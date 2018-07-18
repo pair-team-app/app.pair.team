@@ -1,0 +1,19 @@
+
+.logo {
+	width: 60px;
+	height: 60px;
+}
+
+.nav-link {
+	padding-left: 20px;
+	font-size: 32px;
+}
+
+.nav-link a, .nav-link a:active, .nav-link a:link, .nav-link a:visited {
+	text-decoration: none;
+	color: #000000;
+}
+
+.nav-link a:hover {
+	text-decoration: underline;
+}

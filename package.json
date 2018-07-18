@@ -8,7 +8,8 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4",
-    "react-stripe-elements": "^2.0.1"
+    "react-stripe-elements": "^2.0.1",
+    "simple-flexbox": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
