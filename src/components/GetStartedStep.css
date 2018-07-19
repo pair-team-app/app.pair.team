@@ -1,6 +1,17 @@
 
-
 .intro-image {
 	width: 100%;
 	margin: 10px 0 40px 0;
+}
+
+.project-item-wrapper {
+}
+
+.intro-projects {
+	margin: 80px 0;
+	border-bottom: 1px solid #cccccc;
+}
+
+.reviews-wrapper {
+	margin-top: 40px;
 }

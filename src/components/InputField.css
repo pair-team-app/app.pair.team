@@ -1,0 +1,13 @@
+
+.required-glyph {
+	position: absolute;
+	right: 6px;
+	top: 6px;
+	color: #999999;
+	font-size: 18px;
+	z-index: 101;
+}
+
+.required-glyph-ok {
+	color: #33aa00;
+}
