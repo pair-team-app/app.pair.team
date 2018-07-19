@@ -3,9 +3,11 @@ import React, { Component } from 'react';
 import './App.css';
 
 import {Elements, StripeProvider} from 'react-stripe-elements';
-import { Column, Row } from 'simple-flexbox';
+import { Column } from 'simple-flexbox';
 
+import BottomNav from './components/BottomNav'
 import DetailsStep from './components/DetailsStep';
+import GeneratingStep from './components/GeneratingStep';
 import GetStartedStep from './components/GetStartedStep';
 import StripeCheckout from './components/StripeCheckout';
 import TemplateStep from './components/TemplateStep';
@@ -19,23 +21,50 @@ class App extends Component {
 
 		this.state = {
 		  step : 0,
-      isStripeOverlay : false
+      isStripeOverlay : false,
+			amount : 0.00
 		};
+	}
+
+	handleStep0() {
+		console.log("handleStep0()");
+		window.scrollTo(0, 0);
+		this.setState({ step : 0 });
 	}
 
   handleStep1() {
     console.log("handleStep1()");
+	  window.scrollTo(0, 0);
     this.setState({ step : 1 });
   }
 
 	handleStep2(id) {
 		console.log("handleStep2("+id+")");
+		window.scrollTo(0, 0);
 		this.setState({ step : 2 });
 	}
 
 	handleStep3(obj) {
 		console.log("handleStep3("+JSON.stringify(obj)+")");
+		window.scrollTo(0, 0);
 		this.setState({ step : 3 });
+	}
+
+	handleStep4() {
+		console.log("handleStep4()");
+		window.scrollTo(0, 0);
+		this.setState({ step : 4 });
+	}
+
+	handleItemToggle(obj) {
+		console.log("handleItemToggle("+JSON.stringify(obj)+")");
+
+		let amount = 0.00;
+		obj.forEach(function(item, i) {
+			amount += item.price;
+		});
+
+		this.setState({ amount : amount });
 	}
 
   render() {
@@ -48,21 +77,37 @@ class App extends Component {
     return (
       <div className="page-wrapper">
         <Column horizontal="center">
-          <div className="top-nav"><TopNav /></div>
+          <div className="top-nav">
+	          <TopNav
+		          step={this.state.step}
+		          amount={this.state.amount}
+		          handleStep0={()=> this.handleStep0()}
+		          handleStep1={()=> this.handleStep1()} />
+          </div>
 
           <div className="content-wrapper">
 	          {this.state.step === 0 && (
-              <GetStartedStep onClick={()=> this.handleStep1()}/>
+              <GetStartedStep onClick={()=> this.handleStep1()} />
             )}
 
 	          {this.state.step === 1 && (
-		          <TemplateStep onClick={(id)=> this.handleStep2(id)}/>
+		          <TemplateStep onClick={(id)=> this.handleStep2(id)} />
             )}
 
 	          {this.state.step === 2 && (
-		          <DetailsStep onClick={(obj)=> this.handleStep3(obj)}/>
+		          <DetailsStep onClick={(obj)=> this.handleStep3(obj)} />
+	          )}
+
+	          {this.state.step === 3 && (
+		          <GeneratingStep
+			          onClick={()=> this.handleStep4()}
+		            onItemToggle={(obj)=> this.handleItemToggle(obj)} />
 	          )}
           </div>
+
+	        <div className="bottom-nav">
+		        <BottomNav handleStep1={()=> this.handleStep1()}/>
+	        </div>
 
 	        {this.state.isStripeOverlay && (
             <StripeProvider apiKey="pk_test_hEOqIXLLiGcTTj7p2W9XxuCP">

@@ -30,6 +30,11 @@ class TemplateStep extends Component {
 				type : 'MOBILE',
 				title : "Mobile",
 				image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png"
+			}, {
+				id : 3,
+				type : 'OTHER',
+				title : "Mobile",
+				image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png"
 			}
 		];
 
@@ -44,9 +49,10 @@ class TemplateStep extends Component {
 		return (
 			<Row vertical="start">
 				<Column flexGrow={1} horizontal="center">
-					<div className="intro-text">Select design template</div>
+					<div className="step-header-text">Select a design template</div>
+					<div className="step-text">Select from over <strong>42 Sketch</strong>, <strong>Figma</strong>, <strong>Framer</strong>, <strong>Adobe XD</strong>, &amp; <strong>Adobe Photoshop</strong> AI powered Design Templates.</div>
 					<div className="template-button-wrapper">
-						<Row>
+						<Row horizontal="center" style={{flexWrap:'wrap'}}>
 							{items}
 						</Row>
 					</div>

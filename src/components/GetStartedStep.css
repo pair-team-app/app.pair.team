@@ -1,19 +1,6 @@
 
-.intro-text {
-	margin: 10px 0 40px 0;
-	font-size: 64px;
-}
-
-.intro-button {
-	margin: 10px 0 20px 0;
-}
-
-.intro-button:hover {
-	cursor: pointer;
-}
-
 
 .intro-image {
-	width: 800px;
+	width: 100%;
 	margin: 10px 0 40px 0;
 }

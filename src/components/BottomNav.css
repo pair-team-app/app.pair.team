@@ -1,0 +1,37 @@
+
+.footer-logo {
+	width: 30px;
+	height: 30px;
+}
+
+.footer-title {
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.footer-link {
+	margin-bottom: 10px;
+	color: #999999;
+}
+
+.footer-link:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.footer-link a, .footer-link a:active, .footer-link a:link, .footer-link a:visited {
+	color: #999999;
+	text-decoration: none;
+}
+
+.footer-icon {
+	width: 16px;
+	height: 16px;
+	margin-right: 10px;
+}
+
+.copyright {
+	margin-top: 60px;
+	color: #666666;
+	font-size: 12px;
+}
