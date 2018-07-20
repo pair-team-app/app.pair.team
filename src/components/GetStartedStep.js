@@ -50,7 +50,8 @@ class GetStartedStep extends Component {
 
 		let faStyle = {
 			color: '#0000ff',
-			fontSize: '14px'
+			fontSize: '14px',
+			marginRight: '5px'
 		};
 
 		let lAlignStyle = {
@@ -76,10 +77,14 @@ class GetStartedStep extends Component {
 						<Column flexGrow={1} horizontal="start">
 							<div className="step-subheader-text" style={lAlignStyle}>Professional design using AI.</div>
 							<div className="step-text" style={lAlignStyle}>Though the gravity still dragged at him, his muscles were making great efforts to adjust. After the daily classes he no longer collapsed immediately into bed.</div>
-							<div><FontAwesome name="plus-circle" style={faStyle} /> Read More</div>
+							<Row flexGrow={1} vertical="center">
+								<Column><FontAwesome name="plus-circle" style={faStyle} /></Column>
+								<Column vertical="center">Read More</Column>
+								{/*<div><FontAwesome name="plus-circle" style={faStyle} /> Read More</div>*/}
+							</Row>
 						</Column>
 						<Column flexGrow={1}>
-							<img src="#" alt="iPhone" width="350" height="400" style={{border:'1px dashed #efefef'}} />
+							<img src="/images/iphone.png" alt="iPhone" width="300" height="372" />
 						</Column>
 					</Row>
 					<Row flexGrow={1} style={{width:'100%'}}>

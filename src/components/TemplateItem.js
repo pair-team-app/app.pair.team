@@ -11,7 +11,7 @@ class TemplateItem extends Component {
 		super(props);
 
 		this.state = {
-			isSelected : false
+			isSelected : this.props.selected
 		};
 	}
 

@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import './DetailsStep.css';
 
+import axios from 'axios';
+import Dropzone from 'react-dropzone';
 import { Column, Row } from 'simple-flexbox';
 
 import InputField from './InputField'
@@ -105,9 +107,43 @@ class DetailsStep extends Component {
 		if (validated === 0x1111111) {
 			this.props.onClick(this.state);
 		}
+
+		this.props.onClick(this.state);
+	}
+
+	onDrop(dzFiles) {
+		console.log("onDrop()");
+// 		this.props.onDrop(dzFiles);
+
+		let files = {};
+		dzFiles.forEach(file => {
+			files[file.name] = {};
+			console.log("UPLOADING… "+file.name);
+
+			let formData = new FormData();
+			formData.append('file', file);
+
+			const config = {
+				headers : {
+					'content-type' : 'multipart/form-data'
+				}
+			};
+
+			axios.post('http://cdn.designengine.ai/upload.php', formData, config)
+				.then((response) => {
+					console.log("UPLOAD", JSON.stringify(response.data));
+				}).catch((error) => {
+			});
+		});
 	}
 
 	render() {
+		let dzStyle = {
+			marginTop : '85px',
+			fontSize : '14px',
+			color : '#666666'
+		};
+
 		let buttonClass = (this.state.isValidated) ? 'action-button full-button' : 'action-button full-button disabled-button';
 		return (
 			<div>
@@ -172,8 +208,18 @@ class DetailsStep extends Component {
 							value={this.state.subheadline}
 							onChange={(event)=> this.handleChange(event)} />
 
-						<div style={{backgroundColor:'#e0e0e0', width:'100%'}}>Drag images here</div>
-
+						{/*<ul className="flex-container" style={{width:'100%'}}>*/}
+							{/*<li className="flex-item">*/}
+								{/*<Dropzone disabled={false} onDrop={this.onDrop.bind(this)} className="dropzone">*/}
+									{/*{ <div style={overlayStyle}>Drop files here…</div> }*/}
+								{/*</Dropzone>*/}
+							{/*</li>*/}
+						{/*</ul>*/}
+						<Row vertical="center" horizontal="center" style={{backgroundColor:'#e0e0e0', width:'100%', height:'200px'}}>
+							<Dropzone disabled={false} onDrop={this.onDrop.bind(this)} className="dropzone">
+								<div style={dzStyle}>Drop images here…</div>
+							</Dropzone>
+						</Row>
 					</Column>
 				</Row>
 			</div>

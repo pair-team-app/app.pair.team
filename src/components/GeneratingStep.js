@@ -14,25 +14,29 @@ class GeneratingStep extends Component {
 			queue : {
 				index : 1,
 				total : 1
+			},
+			files : {
+				created : 0,
+				total : 0
 			}
 		};
 
 		this.generatedItems = [{
 			id : 1,
 			type : 'DESKTOP',
-			title : "Desktop",
+			title : "Layout I",
 			image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png",
 			price : 3.99
 		}, {
 			id : 2,
 			type : 'MOBILE',
-			title : "Mobile",
+			title : "Layout II",
 			image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png",
 			price : 1.99
 		}, {
 			id : 3,
 			type : 'OTHER',
-			title : "Mobile",
+			title : "Layout III",
 			image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png",
 			price : 4.99
 		}];
@@ -73,22 +77,30 @@ class GeneratingStep extends Component {
 		this.props.onItemToggle(this.selectedItems);
 	}
 
+	onNext() {
+		if (this.selectedItems.length > 0) {
+			this.props.onClick(this.selectedItems);
+		}
+	}
+
 	render() {
 		let items = this.generatedItems.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<TemplateItem handleClick={(isSelected)=> this.handleClick(item.id, isSelected)} image={item.image} title={item.title} price={item.price} />
+					<TemplateItem handleClick={(isSelected)=> this.handleClick(item.id, isSelected)} image={item.image} title={item.title} price={item.price} selected={false} />
 				</Column>
 			);
 		});
 
+		let btnClass = (this.selectedItems.length > 0) ? 'action-button full-button' : 'action-button full-button disabled-button';
+
 		return (
 			<Row vertical="start">
 				<Column flexGrow={1} horizontal="center">
-					<div className="step-header-text">Generating AI design artboards</div>
-					<div className="step-text">For those who have seen the Earth from space, and for the hundreds and perhaps thousands more who will.</div>
-					<button className="action-button full-button" onClick={()=> this.props.onClick(this.state)}>Next</button>
-					<div className="step-text">You are {this.state.queue.index} of {this.state.queue.total} in line using Design Engine to generate Premium AI Design Templates.</div>
+					<div className="step-header-text">Select the designs you want to keep</div>
+					<div className="step-text">Select only the design files that work for you and click Next.</div>
+					<button className={btnClass} onClick={()=> this.onNext()}>Next</button>
+					<div className="step-text">{this.generatedItems.length} custom design files generated.</div>
 					<div className="template-item-wrapper">
 						<Row horizontal="center" style={{flexWrap:'wrap'}}>
 							{items}

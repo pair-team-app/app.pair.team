@@ -4,11 +4,13 @@
   "private": true,
   "dependencies": {
     "ajv": "^6.5.2",
+    "axios": "^0.18.0",
     "flexbox-react": "^4.4.0",
     "npm": "^6.2.0",
     "react": "^16.4.1",
     "react-currency-format": "^1.0.0",
     "react-dom": "^16.4.1",
+    "react-dropzone": "^4.2.13",
     "react-fontawesome": "^1.6.1",
     "react-scripts": "1.1.4",
     "react-stripe-elements": "^2.0.1",

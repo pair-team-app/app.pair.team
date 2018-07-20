@@ -53,6 +53,7 @@
 	color : #ffffff;
 	border: none;
 	border-radius: 3px;
+	min-width: 70px;
 }
 
 .action-button:hover {
@@ -77,6 +78,10 @@
 	color: #ffffff;
 }
 
+.disabled-button:hover {
+	cursor: default;
+}
+
 .textfield-input {
 	padding: 5px;
 	background-color: #ffffff;
@@ -85,4 +90,33 @@
 	border: 1px solid #999999;
 	width: 100%;
 	box-sizing: border-box;
+}
+
+.is-hidden {
+	display: none;
+	visibility: hidden;
+}
+
+.flex-container {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	flex-flow: row wrap;
+	-webkit-flex-flow: row wrap;
+	flex-wrap: wrap;
+	-webkit-flex-wrap: wrap;
+	justify-content: center;
+}
+
+.flex-item {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	-webkit-flex-direction: column;
+	height: auto;
+	flex: 1 0 auto;
+	-webkit-flex: 1 0 auto;
+	padding: 10px;
 }

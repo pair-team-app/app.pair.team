@@ -9,6 +9,7 @@ import BottomNav from './components/BottomNav'
 import DetailsStep from './components/DetailsStep';
 import GeneratingStep from './components/GeneratingStep';
 import GetStartedStep from './components/GetStartedStep';
+import PurchaseStep from './components/PurchaseStep';
 import StripeCheckout from './components/StripeCheckout';
 import TemplateStep from './components/TemplateStep';
 import TopNav from './components/TopNav';
@@ -22,7 +23,9 @@ class App extends Component {
 		this.state = {
 		  step : 0,
       isStripeOverlay : false,
-			amount : 0.00
+			amount : 0.00,
+			selectedItems : null,
+			purchasedItems : null
 		};
 	}
 
@@ -53,18 +56,54 @@ class App extends Component {
 	handleStep4() {
 		console.log("handleStep4()");
 		window.scrollTo(0, 0);
-		this.setState({ step : 4 });
+		this.setState({
+			step : 4,
+			purchasedItems : this.state.selectedItems
+		});
 	}
 
-	handleItemToggle(obj) {
-		console.log("handleItemToggle("+JSON.stringify(obj)+")");
+	handleStep5() {
+		console.log("handleStep5()");
+		window.scrollTo(0, 0);
+		this.setState({
+			step : 5,
+			isStripeOverlay : true
+		});
+	}
+
+	handleItemToggle(obj, isPurchase) {
+		console.log("handleItemToggle("+JSON.stringify(obj)+", "+isPurchase+")");
 
 		let amount = 0.00;
 		obj.forEach(function(item, i) {
 			amount += item.price;
 		});
 
-		this.setState({ amount : amount });
+		if (isPurchase) {
+			this.setState({
+				amount : amount
+			});
+
+		} else {
+			this.setState({
+				amount        : amount,
+				selectedItems : obj
+			});
+		}
+	}
+
+	handlePurchaseToggle(obj, isPurchase) {
+		console.log("handlePurchaseToggle("+JSON.stringify(obj)+", "+isPurchase+")");
+
+		let amount = 0.00;
+		obj.forEach(function(item, i) {
+			amount += item.price;
+		});
+
+		this.setState({
+			amount : amount,
+			purchasedItems : obj
+		});
 	}
 
   render() {
@@ -101,7 +140,14 @@ class App extends Component {
 	          {this.state.step === 3 && (
 		          <GeneratingStep
 			          onClick={()=> this.handleStep4()}
-		            onItemToggle={(obj)=> this.handleItemToggle(obj)} />
+		            onItemToggle={(obj)=> this.handleItemToggle(obj, false)} />
+	          )}
+
+	          {this.state.step === 4 && (
+		          <PurchaseStep
+			          onClick={()=> this.handleStep5()}
+			          onItemToggle={(obj)=> this.handlePurchaseToggle(obj, true)}
+			          selectedItems={this.state.selectedItems} />
 	          )}
           </div>
 
