@@ -208,13 +208,6 @@ class DetailsStep extends Component {
 							value={this.state.subheadline}
 							onChange={(event)=> this.handleChange(event)} />
 
-						{/*<ul className="flex-container" style={{width:'100%'}}>*/}
-							{/*<li className="flex-item">*/}
-								{/*<Dropzone disabled={false} onDrop={this.onDrop.bind(this)} className="dropzone">*/}
-									{/*{ <div style={overlayStyle}>Drop files here…</div> }*/}
-								{/*</Dropzone>*/}
-							{/*</li>*/}
-						{/*</ul>*/}
 						<Row vertical="center" horizontal="center" style={{backgroundColor:'#e0e0e0', width:'100%', height:'200px'}}>
 							<Dropzone disabled={false} onDrop={this.onDrop.bind(this)} className="dropzone">
 								<div style={dzStyle}>Drop images here…</div>

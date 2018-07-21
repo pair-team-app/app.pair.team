@@ -5,13 +5,30 @@ import './TemplateStep.css';
 import { Column, Row } from 'simple-flexbox';
 
 import TemplateButton from './TemplateButton'
+import axios from "axios/index";
 
 class TemplateStep extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
+			templates : []
 		};
+	}
+
+	componentDidMount() {
+		let formData = new FormData();
+		formData.append('action', 'TEMPLATES');
+		formData.append('template_id', this.templateID);
+		axios.post('http://api.designengine.ai/templates.php', formData)
+			.then((response)=> {
+				console.log("TEMPLATES", JSON.stringify(response.data));
+				let templates = [];
+				response.data.templates.forEach(template => {
+					templates.push(template);
+				});
+				this.setState({ templates : templates });
+			});
 	}
 
 	handleClick(id) {
@@ -19,29 +36,10 @@ class TemplateStep extends Component {
 	}
 
 	render() {
-		let buttons = [
-			{
-				id : 1,
-				type : 'DESKTOP',
-				title : "Desktop",
-				image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png"
-			}, {
-				id : 2,
-				type : 'MOBILE',
-				title : "Mobile",
-				image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png"
-			}, {
-				id : 3,
-				type : 'OTHER',
-				title : "Mobile",
-				image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png"
-			}
-		];
-
-		let items = buttons.map((item, i, arr) => {
+		let items = this.state.templates.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<TemplateButton onClick={()=> this.handleClick(item.type)} image={item.image} title={item.title} />
+					<TemplateButton onClick={()=> this.handleClick(item.id)} image={item.preview} title={item.title} />
 				</Column>
 			);
 		});

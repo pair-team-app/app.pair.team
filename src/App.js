@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './App.css';
 
+import axios from 'axios';
 import {Elements, StripeProvider} from 'react-stripe-elements';
 import { Column } from 'simple-flexbox';
 
@@ -27,6 +28,11 @@ class App extends Component {
 			selectedItems : null,
 			purchasedItems : null
 		};
+
+		this.templateID = 0;
+
+		this.STRIPE_TEST_TOKEN = 'pk_test_hEOqIXLLiGcTTj7p2W9XxuCP';
+		this.STRIPE_LIVE_TOKEN = 'pk_live_7OvF9BcQ3LvNZd0z0FsPPgNF';
 	}
 
 	handleStep0() {
@@ -43,6 +49,7 @@ class App extends Component {
 
 	handleStep2(id) {
 		console.log("handleStep2("+id+")");
+		this.templateID = id;
 		window.scrollTo(0, 0);
 		this.setState({ step : 2 });
 	}
@@ -51,6 +58,14 @@ class App extends Component {
 		console.log("handleStep3("+JSON.stringify(obj)+")");
 		window.scrollTo(0, 0);
 		this.setState({ step : 3 });
+
+		let formData = new FormData();
+		formData.append('action', 'MAKE_ORDER');
+		formData.append('template_id', this.templateID);
+		axios.post('http://api.designengine.ai/templates.php', formData)
+			.then((response)=> {
+				console.log("MAKE_ORDER", JSON.stringify(response.data));
+			});
 	}
 
 	handleStep4() {
@@ -156,8 +171,8 @@ class App extends Component {
 	        </div>
 
 	        {this.state.isStripeOverlay && (
-            <StripeProvider apiKey="pk_test_hEOqIXLLiGcTTj7p2W9XxuCP">
-            {/*<StripeProvider apiKey="pk_live_7OvF9BcQ3LvNZd0z0FsPPgNF">*/}
+            <StripeProvider apiKey={this.STRIPE_TEST_TOKEN}>
+            {/*<StripeProvider apiKey={this.STRIPE_LIVE_TOKEN}>*/}
               <div className="example" style={stripeStyle}>
                 <h3>React Stripe Elements Example</h3>
                 <Elements>
