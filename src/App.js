@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import axios from 'axios';
+// import MessengerPlugin from 'react-messenger-plugin';
 import {Elements, StripeProvider} from 'react-stripe-elements';
 import { Column } from 'simple-flexbox';
 
@@ -69,7 +70,7 @@ class App extends Component {
 		formData.append('product_description', obj.info);
 		formData.append('product_headline', obj.headline);
 		formData.append('product_subheadline', obj.subheadline);
-		axios.post('http://api.designengine.ai/templates.php', formData)
+		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
 				console.log("MAKE_ORDER", JSON.stringify(response.data));
 			});
@@ -189,6 +190,11 @@ class App extends Component {
             </StripeProvider>
           )}
         </Column>
+
+	      {/*<MessengerPlugin*/}
+		      {/*appId="150354118890435"*/}
+		      {/*pageId="238920630004468"*/}
+	      {/*/>*/}
       </div>
     );
   }

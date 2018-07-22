@@ -12,6 +12,7 @@
     "react-dom": "^16.4.1",
     "react-dropzone": "^4.2.13",
     "react-fontawesome": "^1.6.1",
+    "react-messenger-plugin": "^2.1.0",
     "react-scripts": "1.1.4",
     "react-stripe-elements": "^2.0.1",
     "simple-flexbox": "^1.2.0"
