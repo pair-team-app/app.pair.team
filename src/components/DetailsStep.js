@@ -108,7 +108,7 @@ class DetailsStep extends Component {
 			this.props.onClick(this.state);
 		}
 
-		this.props.onClick(this.state);
+		//this.props.onClick(this.state);
 	}
 
 	onDrop(dzFiles) {

@@ -62,6 +62,13 @@ class App extends Component {
 		let formData = new FormData();
 		formData.append('action', 'MAKE_ORDER');
 		formData.append('template_id', this.templateID);
+		formData.append('email', obj.email);
+		formData.append('company_name', obj.company);
+		formData.append('company_description', obj.description);
+		formData.append('product_name', obj.product);
+		formData.append('product_description', obj.info);
+		formData.append('product_headline', obj.headline);
+		formData.append('product_subheadline', obj.subheadline);
 		axios.post('http://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
 				console.log("MAKE_ORDER", JSON.stringify(response.data));

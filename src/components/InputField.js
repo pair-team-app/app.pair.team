@@ -17,7 +17,7 @@ class InputField extends Component {
 	}
 
 	handleChange(event) {
-		console.log("handleChange()");
+// 		console.log("handleChange()");
 
 		if (this.props.type === 'email') {
 			let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

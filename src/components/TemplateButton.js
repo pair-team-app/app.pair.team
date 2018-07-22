@@ -17,7 +17,7 @@ class TemplateButton extends Component {
 	render() {
 		let faStyle = {
 			color: '#0000ff',
-			fontSize: '14px'
+			fontSize: '12px'
 		};
 
 		return (
