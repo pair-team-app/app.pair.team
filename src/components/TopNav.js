@@ -36,7 +36,7 @@ class TopNav extends Component {
 					<Column flexGrow={1} horizontal="center">
 						<Row vertical="center" style={{height:'40px'}}>
 							<span>
-								<span className="nav-link" onClick={()=> this.props.handleStep1()}>Get Started</span>
+								<span className="nav-link" onClick={()=> this.props.handleStep1()}>Menu Bar</span>
 								<span className="nav-link" onClick={()=> this.props.handleStep1()}>View Projects</span>
 								<span className="nav-link"><a href="https://spectrum.chat/designengine/login" target="_blank" rel="noopener noreferrer">What is Design AI?</a></span>
 							</span>

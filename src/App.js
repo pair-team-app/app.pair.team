@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import axios from 'axios';
+import cookie from 'react-cookies';
 import {Elements, StripeProvider} from 'react-stripe-elements';
 import { Column } from 'simple-flexbox';
 
@@ -57,30 +58,33 @@ class App extends Component {
 	handleStep3(obj) {
 		console.log("handleStep3("+JSON.stringify(obj)+")");
 		window.scrollTo(0, 0);
-		this.setState({ step : 3 });
+		cookie.save('order_id', "9", { path: '/' });
 
-		let formData = new FormData();
-		formData.append('action', 'MAKE_ORDER');
-		formData.append('template_id', this.templateID);
-		formData.append('email', obj.email);
-		formData.append('company_name', obj.company);
-		formData.append('company_description', obj.description);
-		formData.append('product_name', obj.product);
-		formData.append('product_description', obj.info);
-		formData.append('product_headline', obj.headline);
-		formData.append('product_subheadline', obj.subheadline);
-		axios.post('https://api.designengine.ai/templates.php', formData)
-			.then((response)=> {
-				console.log("MAKE_ORDER", JSON.stringify(response.data));
-			});
+// 		let formData = new FormData();
+// 		formData.append('action', 'MAKE_ORDER');
+// 		formData.append('template_id', this.templateID);
+// 		formData.append('email', obj.email);
+// 		formData.append('company_name', obj.company);
+// 		formData.append('company_description', obj.description);
+// 		formData.append('product_name', obj.product);
+// 		formData.append('product_description', obj.info);
+// 		formData.append('product_headline', obj.headline);
+// 		formData.append('product_subheadline', obj.subheadline);
+// 		axios.post('https://api.designengine.ai/templates.php', formData)
+// 			.then((response)=> {
+// 				console.log("MAKE_ORDER", JSON.stringify(response.data));
+// 				cookie.save('order_id', response.data.order_id, { path: '/' });
+// 			});
+
+		this.setState({ step : 3 });
 	}
 
-	handleStep4() {
-		console.log("handleStep4()");
+	handleStep4(obj) {
+		console.log("handleStep4("+JSON.stringify(obj)+")");
 		window.scrollTo(0, 0);
 		this.setState({
 			step : 4,
-			purchasedItems : this.state.selectedItems
+			selectedItems : obj
 		});
 	}
 
@@ -93,25 +97,17 @@ class App extends Component {
 		});
 	}
 
-	handleItemToggle(obj, isPurchase) {
-		console.log("handleItemToggle("+JSON.stringify(obj)+", "+isPurchase+")");
+	handleItemToggle(obj) {
+		console.log("handleItemToggle("+JSON.stringify(obj)+")");
 
 		let amount = 0.00;
 		obj.forEach(function(item, i) {
-			amount += item.price;
+			amount += parseFloat(item.per_price);
 		});
 
-		if (isPurchase) {
-			this.setState({
-				amount : amount
-			});
-
-		} else {
-			this.setState({
-				amount        : amount,
-				selectedItems : obj
-			});
-		}
+		this.setState({
+			amount : amount
+		});
 	}
 
 	handlePurchaseToggle(obj, isPurchase) {
@@ -119,7 +115,7 @@ class App extends Component {
 
 		let amount = 0.00;
 		obj.forEach(function(item, i) {
-			amount += item.price;
+			amount += item.per_price;
 		});
 
 		this.setState({
@@ -161,14 +157,15 @@ class App extends Component {
 
 	          {this.state.step === 3 && (
 		          <GeneratingStep
-			          onClick={()=> this.handleStep4()}
-		            onItemToggle={(obj)=> this.handleItemToggle(obj, false)} />
+			          orderID={cookie.load('order_id')}
+			          onClick={(obj)=> this.handleStep4(obj)}
+		            onItemToggle={(obj)=> this.handleItemToggle(obj)} />
 	          )}
 
 	          {this.state.step === 4 && (
 		          <PurchaseStep
 			          onClick={()=> this.handleStep5()}
-			          onItemToggle={(obj)=> this.handlePurchaseToggle(obj, true)}
+			          onItemToggle={(obj)=> this.handleItemToggle(obj)}
 			          selectedItems={this.state.selectedItems} />
 	          )}
           </div>

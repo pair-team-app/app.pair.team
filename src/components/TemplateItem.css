@@ -7,7 +7,7 @@
 }
 
 .template-item-container {
-	background-color: #000000;
+	/*background-color: #000000;*/
 }
 
 .template-item-image {
@@ -18,7 +18,7 @@
 .template-item-price {
 	font-size: 16px;
 	font-weight: bold;
-	color: #ffffff;
+	color: #999999;
 	margin-bottom: 10px;
 }
 

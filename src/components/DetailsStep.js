@@ -13,16 +13,27 @@ class DetailsStep extends Component {
 	constructor(props) {
 		super(props);
 
+// 		this.state = {
+// 			email : '',
+// 			company : '',
+// 			description : '',
+// 			product : '',
+// 			info : '',
+// 			headline : '',
+// 			subheadline : '',
+// 			isValidated : false
+// 		};
 		this.state = {
-			email : '',
-			company : '',
-			description : '',
-			product : '',
-			info : '',
-			headline : '',
-			subheadline : '',
+			email : 'matt@modd.live',
+			company : 'aaa',
+			description : 'bbb',
+			product : 'ccc',
+			info : 'ddd',
+			headline : 'ee',
+			subheadline : 'fff',
 			isValidated : false
 		};
+
 
 		this.handleChange = this.handleChange.bind(this);
 	}

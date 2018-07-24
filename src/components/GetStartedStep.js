@@ -20,23 +20,23 @@ class GetStartedStep extends Component {
 			{
 				id : 1,
 				title : "Project 1",
-				image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png"
+				image : "https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png"
 			}, {
 				id : 2,
 				title : "Project 2",
-				image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png"
+				image : "https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png"
 			}, {
 				id : 3,
 				title : "Project 3",
-				image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png"
+				image : "https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png"
 			}, {
 				id : 4,
 				title : "Project 4",
-				image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png"
+				image : "https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png"
 			}, {
 				id : 5,
 				title : "Project 5",
-				image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png"
+				image : "https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png"
 			}
 		];
 

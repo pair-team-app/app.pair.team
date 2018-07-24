@@ -5,6 +5,7 @@ import './GeneratingStep.css';
 import { Column, Row } from 'simple-flexbox';
 
 import TemplateItem from './TemplateItem'
+import axios from "axios/index";
 
 class GeneratingStep extends Component {
 	constructor(props) {
@@ -15,42 +16,49 @@ class GeneratingStep extends Component {
 				index : 1,
 				total : 1
 			},
-			files : {
-				created : 0,
-				total : 0
-			}
+			files : []
 		};
 
-		this.generatedItems = [{
-			id : 1,
-			type : 'DESKTOP',
-			title : "Layout I",
-			image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png",
-			price : 3.99
-		}, {
-			id : 2,
-			type : 'MOBILE',
-			title : "Layout II",
-			image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png",
-			price : 1.99
-		}, {
-			id : 3,
-			type : 'OTHER',
-			title : "Layout III",
-			image : "https://www.sketchapp.com/images/press/sketch-press-kit/app-icons/sketch-mac-icon@2x.png",
-			price : 4.99
-		}];
-
+		this.interval = null;
 		this.selectedItems = [];
+	}
+
+	componentDidMount() {
+		let self = this;
+		this.interval = setInterval(function() {
+			self.checkNewFiles();
+		}, 10000);
+		this.checkNewFiles()
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.interval);
+	}
+
+	checkNewFiles() {
+		let self = this;
+		let formData = new FormData();
+		formData.append('action', 'FILE_CHECK');
+		formData.append('order_id', this.props.orderID);
+		axios.post('https://api.designengine.ai/templates.php', formData)
+			.then((response)=> {
+				console.log("FILE_CHECK", JSON.stringify(response.data));
+				let files = self.state.files;
+				response.data.files.forEach(file => {
+					files.push(file);
+				});
+				this.setState({ files : files });
+			});
 	}
 
 	handleClick(id, isSelected) {
 		console.log("handleClick("+id+", "+isSelected+")");
 
+		let files = this.state.files;
+
 		let self = this;
 		if (isSelected) {
-
-			this.generatedItems.forEach(function(item, i) {
+			files.forEach(function(item, i) {
 				if (item.id === id) {
 
 					let isFound = false;
@@ -84,10 +92,10 @@ class GeneratingStep extends Component {
 	}
 
 	render() {
-		let items = this.generatedItems.map((item, i, arr) => {
+		let items = this.state.files.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<TemplateItem handleClick={(isSelected)=> this.handleClick(item.id, isSelected)} image={item.image} title={item.title} price={item.price} selected={false} />
+					<TemplateItem handleClick={(isSelected)=> this.handleClick(item.id, isSelected)} image={item.filename} title={item.title+' - '+(i+1)} price={parseFloat(item.per_price)} selected={false} />
 				</Column>
 			);
 		});
@@ -100,7 +108,7 @@ class GeneratingStep extends Component {
 					<div className="step-header-text">Select the designs you want to keep</div>
 					<div className="step-text">Select only the design files that work for you and click Next.</div>
 					<button className={btnClass} onClick={()=> this.onNext()}>Next</button>
-					<div className="step-text">{this.generatedItems.length} custom design files generated.</div>
+					<div className="step-text">{this.state.files.length} custom design files generated.</div>
 					<div className="template-item-wrapper">
 						<Row horizontal="center" style={{flexWrap:'wrap'}}>
 							{items}

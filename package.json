@@ -8,6 +8,7 @@
     "flexbox-react": "^4.4.0",
     "npm": "^6.2.0",
     "react": "^16.4.1",
+    "react-cookies": "^0.1.0",
     "react-currency-format": "^1.0.0",
     "react-dom": "^16.4.1",
     "react-dropzone": "^4.2.13",

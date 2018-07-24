@@ -62,7 +62,7 @@ class PurchaseStep extends Component {
 		let items = this.state.allItems.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<TemplateItem handleClick={(isSelected)=> this.handleClick(item.id, isSelected)} image={item.image} title={item.title} price={item.price} selected={true} />
+					<TemplateItem handleClick={(isSelected)=> this.handleClick(item.id, isSelected)} image={item.filename} title={(i+1)} price={'1.99'} selected={true} />
 				</Column>
 			);
 		});

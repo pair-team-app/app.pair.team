@@ -23,7 +23,6 @@ class TemplateItem extends Component {
 
 	render() {
 		let btnClass = (this.state.isSelected) ? 'action-button small-button selected-button' : 'action-button small-button';
-
 		return (
 			<div className="template-item">
 				<Row>
