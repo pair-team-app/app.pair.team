@@ -75,7 +75,7 @@ class GeneratingStep extends Component {
 	handleSelectClick(id, isSelected) {
 		console.log("handleClick("+id+", "+isSelected+")");
 
-		let files = this.state.files;
+		const files = this.state.files;
 
 		let self = this;
 		if (isSelected) {
@@ -113,7 +113,7 @@ class GeneratingStep extends Component {
 	}
 
 	render() {
-		let items = this.state.files.map((item, i, arr) => {
+		const items = this.state.files.map((item, i, arr) => {
 			return (
 				<Column key={i}>
 					<TemplateItem
@@ -126,7 +126,7 @@ class GeneratingStep extends Component {
 			);
 		});
 
-		let btnClass = (this.selectedItems.length > 0) ? 'action-button full-button' : 'action-button full-button disabled-button';
+		const btnClass = (this.selectedItems.length > 0) ? 'action-button full-button' : 'action-button full-button disabled-button';
 
 		return (
 			<div>

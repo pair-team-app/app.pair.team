@@ -17,7 +17,8 @@ class CornerType extends Component {
 	}
 
 	render() {
-		let className = (this.props.isSelected) ? 'corner-type corner-type-selected' : 'corner-type';
+		const className = (this.props.isSelected) ? 'corner-type corner-type-selected' : 'corner-type';
+
 		return (
 			<div onClick={()=> this.handleClick()} className={className}>
 				<img src={this.props.url} className="corner-type-image" alt={this.props.title} />

@@ -4,7 +4,7 @@ import './PurchaseStep.css';
 
 import { Column, Row } from 'simple-flexbox';
 
-import TemplateItem from '../TemplateItem'
+import TemplateItem from '../TemplateItem';
 
 class PurchaseStep extends Component {
 	constructor(props) {
@@ -59,7 +59,7 @@ class PurchaseStep extends Component {
 
 	render() {
 // 		console.log("render() "+JSON.stringify(this.state));
-		let items = this.state.allItems.map((item, i, arr) => {
+		const items = this.state.allItems.map((item, i, arr) => {
 			return (
 				<Column key={i}>
 					<TemplateItem handleClick={(isSelected)=> this.handleClick(item.id, isSelected)} image={item.filename} title={(i+1)} price={'1.99'} selected={true} />
@@ -67,7 +67,7 @@ class PurchaseStep extends Component {
 			);
 		});
 
-		let btnClass = (this.state.selectedItems.length > 0) ? 'action-button full-button' : 'action-button full-button disabled-button';
+		const btnClass = (this.state.selectedItems.length > 0) ? 'action-button full-button' : 'action-button full-button disabled-button';
 
 		return (
 			<Row vertical="start">

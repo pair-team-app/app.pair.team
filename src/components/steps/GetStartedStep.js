@@ -5,7 +5,7 @@ import './GetStartedStep.css';
 import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
 
-import ProjectItem from '../ProjectItem'
+import ProjectItem from '../ProjectItem';
 
 class GetStartedStep extends Component {
 	constructor(props) {
@@ -16,7 +16,7 @@ class GetStartedStep extends Component {
 	}
 
 	render() {
-		let buttons = [
+		const buttons = [
 			{
 				id : 1,
 				title : "Project 1",
@@ -40,7 +40,7 @@ class GetStartedStep extends Component {
 			}
 		];
 
-		let items = buttons.map((item, i, arr) => {
+		const items = buttons.map((item, i, arr) => {
 			return (
 				<Column key={i}>
 					<ProjectItem image={item.image} title={item.title} />
@@ -48,13 +48,13 @@ class GetStartedStep extends Component {
 			);
 		});
 
-		let faStyle = {
+		const faStyle = {
 			color: '#0000ff',
 			fontSize: '14px',
 			marginRight: '5px'
 		};
 
-		let lAlignStyle = {
+		const lAlignStyle = {
 			textAlign: 'left'
 		};
 

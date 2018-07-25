@@ -4,7 +4,7 @@ import './CornersForm.css';
 
 import { Column, Row } from 'simple-flexbox';
 
-import CornerType from '../CornerType'
+import CornerType from '../CornerType';
 
 
 class CornersForm extends Component {

@@ -5,7 +5,7 @@ import './ColorsForm.css';
 import axios from 'axios';
 import { Column, Row } from 'simple-flexbox';
 
-import ColorSwatch from '../ColorSwatch'
+import ColorSwatch from '../ColorSwatch';
 
 
 class ColorsForm extends Component {

@@ -5,7 +5,7 @@ import './TemplateStep.css';
 import axios from 'axios';
 import { Column, Row } from 'simple-flexbox';
 
-import TemplateButton from '../TemplateButton'
+import TemplateButton from '../TemplateButton';
 
 class TemplateStep extends Component {
 	constructor(props) {
@@ -32,15 +32,11 @@ class TemplateStep extends Component {
 		});
 	}
 
-	handleClick(id) {
-		this.props.onClick(id);
-	}
-
 	render() {
-		let items = this.state.templates.map((item, i, arr) => {
+		const items = this.state.templates.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<TemplateButton onClick={()=> this.handleClick(item.id)} image={item.preview} title={item.title} />
+					<TemplateButton onClick={()=> this.props.onClick(item.id)} image={item.preview} title={item.title} />
 				</Column>
 			);
 		});

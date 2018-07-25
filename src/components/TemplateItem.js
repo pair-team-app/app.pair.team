@@ -16,14 +16,15 @@ class TemplateItem extends Component {
 	}
 
 	handleSelectClick() {
-		let isSelected = !this.state.isSelected;
+		const isSelected = !this.state.isSelected;
 		this.setState({ isSelected : isSelected });
 		this.props.onSelectClick(isSelected);
 	}
 
 	render() {
-		let imageClass = (this.state.isSelected) ? 'template-item-image template-item-image-selected' : 'template-item-image';
-		let btnClass = (this.state.isSelected) ? 'action-button small-button selected-button' : 'action-button small-button';
+		const imageClass = (this.state.isSelected) ? 'template-item-image template-item-image-selected' : 'template-item-image';
+		const btnClass = (this.state.isSelected) ? 'action-button small-button selected-button' : 'action-button small-button';
+
 		return (
 			<div className="template-item">
 				<Row>

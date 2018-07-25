@@ -14,13 +14,13 @@ class ColorSwatch extends Component {
 	}
 
 	handleClick() {
-		let isSelected = !this.state.isSelected;
+		const isSelected = !this.state.isSelected;
 		this.setState({ isSelected : isSelected });
 		this.props.onClick(isSelected);
 	}
 
 	render() {
-		let swatchStyle = {
+		const swatchStyle = {
 			backgroundColor: '#' + this.props.swatch,
 			border: (this.state.isSelected) ? '2px solid #333333' : '2px solid #' + this.props.swatch
 		};

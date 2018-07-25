@@ -15,7 +15,7 @@ class ProjectItem extends Component {
 	}
 
 	render() {
-		let faStyle = {
+		const faStyle = {
 			color: '#999999',
 			fontSize: '12px'
 		};
