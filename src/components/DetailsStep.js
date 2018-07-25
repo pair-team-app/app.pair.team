@@ -320,7 +320,6 @@ class DetailsStep extends Component {
 	}
 
 	render() {
-		//fruits.splice(0, 0, "Lemon");
 		let colors = this.state.colors.map((item, i, arr) => {
 			return (
 				<Column key={i}>

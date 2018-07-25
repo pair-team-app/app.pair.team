@@ -15,10 +15,10 @@ class TemplateItem extends Component {
 		};
 	}
 
-	handleClick() {
+	handleSelectClick() {
 		let isSelected = !this.state.isSelected;
 		this.setState({ isSelected : isSelected });
-		this.props.handleClick(isSelected);
+		this.props.onSelectClick(isSelected);
 	}
 
 	render() {
@@ -28,13 +28,13 @@ class TemplateItem extends Component {
 			<div className="template-item">
 				<Row>
 					<Column flexGrow={1} horizontal="center" className="template-item-container">
-						<Row><img className={imageClass} src={this.props.image} alt={this.props.title} /></Row>
+						<Row><img className={imageClass} src={this.props.image} alt={this.props.title} onClick={()=> this.props.onImageClick()} /></Row>
 						<Row><span className="template-item-price"><CurrencyFormat value={this.props.price} displayType={'text'} thousandSeparator={true} prefix={'$'} /></span></Row>
 						<Row><span className="template-item-title">{this.props.title}</span></Row>
 					</Column>
 				</Row>
 				<Row horizontal="center" className="template-item-button">
-					<button className={btnClass} onClick={()=> this.handleClick()}>{(this.state.isSelected) ? 'Selected' : 'Select'}</button>
+					<button className={btnClass} onClick={()=> this.handleSelectClick()}>{(this.state.isSelected) ? 'Selected' : 'Select'}</button>
 				</Row>
 			</div>
 		);

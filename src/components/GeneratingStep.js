@@ -2,10 +2,11 @@
 import React, { Component } from 'react';
 import './GeneratingStep.css';
 
+import axios from "axios/index";
 import { Column, Row } from 'simple-flexbox';
 
-import TemplateItem from './TemplateItem'
-import axios from "axios/index";
+import LightBox from './LightBox';
+import TemplateItem from './TemplateItem';
 
 class GeneratingStep extends Component {
 	constructor(props) {
@@ -16,7 +17,12 @@ class GeneratingStep extends Component {
 				index : 1,
 				total : 1
 			},
-			files : []
+			files : [],
+			lightBox : {
+				isVisible : true,
+				title     : 'LightBox',
+				url       : 'https://i.ytimg.com/vi/CdP9lNLpVt0/maxresdefault.jpg'
+			}
 		};
 
 		this.interval = null;
@@ -50,7 +56,23 @@ class GeneratingStep extends Component {
 			});
 	}
 
-	handleClick(id, isSelected) {
+	handleLightBoxClick() {
+		let lightBox = this.state.lightBox;
+		lightBox.isVisible = false;
+		this.setState({ lightBox : lightBox });
+	}
+
+	handleImageClick(obj) {
+		this.setState({
+			lightBox : {
+				title : obj.title,
+				url : obj.filename,
+				isVisible : true
+			}
+		});
+	}
+
+	handleSelectClick(id, isSelected) {
 		console.log("handleClick("+id+", "+isSelected+")");
 
 		let files = this.state.files;
@@ -94,7 +116,12 @@ class GeneratingStep extends Component {
 		let items = this.state.files.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<TemplateItem handleClick={(isSelected)=> this.handleClick(item.id, isSelected)} image={item.filename} title={item.title+' - '+(i+1)} price={parseFloat(item.per_price)} selected={false} />
+					<TemplateItem
+						onImageClick={()=> this.handleImageClick(item)}
+						onSelectClick={(isSelected)=> this.handleSelectClick(item.id, isSelected)}
+						image={item.filename} title={item.title+' - '+(i+1)}
+						price={parseFloat(item.per_price)}
+						selected={false} />
 				</Column>
 			);
 		});
@@ -102,19 +129,25 @@ class GeneratingStep extends Component {
 		let btnClass = (this.selectedItems.length > 0) ? 'action-button full-button' : 'action-button full-button disabled-button';
 
 		return (
-			<Row vertical="start">
-				<Column flexGrow={1} horizontal="center">
-					<div className="step-header-text">Select the designs you want to keep</div>
-					<div className="step-text">Select only the design files that work for you and click Next.</div>
-					<button className={btnClass} onClick={()=> this.onNext()}>Next</button>
-					<div className="step-text">{this.state.files.length} custom design files generated.</div>
-					<div className="template-item-wrapper">
-						<Row horizontal="center" style={{flexWrap:'wrap'}}>
-							{items}
-						</Row>
-					</div>
-				</Column>
-			</Row>
+			<div>
+				<Row vertical="start">
+					<Column flexGrow={1} horizontal="center">
+						<div className="step-header-text">Select the designs you want to keep</div>
+						<div className="step-text">Select only the design files that work for you and click Next.</div>
+						<button className={btnClass} onClick={()=> this.onNext()}>Next</button>
+						<div className="step-text">{this.state.files.length} custom design files generated.</div>
+						<div className="template-item-wrapper">
+							<Row horizontal="center" style={{flexWrap:'wrap'}}>
+								{items}
+							</Row>
+						</div>
+					</Column>
+				</Row>
+
+				{this.state.lightBox.isVisible && (
+					<LightBox title={this.state.lightBox.title} url={this.state.lightBox.url} onClick={()=> this.handleLightBoxClick()} />
+				)}
+			</div>
 		);
 	}
 }
