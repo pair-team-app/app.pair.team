@@ -5,7 +5,7 @@ import './TemplateStep.css';
 import axios from 'axios';
 import { Column, Row } from 'simple-flexbox';
 
-import TemplateButton from './TemplateButton'
+import TemplateButton from '../TemplateButton'
 
 class TemplateStep extends Component {
 	constructor(props) {

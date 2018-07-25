@@ -7,14 +7,14 @@ import cookie from 'react-cookies';
 import {Elements, StripeProvider} from 'react-stripe-elements';
 import { Column } from 'simple-flexbox';
 
-import BottomNav from './components/BottomNav'
-import DetailsStep from './components/DetailsStep';
-import GeneratingStep from './components/GeneratingStep';
-import GetStartedStep from './components/GetStartedStep';
-import PurchaseStep from './components/PurchaseStep';
-import StripeCheckout from './components/StripeCheckout';
-import TemplateStep from './components/TemplateStep';
-import TopNav from './components/TopNav';
+import BottomNav from './components/elements/BottomNav'
+import DetailsStep from './components/steps/DetailsStep';
+import GeneratingStep from './components/steps/GeneratingStep';
+import GetStartedStep from './components/steps/GetStartedStep';
+import PurchaseStep from './components/steps/PurchaseStep';
+import StripeCheckout from './components/elements/StripeCheckout';
+import TemplateStep from './components/steps/TemplateStep';
+import TopNav from './components/elements/TopNav';
 
 class App extends Component {
 	constructor(props) {

@@ -5,8 +5,8 @@ import './GeneratingStep.css';
 import axios from "axios/index";
 import { Column, Row } from 'simple-flexbox';
 
-import LightBox from './LightBox';
-import TemplateItem from './TemplateItem';
+import LightBox from '../elements/LightBox';
+import TemplateItem from '../TemplateItem';
 
 class GeneratingStep extends Component {
 	constructor(props) {
@@ -19,9 +19,9 @@ class GeneratingStep extends Component {
 			},
 			files : [],
 			lightBox : {
-				isVisible : true,
-				title     : 'LightBox',
-				url       : 'https://i.ytimg.com/vi/CdP9lNLpVt0/maxresdefault.jpg'
+				isVisible : false,
+				title     : '',
+				url       : ''
 			}
 		};
 

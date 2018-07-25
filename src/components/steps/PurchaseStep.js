@@ -4,7 +4,7 @@ import './PurchaseStep.css';
 
 import { Column, Row } from 'simple-flexbox';
 
-import TemplateItem from './TemplateItem'
+import TemplateItem from '../TemplateItem'
 
 class PurchaseStep extends Component {
 	constructor(props) {

@@ -5,7 +5,7 @@ import './GetStartedStep.css';
 import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
 
-import ProjectItem from './ProjectItem'
+import ProjectItem from '../ProjectItem'
 
 class GetStartedStep extends Component {
 	constructor(props) {
