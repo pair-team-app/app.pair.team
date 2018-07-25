@@ -1,0 +1,22 @@
+
+.imagery-item {
+	width: 180px;
+	margin: 15px 15px 0 0;
+	border-radius: 5px;
+	text-align: center;
+	border: 2px solid #ffffff;
+	opacity: 0.5;
+}
+
+.imagery-item:hover {
+	cursor: pointer;
+}
+
+.imagery-item-selected {
+	border: 2px solid #333333;
+	opacity: 1.0;
+}
+
+.imagery-item-image {
+	width: 100%;
+}

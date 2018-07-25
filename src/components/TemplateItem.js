@@ -22,12 +22,13 @@ class TemplateItem extends Component {
 	}
 
 	render() {
+		let imageClass = (this.state.isSelected) ? 'template-item-image template-item-image-selected' : 'template-item-image';
 		let btnClass = (this.state.isSelected) ? 'action-button small-button selected-button' : 'action-button small-button';
 		return (
 			<div className="template-item">
 				<Row>
 					<Column flexGrow={1} horizontal="center" className="template-item-container">
-						<Row><img className="template-item-image" src={this.props.image} alt={this.props.title} /></Row>
+						<Row><img className={imageClass} src={this.props.image} alt={this.props.title} /></Row>
 						<Row><span className="template-item-price"><CurrencyFormat value={this.props.price} displayType={'text'} thousandSeparator={true} prefix={'$'} /></span></Row>
 						<Row><span className="template-item-title">{this.props.title}</span></Row>
 					</Column>

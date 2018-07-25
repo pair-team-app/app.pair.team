@@ -4,8 +4,12 @@ import './DetailsStep.css';
 
 import axios from 'axios';
 import Dropzone from 'react-dropzone';
+import Masonry from 'react-masonry-component';
 import { Column, Row } from 'simple-flexbox';
 
+import ColorSwatch from './ColorSwatch'
+import CornerType from './CornerType'
+import ImageryItem from './ImageryItem'
 import InputField from './InputField'
 
 
@@ -24,102 +28,269 @@ class DetailsStep extends Component {
 // 			isValidated : false
 // 		};
 		this.state = {
-			email : 'matt@modd.live',
-			company : 'aaa',
-			description : 'bbb',
-			product : 'ccc',
-			info : 'ddd',
-			headline : 'ee',
-			subheadline : 'fff',
-			isValidated : false
+			form : {
+				email        : 'matt@modd.live',
+				title        : 'aaa',
+				headline     : 'bbb',
+				subheadline  : 'ccc',
+				mainHeadline : 'ddd',
+				colors       : '',
+				cornerType   : 1,
+				imagery      : ''
+			},
+			isValidated : false,
+			colors      : [],
+			corners     : [{
+				id    : 1,
+				isSelected : false,
+				title : 'Corner 1',
+				url   : 'https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg'
+			}, {
+				id    : 2,
+				isSelected : false,
+				title : 'Corner 2',
+				url   : 'https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg'
+			}, {
+				id    : 3,
+				isSelected : false,
+				title : 'Corner 3',
+				url   : 'https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg'
+			}, {
+				id    : 4,
+				isSelected : false,
+				title : 'Corner 4',
+				url   : 'https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg'
+			}, {
+				id    : 5,
+				isSelected : false,
+				title : 'Corner 5',
+				url   : 'https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg'
+			}, {
+				id    : 6,
+				isSelected : false,
+				title : 'Corner 6',
+				url   : 'https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg'
+			}],
+			imagery     : []
 		};
 
-
-		this.handleChange = this.handleChange.bind(this);
+		this.selectedColors = [];
+		this.selectedImagery = [];
+		this.handleTextChange = this.handleTextChange.bind(this);
 	}
 
-	validator() {
-		let validated = 0x0000000;
+	componentDidMount() {
+		let formData = new FormData();
+		formData.append('action', 'TEMPLATE_COLORS');
+		formData.append('template_id', this.props.templateID);
+		axios.post('http://api.designengine.ai/templates.php', formData)
+			.then((response) => {
+				console.log("TEMPLATE_COLORS", JSON.stringify(response.data));
+
+				let colors = [];
+				response.data.colors.forEach(color => {
+					colors.push(color);
+				});
+				this.setState({ colors : colors });
+
+				formData.append('action', 'TEMPLATE_IMAGERY');
+				formData.append('template_id', this.props.templateID);
+				axios.post('http://api.designengine.ai/templates.php', formData)
+					.then((response) => {
+						console.log("TEMPLATE_IMAGERY", JSON.stringify(response.data));
+
+						let imagery = [];
+						response.data.imagery.forEach(image => {
+							imagery.push(image);
+						});
+						this.setState({ imagery : imagery });
+
+					}).catch((error) => {
+				});
+
+			}).catch((error) => {
+		});
+	}
+
+	validator(form) {
+		let validated = 0x00000;
 
 		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		if (re.test(String(this.state.email).toLowerCase())) {
-			validated |= 0x0000001;
+		if (re.test(String(form.email).toLowerCase())) {
+			validated |= 0x00001;
 		}
 
-		if (this.state.company.length > 0) {
-			validated |= 0x0000010;
+		if (form.title.length > 0) {
+			validated |= 0x00010;
 		}
 
-		if (this.state.description.length > 0) {
-			validated |= 0x0000100;
+		if (form.headline.length > 0) {
+			validated |= 0x00100;
 		}
 
-		if (this.state.product.length > 0) {
-			validated |= 0x0001000;
+		if (form.subheadline.length > 0) {
+			validated |= 0x01000;
 		}
 
-		if (this.state.info.length > 0) {
-			validated |= 0x0010000;
-		}
-
-		if (this.state.headline.length > 0) {
-			validated |= 0x0100000;
-		}
-
-		if (this.state.subheadline.length > 0) {
-			validated |= 0x1000000;
+		if (form.mainHeadline.length > 0) {
+			validated |= 0x10000;
 		}
 
 		return (validated);
 	}
 
-	handleChange(event) {
+	handleTextChange(event) {
+		let form = this.state.form;
 
 		//this.setState({ [event.target.name] : event.target.value });
 		if (event.target.name === 'txt-email') {
-			this.setState({ email : event.target.value });
+			form.email =  event.target.value;
 
-		} else if (event.target.name === 'txt-company') {
-			if (this.state.company.length <= 40) {
-				this.setState({ company : event.target.value });
-			}
-
-		} else if (event.target.name === 'txt-description') {
-			if (this.state.description.length <= 250) {
-				this.setState({ description : event.target.value });
-			}
-
-		} else if (event.target.name === 'txt-product') {
-			if (this.state.product.length <= 80) {
-				this.setState({ product : event.target.value });
-			}
-
-		} else if (event.target.name === 'txt-info') {
-			if (this.state.info.length <= 250) {
-				this.setState({ info : event.target.value });
+		} else if (event.target.name === 'txt-title') {
+			if (this.state.form.title.length <= 40) {
+				form.title = event.target.value;
 			}
 
 		} else if (event.target.name === 'txt-headline') {
-			if (this.state.headline.length <= 80) {
-				this.setState({ headline : event.target.value });
+			if (this.state.form.headline.length <= 250) {
+				form.headline = event.target.value;
 			}
 
 		} else if (event.target.name === 'txt-subheadline') {
-			if (this.state.subheadline.length <= 40) {
-				this.setState({ subheadline : event.target.value });
+			if (this.state.form.subheadline.length <= 80) {
+				form.subheadline = event.target.value;
+			}
+
+		} else if (event.target.name === 'txt-main-headline') {
+			if (this.state.form.mainHeadline.length <= 250) {
+				form.mainHeadline = event.target.value;
 			}
 		}
 
-		this.setState({ isValidated : (this.validator() === 0x1111111) });
+		this.setState({
+			form : form,
+			isValidated : (this.validator(form) === 0x11111)
+		});
+	}
+
+	handleColorToggle(id, isSelected) {
+		console.log("handleColorToggle("+id+", "+isSelected+")");
+
+		let colors = this.state.colors;
+		let self = this;
+
+		if (isSelected) {
+			colors.forEach(function(item, i) {
+				if (item.id === id) {
+
+					let isFound = false;
+					self.selectedColors.forEach(function(itm, j) {
+						if (itm.id === id) {
+							isFound = true;
+						}
+					});
+
+					if (!isFound) {
+						self.selectedColors.push(item);
+					}
+				}
+			});
+
+		} else {
+			this.selectedColors.forEach(function(item, i) {
+				if (item.id === id) {
+					self.selectedColors.splice(i, 1);
+				}
+			});
+		}
+
+		console.log(JSON.stringify(this.selectedColors));
+	}
+
+	handleCornerToggle(id) {
+		console.log("handleCornerToggle("+id+")");
+
+		let corners = this.state.corners;
+		corners.forEach(function(item, i) {
+			item.isSelected = (id === item.id);
+			corners.splice(i, 1, item);
+		});
+
+		let form = this.state.form;
+		form.cornerType = id;
+		this.setState({
+			form    : form,
+			corners : corners
+		});
+
+		console.log(JSON.stringify(corners));
+	}
+
+	handleImageToggle(id, isSelected) {
+		console.log("handleImageToggle("+id+", "+isSelected+")");
+
+		let imagery = this.state.imagery;
+		let self = this;
+
+		if (isSelected) {
+			imagery.forEach(function(item, i) {
+				if (item.id === id) {
+
+					let isFound = false;
+					self.selectedImagery.forEach(function(itm, j) {
+						if (itm.id === id) {
+							isFound = true;
+						}
+					});
+
+					if (!isFound) {
+						self.selectedImagery.push(item);
+					}
+				}
+			});
+
+		} else {
+			this.selectedImagery.forEach(function(item, i) {
+				if (item.id === id) {
+					self.selectedImagery.splice(i, 1);
+				}
+			});
+		}
+
+		console.log(JSON.stringify(this.selectedImagery));
 	}
 
 	handleClick() {
-		let validated = this.validator();
-		if (validated === 0x1111111) {
-			this.props.onClick(this.state);
-		}
+		let form = this.state.form;
+		if (this.validator(form) === 0x11111) {
+			let colors = [];
+			this.selectedColors.forEach(color => {
+				colors.push(color.id);
+			});
 
-		//this.props.onClick(this.state);
+			let imagery = [];
+			this.selectedImagery.forEach(image => {
+				imagery.push(image.id);
+			});
+
+			form.colors = colors.join();
+			form.imagery = imagery.join();
+			this.props.onClick(form);
+		}
+	}
+
+	dzComponent() {
+		let dzStyle = {
+			marginTop : '85px',
+			fontSize : '14px',
+			color : '#ffffff'
+		};
+
+		return (
+			<Dropzone key={-1} disabled={false} onDrop={this.onDrop.bind(this)} className="dropzone">
+				<div style={dzStyle}>Drop images here…</div>
+			</Dropzone>
+		);
 	}
 
 	onDrop(dzFiles) {
@@ -149,81 +320,88 @@ class DetailsStep extends Component {
 	}
 
 	render() {
-		let dzStyle = {
-			marginTop : '85px',
-			fontSize : '14px',
-			color : '#666666'
-		};
+		//fruits.splice(0, 0, "Lemon");
+		let colors = this.state.colors.map((item, i, arr) => {
+			return (
+				<Column key={i}>
+					<ColorSwatch title={item.title} swatch={item.hex} onClick={(isSelected)=> this.handleColorToggle(item.id, isSelected)} />
+				</Column>
+			);
+		});
+
+		let corners = this.state.corners.map((item, i, arr) => {
+			return (
+				<Column key={i}>
+					<CornerType title={item.title} url={item.url} isSelected={item.isSelected} onClick={()=> this.handleCornerToggle(item.id)} />
+				</Column>
+			);
+		});
+
+		let imagery = this.state.imagery.map((item, i, arr) => {
+			return (
+				<ImageryItem key={i} title={item.title} url={item.url} onClick={(isSelected)=> this.handleImageToggle(item.id, isSelected)} />
+			);
+		});
+
+		imagery.splice(1, 0, this.dzComponent());
 
 		let buttonClass = (this.state.isValidated) ? 'action-button full-button' : 'action-button full-button disabled-button';
 		return (
 			<div>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Add your deisgn details</div>
+						<div className="step-header-text">Adjust your design system</div>
 						<div className="step-text">Add details to your project for Design Engine to generating your files.</div>
 						<button className={buttonClass} onClick={()=> this.handleClick()}>Next</button>
-						<div className="step-text">By clicking “Next” I agree to Design Engine’s Terms of Service.</div>
+						<div className="step-text">By clicking &ldquo;Next&rdquo; I agree to Design Engine’s Terms of Service.</div>
 					</Column>
 				</Row>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="start">
-						<div className="step-subheader-text">Enter Design Details</div>
-						<div className="step-text">Enter your product details below to generate your AI designs.</div>
+						<div className="input-title">Title</div>
+						<InputField
+							type="text"
+							name="txt-title"
+							placeholder="Enter a title for your design system"
+							value={this.state.form.title}
+							onChange={(event)=> this.handleTextChange(event)} />
+
+						<div className="input-title">Email</div>
 						<InputField
 							type="email"
 							name="txt-email"
-							placeholder="Email Address"
-							value={this.state.email}
-							onChange={(event)=> this.handleChange(event)} />
+							placeholder="Enter an email address"
+							value={this.state.form.email}
+							onChange={(event)=> this.handleTextChange(event)} />
 
-						<InputField
-							type="text"
-							name="txt-company"
-							placeholder="Company Name"
-							value={this.state.company}
-							onChange={(event)=> this.handleChange(event)} />
+						<div className="input-title">Headlines</div>
+						<div className="step-text" style={{marginBottom:'10px'}}>Enter your products Headline, Sub Headline, and Main Headline.</div>
+						<div><input className="textfield-input" type="text" name="txt-headline" placeholder="Headline" value={this.state.form.headline} onChange={this.handleTextChange} style={{fontSize:'22px', borderBottom:'none'}} /></div>
+						<div><input className="textfield-input" type="text" name="txt-subheadline" placeholder="Subheadline" value={this.state.form.subheadline} onChange={this.handleTextChange} style={{fontSize:'30px', borderBottom:'none'}} /></div>
+						<div><input className="textfield-input" type="text" name="txt-main-headline" placeholder="Main Headline" value={this.state.form.mainHeadline} onChange={this.handleTextChange} style={{fontSize:'48px', borderBottom:'none'}} /></div>
 
-						<InputField
-							type="text"
-							name="txt-description"
-							placeholder="Company Description"
-							value={this.state.description}
-							onChange={(event)=> this.handleChange(event)} />
+						<div className="input-title">Colors</div>
+						<div className="step-text" style={{marginBottom:'10px'}}>Select up to three colors for your design system.</div>
+						<div className="color-item-wrapper">
+							<Row horizontal="start" style={{flexWrap:'wrap'}}>
+								{colors}
+							</Row>
+						</div>
 
-						<InputField
-							type="text"
-							name="txt-product"
-							placeholder="Product Name"
-							value={this.state.product}
-							onChange={(event)=> this.handleChange(event)} />
+						<div className="input-title">Corners</div>
+						<div className="step-text" style={{marginBottom:'10px'}}>Select a corner style for your design system.</div>
+						<div className="corner-item-wrapper">
+							<Row horizontal="center" style={{flexWrap:'wrap'}}>
+								{corners}
+							</Row>
+						</div>
 
-						<InputField
-							type="text"
-							name="txt-info"
-							placeholder="Product Description"
-							value={this.state.info}
-							onChange={(event)=> this.handleChange(event)} />
+						<div className="input-title">Images</div>
+						<div className="step-text" style={{marginBottom:'10px'}}>Select up to six images for your design system.</div>
 
-						<InputField
-							type="text"
-							name="txt-headline"
-							placeholder="Product Headline"
-							value={this.state.headline}
-							onChange={(event)=> this.handleChange(event)} />
-
-						<InputField
-							type="text"
-							name="txt-subheadline"
-							placeholder="Product Sub Headline"
-							value={this.state.subheadline}
-							onChange={(event)=> this.handleChange(event)} />
-
-						<Row vertical="center" horizontal="center" style={{backgroundColor:'#e0e0e0', width:'100%', height:'200px'}}>
-							<Dropzone disabled={false} onDrop={this.onDrop.bind(this)} className="dropzone">
-								<div style={dzStyle}>Drop images here…</div>
-							</Dropzone>
-						</Row>
+						<Masonry className="images-item-wrapper">
+							{imagery}
+						</Masonry>
 					</Column>
 				</Row>
 			</div>

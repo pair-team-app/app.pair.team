@@ -1,0 +1,21 @@
+
+.color-swatch {
+	width: 90px;
+	height: 25px;
+	margin: 15px 15px 0 0;
+	border-radius: 5px;
+	text-align: center;
+	display: table;
+	color: #000000;
+	font-size: 12px;
+}
+
+.color-swatch-hex {
+	display: table-cell;
+	vertical-align: middle;
+	/*text-shadow: 0 0 2px #ffffff;*/
+}
+
+.color-swatch:hover {
+	cursor: pointer;
+}

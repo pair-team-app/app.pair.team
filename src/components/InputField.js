@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './InputField.css';
 
-import FontAwesome from 'react-fontawesome';
+// import FontAwesome from 'react-fontawesome';
 
 
 class InputField extends Component {
@@ -30,12 +30,12 @@ class InputField extends Component {
 	}
 
 	render() {
-		let glyphStyle = (this.state.isValid) ? 'required-glyph required-glyph-ok' : 'required-glyph';
+// 		let glyphStyle = (this.state.isValid) ? 'required-glyph required-glyph-ok' : 'required-glyph';
 
 		return (
 			<div className="form-element">
 				<input className="textfield-input" type="text" name={this.props.name} placeholder={this.props.placeholder} value={this.props.value} onChange={this.handleChange} />
-				<FontAwesome name="star" className={glyphStyle} />
+				{/*<FontAwesome name="star" className={glyphStyle} />*/}
 			</div>
 		);
 	}

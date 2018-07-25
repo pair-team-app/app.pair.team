@@ -2,17 +2,17 @@
 import React, { Component } from 'react';
 import './TemplateStep.css';
 
+import axios from 'axios';
 import { Column, Row } from 'simple-flexbox';
 
 import TemplateButton from './TemplateButton'
-import axios from "axios/index";
 
 class TemplateStep extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			templates : []
+			templates : [],
 		};
 	}
 
@@ -28,7 +28,8 @@ class TemplateStep extends Component {
 					templates.push(template);
 				});
 				this.setState({ templates : templates });
-			});
+			}).catch((error) => {
+		});
 	}
 
 	handleClick(id) {
@@ -48,7 +49,7 @@ class TemplateStep extends Component {
 			<Row vertical="start">
 				<Column flexGrow={1} horizontal="center">
 					<div className="step-header-text">Select a design template</div>
-					<div className="step-text">Select from over <strong>42 Sketch</strong>, <strong>Figma</strong>, <strong>Framer</strong>, <strong>Adobe XD</strong>, &amp; <strong>Adobe Photoshop</strong> AI powered Design Templates.</div>
+					<div className="step-text">Select from over <strong>{this.state.templates.length} Sketch</strong>, <strong>Figma</strong>, <strong>Framer</strong>, <strong>Adobe XD</strong>, &amp; <strong>Adobe Photoshop</strong> AI powered Design Templates.</div>
 					<div className="template-button-wrapper">
 						<Row horizontal="center" style={{flexWrap:'wrap'}}>
 							{items}

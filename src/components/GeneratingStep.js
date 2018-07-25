@@ -36,14 +36,13 @@ class GeneratingStep extends Component {
 	}
 
 	checkNewFiles() {
-		let self = this;
 		let formData = new FormData();
 		formData.append('action', 'FILE_CHECK');
 		formData.append('order_id', this.props.orderID);
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
 				console.log("FILE_CHECK", JSON.stringify(response.data));
-				let files = self.state.files;
+				let files = [];
 				response.data.files.forEach(file => {
 					files.push(file);
 				});

@@ -75,7 +75,7 @@ class PurchaseStep extends Component {
 					<div className="step-header-text">Confirm your design purchase</div>
 					<div className="step-text">Confirm the designs you have selected below.</div>
 					<button className={btnClass} onClick={()=> this.onNext()}>Confirm Purchase</button>
-					<div className="step-text">By clicking “Confirm Purchase“ I agree to Design Engine AI’s Terms of Service.</div>
+					<div className="step-text">By clicking &ldquo;Confirm Purchase&rdquo; I agree to Design Engine AI’s Terms of Service.</div>
 					<div className="purchase-item-wrapper">
 						<Row horizontal="center" style={{flexWrap:'wrap'}}>
 							{items}

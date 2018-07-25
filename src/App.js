@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import axios from 'axios';
+// import axios from 'axios';
 import cookie from 'react-cookies';
 import {Elements, StripeProvider} from 'react-stripe-elements';
 import { Column } from 'simple-flexbox';
@@ -64,17 +64,19 @@ class App extends Component {
 // 		formData.append('action', 'MAKE_ORDER');
 // 		formData.append('template_id', this.templateID);
 // 		formData.append('email', obj.email);
-// 		formData.append('company_name', obj.company);
-// 		formData.append('company_description', obj.description);
-// 		formData.append('product_name', obj.product);
-// 		formData.append('product_description', obj.info);
-// 		formData.append('product_headline', obj.headline);
-// 		formData.append('product_subheadline', obj.subheadline);
+// 		formData.append('title', obj.company);
+// 		formData.append('headline', obj.headline);
+// 		formData.append('subheadline', obj.subheadline);
+// 		formData.append('main_headline', obj.mainHeadline);
+// 		formData.append('colors', obj.colors);
+// 		formData.append('corner_type', obj.cornerType);
+// 		formData.append('imagery', obj.imagery);
 // 		axios.post('https://api.designengine.ai/templates.php', formData)
 // 			.then((response)=> {
 // 				console.log("MAKE_ORDER", JSON.stringify(response.data));
 // 				cookie.save('order_id', response.data.order_id, { path: '/' });
-// 			});
+// 			}).catch((error) => {
+// 		});
 
 		this.setState({ step : 3 });
 	}
@@ -152,7 +154,9 @@ class App extends Component {
             )}
 
 	          {this.state.step === 2 && (
-		          <DetailsStep onClick={(obj)=> this.handleStep3(obj)} />
+		          <DetailsStep
+			          templateID={this.templateID}
+			          onClick={(obj)=> this.handleStep3(obj)} />
 	          )}
 
 	          {this.state.step === 3 && (
