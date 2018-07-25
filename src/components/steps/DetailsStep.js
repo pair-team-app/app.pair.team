@@ -31,10 +31,6 @@ class DetailsStep extends Component {
 
 		this.selectedColors = [];
 		this.selectedImagery = [];
-		this.handleTextChange = this.handleTextChange.bind(this);
-	}
-
-	componentDidMount() {
 	}
 
 	validator(form) {
@@ -65,8 +61,6 @@ class DetailsStep extends Component {
 	}
 
 	handleTextChange(form) {
-		//let form = this.state.form;
-
 		this.setState({
 			form : form,
 			isValidated : (this.validator(form) === 0x11111)
@@ -153,31 +147,6 @@ class DetailsStep extends Component {
 				</Row>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="start">
-
-						{/*<div style={{width:'100%', textAlign:'left'}}>*/}
-							{/*<div className="input-title">Title</div>*/}
-							{/*<InputField*/}
-								{/*type="text"*/}
-								{/*name="txt-title"*/}
-								{/*placeholder="Enter a title for your design system"*/}
-								{/*value={this.state.form.title}*/}
-								{/*onChange={(event)=> this.handleTextChange(event)} />*/}
-
-							{/*<div className="input-title">Email</div>*/}
-							{/*<InputField*/}
-								{/*type="email"*/}
-								{/*name="txt-email"*/}
-								{/*placeholder="Enter an email address"*/}
-								{/*value={this.state.form.email}*/}
-								{/*onChange={(event)=> this.handleTextChange(event)} />*/}
-
-							{/*<div className="input-title">Headlines</div>*/}
-							{/*<div className="step-text" style={{marginBottom:'10px'}}>Enter your products Headline, Sub Headline, and Main Headline.</div>*/}
-							{/*<div><input className="textfield-input" type="text" name="txt-headline" placeholder="Headline" value={this.state.form.headline} onChange={this.handleTextChange} style={{fontSize:'22px', borderBottom:'none'}} /></div>*/}
-							{/*<div><input className="textfield-input" type="text" name="txt-subheadline" placeholder="Subheadline" value={this.state.form.subheadline} onChange={this.handleTextChange} style={{fontSize:'30px', borderBottom:'none'}} /></div>*/}
-							{/*<div><input className="textfield-input" type="text" name="txt-main-headline" placeholder="Main Headline" value={this.state.form.mainHeadline} onChange={this.handleTextChange} style={{fontSize:'48px', borderBottom:'none'}} /></div>*/}
-						{/*</div>*/}
-
 						<TextForm onChange={(form)=> this.handleTextChange(form)} />
 						<ColorsForm templateID={this.props.templateID} onToggle={(obj)=> this.handleColorToggle(obj)} />
 						<CornersForm onToggle={(id)=> this.handleCornerToggle(id)} />

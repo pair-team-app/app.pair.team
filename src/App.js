@@ -99,6 +99,14 @@ class App extends Component {
 		});
 	}
 
+	handleNext() {
+		console.log("handleNext()");
+		window.scrollTo(0, 0);
+		this.setState({
+			step : this.state.step + 1
+		});
+	}
+
 	handleItemToggle(obj) {
 		console.log("handleItemToggle("+JSON.stringify(obj)+")");
 
@@ -171,6 +179,12 @@ class App extends Component {
 			          onClick={()=> this.handleStep5()}
 			          onItemToggle={(obj)=> this.handleItemToggle(obj)}
 			          selectedItems={this.state.selectedItems} />
+	          )}
+
+	          {this.state.step >= 2 && (
+	          	<div className="floating-button">
+			          <button className="action-button full-button" onClick={()=> this.handleNext()}>Next</button>
+		          </div>
 	          )}
           </div>
 

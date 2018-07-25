@@ -36,7 +36,7 @@ class TemplateStep extends Component {
 		const items = this.state.templates.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<TemplateButton onClick={()=> this.props.onClick(item.id)} image={item.preview} title={item.title} />
+					<TemplateButton onClick={()=> this.props.onClick(item.id)} image={item.preview} gif={item.gif} title={item.title} />
 				</Column>
 			);
 		});
