@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import './GetStartedStep.css';
+import projects from '../../projects.json';
 
 import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
@@ -22,31 +23,7 @@ class GetStartedStep extends Component {
 			removeHash();
 		}
 
-		const buttons = [
-			{
-				id : 1,
-				title : "Project 1",
-				image : "https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png"
-			}, {
-				id : 2,
-				title : "Project 2",
-				image : "https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png"
-			}, {
-				id : 3,
-				title : "Project 3",
-				image : "https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png"
-			}, {
-				id : 4,
-				title : "Project 4",
-				image : "https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png"
-			}, {
-				id : 5,
-				title : "Project 5",
-				image : "https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png"
-			}
-		];
-
-		const items = buttons.map((item, i, arr) => {
+		const items = projects.map((item, i, arr) => {
 			return (
 				<Column key={i}>
 					<ProjectItem image={item.image} title={item.title} />

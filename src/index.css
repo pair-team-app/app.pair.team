@@ -2,10 +2,67 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: "Work Sans", sans-serif;
   font-size: 12px;
 }
 
 button:focus, input:focus, textarea:focus {
   outline: none;
+}
+
+
+/** Thin */
+@font-face {
+  font-family: "Work Sans";
+  font-weight: 400;
+  src: url("./fonts/WorkSans-Thin.otf");
+}
+
+/** Extra Light */
+@font-face {
+  font-family: "Work Sans";
+  font-weight: 400;
+  src: url("./fonts/WorkSans-ExtraLight.otf");
+}
+
+/** Light */
+@font-face {
+  font-family: "Work Sans";
+  font-weight: 400;
+  src: url("./fonts/WorkSans-Light.otf");
+}
+
+/** Regular */
+@font-face {
+  font-family: "Work Sans";
+  font-weight: 500;
+  src: url("./fonts/WorkSans-Regular.otf");
+}
+
+/** Medium */
+@font-face {
+  font-family: "Work Sans";
+  font-weight: 600;
+  src: url("./fonts/WorkSans-Medium.otf");
+}
+
+/** Bold */
+@font-face {
+  font-family: "Work Sans";
+  font-weight: 700;
+  src: url("./fonts/WorkSans-Bold.otf");
+}
+
+/** Extra Bold */
+@font-face {
+  font-family: "Work Sans";
+  font-weight: 800;
+  src: url("./fonts/WorkSans-ExtraBold.otf");
+}
+
+/** Black */
+@font-face {
+  font-family: "Work Sans";
+  font-weight: 900;
+  src: url("./fonts/WorkSans-Black.otf");
 }

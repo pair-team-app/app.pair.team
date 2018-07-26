@@ -57,7 +57,6 @@ class App extends Component {
 
 	handleStep3(obj) {
 		window.scrollTo(0, 0);
-		cookie.save('order_id', "9", { path: '/' });
 
 		let colorCount = (obj.colors.match(/\d+/g) || []).length;
 		if (3 - colorCount > 0) {
@@ -67,7 +66,6 @@ class App extends Component {
 		}
 
 		console.log("handleStep3("+JSON.stringify(obj)+")");
-
 
 // 		let formData = new FormData();
 // 		formData.append('action', 'MAKE_ORDER');
@@ -88,6 +86,7 @@ class App extends Component {
 // 		});
 
 		this.setState({ step : 3 });
+		cookie.save('order_id', "9", { path: '/' });
 	}
 
 	handleStep4(obj) {
