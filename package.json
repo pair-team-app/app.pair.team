@@ -16,6 +16,7 @@
     "react-masonry-component": "^6.2.1",
     "react-messenger-plugin": "^2.1.0",
     "react-scripts": "1.1.4",
+    "react-scrollable-anchor": "^0.6.1",
     "react-stripe-elements": "^2.0.1",
     "react-tooltip": "^3.6.1",
     "simple-flexbox": "^1.2.0"

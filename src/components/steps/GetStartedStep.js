@@ -4,6 +4,7 @@ import './GetStartedStep.css';
 
 import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
+import ScrollableAnchor, { goToAnchor, removeHash } from 'react-scrollable-anchor';
 
 import ProjectItem from '../ProjectItem';
 
@@ -16,6 +17,11 @@ class GetStartedStep extends Component {
 	}
 
 	render() {
+		if (this.props.isScroll) {
+			goToAnchor('projects');
+			removeHash();
+		}
+
 		const buttons = [
 			{
 				id : 1,
@@ -67,12 +73,15 @@ class GetStartedStep extends Component {
 					<img src="/images/macbook.png" className="intro-image" alt="MacBook" />
 					<div className="step-header-text">Accelerate your best ideas with AI</div>
 					<div className="step-text">Whether you are building a web app or a presentation, use AI to accelerate your ideas.</div>
-					<button className="action-button step-button" onClick={()=> this.props.onClick()}>View Projects</button>
-					<div className="project-item-wrapper">
-						<Row horizontal="center" style={{flexWrap:'wrap'}}>
-							{items}
-						</Row>
-					</div>
+
+					{/*<button className="action-button step-button" onClick={()=> this.props.onClick()}>View Projects</button>*/}
+					<ScrollableAnchor id="projects">
+						<div className="project-item-wrapper">
+							<Row horizontal="center" style={{flexWrap:'wrap'}}>
+								{items}
+							</Row>
+						</div>
+					</ScrollableAnchor>
 					<Row flexGrow={1} className="intro-projects">
 						<Column flexGrow={1} horizontal="start">
 							<div className="step-subheader-text" style={lAlignStyle}>Professional design using AI.</div>

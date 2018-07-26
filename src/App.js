@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './App.css';
 
-// import axios from 'axios';
 import cookie from 'react-cookies';
 import {Elements, StripeProvider} from 'react-stripe-elements';
 import { Column } from 'simple-flexbox';
@@ -24,6 +23,7 @@ class App extends Component {
 
 		this.state = {
 		  step : 0,
+			isScroll : false,
       isStripeOverlay : false,
 			amount : 0.00,
 			selectedItems : null,
@@ -56,9 +56,18 @@ class App extends Component {
 	}
 
 	handleStep3(obj) {
-		console.log("handleStep3("+JSON.stringify(obj)+")");
 		window.scrollTo(0, 0);
 		cookie.save('order_id', "9", { path: '/' });
+
+		let colorCount = (obj.colors.match(/\d+/g) || []).length;
+		if (3 - colorCount > 0) {
+			for (let i=0; i<3-colorCount; i++) {
+				obj.colors += (((i === 0 && colorCount === 0) ? '' : ',') + (3-i));
+			}
+		}
+
+		console.log("handleStep3("+JSON.stringify(obj)+")");
+
 
 // 		let formData = new FormData();
 // 		formData.append('action', 'MAKE_ORDER');
@@ -97,6 +106,12 @@ class App extends Component {
 			step : 5,
 			isStripeOverlay : true
 		});
+	}
+
+	handleProjects() {
+		console.log("handleProjects()");
+		this.setState({ isScroll : true });
+
 	}
 
 	handleNext() {
@@ -149,12 +164,14 @@ class App extends Component {
 		          step={this.state.step}
 		          amount={this.state.amount}
 		          handleStep0={()=> this.handleStep0()}
-		          handleStep1={()=> this.handleStep1()} />
+		          handleStep1={()=> this.handleStep1()}
+		          handleProjects={()=> this.handleProjects()}
+	          />
           </div>
 
           <div className="content-wrapper">
 	          {this.state.step === 0 && (
-              <GetStartedStep onClick={()=> this.handleStep1()} />
+              <GetStartedStep onClick={()=> this.handleStep1()} isScroll={this.state.isScroll} />
             )}
 
 	          {this.state.step === 1 && (
