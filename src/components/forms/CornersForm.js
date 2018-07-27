@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import './CornersForm.css';
+import corners from '../../corners';
 
 import { Column, Row } from 'simple-flexbox';
 
@@ -12,37 +13,7 @@ class CornersForm extends Component {
 		super(props);
 
 		this.state = {
-			corners     : [{
-				id    : 1,
-				isSelected : false,
-				title : 'Corner 1',
-				url   : 'https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg'
-			}, {
-				id    : 2,
-				isSelected : false,
-				title : 'Corner 2',
-				url   : 'https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg'
-			}, {
-				id    : 3,
-				isSelected : false,
-				title : 'Corner 3',
-				url   : 'https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg'
-			}, {
-				id    : 4,
-				isSelected : false,
-				title : 'Corner 4',
-				url   : 'https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg'
-			}, {
-				id    : 5,
-				isSelected : false,
-				title : 'Corner 5',
-				url   : 'https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg'
-			}, {
-				id    : 6,
-				isSelected : false,
-				title : 'Corner 6',
-				url   : 'https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg'
-			}]
+			corners : corners
 		};
 	}
 
@@ -73,7 +44,7 @@ class CornersForm extends Component {
 
 		return (
 			<div style={{textAlign:'left'}}>
-				<div className="input-title">Corners</div>
+				<div className="input-title">Shape</div>
 				<div className="step-text" style={{marginBottom:'10px'}}>Select a corner style for your design system.</div>
 				<div className="corner-item-wrapper">
 					<Row horizontal="center" style={{flexWrap:'wrap'}}>

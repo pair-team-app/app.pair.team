@@ -6,8 +6,8 @@
 
 .nav-link {
 	padding-left: 20px;
-	font-size: 12px;
-	color: #000000;
+	font-size: 14px;
+	color: #0000ff;
 }
 
 .nav-link:hover {
@@ -17,5 +17,20 @@
 
 .nav-link a, .nav-link a:active, .nav-link a:link, .nav-link a:visited {
 	text-decoration: none;
-	color: #000000;
+	color: #0000ff;
+}
+
+.nav-link-active, .nav-link:active, .nav-link a:active {
+	color: #999999;
+	text-decoration: none;
+}
+
+.nav-link-close {
+	font-size: 32px;
+	color: #cccccc;
+}
+
+.nav-link-close:hover {
+	cursor: pointer;
+	color: #999999;
 }

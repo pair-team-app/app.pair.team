@@ -4,6 +4,7 @@ body {
   padding: 0;
   font-family: "Work Sans", sans-serif;
   font-size: 12px;
+  font-weight: 400;
 }
 
 button:focus, input:focus, textarea:focus {
@@ -14,55 +15,55 @@ button:focus, input:focus, textarea:focus {
 /** Thin */
 @font-face {
   font-family: "Work Sans";
-  font-weight: 400;
+  font-weight: 100;
   src: url("./fonts/WorkSans-Thin.otf");
 }
 
 /** Extra Light */
 @font-face {
   font-family: "Work Sans";
-  font-weight: 400;
+  font-weight: 200;
   src: url("./fonts/WorkSans-ExtraLight.otf");
 }
 
 /** Light */
 @font-face {
   font-family: "Work Sans";
-  font-weight: 400;
+  font-weight: 300;
   src: url("./fonts/WorkSans-Light.otf");
 }
 
 /** Regular */
 @font-face {
   font-family: "Work Sans";
-  font-weight: 500;
+  font-weight: 400;
   src: url("./fonts/WorkSans-Regular.otf");
 }
 
 /** Medium */
 @font-face {
   font-family: "Work Sans";
-  font-weight: 600;
+  font-weight: 500;
   src: url("./fonts/WorkSans-Medium.otf");
 }
 
 /** Bold */
 @font-face {
   font-family: "Work Sans";
-  font-weight: 700;
+  font-weight: 600;
   src: url("./fonts/WorkSans-Bold.otf");
 }
 
 /** Extra Bold */
 @font-face {
   font-family: "Work Sans";
-  font-weight: 800;
+  font-weight: 700;
   src: url("./fonts/WorkSans-ExtraBold.otf");
 }
 
 /** Black */
 @font-face {
   font-family: "Work Sans";
-  font-weight: 900;
+  font-weight: 800;
   src: url("./fonts/WorkSans-Black.otf");
 }

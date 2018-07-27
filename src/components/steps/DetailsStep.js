@@ -133,16 +133,15 @@ class DetailsStep extends Component {
 	}
 
 	render() {
-		const buttonClass = (this.state.isValidated) ? 'action-button full-button' : 'action-button full-button disabled-button';
+// 		const buttonClass = (this.state.isValidated) ? 'action-button full-button' : 'action-button full-button disabled-button';
 
 		return (
 			<div>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Adjust your design system</div>
-						<div className="step-text">Add details to your project for Design Engine to generating your files.</div>
-						<button className={buttonClass} onClick={()=> this.handleClick()}>Next</button>
-						<div className="step-text">By clicking &ldquo;Next&rdquo; I agree to Design Engine’s Terms of Service.</div>
+						<div className="step-header-text">Edit your Design System</div>
+						<div className="step-text">The following Design Systems examples have been generated from Design Engine.</div>
+						{/*<button className={buttonClass} onClick={()=> this.handleClick()}>Next</button>*/}
 					</Column>
 				</Row>
 				<Row vertical="start">

@@ -36,7 +36,7 @@ class TemplateStep extends Component {
 		const items = this.state.templates.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<TemplateButton onClick={()=> this.props.onClick(item.id)} image={item.preview} gif={item.gif} title={item.title} />
+					<TemplateButton onClick={()=> this.props.onClick(item.id)} image={item.preview} gif={item.gif} title={item.title} info={item.info} />
 				</Column>
 			);
 		});
@@ -44,8 +44,8 @@ class TemplateStep extends Component {
 		return (
 			<Row vertical="start">
 				<Column flexGrow={1} horizontal="center">
-					<div className="step-header-text">Select a design template</div>
-					<div className="step-text">Select from over <strong>{this.state.templates.length} Sketch</strong>, <strong>Figma</strong>, <strong>Framer</strong>, <strong>Adobe XD</strong>, &amp; <strong>Adobe Photoshop</strong> AI powered Design Templates.</div>
+					<div className="step-header-text">Select a Design System Template</div>
+					<div className="step-text">The following Design Systems examples have been generated from Design Engine.</div>
 					<div className="template-button-wrapper">
 						<Row horizontal="center" style={{flexWrap:'wrap'}}>
 							{items}

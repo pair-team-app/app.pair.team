@@ -19,11 +19,11 @@ class ImageryItem extends Component {
 	}
 
 	render() {
-		const className = (this.state.isSelected) ? 'imagery-item imagery-item-selected' : 'imagery-item';
+		const className = (this.state.isSelected) ? 'imagery-item-image imagery-item-image-selected' : 'imagery-item-image';
 
 		return (
-			<div onClick={()=> this.handleClick()} className={className}>
-				<img src={this.props.url} className="imagery-item-image" alt={this.props.title} />
+			<div onClick={()=> this.handleClick()} className="imagery-item">
+				<img src={this.props.url} className={className} alt={this.props.title} />
 			</div>
 		);
 	}

@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './BottomNav.css';
 
+import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
 
 
@@ -15,8 +16,8 @@ class BottomNav extends Component {
 
 	render() {
 		return (
-			<div>
-				<Row vertical="start">
+			<div style={{width:'65%'}}>
+				<Row vertical="start" horizontal="center" style={{margin:'0 30px'}}>
 					<Column flexGrow={1} horizontal="start">
 						<a href="/"><img src="/images/logo.png" className="footer-logo" alt="Design Engine" /></a>
 					</Column>
@@ -44,9 +45,9 @@ class BottomNav extends Component {
 					<Column flexGrow={1} horizontal="start">
 						<div className="footer-title">Follow Us</div>
 						<div className="footer-icons">
-							<a href="" target="_blank" rel="noopener noreferrer"><img className="footer-icon" src="/images/facebook.png" alt="Facebook" /></a>
-							<a href="" target="_blank" rel="noopener noreferrer"><img className="footer-icon" src="/images/instagram.png" alt="Instagram" /></a>
-							<a href="" target="_blank" rel="noopener noreferrer"><img className="footer-icon" src="/images/twitter.png" alt="Twitter" /></a>
+							<a href="" target="_blank" rel="noopener noreferrer"><FontAwesome name="facebook-official" className="footer-icon" /></a>
+							<a href="" target="_blank" rel="noopener noreferrer"><FontAwesome name="instagram" className="footer-icon" /></a>
+							<a href="" target="_blank" rel="noopener noreferrer"><FontAwesome name="twitter" className="footer-icon" /></a>
 						</div>
 					</Column>
 				</Row>

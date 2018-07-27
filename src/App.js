@@ -23,7 +23,8 @@ class App extends Component {
 
 		this.state = {
 		  step : 0,
-			isScroll : false,
+			isProjects : false,
+			isFAQ : false,
       isStripeOverlay : false,
 			amount : 0.00,
 			selectedItems : null,
@@ -109,8 +110,20 @@ class App extends Component {
 
 	handleProjects() {
 		console.log("handleProjects()");
-		this.setState({ isScroll : true });
+		this.setState({ isProjects : true });
+		let self = this;
+		setTimeout(function() {
+			self.setState({ isProjects : false })
+		}, 1000);
+	}
 
+	handleFAQ() {
+		console.log("handleFAQ()");
+		this.setState({ isFAQ : true });
+		let self = this;
+		setTimeout(function() {
+			self.setState({ isFAQ : false })
+		}, 1000);
 	}
 
 	handleNext() {
@@ -156,25 +169,32 @@ class App extends Component {
     };
 
     return (
-      <div className="page-wrapper">
-        <Column horizontal="center">
+    	<div>
+        <Column horizontal="center" className="page-wrapper">
           <div className="top-nav">
 	          <TopNav
 		          step={this.state.step}
 		          amount={this.state.amount}
-		          handleStep0={()=> this.handleStep0()}
-		          handleStep1={()=> this.handleStep1()}
-		          handleProjects={()=> this.handleProjects()}
+		          isProjects={this.state.isProjects}
+		          isFAQ={this.state.isFAQ}
+		          onStep0={()=> this.handleStep0()}
+		          onStep1={()=> this.handleStep1()}
+		          onProjects={()=> this.handleProjects()}
+		          onFAQ={()=> this.handleFAQ()}
 	          />
           </div>
 
           <div className="content-wrapper">
 	          {this.state.step === 0 && (
-              <GetStartedStep onClick={()=> this.handleStep1()} isScroll={this.state.isScroll} />
+              <GetStartedStep
+	              isProjects={this.state.isProjects}
+	              isFAQ={this.state.isFAQ}
+	              onClick={()=> this.handleStep1()} />
             )}
 
 	          {this.state.step === 1 && (
-		          <TemplateStep onClick={(id)=> this.handleStep2(id)} />
+		          <TemplateStep
+			          onClick={(id)=> this.handleStep2(id)} />
             )}
 
 	          {this.state.step === 2 && (
@@ -198,15 +218,11 @@ class App extends Component {
 	          )}
 
 	          {this.state.step >= 2 && (
-	          	<div className="floating-button">
+	            <div className="floating-button">
 			          <button className="action-button full-button" onClick={()=> this.handleNext()}>Next</button>
 		          </div>
 	          )}
           </div>
-
-	        <div className="bottom-nav">
-		        <BottomNav handleStep1={()=> this.handleStep1()}/>
-	        </div>
 
 	        {this.state.isStripeOverlay && (
             <StripeProvider apiKey={this.STRIPE_TEST_TOKEN}>
@@ -220,7 +236,10 @@ class App extends Component {
             </StripeProvider>
           )}
         </Column>
-      </div>
+		    <Column flexGrow={1} horizontal="center" className="bottom-nav">
+			    <BottomNav handleStep1={()=> this.handleStep1()}/>
+		    </Column>
+	    </div>
     );
   }
 }

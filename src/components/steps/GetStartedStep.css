@@ -8,10 +8,36 @@
 }
 
 .intro-projects {
-	margin: 80px 0;
+	margin: 80px 0 40px 0;
+	padding: 0 50px;
 	border-bottom: 1px solid #cccccc;
 }
 
 .reviews-wrapper {
 	margin-top: 40px;
+	text-align: left;
+}
+
+.review-item {
+	margin-bottom: 20px;
+}
+
+.app-icons-wrapper {
+	margin-bottom: 40px;
+}
+
+.review-star, .review-star-empty {
+	font-size: 24px;
+	color: #000000;
+	margin: 10px 10px 10px 0;
+}
+
+.review-star-empty {
+	color: #cccccc;
+}
+
+.review-quote {
+	font-size: 16px;
+	color: #999999;
+	margin-top: 5px;
 }

@@ -102,7 +102,7 @@ class ImageryForm extends Component {
 
 		return (
 			<div style={{width:'100%', textAlign:'left'}}>
-				<div className="input-title">Images</div>
+				<div className="input-title">Mood</div>
 				<div className="step-text" style={{marginBottom:'10px'}}>Select up to six images for your design system.</div>
 				<Masonry className="images-item-wrapper">
 					{imagery}

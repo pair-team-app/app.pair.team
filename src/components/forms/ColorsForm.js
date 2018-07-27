@@ -41,21 +41,23 @@ class ColorsForm extends Component {
 		let self = this;
 
 		if (isSelected) {
-			colors.forEach(function(item, i) {
-				if (item.id === id) {
+			if (this.selectedColors.length < 3) {
+				colors.forEach(function (item, i) {
+					if (item.id === id) {
 
-					let isFound = false;
-					self.selectedColors.forEach(function(itm, j) {
-						if (itm.id === id) {
-							isFound = true;
+						let isFound = false;
+						self.selectedColors.forEach(function (itm, j) {
+							if (itm.id === id) {
+								isFound = true;
+							}
+						});
+
+						if (!isFound) {
+							self.selectedColors.push(item);
 						}
-					});
-
-					if (!isFound) {
-						self.selectedColors.push(item);
 					}
-				}
-			});
+				});
+			}
 
 		} else {
 			this.selectedColors.forEach(function(item, i) {
@@ -83,7 +85,7 @@ class ColorsForm extends Component {
 				<div className="input-title">Colors</div>
 				<div className="step-text" style={{marginBottom:'10px'}}>Select up to three colors for your design system.</div>
 				<div className="color-item-wrapper">
-					<Row horizontal="start" style={{flexWrap:'wrap'}}>
+					<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
 						{colors}
 					</Row>
 				</div>

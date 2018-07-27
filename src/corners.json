@@ -1,0 +1,31 @@
+[{
+  "id"    : 1,
+  "isSelected" : false,
+  "title" : "Corner 1",
+  "url"   : "https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg"
+}, {
+  "id"    : 2,
+  "isSelected" : false,
+  "title" : "Corner 2",
+  "url"   : "https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg"
+}, {
+  "id"    : 3,
+  "isSelected" : false,
+  "title" : "Corner 3",
+  "url"   : "https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg"
+}, {
+  "id"    : 4,
+  "isSelected" : false,
+  "title" : "Corner 4",
+  "url"   : "https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg"
+}, {
+  "id"    : 5,
+  "isSelected" : false,
+  "title" : "Corner 5",
+  "url"   : "https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg"
+}, {
+  "id"    : 6,
+  "isSelected" : false,
+  "title" : "Corner 6",
+  "url"   : "https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg"
+}]

@@ -17,10 +17,23 @@ class GetStartedStep extends Component {
 		};
 	}
 
+	handleDownload() {
+		window.location = 'http://designengine.ai/tryfree';
+	}
+
 	render() {
-		if (this.props.isScroll) {
+		if (this.props.isProjects) {
 			goToAnchor('projects');
-			removeHash();
+			setTimeout(function() {
+				removeHash();
+			}, 750);
+		}
+
+		if (this.props.isFAQ) {
+			goToAnchor('faq');
+			setTimeout(function() {
+				removeHash();
+			}, 750);
 		}
 
 		const items = projects.map((item, i, arr) => {
@@ -31,11 +44,11 @@ class GetStartedStep extends Component {
 			);
 		});
 
-		const faStyle = {
-			color: '#0000ff',
-			fontSize: '14px',
-			marginRight: '5px'
-		};
+// 		const faStyle = {
+// 			color: '#0000ff',
+// 			fontSize: '14px',
+// 			marginRight: '5px'
+// 		};
 
 		const lAlignStyle = {
 			textAlign: 'left'
@@ -44,54 +57,124 @@ class GetStartedStep extends Component {
 		return (
 			<Row vertical="start">
 				<Column flexGrow={1} horizontal="center">
-					<div className="step-header-text">Use AI to design your next <strong>deck</strong></div>
-					<div className="step-text">Accelerate your best ideas with Design Engine’s AI powered Premium Design Projects.</div>
+					<div className="step-header-text">Use AI to design apps, sites, decks, more</div>
+					<div className="step-text">Accelerate your best ideas with Design Engine’s AI powered Premium Design Systems..</div>
 					<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
 					<img src="/images/macbook.png" className="intro-image" alt="MacBook" />
-					<div className="step-header-text">Accelerate your best ideas with AI</div>
-					<div className="step-text">Whether you are building a web app or a presentation, use AI to accelerate your ideas.</div>
 
-					{/*<button className="action-button step-button" onClick={()=> this.props.onClick()}>View Projects</button>*/}
-					<ScrollableAnchor id="projects">
-						<div className="project-item-wrapper">
-							<Row horizontal="center" style={{flexWrap:'wrap'}}>
-								{items}
-							</Row>
-						</div>
-					</ScrollableAnchor>
+					<ScrollableAnchor id="projects"><div className="step-header-text">Accelerate your best ideas using AI</div></ScrollableAnchor>
+					<div className="step-text">The following Design Systems examples have been generated from Design Engine.</div>
+					<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
+					<div className="project-item-wrapper">
+						<Row horizontal="center" style={{flexWrap:'wrap'}}>
+							{items}
+						</Row>
+					</div>
 					<Row flexGrow={1} className="intro-projects">
 						<Column flexGrow={1} horizontal="start">
-							<div className="step-subheader-text" style={lAlignStyle}>Professional design using AI.</div>
-							<div className="step-text" style={lAlignStyle}>Though the gravity still dragged at him, his muscles were making great efforts to adjust. After the daily classes he no longer collapsed immediately into bed.</div>
-							<Row flexGrow={1} vertical="center">
-								<Column><FontAwesome name="plus-circle" style={faStyle} /></Column>
-								<Column vertical="center">Read More</Column>
-								{/*<div><FontAwesome name="plus-circle" style={faStyle} /> Read More</div>*/}
-							</Row>
+							<div className="step-header-text" style={lAlignStyle}>Fully editable, developer ready.</div>
+							<div className="step-text" style={lAlignStyle}>Generate fully editable design files that works perfectly with Adobe, Sketch, Figma, Google, & more.</div>
+							<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
 						</Column>
 						<Column flexGrow={1}>
-							<img src="/images/iphone.png" alt="iPhone" width="300" height="372" />
+							<img src="/images/iphone.png" alt="iPhone" width="200" height="350" />
 						</Column>
 					</Row>
-					<Row flexGrow={1} style={{width:'100%'}}>
-						<Column flexGrow={1}>
-							<div style={{textAlign:'left', fontWeight:'bold', marginBottom:'10px'}}>Explore Ideas</div>
-							<div className="step-text" style={{textAlign:'left', paddingRight:'20px'}}>Decipherment colonies made in the interiors of collapsing stars white dwarf of brilliant.</div>
+					<Row flexGrow={1} style={{width:'100%'}} className="app-icons-wrapper">
+						<Column flexGrow={1} horizontal="center">
+							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="60" height="60" alt="Sketch" />
 						</Column>
-						<Column flexGrow={1}>
-							<div style={{textAlign:'left', fontWeight:'bold', marginBottom:'10px'}}>High-End Templates</div>
-							<div className="step-text" style={{textAlign:'left', paddingRight:'20px'}}>Yet, for all that I have set down, we travelled much, always but there were so many millions.</div>
+						<Column flexGrow={1} horizontal="center">
+							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="60" height="60" alt="Sketch" />
 						</Column>
-						<Column flexGrow={1}>
-							<div style={{textAlign:'left', fontWeight:'bold', marginBottom:'10px'}}>Accelerate</div>
-							<div className="step-text" style={{textAlign:'left', paddingRight:'20px'}}>Bits of moving fluff, made in the interiors of collapsing stars decipherment venture.</div>
+						<Column flexGrow={1} horizontal="center">
+							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="60" height="60" alt="Sketch" />
+						</Column>
+						<Column flexGrow={1} horizontal="center">
+							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="60" height="60" alt="Sketch" />
+						</Column>
+						<Column flexGrow={1} horizontal="center">
+							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="60" height="60" alt="Sketch" />
 						</Column>
 					</Row>
+
+					<ScrollableAnchor id="faq"><div className="step-header-text">Introducing Design Automation</div></ScrollableAnchor>
+					<div className="step-text">The implications of this vary across design disciplines. In architecture, the parametric movement dubbed Parametricism 2.0 demonstrates the potential of technologically enhanced creativity. Its implications are already being explored in the gaming industry, as we design virtual environments.</div>
+					<button className="action-button step-button" onClick={()=> this.props.onClick()}>Read More</button>
+					<img src="/images/macbook.png" className="intro-image" alt="MacBook" />
+					<div className="step-header-text">A new era of design will be AI driven</div>
+					<div className="step-text">Accelerate your best ideas with Design Engine’s AI powered Premium Design Systems.</div>
+					<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
+					<img src="/images/macbook.png" className="intro-image" alt="MacBook" />
+					<div className="step-header-text">What people are saying about Design AI</div>
+					<div className="step-text">&laquo;Though the gravity still dragged at him, his muscles were making great efforts to adjust. After the daily classes he no longer collapsed immediately into bed.&raquo;</div>
+					<div className="step-text"><strong>@BennyBossen</strong></div>
+					<img src="/images/macbook.png" width="80" alt="Apple" />
+
+					<div className="step-header-text">Get FREE users to rate your designs</div>
+					<div className="step-text">Download Design Engine’s Menu Bar to receive FREE feedback on your designs.</div>
+					<button className="action-button step-button" onClick={()=> this.handleDownload()}>Download Menu Bar</button>
+					<img src="/images/macbook.png" className="intro-image" alt="MacBook" />
+					<div className="step-header-text">Wait, what, where is the catch</div>
+					<div className="step-text">The implications of this vary across design disciplines. In architecture, the parametric movement dubbed Parametricism 2.0 demonstrates the potential of technologically enhanced creativity. Its implications are already being explored in the gaming industry, as we design virtual environments.</div>
+					<button className="action-button step-button" onClick={()=> this.handleDownload()}>Download Menu Bar</button>
+					<div className="step-header-text">Get a daily report on design feedback</div>
+					<div className="step-text">Accelerate your best ideas with Design Engine’s AI powered Premium Design Systems.</div>
+					<button className="action-button step-button" onClick={()=> this.handleDownload()}>Download Menu Bar</button>
+
 					<div className="reviews-wrapper">
-						<div className="step-subheader-text">What people are saying about Design Engine?</div>
-						<div className="step-text">«Though the gravity still dragged at him, his muscles were making great efforts to adjust. After the daily classes he no longer collapsed immediately into bed.»</div>
-						<div>Leone Abachio</div>
-						<div className="step-text">Vimeo</div>
+						<Row flexGrow={1} className="review-item">
+							<Column flexGrow={1}>
+								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="160" height="160" alt="Sketch" />
+							</Column>
+							<Column vertical="center" style={{marginLeft:'20px'}}>
+								<Row horizontal="start">
+									<FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star-empty" /><FontAwesome name="star" className="review-star-empty" />
+								</Row>
+								<Row horizontal="start" className="review-quote">
+									&laquo;Though the gravity still dragged at him, his muscles were making great efforts to adjust. After the daily classes he no longer collapsed immediately into bed.&raquo;
+								</Row>
+							</Column>
+						</Row>
+						<Row flexGrow={1} className="review-item">
+							<Column flexGrow={1}>
+								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="160" height="160" alt="Sketch" />
+							</Column>
+							<Column vertical="center" style={{marginLeft:'20px'}}>
+								<Row horizontal="start">
+									<FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star-empty" /><FontAwesome name="star" className="review-star-empty" />
+								</Row>
+								<Row horizontal="start" className="review-quote">
+									&laquo;Though the gravity still dragged at him, his muscles were making great efforts to adjust. After the daily classes he no longer collapsed immediately into bed.&raquo;
+								</Row>
+							</Column>
+						</Row>
+						<Row flexGrow={1} className="review-item">
+							<Column flexGrow={1}>
+								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="160" height="160" alt="Sketch" />
+							</Column>
+							<Column vertical="center" style={{marginLeft:'20px'}}>
+								<Row horizontal="start">
+									<FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star-empty" /><FontAwesome name="star" className="review-star-empty" />
+								</Row>
+								<Row horizontal="start" className="review-quote">
+									&laquo;Though the gravity still dragged at him, his muscles were making great efforts to adjust. After the daily classes he no longer collapsed immediately into bed.&raquo;
+								</Row>
+							</Column>
+						</Row>
+						<Row flexGrow={1} className="review-item">
+							<Column flexGrow={1}>
+								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="160" height="160" alt="Sketch" />
+							</Column>
+							<Column vertical="center" style={{marginLeft:'20px'}}>
+								<Row horizontal="start">
+									<FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star-empty" /><FontAwesome name="star" className="review-star-empty" />
+								</Row>
+								<Row horizontal="start" className="review-quote">
+									&laquo;Though the gravity still dragged at him, his muscles were making great efforts to adjust. After the daily classes he no longer collapsed immediately into bed.&raquo;
+								</Row>
+							</Column>
+						</Row>
 					</div>
 				</Column>
 			</Row>
