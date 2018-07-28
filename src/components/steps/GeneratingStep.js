@@ -6,6 +6,7 @@ import axios from "axios/index";
 import { Column, Row } from 'simple-flexbox';
 
 import LightBox from '../elements/LightBox';
+import NextButton from './../elements/NextButton';
 import TemplateItem from '../TemplateItem';
 
 class GeneratingStep extends Component {
@@ -106,6 +107,32 @@ class GeneratingStep extends Component {
 		this.props.onItemToggle(this.selectedItems);
 	}
 
+	onSelectAll() {
+		let self = this;
+		const files = this.state.files;
+
+		if (this.selectedItems.length === files.length) {
+			this.selectedItems = [];
+
+		} else {
+			files.forEach(function (item, i) {
+				let isFound = false;
+				self.selectedItems.forEach(function (itm, j) {
+					if (itm.id === item.id) {
+						isFound = true;
+					}
+				});
+
+				if (!isFound) {
+					self.selectedItems.push(item);
+				}
+			});
+		}
+
+		this.forceUpdate();
+		this.props.onItemToggle(this.selectedItems);
+	}
+
 	onNext() {
 		if (this.selectedItems.length > 0) {
 			this.props.onClick(this.selectedItems);
@@ -114,6 +141,16 @@ class GeneratingStep extends Component {
 
 	render() {
 		const items = this.state.files.map((item, i, arr) => {
+			let isSelected = false;
+
+			this.selectedItems.forEach(function (itm, i) {
+				if (itm.id === item.id) {
+					isSelected = true;
+				}
+			});
+
+			console.log("SELECTED:", item.id, isSelected);
+
 			return (
 				<Column key={i}>
 					<TemplateItem
@@ -121,21 +158,22 @@ class GeneratingStep extends Component {
 						onSelectClick={(isSelected)=> this.handleSelectClick(item.id, isSelected)}
 						image={item.filename} title={item.title+' - '+(i+1)}
 						price={parseFloat(item.per_price)}
-						selected={false} />
+						selected={isSelected} />
 				</Column>
 			);
 		});
 
-		const btnClass = (this.selectedItems.length > 0) ? 'action-button full-button' : 'action-button full-button disabled-button';
+		//const btnClass = (this.selectedItems.length > 0) ? 'action-button step-button' : 'action-button step-button disabled-button';
+		const btnSelectClass = (this.selectedItems.length === this.state.files.length) ? 'action-button step-button selected-button' : 'action-button step-button';
+		const btnSelectCaption = (this.selectedItems.length === this.state.files.length) ? 'Select None' : 'Select All ('+this.state.files.length+')';
 
 		return (
 			<div>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Select the designs you want to keep</div>
-						<div className="step-text">Select only the design files that work for you and click Next.</div>
-						<button className={btnClass} onClick={()=> this.onNext()}>Next</button>
-						<div className="step-text">{this.state.files.length} custom design files generated.</div>
+						<div className="step-header-text">Select the views you want to keep</div>
+						<div className="step-text">The following Design Systems examples have been generated from Design Engine.</div>
+						<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><button className={btnSelectClass} onClick={()=> this.onSelectAll()}>{btnSelectCaption}</button></Row>
 						<div className="template-item-wrapper">
 							<Row horizontal="center" style={{flexWrap:'wrap'}}>
 								{items}
@@ -147,6 +185,7 @@ class GeneratingStep extends Component {
 				{this.state.lightBox.isVisible && (
 					<LightBox title={this.state.lightBox.title} url={this.state.lightBox.url} onClick={()=> this.handleLightBoxClick()} />
 				)}
+				<NextButton isEnabled={(this.selectedItems.length > 0)} onClick={()=> this.onNext()} />
 			</div>
 		);
 	}

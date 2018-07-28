@@ -11,3 +11,27 @@
 .required-glyph-ok {
 	color: #33aa00;
 }
+
+.input-tip {
+	position: absolute;
+	right: 6px;
+	top: 8px;
+	color: #ffffff;
+	font-size: 16px;
+	font-weight: 500;
+	z-index: 101;
+	padding: 6px 8px;
+	border-radius: 8px;
+}
+
+.input-tip-red {
+	background-color: #ff6666;
+}
+
+.input-tip-green {
+	background-color: #66ff66;
+}
+
+.input-tip-red:hover, .input-tip-green:hover {
+	cursor: pointer;
+}

@@ -216,12 +216,6 @@ class App extends Component {
 			          onItemToggle={(obj)=> this.handleItemToggle(obj)}
 			          selectedItems={this.state.selectedItems} />
 	          )}
-
-	          {this.state.step >= 2 && (
-	            <div className="floating-button">
-			          <button className="action-button full-button" onClick={()=> this.handleNext()}>Next</button>
-		          </div>
-	          )}
           </div>
 
 	        {this.state.isStripeOverlay && (

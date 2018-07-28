@@ -31,7 +31,6 @@ class TemplateItem extends Component {
 					<Column flexGrow={1} horizontal="center" className="template-item-container">
 						<Row><img className={imageClass} src={this.props.image} alt={this.props.title} onClick={()=> this.props.onImageClick()} /></Row>
 						<Row><span className="template-item-price"><CurrencyFormat value={this.props.price} displayType={'text'} thousandSeparator={true} prefix={'$'} /></span></Row>
-						<Row><span className="template-item-title">{this.props.title}</span></Row>
 					</Column>
 				</Row>
 				<Row horizontal="center" className="template-item-button">

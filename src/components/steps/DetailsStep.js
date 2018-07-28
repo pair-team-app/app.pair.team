@@ -8,6 +8,7 @@ import { Column, Row } from 'simple-flexbox';
 import ColorsForm from '../forms/ColorsForm';
 import CornersForm from '../forms/CornersForm';
 import ImageryForm from '../forms/ImageryForm';
+import NextButton from './../elements/NextButton';
 import TextForm from '../forms/TextForm';
 
 
@@ -152,6 +153,7 @@ class DetailsStep extends Component {
 						<ImageryForm templateID={this.props.templateID} onToggle={(obj)=> this.handleImageryToggle(obj)} onDrop={(files)=> this.onDrop(files)} />
 					</Column>
 				</Row>
+				<NextButton isEnabled={this.state.isValidated} onClick={()=> this.handleClick()} />
 			</div>
 		);
 	}

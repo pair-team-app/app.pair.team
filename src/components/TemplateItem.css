@@ -8,11 +8,13 @@
 
 .template-item-container {
 	/*background-color: #000000;*/
+	position: relative;
 }
 
 .template-item-image {
 	width: 140px;
 	height: 180px;
+	border: 1px solid #ffffff;
 }
 
 .template-item-image-selected {
@@ -20,10 +22,15 @@
 }
 
 .template-item-price {
-	font-size: 16px;
-	font-weight: bold;
-	color: #999999;
-	margin-bottom: 10px;
+	font-size: 14px;
+	font-weight: 500;
+	color: #ffffff;
+	background-color: #009900;
+	padding: 10px;
+	position: absolute;
+	left: 20px;
+	bottom: 10px;
+	border-radius: 7px;
 }
 
 .template-item-title {
