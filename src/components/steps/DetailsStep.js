@@ -142,7 +142,6 @@ class DetailsStep extends Component {
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">Edit your Design System</div>
 						<div className="step-text">The following Design Systems examples have been generated from Design Engine.</div>
-						{/*<button className={buttonClass} onClick={()=> this.handleClick()}>Next</button>*/}
 					</Column>
 				</Row>
 				<Row vertical="start">

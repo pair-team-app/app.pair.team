@@ -77,24 +77,24 @@ class GetStartedStep extends Component {
 							<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
 						</Column>
 						<Column flexGrow={1}>
-							<img src="/images/iphone.png" alt="iPhone" width="200" height="350" />
+							<img src="/images/iphone.png" alt="iPhone" width="180" height="350" />
 						</Column>
 					</Row>
-					<Row flexGrow={1} style={{width:'100%'}} className="app-icons-wrapper">
+					<Row flexGrow={1} style={{width:'100%', flexWrap:'wrap'}} className="app-icons-wrapper">
 						<Column flexGrow={1} horizontal="center">
-							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="60" height="60" alt="Sketch" />
+							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" />
 						</Column>
 						<Column flexGrow={1} horizontal="center">
-							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="60" height="60" alt="Sketch" />
+							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" />
 						</Column>
 						<Column flexGrow={1} horizontal="center">
-							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="60" height="60" alt="Sketch" />
+							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" />
 						</Column>
 						<Column flexGrow={1} horizontal="center">
-							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="60" height="60" alt="Sketch" />
+							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" />
 						</Column>
 						<Column flexGrow={1} horizontal="center">
-							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="60" height="60" alt="Sketch" />
+							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" />
 						</Column>
 					</Row>
 
@@ -125,7 +125,7 @@ class GetStartedStep extends Component {
 					<div className="reviews-wrapper">
 						<Row flexGrow={1} className="review-item">
 							<Column flexGrow={1}>
-								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="160" height="160" alt="Sketch" />
+								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="120" height="120" alt="Sketch" />
 							</Column>
 							<Column vertical="center" style={{marginLeft:'20px'}}>
 								<Row horizontal="start">
@@ -138,7 +138,7 @@ class GetStartedStep extends Component {
 						</Row>
 						<Row flexGrow={1} className="review-item">
 							<Column flexGrow={1}>
-								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="160" height="160" alt="Sketch" />
+								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="120" height="120" alt="Sketch" />
 							</Column>
 							<Column vertical="center" style={{marginLeft:'20px'}}>
 								<Row horizontal="start">
@@ -151,7 +151,7 @@ class GetStartedStep extends Component {
 						</Row>
 						<Row flexGrow={1} className="review-item">
 							<Column flexGrow={1}>
-								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="160" height="160" alt="Sketch" />
+								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="120" height="120" alt="Sketch" />
 							</Column>
 							<Column vertical="center" style={{marginLeft:'20px'}}>
 								<Row horizontal="start">
@@ -164,7 +164,7 @@ class GetStartedStep extends Component {
 						</Row>
 						<Row flexGrow={1} className="review-item">
 							<Column flexGrow={1}>
-								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="160" height="160" alt="Sketch" />
+								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="120" height="120" alt="Sketch" />
 							</Column>
 							<Column vertical="center" style={{marginLeft:'20px'}}>
 								<Row horizontal="start">

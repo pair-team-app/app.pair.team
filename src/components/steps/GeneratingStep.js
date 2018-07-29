@@ -149,8 +149,6 @@ class GeneratingStep extends Component {
 				}
 			});
 
-			console.log("SELECTED:", item.id, isSelected);
-
 			return (
 				<Column key={i}>
 					<TemplateItem
@@ -163,7 +161,6 @@ class GeneratingStep extends Component {
 			);
 		});
 
-		//const btnClass = (this.selectedItems.length > 0) ? 'action-button step-button' : 'action-button step-button disabled-button';
 		const btnSelectClass = (this.selectedItems.length === this.state.files.length) ? 'action-button step-button selected-button' : 'action-button step-button';
 		const btnSelectCaption = (this.selectedItems.length === this.state.files.length) ? 'Select None' : 'Select All ('+this.state.files.length+')';
 
