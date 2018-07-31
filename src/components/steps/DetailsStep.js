@@ -18,11 +18,9 @@ class DetailsStep extends Component {
 
 		this.state = {
 			form : {
-				email        : 'matt@modd.live',
-				title        : 'aaa',
-				headline     : 'bbb',
-				subheadline  : 'ccc',
-				mainHeadline : 'ddd',
+				email        : '',
+				title        : '',
+				description  : '',
 				colors       : '',
 				cornerType   : 1,
 				imagery      : ''
@@ -35,27 +33,19 @@ class DetailsStep extends Component {
 	}
 
 	validator(form) {
-		let validated = 0x00000;
+		let validated = 0x000;
 
 		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		if (re.test(String(form.email).toLowerCase())) {
-			validated |= 0x00001;
+			validated |= 0x001;
 		}
 
 		if (form.title.length > 0) {
-			validated |= 0x00010;
+			validated |= 0x010;
 		}
 
-		if (form.headline.length > 0) {
-			validated |= 0x00100;
-		}
-
-		if (form.subheadline.length > 0) {
-			validated |= 0x01000;
-		}
-
-		if (form.mainHeadline.length > 0) {
-			validated |= 0x10000;
+		if (form.description.length > 0) {
+			validated |= 0x100;
 		}
 
 		return (validated);
@@ -64,7 +54,7 @@ class DetailsStep extends Component {
 	handleTextChange(form) {
 		this.setState({
 			form : form,
-			isValidated : (this.validator(form) === 0x11111)
+			isValidated : (this.validator(form) === 0x111)
 		});
 
 		//this.setState({ [event.target.name] : event.target.value });
@@ -90,7 +80,7 @@ class DetailsStep extends Component {
 
 	handleClick() {
 		let form = this.state.form;
-		if (this.validator(form) === 0x11111) {
+		if (this.validator(form) === 0x111) {
 			let colors = [];
 			this.selectedColors.forEach(color => {
 				colors.push(color.id);

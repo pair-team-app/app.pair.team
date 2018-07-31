@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './App.css';
 
+import axios from 'axios';
 import cookie from 'react-cookies';
 import {Elements, StripeProvider} from 'react-stripe-elements';
 import { Column } from 'simple-flexbox';
@@ -28,10 +29,12 @@ class App extends Component {
       isStripeOverlay : false,
 			amount : 0.00,
 			selectedItems : null,
-			purchasedItems : null
+			purchasedItems : null,
+			comprehend : []
 		};
 
 		this.templateID = 0;
+		this.images = [];
 
 		this.STRIPE_TEST_TOKEN = 'pk_test_hEOqIXLLiGcTTj7p2W9XxuCP';
 		this.STRIPE_LIVE_TOKEN = 'pk_live_7OvF9BcQ3LvNZd0z0FsPPgNF';
@@ -68,14 +71,13 @@ class App extends Component {
 
 		console.log("handleStep3("+JSON.stringify(obj)+")");
 
+		let self = this;
 // 		let formData = new FormData();
 // 		formData.append('action', 'MAKE_ORDER');
 // 		formData.append('template_id', this.templateID);
 // 		formData.append('email', obj.email);
 // 		formData.append('title', obj.company);
-// 		formData.append('headline', obj.headline);
-// 		formData.append('subheadline', obj.subheadline);
-// 		formData.append('main_headline', obj.mainHeadline);
+// 		formData.append('description', obj.description);
 // 		formData.append('colors', obj.colors);
 // 		formData.append('corner_type', obj.cornerType);
 // 		formData.append('imagery', obj.imagery);
@@ -85,6 +87,37 @@ class App extends Component {
 // 				cookie.save('order_id', response.data.order_id, { path: '/' });
 // 			}).catch((error) => {
 // 		});
+
+		axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + encodeURIComponent(obj.description))
+			.then((response)=> {
+				console.log("COMPREHEND", JSON.stringify(response.data));
+				let images = [];
+				response.data.comprehend.keywords.forEach(function(item, i) {
+					axios.get('https://api.unsplash.com/search/photos?query='+item.Text+'&per_page=50', {headers:{Authorization:'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479'}})
+						.then((response)=> {
+// 							console.log("UNSPLASH", JSON.stringify(response.data));
+							response.data.results.forEach(function(itm, i) {
+								images.push(itm.urls.full);
+
+								let formData = new FormData();
+								formData.append('action', 'ADD_IMAGE');
+								formData.append('order_id', cookie.load('order_id'));
+								formData.append('keyword', item.Text);
+								formData.append('url', itm.urls.full);
+								axios.post('https://api.designengine.ai/templates.php', formData)
+									.then((response)=> {
+										console.log("ADD_IMAGE", JSON.stringify(response.data));
+									}).catch((error) => {
+								});
+							});
+							self.images = self.images.concat(images);
+							console.log(JSON.stringify(self.images));
+						}).catch((error) => {
+					});
+				});
+
+			}).catch((error) => {
+		});
 
 		this.setState({ step : 3 });
 		cookie.save('order_id', "9", { path: '/' });

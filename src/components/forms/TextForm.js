@@ -12,10 +12,8 @@ class TextForm extends Component {
 		this.state = {
 			form : {
 				email        : 'matt@modd.live',
-				title        : 'aaa',
-				headline     : 'bbb',
-				subheadline  : 'ccc',
-				mainHeadline : 'ddd',
+				title        : 'Swap Meets Map',
+				description  : 'Find local flea markets in Florida.',
 				colors       : '',
 				cornerType   : 1,
 				imagery      : ''
@@ -37,19 +35,9 @@ class TextForm extends Component {
 				form.title = event.target.value;
 			}
 
-		} else if (event.target.name === 'txt-headline') {
-			if (this.state.form.headline.length <= 250) {
-				form.headline = event.target.value;
-			}
-
-		} else if (event.target.name === 'txt-subheadline') {
-			if (this.state.form.subheadline.length <= 80) {
-				form.subheadline = event.target.value;
-			}
-
-		} else if (event.target.name === 'txt-main-headline') {
-			if (this.state.form.mainHeadline.length <= 250) {
-				form.mainHeadline = event.target.value;
+		} else if (event.target.name === 'txt-description') {
+			if (this.state.form.description.length <= 250) {
+				form.description = event.target.value;
 			}
 		}
 
@@ -83,16 +71,8 @@ class TextForm extends Component {
 
 				<div className="input-title">Message</div>
 				<div className="form-element">
-					<input className="textfield-input" type="text" name="txt-headline" placeholder="“Large headline”" value={this.state.form.headline} onChange={this.handleTextChange} style={{fontSize:'48px', borderBottom:'none'}} />
-					<div className="input-tip input-tip-green" onClick={()=> this.handleTooltip('headline')} style={{top:'28px'}}>What is This?</div>
-				</div>
-				<div className="form-element">
-					<input className="textfield-input" type="text" name="txt-subheadline" placeholder="“Medium Headline”" value={this.state.form.subheadline} onChange={this.handleTextChange} style={{fontSize:'30px', borderBottom:'none'}} />
-					<div className="input-tip input-tip-green" onClick={()=> this.handleTooltip('subheadline')} style={{top:'16px'}}>What is This?</div>
-				</div>
-				<div className="form-element">
-					<input className="textfield-input" type="text" name="txt-main-headline" placeholder="“Call To Action”" value={this.state.form.mainHeadline} onChange={this.handleTextChange} style={{fontSize:'22px', borderBottom:'none'}} />
-					<div className="input-tip input-tip-green" onClick={()=> this.handleTooltip('main_headline')} style={{top:'12px'}}>What is This?</div>
+					<textarea className="textfield-input" name="txt-description" placeholder="“Describe what you would like your design to look like”" value={this.state.form.description} onChange={this.handleTextChange} rows="4" />
+					<div className="input-tip input-tip-green" onClick={()=> this.handleTooltip('headline')}>What is This?</div>
 				</div>
 			</div>
 		);
