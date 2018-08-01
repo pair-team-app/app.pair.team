@@ -1,4 +1,16 @@
 
+// todo: select all button
+// todo: comprehend details to checkout
+// todo: plugin generating steps on page
+
+/*
+http://www.pictaculous.com/api/
+http://colormind.io/
+http://www.colr.org/api.html
+https://coolors.co/
+http://www.thecolorapi.com/
+ */
+
 import React, { Component } from 'react';
 import './App.css';
 
@@ -12,6 +24,7 @@ import DetailsStep from './components/steps/DetailsStep';
 import GeneratingStep from './components/steps/GeneratingStep';
 import GetStartedStep from './components/steps/GetStartedStep';
 import PurchaseStep from './components/steps/PurchaseStep';
+import SplashIntro from './components/elements/SplashIntro';
 import StripeCheckout from './components/elements/StripeCheckout';
 import TemplateStep from './components/steps/TemplateStep';
 import TopNav from './components/elements/TopNav';
@@ -24,12 +37,14 @@ class App extends Component {
 
 		this.state = {
 		  step : 0,
+			isIntro : true,
 			isProjects : false,
 			isFAQ : false,
       isStripeOverlay : false,
 			amount : 0.00,
 			selectedItems : null,
 			purchasedItems : null,
+			processingStatus: [],
 			comprehend : []
 		};
 
@@ -91,8 +106,27 @@ class App extends Component {
 		axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + encodeURIComponent(obj.description))
 			.then((response)=> {
 				console.log("COMPREHEND", JSON.stringify(response.data));
+				self.setState({ processingStatus: [
+					"Parsing keywords & entities ("+(response.data.comprehend.keywords.length+response.data.comprehend.entities.length)+")…",
+					"Extracting sentiment ("+(response.data.comprehend.sentiment.outcome)+")…",
+					"Detecting grammar ("+response.data.comprehend.syntax.length+")…"
+				] });
+
+				let colors = [];
 				let images = [];
 				response.data.comprehend.keywords.forEach(function(item, i) {
+					axios.get('http://www.colr.org/json/tag/' + item.Text)
+						.then((response)=> {
+							console.log("colr", JSON.stringify(response.data));
+							response.data.schemes.forEach(function(itm, i) {
+								colors.push(itm.colors);
+							});
+
+							console.log("COLORS", colors);
+
+						}).catch((error) => {
+					});
+
 					axios.get('https://api.unsplash.com/search/photos?query='+item.Text+'&per_page=50', {headers:{Authorization:'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479'}})
 						.then((response)=> {
 // 							console.log("UNSPLASH", JSON.stringify(response.data));
@@ -104,11 +138,11 @@ class App extends Component {
 								formData.append('order_id', cookie.load('order_id'));
 								formData.append('keyword', item.Text);
 								formData.append('url', itm.urls.full);
-								axios.post('https://api.designengine.ai/templates.php', formData)
-									.then((response)=> {
-										console.log("ADD_IMAGE", JSON.stringify(response.data));
-									}).catch((error) => {
-								});
+// 								axios.post('https://api.designengine.ai/templates.php', formData)
+// 									.then((response)=> {
+// 										console.log("ADD_IMAGE", JSON.stringify(response.data));
+// 									}).catch((error) => {
+// 								});
 							});
 							self.images = self.images.concat(images);
 							console.log(JSON.stringify(self.images));
@@ -203,69 +237,79 @@ class App extends Component {
 
     return (
     	<div>
-        <Column horizontal="center" className="page-wrapper">
-          <div className="top-nav">
-	          <TopNav
-		          step={this.state.step}
-		          amount={this.state.amount}
-		          isProjects={this.state.isProjects}
-		          isFAQ={this.state.isFAQ}
-		          onStep0={()=> this.handleStep0()}
-		          onStep1={()=> this.handleStep1()}
-		          onProjects={()=> this.handleProjects()}
-		          onFAQ={()=> this.handleFAQ()}
-	          />
-          </div>
+		    {this.state.isIntro && (
+		    	<SplashIntro onComplete={()=> this.setState({ isIntro : false })}/>
+		    )}
 
-          <div className="content-wrapper">
-	          {this.state.step === 0 && (
-              <GetStartedStep
-	              isProjects={this.state.isProjects}
-	              isFAQ={this.state.isFAQ}
-	              onClick={()=> this.handleStep1()} />
-            )}
 
-	          {this.state.step === 1 && (
-		          <TemplateStep
-			          onClick={(id)=> this.handleStep2(id)} />
-            )}
+		    {!this.state.isIntro && (
+		    	<div>
+				    <Column horizontal="center" className="page-wrapper">
+					    <div className="top-nav">
+						    <TopNav
+							    step={this.state.step}
+							    amount={this.state.amount}
+							    isProjects={this.state.isProjects}
+							    isFAQ={this.state.isFAQ}
+							    onStep0={()=> this.handleStep0()}
+							    onStep1={()=> this.handleStep1()}
+							    onProjects={()=> this.handleProjects()}
+							    onFAQ={()=> this.handleFAQ()}
+						    />
+					    </div>
 
-	          {this.state.step === 2 && (
-		          <DetailsStep
-			          templateID={this.templateID}
-			          onClick={(obj)=> this.handleStep3(obj)} />
-	          )}
+					    <div className="content-wrapper">
+						    {this.state.step === 0 && (
+							    <GetStartedStep
+								    isProjects={this.state.isProjects}
+								    isFAQ={this.state.isFAQ}
+								    onClick={()=> this.handleStep1()} />
+						    )}
 
-	          {this.state.step === 3 && (
-		          <GeneratingStep
-			          orderID={cookie.load('order_id')}
-			          onClick={(obj)=> this.handleStep4(obj)}
-		            onItemToggle={(obj)=> this.handleItemToggle(obj)} />
-	          )}
+						    {this.state.step === 1 && (
+							    <TemplateStep
+								    onClick={(id)=> this.handleStep2(id)} />
+						    )}
 
-	          {this.state.step === 4 && (
-		          <PurchaseStep
-			          onClick={()=> this.handleStep5()}
-			          onItemToggle={(obj)=> this.handleItemToggle(obj)}
-			          selectedItems={this.state.selectedItems} />
-	          )}
-          </div>
+						    {this.state.step === 2 && (
+							    <DetailsStep
+								    templateID={this.templateID}
+								    onClick={(obj)=> this.handleStep3(obj)} />
+						    )}
 
-	        {this.state.isStripeOverlay && (
-            <StripeProvider apiKey={this.STRIPE_TEST_TOKEN}>
-            {/*<StripeProvider apiKey={this.STRIPE_LIVE_TOKEN}>*/}
-              <div className="example" style={stripeStyle}>
-                <h3>React Stripe Elements Example</h3>
-                <Elements>
-                  <StripeCheckout />
-                </Elements>
-              </div>
-            </StripeProvider>
-          )}
-        </Column>
-		    <Column flexGrow={1} horizontal="center" className="bottom-nav">
-			    <BottomNav handleStep1={()=> this.handleStep1()}/>
-		    </Column>
+						    {this.state.step === 3 && (
+							    <GeneratingStep
+								    orderID={cookie.load('order_id')}
+								    status={this.state.processingStatus}
+								    onClick={(obj)=> this.handleStep4(obj)}
+								    onItemToggle={(obj)=> this.handleItemToggle(obj)} />
+						    )}
+
+						    {this.state.step === 4 && (
+							    <PurchaseStep
+								    onClick={()=> this.handleStep5()}
+								    onItemToggle={(obj)=> this.handleItemToggle(obj)}
+								    selectedItems={this.state.selectedItems} />
+						    )}
+					    </div>
+
+					    {this.state.isStripeOverlay && (
+						    <StripeProvider apiKey={this.STRIPE_TEST_TOKEN}>
+							    {/*<StripeProvider apiKey={this.STRIPE_LIVE_TOKEN}>*/}
+							    <div className="example" style={stripeStyle}>
+								    <h3>React Stripe Elements Example</h3>
+								    <Elements>
+									    <StripeCheckout />
+								    </Elements>
+							    </div>
+						    </StripeProvider>
+					    )}
+				    </Column>
+				    <Column flexGrow={1} horizontal="center" className="bottom-nav">
+				      <BottomNav handleStep1={()=> this.handleStep1()}/>
+				    </Column>
+			    </div>
+		    )}
 	    </div>
     );
   }
