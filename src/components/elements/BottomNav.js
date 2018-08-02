@@ -48,6 +48,8 @@ class BottomNav extends Component {
 							<a href="" target="_blank" rel="noopener noreferrer"><FontAwesome name="facebook-official" className="footer-icon" /></a>
 							<a href="" target="_blank" rel="noopener noreferrer"><FontAwesome name="instagram" className="footer-icon" /></a>
 							<a href="" target="_blank" rel="noopener noreferrer"><FontAwesome name="twitter" className="footer-icon" /></a>
+							<a href="" target="_blank" rel="noopener noreferrer"><FontAwesome name="youtube-play" className="footer-icon" /></a>
+							<a href="" target="_blank" rel="noopener noreferrer"><FontAwesome name="slack" className="footer-icon" /></a>
 						</div>
 					</Column>
 				</Row>
@@ -55,17 +57,6 @@ class BottomNav extends Component {
 					<div className="copyright">&copy; {new Date().getFullYear()} Design Engine AI, Inc.</div>
 				</Row>
 			</div>
-// 			<Row vertical='center' horizontal='spaced'>
-// 				<Column vertical='end'>
-// 					<span> Content 1 </span>
-// 					<span> Content 2 </span>
-// 				</Column>
-// 				<Column>
-// 					<span> Content 3 </span>
-// 					<span> Content 4 </span>
-// 					<span> Content 5 </span>
-// 				</Column>
-// 			</Row>
 		);
 	}
 }
