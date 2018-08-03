@@ -2,8 +2,11 @@
 import React, { Component } from 'react';
 import './PurchaseStep.css';
 
+import CurrencyFormat from 'react-currency-format';
+import {Elements, StripeProvider} from 'react-stripe-elements';
 import { Column, Row } from 'simple-flexbox';
 
+import StripeCheckout from '../elements/StripeCheckout';
 import TemplateItem from '../TemplateItem';
 
 class PurchaseStep extends Component {
@@ -14,6 +17,9 @@ class PurchaseStep extends Component {
 			selectedItems : this.props.selectedItems,
 			allItems      : this.props.selectedItems
 		};
+
+		this.STRIPE_TEST_TOKEN = 'pk_test_hEOqIXLLiGcTTj7p2W9XxuCP';
+		this.STRIPE_LIVE_TOKEN = 'pk_live_7OvF9BcQ3LvNZd0z0FsPPgNF';
 	}
 
 	handleClick(id, isSelected) {
@@ -67,19 +73,40 @@ class PurchaseStep extends Component {
 			);
 		});
 
+		let amount = 0;
+		this.props.selectedItems.forEach(function(item, i) {
+			amount += parseFloat(item.per_price);
+		});
+
 		const btnClass = (this.state.selectedItems.length > 0) ? 'action-button full-button' : 'action-button full-button disabled-button';
 
 		return (
 			<Row vertical="start">
 				<Column flexGrow={1} horizontal="center">
-					<div className="step-header-text">Confirm your design purchase</div>
-					<div className="step-text">Confirm the designs you have selected below.</div>
-					<button className={btnClass} onClick={()=> this.onNext()}>Confirm Purchase</button>
-					<div className="step-text">By clicking &ldquo;Confirm Purchase&rdquo; I agree to Design Engine AI’s Terms of Service.</div>
-					<div className="purchase-item-wrapper">
-						<Row horizontal="center" style={{flexWrap:'wrap'}}>
-							{items}
-						</Row>
+					<div className="step-header-text">Enter payment information</div>
+					<div className="step-text">The following Design Systems examples have been generated from Design Engine.</div>
+					<div style={{width:'100%', textAlign:'left'}}>
+						<div className="input-title">Details</div>
+						<StripeProvider apiKey={this.STRIPE_TEST_TOKEN}>
+							{/*<StripeProvider apiKey={this.STRIPE_LIVE_TOKEN}>*/}
+							<div className="example" style={{width:'100%'}}>
+								<Elements>
+									<StripeCheckout />
+								</Elements>
+							</div>
+						</StripeProvider>
+
+						<div className="checkout-price">
+							<CurrencyFormat value={amount} displayType={'text'} thousandSeparator={true} prefix={'$'} /> USD
+						</div>
+
+						<button className={btnClass} onClick={()=> this.onNext()}>Confirm Purchase</button>
+						<div className="step-text">By clicking &ldquo;Confirm Purchase&rdquo; I agree to Design Engine AI’s Terms of Service.</div>
+						<div className="purchase-item-wrapper">
+							<Row horizontal="center" style={{flexWrap:'wrap'}}>
+								{items}
+							</Row>
+						</div>
 					</div>
 				</Column>
 			</Row>

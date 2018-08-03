@@ -1,7 +1,6 @@
 
 // todo: select all button
 // todo: comprehend details to checkout
-// todo: plugin generating steps on page
 
 /*
 http://www.pictaculous.com/api/
@@ -16,7 +15,6 @@ import './App.css';
 
 import axios from 'axios';
 import cookie from 'react-cookies';
-import {Elements, StripeProvider} from 'react-stripe-elements';
 import { Column } from 'simple-flexbox';
 
 import BottomNav from './components/elements/BottomNav'
@@ -25,7 +23,6 @@ import GeneratingStep from './components/steps/GeneratingStep';
 import GetStartedStep from './components/steps/GetStartedStep';
 import PurchaseStep from './components/steps/PurchaseStep';
 import SplashIntro from './components/elements/SplashIntro';
-import StripeCheckout from './components/elements/StripeCheckout';
 import TemplateStep from './components/steps/TemplateStep';
 import TopNav from './components/elements/TopNav';
 
@@ -40,7 +37,6 @@ class App extends Component {
 			isIntro : true,
 			isProjects : false,
 			isFAQ : false,
-      isStripeOverlay : false,
 			amount : 0.00,
 			selectedItems : null,
 			purchasedItems : null,
@@ -50,9 +46,6 @@ class App extends Component {
 
 		this.templateID = 0;
 		this.images = [];
-
-		this.STRIPE_TEST_TOKEN = 'pk_test_hEOqIXLLiGcTTj7p2W9XxuCP';
-		this.STRIPE_LIVE_TOKEN = 'pk_live_7OvF9BcQ3LvNZd0z0FsPPgNF';
 	}
 
 	handleStep0() {
@@ -107,9 +100,9 @@ class App extends Component {
 			.then((response)=> {
 				console.log("COMPREHEND", JSON.stringify(response.data));
 				self.setState({ processingStatus: [
-					"Parsing keywords & entities ("+(response.data.comprehend.keywords.length+response.data.comprehend.entities.length)+")…",
-					"Extracting sentiment ("+(response.data.comprehend.sentiment.outcome)+")…",
-					"Detecting grammar ("+response.data.comprehend.syntax.length+")…"
+					"Keywords & entities ("+(response.data.comprehend.keywords.length+response.data.comprehend.entities.length)+")…",
+					"Sentiment rating ("+(response.data.comprehend.sentiment.outcome)+")…",
+					"Grammar items ("+response.data.comprehend.syntax.length+")…"
 				] });
 
 				let colors = [];
@@ -229,12 +222,6 @@ class App extends Component {
 	}
 
   render() {
-    const stripeStyle = {
-      width: '300px',
-      height: '150px',
-      border: '1px solid #000000'
-    };
-
     return (
     	<div>
 		    {this.state.isIntro && (
@@ -292,18 +279,6 @@ class App extends Component {
 								    selectedItems={this.state.selectedItems} />
 						    )}
 					    </div>
-
-					    {this.state.isStripeOverlay && (
-						    <StripeProvider apiKey={this.STRIPE_TEST_TOKEN}>
-							    {/*<StripeProvider apiKey={this.STRIPE_LIVE_TOKEN}>*/}
-							    <div className="example" style={stripeStyle}>
-								    <h3>React Stripe Elements Example</h3>
-								    <Elements>
-									    <StripeCheckout />
-								    </Elements>
-							    </div>
-						    </StripeProvider>
-					    )}
 				    </Column>
 				    <Column flexGrow={1} horizontal="center" className="bottom-nav">
 				      <BottomNav handleStep1={()=> this.handleStep1()}/>

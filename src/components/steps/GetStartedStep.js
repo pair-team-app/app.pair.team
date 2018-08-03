@@ -4,6 +4,7 @@ import './GetStartedStep.css';
 import projects from '../../projects.json';
 
 import FontAwesome from 'react-fontawesome';
+import MediaQuery from 'react-responsive';
 import { Column, Row } from 'simple-flexbox';
 import ScrollableAnchor, { goToAnchor, removeHash } from 'react-scrollable-anchor';
 
@@ -70,16 +71,29 @@ class GetStartedStep extends Component {
 							{items}
 						</Row>
 					</div>
+
 					<Row flexGrow={1} className="intro-projects">
-						<Column flexGrow={1} horizontal="start">
-							<div className="step-header-text" style={lAlignStyle}>Fully editable, developer ready.</div>
-							<div className="step-text" style={lAlignStyle}>Generate fully editable design files that works perfectly with Adobe, Sketch, Figma, Google, & more.</div>
-							<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
-						</Column>
-						<Column flexGrow={1}>
-							<img src="/images/iphone.png" alt="iPhone" width="180" height="350" />
-						</Column>
+						<MediaQuery minDeviceWidth={1224}>
+							<Column flexGrow={1} horizontal="start">
+								<div className="step-header-text" style={lAlignStyle}>Fully editable, developer ready.</div>
+								<div className="step-text" style={lAlignStyle}>Generate fully editable design files that works perfectly with Adobe, Sketch, Figma, Google, & more.</div>
+								<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
+							</Column>
+						</MediaQuery>
+						<MediaQuery maxDeviceWidth={1224}>
+							<Column flexGrow={1} horizontal="center">
+								<div className="step-header-text" style={lAlignStyle}>Fully editable, developer ready.</div>
+								<div className="step-text" style={lAlignStyle}>Generate fully editable design files that works perfectly with Adobe, Sketch, Figma, Google, & more.</div>
+								<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
+							</Column>
+						</MediaQuery>
+						<MediaQuery minDeviceWidth={1224}>
+							<Column flexGrow={1}>
+								<img src="/images/iphone.png" alt="iPhone" width="180" height="350" />
+							</Column>
+						</MediaQuery>
 					</Row>
+
 					<Row flexGrow={1} style={{width:'100%', flexWrap:'wrap'}} className="app-icons-wrapper">
 						<Column flexGrow={1} horizontal="center">
 							<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" />
@@ -124,48 +138,9 @@ class GetStartedStep extends Component {
 
 					<div className="reviews-wrapper">
 						<Row flexGrow={1} className="review-item">
-							<Column flexGrow={1}>
-								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="120" height="120" alt="Sketch" />
-							</Column>
-							<Column vertical="center" style={{marginLeft:'20px'}}>
-								<Row horizontal="start">
-									<FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star-empty" /><FontAwesome name="star" className="review-star-empty" />
-								</Row>
-								<Row horizontal="start" className="review-quote">
-									&laquo;Though the gravity still dragged at him, his muscles were making great efforts to adjust. After the daily classes he no longer collapsed immediately into bed.&raquo;
-								</Row>
-							</Column>
-						</Row>
-						<Row flexGrow={1} className="review-item">
-							<Column flexGrow={1}>
-								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="120" height="120" alt="Sketch" />
-							</Column>
-							<Column vertical="center" style={{marginLeft:'20px'}}>
-								<Row horizontal="start">
-									<FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star-empty" /><FontAwesome name="star" className="review-star-empty" />
-								</Row>
-								<Row horizontal="start" className="review-quote">
-									&laquo;Though the gravity still dragged at him, his muscles were making great efforts to adjust. After the daily classes he no longer collapsed immediately into bed.&raquo;
-								</Row>
-							</Column>
-						</Row>
-						<Row flexGrow={1} className="review-item">
-							<Column flexGrow={1}>
-								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="120" height="120" alt="Sketch" />
-							</Column>
-							<Column vertical="center" style={{marginLeft:'20px'}}>
-								<Row horizontal="start">
-									<FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star-empty" /><FontAwesome name="star" className="review-star-empty" />
-								</Row>
-								<Row horizontal="start" className="review-quote">
-									&laquo;Though the gravity still dragged at him, his muscles were making great efforts to adjust. After the daily classes he no longer collapsed immediately into bed.&raquo;
-								</Row>
-							</Column>
-						</Row>
-						<Row flexGrow={1} className="review-item">
-							<Column flexGrow={1}>
-								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="120" height="120" alt="Sketch" />
-							</Column>
+								<Column flexGrow={1}>
+									<img className="review-image" src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" alt="Sketch" />
+								</Column>
 							<Column vertical="center" style={{marginLeft:'20px'}}>
 								<Row horizontal="start">
 									<FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star" /><FontAwesome name="star" className="review-star-empty" /><FontAwesome name="star" className="review-star-empty" />

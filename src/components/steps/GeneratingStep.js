@@ -7,6 +7,7 @@ import { Column, Row } from 'simple-flexbox';
 
 import LightBox from '../elements/LightBox';
 import NextButton from './../elements/NextButton';
+import ProcessingStatus from './../elements/ProcessingStatus';
 import TemplateItem from '../TemplateItem';
 
 class GeneratingStep extends Component {
@@ -161,12 +162,6 @@ class GeneratingStep extends Component {
 			);
 		});
 
-		const status = this.props.status.map((item, i, arr) => {
-			return (
-				<Row key={i} horizontal="start" className="status-item">{item}</Row>
-			);
-		});
-
 		const btnSelectClass = (this.selectedItems.length === this.state.files.length) ? 'action-button step-button selected-button' : 'action-button step-button';
 		const btnSelectCaption = (this.selectedItems.length === this.state.files.length) ? 'Select None' : 'Select All ('+this.state.files.length+')';
 
@@ -176,9 +171,6 @@ class GeneratingStep extends Component {
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">Select the views you want to keep</div>
 						<div className="step-text">The following Design Systems examples have been generated from Design Engine.</div>
-						<div className="status-wrapper">
-							{status}
-						</div>
 						<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><button className={btnSelectClass} onClick={()=> this.onSelectAll()}>{btnSelectCaption}</button></Row>
 						<div className="template-item-wrapper">
 							<Row horizontal="center" style={{flexWrap:'wrap'}}>
@@ -187,6 +179,8 @@ class GeneratingStep extends Component {
 						</div>
 					</Column>
 				</Row>
+
+				<ProcessingStatus status={this.props.status} />
 
 				{this.state.lightBox.isVisible && (
 					<LightBox title={this.state.lightBox.title} url={this.state.lightBox.url} onClick={()=> this.handleLightBoxClick()} />

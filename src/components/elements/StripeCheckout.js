@@ -1,6 +1,7 @@
 
 import React, {Component} from 'react';
-import {CardElement, injectStripe} from 'react-stripe-elements';
+
+import { CardNumberElement, CardExpiryElement, CardCVCElement, injectStripe } from 'react-stripe-elements';
 
 class StripeCheckout extends Component {
 	constructor(props) {
@@ -9,15 +10,25 @@ class StripeCheckout extends Component {
 	}
 
 	async submit(ev) {
-		// User clicked submit
+		let {token} = await this.props.stripe.createToken({name: "Name"});
+// 		let response = await fetch("/charge", {
+// 			method: "POST",
+// 			headers: {"Content-Type": "text/plain"},
+// 			body: token.id
+// 		});
+
+// 		if (response.ok) console.log("Purchase Complete!")
+
+		console.log("TOKEN", token);
 	}
 
 	render() {
 		return (
 			<div className="checkout">
-				<p>Complete the purchase</p>
-				<CardElement />
-				<button onClick={this.submit}>Send</button>
+				<div className="form-element"><CardNumberElement className="textfield-input" /></div>
+				<div className="form-element"><CardExpiryElement className="textfield-input" /></div>
+				<div className="form-element"><CardCVCElement className="textfield-input" /></div>
+				<div className="form-element"><button onClick={this.submit}>Send</button></div>
 			</div>
 		);
 	}

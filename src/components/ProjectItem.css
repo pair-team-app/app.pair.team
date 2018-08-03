@@ -4,6 +4,7 @@
 	width: 160px;
 	height: 180px;
 	margin: 10px;
+	border: 1px dotted #090;
 }
 
 .project-item-image {
@@ -16,4 +17,17 @@
 	font-size: 11px;
 	color: #666666;
 	font-weight: bold;
+}
+
+@media only screen and (max-width: 600px) {
+	.project-item {
+		width: 80px;
+		height: 100px;
+	}
+	.project-item-image {
+		width: 80px;
+		height: 80px;
+		margin-bottom: 5px;
+	}
+
 }
