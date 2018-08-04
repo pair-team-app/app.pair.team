@@ -1,10 +1,12 @@
 
 .project-item {
-	/*background-color: #e0e0e0;*/
 	width: 160px;
 	height: 180px;
 	margin: 10px;
-	border: 1px dotted #090;
+}
+
+.project-item:hover {
+	cursor: pointer;
 }
 
 .project-item-image {

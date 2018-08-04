@@ -16,11 +16,17 @@ class LightBox extends Component {
 			console.log(this.contentElement.width, this.contentElement.height);
 		}
 
+		const items = this.props.urls.map((url, i, arr) => {
+			return (
+				<div key={i}><img src={url} className="lightbox-image" alt={this.props.title} /></div>
+			);
+		});
+
 		return (
 			<div className="lightbox-wrapper" onClick={()=> this.props.onClick()}>
 				<div className="lightbox-container">
 					<div className="lightbox-content" ref={(element) => { this.contentElement = element; }}>
-						<img src={this.props.url} className="lightbox-image" alt={this.props.title} />
+						{items}
 					</div>
 				</div>
 			</div>

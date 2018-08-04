@@ -69,7 +69,7 @@ class TextForm extends Component {
 					onChange={(event)=> this.handleTextChange(event)}
 					onClick={(name)=> this.handleTooltip(name)} />
 
-				<div className="input-title">Message</div>
+				<div className="input-title">In 2 or more sentences, describe your design</div>
 				<div className="form-element">
 					<textarea className="textfield-input" name="txt-description" placeholder="“Describe what you would like your design to look like”" value={this.state.form.description} onChange={this.handleTextChange} rows="4" />
 					<div className="input-tip input-tip-green" onClick={()=> this.handleTooltip('headline')}>What is This?</div>

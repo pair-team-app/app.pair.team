@@ -67,3 +67,10 @@ button:focus, input:focus, textarea:focus {
   font-weight: 800;
   src: url("./fonts/WorkSans-Black.otf");
 }
+
+/** Bold */
+@font-face {
+  font-family: "Poppins Bold";
+  font-weight: 700;
+  src: url("./fonts/Poppins-Bold.otf");
+}

@@ -44,8 +44,8 @@ class TemplateStep extends Component {
 		return (
 			<Row vertical="start">
 				<Column flexGrow={1} horizontal="center">
-					<div className="step-header-text">Select a Design System Template</div>
-					<div className="step-text">The following Design Systems examples have been generated from Design Engine.</div>
+					<div className="step-header-text">Select a Design System</div>
+					<div className="step-text">Select a Premium Design System to begin editting.</div>
 					<div className="template-button-wrapper">
 						<Row horizontal="center" style={{flexWrap:'wrap'}}>
 							{items}

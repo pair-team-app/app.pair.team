@@ -1,4 +1,14 @@
 
+.footer-wrapper {
+	width: 65%
+}
+
+@media only screen and (max-width: 600px) {
+	.footer-wrapper {
+		width: 90%
+	}
+}
+
 .footer-logo {
 	width: 30px;
 	height: 30px;

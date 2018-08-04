@@ -7,7 +7,6 @@ import { Column, Row } from 'simple-flexbox';
 
 import LightBox from '../elements/LightBox';
 import NextButton from './../elements/NextButton';
-import ProcessingStatus from './../elements/ProcessingStatus';
 import TemplateItem from '../TemplateItem';
 
 class GeneratingStep extends Component {
@@ -179,8 +178,6 @@ class GeneratingStep extends Component {
 						</div>
 					</Column>
 				</Row>
-
-				<ProcessingStatus status={this.props.status} />
 
 				{this.state.lightBox.isVisible && (
 					<LightBox title={this.state.lightBox.title} url={this.state.lightBox.url} onClick={()=> this.handleLightBoxClick()} />

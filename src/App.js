@@ -21,6 +21,7 @@ import BottomNav from './components/elements/BottomNav'
 import DetailsStep from './components/steps/DetailsStep';
 import GeneratingStep from './components/steps/GeneratingStep';
 import GetStartedStep from './components/steps/GetStartedStep';
+import ProcessingStatus from './components/elements/ProcessingStatus';
 import PurchaseStep from './components/steps/PurchaseStep';
 import SplashIntro from './components/elements/SplashIntro';
 import TemplateStep from './components/steps/TemplateStep';
@@ -28,7 +29,7 @@ import TopNav from './components/elements/TopNav';
 
 class App extends Component {
 	constructor(props) {
-		console.log("constructor()");
+// 		console.log("constructor()");
 
 		super(props);
 
@@ -36,6 +37,7 @@ class App extends Component {
 		  step : 0,
 			isIntro : true,
 			isProjects : false,
+			isStatus : false,
 			isFAQ : false,
 			amount : 0.00,
 			selectedItems : null,
@@ -238,6 +240,7 @@ class App extends Component {
 							    amount={this.state.amount}
 							    isProjects={this.state.isProjects}
 							    isFAQ={this.state.isFAQ}
+							    isStatus={this.state.isFAQ}
 							    onStep0={()=> this.handleStep0()}
 							    onStep1={()=> this.handleStep1()}
 							    onProjects={()=> this.handleProjects()}
@@ -267,7 +270,6 @@ class App extends Component {
 						    {this.state.step === 3 && (
 							    <GeneratingStep
 								    orderID={cookie.load('order_id')}
-								    status={this.state.processingStatus}
 								    onClick={(obj)=> this.handleStep4(obj)}
 								    onItemToggle={(obj)=> this.handleItemToggle(obj)} />
 						    )}
@@ -283,6 +285,10 @@ class App extends Component {
 				    <Column flexGrow={1} horizontal="center" className="bottom-nav">
 				      <BottomNav handleStep1={()=> this.handleStep1()}/>
 				    </Column>
+
+				    {this.state.isStatus && (
+				    	<ProcessingStatus status={this.state.processingStatus} />
+				    )}
 			    </div>
 		    )}
 	    </div>
