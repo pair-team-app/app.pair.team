@@ -37,7 +37,7 @@ class App extends Component {
 		  step : 0,
 			isIntro : true,
 			isProjects : false,
-			isStatus : false,
+			isStatus : true,
 			isFAQ : false,
 			amount : 0.00,
 			selectedItems : null,
@@ -48,6 +48,28 @@ class App extends Component {
 
 		this.templateID = 0;
 		this.images = [];
+		this.interval = null;
+	}
+
+	componentDidMount() {
+// 		let self = this;
+// 		setInterval(function() {
+// 			self.statusCheck();
+// 		}, 2000);
+		this.statusCheck();
+	}
+
+	statusCheck() {
+		let self = this;
+		let formData = new FormData();
+		formData.append('action', 'STATUS_CHECK');
+		formData.append('order_id', cookie.load('order_id'));
+		axios.post('https://api.designengine.ai/templates.php', formData)
+			.then((response)=> {
+				console.log("STATUS_CHECK", JSON.stringify(response.data));
+				self.setState({ processingStatus : [response.data.status] });
+			}).catch((error) => {
+		});
 	}
 
 	handleStep0() {
@@ -115,6 +137,20 @@ class App extends Component {
 							console.log("colr", JSON.stringify(response.data));
 							response.data.schemes.forEach(function(itm, i) {
 								colors.push(itm.colors);
+
+								itm.colors.forEach(function(color, i) {
+									let formData = new FormData();
+									formData.append('action', 'ADD_COLOR');
+									formData.append('order_id', cookie.load('order_id'));
+									formData.append('keyword', item.Text);
+									formData.append('index', itm.id);
+									formData.append('hex', color);
+									axios.post('https://api.designengine.ai/templates.php', formData)
+										.then((response)=> {
+											console.log("ADD_COLOR", JSON.stringify(response.data));
+										}).catch((error) => {
+									});
+								});
 							});
 
 							console.log("COLORS", colors);
@@ -133,11 +169,11 @@ class App extends Component {
 								formData.append('order_id', cookie.load('order_id'));
 								formData.append('keyword', item.Text);
 								formData.append('url', itm.urls.full);
-// 								axios.post('https://api.designengine.ai/templates.php', formData)
-// 									.then((response)=> {
-// 										console.log("ADD_IMAGE", JSON.stringify(response.data));
-// 									}).catch((error) => {
-// 								});
+								axios.post('https://api.designengine.ai/templates.php', formData)
+									.then((response)=> {
+										console.log("ADD_IMAGE", JSON.stringify(response.data));
+									}).catch((error) => {
+								});
 							});
 							self.images = self.images.concat(images);
 							console.log(JSON.stringify(self.images));

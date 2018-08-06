@@ -2,8 +2,6 @@
 import React, { Component } from 'react';
 import './ProcessingStatus.css'
 
-// import axios from 'axios';
-// import cookie from 'react-cookies';
 import { Row } from 'simple-flexbox';
 
 class ProcessingStatus extends Component {
@@ -21,7 +19,7 @@ class ProcessingStatus extends Component {
 		});
 
 		return (
-			<div className="processing-wrapper" onClick={()=> this.props.onClick()}>
+			<div className="processing-wrapper">
 				<div className="processing-content">
 					{status}
 				</div>
