@@ -26,6 +26,25 @@ class TemplateStep extends Component {
 				let templates = [];
 				response.data.templates.forEach(template => {
 					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
+					templates.push(template);
 				});
 				this.setState({ templates : templates });
 			}).catch((error) => {

@@ -168,9 +168,9 @@ class GeneratingStep extends Component {
 			<div>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Select the views you want to keep</div>
+						<div className="step-header-text">Select the designs that you like</div>
 						<div className="step-text">The following Design Systems examples have been generated from Design Engine.</div>
-						<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><button className={btnSelectClass} onClick={()=> this.onSelectAll()}>{btnSelectCaption}</button></Row>
+						<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><div className="step-text-margin"><button className={btnSelectClass} onClick={()=> this.onSelectAll()}>{btnSelectCaption}</button></div></Row>
 						<div className="template-item-wrapper">
 							<Row horizontal="center" style={{flexWrap:'wrap'}}>
 								{items}

@@ -35,10 +35,11 @@ class App extends Component {
 
 		this.state = {
 		  step : 0,
-			isIntro : true,
+			isIntro : false,
 			isProjects : false,
 			isStatus : true,
 			isFAQ : false,
+			isUsers : false,
 			amount : 0.00,
 			selectedItems : null,
 			purchasedItems : null,
@@ -123,11 +124,11 @@ class App extends Component {
 		axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + encodeURIComponent(obj.description))
 			.then((response)=> {
 				console.log("COMPREHEND", JSON.stringify(response.data));
-				self.setState({ processingStatus: [
-					"Keywords & entities ("+(response.data.comprehend.keywords.length+response.data.comprehend.entities.length)+")…",
-					"Sentiment rating ("+(response.data.comprehend.sentiment.outcome)+")…",
-					"Grammar items ("+response.data.comprehend.syntax.length+")…"
-				] });
+// 				self.setState({ processingStatus: [
+// 					"Keywords & entities ("+(response.data.comprehend.keywords.length+response.data.comprehend.entities.length)+")…",
+// 					"Sentiment rating ("+(response.data.comprehend.sentiment.outcome)+")…",
+// 					"Grammar items ("+response.data.comprehend.syntax.length+")…"
+// 				] });
 
 				let colors = [];
 				let images = [];
@@ -224,6 +225,15 @@ class App extends Component {
 		}, 1000);
 	}
 
+	handleUsers() {
+		console.log("handleUsers()");
+		this.setState({ isUsers : true });
+		let self = this;
+		setTimeout(function() {
+			self.setState({ isUsers : false })
+		}, 1000);
+	}
+
 	handleNext() {
 		console.log("handleNext()");
 		window.scrollTo(0, 0);
@@ -277,10 +287,12 @@ class App extends Component {
 							    isProjects={this.state.isProjects}
 							    isFAQ={this.state.isFAQ}
 							    isStatus={this.state.isFAQ}
+							    isUsers={this.state.isUsers}
 							    onStep0={()=> this.handleStep0()}
 							    onStep1={()=> this.handleStep1()}
 							    onProjects={()=> this.handleProjects()}
 							    onFAQ={()=> this.handleFAQ()}
+							    onUsers={()=> this.handleUsers()}
 						    />
 					    </div>
 
@@ -289,6 +301,7 @@ class App extends Component {
 							    <GetStartedStep
 								    isProjects={this.state.isProjects}
 								    isFAQ={this.state.isFAQ}
+								    isUsers={this.state.isUsers}
 								    onClick={()=> this.handleStep1()} />
 						    )}
 
@@ -322,9 +335,9 @@ class App extends Component {
 				      <BottomNav handleStep1={()=> this.handleStep1()}/>
 				    </Column>
 
-				    {this.state.isStatus && (
-				    	<ProcessingStatus status={this.state.processingStatus} />
-				    )}
+				    {/*{(this.state.processingStatus.length > 0) && (*/}
+				    	{/*<ProcessingStatus status={this.state.processingStatus} />*/}
+				    {/*)}*/}
 			    </div>
 		    )}
 	    </div>

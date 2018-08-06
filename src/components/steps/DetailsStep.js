@@ -131,7 +131,7 @@ class DetailsStep extends Component {
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">Edit your Design System</div>
-						<div className="step-text">The following Design Systems examples have been generated from Design Engine.</div>
+						<div className="step-text">Edit your Design System below. The more descriptive details you provide the better.</div>
 					</Column>
 				</Row>
 				<Row vertical="start">

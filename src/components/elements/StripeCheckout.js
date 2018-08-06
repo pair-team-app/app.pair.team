@@ -3,6 +3,8 @@ import React, {Component} from 'react';
 
 import { CardNumberElement, CardExpiryElement, CardCVCElement, injectStripe } from 'react-stripe-elements';
 
+import InputField from '../InputField';
+
 class StripeCheckout extends Component {
 	constructor(props) {
 		super(props);
@@ -22,9 +24,25 @@ class StripeCheckout extends Component {
 		console.log("TOKEN", token);
 	}
 
+	handleTextChange(event) {
+
+	}
+
+	handleTooltip(name) {
+		console.log("handleTooltip");
+	}
+
+
 	render() {
 		return (
 			<div className="checkout">
+				<InputField
+					type="text"
+					name="customer-name"
+					placeholder="Name"
+					onChange={(event)=> this.handleTextChange(event)}
+					onClick={(name)=> this.handleTooltip(name)} />
+
 				<div className="form-element"><CardNumberElement className="textfield-input" /></div>
 				<div className="form-element"><CardExpiryElement className="textfield-input" /></div>
 				<div className="form-element"><CardCVCElement className="textfield-input" /></div>

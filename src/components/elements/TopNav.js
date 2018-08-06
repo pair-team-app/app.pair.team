@@ -50,7 +50,7 @@ class TopNav extends Component {
 					<Row vertical="center" style={{height:'40px'}}>
 						<MediaQuery minDeviceWidth={1224}>
 							{this.props.step === 0 && (
-								<span className="nav-link"><a href="http://designengine.ai/tryfree" target="_blank" rel="noopener noreferrer">Free Users</a></span>
+								<span className="nav-link" onClick={()=> this.props.onUsers()}>Free Users</span>
 							)}
 
 							{this.props.step > 0 && (

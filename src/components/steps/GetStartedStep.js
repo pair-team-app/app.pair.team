@@ -57,6 +57,14 @@ class GetStartedStep extends Component {
 			}, 750);
 		}
 
+		console.log(this.props.isUsers);
+		if (this.props.isUsers) {
+			goToAnchor('users');
+			setTimeout(function() {
+				removeHash();
+			}, 750);
+		}
+
 		const items = projects.map((item, i, arr) => {
 			return (
 				<Column key={i}>
@@ -96,7 +104,7 @@ class GetStartedStep extends Component {
 						<Row flexGrow={1} className="intro-projects">
 							<MediaQuery minDeviceWidth={1224}>
 								<Column flexGrow={1} horizontal="start">
-									<div className="step-header-text" style={lAlignStyle}>Fully editable, developer ready.</div>
+									<div className="step-header-text2" style={lAlignStyle}>Fully editable, developer ready.</div>
 									<div className="step-text" style={lAlignStyle}>Generate fully editable design files that works perfectly with Adobe, Sketch, Figma, Google, & more.</div>
 									<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
 								</Column>
@@ -109,52 +117,58 @@ class GetStartedStep extends Component {
 								</Column>
 							</MediaQuery>
 							<MediaQuery minDeviceWidth={1224}>
-								<Column flexGrow={1}>
+								<Column flexGrow={1} vertical="end">
 									<img src="/images/intro2.png" alt="iPhone" width="209" height="291" />
 								</Column>
 							</MediaQuery>
 						</Row>
 
 						<Row flexGrow={1} style={{width:'100%', flexWrap:'wrap'}} className="app-icons-wrapper">
-							<Column flexGrow={1} horizontal="center">
-								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" />
-							</Column>
-							<Column flexGrow={1} horizontal="center">
-								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" />
-							</Column>
-							<Column flexGrow={1} horizontal="center">
-								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" />
-							</Column>
-							<Column flexGrow={1} horizontal="center">
-								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" />
-							</Column>
-							<Column flexGrow={1} horizontal="center">
-								<img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" />
-							</Column>
+							<Column flexGrow={1} horizontal="center"><img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" /></Column>
+							<Column flexGrow={1} horizontal="center"><img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" /></Column>
+							<Column flexGrow={1} horizontal="center"><img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" /></Column>
+							<Column flexGrow={1} horizontal="center"><img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" /></Column>
+							<Column flexGrow={1} horizontal="center"><img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="50" height="50" alt="Sketch" /></Column>
 						</Row>
 
 						<ScrollableAnchor id="faq"><div className="step-header-text">Introducing Design Automation</div></ScrollableAnchor>
 						<div className="step-text">Design Engine is the first premium design automation tool allowing anyone to generate premium designs using AI. Design Engine uses a combination of curation & speculative design driven by AI software.</div>
 						<button className="action-button step-button" onClick={()=> this.props.onClick()}>Read More</button>
 						<img src="/images/macbook.png" className="intro-image" alt="MacBook" />
-						<div className="step-header-text">A new era of design will be AI driven</div>
-						<div className="step-text">Accelerate your best ideas with Design Engine’s AI powered Premium Design Systems.</div>
+						<div className="step-header-text">Where is Design AI headed?</div>
+						<div className="step-text">Listen to Design Engine’s bi-weekly microcast for insights on Design AI.</div>
 						<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
-						<img src="/images/macbook.png" className="intro-image" alt="MacBook" />
-						<div className="step-header-text">What people are saying about Design AI</div>
-						<div className="step-text">&laquo;Though the gravity still dragged at him, his muscles were making great efforts to adjust. After the daily classes he no longer collapsed immediately into bed.&raquo;</div>
-						<div className="step-text"><strong>@BennyBossen</strong></div>
-						<img src="/images/macbook.png" width="80" alt="Apple" />
+						<Row flexGrow={1} style={{width:'100%', flexWrap:'wrap'}} className="app-icons-wrapper">
+							<Column flexGrow={1} horizontal="center"><a href="#"><img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="160" height="120" alt="Sketch" /></a></Column>
+							<Column flexGrow={1} horizontal="center"><a href="#"><img src="https://radishlab.com/wp-content/uploads/2015/08/sketch-app-icon-e1439400898972.png" width="160" height="120" alt="Sketch" /></a></Column>
+						</Row>
 
-						<div className="step-header-text">Get FREE users to rate your designs</div>
+						<Row flexGrow={1} className="quotes-wrapper">
+							<Column flexGrow={1} horizontal="center">
+								<div className="step-header-text">What people are saying?</div>
+								<div className="step-text step-text-margin">&laquo;Though the gravity still dragged at him, his muscles were making great efforts to adjust. After the daily classes he no longer collapsed immediately into bed.&raquo;</div>
+								<div className="step-text-quote">@BennyBossen</div>
+								<img src="/images/macbook.png" width="80" alt="Apple" />
+							</Column>
+						</Row>
+
+						<Row flexGrow={1} style={{width:'100%', flexWrap:'wrap'}} className="app-icons-wrapper">
+							<Column flexGrow={1} horizontal="center"><img src="/images/adobe_logo.png" width="90" height="22" alt="Adobe" /></Column>
+							<Column flexGrow={1} horizontal="center"><img src="/images/adobe_logo.png" width="90" height="22" alt="Adobe" /></Column>
+							<Column flexGrow={1} horizontal="center"><img src="/images/adobe_logo.png" width="90" height="22" alt="Adobe" /></Column>
+							<Column flexGrow={1} horizontal="center"><img src="/images/adobe_logo.png" width="90" height="22" alt="Adobe" /></Column>
+							<Column flexGrow={1} horizontal="center"><img src="/images/adobe_logo.png" width="90" height="22" alt="Adobe" /></Column>
+						</Row>
+
+						<ScrollableAnchor id="users"><div className="step-header-text">Want free user feedback?</div></ScrollableAnchor>
 						<div className="step-text">Download Design Engine’s Menu Bar to receive FREE feedback on your designs.</div>
 						<button className="action-button step-button" onClick={()=> this.handleDownload()}>Download Menu Bar</button>
 						<img src="/images/macbook.png" className="intro-image" alt="MacBook" />
-						<div className="step-header-text">Wait, what, where is the catch</div>
-						<div className="step-text">The implications of this vary across design disciplines. In architecture, the parametric movement dubbed Parametricism 2.0 demonstrates the potential of technologically enhanced creativity. Its implications are already being explored in the gaming industry, as we design virtual environments.</div>
+						<div className="step-header-text">Wait, where is the catch?</div>
+						<div className="step-text">There is no catch! You simply install Design Engine’s Menu Bar and let our platform learn from your design skills. In return we provide free user feedback on the design artboards you sync with us.</div>
 						<button className="action-button step-button" onClick={()=> this.handleDownload()}>Download Menu Bar</button>
-						<div className="step-header-text">Get a daily report on design feedback</div>
-						<div className="step-text">Accelerate your best ideas with Design Engine’s AI powered Premium Design Systems.</div>
+						<div className="step-header-text">Get a daily report of user feedback</div>
+						<div className="step-text">Design Engine will send you a daily design report detailing rating, sentiment & feedback.</div>
 						<button className="action-button step-button" onClick={()=> this.handleDownload()}>Download Menu Bar</button>
 
 						<div className="reviews-wrapper">

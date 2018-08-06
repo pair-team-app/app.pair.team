@@ -1,0 +1,13 @@
+
+RewriteEngine on
+    # RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [R=301,P]
+		RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [L,R=301,NC]
+
+#-- don't cache these --#
+<IfModule mod_expires.c>
+    <FilesMatch "\.(css|html?|js|json|php)$">
+        ExpiresActive On
+        ExpiresDefault A1
+        Header append Cache-Control must-revalidate
+    </FilesMatch>
+</IfModule>

@@ -11,12 +11,10 @@
 
 .imagery-item-image {
 	width: 100%;
-	border: 2px solid #ffffff;
 	border-radius: 10px;
 	opacity: 0.5;
 }
 
 .imagery-item-image-selected {
-	border: 2px solid #333333;
 	opacity: 1.0;
 }

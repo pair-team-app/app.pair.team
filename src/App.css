@@ -7,13 +7,7 @@
 .content-wrapper {
 	width: 65%;
 	border: 2px dashed #ff00ff;
-	padding: 0 5px;
-}
-
-@media only screen and (max-width: 600px) {
-	.content-wrapper {
-		width: 90%;
-	}
+	padding: 0 1px;
 }
 
 .top-nav {
@@ -28,11 +22,15 @@
 	border-top: 1px solid #cccccc;
 }
 
-.step-header-text {
-	margin: 10px 0 30px 0;
+.step-header-text, .step-header-text2 {
+	margin: 10px 50px 5px 50px;
 	font-size: 48px;
 	font-family: "Poppins Bold", sans-serif;
 	font-weight: 700;
+}
+
+.step-header-text2 {
+	margin: 10px 0 20px 0;
 }
 
 .step-subheader-text {
@@ -41,10 +39,20 @@
 	font-weight: 300;
 }
 
-.step-text {
-	color: #000000;
+.step-text, .step-text-margin {
+	color: #4a4a4a;
 	font-size: 14px;
 	margin: 10px 0 30px 0;
+}
+
+.step-text-margin {
+	margin: 10px 40px 30px 40px;
+}
+
+.step-text-quote {
+	color: #000000;
+	font-size: 14px;
+	margin: -20px 0 30px 0;
 }
 
 .input-title {
@@ -54,23 +62,24 @@
 }
 
 .form-element {
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 	width: 100%;
 	position: relative;
 }
 
 .action-button {
-	padding: 10px 12px;
-	background-color: #0000ff;
+	padding: 8px 12px;
+	background-color: #002fff;
 	font-size: 12px;
 	color : #ffffff;
 	border: none;
 	border-radius: 5px;
-	min-width: 70px;
+	min-width: 75px;
 }
 
 .action-button:hover {
 	cursor: pointer;
+	box-shadow: 0 0 24px #cccccc;
 }
 
 .step-button {
@@ -134,4 +143,15 @@
 	flex: 1 0 auto;
 	-webkit-flex: 1 0 auto;
 	padding: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+	.content-wrapper {
+		width: 90%;
+	}
+
+	.step-header-text, .step-header-text2 {
+		margin: 10px 0 5px 0;
+		font-size: 32px;
+	}
 }

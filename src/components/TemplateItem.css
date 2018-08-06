@@ -14,11 +14,10 @@
 .template-item-image {
 	width: 140px;
 	height: 180px;
-	border: 1px solid #ffffff;
+	box-shadow: 0 0 24px #cccccc;
 }
 
 .template-item-image-selected {
-	border: 1px solid #666666;
 }
 
 .template-item-price {
@@ -39,5 +38,5 @@
 }
 
 .template-item-button {
-	margin-top: 10px;
+	margin-top: 20px;
 }

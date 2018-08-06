@@ -83,7 +83,7 @@ class PurchaseStep extends Component {
 		return (
 			<Row vertical="start">
 				<Column flexGrow={1} horizontal="center">
-					<div className="step-header-text">Enter payment information</div>
+					<div className="step-header-text">Enter your payment details</div>
 					<div className="step-text">The following Design Systems examples have been generated from Design Engine.</div>
 					<div style={{width:'100%', textAlign:'left'}}>
 						<div className="input-title">Details</div>

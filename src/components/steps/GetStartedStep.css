@@ -9,14 +9,20 @@
 
 .intro-projects {
 	margin: 80px 0 40px 0;
-	padding: 0 50px;
-	border-bottom: 1px solid #cccccc;
+	padding: 0 40px;
+	border-bottom: 1px solid #b8c1cb;
 }
 
 @media only screen and (max-width: 600px) {
 	.intro-projects {
 		padding: 0 20px;
 	}
+}
+
+.quotes-wrapper {
+	margin-bottom: 20px;
+	padding: 0 40px 30px 40px;
+	border-bottom: 1px solid #b8c1cb;
 }
 
 .reviews-wrapper {
@@ -45,7 +51,7 @@
 }
 
 .review-star, .review-star-empty {
-	font-size: 20px;
+	font-size: 18px;
 	color: #000000;
 	margin: 10px 10px 10px 0;
 }
@@ -55,7 +61,7 @@
 }
 
 .review-quote {
-	font-size: 16px;
+	font-size: 14px;
 	color: #999999;
 	margin-top: 5px;
 }

@@ -7,7 +7,7 @@
 .nav-link {
 	padding-left: 20px;
 	font-size: 14px;
-	color: #0000ff;
+	color: #002FFF;
 }
 
 .nav-link:hover {
@@ -17,11 +17,11 @@
 
 .nav-link a, .nav-link a:active, .nav-link a:link, .nav-link a:visited {
 	text-decoration: none;
-	color: #0000ff;
+	color: #002FFF;
 }
 
 .nav-link-active, .nav-link:active, .nav-link a:active {
-	color: #999999;
+	color: #9b9b9b;
 	text-decoration: none;
 }
 
