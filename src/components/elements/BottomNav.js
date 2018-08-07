@@ -18,7 +18,7 @@ class BottomNav extends Component {
 	render() {
 		return (
 				<div className="footer-wrapper">
-					<MediaQuery minDeviceWidth={1224}>
+					<MediaQuery minWidth={840}>
 						<Row vertical="start" horizontal="center" style={{margin:'0 30px'}}>
 							<Column flexGrow={1} horizontal="start">
 								<a href="/"><img src="/images/logo.png" className="footer-logo" alt="Design Engine" /></a>
@@ -60,7 +60,7 @@ class BottomNav extends Component {
 						</Row>
 					</MediaQuery>
 
-					<MediaQuery maxDeviceWidth={1224}>
+					<MediaQuery maxWidth={840}>
 						<div style={{marginLeft:'20px'}}>
 							<div className="footer-title">Company</div>
 							<div className="footer-link"><a href="https://" target="_blank" rel="noopener noreferrer">Crunchbase</a></div>

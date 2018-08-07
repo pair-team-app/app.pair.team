@@ -102,21 +102,21 @@ class GetStartedStep extends Component {
 						</div>
 
 						<Row flexGrow={1} className="intro-projects">
-							<MediaQuery minDeviceWidth={1224}>
+							<MediaQuery minWidth={840}>
 								<Column flexGrow={1} horizontal="start">
 									<div className="step-header-text2" style={lAlignStyle}>Fully editable, developer ready.</div>
 									<div className="step-text" style={lAlignStyle}>Generate fully editable design files that works perfectly with Adobe, Sketch, Figma, Google, & more.</div>
 									<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
 								</Column>
 							</MediaQuery>
-							<MediaQuery maxDeviceWidth={1224}>
+							<MediaQuery maxWidth={840}>
 								<Column flexGrow={1} horizontal="center">
 									<div className="step-header-text">Fully editable, developer ready.</div>
 									<div className="step-text">Generate fully editable design files that works perfectly with Adobe, Sketch, Figma, Google, & more.</div>
 									<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
 								</Column>
 							</MediaQuery>
-							<MediaQuery minDeviceWidth={1224}>
+							<MediaQuery minWidth={840}>
 								<Column flexGrow={1} vertical="end">
 									<img src="/images/intro2.png" alt="iPhone" width="209" height="291" />
 								</Column>

@@ -11,9 +11,12 @@ class TextForm extends Component {
 
 		this.state = {
 			form : {
-				email        : 'matt@modd.live',
-				title        : 'Swap Meets Map',
-				description  : 'Find local flea markets in Florida.',
+// 				email        : 'matt@modd.live',
+				email        : '',
+// 				title        : 'Swap Meets Map',
+				title        : '',
+// 				description  : 'Find local flea markets in Florida.',
+				description  : '',
 				colors       : '',
 				cornerType   : 1,
 				imagery      : ''

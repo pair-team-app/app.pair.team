@@ -35,7 +35,7 @@ class TopNav extends Component {
 				{this.props.step === 0 && (
 					<Column flexGrow={1} horizontal="center">
 						<Row vertical="center" style={{height:'40px'}}>
-							<MediaQuery minDeviceWidth={1224}>
+							<MediaQuery minWidth={840}>
 								<span>
 									<span className="nav-link" onClick={()=> this.props.onStep1()}>Get Started</span>
 									<span className="nav-link" onClick={()=> this.props.onProjects()}>View Examples</span>
@@ -48,7 +48,7 @@ class TopNav extends Component {
 
 				<Column flexGrow={1} horizontal="end">
 					<Row vertical="center" style={{height:'40px'}}>
-						<MediaQuery minDeviceWidth={1224}>
+						<MediaQuery minWidth={840}>
 							{this.props.step === 0 && (
 								<span className="nav-link" onClick={()=> this.props.onUsers()}>Free Users</span>
 							)}
@@ -57,7 +57,7 @@ class TopNav extends Component {
 								<FontAwesome name={faGlyph} className="nav-link-close" onClick={()=> this.props.onStep0()} />
 							)}
 						</MediaQuery>
-						<MediaQuery maxDeviceWidth={1224}>
+						<MediaQuery maxWidth={840}>
 							<span className="nav-link" onClick={()=> this.props.onStep1()}>Get Started</span>
 						</MediaQuery>
 					</Row>

@@ -15,6 +15,7 @@ import './App.css';
 
 import axios from 'axios';
 import cookie from 'react-cookies';
+import { geolocated } from 'react-geolocated';
 import { Column } from 'simple-flexbox';
 
 import BottomNav from './components/elements/BottomNav'
@@ -35,11 +36,13 @@ class App extends Component {
 
 		this.state = {
 		  step : 0,
-			isIntro : false,
-			isProjects : false,
+			pages : {
+				isIntro : false,
+				isProjects : false,
+				isFAQ : false,
+				isUsers : false
+			},
 			isStatus : true,
-			isFAQ : false,
-			isUsers : false,
 			amount : 0.00,
 			selectedItems : null,
 			purchasedItems : null,
@@ -71,6 +74,13 @@ class App extends Component {
 				self.setState({ processingStatus : [response.data.status] });
 			}).catch((error) => {
 		});
+	}
+
+	handleIntroComplete() {
+		console.log("handleIntroComplete()");
+		let pages = this.state.pages;
+		pages.isIntro = false;
+		this.setState({ pages : pages });
 	}
 
 	handleStep0() {
@@ -209,28 +219,43 @@ class App extends Component {
 
 	handleProjects() {
 		console.log("handleProjects()");
-		this.setState({ isProjects : true });
 		let self = this;
+		let pages = this.state.pages;
+		pages.isProjects = true;
+
+		this.setState({ pages : pages });
+
 		setTimeout(function() {
-			self.setState({ isProjects : false })
+			pages.isProjects = false;
+			self.setState({ pages : pages })
 		}, 1000);
 	}
 
 	handleFAQ() {
 		console.log("handleFAQ()");
-		this.setState({ isFAQ : true });
 		let self = this;
+		let pages = this.state.pages;
+		pages.isFAQ = true;
+
+		this.setState({ pages : pages });
+
 		setTimeout(function() {
-			self.setState({ isFAQ : false })
+			pages.isFAQ = false;
+			self.setState({ pages : pages })
 		}, 1000);
 	}
 
 	handleUsers() {
 		console.log("handleUsers()");
-		this.setState({ isUsers : true });
 		let self = this;
+		let pages = this.state.pages;
+		pages.isUsers = true;
+
+		this.setState({ pages : pages });
+
 		setTimeout(function() {
-			self.setState({ isUsers : false })
+			pages.isUsers = false;
+			self.setState({ pages : pages })
 		}, 1000);
 	}
 
@@ -270,10 +295,11 @@ class App extends Component {
 	}
 
   render() {
+		console.log("coords", JSON.stringify(this.props.coords));
     return (
     	<div>
 		    {this.state.isIntro && (
-		    	<SplashIntro onComplete={()=> this.setState({ isIntro : false })}/>
+		    	<SplashIntro onComplete={()=> this.handleIntroComplete()}/>
 		    )}
 
 
@@ -284,10 +310,10 @@ class App extends Component {
 						    <TopNav
 							    step={this.state.step}
 							    amount={this.state.amount}
-							    isProjects={this.state.isProjects}
-							    isFAQ={this.state.isFAQ}
-							    isStatus={this.state.isFAQ}
-							    isUsers={this.state.isUsers}
+							    isProjects={this.state.pages.isProjects}
+							    isFAQ={this.state.pages.isFAQ}
+							    isStatus={this.state.pages.isFAQ}
+							    isUsers={this.state.pages.isUsers}
 							    onStep0={()=> this.handleStep0()}
 							    onStep1={()=> this.handleStep1()}
 							    onProjects={()=> this.handleProjects()}
@@ -299,9 +325,9 @@ class App extends Component {
 					    <div className="content-wrapper">
 						    {this.state.step === 0 && (
 							    <GetStartedStep
-								    isProjects={this.state.isProjects}
-								    isFAQ={this.state.isFAQ}
-								    isUsers={this.state.isUsers}
+								    isProjects={this.state.pages.isProjects}
+								    isFAQ={this.state.pages.isFAQ}
+								    isUsers={this.state.pages.isUsers}
 								    onClick={()=> this.handleStep1()} />
 						    )}
 
@@ -345,4 +371,9 @@ class App extends Component {
   }
 }
 
-export default App;
+export default geolocated({
+	positionOptions: {
+		enableHighAccuracy : false,
+	},
+	userDecisionTimeout : 5000,
+})(App);
