@@ -28,13 +28,13 @@ class TopNav extends Component {
 			<Row vertical="start">
 				<Column flexGrow={1} horizontal="start">
 					<Row vertical="center">
-						<a href="/"><img src="/images/logo.png" className="nav-logo" alt="Design Engine" /></a>
+						<a href="/"><img src="/images/logo_header.png" className="nav-logo" alt="Design Engine" /></a>
 					</Row>
 				</Column>
 
 				{this.props.step === 0 && (
 					<Column flexGrow={1} horizontal="center">
-						<Row vertical="center" style={{height:'40px'}}>
+						<Row vertical="center" style={{height:'18px'}}>
 							<MediaQuery minWidth={840}>
 								<span>
 									<span className="nav-link" onClick={()=> this.props.onStep1()}>Get Started</span>
@@ -47,7 +47,7 @@ class TopNav extends Component {
 				)}
 
 				<Column flexGrow={1} horizontal="end">
-					<Row vertical="center" style={{height:'40px'}}>
+					<Row vertical="center" style={{height:'18px'}}>
 						<MediaQuery minWidth={840}>
 							{this.props.step === 0 && (
 								<span className="nav-link" onClick={()=> this.props.onUsers()}>Free Users</span>

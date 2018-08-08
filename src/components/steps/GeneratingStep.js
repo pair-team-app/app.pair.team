@@ -180,7 +180,7 @@ class GeneratingStep extends Component {
 				</Row>
 
 				{this.state.lightBox.isVisible && (
-					<LightBox title={this.state.lightBox.title} url={this.state.lightBox.url} onClick={()=> this.handleLightBoxClick()} />
+					<LightBox title={this.state.lightBox.title} urls={[this.state.lightBox.url]} onClick={()=> this.handleLightBoxClick()} />
 				)}
 				<NextButton isEnabled={(this.selectedItems.length > 0)} onClick={()=> this.onNext()} />
 			</div>

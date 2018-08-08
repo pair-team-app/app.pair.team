@@ -322,7 +322,7 @@ class App extends Component {
 						    />
 					    </div>
 
-					    <div className="content-wrapper">
+					    <div className="content-wrapper debug-border">
 						    {this.state.step === 0 && (
 							    <GetStartedStep
 								    isProjects={this.state.pages.isProjects}

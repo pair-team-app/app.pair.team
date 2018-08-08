@@ -1,7 +1,7 @@
 
 .project-item {
-	width: 180px;
-	height: 150px;
+	width: 204px;
+	height: 158px;
 	margin: 10px;
 }
 
@@ -10,8 +10,8 @@
 }
 
 .project-item-image {
-	width: 180px;
-	height: 150px;
+	width: 204px;
+	height: 158px;
 	margin-bottom: 5px;
 }
 
@@ -23,12 +23,12 @@
 
 @media only screen and (max-width: 600px) {
 	.project-item {
-		width: 80px;
-		height: 100px;
+		width: 68px;
+		height: 52px;
 	}
 	.project-item-image {
-		width: 80px;
-		height: 80px;
+		width: 68px;
+		height: 52px;
 		margin-bottom: 5px;
 	}
 

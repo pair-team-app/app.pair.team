@@ -8,6 +8,7 @@
 	width: 65%;
 	/*border: 2px dashed #ff00ff;*/
 	padding: 0 1px;
+	margin-bottom: 20px;
 }
 
 .top-nav {
@@ -19,30 +20,27 @@
 	width: 100%;
 	margin-bottom: 50px;
 	padding-top: 30px;
-	border-top: 1px solid #cccccc;
+	border-top: 1px solid #cad7e2;
 }
 
-.step-header-text, .step-header-text2 {
+.step-header-text, .step-subheader-text {
 	margin: 10px 50px 5px 50px;
-	font-size: 48px;
+	font-size: 42px;
 	font-family: "Poppins Bold", sans-serif;
 	font-weight: 700;
-}
-
-.step-header-text2 {
-	margin: 10px 0 20px 0;
+	line-height: 52px;
 }
 
 .step-subheader-text {
-	margin: 10px 0;
-	font-size: 32px;
-	font-weight: 300;
+	margin: 10px 0 20px 0;
+	font-size: 36px;
+	line-height: 44px;
 }
 
 .step-text, .step-text-margin {
 	color: #4a4a4a;
-	font-size: 14px;
-	margin: 10px 0 30px 0;
+	font-weight: 400;
+	margin: 10px 0 20px 0;
 }
 
 .step-text-margin {
@@ -51,18 +49,19 @@
 
 .step-text-quote {
 	color: #000000;
-	font-size: 14px;
-	margin: -20px 0 30px 0;
+	font-weight: 500;
+	margin: -10px 0 20px 0;
 }
 
 .input-title {
-	font-size: 24px;
+	font-family: "Poppins Bold", sans-serif;
+	font-size: 18px;
 	font-weight: 600;
-	margin: 30px 0 10px 0;
+	margin: 40px 0 20px 0;
 }
 
 .form-element {
-	margin-bottom: 20px;
+	margin: 0 0 30px 0;
 	width: 100%;
 	position: relative;
 }
@@ -79,7 +78,7 @@
 
 .action-button:hover {
 	cursor: pointer;
-	box-shadow: 0 0 24px #cccccc;
+	box-shadow: 0 0 20px #cccccc;
 }
 
 .step-button {
@@ -101,6 +100,10 @@
 	color: #ffffff;
 }
 
+.selected-button {
+	background-color: #61a913;
+}
+
 .disabled-button:hover {
 	cursor: default;
 }
@@ -111,9 +114,10 @@
 	font-size: 14px;
 	color : #000000;
 	border: none;
+	border-radius: 6px;
 	width: 100%;
 	box-sizing: border-box;
-	box-shadow: 0 0 24px #cccccc;
+	box-shadow: 0 0 20px #cccccc;
 }
 
 .is-hidden {
@@ -121,37 +125,18 @@
 	visibility: hidden;
 }
 
-.flex-container {
-	display: -webkit-box;
-	display: -moz-box;
-	display: -ms-flexbox;
-	display: -webkit-flex;
-	display: flex;
-	flex-flow: row wrap;
-	-webkit-flex-flow: row wrap;
-	flex-wrap: wrap;
-	-webkit-flex-wrap: wrap;
-	justify-content: center;
-}
-
-.flex-item {
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-	-webkit-flex-direction: column;
-	height: auto;
-	flex: 1 0 auto;
-	-webkit-flex: 1 0 auto;
-	padding: 10px;
+.debug-border {
+	border: 1px dashed #ff00ff;
 }
 
 @media only screen and (max-width: 600px) {
 	.content-wrapper {
-		width: 90%;
+		width: 95%;
 	}
 
 	.step-header-text, .step-header-text2 {
 		margin: 10px 0 5px 0;
 		font-size: 32px;
+		line-height: 40px;
 	}
 }

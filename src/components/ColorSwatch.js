@@ -27,7 +27,7 @@ class ColorSwatch extends Component {
 
 		return (
 			<div onClick={()=> this.handleClick()} className="color-swatch" style={swatchStyle} data-tip={'#' + this.props.swatch.toUpperCase()} data-type="dark">
-				<span className="color-swatch-hex">{'#' + this.props.swatch}</span>
+				{/*<span className="color-swatch-hex">{'#' + this.props.swatch}</span>*/}
 				{/*<ReactTooltip />*/}
 			</div>
 		);

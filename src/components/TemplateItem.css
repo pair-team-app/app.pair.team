@@ -7,14 +7,14 @@
 }
 
 .template-item-container {
-	/*background-color: #000000;*/
 	position: relative;
 }
 
 .template-item-image {
 	width: 140px;
 	height: 180px;
-	box-shadow: 0 0 24px #cccccc;
+	border-radius: 6px;
+	box-shadow: 0 0 20px #cccccc;
 }
 
 .template-item-image-selected {
@@ -24,7 +24,7 @@
 	font-size: 14px;
 	font-weight: 500;
 	color: #ffffff;
-	background-color: #009900;
+	background-color: #76aa3c;
 	padding: 10px;
 	position: absolute;
 	left: 20px;

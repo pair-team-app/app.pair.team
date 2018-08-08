@@ -13,13 +13,13 @@
 .template-button-image {
 	width: 155px;
 	height: 110px;
-	box-shadow: 0 0 24px #cccccc;
+	box-shadow: 0 0 20px #cccccc;
 }
 
 .template-button-title {
-	font-size: 14px;
+	font-size: 16px;
 	color: #000000;
-	font-weight: bold;
+	font-weight: 600;
 	text-align: left;
 	margin: 5px 0;
 }

@@ -1,6 +1,6 @@
 
 .color-swatch {
-	width: 160px;
+	width: 140px;
 	height: 40px;
 	margin-top: 25px;
 	border-radius: 5px;
@@ -8,6 +8,7 @@
 	display: table;
 	color: #000000;
 	font-size: 12px;
+	box-shadow: 0 0 12px #cccccc;
 }
 
 .color-swatch-hex {

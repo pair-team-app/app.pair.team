@@ -13,7 +13,7 @@
 .lightbox-container {
 	position: fixed;
 	width: auto;
-	max-width: 600px;
+	max-width: 408px;
 	height: auto;
 	max-height: 90%;
 	top: 50%;
@@ -33,5 +33,5 @@
 }
 
 .lightbox-image {
-	width: 600px;
+	width: 408px;
 }
