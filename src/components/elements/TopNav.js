@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './TopNav.css';
 
-import FontAwesome from 'react-fontawesome';
 import MediaQuery from 'react-responsive';
 import { Column, Row } from 'simple-flexbox';
 
@@ -22,7 +21,7 @@ class TopNav extends Component {
 	}
 
 	render() {
-		const faGlyph = (this.props.isStatus) ? 'spinner' : 'times';
+		//const faGlyph = (this.props.isStatus) ? 'spinner' : 'times';
 
 		return (
 			<Row vertical="start">
@@ -54,7 +53,7 @@ class TopNav extends Component {
 							)}
 
 							{this.props.step > 0 && (
-								<FontAwesome name={faGlyph} className="nav-link-close" onClick={()=> this.props.onStep0()} />
+								<img src="/images/close.png" className="nav-link-close" alt="Close" onClick={()=> this.props.onStep0()} />
 							)}
 						</MediaQuery>
 						<MediaQuery maxWidth={840}>

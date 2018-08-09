@@ -18,7 +18,8 @@ import cookie from 'react-cookies';
 import { geolocated } from 'react-geolocated';
 import { Column } from 'simple-flexbox';
 
-import BottomNav from './components/elements/BottomNav'
+import BottomNav from './components/elements/BottomNav';
+import CompletionStep from './components/steps/CompletionStep';
 import DetailsStep from './components/steps/DetailsStep';
 import GeneratingStep from './components/steps/GeneratingStep';
 import GetStartedStep from './components/steps/GetStartedStep';
@@ -211,10 +212,7 @@ class App extends Component {
 	handleStep5() {
 		console.log("handleStep5()");
 		window.scrollTo(0, 0);
-		this.setState({
-			step : 5,
-			isStripeOverlay : true
-		});
+		this.setState({ step : 5 });
 	}
 
 	handleProjects() {
@@ -322,7 +320,7 @@ class App extends Component {
 						    />
 					    </div>
 
-					    <div className="content-wrapper debug-border">
+					    <div className="content-wrapper">
 						    {this.state.step === 0 && (
 							    <GetStartedStep
 								    isProjects={this.state.pages.isProjects}
@@ -354,6 +352,10 @@ class App extends Component {
 								    onClick={()=> this.handleStep5()}
 								    onItemToggle={(obj)=> this.handleItemToggle(obj)}
 								    selectedItems={this.state.selectedItems} />
+						    )}
+
+						    {this.state.step === 5 && (
+							    <CompletionStep />
 						    )}
 					    </div>
 				    </Column>

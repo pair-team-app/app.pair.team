@@ -26,11 +26,11 @@
 }
 
 .nav-link-close {
-	font-size: 32px;
-	color: #cccccc;
+	width: 20px;
+	height: 20px;
 }
 
 .nav-link-close:hover {
 	cursor: pointer;
-	color: #999999;
+	opacity: 0.75;
 }

@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import './PurchaseStep.css';
+import stripe from '../../stripe.json';
 
 import {Elements, StripeProvider} from 'react-stripe-elements';
 import { Column, Row } from 'simple-flexbox';
@@ -17,8 +18,8 @@ class PurchaseStep extends Component {
 			allItems      : this.props.selectedItems
 		};
 
-		this.STRIPE_TEST_TOKEN = 'pk_test_hEOqIXLLiGcTTj7p2W9XxuCP';
-		this.STRIPE_LIVE_TOKEN = 'pk_live_7OvF9BcQ3LvNZd0z0FsPPgNF';
+		this.STRIPE_TEST_TOKEN = stripe.test.publish;
+		this.STRIPE_LIVE_TOKEN = stripe.live.publish;
 	}
 
 	handleClick(id, isSelected) {

@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 
 import axios from 'axios';
 import CurrencyFormat from 'react-currency-format';
-import { CardCVCElement, CardElement, CardExpiryElement, CardNumberElement, injectStripe } from 'react-stripe-elements';
+import { CardCVCElement, CardExpiryElement, CardNumberElement, injectStripe } from 'react-stripe-elements';
 
 import InputField from '../InputField';
 
@@ -19,20 +19,25 @@ class StripeCheckout extends Component {
 	}
 
 	async submit(ev) {
-		let {token} = await this.props.stripe.createToken({ name : this.state.cardholder });
+		let token = await this.props.stripe.createToken({ name : this.state.cardholder });
 		let amount = this.props.amount;
+
+		console.log("token", token);
 
 		setTimeout(function() {
 			let formData = new FormData();
-			formData.append('token_id', token.id);
+			formData.append('token_id', token.token.id);
 			formData.append('amount', amount);
 // 		axios.post('/stripe_checkout.php', formData)
 			axios.post('http://stage.designengine.ai/stripe_checkout.php', formData)
 				.then((response)=> {
 					console.log("stripe_checkout", JSON.stringify(response.data));
+					this.props.handleStep5();
+// 					if (response.data.result) {
+// 						this.props.handleStep5();
+// 					}
 				}).catch((error) => {
 			});
-
 		}, 500);
 	}
 

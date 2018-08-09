@@ -4,7 +4,7 @@ import './CompletionStep.css'
 
 // import axios from 'axios';
 // import cookie from 'react-cookies';
-import { Row } from 'simple-flexbox';
+import { Column, Row } from 'simple-flexbox';
 
 import ContentModal from '../elements/ContentModal'
 
