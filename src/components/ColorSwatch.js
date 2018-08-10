@@ -2,8 +2,6 @@
 import React, { Component } from 'react';
 import './ColorSwatch.css';
 
-// import ReactTooltip from 'react-tooltip'
-
 class ColorSwatch extends Component {
 	constructor(props) {
 		super(props);

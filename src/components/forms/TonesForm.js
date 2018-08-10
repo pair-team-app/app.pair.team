@@ -1,76 +1,76 @@
 
 import React, { Component } from 'react';
-import './CornersForm.css';
-import corners from '../../corners.json';
+import './TonesForm.css';
+import tones from '../../tones.json';
 
 import { Column, Row } from 'simple-flexbox';
 
-import CornerType from '../CornerType';
+import KeywordItem from '../KeywordItem';
 
 
-class CornersForm extends Component {
+class TonesForm extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			form: {
-				corners : []
-			}
+			form : {
+				tones : []
+			},
+			isValidated : false
 		};
 
-		this.selectedCorners = [];
-	}
-
-	componentDidMount() {
+		this.selectedTones = [];
 	}
 
 	handleToggle(id, isSelected) {
+		console.log("handleToggle()", id, isSelected);
 		let self = this;
 
 		if (isSelected) {
-			if (this.selectedCorners.length < 3) {
-				corners.forEach(function (item, i) {
+			if (this.selectedTones.length < 3) {
+				tones.forEach(function (item, i) {
 					if (item.id === id) {
 
 						let isFound = false;
-						self.selectedCorners.forEach(function (itm, j) {
+						self.selectedTones.forEach(function (itm, j) {
 							if (itm.id === id) {
 								isFound = true;
 							}
 						});
 
 						if (!isFound) {
-							self.selectedCorners.push(item);
+							self.selectedTones.push(item);
 						}
 					}
 				});
 			}
 
 		} else {
-			this.selectedCorners.forEach(function(item, i) {
+			this.selectedTones.forEach(function(item, i) {
 				if (item.id === id) {
-					self.selectedCorners.splice(i, 1);
+					self.selectedTones.splice(i, 1);
 				}
 			});
 		}
 
-		this.setState({ isValidated : (this.selectedCorners.length > 0) })
+		this.setState({ isValidated : (this.selectedTones.length > 0) })
+
 	}
 
 	handleClick() {
 		if (this.state.isValidated) {
 			let form = this.state.form;
-			form.corners = this.selectedCorners;
+			form.tones = this.selectedTones;
 			this.setState({ form : form });
-			this.props.onNext(this.state.form);
+			this.props.onNext(form);
 		}
 	}
 
 	render() {
-		let items = corners.map((item, i, arr) => {
+		const items = tones.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<CornerType title={item.title} url={item.url} isSelected={item.isSelected} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
+					<KeywordItem title={item.title} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
 				</Column>
 			);
 		});
@@ -81,8 +81,8 @@ class CornersForm extends Component {
 			<div style={{width:'100%'}} className="debug-border">
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Step 5</div>
-						<div className="step-text">What type of corners do you want?</div>
+						<div className="step-header-text">Step 3</div>
+						<div className="step-text">What type of tone do you want?</div>
 					</Column>
 				</Row>
 				<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
@@ -95,4 +95,4 @@ class CornersForm extends Component {
 	}
 }
 
-export default CornersForm;
+export default TonesForm;

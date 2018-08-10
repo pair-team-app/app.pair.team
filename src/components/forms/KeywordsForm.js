@@ -1,76 +1,76 @@
 
 import React, { Component } from 'react';
-import './CornersForm.css';
-import corners from '../../corners.json';
+import './KeywordsForm.css';
+import keywords from '../../keywords.json';
 
 import { Column, Row } from 'simple-flexbox';
 
-import CornerType from '../CornerType';
+import KeywordItem from '../KeywordItem';
 
 
-class CornersForm extends Component {
+class KeywordsForm extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			form: {
-				corners : []
-			}
+			form : {
+				keywords : []
+			},
+			isValidated : false
 		};
 
-		this.selectedCorners = [];
-	}
-
-	componentDidMount() {
+		this.selectedKeywords = [];
 	}
 
 	handleToggle(id, isSelected) {
+		console.log("handleToggle()", id, isSelected);
 		let self = this;
 
 		if (isSelected) {
-			if (this.selectedCorners.length < 3) {
-				corners.forEach(function (item, i) {
+			if (this.selectedKeywords.length < 3) {
+				keywords.forEach(function (item, i) {
 					if (item.id === id) {
 
 						let isFound = false;
-						self.selectedCorners.forEach(function (itm, j) {
+						self.selectedKeywords.forEach(function (itm, j) {
 							if (itm.id === id) {
 								isFound = true;
 							}
 						});
 
 						if (!isFound) {
-							self.selectedCorners.push(item);
+							self.selectedKeywords.push(item);
 						}
 					}
 				});
 			}
 
 		} else {
-			this.selectedCorners.forEach(function(item, i) {
+			this.selectedKeywords.forEach(function(item, i) {
 				if (item.id === id) {
-					self.selectedCorners.splice(i, 1);
+					self.selectedKeywords.splice(i, 1);
 				}
 			});
 		}
 
-		this.setState({ isValidated : (this.selectedCorners.length > 0) })
+		this.setState({ isValidated : (this.selectedKeywords.length > 0) })
+
 	}
 
 	handleClick() {
 		if (this.state.isValidated) {
 			let form = this.state.form;
-			form.corners = this.selectedCorners;
+			form.keywords = this.selectedKeywords;
 			this.setState({ form : form });
-			this.props.onNext(this.state.form);
+			this.props.onNext(form);
 		}
 	}
 
 	render() {
-		let items = corners.map((item, i, arr) => {
+		const items = keywords.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<CornerType title={item.title} url={item.url} isSelected={item.isSelected} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
+					<KeywordItem title={item.title} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
 				</Column>
 			);
 		});
@@ -81,8 +81,8 @@ class CornersForm extends Component {
 			<div style={{width:'100%'}} className="debug-border">
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Step 5</div>
-						<div className="step-text">What type of corners do you want?</div>
+						<div className="step-header-text">Step 2</div>
+						<div className="step-text">What are you looking to design?</div>
 					</Column>
 				</Row>
 				<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
@@ -95,4 +95,4 @@ class CornersForm extends Component {
 	}
 }
 
-export default CornersForm;
+export default KeywordsForm;

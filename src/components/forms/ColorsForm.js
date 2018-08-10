@@ -13,7 +13,10 @@ class ColorsForm extends Component {
 		super(props);
 
 		this.state = {
-			colors : []
+			colors: [],
+			form: {
+				colors : []
+			}
 		};
 
 		this.selectedColors = [];
@@ -67,8 +70,16 @@ class ColorsForm extends Component {
 			});
 		}
 
-		console.log(JSON.stringify(this.selectedColors));
-		this.props.onToggle(this.selectedColors);
+		this.setState({ isValidated : (this.selectedColors.length > 0) })
+	}
+
+	handleClick() {
+		if (this.state.isValidated) {
+			let form = this.state.form;
+			form.colors = this.selectedColors;
+			this.setState({ form : form });
+			this.props.onNext(this.state.form);
+		}
 	}
 
 	render() {
@@ -80,15 +91,21 @@ class ColorsForm extends Component {
 			);
 		});
 
+		const btnClass = (this.state.isValidated) ? 'action-button step-button' : 'action-button step-button disabled-button';
+
 		return (
-			<div style={{textAlign:'left'}}>
-				<div className="input-title">Colors</div>
-				<div className="step-text" style={{marginBottom:'10px'}}>Select up to three colors for your design system.</div>
-				<div className="color-item-wrapper">
-					<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
-						{colors}
-					</Row>
-				</div>
+			<div style={{width:'100%'}} className="debug-border">
+				<Row vertical="start">
+					<Column flexGrow={1} horizontal="center">
+						<div className="step-header-text">Step 4</div>
+						<div className="step-text">What type of tone do you want?</div>
+					</Column>
+				</Row>
+				<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
+					{colors}
+				</Row>
+				<button className="action-button step-button" onClick={()=> this.props.onBack()}>Back</button>
+				<button className={btnClass} onClick={()=> this.handleClick()}>Next Step</button>
 			</div>
 		);
 	}

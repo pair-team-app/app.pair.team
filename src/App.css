@@ -82,7 +82,7 @@
 }
 
 .step-button {
-	margin: 10px 0 20px 0;
+	margin: 10px 10px 20px 10px;
 }
 
 .full-button {
@@ -95,17 +95,19 @@
 	padding: 8px 12px;
 }
 
-.disabled-button, .selected-button {
+.disabled-button {
 	background-color: #999999;
 	color: #ffffff;
 }
 
 .selected-button {
 	background-color: #61a913;
+	color: #ffffff;
 }
 
 .disabled-button:hover {
 	cursor: default;
+	box-shadow: none;
 }
 
 .textfield-input {

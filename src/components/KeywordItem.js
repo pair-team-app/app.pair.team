@@ -1,9 +1,8 @@
 
 import React, { Component } from 'react';
-import './CornerType.css';
+import './KeywordItem.css';
 
-
-class CornerType extends Component {
+class KeywordItem extends Component {
 	constructor(props) {
 		super(props);
 
@@ -19,14 +18,14 @@ class CornerType extends Component {
 	}
 
 	render() {
-		const className = (this.state.isSelected) ? 'corner-type corner-type-selected' : 'corner-type';
+		const className = (this.state.isSelected) ? 'keyword-item keyword-item-selected' : 'keyword-item';
 
 		return (
 			<div onClick={()=> this.handleClick()} className={className}>
-				<img src={this.props.url} className="corner-type-image" alt={this.props.title} />
+				<span className="keyword-item-text">{this.props.title}</span>
 			</div>
 		);
 	}
 }
 
-export default CornerType;
+export default KeywordItem;

@@ -9,7 +9,9 @@ import ColorsForm from '../forms/ColorsForm';
 import CornersForm from '../forms/CornersForm';
 import ImageryForm from '../forms/ImageryForm';
 import NextButton from './../elements/NextButton';
-import TextForm from '../forms/TextForm';
+import TitleForm from '../forms/TitleForm';
+import KeywordsForm from "../forms/KeywordsForm";
+import TonesForm from "../forms/TonesForm";
 
 
 class DetailsStep extends Component {
@@ -17,6 +19,7 @@ class DetailsStep extends Component {
 		super(props);
 
 		this.state = {
+			step : 0,
 			form : {
 				email        : '',
 				title        : '',
@@ -24,6 +27,10 @@ class DetailsStep extends Component {
 				colors       : '',
 				cornerType   : 1,
 				imagery      : ''
+			},
+			validate : {
+				title : false,
+				keywords : false
 			},
 			isValidated : false
 		};
@@ -51,10 +58,26 @@ class DetailsStep extends Component {
 		return (validated);
 	}
 
-	handleTextChange(form) {
+	handleStepChange(vals) {
+		console.log("handleStepChange()", JSON.stringify(vals));
+
+		let form = this.state.form;
+		if (this.state.step === 0) {
+			for (let [key, value] of Object.entries(vals)) {
+				console.log(key, value);
+			}
+
+		} else if (this.state.step === 1) {
+
+		} else if (this.state.step === 2) {
+
+		} else if (this.state.step === 3) {
+
+		}
+
 		this.setState({
-			form : form,
-			isValidated : (this.validator(form) === 0x111)
+			step : this.state.step + 1,
+			form : form
 		});
 
 		//this.setState({ [event.target.name] : event.target.value });
@@ -76,6 +99,10 @@ class DetailsStep extends Component {
 	handleImageryToggle(obj) {
 		console.log("handleImageryToggle(" + JSON.stringify(obj) + ")");
 		this.selectedImagery = obj;
+	}
+
+	handleBack() {
+		this.setState({ step : this.state.step - 1 })
 	}
 
 	handleClick() {
@@ -128,20 +155,42 @@ class DetailsStep extends Component {
 
 		return (
 			<div>
-				<Row vertical="start">
-					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Edit your Design System</div>
-						<div className="step-text">Edit your Design System below. The more descriptive details you provide the better.</div>
-					</Column>
-				</Row>
-				<Row vertical="start">
+				{this.state.step === 0 && (
 					<Column flexGrow={1} horizontal="start">
-						<TextForm onChange={(form)=> this.handleTextChange(form)} />
-						<ColorsForm templateID={this.props.templateID} onToggle={(obj)=> this.handleColorToggle(obj)} />
-						<CornersForm onToggle={(id)=> this.handleCornerToggle(id)} />
+						<TitleForm onNext={(vals)=> this.handleStepChange(vals)} />
+					</Column>
+				)}
+
+				{this.state.step === 1 && (
+					<Column flexGrow={1} horizontal="start">
+						<KeywordsForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
+					</Column>
+				)}
+
+				{this.state.step === 2 && (
+					<Column flexGrow={1} horizontal="start">
+						<TonesForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
+					</Column>
+				)}
+
+				{this.state.step === 3 && (
+					<Column flexGrow={1} horizontal="start">
+						<ColorsForm templateID={this.props.templateID} onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
+					</Column>
+				)}
+
+				{this.state.step === 4 && (
+					<Column flexGrow={1} horizontal="start">
+						<CornersForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
+					</Column>
+				)}
+
+				{this.state.step === 5 && (
+					<Column flexGrow={1} horizontal="start">
 						<ImageryForm templateID={this.props.templateID} onToggle={(obj)=> this.handleImageryToggle(obj)} onDrop={(files)=> this.onDrop(files)} />
 					</Column>
-				</Row>
+				)}
+
 				<NextButton isEnabled={this.state.isValidated} onClick={()=> this.handleClick()} />
 			</div>
 		);

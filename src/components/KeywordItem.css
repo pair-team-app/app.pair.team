@@ -1,22 +1,26 @@
 
-.color-swatch {
+.keyword-item {
 	width: 140px;
 	height: 40px;
 	margin-top: 25px;
 	border-radius: 20px;
 	text-align: center;
 	display: table;
-	color: #000000;
-	font-size: 12px;
+	color: #4a4a4a;
+	font-size: 14px;
 	box-shadow: 0 0 12px #cccccc;
+	background-color: #ffffff;
 }
 
-.color-swatch-hex {
+.keyword-item-selected {
+	background-color: #85c734;
+}
+
+.keyword-item-text {
 	display: table-cell;
 	vertical-align: middle;
-	/*text-shadow: 0 0 2px #ffffff;*/
 }
 
-.color-swatch:hover {
+.keyword-item:hover {
 	cursor: pointer;
 }
