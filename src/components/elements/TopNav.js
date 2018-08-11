@@ -21,7 +21,7 @@ class TopNav extends Component {
 	}
 
 	render() {
-		//const faGlyph = (this.props.isStatus) ? 'spinner' : 'times';
+		//const faGlyph = (this.props.isTooltip) ? 'spinner' : 'times';
 
 		return (
 			<Row vertical="start">

@@ -2,13 +2,12 @@
 import React, { Component } from 'react';
 import './DetailsStep.css';
 
-import axios from 'axios';
-import { Column, Row } from 'simple-flexbox';
+import { Column } from 'simple-flexbox';
 
 import ColorsForm from '../forms/ColorsForm';
 import CornersForm from '../forms/CornersForm';
 import ImageryForm from '../forms/ImageryForm';
-import NextButton from './../elements/NextButton';
+// import NextButton from './../elements/NextButton';
 import TitleForm from '../forms/TitleForm';
 import KeywordsForm from "../forms/KeywordsForm";
 import TonesForm from "../forms/TonesForm";
@@ -25,89 +24,54 @@ class DetailsStep extends Component {
 				title        : '',
 				description  : '',
 				colors       : '',
-				cornerType   : 1,
+				cornerType   : '1',
 				imagery      : ''
-			},
-			validate : {
-				title : false,
-				keywords : false
-			},
-			isValidated : false
+			}
 		};
 
 		this.selectedColors = [];
 		this.selectedImagery = [];
 	}
 
-	validator(form) {
-		let validated = 0x000;
-
-		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		if (re.test(String(form.email).toLowerCase())) {
-			validated |= 0x001;
-		}
-
-		if (form.title.length > 0) {
-			validated |= 0x010;
-		}
-
-		if (form.description.length > 0) {
-			validated |= 0x100;
-		}
-
-		return (validated);
-	}
-
 	handleStepChange(vals) {
 		console.log("handleStepChange()", JSON.stringify(vals));
 
 		let form = this.state.form;
+
+		// title + email
 		if (this.state.step === 0) {
 			for (let [key, value] of Object.entries(vals)) {
 				console.log(key, value);
 			}
 
+		// keywords
 		} else if (this.state.step === 1) {
 
+		// tones
 		} else if (this.state.step === 2) {
 
+			// colors
 		} else if (this.state.step === 3) {
+			this.selectedColors = vals;
 
+			// corners
+		} else if (this.state.step === 4) {
+			let form = this.state.form;
+			form.cornerType = vals;
+			this.setState({ form : form });
+
+			// imagery
+		} else if (this.state.step === 5) {
+			this.selectedImagery = vals;
 		}
 
-		this.setState({
-			step : this.state.step + 1,
-			form : form
-		});
+		if (this.state.step < 5) {
+			this.setState({
+				step : this.state.step + 1,
+				form : form
+			});
 
-		//this.setState({ [event.target.name] : event.target.value });
-	}
-
-	handleColorToggle(obj) {
-		console.log("handleColorToggle("+JSON.stringify(obj)+")");
-		this.selectedColors = obj;
-	}
-
-	handleCornerToggle(id) {
-		console.log("handleCornerToggle("+id+")");
-
-		let form = this.state.form;
-		form.cornerType = id;
-		this.setState({ form : form });
-	}
-
-	handleImageryToggle(obj) {
-		console.log("handleImageryToggle(" + JSON.stringify(obj) + ")");
-		this.selectedImagery = obj;
-	}
-
-	handleBack() {
-		this.setState({ step : this.state.step - 1 })
-	}
-
-	handleClick() {
-		let form = this.state.form;
-		if (this.validator(form) === 0x111) {
+		} else {
 			let colors = [];
 			this.selectedColors.forEach(color => {
 				colors.push(color.id);
@@ -122,32 +86,12 @@ class DetailsStep extends Component {
 			form.imagery = imagery.join();
 			this.props.onClick(form);
 		}
+
+		//this.setState({ [event.target.name] : event.target.value });
 	}
 
-	onDrop(dzFiles) {
-		console.log("onDrop()");
-// 		this.props.onDrop(dzFiles);
-
-		let files = {};
-		dzFiles.forEach(file => {
-			files[file.name] = {};
-			console.log("UPLOADING… "+file.name);
-
-			let formData = new FormData();
-			formData.append('file', file);
-
-			const config = {
-				headers : {
-					'content-type' : 'multipart/form-data'
-				}
-			};
-
-			axios.post('http://cdn.designengine.ai/upload.php', formData, config)
-				.then((response) => {
-					console.log("UPLOAD", JSON.stringify(response.data));
-				}).catch((error) => {
-			});
-		});
+	handleBack() {
+		this.setState({ step : this.state.step - 1 })
 	}
 
 	render() {
@@ -155,43 +99,35 @@ class DetailsStep extends Component {
 
 		return (
 			<div>
-				{this.state.step === 0 && (
-					<Column flexGrow={1} horizontal="start">
-						<TitleForm onNext={(vals)=> this.handleStepChange(vals)} />
-					</Column>
-				)}
+				<Column flexGrow={1} horizontal="start">
+					{this.state.step === 0 && (
+						<TitleForm
+							onTooltip={(obj)=> this.props.onTooltip(obj)}
+							onNext={(vals)=> this.handleStepChange(vals)} />
+					)}
 
-				{this.state.step === 1 && (
-					<Column flexGrow={1} horizontal="start">
+					{this.state.step === 1 && (
 						<KeywordsForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
-					</Column>
-				)}
+					)}
 
-				{this.state.step === 2 && (
-					<Column flexGrow={1} horizontal="start">
+					{this.state.step === 2 && (
 						<TonesForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
-					</Column>
-				)}
+					)}
 
-				{this.state.step === 3 && (
-					<Column flexGrow={1} horizontal="start">
+					{this.state.step === 3 && (
 						<ColorsForm templateID={this.props.templateID} onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
-					</Column>
-				)}
+					)}
 
-				{this.state.step === 4 && (
-					<Column flexGrow={1} horizontal="start">
+					{this.state.step === 4 && (
 						<CornersForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
-					</Column>
-				)}
+					)}
 
-				{this.state.step === 5 && (
-					<Column flexGrow={1} horizontal="start">
-						<ImageryForm templateID={this.props.templateID} onToggle={(obj)=> this.handleImageryToggle(obj)} onDrop={(files)=> this.onDrop(files)} />
-					</Column>
-				)}
+					{this.state.step === 5 && (
+						<ImageryForm templateID={this.props.templateID} onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} onDrop={(files)=> this.onDrop(files)} />
+					)}
+				</Column>
 
-				<NextButton isEnabled={this.state.isValidated} onClick={()=> this.handleClick()} />
+				{/*<NextButton isEnabled={this.state.isValidated} onClick={()=> this.handleClick()} />*/}
 			</div>
 		);
 	}

@@ -101,11 +101,11 @@ class ColorsForm extends Component {
 						<div className="step-text">What type of tone do you want?</div>
 					</Column>
 				</Row>
+				<button className="action-button step-button" onClick={()=> this.props.onBack()}>Back</button>
+				<button className={btnClass} onClick={()=> this.handleClick()}>Next Step</button>
 				<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
 					{colors}
 				</Row>
-				<button className="action-button step-button" onClick={()=> this.props.onBack()}>Back</button>
-				<button className={btnClass} onClick={()=> this.handleClick()}>Next Step</button>
 			</div>
 		);
 	}

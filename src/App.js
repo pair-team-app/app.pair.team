@@ -23,7 +23,7 @@ import CompletionStep from './components/steps/CompletionStep';
 import DetailsStep from './components/steps/DetailsStep';
 import GeneratingStep from './components/steps/GeneratingStep';
 import GetStartedStep from './components/steps/GetStartedStep';
-import ProcessingStatus from './components/elements/ProcessingStatus';
+import Tooltip from './components/elements/Tooltip';
 import PurchaseStep from './components/steps/PurchaseStep';
 import SplashIntro from './components/elements/SplashIntro';
 import TemplateStep from './components/steps/TemplateStep';
@@ -43,11 +43,14 @@ class App extends Component {
 				isFAQ : false,
 				isUsers : false
 			},
-			isStatus : true,
+			isTooltip : false,
 			amount : 0.00,
 			selectedItems : null,
 			purchasedItems : null,
-			processingStatus: [],
+			tooltip: {
+		  	img : '',
+				txt : ''
+			},
 			comprehend : []
 		};
 
@@ -61,7 +64,25 @@ class App extends Component {
 // 		setInterval(function() {
 // 			self.statusCheck();
 // 		}, 2000);
-		this.statusCheck();
+// 		this.statusCheck();
+
+		this.showStatus({
+			img : '/images/logo_icon.png',
+			txt : 'Design Systems loaded.'
+		})
+	}
+
+	showStatus(tooltip) {
+		let self = this;
+
+		this.setState({
+			isTooltip : true,
+			tooltip : tooltip
+		});
+
+		setTimeout(function() {
+			self.setState({ isTooltip : false });
+		}, 2000);
 	}
 
 	statusCheck() {
@@ -72,7 +93,11 @@ class App extends Component {
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
 				console.log("STATUS_CHECK", JSON.stringify(response.data));
-				self.setState({ processingStatus : [response.data.status] });
+				self.showStatus({
+					img : '/images/logo_icon.png',
+					txt : response.data.status
+				});
+
 			}).catch((error) => {
 		});
 	}
@@ -101,6 +126,11 @@ class App extends Component {
 		this.templateID = id;
 		window.scrollTo(0, 0);
 		this.setState({ step : 2 });
+
+		this.showStatus({
+			img : '/images/logo_icon.png',
+			txt : 'Template ['+this.templateID+'] selected.'
+		});
 	}
 
 	handleStep3(obj) {
@@ -135,7 +165,7 @@ class App extends Component {
 		axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + encodeURIComponent(obj.description))
 			.then((response)=> {
 				console.log("COMPREHEND", JSON.stringify(response.data));
-// 				self.setState({ processingStatus: [
+// 				self.setState({ tooltip: [
 // 					"Keywords & entities ("+(response.data.comprehend.keywords.length+response.data.comprehend.entities.length)+")…",
 // 					"Sentiment rating ("+(response.data.comprehend.sentiment.outcome)+")…",
 // 					"Grammar items ("+response.data.comprehend.syntax.length+")…"
@@ -310,7 +340,7 @@ class App extends Component {
 							    amount={this.state.amount}
 							    isProjects={this.state.pages.isProjects}
 							    isFAQ={this.state.pages.isFAQ}
-							    isStatus={this.state.pages.isFAQ}
+							    isTooltip={this.state.pages.isFAQ}
 							    isUsers={this.state.pages.isUsers}
 							    onStep0={()=> this.handleStep0()}
 							    onStep1={()=> this.handleStep1()}
@@ -337,6 +367,7 @@ class App extends Component {
 						    {this.state.step === 2 && (
 							    <DetailsStep
 								    templateID={this.templateID}
+								    onTooltip={(obj)=> this.showStatus(obj)}
 								    onClick={(obj)=> this.handleStep3(obj)} />
 						    )}
 
@@ -363,9 +394,9 @@ class App extends Component {
 				      <BottomNav handleStep1={()=> this.handleStep1()}/>
 				    </Column>
 
-				    {/*{(this.state.processingStatus.length > 0) && (*/}
-				    	{/*<ProcessingStatus status={this.state.processingStatus} />*/}
-				    {/*)}*/}
+				    {this.state.isTooltip && (
+				    	<Tooltip content={this.state.tooltip} />
+				    )}
 			    </div>
 		    )}
 	    </div>

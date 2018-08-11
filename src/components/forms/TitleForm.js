@@ -41,6 +41,10 @@ class TitleForm extends Component {
 		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		if (re.test(String(form.email).toLowerCase())) {
 			validated |= 0x001;
+			this.props.onTooltip({
+				img : '/images/logo_icon.png',
+				txt : 'Email validated, thanks!'
+			});
 		}
 
 		if (form.title.length > 0) {

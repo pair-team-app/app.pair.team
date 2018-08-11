@@ -6,6 +6,8 @@ import axios from 'axios';
 import Dropzone from 'react-dropzone';
 import Masonry from 'react-masonry-component';
 
+import { Column, Row } from 'simple-flexbox';
+
 import ImageryItem from '../ImageryItem';
 
 
@@ -14,7 +16,11 @@ class ImageryForm extends Component {
 		super(props);
 
 		this.state = {
-			imagery : []
+			form : {
+				imagery : []
+			},
+			imagery : [],
+			isValidated : false
 		};
 
 		this.selectedImagery = [];
@@ -35,6 +41,46 @@ class ImageryForm extends Component {
 				this.setState({ imagery : imagery });
 
 			}).catch((error) => {
+		});
+	}
+
+	dzComponent() {
+		let dzStyle = {
+			marginTop : '85px',
+			fontSize : '14px',
+			color : '#ffffff',
+			textAlign : 'center'
+		};
+
+		return (
+			<Dropzone key={-1} disabled={false} onDrop={this.onDrop.bind(this)} className="dropzone">
+				<div style={dzStyle}>Drop images here…</div>
+			</Dropzone>
+		);
+	}
+
+	onDrop(dzFiles) {
+		console.log("onDrop()");
+
+		let files = {};
+		dzFiles.forEach(file => {
+			files[file.name] = {};
+			console.log("UPLOADING… "+file.name);
+
+			let formData = new FormData();
+			formData.append('file', file);
+
+			const config = {
+				headers : {
+					'content-type' : 'multipart/form-data'
+				}
+			};
+
+			axios.post('http://cdn.designengine.ai/upload.php', formData, config)
+				.then((response) => {
+					console.log("UPLOAD", JSON.stringify(response.data));
+				}).catch((error) => {
+			});
 		});
 	}
 
@@ -67,28 +113,16 @@ class ImageryForm extends Component {
 			});
 		}
 
-		console.log(JSON.stringify(this.selectedImagery));
-		this.props.onToggle(this.selectedImagery);
+		this.setState({ isValidated : (this.selectedImagery.length > 0) })
 	}
 
-	dzComponent() {
-		let dzStyle = {
-			marginTop : '85px',
-			fontSize : '14px',
-			color : '#ffffff',
-			textAlign : 'center'
-		};
-
-		return (
-			<Dropzone key={-1} disabled={false} onDrop={this.onDrop.bind(this)} className="dropzone">
-				<div style={dzStyle}>Drop images here…</div>
-			</Dropzone>
-		);
-	}
-
-	onDrop(files) {
-		console.log("onDrop()");
-		this.props.onDrop(files);
+	handleClick() {
+		if (this.state.isValidated) {
+			let form = this.state.form;
+			form.keywords = this.selectedImagery;
+			this.setState({ form : form });
+			this.props.onNext(form);
+		}
 	}
 
 	render() {
@@ -100,11 +134,19 @@ class ImageryForm extends Component {
 
 		imagery.splice(1, 0, this.dzComponent());
 
+		const btnClass = (this.state.isValidated) ? 'action-button step-button' : 'action-button step-button disabled-button';
+
 		return (
-			<div style={{width:'100%', textAlign:'left'}}>
-				<div className="input-title">Mood</div>
-				<div className="step-text" style={{marginBottom:'10px'}}>Select up to six images for your design system.</div>
-				<Masonry className="images-item-wrapper">
+			<div style={{width:'100%'}} className="debug-border">
+				<Row vertical="start">
+					<Column flexGrow={1} horizontal="center">
+						<div className="step-header-text">Step 6</div>
+						<div className="step-text">What type of photos or illustrations do you like?</div>
+					</Column>
+				</Row>
+				<button className="action-button step-button" onClick={()=> this.props.onBack()}>Back</button>
+				<button className={btnClass} onClick={()=> this.handleClick()}>Next Step</button>
+				<Masonry className="images-item-wrapper" style={{width:'100%'}}>
 					{imagery}
 				</Masonry>
 			</div>

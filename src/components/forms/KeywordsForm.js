@@ -85,11 +85,11 @@ class KeywordsForm extends Component {
 						<div className="step-text">What are you looking to design?</div>
 					</Column>
 				</Row>
+				<button className="action-button step-button" onClick={()=> this.props.onBack()}>Back</button>
+				<button className={btnClass} onClick={()=> this.handleClick()}>Next Step</button>
 				<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
 					{items}
 				</Row>
-				<button className="action-button step-button" onClick={()=> this.props.onBack()}>Back</button>
-				<button className={btnClass} onClick={()=> this.handleClick()}>Next Step</button>
 			</div>
 		);
 	}
