@@ -3,13 +3,14 @@
 	z-index: 101;
 	position: fixed;
 	left: 10px;
-	top: 70px;
+	top: 40px;
 	color: #002fff;
 	font-weight: 500;
 	font-size: 14px;
 	text-align: left;
 	padding: 10px;
 	border-radius: 8px;
+	background-color: #ffffff;
 	box-shadow: 0 0 20px #cccccc;
 }
 
