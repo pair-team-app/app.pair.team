@@ -119,7 +119,7 @@ class ImageryForm extends Component {
 	handleClick() {
 		if (this.state.isValidated) {
 			let form = this.state.form;
-			form.keywords = this.selectedImagery;
+			form.imagery = this.selectedImagery;
 			this.setState({ form : form });
 			this.props.onNext(form);
 		}

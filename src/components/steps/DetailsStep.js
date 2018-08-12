@@ -20,12 +20,13 @@ class DetailsStep extends Component {
 		this.state = {
 			step : 0,
 			form : {
-				email        : '',
-				title        : '',
-				description  : '',
-				colors       : '',
-				cornerType   : '1',
-				imagery      : ''
+				email    : '',
+				title    : '',
+				keywords : [],
+				tones    : [],
+				colors   : [],
+				corners  : [],
+				imagery  : []
 			}
 		};
 
@@ -41,28 +42,39 @@ class DetailsStep extends Component {
 		// title + email
 		if (this.state.step === 0) {
 			for (let [key, value] of Object.entries(vals)) {
-				console.log(key, value);
+				form[key] = value;
 			}
 
 		// keywords
 		} else if (this.state.step === 1) {
+			for (let [key, value] of Object.entries(vals)) {
+				form[key] = value;
+			}
 
 		// tones
 		} else if (this.state.step === 2) {
+			for (let [key, value] of Object.entries(vals)) {
+				form[key] = value;
+			}
 
 			// colors
 		} else if (this.state.step === 3) {
-			this.selectedColors = vals;
+			for (let [key, value] of Object.entries(vals)) {
+				form[key] = value;
+			}
 
 			// corners
 		} else if (this.state.step === 4) {
-			let form = this.state.form;
-			form.cornerType = vals;
-			this.setState({ form : form });
+			for (let [key, value] of Object.entries(vals)) {
+				form[key] = value;
+			}
 
 			// imagery
 		} else if (this.state.step === 5) {
-			this.selectedImagery = vals;
+			for (let [key, value] of Object.entries(vals)) {
+				form[key] = value;
+			}
+			this.setState({ form : form });
 		}
 
 		if (this.state.step < 5) {
@@ -72,20 +84,10 @@ class DetailsStep extends Component {
 			});
 
 		} else {
-			let colors = [];
-			this.selectedColors.forEach(color => {
-				colors.push(color.id);
-			});
-
-			let imagery = [];
-			this.selectedImagery.forEach(image => {
-				imagery.push(image.id);
-			});
-
-			form.colors = colors.join();
-			form.imagery = imagery.join();
 			this.props.onClick(form);
 		}
+
+		console.log('form', form)
 
 		//this.setState({ [event.target.name] : event.target.value });
 	}
@@ -123,7 +125,7 @@ class DetailsStep extends Component {
 					)}
 
 					{this.state.step === 5 && (
-						<ImageryForm templateID={this.props.templateID} onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} onDrop={(files)=> this.onDrop(files)} />
+						<ImageryForm templateID={this.props.templateID} onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
 					)}
 				</Column>
 

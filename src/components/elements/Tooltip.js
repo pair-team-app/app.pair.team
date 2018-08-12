@@ -10,17 +10,23 @@ class Tooltip extends Component {
 		this.state = {
 			isFade : false
 		};
+
+		this.interval = null
 	}
 
 	componentDidMount() {
 		let self = this;
-		setTimeout(function() {
+		this.interval = setTimeout(function() {
 			self.setState({ isFade : true });
 
-			setTimeout(function() {
+			self.interval = setTimeout(function() {
 				self.setState({ isFade : false });
 			}, 500);
 		}, 1500);
+	}
+
+	componentWillUnmount() {
+		clearTimeout(this.interval);
 	}
 
 	render() {
