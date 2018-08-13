@@ -7,20 +7,20 @@
 .nav-link {
 	padding-left: 20px;
 	font-size: 12px;
-	color: #002FFF;
+	color: #002fff;
 }
 
-.nav-link:hover {
+.nav-link:hover,.nav-link-active:hover {
 	cursor: pointer;
 	text-decoration: underline;
 }
 
 .nav-link a, .nav-link a:active, .nav-link a:link, .nav-link a:visited {
 	text-decoration: none;
-	color: #002FFF;
+	color: #002fff;
 }
 
-.nav-link-active, .nav-link:active, .nav-link a:active {
+.nav-link-active, .nav-link-active a, .nav-link-active a:active, .nav-link-active a:link, .nav-link-active a:visited {
 	color: #9b9b9b;
 	text-decoration: none;
 }

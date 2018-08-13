@@ -15,19 +15,21 @@ import './App.css';
 
 import axios from 'axios';
 import cookie from 'react-cookies';
-import { geolocated } from 'react-geolocated';
+// import { geolocated } from 'react-geolocated';
 import { Column } from 'simple-flexbox';
 
 import BottomNav from './components/elements/BottomNav';
 import CompletionStep from './components/steps/CompletionStep';
 import DetailsStep from './components/steps/DetailsStep';
+import FAQStep from './components/steps/FAQStep';
 import GeneratingStep from './components/steps/GeneratingStep';
 import GetStartedStep from './components/steps/GetStartedStep';
-import Tooltip from './components/elements/Tooltip';
 import PurchaseStep from './components/steps/PurchaseStep';
 import SplashIntro from './components/elements/SplashIntro';
 import TemplateStep from './components/steps/TemplateStep';
+import Tooltip from './components/elements/Tooltip';
 import TopNav from './components/elements/TopNav';
+import UsersStep from "./components/steps/UsersStep";
 
 class App extends Component {
 	constructor(props) {
@@ -109,23 +111,35 @@ class App extends Component {
 		this.setState({ pages : pages });
 	}
 
-	handleStep0() {
-		console.log("handleStep0()");
+	handleGettingStartedStep() {
+		console.log("handleGettingStartedStep()");
 		window.scrollTo(0, 0);
 		this.setState({ step : 0 });
 	}
 
-  handleStep1() {
-    console.log("handleStep1()");
+  handleFAQStep() {
+    console.log("handleFAQStep()");
 	  window.scrollTo(0, 0);
     this.setState({ step : 1 });
   }
 
-	handleStep2(id) {
-		console.log("handleStep2("+id+")");
-		this.templateID = id;
+	handleUsersStep() {
+		console.log("handleUsersStep()");
 		window.scrollTo(0, 0);
 		this.setState({ step : 2 });
+	}
+
+	handleTemplateStep() {
+		console.log("handleTemplateStep()");
+		window.scrollTo(0, 0);
+		this.setState({ step : 3 });
+	}
+
+	handleDetailsStep(id) {
+		console.log("handleDetailsStep("+id+")");
+		this.templateID = id;
+		window.scrollTo(0, 0);
+		this.setState({ step : 4 });
 
 		this.showStatus({
 			img : '/images/logo_icon.png',
@@ -133,13 +147,12 @@ class App extends Component {
 		});
 	}
 
-	handleStep3(obj) {
+	handleGeneratingStep(obj) {
 		window.scrollTo(0, 0);
-		console.log("handleStep3("+JSON.stringify(obj)+")");
+		console.log("handleGeneratingStep("+JSON.stringify(obj)+")");
 
 // 		cookie.save('order_id', "22", { path: '/' });
 // 		this.setState({ step : 3 });
-
 
 		let self = this;
 		let formData = new FormData();
@@ -151,7 +164,7 @@ class App extends Component {
 			.then((response)=> {
 				console.log("MAKE_ORDER", JSON.stringify(response.data));
 				cookie.save('order_id', response.data.order_id, { path: '/' });
-				self.setState({ step : 3 });
+				self.setState({ step : 5 });
 
 				let keywords = obj.title.split();
 				obj.keywords.forEach(function(keyword, i) {
@@ -231,19 +244,19 @@ class App extends Component {
 		});
 	}
 
-	handleStep4(obj) {
-		console.log("handleStep4("+JSON.stringify(obj)+")");
+	handlePurchaseStep(obj) {
+		console.log("handlePurchaseStep("+JSON.stringify(obj)+")");
 		window.scrollTo(0, 0);
 		this.setState({
-			step : 4,
+			step : 6,
 			selectedItems : obj
 		});
 	}
 
-	handleStep5() {
-		console.log("handleStep5()");
+	handleCompletionStep() {
+		console.log("handleCompletionStep()");
 		window.scrollTo(0, 0);
-		this.setState({ step : 5 });
+		this.setState({ step : 7 });
 	}
 
 	handleProjects() {
@@ -324,7 +337,7 @@ class App extends Component {
 	}
 
   render() {
-		console.log("coords", JSON.stringify(this.props.coords));
+// 		console.log("coords", JSON.stringify(this.props.coords));
     return (
     	<div>
 		    {this.state.isIntro && (
@@ -343,11 +356,11 @@ class App extends Component {
 							    isFAQ={this.state.pages.isFAQ}
 							    isTooltip={this.state.pages.isFAQ}
 							    isUsers={this.state.pages.isUsers}
-							    onStep0={()=> this.handleStep0()}
-							    onStep1={()=> this.handleStep1()}
+							    onStep0={()=> this.handleGettingStartedStep()}
+							    onStep1={()=> this.handleTemplateStep()}
 							    onProjects={()=> this.handleProjects()}
-							    onFAQ={()=> this.handleFAQ()}
-							    onUsers={()=> this.handleUsers()}
+							    onFAQ={()=> this.handleFAQStep()}
+							    onUsers={()=> this.handleUsersStep()}
 						    />
 					    </div>
 
@@ -355,39 +368,46 @@ class App extends Component {
 						    {this.state.step === 0 && (
 							    <GetStartedStep
 								    isProjects={this.state.pages.isProjects}
-								    isFAQ={this.state.pages.isFAQ}
 								    isUsers={this.state.pages.isUsers}
-								    onClick={()=> this.handleStep1()} />
+								    onClick={()=> this.handleTemplateStep()} />
 						    )}
 
 						    {this.state.step === 1 && (
-							    <TemplateStep
-								    onClick={(id)=> this.handleStep2(id)} />
+							    <FAQStep onClick={()=> this.handleTemplateStep()} />
 						    )}
 
 						    {this.state.step === 2 && (
-							    <DetailsStep
-								    templateID={this.templateID}
-								    onTooltip={(obj)=> this.showStatus(obj)}
-								    onClick={(obj)=> this.handleStep3(obj)} />
+							    <UsersStep onClick={()=> this.handleTemplateStep()} />
 						    )}
 
 						    {this.state.step === 3 && (
-							    <GeneratingStep
-								    orderID={cookie.load('order_id')}
-								    onTooltip={(obj)=> this.showStatus(obj)}
-								    onClick={(obj)=> this.handleStep4(obj)}
-								    onItemToggle={(obj)=> this.handleItemToggle(obj)} />
+							    <TemplateStep
+								    onClick={(id)=> this.handleDetailsStep(id)} />
 						    )}
 
 						    {this.state.step === 4 && (
+							    <DetailsStep
+								    templateID={this.templateID}
+								    onTooltip={(obj)=> this.showStatus(obj)}
+								    onClick={(obj)=> this.handleGeneratingStep(obj)} />
+						    )}
+
+						    {this.state.step === 5 && (
+							    <GeneratingStep
+								    orderID={cookie.load('order_id')}
+								    onTooltip={(obj)=> this.showStatus(obj)}
+								    onClick={(obj)=> this.handlePurchaseStep(obj)}
+								    onItemToggle={(obj)=> this.handleItemToggle(obj)} />
+						    )}
+
+						    {this.state.step === 6 && (
 							    <PurchaseStep
-								    onClick={()=> this.handleStep5()}
+								    onClick={()=> this.handleCompletionStep()}
 								    onItemToggle={(obj)=> this.handleItemToggle(obj)}
 								    selectedItems={this.state.selectedItems} />
 						    )}
 
-						    {this.state.step === 5 && (
+						    {this.state.step === 7 && (
 							    <CompletionStep />
 						    )}
 					    </div>
@@ -406,9 +426,10 @@ class App extends Component {
   }
 }
 
-export default geolocated({
-	positionOptions: {
-		enableHighAccuracy : false,
-	},
-	userDecisionTimeout : 5000,
-})(App);
+export default App;
+// export default geolocated({
+// 	positionOptions: {
+// 		enableHighAccuracy : false,
+// 	},
+// 	userDecisionTimeout : 5000,
+// })(App);

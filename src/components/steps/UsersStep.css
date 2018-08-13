@@ -1,0 +1,42 @@
+
+.reviews-wrapper {
+	margin-top: 40px;
+	text-align: left;
+}
+
+.review-item {
+	margin-bottom: 20px;
+}
+
+.review-image {
+	width: 200px;
+	height: 154px;
+}
+
+.review-star, .review-star-empty {
+	font-size: 16px;
+	color: #000000;
+	margin: 0 10px 10px 0;
+}
+
+.review-star-empty {
+	color: #9b9b9b;
+}
+
+.review-quote {
+	color: #999999;
+	margin-top: 5px;
+}
+
+
+@media only screen and (max-width: 600px) {
+	.review-image {
+		width: 100px;
+		height: 77px;
+	}
+
+	.review-star, .review-star-empty {
+		font-size: 12px;
+		margin: 7px 6px 6px 0;
+	}
+}

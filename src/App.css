@@ -8,7 +8,7 @@
 	width: 65%;
 	/*border: 2px dashed #ff00ff;*/
 	padding: 0 1px;
-	margin-bottom: 20px;
+	margin-bottom: 60px;
 }
 
 .top-nav {
@@ -18,9 +18,14 @@
 
 .bottom-nav {
 	width: 100%;
-	margin-bottom: 50px;
+	margin-bottom: 20px;
 	padding-top: 30px;
 	border-top: 1px solid #cad7e2;
+}
+
+.flex-wrapper {
+	width: 100%;
+	flex-wrap: wrap;
 }
 
 .step-header-text, .step-subheader-text {
