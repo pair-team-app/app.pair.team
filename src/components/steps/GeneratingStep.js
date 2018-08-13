@@ -31,11 +31,17 @@ class GeneratingStep extends Component {
 	}
 
 	componentDidMount() {
+		this.props.onTooltip({
+			'img' : '/images/logo_icon.png',
+			'txt' : 'Checking engine…'
+		});
+
 		let self = this;
 		this.interval = setInterval(function() {
 			self.checkNewFiles();
 		}, 10000);
-		this.checkNewFiles()
+		this.checkNewFiles();
+		this.checkQueue();
 	}
 
 	componentWillUnmount() {
@@ -54,6 +60,23 @@ class GeneratingStep extends Component {
 					files.push(file);
 				});
 				this.setState({ files : files });
+			});
+	}
+
+	checkQueue() {
+		let self = this;
+		let formData = new FormData();
+		formData.append('action', 'QUEUE_CHECK');
+		formData.append('order_id', this.props.orderID);
+		axios.post('https://api.designengine.ai/templates.php', formData)
+			.then((response)=> {
+				console.log("QUEUE_CHECK", JSON.stringify(response.data));
+				if (response.data.index > 0) {
+					self.props.onTooltip({
+						'img' : '/images/logo_icon.png',
+						'txt' : 'You are #' + response.data.index + ' in line, please wait.'
+					});
+				}
 			});
 	}
 

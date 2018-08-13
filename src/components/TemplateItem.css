@@ -1,7 +1,7 @@
 
 .template-item {
-	width: 160px;
-	height: 260px;
+	width: 200px;
+	height: 242px;
 	padding: 10px;
 	margin: 10px;
 }
@@ -11,8 +11,8 @@
 }
 
 .template-item-image {
-	width: 140px;
-	height: 180px;
+	width: 200px;
+	height: 142px;
 	border-radius: 6px;
 	box-shadow: 0 0 20px #cccccc;
 }

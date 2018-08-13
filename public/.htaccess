@@ -1,6 +1,7 @@
 
 RewriteEngine on
     # RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [R=301,P]
+    RedirectMatch 301 ^/getstarted/?$ /
 		RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [L,R=301,NC]
 
 #-- don't cache these --#

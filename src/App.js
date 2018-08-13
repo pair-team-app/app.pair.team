@@ -135,15 +135,11 @@ class App extends Component {
 
 	handleStep3(obj) {
 		window.scrollTo(0, 0);
-
-// 		let colorCount = (obj.colors.match(/\d+/g) || []).length;
-// 		if (3 - colorCount > 0) {
-// 			for (let i=0; i<3-colorCount; i++) {
-// 				obj.colors += (((i === 0 && colorCount === 0) ? '' : ',') + (3-i));
-// 			}
-// 		}
-
 		console.log("handleStep3("+JSON.stringify(obj)+")");
+
+// 		cookie.save('order_id', "22", { path: '/' });
+// 		this.setState({ step : 3 });
+
 
 		let self = this;
 		let formData = new FormData();
@@ -233,7 +229,6 @@ class App extends Component {
 
 			}).catch((error) => {
 		});
-// 		cookie.save('order_id', "9", { path: '/' });
 	}
 
 	handleStep4(obj) {
@@ -380,6 +375,7 @@ class App extends Component {
 						    {this.state.step === 3 && (
 							    <GeneratingStep
 								    orderID={cookie.load('order_id')}
+								    onTooltip={(obj)=> this.showStatus(obj)}
 								    onClick={(obj)=> this.handleStep4(obj)}
 								    onItemToggle={(obj)=> this.handleItemToggle(obj)} />
 						    )}
