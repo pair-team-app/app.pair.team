@@ -62,12 +62,6 @@ class App extends Component {
 	}
 
 	componentDidMount() {
-		let self = this;
-		setInterval(function() {
-			self.statusCheck();
-		}, 2000);
-		this.statusCheck();
-
 		this.showStatus({
 			img : '/images/logo_icon.png',
 			txt : 'Design Systems loaded.'
@@ -84,26 +78,7 @@ class App extends Component {
 
 		setTimeout(function() {
 			self.setState({ isTooltip : false });
-		}, 2000);
-	}
-
-	statusCheck() {
-		let self = this;
-		let formData = new FormData();
-		formData.append('action', 'STATUS_CHECK');
-		formData.append('order_id', cookie.load('order_id'));
-		axios.post('https://api.designengine.ai/templates.php', formData)
-			.then((response)=> {
-				console.log("STATUS_CHECK", JSON.stringify(response.data));
-				if (response.data.status) {
-					self.showStatus({
-						img : '/images/logo_icon.png',
-						txt : response.data.status
-					});
-				}
-
-			}).catch((error) => {
-		});
+		}, 1500);
 	}
 
 	handleIntroComplete() {
@@ -240,7 +215,9 @@ class App extends Component {
 									});
 
 									response.data.results.forEach(function(itm, i) {
-										images.push(itm.urls.full);
+// 										images.push(itm.urls.full);
+// 										images.push(itm.urls.regular);
+										images.push(itm.urls.small);
 
 										let formData = new FormData();
 										formData.append('action', 'ADD_IMAGE');

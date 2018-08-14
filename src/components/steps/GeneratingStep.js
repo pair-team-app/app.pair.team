@@ -17,6 +17,7 @@ class GeneratingStep extends Component {
 			elapsed : 0,
 			files : [],
 			maxFiles : 0,
+			status : 'The following Design Systems examples have been generated from Design Engine.',
 			lightBox : {
 				isVisible : false,
 				title     : '',
@@ -24,7 +25,8 @@ class GeneratingStep extends Component {
 			}
 		};
 
-		this.interval = null;
+		this.fileInterval = null;
+		this.statusInterval = null;
 		this.selectedItems = [];
 
 		this.startTime = (new Date()).getTime();
@@ -35,22 +37,23 @@ class GeneratingStep extends Component {
 			'img' : '/images/logo_icon.png',
 			'txt' : 'Starting up engine…'
 		});
+		this.checkQueue();
+
 
 		let self = this;
 		setInterval(function() {
-			self.setState({ elapsed : parseInt((new Date()).getTime() * 0.001) - parseInt(self.startTime * 0.001) });
+			self.setState({ elapsed : parseInt((new Date()).getTime() * 0.001, 10) - parseInt(self.startTime * 0.001, 10) });
 		}, 1000);
 
-		this.interval = setInterval(function() {
-			self.checkNewFiles();
-		}, 5000);
-		this.checkNewFiles();
-		this.checkQueue();
+		this.statusInterval = setInterval(function() {
+			self.checkStatus();
+		}, 1000);
+		this.checkStatus();
 
-		this.repeater();
-		setInterval(function() {
-			self.repeater();
-		}, 8000);
+		this.fileInterval = setInterval(function() {
+			self.checkNewFiles();
+		}, 3000);
+		this.checkNewFiles();
 
 
 		let formData = new FormData();
@@ -64,44 +67,40 @@ class GeneratingStep extends Component {
 	}
 
 	componentWillUnmount() {
-		clearInterval(this.interval);
+		clearInterval(this.fileInterval);
+		clearInterval(this.statusInterval);
 	}
 
-	repeater() {
+	checkStatus() {
 		let self = this;
-		this.props.onTooltip({
-			'img' : '/images/logo_icon.png',
-			'txt' : 'Altering colors…'
+		let formData = new FormData();
+		formData.append('action', 'STATUS_CHECK');
+		formData.append('order_id', this.props.orderID);
+		axios.post('https://api.designengine.ai/templates.php', formData)
+			.then((response)=> {
+				console.log("STATUS_CHECK", JSON.stringify(response.data));
+				self.setState({ status : (response.data.message) ? response.data.message : 'Design Engine is processing…' });
+
+
+			}).catch((error) => {
 		});
-
-		setTimeout(function() {
-			self.props.onTooltip({
-				'img' : '/images/logo_icon.png',
-				'txt' : 'Getting images…'
-			});
-
-			setTimeout(function() {
-				self.props.onTooltip({
-					'img' : '/images/logo_icon.png',
-					'txt' : 'Generating preview…'
-				});
-			}, 3333);
-
-		}, 3333);
 	}
 
 	checkNewFiles() {
-		this.props.onTooltip({
-			'img' : '/images/logo_icon.png',
-			'txt' : 'Retrieving preview…'
-		});
-
+		let self = this;
 		let formData = new FormData();
 		formData.append('action', 'FILE_CHECK');
 		formData.append('order_id', this.props.orderID);
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
 				console.log("FILE_CHECK", JSON.stringify(response.data));
+				if (response.data.files.length !== self.state.files.length) {
+					self.props.onTooltip({
+						'img' : '/images/logo_icon.png',
+						'txt' : 'Retrieving preview…'
+					});
+				}
+
 				let files = [];
 				response.data.files.reverse().forEach(file => {
 					files.push(file);
@@ -236,11 +235,11 @@ class GeneratingStep extends Component {
 
 		return (
 			<div>
-				<div className="debug-window debug-border">{this.state.elapsed} seconds<br />{this.state.files.length} files / {this.state.maxFiles} expected files</div>
+				<div className="debug-window debug-border">{this.state.elapsed} seconds<br />{this.state.files.length} files</div>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">Select the designs that you like</div>
-						<div className="step-text">The following Design Systems examples have been generated from Design Engine.</div>
+						<div className="step-text">{this.state.status}</div>
 						<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><div className="step-text-margin"><button className={btnSelectClass} onClick={()=> this.onSelectAll()}>{btnSelectCaption}</button></div></Row>
 						<div className="template-item-wrapper">
 							<Row horizontal="center" style={{flexWrap:'wrap'}}>

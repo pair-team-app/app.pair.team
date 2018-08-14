@@ -19,10 +19,10 @@ class Tooltip extends Component {
 		this.interval = setTimeout(function() {
 			self.setState({ isFade : true });
 
-			self.interval = setTimeout(function() {
-				self.setState({ isFade : false });
-			}, 500);
-		}, 1500);
+// 			self.interval = setTimeout(function() {
+// 				self.setState({ isFade : false });
+// 			}, 1000);
+		}, 1000);
 	}
 
 	componentWillUnmount() {
