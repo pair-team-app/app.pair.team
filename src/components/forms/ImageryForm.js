@@ -132,7 +132,7 @@ class ImageryForm extends Component {
 			);
 		});
 
-		imagery.splice(1, 0, this.dzComponent());
+		//imagery.splice(1, 0, this.dzComponent());
 
 		const btnClass = (this.state.isValidated) ? 'action-button step-button' : 'action-button step-button disabled-button';
 

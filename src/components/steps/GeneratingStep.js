@@ -14,11 +14,9 @@ class GeneratingStep extends Component {
 		super(props);
 
 		this.state = {
-			queue : {
-				index : 1,
-				total : 1
-			},
+			elapsed : 0,
 			files : [],
+			maxFiles : 0,
 			lightBox : {
 				isVisible : false,
 				title     : '',
@@ -28,27 +26,76 @@ class GeneratingStep extends Component {
 
 		this.interval = null;
 		this.selectedItems = [];
+
+		this.startTime = (new Date()).getTime();
 	}
 
 	componentDidMount() {
 		this.props.onTooltip({
 			'img' : '/images/logo_icon.png',
-			'txt' : 'Checking engine…'
+			'txt' : 'Starting up engine…'
 		});
 
 		let self = this;
+		setInterval(function() {
+			self.setState({ elapsed : parseInt((new Date()).getTime() * 0.001) - parseInt(self.startTime * 0.001) });
+		}, 1000);
+
 		this.interval = setInterval(function() {
 			self.checkNewFiles();
-		}, 10000);
+		}, 5000);
 		this.checkNewFiles();
 		this.checkQueue();
+
+		this.repeater();
+		setInterval(function() {
+			self.repeater();
+		}, 8000);
+
+
+		let formData = new FormData();
+		formData.append('action', 'COLOR_SETS');
+		formData.append('order_id', this.props.orderID);
+		axios.post('https://api.designengine.ai/templates.php', formData)
+			.then((response)=> {
+				console.log("COLOR_SETS", JSON.stringify(response.data));
+				this.setState({ maxFiles : response.data.color_sets * 40 });
+			});
 	}
 
 	componentWillUnmount() {
 		clearInterval(this.interval);
 	}
 
+	repeater() {
+		let self = this;
+		this.props.onTooltip({
+			'img' : '/images/logo_icon.png',
+			'txt' : 'Altering colors…'
+		});
+
+		setTimeout(function() {
+			self.props.onTooltip({
+				'img' : '/images/logo_icon.png',
+				'txt' : 'Getting images…'
+			});
+
+			setTimeout(function() {
+				self.props.onTooltip({
+					'img' : '/images/logo_icon.png',
+					'txt' : 'Generating preview…'
+				});
+			}, 3333);
+
+		}, 3333);
+	}
+
 	checkNewFiles() {
+		this.props.onTooltip({
+			'img' : '/images/logo_icon.png',
+			'txt' : 'Retrieving preview…'
+		});
+
 		let formData = new FormData();
 		formData.append('action', 'FILE_CHECK');
 		formData.append('order_id', this.props.orderID);
@@ -56,7 +103,7 @@ class GeneratingStep extends Component {
 			.then((response)=> {
 				console.log("FILE_CHECK", JSON.stringify(response.data));
 				let files = [];
-				response.data.files.forEach(file => {
+				response.data.files.reverse().forEach(file => {
 					files.push(file);
 				});
 				this.setState({ files : files });
@@ -189,6 +236,7 @@ class GeneratingStep extends Component {
 
 		return (
 			<div>
+				<div className="debug-window debug-border">{this.state.elapsed} seconds<br />{this.state.files.length} files / {this.state.maxFiles} expected files</div>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">Select the designs that you like</div>

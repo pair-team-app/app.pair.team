@@ -62,11 +62,11 @@ class App extends Component {
 	}
 
 	componentDidMount() {
-// 		let self = this;
-// 		setInterval(function() {
-// 			self.statusCheck();
-// 		}, 2000);
-// 		this.statusCheck();
+		let self = this;
+		setInterval(function() {
+			self.statusCheck();
+		}, 2000);
+		this.statusCheck();
 
 		this.showStatus({
 			img : '/images/logo_icon.png',
@@ -95,10 +95,12 @@ class App extends Component {
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
 				console.log("STATUS_CHECK", JSON.stringify(response.data));
-				self.showStatus({
-					img : '/images/logo_icon.png',
-					txt : response.data.status
-				});
+				if (response.data.status) {
+					self.showStatus({
+						img : '/images/logo_icon.png',
+						txt : response.data.status
+					});
+				}
 
 			}).catch((error) => {
 		});
@@ -154,6 +156,11 @@ class App extends Component {
 // 		cookie.save('order_id', "22", { path: '/' });
 // 		this.setState({ step : 3 });
 
+		this.showStatus({
+			'img' : '/images/logo_icon.png',
+			'txt' : 'Submitting order'
+		});
+
 		let self = this;
 		let formData = new FormData();
 		formData.append('action', 'MAKE_ORDER');
@@ -175,6 +182,11 @@ class App extends Component {
 					.then((response)=> {
 						console.log("COMPREHEND", JSON.stringify(response.data));
 
+						self.showStatus({
+							'img' : '/images/logo_icon.png',
+							'txt' : 'Found ' + response.data.comprehend.keywords.length + ' keyword(s).'
+						});
+
 						let colors = [];
 						let images = [];
 						response.data.comprehend.syntax.forEach(function(item, i) {
@@ -191,6 +203,11 @@ class App extends Component {
 							axios.get('http://www.colr.org/json/tag/' + item.Text)
 								.then((response)=> {
 									console.log("colr", JSON.stringify(response.data));
+									self.showStatus({
+										'img' : '/images/logo_icon.png',
+										'txt' : 'Found ' + response.data.schemes.length + ' color theme(s).'
+									});
+
 									response.data.schemes.forEach(function(itm, i) {
 										colors.push(itm.colors);
 
@@ -217,6 +234,11 @@ class App extends Component {
 							axios.get('https://api.unsplash.com/search/photos?query='+item.Text+'&per_page=50', {headers:{Authorization:'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479'}})
 								.then((response)=> {
 // 									console.log("UNSPLASH", JSON.stringify(response.data));
+									self.showStatus({
+										'img' : '/images/logo_icon.png',
+										'txt' : 'Located ' + response.data.results.length + ' image(s).'
+									});
+
 									response.data.results.forEach(function(itm, i) {
 										images.push(itm.urls.full);
 
