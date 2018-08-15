@@ -59,10 +59,11 @@
 }
 
 .input-title {
-	font-family: "Poppins Bold", sans-serif;
-	font-size: 18px;
+	font-family: "Poppins SemiBold", sans-serif;
+	font-size: 24px;
 	font-weight: 600;
-	margin: 40px 0 20px 0;
+	margin: 40px 0 50px 0;
+	color: #002fff;
 }
 
 .form-element {
@@ -100,6 +101,41 @@
 	padding: 8px 12px;
 }
 
+.form-button {
+	margin-top: 20px;
+	padding: 8px 12px;
+	background-color: #002fff;
+	font-size: 14px;
+	color : #ffffff;
+	border: 3px solid #002fff;
+	border-radius: 10px;
+	min-width: 100px;
+	min-height: 30px;
+}
+
+.form-button-disabled {
+	border: 3px solid #cccccc;
+	background-color: #cccccc;
+	color: #ffffff;
+}
+
+.form-button-secondary {
+	border: 3px solid #cccccc;
+	background-color: #ffffff;
+	color: #999999;
+	margin-right: 20px;
+}
+
+.form-button:hover, .form-button-secondary:hover {
+	cursor: pointer;
+	box-shadow: 0 0 20px #cccccc;
+}
+
+.form-button-disabled:hover {
+	cursor: default;
+	box-shadow: none;
+}
+
 .disabled-button {
 	background-color: #999999;
 	color: #ffffff;
@@ -121,10 +157,11 @@
 	font-size: 14px;
 	color : #000000;
 	border: none;
-	border-radius: 6px;
+	border-radius: 26px;
 	width: 100%;
 	box-sizing: border-box;
 	box-shadow: 0 0 20px #cccccc;
+	text-align: center;
 }
 
 .is-hidden {

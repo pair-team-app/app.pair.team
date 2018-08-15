@@ -62,7 +62,7 @@ class GeneratingStep extends Component {
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
 				console.log("COLOR_SETS", JSON.stringify(response.data));
-				this.setState({ maxFiles : response.data.color_sets * 40 });
+				self.setState({ maxFiles : response.data.color_sets * 40 });
 			});
 	}
 
@@ -235,7 +235,7 @@ class GeneratingStep extends Component {
 
 		return (
 			<div>
-				<div className="debug-window debug-border">{this.state.elapsed} seconds<br />{this.state.files.length} files</div>
+				<div className="debug-window debug-border">{this.state.elapsed} seconds<br />{this.state.files.length} files / {this.state.maxFiles} expected files</div>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">Select the designs that you like</div>

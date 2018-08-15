@@ -65,7 +65,20 @@ class App extends Component {
 		this.showStatus({
 			img : '/images/logo_icon.png',
 			txt : 'Design Systems loaded.'
-		})
+		});
+
+// 		window.addEventListener('beforeunload', this.onUnload);
+	}
+
+	componentWillUnmount() {
+// 		window.removeEventListener('beforeunload', this.onUnload);
+	}
+
+	onUnload(event) { // the method that will be used for both add and remove event
+		console.log("hellooww");
+		event.preventDefault();
+		alert('CLOSING');
+		event.returnValue = 'Hellooww';
 	}
 
 	showStatus(tooltip) {
@@ -124,18 +137,7 @@ class App extends Component {
 		});
 	}
 
-	handleGeneratingStep(obj) {
-		window.scrollTo(0, 0);
-		console.log("handleGeneratingStep("+JSON.stringify(obj)+")");
-
-// 		cookie.save('order_id', "22", { path: '/' });
-// 		this.setState({ step : 3 });
-
-		this.showStatus({
-			'img' : '/images/logo_icon.png',
-			'txt' : 'Submitting order'
-		});
-
+	handleStartGenerating(obj) {
 		let self = this;
 		let formData = new FormData();
 		formData.append('action', 'MAKE_ORDER');
@@ -146,7 +148,6 @@ class App extends Component {
 			.then((response)=> {
 				console.log("MAKE_ORDER", JSON.stringify(response.data));
 				cookie.save('order_id', response.data.order_id, { path: '/' });
-				self.setState({ step : 5 });
 
 				let keywords = obj.title.split();
 				obj.keywords.forEach(function(keyword, i) {
@@ -215,15 +216,13 @@ class App extends Component {
 									});
 
 									response.data.results.forEach(function(itm, i) {
-// 										images.push(itm.urls.full);
-// 										images.push(itm.urls.regular);
 										images.push(itm.urls.small);
 
 										let formData = new FormData();
 										formData.append('action', 'ADD_IMAGE');
 										formData.append('order_id', cookie.load('order_id'));
 										formData.append('keyword', item.Text);
-										formData.append('url', itm.urls.full);
+										formData.append('url', itm.urls.small);
 										axios.post('https://api.designengine.ai/templates.php', formData)
 											.then((response)=> {
 												console.log("ADD_IMAGE", JSON.stringify(response.data));
@@ -241,6 +240,21 @@ class App extends Component {
 
 			}).catch((error) => {
 		});
+	}
+
+	handleGeneratingStep(obj) {
+		window.scrollTo(0, 0);
+		console.log("handleGeneratingStep("+JSON.stringify(obj)+")");
+
+// 		cookie.save('order_id', "22", { path: '/' });
+// 		this.setState({ step : 3 });
+
+		this.showStatus({
+			'img' : '/images/logo_icon.png',
+			'txt' : 'Submitting order'
+		});
+
+		this.setState({ step : 5 });
 	}
 
 	handlePurchaseStep(obj) {
@@ -388,6 +402,7 @@ class App extends Component {
 							    <DetailsStep
 								    templateID={this.templateID}
 								    onTooltip={(obj)=> this.showStatus(obj)}
+								    onStart={(obj)=> this.handleStartGenerating(obj)}
 								    onClick={(obj)=> this.handleGeneratingStep(obj)} />
 						    )}
 

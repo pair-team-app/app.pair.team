@@ -75,3 +75,10 @@ button:focus, input:focus, textarea:focus {
   font-weight: 700;
   src: url("./fonts/Poppins-Bold.otf");
 }
+
+/** Bold */
+@font-face {
+  font-family: "Poppins SemiBold";
+  font-weight: 600;
+  src: url("./fonts/Poppins-SemiBold.otf");
+}

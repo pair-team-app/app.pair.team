@@ -45,6 +45,8 @@ class DetailsStep extends Component {
 				form[key] = value;
 			}
 
+			this.props.onStart(form);
+
 		// keywords
 		} else if (this.state.step === 1) {
 			for (let [key, value] of Object.entries(vals)) {

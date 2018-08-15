@@ -68,35 +68,36 @@ class TitleForm extends Component {
 	}
 
 	render() {
-		const btnClass = (this.state.isValidated) ? 'action-button step-button' : 'action-button step-button disabled-button';
+		const btnClass = (this.state.isValidated) ? 'form-button' : 'form-button form-button-disabled';
 
 		return (
-			<div style={{width:'100%'}} className="debug-border">
+			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Step 1</div>
-						<div className="step-text">What is your email &amp; product name?</div>
+						<div className="step-header-text">Step 1: enter email & product name</div>
+						<div className="input-title">Enter your email & product name.</div>
 					</Column>
 				</Row>
 				<Row vertical="start">
 					<div style={{width:'100%'}}>
 						<InputField
-							type="text"
-							name="txt-title"
-							placeholder="Project name"
-							value={this.state.form.title}
-							onChange={(event)=> this.handleTextChange(event)}
-							onClick={(name)=> this.handleTooltip(name)} />
-
-						<InputField
 							type="email"
 							name="txt-email"
-							placeholder="Email address"
+							placeholder="Enter a work email address"
 							value={this.state.form.email}
 							onChange={(event)=> this.handleTextChange(event)}
 							onClick={(name)=> this.handleTooltip(name)} />
 
-						<button className={btnClass} onClick={()=> this.handleClick()}>Next Step</button>
+						<InputField
+							type="text"
+							name="txt-title"
+							placeholder="Enter your product’s or brands name"
+							value={this.state.form.title}
+							onChange={(event)=> this.handleTextChange(event)}
+							onClick={(name)=> this.handleTooltip(name)} />
+
+						<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Cancel</button>
+						<button className={btnClass} onClick={()=> this.handleClick()}>Next</button>
 
 						{/*<div className="input-title">In 2 or more sentences, describe your design</div>*/}
 						{/*<div className="form-element">*/}
