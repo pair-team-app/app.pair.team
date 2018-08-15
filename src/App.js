@@ -67,33 +67,21 @@ class App extends Component {
 			txt : 'Design Systems loaded.'
 		});
 
-		window.addEventListener('beforeunload', this.onBeforeUnload);
-		window.addEventListener('unload', this.onUnload);
+		let self = this;
+		this.interval = setInterval(function() {
+			if (typeof cookie.load('order_id') !== 'undefined') {
+				let formData = new FormData();
+				formData.append('action', 'ORDER_PING');
+				formData.append('order_id', cookie.load('order_id'));
+				axios.post('https://api.designengine.ai/templates.php', formData)
+					.then((response)=> {
+					}).catch((error) => {
+				});
+			}
+		}, 5000);
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener('beforeunload', this.onBeforeUnload);
-		window.removeEventListener('unload', this.onUnload);
-	}
-
-	onBeforeUnload(event) { // the method that will be used for both add and remove event
-		event.preventDefault();
-		console.log("onUnload", JSON.stringify(event));
-
-		event.returnValue = null;
-		return (null);
-	}
-
-	onUnload(event) {
-		//alert('BYE BYE');
-		let formData = new FormData();
-		formData.append('action', 'STOP_PROCESSING');
-		formData.append('order_id', cookie.load('order_id'));
-		axios.post('https://api.designengine.ai/templates.php', formData)
-			.then((response)=> {
-				console.log("STOP_PROCESSING", JSON.stringify(response.data));
-			}).catch((error) => {
-		});
 	}
 
 	showStatus(tooltip) {
