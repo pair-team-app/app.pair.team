@@ -41,9 +41,9 @@ class BottomNav extends Component {
 							</Column>
 							<Column flexGrow={1} horizontal="start">
 								<div className="footer-title">Company</div>
+								<div className="footer-link" onClick={()=> this.props.onFAQ()}>What is Design AI?</div>
 								<div className="footer-link"><a href={urls.crunchbase} target="_blank" rel="noopener noreferrer">Crunchbase</a></div>
-								<div className="footer-link"><a href={urls.spectrum} target="_blank" rel="noopener noreferrer">Support</a></div>
-								<div className="footer-link"><a href={urls.blog} target="_blank" rel="noopener noreferrer">Blog</a></div>
+								<div className="footer-link"><a href={urls.messenger} target="_blank" rel="noopener noreferrer">Chat Now</a></div>
 							</Column>
 							<Column flexGrow={1} horizontal="start">
 								<div className="footer-title">Legal</div>
@@ -52,13 +52,13 @@ class BottomNav extends Component {
 							</Column>
 							<Column flexGrow={1} horizontal="start">
 								<div className="footer-title">Products</div>
-								<div className="footer-link" onClick={()=> this.props.handleStep1()}>Get Started</div>
-								<div className="footer-link" onClick={()=> this.props.handleStep1()}>View Templates</div>
+								<div className="footer-link" onClick={()=> this.props.onStep1()}>Get Started</div>
+								<div className="footer-link" onClick={()=> this.props.onStep1()}>View Templates</div>
 								<div className="footer-link"><a href={urls.dmg} target="_blank" rel="noopener noreferrer">Menu Bar</a></div>
 							</Column>
 							<Column flexGrow={1} horizontal="start">
-								<div className="footer-title">Account</div>
-								<div className="footer-link"><a href={urls.login} target="_blank" rel="noopener noreferrer">Login</a></div>
+								<div className="footer-title">Support</div>
+								<div className="footer-link"><a href={urls.messenger} target="_blank" rel="noopener noreferrer">Chat Now</a></div>
 							</Column>
 							<Column flexGrow={1} horizontal="start">
 								<div className="footer-title">Follow Us</div>
@@ -79,9 +79,9 @@ class BottomNav extends Component {
 					<MediaQuery maxWidth={840}>
 						<div style={{marginLeft:'20px'}}>
 							<div className="footer-title">Company</div>
+							<div className="footer-link" onClick={()=> this.props.onFAQ()}>What is Design AI?</div>
 							<div className="footer-link"><a href={urls.crunchbase} target="_blank" rel="noopener noreferrer">Crunchbase</a></div>
-							<div className="footer-link"><a href={urls.spectrum} target="_blank" rel="noopener noreferrer">Support</a></div>
-							<div className="footer-link"><a href={urls.blog} target="_blank" rel="noopener noreferrer">Blog</a></div>
+							<div className="footer-link"><a href={urls.messenger} target="_blank" rel="noopener noreferrer">Chat Now</a></div>
 						</div>
 						<div style={{margin:'20px 0 0 20px'}}>
 							<div className="footer-title">Legal</div>
@@ -90,13 +90,13 @@ class BottomNav extends Component {
 						</div>
 						<div style={{margin:'20px 0 0 20px'}}>
 							<div className="footer-title">Products</div>
-							<div className="footer-link" onClick={()=> this.props.handleStep1()}>Get Started</div>
-							<div className="footer-link" onClick={()=> this.props.handleStep1()}>View Templates</div>
+							<div className="footer-link" onClick={()=> this.props.onStep1()}>Get Started</div>
+							<div className="footer-link" onClick={()=> this.props.onStep1()}>View Templates</div>
 							<div className="footer-link"><a href={urls.dmg} target="_blank" rel="noopener noreferrer">Menu Bar</a></div>
 						</div>
 						<div style={{margin:'20px 0 0 20px'}}>
 							<div className="footer-title">Support</div>
-							<div className="footer-link"><a href={urls.login} target="_blank" rel="noopener noreferrer">Chat Now</a></div>
+							<div className="footer-link"><a href={urls.messenger} target="_blank" rel="noopener noreferrer">Chat Now</a></div>
 						</div>
 						<div style={{margin:'20px 0 0 20px'}}>
 							<div className="footer-title">Follow Us</div>

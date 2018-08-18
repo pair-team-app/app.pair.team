@@ -45,7 +45,7 @@ class DetailsStep extends Component {
 				form[key] = value;
 			}
 
-			this.props.onStart(form);
+			//this.props.onStart(form);
 
 		// keywords
 		} else if (this.state.step === 1) {
@@ -107,6 +107,7 @@ class DetailsStep extends Component {
 					{this.state.step === 0 && (
 						<TitleForm
 							onTooltip={(obj)=> this.props.onTooltip(obj)}
+							onBack={()=> this.props.onCancel()}
 							onNext={(vals)=> this.handleStepChange(vals)} />
 					)}
 

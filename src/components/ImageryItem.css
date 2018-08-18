@@ -12,9 +12,9 @@
 .imagery-item-image {
 	width: 100%;
 	border-radius: 10px;
-	opacity: 0.5;
+	opacity: 1.0;
 }
 
 .imagery-item-image-selected {
-	opacity: 1.0;
+	opacity: 0.5;
 }

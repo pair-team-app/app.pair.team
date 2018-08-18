@@ -17,7 +17,7 @@ class GeneratingStep extends Component {
 			elapsed : 0,
 			files : [],
 			maxFiles : 0,
-			status : 'The following Design Systems examples have been generated from Design Engine.',
+			status : 'Design Engine is processing…',
 			lightBox : {
 				isVisible : false,
 				title     : '',
@@ -79,9 +79,10 @@ class GeneratingStep extends Component {
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
 				console.log("STATUS_CHECK", JSON.stringify(response.data));
-				self.setState({ status : (response.data.message) ? response.data.message : 'Design Engine is processing…' });
 
-
+				const percent = this.state.files.length > 0 ? Math.round((this.state.maxFiles / this.state.files.length) * 100) : 0;
+				const rate = this.state.files.length > 0 ? Math.ceil(this.state.elapsed / this.state.files.length) : 0;
+				self.setState({ status : (response.data.message) ? response.data.message : this.state.files.length + ' (' + percent + '%) of ' + this.state.maxFiles + ' estimated art boards, ' + rate + ' per second.' });
 			}).catch((error) => {
 		});
 	}
@@ -235,11 +236,12 @@ class GeneratingStep extends Component {
 
 		return (
 			<div>
-				<div className="debug-window debug-border">{this.state.elapsed} seconds<br />{this.state.files.length} files / {this.state.maxFiles} expected files</div>
+				<div className="debug-window debug-border">
+					{this.state.elapsed} seconds<br /> files / {this.state.maxFiles} expected files</div>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">Select the designs that you like</div>
-						<div className="step-text">{this.state.status}</div>
+						<div className="input-title">{this.state.status}</div>
 						<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><div className="step-text-margin"><button className={btnSelectClass} onClick={()=> this.onSelectAll()}>{btnSelectCaption}</button></div></Row>
 						<div className="template-item-wrapper">
 							<Row horizontal="center" style={{flexWrap:'wrap'}}>

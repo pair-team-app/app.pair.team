@@ -405,6 +405,7 @@ class App extends Component {
 							    <DetailsStep
 								    templateID={this.templateID}
 								    onTooltip={(obj)=> this.showStatus(obj)}
+								    onCancel={()=> this.handleTemplateStep()}
 								    onStart={(obj)=> this.handleStartGenerating(obj)}
 								    onClick={(obj)=> this.handleGeneratingStep(obj)} />
 						    )}
@@ -430,7 +431,9 @@ class App extends Component {
 					    </div>
 				    </Column>
 				    <Column flexGrow={1} horizontal="center" className="bottom-nav">
-				      <BottomNav handleStep1={()=> this.handleStep1()}/>
+				      <BottomNav
+					      onFAQ={()=> this.handleFAQStep()}
+					      onStep1={()=> this.handleStep1()}/>
 				    </Column>
 
 				    {this.state.isTooltip && (

@@ -137,7 +137,7 @@ class ImageryForm extends Component {
 		const btnClass = (this.state.isValidated) ? 'action-button step-button' : 'action-button step-button disabled-button';
 
 		return (
-			<div style={{width:'100%'}} className="debug-border">
+			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">Step 6</div>

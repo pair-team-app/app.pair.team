@@ -74,9 +74,13 @@ class TitleForm extends Component {
 			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Step 1: enter email & product name</div>
-						<div className="input-title">Enter your email & product name.</div>
+						<div className="step-header-text">Email &amp; company name</div>
+						<div className="input-title">Enter your email &amp; company name.</div>
 					</Column>
+				</Row>
+				<Row horizontal="center">
+					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Back</button>
+					<button className={btnClass} onClick={()=> this.handleClick()}>Next</button>
 				</Row>
 				<Row vertical="start">
 					<div style={{width:'100%'}}>
@@ -91,19 +95,10 @@ class TitleForm extends Component {
 						<InputField
 							type="text"
 							name="txt-title"
-							placeholder="Enter your product’s or brands name"
+							placeholder="Enter your company or brand's name"
 							value={this.state.form.title}
 							onChange={(event)=> this.handleTextChange(event)}
 							onClick={(name)=> this.handleTooltip(name)} />
-
-						<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Cancel</button>
-						<button className={btnClass} onClick={()=> this.handleClick()}>Next</button>
-
-						{/*<div className="input-title">In 2 or more sentences, describe your design</div>*/}
-						{/*<div className="form-element">*/}
-						{/*<textarea className="textfield-input" name="txt-description" placeholder="“Describe what you would like your design to look like”" value={this.state.form.description} onChange={this.handleTextChange} rows="4" />*/}
-						{/*<div className="input-tip input-tip-green" onClick={()=> this.handleTooltip('headline')}>What is This?</div>*/}
-						{/*</div>*/}
 					</div>
 				</Row>
 			</div>

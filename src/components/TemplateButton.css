@@ -1,7 +1,6 @@
 
 .template-button {
-	width: 155px;
-	height: 170px;
+	width: 200px;
 	padding: 10px;
 	margin: 10px;
 }
@@ -11,21 +10,29 @@
 }
 
 .template-button-image {
-	width: 155px;
-	height: 110px;
+	width: 200px;
+	height: 142px;
+	border-radius: 5px;
 	box-shadow: 0 0 20px #cccccc;
 }
 
 .template-button-title {
-	font-size: 16px;
+	font-size: 14px;
 	color: #000000;
 	font-weight: 600;
 	text-align: left;
-	margin: 5px 0;
+	margin: 12px 0 12px 0;
 }
 
 .template-button-text {
 	font-size: 14px;
-	color: #666666;
+	color: #9b9b9b;
 	text-align: left;
+}
+
+.template-button-button {
+	margin-top: 10px;
+	padding: 5px 12px;
+	min-width: 0;
+	font-size: 12px;
 }

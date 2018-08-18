@@ -1,9 +1,9 @@
 
 .keyword-item {
-	width: 140px;
 	height: 40px;
-	margin-top: 25px;
-	border-radius: 20px;
+	margin: 0 10px 25px 10px;
+	border-radius: 25px;
+	padding: 2px 20px;
 	text-align: center;
 	display: table;
 	color: #4a4a4a;
@@ -13,12 +13,13 @@
 }
 
 .keyword-item-selected {
-	background-color: #85c734;
+	background-color: #7ed321;
 	color: #ffffff;
 }
 
 .keyword-item-text {
 	display: table-cell;
+	font-weight: 500;
 	vertical-align: middle;
 }
 
