@@ -12,7 +12,6 @@ class FAQStep extends Component {
 		};
 	}
 
-
 	render() {
 		return (
 			<div>

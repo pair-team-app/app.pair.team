@@ -12,6 +12,14 @@ button:focus, input:focus, textarea:focus {
   outline: none;
 }
 
+li {
+  margin-bottom: 20px;
+}
+
+p {
+  line-height: 20px;
+}
+
 
 /** Thin */
 @font-face {

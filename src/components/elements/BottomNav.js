@@ -47,8 +47,8 @@ class BottomNav extends Component {
 							</Column>
 							<Column flexGrow={1} horizontal="start">
 								<div className="footer-title">Legal</div>
-								<div className="footer-link"><a href={urls.privacy} target="_blank" rel="noopener noreferrer">Privacy</a></div>
-								<div className="footer-link"><a href={urls.terms} target="_blank" rel="noopener noreferrer">Terms</a></div>
+								<div className="footer-link" onClick={()=> this.props.onPrivacy()}>Privacy</div>
+								<div className="footer-link" onClick={()=> this.props.onTerms()}>Terms</div>
 							</Column>
 							<Column flexGrow={1} horizontal="start">
 								<div className="footer-title">Products</div>
@@ -85,8 +85,8 @@ class BottomNav extends Component {
 						</div>
 						<div style={{margin:'20px 0 0 20px'}}>
 							<div className="footer-title">Legal</div>
-							<div className="footer-link"><a href={urls.privacy} target="_blank" rel="noopener noreferrer">Privacy</a></div>
-							<div className="footer-link"><a href={urls.terms} target="_blank" rel="noopener noreferrer">Terms</a></div>
+							<div className="footer-link" onClick={()=> this.props.onPrivacy()}>Privacy</div>
+							<div className="footer-link" onClick={()=> this.props.onTerms()}>Terms</div>
 						</div>
 						<div style={{margin:'20px 0 0 20px'}}>
 							<div className="footer-title">Products</div>

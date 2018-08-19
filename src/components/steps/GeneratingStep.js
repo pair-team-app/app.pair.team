@@ -7,7 +7,6 @@ import { Column, Row } from 'simple-flexbox';
 
 import LightBox from '../elements/LightBox';
 import TemplateItem from '../TemplateItem';
-import cookie from "react-cookies";
 
 class GeneratingStep extends Component {
 	constructor(props) {

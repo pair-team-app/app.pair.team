@@ -24,9 +24,11 @@ import DetailsStep from './components/steps/DetailsStep';
 import FAQStep from './components/steps/FAQStep';
 import GeneratingStep from './components/steps/GeneratingStep';
 import GetStartedStep from './components/steps/GetStartedStep';
+import PrivacyStep from './components/steps/PrivacyStep';
 import PurchaseStep from './components/steps/PurchaseStep';
 import SplashIntro from './components/elements/SplashIntro';
 import TemplateStep from './components/steps/TemplateStep';
+import TermsStep from './components/steps/TermsStep';
 import Tooltip from './components/elements/Tooltip';
 import TopNav from './components/elements/TopNav';
 import UsersStep from "./components/steps/UsersStep";
@@ -279,30 +281,34 @@ class App extends Component {
 
 	handleFAQ() {
 		console.log("handleFAQ()");
-		let self = this;
+		window.scrollTo(0, 0);
+
 		let pages = this.state.pages;
 		pages.isFAQ = true;
 
 		this.setState({ pages : pages });
-
-		setTimeout(function() {
-			pages.isFAQ = false;
-			self.setState({ pages : pages })
-		}, 1000);
 	}
 
 	handleUsers() {
 		console.log("handleUsers()");
-		let self = this;
+		window.scrollTo(0, 0);
+
 		let pages = this.state.pages;
 		pages.isUsers = true;
 
 		this.setState({ pages : pages });
+	}
 
-		setTimeout(function() {
-			pages.isUsers = false;
-			self.setState({ pages : pages })
-		}, 1000);
+	handlePrivacy() {
+		console.log("handlePrivacy()");
+		window.scrollTo(0, 0);
+		this.setState({ step : 8 });
+	}
+
+	handleTerms() {
+		console.log("handleTerms()");
+		window.scrollTo(0, 0);
+		this.setState({ step : 9 });
 	}
 
 	handleNext() {
@@ -417,12 +423,22 @@ class App extends Component {
 						    {this.state.step === 7 && (
 							    <CompletionStep />
 						    )}
+
+						    {this.state.step === 8 && (
+							    <PrivacyStep />
+						    )}
+
+						    {this.state.step === 9 && (
+							    <TermsStep />
+						    )}
 					    </div>
 				    </Column>
 				    <Column flexGrow={1} horizontal="center" className="bottom-nav">
 				      <BottomNav
 					      onFAQ={()=> this.handleFAQStep()}
-					      onStep1={()=> this.handleTemplateStep()}/>
+					      onStep1={()=> this.handleTemplateStep()}
+					      onPrivacy={()=> this.handlePrivacy()}
+					      onTerms={()=> this.handleTerms()} />
 				    </Column>
 
 				    {this.state.isTooltip && (

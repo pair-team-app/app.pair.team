@@ -34,7 +34,7 @@ class TopNav extends Component {
 					</Row>
 				</Column>
 
-				{this.props.step < 3 && (
+				{(this.props.step < 3 || this.props.step > 7) && (
 					<Column flexGrow={1} horizontal="center">
 						<Row vertical="center" style={{height:'18px'}}>
 							<MediaQuery minWidth={840}>
@@ -51,11 +51,11 @@ class TopNav extends Component {
 				<Column flexGrow={1} horizontal="end">
 					<Row vertical="center" style={{height:'18px'}}>
 						<MediaQuery minWidth={840}>
-							{this.props.step < 3 && (
+							{(this.props.step < 3 || this.props.step > 7) && (
 								<span className={usersLinkClass} onClick={()=> this.props.onUsers()}>Free Users</span>
 							)}
 
-							{this.props.step >= 3 && (
+							{(this.props.step >= 3 && this.props.step < 8) && (
 								<img src="/images/close.png" className="nav-link-close" alt="Close" onClick={()=> this.props.onStep0()} />
 							)}
 						</MediaQuery>
