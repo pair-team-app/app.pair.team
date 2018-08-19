@@ -134,18 +134,20 @@ class ImageryForm extends Component {
 
 		//imagery.splice(1, 0, this.dzComponent());
 
-		const btnClass = (this.state.isValidated) ? 'action-button step-button' : 'action-button step-button disabled-button';
+		const btnClass = (this.state.isValidated) ? 'form-button' : 'form-button form-button-disabled';
 
 		return (
 			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Step 6</div>
-						<div className="step-text">What type of photos or illustrations do you like?</div>
+						<div className="step-header-text">What type of imagery do you need?</div>
+						<div className="input-title">Select one or more photos or illustrations.</div>
 					</Column>
 				</Row>
-				<button className="action-button step-button" onClick={()=> this.props.onBack()}>Back</button>
-				<button className={btnClass} onClick={()=> this.handleClick()}>Next Step</button>
+				<Row horizontal="center">
+					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Back</button>
+					<button className={btnClass} onClick={()=> this.handleClick()}>Next</button>
+				</Row>
 				<Masonry className="images-item-wrapper" style={{width:'100%'}}>
 					{imagery}
 				</Masonry>

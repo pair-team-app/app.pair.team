@@ -87,7 +87,7 @@ class TonesForm extends Component {
 				</Row>
 				<Row horizontal="center">
 					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Back</button>
-					<button className={btnClass} onClick={()=> this.handleClick()}>Next Step</button>
+					<button className={btnClass} onClick={()=> this.handleClick()}>Next</button>
 				</Row>
 				<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
 					{items}

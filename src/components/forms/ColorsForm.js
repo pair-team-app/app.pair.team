@@ -1,8 +1,9 @@
 
 import React, { Component } from 'react';
 import './ColorsForm.css';
+import colors from '../../colors.json';
 
-import axios from 'axios';
+// import axios from 'axios';
 import { Column, Row } from 'simple-flexbox';
 
 import ColorSwatch from '../ColorSwatch';
@@ -23,20 +24,22 @@ class ColorsForm extends Component {
 	}
 
 	componentDidMount() {
-		let formData = new FormData();
-		formData.append('action', 'TEMPLATE_COLORS');
-		formData.append('template_id', this.props.templateID);
-		axios.post('http://api.designengine.ai/templates.php', formData)
-			.then((response) => {
-				console.log("TEMPLATE_COLORS", JSON.stringify(response.data));
+		this.setState({ colors : colors });
 
-				let colors = [];
-				response.data.colors.forEach(color => {
-					colors.push(color);
-				});
-				this.setState({ colors : colors });
-			}).catch((error) => {
-		});
+// 		let formData = new FormData();
+// 		formData.append('action', 'TEMPLATE_COLORS');
+// 		formData.append('template_id', this.props.templateID);
+// 		axios.post('http://api.designengine.ai/templates.php', formData)
+// 			.then((response) => {
+// 				console.log("TEMPLATE_COLORS", JSON.stringify(response.data));
+//
+// 				let colors = [];
+// 				response.data.colors.forEach(color => {
+// 					colors.push(color);
+// 				});
+// 				this.setState({ colors : colors });
+// 			}).catch((error) => {
+// 		});
 	}
 
 	handleToggle(id, isSelected) {
@@ -103,7 +106,7 @@ class ColorsForm extends Component {
 				</Row>
 				<Row horizontal="center">
 					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Back</button>
-					<button className={btnClass} onClick={()=> this.handleClick()}>Next Step</button>
+					<button className={btnClass} onClick={()=> this.handleClick()}>Next</button>
 				</Row>
 				<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
 					{colors}

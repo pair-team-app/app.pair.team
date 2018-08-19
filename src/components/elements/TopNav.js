@@ -30,7 +30,7 @@ class TopNav extends Component {
 			<Row vertical="start">
 				<Column flexGrow={1} horizontal="start">
 					<Row vertical="center">
-						<a href="/"><img src="/images/logo_header.png" className="nav-logo" alt="Design Engine" /></a>
+						<a href="/"><img src="/images/logo_header.svg" className="nav-logo" alt="Design Engine" /></a>
 					</Row>
 				</Column>
 

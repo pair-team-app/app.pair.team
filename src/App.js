@@ -66,19 +66,6 @@ class App extends Component {
 			img : '/images/logo_icon.png',
 			txt : 'Design Systems loaded.'
 		});
-
-		let self = this;
-		this.interval = setInterval(function() {
-			if (typeof cookie.load('order_id') !== 'undefined') {
-				let formData = new FormData();
-				formData.append('action', 'ORDER_PING');
-				formData.append('order_id', cookie.load('order_id'));
-				axios.post('https://api.designengine.ai/templates.php', formData)
-					.then((response)=> {
-					}).catch((error) => {
-				});
-			}
-		}, 5000);
 	}
 
 	componentWillUnmount() {
@@ -153,6 +140,7 @@ class App extends Component {
 				cookie.save('order_id', response.data.order_id, { path: '/' });
 
 				let keywords = obj.title.split();
+				keywords.push('layout');
 				obj.keywords.forEach(function(keyword, i) {
 					keywords.push(keyword.title);
 				});
@@ -414,6 +402,7 @@ class App extends Component {
 							    <GeneratingStep
 								    orderID={cookie.load('order_id')}
 								    onTooltip={(obj)=> this.showStatus(obj)}
+								    onBack={()=> this.handleDetailsStep(this.templateID)}
 								    onClick={(obj)=> this.handlePurchaseStep(obj)}
 								    onItemToggle={(obj)=> this.handleItemToggle(obj)} />
 						    )}
@@ -433,7 +422,7 @@ class App extends Component {
 				    <Column flexGrow={1} horizontal="center" className="bottom-nav">
 				      <BottomNav
 					      onFAQ={()=> this.handleFAQStep()}
-					      onStep1={()=> this.handleStep1()}/>
+					      onStep1={()=> this.handleTemplateStep()}/>
 				    </Column>
 
 				    {this.state.isTooltip && (

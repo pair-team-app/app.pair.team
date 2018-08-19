@@ -70,23 +70,25 @@ class CornersForm extends Component {
 		let items = corners.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<CornerType title={item.title} url={item.url} isSelected={item.isSelected} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
+					<CornerType title={item.title} amount={item.amount} isSelected={item.isSelected} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
 				</Column>
 			);
 		});
 
-		const btnClass = (this.state.isValidated) ? 'action-button step-button' : 'action-button step-button disabled-button';
+		const btnClass = (this.state.isValidated) ? 'form-button' : 'form-button form-button-disabled';
 
 		return (
 			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Step 5</div>
-						<div className="step-text">What type of corners do you want?</div>
+						<div className="step-header-text">What type of button shapes?</div>
+						<div className="input-title">Select one or more button shapes.</div>
 					</Column>
 				</Row>
-				<button className="action-button step-button" onClick={()=> this.props.onBack()}>Back</button>
-				<button className={btnClass} onClick={()=> this.handleClick()}>Next Step</button>
+				<Row horizontal="center">
+					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Back</button>
+					<button className={btnClass} onClick={()=> this.handleClick()}>Next</button>
+				</Row>
 				<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
 					{items}
 				</Row>

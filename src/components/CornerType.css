@@ -1,9 +1,14 @@
 
 .corner-type {
-	width: 50px;
-	height: 50px;
-	margin-right: 15px;
-	border: 2px solid #ffffff;
+	display: table;
+	width: 140px;
+	height: 40px;
+	margin: 0 10px 25px 10px;
+	border-radius: 25px;
+	border: 2px solid #9b9b9b;
+	box-shadow: 0 0 12px #cccccc;
+	font-size: 15px;
+	font-weight: 500;
 }
 
 .corner-type:hover {
@@ -11,10 +16,10 @@
 }
 
 .corner-type-selected {
-	border: 2px solid #333333;
+	border: 2px solid #002fff;
 }
 
-.corner-type-image {
-	width: 100%;
-	height: 100%;
+.corner-type-text {
+	display: table-cell;
+	vertical-align: middle;
 }

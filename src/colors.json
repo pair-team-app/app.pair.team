@@ -1,0 +1,33 @@
+[{
+  "id": 1,
+  "keyword": "blue",
+  "hex": "0000ff"
+}, {
+  "id": 2,
+  "keyword": "green",
+  "hex": "00ff00"
+}, {
+  "id": 3,
+  "keyword": "red",
+  "hex": "ff0000"
+}, {
+  "id": 4,
+  "keyword": "yellow",
+  "hex": "ffff00"
+}, {
+  "id": 5,
+  "keyword": "cyan",
+  "hex": "00ffff"
+}, {
+  "id": 6,
+  "keyword": "purple",
+  "hex": "ff00ff"
+}, {
+  "id": 7,
+  "keyword": "orange",
+  "hex": "ff9900"
+}, {
+  "id": 8,
+  "keyword": "gray",
+  "hex": "808080"
+}]

@@ -37,7 +37,7 @@ class BottomNav extends Component {
 					<MediaQuery minWidth={840}>
 						<Row vertical="start" horizontal="center" style={{margin:'0 30px'}}>
 							<Column flexGrow={1} horizontal="start">
-								<a href="/"><img src="/images/logo_footer.png" className="footer-logo" alt="Design Engine" /></a>
+								<a href="/"><img src="/images/logo_footer.svg" className="footer-logo" alt="Design Engine" /></a>
 							</Column>
 							<Column flexGrow={1} horizontal="start">
 								<div className="footer-title">Company</div>

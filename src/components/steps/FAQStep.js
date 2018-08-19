@@ -20,14 +20,14 @@ class FAQStep extends Component {
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">Introducing Design Automation</div>
 						<div className="step-text">Design Engine is the first premium design automation tool allowing anyone to generate premium designs using AI. Design Engine uses a combination of curation & speculative design driven by AI software.</div>
-						<button className="action-button step-button" onClick={()=> this.props.onClick()}>Read More</button>
+						<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
 						<img src="/images/intro3.png" className="intro-image" alt="MacBook" />
 						<div className="step-header-text">Where is Design AI headed?</div>
 						<div className="step-text">Listen to Design Engine’s bi-weekly microcast for insights on Design AI.</div>
 						<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
 						<Row flexGrow={1} style={{width:'100%', flexWrap:'wrap'}} className="flex-wrapper">
-							<Column flexGrow={1} horizontal="center"><a href="https://www.youtube.com/watch?v=xYsLayJPBco"><img src="/images/video1.png" className="video-image" alt="Video 1" /></a></Column>
-							<Column flexGrow={1} horizontal="center"><a href="https://www.youtube.com/watch?v=xYsLayJPBco"><img src="/images/video2.png" className="video-image" alt="Video 2" /></a></Column>
+							<Column flexGrow={1} horizontal="center"><a href="https://www.youtube.com/watch?v=xYsLayJPBco" target="_blank" rel="noopener noreferrer"><img src="/images/video1.png" className="video-image" alt="Video 1" /></a></Column>
+							<Column flexGrow={1} horizontal="center"><a href="https://www.youtube.com/watch?v=xYsLayJPBco" target="_blank" rel="noopener noreferrer"><img src="/images/video2.png" className="video-image" alt="Video 2" /></a></Column>
 						</Row>
 
 						<Row flexGrow={1} className="quotes-wrapper">

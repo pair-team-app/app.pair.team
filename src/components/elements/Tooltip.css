@@ -1,6 +1,6 @@
 
 .tooltip-wrapper {
-	z-index: 101;
+	z-index: 100;
 	position: fixed;
 	left: 10px;
 	top: 60px;

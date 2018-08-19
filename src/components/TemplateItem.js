@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import './TemplateItem.css';
 
-import CurrencyFormat from 'react-currency-format';
+// import CurrencyFormat from 'react-currency-format';
+import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
 
 
@@ -23,18 +24,26 @@ class TemplateItem extends Component {
 
 	render() {
 		const imageClass = (this.state.isSelected) ? 'template-item-image template-item-image-selected' : 'template-item-image';
-		const btnClass = (this.state.isSelected) ? 'action-button small-button selected-button' : 'action-button small-button';
+		const faClass = (this.state.isSelected) ? 'template-item-check' : 'template-item-check is-hidden';
+		const btnClass = (this.state.isSelected) ? 'action-button template-item-button template-item-button-selected' : 'action-button template-item-button';
 
 		return (
 			<div className="template-item">
 				<Row>
 					<Column flexGrow={1} horizontal="center" className="template-item-container">
 						<Row><img className={imageClass} src={this.props.image} alt={this.props.title} onClick={()=> this.props.onImageClick()} /></Row>
-						<Row><span className="template-item-price"><CurrencyFormat value={this.props.price} displayType={'text'} thousandSeparator={true} prefix={'$'} /></span></Row>
+						<Row><FontAwesome name="check-circle" className={faClass} /></Row>
 					</Column>
 				</Row>
-				<Row horizontal="center" className="template-item-button">
-					<button className={btnClass} onClick={()=> this.handleSelectClick()}>{(this.state.isSelected) ? 'Selected' : 'Select'}</button>
+				<Row>
+					<Column flexGrow={1} horizontal="start">
+						<Row className="template-item-title">Title</Row>
+						<Row className="template-item-text">Text info here</Row>
+						<Row><button className={btnClass} onClick={()=> this.handleSelectClick()}>
+							{this.state.isSelected && ('Selected')}
+							{!this.state.isSelected && ('$' + this.props.price + ' Buy')}
+						</button></Row>
+					</Column>
 				</Row>
 			</div>
 		);

@@ -18,25 +18,41 @@
 }
 
 .template-item-image-selected {
+	opacity: 0.5;
 }
 
-.template-item-price {
-	font-size: 14px;
-	font-weight: 500;
-	color: #ffffff;
-	background-color: #76aa3c;
-	padding: 10px;
+.template-item-check {
 	position: absolute;
-	left: 20px;
-	bottom: 10px;
-	border-radius: 7px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	color: #7ed321;
+	font-size: 36px;
 }
 
 .template-item-title {
-	color: #666666;
+	font-family: "Poppins SemiBold", sans-serif;
+	margin: 10px 0 10px 0;
+}
+
+.template-item-text {
+	font-family: "Poppins Medium", sans-serif;
+	color: #9b9b9b;
 	margin-bottom: 10px;
 }
 
 .template-item-button {
-	margin-top: 20px;
+	background-color: #002fff;
+	color: #ffffff;
+	min-width: 80px;
+}
+
+.template-item-button:hover {
+	cursor : pointer;
+}
+
+.template-item-button-selected {
+	background-color: #7ed321;
+	color: #ffffff;
 }

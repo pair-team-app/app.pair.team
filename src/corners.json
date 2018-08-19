@@ -1,31 +1,41 @@
 [{
-  "id"    : 1,
+  "id"         : 1,
   "isSelected" : false,
-  "title" : "Corner 1",
-  "url"   : "https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg"
+  "title"      : "Radius 0",
+  "amount"     : 1
 }, {
-  "id"    : 2,
+  "id"         : 2,
   "isSelected" : false,
-  "title" : "Corner 2",
-  "url"   : "https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg"
+  "title"      : "Radius 2",
+  "amount"     : 2
 }, {
-  "id"    : 3,
+  "id"         : 3,
   "isSelected" : false,
-  "title" : "Corner 3",
-  "url"   : "https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg"
+  "title"      : "Radius 4",
+  "amount"     : 4
 }, {
-  "id"    : 4,
+  "id"         : 4,
   "isSelected" : false,
-  "title" : "Corner 4",
-  "url"   : "https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg"
+  "title"      : "Radius 5",
+  "amount"     : 5
 }, {
-  "id"    : 5,
+  "id"         : 5,
   "isSelected" : false,
-  "title" : "Corner 5",
-  "url"   : "https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg"
+  "title"      : "Radius 10",
+  "amount"     : 10
 }, {
-  "id"    : 6,
+  "id"         : 6,
   "isSelected" : false,
-  "title" : "Corner 6",
-  "url"   : "https://img.freepik.com/free-icon/rounded-corners-interface-square-symbol_318-70718.jpg?size=338&ext=jpg"
+  "title"      : "Radius 15",
+  "amount"     : 15
+}, {
+  "id"         : 7,
+  "isSelected" : false,
+  "title"      : "Radius 20",
+  "amount"     : 20
+}, {
+  "id"         : 8,
+  "isSelected" : false,
+  "title"      : "Radius 25",
+  "amount"     : 25
 }]

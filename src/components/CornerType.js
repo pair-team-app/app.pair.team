@@ -19,11 +19,12 @@ class CornerType extends Component {
 	}
 
 	render() {
+		const style = { borderRadius : this.props.amount + 'px' };
 		const className = (this.state.isSelected) ? 'corner-type corner-type-selected' : 'corner-type';
 
 		return (
-			<div onClick={()=> this.handleClick()} className={className}>
-				<img src={this.props.url} className="corner-type-image" alt={this.props.title} />
+			<div onClick={()=> this.handleClick()} className={className} style={style}>
+				<span className="corner-type-text">{this.props.title}px</span>
 			</div>
 		);
 	}

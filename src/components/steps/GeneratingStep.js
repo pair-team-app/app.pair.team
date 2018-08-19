@@ -6,8 +6,8 @@ import axios from "axios/index";
 import { Column, Row } from 'simple-flexbox';
 
 import LightBox from '../elements/LightBox';
-import NextButton from './../elements/NextButton';
 import TemplateItem from '../TemplateItem';
+import cookie from "react-cookies";
 
 class GeneratingStep extends Component {
 	constructor(props) {
@@ -21,10 +21,13 @@ class GeneratingStep extends Component {
 			lightBox : {
 				isVisible : false,
 				title     : '',
+				file_id   : 0,
+				price     : 0,
 				url       : ''
 			}
 		};
 
+		this.orderInterval = null;
 		this.fileInterval = null;
 		this.statusInterval = null;
 		this.selectedItems = [];
@@ -38,6 +41,16 @@ class GeneratingStep extends Component {
 			'txt' : 'Starting up engine…'
 		});
 		this.checkQueue();
+
+		this.orderInterval = setInterval(function() {
+			let formData = new FormData();
+			formData.append('action', 'ORDER_PING');
+			formData.append('order_id', this.props.order_id);
+			axios.post('https://api.designengine.ai/templates.php', formData)
+				.then((response)=> {
+				}).catch((error) => {
+			});
+		}, 5000);
 
 
 		let self = this;
@@ -67,6 +80,7 @@ class GeneratingStep extends Component {
 	}
 
 	componentWillUnmount() {
+		clearInterval(this.orderInterval);
 		clearInterval(this.fileInterval);
 		clearInterval(this.statusInterval);
 	}
@@ -80,9 +94,10 @@ class GeneratingStep extends Component {
 			.then((response)=> {
 				console.log("STATUS_CHECK", JSON.stringify(response.data));
 
-				const percent = this.state.files.length > 0 ? Math.round((this.state.maxFiles / this.state.files.length) * 100) : 0;
+				const percent = this.state.files.length > 0 ? Math.round((this.state.files.length / this.state.maxFiles) * 100) : 0;
 				const rate = this.state.files.length > 0 ? Math.ceil(this.state.elapsed / this.state.files.length) : 0;
-				self.setState({ status : (response.data.message) ? response.data.message : this.state.files.length + ' (' + percent + '%) of ' + this.state.maxFiles + ' estimated art boards, ' + rate + ' per second.' });
+// 				self.setState({ status : (response.data.message) ? response.data.message : this.state.files.length + ' (' + percent + '%) of ' + this.state.maxFiles + ' estimated art boards, ' + rate + ' per second.' });
+				self.setState({ status : this.state.files.length + ' (' + percent + '%) of ' + this.state.maxFiles + ' estimated art boards, ' + rate + ' per second.' });
 			}).catch((error) => {
 		});
 	}
@@ -136,8 +151,10 @@ class GeneratingStep extends Component {
 	handleImageClick(obj) {
 		this.setState({
 			lightBox : {
-				title : obj.title,
-				url : obj.filename,
+				title     : obj.title,
+				file_id   : obj.id,
+				price     : obj.per_price,
+				url       : obj.filename,
 				isVisible : true
 			}
 		});
@@ -231,30 +248,41 @@ class GeneratingStep extends Component {
 			);
 		});
 
-		const btnSelectClass = (this.selectedItems.length === this.state.files.length) ? 'action-button step-button selected-button' : 'action-button step-button';
-		const btnSelectCaption = (this.selectedItems.length === this.state.files.length) ? 'Select None' : 'Select All ('+this.state.files.length+')';
+// 		const btnSelectClass = (this.selectedItems.length === this.state.files.length) ? 'action-button step-button selected-button' : 'action-button step-button';
+// 		const btnSelectCaption = (this.selectedItems.length === this.state.files.length) ? 'Select None' : 'Select All ('+this.state.files.length+')';
+
+		const btnClass = (this.selectedItems.length > 0) ? 'form-button' : 'form-button form-button-disabled';
 
 		return (
 			<div>
-				<div className="debug-window debug-border">
-					{this.state.elapsed} seconds<br /> files / {this.state.maxFiles} expected files</div>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">Select the designs that you like</div>
 						<div className="input-title">{this.state.status}</div>
-						<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><div className="step-text-margin"><button className={btnSelectClass} onClick={()=> this.onSelectAll()}>{btnSelectCaption}</button></div></Row>
-						<div className="template-item-wrapper">
-							<Row horizontal="center" style={{flexWrap:'wrap'}}>
-								{items}
-							</Row>
-						</div>
+						{/*<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><div className="step-text-margin"><button className={btnSelectClass} onClick={()=> this.onSelectAll()}>{btnSelectCaption}</button></div></Row>*/}
 					</Column>
+				</Row>
+				<Row horizontal="center">
+					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Back</button>
+					<button className={btnClass} onClick={()=> this.onNext()}>Next</button>
+				</Row>
+				<Row horizontal="center">
+					<div className="template-item-wrapper">
+						<Row horizontal="center" style={{flexWrap:'wrap'}}>
+							{items}
+						</Row>
+					</div>
 				</Row>
 
 				{this.state.lightBox.isVisible && (
-					<LightBox title={this.state.lightBox.title} urls={[this.state.lightBox.url]} onClick={()=> this.handleLightBoxClick()} />
+					<LightBox
+						title={this.state.lightBox.title}
+						file_id={this.state.lightBox.file_id}
+						price={this.state.lightBox.price}
+						urls={[this.state.lightBox.url]}
+						onSelect={(file_id)=> this.handleSelectClick(file_id, true)}
+						onClick={()=> this.handleLightBoxClick()} />
 				)}
-				<NextButton isEnabled={(this.selectedItems.length > 0)} onClick={()=> this.onNext()} />
 			</div>
 		);
 	}
