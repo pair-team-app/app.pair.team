@@ -90,25 +90,21 @@ class PurchaseStep extends Component {
 			amount += parseFloat(item.per_price);
 		});
 
-		const btnClass = (this.state.selectedItems.length > 0) ? 'action-button full-button' : 'action-button full-button disabled-button';
-
 		return (
 			<Row vertical="start">
 				<Column flexGrow={1} horizontal="center">
 					<div className="step-header-text">Enter your payment details</div>
-					<div className="step-text">Enter your credit card or PayPal information below to complate your purchase.</div>
+					<div className="input-title">{this.state.selectedItems.length} Design Engine views for ${amount} USD.</div>
 					<div style={{width:'100%', textAlign:'left'}}>
-						<div className="input-title">Details</div>
 						<StripeProvider apiKey={this.STRIPE_TEST_TOKEN}>
 							{/*<StripeProvider apiKey={this.STRIPE_LIVE_TOKEN}>*/}
 							<div className="example" style={{width:'100%'}}>
 								<Elements>
-									<StripeCheckout amount={amount} btnClass={btnClass} />
+									<StripeCheckout amount={amount} onBack={()=> this.props.onBack(this.state.selectedItems)} />
 								</Elements>
 							</div>
 						</StripeProvider>
 
-						<div className="step-text">By clicking &ldquo;Confirm Purchase&rdquo; I agree to Design Engine AI’s Terms of Service.</div>
 						<div className="purchase-item-wrapper">
 							<Row horizontal="center" style={{flexWrap:'wrap'}}>
 								{items}

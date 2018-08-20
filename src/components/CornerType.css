@@ -5,10 +5,11 @@
 	height: 40px;
 	margin: 0 10px 25px 10px;
 	border-radius: 25px;
-	border: 2px solid #9b9b9b;
+	/*border: 2px solid #9b9b9b;*/
 	box-shadow: 0 0 12px #cccccc;
 	font-size: 15px;
 	font-weight: 500;
+	color: #000000;
 }
 
 .corner-type:hover {
@@ -16,7 +17,9 @@
 }
 
 .corner-type-selected {
-	border: 2px solid #002fff;
+	background-color: #7ed321;
+	color: #ffffff;
+	/*border: 2px solid #002fff;*/
 }
 
 .corner-type-text {

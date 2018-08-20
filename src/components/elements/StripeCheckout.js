@@ -2,10 +2,10 @@
 import React, {Component} from 'react';
 
 import axios from 'axios';
-import CurrencyFormat from 'react-currency-format';
+// import CurrencyFormat from 'react-currency-format';
+import { Row } from 'simple-flexbox';
 import { CardCVCElement, CardExpiryElement, CardNumberElement, injectStripe } from 'react-stripe-elements';
 
-import InputField from '../InputField';
 
 class StripeCheckout extends Component {
 	constructor(props) {
@@ -51,36 +51,29 @@ class StripeCheckout extends Component {
 
 
 	render() {
+		const btnClass = (this.props.amount > 0) ? 'form-button' : 'form-button form-button-disabled';
+
 		return (
 			<div className="checkout">
-				<InputField
-					type="text"
-					name="customer-name"
-					placeholder="Name"
-					onChange={(event)=> this.handleTextChange(event)}
-					onClick={(name)=> this.handleTooltip(name)} />
+				<Row horizontal="center">
+					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Back</button>
+					<button className={btnClass} onClick={()=> this.submit()}>Submit</button>
+				</Row>
+
+				<div className="form-element">
+					<input className="textfield-input" style={{textAlign:'left'}} type="text" name="customer-name" placeholder="Name" value={this.state.cardholder} onChange={this.handleTextChange} />
+				</div>
 
 				<div className="form-element">
 					<CardNumberElement className="textfield-input" />
-					<div className="input-tip input-tip-red">Required</div>
 				</div>
 
 				<div className="form-element">
 					<CardExpiryElement className="textfield-input" />
-					<div className="input-tip input-tip-red">Required</div>
 				</div>
 
 				<div className="form-element">
 					<CardCVCElement className="textfield-input" />
-					<div className="input-tip input-tip-red">Required</div>
-				</div>
-
-				<div className="checkout-price">
-					Total: <CurrencyFormat value={this.props.amount} displayType={'text'} thousandSeparator={true} prefix={'$'} /> USD
-				</div>
-
-				<div className="form-element">
-					<button className={this.props.btnClass} onClick={this.submit}>Confirm Purchase</button>
 				</div>
 			</div>
 		);

@@ -18,11 +18,7 @@ class Tooltip extends Component {
 		let self = this;
 		this.interval = setTimeout(function() {
 			self.setState({ isFade : true });
-
-// 			self.interval = setTimeout(function() {
-// 				self.setState({ isFade : false });
-// 			}, 1000);
-		}, 1000);
+		}, 1500);
 	}
 
 	componentWillUnmount() {
@@ -34,9 +30,9 @@ class Tooltip extends Component {
 
 		return (
 			<Row className={className}>
-				<Column><img src={this.props.content.img} className="tooltip-icon" alt={this.props.content.txt} /></Column>
+				<Column vertical="center"><div className="tooltip-icon">{this.props.content.ico}</div></Column>
 				<Column className="tooltip-content">
-					<Row vertical="center" style={{height:'30px'}}>{this.props.content.txt}</Row>
+					<Row vertical="center">{this.props.content.txt}</Row>
 				</Column>
 			</Row>
 		);

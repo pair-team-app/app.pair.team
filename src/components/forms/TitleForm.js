@@ -19,6 +19,9 @@ class TitleForm extends Component {
 			isValidated : false
 		};
 
+		this.isEmailValidated = false;
+		this.isTitleValidated = false;
+
 		this.handleTextChange = this.handleTextChange.bind(this);
 	}
 
@@ -40,15 +43,31 @@ class TitleForm extends Component {
 
 		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		if (re.test(String(form.email).toLowerCase())) {
-			validated |= 0x001;
-			this.props.onTooltip({
-				img : '/images/logo_icon.png',
-				txt : 'Email validated, thanks!'
-			});
+			if (!this.isEmailValidated) {
+				this.isEmailValidated = true;
+				this.props.onTooltip({
+					ico : '📧',
+					txt : 'Email looks valid, sweet.'
+				});
+			}
+			validated |= 0x01;
+
+		} else {
+			this.isEmailValidated = false;
 		}
 
 		if (form.title.length > 0) {
-			validated |= 0x010;
+			if (!this.isTitleValidated) {
+				this.isTitleValidated = true;
+				this.props.onTooltip({
+					ico : '👍',
+					txt : 'Name looks great.'
+				});
+			}
+			validated |= 0x10;
+
+		} else {
+			this.isTitleValidated = false;
 		}
 
 		this.setState({

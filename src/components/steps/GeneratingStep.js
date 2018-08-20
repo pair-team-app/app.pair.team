@@ -26,6 +26,7 @@ class GeneratingStep extends Component {
 			}
 		};
 
+		this.elapsedInterval = null;
 		this.orderInterval = null;
 		this.fileInterval = null;
 		this.statusInterval = null;
@@ -35,16 +36,17 @@ class GeneratingStep extends Component {
 	}
 
 	componentDidMount() {
-		this.props.onTooltip({
-			'img' : '/images/logo_icon.png',
-			'txt' : 'Starting up engine…'
-		});
+// 		this.props.onTooltip({
+// 			'img' : '/images/logo_icon.png',
+// 			'txt' : 'Starting up engine…'
+// 		});
 		this.checkQueue();
 
+		let self = this;
 		this.orderInterval = setInterval(function() {
 			let formData = new FormData();
 			formData.append('action', 'ORDER_PING');
-			formData.append('order_id', this.props.order_id);
+			formData.append('order_id', self.props.orderID);
 			axios.post('https://api.designengine.ai/templates.php', formData)
 				.then((response)=> {
 				}).catch((error) => {
@@ -52,8 +54,7 @@ class GeneratingStep extends Component {
 		}, 5000);
 
 
-		let self = this;
-		setInterval(function() {
+		this.elapsedInterval = setInterval(function() {
 			self.setState({ elapsed : parseInt((new Date()).getTime() * 0.001, 10) - parseInt(self.startTime * 0.001, 10) });
 		}, 1000);
 
@@ -79,6 +80,7 @@ class GeneratingStep extends Component {
 	}
 
 	componentWillUnmount() {
+		clearInterval(this.elapsedInterval);
 		clearInterval(this.orderInterval);
 		clearInterval(this.fileInterval);
 		clearInterval(this.statusInterval);
@@ -111,8 +113,8 @@ class GeneratingStep extends Component {
 				console.log("FILE_CHECK", JSON.stringify(response.data));
 				if (response.data.files.length !== self.state.files.length) {
 					self.props.onTooltip({
-						'img' : '/images/logo_icon.png',
-						'txt' : 'Retrieving preview…'
+						'ico' : '🏭',
+						'txt' : 'Rendering preview.'
 					});
 				}
 
@@ -134,7 +136,7 @@ class GeneratingStep extends Component {
 				console.log("QUEUE_CHECK", JSON.stringify(response.data));
 				if (response.data.index > 0) {
 					self.props.onTooltip({
-						'img' : '/images/logo_icon.png',
+						'ico' : '✋',
 						'txt' : 'You are #' + response.data.index + ' in line, please wait.'
 					});
 				}

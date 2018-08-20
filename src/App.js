@@ -65,8 +65,8 @@ class App extends Component {
 
 	componentDidMount() {
 		this.showStatus({
-			img : '/images/logo_icon.png',
-			txt : 'Design Systems loaded.'
+			ico : '📍',
+			txt : 'Engine started in Mountain View, CA'
 		});
 	}
 
@@ -83,7 +83,7 @@ class App extends Component {
 
 		setTimeout(function() {
 			self.setState({ isTooltip : false });
-		}, 1500);
+		}, 2000);
 	}
 
 	handleIntroComplete() {
@@ -115,21 +115,31 @@ class App extends Component {
 		console.log("handleTemplateStep()");
 		window.scrollTo(0, 0);
 		this.setState({ step : 3 });
+// 		this.setState({
+// 			step : 6,
+// 			selectedItems : []
+// 		});
 	}
 
 	handleDetailsStep(id) {
 		console.log("handleDetailsStep("+id+")");
 		this.templateID = id;
 		window.scrollTo(0, 0);
-		this.setState({ step : 4 });
 
 		this.showStatus({
-			img : '/images/logo_icon.png',
-			txt : 'Template ['+this.templateID+'] selected.'
+			ico : '🎬',
+			txt : 'Design Engine ready.'
 		});
+
+		this.setState({ step : 4 });
 	}
 
 	handleStartGenerating(obj) {
+		this.showStatus({
+			ico : '🚗',
+			txt : 'Design Engine starting.'
+		});
+
 		let self = this;
 		let formData = new FormData();
 		formData.append('action', 'MAKE_ORDER');
@@ -152,9 +162,26 @@ class App extends Component {
 						console.log("COMPREHEND", JSON.stringify(response.data));
 
 						self.showStatus({
-							'img' : '/images/logo_icon.png',
-							'txt' : 'Found ' + response.data.comprehend.keywords.length + ' keyword(s).'
+							'ico' : '💭',
+							'txt' : 'Found ' + response.data.comprehend.syntax.length + ' keyword(s).'
 						});
+
+						const score = parseFloat(response.data.comprehend.sentiment.scores[response.data.comprehend.sentiment.outcome]).toFixed(2);
+						const feeling = response.data.comprehend.sentiment.outcome;
+
+						setTimeout(function() {
+							self.showStatus({
+								'ico' : '🙌',
+								'txt' : 'AI Score: ' + score
+							});
+						}, 2000);
+
+						setTimeout(function() {
+							self.showStatus({
+								'ico' : (feeling === 'Positive') ? '😊' : (feeling === 'Negative') ? '☹️' : '😐',
+								'txt' : 'AI Sentiment: ' + feeling
+							});
+						}, 3000);
 
 						let colors = [];
 						let images = [];
@@ -172,10 +199,13 @@ class App extends Component {
 							axios.get('http://www.colr.org/json/tag/' + item.Text)
 								.then((response)=> {
 									console.log("colr", JSON.stringify(response.data));
-									self.showStatus({
-										'img' : '/images/logo_icon.png',
-										'txt' : 'Found ' + response.data.schemes.length + ' color theme(s).'
-									});
+
+									if (response.data.schemes.length > 0) {
+										self.showStatus({
+											'ico' : '💭',
+											'txt' : 'Found ' + response.data.schemes.length + ' color theme(s).'
+										});
+									}
 
 									response.data.schemes.forEach(function(itm, i) {
 										colors.push(itm.colors);
@@ -195,8 +225,6 @@ class App extends Component {
 										});
 									});
 
-									console.log("COLORS", colors);
-
 								}).catch((error) => {
 							});
 
@@ -204,7 +232,7 @@ class App extends Component {
 								.then((response)=> {
 // 									console.log("UNSPLASH", JSON.stringify(response.data));
 									self.showStatus({
-										'img' : '/images/logo_icon.png',
+										'ico' : '💭',
 										'txt' : 'Located ' + response.data.results.length + ' image(s).'
 									});
 
@@ -239,14 +267,7 @@ class App extends Component {
 		window.scrollTo(0, 0);
 		console.log("handleGeneratingStep("+JSON.stringify(obj)+")");
 
-// 		cookie.save('order_id', "22", { path: '/' });
-// 		this.setState({ step : 3 });
-
-		this.showStatus({
-			'img' : '/images/logo_icon.png',
-			'txt' : 'Submitting order'
-		});
-
+		//cookie.save('order_id', "76", { path: '/' });
 		this.setState({ step : 5 });
 	}
 
@@ -417,7 +438,9 @@ class App extends Component {
 							    <PurchaseStep
 								    onClick={()=> this.handleCompletionStep()}
 								    onItemToggle={(obj)=> this.handleItemToggle(obj)}
-								    selectedItems={this.state.selectedItems} />
+								    selectedItems={this.state.selectedItems}
+								    onBack={(obj)=> this.handleGeneratingStep(obj)}
+							    />
 						    )}
 
 						    {this.state.step === 7 && (
