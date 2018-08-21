@@ -2,15 +2,16 @@
 import React, { Component } from 'react';
 import './DetailsStep.css';
 
+import axios from 'axios';
 import { Column } from 'simple-flexbox';
 
 import ColorsForm from '../forms/ColorsForm';
 import CornersForm from '../forms/CornersForm';
 import ImageryForm from '../forms/ImageryForm';
-// import NextButton from './../elements/NextButton';
 import TitleForm from '../forms/TitleForm';
 import KeywordsForm from "../forms/KeywordsForm";
 import TonesForm from "../forms/TonesForm";
+import cookie from "react-cookies";
 
 
 class DetailsStep extends Component {
@@ -51,30 +52,94 @@ class DetailsStep extends Component {
 		} else if (this.state.step === 1) {
 			for (let [key, value] of Object.entries(vals)) {
 				form[key] = value;
+
+				value.forEach(function(item, i) {
+					let formData = new FormData();
+					formData.append('action', 'ADD_KEYWORD');
+					formData.append('order_id', cookie.load('order_id'));
+					formData.append('keyword', item.title);
+					axios.post('https://api.designengine.ai/templates.php', formData)
+						.then((response)=> {
+							console.log("ADD_KEYWORD", JSON.stringify(response.data));
+						}).catch((error) => {
+					});
+				});
 			}
 
 		// tones
 		} else if (this.state.step === 2) {
 			for (let [key, value] of Object.entries(vals)) {
 				form[key] = value;
+
+				value.forEach(function(item, i) {
+					let formData = new FormData();
+					formData.append('action', 'ADD_TONE');
+					formData.append('order_id', cookie.load('order_id'));
+					formData.append('tone', item.title);
+					axios.post('https://api.designengine.ai/templates.php', formData)
+						.then((response) => {
+							console.log("ADD_TONE", JSON.stringify(response.data));
+						}).catch((error) => {
+					});
+				});
 			}
 
 			// colors
 		} else if (this.state.step === 3) {
 			for (let [key, value] of Object.entries(vals)) {
 				form[key] = value;
+
+				value.forEach(function(item, i) {
+					let formData = new FormData();
+					formData.append('action', 'ADD_COLOR');
+					formData.append('order_id', cookie.load('order_id'));
+					formData.append('keyword', item.keyword);
+					formData.append('index', "0");
+					formData.append('hex', item.hex);
+					axios.post('https://api.designengine.ai/templates.php', formData)
+						.then((response) => {
+							console.log("ADD_COLOR", JSON.stringify(response.data));
+						}).catch((error) => {
+					});
+				});
 			}
 
 			// corners
 		} else if (this.state.step === 4) {
 			for (let [key, value] of Object.entries(vals)) {
 				form[key] = value;
+
+				value.forEach(function(item, i) {
+					let formData = new FormData();
+					formData.append('action', 'ADD_CORNER');
+					formData.append('order_id', cookie.load('order_id'));
+					formData.append('name', item.title);
+					formData.append('radius', item.amount);
+					axios.post('https://api.designengine.ai/templates.php', formData)
+						.then((response) => {
+							console.log("ADD_CORNER", JSON.stringify(response.data));
+						}).catch((error) => {
+					});
+				});
 			}
 
 			// imagery
 		} else if (this.state.step === 5) {
 			for (let [key, value] of Object.entries(vals)) {
 				form[key] = value;
+
+				value.forEach(function(item, i) {
+					let formData = new FormData();
+					formData.append('action', 'ADD_IMAGE');
+					formData.append('order_id', cookie.load('order_id'));
+					formData.append('keyword', item.title);
+					formData.append('url', item.url);
+					axios.post('https://api.designengine.ai/templates.php', formData)
+						.then((response) => {
+							console.log("ADD_IMAGE", JSON.stringify(response.data));
+						}).catch((error) => {
+					});
+				});
 			}
 			this.setState({ form : form });
 		}
