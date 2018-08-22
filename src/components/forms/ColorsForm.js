@@ -47,23 +47,21 @@ class ColorsForm extends Component {
 		let self = this;
 
 		if (isSelected) {
-			if (this.selectedColors.length < 3) {
-				colors.forEach(function (item, i) {
-					if (item.id === id) {
+			colors.forEach(function (item, i) {
+				if (item.id === id) {
 
-						let isFound = false;
-						self.selectedColors.forEach(function (itm, j) {
-							if (itm.id === id) {
-								isFound = true;
-							}
-						});
-
-						if (!isFound) {
-							self.selectedColors.push(item);
+					let isFound = false;
+					self.selectedColors.forEach(function (itm, j) {
+						if (itm.id === id) {
+							isFound = true;
 						}
+					});
+
+					if (!isFound) {
+						self.selectedColors.push(item);
 					}
-				});
-			}
+				}
+			});
 
 		} else {
 			this.selectedColors.forEach(function(item, i) {

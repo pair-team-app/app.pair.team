@@ -28,23 +28,21 @@ class CornersForm extends Component {
 		let self = this;
 
 		if (isSelected) {
-			if (this.selectedCorners.length < 3) {
-				corners.forEach(function (item, i) {
-					if (item.id === id) {
+			corners.forEach(function (item, i) {
+				if (item.id === id) {
 
-						let isFound = false;
-						self.selectedCorners.forEach(function (itm, j) {
-							if (itm.id === id) {
-								isFound = true;
-							}
-						});
-
-						if (!isFound) {
-							self.selectedCorners.push(item);
+					let isFound = false;
+					self.selectedCorners.forEach(function (itm, j) {
+						if (itm.id === id) {
+							isFound = true;
 						}
+					});
+
+					if (!isFound) {
+						self.selectedCorners.push(item);
 					}
-				});
-			}
+				}
+			});
 
 		} else {
 			this.selectedCorners.forEach(function(item, i) {

@@ -113,7 +113,7 @@ class ImageryForm extends Component {
 			});
 		}
 
-		this.setState({ isValidated : (this.selectedImagery.length > 0) })
+		this.setState({ isValidated : (this.selectedImagery.length >= 3) })
 	}
 
 	handleClick() {
@@ -141,7 +141,7 @@ class ImageryForm extends Component {
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">What type of imagery do you need?</div>
-						<div className="input-title">Select one or more photos or illustrations.</div>
+						<div className="input-title">Select three or more photos or illustrations.</div>
 					</Column>
 				</Row>
 				<Row horizontal="center">

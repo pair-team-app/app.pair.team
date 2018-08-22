@@ -27,23 +27,21 @@ class KeywordsForm extends Component {
 		let self = this;
 
 		if (isSelected) {
-			if (this.selectedKeywords.length < 3) {
-				keywords.forEach(function (item, i) {
-					if (item.id === id) {
+			keywords.forEach(function (item, i) {
+				if (item.id === id) {
 
-						let isFound = false;
-						self.selectedKeywords.forEach(function (itm, j) {
-							if (itm.id === id) {
-								isFound = true;
-							}
-						});
-
-						if (!isFound) {
-							self.selectedKeywords.push(item);
+					let isFound = false;
+					self.selectedKeywords.forEach(function (itm, j) {
+						if (itm.id === id) {
+							isFound = true;
 						}
+					});
+
+					if (!isFound) {
+						self.selectedKeywords.push(item);
 					}
-				});
-			}
+				}
+			});
 
 		} else {
 			this.selectedKeywords.forEach(function(item, i) {

@@ -27,23 +27,21 @@ class TonesForm extends Component {
 		let self = this;
 
 		if (isSelected) {
-			if (this.selectedTones.length < 3) {
-				tones.forEach(function (item, i) {
-					if (item.id === id) {
+			tones.forEach(function (item, i) {
+				if (item.id === id) {
 
-						let isFound = false;
-						self.selectedTones.forEach(function (itm, j) {
-							if (itm.id === id) {
-								isFound = true;
-							}
-						});
-
-						if (!isFound) {
-							self.selectedTones.push(item);
+					let isFound = false;
+					self.selectedTones.forEach(function (itm, j) {
+						if (itm.id === id) {
+							isFound = true;
 						}
+					});
+
+					if (!isFound) {
+						self.selectedTones.push(item);
 					}
-				});
-			}
+				}
+			});
 
 		} else {
 			this.selectedTones.forEach(function(item, i) {
