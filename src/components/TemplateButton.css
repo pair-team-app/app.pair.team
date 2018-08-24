@@ -14,9 +14,11 @@
 	height: 142px;
 	border-radius: 5px;
 	box-shadow: 0 0 20px #cccccc;
+	background-color: #f3f3f3;
 }
 
 .template-button-title {
+	font-family: "Poppins SemiBold", sans-serif;
 	font-size: 14px;
 	color: #000000;
 	font-weight: 600;
@@ -25,16 +27,19 @@
 }
 
 .template-button-text {
+	font-family: "Poppins Medium", sans-serif;
 	font-size: 14px;
 	color: #9b9b9b;
 	text-align: left;
+	line-height: 22px;
 }
 
 .template-button-button {
 	margin-top: 10px;
-	padding: 5px 12px;
+	padding: 6px 15px;
 	min-width: 0;
 	font-size: 12px;
+	font-weight: 400;
 }
 
 @media only screen and (max-width: 600px) {

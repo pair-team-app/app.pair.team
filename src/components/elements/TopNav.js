@@ -24,7 +24,7 @@ class TopNav extends Component {
 		//const faGlyph = (this.props.isTooltip) ? 'spinner' : 'times';
 
 		const faqLinkClass = (this.props.step === 1) ? 'nav-link nav-link-active' : 'nav-link';
-		const usersLinkClass = (this.props.step === 2) ? 'nav-link nav-link-active' : 'nav-link';
+// 		const usersLinkClass = (this.props.step === 2) ? 'nav-link nav-link-active' : 'nav-link';
 
 		return (
 			<Row vertical="start">
@@ -52,7 +52,7 @@ class TopNav extends Component {
 					<Row vertical="center" style={{height:'18px'}}>
 						<MediaQuery minWidth={840}>
 							{(this.props.step < 3 || this.props.step > 7) && (
-								<span className={usersLinkClass} onClick={()=> this.props.onUsers()}>Free Users</span>
+								<div style={{width:'158px'}} />
 							)}
 
 							{(this.props.step >= 3 && this.props.step < 8) && (

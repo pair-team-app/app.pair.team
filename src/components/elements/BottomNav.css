@@ -11,14 +11,14 @@
 .footer-title {
 	font-family: "Poppins Bold", sans-serif;
 	margin-bottom: 15px;
-	font-size: 11px;
+	font-size: 13px;
 }
 
 .footer-link {
 	margin-bottom: 10px;
 	color: #4a4a4a;
 	font-family: "Poppins Medium", sans-serif;
-	font-size: 11px;
+	font-size: 13px;
 }
 
 .footer-link:hover {
@@ -34,7 +34,7 @@
 
 .footer-icon {
 	margin-right: 12px;
-	font-size: 14px;
+	font-size: 16px;
 	color: #000000;
 }
 

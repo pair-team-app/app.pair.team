@@ -5,6 +5,7 @@ import './ImageryForm.css';
 import axios from 'axios';
 import Dropzone from 'react-dropzone';
 import Masonry from 'react-masonry-component';
+import MasonryLayout from 'react-masonry-layout'
 
 import { Column, Row } from 'simple-flexbox';
 
@@ -126,6 +127,10 @@ class ImageryForm extends Component {
 	}
 
 	render() {
+		const masonryOptions = {
+			transitionDuration : 0.1
+		};
+
 		let imagery = this.state.imagery.map((item, i, arr) => {
 			return (
 				<ImageryItem key={i} title={item.title} url={item.url} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
@@ -148,8 +153,15 @@ class ImageryForm extends Component {
 					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Back</button>
 					<button className={btnClass} onClick={()=> this.handleClick()}>Next</button>
 				</Row>
-				<Masonry className="images-item-wrapper" style={{width:'100%'}}>
+				<Masonry
+					options={masonryOptions}
+					disableImagesLoaded={true}
+					updateOnEachImageLoad={true}
+					className="images-item-wrapper"
+					style={{width:'100%'}}>
+					{/*<MasonryLayout className="images-item-wrapper" style={{width:'100%'}}>*/}
 					{imagery}
+					{/*</MasonryLayout>*/}
 				</Masonry>
 			</div>
 		);

@@ -87,7 +87,7 @@ class ColorsForm extends Component {
 		let colors = this.state.colors.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<ColorSwatch title={item.title} swatch={item.hex} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
+					<ColorSwatch title={item.title} gradient={item.gradient} swatch={item.hex} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
 				</Column>
 			);
 		});

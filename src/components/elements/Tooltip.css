@@ -23,17 +23,12 @@
 	font-size: 13px;
 }
 
-.tooltip-fade {
-	transition: opacity 0.2s;
-	-webkit-transition: opacity 0.2s;
-	opacity: 0;
-}
 
 @media only screen and (max-width: 600px) {
 	.tooltip-wrapper {
 		top: 20px;
 		left: 50%;
-		width: 300px;
+		width: auto;
 		height: 50px;
 		transform: translate(-50%, 0%);
 		-webkit-transform: translate(-50%, 0%);

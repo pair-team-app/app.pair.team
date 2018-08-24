@@ -19,8 +19,8 @@ class DetailsStep extends Component {
 		super(props);
 
 		this.state = {
-			step : 0,
-			form : {
+			step   : 0,
+			form   : {
 				email    : '',
 				title    : '',
 				keywords : [],
@@ -196,8 +196,6 @@ class DetailsStep extends Component {
 						<ImageryForm templateID={this.props.templateID} onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
 					)}
 				</Column>
-
-				{/*<NextButton isEnabled={this.state.isValidated} onClick={()=> this.handleClick()} />*/}
 			</div>
 		);
 	}

@@ -32,8 +32,6 @@ class ColorSwatch extends Component {
 		let g = parseInt(col.substring(2,4),16);
 		let b = parseInt(col.substring(4,6),16);
 
-		// to make the colour less bright than the input
-		// change the following three "+" symbols to "-"
 		r += amt;
 		g += amt;
 		b += amt;
@@ -68,8 +66,7 @@ class ColorSwatch extends Component {
 
 
 	render() {
-		//const swatchStyle = { backgroundColor: '#' + this.props.swatch };
-		const swatchStyle = { backgroundImage : 'linear-gradient(to right, #' + this.adjustBrightness(this.props.swatch, -100) + ' , #' + this.props.swatch + ')' };
+		const swatchStyle = { backgroundImage : 'linear-gradient(to right, #' + this.props.gradient + ' , #' + this.props.swatch + ')' };
 		const faClass = (this.state.isSelected) ? 'color-swatch-check' : 'color-swatch-check is-hidden';
 
 		return (

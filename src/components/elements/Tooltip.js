@@ -2,39 +2,36 @@
 import React, { Component } from 'react';
 import './Tooltip.css'
 
+import { TweenMax, Expo } from "gsap/TweenMax";
 import { Column, Row } from 'simple-flexbox';
 
 class Tooltip extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isFade : false
 		};
 
-		this.interval = null
+		this.divWrapper = null;
 	}
 
 	componentDidMount() {
-		let self = this;
-		this.interval = setTimeout(function() {
-			self.setState({ isFade : true });
-		}, 1500);
-	}
-
-	componentWillUnmount() {
-		clearTimeout(this.interval);
+		let tween = TweenMax.to(this.divWrapper, 1, {
+			opacity : 0,
+			ease    : Expo.easeOut,
+			delay   : 1.5
+		});
 	}
 
 	render() {
-		const className = (this.state.isFade) ? 'tooltip-wrapper tooltip-fade' : 'tooltip-wrapper';
-
 		return (
-			<Row className={className}>
-				<Column vertical="center"><div className="tooltip-icon">{this.props.content.ico}</div></Column>
-				<Column className="tooltip-content">
-					<Row vertical="center">{this.props.content.txt}</Row>
-				</Column>
-			</Row>
+			<div className="tooltip-wrapper" ref={div=> this.divWrapper = div}>
+				<Row>
+					<Column vertical="center"><div className="tooltip-icon">{this.props.content.ico}</div></Column>
+					<Column className="tooltip-content">
+						<Row vertical="center">{this.props.content.txt}</Row>
+					</Column>
+				</Row>
+			</div>
 		);
 	}
 }

@@ -20,3 +20,7 @@
 .imagery-item-image-selected {
 	opacity: 0.5;
 }
+
+.grid-item {
+	float: left;
+}

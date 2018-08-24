@@ -4,6 +4,7 @@ import './TitleForm.css';
 
 import { Column, Row } from 'simple-flexbox';
 
+import AIStatus from '../elements/AIStatus';
 import InputField from '../InputField';
 
 
@@ -12,6 +13,14 @@ class TitleForm extends Component {
 		super(props);
 
 		this.state = {
+			status : {
+				isVisible : false,
+				content   : '',
+				coords    : {
+					x : 0,
+					y : 0
+				}
+			},
 			form : {
 				email : '',
 				title : ''
@@ -120,6 +129,10 @@ class TitleForm extends Component {
 							onClick={(name)=> this.handleTooltip(name)} />
 					</div>
 				</Row>
+
+				{this.state.status.isVisible && (
+					<AIStatus content={this.state.status.content} coords={this.state.status.coords} />
+				)}
 			</div>
 		);
 	}

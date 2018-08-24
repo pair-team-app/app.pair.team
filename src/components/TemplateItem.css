@@ -15,6 +15,7 @@
 	height: 142px;
 	border-radius: 6px;
 	box-shadow: 0 0 20px #cccccc;
+	background-color: #f3f3f3;
 }
 
 .template-item-image-selected {
@@ -32,20 +33,25 @@
 }
 
 .template-item-title {
-	font-family: "Poppins SemiBold", sans-serif;
 	margin: 10px 0 10px 0;
+	font-family: "Poppins SemiBold", sans-serif;
+	font-size: 14px;
 }
 
 .template-item-text {
 	font-family: "Poppins Medium", sans-serif;
+	font-size: 14px;
 	color: #9b9b9b;
 	margin-bottom: 10px;
+	line-height: 22px;
 }
 
 .template-item-button {
 	background-color: #002fff;
 	color: #ffffff;
 	min-width: 80px;
+	font-size: 12px;
+	font-weight: 400;
 }
 
 .template-item-button:hover {

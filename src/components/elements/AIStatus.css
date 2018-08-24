@@ -1,0 +1,19 @@
+
+.ai-status {
+	width: 50px;
+	height: 34px;
+	border-radius: 15px;
+	text-align: center;
+	display: table;
+	color: #4a4a4a;
+	font-size: 14px;
+	box-shadow: 0 0 12px #cccccc;
+	background-color: #ffffff;
+	z-index: 100;
+}
+
+.ai-status-text {
+	display: table-cell;
+	font-weight: 500;
+	vertical-align: middle;
+}

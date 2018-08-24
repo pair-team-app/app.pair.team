@@ -1,5 +1,6 @@
 
 .keyword-item {
+	position: relative;
 	height: 40px;
 	margin: 0 10px 25px 10px;
 	border-radius: 25px;

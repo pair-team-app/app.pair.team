@@ -3,22 +3,22 @@ import React, { Component } from 'react';
 import './LightBox.css';
 
 class LightBox extends Component {
-	onKeyDown = ()=> this.onKeyDown();
+// 	onKeyDown = ()=> this.onKeyDown();
 	constructor(props) {
 		super(props);
 		this.state = {
 		};
 
 		this.contentElement = null;
-		//this.onKeyDown = this.onKeyDown.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
 	}
 
 	componentDidMount() {
-		//window.addEventListener('keydown', this.onKeyDown);
+		window.addEventListener('keydown', this.onKeyDown);
 	}
 
 	componentWillUnmount() {
-		//window.removeEventListener('keydown', this.onKeyDown);
+		window.removeEventListener('keydown', this.onKeyDown);
 	}
 
 	onKeyDown(event) {
@@ -28,10 +28,6 @@ class LightBox extends Component {
 
 
 	render() {
-		if (this.contentElement) {
-			console.log(this.contentElement.width, this.contentElement.height);
-		}
-
 		const items = this.props.urls.map((url, i, arr) => {
 			return (
 				<div key={i}><img src={url} className="lightbox-image" alt={this.props.title} /></div>
