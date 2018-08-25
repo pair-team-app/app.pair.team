@@ -24,6 +24,12 @@ class LightBox extends Component {
 	onKeyDown(event) {
 		const key = event.key;
 		console.log('onKeyDown()', key);
+		if (event.key === 'leftArrow') {
+			this.props.onNext();
+
+		} else if (event.key === 'rightArrow') {
+			this.props.onBack();
+		}
 	}
 
 

@@ -48,6 +48,9 @@ class DetailsStep extends Component {
 
 			if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {
 				this.props.onStart(form);
+
+			} else {
+				window.alert("Design Engine is invite only at the moment.");
 			}
 
 		// keywords
