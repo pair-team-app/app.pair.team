@@ -46,7 +46,9 @@ class DetailsStep extends Component {
 				form[key] = value;
 			}
 
-			this.props.onStart(form);
+			if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {
+				this.props.onStart(form);
+			}
 
 		// keywords
 		} else if (this.state.step === 1) {

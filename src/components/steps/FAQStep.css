@@ -1,4 +1,10 @@
 
+.video-wrapper {
+	width: 100%;
+	flex-wrap: wrap;
+	margin-bottom: 10px;
+}
+
 .video-image {
 	width: 326px;
 	height: 200px;

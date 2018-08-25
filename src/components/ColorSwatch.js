@@ -71,6 +71,7 @@ class ColorSwatch extends Component {
 
 		return (
 			<div onClick={()=> this.handleClick()} className="color-swatch" style={swatchStyle}>
+				<div className="color-swatch-hex">{this.props.title}</div>
 				<FontAwesome name="check-circle" className={faClass} />
 			</div>
 		);

@@ -1,51 +1,51 @@
 [{
   "id": 1,
-  "keyword": "blue",
+  "title": "blue",
   "gradient": "fe5c1c",
   "hex": "eeb735"
 }, {
   "id": 2,
-  "keyword": "green",
+  "title": "green",
   "gradient": "3d40ab",
   "hex": "2d3096"
 }, {
   "id": 3,
-  "keyword": "red",
+  "title": "red",
   "gradient": "789a2e",
   "hex": "4f7219"
 }, {
   "id": 4,
-  "keyword": "yellow",
+  "title": "yellow",
   "gradient": "82d3e2",
   "hex": "a5b7c6"
 }, {
   "id": 5,
-  "keyword": "cyan",
+  "title": "cyan",
   "gradient": "583652",
   "hex": "271824"
 }, {
   "id": 6,
-  "keyword": "purple",
+  "title": "purple",
   "gradient": "cc7546",
   "hex": "814a2c"
 }, {
   "id": 7,
-  "keyword": "orange",
+  "title": "orange",
   "gradient": "82d3e1",
   "hex": "b4e5ed"
 }, {
   "id": 8,
-  "keyword": "gray",
+  "title": "gray",
   "gradient": "b6bcc1",
   "hex": "d3d8dc"
 }, {
   "id": 9,
-  "keyword": "gray",
+  "title": "gray",
   "gradient": "e49d74",
   "hex": "e9ecee"
 }, {
   "id": 10,
-  "keyword": "gray",
+  "title": "gray",
   "gradient": "3e46ae",
   "hex": "33399d"
 }]

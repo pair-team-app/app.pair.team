@@ -5,7 +5,6 @@ import './ImageryForm.css';
 import axios from 'axios';
 import Dropzone from 'react-dropzone';
 import Masonry from 'react-masonry-component';
-import MasonryLayout from 'react-masonry-layout'
 
 import { Column, Row } from 'simple-flexbox';
 
@@ -25,6 +24,8 @@ class ImageryForm extends Component {
 		};
 
 		this.selectedImagery = [];
+		this.handleImageLoaded = this.handleImageLoaded.bind(this);
+		this.handleLayoutComplete = this.handleLayoutComplete.bind(this);
 	}
 
 	componentDidMount() {
@@ -126,11 +127,15 @@ class ImageryForm extends Component {
 		}
 	}
 
-	render() {
-		const masonryOptions = {
-			transitionDuration : 0.1
-		};
+	handleImageLoaded(imagesLoadedInstance) {
+		window.dispatchEvent(new Event('resize'));
+	}
 
+	handleLayoutComplete(laidOutItems) {
+		window.dispatchEvent(new Event('resize'));
+	}
+
+	render() {
 		let imagery = this.state.imagery.map((item, i, arr) => {
 			return (
 				<ImageryItem key={i} title={item.title} url={item.url} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
@@ -154,14 +159,13 @@ class ImageryForm extends Component {
 					<button className={btnClass} onClick={()=> this.handleClick()}>Next</button>
 				</Row>
 				<Masonry
-					options={masonryOptions}
-					disableImagesLoaded={true}
+					options={{ transitionDuration : 0.1 }}
 					updateOnEachImageLoad={true}
+					onImagesLoaded={this.handleImageLoaded}
+					onLayoutComplete={laidOutItems => this.handleLayoutComplete(laidOutItems)}
 					className="images-item-wrapper"
 					style={{width:'100%'}}>
-					{/*<MasonryLayout className="images-item-wrapper" style={{width:'100%'}}>*/}
-					{imagery}
-					{/*</MasonryLayout>*/}
+						{imagery}
 				</Masonry>
 			</div>
 		);

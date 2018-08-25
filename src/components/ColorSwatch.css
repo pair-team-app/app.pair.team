@@ -14,6 +14,9 @@
 .color-swatch-hex {
 	display: table-cell;
 	vertical-align: middle;
+	color: #000000;
+	font-size: 16px;
+	font-weight: 600;
 	/*text-shadow: 0 0 2px #ffffff;*/
 }
 
