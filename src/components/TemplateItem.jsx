@@ -37,8 +37,8 @@ class TemplateItem extends Component {
 				</Row>
 				<Row>
 					<Column flexGrow={1} horizontal="start">
-						<Row className="template-item-title">Title</Row>
-						<Row className="template-item-text">Text info here</Row>
+						<Row className="template-item-title">{this.props.title}</Row>
+						<Row className="template-item-text">{this.props.description}</Row>
 						<Row><button className={btnClass} onClick={()=> this.handleSelectClick()}>
 							{this.state.isSelected && ('Selected')}
 							{!this.state.isSelected && ('$' + this.props.price + ' Buy')}

@@ -98,8 +98,9 @@ class DetailsStep extends Component {
 					let formData = new FormData();
 					formData.append('action', 'ADD_COLOR');
 					formData.append('order_id', cookie.load('order_id'));
-					formData.append('keyword', item.keyword);
+					formData.append('keyword', item.title);
 					formData.append('index', "0");
+					formData.append('gradient', item.gradient);
 					formData.append('hex', item.hex);
 					axios.post('https://api.designengine.ai/templates.php', formData)
 						.then((response) => {
@@ -149,7 +150,15 @@ class DetailsStep extends Component {
 			this.setState({ form : form });
 		}
 
-		if (this.state.step < 5) {
+		if (this.state.step === 0) {
+			if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {
+				this.setState({
+					step : 1,
+					form : form
+				});
+			}
+
+		} else if (this.state.step < 5) {
 			this.setState({
 				step : this.state.step + 1,
 				form : form

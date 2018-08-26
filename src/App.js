@@ -216,6 +216,7 @@ class App extends Component {
 											formData.append('order_id', cookie.load('order_id'));
 											formData.append('keyword', item.Text);
 											formData.append('index', itm.id);
+											formData.append('gradient', '000000');
 											formData.append('hex', color);
 											axios.post('https://api.designengine.ai/templates.php', formData)
 												.then((response)=> {

@@ -96,7 +96,7 @@ class GeneratingStep extends Component {
 				console.log("STATUS_CHECK", JSON.stringify(response.data));
 
 				const percent = this.state.files.length > 0 ? Math.round((this.state.files.length / this.state.maxFiles) * 100) : 0;
-				const rate = this.state.files.length > 0 ? Math.ceil(this.state.elapsed / this.state.files.length) : 0;
+				const rate = this.state.files.length > 0 ? Math.ceil(this.state.files.length / this.state.elapsed) : 0;
 // 				self.setState({ status : (response.data.message) ? response.data.message : this.state.files.length + ' (' + percent + '%) of ' + this.state.maxFiles + ' estimated art boards, ' + rate + ' per second.' });
 				self.setState({ status : this.state.files.length + ' (' + percent + '%) of ' + this.state.maxFiles + ' estimated art boards, ' + rate + ' per second.' });
 			}).catch((error) => {
@@ -242,7 +242,9 @@ class GeneratingStep extends Component {
 					<TemplateItem
 						onImageClick={()=> this.handleImageClick(item)}
 						onSelectClick={(isSelected)=> this.handleSelectClick(item.id, isSelected)}
-						image={item.filename} title={item.title+' - '+(i+1)}
+						title={item.title}
+						description={item.description}
+						image={item.filename}
 						price={parseFloat(item.per_price)}
 						selected={isSelected} />
 				</Column>
