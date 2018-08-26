@@ -41,7 +41,7 @@ class BottomNav extends Component {
 							</Column>
 							<Column flexGrow={1} horizontal="start">
 								<div className="footer-title">Company</div>
-								<div className="footer-link" onClick={()=> this.props.onFAQ()}>What is Design AI?</div>
+								{/*<div className="footer-link" onClick={()=> this.props.onFAQ()}>What is Design AI?</div>*/}
 								<div className="footer-link"><a href={urls.crunchbase} target="_blank" rel="noopener noreferrer">Crunchbase</a></div>
 								<div className="footer-link"><a href={urls.messenger} target="_blank" rel="noopener noreferrer">Chat Now</a></div>
 							</Column>

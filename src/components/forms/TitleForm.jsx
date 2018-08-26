@@ -129,7 +129,7 @@ class TitleForm extends Component {
 							onClick={(name)=> this.handleTooltip(name)} />
 					</div>
 				</Row>
-				<Row horizontal="center" style={{color:'#cccccc', marginTop:'40px'}}>
+				<Row horizontal="center" className="disclaimer-form">
 					By tapping “Next” you agree to Design<br />Engine's Terms of Service
 				</Row>
 

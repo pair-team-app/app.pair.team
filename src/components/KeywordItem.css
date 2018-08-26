@@ -1,14 +1,14 @@
 
 .keyword-item {
 	position: relative;
-	height: 40px;
-	margin: 0 10px 25px 10px;
+	height: 50px;
+	margin: 0 18px 25px 18px;
 	border-radius: 25px;
-	padding: 2px 20px;
+	padding: 2px 24px;
 	text-align: center;
 	display: table;
-	color: #4a4a4a;
-	font-size: 14px;
+	font-size: 18px;
+	font-weight: 500;
 	box-shadow: 0 0 12px #cccccc;
 	background-color: #ffffff;
 }
@@ -20,7 +20,6 @@
 
 .keyword-item-text {
 	display: table-cell;
-	font-weight: 500;
 	vertical-align: middle;
 }
 

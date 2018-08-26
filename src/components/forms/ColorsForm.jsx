@@ -99,7 +99,7 @@ class ColorsForm extends Component {
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">What colors are you looking for?</div>
-						<div className="input-title">Select one or more color gradients.</div>
+						<div className="input-title">Select one or more colors.</div>
 					</Column>
 				</Row>
 				<Row horizontal="center">

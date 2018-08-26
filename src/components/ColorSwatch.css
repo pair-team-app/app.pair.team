@@ -1,23 +1,26 @@
 
 .color-swatch {
 	position: relative;
-	width: 140px;
-	height: 40px;
-	margin: 0 10px 25px 10px;
+	height: 50px;
+	margin: 0 18px 25px 18px;
 	border-radius: 25px;
+	padding: 2px 28px;
 	display: table;
-	color: #000000;
-	font-size: 12px;
+	color: #ffffff;
+	font-size: 18px;
+	font-weight: 500;
 	box-shadow: 0 0 12px #cccccc;
 }
 
 .color-swatch-hex {
 	display: table-cell;
 	vertical-align: middle;
-	color: #000000;
 	font-size: 16px;
-	font-weight: 600;
 	/*text-shadow: 0 0 2px #ffffff;*/
+}
+
+.color-swatch-selected {
+	background-color: #7ed321;
 }
 
 .color-swatch:hover {

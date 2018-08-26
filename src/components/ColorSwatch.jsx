@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './ColorSwatch.css';
 
-import FontAwesome from 'react-fontawesome';
+// import FontAwesome from 'react-fontawesome';
 
 class ColorSwatch extends Component {
 	constructor(props) {
@@ -66,13 +66,14 @@ class ColorSwatch extends Component {
 
 
 	render() {
-		const swatchStyle = { backgroundImage : 'linear-gradient(to right, #' + this.props.gradient + ' , #' + this.props.swatch + ')' };
-		const faClass = (this.state.isSelected) ? 'color-swatch-check' : 'color-swatch-check is-hidden';
+		const swatchClass = (this.state.isSelected) ? 'color-swatch color-swatch-selected' : 'color-swatch';
+		const swatchStyle = (this.state.isSelected) ? {} : { backgroundImage : 'linear-gradient(to right, #' + this.props.gradient + ' , #' + this.props.swatch + ')' };
+		//const faClass = (this.state.isSelected) ? 'color-swatch-check' : 'color-swatch-check is-hidden';
 
 		return (
-			<div onClick={()=> this.handleClick()} className="color-swatch" style={swatchStyle}>
+			<div onClick={()=> this.handleClick()} className={swatchClass} style={swatchStyle}>
 				<div className="color-swatch-hex">{this.props.title}</div>
-				<FontAwesome name="check-circle" className={faClass} />
+				{/*<FontAwesome name="check-circle" className={faClass} />*/}
 			</div>
 		);
 	}

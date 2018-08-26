@@ -9,8 +9,14 @@
 
 .intro-projects {
 	margin: 40px 0;
-	padding: 0 40px;
+	padding: 0 100px;
 	border-bottom: 1px solid #cad7e2;
+}
+
+.app-icon-wrapper {
+	width: 85%;
+	flex-wrap: wrap;
+
 }
 
 

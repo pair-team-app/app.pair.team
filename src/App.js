@@ -81,9 +81,9 @@ class App extends Component {
 			tooltip : tooltip
 		});
 
-		setTimeout(function() {
-			self.setState({ isTooltip : false });
-		}, 2000);
+// 		setTimeout(function() {
+// 			self.setState({ isTooltip : false });
+// 		}, 2000);
 	}
 
 	handleIntroComplete() {

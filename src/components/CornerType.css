@@ -1,13 +1,12 @@
 
 .corner-type {
 	display: table;
-	width: 140px;
-	height: 40px;
-	margin: 0 10px 25px 10px;
+	height: 50px;
+	margin: 0 18px 25px 18px;
 	border-radius: 25px;
-	/*border: 2px solid #9b9b9b;*/
+	padding: 2px 28px;
 	box-shadow: 0 0 12px #cccccc;
-	font-size: 15px;
+	font-size: 18px;
 	font-weight: 500;
 	color: #000000;
 }

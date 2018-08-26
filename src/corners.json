@@ -1,9 +1,4 @@
 [{
-  "id"         : 2,
-  "isSelected" : false,
-  "title"      : "Radius 0",
-  "amount"     : 1
-}, {
   "id"         : 5,
   "isSelected" : false,
   "title"      : "Radius 4",

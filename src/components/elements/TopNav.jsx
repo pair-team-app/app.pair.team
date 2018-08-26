@@ -30,7 +30,13 @@ class TopNav extends Component {
 			<Row vertical="start">
 				<Column flexGrow={1} horizontal="start">
 					<Row vertical="center">
-						<a href="/"><img src="/images/logo_header.svg" className="nav-logo" alt="Design Engine" /></a>
+						{(this.props.step < 3 || this.props.step > 7) && (
+							<a href="/"><img src="/images/logo_header.svg" className="nav-logo" alt="Design Engine" /></a>
+						)}
+
+						{(this.props.step >= 3 && this.props.step < 8) && (
+							<a href="/"><img src="/images/logo_footer.svg" className="nav-logo2" alt="Design Engine" /></a>
+						)}
 					</Row>
 				</Column>
 
@@ -41,7 +47,7 @@ class TopNav extends Component {
 								<span>
 									<span className="nav-link" onClick={()=> this.props.onStep1()}>Get Started</span>
 									<span className="nav-link" onClick={()=> this.props.onProjects()}>View Examples</span>
-									<span className={faqLinkClass} onClick={()=> this.props.onFAQ()}>What is Design AI?</span>
+									{/*<span className={faqLinkClass} onClick={()=> this.props.onFAQ()}>What is Design AI?</span>*/}
 								</span>
 							</MediaQuery>
 						</Row>

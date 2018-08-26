@@ -79,7 +79,7 @@ class GetStartedStep extends Component {
 							<MediaQuery minWidth={840}>
 								<Column flexGrow={1} horizontal="start" vertical="center">
 									<div className="step-subheader-text" style={lAlignStyle}>Fully editable, developer ready.</div>
-									<div className="step-text" style={lAlignStyle}>Generate fully editable design files that works perfectly with Adobe, Sketch, Figma, Google, & more.</div>
+									<div className="step-text" style={lAlignStyle}>Generate fully editable design files that works perfectly with Adobe, Sketch, Figma, & Google.</div>
 									<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
 								</Column>
 							</MediaQuery>
@@ -97,7 +97,7 @@ class GetStartedStep extends Component {
 							</MediaQuery>
 						</Row>
 
-						<Row flexGrow={1} style={{width:'100%', flexWrap:'wrap'}} className="flex-wrapper">
+						<Row flexGrow={1} horizontal="space-between" className="flex-wrapper app-icon-wrapper">
 							<Column flexGrow={1} horizontal="center"><img src="/images/sketch_icon.png" width="50" height="48" alt="Sketch" /></Column>
 							<Column flexGrow={1} horizontal="center"><img src="/images/figma_icon.png" width="32" height="48" alt="Figma" /></Column>
 							<Column flexGrow={1} horizontal="center"><img src="/images/framer_icon.png" width="33" height="48" alt="Framer" /></Column>

@@ -4,9 +4,15 @@
 	height: 18px;
 }
 
+.nav-logo2 {
+	width: 36px;
+	height: 16px;
+}
+
+
 .nav-link {
 	padding-left: 20px;
-	font-size: 15px;
+	font-size: 16px;
 	color: #002fff;
 }
 
