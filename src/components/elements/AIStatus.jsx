@@ -14,7 +14,13 @@ class AIStatus extends Component {
 	}
 
 	componentDidMount() {
-		let tween = TweenMax.to(this.divWrapper, 1, {
+		let tween = TweenMax.to(this.divWrapper, 0.125, {
+			opacity : 1,
+			ease    : Expo.easeIn
+		});
+
+		let tween2 = TweenMax.to(this.divWrapper, 1, {
+			y       : '-20px',
 			opacity : 0,
 			ease    : Expo.easeOut,
 			delay   : 1.5

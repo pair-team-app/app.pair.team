@@ -152,7 +152,7 @@ class App extends Component {
 				cookie.save('order_id', response.data.order_id, { path: '/' });
 
 				let keywords = obj.title.split();
-				keywords.push('layout');
+				keywords.push('sunshine');
 				obj.keywords.forEach(function(keyword, i) {
 					keywords.push(keyword.title);
 				});

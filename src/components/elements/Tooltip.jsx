@@ -17,6 +17,7 @@ class Tooltip extends Component {
 	componentDidMount() {
 // 		let tween = TweenMax.to(this.divWrapper, 1, {
 // 			opacity : 0,
+// 			y       : '-20px',
 // 			ease    : Expo.easeOut,
 // 			delay   : 1.5
 // 		});

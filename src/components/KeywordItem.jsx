@@ -54,8 +54,7 @@ class KeywordItem extends Component {
 			axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + this.props.title)
 				.then((response)=> {
 					console.log("COMPREHEND", JSON.stringify(response.data));
-					const feeling = response.data.comprehend.sentiment.outcome;
-					self.showStatus({x:0, y:0}, (feeling === 'Positive') ? '😊' : (feeling === 'Negative') ? '☹️' : '😐');
+					self.showStatus({x:0, y:0}, 'Sentiment: ' + response.data.comprehend.sentiment.outcome);
 				}).catch((error) => {
 			});
 		}
@@ -66,11 +65,11 @@ class KeywordItem extends Component {
 
 		return (
 			<div onClick={()=> this.handleClick()} className={className}>
-				<div className="ai-status-wrapper">
-					{this.state.status.isVisible && (
+				{this.state.status.isVisible && (
+					<div className="ai-status-wrapper">
 						<AIStatus content={this.state.status.content} coords={this.state.status.coords} />
-					)}
-				</div>
+					</div>
+				)}
 				<span className="keyword-item-text">{this.props.title}</span>
 			</div>
 		);
