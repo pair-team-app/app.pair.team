@@ -3,15 +3,16 @@ import React, { Component } from 'react';
 import './DetailsStep.css';
 
 import axios from 'axios';
+import cookie from "react-cookies";
 import { Column } from 'simple-flexbox';
 
+import OverlayAlert from '../elements/OverlayAlert';
 import ColorsForm from '../forms/ColorsForm';
 import CornersForm from '../forms/CornersForm';
 import ImageryForm from '../forms/ImageryForm';
 import TitleForm from '../forms/TitleForm';
 import KeywordsForm from "../forms/KeywordsForm";
 import TonesForm from "../forms/TonesForm";
-import cookie from "react-cookies";
 
 
 class DetailsStep extends Component {
@@ -19,6 +20,12 @@ class DetailsStep extends Component {
 		super(props);
 
 		this.state = {
+			timeoutAlert : {
+				isVisible : false,
+				title     : '',
+				content   : '',
+				buttons   : []
+			},
 			step   : 0,
 			form   : {
 				email    : '',
@@ -33,6 +40,62 @@ class DetailsStep extends Component {
 
 		this.selectedColors = [];
 		this.selectedImagery = [];
+		this.orderTimeout = null;
+		this.orderInterval = null;
+	}
+
+	componentWillUnmount() {
+		clearTimeout(this.orderTimeout);
+		clearInterval(this.orderInterval);
+	}
+
+	onTimeout() {
+		this.setState({
+			timeoutAlert : {
+				isVisible : true,
+				title     : 'Closing Session',
+				content   : 'Would you like to stop your Design Engine session?',
+				buttons   : []
+			}
+		});
+	}
+
+	handleAlertConfirm() {
+		console.log("handleAlertConfirm()");
+
+		this.setState({
+			timeoutAlert : {
+				isVisible : false,
+				title     : '',
+				content   : '',
+				buttons   : []
+			}
+		});
+
+		let self = this;
+		this.orderInterval = setInterval(function() {
+			let formData = new FormData();
+			formData.append('action', 'ORDER_PING');
+			formData.append('order_id', self.props.orderID);
+			axios.post('https://api.designengine.ai/templates.php', formData)
+				.then((response)=> {
+				}).catch((error) => {
+			});
+		}, 5000);
+	}
+
+	handleAlertCancel() {
+		console.log("handleAlertCancel()");
+		this.setState({
+			timeoutAlert : {
+				isVisible : false,
+				title     : '',
+				content   : '',
+				buttons   : []
+			}
+		});
+
+		this.props.onCancel();
 	}
 
 	handleStepChange(vals) {
@@ -48,6 +111,11 @@ class DetailsStep extends Component {
 
 			if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {
 				this.props.onStart(form);
+
+				let self = this;
+				this.orderTimeout = setTimeout(function() {
+					self.onTimeout();
+				}, 15000);
 
 			} else {
 				window.alert("Design Engine is invite only at the moment.");
@@ -210,6 +278,16 @@ class DetailsStep extends Component {
 						<ImageryForm templateID={this.props.templateID} onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
 					)}
 				</Column>
+
+				{this.state.timeoutAlert.isVisible && (
+					<OverlayAlert
+						title={this.state.timeoutAlert.title}
+						content={this.state.timeoutAlert.content}
+						buttons={this.state.timeoutAlert.buttons}
+						onConfirm={()=> this.handleAlertConfirm()}
+						onCancel={()=> this.handleAlertCancel()}
+					/>
+				)}
 			</div>
 		);
 	}

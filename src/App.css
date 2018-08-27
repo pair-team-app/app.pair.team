@@ -33,7 +33,7 @@
 	font-size: 56px;
 	font-family: "Poppins Bold", sans-serif;
 	font-weight: 700;
-	line-height: 60px;
+	line-height: 64px;
 }
 
 .step-subheader-text {
@@ -176,7 +176,7 @@
 
 .ai-status-wrapper {
 	position: absolute;
-	top: -80px;
+	top: -60px;
 	left: 50%;
 	transform: translate(-50%, 0%);
 	-webkit-transform: translate(-50%, 0%);

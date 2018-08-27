@@ -2,28 +2,70 @@
 import React, { Component } from 'react';
 import './CornerType.css';
 
+import AIStatus from './elements/AIStatus';
+
 
 class CornerType extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			isSelected : false
+			isSelected : false,
+			status : {
+				isVisible : false,
+				content   : '',
+				coords    : {
+					x : 0,
+					y : 0
+				}
+			}
 		};
+	}
+
+	showStatus(coords, content) {
+		let self = this;
+		this.setState({
+			status : {
+				isVisible : true,
+				content : content,
+				coords : coords,
+			}
+		});
+
+		setTimeout(function() {
+			let status = {
+				isVisible : false,
+				content   : '',
+				coords    : {
+					x : 0,
+					y : 0
+				},
+			};
+			self.setState({ status : status });
+		}, 3000);
 	}
 
 	handleClick() {
 		const isSelected = !this.state.isSelected;
 		this.setState({ isSelected : isSelected });
 		this.props.onClick(isSelected);
+
+		if (isSelected) {
+			this.showStatus({x:0, y:0}, (this.props.amount < 5) ? 'Sentiment: Negative' : (this.props.amount < 20) ? 'Sentiment: Neutral' : 'Sentiment: Positive');
+		}
 	}
 
 	render() {
-		const style = { borderRadius : this.props.amount + 'px' };
+// 		const style = { borderRadius : this.props.amount + 'px' };
 		const className = (this.state.isSelected) ? 'corner-type corner-type-selected' : 'corner-type';
 
 		return (
-			<div onClick={()=> this.handleClick()} className={className} style={style}>
+			<div onClick={()=> this.handleClick()} className={className}>
+				{this.state.status.isVisible && (
+					<div className="ai-status-wrapper">
+						<AIStatus content={this.state.status.content} coords={this.state.status.coords} />
+					</div>
+				)}
 				<span className="corner-type-text">{this.props.title}px</span>
 			</div>
 		);

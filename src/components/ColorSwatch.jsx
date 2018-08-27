@@ -2,14 +2,25 @@
 import React, { Component } from 'react';
 import './ColorSwatch.css';
 
-// import FontAwesome from 'react-fontawesome';
+import axios from "axios/index";
+
+import AIStatus from './elements/AIStatus';
+
 
 class ColorSwatch extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			isSelected : false
+			isSelected : false,
+			status : {
+				isVisible : false,
+				content   : '',
+				coords    : {
+					x : 0,
+					y : 0
+				}
+			}
 		};
 	}
 
@@ -17,10 +28,41 @@ class ColorSwatch extends Component {
 		const isSelected = !this.state.isSelected;
 		this.setState({ isSelected : isSelected });
 		this.props.onClick(isSelected);
+
+		let self = this;
+		if (isSelected) {
+			axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + this.props.title)
+				.then((response)=> {
+					console.log("COMPREHEND", JSON.stringify(response.data));
+					self.showStatus({x:0, y:0}, 'Sentiment: ' + response.data.comprehend.sentiment.outcome);
+				}).catch((error) => {
+			});
+		}
+	}
+
+	showStatus(coords, content) {
+		let self = this;
+		let status = {
+			isVisible : true,
+			content : content,
+			coords : coords,
+		};
+		this.setState({ status : status });
+
+		setTimeout(function() {
+			let status = {
+				isVisible : false,
+				content   : '',
+				coords    : {
+					x : 0,
+					y : 0
+				},
+			};
+			self.setState({ status : status });
+		}, 3000);
 	}
 
 	adjustBrightness(col, amt) {
-
 		let usePound = false;
 
 		if (col[0] === '#') {
@@ -73,7 +115,11 @@ class ColorSwatch extends Component {
 		return (
 			<div onClick={()=> this.handleClick()} className={swatchClass} style={swatchStyle}>
 				<div className="color-swatch-hex">{this.props.title}</div>
-				{/*<FontAwesome name="check-circle" className={faClass} />*/}
+				{this.state.status.isVisible && (
+					<div className="ai-status-wrapper">
+						<AIStatus content={this.state.status.content} coords={this.state.status.coords} />
+					</div>
+				)}
 			</div>
 		);
 	}

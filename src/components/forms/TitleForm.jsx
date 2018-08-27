@@ -56,7 +56,7 @@ class TitleForm extends Component {
 				this.isEmailValidated = true;
 				this.props.onTooltip({
 					ico : '📧',
-					txt : 'Email looks valid, sweet.'
+					txt : 'Email address looks valid & legit.'
 				});
 			}
 			validated |= 0x01;
@@ -70,7 +70,7 @@ class TitleForm extends Component {
 				this.isTitleValidated = true;
 				this.props.onTooltip({
 					ico : '👍',
-					txt : 'Name looks great.'
+					txt : 'Product or company name looks great.'
 				});
 			}
 			validated |= 0x10;

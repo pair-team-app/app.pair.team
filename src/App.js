@@ -40,6 +40,7 @@ class App extends Component {
 		super(props);
 
 		this.state = {
+			orderID : 0,
 		  step : 0,
 			pages : {
 				isIntro : false,
@@ -64,17 +65,17 @@ class App extends Component {
 	}
 
 	componentDidMount() {
-		this.showStatus({
-			ico : '📍',
-			txt : 'Engine started in Mountain View, CA'
-		});
+// 		this.showStatus({
+// 			ico : '📍',
+// 			txt : 'Engine started in Mountain View, CA'
+// 		});
 	}
 
 	componentWillUnmount() {
 	}
 
 	showStatus(tooltip) {
-		let self = this;
+		//let self = this;
 
 		this.setState({
 			isTooltip : true,
@@ -137,7 +138,7 @@ class App extends Component {
 	handleStartGenerating(obj) {
 		this.showStatus({
 			ico : '🚗',
-			txt : 'Design Engine starting.'
+			txt : 'Design Engine is starting up…'
 		});
 
 		let self = this;
@@ -150,6 +151,7 @@ class App extends Component {
 			.then((response)=> {
 				console.log("MAKE_ORDER", JSON.stringify(response.data));
 				cookie.save('order_id', response.data.order_id, { path: '/' });
+				self.setState({ orderID : response.data.order_id });
 
 				let keywords = obj.title.split();
 				keywords.push('sunshine');
@@ -420,6 +422,7 @@ class App extends Component {
 						    {this.state.step === 4 && (
 							    <DetailsStep
 								    templateID={this.templateID}
+								    orderID={this.state.orderID}
 								    onTooltip={(obj)=> this.showStatus(obj)}
 								    onCancel={()=> this.handleTemplateStep()}
 								    onStart={(obj)=> this.handleStartGenerating(obj)}
