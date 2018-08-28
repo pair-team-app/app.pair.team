@@ -46,7 +46,7 @@
 	right: 25px;
 }
 
-.lightbox-button:hover {
+.lightbox-close:hover, .lightbox-button:hover {
 	cursor: pointer;
 	opacity: 0.75;
 }
@@ -58,5 +58,5 @@
 .lightbox-footer {
 	width: 100%;
 	text-align: center;
-	margin-top: 30px;
+	margin-top: 10px;
 }

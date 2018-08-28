@@ -14,7 +14,7 @@ class TemplateButton extends Component {
 	}
 
 	render() {
-		const isPending = (parseInt(this.props.pending) === 1);
+		const isPending = (parseInt(this.props.pending, 10) === 1);
 		const className = (isPending) ? 'template-button template-button-pending' : 'template-button';
 
 		return (

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './Tooltip.css'
 
-import { TweenMax, Expo } from "gsap/TweenMax";
+// import { TweenMax, Expo } from "gsap/TweenMax";
 import { Column, Row } from 'simple-flexbox';
 
 class Tooltip extends Component {

@@ -154,7 +154,7 @@ class App extends Component {
 				self.setState({ orderID : response.data.order_id });
 
 				let keywords = obj.title.split();
-				keywords.push('sunshine');
+				keywords.push('water');
 				obj.keywords.forEach(function(keyword, i) {
 					keywords.push(keyword.title);
 				});

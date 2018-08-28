@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './KeywordItem.css';
 
 import axios from "axios/index";
+
 import AIStatus from './elements/AIStatus';
 
 class KeywordItem extends Component {
@@ -18,8 +19,10 @@ class KeywordItem extends Component {
 					x : 0,
 					y : 0
 				}
-			},
+			}
 		};
+
+		this.divWrapper = null;
 	}
 
 	showStatus(coords, content) {
@@ -41,7 +44,7 @@ class KeywordItem extends Component {
 				},
 			};
 			self.setState({ status : status });
-		}, 3000);
+		}, 2000);
 	}
 
 	handleClick() {
@@ -62,11 +65,13 @@ class KeywordItem extends Component {
 
 	render() {
 		const className = (this.state.isSelected) ? 'keyword-item keyword-item-selected' : 'keyword-item';
+		const marginOffset = (this.divWrapper) ? (this.divWrapper.clientWidth < 200) ? (200 - this.divWrapper.clientWidth) * -0.5 : (this.divWrapper.clientWidth - 200) * 0.5 : 0;
+		if (this.divWrapper && this.state.isSelected) console.log(this.divWrapper.clientWidth, marginOffset);
 
 		return (
-			<div onClick={()=> this.handleClick()} className={className}>
+			<div onClick={()=> this.handleClick()} className={className} ref={(element)=> { this.divWrapper = element; }}>
 				{this.state.status.isVisible && (
-					<div className="ai-status-wrapper">
+					<div className="ai-status-wrapper" style={{marginLeft:marginOffset + 'px'}}>
 						<AIStatus content={this.state.status.content} coords={this.state.status.coords} />
 					</div>
 				)}

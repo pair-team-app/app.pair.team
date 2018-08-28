@@ -75,11 +75,11 @@
 }
 
 .action-button {
-	padding: 8px 12px;
+	padding: 9px 16px;
 	background-color: #002fff;
-	font-size: 12px;
-	font-weight: 500;
-	letter-spacing: 1.2px;
+	font-size: 14px;
+	font-weight: 400;
+	letter-spacing: 1px;
 	color : #ffffff;
 	border: none;
 	border-radius: 5px;
@@ -92,7 +92,8 @@
 }
 
 .step-button {
-	margin: 10px 10px 20px 10px;
+	margin: 10px 0 20px 0;
+	min-width: 158px;
 }
 
 .full-button {
@@ -176,12 +177,15 @@
 
 .ai-status-wrapper {
 	position: absolute;
-	top: -60px;
+	top: -45px;
+	/*left: 0;*/
 	left: 50%;
-	transform: translate(-50%, 0%);
-	-webkit-transform: translate(-50%, 0%);
+	/*transform: translate(-50%, 0%);*/
+	/*-webkit-transform: translate(-50%, 0%);*/
+	/*-moz-transform: translate(-50%, 0%);*/
 	width: 200px;
 	height: 50px;
+	z-index: 2;
 }
 
 .is-hidden {

@@ -108,7 +108,12 @@ class GetStartedStep extends Component {
 				</Row>
 
 				{this.state.lightBox.isVisible && (
-					<LightBox title="" urls={[this.state.lightBox.url]} onClick={()=> this.handleLightBoxClick()} />
+					<LightBox
+						type="project"
+						title=""
+						urls={[this.state.lightBox.url]}
+						onTemplateStep={()=> this.props.onClick()}
+						onClick={()=> this.handleLightBoxClick()} />
 				)}
 			</div>
 		);

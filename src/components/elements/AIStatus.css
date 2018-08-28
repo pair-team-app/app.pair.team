@@ -1,19 +1,40 @@
 
 .ai-status {
 	width: 200px;
-	height: 50px;
-	margin: 0 18px 25px 18px;
-	border-radius: 25px;
-	padding: 2px 24px;
 	text-align: center;
-	display: table;
 	color: #ffffff;
 	font-size: 18px;
 	font-weight: 500;
-	border: 1px solid #ffffff;
-	background-color: #7ed321;
 	z-index: 100;
-	opacity: 0;
+}
+
+.ai-status-main, .ai-status-tail-1, .ai-status-tail-2, .ai-status-tail-3 {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 200px;
+	height: 50px;
+	border-radius: 25px;
+	background-color: #7ed321;
+	display: table;
+}
+
+.ai-status-tail-1 {
+	top: 20px;
+	opacity: 0.33;
+	z-index: 99;
+}
+
+.ai-status-tail-2 {
+	top: 40px;
+	opacity: 0.25;
+	z-index: 98;
+}
+
+.ai-status-tail-3 {
+	top: 60px;
+	opacity: 0.125;
+	z-index: 97;
 }
 
 .ai-status-text {

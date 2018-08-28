@@ -9,7 +9,6 @@ class LightBox extends Component {
 		this.state = {
 		};
 
-		this.contentElement = null;
 		//this.onKeyDown = this.onKeyDown.bind(this);
 	}
 
@@ -45,12 +44,18 @@ class LightBox extends Component {
 				<img src="/images/close.png" className="lightbox-close" alt="Close" onClick={()=> this.props.onClick()} />
 				<div className="lightbox-container">
 					<div className="lightbox-title">{this.props.title}</div>
-					<div className="lightbox-content" ref={(element) => { this.contentElement = element; }}>
+					<div className="lightbox-content">
 						{items}
 					</div>
 					<div className="lightbox-footer">
 						<button className="form-button form-button-secondary" onClick={()=> this.props.onClick()}>Close</button>
-						<button className="form-button" onClick={()=> this.props.onSelect(this.props.file_id)}>Select ${this.props.price}</button>
+						{this.props.type === 'project' && (
+							<button className="form-button" onClick={()=> this.props.onTemplateStep()}>Get Started</button>
+						)}
+
+						{this.props.type === 'order' && (
+							<button className="form-button" onClick={()=> this.props.onSelect(this.props.file_id)}>Select ${this.props.price}</button>
+						)}
 					</div>
 				</div>
 			</div>

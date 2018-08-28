@@ -22,6 +22,8 @@ class ColorSwatch extends Component {
 				}
 			}
 		};
+
+		this.divWrapper = null;
 	}
 
 	handleClick() {
@@ -112,11 +114,14 @@ class ColorSwatch extends Component {
 		const swatchStyle = (this.state.isSelected) ? {} : { backgroundImage : 'linear-gradient(to right, #' + this.props.gradient + ' , #' + this.props.swatch + ')' };
 		//const faClass = (this.state.isSelected) ? 'color-swatch-check' : 'color-swatch-check is-hidden';
 
+		const marginOffset = (this.divWrapper) ? (this.divWrapper.clientWidth < 200) ? (200 - this.divWrapper.clientWidth) * -0.5 : (this.divWrapper.clientWidth - 200) * 0.5 : 0;
+		if (this.divWrapper && this.state.isSelected) console.log(this.divWrapper.clientWidth, marginOffset);
+
 		return (
 			<div onClick={()=> this.handleClick()} className={swatchClass} style={swatchStyle}>
 				<div className="color-swatch-hex">{this.props.title}</div>
 				{this.state.status.isVisible && (
-					<div className="ai-status-wrapper">
+					<div className="ai-status-wrapper"style={{marginLeft:marginOffset + 'px'}}>
 						<AIStatus content={this.state.status.content} coords={this.state.status.coords} />
 					</div>
 				)}

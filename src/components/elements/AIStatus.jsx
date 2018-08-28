@@ -14,23 +14,20 @@ class AIStatus extends Component {
 	}
 
 	componentDidMount() {
-		let tween = TweenMax.to(this.divWrapper, 0.125, {
-			opacity : 1,
-			ease    : Expo.easeIn
-		});
-
-		let tween2 = TweenMax.to(this.divWrapper, 1, {
-			y       : '-20px',
+		// eslint-disable-next-line
+		let tween = TweenMax.to(this.divWrapper, 2, {
+			y       : '-15px',
 			opacity : 0,
 			ease    : Expo.easeOut,
-			delay   : 1.5
+			delay   : 0.125
 		});
 	}
 
 	componentWillUnmount() {
+		// eslint-disable-next-line
 		let tween = TweenMax.to(this.divWrapper, 0.01, {
 			opacity : 1,
-			ease    : Expo.easeOut
+			ease    : Expo.easeIn
 		});
 	}
 
@@ -40,7 +37,12 @@ class AIStatus extends Component {
 
 		return (
 			<div className="ai-status" style={style} ref={div=> this.divWrapper = div}>
-				<div className="ai-status-text">{this.props.content}</div>
+				<div className="ai-status-main">
+					<div className="ai-status-text">{this.props.content}</div>
+				</div>
+				<div className="ai-status-tail-1" />
+				<div className="ai-status-tail-2" />
+				<div className="ai-status-tail-3" />
 			</div>
 		);
 	}

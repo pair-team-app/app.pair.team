@@ -71,17 +71,6 @@ class DetailsStep extends Component {
 				buttons   : []
 			}
 		});
-
-		let self = this;
-		this.orderInterval = setInterval(function() {
-			let formData = new FormData();
-			formData.append('action', 'ORDER_PING');
-			formData.append('order_id', self.props.orderID);
-			axios.post('https://api.designengine.ai/templates.php', formData)
-				.then((response)=> {
-				}).catch((error) => {
-			});
-		}, 5000);
 	}
 
 	handleAlertCancel() {
@@ -112,10 +101,22 @@ class DetailsStep extends Component {
 			if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {
 				this.props.onStart(form);
 
+// 				let self = this;
+// 				this.orderTimeout = setTimeout(function() {
+// 					self.onTimeout();
+// 				}, 15000);
+
 				let self = this;
-				this.orderTimeout = setTimeout(function() {
-					self.onTimeout();
-				}, 15000);
+				this.orderInterval = setInterval(function() {
+					let formData = new FormData();
+					formData.append('action', 'ORDER_PING');
+					formData.append('order_id', self.props.orderID);
+					axios.post('https://api.designengine.ai/templates.php', formData)
+						.then((response)=> {
+							console.log("ORDER_PING", JSON.stringify(response.data));
+						}).catch((error) => {
+					});
+				}, 5000);
 
 			} else {
 				window.alert("Design Engine is invite only at the moment.");

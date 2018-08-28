@@ -75,7 +75,7 @@ class GeneratingStep extends Component {
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
 				console.log("COLOR_SETS", JSON.stringify(response.data));
-				self.setState({ maxFiles : response.data.color_sets * 40 });
+				self.setState({ maxFiles : response.data.color_sets * 4 });
 			});
 	}
 
@@ -279,6 +279,7 @@ class GeneratingStep extends Component {
 
 				{this.state.lightBox.isVisible && (
 					<LightBox
+						type="order"
 						title={this.state.lightBox.title}
 						file_id={this.state.lightBox.file_id}
 						price={this.state.lightBox.price}

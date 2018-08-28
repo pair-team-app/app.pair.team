@@ -21,9 +21,8 @@ class TopNav extends Component {
 	}
 
 	render() {
-		//const faGlyph = (this.props.isTooltip) ? 'spinner' : 'times';
-
-		const faqLinkClass = (this.props.step === 1) ? 'nav-link nav-link-active' : 'nav-link';
+// 		const faGlyph = (this.props.isTooltip) ? 'spinner' : 'times';
+// 		const faqLinkClass = (this.props.step === 1) ? 'nav-link nav-link-active' : 'nav-link';
 // 		const usersLinkClass = (this.props.step === 2) ? 'nav-link nav-link-active' : 'nav-link';
 
 		return (
