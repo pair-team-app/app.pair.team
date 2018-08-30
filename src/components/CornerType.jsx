@@ -44,7 +44,7 @@ class CornerType extends Component {
 				},
 			};
 			self.setState({ status : status });
-		}, 3000);
+		}, 2125);
 	}
 
 	handleClick() {
@@ -53,7 +53,7 @@ class CornerType extends Component {
 		this.props.onClick(isSelected);
 
 		if (isSelected) {
-			this.showStatus({x:0, y:0}, (this.props.amount < 8) ? 'Sentiment: Negative' : (this.props.amount < 20) ? 'Sentiment: Neutral' : 'Sentiment: Positive');
+			this.showStatus({x:1.125, y:0}, (this.props.amount < 4) ? 'Sentiment: Negative' : (this.props.amount < 20) ? 'Sentiment: Neutral' : 'Sentiment: Positive');
 		}
 	}
 

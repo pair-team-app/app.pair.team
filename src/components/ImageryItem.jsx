@@ -44,7 +44,7 @@ class ImageryItem extends Component {
 				},
 			};
 			self.setState({ status : status });
-		}, 2000);
+		}, 4500);
 	}
 
 	handleClick() {
@@ -54,6 +54,7 @@ class ImageryItem extends Component {
 
 		let self = this;
 		if (isSelected) {
+			this.showStatus({x:3.5, y:0}, 'Loading…');
 			axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(this.props.url))
 				.then((response)=> {
 					console.log("REKOGNITION", JSON.stringify(response.data));

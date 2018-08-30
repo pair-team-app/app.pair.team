@@ -21,6 +21,7 @@
 
 .color-swatch-selected {
 	background-color: #7ed321;
+	color: #ffffff;
 }
 
 .color-swatch:hover {

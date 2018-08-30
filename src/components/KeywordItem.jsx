@@ -44,7 +44,7 @@ class KeywordItem extends Component {
 				},
 			};
 			self.setState({ status : status });
-		}, 2000);
+		}, 3125);
 	}
 
 	handleClick() {
@@ -54,6 +54,7 @@ class KeywordItem extends Component {
 		this.props.onClick(isSelected);
 
 		if (isSelected) {
+			this.showStatus({x:2.125, y:0}, 'Loading…');
 			axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + this.props.title)
 				.then((response)=> {
 					console.log("COMPREHEND", JSON.stringify(response.data));

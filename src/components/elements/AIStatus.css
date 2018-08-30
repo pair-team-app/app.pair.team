@@ -17,22 +17,23 @@
 	border-radius: 25px;
 	background-color: #7ed321;
 	display: table;
+	z-index: 100;
 }
 
 .ai-status-tail-1 {
-	top: 20px;
+	top: 15px;
 	opacity: 0.33;
 	z-index: 99;
 }
 
 .ai-status-tail-2 {
-	top: 40px;
+	top: 30px;
 	opacity: 0.25;
 	z-index: 98;
 }
 
 .ai-status-tail-3 {
-	top: 60px;
+	top: 45px;
 	opacity: 0.125;
 	z-index: 97;
 }
