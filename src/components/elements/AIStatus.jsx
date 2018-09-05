@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './AIStatus.css';
 
-import { TweenMax, Expo } from "gsap/TweenMax";
+import { TimelineLite, Power1 } from "gsap/TweenMax";
 
 class AIStatus extends Component {
 	constructor(props) {
@@ -10,26 +10,27 @@ class AIStatus extends Component {
 		this.state = {
 		};
 
-		this.divWrapper = null;
-		this.tween = null;
+		this.contentWrapper = null;
+		this.tail1Wrapper = null;
+		this.tail2Wrapper = null;
+		this.tail3Wrapper = null;
+		this.timeline = null;
 	}
 
 	componentDidMount() {
-		this.tween = TweenMax.to(this.divWrapper, 1, {
-			y       : '-15px',
+		this.timeline = new TimelineLite();
+
+		this.timeline.staggerTo([this.contentWrapper, this.tail1Wrapper, this.tail2Wrapper, this.tail3Wrapper], 0.5, {
+			y       : '-25px',
 			opacity : 0,
-			ease    : Expo.easeOut,
-			delay   : this.props.coords.x
-		});
+			ease    : Power1.easeIn,
+			delay   : this.props.delay
+		}, 0.1);
+		this.timeline.play();
 	}
 
 	componentWillUnmount() {
-		this.tween = null;
-// 		// eslint-disable-next-line
-// 		let tween = TweenMax.to(this.divWrapper, 0.01, {
-// 			opacity : 1,
-// 			ease    : Expo.easeIn
-// 		});
+		this.timeline = null;
 	}
 
 	render() {
@@ -37,11 +38,11 @@ class AIStatus extends Component {
 		};
 
 		return (
-			<div className="ai-status" style={style} ref={div=> this.divWrapper = div}>
-				<div className="ai-status-tail-3" />
-				<div className="ai-status-tail-2" />
-				<div className="ai-status-tail-1" />
-				<div className="ai-status-main">
+			<div className="ai-status" style={style}>
+				<div className="ai-status-tail ai-status-tail-3" ref={div=> this.tail3Wrapper = div} />
+				<div className="ai-status-tail ai-status-tail-2" ref={div=> this.tail2Wrapper = div} />
+				<div className="ai-status-tail ai-status-tail-1" ref={div=> this.tail1Wrapper = div} />
+				<div className="ai-status-main" ref={div=> this.contentWrapper = div}>
 					<div className="ai-status-text">{this.props.content}</div>
 				</div>
 			</div>

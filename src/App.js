@@ -190,7 +190,7 @@ class App extends Component {
 						response.data.comprehend.syntax.forEach(function(item, i) {
 							let formData = new FormData();
 							formData.append('action', 'ADD_KEYWORD');
-							formData.append('order_id', cookie.load('order_id'));
+							formData.append('order_id', self.state.orderID);
 							formData.append('keyword', item.Text);
 							axios.post('https://api.designengine.ai/templates.php', formData)
 								.then((response)=> {
@@ -215,7 +215,7 @@ class App extends Component {
 										itm.colors.forEach(function(color, i) {
 											let formData = new FormData();
 											formData.append('action', 'ADD_COLOR');
-											formData.append('order_id', cookie.load('order_id'));
+											formData.append('order_id', self.state.orderID);
 											formData.append('keyword', item.Text);
 											formData.append('index', itm.id);
 											formData.append('gradient', '000000');
@@ -244,7 +244,7 @@ class App extends Component {
 
 										let formData = new FormData();
 										formData.append('action', 'ADD_IMAGE');
-										formData.append('order_id', cookie.load('order_id'));
+										formData.append('order_id', self.state.orderID);
 										formData.append('keyword', item.Text);
 										formData.append('url', itm.urls.small);
 										axios.post('https://api.designengine.ai/templates.php', formData)
@@ -431,7 +431,7 @@ class App extends Component {
 
 						    {this.state.step === 5 && (
 							    <GeneratingStep
-								    orderID={cookie.load('order_id')}
+								    orderID={this.state.orderID}
 								    onTooltip={(obj)=> this.showStatus(obj)}
 								    onBack={()=> this.handleDetailsStep(this.templateID)}
 								    onClick={(obj)=> this.handlePurchaseStep(obj)}

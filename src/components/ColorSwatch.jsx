@@ -16,10 +16,7 @@ class ColorSwatch extends Component {
 			status : {
 				isVisible : false,
 				content   : '',
-				coords    : {
-					x : 0,
-					y : 0
-				}
+				delay     : 0
 			}
 		};
 
@@ -33,22 +30,22 @@ class ColorSwatch extends Component {
 
 		let self = this;
 		if (isSelected) {
-			this.showStatus({x:2.125, y:0}, 'Loading…');
+			this.showStatus(2.125, 'Loading…');
 			axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + this.props.title)
 				.then((response)=> {
 					console.log("COMPREHEND", JSON.stringify(response.data));
-					self.showStatus({x:0, y:0}, 'Sentiment: ' + response.data.comprehend.sentiment.outcome);
+					self.showStatus(0, 'Sentiment: ' + response.data.comprehend.sentiment.outcome);
 				}).catch((error) => {
 			});
 		}
 	}
 
-	showStatus(coords, content) {
+	showStatus(delay, content) {
 		let self = this;
 		let status = {
 			isVisible : true,
 			content : content,
-			coords : coords,
+			delay : delay,
 		};
 		this.setState({ status : status });
 
@@ -56,10 +53,7 @@ class ColorSwatch extends Component {
 			let status = {
 				isVisible : false,
 				content   : '',
-				coords    : {
-					x : 0,
-					y : 0
-				},
+				delay     : 0
 			};
 			self.setState({ status : status });
 		}, 3125);
@@ -113,19 +107,18 @@ class ColorSwatch extends Component {
 	render() {
 		const swatchClass = (this.state.isSelected) ? 'color-swatch color-swatch-selected' : 'color-swatch';
 		const swatchStyle = (this.state.isSelected) ? {} : { backgroundImage : 'linear-gradient(to right, #' + this.props.gradient + ' , #' + this.props.swatch + ')' };
-		//const faClass = (this.state.isSelected) ? 'color-swatch-check' : 'color-swatch-check is-hidden';
 
-		const marginOffset = (this.divWrapper) ? (this.divWrapper.clientWidth < 200) ? (200 - this.divWrapper.clientWidth) * -0.5 : (this.divWrapper.clientWidth - 200) * 0.5 : 0;
+		const marginOffset = (this.divWrapper) ? (this.divWrapper.clientWidth < 200) ? (this.divWrapper.clientWidth * -0.5) + ((200 - this.divWrapper.clientWidth) * -0.5) : (this.divWrapper.clientWidth * -0.5) + ((this.divWrapper.clientWidth - 200) * 0.5) : 0;
 		if (this.divWrapper && this.state.isSelected) console.log(this.divWrapper.clientWidth, marginOffset);
 
 		return (
-			<div onClick={()=> this.handleClick()} className={swatchClass} style={swatchStyle}>
-				<div className="color-swatch-hex">{this.props.title}</div>
+			<div onClick={()=> this.handleClick()} className={swatchClass} style={swatchStyle} ref={(element)=> { this.divWrapper = element; }}>
 				{this.state.status.isVisible && (
-					<div className="ai-status-wrapper"style={{marginLeft:marginOffset + 'px'}}>
-						<AIStatus content={this.state.status.content} coords={this.state.status.coords} />
+					<div className="ai-status-wrapper" style={{marginLeft:marginOffset + 'px'}}>
+						<AIStatus content={this.state.status.content} delay={this.state.status.delay} />
 					</div>
 				)}
+				<span className="color-swatch-hex">{this.props.title}</span>
 			</div>
 		);
 	}

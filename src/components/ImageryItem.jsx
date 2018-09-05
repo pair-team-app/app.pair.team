@@ -15,22 +15,19 @@ class ImageryItem extends Component {
 			status : {
 				isVisible : false,
 				content   : '',
-				coords    : {
-					x : 0,
-					y : 0
-				}
+				delay     : 0
 			}
 		};
 
 		this.divWrapper = null;
 	}
 
-	showStatus(coords, content) {
+	showStatus(delay, content) {
 		let self = this;
 		let status = {
 			isVisible : true,
 			content : content,
-			coords : coords,
+			delay : delay,
 		};
 		this.setState({ status : status });
 
@@ -38,10 +35,7 @@ class ImageryItem extends Component {
 			let status = {
 				isVisible : false,
 				content   : '',
-				coords    : {
-					x : 0,
-					y : 0
-				},
+				delay     : 0,
 			};
 			self.setState({ status : status });
 		}, 4500);
@@ -54,11 +48,11 @@ class ImageryItem extends Component {
 
 		let self = this;
 		if (isSelected) {
-			this.showStatus({x:3.5, y:0}, 'Loading…');
+			this.showStatus(3.5, 'Loading…');
 			axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(this.props.url))
 				.then((response)=> {
 					console.log("REKOGNITION", JSON.stringify(response.data));
-					self.showStatus({x:0, y:0}, 'Topic: ' + response.data.rekognition.labels[0].Name);
+					self.showStatus(0, 'Topic: ' + response.data.rekognition.labels[0].Name);
 				}).catch((error) => {
 			});
 		}
@@ -66,13 +60,13 @@ class ImageryItem extends Component {
 
 	render() {
 		const className = (this.state.isSelected) ? 'imagery-item-image imagery-item-image-selected' : 'imagery-item-image';
-		const marginOffset = -100;//(this.divWrapper) ? (this.divWrapper.clientWidth < 200) ? (200 - this.divWrapper.clientWidth) * -0.5 : (this.divWrapper.clientWidth - 200) * 0.5 : 0;
+		const marginOffset = (this.divWrapper) ? (this.divWrapper.clientWidth < 200) ? (this.divWrapper.clientWidth * -0.5) + ((200 - this.divWrapper.clientWidth) * -0.5) : (this.divWrapper.clientWidth * -0.5) + ((this.divWrapper.clientWidth - 200) * 0.5) : 0;
 
 		return (
 			<div onClick={()=> this.handleClick()} className="imagery-item" ref={(element)=> { this.divWrapper = element; }}>
 				{this.state.status.isVisible && (
 					<div className="ai-status-wrapper" style={{marginLeft:marginOffset + 'px'}}>
-						<AIStatus content={this.state.status.content} coords={this.state.status.coords} />
+						<AIStatus content={this.state.status.content} delay={this.state.status.delay} />
 					</div>
 				)}
 				<img src={this.props.url} className={className} alt={this.props.title} />

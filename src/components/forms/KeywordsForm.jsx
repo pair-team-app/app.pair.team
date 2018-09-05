@@ -13,14 +13,6 @@ class KeywordsForm extends Component {
 		super(props);
 
 		this.state = {
-			status : {
-				isVisible : false,
-				content   : '',
-				coords    : {
-					x : 0,
-					y : 0
-				}
-			},
 			form : {
 				keywords : []
 			},
@@ -28,28 +20,6 @@ class KeywordsForm extends Component {
 		};
 
 		this.selectedKeywords = [];
-	}
-
-	showStatus(coords, content) {
-		let self = this;
-		let status = {
-			isVisible : true,
-			content : content,
-			coords : coords,
-		};
-		this.setState({ status : status });
-
-		setTimeout(function() {
-			let status = {
-				isVisible : false,
-				content : '',
-				coords : {
-					x : 0,
-					y: 0
-				},
-			};
-			self.setState({ status : status });
-		}, 3000);
 	}
 
 	handleToggle(id, isSelected) {
@@ -126,10 +96,6 @@ class KeywordsForm extends Component {
 				<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
 					{items}
 				</Row>
-
-				{/*{this.state.status.isVisible && (*/}
-					{/*<AIStatus content={this.state.status.content} coords={this.state.status.coords} />*/}
-				{/*)}*/}
 			</div>
 		);
 	}

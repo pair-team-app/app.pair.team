@@ -24,13 +24,13 @@ class CornerType extends Component {
 		this.divWrapper = null;
 	}
 
-	showStatus(coords, content) {
+	showStatus(delay, content) {
 		let self = this;
 		this.setState({
 			status : {
 				isVisible : true,
 				content : content,
-				coords : coords,
+				delay : delay,
 			}
 		});
 
@@ -38,10 +38,7 @@ class CornerType extends Component {
 			let status = {
 				isVisible : false,
 				content   : '',
-				coords    : {
-					x : 0,
-					y : 0
-				},
+				delay     : 0,
 			};
 			self.setState({ status : status });
 		}, 2125);
@@ -53,21 +50,21 @@ class CornerType extends Component {
 		this.props.onClick(isSelected);
 
 		if (isSelected) {
-			this.showStatus({x:1.125, y:0}, (this.props.amount < 4) ? 'Sentiment: Negative' : (this.props.amount < 20) ? 'Sentiment: Neutral' : 'Sentiment: Positive');
+			this.showStatus(1.125, (this.props.amount < 4) ? 'Sentiment: Negative' : (this.props.amount < 20) ? 'Sentiment: Neutral' : 'Sentiment: Positive');
 		}
 	}
 
 	render() {
 // 		const style = { borderRadius : this.props.amount + 'px' };
 		const className = (this.state.isSelected) ? 'corner-type corner-type-selected' : 'corner-type';
-		const marginOffset = (this.divWrapper) ? (this.divWrapper.clientWidth < 200) ? (200 - this.divWrapper.clientWidth) * -0.5 : (this.divWrapper.clientWidth - 200) * 0.5 : 0;
+		const marginOffset = (this.divWrapper) ? (this.divWrapper.clientWidth < 200) ? (this.divWrapper.clientWidth * -0.5) + ((200 - this.divWrapper.clientWidth) * -0.5) : (this.divWrapper.clientWidth * -0.5) + ((this.divWrapper.clientWidth - 200) * 0.5) : 0;
 		if (this.divWrapper && this.state.isSelected) console.log(this.divWrapper.clientWidth, marginOffset);
 
 		return (
-			<div onClick={()=> this.handleClick()} className={className}>
+			<div onClick={()=> this.handleClick()} className={className} ref={(element)=> { this.divWrapper = element; }}>
 				{this.state.status.isVisible && (
 					<div className="ai-status-wrapper" style={{marginLeft:marginOffset + 'px'}}>
-						<AIStatus content={this.state.status.content} coords={this.state.status.coords} />
+						<AIStatus content={this.state.status.content} delay={this.state.status.delay} />
 					</div>
 				)}
 				<span className="corner-type-text">{this.props.title}px</span>
