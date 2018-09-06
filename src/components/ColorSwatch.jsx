@@ -16,7 +16,7 @@ class ColorSwatch extends Component {
 			status : {
 				isVisible : false,
 				content   : '',
-				delay     : 0
+				isLoading : false
 			}
 		};
 
@@ -30,22 +30,22 @@ class ColorSwatch extends Component {
 
 		let self = this;
 		if (isSelected) {
-			this.showStatus(2.125, 'Loading…');
+			this.showStatus(true, 'Loading…');
 			axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + this.props.title)
 				.then((response)=> {
 					console.log("COMPREHEND", JSON.stringify(response.data));
-					self.showStatus(0, 'Sentiment: ' + response.data.comprehend.sentiment.outcome);
+					self.showStatus(false, 'Sentiment: ' + response.data.comprehend.sentiment.outcome);
 				}).catch((error) => {
 			});
 		}
 	}
 
-	showStatus(delay, content) {
+	showStatus(isLoading, content) {
 		let self = this;
 		let status = {
 			isVisible : true,
-			content : content,
-			delay : delay,
+			content   : content,
+			isLoading : isLoading
 		};
 		this.setState({ status : status });
 
@@ -53,7 +53,7 @@ class ColorSwatch extends Component {
 			let status = {
 				isVisible : false,
 				content   : '',
-				delay     : 0
+				isLoading : false
 			};
 			self.setState({ status : status });
 		}, 3125);
@@ -115,7 +115,7 @@ class ColorSwatch extends Component {
 			<div onClick={()=> this.handleClick()} className={swatchClass} style={swatchStyle} ref={(element)=> { this.divWrapper = element; }}>
 				{this.state.status.isVisible && (
 					<div className="ai-status-wrapper" style={{marginLeft:marginOffset + 'px'}}>
-						<AIStatus content={this.state.status.content} delay={this.state.status.delay} />
+						<AIStatus content={this.state.status.content} loading={this.state.status.isLoading} />
 					</div>
 				)}
 				<span className="color-swatch-hex">{this.props.title}</span>

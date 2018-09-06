@@ -14,34 +14,30 @@ class CornerType extends Component {
 			status : {
 				isVisible : false,
 				content   : '',
-				coords    : {
-					x : 0,
-					y : 0
-				}
+				isLoading : false
 			}
 		};
 
 		this.divWrapper = null;
 	}
 
-	showStatus(delay, content) {
+	showStatus(isLoading, content) {
 		let self = this;
-		this.setState({
-			status : {
-				isVisible : true,
-				content : content,
-				delay : delay,
-			}
-		});
+		let status = {
+			isVisible : true,
+			content   : content,
+			isLoading : isLoading
+		};
+		this.setState({ status : status });
 
 		setTimeout(function() {
 			let status = {
 				isVisible : false,
 				content   : '',
-				delay     : 0,
+				isLoading : false
 			};
 			self.setState({ status : status });
-		}, 2125);
+		}, 3125);
 	}
 
 	handleClick() {
@@ -50,7 +46,12 @@ class CornerType extends Component {
 		this.props.onClick(isSelected);
 
 		if (isSelected) {
-			this.showStatus(1.125, (this.props.amount < 4) ? 'Sentiment: Negative' : (this.props.amount < 20) ? 'Sentiment: Neutral' : 'Sentiment: Positive');
+			this.showStatus(true, 'Loading…');
+			let self = this;
+
+			setTimeout(function() {
+				self.showStatus(false, (self.props.amount < 4) ? 'Sentiment: Negative' : (self.props.amount < 20) ? 'Sentiment: Neutral' : 'Sentiment: Positive');
+			}, 250);
 		}
 	}
 
@@ -64,7 +65,7 @@ class CornerType extends Component {
 			<div onClick={()=> this.handleClick()} className={className} ref={(element)=> { this.divWrapper = element; }}>
 				{this.state.status.isVisible && (
 					<div className="ai-status-wrapper" style={{marginLeft:marginOffset + 'px'}}>
-						<AIStatus content={this.state.status.content} delay={this.state.status.delay} />
+						<AIStatus content={this.state.status.content} loading={this.state.status.isLoading} />
 					</div>
 				)}
 				<span className="corner-type-text">{this.props.title}px</span>

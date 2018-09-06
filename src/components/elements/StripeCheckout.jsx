@@ -15,6 +15,7 @@ class StripeCheckout extends Component {
 			cardholder : ''
 		};
 
+		this.handleTextChange = this.handleTextChange.bind(this);
 		this.submit = this.submit.bind(this);
 	}
 

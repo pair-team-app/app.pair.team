@@ -79,6 +79,7 @@ class PurchaseStep extends Component {
 						onSelectClick={(isSelected)=> this.handleClick(item.id, isSelected)}
 						image={item.filename}
 						title={(i+1)}
+						description=''
 						price={parseFloat(item.per_price)}
 						selected={isSelected} />
 				</Column>

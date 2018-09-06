@@ -22,12 +22,12 @@ class ImageryItem extends Component {
 		this.divWrapper = null;
 	}
 
-	showStatus(delay, content) {
+	showStatus(isLoading, content) {
 		let self = this;
 		let status = {
 			isVisible : true,
-			content : content,
-			delay : delay,
+			content   : content,
+			isLoading : isLoading
 		};
 		this.setState({ status : status });
 
@@ -35,10 +35,10 @@ class ImageryItem extends Component {
 			let status = {
 				isVisible : false,
 				content   : '',
-				delay     : 0,
+				isLoading : false
 			};
 			self.setState({ status : status });
-		}, 4500);
+		}, 3125);
 	}
 
 	handleClick() {
@@ -48,11 +48,11 @@ class ImageryItem extends Component {
 
 		let self = this;
 		if (isSelected) {
-			this.showStatus(3.5, 'Loading…');
+			this.showStatus(true, 'Loading…');
 			axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(this.props.url))
 				.then((response)=> {
 					console.log("REKOGNITION", JSON.stringify(response.data));
-					self.showStatus(0, 'Topic: ' + response.data.rekognition.labels[0].Name);
+					self.showStatus(false, 'Topic: ' + response.data.rekognition.labels[0].Name);
 				}).catch((error) => {
 			});
 		}
@@ -66,7 +66,7 @@ class ImageryItem extends Component {
 			<div onClick={()=> this.handleClick()} className="imagery-item" ref={(element)=> { this.divWrapper = element; }}>
 				{this.state.status.isVisible && (
 					<div className="ai-status-wrapper" style={{marginLeft:marginOffset + 'px'}}>
-						<AIStatus content={this.state.status.content} delay={this.state.status.delay} />
+						<AIStatus content={this.state.status.content} loading={this.state.status.isLoading} />
 					</div>
 				)}
 				<img src={this.props.url} className={className} alt={this.props.title} />
