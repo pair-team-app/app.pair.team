@@ -4,6 +4,7 @@ import './DetailsStep.css';
 
 import axios from 'axios';
 import cookie from "react-cookies";
+import ReactPixel from 'react-facebook-pixel';
 import { Column } from 'simple-flexbox';
 
 import OverlayAlert from '../elements/OverlayAlert';
@@ -42,6 +43,15 @@ class DetailsStep extends Component {
 		this.selectedImagery = [];
 		this.orderTimeout = null;
 		this.orderInterval = null;
+	}
+
+	componentDidMount() {
+		const advancedMatching = { em: 'some@email.com' }; // optional, more info: https://developers.facebook.com/docs/facebook-pixel/pixel-with-ads/conversion-tracking#advanced_match
+		const options = {
+			autoConfig : true, 	// set pixel's autoConfig
+			debug      : false, // enable logs
+		};
+		ReactPixel.init('318191662273348', advancedMatching, options);
 	}
 
 	componentWillUnmount() {
@@ -94,11 +104,13 @@ class DetailsStep extends Component {
 
 		// title + email
 		if (this.state.step === 0) {
+			ReactPixel.trackCustom('email-company');
 			for (let [key, value] of Object.entries(vals)) {
 				form[key] = value;
 			}
 
-			if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {
+			//if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {
+			if (form.email.length > 0) {
 				this.props.onStart(form);
 
 // 				let self = this;
@@ -124,6 +136,7 @@ class DetailsStep extends Component {
 
 		// keywords
 		} else if (this.state.step === 1) {
+			ReactPixel.trackCustom('design-type');
 			for (let [key, value] of Object.entries(vals)) {
 				form[key] = value;
 
@@ -142,6 +155,7 @@ class DetailsStep extends Component {
 
 		// tones
 		} else if (this.state.step === 2) {
+			ReactPixel.trackCustom('tones');
 			for (let [key, value] of Object.entries(vals)) {
 				form[key] = value;
 
@@ -160,6 +174,7 @@ class DetailsStep extends Component {
 
 			// colors
 		} else if (this.state.step === 3) {
+			ReactPixel.trackCustom('colors');
 			for (let [key, value] of Object.entries(vals)) {
 				form[key] = value;
 
@@ -181,6 +196,7 @@ class DetailsStep extends Component {
 
 			// corners
 		} else if (this.state.step === 4) {
+			ReactPixel.trackCustom('corners');
 			for (let [key, value] of Object.entries(vals)) {
 				form[key] = value;
 
@@ -200,6 +216,7 @@ class DetailsStep extends Component {
 
 			// imagery
 		} else if (this.state.step === 5) {
+			ReactPixel.trackCustom('imagery');
 			for (let [key, value] of Object.entries(vals)) {
 				form[key] = value;
 

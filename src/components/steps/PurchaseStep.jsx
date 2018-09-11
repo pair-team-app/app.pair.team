@@ -3,9 +3,13 @@ import React, { Component } from 'react';
 import './PurchaseStep.css';
 import stripe from '../../stripe.json';
 
+import ReactPixel from 'react-facebook-pixel';
+// eslint-disable-next-line
 import {Elements, StripeProvider} from 'react-stripe-elements';
 import { Column, Row } from 'simple-flexbox';
 
+import OverlayAlert from '../elements/OverlayAlert';
+// eslint-disable-next-line
 import StripeCheckout from '../elements/StripeCheckout';
 import TemplateItem from '../TemplateItem';
 
@@ -14,12 +18,28 @@ class PurchaseStep extends Component {
 		super(props);
 
 		this.state = {
+			step : 0,
+			overlay : {
+				isVisible : false,
+				title     : '',
+				content   : '',
+				buttons   : []
+			},
 			selectedItems : this.props.selectedItems,
 			allItems      : this.props.selectedItems
 		};
 
 		this.STRIPE_TEST_TOKEN = stripe.test.publish;
 		this.STRIPE_LIVE_TOKEN = stripe.live.publish;
+	}
+
+	componentDidMount() {
+		const advancedMatching = { em: 'some@email.com' }; // optional, more info: https://developers.facebook.com/docs/facebook-pixel/pixel-with-ads/conversion-tracking#advanced_match
+		const options = {
+			autoConfig : true, 	// set pixel's autoConfig
+			debug      : false, // enable logs
+		};
+		ReactPixel.init('318191662273348', advancedMatching, options);
 	}
 
 	handleClick(id, isSelected) {
@@ -57,10 +77,42 @@ class PurchaseStep extends Component {
 		this.props.onItemToggle(selectedItems);
 	}
 
-	onNext() {
-		if (this.state.selectedItems.length > 0) {
-			this.props.onClick(this.selectedItems);
-		}
+	onStripe() {
+		ReactPixel.trackCustom('purchase');
+		this.setState({
+			overlay : {
+				isVisible : true,
+				title     : 'Free Content',
+				content   : 'All items are free today.',
+				buttons   : []
+			}
+		})
+	}
+
+	onPayPal() {
+		ReactPixel.trackCustom('purchase');
+		this.setState({
+			overlay : {
+				isVisible : true,
+				title     : 'Free Content',
+				content   : 'All items are free today.',
+				buttons   : []
+			}
+		})
+	}
+
+	handleAlertConfirm() {
+		console.log("handleAlertConfirm()");
+
+		this.setState({
+			step : 1,
+			overlay : {
+				isVisible : false,
+				title     : '',
+				content   : '',
+				buttons   : []
+			}
+		});
 	}
 
 	render() {
@@ -78,7 +130,7 @@ class PurchaseStep extends Component {
 					<TemplateItem
 						onSelectClick={(isSelected)=> this.handleClick(item.id, isSelected)}
 						image={item.filename}
-						title={(i+1)}
+						title=''
 						description=''
 						price={parseFloat(item.per_price)}
 						selected={isSelected} />
@@ -92,28 +144,56 @@ class PurchaseStep extends Component {
 		});
 
 		return (
-			<Row vertical="start">
-				<Column flexGrow={1} horizontal="center">
-					<div className="step-header-text">Enter your payment details</div>
-					<div className="input-title">{this.state.selectedItems.length} Design Engine views for ${amount} USD.</div>
-					<div style={{width:'100%', textAlign:'left'}}>
-						<StripeProvider apiKey={this.STRIPE_TEST_TOKEN}>
-							{/*<StripeProvider apiKey={this.STRIPE_LIVE_TOKEN}>*/}
-							<div className="example" style={{width:'100%'}}>
-								<Elements>
-									<StripeCheckout amount={amount} onBack={()=> this.props.onBack(this.state.selectedItems)} />
-								</Elements>
-							</div>
-						</StripeProvider>
+			<div>
+				<Row vertical="start">
+					<Column flexGrow={1} horizontal="center">
+						<div className="step-header-text">Choose a payment option</div>
+						<div className="input-title">{this.state.selectedItems.length} Design Engine views for ${amount} USD.</div>
 
-						<div className="purchase-item-wrapper">
-							<Row horizontal="center" style={{flexWrap:'wrap'}}>
-								{items}
-							</Row>
-						</div>
-					</div>
-				</Column>
-			</Row>
+						{this.state.step === 0 && (
+							<div>
+								<button className="action-button step-button" style={{marginBottom:'10px'}} onClick={()=> this.onStripe()}>Stripe</button><br />
+								<button className="action-button step-button" onClick={()=> this.onPayPal()}>PayPal</button>
+
+								<div style={{width:'100%', textAlign:'left'}}>
+									{/*<StripeProvider apiKey={this.STRIPE_TEST_TOKEN}>*/}
+									{/*/!*<StripeProvider apiKey={this.STRIPE_LIVE_TOKEN}>*!/*/}
+									{/*<div className="example" style={{width:'100%'}}>*/}
+									{/*<Elements>*/}
+									{/*<StripeCheckout*/}
+									{/*amount={amount}*/}
+									{/*onBack={()=> this.props.onBack(this.state.selectedItems)}*/}
+									{/*onNext={()=> this.props.onNext()}*/}
+									{/*/>*/}
+									{/*</Elements>*/}
+									{/*</div>*/}
+									{/*</StripeProvider>*/}
+
+									<div className="purchase-item-wrapper">
+										<Row horizontal="center" style={{flexWrap:'wrap'}}>
+											{items}
+										</Row>
+									</div>
+								</div>
+							</div>
+						)}
+
+						{this.state.step === 1 && (
+							<a className="step-text" href="http://cdn.designengine.ai/assets/saas_funnel-test-1.sketch" target="_blank" rel="noopener noreferrer">Download Sketch source</a>
+						)}
+					</Column>
+				</Row>
+
+				{this.state.overlay.isVisible && (
+					<OverlayAlert
+						title={this.state.overlay.title}
+						content={this.state.overlay.content}
+						buttons={this.state.overlay.buttons}
+						onConfirm={()=> this.handleAlertConfirm()}
+						onCancel={()=> this.handleAlertCancel()}
+					/>
+				)}
+			</div>
 		);
 	}
 }

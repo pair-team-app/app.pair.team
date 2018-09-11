@@ -37,7 +37,7 @@ class AIStatus extends Component {
 	}
 
 	render() {
-		if (!this.props.loading) {
+		if (!this.props.loading && this.timeline) {
 			this.timeline.play();
 		}
 

@@ -14,7 +14,7 @@ class TitleForm extends Component {
 		this.state = {
 			form : {
 				email : '',
-				title : ''
+				title : 'Funnel Test 1'
 			},
 			isValidated : false
 		};

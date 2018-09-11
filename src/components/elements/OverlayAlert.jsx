@@ -18,7 +18,7 @@ class OverlayAlert extends Component {
 					<div className="overlay-content" ref={(element) => { this.contentElement = element; }}>
 						{this.props.content}
 					</div>
-					<button className="action-button overlay-button overlay-button-red" onClick={()=> this.props.onCancel()}>Close</button>
+					{/*<button className="action-button overlay-button overlay-button-red" onClick={()=> this.props.onCancel()}>Close</button>*/}
 					<button className="action-button overlay-button overlay-button-blue" onClick={()=> this.props.onConfirm()}>Continue</button>
 				</div>
 			</div>

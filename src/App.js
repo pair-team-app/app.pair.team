@@ -16,6 +16,7 @@ import './App.css';
 import axios from 'axios';
 import cookie from 'react-cookies';
 // import { geolocated } from 'react-geolocated';
+import ReactPixel from 'react-facebook-pixel';
 import { Column } from 'simple-flexbox';
 
 import BottomNav from './components/elements/BottomNav';
@@ -69,6 +70,14 @@ class App extends Component {
 // 			ico : '📍',
 // 			txt : 'Engine started in Mountain View, CA'
 // 		});
+
+		const advancedMatching = { em: 'some@email.com' }; // optional, more info: https://developers.facebook.com/docs/facebook-pixel/pixel-with-ads/conversion-tracking#advanced_match
+		const options = {
+			autoConfig : true, 	// set pixel's autoConfig
+			debug      : false, // enable logs
+		};
+		ReactPixel.init('318191662273348', advancedMatching, options);
+		ReactPixel.trackCustom('load');
 	}
 
 	componentWillUnmount() {
@@ -108,12 +117,15 @@ class App extends Component {
 
 	handleUsersStep() {
 		console.log("handleUsersStep()");
+
 		window.scrollTo(0, 0);
 		this.setState({ step : 2 });
 	}
 
 	handleTemplateStep() {
 		console.log("handleTemplateStep()");
+		ReactPixel.trackCustom('get-started');
+
 		window.scrollTo(0, 0);
 		this.setState({ step : 3 });
 // 		this.setState({
@@ -124,6 +136,8 @@ class App extends Component {
 
 	handleDetailsStep(id) {
 		console.log("handleDetailsStep("+id+")");
+		ReactPixel.trackCustom('pick-template');
+
 		this.templateID = id;
 		window.scrollTo(0, 0);
 
@@ -267,6 +281,8 @@ class App extends Component {
 	}
 
 	handleGeneratingStep(obj) {
+		ReactPixel.trackCustom('generating');
+
 		window.scrollTo(0, 0);
 		console.log("handleGeneratingStep("+JSON.stringify(obj)+")");
 
@@ -275,6 +291,8 @@ class App extends Component {
 	}
 
 	handlePurchaseStep(obj) {
+		ReactPixel.trackCustom('checkout');
+
 		console.log("handlePurchaseStep("+JSON.stringify(obj)+")");
 		window.scrollTo(0, 0);
 		this.setState({
