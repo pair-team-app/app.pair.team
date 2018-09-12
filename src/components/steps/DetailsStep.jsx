@@ -237,7 +237,8 @@ class DetailsStep extends Component {
 		}
 
 		if (this.state.step === 0) {
-			if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {
+// 			if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {
+			if (form.email.length > 0) {
 				this.setState({
 					step : 1,
 					form : form
