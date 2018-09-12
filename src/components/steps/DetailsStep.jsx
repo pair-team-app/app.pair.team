@@ -264,8 +264,6 @@ class DetailsStep extends Component {
 	}
 
 	render() {
-// 		const buttonClass = (this.state.isValidated) ? 'action-button full-button' : 'action-button full-button disabled-button';
-
 		return (
 			<div>
 				<Column flexGrow={1} horizontal="start">
