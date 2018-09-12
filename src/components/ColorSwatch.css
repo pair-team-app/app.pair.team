@@ -1,29 +1,37 @@
 
 .color-swatch {
 	position: relative;
+	height: 50px;
 	margin: 0 18px 25px 18px;
-}
-
-.color-swatch-fill {
-	width: 100px;
-	height: 100px;
-	border-radius: 50%;
+	border-radius: 25px;
+	padding: 2px 28px;
+	display: table;
+	color: #000000;
+	font-size: 18px;
+	font-weight: 500;
 	box-shadow: 0 0 12px #cccccc;
 }
 
-.color-swatch-fill-selected {
-	background-color: #7ed321;
+.color-swatch-hex {
+	display: table-cell;
+	vertical-align: middle;
+	font-size: 16px;
+	/*text-shadow: 0 0 2px #ffffff;*/
 }
 
-.color-swatch-text {
-	font-size: 14px;
-	font-weight: 400;
-	margin-top: 20px;
-	text-align: center;
-	width: 100%;
+.color-swatch-selected {
+	background-color: #7ed321;
+	color: #ffffff;
 }
 
 .color-swatch:hover {
 	cursor: pointer;
 }
 
+.color-swatch-check {
+	position : absolute;
+	top: 3px;
+	right: 6px;
+	font-size: 34px;
+	color: #7ed321;
+}

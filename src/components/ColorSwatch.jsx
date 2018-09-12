@@ -105,21 +105,20 @@ class ColorSwatch extends Component {
 
 
 	render() {
-		const swatchClass = (this.state.isSelected) ? 'color-swatch-fill color-swatch-fill-selected' : 'color-swatch-fill';
+		const swatchClass = (this.state.isSelected) ? 'color-swatch color-swatch-selected' : 'color-swatch';
 		const swatchStyle = (this.state.isSelected) ? {} : { backgroundImage : 'linear-gradient(to right, #' + this.props.gradient + ' , #' + this.props.swatch + ')' };
 
 		const marginOffset = (this.divWrapper) ? (this.divWrapper.clientWidth < 200) ? (this.divWrapper.clientWidth * -0.5) + ((200 - this.divWrapper.clientWidth) * -0.5) : (this.divWrapper.clientWidth * -0.5) + ((this.divWrapper.clientWidth - 200) * 0.5) : 0;
 		if (this.divWrapper && this.state.isSelected) console.log(this.divWrapper.clientWidth, marginOffset);
 
 		return (
-			<div onClick={()=> this.handleClick()} className="color-swatch" ref={(element)=> { this.divWrapper = element; }}>
+			<div onClick={()=> this.handleClick()} className={swatchClass} style={swatchStyle} ref={(element)=> { this.divWrapper = element; }}>
 				{this.state.status.isVisible && (
 					<div className="ai-status-wrapper" style={{marginLeft:marginOffset + 'px'}}>
 						<AIStatus content={this.state.status.content} loading={this.state.status.isLoading} />
 					</div>
 				)}
-				<div className={swatchClass} style={swatchStyle}></div>
-				<div className="color-swatch-text">{this.props.title}</div>
+				<span className="color-swatch-hex">{this.props.title}</span>
 			</div>
 		);
 	}

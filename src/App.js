@@ -66,10 +66,10 @@ class App extends Component {
 	}
 
 	componentDidMount() {
-		this.showStatus({
-			ico : '📍',
-			txt : 'Engine started in Mountain View, CA'
-		});
+// 		this.showStatus({
+// 			ico : '📍',
+// 			txt : 'Engine started in Mountain View, CA'
+// 		});
 
 		const advancedMatching = { em: 'some@email.com' }; // optional, more info: https://developers.facebook.com/docs/facebook-pixel/pixel-with-ads/conversion-tracking#advanced_match
 		const options = {

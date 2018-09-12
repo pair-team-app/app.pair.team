@@ -1,12 +1,11 @@
 
 import React, { Component } from 'react';
-import './KeywordItem.css';
-
-import axios from "axios/index";
+import './CornerType.css';
 
 import AIStatus from './elements/AIStatus';
 
-class KeywordItem extends Component {
+
+class CornerType extends Component {
 	constructor(props) {
 		super(props);
 
@@ -42,25 +41,25 @@ class KeywordItem extends Component {
 	}
 
 	handleClick() {
-		let self = this;
 		const isSelected = !this.state.isSelected;
 		this.setState({ isSelected : isSelected });
 		this.props.onClick(isSelected);
 
 		if (isSelected) {
 			this.showStatus(true, 'Loading…');
-			axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + this.props.title)
-				.then((response)=> {
-					console.log("COMPREHEND", JSON.stringify(response.data));
-					self.showStatus(false, 'Sentiment: ' + response.data.comprehend.sentiment.outcome);
-				}).catch((error) => {
-			});
+			let self = this;
+
+			setTimeout(function() {
+				self.showStatus(false, (self.props.amount < 4) ? 'Sentiment: Negative' : (self.props.amount < 20) ? 'Sentiment: Neutral' : 'Sentiment: Positive');
+			}, 250);
 		}
 	}
 
 	render() {
-		const className = (this.state.isSelected) ? 'keyword-item keyword-item-selected' : 'keyword-item';
+// 		const style = { borderRadius : this.props.amount + 'px' };
+		const className = (this.state.isSelected) ? 'corner-type corner-type-selected' : 'corner-type';
 		const marginOffset = (this.divWrapper) ? (this.divWrapper.clientWidth < 200) ? (this.divWrapper.clientWidth * -0.5) + ((200 - this.divWrapper.clientWidth) * -0.5) : (this.divWrapper.clientWidth * -0.5) + ((this.divWrapper.clientWidth - 200) * 0.5) : 0;
+		if (this.divWrapper && this.state.isSelected) console.log(this.divWrapper.clientWidth, marginOffset);
 
 		return (
 			<div onClick={()=> this.handleClick()} className={className} ref={(element)=> { this.divWrapper = element; }}>
@@ -69,10 +68,10 @@ class KeywordItem extends Component {
 						<AIStatus content={this.state.status.content} loading={this.state.status.isLoading} />
 					</div>
 				)}
-				<span className="keyword-item-text">{this.props.title}</span>
+				<span className="corner-type-text">{this.props.title}px</span>
 			</div>
 		);
 	}
 }
 
-export default KeywordItem;
+export default CornerType;
