@@ -5,7 +5,7 @@ import corners from '../../corners.json';
 
 import { Column, Row } from 'simple-flexbox';
 
-import CornerType from '../CornerType';
+import KeywordItem from '../KeywordItem';
 
 
 class CornersForm extends Component {
@@ -68,7 +68,7 @@ class CornersForm extends Component {
 		let items = corners.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<CornerType title={item.title} amount={item.amount} isSelected={item.isSelected} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
+					<KeywordItem title={item.title} img={item.image} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
 				</Column>
 			);
 		});

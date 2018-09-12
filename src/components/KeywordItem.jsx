@@ -59,17 +59,20 @@ class KeywordItem extends Component {
 	}
 
 	render() {
-		const className = (this.state.isSelected) ? 'keyword-item keyword-item-selected' : 'keyword-item';
+		const className = (this.state.isSelected) ? 'keyword-item-image-wrapper keyword-item-image-wrapper-selected' : 'keyword-item-image-wrapper';
 		const marginOffset = (this.divWrapper) ? (this.divWrapper.clientWidth < 200) ? (this.divWrapper.clientWidth * -0.5) + ((200 - this.divWrapper.clientWidth) * -0.5) : (this.divWrapper.clientWidth * -0.5) + ((this.divWrapper.clientWidth - 200) * 0.5) : 0;
 
 		return (
-			<div onClick={()=> this.handleClick()} className={className} ref={(element)=> { this.divWrapper = element; }}>
+			<div onClick={()=> this.handleClick()} className="keyword-item" ref={(element)=> { this.divWrapper = element; }}>
 				{this.state.status.isVisible && (
 					<div className="ai-status-wrapper" style={{marginLeft:marginOffset + 'px'}}>
 						<AIStatus content={this.state.status.content} loading={this.state.status.isLoading} />
 					</div>
 				)}
-				<span className="keyword-item-text">{this.props.title}</span>
+				<div className={className}>
+					<img className="keyword-item-image" src={'https://via.placeholder.com/60x60'} alt={this.props.title} />
+				</div>
+				<div className="keyword-item-text">{this.props.title}</div>
 			</div>
 		);
 	}
