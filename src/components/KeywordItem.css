@@ -1,26 +1,34 @@
 
 .keyword-item {
 	position: relative;
-	overflow: visible;
-	height: 50px;
 	margin: 0 18px 25px 18px;
-	border-radius: 25px;
-	padding: 2px 24px;
-	text-align: center;
-	display: table;
-	font-size: 18px;
-	font-weight: 500;
+}
+
+.keyword-item-image-wrapper {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
 	box-shadow: 0 0 12px #cccccc;
 }
 
-.keyword-item-selected {
+.keyword-item-image-wrapper-selected {
 	background-color: #7ed321;
-	color: #ffffff;
+}
+
+.keyword-item-image {
+	width: 60px;
+	height: 60px;
+	vertical-align: middle;
+	text-align: center;
+	margin-top: 20px;
 }
 
 .keyword-item-text {
-	display: table-cell;
-	vertical-align: middle;
+	font-size: 14px;
+	font-weight: 400;
+	margin-top: 20px;
+	text-align: center;
+	width: 100%;
 }
 
 .keyword-item:hover {
