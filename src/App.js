@@ -66,11 +66,6 @@ class App extends Component {
 	}
 
 	componentDidMount() {
-		this.showStatus({
-			ico : '📍',
-			txt : 'Engine started in Mountain View, CA'
-		});
-
 		const advancedMatching = { em: 'some@email.com' }; // optional, more info: https://developers.facebook.com/docs/facebook-pixel/pixel-with-ads/conversion-tracking#advanced_match
 		const options = {
 			autoConfig : true, 	// set pixel's autoConfig
@@ -90,10 +85,6 @@ class App extends Component {
 			isTooltip : true,
 			tooltip : tooltip
 		});
-
-// 		setTimeout(function() {
-// 			self.setState({ isTooltip : false });
-// 		}, 2000);
 	}
 
 	handleIntroComplete() {
@@ -106,7 +97,11 @@ class App extends Component {
 	handleGettingStartedStep() {
 		console.log("handleGettingStartedStep()");
 		window.scrollTo(0, 0);
-		this.setState({ step : 0 });
+
+		this.setState({
+			step      : 0,
+			isTooltip : false
+		});
 	}
 
   handleFAQStep() {
@@ -128,10 +123,10 @@ class App extends Component {
 
 		window.scrollTo(0, 0);
 		this.setState({ step : 3 });
-// 		this.setState({
-// 			step : 6,
-// 			selectedItems : []
-// 		});
+
+		this.showStatus({
+			txt : 'Design Engine is ready.'
+		});
 	}
 
 	handleDetailsStep(id) {
@@ -140,11 +135,6 @@ class App extends Component {
 
 		this.templateID = id;
 		window.scrollTo(0, 0);
-
-		this.showStatus({
-			ico : '🎬',
-			txt : 'Design Engine ready.'
-		});
 
 		this.setState({ step : 4 });
 	}
@@ -406,7 +396,6 @@ class App extends Component {
 							    amount={this.state.amount}
 							    isProjects={this.state.pages.isProjects}
 							    isFAQ={this.state.pages.isFAQ}
-							    isTooltip={this.state.pages.isFAQ}
 							    isUsers={this.state.pages.isUsers}
 							    onStep0={()=> this.handleGettingStartedStep()}
 							    onStep1={()=> this.handleTemplateStep()}

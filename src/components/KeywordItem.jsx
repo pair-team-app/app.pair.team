@@ -48,11 +48,12 @@ class KeywordItem extends Component {
 		this.props.onClick(isSelected);
 
 		if (isSelected) {
-			this.showStatus(true, 'Loading…');
+			this.showStatus(true, '…');
 			axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + this.props.title)
 				.then((response)=> {
 					console.log("COMPREHEND", JSON.stringify(response.data));
-					self.showStatus(false, 'Sentiment: ' + response.data.comprehend.sentiment.outcome);
+					const val = response.data.comprehend.sentiment.scores[response.data.comprehend.sentiment.outcome].toFixed(1);
+					self.showStatus(false, response.data.comprehend.sentiment.outcome + ' (' + val + ')');
 				}).catch((error) => {
 			});
 		}

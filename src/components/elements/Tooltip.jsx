@@ -2,8 +2,7 @@
 import React, { Component } from 'react';
 import './Tooltip.css'
 
-// import { TweenMax, Expo } from "gsap/TweenMax";
-import { Column, Row } from 'simple-flexbox';
+import { TimelineMax, Elastic } from "gsap/TweenMax";
 
 class Tooltip extends Component {
 	constructor(props) {
@@ -11,27 +10,66 @@ class Tooltip extends Component {
 		this.state = {
 		};
 
-		this.divWrapper = null;
+		this.contentWrapper = null;
+		this.tail1Wrapper = null;
+		this.tail2Wrapper = null;
+		this.tail3Wrapper = null;
+		this.tail4Wrapper = null;
+		this.timeline = null;
 	}
 
 	componentDidMount() {
-// 		let tween = TweenMax.to(this.divWrapper, 1, {
+		this.timeline = new TimelineMax();
+		this.timeline.staggerFrom([this.contentWrapper, this.tail1Wrapper, this.tail2Wrapper, this.tail3Wrapper, this.tail4Wrapper], 2.5, {
+			y       : '+25px',
+			opacity : 0,
+			delay   : 0,
+			ease    : Elastic.easeOut
+		}, 0.125);
+
+// 		this.timeline.add('hover', '+=0.1');
+//
+// 		this.timeline.staggerTo([this.contentWrapper, this.tail1Wrapper, this.tail2Wrapper, this.tail3Wrapper, this.tail4Wrapper], 1, {
+// 			y          : '+10px',
+// 			opacity    : 1,
+// 			delay      : 0,
+// 			ease       : Elastic.easeOut,
+// 			onComplete : function() {
+// 				this.play('hover');
+// 			}
+// 		}, 0.125, 'hover');
+
+// 		this.timeline.staggerTo([this.contentWrapper, this.tail1Wrapper, this.tail2Wrapper, this.tail3Wrapper, this.tail4Wrapper], 0.5, {
+// 			y       : '-25px',
 // 			opacity : 0,
-// 			y       : '-20px',
-// 			ease    : Expo.easeOut,
-// 			delay   : 1.5
-// 		});
+// 			delay   : 0,
+// 			ease    : Power1.easeIn
+// 		}, 0.1);
+// 		this.timeline.stop();
+	}
+
+	componentWillUnmount() {
+		this.contentWrapper = null;
+		this.tail1Wrapper = null;
+		this.tail2Wrapper = null;
+		this.tail3Wrapper = null;
+		this.timeline = null;
 	}
 
 	render() {
+		if (this.timeline) {
+			this.timeline.restart();
+		}
+
 		return (
-			<div className="tooltip-wrapper" ref={div=> this.divWrapper = div}>
-				<Row>
-					<Column vertical="center"><div className="tooltip-icon">{this.props.content.ico}</div></Column>
-					<Column className="tooltip-content">
-						<Row vertical="center">{this.props.content.txt}</Row>
-					</Column>
-				</Row>
+			<div className="tooltip-wrapper">
+				<div className="tooltip-tail tooltip-tail-4" ref={div=> this.tail4Wrapper = div} />
+				<div className="tooltip-tail tooltip-tail-3" ref={div=> this.tail3Wrapper = div} />
+				<div className="tooltip-tail tooltip-tail-2" ref={div=> this.tail2Wrapper = div} />
+				<div className="tooltip-tail tooltip-tail-1" ref={div=> this.tail1Wrapper = div} />
+				<div className="tooltip-content" ref={div=> this.contentWrapper = div}>
+					<div className="tooltip-text">{this.props.content.txt}</div>
+				</div>
 			</div>
 		);
 	}
