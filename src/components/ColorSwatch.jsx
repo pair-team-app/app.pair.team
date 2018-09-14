@@ -24,19 +24,34 @@ class ColorSwatch extends Component {
 	}
 
 	handleClick() {
+		let self = this;
 		const isSelected = !this.state.isSelected;
 		this.setState({ isSelected : isSelected });
 		this.props.onClick(isSelected);
 
-		let self = this;
 		if (isSelected) {
 			this.showStatus(true, 'Loading…');
 			axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + this.props.title)
 				.then((response)=> {
 					console.log("COMPREHEND", JSON.stringify(response.data));
-					self.showStatus(false, 'Sentiment: ' + response.data.comprehend.sentiment.outcome);
+					this.showStatus(false, 'Sentiment: ' + response.data.comprehend.sentiment.outcome);
 				}).catch((error) => {
 			});
+
+			axios.get('http://www.colr.org/json/tag/' + encodeURIComponent(this.props.title))
+				.then((response)=> {
+					console.log("colr", JSON.stringify(response.data));
+
+					if (response.data.counts.matching_colors > 0) {
+						this.props.onTooltip({
+							txt : response.data.counts.matching_colors + ' "' + this.props.title + '" colors loaded into AI.'
+						});
+					}
+
+					setTimeout(function() {
+						self.props.onTooltip({ txt : 'Design Engine is ready.' });
+					}, 2000);
+				});
 		}
 	}
 

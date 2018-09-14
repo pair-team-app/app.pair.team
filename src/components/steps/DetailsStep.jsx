@@ -45,6 +45,11 @@ class DetailsStep extends Component {
 			debug      : false, // enable logs
 		};
 		ReactPixel.init('318191662273348', advancedMatching, options);
+
+		this.handleStepChange({
+			email : "FunnelTest1@gmail.com",
+			title : "Funnel Test 1"
+		})
 	}
 
 	componentWillUnmount() {
@@ -66,7 +71,7 @@ class DetailsStep extends Component {
 
 			//if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {
 			if (form.email.length > 0) {
-				//this.props.onStart(form);
+// 				this.props.onStart(form);
 
 				let self = this;
 				this.orderInterval = setInterval(function() {
@@ -79,6 +84,14 @@ class DetailsStep extends Component {
 						}).catch((error) => {
 					});
 				}, 5000);
+
+				this.props.onTooltip({
+					txt : 'Loading Artboards into AI.'
+				});
+
+				setTimeout(function() {
+					self.props.onTooltip({ txt : 'Design Engine is ready.' });
+				}, 2000);
 
 			} else {
 				window.alert("Design Engine is invite only at the moment.");
@@ -186,6 +199,12 @@ class DetailsStep extends Component {
 			this.setState({ form : form });
 		}
 
+		if (this.state.step > 0 && this.state.step < 4) {
+			this.props.onTooltip({
+				txt : 'Design Engine is ready.'
+			});
+		}
+
 		if (this.state.step === 0) {
 // 			if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {
 			if (form.email.length > 0) {
@@ -195,7 +214,7 @@ class DetailsStep extends Component {
 				});
 			}
 
-		} else if (this.state.step < 5) {
+		} else if (this.state.step < 4) {
 			this.setState({
 				step : this.state.step + 1,
 				form : form
@@ -226,23 +245,23 @@ class DetailsStep extends Component {
 					)}
 
 					{this.state.step === 1 && (
-						<KeywordsForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
+						<KeywordsForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
 					)}
 
 					{this.state.step === 2 && (
-						<TonesForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
+						<TonesForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
 					)}
 
 					{this.state.step === 3 && (
-						<ColorsForm templateID={this.props.templateID} onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
+						<ColorsForm templateID={this.props.templateID} onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
 					)}
 
 					{this.state.step === 4 && (
-						<CornersForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
+						<CornersForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
 					)}
 
 					{this.state.step === 5 && (
-						<ImageryForm templateID={this.props.templateID} onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} />
+						<ImageryForm templateID={this.props.templateID} onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
 					)}
 				</Column>
 			</div>
