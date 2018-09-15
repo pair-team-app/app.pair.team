@@ -20,6 +20,9 @@ p {
   line-height: 20px;
 }
 
+a, a:link, a:active, a:focus, a:visited {
+  text-decoration: none;
+}
 
 /** Thin */
 @font-face {
@@ -77,6 +80,21 @@ p {
   src: url("./fonts/WorkSans-Black.otf");
 }
 
+
+/** Black */
+@font-face {
+  font-family: "Poppins Black";
+  font-weight: 900;
+  src: url("./fonts/Poppins-Bold.otf");
+}
+
+/** Extra Bold */
+@font-face {
+  font-family: "Poppins ExtraBold";
+  font-weight: 800;
+  src: url("./fonts/Poppins-ExtraBold.otf");
+}
+
 /** Bold */
 @font-face {
   font-family: "Poppins Bold";
@@ -96,4 +114,25 @@ p {
   font-family: "Poppins Medium";
   font-weight: 500;
   src: url("./fonts/Poppins-Medium.otf");
+}
+
+/** Regular */
+@font-face {
+  font-family: "Poppins Regular";
+  font-weight: 400;
+  src: url("./fonts/Poppins-Regular.otf");
+}
+
+/** Light */
+@font-face {
+  font-family: "Poppins Light";
+  font-weight: 300;
+  src: url("./fonts/Poppins-Light.otf");
+}
+
+/** Light */
+@font-face {
+  font-family: "Poppins Thin";
+  font-weight: 200;
+  src: url("./fonts/Poppins-Thin.otf");
 }

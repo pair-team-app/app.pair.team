@@ -1,24 +1,24 @@
 
 import React, { Component } from 'react';
-import './CornersForm.css';
-import corners from '../../corners.json';
+import './SystemsForm.css';
+import systems from '../../systems.json';
 
 import { Column, Row } from 'simple-flexbox';
 
 import KeywordItem from '../KeywordItem';
 
 
-class CornersForm extends Component {
+class SystemsForm extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			form: {
-				corners : []
+				systems : []
 			}
 		};
 
-		this.selectedCorners = [];
+		this.selectedSystems = [];
 	}
 
 	componentDidMount() {
@@ -28,44 +28,44 @@ class CornersForm extends Component {
 		let self = this;
 
 		if (isSelected) {
-			corners.forEach(function (item, i) {
+			systems.forEach(function (item, i) {
 				if (item.id === id) {
 
 					let isFound = false;
-					self.selectedCorners.forEach(function (itm, j) {
+					self.selectedSystems.forEach(function (itm, j) {
 						if (itm.id === id) {
 							isFound = true;
 						}
 					});
 
 					if (!isFound) {
-						self.selectedCorners.push(item);
+						self.selectedSystems.push(item);
 					}
 				}
 			});
 
 		} else {
-			this.selectedCorners.forEach(function(item, i) {
+			this.selectedSystems.forEach(function(item, i) {
 				if (item.id === id) {
-					self.selectedCorners.splice(i, 1);
+					self.selectedSystems.splice(i, 1);
 				}
 			});
 		}
 
-		this.setState({ isValidated : (this.selectedCorners.length > 0) })
+		this.setState({ isValidated : (this.selectedSystems.length > 0) })
 	}
 
 	handleClick() {
 		if (this.state.isValidated) {
 			let form = this.state.form;
-			form.corners = this.selectedCorners;
+			form.systems = this.selectedSystems;
 			this.setState({ form : form });
 			this.props.onNext(this.state.form);
 		}
 	}
 
 	render() {
-		let items = corners.map((item, i, arr) => {
+		let items = systems.map((item, i, arr) => {
 			return (
 				<Column key={i}>
 					<KeywordItem title={item.title} img={'https://via.placeholder.com/100x100'} onTooltip={(obj)=> this.props.onTooltip(obj)} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
@@ -79,8 +79,8 @@ class CornersForm extends Component {
 			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">What type of button shapes?</div>
-						<div className="input-title">Select one or more button shapes.</div>
+						<div className="step-header-text">What type of interface design?</div>
+						<div className="input-title">Select one interface design style.</div>
 					</Column>
 				</Row>
 				<Row horizontal="center">
@@ -95,4 +95,4 @@ class CornersForm extends Component {
 	}
 }
 
-export default CornersForm;
+export default SystemsForm;

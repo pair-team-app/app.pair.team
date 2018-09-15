@@ -141,7 +141,6 @@ class App extends Component {
 
 	handleStartGenerating(obj) {
 		this.showStatus({
-			ico : '🚗',
 			txt : 'Design Engine is starting up…'
 		});
 
@@ -157,7 +156,7 @@ class App extends Component {
 				cookie.save('order_id', response.data.order_id, { path: '/' });
 				self.setState({ orderID : response.data.order_id });
 
-				let keywords = obj.title.split();
+				/*let keywords = obj.title.split();
 				keywords.push('water');
 				obj.keywords.forEach(function(keyword, i) {
 					keywords.push(keyword.title);
@@ -168,8 +167,8 @@ class App extends Component {
 						console.log("COMPREHEND", JSON.stringify(response.data));
 
 						self.showStatus({
-							'ico' : '💭',
-							'txt' : 'Found ' + response.data.comprehend.syntax.length + ' keyword(s).'
+							ico : '💭',
+							txt : 'Found ' + response.data.comprehend.syntax.length + ' keyword(s).'
 						});
 
 						const score = parseFloat(response.data.comprehend.sentiment.scores[response.data.comprehend.sentiment.outcome]).toFixed(2);
@@ -177,15 +176,15 @@ class App extends Component {
 
 						setTimeout(function() {
 							self.showStatus({
-								'ico' : '🙌',
-								'txt' : 'AI Score: ' + score
+								ico : '🙌',
+								txt : 'AI Score: ' + score
 							});
 						}, 2000);
 
 						setTimeout(function() {
 							self.showStatus({
-								'ico' : (feeling === 'Positive') ? '😊' : (feeling === 'Negative') ? '☹️' : '😐',
-								'txt' : 'AI Sentiment: ' + feeling
+								ico : (feeling === 'Positive') ? '😊' : (feeling === 'Negative') ? '☹️' : '😐',
+								txt : 'AI Sentiment: ' + feeling
 							});
 						}, 3000);
 
@@ -208,8 +207,8 @@ class App extends Component {
 
 									if (response.data.schemes.length > 0) {
 										self.showStatus({
-											'ico' : '💭',
-											'txt' : 'Found ' + response.data.schemes.length + ' color theme(s).'
+											ico : '💭',
+											txt : 'Found ' + response.data.schemes.length + ' color theme(s).'
 										});
 									}
 
@@ -239,8 +238,8 @@ class App extends Component {
 								.then((response)=> {
 // 									console.log("UNSPLASH", JSON.stringify(response.data));
 									self.showStatus({
-										'ico' : '💭',
-										'txt' : 'Located ' + response.data.results.length + ' image(s).'
+										ico : '💭',
+										txt : 'Located ' + response.data.results.length + ' image(s).'
 									});
 
 									response.data.results.forEach(function(itm, i) {
@@ -265,6 +264,7 @@ class App extends Component {
 
 					}).catch((error) => {
 				});
+			*/
 
 			}).catch((error) => {
 		});
@@ -282,6 +282,10 @@ class App extends Component {
 
 	handlePurchaseStep(obj) {
 		ReactPixel.trackCustom('checkout');
+
+		this.showStatus({
+			txt : 'Design Engine has stopped.'
+		});
 
 		console.log("handlePurchaseStep("+JSON.stringify(obj)+")");
 		window.scrollTo(0, 0);
@@ -447,6 +451,7 @@ class App extends Component {
 
 						    {this.state.step === 6 && (
 							    <PurchaseStep
+								    onTooltip={(obj)=> this.showStatus(obj)}
 								    onClick={()=> this.handleCompletionStep()}
 								    onItemToggle={(obj)=> this.handleItemToggle(obj)}
 								    selectedItems={this.state.selectedItems}

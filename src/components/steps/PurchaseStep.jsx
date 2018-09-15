@@ -8,10 +8,8 @@ import ReactPixel from 'react-facebook-pixel';
 import {Elements, StripeProvider} from 'react-stripe-elements';
 import { Column, Row } from 'simple-flexbox';
 
-import OverlayAlert from '../elements/OverlayAlert';
 // eslint-disable-next-line
 import StripeCheckout from '../elements/StripeCheckout';
-import TemplateItem from '../TemplateItem';
 
 class PurchaseStep extends Component {
 	constructor(props) {
@@ -19,12 +17,6 @@ class PurchaseStep extends Component {
 
 		this.state = {
 			step : 0,
-			overlay : {
-				isVisible : false,
-				title     : '',
-				content   : '',
-				buttons   : []
-			},
 			selectedItems : this.props.selectedItems,
 			allItems      : this.props.selectedItems
 		};
@@ -79,83 +71,77 @@ class PurchaseStep extends Component {
 
 	onStripe() {
 		ReactPixel.trackCustom('purchase');
-		this.setState({
-			overlay : {
-				isVisible : true,
-				title     : 'Free Content',
-				content   : 'All items are free today.',
-				buttons   : []
-			}
-		})
+		this.setState({ step : 1 });
+		this.props.onTooltip({ txt : 'Design Engine is shutting down.'})
 	}
 
-	onPayPal() {
+	onCC() {
 		ReactPixel.trackCustom('purchase');
-		this.setState({
-			overlay : {
-				isVisible : true,
-				title     : 'Free Content',
-				content   : 'All items are free today.',
-				buttons   : []
-			}
-		})
+		this.setState({ step : 1 });
+		this.props.onTooltip({ txt : 'Design Engine is shutting down.'})
 	}
 
-	handleAlertConfirm() {
-		console.log("handleAlertConfirm()");
-
-		this.setState({
-			step : 1,
-			overlay : {
-				isVisible : false,
-				title     : '',
-				content   : '',
-				buttons   : []
-			}
-		});
+	onWePay() {
+		ReactPixel.trackCustom('purchase');
+		this.setState({ step : 1 });
+		this.props.onTooltip({ txt : 'Design Engine is shutting down.'})
 	}
 
 	render() {
-		const items = this.state.allItems.map((item, i, arr) => {
-			let isSelected = false;
+// 		const items = this.state.allItems.map((item, i, arr) => {
+// 			let isSelected = false;
+//
+// 			this.state.selectedItems.forEach(function (itm, i) {
+// 				if (itm.id === item.id) {
+// 					isSelected = true;
+// 				}
+// 			});
+//
+// 			return (
+// 				<Column key={i}>
+// 					<TemplateItem
+// 						onSelectClick={(isSelected)=> this.handleClick(item.id, isSelected)}
+// 						image={item.filename}
+// 						title=''
+// 						description=''
+// 						price={parseFloat(item.per_price)}
+// 						selected={isSelected} />
+// 				</Column>
+// 			);
+// 		});
 
-			this.state.selectedItems.forEach(function (itm, i) {
-				if (itm.id === item.id) {
-					isSelected = true;
-				}
-			});
-
-			return (
-				<Column key={i}>
-					<TemplateItem
-						onSelectClick={(isSelected)=> this.handleClick(item.id, isSelected)}
-						image={item.filename}
-						title=''
-						description=''
-						price={parseFloat(item.per_price)}
-						selected={isSelected} />
-				</Column>
-			);
-		});
-
-		let amount = 0;
-		this.state.selectedItems.forEach(function(item, i) {
-			amount += parseFloat(item.per_price);
-		});
+// 		let amount = 0;
+// 		this.state.selectedItems.forEach(function(item, i) {
+// 			amount += parseFloat(item.per_price);
+// 		});
 
 		return (
 			<div>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Choose a payment option</div>
-						<div className="input-title">{this.state.selectedItems.length} Design Engine views for ${amount} USD.</div>
+						{this.state.step === 1 && (
+							<div>
+								<div className="step-header-text">Congrats, your files are free!</div>
+								<div className="input-title">Ready to download.</div>
+								<Row horizontal="center">
+									<a href="http://cdn.designengine.ai/assets/saas_funnel-test-1.sketch" target="_blank" rel="noopener noreferrer"><div className="purchase-link">Download Files</div></a>
+								</Row>
+								<Row horizontal="center">
+									<a href="https://m.me/DesignEngineAI" target="_blank" rel="noopener noreferrer"><div className="purchase-link">Message Support</div></a>
+								</Row>
+							</div>
+						)}
 
 						{this.state.step === 0 && (
-							<div>
-								<button className="action-button step-button" style={{marginBottom:'10px'}} onClick={()=> this.onStripe()}>Stripe</button><br />
-								<button className="action-button step-button" onClick={()=> this.onPayPal()}>PayPal</button>
+							<div className="purchase-wrapper">
+								<div className="purchase-title">Payment</div>
+								<div className="purchase-text">Looks like your connection has been lost.</div>
 
-								<div style={{width:'100%', textAlign:'left'}}>
+								<button className="action-button purchase-button" onClick={()=> this.onStripe()}>Stripe</button><br />
+								<button className="action-button purchase-button" onClick={()=> this.onCC()}>Credit Card</button><br />
+								<button className="action-button purchase-button" onClick={()=> this.onWePay()}>WePay</button>
+
+								{/*<div style={{width:'100%', textAlign:'left'}}>*/}
 									{/*<StripeProvider apiKey={this.STRIPE_TEST_TOKEN}>*/}
 									{/*/!*<StripeProvider apiKey={this.STRIPE_LIVE_TOKEN}>*!/*/}
 									{/*<div className="example" style={{width:'100%'}}>*/}
@@ -169,30 +155,16 @@ class PurchaseStep extends Component {
 									{/*</div>*/}
 									{/*</StripeProvider>*/}
 
-									<div className="purchase-item-wrapper">
-										<Row horizontal="center" style={{flexWrap:'wrap'}}>
-											{items}
-										</Row>
-									</div>
-								</div>
+									{/*<div className="purchase-item-wrapper">*/}
+										{/*<Row horizontal="center" style={{flexWrap:'wrap'}}>*/}
+											{/*{items}*/}
+										{/*</Row>*/}
+									{/*</div>*/}
+								{/*</div>*/}
 							</div>
-						)}
-
-						{this.state.step === 1 && (
-							<a className="step-text" href="http://cdn.designengine.ai/assets/saas_funnel-test-1.sketch" target="_blank" rel="noopener noreferrer">Download Sketch source</a>
 						)}
 					</Column>
 				</Row>
-
-				{this.state.overlay.isVisible && (
-					<OverlayAlert
-						title={this.state.overlay.title}
-						content={this.state.overlay.content}
-						buttons={this.state.overlay.buttons}
-						onConfirm={()=> this.handleAlertConfirm()}
-						onCancel={()=> this.handleAlertCancel()}
-					/>
-				)}
 			</div>
 		);
 	}

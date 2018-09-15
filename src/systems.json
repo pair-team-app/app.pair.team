@@ -1,0 +1,16 @@
+[{
+  "id"         : 1,
+  "isSelected" : false,
+  "title"      : "Material",
+  "image"      : "https://via.placeholder.com/100x100"
+}, {
+  "id"         : 2,
+  "isSelected" : false,
+  "title"      : "iOS/Apple",
+  "image"      : "https://via.placeholder.com/100x100"
+}, {
+  "id"         : 3,
+  "isSelected" : false,
+  "title"      : "Other",
+  "image"      : "https://via.placeholder.com/100x100"
+}]

@@ -8,9 +8,9 @@ import ReactPixel from 'react-facebook-pixel';
 import { Column } from 'simple-flexbox';
 
 import ColorsForm from '../forms/ColorsForm';
-import CornersForm from '../forms/CornersForm';
+import SystemsForm from '../forms/SystemsForm';
 import ImageryForm from '../forms/ImageryForm';
-import TitleForm from '../forms/TitleForm';
+import EmailForm from '../forms/EmailForm';
 import KeywordsForm from "../forms/KeywordsForm";
 import TonesForm from "../forms/TonesForm";
 
@@ -46,10 +46,10 @@ class DetailsStep extends Component {
 		};
 		ReactPixel.init('318191662273348', advancedMatching, options);
 
-		this.handleStepChange({
-			email : "FunnelTest1@gmail.com",
-			title : "Funnel Test 1"
-		})
+// 		this.handleStepChange({
+// 			email : "FunnelTest1@gmail.com",
+// 			title : "Funnel Test 1"
+// 		});
 	}
 
 	componentWillUnmount() {
@@ -71,7 +71,7 @@ class DetailsStep extends Component {
 
 			//if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {
 			if (form.email.length > 0) {
-// 				this.props.onStart(form);
+				this.props.onStart(form);
 
 				let self = this;
 				this.orderInterval = setInterval(function() {
@@ -238,7 +238,7 @@ class DetailsStep extends Component {
 			<div>
 				<Column flexGrow={1} horizontal="start">
 					{this.state.step === 0 && (
-						<TitleForm
+						<EmailForm
 							onTooltip={(obj)=> this.props.onTooltip(obj)}
 							onBack={()=> this.props.onCancel()}
 							onNext={(vals)=> this.handleStepChange(vals)} />
@@ -257,7 +257,7 @@ class DetailsStep extends Component {
 					)}
 
 					{this.state.step === 4 && (
-						<CornersForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
+						<SystemsForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
 					)}
 
 					{this.state.step === 5 && (

@@ -89,7 +89,7 @@ class KeywordItem extends Component {
 							console.log("REKOGNITION", JSON.stringify(response.data));
 							response.data.rekognition.labels.forEach(function(item, i) {
 								if (i < 5) {
-									self.topics.push('Topic: ' + item.Name + ' (' + (Math.round(item.Confidence) * 0.01) + ')');
+									self.topics.push('Topic: ' + item.Name + ' (' + (Math.round(item.Confidence) * 0.01).toFixed(2) + ')');
 								}
 							});
 

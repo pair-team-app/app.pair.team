@@ -1,13 +1,13 @@
 
 import React, { Component } from 'react';
-import './TitleForm.css';
+import './EmailForm.css';
 
 import { Column, Row } from 'simple-flexbox';
 
 import InputField from '../InputField';
 
 
-class TitleForm extends Component {
+class EmailForm extends Component {
 	constructor(props) {
 		super(props);
 
@@ -20,8 +20,6 @@ class TitleForm extends Component {
 		};
 
 		this.isEmailValidated = false;
-		this.isTitleValidated = false;
-
 		this.handleTextChange = this.handleTextChange.bind(this);
 	}
 
@@ -39,7 +37,7 @@ class TitleForm extends Component {
 			}
 		}
 
-		let validated = 0x00;
+		let validated = 0x10;
 
 		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		if (re.test(String(form.email).toLowerCase())) {
@@ -56,19 +54,19 @@ class TitleForm extends Component {
 			this.isEmailValidated = false;
 		}
 
-		if (form.title.length > 0) {
-			if (!this.isTitleValidated) {
-				this.isTitleValidated = true;
-				this.props.onTooltip({
-					ico : '👍',
-					txt : 'Product or company name looks great.'
-				});
-			}
-			validated |= 0x10;
-
-		} else {
-			this.isTitleValidated = false;
-		}
+// 		if (form.title.length > 0) {
+// 			if (!this.isTitleValidated) {
+// 				this.isTitleValidated = true;
+// 				this.props.onTooltip({
+// 					ico : '👍',
+// 					txt : 'Product or company name looks great.'
+// 				});
+// 			}
+// 			validated |= 0x10;
+//
+// 		} else {
+// 			this.isTitleValidated = false;
+// 		}
 
 		this.setState({
 			form : form,
@@ -93,8 +91,8 @@ class TitleForm extends Component {
 			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Email &amp; company name</div>
-						<div className="input-title">Enter your email &amp; company name.</div>
+						<div className="step-header-text">Enter your email address</div>
+						<div className="input-title">To get started enter a valid email.</div>
 					</Column>
 				</Row>
 				<Row horizontal="center">
@@ -111,21 +109,21 @@ class TitleForm extends Component {
 							onChange={(event)=> this.handleTextChange(event)}
 							onClick={(name)=> this.handleTooltip(name)} />
 
-						<InputField
-							type="text"
-							name="txt-title"
-							placeholder="Enter your company or brand's name"
-							value={this.state.form.title}
-							onChange={(event)=> this.handleTextChange(event)}
-							onClick={(name)=> this.handleTooltip(name)} />
+						{/*<InputField*/}
+							{/*type="text"*/}
+							{/*name="txt-title"*/}
+							{/*placeholder="Enter your company or brand's name"*/}
+							{/*value={this.state.form.title}*/}
+							{/*onChange={(event)=> this.handleTextChange(event)}*/}
+							{/*onClick={(name)=> this.handleTooltip(name)} />*/}
 					</div>
 				</Row>
 				<Row horizontal="center" className="disclaimer-form">
-					By tapping “Next” you agree to Design<br />Engine's Terms of Service
+					By tapping “Next”, you agree to Design Engine AI<br />Inc’s Terms of Service.
 				</Row>
 			</div>
 		);
 	}
 }
 
-export default TitleForm;
+export default EmailForm;

@@ -1,11 +1,10 @@
 
 .tooltip-wrapper {
-	width: 300px;
+	width: 350px;
 	text-align: center;
 	color: #ffffff;
 	font-size: 16px;
 	font-weight: 500;
-	z-index: 100;
 	position: fixed;
 	left: 50%;
 	bottom: 120px;

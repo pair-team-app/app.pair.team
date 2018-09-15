@@ -36,10 +36,6 @@ class GeneratingStep extends Component {
 	}
 
 	componentDidMount() {
-// 		this.props.onTooltip({
-// 			'img' : '/images/logo_icon.png',
-// 			'txt' : 'Starting up engine…'
-// 		});
 		this.checkQueue();
 
 		let self = this;
@@ -58,10 +54,10 @@ class GeneratingStep extends Component {
 			self.setState({ elapsed : parseInt((new Date()).getTime() * 0.001, 10) - parseInt(self.startTime * 0.001, 10) });
 		}, 1000);
 
-		this.statusInterval = setInterval(function() {
-			self.checkStatus();
-		}, 1000);
-		this.checkStatus();
+// 		this.statusInterval = setInterval(function() {
+// 			self.checkStatus();
+// 		}, 1000);
+// 		this.checkStatus();
 
 		this.fileInterval = setInterval(function() {
 			self.checkNewFiles();
@@ -75,7 +71,7 @@ class GeneratingStep extends Component {
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
 				console.log("COLOR_SETS", JSON.stringify(response.data));
-				self.setState({ maxFiles : response.data.color_sets * 4 });
+				self.setState({ maxFiles : 500 });
 			});
 	}
 
@@ -87,18 +83,12 @@ class GeneratingStep extends Component {
 	}
 
 	checkStatus() {
-		let self = this;
 		let formData = new FormData();
 		formData.append('action', 'STATUS_CHECK');
 		formData.append('order_id', this.props.orderID);
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
 				console.log("STATUS_CHECK", JSON.stringify(response.data));
-
-				const percent = this.state.files.length > 0 ? Math.round((this.state.files.length / this.state.maxFiles) * 100) : 0;
-				const rate = this.state.files.length > 0 ? Math.ceil(this.state.files.length / this.state.elapsed) : 0;
-// 				self.setState({ status : (response.data.message) ? response.data.message : this.state.files.length + ' (' + percent + '%) of ' + this.state.maxFiles + ' estimated art boards, ' + rate + ' per second.' });
-				self.setState({ status : this.state.files.length + ' (' + percent + '%) of ' + this.state.maxFiles + ' estimated art boards, ' + rate + ' per second.' });
 			}).catch((error) => {
 		});
 	}
@@ -112,9 +102,12 @@ class GeneratingStep extends Component {
 			.then((response)=> {
 				console.log("FILE_CHECK", JSON.stringify(response.data));
 				if (response.data.files.length !== self.state.files.length) {
+					//const percent = this.state.files.length > 0 ? Math.round((this.state.files.length / this.state.maxFiles) * 100) : 0;
+					const rate = this.state.files.length > 0 ? Math.ceil(this.state.files.length / this.state.elapsed) : 0;
+
 					self.props.onTooltip({
-						'ico' : '🏭',
-						'txt' : 'Rendering preview.'
+// 						txt : this.state.files.length + ' (' + percent + '%) of ' + this.state.maxFiles + ' estimated art boards, ' + rate + ' per second.'
+						txt : 'Rendering ' + this.state.files.length + ' of ' + this.state.maxFiles + ' Designs, ' + rate + ' per second.'
 					});
 				}
 
@@ -136,8 +129,7 @@ class GeneratingStep extends Component {
 				console.log("QUEUE_CHECK", JSON.stringify(response.data));
 				if (response.data.index > 0) {
 					self.props.onTooltip({
-						'ico' : '✋',
-						'txt' : 'You are #' + response.data.index + ' in line, please wait.'
+						txt : 'You are #' + response.data.index + ' in line, please wait.'
 					});
 				}
 			});
@@ -243,7 +235,8 @@ class GeneratingStep extends Component {
 						onImageClick={()=> this.handleImageClick(item)}
 						onSelectClick={(isSelected)=> this.handleSelectClick(item.id, isSelected)}
 						title={item.title}
-						description={item.description}
+// 						description={item.description}
+						description="iOS Application, Energetic, Postive Sentiment, 0.9 Confidence."
 						image={item.filename}
 						price={parseFloat(item.per_price)}
 						selected={isSelected} />
@@ -260,8 +253,8 @@ class GeneratingStep extends Component {
 			<div>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Select the designs that you like</div>
-						<div className="input-title">{this.state.status}</div>
+						<div className="step-header-text">Design Engine is rendering…</div>
+						<div className="input-title">Select one interface design style.</div>
 						{/*<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><div className="step-text-margin"><button className={btnSelectClass} onClick={()=> this.onSelectAll()}>{btnSelectCaption}</button></div></Row>*/}
 					</Column>
 				</Row>
