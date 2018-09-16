@@ -71,7 +71,7 @@ class DetailsStep extends Component {
 
 			//if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {
 			if (form.email.length > 0) {
-				this.props.onStart(form);
+// 				this.props.onStart(form);
 
 				let self = this;
 				this.orderInterval = setInterval(function() {
@@ -245,23 +245,23 @@ class DetailsStep extends Component {
 					)}
 
 					{this.state.step === 1 && (
-						<KeywordsForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
+						<KeywordsForm onBack={()=> this.props.onCancel()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
 					)}
 
 					{this.state.step === 2 && (
-						<TonesForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
+						<TonesForm onBack={()=> this.props.onCancel()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
 					)}
 
 					{this.state.step === 3 && (
-						<ColorsForm templateID={this.props.templateID} onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
+						<ColorsForm templateID={this.props.templateID} onBack={()=> this.props.onCancel()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
 					)}
 
 					{this.state.step === 4 && (
-						<SystemsForm onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
+						<SystemsForm onBack={()=> this.props.onCancel()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
 					)}
 
 					{this.state.step === 5 && (
-						<ImageryForm templateID={this.props.templateID} onBack={()=> this.handleBack()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
+						<ImageryForm templateID={this.props.templateID} onBack={()=> this.props.onCancel()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
 					)}
 				</Column>
 			</div>

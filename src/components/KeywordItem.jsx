@@ -11,9 +11,10 @@ class KeywordItem extends Component {
 		super(props);
 
 		this.state = {
+			section    : '',
 			isSelected : false,
-			image : this.props.img,
-			status : {
+			image      : this.props.img,
+			status     : {
 				isVisible : false,
 				content   : '',
 				isLoading : false
@@ -65,7 +66,11 @@ class KeywordItem extends Component {
 		if (isSelected) {
 			let self = this;
 			this.showStatus(true, '…');
-			this.setState({ image : 'https://gifimage.net/wp-content/uploads/2018/05/spinner-gif-transparent-background-8.gif' });
+
+			if (this.props.section === 'tones') {
+				this.setState({ image : 'https://gifimage.net/wp-content/uploads/2018/05/spinner-gif-transparent-background-8.gif' });
+			}
+
 			axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + this.props.title)
 				.then((response)=> {
 					console.log("COMPREHEND", JSON.stringify(response.data));
@@ -74,30 +79,32 @@ class KeywordItem extends Component {
 				}).catch((error) => {
 			});
 
-			axios.get('https://api.unsplash.com/search/photos?query='+this.props.title+'&per_page=50', {headers:{Authorization:'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479'}})
-				.then((response)=> {
-					console.log("UNSPLASH", JSON.stringify(response.data.results));
-					this.props.onTooltip({
-						txt : (Math.floor(Math.random() * (response.data.results.length - 5)) + 5) + ' "' + this.props.title + '" images loaded into AI.'
+			if (this.props.section === 'tones') {
+				axios.get('https://api.unsplash.com/search/photos?query=' + this.props.title + '&per_page=50', { headers : { Authorization : 'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479' } })
+					.then((response) => {
+						console.log("UNSPLASH", JSON.stringify(response.data.results));
+						this.props.onTooltip({
+							txt : (Math.floor(Math.random() * (response.data.results.length - 5)) + 5) + ' "' + this.props.title + '" images loaded into AI.'
+						});
+
+						const ind = Math.floor(Math.random() * response.data.results.length);
+						this.setState({ image : response.data.results[ind].urls.small });
+
+						axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(response.data.results[ind].urls.small))
+							.then((response) => {
+								console.log("REKOGNITION", JSON.stringify(response.data));
+								response.data.rekognition.labels.forEach(function (item, i) {
+									if (i < 5) {
+										self.topics.push('Topic: ' + item.Name + ' (' + (Math.round(item.Confidence) * 0.01).toFixed(2) + ')');
+									}
+								});
+
+								this.showTopic();
+
+							}).catch((error) => {
+						});
 					});
-
-					const ind = Math.floor(Math.random() * response.data.results.length);
-					this.setState({ image : response.data.results[ind].urls.small });
-
-					axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(response.data.results[ind].urls.small))
-						.then((response)=> {
-							console.log("REKOGNITION", JSON.stringify(response.data));
-							response.data.rekognition.labels.forEach(function(item, i) {
-								if (i < 5) {
-									self.topics.push('Topic: ' + item.Name + ' (' + (Math.round(item.Confidence) * 0.01).toFixed(2) + ')');
-								}
-							});
-
-							this.showTopic();
-
-						}).catch((error) => {
-					});
-				});
+			}
 
 		} else {
 			this.setState({ image : this.props.img });
@@ -105,8 +112,14 @@ class KeywordItem extends Component {
 	}
 
 	render() {
-		const className = (this.state.isSelected) ? 'keyword-item-image-wrapper keyword-item-image-wrapper-selected' : 'keyword-item-image-wrapper';
+		const className = (this.state.isSelected) ? 'selected-opacity' : '';
 		const marginOffset = (this.divWrapper) ? (this.divWrapper.clientWidth < 200) ? (this.divWrapper.clientWidth * -0.5) + ((200 - this.divWrapper.clientWidth) * -0.5) : (this.divWrapper.clientWidth * -0.5) + ((this.divWrapper.clientWidth - 200) * 0.5) : 0;
+		const imgStyle = (this.props.section === 'tones' && this.state.isSelected) ? {
+			width     : '100%',
+			height    : '100%',
+			marginTop : '0',
+			clipPath  : 'inset(0 0 0 0 round 50%)'
+		} : {};
 
 		return (
 			<div onClick={()=> this.handleClick()} className="keyword-item" ref={(element)=> { this.divWrapper = element; }}>
@@ -116,9 +129,11 @@ class KeywordItem extends Component {
 					</div>
 				)}
 				<div className={className}>
-					<img className="keyword-item-image" src={this.state.image} alt={this.props.title} />
+					<div className="keyword-item-image-wrapper">
+						<img className="keyword-item-image" src={this.state.image} alt={this.props.title} style={imgStyle} />
+					</div>
+					<div className="keyword-item-text">{this.props.title}</div>
 				</div>
-				<div className="keyword-item-text">{this.props.title}</div>
 			</div>
 		);
 	}

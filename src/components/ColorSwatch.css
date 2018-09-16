@@ -1,26 +1,29 @@
 
 .color-swatch {
 	position: relative;
-	margin: 0 18px 25px 18px;
+	margin: 0 30px 35px 30px;
+	width: 150px;
+}
+
+.color-swatch-selected {
+	opacity: 0.5;
 }
 
 .color-swatch-fill {
-	width: 100px;
-	height: 100px;
+	width: 150px;
+	height: 150px;
 	border-radius: 50%;
 	box-shadow: 0 0 12px #cccccc;
 }
 
-.color-swatch-fill-selected {
-	background-color: #7ed321;
-}
-
 .color-swatch-text {
-	font-size: 14px;
-	font-weight: 400;
-	margin-top: 20px;
+	font-size: 18px;
+	font-weight: 500;
+	margin-top: 30px;
 	text-align: center;
 	width: 100%;
+	color: #9b9b9b;
+	line-height: 22px;
 }
 
 .color-swatch:hover {

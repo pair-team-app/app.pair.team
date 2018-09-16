@@ -41,19 +41,19 @@ class BottomNav extends Component {
 							</Column>
 							<Column flexGrow={1} horizontal="start">
 								<div className="footer-title">Company</div>
-								{/*<div className="footer-link" onClick={()=> this.props.onFAQ()}>What is Design AI?</div>*/}
+								<div className="footer-link" onClick={()=> this.props.onFAQ()}>What is Design AI?</div>
 								<div className="footer-link"><a href={urls.crunchbase} target="_blank" rel="noopener noreferrer">Crunchbase</a></div>
 								<div className="footer-link"><a href={urls.messenger} target="_blank" rel="noopener noreferrer">Chat Now</a></div>
 							</Column>
 							<Column flexGrow={1} horizontal="start">
-								<div className="footer-title">Legal</div>
-								<div className="footer-link" onClick={()=> this.props.onPrivacy()}>Privacy</div>
-								<div className="footer-link" onClick={()=> this.props.onTerms()}>Terms</div>
-							</Column>
-							<Column flexGrow={1} horizontal="start">
 								<div className="footer-title">Products</div>
 								<div className="footer-link" onClick={()=> this.props.onStep1()}>Get Started</div>
-								<div className="footer-link" onClick={()=> this.props.onStep1()}>View Templates</div>
+								<div className="footer-link" onClick={()=> this.props.onStep1()}>View Examples</div>
+							</Column>
+							<Column flexGrow={1} horizontal="start">
+								<div className="footer-title">Legal</div>
+								<div className="footer-link" onClick={()=> this.props.onTerms()}>Terms of Service</div>
+								<div className="footer-link" onClick={()=> this.props.onPrivacy()}>Privacy Policy</div>
 							</Column>
 							<Column flexGrow={1} horizontal="start">
 								<div className="footer-title">Support</div>
@@ -83,14 +83,14 @@ class BottomNav extends Component {
 							<div className="footer-link"><a href={urls.messenger} target="_blank" rel="noopener noreferrer">Chat Now</a></div>
 						</div>
 						<div style={{margin:'20px 0 0 20px'}}>
-							<div className="footer-title">Legal</div>
-							<div className="footer-link" onClick={()=> this.props.onPrivacy()}>Privacy</div>
-							<div className="footer-link" onClick={()=> this.props.onTerms()}>Terms</div>
-						</div>
-						<div style={{margin:'20px 0 0 20px'}}>
 							<div className="footer-title">Products</div>
 							<div className="footer-link" onClick={()=> this.props.onStep1()}>Get Started</div>
-							<div className="footer-link" onClick={()=> this.props.onStep1()}>View Templates</div>
+							<div className="footer-link" onClick={()=> this.props.onStep1()}>View Examples</div>
+						</div>
+						<div style={{margin:'20px 0 0 20px'}}>
+							<div className="footer-title">Legal</div>
+							<div className="footer-link" onClick={()=> this.props.onPrivacy()}>Privacy Policy</div>
+							<div className="footer-link" onClick={()=> this.props.onTerms()}>Terms of Serices</div>
 						</div>
 						<div style={{margin:'20px 0 0 20px'}}>
 							<div className="footer-title">Support</div>

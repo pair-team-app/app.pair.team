@@ -1,31 +1,41 @@
 [{
+  "id"    : 1,
+  "title" : "Calm",
+  "image" : "http://cdn.designengine.ai/assets/tones/01_calm.svg"
+}, {
   "id"    : 2,
-  "title" : "Clean"
+  "title" : "Ecstatic",
+  "image" : "http://cdn.designengine.ai/assets/tones/02_ecstatic.svg"
 }, {
   "id"    : 3,
-  "title" : "Modern"
+  "title" : "Neutral",
+  "image" : "http://cdn.designengine.ai/assets/tones/03_neutral.svg"
 }, {
-  "id"    : 30,
-  "title" : "Confident"
+  "id"    : 4,
+  "title" : "Vibrant",
+  "image" : "http://cdn.designengine.ai/assets/tones/04_vibrant.svg"
 }, {
-  "id"    : 19,
-  "title" : "Playful"
+  "id"    : 5,
+  "title" : "Seductive",
+  "image" : "http://cdn.designengine.ai/assets/tones/05_seductive.svg"
 }, {
-  "id"    : 22,
-  "title" : "Calm"
+  "id"    : 6,
+  "title" : "Proud",
+  "image" : "http://cdn.designengine.ai/assets/tones/06_proud.svg"
 }, {
-  "id"    : 22,
-  "title" : "Confident"
+  "id"    : 7,
+  "title" : "Loving",
+  "image" : "http://cdn.designengine.ai/assets/tones/07_loving.svg"
 }, {
-  "id"    : 54,
-  "title" : "Scholarly"
+  "id"    : 8,
+  "title" : "Playful",
+  "image" : "http://cdn.designengine.ai/assets/tones/08_playful.svg"
 }, {
-  "id"    : 55,
-  "title" : "Whimsical"
+  "id"    : 9,
+  "title" : "Modern",
+  "image" : "http://cdn.designengine.ai/assets/tones/09_modern.svg"
 }, {
-  "id"    : 56,
-  "title" : "Enthusiastic"
-}, {
-  "id"    : 58,
-  "title" : "Energetic"
+  "id"    : 10,
+  "title" : "Clean",
+  "image" : "http://cdn.designengine.ai/assets/tones/10_clean.svg"
 }]

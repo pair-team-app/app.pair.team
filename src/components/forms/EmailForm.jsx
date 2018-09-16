@@ -96,8 +96,8 @@ class EmailForm extends Component {
 					</Column>
 				</Row>
 				<Row horizontal="center">
-					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Back</button>
-					<button className={btnClass} onClick={()=> this.handleClick()}>Next</button>
+					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Cancel</button>
+					<button className={btnClass} onClick={()=> this.handleClick()}>Next <img className="next-glyph" src="/images/arrow.svg" alt="Next"/></button>
 				</Row>
 				<Row vertical="start">
 					<div style={{width:'100%'}}>

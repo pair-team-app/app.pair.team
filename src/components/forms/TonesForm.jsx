@@ -68,7 +68,7 @@ class TonesForm extends Component {
 		const items = tones.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<KeywordItem title={item.title} img={'https://via.placeholder.com/100x100'} onTooltip={(obj)=> this.props.onTooltip(obj)} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
+					<KeywordItem title={item.title} img={item.image} onTooltip={(obj)=> this.props.onTooltip(obj)} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} section="tones" />
 				</Column>
 			);
 		});
@@ -80,12 +80,12 @@ class TonesForm extends Component {
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">What type of tone are you looking for?</div>
-						<div className="input-title">Select one or more types of tone.</div>
+						<div className="input-title">Select one or more types of tonality.</div>
 					</Column>
 				</Row>
 				<Row horizontal="center">
-					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Back</button>
-					<button className={btnClass} onClick={()=> this.handleClick()}>Next</button>
+					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Cancel</button>
+					<button className={btnClass} onClick={()=> this.handleClick()}>Next <img className="next-glyph" src="/images/arrow.svg" alt="Next"/></button>
 				</Row>
 				<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
 					{items}

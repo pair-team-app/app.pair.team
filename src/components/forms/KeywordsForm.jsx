@@ -74,7 +74,7 @@ class KeywordsForm extends Component {
 		const items = keywords.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<KeywordItem title={item.title} img={'https://via.placeholder.com/100x100'} onTooltip={(obj)=> this.props.onTooltip(obj)} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
+					<KeywordItem title={item.title} img={item.image} onTooltip={(obj)=> this.props.onTooltip(obj)} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
 				</Column>
 			);
 		});
@@ -85,13 +85,13 @@ class KeywordsForm extends Component {
 			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">What do you need designed?</div>
-						<div className="input-title">Select one or more types of design.</div>
+						<div className="step-header-text">What type of design do you need?</div>
+						<div className="input-title">Select one or more design options.</div>
 					</Column>
 				</Row>
 				<Row horizontal="center">
-					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Back</button>
-					<button className={btnClass} onClick={()=> this.handleClick()}>Next</button>
+					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Cancel</button>
+					<button className={btnClass} onClick={()=> this.handleClick()}>Next <img className="next-glyph" src="/images/arrow.svg" alt="Next"/></button>
 				</Row>
 				<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
 					{items}

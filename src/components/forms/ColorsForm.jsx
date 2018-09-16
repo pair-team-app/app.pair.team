@@ -98,13 +98,13 @@ class ColorsForm extends Component {
 			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">What colors are you looking for?</div>
-						<div className="input-title">Select one or more colors.</div>
+						<div className="step-header-text">What type of color do you like?</div>
+						<div className="input-title">Select one or more types of color.</div>
 					</Column>
 				</Row>
 				<Row horizontal="center">
-					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Back</button>
-					<button className={btnClass} onClick={()=> this.handleClick()}>Next</button>
+					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Cancel</button>
+					<button className={btnClass} onClick={()=> this.handleClick()}>Next <img className="next-glyph" src="/images/arrow.svg" alt="Next"/></button>
 				</Row>
 				<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
 					{colors}

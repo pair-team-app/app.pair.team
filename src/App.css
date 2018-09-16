@@ -30,7 +30,7 @@
 
 .step-header-text, .step-subheader-text {
 	margin: 10px 100px 5px 100px;
-	font-size: 56px;
+	font-size: 60px;
 	font-family: "Poppins Bold", sans-serif;
 	font-weight: 700;
 	line-height: 64px;
@@ -108,40 +108,39 @@
 
 .form-button {
 	margin: 22px 0 60px 0;
-	padding: 12px 36px;
-	background-color: #002fff;
+	padding: 12px 10px 12px 16px;
+	background-color: #ffffff;
 	font-size: 18px;
-	font-weight: 500;
-	letter-spacing: 0.25px;
-	color : #ffffff;
-	border: 3px solid #002fff;
-	border-radius: 30px;
+	font-weight: 600;
+	letter-spacing: 0.1px;
+	color : #002fff;
+	border: 3px solid #ffffff;
+	border-radius: 60px;
 	min-width: 150px;
 	min-height: 30px;
+	box-shadow: 0 0 20px #cccccc;
 }
 
 .form-button-disabled {
-	border: 3px solid #cccccc;
-	background-color: #cccccc;
-	color: #ffffff;
+	opacity: 0.33;
 }
 
 .form-button-secondary {
-	border: 3px solid #cccccc;
-	background-color: #ffffff;
+	padding: 12px 36px;
+	border: 3px solid #eeeeee;
+	background-color: #eeeeee;
 	color: #999999;
 	margin-right: 20px;
 	min-width: 0;
+	box-shadow: none;
 }
 
 .form-button:hover, .form-button-secondary:hover {
 	cursor: pointer;
-	box-shadow: 0 0 20px #cccccc;
 }
 
 .form-button-disabled:hover {
 	cursor: default;
-	box-shadow: none;
 }
 
 .disabled-button {
@@ -164,7 +163,7 @@
 	padding: 0 40px 28px 15px;
 	background-color: #ffffff;
 	font-family: "Work Sans", sans-serif;
-	font-size: 18px;
+	font-size: 22px;
 	color : #002fff;
 	border: none;
 	border-bottom: 2px solid #cccccc;
@@ -188,6 +187,16 @@
 	width: 200px;
 	height: 50px;
 	z-index: 2;
+}
+
+.next-glyph {
+	width: 25px;
+	height: 13px;
+	margin-left: 10px;
+}
+
+.selected-opacity {
+	opacity: 0.5;
 }
 
 .is-hidden {

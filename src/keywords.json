@@ -1,31 +1,69 @@
 [{
-  "id"    : 204,
-  "title" : "iOS App"
+  "id"    : 1,
+  "title" : "Website",
+  "image" : "http://cdn.designengine.ai/assets/type/01_website.svg"
 }, {
-  "id"    : 203,
-  "title" : "Android App"
-}, {
-  "id"    : 28,
-  "title" : "Website"
+  "id"    : 2,
+  "title" : "Mobile App",
+  "image" : "http://cdn.designengine.ai/assets/type/02_mobileapp.svg"
 }, {
   "id"    : 3,
-  "title" : "Email"
+  "title" : "Menu",
+  "image" : "http://cdn.designengine.ai/assets/type/03_menu.svg"
 }, {
-  "id"    : 223,
-  "title" : "Podcast Cover"
+  "id"    : 4,
+  "title" : "Shopping Cart",
+  "image" : "http://cdn.designengine.ai/assets/type/04_shoppingcart.svg"
+}, {
+  "id"    : 5,
+  "title" : "Blog",
+  "image" : "http://cdn.designengine.ai/assets/type/05_blog.svg"
+}, {
+  "id"    : 6,
+  "title" : "Button",
+  "image" : "http://cdn.designengine.ai/assets/type/06_button.svg"
+}, {
+  "id"    : 7,
+  "title" : "Calendar",
+  "image" : "http://cdn.designengine.ai/assets/type/07_calendar.svg"
 }, {
   "id"    : 8,
-  "title" : "Instagram"
+  "title" : "Card Stack",
+  "image" : "http://cdn.designengine.ai/assets/type/08_cardstack.svg"
+}, {
+  "id"    : 9,
+  "title" : "Card System",
+  "image" : "http://cdn.designengine.ai/assets/type/09_cardsystem.svg"
+}, {
+  "id"    : 10,
+  "title" : "Chatbot",
+  "image" : "http://cdn.designengine.ai/assets/type/10_chatbot.svg"
 }, {
   "id"    : 11,
-  "title" : "Facebook"
+  "title" : "Footer",
+  "image" : "http://cdn.designengine.ai/assets/type/11_footer.svg"
 }, {
-  "id"    : 230,
-  "title" : "Desktop App"
+  "id"    : 12,
+  "title" : "Gallery",
+  "image" : "http://cdn.designengine.ai/assets/type/12_gallery.svg"
 }, {
-  "id"    : 232,
-  "title" : "Presentation"
+  "id"    : 13,
+  "title" : "Illustrations",
+  "image" : "http://cdn.designengine.ai/assets/type/13_illustrations.svg"
 }, {
-  "id"    : 233,
-  "title" : "T-Shirt"
+  "id"    : 14,
+  "title" : "List View",
+  "image" : "http://cdn.designengine.ai/assets/type/14_listview.svg"
+}, {
+  "id"    : 16,
+  "title" : "Media Player",
+  "image" : "http://cdn.designengine.ai/assets/type/18_mediaplayer.svg"
+}, {
+  "id"    : 17,
+  "title" : "Watch",
+  "image" : "http://cdn.designengine.ai/assets/type/19_watch.svg"
+}, {
+  "id"    : 18,
+  "title" : "Settings",
+  "image" : "http://cdn.designengine.ai/assets/type/20_settings.svg"
 }]

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './Tooltip.css'
 
-import { TimelineMax, Elastic } from "gsap/TweenMax";
+import { TimelineMax, Elastic, Power1 } from "gsap/TweenMax";
 
 class Tooltip extends Component {
 	constructor(props) {
@@ -27,25 +27,11 @@ class Tooltip extends Component {
 			ease    : Elastic.easeOut
 		}, 0.125);
 
-// 		this.timeline.add('hover', '+=0.1');
-//
-// 		this.timeline.staggerTo([this.contentWrapper, this.tail1Wrapper, this.tail2Wrapper, this.tail3Wrapper, this.tail4Wrapper], 1, {
-// 			y          : '+10px',
-// 			opacity    : 1,
-// 			delay      : 0,
-// 			ease       : Elastic.easeOut,
-// 			onComplete : function() {
-// 				this.play('hover');
-// 			}
-// 		}, 0.125, 'hover');
-
-// 		this.timeline.staggerTo([this.contentWrapper, this.tail1Wrapper, this.tail2Wrapper, this.tail3Wrapper, this.tail4Wrapper], 0.5, {
-// 			y       : '-25px',
-// 			opacity : 0,
-// 			delay   : 0,
-// 			ease    : Power1.easeIn
-// 		}, 0.1);
-// 		this.timeline.stop();
+		this.timeline.staggerTo([this.tail4Wrapper, this.tail3Wrapper, this.tail2Wrapper, this.tail1Wrapper], 0.25, {
+			opacity : 0,
+			delay   : 0,
+			ease    : Power1.easeIn
+		}, 0.125);
 	}
 
 	componentWillUnmount() {
