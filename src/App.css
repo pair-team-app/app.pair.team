@@ -93,7 +93,9 @@
 
 .step-button {
 	margin: 10px 0 20px 0;
+	padding: 15px 50px;
 	min-width: 158px;
+	font-size: 16px;
 }
 
 .full-button {
@@ -196,6 +198,9 @@
 }
 
 .selected-opacity {
+	opacity: 1;
+}
+.unselected-opacity {
 	opacity: 0.5;
 }
 

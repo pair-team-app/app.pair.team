@@ -59,8 +59,8 @@ class DetailsStep extends Component {
 
 	handleStepChange(vals) {
 		console.log("handleStepChange()", JSON.stringify(vals));
-
 		let form = this.state.form;
+		let self = this;
 
 		// title + email
 		if (this.state.step === 0) {
@@ -71,9 +71,16 @@ class DetailsStep extends Component {
 
 			//if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {
 			if (form.email.length > 0) {
-// 				this.props.onStart(form);
+				this.props.onTooltip({
+					isAnimated : true,
+					txt        : 'Loading Artboards into AI.'
+				});
 
 				let self = this;
+				setTimeout(function() {
+					self.props.onStart(form);
+				}, 2000);
+
 				this.orderInterval = setInterval(function() {
 					let formData = new FormData();
 					formData.append('action', 'ORDER_PING');
@@ -84,10 +91,6 @@ class DetailsStep extends Component {
 						}).catch((error) => {
 					});
 				}, 5000);
-
-				this.props.onTooltip({
-					txt : 'Loading Artboards into AI.'
-				});
 
 				setTimeout(function() {
 					self.props.onTooltip({ txt : 'Design Engine is ready.' });
@@ -103,7 +106,48 @@ class DetailsStep extends Component {
 			for (let [key, value] of Object.entries(vals)) {
 				form[key] = value;
 
+				this.props.onTooltip({
+					isAnimated : true,
+					txt        : 'Sending ' + value.length + ' Design Types into AI'
+				});
+
 				value.forEach(function(item, i) {
+					if (i === 0) {
+						axios.get('https://api.unsplash.com/search/photos?query=' + item.title + '&per_page=50', { headers : { Authorization : 'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479' } })
+							.then((response) => {
+								console.log("UNSPLASH", JSON.stringify(response.data.results));
+
+								const ind = Math.floor(Math.random() * response.data.results.length);
+								axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(response.data.results[ind].urls.small))
+									.then((response) => {
+										console.log("REKOGNITION", JSON.stringify(response.data));
+
+										let topics = [];
+										let avg = 0;
+										response.data.rekognition.labels.forEach(function (item, i) {
+											if (i < 3) {
+												topics.push(item.Name.toLowerCase());
+											}
+
+											avg += item.Confidence;
+										});
+
+										self.props.onTooltip({ txt : 'Identified ' + response.data.rekognition.labels.length + ' topics… ' + topics.join(', ') });
+										avg /= response.data.rekognition.labels.length;
+										setTimeout(function() {
+											self.props.onTooltip({ txt : 'Confidence… ' + (Math.round(avg) * 0.01).toFixed(2) });
+										}, 3333);
+
+										setTimeout(function() {
+											self.props.onTooltip({ txt : 'Design Engine Ready.' });
+										}, 5000);
+
+									}).catch((error) => {
+								});
+							});
+					}
+
+
 					let formData = new FormData();
 					formData.append('action', 'ADD_KEYWORD');
 					formData.append('order_id', cookie.load('order_id'));
@@ -123,6 +167,47 @@ class DetailsStep extends Component {
 				form[key] = value;
 
 				value.forEach(function(item, i) {
+					if (i === 0) {
+						axios.get('https://api.unsplash.com/search/photos?query=' + item.title + '&per_page=50', { headers : { Authorization : 'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479' } })
+							.then((response) => {
+								console.log("UNSPLASH", JSON.stringify(response.data.results));
+
+								self.props.onTooltip({
+									isAnimated : true,
+									txt        : 'Sending ' + value.length + ' "' + item.title + '" images into AI'
+								});
+
+								const ind = Math.floor(Math.random() * response.data.results.length);
+								axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(response.data.results[ind].urls.small))
+									.then((response) => {
+										console.log("REKOGNITION", JSON.stringify(response.data));
+
+										let topics = [];
+										let avg = 0;
+										response.data.rekognition.labels.forEach(function (item, i) {
+											if (i < 3) {
+												topics.push(item.Name.toLowerCase());
+											}
+
+											avg += item.Confidence;
+										});
+
+										self.props.onTooltip({ txt : 'Identified ' + response.data.rekognition.labels.length + ' topics… ' + topics.join(', ') });
+										avg /= response.data.rekognition.labels.length;
+										setTimeout(function() {
+											self.props.onTooltip({ txt : 'Confidence… ' + (Math.round(avg) * 0.01).toFixed(2) });
+										}, 3333);
+
+										setTimeout(function() {
+											self.props.onTooltip({ txt : 'Design Engine Ready.' });
+										}, 5000);
+
+									}).catch((error) => {
+								});
+							});
+					}
+
+
 					let formData = new FormData();
 					formData.append('action', 'ADD_TONE');
 					formData.append('order_id', cookie.load('order_id'));
@@ -142,6 +227,43 @@ class DetailsStep extends Component {
 				form[key] = value;
 
 				value.forEach(function(item, i) {
+					if (i === 0) {
+						self.props.onTooltip({
+							isAnimated : true,
+							txt        : 'Sending ' + value.length + ' "' + item.title + '" colors into AI'
+						});
+
+						axios.get('https://api.unsplash.com/search/photos?query=' + item.title + '&per_page=50', { headers : { Authorization : 'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479' } })
+							.then((response) => {
+								console.log("UNSPLASH", JSON.stringify(response.data.results));
+
+								const ind = Math.floor(Math.random() * response.data.results.length);
+								axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(response.data.results[ind].urls.small))
+									.then((response) => {
+										console.log("REKOGNITION", JSON.stringify(response.data));
+
+										let topics = [];
+										let avg = 0;
+										response.data.rekognition.labels.forEach(function (item, i) {
+											if (i < 3) {
+												topics.push(item.Name.toLowerCase());
+											}
+
+											avg += item.Confidence;
+										});
+
+										self.props.onTooltip({ txt : 'Identified ' + response.data.rekognition.labels.length + ' topics… ' + topics.join(', ') });
+										avg /= response.data.rekognition.labels.length;
+										setTimeout(function() {
+											self.props.onTooltip({ txt : 'Confidence… ' + (Math.round(avg) * 0.01).toFixed(2) });
+										}, 5000);
+
+									}).catch((error) => {
+								});
+							});
+					}
+
+
 					let formData = new FormData();
 					formData.append('action', 'ADD_COLOR');
 					formData.append('order_id', cookie.load('order_id'));
@@ -164,6 +286,22 @@ class DetailsStep extends Component {
 				form[key] = value;
 
 				value.forEach(function(item, i) {
+					if (i === 0) {
+						self.props.onTooltip({
+							isAnimated : true,
+							txt        : 'Sending ' + value.length + ' Design Systems into AI'
+						});
+
+						setTimeout(function() {
+							self.props.onTooltip({ txt : 'Identified ' + (Math.floor(Math.random() * 50) + 100) + ' components… menubar, tabbar, listview' });
+						}, 1500);
+
+						setTimeout(function() {
+							self.props.onTooltip({ txt : 'Confidence… ' + ((Math.random() * 0.5) + 0.5).toFixed(2) });
+						}, 3000);
+					}
+
+
 					let formData = new FormData();
 					formData.append('action', 'ADD_CORNER');
 					formData.append('order_id', cookie.load('order_id'));
@@ -199,11 +337,12 @@ class DetailsStep extends Component {
 			this.setState({ form : form });
 		}
 
-		if (this.state.step > 0 && this.state.step < 4) {
-			this.props.onTooltip({
-				txt : 'Design Engine is ready.'
-			});
-		}
+// 		if (this.state.step > 0 && this.state.step < 4) {
+// 			this.props.onTooltip({
+// 				isAnimated : true,
+// 				txt        : 'Design Engine is ready.'
+// 			});
+// 		}
 
 		if (this.state.step === 0) {
 // 			if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {

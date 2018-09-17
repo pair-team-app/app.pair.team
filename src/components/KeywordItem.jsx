@@ -67,7 +67,7 @@ class KeywordItem extends Component {
 			let self = this;
 			this.showStatus(true, '…');
 
-			if (this.props.section === 'tones') {
+			if (this.props.section === 'tones2') {
 				this.setState({ image : 'https://gifimage.net/wp-content/uploads/2018/05/spinner-gif-transparent-background-8.gif' });
 			}
 
@@ -79,7 +79,7 @@ class KeywordItem extends Component {
 				}).catch((error) => {
 			});
 
-			if (this.props.section === 'tones') {
+			if (this.props.section === 'tones2') {
 				axios.get('https://api.unsplash.com/search/photos?query=' + this.props.title + '&per_page=50', { headers : { Authorization : 'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479' } })
 					.then((response) => {
 						console.log("UNSPLASH", JSON.stringify(response.data.results));
@@ -112,9 +112,9 @@ class KeywordItem extends Component {
 	}
 
 	render() {
-		const className = (this.state.isSelected) ? 'selected-opacity' : '';
+		const className = (this.state.isSelected) ? 'selected-opacity' : 'unselected-opacity';
 		const marginOffset = (this.divWrapper) ? (this.divWrapper.clientWidth < 200) ? (this.divWrapper.clientWidth * -0.5) + ((200 - this.divWrapper.clientWidth) * -0.5) : (this.divWrapper.clientWidth * -0.5) + ((this.divWrapper.clientWidth - 200) * 0.5) : 0;
-		const imgStyle = (this.props.section === 'tones' && this.state.isSelected) ? {
+		const imgStyle = (this.props.section === 'tones2' && this.state.isSelected) ? {
 			width     : '100%',
 			height    : '100%',
 			marginTop : '0',

@@ -43,7 +43,7 @@ class Tooltip extends Component {
 	}
 
 	render() {
-		if (this.timeline) {
+		if (this.timeline && this.props.content.isAnimated) {
 			this.timeline.restart();
 		}
 

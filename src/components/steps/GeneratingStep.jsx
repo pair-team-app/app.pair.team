@@ -101,7 +101,7 @@ class GeneratingStep extends Component {
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
 				console.log("FILE_CHECK", JSON.stringify(response.data));
-				if (response.data.files.length !== self.state.files.length) {
+				if (response.data.files.length !== self.state.files.length || self.state.files.length === 0) {
 					//const percent = this.state.files.length > 0 ? Math.round((this.state.files.length / this.state.maxFiles) * 100) : 0;
 					const rate = this.state.files.length > 0 ? Math.ceil(this.state.files.length / this.state.elapsed) : 0;
 

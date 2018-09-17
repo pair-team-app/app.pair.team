@@ -3,10 +3,11 @@
 	position: relative;
 	margin: 0 30px 35px 30px;
 	width: 150px;
+	opacity: 0.5;
 }
 
 .color-swatch-selected {
-	opacity: 0.5;
+	opacity: 1;
 }
 
 .color-swatch-fill {

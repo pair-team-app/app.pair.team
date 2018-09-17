@@ -54,8 +54,8 @@ class App extends Component {
 			selectedItems : null,
 			purchasedItems : null,
 			tooltip: {
-		  	img : '',
-				txt : ''
+		  	isAnimated : true,
+				txt        : ''
 			},
 			comprehend : []
 		};
@@ -122,10 +122,12 @@ class App extends Component {
 		ReactPixel.trackCustom('get-started');
 
 		window.scrollTo(0, 0);
-		this.setState({ step : 3 });
+// 		this.setState({ step : 3 });
+		this.setState({ step : 4 });
 
 		this.showStatus({
-			txt : 'Design Engine is ready.'
+			isAnimated : true,
+			txt        : 'Design Engine is ready.'
 		});
 	}
 
@@ -140,14 +142,10 @@ class App extends Component {
 	}
 
 	handleStartGenerating(obj) {
-		this.showStatus({
-			txt : 'Design Engine is starting up…'
-		});
-
 		let self = this;
 		let formData = new FormData();
 		formData.append('action', 'MAKE_ORDER');
-		formData.append('template_id', this.templateID);
+		formData.append('template_id', 1);//this.templateID);
 		formData.append('email', obj.email);
 		formData.append('title', obj.title);
 		axios.post('https://api.designengine.ai/templates.php', formData)
@@ -435,7 +433,7 @@ class App extends Component {
 								    templateID={this.templateID}
 								    orderID={this.state.orderID}
 								    onTooltip={(obj)=> this.showStatus(obj)}
-								    onCancel={()=> this.handleTemplateStep()}
+								    onCancel={()=> this.handleGettingStartedStep()}
 								    onStart={(obj)=> this.handleStartGenerating(obj)}
 								    onClick={(obj)=> this.handleGeneratingStep(obj)} />
 						    )}
