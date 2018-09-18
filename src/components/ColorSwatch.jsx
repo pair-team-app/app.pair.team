@@ -24,7 +24,7 @@ class ColorSwatch extends Component {
 	}
 
 	handleClick() {
-// 		let self = this;
+		let self = this;
 		const isSelected = !this.state.isSelected;
 		this.setState({ isSelected : isSelected });
 		this.props.onClick(isSelected);
@@ -38,21 +38,43 @@ class ColorSwatch extends Component {
 				}).catch((error) => {
 			});
 
-// 			axios.get('http://www.colr.org/json/tag/' + encodeURIComponent(this.props.title))
-// 				.then((response)=> {
-// 					console.log("colr", JSON.stringify(response.data));
-//
-// 					if (response.data.counts.matching_colors > 0) {
-// 						this.props.onTooltip({
-// 							txt : response.data.counts.matching_colors + ' "' + this.props.title + '" colors loaded into AI.'
-// 						});
-// 					}
-//
-// 					setTimeout(function() {
-// 						self.props.onTooltip({ txt : 'Design Engine is ready.' });
-// 					}, 2000);
-// 				}).catch((error) => {
-// 			});
+			self.props.onTooltip({
+				isAnimated : true,
+				txt        : 'Sending "' + this.props.title + '" color into AI'
+			});
+
+			axios.get('https://api.unsplash.com/search/photos?query=' + this.props.title + '&per_page=50', { headers : { Authorization : 'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479' } })
+				.then((response) => {
+					console.log("UNSPLASH", JSON.stringify(response.data.results));
+
+					const ind = Math.floor(Math.random() * response.data.results.length);
+					axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(response.data.results[ind].urls.small))
+						.then((response) => {
+							console.log("REKOGNITION", JSON.stringify(response.data));
+
+							let topics = [];
+							let avg = 0;
+							response.data.rekognition.labels.forEach(function (item, i) {
+								if (i < 3) {
+									topics.push(item.Name.toLowerCase());
+								}
+
+								avg += item.Confidence;
+							});
+
+							self.props.onTooltip({ txt : 'Identified ' + response.data.rekognition.labels.length + ' topics… ' + topics.join(', ') });
+							avg /= response.data.rekognition.labels.length;
+							setTimeout(function() {
+								self.props.onTooltip({ txt : 'Confidence… ' + (Math.round(avg) * 0.01).toFixed(2) });
+							}, 3000);
+
+							setTimeout(function() {
+								self.props.onTooltip({ txt : 'Design Engine is ready.' });
+							}, 4000);
+
+						}).catch((error) => {
+					});
+				});
 		}
 	}
 

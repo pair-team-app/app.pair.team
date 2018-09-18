@@ -12,7 +12,7 @@ class KeywordItem extends Component {
 
 		this.state = {
 			section    : '',
-			isSelected : false,
+			isSelected : this.props.selected,
 			image      : this.props.img,
 			status     : {
 				isVisible : false,
@@ -67,10 +67,6 @@ class KeywordItem extends Component {
 			let self = this;
 			this.showStatus(true, '…');
 
-			if (this.props.section === 'tones2') {
-				this.setState({ image : 'https://gifimage.net/wp-content/uploads/2018/05/spinner-gif-transparent-background-8.gif' });
-			}
-
 			axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + this.props.title)
 				.then((response)=> {
 					console.log("COMPREHEND", JSON.stringify(response.data));
@@ -79,31 +75,102 @@ class KeywordItem extends Component {
 				}).catch((error) => {
 			});
 
-			if (this.props.section === 'tones2') {
+
+			if (this.props.section === 'keyword') {
+				this.props.onTooltip({
+					isAnimated : true,
+					txt        : 'Sending "' + this.props.title + '" Design Type into AI'
+				});
+
 				axios.get('https://api.unsplash.com/search/photos?query=' + this.props.title + '&per_page=50', { headers : { Authorization : 'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479' } })
 					.then((response) => {
 						console.log("UNSPLASH", JSON.stringify(response.data.results));
-						this.props.onTooltip({
-							txt : (Math.floor(Math.random() * (response.data.results.length - 5)) + 5) + ' "' + this.props.title + '" images loaded into AI.'
-						});
 
 						const ind = Math.floor(Math.random() * response.data.results.length);
-						this.setState({ image : response.data.results[ind].urls.small });
-
 						axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(response.data.results[ind].urls.small))
 							.then((response) => {
 								console.log("REKOGNITION", JSON.stringify(response.data));
+
+								let topics = [];
+								let avg = 0;
 								response.data.rekognition.labels.forEach(function (item, i) {
-									if (i < 5) {
-										self.topics.push('Topic: ' + item.Name + ' (' + (Math.round(item.Confidence) * 0.01).toFixed(2) + ')');
+									if (i < 3) {
+										topics.push(item.Name.toLowerCase());
 									}
+
+									avg += item.Confidence;
 								});
 
-								this.showTopic();
+								self.props.onTooltip({ txt : 'Identified ' + response.data.rekognition.labels.length + ' topics… ' + topics.join(', ') });
+								avg /= response.data.rekognition.labels.length;
+								setTimeout(function() {
+									self.props.onTooltip({ txt : 'Confidence… ' + (Math.round(avg) * 0.01).toFixed(2) });
+								}, 3000);
+
+								setTimeout(function() {
+									self.props.onTooltip({ txt : 'Design Engine is ready.' });
+								}, 4000);
 
 							}).catch((error) => {
 						});
 					});
+
+			} else if (this.props.section === 'tone') {
+				axios.get('https://api.unsplash.com/search/photos?query=' + this.props.title + '&per_page=50', { headers : { Authorization : 'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479' } })
+					.then((response) => {
+						console.log("UNSPLASH", JSON.stringify(response.data.results));
+
+						self.props.onTooltip({
+							isAnimated : true,
+							txt        : 'Sending ' + response.data.results.length + ' "' + this.props.title + '" images into AI'
+						});
+
+						const ind = Math.floor(Math.random() * response.data.results.length);
+						axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(response.data.results[ind].urls.small))
+							.then((response) => {
+								console.log("REKOGNITION", JSON.stringify(response.data));
+
+								let topics = [];
+								let avg = 0;
+								response.data.rekognition.labels.forEach(function (item, i) {
+									if (i < 3) {
+										topics.push(item.Name.toLowerCase());
+									}
+
+									avg += item.Confidence;
+								});
+
+								self.props.onTooltip({ txt : 'Identified ' + response.data.rekognition.labels.length + ' topics… ' + topics.join(', ') });
+								avg /= response.data.rekognition.labels.length;
+								setTimeout(function() {
+									self.props.onTooltip({ txt : 'Confidence… ' + (Math.round(avg) * 0.01).toFixed(2) });
+								}, 3000);
+
+								setTimeout(function() {
+									self.props.onTooltip({ txt : 'Design Engine is ready.' });
+								}, 4000);
+
+							}).catch((error) => {
+						});
+					});
+
+			} else if (this.props.section === 'system') {
+				self.props.onTooltip({
+					isAnimated : true,
+					txt        : 'Sending "' + this.props.title + '" Design System into AI'
+				});
+
+				setTimeout(function() {
+					self.props.onTooltip({ txt : 'Identified ' + (Math.floor(Math.random() * 50) + 100) + ' components… menubar, tabbar, listview' });
+				}, 3000);
+
+				setTimeout(function() {
+					self.props.onTooltip({ txt : 'Confidence… ' + ((Math.random() * 0.5) + 0.5).toFixed(2) });
+				}, 4000);
+
+				setTimeout(function() {
+					self.props.onTooltip({ txt : 'Design Engine is ready.' });
+				}, 5000);
 			}
 
 		} else {
@@ -112,6 +179,12 @@ class KeywordItem extends Component {
 	}
 
 	render() {
+		if (this.props.section === 'system' && !this.props.selected && this.state.isSelected) {
+			this.setState({ isSelected : false });
+		}
+
+
+		console.log('render()', this.props.title, this.state.isSelected);
 		const className = (this.state.isSelected) ? 'selected-opacity' : 'unselected-opacity';
 		const marginOffset = (this.divWrapper) ? (this.divWrapper.clientWidth < 200) ? (this.divWrapper.clientWidth * -0.5) + ((200 - this.divWrapper.clientWidth) * -0.5) : (this.divWrapper.clientWidth * -0.5) + ((this.divWrapper.clientWidth - 200) * 0.5) : 0;
 		const imgStyle = (this.props.section === 'tones2' && this.state.isSelected) ? {

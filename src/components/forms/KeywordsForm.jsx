@@ -74,7 +74,12 @@ class KeywordsForm extends Component {
 		const items = keywords.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<KeywordItem title={item.title} img={item.image} onTooltip={(obj)=> this.props.onTooltip(obj)} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
+					<KeywordItem
+						section="keyword"
+						title={item.title}
+						img={item.image}
+						onTooltip={(obj)=> this.props.onTooltip(obj)}
+						onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
 				</Column>
 			);
 		});
@@ -86,7 +91,7 @@ class KeywordsForm extends Component {
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">What type of design do you need?</div>
-						<div className="input-title">Select one or more design options.</div>
+						<div className="input-title">Select one or more design types.</div>
 					</Column>
 				</Row>
 				<Row horizontal="center">

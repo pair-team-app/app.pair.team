@@ -43,17 +43,25 @@ class Tooltip extends Component {
 	}
 
 	render() {
+// 		const wrapperStyle = {
+// 			width : this.contentWrapper.clientWidth
+// 		};
+
+		const bgStyle = {
+			backgroundColor : (this.props.content.txt === 'Design Engine is ready.') ? '#61a913' : (this.props.content.txt === 'Design Engine is shutting down.') ? '#b11627' : '#002fff'
+		};
+
 		if (this.timeline && this.props.content.isAnimated) {
 			this.timeline.restart();
 		}
 
 		return (
-			<div className="tooltip-wrapper">
-				<div className="tooltip-tail tooltip-tail-4" ref={div=> this.tail4Wrapper = div} />
-				<div className="tooltip-tail tooltip-tail-3" ref={div=> this.tail3Wrapper = div} />
-				<div className="tooltip-tail tooltip-tail-2" ref={div=> this.tail2Wrapper = div} />
-				<div className="tooltip-tail tooltip-tail-1" ref={div=> this.tail1Wrapper = div} />
-				<div className="tooltip-content" ref={div=> this.contentWrapper = div}>
+			<div className="tooltip-wrapper" ref={div=> this.contentWrapper = div}>
+				<div className="tooltip-tail tooltip-tail-4" style={bgStyle} ref={div=> this.tail4Wrapper = div} />
+				<div className="tooltip-tail tooltip-tail-3" style={bgStyle} ref={div=> this.tail3Wrapper = div} />
+				<div className="tooltip-tail tooltip-tail-2" style={bgStyle} ref={div=> this.tail2Wrapper = div} />
+				<div className="tooltip-tail tooltip-tail-1" style={bgStyle} ref={div=> this.tail1Wrapper = div} />
+				<div className="tooltip-content" style={bgStyle} ref={div=> this.contentWrapper = div}>
 					<div className="tooltip-text">{this.props.content.txt}</div>
 				</div>
 			</div>

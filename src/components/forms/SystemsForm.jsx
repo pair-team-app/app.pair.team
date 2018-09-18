@@ -13,6 +13,7 @@ class SystemsForm extends Component {
 		super(props);
 
 		this.state = {
+			systems : systems,
 			form: {
 				systems : []
 			}
@@ -30,19 +31,28 @@ class SystemsForm extends Component {
 		if (isSelected) {
 			systems.forEach(function (item, i) {
 				if (item.id === id) {
-
-					let isFound = false;
-					self.selectedSystems.forEach(function (itm, j) {
-						if (itm.id === id) {
-							isFound = true;
-						}
-					});
-
-					if (!isFound) {
-						self.selectedSystems.push(item);
-					}
+					self.selectedSystems = [item];
 				}
+
+// 					let isFound = false;
+// 					self.selectedSystems.forEach(function (itm, j) {
+// 						if (itm.id === id) {
+// 							isFound = true;
+// 						}
+// 					});
+//
+// 					if (!isFound) {
+// 						self.selectedSystems.push(item);
+// 					}
+// 				}
 			});
+
+			let sys = this.state.systems;
+			sys.forEach(function (item, i) {
+				item.isSelected = (item.id === id);
+			});
+
+			this.setState({ systems : sys });
 
 		} else {
 			this.selectedSystems.forEach(function(item, i) {
@@ -65,10 +75,16 @@ class SystemsForm extends Component {
 	}
 
 	render() {
-		let items = systems.map((item, i, arr) => {
+		let items = this.state.systems.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<KeywordItem title={item.title} img={item.image} onTooltip={(obj)=> this.props.onTooltip(obj)} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
+					<KeywordItem
+						section="system"
+						title={item.title}
+						img={item.image}
+						selected={item.isSelected}
+						onTooltip={(obj)=> this.props.onTooltip(obj)}
+						onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
 				</Column>
 			);
 		});
@@ -79,8 +95,8 @@ class SystemsForm extends Component {
 			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">What type of interface design?</div>
-						<div className="input-title">Select one interface design style.</div>
+						<div className="step-header-text">What Design System are you using?</div>
+						<div className="input-title">Select one Design System you are working with.</div>
 					</Column>
 				</Row>
 				<Row horizontal="center">

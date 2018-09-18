@@ -68,7 +68,12 @@ class TonesForm extends Component {
 		const items = tones.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<KeywordItem title={item.title} img={item.image} onTooltip={(obj)=> this.props.onTooltip(obj)} onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} section="tones" />
+					<KeywordItem
+						section="tone"
+						title={item.title}
+						img={item.image}
+						onTooltip={(obj)=> this.props.onTooltip(obj)}
+						onClick={(isSelected)=> this.handleToggle(item.id, isSelected)} />
 				</Column>
 			);
 		});
@@ -79,7 +84,7 @@ class TonesForm extends Component {
 			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">What type of tone are you looking for?</div>
+						<div className="step-header-text">What type of design tone are you looking for?</div>
 						<div className="input-title">Select one or more types of tonality.</div>
 					</Column>
 				</Row>

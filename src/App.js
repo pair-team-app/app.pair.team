@@ -273,9 +273,12 @@ class App extends Component {
 
 		window.scrollTo(0, 0);
 		console.log("handleGeneratingStep("+JSON.stringify(obj)+")");
-
-		//cookie.save('order_id', "76", { path: '/' });
 		this.setState({ step : 5 });
+
+		this.showStatus({
+			isAnimated : true,
+			txt        : 'Rendering dataset into Design Engine AI.'
+		});
 	}
 
 	handlePurchaseStep(obj) {
@@ -442,7 +445,7 @@ class App extends Component {
 							    <GeneratingStep
 								    orderID={this.state.orderID}
 								    onTooltip={(obj)=> this.showStatus(obj)}
-								    onBack={()=> this.handleDetailsStep(this.templateID)}
+								    onCancel={()=> this.handleGettingStartedStep()}
 								    onClick={(obj)=> this.handlePurchaseStep(obj)}
 								    onItemToggle={(obj)=> this.handleItemToggle(obj)} />
 						    )}

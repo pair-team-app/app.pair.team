@@ -105,10 +105,19 @@ class GeneratingStep extends Component {
 					//const percent = this.state.files.length > 0 ? Math.round((this.state.files.length / this.state.maxFiles) * 100) : 0;
 					const rate = this.state.files.length > 0 ? Math.ceil(this.state.files.length / this.state.elapsed) : 0;
 
-					self.props.onTooltip({
-// 						txt : this.state.files.length + ' (' + percent + '%) of ' + this.state.maxFiles + ' estimated art boards, ' + rate + ' per second.'
-						txt : 'Rendering ' + this.state.files.length + ' of ' + this.state.maxFiles + ' Designs, ' + rate + ' per second.'
-					});
+
+					if (self.state.files.length === 0) {
+						setTimeout(function() {
+							self.props.onTooltip({
+								txt : 'Rendering ' + self.state.files.length + ' of ' + self.state.maxFiles + ' Designs, ' + rate + ' per second.'
+							});
+						}, 2000);
+
+					} else {
+						self.props.onTooltip({
+							txt : 'Rendering ' + this.state.files.length + ' of ' + this.state.maxFiles + ' Designs, ' + rate + ' per second.'
+						});
+					}
 				}
 
 				let files = [];
@@ -259,7 +268,7 @@ class GeneratingStep extends Component {
 					</Column>
 				</Row>
 				<Row horizontal="center">
-					<button className="form-button form-button-secondary" onClick={()=> this.props.onBack()}>Back</button>
+					<button className="form-button form-button-secondary" onClick={()=> this.props.onCancel()}>Cancel</button>
 					<button className={btnClass} onClick={()=> this.onNext()}>Next</button>
 				</Row>
 				<Row horizontal="center">
