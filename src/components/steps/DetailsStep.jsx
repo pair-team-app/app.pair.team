@@ -78,7 +78,7 @@ class DetailsStep extends Component {
 
 				let self = this;
 				setTimeout(function() {
-					self.props.onStart(form);
+// 					self.props.onStart(form);
 				}, 2000);
 
 				this.orderInterval = setInterval(function() {
@@ -100,33 +100,52 @@ class DetailsStep extends Component {
 				window.alert("Design Engine is invite only at the moment.");
 			}
 
-		// keywords
+		// system
 		} else if (this.state.step === 1) {
-			ReactPixel.trackCustom('design-type');
-			this.props.onTooltip({
-				isAnimated : true,
-				txt        : 'Loading Tones into AI.'
-			});
-
-			setTimeout(function() {
-				self.props.onTooltip({ txt : 'Design Engine is ready.' });
-			}, 2000);
+			ReactPixel.trackCustom('corners');
 
 			for (let [key, value] of Object.entries(vals)) {
 				form[key] = value;
 
 				value.forEach(function(item, i) {
 					let formData = new FormData();
-					formData.append('action', 'ADD_KEYWORD');
+					formData.append('action', 'ADD_CORNER');
 					formData.append('order_id', cookie.load('order_id'));
-					formData.append('keyword', item.title);
+					formData.append('name', item.title);
+					formData.append('radius', item.amount);
 					axios.post('https://api.designengine.ai/templates.php', formData)
-						.then((response)=> {
-							console.log("ADD_KEYWORD", JSON.stringify(response.data));
+						.then((response) => {
+							console.log("ADD_CORNER", JSON.stringify(response.data));
 						}).catch((error) => {
 					});
 				});
 			}
+
+// 			ReactPixel.trackCustom('design-type');
+// 			this.props.onTooltip({
+// 				isAnimated : true,
+// 				txt        : 'Loading Tones into AI.'
+// 			});
+//
+// 			setTimeout(function() {
+// 				self.props.onTooltip({ txt : 'Design Engine is ready.' });
+// 			}, 2000);
+//
+// 			for (let [key, value] of Object.entries(vals)) {
+// 				form[key] = value;
+//
+// 				value.forEach(function(item, i) {
+// 					let formData = new FormData();
+// 					formData.append('action', 'ADD_KEYWORD');
+// 					formData.append('order_id', cookie.load('order_id'));
+// 					formData.append('keyword', item.title);
+// 					axios.post('https://api.designengine.ai/templates.php', formData)
+// 						.then((response)=> {
+// 							console.log("ADD_KEYWORD", JSON.stringify(response.data));
+// 						}).catch((error) => {
+// 					});
+// 				});
+// 			}
 
 		// tones
 		} else if (this.state.step === 2) {
@@ -190,24 +209,7 @@ class DetailsStep extends Component {
 
 			// corners
 		} else if (this.state.step === 4) {
-			ReactPixel.trackCustom('corners');
 
-			for (let [key, value] of Object.entries(vals)) {
-				form[key] = value;
-
-				value.forEach(function(item, i) {
-					let formData = new FormData();
-					formData.append('action', 'ADD_CORNER');
-					formData.append('order_id', cookie.load('order_id'));
-					formData.append('name', item.title);
-					formData.append('radius', item.amount);
-					axios.post('https://api.designengine.ai/templates.php', formData)
-						.then((response) => {
-							console.log("ADD_CORNER", JSON.stringify(response.data));
-						}).catch((error) => {
-					});
-				});
-			}
 
 			// imagery
 		} else if (this.state.step === 5) {
@@ -247,7 +249,7 @@ class DetailsStep extends Component {
 				});
 			}
 
-		} else if (this.state.step < 4) {
+		} else if (this.state.step < 3) {
 			this.setState({
 				step : this.state.step + 1,
 				form : form
@@ -269,6 +271,7 @@ class DetailsStep extends Component {
 	render() {
 		return (
 			<div>
+				{/*<KeywordsForm onBack={()=> this.props.onCancel()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />*/}
 				<Column flexGrow={1} horizontal="start">
 					{this.state.step === 0 && (
 						<EmailForm
@@ -278,7 +281,7 @@ class DetailsStep extends Component {
 					)}
 
 					{this.state.step === 1 && (
-						<KeywordsForm onBack={()=> this.props.onCancel()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
+						<SystemsForm onBack={()=> this.props.onCancel()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
 					)}
 
 					{this.state.step === 2 && (
@@ -290,7 +293,7 @@ class DetailsStep extends Component {
 					)}
 
 					{this.state.step === 4 && (
-						<SystemsForm onBack={()=> this.props.onCancel()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
+						<ColorsForm templateID={this.props.templateID} onBack={()=> this.props.onCancel()} onNext={(vals)=> this.handleStepChange(vals)} onTooltip={(obj)=> this.props.onTooltip(obj)} />
 					)}
 
 					{this.state.step === 5 && (

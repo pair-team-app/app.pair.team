@@ -16,7 +16,7 @@ class PurchaseStep extends Component {
 		super(props);
 
 		this.state = {
-			step : 0,
+			step : 1,
 			selectedItems : this.props.selectedItems,
 			allItems      : this.props.selectedItems
 		};
@@ -121,14 +121,20 @@ class PurchaseStep extends Component {
 					<Column flexGrow={1} horizontal="center">
 						{this.state.step === 1 && (
 							<div>
-								<div className="step-header-text">Congrats, your files are free!</div>
+								<div className="step-header-text">Congrats, below are your files Download Sketch & Parts Below.</div>
 								<div className="input-title">Ready to download.</div>
 								<Row horizontal="center">
-									<a href="http://cdn.designengine.ai/assets/saas_funnel-test-1.sketch" target="_blank" rel="noopener noreferrer"><div className="purchase-link">Download Files</div></a>
+									<a href="http://cdn.designengine.ai/assets/saas_funnel-test-1.sketch" target="_blank" rel="noopener noreferrer"><div className="purchase-link">Sketch Download</div></a>
 								</Row>
 								<Row horizontal="center">
-									<a href="https://m.me/DesignEngineAI" target="_blank" rel="noopener noreferrer"><div className="purchase-link">Message Support</div></a>
+									<a href="http://cdn.designengine.ai/assets/saas_funnel-test-1.sketch" target="_blank" rel="noopener noreferrer"><div className="purchase-link">Parts Download</div></a>
 								</Row>
+								<Row horizontal="center">
+									<a href="http://cdn.designengine.ai/assets/saas_funnel-test-1.sketch" target="_blank" rel="noopener noreferrer"><div className="purchase-link">Open with InVision</div></a>
+								</Row>
+								{/*<Row horizontal="center">*/}
+									{/*<a href="https://m.me/DesignEngineAI" target="_blank" rel="noopener noreferrer"><div className="purchase-link">Message Support</div></a>*/}
+								{/*</Row>*/}
 							</div>
 						)}
 

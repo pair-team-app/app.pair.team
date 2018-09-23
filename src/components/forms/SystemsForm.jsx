@@ -95,7 +95,7 @@ class SystemsForm extends Component {
 			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">What Design System are you using?</div>
+						<div className="step-header-text">What Design Framework are you using?</div>
 						<div className="input-title">Select one Design System you are working with.</div>
 					</Column>
 				</Row>
