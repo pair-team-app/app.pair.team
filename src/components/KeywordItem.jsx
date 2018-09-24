@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './KeywordItem.css';
 
 import axios from "axios/index";
+import FontAwesome from 'react-fontawesome';
 
 import AIStatus from './elements/AIStatus';
 
@@ -183,8 +184,7 @@ class KeywordItem extends Component {
 			this.setState({ isSelected : false });
 		}
 
-
-		console.log('render()', this.props.title, this.state.isSelected);
+		const faClass = (this.state.isSelected) ? 'keyword-item-check' : 'keyword-item-check is-hidden';
 		const className = (this.state.isSelected) ? 'selected-opacity' : 'unselected-opacity';
 		const marginOffset = (this.divWrapper) ? (this.divWrapper.clientWidth < 200) ? (this.divWrapper.clientWidth * -0.5) + ((200 - this.divWrapper.clientWidth) * -0.5) : (this.divWrapper.clientWidth * -0.5) + ((this.divWrapper.clientWidth - 200) * 0.5) : 0;
 		const imgStyle = (this.props.section === 'tones2' && this.state.isSelected) ? {
@@ -204,6 +204,7 @@ class KeywordItem extends Component {
 				<div className={className}>
 					<div className="keyword-item-image-wrapper">
 						<img className="keyword-item-image" src={this.state.image} alt={this.props.title} style={imgStyle} />
+						<FontAwesome name="check-circle" className={faClass} />
 					</div>
 					<div className="keyword-item-text">{this.props.title}</div>
 				</div>

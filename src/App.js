@@ -142,10 +142,14 @@ class App extends Component {
 	}
 
 	handleStartGenerating(obj) {
+		console.log("handleStartGenerating()", obj);
+
 		let self = this;
 		let formData = new FormData();
+		this.templateID = obj.templateID;
+
 		formData.append('action', 'MAKE_ORDER');
-		formData.append('template_id', 1);//this.templateID);
+		formData.append('template_id', this.templateID);
 		formData.append('email', obj.email);
 		formData.append('title', obj.title);
 		axios.post('https://api.designengine.ai/templates.php', formData)
@@ -153,117 +157,6 @@ class App extends Component {
 				console.log("MAKE_ORDER", JSON.stringify(response.data));
 				cookie.save('order_id', response.data.order_id, { path: '/' });
 				self.setState({ orderID : response.data.order_id });
-
-				/*let keywords = obj.title.split();
-				keywords.push('water');
-				obj.keywords.forEach(function(keyword, i) {
-					keywords.push(keyword.title);
-				});
-
-				axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + encodeURIComponent(keywords.join(' ')))
-					.then((response)=> {
-						console.log("COMPREHEND", JSON.stringify(response.data));
-
-						self.showStatus({
-							ico : '💭',
-							txt : 'Found ' + response.data.comprehend.syntax.length + ' keyword(s).'
-						});
-
-						const score = parseFloat(response.data.comprehend.sentiment.scores[response.data.comprehend.sentiment.outcome]).toFixed(2);
-						const feeling = response.data.comprehend.sentiment.outcome;
-
-						setTimeout(function() {
-							self.showStatus({
-								ico : '🙌',
-								txt : 'AI Score: ' + score
-							});
-						}, 2000);
-
-						setTimeout(function() {
-							self.showStatus({
-								ico : (feeling === 'Positive') ? '😊' : (feeling === 'Negative') ? '☹️' : '😐',
-								txt : 'AI Sentiment: ' + feeling
-							});
-						}, 3000);
-
-						let colors = [];
-						let images = [];
-						response.data.comprehend.syntax.forEach(function(item, i) {
-							let formData = new FormData();
-							formData.append('action', 'ADD_KEYWORD');
-							formData.append('order_id', self.state.orderID);
-							formData.append('keyword', item.Text);
-							axios.post('https://api.designengine.ai/templates.php', formData)
-								.then((response)=> {
-									console.log("ADD_KEYWORD", JSON.stringify(response.data));
-								}).catch((error) => {
-							});
-
-							axios.get('http://www.colr.org/json/tag/' + item.Text)
-								.then((response)=> {
-									console.log("colr", JSON.stringify(response.data));
-
-									if (response.data.schemes.length > 0) {
-										self.showStatus({
-											ico : '💭',
-											txt : 'Found ' + response.data.schemes.length + ' color theme(s).'
-										});
-									}
-
-									response.data.schemes.forEach(function(itm, i) {
-										colors.push(itm.colors);
-
-										itm.colors.forEach(function(color, i) {
-											let formData = new FormData();
-											formData.append('action', 'ADD_COLOR');
-											formData.append('order_id', self.state.orderID);
-											formData.append('keyword', item.Text);
-											formData.append('index', itm.id);
-											formData.append('gradient', '000000');
-											formData.append('hex', color);
-											axios.post('https://api.designengine.ai/templates.php', formData)
-												.then((response)=> {
-													console.log("ADD_COLOR", JSON.stringify(response.data));
-												}).catch((error) => {
-											});
-										});
-									});
-
-								}).catch((error) => {
-							});
-
-							axios.get('https://api.unsplash.com/search/photos?query='+item.Text+'&per_page=50', {headers:{Authorization:'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479'}})
-								.then((response)=> {
-// 									console.log("UNSPLASH", JSON.stringify(response.data));
-									self.showStatus({
-										ico : '💭',
-										txt : 'Located ' + response.data.results.length + ' image(s).'
-									});
-
-									response.data.results.forEach(function(itm, i) {
-										images.push(itm.urls.small);
-
-										let formData = new FormData();
-										formData.append('action', 'ADD_IMAGE');
-										formData.append('order_id', self.state.orderID);
-										formData.append('keyword', item.Text);
-										formData.append('url', itm.urls.small);
-										axios.post('https://api.designengine.ai/templates.php', formData)
-											.then((response)=> {
-												console.log("ADD_IMAGE", JSON.stringify(response.data));
-											}).catch((error) => {
-										});
-									});
-									self.images = self.images.concat(images);
-									console.log(JSON.stringify(self.images));
-								}).catch((error) => {
-							});
-						});
-
-					}).catch((error) => {
-				});
-			*/
-
 			}).catch((error) => {
 		});
 	}
@@ -308,7 +201,10 @@ class App extends Component {
 		let pages = this.state.pages;
 		pages.isProjects = true;
 
-		this.setState({ pages : pages });
+		this.setState({
+			step : 0,
+			pages : pages
+		});
 
 		setTimeout(function() {
 			pages.isProjects = false;
@@ -323,7 +219,10 @@ class App extends Component {
 		let pages = this.state.pages;
 		pages.isFAQ = true;
 
-		this.setState({ pages : pages });
+		this.setState({
+			step : 0,
+			pages : pages
+		});
 	}
 
 	handleUsers() {
@@ -333,7 +232,10 @@ class App extends Component {
 		let pages = this.state.pages;
 		pages.isUsers = true;
 
-		this.setState({ pages : pages });
+		this.setState({
+			step : 0,
+			pages : pages
+		});
 	}
 
 	handlePrivacy() {
@@ -475,6 +377,7 @@ class App extends Component {
 				    </Column>
 				    <Column flexGrow={1} horizontal="center" className="bottom-nav">
 				      <BottomNav
+					      onProjects={()=> this.handleProjects()}
 					      onFAQ={()=> this.handleFAQStep()}
 					      onStep1={()=> this.handleTemplateStep()}
 					      onPrivacy={()=> this.handlePrivacy()}

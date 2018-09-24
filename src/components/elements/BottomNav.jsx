@@ -48,7 +48,7 @@ class BottomNav extends Component {
 							<Column flexGrow={1} horizontal="start">
 								<div className="footer-title">Products</div>
 								<div className="footer-link" onClick={()=> this.props.onStep1()}>Get Started</div>
-								<div className="footer-link" onClick={()=> this.props.onStep1()}>View Examples</div>
+								<div className="footer-link" onClick={()=> this.props.onProjects()}>View Examples</div>
 							</Column>
 							<Column flexGrow={1} horizontal="start">
 								<div className="footer-title">Legal</div>
@@ -85,7 +85,7 @@ class BottomNav extends Component {
 						<div style={{margin:'20px 0 0 20px'}}>
 							<div className="footer-title">Products</div>
 							<div className="footer-link" onClick={()=> this.props.onStep1()}>Get Started</div>
-							<div className="footer-link" onClick={()=> this.props.onStep1()}>View Examples</div>
+							<div className="footer-link" onClick={()=> this.props.onProjects()}>View Examples</div>
 						</div>
 						<div style={{margin:'20px 0 0 20px'}}>
 							<div className="footer-title">Legal</div>

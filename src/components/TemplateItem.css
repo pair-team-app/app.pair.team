@@ -26,6 +26,10 @@
 	background-color: #f3f3f3;
 }
 
+.template-item-image-portrait {
+	width: 98px;
+}
+
 .template-item-check {
 	position: absolute;
 	top: 50%;

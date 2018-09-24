@@ -11,7 +11,7 @@ import ColorsForm from '../forms/ColorsForm';
 import SystemsForm from '../forms/SystemsForm';
 import ImageryForm from '../forms/ImageryForm';
 import EmailForm from '../forms/EmailForm';
-import KeywordsForm from "../forms/KeywordsForm";
+// import KeywordsForm from "../forms/KeywordsForm";
 import TonesForm from "../forms/TonesForm";
 
 
@@ -22,13 +22,14 @@ class DetailsStep extends Component {
 		this.state = {
 			step   : 0,
 			form   : {
-				email    : '',
-				title    : '',
-				keywords : [],
-				tones    : [],
-				colors   : [],
-				corners  : [],
-				imagery  : []
+				email      : '',
+				title      : '',
+				templateID : 0,
+				keywords   : [],
+				tones      : [],
+				colors     : [],
+				corners    : [],
+				imagery    : []
 			}
 		};
 
@@ -76,22 +77,6 @@ class DetailsStep extends Component {
 					txt        : 'Loading Artboards into AI.'
 				});
 
-				let self = this;
-				setTimeout(function() {
-// 					self.props.onStart(form);
-				}, 2000);
-
-				this.orderInterval = setInterval(function() {
-					let formData = new FormData();
-					formData.append('action', 'ORDER_PING');
-					formData.append('order_id', self.props.orderID);
-					axios.post('https://api.designengine.ai/templates.php', formData)
-						.then((response)=> {
-							console.log("ORDER_PING", JSON.stringify(response.data));
-						}).catch((error) => {
-					});
-				}, 5000);
-
 				setTimeout(function() {
 					self.props.onTooltip({ txt : 'Design Engine is ready.' });
 				}, 2000);
@@ -108,18 +93,25 @@ class DetailsStep extends Component {
 				form[key] = value;
 
 				value.forEach(function(item, i) {
-					let formData = new FormData();
-					formData.append('action', 'ADD_CORNER');
-					formData.append('order_id', cookie.load('order_id'));
-					formData.append('name', item.title);
-					formData.append('radius', item.amount);
-					axios.post('https://api.designengine.ai/templates.php', formData)
-						.then((response) => {
-							console.log("ADD_CORNER", JSON.stringify(response.data));
-						}).catch((error) => {
-					});
+					form.templateID = item.id;
+
+					setTimeout(function() {
+						self.props.onStart(form);
+					}, 1000);
 				});
 			}
+
+			self.orderInterval = setInterval(function () {
+				let formData = new FormData();
+				formData.append('action', 'ORDER_PING');
+				formData.append('order_id', self.props.orderID);
+				axios.post('https://api.designengine.ai/templates.php', formData)
+					.then((response) => {
+						console.log("ORDER_PING", JSON.stringify(response.data));
+					}).catch((error) => {
+				});
+			}, 5000);
+
 
 // 			ReactPixel.trackCustom('design-type');
 // 			this.props.onTooltip({
