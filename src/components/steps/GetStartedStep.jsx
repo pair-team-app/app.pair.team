@@ -22,6 +22,9 @@ class GetStartedStep extends Component {
 		};
 	}
 
+	componentDidMount() {
+	}
+
 	handleProject(img) {
 		let lightBox = {
 			isVisible : true,

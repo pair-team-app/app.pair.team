@@ -48,7 +48,7 @@ class Tooltip extends Component {
 // 		};
 
 		const bgStyle = {
-			backgroundColor : (this.props.content.txt === 'Design Engine is ready.') ? '#61a913' : (this.props.content.txt === 'Design Engine is shutting down.') ? '#b11627' : '#002fff'
+			backgroundColor : (this.props.content.txt === 'Design Engine is ready.') ? '#61a913' : (this.props.content.txt === 'Design Engine is shutting down.' || this.props.content.txt === 'Design Engine has stopped.') ? '#ff4b61' : '#002fff'
 		};
 
 		if (this.timeline && this.props.content.isAnimated) {

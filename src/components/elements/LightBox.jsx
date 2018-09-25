@@ -43,20 +43,20 @@ class LightBox extends Component {
 			<div className="lightbox-wrapper" onKeyDown={()=> this.onKeyDown()}>
 				<img src="/images/close.png" className="lightbox-close" alt="Close" onClick={()=> this.props.onClick()} />
 				<div className="lightbox-container">
-					<div className="lightbox-title">{this.props.title}</div>
+					<div className="lightbox-title">{this.props.title.replace('-portrait', '')}</div>
 					<div className="lightbox-content">
 						{items}
 					</div>
-					<div className="lightbox-footer">
-						<button className="form-button form-button-secondary" onClick={()=> this.props.onClick()}>Close</button>
-						{this.props.type === 'project' && (
-							<button className="form-button" onClick={()=> this.props.onTemplateStep()}>Get Started</button>
-						)}
+					{/*<div className="lightbox-footer">*/}
+						{/*<button className="form-button form-button-secondary" onClick={()=> this.props.onClick()}>Close</button>*/}
+						{/*{this.props.type === 'project' && (*/}
+							{/*<button className="form-button" onClick={()=> this.props.onTemplateStep()}>Get Started</button>*/}
+						{/*)}*/}
 
-						{this.props.type === 'order' && (
-							<button className="form-button" onClick={()=> this.props.onSelect(this.props.file_id)}>Select ${this.props.price}</button>
-						)}
-					</div>
+						{/*{this.props.type === 'order' && (*/}
+							{/*<button className="form-button" onClick={()=> this.props.onSelect(this.props.file_id)}>Select ${this.props.price}</button>*/}
+						{/*)}*/}
+					{/*</div>*/}
 				</div>
 			</div>
 		);

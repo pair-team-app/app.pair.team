@@ -65,7 +65,7 @@ class DetailsStep extends Component {
 
 		// email
 		if (this.state.step === 0) {
-			ReactPixel.trackCustom('email-company');
+			ReactPixel.trackCustom('email');
 			for (let [key, value] of Object.entries(vals)) {
 				form[key] = value;
 			}
@@ -87,7 +87,7 @@ class DetailsStep extends Component {
 
 		// system
 		} else if (this.state.step === 1) {
-			ReactPixel.trackCustom('corners');
+			ReactPixel.trackCustom('system');
 
 			for (let [key, value] of Object.entries(vals)) {
 				form[key] = value;

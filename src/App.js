@@ -20,7 +20,7 @@ import ReactPixel from 'react-facebook-pixel';
 import { Column } from 'simple-flexbox';
 
 import BottomNav from './components/elements/BottomNav';
-import CompletionStep from './components/steps/CompletionStep';
+import DownloadStep from './components/steps/DownloadStep';
 import DetailsStep from './components/steps/DetailsStep';
 import FAQStep from './components/steps/FAQStep';
 import GeneratingStep from './components/steps/GeneratingStep';
@@ -119,7 +119,6 @@ class App extends Component {
 
 	handleTemplateStep() {
 		console.log("handleTemplateStep()");
-		ReactPixel.trackCustom('get-started');
 
 		window.scrollTo(0, 0);
 // 		this.setState({ step : 3 });
@@ -133,7 +132,7 @@ class App extends Component {
 
 	handleDetailsStep(id) {
 		console.log("handleDetailsStep("+id+")");
-		ReactPixel.trackCustom('pick-template');
+		ReactPixel.trackCustom('get-started');
 
 		this.templateID = id;
 		window.scrollTo(0, 0);
@@ -181,16 +180,18 @@ class App extends Component {
 			txt : 'Design Engine has stopped.'
 		});
 
-		console.log("handlePurchaseStep("+JSON.stringify(obj)+")");
-		window.scrollTo(0, 0);
-		this.setState({
-			step : 6,
-			selectedItems : obj
-		});
+		this.handleDownloadStep();
+
+// 		console.log("handlePurchaseStep("+JSON.stringify(obj)+")");
+// 		window.scrollTo(0, 0);
+// 		this.setState({
+// 			step : 6,
+// 			selectedItems : obj
+// 		});
 	}
 
-	handleCompletionStep() {
-		console.log("handleCompletionStep()");
+	handleDownloadStep() {
+		console.log("handleDownloadStep()");
 		window.scrollTo(0, 0);
 		this.setState({ step : 7 });
 	}
@@ -355,7 +356,7 @@ class App extends Component {
 						    {this.state.step === 6 && (
 							    <PurchaseStep
 								    onTooltip={(obj)=> this.showStatus(obj)}
-								    onClick={()=> this.handleCompletionStep()}
+								    onClick={()=> this.handleDownloadStep()}
 								    onItemToggle={(obj)=> this.handleItemToggle(obj)}
 								    selectedItems={this.state.selectedItems}
 								    onBack={(obj)=> this.handleGeneratingStep(obj)}
@@ -363,7 +364,9 @@ class App extends Component {
 						    )}
 
 						    {this.state.step === 7 && (
-							    <CompletionStep />
+							    <DownloadStep
+								    orderID={this.state.orderID}
+							    />
 						    )}
 
 						    {this.state.step === 8 && (
