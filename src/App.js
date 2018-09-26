@@ -94,6 +94,14 @@ class App extends Component {
 		this.setState({ pages : pages });
 	}
 
+	handleSystem(systemID) {
+		console.log("handleSystem()", systemID);
+		window.scrollTo(0, 0);
+
+		this.setState({ step : 4 });
+		this.handleStartGenerating({ templateID : systemID });
+	}
+
 	handleGettingStartedStep() {
 		console.log("handleGettingStartedStep()");
 		window.scrollTo(0, 0);
@@ -318,6 +326,7 @@ class App extends Component {
 							    <GetStartedStep
 								    isProjects={this.state.pages.isProjects}
 								    isUsers={this.state.pages.isUsers}
+								    onSystem={(systemID)=> this.handleSystem(systemID)}
 								    onClick={()=> this.handleTemplateStep()} />
 						    )}
 

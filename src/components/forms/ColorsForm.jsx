@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './ColorsForm.css';
 import colors from '../../colors.json';
 
-// import axios from 'axios';
 import { Column, Row } from 'simple-flexbox';
 
 import ColorSwatch from '../ColorSwatch';
@@ -25,21 +24,6 @@ class ColorsForm extends Component {
 
 	componentDidMount() {
 		this.setState({ colors : colors });
-
-// 		let formData = new FormData();
-// 		formData.append('action', 'TEMPLATE_COLORS');
-// 		formData.append('template_id', this.props.templateID);
-// 		axios.post('http://api.designengine.ai/templates.php', formData)
-// 			.then((response) => {
-// 				console.log("TEMPLATE_COLORS", JSON.stringify(response.data));
-//
-// 				let colors = [];
-// 				response.data.colors.forEach(color => {
-// 					colors.push(color);
-// 				});
-// 				this.setState({ colors : colors });
-// 			}).catch((error) => {
-// 		});
 	}
 
 	handleToggle(id, isSelected) {

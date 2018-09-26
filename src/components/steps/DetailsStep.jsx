@@ -20,7 +20,7 @@ class DetailsStep extends Component {
 		super(props);
 
 		this.state = {
-			step   : 0,
+			step   : 2,
 			form   : {
 				email      : '',
 				title      : '',
@@ -51,6 +51,18 @@ class DetailsStep extends Component {
 // 			email : "FunnelTest1@gmail.com",
 // 			title : "Funnel Test 1"
 // 		});
+
+		let self = this;
+		this.orderInterval = setInterval(function () {
+			let formData = new FormData();
+			formData.append('action', 'ORDER_PING');
+			formData.append('order_id', self.props.orderID);
+			axios.post('https://api.designengine.ai/templates.php', formData)
+				.then((response) => {
+					console.log("ORDER_PING", JSON.stringify(response.data));
+				}).catch((error) => {
+			});
+		}, 5000);
 	}
 
 	componentWillUnmount() {
@@ -101,16 +113,16 @@ class DetailsStep extends Component {
 				});
 			}
 
-			self.orderInterval = setInterval(function () {
-				let formData = new FormData();
-				formData.append('action', 'ORDER_PING');
-				formData.append('order_id', self.props.orderID);
-				axios.post('https://api.designengine.ai/templates.php', formData)
-					.then((response) => {
-						console.log("ORDER_PING", JSON.stringify(response.data));
-					}).catch((error) => {
-				});
-			}, 5000);
+// 			this.orderInterval = setInterval(function () {
+// 				let formData = new FormData();
+// 				formData.append('action', 'ORDER_PING');
+// 				formData.append('order_id', self.props.orderID);
+// 				axios.post('https://api.designengine.ai/templates.php', formData)
+// 					.then((response) => {
+// 						console.log("ORDER_PING", JSON.stringify(response.data));
+// 					}).catch((error) => {
+// 				});
+// 			}, 5000);
 
 
 // 			ReactPixel.trackCustom('design-type');

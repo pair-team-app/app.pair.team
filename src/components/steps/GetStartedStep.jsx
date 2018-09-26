@@ -66,7 +66,9 @@ class GetStartedStep extends Component {
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">Use AI to design sites, apps, decks, more</div>
 						<div className="step-text">Accelerate your best ideas with Design Engine’s AI powered Premium Design Systems.</div>
-						<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>
+						{/*<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>*/}
+						<button className="action-button step-button" onClick={()=> this.props.onSystem(2)}>iOS</button>
+						<button className="action-button step-button" onClick={()=> this.props.onSystem(3)}>Material</button>
 						<img src="/images/intro1.png" className="intro-image" alt="MacBook" />
 
 						<ScrollableAnchor id="projects"><div className="step-header-text">Accelerate your best ideas using AI</div></ScrollableAnchor>
