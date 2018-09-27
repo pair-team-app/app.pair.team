@@ -282,22 +282,22 @@ class GeneratingStep extends Component {
 						<div className="step-header-text">Design Engine is rendering…</div>
 						<div className="input-title">Select one interface design style.</div>
 						{/*<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><div className="step-text-margin"><button className={btnSelectClass} onClick={()=> this.onSelectAll()}>{btnSelectCaption}</button></div></Row>*/}
-						<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><div className="step-text-margin">
-							<select name="tones" value={this.tones} onChange={this.handleFilterChange}>
-								{tones.map(item => {
-									return (
-										<option key={item.id} value={item.id}>{item.title}</option>
-									);
-								})}
-							</select>
-							<select name="colors" value={this.colors} onChange={this.handleFilterChange}>
-								{colors.map(item => {
-									return (
-										<option key={item.id} value={item.id}>{item.title}</option>
-									);
-								})}
-							</select>
-						</div></Row>
+						{/*<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><div className="step-text-margin">*/}
+							{/*<select name="tones" value={this.tones} onChange={this.handleFilterChange}>*/}
+								{/*{tones.map(item => {*/}
+									{/*return (*/}
+										{/*<option key={item.id} value={item.id}>{item.title}</option>*/}
+									{/*);*/}
+								{/*})}*/}
+							{/*</select>*/}
+							{/*<select name="colors" value={this.colors} onChange={this.handleFilterChange}>*/}
+								{/*{colors.map(item => {*/}
+									{/*return (*/}
+										{/*<option key={item.id} value={item.id}>{item.title}</option>*/}
+									{/*);*/}
+								{/*})}*/}
+							{/*</select>*/}
+						{/*</div></Row>*/}
 					</Column>
 				</Row>
 				<Row horizontal="center">
