@@ -237,13 +237,6 @@ class DetailsStep extends Component {
 			this.setState({ form : form });
 		}
 
-// 		if (this.state.step > 0 && this.state.step < 4) {
-// 			this.props.onTooltip({
-// 				isAnimated : true,
-// 				txt        : 'Design Engine is ready.'
-// 			});
-// 		}
-
 		if (this.state.step === 0) {
 // 			if (form.email === 'jason@designengine.ai' || form.email === 'a@gmail.com') {
 			if (form.email.length > 0) {
@@ -264,8 +257,6 @@ class DetailsStep extends Component {
 		}
 
 		console.log('form', form)
-
-		//this.setState({ [event.target.name] : event.target.value });
 	}
 
 	handleBack() {

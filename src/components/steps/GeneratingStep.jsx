@@ -1,6 +1,8 @@
 
 import React, { Component } from 'react';
 import './GeneratingStep.css';
+import tones from '../../tones.json';
+import colors from '../../colors.json';
 
 import axios from "axios/index";
 import { Column, Row } from 'simple-flexbox';
@@ -13,10 +15,12 @@ class GeneratingStep extends Component {
 		super(props);
 
 		this.state = {
-			elapsed : 0,
-			files : [],
+			elapsed  : 0,
+			files    : [],
 			maxFiles : 0,
-			status : 'Design Engine is processing…',
+			tones    : 0,
+			colors   : 0,
+			status   : 'Design Engine is processing…',
 			lightBox : {
 				isVisible : false,
 				title     : '',
@@ -33,6 +37,8 @@ class GeneratingStep extends Component {
 		this.selectedItems = [];
 
 		this.startTime = (new Date()).getTime();
+
+		this.handleFilterChange = this.handleFilterChange.bind(this);
 	}
 
 	componentDidMount() {
@@ -106,6 +112,7 @@ class GeneratingStep extends Component {
 					clearInterval(self.orderInterval);
 					clearInterval(self.fileInterval);
 					clearInterval(self.statusInterval);
+					self.props.onTooltip({ txt : 'Design Engine is ready.' });
 				}
 
 				if (response.data.files.length !== self.state.files.length || self.state.files.length === 0) {
@@ -114,11 +121,11 @@ class GeneratingStep extends Component {
 
 
 					if (self.state.files.length === 0) {
-						setTimeout(function() {
+						//setTimeout(function() {
 							self.props.onTooltip({
 								txt : 'Rendering ' + self.state.files.length + ' of ' + self.state.maxFiles + ' Designs, ' + rate + ' per second.'
 							});
-						}, 2000);
+						//}, 2000);
 
 					} else {
 						self.props.onTooltip({
@@ -151,6 +158,11 @@ class GeneratingStep extends Component {
 			});
 	}
 
+	handleFilterChange(event) {
+		console.log("handleFilterChange("+event+")", [event.target.name]);
+		this.setState({ [event.target.name] : event.target.value });
+	}
+
 	handleLightBoxClick() {
 		let lightBox = this.state.lightBox;
 		lightBox.isVisible = false;
@@ -170,8 +182,6 @@ class GeneratingStep extends Component {
 	}
 
 	handleSelectClick(id, isSelected) {
-		console.log("handleClick("+id+", "+isSelected+")");
-
 		const files = this.state.files;
 
 		let self = this;
@@ -272,6 +282,22 @@ class GeneratingStep extends Component {
 						<div className="step-header-text">Design Engine is rendering…</div>
 						<div className="input-title">Select one interface design style.</div>
 						{/*<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><div className="step-text-margin"><button className={btnSelectClass} onClick={()=> this.onSelectAll()}>{btnSelectCaption}</button></div></Row>*/}
+						<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><div className="step-text-margin">
+							<select name="tones" value={this.tones} onChange={this.handleFilterChange}>
+								{tones.map(item => {
+									return (
+										<option key={item.id} value={item.id}>{item.title}</option>
+									);
+								})}
+							</select>
+							<select name="colors" value={this.colors} onChange={this.handleFilterChange}>
+								{colors.map(item => {
+									return (
+										<option key={item.id} value={item.id}>{item.title}</option>
+									);
+								})}
+							</select>
+						</div></Row>
 					</Column>
 				</Row>
 				<Row horizontal="center">
