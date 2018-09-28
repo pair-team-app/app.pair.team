@@ -2,10 +2,12 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Work Sans", sans-serif;
+  font-family: "Roboto Mono", monospace;
   font-size: 13px;
   font-weight: 400;
   line-height: 16px;
+  background-color: #3f3f3f;
+  color: #c6c6c6;
 }
 
 button:focus, input:focus, textarea:focus {
@@ -20,9 +22,42 @@ p {
   line-height: 20px;
 }
 
-a, a:link, a:active, a:focus, a:visited {
-  text-decoration: none;
+
+/** Thin */
+@font-face {
+  font-family: "Roboto Mono";
+  font-weight: 200;
+  src: url("./fonts/RobotoMono-Thin.otf");
 }
+
+/** Light */
+@font-face {
+  font-family: "Roboto Mono";
+  font-weight: 300;
+  src: url("./fonts/RobotoMono-Light.otf");
+}
+
+/** Regular */
+@font-face {
+  font-family: "Roboto Mono";
+  font-weight: 400;
+  src: url("./fonts/RobotoMono-Regular.otf");
+}
+
+/** Medium */
+@font-face {
+  font-family: "Roboto Mono";
+  font-weight: 500;
+  src: url("./fonts/RobotoMono-Medium.otf");
+}
+
+/** Bold */
+@font-face {
+  font-family: "Roboto Mono";
+  font-weight: 600;
+  src: url("./fonts/RobotoMono-Bold.otf");
+}
+
 
 /** Thin */
 @font-face {

@@ -35,40 +35,20 @@ class BottomNav extends Component {
 		return (
 				<div className="footer-wrapper">
 					<MediaQuery minWidth={840}>
-						<Row vertical="start" horizontal="center" style={{margin:'0 30px'}}>
+						<Row vertical="start" horizontal="center">
 							<Column flexGrow={1} horizontal="start">
 								<a href="/"><img src="/images/logo_footer.svg" className="footer-logo" alt="Design Engine" /></a>
 							</Column>
 							<Column flexGrow={1} horizontal="start">
-								<div className="footer-title">Company</div>
-								<div className="footer-link" onClick={()=> this.props.onFAQ()}>What is Design AI?</div>
+								<div className="footer-link" onClick={()=> this.props.onManifesto()}>Manifesto</div>
 								<div className="footer-link"><a href={urls.crunchbase} target="_blank" rel="noopener noreferrer">Crunchbase</a></div>
 								<div className="footer-link"><a href={urls.messenger} target="_blank" rel="noopener noreferrer">Chat Now</a></div>
 							</Column>
 							<Column flexGrow={1} horizontal="start">
-								<div className="footer-title">Products</div>
-								<div className="footer-link" onClick={()=> this.props.onStep1()}>Get Started</div>
-								<div className="footer-link" onClick={()=> this.props.onProjects()}>View Examples</div>
-							</Column>
-							<Column flexGrow={1} horizontal="start">
-								<div className="footer-title">Legal</div>
 								<div className="footer-link" onClick={()=> this.props.onTerms()}>Terms of Service</div>
 								<div className="footer-link" onClick={()=> this.props.onPrivacy()}>Privacy Policy</div>
 							</Column>
-							<Column flexGrow={1} horizontal="start">
-								<div className="footer-title">Support</div>
-								<div className="footer-link"><a href={urls.messenger} target="_blank" rel="noopener noreferrer">Chat Now</a></div>
-							</Column>
-							<Column flexGrow={1} horizontal="start">
-								<div className="footer-title">Follow Us</div>
-								<div className="footer-icons">
-									<a href={urls.facebook} target="_blank" rel="noopener noreferrer"><FontAwesome name="facebook-official" className="footer-icon" /></a>
-									<a href={urls.instagram} target="_blank" rel="noopener noreferrer"><FontAwesome name="instagram" className="footer-icon" /></a>
-									<a href={urls.twitter} target="_blank" rel="noopener noreferrer"><FontAwesome name="twitter" className="footer-icon" /></a>
-									<a href={urls.youtube} target="_blank" rel="noopener noreferrer"><FontAwesome name="youtube-play" className="footer-icon" /></a>
-									<a href={urls.slack} target="_blank" rel="noopener noreferrer"><FontAwesome name="slack" className="footer-icon" /></a>
-								</div>
-							</Column>
+							<Column flexGrow={10} horizontal="start" />
 						</Row>
 						<Row horizontal="center">
 							<div className="copyright">&copy; {new Date().getFullYear()} Design Engine AI, Inc.</div>

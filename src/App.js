@@ -25,6 +25,7 @@ import DetailsStep from './components/steps/DetailsStep';
 import FAQStep from './components/steps/FAQStep';
 import GeneratingStep from './components/steps/GeneratingStep';
 import GetStartedStep from './components/steps/GetStartedStep';
+import ManifestoStep from './components/steps/ManifestoStep';
 import PrivacyStep from './components/steps/PrivacyStep';
 import PurchaseStep from './components/steps/PurchaseStep';
 import SplashIntro from './components/elements/SplashIntro';
@@ -98,7 +99,7 @@ class App extends Component {
 		console.log("handleSystem()", systemID);
 		window.scrollTo(0, 0);
 
-		this.setState({ step : 4 });
+		this.setState({ step : 5 });
 		this.handleStartGenerating({ templateID : systemID });
 	}
 
@@ -259,6 +260,12 @@ class App extends Component {
 		this.setState({ step : 9 });
 	}
 
+	handleManifesto() {
+		console.log("handleManifesto()");
+		window.scrollTo(0, 0);
+		this.setState({ step : 10 });
+	}
+
 	handleNext() {
 		console.log("handleNext()");
 		window.scrollTo(0, 0);
@@ -309,15 +316,8 @@ class App extends Component {
 					    <div className="top-nav">
 						    <TopNav
 							    step={this.state.step}
-							    amount={this.state.amount}
-							    isProjects={this.state.pages.isProjects}
-							    isFAQ={this.state.pages.isFAQ}
-							    isUsers={this.state.pages.isUsers}
-							    onStep0={()=> this.handleGettingStartedStep()}
-							    onStep1={()=> this.handleTemplateStep()}
-							    onProjects={()=> this.handleProjects()}
-							    onFAQ={()=> this.handleFAQStep()}
-							    onUsers={()=> this.handleUsersStep()}
+							    onManifesto={()=> this.handleManifesto()}
+							    onClose={()=> this.handleGettingStartedStep()}
 						    />
 					    </div>
 
@@ -385,13 +385,15 @@ class App extends Component {
 						    {this.state.step === 9 && (
 							    <TermsStep />
 						    )}
+
+						    {this.state.step === 10 && (
+							    <ManifestoStep />
+						    )}
 					    </div>
 				    </Column>
 				    <Column flexGrow={1} horizontal="center" className="bottom-nav">
 				      <BottomNav
-					      onProjects={()=> this.handleProjects()}
-					      onFAQ={()=> this.handleFAQStep()}
-					      onStep1={()=> this.handleTemplateStep()}
+					      onManifesto={()=> this.handleManifesto()}
 					      onPrivacy={()=> this.handlePrivacy()}
 					      onTerms={()=> this.handleTerms()} />
 				    </Column>

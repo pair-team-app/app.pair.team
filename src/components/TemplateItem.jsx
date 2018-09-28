@@ -37,16 +37,14 @@ class TemplateItem extends Component {
 						<Row><FontAwesome name="check-circle" className={faClass} /></Row>
 					</Column>
 				</Row>
-				<Row>
-					<Column flexGrow={1} horizontal="start">
-						<Row className="template-item-title">{this.props.title.replace('-portrait', '')}</Row>
-						<Row className="template-item-text">{this.props.description.replace('-portrait', '')}</Row>
-						<Row><button className={btnClass} onClick={()=> this.handleSelectClick()}>
-							{this.state.isSelected && ('Selected')}
-							{!this.state.isSelected && ('$' + this.props.price + ' Buy')}
-						</button></Row>
-					</Column>
-				</Row>
+				{/*<Row>*/}
+					{/*<Column flexGrow={1} horizontal="start">*/}
+						{/*<Row><button className={btnClass} onClick={()=> this.handleSelectClick()}>*/}
+							{/*{this.state.isSelected && ('Selected')}*/}
+							{/*{!this.state.isSelected && ('$' + this.props.price + ' Buy')}*/}
+						{/*</button></Row>*/}
+					{/*</Column>*/}
+				{/*</Row>*/}
 			</div>
 		);
 	}

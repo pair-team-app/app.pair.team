@@ -1,7 +1,6 @@
 
 .template-item {
 	width: 300px;
-	height: 400px;
 	padding: 10px;
 	margin: 10px;
 }
@@ -22,8 +21,8 @@
 	width: 300px;
 	height: 213px;
 	border-radius: 6px;
-	box-shadow: 0 0 20px #cccccc;
-	background-color: #f3f3f3;
+	box-shadow: 0 0 20px #000000;
+	background-color: #4e4e4e;
 }
 
 .template-item-image-portrait {
@@ -38,24 +37,6 @@
 	-webkit-transform: translate(-50%, -50%);
 	color: #7ed321;
 	font-size: 36px;
-}
-
-.template-item-title {
-	font-family: "Poppins SemiBold", sans-serif;
-	font-size: 16px;
-	color: #000000;
-	font-weight: 600;
-	text-align: left;
-	margin: 20px 0 12px 0;
-}
-
-.template-item-text {
-	font-family: "Poppins Regular", sans-serif;
-	font-size: 16px;
-	color: #9b9b9b;
-	text-align: left;
-	line-height: 22px;
-	margin-bottom: 15px;
 }
 
 .template-item-button {

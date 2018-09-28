@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './ProjectItem.css';
 
-// import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
 
 
@@ -15,11 +14,6 @@ class ProjectItem extends Component {
 	}
 
 	render() {
-// 		const faStyle = {
-// 			color: '#999999',
-// 			fontSize: '12px'
-// 		};
-
 		return (
 			<div className="project-item" onClick={()=> this.props.onClick()}>
 				<Column flexGrow={1} horizontal="center">

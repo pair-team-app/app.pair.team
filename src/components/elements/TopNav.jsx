@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './TopNav.css';
 
-import MediaQuery from 'react-responsive';
 import { Column, Row } from 'simple-flexbox';
 
 
@@ -21,52 +20,33 @@ class TopNav extends Component {
 	}
 
 	render() {
-// 		const faGlyph = (this.props.isTooltip) ? 'spinner' : 'times';
 // 		const faqLinkClass = (this.props.step === 1) ? 'nav-link nav-link-active' : 'nav-link';
 // 		const usersLinkClass = (this.props.step === 2) ? 'nav-link nav-link-active' : 'nav-link';
 
 		return (
 			<Row vertical="start">
 				<Column flexGrow={1} horizontal="start">
-					<Row vertical="center">
-						{(this.props.step < 3 || this.props.step > 7) && (
-							<a href="/"><img src="/images/logo_header.svg" className="nav-logo" alt="Design Engine" /></a>
-						)}
-
-						{(this.props.step >= 3 && this.props.step < 8) && (
-							<a href="/"><img src="/images/logo_footer.svg" className="nav-logo2" alt="Design Engine" /></a>
-						)}
+					<Row vertical="center" style={{height:'40px'}}>
+						<div style={{width:'97px'}} />
 					</Row>
 				</Column>
 
-				{(this.props.step < 3 || this.props.step > 7) && (
-					<Column flexGrow={1} horizontal="center">
-						<Row vertical="center" style={{height:'18px'}}>
-							<MediaQuery minWidth={840}>
-								<span>
-									<span className="nav-link" onClick={()=> this.props.onStep1()}>Get Started</span>
-									<span className="nav-link" onClick={()=> this.props.onProjects()}>View Examples</span>
-									{/*<span className={faqLinkClass} onClick={()=> this.props.onFAQ()}>What is Design AI?</span>*/}
-								</span>
-							</MediaQuery>
-						</Row>
-					</Column>
-				)}
+				<Column flexGrow={1} horizontal="center">
+					<Row vertical="center" style={{height:'40px'}}>
+						<a href="/"><img src="/images/logo_footer.svg" className="nav-logo" alt="Design Engine" /></a>
+					</Row>
+				</Column>
+
 
 				<Column flexGrow={1} horizontal="end">
-					<Row vertical="center" style={{height:'18px'}}>
-						<MediaQuery minWidth={840}>
-							{(this.props.step < 3 || this.props.step > 7) && (
-								<div style={{width:'158px'}} />
-							)}
+					<Row vertical="center" horizontal="end" style={{width:'97px',height:'40px'}}>
+						{((this.props.step < 3 || this.props.step > 7) && this.props.step !== 10) && (
+							<span className="nav-link"><a onClick={()=> this.props.onManifesto()}>Manifesto</a></span>
+						)}
 
-							{(this.props.step >= 3 && this.props.step < 8) && (
-								<img src="/images/close.png" className="nav-link-close" alt="Close" onClick={()=> this.props.onStep0()} />
-							)}
-						</MediaQuery>
-						<MediaQuery maxWidth={840}>
-							<span className="nav-link" onClick={()=> this.props.onStep1()}>Get Started</span>
-						</MediaQuery>
+						{((this.props.step >= 3 && this.props.step < 8) || (this.props.step === 10)) && (
+							<span className="nav-link"><a onClick={()=> this.props.onClose()}>Close</a></span>
+						)}
 					</Row>
 				</Column>
 			</Row>

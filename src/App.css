@@ -8,7 +8,7 @@
 	width: 75%;
 	/*border: 2px dashed #ff00ff;*/
 	padding: 0 1px;
-	margin-bottom: 160px;
+	margin-bottom: 30px;
 }
 
 .top-nav {
@@ -20,7 +20,6 @@
 	width: 100%;
 	margin-bottom: 20px;
 	padding-top: 30px;
-	border-top: 1px solid #cad7e2;
 }
 
 .flex-wrapper {
@@ -34,16 +33,18 @@
 	font-family: "Poppins Bold", sans-serif;
 	font-weight: 700;
 	line-height: 64px;
+	color: #ffffff;
 }
 
 .step-subheader-text {
 	margin: 10px 20px 20px 0;
 	font-size: 42px;
 	line-height: 48px;
+	color: #c6c6c6;
 }
 
 .step-text, .step-text-margin {
-	color: #4a4a4a;
+	color: #c6c6c6;
 	font-size: 16px;
 	font-weight: 400;
 	margin: 20px 0 20px 0;
@@ -54,10 +55,8 @@
 	margin: 10px 40px 30px 40px;
 }
 
-.step-text-quote {
-	color: #000000;
-	font-weight: 500;
-	margin: -10px 0 20px 0;
+.step-text-underline {
+	text-decoration: underline;
 }
 
 .input-title {
@@ -84,11 +83,12 @@
 	border: none;
 	border-radius: 5px;
 	min-width: 150px;
+	font-family: "Roboto Mono", sans-serif;
 }
 
 .action-button:hover {
 	cursor: pointer;
-	box-shadow: 0 0 20px #cccccc;
+	box-shadow: 0 0 20px #202020;
 }
 
 .step-button {

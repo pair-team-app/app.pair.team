@@ -5,24 +5,9 @@
 }
 
 .project-item-wrapper {
-}
-
-.intro-projects {
-	margin: 40px 0;
-	padding: 0 100px;
-	border-bottom: 1px solid #cad7e2;
-}
-
-.app-icon-wrapper {
-	width: 85%;
-	flex-wrap: wrap;
-
+	margin-top: 30px;
 }
 
 
 @media only screen and (max-width: 600px) {
-	.intro-projects {
-		margin: 20px 0 40px 0;
-		padding: 0 20px;
-	}
 }

@@ -1,8 +1,11 @@
 
 .project-item {
-	width: 270px;
+	width: 260px;
 	height: 201px;
 	margin: 10px;
+	background-color: #4e4e4e;
+	border-radius: 10px;
+	box-shadow: 0 0 20px #000000;
 }
 
 .project-item:hover {
@@ -12,14 +15,9 @@
 .project-item-image {
 	width: 260px;
 	height: 201px;
-	margin-bottom: 5px;
+	border-radius: 10px;
 }
 
-.project-item-text {
-	font-size: 11px;
-	color: #666666;
-	font-weight: bold;
-}
 
 @media only screen and (max-width: 600px) {
 	.project-item {
@@ -29,7 +27,5 @@
 	.project-item-image {
 		width: 68px;
 		height: 52px;
-		margin-bottom: 5px;
 	}
-
 }
