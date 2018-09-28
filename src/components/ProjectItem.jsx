@@ -14,10 +14,12 @@ class ProjectItem extends Component {
 	}
 
 	render() {
+		const imgClass = (this.props.title.includes('-portrait') || this.props.description.includes('-portrait')) ? 'project-item-image project-item-image-portrait' : 'project-item-image';
+
 		return (
 			<div className="project-item" onClick={()=> this.props.onClick()}>
 				<Column flexGrow={1} horizontal="center">
-					<Row><img className="project-item-image" src={this.props.image} alt={this.props.title} /></Row>
+					<Row><img className={imgClass} src={this.props.image} alt={this.props.title} /></Row>
 				</Column>
 			</div>
 		);

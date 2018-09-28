@@ -20,7 +20,7 @@
 	-webkit-transform: translate(-50%, -50%);
 	z-index: 11;
 	overflow: hidden;
-	box-shadow: 0 0 20px #cccccc;
+	box-shadow: 0 0 20px #000000;
 	text-align: center;
 	padding: 40px;
 }
@@ -58,5 +58,5 @@
 
 .overlay-button:hover {
 	cursor: pointer;
-	box-shadow: 0 0 20px #cccccc;
+	box-shadow: 0 0 20px #202020;
 }

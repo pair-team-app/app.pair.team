@@ -28,7 +28,6 @@ import GetStartedStep from './components/steps/GetStartedStep';
 import ManifestoStep from './components/steps/ManifestoStep';
 import PrivacyStep from './components/steps/PrivacyStep';
 import PurchaseStep from './components/steps/PurchaseStep';
-import SplashIntro from './components/elements/SplashIntro';
 import TemplateStep from './components/steps/TemplateStep';
 import TermsStep from './components/steps/TermsStep';
 import Tooltip from './components/elements/Tooltip';
@@ -305,11 +304,6 @@ class App extends Component {
 // 		console.log("coords", JSON.stringify(this.props.coords));
     return (
     	<div>
-		    {this.state.isIntro && (
-		    	<SplashIntro onComplete={()=> this.handleIntroComplete()}/>
-		    )}
-
-
 		    {!this.state.isIntro && (
 		    	<div>
 				    <Column horizontal="center" className="page-wrapper">
@@ -391,12 +385,12 @@ class App extends Component {
 						    )}
 					    </div>
 				    </Column>
-				    <Column flexGrow={1} horizontal="center" className="bottom-nav">
-				      <BottomNav
-					      onManifesto={()=> this.handleManifesto()}
-					      onPrivacy={()=> this.handlePrivacy()}
-					      onTerms={()=> this.handleTerms()} />
-				    </Column>
+
+			      <BottomNav
+				      onManifesto={()=> this.handleManifesto()}
+				      onPrivacy={()=> this.handlePrivacy()}
+				      onTerms={()=> this.handleTerms()} />
+
 
 				    {this.state.isTooltip && (
 				    	<Tooltip content={this.state.tooltip} />

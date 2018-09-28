@@ -273,36 +273,25 @@ class GeneratingStep extends Component {
 // 		const btnSelectClass = (this.selectedItems.length === this.state.files.length) ? 'action-button step-button selected-button' : 'action-button step-button';
 // 		const btnSelectCaption = (this.selectedItems.length === this.state.files.length) ? 'Select None' : 'Select All ('+this.state.files.length+')';
 
-		const btnClass = (this.selectedItems.length > 0) ? 'form-button' : 'form-button form-button-disabled';
-
 		return (
 			<div>
-				<Row vertical="start">
-					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Design Engine is rendering…</div>
-						<div className="input-title">Select one interface design style.</div>
-						{/*<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><div className="step-text-margin"><button className={btnSelectClass} onClick={()=> this.onSelectAll()}>{btnSelectCaption}</button></div></Row>*/}
-						<Row horizontal="end" style={{width:'100%', marginRight:'20px'}}><div className="step-text-margin">
-							<select name="tones" value={this.tones} onChange={this.handleFilterChange}>
-								{tones.map(item => {
-									return (
-										<option key={item.id} value={item.id}>{item.title}</option>
-									);
-								})}
-							</select>
-							<select name="colors" value={this.colors} onChange={this.handleFilterChange}>
-								{colors.map(item => {
-									return (
-										<option key={item.id} value={item.id}>{item.title}</option>
-									);
-								})}
-							</select>
-						</div></Row>
-					</Column>
-				</Row>
 				<Row horizontal="center">
-					<button className="form-button form-button-secondary" onClick={()=> this.props.onCancel()}>Cancel</button>
-					<button className={btnClass} onClick={()=> this.onNext()}>Next</button>
+					<div style={{width:'100%'}}>
+						<select name="tones" value={this.tones} onChange={this.handleFilterChange}>
+							{tones.map(item => {
+								return (
+									<option key={item.id} value={item.id}>{item.title}</option>
+								);
+							})}
+						</select>
+						<select name="colors" value={this.colors} onChange={this.handleFilterChange}>
+							{colors.map(item => {
+								return (
+									<option key={item.id} value={item.id}>{item.title}</option>
+								);
+							})}
+						</select>
+					</div>
 				</Row>
 				<Row horizontal="center">
 					<div className="template-item-wrapper">

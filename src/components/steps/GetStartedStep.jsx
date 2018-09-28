@@ -14,6 +14,7 @@ class GetStartedStep extends Component {
 
 		this.state = {
 			renders  : [],
+			total    : 0,
 			lightBox : {
 				isVisible : false,
 				url : ''
@@ -24,11 +25,14 @@ class GetStartedStep extends Component {
 	componentDidMount() {
 		let formData = new FormData();
 		formData.append('action', 'RECENT_RENDERS');
-		formData.append('amount', '10');
+		formData.append('amount', '12');
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response) => {
 				console.log("RECENT_RENDERS", JSON.stringify(response.data));
-				this.setState({ renders : response.data.renders });
+				this.setState({
+					renders : response.data.renders,
+					total   : response.data.total
+				});
 			}).catch((error) => {
 		});
 	}
@@ -52,13 +56,17 @@ class GetStartedStep extends Component {
 		const items = this.state.renders.map((item, i, arr) => {
 			return (
 				<Column key={i}>
-					<ProjectItem image={item.filename} title={item.title} onClick={()=> this.handleProject(item.filename)} />
+					<ProjectItem
+						image={item.filename}
+						title={item.title}
+						description={item.description}
+						onClick={()=> this.handleProject(item.filename)} />
 				</Column>
 			);
 		});
 
 		return (
-			<div>
+			<div className="intro-wrapper">
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">Engineers, start your Design Engine</div>
@@ -70,7 +78,7 @@ class GetStartedStep extends Component {
 						</Row>
 						<img src="/images/intro1.png" className="intro-image" alt="MacBook" />
 
-						<div className="step-text step-text-underline">Recent Renders</div>
+						<div className="step-text">Recent Renders ({(this.state.total+'').replace(/.(?=(?:[0-9]{3})+\b)/g, '$&,')})</div>
 						<div className="project-item-wrapper">
 							<Row horizontal="center" style={{flexWrap:'wrap'}}>
 								{items}
