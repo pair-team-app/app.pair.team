@@ -66,7 +66,7 @@ class GetStartedStep extends Component {
 		});
 
 		return (
-			<div className="intro-wrapper">
+			<div className="home-wrapper">
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<div className="step-header-text">Engineers, start your Design Engine</div>
@@ -76,7 +76,7 @@ class GetStartedStep extends Component {
 							<button className="action-button step-button" onClick={()=> this.props.onSystem(2)} style={{marginRight:'20px'}}>iOS 12</button>
 							<button className="action-button step-button" onClick={()=> this.props.onSystem(3)}>Material Design</button>
 						</Row>
-						<img src="/images/intro1.png" className="intro-image" alt="MacBook" />
+						<img src="/images/animation.png" className="home-image" alt="Animation" />
 
 						<div className="step-text">Recent Renders ({(this.state.total+'').replace(/.(?=(?:[0-9]{3})+\b)/g, '$&,')})</div>
 						<div className="project-item-wrapper">
