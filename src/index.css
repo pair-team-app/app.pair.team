@@ -10,16 +10,12 @@ body {
   color: #c6c6c6;
 }
 
-button:focus, input:focus, textarea:focus {
-  outline: none;
-}
-
-li {
-  margin-bottom: 20px;
-}
-
 p {
   line-height: 20px;
+}
+
+*:focus {
+  outline: none;
 }
 
 
