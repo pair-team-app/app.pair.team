@@ -5,6 +5,7 @@ import tones from '../../tones.json';
 import colors from '../../colors.json';
 
 import axios from "axios/index";
+import onClickOutside from "react-onclickoutside";
 import { Column, Row } from 'simple-flexbox';
 
 import LightBox from '../elements/LightBox';
@@ -316,4 +317,4 @@ class GeneratingStep extends Component {
 	}
 }
 
-export default GeneratingStep;
+export default onClickOutside(GeneratingStep);
