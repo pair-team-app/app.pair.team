@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './ImageryForm.css';
 
 import axios from 'axios';
-import Dropzone from 'react-dropzone';
 import Masonry from 'react-masonry-component';
 
 import { Column, Row } from 'simple-flexbox';
@@ -43,46 +42,6 @@ class ImageryForm extends Component {
 				this.setState({ imagery : imagery });
 
 			}).catch((error) => {
-		});
-	}
-
-	dzComponent() {
-		let dzStyle = {
-			marginTop : '85px',
-			fontSize : '14px',
-			color : '#ffffff',
-			textAlign : 'center'
-		};
-
-		return (
-			<Dropzone key={-1} disabled={false} onDrop={this.onDrop.bind(this)} className="dropzone">
-				<div style={dzStyle}>Drop images here…</div>
-			</Dropzone>
-		);
-	}
-
-	onDrop(dzFiles) {
-		console.log("onDrop()");
-
-		let files = {};
-		dzFiles.forEach(file => {
-			files[file.name] = {};
-			console.log("UPLOADING… "+file.name);
-
-			let formData = new FormData();
-			formData.append('file', file);
-
-			const config = {
-				headers : {
-					'content-type' : 'multipart/form-data'
-				}
-			};
-
-			axios.post('http://cdn.designengine.ai/upload.php', formData, config)
-				.then((response) => {
-					console.log("UPLOAD", JSON.stringify(response.data));
-				}).catch((error) => {
-			});
 		});
 	}
 
