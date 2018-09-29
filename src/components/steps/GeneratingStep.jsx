@@ -8,6 +8,8 @@ import axios from "axios/index";
 import onClickOutside from "react-onclickoutside";
 import { Column, Row } from 'simple-flexbox';
 
+import Dropdown from '../elements/Dropdown';
+import DropdownMultiple from '../elements/DropdownMultiple';
 import LightBox from '../elements/LightBox';
 import TemplateItem from '../TemplateItem';
 
@@ -19,8 +21,8 @@ class GeneratingStep extends Component {
 			elapsed  : 0,
 			files    : [],
 			maxFiles : 0,
-			tones    : 0,
-			colors   : 0,
+			tones    : [],
+			colors   : [],
 			status   : 'Design Engine is processing…',
 			lightBox : {
 				isVisible : false,
@@ -28,7 +30,84 @@ class GeneratingStep extends Component {
 				file_id   : 0,
 				price     : 0,
 				url       : ''
-			}
+			},
+
+			location: [
+				{
+					id: 0,
+					title: 'New York',
+					selected: false,
+					key: 'location'
+				},
+				{
+					id: 1,
+					title: 'Dublin',
+					selected: false,
+					key: 'location'
+				},
+				{
+					id: 2,
+					title: 'California',
+					selected: false,
+					key: 'location'
+				},
+				{
+					id: 3,
+					title: 'Istanbul',
+					selected: false,
+					key: 'location'
+				},
+				{
+					id: 4,
+					title: 'Izmir',
+					selected: false,
+					key: 'location'
+				},
+				{
+					id: 5,
+					title: 'Oslo',
+					selected: false,
+					key: 'location'
+				},
+				{
+					id: 6,
+					title: 'Zurich',
+					selected: false,
+					key: 'location'
+				}
+			],
+			fruit: [
+				{
+					id: 0,
+					title: 'Apple',
+					selected: false,
+					key: 'fruit'
+				},
+				{
+					id: 1,
+					title: 'Orange',
+					selected: false,
+					key: 'fruit'
+				},
+				{
+					id: 2,
+					title: 'Grape',
+					selected: false,
+					key: 'fruit'
+				},
+				{
+					id: 3,
+					title: 'Pomegranate',
+					selected: false,
+					key: 'fruit'
+				},
+				{
+					id: 4,
+					title: 'Strawberry',
+					selected: false,
+					key: 'fruit'
+				}
+			]
 		};
 
 		this.elapsedInterval = null;
@@ -43,6 +122,10 @@ class GeneratingStep extends Component {
 	}
 
 	componentDidMount() {
+		
+
+
+
 		this.checkQueue();
 
 		let self = this;
@@ -158,6 +241,21 @@ class GeneratingStep extends Component {
 				}
 			});
 	}
+
+	toggleSelected = (id, key) => {
+		let temp = [...this.state[key]]
+		temp[id].selected = !temp[id].selected;
+		this.setState({
+			[key]: temp
+		})
+	};
+
+	resetThenSet = (id, stateKey) => {
+		let fruits = [...this.state.fruit];
+		fruits.forEach(item => item.selected = false);
+		fruits[id].selected = true;
+	};
+
 
 	handleFilterChange(event) {
 		console.log("handleFilterChange("+event+")", [event.target.name]);
@@ -278,6 +376,20 @@ class GeneratingStep extends Component {
 			<div>
 				<Row horizontal="center">
 					<div style={{width:'100%'}}>
+						<DropdownMultiple
+							titleHelper="Location"
+							title="Select location"
+							list={this.state.location}
+							toggleItem={this.toggleSelected}
+						/>
+
+						<Dropdown
+							title="Select fruit"
+							list={this.state.fruit}
+							resetThenSet={this.resetThenSet}
+						/>
+
+
 						<select name="tones" value={this.tones} onChange={this.handleFilterChange}>
 							{tones.map(item => {
 								return (
