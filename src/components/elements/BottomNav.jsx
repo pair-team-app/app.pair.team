@@ -37,7 +37,7 @@ class BottomNav extends Component {
 					<MediaQuery minWidth={840}>
 						<Row vertical="start" horizontal="center">
 							<Column flexGrow={1} horizontal="start">
-								<a href="/"><img src="/images/logo_footer.svg" className="footer-logo" alt="Design Engine" /></a>
+								<a href="/"><img src="/images/logo.svg" className="footer-logo" alt="Design Engine" /></a>
 							</Column>
 							<Column flexGrow={1} horizontal="start">
 								<div className="footer-link" onClick={()=> this.props.onManifesto()}>Manifesto</div>

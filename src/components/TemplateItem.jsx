@@ -28,12 +28,12 @@ class TemplateItem extends Component {
 		const faClass = (this.state.isSelected) ? 'template-item-check' : 'template-item-check is-hidden';
 
 		return (
-			<div className="template-item" onClick={()=> this.handleSelectClick()}>
+			<div className="template-item">
 				<Row>
 					<Column flexGrow={1} horizontal="center" className="template-item-container">
-						{/*<Row><img className={imgClass} src={this.props.image} alt={this.props.title} onClick={()=> this.props.onImageClick()} /></Row>*/}
-						<Row><img className={imgClass} src={this.props.image} alt={this.props.title} /></Row>
-						<div className={className}><FontAwesome name="check" className={faClass} /></div>
+						<Row><img className={imgClass} src={this.props.image} alt={this.props.title} onClick={()=> this.props.onImageClick()} /></Row>
+						{/*<Row><img className={imgClass} src={this.props.image} alt={this.props.title} /></Row>*/}
+						<div className={className} onClick={()=> this.handleSelectClick()}><FontAwesome name="check" className={faClass} /></div>
 					</Column>
 				</Row>
 			</div>

@@ -6,7 +6,7 @@
 	text-align: center;
 	color: #ffffff;
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: 400;
 	position: fixed;
 	left: 50%;
 	bottom: 40px;
@@ -30,7 +30,6 @@
 .tooltip-text {
 	padding: 20px;
 	display: table-cell;
-	font-weight: 500;
 	vertical-align: middle;
 }
 

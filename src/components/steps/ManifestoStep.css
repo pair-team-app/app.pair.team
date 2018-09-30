@@ -1,5 +1,14 @@
 
+.manifesto-wrapper {
+	margin: 0 100px 0 100px;
+}
+
 .manifesto-text {
 	margin-top: 20px;
 	text-align: left;
+}
+
+.manifesto-image {
+	width: 100%;
+	margin: 40px 0;
 }

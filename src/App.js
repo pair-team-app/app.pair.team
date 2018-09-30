@@ -159,6 +159,8 @@ class App extends Component {
 		let formData = new FormData();
 		this.templateID = obj.templateID;
 
+		cookie.save('template_id', this.templateID, { path: '/' });
+
 		formData.append('action', 'MAKE_ORDER');
 		formData.append('template_id', this.templateID);
 		formData.append('email', obj.email);

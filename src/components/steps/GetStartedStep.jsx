@@ -80,7 +80,7 @@ class GetStartedStep extends Component {
 
 						<div className="step-text">Recent Renders ({(this.state.total+'').replace(/.(?=(?:[0-9]{3})+\b)/g, '$&,')})</div>
 						<div className="project-item-wrapper">
-							<Row horizontal="center" style={{flexWrap:'wrap'}}>
+							<Row horizontal="space-between" style={{flexWrap:'wrap'}}>
 								{items}
 							</Row>
 						</div>

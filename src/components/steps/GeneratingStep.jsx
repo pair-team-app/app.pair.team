@@ -6,6 +6,7 @@ import colors from '../../colors.json';
 import parts from '../../parts.json';
 
 import axios from "axios/index";
+import cookie from 'react-cookies';
 import onClickOutside from "react-onclickoutside";
 import { Column, Row } from 'simple-flexbox';
 
@@ -21,6 +22,7 @@ class GeneratingStep extends Component {
 		this.state = {
 			elapsed  : 0,
 			files    : [],
+			allFiles : [],
 			maxFiles : 0,
 			tones    : [],
 			colors   : [],
@@ -35,10 +37,11 @@ class GeneratingStep extends Component {
 			}
 		};
 
+		this.fileCount = 0;
+
 		this.elapsedInterval = null;
 		this.orderInterval = null;
 		this.fileInterval = null;
-		this.statusInterval = null;
 		this.selectedItems = [];
 
 		this.startTime = (new Date()).getTime();
@@ -87,31 +90,20 @@ class GeneratingStep extends Component {
 		this.checkQueue();
 
 		let self = this;
-		this.orderInterval = setInterval(function() {
-			let formData = new FormData();
-			formData.append('action', 'ORDER_PING');
-			formData.append('order_id', self.props.orderID);
-			axios.post('https://api.designengine.ai/templates.php', formData)
-				.then((response)=> {
-				}).catch((error) => {
-			});
-		}, 5000);
+// 		this.orderInterval = setInterval(function() {
+// 			let formData = new FormData();
+// 			formData.append('action', 'ORDER_PING');
+// 			formData.append('order_id', self.props.orderID);
+// 			axios.post('https://api.designengine.ai/templates.php', formData)
+// 				.then((response)=> {
+// 				}).catch((error) => {
+// 			});
+// 		}, 5000);
 
 
 		this.elapsedInterval = setInterval(function() {
 			self.setState({ elapsed : parseInt((new Date()).getTime() * 0.001, 10) - parseInt(self.startTime * 0.001, 10) });
 		}, 1000);
-
-// 		this.statusInterval = setInterval(function() {
-// 			self.checkStatus();
-// 		}, 1000);
-// 		this.checkStatus();
-
-		this.fileInterval = setInterval(function() {
-			self.checkNewFiles();
-		}, 3000);
-		this.checkNewFiles();
-
 
 		let formData = new FormData();
 		formData.append('action', 'COLOR_SETS');
@@ -121,13 +113,29 @@ class GeneratingStep extends Component {
 				console.log("COLOR_SETS", JSON.stringify(response.data));
 				self.setState({ maxFiles : 500 });
 			});
+
+		formData = new FormData();
+		formData.append('action', 'FILE_CHECK');
+		formData.append('order_id', (cookie.load('template_id') === 2) ? "599" : "600");
+		axios.post('https://api.designengine.ai/templates.php', formData)
+			.then((response)=> {
+				console.log("FILE_CHECK", JSON.stringify(response.data));
+				let files = [];
+				response.data.files.reverse().forEach(file => {
+					files.push(file);
+				});
+				this.setState({ allFiles : files });
+				this.fileInterval = setInterval(function() {
+					self.checkNewFiles();
+				}, 750);
+				this.checkNewFiles();
+			});
 	}
 
 	componentWillUnmount() {
 		clearInterval(this.elapsedInterval);
 		clearInterval(this.orderInterval);
 		clearInterval(this.fileInterval);
-		clearInterval(this.statusInterval);
 	}
 
 	checkStatus() {
@@ -142,46 +150,44 @@ class GeneratingStep extends Component {
 	}
 
 	checkNewFiles() {
-		let self = this;
-		let formData = new FormData();
-		formData.append('action', 'FILE_CHECK');
-		formData.append('order_id', this.props.orderID);
-		axios.post('https://api.designengine.ai/templates.php', formData)
-			.then((response)=> {
-				console.log("FILE_CHECK", JSON.stringify(response.data));
-				if (!response.data.running) {
-					clearInterval(self.elapsedInterval);
-					clearInterval(self.orderInterval);
-					clearInterval(self.fileInterval);
-					clearInterval(self.statusInterval);
-					self.props.onTooltip({ txt : 'Design Engine is ready.' });
-				}
+		let files = this.state.allFiles.slice(0, Math.min(++this.fileCount, this.state.allFiles.length));
+		const rate = files.length > 0 ? Math.ceil(this.state.files.length / this.state.elapsed) : 0;
 
-				if (response.data.files.length !== self.state.files.length || self.state.files.length === 0) {
-					//const percent = this.state.files.length > 0 ? Math.round((this.state.files.length / this.state.maxFiles) * 100) : 0;
-					const rate = this.state.files.length > 0 ? Math.ceil(this.state.files.length / this.state.elapsed) : 0;
+		this.setState({ files : files });
+		this.props.onTooltip({
+			txt : 'Rendering ' + this.state.files.length + ' of ' + this.state.maxFiles + ' Designs, ' + rate + ' per second.'
+		});
 
-
-					if (self.state.files.length === 0) {
-						//setTimeout(function() {
-							self.props.onTooltip({
-								txt : 'Rendering ' + self.state.files.length + ' of ' + self.state.maxFiles + ' Designs, ' + rate + ' per second.'
-							});
-						//}, 2000);
-
-					} else {
-						self.props.onTooltip({
-							txt : 'Rendering ' + this.state.files.length + ' of ' + this.state.maxFiles + ' Designs, ' + rate + ' per second.'
-						});
-					}
-				}
-
-				let files = [];
-				response.data.files.reverse().forEach(file => {
-					files.push(file);
-				});
-				this.setState({ files : files });
-			});
+// 		let self = this;
+// 		let formData = new FormData();
+// 		formData.append('action', 'FILE_CHECK');
+// 		formData.append('order_id', this.props.orderID);
+// 		axios.post('https://api.designengine.ai/templates.php', formData)
+// 			.then((response)=> {
+// 				console.log("FILE_CHECK", JSON.stringify(response.data));
+// 				if (!response.data.running) {
+// 					clearInterval(self.elapsedInterval);
+// 					clearInterval(self.orderInterval);
+// 					clearInterval(self.fileInterval);
+// 					self.props.onTooltip({ txt : 'Design Engine is ready.' });
+//
+// 				} else {
+// 					if (response.data.files.length !== self.state.files.length || self.state.files.length === 0) {
+// 						//const percent = this.state.files.length > 0 ? Math.round((this.state.files.length / this.state.maxFiles) * 100) : 0;
+// 						const rate = this.state.files.length > 0 ? Math.ceil(this.state.files.length / this.state.elapsed) : 0;
+// 						self.props.onTooltip({
+// 							txt : 'Rendering ' + this.state.files.length + ' of ' + this.state.maxFiles + ' Designs, ' + rate + ' per second.'
+// 						});
+//
+// 					}
+// 				}
+//
+// 				let files = [];
+// 				response.data.files.reverse().forEach(file => {
+// 					files.push(file);
+// 				});
+// 				this.setState({ files : files });
+// 			});
 	}
 
 	checkQueue() {
