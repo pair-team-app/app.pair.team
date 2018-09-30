@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './GeneratingStep.css';
 import tones from '../../tones.json';
 import colors from '../../colors.json';
+import parts from '../../parts.json';
 
 import axios from "axios/index";
 import onClickOutside from "react-onclickoutside";
@@ -23,6 +24,7 @@ class GeneratingStep extends Component {
 			maxFiles : 0,
 			tones    : [],
 			colors   : [],
+			parts    : [],
 			status   : 'Design Engine is processing…',
 			lightBox : {
 				isVisible : false,
@@ -30,84 +32,7 @@ class GeneratingStep extends Component {
 				file_id   : 0,
 				price     : 0,
 				url       : ''
-			},
-
-			location: [
-				{
-					id: 0,
-					title: 'New York',
-					selected: false,
-					key: 'location'
-				},
-				{
-					id: 1,
-					title: 'Dublin',
-					selected: false,
-					key: 'location'
-				},
-				{
-					id: 2,
-					title: 'California',
-					selected: false,
-					key: 'location'
-				},
-				{
-					id: 3,
-					title: 'Istanbul',
-					selected: false,
-					key: 'location'
-				},
-				{
-					id: 4,
-					title: 'Izmir',
-					selected: false,
-					key: 'location'
-				},
-				{
-					id: 5,
-					title: 'Oslo',
-					selected: false,
-					key: 'location'
-				},
-				{
-					id: 6,
-					title: 'Zurich',
-					selected: false,
-					key: 'location'
-				}
-			],
-			fruit: [
-				{
-					id: 0,
-					title: 'Apple',
-					selected: false,
-					key: 'fruit'
-				},
-				{
-					id: 1,
-					title: 'Orange',
-					selected: false,
-					key: 'fruit'
-				},
-				{
-					id: 2,
-					title: 'Grape',
-					selected: false,
-					key: 'fruit'
-				},
-				{
-					id: 3,
-					title: 'Pomegranate',
-					selected: false,
-					key: 'fruit'
-				},
-				{
-					id: 4,
-					title: 'Strawberry',
-					selected: false,
-					key: 'fruit'
-				}
-			]
+			}
 		};
 
 		this.elapsedInterval = null;
@@ -117,13 +42,46 @@ class GeneratingStep extends Component {
 		this.selectedItems = [];
 
 		this.startTime = (new Date()).getTime();
-
-		this.handleFilterChange = this.handleFilterChange.bind(this);
 	}
 
 	componentDidMount() {
-		
+		let list1 = [];
+		tones.forEach(function(item, i) {
+			list1.push({
+				id       : item.id,
+				title    : item.title,
+				selected : false,
+				key      : 'tones'
+			});
+		});
 
+		let list2 = [];
+		colors.forEach(function(item, i) {
+			list2.push({
+				id       : item.id,
+				title    : item.title,
+				hex      : item.hex,
+				gradient : item.gradient,
+				selected : false,
+				key      : 'colors'
+			});
+		});
+
+		let list3 = [];
+		parts.forEach(function(item, i) {
+			list3.push({
+				id       : item.id,
+				title    : item.title,
+				selected : false,
+				key      : 'parts'
+			});
+		});
+
+		this.setState({
+			tones  : list1,
+			colors : list2,
+			parts  : list3
+		});
 
 
 		this.checkQueue();
@@ -243,24 +201,17 @@ class GeneratingStep extends Component {
 	}
 
 	toggleSelected = (id, key) => {
-		let temp = [...this.state[key]]
-		temp[id].selected = !temp[id].selected;
-		this.setState({
-			[key]: temp
-		})
+		console.log('toggleSelected()', id, key);
+		let temp = [...this.state[key]];
+		temp[id-1].selected = !temp[id-1].selected;
+		this.setState({ [key] : temp });
 	};
 
 	resetThenSet = (id, stateKey) => {
-		let fruits = [...this.state.fruit];
-		fruits.forEach(item => item.selected = false);
-		fruits[id].selected = true;
+		let tones = [...this.state[stateKey]];
+		tones.forEach(item => item.selected = false);
+		tones[id-1].selected = true;
 	};
-
-
-	handleFilterChange(event) {
-		console.log("handleFilterChange("+event+")", [event.target.name]);
-		this.setState({ [event.target.name] : event.target.value });
-	}
 
 	handleLightBoxClick() {
 		let lightBox = this.state.lightBox;
@@ -376,34 +327,24 @@ class GeneratingStep extends Component {
 			<div>
 				<Row horizontal="center">
 					<div style={{width:'100%'}}>
+						<Dropdown
+							title="Select parts"
+							list={this.state.parts}
+							resetThenSet={this.resetThenSet}
+						/>
+
 						<DropdownMultiple
-							titleHelper="Location"
-							title="Select location"
-							list={this.state.location}
+							titleHelper="Color"
+							title="Select color(s)"
+							list={this.state.colors}
 							toggleItem={this.toggleSelected}
 						/>
 
 						<Dropdown
-							title="Select fruit"
-							list={this.state.fruit}
+							title="Select tone"
+							list={this.state.tones}
 							resetThenSet={this.resetThenSet}
 						/>
-
-
-						<select name="tones" value={this.tones} onChange={this.handleFilterChange}>
-							{tones.map(item => {
-								return (
-									<option key={item.id} value={item.id}>{item.title}</option>
-								);
-							})}
-						</select>
-						<select name="colors" value={this.colors} onChange={this.handleFilterChange}>
-							{colors.map(item => {
-								return (
-									<option key={item.id} value={item.id}>{item.title}</option>
-								);
-							})}
-						</select>
 					</div>
 				</Row>
 				<Row horizontal="center">

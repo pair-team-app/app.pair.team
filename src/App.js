@@ -99,7 +99,11 @@ class App extends Component {
 		window.scrollTo(0, 0);
 
 		this.setState({ step : 5 });
-		this.handleStartGenerating({ templateID : systemID });
+		this.handleMakeOrder({
+			templateID : systemID,
+			email      : 'orders@designengine.ai',
+			title      : 'Untitled'
+		});
 	}
 
 	handleGettingStartedStep() {
@@ -148,8 +152,8 @@ class App extends Component {
 		this.setState({ step : 4 });
 	}
 
-	handleStartGenerating(obj) {
-		console.log("handleStartGenerating()", obj);
+	handleMakeOrder(obj) {
+		console.log("handleMakeOrder()", obj);
 
 		let self = this;
 		let formData = new FormData();
@@ -343,7 +347,7 @@ class App extends Component {
 								    orderID={this.state.orderID}
 								    onTooltip={(obj)=> this.showStatus(obj)}
 								    onCancel={()=> this.handleGettingStartedStep()}
-								    onStart={(obj)=> this.handleStartGenerating(obj)}
+								    onStart={(obj)=> this.handleMakeOrder(obj)}
 								    onClick={(obj)=> this.handleGeneratingStep(obj)} />
 						    )}
 

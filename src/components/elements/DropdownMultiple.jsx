@@ -17,13 +17,13 @@ class DropdownMultiple extends Component{
 		const count = nextProps.list.filter(function(a) { return a.selected; }).length;
 
 		if (count === 0) {
-			return ({headerTitle : nextProps.title});
+			return ({ headerTitle : nextProps.title });
 
 		} else if (count === 1) {
-			return ({headerTitle : `${count} ${nextProps.titleHelper}`});
+			return ({ headerTitle : `${count} ${nextProps.titleHelper}` });
 
 		} else if (count > 1) {
-			return ({headerTitle : `${count} ${nextProps.titleHelper}s`});
+			return ({ headerTitle : `${count} ${nextProps.titleHelper}s` });
 		}
 	}
 
@@ -51,9 +51,9 @@ class DropdownMultiple extends Component{
 					}
 				</div>
 				{listOpen && <ul className="dd-list">
-					{list.map((item) => (
-						<li className="dd-list-item" key={item.title} onClick={() => toggleItem(item.id, item.key)}>
-							{item.title} {item.selected && <FontAwesome name="check"/>}
+					{list.map((item, i) => (
+						<li className="dd-list-item" key={i} onClick={() => toggleItem(item.id, item.key)}>
+							<span style={{width:'20px',height:'20px',marginRight:'6px',backgroundImage:'linear-gradient(to right, #'+item.gradient+' , #'+item.hex+')'}}>&nbsp;&nbsp;</span>{item.title} {item.selected && <FontAwesome name="check"/>}
 						</li>
 					))}
 				</ul>}

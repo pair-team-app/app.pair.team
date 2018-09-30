@@ -11,7 +11,7 @@
 }
 
 .nav-link a, .nav-link a:active, .nav-link a:link, .nav-link a:visited {
-	text-decoration: underline;
+	text-decoration: none;
 	color: #ffffff;
 }
 
@@ -20,7 +20,7 @@
 }
 
 .nav-link a:hover {
-	text-decoration: none;
+	text-decoration: underline;
 	cursor: pointer;
 }
 
