@@ -111,8 +111,14 @@ class GeneratingStep extends Component {
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
 				console.log("COLOR_SETS", JSON.stringify(response.data));
-				self.setState({ maxFiles : 500 });
+				this.setState({ maxFiles : 500 });
 			});
+
+		const system = (cookie.load('template_id') === 2) ? "iOS" : "Material";
+		const totals = {
+			ios      : [44, 22, 12],
+			material : [57, 31, 15]
+		};
 
 		formData = new FormData();
 		formData.append('action', 'FILE_CHECK');
@@ -125,9 +131,21 @@ class GeneratingStep extends Component {
 					files.push(file);
 				});
 				this.setState({ allFiles : files });
-				this.fileInterval = setInterval(function() {
-					self.checkNewFiles();
-				}, 750);
+
+				this.props.onTooltip({ txt : 'Loading ' + totals[system.toLowerCase()][0] + ' ' + system + ' Views' });
+				setTimeout(function() {
+					self.props.onTooltip({ txt : 'Loading ' + totals[system.toLowerCase()][1] + ' ' + system + ' Presentations' });
+				}, 1500);
+
+				setTimeout(function() {
+					self.props.onTooltip({ txt : 'Loading ' + totals[system.toLowerCase()][2] + ' ' + system + ' Components' });
+				}, 3000);
+
+				setTimeout(function() {
+					self.fileInterval = setInterval(function () {
+						self.checkNewFiles();
+					}, 750);
+				}, 4500);
 			});
 	}
 
@@ -157,10 +175,10 @@ class GeneratingStep extends Component {
 
 		} else {
 			let files = this.state.allFiles.slice(0, this.fileCount);
-			const rate = files.length > 0 ? Math.ceil(this.state.files.length / this.state.elapsed) : 0;
+// 			const rate = files.length > 0 ? Math.ceil(this.state.files.length / this.state.elapsed) : 0;
 
 			this.setState({ files : files });
-			this.props.onTooltip({ txt : 'Rendering ' + this.state.files.length + ' of ' + this.state.maxFiles + ' Designs, ' + rate + ' per second.' });
+			this.props.onTooltip({ txt : 'Design Engine is ready (' + this.state.files.length + ' of ' + this.state.maxFiles + '+ Renders)' });
 		}
 
 // 		let self = this;
@@ -228,15 +246,17 @@ class GeneratingStep extends Component {
 
 	handleDropdownUpdate(key, title) {
 		let self = this;
+		let imageTotal = 0;
+
+		this.props.onTooltip({
+			isAnimated : false,
+			txt        : 'Loading ' + ((cookie.load('template_id') === '2') ? 'iOS 12' : 'Material Design') + ' ' + ((key === 'parts') ? 'Devices' : ((key === 'colors') ? 'Colors' : 'Artboards')) + ' into AI'
+		});
 
 		axios.get('https://api.unsplash.com/search/photos?query=' + title + '&per_page=50', { headers : { Authorization : 'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479' } })
 			.then((response) => {
 				console.log("UNSPLASH", JSON.stringify(response.data.results));
-
-				this.props.onTooltip({
-					isAnimated : true,
-					txt        : 'Sending ' + response.data.results.length + ' "' + title + '" ' + key + ' into AI'
-				});
+				imageTotal = response.data.results.length;
 
 				const ind = Math.floor(Math.random() * response.data.results.length);
 				axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(response.data.results[ind].urls.small))
@@ -244,24 +264,32 @@ class GeneratingStep extends Component {
 						console.log("REKOGNITION", JSON.stringify(response.data));
 
 						let topics = [];
-						let avg = 0;
 						response.data.rekognition.labels.forEach(function (item, i) {
-							if (i < 3) {
-								topics.push(item.Name.toLowerCase());
+							if (i < 5) {
+								topics.push(item.Name);
 							}
-
-							avg += item.Confidence;
 						});
 
-						self.props.onTooltip({ txt : 'Identified ' + response.data.rekognition.labels.length + ' topics… ' + topics.join(', ') });
-						avg /= response.data.rekognition.labels.length;
-						setTimeout(function() {
-							self.props.onTooltip({ txt : 'Confidence… ' + (Math.round(avg) * 0.01).toFixed(2) });
-						}, 3000);
+						this.props.onTooltip({ txt : response.data.rekognition.labels.length + ' Topics Identified from ' + imageTotal + ' images.' });
 
 						setTimeout(function() {
-							self.props.onTooltip({ txt : 'Design Engine is ready.' });
-						}, 4000);
+							self.props.onTooltip({ txt : topics.join(', ') + '… (' + (response.data.rekognition.labels.length - topics.length) + ' more)' });
+
+							setTimeout(function() {
+								axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + topics[0])
+									.then((response) => {
+										console.log("COMPREHEND", JSON.stringify(response.data));
+										const sentiment = response.data.comprehend.sentiment.outcome;
+										self.props.onTooltip({ txt : 'Sentiment: ' + Math.round(response.data.comprehend.sentiment.scores[sentiment] * 100) + '% ' + sentiment });
+
+										setTimeout(function () {
+											self.props.onTooltip({ txt : 'Design Engine is ready.' });
+										}, 1000);
+									}).catch((error) => {
+								});
+							}, 1000);
+
+						}, 3000);
 
 					}).catch((error) => {
 				});

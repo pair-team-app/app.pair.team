@@ -2,7 +2,7 @@
 .tooltip-wrapper {
 	min-width: 400px;
 	height: 56px;
-	/*white-space: nowrap;*/
+	white-space: nowrap;
 	text-align: center;
 	color: #ffffff;
 	font-size: 14px;
@@ -28,7 +28,7 @@
 }
 
 .tooltip-text {
-	padding: 20px;
+	padding: 15px;
 	display: table-cell;
 	vertical-align: middle;
 }

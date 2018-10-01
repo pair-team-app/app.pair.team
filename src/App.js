@@ -128,10 +128,10 @@ class App extends Component {
 	handleMakeOrder(obj) {
 		console.log("handleMakeOrder()", obj);
 
-		this.showStatus({
-			isAnimated : true,
-			txt        : 'Rendering dataset into Design Engine AI.'
-		});
+// 		this.showStatus({
+// 			isAnimated : true,
+// 			txt        : 'Rendering dataset into Design Engine AI.'
+// 		});
 
 		let self = this;
 		this.templateID = obj.templateID;
