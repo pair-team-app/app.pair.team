@@ -128,7 +128,6 @@ class GeneratingStep extends Component {
 				this.fileInterval = setInterval(function() {
 					self.checkNewFiles();
 				}, 750);
-				this.checkNewFiles();
 			});
 	}
 
@@ -150,13 +149,19 @@ class GeneratingStep extends Component {
 	}
 
 	checkNewFiles() {
-		let files = this.state.allFiles.slice(0, Math.min(++this.fileCount, this.state.allFiles.length));
-		const rate = files.length > 0 ? Math.ceil(this.state.files.length / this.state.elapsed) : 0;
+		if (++this.fileCount >= this.state.allFiles.length) {
+			clearInterval(this.elapsedInterval);
+			clearInterval(this.orderInterval);
+			clearInterval(this.fileInterval);
+			this.props.onTooltip({ txt : 'Design Engine is ready.' });
 
-		this.setState({ files : files });
-		this.props.onTooltip({
-			txt : 'Rendering ' + this.state.files.length + ' of ' + this.state.maxFiles + ' Designs, ' + rate + ' per second.'
-		});
+		} else {
+			let files = this.state.allFiles.slice(0, this.fileCount);
+			const rate = files.length > 0 ? Math.ceil(this.state.files.length / this.state.elapsed) : 0;
+
+			this.setState({ files : files });
+			this.props.onTooltip({ txt : 'Rendering ' + this.state.files.length + ' of ' + this.state.maxFiles + ' Designs, ' + rate + ' per second.' });
+		}
 
 // 		let self = this;
 // 		let formData = new FormData();
@@ -208,16 +213,78 @@ class GeneratingStep extends Component {
 
 	toggleSelected = (id, key) => {
 		console.log('toggleSelected()', id, key);
-		let temp = [...this.state[key]];
-		temp[id-1].selected = !temp[id-1].selected;
-		this.setState({ [key] : temp });
+		let tmp = [...this.state[key]];
+		tmp[id-1].selected = !tmp[id-1].selected;
+		this.setState({ [key] : tmp });
+		this.handleDropdownUpdate(key, tmp[id-1].title);
 	};
 
-	resetThenSet = (id, stateKey) => {
-		let tones = [...this.state[stateKey]];
-		tones.forEach(item => item.selected = false);
-		tones[id-1].selected = true;
+	resetThenSet = (id, key) => {
+		let tmp = [...this.state[key]];
+		tmp.forEach(item => item.selected = false);
+		tmp[id-1].selected = true;
+		this.handleDropdownUpdate(key, tmp[id-1].title);
 	};
+
+	handleDropdownUpdate(key, title) {
+		let self = this;
+
+		axios.get('https://api.unsplash.com/search/photos?query=' + title + '&per_page=50', { headers : { Authorization : 'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479' } })
+			.then((response) => {
+				console.log("UNSPLASH", JSON.stringify(response.data.results));
+
+				this.props.onTooltip({
+					isAnimated : true,
+					txt        : 'Sending ' + response.data.results.length + ' "' + title + '" ' + key + ' into AI'
+				});
+
+				const ind = Math.floor(Math.random() * response.data.results.length);
+				axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(response.data.results[ind].urls.small))
+					.then((response) => {
+						console.log("REKOGNITION", JSON.stringify(response.data));
+
+						let topics = [];
+						let avg = 0;
+						response.data.rekognition.labels.forEach(function (item, i) {
+							if (i < 3) {
+								topics.push(item.Name.toLowerCase());
+							}
+
+							avg += item.Confidence;
+						});
+
+						self.props.onTooltip({ txt : 'Identified ' + response.data.rekognition.labels.length + ' topics… ' + topics.join(', ') });
+						avg /= response.data.rekognition.labels.length;
+						setTimeout(function() {
+							self.props.onTooltip({ txt : 'Confidence… ' + (Math.round(avg) * 0.01).toFixed(2) });
+						}, 3000);
+
+						setTimeout(function() {
+							self.props.onTooltip({ txt : 'Design Engine is ready.' });
+						}, 4000);
+
+					}).catch((error) => {
+				});
+			});
+
+
+// 		if (key === 'colors') {
+// 			this.props.onTooltip({ txt : 'Changing colors' });
+//
+// 		} else if (key === 'tones') {
+// 			this.props.onTooltip({ txt : 'Changing tone "' + title + '"' });
+//
+// 		} else if (key === 'parts') {
+// 			this.props.onTooltip({ txt : 'Changing part "' + title + '"' });
+// 		}
+//
+// 		if (this.fileCount >= this.state.allFiles.length) {
+// 			let self = this;
+// 			setTimeout(function () {
+// 				self.props.onTooltip({ txt : 'Design Engine is ready.' });
+// 			}, 2000);
+// 		}
+	}
 
 	handleLightBoxClick() {
 		let lightBox = this.state.lightBox;
@@ -369,7 +436,7 @@ class GeneratingStep extends Component {
 						price={this.state.lightBox.price}
 						urls={[this.state.lightBox.url]}
 						onSelect={(file_id)=> this.handleSelectClick(file_id, true)}
-						onClick={()=> this.handleLightBoxClick()} />
+						onClose={()=> this.handleLightBoxClick()} />
 				)}
 			</div>
 		);

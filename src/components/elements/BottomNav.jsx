@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './BottomNav.css';
 
-import FontAwesome from 'react-fontawesome';
 import MediaQuery from 'react-responsive';
 import { Column, Row } from 'simple-flexbox';
 
@@ -28,8 +27,7 @@ class BottomNav extends Component {
 			blog       : 'https://medium.com/@jasonfesta?source=linkShare-aae22e53724a-1533684578',
 			privacy    : 'https://designengine.gitbook.io/docs/privacy',
 			terms      : 'https://designengine.gitbook.io/docs/terms-of-service',
-			dmg        : 'http://designengine.ai/tryfree',
-			login      : ''
+			dmg        : 'http://designengine.ai/tryfree'
 		};
 
 		return (
@@ -48,7 +46,7 @@ class BottomNav extends Component {
 								<div className="footer-link" onClick={()=> this.props.onTerms()}>Terms of Service</div>
 								<div className="footer-link" onClick={()=> this.props.onPrivacy()}>Privacy Policy</div>
 							</Column>
-							<Column flexGrow={10} horizontal="start" />
+							<Column flexGrow={10} horizontal="start">&nbsp;</Column>
 						</Row>
 						<Row horizontal="center">
 							<div className="copyright">&copy; {new Date().getFullYear()} Design Engine AI, Inc.</div>
@@ -58,33 +56,14 @@ class BottomNav extends Component {
 					<MediaQuery maxWidth={840}>
 						<div style={{marginLeft:'20px'}}>
 							<div className="footer-title">Company</div>
-							<div className="footer-link" onClick={()=> this.props.onFAQ()}>What is Design AI?</div>
+							<div className="footer-link" onClick={()=> this.props.onManifesto()}>Manifesto</div>
 							<div className="footer-link"><a href={urls.crunchbase} target="_blank" rel="noopener noreferrer">Crunchbase</a></div>
 							<div className="footer-link"><a href={urls.messenger} target="_blank" rel="noopener noreferrer">Chat Now</a></div>
 						</div>
 						<div style={{margin:'20px 0 0 20px'}}>
-							<div className="footer-title">Products</div>
-							<div className="footer-link" onClick={()=> this.props.onStep1()}>Get Started</div>
-							<div className="footer-link" onClick={()=> this.props.onProjects()}>View Examples</div>
-						</div>
-						<div style={{margin:'20px 0 0 20px'}}>
 							<div className="footer-title">Legal</div>
+							<div className="footer-link" onClick={()=> this.props.onTerms()}>Terms of Service</div>
 							<div className="footer-link" onClick={()=> this.props.onPrivacy()}>Privacy Policy</div>
-							<div className="footer-link" onClick={()=> this.props.onTerms()}>Terms of Serices</div>
-						</div>
-						<div style={{margin:'20px 0 0 20px'}}>
-							<div className="footer-title">Support</div>
-							<div className="footer-link"><a href={urls.messenger} target="_blank" rel="noopener noreferrer">Chat Now</a></div>
-						</div>
-						<div style={{margin:'20px 0 0 20px'}}>
-							<div className="footer-title">Follow Us</div>
-							<div className="footer-icons">
-								<a href={urls.facebook} target="_blank" rel="noopener noreferrer"><FontAwesome name="facebook-official" className="footer-icon" /></a>
-								<a href={urls.instagram} target="_blank" rel="noopener noreferrer"><FontAwesome name="instagram" className="footer-icon" /></a>
-								<a href={urls.twitter} target="_blank" rel="noopener noreferrer"><FontAwesome name="twitter" className="footer-icon" /></a>
-								<a href={urls.youtube} target="_blank" rel="noopener noreferrer"><FontAwesome name="youtube-play" className="footer-icon" /></a>
-								<a href={urls.slack} target="_blank" rel="noopener noreferrer"><FontAwesome name="slack" className="footer-icon" /></a>
-							</div>
 						</div>
 						<Row horizontal="center">
 							<div className="copyright">&copy; {new Date().getFullYear()} Design Engine AI, Inc.</div>

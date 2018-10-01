@@ -22,7 +22,6 @@ import { Column } from 'simple-flexbox';
 import BottomNav from './components/elements/BottomNav';
 import DownloadStep from './components/steps/DownloadStep';
 import DetailsStep from './components/steps/DetailsStep';
-import FAQStep from './components/steps/FAQStep';
 import GeneratingStep from './components/steps/GeneratingStep';
 import GetStartedStep from './components/steps/GetStartedStep';
 import ManifestoStep from './components/steps/ManifestoStep';
@@ -32,7 +31,6 @@ import TemplateStep from './components/steps/TemplateStep';
 import TermsStep from './components/steps/TermsStep';
 import Tooltip from './components/elements/Tooltip';
 import TopNav from './components/elements/TopNav';
-import UsersStep from "./components/steps/UsersStep";
 
 class App extends Component {
 	constructor(props) {
@@ -87,13 +85,6 @@ class App extends Component {
 		});
 	}
 
-	handleIntroComplete() {
-		console.log("handleIntroComplete()");
-		let pages = this.state.pages;
-		pages.isIntro = false;
-		this.setState({ pages : pages });
-	}
-
 	handleSystem(systemID) {
 		console.log("handleSystem()", systemID);
 		window.scrollTo(0, 0);
@@ -116,30 +107,12 @@ class App extends Component {
 		});
 	}
 
-  handleFAQStep() {
-    console.log("handleFAQStep()");
-	  window.scrollTo(0, 0);
-    this.setState({ step : 1 });
-  }
-
-	handleUsersStep() {
-		console.log("handleUsersStep()");
-
-		window.scrollTo(0, 0);
-		this.setState({ step : 2 });
-	}
-
 	handleTemplateStep() {
 		console.log("handleTemplateStep()");
 
 		window.scrollTo(0, 0);
 // 		this.setState({ step : 3 });
 		this.setState({ step : 4 });
-
-		this.showStatus({
-			isAnimated : true,
-			txt        : 'Design Engine is ready.'
-		});
 	}
 
 	handleDetailsStep(id) {
@@ -155,12 +128,17 @@ class App extends Component {
 	handleMakeOrder(obj) {
 		console.log("handleMakeOrder()", obj);
 
+		this.showStatus({
+			isAnimated : true,
+			txt        : 'Rendering dataset into Design Engine AI.'
+		});
+
 		let self = this;
-		let formData = new FormData();
 		this.templateID = obj.templateID;
 
-		cookie.save('template_id', this.templateID, { path: '/' });
+		cookie.save('template_id', this.templateID, { path : '/' });
 
+		let formData = new FormData();
 		formData.append('action', 'MAKE_ORDER');
 		formData.append('template_id', this.templateID);
 		formData.append('email', obj.email);
@@ -168,7 +146,7 @@ class App extends Component {
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
 				console.log("MAKE_ORDER", JSON.stringify(response.data));
-				cookie.save('order_id', response.data.order_id, { path: '/' });
+				cookie.save('order_id', response.data.order_id, { path : '/' });
 				self.setState({ orderID : response.data.order_id });
 			}).catch((error) => {
 		});
@@ -180,11 +158,6 @@ class App extends Component {
 		window.scrollTo(0, 0);
 		console.log("handleGeneratingStep("+JSON.stringify(obj)+")");
 		this.setState({ step : 5 });
-
-		this.showStatus({
-			isAnimated : true,
-			txt        : 'Rendering dataset into Design Engine AI.'
-		});
 	}
 
 	handlePurchaseStep(obj) {
@@ -328,14 +301,6 @@ class App extends Component {
 								    isUsers={this.state.pages.isUsers}
 								    onSystem={(systemID)=> this.handleSystem(systemID)}
 								    onClick={()=> this.handleTemplateStep()} />
-						    )}
-
-						    {this.state.step === 1 && (
-							    <FAQStep onClick={()=> this.handleTemplateStep()} />
-						    )}
-
-						    {this.state.step === 2 && (
-							    <UsersStep onClick={()=> this.handleTemplateStep()} />
 						    )}
 
 						    {this.state.step === 3 && (

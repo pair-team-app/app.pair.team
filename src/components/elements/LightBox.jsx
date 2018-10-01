@@ -41,7 +41,7 @@ class LightBox extends Component {
 
 		return (
 			<div className="lightbox-wrapper" onKeyDown={()=> this.onKeyDown()}>
-				<img src="/images/close.png" className="lightbox-close" alt="Close" onClick={()=> this.props.onClick()} />
+				<div className="lightbox-close"><a onClick={()=> this.props.onClose()}>Close</a></div>
 				<div className="lightbox-container">
 					<div className="lightbox-title">{this.props.title.replace('-portrait', '')}</div>
 					<div className="lightbox-content">
