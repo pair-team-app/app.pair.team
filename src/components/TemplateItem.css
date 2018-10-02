@@ -15,6 +15,14 @@
 	display: block;
 }
 
+.template-item-placeholder:hover {
+	cursor: default;
+}
+
+.template-item-placeholder:hover .template-item-check-wrapper {
+	display: none;
+}
+
 .template-item-container {
 	position: relative;
 }

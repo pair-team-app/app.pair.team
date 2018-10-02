@@ -38,6 +38,7 @@ class GeneratingStep extends Component {
 		};
 
 		this.fileCount = 0;
+		this.ddTitle = '';
 
 		this.elapsedInterval = null;
 		this.orderInterval = null;
@@ -96,6 +97,7 @@ class GeneratingStep extends Component {
 // 			formData.append('order_id', self.props.orderID);
 // 			axios.post('https://api.designengine.ai/templates.php', formData)
 // 				.then((response)=> {
+// 					console.log("ORDER_PING", JSON.stringify(response.data));
 // 				}).catch((error) => {
 // 			});
 // 		}, 5000);
@@ -114,15 +116,16 @@ class GeneratingStep extends Component {
 				this.setState({ maxFiles : 500 });
 			});
 
-		const system = (cookie.load('template_id') === 2) ? "iOS" : "Material";
+		const system = (cookie.load('template_id') === '2') ? "iOS" : "Material";
 		const totals = {
-			ios      : [44, 22, 12],
-			material : [57, 31, 15]
+			ios      : [6, 10, 47, 88],
+			material : [20, 10, 63, 131]
 		};
 
 		formData = new FormData();
 		formData.append('action', 'FILE_CHECK');
-		formData.append('order_id', (cookie.load('template_id') === 2) ? "599" : "600");
+		formData.append('order_id', (cookie.load('template_id') === '2') ? "680" : "681");
+// 		formData.append('order_id', this.props.orderID);
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
 				console.log("FILE_CHECK", JSON.stringify(response.data));
@@ -132,20 +135,26 @@ class GeneratingStep extends Component {
 				});
 				this.setState({ allFiles : files });
 
-				this.props.onTooltip({ txt : 'Loading ' + totals[system.toLowerCase()][0] + ' ' + system + ' Views' });
+				this.props.onTooltip({ txt : 'Loading ' + totals[system.toLowerCase()][0] + ' ' + ((system === 'Material') ? 'Material Design' : system) + ' Views' });
 				setTimeout(function() {
-					self.props.onTooltip({ txt : 'Loading ' + totals[system.toLowerCase()][1] + ' ' + system + ' Presentations' });
-				}, 1500);
+					self.props.onTooltip({ txt : 'Loading ' + totals[system.toLowerCase()][1] + ' ' + ((system === 'Material') ? 'Material Design' : system) + ' Presentation Slides' });
+				}, 2000);
 
 				setTimeout(function() {
-					self.props.onTooltip({ txt : 'Loading ' + totals[system.toLowerCase()][2] + ' ' + system + ' Components' });
-				}, 3000);
+					self.props.onTooltip({ txt : 'Loading ' + totals[system.toLowerCase()][2] + ' ' + ((system === 'Material') ? 'Material Design' : system) + ' Components' });
+				}, 4000);
 
 				setTimeout(function() {
+					self.props.onTooltip({ txt : 'Loading ' + totals[system.toLowerCase()][3] + ' ' + ((system === 'Material') ? 'Material Design' : system) + ' Symbols' });
+				}, 6000);
+
+				setTimeout(function() {
+					self.props.onTooltip({ txt : 'Design Engine is ready.' });
+
 					self.fileInterval = setInterval(function () {
 						self.checkNewFiles();
 					}, 750);
-				}, 4500);
+				}, 8000);
 			});
 	}
 
@@ -177,8 +186,16 @@ class GeneratingStep extends Component {
 			let files = this.state.allFiles.slice(0, this.fileCount);
 // 			const rate = files.length > 0 ? Math.ceil(this.state.files.length / this.state.elapsed) : 0;
 
+			for (let i=files.length; i<this.state.allFiles.length-1; i++) {
+				files.push({
+					title     : 'Placeholder',
+					filename  : 'https://upload.wikimedia.org/wikipedia/commons/c/ca/1x1.png',
+					per_price : 0
+				});
+			}
+
 			this.setState({ files : files });
-			this.props.onTooltip({ txt : 'Design Engine is ready (' + this.state.files.length + ' of ' + this.state.maxFiles + '+ Renders)' });
+			//this.props.onTooltip({ txt : 'Design Engine is ready (' + this.state.files.length + ' of ' + this.state.maxFiles + '+ Renders)' });
 		}
 
 // 		let self = this;
@@ -234,19 +251,25 @@ class GeneratingStep extends Component {
 		let tmp = [...this.state[key]];
 		tmp[id-1].selected = !tmp[id-1].selected;
 		this.setState({ [key] : tmp });
-		this.handleDropdownUpdate(key, tmp[id-1].title);
+// 		this.handleDropdownUpdate(key, tmp[id-1].title);
 	};
 
 	resetThenSet = (id, key) => {
 		let tmp = [...this.state[key]];
 		tmp.forEach(item => item.selected = false);
 		tmp[id-1].selected = true;
-		this.handleDropdownUpdate(key, tmp[id-1].title);
+		this.ddTitle = tmp[id-1].title;
+// 		this.handleDropdownUpdate(key, tmp[id-1].title);
 	};
 
 	handleDropdownUpdate(key, title) {
+		clearInterval(this.fileInterval);
+
 		let self = this;
 		let imageTotal = 0;
+
+		this.fileCount = 0;
+		this.setState({ files : [] });
 
 		this.props.onTooltip({
 			isAnimated : false,
@@ -265,7 +288,7 @@ class GeneratingStep extends Component {
 
 						let topics = [];
 						response.data.rekognition.labels.forEach(function (item, i) {
-							if (i < 5) {
+							if (i < 4) {
 								topics.push(item.Name);
 							}
 						});
@@ -284,37 +307,20 @@ class GeneratingStep extends Component {
 
 										setTimeout(function () {
 											self.props.onTooltip({ txt : 'Design Engine is ready.' });
+											self.fileInterval = setInterval(function () {
+												self.checkNewFiles();
+											}, 750);
 										}, 1000);
 									}).catch((error) => {
 								});
 							}, 1000);
-
 						}, 3000);
-
 					}).catch((error) => {
 				});
 			});
-
-
-// 		if (key === 'colors') {
-// 			this.props.onTooltip({ txt : 'Changing colors' });
-//
-// 		} else if (key === 'tones') {
-// 			this.props.onTooltip({ txt : 'Changing tone "' + title + '"' });
-//
-// 		} else if (key === 'parts') {
-// 			this.props.onTooltip({ txt : 'Changing part "' + title + '"' });
-// 		}
-//
-// 		if (this.fileCount >= this.state.allFiles.length) {
-// 			let self = this;
-// 			setTimeout(function () {
-// 				self.props.onTooltip({ txt : 'Design Engine is ready.' });
-// 			}, 2000);
-// 		}
 	}
 
-	handleLightBoxClick() {
+	handleLightBoxClose() {
 		let lightBox = this.state.lightBox;
 		lightBox.isVisible = false;
 		this.setState({ lightBox : lightBox });
@@ -421,9 +427,6 @@ class GeneratingStep extends Component {
 			);
 		});
 
-// 		const btnSelectClass = (this.selectedItems.length === this.state.files.length) ? 'action-button step-button selected-button' : 'action-button step-button';
-// 		const btnSelectCaption = (this.selectedItems.length === this.state.files.length) ? 'Select None' : 'Select All ('+this.state.files.length+')';
-
 		return (
 			<div>
 				<Row horizontal="center">
@@ -433,19 +436,18 @@ class GeneratingStep extends Component {
 							list={this.state.parts}
 							resetThenSet={this.resetThenSet}
 						/>
-
 						<DropdownMultiple
 							titleHelper="Color"
 							title="Select color(s)"
 							list={this.state.colors}
 							toggleItem={this.toggleSelected}
 						/>
-
 						<Dropdown
 							title="Select tone"
 							list={this.state.tones}
 							resetThenSet={this.resetThenSet}
 						/>
+						<button className="action-button form-button" onClick={()=> this.handleDropdownUpdate('tones', this.ddTitle)}>Render</button>
 					</div>
 				</Row>
 				<Row horizontal="center">
@@ -464,7 +466,7 @@ class GeneratingStep extends Component {
 						price={this.state.lightBox.price}
 						urls={[this.state.lightBox.url]}
 						onSelect={(file_id)=> this.handleSelectClick(file_id, true)}
-						onClose={()=> this.handleLightBoxClick()} />
+						onClose={()=> this.handleLightBoxClose()} />
 				)}
 			</div>
 		);

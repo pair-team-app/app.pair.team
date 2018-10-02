@@ -46,7 +46,7 @@ class GetStartedStep extends Component {
 		this.setState({ lightBox : lightBox });
 	}
 
-	handleLightBoxClick() {
+	handleLightBoxClose() {
 		let lightBox = this.state.lightBox;
 		lightBox.isVisible = false;
 		this.setState({ lightBox : lightBox });
@@ -93,7 +93,7 @@ class GetStartedStep extends Component {
 						title=""
 						urls={[this.state.lightBox.url]}
 						onTemplateStep={()=> this.props.onClick()}
-						onClick={()=> this.handleLightBoxClick()} />
+						onClose={()=> this.handleLightBoxClose()} />
 				)}
 			</div>
 		);
