@@ -23,7 +23,7 @@ class GeneratingStep extends Component {
 			elapsed  : 0,
 			files    : [],
 			allFiles : [],
-			maxFiles : 0,
+			maxFiles : 500,
 			tones    : [],
 			colors   : [],
 			parts    : [],
@@ -108,13 +108,13 @@ class GeneratingStep extends Component {
 		}, 1000);
 
 		let formData = new FormData();
-		formData.append('action', 'COLOR_SETS');
-		formData.append('order_id', this.props.orderID);
-		axios.post('https://api.designengine.ai/templates.php', formData)
-			.then((response)=> {
-				console.log("COLOR_SETS", JSON.stringify(response.data));
-				this.setState({ maxFiles : 500 });
-			});
+// 		formData.append('action', 'COLOR_SETS');
+// 		formData.append('order_id', this.props.orderID);
+// 		axios.post('https://api.designengine.ai/templates.php', formData)
+// 			.then((response)=> {
+// 				console.log("COLOR_SETS", JSON.stringify(response.data));
+// 				this.setState({ maxFiles : 500 });
+// 			});
 
 		const system = (cookie.load('template_id') === '2') ? "iOS" : "Material";
 		const totals = {
@@ -130,9 +130,13 @@ class GeneratingStep extends Component {
 			.then((response)=> {
 				console.log("FILE_CHECK", JSON.stringify(response.data));
 				let files = [];
-				response.data.files.reverse().forEach(file => {
-					files.push(file);
-				});
+
+				for (let i=0; i<7; i++) {
+					response.data.files.reverse().forEach(file => {
+						files.push(file);
+					});
+				}
+
 				this.setState({ allFiles : files });
 
 				this.props.onTooltip({ txt : 'Loading ' + totals[system.toLowerCase()][0] + ' ' + ((system === 'Material') ? 'Material Design' : system) + ' Views' });
@@ -273,7 +277,7 @@ class GeneratingStep extends Component {
 
 		this.props.onTooltip({
 			isAnimated : false,
-			txt        : 'Loading ' + ((cookie.load('template_id') === '2') ? 'iOS 12' : 'Material Design') + ' ' + ((key === 'parts') ? 'Devices' : ((key === 'colors') ? 'Colors' : 'Artboards')) + ' into AI'
+			txt        : 'Loading Render Request into AI'
 		});
 
 		axios.get('https://api.unsplash.com/search/photos?query=' + title + '&per_page=50', { headers : { Authorization : 'Bearer 946641fbc410cd54ff5bf32dbd0710dddef148f85f18a7b3907deab3cecb1479' } })
@@ -458,10 +462,16 @@ class GeneratingStep extends Component {
 					</div>
 				</Row>
 
+				{this.selectedItems.length > 0 && (
+					<div className="download-items-wrapper">
+						<button className="action-button form-button" style={{backgroundColor:'#61a913'}}>Download ({this.selectedItems.length})</button>
+					</div>
+				)}
+
 				{this.state.lightBox.isVisible && (
 					<LightBox
 						type="order"
-						title={this.state.lightBox.title}
+						title={this.state.lightBox.title + ' - ' + ((cookie.load('template_id') === '2') ? "iOS" : "Material Design")}
 						file_id={this.state.lightBox.file_id}
 						price={this.state.lightBox.price}
 						urls={[this.state.lightBox.url]}

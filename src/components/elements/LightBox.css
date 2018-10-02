@@ -13,9 +13,8 @@
 .lightbox-container {
 	position: fixed;
 	width: auto;
-	max-width: 808px;
+	max-width: 900px;
 	height: auto;
-	max-height: 90%;
 	left: 50%;
 	transform: translate(-50%, 0%);
 	-webkit-transform: translate(-50%, 0%);
@@ -34,11 +33,12 @@
 .lightbox-content {
 	overflow-x: hidden;
 	overflow-y: auto;
+	text-align: center;
 }
 
 .lightbox-close {
 	position: absolute;
-	top: 24px;
+	top: 37px;
 	right: 25px;
 	font-size: 16px;
 }
@@ -60,6 +60,10 @@
 
 .lightbox-image {
 	width: 100%;
+}
+
+.lightbox-image-portrait {
+	width: 60%;
 }
 
 .lightbox-footer {

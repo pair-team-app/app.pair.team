@@ -31,11 +31,11 @@ class LightBox extends Component {
 		}
 	}
 
-
 	render() {
 		const items = this.props.urls.map((url, i, arr) => {
+			const className = (this.props.title.includes('-portrait')) ? 'lightbox-image lightbox-image-portrait' : 'lightbox-image';
 			return (
-				<div key={i}><img src={url} className="lightbox-image" alt={this.props.title} /></div>
+				<div key={i}><img src={url} className={className} alt={this.props.title} /></div>
 			);
 		});
 

@@ -1,5 +1,12 @@
 
 .template-item-wrapper {
 	margin-top: 50px;
-	min-height: 466px;
+	min-height: 500px;
+}
+
+.download-items-wrapper {
+	position: absolute;
+	left: 20px;
+	bottom: 20px;
+	z-index: 5;
 }
