@@ -107,22 +107,13 @@ class GeneratingStep extends Component {
 			self.setState({ elapsed : parseInt((new Date()).getTime() * 0.001, 10) - parseInt(self.startTime * 0.001, 10) });
 		}, 1000);
 
-		let formData = new FormData();
-// 		formData.append('action', 'COLOR_SETS');
-// 		formData.append('order_id', this.props.orderID);
-// 		axios.post('https://api.designengine.ai/templates.php', formData)
-// 			.then((response)=> {
-// 				console.log("COLOR_SETS", JSON.stringify(response.data));
-// 				this.setState({ maxFiles : 500 });
-// 			});
-
 		const system = (cookie.load('template_id') === '2') ? "iOS" : "Material";
 		const totals = {
 			ios      : [6, 10, 47, 88],
 			material : [20, 10, 63, 131]
 		};
 
-		formData = new FormData();
+		let formData = new FormData();
 		formData.append('action', 'FILE_CHECK');
 		formData.append('order_id', (cookie.load('template_id') === '2') ? "680" : "681");
 // 		formData.append('order_id', this.props.orderID);
