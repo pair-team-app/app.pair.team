@@ -1,8 +1,14 @@
 
+#-- react router fix --#
 RewriteEngine on
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ / [R=301,P]
+    
+# RewriteEngine on
     # RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [R=301,P]
-    RedirectMatch 301 ^/getstarted/?$ /
-		RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [L,R=301,NC]
+    # RedirectMatch 301 ^/getstarted/?$ /
+		# RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [L,R=301,NC]
 
 #-- don't cache these --#
 <IfModule mod_expires.c>

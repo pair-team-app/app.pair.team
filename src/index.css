@@ -1,13 +1,13 @@
 
-body {
+html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
   font-family: "Roboto Mono", monospace;
   font-size: 13px;
   font-weight: 300;
-  line-height: 16px;
-  background-color: #3f3f3f;
-  color: #c6c6c6;
+  background-color: #313131;
+  color: #ffffff;
 }
 
 p {

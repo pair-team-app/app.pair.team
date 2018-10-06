@@ -1,10 +1,10 @@
 
 import React, { Component } from 'react';
-import './ManifestoStep.css';
+import './ManifestoPage.css';
 
 import { Column, Row } from 'simple-flexbox';
 
-class ManifestoStep extends Component {
+class ManifestoPage extends Component {
 	constructor(props) {
 		super(props);
 
@@ -14,11 +14,11 @@ class ManifestoStep extends Component {
 
 	render() {
 		return (
-			<div className="manifesto-wrapper">
+			<div className="manifesto-page-wrapper">
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<Row horizontal="center"><div className="step-header-text">Our Design AI<br />Manifesto</div></Row>
-						<div className="manifesto-text">
+						<div>
 							<Row><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus vitae massa id porta. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Quisque posuere, elit et pharetra egestas, ligula tellus fermentum purus, at lacinia nisi nibh et libero. Maecenas tristique nulla id lorem semper, non feugiat velit consectetur. Maecenas tristique enim sit amet luctus malesuada. Sed non nunc laoreet, fringilla metus sit amet, scelerisque dolor. Praesent nec dui vulputate libero ultricies condimentum.</p></Row>
 							<Row><img src="/images/manifesto.png" className="manifesto-image" alt="Manifesto Garage" /></Row>
 							<Row><p>Vestibulum suscipit sem odio, quis interdum purus pharetra at. Aliquam dictum blandit ex ultricies convallis. Quisque venenatis lacus vitae nibh aliquet aliquet. Curabitur ut lacinia dolor. Pellentesque rutrum, nulla auctor laoreet euismod, nisl lorem aliquam lorem, pellentesque interdum felis mauris nec turpis. Ut condimentum, nibh gravida congue pharetra, nibh felis malesuada odio, at tempus tortor risus quis orci. Aenean nisi nulla, mollis eget rutrum ultrices, efficitur eget orci. Nam nec diam pharetra, rhoncus massa id, commodo metus. Mauris accumsan nunc et efficitur accumsan. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam erat volutpat. Aliquam efficitur vulputate purus in volutpat.</p></Row>
@@ -33,4 +33,4 @@ class ManifestoStep extends Component {
 	}
 }
 
-export default ManifestoStep;
+export default ManifestoPage;

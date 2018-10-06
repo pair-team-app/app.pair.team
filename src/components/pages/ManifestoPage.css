@@ -1,6 +1,7 @@
 
-.manifesto-wrapper {
-	margin: 0 100px 0 100px;
+.manifesto-page-wrapper {
+	width: 100%;
+	margin-bottom: 75px;
 }
 
 .manifesto-text {
@@ -10,5 +11,5 @@
 
 .manifesto-image {
 	width: 100%;
-	margin: 40px 0;
+	margin: 10px 0;
 }

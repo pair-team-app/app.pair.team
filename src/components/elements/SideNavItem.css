@@ -1,0 +1,10 @@
+
+.side-nav-item {
+	margin-bottom: 12px;
+	font-weight: 400;
+}
+
+.side-nav-item:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
