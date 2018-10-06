@@ -36,16 +36,20 @@ class App extends Component {
 	componentWillUnmount() {
 	}
 
-	handleSideNavItem = (obj) => {
+	handleSideNavItem = (obj)=> {
 		console.log('handleNavItem()', obj);
 		this.setState({ section : obj.title });
+	};
+
+	handleUpload = ()=> {
+		console.log('handleUpload()');
 	};
 
 
   render() {
     return (
     	<div className="page-wrapper">
-		    <TopNav url={this.state.url} />
+		    <TopNav url={this.state.url} onUpload={()=> this.handleUpload()} />
 		    <SideNav url={this.state.url} onNavItem={(obj)=> this.handleSideNavItem(obj)} />
 
 		    <BrowserRouter><div className="content-wrapper">

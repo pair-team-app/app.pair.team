@@ -20,12 +20,13 @@
 	-webkit-box-pack: justify;
 	-ms-flex-pack: justify;
 	justify-content: space-between;
-	line-height: 38px;
+	/*line-height: 38px;*/
 	cursor: default;
 	position: relative;
 	background-color: #002fff;
 	color: #ffffff;
 	border-radius: 5px;
+	padding: 5px 14px;
 }
 
 .dd-header span {
@@ -33,7 +34,7 @@
 }
 
 .dd-header-title {
-	margin: 2px 30px 2px 20px;
+	margin: 2px 20px;
 }
 
 .angle-down {

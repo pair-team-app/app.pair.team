@@ -18,6 +18,20 @@ p {
   outline: none;
 }
 
+button {
+  padding: 9px 16px;
+  background-color: #002fff;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color : #ffffff;
+  border: none;
+  border-radius: 5px;
+}
+
+button:hover {
+  cursor: pointer;
+}
 
 ::-webkit-scrollbar {
   width: 10px;
