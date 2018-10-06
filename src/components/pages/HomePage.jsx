@@ -20,7 +20,7 @@ class HomePage extends Component {
 	render() {
 		return (
 			<div className="home-page-wrapper">
-				HOME PAGE
+				HOME PAGE - ({this.props.section})
 			</div>
 		);
 	}

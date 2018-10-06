@@ -56,8 +56,10 @@ class SideNav extends Component {
 
 
 		return (
-			<div style={{margin:'25px 0 0 25px'}}>
-				{items}
+			<div className="side-nav-wrapper">
+				<div className="side-nav-link-wrapper">
+					{items}
+				</div>
 			</div>
 		);
 	}

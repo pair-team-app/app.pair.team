@@ -4,7 +4,6 @@ import './App.css';
 
 import ReactPixel from 'react-facebook-pixel';
 import { BrowserRouter, Route} from 'react-router-dom'
-import { Column, Row } from 'simple-flexbox';
 
 import BottomNav from './components/elements/BottomNav';
 import HomePage from './components/pages/HomePage';
@@ -18,12 +17,9 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			url : window.location.pathname
+			url     : window.location.pathname,
+			section : '0'
 		};
-
-		this.templateID = 0;
-		this.images = [];
-		this.interval = null;
 	}
 
 	componentDidMount() {
@@ -40,8 +36,9 @@ class App extends Component {
 	componentWillUnmount() {
 	}
 
-	handleNavItem = (obj) => {
+	handleSideNavItem = (obj) => {
 		console.log('handleNavItem()', obj);
+		this.setState({ section : obj.title });
 	};
 
 
@@ -49,24 +46,15 @@ class App extends Component {
     return (
     	<div className="page-wrapper">
 		    <TopNav url={this.state.url} />
+		    <SideNav url={this.state.url} onNavItem={(obj)=> this.handleSideNavItem(obj)} />
 
-		    <Row horizontal="start" vertical="start">
-		      <Column horizontal="start" className="side-nav-wrapper">
-			      <SideNav url={this.state.url} onNavItem={(obj)=> this.handleNavItem(obj)} />
-		      </Column>
+		    <BrowserRouter><div className="content-wrapper">
+			    <Route exact path="/" render={()=> <HomePage section={this.state.section} />} />
+			    <Route exact path="/render" render={()=> <InspectorPage section={this.state.section} />} />
+			    <Route exact path="/manifesto" render={()=> <ManifestoPage section={this.state.section} />} />
+		    </div></BrowserRouter>
 
-			    <Column horizontal="start" className="content-wrapper">
-				    <BrowserRouter><div style={{width:'100%'}}>
-					    <Route exact path="/" component={HomePage} />
-					    <Route exact path="/render" component={InspectorPage} />
-					    <Route exact path="/manifesto" component={ManifestoPage} />
-				    </div></BrowserRouter>
-			    </Column>
-		    </Row>
-
-		    <div className="bottom-nav-wrapper">
-		      <BottomNav />
-		    </div>
+		    <BottomNav />
 	    </div>
     );
   }

@@ -4,31 +4,16 @@
 	height: 100%;
 }
 
-.side-nav-wrapper {
-	position: fixed;
-	top: 40px;
-	width: 200px;
-	height: 100%;
-	background-color: #313131;
-}
-
 .content-wrapper {
 	position: fixed;
 	top: 40px;
 	left: 200px;
 	width: calc(100% - 240px);
 	height: 100%;
-	overflow-y: auto;
+	overflow-x: hidden;
+	overflow-y: scroll;
 	background-color: #3f3f3f;
 	padding: 20px;
-}
-
-.bottom-nav-wrapper {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	background-color: rgba(0, 0, 0, 0.875);
 }
 
 .flex-wrapper {
@@ -36,6 +21,9 @@
 	flex-wrap: wrap;
 }
 
+.full-width {
+	width: 100%;
+}
 
 .text-underline {
 	text-decoration: underline;

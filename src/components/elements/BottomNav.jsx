@@ -15,7 +15,7 @@ class BottomNav extends Component {
 
 	render() {
 		return (
-			<div className="bottom-nav">
+			<div className="bottom-nav-wrapper">
 				<Row horizontal="center">
 					<div className="copyright">&copy; {new Date().getFullYear()} Design Engine AI, Inc.</div>
 				</Row>

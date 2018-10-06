@@ -1,0 +1,12 @@
+
+.side-nav-wrapper {
+	position: fixed;
+	top: 40px;
+	width: 200px;
+	height: 100%;
+	background-color: #313131;
+}
+
+.side-nav-link-wrapper {
+	margin: 25px 0 0 25px;
+}
