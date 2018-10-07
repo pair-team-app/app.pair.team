@@ -1,9 +1,9 @@
 
 import React, { Component } from 'react';
 import './GeneratingStep.css';
-import tones from '../../tones.json';
-import colors from '../../colors.json';
-import parts from '../../parts.json';
+import tones from '../../json/tones.json';
+import colors from '../../json/colors.json';
+import parts from '../../json/parts.json';
 
 import axios from "axios/index";
 import cookie from 'react-cookies';

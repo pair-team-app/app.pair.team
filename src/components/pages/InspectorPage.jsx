@@ -11,16 +11,19 @@ class InspectorPage extends Component {
 		super(props);
 
 		this.state = {
+			itemID : 0
 		};
 	}
 
 	componentDidMount() {
+		const { itemID } = this.props.match.params;
+		this.setState({ itemID : itemID });
 	}
 
 	render() {
 		return (
 			<div className="inspector-page-wrapper">
-				INSPECTOR PAGE
+				INSPECTOR PAGE ({this.state.itemID})
 			</div>
 		);
 	}

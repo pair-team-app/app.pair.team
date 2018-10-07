@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import './SystemsForm.css';
-import systems from '../../systems.json';
+import systems from '../../json/systems.json';
 
 import { Column, Row } from 'simple-flexbox';
 

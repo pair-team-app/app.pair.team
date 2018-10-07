@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import './PurchaseStep.css';
-import stripe from '../../stripe.json';
+import stripe from '../../json/stripe.json';
 
 import ReactPixel from 'react-facebook-pixel';
 // eslint-disable-next-line

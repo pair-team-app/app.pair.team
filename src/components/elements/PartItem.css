@@ -1,0 +1,17 @@
+
+.part-item {
+	position: relative;
+	width: 150px;
+	height: 200px;
+	background-color: #999999;
+	margin: 14px;
+}
+
+.part-item-title {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.875);
+	padding: 28px;
+}

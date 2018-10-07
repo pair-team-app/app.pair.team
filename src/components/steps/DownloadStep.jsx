@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import './DownloadStep.css';
-import downloads from '../../downloads.json';
+import downloads from '../../json/downloads.json';
 
 import axios from 'axios';
 import ReactPixel from 'react-facebook-pixel';

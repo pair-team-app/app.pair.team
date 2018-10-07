@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import './KeywordsForm.css';
-import keywords from '../../keywords.json';
+import keywords from '../../json/keywords.json';
 
 import { Column, Row } from 'simple-flexbox';
 

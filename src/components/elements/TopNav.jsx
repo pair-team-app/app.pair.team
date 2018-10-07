@@ -6,9 +6,9 @@ import { Column, Row } from 'simple-flexbox';
 
 import Dropdown from '../elements/Dropdown';
 import DropdownMultiple from '../elements/DropdownMultiple';
-import tones from '../../tones.json';
-import colors from '../../colors.json';
-import parts from '../../parts.json';
+import tones from '../../json/tones.json';
+import colors from '../../json/colors.json';
+import parts from '../../json/parts.json';
 
 class TopNav extends Component {
 	constructor(props) {
@@ -112,7 +112,6 @@ class TopNav extends Component {
 					</Column>
 
 					<Column flexGrow={1} horizontal="end" vertical="center" className="top-nav-column">
-						<div className="nav-link"><a href={'/manifesto'}>Manifesto</a></div>
 					</Column>
 				</Row>
 			</div>

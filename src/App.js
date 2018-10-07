@@ -5,11 +5,12 @@ import './App.css';
 import ReactPixel from 'react-facebook-pixel';
 import { BrowserRouter, Route} from 'react-router-dom'
 
-import BottomNav from './components/elements/BottomNav';
 import HomePage from './components/pages/HomePage';
 import InspectorPage from './components/pages/InspectorPage';
 import ManifestoPage from './components/pages/ManifestoPage';
+import PrivacyPage from './components/pages/PrivacyPage';
 import SideNav from "./components/elements/SideNav";
+import TermsPage from './components/pages/TermsPage';
 import TopNav from './components/elements/TopNav';
 
 class App extends Component {
@@ -54,11 +55,11 @@ class App extends Component {
 
 		    <BrowserRouter><div className="content-wrapper">
 			    <Route exact path="/" render={()=> <HomePage section={this.state.section} />} />
-			    <Route exact path="/render" render={()=> <InspectorPage section={this.state.section} />} />
-			    <Route exact path="/manifesto" render={()=> <ManifestoPage section={this.state.section} />} />
+			    <Route exact path="/manifesto" component={ManifestoPage} />
+			    <Route exact path="/privacy" component={PrivacyPage} />
+			    <Route exact path="/terms" component={TermsPage} />
+			    <Route path="/render/:itemID" component={InspectorPage} />
 		    </div></BrowserRouter>
-
-		    <BottomNav />
 	    </div>
     );
   }

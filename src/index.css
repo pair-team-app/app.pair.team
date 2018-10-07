@@ -10,10 +10,6 @@ html, body {
   color: #ffffff;
 }
 
-p {
-  line-height: 20px;
-}
-
 *:focus {
   outline: none;
 }
@@ -26,11 +22,18 @@ button {
   letter-spacing: 1px;
   color : #ffffff;
   border: none;
-  border-radius: 5px;
 }
 
 button:hover {
   cursor: pointer;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+p {
+  line-height: 20px;
 }
 
 ::-webkit-scrollbar {

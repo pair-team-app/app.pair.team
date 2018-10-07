@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import './ColorsForm.css';
-import colors from '../../colors.json';
+import colors from '../../json/colors.json';
 
 import { Column, Row } from 'simple-flexbox';
 

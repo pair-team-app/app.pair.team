@@ -1,10 +1,10 @@
 
 import React, { Component } from 'react';
-import './TermsStep.css';
+import './TermsPage.css';
 
 import { Column, Row } from 'simple-flexbox';
 
-class TermsStep extends Component {
+class TermsPage extends Component {
 	constructor(props) {
 		super(props);
 
@@ -94,4 +94,4 @@ class TermsStep extends Component {
 	}
 }
 
-export default TermsStep;
+export default TermsPage;

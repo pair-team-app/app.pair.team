@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import './TonesForm.css';
-import tones from '../../tones.json';
+import tones from '../../json/tones.json';
 
 import { Column, Row } from 'simple-flexbox';
 

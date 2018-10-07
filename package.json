@@ -12,6 +12,7 @@
     "react-cookies": "^0.1.0",
     "react-currency-format": "^1.0.0",
     "react-dom": "^16.5.2",
+    "react-dropzone": "^6.0.2",
     "react-facebook-pixel": "^0.1.1",
     "react-fontawesome": "^1.6.1",
     "react-geolocated": "^2.4.0",

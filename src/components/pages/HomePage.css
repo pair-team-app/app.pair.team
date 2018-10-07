@@ -1,5 +1,27 @@
 
 .home-page-wrapper {
 	width: 100%;
-	margin-bottom: 75px;
+	margin-bottom: 28px;
+}
+
+.home-page-project {
+	position: relative;
+	width: 100%;
+	height: 300px;
+	background-color: #999999;
+	margin-bottom: 28px;
+}
+
+.home-page-image {
+	width: 100%;
+	height: 100%;
+}
+
+.home-page-title {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.875);
+	padding: 28px;
 }

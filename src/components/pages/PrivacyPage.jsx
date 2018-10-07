@@ -1,10 +1,10 @@
 
 import React, { Component } from 'react';
-import './PrivacyStep.css';
+import './PrivacyPage.css';
 
 import { Column, Row } from 'simple-flexbox';
 
-class PrivacyStep extends Component {
+class PrivacyPage extends Component {
 	constructor(props) {
 		super(props);
 
@@ -56,4 +56,4 @@ class PrivacyStep extends Component {
 	}
 }
 
-export default PrivacyStep;
+export default PrivacyPage;
