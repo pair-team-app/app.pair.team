@@ -1,28 +1,46 @@
 [{
   "id": 1,
-  "title": "Headers"
+  "title": "Headers",
+  "image": "https://via.placeholder.com/1100x300",
+  "selected": false
 }, {
   "id": 2,
-  "title": "Footers"
+  "title": "Footers",
+  "image": "https://via.placeholder.com/150x200",
+  "selected": false
 }, {
   "id": 3,
-  "title": "Input Fields"
+  "title": "Input Fields",
+  "image": "https://via.placeholder.com/150x200",
+  "selected": false
 }, {
   "id": 4,
-  "title": "Text Copy"
+  "title": "Text Copy",
+  "image": "https://via.placeholder.com/150x200",
+  "selected": false
 }, {
   "id": 5,
-  "title": "Grids"
+  "title": "Grids",
+  "image": "https://via.placeholder.com/150x200",
+  "selected": false
 }, {
   "id": 6,
-  "title": "Lists"
+  "title": "Lists",
+  "image": "https://via.placeholder.com/150x200",
+  "selected": false
 }, {
   "id": 7,
-  "title": "Camera"
+  "title": "Camera",
+  "image": "https://via.placeholder.com/150x200",
+  "selected": false
 }, {
   "id": 8,
-  "title": "Settings"
+  "title": "Settings",
+  "image": "https://via.placeholder.com/150x200",
+  "selected": false
 }, {
   "id": 9,
-  "title": "Modals"
+  "title": "Modals",
+  "image": "https://via.placeholder.com/150x200",
+  "selected": false
 }]

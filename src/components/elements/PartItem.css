@@ -7,11 +7,47 @@
 	margin: 14px;
 }
 
-.part-item-title {
+.part-item:hover {
+	cursor: pointer;
+}
+
+.part-item-details-wrapper {
 	position: absolute;
 	left: 0;
 	bottom: 0;
 	width: 100%;
 	background-color: rgba(0, 0, 0, 0.875);
 	padding: 28px;
+}
+
+.part-item:hover .part-item-title {
+	display: none;
+}
+
+.part-item:hover .part-item-button {
+	display: block;
+}
+
+.part-item-title {
+	width: 100%;
+	height: 25px;
+	padding: 4px 0;
+}
+
+.part-item-button {
+	background-color: #7ed321;
+	width: 100%;
+	height: 25px;
+	padding: 4px;
+	display: none;
+}
+
+.part-item-button-selected {
+	display: block;
+	background-color: #002fff;
+}
+
+.part-item-check {
+	font-size: 16px;
+	color: #ffffff;
 }

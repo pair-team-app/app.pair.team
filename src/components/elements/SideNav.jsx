@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import './SideNav.css'
 
+import { Column, Row } from 'simple-flexbox';
+
 import SideNavItem from './SideNavItem';
 
 class SideNav extends Component {
@@ -57,8 +59,15 @@ class SideNav extends Component {
 		return (
 			<div className="side-nav-wrapper">
 				<div className="side-nav-link-wrapper">
-					<div className="side-nav-top-wrapper">{items}</div>
+					<div className="side-nav-top-wrapper">
+						<button className="side-nav-invite-button" onClick={()=> this.props.onInvite()}><Row>
+							<Column flexGrow={1} horizontal="start" vertical="center">Invite Team</Column>
+							<Column flexGrow={1} horizontal="end" vertical="center"><img className="side-nav-invite-image" src="https://via.placeholder.com/18x20" alt="Invite Team" /></Column>
+						</Row></button>
+						{items}
+					</div>
 					<div className="side-nav-bottom-wrapper">
+						<div className="nav-link" onClick={()=> this.props.onRegister()}>Sign Up / Sign In</div>
 						<div className="nav-link"><a href="https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA" target="_blank" rel="noopener noreferrer">Slack</a></div>
 						<div className="nav-link"><a href="https://spectrum.chat/designengine" target="_blank" rel="noopener noreferrer">Spectrum</a></div>
 						<div className="nav-link"><a href={'/manifesto'}>Manifesto</a></div>

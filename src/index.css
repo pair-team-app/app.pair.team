@@ -6,7 +6,7 @@ html, body {
   font-family: "Roboto Mono", monospace;
   font-size: 13px;
   font-weight: 300;
-  background-color: #313131;
+  background-color: #363636;
   color: #ffffff;
 }
 
@@ -17,9 +17,9 @@ html, body {
 button {
   padding: 9px 16px;
   background-color: #002fff;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 1px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 13px;
+  font-weight: 300;
   color : #ffffff;
   border: none;
 }

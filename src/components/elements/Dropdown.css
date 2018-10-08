@@ -7,7 +7,7 @@
 	position: relative;
 	width: 222px;
 	display: inline-block;
-	margin: 0 10px 0 10px;
+	margin: 0 20px 0 0;
 }
 
 .dd-header {
@@ -23,9 +23,9 @@
 	/*line-height: 38px;*/
 	cursor: default;
 	position: relative;
-	background-color: #002fff;
+	background-color: #3e3e3e;
 	color: #ffffff;
-	padding: 5px 14px;
+	padding: 4px 14px;
 }
 
 .dd-header span {

@@ -4,11 +4,11 @@
 	top: 50px;
 	width: 200px;
 	height: 100%;
-	background-color: #313131;
+	background-color: #3e3e3e;
 }
 
 .side-nav-link-wrapper {
-	margin: 28px 0 0 28px;
+	margin: 28px;
 	height: 100%;
 	/*position: relative;*/
 }
@@ -20,10 +20,26 @@
 	/*height: 50px;*/
 }
 
+.side-nav-invite-button {
+	width: 100%;
+	margin-bottom: 28px;
+	padding: 9px 5px;
+}
+
+.side-nav-invite-image {
+	width: 18px;
+	height: 20px;
+}
+
 .nav-link {
 	padding-right: 20px;
 	color: #ffffff;
 	margin-bottom: 10px;
+}
+
+.nav-link:hover, .nav-link a:hover {
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 .nav-link a, .nav-link a:active, .nav-link a:link, .nav-link a:visited {
@@ -35,10 +51,6 @@
 	color: #eeeeee;
 }
 
-.nav-link a:hover {
-	text-decoration: underline;
-	cursor: pointer;
-}
 
 .copyright {
 	color: #999999;

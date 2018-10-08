@@ -18,8 +18,9 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			url     : window.location.pathname,
-			section : '0'
+			url           : window.location.pathname,
+			section       : '0',
+			selectedParts : []
 		};
 	}
 
@@ -37,6 +38,14 @@ class App extends Component {
 	componentWillUnmount() {
 	}
 
+	handleInvite = ()=> {
+		console.log('handleInvite()');
+	};
+
+	handleRegistration = ()=> {
+		console.log('handleRegistration()');
+	};
+
 	handleSideNavItem = (obj)=> {
 		console.log('handleNavItem()', obj);
 		this.setState({ section : obj.title });
@@ -46,15 +55,46 @@ class App extends Component {
 		console.log('handleUpload()');
 	};
 
+	handlePartSelected = (obj)=> {
+		console.log('handlePartSelected()', obj);
+		let selectedParts = this.state.selectedParts;
+		if (obj.selected) {
+			let isFound = false;
+			selectedParts.forEach(function(item, i) {
+				if (item.id === obj.id) {
+					isFound = true;
+				}
+			});
+
+			if (!isFound) {
+				selectedParts.push(obj);
+			}
+
+		} else {
+			selectedParts.forEach(function(item, i) {
+				if (item.id === obj.id) {
+					selectedParts.splice(i, 1);
+				}
+			});
+		}
+
+		this.setState({ selectedParts : selectedParts });
+	};
+
+	handlePartDetails = (obj)=> {
+		console.log('handlePartDetails()', obj);
+		window.location.href = '/render/' + obj.id;
+	};
+
 
   render() {
     return (
     	<div className="page-wrapper">
-		    <TopNav url={this.state.url} onUpload={()=> this.handleUpload()} />
-		    <SideNav url={this.state.url} onNavItem={(obj)=> this.handleSideNavItem(obj)} />
+		    <TopNav url={this.state.url} onUpload={()=> this.handleUpload()} parts={this.state.selectedParts} />
+		    <SideNav url={this.state.url} onNavItem={(obj)=> this.handleSideNavItem(obj)} onInvite={()=> this.handleInvite()} onRegister={()=> this.handleRegistration()} />
 
-		    <BrowserRouter><div className="content-wrapper">
-			    <Route exact path="/" render={()=> <HomePage section={this.state.section} />} />
+		    <BrowserRouter><div className="content-wrapper debug-border">
+			    <Route exact path="/" render={()=> <HomePage section={this.state.section} onPartSelected={(obj)=> this.handlePartSelected(obj)} onPartClicked={(obj)=> this.handlePartDetails(obj)} />} />
 			    <Route exact path="/manifesto" component={ManifestoPage} />
 			    <Route exact path="/privacy" component={PrivacyPage} />
 			    <Route exact path="/terms" component={TermsPage} />

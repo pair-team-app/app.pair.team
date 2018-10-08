@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './TopNav.css';
 
+import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
 
 import Dropdown from '../elements/Dropdown';
@@ -85,13 +86,13 @@ class TopNav extends Component {
 		return (
 			<div className="top-nav-wrapper">
 				<Row vertical="start">
-					<Column flexGrow={1} horizontal="start" vertical="center" className="top-nav-column">
+					<Column flexGrow={2} horizontal="start" vertical="center" className="top-nav-column">
 						<a href="/"><img src="/images/logo.svg" className="nav-logo" alt="Design Engine" /></a>
 					</Column>
 
 					<Column flexGrow={5} horizontal="start" vertical="center" className="top-nav-column">
 						<div className="full-width">
-							<button onClick={()=> this.props.onUpload()}>+</button>
+							<button onClick={()=> this.props.onUpload()}><FontAwesome name="plus" className="top-nav-upload-plus" /></button>
 							<Dropdown
 								title="Select parts"
 								list={this.state.dropdowns.parts}
@@ -111,7 +112,10 @@ class TopNav extends Component {
 						</div>
 					</Column>
 
-					<Column flexGrow={1} horizontal="end" vertical="center" className="top-nav-column">
+					<Column flexGrow={2} horizontal="end" vertical="center" className="top-nav-column">
+						{(this.props.parts.length > 0) && (
+							<button>Download Parts ({this.props.parts.length})</button>
+						)}
 					</Column>
 				</Row>
 			</div>

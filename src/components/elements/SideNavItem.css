@@ -8,3 +8,9 @@
 	cursor: pointer;
 	text-decoration: underline;
 }
+
+.side-nav-item-arrow {
+	font-size: 14px;
+	color: #ffffff;
+	margin-right: 10px;
+}

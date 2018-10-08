@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './SideNavItem.css'
 
+import FontAwesome from 'react-fontawesome';
 
 class SideNavItem extends Component {
 	constructor(props) {
@@ -19,7 +20,7 @@ class SideNavItem extends Component {
 
 		return (
 			<div className={className} onClick={()=> this.props.onClick()}>
-				{(this.props.selected) && ('> ')}
+				{(this.props.selected) && (<FontAwesome name="caret-right" className="side-nav-item-arrow" />)}
 				{this.props.title}
 			</div>
 		);
