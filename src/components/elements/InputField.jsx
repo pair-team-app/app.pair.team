@@ -30,7 +30,7 @@ class InputField extends Component {
 	render() {
 		return (
 			<div className="form-element">
-				<input className="textfield-input" type="text" name={this.props.name} placeholder={this.props.placeholder} value={this.props.value} onChange={this.handleChange} />
+				<input className="textfield-input" type={(this.props.type === 'password') ? 'password' : 'text'} name={this.props.name} placeholder={this.props.placeholder} value={this.props.value} onChange={this.handleChange} />
 				{/*<div className="input-tip input-tip-red" onClick={()=> this.props.onClick('title')}>Required</div>*/}
 			</div>
 		);

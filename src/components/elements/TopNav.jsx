@@ -114,7 +114,7 @@ class TopNav extends Component {
 
 					<Column flexGrow={2} horizontal="end" vertical="center" className="top-nav-column">
 						{(this.props.parts.length > 0) && (
-							<button>Download Parts ({this.props.parts.length})</button>
+							<button onClick={()=> this.props.onDownload()}>Download Parts ({this.props.parts.length})</button>
 						)}
 					</Column>
 				</Row>

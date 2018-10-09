@@ -147,26 +147,26 @@ class PurchaseStep extends Component {
 								<button className="action-button purchase-button" onClick={()=> this.onCC()}>Credit Card</button><br />
 								<button className="action-button purchase-button" onClick={()=> this.onWePay()}>WePay</button>
 
-								{/*<div style={{width:'100%', textAlign:'left'}}>*/}
-									{/*<StripeProvider apiKey={this.STRIPE_TEST_TOKEN}>*/}
-									{/*/!*<StripeProvider apiKey={this.STRIPE_LIVE_TOKEN}>*!/*/}
-									{/*<div className="example" style={{width:'100%'}}>*/}
-									{/*<Elements>*/}
-									{/*<StripeCheckout*/}
-									{/*amount={amount}*/}
-									{/*onBack={()=> this.props.onBack(this.state.selectedItems)}*/}
-									{/*onNext={()=> this.props.onNext()}*/}
-									{/*/>*/}
-									{/*</Elements>*/}
-									{/*</div>*/}
-									{/*</StripeProvider>*/}
+								<div style={{width:'100%', textAlign:'left'}}>
+									<StripeProvider apiKey={this.STRIPE_TEST_TOKEN}>
+									{/*<StripeProvider apiKey={this.STRIPE_LIVE_TOKEN}>*/}
+									<div className="example" style={{width:'100%'}}>
+									<Elements>
+									<StripeCheckout
+									amount={amount}
+									onBack={()=> this.props.onBack(this.state.selectedItems)}
+									onNext={()=> this.props.onNext()}
+									/>
+									</Elements>
+									</div>
+									</StripeProvider>
 
-									{/*<div className="purchase-item-wrapper">*/}
-										{/*<Row horizontal="center" style={{flexWrap:'wrap'}}>*/}
-											{/*{items}*/}
-										{/*</Row>*/}
-									{/*</div>*/}
-								{/*</div>*/}
+									<div className="purchase-item-wrapper">
+										<Row horizontal="center" style={{flexWrap:'wrap'}}>
+											{items}
+										</Row>
+									</div>
+								</div>
 							</div>
 						)}
 					</Column>

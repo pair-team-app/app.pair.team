@@ -16,6 +16,11 @@
 	padding: 28px;
 }
 
+.input-title {
+	margin-bottom: 28px;
+	font-size: 18px;
+}
+
 .flex-wrapper {
 	width: 100%;
 	flex-wrap: wrap;

@@ -4,7 +4,7 @@ import './EmailForm.css';
 
 import { Column, Row } from 'simple-flexbox';
 
-import InputField from '../InputField';
+import InputField from '../elements/InputField';
 
 
 class EmailForm extends Component {
