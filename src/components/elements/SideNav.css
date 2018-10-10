@@ -1,8 +1,8 @@
 
 .side-nav-wrapper {
 	position: fixed;
-	top: 50px;
-	width: 200px;
+	top: 90px;
+	width: 300px;
 	height: 100%;
 	background-color: #3e3e3e;
 }
@@ -10,14 +10,12 @@
 .side-nav-link-wrapper {
 	margin: 28px;
 	height: 100%;
-	/*position: relative;*/
 }
 
 .side-nav-bottom-wrapper {
 	position: absolute;
-	bottom: 50px;
+	bottom: 100px;
 	left: 28px;
-	/*height: 50px;*/
 }
 
 .side-nav-invite-button {

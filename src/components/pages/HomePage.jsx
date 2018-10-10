@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './HomePage.css';
 
-import axios from 'axios';
 import { Column, Row } from 'simple-flexbox';
 
 import PartItem from './../elements/PartItem';

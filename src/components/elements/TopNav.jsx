@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './TopNav.css';
 
+import cookie from 'react-cookies';
 import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
 
@@ -85,19 +86,24 @@ class TopNav extends Component {
 	render() {
 		return (
 			<div className="top-nav-wrapper">
-				<Row vertical="start">
-					<Column flexGrow={2} horizontal="start" vertical="center" className="top-nav-column">
+				<div className="top-nav-column" style={{width:'300px'}}><Row>
+					<Column flexGrow={1} horizontal="start" vertical="center">
 						<a href="/"><img src="/images/logo.svg" className="nav-logo" alt="Design Engine" /></a>
 					</Column>
-
-					<Column flexGrow={5} horizontal="start" vertical="center" className="top-nav-column">
-						<div className="full-width">
+					{(typeof cookie.load('user_id') !== 'undefined') && (
+						<Column flexGrow={1} horizontal="end" vertical="center">
 							<button onClick={()=> this.props.onUpload()}><FontAwesome name="plus" className="top-nav-upload-plus" /></button>
-							<Dropdown
-								title="Select parts"
-								list={this.state.dropdowns.parts}
-								resetThenSet={this.resetThenSet}
-							/>
+						</Column>
+					)}
+				</Row></div>
+
+				<div className="top-nav-column">
+					{(typeof cookie.load('upload_id') !== 'undefined') && (
+						<div><Dropdown
+							title="Select parts"
+							list={this.state.dropdowns.parts}
+							resetThenSet={this.resetThenSet}
+						/>
 							<DropdownMultiple
 								titleHelper="Color"
 								title="Select color(s)"
@@ -108,16 +114,15 @@ class TopNav extends Component {
 								title="Select tone"
 								list={this.state.dropdowns.tones}
 								resetThenSet={this.resetThenSet}
-							/>
-						</div>
-					</Column>
+							/></div>
+					)}
+				</div>
 
-					<Column flexGrow={2} horizontal="end" vertical="center" className="top-nav-column">
-						{(this.props.parts.length > 0) && (
-							<button onClick={()=> this.props.onDownload()}>Download Parts ({this.props.parts.length})</button>
-						)}
-					</Column>
-				</Row>
+				<div className="top-nav-column" style={{textAlign:'right'}}>
+					{(this.props.parts.length > 0) && (
+						<button onClick={()=> this.props.onDownload()}>Download Parts ({this.props.parts.length})</button>
+					)}
+				</div>
 			</div>
 		);
 	}

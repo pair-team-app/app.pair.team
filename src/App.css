@@ -6,9 +6,9 @@
 
 .content-wrapper {
 	position: fixed;
-	top: 50px;
-	left: 200px;
-	width: calc(100% - 200px);
+	top: 90px;
+	left: 300px;
+	width: calc(100% - 300px);
 	height: 100%;
 	overflow-x: hidden;
 	overflow-y: scroll;
@@ -19,6 +19,15 @@
 .input-title {
 	margin-bottom: 28px;
 	font-size: 18px;
+}
+
+.input-wrapper {
+	margin-bottom: 28px;
+	border: 1px solid #3e3e3e;
+}
+
+.input-wrapper-error {
+	border: 1px solid #da3838;
 }
 
 .flex-wrapper {
@@ -33,6 +42,7 @@
 .text-underline {
 	text-decoration: underline;
 }
+
 
 .is-hidden {
 	display: none;

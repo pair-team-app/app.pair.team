@@ -4,7 +4,6 @@ import React, {Component} from 'react';
 import axios from 'axios';
 // import CurrencyFormat from 'react-currency-format';
 import ReactPixel from 'react-facebook-pixel';
-import { Row } from 'simple-flexbox';
 import { CardCVCElement, CardExpiryElement, CardNumberElement, injectStripe } from 'react-stripe-elements';
 
 
@@ -47,8 +46,6 @@ class StripeCheckout extends Component {
 	}
 
 	render() {
-		const btnClass = (this.props.amount > 0) ? 'form-button' : 'form-button form-button-disabled';
-
 		return (
 			<div className="checkout">
 				<div className="form-element">

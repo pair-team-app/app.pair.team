@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './InspectorPage.css';
 
-import axios from 'axios';
 // import { Column, Row } from 'simple-flexbox';
 
 

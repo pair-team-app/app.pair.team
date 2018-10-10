@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './App.css';
 
+import cookie from 'react-cookies';
 import ReactPixel from 'react-facebook-pixel';
 import { BrowserRouter, Route} from 'react-router-dom'
 
@@ -25,7 +26,8 @@ class App extends Component {
 			url           : window.location.pathname,
 			section       : '0',
 			selectedParts : [],
-			overlayAlert  : null
+			overlayAlert  : null,
+			user_id       : 0
 		};
 	}
 
@@ -97,8 +99,8 @@ class App extends Component {
 	handleOverlay = (overlayType, buttonType)=> {
 		console.log('handleOverlay()', overlayType, buttonType);
 		this.setState({ overlayAlert : null });
-		if (buttonType === 'cancel') {
-			this.setState({ overlayAlert : null });
+		if (overlayType === 'register' && buttonType === 'submit') {
+			this.setState({ user_id : 0 });
 		}
 	};
 
@@ -107,6 +109,10 @@ class App extends Component {
 		this.setState({ overlayAlert: 'download' });
 	};
 
+	handleLogout = ()=> {
+		cookie.remove('user_id');
+		this.setState({ user_id : 0 });
+	};
 
   render() {
     return (
@@ -117,9 +123,15 @@ class App extends Component {
 			    onUpload={()=> this.handleUpload()}
 			    onDownload={()=> this.handleDownload()}
 		    />
-		    <SideNav url={this.state.url} onNavItem={(obj)=> this.handleSideNavItem(obj)} onInvite={()=> this.handleInvite()} onRegister={()=> this.handleRegistration()} />
+		    <SideNav
+			    url={this.state.url}
+			    onNavItem={(obj)=> this.handleSideNavItem(obj)}
+			    onInvite={()=> this.handleInvite()}
+			    onRegister={()=> this.handleRegistration()}
+			    onLogout={()=> this.handleLogout()}
+		    />
 
-		    <BrowserRouter><div className="content-wrapper debug-border">
+		    <BrowserRouter><div className="content-wrapper">
 			    <Route exact path="/" render={()=> <HomePage section={this.state.section} onPartSelected={(obj)=> this.handlePartSelected(obj)} onPartClicked={(obj)=> this.handlePartDetails(obj)} />} />
 			    <Route exact path="/manifesto" component={ManifestoPage} />
 			    <Route exact path="/privacy" component={PrivacyPage} />
