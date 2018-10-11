@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './SideNav.css'
 
+import axios from 'axios';
 import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
@@ -12,41 +13,48 @@ class SideNav extends Component {
 		super(props);
 
 		this.state = {
-			items : [
-				{
-					id          : 1,
-					title       : 'Item 1',
-					description : '',
-					selected    : false
-				}, {
-					id          : 2,
-					title       : 'Item 2',
-					description : '',
-					selected    : false
-				}, {
-					id          : 3,
-					title       : 'Item 3',
-					description : '',
-					selected    : false
-				}
-			]
+			pages : []
 		};
 	}
 
 	handleNavItem = (ind) => {
-		let items = [...this.state.items];
-		items.forEach(item => item.selected = false);
-		items[ind].selected = true;
+		let pages = [...this.state.pages];
+		pages.forEach(page => page.selected = false);
+		pages[ind].selected = true;
 
-		this.setState({ items : items });
-		this.props.onNavItem(items[ind]);
+		this.setState({ pages : pages });
+		this.props.onNavItem(pages[ind]);
 	};
 
 	componentDidMount() {
+		if ((this.props.url === '/' || this.props.url.includes('/render/')) && typeof cookie.load('user_id') !== 'undefined') {
+			let formData = new FormData();
+			formData.append('action', 'PAGES');
+			formData.append('user_id', cookie.load('user_id'));
+			formData.append('upload_id', cookie.load('upload_id'));
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response) => {
+					console.log('PAGES', JSON.stringify(response.data));
+					let pages = [];
+					response.data.pages.forEach(page => {
+						pages.push({
+							id          : page.id,
+							title       : page.title,
+							description : page.description,
+							added       : page.added,
+							selected    : false
+						});
+					});
+
+					this.setState({ pages : pages });
+
+				}).catch((error) => {
+			});
+		}
 	}
 
 	render() {
-		const items = ((this.props.url === '/' || this.props.url.includes('/render/')) && typeof cookie.load('user_id') !== 'undefined') ? this.state.items.map((item, i, arr) => {
+		const items = ((this.props.url === '/' || this.props.url.includes('/render/')) && typeof cookie.load('user_id') !== 'undefined') ? this.state.pages.map((item, i, arr) => {
 			return (
 					<SideNavItem
 						key={i}

@@ -40,6 +40,8 @@ class App extends Component {
 
 		ReactPixel.init('318191662273348', advancedMatching, options);
 		ReactPixel.trackCustom('load');
+
+		cookie.save('upload_id', '110', { path : '/' });
 	}
 
 	componentWillUnmount() {

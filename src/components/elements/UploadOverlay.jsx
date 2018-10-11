@@ -52,7 +52,7 @@ class UploadOverlay extends Component {
 				}
 			};
 
-			axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsketch', formData, config)
+			axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
 				.then((response)=>{
 					console.log("UPLOAD", JSON.stringify(response.data));
 				}).catch((error) => {
@@ -64,10 +64,11 @@ class UploadOverlay extends Component {
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD');
 		formData.append('user_id', cookie.load('user_id'));
-		formData.append('filename', this.state.files[0].name);
+		formData.append('filename', "http://cdn.designengine.ai/system/" + this.state.files[0].name);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD', JSON.stringify(response.data));
+				cookie.save('upload_id', response.data.upload_id, { path : '/' });
 				this.props.onClick('submit');
 			}).catch((error) => {
 		});
