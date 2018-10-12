@@ -1,5 +1,88 @@
 
 .inspector-page-wrapper {
 	width: 100%;
+	height: calc(100% - 90px);
 	margin-bottom: 75px;
+	display: table;
+}
+
+.inspector-page-content {
+	width: calc(100% - 300px);
+	height: 100%;
+	display: table-cell;
+	padding: 28px;
+	vertical-align: top;
+}
+
+.inspector-page-hero-wrapper {
+	position: relative;
+	width: 100%;
+	height: 400px;
+	background-color: #5fff63;
+}
+
+.inspector-page-hero-image {
+	width: 100%;
+	height: 100%;
+}
+
+.inspector-page-hero-title {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.875);
+	padding: 28px;
+}
+
+.inspector-page-hero-info-wrapper {
+	margin-top: 28px;
+	line-height: 26px;
+}
+
+.inspector-page-panel {
+	width: 300px;
+	height: 100%;
+	padding: 28px;
+	background-color: #242424;
+	display: table-cell;
+	vertical-align: top;
+}
+
+.inspector-page-panel-display {
+	width: 100%;
+	height: 244px;
+	background-image: url("/images/checkerboard.png");
+}
+
+.inspector-page-panel-button-wrapper {
+	width: 100%;
+	margin: 28px 0 28px 0;
+}
+
+.inspector-page-size-button {
+	background-color: #3e3e3e;
+	width: 80px;
+	padding: 4px 8px;
+	font-size: 12px;
+}
+
+.inspector-page-size-button-middle {
+	margin: 0 2px;
+}
+
+.inspector-page-select-button {
+	width: 100%;
+	margin: 28px 0;
+	background-color: #669b2c;
+}
+
+.inspector-page-download-button {
+	width: 100%;
+}
+
+.inspector-page-panel-info-wrapper {
+	width: 100%;
+	margin-top: 28px;
+	line-height: 26px;
 }
