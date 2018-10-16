@@ -4,6 +4,7 @@ import './SideNav.css'
 
 import axios from 'axios';
 import cookie from 'react-cookies';
+import { withRouter } from 'react-router-dom'
 import { Column, Row } from 'simple-flexbox';
 
 import SideNavItem from './SideNavItem';
@@ -13,23 +14,104 @@ class SideNav extends Component {
 		super(props);
 
 		this.state = {
-			isHome : true,
-			pages  : []
+			pageID     : 0,
+			artboardID : 0,
+			sliceID    : 0,
+			pages      : [],
+			artboards  : []
 		};
 	}
 
 	handleNavItem = (ind) => {
-		let pages = [...this.state.pages];
-		pages.forEach(page => page.selected = false);
-		pages[ind].selected = true;
+		console.log('handleNavItem()', ind);
 
-		this.setState({ pages : pages });
-		this.props.onNavItem(pages[ind]);
+		if (window.location.pathname === '/') {
+			let pages = [...this.state.pages];
+			pages.forEach(page => page.selected = false);
+			pages[ind].selected = true;
+
+			this.setState({ pages : pages });
+			this.props.onPageItem(pages[ind]);
+
+		} else {
+			let artboards = [...this.state.artboards];
+			artboards.forEach(artboard => artboard.selected = false);
+			artboards[ind].selected = true;
+
+			this.setState({
+				pageID      : artboards[ind].pageID,
+				artboardID  : artboards[ind].id,
+				artboards   : artboards
+			});
+
+			this.props.onArtboardItem(artboards[ind]);
+			this.props.history.push('/render/' + artboards[ind].pageID + '/' + artboards[ind].id);
+		}
 	};
 
 	componentDidMount() {
+		this.refreshData();
+	}
+
+	refreshData = ()=> {
+		if (window.location.pathname.includes('/render/')) {
+			const pageID = window.location.pathname.match(/\/(\d+)\//)[1];
+			const artboardID = window.location.pathname.match(/\/(\d+)$/)[1];
+			this.setState({
+				pageID     : pageID,
+				artboardID : artboardID
+			});
+		}
+
 		if (typeof cookie.load('user_id') !== 'undefined') {
-			if (this.props.url === '/') {
+			if (window.location.pathname.includes('/render/')) {
+				const pageID = window.location.pathname.match(/\/(\d+)\//)[1];
+				const artboardID = window.location.pathname.match(/\/(\d+)$/)[1];
+				this.setState({
+					pageID     : pageID,
+					artboardID : artboardID
+				});
+
+				let formData = new FormData();
+				formData.append('action', 'ARTBOARDS');
+				formData.append('upload_id', cookie.load('upload_id'));
+				formData.append('page_id', '' + pageID);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response) => {
+						console.log('ARTBOARDS', response.data);
+						let artboards = [];
+
+						response.data.artboards.forEach(artboard => {
+							let slices = [];
+							artboard.slices.forEach(function(item, i) {
+								slices.push({
+									id       : item.id,
+									title    : item.title,
+									filename : item.filename + '@1x.png',
+									meta     : JSON.parse(item.meta),
+									added    : item.added,
+									selected : false
+								});
+							});
+
+							artboards.push({
+								id        : artboard.id,
+								pageID    : artboard.page_id,
+								title     : artboard.title,
+								filename  : artboard.filename,
+								meta      : JSON.parse(artboard.meta),
+								added     : artboard.added,
+								slices    : slices,
+								selected  : (artboardID === artboard.id)
+							});
+						});
+
+						this.setState({ artboards : artboards });
+
+					}).catch((error) => {
+				});
+
+			}	else {
 				let formData = new FormData();
 				formData.append('action', 'PAGES');
 				formData.append('user_id', cookie.load('user_id'));
@@ -39,10 +121,38 @@ class SideNav extends Component {
 						console.log('PAGES', response.data);
 						let pages = [];
 						response.data.pages.forEach(page => {
+							let artboards = [];
+
+							page.artboards.forEach(artboard => {
+								let slices = [];
+								artboard.slices.forEach(function(item, i) {
+									slices.push({
+										id       : item.id,
+										title    : item.title,
+										filename : item.filename + '@1x.png',
+										meta     : JSON.parse(item.meta),
+										added    : item.added,
+										selected : false
+									});
+								});
+
+								artboards.push({
+									id        : artboard.id,
+									pageID    : artboard.page_id,
+									title     : artboard.title,
+									filename  : artboard.filename,
+									meta      : JSON.parse(artboard.meta),
+									added     : artboard.added,
+									slices    : slices,
+									selected  : false//(artboardID === artboard.id)
+								});
+							});
+
 							pages.push({
 								id          : page.id,
 								title       : page.title,
 								description : page.description,
+								artboards   : artboards,
 								added       : page.added,
 								selected    : false
 							});
@@ -52,39 +162,48 @@ class SideNav extends Component {
 
 					}).catch((error) => {
 				});
+			}
+		}
+	};
 
-			} else if (this.props.url.includes('/render/')) {
+	render() {
+		console.log('SideNav.render()');
 
-			}	else {
-				let formData = new FormData();
-				formData.append('action', 'ARTBOARDS');
-				formData.append('page_id', this.props.pageID);
-				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response) => {
-						console.log('ARTBOARDS', response.data);
-						let artboards = [];
-						response.data.artboards.forEach(page => {
-						});
+		if (window.location.pathname.includes('/render/')) {
+			const artboardID = window.location.pathname.match(/\/(\d+)$/)[1];
+			if (this.state.artboardID !== artboardID) {
+				this.refreshData();
+				return (null);
+			}
+		}
 
-						this.setState({ artboards : artboards });
+		let items = [];
+		if (typeof cookie.load('user_id') !== 'undefined') {
+			if (window.location.pathname === '/') {
+				items = this.state.pages.map((item, i, arr) => {
+					return (
+						<SideNavItem
+							key={i}
+							title={item.title}
+							description={item.description}
+							selected={item.selected}
+							onClick={()=> this.handleNavItem(i)} />
+					);
+				});
 
-					}).catch((error) => {
+			} else if (window.location.pathname.includes('/render/')) {
+				items = this.state.artboards.map((item, i, arr) => {
+					return (
+						<SideNavItem
+							key={i}
+							title={item.title}
+							description=""
+							selected={item.selected}
+							onClick={()=> this.handleNavItem(i)} />
+					);
 				});
 			}
 		}
-	}
-
-	render() {
-		const items = ((this.props.url === '/' || this.props.url.includes('/render/')) && typeof cookie.load('user_id') !== 'undefined') ? this.state.pages.map((item, i, arr) => {
-			return (
-					<SideNavItem
-						key={i}
-						title={item.title}
-						description={item.description}
-						selected={item.selected}
-						onClick={()=> this.handleNavItem(i)} />
-			);
-		}) : [];
 
 		return (
 			<div className="side-nav-wrapper">
@@ -116,4 +235,4 @@ class SideNav extends Component {
 	}
 }
 
-export default SideNav;
+export default withRouter(SideNav);

@@ -12,12 +12,13 @@ class UploadOverlay extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			files: [],
-			percent : 0,
-			action : '',
-			email1 : '',
-			email2 : '',
-			email3 : '',
+			system      : '',
+			files       : [],
+			percent     : 0,
+			action      : '',
+			email1      : '',
+			email2      : '',
+			email3      : '',
 			email1Valid : false,
 			email2Valid : false,
 			email3Valid : false
@@ -64,6 +65,7 @@ class UploadOverlay extends Component {
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD');
 		formData.append('user_id', cookie.load('user_id'));
+		formData.append('system', this.state.system);
 		formData.append('filename', "http://cdn.designengine.ai/system/" + this.state.files[0].name);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
@@ -133,6 +135,7 @@ class UploadOverlay extends Component {
 						<div className="overlay-logo-wrapper"><img src="/images/logo.svg" className="overlay-logo" alt="Design Engine" /></div>
 						<div className="overlay-title">{title}</div>
 						<div className="overlay-content">
+							<div className="input-wrapper"><input type="text" name="system" placeholder="System Name" value={this.state.system} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 							<div className="input-title">Invite team members</div>
 							<div className={email1Class}><input type="text" name="email1" placeholder="Engineer Email" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 							<div className={email2Class}><input type="text" name="email2" placeholder="Engineer Email" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>

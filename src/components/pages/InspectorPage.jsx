@@ -14,12 +14,15 @@ class InspectorPage extends Component {
 			artboardID : 0,
 			sliceID    : 0,
 			page       : null,
-			artboard   : null,
-			slices     : []
+			artboard   : null
 		};
 	}
 
 	componentDidMount() {
+		//this.refreshData();
+	}
+
+	refreshData = ()=> {
 		const { pageID, artboardID } = this.props.match.params;
 		this.setState({
 			pageID     : pageID,
@@ -39,47 +42,46 @@ class InspectorPage extends Component {
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response)=> {
 						console.log('ARTBOARD', response.data);
+
+						let slices = [];
+						response.data.artboard.slices.forEach(function(item, i) {
+							slices.push({
+								id       : item.id,
+								title    : item.title,
+								filename : item.filename + '@1x.png',
+								meta     : JSON.parse(item.meta),
+								added    : item.added
+							});
+						});
+
 						const artboard = {
 							id        : response.data.artboard.id,
 							pageID    : response.data.artboard.page_id,
 							title     : response.data.artboard.title,
 							filename  : response.data.artboard.filename,
 							meta      : JSON.parse(response.data.artboard.meta),
-							added     : response.data.artboard.added
+							added     : response.data.artboard.added,
+							slices    : slices
 						};
+
 						this.setState({ artboard : artboard });
-
-						formData.append('action', 'SLICES');
-						formData.append('artboard_id', '' + artboardID);
-						axios.post('https://api.designengine.ai/system.php', formData)
-							.then((response)=> {
-								console.log('SLICES', response.data);
-
-								let slices = [];
-								response.data.slices.forEach(function(item, i) {
-									slices.push({
-										id       : item.id,
-										title    : item.title,
-										filename : item.filename + '@1x.png',
-										meta     : JSON.parse(item.meta),
-										added    : item.added,
-										selected : false
-									});
-								});
-
-								this.setState({ slices : slices });
-							}).catch((error) => {
-						});
 					}).catch((error) => {
 				});
 			}).catch((error) => {
 		});
-	}
+	};
 
 	render() {
+		console.log('InspectorPage.render()');
+		const { artboardID } = this.props.match.params;
+		if (this.state.artboardID !== artboardID) {
+			this.refreshData();
+			return (null);
+		}
+
 		const page = (this.state.page) ? this.state.page : null;
 		const artboard = (this.state.artboard) ? this.state.artboard : null;
-		const slice = (this.state.slices.length > 0) ? this.state.slices[0] : null;
+		const slice = (this.state.artboard) ? (this.state.artboard.slices.length > 0) ? this.state.artboard.slices[0] : null : null;
 
 		const heroImageClass = 'inspector-page-hero-image' + ((artboard) ? (artboard.meta.frame.width > artboard.meta.frame.height) ? ' inspector-page-hero-image-landscape' : ' inspector-page-hero-image-portrait' : '');
 		const panelImageClass = 'inspector-page-panel-image' + ((slice) ? (slice.meta.frame.width > slice.meta.frame.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait' : '');

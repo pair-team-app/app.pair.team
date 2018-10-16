@@ -4,7 +4,7 @@ import './App.css';
 
 import cookie from 'react-cookies';
 import ReactPixel from 'react-facebook-pixel';
-import { BrowserRouter, Route} from 'react-router-dom'
+import { Route, withRouter } from 'react-router-dom'
 
 import HomePage from './components/pages/HomePage';
 import InspectorPage from './components/pages/InspectorPage';
@@ -23,7 +23,6 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			url           : window.location.pathname,
 			section       : '0',
 			pageID        : 0,
 			artboardID    : 0,
@@ -38,11 +37,15 @@ class App extends Component {
 		const advancedMatching = { em: 'some@email.com' };
 		const options = {
 			autoConfig : true,
-			debug      : false,
+			debug      : false
 		};
 
 		ReactPixel.init('318191662273348', advancedMatching, options);
 		ReactPixel.trackCustom('load');
+
+		if (window.location.pathname.includes('/render/')) {
+			this.setState({ pageID : window.location.pathname.match(/\/\d+\//)[1] });
+		}
 
 		cookie.save('upload_id', '110', { path : '/' });
 	}
@@ -60,9 +63,19 @@ class App extends Component {
 		this.setState({ overlayAlert: 'register' });
 	};
 
-	handleSideNavItem = (obj)=> {
-		console.log('handleNavItem()', obj);
+	handleSideNavPageItem = (obj)=> {
+		console.log('handleSideNavPageItem()', obj);
 		this.setState({ pageID : obj.id });
+	};
+
+	handleSideNavArtboardItem = (obj)=> {
+		console.log('handleSideNavArtboardItem()', obj);
+		this.setState({ artboardID : obj.id });
+	};
+
+	handleSideNavSliceItem = (obj)=> {
+		console.log('handleSideNavSliceItem()', obj);
+		this.setState({ slice : obj.id });
 	};
 
 	handleUpload = ()=> {
@@ -98,8 +111,12 @@ class App extends Component {
 
 	handleArtboardDetails = (obj)=> {
 		console.log('handleArtboardDetails()', obj);
-		this.setState({ pageID : obj.pageID });
-		window.location.href = '/render/' + obj.pageID + '/' + obj.id;
+		this.setState({
+			pageID     : obj.pageID,
+			artboardID : obj.id
+		});
+
+		this.props.history.push('/render/' + obj.pageID + '/' + obj.id);
 	};
 
 	handleOverlay = (overlayType, buttonType)=> {
@@ -121,30 +138,32 @@ class App extends Component {
 	};
 
   render() {
+  	console.log('state', this.state);
+
     return (
     	<div className="page-wrapper">
 		    <TopNav
-			    url={this.state.url}
 			    parts={this.state.selectedArtboards}
 			    onUpload={()=> this.handleUpload()}
 			    onDownload={()=> this.handleDownload()}
 		    />
 		    <SideNav
-			    url={this.state.url}
 			    pageID={this.state.pageID}
-			    onNavItem={(obj)=> this.handleSideNavItem(obj)}
+			    onPageItem={(obj)=> this.handleSideNavPageItem(obj)}
+			    onArtboardItem={(obj)=> this.handleSideNavArtboardItem(obj)}
+			    onSliceItem={(obj)=> this.handleSideNavSliceItem(obj)}
 			    onInvite={()=> this.handleInvite()}
 			    onRegister={()=> this.handleRegistration()}
 			    onLogout={()=> this.handleLogout()}
 		    />
 
-		    <BrowserRouter><div className="content-wrapper">
+		    <div className="content-wrapper">
 			    <Route exact path="/" render={()=> <HomePage pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
 			    <Route exact path="/manifesto" component={ManifestoPage} />
 			    <Route exact path="/privacy" component={PrivacyPage} />
-			    <Route exact path="/terms" component={TermsPage} />
 			    <Route path="/render/:pageID/:artboardID" component={InspectorPage} />
-		    </div></BrowserRouter>
+			    <Route exact path="/terms" component={TermsPage} />
+		    </div>
 
 		    {(this.state.overlayAlert === 'register') && (
 			    <RegisterOverlay onClick={(buttonType)=>this.handleOverlay('register', buttonType)} />
@@ -166,4 +185,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(App);

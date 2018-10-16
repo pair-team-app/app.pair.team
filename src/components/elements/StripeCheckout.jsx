@@ -19,10 +19,10 @@ class StripeCheckout extends Component {
 	}
 
 	componentDidMount() {
-		const advancedMatching = { em: 'some@email.com' }; // optional, more info: https://developers.facebook.com/docs/facebook-pixel/pixel-with-ads/conversion-tracking#advanced_match
+		const advancedMatching = { em : 'some@email.com' };
 		const options = {
-			autoConfig : true, 	// set pixel's autoConfig
-			debug      : false, // enable logs
+			autoConfig : true,
+			debug      : false
 		};
 		ReactPixel.init('318191662273348', advancedMatching, options);
 	}

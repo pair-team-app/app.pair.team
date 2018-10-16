@@ -20,7 +20,7 @@ class SideNavItem extends Component {
 
 		return (
 			<div className={className} onClick={()=> this.props.onClick()}>
-				{(this.props.selected) && (<FontAwesome name="caret-right" className="side-nav-item-arrow" />)}
+				{(this.props.selected) && (<FontAwesome name="caret-down" className="side-nav-item-arrow" />)}
 				{this.props.title}
 			</div>
 		);
