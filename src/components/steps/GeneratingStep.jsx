@@ -97,7 +97,7 @@ class GeneratingStep extends Component {
 // 			formData.append('order_id', self.props.orderID);
 // 			axios.post('https://api.designengine.ai/templates.php', formData)
 // 				.then((response)=> {
-// 					console.log("ORDER_PING", JSON.stringify(response.data));
+// 					console.log("ORDER_PING", response.data);
 // 				}).catch((error) => {
 // 			});
 // 		}, 5000);
@@ -119,7 +119,7 @@ class GeneratingStep extends Component {
 // 		formData.append('order_id', this.props.orderID);
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
-				console.log("FILE_CHECK", JSON.stringify(response.data));
+				console.log("FILE_CHECK", response.data);
 				let files = [];
 
 				for (let i=0; i<7; i++) {
@@ -165,7 +165,7 @@ class GeneratingStep extends Component {
 		formData.append('order_id', this.props.orderID);
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
-				console.log("STATUS_CHECK", JSON.stringify(response.data));
+				console.log("STATUS_CHECK", response.data);
 			}).catch((error) => {
 		});
 	}
@@ -199,7 +199,7 @@ class GeneratingStep extends Component {
 // 		formData.append('order_id', this.props.orderID);
 // 		axios.post('https://api.designengine.ai/templates.php', formData)
 // 			.then((response)=> {
-// 				console.log("FILE_CHECK", JSON.stringify(response.data));
+// 				console.log("FILE_CHECK", response.data);
 // 				if (!response.data.running) {
 // 					clearInterval(self.elapsedInterval);
 // 					clearInterval(self.orderInterval);
@@ -232,7 +232,7 @@ class GeneratingStep extends Component {
 		formData.append('order_id', this.props.orderID);
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
-				console.log("QUEUE_CHECK", JSON.stringify(response.data));
+				console.log("QUEUE_CHECK", response.data);
 				if (response.data.index > 0) {
 					self.props.onTooltip({
 						txt : 'You are #' + response.data.index + ' in line, please wait.'
@@ -279,7 +279,7 @@ class GeneratingStep extends Component {
 				const ind = Math.floor(Math.random() * response.data.results.length);
 				axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(response.data.results[ind].urls.small))
 					.then((response) => {
-						console.log("REKOGNITION", JSON.stringify(response.data));
+						console.log("REKOGNITION", response.data);
 
 						let topics = [];
 						response.data.rekognition.labels.forEach(function (item, i) {
@@ -296,7 +296,7 @@ class GeneratingStep extends Component {
 							setTimeout(function() {
 								axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + topics[0])
 									.then((response) => {
-										console.log("COMPREHEND", JSON.stringify(response.data));
+										console.log("COMPREHEND", response.data);
 										const sentiment = response.data.comprehend.sentiment.outcome;
 										self.props.onTooltip({ txt : 'Sentiment: ' + Math.round(response.data.comprehend.sentiment.scores[sentiment] * 100) + '% ' + sentiment });
 

@@ -22,7 +22,7 @@ class TemplateStep extends Component {
 		formData.append('template_id', this.templateID);
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response)=> {
-				console.log("TEMPLATES", JSON.stringify(response.data));
+				console.log("TEMPLATES", response.data);
 				let templates = [];
 				response.data.templates.forEach(template => {
 					templates.push(template);

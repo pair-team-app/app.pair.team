@@ -42,7 +42,7 @@ class KeywordsForm extends Component {
 
 // 						axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + item.title)
 // 							.then((response)=> {
-// 								console.log("COMPREHEND", JSON.stringify(response.data));
+// 								console.log("COMPREHEND", response.data);
 // 								self.showStatus({x:0, y:0}, response.data.comprehend.sentiment.outcome);
 // 							}).catch((error) => {
 // 							});

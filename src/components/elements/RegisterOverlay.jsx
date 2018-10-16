@@ -54,15 +54,15 @@ class RegisterOverlay extends Component {
 			formData.append('password', password);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response)=> {
-					console.log(action, JSON.stringify(response.data));
+					console.log(action, response.data);
 					if (response.data.status === true) {
 						cookie.save('user_id', response.data.user_id, { path : '/' });
 						formData.append('action', 'SYSTEM_FILE');
 						formData.append('user_id', cookie.load('user_id'));
 						axios.post('https://api.designengine.ai/system.php', formData)
 							.then((response)=> {
-								console.log('SYSTEM_FILE', JSON.stringify(response.data));
-								cookie.save('upload_id', response.data.file_id, { path : '/' });
+								console.log('SYSTEM_FILE', response.data);
+								cookie.save('upload_id', response.data.upload_id, { path : '/' });
 								this.props.onClick('submit');
 
 							}).catch((error) => {

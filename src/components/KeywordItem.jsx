@@ -70,7 +70,7 @@ class KeywordItem extends Component {
 
 			axios.get('http://192.241.197.211/aws.php?action=COMPREHEND&phrase=' + this.props.title)
 				.then((response)=> {
-					console.log("COMPREHEND", JSON.stringify(response.data));
+					console.log("COMPREHEND", response.data);
 					const val = response.data.comprehend.sentiment.scores[response.data.comprehend.sentiment.outcome].toFixed(1);
 					this.showStatus(false, response.data.comprehend.sentiment.outcome + ' (' + val + ')');
 				}).catch((error) => {
@@ -90,7 +90,7 @@ class KeywordItem extends Component {
 						const ind = Math.floor(Math.random() * response.data.results.length);
 						axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(response.data.results[ind].urls.small))
 							.then((response) => {
-								console.log("REKOGNITION", JSON.stringify(response.data));
+								console.log("REKOGNITION", response.data);
 
 								let topics = [];
 								let avg = 0;
@@ -129,7 +129,7 @@ class KeywordItem extends Component {
 						const ind = Math.floor(Math.random() * response.data.results.length);
 						axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(response.data.results[ind].urls.small))
 							.then((response) => {
-								console.log("REKOGNITION", JSON.stringify(response.data));
+								console.log("REKOGNITION", response.data);
 
 								let topics = [];
 								let avg = 0;

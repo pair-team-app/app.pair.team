@@ -39,7 +39,7 @@ class StripeCheckout extends Component {
 			formData.append('amount', '499');
 			axios.post('http://stage.designengine.ai/stripe_checkout.php', formData)
 				.then((response)=> {
-					console.log("stripe_checkout", JSON.stringify(response.data));
+					console.log("stripe_checkout", response.data);
 				}).catch((error) => {
 			});
 		}, 333);

@@ -33,7 +33,7 @@ class ImageryForm extends Component {
 		formData.append('template_id', this.props.templateID);
 		axios.post('http://api.designengine.ai/templates.php', formData)
 			.then((response) => {
-				console.log("TEMPLATE_IMAGERY", JSON.stringify(response.data));
+				console.log("TEMPLATE_IMAGERY", response.data);
 
 				let imagery = [];
 				response.data.imagery.forEach(image => {

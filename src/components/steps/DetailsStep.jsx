@@ -59,7 +59,7 @@ class DetailsStep extends Component {
 			formData.append('order_id', self.props.orderID);
 			axios.post('https://api.designengine.ai/templates.php', formData)
 				.then((response) => {
-					console.log("ORDER_PING", JSON.stringify(response.data));
+					console.log("ORDER_PING", response.data);
 				}).catch((error) => {
 			});
 		}, 5000);
@@ -119,7 +119,7 @@ class DetailsStep extends Component {
 // 				formData.append('order_id', self.props.orderID);
 // 				axios.post('https://api.designengine.ai/templates.php', formData)
 // 					.then((response) => {
-// 						console.log("ORDER_PING", JSON.stringify(response.data));
+// 						console.log("ORDER_PING", response.data);
 // 					}).catch((error) => {
 // 				});
 // 			}, 5000);
@@ -145,7 +145,7 @@ class DetailsStep extends Component {
 // 					formData.append('keyword', item.title);
 // 					axios.post('https://api.designengine.ai/templates.php', formData)
 // 						.then((response)=> {
-// 							console.log("ADD_KEYWORD", JSON.stringify(response.data));
+// 							console.log("ADD_KEYWORD", response.data);
 // 						}).catch((error) => {
 // 					});
 // 				});
@@ -174,7 +174,7 @@ class DetailsStep extends Component {
 					formData.append('tone', item.title);
 					axios.post('https://api.designengine.ai/templates.php', formData)
 						.then((response) => {
-							console.log("ADD_TONE", JSON.stringify(response.data));
+							console.log("ADD_TONE", response.data);
 						}).catch((error) => {
 					});
 				});
@@ -205,7 +205,7 @@ class DetailsStep extends Component {
 					formData.append('hex', item.hex);
 					axios.post('https://api.designengine.ai/templates.php', formData)
 						.then((response) => {
-							console.log("ADD_COLOR", JSON.stringify(response.data));
+							console.log("ADD_COLOR", response.data);
 						}).catch((error) => {
 					});
 				});
@@ -229,7 +229,7 @@ class DetailsStep extends Component {
 					formData.append('url', item.url);
 					axios.post('https://api.designengine.ai/templates.php', formData)
 						.then((response) => {
-							console.log("ADD_IMAGE", JSON.stringify(response.data));
+							console.log("ADD_IMAGE", response.data);
 						}).catch((error) => {
 					});
 				});

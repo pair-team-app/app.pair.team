@@ -2,8 +2,7 @@
 import React, { Component } from 'react';
 import './InspectorPage.css';
 
-// import axios from 'axios';
-// import { Column, Row } from 'simple-flexbox';
+import axios from 'axios';
 
 
 class InspectorPage extends Component {
@@ -11,23 +10,87 @@ class InspectorPage extends Component {
 		super(props);
 
 		this.state = {
-			itemID : 0
+			pageID     : 0,
+			artboardID : 0,
+			sliceID    : 0,
+			page       : null,
+			artboard   : null,
+			slices     : []
 		};
 	}
 
 	componentDidMount() {
-		const { itemID } = this.props.match.params;
-		this.setState({ itemID : itemID });
+		const { pageID, artboardID } = this.props.match.params;
+		this.setState({
+			pageID     : pageID,
+			artboardID : artboardID
+		});
+
+		let formData = new FormData();
+		formData.append('action', 'PAGE');
+		formData.append('page_id', '' + pageID);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response)=> {
+				console.log('PAGE', response.data);
+				this.setState({ page : response.data.page });
+
+				formData.append('action', 'ARTBOARD');
+				formData.append('artboard_id', '' + artboardID);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response)=> {
+						console.log('ARTBOARD', response.data);
+						const artboard = {
+							id        : response.data.artboard.id,
+							pageID    : response.data.artboard.page_id,
+							title     : response.data.artboard.title,
+							filename  : response.data.artboard.filename,
+							meta      : JSON.parse(response.data.artboard.meta),
+							added     : response.data.artboard.added
+						};
+						this.setState({ artboard : artboard });
+
+						formData.append('action', 'SLICES');
+						formData.append('artboard_id', '' + artboardID);
+						axios.post('https://api.designengine.ai/system.php', formData)
+							.then((response)=> {
+								console.log('SLICES', response.data);
+
+								let slices = [];
+								response.data.slices.forEach(function(item, i) {
+									slices.push({
+										id       : item.id,
+										title    : item.title,
+										filename : item.filename + '@1x.png',
+										meta     : JSON.parse(item.meta),
+										added    : item.added,
+										selected : false
+									});
+								});
+
+								this.setState({ slices : slices });
+							}).catch((error) => {
+						});
+					}).catch((error) => {
+				});
+			}).catch((error) => {
+		});
 	}
 
 	render() {
+		const page = (this.state.page) ? this.state.page : null;
+		const artboard = (this.state.artboard) ? this.state.artboard : null;
+		const slice = (this.state.slices.length > 0) ? this.state.slices[0] : null;
+
+		const heroImageClass = 'inspector-page-hero-image' + ((artboard) ? (artboard.meta.frame.width > artboard.meta.frame.height) ? ' inspector-page-hero-image-landscape' : ' inspector-page-hero-image-portrait' : '');
+		const panelImageClass = 'inspector-page-panel-image' + ((slice) ? (slice.meta.frame.width > slice.meta.frame.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait' : '');
+
 		return (
 			<div className="inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<div className="inspector-page-hero-wrapper">
-						<img className="inspector-page-hero-image" src="" alt="Hero" />
+						{(artboard) && (<img className={heroImageClass} src={artboard.filename} alt="Hero" />)}
 						<div className="inspector-page-hero-title">
-							Material Design System
+							{(artboard) ? artboard.title : ''}
 						</div>
 					</div>
 					<div className="inspector-page-hero-info-wrapper">
@@ -37,6 +100,9 @@ class InspectorPage extends Component {
 				</div>
 				<div className="inspector-page-panel">
 					<div className="inspector-page-panel-display">
+						{(slice) && (
+							<img className={panelImageClass} src={slice.filename} alt={slice.title} />
+						)}
 					</div>
 					<div className="inspector-page-panel-button-wrapper">
 						<div>
@@ -50,20 +116,20 @@ class InspectorPage extends Component {
 						</div>
 					</div>
 					<div className="inspector-page-panel-info-wrapper">
-						System: <br />
-						Author: <br />
-						Page: <br />
-						Artboard: <br />
-						Slice: <br />
-						Position: <br />
-						Size: <br />
-						Rotation: <br />
-						Opacity: <br />
-						Color: <br />
-						Font: <br />
-						Font Size: <br />
-						Font Color: <br />
-						Blend Mode: <br />
+						System: N/A<br />
+						Author: N/A<br />
+						Page: {(page) ? page.title : 'N/A'}<br />
+						Artboard: {(artboard) ? artboard.title : 'N/A'}<br />
+						Slice: {(slice) ? slice.title : ''}<br />
+						Position: ({(slice) ? slice.meta.frame.origin.x : '0'}, {(slice) ? slice.meta.frame.origin.y : 0})<br />
+						Size: {(slice) ? slice.meta.frame.size.width : 0} &times; {(slice) ? slice.meta.frame.size.height : 0}<br />
+						Rotation: {(slice) ? slice.meta.rotation : 0}<br />
+						Opacity: {(slice) ? slice.meta.opacity : '100%'}<br />
+						Color: {(slice) ? slice.meta.fillColor : 'N/A'}<br />
+						Font: {(slice) ? slice.meta.font.family : 'N/A'}<br />
+						Font Size: {(slice) ? slice.meta.font.size : 'N/A'}<br />
+						Font Color: {(slice) ? slice.meta.font.color : 'N/A'}<br />
+						Blend Mode: {(slice) ? slice.meta.blendMode.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) : 'N/A'}<br />
 					</div>
 				</div>
 			</div>

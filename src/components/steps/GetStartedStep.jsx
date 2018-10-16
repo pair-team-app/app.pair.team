@@ -28,7 +28,7 @@ class GetStartedStep extends Component {
 		formData.append('amount', '12');
 		axios.post('https://api.designengine.ai/templates.php', formData)
 			.then((response) => {
-				console.log("RECENT_RENDERS", JSON.stringify(response.data));
+				console.log("RECENT_RENDERS", response.data);
 				this.setState({
 					renders : response.data.renders,
 					total   : response.data.total

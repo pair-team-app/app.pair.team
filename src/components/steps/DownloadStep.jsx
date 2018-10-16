@@ -37,7 +37,7 @@ class PurchaseStep extends Component {
 		formData.append('order_id', this.props.orderID);
 		axios.post('http://api.designengine.ai/templates.php', formData)
 			.then((response) => {
-				console.log("ORDER_URLS", JSON.stringify(response.data));
+				console.log("ORDER_URLS", response.data);
 				this.setState({
 					system : response.data.system,
 					urls   : response.data.urls,

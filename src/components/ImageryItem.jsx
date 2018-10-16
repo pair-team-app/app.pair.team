@@ -51,7 +51,7 @@ class ImageryItem extends Component {
 			this.showStatus(true, 'Loading…');
 			axios.get('http://192.241.197.211/aws.php?action=REKOGNITION&image_url=' + encodeURIComponent(this.props.url))
 				.then((response)=> {
-					console.log("REKOGNITION", JSON.stringify(response.data));
+					console.log("REKOGNITION", response.data);
 					self.showStatus(false, 'Topic: ' + response.data.rekognition.labels[0].Name);
 				}).catch((error) => {
 			});

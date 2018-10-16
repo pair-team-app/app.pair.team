@@ -2,13 +2,29 @@
 .part-item {
 	position: relative;
 	width: 150px;
-	height: 200px;
-	background-color: #999999;
+	height: 325px;
+	background-color: #3e3e3e;
 	margin: 14px;
 }
 
 .part-item:hover {
 	cursor: pointer;
+}
+
+.part-item-image {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+}
+
+.part-item-image-landscape {
+	width: 100%
+}
+
+.part-item-image-portrait {
+	height: 100%;
 }
 
 .part-item-details-wrapper {

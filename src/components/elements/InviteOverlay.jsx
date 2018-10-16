@@ -54,7 +54,7 @@ class InviteOverlay extends Component {
 			formData.append('emails', emails);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
-					console.log('INVITE', JSON.stringify(response.data));
+					console.log('INVITE', response.data);
 					this.props.onClick('submit');
 				}).catch((error) => {
 			});

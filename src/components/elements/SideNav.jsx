@@ -13,7 +13,8 @@ class SideNav extends Component {
 		super(props);
 
 		this.state = {
-			pages : []
+			isHome : true,
+			pages  : []
 		};
 	}
 
@@ -27,29 +28,49 @@ class SideNav extends Component {
 	};
 
 	componentDidMount() {
-		if ((this.props.url === '/' || this.props.url.includes('/render/')) && typeof cookie.load('user_id') !== 'undefined') {
-			let formData = new FormData();
-			formData.append('action', 'PAGES');
-			formData.append('user_id', cookie.load('user_id'));
-			formData.append('upload_id', cookie.load('upload_id'));
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					console.log('PAGES', JSON.stringify(response.data));
-					let pages = [];
-					response.data.pages.forEach(page => {
-						pages.push({
-							id          : page.id,
-							title       : page.title,
-							description : page.description,
-							added       : page.added,
-							selected    : false
+		if (typeof cookie.load('user_id') !== 'undefined') {
+			if (this.props.url === '/') {
+				let formData = new FormData();
+				formData.append('action', 'PAGES');
+				formData.append('user_id', cookie.load('user_id'));
+				formData.append('upload_id', cookie.load('upload_id'));
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response) => {
+						console.log('PAGES', response.data);
+						let pages = [];
+						response.data.pages.forEach(page => {
+							pages.push({
+								id          : page.id,
+								title       : page.title,
+								description : page.description,
+								added       : page.added,
+								selected    : false
+							});
 						});
-					});
 
-					this.setState({ pages : pages });
+						this.setState({ pages : pages });
 
-				}).catch((error) => {
-			});
+					}).catch((error) => {
+				});
+
+			} else if (this.props.url.includes('/render/')) {
+
+			}	else {
+				let formData = new FormData();
+				formData.append('action', 'ARTBOARDS');
+				formData.append('page_id', this.props.pageID);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response) => {
+						console.log('ARTBOARDS', response.data);
+						let artboards = [];
+						response.data.artboards.forEach(page => {
+						});
+
+						this.setState({ artboards : artboards });
+
+					}).catch((error) => {
+				});
+			}
 		}
 	}
 

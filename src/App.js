@@ -25,9 +25,12 @@ class App extends Component {
 		this.state = {
 			url           : window.location.pathname,
 			section       : '0',
-			selectedParts : [],
+			pageID        : 0,
+			artboardID    : 0,
+			sliceID       : 0,
+			selectedArtboards : [],
 			overlayAlert  : null,
-			user_id       : 0
+			userID        : 0
 		};
 	}
 
@@ -59,7 +62,7 @@ class App extends Component {
 
 	handleSideNavItem = (obj)=> {
 		console.log('handleNavItem()', obj);
-		this.setState({ section : obj.title });
+		this.setState({ pageID : obj.id });
 	};
 
 	handleUpload = ()=> {
@@ -67,35 +70,36 @@ class App extends Component {
 		this.setState({ overlayAlert: 'upload' });
 	};
 
-	handlePartSelected = (obj)=> {
-		console.log('handlePartSelected()', obj);
-		let selectedParts = this.state.selectedParts;
+	handleArtboardSelected = (obj)=> {
+		console.log('handleArtboardSelected()', obj);
+		let selectedArtboards = this.state.selectedArtboards;
 		if (obj.selected) {
 			let isFound = false;
-			selectedParts.forEach(function(item, i) {
+			selectedArtboards.forEach(function(item, i) {
 				if (item.id === obj.id) {
 					isFound = true;
 				}
 			});
 
 			if (!isFound) {
-				selectedParts.push(obj);
+				selectedArtboards.push(obj);
 			}
 
 		} else {
-			selectedParts.forEach(function(item, i) {
+			selectedArtboards.forEach(function(item, i) {
 				if (item.id === obj.id) {
-					selectedParts.splice(i, 1);
+					selectedArtboards.splice(i, 1);
 				}
 			});
 		}
 
-		this.setState({ selectedParts : selectedParts });
+		this.setState({ selectedArtboards : selectedArtboards });
 	};
 
-	handlePartDetails = (obj)=> {
-		console.log('handlePartDetails()', obj);
-		window.location.href = '/render/' + obj.id;
+	handleArtboardDetails = (obj)=> {
+		console.log('handleArtboardDetails()', obj);
+		this.setState({ pageID : obj.pageID });
+		window.location.href = '/render/' + obj.pageID + '/' + obj.id;
 	};
 
 	handleOverlay = (overlayType, buttonType)=> {
@@ -121,12 +125,13 @@ class App extends Component {
     	<div className="page-wrapper">
 		    <TopNav
 			    url={this.state.url}
-			    parts={this.state.selectedParts}
+			    parts={this.state.selectedArtboards}
 			    onUpload={()=> this.handleUpload()}
 			    onDownload={()=> this.handleDownload()}
 		    />
 		    <SideNav
 			    url={this.state.url}
+			    pageID={this.state.pageID}
 			    onNavItem={(obj)=> this.handleSideNavItem(obj)}
 			    onInvite={()=> this.handleInvite()}
 			    onRegister={()=> this.handleRegistration()}
@@ -134,11 +139,11 @@ class App extends Component {
 		    />
 
 		    <BrowserRouter><div className="content-wrapper">
-			    <Route exact path="/" render={()=> <HomePage section={this.state.section} onPartSelected={(obj)=> this.handlePartSelected(obj)} onPartClicked={(obj)=> this.handlePartDetails(obj)} />} />
+			    <Route exact path="/" render={()=> <HomePage pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
 			    <Route exact path="/manifesto" component={ManifestoPage} />
 			    <Route exact path="/privacy" component={PrivacyPage} />
 			    <Route exact path="/terms" component={TermsPage} />
-			    <Route path="/render/:itemID" component={InspectorPage} />
+			    <Route path="/render/:pageID/:artboardID" component={InspectorPage} />
 		    </div></BrowserRouter>
 
 		    {(this.state.overlayAlert === 'register') && (
