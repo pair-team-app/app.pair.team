@@ -45,7 +45,6 @@ class SideNav extends Component {
 			});
 
 			this.props.onArtboardItem(artboards[ind]);
-			this.props.history.push('/render/' + artboards[ind].pageID + '/' + artboards[ind].id);
 		}
 	};
 
@@ -100,6 +99,8 @@ class SideNav extends Component {
 								title     : artboard.title,
 								filename  : artboard.filename,
 								meta      : JSON.parse(artboard.meta),
+								views     : artboard.views,
+								downloads : artboard.downloads,
 								added     : artboard.added,
 								slices    : slices,
 								selected  : (artboardID === artboard.id)

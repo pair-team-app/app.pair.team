@@ -14,3 +14,12 @@
 	color: #ffffff;
 	margin-right: 10px;
 }
+
+.side-nav-item-text {
+
+}
+
+.side-nav-item-arrow-selected, .side-nav-item-text-selected {
+	text-transform: uppercase;
+	color: #7ed321;
+}

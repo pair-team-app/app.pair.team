@@ -3,23 +3,36 @@ import React, { Component } from 'react';
 import './InspectorPage.css';
 
 import axios from 'axios';
-
+import cookie from 'react-cookies';
 
 class InspectorPage extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
+			system     : cookie.load('system'),
+			author     : cookie.load('author'),
 			pageID     : 0,
 			artboardID : 0,
 			sliceID    : 0,
 			page       : null,
-			artboard   : null
+			artboard   : null,
+			code       : '#block {<br>&nbsp;&nbsp;width: 100%;<br>&nbsp;&nbsp;color: #ffffff;<br>}',
+			comment    : ''
 		};
 	}
 
 	componentDidMount() {
-		//this.refreshData();
+		let formData = new FormData();
+		formData.append('action', 'ADD_VIEW');
+		formData.append('artboard_id', '' + this.props.match.params.artboardID);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+				console.log('ADD_VIEW', response.data);
+			}).catch((error) => {
+		});
+
+
 	}
 
 	refreshData = ()=> {
@@ -60,6 +73,8 @@ class InspectorPage extends Component {
 							title     : response.data.artboard.title,
 							filename  : response.data.artboard.filename,
 							meta      : JSON.parse(response.data.artboard.meta),
+							views     : response.data.artboard.views,
+							downloads : response.data.artboard.downloads,
 							added     : response.data.artboard.added,
 							slices    : slices
 						};
@@ -69,6 +84,10 @@ class InspectorPage extends Component {
 				});
 			}).catch((error) => {
 		});
+	};
+
+	submitComment = ()=> {
+		this.setState({ comment : '' })
 	};
 
 	render() {
@@ -95,9 +114,14 @@ class InspectorPage extends Component {
 							{(artboard) ? artboard.title : ''}
 						</div>
 					</div>
+					<div className="inspector-page-comment-wrapper">
+						<textarea className="inspector-page-comment-txt" name="comment" placeholder="Enter Comment Here" value={this.state.comment} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })}>
+						</textarea>
+						<button className="inspector-page-comment-button" onClick={()=> this.submitComment()}>Submit Comment</button>
+					</div>
 					<div className="inspector-page-hero-info-wrapper">
-						0 Views<br />
-						0 Downloads
+						{(artboard) ? artboard.views + ' View' + ((parseInt(artboard.views, 10) !== 1) ? 's' : '') : 'Views'}<br />
+						{(artboard) ? artboard.downloads + ' Download' + ((parseInt(artboard.downloads, 10) !== 1) ? 's' : '') : 'Downloads'}
 					</div>
 				</div>
 				<div className="inspector-page-panel">
@@ -113,16 +137,15 @@ class InspectorPage extends Component {
 							<button className="inspector-page-size-button">3x</button>
 						</div>
 						<div>
-							<button className="inspector-page-select-button">Select Part ()</button>
-							<button className="inspector-page-download-button">Download All ()</button>
+							<button className="inspector-page-download-button">Download Parts</button>
 						</div>
 					</div>
 					<div className="inspector-page-panel-info-wrapper">
-						System: N/A<br />
-						Author: N/A<br />
+						System: {this.state.system}<br />
+						Author: <a href={'mailto:' + this.state.author}>{this.state.author}</a><br />
 						Page: {(page) ? page.title : 'N/A'}<br />
 						Artboard: {(artboard) ? artboard.title : 'N/A'}<br />
-						Slice: {(slice) ? slice.title : ''}<br />
+						Slice: {(slice) ? slice.title : 'N/A'}<br />
 						Position: ({(slice) ? slice.meta.frame.origin.x : '0'}, {(slice) ? slice.meta.frame.origin.y : 0})<br />
 						Size: {(slice) ? slice.meta.frame.size.width : 0} &times; {(slice) ? slice.meta.frame.size.height : 0}<br />
 						Rotation: {(slice) ? slice.meta.rotation : 0}<br />
@@ -132,6 +155,17 @@ class InspectorPage extends Component {
 						Font Size: {(slice) ? slice.meta.font.size : 'N/A'}<br />
 						Font Color: {(slice) ? slice.meta.font.color : 'N/A'}<br />
 						Blend Mode: {(slice) ? slice.meta.blendMode.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) : 'N/A'}<br />
+					</div>
+					<div className="inspector-page-panel-code-wrapper">
+						<div className="inspector-page-panel-code"><span dangerouslySetInnerHTML={{ __html : this.state.code }} /></div>
+						<div className="inspector-page-panel-button-wrapper">
+							<div>
+								<button className="inspector-page-code-button">CSS</button>
+								<button className="inspector-page-code-button inspector-page-code-button-middle">Swift</button>
+								<button className="inspector-page-code-button">Java</button>
+							</div>
+						</div>
+						<button className="inspector-page-copy-code-button">Copy Code</button>
 					</div>
 				</div>
 			</div>

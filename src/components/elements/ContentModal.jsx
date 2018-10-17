@@ -20,7 +20,7 @@ class ContentModal extends Component {
 			<div className="modal-wrapper" onClick={()=> this.props.onClick()}>
 				<div className="modal-container">
 					<div className="modal-content" ref={(element) => { this.contentElement = element; }}>
-						<span dangerouslySetInnerHTML={{__html : this.props.content}} />
+						<span dangerouslySetInnerHTML={{ __html : this.props.content }} />
 					</div>
 				</div>
 			</div>

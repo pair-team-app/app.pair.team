@@ -13,6 +13,7 @@ class UploadOverlay extends Component {
 		super(props);
 		this.state = {
 			system      : '',
+			description : '',
 			files       : [],
 			percent     : 0,
 			action      : '',
@@ -135,7 +136,8 @@ class UploadOverlay extends Component {
 						<div className="overlay-logo-wrapper"><img src="/images/logo.svg" className="overlay-logo" alt="Design Engine" /></div>
 						<div className="overlay-title">{title}</div>
 						<div className="overlay-content">
-							<div className="input-wrapper"><input type="text" name="system" placeholder="System Name" value={this.state.system} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<div className="input-wrapper"><input type="text" name="system" placeholder="Design System Name" value={this.state.system} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<div className="input-wrapper"><input type="text" name="description" placeholder="Description" value={this.state.description} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 							<div className="input-title">Invite team members</div>
 							<div className={email1Class}><input type="text" name="email1" placeholder="Engineer Email" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 							<div className={email2Class}><input type="text" name="email2" placeholder="Engineer Email" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>

@@ -17,6 +17,7 @@ import SideNav from "./components/elements/SideNav";
 import TermsPage from './components/pages/TermsPage';
 import TopNav from './components/elements/TopNav';
 import UploadOverlay from './components/elements/UploadOverlay';
+import axios from "axios/index";
 
 class App extends Component {
 	constructor(props) {
@@ -71,6 +72,16 @@ class App extends Component {
 	handleSideNavArtboardItem = (obj)=> {
 		console.log('handleSideNavArtboardItem()', obj);
 		this.setState({ artboardID : obj.id });
+
+		let formData = new FormData();
+		formData.append('action', 'ADD_VIEW');
+		formData.append('artboard_id', obj.id);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+				console.log('ADD_VIEW', response.data);
+				this.props.history.push('/render/' + obj.pageID + '/' + obj.id);
+			}).catch((error) => {
+		});
 	};
 
 	handleSideNavSliceItem = (obj)=> {
@@ -116,7 +127,15 @@ class App extends Component {
 			artboardID : obj.id
 		});
 
-		this.props.history.push('/render/' + obj.pageID + '/' + obj.id);
+		let formData = new FormData();
+		formData.append('action', 'ADD_VIEW');
+		formData.append('artboard_id', obj.id);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+				console.log('ADD_VIEW', response.data);
+				this.props.history.push('/render/' + obj.pageID + '/' + obj.id);
+			}).catch((error) => {
+		});
 	};
 
 	handleOverlay = (overlayType, buttonType)=> {
@@ -135,6 +154,7 @@ class App extends Component {
 	handleLogout = ()=> {
 		cookie.remove('user_id');
 		this.setState({ user_id : 0 });
+		window.location.href = '/';
 	};
 
   render() {

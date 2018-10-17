@@ -63,6 +63,8 @@ class RegisterOverlay extends Component {
 							.then((response)=> {
 								console.log('SYSTEM_FILE', response.data);
 								cookie.save('upload_id', response.data.upload_id, { path : '/' });
+								cookie.save('system', response.data.system, { path : '/' });
+								cookie.save('author', response.data.author, { path : '/' });
 								this.props.onClick('submit');
 
 							}).catch((error) => {
