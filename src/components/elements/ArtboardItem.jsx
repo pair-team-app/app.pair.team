@@ -1,10 +1,10 @@
 
 import React, { Component } from 'react';
-import './PartItem.css'
+import './ArtboardItem.css'
 
 import FontAwesome from 'react-fontawesome';
 
-class PartItem extends Component {
+class ArtboardItem extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -40,4 +40,4 @@ class PartItem extends Component {
 	}
 }
 
-export default PartItem;
+export default ArtboardItem;

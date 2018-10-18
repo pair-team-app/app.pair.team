@@ -6,7 +6,7 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
-import PartItem from './../elements/PartItem';
+import ArtboardItem from '../elements/ArtboardItem';
 
 
 class HomePage extends Component {
@@ -76,13 +76,11 @@ class HomePage extends Component {
 
 	render() {
 		const artboards = this.state.artboards;
-
-
 		const items = artboards.map((item, i, arr) => {
 			if (this.props.pageID === 0 || this.props.pageID === item.pageID) {
 				return (
 					<Column key={i}>
-						<PartItem
+						<ArtboardItem
 							title={item.title}
 							image={item.filename}
 							size={(item.meta.frame.size.width > item.meta.frame.size.height) ? 'landscape' : 'portrait'}

@@ -91,7 +91,7 @@ class InspectorPage extends Component {
 	};
 
 	render() {
-		console.log('InspectorPage.render()');
+		//console.log('InspectorPage.render()');
 		const { artboardID } = this.props.match.params;
 		if (this.state.artboardID !== artboardID) {
 			this.refreshData();

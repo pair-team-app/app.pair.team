@@ -32,6 +32,8 @@ class App extends Component {
 			overlayAlert  : null,
 			userID        : 0
 		};
+
+		this.uploadInterval = null;
 	}
 
 	componentDidMount() {
@@ -47,8 +49,6 @@ class App extends Component {
 		if (window.location.pathname.includes('/render/')) {
 			this.setState({ pageID : window.location.pathname.match(/\/\d+\//)[1] });
 		}
-
-		cookie.save('upload_id', '110', { path : '/' });
 	}
 
 	componentWillUnmount() {
@@ -143,6 +143,12 @@ class App extends Component {
 		this.setState({ overlayAlert : null });
 		if (overlayType === 'register' && buttonType === 'submit') {
 			this.setState({ user_id : 0 });
+
+		} else if (overlayType === 'upload' && buttonType === 'upload') {
+			let self = this;
+			this.uploadInterval = setInterval(function() {
+				self.uploadRefresh();
+			}, 1000);
 		}
 	};
 
@@ -157,8 +163,12 @@ class App extends Component {
 		window.location.href = '/';
 	};
 
+	uploadRefresh = ()=> {
+		console.log('uploadRefresh()');
+	};
+
   render() {
-  	console.log('state', this.state);
+  	//console.log('App.state', this.state);
 
     return (
     	<div className="page-wrapper">

@@ -41,12 +41,12 @@ div, input, textarea {
 }
 
 input[type=text], input[type=password], input[type=tel], .input-txt {
-  background-color: #3e3e3e;
+  background-color: #272727;
   color: #ffffff;
   padding: 10px;
   border: none;
   font-family: "Roboto Mono", monospace;
-  font-size: 18px;
+  font-size: 15px;
   width: 100%;
 }
 

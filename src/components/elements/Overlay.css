@@ -10,6 +10,17 @@
 	background-color: #363636;
 }
 
+.overlay-progress-wrapper {
+	width: 100%;
+	height: 10px;
+	background-color: #000000;
+}
+
+.overlay-progress {
+	height: 100%;
+	background-color: #143cec;
+}
+
 .overlay-container {
 	position: fixed;
 	width: 480px;
@@ -36,7 +47,7 @@
 .overlay-title {
 	font-size: 22px;
 	width: 100%;
-	margin-bottom: 56px;
+	margin-bottom: 28px;
 	text-align: center;
 	line-height: 40px;
 }
@@ -44,7 +55,7 @@
 .overlay-content {
 	overflow-x: hidden;
 	overflow-y: auto;
-	margin-bottom: 28px;
+	/*margin-bottom: 28px;*/
 }
 
 .overlay-button-wrapper {
@@ -55,9 +66,27 @@
 	color: #ffffff;
 }
 
+.overlay-button-upload {
+	width: 100%;
+	background-color: #3e3e3e;
+	margin-bottom: 28px;
+}
+
 .overlay-button-confirm {
 	background-color: #143cec;
 	margin-right: 15px;
+}
+
+.overlay-button-primary {
+	width: 100%;
+	background-color: #143cec;
+}
+
+.overlay-button-secondary {
+	width: 100%;
+	margin-top: 14px;
+	background-color: #363636;
+	color: #979797;
 }
 
 .overlay-button-cancel {

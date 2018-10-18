@@ -16,7 +16,7 @@ class SideNavItem extends Component {
 	}
 
 	render() {
-		console.log(this.props.title + '.render()', this.props.selected);
+		//console.log(this.props.title + '.render()', this.props.selected);
 		const faClass = (this.props.selected) ? 'side-nav-item-arrow side-nav-item-arrow-selected' : 'side-nav-item-arrow';
 		const textClass = (this.props.selected) ? 'side-nav-item-text side-nav-item-text-selected' : 'side-nav-item-text';
 

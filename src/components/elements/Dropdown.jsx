@@ -46,7 +46,7 @@ class Dropdown extends Component{
 				</div>
 				{listOpen && <ul className="dd-list">
 					{list.map((item, i)=> (
-						<li className="dd-list-item" key={i} onClick={() => this.selectItem(item.title, item.id, item.key)}>{item.title} {item.selected && <FontAwesome name="check"/>}</li>
+						<li className="dd-list-item" key={i} onClick={() => this.selectItem(item.title, i, item.key)}>{item.title} {item.selected && <FontAwesome name="check"/>}</li>
 					))}
 				</ul>}
 			</div>

@@ -4,7 +4,6 @@ import './SideNav.css'
 
 import axios from 'axios';
 import cookie from 'react-cookies';
-import { withRouter } from 'react-router-dom'
 import { Column, Row } from 'simple-flexbox';
 
 import SideNavItem from './SideNavItem';
@@ -168,7 +167,7 @@ class SideNav extends Component {
 	};
 
 	render() {
-		console.log('SideNav.render()');
+		//console.log('SideNav.render()');
 
 		if (window.location.pathname.includes('/render/')) {
 			const artboardID = window.location.pathname.match(/\/(\d+)$/)[1];
@@ -236,4 +235,4 @@ class SideNav extends Component {
 	}
 }
 
-export default withRouter(SideNav);
+export default SideNav;
