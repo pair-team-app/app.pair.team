@@ -145,10 +145,10 @@ class App extends Component {
 			this.setState({ user_id : 0 });
 
 		} else if (overlayType === 'upload' && buttonType === 'upload') {
-			let self = this;
-			this.uploadInterval = setInterval(function() {
-				self.uploadRefresh();
-			}, 1000);
+// 			let self = this;
+// 			this.uploadInterval = setInterval(function() {
+// 				self.uploadRefresh();
+// 			}, 1000);
 		}
 	};
 

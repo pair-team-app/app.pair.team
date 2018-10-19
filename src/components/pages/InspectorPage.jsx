@@ -5,6 +5,9 @@ import './InspectorPage.css';
 import axios from 'axios';
 import cookie from 'react-cookies';
 
+import SliceItem from '../elements/SliceItem';
+
+const heroImage = React.createRef();
 class InspectorPage extends Component {
 	constructor(props) {
 		super(props);
@@ -14,7 +17,7 @@ class InspectorPage extends Component {
 			author     : cookie.load('author'),
 			pageID     : 0,
 			artboardID : 0,
-			sliceID    : 0,
+			slice      : -1,
 			page       : null,
 			artboard   : null,
 			code       : '#block {<br>&nbsp;&nbsp;width: 100%;<br>&nbsp;&nbsp;color: #ffffff;<br>}',
@@ -32,7 +35,7 @@ class InspectorPage extends Component {
 			}).catch((error) => {
 		});
 
-
+		this.heroImage = null;
 	}
 
 	refreshData = ()=> {
@@ -90,6 +93,10 @@ class InspectorPage extends Component {
 		this.setState({ comment : '' })
 	};
 
+	handleSliceClick = (ind, id)=> {
+		this.setState({ slice : ind });
+	};
+
 	render() {
 		//console.log('InspectorPage.render()');
 		const { artboardID } = this.props.match.params;
@@ -100,16 +107,33 @@ class InspectorPage extends Component {
 
 		const page = (this.state.page) ? this.state.page : null;
 		const artboard = (this.state.artboard) ? this.state.artboard : null;
-		const slice = (this.state.artboard) ? (this.state.artboard.slices.length > 0) ? this.state.artboard.slices[0] : null : null;
+		const slice = (this.state.artboard) ? (this.state.slice > -1) ? this.state.artboard.slices[this.state.slice] : null : null;
 
 		const heroImageClass = 'inspector-page-hero-image' + ((artboard) ? (artboard.meta.frame.width > artboard.meta.frame.height) ? ' inspector-page-hero-image-landscape' : ' inspector-page-hero-image-portrait' : '');
 		const panelImageClass = 'inspector-page-panel-image' + ((slice) ? (slice.meta.frame.width > slice.meta.frame.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait' : '');
+
+		const items = (artboard) ? artboard.slices.map((item, i, arr) => {
+			return (
+				<SliceItem
+					key={i}
+					title={item.title}
+					top={item.meta.frame.origin.y}
+					left={item.meta.frame.origin.x}
+					width={item.meta.frame.size.width}
+					height={item.meta.frame.size.height}
+					scale={(heroImage && heroImage.current) ? heroImage.current.clientHeight / artboard.meta.frame.size.height : 0}
+					onClick={() => this.handleSliceClick(i, item.id)} />
+			);
+		}) : [];
 
 		return (
 			<div className="inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<div className="inspector-page-hero-wrapper">
-						{(artboard) && (<img className={heroImageClass} src={artboard.filename} alt="Hero" />)}
+						<div style={{width:'100%', height:'100%'}} ref={heroImage}>{(artboard) && (<img className={heroImageClass} src={artboard.filename} alt="Hero" />)}</div>
+						<div className="inspector-page-hero-slice-wrapper">
+							{items}
+						</div>
 						<div className="inspector-page-hero-title">
 							{(artboard) ? artboard.title : ''}
 						</div>

@@ -92,7 +92,6 @@ class HomePage extends Component {
 			} else {
 				return (null);
 			}
-
 		});
 
 		items.shift();

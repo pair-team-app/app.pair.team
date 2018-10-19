@@ -5,7 +5,6 @@ import './Overlay.css';
 import axios from 'axios';
 import cookie from 'react-cookies';
 import Dropzone from 'react-dropzone';
-import { Row, Column } from 'simple-flexbox';
 
 class UploadOverlay extends Component {
 	constructor(props) {
@@ -35,32 +34,37 @@ class UploadOverlay extends Component {
 	}
 
 	handleUpload = ()=> {
-		this.setState({ uploading : true });
-
-		let self = this;
-		const config = {
-			headers: {
-				'content-type': 'multipart/form-data'
-			}, onUploadProgress: function(progressEvent) {
-				const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-				self.setState({ percent : percent });
-
-				if (percent >= 100) {
-					self.onUploadComplete();
-				}
-			}
-		};
-
-		this.state.files.forEach(file => {
-			let formData = new FormData();
-			formData.append('file', file);
-
-			axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
-				.then((response)=>{
-					console.log("UPLOAD", response.data);
-				}).catch((error) => {
+		if (this.state.files.length > 0) {
+			this.setState({
+				uploading : true,
+				action    : ''
 			});
-		});
+
+			let self = this;
+			const config = {
+				headers: {
+					'content-type': 'multipart/form-data'
+				}, onUploadProgress: function(progressEvent) {
+					const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+					self.setState({ percent : percent });
+
+					if (progressEvent.loaded === progressEvent.total) {
+						self.onUploadComplete();
+					}
+				}
+			};
+
+			this.state.files.forEach(file => {
+				let formData = new FormData();
+				formData.append('file', file);
+
+				axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
+					.then((response)=>{
+						console.log("UPLOAD", response.data);
+					}).catch((error) => {
+				});
+			});
+		}
 	};
 
 	onUploadComplete = ()=> {
@@ -123,12 +127,13 @@ class UploadOverlay extends Component {
 
 	render() {
 		const progressStyle = { width : this.state.percent + '%' };
+		const uploadStyle = (this.state.files.length === 0) ? { color:'#999999', cursor:'default' } : {};
 
 		const email1Class = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'INVITE' && !this.state.email1Valid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 		const email2Class = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'INVITE' && !this.state.email2Valid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 		const email3Class = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'INVITE' && !this.state.email3Valid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 
-		const { files } = this.state;
+// 		const { files } = this.state;
 		const title = (this.state.uploading) ? 'Uploading Sketch File ' + this.state.percent + '%…' : 'Drop anywhere to begin upload.';
 		return (
 			<Dropzone
@@ -159,7 +164,7 @@ class UploadOverlay extends Component {
 							<div className={email3Class}><input type="text" name="email3" placeholder="Engineer Email" value={this.state.email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						</div>
 						<div className="overlay-button-wrapper">
-							<button className="overlay-button overlay-button-upload" onClick={()=> this.handleUpload()}>Upload Sketch File</button>
+							<button className="overlay-button overlay-button-upload" style={uploadStyle} onClick={()=> this.handleUpload()}>Upload Sketch File</button>
 							<button className="overlay-button overlay-button-primary" onClick={()=> this.handleInvite()}>Submit</button>
 							<button className="overlay-button overlay-button-secondary" onClick={()=> this.props.onClick('cancel')}>Cancel</button>
 						</div>

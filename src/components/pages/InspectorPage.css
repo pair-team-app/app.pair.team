@@ -21,12 +21,18 @@
 	background-color: #3e3e3e;
 }
 
-.inspector-page-hero-image {
+.inspector-page-hero-image, .inspector-page-hero-slice-wrapper {
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	-webkit-transform: translate(-50%, -50%);
+}
+
+.inspector-page-hero-slice-wrapper {
+	z-index: 2;
+	width: 184px;
+	height: 400px;
 }
 
 .inspector-page-hero-image-landscape {
