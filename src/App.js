@@ -47,7 +47,11 @@ class App extends Component {
 		ReactPixel.trackCustom('load');
 
 		if (window.location.pathname.includes('/render/')) {
-			this.setState({ pageID : window.location.pathname.match(/\/\d+\//)[1] });
+			this.setState({
+				pageID     : window.location.pathname.match(/render\/(\d+)\/\d+\/\d+/)[1],
+				artboardID : window.location.pathname.match(/render\/\d+\/(\d+)\/\d+/)[1],
+				sliceID    : window.location.pathname.match(/render\/\d+\/\d+\/(\d+)/)[1]
+			});
 		}
 	}
 
@@ -79,14 +83,15 @@ class App extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
-				this.props.history.push('/render/' + obj.pageID + '/' + obj.id);
+				this.props.history.push('/render/' + obj.pageID + '/' + obj.id + '/0');
 			}).catch((error) => {
 		});
 	};
 
 	handleSideNavSliceItem = (obj)=> {
 		console.log('handleSideNavSliceItem()', obj);
-		this.setState({ slice : obj.id });
+		this.setState({ sliceID : obj.id });
+		this.props.history.push('/render/' + this.state.pageID + '/' + this.state.artboardID + '/' + obj.id);
 	};
 
 	handleUpload = ()=> {
@@ -133,7 +138,7 @@ class App extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
-				this.props.history.push('/render/' + obj.pageID + '/' + obj.id);
+				this.props.history.push('/render/' + obj.pageID + '/' + obj.id + '/0');
 			}).catch((error) => {
 		});
 	};
@@ -168,7 +173,7 @@ class App extends Component {
 	};
 
   render() {
-  	//console.log('App.state', this.state);
+  	console.log('App.state', this.state);
 
     return (
     	<div className="page-wrapper">
@@ -179,6 +184,8 @@ class App extends Component {
 		    />
 		    <SideNav
 			    pageID={this.state.pageID}
+			    artboardID={this.state.artboardID}
+			    sliceID={this.state.sliceID}
 			    onPageItem={(obj)=> this.handleSideNavPageItem(obj)}
 			    onArtboardItem={(obj)=> this.handleSideNavArtboardItem(obj)}
 			    onSliceItem={(obj)=> this.handleSideNavSliceItem(obj)}
@@ -191,7 +198,8 @@ class App extends Component {
 			    <Route exact path="/" render={()=> <HomePage pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
 			    <Route exact path="/manifesto" component={ManifestoPage} />
 			    <Route exact path="/privacy" component={PrivacyPage} />
-			    <Route path="/render/:pageID/:artboardID" component={InspectorPage} />
+			    <Route path="/render/:pageID/:artboardID/:sliceID" component={InspectorPage} />
+			    {/*<Route path="/render/:pageID/:artboardID" render={()=> <InspectorPage pageID={this.state.pageID} artboardID={this.state.artboardID} sliceID={this.state.sliceID} />} />*/}
 			    <Route exact path="/terms" component={TermsPage} />
 		    </div>
 

@@ -26,6 +26,7 @@
     "react-scrollable-anchor": "^0.6.1",
     "react-stripe-elements": "^2.0.1",
     "react-tooltip": "^3.8.4",
+    "react-treeview": "^0.4.7",
     "simple-flexbox": "^1.2.0"
   },
   "scripts": {

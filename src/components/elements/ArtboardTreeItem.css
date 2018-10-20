@@ -1,0 +1,21 @@
+
+.artboard-tree-item {
+	margin-bottom: 12px;
+	font-weight: 400;
+}
+
+.artboard-tree-item-arrow {
+	font-size: 14px;
+	color: #ffffff;
+	margin-right: 10px;
+}
+
+.artboard-tree-item-text:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.artboard-tree-item-arrow-selected, .artboard-tree-item-text-selected {
+	text-transform: uppercase;
+	color: #7ed321;
+}

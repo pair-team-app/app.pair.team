@@ -1,0 +1,25 @@
+
+.slice-tree-item {
+	margin: 12px 0 0 18px;
+	font-weight: 400;
+}
+
+.slice-tree-item:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.slice-tree-item-arrow {
+	font-size: 14px;
+	color: #ffffff;
+	margin-right: 10px;
+}
+
+.slice-tree-item-text {
+
+}
+
+.slice-tree-item-arrow-selected, .slice-tree-item-text-selected {
+	text-transform: uppercase;
+	color: #7ed321;
+}

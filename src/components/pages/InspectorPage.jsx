@@ -39,10 +39,11 @@ class InspectorPage extends Component {
 	}
 
 	refreshData = ()=> {
-		const { pageID, artboardID } = this.props.match.params;
+		const { pageID, artboardID, sliceID } = this.props.match.params;
 		this.setState({
 			pageID     : pageID,
-			artboardID : artboardID
+			artboardID : artboardID,
+			slice      : sliceID
 		});
 
 		let formData = new FormData();
@@ -99,8 +100,8 @@ class InspectorPage extends Component {
 
 	render() {
 		//console.log('InspectorPage.render()');
-		const { artboardID } = this.props.match.params;
-		if (this.state.artboardID !== artboardID) {
+		const { pageID, artboardID, sliceID } = this.props.match.params;
+		if (this.state.artboardID !== artboardID || this.state.slice !== sliceID) {
 			this.refreshData();
 			return (null);
 		}

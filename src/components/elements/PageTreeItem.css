@@ -1,0 +1,25 @@
+
+.page-tree-item {
+	margin-bottom: 12px;
+	font-weight: 400;
+}
+
+.page-tree-item:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.page-tree-item-arrow {
+	font-size: 14px;
+	color: #ffffff;
+	margin-right: 10px;
+}
+
+.page-tree-item-text {
+
+}
+
+.page-tree-item-arrow-selected, .page-tree-item-text-selected {
+	text-transform: uppercase;
+	color: #7ed321;
+}
