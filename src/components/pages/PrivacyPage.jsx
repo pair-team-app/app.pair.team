@@ -14,7 +14,7 @@ class PrivacyPage extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className="privacy-page-wrapper">
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<Row horizontal="center"><div className="step-header-text">Privacy Policy</div></Row>

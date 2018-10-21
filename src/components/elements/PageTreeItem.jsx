@@ -14,7 +14,6 @@ class PageTreeItem extends Component {
 	}
 
 	render() {
-		const faClass = (this.props.selected) ? 'page-tree-item-arrow page-tree-item-arrow-selected' : 'page-tree-item-arrow';
 		const textClass = (this.props.selected) ? 'page-tree-item-text page-tree-item-text-selected' : 'page-tree-item-text';
 
 		return (

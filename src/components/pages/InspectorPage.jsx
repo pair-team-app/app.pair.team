@@ -38,6 +38,14 @@ class InspectorPage extends Component {
 		this.heroImage = null;
 	}
 
+	componentDidUpdate() {
+		const { artboardID } = this.props.match.params;
+		if (this.state.artboardID !== artboardID) {
+			this.refreshData();
+			return (null);
+		}
+	}
+
 	refreshData = ()=> {
 		const { pageID, artboardID, sliceID } = this.props.match.params;
 		this.setState({
@@ -99,19 +107,23 @@ class InspectorPage extends Component {
 	};
 
 	render() {
-		//console.log('InspectorPage.render()');
-		const { pageID, artboardID, sliceID } = this.props.match.params;
-		if (this.state.artboardID !== artboardID || this.state.slice !== sliceID) {
-			this.refreshData();
-			return (null);
-		}
+		console.log('InspectorPage.render()', this.state);
 
 		const page = (this.state.page) ? this.state.page : null;
 		const artboard = (this.state.artboard) ? this.state.artboard : null;
 		const slice = (this.state.artboard) ? (this.state.slice > -1) ? this.state.artboard.slices[this.state.slice] : null : null;
+		const scale = (artboard && heroImage && heroImage.current) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? heroImage.current.clientWidth / artboard.meta.frame.size.width : heroImage.current.clientHeight / artboard.meta.frame.size.height : 0;
 
-		const heroImageClass = 'inspector-page-hero-image' + ((artboard) ? (artboard.meta.frame.width > artboard.meta.frame.height) ? ' inspector-page-hero-image-landscape' : ' inspector-page-hero-image-portrait' : '');
-		const panelImageClass = 'inspector-page-panel-image' + ((slice) ? (slice.meta.frame.width > slice.meta.frame.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait' : '');
+		const heroImageClass = 'inspector-page-hero-image' + ((artboard) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? ' inspector-page-hero-image-landscape' : ' inspector-page-hero-image-portrait' : '');
+		const panelImageClass = 'inspector-page-panel-image' + ((slice) ? (slice.meta.frame.size.width > slice.meta.frame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait' : '');
+		const slicesStyle = (artboard) ? {
+			width  : (scale * artboard.meta.frame.size.width) + 'px',
+			height : (scale * artboard.meta.frame.size.height) + 'px'
+		} : {
+			width  : '100%',
+			height : '100%'
+		};
+
 
 		const items = (artboard) ? artboard.slices.map((item, i, arr) => {
 			return (
@@ -122,7 +134,7 @@ class InspectorPage extends Component {
 					left={item.meta.frame.origin.x}
 					width={item.meta.frame.size.width}
 					height={item.meta.frame.size.height}
-					scale={(heroImage && heroImage.current) ? heroImage.current.clientHeight / artboard.meta.frame.size.height : 0}
+					scale={scale}
 					onClick={() => this.handleSliceClick(i, item.id)} />
 			);
 		}) : [];
@@ -131,8 +143,8 @@ class InspectorPage extends Component {
 			<div className="inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<div className="inspector-page-hero-wrapper">
-						<div style={{width:'100%', height:'100%'}} ref={heroImage}>{(artboard) && (<img className={heroImageClass} src={artboard.filename} alt="Hero" />)}</div>
-						<div className="inspector-page-hero-slice-wrapper">
+						<div ref={heroImage}>{(artboard) && (<img className={heroImageClass} src={artboard.filename} alt="Hero" />)}</div>
+						<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>
 							{items}
 						</div>
 						<div className="inspector-page-hero-title">
@@ -173,7 +185,7 @@ class InspectorPage extends Component {
 						Slice: {(slice) ? slice.title : 'N/A'}<br />
 						Position: ({(slice) ? slice.meta.frame.origin.x : '0'}, {(slice) ? slice.meta.frame.origin.y : 0})<br />
 						Size: {(slice) ? slice.meta.frame.size.width : 0} &times; {(slice) ? slice.meta.frame.size.height : 0}<br />
-						Rotation: {(slice) ? slice.meta.rotation : 0}<br />
+						Rotation: {(slice) ? slice.meta.rotation : 0}&deg;<br />
 						Opacity: {(slice) ? slice.meta.opacity : '100%'}<br />
 						Color: {(slice) ? slice.meta.fillColor : 'N/A'}<br />
 						Font: {(slice) ? slice.meta.font.family : 'N/A'}<br />

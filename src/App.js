@@ -70,7 +70,7 @@ class App extends Component {
 
 	handleSideNavPageItem = (obj)=> {
 		console.log('handleSideNavPageItem()', obj);
-		this.setState({ pageID : obj.id });
+		this.setState({ pageID : (obj.selected) ? obj.id : 0 });
 	};
 
 	handleSideNavArtboardItem = (obj)=> {
@@ -148,6 +148,7 @@ class App extends Component {
 		this.setState({ overlayAlert : null });
 		if (overlayType === 'register' && buttonType === 'submit') {
 			this.setState({ user_id : 0 });
+			window.location.reload();
 
 		} else if (overlayType === 'upload' && buttonType === 'upload') {
 // 			let self = this;
@@ -199,7 +200,6 @@ class App extends Component {
 			    <Route exact path="/manifesto" component={ManifestoPage} />
 			    <Route exact path="/privacy" component={PrivacyPage} />
 			    <Route path="/render/:pageID/:artboardID/:sliceID" component={InspectorPage} />
-			    {/*<Route path="/render/:pageID/:artboardID" render={()=> <InspectorPage pageID={this.state.pageID} artboardID={this.state.artboardID} sliceID={this.state.sliceID} />} />*/}
 			    <Route exact path="/terms" component={TermsPage} />
 		    </div>
 

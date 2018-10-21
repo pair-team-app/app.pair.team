@@ -14,7 +14,6 @@ class SliceTreeItem extends Component {
 	}
 
 	render() {
-		const faClass = (this.props.selected) ? 'slice-tree-item-arrow slice-tree-item-arrow-selected' : 'slice-tree-item-arrow';
 		const textClass = (this.props.selected) ? 'slice-tree-item-text slice-tree-item-text-selected' : 'slice-tree-item-text';
 
 		return (

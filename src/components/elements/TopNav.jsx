@@ -38,7 +38,7 @@ class TopNav extends Component {
 						id       : upload.id,
 						title    : upload.title,
 						added    : upload.added,
-						selected : false,
+						selected : (upload.id === cookie.load('upload_id')),
 						key      : 'uploads'
 					});
 				});

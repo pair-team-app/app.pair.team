@@ -6,15 +6,8 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
-import SideNavItem from './SideNavItem';
 import ArtboardTreeItem from './ArtboardTreeItem';
 import PageTreeItem from './PageTreeItem';
-
-const dataSource = [
-	['Apple', 'Orange'],
-	['Facebook', 'Google'],
-	['Celery', 'Cheeseburger'],
-];
 
 class SideNav extends Component {
 	constructor(props) {
@@ -96,15 +89,6 @@ class SideNav extends Component {
 	}
 
 	refreshData = ()=> {
-		if (window.location.pathname.includes('/render/')) {
-			const { pageID, artboardID, sliceID } = this.props;
-			this.setState({
-				pageID     : pageID,
-				artboardID : artboardID,
-				sliceID    : sliceID
-			});
-		}
-
 		if (typeof cookie.load('user_id') !== 'undefined') {
 			if (window.location.pathname.includes('/render/')) {
 				const { pageID, artboardID, sliceID } = this.props;
@@ -214,41 +198,13 @@ class SideNav extends Component {
 	};
 
 	render() {
-		//console.log('SideNav.render()');
+		console.log('SideNav.render()', this.state.pages);
 
 		if (window.location.pathname.includes('/render/')) {
-			const artboardID = this.props.artboardID; //window.location.pathname.match(/\/(\d+)$/)[1];
+			const artboardID = this.props.artboardID;
 			if (this.state.artboardID !== artboardID) {
 				this.refreshData();
 				return (null);
-			}
-		}
-
-		let items = [];
-		if (typeof cookie.load('user_id') !== 'undefined') {
-			if (window.location.pathname === '/') {
-				items = this.state.pages.map((item, i, arr) => {
-					return (
-						<PageTreeItem
-							key={i}
-							title={item.title}
-							description={item.description}
-							selected={item.selected}
-							onClick={()=> this.handleNavItem('page', item.id)} />
-					);
-				});
-
-			} else if (window.location.pathname.includes('/render/')) {
-				items = this.state.artboards.map((item, i, arr) => {
-					return (
-						<ArtboardTreeItem
-							key={i}
-							title={item.title}
-							description=""
-							selected={item.selected}
-							onClick={()=> this.handleNavItem('artboard', item.id)} />
-					);
-				});
 			}
 		}
 
@@ -262,21 +218,30 @@ class SideNav extends Component {
 								<Column flexGrow={1} horizontal="end" vertical="center"><img className="side-nav-invite-image" src="https://via.placeholder.com/18x20" alt="Invite Team" /></Column>
 							</Row></button>
 						)}
-						{/*{items}*/}
-					</div>
-					<div>
-						{this.state.artboards.map((artboard, i)=> {
-							return (
-								<ArtboardTreeItem
-									key={artboard.id}
-									title={artboard.title}
-									description=""
-									slices={artboard.slices}
-									selected={artboard.selected}
-									onClick={()=> this.handleNavItem('artboard', artboard.id)}
-									onSliceClick={(id)=> this.handleNavItem('slice', id)} />
-							);
-						})}
+						{(window.location.pathname.includes('/render/'))
+							? this.state.artboards.map((artboard, i)=> {
+								return (
+									<ArtboardTreeItem
+										key={artboard.id}
+										title={artboard.title}
+										description=""
+										slices={artboard.slices}
+										selected={artboard.selected}
+										onClick={()=> this.handleNavItem('artboard', artboard.id)}
+										onSliceClick={(id)=> this.handleNavItem('slice', id)} />
+								);
+							})
+							: this.state.pages.map((item, i, arr) => {
+								return (
+									<PageTreeItem
+										key={i}
+										title={item.title}
+										description={item.description}
+										selected={item.selected}
+										onClick={()=> this.handleNavItem('page', item.id)} />
+								);
+							})
+						}
 					</div>
 					<div className="side-nav-bottom-wrapper">
 						{(typeof cookie.load('user_id') !== 'undefined')

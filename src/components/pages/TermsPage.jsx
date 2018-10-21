@@ -14,7 +14,7 @@ class TermsPage extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className="terms-page-wrapper">
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<Row horizontal="center"><div className="step-header-text">Terms of Service</div></Row>
