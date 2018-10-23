@@ -51,7 +51,7 @@ class TemplateStep extends Component {
 		return (
 			<Row vertical="start">
 				<Column flexGrow={1} horizontal="center">
-					<div className="step-header-text">Select a Design Engine System</div>
+					<div className="page-header-text">Select a Design Engine System</div>
 					<div className="input-title">To begin select a design system.</div>
 					<div className="template-button-wrapper">
 						<Row horizontal="center" style={{flexWrap:'wrap'}}>

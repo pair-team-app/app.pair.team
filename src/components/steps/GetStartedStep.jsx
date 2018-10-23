@@ -69,7 +69,7 @@ class GetStartedStep extends Component {
 			<div className="home-wrapper">
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Engineers, start your Design Engine</div>
+						<div className="page-header-text">Engineers, start your Design Engine</div>
 						<div className="step-text">Accelerate your best ideas with Design Engine’s AI powered Premium Design Systems.</div>
 						{/*<button className="action-button step-button" onClick={()=> this.props.onClick()}>Get Started</button>*/}
 						<Row horizontal="center">

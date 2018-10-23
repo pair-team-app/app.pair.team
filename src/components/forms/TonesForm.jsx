@@ -84,7 +84,7 @@ class TonesForm extends Component {
 			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">What type of design tone are you looking for?</div>
+						<div className="page-header-text">What type of design tone are you looking for?</div>
 						<div className="input-title">Select one or more types of tonality.</div>
 					</Column>
 				</Row>

@@ -26,14 +26,14 @@ class UsersStep extends Component {
 			<div>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Want free user feedback?</div>
+						<div className="page-header-text">Want free user feedback?</div>
 						<div className="step-text">Download Design Engine’s Menu Bar to receive FREE feedback on your designs.</div>
 						<button className="action-button step-button" onClick={()=> this.handleDownload()}>Download Menu Bar</button>
 						<img src="/images/intro5.png" className="intro-image" alt="MacBook" />
-						<div className="step-header-text">Wait, where is the catch?</div>
+						<div className="page-header-text">Wait, where is the catch?</div>
 						<div className="step-text">There is no catch! You simply install Design Engine’s Menu Bar and let our platform learn from your design skills. In return we provide free user feedback on the design artboards you sync with us.</div>
 						<button className="action-button step-button" onClick={()=> this.handleDownload()}>Download Menu Bar</button>
-						<div className="step-header-text">Get a daily report of user feedback</div>
+						<div className="page-header-text">Get a daily report of user feedback</div>
 						<div className="step-text">Design Engine will send you a daily design report detailing rating, sentiment & feedback.</div>
 						<button className="action-button step-button" onClick={()=> this.handleDownload()}>Download Menu Bar</button>
 

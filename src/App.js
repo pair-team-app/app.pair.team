@@ -2,14 +2,16 @@
 import React, { Component } from 'react';
 import './App.css';
 
+import axios from 'axios';
 import cookie from 'react-cookies';
 import ReactPixel from 'react-facebook-pixel';
 import { Route, withRouter } from 'react-router-dom'
 
+import DevelopersPage from './components/pages/DevelopersPage';
 import HomePage from './components/pages/HomePage';
 import InspectorPage from './components/pages/InspectorPage';
 import InviteOverlay from './components/elements/InviteOverlay';
-import ManifestoPage from './components/pages/ManifestoPage';
+import MissionPage from './components/pages/MissionPage';
 import PrivacyPage from './components/pages/PrivacyPage';
 import StripeOverlay from './components/elements/StripeOverlay';
 import RegisterOverlay from './components/elements/RegisterOverlay';
@@ -17,7 +19,6 @@ import SideNav from "./components/elements/SideNav";
 import TermsPage from './components/pages/TermsPage';
 import TopNav from './components/elements/TopNav';
 import UploadOverlay from './components/elements/UploadOverlay';
-import axios from "axios/index";
 
 class App extends Component {
 	constructor(props) {
@@ -46,16 +47,13 @@ class App extends Component {
 		ReactPixel.init('318191662273348', advancedMatching, options);
 		ReactPixel.trackCustom('load');
 
-		if (window.location.pathname.includes('/render/')) {
-			this.setState({
-				pageID     : window.location.pathname.match(/render\/(\d+)\/\d+\/\d+/)[1],
-				artboardID : window.location.pathname.match(/render\/\d+\/(\d+)\/\d+/)[1],
-				sliceID    : window.location.pathname.match(/render\/\d+\/\d+\/(\d+)/)[1]
-			});
-		}
-	}
-
-	componentWillUnmount() {
+// 		if (window.location.pathname.includes('/render/')) {
+// 			this.setState({
+// 				pageID     : window.location.pathname.match(/render\/(\d+)\/\d+\/(\d+)?/)[1],
+// 				artboardID : window.location.pathname.match(/render\/\d+\/(\d+)\/(\d+)?/)[1],
+// 				sliceID    : window.location.pathname.match(/render\/\d+\/\d+\/(\d+)?/)[1]
+// 			});
+// 		}
 	}
 
 	handleInvite = ()=> {
@@ -75,7 +73,10 @@ class App extends Component {
 
 	handleSideNavArtboardItem = (obj)=> {
 		console.log('handleSideNavArtboardItem()', obj);
-		this.setState({ artboardID : obj.id });
+		this.setState({
+			pageID     : obj.pageID,
+			artboardID : obj.id
+		});
 
 		let formData = new FormData();
 		formData.append('action', 'ADD_VIEW');
@@ -83,7 +84,7 @@ class App extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
-				this.props.history.push('/render/' + obj.pageID + '/' + obj.id + '/0');
+				this.props.history.push('/render/' + obj.pageID + '/' + obj.id + '/');
 			}).catch((error) => {
 		});
 	};
@@ -127,10 +128,10 @@ class App extends Component {
 
 	handleArtboardDetails = (obj)=> {
 		console.log('handleArtboardDetails()', obj);
-		this.setState({
-			pageID     : obj.pageID,
-			artboardID : obj.id
-		});
+// 		this.setState({
+// 			pageID     : obj.pageID,
+// 			artboardID : obj.id
+// 		});
 
 		let formData = new FormData();
 		formData.append('action', 'ADD_VIEW');
@@ -138,7 +139,7 @@ class App extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
-				this.props.history.push('/render/' + obj.pageID + '/' + obj.id + '/0');
+				this.props.history.push('/render/' + obj.pageID + '/' + obj.id + '/');
 			}).catch((error) => {
 		});
 	};
@@ -180,6 +181,7 @@ class App extends Component {
     	<div className="page-wrapper">
 		    <TopNav
 			    parts={this.state.selectedArtboards}
+			    artboardID={this.state.artboardID}
 			    onUpload={()=> this.handleUpload()}
 			    onDownload={()=> this.handleDownload()}
 		    />
@@ -197,8 +199,10 @@ class App extends Component {
 
 		    <div className="content-wrapper">
 			    <Route exact path="/" render={()=> <HomePage pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
-			    <Route exact path="/manifesto" component={ManifestoPage} />
+			    <Route exact path="/developer" component={DevelopersPage} />
+			    <Route exact path="/mission" component={MissionPage} />
 			    <Route exact path="/privacy" component={PrivacyPage} />
+			    <Route path="/render/:pageID/:artboardID/" component={InspectorPage} />
 			    <Route path="/render/:pageID/:artboardID/:sliceID" component={InspectorPage} />
 			    <Route exact path="/terms" component={TermsPage} />
 		    </div>

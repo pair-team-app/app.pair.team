@@ -121,7 +121,7 @@ class PurchaseStep extends Component {
 					<Column flexGrow={1} horizontal="center">
 						{this.state.step === 1 && (
 							<div>
-								<div className="step-header-text">Congrats, below are your files Download Sketch & Parts Below.</div>
+								<div className="page-header-text">Congrats, below are your files Download Sketch & Parts Below.</div>
 								<div className="input-title">Ready to download.</div>
 								<Row horizontal="center">
 									<a href="http://cdn.designengine.ai/assets/saas_funnel-test-1.sketch" target="_blank" rel="noopener noreferrer"><div className="purchase-link">Sketch Download</div></a>

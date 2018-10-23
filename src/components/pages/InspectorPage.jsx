@@ -35,12 +35,12 @@ class InspectorPage extends Component {
 			}).catch((error) => {
 		});
 
-		this.heroImage = null;
+		this.refreshData();
 	}
 
-	componentDidUpdate() {
-		const { artboardID } = this.props.match.params;
-		if (this.state.artboardID !== artboardID) {
+	componentDidUpdate(prevProps) {
+		console.log("componentDidUpdate()", prevProps);
+		if (this.props.match.params.artboardID !== prevProps.match.params.artboardID) {
 			this.refreshData();
 			return (null);
 		}
@@ -107,12 +107,10 @@ class InspectorPage extends Component {
 	};
 
 	render() {
-		console.log('InspectorPage.render()', this.state);
-
 		const page = (this.state.page) ? this.state.page : null;
 		const artboard = (this.state.artboard) ? this.state.artboard : null;
 		const slice = (this.state.artboard) ? (this.state.slice > -1) ? this.state.artboard.slices[this.state.slice] : null : null;
-		const scale = (artboard && heroImage && heroImage.current) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? heroImage.current.clientWidth / artboard.meta.frame.size.width : heroImage.current.clientHeight / artboard.meta.frame.size.height : 0;
+		const scale = (artboard && heroImage && heroImage.current) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? heroImage.current.clientWidth / artboard.meta.frame.size.width : heroImage.current.clientHeight / artboard.meta.frame.size.height : 1;
 
 		const heroImageClass = 'inspector-page-hero-image' + ((artboard) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? ' inspector-page-hero-image-landscape' : ' inspector-page-hero-image-portrait' : '');
 		const panelImageClass = 'inspector-page-panel-image' + ((slice) ? (slice.meta.frame.size.width > slice.meta.frame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait' : '');
@@ -124,6 +122,7 @@ class InspectorPage extends Component {
 			height : '100%'
 		};
 
+		console.log("InspectorPage", "artboard:"+artboard, "heroImage:"+heroImage, "heroImage.current"+heroImage.current);
 
 		const items = (artboard) ? artboard.slices.map((item, i, arr) => {
 			return (
@@ -143,7 +142,7 @@ class InspectorPage extends Component {
 			<div className="inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<div className="inspector-page-hero-wrapper">
-						<div ref={heroImage}>{(artboard) && (<img className={heroImageClass} src={artboard.filename} alt="Hero" />)}</div>
+						{(artboard) && (<img className={heroImageClass} src={artboard.filename} alt="Hero" ref={heroImage} />)}
 						<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>
 							{items}
 						</div>

@@ -109,7 +109,7 @@ class ImageryForm extends Component {
 			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">What type of imagery do you need?</div>
+						<div className="page-header-text">What type of imagery do you need?</div>
 						<div className="input-title">Select the type of mood images you wish to include.</div>
 					</Column>
 				</Row>

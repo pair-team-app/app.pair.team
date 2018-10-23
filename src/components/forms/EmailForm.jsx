@@ -91,7 +91,7 @@ class EmailForm extends Component {
 			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">Enter a work or school email address</div>
+						<div className="page-header-text">Enter a work or school email address</div>
 						<div className="input-title">To get started enter a valid email.</div>
 					</Column>
 				</Row>

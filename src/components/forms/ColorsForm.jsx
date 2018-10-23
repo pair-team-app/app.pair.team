@@ -82,7 +82,7 @@ class ColorsForm extends Component {
 			<div style={{width:'100%'}}>
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<div className="step-header-text">What type of color do you like?</div>
+						<div className="page-header-text">What type of color do you like?</div>
 						<div className="input-title">Select one or more colors.</div>
 					</Column>
 				</Row>

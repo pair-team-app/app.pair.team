@@ -45,17 +45,15 @@ class TopNav extends Component {
 				this.setState({ uploads : uploads });
 
 				formData.append('action', 'COLORS');
-				formData.append('upload_id', cookie.load('upload_id'));
+				formData.append('artboard_id', this.props.artboardID);
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response) => {
 						console.log('COLORS', response.data);
 						let colors = [];
-						response.data.uploads.forEach(color => {
+						response.data.colors.forEach(color => {
 							colors.push({
 								id       : color.id,
 								title    : color.title,
-								hex      : color.hex,
-								gradient : color.gradient,
 								selected : false,
 								key      : 'colors'
 							});
@@ -63,12 +61,12 @@ class TopNav extends Component {
 						this.setState({ colors : colors });
 
 						formData.append('action', 'DEVICES');
-						formData.append('upload_id', cookie.load('upload_id'));
+						formData.append('artboard_id', this.props.artboardID);
 						axios.post('https://api.designengine.ai/system.php', formData)
 							.then((response) => {
 								console.log('DEVICES', response.data);
 								let devices = [];
-								response.data.uploads.forEach(device => {
+								response.data.devices.forEach(device => {
 									devices.push({
 										id       : device.id,
 										title    : device.title,

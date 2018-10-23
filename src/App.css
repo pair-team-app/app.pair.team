@@ -15,6 +15,15 @@
 	background-color: #363636;
 }
 
+.page-header-text {
+	font-size: 24px;
+}
+
+.page-subheader-text {
+	text-align: center;
+	margin-top: 56px;
+}
+
 .input-title {
 	margin-bottom: 28px;
 	font-size: 16px;

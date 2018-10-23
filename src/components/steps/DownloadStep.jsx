@@ -79,7 +79,7 @@ class PurchaseStep extends Component {
 		return (
 			<Row vertical="start">
 				<Column flexGrow={1} horizontal="center">
-					<div className="step-header-text">Download render design files</div>
+					<div className="page-header-text">Download render design files</div>
 					<div className="input-title">Download your design source and and parts</div>
 					<div className="download-item-wrapper">
 						<Row horizontal="center" style={{flexWrap:'wrap'}}>

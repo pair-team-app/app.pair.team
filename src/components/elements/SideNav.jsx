@@ -60,13 +60,15 @@ class SideNav extends Component {
 				}
 			});
 
-			this.setState({
-				pageID      : artboards.pageID,
-				artboardID  : id,
-				artboards   : artboards
-			});
+// 			if (artboard.selected) {
+				this.setState({
+					pageID     : artboard.pageID,
+					artboardID : id,
+					artboards  : artboards
+				});
 
-			this.props.onArtboardItem(artboard);
+				this.props.onArtboardItem(artboard);
+// 			}
 
 		} else if (type === 'slice') {
 			let slice = null;
@@ -250,7 +252,7 @@ class SideNav extends Component {
 						}
 						<div className="nav-link"><a href="https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA" target="_blank" rel="noopener noreferrer">Slack</a></div>
 						<div className="nav-link"><a href="https://spectrum.chat/designengine" target="_blank" rel="noopener noreferrer">Spectrum</a></div>
-						<div className="nav-link"><a href={'/manifesto'}>Manifesto</a></div>
+						<div className="nav-link"><a href={'/mission'}>Mission</a></div>
 						<div className="nav-link"><a href={'/terms'}>Terms of Service</a></div>
 						<div className="nav-link"><a href={'/privacy'}>Privacy Policy</a></div>
 						<div className="copyright">&copy; {new Date().getFullYear()} Design Engine AI</div>

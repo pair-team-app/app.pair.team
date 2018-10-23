@@ -17,7 +17,7 @@ class TermsPage extends Component {
 			<div className="terms-page-wrapper">
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<Row horizontal="center"><div className="step-header-text">Terms of Service</div></Row>
+						<Row horizontal="center"><div className="page-header-text">Terms of Service</div></Row>
 						<div className="terms-text">
 							<Row><p>Please read these terms of service (“Agreement”) carefully because it is an agreement between you (“you”) and Design Engine AI, Inc. (“Design Engine”, “we”, “us”, or “our”), and governs your access to and use of Design Engine’s platform, client-side plug-in (the “Plug-in”) (where applicable), our website located at https://designengine.ai/ (the “Site”), and related services (Design Engine’s platform, the Terminal application, the macOS application, the Site and related services are collectively referred as the “Services”).</p></Row>
 							<Row><p>If you are accessing and using the Services by or on behalf of a company or other organization, the individual accepting this Agreement represents and warrants that he or she has the authority to bind that company or other organization to this Agreement, and “you” and “your” will refer to that company or other organization. Use of and access to the Services is conditioned upon compliance with this Agreement and all applicable local, state, national, and international laws, rules and regulations. By checking the box next to ‘I agree to the Design Engine Terms of Service’, you indicate that you understand and agree to be bound by these terms of service.</p></Row>
