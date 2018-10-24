@@ -1,0 +1,24 @@
+
+.artboard-tree-item {
+	margin-bottom: 12px;
+	font-weight: 400;
+}
+
+.artboard-tree-item-arrow {
+	margin-right: 4px;
+	width: 10px;
+	height: 10px;
+}
+
+.artboard-tree-item-text:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.artboard-tree-item-text-selected {
+	color: #7ed321;
+}
+
+.artboard-tree-item-slices, .artboard-tree-item-hotspots, .artboard-tree-item-backgrounds {
+	margin: 12px 0 0 16px;
+}

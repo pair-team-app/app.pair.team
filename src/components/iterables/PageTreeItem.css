@@ -10,9 +10,9 @@
 }
 
 .page-tree-item-arrow {
-	font-size: 14px;
-	color: #ffffff;
-	margin-right: 10px;
+	margin-right: 4px;
+	width: 10px;
+	height: 10px;
 }
 
 .page-tree-item-text {
@@ -20,6 +20,5 @@
 }
 
 .page-tree-item-arrow-selected, .page-tree-item-text-selected {
-	text-transform: uppercase;
 	color: #7ed321;
 }

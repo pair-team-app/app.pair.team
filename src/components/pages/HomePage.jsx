@@ -6,7 +6,7 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
-import ArtboardItem from '../elements/ArtboardItem';
+import ArtboardItem from '../iterables/ArtboardItem';
 
 
 class HomePage extends Component {
@@ -34,6 +34,7 @@ class HomePage extends Component {
 							id       : item.id,
 							pageID   : item.page_id,
 							title    : item.title,
+							type     : item.type,
 							filename : item.filename,
 							meta     : JSON.parse(item.meta),
 							added    : item.added,
@@ -77,7 +78,7 @@ class HomePage extends Component {
 	render() {
 		const artboards = this.state.artboards;
 		const items = artboards.map((item, i, arr) => {
-			if (this.props.pageID === 0 || this.props.pageID === item.pageID) {
+			if (item.type !== 'hero' && (this.props.pageID === 0 || this.props.pageID === item.pageID)) {
 				return (
 					<Column key={i}>
 						<ArtboardItem
@@ -94,15 +95,19 @@ class HomePage extends Component {
 			}
 		});
 
-		items.shift();
+		let artboard = null;
+		artboards.forEach(function(item, i) {
+			if (artboard === null && item.type === 'hero') {
+				artboard = item;
+			}
+		});
 
-		const artboard = (artboards.length > 0) ? artboards[0] : null;
 		const imageClass = (artboard) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? 'home-page-image home-page-image-landscape' : 'home-page-image home-page-image-portrait' : 'home-page-image';
 
 		return (
 			<div className="home-page-wrapper">
 				{(artboard) && (
-					<div className="home-page-project">
+					<div className="home-page-project" onClick={() => this.handleSelect(artboard.id)}>
 						<img className={imageClass} src={artboard.filename} alt={artboards.title} />
 						<div className="home-page-title">{artboard.title}</div>
 					</div>

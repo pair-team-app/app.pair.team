@@ -18,7 +18,7 @@ class PageTreeItem extends Component {
 
 		return (
 			<div className="page-tree-item" onClick={()=> this.props.onClick()}>
-				<div className={textClass}>{this.props.title}</div>
+				<div className={textClass}>{(this.props.selected) && (<img className="page-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />)}{this.props.title}</div>
 			</div>
 		);
 	}

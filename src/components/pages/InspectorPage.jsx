@@ -5,7 +5,8 @@ import './InspectorPage.css';
 import axios from 'axios';
 import cookie from 'react-cookies';
 
-import SliceItem from '../elements/SliceItem';
+import CommentItem from '../iterables/CommentItem';
+import SliceItem from '../iterables/SliceItem';
 
 const heroImage = React.createRef();
 class InspectorPage extends Component {
@@ -39,7 +40,6 @@ class InspectorPage extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		console.log("componentDidUpdate()", prevProps);
 		if (this.props.match.params.artboardID !== prevProps.match.params.artboardID) {
 			this.refreshData();
 			return (null);
@@ -88,7 +88,8 @@ class InspectorPage extends Component {
 							views     : response.data.artboard.views,
 							downloads : response.data.artboard.downloads,
 							added     : response.data.artboard.added,
-							slices    : slices
+							slices    : slices,
+							comments  : response.data.artboard.comments
 						};
 
 						this.setState({ artboard : artboard });
@@ -99,7 +100,16 @@ class InspectorPage extends Component {
 	};
 
 	submitComment = ()=> {
-		this.setState({ comment : '' })
+		let formData = new FormData();
+		formData.append('action', 'ADD_COMMENT');
+		formData.append('user_id', cookie.load('user_id'));
+		formData.append('content', this.state.comment);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response)=> {
+				console.log('ADD_COMMENT', response.data);
+				this.setState({ comment : '' });
+			}).catch((error) => {
+		});
 	};
 
 	handleSliceClick = (ind, id)=> {
@@ -124,7 +134,7 @@ class InspectorPage extends Component {
 
 		console.log("InspectorPage", "artboard:"+artboard, "heroImage:"+heroImage, "heroImage.current"+heroImage.current);
 
-		const items = (artboard) ? artboard.slices.map((item, i, arr) => {
+		const slices = (artboard) ? artboard.slices.map((item, i, arr) => {
 			return (
 				<SliceItem
 					key={i}
@@ -138,19 +148,29 @@ class InspectorPage extends Component {
 			);
 		}) : [];
 
+		const comments = (artboard) ? artboard.comments.map((item, i, arr) => {
+			return (
+				<CommentItem
+					author={item.author}
+					content={item.content}
+					added={item.added}
+				/>);
+		}) : [];
+
 		return (
 			<div className="inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<div className="inspector-page-hero-wrapper">
 						{(artboard) && (<img className={heroImageClass} src={artboard.filename} alt="Hero" ref={heroImage} />)}
 						<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>
-							{items}
+							{slices}
 						</div>
 						<div className="inspector-page-hero-title">
 							{(artboard) ? artboard.title : ''}
 						</div>
 					</div>
 					<div className="inspector-page-comment-wrapper">
+						{comments}
 						<textarea className="inspector-page-comment-txt" name="comment" placeholder="Enter Comment Here" value={this.state.comment} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })}>
 						</textarea>
 						<button className="inspector-page-comment-button" onClick={()=> this.submitComment()}>Submit Comment</button>

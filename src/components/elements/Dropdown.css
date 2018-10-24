@@ -46,7 +46,7 @@
 	position: absolute;
 	width: 100%;
 	margin-top: 0;
-	background-color: #002fff;
+	background-color: #3e3e3e;
 	padding: 0;
 	max-height: 415px;
 	overflow: hidden;
@@ -66,12 +66,12 @@
 
 .dd-list-item.selected {
 	color: #fff;
-	background-color: #000000;
+	background-color: #002fff;
 }
 
 .dd-list-item:hover {
 	color: #fff;
-	background-color: #000000;
+	background-color: #002fff;
 }
 
 .dd-wrapper-single {

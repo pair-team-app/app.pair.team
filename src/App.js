@@ -128,10 +128,10 @@ class App extends Component {
 
 	handleArtboardDetails = (obj)=> {
 		console.log('handleArtboardDetails()', obj);
-// 		this.setState({
-// 			pageID     : obj.pageID,
-// 			artboardID : obj.id
-// 		});
+		this.setState({
+			pageID     : obj.pageID,
+			artboardID : obj.id
+		});
 
 		let formData = new FormData();
 		formData.append('action', 'ADD_VIEW');
@@ -189,6 +189,7 @@ class App extends Component {
 			    pageID={this.state.pageID}
 			    artboardID={this.state.artboardID}
 			    sliceID={this.state.sliceID}
+			    onBack={()=> window.location.href = '/'}
 			    onPageItem={(obj)=> this.handleSideNavPageItem(obj)}
 			    onArtboardItem={(obj)=> this.handleSideNavArtboardItem(obj)}
 			    onSliceItem={(obj)=> this.handleSideNavSliceItem(obj)}

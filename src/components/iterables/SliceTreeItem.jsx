@@ -18,7 +18,7 @@ class SliceTreeItem extends Component {
 
 		return (
 			<div className="slice-tree-item" onClick={()=> this.props.onClick()}>
-				<div className={textClass}>{this.props.title}</div>
+				<div className={textClass}><img className="slice-tree-item-icon" src={(this.props.selected) ? '/images/layer-selected.svg' : '/images/layer.svg'} alt='icon' />{this.props.title}</div>
 			</div>
 		);
 	}
