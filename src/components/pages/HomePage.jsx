@@ -20,33 +20,44 @@ class HomePage extends Component {
 
 	componentDidMount() {
 		if (typeof cookie.load('upload_id') !== 'undefined') {
-			let formData = new FormData();
-			formData.append('action', 'ARTBOARDS');
-			formData.append('upload_id', cookie.load('upload_id'));
-			formData.append('page_id', '' + this.props.pageID);
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response)=> {
-					console.log('ARTBOARDS', response.data);
-
-					let artboards = [];
-					response.data.artboards.forEach(function(item, i) {
-						artboards.push({
-							id       : item.id,
-							pageID   : item.page_id,
-							title    : item.title,
-							type     : item.type,
-							filename : item.filename,
-							meta     : JSON.parse(item.meta),
-							added    : item.added,
-							selected : false
-						});
-					});
-
-					this.setState({ artboards : artboards });
-				}).catch((error) => {
-			});
+			this.refreshData();
 		}
 	}
+
+	componentDidUpdate(prevProps) {
+		if (this.props.pageID !== prevProps.pageID) {
+			this.refreshData();
+			return (null);
+		}
+	}
+
+	refreshData = ()=> {
+		let formData = new FormData();
+		formData.append('action', 'ARTBOARDS');
+		formData.append('upload_id', cookie.load('upload_id'));
+		formData.append('page_id', '' + this.props.pageID);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response)=> {
+				console.log('ARTBOARDS', response.data);
+
+				let artboards = [];
+				response.data.artboards.forEach(function(item, i) {
+					artboards.push({
+						id       : item.id,
+						pageID   : item.page_id,
+						title    : item.title,
+						type     : item.type,
+						filename : item.filename,
+						meta     : JSON.parse(item.meta),
+						added    : item.added,
+						selected : false
+					});
+				});
+
+				this.setState({ artboards : artboards });
+			}).catch((error) => {
+		});
+	};
 
 	handleToggle = (id, isSelected)=> {
 		console.log('handleToggle()', id, isSelected);
@@ -79,7 +90,7 @@ class HomePage extends Component {
 		if (typeof cookie.load('user_id') !== 'undefined') {
 			const artboards = this.state.artboards;
 			const items = artboards.map((item, i, arr) => {
-				if (item.type !== 'hero' && (this.props.pageID === 0 || this.props.pageID === item.pageID)) {
+				if (item.type !== 'hero' && (this.props.pageID <= 0 || this.props.pageID === item.pageID)) {
 					return (
 						<Column key={i}>
 							<ArtboardItem
@@ -97,11 +108,13 @@ class HomePage extends Component {
 			});
 
 			let artboard = null;
-			artboards.forEach(function (item, i) {
-				if (artboard === null && item.type === 'hero') {
-					artboard = item;
-				}
-			});
+			if (this.props.pageID !== -1) {
+				artboards.forEach(function (item, i) {
+					if (artboard === null && item.type === 'hero') {
+						artboard = item;
+					}
+				});
+			}
 
 			const imageClass = (artboard) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? 'home-page-image home-page-image-landscape' : 'home-page-image home-page-image-portrait' : 'home-page-image';
 

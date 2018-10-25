@@ -14,9 +14,9 @@ class SideNav extends Component {
 		super(props);
 
 		this.state = {
-			pageID     : (window.location.pathname.includes('/render/')) ? window.location.pathname.match(/render\/(\d+)\/\d+\/(\d+)?/)[1] : 0,
-			artboardID : (window.location.pathname.includes('/render/')) ? window.location.pathname.match(/render\/\d+\/(\d+)\/(\d+)?/)[1] : 0,
-			sliceID    : (window.location.pathname.includes('/render/')) ? window.location.pathname.match(/render\/\d+\/\d+\/(\d+)?/)[1] : 0,
+			pageID     : (window.location.pathname.includes('/render/')) ? window.location.pathname.match(/render\/(\d+)\/\d+\/(\d+)?/)[1] : this.props.pageID,
+			artboardID : (window.location.pathname.includes('/render/')) ? window.location.pathname.match(/render\/\d+\/(\d+)\/(\d+)?/)[1] : this.props.artboardID,
+			sliceID    : (window.location.pathname.includes('/render/')) ? window.location.pathname.match(/render\/\d+\/\d+\/(\d+)?/)[1] : this.props.sliceID,
 			pages      : [],
 			artboards  : [],
 			treeMenu   : [],
@@ -42,7 +42,15 @@ class SideNav extends Component {
 	handleNavItem = (type, id) => {
 		console.log('handleNavItem()', type, id);
 
-		if (type === 'page') {
+		if (type === 'top') {
+			let pages = [...this.state.pages];
+			pages.forEach((page)=> {
+				page.selected = false;
+			});
+			this.setState({ pageID : -1 });
+			this.props.onTop();
+
+		} else if (type === 'page') {
 			let page = null;
 			let pages = [...this.state.pages];
 			pages.forEach(function(item, i) {
@@ -55,7 +63,10 @@ class SideNav extends Component {
 				}
 			});
 
-			this.setState({ pages : pages });
+			this.setState({
+				pageID : id,
+				pages : pages
+			});
 			this.props.onPageItem(page);
 
 		} else if (type === 'artboard') {
@@ -215,7 +226,8 @@ class SideNav extends Component {
 					<div className="side-nav-top-wrapper">
 						{(typeof cookie.load('user_id') !== 'undefined') && (<div>
 							<button className="side-nav-invite-button" onClick={()=> this.props.onInvite()}>Invite Team Members</button>
-							<div className="nav-link" onClick={()=> this.props.onTop()}><img className="side-nav-arrow" src="/images/chevron-right.svg" alt="chevron" />Top Views</div>
+							{(window.location.pathname === '/' && this.state.pageID !== -1) && (<div className="nav-link" onClick={()=> this.handleNavItem('top', 0)}>Top Views</div>)}
+							{(window.location.pathname === '/' && this.state.pageID === -1) && (<div className="nav-link page-tree-item-text-selected" onClick={()=> this.handleNavItem('top', 0)}><img className="artboard-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />Top Views</div>)}
 						</div>)}
 						{(window.location.pathname !== '/') && (<SideNavBack onClick={()=> this.props.onBack()} />)}
 						{(window.location.pathname.includes('/render/'))

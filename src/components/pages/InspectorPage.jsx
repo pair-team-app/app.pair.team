@@ -70,12 +70,13 @@ class InspectorPage extends Component {
 
 						let slices = [];
 						response.data.artboard.slices.forEach(function(item, i) {
+							const meta = JSON.parse(item.meta);
 							slices.push({
 								id       : item.id,
 								title    : item.title,
 								type     : item.type,
-								filename : item.filename + '@1x.png',
-								meta     : JSON.parse(item.meta),
+								filename : (item.type === 'slice') ? item.filename + '@1x.png' : 'https://via.placeholder.com/' + meta.frame.size.width + 'x'+ meta.frame.size.height,
+								meta     : meta,
 								added    : item.added
 							});
 						});
@@ -135,7 +136,7 @@ class InspectorPage extends Component {
 			height : '100%'
 		};
 
-		console.log("InspectorPage", "artboard:"+artboard, "heroImage:"+heroImage, "heroImage.current"+heroImage.current);
+// 		console.log("InspectorPage", "artboard:"+artboard, "heroImage:"+heroImage, "heroImage.current"+heroImage.current);
 
 		const slices = (artboard) ? artboard.slices.map((item, i, arr) => {
 			return (
@@ -207,7 +208,7 @@ class InspectorPage extends Component {
 						Author: <a href={'mailto:' + this.state.author}>{this.state.author}</a><br />
 						Page: {(page) ? page.title : 'N/A'}<br />
 						Artboard: {(artboard) ? artboard.title : 'N/A'}<br />
-						Slice: {(slice) ? slice.title : 'N/A'}<br />
+						Name: {(slice) ? slice.title : 'N/A'} {(slice) ? '(' + slice.type.replace(/(\b\w)/gi, function(m) {return (m.toUpperCase());}) + ')' : ''}<br />
 						Position: ({(slice) ? slice.meta.frame.origin.x : '0'}, {(slice) ? slice.meta.frame.origin.y : 0})<br />
 						Size: {(slice) ? slice.meta.frame.size.width : 0} &times; {(slice) ? slice.meta.frame.size.height : 0}<br />
 						Rotation: {(slice) ? slice.meta.rotation : 0}&deg;<br />
