@@ -8,6 +8,7 @@ import ReactPixel from 'react-facebook-pixel';
 import { Route, withRouter } from 'react-router-dom'
 
 import DevelopersPage from './components/pages/DevelopersPage';
+import ErrorOverlay from './components/elements/ErrorOverlay';
 import HomePage from './components/pages/HomePage';
 import InspectorPage from './components/pages/InspectorPage';
 import InviteOverlay from './components/elements/InviteOverlay';
@@ -25,7 +26,6 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			section       : '0',
 			pageID        : 0,
 			artboardID    : 0,
 			sliceID       : 0,
@@ -46,23 +46,16 @@ class App extends Component {
 
 		ReactPixel.init('318191662273348', advancedMatching, options);
 		ReactPixel.trackCustom('load');
-
-// 		if (window.location.pathname.includes('/render/')) {
-// 			this.setState({
-// 				pageID     : window.location.pathname.match(/render\/(\d+)\/\d+\/(\d+)?/)[1],
-// 				artboardID : window.location.pathname.match(/render\/\d+\/(\d+)\/(\d+)?/)[1],
-// 				sliceID    : window.location.pathname.match(/render\/\d+\/\d+\/(\d+)?/)[1]
-// 			});
-// 		}
 	}
 
 	handleInvite = ()=> {
-		console.log('handleInvite()');
 		this.setState({ overlayAlert : 'invite' });
 	};
 
+	handleTopViews = ()=> {
+	};
+
 	handleRegistration = ()=> {
-		console.log('handleRegistration()');
 		this.setState({ overlayAlert: 'register' });
 	};
 
@@ -190,6 +183,7 @@ class App extends Component {
 			    artboardID={this.state.artboardID}
 			    sliceID={this.state.sliceID}
 			    onBack={()=> window.location.href = '/'}
+			    onTop={()=> this.handleTopViews()}
 			    onPageItem={(obj)=> this.handleSideNavPageItem(obj)}
 			    onArtboardItem={(obj)=> this.handleSideNavArtboardItem(obj)}
 			    onSliceItem={(obj)=> this.handleSideNavSliceItem(obj)}

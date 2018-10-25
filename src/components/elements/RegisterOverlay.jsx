@@ -4,7 +4,6 @@ import './Overlay.css';
 
 import axios from 'axios';
 import cookie from 'react-cookies';
-import FontAwesome from 'react-fontawesome';
 import { Row, Column } from 'simple-flexbox';
 
 class RegisterOverlay extends Component {
@@ -93,9 +92,13 @@ class RegisterOverlay extends Component {
 		return (
 			<div className="overlay-wrapper">
 				<div className="overlay-container">
-					<div className="overlay-logo-wrapper"><img src="/images/logo.svg" className="overlay-logo" alt="Design Engine" /></div>
-					<div className="overlay-title">To Sign In or Sign Up for Design Engine, enter an email &amp; password below.</div>
 					<div className="overlay-content">
+						<div className="page-header">
+							<Row horizontal="center"><div className="page-header-text">You need to be signed in</div></Row>
+							<div className="page-subheader-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
+							<Row horizontal="center"><button className="page-button" onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
+						</div>
+
 						<div className="input-title">Sign Up</div>
 						<div className={email1Class}><input type="text" name="email1" placeholder="Email Address" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<div className={password1Class}><input type="password" name="password1" placeholder="Password" value={this.state.password1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
@@ -105,11 +108,7 @@ class RegisterOverlay extends Component {
 						<div className={password2Class}><input type="password" name="password2" placeholder="Password" value={this.state.password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					</div>
 					<div className="overlay-button-wrapper">
-						<button className="overlay-button overlay-button-confirm" onClick={()=> this.submit()}><Row>
-							<Column flexGrow={1} horizontal="start" vertical="center">Submit</Column>
-							<Column flexGrow={1} horizontal="end" vertical="center"><FontAwesome name="caret-right" className="overlay-button-confirm-arrow" /></Column>
-						</Row></button>
-						<button className="overlay-button overlay-button-cancel" onClick={()=> this.props.onClick('cancel')}>Cancel</button>
+						<button className="overlay-button overlay-button-confirm" onClick={()=> this.submit()}>Submit</button>
 					</div>
 				</div>
 			</div>

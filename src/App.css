@@ -15,23 +15,36 @@
 	background-color: #363636;
 }
 
+.page-header {
+	background-color: #000000;
+	padding: 56px;
+	margin-bottom: 28px;
+}
+
 .page-header-text {
 	font-size: 24px;
+	font-family: "Poppins SemiBold", sans-serif;
 }
 
 .page-subheader-text {
 	text-align: center;
-	margin-top: 56px;
+	margin: 28px 0 56px 0;
+	font-family: "Roboto Light", sans-serif;
+	line-height: 30px;
+}
+
+.page-button {
+	margin-right: 14px;
 }
 
 .input-title {
-	margin-bottom: 28px;
+	margin-bottom: 20px;
 	font-size: 16px;
 	color: #979797;
 }
 
 .input-wrapper {
-	margin-bottom: 28px;
+	margin-bottom: 20px;
 	border: 1px solid #3e3e3e;
 }
 

@@ -26,10 +26,13 @@ class StripeOverlay extends Component {
 		return (
 			<div className="overlay-wrapper">
 				<div className="overlay-container">
-					<div className="overlay-logo-wrapper"><img src="/images/logo.svg" className="overlay-logo" alt="Design Engine" /></div>
-					<div className="overlay-title">Design Engine is ONLY $4.99 per month for the first 1000 customers who sign up.</div>
 					<div className="overlay-content">
-						<div className="input-title">Payment Information</div>
+						<div className="page-header">
+							<Row horizontal="center"><div className="page-header-text">One Plan, $2.99 per month</div></Row>
+							<div className="page-subheader-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
+							<Row horizontal="center"><button className="page-button" onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
+						</div>
+						<div className="input-title">Payment details</div>
 						<StripeProvider apiKey={this.STRIPE_TEST_TOKEN}>
 							{/*<StripeProvider apiKey={this.STRIPE_LIVE_TOKEN}>*/}
 							<Elements>
@@ -38,11 +41,7 @@ class StripeOverlay extends Component {
 						</StripeProvider>
 					</div>
 					<div className="overlay-button-wrapper">
-						<button className="overlay-button overlay-button-confirm" onClick={()=> this.props.onClick('invite')}><Row>
-							<Column flexGrow={1} horizontal="start" vertical="center">Purchase Now</Column>
-							<Column flexGrow={1} horizontal="end" vertical="center"><FontAwesome name="caret-right" className="overlay-button-confirm-arrow" /></Column>
-						</Row></button>
-						<button className="overlay-button overlay-button-cancel" onClick={()=> this.props.onClick('cancel')}>Cancel</button>
+						<button className="overlay-button overlay-button-confirm" onClick={()=> this.props.onClick('submit')}>Submit</button>
 					</div>
 				</div>
 			</div>

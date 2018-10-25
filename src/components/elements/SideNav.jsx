@@ -4,7 +4,6 @@ import './SideNav.css'
 
 import axios from 'axios';
 import cookie from 'react-cookies';
-import { Column, Row } from 'simple-flexbox';
 
 import ArtboardTreeItem from '../iterables/ArtboardTreeItem';
 import PageTreeItem from '../iterables/PageTreeItem';
@@ -214,12 +213,10 @@ class SideNav extends Component {
 			<div className="side-nav-wrapper">
 				<div className="side-nav-link-wrapper">
 					<div className="side-nav-top-wrapper">
-						{(typeof cookie.load('user_id') !== 'undefined') && (
-							<button className="side-nav-invite-button" onClick={()=> this.props.onInvite()}><Row>
-								<Column flexGrow={1} horizontal="start" vertical="center">Invite Team</Column>
-								<Column flexGrow={1} horizontal="end" vertical="center"><img className="side-nav-invite-image" src="https://via.placeholder.com/18x20" alt="Invite Team" /></Column>
-							</Row></button>
-						)}
+						{(typeof cookie.load('user_id') !== 'undefined') && (<div>
+							<button className="side-nav-invite-button" onClick={()=> this.props.onInvite()}>Invite Team Members</button>
+							<div className="nav-link" onClick={()=> this.props.onTop()}><img className="side-nav-arrow" src="/images/chevron-right.svg" alt="chevron" />Top Views</div>
+						</div>)}
 						{(window.location.pathname !== '/') && (<SideNavBack onClick={()=> this.props.onBack()} />)}
 						{(window.location.pathname.includes('/render/'))
 							? this.state.artboards.map((artboard, i)=> {

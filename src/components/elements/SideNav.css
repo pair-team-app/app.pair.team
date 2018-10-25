@@ -30,6 +30,12 @@
 	height: 20px;
 }
 
+.side-nav-arrow {
+	margin-right: 4px;
+	width: 10px;
+	height: 10px;
+}
+
 .nav-link {
 	padding-right: 20px;
 	color: #ffffff;

@@ -48,19 +48,19 @@ class StripeCheckout extends Component {
 	render() {
 		return (
 			<div className="checkout">
-				<div className="form-element">
+				<div className="input-wrapper">
 					<input className="textfield-input" style={{textAlign:'left'}} type="text" name="customer-name" placeholder="Name" value={this.state.cardholder} onChange={(event)=> this.setState({ cardholder : event.target.value })} />
 				</div>
 
-				<div className="form-element">
+				<div className="input-wrapper">
 					<CardNumberElement className="input-txt" />
 				</div>
 
-				<div className="form-element">
+				<div className="input-wrapper">
 					<CardExpiryElement className="input-txt" />
 				</div>
 
-				<div className="form-element">
+				<div className="input-wrapper">
 					<CardCVCElement className="input-txt" />
 				</div>
 			</div>

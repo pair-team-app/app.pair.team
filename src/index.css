@@ -3,9 +3,8 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: "Roboto Mono", monospace;
+  font-family: "Roboto Light", sans-serif;
   font-size: 13px;
-  font-weight: 300;
   background-color: #363636;
   color: #ffffff;
 }
@@ -25,9 +24,8 @@ a:hover {
 button {
   padding: 9px 16px;
   background-color: #002fff;
-  font-family: "Roboto Mono", monospace;
+  font-family: "Poppins Medium", sans-serif;
   font-size: 13px;
-  font-weight: 300;
   color : #ffffff;
   border: none;
 }
@@ -45,7 +43,7 @@ input[type=text], input[type=password], input[type=tel], .input-txt {
   color: #ffffff;
   padding: 10px;
   border: none;
-  font-family: "Roboto Mono", monospace;
+  font-family: "Poppins Regular", sans-serif;
   font-size: 15px;
   width: 100%;
 }
@@ -55,7 +53,7 @@ p {
 }
 
 textarea {
-  font-family: "Roboto Mono", monospace;
+  font-family: "Poppins Regular", sans-serif;
   font-size: 14px;
   width: 100%;
 }
@@ -74,6 +72,42 @@ textarea {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #666666;
+}
+
+
+/** Thin */
+@font-face {
+	font-family: "Roboto Thin";
+	font-weight: 200;
+	src: url("./fonts/Roboto-Thin.otf");
+}
+
+/** Light */
+@font-face {
+	font-family: "Roboto Light";
+	font-weight: 300;
+	src: url("./fonts/Roboto-Light.otf");
+}
+
+/** Regular */
+@font-face {
+	font-family: "Roboto Regular";
+	font-weight: 400;
+	src: url("./fonts/Roboto-Regular.otf");
+}
+
+/** Medium */
+@font-face {
+	font-family: "Roboto Medium";
+	font-weight: 500;
+	src: url("./fonts/Roboto-Medium.otf");
+}
+
+/** Bold */
+@font-face {
+	font-family: "Roboto Bold";
+	font-weight: 600;
+	src: url("./fonts/Roboto-Bold.otf");
 }
 
 
