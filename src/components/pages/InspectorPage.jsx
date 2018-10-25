@@ -73,6 +73,7 @@ class InspectorPage extends Component {
 							slices.push({
 								id       : item.id,
 								title    : item.title,
+								type     : item.type,
 								filename : item.filename + '@1x.png',
 								meta     : JSON.parse(item.meta),
 								added    : item.added
@@ -141,6 +142,7 @@ class InspectorPage extends Component {
 				<SliceItem
 					key={i}
 					title={item.title}
+					type={item.type}
 					top={item.meta.frame.origin.y}
 					left={item.meta.frame.origin.x}
 					width={item.meta.frame.size.width}

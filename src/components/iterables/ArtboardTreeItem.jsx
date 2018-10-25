@@ -10,9 +10,9 @@ class ArtboardTreeItem extends Component {
 
 		this.state = {
 			items : {
-				slices      : [],
-				hotspots    : [],
-				backgrounds : []
+				slices     : [],
+				hotspots   : [],
+				textfields : []
 			},
 		};
 	}
@@ -20,7 +20,7 @@ class ArtboardTreeItem extends Component {
 	componentDidMount() {
 		let slices = [];
 		let hotspots = [];
-		let backgrounds = [];
+		let textfields = [];
 
 		this.props.slices.forEach(function(item, i ) {
 			if (item.type === 'slice') {
@@ -29,16 +29,16 @@ class ArtboardTreeItem extends Component {
 			} else if (item.type === 'hotspot') {
 				hotspots.push(item);
 
-			} else if (item.type === 'background') {
-				backgrounds.push(item);
+			} else if (item.type === 'textfield') {
+				textfields.push(item);
 			}
 		});
 
 		this.setState({
 			items : {
-				slices      : slices,
-				hotspots    : hotspots,
-				backgrounds : backgrounds
+				slices     : slices,
+				hotspots   : hotspots,
+				textfields : textfields
 			}
 		})
 	}
@@ -63,7 +63,7 @@ class ArtboardTreeItem extends Component {
 				onClick={()=> this.props.onSliceClick(slice.id)} />
 		);
 
-		const backgrounds = this.state.items.backgrounds.map((slice, j)=>
+		const textfields = this.state.items.textfields.map((slice, j)=>
 			<SliceTreeItem
 				key={slice.id}
 				title={slice.title}
@@ -84,10 +84,10 @@ class ArtboardTreeItem extends Component {
 						<img className="artboard-tree-item-arrow" src={(hotspots.length > 0) ? '/images/chevron-down.svg' : '/images/chevron-right.svg'} alt="chevron" />Hotspots
 					</div>
 					{hotspots}
-					<div className="artboard-tree-item-backgrounds">
-						<img className="artboard-tree-item-arrow" src={(backgrounds.length > 0) ? '/images/chevron-down.svg' : '/images/chevron-right.svg'} alt="chevron" />Backgrounds
+					<div className="artboard-tree-item-textfields">
+						<img className="artboard-tree-item-arrow" src={(textfields.length > 0) ? '/images/chevron-down.svg' : '/images/chevron-right.svg'} alt="chevron" />Textfields
 					</div>
-					{backgrounds}
+					{textfields}
 				</div>)}
 			</div>
 		);

@@ -4,7 +4,7 @@ import './Overlay.css';
 
 import axios from 'axios';
 import cookie from 'react-cookies';
-import { Row, Column } from 'simple-flexbox';
+import { Row } from 'simple-flexbox';
 
 class RegisterOverlay extends Component {
 	constructor(props) {

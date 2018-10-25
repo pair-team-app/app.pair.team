@@ -12,6 +12,7 @@ class SliceItem extends Component {
 	}
 
 	render() {
+		const className = (this.props.type === 'slice') ? 'slice-item slice-item-slice' : (this.props.type === 'hotspot') ? 'slice-item slice-item-hotspot' : 'slice-item slice-item-textfield';
 		const style = {
 			top    : this.props.top + 'px',
 			left   : this.props.left + 'px',
@@ -21,7 +22,7 @@ class SliceItem extends Component {
 		};
 
 		return (
-			<div className="slice-item" style={style} onClick={()=> this.props.onClick()}>
+			<div className={className} style={style} onClick={()=> this.props.onClick()}>
 				<FontAwesome name="plus-circle" className="slice-item-plus" />
 			</div>
 		);

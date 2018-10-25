@@ -8,6 +8,7 @@ import ReactPixel from 'react-facebook-pixel';
 import { Route, withRouter } from 'react-router-dom'
 
 import DevelopersPage from './components/pages/DevelopersPage';
+// eslint-disable-next-line
 import ErrorOverlay from './components/elements/ErrorOverlay';
 import HomePage from './components/pages/HomePage';
 import InspectorPage from './components/pages/InspectorPage';
@@ -53,6 +54,7 @@ class App extends Component {
 	};
 
 	handleTopViews = ()=> {
+		this.setState({ pageID : -1 });
 	};
 
 	handleRegistration = ()=> {

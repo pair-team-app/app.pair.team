@@ -2,9 +2,8 @@
 import React, { Component } from 'react';
 import './Overlay.css';
 
-import FontAwesome from 'react-fontawesome';
 import { Elements, StripeProvider } from 'react-stripe-elements';
-import { Row, Column } from 'simple-flexbox';
+import { Row } from 'simple-flexbox';
 
 import StripeCheckout from './StripeCheckout';
 import stripe from '../../json/stripe.json';

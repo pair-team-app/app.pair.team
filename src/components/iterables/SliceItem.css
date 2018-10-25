@@ -1,13 +1,26 @@
 
 .slice-item {
 	position: absolute;
-	background-color: rgba(155, 95, 0, 0.25);
-	border: 1px dashed #ffa500;
 	zoom: 0;
 }
 
 .slice-item:hover {
 	cursor: pointer;
+}
+
+.slice-item-slice {
+	background-color: rgba(155, 95, 0, 0.25);
+	border: 1px solid #ffa500;
+}
+
+.slice-item-hotspot {
+	background-color: rgba(0, 255, 0, 0.25);
+	border: 1px dotted #ffa500;
+}
+
+.slice-item-textfield {
+	background-color: rgba(30, 0, 155, 0.25);
+	border: 1px dashed #ffa500;
 }
 
 .slice-item-plus {
