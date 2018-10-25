@@ -103,11 +103,13 @@ class InspectorPage extends Component {
 		let formData = new FormData();
 		formData.append('action', 'ADD_COMMENT');
 		formData.append('user_id', cookie.load('user_id'));
+		formData.append('artboard_id', '' + this.state.artboardID);
 		formData.append('content', this.state.comment);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response)=> {
 				console.log('ADD_COMMENT', response.data);
 				this.setState({ comment : '' });
+				this.refreshData();
 			}).catch((error) => {
 		});
 	};
@@ -151,6 +153,7 @@ class InspectorPage extends Component {
 		const comments = (artboard) ? artboard.comments.map((item, i, arr) => {
 			return (
 				<CommentItem
+					key={i}
 					author={item.author}
 					content={item.content}
 					added={item.added}
@@ -169,15 +172,16 @@ class InspectorPage extends Component {
 							{(artboard) ? artboard.title : ''}
 						</div>
 					</div>
-					<div className="inspector-page-comment-wrapper">
-						{comments}
-						<textarea className="inspector-page-comment-txt" name="comment" placeholder="Enter Comment Here" value={this.state.comment} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })}>
-						</textarea>
-						<button className="inspector-page-comment-button" onClick={()=> this.submitComment()}>Submit Comment</button>
-					</div>
+					<textarea className="inspector-page-comment-txt" name="comment" placeholder="Enter Comment Here" value={this.state.comment} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} />
+					<button className="inspector-page-comment-button" onClick={()=> this.submitComment()}>Submit</button>
+
 					<div className="inspector-page-hero-info-wrapper">
 						{(artboard) ? artboard.views + ' View' + ((parseInt(artboard.views, 10) !== 1) ? 's' : '') : 'Views'}<br />
-						{(artboard) ? artboard.downloads + ' Download' + ((parseInt(artboard.downloads, 10) !== 1) ? 's' : '') : 'Downloads'}
+						{(artboard) ? artboard.downloads + ' Download' + ((parseInt(artboard.downloads, 10) !== 1) ? 's' : '') : 'Downloads'}<br />
+						{(artboard) ? artboard.comments.length + ' Comment' + ((artboard.comments.length !== 1) ? 's' : '') : 'Comments'}
+					</div>
+					<div className="inspector-page-comment-wrapper">
+						{comments}
 					</div>
 				</div>
 				<div className="inspector-page-panel">

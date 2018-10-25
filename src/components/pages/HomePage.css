@@ -13,6 +13,10 @@
 	margin-bottom: 14px;
 }
 
+.home-page-project:hover {
+	cursor: pointer;
+}
+
 .home-page-image {
 	position: absolute;
 	top: 50%;

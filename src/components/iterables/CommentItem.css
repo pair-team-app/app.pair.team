@@ -1,6 +1,6 @@
 
 .comment-item {
-	margin: 10px;
+	margin: 28px 0;
 	display: table;
 }
 
@@ -11,8 +11,16 @@
 	margin: 0 10px 0 0;
 }
 
-.comment-item-text {
+.comment-item-content-wrapper {
 	padding: 4px;
 	display: table-cell;
 	vertical-align: top;
+}
+
+.comment-item-date {
+	font-size: 12px;
+	margin-bottom: 3px;
+}
+
+.comment-item-text {
 }

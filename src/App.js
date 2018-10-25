@@ -203,19 +203,19 @@ class App extends Component {
 		    </div>
 
 		    {(this.state.overlayAlert === 'register') && (
-			    <RegisterOverlay onClick={(buttonType)=>this.handleOverlay('register', buttonType)} />
+			    <RegisterOverlay onClick={(buttonType)=> this.handleOverlay('register', buttonType)} />
 		    )}
 
 		    {(this.state.overlayAlert === 'invite') && (
-			    <InviteOverlay onClick={(buttonType)=>this.handleOverlay('invite', buttonType)} />
+			    <InviteOverlay onClick={(buttonType)=> this.handleOverlay('invite', buttonType)} />
 		    )}
 
 		    {(this.state.overlayAlert === 'upload') && (
-		    	<UploadOverlay onClick={(buttonType)=>this.handleOverlay('upload', buttonType)} />
+		    	<UploadOverlay onClick={(buttonType)=> this.handleOverlay('upload', buttonType)} />
 		    )}
 
 		    {(this.state.overlayAlert === 'download') && (
-			    <StripeOverlay onClick={(buttonType)=>this.handleOverlay('download', buttonType)} />
+			    <StripeOverlay onClick={(buttonType)=> this.handleOverlay('download', buttonType)} />
 		    )}
 	    </div>
     );
