@@ -24,7 +24,7 @@ class StripeOverlay extends Component {
 	render() {
 		return (
 			<div className="overlay-wrapper">
-				<div className="overlay-container">
+				<div className="overlay-container"><Row horizontal="center">
 					<div className="overlay-content">
 						<div className="page-header">
 							<Row horizontal="center"><div className="page-header-text">One Plan, $2.99 per month</div></Row>
@@ -38,11 +38,11 @@ class StripeOverlay extends Component {
 								<StripeCheckout />
 							</Elements>
 						</StripeProvider>
+						<div className="overlay-button-wrapper">
+							<button className="overlay-button overlay-button-confirm" onClick={()=> this.props.onClick('submit')}>Submit</button>
+						</div>
 					</div>
-					<div className="overlay-button-wrapper">
-						<button className="overlay-button overlay-button-confirm" onClick={()=> this.props.onClick('submit')}>Submit</button>
-					</div>
-				</div>
+				</Row></div>
 			</div>
 		);
 	}

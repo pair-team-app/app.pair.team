@@ -4,25 +4,30 @@ import './Overlay.css';
 
 import axios from 'axios';
 import cookie from 'react-cookies';
-import FontAwesome from 'react-fontawesome';
-import { Row, Column } from 'simple-flexbox';
+import { Row } from 'simple-flexbox';
 
 class InviteOverlay extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			action      : '',
-			email1      : '',
-			email2      : '',
-			email3      : '',
-			email1Valid : false,
-			email2Valid : false,
-			email3Valid : false
+			action        : '',
+			email         : '',
+			password      : '',
+			email1        : '',
+			email2        : '',
+			email3        : '',
+			emailValid    : false,
+			passwordValid : false,
+			email1Valid   : false,
+			email2Valid   : false,
+			email3Valid   : false
 		};
 	}
 
 	submit = ()=> {
-		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/gi;
+		const isEmailValid = re.test(String(this.state.email).toLowerCase());
+		const isPassword = (this.state.password.length > 0);
 		const isEmail1Valid = re.test(String(this.state.email1).toLowerCase());
 		const isEmail2Valid = re.test(String(this.state.email2).toLowerCase());
 		const isEmail3Valid = re.test(String(this.state.email3).toLowerCase());
@@ -62,29 +67,37 @@ class InviteOverlay extends Component {
 	};
 
 	render() {
+		const emailClass = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'LOGIN' && !this.state.emailValid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+		const passwordClass = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'LOGIN' && !this.state.passwordValid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+
 		const email1Class = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'INVITE' && !this.state.email1Valid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 		const email2Class = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'INVITE' && !this.state.email2Valid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 		const email3Class = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'INVITE' && !this.state.email3Valid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 
 		return (
 			<div className="overlay-wrapper">
-				<div className="overlay-container">
-					<div className="overlay-logo-wrapper"><img src="/images/logo.svg" className="overlay-logo" alt="Design Engine" /></div>
-					<div className="overlay-title">Invite 3 team members below to Design Engine.</div>
+				<div className="overlay-container"><Row horizontal="center">
 					<div className="overlay-content">
+						<div className="page-header">
+							<Row horizontal="center"><div className="page-header-text">Invite Everyone</div></Row>
+							<div className="page-subheader-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.
+							</div>
+							<Row horizontal="center"><button className="page-button" onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
+						</div>
+						{(typeof cookie.load('user_id') === 'undefined') && (<div>
+							<div className="input-title">Enter details</div>
+							<div className={emailClass}><input type="text" name="email2" placeholder="Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<div className={passwordClass}><input type="password" name="password2" placeholder="Password" value={this.state.password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+						</div>)}
 						<div className="input-title">Invite team members</div>
 						<div className={email1Class}><input type="text" name="email1" placeholder="Engineer Email" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<div className={email2Class}><input type="text" name="email2" placeholder="Engineer Email" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<div className={email3Class}><input type="text" name="email3" placeholder="Engineer Email" value={this.state.email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+						<div className="overlay-button-wrapper">
+							<button className="overlay-button overlay-button-confirm" onClick={()=> this.submit()}>Submit</button>
+						</div>
 					</div>
-					<div className="overlay-button-wrapper">
-						<button className="overlay-button overlay-button-confirm" onClick={()=> this.submit()}><Row>
-							<Column flexGrow={1} horizontal="start" vertical="center">Send Invites Now</Column>
-							<Column flexGrow={1} horizontal="end" vertical="center"><FontAwesome name="caret-right" className="overlay-button-confirm-arrow" /></Column>
-						</Row></button>
-						<button className="overlay-button overlay-button-cancel" onClick={()=> this.props.onClick('cancel')}>Cancel</button>
-					</div>
-				</div>
+				</Row></div>
 			</div>
 		);
 	}

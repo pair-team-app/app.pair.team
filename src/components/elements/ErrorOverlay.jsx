@@ -14,7 +14,7 @@ class ErrorOverlay extends Component {
 	render() {
 		return (
 			<div className="overlay-wrapper">
-				<div className="overlay-container">
+				<div className="overlay-container"><Row horizontal="center">
 					<div className="overlay-content">
 						<div className="page-header">
 							<Row horizontal="center"><div className="page-header-text">Error</div></Row>
@@ -22,7 +22,7 @@ class ErrorOverlay extends Component {
 							<Row horizontal="center"><button className="page-button" onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
 						</div>
 					</div>
-				</div>
+				</Row></div>
 			</div>
 		);
 	}

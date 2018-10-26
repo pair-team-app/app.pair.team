@@ -91,7 +91,7 @@ class RegisterOverlay extends Component {
 
 		return (
 			<div className="overlay-wrapper">
-				<div className="overlay-container">
+				<div className="overlay-container"><Row horizontal="center">
 					<div className="overlay-content">
 						<div className="page-header">
 							<Row horizontal="center"><div className="page-header-text">You need to be signed in</div></Row>
@@ -106,11 +106,11 @@ class RegisterOverlay extends Component {
 						<div className="input-title">Sign In</div>
 						<div className={email2Class}><input type="text" name="email2" placeholder="Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<div className={password2Class}><input type="password" name="password2" placeholder="Password" value={this.state.password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+						<div className="overlay-button-wrapper">
+							<button className="overlay-button overlay-button-confirm" onClick={()=> this.submit()}>Submit</button>
+						</div>
 					</div>
-					<div className="overlay-button-wrapper">
-						<button className="overlay-button overlay-button-confirm" onClick={()=> this.submit()}>Submit</button>
-					</div>
-				</div>
+				</Row></div>
 			</div>
 		);
 	}

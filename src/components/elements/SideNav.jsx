@@ -225,10 +225,10 @@ class SideNav extends Component {
 				<div className="side-nav-link-wrapper">
 					<div className="side-nav-top-wrapper">
 						{(typeof cookie.load('user_id') !== 'undefined') && (<div>
-							<button className="side-nav-invite-button" onClick={()=> this.props.onInvite()}>Invite Team Members</button>
 							{(window.location.pathname === '/' && this.state.pageID !== -1) && (<div className="nav-link" onClick={()=> this.handleNavItem('top', 0)}>Top Views</div>)}
 							{(window.location.pathname === '/' && this.state.pageID === -1) && (<div className="nav-link page-tree-item-text-selected" onClick={()=> this.handleNavItem('top', 0)}><img className="artboard-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />Top Views</div>)}
 						</div>)}
+						<button className="side-nav-invite-button" onClick={()=> this.props.onInvite()}>Invite Team Members</button>
 						{(window.location.pathname !== '/') && (<SideNavBack onClick={()=> this.props.onBack()} />)}
 						{(window.location.pathname.includes('/render/'))
 							? this.state.artboards.map((artboard, i)=> {
