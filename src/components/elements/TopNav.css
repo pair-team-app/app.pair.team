@@ -19,7 +19,11 @@
 	padding-left: 28px;
 }
 
+.top-nav-upload-button {
+	padding: 5px 12px;
+}
+
 .top-nav-upload-plus {
-	font-size: 14px;
+	font-size: 12px;
 	color: #ffffff;
 }

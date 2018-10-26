@@ -33,7 +33,7 @@ class TopNav extends Component {
 			.then((response) => {
 				console.log('UPLOADS', response.data);
 				let uploads = [];
-				response.data.uploads.forEach(upload => {
+				response.data.uploads.forEach((upload) => {
 					uploads.push({
 						id       : upload.id,
 						title    : upload.title,
@@ -50,7 +50,7 @@ class TopNav extends Component {
 					.then((response) => {
 						console.log('COLORS', response.data);
 						let colors = [];
-						response.data.colors.forEach(color => {
+						response.data.colors.forEach((color) => {
 							colors.push({
 								id       : color.id,
 								title    : color.title,
@@ -66,7 +66,7 @@ class TopNav extends Component {
 							.then((response) => {
 								console.log('DEVICES', response.data);
 								let devices = [];
-								response.data.devices.forEach(device => {
+								response.data.devices.forEach((device) => {
 									devices.push({
 										id       : device.id,
 										title    : device.title,
@@ -83,10 +83,10 @@ class TopNav extends Component {
 		});
 	};
 
-	toggleSelected = (id, key) => {
-		console.log('toggleSelected()', id, key);
+	toggleSelected = (id, ind, key) => {
+		console.log('toggleSelected()', 'id='+id, 'ind='+ind, 'key='+key);
 		let tmp = [...this.state[key]];
-		tmp[id-1].selected = !tmp[id-1].selected;
+		tmp[ind].selected = !tmp[ind].selected;
 		this.setState({ [key] : tmp });
 // 		this.handleDropdownUpdate(key, tmp[id-1].title);
 	};
@@ -98,7 +98,11 @@ class TopNav extends Component {
 		tmp[ind].selected = true;
 		this.ddTitle = tmp[ind].title;
 		this.setState({ [key] : tmp });
-// 		this.handleDropdownUpdate(key, tmp[id-1].title);
+
+		if (key === 'uploads') {
+			cookie.save('upload_id', tmp[ind].id);
+			window.location.reload();
+		}
 	};
 
 	render() {
@@ -110,7 +114,7 @@ class TopNav extends Component {
 					</Column>
 					{(typeof cookie.load('user_id') !== 'undefined') && (
 						<Column flexGrow={1} horizontal="end" vertical="center">
-							<button onClick={()=> this.props.onUpload()}><FontAwesome name="plus" className="top-nav-upload-plus" /></button>
+							<button className="top-nav-upload-button" onClick={()=> this.props.onUpload()}><FontAwesome name="plus" className="top-nav-upload-plus" /></button>
 						</Column>
 					)}
 				</Row></div>
