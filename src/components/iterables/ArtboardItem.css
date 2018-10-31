@@ -1,5 +1,5 @@
 
-.part-item {
+.artboard-item {
 	position: relative;
 	width: 150px;
 	height: 325px;
@@ -7,11 +7,11 @@
 	margin: 14px;
 }
 
-.part-item:hover {
+.artboard-item:hover {
 	cursor: pointer;
 }
 
-.part-item-image {
+.artboard-item-image {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -19,15 +19,15 @@
 	-webkit-transform: translate(-50%, -50%);
 }
 
-.part-item-image-landscape {
+.artboard-item-image-landscape {
 	width: 100%
 }
 
-.part-item-image-portrait {
+.artboard-item-image-portrait {
 	height: 100%;
 }
 
-.part-item-details-wrapper {
+.artboard-item-details-wrapper {
 	position: absolute;
 	left: 0;
 	bottom: 0;
@@ -36,21 +36,21 @@
 	padding: 28px;
 }
 
-.part-item:hover .part-item-title {
+.artboard-item:hover .artboard-item-title {
 	display: none;
 }
 
-.part-item:hover .part-item-button {
+.artboard-item:hover .artboard-item-button {
 	display: block;
 }
 
-.part-item-title {
+.artboard-item-title {
 	width: 100%;
 	height: 25px;
 	padding: 4px 0;
 }
 
-.part-item-button {
+.artboard-item-button {
 	background-color: #7ed321;
 	width: 100%;
 	height: 25px;
@@ -58,12 +58,12 @@
 	display: none;
 }
 
-.part-item-button-selected {
+.artboard-item-button-selected {
 	display: block;
 	background-color: #002fff;
 }
 
-.part-item-check {
+.artboard-item-check {
 	font-size: 16px;
 	color: #ffffff;
 }
