@@ -14,11 +14,12 @@ class SliceTreeItem extends Component {
 	}
 
 	render() {
+		const icon = (this.props.type === 'slice') ? '/images/layer-slice' : (this.props.type === 'hotspot') ? '/images/layer-hotspot' : (this.props.type === 'textfield') ? '/images/layer-textfield' : '/images/layer-background';
 		const textClass = (this.props.selected) ? 'slice-tree-item-text slice-tree-item-text-selected' : 'slice-tree-item-text';
 
 		return (
 			<div className="slice-tree-item" onClick={()=> this.props.onClick()}>
-				<div className={textClass}><img className="slice-tree-item-icon" src={(this.props.selected) ? '/images/layer-selected.svg' : '/images/layer.svg'} alt='icon' />{this.props.title}</div>
+				<div className={textClass}><img className="slice-tree-item-icon" src={(this.props.selected) ? icon + '_selected.svg' : icon + '.svg'} alt='icon' />{this.props.title}</div>
 			</div>
 		);
 	}

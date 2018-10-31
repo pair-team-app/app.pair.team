@@ -39,7 +39,7 @@ class InviteOverlay extends Component {
 			email3Valid : isEmail3Valid
 		});
 
-		if (this.state.email.length > 0) {
+		if (isEmailValid && isPassword) {
 			let formData = new FormData();
 			formData.append('action', 'LOGIN');
 			formData.append('email', this.state.email);

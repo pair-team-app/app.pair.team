@@ -1,6 +1,6 @@
 
 .slice-tree-item {
-	margin: 12px 0 0 34px;
+	margin: 12px 0 0 48px;
 	font-weight: 400;
 }
 
@@ -10,7 +10,7 @@
 }
 
 .slice-tree-item-icon {
-	margin-right: 8px;
+	margin-right: 10px;
 	width: 10px;
 	height: 10px;
 }

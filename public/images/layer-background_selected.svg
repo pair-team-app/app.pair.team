@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>Icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="SIDE-MENU-2" transform="translate(-73.000000, -790.000000)" fill="#7ED321" fill-rule="nonzero">
+            <g id="SIDE-MENU">
+                <g id="Icon" transform="translate(73.000000, 790.000000)">
+                    <path d="M5.28431373,0.914117647 L3.93647059,0 L3.31882353,0.908627451 L4.66666667,1.8227451 L0,8.70196078 L7.80156863,13.9835294 L13.0721569,6.19568627 L5.28431373,0.914117647 Z M5.57529412,2.43764706 L11.5458824,6.48666667 L10.2721569,8.38352941 L1.57568627,8.43294118 L1.5372549,8.4054902 L5.57529412,2.43764706 Z" id="Shape"></path>
+                    <path d="M11.8505882,11.087451 C11.8505882,10.5054902 12.9019608,9.22901961 12.9019608,9.22901961 C12.9019608,9.22901961 13.9533333,10.5054902 13.9533333,11.087451 C13.9533333,11.668866 13.4820033,12.1401961 12.9005882,12.1401961 C12.3191732,12.1401961 11.8478431,11.668866 11.8478431,11.087451 L11.8505882,11.087451 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

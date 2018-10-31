@@ -10,9 +10,10 @@ class ArtboardTreeItem extends Component {
 
 		this.state = {
 			items : {
-				slices     : [],
-				hotspots   : [],
-				textfields : []
+				slices      : [],
+				hotspots    : [],
+				textfields  : [],
+				backgrounds : []
 			},
 		};
 	}
@@ -21,6 +22,7 @@ class ArtboardTreeItem extends Component {
 		let slices = [];
 		let hotspots = [];
 		let textfields = [];
+		let backgrounds = [];
 
 		this.props.slices.forEach(function(item, i ) {
 			if (item.type === 'slice') {
@@ -31,14 +33,18 @@ class ArtboardTreeItem extends Component {
 
 			} else if (item.type === 'textfield') {
 				textfields.push(item);
+
+			} else if (item.type === 'background') {
+				backgrounds.push(item);
 			}
 		});
 
 		this.setState({
 			items : {
-				slices     : slices,
-				hotspots   : hotspots,
-				textfields : textfields
+				slices      : slices,
+				hotspots    : hotspots,
+				textfields  : textfields,
+				backgrounds : backgrounds
 			}
 		})
 	}
@@ -49,6 +55,7 @@ class ArtboardTreeItem extends Component {
 			<SliceTreeItem
 				key={slice.id}
 				title={slice.title}
+				type="slice"
 				description=""
 				selected={slice.selected}
 				onClick={()=> this.props.onSliceClick(slice.id)} />
@@ -58,6 +65,7 @@ class ArtboardTreeItem extends Component {
 			<SliceTreeItem
 				key={slice.id}
 				title={slice.title}
+				type="hotspot"
 				description=""
 				selected={slice.selected}
 				onClick={()=> this.props.onSliceClick(slice.id)} />
@@ -67,6 +75,17 @@ class ArtboardTreeItem extends Component {
 			<SliceTreeItem
 				key={slice.id}
 				title={slice.title}
+				type="textfield"
+				description=""
+				selected={slice.selected}
+				onClick={()=> this.props.onSliceClick(slice.id)} />
+		);
+
+		const backgrounds = this.state.items.backgrounds.map((slice, j)=>
+			<SliceTreeItem
+				key={slice.id}
+				title={slice.title}
+				type="background"
 				description=""
 				selected={slice.selected}
 				onClick={()=> this.props.onSliceClick(slice.id)} />
@@ -77,17 +96,21 @@ class ArtboardTreeItem extends Component {
 				<div className={textClass} onClick={()=> this.props.onClick()}><img className="artboard-tree-item-arrow" src={(this.props.selected) ? '/images/chevron-down.svg' : '/images/chevron-right.svg'} alt="chevron" />{this.props.title}</div>
 				{(this.props.selected) && (<div>
 					<div className="artboard-tree-item-slices">
-						<img className="artboard-tree-item-arrow" src={(slices.length > 0) ? '/images/chevron-down.svg' : '/images/chevron-right.svg'} alt="chevron" />Slices
+						<img className="artboard-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />Slices
 					</div>
 					{slices}
 					<div className="artboard-tree-item-hotspots">
-						<img className="artboard-tree-item-arrow" src={(hotspots.length > 0) ? '/images/chevron-down.svg' : '/images/chevron-right.svg'} alt="chevron" />Hotspots
+						<img className="artboard-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />Hotspots
 					</div>
 					{hotspots}
 					<div className="artboard-tree-item-textfields">
-						<img className="artboard-tree-item-arrow" src={(textfields.length > 0) ? '/images/chevron-down.svg' : '/images/chevron-right.svg'} alt="chevron" />Textfields
+						<img className="artboard-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />Textfields
 					</div>
 					{textfields}
+					<div className="artboard-tree-item-backgrounds">
+						<img className="artboard-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />Backgrounds
+					</div>
+					{backgrounds}
 				</div>)}
 			</div>
 		);
