@@ -62,11 +62,11 @@ class InviteOverlay extends Component {
 
 								let emails = '';
 								if (isEmail1Valid) {
-									emails += this.state.email1 + " ";
+									emails += this.state.email1 + ' ';
 								}
 
 								if (isEmail2Valid) {
-									emails += this.state.email2 + " ";
+									emails += this.state.email2 + ' ';
 								}
 
 								if (isEmail3Valid) {
