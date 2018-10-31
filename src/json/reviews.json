@@ -1,0 +1,31 @@
+[{
+  "id": 1,
+  "author": "Reviewer 1",
+  "image": "/images/default-avatar.png",
+  "quote": "Vestibulum suscipit sem odio, quis interdum purus pharetra at."
+}, {
+  "id": 2,
+  "author": "Reviewer 2",
+  "image": "/images/default-avatar.png",
+  "quote": "Aliquam dictum blandit ex ultricies convallis."
+}, {
+  "id": 3,
+  "author": "Reviewer 3",
+  "image": "/images/default-avatar.png",
+  "quote": "Quisque venenatis lacus vitae nibh aliquet aliquet. Curabitur ut lacinia dolor."
+}, {
+  "id": 4,
+  "author": "Reviewer 4",
+  "image": "/images/default-avatar.png",
+  "quote": "Pellentesque rutrum, nulla auctor laoreet euismod, nisl lorem aliquam lorem."
+}, {
+  "id": 5,
+  "author": "Reviewer 5",
+  "image": "/images/default-avatar.png",
+  "quote": "Ut condimentum, nibh gravida congue pharetra, nibh felis malesuada odio."
+}, {
+  "id": 6,
+  "author": "Reviewer 6",
+  "image": "/images/default-avatar.png",
+  "quote": "Maecenas cursus venenatis nisi nec hendrerit."
+}]
