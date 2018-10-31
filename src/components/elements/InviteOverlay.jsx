@@ -26,43 +26,104 @@ class InviteOverlay extends Component {
 
 	submit = ()=> {
 		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/gi;
-		const isEmailValid = re.test(String(this.state.email).toLowerCase());
-		const isPassword = (this.state.password.length > 0);
+		const isEmailValid = (re.test(String(this.state.email).toLowerCase()) || typeof cookie.load('user_id' !== 'undefined'));
+		const isPassword = (this.state.password.length > 0 || typeof cookie.load('user_id' !== 'undefined'));
 		const isEmail1Valid = re.test(String(this.state.email1).toLowerCase());
 		const isEmail2Valid = re.test(String(this.state.email2).toLowerCase());
 		const isEmail3Valid = re.test(String(this.state.email3).toLowerCase());
 
 		this.setState({
-			action : 'INVITE',
+			action      : (this.state.email.length > 0) ? 'LOGIN' : 'INVITE',
 			email1Valid : isEmail1Valid,
 			email2Valid : isEmail2Valid,
 			email3Valid : isEmail3Valid
 		});
 
-		let emails = '';
-		if (isEmail1Valid) {
-			emails += this.state.email1 + " ";
-		}
-
-		if (isEmail2Valid) {
-			emails += this.state.email2 + " ";
-		}
-
-		if (isEmail3Valid) {
-			emails += this.state.email3;
-		}
-
-		if (isEmail1Valid || isEmail2Valid || isEmail3Valid) {
+		if (this.state.email.length > 0) {
 			let formData = new FormData();
-			formData.append('action', 'INVITE');
-			formData.append('user_id', cookie.load('user_id'));
-			formData.append('emails', emails);
+			formData.append('action', 'LOGIN');
+			formData.append('email', this.state.email);
+			formData.append('password', this.state.password);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
-					console.log('INVITE', response.data);
-					this.props.onClick('submit');
+					console.log('LOGIN', response.data);
+					if (response.data.status === true) {
+						cookie.save('user_id', response.data.user_id, { path : '/' });
+						formData.append('action', 'UPLOADS');
+						formData.append('user_id', cookie.load('user_id'));
+						axios.post('https://api.designengine.ai/system.php', formData)
+							.then((response)=> {
+								console.log('UPLOADS', response.data);
+								if (response.data.uploads.length > 0) {
+									cookie.save('upload_id', response.data.uploads[0].id, { path : '/' });
+									cookie.save('system', response.data.uploads[0].title, { path : '/' });
+									cookie.save('author', response.data.uploads[0].author, { path : '/' });
+								}
+
+								let emails = '';
+								if (isEmail1Valid) {
+									emails += this.state.email1 + " ";
+								}
+
+								if (isEmail2Valid) {
+									emails += this.state.email2 + " ";
+								}
+
+								if (isEmail3Valid) {
+									emails += this.state.email3;
+								}
+
+								if (isEmail1Valid || isEmail2Valid || isEmail3Valid) {
+									let formData = new FormData();
+									formData.append('action', 'INVITE');
+									formData.append('user_id', cookie.load('user_id'));
+									formData.append('emails', emails);
+									axios.post('https://api.designengine.ai/system.php', formData)
+										.then((response) => {
+											console.log('INVITE', response.data);
+											this.props.onClick('submit');
+										}).catch((error) => {
+									});
+								}
+
+							}).catch((error) => {
+						});
+
+					} else {
+						this.setState({
+							emailValid    : false,
+							passwordValid : false
+						});
+					}
 				}).catch((error) => {
 			});
+
+		} else {
+			let emails = '';
+			if (isEmail1Valid) {
+				emails += this.state.email1 + " ";
+			}
+
+			if (isEmail2Valid) {
+				emails += this.state.email2 + " ";
+			}
+
+			if (isEmail3Valid) {
+				emails += this.state.email3;
+			}
+
+			if (isEmail1Valid || isEmail2Valid || isEmail3Valid) {
+				let formData = new FormData();
+				formData.append('action', 'INVITE');
+				formData.append('user_id', cookie.load('user_id'));
+				formData.append('emails', emails);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response) => {
+						console.log('INVITE', response.data);
+						this.props.onClick('submit');
+					}).catch((error) => {
+				});
+			}
 		}
 	};
 
