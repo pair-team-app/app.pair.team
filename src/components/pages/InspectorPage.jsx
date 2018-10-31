@@ -7,6 +7,7 @@ import cookie from 'react-cookies';
 
 import CommentItem from '../iterables/CommentItem';
 import SliceItem from '../iterables/SliceItem';
+import SliceToggle from '../elements/SliceToggle';
 
 const heroImage = React.createRef();
 class InspectorPage extends Component {
@@ -14,15 +15,16 @@ class InspectorPage extends Component {
 		super(props);
 
 		this.state = {
-			system     : cookie.load('system'),
-			author     : cookie.load('author'),
-			pageID     : 0,
-			artboardID : 0,
-			slice      : -1,
-			page       : null,
-			artboard   : null,
-			code       : '#block {<br>&nbsp;&nbsp;width: 100%;<br>&nbsp;&nbsp;color: #ffffff;<br>}',
-			comment    : ''
+			system        : cookie.load('system'),
+			author        : cookie.load('author'),
+			pageID        : 0,
+			artboardID    : 0,
+			slice         : -1,
+			page          : null,
+			artboard      : null,
+			code          : '#block {<br>&nbsp;&nbsp;width: 100%;<br>&nbsp;&nbsp;color: #ffffff;<br>}',
+			comment       : '',
+			slicesVisible : true
 		};
 	}
 
@@ -101,6 +103,14 @@ class InspectorPage extends Component {
 		});
 	};
 
+	handleSliceToggle = (isSelected)=> {
+		console.log('handleSliceToggle()', isSelected);
+		this.setState({
+			slice         : -1,
+			slicesVisible : isSelected
+		});
+	};
+
 	submitComment = ()=> {
 		let formData = new FormData();
 		formData.append('action', 'ADD_COMMENT');
@@ -129,11 +139,12 @@ class InspectorPage extends Component {
 		const heroImageClass = 'inspector-page-hero-image' + ((artboard) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? ' inspector-page-hero-image-landscape' : ' inspector-page-hero-image-portrait' : '');
 		const panelImageClass = 'inspector-page-panel-image' + ((slice) ? (slice.meta.frame.size.width > slice.meta.frame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait' : '');
 		const slicesStyle = (artboard) ? {
-			width  : (scale * artboard.meta.frame.size.width) + 'px',
-			height : (scale * artboard.meta.frame.size.height) + 'px'
+			width   : (scale * artboard.meta.frame.size.width) + 'px',
+			height  : (scale * artboard.meta.frame.size.height) + 'px',
+			display : (this.state.slicesVisible) ? 'block' : 'none'
 		} : {
-			width  : '100%',
-			height : '100%'
+			width   : '100%',
+			height  : '100%',
 		};
 
 // 		console.log("InspectorPage", "artboard:"+artboard, "heroImage:"+heroImage, "heroImage.current"+heroImage.current);
@@ -171,8 +182,8 @@ class InspectorPage extends Component {
 						<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>
 							{slices}
 						</div>
-						<div className="inspector-page-hero-title">
-							{(artboard) ? artboard.title : ''}
+						<div className="inspector-page-hero-switch">
+							<SliceToggle onClick={(isSelected)=> this.handleSliceToggle(isSelected)} />
 						</div>
 					</div>
 					<textarea className="inspector-page-comment-txt" name="comment" placeholder="Enter Comment Here" value={this.state.comment} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} />

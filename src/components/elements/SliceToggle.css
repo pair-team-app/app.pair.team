@@ -1,0 +1,13 @@
+
+.slice-toggle {
+
+}
+
+.slice-toggle:hover {
+	cursor: pointer;
+}
+
+.slice-toggle-image {
+	width: 50px;
+	height: 25px;
+}
