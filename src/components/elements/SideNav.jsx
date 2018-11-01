@@ -14,9 +14,9 @@ class SideNav extends Component {
 		super(props);
 
 		this.state = {
-			pageID     : (window.location.pathname.includes('/render/')) ? window.location.pathname.match(/render\/(\d+)\/\d+\/(\d+)?/)[1] : this.props.pageID,
-			artboardID : (window.location.pathname.includes('/render/')) ? window.location.pathname.match(/render\/\d+\/(\d+)\/(\d+)?/)[1] : this.props.artboardID,
-			sliceID    : (window.location.pathname.includes('/render/')) ? window.location.pathname.match(/render\/\d+\/\d+\/(\d+)?/)[1] : this.props.sliceID,
+			pageID     : this.props.pageID,
+			artboardID : this.props.artboardID,
+			sliceID    : this.props.sliceID,
 			pages      : [],
 			artboards  : [],
 			treeMenu   : [],
@@ -30,9 +30,17 @@ class SideNav extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		console.log("SideNav.componentDidUpdate()", prevProps);
+		console.log("SideNav.componentDidUpdate()", this.props, prevProps);
 		if (window.location.pathname.includes('/render/')) {
 			if (this.props.artboardID !== prevProps.artboardID) {
+				const { pageID, artboardID, sliceID } = this.props;
+
+				this.setState({
+					pageID     : pageID,
+					artboardID : artboardID,
+					sliceID    : sliceID
+				});
+
 				this.refreshData();
 				return (null);
 			}
@@ -220,6 +228,8 @@ class SideNav extends Component {
 	};
 
 	render() {
+		console.log('SideNav.render()', this.state);
+
 		return (
 			<div className="side-nav-wrapper">
 				<div className="side-nav-link-wrapper">

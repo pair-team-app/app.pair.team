@@ -8,8 +8,6 @@ import ReactPixel from 'react-facebook-pixel';
 import { Route, withRouter } from 'react-router-dom'
 
 import DevelopersPage from './components/pages/DevelopersPage';
-// eslint-disable-next-line
-import ErrorOverlay from './components/elements/ErrorOverlay';
 import HomePage from './components/pages/HomePage';
 import InspectorPage from './components/pages/InspectorPage';
 import InviteOverlay from './components/elements/InviteOverlay';
@@ -27,9 +25,9 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			pageID        : 0,
-			artboardID    : 0,
-			sliceID       : 0,
+			pageID     : (window.location.pathname.includes('/render/')) ? window.location.pathname.match(/render\/(\d+)\/\d+\/(\d+)?/)[1] : 0,
+			artboardID : (window.location.pathname.includes('/render/')) ? window.location.pathname.match(/render\/\d+\/(\d+)\/(\d+)?/)[1] : 0,
+			sliceID    : (window.location.pathname.includes('/render/')) ? window.location.pathname.match(/render\/\d+\/\d+\/(\d+)?/)[1] : 0,
 			selectedArtboards : [],
 			overlayAlert  : null,
 			userID        : 0
@@ -68,11 +66,6 @@ class App extends Component {
 
 	handleSideNavArtboardItem = (obj)=> {
 		console.log('handleSideNavArtboardItem()', obj);
-		this.setState({
-			pageID     : obj.pageID,
-			artboardID : obj.id
-		});
-
 		let formData = new FormData();
 		formData.append('action', 'ADD_VIEW');
 		formData.append('artboard_id', obj.id);
@@ -80,14 +73,18 @@ class App extends Component {
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
 				this.props.history.push('/render/' + obj.pageID + '/' + obj.id + '/');
+				this.setState({
+					pageID     : obj.pageID,
+					artboardID : obj.id
+				});
 			}).catch((error) => {
 		});
 	};
 
 	handleSideNavSliceItem = (obj)=> {
 		console.log('handleSideNavSliceItem()', obj);
-		this.setState({ sliceID : obj.id });
 		this.props.history.push('/render/' + this.state.pageID + '/' + this.state.artboardID + '/' + obj.id);
+		this.setState({ sliceID : obj.id });
 	};
 
 	handleUpload = ()=> {
@@ -123,10 +120,6 @@ class App extends Component {
 
 	handleArtboardDetails = (obj)=> {
 		console.log('handleArtboardDetails()', obj);
-		this.setState({
-			pageID     : obj.pageID,
-			artboardID : obj.id
-		});
 
 		let formData = new FormData();
 		formData.append('action', 'ADD_VIEW');
@@ -135,6 +128,10 @@ class App extends Component {
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
 				this.props.history.push('/render/' + obj.pageID + '/' + obj.id + '/');
+				this.setState({
+					pageID     : obj.pageID,
+					artboardID : obj.id
+				});
 			}).catch((error) => {
 		});
 	};
@@ -163,10 +160,6 @@ class App extends Component {
 		cookie.remove('user_id');
 		this.setState({ user_id : 0 });
 		window.location.href = '/';
-	};
-
-	uploadRefresh = ()=> {
-		console.log('uploadRefresh()');
 	};
 
   render() {
