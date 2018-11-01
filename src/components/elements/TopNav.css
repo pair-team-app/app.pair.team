@@ -13,6 +13,18 @@
 	vertical-align: middle;
 }
 
+.top-nav-column-left {
+	width: 388px;
+}
+
+.top-nav-column-middle {
+}
+
+.top-nav-column-right {
+	padding-right: 28px;
+	text-align: right;
+}
+
 .nav-logo {
 	width: 65px;
 	height: 36px;
@@ -20,7 +32,9 @@
 }
 
 .top-nav-upload-button {
+	margin-right: 28px;
 	padding: 5px 12px;
+	border-radius: 3px;
 }
 
 .top-nav-upload-plus {

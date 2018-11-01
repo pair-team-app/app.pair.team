@@ -108,7 +108,7 @@ class TopNav extends Component {
 	render() {
 		return (
 			<div className="top-nav-wrapper">
-				<div className="top-nav-column" style={{width:'388px'}}><Row>
+				<div className="top-nav-column top-nav-column-left"><Row>
 					<Column flexGrow={1} horizontal="start" vertical="center">
 						<a href="/"><img src="/images/logo.svg" className="nav-logo" alt="Design Engine" /></a>
 					</Column>
@@ -119,30 +119,30 @@ class TopNav extends Component {
 					)}
 				</Row></div>
 
-				<div className="top-nav-column">
-					{(typeof cookie.load('upload_id') !== 'undefined') && (
-						<div><Dropdown
-							title="Select design system"
+				<div className="top-nav-column top-nav-column-middle">
+					{(typeof cookie.load('upload_id') !== 'undefined') && (<div>
+						<Dropdown
+							title="Design system"
 							list={this.state.uploads}
 							resetThenSet={this.resetThenSet}
 						/>
-							<DropdownMultiple
-								titleHelper="Color"
-								title="Select color(s)"
-								list={this.state.colors}
-								toggleItem={this.toggleSelected}
-							/>
-							<Dropdown
-								title="Select device"
-								list={this.state.devices}
-								resetThenSet={this.resetThenSet}
-							/></div>
-					)}
+						<Dropdown
+							title="Device"
+							list={this.state.devices}
+							resetThenSet={this.resetThenSet}
+						/>
+						<DropdownMultiple
+							titleHelper="Themes"
+							title="Theme(s)"
+							list={this.state.colors}
+							toggleItem={this.toggleSelected}
+						/>
+					</div>)}
 				</div>
 
-				<div className="top-nav-column" style={{textAlign:'right'}}>
+				<div className="top-nav-column top-nav-column-right">
 					{(this.props.parts.length > 0) && (
-						<button onClick={()=> this.props.onDownload()}>Download Parts ({this.props.parts.length})</button>
+						<button onClick={()=> this.props.onDownload()}>Download ({this.props.parts.length})</button>
 					)}
 				</div>
 			</div>
