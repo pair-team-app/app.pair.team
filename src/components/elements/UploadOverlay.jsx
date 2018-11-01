@@ -5,23 +5,25 @@ import './Overlay.css';
 import axios from 'axios';
 import cookie from 'react-cookies';
 import Dropzone from 'react-dropzone';
+import { Row } from 'simple-flexbox';
 
 class UploadOverlay extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			title       : '',
-			description : '',
-			files       : [],
-			uploading   : false,
-			percent     : 0,
-			action      : '',
-			email1      : '',
-			email2      : '',
-			email3      : '',
-			email1Valid : false,
-			email2Valid : false,
-			email3Valid : false
+			title          : '',
+			description    : '',
+			files          : [],
+			uploading      : false,
+			uploadComplete : false,
+			percent        : 0,
+			action         : '',
+			email1         : '',
+			email2         : '',
+			email3         : '',
+			email1Valid    : false,
+			email2Valid    : false,
+			email3Valid    : false
 		};
 	}
 
@@ -30,59 +32,47 @@ class UploadOverlay extends Component {
 
 	onDrop(files) {
 		console.log('onDrop()', files);
-		this.setState({ files });
+		this.setState({
+			files,
+			uploading : true,
+			action    : ''
+		});
+
+		let self = this;
+		const config = {
+			headers: {
+				'content-type': 'multipart/form-data'
+			}, onUploadProgress: function(progressEvent) {
+				const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+				self.setState({ percent : percent });
+
+				if (progressEvent.loaded === progressEvent.total) {
+					self.onUploadComplete();
+				}
+			}
+		};
+
+		this.state.files.forEach(file => {
+			let formData = new FormData();
+			formData.append('file', file);
+
+			axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
+				.then((response)=>{
+					console.log("UPLOAD", response.data);
+				}).catch((error) => {
+			});
+		});
 	}
 
-	handleUpload = ()=> {
-		if (this.state.files.length > 0) {
-			this.setState({
-				uploading : true,
-				action    : ''
-			});
-
-			let self = this;
-			const config = {
-				headers: {
-					'content-type': 'multipart/form-data'
-				}, onUploadProgress: function(progressEvent) {
-					const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-					self.setState({ percent : percent });
-
-					if (progressEvent.loaded === progressEvent.total) {
-						self.onUploadComplete();
-					}
-				}
-			};
-
-			this.state.files.forEach(file => {
-				let formData = new FormData();
-				formData.append('file', file);
-
-				axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
-					.then((response)=>{
-						console.log("UPLOAD", response.data);
-					}).catch((error) => {
-				});
-			});
-		}
+	onUploadComplete = ()=> {
+		this.setState({
+			uploading      : false,
+			uploadComplete : true
+		});
 	};
 
-	onUploadComplete = ()=> {
-		this.setState({ uploading : false });
+	handleLogin = ()=> {
 
-		let formData = new FormData();
-		formData.append('action', 'UPLOAD');
-		formData.append('user_id', cookie.load('user_id'));
-		formData.append('title', this.state.title);
-		formData.append('filename', "http://cdn.designengine.ai/system/" + this.state.files[0].name);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-				console.log('UPLOAD', response.data);
-				cookie.save('upload_id', response.data.upload_id, { path : '/' });
-				this.setState({ files : [] });
-				this.props.onClick('upload');
-			}).catch((error) => {
-		});
 	};
 
 	handleInvite = ()=> {
@@ -125,16 +115,37 @@ class UploadOverlay extends Component {
 		}
 	};
 
+	submit = ()=> {
+		let formData = new FormData();
+		formData.append('action', 'UPLOAD');
+		formData.append('user_id', cookie.load('user_id'));
+		formData.append('title', this.state.title);
+		formData.append('filename', "http://cdn.designengine.ai/system/" + this.state.files[0].name);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+				console.log('UPLOAD', response.data);
+				cookie.save('upload_id', response.data.upload_id, { path : '/' });
+				this.setState({ files : [] });
+				this.props.onClick('upload');
+			}).catch((error) => {
+		});
+	};
+
 	render() {
 		const progressStyle = { width : this.state.percent + '%' };
-		const uploadStyle = (this.state.files.length === 0) ? { color:'#999999', cursor:'default' } : {};
+
+		const emailClass = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'LOGIN' && !this.state.emailValid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+		const passwordClass = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'LOGIN' && !this.state.passwordValid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 
 		const email1Class = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'INVITE' && !this.state.email1Valid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 		const email2Class = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'INVITE' && !this.state.email2Valid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 		const email3Class = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'INVITE' && !this.state.email3Valid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 
+		const titleClass = 'input-wrapper';
+		const descriptionClass = 'input-wrapper';
+
 // 		const { files } = this.state;
-		const title = (this.state.uploading) ? 'Uploading Sketch File ' + this.state.percent + '%…' : 'Drop anywhere to begin upload.';
+		const title = (typeof cookie.load('user_id') !== 'undefined') ? (this.state.uploading) ? 'Loading ' + this.state.percent + '%…' : (this.state.uploadComplete) ? 'Project Ready' : 'Drag anywhere to start upload' : 'You need to be signed in';
 		return (
 			<Dropzone
 				disableClick
@@ -149,26 +160,53 @@ class UploadOverlay extends Component {
 							</div>
 						</div>
 					)}
-					<div className="overlay-container">
-						{(!this.state.uploading) && (
-							<div className="overlay-logo-wrapper"><img src="/images/logo.svg" className="overlay-logo" alt="Design Engine" /></div>
-						)}
-						<div className="overlay-title">{title}</div>
+					<div className="overlay-container"><Row horizontal="center">
 						<div className="overlay-content">
-							<div className="input-title">Enter details</div>
-							<div className="input-wrapper"><input type="text" name="title" placeholder="Design System Name" value={this.state.title} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-							<div className="input-wrapper"><input type="text" name="description" placeholder="Description" value={this.state.description} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-							<div className="input-title">Invite team members</div>
-							<div className={email1Class}><input type="text" name="email1" placeholder="Engineer Email" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-							<div className={email2Class}><input type="text" name="email2" placeholder="Engineer Email" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-							<div className={email3Class}><input type="text" name="email3" placeholder="Engineer Email" value={this.state.email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<div className="page-header">
+								<Row horizontal="center"><div className="page-header-text">{title}</div></Row>
+								<div className="page-subheader-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
+								<Row horizontal="center"><button className="page-button" onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
+							</div>
+
+							{(typeof cookie.load('user_id') !== 'undefined') && (<div>
+								{(this.state.files.length === 0)
+									? (<div>
+											<div className="input-title">Invite your teammates</div>
+											<div className={email1Class}><input type="text" name="email1" placeholder="Enter Email Address" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+											<div className={email2Class}><input type="text" name="email2" placeholder="Enter Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+											<div className={email3Class}><input type="text" name="email3" placeholder="Enter Email Address" value={this.state.email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+										</div>)
+									: (<div>
+											<div className="input-title">Setup your project</div>
+											<div className={titleClass}><input type="text" name="title" placeholder="Enter project name" value={this.state.title} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+											<div className={descriptionClass}><input type="text" name="description" placeholder="Enter project description" value={this.state.description} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+										</div>
+									)
+								}
+							</div>)}
+
+							{(typeof cookie.load('user_id') === 'undefined') && (<div>
+								<div className="input-title">Sign In</div>
+								<div className={emailClass}><input type="text" name="email" placeholder="Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+								<div className={passwordClass}><input type="password" name="password" placeholder="Password" value={this.state.password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							</div>)}
+
+							{(typeof cookie.load('user_id') !== 'undefined') && (
+								<div className="overlay-button-wrapper">
+									{(this.state.files.length > 0)
+										? (<button className="overlay-button overlay-button-confirm" onClick={() => this.submit()}>Next</button>)
+										: (<button className="overlay-button overlay-button-confirm" onClick={() => this.handleInvite()}>Invite these people</button>)
+									}
+								</div>
+							)}
+
+							{(typeof cookie.load('user_id') === 'undefined') && (
+								<div className="overlay-button-wrapper">
+									<button className="overlay-button overlay-button-confirm" onClick={()=> this.handleLogin()}>Submit</button>
+								</div>
+							)}
 						</div>
-						<div className="overlay-button-wrapper">
-							<button className="overlay-button overlay-button-upload" style={uploadStyle} onClick={()=> this.handleUpload()}>Upload Sketch File</button>
-							<button className="overlay-button overlay-button-primary" onClick={()=> this.handleInvite()}>Submit</button>
-							<button className="overlay-button overlay-button-secondary" onClick={()=> this.props.onClick('cancel')}>Cancel</button>
-						</div>
-					</div>
+					</Row></div>
 				</div>
 			</Dropzone>
 		);
