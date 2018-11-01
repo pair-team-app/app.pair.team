@@ -1,0 +1,29 @@
+
+.addon-item {
+	margin-bottom: 28px;
+	background-color: #272727;
+}
+
+.addon-item-image {
+	width: 125px;
+	height: 125px;
+	padding: 28px;
+}
+
+.addon-item-title-wrapper {
+	background-color: #202020;
+	padding: 14px;
+}
+
+.addon-item-title {
+
+}
+
+.addon-item-button {
+	padding: 7px 14px;
+}
+
+.addon-item-plus {
+	font-size: 12px;
+	color: #ffffff;
+}
