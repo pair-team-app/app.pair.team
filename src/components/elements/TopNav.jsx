@@ -28,7 +28,7 @@ class TopNav extends Component {
 	refreshData = ()=> {
 		let formData = new FormData();
 		formData.append('action', 'UPLOADS');
-		formData.append('user_id', cookie.load('user_id'));
+		formData.append('user_id', (typeof cookie.load('user_id') !== 'undefined') ? cookie.load('user_id') : '0');
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOADS', response.data);

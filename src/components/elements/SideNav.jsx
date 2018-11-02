@@ -264,7 +264,7 @@ class SideNav extends Component {
 						}
 					</div>
 					<div className="side-nav-bottom-wrapper">
-						{(typeof cookie.load('user_id') !== 'undefined')
+						{(cookie.load('user_id') !== '0')
 							? <div className="nav-link" onClick={() => this.props.onLogout()}>Logout</div>
 							: <div className="nav-link" onClick={() => this.props.onRegister()}>Sign Up / Sign In</div>
 						}
