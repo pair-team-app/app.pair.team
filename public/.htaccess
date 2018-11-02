@@ -9,8 +9,6 @@ RewriteEngine on
 #-- react router fix --#
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} !^/invite/.*$
-    RewriteCond %{REQUEST_URI} !^/verify/\d+$
     RewriteRule ^(.*)$ / [R=301,P]
 
 #-- don't cache these --#
