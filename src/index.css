@@ -62,17 +62,17 @@ textarea {
   width: 10px;
 }
 
-::-webkit-scrollbar-track {
-  background: #3f3f3f;
-}
+/*::-webkit-scrollbar-track {*/
+  /*background: #151619;*/
+/*}*/
 
-::-webkit-scrollbar-thumb {
-  background: #666666;
-}
+/*::-webkit-scrollbar-thumb {*/
+  /*background: #151619;*/
+/*}*/
 
-::-webkit-scrollbar-thumb:hover {
-  background: #666666;
-}
+/*::-webkit-scrollbar-thumb:hover {*/
+  /*background: #111111;*/
+/*}*/
 
 
 /** Thin */
