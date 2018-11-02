@@ -29,14 +29,14 @@ class InspectorPage extends Component {
 	}
 
 	componentDidMount() {
-		let formData = new FormData();
-		formData.append('action', 'ADD_VIEW');
-		formData.append('artboard_id', '' + this.props.match.params.artboardID);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-				console.log('ADD_VIEW', response.data);
-			}).catch((error) => {
-		});
+// 		let formData = new FormData();
+// 		formData.append('action', 'ADD_VIEW');
+// 		formData.append('artboard_id', '' + this.props.match.params.artboardID);
+// 		axios.post('https://api.designengine.ai/system.php', formData)
+// 			.then((response) => {
+// 				console.log('ADD_VIEW', response.data);
+// 			}).catch((error) => {
+// 		});
 
 		this.refreshData();
 	}

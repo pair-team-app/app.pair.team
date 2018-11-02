@@ -32,7 +32,7 @@ class SideNav extends Component {
 	componentDidUpdate(prevProps) {
 		console.log("SideNav.componentDidUpdate()", this.props, prevProps);
 		if (window.location.pathname.includes('/render/')) {
-			if (this.props.artboardID !== prevProps.artboardID) {
+			if (this.props.pageID !== prevProps.pageID && this.props.artboardID !== prevProps.artboardID) {
 				const { pageID, artboardID, sliceID } = this.props;
 
 				this.setState({
@@ -121,7 +121,7 @@ class SideNav extends Component {
 	refreshData = ()=> {
 		if (typeof cookie.load('user_id') !== 'undefined') {
 			if (window.location.pathname.includes('/render/')) {
-				const { pageID, artboardID } = this.state;
+				const { pageID, artboardID } = this.props;
 
 				let formData = new FormData();
 				formData.append('action', 'ARTBOARDS');
