@@ -28,7 +28,7 @@ class TopNav extends Component {
 	refreshData = ()=> {
 		let formData = new FormData();
 		formData.append('action', 'UPLOADS');
-		formData.append('user_id', (typeof cookie.load('user_id') !== 'undefined') ? cookie.load('user_id') : '0');
+		formData.append('user_id', cookie.load('user_id'));
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOADS', response.data);
@@ -112,7 +112,7 @@ class TopNav extends Component {
 					<Column flexGrow={1} horizontal="start" vertical="center">
 						<a href="/"><img src="/images/logo.svg" className="nav-logo" alt="Design Engine" /></a>
 					</Column>
-					{(typeof cookie.load('user_id') !== 'undefined') && (
+					{(cookie.load('user_id') !== '0') && (
 						<Column flexGrow={1} horizontal="end" vertical="center">
 							<button className="top-nav-upload-button" onClick={()=> this.props.onUpload()}><FontAwesome name="plus" className="top-nav-upload-plus" /></button>
 						</Column>

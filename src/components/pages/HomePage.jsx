@@ -87,72 +87,50 @@ class HomePage extends Component {
 	};
 
 	render() {
-		if (typeof cookie.load('user_id') !== 'undefined') {
-			const artboards = this.state.artboards;
-			const items = artboards.map((item, i, arr) => {
-				if (item.type !== 'hero' && (this.props.pageID <= 0 || this.props.pageID === item.pageID)) {
-					return (
-						<Column key={i}>
-							<ArtboardItem
-								title={item.title}
-								image={item.filename}
-								size={(item.meta.frame.size.width > item.meta.frame.size.height) ? 'landscape' : 'portrait'}
-								onClick={() => this.handleSelect(item.id)}
-								onSelect={(isSelected) => this.handleToggle(item.id, isSelected)} />
-						</Column>
-					);
+		const artboards = this.state.artboards;
+		const items = artboards.map((item, i, arr) => {
+			if (item.type !== 'hero' && (this.props.pageID <= 0 || this.props.pageID === item.pageID)) {
+				return (
+					<Column key={i}>
+						<ArtboardItem
+							title={item.title}
+							image={item.filename}
+							size={(item.meta.frame.size.width > item.meta.frame.size.height) ? 'landscape' : 'portrait'}
+							onClick={() => this.handleSelect(item.id)}
+							onSelect={(isSelected) => this.handleToggle(item.id, isSelected)} />
+					</Column>
+				);
 
-				} else {
-					return (null);
+			} else {
+				return (null);
+			}
+		});
+
+		let artboard = null;
+		if (this.props.pageID !== -1) {
+			artboards.forEach(function (item, i) {
+				if (artboard === null && item.type === 'hero') {
+					artboard = item;
 				}
 			});
-
-			let artboard = null;
-			if (this.props.pageID !== -1) {
-				artboards.forEach(function (item, i) {
-					if (artboard === null && item.type === 'hero') {
-						artboard = item;
-					}
-				});
-			}
-
-			const imageClass = (artboard) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? 'home-page-image home-page-image-landscape' : 'home-page-image home-page-image-portrait' : 'home-page-image';
-
-			return (
-				<div className="home-page-wrapper">
-					{(artboard) && (
-						<div className="home-page-project" onClick={() => this.handleSelect(artboard.id)}>
-							<img className={imageClass} src={artboard.filename} alt={artboards.title} />
-							<div className="home-page-title">{artboard.title}</div>
-						</div>
-					)}
-
-					<Row horizontal="space-between" style={{flexWrap:'wrap'}}>
-						{items}
-					</Row>
-				</div>
-			);
-
-		} else {
-			const items = [];
-
-			return (
-				<div className="home-page-wrapper">
-					<Row vertical="start">
-						<Column flexGrow={1} horizontal="center">
-							<div className="page-header">
-								<Row horizontal="center"><div className="page-header-text">On-demand Production Design</div></Row>
-								<div className="page-subheader-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
-								<Row horizontal="center"><button className="page-button" onClick={()=> window.open('https://www.youtube.com')}>Watch Video</button><button onClick={()=> window.location.href = '/mission'}>Mission</button></Row>
-							</div>
-							<Row horizontal="space-between" className="home-page-plugins-wrapper" style={{flexWrap:'wrap'}}>
-								{items}
-							</Row>
-						</Column>
-					</Row>
-				</div>
-			);
 		}
+
+		const imageClass = (artboard) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? 'home-page-image home-page-image-landscape' : 'home-page-image home-page-image-portrait' : 'home-page-image';
+
+		return (
+			<div className="home-page-wrapper">
+				{(artboard) && (
+					<div className="home-page-project" onClick={() => this.handleSelect(artboard.id)}>
+						<img className={imageClass} src={artboard.filename} alt={artboards.title} />
+						<div className="home-page-title">{artboard.title}</div>
+					</div>
+				)}
+
+				<Row horizontal="space-between" style={{flexWrap:'wrap'}}>
+					{items}
+				</Row>
+			</div>
+		);
 	}
 }
 

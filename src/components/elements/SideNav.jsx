@@ -119,20 +119,68 @@ class SideNav extends Component {
 	};
 
 	refreshData = ()=> {
-		if (typeof cookie.load('user_id') !== 'undefined') {
-			if (window.location.pathname.includes('/render/')) {
-				const { pageID, artboardID } = this.props;
+		if (window.location.pathname.includes('/render/')) {
+			const { pageID, artboardID } = this.props;
 
-				let formData = new FormData();
-				formData.append('action', 'ARTBOARDS');
-				formData.append('upload_id', cookie.load('upload_id'));
-				formData.append('page_id', '' + pageID);
-				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response) => {
-						console.log('ARTBOARDS', response.data);
+			let formData = new FormData();
+			formData.append('action', 'ARTBOARDS');
+			formData.append('upload_id', cookie.load('upload_id'));
+			formData.append('page_id', '' + pageID);
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response) => {
+					console.log('ARTBOARDS', response.data);
+					let artboards = [];
+
+					response.data.artboards.forEach(artboard => {
+						let slices = [];
+						artboard.slices.forEach(function(item, i) {
+							slices.push({
+								id       : item.id,
+								title    : item.title,
+								type     : item.type,
+								filename : item.filename + '@1x.png',
+								meta     : JSON.parse(item.meta),
+								added    : item.added,
+								selected : false
+							});
+						});
+
+						artboards.push({
+							id        : artboard.id,
+							pageID    : artboard.page_id,
+							title     : artboard.title,
+							filename  : artboard.filename,
+							meta      : JSON.parse(artboard.meta),
+							views     : artboard.views,
+							downloads : artboard.downloads,
+							added     : artboard.added,
+							slices    : slices,
+							comments  : artboard.comments,
+							selected  : (artboardID === artboard.id)
+						});
+					});
+
+					this.setState({
+						artboards : artboards,
+						collapsedBookkeeping :artboards.map(() => false)
+					});
+
+				}).catch((error) => {
+			});
+
+		}	else {
+			let formData = new FormData();
+			formData.append('action', 'PAGES');
+			formData.append('user_id', cookie.load('user_id'));
+			formData.append('upload_id', cookie.load('upload_id'));
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response) => {
+					console.log('PAGES', response.data);
+					let pages = [];
+					response.data.pages.forEach(page => {
 						let artboards = [];
 
-						response.data.artboards.forEach(artboard => {
+						page.artboards.forEach(artboard => {
 							let slices = [];
 							artboard.slices.forEach(function(item, i) {
 								slices.push({
@@ -152,76 +200,26 @@ class SideNav extends Component {
 								title     : artboard.title,
 								filename  : artboard.filename,
 								meta      : JSON.parse(artboard.meta),
-								views     : artboard.views,
-								downloads : artboard.downloads,
 								added     : artboard.added,
 								slices    : slices,
-								comments  : artboard.comments,
-								selected  : (artboardID === artboard.id)
+								selected  : false
 							});
 						});
 
-						this.setState({
-							artboards : artboards,
-							collapsedBookkeeping :artboards.map(() => false)
+						pages.push({
+							id          : page.id,
+							title       : page.title,
+							description : page.description,
+							artboards   : artboards,
+							added       : page.added,
+							selected    : false
 						});
+					});
 
-					}).catch((error) => {
-				});
+					this.setState({ pages : pages });
 
-			}	else {
-				let formData = new FormData();
-				formData.append('action', 'PAGES');
-				formData.append('user_id', cookie.load('user_id'));
-				formData.append('upload_id', cookie.load('upload_id'));
-				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response) => {
-						console.log('PAGES', response.data);
-						let pages = [];
-						response.data.pages.forEach(page => {
-							let artboards = [];
-
-							page.artboards.forEach(artboard => {
-								let slices = [];
-								artboard.slices.forEach(function(item, i) {
-									slices.push({
-										id       : item.id,
-										title    : item.title,
-										type     : item.type,
-										filename : item.filename + '@1x.png',
-										meta     : JSON.parse(item.meta),
-										added    : item.added,
-										selected : false
-									});
-								});
-
-								artboards.push({
-									id        : artboard.id,
-									pageID    : artboard.page_id,
-									title     : artboard.title,
-									filename  : artboard.filename,
-									meta      : JSON.parse(artboard.meta),
-									added     : artboard.added,
-									slices    : slices,
-									selected  : false
-								});
-							});
-
-							pages.push({
-								id          : page.id,
-								title       : page.title,
-								description : page.description,
-								artboards   : artboards,
-								added       : page.added,
-								selected    : false
-							});
-						});
-
-						this.setState({ pages : pages });
-
-					}).catch((error) => {
-				});
-			}
+				}).catch((error) => {
+			});
 		}
 	};
 
@@ -233,10 +231,8 @@ class SideNav extends Component {
 				<div className="side-nav-link-wrapper">
 					<div className="side-nav-top-wrapper">
 						<button className="side-nav-invite-button" onClick={()=> this.props.onInvite()}>Invite Team Members</button>
-						{(typeof cookie.load('user_id') !== 'undefined') && (<div>
-							{(window.location.pathname === '/' && this.state.pageID !== -1) && (<div className="nav-link" onClick={()=> this.handleNavItem('top', 0)}>Top Views</div>)}
-							{(window.location.pathname === '/' && this.state.pageID === -1) && (<div className="nav-link page-tree-item-text-selected" onClick={()=> this.handleNavItem('top', 0)}><img className="artboard-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />Top Views</div>)}
-						</div>)}
+						{(window.location.pathname === '/' && this.state.pageID !== -1) && (<div className="nav-link" onClick={()=> this.handleNavItem('top', 0)}>Top Views</div>)}
+						{(window.location.pathname === '/' && this.state.pageID === -1) && (<div className="nav-link page-tree-item-text-selected" onClick={()=> this.handleNavItem('top', 0)}><img className="artboard-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />Top Views</div>)}
 						{(window.location.pathname !== '/') && (<SideNavBack onClick={()=> this.props.onBack()} />)}
 						{(window.location.pathname.includes('/render/'))
 							? this.state.artboards.map((artboard, i)=> {

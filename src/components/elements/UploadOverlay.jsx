@@ -145,7 +145,7 @@ class UploadOverlay extends Component {
 		const descriptionClass = 'input-wrapper';
 
 // 		const { files } = this.state;
-		const title = (typeof cookie.load('user_id') !== 'undefined') ? (this.state.uploading) ? 'Loading ' + this.state.percent + '%…' : (this.state.uploadComplete) ? 'Project Ready' : 'Drag anywhere to start upload' : 'You need to be signed in';
+		const title = (cookie.load('user_id') !== '0') ? (this.state.uploading) ? 'Loading ' + this.state.percent + '%…' : (this.state.uploadComplete) ? 'Project Ready' : 'Drag anywhere to start upload' : 'You need to be signed in';
 		return (
 			<Dropzone
 				disableClick
@@ -168,7 +168,7 @@ class UploadOverlay extends Component {
 								<Row horizontal="center"><button className="page-button" onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
 							</div>
 
-							{(typeof cookie.load('user_id') !== 'undefined') && (<div>
+							{(cookie.load('user_id') !== '0') && (<div>
 								{(this.state.files.length === 0)
 									? (<div>
 											<div className="input-title">Invite your teammates</div>
@@ -185,13 +185,13 @@ class UploadOverlay extends Component {
 								}
 							</div>)}
 
-							{(typeof cookie.load('user_id') === 'undefined') && (<div>
+							{(cookie.load('user_id') === '0') && (<div>
 								<div className="input-title">Sign In</div>
 								<div className={emailClass}><input type="text" name="email" placeholder="Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 								<div className={passwordClass}><input type="password" name="password" placeholder="Password" value={this.state.password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 							</div>)}
 
-							{(typeof cookie.load('user_id') !== 'undefined') && (
+							{(cookie.load('user_id') !== '0') && (
 								<div className="overlay-button-wrapper">
 									{(this.state.files.length > 0)
 										? (<button className="overlay-button overlay-button-confirm" onClick={() => this.submit()}>Next</button>)
@@ -200,7 +200,7 @@ class UploadOverlay extends Component {
 								</div>
 							)}
 
-							{(typeof cookie.load('user_id') === 'undefined') && (
+							{(cookie.load('user_id') === '0') && (
 								<div className="overlay-button-wrapper">
 									<button className="overlay-button overlay-button-confirm" onClick={()=> this.handleLogin()}>Submit</button>
 								</div>

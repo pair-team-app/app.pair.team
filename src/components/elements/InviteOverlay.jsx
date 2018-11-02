@@ -26,8 +26,8 @@ class InviteOverlay extends Component {
 
 	submit = ()=> {
 		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/gi;
-		const isEmailValid = (re.test(String(this.state.email).toLowerCase()) || typeof cookie.load('user_id' !== 'undefined'));
-		const isPassword = (this.state.password.length > 0 || typeof cookie.load('user_id' !== 'undefined'));
+		const isEmailValid = (re.test(String(this.state.email).toLowerCase()) || cookie.load('user_id' !== '0'));
+		const isPassword = (this.state.password.length > 0 || cookie.load('user_id' !== '0'));
 		const isEmail1Valid = re.test(String(this.state.email1).toLowerCase());
 		const isEmail2Valid = re.test(String(this.state.email2).toLowerCase());
 		const isEmail3Valid = re.test(String(this.state.email3).toLowerCase());
@@ -145,7 +145,7 @@ class InviteOverlay extends Component {
 							</div>
 							<Row horizontal="center"><button className="page-button" onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
 						</div>
-						{(typeof cookie.load('user_id') === 'undefined') && (<div>
+						{(cookie.load('user_id') === '0') && (<div>
 							<div className="input-title">Enter details</div>
 							<div className={emailClass}><input type="text" name="email2" placeholder="Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 							<div className={passwordClass}><input type="password" name="password2" placeholder="Password" value={this.state.password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
