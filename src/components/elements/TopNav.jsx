@@ -132,7 +132,7 @@ class TopNav extends Component {
 							resetThenSet={this.resetThenSet}
 						/>
 						<DropdownMultiple
-							titleHelper="Themes"
+							titleHelper="Theme"
 							title="Theme(s)"
 							list={this.state.colors}
 							toggleItem={this.toggleSelected}

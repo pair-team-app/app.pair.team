@@ -94,15 +94,13 @@ class SideNav extends Component {
 				}
 			});
 
-// 			if (artboard.selected) {
-				this.setState({
-					pageID     : artboard.pageID,
-					artboardID : id,
-					artboards  : artboards
-				});
+			this.setState({
+				pageID     : artboard.pageID,
+				artboardID : id,
+				artboards  : artboards
+			});
 
-				this.props.onArtboardItem(artboard);
-// 			}
+			this.props.onArtboardItem(artboard);
 
 		} else if (type === 'slice') {
 			let slice = null;

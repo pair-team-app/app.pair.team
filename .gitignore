@@ -20,11 +20,7 @@
 .env.production.local
 
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
-public/stripe_checkout.php
-
-src/json/stripe.json
+*.php
 
 src/json/stripe.json
