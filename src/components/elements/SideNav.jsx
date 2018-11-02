@@ -273,7 +273,7 @@ class SideNav extends Component {
 						<div className="nav-link"><a href={'/mission'}>Mission</a></div>
 						<div className="nav-link"><a href={'/terms'}>Terms of Service</a></div>
 						<div className="nav-link"><a href={'/privacy'}>Privacy Policy</a></div>
-						<div className="copyright">&copy; {new Date().getFullYear()} Design Engine AI</div>
+						<div className="copyright">&copy; {(new Date().getFullYear() + 1)} Design Engine AI, Inc.</div>
 					</div>
 				</div>
 			</div>
