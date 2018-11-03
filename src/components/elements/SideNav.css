@@ -3,6 +3,7 @@
 	position: fixed;
 	top: 68px;
 	width: 388px;
+	overflow-y: scroll;
 	height: 100%;
 }
 
@@ -12,9 +13,9 @@
 }
 
 .side-nav-bottom-wrapper {
-	position: absolute;
-	bottom: 100px;
-	left: 28px;
+	/*position: absolute;*/
+	/*bottom: 100px;*/
+	/*left: 28px;*/
 }
 
 .side-nav-invite-button {
