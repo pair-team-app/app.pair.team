@@ -116,18 +116,20 @@ class InspectorPage extends Component {
 	};
 
 	submitComment = ()=> {
-		let formData = new FormData();
-		formData.append('action', 'ADD_COMMENT');
-		formData.append('user_id', cookie.load('user_id'));
-		formData.append('artboard_id', '' + this.state.artboardID);
-		formData.append('content', this.state.comment);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response)=> {
-				console.log('ADD_COMMENT', response.data);
-				this.setState({ comment : '' });
-				this.refreshData();
-			}).catch((error) => {
-		});
+		if (this.state.comment.length > 0) {
+			let formData = new FormData();
+			formData.append('action', 'ADD_COMMENT');
+			formData.append('user_id', cookie.load('user_id'));
+			formData.append('artboard_id', '' + this.state.artboardID);
+			formData.append('content', this.state.comment);
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response) => {
+					console.log('ADD_COMMENT', response.data);
+					this.setState({ comment : '' });
+					this.refreshData();
+				}).catch((error) => {
+			});
+		}
 	};
 
 	handleSizeChange = (scaleSize)=> {
@@ -154,6 +156,8 @@ class InspectorPage extends Component {
 			width   : '100%',
 			height  : '100%'
 		};
+
+		const commentButtonClass = (this.state.comment.length !== 0) ? 'inspector-page-comment-button' : 'inspector-page-comment-button inspector-page-comment-button-disabled';
 
 // 		console.log("InspectorPage", "artboard:"+artboard, "heroImage:"+heroImage, "heroImage.current"+heroImage.current);
 
@@ -195,7 +199,7 @@ class InspectorPage extends Component {
 						</div>
 					</div>
 					<textarea className="inspector-page-comment-txt" name="comment" placeholder="Enter Comment Here" value={this.state.comment} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} />
-					<button className="inspector-page-comment-button" onClick={()=> this.submitComment()}>Submit</button>
+					<button className={commentButtonClass} onClick={()=> this.submitComment()}>Submit</button>
 
 					<div className="inspector-page-hero-info-wrapper">
 						{(artboard) ? artboard.views + ' View' + ((parseInt(artboard.views, 10) !== 1) ? 's' : '') : 'Views'}<br />

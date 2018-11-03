@@ -80,7 +80,10 @@
 }
 
 .overlay-button-confirm-disabled {
-	background-color: #666666;
+	background-color: #333333;
+}
+
+.overlay-button-confirm-disabled:hover {
 	cursor: default;
 }
 

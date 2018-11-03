@@ -77,6 +77,13 @@
 	width: 100%;
 }
 
+.inspector-page-comment-button-disabled {
+	background-color: #333333;
+}
+
+.inspector-page-comment-button-disabled:hover {
+	cursor: default;
+}
 
 .inspector-page-panel {
 	width: 400px;
