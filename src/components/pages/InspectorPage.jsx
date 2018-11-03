@@ -228,9 +228,10 @@ class InspectorPage extends Component {
 						Rotation: {(slice) ? slice.meta.rotation : 0}&deg;<br />
 						Opacity: {(slice) ? slice.meta.opacity : '100%'}<br />
 						Color: {(slice) ? slice.meta.fillColor : 'N/A'}<br />
-						Font: {(slice) ? slice.meta.font.family : 'N/A'}<br />
-						Font Size: {(slice) ? slice.meta.font.size : 'N/A'}<br />
-						Font Color: {(slice) ? slice.meta.font.color : 'N/A'}<br />
+						Font: {(slice && slice.meta.font.family) ? slice.meta.font.family : 'N/A'}<br />
+						Font Size: {(slice && slice.meta.font.size) ? slice.meta.font.size : 'N/A'}<br />
+						{/*Font Color: {(slice && slice.meta.font.color) ? slice.meta.font.color : 'N/A'}<br />*/}
+						Font Color: N/A<br />
 						Blend Mode: {(slice) ? slice.meta.blendMode.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) : 'N/A'}<br />
 					</div>
 					<div className="inspector-page-panel-code-wrapper">
