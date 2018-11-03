@@ -24,8 +24,8 @@ class ArtboardItem extends Component {
 		const btnClass = (this.state.isSelected) ? 'artboard-item-button artboard-item-button-selected' : 'artboard-item-button';
 
 		return (
-			<div className="artboard-item">
-				<img className={imageClass} src={this.props.image} alt={this.props.title} onClick={()=> this.props.onClick()} />
+			<div className="artboard-item" onClick={()=> this.props.onClick()}>
+				<img className={imageClass} src={this.props.image} alt={this.props.title} />
 				<div className="artboard-item-details-wrapper">
 					<div className={titleClass}>{this.props.title}</div>
 					<button className={btnClass} onClick={()=> this.handleSelect()}>
