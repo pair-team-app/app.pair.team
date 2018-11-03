@@ -21,6 +21,7 @@ class InspectorPage extends Component {
 			pageID        : 0,
 			artboardID    : 0,
 			slice         : -1,
+			scaleSize     : 1,
 			page          : null,
 			artboard      : null,
 			code          : '#block {<br>&nbsp;&nbsp;width: 100%;<br>&nbsp;&nbsp;color: #ffffff;<br>}',
@@ -74,16 +75,14 @@ class InspectorPage extends Component {
 						let slices = [];
 						response.data.artboard.slices.forEach(function(item, i) {
 							const meta = JSON.parse(item.meta);
-							if (item.type !== 'background') {
-								slices.push({
-									id       : item.id,
-									title    : item.title,
-									type     : item.type,
-									filename : (item.type === 'slice') ? item.filename + '@1x.png' : 'https://via.placeholder.com/' + meta.frame.size.width + 'x' + meta.frame.size.height,
-									meta     : meta,
-									added    : item.added
-								});
-							}
+							slices.push({
+								id       : item.id,
+								title    : item.title,
+								type     : item.type,
+								filename : (item.type === 'slice') ? item.filename : 'https://via.placeholder.com/' + meta.frame.size.width + 'x' + meta.frame.size.height,
+								meta     : meta,
+								added    : item.added
+							});
 						});
 
 						const artboard = {
@@ -127,6 +126,10 @@ class InspectorPage extends Component {
 				this.refreshData();
 			}).catch((error) => {
 		});
+	};
+
+	handleSizeChange = (scaleSize)=> {
+		this.setState({ scaleSize : scaleSize });
 	};
 
 	handleSliceClick = (ind, id)=> {
@@ -204,14 +207,14 @@ class InspectorPage extends Component {
 				<div className="inspector-page-panel">
 					<div className="inspector-page-panel-display">
 						{(slice) && (
-							<img className={panelImageClass} src={slice.filename} alt={slice.title} />
+							<img className={panelImageClass} src={((slice.type === 'slice') ? slice.filename + '@' + this.state.scaleSize + 'x.png' : ('https://via.placeholder.com/' + (slice.meta.frame.size.width * this.state.scaleSize) + 'x' + (slice.meta.frame.size.height * this.state.scaleSize)))} alt={(slice.title + ' - @' + this.state.scaleSize + 'x')} />
 						)}
 					</div>
 					<div className="inspector-page-panel-button-wrapper">
 						<div>
-							<button className="inspector-page-size-button">1x</button>
-							<button className="inspector-page-size-button inspector-page-size-button-middle">2x</button>
-							<button className="inspector-page-size-button">3x</button>
+							<button className="inspector-page-size-button" onClick={()=> this.handleSizeChange(1)}>1x</button>
+							<button className="inspector-page-size-button inspector-page-size-button-middle" onClick={()=> this.handleSizeChange(2)}>2x</button>
+							<button className="inspector-page-size-button" onClick={()=> this.handleSizeChange(3)}>3x</button>
 						</div>
 						<div>
 							<button className="inspector-page-download-button">Download Parts</button>
@@ -224,7 +227,8 @@ class InspectorPage extends Component {
 						Artboard: {(artboard) ? artboard.title : 'N/A'}<br />
 						Name: {(slice) ? slice.title : 'N/A'} {(slice) ? '(' + slice.type.replace(/(\b\w)/gi, function(m) {return (m.toUpperCase());}) + ')' : ''}<br />
 						Position: ({(slice) ? slice.meta.frame.origin.x : '0'}, {(slice) ? slice.meta.frame.origin.y : 0})<br />
-						Size: {(slice) ? slice.meta.frame.size.width : 0} &times; {(slice) ? slice.meta.frame.size.height : 0}<br />
+						Scale: {(this.state.scaleSize + 'x')}<br />
+						Size: {(slice) ? (slice.meta.frame.size.width * this.state.scaleSize) : 0} &times; {(slice) ? (slice.meta.frame.size.height * this.state.scaleSize) : 0}<br />
 						Rotation: {(slice) ? slice.meta.rotation : 0}&deg;<br />
 						Opacity: {(slice) ? slice.meta.opacity : '100%'}<br />
 						Color: {(slice) ? slice.meta.fillColor : 'N/A'}<br />

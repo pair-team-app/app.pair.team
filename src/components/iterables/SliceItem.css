@@ -23,6 +23,11 @@
 	border: 1px dashed #ffa500;
 }
 
+.slice-item-background {
+	background-color: rgba(102, 102, 102, 0.25);
+	border: 1px hidden #666666;
+}
+
 .slice-item-plus {
 	position: absolute;
 	top: 2px;

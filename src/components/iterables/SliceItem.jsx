@@ -12,7 +12,7 @@ class SliceItem extends Component {
 	}
 
 	render() {
-		const className = (this.props.type === 'slice') ? 'slice-item slice-item-slice' : (this.props.type === 'hotspot') ? 'slice-item slice-item-hotspot' : 'slice-item slice-item-textfield';
+		const className = (this.props.type === 'slice') ? 'slice-item slice-item-slice' : (this.props.type === 'hotspot') ? 'slice-item slice-item-hotspot' : (this.props.type === 'textfield') ? 'slice-item slice-item-textfield' : 'slice-item slice-item-background';
 		const style = {
 			top    : this.props.top + 'px',
 			left   : this.props.left + 'px',
