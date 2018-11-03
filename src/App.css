@@ -36,6 +36,12 @@
 	margin-right: 14px;
 }
 
+.page-section-header {
+	font-family: "Poppins Bold", sans-serif;
+	font-size: 20px;
+	margin: 28px 0;
+}
+
 .input-title {
 	margin-bottom: 20px;
 	font-size: 16px;

@@ -43,7 +43,7 @@ class StripeOverlay extends Component {
 							<button className="overlay-button overlay-button-confirm" onClick={()=> this.props.onClick('submit')}>Submit</button>
 						</div>
 						<Row horizontal="center">
-							<img className="stripe-overlay-logo" src="/images/stripe-logo.png" />
+							<img className="stripe-overlay-logo" src="/images/stripe-logo.png" alt="Stripe logo" />
 						</Row>
 						<Row horizontal="space-between" style={{flexWrap:'wrap'}}>
 							<Column className="stripe-overlay-faq">

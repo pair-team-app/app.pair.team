@@ -35,6 +35,7 @@ class App extends Component {
 
 		this.uploadInterval = null;
 		cookie.save('user_id', (typeof cookie.load('user_id') === 'undefined') ? 0 : cookie.load('user_id'));
+		cookie.save('upload_id', (typeof cookie.load('upload_id') === 'undefined') ? 112 : cookie.load('upload_id'));
 	}
 
 	componentDidMount() {
