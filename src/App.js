@@ -20,6 +20,8 @@ import TermsPage from './components/pages/TermsPage';
 import TopNav from './components/elements/TopNav';
 import UploadOverlay from './components/elements/UploadOverlay';
 
+const wrapper = React.createRef();
+
 class App extends Component {
 	constructor(props) {
 		super(props);
@@ -123,6 +125,9 @@ class App extends Component {
 	handleArtboardDetails = (obj)=> {
 		console.log('handleArtboardDetails()', obj);
 
+		console.log(wrapper.current.scrollTop);
+		wrapper.current.scrollTo(0, 0);
+
 		let formData = new FormData();
 		formData.append('action', 'ADD_VIEW');
 		formData.append('artboard_id', obj.id);
@@ -189,7 +194,7 @@ class App extends Component {
 			    onLogout={()=> this.handleLogout()}
 		    />
 
-		    <div className="content-wrapper">
+		    <div className="content-wrapper" ref={wrapper}>
 			    <Route exact path="/" render={()=> <HomePage pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
 			    <Route exact path="/developer" component={DevelopersPage} />
 			    <Route exact path="/mission" component={MissionPage} />

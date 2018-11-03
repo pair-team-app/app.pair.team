@@ -10,6 +10,7 @@ import SliceItem from '../iterables/SliceItem';
 import SliceToggle from '../elements/SliceToggle';
 
 const heroImage = React.createRef();
+
 class InspectorPage extends Component {
 	constructor(props) {
 		super(props);
