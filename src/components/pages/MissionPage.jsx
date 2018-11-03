@@ -61,8 +61,8 @@ class MissionPage extends Component {
 							<Row><p>Vestibulum suscipit sem odio, quis interdum purus pharetra at. Aliquam dictum blandit ex ultricies convallis. Quisque venenatis lacus vitae nibh aliquet aliquet. Curabitur ut lacinia dolor. Pellentesque rutrum, nulla auctor laoreet euismod, nisl lorem aliquam lorem, pellentesque interdum felis mauris nec turpis. Ut condimentum, nibh gravida congue pharetra, nibh felis malesuada odio, at tempus tortor risus quis orci. Aenean nisi nulla, mollis eget rutrum ultrices, efficitur eget orci. Nam nec diam pharetra, rhoncus massa id, commodo metus. Mauris accumsan nunc et efficitur accumsan. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam erat volutpat. Aliquam efficitur vulputate purus in volutpat.</p></Row>
 							<Row><p><img className="mission-page-founders-image" src="http://static1.businessinsider.com/image/5ada303319ee8642008b4679-2400/oceans%20venture%20group.jpg" alt="Founders" /></p></Row>
 							<Row><div className="page-section-header">Press</div></Row>
-							<Row><a href="#"></a>Branding</Row>
-							<Row><a href="#"></a>Founder's Photos</Row>
+							<Row><a href={'/branding'}>Branding</a></Row>
+							<Row><a href={'/founders'}>Founder's Photos</a></Row>
 						</div>
 					</Column>
 				</Row>

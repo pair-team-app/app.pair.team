@@ -116,19 +116,21 @@ class UploadOverlay extends Component {
 	};
 
 	submit = ()=> {
-		let formData = new FormData();
-		formData.append('action', 'UPLOAD');
-		formData.append('user_id', cookie.load('user_id'));
-		formData.append('title', this.state.title);
-		formData.append('filename', "http://cdn.designengine.ai/system/" + this.state.files[0].name);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-				console.log('UPLOAD', response.data);
-				cookie.save('upload_id', response.data.upload_id, { path : '/' });
-				this.setState({ files : [] });
-				this.props.onClick('upload');
-			}).catch((error) => {
-		});
+		if (this.state.uploadComplete) {
+			let formData = new FormData();
+			formData.append('action', 'UPLOAD');
+			formData.append('user_id', cookie.load('user_id'));
+			formData.append('title', this.state.title);
+			formData.append('filename', "http://cdn.designengine.ai/system/" + this.state.files[0].name);
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response) => {
+					console.log('UPLOAD', response.data);
+					cookie.save('upload_id', response.data.upload_id, { path : '/' });
+					this.setState({ files : [] });
+					this.props.onClick('upload');
+				}).catch((error) => {
+			});
+		}
 	};
 
 	render() {
@@ -143,6 +145,8 @@ class UploadOverlay extends Component {
 
 		const titleClass = 'input-wrapper';
 		const descriptionClass = 'input-wrapper';
+
+		const nextButtonClass = (this.state.uploadComplete) ? 'overlay-button overlay-button-confirm' : 'overlay-button overlay-button-confirm overlay-button-confirm-disabled';
 
 // 		const { files } = this.state;
 		const title = (cookie.load('user_id') !== '0') ? (this.state.uploading) ? 'Loading ' + this.state.percent + '%…' : (this.state.uploadComplete) ? 'Project Ready' : 'Drag anywhere to start upload' : 'You need to be signed in';
@@ -194,7 +198,7 @@ class UploadOverlay extends Component {
 							{(cookie.load('user_id') !== '0') && (
 								<div className="overlay-button-wrapper">
 									{(this.state.files.length > 0)
-										? (<button className="overlay-button overlay-button-confirm" onClick={() => this.submit()}>Next</button>)
+										? (<button className={nextButtonClass} onClick={() => this.submit()}>Next</button>)
 										: (<button className="overlay-button overlay-button-confirm" onClick={() => this.handleInvite()}>Invite these people</button>)
 									}
 								</div>

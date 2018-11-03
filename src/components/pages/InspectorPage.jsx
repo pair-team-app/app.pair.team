@@ -110,6 +110,7 @@ class InspectorPage extends Component {
 		console.log('handleSliceToggle()', isSelected);
 		this.setState({
 			slice         : -1,
+			scaleSize     : 1,
 			slicesVisible : isSelected
 		});
 	};

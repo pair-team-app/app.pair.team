@@ -79,6 +79,11 @@
 	margin-right: 15px;
 }
 
+.overlay-button-confirm-disabled {
+	background-color: #666666;
+	cursor: default;
+}
+
 .overlay-button-primary {
 	width: 100%;
 	background-color: #143cec;
