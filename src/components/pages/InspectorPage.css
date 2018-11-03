@@ -105,11 +105,11 @@
 }
 
 .inspector-page-panel-image-landscape {
-	width: 95%;
+	/*width: 75%;*/
 }
 
 .inspector-page-panel-image-portrait {
-	height: 95%;
+	/*height: 75%;*/
 }
 
 .inspector-page-panel-button-wrapper {

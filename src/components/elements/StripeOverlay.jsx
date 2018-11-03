@@ -1,9 +1,10 @@
 
 import React, { Component } from 'react';
 import './Overlay.css';
+import './StripeOverlay.css';
 
 import { Elements, StripeProvider } from 'react-stripe-elements';
-import { Row } from 'simple-flexbox';
+import { Column, Row } from 'simple-flexbox';
 
 import StripeCheckout from './StripeCheckout';
 import stripe from '../../json/stripe.json';
@@ -41,6 +42,27 @@ class StripeOverlay extends Component {
 						<div className="overlay-button-wrapper">
 							<button className="overlay-button overlay-button-confirm" onClick={()=> this.props.onClick('submit')}>Submit</button>
 						</div>
+						<Row horizontal="center">
+							<img className="stripe-overlay-logo" src="/images/stripe-logo.png" />
+						</Row>
+						<Row horizontal="space-between" style={{flexWrap:'wrap'}}>
+							<Column className="stripe-overlay-faq">
+								<div className="stripe-overlay-faq-title">Will Design Engine be a web app or desktop app?</div>
+								<div className="stripe-overlay-faq-content"><p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p></div>
+							</Column>
+							<Column className="stripe-overlay-faq">
+								<div className="stripe-overlay-faq-title">Will Design Engine be a web app or desktop app?</div>
+								<div className="stripe-overlay-faq-content"><p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p></div>
+							</Column>
+							<Column className="stripe-overlay-faq">
+								<div className="stripe-overlay-faq-title">Will Design Engine be a web app or desktop app?</div>
+								<div className="stripe-overlay-faq-content"><p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p></div>
+							</Column>
+							<Column className="stripe-overlay-faq">
+								<div className="stripe-overlay-faq-title">Will Design Engine be a web app or desktop app?</div>
+								<div className="stripe-overlay-faq-content"><p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p></div>
+							</Column>
+						</Row>
 					</div>
 				</Row></div>
 			</div>

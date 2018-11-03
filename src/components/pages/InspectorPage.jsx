@@ -73,14 +73,16 @@ class InspectorPage extends Component {
 						let slices = [];
 						response.data.artboard.slices.forEach(function(item, i) {
 							const meta = JSON.parse(item.meta);
-							slices.push({
-								id       : item.id,
-								title    : item.title,
-								type     : item.type,
-								filename : (item.type === 'slice') ? item.filename + '@1x.png' : 'https://via.placeholder.com/' + meta.frame.size.width + 'x'+ meta.frame.size.height,
-								meta     : meta,
-								added    : item.added
-							});
+							if (item.type !== 'background') {
+								slices.push({
+									id       : item.id,
+									title    : item.title,
+									type     : item.type,
+									filename : (item.type === 'slice') ? item.filename + '@1x.png' : 'https://via.placeholder.com/' + meta.frame.size.width + 'x' + meta.frame.size.height,
+									meta     : meta,
+									added    : item.added
+								});
+							}
 						});
 
 						const artboard = {
