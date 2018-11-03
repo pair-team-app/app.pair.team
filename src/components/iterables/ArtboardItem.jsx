@@ -31,7 +31,7 @@ class ArtboardItem extends Component {
 					<button className={btnClass} onClick={()=> this.handleSelect()}>
 						{(this.state.isSelected)
 							? <FontAwesome name="check" className="artboard-item-check" />
-							: 'Select'
+							: 'View'
 						}
 					</button>
 				</div>
