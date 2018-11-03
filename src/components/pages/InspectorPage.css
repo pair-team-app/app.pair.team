@@ -107,6 +107,22 @@
 	color: #000000;
 }
 
+.inspector-page-panel-image-slice {
+	border: 1px solid rgba(255, 153, 0, 0.5);
+}
+
+.inspector-page-panel-image-hotspot {
+	border: 1px solid rgba(0, 255, 0, 0.5);
+}
+
+.inspector-page-panel-image-textfield {
+	border: 1px solid rgba(30, 0, 155, 0.5);
+}
+
+.inspector-page-panel-image-background {
+	border: 1px solid rgba(102, 102, 102, 0.5);
+}
+
 .inspector-page-panel-image-landscape {
 	/*width: 75%;*/
 }
