@@ -94,6 +94,7 @@ class InspectorPage extends Component {
 							views     : response.data.artboard.views,
 							downloads : response.data.artboard.downloads,
 							added     : response.data.artboard.added,
+							system    : response.data.artboard.system,
 							slices    : slices,
 							comments  : response.data.artboard.comments
 						};
@@ -221,8 +222,8 @@ class InspectorPage extends Component {
 						</div>
 					</div>
 					<div className="inspector-page-panel-info-wrapper">
-						System: {this.state.system}<br />
-						Author: <a href={'mailto:' + this.state.author}>{this.state.author}</a><br />
+						System: {(artboard && artboard.system) ? artboard.system.title : 'N/A'}<br />
+						Author: <a href={'mailto:' + ((artboard && artboard.system) ? artboard.system.author : '#')} style={{textDecoration:'none'}}>{(artboard && artboard.system) ? artboard.system.author : 'N/A'}</a><br />
 						Page: {(page) ? page.title : 'N/A'}<br />
 						Artboard: {(artboard) ? artboard.title : 'N/A'}<br />
 						Name: {(slice) ? slice.title : 'N/A'} {(slice) ? '(' + slice.type.replace(/(\b\w)/gi, function(m) {return (m.toUpperCase());}) + ')' : ''}<br />
