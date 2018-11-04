@@ -42,6 +42,15 @@ class TopNav extends Component {
 						key      : 'uploads'
 					});
 				});
+
+				uploads.push({
+					id       : -1,
+					title    : 'Upload',
+					added    : '0000-00-00 00:00:00',
+					selected : false,
+					key      : 'uploads'
+				});
+
 				this.setState({ uploads : uploads });
 
 				formData.append('action', 'COLORS');
