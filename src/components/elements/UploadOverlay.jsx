@@ -165,6 +165,7 @@ class UploadOverlay extends Component {
 						</div>
 					)}
 					<div className="overlay-container"><Row horizontal="center">
+						<div className="overlay-close-background" onClick={()=> this.props.onClick('cancel')} />
 						<div className="overlay-content">
 							<div className="page-header">
 								<Row horizontal="center"><div className="page-header-text">{title}</div></Row>

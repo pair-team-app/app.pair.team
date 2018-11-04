@@ -91,6 +91,7 @@ class RegisterOverlay extends Component {
 
 		return (
 			<div className="overlay-wrapper">
+				<div className="overlay-close-background" onClick={()=> this.props.onClick('cancel')} />
 				<div className="overlay-container"><Row horizontal="center">
 					<div className="overlay-content">
 						<div className="page-header">
