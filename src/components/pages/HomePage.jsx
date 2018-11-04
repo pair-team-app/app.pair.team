@@ -95,7 +95,7 @@ class HomePage extends Component {
 						<ArtboardItem
 							title={item.title}
 							image={item.filename}
-							size={(item.meta.frame.size.width > item.meta.frame.size.height) ? 'landscape' : 'portrait'}
+							size="landscape"//{(item.meta.frame.size.width > item.meta.frame.size.height || item.meta.frame.size.width === item.meta.frame.size.height) ? 'landscape' : 'portrait'}
 							onClick={() => this.handleSelect(item.id)}
 							onSelect={(isSelected) => this.handleToggle(item.id, isSelected)} />
 					</Column>
