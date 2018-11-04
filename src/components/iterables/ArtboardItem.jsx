@@ -27,7 +27,7 @@ class ArtboardItem extends Component {
 			<div className="artboard-item" onClick={()=> this.props.onClick()}>
 				<img className={imageClass} src={this.props.image} alt={this.props.title} />
 				<div className="artboard-item-details-wrapper">
-					<div className={titleClass}>{this.props.title}</div>
+					<div className={titleClass}>{(this.props.title.length > 25) ? (this.props.title.substring(0, 24) + '…') : this.props.title}</div>
 					<button className={btnClass} onClick={()=> this.handleSelect()}>
 						{(this.state.isSelected)
 							? <FontAwesome name="check" className="artboard-item-check" />
