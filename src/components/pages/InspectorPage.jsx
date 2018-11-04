@@ -22,7 +22,7 @@ class InspectorPage extends Component {
 			pageID        : 0,
 			artboardID    : 0,
 			slice         : -1,
-			scaleSize     : 1,
+			scaleSize     : 3,
 			page          : null,
 			artboard      : null,
 			code          : '#block {<br>&nbsp;&nbsp;width: 100%;<br>&nbsp;&nbsp;color: #ffffff;<br>}',
