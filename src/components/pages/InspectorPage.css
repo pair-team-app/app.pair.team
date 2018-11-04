@@ -30,6 +30,11 @@
 	-webkit-transform: translate(-50%, -50%);
 }
 
+.inspector-page-hero-image {
+	max-width: 300%;
+	max-height: 300%;
+}
+
 .inspector-page-hero-slice-wrapper {
 	z-index: 2;
 }
