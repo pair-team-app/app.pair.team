@@ -126,7 +126,7 @@ class HomePage extends Component {
 					</div>
 				)}
 
-				<Row horizontal="space-between" style={{flexWrap:'wrap'}}>
+				<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
 					{items}
 				</Row>
 			</div>
