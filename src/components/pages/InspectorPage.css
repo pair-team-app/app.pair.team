@@ -162,6 +162,10 @@
 	font-size: 12px;
 }
 
+.inspector-page-size-button-selected, .inspector-page-code-button-selected {
+	background-color: #111111;
+}
+
 .inspector-page-size-button-middle, .inspector-page-code-button-middle {
 	margin: 0 1px;
 }

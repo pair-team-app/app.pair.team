@@ -230,9 +230,9 @@ class InspectorPage extends Component {
 					</div>
 					<div className="inspector-page-panel-button-wrapper">
 						<div>
-							<button className="inspector-page-size-button" onClick={()=> this.handleSizeChange(1)}>1x</button>
-							<button className="inspector-page-size-button inspector-page-size-button-middle" onClick={()=> this.handleSizeChange(2)}>2x</button>
-							<button className="inspector-page-size-button" onClick={()=> this.handleSizeChange(3)}>3x</button>
+							<button className={'inspector-page-size-button' + ((this.state.scaleSize === 1) ? ' inspector-page-size-button-selected' : '')} onClick={()=> this.handleSizeChange(1)}>1x</button>
+							<button className={'inspector-page-size-button inspector-page-size-button-middle' + ((this.state.scaleSize === 2) ? ' inspector-page-size-button-selected' : '')} onClick={()=> this.handleSizeChange(2)}>2x</button>
+							<button className={'inspector-page-size-button' + ((this.state.scaleSize === 3) ? ' inspector-page-size-button-selected' : '')} onClick={()=> this.handleSizeChange(3)}>3x</button>
 						</div>
 						<div><button className="inspector-page-download-button">Download</button></div>
 					</div>
