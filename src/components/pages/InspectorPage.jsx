@@ -209,7 +209,7 @@ class InspectorPage extends Component {
 							<Column flexGrow={1} horizontal="end"><SliceToggle onClick={(isSelected)=> this.handleSliceToggle(isSelected)} /></Column>
 						</Row></div>
 					</div>
-					<textarea className="inspector-page-comment-txt" name="comment" placeholder="Enter Comment Here" value={this.state.comment} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} />
+					<textarea className="inspector-page-comment-txt" name="comment" placeholder="" value={this.state.comment} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} />
 					<button className={commentButtonClass} onClick={()=> this.submitComment()}>Submit</button>
 
 					<div className="inspector-page-hero-info-wrapper">
