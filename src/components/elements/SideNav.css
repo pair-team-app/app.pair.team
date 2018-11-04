@@ -13,9 +13,7 @@
 }
 
 .side-nav-bottom-wrapper {
-	/*position: absolute;*/
-	/*bottom: 100px;*/
-	/*left: 28px;*/
+	padding: 100px 0 80px 0;
 }
 
 .side-nav-invite-button {
