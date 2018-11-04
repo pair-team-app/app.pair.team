@@ -4,6 +4,7 @@ import './InspectorPage.css';
 
 import axios from 'axios';
 import cookie from 'react-cookies';
+import { Column, Row } from 'simple-flexbox';
 
 import CommentItem from '../iterables/CommentItem';
 import SliceItem from '../iterables/SliceItem';
@@ -141,6 +142,14 @@ class InspectorPage extends Component {
 	};
 
 	render() {
+		const tsOptions = {
+			year   : 'numeric',
+			month  : 'numeric',
+			day    : 'numeric',
+			hour   : 'numeric',
+			minute : 'numeric'
+		};
+
 		const page = (this.state.page) ? this.state.page : null;
 		const artboard = (this.state.artboard) ? this.state.artboard : null;
 		const slice = (this.state.artboard) ? (this.state.slice > -1) ? this.state.artboard.slices[this.state.slice] : null : null;
@@ -186,6 +195,8 @@ class InspectorPage extends Component {
 				/>);
 		}) : [];
 
+		console.log('slice', slice);
+
 		return (
 			<div className="inspector-page-wrapper">
 				<div className="inspector-page-content">
@@ -194,9 +205,10 @@ class InspectorPage extends Component {
 						<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>
 							{slices}
 						</div>
-						<div className="inspector-page-hero-switch">
-							<SliceToggle onClick={(isSelected)=> this.handleSliceToggle(isSelected)} />
-						</div>
+						<div className="inspector-page-hero-title-wrapper"><Row>
+							<Column flexGrow={1} horizontal="start">{(artboard) ? artboard.title : 'N/A'}</Column>
+							<Column flexGrow={1} horizontal="end"><SliceToggle onClick={(isSelected)=> this.handleSliceToggle(isSelected)} /></Column>
+						</Row></div>
 					</div>
 					<textarea className="inspector-page-comment-txt" name="comment" placeholder="Enter Comment Here" value={this.state.comment} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} />
 					<button className={commentButtonClass} onClick={()=> this.submitComment()}>Submit</button>
@@ -222,38 +234,37 @@ class InspectorPage extends Component {
 							<button className="inspector-page-size-button inspector-page-size-button-middle" onClick={()=> this.handleSizeChange(2)}>2x</button>
 							<button className="inspector-page-size-button" onClick={()=> this.handleSizeChange(3)}>3x</button>
 						</div>
-						<div>
-							<button className="inspector-page-download-button">Download Parts</button>
-						</div>
+						<div><button className="inspector-page-download-button">Download</button></div>
 					</div>
 					<div className="inspector-page-panel-info-wrapper">
-						System: {(artboard && artboard.system) ? artboard.system.title : 'N/A'}<br />
-						Author: <a href={'mailto:' + ((artboard && artboard.system) ? artboard.system.author : '#')} style={{textDecoration:'none'}}>{(artboard && artboard.system) ? artboard.system.author : 'N/A'}</a><br />
-						Page: {(page) ? page.title : 'N/A'}<br />
-						Artboard: {(artboard) ? artboard.title : 'N/A'}<br />
-						Name: {(slice) ? slice.title : 'N/A'} {(slice) ? '(' + slice.type.replace(/(\b\w)/gi, function(m) {return (m.toUpperCase());}) + ')' : ''}<br />
-						Position: ({(slice) ? slice.meta.frame.origin.x : '0'}, {(slice) ? slice.meta.frame.origin.y : 0})<br />
-						Scale: {(this.state.scaleSize + 'x')}<br />
-						Size: {(slice) ? (slice.meta.frame.size.width * this.state.scaleSize) : 0} &times; {(slice) ? (slice.meta.frame.size.height * this.state.scaleSize) : 0}<br />
-						Rotation: {(slice) ? slice.meta.rotation : 0}&deg;<br />
-						Opacity: {(slice) ? slice.meta.opacity : '100%'}<br />
-						Color: {(slice) ? slice.meta.fillColor : 'N/A'}<br />
-						Font: {(slice && slice.meta.font.family) ? slice.meta.font.family : 'N/A'}<br />
-						Font Size: {(slice && slice.meta.font.size) ? slice.meta.font.size : 'N/A'}<br />
-						{/*Font Color: {(slice && slice.meta.font.color) ? slice.meta.font.color : 'N/A'}<br />*/}
-						Font Color: N/A<br />
-						Blend Mode: {(slice) ? slice.meta.blendMode.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) : 'N/A'}<br />
+						<Row><Column flexGrow={1}>System</Column><Column flexGrow={1} horizontal="end">{(artboard && artboard.system) ? artboard.system.title : 'N/A'}</Column></Row>
+						<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end"><a href={'mailto:' + ((artboard && artboard.system) ? artboard.system.author : '#')} style={{textDecoration:'none'}}>{(artboard && artboard.system) ? artboard.system.author : 'N/A'}</a></Column></Row>
+						<Row><Column flexGrow={1}>Page</Column><Column flexGrow={1} horizontal="end">{(page) ? page.title : 'N/A'}</Column></Row>
+						<Row><Column flexGrow={1}>Artboard</Column><Column flexGrow={1} horizontal="end">{(artboard) ? artboard.title : 'N/A'}</Column></Row>
+						<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end">{(slice) ? slice.title : 'N/A'} {(slice) ? '(' + slice.type.replace(/(\b\w)/gi, function(m) {return (m.toUpperCase());}) + ')' : ''}</Column></Row>
+						<Row><Column flexGrow={1}>Added</Column><Column flexGrow={1} horizontal="end">{(slice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(slice.added))).replace(',', '').toLowerCase().replace(/ (.{2})$/g, '$1') : 'N/A'}</Column></Row>
+						<Row><Column flexGrow={1}>Position</Column><Column flexGrow={1} horizontal="end">({(slice) ? slice.meta.frame.origin.x : '0'}, {(slice) ? slice.meta.frame.origin.y : 0})</Column></Row>
+						<Row><Column flexGrow={1}>Size</Column><Column flexGrow={1} horizontal="end">{(slice) ? (slice.meta.frame.size.width * this.state.scaleSize) : 0} &times; {(slice) ? (slice.meta.frame.size.height * this.state.scaleSize) : 0}</Column></Row>
 					</div>
 					<div className="inspector-page-panel-code-wrapper">
 						<div className="inspector-page-panel-code"><span dangerouslySetInnerHTML={{ __html : this.state.code }} /></div>
-						<div className="inspector-page-panel-button-wrapper">
-							<div>
-								<button className="inspector-page-code-button">CSS</button>
-								<button className="inspector-page-code-button inspector-page-code-button-middle">Swift</button>
-								<button className="inspector-page-code-button">Java</button>
-							</div>
-						</div>
-						<button className="inspector-page-copy-code-button">Copy Code</button>
+						<div className="inspector-page-panel-button-wrapper"><div>
+							<button className="inspector-page-code-button">CSS</button>
+							<button className="inspector-page-code-button inspector-page-code-button-middle">Swift</button>
+							<button className="inspector-page-code-button">Java</button>
+						</div></div>
+						<button className="inspector-page-copy-code-button">Copy</button>
+					</div>
+					<div className="inspector-page-panel-info-wrapper">
+						<Row><Column flexGrow={1}>Scale</Column><Column flexGrow={1} horizontal="end">{(this.state.scaleSize + 'x')}</Column></Row>
+						<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end">{(slice) ? slice.meta.rotation : 0}&deg;</Column></Row>
+						<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end">{(slice) ? (slice.meta.opacity * 100) : 100}%</Column></Row>
+						<Row><Column flexGrow={1}>Color</Column><Column flexGrow={1} horizontal="end">{(slice) ? slice.meta.fillColor.toUpperCase() : 'N/A'}</Column></Row>
+						<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end">{(slice && slice.meta.font.family) ? slice.meta.font.family : 'N/A'}</Column></Row>
+						<Row><Column flexGrow={1}>Font Size</Column><Column flexGrow={1} horizontal="end">{(slice && slice.meta.font.size) ? slice.meta.font.size : 'N/A'}</Column></Row>
+						{/*<Row><Column flexGrow={1}>Font Color: {(slice && slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : 'N/A'}</Column></Row>*/}
+						<Row><Column flexGrow={1}>Font Color</Column><Column flexGrow={1} horizontal="end">N/A</Column></Row>
+						<Row><Column flexGrow={1}>Blend Mode</Column><Column flexGrow={1} horizontal="end">{(slice) ? slice.meta.blendMode.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) : 'N/A'}</Column></Row>
 					</div>
 				</div>
 			</div>
