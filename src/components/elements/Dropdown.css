@@ -5,7 +5,7 @@
 	-ms-user-select: none;
 	user-select: none;
 	position: relative;
-	width: 222px;
+	width: 100%;
 	display: inline-block;
 	margin: 0 28px 0 0;
 }
@@ -25,7 +25,7 @@
 	position: relative;
 	background-color: #3e3e3e;
 	color: #ffffff;
-	padding: 4px 14px;
+	padding: 6px 14px;
 }
 
 .dd-header span {
