@@ -134,24 +134,30 @@ class TopNav extends Component {
 				</Row></div>
 
 				<div className="top-nav-column top-nav-column-middle">
-					{(typeof cookie.load('upload_id') !== 'undefined') && (<div>
-						<Dropdown
-							title="iOS 12 Design System"
-							list={this.state.uploads}
-							resetThenSet={this.resetThenSet}
-						/>
-						<DropdownMultiple
-							titleHelper="Device"
-							title="Device(s)"
-							list={this.state.devices}
-							toggleItem={this.toggleSelected}
-						/>
-						<Dropdown
-							title="Light Theme"
-							list={this.state.colors}
-							resetThenSet={this.resetThenSet}
-						/>
-					</div>)}
+					{(typeof cookie.load('upload_id') !== 'undefined') && (<Row>
+						<Column flexGrow={1} horizontal="start" vertical="center" style={{marginRight:'28px'}}>
+							<Dropdown
+								title="iOS 12 Design System"
+								list={this.state.uploads}
+								resetThenSet={this.resetThenSet}
+							/>
+						</Column>
+						<Column flexGrow={1} horizontal="start" vertical="center" style={{marginRight:'28px'}}>
+							<DropdownMultiple
+								titleHelper="Device"
+								title="Device(s)"
+								list={this.state.devices}
+								toggleItem={this.toggleSelected}
+							/>
+						</Column>
+						<Column flexGrow={1} horizontal="start" vertical="center" style={{marginRight:'28px'}}>
+							<Dropdown
+								title="Light Theme"
+								list={this.state.colors}
+								resetThenSet={this.resetThenSet}
+							/>
+						</Column>
+					</Row>)}
 				</div>
 
 				<div className="top-nav-column top-nav-column-right">

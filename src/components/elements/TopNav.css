@@ -18,11 +18,13 @@
 }
 
 .top-nav-column-middle {
+	width: 800px;
 }
 
 .top-nav-column-right {
 	padding-right: 28px;
 	text-align: right;
+
 }
 
 .nav-logo {
@@ -33,7 +35,7 @@
 
 .top-nav-upload-button {
 	margin-right: 28px;
-	padding: 5px 12px;
+	padding: 7px 12px;
 	border-radius: 3px;
 }
 
