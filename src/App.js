@@ -35,7 +35,6 @@ class App extends Component {
 			userID        : 0
 		};
 
-		this.uploadInterval = null;
 		cookie.save('user_id', (typeof cookie.load('user_id') === 'undefined') ? 0 : cookie.load('user_id'));
 		cookie.save('upload_id', (typeof cookie.load('upload_id') === 'undefined') ? 112 : cookie.load('upload_id'));
 	}
@@ -151,10 +150,6 @@ class App extends Component {
 			window.location.reload();
 
 		} else if (overlayType === 'upload' && buttonType === 'upload') {
-// 			let self = this;
-// 			this.uploadInterval = setInterval(function() {
-// 				self.uploadRefresh();
-// 			}, 1000);
 		}
 	};
 

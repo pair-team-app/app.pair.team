@@ -12,6 +12,7 @@ class UploadOverlay extends Component {
 		super(props);
 		this.state = {
 			title          : '',
+			status         : '',
 			description    : '',
 			files          : [],
 			uploading      : false,
@@ -25,6 +26,8 @@ class UploadOverlay extends Component {
 			email2Valid    : false,
 			email3Valid    : false
 		};
+
+		this.uploadInterval = null;
 	}
 
 	onDragEnter() {}
@@ -68,6 +71,39 @@ class UploadOverlay extends Component {
 		this.setState({
 			uploading      : false,
 			uploadComplete : true
+		});
+
+		let formData = new FormData();
+		formData.append('action', 'UPLOAD');
+		formData.append('user_id', cookie.load('user_id'));
+		formData.append('title', this.state.title);
+		formData.append('filename', "http://cdn.designengine.ai/system/" + this.state.files[0].name);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+				console.log('UPLOAD', response.data);
+				cookie.save('upload_id', response.data.upload_id, { path : '/' });
+
+				let self = this;
+				this.uploadInterval = setInterval(function() {
+					self.statusInterval();
+				}, 1000);
+			}).catch((error) => {
+		});
+	};
+
+	statusInterval = ()=> {
+		let formData = new FormData();
+		formData.append('action', 'UPLOAD_STATUS');
+		formData.append('upload_id', cookie.load('upload_id'));
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+				console.log('UPLOAD_STATUS', response.data);
+				if (response.data.message === 'Processing complete') {
+					clearInterval(this.uploadInterval);
+				}
+
+				this.setState({ status : response.data.message });
+			}).catch((error) => {
 		});
 	};
 
@@ -118,16 +154,12 @@ class UploadOverlay extends Component {
 	submit = ()=> {
 		if (this.state.uploadComplete) {
 			let formData = new FormData();
-			formData.append('action', 'UPLOAD');
-			formData.append('user_id', cookie.load('user_id'));
+			formData.append('action', 'UPLOAD_EDIT');
+			formData.append('upload_id', cookie.load('upload_id'));
 			formData.append('title', this.state.title);
-			formData.append('filename', "http://cdn.designengine.ai/system/" + this.state.files[0].name);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
-					console.log('UPLOAD', response.data);
-					cookie.save('upload_id', response.data.upload_id, { path : '/' });
-					this.setState({ files : [] });
-					this.props.onClick('upload');
+					console.log('UPLOAD_EDIT', response.data);
 				}).catch((error) => {
 			});
 		}
@@ -149,7 +181,7 @@ class UploadOverlay extends Component {
 		const nextButtonClass = (this.state.uploadComplete) ? 'overlay-button overlay-button-confirm' : 'overlay-button overlay-button-confirm overlay-button-confirm-disabled';
 
 // 		const { files } = this.state;
-		const title = (cookie.load('user_id') !== '0') ? (this.state.uploading) ? 'Loading ' + this.state.percent + '%…' : (this.state.uploadComplete) ? 'Project Ready' : 'Drag anywhere to start upload' : 'You need to be signed in';
+		const title = (cookie.load('user_id') !== '0') ? (this.state.uploading) ? 'Loading ' + this.state.percent + '%…' : (this.state.uploadComplete) ? this.state.status : 'Drag anywhere to start upload' : 'You need to be signed in';
 		return (
 			<Dropzone
 				disableClick

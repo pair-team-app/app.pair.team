@@ -70,7 +70,7 @@ class TopNav extends Component {
 						this.setState({ colors : colors });
 
 						formData.append('action', 'DEVICES');
-						formData.append('artboard_id', this.props.artboardID);
+						formData.append('upload_id', cookie.load('upload_id'));
 						axios.post('https://api.designengine.ai/system.php', formData)
 							.then((response) => {
 								console.log('DEVICES', response.data);
@@ -109,8 +109,13 @@ class TopNav extends Component {
 		this.setState({ [key] : tmp });
 
 		if (key === 'uploads') {
-			cookie.save('upload_id', tmp[ind].id);
-			window.location.reload();
+			if (tmp[ind].id !== -1) {
+				cookie.save('upload_id', tmp[ind].id);
+				window.location = '/';
+
+			} else {
+				this.props.onUpload();
+			}
 		}
 	};
 
@@ -131,20 +136,20 @@ class TopNav extends Component {
 				<div className="top-nav-column top-nav-column-middle">
 					{(typeof cookie.load('upload_id') !== 'undefined') && (<div>
 						<Dropdown
-							title="Design system"
+							title="iOS 12 Design System"
 							list={this.state.uploads}
 							resetThenSet={this.resetThenSet}
 						/>
-						<Dropdown
-							title="Device"
-							list={this.state.devices}
-							resetThenSet={this.resetThenSet}
-						/>
 						<DropdownMultiple
-							titleHelper="Theme"
-							title="Theme(s)"
-							list={this.state.colors}
+							titleHelper="Device"
+							title="Device(s)"
+							list={this.state.devices}
 							toggleItem={this.toggleSelected}
+						/>
+						<Dropdown
+							title="Light Theme"
+							list={this.state.colors}
+							resetThenSet={this.resetThenSet}
 						/>
 					</div>)}
 				</div>
