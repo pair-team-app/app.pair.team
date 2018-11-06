@@ -40,20 +40,16 @@ class HomePage extends Component {
 			.then((response)=> {
 				console.log('ARTBOARDS', response.data);
 
-				let artboards = [];
-				response.data.artboards.forEach(function(item, i) {
-					artboards.push({
-						id       : item.id,
-						pageID   : item.page_id,
-						title    : item.title,
-						type     : item.type,
-						filename : item.filename,
-						meta     : JSON.parse(item.meta),
-						added    : item.added,
-						selected : false
-					});
-				});
-
+				const artboards = response.data.artboards.map((item) => ({
+					id       : item.id,
+					pageID   : item.page_id,
+					title    : item.title,
+					type     : item.type,
+					filename : item.filename,
+					meta     : JSON.parse(item.meta),
+					added    : item.added,
+					selected : false
+				}));
 				this.setState({ artboards : artboards });
 			}).catch((error) => {
 		});
