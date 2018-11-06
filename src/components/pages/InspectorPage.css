@@ -51,16 +51,10 @@
 	position: absolute;
 	bottom: 0;
 	left: 0;
-	background-color: #212121;
+	/*background-color: #212121;*/
 	width: 100%;
 	height: 76px;
 	padding: 28px;
-}
-
-.inspector-page-hero-switch {
-	position: absolute;
-	bottom: 14px;
-	right: 14px;
 }
 
 .inspector-page-hero-info-wrapper {
@@ -74,7 +68,7 @@
 }
 
 .inspector-page-comment-txt {
-	height: 75px;
+	height: 125px;
 	background-color: #000000;
 	color: #999999;
 	border: none;
@@ -87,19 +81,11 @@
 	width: 100%;
 }
 
-.inspector-page-comment-button-disabled {
-	background-color: #333333;
-}
-
-.inspector-page-comment-button-disabled:hover {
-	cursor: default;
-}
-
 .inspector-page-panel {
 	width: 400px;
 	height: 100%;
 	padding: 28px;
-	background-color: #242424;
+	/*background-color: #242424;*/
 	display: table-cell;
 	vertical-align: top;
 	font-weight: 200;

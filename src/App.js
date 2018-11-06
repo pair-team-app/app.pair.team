@@ -27,9 +27,9 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			pageID     : (window.location.pathname.includes('/render/')) ? window.location.pathname.match(/render\/(\d+)\/\d+\/(\d+)?/)[1] : 0,
-			artboardID : (window.location.pathname.includes('/render/')) ? window.location.pathname.match(/render\/\d+\/(\d+)\/(\d+)?/)[1] : 0,
-			sliceID    : (window.location.pathname.includes('/render/')) ? window.location.pathname.match(/render\/\d+\/\d+\/(\d+)?/)[1] : 0,
+			pageID     : (window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/(\d+)\/.*$/)[1] : 0,
+			artboardID : (window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/(\d+)\/.*$/)[1] : 0,
+			sliceID    : 0,//(window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/.+\/(\d+)?/)[1] : 0,
 			selectedArtboards : [],
 			overlayAlert  : null,
 			userID        : 0
@@ -75,7 +75,7 @@ class App extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
-				this.props.history.push('/render/' + obj.pageID + '/' + obj.id + '/');
+				this.props.history.push('/artboard/' + obj.pageID + '/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
 				this.setState({
 					pageID     : obj.pageID,
 					artboardID : obj.id
@@ -86,8 +86,8 @@ class App extends Component {
 
 	handleSideNavSliceItem = (obj)=> {
 		console.log('handleSideNavSliceItem()', obj);
-		this.props.history.push('/render/' + this.state.pageID + '/' + this.state.artboardID + '/' + obj.id);
-		this.setState({ sliceID : obj.id });
+// 		this.props.history.push('/artboard/' + this.state.pageID + '/' + this.state.artboardID + '/' + obj.id);
+// 		this.setState({ sliceID : obj.id });
 	};
 
 	handleUpload = ()=> {
@@ -133,7 +133,7 @@ class App extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
-				this.props.history.push('/render/' + obj.pageID + '/' + obj.id + '/');
+				this.props.history.push('/artboard/' + obj.pageID + '/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
 				this.setState({
 					pageID     : obj.pageID,
 					artboardID : obj.id
@@ -194,8 +194,8 @@ class App extends Component {
 			    <Route exact path="/developer" component={DevelopersPage} />
 			    <Route exact path="/mission" component={MissionPage} />
 			    <Route exact path="/privacy" component={PrivacyPage} />
-			    <Route path="/render/:pageID/:artboardID/" component={InspectorPage} />
-			    <Route path="/render/:pageID/:artboardID/:sliceID" component={InspectorPage} />
+			    <Route path="/artboard/:pageID/:artboardID/:artboardName" component={InspectorPage} />
+			    <Route path="/artboard/:pageID/:artboardID/:artboardName/:sliceID" component={InspectorPage} />
 			    <Route exact path="/terms" component={TermsPage} />
 		    </div>
 
