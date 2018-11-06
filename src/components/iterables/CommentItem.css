@@ -2,6 +2,7 @@
 .comment-item {
 	margin: 28px 0;
 	display: table;
+	font-size: 12px;
 }
 
 .comment-item-avatar {
@@ -11,6 +12,28 @@
 	margin: 0 10px 0 0;
 }
 
+.comment-item-vote-wrapper {
+	display: table-cell;
+	vertical-align: top;
+	text-align: center;
+	padding: 0 4px 0 4px;
+}
+
+.comment-item-arrow {
+	font-size: 14px;
+}
+
+.comment-item-arrow:hover {
+	cursor: pointer;
+}
+
+.comment-item-arrow-voted {
+	color: #7ed321;
+}
+
+.comment-item-score {
+}
+
 .comment-item-content-wrapper {
 	padding: 4px;
 	display: table-cell;
@@ -18,7 +41,6 @@
 }
 
 .comment-item-date {
-	font-size: 12px;
 	margin-bottom: 3px;
 }
 
