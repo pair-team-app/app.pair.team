@@ -26,7 +26,7 @@ class CommentItem extends Component {
 			<div className="comment-item">
 				<img className="comment-item-avatar" src="/images/default-avatar.png" alt={this.props.author} />
 				<div className="comment-item-content-wrapper">
-					<div className="comment-item-date">{(new Intl.DateTimeFormat('en-US', options).format(Date.parse(this.props.added))).replace(',', '').toLowerCase().replace(/ (.{2})$/g, '$1')}</div>
+					<div className="comment-item-date">{(new Intl.DateTimeFormat('en-US', options).format(Date.parse(this.props.added))).replace(',', '').replace(/ (.{2})$/g, '$1').toLowerCase()}</div>
 					<div className="comment-item-text">{this.props.content}</div>
 				</div>
 			</div>

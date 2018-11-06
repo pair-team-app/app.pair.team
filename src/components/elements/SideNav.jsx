@@ -31,7 +31,7 @@ class SideNav extends Component {
 
 	componentDidUpdate(prevProps) {
 		console.log("SideNav.componentDidUpdate()", this.props, prevProps);
-		if (window.location.pathname.includes('/render/')) {
+		if (window.location.pathname.includes('/artboard/')) {
 			if (this.props.pageID !== prevProps.pageID && this.props.artboardID !== prevProps.artboardID) {
 				const { pageID, artboardID, sliceID } = this.props;
 
@@ -119,7 +119,7 @@ class SideNav extends Component {
 	};
 
 	refreshData = ()=> {
-		if (window.location.pathname.includes('/render/')) {
+		if (window.location.pathname.includes('/artboard/')) {
 			const { pageID, artboardID } = this.props;
 
 			let formData = new FormData();
@@ -224,17 +224,15 @@ class SideNav extends Component {
 	};
 
 	render() {
-		console.log('SideNav.render()', this.state);
-
 		return (
 			<div className="side-nav-wrapper">
 				<div className="side-nav-link-wrapper">
 					<div className="side-nav-top-wrapper">
 						<button className="side-nav-invite-button" onClick={()=> this.props.onInvite()}>Invite Team Members</button>
-						{(window.location.pathname === '/' && this.state.pageID !== -1) && (<div className="nav-link" onClick={()=> this.handleNavItem('top', 0)}>Top Views</div>)}
+						{/*{(window.location.pathname === '/' && this.state.pageID !== -1) && (<div className="nav-link" onClick={()=> this.handleNavItem('top', 0)}>Top Views</div>)}*/}
 						{(window.location.pathname === '/' && this.state.pageID === -1) && (<div className="nav-link page-tree-item-text-selected" onClick={()=> this.handleNavItem('top', 0)}><img className="artboard-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />Top Views</div>)}
 						{(window.location.pathname !== '/') && (<SideNavBack onClick={()=> this.props.onBack()} />)}
-						{(window.location.pathname.includes('/render/'))
+						{(window.location.pathname.includes('/artboard/'))
 							? this.state.artboards.map((artboard, i)=> {
 								return (
 									<ArtboardTreeItem

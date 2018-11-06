@@ -179,7 +179,7 @@ class UploadOverlay extends Component {
 		const titleClass = 'input-wrapper';
 		const descriptionClass = 'input-wrapper';
 
-		const nextButtonClass = (this.state.uploadComplete) ? 'overlay-button overlay-button-confirm' : 'overlay-button overlay-button-confirm overlay-button-confirm-disabled';
+		const nextButtonClass = (this.state.uploadComplete) ? 'overlay-button overlay-button-confirm' : 'overlay-button overlay-button-confirm button-disabled';
 
 // 		const { files } = this.state;
 		const title = (cookie.load('user_id') !== '0') ? (this.state.uploading) ? 'Loading ' + this.state.percent + '%…' : (this.state.uploadComplete) ? this.state.status : 'Drag here to start upload' : 'You need to be signed in';

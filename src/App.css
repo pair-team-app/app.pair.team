@@ -66,6 +66,14 @@
 	width: 100%;
 }
 
+.button-disabled {
+	background-color: #333333;
+}
+
+.button-disabled:hover {
+	cursor: default;
+}
+
 .text-underline {
 	text-decoration: underline;
 }
