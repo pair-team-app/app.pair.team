@@ -94,24 +94,6 @@ class ArtboardTreeItem extends Component {
 		return (
 			<div className="artboard-tree-item">
 				<div className={textClass} onClick={()=> this.props.onClick()}><img className="artboard-tree-item-arrow" src={(this.props.selected) ? '/images/chevron-down.svg' : '/images/chevron-right.svg'} alt="chevron" />{this.props.title}</div>
-				{(this.props.selected) && (<div>
-					<div className="artboard-tree-item-slices">
-						<img className="artboard-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />Slices
-					</div>
-					{slices}
-					<div className="artboard-tree-item-hotspots">
-						<img className="artboard-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />Hotspots
-					</div>
-					{hotspots}
-					<div className="artboard-tree-item-textfields">
-						<img className="artboard-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />Textfields
-					</div>
-					{textfields}
-					<div className="artboard-tree-item-backgrounds">
-						<img className="artboard-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />Backgrounds
-					</div>
-					{backgrounds}
-				</div>)}
 			</div>
 		);
 	}
