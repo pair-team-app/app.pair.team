@@ -1,6 +1,10 @@
 
 .slice-toggle {
+	margin-right: 28px;
+}
 
+.slice-toggle-last {
+	margin-right: 0;
 }
 
 .slice-toggle:hover {
@@ -8,6 +12,6 @@
 }
 
 .slice-toggle-image {
-	width: 50px;
-	height: 25px;
+	width: 14px;
+	height: 14px;
 }

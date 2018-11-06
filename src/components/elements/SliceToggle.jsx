@@ -18,13 +18,16 @@ class SliceTreeItem extends Component {
 		let selected = !this.state.selected;
 
 		this.setState({ selected : selected });
-		this.props.onClick(selected);
+		this.props.onClick(this.props.type, selected);
 	};
 
 	render() {
+		const className = (this.props.last) ? 'slice-toggle slice-toggle-last' : 'slice-toggle';
+		const icon = (this.props.type === 'slice') ? '/images/layer-slice' : (this.props.type === 'hotspot') ? '/images/layer-hotspot' : (this.props.type === 'textfield') ? '/images/layer-textfield' : '/images/layer-background';
+
 		return (
-			<div className="slice-toggle" onClick={()=> this.handleClick()}>
-				<img className="slice-toggle-image" src={(this.state.selected) ? '/images/slice-toggle_on.svg' : '/images/slice-toggle_off.svg'} alt="Toggle" />
+			<div className={className} onClick={()=> this.handleClick()}>
+				<img className="slice-toggle-image" src={(this.state.selected) ? icon + '_selected.svg' : icon + '.svg'} alt="Toggle" />
 			</div>
 		);
 	}
