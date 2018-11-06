@@ -33,7 +33,12 @@ class InspectorPage extends Component {
 				syntax : '#block {width: 100%; color: #ffffff;}'
 			},
 			comment       : '',
-			slicesVisible : true,
+			visibleTypes  : {
+				slice      : true,
+				hotspot    : true,
+				textfield  : true,
+				background : true
+			},
 			languages     : [{
 				id       : 1,
 				title    : 'CSS/HTML',
@@ -95,45 +100,44 @@ class InspectorPage extends Component {
 					.then((response)=> {
 						console.log('ARTBOARD', response.data);
 
-						let slices = [];
-						response.data.artboard.slices.forEach(function(item, i) {
-							const meta = JSON.parse(item.meta);
-							slices.push({
-								id       : item.id,
-								title    : item.title,
-								type     : item.type,
-								filename : (item.type === 'slice') ? item.filename : 'https://via.placeholder.com/' + meta.frame.size.width + 'x' + meta.frame.size.height,
-								meta     : meta,
-								added    : item.added
-							});
+						const slices =response.data.artboard.slices.map((item)=> ({
+							id       : item.id,
+							title    : item.title,
+							type     : item.type,
+							filename : (item.type === 'slice') ? item.filename : 'https://via.placeholder.com/' + JSON.parse(item.meta).frame.size.width + 'x' + JSON.parse(item.meta).frame.size.height,
+							meta     : JSON.parse(item.meta),
+							added    : item.added
+						}));
+
+						this.setState({
+							artboard : {
+								id        : response.data.artboard.id,
+								pageID    : response.data.artboard.page_id,
+								title     : response.data.artboard.title,
+								filename  : response.data.artboard.filename,
+								meta      : JSON.parse(response.data.artboard.meta),
+								views     : response.data.artboard.views,
+								downloads : response.data.artboard.downloads,
+								added     : response.data.artboard.added,
+								system    : response.data.artboard.system,
+								slices    : slices,
+								comments  : response.data.artboard.comments
+							}
 						});
-
-						const artboard = {
-							id        : response.data.artboard.id,
-							pageID    : response.data.artboard.page_id,
-							title     : response.data.artboard.title,
-							filename  : response.data.artboard.filename,
-							meta      : JSON.parse(response.data.artboard.meta),
-							views     : response.data.artboard.views,
-							downloads : response.data.artboard.downloads,
-							added     : response.data.artboard.added,
-							system    : response.data.artboard.system,
-							slices    : slices,
-							comments  : response.data.artboard.comments
-						};
-
-						this.setState({ artboard : artboard });
 					}).catch((error) => {
 				});
 			}).catch((error) => {
 		});
 	};
 
-	handleSliceToggle = (isSelected)=> {
-		console.log('handleSliceToggle()', isSelected);
+	handleSliceToggle = (type, isSelected)=> {
+		console.log('handleSliceToggle()', type, isSelected);
+
+		let visibleTypes = this.state.visibleTypes;
+		visibleTypes[type] = !visibleTypes[type];
 		this.setState({
-			slice         : -1,
-			slicesVisible : isSelected
+			slice        : (this.state.slice) ? (this.state.slice.type === type) ? null : this.state.slice : null,
+			visibleTypes : visibleTypes
 		});
 	};
 
@@ -158,6 +162,20 @@ class InspectorPage extends Component {
 		}
 	};
 
+	handleVote = (commentID, score)=> {
+		let formData = new FormData();
+		formData.append('action', 'VOTE_COMMENT');
+		formData.append('user_id', cookie.load('user_id'));
+		formData.append('comment_id', commentID);
+		formData.append('value', score);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+				console.log('VOTE_COMMENT', response.data);
+				this.refreshData();
+			}).catch((error) => {
+		});
+	};
+
 	handleSizeChange = (scaleSize)=> {
 		this.setState({ scaleSize : scaleSize });
 	};
@@ -170,8 +188,8 @@ class InspectorPage extends Component {
 // 		window.open(this.state.slice.filename + '@3x.png');
 // 		window.open('http://cdn.designengine.ai/slice.php?slice_id=' + this.state.slice.id);
 
-		if (this.state.slice && this.state.slice.type === 'slice') {
-			const filePath = 'http://cdn.designengine.ai/slice.php?slice_id=' + this.state.slice.id;
+		if (this.state.artboard) {
+			const filePath = 'http://cdn.designengine.ai/artboard.php?artboard_id=' + this.state.artboard.id;
 			var link = document.createElement('a');
 			link.href = filePath;
 			link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
@@ -204,15 +222,13 @@ class InspectorPage extends Component {
 		const panelImageClass = 'inspector-page-panel-image' + ((slice) ? ((slice.meta.frame.size.width > slice.meta.frame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait')  + ' ' + ((slice.type === 'slice') ? 'inspector-page-panel-image-slice' : (slice.type === 'hotspot') ? 'inspector-page-panel-image-hotspot' : (slice.type === 'textfield') ? 'inspector-page-panel-image-textfield' : 'inspector-page-panel-image-background') : '');
 		const slicesStyle = (artboard) ? {
 			width   : (scale * artboard.meta.frame.size.width) + 'px',
-			height  : (scale * artboard.meta.frame.size.height) + 'px',
-			display : (this.state.slicesVisible) ? 'block' : 'none'
+			height  : (scale * artboard.meta.frame.size.height) + 'px'
 		} : {
 			width   : '100%',
 			height  : '100%'
 		};
 
 		const commentButtonClass = (this.state.comment.length !== 0) ? 'inspector-page-comment-button' : 'inspector-page-comment-button button-disabled';
-		const downloadButtonClass = (slice && slice.type === 'slice') ? 'inspector-page-download-button' : 'inspector-page-download-button button-disabled';
 
 		const slices = (artboard) ? artboard.slices.map((item, i, arr) => {
 			return (
@@ -220,6 +236,7 @@ class InspectorPage extends Component {
 					key={i}
 					title={item.title}
 					type={item.type}
+					visible={this.state.visibleTypes[item.type]}
 					top={item.meta.frame.origin.y}
 					left={item.meta.frame.origin.x}
 					width={item.meta.frame.size.width}
@@ -233,9 +250,12 @@ class InspectorPage extends Component {
 			return (
 				<CommentItem
 					key={i}
+					id={item.id}
+					votes={item.votes}
 					author={item.author}
 					content={item.content}
 					added={item.added}
+					onVote={(score)=> this.handleVote(item.id, score)}
 				/>);
 		}) : [];
 
@@ -249,10 +269,15 @@ class InspectorPage extends Component {
 						<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>
 							{slices}
 						</div>
-						<div className="inspector-page-hero-title-wrapper"><Row>
+						<div className="inspector-page-hero-title-wrapper">
 							{/*<Column flexGrow={1} horizontal="start">{(artboard) ? artboard.title : 'N/A'}</Column>*/}
-							<Column flexGrow={1} horizontal="center"><SliceToggle onClick={(isSelected)=> this.handleSliceToggle(isSelected)} /></Column>
-						</Row></div>
+							<Column flexGrow={1} horizontal="center"><Row>
+								<SliceToggle type="slice" onClick={(isSelected)=> this.handleSliceToggle('slice', isSelected)} last={false} />
+								<SliceToggle type="hotspot" onClick={(isSelected)=> this.handleSliceToggle('hotspot', isSelected)} last={false} />
+								<SliceToggle type="textfield" onClick={(isSelected)=> this.handleSliceToggle('textfield', isSelected)} last={false} />
+								<SliceToggle type="background" onClick={(isSelected)=> this.handleSliceToggle('background', isSelected)} last={true} />
+							</Row></Column>
+						</div>
 					</div>
 					<textarea className="inspector-page-comment-txt" name="comment" placeholder="Enter Comment" value={this.state.comment} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} />
 					<button className={commentButtonClass} onClick={()=> this.submitComment()}>Submit</button>
@@ -278,7 +303,7 @@ class InspectorPage extends Component {
 							<button className={'inspector-page-size-button inspector-page-size-button-middle' + ((this.state.scaleSize === 2) ? ' inspector-page-size-button-selected' : '')} onClick={()=> this.handleSizeChange(2)}>2x</button>
 							<button className={'inspector-page-size-button' + ((this.state.scaleSize === 3) ? ' inspector-page-size-button-selected' : '')} onClick={()=> this.handleSizeChange(3)}>3x</button>
 						</div>
-						<div><button className={downloadButtonClass} onClick={()=> this.handleDownload()}>Download</button></div>
+						<div><button className="inspector-page-download-button" onClick={()=> this.handleDownload()}>Download</button></div>
 					</div>
 					<div className="inspector-page-panel-button-wrapper">
 						<Dropdown
