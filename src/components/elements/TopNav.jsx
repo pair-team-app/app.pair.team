@@ -128,7 +128,7 @@ class TopNav extends Component {
 					</Column>
 					{(cookie.load('user_id') !== '0') && (
 						<Column flexGrow={1} horizontal="end" vertical="center">
-							<button className="top-nav-upload-button" onClick={()=> this.props.onUpload()}><FontAwesome name="plus" className="top-nav-upload-plus" /></button>
+							<button className="top-nav-upload-button" onClick={()=> this.props.onUpload()}><FontAwesome name="plus" className="top-nav-upload-plus" /> New</button>
 						</Column>
 					)}
 				</Row></div>
@@ -137,14 +137,14 @@ class TopNav extends Component {
 					{(typeof cookie.load('upload_id') !== 'undefined') && (<Row>
 						<Column flexGrow={1} horizontal="start" vertical="center" style={{marginRight:'28px'}}>
 							<Dropdown
-								title="iOS 12 Design System"
+								title="Select System"
 								list={this.state.uploads}
 								resetThenSet={this.resetThenSet}
 							/>
 						</Column>
 						<Column flexGrow={1} horizontal="start" vertical="center" style={{marginRight:'28px'}}>
 							<DropdownMultiple
-								titleHelper="Device"
+								titleHelper="Select Device"
 								title="Device(s)"
 								list={this.state.devices}
 								toggleItem={this.toggleSelected}
@@ -152,7 +152,7 @@ class TopNav extends Component {
 						</Column>
 						<Column flexGrow={1} horizontal="start" vertical="center" style={{marginRight:'28px'}}>
 							<Dropdown
-								title="Light Theme"
+								title="Select Theme"
 								list={this.state.colors}
 								resetThenSet={this.resetThenSet}
 							/>
