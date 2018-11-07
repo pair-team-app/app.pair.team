@@ -203,33 +203,19 @@ class SideNav extends Component {
 					<div className="side-nav-top-wrapper">
 						<button className="side-nav-invite-button" onClick={()=> this.props.onInvite()}>Invite Team Members</button>
 						{(window.location.pathname === '/' && this.state.pageID === -1) && (<div className="nav-link page-tree-item-text-selected" onClick={()=> this.handleTop()}><img className="artboard-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />Top Views</div>)}
-						{(window.location.pathname !== '/') && (<SideNavBack onClick={()=> this.props.onBack()} />)}
-						{(window.location.pathname.includes('/artboard/'))
-							? this.state.artboards.map((artboard, i)=> {
-								return (
-									<ArtboardTreeItem
-										key={artboard.id}
-										title={(artboard.title.length > 45) ? (artboard.title.substring(0, 44) + '…') : artboard.title}
-										description=""
-										slices={artboard.slices}
-										selected={artboard.selected}
-										onClick={()=> this.handleArtboardClick(artboard)} />
-								);
-							})
-							: (window.location.pathname === '/') && (this.state.uploads.map((upload, i, arr) => {
-								return (
-									<UploadTreeItem
-										key={i}
-										title={(upload.title.length > 45) ? (upload.title.substring(0, 44) + '…') : upload.title}
-										author={upload.author}
-										pages={upload.pages}
-										selected={upload.selected}
-										onClick={()=> this.handleUploadClick(upload)}
-										onPageClick={(page)=> this.handlePageClick(page)}
-										onArtboardClick={(artboard)=> this.handleArtboardClick(artboard)} />
-								);
-							}))
-						}
+						{this.state.uploads.map((upload, i, arr) => {
+							return (
+								<UploadTreeItem
+									key={i}
+									title={(upload.title.length > 45) ? (upload.title.substring(0, 44) + '…') : upload.title}
+									author={upload.author}
+									pages={upload.pages}
+									selected={upload.selected}
+									onClick={()=> this.handleUploadClick(upload)}
+									onPageClick={(page)=> this.handlePageClick(page)}
+									onArtboardClick={(artboard)=> this.handleArtboardClick(artboard)} />
+							);
+						})}
 					</div>
 					<div className="side-nav-bottom-wrapper">
 						{(cookie.load('user_id') !== '0')
