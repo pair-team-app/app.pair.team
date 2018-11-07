@@ -187,7 +187,7 @@ class SideNav extends Component {
 							selected    : false
 						})),
 						added    : upload.added,
-						selected : (this.props.uploadID === upload.id)
+						selected : false//(this.props.uploadID === upload.id)
 					}));
 
 					this.setState({ uploads : uploads });

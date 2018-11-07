@@ -27,7 +27,7 @@ class App extends Component {
 		super(props);
 
 		cookie.save('user_id', (typeof cookie.load('user_id') === 'undefined') ? 0 : cookie.load('user_id'));
-		cookie.save('upload_id', (typeof cookie.load('upload_id') === 'undefined') ? 112 : cookie.load('upload_id'));
+		cookie.save('upload_id', 0);//(typeof cookie.load('upload_id') === 'undefined') ? 112 : cookie.load('upload_id'));
 
 		this.state = {
 			uploadID   : cookie.load('upload_id'),
@@ -65,8 +65,8 @@ class App extends Component {
 
 	handleSideNavUploadItem = (obj)=> {
 		console.log('handleSideNavUploadItem()', obj);
-		cookie.save('upload_id', obj.id);
-		this.setState({ uploadID : obj.id });
+		cookie.save('upload_id', (obj.selected) ? obj.id : 0);
+		this.setState({ uploadID : (obj.selected) ? obj.id : 0 });
 	};
 
 	handleSideNavPageItem = (obj)=> {
