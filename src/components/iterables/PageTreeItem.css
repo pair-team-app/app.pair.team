@@ -4,21 +4,24 @@
 	font-weight: 400;
 }
 
-.page-tree-item:hover {
-	cursor: pointer;
-	text-decoration: underline;
-}
-
 .page-tree-item-arrow {
-	margin-right: 4px;
+	margin-right: 8px;
 	width: 10px;
 	height: 10px;
 }
 
 .page-tree-item-text {
+}
 
+.page-tree-item-text:hover {
+	cursor: pointer;
+	text-decoration: underline;
 }
 
 .page-tree-item-arrow-selected, .page-tree-item-text-selected {
 	color: #7ed321;
+}
+
+.page-tree-item-artboards {
+	margin: 12px 0 0 16px;
 }

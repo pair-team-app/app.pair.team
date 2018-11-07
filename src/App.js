@@ -26,7 +26,11 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 
+		cookie.save('user_id', (typeof cookie.load('user_id') === 'undefined') ? 0 : cookie.load('user_id'));
+		cookie.save('upload_id', (typeof cookie.load('upload_id') === 'undefined') ? 112 : cookie.load('upload_id'));
+
 		this.state = {
+			uploadID   : cookie.load('upload_id'),
 			pageID     : (window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/(\d+)\/.*$/)[1] : 0,
 			artboardID : (window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/(\d+)\/.*$/)[1] : 0,
 			sliceID    : 0,//(window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/.+\/(\d+)?/)[1] : 0,
@@ -34,9 +38,6 @@ class App extends Component {
 			overlayAlert  : null,
 			userID        : 0
 		};
-
-		cookie.save('user_id', (typeof cookie.load('user_id') === 'undefined') ? 0 : cookie.load('user_id'));
-		cookie.save('upload_id', (typeof cookie.load('upload_id') === 'undefined') ? 112 : cookie.load('upload_id'));
 	}
 
 	componentDidMount() {
@@ -60,6 +61,12 @@ class App extends Component {
 
 	handleRegistration = ()=> {
 		this.setState({ overlayAlert: 'register' });
+	};
+
+	handleSideNavUploadItem = (obj)=> {
+		console.log('handleSideNavUploadItem()', obj);
+		cookie.save('upload_id', obj.id);
+		this.setState({ uploadID : obj.id });
 	};
 
 	handleSideNavPageItem = (obj)=> {
@@ -176,11 +183,13 @@ class App extends Component {
 			    onDownload={()=> this.handleDownload()}
 		    />
 		    <SideNav
+			    uploadID={this.state.uploadID}
 			    pageID={this.state.pageID}
 			    artboardID={this.state.artboardID}
 			    sliceID={this.state.sliceID}
 			    onBack={()=> window.location.href = '/'}
 			    onTop={()=> this.handleTopViews()}
+			    onUploadItem={(obj)=> this.handleSideNavUploadItem(obj)}
 			    onPageItem={(obj)=> this.handleSideNavPageItem(obj)}
 			    onArtboardItem={(obj)=> this.handleSideNavArtboardItem(obj)}
 			    onSliceItem={(obj)=> this.handleSideNavSliceItem(obj)}
