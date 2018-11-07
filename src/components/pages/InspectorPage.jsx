@@ -215,7 +215,8 @@ class InspectorPage extends Component {
 			day    : 'numeric'
 		};
 
-		const { page, artboard, slice } = this.state;
+// 		const { page, artboard, slice } = this.state;
+		const { artboard, slice } = this.state;
 
 		const scale = (artboard && heroImage && heroImage.current) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? heroImage.current.clientWidth / artboard.meta.frame.size.width : heroImage.current.clientHeight / artboard.meta.frame.size.height : 1;
 		const heroImageClass = 'inspector-page-hero-image' + ((artboard) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? ' inspector-page-hero-image-landscape' : ' inspector-page-hero-image-portrait' : '');

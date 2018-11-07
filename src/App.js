@@ -199,7 +199,7 @@ class App extends Component {
 		    />
 
 		    <div className="content-wrapper" ref={wrapper}>
-			    <Route exact path="/" render={()=> <HomePage pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
+			    <Route exact path="/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
 			    <Route exact path="/developer" component={DevelopersPage} />
 			    <Route exact path="/mission" component={MissionPage} />
 			    <Route exact path="/privacy" component={PrivacyPage} />

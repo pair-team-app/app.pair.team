@@ -19,13 +19,11 @@ class HomePage extends Component {
 	}
 
 	componentDidMount() {
-		if (typeof cookie.load('upload_id') !== 'undefined') {
-			this.refreshData();
-		}
+		this.refreshData();
 	}
 
 	componentDidUpdate(prevProps) {
-		if (this.props.pageID !== prevProps.pageID) {
+		if (this.props.uploadID !== prevProps.uploadID && this.props.pageID !== prevProps.pageID) {
 			this.refreshData();
 			return (null);
 		}
@@ -34,8 +32,8 @@ class HomePage extends Component {
 	refreshData = ()=> {
 		let formData = new FormData();
 		formData.append('action', 'ARTBOARDS');
-		formData.append('upload_id', cookie.load('upload_id'));
-		formData.append('page_id', '' + this.props.pageID);
+		formData.append('upload_id', this.props.uploadID);
+		formData.append('page_id', this.props.pageID);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response)=> {
 				console.log('ARTBOARDS', response.data);

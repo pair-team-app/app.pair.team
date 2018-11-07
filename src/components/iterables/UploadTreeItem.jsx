@@ -16,7 +16,6 @@ class UploadTreeItem extends Component {
 	}
 
 	render() {
-		console.log('UploadTreeItem.render()', this.props);
 		const arrowClass = (this.props.selected) ? 'upload-tree-item-arrow upload-tree-item-arrow-selected' : 'upload-tree-item-arrow';
 		const textClass = (this.props.selected) ? 'upload-tree-item-text upload-tree-item-text-selected' : 'upload-tree-item-text';
 
