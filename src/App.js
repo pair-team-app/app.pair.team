@@ -26,13 +26,10 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 
-		cookie.save('user_id', (typeof cookie.load('user_id') === 'undefined') ? 0 : cookie.load('user_id'));
-		cookie.save('upload_id', 0);//(typeof cookie.load('upload_id') === 'undefined') ? 112 : cookie.load('upload_id'));
-
 		this.state = {
-			uploadID   : cookie.load('upload_id'),
-			pageID     : (window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/(\d+)\/.*$/)[1] : 0,
-			artboardID : (window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/(\d+)\/.*$/)[1] : 0,
+			uploadID   : (window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/(\d+)\/.*$/)[1] : 0,
+			pageID     : (window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/(\d+)\/.*$/)[1] : 0,
+			artboardID : (window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
 			sliceID    : 0,//(window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/.+\/(\d+)?/)[1] : 0,
 			selectedArtboards : [],
 			overlayAlert  : null,
@@ -49,6 +46,18 @@ class App extends Component {
 
 		ReactPixel.init('318191662273348', advancedMatching, options);
 		ReactPixel.trackCustom('load');
+
+		if (window.location.pathname.includes('/artboard/') && this.state.uploadID === 0) {
+			let formData = new FormData();
+			formData.append('action', 'PAGE');
+			formData.append('page_id', this.state.pageID);
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response) => {
+					console.log('PAGE', response.data);
+					this.setState({ uploadID : response.data.page.upload_id });
+				}).catch((error) => {
+			});
+		}
 	}
 
 	handleHome = ()=> {
@@ -63,7 +72,6 @@ class App extends Component {
 
 	handleSideNavUploadItem = (obj)=> {
 		console.log('handleSideNavUploadItem()', obj);
-		cookie.save('upload_id', (obj.selected) ? obj.id : 0);
 		this.setState({
 			uploadID   : (obj.selected) ? obj.id : 0,
 			pageID     : 0,
@@ -174,9 +182,8 @@ class App extends Component {
 	};
 
 	handleLogout = ()=> {
-		cookie.remove('user_id');
-		this.setState({ user_id : 0 });
-		cookie.remove('user_id');
+		cookie.save('user_id', '0');
+		this.setState({ userID : 0 });
 		window.location.href = '/';
 	};
 
@@ -213,8 +220,7 @@ class App extends Component {
 			    <Route exact path="/developer" component={DevelopersPage} />
 			    <Route exact path="/mission" component={MissionPage} />
 			    <Route exact path="/privacy" component={PrivacyPage} />
-			    <Route path="/artboard/:pageID/:artboardID/:artboardName" component={InspectorPage} />
-			    <Route path="/artboard/:pageID/:artboardID/:artboardName/:sliceID" component={InspectorPage} />
+			    <Route path="/artboard/:uploadID/:pageID/:artboardID/:artboardName" component={InspectorPage} />
 			    <Route exact path="/terms" component={TermsPage} />
 		    </div>
 

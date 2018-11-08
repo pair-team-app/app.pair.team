@@ -7,9 +7,6 @@ import cookie from 'react-cookies';
 import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
 
-import Dropdown from '../elements/Dropdown';
-import DropdownMultiple from '../elements/DropdownMultiple';
-
 class TopNav extends Component {
 	constructor(props) {
 		super(props);
@@ -22,7 +19,7 @@ class TopNav extends Component {
 	}
 
 	componentDidMount() {
-		this.refreshData();
+		//this.refreshData();
 	}
 
 	refreshData = ()=> {

@@ -54,11 +54,6 @@ class InviteOverlay extends Component {
 						axios.post('https://api.designengine.ai/system.php', formData)
 							.then((response)=> {
 								console.log('UPLOADS', response.data);
-								if (response.data.uploads.length > 0) {
-									cookie.save('upload_id', response.data.uploads[0].id, { path : '/' });
-									cookie.save('system', response.data.uploads[0].title, { path : '/' });
-									cookie.save('author', response.data.uploads[0].author, { path : '/' });
-								}
 
 								let emails = '';
 								if (isEmail1Valid) {

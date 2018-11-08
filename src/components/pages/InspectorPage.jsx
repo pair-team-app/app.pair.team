@@ -19,8 +19,6 @@ class InspectorPage extends Component {
 		super(props);
 
 		this.state = {
-			system        : cookie.load('system'),
-			author        : cookie.load('author'),
 			pageID        : this.props.match.params.pageID,
 			artboardID    : this.props.match.params.artboardID,
 			sliceID       : this.props.match.params.sliceID,
@@ -91,7 +89,7 @@ class InspectorPage extends Component {
 		formData.append('page_id', '' + pageID);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response)=> {
-				console.log('PAGE', response.data);
+// 				console.log('PAGE', response.data);
 				this.setState({ page : response.data.page });
 
 				formData.append('action', 'ARTBOARD');
@@ -207,7 +205,7 @@ class InspectorPage extends Component {
 	};
 
 	render() {
-		console.log('InspectorPage.render()', this.state);
+// 		console.log('InspectorPage.render()', this.state);
 
 		const tsOptions = {
 			year   : 'numeric',
@@ -259,8 +257,6 @@ class InspectorPage extends Component {
 					onVote={(score)=> this.handleVote(item.id, score)}
 				/>);
 		}) : [];
-
-		console.log('slice', slice);
 
 		return (
 			<div className="inspector-page-wrapper">
