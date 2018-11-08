@@ -124,45 +124,18 @@ class TopNav extends Component {
 			<div className="top-nav-wrapper">
 				<div className="top-nav-column top-nav-column-left"><Row>
 					<Column flexGrow={1} horizontal="start" vertical="center">
-						<a href="/"><img src="/images/logo.svg" className="nav-logo" alt="Design Engine" /></a>
+						<img onClick={()=> this.props.onHome()} src="/images/logo.svg" className="nav-logo" alt="Design Engine" />
 					</Column>
+				</Row></div>
+
+				<div className="top-nav-column top-nav-column-middle">
+				</div>
+
+				<div className="top-nav-column top-nav-column-right">
 					{(cookie.load('user_id') !== '0') && (
 						<Column flexGrow={1} horizontal="end" vertical="center">
 							<button className="top-nav-upload-button" onClick={()=> this.props.onUpload()}><FontAwesome name="plus" className="top-nav-upload-plus" /> New</button>
 						</Column>
-					)}
-				</Row></div>
-
-				<div className="top-nav-column top-nav-column-middle">
-					{(typeof cookie.load('upload_id') !== 'undefined') && (<Row>
-						<Column flexGrow={1} horizontal="start" vertical="center" style={{marginRight:'28px'}}>
-							<Dropdown
-								title="Select System"
-								list={this.state.uploads}
-								resetThenSet={this.resetThenSet}
-							/>
-						</Column>
-						<Column flexGrow={1} horizontal="start" vertical="center" style={{marginRight:'28px'}}>
-							<DropdownMultiple
-								titleHelper="Select Device"
-								title="Device(s)"
-								list={this.state.devices}
-								toggleItem={this.toggleSelected}
-							/>
-						</Column>
-						<Column flexGrow={1} horizontal="start" vertical="center" style={{marginRight:'28px'}}>
-							<Dropdown
-								title="Select Theme"
-								list={this.state.colors}
-								resetThenSet={this.resetThenSet}
-							/>
-						</Column>
-					</Row>)}
-				</div>
-
-				<div className="top-nav-column top-nav-column-right">
-					{(this.props.parts.length > 0) && (
-						<button onClick={()=> this.props.onDownload()}>Download ({this.props.parts.length})</button>
 					)}
 				</div>
 			</div>

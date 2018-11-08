@@ -33,8 +33,12 @@
 	padding-left: 28px;
 }
 
+.nav-logo:hover {
+	cursor: pointer;
+}
+
 .top-nav-upload-button {
-	margin-right: 28px;
+	margin-right: 9px;
 	padding: 7px 12px;
 	border-radius: 3px;
 }
