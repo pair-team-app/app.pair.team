@@ -5,9 +5,9 @@ import './SideNav.css'
 import axios from 'axios';
 import cookie from 'react-cookies';
 
-import ArtboardTreeItem from '../iterables/ArtboardTreeItem';
 import UploadTreeItem from '../iterables/UploadTreeItem';
-import SideNavBack from './SideNavBack';
+
+const wrapper = React.createRef();
 
 class SideNav extends Component {
 	constructor(props) {
@@ -29,6 +29,7 @@ class SideNav extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
+		console.log('SideNav.componentDidUpdate()', prevProps, this.props);
 		if (window.location.pathname.includes('/artboard/')) {
 			if (this.props.pageID !== prevProps.pageID && this.props.artboardID !== prevProps.artboardID) {
 				const { pageID, artboardID, sliceID } = this.props;
@@ -53,6 +54,12 @@ class SideNav extends Component {
 
 			} else {
 				item.selected = false;
+				item.pages.forEach((page)=> {
+					page.selected = false;
+					page.artboards.forEach((artboard)=> {
+						artboard.selected = false;
+					});
+				});
 			}
 		});
 
@@ -61,6 +68,7 @@ class SideNav extends Component {
 			pages   : upload.pages
 		});
 
+		wrapper.current.scrollTo(0, 0);
 		this.props.onUploadItem(upload);
 	};
 
@@ -112,93 +120,55 @@ class SideNav extends Component {
 	};
 
 	refreshData = ()=> {
-		if (window.location.pathname.includes('/artboard/')) {
-			const { pageID, artboardID } = this.props;
+		let formData = new FormData();
+		formData.append('action', 'UPLOADS');
+		formData.append('user_id', cookie.load('user_id'));
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+				console.log('UPLOADS', response.data);
 
-			let formData = new FormData();
-			formData.append('action', 'ARTBOARDS');
-			formData.append('upload_id', cookie.load('upload_id'));
-			formData.append('page_id', '' + pageID);
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					console.log('ARTBOARDS', response.data);
-					const artboards = response.data.artboards.map((artboard)=> ({
-						id        : artboard.id,
-						pageID    : artboard.page_id,
-						title     : artboard.title,
-						filename  : artboard.filename,
-						meta      : JSON.parse(artboard.meta),
-						views     : artboard.views,
-						downloads : artboard.downloads,
-						added     : artboard.added,
-						slices    : artboard.slices.map((item)=> ({
-							id       : item.id,
-							title    : item.title,
-							type     : item.type,
-							filename : item.filename + '@1x.png',
-							meta     : JSON.parse(item.meta),
-							added    : item.added,
-							selected : false
-						})),
-						comments  : artboard.comments,
-						selected  : (artboardID === artboard.id)
-					}));
-
-					this.setState({ artboards : artboards });
-
-				}).catch((error) => {
-			});
-
-		}	else {
-			let formData = new FormData();
-			formData.append('action', 'UPLOADS');
-			formData.append('user_id', cookie.load('user_id'));
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					console.log('UPLOADS', response.data);
-
-					const uploads =response.data.uploads.map((upload)=> ({
-						id       : upload.id,
-						title    : upload.title,
-						author   : upload.author,
-						pages    : upload.pages.map((page) => ({
-							id          : page.id,
-							title       : page.title,
-							description : page.description,
-							artboards   : page.artboards.map((artboard)=> ({
-								id        : artboard.id,
-								pageID    : artboard.page_id,
-								title     : artboard.title,
-								filename  : artboard.filename,
-								meta      : JSON.parse(artboard.meta),
-								added     : artboard.added,
-								slices    : artboard.slices.map((slice)=> ({
-									id       : slice.id,
-									title    : slice.title,
-									type     : slice.type,
-									filename : slice.filename + '@1x.png',
-									meta     : JSON.parse(slice.meta),
-									added    : slice.added,
-									selected : false
-								})),
-								selected  : false
+				const uploads =response.data.uploads.map((upload)=> ({
+					id       : upload.id,
+					title    : upload.title,
+					author   : upload.author,
+					pages    : upload.pages.map((page) => ({
+						id          : page.id,
+						title       : page.title,
+						description : page.description,
+						artboards   : page.artboards.map((artboard)=> ({
+							id        : artboard.id,
+							pageID    : artboard.page_id,
+							title     : artboard.title,
+							filename  : artboard.filename,
+							meta      : JSON.parse(artboard.meta),
+							added     : artboard.added,
+							slices    : artboard.slices.map((slice)=> ({
+								id       : slice.id,
+								title    : slice.title,
+								type     : slice.type,
+								filename : slice.filename + '@1x.png',
+								meta     : JSON.parse(slice.meta),
+								added    : slice.added,
+								selected : false
 							})),
-							added       : page.added,
-							selected    : false
+							selected  : (this.props.artboardID === artboard.id)
 						})),
-						added    : upload.added,
-						selected : false//(this.props.uploadID === upload.id)
-					}));
+						added       : page.added,
+						selected    : (this.props.pageID === page.id)
+					})),
+					added    : upload.added,
+					selected : (this.props.uploadID === upload.id)
+				}));
 
-					this.setState({ uploads : uploads });
-				}).catch((error) => {
-			});
-		}
+				this.setState({ uploads : uploads });
+			}).catch((error) => {
+		});
 	};
 
 	render() {
+		console.log('SideNav.render()', this.state);
 		return (
-			<div className="side-nav-wrapper">
+			<div className="side-nav-wrapper" ref={wrapper}>
 				<div className="side-nav-link-wrapper">
 					<div className="side-nav-top-wrapper">
 						<button className="side-nav-invite-button" onClick={()=> this.props.onInvite()}>Invite Team Members</button>
