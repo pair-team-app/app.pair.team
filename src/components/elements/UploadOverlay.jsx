@@ -231,7 +231,7 @@ class UploadOverlay extends Component {
 										<div className="page-subheader-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
 										<Row horizontal="center"><button className="page-button" onClick={()=> this.handleCancel()}>Cancel</button></Row>
 									</div>
-								</Dropzone>
+							</Dropzone>
 						</div>
 
 						{(!this.state.sentInvites) && (<div>
@@ -246,7 +246,7 @@ class UploadOverlay extends Component {
 								: (<div>
 										<div className="input-title">Setup your project</div>
 										<div className={titleClass}><input type="text" name="title" placeholder="Enter project name" value={this.state.title} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={titleTextfield} /></div>
-										<div className={descriptionClass}><input type="text" name="description" placeholder="Enter project description" value={this.state.description} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+										<div className={descriptionClass}><input type="text" name="description" placeholder="Enter project description (optional)" value={this.state.description} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 										<div className="overlay-button-wrapper"><button className={nextButtonClass} onClick={() => this.handleSubmit()}>Next</button></div>
 									</div>
 								)
