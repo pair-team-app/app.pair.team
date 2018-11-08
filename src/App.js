@@ -176,6 +176,7 @@ class App extends Component {
 	handleLogout = ()=> {
 		cookie.remove('user_id');
 		this.setState({ user_id : 0 });
+		cookie.remove('user_id');
 		window.location.href = '/';
 	};
 
