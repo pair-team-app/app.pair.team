@@ -21,6 +21,7 @@ class UploadOverlay extends Component {
 			uploading          : false,
 			uploadComplete     : false,
 			processingComplete : false,
+			sentInvites        : false,
 			percent            : 0,
 			action             : '',
 			email1             : '',
@@ -166,9 +167,10 @@ class UploadOverlay extends Component {
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log('INVITE', response.data);
-
 				}).catch((error) => {
 			});
+
+			this.setState({ sentInvites : true });
 		}
 	};
 
@@ -183,7 +185,7 @@ class UploadOverlay extends Component {
 				if (response.data.message === 'Processing complete') {
 					clearInterval(this.uploadInterval);
 					this.setState({ processingComplete : true });
-					this.props.onClick('complete');
+					//this.props.onClick('complete');
 				}
 			}).catch((error) => {
 		});
@@ -205,7 +207,7 @@ class UploadOverlay extends Component {
 		const nextButtonClass = (this.state.uploadComplete && this.state.title.length > 0) ? 'overlay-button' : 'overlay-button button-disabled';
 		const inviteButtonClass = (email1.length > 0 || email2.length > 0 || email3.length > 0) ? 'overlay-button' : 'overlay-button button-disabled';
 
-		const title = (this.state.uploading) ? 'Loading ' + this.state.percent + '%…' : (this.state.uploadComplete) ? (this.state.files.length === 0) ? (this.state.processingComplete) ? 'Processing complete' : this.state.status : 'Enter details to start processing' : 'Drag here to start upload';
+		const title = (this.state.uploading) ? 'Loading ' + this.state.percent + '%…' : (this.state.uploadComplete) ? (this.state.files.length === 0) ? (this.state.processingComplete) ? 'Project ready' : this.state.status : 'Enter details to start processing' : 'Drag here to start upload';
 		return (
 			<div className="overlay-wrapper">
 				<div className="overlay-close-background" onClick={()=> this.handleBackgroundClose()} />
@@ -232,7 +234,7 @@ class UploadOverlay extends Component {
 								</Dropzone>
 						</div>
 
-						{(cookie.load('user_id') !== '0') && (<div>
+						{(!this.state.sentInvites) && (<div>
 							{(this.state.uploadComplete && this.state.files.length === 0)
 								? (<div>
 										<div className="input-title">Invite your teammates</div>
@@ -250,6 +252,9 @@ class UploadOverlay extends Component {
 								)
 							}
 						</div>)}
+
+						{(this.state.sentInvites) && (<div className="input-title">Invites will be sent once your file has been processed.</div>)}
+						{(this.state.processingComplete) && (<Row horizontal="center"><div className="overlay-button-wrapper"><button className="overlay-button" onClick={() => this.handleBackgroundClose()}>Get Started</button></div></Row>)}
 					</div>
 				</Row></div>
 			</div>

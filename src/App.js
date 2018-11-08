@@ -51,22 +51,24 @@ class App extends Component {
 		ReactPixel.trackCustom('load');
 	}
 
-	handleInvite = ()=> {
-		this.setState({ overlayAlert : 'invite' });
-	};
+	handleHome = ()=> {
+		this.setState({
+			uploadID   : 0,
+			pageID     : 0,
+			artboardID : 0
+		});
 
-	handleTopViews = ()=> {
-		this.setState({ pageID : -1 });
-	};
-
-	handleRegistration = ()=> {
-		this.setState({ overlayAlert: 'register' });
+		this.props.history.push('/');
 	};
 
 	handleSideNavUploadItem = (obj)=> {
 		console.log('handleSideNavUploadItem()', obj);
 		cookie.save('upload_id', (obj.selected) ? obj.id : 0);
-		this.setState({ uploadID : (obj.selected) ? obj.id : 0 });
+		this.setState({
+			uploadID   : (obj.selected) ? obj.id : 0,
+			pageID     : 0,
+			artboardID : 0
+		});
 	};
 
 	handleSideNavPageItem = (obj)=> {
@@ -130,8 +132,6 @@ class App extends Component {
 
 	handleArtboardDetails = (obj)=> {
 		console.log('handleArtboardDetails()', obj);
-
-		console.log(wrapper.current.scrollTop);
 		wrapper.current.scrollTo(0, 0);
 
 		let formData = new FormData();
@@ -152,11 +152,19 @@ class App extends Component {
 	handleOverlay = (overlayType, buttonType)=> {
 		console.log('handleOverlay()', overlayType, buttonType);
 		this.setState({ overlayAlert : null });
-		if (overlayType === 'register' && buttonType === 'submit') {
-			this.setState({ user_id : 0 });
-			window.location.reload();
+		if (overlayType === 'register') {
+			if (buttonType === 'submit') {
+				this.setState({ user_id : 0 });
+				window.location.reload();
+			}
 
-		} else if (overlayType === 'upload' && buttonType === 'upload') {
+		} else if (overlayType === 'upload') {
+			if (buttonType === 'background') {
+				window.location.reload();
+
+			} else if (buttonType === 'complete') {
+				window.location.reload();
+			}
 		}
 	};
 
@@ -179,6 +187,7 @@ class App extends Component {
 		    <TopNav
 			    parts={this.state.selectedArtboards}
 			    artboardID={this.state.artboardID}
+			    onHome={()=> this.handleHome()}
 			    onUpload={()=> this.handleUpload()}
 			    onDownload={()=> this.handleDownload()}
 		    />
@@ -188,13 +197,13 @@ class App extends Component {
 			    artboardID={this.state.artboardID}
 			    sliceID={this.state.sliceID}
 			    onBack={()=> window.location.href = '/'}
-			    onTop={()=> this.handleTopViews()}
+			    onTop={()=> this.setState({ pageID : -1 })}
 			    onUploadItem={(obj)=> this.handleSideNavUploadItem(obj)}
 			    onPageItem={(obj)=> this.handleSideNavPageItem(obj)}
 			    onArtboardItem={(obj)=> this.handleSideNavArtboardItem(obj)}
 			    onSliceItem={(obj)=> this.handleSideNavSliceItem(obj)}
-			    onInvite={()=> this.handleInvite()}
-			    onRegister={()=> this.handleRegistration()}
+			    onInvite={()=> this.setState({ overlayAlert : 'invite' })}
+			    onRegister={()=> this.setState({ overlayAlert: 'register' })}
 			    onLogout={()=> this.handleLogout()}
 		    />
 
