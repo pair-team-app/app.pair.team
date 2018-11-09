@@ -2,6 +2,7 @@
 .artboard-tree-item {
 	margin-bottom: 12px;
 	font-weight: 400;
+	width: fit-content;
 }
 
 .artboard-tree-item-arrow {
@@ -12,11 +13,11 @@
 
 .artboard-tree-item-text:hover {
 	cursor: pointer;
-	text-decoration: underline;
 }
 
 .artboard-tree-item-text-selected {
-	color: #7ed321;
+	font-weight: bold;
+	text-decoration: underline;
 }
 
 .artboard-tree-item-slices, .artboard-tree-item-hotspots, .artboard-tree-item-textfields, .artboard-tree-item-backgrounds {

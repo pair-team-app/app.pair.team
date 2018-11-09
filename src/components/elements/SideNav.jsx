@@ -79,7 +79,7 @@ class SideNav extends Component {
 		}
 
 
-		if (window.location.pathname.includes('/artboard/') && this.state.pages.length === 0) {
+		if ((window.location.pathname.includes('/artboard/') || window.location.pathname.includes('/doc/')) && this.state.pages.length === 0) {
 			let self = this;
 			let uploads = [...this.state.uploads];
 			uploads.forEach(function(upload, i) {
@@ -111,6 +111,7 @@ class SideNav extends Component {
 							}));
 
 							upload.pages = pages;
+							self.setState( { pages : pages });
 
 							pages.forEach(function(page, i) {
 								if (page.id === self.props.pageID) {
@@ -268,38 +269,39 @@ class SideNav extends Component {
 
 	render() {
 		console.log('SideNav.render()', this.state);
+
+		const year = new Date().getFullYear();
+
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>
-				<div className="side-nav-link-wrapper">
-					<div className="side-nav-top-wrapper">
-						<button className="side-nav-invite-button" onClick={()=> this.props.onInvite()}>Invite Team Members</button>
-						{(window.location.pathname === '/' && this.state.pageID === -1) && (<div className="nav-link page-tree-item-text-selected" onClick={()=> this.handleTop()}><img className="artboard-tree-item-arrow" src="/images/chevron-right.svg" alt="chevron" />Top Views</div>)}
-						{this.state.uploads.map((upload, i, arr) => {
-							return (
-								<UploadTreeItem
-									key={i}
-									title={(upload.title.length > 45) ? (upload.title.substring(0, 44) + '…') : upload.title}
-									author={upload.author}
-									pages={upload.pages}
-									selected={upload.selected}
-									onClick={()=> this.handleUploadClick(upload)}
-									onPageClick={(page)=> this.handlePageClick(page)}
-									onArtboardClick={(artboard)=> this.handleArtboardClick(artboard)} />
-							);
-						})}
-					</div>
-					<div className="side-nav-bottom-wrapper">
-						{(cookie.load('user_id') !== '0')
-							? <div className="nav-link" onClick={() => this.props.onLogout()}>Logout</div>
-							: <div className="nav-link" onClick={() => this.props.onRegister()}>Sign Up / Sign In</div>
-						}
-						<div className="nav-link"><a href="https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA" target="_blank" rel="noopener noreferrer">Slack</a></div>
-						<div className="nav-link"><a href="https://spectrum.chat/designengine" target="_blank" rel="noopener noreferrer">Spectrum</a></div>
-						<div className="nav-link"><a href={'/mission'}>Mission</a></div>
-						<div className="nav-link"><a href={'/terms'}>Terms of Service</a></div>
-						<div className="nav-link"><a href={'/privacy'}>Privacy Policy</a></div>
-						<div className="copyright">&copy; {(new Date().getFullYear() + 1)} Design Engine AI, Inc.</div>
-					</div>
+				<div className="side-nav-top-wrapper">
+					<button className="side-nav-invite-button" onClick={()=> this.props.onInvite()}>Invite Team Members</button>
+					<div className="side-nav-header">Projects</div>
+					{this.state.uploads.map((upload, i, arr) => {
+						return (
+							<UploadTreeItem
+								key={i}
+								title={upload.title}
+								author={upload.author}
+								pages={upload.pages}
+								selected={upload.selected}
+								onClick={()=> this.handleUploadClick(upload)}
+								onPageClick={(page)=> this.handlePageClick(page)}
+								onArtboardClick={(artboard)=> this.handleArtboardClick(artboard)} />
+						);
+					})}
+				</div>
+				<div className="side-nav-bottom-wrapper">
+					{(cookie.load('user_id') !== '0')
+						? <div className="nav-link" onClick={() => this.props.onLogout()}>Logout</div>
+						: <div className="nav-link" onClick={() => this.props.onRegister()}>Sign Up / Sign In</div>
+					}
+					<div className="nav-link"><a href="https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA" target="_blank" rel="noopener noreferrer">Slack</a></div>
+					<div className="nav-link"><a href="https://spectrum.chat/designengine" target="_blank" rel="noopener noreferrer">Spectrum</a></div>
+					<div className="nav-link"><a href={'/mission'}>Mission</a></div>
+					<div className="nav-link"><a href={'/terms'}>Terms of Service</a></div>
+					<div className="nav-link"><a href={'/privacy'}>Privacy Policy</a></div>
+					<div className="copyright">&copy; {(year !== 2018) && ('2018-')}{year} Design Engine AI, Inc.</div>
 				</div>
 			</div>
 		);

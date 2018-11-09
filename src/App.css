@@ -7,18 +7,20 @@
 .content-wrapper {
 	position: fixed;
 	top: 68px;
-	left: 388px;
-	width: calc(100% - 388px);
+	left: 300px;
+	width: calc(100% - 300px);
 	height: 100%;
 	overflow-x: hidden;
 	overflow-y: scroll;
 }
 
 .page-header {
-	background-color: #000000;
+	background-color: #fafbfc;
 	padding: 56px;
 	margin-bottom: 28px;
 	width: 100%;
+	border: 1px solid #eaecef;
+	border-radius: 4px;
 }
 
 .page-header-text {
@@ -51,7 +53,6 @@
 
 .input-wrapper {
 	margin-bottom: 20px;
-	border: 1px solid #3e3e3e;
 }
 
 .input-wrapper-error {

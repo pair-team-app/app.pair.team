@@ -29,7 +29,10 @@ class HomePage extends Component {
 	}
 
 	componentDidMount() {
-		//this.refreshData();
+		console.log('HomePage().componentDidMount()', this.props);
+		if (this.props.uploadID !== 0) {
+			this.refreshData();
+		}
 	}
 
 	componentDidUpdate(prevProps) {

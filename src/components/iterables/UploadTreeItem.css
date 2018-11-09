@@ -2,12 +2,8 @@
 .upload-tree-item {
 	margin-bottom: 12px;
 	font-weight: 400;
-}
-
-.upload-tree-item-arrow {
-	margin-right: 8px;
-	width: 10px;
-	height: 10px;
+	color: #0267D8;
+	width: fit-content;
 }
 
 .upload-tree-item-text {
@@ -15,13 +11,13 @@
 
 .upload-tree-item-text:hover {
 	cursor: pointer;
-	text-decoration: underline;
 }
 
 .upload-tree-item-arrow-selected, .upload-tree-item-text-selected {
-	color: #7ed321;
+	font-weight: bold;
+	text-decoration: underline;
 }
 
 .upload-tree-item-artboards {
-	margin: 12px 0 0 16px;
+	margin: 12px 0 0 8px;
 }

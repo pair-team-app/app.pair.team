@@ -27,16 +27,17 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 
-		const patt = /\/artboard\/\d+\/\d+\/\d+\/.*$/;
+		const artboardPatt = /\/artboard\/\d+\/\d+\/\d+\/.*$/;
+		const uploadPatt = /\/doc\/\d+\/.*$/;
 
 		this.state = {
-			uploadID   : (patt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/(\d+)\/.*$/)[1] : 0,
-			pageID     : (patt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/\d+\/(\d+)\/.*$/)[1] : 0,
-			artboardID : (patt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
-			sliceID    : 0,//(window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/.+\/(\d+)?/)[1] : 0,
+			uploadID          : (artboardPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/(\d+)\/.*$/)[1] : (uploadPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/doc\/(\d+)\/.*$/)[1] : 0,
+			pageID            : (artboardPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/\d+\/(\d+)\/.*$/)[1] : 0,
+			artboardID        : (artboardPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
+			sliceID           : 0,//(window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/.+\/(\d+)?/)[1] : 0,
 			selectedArtboards : [],
-			overlayAlert  : null,
-			userID        : 0
+			overlayAlert      : null,
+			userID            : 0
 		};
 	}
 
@@ -86,6 +87,11 @@ class App extends Component {
 
 	handleSideNavUploadItem = (obj)=> {
 		console.log('handleSideNavUploadItem()', obj);
+
+		if (obj.selected) {
+			this.props.history.push('/doc/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+		}
+
 		this.setState({
 			uploadID   : (obj.selected) ? obj.id : 0,
 			pageID     : 0,
@@ -190,9 +196,9 @@ class App extends Component {
 		}
 	};
 
-	handleDownload = ()=> {
-		console.log('handleDownload()');
-		this.setState({ overlayAlert: 'download' });
+	handleAddOns = ()=> {
+		console.log('handleAddOns()');
+// 		this.setState({ overlayAlert: 'download' });
 	};
 
 	handleLogout = ()=> {
@@ -210,8 +216,8 @@ class App extends Component {
 			    parts={this.state.selectedArtboards}
 			    artboardID={this.state.artboardID}
 			    onHome={()=> this.handleHome()}
+			    onAddOns={()=> this.handleAddOns()}
 			    onUpload={()=> this.handleUpload()}
-			    onDownload={()=> this.handleDownload()}
 		    />
 		    <SideNav
 			    uploadID={this.state.uploadID}
@@ -232,6 +238,7 @@ class App extends Component {
 		    <div className="content-wrapper" ref={wrapper}>
 			    <Switch>
 			      <Route exact path="/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
+				    <Route exact path="/doc/:uploadID/:docName" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
 			      <Route exact path="/developer" component={DevelopersPage} />
 			      <Route exact path="/mission" component={MissionPage} />
 			      <Route exact path="/privacy" component={PrivacyPage} />

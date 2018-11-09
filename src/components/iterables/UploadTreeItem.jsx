@@ -9,21 +9,25 @@ class UploadTreeItem extends Component {
 		super(props);
 
 		this.state = {
+			title : this.props.title
 		};
 	}
 
 	componentDidMount() {
 	}
 
+	static getDerivedStateFromProps(nextProps) {
+		return ({ title : (nextProps.title.length > 30) ? (nextProps.title.substring(0, 29) + '…') : nextProps.title });
+	}
+
 	render() {
-		const arrowClass = (this.props.selected) ? 'upload-tree-item-arrow upload-tree-item-arrow-selected' : 'upload-tree-item-arrow';
 		const textClass = (this.props.selected) ? 'upload-tree-item-text upload-tree-item-text-selected' : 'upload-tree-item-text';
 
 		const pages = this.props.pages.map((page, i)=> {
 			return (
 				<PageTreeItem
 					key={i}
-					title={(page.title.length > 45) ? (page.title.substring(0, 44) + '…') : page.title}
+					title={page.title}
 					description={page.description}
 					artboards={page.artboards}
 					selected={page.selected}
@@ -34,7 +38,7 @@ class UploadTreeItem extends Component {
 
 		return (
 			<div className="upload-tree-item">
-				<div className={textClass} onClick={()=> this.props.onClick()}><img className={arrowClass} src={(this.props.selected) ? '/images/chevron-down.svg' : '/images/chevron-right.svg'} alt="chevron" />{this.props.title}</div>
+				<div className={textClass} onClick={()=> this.props.onClick()}>{this.state.title}</div>
 				{(this.props.selected) && (<div className="upload-tree-item-artboards">
 					{pages}
 				</div>)}

@@ -23,10 +23,10 @@ class TopNav extends Component {
 	render() {
 		return (
 			<div className="top-nav-wrapper">
-				<div className="top-nav-column top-nav-column-left"><Row>
-					<Column flexGrow={1} horizontal="start" vertical="center">
-						<img onClick={()=> this.props.onHome()} src="/images/logo.svg" className="nav-logo" alt="Design Engine" />
-					</Column>
+				<div className="top-nav-column top-nav-column-left"><Row horizontal="start" vertical="center">
+					<img onClick={()=> this.props.onHome()} src="/images/logo.svg" className="top-nav-logo" alt="Design Engine" />
+					<div className="top-nav-link" onClick={()=> this.props.onHome()}>Projects</div>
+					<div className="top-nav-link" onClick={()=> this.props.onAddOns()}>Add Ons</div>
 				</Row></div>
 
 				<div className="top-nav-column top-nav-column-middle">

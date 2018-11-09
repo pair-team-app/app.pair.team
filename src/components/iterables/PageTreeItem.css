@@ -2,6 +2,7 @@
 .page-tree-item {
 	margin-bottom: 12px;
 	font-weight: 400;
+	width: fit-content;
 }
 
 .page-tree-item-arrow {
@@ -15,13 +16,13 @@
 
 .page-tree-item-text:hover {
 	cursor: pointer;
-	text-decoration: underline;
 }
 
 .page-tree-item-arrow-selected, .page-tree-item-text-selected {
-	color: #7ed321;
+	font-weight: bold;
+	text-decoration: underline;
 }
 
 .page-tree-item-artboards {
-	margin: 12px 0 0 16px;
+	margin: 12px 0 0 8px;
 }
