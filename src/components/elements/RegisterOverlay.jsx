@@ -56,15 +56,7 @@ class RegisterOverlay extends Component {
 					console.log(action, response.data);
 					if (response.data.status === true) {
 						cookie.save('user_id', response.data.user_id, { path : '/' });
-						formData.append('action', 'UPLOADS');
-						formData.append('user_id', cookie.load('user_id'));
-						axios.post('https://api.designengine.ai/system.php', formData)
-							.then((response)=> {
-								console.log('UPLOADS', response.data);
-								this.props.onClick('submit');
-
-							}).catch((error) => {
-						});
+						this.props.onClick('submit');
 
 					} else {
 						this.setState({

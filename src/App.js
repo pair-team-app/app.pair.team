@@ -5,7 +5,7 @@ import './App.css';
 import axios from 'axios';
 import cookie from 'react-cookies';
 import ReactPixel from 'react-facebook-pixel';
-import { Route, withRouter } from 'react-router-dom'
+import { Route, Switch, withRouter } from 'react-router-dom'
 
 import DevelopersPage from './components/pages/DevelopersPage';
 import HomePage from './components/pages/HomePage';
@@ -15,7 +15,8 @@ import MissionPage from './components/pages/MissionPage';
 import PrivacyPage from './components/pages/PrivacyPage';
 import StripeOverlay from './components/elements/StripeOverlay';
 import RegisterOverlay from './components/elements/RegisterOverlay';
-import SideNav from "./components/elements/SideNav";
+import SideNav from './components/elements/SideNav';
+import Status404Page from './components/pages/Status404Page';
 import TermsPage from './components/pages/TermsPage';
 import TopNav from './components/elements/TopNav';
 import UploadOverlay from './components/elements/UploadOverlay';
@@ -26,10 +27,13 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 
+		const patt = /\/artboard\/\d+\/\d+\/\d+\/.*$/;
+
 		this.state = {
-			uploadID   : (window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/(\d+)\/.*$/)[1] : 0,
-			pageID     : (window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/(\d+)\/.*$/)[1] : 0,
-			artboardID : (window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
+			uploadID   : (patt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/(\d+)\/.*$/)[1] : 0,
+			pageID     : (patt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/\d+\/(\d+)\/.*$/)[1] : 0,
+			artboardID : (patt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
+
 			sliceID    : 0,//(window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/.+\/(\d+)?/)[1] : 0,
 			selectedArtboards : [],
 			overlayAlert  : null,
@@ -92,7 +96,7 @@ class App extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
-				this.props.history.push('/artboard/' + obj.pageID + '/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+				this.props.history.push('/artboard/' + this.state.uploadID + '/' + obj.pageID + '/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
 				this.setState({
 					pageID     : obj.pageID,
 					artboardID : obj.id
@@ -148,7 +152,7 @@ class App extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
-				this.props.history.push('/artboard/' + obj.pageID + '/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+				this.props.history.push('/artboard/' + this.state.uploadID + '/' + obj.pageID + '/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
 				this.setState({
 					pageID     : obj.pageID,
 					artboardID : obj.id
@@ -182,7 +186,7 @@ class App extends Component {
 	};
 
 	handleLogout = ()=> {
-		cookie.save('user_id', '0');
+		cookie.save('user_id', '0', { path : '/' });
 		this.setState({ userID : 0 });
 		window.location.href = '/';
 	};
@@ -216,12 +220,15 @@ class App extends Component {
 		    />
 
 		    <div className="content-wrapper" ref={wrapper}>
-			    <Route exact path="/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
-			    <Route exact path="/developer" component={DevelopersPage} />
-			    <Route exact path="/mission" component={MissionPage} />
-			    <Route exact path="/privacy" component={PrivacyPage} />
-			    <Route path="/artboard/:uploadID/:pageID/:artboardID/:artboardName" component={InspectorPage} />
-			    <Route exact path="/terms" component={TermsPage} />
+			    <Switch>
+			      <Route exact path="/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
+			      <Route exact path="/developer" component={DevelopersPage} />
+			      <Route exact path="/mission" component={MissionPage} />
+			      <Route exact path="/privacy" component={PrivacyPage} />
+			      <Route path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" component={InspectorPage} />
+			      <Route exact path="/terms" component={TermsPage} />
+			      <Route component={Status404Page} />
+			    </Switch>
 		    </div>
 
 		    {(this.state.overlayAlert === 'register') && (
