@@ -111,6 +111,22 @@
 	border-radius: 4px;
 }
 
+.inspector-page-panel-zoom-wrapper {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+}
+
+.inspector-page-zoom-button {
+	padding: 10px 8px;
+	margin-bottom: 4px;
+}
+
+.inspector-page-zoom-button-disabled {
+	cursor: default;
+	background-color: #3e3e3e;
+}
+
 .inspector-page-panel-image-slice {
 	border: 1px solid rgba(255, 153, 0, 0.5);
 	background-color: rgba(155, 95, 0, 0.25);
@@ -142,21 +158,6 @@
 .inspector-page-panel-button-wrapper {
 	width: 100%;
 	margin: 28px 0;
-}
-
-.inspector-page-size-button, .inspector-page-code-button {
-	background-color: #3e3e3e;
-	width: 33%;
-	padding: 10px 8px;
-	font-size: 12px;
-}
-
-.inspector-page-size-button-selected, .inspector-page-code-button-selected {
-	background-color: #111111;
-}
-
-.inspector-page-size-button-middle, .inspector-page-code-button-middle {
-	margin: 0 1px;
 }
 
 .inspector-page-download-button {

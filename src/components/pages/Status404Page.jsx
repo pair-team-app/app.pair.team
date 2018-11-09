@@ -20,7 +20,7 @@ class DevelopersPage extends Component {
 					<Column flexGrow={1} horizontal="center">
 						<div className="page-header">
 							<Row horizontal="center"><div className="page-header-text">404 Not Found!</div></Row>
-							<div className="page-subheader-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
+							<div className="page-subheader-text">The document at {window.location.pathname} was not found here.</div>
 						</div>
 					</Column>
 				</Row>

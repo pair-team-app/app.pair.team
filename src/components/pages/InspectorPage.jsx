@@ -5,6 +5,9 @@ import './InspectorPage.css';
 import axios from 'axios';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
+import FontAwesome from 'react-fontawesome';
+// eslint-disable-next-line
+import Tooltip from 'rc-tooltip';
 import { Column, Row } from 'simple-flexbox';
 
 import CommentItem from '../iterables/CommentItem';
@@ -23,7 +26,7 @@ class InspectorPage extends Component {
 			artboardID    : this.props.match.params.artboardID,
 			sliceID       : this.props.match.params.sliceID,
 			slice         : null,
-			scaleSize     : 3,
+			scaleSize     : 2,
 			page          : null,
 			artboard      : null,
 			code          : {
@@ -33,9 +36,9 @@ class InspectorPage extends Component {
 			comment       : '',
 			visibleTypes  : {
 				slice      : true,
-				hotspot    : true,
-				textfield  : true,
-				background : true
+				hotspot    : false,
+				textfield  : false,
+				background : false
 			},
 			languages     : [{
 				id       : 1,
@@ -57,15 +60,6 @@ class InspectorPage extends Component {
 	}
 
 	componentDidMount() {
-// 		let formData = new FormData();
-// 		formData.append('action', 'ADD_VIEW');
-// 		formData.append('artboard_id', '' + this.props.match.params.artboardID);
-// 		axios.post('https://api.designengine.ai/system.php', formData)
-// 			.then((response) => {
-// 				console.log('ADD_VIEW', response.data);
-// 			}).catch((error) => {
-// 		});
-
 		this.refreshData();
 	}
 
@@ -128,11 +122,16 @@ class InspectorPage extends Component {
 		});
 	};
 
-	handleSliceToggle = (type, isSelected)=> {
-		console.log('handleSliceToggle()', type, isSelected);
+	handleSliceToggle = (type)=> {
+		console.log('handleSliceToggle()', type);
 
 		let visibleTypes = this.state.visibleTypes;
-		visibleTypes[type] = !visibleTypes[type];
+		Object.keys(visibleTypes).forEach(function(key) {
+			visibleTypes[key] = false;
+
+		});
+		visibleTypes[type] = true;
+
 		this.setState({
 			slice        : (this.state.slice) ? (this.state.slice.type === type) ? null : this.state.slice : null,
 			visibleTypes : visibleTypes
@@ -174,8 +173,8 @@ class InspectorPage extends Component {
 		});
 	};
 
-	handleSizeChange = (scaleSize)=> {
-		this.setState({ scaleSize : scaleSize });
+	handleZoom = (direction)=> {
+		this.setState({ scaleSize : Math.min(Math.max(this.state.scaleSize + direction, 1), 3) });
 	};
 
 	handleSliceClick = (ind, item)=> {
@@ -269,10 +268,10 @@ class InspectorPage extends Component {
 						<div className="inspector-page-hero-title-wrapper">
 							{/*<Column flexGrow={1} horizontal="start">{(artboard) ? artboard.title : 'N/A'}</Column>*/}
 							<Column flexGrow={1} horizontal="center"><Row>
-								<SliceToggle type="slice" onClick={(isSelected)=> this.handleSliceToggle('slice', isSelected)} last={false} />
-								<SliceToggle type="hotspot" onClick={(isSelected)=> this.handleSliceToggle('hotspot', isSelected)} last={false} />
-								<SliceToggle type="textfield" onClick={(isSelected)=> this.handleSliceToggle('textfield', isSelected)} last={false} />
-								<SliceToggle type="background" onClick={(isSelected)=> this.handleSliceToggle('background', isSelected)} last={true} />
+								<SliceToggle type="slice" selected={this.state.visibleTypes.slice} onClick={(isSelected)=> this.handleSliceToggle('slice')} last={false} />
+								<SliceToggle type="hotspot" selected={this.state.visibleTypes.hotspot} onClick={(isSelected)=> this.handleSliceToggle('hotspot')} last={false} />
+								<SliceToggle type="textfield" selected={this.state.visibleTypes.textfield} onClick={(isSelected)=> this.handleSliceToggle('textfield')} last={false} />
+								<SliceToggle type="background" selected={this.state.visibleTypes.background} onClick={(isSelected)=> this.handleSliceToggle('background')} last={true} />
 							</Row></Column>
 						</div>
 					</div>
@@ -293,13 +292,12 @@ class InspectorPage extends Component {
 						{(slice) && (
 							<img className={panelImageClass} src={((slice.type === 'slice') ? slice.filename + '@' + this.state.scaleSize + 'x.png' : ('https://via.placeholder.com/' + (slice.meta.frame.size.width * this.state.scaleSize) + 'x' + (slice.meta.frame.size.height * this.state.scaleSize)))} alt={(slice.title + ' - @' + this.state.scaleSize + 'x')} />
 						)}
+						<div className="inspector-page-panel-zoom-wrapper">
+							<button className={(slice && this.state.scaleSize < 3) ? 'inspector-page-zoom-button' : 'inspector-page-zoom-button button-disabled'} onClick={()=> this.handleZoom(1)}><FontAwesome name="plus" /></button><br />
+							<button className={(slice && this.state.scaleSize > 1) ? 'inspector-page-zoom-button' : 'inspector-page-zoom-button button-disabled'} onClick={()=> this.handleZoom(-1)} style={{marginRight:'6px'}}><FontAwesome name="minus" /></button>
+						</div>
 					</div>
 					<div className="inspector-page-panel-button-wrapper">
-						<div>
-							<button className={'inspector-page-size-button' + ((this.state.scaleSize === 1) ? ' inspector-page-size-button-selected' : '')} onClick={()=> this.handleSizeChange(1)}>1x</button>
-							<button className={'inspector-page-size-button inspector-page-size-button-middle' + ((this.state.scaleSize === 2) ? ' inspector-page-size-button-selected' : '')} onClick={()=> this.handleSizeChange(2)}>2x</button>
-							<button className={'inspector-page-size-button' + ((this.state.scaleSize === 3) ? ' inspector-page-size-button-selected' : '')} onClick={()=> this.handleSizeChange(3)}>3x</button>
-						</div>
 						<div><button className="inspector-page-download-button" onClick={()=> this.handleDownload()}>Download</button></div>
 					</div>
 					<div className="inspector-page-panel-button-wrapper">

@@ -33,7 +33,6 @@ class App extends Component {
 			uploadID   : (patt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/(\d+)\/.*$/)[1] : 0,
 			pageID     : (patt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/\d+\/(\d+)\/.*$/)[1] : 0,
 			artboardID : (patt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
-
 			sliceID    : 0,//(window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/.+\/(\d+)?/)[1] : 0,
 			selectedArtboards : [],
 			overlayAlert  : null,
@@ -51,14 +50,25 @@ class App extends Component {
 		ReactPixel.init('318191662273348', advancedMatching, options);
 		ReactPixel.trackCustom('load');
 
-		if (window.location.pathname.includes('/artboard/') && this.state.uploadID === 0) {
+		if (window.location.pathname.includes('/artboard/')) {
 			let formData = new FormData();
-			formData.append('action', 'PAGE');
-			formData.append('page_id', this.state.pageID);
+
+			if (this.state.uploadID === 0) {
+				formData.append('action', 'PAGE');
+				formData.append('page_id', this.state.pageID);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response) => {
+						console.log('PAGE', response.data);
+						this.setState({ uploadID : response.data.page.upload_id });
+					}).catch((error) => {
+				});
+			}
+
+			formData.append('action', 'ADD_VIEW');
+			formData.append('artboard_id', this.state.artboardID);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
-					console.log('PAGE', response.data);
-					this.setState({ uploadID : response.data.page.upload_id });
+					console.log('ADD_VIEW', response.data);
 				}).catch((error) => {
 			});
 		}
