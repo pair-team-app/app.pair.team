@@ -22,7 +22,7 @@ a:hover {
 }
 
 button {
-  padding: 7px 35px;
+  padding: 12px 35px;
   background-image: linear-gradient(#69cd58, #57aa48);
   border: 1px solid rgba(131, 142, 155, 0.5);
   border-radius: 4px;
@@ -45,6 +45,7 @@ input[type=text], input[type=password], input[type=tel], .input-txt {
   width: 100%;
   border: 1px solid #eaecef;
   border-radius: 4px;
+  font-size: 14px;
 }
 
 p {
@@ -55,10 +56,11 @@ textarea {
   width: 100%;
   border: 1px solid #eaecef;
   border-radius: 4px;
+  font-size: 14px;
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  display: none;
 }
 
 /*::-webkit-scrollbar-track {*/

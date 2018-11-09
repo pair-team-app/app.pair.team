@@ -22,7 +22,7 @@
 }
 
 .top-nav-column-right {
-	padding-right: 28px;
+	padding-right: 8px;
 	text-align: right;
 }
 
@@ -46,7 +46,6 @@
 }
 
 .top-nav-upload-button {
-	margin-right: 9px;
-	padding: 7px 12px;
+	/*margin-right: 9px;*/
 	border-radius: 3px;
 }

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './ArtboardTreeItem.css';
 
-import { Column, Row } from 'simple-flexbox';
+import { Row } from 'simple-flexbox';
 
 class ArtboardTreeItem extends Component {
 	constructor(props) {

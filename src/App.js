@@ -207,6 +207,16 @@ class App extends Component {
 		window.location.href = '/';
 	};
 
+	handlePage = (url)=> {
+		this.setState({
+			uploadID   : 0,
+			pageID     : 0,
+			artboardID : 0
+		});
+
+		this.props.history.push('/' + url);
+	};
+
   render() {
   	console.log('App.state', this.state);
 
@@ -224,8 +234,6 @@ class App extends Component {
 			    pageID={this.state.pageID}
 			    artboardID={this.state.artboardID}
 			    sliceID={this.state.sliceID}
-			    onBack={()=> window.location.href = '/'}
-			    onTop={()=> this.setState({ pageID : -1 })}
 			    onUploadItem={(obj)=> this.handleSideNavUploadItem(obj)}
 			    onPageItem={(obj)=> this.handleSideNavPageItem(obj)}
 			    onArtboardItem={(obj)=> this.handleSideNavArtboardItem(obj)}
@@ -233,16 +241,18 @@ class App extends Component {
 			    onInvite={()=> this.setState({ overlayAlert : 'invite' })}
 			    onRegister={()=> this.setState({ overlayAlert: 'register' })}
 			    onLogout={()=> this.handleLogout()}
+			    onUpload={()=> this.setState({ overlayAlert : 'upload' })}
+			    onPage={(url)=> this.handlePage(url)}
 		    />
 
 		    <div className="content-wrapper" ref={wrapper}>
 			    <Switch>
 			      <Route exact path="/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
-				    <Route exact path="/doc/:uploadID/:docName" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
+				    <Route path="/doc/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
 			      <Route exact path="/developer" component={DevelopersPage} />
 			      <Route exact path="/mission" component={MissionPage} />
 			      <Route exact path="/privacy" component={PrivacyPage} />
-			      <Route path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" component={InspectorPage} />
+			      <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" component={InspectorPage} />
 			      <Route exact path="/terms" component={TermsPage} />
 			      <Route component={Status404Page} />
 			    </Switch>

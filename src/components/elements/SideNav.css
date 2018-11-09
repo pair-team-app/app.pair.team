@@ -6,7 +6,7 @@
 	overflow-y: scroll;
 	height: 100%;
 	background-color: #fafbfc;
-	border: 1px solid #eaecef;
+	border-right: 1px solid #eaecef;
 	padding: 28px 28px 0 28px;
 }
 
@@ -22,7 +22,6 @@
 .side-nav-invite-button {
 	width: 100%;
 	margin-bottom: 28px;
-	padding: 9px 5px;
 }
 
 .side-nav-header {
@@ -56,7 +55,6 @@
 .nav-link a:active {
 	color: #eeeeee;
 }
-
 
 .copyright {
 	color: #999999;

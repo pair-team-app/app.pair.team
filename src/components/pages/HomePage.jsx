@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './HomePage.css';
 
 import axios from 'axios';
+import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
@@ -24,7 +25,9 @@ class HomePage extends Component {
 			email3        : '',
 			email3Valid   : false,
 
-			artboards : []
+			title         : 'Loading Project…',
+			uploadURL     : '',
+			artboards     : []
 		};
 	}
 
@@ -45,53 +48,51 @@ class HomePage extends Component {
 
 	refreshData = ()=> {
 		let formData = new FormData();
-		formData.append('action', 'ARTBOARDS');
-		formData.append('upload_id', this.props.uploadID);
-		formData.append('page_id', this.props.pageID);
+		formData.append('action', 'UPLOAD_NAMES');
+		formData.append('user_id', cookie.load('user_id'));
 		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response)=> {
-				console.log('ARTBOARDS', response.data);
+			.then((response) => {
+				console.log('UPLOAD_NAMES', response.data);
+				let self = this;
+				let title = '';
+				let uploadURL = '';
+				response.data.uploads.forEach(function(upload, i) {
+					if (upload.id === self.props.uploadID) {
+						title = upload.title;
+						uploadURL = 'https://earlyaccess.designengine.ai/doc/' + self.props.uploadID + '/' + upload.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
+					}
+				});
 
-				const artboards = response.data.artboards.map((item) => ({
-					id       : item.id,
-					pageID   : item.page_id,
-					title    : item.title,
-					type     : item.type,
-					filename : item.filename,
-					meta     : JSON.parse(item.meta),
-					added    : item.added,
-					selected : false
-				}));
-				this.setState({ artboards : artboards });
+				formData.append('action', 'ARTBOARDS');
+				formData.append('upload_id', this.props.uploadID);
+				formData.append('page_id', this.props.pageID);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response)=> {
+						console.log('ARTBOARDS', response.data);
+
+						const artboards = response.data.artboards.map((item) => ({
+							id       : item.id,
+							pageID   : item.page_id,
+							title    : item.title,
+							type     : item.type,
+							filename : item.filename,
+							meta     : JSON.parse(item.meta),
+							added    : item.added,
+							selected : false
+						}));
+
+
+						this.setState({
+							title     : title,
+							uploadURL : uploadURL,
+							artboards : artboards
+						});
+
+
+					}).catch((error) => {
+				});
 			}).catch((error) => {
 		});
-	};
-
-	handleToggle = (id, isSelected)=> {
-		console.log('handleToggle()', id, isSelected);
-
-		let obj = {};
-		this.state.artboards.forEach(function(item, i) {
-			if (item.id === id) {
-				obj = item;
-				obj.selected = isSelected;
-			}
-		});
-
-		this.props.onArtboardSelected(obj);
-	};
-
-	handleSelect = (id)=> {
-		console.log('handleSelect()', id);
-
-		let obj = {};
-		this.state.artboards.forEach(function(item, i) {
-			if (item.id === id) {
-				obj = item;
-			}
-		});
-
-		this.props.onArtboardClicked(obj);
 	};
 
 	handleRegistrationSubmit = ()=> {
@@ -188,6 +189,11 @@ class HomePage extends Component {
 		}
 	};
 
+	handleURLCopy = ()=> {
+		window.alert('URL copied to clipboard!');
+	};
+
+
 	render() {
 		console.log('HomePage.render()', this.props);
 
@@ -200,8 +206,7 @@ class HomePage extends Component {
 							title={item.title}
 							image={item.filename}
 							size="landscape"//{(item.meta.frame.size.width > item.meta.frame.size.height || item.meta.frame.size.width === item.meta.frame.size.height) ? 'landscape' : 'portrait'}
-							onClick={() => this.handleSelect(item.id)}
-							onSelect={(isSelected) => this.handleToggle(item.id, isSelected)} />
+							onClick={() => this.props.onArtboardClicked(item)} />
 					</Column>
 				);
 
@@ -209,17 +214,6 @@ class HomePage extends Component {
 				return (null);
 			}
 		});
-
-		let artboard = null;
-		if (this.props.pageID !== -1) {
-			artboards.forEach(function (item, i) {
-				if (artboard === null && item.type === 'hero') {
-					artboard = item;
-				}
-			});
-		}
-
-		const imageClass = (artboard) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? 'home-page-image home-page-image-landscape' : 'home-page-image home-page-image-portrait' : 'home-page-image';
 
 		let email1Class = '';
 		let password1Class = '';
@@ -324,14 +318,23 @@ class HomePage extends Component {
 				</div>)}
 
 				{(parseInt(cookie.load('user_id'), 10) !== 0 && parseInt(this.props.uploadID, 10) !== 0) && (<div>
-					{(artboard) && (
-						<div className="home-page-project" onClick={() => this.handleSelect(artboard.id)}>
-							<img className={imageClass} src={artboard.filename} alt={artboards.title} />
-							<div className="home-page-title">{artboard.title}</div>
-						</div>
-					)}
-
-					<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
+					<Row vertical="start">
+						<Column flexGrow={1} horizontal="center">
+							<div className="page-header">
+								<Row horizontal="center"><div className="page-header-text">{this.state.title}</div></Row>
+								<div className="page-subheader-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
+								<Row horizontal="center">
+									<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={this.state.uploadURL}>
+										<button className="page-button">Copy Project Link</button>
+									</CopyToClipboard>
+								</Row>
+								<Row horizontal="center"><div className="home-page-upload-url">
+									<a href={this.state.uploadURL} target="_blank" rel="noopener noreferrer">{this.state.uploadURL}</a>
+								</div></Row>
+							</div>
+						</Column>
+					</Row>
+					<Row horizontal="space-between" style={{flexWrap:'wrap'}}>
 						{items}
 					</Row>
 				</div>)}

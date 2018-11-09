@@ -2,7 +2,11 @@
 .home-page-wrapper {
 	width: 100%;
 	margin-bottom: 78px;
-	padding: 28px;
+}
+
+.home-page-upload-url {
+	margin-top: 24px;
+	font-size: 12px;
 }
 
 .home-page-project {

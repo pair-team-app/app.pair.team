@@ -46,7 +46,7 @@ class CommentItem extends Component {
 				<img className="comment-item-avatar" src="/images/default-avatar.png" alt={this.props.author} />
 				<div className="comment-item-vote-wrapper">
 					<FontAwesome name="arrow-up" className={arrowUpClass} onClick={()=> this.props.onVote(1)} /><br />
-					{score}<br />
+					<div className="comment-item-score">{score}</div>
 					<FontAwesome name="arrow-down" className={arrowDnClass} onClick={()=> this.props.onVote(-1)} /><br />
 				</div>
 				<div className="comment-item-content-wrapper">

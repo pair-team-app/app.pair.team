@@ -1,15 +1,18 @@
 
 .comment-item {
-	margin: 28px 0;
+	margin-top: 20px;
 	display: table;
 	font-size: 12px;
 }
 
 .comment-item-avatar {
-	width: 50px;
-	height: 50px;
+	width: 60px;
+	height: 60px;
 	display: table-cell;
 	margin: 0 10px 0 0;
+	background-color: #fafbfc;
+	border: 1px solid #eaecef;
+	border-radius: 4px;
 }
 
 .comment-item-vote-wrapper {
@@ -28,20 +31,21 @@
 }
 
 .comment-item-arrow-voted {
-	color: #7ed321;
+	color: #0267D8;
 }
 
 .comment-item-score {
+	padding: 8px 0;
 }
 
 .comment-item-content-wrapper {
-	padding: 4px;
+	padding: 6px 4px;
 	display: table-cell;
 	vertical-align: top;
 }
 
 .comment-item-date {
-	margin-bottom: 3px;
+	margin-bottom: 8px;
 }
 
 .comment-item-text {

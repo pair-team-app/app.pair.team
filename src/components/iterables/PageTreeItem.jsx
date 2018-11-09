@@ -4,7 +4,7 @@ import './PageTreeItem.css';
 
 import ArtboardTreeItem from './ArtboardTreeItem';
 
-import { Column, Row } from 'simple-flexbox';
+import { Row } from 'simple-flexbox';
 
 class PageTreeItem extends Component {
 	constructor(props) {

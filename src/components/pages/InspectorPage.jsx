@@ -41,9 +41,14 @@ class InspectorPage extends Component {
 				background : false
 			},
 			languages     : [{
+				id       : 0,
+				title    : 'Add Ons',
+				selected : true,
+				key      : 'languages'
+			}, {
 				id       : 1,
 				title    : 'CSS/HTML',
-				selected : true,
+				selected : false,
 				key      : 'languages'
 			}, {
 				id       : 2,
@@ -260,93 +265,95 @@ class InspectorPage extends Component {
 		return (
 			<div className="inspector-page-wrapper">
 				<div className="inspector-page-content">
+					<div className="inspector-page-title">{(artboard) ? artboard.title : 'N/A'}</div>
 					<div className="inspector-page-hero-wrapper">
 						{(artboard) && (<img className={heroImageClass} src={artboard.filename} alt="Hero" ref={heroImage} />)}
 						<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>
 							{slices}
 						</div>
-						<div className="inspector-page-hero-title-wrapper">
-							{/*<Column flexGrow={1} horizontal="start">{(artboard) ? artboard.title : 'N/A'}</Column>*/}
-							<Column flexGrow={1} horizontal="center"><Row>
-								<SliceToggle type="slice" selected={this.state.visibleTypes.slice} onClick={(isSelected)=> this.handleSliceToggle('slice')} last={false} />
-								<SliceToggle type="hotspot" selected={this.state.visibleTypes.hotspot} onClick={(isSelected)=> this.handleSliceToggle('hotspot')} last={false} />
-								<SliceToggle type="textfield" selected={this.state.visibleTypes.textfield} onClick={(isSelected)=> this.handleSliceToggle('textfield')} last={false} />
-								<SliceToggle type="background" selected={this.state.visibleTypes.background} onClick={(isSelected)=> this.handleSliceToggle('background')} last={true} />
-							</Row></Column>
+						<div className="inspector-page-toggle-wrapper">
+							<SliceToggle type="slice" selected={this.state.visibleTypes.slice} onClick={()=> this.handleSliceToggle('slice')} last={false} /><br />
+							<SliceToggle type="hotspot" selected={this.state.visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} last={false} /><br />
+							<SliceToggle type="textfield" selected={this.state.visibleTypes.textfield} onClick={()=> this.handleSliceToggle('textfield')} last={false} /><br />
+							<SliceToggle type="background" selected={this.state.visibleTypes.background} onClick={()=> this.handleSliceToggle('background')} last={true} />
 						</div>
 					</div>
-					<textarea className="inspector-page-comment-txt" name="comment" placeholder="Enter Comment" value={this.state.comment} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} />
-					<button className={commentButtonClass} onClick={()=> this.submitComment()}>Submit</button>
-
-					<div className="inspector-page-hero-info-wrapper">
-						{(artboard) ? artboard.views + ' View' + ((parseInt(artboard.views, 10) !== 1) ? 's' : '') : 'Views'}<br />
-						{(artboard) ? artboard.downloads + ' Download' + ((parseInt(artboard.downloads, 10) !== 1) ? 's' : '') : 'Downloads'}<br />
-						{(artboard) ? artboard.comments.length + ' Comment' + ((artboard.comments.length !== 1) ? 's' : '') : 'Comments'}
+					<div>
+						<button className="inspector-page-download-button" onClick={()=> this.handleDownload()}>Download</button>
+						<button className="inspector-page-add-button" onClick={()=> this.handleDownload()}>Add to My Projects</button>
 					</div>
+					<textarea className="inspector-page-comment-txt" name="comment" placeholder="Enter Comment" value={this.state.comment} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} />
+					<button className={commentButtonClass} onClick={()=> this.submitComment()}>Comment</button>
+
+					{/*<div className="inspector-page-hero-info-wrapper">*/}
+						{/*{(artboard) ? artboard.views + ' View' + ((parseInt(artboard.views, 10) !== 1) ? 's' : '') : 'Views'}<br />*/}
+						{/*{(artboard) ? artboard.downloads + ' Download' + ((parseInt(artboard.downloads, 10) !== 1) ? 's' : '') : 'Downloads'}<br />*/}
+						{/*{(artboard) ? artboard.comments.length + ' Comment' + ((artboard.comments.length !== 1) ? 's' : '') : 'Comments'}*/}
+					{/*</div>*/}
+
 					<div className="inspector-page-comment-wrapper">
 						{comments}
 					</div>
 				</div>
 				<div className="inspector-page-panel">
-					<div className="inspector-page-panel-display">
-						{(slice) && (
-							<img className={panelImageClass} src={((slice.type === 'slice') ? slice.filename + '@' + this.state.scaleSize + 'x.png' : ('https://via.placeholder.com/' + (slice.meta.frame.size.width * this.state.scaleSize) + 'x' + (slice.meta.frame.size.height * this.state.scaleSize)))} alt={(slice.title + ' - @' + this.state.scaleSize + 'x')} />
-						)}
-						<div className="inspector-page-panel-zoom-wrapper">
-							<button className={(slice && this.state.scaleSize < 3) ? 'inspector-page-zoom-button' : 'inspector-page-zoom-button button-disabled'} onClick={()=> this.handleZoom(1)}><FontAwesome name="plus" /></button><br />
-							<button className={(slice && this.state.scaleSize > 1) ? 'inspector-page-zoom-button' : 'inspector-page-zoom-button button-disabled'} onClick={()=> this.handleZoom(-1)} style={{marginRight:'6px'}}><FontAwesome name="minus" /></button>
+					<div className="inspector-page-panel-content-wrapper">
+						<div className="inspector-page-panel-display">
+							{(slice) && (
+								<img className={panelImageClass} src={((slice.type === 'slice') ? slice.filename + '@' + this.state.scaleSize + 'x.png' : ('https://via.placeholder.com/' + (slice.meta.frame.size.width * this.state.scaleSize) + 'x' + (slice.meta.frame.size.height * this.state.scaleSize)))} alt={(slice.title + ' - @' + this.state.scaleSize + 'x')} />
+							)}
+							<div className="inspector-page-panel-zoom-wrapper">
+								<button className={(slice && this.state.scaleSize < 3) ? 'inspector-page-zoom-button' : 'inspector-page-zoom-button button-disabled'} onClick={()=> this.handleZoom(1)}><FontAwesome name="plus" /></button>
+								<button className={(slice && this.state.scaleSize > 1) ? 'inspector-page-zoom-button' : 'inspector-page-zoom-button button-disabled'} onClick={()=> this.handleZoom(-1)} style={{marginRight:'6px'}}><FontAwesome name="minus" /></button>
+							</div>
 						</div>
 					</div>
-					<div className="inspector-page-panel-button-wrapper">
-						<div><button className="inspector-page-download-button" onClick={()=> this.handleDownload()}>Download</button></div>
-					</div>
-					<div className="inspector-page-panel-button-wrapper">
+					<div className="inspector-page-panel-content-wrapper">
 						<Dropdown
 							title="CSS/HTML"
 							list={this.state.languages}
 							resetThenSet={this.resetThenSet}
 						/>
+						<div className="inspector-page-panel-code-wrapper">
+							<div className="inspector-page-panel-code"><span dangerouslySetInnerHTML={{ __html : this.state.code.html }} /></div>
+							<CopyToClipboard onCopy={()=> this.handleCodeCopy()} text={this.state.code.syntax}>
+								<button className="inspector-page-copy-code-button">Copy</button>
+							</CopyToClipboard>
+						</div>
 					</div>
-					<div className="inspector-page-panel-code-wrapper">
-						<div className="inspector-page-panel-code"><span dangerouslySetInnerHTML={{ __html : this.state.code.html }} /></div>
-					</div>
-					<div className="inspector-page-panel-button-wrapper">
-						<CopyToClipboard onCopy={()=> this.handleCodeCopy()} text={this.state.code.syntax}>
-							<button className="inspector-page-copy-code-button">Copy</button>
-						</CopyToClipboard>
-					</div>
-					<div className="inspector-page-panel-info-wrapper">
-						{/*<Row><Column flexGrow={1}>System</Column><Column flexGrow={1} horizontal="end">{(artboard && artboard.system) ? artboard.system.title : 'N/A'}</Column></Row>*/}
-						{/*<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end"><a href={'mailto:' + ((artboard && artboard.system) ? artboard.system.author : '#')} style={{textDecoration:'none'}}>{(artboard && artboard.system) ? artboard.system.author : 'N/A'}</a></Column></Row>*/}
-						{/*<Row><Column flexGrow={1}>Page</Column><Column flexGrow={1} horizontal="end">{(page) ? page.title : 'N/A'}</Column></Row>*/}
-						{/*<Row><Column flexGrow={1}>Artboard</Column><Column flexGrow={1} horizontal="end">{(artboard) ? artboard.title : 'N/A'}</Column></Row>*/}
-						{/*<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end">{(slice) ? slice.title : 'N/A'} {(slice) ? '(' + slice.type.replace(/(\b\w)/gi, function(m) {return (m.toUpperCase());}) + ')' : ''}</Column></Row>*/}
-						<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end">{(slice) ? slice.title : 'N/A'}</Column></Row>
-						<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end">{(slice) ? slice.type.replace(/(\b\w)/gi, function(m) {return (m.toUpperCase());}) : 'N/A'}</Column></Row>
-						<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end">{(slice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(slice.added))) : 'N/A'}</Column></Row>
-						<Row>
-							<Column flexGrow={1} flexBasis={1}>Export Size</Column>
-							<Row flexGrow={1} flexBasis={1}>
-								<div style={{width:'50%'}}>W: {(slice) ? slice.meta.frame.size.width : 0}px</div>
-								<div style={{width:'50%', textAlign:'right'}}>H: {(slice) ? slice.meta.frame.size.height : 0}px</div>
+					<div className="inspector-page-panel-content-wrapper" style={{borderBottom:'none'}}>
+						<div className="inspector-page-panel-info-wrapper">
+							{/*<Row><Column flexGrow={1}>System</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard && artboard.system) ? artboard.system.title : 'N/A'}</Column></Row>*/}
+							{/*<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val"><a href={'mailto:' + ((artboard && artboard.system) ? artboard.system.author : '#')} style={{textDecoration:'none'}}>{(artboard && artboard.system) ? artboard.system.author : 'N/A'}</a></Column></Row>*/}
+							{/*<Row><Column flexGrow={1}>Page</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(page) ? page.title : 'N/A'}</Column></Row>*/}
+							{/*<Row><Column flexGrow={1}>Artboard</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard) ? artboard.title : 'N/A'}</Column></Row>*/}
+							{/*<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.title : 'N/A'} {(slice) ? '(' + slice.type.replace(/(\b\w)/gi, function(m) {return (m.toUpperCase());}) + ')' : ''}</Column></Row>*/}
+							<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.title : 'N/A'}</Column></Row>
+							<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.type.replace(/(\b\w)/gi, function(m) {return (m.toUpperCase());}) : 'N/A'}</Column></Row>
+							<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(slice.added))) : 'N/A'}</Column></Row>
+							<Row>
+								<Column flexGrow={1} flexBasis={1}>Export Size</Column>
+								<Row flexGrow={1} flexBasis={1} className="inspector-page-panel-info-val">
+									<div style={{width:'50%'}}>W: {(slice) ? slice.meta.frame.size.width : 0}px</div>
+									<div style={{width:'50%', textAlign:'right'}}>H: {(slice) ? slice.meta.frame.size.height : 0}px</div>
+								</Row>
 							</Row>
-						</Row>
-						<Row>
-							<Column flexGrow={1} flexBasis={1}>Position</Column>
-							<Row flexGrow={1} flexBasis={1}>
-								<div style={{width:'50%'}}>X: {(slice) ? slice.meta.frame.origin.x : 0}px</div>
-								<div style={{width:'50%', textAlign:'right'}}>Y: {(slice) ? slice.meta.frame.origin.y : 0}px</div>
+							<Row>
+								<Column flexGrow={1} flexBasis={1}>Position</Column>
+								<Row flexGrow={1} flexBasis={1} className="inspector-page-panel-info-val">
+									<div style={{width:'50%'}}>X: {(slice) ? slice.meta.frame.origin.x : 0}px</div>
+									<div style={{width:'50%', textAlign:'right'}}>Y: {(slice) ? slice.meta.frame.origin.y : 0}px</div>
+								</Row>
 							</Row>
-						</Row>
-						{/*<Row><Column flexGrow={1}>Scale</Column><Column flexGrow={1} horizontal="end">{(this.state.scaleSize + 'x')}</Column></Row>*/}
-						<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end">{(slice) ? slice.meta.rotation : 0}&deg;</Column></Row>
-						<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end">{(slice) ? (slice.meta.opacity * 100) : 100}%</Column></Row>
-						<Row><Column flexGrow={1}>Color</Column><Column flexGrow={1} horizontal="end">{(slice) ? slice.meta.fillColor.toUpperCase() : 'N/A'}</Column></Row>
-						{/*<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end">{(slice && slice.meta.font.family) ? slice.meta.font.family : 'N/A'}</Column></Row>*/}
-						<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end">{(slice && slice.type === 'textfield') ? (artboard.system.title.toLowerCase().includes('ios')) ? 'SFProText' : 'Roboto' : 'N/A'}</Column></Row>
-						<Row><Column flexGrow={1}>Font size</Column><Column flexGrow={1} horizontal="end">{(slice && slice.type === 'textfield' && slice.meta.font.size) ? (slice.meta.font.size + 'px') : 'N/A'}</Column></Row>
-						<Row><Column flexGrow={1}>Font color</Column><Column flexGrow={1} horizontal="end">{(slice && slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : 'N/A'}</Column></Row>
-						<Row><Column flexGrow={1}>Blend</Column><Column flexGrow={1} horizontal="end">{(slice) ? slice.meta.blendMode.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) : 'N/A'}</Column></Row>
+							{/*<Row><Column flexGrow={1}>Scale</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(this.state.scaleSize + 'x')}</Column></Row>*/}
+							<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.meta.rotation : 0}&deg;</Column></Row>
+							<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? (slice.meta.opacity * 100) : 100}%</Column></Row>
+							<Row><Column flexGrow={1}>Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.meta.fillColor.toUpperCase() : 'N/A'}</Column></Row>
+							{/*<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice && slice.meta.font.family) ? slice.meta.font.family : 'N/A'}</Column></Row>*/}
+							<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice && slice.type === 'textfield') ? (artboard.system.title.toLowerCase().includes('ios')) ? 'SFProText' : 'Roboto' : 'N/A'}</Column></Row>
+							<Row><Column flexGrow={1}>Font size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice && slice.type === 'textfield' && slice.meta.font.size) ? (slice.meta.font.size + 'px') : 'N/A'}</Column></Row>
+							<Row><Column flexGrow={1}>Font color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice && slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : 'N/A'}</Column></Row>
+							<Row><Column flexGrow={1}>Blend</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.meta.blendMode.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) : 'N/A'}</Column></Row>
+						</div>
 					</div>
 				</div>
 			</div>
