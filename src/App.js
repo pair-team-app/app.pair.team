@@ -48,6 +48,10 @@ class App extends Component {
 			debug      : false
 		};
 
+		if (typeof cookie.load('user_id') === 'undefined') {
+			cookie.save('user_id', '0', { path : '/' });
+		}
+
 		ReactPixel.init('318191662273348', advancedMatching, options);
 		ReactPixel.trackCustom('load');
 
@@ -76,6 +80,8 @@ class App extends Component {
 	}
 
 	handleHome = ()=> {
+		wrapper.current.scrollTo(0, 0);
+
 		this.setState({
 			uploadID   : 0,
 			pageID     : 0,
@@ -208,12 +214,13 @@ class App extends Component {
 	};
 
 	handlePage = (url)=> {
+		wrapper.current.scrollTo(0, 0);
+
 		this.setState({
 			uploadID   : 0,
 			pageID     : 0,
 			artboardID : 0
 		});
-
 		this.props.history.push('/' + url);
 	};
 

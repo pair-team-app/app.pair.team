@@ -317,7 +317,7 @@ class HomePage extends Component {
 					</Row>
 				</div>)}
 
-				{(parseInt(cookie.load('user_id'), 10) !== 0 && parseInt(this.props.uploadID, 10) !== 0) && (<div>
+				{(parseInt(this.props.uploadID, 10) !== 0) && (<div>
 					<Row vertical="start">
 						<Column flexGrow={1} horizontal="center">
 							<div className="page-header">

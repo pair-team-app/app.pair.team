@@ -277,23 +277,25 @@ class SideNav extends Component {
 				<div className="side-nav-top-wrapper">
 					<button className="side-nav-invite-button" onClick={()=> this.props.onInvite()}>Invite Team Members</button>
 					<div className="side-nav-header">Projects</div>
-					{this.state.uploads.map((upload, i, arr) => {
-						return (
-							<UploadTreeItem
-								key={i}
-								title={upload.title}
-								author={upload.author}
-								pages={upload.pages}
-								selected={upload.selected}
-								onClick={()=> this.handleUploadClick(upload)}
-								onPageClick={(page)=> this.handlePageClick(page)}
-								onArtboardClick={(artboard)=> this.handleArtboardClick(artboard)} />
-						);
-					})}
+					<div className="side-nav-tree-wrapper">
+						{this.state.uploads.map((upload, i, arr) => {
+							return (
+								<UploadTreeItem
+									key={i}
+									title={upload.title}
+									author={upload.author}
+									pages={upload.pages}
+									selected={upload.selected}
+									onClick={()=> this.handleUploadClick(upload)}
+									onPageClick={(page)=> this.handlePageClick(page)}
+									onArtboardClick={(artboard)=> this.handleArtboardClick(artboard)} />
+							);
+						})}
+					</div>
 					<div className="nav-link" onClick={()=> this.props.onUpload()}>New Project</div>
 				</div>
 				<div className="side-nav-bottom-wrapper">
-					{(cookie.load('user_id') !== '0')
+					{(typeof cookie.load('user_id') !== 'undefined' && cookie.load('user_id') !== '0')
 						? <div className="nav-link" onClick={() => this.props.onLogout()}>Logout</div>
 						: <div className="nav-link" onClick={() => this.props.onRegister()}>Sign Up / Sign In</div>
 					}
