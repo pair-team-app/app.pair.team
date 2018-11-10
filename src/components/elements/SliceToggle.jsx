@@ -14,12 +14,11 @@ class SliceTreeItem extends Component {
 	}
 
 	render() {
-		const className = (this.props.last) ? 'slice-toggle slice-toggle-last' : 'slice-toggle';
 		const icon = (this.props.type === 'slice') ? '/images/layer-slice' : (this.props.type === 'hotspot') ? '/images/layer-hotspot' : (this.props.type === 'textfield') ? '/images/layer-textfield' : '/images/layer-background';
 
 		return (
-			<div className={className} onClick={()=> this.props.onClick()}>
-				<img className="slice-toggle-image" src={(this.props.selected) ? icon + '_selected.svg' : icon + '.svg'} alt="Toggle" />
+			<div className="slice-toggle" onClick={()=> this.props.onClick()}>
+				<button className="inspector-page-float-button"><img className="inspector-page-float-button-image" src={(this.props.selected) ? icon + '_selected.svg' : icon + '.svg'} alt="Toggle" /></button>
 			</div>
 		);
 	}

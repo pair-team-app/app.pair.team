@@ -1,17 +1,4 @@
 
 .slice-toggle {
-	margin-top: 20px;
-}
-
-.slice-toggle-last {
-	margin-right: 0;
-}
-
-.slice-toggle:hover {
-	cursor: pointer;
-}
-
-.slice-toggle-image {
-	width: 20px;
-	height: 20px;
+	margin-top: 10px;
 }

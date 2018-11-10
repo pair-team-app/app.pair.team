@@ -5,7 +5,6 @@ import './InspectorPage.css';
 import axios from 'axios';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
-import FontAwesome from 'react-fontawesome';
 // eslint-disable-next-line
 import Tooltip from 'rc-tooltip';
 import { Column, Row } from 'simple-flexbox';
@@ -128,19 +127,13 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceToggle = (type)=> {
-		console.log('handleSliceToggle()', type);
-
 		let visibleTypes = this.state.visibleTypes;
 		Object.keys(visibleTypes).forEach(function(key) {
 			visibleTypes[key] = false;
 
 		});
 		visibleTypes[type] = true;
-
-		this.setState({
-			slice        : (this.state.slice) ? (this.state.slice.type === type) ? null : this.state.slice : null,
-			visibleTypes : visibleTypes
-		});
+		this.setState({ visibleTypes : visibleTypes });
 	};
 
 	handleCodeCopy = ()=> {
@@ -265,17 +258,17 @@ class InspectorPage extends Component {
 		return (
 			<div className="inspector-page-wrapper">
 				<div className="inspector-page-content">
-					<div className="inspector-page-title">{(artboard) ? artboard.title : 'N/A'}</div>
+					<div className="inspector-page-title">{(artboard) ? artboard.title : 'Loading…'}</div>
 					<div className="inspector-page-hero-wrapper">
 						{(artboard) && (<img className={heroImageClass} src={artboard.filename} alt="Hero" ref={heroImage} />)}
 						<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>
 							{slices}
 						</div>
 						<div className="inspector-page-toggle-wrapper">
-							<SliceToggle type="slice" selected={this.state.visibleTypes.slice} onClick={()=> this.handleSliceToggle('slice')} last={false} /><br />
-							<SliceToggle type="hotspot" selected={this.state.visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} last={false} /><br />
-							<SliceToggle type="textfield" selected={this.state.visibleTypes.textfield} onClick={()=> this.handleSliceToggle('textfield')} last={false} /><br />
-							<SliceToggle type="background" selected={this.state.visibleTypes.background} onClick={()=> this.handleSliceToggle('background')} last={true} />
+							<SliceToggle type="hotspot" selected={this.state.visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} /><br />
+							<SliceToggle type="slice" selected={this.state.visibleTypes.slice} onClick={()=> this.handleSliceToggle('slice')} /><br />
+							<SliceToggle type="textfield" selected={this.state.visibleTypes.textfield} onClick={()=> this.handleSliceToggle('textfield')} /><br />
+							<SliceToggle type="background" selected={this.state.visibleTypes.background} onClick={()=> this.handleSliceToggle('background')} />
 						</div>
 					</div>
 					<div>
@@ -299,24 +292,24 @@ class InspectorPage extends Component {
 					<div className="inspector-page-panel-content-wrapper">
 						<div className="inspector-page-panel-display">
 							{(slice) && (
-								<img className={panelImageClass} src={((slice.type === 'slice') ? slice.filename + '@' + this.state.scaleSize + 'x.png' : ('https://via.placeholder.com/' + (slice.meta.frame.size.width * this.state.scaleSize) + 'x' + (slice.meta.frame.size.height * this.state.scaleSize)))} alt={(slice.title + ' - @' + this.state.scaleSize + 'x')} />
+								<img className={panelImageClass} src={((slice.type === 'slice') ? slice.filename + '@' + this.state.scaleSize + 'x.png' : ('https://via.placeholder.com/' + (slice.meta.frame.size.width * this.state.scaleSize) + 'x' + (slice.meta.frame.size.height * this.state.scaleSize)))} alt={(slice.title + ' @' + this.state.scaleSize + 'x')} />
 							)}
 							<div className="inspector-page-panel-zoom-wrapper">
-								<button className={(slice && this.state.scaleSize < 3) ? 'inspector-page-zoom-button' : 'inspector-page-zoom-button button-disabled'} onClick={()=> this.handleZoom(1)}><FontAwesome name="plus" /></button>
-								<button className={(slice && this.state.scaleSize > 1) ? 'inspector-page-zoom-button' : 'inspector-page-zoom-button button-disabled'} onClick={()=> this.handleZoom(-1)} style={{marginRight:'6px'}}><FontAwesome name="minus" /></button>
+								<button className={'inspector-page-float-button' + ((this.state.scaleSize === 3) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)} style={{marginRight:'20px'}}><img className="inspector-page-float-button-image" src={(slice && this.state.scaleSize < 3) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button>
+								<button className={'inspector-page-float-button' + ((this.state.scaleSize === 1) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(slice && this.state.scaleSize > 1) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button>
 							</div>
 						</div>
 					</div>
 					<div className="inspector-page-panel-content-wrapper">
 						<Dropdown
-							title="CSS/HTML"
+							title="Add Ons"
 							list={this.state.languages}
 							resetThenSet={this.resetThenSet}
 						/>
 						<div className="inspector-page-panel-code-wrapper">
 							<div className="inspector-page-panel-code"><span dangerouslySetInnerHTML={{ __html : this.state.code.html }} /></div>
 							<CopyToClipboard onCopy={()=> this.handleCodeCopy()} text={this.state.code.syntax}>
-								<button className="inspector-page-copy-code-button">Copy</button>
+								<button className="inspector-page-float-button inspector-page-copy-code-button"><img className="inspector-page-float-button-image" src="/images/copy-code.svg" alt="Copy" /></button>
 							</CopyToClipboard>
 						</div>
 					</div>

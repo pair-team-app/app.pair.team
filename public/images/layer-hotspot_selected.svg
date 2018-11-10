@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="12px" height="16px" viewBox="0 0 12 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="23px" height="20px" viewBox="0 0 23 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
-    <title>Group 3</title>
+    <title>layout</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="SIDE-MENU-2" transform="translate(-74.000000, -490.000000)" fill="#7ED321" fill-rule="nonzero">
-            <g id="SIDE-MENU">
-                <g id="Group-3" transform="translate(74.000000, 490.000000)">
-                    <path d="M6,10.3001213 C4.92817938,11.3873824 4.32305908,13.1847778 4.18463723,15.6923077 C1.57363477,15.0147401 0,12.8943991 0,10.429185 C0,6.27714362 3.36800031,5.3751027 2.97800031,0 C3.71266708,0.0119387815 6.68133323,1.69066347 7.23533354,5.67622518 C7.81556215,5.10916213 8.11168615,3.231979 8.00000031,2.46403091 C10.6346668,4.43326585 12,6.96163348 12,9.78250117 C12,12.5745138 10.4384889,14.9421324 7.814688,15.6801645 C7.67498585,13.1789742 7.07008985,11.3856265 6,10.3001213 Z" id="Shape"></path>
+    <g id="light-web" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Default" transform="translate(-1002.000000, -560.000000)" stroke="#0267D8" stroke-width="2">
+            <g id="Group-7" transform="translate(320.000000, 158.000000)">
+                <g id="Group-11" transform="translate(668.000000, 388.000000)">
+                    <g id="layout" transform="translate(15.000000, 15.000000)">
+                        <rect id="Rectangle-path" stroke-linecap="round" stroke-linejoin="round" x="0" y="0" width="18" height="18" rx="2"></rect>
+                        <circle id="Oval-2" fill="#F2F2F2" cx="18" cy="9" r="3"></circle>
+                    </g>
                 </g>
             </g>
         </g>

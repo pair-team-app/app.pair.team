@@ -55,6 +55,7 @@ p {
 textarea {
   width: 100%;
   border: 1px solid #eaecef;
+  background-color: #fafbfc;
   border-radius: 4px;
   font-size: 14px;
 }

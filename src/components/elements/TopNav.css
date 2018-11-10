@@ -43,9 +43,9 @@
 
 .top-nav-link:hover {
 	cursor: pointer;
+	color: #e0e0e0;
 }
 
 .top-nav-upload-button {
-	/*margin-right: 9px;*/
 	border-radius: 3px;
 }

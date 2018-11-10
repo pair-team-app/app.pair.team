@@ -57,7 +57,7 @@ class Dropdown extends Component{
 				<li className="dd-list-item" key={i} onClick={() => this.selectItem(item.title, i, item.key)}><Row>
 					{(thumbImage) && (<Column flexGrow={1} horizontal="start" vertical="center"><img src={thumbImage} style={{width:'20px',height:'20px'}} alt={item.title} /></Column>)}
 					<Column flexGrow={1} horizontal="start" vertical="center">{item.title}</Column>
-					<Column flexGrow={10} horizontal="start" vertical="center">{item.selected && <FontAwesome name="check"/>}</Column>
+					<Column flexGrow={15} horizontal="start" vertical="center">{item.selected && <FontAwesome name="check"/>}</Column>
 				</Row></li>
 			);
 		});
@@ -66,10 +66,11 @@ class Dropdown extends Component{
 			<div className="dd-wrapper">
 				<div className="dd-header" onClick={this.toggleList}>
 					<div className="dd-header-title">{headerTitle}</div>
-					{listOpen
-						? <FontAwesome name="angle-up" />
-						: <FontAwesome name="angle-down" />
-					}
+					<img src="/images/dropdown-arrow.svg" alt="Arrow" />
+					{/*{listOpen*/}
+						{/*? <FontAwesome name="angle-up" />*/}
+						{/*: <FontAwesome name="angle-down" />*/}
+					{/*}*/}
 				</div>
 				{listOpen && <ul className="dd-list">
 					{items}
