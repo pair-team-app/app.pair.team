@@ -11,6 +11,7 @@
 
 .upload-tree-item-text:hover {
 	cursor: pointer;
+	text-decoration: underline;
 }
 
 .upload-tree-item-arrow-selected, .upload-tree-item-text-selected {

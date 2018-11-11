@@ -12,6 +12,7 @@
 }
 
 .artboard-tree-item-text:hover {
+	text-decoration: underline;
 	cursor: pointer;
 }
 

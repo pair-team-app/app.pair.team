@@ -56,15 +56,11 @@
 }
 
 .nav-link:hover, .nav-link a:hover {
-	text-decoration: none;
+	text-decoration: underline;
 	cursor: pointer;
 }
 
 .nav-link a, .nav-link a:active, .nav-link a:link, .nav-link a:visited {
 	text-decoration: none;
 	color: #0267D8;
-}
-
-.nav-link a:active {
-	color: #eeeeee;
 }

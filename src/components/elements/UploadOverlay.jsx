@@ -227,9 +227,9 @@ class UploadOverlay extends Component {
 								onDragEnter={this.onDragEnter.bind(this)}
 								onDragLeave={this.onDragLeave.bind(this)}>
 									<div className="page-header">
-										<Row horizontal="center"><div className="page-header-text">{title}</div></Row>
-										<div className="page-subheader-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
-										<Row horizontal="center"><button className="page-button" onClick={()=> this.handleCancel()}>Cancel</button></Row>
+										<Row horizontal="center"><h1>{title}</h1></Row>
+										<div className="page-header-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
+										<Row horizontal="center"><button onClick={()=> this.handleCancel()}>Cancel</button></Row>
 									</div>
 							</Dropzone>
 						</div>
@@ -237,14 +237,14 @@ class UploadOverlay extends Component {
 						{(!this.state.sentInvites) && (<div>
 							{(this.state.uploadComplete && this.state.files.length === 0)
 								? (<div>
-										<div className="input-title">Invite your teammates</div>
+										<h4>Invite your teammates</h4>
 										<div className={email1Class}><input type="text" name="email1" placeholder="Enter Email Address" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 										<div className={email2Class}><input type="text" name="email2" placeholder="Enter Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 										<div className={email3Class}><input type="text" name="email3" placeholder="Enter Email Address" value={this.state.email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 										<div className="overlay-button-wrapper"><button className={inviteButtonClass} onClick={() => this.handleInvite()}>Invite these people</button></div>
 									</div>)
 								: (<div>
-										<div className="input-title">Setup your project</div>
+										<h4>Setup your project</h4>
 										<div className={titleClass}><input type="text" name="title" placeholder="Enter project name" value={this.state.title} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={titleTextfield} /></div>
 										<div className={descriptionClass}><input type="text" name="description" placeholder="Enter project description (optional)" value={this.state.description} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 										<div className="overlay-button-wrapper"><button className={nextButtonClass} onClick={() => this.handleSubmit()}>Next</button></div>
@@ -253,7 +253,7 @@ class UploadOverlay extends Component {
 							}
 						</div>)}
 
-						{(this.state.sentInvites) && (<div className="input-title">Invites will be sent once your file has been processed.</div>)}
+						{(this.state.sentInvites) && (<h4>Invites will be sent once your file has been processed.</h4>)}
 						{(this.state.processingComplete) && (<Row horizontal="center"><div className="overlay-button-wrapper"><button className="overlay-button" onClick={() => this.handleBackgroundClose()}>Get Started</button></div></Row>)}
 					</div>
 				</Row></div>

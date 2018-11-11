@@ -25,45 +25,12 @@ class SideNav extends Component {
 	}
 
 	componentDidMount() {
-		let formData = new FormData();
-		formData.append('action', 'UPLOAD_NAMES');
-		formData.append('user_id', cookie.load('user_id'));
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-				console.log('UPLOAD_NAMES', response.data);
-
-				const uploads = response.data.uploads.map((upload)=> ({
-					id       : upload.id,
-					title    : upload.title,
-					author   : upload.author,
-					added    : upload.added,
-					selected : (this.props.uploadID === upload.id),
-					pages    : upload.pages.map((page) => ({
-						id          : page.id,
-						title       : page.title,
-						description : page.description,
-						added       : page.added,
-						selected    : (this.props.pageID === page.id),
-						artboards   : page.artboards.map((artboard)=> ({
-							id       : artboard.id,
-							pageID   : artboard.page_id,
-							title    : artboard.title,
-							filename : artboard.filename,
-							meta     : JSON.parse(artboard.meta),
-							added    : artboard.added,
-							selected : (this.props.artboardID === artboard.id)
-						}))
-					}))
-				}));
-
-				this.setState({ uploads : uploads });
-			}).catch((error) => {
-		});
+		this.refreshUploads();
 	}
 
 	componentDidUpdate(prevProps) {
 		console.log('SideNav.componentDidUpdate()', prevProps, this.props);
-		if (this.props.uploadID === 0 && prevProps.uploadID !== this.props.uploadID) {
+		if ((this.props.uploadID === 0 && prevProps.uploadID !== this.props.uploadID)) {
 			let uploads = [...this.state.uploads];
 			uploads.forEach((upload)=> {
 				upload.selected = false;
@@ -76,6 +43,10 @@ class SideNav extends Component {
 			});
 
 			this.setState({ uploads : uploads });
+		}
+
+		if (this.props.userID !== prevProps.userID) {
+			this.refreshUploads();
 		}
 
 
@@ -150,6 +121,43 @@ class SideNav extends Component {
 			});
 		}
 	}
+
+	refreshUploads = ()=> {
+		let formData = new FormData();
+		formData.append('action', 'UPLOAD_NAMES');
+		formData.append('user_id', cookie.load('user_id'));
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+				console.log('UPLOAD_NAMES', response.data);
+
+				const uploads = response.data.uploads.map((upload)=> ({
+					id       : upload.id,
+					title    : upload.title,
+					author   : upload.author,
+					added    : upload.added,
+					selected : (this.props.uploadID === upload.id),
+					pages    : upload.pages.map((page) => ({
+						id          : page.id,
+						title       : page.title,
+						description : page.description,
+						added       : page.added,
+						selected    : (this.props.pageID === page.id),
+						artboards   : page.artboards.map((artboard)=> ({
+							id       : artboard.id,
+							pageID   : artboard.page_id,
+							title    : artboard.title,
+							filename : artboard.filename,
+							meta     : JSON.parse(artboard.meta),
+							added    : artboard.added,
+							selected : (this.props.artboardID === artboard.id)
+						}))
+					}))
+				}));
+
+				this.setState({ uploads : uploads });
+			}).catch((error) => {
+		});
+	};
 
 	handleUploadClick = (upload)=> {
 		let uploads = [...this.state.uploads];

@@ -256,7 +256,7 @@ class InspectorPage extends Component {
 		}) : [];
 
 		return (
-			<div className="inspector-page-wrapper">
+			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<div className="inspector-page-title">{(artboard) ? artboard.title : 'Loading…'}</div>
 					<div className="inspector-page-hero-wrapper">

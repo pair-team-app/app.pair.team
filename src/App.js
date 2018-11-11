@@ -20,6 +20,7 @@ import Status404Page from './components/pages/Status404Page';
 import TermsPage from './components/pages/TermsPage';
 import TopNav from './components/elements/TopNav';
 import UploadOverlay from './components/elements/UploadOverlay';
+import UploadPage from './components/pages/UploadPage';
 
 const wrapper = React.createRef();
 
@@ -133,51 +134,20 @@ class App extends Component {
 // 		this.setState({ sliceID : obj.id });
 	};
 
-	handleUpload = ()=> {
-		console.log('handleUpload()');
-		this.setState({ overlayAlert: 'upload' });
-	};
-
-	handleArtboardSelected = (obj)=> {
-		console.log('handleArtboardSelected()', obj);
-		let selectedArtboards = this.state.selectedArtboards;
-		if (obj.selected) {
-			let isFound = false;
-			selectedArtboards.forEach(function(item, i) {
-				if (item.id === obj.id) {
-					isFound = true;
-				}
-			});
-
-			if (!isFound) {
-				selectedArtboards.push(obj);
-			}
-
-		} else {
-			selectedArtboards.forEach(function(item, i) {
-				if (item.id === obj.id) {
-					selectedArtboards.splice(i, 1);
-				}
-			});
-		}
-
-		this.setState({ selectedArtboards : selectedArtboards });
-	};
-
-	handleArtboardDetails = (obj)=> {
-		console.log('handleArtboardDetails()', obj);
+	handleArtboardClicked = (artboard)=> {
+		console.log('handleArtboardClicked()', artboard);
 		wrapper.current.scrollTo(0, 0);
 
 		let formData = new FormData();
 		formData.append('action', 'ADD_VIEW');
-		formData.append('artboard_id', obj.id);
+		formData.append('artboard_id', artboard.id);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
-				this.props.history.push('/artboard/' + this.state.uploadID + '/' + obj.pageID + '/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+				this.props.history.push('/artboard/' + this.state.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + artboard.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
 				this.setState({
-					pageID     : obj.pageID,
-					artboardID : obj.id
+					pageID     : artboard.pageID,
+					artboardID : artboard.id
 				});
 			}).catch((error) => {
 		});
@@ -188,7 +158,6 @@ class App extends Component {
 		this.setState({ overlayAlert : null });
 		if (overlayType === 'register') {
 			if (buttonType === 'submit') {
-				this.setState({ user_id : 0 });
 				window.location.reload();
 			}
 
@@ -208,35 +177,38 @@ class App extends Component {
 	};
 
 	handleLogout = ()=> {
+		this.props.history.push('/');
+
 		cookie.save('user_id', '0', { path : '/' });
 		this.setState({ userID : 0 });
-		window.location.href = '/';
 	};
 
 	handlePage = (url)=> {
-		wrapper.current.scrollTo(0, 0);
+		console.log('handlePage()', url);
 
+		wrapper.current.scrollTo(0, 0);
+		this.props.history.push('/' + url);
 		this.setState({
 			uploadID   : 0,
 			pageID     : 0,
 			artboardID : 0
 		});
-		this.props.history.push('/' + url);
 	};
 
   render() {
   	console.log('App.state', this.state);
 
     return (
-    	<div className="page-wrapper">
+    	<div className="site-wrapper">
 		    <TopNav
 			    parts={this.state.selectedArtboards}
 			    artboardID={this.state.artboardID}
 			    onHome={()=> this.handleHome()}
 			    onAddOns={()=> this.handleAddOns()}
-			    onUpload={()=> this.handleUpload()}
+			    onUpload={()=> this.handlePage('upload')}
 		    />
 		    <SideNav
+			    userID={cookie.load('user_id')}
 			    uploadID={this.state.uploadID}
 			    pageID={this.state.pageID}
 			    artboardID={this.state.artboardID}
@@ -248,19 +220,20 @@ class App extends Component {
 			    onInvite={()=> this.setState({ overlayAlert : 'invite' })}
 			    onRegister={()=> this.setState({ overlayAlert: 'register' })}
 			    onLogout={()=> this.handleLogout()}
-			    onUpload={()=> this.setState({ overlayAlert : 'upload' })}
+			    onUpload={()=> this.handlePage('upload')}
 			    onPage={(url)=> this.handlePage(url)}
 		    />
 
 		    <div className="content-wrapper" ref={wrapper}>
 			    <Switch>
-			      <Route exact path="/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
-				    <Route path="/doc/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onArtboardSelected={(obj)=> this.handleArtboardSelected(obj)} onArtboardClicked={(obj)=> this.handleArtboardDetails(obj)} />} />
-			      <Route exact path="/developer" component={DevelopersPage} />
-			      <Route exact path="/mission" component={MissionPage} />
+			      <Route exact path="/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onRegister={()=> this.setState({ overlayAlert: 'register' })} onPayment={()=> this.setState({ overlayAlert: 'payment' })} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
+				    <Route path="/doc/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onRegister={()=> this.setState({ overlayAlert: 'register' })} onPayment={()=> this.setState({ overlayAlert: 'payment' })} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
+			      <Route exact path="/developer" render={()=> <DevelopersPage onPage={(url)=> this.handlePage(url)} />} />
+			      <Route exact path="/mission" render={()=> <MissionPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route exact path="/privacy" component={PrivacyPage} />
 			      <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" component={InspectorPage} />
 			      <Route exact path="/terms" component={TermsPage} />
+			      <Route exact path="/upload" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onCancel={()=> this.props.history.goBack()} />} />
 			      <Route component={Status404Page} />
 			    </Switch>
 		    </div>
@@ -277,7 +250,7 @@ class App extends Component {
 		    	<UploadOverlay onClick={(buttonType)=> this.handleOverlay('upload', buttonType)} />
 		    )}
 
-		    {(this.state.overlayAlert === 'download') && (
+		    {(this.state.overlayAlert === 'payment') && (
 			    <StripeOverlay onClick={(buttonType)=> this.handleOverlay('download', buttonType)} />
 		    )}
 	    </div>

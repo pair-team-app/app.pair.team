@@ -16,6 +16,7 @@
 
 .page-tree-item-text:hover {
 	cursor: pointer;
+	text-decoration: underline;
 }
 
 .page-tree-item-arrow-selected, .page-tree-item-text-selected {

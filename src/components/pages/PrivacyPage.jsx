@@ -14,10 +14,10 @@ class PrivacyPage extends Component {
 
 	render() {
 		return (
-			<div className="privacy-page-wrapper">
+			<div className="page-wrapper privacy-page-wrapper">
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						<Row horizontal="center"><div className="page-header-text">Privacy Policy</div></Row>
+						<Row horizontal="center"><h1>Privacy Policy</h1></Row>
 						<div className="privacy-text">
 							<Row><p>We only collect data that can be directly used to improve your product experience. Every piece of data we collect, from your company name to the number of adjectives you use, is collected with specific intentions. We use data to improve our predictive models, so that the more you use Design Engine’s products, the better results you get. We aggregate data into patterns to provide smarter writing guidance over time. We don’t sell your data. We are committed to making Design Engine so useful that it is an indispensable part of your company’s operations and productivity. We store your document text in order to understand company and industry language patterns, but we will not share your data with anyone outside your company or ours, except for trusted third-party services providers that support us in providing our services to you. We are committed to the security of your private data. Privacy and security go hand in hand. Our commitment to your privacy means that we also take the security of your data seriously. We take steps to ensure that your Personal Information is treated securely and in accordance with this Privacy Policy. In this document, Design Engine refers to the products and services that we offer at https://designengine.ai/ (“Service” or “Services”). It also refers to our company, Design Engine AI, Inc., as “Design Engine,” “we,” “our,” or “us.”</p></Row>
 							<Row><p>Data We Collect We collect data at different points during your use of Design Engine. We always strive to be open with you about the data we collect and how we’re using it. When you inquire about or purchase our Services, we may require you to provide Personal Information, such as:</p></Row>

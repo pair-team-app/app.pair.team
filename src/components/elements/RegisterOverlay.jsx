@@ -82,16 +82,16 @@ class RegisterOverlay extends Component {
 				<div className="overlay-container"><Row horizontal="center">
 					<div className="overlay-content">
 						<div className="page-header">
-							<Row horizontal="center"><div className="page-header-text">You need to be signed in</div></Row>
-							<div className="page-subheader-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
-							<Row horizontal="center"><button className="page-button" onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
+							<Row horizontal="center"><h1>You need to be signed in</h1></Row>
+							<div className="page-header-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
+							<Row horizontal="center"><button onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
 						</div>
 
-						<div className="input-title">Sign Up</div>
+						<h4>Sign Up</h4>
 						<div className={email1Class}><input type="text" name="email1" placeholder="Email Address" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<div className={password1Class}><input type="password" name="password1" placeholder="Password" value={this.state.password1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 
-						<div className="input-title">Sign In</div>
+						<h4>Sign In</h4>
 						<div className={email2Class}><input type="text" name="email2" placeholder="Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<div className={password2Class}><input type="password" name="password2" placeholder="Password" value={this.state.password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<div className="overlay-button-wrapper">

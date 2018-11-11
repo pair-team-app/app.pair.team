@@ -18,9 +18,9 @@ class ErrorOverlay extends Component {
 				<div className="overlay-container"><Row horizontal="center">
 					<div className="overlay-content">
 						<div className="page-header">
-							<Row horizontal="center"><div className="page-header-text">Error</div></Row>
-							<div className="page-subheader-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
-							<Row horizontal="center"><button className="page-button" onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
+							<Row horizontal="center"><h1>Error</h1></Row>
+							<div className="page-header-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
+							<Row horizontal="center"><button onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
 						</div>
 					</div>
 				</Row></div>

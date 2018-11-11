@@ -14,14 +14,17 @@ class ArtboardItem extends Component {
 	}
 
 	render() {
+		const className = (this.props.title !== '') ? 'artboard-item' : 'artboard-item artboard-item-loading';
 		const imageClass = (this.props.size === 'landscape') ? 'artboard-item-image artboard-item-image-landscape' : 'artboard-item-image artboard-item-image-portrait';
 
 		return (
-			<div className="artboard-item" onClick={()=> this.props.onClick()}>
-				<img className={imageClass} src={this.props.image} alt={this.props.title} />
-				<div className="artboard-item-details-wrapper">
-					<div className="artboard-item-title">{this.state.title}</div>
-				</div>
+			<div className={className} onClick={()=> (this.props.title !== '') ? this.props.onClick() : null}>
+				{(this.props.title !== '') && (<div>
+					<img className={imageClass} src={this.props.image} alt={this.props.title} />
+					<div className="artboard-item-details-wrapper">
+						<div className="artboard-item-title">{this.state.title}</div>
+					</div>
+				</div>)}
 			</div>
 		);
 	}

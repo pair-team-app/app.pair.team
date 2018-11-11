@@ -1,6 +1,5 @@
 
 .mission-page-wrapper {
-	margin-bottom: 78px;
 }
 
 .mission-page-reviews-wrapper {
@@ -9,16 +8,6 @@
 
 .mission-page-faq {
 	width: 400px;
-	margin-bottom: 56px;
-}
-
-.mission-page-faq-title {
-	margin-bottom: 28px;
-	font-family: "Poppins Bold", sans-serif;
-	font-size: 24px;
-}
-
-.mission-page-faq-content {
 }
 
 .mission-page-founders-image {

@@ -15,12 +15,12 @@ class DevelopersPage extends Component {
 
 	render() {
 		return (
-			<div className="status-404-page-wrapper">
+			<div className="page-wrapper status-404-page-wrapper">
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<div className="page-header">
-							<Row horizontal="center"><div className="page-header-text">404 Not Found!</div></Row>
-							<div className="page-subheader-text">The document at {window.location.pathname} was not found here.</div>
+							<Row horizontal="center"><h1>404 Not Found!</h1></Row>
+							<div className="page-header-text">The document at {window.location.pathname} was not found here.</div>
 						</div>
 					</Column>
 				</Row>

@@ -12,6 +12,10 @@
 	cursor: pointer;
 }
 
+.artboard-item-loading:hover {
+	cursor: default;
+}
+
 .artboard-item-image {
 	position: absolute;
 	top: 35px;

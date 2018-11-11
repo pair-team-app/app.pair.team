@@ -136,17 +136,17 @@ class InviteOverlay extends Component {
 				<div className="overlay-container"><Row horizontal="center">
 					<div className="overlay-content">
 						<div className="page-header">
-							<Row horizontal="center"><div className="page-header-text">Invite Everyone</div></Row>
-							<div className="page-subheader-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.
+							<Row horizontal="center"><h1>Invite Everyone</h1></Row>
+							<div className="page-header-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.
 							</div>
-							<Row horizontal="center"><button className="page-button" onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
+							<Row horizontal="center"><button onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
 						</div>
 						{(cookie.load('user_id') === '0') && (<div>
-							<div className="input-title">Enter details</div>
+							<h4>Enter details</h4>
 							<div className={emailClass}><input type="text" name="email2" placeholder="Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 							<div className={passwordClass}><input type="password" name="password2" placeholder="Password" value={this.state.password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						</div>)}
-						<div className="input-title">Invite team members</div>
+						<h4>Invite team members</h4>
 						<div className={email1Class}><input type="text" name="email1" placeholder="Engineer Email" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<div className={email2Class}><input type="text" name="email2" placeholder="Engineer Email" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<div className={email3Class}><input type="text" name="email3" placeholder="Engineer Email" value={this.state.email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>

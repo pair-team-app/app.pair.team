@@ -29,11 +29,11 @@ class StripeOverlay extends Component {
 				<div className="overlay-container"><Row horizontal="center">
 					<div className="overlay-content">
 						<div className="page-header">
-							<Row horizontal="center"><div className="page-header-text">One Plan, $2.99 per month</div></Row>
-							<div className="page-subheader-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
-							<Row horizontal="center"><button className="page-button" onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
+							<Row horizontal="center"><h1>One Plan, $2.99 per month</h1></Row>
+							<div className="page-header-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
+							<Row horizontal="center"><button onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
 						</div>
-						<div className="input-title">Payment details</div>
+						<h4>Payment details</h4>
 						<StripeProvider apiKey={this.STRIPE_TEST_TOKEN}>
 							{/*<StripeProvider apiKey={this.STRIPE_LIVE_TOKEN}>*/}
 							<Elements>
