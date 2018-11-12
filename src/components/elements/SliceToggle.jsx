@@ -14,7 +14,7 @@ class SliceTreeItem extends Component {
 	}
 
 	render() {
-		const icon = (this.props.type === 'slice') ? '/images/layer-slice' : (this.props.type === 'hotspot') ? '/images/layer-hotspot' : (this.props.type === 'textfield') ? '/images/layer-textfield' : '/images/layer-background';
+		const icon = (this.props.type === 'slice') ? '/images/layer-slice' : (this.props.type === 'hotspot') ? '/images/layer-hotspot' : (this.props.type === 'textfield') ? '/images/layer-textfield' : (this.props.type === 'background') ? '/images/layer-background' : '/images/layer-off';
 
 		return (
 			<div className="slice-toggle" onClick={()=> this.props.onClick()}>

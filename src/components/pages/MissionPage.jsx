@@ -44,7 +44,7 @@ class MissionPage extends Component {
 					</Row>
 					<Row>
 						<div className="mission-page-column-left">
-							<h2>Design is on 🔥</h2>
+							<h2>Design is on <span role="img" aria-label="Fire">🔥</span></h2>
 							<p>Design in 2018 has really taken off with the introductions of new design tools and the mainstream adoption of design systems now  being embraced by both large scale technology companies and small open source projects.</p>
 							<h2>Production ready</h2>
 							<p>Design Engine renders production ready design on-demand for engineering teams & organizations to view designs, download parts, inspect source and make software projects faster. Designers simply upload their design source & invite engineering teammates to their projects. Design Engine automatically generates specifications, cuts parts, and generates code snippets to inspect & re-use.</p>

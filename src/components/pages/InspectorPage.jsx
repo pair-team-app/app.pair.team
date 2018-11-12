@@ -37,7 +37,8 @@ class InspectorPage extends Component {
 				slice      : true,
 				hotspot    : false,
 				textfield  : false,
-				background : false
+				background : false,
+				all        : false
 			},
 			languages     : [{
 				id       : 0,
@@ -211,6 +212,8 @@ class InspectorPage extends Component {
 
 // 		const { page, artboard, slice } = this.state;
 		const { artboard, slice } = this.state;
+		const { visibleTypes } = this.state;
+		const { scaleSize } = this.state;
 
 		const scale = (artboard && heroImage && heroImage.current) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? heroImage.current.clientWidth / artboard.meta.frame.size.width : heroImage.current.clientHeight / artboard.meta.frame.size.height : 1;
 		const heroImageClass = 'inspector-page-hero-image' + ((artboard) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? ' inspector-page-hero-image-landscape' : ' inspector-page-hero-image-portrait' : '');
@@ -231,7 +234,7 @@ class InspectorPage extends Component {
 					key={i}
 					title={item.title}
 					type={item.type}
-					visible={this.state.visibleTypes[item.type]}
+					visible={visibleTypes[item.type]}
 					top={item.meta.frame.origin.y}
 					left={item.meta.frame.origin.x}
 					width={item.meta.frame.size.width}
@@ -264,10 +267,11 @@ class InspectorPage extends Component {
 							{slices}
 						</div>
 						<div className="inspector-page-toggle-wrapper">
-							<SliceToggle type="hotspot" selected={this.state.visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} /><br />
-							<SliceToggle type="slice" selected={this.state.visibleTypes.slice} onClick={()=> this.handleSliceToggle('slice')} /><br />
-							<SliceToggle type="textfield" selected={this.state.visibleTypes.textfield} onClick={()=> this.handleSliceToggle('textfield')} /><br />
-							<SliceToggle type="background" selected={this.state.visibleTypes.background} onClick={()=> this.handleSliceToggle('background')} />
+							<SliceToggle type="hotspot" selected={visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} /><br />
+							<SliceToggle type="slice" selected={visibleTypes.slice} onClick={()=> this.handleSliceToggle('slice')} /><br />
+							<SliceToggle type="textfield" selected={visibleTypes.textfield} onClick={()=> this.handleSliceToggle('textfield')} /><br />
+							<SliceToggle type="background" selected={visibleTypes.background} onClick={()=> this.handleSliceToggle('background')} />
+							<SliceToggle type="" selected={(visibleTypes.all)} onClick={()=> this.handleSliceToggle('all')} />
 						</div>
 					</div>
 					<div>
@@ -291,11 +295,11 @@ class InspectorPage extends Component {
 					<div className="inspector-page-panel-content-wrapper">
 						<div className="inspector-page-panel-display">
 							{(slice) && (
-								<img className={panelImageClass} src={((slice.type === 'slice') ? slice.filename + '@' + this.state.scaleSize + 'x.png' : ('https://via.placeholder.com/' + (slice.meta.frame.size.width * this.state.scaleSize) + 'x' + (slice.meta.frame.size.height * this.state.scaleSize)))} alt={(slice.title + ' @' + this.state.scaleSize + 'x')} />
+								<img className={panelImageClass} src={((slice.type === 'slice') ? slice.filename + '@' + scaleSize + 'x.png' : ('https://via.placeholder.com/' + (slice.meta.frame.size.width * scaleSize) + 'x' + (slice.meta.frame.size.height * scaleSize)))} alt={(slice.title + ' @' + scaleSize + 'x')} />
 							)}
 							<div className="inspector-page-panel-zoom-wrapper">
-								<button className={'inspector-page-float-button' + ((this.state.scaleSize === 3) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)} style={{marginRight:'20px'}}><img className="inspector-page-float-button-image" src={(slice && this.state.scaleSize < 3) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button>
-								<button className={'inspector-page-float-button' + ((this.state.scaleSize === 1) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(slice && this.state.scaleSize > 1) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button>
+								<button className={'inspector-page-float-button' + ((scaleSize === 3) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)} style={{marginRight:'20px'}}><img className="inspector-page-float-button-image" src={(slice && scaleSize < 3) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button>
+								<button className={'inspector-page-float-button' + ((scaleSize === 1) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(slice && scaleSize > 1) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button>
 							</div>
 						</div>
 					</div>
@@ -336,7 +340,7 @@ class InspectorPage extends Component {
 									<div style={{width:'50%', textAlign:'right'}}>Y: {(slice) ? slice.meta.frame.origin.y : 0}px</div>
 								</Row>
 							</Row>
-							{/*<Row><Column flexGrow={1}>Scale</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(this.state.scaleSize + 'x')}</Column></Row>*/}
+							{/*<Row><Column flexGrow={1}>Scale</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(scaleSize + 'x')}</Column></Row>*/}
 							<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.meta.rotation : 0}&deg;</Column></Row>
 							<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? (slice.meta.opacity * 100) : 100}%</Column></Row>
 							<Row><Column flexGrow={1}>Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.meta.fillColor.toUpperCase() : 'N/A'}</Column></Row>
