@@ -2,15 +2,21 @@
 .mission-page-wrapper {
 }
 
+.mission-page-title {
+	margin-bottom: 0;
+}
+
 .mission-page-reviews-wrapper {
+	margin: 20px 0;
 }
 
-
-.mission-page-faq {
-	width: 400px;
+.mission-page-column-left {
+	width: 56%;
+	display: table-cell;
+	margin-right: 20px;
 }
 
-.mission-page-founders-image {
-	width: 100%;
-	object-fit: cover;
+.mission-page-column-right {
+	width: 44%;
+	display: table-cell;
 }

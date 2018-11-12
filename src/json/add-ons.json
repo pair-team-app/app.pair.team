@@ -14,8 +14,4 @@
   "id": 4,
   "title": "Vue",
   "image": "/images/icon-vue.png"
-}, {
-  "id": 5,
-  "title": "Bootstrap",
-  "image": "/images/icon-bootstrap.png"
 }]

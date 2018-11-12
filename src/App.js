@@ -7,20 +7,21 @@ import cookie from 'react-cookies';
 import ReactPixel from 'react-facebook-pixel';
 import { Route, Switch, withRouter } from 'react-router-dom'
 
-import DevelopersPage from './components/pages/DevelopersPage';
+import SideNav from './components/elements/SideNav';
+import TopNav from './components/elements/TopNav';
+import AddOnsPage from './components/pages/AddOnsPage';
+import APIPage from './components/pages/APIPage';
 import HomePage from './components/pages/HomePage';
 import InspectorPage from './components/pages/InspectorPage';
-import InviteOverlay from './components/elements/InviteOverlay';
 import MissionPage from './components/pages/MissionPage';
 import PrivacyPage from './components/pages/PrivacyPage';
-import StripeOverlay from './components/elements/StripeOverlay';
-import RegisterOverlay from './components/elements/RegisterOverlay';
-import SideNav from './components/elements/SideNav';
 import Status404Page from './components/pages/Status404Page';
 import TermsPage from './components/pages/TermsPage';
-import TopNav from './components/elements/TopNav';
-import UploadOverlay from './components/elements/UploadOverlay';
 import UploadPage from './components/pages/UploadPage';
+import UploadOverlay from './components/elements/UploadOverlay';
+import InviteOverlay from './components/elements/InviteOverlay';
+import StripeOverlay from './components/elements/StripeOverlay';
+import RegisterOverlay from './components/elements/RegisterOverlay';
 
 const wrapper = React.createRef();
 
@@ -202,10 +203,9 @@ class App extends Component {
     	<div className="site-wrapper">
 		    <TopNav
 			    parts={this.state.selectedArtboards}
-			    artboardID={this.state.artboardID}
+			    uploadID={this.state.uploadID}
 			    onHome={()=> this.handleHome()}
-			    onAddOns={()=> this.handleAddOns()}
-			    onUpload={()=> this.handlePage('upload')}
+			    onPage={(url)=> this.handlePage(url)}
 		    />
 		    <SideNav
 			    userID={cookie.load('user_id')}
@@ -227,14 +227,15 @@ class App extends Component {
 		    <div className="content-wrapper" ref={wrapper}>
 			    <Switch>
 			      <Route exact path="/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onRegister={()=> this.setState({ overlayAlert: 'register' })} onPayment={()=> this.setState({ overlayAlert: 'payment' })} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
+			      <Route exact path="/add-ons" render={()=> <AddOnsPage onPage={(url)=> this.handlePage(url)} />} />
+			      <Route exact path="/api" render={()=> <APIPage onPage={(url)=> this.handlePage(url)} />} />
+				    <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" component={InspectorPage} />
 				    <Route path="/doc/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onRegister={()=> this.setState({ overlayAlert: 'register' })} onPayment={()=> this.setState({ overlayAlert: 'payment' })} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
-			      <Route exact path="/developer" render={()=> <DevelopersPage onPage={(url)=> this.handlePage(url)} />} />
-			      <Route exact path="/mission" render={()=> <MissionPage onPage={(url)=> this.handlePage(url)} />} />
+			      <Route exact path="/mission" render={()=> <MissionPage onPage={(url)=> this.handlePage(url)} onRegister={()=> this.setState({ overlayAlert: 'register' })} onPayment={()=> this.setState({ overlayAlert: 'payment' })} />} />
 			      <Route exact path="/privacy" component={PrivacyPage} />
-			      <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" component={InspectorPage} />
 			      <Route exact path="/terms" component={TermsPage} />
 			      <Route exact path="/upload" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onCancel={()=> this.props.history.goBack()} />} />
-			      <Route component={Status404Page} />
+			      <Route render={()=> <Status404Page onPage={(url)=> this.handlePage(url)} />} />
 			    </Switch>
 		    </div>
 

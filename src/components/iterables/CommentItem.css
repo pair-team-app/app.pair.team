@@ -1,13 +1,12 @@
 
 .comment-item {
-	margin-top: 20px;
+	margin: 20px 0;
 	display: table;
-	font-size: 12px;
 }
 
 .comment-item-avatar {
-	width: 60px;
-	height: 60px;
+	width: 73px;
+	height: 73px;
 	display: table-cell;
 	margin: 0 10px 0 0;
 	background-color: #fafbfc;
@@ -39,7 +38,7 @@
 }
 
 .comment-item-content-wrapper {
-	padding: 6px 4px;
+	padding: 15px 4px;
 	display: table-cell;
 	vertical-align: top;
 }

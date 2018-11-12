@@ -18,7 +18,7 @@
 }
 
 .top-nav-column-middle {
-	width: 800px;
+	width: 69px;
 }
 
 .top-nav-column-right {
@@ -39,11 +39,16 @@
 .top-nav-link {
 	color: #ffffff;
 	margin-left: 28px;
+	letter-spacing: -0.3;
 }
 
 .top-nav-link:hover {
 	cursor: pointer;
-	color: #e0e0e0;
+	text-decoration: underline;
+}
+
+.top-nav-link-selected {
+	color: #9b9b9b;
 }
 
 .top-nav-upload-button {

@@ -82,9 +82,8 @@
 
 .inspector-page-comment-txt {
 	height: 125px;
-	resize: none;
-	padding: 20px;
 	margin-top: 20px;
+	padding: 20px;
 }
 
 .inspector-page-comment-button {
@@ -97,7 +96,6 @@
 	display: table-cell;
 	vertical-align: top;
 	font-weight: 200;
-	font-size: 12px;
 	background-color: #fafbfc;
 	border-left: 1px solid #eaecef;
 }
@@ -182,7 +180,7 @@
 }
 
 .inspector-page-panel-info-val {
-	color: #0267D8;
+	color: #0267d8;
 }
 
 .inspector-page-panel-code-wrapper {
@@ -191,11 +189,8 @@
 
 .inspector-page-panel-code {
 	min-height: 150px;
-	padding: 14px;
-	background-color: #000000;
-	color: #7ed321;
-	font-family: "Roboto Mono", Monaco, Consolas, sans-serif;
 	margin-top: 20px;
+	padding: 14px;
 }
 
 .inspector-page-copy-code-button {

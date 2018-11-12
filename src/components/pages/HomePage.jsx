@@ -63,58 +63,36 @@ class HomePage extends Component {
 					}
 				});
 
-				formData.append('action', 'ARTBOARD_COUNT');
-				formData.append('upload_id', this.props.uploadID);
+
+				formData.append('action', 'PAGE');
 				formData.append('page_id', this.props.pageID);
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response)=> {
-						console.log('ARTBOARD_COUNT', response.data);
+						console.log('PAGE', response.data);
+						this.setState({ pageTitle : (this.props.pageID === 0) ? title : response.data.page.title });
 
-						const artboards = response.data.artboards.map((item) => ({
-							id       : item.id,
-							pageID   : '',
-							title    : '',
-							type     : '',
-							filename : '',
-							meta     : '',
-							added    : '',
-							selected : false
-						}));
-
-
-						this.setState({
-							uploadTitle : title,
-							uploadURL   : uploadURL,
-							artboards   : artboards
-						});
-
-						formData.append('action', 'PAGE');
+						formData.append('action', 'ARTBOARDS');
+						formData.append('upload_id', this.props.uploadID);
 						formData.append('page_id', this.props.pageID);
 						axios.post('https://api.designengine.ai/system.php', formData)
 							.then((response)=> {
-								console.log('PAGE', response.data);
-								this.setState({ pageTitle : (this.props.pageID === 0) ? title : response.data.page.title });
+								console.log('ARTBOARDS', response.data);
 
-								formData.append('action', 'ARTBOARDS');
-								formData.append('upload_id', this.props.uploadID);
-								formData.append('page_id', this.props.pageID);
-								axios.post('https://api.designengine.ai/system.php', formData)
-									.then((response)=> {
-										console.log('ARTBOARDS', response.data);
+								const artboards = response.data.artboards.map((item) => ({
+									id       : item.id,
+									pageID   : item.page_id,
+									title    : item.title,
+									type     : item.type,
+									filename : item.filename,
+									meta     : JSON.parse(item.meta),
+									added    : item.added,
+									selected : false
+								}));
 
-										const artboards = response.data.artboards.map((item) => ({
-											id       : item.id,
-											pageID   : item.page_id,
-											title    : item.title,
-											type     : item.type,
-											filename : item.filename,
-											meta     : JSON.parse(item.meta),
-											added    : item.added,
-											selected : false
-										}));
-
-										this.setState({ artboards : artboards });
-									}).catch((error) => {
+								this.setState({
+									uploadTitle : title,
+									uploadURL   : uploadURL,
+									artboards : artboards
 								});
 							}).catch((error) => {
 						});
@@ -166,14 +144,14 @@ class HomePage extends Component {
 										<button>Copy Project Link</button>
 									</CopyToClipboard>
 								</Row>
-								<Row horizontal="center"><div className="home-page-upload-url">
+								<Row horizontal="center"><div className="page-header-url">
 									<a href={this.state.uploadURL} target="_blank" rel="noopener noreferrer">{this.state.uploadURL}</a>
 								</div></Row>
 							</div>
 						</Column>
 					</Row>
 					<Row><h5>{this.state.pageTitle}</h5></Row>
-					<Row horizontal="space-between" style={{flexWrap:'wrap'}}>
+					<Row horizontal="space-between" className="home-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
 						{items}
 					</Row>
 				</div>)}

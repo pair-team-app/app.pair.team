@@ -7,7 +7,8 @@
 	height: 100%;
 	background-color: #fafbfc;
 	border-right: 1px solid #eaecef;
-	padding: 28px 28px 0 28px;
+	padding: 24px;
+	letter-spacing: -0.27px;
 }
 
 .side-nav-link-wrapper {
@@ -24,8 +25,6 @@
 }
 
 .side-nav-header {
-	font-size: 16px;
-	font-weight: bold;
 	margin-bottom: 28px;
 }
 
@@ -33,13 +32,19 @@
 }
 
 .side-nav-bottom-wrapper {
-	padding: 100px 0 80px 0;
+	padding: 100px 0 65px 0;
+}
+
+.side-nav-bottom-wrapper-fixed {
+	position: absolute;
+	bottom: 88px;
+	left: 24px;
 }
 
 .copyright {
-	color: #999999;
-	font-size: 10px;
-	font-weight: 300;
+	font-size: 15px;
+	letter-spacing: -0.3px;
+	color: #9b9b9b;
 	margin-top: 20px;
 }
 

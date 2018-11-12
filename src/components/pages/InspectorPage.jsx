@@ -226,7 +226,7 @@ class InspectorPage extends Component {
 
 		const commentButtonClass = (this.state.comment.length !== 0) ? 'inspector-page-comment-button' : 'inspector-page-comment-button button-disabled';
 
-		const slices = (artboard) ? artboard.slices.map((item, i, arr) => {
+		const slices = (artboard) ? artboard.slices.map((item, i) => {
 			return (
 				<SliceItem
 					key={i}
@@ -242,7 +242,7 @@ class InspectorPage extends Component {
 			);
 		}) : [];
 
-		const comments = (artboard) ? artboard.comments.map((item, i, arr) => {
+		const comments = (artboard) ? artboard.comments.map((item, i) => {
 			return (
 				<CommentItem
 					key={i}
@@ -307,7 +307,7 @@ class InspectorPage extends Component {
 							resetThenSet={this.resetThenSet}
 						/>
 						<div className="inspector-page-panel-code-wrapper">
-							<div className="inspector-page-panel-code"><span dangerouslySetInnerHTML={{ __html : this.state.code.html }} /></div>
+							<div className="code-snippet inspector-page-panel-code"><span dangerouslySetInnerHTML={{ __html : this.state.code.html }} /></div>
 							<CopyToClipboard onCopy={()=> this.handleCodeCopy()} text={this.state.code.syntax}>
 								<button className="inspector-page-float-button inspector-page-copy-code-button"><img className="inspector-page-float-button-image" src="/images/copy-code.svg" alt="Copy" /></button>
 							</CopyToClipboard>

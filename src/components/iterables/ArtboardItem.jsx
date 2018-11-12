@@ -21,6 +21,7 @@ class ArtboardItem extends Component {
 			<div className={className} onClick={()=> (this.props.title !== '') ? this.props.onClick() : null}>
 				{(this.props.title !== '') && (<div>
 					<img className={imageClass} src={this.props.image} alt={this.props.title} />
+					<div className="artboard-item-overlay" />
 					<div className="artboard-item-details-wrapper">
 						<div className="artboard-item-title">{this.state.title}</div>
 					</div>

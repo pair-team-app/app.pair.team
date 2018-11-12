@@ -2,11 +2,6 @@
 .home-page-wrapper {
 }
 
-.home-page-upload-url {
-	margin-top: 24px;
-	font-size: 12px;
-}
-
 .home-page-project {
 	position: relative;
 	width: 100%;
@@ -44,7 +39,8 @@
 	padding: 28px;
 }
 
-.home-page-plugins-wrapper {
+.home-page-artboards-wrapper {
+	margin-top: 20px;
 }
 
 .home-page-form-wrapper {

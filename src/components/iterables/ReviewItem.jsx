@@ -17,9 +17,9 @@ class ReviewItem extends Component {
 		return (
 			<div className="review-item">
 				<img className="review-item-image" src={this.props.image} alt={this.props.author} />
-				<div className="review-item-quote">
-					&ldquo;{this.props.quote}&rdquo;<br />
-					&mdash;{this.props.author}
+				<div className="review-item-text">
+					<div className="review-item-quote">{this.props.quote}</div>
+					<div className="review-item-author">{this.props.author}</div>
 				</div>
 			</div>
 		);

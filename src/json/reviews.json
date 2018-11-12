@@ -28,4 +28,14 @@
   "author": "Reviewer 6",
   "image": "/images/default-avatar.png",
   "quote": "Maecenas cursus venenatis nisi nec hendrerit."
+}, {
+  "id": 7,
+  "author": "Reviewer 7",
+  "image": "/images/default-avatar.png",
+  "quote": "Maecenas cursus venenatis nisi nec hendrerit."
+}, {
+  "id": 8,
+  "author": "Reviewer 8",
+  "image": "/images/default-avatar.png",
+  "quote": "Maecenas cursus venenatis nisi nec hendrerit."
 }]

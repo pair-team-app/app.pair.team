@@ -16,7 +16,7 @@ class MissionPage extends Component {
 	}
 
 	render() {
-		const items = reviews.map((item, i, arr) => {
+		const items = reviews.map((item, i) => {
 			return (
 				<Column key={i}>
 					<ReviewItem author={item.author} image={item.image} quote={item.quote} />
@@ -26,46 +26,43 @@ class MissionPage extends Component {
 
 		return (
 			<div className="page-wrapper mission-page-wrapper">
-				<Row vertical="start">
-					<Column flexGrow={1} horizontal="center">
-						<div className="page-header">
-							<Row horizontal="center"><h1>Our Mission</h1></Row>
-							<div className="page-header-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
-							<Row horizontal="center"><button className="adjacent-button" onClick={()=> window.open('https://www.youtube.com')}>Watch Video</button><button onClick={()=> window.location.href = '/mission'}>Mission</button></Row>
+				<div className="page-header">
+					<Row horizontal="center"><h1>Mission</h1></Row>
+					<div className="page-header-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along.</div>
+					<Row horizontal="center">
+						<button className="adjacent-button" onClick={()=> window.open('https://www.github.com/de-ai')}>Github</button>
+						<button className="adjacent-button" onClick={()=> window.open('https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA')}>Slack</button>
+						<button onClick={()=> window.open('https://spectrum.chat/designengine')}>Spectrum</button>
+					</Row>
+				</div>
+				<div>
+					<Row><h2 className="mission-page-title">What is Design Engine?</h2></Row>
+					<Row><p>We only collect data that can be directly used to improve your product experience. Every piece of data we collect, from your company name to the number of adjectives you use, is collected with specific intentions. We use data to improve our predictive models, so that the more you use Design Engine’s products, the better results you get. </p></Row>
+					<Row><h4>User Reviews</h4></Row>
+					<Row horizontal="space-around" className="mission-page-reviews-wrapper" style={{flexWrap:'wrap'}}>
+						{items}
+					</Row>
+					<Row>
+						<div className="mission-page-column-left">
+							<h2>Will Design Engine be a web app or desktop app?</h2>
+							<p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p>
+							<h2>Will Design Engine be a web app or desktop app?</h2>
+							<p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p>
+							<p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p>
+							<h2>How much does it cost?</h2>
+							<p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers <span className="page-link" onClick={()=> this.props.onPayment()}>@2.99 per month</span>.</p>
 						</div>
-						<div>
-							<Row><h3>Mission</h3></Row>
-							<Row><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam luctus vitae massa id porta. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Quisque posuere, elit et pharetra egestas, ligula tellus fermentum purus, at lacinia nisi nibh et libero. Maecenas tristique nulla id lorem semper, non feugiat velit consectetur. Maecenas tristique enim sit amet luctus malesuada. Sed non nunc laoreet, fringilla metus sit amet, scelerisque dolor. Praesent nec dui vulputate libero ultricies condimentum.</p></Row>
-							<Row horizontal="space-around" className="mission-page-reviews-wrapper" style={{flexWrap:'wrap'}}>
-								{items}
-							</Row>
-							<Row horizontal="space-around" style={{flexWrap:'wrap'}}>
-								<Column className="mission-page-faq">
-									<h2>Will Design Engine be a web app or desktop app?</h2>
-									<p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p>
-								</Column>
-								<Column className="mission-page-faq">
-									<h2>Will Design Engine be a web app or desktop app?</h2>
-									<p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p>
-								</Column>
-								<Column className="mission-page-faq">
-									<h2>Will Design Engine be a web app or desktop app?</h2>
-									<p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p>
-								</Column>
-								<Column className="mission-page-faq">
-									<h2>Will Design Engine be a web app or desktop app?</h2>
-									<p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p>
-								</Column>
-							</Row>
-							<Row><h3>Founders</h3></Row>
-							<Row><p>Vestibulum suscipit sem odio, quis interdum purus pharetra at. Aliquam dictum blandit ex ultricies convallis. Quisque venenatis lacus vitae nibh aliquet aliquet. Curabitur ut lacinia dolor. Pellentesque rutrum, nulla auctor laoreet euismod, nisl lorem aliquam lorem, pellentesque interdum felis mauris nec turpis. Ut condimentum, nibh gravida congue pharetra, nibh felis malesuada odio, at tempus tortor risus quis orci. Aenean nisi nulla, mollis eget rutrum ultrices, efficitur eget orci. Nam nec diam pharetra, rhoncus massa id, commodo metus. Mauris accumsan nunc et efficitur accumsan. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam erat volutpat. Aliquam efficitur vulputate purus in volutpat.</p></Row>
-							<Row><p><img className="mission-page-founders-image" src="http://static1.businessinsider.com/image/5ada303319ee8642008b4679-2400/oceans%20venture%20group.jpg" alt="Founders" /></p></Row>
-							<Row><h3>Press</h3></Row>
-							<Row><div className="page-link" onClick={()=> this.props.onPage('branding')}>Branding</div></Row>
-							<Row><div className="page-link" onClick={()=> this.props.onPage('founders')}>Founder's Photos</div></Row>
+
+						<div className="mission-page-column-right">
+							<h2>Will Design Engine be a web app or desktop app?</h2>
+							<p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p>
+							<h2>Will Design Engine be a web app or desktop app?</h2>
+							<p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts.</p>
+							<button className="stack-button" onClick={()=> this.props.onRegister()}>Sign Up with Email Address</button><br />
+							<button onClick={()=> this.props.onRegister()}>Sign In</button>
 						</div>
-					</Column>
-				</Row>
+					</Row>
+				</div>
 			</div>
 		);
 	}

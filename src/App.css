@@ -21,10 +21,10 @@
 }
 
 .page-header {
-	background-color: #fafbfc;
 	padding: 40px;
-	margin-bottom: 20px;
+	margin-bottom: 40px;
 	width: 100%;
+	background-color: #fafbfc;
 	border: 1px solid #eaecef;
 	border-radius: 4px;
 }
@@ -33,7 +33,15 @@
 	text-align: center;
 	margin: 28px 0 56px 0;
 	line-height: 40px;
-	font-size: 18px;
+	font-family: "San Francisco Text", sans-serif;
+	font-size: 20px;
+	letter-spacing: -0.3px;
+}
+
+.page-header-url {
+	margin-top: 24px;
+	font-size: 14px;
+	letter-spacing: -0.23px;
 }
 
 .adjacent-button {
@@ -70,7 +78,14 @@
 }
 
 .input-wrapper-error {
-	border: 1px solid #ea0000;
+	border: 1px solid #ff2f48;
+	color: #ff2f48;
+}
+
+.code-snippet {
+	background-color: #111111;
+	font-family: "Andale Mono", Monaco, Consolas, monospace;
+	color: #7ed321;
 }
 
 .faq-block {

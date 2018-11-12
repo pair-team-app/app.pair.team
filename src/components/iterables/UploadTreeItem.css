@@ -15,7 +15,7 @@
 }
 
 .upload-tree-item-arrow-selected, .upload-tree-item-text-selected {
-	font-weight: bold;
+	font-family: "San Francisco Text Bold", sans-serif;
 	text-decoration: underline;
 }
 
