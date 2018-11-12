@@ -22,6 +22,7 @@ import UploadOverlay from './components/elements/UploadOverlay';
 import InviteOverlay from './components/elements/InviteOverlay';
 import StripeOverlay from './components/elements/StripeOverlay';
 import RegisterOverlay from './components/elements/RegisterOverlay';
+import InviteTeamPage from "./components/pages/InviteTeamPage";
 
 const wrapper = React.createRef();
 
@@ -186,14 +187,23 @@ class App extends Component {
 
 	handlePage = (url)=> {
 		console.log('handlePage()', url);
-
 		wrapper.current.scrollTo(0, 0);
-		this.props.history.push('/' + url);
-		this.setState({
-			uploadID   : 0,
-			pageID     : 0,
-			artboardID : 0
-		});
+
+		if (url === '//') {
+			this.props.history.goBack();
+
+		} else {
+			this.props.history.push('/' + url);
+		}
+
+
+		if (url === '') {
+			this.setState({
+				uploadID   : 0,
+				pageID     : 0,
+				artboardID : 0
+			});
+		}
 	};
 
   render() {
@@ -217,7 +227,6 @@ class App extends Component {
 			    onPageItem={(obj)=> this.handleSideNavPageItem(obj)}
 			    onArtboardItem={(obj)=> this.handleSideNavArtboardItem(obj)}
 			    onSliceItem={(obj)=> this.handleSideNavSliceItem(obj)}
-			    onInvite={()=> this.setState({ overlayAlert : 'invite' })}
 			    onRegister={()=> this.setState({ overlayAlert: 'register' })}
 			    onLogout={()=> this.handleLogout()}
 			    onUpload={()=> this.handlePage('upload')}
@@ -231,10 +240,11 @@ class App extends Component {
 			      <Route exact path="/api" render={()=> <APIPage onPage={(url)=> this.handlePage(url)} />} />
 				    <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" component={InspectorPage} />
 				    <Route path="/doc/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onRegister={()=> this.setState({ overlayAlert: 'register' })} onPayment={()=> this.setState({ overlayAlert: 'payment' })} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
+				    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={this.state.uploadID} onPage={(url)=> this.handlePage(url)} />} />
 			      <Route exact path="/mission" render={()=> <MissionPage onPage={(url)=> this.handlePage(url)} onRegister={()=> this.setState({ overlayAlert: 'register' })} onPayment={()=> this.setState({ overlayAlert: 'payment' })} />} />
 			      <Route exact path="/privacy" component={PrivacyPage} />
 			      <Route exact path="/terms" component={TermsPage} />
-			      <Route exact path="/upload" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onCancel={()=> this.props.history.goBack()} />} />
+			      <Route exact path="/upload" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route render={()=> <Status404Page onPage={(url)=> this.handlePage(url)} />} />
 			    </Switch>
 		    </div>

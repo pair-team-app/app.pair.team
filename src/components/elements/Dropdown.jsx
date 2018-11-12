@@ -16,6 +16,12 @@ class Dropdown extends Component{
 			headerTitle : this.props.title
 		};
 	}
+	componentDidUpdate(prevProps) {
+		if (this.props.title !== prevProps.title) {
+			this.setState({ headerTitle : this.props.title });
+		}
+	}
+
 
 	handleClickOutside(e) {
 		this.setState({ listOpen : false })
@@ -35,8 +41,8 @@ class Dropdown extends Component{
 	};
 
 	render() {
-		const {list} = this.props;
-		const {listOpen, headerTitle} = this.state;
+		const { list } = this.props;
+		const { listOpen, headerTitle } = this.state;
 
 		const items = list.map((item, i)=> {
 			let thumbImage = null;
@@ -55,9 +61,9 @@ class Dropdown extends Component{
 
 			return (
 				<li className="dd-list-item" key={i} onClick={() => this.selectItem(item.title, i, item.key)}><Row>
-					{(thumbImage) && (<Column flexGrow={1} horizontal="start" vertical="center"><img src={thumbImage} style={{width:'20px',height:'20px'}} alt={item.title} /></Column>)}
-					<Column flexGrow={1} horizontal="start" vertical="center">{item.title}</Column>
-					<Column flexGrow={15} horizontal="start" vertical="center">{item.selected && <FontAwesome name="check"/>}</Column>
+					{(thumbImage) && (<Column flexGrow={1} horizontal="start" vertical="center"><img src={thumbImage} style={{width:'20px',height:'20px',marginRight:'8px'}} alt={item.title} /></Column>)}
+					<Column flexGrow={666} horizontal="start" vertical="center">{item.title}</Column>
+					{/*<Column flexGrow={150} horizontal="start" vertical="center">{item.selected && <FontAwesome name="check"/>}</Column>*/}
 				</Row></li>
 			);
 		});

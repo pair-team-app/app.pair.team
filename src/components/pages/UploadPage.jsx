@@ -112,7 +112,7 @@ class UploadPage extends Component {
 				console.log('UPLOAD_CANCEL', response.data);
 				clearInterval(this.uploadInterval);
 				cookie.save('upload_id', '0', { path : '/' });
-				this.props.onCancel();
+				this.props.onPage('//');
 			}).catch((error) => {
 		});
 	};

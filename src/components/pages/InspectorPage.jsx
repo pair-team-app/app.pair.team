@@ -197,7 +197,6 @@ class InspectorPage extends Component {
 		let tmp = [...this.state[key]];
 		tmp.forEach(item => item.selected = false);
 		tmp[ind].selected = true;
-		this.ddTitle = tmp[ind].title;
 		this.setState({ [key] : tmp });
 	};
 
