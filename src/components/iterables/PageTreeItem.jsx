@@ -41,7 +41,7 @@ class PageTreeItem extends Component {
 			<div className="page-tree-item">
 				<div className={textClass} onClick={()=> this.props.onClick()}><Row vertical="center">
 					<img className="side-nav-arrow" src="/images/chevron-right.svg" alt="chevron" />
-					{this.state.title}
+					{this.state.title + ((artboards.length > 0) ? ' (' + artboards.length + ')' : '')}
 				</Row></div>
 				{(this.props.selected) && (<div className="page-tree-item-artboards">
 					{artboards}

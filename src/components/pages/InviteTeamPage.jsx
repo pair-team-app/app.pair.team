@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './InviteTeamPage.css';
 
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { Column, Row } from 'simple-flexbox';
+import { Row } from 'simple-flexbox';
 import cookie from "react-cookies";
 import axios from "axios/index";
 

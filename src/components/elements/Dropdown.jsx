@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './Dropdown.css';
 
-import FontAwesome from 'react-fontawesome'
 import onClickOutside from "react-onclickoutside";
 import { Column, Row } from 'simple-flexbox';
 
@@ -21,7 +20,6 @@ class Dropdown extends Component{
 			this.setState({ headerTitle : this.props.title });
 		}
 	}
-
 
 	handleClickOutside(e) {
 		this.setState({ listOpen : false })

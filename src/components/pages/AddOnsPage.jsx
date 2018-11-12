@@ -28,7 +28,7 @@ class AddOnsPage extends Component {
 			<div className="page-wrapper add-ons-page-wrapper">
 				<div className="page-header">
 					<Row horizontal="center"><h1>Developer Add Ons</h1></Row>
-					<div className="page-header-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along.</div>
+					<div className="page-header-text">Design Engine Add Ons are community driven application Add Ons theat render code and components from Design Engine project JSON format.</div>
 					<Row horizontal="center">
 						<button className="adjacent-button" onClick={()=> this.props.onPage('api')}>API</button>
 						<button className="adjacent-button" onClick={()=> window.open('https://www.github.com/de-ai')}>Github</button>

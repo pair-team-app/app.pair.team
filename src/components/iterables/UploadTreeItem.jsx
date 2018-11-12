@@ -38,7 +38,7 @@ class UploadTreeItem extends Component {
 
 		return (
 			<div className="upload-tree-item">
-				<div className={textClass} onClick={()=> this.props.onClick()}>{this.state.title}</div>
+				<div className={textClass} onClick={()=> this.props.onClick()}>{this.state.title + ((pages.length > 0) ? ' (' + pages.length + ')' : '')}</div>
 				{(this.props.selected) && (<div className="upload-tree-item-artboards">
 					{pages}
 				</div>)}
