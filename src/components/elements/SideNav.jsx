@@ -320,17 +320,21 @@ class SideNav extends Component {
 					<div className="nav-link" onClick={()=> this.props.onUpload()}>New Project</div>
 				</div>
 				<div className={footerClass}>
-					{(typeof cookie.load('user_id') !== 'undefined' && cookie.load('user_id') !== '0')
-						? <div className="nav-link" onClick={() => this.props.onLogout()}>Logout</div>
-						: <div className="nav-link" onClick={() => this.props.onRegister()}>Sign Up / Sign In</div>
-					}
-					<div className="nav-link" onClick={()=> this.props.onPage('api')}>API</div>
+					{(cookie.load('user_id') === '0') && (<div>
+						<div className="nav-link" onClick={() => this.props.onPage('register')}>Sign Up</div>
+						<div className="nav-link" onClick={() => this.props.onPage('login')}>Sign In</div>
+					</div>)}
+
+					{(cookie.load('user_id') !== '0') && (<div className="nav-link" onClick={() => this.props.onLogout()}>Logout</div>)}
+
+					<div className="nav-link" onClick={()=> window.open('https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA')}>Slack</div>
+					<div className="nav-link" onClick={()=> window.open('https://spectrum.chat/designengine')}>Spectrum</div>
+
+					<div className="nav-link" onClick={()=> this.props.onPage('api')}>API Docs</div>
 					<div className="nav-link" onClick={()=> this.props.onPage('mission')}>Mission</div>
 					<div className="nav-link" onClick={()=> this.props.onPage('terms')}>Terms of Service</div>
 					<div className="nav-link" onClick={()=> this.props.onPage('privacy')}>Privacy Policy</div>
-					<div className="nav-link" onClick={()=> window.open('https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA')}>Slack</div>
-					<div className="nav-link" onClick={()=> window.open('https://spectrum.chat/designengine')}>Spectrum</div>
-					<div className="copyright">&copy; {(year !== 2018) && ('2018-')}{year} Design Engine AI, Inc.</div>
+					<div className="copyright">&copy; {year} Design Engine AI, Inc.</div>
 				</div>
 			</div>
 		);

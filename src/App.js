@@ -14,8 +14,10 @@ import APIPage from './components/pages/APIPage';
 import HomePage from './components/pages/HomePage';
 import InspectorPage from './components/pages/InspectorPage';
 import InviteTeamPage from "./components/pages/InviteTeamPage";
+import LoginPage from './components/pages/LoginPage';
 import MissionPage from './components/pages/MissionPage';
 import PrivacyPage from './components/pages/PrivacyPage';
+import RegisterPage from './components/pages/RegisterPage';
 import Status404Page from './components/pages/Status404Page';
 import TermsPage from './components/pages/TermsPage';
 import UploadPage from './components/pages/UploadPage';
@@ -202,8 +204,7 @@ class App extends Component {
 				artboardID : 0
 			});
 
-		} else if (url === 'register') {
-			this.setState({ overlayAlert: 'register' });
+			this.props.history.push('/');
 
 		} else {
 			this.props.history.push('/' + url);
@@ -239,14 +240,16 @@ class App extends Component {
 
 		    <div className="content-wrapper" ref={wrapper}>
 			    <Switch>
-			      <Route exact path="/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onRegister={()=> this.setState({ overlayAlert: 'register' })} onPayment={()=> this.setState({ overlayAlert: 'payment' })} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
+			      <Route exact path="/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onPayment={()=> this.setState({ overlayAlert: 'payment' })} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
 			      <Route exact path="/add-ons" render={()=> <AddOnsPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route exact path="/api" render={()=> <APIPage onPage={(url)=> this.handlePage(url)} />} />
 				    <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" component={InspectorPage} />
 				    <Route path="/doc/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onRegister={()=> this.setState({ overlayAlert: 'register' })} onPayment={()=> this.setState({ overlayAlert: 'payment' })} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
 				    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={this.state.uploadID} onPage={(url)=> this.handlePage(url)} />} />
+				    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route exact path="/mission" render={()=> <MissionPage onPage={(url)=> this.handlePage(url)} onRegister={()=> this.setState({ overlayAlert: 'register' })} onPayment={()=> this.setState({ overlayAlert: 'payment' })} />} />
 			      <Route exact path="/privacy" component={PrivacyPage} />
+				    <Route exact path="/register" render={()=> <RegisterPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route exact path="/terms" component={TermsPage} />
 			      <Route exact path="/upload" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route render={()=> <Status404Page onPage={(url)=> this.handlePage(url)} />} />

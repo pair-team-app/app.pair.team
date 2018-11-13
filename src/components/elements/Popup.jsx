@@ -5,8 +5,6 @@ import './Popup.css'
 import { TweenMax, Expo } from "gsap/TweenMax";
 import { Column, Row } from 'simple-flexbox';
 
-const wrapper = React.createRef();
-
 class Popup extends Component {
 	constructor(props) {
 		super(props);

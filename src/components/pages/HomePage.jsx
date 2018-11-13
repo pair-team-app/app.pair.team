@@ -130,8 +130,8 @@ class HomePage extends Component {
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
-				{(parseInt(cookie.load('user_id'), 10) === 0 && parseInt(this.props.uploadID, 10) === 0) && (<LoggedOutPage onRegister={()=> this.props.onRegister()} onPayment={()=> this.props.onPayment()} />)}
-				{(parseInt(cookie.load('user_id'), 10) !== 0 && parseInt(this.props.uploadID, 10) === 0) && (<LoggedInPage onPage={(url)=> this.props.onPage(url)} onRegister={()=> this.props.onRegister()} onPayment={()=> this.props.onPayment()}/>)}
+				{(parseInt(cookie.load('user_id'), 10) === 0 && parseInt(this.props.uploadID, 10) === 0) && (<LoggedOutPage onPage={(url)=> this.props.onPage(url)} onPayment={()=> this.props.onPayment()} />)}
+				{(parseInt(cookie.load('user_id'), 10) !== 0 && parseInt(this.props.uploadID, 10) === 0) && (<LoggedInPage onPage={(url)=> this.props.onPage(url)} onPayment={()=> this.props.onPayment()}/>)}
 
 				{(parseInt(this.props.uploadID, 10) !== 0) && (<div>
 					<Row vertical="start">

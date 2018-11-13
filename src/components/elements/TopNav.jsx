@@ -34,7 +34,7 @@ class TopNav extends Component {
 
 				<div className="top-nav-column top-nav-column-right">
 					<Column flexGrow={1} horizontal="end" vertical="center">
-						<button className="top-nav-upload-button" onClick={()=> this.props.onPage('register')}>New Project</button>
+						<button className="top-nav-upload-button" onClick={()=> this.props.onPage((cookie.load('user_id') === '0') ? 'register' : 'upload')}>New Project</button>
 					</Column>
 				</div>
 			</div>

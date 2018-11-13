@@ -41,8 +41,8 @@ class LoggedInPage extends Component {
 						<p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p>
 						<h2>Will Design Engine be a web app or desktop app?</h2>
 						<p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts.</p>
-						<button className="stack-button" onClick={()=> this.props.onRegister()}>Sign Up with Email Address</button><br />
-						<button onClick={()=> this.props.onRegister()}>Sign In</button>
+						<button className="stack-button" onClick={()=> this.props.onPage('register')}>Sign Up with Email Address</button><br />
+						<button onClick={()=> this.props.onPage('login')}>Sign In</button>
 					</div>
 				</Row>
 			</div>

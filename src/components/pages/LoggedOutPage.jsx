@@ -21,7 +21,7 @@ class LoggedOutPage extends Component {
 						<div className="page-header">
 							<Row horizontal="center"><h1>Designed for Engineers</h1></Row>
 							<div className="page-header-text">Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.</div>
-							<Row horizontal="center"><button className="adjacent-button" onClick={()=> this.props.onRegister()}>Sign Up with Email Address</button><button onClick={()=> this.props.onRegister()}>Sign In</button></Row>
+							<Row horizontal="center"><button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign Up with Email Address</button><button onClick={()=> this.props.onPage('login')}>Sign In</button></Row>
 						</div>
 					</Column>
 				</Row>
@@ -40,8 +40,8 @@ class LoggedOutPage extends Component {
 						<p>Design Engine processes every design file's slice, button, icon and more for export every time you upload a  file. Whether you are developing an iOS 12 Mobile App or for an Android Tablet, Design Engine handles parts on-demand.</p>
 						<h2>Sign up free</h2>
 						<p>Sign up for Design Engine to inspect parts, download source, and start building interfaces faster.</p>
-						<button className="stack-button" onClick={()=> this.props.onRegister()}>Sign Up with Email Address</button><br />
-						<button onClick={()=> this.props.onRegister()}>Sign In</button>
+						<button className="stack-button" onClick={()=> this.props.onPage('register')}>Sign Up with Email Address</button><br />
+						<button onClick={()=> this.props.onPage('login')}>Sign In</button>
 					</div>
 				</Row>
 			</div>
