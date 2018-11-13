@@ -14,7 +14,9 @@ import Dropdown from '../elements/Dropdown';
 import SliceItem from '../iterables/SliceItem';
 import SliceToggle from '../elements/SliceToggle';
 
+const heroWrapper = React.createRef();
 const heroImage = React.createRef();
+const canvas = React.createRef();
 
 class InspectorPage extends Component {
 	constructor(props) {
@@ -25,6 +27,7 @@ class InspectorPage extends Component {
 			artboardID    : this.props.match.params.artboardID,
 			sliceID       : this.props.match.params.sliceID,
 			slice         : null,
+			hoverSlice    : null,
 			scaleSize     : 2,
 			page          : null,
 			artboard      : null,
@@ -62,16 +65,26 @@ class InspectorPage extends Component {
 				key      : 'languages'
 			}]
 		};
+
+		this.scale = 1;
+		this.antsOffset = 0;
+		this.antsInterval = null;
 	}
 
 	componentDidMount() {
 		this.refreshData();
+		this.antsInterval = setInterval(this.redrawAnts, 50);
 	}
 
 	componentDidUpdate(prevProps) {
+		console.log('componentDidUpdate()', canvas);
 		if (this.props.match.params.artboardID !== prevProps.match.params.artboardID) {
 			this.refreshData();
 			return (null);
+		}
+
+		if (canvas.current) {
+			this.updateCanvas();
 		}
 	}
 
@@ -176,8 +189,16 @@ class InspectorPage extends Component {
 		this.setState({ scaleSize : Math.min(Math.max(this.state.scaleSize + direction, 1), 3) });
 	};
 
-	handleSliceClick = (ind, item)=> {
-		this.setState({ slice : item });
+	handleSliceRollOver = (ind, slice)=> {
+		this.setState({ hoverSlice : slice });
+	};
+
+	handleSliceRollOut = (ind, slice)=> {
+		this.setState({ hoverSlice : null });
+	};
+
+	handleSliceClick = (ind, slice)=> {
+		this.setState({ slice : slice });
 	};
 
 	handleDownload = ()=> {
@@ -201,9 +222,106 @@ class InspectorPage extends Component {
 		this.setState({ [key] : tmp });
 	};
 
-	render() {
-// 		console.log('InspectorPage.render()', this.state);
+	updateCanvas = ()=> {
+// 		console.log('updateCanvas()', heroWrapper, heroImage);
+		const context = canvas.current.getContext('2d');
+		context.clearRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
 
+		if (this.state.hoverSlice) {
+			const offset = (heroWrapper.current && heroImage.current) ? {
+				x : heroImage.current.clientWidth,
+				y : (heroWrapper.current.clientHeight - heroImage.current.clientHeight) * 0.5
+			} : {
+				x : 0,
+				y : 0
+			};
+
+			const srcFrame = (this.state.hoverSlice) ? this.state.hoverSlice.meta.frame : null;
+
+			if (srcFrame) {
+				const frame = {
+					origin : {
+						x : 14 + (offset.x + Math.ceil(srcFrame.origin.x * this.scale)),
+						y : offset.y + Math.ceil(srcFrame.origin.y * this.scale)
+					},
+					size   : {
+						width  : Math.ceil(srcFrame.size.width * this.scale),
+						height : Math.ceil(srcFrame.size.height * this.scale)
+					}
+				};
+
+// 				console.log('updateCanvas()', heroImage, offset, frame);
+
+// 			context.fillStyle = 'rgba(0, 255, 0, 0.5)';
+// 			context.fillRect(Math.round(frame.origin.x * this.scale), 2 + Math.round(frame.origin.y * this.scale), Math.round(frame.size.width * this.scale), Math.round(frame.size.height * this.scale));\
+
+				context.strokeStyle = 'rgba(0, 255, 0, 0.5)';
+				context.beginPath();
+				context.setLineDash([1, 0]);
+				context.lineDashOffset = 0;
+				context.moveTo(0, frame.origin.y);
+				context.lineTo(canvas.current.clientWidth, frame.origin.y);
+				context.moveTo(0, frame.origin.y + frame.size.height);
+				context.lineTo(canvas.current.clientWidth, frame.origin.y + frame.size.height);
+				context.moveTo(frame.origin.x, 0);
+				context.lineTo(frame.origin.x, canvas.current.clientHeight);
+				context.moveTo(frame.origin.x + frame.size.width, 0);
+				context.lineTo(frame.origin.x + frame.size.width,  canvas.current.clientHeight);
+				context.stroke();
+
+				context.strokeStyle = '#000000';
+				context.beginPath();
+				context.moveTo(0, 0);
+				context.setLineDash([6, 3]);
+				context.lineDashOffset = -this.antsOffset;
+
+// 			context.lineTo(canvas.current.clientWidth, canvas.current.clientHeight);
+// 			context.moveTo(canvas.current.clientWidth, 0);
+// 			context.lineTo(0, canvas.current.clientHeight);
+
+				context.strokeRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+
+// 		  context.lineWidth = 2;
+
+				context.stroke();
+
+				context.font = '9px AndaleMono';
+				context.fillStyle = '#000000';
+				context.textBaseline = 'bottom';
+				context.fillText(srcFrame.size.width + 'w', frame.origin.x, frame.origin.y - 2);
+
+				context.textBaseline = 'middle';
+				context.fillText(srcFrame.size.height + 'h', 2 + (frame.origin.x + frame.size.width), frame.origin.y + (frame.size.height * 0.5));
+
+				context.fillStyle = 'rgba(0, 255, 0, 1)';
+				context.textAlign = 'right';
+				context.textBaseline = 'top';
+				context.fillText(srcFrame.origin.x + 'px', frame.origin.x - 2, 1);
+
+				context.textAlign = 'left';
+				context.fillText((srcFrame.origin.x + srcFrame.size.width) + 'px', (frame.origin.x + frame.size.width) + 2, 1);
+
+				context.textBaseline = 'bottom';
+				context.fillText(srcFrame.origin.y + 'px', 1, frame.origin.y);
+
+				context.textBaseline = 'top';
+				context.fillText((srcFrame.origin.y + srcFrame.size.height) + 'px', 1, (frame.origin.y + frame.size.height) + 1);
+// 			context.fillRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
+			}
+		}
+	};
+
+	redrawAnts = ()=> {
+		if (this.antsOffset++ > 16) {
+			this.antsOffset = 0;
+		}
+
+		if (canvas.current) {
+			this.updateCanvas();
+		}
+	};
+
+	render() {
 		const tsOptions = {
 			year   : 'numeric',
 			month  : 'numeric',
@@ -215,32 +333,37 @@ class InspectorPage extends Component {
 		const { visibleTypes } = this.state;
 		const { scaleSize } = this.state;
 
-		const scale = (artboard && heroImage && heroImage.current) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? heroImage.current.clientWidth / artboard.meta.frame.size.width : heroImage.current.clientHeight / artboard.meta.frame.size.height : 1;
+		this.scale = (artboard && heroImage && heroImage.current) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? heroImage.current.clientWidth / artboard.meta.frame.size.width : heroImage.current.clientHeight / artboard.meta.frame.size.height : 1;
+
 		const heroImageClass = 'inspector-page-hero-image' + ((artboard) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? ' inspector-page-hero-image-landscape' : ' inspector-page-hero-image-portrait' : '');
-		const panelImageClass = 'inspector-page-panel-image' + ((slice) ? ((slice.meta.frame.size.width > slice.meta.frame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait')  + ' ' + ((slice.type === 'slice') ? 'inspector-page-panel-image-slice' : (slice.type === 'hotspot') ? 'inspector-page-panel-image-hotspot' : (slice.type === 'textfield') ? 'inspector-page-panel-image-textfield' : 'inspector-page-panel-image-background') : '');
+		const panelImageClass = 'inspector-page-panel-image';// + ((slice) ? ((slice.meta.frame.size.width > slice.meta.frame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait')  + ' ' + ((slice.type === 'slice') ? 'inspector-page-panel-image-slice' : (slice.type === 'hotspot') ? 'inspector-page-panel-image-hotspot' : (slice.type === 'textfield') ? 'inspector-page-panel-image-textfield' : 'inspector-page-panel-image-background') : '');
 		const slicesStyle = (artboard) ? {
-			width   : (scale * artboard.meta.frame.size.width) + 'px',
-			height  : (scale * artboard.meta.frame.size.height) + 'px'
+			width   : (this.scale * artboard.meta.frame.size.width) + 'px',
+			height  : (this.scale * artboard.meta.frame.size.height) + 'px'
 		} : {
 			width   : '100%',
 			height  : '100%'
 		};
 
+// 		console.log('InspectorPage.render()', this.scale);
+
 		const commentButtonClass = (this.state.comment.length !== 0) ? 'inspector-page-comment-button' : 'inspector-page-comment-button button-disabled';
 
-		const slices = (artboard) ? artboard.slices.map((item, i) => {
+		const slices = (artboard) ? artboard.slices.map((slice, i) => {
 			return (
 				<SliceItem
 					key={i}
-					title={item.title}
-					type={item.type}
-					visible={visibleTypes[item.type]}
-					top={item.meta.frame.origin.y}
-					left={item.meta.frame.origin.x}
-					width={item.meta.frame.size.width}
-					height={item.meta.frame.size.height}
-					scale={scale}
-					onClick={() => this.handleSliceClick(i, item)} />
+					title={slice.title}
+					type={slice.type}
+					visible={visibleTypes[slice.type]}
+					top={slice.meta.frame.origin.y}
+					left={slice.meta.frame.origin.x}
+					width={slice.meta.frame.size.width}
+					height={slice.meta.frame.size.height}
+					scale={this.scale}
+					onRollOver={()=> this.handleSliceRollOver(i, slice)}
+					onRollOut={()=> this.handleSliceRollOut(i, slice)}
+					onClick={() => this.handleSliceClick(i, slice)} />
 			);
 		}) : [];
 
@@ -261,10 +384,12 @@ class InspectorPage extends Component {
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<div className="inspector-page-title">{(artboard) ? artboard.title : 'Loading…'}</div>
-					<div className="inspector-page-hero-wrapper">
+					<div className="inspector-page-hero-wrapper" ref={heroWrapper}>
 						{(artboard) && (<img className={heroImageClass} src={artboard.filename} alt="Hero" ref={heroImage} />)}
-						<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>
-							{slices}
+						<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>{slices}</div>
+						<div className="inspector-page-hero-canvas-wrapper">
+							{/*<canvas width={(artboard) ? scale * artboard.meta.frame.size.width : 0} height={(artboard) ? scale * artboard.meta.frame.size.height : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>*/}
+							<canvas width={(heroWrapper.current) ? heroWrapper.current.clientWidth : 0} height="600" ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
 						</div>
 						<div className="inspector-page-toggle-wrapper">
 							<SliceToggle type="hotspot" selected={visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} /><br />
