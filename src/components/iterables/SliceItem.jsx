@@ -12,7 +12,7 @@ class SliceItem extends Component {
 	}
 
 	render() {
-		//const className = (this.props.type === 'slice') ? 'slice-item slice-item-slice' : (this.props.type === 'hotspot') ? 'slice-item slice-item-hotspot' : (this.props.type === 'textfield') ? 'slice-item slice-item-textfield' : 'slice-item slice-item-background';
+		const className = (this.props.type === 'slice') ? 'slice-item slice-item-slice' : (this.props.type === 'hotspot') ? 'slice-item slice-item-hotspot' : (this.props.type === 'textfield') ? 'slice-item slice-item-textfield' : 'slice-item slice-item-background';
 		const style = {
 			top     : this.props.top + 'px',
 			left    : this.props.left + 'px',
@@ -23,7 +23,7 @@ class SliceItem extends Component {
 		};
 
 		return (
-			<div className="slice-item" style={style} onMouseEnter={()=> this.props.onRollOver()} onMouseLeave={()=> this.props.onRollOut()} onClick={()=> this.props.onClick()}>
+			<div className={className} style={style} onMouseEnter={()=> this.props.onRollOver()} onMouseLeave={()=> this.props.onRollOut()} onClick={()=> this.props.onClick()}>
 				<FontAwesome name="plus-circle" className="slice-item-plus" />
 			</div>
 		);

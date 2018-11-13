@@ -38,11 +38,11 @@ class InspectorPage extends Component {
 			},
 			comment       : '',
 			visibleTypes  : {
-				slice      : true,
+				slice      : false,
 				hotspot    : false,
 				textfield  : false,
 				background : false,
-				all        : false
+				all        : true
 			},
 			languages     : [{
 				id       : 0,
@@ -263,7 +263,7 @@ class InspectorPage extends Component {
 					}
 				};
 
-				console.log('updateCanvas()', this.scale, offset, srcFrame.origin, frame.origin);
+// 				console.log('updateCanvas()', this.scale, offset, srcFrame.origin, frame.origin);
 
 // 			context.fillRect(Math.round(frame.origin.x * this.scale), 2 + Math.round(frame.origin.y * this.scale), Math.round(frame.size.width * this.scale), Math.round(frame.size.height * this.scale));\
 

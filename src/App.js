@@ -195,17 +195,18 @@ class App extends Component {
 		if (url === '//') {
 			this.props.history.goBack();
 
-		} else {
-			this.props.history.push('/' + url);
-		}
-
-
-		if (url === '') {
+		} else if (url === '') {
 			this.setState({
 				uploadID   : 0,
 				pageID     : 0,
 				artboardID : 0
 			});
+
+		} else if (url === 'register') {
+			this.setState({ overlayAlert: 'register' });
+
+		} else {
+			this.props.history.push('/' + url);
 		}
 	};
 
