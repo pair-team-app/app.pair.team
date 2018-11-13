@@ -107,7 +107,9 @@ class InviteTeamPage extends Component {
 		window.alert('URL copied to clipboard!');
 	};
 
-	handleInvite = ()=> {
+	handleSubmit = (event)=> {
+		event.preventDefault();
+
 		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		const isEmail1Valid = re.test(String(this.state.email1).toLowerCase());
 		const isEmail2Valid = re.test(String(this.state.email2).toLowerCase());
@@ -184,10 +186,12 @@ class InviteTeamPage extends Component {
 							list={this.state.uploads}
 							resetThenSet={this.resetThenSet}
 						/>
-						<div className={email1Class}><input type="text" name="email1" placeholder="Enter Team Member Email Address" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-						<div className={email2Class}><input type="text" name="email2" placeholder="Enter Team Member Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-						<div className={email3Class}><input type="text" name="email3" placeholder="Enter Team Member Email Address" value={this.state.email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-						<button className={inviteButtonClass} onClick={() => this.handleInvite()}>Send Invites</button>
+						<form onSubmit={this.handleSubmit}>
+							<div className={email1Class}><input type="text" name="email1" placeholder="Enter Team Member Email Address" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<div className={email2Class}><input type="text" name="email2" placeholder="Enter Team Member Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<div className={email3Class}><input type="text" name="email3" placeholder="Enter Team Member Email Address" value={this.state.email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<button type="submit" className={inviteButtonClass} onClick={(event) => this.handleSubmit(event)}>Send Invites</button>
+						</form>
 					</div>)
 					: (<h5>Invitations sent.</h5>)}
 			</div>

@@ -20,8 +20,10 @@ class RegisterOverlay extends Component {
 		};
 	}
 
-	submit = ()=> {
+	submit = (event)=> {
 		console.log('submit()');
+		event.preventDefault();
+
 		const action = (this.state.email1.length > 0) ? 'REGISTER' : (this.state.email2.length > 0) ? 'LOGIN' : '';
 		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -87,16 +89,18 @@ class RegisterOverlay extends Component {
 							<Row horizontal="center"><button onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
 						</div>
 
-						<h4>Sign Up</h4>
-						<div className={email1Class}><input type="text" name="email1" placeholder="Email Address" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-						<div className={password1Class}><input type="password" name="password1" placeholder="Password" value={this.state.password1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+						<form onSubmit={this.submit}>
+							<h4>Sign Up</h4>
+							<div className={email1Class}><input type="text" name="email1" placeholder="Email Address" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<div className={password1Class}><input type="password" name="password1" placeholder="Password" value={this.state.password1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 
-						<h4>Sign In</h4>
-						<div className={email2Class}><input type="text" name="email2" placeholder="Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-						<div className={password2Class}><input type="password" name="password2" placeholder="Password" value={this.state.password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-						<div className="overlay-button-wrapper">
-							<button className="overlay-button overlay-button-confirm" onClick={()=> this.submit()}>Submit</button>
-						</div>
+							<h4>Sign In</h4>
+							<div className={email2Class}><input type="text" name="email2" placeholder="Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<div className={password2Class}><input type="password" name="password2" placeholder="Password" value={this.state.password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<div className="overlay-button-wrapper">
+								<button type="submit" className="overlay-button overlay-button-confirm" onClick={(event)=> this.submit(event)}>Submit</button>
+							</div>
+						</form>
 					</div>
 				</Row></div>
 			</div>
