@@ -11,11 +11,11 @@ class LoginPage extends Component {
 		super(props);
 
 		this.state = {
-			action        : '',
 			email         : '',
 			password      : '',
 			emailValid    : false,
-			passwordValid : false
+			passwordValid : false,
+			errorMsg      : ''
 		};
 	}
 
@@ -32,7 +32,6 @@ class LoginPage extends Component {
 		const isPasswordValid = (password.length > 0);
 
 		this.setState({
-			action        : 'LOGIN',
 			emailValid    : isEmailValid,
 			passwordValid : isPasswordValid
 		});
@@ -50,6 +49,7 @@ class LoginPage extends Component {
 						this.props.onPage('//');
 
 					} else {
+						this.setState({ errorMsg : 'Email and/or Password Are Incorrect!'});
 					}
 				}).catch((error) => {
 			});
@@ -58,7 +58,7 @@ class LoginPage extends Component {
 
 
 	render() {
-		const { action, emailValid, passwordValid } = this.state;
+		const { action, emailValid, passwordValid, errorMsg } = this.state;
 		const { email, password } = this.state;
 
 		const emailClass = (action === '') ? 'input-wrapper' : (action === 'LOGIN' && !emailValid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
@@ -67,10 +67,10 @@ class LoginPage extends Component {
 		return (
 			<div className="page-wrapper register-page-wrapper">
 				<h4>Sign In</h4>
-				{(action === 'LOGIN' && emailValid && passwordValid) && (<div className="input-wrapper input-wrapper-error"><input type="text" placeholder="" value="Email Or Password Are Incorrect!" disabled /></div>)}
+				{(errorMsg !== '') && (<div className="input-wrapper input-wrapper-error"><input type="text" placeholder="" value={errorMsg} disabled /></div>)}
 				<form onSubmit={this.handleSubmit}>
-					<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ action : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-					<div className={passwordClass}><input type="password" name="password" placeholder="Enter Password" value={password} onFocus={()=> this.setState({ action : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+					<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ errorMsg : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+					<div className={passwordClass}><input type="password" name="password" placeholder="Enter Password" value={password} onFocus={()=> this.setState({ errorMsg : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className="overlay-button-wrapper">
 						<button type="submit" className="overlay-button overlay-button-confirm" onClick={(event)=> this.handleSubmit(event)}>Sign In</button>
 					</div>
