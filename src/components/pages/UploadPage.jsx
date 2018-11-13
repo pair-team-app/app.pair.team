@@ -56,40 +56,42 @@ class UploadPage extends Component {
 
 	onDrop(files) {
 		console.log('onDrop()', files);
-		this.setState({
-			files     : files,
-			title     : files[0].name.split('.').slice(0, -1).join(),
-			uploading : true,
-			action    : 'UPLOAD'
-		});
-
-		let self = this;
-		const config = {
-			headers: {
-				'content-type': 'multipart/form-data'
-			}, onUploadProgress: function(progressEvent) {
-				const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-				self.setState({ percent : percent });
-
-				if (progressEvent.loaded === progressEvent.total) {
-					self.onUploadComplete();
-				}
-			}
-		};
-
-		this.state.files.forEach(file => {
-			let formData = new FormData();
-			formData.append('file', file);
-
-			axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
-				.then((response)=>{
-					console.log("UPLOAD", response.data);
-				}).catch((error) => {
+		if (files[0].name.split('.').pop() === 'sketch') {
+			this.setState({
+				files     : files,
+				title     : files[0].name.split('.').slice(0, -1).join(),
+				uploading : true,
+				action    : 'UPLOAD'
 			});
-		});
 
-		titleTextfield.current.focus();
-		titleTextfield.current.select();
+			let self = this;
+			const config = {
+				headers             : {
+					'content-type' : 'multipart/form-data'
+				}, onUploadProgress : function (progressEvent) {
+					const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+					self.setState({ percent : percent });
+
+					if (progressEvent.loaded === progressEvent.total) {
+						self.onUploadComplete();
+					}
+				}
+			};
+
+			this.state.files.forEach(file => {
+				let formData = new FormData();
+				formData.append('file', file);
+
+				axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
+					.then((response) => {
+						console.log("UPLOAD", response.data);
+					}).catch((error) => {
+				});
+			});
+
+			titleTextfield.current.focus();
+			titleTextfield.current.select();
+		}
 	}
 
 	onUploadComplete = ()=> {
