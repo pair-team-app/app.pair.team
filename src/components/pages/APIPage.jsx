@@ -144,6 +144,8 @@ class APIPage extends Component {
 					</div>
 				</div>
 
+				<h6>Last Updated: 10-13-2018</h6>
+
 				{this.state.popup.visible && (
 					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
 				)}

@@ -97,6 +97,13 @@ h5 {
   font-size: 20px;
 }
 
+h6 {
+  margin-bottom: 0;
+  font-family: "San Francisco Text", sans-serif;
+  font-size: 18px;
+  font-style: italic;
+}
+
 p {
   font-family: "San Francisco Text", sans-serif;
   font-size: 20px;

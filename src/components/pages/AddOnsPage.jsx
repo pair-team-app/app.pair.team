@@ -40,6 +40,7 @@ class AddOnsPage extends Component {
 				<Row horizontal="space-between" className="add-ons-plugins-wrapper" style={{flexWrap:'wrap'}}>
 					{items}
 				</Row>
+				<h6>Last Updated: 10-13-2018</h6>
 			</div>
 		);
 	}
