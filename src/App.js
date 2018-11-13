@@ -13,16 +13,18 @@ import AddOnsPage from './components/pages/AddOnsPage';
 import APIPage from './components/pages/APIPage';
 import HomePage from './components/pages/HomePage';
 import InspectorPage from './components/pages/InspectorPage';
+import InviteTeamPage from "./components/pages/InviteTeamPage";
 import MissionPage from './components/pages/MissionPage';
 import PrivacyPage from './components/pages/PrivacyPage';
 import Status404Page from './components/pages/Status404Page';
 import TermsPage from './components/pages/TermsPage';
 import UploadPage from './components/pages/UploadPage';
+
 import UploadOverlay from './components/elements/UploadOverlay';
 import InviteOverlay from './components/elements/InviteOverlay';
 import StripeOverlay from './components/elements/StripeOverlay';
 import RegisterOverlay from './components/elements/RegisterOverlay';
-import InviteTeamPage from "./components/pages/InviteTeamPage";
+
 
 const wrapper = React.createRef();
 
@@ -40,7 +42,8 @@ class App extends Component {
 			sliceID           : 0,//(window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/.+\/(\d+)?/)[1] : 0,
 			selectedArtboards : [],
 			overlayAlert      : null,
-			userID            : 0
+			userID            : 0,
+			popupVisible      : false
 		};
 	}
 

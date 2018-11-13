@@ -5,6 +5,8 @@ import './APIPage.css';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Row } from 'simple-flexbox';
 
+import Popup from '../elements/Popup';
+
 class APIPage extends Component {
 	constructor(props) {
 		super(props);
@@ -17,16 +19,28 @@ class APIPage extends Component {
 			urls  : [
 				'https://earlyaccess.designengine.ai/doc/111/ios-12-design-system',
 				'https://earlyaccess.designengine.ai/artboard/111/22/321/tab-bars',
-			]
+			],
+			popup : {
+			visible : false,
+				content : ''
+		}
 		};
 	}
 
 	handleCodeCopy = (code)=> {
-		window.alert('Code copied to clipboard!');
+		const popup = {
+			visible : true,
+			content : 'Copied to Clipboard!'
+		};
+		this.setState({ popup : popup });
 	};
 
 	handleURLCopy = (url)=> {
-		window.alert('URL copied to clipboard!');
+		const popup = {
+			visible : true,
+			content : 'Copied to Clipboard!'
+		};
+		this.setState({ popup : popup });
 	};
 
 	render() {
@@ -129,6 +143,10 @@ class APIPage extends Component {
 						</CopyToClipboard>
 					</div>
 				</div>
+
+				{this.state.popup.visible && (
+					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
+				)}
 			</div>
 		);
 	}

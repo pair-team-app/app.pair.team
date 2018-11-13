@@ -13,6 +13,7 @@ import CommentItem from '../iterables/CommentItem';
 import Dropdown from '../elements/Dropdown';
 import SliceItem from '../iterables/SliceItem';
 import SliceToggle from '../elements/SliceToggle';
+import Popup from '../elements/Popup';
 
 const heroWrapper = React.createRef();
 const heroImage = React.createRef();
@@ -63,7 +64,11 @@ class InspectorPage extends Component {
 				title    : 'Java',
 				selected : false,
 				key      : 'languages'
-			}]
+			}],
+			popup : {
+				visible : false,
+				content : ''
+			}
 		};
 
 		this.scale = 1;
@@ -155,7 +160,11 @@ class InspectorPage extends Component {
 	};
 
 	handleCodeCopy = ()=> {
-		window.alert('Code copied to clipboard!');
+		const popup = {
+			visible : true,
+			content : 'Copied to Clipboard!'
+		};
+		this.setState({ popup : popup });
 	};
 
 	submitComment = ()=> {
@@ -485,6 +494,10 @@ class InspectorPage extends Component {
 						</div>
 					</div>
 				</div>
+
+				{this.state.popup.visible && (
+					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
+				)}
 			</div>
 		);
 	}
