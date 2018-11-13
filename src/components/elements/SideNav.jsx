@@ -291,7 +291,7 @@ class SideNav extends Component {
 
 	render() {
 		const { uploads, pages, artboards } = this.state;
-		const scrollHeight = 80 + (((1 + uploads.length + pages.length + artboards.length) * 19) + 367 + 24 + 47 + 24);
+		const scrollHeight = 80 + (((1 + uploads.length + pages.length + artboards.length) * 19) + 377 + 24 + 47 + 24);
 		const footerClass = (wrapper.current && scrollHeight > wrapper.current.clientHeight) ? 'side-nav-bottom-wrapper' : 'side-nav-bottom-wrapper-fixed';
 		const year = new Date().getFullYear();
 
