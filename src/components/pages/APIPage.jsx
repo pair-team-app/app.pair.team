@@ -133,16 +133,16 @@ class APIPage extends Component {
 					</div>
 				</div>
 
-				<div className="api-topic-wrapper">
-					<h4>Code Snippet</h4>
-					<p className="api-page-paragraph">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p>
-					<div className="code-snippet api-page-code-box">
-						<span dangerouslySetInnerHTML={{ __html : this.state.codes[0].html }} />
-						<CopyToClipboard onCopy={()=> this.handleCodeCopy(this.state.codes[0].syntax)} text={this.state.codes[0].syntax}>
-							<button className="api-page-float-button"><img src="/images/copy-code.svg" alt="Copy" /></button>
-						</CopyToClipboard>
-					</div>
-				</div>
+				{/*<div className="api-topic-wrapper">*/}
+					{/*<h4>Code Snippet</h4>*/}
+					{/*<p className="api-page-paragraph">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p>*/}
+					{/*<div className="code-snippet api-page-code-box">*/}
+						{/*<span dangerouslySetInnerHTML={{ __html : this.state.codes[0].html }} />*/}
+						{/*<CopyToClipboard onCopy={()=> this.handleCodeCopy(this.state.codes[0].syntax)} text={this.state.codes[0].syntax}>*/}
+							{/*<button className="api-page-float-button"><img src="/images/copy-code.svg" alt="Copy" /></button>*/}
+						{/*</CopyToClipboard>*/}
+					{/*</div>*/}
+				{/*</div>*/}
 
 				<h6>Last Updated: 10-13-2018</h6>
 

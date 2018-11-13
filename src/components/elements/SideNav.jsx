@@ -291,7 +291,7 @@ class SideNav extends Component {
 
 	render() {
 		const { uploads, pages, artboards } = this.state;
-		const scrollHeight = 80 + (((1 + uploads.length + pages.length + artboards.length) * 19) + 377 + 24 + 47 + 24);
+		const scrollHeight = 80 + (((1 + uploads.length + pages.length + artboards.length) * 19) + 400 + 24 + 47 + 24);
 		const footerClass = (wrapper.current && scrollHeight > wrapper.current.clientHeight) ? 'side-nav-bottom-wrapper' : 'side-nav-bottom-wrapper-fixed';
 		const year = new Date().getFullYear();
 
@@ -324,11 +324,12 @@ class SideNav extends Component {
 						? <div className="nav-link" onClick={() => this.props.onLogout()}>Logout</div>
 						: <div className="nav-link" onClick={() => this.props.onRegister()}>Sign Up / Sign In</div>
 					}
-					<div className="nav-link" onClick={()=> window.open('https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA')}>Slack</div>
-					<div className="nav-link" onClick={()=> window.open('https://spectrum.chat/designengine')}>Spectrum</div>
+					<div className="nav-link" onClick={()=> this.props.onPage('api')}>API</div>
 					<div className="nav-link" onClick={()=> this.props.onPage('mission')}>Mission</div>
 					<div className="nav-link" onClick={()=> this.props.onPage('terms')}>Terms of Service</div>
 					<div className="nav-link" onClick={()=> this.props.onPage('privacy')}>Privacy Policy</div>
+					<div className="nav-link" onClick={()=> window.open('https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA')}>Slack</div>
+					<div className="nav-link" onClick={()=> window.open('https://spectrum.chat/designengine')}>Spectrum</div>
 					<div className="copyright">&copy; {(year !== 2018) && ('2018-')}{year} Design Engine AI, Inc.</div>
 				</div>
 			</div>
