@@ -28,7 +28,7 @@ class InspectorPage extends Component {
 			sliceID       : this.props.match.params.sliceID,
 			slice         : null,
 			hoverSlice    : null,
-			scaleSize     : 2,
+			scaleSize     : 3,
 			page          : null,
 			artboard      : null,
 			code          : {
@@ -73,11 +73,11 @@ class InspectorPage extends Component {
 
 	componentDidMount() {
 		this.refreshData();
-		this.antsInterval = setInterval(this.redrawAnts, 50);
+		this.antsInterval = setInterval(this.redrawAnts, 75);
 	}
 
 	componentDidUpdate(prevProps) {
-		console.log('componentDidUpdate()', canvas);
+// 		console.log('componentDidUpdate()', prevProps, this.props);
 		if (this.props.match.params.artboardID !== prevProps.match.params.artboardID) {
 			this.refreshData();
 			return (null);
@@ -86,6 +86,10 @@ class InspectorPage extends Component {
 		if (canvas.current) {
 			this.updateCanvas();
 		}
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.antsInterval);
 	}
 
 	refreshData = ()=> {
@@ -229,7 +233,7 @@ class InspectorPage extends Component {
 
 		if (this.state.hoverSlice) {
 			const offset = (heroWrapper.current && heroImage.current) ? {
-				x : heroImage.current.clientWidth,
+				x : (heroWrapper.current.clientWidth - heroImage.current.clientWidth) * 0.5,
 				y : (heroWrapper.current.clientHeight - heroImage.current.clientHeight) * 0.5
 			} : {
 				x : 0,
@@ -241,18 +245,17 @@ class InspectorPage extends Component {
 			if (srcFrame) {
 				const frame = {
 					origin : {
-						x : 14 + (offset.x + Math.ceil(srcFrame.origin.x * this.scale)),
-						y : offset.y + Math.ceil(srcFrame.origin.y * this.scale)
+						x : offset.x + Math.round(srcFrame.origin.x * this.scale),
+						y : offset.y + Math.round(srcFrame.origin.y * this.scale)
 					},
 					size   : {
-						width  : Math.ceil(srcFrame.size.width * this.scale),
-						height : Math.ceil(srcFrame.size.height * this.scale)
+						width  : Math.round(srcFrame.size.width * this.scale),
+						height : Math.round(srcFrame.size.height * this.scale)
 					}
 				};
 
-// 				console.log('updateCanvas()', heroImage, offset, frame);
+				console.log('updateCanvas()', this.scale, offset, srcFrame.origin, frame.origin);
 
-// 			context.fillStyle = 'rgba(0, 255, 0, 0.5)';
 // 			context.fillRect(Math.round(frame.origin.x * this.scale), 2 + Math.round(frame.origin.y * this.scale), Math.round(frame.size.width * this.scale), Math.round(frame.size.height * this.scale));\
 
 				context.strokeStyle = 'rgba(0, 255, 0, 0.5)';
@@ -269,27 +272,24 @@ class InspectorPage extends Component {
 				context.lineTo(frame.origin.x + frame.size.width,  canvas.current.clientHeight);
 				context.stroke();
 
-				context.strokeStyle = '#000000';
+				context.fillStyle = 'rgba(0, 0, 0, 0.125)';
+				context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+				context.strokeStyle = 'rgba(128, 0, 128, 1)';
 				context.beginPath();
 				context.moveTo(0, 0);
-				context.setLineDash([6, 3]);
-				context.lineDashOffset = -this.antsOffset;
-
-// 			context.lineTo(canvas.current.clientWidth, canvas.current.clientHeight);
-// 			context.moveTo(canvas.current.clientWidth, 0);
-// 			context.lineTo(0, canvas.current.clientHeight);
-
+				context.setLineDash([4, 2]);
+				context.lineDashOffset = this.antsOffset;
 				context.strokeRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-
 // 		  context.lineWidth = 2;
-
 				context.stroke();
 
-				context.font = '9px AndaleMono';
-				context.fillStyle = '#000000';
+				context.font = '8px AndaleMono';
+				context.fillStyle = '#808080';
+				context.textAlign = 'center';
 				context.textBaseline = 'bottom';
-				context.fillText(srcFrame.size.width + 'w', frame.origin.x, frame.origin.y - 2);
+				context.fillText(srcFrame.size.width + 'w', frame.origin.x + (frame.size.width * 0.5), frame.origin.y - 1);
 
+				context.textAlign = 'left';
 				context.textBaseline = 'middle';
 				context.fillText(srcFrame.size.height + 'h', 2 + (frame.origin.x + frame.size.width), frame.origin.y + (frame.size.height * 0.5));
 
@@ -305,8 +305,7 @@ class InspectorPage extends Component {
 				context.fillText(srcFrame.origin.y + 'px', 1, frame.origin.y);
 
 				context.textBaseline = 'top';
-				context.fillText((srcFrame.origin.y + srcFrame.size.height) + 'px', 1, (frame.origin.y + frame.size.height) + 1);
-// 			context.fillRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
+				context.fillText((srcFrame.origin.y + srcFrame.size.height) + 'px', 1, frame.origin.y + frame.size.height);
 			}
 		}
 	};
@@ -336,7 +335,6 @@ class InspectorPage extends Component {
 		this.scale = (artboard && heroImage && heroImage.current) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? heroImage.current.clientWidth / artboard.meta.frame.size.width : heroImage.current.clientHeight / artboard.meta.frame.size.height : 1;
 
 		const heroImageClass = 'inspector-page-hero-image' + ((artboard) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? ' inspector-page-hero-image-landscape' : ' inspector-page-hero-image-portrait' : '');
-		const panelImageClass = 'inspector-page-panel-image';// + ((slice) ? ((slice.meta.frame.size.width > slice.meta.frame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait')  + ' ' + ((slice.type === 'slice') ? 'inspector-page-panel-image-slice' : (slice.type === 'hotspot') ? 'inspector-page-panel-image-hotspot' : (slice.type === 'textfield') ? 'inspector-page-panel-image-textfield' : 'inspector-page-panel-image-background') : '');
 		const slicesStyle = (artboard) ? {
 			width   : (this.scale * artboard.meta.frame.size.width) + 'px',
 			height  : (this.scale * artboard.meta.frame.size.height) + 'px'
@@ -348,6 +346,12 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.render()', this.scale);
 
 		const commentButtonClass = (this.state.comment.length !== 0) ? 'inspector-page-comment-button' : 'inspector-page-comment-button button-disabled';
+
+		const panelFrame = (artboard && !slice) ? artboard.meta.frame : (slice) ? slice.meta.frame : null;
+
+// 		const panelImageClass = 'inspector-page-panel-image' + ((artboard && !slice) ? ' inspector-page-panel-image-artboard' : '');// + ((slice) ? ((slice.meta.frame.size.width > slice.meta.frame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait')  + ' ' + ((slice.type === 'slice') ? 'inspector-page-panel-image-slice' : (slice.type === 'hotspot') ? 'inspector-page-panel-image-hotspot' : (slice.type === 'textfield') ? 'inspector-page-panel-image-textfield' : 'inspector-page-panel-image-background') : '');
+		const panelImageClass = 'inspector-page-panel-image' + ((artboard && !slice) ? ' inspector-page-panel-image-artboard' + ((panelFrame.size.width > panelFrame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait') : '');
+		const panelSliceImage = (slice) ? ((slice.type === 'slice') ? slice.filename + '@' + scaleSize + 'x.png' : ('https://via.placeholder.com/' + (slice.meta.frame.size.width * scaleSize) + 'x' + (slice.meta.frame.size.height * scaleSize))) : null;
 
 		const slices = (artboard) ? artboard.slices.map((slice, i) => {
 			return (
@@ -419,8 +423,12 @@ class InspectorPage extends Component {
 				<div className="inspector-page-panel">
 					<div className="inspector-page-panel-content-wrapper">
 						<div className="inspector-page-panel-display">
+							{(artboard && !slice) && (
+								<img className={panelImageClass} src={artboard.filename} alt={artboard.title} />
+							)}
+
 							{(slice) && (
-								<img className={panelImageClass} src={((slice.type === 'slice') ? slice.filename + '@' + scaleSize + 'x.png' : ('https://via.placeholder.com/' + (slice.meta.frame.size.width * scaleSize) + 'x' + (slice.meta.frame.size.height * scaleSize)))} alt={(slice.title + ' @' + scaleSize + 'x')} />
+								<img className={panelImageClass} src={panelSliceImage} alt={(slice.title + ' @' + scaleSize + 'x')} />
 							)}
 							<div className="inspector-page-panel-zoom-wrapper">
 								<button className={'inspector-page-float-button' + ((scaleSize === 3) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)} style={{marginRight:'20px'}}><img className="inspector-page-float-button-image" src={(slice && scaleSize < 3) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button>
