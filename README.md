@@ -1,4 +1,4 @@
-Welcome to Design Engine
+## Welcome to Design Engine
 
 Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.
 
@@ -8,6 +8,8 @@ Design Engine automates unnecessary and repetitive design production tasks that 
 
 - [Updating to New Releases](#updating-to-new-releases)
 
-## Something Missing?
+## Looking for Support
 
-If you have ideas for more “How To” recipes that should be on this page, [let us know](https://github.com/facebookincubator/create-react-app/issues) or [contribute some!](https://github.com/facebookincubator/create-react-app/edit/master/packages/react-scripts/template/README.md)
+[Slack](https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA)
+
+[Spectrum](https://spectrum.chat/designengine)
