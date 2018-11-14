@@ -288,6 +288,10 @@ class SideNav extends Component {
 		this.props.onArtboardItem(artboard)
 	};
 
+	handleInvite = ()=> {
+		cookie.save('msg', 'invite team members.', { path : '/' });
+		this.props.onPage((cookie.load('user_id') !== '0') ? 'invite-team' : 'login');
+	};
 
 	render() {
 		const { uploads, pages, artboards } = this.state;
@@ -300,7 +304,7 @@ class SideNav extends Component {
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>
 				<div className="side-nav-top-wrapper">
-					<button className="side-nav-invite-button" onClick={()=> this.props.onPage((cookie.load('user_id') !== '0') ? 'invite-team' : 'login')}>Invite Team Members</button>
+					<button className="side-nav-invite-button" onClick={()=> this.handleInvite()}>Invite Team Members</button>
 					<h3 className="side-nav-header">Projects</h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
 						{uploads.map((upload, i) => {

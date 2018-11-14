@@ -19,6 +19,10 @@ class TopNav extends Component {
 	componentDidMount() {
 	}
 
+	handleUplaod = ()=> {
+		cookie.save('msg', 'start a new project.', { path : '/' });
+		this.props.onPage((cookie.load('user_id') === '0') ? 'login' : 'upload')
+	};
 
 	render() {
 		return (
@@ -34,7 +38,7 @@ class TopNav extends Component {
 
 				<div className="top-nav-column top-nav-column-right">
 					<Column flexGrow={1} horizontal="end" vertical="center">
-						<button className="top-nav-upload-button" onClick={()=> this.props.onPage((cookie.load('user_id') === '0') ? 'login' : 'upload')}>New Project</button>
+						<button className="top-nav-upload-button" onClick={()=> this.handleUplaod()}>New Project</button>
 					</Column>
 				</div>
 			</div>

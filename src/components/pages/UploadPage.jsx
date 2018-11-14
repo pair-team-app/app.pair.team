@@ -248,9 +248,7 @@ class UploadPage extends Component {
 
 		const nextButtonClass = (this.state.uploadComplete && this.state.title.length > 0) ? '' : 'button-disabled';
 		const inviteButtonClass = (email1.length > 0 || email2.length > 0 || email3.length > 0) ? '' : 'button-disabled';
-
 		const title = (this.state.uploading) ? 'Uploading ' + this.state.title + '…' : (this.state.uploadComplete) ? (this.state.files.length === 0) ? (this.state.processingComplete) ? 'Project ready' : this.state.status : 'Enter details to start processing' : 'Drag & drop your design file';
-
 
 		const radioButtons = this.state.radioButtons.map((radioButton, i)=> {
 			return (

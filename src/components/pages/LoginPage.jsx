@@ -61,12 +61,15 @@ class LoginPage extends Component {
 		const { action, emailValid, passwordValid, errorMsg } = this.state;
 		const { email, password } = this.state;
 
+		const title = (typeof cookie.load('msg') === 'undefined') ? 'Sign In' : 'You must be signed in to ' + cookie.load('msg');
+
 		const emailClass = (action === '') ? 'input-wrapper' : (action === 'LOGIN' && !emailValid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 		const passwordClass = (action === '') ? 'input-wrapper' : (action === 'LOGIN' && !passwordValid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 
+		cookie.remove('msg');
 		return (
 			<div className="page-wrapper register-page-wrapper">
-				<h4>Sign In</h4>
+				<h4>{title}</h4>
 				{(errorMsg !== '') && (<div className="input-wrapper input-wrapper-error"><input type="text" placeholder="" value={errorMsg} disabled /></div>)}
 				<form onSubmit={this.handleSubmit}>
 					<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ errorMsg : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>

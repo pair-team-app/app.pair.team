@@ -173,11 +173,7 @@ class InviteTeamPage extends Component {
 								</CopyToClipboard>)
 							: (<button onClick={()=> this.props.onPage('//')}>Go Back</button>)
 						}
-
 					</Row>
-					<Row horizontal="center"><div className="page-header-url">
-						<a href={this.state.uploadURL} target="_blank" rel="noopener noreferrer">{this.state.uploadURL}</a>
-					</div></Row>
 				</div>
 				{(!this.state.sentInvites)
 					? (<div style={{width:'100%'}}>
@@ -187,9 +183,9 @@ class InviteTeamPage extends Component {
 							resetThenSet={this.resetThenSet}
 						/>
 						<form onSubmit={this.handleSubmit}>
-							<div className={email1Class}><input type="text" name="email1" placeholder="Enter Team Member Email Address" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-							<div className={email2Class}><input type="text" name="email2" placeholder="Enter Team Member Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-							<div className={email3Class}><input type="text" name="email3" placeholder="Enter Team Member Email Address" value={this.state.email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<div className={email1Class}><input type="text" name="email1" placeholder="Enter Email Address" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<div className={email2Class}><input type="text" name="email2" placeholder="Enter Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<div className={email3Class}><input type="text" name="email3" placeholder="Enter Email Address" value={this.state.email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 							<button type="submit" className={inviteButtonClass} onClick={(event) => this.handleSubmit(event)}>Send Invites</button>
 						</form>
 					</div>)
