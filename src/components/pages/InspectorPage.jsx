@@ -412,7 +412,7 @@ class InspectorPage extends Component {
 					</div>
 					<div>
 						<button className="inspector-page-download-button" onClick={()=> this.handleDownload()}>Download</button>
-						<button className="inspector-page-add-button" onClick={()=> this.handleDownload()}>Add to My Projects</button>
+						{/*<button className="inspector-page-add-button" onClick={()=> this.handleDownload()}>Add to My Projects</button>*/}
 					</div>
 					<textarea className="inspector-page-comment-txt" name="comment" placeholder="Enter Comment" value={this.state.comment} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} />
 					<button className={commentButtonClass} onClick={()=> this.submitComment()}>Comment</button>

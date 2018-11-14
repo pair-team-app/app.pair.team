@@ -271,7 +271,7 @@ class UploadPage extends Component {
 		let title = '';
 		if (processingState === -1) {
 			title = 'Drag & drop your design file';
-			
+
 		} else if (processingState === 0) {
 			title = (uploading) ? ('Uploading ' + this.state.uploadTitle + '…') : 'Enter details to start processing';
 
