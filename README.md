@@ -1,4 +1,4 @@
-## [Welcome to Design Engine](http://earlyaccess.designengine.ai/)
+## What is Design Engine?
 
 Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.
 
@@ -12,9 +12,6 @@ Design Engine automates unnecessary and repetitive design production tasks that 
     - [Technologies](#technologies)
     - [Folder Structure](#folder-structure)
     - [Code Style](#code-style)
-  - [First time setup](#first-time-setup)
-  - [Running the app locally](#running-the-app-locally)
-  - [Roadmap](https://github.com/withspectrum/spectrum/projects/19)
 - [Technical](docs/)
   - [Testing](docs/testing/intro.md)
   - [Background Jobs](docs/workers/background-jobs.md)
@@ -25,7 +22,7 @@ Design Engine automates unnecessary and repetitive design production tasks that 
     - [Testing](docs/backend/api/testing.md)
     - [Tips and Tricks](docs/backend/api/tips-and-tricks.md)
 
-## Looking for Support, Message us on Slack and or Spectrum!
+## Support
 
 [Slack](https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA)
 [Spectrum](https://spectrum.chat/designengine)
