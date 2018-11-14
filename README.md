@@ -24,5 +24,5 @@ Design Engine automates unnecessary and repetitive design production tasks that 
 
 ## Support
 
-[Slack](https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA)
-[Spectrum](https://spectrum.chat/designengine)
+- [Slack](https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA)
+- [Spectrum](https://spectrum.chat/designengine)
