@@ -15,7 +15,7 @@ class InviteTeamPage extends Component {
 
 		this.state = {
 			uploadID    : this.props.uploadID,
-			uploadTitle : 'Loading…',
+			uploadTitle : 'Select Project',
 			uploadURL   : '…',
 			uploads     : [],
 			action      : '',
@@ -63,19 +63,16 @@ class InviteTeamPage extends Component {
 				if (this.props.uploadID !== 0) {
 					let self = this;
 					let uploadID = 0;
-					let uploadTitle = '';
 					let uploadURL = '';
 					uploads.forEach(function(upload) {
 						if (upload.id === self.props.uploadID) {
 							uploadID = upload.id;
-							uploadTitle = upload.title;
 							uploadURL = 'https://earlyaccess.designengine.ai/doc/' + self.props.uploadID + '/' + upload.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
 						}
 					});
 
 					this.setState({
 						uploadID    : uploadID,
-						uploadTitle : uploadTitle,
 						uploadURL   : uploadURL,
 						uploads     : uploads
 					});
@@ -83,7 +80,6 @@ class InviteTeamPage extends Component {
 				} else {
 					this.setState({
 						uploadID    : (uploads.length > 0) ? uploads[0].id : this.state.uploadID,
-						uploadTitle : (uploads.length > 0) ? uploads[0].title : this.state.uploadTitle,
 						uploadURL   : (uploads.length > 0) ? 'https://earlyaccess.designengine.ai/doc/' + uploads[0].id + '/' + uploads[0].title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase() : this.state.uploadURL,
 						uploads     : uploads
 					});
@@ -97,7 +93,6 @@ class InviteTeamPage extends Component {
 		uploads.forEach(upload => upload.selected = false);
 		uploads[ind].selected = true;
 		this.setState({
-			uploadTitle : uploads[ind].title,
 			uploadURL   : 'https://earlyaccess.designengine.ai/doc/' + uploads[0].id + '/' + uploads[ind].title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase(),
 			uploads     : uploads
 		});
@@ -178,7 +173,7 @@ class InviteTeamPage extends Component {
 				{(!this.state.sentInvites)
 					? (<div style={{width:'100%'}}>
 						<Dropdown
-							title={this.state.uploadTitle}
+							title="Select Project"
 							list={this.state.uploads}
 							resetThenSet={this.resetThenSet}
 						/>
