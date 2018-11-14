@@ -1,6 +1,5 @@
 
 import React, { Component } from 'react';
-import './Overlay.css';
 import './StripeOverlay.css';
 
 import { Elements, StripeProvider } from 'react-stripe-elements';

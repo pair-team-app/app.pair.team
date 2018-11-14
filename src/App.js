@@ -22,10 +22,7 @@ import Status404Page from './components/pages/Status404Page';
 import TermsPage from './components/pages/TermsPage';
 import UploadPage from './components/pages/UploadPage';
 
-import UploadOverlay from './components/elements/UploadOverlay';
-import InviteOverlay from './components/elements/InviteOverlay';
 import StripeOverlay from './components/elements/StripeOverlay';
-import RegisterOverlay from './components/elements/RegisterOverlay';
 
 
 const wrapper = React.createRef();
@@ -255,18 +252,6 @@ class App extends Component {
 			      <Route render={()=> <Status404Page onPage={(url)=> this.handlePage(url)} />} />
 			    </Switch>
 		    </div>
-
-		    {(this.state.overlayAlert === 'register') && (
-			    <RegisterOverlay onClick={(buttonType)=> this.handleOverlay('register', buttonType)} />
-		    )}
-
-		    {(this.state.overlayAlert === 'invite') && (
-			    <InviteOverlay onClick={(buttonType)=> this.handleOverlay('invite', buttonType)} />
-		    )}
-
-		    {(this.state.overlayAlert === 'upload') && (
-		    	<UploadOverlay onClick={(buttonType)=> this.handleOverlay('upload', buttonType)} />
-		    )}
 
 		    {(this.state.overlayAlert === 'payment') && (
 			    <StripeOverlay onClick={(buttonType)=> this.handleOverlay('download', buttonType)} />

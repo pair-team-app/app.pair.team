@@ -189,34 +189,3 @@ textarea {
   font-weight: 300;
   src: url("./fonts/SanFranciscoText-Light.otf");
 }
-
-/** Regular */
-@font-face {
-  font-family: "BitstreamVeraSansMono";
-  src: url("./fonts/BitstreamVeraSansMono.otf"),
-  url('./fonts/BitstreamVeraSansMono.ttf') format('truetype');
-}
-
-/** Regular */
-@font-face {
-  font-family: "BitstreamVeraSansMono-Bold";
-  src: url('./fonts/BitstreamVeraSansMono-Bold.ttf') format('truetype');
-}
-
-/** Regular */
-@font-face {
-  font-family: "Axxell";
-  src: url("./fonts/Axxell.otf"), url('./fonts/Axxell.ttf') format('truetype');
-}
-
-/** Regular */
-@font-face {
-  font-family: "FFFUrban";
-  src: url("./fonts/FFFUrban.otf"), url('./fonts/FFFUrban.ttf') format('truetype');
-}
-
-/** Regular */
-@font-face {
-  font-family: "ProggyTiny";
-  src: url("./fonts/ProggyTiny.otf"), url('./fonts/ProggyTiny.ttf') format('truetype');
-}
