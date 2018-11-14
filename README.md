@@ -1,8 +1,8 @@
 <div align="center">
 
-  [![Spectrum](https://scontent-sjc3-1.xx.fbcdn.net/v/t1.0-9/44664310_2494240697282690_8710828163216703488_n.png?_nc_cat=107&_nc_ht=scontent-sjc3-1.xx&oh=afdd7a93302ffcc298dade914da53e1f&oe=5C7CA4F4)](https://spectrum.chat)
+  [![Spectrum](https://res-4.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_120,w_120,f_auto,b_white,q_auto:eco/cws7pwk5usxwc5rwqyvl)](http://earlyaccess.designengine.ai/)
 
-  ### Design for Engineers
+  ### Design Engine
 
 </div>
 
