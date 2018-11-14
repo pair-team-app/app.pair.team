@@ -56,41 +56,49 @@ class UploadPage extends Component {
 
 	onDrop(files) {
 		console.log('onDrop()', files);
-		if (files[0].name.split('.').pop() === 'sketch') {
-			this.setState({
-				files     : files,
-				title     : files[0].name.split('.').slice(0, -1).join(),
-				uploading : true,
-				action    : 'UPLOAD'
-			});
-
-			let self = this;
-			const config = {
-				headers             : {
-					'content-type' : 'multipart/form-data'
-				}, onUploadProgress : function (progressEvent) {
-					const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-					self.setState({ percent : percent });
-
-					if (progressEvent.loaded === progressEvent.total) {
-						self.onUploadComplete();
-					}
-				}
-			};
-
-			this.state.files.forEach(file => {
-				let formData = new FormData();
-				formData.append('file', file);
-
-				axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
-					.then((response) => {
-						console.log("UPLOAD", response.data);
-					}).catch((error) => {
+		if (files.length > 0 && files[0].name.split('.').pop() === 'sketch') {
+			if (files[0].size < 100 * 1024 * 1024) {
+				this.setState({
+					files     : files,
+					title     : files[0].name.split('.').slice(0, -1).join(),
+					uploading : true,
+					action    : 'UPLOAD'
 				});
-			});
 
-			titleTextfield.current.focus();
-			titleTextfield.current.select();
+				let self = this;
+				const config = {
+					headers             : {
+						'content-type' : 'multipart/form-data'
+					}, onUploadProgress : function (progressEvent) {
+						const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+						self.setState({ percent : percent });
+
+						if (progressEvent.loaded === progressEvent.total) {
+							self.onUploadComplete();
+						}
+					}
+				};
+
+				this.state.files.forEach(file => {
+					let formData = new FormData();
+					formData.append('file', file);
+
+					axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
+						.then((response) => {
+							console.log("UPLOAD", response.data);
+						}).catch((error) => {
+					});
+				});
+
+				titleTextfield.current.focus();
+				titleTextfield.current.select();
+
+			} else {
+				window.alert('File size must be under 100MB');
+			}
+
+		} else {
+			window.alert('Only Sketch files are support at this time');
 		}
 	}
 
@@ -252,6 +260,7 @@ class UploadPage extends Component {
 						<Dropzone
 							ref={dzWrapper}
 							className="upload-page-dz-wrapper"
+// 							accept="application/octet-stream"
 							onDrop={this.onDrop.bind(this)}
 							onDragEnter={this.onDragEnter.bind(this)}
 							onDragLeave={this.onDragLeave.bind(this)}>

@@ -2,9 +2,9 @@
 import React, { Component } from 'react';
 import './LoginPage.css';
 
-import { Column, Row } from 'simple-flexbox';
-import cookie from "react-cookies";
 import axios from "axios/index";
+import cookie from "react-cookies";
+import { Column, Row } from 'simple-flexbox';
 
 class LoginPage extends Component {
 	constructor(props) {
@@ -71,9 +71,10 @@ class LoginPage extends Component {
 				<form onSubmit={this.handleSubmit}>
 					<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ errorMsg : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className={passwordClass}><input type="password" name="password" placeholder="Enter Password" value={password} onFocus={()=> this.setState({ errorMsg : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-					<div className="overlay-button-wrapper">
-						<button type="submit" className="overlay-button overlay-button-confirm" onClick={(event)=> this.handleSubmit(event)}>Sign In</button>
-					</div>
+					<div className="overlay-button-wrapper"><Row vertical="center">
+						<Column><button type="submit" className="overlay-button overlay-button-confirm" onClick={(event)=> this.handleSubmit(event)}>Sign In</button></Column>
+						<Column><div className="page-link" onClick={()=> this.props.onPage('register')}>Sign Up</div></Column>
+					</Row></div>
 				</form>
 			</div>
 		);

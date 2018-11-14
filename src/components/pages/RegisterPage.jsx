@@ -2,9 +2,9 @@
 import React, { Component } from 'react';
 import './RegisterPage.css';
 
-import { Column, Row } from 'simple-flexbox';
-import cookie from "react-cookies";
 import axios from "axios/index";
+import cookie from "react-cookies";
+import { Column, Row } from 'simple-flexbox';
 
 class RegisterPage extends Component {
 	constructor(props) {
@@ -73,9 +73,10 @@ class RegisterPage extends Component {
 					<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ errorMsg : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className={passwordClass}><input type="password" name="password" placeholder="Enter Password" value={password} onFocus={()=> this.setState({ errorMsg : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className={password2Class}><input type="password" name="password2" placeholder="Confirm Password" value={password2} onFocus={()=> this.setState({ errorMsg : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-					<div className="overlay-button-wrapper">
-						<button type="submit" className="overlay-button overlay-button-confirm" onClick={(event)=> this.handleSubmit(event)}>Sign Up</button>
-					</div>
+					<div className="overlay-button-wrapper"><Row vertical="center">
+						<Column><button type="submit" className="overlay-button overlay-button-confirm" onClick={(event)=> this.handleSubmit(event)}>Sign Up</button></Column>
+						<Column><div className="page-link" onClick={()=> this.props.onPage('login')}>Sign In</div></Column>
+					</Row></div>
 				</form>
 			</div>
 		);

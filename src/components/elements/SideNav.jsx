@@ -300,7 +300,7 @@ class SideNav extends Component {
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>
 				<div className="side-nav-top-wrapper">
-					<button className="side-nav-invite-button" onClick={()=> this.props.onPage('invite-team')}>Invite Team Members</button>
+					<button className="side-nav-invite-button" onClick={()=> this.props.onPage((cookie.load('user_id') !== '0') ? 'invite-team' : 'login')}>Invite Team Members</button>
 					<h3 className="side-nav-header">Projects</h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
 						{uploads.map((upload, i) => {
