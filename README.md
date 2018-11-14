@@ -32,5 +32,6 @@ Design Engine is a design platform built for engineers. From open source project
 
 ## Support
 
+- [Submit Issue] (https://github.com/de-ai/designengine.ai/issues)
 - [Slack](https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA)
 - [Spectrum](https://spectrum.chat/designengine)
