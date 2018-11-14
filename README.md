@@ -8,7 +8,7 @@
 
 ## What is Design Engine?
 
-Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster. Design Engine automates unnecessary and repetitive design production tasks that slow engineering projects down. Designers upload their files and invite engineering teammates, 
+Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster. Design Engine automates unnecessary and repetitive design production tasks that slow engineering projects down.
 
 ## Documents
 
