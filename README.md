@@ -1,4 +1,4 @@
-## Welcome to [Design Engine](http://earlyaccess.designengine.ai/)
+## [Welcome to Design Engine](http://earlyaccess.designengine.ai/)
 
 Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.
 
