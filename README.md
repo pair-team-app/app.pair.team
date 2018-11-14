@@ -1,3 +1,11 @@
+<div align="center">
+
+  [![Spectrum](https://scontent-sjc3-1.xx.fbcdn.net/v/t1.0-9/44664310_2494240697282690_8710828163216703488_n.png?_nc_cat=107&_nc_ht=scontent-sjc3-1.xx&oh=afdd7a93302ffcc298dade914da53e1f&oe=5C7CA4F4)](https://spectrum.chat)
+
+  ### Design for Engineers
+
+</div>
+
 ## What is Design Engine?
 
 [Design Engine](http://earlyaccess.designengine.ai/) is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.
