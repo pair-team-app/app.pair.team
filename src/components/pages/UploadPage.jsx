@@ -18,17 +18,21 @@ class UploadPage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			uploadID           : 0,
-			title              : '',
-			status             : '',
-			description        : '',
 			files              : [],
+			percent            : 0,
+			uploadID           : 0,
+			uploadTitle        : '',
+			description        : '',
+			uploadURL          : '',
+			processingState    : -1,
+			status             : '',
+			title              : '',
+			totalElements      : 0,
 			uploading          : false,
 			uploadComplete     : false,
+			downloadComplete   : false,
 			processingComplete : false,
 			sentInvites        : false,
-			uploadURL          : '',
-			percent            : 0,
 			action             : '',
 			email1             : '',
 			email2             : '',
@@ -64,10 +68,10 @@ class UploadPage extends Component {
 		if (files.length > 0 && files[0].name.split('.').pop() === 'sketch') {
 			if (files[0].size < 100 * 1024 * 1024) {
 				this.setState({
-					files     : files,
-					title     : files[0].name.split('.').slice(0, -1).join(),
-					uploading : true,
-					action    : 'UPLOAD'
+					files       : files,
+					uploadTitle : files[0].name.split('.').slice(0, -1).join(),
+					uploading   : true,
+					action      : 'UPLOAD'
 				});
 
 				let self = this;
@@ -84,7 +88,7 @@ class UploadPage extends Component {
 					}
 				};
 
-				this.state.files.forEach(file => {
+				files.forEach(file => {
 					let formData = new FormData();
 					formData.append('file', file);
 
@@ -154,7 +158,7 @@ class UploadPage extends Component {
 			let formData = new FormData();
 			formData.append('action', 'UPLOAD');
 			formData.append('user_id', cookie.load('user_id'));
-			formData.append('title', this.state.title);
+			formData.append('title', this.state.uploadTitle);
 			formData.append('description', this.state.description);
 			formData.append('filename', "http://cdn.designengine.ai/system/" + this.state.files[0].name);
 			axios.post('https://api.designengine.ai/system.php', formData)
@@ -163,7 +167,7 @@ class UploadPage extends Component {
 					cookie.save('upload_id', response.data.upload_id, { path : '/' });
 					this.setState({
 						uploadID  : response.data.upload_id,
-						uploadURL : 'https://earlyaccess.designengine.ai/doc/' + response.data.upload_id + '/' + this.state.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase(),
+						uploadURL : 'https://earlyaccess.designengine.ai/doc/' + response.data.upload_id + '/' + this.state.uploadTitle.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase(),
 						files     : []
 					});
 
@@ -224,31 +228,37 @@ class UploadPage extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD_STATUS', response.data);
-				this.setState({ status : response.data.type + response.data.message });
-				if (response.data.message === 'Processing complete') {
+				this.setState({ status : response.data.message });
+				if (response.data.state === 1) {
+					this.setState({ downloadComplete : true });
+					//this.props.onPage('doc/' + this.state.uploadID + '/' + this.state.uploadTitle.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+				}
+				if (response.data.state === 3) {
 					clearInterval(this.uploadInterval);
 					this.setState({ processingComplete : true });
-					//this.props.onClick('complete');
+					//this.props.onPage('doc/' + this.state.uploadID + '/' + this.state.uploadTitle.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
 				}
 			}).catch((error) => {
 		});
 	};
 
 	render() {
-		const { email1, email2, email3 } = this.state;
-		const { email1Valid, email2Valid, email3Valid } = this.state;
+		const { email1, email2, email3, email1Valid, email2Valid, email3Valid } = this.state;
+		const { action } = this.state;
+		const { uploading, uploadComplete, processingComplete, sentInvites } = this.state;
 
 		const progressStyle = { width : this.state.percent + '%' };
 
-		const email1Class = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'INVITE' && !email1Valid && email1.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
-		const email2Class = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'INVITE' && !email2Valid && email2.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
-		const email3Class = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'INVITE' && !email3Valid && email3.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+		const email1Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email1Valid && email1.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+		const email2Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email2Valid && email2.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+		const email3Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email3Valid && email3.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 
-		const titleClass = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'UPLOAD' && this.state.title === '') ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+		const titleClass = (action === '') ? 'input-wrapper' : (action === 'UPLOAD' && this.state.uploadTitle === '') ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 
-		const nextButtonClass = (this.state.uploadComplete && this.state.title.length > 0) ? '' : 'button-disabled';
+		const nextButtonClass = (uploadComplete && this.state.uploadTitle.length > 0) ? '' : 'button-disabled';
 		const inviteButtonClass = (email1.length > 0 || email2.length > 0 || email3.length > 0) ? '' : 'button-disabled';
-		const title = (this.state.uploading) ? 'Uploading ' + this.state.title + '…' : (this.state.uploadComplete) ? (this.state.files.length === 0) ? (this.state.processingComplete) ? 'Project ready' : this.state.status : 'Enter details to start processing' : 'Drag & drop your design file';
+
+		const title = (uploading) ? 'Uploading ' + this.state.uploadTitle + '…' : (uploadComplete) ? (this.state.files.length === 0) ? (processingComplete) ? 'Project ready' : this.state.status : 'Enter details to start processing' : 'Drag & drop your design file';
 
 		const radioButtons = this.state.radioButtons.map((radioButton, i)=> {
 			return (
@@ -264,74 +274,85 @@ class UploadPage extends Component {
 			);
 		});
 
-		return (
-			<div className="page-wrapper upload-page-wrapper">
-				<Row vertical="start">
-					<Column flexGrow={1} horizontal="center">
-						<Dropzone
-							ref={dzWrapper}
-							className="upload-page-dz-wrapper"
-// 							accept="application/octet-stream"
-							onDrop={this.onDrop.bind(this)}
-							onDragEnter={this.onDragEnter.bind(this)}
-							onDragLeave={this.onDragLeave.bind(this)}>
-							<div className="page-header upload-page-header">
-								<div className="upload-page-progress-wrapper">
-									{(this.state.uploading) && (
-										<div className="upload-page-progress" style={progressStyle}>
-										</div>
-									)}
-								</div>
-								<Row horizontal="center"><h1>{title}</h1></Row>
-								<div className="page-header-text">{(this.state.uploading || this.state.uploadComplete) ? 'Or cancel your Sketch file upload' :'Or choose your file'}</div>
-
-								{(this.state.uploadComplete && this.state.files.length === 0 && !this.state.processingComplete)
-									? (<div>
-											<Row horizontal="center">
-												<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={this.state.uploadURL}>
-													<button>Copy Project Link</button>
-												</CopyToClipboard>
-											</Row>
-											<Row horizontal="center"><div className="page-header-url">
-												<a href={this.state.uploadURL} target="_blank" rel="noopener noreferrer">{this.state.uploadURL}</a>
-											</div></Row>
-										</div>)
-									: (<Row horizontal="center"><button onClick={(event)=> this.handleCancel(event)}>Cancel</button></Row>)
-								}
-							</div>
-						</Dropzone>
-
-						{(!this.state.sentInvites) && (<div style={{width:'100%'}}>
-							{(this.state.uploadComplete && this.state.files.length === 0)
-								? (<div style={{width:'100%'}}>
-									<div className={email1Class}><input type="text" name="email1" placeholder="Enter Team Member Email Address" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-									<div className={email2Class}><input type="text" name="email2" placeholder="Enter Team Member Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-									<div className={email3Class}><input type="text" name="email3" placeholder="Enter Team Member Email Address" value={this.state.email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-									<button className={inviteButtonClass} onClick={() => this.handleInvite()}>Send Invites</button>
-								</div>)
-								: (<div className="upload-page-form-wrapper">
-										<div className={titleClass}><input type="text" name="title" placeholder="Project Title" value={this.state.title} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={titleTextfield} /></div>
-										<div className="input-wrapper"><input type="text" name="description" placeholder="Project Description" value={this.state.description} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-										<Row horizontal="start" style={{flexWrap:'wrap'}}>
-											{radioButtons}
-										</Row>
-										<button className={nextButtonClass} onClick={() => this.handleSubmit()}>Next</button>
+		return (<div>
+			{(!processingComplete && !sentInvites) ? (
+				<div className="page-wrapper upload-page-wrapper">
+					<Dropzone
+						ref={dzWrapper}
+						className="upload-page-dz-wrapper"
+						onDrop={this.onDrop.bind(this)}
+						onDragEnter={this.onDragEnter.bind(this)}
+						onDragLeave={this.onDragLeave.bind(this)}>
+						<div className="page-header upload-page-header">
+							<div className="upload-page-progress-wrapper">
+								{(this.state.uploading) && (
+									<div className="upload-page-progress" style={progressStyle}>
 									</div>
-								)
+								)}
+							</div>
+							<Row horizontal="center"><h1>{title}</h1></Row>
+							<div className="page-header-text">{(uploading || uploadComplete) ? 'Or cancel your Sketch file upload' :'Or choose your file'}</div>
+
+							{(uploadComplete && this.state.files.length === 0 && !processingComplete)
+								? (<div>
+										<Row horizontal="center">
+											<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={this.state.uploadURL}>
+												<button>Copy Project Link</button>
+											</CopyToClipboard>
+										</Row>
+										<Row horizontal="center"><div className="page-header-url">
+											<a href={this.state.uploadURL} target="_blank" rel="noopener noreferrer">{this.state.uploadURL}</a>
+										</div></Row>
+									</div>)
+								: (<Row horizontal="center"><button onClick={(event)=> this.handleCancel(event)}>Cancel</button></Row>)
 							}
-						</div>)}
+						</div>
+					</Dropzone>
 
-						{(this.state.sentInvites) && (<h4>Invites will be sent once your file has been processed.</h4>)}
-						{(this.state.processingComplete) && (<Row horizontal="start"><button onClick={() => this.props.onPage('')}>Get Started</button></Row>)}
+					{(!sentInvites) && (<div style={{width:'100%'}}>
+						{(uploadComplete && this.state.files.length === 0)
+							? (<div style={{width:'100%'}}>
+								<div className={email1Class}><input type="text" name="email1" placeholder="Enter Team Member Email Address" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+								<div className={email2Class}><input type="text" name="email2" placeholder="Enter Team Member Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+								<div className={email3Class}><input type="text" name="email3" placeholder="Enter Team Member Email Address" value={this.state.email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+								<button className={inviteButtonClass} onClick={() => this.handleInvite()}>Send Invites</button>
+							</div>)
+							: (<div className="upload-page-form-wrapper">
+									<div className={titleClass}><input type="text" name="uploadTitle" placeholder="Project Title" value={this.state.uploadTitle} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={titleTextfield} /></div>
+									<div className="input-wrapper"><input type="text" name="description" placeholder="Project Description" value={this.state.description} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+									<Row horizontal="start" style={{flexWrap:'wrap'}}>
+										{radioButtons}
+									</Row>
+									<button className={nextButtonClass} onClick={() => this.handleSubmit()}>Next</button>
+								</div>
+							)
+						}
+					</div>)}
+					{(sentInvites) && (<h4>Invites will be sent once your file has been processed.</h4>)}
+					{this.state.popup.visible && (
+						<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
+					)}
 
-					</Column>
-				</Row>
+				</div>) : (<div>
+					<div className="page-wrapper upload-page-wrapper">
+						<div className="page-header">
+							<Row horizontal="center"><h1>Processing {this.state.uploadTitle}</h1></Row>
+							<div className="page-header-text">{(this.state.description !== '') && (<span>{this.state.description}. </span>)}{this.state.status}</div>
+							<Row horizontal="start">
+								<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={this.state.uploadURL}>
+									<button className="adjacent-button">Copy Project Link</button>
+								</CopyToClipboard>
+								<button onClick={() => this.props.onPage('invite-team')}>Invite Team Members</button>
+							</Row>
+						</div>
+					</div>
 
-				{this.state.popup.visible && (
-					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
-				)}
-			</div>
-		);
+					<Row><h5>{this.state.uploadTitle}</h5></Row>
+					{this.state.popup.visible && (
+						<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
+					)}
+				</div>)}
+		</div>);
 	}
 }
 
