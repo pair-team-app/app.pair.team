@@ -485,9 +485,13 @@ class InspectorPage extends Component {
 							<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? (slice.meta.opacity * 100) : 100}%</Column></Row>
 							<Row><Column flexGrow={1}>Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.meta.fillColor.toUpperCase() : 'N/A'}</Column></Row>
 							{/*<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice && slice.meta.font.family) ? slice.meta.font.family : 'N/A'}</Column></Row>*/}
-							<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice && slice.type === 'textfield') ? (artboard.system.title.toLowerCase().includes('ios')) ? 'SFProText' : 'Roboto' : 'N/A'}</Column></Row>
-							<Row><Column flexGrow={1}>Font size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice && slice.type === 'textfield' && slice.meta.font.size) ? (slice.meta.font.size + 'px') : 'N/A'}</Column></Row>
-							<Row><Column flexGrow={1}>Font color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice && slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : 'N/A'}</Column></Row>
+							{(slice && slice.type === 'textfield') && (<div>
+								<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard.system.title.toLowerCase().includes('ios')) ? 'SFProText' : 'Roboto'}</Column></Row>
+								<Row><Column flexGrow={1}>Font size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.size + 'px')}</Column></Row>
+								<Row><Column flexGrow={1}>Font color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : 'N/A'}</Column></Row>
+								<Row><Column flexGrow={1}>Line Height</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.lineHeight) ? (slice.meta.font.lineHeight + 'px') : 'N/A'}</Column></Row>
+								<Row><Column flexGrow={1}>Letter Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.kerning) ? (slice.meta.font.kerning + 'px') : 'N/A'}</Column></Row>
+							</div>)}
 							<Row><Column flexGrow={1}>Blend</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.meta.blendMode.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) : 'N/A'}</Column></Row>
 						</div>
 					</div>
