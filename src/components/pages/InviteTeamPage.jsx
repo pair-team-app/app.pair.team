@@ -8,6 +8,7 @@ import cookie from "react-cookies";
 import axios from "axios/index";
 
 import Dropdown from '../elements/Dropdown';
+import Popup from '../elements/Popup';
 
 class InviteTeamPage extends Component {
 	constructor(props) {
@@ -25,7 +26,11 @@ class InviteTeamPage extends Component {
 			email1Valid : false,
 			email2Valid : false,
 			email3Valid : false,
-			sentInvites : false
+			sentInvites : false,
+			popup : {
+				visible : false,
+				content : ''
+			}
 		};
 	}
 
@@ -99,7 +104,11 @@ class InviteTeamPage extends Component {
 	};
 
 	handleURLCopy = ()=> {
-		window.alert('URL copied to clipboard!');
+		const popup = {
+			visible : true,
+			content : 'Copied to Clipboard!'
+		};
+		this.setState({ popup : popup });
 	};
 
 	handleSubmit = (event)=> {
@@ -185,6 +194,10 @@ class InviteTeamPage extends Component {
 						</form>
 					</div>)
 					: (<h5>Invitations sent.</h5>)}
+
+				{this.state.popup.visible && (
+					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
+				)}
 			</div>
 		);
 	}
