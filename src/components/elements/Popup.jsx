@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './Popup.css'
 
-import { TimelineMax, TweenMax, Power1, Power2 } from "gsap/TweenMax";
+import { TimelineMax, Power1, Power2 } from "gsap/TweenMax";
 import { Column, Row } from 'simple-flexbox';
 
 class Popup extends Component {

@@ -33,9 +33,6 @@ class TopNav extends Component {
 					<div className={(window.location.pathname.includes('/add-ons')) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage('add-ons')}>Add Ons</div>
 				</Row></div>
 
-				<div className="top-nav-column top-nav-column-middle">
-				</div>
-
 				<div className="top-nav-column top-nav-column-right">
 					<Column flexGrow={1} horizontal="end" vertical="center">
 						<button className="top-nav-upload-button" onClick={()=> this.handleUplaod()}>New Project</button>

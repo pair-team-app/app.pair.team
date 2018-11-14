@@ -293,6 +293,11 @@ class SideNav extends Component {
 		this.props.onPage((cookie.load('user_id') !== '0') ? 'invite-team' : 'login');
 	};
 
+	handleUplaod = ()=> {
+		cookie.save('msg', 'start a new project.', { path : '/' });
+		this.props.onPage((cookie.load('user_id') === '0') ? 'login' : 'upload')
+	};
+
 	render() {
 		const { uploads, pages, artboards } = this.state;
 		const scrollHeight = 80 + (((1 + uploads.length + pages.length + artboards.length) * 19) + 400 + 24 + 47 + 24);
@@ -321,7 +326,7 @@ class SideNav extends Component {
 							);
 						})}
 					</div>
-					<div className="nav-link" onClick={()=> this.props.onUpload()}>New Project</div>
+					<div className="nav-link" onClick={()=> this.handleUplaod()}>New Project</div>
 				</div>
 				<div className={footerClass}>
 					{(cookie.load('user_id') === '0') && (<div>
