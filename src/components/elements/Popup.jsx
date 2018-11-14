@@ -16,7 +16,7 @@ class Popup extends Component {
 
 	componentDidMount() {
 		let self = this;
-		let tween = TweenMax.to(this.wrapper, 0.75, {
+		TweenMax.to(this.wrapper, 0.75, {
 			opacity    : 0,
 			y          : '-20px',
 			ease       : Expo.easeOut,
@@ -26,12 +26,14 @@ class Popup extends Component {
 	}
 
 	render() {
+		const icon = (this.props.content.split('::')[0] === 'error') ? '/images/icon-error.png' : '/images/copy-code.svg';
+
 		return (
 			<div className="popup-wrapper" ref={(div)=> this.wrapper = div}>
 				<Row>
-					<Column><img src="/images/copy-code.svg" className="popup-icon" alt={this.props.content} /></Column>
+					<Column><img src={icon} className="popup-icon" alt={this.props.content.split('::')[0]} /></Column>
 					<Column className="popup-content">
-						<Row vertical="center" className="popup-text">{this.props.content}</Row>
+						<Row vertical="center" className="popup-text">{this.props.content.split('::').pop()}</Row>
 					</Column>
 				</Row>
 			</div>

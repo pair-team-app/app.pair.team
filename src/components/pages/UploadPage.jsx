@@ -8,6 +8,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import Dropzone from 'react-dropzone';
 import { Column, Row } from 'simple-flexbox';
 
+import Popup from '../elements/Popup';
 import RadioButton from '../elements/RadioButton';
 
 const dzWrapper = React.createRef();
@@ -45,7 +46,11 @@ class UploadPage extends Component {
 				title    : 'Private Project (soon)',
 				selected : false,
 				enabled  : false
-			}]
+			}],
+			popup : {
+				visible : false,
+				content : ''
+			}
 		};
 
 		this.uploadInterval = null;
@@ -94,11 +99,19 @@ class UploadPage extends Component {
 				titleTextfield.current.select();
 
 			} else {
-				window.alert('File size must be under 100MB');
+				const popup = {
+					visible : true,
+					content : 'error::File size must be under 100MB.'
+				};
+				this.setState({ popup : popup });
 			}
 
 		} else {
-			window.alert('Only Sketch files are support at this time');
+			const popup = {
+				visible : true,
+				content : 'error::Only Sketch files are support at this time.'
+			};
+			this.setState({ popup : popup });
 		}
 	}
 
@@ -315,6 +328,10 @@ class UploadPage extends Component {
 
 					</Column>
 				</Row>
+
+				{this.state.popup.visible && (
+					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
+				)}
 			</div>
 		);
 	}

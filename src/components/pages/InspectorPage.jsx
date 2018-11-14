@@ -5,8 +5,6 @@ import './InspectorPage.css';
 import axios from 'axios';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
-// eslint-disable-next-line
-import Tooltip from 'rc-tooltip';
 import { Column, Row } from 'simple-flexbox';
 
 import CommentItem from '../iterables/CommentItem';

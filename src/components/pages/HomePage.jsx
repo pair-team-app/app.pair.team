@@ -10,7 +10,7 @@ import { Column, Row } from 'simple-flexbox';
 import LoggedInPage from './LoggedInPage';
 import LoggedOutPage from './LoggedOutPage';
 import ArtboardItem from '../iterables/ArtboardItem';
-
+import Popup from '../elements/Popup';
 
 class HomePage extends Component {
 	constructor(props) {
@@ -21,7 +21,11 @@ class HomePage extends Component {
 			uploadTitle : 'Loading Project…',
 			pageTitle   : 'Loading…',
 			uploadURL   : '…',
-			artboards   : []
+			artboards   : [],
+			popup : {
+				visible : false,
+				content : ''
+			}
 		};
 	}
 
@@ -103,7 +107,11 @@ class HomePage extends Component {
 	};
 
 	handleURLCopy = ()=> {
-		window.alert('URL copied to clipboard!');
+		const popup = {
+			visible : true,
+			content : 'Copied to Clipboard!'
+		};
+		this.setState({ popup : popup });
 	};
 
 
@@ -155,6 +163,10 @@ class HomePage extends Component {
 						{items}
 					</Row>
 				</div>)}
+
+				{this.state.popup.visible && (
+					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
+				)}
 			</div>
 		);
 	}
