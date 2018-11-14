@@ -13,6 +13,7 @@ class RegisterPage extends Component {
 		this.state = {
 			email         : '',
 			password      : '',
+			password2     : '',
 			emailValid    : false,
 			passwordValid : false,
 			errorMsg      : ''
@@ -39,6 +40,7 @@ class RegisterPage extends Component {
 				formData.append('action', 'REGISTER');
 				formData.append('email', email);
 				formData.append('password', password);
+				formData.append('type', 'user');
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response) => {
 						console.log('REGISTER', response.data);
