@@ -360,6 +360,34 @@ class InspectorPage extends Component {
 		const panelImageClass = 'inspector-page-panel-image' + ((artboard && !slice) ? ' inspector-page-panel-image-artboard' + ((panelFrame.size.width > panelFrame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait') : '');
 		const panelSliceImage = (slice) ? ((slice.type === 'slice') ? slice.filename + '@' + scaleSize + 'x.png' : ('https://via.placeholder.com/' + (slice.meta.frame.size.width * scaleSize) + 'x' + (slice.meta.frame.size.height * scaleSize))) : null;
 
+		console.log('styles', (slice) ? slice.meta.styles : '');
+
+		const styles = (slice && slice.meta.styles.length > 0) ? {
+			stroke : (slice.meta.styles[0].border.length > 0) ? {
+				color     : slice.meta.styles[0].border[0].color.toUpperCase(),
+				position  : slice.meta.styles[0].border[0].position,
+				thickness : slice.meta.styles[0].border[0].thickness + 'px'
+			} : null,
+			shadow : (slice.meta.styles[0].shadow.length > 0) ? {
+				color  : slice.meta.styles[0].shadow[0].color.toUpperCase(),
+				offset : {
+					x : slice.meta.styles[0].shadow[0].offset.x,
+					y : slice.meta.styles[0].shadow[0].offset.y
+				},
+				spread : slice.meta.styles[0].shadow[0].spread + 'px',
+				blur   : slice.meta.styles[0].shadow[0].blur + 'px'
+			} : null,
+			innerShadow : (slice.meta.styles[0].innerShadow.length > 0) ? {
+				color  : slice.meta.styles[0].shadow[0].color.toUpperCase(),
+				offset : {
+					x : slice.meta.styles[0].shadow[0].offset.x,
+					y : slice.meta.styles[0].shadow[0].offset.y
+				},
+				spread : slice.meta.styles[0].shadow[0].spread + 'px',
+				blur   : slice.meta.styles[0].shadow[0].blur + 'px'
+			} : null
+		} : null;
+
 		const slices = (artboard) ? artboard.slices.map((slice, i) => {
 			return (
 				<SliceItem
@@ -484,8 +512,13 @@ class InspectorPage extends Component {
 							<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.meta.rotation : 0}&deg;</Column></Row>
 							<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? (slice.meta.opacity * 100) : 100}%</Column></Row>
 							<Row><Column flexGrow={1}>Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.meta.fillColor.toUpperCase() : 'N/A'}</Column></Row>
-							{/*<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice && slice.meta.font.family) ? slice.meta.font.family : 'N/A'}</Column></Row>*/}
+							{(styles) && (<div>
+								<Row><Column flexGrow={1}>Stroke</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.stroke) ? (styles.stroke.position.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) + ' / Size: ' + styles.stroke.thickness + ' / ' + styles.stroke.color) : 'N/A'}</Column></Row>
+								<Row><Column flexGrow={1}>Shadow</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.shadow) ? ('Offset: (' + styles.shadow.offset.x + ', ' + styles.shadow.offset.y + ') / Blur: ' + styles.shadow.blur) : 'N/A'}</Column></Row>
+								<Row><Column flexGrow={1}>Inner Shadow</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('Offset: (' + styles.innerShadow.offset.x + ', ' + styles.innerShadow.offset.y + ') / Blur: ' + styles.innerShadow.blur) : 'N/A'}</Column></Row>
+							</div>)}
 							{(slice && slice.type === 'textfield') && (<div>
+								{/*<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.family) ? slice.meta.font.family : 'N/A'}</Column></Row>*/}
 								<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard.system.title.toLowerCase().includes('ios')) ? 'SFProText' : 'Roboto'}</Column></Row>
 								<Row><Column flexGrow={1}>Font size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.size + 'px')}</Column></Row>
 								<Row><Column flexGrow={1}>Font color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : 'N/A'}</Column></Row>
