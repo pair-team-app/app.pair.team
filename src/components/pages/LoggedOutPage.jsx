@@ -19,7 +19,7 @@ class LoggedOutPage extends Component {
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
 						<div className="page-header">
-							<Row horizontal="center"><h1>Designed for Engineers</h1></Row>
+							<Row horizontal="center"><h1>Design for Engineers</h1></Row>
 							<div className="page-header-text">Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.</div>
 							<Row horizontal="center"><button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign Up with Email Address</button><button onClick={()=> this.props.onPage('login')}>Sign In</button></Row>
 						</div>
