@@ -302,7 +302,7 @@ class SideNav extends Component {
 		const { uploads, pages, artboards } = this.state;
 		const scrollHeight = 80 + (((1 + uploads.length + pages.length + artboards.length) * 19) + 400 + 24 + 47 + 24);
 		const footerClass = (wrapper.current && scrollHeight > wrapper.current.clientHeight) ? 'side-nav-bottom-wrapper' : 'side-nav-bottom-wrapper-fixed';
-		const year = new Date().getFullYear();
+		const year = 2019;//new Date().getFullYear();
 
 // 		console.log((wrapper.current) ? wrapper.current.clientHeight : 0, scrollHeight);
 
@@ -343,7 +343,7 @@ class SideNav extends Component {
 					<div className="nav-link" onClick={()=> this.props.onPage('mission')}>Mission</div>
 					<div className="nav-link" onClick={()=> this.props.onPage('terms')}>Terms of Service</div>
 					<div className="nav-link" onClick={()=> this.props.onPage('privacy')}>Privacy Policy</div>
-					<div className="copyright">&copy; {year} Design Engine AI, Inc.</div>
+					<div className="copyright">&copy; {year}</div>
 				</div>
 			</div>
 		);
