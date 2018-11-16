@@ -201,11 +201,17 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceRollOver = (ind, slice)=> {
-		this.setState({ hoverSlice : slice });
+		this.setState({
+			hoverSlice : slice,
+			slice      : slice
+		});
 	};
 
 	handleSliceRollOut = (ind, slice)=> {
-		this.setState({ hoverSlice : null });
+		this.setState({
+			hoverSlice : null,
+			slice      : (slice) ? slice : null
+		});
 	};
 
 	handleSliceClick = (ind, slice)=> {
