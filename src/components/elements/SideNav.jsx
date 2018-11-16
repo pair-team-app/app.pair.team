@@ -30,15 +30,17 @@ class SideNav extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		//console.log('SideNav.componentDidUpdate()', prevProps, this.props);
-		if ((this.props.uploadID === 0 && prevProps.uploadID !== this.props.uploadID)) {
+		console.log('SideNav.componentDidUpdate()', prevProps, this.props);
+// 		if (this.props.uploadID === 0 && (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID)) {
+		if (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID) {
+			let self = this;
 			let uploads = [...this.state.uploads];
 			uploads.forEach((upload)=> {
-				upload.selected = false;
+				upload.selected = (upload.id === this.props.uploadID);
 				upload.pages.forEach((page)=> {
-					page.selected = false;
+					page.selected = (page.id === self.props.pageID);
 					page.artboards.forEach((artboard)=> {
-						artboard.selected = false;
+						artboard.selected = (artboard.id === self.props.artboardID);
 					});
 				});
 			});
@@ -299,12 +301,12 @@ class SideNav extends Component {
 	};
 
 	render() {
+		console.log('SideNav.render()', this.props, this.state);
+
 		const { uploads, pages, artboards } = this.state;
 		const scrollHeight = 80 + (((1 + uploads.length + pages.length + artboards.length) * 19) + 400 + 24 + 47 + 24);
 		const footerClass = (wrapper.current && scrollHeight > wrapper.current.clientHeight) ? 'side-nav-bottom-wrapper' : 'side-nav-bottom-wrapper-fixed';
 		const year = 2019;//new Date().getFullYear();
-
-// 		console.log((wrapper.current) ? wrapper.current.clientHeight : 0, scrollHeight);
 
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>
