@@ -5,6 +5,7 @@ import './RegisterPage.css';
 import axios from "axios/index";
 import cookie from "react-cookies";
 import { Column, Row } from 'simple-flexbox';
+import ReactPixel from "react-facebook-pixel";
 
 class RegisterPage extends Component {
 	constructor(props) {
@@ -18,6 +19,9 @@ class RegisterPage extends Component {
 			passwordValid : false,
 			errorMsg      : ''
 		};
+	}
+
+	componentDidMount() {
 	}
 
 	handleSubmit = (event)=> {
@@ -45,6 +49,15 @@ class RegisterPage extends Component {
 					.then((response) => {
 						console.log('REGISTER', response.data);
 						if (response.data.status === true) {
+							const advancedMatching = { em: 'some@email.com' };
+							const options = {
+								autoConfig : true,
+								debug      : false
+							};
+
+							ReactPixel.init('318191662273348', advancedMatching, options);
+							ReactPixel.trackCustom('sign-up');
+
 							cookie.save('user_id', response.data.user_id, { path : '/' });
 							this.props.onPage('//');
 
