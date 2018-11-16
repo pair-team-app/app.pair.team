@@ -125,6 +125,8 @@
 	font-family: "AndaleMono", monospace;
 	font-size: 10px;
 	color: #000000;
+	max-width: 95%;
+	max-height: 95%;
 }
 
 .inspector-page-panel-zoom-wrapper {

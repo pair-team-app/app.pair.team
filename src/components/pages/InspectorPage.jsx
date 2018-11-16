@@ -132,6 +132,7 @@ class InspectorPage extends Component {
 								pageID    : response.data.artboard.page_id,
 								title     : response.data.artboard.title,
 								filename  : response.data.artboard.filename,
+// 								filename  : (response.data.artboard.type === 'slice') ? response.data.artboard.filename : 'https://via.placeholder.com/' + JSON.parse(response.data.artboard.meta).frame.size.width + 'x' + JSON.parse(response.data.artboard.meta).frame.size.height,
 								meta      : JSON.parse(response.data.artboard.meta),
 								views     : response.data.artboard.views,
 								downloads : response.data.artboard.downloads,
@@ -366,7 +367,8 @@ class InspectorPage extends Component {
 
 // 		const panelImageClass = 'inspector-page-panel-image' + ((artboard && !slice) ? ' inspector-page-panel-image-artboard' : '');// + ((slice) ? ((slice.meta.frame.size.width > slice.meta.frame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait')  + ' ' + ((slice.type === 'slice') ? 'inspector-page-panel-image-slice' : (slice.type === 'hotspot') ? 'inspector-page-panel-image-hotspot' : (slice.type === 'textfield') ? 'inspector-page-panel-image-textfield' : 'inspector-page-panel-image-background') : '');
 		const panelImageClass = 'inspector-page-panel-image' + ((artboard && !slice) ? ' inspector-page-panel-image-artboard' + ((panelFrame.size.width > panelFrame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait') : '');
-		const panelSliceImage = (slice) ? slice.filename + '@' + scaleSize + 'x.png' : null;
+		const panelSliceImage = (slice) ? ((slice.type === 'slice') ? slice.filename + '@' + scaleSize + 'x.png' : ('https://via.placeholder.com/' + (slice.meta.frame.size.width * scaleSize) + 'x' + (slice.meta.frame.size.height * scaleSize))) : null;
+// 		const panelSliceImage = (slice) ? slice.filename + '@' + scaleSize + 'x.png' : null;
 
 		const styles = (slice &&  slice.meta.styles && slice.meta.styles.length > 0) ? {
 			stroke : (slice.meta.styles[0].border.length > 0) ? {
