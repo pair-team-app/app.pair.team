@@ -36,11 +36,11 @@ class InspectorPage extends Component {
 			},
 			comment       : '',
 			visibleTypes  : {
-				slice      : true,
-				hotspot    : true,
-				textfield  : true,
-				background : true,
-				all        : false
+				slice      : false,
+				hotspot    : false,
+				textfield  : false,
+				background : false,
+				all        : true
 			},
 			languages     : [{
 				id       : 0,
