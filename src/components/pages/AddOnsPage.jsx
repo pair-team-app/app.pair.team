@@ -15,11 +15,15 @@ class AddOnsPage extends Component {
 		};
 	}
 
+	handleURL = (url)=> {
+		window.open(url);
+	};
+
 	render() {
 		const items = addOns.map((item, i)=> {
 			return (
 				<Column key={i}>
-					<AddonItem title={item.title} image={item.image} />
+					<AddonItem title={item.title} image={item.image} url={item.url} onClick={(url=> this.handleURL(url))} />
 				</Column>
 			);
 		});

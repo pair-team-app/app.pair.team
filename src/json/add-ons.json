@@ -1,5 +1,6 @@
 [{
   "id": 1,
   "title": "CSS",
-  "image": "/images/icon-css.png"
+  "image": "/images/icon-css.png",
+  "url": "https://github.com/de-ai/plugins"
 }]

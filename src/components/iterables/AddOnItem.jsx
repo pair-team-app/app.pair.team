@@ -15,7 +15,7 @@ class AddOnItem extends Component {
 
 	render() {
 		return (
-			<div className="add-on-item">
+			<div className="add-on-item" onClick={()=> this.props.onClick(this.props.url)}>
 				<img className="add-on-item-image" src={this.props.image} alt={this.props.title} />
 				<div className="add-on-item-overlay" />
 				<div className="add-on-item-title-wrapper">

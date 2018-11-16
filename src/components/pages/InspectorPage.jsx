@@ -219,9 +219,6 @@ class InspectorPage extends Component {
 	};
 
 	handleDownload = ()=> {
-// 		window.open(this.state.slice.filename + '@3x.png');
-// 		window.open('http://cdn.designengine.ai/slice.php?slice_id=' + this.state.slice.id);
-
 		if (cookie.load('user_id') === '0') {
 			cookie.save('msg', 'download these parts.', { path : '/' });
 			this.props.onPage('login');
