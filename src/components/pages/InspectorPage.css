@@ -122,6 +122,8 @@
 	transform: translate(-50%, -50%);
 	-webkit-transform: translate(-50%, -50%);
 	object-fit: contain;
+	font-family: "AndaleMono", monospace;
+	font-size: 10px;
 	color: #000000;
 }
 

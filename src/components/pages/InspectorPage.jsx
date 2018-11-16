@@ -121,7 +121,7 @@ class InspectorPage extends Component {
 							id       : item.id,
 							title    : item.title,
 							type     : item.type,
-							filename : (item.type === 'slice') ? item.filename : 'https://via.placeholder.com/' + JSON.parse(item.meta).frame.size.width + 'x' + JSON.parse(item.meta).frame.size.height,
+							filename : item.filename,
 							meta     : JSON.parse(item.meta),
 							added    : item.added
 						}));
@@ -210,7 +210,7 @@ class InspectorPage extends Component {
 	handleSliceRollOut = (ind, slice)=> {
 		this.setState({
 			hoverSlice : null,
-			slice      : (slice) ? slice : null
+// 			slice      : null
 		});
 	};
 
@@ -222,12 +222,18 @@ class InspectorPage extends Component {
 // 		window.open(this.state.slice.filename + '@3x.png');
 // 		window.open('http://cdn.designengine.ai/slice.php?slice_id=' + this.state.slice.id);
 
-		if (this.state.artboard) {
-			const filePath = 'http://cdn.designengine.ai/artboard.php?artboard_id=' + this.state.artboard.id;
-			var link = document.createElement('a');
-			link.href = filePath;
-			link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
-			link.click();
+		if (cookie.load('user_id') === '0') {
+			cookie.save('msg', 'download these parts.', { path : '/' });
+			this.props.onPage('login');
+
+		} else {
+			if (this.state.artboard) {
+				const filePath = 'http://cdn.designengine.ai/artboard.php?artboard_id=' + this.state.artboard.id;
+				var link = document.createElement('a');
+				link.href = filePath;
+				link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
+				link.click();
+			}
 		}
 	};
 
@@ -359,12 +365,10 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.render()', this.scale);
 
 		const commentButtonClass = (this.state.comment.length !== 0) ? 'inspector-page-comment-button' : 'inspector-page-comment-button button-disabled';
-
 		const panelFrame = (artboard && !slice) ? artboard.meta.frame : (slice) ? slice.meta.frame : null;
 
 // 		const panelImageClass = 'inspector-page-panel-image' + ((artboard && !slice) ? ' inspector-page-panel-image-artboard' : '');// + ((slice) ? ((slice.meta.frame.size.width > slice.meta.frame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait')  + ' ' + ((slice.type === 'slice') ? 'inspector-page-panel-image-slice' : (slice.type === 'hotspot') ? 'inspector-page-panel-image-hotspot' : (slice.type === 'textfield') ? 'inspector-page-panel-image-textfield' : 'inspector-page-panel-image-background') : '');
 		const panelImageClass = 'inspector-page-panel-image' + ((artboard && !slice) ? ' inspector-page-panel-image-artboard' + ((panelFrame.size.width > panelFrame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait') : '');
-// 		const panelSliceImage = (slice) ? ((slice.type === 'slice') ? slice.filename + '@' + scaleSize + 'x.png' : ('https://via.placeholder.com/' + (slice.meta.frame.size.width * scaleSize) + 'x' + (slice.meta.frame.size.height * scaleSize))) : null;
 		const panelSliceImage = (slice) ? slice.filename + '@' + scaleSize + 'x.png' : null;
 
 		const styles = (slice &&  slice.meta.styles && slice.meta.styles.length > 0) ? {
