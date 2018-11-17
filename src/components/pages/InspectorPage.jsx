@@ -36,11 +36,11 @@ class InspectorPage extends Component {
 			},
 			comment       : '',
 			visibleTypes  : {
-				slice      : false,
-				hotspot    : false,
-				textfield  : false,
-				background : false,
-				all        : true
+				slice      : true,
+				hotspot    : true,
+				textfield  : true,
+				background : true,
+				all        : false
 			},
 			languages     : [{
 				id       : 0,
@@ -168,8 +168,6 @@ class InspectorPage extends Component {
 
 	handleCommentChange = (event)=> {
 		event.persist();
-		console.log('handleCommentChange()', event.target);
-
 		if (/\r|\n/.exec(event.target.value)) {
 			this.submitComment(event);
 
@@ -239,13 +237,11 @@ class InspectorPage extends Component {
 			this.props.onPage('login');
 
 		} else {
-			if (this.state.artboard) {
-				const filePath = 'http://cdn.designengine.ai/artboard.php?artboard_id=' + this.state.artboard.id;
-				var link = document.createElement('a');
-				link.href = filePath;
-				link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
-				link.click();
-			}
+			const filePath = 'http://cdn.designengine.ai/artboard.php?artboard_id=' + this.state.artboard.id;
+			var link = document.createElement('a');
+			link.href = filePath;
+			link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
+			link.click();
 		}
 	};
 
