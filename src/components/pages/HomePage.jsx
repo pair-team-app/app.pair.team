@@ -18,6 +18,7 @@ class HomePage extends Component {
 
 		this.state = {
 			action            : '',
+			uploadID          : 0,
 			uploadTitle       : 'Loading Project…',
 			uploadDescription : '',
 			uploadTotal       : 0,
@@ -60,12 +61,14 @@ class HomePage extends Component {
 			.then((response) => {
 				console.log('UPLOAD_NAMES', response.data);
 				let self = this;
+				let uploadID = 0;
 				let title = '';
 				let description = '';
 				let total = 0;
 				let uploadURL = '';
 				response.data.uploads.forEach(function(upload, i) {
 					if (upload.id === self.props.uploadID) {
+						uploadID = upload.id;
 						title = upload.title;
 						description = upload.description;
 						total = upload.total;
@@ -100,6 +103,7 @@ class HomePage extends Component {
 								}));
 
 								this.setState({
+									uploadID          : uploadID,
 									uploadTitle       : title,
 									uploadDescription : description,
 									uploadTotal       : total,
@@ -112,6 +116,14 @@ class HomePage extends Component {
 				});
 			}).catch((error) => {
 		});
+	};
+
+	handleDownload = ()=> {
+		let link = document.createElement('a');
+		const filePath = 'http://cdn.designengine.ai/document.php?upload_id=' + this.state.uploadID;
+		link.href = filePath;
+		link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
+		link.click();
 	};
 
 	handleURLCopy = ()=> {
@@ -156,6 +168,7 @@ class HomePage extends Component {
 								<Row horizontal="center"><h1>{this.state.uploadTitle}</h1></Row>
 								<div className="page-header-text">{(this.state.uploadDescription !== '') ? this.state.uploadDescription + '. ' : ''}Design Engine parsed {this.state.uploadTotal} pages, artboards, symbols, fonts, and more from {this.state.uploadTitle}'s Design Source.</div>
 								<Row horizontal="center">
+									<button className="adjacent-button" onClick={()=> this.handleDownload()}>Download Project</button>
 									<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={this.state.uploadURL}>
 										<button>Copy Project Link</button>
 									</CopyToClipboard>
