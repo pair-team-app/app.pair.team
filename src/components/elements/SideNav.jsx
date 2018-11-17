@@ -65,12 +65,13 @@ class SideNav extends Component {
 					formData.append('upload_id', upload.id);
 					axios.post('https://api.designengine.ai/system.php', formData)
 						.then((response) => {
-							//console.log('PAGE_NAMES', response.data);
+							console.log('PAGE_NAMES', response.data);
 
 							const pages = response.data.pages.map((page) => ({
 								id          : page.id,
 								title       : page.title,
 								description : page.description,
+								total       : page.total,
 								added       : page.added,
 								selected    : (self.props.pageID === page.id),
 								artboards   : page.artboards.map((artboard)=> ({
@@ -78,6 +79,7 @@ class SideNav extends Component {
 									pageID   : artboard.page_id,
 									title    : artboard.title,
 									filename : artboard.filename,
+									total    : artboard.total,
 									meta     : JSON.parse(artboard.meta),
 									added    : artboard.added,
 									selected : (self.props.artboardID === artboard.id)
@@ -94,13 +96,14 @@ class SideNav extends Component {
 									formData.append('page_id', self.props.pageID);
 									axios.post('https://api.designengine.ai/system.php', formData)
 										.then((response) => {
-											//console.log('ARTBOARD_NAMES', response.data);
+											console.log('ARTBOARD_NAMES', response.data);
 
 											const artboards = response.data.artboards.map((artboard) => ({
 												id       : artboard.id,
 												pageID   : artboard.page_id,
 												title    : artboard.title,
 												filename : artboard.filename,
+												total    : artboard.total,
 												meta     : JSON.parse(artboard.meta),
 												added    : artboard.added,
 												selected : (self.props.artboardID === artboard.id)
@@ -131,18 +134,20 @@ class SideNav extends Component {
 		formData.append('user_id', cookie.load('user_id'));
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
-				//console.log('UPLOAD_NAMES', response.data);
+				console.log('UPLOAD_NAMES', response.data);
 
 				const uploads = response.data.uploads.map((upload)=> ({
 					id       : upload.id,
 					title    : upload.title,
 					author   : upload.author,
+					total    : upload.total,
 					added    : upload.added,
 					selected : (this.props.uploadID === upload.id),
 					pages    : upload.pages.map((page) => ({
 						id          : page.id,
 						title       : page.title,
 						description : page.description,
+						total       : page.total,
 						added       : page.added,
 						selected    : (this.props.pageID === page.id),
 						artboards   : page.artboards.map((artboard)=> ({
@@ -150,6 +155,7 @@ class SideNav extends Component {
 							pageID   : artboard.page_id,
 							title    : artboard.title,
 							filename : artboard.filename,
+							total    : artboard.total,
 							meta     : JSON.parse(artboard.meta),
 							added    : artboard.added,
 							selected : (this.props.artboardID === artboard.id)
@@ -185,12 +191,13 @@ class SideNav extends Component {
 			formData.append('upload_id', upload.id);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
-					//console.log('PAGE_NAMES', response.data);
+					console.log('PAGE_NAMES', response.data);
 
 					const pages = response.data.pages.map((page) => ({
 						id          : page.id,
 						title       : page.title,
 						description : page.description,
+						total       : page.total,
 						added       : page.added,
 						selected    : (this.props.pageID === page.id),
 						artboards   : page.artboards.map((artboard) => ({
@@ -198,6 +205,7 @@ class SideNav extends Component {
 							pageID   : artboard.page_id,
 							title    : artboard.title,
 							filename : artboard.filename,
+							total    : artboard.total,
 							meta     : JSON.parse(artboard.meta),
 							added    : artboard.added,
 							selected : (this.props.artboardID === artboard.id)
@@ -242,13 +250,14 @@ class SideNav extends Component {
 			formData.append('page_id', page.id);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
-					//console.log('ARTBOARD_NAMES', response.data);
+					console.log('ARTBOARD_NAMES', response.data);
 
 					const artboards = response.data.artboards.map((artboard) => ({
 						id       : artboard.id,
 						pageID   : artboard.page_id,
 						title    : artboard.title,
 						filename : artboard.filename,
+						total    : artboard.total,
 						meta     : JSON.parse(artboard.meta),
 						added    : artboard.added,
 						selected : (this.props.artboardID === artboard.id)
@@ -318,7 +327,7 @@ class SideNav extends Component {
 							return (
 								<UploadTreeItem
 									key={i}
-									title={upload.title}
+									title={upload.title + ' (' + upload.total + ')'}
 									author={upload.author}
 									pages={upload.pages}
 									selected={upload.selected}

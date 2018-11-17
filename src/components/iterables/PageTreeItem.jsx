@@ -29,7 +29,7 @@ class PageTreeItem extends Component {
 			return (
 				<ArtboardTreeItem
 					key={artboard.id}
-					title={artboard.title}
+					title={artboard.title + ' (' + artboard.total + ')'}
 					description=""
 					slices={artboard.slices}
 					selected={artboard.selected}
@@ -41,7 +41,7 @@ class PageTreeItem extends Component {
 			<div className="page-tree-item">
 				<div className={textClass} onClick={()=> this.props.onClick()}><Row vertical="center">
 					<img className="side-nav-arrow" src="/images/chevron-right.svg" alt="chevron" />
-					{this.state.title + ((artboards.length > 0) ? ' (' + artboards.length + ')' : '')}
+					{this.state.title}
 				</Row></div>
 				{(this.props.selected) && (<div className="page-tree-item-artboards">
 					{artboards}

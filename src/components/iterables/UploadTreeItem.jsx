@@ -17,7 +17,7 @@ class UploadTreeItem extends Component {
 	}
 
 	static getDerivedStateFromProps(nextProps) {
-		return ({ title : (nextProps.title.length > 30) ? (nextProps.title.substring(0, 29) + '…') : nextProps.title });
+		return ({ title : (nextProps.title.length > 32) ? (nextProps.title.substring(0, 31) + '…') : nextProps.title });
 	}
 
 	render() {
@@ -27,7 +27,7 @@ class UploadTreeItem extends Component {
 			return (
 				<PageTreeItem
 					key={i}
-					title={page.title}
+					title={page.title + ' (' + page.total + ')'}
 					description={page.description}
 					artboards={page.artboards}
 					selected={page.selected}
@@ -38,7 +38,7 @@ class UploadTreeItem extends Component {
 
 		return (
 			<div className="upload-tree-item">
-				<div className={textClass} onClick={()=> this.props.onClick()}>{this.state.title + ((pages.length > 0) ? ' (' + pages.length + ')' : '')}</div>
+				<div className={textClass} onClick={()=> this.props.onClick()}>{this.state.title}</div>
 				{(this.props.selected) && (<div className="upload-tree-item-artboards">
 					{pages}
 				</div>)}
