@@ -74,6 +74,8 @@ class RegisterPage extends Component {
 	};
 
 	render() {
+		console.log('RegisterPage.render()');
+
 		const { email, password, password2 } = this.state;
 		const { action, emailValid, passwordValid, errorMsg } = this.state;
 		const emailClass = (action === '') ? 'input-wrapper' : (action === 'REGISTER' && !emailValid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';

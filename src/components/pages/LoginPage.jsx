@@ -58,14 +58,16 @@ class LoginPage extends Component {
 
 
 	render() {
+		console.log('LoginPage.render()');
 		const { action, emailValid, passwordValid, errorMsg } = this.state;
 		const { email, password } = this.state;
 
-		const title = (typeof cookie.load('msg') === 'undefined') ? 'Sign In' : 'You must be signed in to ' + cookie.load('msg');
+		const title = (typeof cookie.load('msg') === 'undefined' || cookie.load('msg') === '') ? 'Sign In' : 'You must be signed in to ' + cookie.load('msg');
 
 		const emailClass = (action === '') ? 'input-wrapper' : (action === 'LOGIN' && !emailValid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 		const passwordClass = (action === '') ? 'input-wrapper' : (action === 'LOGIN' && !passwordValid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 
+		cookie.save('msg', '', { path : '/' });
 		cookie.remove('msg');
 		return (
 			<div className="page-wrapper register-page-wrapper">
