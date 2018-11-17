@@ -75,7 +75,7 @@ class LoginPage extends Component {
 					<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ errorMsg : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className={passwordClass}><input type="password" name="password" placeholder="Enter Password" value={password} onFocus={()=> this.setState({ errorMsg : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className="overlay-button-wrapper"><Row vertical="center">
-						<Column><button type="submit" className="overlay-button overlay-button-confirm" onClick={(event)=> this.handleSubmit(event)}>Sign In</button></Column>
+						<Column><button type="submit" className="adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Sign In</button></Column>
 						<Column><div className="page-link" onClick={()=> this.props.onPage('register')}>Sign Up</div></Column>
 					</Row></div>
 				</form>

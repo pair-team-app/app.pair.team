@@ -338,7 +338,6 @@ class SideNav extends Component {
 						})}
 					</div>
 					<div className="nav-link" onClick={()=> this.handleUplaod()}>New Project</div>
-					<div className="nav-link" onClick={()=> window.open('https://github.com/de-ai/designengine.ai/projects/1')}>Roadmap</div>
 				</div>
 				<div className={footerClass}>
 					{(cookie.load('user_id') === '0') && (<div>
