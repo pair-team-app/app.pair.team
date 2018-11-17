@@ -166,7 +166,21 @@ class InspectorPage extends Component {
 		this.setState({ popup : popup });
 	};
 
-	submitComment = ()=> {
+	handleCommentChange = (event)=> {
+		event.persist();
+		console.log('handleCommentChange()', event.target);
+
+		if (/\r|\n/.exec(event.target.value)) {
+			this.submitComment(event);
+
+		} else {
+			this.setState({ [event.target.name] : event.target.value })
+		}
+	};
+
+	submitComment = (event)=> {
+		event.preventDefault();
+
 		if (this.state.comment.length > 0) {
 			let formData = new FormData();
 			formData.append('action', 'ADD_COMMENT');
@@ -450,8 +464,10 @@ class InspectorPage extends Component {
 						<button className="inspector-page-download-button" onClick={()=> this.handleDownload()}>Download</button>
 						{/*<button className="inspector-page-add-button" onClick={()=> this.handleDownload()}>Add to My Projects</button>*/}
 					</div>
-					<textarea className="inspector-page-comment-txt" name="comment" placeholder="Enter Comment" value={this.state.comment} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} />
-					<button className={commentButtonClass} onClick={()=> this.submitComment()}>Comment</button>
+					<form onSubmit={this.submitComment}>
+						<textarea className="inspector-page-comment-txt" autocomplete="off" type="text" name="comment" placeholder="Enter Comment" value={this.state.comment} onChange={(event)=> this.handleCommentChange(event)} />
+						<button type="submit" className={commentButtonClass} onClick={(event)=> this.submitComment(event)}>Comment</button>
+					</form>
 
 					{/*<div className="inspector-page-hero-info-wrapper">*/}
 						{/*{(artboard) ? artboard.views + ' View' + ((parseInt(artboard.views, 10) !== 1) ? 's' : '') : 'Views'}<br />*/}
