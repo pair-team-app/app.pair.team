@@ -77,7 +77,7 @@ class HomePage extends Component {
 
 						formData.append('action', 'ARTBOARDS');
 						formData.append('upload_id', this.props.uploadID);
-						formData.append('page_id', this.props.pageID);
+						formData.append('page_id', (this.props.pageID === 0) ? '-1' : this.props.pageID);
 						axios.post('https://api.designengine.ai/system.php', formData)
 							.then((response)=> {
 								console.log('ARTBOARDS', response.data);

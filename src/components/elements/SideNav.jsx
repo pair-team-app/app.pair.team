@@ -96,7 +96,7 @@ class SideNav extends Component {
 									formData.append('page_id', self.props.pageID);
 									axios.post('https://api.designengine.ai/system.php', formData)
 										.then((response) => {
-											console.log('ARTBOARD_NAMES', response.data);
+											//console.log('ARTBOARD_NAMES', response.data);
 
 											const artboards = response.data.artboards.map((artboard) => ({
 												id       : artboard.id,
@@ -250,7 +250,7 @@ class SideNav extends Component {
 			formData.append('page_id', page.id);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
-					console.log('ARTBOARD_NAMES', response.data);
+					//console.log('ARTBOARD_NAMES', response.data);
 
 					const artboards = response.data.artboards.map((artboard) => ({
 						id       : artboard.id,

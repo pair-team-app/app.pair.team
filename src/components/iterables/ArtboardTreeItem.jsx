@@ -17,7 +17,7 @@ class ArtboardTreeItem extends Component {
 	}
 
 	static getDerivedStateFromProps(nextProps) {
-		return ({ title : (nextProps.title.length > 25) ? (nextProps.title.substring(0, 24) + '…') : nextProps.title });
+		return ({ title : (nextProps.title.length > 30) ? (nextProps.title.substring(0, 29) + '…') : nextProps.title });
 	}
 
 	render() {
