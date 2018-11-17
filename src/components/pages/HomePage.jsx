@@ -17,11 +17,13 @@ class HomePage extends Component {
 		super(props);
 
 		this.state = {
-			action      : '',
-			uploadTitle : 'Loading Project…',
-			pageTitle   : 'Loading…',
-			uploadURL   : '…',
-			artboards   : [],
+			action            : '',
+			uploadTitle       : 'Loading Project…',
+			uploadDescription : '',
+			uploadTotal       : 0,
+			pageTitle         : 'Loading…',
+			uploadURL         : '…',
+			artboards         : [],
 			popup : {
 				visible : false,
 				content : ''
@@ -37,7 +39,7 @@ class HomePage extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		console.log('HomePage.componentDidUpdate()', this.props, prevProps);
+// 		console.log('HomePage.componentDidUpdate()', this.props, prevProps);
 		if (this.props.uploadID !== prevProps.uploadID || this.props.pageID !== prevProps.pageID) {
 			this.refreshData();
 			return (null);
@@ -59,10 +61,14 @@ class HomePage extends Component {
 				console.log('UPLOAD_NAMES', response.data);
 				let self = this;
 				let title = '';
+				let description = '';
+				let total = 0;
 				let uploadURL = '';
 				response.data.uploads.forEach(function(upload, i) {
 					if (upload.id === self.props.uploadID) {
 						title = upload.title;
+						description = upload.description;
+						total = upload.total;
 						uploadURL = 'https://earlyaccess.designengine.ai/doc/' + self.props.uploadID + '/' + upload.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
 					}
 				});
@@ -94,9 +100,11 @@ class HomePage extends Component {
 								}));
 
 								this.setState({
-									uploadTitle : title,
-									uploadURL   : uploadURL,
-									artboards : artboards
+									uploadTitle       : title,
+									uploadDescription : description,
+									uploadTotal       : total,
+									uploadURL         : uploadURL,
+									artboards         : artboards
 								});
 							}).catch((error) => {
 						});
@@ -146,7 +154,7 @@ class HomePage extends Component {
 						<Column flexGrow={1} horizontal="center">
 							<div className="page-header">
 								<Row horizontal="center"><h1>{this.state.uploadTitle}</h1></Row>
-								<div className="page-header-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
+								<div className="page-header-text">{(this.state.uploadDescription !== '') ? this.state.uploadDescription + '. ' : ''}Design Engine parsed {this.state.uploadTotal} pages, artboards, symbols, fonts, and more from {this.state.uploadTitle}'s Design Source.</div>
 								<Row horizontal="center">
 									<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={this.state.uploadURL}>
 										<button>Copy Project Link</button>

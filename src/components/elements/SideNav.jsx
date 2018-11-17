@@ -30,7 +30,7 @@ class SideNav extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		console.log('SideNav.componentDidUpdate()', prevProps, this.props);
+// 		console.log('SideNav.componentDidUpdate()', prevProps, this.props);
 // 		if (this.props.uploadID === 0 && (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID)) {
 		if (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID) {
 			let self = this;
@@ -310,7 +310,7 @@ class SideNav extends Component {
 	};
 
 	render() {
-		console.log('SideNav.render()', this.props, this.state);
+// 		console.log('SideNav.render()', this.props, this.state);
 
 		const { uploads, pages, artboards } = this.state;
 		const scrollHeight = 80 + (((1 + uploads.length + pages.length + artboards.length) * 19) + 400 + 24 + 47 + 24);
