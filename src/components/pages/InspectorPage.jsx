@@ -430,7 +430,7 @@ class InspectorPage extends Component {
 		return (
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
-					<div className="inspector-page-title">{(artboard) ? artboard.title : 'Loading…'}</div>
+					{/*<div className="inspector-page-title">{(artboard) ? artboard.title : 'Loading…'}</div>*/}
 					<div className="inspector-page-hero-wrapper" ref={heroWrapper}>
 						{(artboard) && (<img className={heroImageClass} src={artboard.filename} alt="Hero" ref={heroImage} />)}
 						<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>{slices}</div>
