@@ -285,10 +285,10 @@ class InspectorPage extends Component {
 
 // 			context.fillRect(Math.round(frame.origin.x * this.scale), 2 + Math.round(frame.origin.y * this.scale), Math.round(frame.size.width * this.scale), Math.round(frame.size.height * this.scale));\
 
-				context.strokeStyle = 'rgba(0, 255, 0, 0.5)';
+				context.strokeStyle = 'rgba(0, 255, 0, 1.0)';
 				context.beginPath();
-				context.setLineDash([1, 0]);
-				context.lineDashOffset = 0;
+				context.setLineDash([4, 2]);
+				context.lineDashOffset = 0;//-this.antsOffset;
 				context.moveTo(0, frame.origin.y);
 				context.lineTo(canvas.current.clientWidth, frame.origin.y);
 				context.moveTo(0, frame.origin.y + frame.size.height);
@@ -299,26 +299,30 @@ class InspectorPage extends Component {
 				context.lineTo(frame.origin.x + frame.size.width,  canvas.current.clientHeight);
 				context.stroke();
 
-				context.fillStyle = 'rgba(0, 0, 0, 0.125)';
+				context.setLineDash([1, 0]);
+				context.lineDashOffset = 0;
+				context.fillStyle = 'rgba(0, 0, 0, 0.0)';
 				context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-				context.strokeStyle = 'rgba(128, 0, 128, 1)';
+				context.strokeStyle = '#00ff00';
 				context.beginPath();
 				context.moveTo(0, 0);
-				context.setLineDash([4, 2]);
-				context.lineDashOffset = this.antsOffset;
 				context.strokeRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 // 		  context.lineWidth = 2;
 				context.stroke();
 
-				context.font = '8px AndaleMono';
-				context.fillStyle = '#808080';
+				context.fillStyle = '#00ff00';
+				context.fillRect(frame.origin.x, frame.origin.y - 13, frame.size.width, 13);
+				context.fillRect(frame.origin.x - 30, frame.origin.y, 30, frame.size.height);
+
+				context.font = '10px AndaleMono';
+				context.fillStyle = '#ffffff';
 				context.textAlign = 'center';
 				context.textBaseline = 'bottom';
-				context.fillText(srcFrame.size.width + 'w', frame.origin.x + (frame.size.width * 0.5), frame.origin.y - 1);
+				context.fillText(srcFrame.size.width + 'PX', frame.origin.x + (frame.size.width * 0.5), frame.origin.y - 1);
 
-				context.textAlign = 'left';
+				context.textAlign = 'right';
 				context.textBaseline = 'middle';
-				context.fillText(srcFrame.size.height + 'h', 2 + (frame.origin.x + frame.size.width), frame.origin.y + (frame.size.height * 0.5));
+				context.fillText(srcFrame.size.height + 'PX', frame.origin.x - 2, frame.origin.y + (frame.size.height * 0.5));
 
 				context.fillStyle = 'rgba(0, 255, 0, 1)';
 				context.textAlign = 'right';
@@ -512,17 +516,17 @@ class InspectorPage extends Component {
 							{/*<Row><Column flexGrow={1}>Artboard</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard) ? artboard.title : 'N/A'}</Column></Row>*/}
 							{/*<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.title : 'N/A'} {(slice) ? '(' + slice.type.replace(/(\b\w)/gi, function(m) {return (m.toUpperCase());}) + ')' : ''}</Column></Row>*/}
 							<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.title : 'N/A'}</Column></Row>
-							<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.type.replace(/(\b\w)/gi, function(m) {return (m.toUpperCase());}) : 'N/A'}</Column></Row>
-							<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(slice.added))) : 'N/A'}</Column></Row>
+							{/*<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.type.replace(/(\b\w)/gi, function(m) {return (m.toUpperCase());}) : 'N/A'}</Column></Row>*/}
+							<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(slice.added))) : 'N/A'}</Column></Row>
 							<Row>
-								<Column flexGrow={1} flexBasis={1}>Export Size</Column>
+								<Column flexGrow={1} flexBasis={1}>Export Size:</Column>
 								<Row flexGrow={1} flexBasis={1} className="inspector-page-panel-info-val">
 									<div style={{width:'50%'}}>W: {(slice) ? slice.meta.frame.size.width : 0}px</div>
 									<div style={{width:'50%', textAlign:'right'}}>H: {(slice) ? slice.meta.frame.size.height : 0}px</div>
 								</Row>
 							</Row>
 							<Row>
-								<Column flexGrow={1} flexBasis={1}>Position</Column>
+								<Column flexGrow={1} flexBasis={1}>Position:</Column>
 								<Row flexGrow={1} flexBasis={1} className="inspector-page-panel-info-val">
 									<div style={{width:'50%'}}>X: {(slice) ? slice.meta.frame.origin.x : 0}px</div>
 									<div style={{width:'50%', textAlign:'right'}}>Y: {(slice) ? slice.meta.frame.origin.y : 0}px</div>
@@ -531,21 +535,21 @@ class InspectorPage extends Component {
 							{/*<Row><Column flexGrow={1}>Scale</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(scaleSize + 'x')}</Column></Row>*/}
 							<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.meta.rotation : 0}&deg;</Column></Row>
 							<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? (slice.meta.opacity * 100) : 100}%</Column></Row>
-							<Row><Column flexGrow={1}>Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.meta.fillColor.toUpperCase() : 'N/A'}</Column></Row>
-							{(styles) && (<div>
-								<Row><Column flexGrow={1}>Stroke</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.stroke) ? (styles.stroke.position.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) + ' / Size: ' + styles.stroke.thickness + ' / ' + styles.stroke.color) : 'N/A'}</Column></Row>
-								<Row><Column flexGrow={1}>Shadow</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.shadow) ? ('Offset: (' + styles.shadow.offset.x + ', ' + styles.shadow.offset.y + ') / Blur: ' + styles.shadow.blur) : 'N/A'}</Column></Row>
-								<Row><Column flexGrow={1}>Inner Shadow</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('Offset: (' + styles.innerShadow.offset.x + ', ' + styles.innerShadow.offset.y + ') / Blur: ' + styles.innerShadow.blur) : 'N/A'}</Column></Row>
-							</div>)}
+							<Row><Column flexGrow={1}>Color:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.meta.fillColor.toUpperCase() : 'N/A'}</Column></Row>
 							{(slice && slice.type === 'textfield') && (<div>
 								{/*<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.family) ? slice.meta.font.family : 'N/A'}</Column></Row>*/}
-								<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard.system.title.toLowerCase().includes('ios')) ? 'SFProText' : 'Roboto'}</Column></Row>
-								<Row><Column flexGrow={1}>Font size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.size + 'px')}</Column></Row>
-								<Row><Column flexGrow={1}>Font color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : 'N/A'}</Column></Row>
-								<Row><Column flexGrow={1}>Line Height</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.lineHeight) ? (slice.meta.font.lineHeight + 'px') : 'N/A'}</Column></Row>
-								<Row><Column flexGrow={1}>Letter Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.kerning) ? (slice.meta.font.kerning + 'px') : 'N/A'}</Column></Row>
+								<Row><Column flexGrow={1}>Font:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard.system.title.toLowerCase().includes('ios')) ? 'SFProText' : 'Roboto'}</Column></Row>
+								<Row><Column flexGrow={1}>Font size:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.size + 'px')}</Column></Row>
+								<Row><Column flexGrow={1}>Font color:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : 'N/A'}</Column></Row>
+								<Row><Column flexGrow={1}>Line Height:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.lineHeight) ? (slice.meta.font.lineHeight + 'px') : 'N/A'}</Column></Row>
+								<Row><Column flexGrow={1}>Letter Spacing:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.kerning) ? (slice.meta.font.kerning + 'px') : 'N/A'}</Column></Row>
 							</div>)}
-							<Row><Column flexGrow={1}>Blend</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.meta.blendMode.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) : 'N/A'}</Column></Row>
+							{(styles) && (<div>
+								<Row><Column flexGrow={1}>Stroke:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.stroke) ? (styles.stroke.position.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) + ' S: ' + styles.stroke.thickness + ' ' + styles.stroke.color) : 'N/A'}</Column></Row>
+								<Row><Column flexGrow={1}>Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.shadow) ? ('X: ' + styles.shadow.offset.x + ' Y: ' + styles.shadow.offset.y + ' B: ' + styles.shadow.blur + ' S: ' + styles.shadow.spread) : 'N/A'}</Column></Row>
+								<Row><Column flexGrow={1}>Inner Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : 'N/A'}</Column></Row>
+							</div>)}
+							<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.meta.blendMode.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) : 'N/A'}</Column></Row>
 						</div>
 					</div>
 				</div>
