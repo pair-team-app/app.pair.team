@@ -113,6 +113,14 @@ p {
   color: #696969;
 }
 
+sup {
+  font-family: "San Francisco Text", sans-serif;
+  font-size: 10px;
+  color: #7ed321;
+  text-transform: uppercase;
+  margin: -8px 0 8px 2px;
+}
+
 textarea {
   width: 100%;
   border: 1px solid #eaecef;
