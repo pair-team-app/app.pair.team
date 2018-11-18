@@ -280,20 +280,20 @@ class UploadPage extends Component {
 		console.log('render()', this.state);
 
 		const { action } = this.state;
-		const { email1, email2, email3, email1Valid, email2Valid, email3Valid } = this.state;
-		const { uploading, uploadComplete, sentInvites } = this.state;
+// 		const { email1, email2, email3, email1Valid, email2Valid, email3Valid } = this.state;
+		const { uploading, uploadComplete } = this.state;
 		const { processingState } = this.state;
 
 		const progressStyle = { width : this.state.percent + '%' };
 
-		const email1Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email1Valid && email1.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
-		const email2Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email2Valid && email2.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
-		const email3Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email3Valid && email3.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+// 		const email1Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email1Valid && email1.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+// 		const email2Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email2Valid && email2.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+// 		const email3Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email3Valid && email3.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 
 		const titleClass = (action === '') ? 'input-wrapper' : (action === 'UPLOAD' && this.state.uploadTitle === '') ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 
 		const nextButtonClass = (uploadComplete && this.state.uploadTitle.length > 0) ? 'narrow-button' : 'narrow-button button-disabled';
-		const inviteButtonClass = (email1.length > 0 || email2.length > 0 || email3.length > 0) ? '' : 'button-disabled';
+// 		const inviteButtonClass = (email1.length > 0 || email2.length > 0 || email3.length > 0) ? '' : 'button-disabled';
 
 		let title = '';
 		if (processingState === -1) {

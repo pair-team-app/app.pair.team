@@ -18,12 +18,12 @@ class SliceItem extends Component {
 			left    : this.props.left + 'px',
 			width   : this.props.width + 'px',
 			height  : this.props.height + 'px',
-			zoom    : this.props.scale,
-			display : (this.props.visible) ? 'block' : 'none'
+			zoom    : this.props.scale
+// 			display : (this.props.visible) ? 'block' : 'none'
 		};
 
 		return (
-			<div className={className} style={style} onMouseEnter={()=> this.props.onRollOver()} onMouseLeave={()=> this.props.onRollOut()} onClick={()=> this.props.onClick()}>
+			<div className={className + ((this.props.visible) ? '-selected' : '')} style={style} onMouseEnter={()=> this.props.onRollOver()} onMouseLeave={()=> this.props.onRollOut()} onClick={()=> this.props.onClick()}>
 				<FontAwesome name="plus-circle" className="slice-item-plus" />
 			</div>
 		);

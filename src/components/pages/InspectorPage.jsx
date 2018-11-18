@@ -16,7 +16,6 @@ import Popup from '../elements/Popup';
 const heroWrapper = React.createRef();
 const heroImage = React.createRef();
 const canvas = React.createRef();
-const toggle = React.createRef();
 
 class InspectorPage extends Component {
 	constructor(props) {
@@ -119,7 +118,7 @@ class InspectorPage extends Component {
 					.then((response)=> {
 						console.log('ARTBOARD', response.data);
 
-						const slices =response.data.artboard.slices.map((item)=> ({
+						const slices = response.data.artboard.slices.map((item)=> ({
 							id       : item.id,
 							title    : item.title,
 							type     : item.type,
@@ -251,11 +250,13 @@ class InspectorPage extends Component {
 
 	updateCanvas = ()=> {
 // 		console.log('updateCanvas()', heroWrapper, heroImage);
+
+		const slice = this.state.slice;
 		const context = canvas.current.getContext('2d');
 		context.clearRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
 
-		if (this.state.slice) {
-			const selectedSrcFrame = this.state.slice.meta.frame;
+		if (slice) {
+			const selectedSrcFrame = slice.meta.frame;
 			const selectedOffset = (heroWrapper.current && heroImage.current) ? {
 				x : (heroWrapper.current.clientWidth - heroImage.current.clientWidth) * 0.5,
 				y : (heroWrapper.current.clientHeight - heroImage.current.clientHeight) * 0.5
@@ -275,7 +276,8 @@ class InspectorPage extends Component {
 				}
 			};
 
-
+			context.fillStyle = (slice.type === 'slice') ? 'rgba(255, 127, 0, 0.25)' : (slice.type === 'hotspot') ? 'rgba(0, 255, 0, 0.25)' : (slice.type === 'textfield') ? 'rgba(0, 0, 155, 0.25)' : 'rgba(127, 0, 0, 0.25)';
+			context.fillRect(selectedFrame.origin.x, selectedFrame.origin.y, selectedFrame.size.width, selectedFrame.size.height);
 			context.fillStyle = '#00ff00';
 			context.fillRect(selectedFrame.origin.x, selectedFrame.origin.y - 13, selectedFrame.size.width, 13);
 			context.fillRect(selectedFrame.origin.x - 30, selectedFrame.origin.y, 30, selectedFrame.size.height);
@@ -290,7 +292,7 @@ class InspectorPage extends Component {
 			context.textBaseline = 'middle';
 			context.fillText(selectedSrcFrame.size.height + 'PX', selectedFrame.origin.x - 2, selectedFrame.origin.y + (selectedFrame.size.height * 0.5));
 
-			context.strokeStyle = 'rgba(0, 255, 0, 1.0)';
+			context.strokeStyle = 'rgba(64, 64, 64, 0.5)';
 			context.beginPath();
 			context.setLineDash([4, 2]);
 			context.lineDashOffset = this.antsOffset;
@@ -298,84 +300,98 @@ class InspectorPage extends Component {
 		}
 
 		if (this.state.hoverSlice) {
-			const offset = (heroWrapper.current && heroImage.current) ? {
-				x : (heroWrapper.current.clientWidth - heroImage.current.clientWidth) * 0.5,
-				y : (heroWrapper.current.clientHeight - heroImage.current.clientHeight) * 0.5
-			} : {
-				x : 0,
-				y : 0
-			};
-
-			const srcFrame = this.state.hoverSlice.meta.frame;
-
-			const frame = {
-				origin : {
-					x : offset.x + Math.round(srcFrame.origin.x * this.scale),
-					y : offset.y + Math.round(srcFrame.origin.y * this.scale)
-				},
-				size   : {
-					width  : Math.round(srcFrame.size.width * this.scale),
-					height : Math.round(srcFrame.size.height * this.scale)
+			let visible = false;
+			let self = this;
+			Object.keys(this.state.visibleTypes).forEach(function(key) {
+// 				console.log('hoverslice', self.state.visibleTypes, self.state.hoverSlice.type, key);
+				if (self.state.visibleTypes[key] && self.state.hoverSlice.type === key) {
+					visible = true;
 				}
-			};
+			});
 
-// 				console.log('updateCanvas()', this.scale, offset, srcFrame.origin, frame.origin);
+			if (this.state.visibleTypes.all) {
+				visible = true;
+			}
 
-// 			context.fillRect(Math.round(frame.origin.x * this.scale), 2 + Math.round(frame.origin.y * this.scale), Math.round(frame.size.width * this.scale), Math.round(frame.size.height * this.scale));\
+			if (visible) {
+				const offset = (heroWrapper.current && heroImage.current) ? {
+					x : (heroWrapper.current.clientWidth - heroImage.current.clientWidth) * 0.5,
+					y : (heroWrapper.current.clientHeight - heroImage.current.clientHeight) * 0.5
+				} : {
+					x : 0,
+					y : 0
+				};
 
+				const srcFrame = this.state.hoverSlice.meta.frame;
 
-			context.strokeStyle = 'rgba(0, 255, 0, 1.0)';
-			context.beginPath();
-			context.setLineDash([4, 2]);
-			context.lineDashOffset = 0;//-this.antsOffset;
-			context.moveTo(0, frame.origin.y);
-			context.lineTo(canvas.current.clientWidth, frame.origin.y);
-			context.moveTo(0, frame.origin.y + frame.size.height);
-			context.lineTo(canvas.current.clientWidth, frame.origin.y + frame.size.height);
-			context.moveTo(frame.origin.x, 0);
-			context.lineTo(frame.origin.x, canvas.current.clientHeight);
-			context.moveTo(frame.origin.x + frame.size.width, 0);
-			context.lineTo(frame.origin.x + frame.size.width,  canvas.current.clientHeight);
-			context.stroke();
+				const frame = {
+					origin : {
+						x : offset.x + Math.round(srcFrame.origin.x * this.scale),
+						y : offset.y + Math.round(srcFrame.origin.y * this.scale)
+					},
+					size   : {
+						width  : Math.round(srcFrame.size.width * this.scale),
+						height : Math.round(srcFrame.size.height * this.scale)
+					}
+				};
 
-			context.setLineDash([1, 0]);
-			context.lineDashOffset = 0;
-			context.fillStyle = 'rgba(0, 0, 0, 0.0)';
-			context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-			context.strokeStyle = '#00ff00';
-			context.beginPath();
-			context.moveTo(0, 0);
-			context.strokeRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-// 		  context.lineWidth = 2;
-			context.stroke();
+				// 				console.log('updateCanvas()', this.scale, offset, srcFrame.origin, frame.origin);
 
-			context.fillStyle = '#00ff00';
-			context.fillRect(frame.origin.x, frame.origin.y - 13, frame.size.width, 13);
-			context.fillRect(frame.origin.x - 30, frame.origin.y, 30, frame.size.height);
+				context.fillStyle = (this.state.hoverSlice.type === 'slice') ? 'rgba(255, 127, 0, 0.25)' : (this.state.hoverSlice.type === 'hotspot') ? 'rgba(0, 255, 0, 0.25)' : (this.state.hoverSlice.type === 'textfield') ? 'rgba(0, 0, 255, 0.25)' : 'rgba(255, 0, 0, 0.25)';
+				context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+				context.strokeStyle = 'rgba(0, 255, 0, 1.0)';
+				context.beginPath();
+				context.setLineDash([4, 2]);
+				context.lineDashOffset = 0;//-this.antsOffset;
+				context.moveTo(0, frame.origin.y);
+				context.lineTo(canvas.current.clientWidth, frame.origin.y);
+				context.moveTo(0, frame.origin.y + frame.size.height);
+				context.lineTo(canvas.current.clientWidth, frame.origin.y + frame.size.height);
+				context.moveTo(frame.origin.x, 0);
+				context.lineTo(frame.origin.x, canvas.current.clientHeight);
+				context.moveTo(frame.origin.x + frame.size.width, 0);
+				context.lineTo(frame.origin.x + frame.size.width, canvas.current.clientHeight);
+				context.stroke();
 
-			context.font = '10px AndaleMono';
-			context.fillStyle = '#ffffff';
-			context.textAlign = 'center';
-			context.textBaseline = 'bottom';
-			context.fillText(srcFrame.size.width + 'PX', frame.origin.x + (frame.size.width * 0.5), frame.origin.y - 1);
+				context.setLineDash([1, 0]);
+				context.lineDashOffset = 0;
+				context.fillStyle = 'rgba(0, 0, 0, 0.0)';
+				context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+				context.strokeStyle = '#00ff00';
+				context.beginPath();
+				context.moveTo(0, 0);
+				context.strokeRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+				// 		  context.lineWidth = 2;
+				context.stroke();
 
-			context.textAlign = 'right';
-			context.textBaseline = 'middle';
-			context.fillText(srcFrame.size.height + 'PX', frame.origin.x - 2, frame.origin.y + (frame.size.height * 0.5));
+				context.fillStyle = '#00ff00';
+				context.fillRect(frame.origin.x, frame.origin.y - 13, frame.size.width, 13);
+				context.fillRect(frame.origin.x - 30, frame.origin.y, 30, frame.size.height);
 
-			context.fillStyle = 'rgba(0, 255, 0, 1)';
-			context.textAlign = 'right';
-			context.textBaseline = 'top';
-			context.fillText(srcFrame.origin.x + 'px', frame.origin.x - 2, 1);
+				context.font = '10px AndaleMono';
+				context.fillStyle = '#ffffff';
+				context.textAlign = 'center';
+				context.textBaseline = 'bottom';
+				context.fillText(srcFrame.size.width + 'PX', frame.origin.x + (frame.size.width * 0.5), frame.origin.y - 1);
 
-			context.textAlign = 'left';
-			context.fillText((srcFrame.origin.x + srcFrame.size.width) + 'px', (frame.origin.x + frame.size.width) + 2, 1);
+				context.textAlign = 'right';
+				context.textBaseline = 'middle';
+				context.fillText(srcFrame.size.height + 'PX', frame.origin.x - 2, frame.origin.y + (frame.size.height * 0.5));
 
-			context.textBaseline = 'bottom';
-			context.fillText(srcFrame.origin.y + 'px', 1, frame.origin.y);
+				context.fillStyle = 'rgba(0, 255, 0, 1)';
+				context.textAlign = 'right';
+				context.textBaseline = 'top';
+				context.fillText(srcFrame.origin.x + 'px', frame.origin.x - 2, 1);
 
-			context.textBaseline = 'top';
-			context.fillText((srcFrame.origin.y + srcFrame.size.height) + 'px', 1, frame.origin.y + frame.size.height);
+				context.textAlign = 'left';
+				context.fillText((srcFrame.origin.x + srcFrame.size.width) + 'px', (frame.origin.x + frame.size.width) + 2, 1);
+
+				context.textBaseline = 'bottom';
+				context.fillText(srcFrame.origin.y + 'px', 1, frame.origin.y);
+
+				context.textBaseline = 'top';
+				context.fillText((srcFrame.origin.y + srcFrame.size.height) + 'px', 1, frame.origin.y + frame.size.height);
+			}
 		}
 	};
 
@@ -423,10 +439,10 @@ class InspectorPage extends Component {
 		}
 
 		const commentButtonClass = (this.state.comment.length !== 0) ? 'inspector-page-comment-button' : 'inspector-page-comment-button button-disabled';
-		const panelFrame = (artboard && !slice) ? artboard.meta.frame : (slice) ? slice.meta.frame : null;
+// 		const panelFrame = (artboard && !slice) ? artboard.meta.frame : (slice) ? slice.meta.frame : null;
 
-// 		const panelImageClass = 'inspector-page-panel-image' + ((artboard && !slice) ? ' inspector-page-panel-image-artboard' : '');// + ((slice) ? ((slice.meta.frame.size.width > slice.meta.frame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait')  + ' ' + ((slice.type === 'slice') ? 'inspector-page-panel-image-slice' : (slice.type === 'hotspot') ? 'inspector-page-panel-image-hotspot' : (slice.type === 'textfield') ? 'inspector-page-panel-image-textfield' : 'inspector-page-panel-image-background') : '');
-		const panelImageClass = 'inspector-page-panel-image' + ((artboard && !slice) ? ' inspector-page-panel-image-artboard' + ((panelFrame.size.width > panelFrame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait') : '');
+		const panelImageClass = 'inspector-page-panel-image' + ((artboard && !slice) ? ' inspector-page-panel-image-artboard' : ((slice) ? ((slice.meta.frame.size.width > slice.meta.frame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait')  + ' ' + ((slice.type === 'slice') ? 'inspector-page-panel-image-slice' : (slice.type === 'hotspot') ? 'inspector-page-panel-image-hotspot' : (slice.type === 'textfield') ? 'inspector-page-panel-image-textfield' : 'inspector-page-panel-image-background') : ''));
+// 		const panelImageClass = 'inspector-page-panel-image' + ((artboard && !slice) ? ' inspector-page-panel-image-artboard' + ((panelFrame.size.width > panelFrame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait') : '');
 // 		const panelSliceImage = (slice) ? ((slice.type === 'slice') ? slice.filename + '@' + scaleSize + 'x.png' : ('https://via.placeholder.com/' + (slice.meta.frame.size.width * scaleSize) + 'x' + (slice.meta.frame.size.height * scaleSize))) : null;
 		const panelSliceImage = (slice) ? slice.filename + '@' + scaleSize + 'x.png' : null;
 
