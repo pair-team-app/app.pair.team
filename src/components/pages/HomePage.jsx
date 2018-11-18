@@ -136,7 +136,6 @@ class HomePage extends Component {
 
 
 	render() {
-		console.log('HomePage.render()', this.props);
 		const artboards = this.state.artboards;
 		const items = artboards.map((artboard) => {
 			if (artboard.type !== 'hero' && (this.props.pageID <= 0 || this.props.pageID === artboard.pageID)) {

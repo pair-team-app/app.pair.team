@@ -312,12 +312,12 @@ class SideNav extends Component {
 	};
 
 	render() {
-// 		console.log('SideNav.render()', this.props, this.state);
-
 		const { uploads, pages, artboards } = this.state;
-		const scrollHeight = 80 + (((1 + uploads.length + pages.length + artboards.length) * 25) + 400 + 24 + 47 + 24);
+		const scrollHeight = 80 + (((1 + uploads.length + pages.length + artboards.length) * 25) + 500 + 96);
 		const footerClass = (wrapper.current && scrollHeight > wrapper.current.clientHeight) ? 'side-nav-bottom-wrapper' : 'side-nav-bottom-wrapper-fixed';
 		const year = 2019;//new Date().getFullYear();
+
+		console.log('SideNav.render()', scrollHeight, (wrapper.current) ? wrapper.current.clientHeight : '');
 
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>
