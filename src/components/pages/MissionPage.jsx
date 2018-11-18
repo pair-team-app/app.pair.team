@@ -30,6 +30,7 @@ class MissionPage extends Component {
 					<Row horizontal="center"><h1>Mission</h1></Row>
 					<div className="page-header-text">Our mission is to provide a design platform that connects designers with engineers worldwide using web based tools to help them make software together, faster.</div>
 					<Row horizontal="center">
+						<button className="adjacent-button" onClick={()=> this.props.onPage('api')}>API</button>
 						<button className="adjacent-button" onClick={()=> window.open('https://www.github.com/de-ai')}>Github</button>
 						<button className="adjacent-button" onClick={()=> window.open('https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA')}>Slack</button>
 						<button onClick={()=> window.open('https://spectrum.chat/designengine')}>Spectrum</button>
@@ -37,8 +38,10 @@ class MissionPage extends Component {
 				</div>
 				<div>
 					<Row><h2 className="mission-page-title">Why did Matt and Jason build Design Engine?</h2></Row>
-					<Row><p>Design Engine was created by Matt Holcombe (Engineer) &amp; Jason Festa (Designer). Matt &amp; Jason co-founded Design Engine with two values, 1) We wanted to create Design Software we would actually use and 2) We wanted to provide a tool to allow engineers to build interfaces faster. Matt &amp; Jason together have developed… <span className="page-link">Read More</span></p></Row>
-					<Row><h4>User Reviews</h4></Row>
+					<Row><p>Design Engine was created by Matt Holcombe (Engineer) &amp; Jason Festa (Designer). Matt &amp; Jason co-founded Design Engine with two values, 1) We wanted to create Design Software we would actually use and 2) We wanted to provide a tool to allow engineers to build interfaces faster. Matt &amp; Jason together have developed…
+						{/*<span className="page-link">Read More</span>*/}
+					</p></Row>
+					<Row><h4>Customer Reviews</h4></Row>
 					<Row horizontal="space-around" className="mission-page-reviews-wrapper" style={{flexWrap:'wrap'}}>
 						{items}
 					</Row>
