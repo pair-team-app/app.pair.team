@@ -216,17 +216,11 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceRollOver = (ind, slice)=> {
-		this.setState({
-			hoverSlice : slice,
-			slice      : slice
-		});
+		this.setState({ hoverSlice : slice });
 	};
 
 	handleSliceRollOut = (ind, slice)=> {
-		this.setState({
-			hoverSlice : null,
-// 			slice      : null
-		});
+		this.setState({ hoverSlice : null });
 	};
 
 	handleSliceClick = (ind, slice)=> {
@@ -260,6 +254,49 @@ class InspectorPage extends Component {
 		const context = canvas.current.getContext('2d');
 		context.clearRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
 
+		if (this.state.slice) {
+			const selectedSrcFrame = this.state.slice.meta.frame;
+			const selectedOffset = (heroWrapper.current && heroImage.current) ? {
+				x : (heroWrapper.current.clientWidth - heroImage.current.clientWidth) * 0.5,
+				y : (heroWrapper.current.clientHeight - heroImage.current.clientHeight) * 0.5
+			} : {
+				x : 0,
+				y : 0
+			};
+
+			const selectedFrame = {
+				origin : {
+					x : selectedOffset.x + Math.round(selectedSrcFrame.origin.x * this.scale),
+					y : selectedOffset.y + Math.round(selectedSrcFrame.origin.y * this.scale)
+				},
+				size   : {
+					width  : Math.round(selectedSrcFrame.size.width * this.scale),
+					height : Math.round(selectedSrcFrame.size.height * this.scale)
+				}
+			};
+
+
+			context.fillStyle = '#00ff00';
+			context.fillRect(selectedFrame.origin.x, selectedFrame.origin.y - 13, selectedFrame.size.width, 13);
+			context.fillRect(selectedFrame.origin.x - 30, selectedFrame.origin.y, 30, selectedFrame.size.height);
+
+			context.font = '10px AndaleMono';
+			context.fillStyle = '#ffffff';
+			context.textAlign = 'center';
+			context.textBaseline = 'bottom';
+			context.fillText(selectedSrcFrame.size.width + 'PX', selectedFrame.origin.x + (selectedFrame.size.width * 0.5), selectedFrame.origin.y - 1);
+
+			context.textAlign = 'right';
+			context.textBaseline = 'middle';
+			context.fillText(selectedSrcFrame.size.height + 'PX', selectedFrame.origin.x - 2, selectedFrame.origin.y + (selectedFrame.size.height * 0.5));
+
+			context.strokeStyle = 'rgba(0, 255, 0, 1.0)';
+			context.beginPath();
+			context.setLineDash([4, 2]);
+			context.lineDashOffset = this.antsOffset;
+			context.strokeRect(selectedFrame.origin.x, selectedFrame.origin.y, selectedFrame.size.width, selectedFrame.size.height);
+		}
+
 		if (this.state.hoverSlice) {
 			const offset = (heroWrapper.current && heroImage.current) ? {
 				x : (heroWrapper.current.clientWidth - heroImage.current.clientWidth) * 0.5,
@@ -269,77 +306,76 @@ class InspectorPage extends Component {
 				y : 0
 			};
 
-			const srcFrame = (this.state.hoverSlice) ? this.state.hoverSlice.meta.frame : null;
+			const srcFrame = this.state.hoverSlice.meta.frame;
 
-			if (srcFrame) {
-				const frame = {
-					origin : {
-						x : offset.x + Math.round(srcFrame.origin.x * this.scale),
-						y : offset.y + Math.round(srcFrame.origin.y * this.scale)
-					},
-					size   : {
-						width  : Math.round(srcFrame.size.width * this.scale),
-						height : Math.round(srcFrame.size.height * this.scale)
-					}
-				};
+			const frame = {
+				origin : {
+					x : offset.x + Math.round(srcFrame.origin.x * this.scale),
+					y : offset.y + Math.round(srcFrame.origin.y * this.scale)
+				},
+				size   : {
+					width  : Math.round(srcFrame.size.width * this.scale),
+					height : Math.round(srcFrame.size.height * this.scale)
+				}
+			};
 
 // 				console.log('updateCanvas()', this.scale, offset, srcFrame.origin, frame.origin);
 
 // 			context.fillRect(Math.round(frame.origin.x * this.scale), 2 + Math.round(frame.origin.y * this.scale), Math.round(frame.size.width * this.scale), Math.round(frame.size.height * this.scale));\
 
-				context.strokeStyle = 'rgba(0, 255, 0, 1.0)';
-				context.beginPath();
-				context.setLineDash([4, 2]);
-				context.lineDashOffset = 0;//-this.antsOffset;
-				context.moveTo(0, frame.origin.y);
-				context.lineTo(canvas.current.clientWidth, frame.origin.y);
-				context.moveTo(0, frame.origin.y + frame.size.height);
-				context.lineTo(canvas.current.clientWidth, frame.origin.y + frame.size.height);
-				context.moveTo(frame.origin.x, 0);
-				context.lineTo(frame.origin.x, canvas.current.clientHeight);
-				context.moveTo(frame.origin.x + frame.size.width, 0);
-				context.lineTo(frame.origin.x + frame.size.width,  canvas.current.clientHeight);
-				context.stroke();
 
-				context.setLineDash([1, 0]);
-				context.lineDashOffset = 0;
-				context.fillStyle = 'rgba(0, 0, 0, 0.0)';
-				context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-				context.strokeStyle = '#00ff00';
-				context.beginPath();
-				context.moveTo(0, 0);
-				context.strokeRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+			context.strokeStyle = 'rgba(0, 255, 0, 1.0)';
+			context.beginPath();
+			context.setLineDash([4, 2]);
+			context.lineDashOffset = 0;//-this.antsOffset;
+			context.moveTo(0, frame.origin.y);
+			context.lineTo(canvas.current.clientWidth, frame.origin.y);
+			context.moveTo(0, frame.origin.y + frame.size.height);
+			context.lineTo(canvas.current.clientWidth, frame.origin.y + frame.size.height);
+			context.moveTo(frame.origin.x, 0);
+			context.lineTo(frame.origin.x, canvas.current.clientHeight);
+			context.moveTo(frame.origin.x + frame.size.width, 0);
+			context.lineTo(frame.origin.x + frame.size.width,  canvas.current.clientHeight);
+			context.stroke();
+
+			context.setLineDash([1, 0]);
+			context.lineDashOffset = 0;
+			context.fillStyle = 'rgba(0, 0, 0, 0.0)';
+			context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+			context.strokeStyle = '#00ff00';
+			context.beginPath();
+			context.moveTo(0, 0);
+			context.strokeRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 // 		  context.lineWidth = 2;
-				context.stroke();
+			context.stroke();
 
-				context.fillStyle = '#00ff00';
-				context.fillRect(frame.origin.x, frame.origin.y - 13, frame.size.width, 13);
-				context.fillRect(frame.origin.x - 30, frame.origin.y, 30, frame.size.height);
+			context.fillStyle = '#00ff00';
+			context.fillRect(frame.origin.x, frame.origin.y - 13, frame.size.width, 13);
+			context.fillRect(frame.origin.x - 30, frame.origin.y, 30, frame.size.height);
 
-				context.font = '10px AndaleMono';
-				context.fillStyle = '#ffffff';
-				context.textAlign = 'center';
-				context.textBaseline = 'bottom';
-				context.fillText(srcFrame.size.width + 'PX', frame.origin.x + (frame.size.width * 0.5), frame.origin.y - 1);
+			context.font = '10px AndaleMono';
+			context.fillStyle = '#ffffff';
+			context.textAlign = 'center';
+			context.textBaseline = 'bottom';
+			context.fillText(srcFrame.size.width + 'PX', frame.origin.x + (frame.size.width * 0.5), frame.origin.y - 1);
 
-				context.textAlign = 'right';
-				context.textBaseline = 'middle';
-				context.fillText(srcFrame.size.height + 'PX', frame.origin.x - 2, frame.origin.y + (frame.size.height * 0.5));
+			context.textAlign = 'right';
+			context.textBaseline = 'middle';
+			context.fillText(srcFrame.size.height + 'PX', frame.origin.x - 2, frame.origin.y + (frame.size.height * 0.5));
 
-				context.fillStyle = 'rgba(0, 255, 0, 1)';
-				context.textAlign = 'right';
-				context.textBaseline = 'top';
-				context.fillText(srcFrame.origin.x + 'px', frame.origin.x - 2, 1);
+			context.fillStyle = 'rgba(0, 255, 0, 1)';
+			context.textAlign = 'right';
+			context.textBaseline = 'top';
+			context.fillText(srcFrame.origin.x + 'px', frame.origin.x - 2, 1);
 
-				context.textAlign = 'left';
-				context.fillText((srcFrame.origin.x + srcFrame.size.width) + 'px', (frame.origin.x + frame.size.width) + 2, 1);
+			context.textAlign = 'left';
+			context.fillText((srcFrame.origin.x + srcFrame.size.width) + 'px', (frame.origin.x + frame.size.width) + 2, 1);
 
-				context.textBaseline = 'bottom';
-				context.fillText(srcFrame.origin.y + 'px', 1, frame.origin.y);
+			context.textBaseline = 'bottom';
+			context.fillText(srcFrame.origin.y + 'px', 1, frame.origin.y);
 
-				context.textBaseline = 'top';
-				context.fillText((srcFrame.origin.y + srcFrame.size.height) + 'px', 1, frame.origin.y + frame.size.height);
-			}
+			context.textBaseline = 'top';
+			context.fillText((srcFrame.origin.y + srcFrame.size.height) + 'px', 1, frame.origin.y + frame.size.height);
 		}
 	};
 
@@ -466,8 +502,8 @@ class InspectorPage extends Component {
 							<SliceToggle type="hotspot" selected={visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} /><br />
 							<SliceToggle type="slice" selected={visibleTypes.slice} onClick={()=> this.handleSliceToggle('slice')} /><br />
 							<SliceToggle type="textfield" selected={visibleTypes.textfield} onClick={()=> this.handleSliceToggle('textfield')} /><br />
-							<SliceToggle type="background" selected={visibleTypes.background} onClick={()=> this.handleSliceToggle('background')} />
-							<SliceToggle ref={toggle} type="" selected={(visibleTypes.all)} onClick={()=> this.handleSliceToggle('all')} />
+							<SliceToggle type="background" selected={visibleTypes.background} onClick={()=> this.handleSliceToggle('background')} /><br />
+							<SliceToggle type="" selected={(visibleTypes.all)} onClick={()=> this.handleSliceToggle('all')} />
 						</div>
 					</div>
 					<div>
