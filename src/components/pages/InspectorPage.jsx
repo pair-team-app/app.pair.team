@@ -383,7 +383,7 @@ class InspectorPage extends Component {
 			this.rerender = 1;
 			setTimeout(function() {
 				self.forceUpdate();
-			}, 750);
+			}, 1000);
 		}
 
 		const commentButtonClass = (this.state.comment.length !== 0) ? 'inspector-page-comment-button' : 'inspector-page-comment-button button-disabled';
