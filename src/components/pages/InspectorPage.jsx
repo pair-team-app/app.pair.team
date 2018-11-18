@@ -73,6 +73,8 @@ class InspectorPage extends Component {
 		this.scale = 1;
 		this.antsOffset = 0;
 		this.antsInterval = null;
+
+		cookie.save('upload_id', this.props.match.params.uploadID, { path : '/' });
 	}
 
 	componentDidMount() {

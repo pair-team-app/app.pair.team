@@ -169,6 +169,8 @@ class SideNav extends Component {
 	};
 
 	handleUploadClick = (upload)=> {
+		cookie.save('upload_id', upload.id, { path : '/' });
+
 		let uploads = [...this.state.uploads];
 		uploads.forEach(function(item, i) {
 			if (item.id === upload.id) {

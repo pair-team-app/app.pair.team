@@ -15,7 +15,7 @@ class InviteTeamPage extends Component {
 		super(props);
 
 		this.state = {
-			uploadID    : this.props.uploadID,
+			uploadID    : (typeof cookie.load('upload_id') !== 'undefined') ? cookie.load('upload_id') : this.props.uploadID,
 			uploadTitle : 'Select Project',
 			uploadURL   : '…',
 			uploads     : [],
@@ -46,7 +46,7 @@ class InviteTeamPage extends Component {
 					title    : upload.title,
 					author   : upload.author,
 					added    : upload.added,
-					selected : (this.props.uploadID === upload.id),
+					selected : (this.state.uploadID === upload.id),
 					pages    : upload.pages.map((page) => ({
 						id          : page.id,
 						title       : page.title,
@@ -65,19 +65,23 @@ class InviteTeamPage extends Component {
 					}))
 				}));
 
-				if (this.props.uploadID !== 0) {
+				if (this.state.uploadID !== 0) {
 					let self = this;
 					let uploadID = 0;
+					let uploadTitle = 'Select Project';
 					let uploadURL = '';
 					uploads.forEach(function(upload) {
-						if (upload.id === self.props.uploadID) {
+						console.log('forEach', upload.id, self.state.uploadID);
+						if (upload.id === self.state.uploadID) {
 							uploadID = upload.id;
-							uploadURL = 'https://earlyaccess.designengine.ai/doc/' + self.props.uploadID + '/' + upload.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
+							uploadTitle = upload.title;
+							uploadURL = 'https://earlyaccess.designengine.ai/doc/' + self.state.uploadID + '/' + upload.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
 						}
 					});
 
 					this.setState({
 						uploadID    : uploadID,
+						uploadTitle : uploadTitle,
 						uploadURL   : uploadURL,
 						uploads     : uploads
 					});
@@ -85,6 +89,7 @@ class InviteTeamPage extends Component {
 				} else {
 					this.setState({
 						uploadID    : (uploads.length > 0) ? uploads[0].id : this.state.uploadID,
+						uploadTitle : (uploads.length > 0) ? uploads[0].title : this.state.uploadTitle,
 						uploadURL   : (uploads.length > 0) ? 'https://earlyaccess.designengine.ai/doc/' + uploads[0].id + '/' + uploads[0].title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase() : this.state.uploadURL,
 						uploads     : uploads
 					});
@@ -182,7 +187,7 @@ class InviteTeamPage extends Component {
 				{(!this.state.sentInvites)
 					? (<div style={{width:'100%'}}>
 						<Dropdown
-							title="Select Project"
+							title={this.state.uploadTitle}
 							list={this.state.uploads}
 							resetThenSet={this.resetThenSet}
 						/>
