@@ -16,6 +16,7 @@ import Popup from '../elements/Popup';
 const heroWrapper = React.createRef();
 const heroImage = React.createRef();
 const canvas = React.createRef();
+const toggle = React.createRef();
 
 class InspectorPage extends Component {
 	constructor(props) {
@@ -69,6 +70,7 @@ class InspectorPage extends Component {
 			}
 		};
 
+		this.rerender = 0;
 		this.scale = 1;
 		this.antsOffset = 0;
 		this.antsInterval = null;
@@ -376,6 +378,14 @@ class InspectorPage extends Component {
 
 // 		console.log('InspectorPage.render()', this.scale);
 
+		let self = this;
+		if (this.rerender === 0) {
+			this.rerender = 1;
+			setTimeout(function() {
+				self.forceUpdate();
+			}, 750);
+		}
+
 		const commentButtonClass = (this.state.comment.length !== 0) ? 'inspector-page-comment-button' : 'inspector-page-comment-button button-disabled';
 		const panelFrame = (artboard && !slice) ? artboard.meta.frame : (slice) ? slice.meta.frame : null;
 
@@ -457,7 +467,7 @@ class InspectorPage extends Component {
 							<SliceToggle type="slice" selected={visibleTypes.slice} onClick={()=> this.handleSliceToggle('slice')} /><br />
 							<SliceToggle type="textfield" selected={visibleTypes.textfield} onClick={()=> this.handleSliceToggle('textfield')} /><br />
 							<SliceToggle type="background" selected={visibleTypes.background} onClick={()=> this.handleSliceToggle('background')} />
-							<SliceToggle type="" selected={(visibleTypes.all)} onClick={()=> this.handleSliceToggle('all')} />
+							<SliceToggle ref={toggle} type="" selected={(visibleTypes.all)} onClick={()=> this.handleSliceToggle('all')} />
 						</div>
 					</div>
 					<div>
