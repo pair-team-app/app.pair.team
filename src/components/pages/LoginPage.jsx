@@ -46,6 +46,7 @@ class LoginPage extends Component {
 					console.log('LOGIN', response.data);
 					if (response.data.status === true) {
 						cookie.save('user_id', response.data.user_id, { path : '/' });
+						cookie.save('user_email', email);
 						this.props.onPage('');
 
 					} else {
