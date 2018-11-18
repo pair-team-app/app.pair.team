@@ -38,10 +38,20 @@
 	letter-spacing: -0.3px;
 }
 
+.page-header-subtext {
+	text-align: center;
+	color: #0267d8;
+	margin-bottom: 20px;
+}
+
 .page-header-url {
 	margin-top: 18px;
 	font-size: 14px;
 	letter-spacing: -0.23px;
+}
+
+.narrow-button {
+	padding: 12px 20px;
 }
 
 .adjacent-button {
@@ -72,6 +82,14 @@
 
 .page-footer {
 
+}
+
+.sub-h1 {
+	/*font-family: "San Francisco Text Bold", sans-serif;*/
+	font-size: 28px;
+	color: #9b9b9b;
+	letter-spacing: -0.52px;
+	margin: 20px 0;
 }
 
 .input-wrapper {

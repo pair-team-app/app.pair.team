@@ -59,7 +59,7 @@ class RegisterPage extends Component {
 							ReactPixel.trackCustom('sign-up');
 
 							cookie.save('user_id', response.data.user_id, { path : '/' });
-							this.props.onPage('//');
+							this.props.onPage('');
 
 						} else {
 							this.setState({ errorMsg : 'Email Address Already Signed Up!'});

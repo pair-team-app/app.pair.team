@@ -46,7 +46,7 @@ class LoginPage extends Component {
 					console.log('LOGIN', response.data);
 					if (response.data.status === true) {
 						cookie.save('user_id', response.data.user_id, { path : '/' });
-						this.props.onPage('//');
+						this.props.onPage('');
 
 					} else {
 						this.setState({ errorMsg : 'Email and/or Password Are Incorrect!'});
