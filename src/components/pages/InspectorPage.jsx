@@ -36,11 +36,11 @@ class InspectorPage extends Component {
 			},
 			comment       : '',
 			visibleTypes  : {
-				slice      : true,
-				hotspot    : true,
-				textfield  : true,
-				background : true,
-				all        : false
+				slice      : false,
+				hotspot    : false,
+				textfield  : false,
+				background : false,
+				all        : true
 			},
 			languages     : [{
 				id       : 0,
@@ -294,7 +294,7 @@ class InspectorPage extends Component {
 			context.textBaseline = 'middle';
 			context.fillText(selectedSrcFrame.size.height + 'PX', selectedFrame.origin.x - 2, selectedFrame.origin.y + (selectedFrame.size.height * 0.5));
 
-			context.strokeStyle = 'rgba(64, 64, 64, 0.5)';
+			context.strokeStyle = 'rgba(0, 0, 0, 0.5)';
 			context.beginPath();
 			context.setLineDash([4, 2]);
 			context.lineDashOffset = this.antsOffset;
