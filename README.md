@@ -12,7 +12,7 @@ Design Engine is a design platform built for engineers. From open source project
 
 ## Documents
 
-- [Contributing](#contributing)
+- [Contributing]()
   - [Ground Rules](#ground-rules)
   - [Codebase](#codebase)
     - [Technologies](#technologies)
