@@ -8,6 +8,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import Dropzone from 'react-dropzone';
 import { Column, Row } from 'simple-flexbox';
 
+import BottomNav from '../elements/BottomNav';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Popup from '../elements/Popup';
 import RadioButton from '../elements/RadioButton';
@@ -400,6 +401,7 @@ class UploadPage extends Component {
 						</Row>
 					</div>
 				</div>)}
+				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 
 				{this.state.popup.visible && (
 					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />

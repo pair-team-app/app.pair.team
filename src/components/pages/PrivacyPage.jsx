@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import './PrivacyPage.css';
 
+import BottomNav from '../elements/BottomNav';
+
 class PrivacyPage extends Component {
 	constructor(props) {
 		super(props);
@@ -46,6 +48,7 @@ class PrivacyPage extends Component {
 					<p>Children's Privacy Services are not directed to nor does Design Engine knowingly collect Personal Information from children under 13 years of age. If you learn that your child has provided us with Personal Information without your consent, you may alert us at privacy@Design Engine.com. If we learn that we have collected any Personal Information from children under 13, we will promptly take steps to delete such Personal Information and terminate the child's account.</p>
 					<p>California Privacy Rights California law permits users who are California residents to request and obtain from us once a year, free of charge, a list of the third parties to whom we have disclosed their Personal Information (if any) for their direct marketing purposes in the prior calendar year, as well as the type of Personal Information disclosed to those parties. We do not share Personal Information with third parties for their own marketing purposes.</p>
 				</div>
+				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 			</div>
 		);
 	}

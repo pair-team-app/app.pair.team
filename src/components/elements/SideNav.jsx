@@ -315,9 +315,8 @@ class SideNav extends Component {
 		const { uploads, pages, artboards } = this.state;
 		const scrollHeight = 80 + (((1 + uploads.length + pages.length + artboards.length) * 25) + 500 + 96);
 		const footerClass = (wrapper.current && scrollHeight > wrapper.current.clientHeight) ? 'side-nav-bottom-wrapper' : 'side-nav-bottom-wrapper-fixed';
-		const year = 2019;//new Date().getFullYear();
 
-		console.log('SideNav.render()', scrollHeight, (wrapper.current) ? wrapper.current.clientHeight : '');
+		//console.log('SideNav.render()', scrollHeight, (wrapper.current) ? wrapper.current.clientHeight : '');
 
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>
@@ -349,14 +348,7 @@ class SideNav extends Component {
 
 					{(cookie.load('user_id') !== '0') && (<div className="nav-link" onClick={() => this.props.onLogout()}>Logout</div>)}
 
-					<div className="nav-link" onClick={()=> window.open('https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA')}>Slack</div>
-					<div className="nav-link" onClick={()=> window.open('https://spectrum.chat/designengine')}>Spectrum</div>
-
-					<div className="nav-link" onClick={()=> this.props.onPage('api')}>API Docs</div>
-					<div className="nav-link" onClick={()=> this.props.onPage('mission')}>Mission</div>
-					<div className="nav-link" onClick={()=> this.props.onPage('terms')}>Terms of Service</div>
-					<div className="nav-link" onClick={()=> this.props.onPage('privacy')}>Privacy Policy</div>
-					<div className="copyright">&copy; {year}</div>
+					{/*<div className="nav-link" onClick={()=> this.props.onPage('mission')}>Mission</div>*/}
 				</div>
 			</div>
 		);

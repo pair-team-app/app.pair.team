@@ -1,0 +1,34 @@
+
+.bottom-nav-wrapper {
+	width: 100%;
+	margin: 20px 0;
+	font-size: 15px;
+	letter-spacing: -0.3px;
+}
+
+.bottom-nav-link-wrapper {
+	display: table;
+	margin-bottom: 5px;
+}
+
+.bottom-nav-link {
+	display: table-cell;
+	color: #0267D8;
+	text-decoration: underline;
+	padding-right: 40px;
+}
+
+.bottom-nav-link:hover, .bottom-nav-link a:hover {
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.bottom-nav-link a, .bottom-nav-link a:active, .bottom-nav-link a:link, .bottom-nav-link a:visited {
+	text-decoration: underline;
+	color: #0267D8;
+}
+
+.copyright {
+	font-family: "San Francisco Text", sans-serif;
+	color: #9b9b9b;
+}

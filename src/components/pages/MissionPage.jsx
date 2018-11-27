@@ -4,6 +4,7 @@ import './MissionPage.css';
 
 import { Column, Row } from 'simple-flexbox';
 
+import BottomNav from '../elements/BottomNav';
 import ReviewItem from '../iterables/ReviewItem';
 import reviews from '../../json/reviews.json';
 
@@ -66,6 +67,7 @@ class MissionPage extends Component {
 						</div>
 					</Row>
 				</div>
+				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 			</div>
 		);
 	}

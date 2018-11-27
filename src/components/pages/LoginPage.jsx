@@ -6,6 +6,8 @@ import axios from "axios/index";
 import cookie from "react-cookies";
 import { Column, Row } from 'simple-flexbox';
 
+import BottomNav from '../elements/BottomNav';
+
 class LoginPage extends Component {
 	constructor(props) {
 		super(props);
@@ -82,6 +84,7 @@ class LoginPage extends Component {
 						<Column><div className="page-link" onClick={()=> this.props.onPage('register')}>Sign Up</div></Column>
 					</Row></div>
 				</form>
+				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 			</div>
 		);
 	}

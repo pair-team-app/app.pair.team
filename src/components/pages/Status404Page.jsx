@@ -5,6 +5,8 @@ import './Status404Page.css';
 
 import { Row } from 'simple-flexbox';
 
+import BottomNav from '../elements/BottomNav';
+
 class DevelopersPage extends Component {
 	constructor(props) {
 		super(props);
@@ -21,6 +23,7 @@ class DevelopersPage extends Component {
 					<div className="page-header-text">Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.</div>
 					<Row horizontal="center"><button className="narrow-button" onClick={()=> this.props.onPage('')}>Go Home</button></Row>
 				</div>
+				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 			</div>
 		);
 	}

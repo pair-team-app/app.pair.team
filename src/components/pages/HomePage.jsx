@@ -7,6 +7,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
+import BottomNav from '../elements/BottomNav';
 import LoggedInPage from './LoggedInPage';
 import LoggedOutPage from './LoggedOutPage';
 import ArtboardItem from '../iterables/ArtboardItem';
@@ -183,6 +184,7 @@ class HomePage extends Component {
 						{items}
 					</Row>
 				</div>)}
+				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 
 				{this.state.popup.visible && (
 					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />

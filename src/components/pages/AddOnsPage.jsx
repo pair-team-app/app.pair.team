@@ -4,6 +4,7 @@ import './AddOnsPage.css';
 
 import { Column, Row } from 'simple-flexbox';
 
+import BottomNav from '../elements/BottomNav';
 import AddonItem from '../iterables/AddOnItem';
 import addOns from '../../json/add-ons.json';
 
@@ -45,6 +46,7 @@ class AddOnsPage extends Component {
 					{items}
 				</Row>
 				<h6>Last Updated: 10-13-2018</h6>
+				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 			</div>
 		);
 	}

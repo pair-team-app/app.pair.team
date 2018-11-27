@@ -7,6 +7,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
+import BottomNav from '../elements/BottomNav';
 import CommentItem from '../iterables/CommentItem';
 import Dropdown from '../elements/Dropdown';
 import SliceItem from '../iterables/SliceItem';
@@ -617,6 +618,7 @@ class InspectorPage extends Component {
 						</div>
 					</div>
 				</div>
+				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 
 				{this.state.popup.visible && (
 					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />

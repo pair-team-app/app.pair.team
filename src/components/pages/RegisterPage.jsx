@@ -7,6 +7,8 @@ import cookie from "react-cookies";
 import { Column, Row } from 'simple-flexbox';
 import ReactPixel from "react-facebook-pixel";
 
+import BottomNav from '../elements/BottomNav';
+
 class RegisterPage extends Component {
 	constructor(props) {
 		super(props);
@@ -95,6 +97,7 @@ class RegisterPage extends Component {
 						<Column><div className="page-link" onClick={()=> this.props.onPage('login')}>Sign In</div></Column>
 					</Row></div>
 				</form>
+				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 			</div>
 		);
 	}
