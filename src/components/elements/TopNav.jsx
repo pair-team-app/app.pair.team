@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './TopNav.css';
 
 import cookie from 'react-cookies';
+import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
 
 class TopNav extends Component {
@@ -36,9 +37,14 @@ class TopNav extends Component {
 				</Row></div>
 
 				<div className="top-nav-column top-nav-column-right">
-					<Column flexGrow={1} horizontal="end" vertical="center">
-						<button className="top-nav-upload-button" onClick={()=> this.props.onPage('register')}>Sign Up with Email</button>
-					</Column>
+					<Row horizontal="end" vertical="center">
+						{(cookie.load('user_id') === '0')
+							? (<button className="top-nav-upload-button" onClick={()=> this.props.onPage('register')}>Sign Up with Email</button>)
+							: (<Row vertical="center">
+									<img src="/images/default-avatar.png" className="top-nav-avatar" alt="Avatar" />
+									<FontAwesome name="caret-down" className="top-nav-profile-arrow" />
+							</Row>)}
+					</Row>
 				</div>
 			</div>
 		);

@@ -52,3 +52,19 @@
 	font-size: 14px;
 	padding: 3px 14px;
 }
+
+.top-nav-avatar {
+	width: 30px;
+	height: 30px;
+	border-radius: 4px;
+	margin-right: 10px;
+}
+
+.top-nav-profile-arrow {
+	font-size: 16px;
+	color: #ffffff;
+}
+
+.top-nav-avatar:hover, .top-nav-profile-arrow:hover {
+	cursor: pointer;
+}
