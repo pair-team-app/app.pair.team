@@ -67,4 +67,5 @@
 
 .top-nav-avatar:hover, .top-nav-profile-arrow:hover {
 	cursor: pointer;
+	opacity: 0.8;
 }
