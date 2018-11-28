@@ -8,8 +8,6 @@ import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
 import BottomNav from '../elements/BottomNav';
-import LoggedInPage from './LoggedInPage';
-import LoggedOutPage from './LoggedOutPage';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Popup from '../elements/Popup';
 
@@ -187,9 +185,6 @@ class HomePage extends Component {
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
-				{(parseInt(cookie.load('user_id'), 10) === 0 && parseInt(this.props.uploadID, 10) === 0) && (<LoggedOutPage onPage={(url)=> this.props.onPage(url)} onPayment={()=> this.props.onPayment()} />)}
-				{(parseInt(cookie.load('user_id'), 10) !== 0 && parseInt(this.props.uploadID, 10) === 0) && (<LoggedInPage onPage={(url)=> this.props.onPage(url)} onPayment={()=> this.props.onPayment()}/>)}
-
 				{(parseInt(this.props.uploadID, 10) !== 0) && (<div>
 					<Row vertical="start">
 						<Column flexGrow={1} horizontal="center">
