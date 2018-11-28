@@ -4,6 +4,7 @@ import './SideNav.css'
 
 import axios from 'axios';
 import cookie from 'react-cookies';
+import { Column, Row } from 'simple-flexbox';
 
 import UploadTreeItem from '../iterables/UploadTreeItem';
 
@@ -131,7 +132,7 @@ class SideNav extends Component {
 	refreshUploads = ()=> {
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
-		formData.append('user_id', cookie.load('user_id'));
+		formData.append('user_id', (typeof cookie.load('user_id') !== 'undefined') ? cookie.load('user_id') : '0');
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD_NAMES', response.data);
@@ -312,17 +313,17 @@ class SideNav extends Component {
 	};
 
 	render() {
-		const { uploads, pages, artboards } = this.state;
-		const scrollHeight = 80 + (((1 + uploads.length + pages.length + artboards.length) * 25) + 500 + 96);
-		const footerClass = (wrapper.current && scrollHeight > wrapper.current.clientHeight) ? 'side-nav-bottom-wrapper' : 'side-nav-bottom-wrapper-fixed';
-
+		const { uploads } = this.state;
 		//console.log('SideNav.render()', scrollHeight, (wrapper.current) ? wrapper.current.clientHeight : '');
 
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>
 				<div className="side-nav-top-wrapper">
-					<button className="side-nav-invite-button" onClick={()=> this.handleInvite()}>Invite Team Members</button>
-					<h3 className="side-nav-header">Projects</h3>
+					{/*<button className="side-nav-invite-button" onClick={()=> this.handleInvite()}>Invite Team Members</button>*/}
+					<h3 className="side-nav-header"><Row vertical="center" style={{width:'100%'}}>
+						<Column flexGrow={1} horizontal="start">Projects</Column>
+						<Column flexGrow={1} horizontal="end"><button className="side-nav-upload-button" onClick={()=> this.handleUplaod()}>New</button></Column>
+					</Row></h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
 						{uploads.map((upload, i) => {
 							return (
@@ -338,17 +339,21 @@ class SideNav extends Component {
 							);
 						})}
 					</div>
-					<div className="nav-link" onClick={()=> this.handleUplaod()}>New Project</div>
+					<div className="side-nav-link">Explore More</div>
 				</div>
-				<div className={footerClass}>
+				<div className="side-nav-team-wrapper">
+					<h6>Your teams</h6>
+					Team support coming soon. <span className="page-link" onClick={()=> window.open('https://github.com/de-ai/designengine.ai/projects/1')}>Roadmap</span>
+				</div>
+				<div className="side-nav-account-wrapper">
+					<h6>Account</h6>
+					{(cookie.load('user_id') !== '0') && (<div className="nav-link" onClick={() => this.props.onPage('profile')}>Profile</div>)}
 					{(cookie.load('user_id') === '0') && (<div>
-						<div className="nav-link" onClick={() => this.props.onPage('register')}>Sign Up with Email</div>
-						<div className="nav-link" onClick={() => this.props.onPage('login')}>Sign In</div>
+						<div className="nav-link" onClick={() => this.props.onPage('register')}>Sign Up</div>
+						<div className="nav-link" onClick={() => this.props.onPage('login')}>Login</div>
 					</div>)}
 
-					{(cookie.load('user_id') !== '0') && (<div className="nav-link" onClick={() => this.props.onLogout()}>Logout</div>)}
-
-					{/*<div className="nav-link" onClick={()=> this.props.onPage('mission')}>Mission</div>*/}
+					{(cookie.load('user_id') !== '0') && (<div className="nav-link" onClick={() => this.props.onLogout()}>Sign Out</div>)}
 				</div>
 			</div>
 		);

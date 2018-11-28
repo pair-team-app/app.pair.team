@@ -5,12 +5,6 @@
 	width: fit-content;
 }
 
-.page-tree-item-arrow {
-	margin-right: 8px;
-	width: 10px;
-	height: 10px;
-}
-
 .page-tree-item-text {
 }
 
@@ -25,5 +19,5 @@
 }
 
 .page-tree-item-artboards {
-	margin: 12px 0 0 8px;
+	margin: 12px 0 0 18px;
 }

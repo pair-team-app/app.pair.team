@@ -2,8 +2,6 @@
 import React, { Component } from 'react';
 import './ArtboardTreeItem.css';
 
-import { Row } from 'simple-flexbox';
-
 class ArtboardTreeItem extends Component {
 	constructor(props) {
 		super(props);
@@ -17,7 +15,7 @@ class ArtboardTreeItem extends Component {
 	}
 
 	static getDerivedStateFromProps(nextProps) {
-		return ({ title : (nextProps.title.length > 30) ? (nextProps.title.substring(0, 29) + '…') : nextProps.title });
+		return ({ title : (nextProps.title.length > 24) ? (nextProps.title.substring(0, 23) + '…') : nextProps.title });
 	}
 
 	render() {
@@ -25,10 +23,7 @@ class ArtboardTreeItem extends Component {
 
 		return (
 			<div className="artboard-tree-item">
-				<div className={textClass} onClick={()=> this.props.onClick()}><Row vertical="center">
-					<img className="side-nav-arrow" src="/images/chevron-right.svg" alt="chevron" />
-					{this.state.title}
-				</Row></div>
+				<div className={textClass} onClick={()=> this.props.onClick()}>{this.state.title}</div>
 			</div>
 		);
 	}

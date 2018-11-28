@@ -6,6 +6,12 @@
 	width: fit-content;
 }
 
+.upload-tree-item-icon {
+	width: 20px;
+	height: 20px;
+	margin: 0 8px 0 0;
+}
+
 .upload-tree-item-text {
 }
 
@@ -20,5 +26,5 @@
 }
 
 .upload-tree-item-artboards {
-	margin: 12px 0 0 8px;
+	margin: 12px 0 0 40px;
 }

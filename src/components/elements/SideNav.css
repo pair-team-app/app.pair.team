@@ -9,26 +9,48 @@
 	border-right: 1px solid #eaecef;
 	padding: 24px;
 	letter-spacing: -0.27px;
-}
-
-.side-nav-link-wrapper {
-	margin: 28px;
-	height: 100%;
+	color: #999999;
 }
 
 .side-nav-top-wrapper {
-}
-
-.side-nav-invite-button {
-	width: 100%;
-	margin-bottom: 28px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #eaecef;
 }
 
 .side-nav-header {
 	margin-bottom: 28px;
 }
 
+.side-nav-upload-button {
+	font-family: "San Francisco Text", sans-serif;
+	font-size: 14px;
+	padding: 3px 14px;
+}
+
 .side-nav-tree-wrapper {
+}
+
+.side-nav-link {
+	font-size: 12px;
+	color: #999999;
+	text-decoration: underline;
+	margin: 20px 0;
+}
+
+.side-nav-link:hover {
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.side-nav-team-wrapper {
+	font-size: 12px;
+	padding: 20px 0;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #eaecef;
+}
+
+.side-nav-account-wrapper {
+
 }
 
 .side-nav-bottom-wrapper {
@@ -50,7 +72,8 @@
 .nav-link {
 	width: fit-content;
 	color: #0267D8;
-	margin-bottom: 15px;
+	margin-bottom: 5px;
+	font-size: 12px;
 }
 
 .nav-link:hover, .nav-link a:hover {

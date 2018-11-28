@@ -112,6 +112,12 @@
 	color: #7ed321;
 }
 
+.updated-timestamp {
+	font-family: "San Francisco Text", sans-serif;
+	font-size: 18px;
+	font-style: italic;
+}
+
 .faq-block {
 	margin-bottom: 58px;
 }

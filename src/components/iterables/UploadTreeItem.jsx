@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import './UploadTreeItem.css';
 
+import { Row } from 'simple-flexbox';
+
 import PageTreeItem from './PageTreeItem';
 
 class UploadTreeItem extends Component {
@@ -17,7 +19,7 @@ class UploadTreeItem extends Component {
 	}
 
 	static getDerivedStateFromProps(nextProps) {
-		return ({ title : (nextProps.title.length > 32) ? (nextProps.title.substring(0, 31) + '…') : nextProps.title });
+		return ({ title : (nextProps.title.length > 28) ? (nextProps.title.substring(0, 27) + '…') : nextProps.title });
 	}
 
 	render() {
@@ -27,7 +29,7 @@ class UploadTreeItem extends Component {
 			return (
 				<PageTreeItem
 					key={i}
-					title={page.title + ' (' + page.total + ')'}
+					title={page.title}
 					description={page.description}
 					artboards={page.artboards}
 					selected={page.selected}
@@ -38,7 +40,10 @@ class UploadTreeItem extends Component {
 
 		return (
 			<div className="upload-tree-item">
-				<div className={textClass} onClick={()=> this.props.onClick()}>{this.state.title}</div>
+				<Row vertical="center">
+					<img src="/images/icon-sketch.png" className="upload-tree-item-icon" alt="Icon" />
+					<div className={textClass} onClick={()=> this.props.onClick()}>{this.state.title}</div>
+				</Row>
 				{(this.props.selected) && (<div className="upload-tree-item-artboards">
 					{pages}
 				</div>)}

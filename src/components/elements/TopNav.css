@@ -14,11 +14,11 @@
 }
 
 .top-nav-column-left {
-	width: 400px;
+	width: 800px;
 }
 
 .top-nav-column-right {
-	padding-right: 8px;
+	padding-right: 20px;
 	text-align: right;
 }
 
@@ -48,6 +48,7 @@
 }
 
 .top-nav-upload-button {
-	padding: 10px 25px;
-	border-radius: 3px;
+	font-family: "San Francisco Text", sans-serif;
+	font-size: 14px;
+	padding: 3px 14px;
 }
