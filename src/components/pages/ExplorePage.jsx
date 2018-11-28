@@ -65,21 +65,24 @@ class ExplorePage extends Component {
 			<div className="page-wrapper explore-page-wrapper">
 				<Row vertical="start">
 					<Column flexGrow={1} horizontal="center">
-						{(cookie.load('user_id') === '0') ? (<div className="page-header">
-							<Row horizontal="center"><h1>Design for Engineers</h1></Row>
-							<div className="page-header-text">Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.</div>
-							<Row horizontal="center">
-								<button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign Up with Email</button>
-								<button onClick={()=> this.props.onPage('login')}>Sign In</button>
-							</Row>
-						</div>) : (<div className="page-header">
-							<Row horizontal="center"><h1>To begin start a new project</h1></Row>
-							<div className="page-header-text">Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.</div>
-							<Row horizontal="center">
-								<button className="adjacent-button" onClick={()=> this.props.onPage('upload')}>New Project</button>
-								<button onClick={()=> this.props.onPage('invite-team')}>Invite Team Members</button>
-							</Row>
-						</div>)}
+						{(cookie.load('user_id') === '0')
+							? (<div className="page-header">
+									<Row horizontal="center"><h1>Design for Engineers</h1></Row>
+									<div className="page-header-text">Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.</div>
+									<Row horizontal="center">
+										<button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign Up with Email</button>
+										<button onClick={()=> this.props.onPage('login')}>Sign In</button>
+									</Row>
+							</div>)
+							: (<div className="page-header">
+									<Row horizontal="center"><h1>To begin start a new project</h1></Row>
+									<div className="page-header-text">Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.</div>
+									<Row horizontal="center">
+										<button className="adjacent-button" onClick={()=> this.props.onPage('upload')}>New Project</button>
+										<button onClick={()=> this.props.onPage('invite-team')}>Invite Team Members</button>
+									</Row>
+								</div>
+							)}
 					</Column>
 				</Row>
 				{(cookie.load('user_id') !== '0') && (<div>

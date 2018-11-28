@@ -603,11 +603,11 @@ class InspectorPage extends Component {
 							<Row><Column flexGrow={1}>Color:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.meta.fillColor.toUpperCase() : 'N/A'}</Column></Row>
 							{(slice && slice.type === 'textfield') && (<div>
 								{/*<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.family) ? slice.meta.font.family : 'N/A'}</Column></Row>*/}
-								<Row><Column flexGrow={1}>Font:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard.system.title.toLowerCase().includes('ios')) ? 'SFProText' : 'Roboto'}</Column></Row>
+								<Row><Column flexGrow={1}>Font:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">San Francisco Text</Column></Row>
 								<Row><Column flexGrow={1}>Font size:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.size + 'px')}</Column></Row>
 								<Row><Column flexGrow={1}>Font color:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : 'N/A'}</Column></Row>
 								<Row><Column flexGrow={1}>Line Height:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.lineHeight) ? (slice.meta.font.lineHeight + 'px') : 'N/A'}</Column></Row>
-								<Row><Column flexGrow={1}>Letter Spacing:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.kerning) ? (slice.meta.font.kerning + 'px') : 'N/A'}</Column></Row>
+								<Row><Column flexGrow={1}>Letter Spacing:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice.meta.font.kerning) ? (slice.meta.font.kerning.toFixed(2) + 'px') : 'N/A'}</Column></Row>
 							</div>)}
 							{(styles) && (<div>
 								<Row><Column flexGrow={1}>Stroke:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.stroke) ? (styles.stroke.position.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) + ' S: ' + styles.stroke.thickness + ' ' + styles.stroke.color) : 'N/A'}</Column></Row>

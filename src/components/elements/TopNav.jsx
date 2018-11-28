@@ -4,7 +4,7 @@ import './TopNav.css';
 
 import cookie from 'react-cookies';
 import FontAwesome from 'react-fontawesome';
-import { Column, Row } from 'simple-flexbox';
+import { Row } from 'simple-flexbox';
 
 class TopNav extends Component {
 	constructor(props) {
