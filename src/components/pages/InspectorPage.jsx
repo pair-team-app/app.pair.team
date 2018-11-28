@@ -506,7 +506,7 @@ class InspectorPage extends Component {
 				/>);
 		}) : [];
 
-		return (
+		return (<div style={{paddingBottom:'30px'}}>
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
 					{/*<div className="inspector-page-title">{(artboard) ? artboard.title : 'Loading…'}</div>*/}
@@ -618,13 +618,12 @@ class InspectorPage extends Component {
 						</div>
 					</div>
 				</div>
-				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
-
 				{this.state.popup.visible && (
 					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
 				)}
 			</div>
-		);
+			<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
+		</div>);
 	}
 }
 
