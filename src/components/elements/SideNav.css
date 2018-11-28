@@ -4,7 +4,7 @@
 	top: 58px;
 	width: 300px;
 	overflow-y: scroll;
-	height: 100%;
+	height: calc(100% - 58px);
 	background-color: #fafbfc;
 	border-right: 1px solid #eaecef;
 	padding: 24px;
