@@ -329,7 +329,7 @@ class SideNav extends Component {
 							return (
 								<UploadTreeItem
 									key={i}
-									title={upload.title + ' (' + upload.total + ')'}
+									title={upload.title}
 									author={upload.author}
 									pages={upload.pages}
 									selected={upload.selected}
