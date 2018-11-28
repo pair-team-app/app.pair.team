@@ -8,12 +8,12 @@
 	background-color: #fafbfc;
 	border-right: 1px solid #eaecef;
 	padding: 24px;
-	letter-spacing: -0.27px;
-	color: #999999;
+	letter-spacing: -0.2px;
+	color: #9b9b9b;
 }
 
 .side-nav-top-wrapper {
-	padding-bottom: 20px;
+	padding-bottom: 15px;
 	border-bottom: 1px solid #eaecef;
 }
 
@@ -22,9 +22,11 @@
 }
 
 .side-nav-upload-button {
-	font-family: "San Francisco Text", sans-serif;
-	font-size: 14px;
-	padding: 3px 14px;
+	font-family: "San Francisco Text Bold", sans-serif;
+	font-size: 13px;
+	letter-spacing: -0.43px;
+	padding: 4px 14px;
+	/*border-radius: 6px;*/
 }
 
 .side-nav-tree-wrapper {
@@ -35,6 +37,7 @@
 	color: #999999;
 	text-decoration: underline;
 	margin: 20px 0;
+	width: fit-content;
 }
 
 .side-nav-link:hover {
@@ -44,8 +47,8 @@
 
 .side-nav-team-wrapper {
 	font-size: 12px;
-	padding: 20px 0;
-	margin-bottom: 10px;
+	padding: 24px 0;
+	margin-bottom: 15px;
 	border-bottom: 1px solid #eaecef;
 }
 

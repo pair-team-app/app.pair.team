@@ -99,10 +99,10 @@ h5 {
 }
 
 h6 {
-  font-family: "San Francisco Text Medium", sans-serif;
+  font-family: "San Francisco Text Bold", sans-serif;
   font-size: 12px;
-  color: #000000;
-  margin: 0 0 10px 0;
+  color: #483e37;
+  margin: 0 0 15px 0;
 }
 
 p {
