@@ -75,73 +75,44 @@ class HomePage extends Component {
 					}
 				});
 
-				if (this.props.pageID >= 0) {
-					formData.append('action', 'PAGE');
-					formData.append('page_id', this.props.pageID);
-					axios.post('https://api.designengine.ai/system.php', formData)
-						.then((response) => {
-							console.log('PAGE', response.data);
-							this.setState({ pageTitle : (this.props.pageID === 0) ? title : response.data.page.title });
+				formData.append('action', 'PAGE');
+				formData.append('page_id', this.props.pageID);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response) => {
+						console.log('PAGE', response.data);
+						this.setState({ pageTitle : (this.props.pageID === 0) ? title : response.data.page.title });
 
-							formData.append('action', 'ARTBOARDS');
-							formData.append('upload_id', this.props.uploadID);
-							formData.append('page_id', (this.props.pageID === 0) ? '-1' : this.props.pageID);
-							axios.post('https://api.designengine.ai/system.php', formData)
-								.then((response) => {
-									console.log('ARTBOARDS', response.data);
+						formData.append('action', 'ARTBOARDS');
+						formData.append('upload_id', this.props.uploadID);
+						formData.append('page_id', (this.props.pageID === 0) ? '-1' : this.props.pageID);
+						axios.post('https://api.designengine.ai/system.php', formData)
+							.then((response) => {
+								console.log('ARTBOARDS', response.data);
 
-									const artboards = response.data.artboards.map((item) => ({
-										id       : item.id,
-										pageID   : item.page_id,
-										title    : item.title,
-										type     : item.type,
-										filename : item.filename,
-										meta     : JSON.parse(item.meta),
-										added    : item.added,
-										selected : false
-									}));
+								const artboards = response.data.artboards.map((item) => ({
+									id       : item.id,
+									pageID   : item.page_id,
+									title    : item.title,
+									type     : item.type,
+									filename : item.filename,
+									meta     : JSON.parse(item.meta),
+									added    : item.added,
+									selected : false
+								}));
 
-									this.setState({
-										uploadID          : uploadID,
-										uploadTitle       : title,
-										uploadDescription : description,
-										uploadTotal       : total,
-										uploadURL         : uploadURL,
-										artboards         : artboards
-									});
-								}).catch((error) => {
-							});
-						}).catch((error) => {
-					});
-
-				} else {
-					formData.append('action', 'EXPLORE');
-					axios.post('https://api.designengine.ai/system.php', formData)
-						.then((response) => {
-							console.log('EXPLORE', response.data);
-
-							const artboards = response.data.artboards.map((item) => ({
-								id       : item.id,
-								pageID   : item.page_id,
-								title    : item.title,
-								type     : item.type,
-								filename : item.filename,
-								meta     : JSON.parse(item.meta),
-								added    : item.added,
-								selected : false
-							}));
-
-							this.setState({
-								uploadID          : uploadID,
-								uploadTitle       : title,
-								uploadDescription : description,
-								uploadTotal       : total,
-								uploadURL         : uploadURL,
-								artboards         : artboards
-							});
-						}).catch((error) => {
-					});
-				}
+								this.setState({
+									uploadID          : uploadID,
+									uploadTitle       : title,
+									uploadDescription : description,
+									uploadTotal       : total,
+									uploadURL         : uploadURL,
+									artboards         : artboards,
+									pageTitle         : this.state.pageTitle + ' (' + (artboards.length) + ')'
+								});
+							}).catch((error) => {
+						});
+					}).catch((error) => {
+				});
 			}).catch((error) => {
 		});
 	};
@@ -192,14 +163,13 @@ class HomePage extends Component {
 								<Row horizontal="center"><h1>{this.state.uploadTitle}</h1></Row>
 								<div className="page-header-text">{(this.state.uploadDescription !== '') ? this.state.uploadDescription + '. ' : ''}Design Engine parsed {this.state.uploadTotal} pages, artboards, symbols, fonts, and more from {this.state.uploadTitle}'s Design Source.</div>
 								<Row horizontal="center">
-									<button className="adjacent-button" onClick={()=> this.handleDownload()}>Download Project</button>
+									<button className="adjacent-button" onClick={()=> this.handleDownload()}>Download Parts</button>
+									<button className="adjacent-button">Clone Project</button>
+									<button className="adjacent-button" onClick={()=> this.props.onPage('invite-team')}>Invite Team Members</button>
 									<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={this.state.uploadURL}>
-										<button>Copy Project Link</button>
+										<button>Copy Project URL</button>
 									</CopyToClipboard>
 								</Row>
-								<Row horizontal="center"><div className="page-header-url">
-									<a href={this.state.uploadURL} target="_blank" rel="noopener noreferrer">{this.state.uploadURL}</a>
-								</div></Row>
 							</div>
 						</Column>
 					</Row>
