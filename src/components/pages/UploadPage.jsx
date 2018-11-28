@@ -32,6 +32,7 @@ class UploadPage extends Component {
 			totalElements      : 0,
 			uploading          : false,
 			uploadComplete     : false,
+			submitted          : false,
 			downloadComplete   : false,
 			sentInvites        : false,
 			action             : '',
@@ -165,7 +166,8 @@ class UploadPage extends Component {
 	};
 
 	handleSubmit = ()=> {
-		if (this.state.uploadComplete) {
+		if (this.state.uploadComplete && !this.state.submitted) {
+			this.setState({ submitted : true });
 			let formData = new FormData();
 			formData.append('action', 'UPLOAD');
 			formData.append('user_id', cookie.load('user_id'));
@@ -293,7 +295,7 @@ class UploadPage extends Component {
 
 		const titleClass = (action === '') ? 'input-wrapper' : (action === 'UPLOAD' && this.state.uploadTitle === '') ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 
-		const nextButtonClass = (uploadComplete && this.state.uploadTitle.length > 0) ? 'narrow-button' : 'narrow-button button-disabled';
+		const nextButtonClass = (uploadComplete && this.state.uploadTitle.length > 0 && !this.state.submitted) ? 'narrow-button' : 'narrow-button button-disabled';
 // 		const inviteButtonClass = (email1.length > 0 || email2.length > 0 || email3.length > 0) ? '' : 'button-disabled';
 
 		let title = '';
