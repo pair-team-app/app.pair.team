@@ -2,8 +2,9 @@
 .bottom-nav-wrapper {
 	width: 100%;
 	margin: 20px 0;
-	font-size: 15px;
-	letter-spacing: -0.3px;
+	font-family: "San Francisco Text Bold", sans-serif;
+	font-size: 12px;
+	letter-spacing: -0.4px;
 }
 
 .bottom-nav-link-wrapper {
@@ -15,7 +16,7 @@
 	display: table-cell;
 	color: #0267D8;
 	text-decoration: underline;
-	padding-right: 40px;
+	padding-right: 24px;
 }
 
 .bottom-nav-link:hover, .bottom-nav-link a:hover {
@@ -29,6 +30,7 @@
 }
 
 .copyright {
-	font-family: "San Francisco Text", sans-serif;
+	font-family: "San Francisco Text SemiBold", sans-serif;
+	letter-spacing: -0.4px;
 	color: #9b9b9b;
 }
