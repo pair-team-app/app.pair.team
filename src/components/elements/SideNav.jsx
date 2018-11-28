@@ -339,7 +339,7 @@ class SideNav extends Component {
 							);
 						})}
 					</div>
-					<div className="side-nav-link">Explore More</div>
+					<div className="side-nav-link" onClick={()=> this.props.onPage('explore')}>Explore More</div>
 				</div>
 				<div className="side-nav-team-wrapper">
 					<h6>Your teams</h6>
