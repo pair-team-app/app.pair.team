@@ -28,3 +28,4 @@ public/stripe_checkout.php
 src/stripe.json
 
 src/stripe.json
+src/json/stripe-creds.json
