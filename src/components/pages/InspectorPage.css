@@ -26,6 +26,7 @@
 	width: 100%;
 	height: 600px;
 	background-color: #111111;
+	overflow: hidden;
 }
 
 .inspector-page-hero-image, .inspector-page-hero-slice-wrapper {
@@ -42,10 +43,12 @@
 	top: 0;
 	left: 0;
 	z-index: 2;
+	display: none;
 }
 
 .inspector-page-hero-slice-wrapper {
 	z-index: 3;
+	display: none;
 }
 
 .inspector-page-hero-image-landscape {
