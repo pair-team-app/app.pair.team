@@ -1,382 +1,269 @@
 
-// todo: select all button
-// todo: comprehend details to checkout
-
-/*
-http://www.pictaculous.com/api/
-http://colormind.io/
-http://www.colr.org/api.html
-https://coolors.co/
-http://www.thecolorapi.com/
- */
-
 import React, { Component } from 'react';
 import './App.css';
 
 import axios from 'axios';
 import cookie from 'react-cookies';
-// import { geolocated } from 'react-geolocated';
 import ReactPixel from 'react-facebook-pixel';
-import { Column } from 'simple-flexbox';
+import { Route, Switch, withRouter } from 'react-router-dom'
 
-import BottomNav from './components/elements/BottomNav';
-import DownloadStep from './components/steps/DownloadStep';
-import DetailsStep from './components/steps/DetailsStep';
-import GeneratingStep from './components/steps/GeneratingStep';
-import GetStartedStep from './components/steps/GetStartedStep';
-import ManifestoStep from './components/steps/ManifestoStep';
-import PrivacyStep from './components/steps/PrivacyStep';
-import PurchaseStep from './components/steps/PurchaseStep';
-import TemplateStep from './components/steps/TemplateStep';
-import TermsStep from './components/steps/TermsStep';
-import Tooltip from './components/elements/Tooltip';
+import SideNav from './components/elements/SideNav';
 import TopNav from './components/elements/TopNav';
+import AddOnsPage from './components/pages/AddOnsPage';
+import APIPage from './components/pages/APIPage';
+import ExplorePage from './components/pages/ExplorePage';
+import HomePage from './components/pages/HomePage';
+import InspectorPage from './components/pages/InspectorPage';
+import InviteTeamPage from "./components/pages/InviteTeamPage";
+import LoginPage from './components/pages/LoginPage';
+import MissionPage from './components/pages/MissionPage';
+import PrivacyPage from './components/pages/PrivacyPage';
+import RegisterPage from './components/pages/RegisterPage';
+import Status404Page from './components/pages/Status404Page';
+import TermsPage from './components/pages/TermsPage';
+import UploadPage from './components/pages/UploadPage';
+
+import StripeOverlay from './components/elements/StripeOverlay';
+
+
+const wrapper = React.createRef();
 
 class App extends Component {
 	constructor(props) {
-// 		console.log("constructor()");
-
 		super(props);
 
-		this.state = {
-			orderID : 0,
-		  step : 0,
-			pages : {
-				isIntro : false,
-				isProjects : false,
-				isFAQ : false,
-				isUsers : false
-			},
-			isTooltip : false,
-			amount : 0.00,
-			selectedItems : null,
-			purchasedItems : null,
-			tooltip: {
-		  	isAnimated : true,
-				txt        : ''
-			},
-			comprehend : []
-		};
+		const artboardPatt = /\/artboard\/\d+\/\d+\/\d+\/.*$/;
+		const uploadPatt = /\/doc\/\d+\/.*$/;
 
-		this.templateID = 0;
-		this.images = [];
-		this.interval = null;
+		this.state = {
+			uploadID          : (artboardPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/(\d+)\/.*$/)[1] : (uploadPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/doc\/(\d+)\/.*$/)[1] : 0,
+			pageID            : (artboardPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/\d+\/(\d+)\/.*$/)[1] : 0,
+			artboardID        : (artboardPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
+			sliceID           : 0,//(window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/.+\/(\d+)?/)[1] : 0,
+			selectedArtboards : [],
+			overlayAlert      : null,
+			userID            : 0,
+			popupVisible      : false
+		};
 	}
 
 	componentDidMount() {
-		const advancedMatching = { em: 'some@email.com' }; // optional, more info: https://developers.facebook.com/docs/facebook-pixel/pixel-with-ads/conversion-tracking#advanced_match
+		const advancedMatching = { em: 'some@email.com' };
 		const options = {
-			autoConfig : true, 	// set pixel's autoConfig
-			debug      : false, // enable logs
+			autoConfig : true,
+			debug      : false
 		};
+
+		if (typeof cookie.load('user_id') === 'undefined') {
+			cookie.save('user_id', '0', { path : '/' });
+		}
+
 		ReactPixel.init('318191662273348', advancedMatching, options);
 		ReactPixel.trackCustom('load');
+
+		if (window.location.pathname.includes('/artboard/')) {
+			let formData = new FormData();
+
+			if (this.state.uploadID === 0) {
+				formData.append('action', 'PAGE');
+				formData.append('page_id', this.state.pageID);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response) => {
+						console.log('PAGE', response.data);
+						this.setState({ uploadID : response.data.page.upload_id });
+					}).catch((error) => {
+				});
+			}
+
+			formData.append('action', 'ADD_VIEW');
+			formData.append('artboard_id', this.state.artboardID);
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response) => {
+					console.log('ADD_VIEW', response.data);
+				}).catch((error) => {
+			});
+		}
 	}
 
-	componentWillUnmount() {
-	}
-
-	showStatus(tooltip) {
-		//let self = this;
+	handleHome = ()=> {
+		wrapper.current.scrollTo(0, 0);
 
 		this.setState({
-			isTooltip : true,
-			tooltip : tooltip
+			uploadID   : 0,
+			pageID     : 0,
+			artboardID : 0
 		});
-	}
 
-	handleSystem(systemID) {
-		console.log("handleSystem()", systemID);
-		window.scrollTo(0, 0);
+		this.props.history.push('/');
+	};
 
-		this.setState({ step : 5 });
-		this.handleMakeOrder({
-			templateID : systemID,
-			email      : 'orders@designengine.ai',
-			title      : 'Untitled'
-		});
-	}
+	handleSideNavUploadItem = (obj)=> {
+		console.log('handleSideNavUploadItem()', obj);
 
-	handleGettingStartedStep() {
-		console.log("handleGettingStartedStep()");
-		window.scrollTo(0, 0);
+		if (obj.selected) {
+			this.props.history.push('/doc/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+
+		} else {
+			this.props.history.push('/explore');
+		}
 
 		this.setState({
-			step      : 0,
-			isTooltip : false
+			uploadID   : (obj.selected) ? obj.id : 0,
+			pageID     : 0,
+			artboardID : 0
 		});
-	}
+	};
 
-	handleTemplateStep() {
-		console.log("handleTemplateStep()");
+	handleSideNavPageItem = (obj)=> {
+		console.log('handleSideNavPageItem()', obj);
+		this.setState({ pageID : (obj.selected) ? obj.id : 0 });
+	};
 
-		window.scrollTo(0, 0);
-// 		this.setState({ step : 3 });
-		this.setState({ step : 4 });
-	}
-
-	handleDetailsStep(id) {
-		console.log("handleDetailsStep("+id+")");
-		ReactPixel.trackCustom('get-started');
-
-		this.templateID = id;
-		window.scrollTo(0, 0);
-
-		this.setState({ step : 4 });
-	}
-
-	handleMakeOrder(obj) {
-		console.log("handleMakeOrder()", obj);
-
-// 		this.showStatus({
-// 			isAnimated : true,
-// 			txt        : 'Rendering dataset into Design Engine AI.'
-// 		});
-
-		let self = this;
-		this.templateID = obj.templateID;
-
-		cookie.save('template_id', this.templateID, { path : '/' });
-
+	handleSideNavArtboardItem = (obj)=> {
+		console.log('handleSideNavArtboardItem()', obj);
 		let formData = new FormData();
-		formData.append('action', 'MAKE_ORDER');
-		formData.append('template_id', this.templateID);
-		formData.append('email', obj.email);
-		formData.append('title', obj.title);
-		axios.post('https://api.designengine.ai/templates.php', formData)
-			.then((response)=> {
-				console.log("MAKE_ORDER", JSON.stringify(response.data));
-				cookie.save('order_id', response.data.order_id, { path : '/' });
-				self.setState({ orderID : response.data.order_id });
+		formData.append('action', 'ADD_VIEW');
+		formData.append('artboard_id', obj.id);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+				console.log('ADD_VIEW', response.data);
+				this.props.history.push('/artboard/' + this.state.uploadID + '/' + obj.pageID + '/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+				this.setState({
+					pageID     : obj.pageID,
+					artboardID : obj.id
+				});
 			}).catch((error) => {
 		});
-	}
+	};
 
-	handleGeneratingStep(obj) {
-		ReactPixel.trackCustom('generating');
+	handleSideNavSliceItem = (obj)=> {
+		console.log('handleSideNavSliceItem()', obj);
+// 		this.props.history.push('/artboard/' + this.state.pageID + '/' + this.state.artboardID + '/' + obj.id);
+// 		this.setState({ sliceID : obj.id });
+	};
 
-		window.scrollTo(0, 0);
-		console.log("handleGeneratingStep("+JSON.stringify(obj)+")");
-		this.setState({ step : 5 });
-	}
+	handleArtboardClicked = (artboard)=> {
+		console.log('handleArtboardClicked()', artboard);
+		wrapper.current.scrollTo(0, 0);
 
-	handlePurchaseStep(obj) {
-		ReactPixel.trackCustom('checkout');
-
-		this.showStatus({
-			txt : 'Design Engine has stopped.'
+		let formData = new FormData();
+		formData.append('action', 'ADD_VIEW');
+		formData.append('artboard_id', artboard.id);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+				console.log('ADD_VIEW', response.data);
+				this.props.history.push('/artboard/' + this.state.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + artboard.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+				this.setState({
+					pageID     : artboard.pageID,
+					artboardID : artboard.id
+				});
+			}).catch((error) => {
 		});
+	};
 
-		this.handleDownloadStep();
+	handleOverlay = (overlayType, buttonType)=> {
+		console.log('handleOverlay()', overlayType, buttonType);
+		this.setState({ overlayAlert : null });
+		if (overlayType === 'register') {
+			if (buttonType === 'submit') {
+				window.location.reload();
+			}
 
-// 		console.log("handlePurchaseStep("+JSON.stringify(obj)+")");
-// 		window.scrollTo(0, 0);
-// 		this.setState({
-// 			step : 6,
-// 			selectedItems : obj
-// 		});
-	}
+		} else if (overlayType === 'upload') {
+			if (buttonType === 'background') {
+				window.location.reload();
 
-	handleDownloadStep() {
-		console.log("handleDownloadStep()");
-		window.scrollTo(0, 0);
-		this.setState({ step : 7 });
-	}
+			} else if (buttonType === 'complete') {
+				window.location.reload();
+			}
+		}
+	};
 
-	handleProjects() {
-		console.log("handleProjects()");
-		let self = this;
-		let pages = this.state.pages;
-		pages.isProjects = true;
+	handleAddOns = ()=> {
+		console.log('handleAddOns()');
+// 		this.setState({ overlayAlert: 'download' });
+	};
 
-		this.setState({
-			step : 0,
-			pages : pages
-		});
+	handleLogout = ()=> {
+		this.props.history.push('/');
 
-		setTimeout(function() {
-			pages.isProjects = false;
-			self.setState({ pages : pages })
-		}, 1000);
-	}
+		cookie.save('user_id', '0', { path : '/' });
+		this.setState({ userID : 0 });
+	};
 
-	handleFAQ() {
-		console.log("handleFAQ()");
-		window.scrollTo(0, 0);
+	handlePage = (url)=> {
+		console.log('handlePage()', url);
+		wrapper.current.scrollTo(0, 0);
 
-		let pages = this.state.pages;
-		pages.isFAQ = true;
+		if (url === '//') {
+			this.props.history.goBack();
 
-		this.setState({
-			step : 0,
-			pages : pages
-		});
-	}
+		} else if (url === '') {
+			this.setState({
+				uploadID   : 0,
+				pageID     : 0,
+				artboardID : 0
+			});
 
-	handleUsers() {
-		console.log("handleUsers()");
-		window.scrollTo(0, 0);
+			this.props.history.push('/');
 
-		let pages = this.state.pages;
-		pages.isUsers = true;
-
-		this.setState({
-			step : 0,
-			pages : pages
-		});
-	}
-
-	handlePrivacy() {
-		console.log("handlePrivacy()");
-		window.scrollTo(0, 0);
-		this.setState({ step : 8 });
-	}
-
-	handleTerms() {
-		console.log("handleTerms()");
-		window.scrollTo(0, 0);
-		this.setState({ step : 9 });
-	}
-
-	handleManifesto() {
-		console.log("handleManifesto()");
-		window.scrollTo(0, 0);
-		this.setState({ step : 10 });
-	}
-
-	handleNext() {
-		console.log("handleNext()");
-		window.scrollTo(0, 0);
-		this.setState({
-			step : this.state.step + 1
-		});
-	}
-
-	handleItemToggle(obj) {
-		console.log("handleItemToggle("+JSON.stringify(obj)+")");
-
-		let amount = 0.00;
-		obj.forEach(function(item, i) {
-			amount += parseFloat(item.per_price);
-		});
-
-		this.setState({
-			amount : amount
-		});
-	}
-
-	handlePurchaseToggle(obj, isPurchase) {
-		console.log("handlePurchaseToggle("+JSON.stringify(obj)+", "+isPurchase+")");
-
-		let amount = 0.00;
-		obj.forEach(function(item, i) {
-			amount += item.per_price;
-		});
-
-		this.setState({
-			amount : amount,
-			purchasedItems : obj
-		});
-	}
+		} else {
+			this.props.history.push('/' + url);
+		}
+	};
 
   render() {
-// 		console.log("coords", JSON.stringify(this.props.coords));
+  	console.log('App.state', this.state);
+
     return (
-    	<div>
-		    {!this.state.isIntro && (
-		    	<div>
-				    <Column horizontal="center" className="page-wrapper">
-					    <div className="top-nav">
-						    <TopNav
-							    step={this.state.step}
-							    onManifesto={()=> this.handleManifesto()}
-							    onClose={()=> this.handleGettingStartedStep()}
-						    />
-					    </div>
+    	<div className="site-wrapper">
+		    <TopNav
+			    parts={this.state.selectedArtboards}
+			    uploadID={this.state.uploadID}
+			    onHome={()=> this.handleHome()}
+			    onPage={(url)=> this.handlePage(url)}
+		    />
+		    <SideNav
+			    userID={cookie.load('user_id')}
+			    uploadID={this.state.uploadID}
+			    pageID={this.state.pageID}
+			    artboardID={this.state.artboardID}
+			    sliceID={this.state.sliceID}
+			    onUploadItem={(obj)=> this.handleSideNavUploadItem(obj)}
+			    onPageItem={(obj)=> this.handleSideNavPageItem(obj)}
+			    onArtboardItem={(obj)=> this.handleSideNavArtboardItem(obj)}
+			    onSliceItem={(obj)=> this.handleSideNavSliceItem(obj)}
+			    onRegister={()=> this.setState({ overlayAlert: 'register' })}
+			    onLogout={()=> this.handleLogout()}
+			    onUpload={()=> this.handlePage('upload')}
+			    onPage={(url)=> this.handlePage(url)}
+		    />
 
-					    <div className="content-wrapper">
-						    {this.state.step === 0 && (
-							    <GetStartedStep
-								    isProjects={this.state.pages.isProjects}
-								    isUsers={this.state.pages.isUsers}
-								    onSystem={(systemID)=> this.handleSystem(systemID)}
-								    onClick={()=> this.handleTemplateStep()} />
-						    )}
+		    <div className="content-wrapper" ref={wrapper}>
+			    <Switch>
+				    <Route exact path="/" render={()=> <ExplorePage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
+			      <Route exact path="/add-ons" render={()=> <AddOnsPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
+			      <Route exact path="/api" render={()=> <APIPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
+				    <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
+				    <Route path="/doc/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onPayment={()=> this.setState({ overlayAlert: 'payment' })} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onLogout={()=> this.handleLogout()} />} />
+				    <Route exact path="/explore" render={()=> <ExplorePage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
+				    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={this.state.uploadID} onPage={(url)=> this.handlePage(url)} />} />
+				    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} />} />
+			      <Route exact path="/mission" render={()=> <MissionPage onPage={(url)=> this.handlePage(url)} onRegister={()=> this.setState({ overlayAlert: 'register' })} onPayment={()=> this.setState({ overlayAlert: 'payment' })} onLogout={()=> this.handleLogout()} />} />
+			      <Route exact path="/privacy" component={PrivacyPage} />
+				    <Route exact path="/register" render={()=> <RegisterPage onPage={(url)=> this.handlePage(url)} />} />
+			      <Route exact path="/terms" component={TermsPage} />
+			      <Route exact path="/upload" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} />} />
+			      <Route render={()=> <Status404Page onPage={(url)=> this.handlePage(url)} />} />
+			    </Switch>
+		    </div>
 
-						    {this.state.step === 3 && (
-							    <TemplateStep
-								    onClick={(id)=> this.handleDetailsStep(id)} />
-						    )}
-
-						    {this.state.step === 4 && (
-							    <DetailsStep
-								    templateID={this.templateID}
-								    orderID={this.state.orderID}
-								    onTooltip={(obj)=> this.showStatus(obj)}
-								    onCancel={()=> this.handleGettingStartedStep()}
-								    onStart={(obj)=> this.handleMakeOrder(obj)}
-								    onClick={(obj)=> this.handleGeneratingStep(obj)} />
-						    )}
-
-						    {this.state.step === 5 && (
-							    <GeneratingStep
-								    orderID={this.state.orderID}
-								    onTooltip={(obj)=> this.showStatus(obj)}
-								    onCancel={()=> this.handleGettingStartedStep()}
-								    onClick={(obj)=> this.handlePurchaseStep(obj)}
-								    onItemToggle={(obj)=> this.handleItemToggle(obj)} />
-						    )}
-
-						    {this.state.step === 6 && (
-							    <PurchaseStep
-								    onTooltip={(obj)=> this.showStatus(obj)}
-								    onClick={()=> this.handleDownloadStep()}
-								    onItemToggle={(obj)=> this.handleItemToggle(obj)}
-								    selectedItems={this.state.selectedItems}
-								    onBack={(obj)=> this.handleGeneratingStep(obj)}
-							    />
-						    )}
-
-						    {this.state.step === 7 && (
-							    <DownloadStep
-								    orderID={this.state.orderID}
-							    />
-						    )}
-
-						    {this.state.step === 8 && (
-							    <PrivacyStep />
-						    )}
-
-						    {this.state.step === 9 && (
-							    <TermsStep />
-						    )}
-
-						    {this.state.step === 10 && (
-							    <ManifestoStep />
-						    )}
-					    </div>
-				    </Column>
-
-			      <BottomNav
-				      onManifesto={()=> this.handleManifesto()}
-				      onPrivacy={()=> this.handlePrivacy()}
-				      onTerms={()=> this.handleTerms()} />
-
-
-				    {this.state.isTooltip && (
-				    	<Tooltip content={this.state.tooltip} />
-				    )}
-			    </div>
+		    {(this.state.overlayAlert === 'payment') && (
+			    <StripeOverlay onClick={(buttonType)=> this.handleOverlay('download', buttonType)} />
 		    )}
 	    </div>
     );
   }
 }
 
-export default App;
-// export default geolocated({
-// 	positionOptions: {
-// 		enableHighAccuracy : false,
-// 	},
-// 	userDecisionTimeout : 5000,
-// })(App);
+export default withRouter(App);

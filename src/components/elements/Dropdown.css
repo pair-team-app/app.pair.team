@@ -5,9 +5,10 @@
 	-ms-user-select: none;
 	user-select: none;
 	position: relative;
-	width: 222px;
+	width: 100%;
 	display: inline-block;
-	margin: 0 10px 0 10px;
+	margin: 0 0 20px 0;
+	letter-spacing: -0.3px;
 }
 
 .dd-header {
@@ -20,20 +21,22 @@
 	-webkit-box-pack: justify;
 	-ms-flex-pack: justify;
 	justify-content: space-between;
-	line-height: 38px;
+	/*line-height: 38px;*/
 	cursor: default;
 	position: relative;
-	background-color: #002fff;
-	color: #ffffff;
-	border-radius: 5px;
+	background-color: #fafbfc;
+	padding: 8px 12px;
+	border: 1px solid #eaecef;
+	border-radius: 4px;
 }
 
 .dd-header span {
-	margin-right: 20px;
+	/*margin-right: 20px;*/
 }
 
 .dd-header-title {
-	margin: 2px 30px 2px 20px;
+	/*margin: 2px 20px;*/
+	margin: 2px 0;
 }
 
 .angle-down {
@@ -43,15 +46,16 @@
 .dd-list {
 	z-index: 10;
 	position: absolute;
-	width: 100%;
+	width: 99%;
 	margin-top: 0;
-	background-color: #002fff;
+	background-color: #fafbfc;
+	border: 1px solid #eaecef;
 	padding: 0;
 	max-height: 415px;
 	overflow: hidden;
 	-webkit-overflow-scrolling: touch;
 	text-align: left;
-	color: #ffffff;
+	color: #4b4b4b;
 }
 
 .dd-list-item {
@@ -65,12 +69,12 @@
 
 .dd-list-item.selected {
 	color: #fff;
-	background-color: #000000;
+	background-color: #002fff;
 }
 
 .dd-list-item:hover {
 	color: #fff;
-	background-color: #000000;
+	background-color: #002fff;
 }
 
 .dd-wrapper-single {

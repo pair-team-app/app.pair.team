@@ -1,112 +1,201 @@
 
-body {
+html, body {
   margin: 0;
   padding: 0;
-  font-family: "Roboto Mono", monospace;
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 16px;
-  background-color: #3f3f3f;
-  color: #c6c6c6;
-}
-
-p {
-  line-height: 20px;
+  height: 100%;
+  font-family: "San Francisco Text Medium", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px;
+  letter-spacing: -0.27px;
+  background-color: #ffffff;
+  color: #4a4a4a;
 }
 
 *:focus {
   outline: none;
 }
 
-
-/** Thin */
-@font-face {
-  font-family: "Roboto Mono";
-  font-weight: 200;
-  src: url("./fonts/RobotoMono-Thin.otf");
+a, a:link, a:active, a:visited {
+  color: #0267d8;
+  text-decoration: none;
 }
 
-/** Light */
-@font-face {
-  font-family: "Roboto Mono";
-  font-weight: 300;
-  src: url("./fonts/RobotoMono-Light.otf");
+a:hover {
+  text-decoration: underline;
 }
+
+button {
+  padding: 12px 35px;
+  background: #28a745 linear-gradient(-180deg, #34d058, #28a745 90%);
+  border: 1px solid rgba(27, 31, 35, 0.2);
+  border-radius: 4px;
+  font-family: "San Francisco Text Medium", sans-serif;
+  font-size: 18px;
+  letter-spacing: -0.6px;
+  color : #ffffff;
+}
+
+button:hover, button:active {
+  cursor: pointer;
+  background: #269f42 linear-gradient(-180deg, #2fcb53, #269f42 90%) -0.5em;
+  border-color: rgba(27, 31, 35, 0.5);
+}
+
+div, input, textarea {
+  box-sizing: border-box;
+}
+
+input[type=text], input[type=password], input[type=tel], .input-txt {
+  background-color: #fafbfc;
+  color: #000000;
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #eaecef;
+  border-radius: 4px;
+  font-family: "San Francisco Text Medium", sans-serif;
+  font-size: 16px;
+  letter-spacing: -0.3px;
+}
+
+h1, h2, h3, h4, h5 {
+  margin-top: 0;
+}
+
+/** Page header */
+h1 {
+  font-family: "San Francisco Text SemiBold", sans-serif;
+  font-size: 48px;
+  letter-spacing: -0.6px;
+  color: #1c1c1c;
+}
+
+/** FAQ title */
+h2 {
+  font-family: "San Francisco Text SemiBold", sans-serif;
+  font-size: 35px;
+  letter-spacing: -0.66px;
+  color: #1c1c1c;
+}
+
+/** Section title */
+h3 {
+  font-family: "San Francisco Text SemiBold", sans-serif;
+  font-size: 20px;
+  letter-spacing: -0.33px;
+  color: #000000;
+}
+
+/** Subsection title */
+h4 {
+  font-family: "San Francisco Text Medium", sans-serif;
+  font-size: 20px;
+  color: #000000;
+  letter-spacing: -0.66px;
+  margin-bottom: 20px;
+}
+
+h5 {
+  margin-bottom: 10px;
+  font-family: "San Francisco Text", sans-serif;
+  font-size: 20px;
+}
+
+h6 {
+  font-family: "San Francisco Text Bold", sans-serif;
+  font-size: 12px;
+  color: #483e37;
+  margin: 0 0 15px 0;
+}
+
+p {
+  font-family: "San Francisco Text", sans-serif;
+  font-size: 20px;
+  line-height: 40px;
+  margin-bottom: 40px;
+  color: #696969;
+}
+
+sup {
+  font-family: "San Francisco Text", sans-serif;
+  font-size: 10px;
+  color: #7ed321;
+  text-transform: uppercase;
+  margin: -8px 0 8px 2px;
+}
+
+textarea {
+  width: 100%;
+  border: 1px solid #eaecef;
+  background-color: #fafbfc;
+  border-radius: 4px;
+  font-family: "San Francisco Text Medium", sans-serif;
+  font-size: 16px;
+  letter-spacing: -0.3px;
+  color: #4a4a4a;
+  resize: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/*::-webkit-scrollbar-track {*/
+  /*background: #151619;*/
+/*}*/
+
+/*::-webkit-scrollbar-thumb {*/
+  /*background: #151619;*/
+/*}*/
+
+/*::-webkit-scrollbar-thumb:hover {*/
+  /*background: #111111;*/
+/*}*/
 
 /** Regular */
 @font-face {
-  font-family: "Roboto Mono";
+  font-family: "AndaleMono";
   font-weight: 400;
-  src: url("./fonts/RobotoMono-Regular.otf");
-}
-
-/** Medium */
-@font-face {
-  font-family: "Roboto Mono";
-  font-weight: 500;
-  src: url("./fonts/RobotoMono-Medium.otf");
-}
-
-/** Bold */
-@font-face {
-  font-family: "Roboto Mono";
-  font-weight: 600;
-  src: url("./fonts/RobotoMono-Bold.otf");
+  src: url("./fonts/AndaleMono.otf");
 }
 
 
-/** Black */
+/** Heavy */
 @font-face {
-  font-family: "Poppins Black";
-  font-weight: 900;
-  src: url("./fonts/Poppins-Bold.otf");
-}
-
-/** Extra Bold */
-@font-face {
-  font-family: "Poppins ExtraBold";
+  font-family: "San Francisco Text Heavy";
   font-weight: 800;
-  src: url("./fonts/Poppins-ExtraBold.otf");
+  src: url("./fonts/SanFranciscoText-Heavy.otf");
 }
 
 /** Bold */
 @font-face {
-  font-family: "Poppins Bold";
+  font-family: "San Francisco Text Bold";
   font-weight: 700;
-  src: url("./fonts/Poppins-Bold.otf");
+  src: url("./fonts/SanFranciscoText-Bold.otf");
 }
 
-/** Bold */
+/** Semi-Bold */
 @font-face {
-  font-family: "Poppins SemiBold";
+  font-family: "San Francisco Text SemiBold";
   font-weight: 600;
-  src: url("./fonts/Poppins-SemiBold.otf");
+  src: url("./fonts/SanFranciscoText-Semibold.otf");
 }
 
 /** Medium */
 @font-face {
-  font-family: "Poppins Medium";
+  font-family: "San Francisco Text Medium";
   font-weight: 500;
-  src: url("./fonts/Poppins-Medium.otf");
+  src: url("./fonts/SanFranciscoText-Medium.otf");
 }
 
 /** Regular */
 @font-face {
-  font-family: "Poppins Regular";
+  font-family: "San Francisco Text";
   font-weight: 400;
-  src: url("./fonts/Poppins-Regular.otf");
+  src: url("./fonts/SanFranciscoText-Regular.otf");
 }
 
 /** Light */
 @font-face {
-  font-family: "Poppins Light";
+  font-family: "San Francisco Text Light";
   font-weight: 300;
-  src: url("./fonts/Poppins-Light.otf");
-}
-
-/** Light */
-@font-face {
-  font-family: "Poppins Thin";
-  font-weight: 200;
-  src: url("./fonts/Poppins-Thin.otf");
+  src: url("./fonts/SanFranciscoText-Light.otf");
 }

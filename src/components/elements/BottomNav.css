@@ -1,42 +1,36 @@
 
-.footer-wrapper {
-	/*border: 2px dashed #ff00ff;*/
-	margin: 30px 120px 30px 120px;
-	padding: 0 50px 0 50px;
+.bottom-nav-wrapper {
+	width: 100%;
+	margin: 20px 0;
+	font-family: "San Francisco Text Bold", sans-serif;
+	font-size: 12px;
+	letter-spacing: -0.4px;
 }
 
-.footer-logo {
-	width: 30px;
-	height: 13px;
+.bottom-nav-link-wrapper {
+	display: table;
+	margin-bottom: 5px;
 }
 
-.footer-link {
-	margin-bottom: 10px;
-	color: #ffffff;
-	font-family: "Roboto Mono", sans-serif;
-	font-size: 13px;
-}
-
-.footer-link:hover {
-	cursor: pointer;
+.bottom-nav-link {
+	display: table-cell;
+	color: #0267D8;
 	text-decoration: underline;
+	padding-right: 24px;
 }
 
-.footer-link a, .footer-link a:active, .footer-link a:link, .footer-link a:visited {
-	color: #ffffff;
+.bottom-nav-link:hover, .bottom-nav-link a:hover {
 	text-decoration: none;
+	cursor: pointer;
+}
+
+.bottom-nav-link a, .bottom-nav-link a:active, .bottom-nav-link a:link, .bottom-nav-link a:visited {
+	text-decoration: underline;
+	color: #0267D8;
 }
 
 .copyright {
-	margin-top: 60px;
-	color: #999999;
-	font-size: 13px;
-	font-family: "Roboto Mono", sans-serif;
-	font-weight: 300;
-}
-
-@media only screen and (max-width: 600px) {
-	.footer-wrapper {
-		width: 95%
-	}
+	font-family: "San Francisco Text SemiBold", sans-serif;
+	letter-spacing: -0.4px;
+	color: #9b9b9b;
 }

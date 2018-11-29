@@ -46,14 +46,15 @@ class DropdownMultiple extends Component{
 				<div className="dd-header" onClick={() => this.toggleList()}>
 					<div className="dd-header-title">{headerTitle}</div>
 					{listOpen
-						? <FontAwesome name="angle-up" size="2x"/>
-						: <FontAwesome name="angle-down" size="2x"/>
+						? <FontAwesome name="angle-up" />
+						: <FontAwesome name="angle-down" />
 					}
 				</div>
 				{listOpen && <ul className="dd-list">
 					{list.map((item, i) => (
-						<li className="dd-list-item" key={i} onClick={() => toggleItem(item.id, item.key)}>
-							<span style={{width:'20px',height:'20px',marginRight:'6px',backgroundImage:'linear-gradient(to right, #'+item.gradient+' , #'+item.hex+')'}}>&nbsp;&nbsp;</span>{item.title} {item.selected && <FontAwesome name="check"/>}
+						<li className="dd-list-item" key={i} onClick={() => toggleItem(item.id, i, item.key)}>
+							<span style={{width:'20px',height:'20px',marginRight:'6px',backgroundImage:'linear-gradient(to right, #'+item.gradient+' , #'+item.hex+')'}}>&nbsp;&nbsp;</span>
+							{item.title} {item.selected && <FontAwesome name="check"/>}
 						</li>
 					))}
 				</ul>}

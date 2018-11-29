@@ -1,0 +1,41 @@
+
+.slice-item {
+	position: absolute;
+	/*border: 1px solid rgba(0, 0, 0, 0.125);*/
+	/*background-color: rgba(0, 0, 0, 0.125);*/
+	zoom: 0;
+}
+
+.slice-item:hover {
+	cursor: pointer;
+}
+
+.slice-item-slice-selected {
+	background-color: rgba(255, 127, 0, 0.25);
+	border: 1px solid rgba(255, 127, 0, 0.125);
+}
+
+.slice-item-hotspot-selected {
+	background-color: rgba(0, 255, 0, 0.25);
+	border: 1px solid rgba(0, 255, 0, 0.125);
+}
+
+.slice-item-textfield-selected {
+	background-color: rgba(0, 0, 155, 0.25);
+	border: 1px solid rgba(0, 0, 155, 0.125);
+}
+
+.slice-item-background-selected {
+	background-color: rgba(127, 0, 0, 0.25);
+	border: 1px solid rgba(127, 0, 0, 0.125);
+}
+
+.slice-item-plus {
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	font-size: 40px;
+	color: #ff9500;
+	opacity: 0.75;
+	display: none;
+}

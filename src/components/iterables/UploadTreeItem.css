@@ -1,0 +1,30 @@
+
+.upload-tree-item {
+	margin-bottom: 18px;
+	font-weight: 400;
+	color: #0267D8;
+	width: fit-content;
+}
+
+.upload-tree-item-icon {
+	width: 20px;
+	height: 20px;
+	margin: 0 8px 0 0;
+}
+
+.upload-tree-item-text {
+}
+
+.upload-tree-item-text:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.upload-tree-item-arrow-selected, .upload-tree-item-text-selected {
+	font-family: "San Francisco Text Bold", sans-serif;
+	text-decoration: underline;
+}
+
+.upload-tree-item-artboards {
+	margin: 12px 0 0 40px;
+}

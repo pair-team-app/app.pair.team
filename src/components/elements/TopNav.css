@@ -1,35 +1,71 @@
 
-.nav-logo {
-	width: 72px;
-	height: 40px;
+.top-nav-wrapper {
+	position: fixed;
+	width: 100%;
+	background-color: #111111;
+	display: table;
+	z-index: 3;
 }
 
-.nav-link {
-	padding-left: 20px;
-	font-size: 16px;
+.top-nav-column {
+	display: table-cell;
+	height: 58px;
+	vertical-align: middle;
+}
+
+.top-nav-column-left {
+	width: 800px;
+}
+
+.top-nav-column-right {
+	padding-right: 20px;
+	text-align: right;
+}
+
+.top-nav-logo {
+	width: 48px;
+	height: 22px;
+	padding-left: 28px;
+}
+
+.top-nav-logo:hover {
+	cursor: pointer;
+}
+
+.top-nav-link {
 	color: #ffffff;
+	margin-left: 28px;
+	letter-spacing: -0.3px;
 }
 
-.nav-link a, .nav-link a:active, .nav-link a:link, .nav-link a:visited {
-	text-decoration: none;
-	color: #ffffff;
-}
-
-.nav-link a:active {
-	color: #eeeeee;
-}
-
-.nav-link a:hover {
+.top-nav-link:hover {
+	cursor: pointer;
 	text-decoration: underline;
-	cursor: pointer;
 }
 
-.nav-link-close {
-	width: 20px;
-	height: 20px;
+.top-nav-link-selected {
+	color: #9b9b9b;
 }
 
-.nav-link-close:hover {
+.top-nav-upload-button {
+	font-family: "San Francisco Text", sans-serif;
+	font-size: 14px;
+	padding: 3px 14px;
+}
+
+.top-nav-avatar {
+	width: 30px;
+	height: 30px;
+	border-radius: 4px;
+	margin-right: 10px;
+}
+
+.top-nav-profile-arrow {
+	font-size: 18px;
+	color: #ffffff;
+}
+
+.top-nav-avatar:hover, .top-nav-profile-arrow:hover {
 	cursor: pointer;
-	opacity: 0.75;
+	opacity: 0.8;
 }

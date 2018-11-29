@@ -2,9 +2,7 @@
 import React, { Component } from 'react';
 import './BottomNav.css';
 
-import MediaQuery from 'react-responsive';
-import { Column, Row } from 'simple-flexbox';
-
+import cookie from 'react-cookies';
 
 class BottomNav extends Component {
 	constructor(props) {
@@ -14,62 +12,26 @@ class BottomNav extends Component {
 		};
 	}
 
+	componentDidMount() {
+	}
+
 	render() {
-		const urls = {
-			crunchbase : 'https://www.crunchbase.com/organization/design-engine',
-			twitter    : 'https://twitter.com/designengineai',
-			instagram  : 'https://www.instagram.com/designengine.ai',
-			youtube    : 'https://www.youtube.com/channel/UCmn_myR8ZGlQLCRhRZQKQoA/',
-			spectrum   : 'https://spectrum.chat/designengine',
-			slack      : 'https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA',
-			facebook   : 'https://www.facebook.com/designengineai/',
-			messenger  : 'https://www.m.me/designengineai/',
-			blog       : 'https://medium.com/@jasonfesta?source=linkShare-aae22e53724a-1533684578',
-			privacy    : 'https://designengine.gitbook.io/docs/privacy',
-			terms      : 'https://designengine.gitbook.io/docs/terms-of-service',
-			dmg        : 'http://designengine.ai/tryfree'
-		};
+		const year = new Date().getFullYear();
 
 		return (
-				<div className="footer-wrapper">
-					<MediaQuery minWidth={840}>
-						<Row vertical="start" horizontal="center">
-							<Column flexGrow={1} horizontal="start">
-								<a href="/"><img src="/images/logo.svg" className="footer-logo" alt="Design Engine" /></a>
-							</Column>
-							<Column flexGrow={1} horizontal="start">
-								<div className="footer-link" onClick={()=> this.props.onManifesto()}>Manifesto</div>
-								<div className="footer-link"><a href={urls.crunchbase} target="_blank" rel="noopener noreferrer">Crunchbase</a></div>
-								<div className="footer-link"><a href={urls.messenger} target="_blank" rel="noopener noreferrer">Chat Now</a></div>
-							</Column>
-							<Column flexGrow={1} horizontal="start">
-								<div className="footer-link" onClick={()=> this.props.onTerms()}>Terms of Service</div>
-								<div className="footer-link" onClick={()=> this.props.onPrivacy()}>Privacy Policy</div>
-							</Column>
-							<Column flexGrow={10} horizontal="start">&nbsp;</Column>
-						</Row>
-						<Row horizontal="center">
-							<div className="copyright">&copy; {new Date().getFullYear()} Design Engine AI, Inc.</div>
-						</Row>
-					</MediaQuery>
-
-					<MediaQuery maxWidth={840}>
-						<div style={{marginLeft:'20px'}}>
-							<div className="footer-title">Company</div>
-							<div className="footer-link" onClick={()=> this.props.onManifesto()}>Manifesto</div>
-							<div className="footer-link"><a href={urls.crunchbase} target="_blank" rel="noopener noreferrer">Crunchbase</a></div>
-							<div className="footer-link"><a href={urls.messenger} target="_blank" rel="noopener noreferrer">Chat Now</a></div>
-						</div>
-						<div style={{margin:'20px 0 0 20px'}}>
-							<div className="footer-title">Legal</div>
-							<div className="footer-link" onClick={()=> this.props.onTerms()}>Terms of Service</div>
-							<div className="footer-link" onClick={()=> this.props.onPrivacy()}>Privacy Policy</div>
-						</div>
-						<Row horizontal="center">
-							<div className="copyright">&copy; {new Date().getFullYear()} Design Engine AI, Inc.</div>
-						</Row>
-					</MediaQuery>
+			<div className="bottom-nav-wrapper">
+				<div className="bottom-nav-link-wrapper">
+					<div className="bottom-nav-link" onClick={()=> this.props.onPage('terms')}>Terms</div>
+					<div className="bottom-nav-link" onClick={()=> this.props.onPage('privacy')}>Privacy</div>
+					<div className="bottom-nav-link" onClick={()=> window.open('https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA')}>Slack</div>
+					<div className="bottom-nav-link" onClick={()=> window.open('https://spectrum.chat/designengine')}>Spectrum</div>
+					<div className="bottom-nav-link" onClick={()=> this.props.onPage('api')}>API</div>
+					<div className="bottom-nav-link" onClick={()=> window.open('https://github.com/de-ai/designengine.ai/projects/1')}>Roadmap</div>
+					{(cookie.load('user_id') !== '0') && (<div className="bottom-nav-link" onClick={() => this.props.onLogout()}>Sign Out</div>)}
 				</div>
+
+				<div className="copyright">&copy; {year} Design Engine AI, Inc</div>
+			</div>
 		);
 	}
 }
