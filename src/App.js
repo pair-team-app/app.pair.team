@@ -102,6 +102,9 @@ class App extends Component {
 
 		if (obj.selected) {
 			this.props.history.push('/doc/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+
+		} else {
+			this.props.history.push('/explore');
 		}
 
 		this.setState({
