@@ -80,7 +80,7 @@ class UploadPage extends Component {
 
 				let self = this;
 				const config = {
-					headers             : {
+					headers : {
 						'content-type' : 'multipart/form-data'
 					}, onUploadProgress : function (progressEvent) {
 						const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -100,6 +100,13 @@ class UploadPage extends Component {
 						.then((response) => {
 							console.log("UPLOAD", response.data);
 						}).catch((error) => {
+						formData.append('action', 'SLACK');
+						formData.append('message', '*' + cookie.load('user_email') + '* upload failed for file _' + files[0].name + '_');
+						axios.post('https://api.designengine.ai/system.php', formData)
+							.then((response) => {
+								console.log("SLACK", response.data);
+							}).catch((error) => {
+						});
 					});
 				});
 
@@ -117,13 +124,13 @@ class UploadPage extends Component {
 		} else {
 			let formData = new FormData();
 			formData.append('action', 'SLACK');
-			formData.append('message', '*' + cookie.load('user_email') + '* uploaded incompatible file _' + files[0].name + '_');
+			formData.append('message', '*(' + cookie.load('user_id') + ')* *' + cookie.load('user_email') + '* uploaded incompatible file "_' + files[0].name + '_"');
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log("SLACK", response.data);
 				}).catch((error) => {
 			});
-			
+
 			const popup = {
 				visible : true,
 				content : 'error::Only Sketch files are support at this time.'
