@@ -524,14 +524,20 @@ class InspectorPage extends Component {
 				/>);
 		}) : [];
 
+// 		return (<div style={{paddingBottom:'30px'}}>
+// 			<Draggable>
+// 				<img className="inspector-page-hero-image inspector-page-hero-image-portrait" src="http://cdn.designengine.ai/artboards/26BD499B-3A04-403A-A6CB-3809CFFA5FA7@3x.png" alt="Hero" ref={heroImage} />
+// 			</Draggable>
+// 		</div>);
+
 		return (<div style={{paddingBottom:'30px'}}>
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
 					{/*<div className="inspector-page-title">{(artboard) ? artboard.title : 'Loading…'}</div>*/}
 					<div className="inspector-page-hero-wrapper" ref={heroWrapper}>
-						{(artboard) && (<Draggable>
+						{(artboard) && (
 							<img className={heroImageClass} src={artboard.filename} alt="Hero" ref={heroImage} />
-						</Draggable>)}
+						)}
 						<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>{slices}</div>
 						<div className="inspector-page-hero-canvas-wrapper">
 							{/*<canvas width={(artboard) ? scale * artboard.meta.frame.size.width : 0} height={(artboard) ? scale * artboard.meta.frame.size.height : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>*/}
@@ -555,9 +561,9 @@ class InspectorPage extends Component {
 					</form>
 
 					{/*<div className="inspector-page-hero-info-wrapper">*/}
-						{/*{(artboard) ? artboard.views + ' View' + ((parseInt(artboard.views, 10) !== 1) ? 's' : '') : 'Views'}<br />*/}
-						{/*{(artboard) ? artboard.downloads + ' Download' + ((parseInt(artboard.downloads, 10) !== 1) ? 's' : '') : 'Downloads'}<br />*/}
-						{/*{(artboard) ? artboard.comments.length + ' Comment' + ((artboard.comments.length !== 1) ? 's' : '') : 'Comments'}*/}
+					{/*{(artboard) ? artboard.views + ' View' + ((parseInt(artboard.views, 10) !== 1) ? 's' : '') : 'Views'}<br />*/}
+					{/*{(artboard) ? artboard.downloads + ' Download' + ((parseInt(artboard.downloads, 10) !== 1) ? 's' : '') : 'Downloads'}<br />*/}
+					{/*{(artboard) ? artboard.comments.length + ' Comment' + ((artboard.comments.length !== 1) ? 's' : '') : 'Comments'}*/}
 					{/*</div>*/}
 
 					<div className="inspector-page-comment-wrapper">

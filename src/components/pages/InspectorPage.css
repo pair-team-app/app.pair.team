@@ -43,12 +43,12 @@
 	top: 0;
 	left: 0;
 	z-index: 2;
-	display: none;
+	/*display: none;*/
 }
 
 .inspector-page-hero-slice-wrapper {
 	z-index: 3;
-	display: none;
+	/*display: none;*/
 }
 
 .inspector-page-hero-image-landscape {
