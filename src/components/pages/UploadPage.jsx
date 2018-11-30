@@ -70,6 +70,17 @@ class UploadPage extends Component {
 		console.log('onDrop()', files);
 		if (files.length > 0 && files[0].name.split('.').pop() === 'sketch') {
 			if (files[0].size < 100 * 1024 * 1024) {
+
+				let formData = new FormData();
+				formData.append('action', 'SLACK');
+				formData.append('message', '*(' + cookie.load('user_id') + ')* *' + cookie.load('user_email') + '* started uploading file "_' + files[0].name + '_"');
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response) => {
+						console.log("SLACK", response.data);
+					}).catch((error) => {
+				});
+
+
 				this.setState({
 // 					processingState : -1,
 					files           : files,
@@ -87,6 +98,15 @@ class UploadPage extends Component {
 						self.setState({ percent : percent });
 
 						if (progressEvent.loaded === progressEvent.total) {
+							let formData = new FormData();
+							formData.append('action', 'SLACK');
+							formData.append('message', '*(' + cookie.load('user_id') + ')* *' + cookie.load('user_email') + '* - "_' + files[0].name + '_" uploaded');
+							axios.post('https://api.designengine.ai/system.php', formData)
+								.then((response) => {
+									console.log("SLACK", response.data);
+								}).catch((error) => {
+							});
+
 							self.onUploadComplete();
 						}
 					}
