@@ -404,16 +404,8 @@ class InspectorPage extends Component {
 		console.log('Data: ', data);
 	};
 
-	handleStart = ()=> {
-
-	};
-
-	handleDrag = ()=> {
-
-	};
-
-	handleStop = ()=> {
-
+	handleDrag = (event)=> {
+		console.log(event.type, event.target);
 	};
 
 	redrawAnts = ()=> {
@@ -530,12 +522,26 @@ class InspectorPage extends Component {
 // 			</Draggable>
 // 		</div>);
 
+		const draggablePosition = (heroWrapper.current && artboard) ? {
+			x : heroWrapper.current.clientWidth * -0.5, //(heroWrapper.current.clientWidth - (this.scale * artboard.meta.frame.size.width)) * 0.5,
+			y : heroWrapper.current.clientHeight * -0.5//(heroWrapper.current.clientHeight - (this.scale * artboard.meta.frame.size.height)) * 0.5
+		} : {
+			x : 0,
+			y : 0
+		};
+
+		console.log(this.scale, draggablePosition);
+
 		return (<div style={{paddingBottom:'30px'}}>
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
 					{/*<div className="inspector-page-title">{(artboard) ? artboard.title : 'Loading…'}</div>*/}
 					<div className="inspector-page-hero-wrapper" ref={heroWrapper}>
-						{(artboard) && (<Draggable>
+						{(artboard) && (<Draggable
+							defaultPosition={draggablePosition}
+							onStart={this.handleDrag}
+							onDrag={this.handleDrag}
+							onStop={this.handleDrag}>
 							<img className={heroImageClass} src={artboard.filename} alt="Hero" ref={heroImage} />
 						</Draggable>)}
 						<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>{slices}</div>
