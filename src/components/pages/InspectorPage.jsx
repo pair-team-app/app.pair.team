@@ -535,9 +535,9 @@ class InspectorPage extends Component {
 				<div className="inspector-page-content">
 					{/*<div className="inspector-page-title">{(artboard) ? artboard.title : 'Loading…'}</div>*/}
 					<div className="inspector-page-hero-wrapper" ref={heroWrapper}>
-						{(artboard) && (
+						{(artboard) && (<Draggable>
 							<img className={heroImageClass} src={artboard.filename} alt="Hero" ref={heroImage} />
-						)}
+						</Draggable>)}
 						<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>{slices}</div>
 						<div className="inspector-page-hero-canvas-wrapper">
 							{/*<canvas width={(artboard) ? scale * artboard.meta.frame.size.width : 0} height={(artboard) ? scale * artboard.meta.frame.size.height : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>*/}
