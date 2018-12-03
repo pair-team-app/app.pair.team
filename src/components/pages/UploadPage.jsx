@@ -84,7 +84,7 @@ class UploadPage extends Component {
 				this.setState({
 // 					processingState : -1,
 					files           : files,
-					uploadTitle     : files[0].name.split('.').slice(0, -1).join(),
+					uploadTitle     : files[0].name.split('.').slice(0, -1).join('.'),
 					uploading       : true,
 					action          : 'UPLOAD'
 				});
