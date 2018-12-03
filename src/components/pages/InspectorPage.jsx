@@ -284,6 +284,9 @@ class InspectorPage extends Component {
 		const context = canvas.current.getContext('2d');
 		context.clearRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
 
+		context.fillStyle = 'rgba(0, 0, 0, 0.25)';
+		context.fillRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
+
 		if (slice) {
 			const selectedSrcFrame = slice.meta.frame;
 // 			const selectedOffset = (heroWrapper.current && heroImage.current) ? {
@@ -469,7 +472,16 @@ class InspectorPage extends Component {
 			height  : '100%'
 		};
 
-		//console.log('InspectorPage.render()', dragOffset);
+
+		const selectedOffset = (dragWrapper.current) ? {
+			x : parseInt(dragWrapper.current.style.transform.split('(')[1].slice(0, -1).split(', ')[0].replace('px', ''), 10),
+			y : parseInt(dragWrapper.current.style.transform.split('(')[1].slice(0, -1).split(', ')[1].replace('px', ''), 10),
+		} : {
+			x : 0,
+			y : 0
+		};
+
+		console.log('InspectorPage.render()', selectedOffset);
 
 		let self = this;
 		if (this.rerender === 0) {
@@ -534,6 +546,7 @@ class InspectorPage extends Component {
 		const canvasClass = 'inspector-page-hero-canvas-wrapper' + ((this.state.canvasVisible) ? '' : ' is-hidden');
 
 
+
 		const slices = (artboard) ? artboard.slices.map((slice, i) => {
 			return (
 				<SliceItem
@@ -572,6 +585,7 @@ class InspectorPage extends Component {
 					<div className="inspector-page-hero-wrapper" ref={heroWrapper}>
 						{(artboard) && (<Draggable
 							defaultPosition={draggablePosition}
+							bounds={{left:0,top:0,right:heroWrapper.current.clientWidth,bottom:heroWrapper.current.clientHeight}}
 							onStart={this.handleDrag}
 							onDrag={this.handleDrag}
 							onStop={this.handleDrag}><div className="inspector-page-drag-wrapper" ref={dragWrapper}>
