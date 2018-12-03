@@ -53,7 +53,7 @@ class Dropdown extends Component{
 			} else if (item.title.match(/android/i)) {
 				thumbImage = '/images/icon-android.png';
 
-			} else if (item.title.match(/upload/i)) {
+			} else if (item.title.match(/new/i)) {
 				thumbImage = '/images/plus-square.png';
 			}
 

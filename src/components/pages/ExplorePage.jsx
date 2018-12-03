@@ -78,7 +78,7 @@ class ExplorePage extends Component {
 									<Row horizontal="center"><h1>To begin start a new project</h1></Row>
 									<div className="page-header-text">Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.</div>
 									<Row horizontal="center">
-										<button className="adjacent-button" onClick={()=> this.props.onPage('upload')}>New Project</button>
+										<button className="adjacent-button" onClick={()=> this.props.onPage('new')}>New Project</button>
 										<button onClick={()=> this.props.onPage('invite-team')}>Invite Team Members</button>
 									</Row>
 								</div>

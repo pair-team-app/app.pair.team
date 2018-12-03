@@ -22,7 +22,7 @@ class TopNav extends Component {
 
 	handleUplaod = ()=> {
 		cookie.save('msg', 'start a new project.', { path : '/' });
-		this.props.onPage((cookie.load('user_id') === '0') ? 'login' : 'upload')
+		this.props.onPage((cookie.load('user_id') === '0') ? 'login' : 'new')
 	};
 
 	render() {

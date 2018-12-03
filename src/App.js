@@ -253,7 +253,7 @@ class App extends Component {
 				    <Route path="/proj/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onPayment={()=> this.setState({ overlayAlert: 'payment' })} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onLogout={()=> this.handleLogout()} />} />
 				    <Route exact path="/register" render={()=> <RegisterPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route exact path="/terms" component={TermsPage} />
-			      <Route exact path="/upload" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} />} />
+			      <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route render={()=> <Status404Page onPage={(url)=> this.handlePage(url)} />} />
 			    </Switch>
 		    </div>
