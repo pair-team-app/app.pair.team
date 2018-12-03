@@ -40,7 +40,7 @@ class HomePage extends Component {
 
 	componentDidUpdate(prevProps) {
 // 		console.log('HomePage.componentDidUpdate()', this.props, prevProps);
-		if (this.props.uploadID !== prevProps.uploadID || this.props.pageID !== prevProps.pageID) {
+		if (this.props.uploadID !== -1 && (this.props.uploadID !== prevProps.uploadID || this.props.pageID !== prevProps.pageID)) {
 			this.refreshData();
 			return (null);
 		}
