@@ -153,7 +153,7 @@ class UploadPage extends Component {
 
 			const popup = {
 				visible : true,
-				content : 'error::Only Sketch files are support at this time.'
+				content : (files[0].name.split('.').pop() === 'xd') ? 'Adobe XD Support Coming Soon!' : 'error::Only Sketch files are support at this time.'
 			};
 			this.setState({ popup : popup });
 		}
