@@ -15,6 +15,7 @@ import SliceItem from '../iterables/SliceItem';
 import SliceToggle from '../elements/SliceToggle';
 import Popup from '../elements/Popup';
 
+const dragWrapper = React.createRef();
 const heroWrapper = React.createRef();
 const heroImage = React.createRef();
 const canvas = React.createRef();
@@ -29,6 +30,7 @@ class InspectorPage extends Component {
 			sliceID       : this.props.match.params.sliceID,
 			slice         : null,
 			hoverSlice    : null,
+			canvasVisible : true,
 			scaleSize     : 3,
 			page          : null,
 			artboard      : null,
@@ -214,8 +216,31 @@ class InspectorPage extends Component {
 		});
 	};
 
+	handleDrag = (event)=> {
+		//console.log(event.type, event.target);
+		if (event.type === 'mousedown') {
+
+
+		} else if (event.type === 'mousemove') {
+// 			this.forceUpdate();
+
+		} else if (event.type === 'mouseup') {
+			this.setState({ canvasVisible : true });
+		}
+	};
+
+	handleMouseDown = ()=> {
+		this.setState({ canvasVisible : false });
+	};
+
+	handleMouseUp = ()=> {
+		this.setState({ canvasVisible : true });
+	};
+
 	handleZoom = (direction)=> {
-		this.setState({ scaleSize : Math.min(Math.max(this.state.scaleSize + direction, 1), 3) });
+// 		this.setState({ scaleSize : Math.min(Math.max(this.state.scaleSize + direction, 1), 3) });
+		this.scale += (direction * 0.025);
+		this.setState({ scale : this.scale + (direction * 0.5) });
 	};
 
 	handleSliceRollOver = (ind, slice)=> {
@@ -261,9 +286,17 @@ class InspectorPage extends Component {
 
 		if (slice) {
 			const selectedSrcFrame = slice.meta.frame;
-			const selectedOffset = (heroWrapper.current && heroImage.current) ? {
-				x : (heroWrapper.current.clientWidth - heroImage.current.clientWidth) * 0.5,
-				y : (heroWrapper.current.clientHeight - heroImage.current.clientHeight) * 0.5
+// 			const selectedOffset = (heroWrapper.current && heroImage.current) ? {
+// 				x : heroImage.current.offsetLeft,//(heroWrapper.current.clientWidth - heroImage.current.clientWidth) * 0.5,
+// 				y : heroImage.current.offsetTop//(heroWrapper.current.clientHeight - heroImage.current.clientHeight) * 0.5
+// 			} : {
+// 				x : 0,
+// 				y : 0
+// 			};
+
+			const selectedOffset = (dragWrapper.current) ? {
+				x : parseInt(dragWrapper.current.style.transform.split('(')[1].slice(0, -1).split(', ')[0].replace('px', ''), 10),
+				y : parseInt(dragWrapper.current.style.transform.split('(')[1].slice(0, -1).split(', ')[1].replace('px', ''), 10),
 			} : {
 				x : 0,
 				y : 0
@@ -404,10 +437,6 @@ class InspectorPage extends Component {
 		console.log('Data: ', data);
 	};
 
-	handleDrag = (event)=> {
-		console.log(event.type, event.target);
-	};
-
 	redrawAnts = ()=> {
 		if (this.antsOffset++ > 16) {
 			this.antsOffset = 0;
@@ -430,9 +459,8 @@ class InspectorPage extends Component {
 		const { visibleTypes } = this.state;
 		const { scaleSize } = this.state;
 
-		this.scale = (artboard && heroImage && heroImage.current) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? heroImage.current.clientWidth / artboard.meta.frame.size.width : heroImage.current.clientHeight / artboard.meta.frame.size.height : 1;
+		//this.scale = (artboard && heroImage && heroImage.current) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? heroImage.current.clientWidth / artboard.meta.frame.size.width : heroImage.current.clientHeight / artboard.meta.frame.size.height : 1;
 
-		const heroImageClass = 'inspector-page-hero-image' + ((artboard) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? ' inspector-page-hero-image-landscape' : ' inspector-page-hero-image-portrait' : '');
 		const slicesStyle = (artboard) ? {
 			width   : (this.scale * artboard.meta.frame.size.width) + 'px',
 			height  : (this.scale * artboard.meta.frame.size.height) + 'px'
@@ -441,7 +469,7 @@ class InspectorPage extends Component {
 			height  : '100%'
 		};
 
-// 		console.log('InspectorPage.render()', this.scale);
+		//console.log('InspectorPage.render()', dragOffset);
 
 		let self = this;
 		if (this.rerender === 0) {
@@ -485,6 +513,27 @@ class InspectorPage extends Component {
 			} : null
 		} : null;
 
+
+		const draggablePosition = (heroWrapper.current && artboard) ? {
+			x : Math.floor((heroWrapper.current.clientWidth - (this.scale * artboard.meta.frame.size.width)) * 0.5),
+			y : Math.floor((heroWrapper.current.clientHeight - (this.scale * artboard.meta.frame.size.height)) * 0.5)
+		} : {
+			x : 0,
+			y : 0
+		};
+
+		const heroImageStyle = {
+			width              : (artboard) ? (this.scale * artboard.meta.frame.size.width) + 'px' : '0',
+			height             : (artboard) ? (this.scale * artboard.meta.frame.size.height) + 'px' : '0',
+			backgroundImage    : (artboard) ? 'url("' + artboard.filename + '")' : 'none',
+			backgroundSize     : 'cover',
+			backgroundRepeat   : 'no-repeat',
+			backgroundPosition : 'center'
+		};
+
+		const canvasClass = 'inspector-page-hero-canvas-wrapper' + ((this.state.canvasVisible) ? '' : ' is-hidden');
+
+
 		const slices = (artboard) ? artboard.slices.map((slice, i) => {
 			return (
 				<SliceItem
@@ -516,31 +565,6 @@ class InspectorPage extends Component {
 				/>);
 		}) : [];
 
-// 		return (<div style={{paddingBottom:'30px'}}>
-// 			<Draggable>
-// 				<img className="inspector-page-hero-image inspector-page-hero-image-portrait" src="http://cdn.designengine.ai/artboards/26BD499B-3A04-403A-A6CB-3809CFFA5FA7@3x.png" alt="Hero" ref={heroImage} />
-// 			</Draggable>
-// 		</div>);
-
-		const draggablePosition = (heroWrapper.current && artboard) ? {
-			x : (heroWrapper.current.clientWidth - (this.scale * artboard.meta.frame.size.width)) * 0.5,
-			y : (heroWrapper.current.clientHeight - (this.scale * artboard.meta.frame.size.height)) * 0.5
-		} : {
-			x : 0,
-			y : 0
-		};
-
-		const heroImageStyle = {
-			width              : (artboard) ? (this.scale * artboard.meta.frame.size.width) + 'px' : '0',
-			height             : (artboard) ? (this.scale * artboard.meta.frame.size.height) + 'px' : '0',
-			backgroundImage    : (artboard) ? 'url("' + artboard.filename + '")' : 'none',
-			backgroundSize     : 'cover',
-			backgroundRepeat   : 'no-repeat',
-			backgroundPosition : 'center'
-		};
-
-		console.log(this.scale, heroImage);
-
 		return (<div style={{paddingBottom:'30px'}}>
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
@@ -550,14 +574,17 @@ class InspectorPage extends Component {
 							defaultPosition={draggablePosition}
 							onStart={this.handleDrag}
 							onDrag={this.handleDrag}
-							onStop={this.handleDrag}>
-							<div style={heroImageStyle} ref={heroImage}></div>
-							{/*<img className={heroImageClass} src={artboard.filename} alt="Hero" ref={heroImage} />*/}
+							onStop={this.handleDrag}><div className="inspector-page-drag-wrapper" ref={dragWrapper}>
+								<div style={heroImageStyle} ref={heroImage} />
+								<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>{slices}</div>
+							</div>
 						</Draggable>)}
-						<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>{slices}</div>
-						<div className="inspector-page-hero-canvas-wrapper">
-							{/*<canvas width={(artboard) ? scale * artboard.meta.frame.size.width : 0} height={(artboard) ? scale * artboard.meta.frame.size.height : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>*/}
+						<div className={canvasClass} onMouseDown={()=> this.handleMouseDown()} onMouseUp={()=> this.handleMouseUp()}>
 							<canvas width={(heroWrapper.current) ? heroWrapper.current.clientWidth : 0} height="600" ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
+						</div>
+						<div className="inspector-page-zoom-wrapper">
+							<button className={'inspector-page-float-button' + ((scaleSize === 3) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)} style={{marginRight:'20px'}}><img className="inspector-page-float-button-image" src={(slice && scaleSize < 3) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button>
+							<button className={'inspector-page-float-button' + ((scaleSize === 1) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(slice && scaleSize > 1) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button>
 						</div>
 						<div className="inspector-page-toggle-wrapper">
 							<SliceToggle type="hotspot" selected={visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} /><br />
@@ -576,12 +603,6 @@ class InspectorPage extends Component {
 						<button type="submit" className={commentButtonClass} onClick={(event)=> this.submitComment(event)}>Comment</button>
 					</form>
 
-					{/*<div className="inspector-page-hero-info-wrapper">*/}
-					{/*{(artboard) ? artboard.views + ' View' + ((parseInt(artboard.views, 10) !== 1) ? 's' : '') : 'Views'}<br />*/}
-					{/*{(artboard) ? artboard.downloads + ' Download' + ((parseInt(artboard.downloads, 10) !== 1) ? 's' : '') : 'Downloads'}<br />*/}
-					{/*{(artboard) ? artboard.comments.length + ' Comment' + ((artboard.comments.length !== 1) ? 's' : '') : 'Comments'}*/}
-					{/*</div>*/}
-
 					<div className="inspector-page-comment-wrapper">
 						{comments}
 					</div>
@@ -596,10 +617,6 @@ class InspectorPage extends Component {
 							{(slice) && (
 								<img className={panelImageClass} src={panelSliceImage} alt={(slice.title + ' @' + scaleSize + 'x')} />
 							)}
-							<div className="inspector-page-panel-zoom-wrapper">
-								<button className={'inspector-page-float-button' + ((scaleSize === 3) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)} style={{marginRight:'20px'}}><img className="inspector-page-float-button-image" src={(slice && scaleSize < 3) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button>
-								<button className={'inspector-page-float-button' + ((scaleSize === 1) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(slice && scaleSize > 1) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button>
-							</div>
 						</div>
 					</div>
 					<div className="inspector-page-panel-content-wrapper">
