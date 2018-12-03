@@ -249,10 +249,10 @@ class App extends Component {
 				    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={this.state.uploadID} onPage={(url)=> this.handlePage(url)} />} />
 				    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route exact path="/mission" render={()=> <MissionPage onPage={(url)=> this.handlePage(url)} onRegister={()=> this.setState({ overlayAlert: 'register' })} onPayment={()=> this.setState({ overlayAlert: 'payment' })} onLogout={()=> this.handleLogout()} />} />
-			      <Route exact path="/privacy" component={PrivacyPage} />
+			      <Route exact path="/privacy" render={()=> <PrivacyPage onPage={(url)=> this.handlePage(url)} />} />
 				    <Route path="/proj/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onPayment={()=> this.setState({ overlayAlert: 'payment' })} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onLogout={()=> this.handleLogout()} />} />
 				    <Route exact path="/register" render={()=> <RegisterPage onPage={(url)=> this.handlePage(url)} />} />
-			      <Route exact path="/terms" component={TermsPage} />
+			      <Route exact path="/terms" render={()=> <TermsPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route render={()=> <Status404Page onPage={(url)=> this.handlePage(url)} />} />
 			    </Switch>
