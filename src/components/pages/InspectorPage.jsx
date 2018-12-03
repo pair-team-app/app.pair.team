@@ -545,6 +545,77 @@ class InspectorPage extends Component {
 
 		const canvasClass = 'inspector-page-hero-canvas-wrapper' + ((this.state.canvasVisible) ? '' : ' is-hidden');
 
+		const backgroundSlices = (artboard) ? artboard.slices.map((slice, i) => {
+			return ((slice.type === 'background') ?
+				<SliceItem
+					key={i}
+					title={slice.title}
+					type={slice.type}
+					visible={visibleTypes[slice.type]}
+					top={slice.meta.frame.origin.y}
+					left={slice.meta.frame.origin.x}
+					width={slice.meta.frame.size.width}
+					height={slice.meta.frame.size.height}
+					scale={this.scale}
+					onRollOver={()=> this.handleSliceRollOver(i, slice)}
+					onRollOut={()=> this.handleSliceRollOut(i, slice)}
+					onClick={() => this.handleSliceClick(i, slice)} />
+			: null);
+		}) : [];
+
+		const hotspotSlices = (artboard) ? artboard.slices.map((slice, i) => {
+			return ((slice.type === 'hotspot') ?
+				<SliceItem
+					key={i}
+					title={slice.title}
+					type={slice.type}
+					visible={visibleTypes[slice.type]}
+					top={slice.meta.frame.origin.y}
+					left={slice.meta.frame.origin.x}
+					width={slice.meta.frame.size.width}
+					height={slice.meta.frame.size.height}
+					scale={this.scale}
+					onRollOver={()=> this.handleSliceRollOver(i, slice)}
+					onRollOut={()=> this.handleSliceRollOut(i, slice)}
+					onClick={() => this.handleSliceClick(i, slice)} />
+			: null);
+		}) : [];
+
+		const textfieldSlices = (artboard) ? artboard.slices.map((slice, i) => {
+			return ((slice.type === 'textfield') ?
+				<SliceItem
+					key={i}
+					title={slice.title}
+					type={slice.type}
+					visible={visibleTypes[slice.type]}
+					top={slice.meta.frame.origin.y}
+					left={slice.meta.frame.origin.x}
+					width={slice.meta.frame.size.width}
+					height={slice.meta.frame.size.height}
+					scale={this.scale}
+					onRollOver={()=> this.handleSliceRollOver(i, slice)}
+					onRollOut={()=> this.handleSliceRollOut(i, slice)}
+					onClick={() => this.handleSliceClick(i, slice)} />
+			: null);
+		}) : [];
+
+		const sliceSlices = (artboard) ? artboard.slices.map((slice, i) => {
+			return ((slice.type === 'slice') ?
+				<SliceItem
+					key={i}
+					title={slice.title}
+					type={slice.type}
+					visible={visibleTypes[slice.type]}
+					top={slice.meta.frame.origin.y}
+					left={slice.meta.frame.origin.x}
+					width={slice.meta.frame.size.width}
+					height={slice.meta.frame.size.height}
+					scale={this.scale}
+					onRollOver={()=> this.handleSliceRollOver(i, slice)}
+					onRollOut={()=> this.handleSliceRollOut(i, slice)}
+					onClick={() => this.handleSliceClick(i, slice)} />
+			: null);
+		}) : [];
 
 
 		const slices = (artboard) ? artboard.slices.map((slice, i) => {
@@ -590,7 +661,12 @@ class InspectorPage extends Component {
 							onDrag={this.handleDrag}
 							onStop={this.handleDrag}><div className="inspector-page-drag-wrapper" ref={dragWrapper}>
 								<div style={heroImageStyle} ref={heroImage} />
-								<div className="inspector-page-hero-slice-wrapper" style={slicesStyle}>{slices}</div>
+								<div className="inspector-page-hero-slices-wrapper" style={slicesStyle}>
+									<div className="inspector-page-background-wrapper">{backgroundSlices}</div>
+									<div className="inspector-page-hotspot-wrapper">{hotspotSlices}</div>
+									<div className="inspector-page-textfield-wrapper">{textfieldSlices}</div>
+									<div className="inspector-page-slice-wrapper">{sliceSlices}</div>
+								</div>
 							</div>
 						</Draggable>)}
 						<div className={canvasClass} onMouseDown={()=> this.handleMouseDown()} onMouseUp={()=> this.handleMouseUp()}>

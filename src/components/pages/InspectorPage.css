@@ -32,11 +32,27 @@
 	overflow: hidden;
 }
 
-.inspector-page-hero-slice-wrapper {
+.inspector-page-hero-slices-wrapper {
 	position: absolute;
 	top: 0;
 	left: 0;
 	z-index: 3;
+}
+
+.inspector-page-background-wrapper {
+	z-index: 4;
+}
+
+.inspector-page-hotspot-wrapper {
+	z-index: 5;
+}
+
+.inspector-page-textfield-wrapper {
+	z-index: 6;
+}
+
+.inspector-page-slice-wrapper {
+	z-index: 7;
 }
 
 .inspector-page-hero-canvas-wrapper {
@@ -51,7 +67,7 @@
 	right: 0;
 	top: 0;
 	padding: 20px;
-	z-index: 4;
+	z-index: 10;
 }
 
 .inspector-page-toggle-wrapper {
@@ -59,7 +75,7 @@
 	bottom: 0;
 	right: 0;
 	padding: 20px;
-	z-index: 4;
+	z-index: 10;
 }
 
 .inspector-page-download-button {
