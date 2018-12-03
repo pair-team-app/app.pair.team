@@ -76,7 +76,7 @@ class InviteTeamPage extends Component {
 						if (upload.id === self.state.uploadID) {
 							uploadID = upload.id;
 							uploadTitle = upload.title;
-							uploadURL = 'https://earlyaccess.designengine.ai/doc/' + self.state.uploadID + '/' + upload.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
+							uploadURL = 'https://earlyaccess.designengine.ai/proj/' + self.state.uploadID + '/' + upload.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
 						}
 					});
 
@@ -91,7 +91,7 @@ class InviteTeamPage extends Component {
 					this.setState({
 						uploadID    : (uploads.length > 0) ? uploads[0].id : this.state.uploadID,
 						uploadTitle : (uploads.length > 0) ? uploads[0].title : this.state.uploadTitle,
-						uploadURL   : (uploads.length > 0) ? 'https://earlyaccess.designengine.ai/doc/' + uploads[0].id + '/' + uploads[0].title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase() : this.state.uploadURL,
+						uploadURL   : (uploads.length > 0) ? 'https://earlyaccess.designengine.ai/proj/' + uploads[0].id + '/' + uploads[0].title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase() : this.state.uploadURL,
 						uploads     : uploads
 					});
 				}
@@ -104,7 +104,7 @@ class InviteTeamPage extends Component {
 		uploads.forEach(upload => upload.selected = false);
 		uploads[ind].selected = true;
 		this.setState({
-			uploadURL   : 'https://earlyaccess.designengine.ai/doc/' + uploads[0].id + '/' + uploads[ind].title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase(),
+			uploadURL   : 'https://earlyaccess.designengine.ai/proj/' + uploads[0].id + '/' + uploads[ind].title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase(),
 			uploads     : uploads
 		});
 	};

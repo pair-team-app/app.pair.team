@@ -71,7 +71,7 @@ class HomePage extends Component {
 						title = upload.title;
 						description = upload.description;
 						total = upload.total;
-						uploadURL = 'https://earlyaccess.designengine.ai/doc/' + self.props.uploadID + '/' + upload.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
+						uploadURL = 'https://earlyaccess.designengine.ai/proj/' + self.props.uploadID + '/' + upload.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
 					}
 				});
 

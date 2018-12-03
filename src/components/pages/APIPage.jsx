@@ -18,7 +18,7 @@ class APIPage extends Component {
 				syntax : '#block {width: 100%; color: #ffffff;}'
 			}],
 			urls  : [
-				'https://earlyaccess.designengine.ai/doc/111/ios-12-design-system',
+				'https://earlyaccess.designengine.ai/proj/111/ios-12-design-system',
 				'https://earlyaccess.designengine.ai/artboard/111/22/321/tab-bars',
 			],
 			popup : {

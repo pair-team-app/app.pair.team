@@ -54,7 +54,7 @@ class SideNav extends Component {
 		}
 
 
-		if ((window.location.pathname.includes('/artboard/') || window.location.pathname.includes('/doc/')) && this.state.pages.length === 0) {
+		if ((window.location.pathname.includes('/artboard/') || window.location.pathname.includes('/proj/')) && this.state.pages.length === 0) {
 			let self = this;
 			let uploads = [...this.state.uploads];
 			uploads.forEach(function(upload, i) {

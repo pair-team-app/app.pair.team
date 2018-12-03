@@ -216,7 +216,7 @@ class UploadPage extends Component {
 					cookie.save('upload_id', response.data.upload_id, { path : '/' });
 					this.setState({
 						uploadID        : response.data.upload_id,
-						uploadURL       : 'https://earlyaccess.designengine.ai/doc/' + response.data.upload_id + '/' + this.state.uploadTitle.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase(),
+						uploadURL       : 'https://earlyaccess.designengine.ai/proj/' + response.data.upload_id + '/' + this.state.uploadTitle.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase(),
 						processingState : 0,
 						files           : []
 					});
@@ -280,7 +280,7 @@ class UploadPage extends Component {
 				console.log('UPLOAD_STATUS', response.data);
 				if (response.data.state === '3') {
 					clearInterval(this.uploadInterval);
-					window.location.href = 'doc/' + this.state.uploadID + '/' + this.state.uploadTitle.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
+					window.location.href = 'proj/' + this.state.uploadID + '/' + this.state.uploadTitle.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
 				}
 
 				let status = response.data.message;
