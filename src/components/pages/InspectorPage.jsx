@@ -617,25 +617,6 @@ class InspectorPage extends Component {
 			: null);
 		}) : [];
 
-
-		const slices = (artboard) ? artboard.slices.map((slice, i) => {
-			return (
-				<SliceItem
-					key={i}
-					title={slice.title}
-					type={slice.type}
-					visible={visibleTypes[slice.type]}
-					top={slice.meta.frame.origin.y}
-					left={slice.meta.frame.origin.x}
-					width={slice.meta.frame.size.width}
-					height={slice.meta.frame.size.height}
-					scale={this.scale}
-					onRollOver={()=> this.handleSliceRollOver(i, slice)}
-					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={() => this.handleSliceClick(i, slice)} />
-			);
-		}) : [];
-
 		const comments = (artboard) ? artboard.comments.map((item, i) => {
 			return (
 				<CommentItem
