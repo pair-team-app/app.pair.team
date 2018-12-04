@@ -208,6 +208,7 @@
 .inspector-page-panel-code {
 	min-height: 150px;
 	padding: 14px;
+	font-size: 12px;
 }
 
 .inspector-page-copy-code-button {

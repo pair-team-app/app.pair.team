@@ -31,12 +31,12 @@ class InspectorPage extends Component {
 			slice         : null,
 			hoverSlice    : null,
 			canvasVisible : true,
-			scale         : 1,
+			scale         : 0.85,
 			page          : null,
 			artboard      : null,
 			code          : {
-				html   : '#block {<br>&nbsp;&nbsp;width: 100%;<br>&nbsp;&nbsp;color: #ffffff;<br>}',
-				syntax : '#block {width: 100%; color: #ffffff;}'
+				html   : '',
+				syntax : ''
 			},
 			comment       : '',
 			visibleTypes  : {
@@ -63,7 +63,7 @@ class InspectorPage extends Component {
 				key      : 'languages'
 			}, {
 				id       : 3,
-				title    : 'SVG',
+				title    : 'LESS',
 				selected : false,
 				key      : 'languages'
 			}],
@@ -285,7 +285,50 @@ class InspectorPage extends Component {
 		let tmp = [...this.state[key]];
 		tmp.forEach(item => item.selected = false);
 		tmp[ind].selected = true;
-		this.setState({ [key] : tmp });
+
+		const { slice } = this.state;
+		let html = '';
+		let syntax = '';
+
+		if (slice) {
+			if (ind === 1 || ind === 2) {
+				html += (ind === 2) ? '{' : '.' + slice.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase() + ' {<br />';
+				html += '&nbsp;&nbsp;position: absolute;<br />';
+				html += '&nbsp;&nbsp;top: ' + slice.meta.frame.origin.y + 'px;<br />';
+				html += '&nbsp;&nbsp;left: ' + slice.meta.frame.origin.x + 'px;<br />';
+				html += '&nbsp;&nbsp;width: ' + slice.meta.frame.size.width + 'px;<br />';
+				html += '&nbsp;&nbsp;height: ' + slice.meta.frame.size.height + 'px;<br />';
+				if (slice.type === 'textfield') {
+					html += '&nbsp;&nbsp;font-family: "' + 'San Francisco Text' + '", sans-serif;<br />';
+					html += '&nbsp;&nbsp;font-size: ' + slice.meta.font.size + 'px;<br />';
+					html += '&nbsp;&nbsp;color: ' + slice.meta.font.color.toUpperCase() + ';<br />';
+					html += '&nbsp;&nbsp;letter-spacing: ' + slice.meta.font.kerning + 'px;<br />';
+					html += '&nbsp;&nbsp;line-height: ' + slice.meta.font.lineHeight + 'px;<br />';
+					html += '&nbsp;&nbsp;text-align: ' + 'left' + ';<br />';
+
+				} else if (slice.type === 'slice') {
+					html += '&nbsp;&nbsp;background: url("' + slice.filename.split('/').pop() + '@3x.png");<br />';
+				}
+				html += '}';
+
+				syntax = html.replace(/&nbsp;/g, '').replace(/<br \/>/g, '\n');
+
+				if (ind === 2) {
+					syntax = syntax.replace(/: (.+?);/g, ':\'$1\',').replace(/(-.)/g, function(v){ return (v[1].toUpperCase()); });
+					html = syntax;
+
+				}
+
+			}
+		}
+
+		this.setState({
+			[key] : tmp,
+			code  : {
+				html   : html,
+				syntax : syntax
+			}
+		});
 	};
 
 	updateCanvas = ()=> {

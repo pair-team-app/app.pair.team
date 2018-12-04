@@ -7,6 +7,7 @@
     "axios": "^0.18.0",
     "babel-plugin-syntax-decorators": "^6.13.0",
     "gsap": "^2.0.2",
+    "native-css": "^2.0.0",
     "npm": "^6.4.1",
     "rc-tooltip": "^3.7.3",
     "react": "^16.6.3",
