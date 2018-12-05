@@ -65,7 +65,7 @@ class LoginPage extends Component {
 		const { action, emailValid, passwordValid, errorMsg } = this.state;
 		const { email, password } = this.state;
 
-		const title = (typeof cookie.load('msg') === 'undefined' || cookie.load('msg') === '') ? 'Sign In' : 'You must be signed in to ' + cookie.load('msg');
+		const title = (typeof cookie.load('msg') === 'undefined' || cookie.load('msg') === '') ? 'Login' : 'You must be signed in to ' + cookie.load('msg');
 
 		const emailClass = (action === '') ? 'input-wrapper' : (action === 'LOGIN' && !emailValid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 		const passwordClass = (action === '') ? 'input-wrapper' : (action === 'LOGIN' && !passwordValid) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
@@ -75,15 +75,18 @@ class LoginPage extends Component {
 		return (
 			<div className="page-wrapper register-page-wrapper">
 				<h4>{title}</h4>
-				{(errorMsg !== '') && (<div className="input-wrapper input-wrapper-error"><input type="text" placeholder="" value={errorMsg} disabled /></div>)}
-				<form onSubmit={this.handleSubmit}>
-					<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ errorMsg : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-					<div className={passwordClass}><input type="password" name="password" placeholder="Enter Password" value={password} onFocus={()=> this.setState({ errorMsg : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-					<div className="overlay-button-wrapper"><Row vertical="center">
-						<Column><button type="submit" className="adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Sign In</button></Column>
-						<Column><div className="page-link" onClick={()=> this.props.onPage('register')}>Sign Up</div></Column>
-					</Row></div>
-				</form>
+				Enter the email address of each member of your team to invite them to this project.
+				<div className="login-page-form-wrapper">
+					{(errorMsg !== '') && (<div className="input-wrapper input-wrapper-error"><input type="text" placeholder="" value={errorMsg} disabled /></div>)}
+					<form onSubmit={this.handleSubmit}>
+						<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ errorMsg : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+						<div className={passwordClass}><input type="password" name="password" placeholder="Enter Password" value={password} onFocus={()=> this.setState({ errorMsg : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+						<div className="overlay-button-wrapper"><Row vertical="center">
+							<Column><button type="submit" className="adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
+							<Column><div className="page-link" onClick={()=> this.props.onPage('recover')}>Forgot password?</div></Column>
+						</Row></div>
+					</form>
+				</div>
 				{/*<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />*/}
 			</div>
 		);

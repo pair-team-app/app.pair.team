@@ -84,7 +84,7 @@ class UploadPage extends Component {
 
 				let formData = new FormData();
 				formData.append('action', 'SLACK');
-				formData.append('message', '*(' + cookie.load('user_id') + ')* *' + cookie.load('user_email') + '* started uploading file "_' + files[0].name + '_"');
+				formData.append('message', '*[' + cookie.load('user_id') + ']* *' + cookie.load('user_email') + '* started uploading file "_' + files[0].name + '_"');
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response) => {
 						console.log("SLACK", response.data);
@@ -111,7 +111,7 @@ class UploadPage extends Component {
 						if (progressEvent.loaded === progressEvent.total) {
 							let formData = new FormData();
 							formData.append('action', 'SLACK');
-							formData.append('message', '*(' + cookie.load('user_id') + ')* *' + cookie.load('user_email') + '* - "_' + files[0].name + '_" uploaded');
+							formData.append('message', '*[' + cookie.load('user_id') + ']* *' + cookie.load('user_email') + '* - "_' + files[0].name + '_" uploaded');
 							axios.post('https://api.designengine.ai/system.php', formData)
 								.then((response) => {
 									console.log("SLACK", response.data);
@@ -155,7 +155,7 @@ class UploadPage extends Component {
 		} else {
 			let formData = new FormData();
 			formData.append('action', 'SLACK');
-			formData.append('message', '*(' + cookie.load('user_id') + ')* *' + cookie.load('user_email') + '* uploaded incompatible file "_' + files[0].name + '_"');
+			formData.append('message', '*[' + cookie.load('user_id') + ']* *' + cookie.load('user_email') + '* uploaded incompatible file "_' + files[0].name + '_"');
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log("SLACK", response.data);
