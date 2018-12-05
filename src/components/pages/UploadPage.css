@@ -4,9 +4,12 @@
 }
 
 .upload-page-progress-wrapper {
-	width: calc(100% + 60px);
+	position: fixed;
+	top: 58px;
+	left: 0;
+	width: calc(100% + 300px);
 	height: 6px;
-	margin: -30px 0 30px -30px;
+	z-index: 10;
 }
 
 .upload-page-progress {
@@ -26,6 +29,7 @@
 
 .upload-page-form-wrapper {
 	width: 100%;
+	margin-top: 30px;
 }
 
 .upload-page-dz-wrapper {

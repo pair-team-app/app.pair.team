@@ -10,6 +10,7 @@ import { Column, Row } from 'simple-flexbox';
 
 import BottomNav from '../elements/BottomNav';
 import ArtboardItem from '../iterables/ArtboardItem';
+import Dropdown from '../elements/Dropdown';
 import Popup from '../elements/Popup';
 import RadioButton from '../elements/RadioButton';
 
@@ -26,7 +27,7 @@ class UploadPage extends Component {
 			uploadTitle        : '',
 			description        : '',
 			uploadURL          : '',
-			processingState    : -1,
+			processingState    : -2,
 			status             : '',
 			title              : '',
 			totalElements      : 0,
@@ -39,18 +40,24 @@ class UploadPage extends Component {
 			email1             : '',
 			email2             : '',
 			email3             : '',
+			email4             : '',
+			email5             : '',
 			email1Valid        : false,
 			email2Valid        : false,
 			email3Valid        : false,
+			email4Valid        : false,
+			email5Valid        : false,
 			artboards          : [],
 			radioButtons       : [{
 				id       : 1,
-				title    : 'Public Project',
+				title    : 'Public',
+				subtext  : 'Anyone can see, download, & clone this design project.',
 				selected : true,
 				enabled  : true
 			}, {
 				id       : 2,
-				title    : 'Private Project (soon)',
+				title    : 'Private (soon)',
+				subtext  : 'You choose who can see, download, & clone this design project.',
 				selected : false,
 				enabled  : false
 			}],
@@ -61,6 +68,10 @@ class UploadPage extends Component {
 		};
 
 		this.uploadInterval = null;
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.uploadInterval);
 	}
 
 	onDragEnter() {}
@@ -82,7 +93,7 @@ class UploadPage extends Component {
 
 
 				this.setState({
-// 					processingState : -1,
+					processingState : -1,
 					files           : files,
 					uploadTitle     : files[0].name.split('.').slice(0, -1).join('.'),
 					uploading       : true,
@@ -166,6 +177,9 @@ class UploadPage extends Component {
 		});
 	};
 
+	resetThenSet = (ind, key) => {
+	};
+
 	handleCancel = (event)=> {
 		console.log('handleCancel()', event);
 		event.preventDefault();
@@ -235,31 +249,44 @@ class UploadPage extends Component {
 		const isEmail1Valid = re.test(String(this.state.email1).toLowerCase());
 		const isEmail2Valid = re.test(String(this.state.email2).toLowerCase());
 		const isEmail3Valid = re.test(String(this.state.email3).toLowerCase());
+		const isEmail4Valid = re.test(String(this.state.email4).toLowerCase());
+		const isEmail5Valid = re.test(String(this.state.email5).toLowerCase());
 
 		this.setState({
 			action      : 'INVITE',
 			email1Valid : isEmail1Valid,
 			email2Valid : isEmail2Valid,
-			email3Valid : isEmail3Valid
+			email3Valid : isEmail3Valid,
+			email4Valid : isEmail4Valid,
+			email5Valid : isEmail5Valid
 		});
 
 		let emails = '';
 		if (isEmail1Valid) {
-			emails += this.state.email1 + " ";
+			emails += this.state.email1 + ' ';
 		}
 
 		if (isEmail2Valid) {
-			emails += this.state.email2 + " ";
+			emails += this.state.email2 + ' ';
 		}
 
 		if (isEmail3Valid) {
-			emails += this.state.email3;
+			emails += this.state.email3 + ' ';
 		}
 
-		if (isEmail1Valid || isEmail2Valid || isEmail3Valid) {
+		if (isEmail4Valid) {
+			emails += this.state.email4 + ' ';
+		}
+
+		if (isEmail5Valid) {
+			emails += this.state.email5;
+		}
+
+		if (isEmail1Valid || isEmail2Valid || isEmail3Valid || isEmail4Valid || isEmail5Valid) {
 			let formData = new FormData();
 			formData.append('action', 'INVITE');
 			formData.append('user_id', cookie.load('user_id'));
+			formData.append('upload_id', '' + this.state.uploadID);
 			formData.append('emails', emails);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
@@ -319,32 +346,24 @@ class UploadPage extends Component {
 		console.log('render()', this.state);
 
 		const { action } = this.state;
-// 		const { email1, email2, email3, email1Valid, email2Valid, email3Valid } = this.state;
+		const { email1, email2, email3, email4, email5, email1Valid, email2Valid, email3Valid, email4Valid, email5Valid } = this.state;
 		const { uploading, uploadComplete } = this.state;
 		const { processingState } = this.state;
 
 		const progressStyle = { width : this.state.percent + '%' };
 
-// 		const email1Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email1Valid && email1.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
-// 		const email2Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email2Valid && email2.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
-// 		const email3Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email3Valid && email3.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+		const email1Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email1Valid && email1.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+		const email2Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email2Valid && email2.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+		const email3Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email3Valid && email3.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+		const email4Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email4Valid && email4.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+		const email5Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email5Valid && email5.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 
 		const titleClass = (action === '') ? 'input-wrapper' : (action === 'UPLOAD' && this.state.uploadTitle === '') ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 
 		const nextButtonClass = (uploadComplete && this.state.uploadTitle.length > 0 && !this.state.submitted) ? 'narrow-button' : 'narrow-button button-disabled';
-// 		const inviteButtonClass = (email1.length > 0 || email2.length > 0 || email3.length > 0) ? '' : 'button-disabled';
+		const inviteButtonClass = (email1.length > 0 || email2.length > 0 || email3.length > 0) ? '' : 'button-disabled';
 
-		let title = '';
-		if (processingState === -1) {
-			title = (uploading) ? ('Uploading ' + this.state.uploadTitle + '…') : (uploadComplete) ? 'Processing ' + this.state.uploadTitle : 'Drag & drop your Sketch file';
-
-		} else if (processingState < 3) {
-			title = 'Processing ' + this.state.uploadTitle;
-
-		} else if (processingState === 3) {
-			title = this.state.uploadTitle + ' has completed processing';
-		}
-
+		let title = (processingState === -2) ? 'Drag & drop your design' : this.state.uploadTitle;
 		const radioButtons = this.state.radioButtons.map((radioButton, i)=> {
 			return (
 				<Column key={i}>
@@ -353,6 +372,7 @@ class UploadPage extends Component {
 						enabled={radioButton.enabled}
 						selected={radioButton.selected}
 						title={radioButton.title}
+						subtext={radioButton.subtext}
 						onClick={()=> this.handleRadioButton(radioButton)}
 					/>
 				</Column>
@@ -363,7 +383,7 @@ class UploadPage extends Component {
 
 		return (
 			<div className="page-wrapper upload-page-wrapper">
-				{(processingState === -1) ? (<div>
+				{(processingState === -2) && (<div>
 					<Dropzone
 						ref={dzWrapper}
 						className="upload-page-dz-wrapper"
@@ -371,43 +391,58 @@ class UploadPage extends Component {
 						onDragEnter={this.onDragEnter.bind(this)}
 						onDragLeave={this.onDragLeave.bind(this)}>
 						<div className="page-header upload-page-header-dz">
-							<div className="upload-page-progress-wrapper">
-								{(this.state.uploading) && (
-									<div className="upload-page-progress" style={progressStyle}>
+								<div>
+									<Row horizontal="center"><img className="upload-page-icon" src="/images/upload.png" alt="Upload" /></Row>
+									<Row horizontal="center"><h1 className="sub-h1">{title}</h1></Row>
+									<div className="page-header-subtext">Or choose your file</div>
 									</div>
-								)}
-							</div>
-							{(!uploadComplete)
-								? (<div>
-										{(!uploading) && (<Row horizontal="center"><img className="upload-page-icon" src="/images/upload.png" alt="Upload" /></Row>)}
-										{(!uploading) ? (<Row horizontal="center"><h1 className="sub-h1">{title}</h1></Row>) : (<Row horizontal="center"><h1>{title}</h1></Row>)}
-										{(uploading) ? (<Row horizontal="center"><button onClick={(event)=> this.handleCancel(event)}>Cancel</button></Row>) : (<div className="page-header-subtext">Or choose your file</div>)}
-									</div>)
-								: (<div>
-									<Row horizontal="center"><h1>{title}</h1></Row>
-									<div className="page-header-text">{(this.state.status === '') ? 'Design Engine parsed 0 pages, artboards, symbols, fonts, and more from ' + this.state.uploadTitle + '\'s Design Source.' : this.state.status}</div>
-									<Row horizontal="center">
-										<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={this.state.uploadURL}>
-											<button className="adjacent-button">Copy Project Link</button>
-										</CopyToClipboard>
-										<button onClick={() => this.props.onPage('invite-team')}>Invite Team Members</button>
-									</Row>
-								</div>)}
 						</div>
 					</Dropzone>
 
 					<div style={{width:'100%'}}>
+						<h3>Create a new design project</h3>
+						A design project contains all the files for your project, including specifications, parts, and code examples.
 						<div className="upload-page-form-wrapper">
-							<div className={titleClass}><input type="text" name="uploadTitle" placeholder="Project Title" value={this.state.uploadTitle} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={titleTextfield} /></div>
-							<div className="input-wrapper"><input type="text" name="description" placeholder="Project Description" value={this.state.description} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-							<Row horizontal="start" style={{flexWrap:'wrap'}}>
+							<div style={{width:"33%"}}>
+								<Dropdown
+									title="Select team (soon)"
+									list={[]}
+									resetThenSet={this.resetThenSet}
+								/>
+								<div className={titleClass}><input type="text" name="uploadTitle" placeholder="Project Name" value={this.state.uploadTitle} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={titleTextfield} /></div>
+							</div>
+							<div className="input-wrapper"><input type="text" name="description" placeholder="Project Description (optional)" value={this.state.description} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 								{radioButtons}
-							</Row>
-							<button className={nextButtonClass} onClick={() => this.handleSubmit()}>Next</button>
+							<button className={nextButtonClass} onClick={() => this.handleSubmit()}>Submit</button>
 						</div>
 					</div>
+				</div>)}
 
-				</div>) : (<div>
+				{(processingState === -1) && (<div>
+					<div className="upload-page-progress-wrapper">
+						{(this.state.uploading) && (<div className="upload-page-progress" style={progressStyle} />)}
+					</div>
+
+					<div style={{width:'100%'}}>
+						<h3>Create a new design project</h3>
+						A design project contains all the files for your project, including specifications, parts, and code examples.
+						<div className="upload-page-form-wrapper">
+							<div style={{width:"33%"}}>
+								<Dropdown
+									title="Select team (soon)"
+									list={[]}
+									resetThenSet={this.resetThenSet}
+								/>
+								<div className={titleClass}><input type="text" name="uploadTitle" placeholder="Project Name" value={this.state.uploadTitle} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={titleTextfield} /></div>
+							</div>
+							<div className="input-wrapper"><input type="text" name="description" placeholder="Project Description (optional)" value={this.state.description} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							{radioButtons}
+							<button className={nextButtonClass} onClick={() => this.handleSubmit()}>{(uploading) ? 'Uploading' : 'Submit'}</button>
+						</div>
+					</div>
+				</div>)}
+
+				{(processingState >= 0) && (<div>
 					<div className="page-header">
 						<div className="upload-page-progress-wrapper">
 							{(this.state.uploading) && (<div className="upload-page-progress" style={progressStyle} />)}
@@ -415,15 +450,15 @@ class UploadPage extends Component {
 						<Row horizontal="center"><h1>{title}</h1></Row>
 						<div className="page-header-text">{(this.state.status === '') ? 'Design Engine parsed 0 pages, artboards, symbols, fonts, and more from ' + this.state.uploadTitle + '\'s Design Source.' : this.state.status}</div>
 						<Row horizontal="center">
+							<button className="adjacent-button" onClick={() => this.props.onPage('invite-team')}>Invite Team</button>
 							<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={this.state.uploadURL}>
-								<button className="adjacent-button">Copy Project Link</button>
+								<button>Copy Link</button>
 							</CopyToClipboard>
-							<button onClick={() => this.props.onPage('invite-team')}>Invite Team Members</button>
 						</Row>
 					</div>
 
 					<div>
-						<h4>Processing {this.state.uploadTitle}…</h4>
+						<h3>Processing…</h3>
 						<Row horizontal="space-between" className="home-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
 							{artboards.map((artboard) => {
 								return (
@@ -438,7 +473,23 @@ class UploadPage extends Component {
 							})}
 						</Row>
 					</div>
+
+					{(!this.state.sentInvites) && (<div>
+						<h3>Invite Team</h3>
+						Enter the email address of each member of your team to invite them to this project.
+						<div className="upload-page-form-wrapper">
+							<div style={{width:"33%"}}>
+								<div className={email1Class}><input type="text" name="email1" placeholder="Enter Email Address" value={email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+								<div className={email2Class}><input type="text" name="email2" placeholder="Enter Email Address" value={email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+								<div className={email3Class}><input type="text" name="email3" placeholder="Enter Email Address" value={email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+								<div className={email4Class}><input type="text" name="email4" placeholder="Enter Email Address" value={email4} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+								<div className={email5Class}><input type="text" name="email5" placeholder="Enter Email Address" value={email5} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							</div>
+							<button className={inviteButtonClass} onClick={() => this.handleInvite()}>Submit</button>
+						</div>
+					</div>)}
 				</div>)}
+
 				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 
 				{this.state.popup.visible && (
