@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './RecoverPage.css';
 
 import axios from "axios/index";
-import cookie from "react-cookies";
 import { Column, Row } from 'simple-flexbox';
 
 // import BottomNav from '../elements/BottomNav';

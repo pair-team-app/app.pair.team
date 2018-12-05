@@ -7,7 +7,7 @@ html, body {
   font-size: 16px;
   letter-spacing: -0.27px;
   background-color: #ffffff;
-  color: #4a4a4a;
+  color: #696969;
 }
 
 *:focus {
@@ -28,7 +28,7 @@ button {
   background: #28a745 linear-gradient(-180deg, #34d058, #28a745 90%);
   border: 1px solid rgba(27, 31, 35, 0.2);
   border-radius: 4px;
-  font-family: "San Francisco Text Medium", sans-serif;
+  font-family: "San Francisco Text Bold", sans-serif;
   font-size: 18px;
   letter-spacing: -0.6px;
   color : #ffffff;
@@ -47,7 +47,7 @@ div, input, textarea {
 input[type=text], input[type=password], input[type=tel], .input-txt {
   background-color: #fafbfc;
   color: #000000;
-  padding: 10px;
+  padding: 15px 10px;
   width: 100%;
   border: 1px solid #eaecef;
   border-radius: 4px;

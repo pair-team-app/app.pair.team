@@ -83,7 +83,7 @@ class LoginPage extends Component {
 						<div className={passwordClass}><input type="password" name="password" placeholder="Enter Password" value={password} onFocus={()=> this.setState({ errorMsg : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<div className="overlay-button-wrapper"><Row vertical="center">
 							<Column><button type="submit" className="adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-							<Column><div className="page-link" onClick={()=> this.props.onPage('recover')}>Forgot password?</div></Column>
+							<Column><div className="page-link" style={{fontSize:'14px'}} onClick={()=> this.props.onPage('recover')}>Forgot password?</div></Column>
 						</Row></div>
 					</form>
 				</div>

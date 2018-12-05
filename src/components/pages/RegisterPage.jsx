@@ -105,7 +105,7 @@ class RegisterPage extends Component {
 						<div className={password2Class}><input type="password" name="password2" placeholder="Confirm Password" value={password2} onFocus={()=> this.setState({ errorMsg : '', action: '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<div className="overlay-button-wrapper"><Row vertical="center">
 							<Column><button type="submit" className="adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-							<Column><div className="page-link" onClick={()=> this.props.onPage('login')}>Already have an account?</div></Column>
+							<Column><div className="page-link" style={{fontSize:'14px'}} onClick={()=> this.props.onPage('login')}>Already have an account?</div></Column>
 						</Row></div>
 					</form>
 				</div>
