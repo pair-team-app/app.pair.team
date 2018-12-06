@@ -325,21 +325,25 @@ class SideNav extends Component {
 						<Column flexGrow={1} horizontal="end"><button className="side-nav-upload-button" onClick={()=> this.handleUplaod()}>New</button></Column>
 					</Row></h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
-						{uploads.map((upload, i) => {
-							return (
-								<UploadTreeItem
-									key={i}
-									title={upload.title}
-									author={upload.author}
-									pages={upload.pages}
-									selected={upload.selected}
-									onClick={()=> this.handleUploadClick(upload)}
-									onPageClick={(page)=> this.handlePageClick(page)}
-									onArtboardClick={(artboard)=> this.handleArtboardClick(artboard)} />
-							);
-						})}
+						{(cookie.load('user_id') === '0') ? (<div>
+							You must be logged in.
+						</div>) : (<div>
+								{(uploads.length === 0) ? 'You don\'t have any projects yet!' : uploads.map((upload, i) => {
+								return (
+									<UploadTreeItem
+										key={i}
+										title={upload.title}
+										author={upload.author}
+										pages={upload.pages}
+										selected={upload.selected}
+										onClick={()=> this.handleUploadClick(upload)}
+										onPageClick={(page)=> this.handlePageClick(page)}
+										onArtboardClick={(artboard)=> this.handleArtboardClick(artboard)} />
+								);
+							})}
+						</div>)}
 					</div>
-					<div className="side-nav-link" onClick={()=> this.props.onPage('explore')}>Explore More</div>
+					<div className="side-nav-link" onClick={()=> this.props.onPage('new')}>New Project</div>
 				</div>
 				<div className="side-nav-team-wrapper">
 					<h6>Your teams</h6>

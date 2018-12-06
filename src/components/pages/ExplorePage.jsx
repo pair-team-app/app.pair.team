@@ -85,12 +85,6 @@ class ExplorePage extends Component {
 							)}
 					</Column>
 				</Row>
-				{(cookie.load('user_id') !== '0') && (<div>
-					<Row><h5>Activity</h5></Row>
-					<Row horizontal="space-between" className="explore-page-activity-wrapper" style={{flexWrap:'wrap'}}>
-						<ActivityItem title='Welcome to Design Engine, to begin start a new project.' avatar='/images/default-avatar.png' />
-					</Row>
-				</div>)}
 
 				<Row><h5>Explore</h5></Row>
 				<Row horizontal="space-between" className="explore-page-artboards-wrapper" style={{flexWrap:'wrap'}}>

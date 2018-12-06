@@ -70,7 +70,7 @@ class Dropdown extends Component{
 			<div className="dd-wrapper">
 				<div className="dd-header" onClick={this.toggleList}>
 					<div className="dd-header-title">{headerTitle}</div>
-					<img src="/images/dropdown-arrow.svg" alt="Arrow" />
+					<img className="dd-angle-down" src="/images/dropdown-arrow.svg" alt="Arrow" />
 					{/*{listOpen*/}
 						{/*? <FontAwesome name="angle-up" />*/}
 						{/*: <FontAwesome name="angle-down" />*/}

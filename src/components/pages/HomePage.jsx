@@ -8,6 +8,7 @@ import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
 import BottomNav from '../elements/BottomNav';
+import ActivityItem from '../iterables/ActivityItem';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Popup from '../elements/Popup';
 
@@ -35,6 +36,28 @@ class HomePage extends Component {
 		console.log('HomePage().componentDidMount()', this.props);
 		if (this.props.uploadID !== 0) {
 			this.refreshData();
+
+		} else {
+			let formData = new FormData();
+			formData.append('action', 'EXPLORE');
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response) => {
+					console.log('EXPLORE', response.data);
+
+					const artboards = response.data.artboards.map((item) => ({
+						id       : item.id,
+						pageID   : item.page_id,
+						title    : item.title,
+						type     : item.type,
+						filename : item.filename,
+						meta     : JSON.parse(item.meta),
+						added    : item.added,
+						selected : false
+					}));
+
+					this.setState({ artboards : artboards });
+				}).catch((error) => {
+			});
 		}
 	}
 
@@ -173,11 +196,37 @@ class HomePage extends Component {
 							</div>
 						</Column>
 					</Row>
-					<Row><h5>{this.state.pageTitle}</h5></Row>
+					<Row><h3>{this.state.pageTitle}</h3></Row>
 					<Row horizontal="space-between" className="home-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
 						{items}
 					</Row>
 				</div>)}
+
+				{(cookie.load('user_id') === '0') ? (<div>
+					<Row vertical="start">
+						<Column flexGrow={1} horizontal="center">
+							<div className="page-header">
+								<Row horizontal="center"><h1>Design for Engineers</h1></Row>
+								<div className="page-header-text">Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.</div>
+								<Row horizontal="center">
+									<button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign Up with Email</button>
+									<button className="adjacent-button" onClick={()=> this.props.onPage('login')}>Login</button>
+								</Row>
+							</div>
+						</Column>
+					</Row>
+					<Row><h3>Explore</h3></Row>
+					<Row horizontal="space-between" className="home-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
+						{items}
+					</Row>
+				</div>) : (<div>
+						{(items.length === 0) && (<div><Row><h5>Activity</h5></Row>
+					<Row horizontal="space-between" className="explore-page-activity-wrapper" style={{flexWrap:'wrap'}}>
+						<ActivityItem content="To begin start a <a class='page-link' href='/new'>New Project</a> or <a class='page-link' href='/explore'>Explore</a>." avatar="/images/default-avatar.png" />
+						<ActivityItem content="Welcome to Design Engine, to begin start a new project." avatar="/images/default-avatar.png" />
+					</Row></div>)}
+				</div>)}
+
 				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 
 				{this.state.popup.visible && (

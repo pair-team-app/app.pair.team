@@ -16,11 +16,11 @@ html, body {
 
 a, a:link, a:active, a:visited {
   color: #0267d8;
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 button {
@@ -42,18 +42,6 @@ button:hover, button:active {
 
 div, input, textarea {
   box-sizing: border-box;
-}
-
-input[type=text], input[type=password], input[type=tel], .input-txt {
-  background-color: #fafbfc;
-  color: #000000;
-  padding: 15px 10px;
-  width: 100%;
-  border: 1px solid #eaecef;
-  border-radius: 4px;
-  font-family: "San Francisco Text Medium", sans-serif;
-  font-size: 16px;
-  letter-spacing: -0.3px;
 }
 
 h1, h2, h3, h4, h5 {
@@ -81,7 +69,7 @@ h3 {
   font-family: "San Francisco Text SemiBold", sans-serif;
   font-size: 20px;
   letter-spacing: -0.33px;
-  color: #000000;
+  color: #1c1c1c;
 }
 
 /** Subsection title */
@@ -104,6 +92,18 @@ h6 {
   font-size: 12px;
   color: #483e37;
   margin: 0 0 15px 0;
+}
+
+input[type=text], input[type=password], input[type=tel], .input-txt {
+  background-color: #fafbfc;
+  color: #000000;
+  padding: 15px 10px;
+  width: 100%;
+  border: 1px solid #eaecef;
+  border-radius: 4px;
+  font-family: "San Francisco Text Medium", sans-serif;
+  font-size: 16px;
+  letter-spacing: -0.3px;
 }
 
 p {

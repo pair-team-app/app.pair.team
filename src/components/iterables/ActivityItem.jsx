@@ -18,7 +18,7 @@ class ActivityItem extends Component {
 	render() {
 		return (
 			<div className="activity-item"><Row vertical="center">
-				<Column flexGrow={1} horizontal="start">{this.props.title}</Column>
+				<Column flexGrow={1} horizontal="start"><span dangerouslySetInnerHTML={{ __html : this.props.content }} /></Column>
 				<Column flexGrow={1} horizontal="end"><img className="activity-item-avatar" src={this.props.avatar} alt={this.props.title} /></Column>
 			</Row></div>
 		);

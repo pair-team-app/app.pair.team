@@ -72,7 +72,6 @@ class InviteTeamPage extends Component {
 					let uploadTitle = 'Select Project';
 					let uploadURL = '';
 					uploads.forEach(function(upload) {
-						console.log('forEach', upload.id, self.state.uploadID);
 						if (upload.id === self.state.uploadID) {
 							uploadID = upload.id;
 							uploadTitle = upload.title;

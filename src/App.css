@@ -12,7 +12,7 @@
 	height: 100%;
 	overflow-x: hidden;
 	overflow-y: scroll;
-	padding: 20px;
+	padding: 25px 20px;
 }
 
 .page-wrapper {
@@ -23,7 +23,7 @@
 
 .page-header {
 	padding: 30px;
-	margin-bottom: 40px;
+	margin-bottom: 20px;
 	width: 100%;
 	background-color: #fafbfc;
 	border: 1px solid #eaecef;
@@ -72,12 +72,12 @@
 	opacity : 0.5;
 }
 
-.page-link {
+.page-link, .page-link a, .page-link a:active, .page-link a:link, .page-link a:visited {
 	color: #0267d8;
 	text-decoration: underline;
 }
 
-.page-link:hover {
+.page-link:hover, .page-link a:hover {
 	cursor: pointer;
 	text-decoration: none;
 }

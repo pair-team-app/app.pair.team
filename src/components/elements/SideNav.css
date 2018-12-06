@@ -13,7 +13,7 @@
 }
 
 .side-nav-top-wrapper {
-	padding-bottom: 10px;
+	padding-bottom: 15px;
 	border-bottom: 1px solid #eaecef;
 }
 
@@ -36,7 +36,7 @@
 	font-size: 12px;
 	color: #999999;
 	text-decoration: underline;
-	margin: 20px 0;
+	margin: 30px 0 10px 0;
 	width: fit-content;
 }
 
@@ -77,14 +77,15 @@
 	color: #0267D8;
 	margin-bottom: 5px;
 	font-size: 12px;
+	text-decoration: underline;
 }
 
 .nav-link:hover, .nav-link a:hover {
-	text-decoration: underline;
+	text-decoration: none;
 	cursor: pointer;
 }
 
 .nav-link a, .nav-link a:active, .nav-link a:link, .nav-link a:visited {
-	text-decoration: none;
+	text-decoration: underline;
 	color: #0267D8;
 }
