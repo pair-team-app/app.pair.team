@@ -186,6 +186,7 @@ class App extends Component {
 		this.props.history.push('/');
 
 		cookie.save('user_id', '0', { path : '/' });
+		cookie.remove('user_email', { path : '/' });
 		this.setState({ userID : 0 });
 	};
 
