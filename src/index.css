@@ -8,6 +8,8 @@ html, body {
   letter-spacing: -0.27px;
   background-color: #ffffff;
   color: #696969;
+  /*-webkit-font-smoothing: antialiased;*/
+  /*-moz-osx-font-smoothing: grayscale;*/
 }
 
 *:focus {
@@ -74,16 +76,16 @@ h3 {
 
 /** Subsection title */
 h4 {
-  font-family: "San Francisco Text Medium", sans-serif;
+  font-family: "San Francisco Text SemiBold", sans-serif;
   font-size: 20px;
-  color: #000000;
-  letter-spacing: -0.6px;
+  letter-spacing: -0.33px;
   margin-bottom: 20px;
+  color: #1c1c1c;
 }
 
 h5 {
   margin-bottom: 10px;
-  font-family: "San Francisco Text", sans-serif;
+  font-family: "San Francisco Text Medium", sans-serif;
   font-size: 20px;
   color: #1c1c1c;
 }
@@ -97,12 +99,12 @@ h6 {
 
 input[type=text], input[type=password], input[type=tel], .input-txt {
   background-color: #fafbfc;
-  color: #000000;
+  color: #1c1c1c;
   padding: 15px 10px;
   width: 100%;
   border: 1px solid #eaecef;
   border-radius: 4px;
-  font-family: "San Francisco Text Medium", sans-serif;
+  font-family: "San Francisco Text", sans-serif;
   font-size: 16px;
   letter-spacing: -0.3px;
 }

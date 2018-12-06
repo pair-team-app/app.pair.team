@@ -198,7 +198,7 @@ class InviteTeamPage extends Component {
 							<button type="submit" className={inviteButtonClass} onClick={(event) => this.handleSubmit(event)}>Send Invites</button>
 						</form>
 					</div>)
-					: (<h5>Invitations sent.</h5>)}
+					: (<h4>Invitations sent.</h4>)}
 				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 
 				{this.state.popup.visible && (
