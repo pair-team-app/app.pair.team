@@ -101,9 +101,10 @@ class App extends Component {
 	handleSideNavUploadItem = (obj)=> {
 		console.log('handleSideNavUploadItem()', obj);
 
-		if (obj.selected) {
-			this.props.history.push('/proj/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
-		}
+		//if (obj.selected) {
+		this.handlePage('proj/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+			//this.props.history.push('/proj/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+		//}
 
 		this.setState({
 			uploadID   : (obj.selected) ? obj.id : -1,
