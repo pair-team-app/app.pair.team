@@ -343,7 +343,7 @@ class SideNav extends Component {
 							})}
 						</div>)}
 					</div>
-					<div className="side-nav-link" onClick={()=> this.props.onPage('new')}>New Project</div>
+					<div className="side-nav-link" onClick={()=> this.handleUplaod()}>New Project</div>
 				</div>
 				<div className="side-nav-team-wrapper">
 					<h6>Your teams</h6>
