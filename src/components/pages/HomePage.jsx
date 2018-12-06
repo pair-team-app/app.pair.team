@@ -34,7 +34,7 @@ class HomePage extends Component {
 
 	componentDidMount() {
 		console.log('HomePage().componentDidMount()', this.props);
-		if (this.props.uploadID !== 0) {
+		if (this.props.uploadID !== 0 && this.props.pageID !== 0) {
 			this.refreshData();
 
 		} else {
@@ -220,7 +220,7 @@ class HomePage extends Component {
 						{items}
 					</Row>
 				</div>) : (<div>
-						{(items.length === 0) && (<div><Row><h5>Activity</h5></Row>
+						{(this.props.uploadID === 0) && (<div><Row><h5>Activity</h5></Row>
 					<Row horizontal="space-between" className="explore-page-activity-wrapper" style={{flexWrap:'wrap'}}>
 						<ActivityItem content="To begin start a <a class='page-link' href='/new'>New Project</a> or <a class='page-link' href='/explore'>Explore</a>." avatar="/images/default-avatar.png" />
 						<ActivityItem content="Welcome to Design Engine, to begin start a new project." avatar="/images/default-avatar.png" />

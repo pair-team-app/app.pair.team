@@ -203,10 +203,20 @@ class App extends Component {
 				artboardID : 0
 			});
 
-			this.props.history.push('/');
+			if (window.location.pathname === '/') {
+				window.location.href = '/';
+
+			} else {
+				this.props.history.push('/');
+			}
 
 		} else {
-			this.props.history.push('/' + url);
+			if (window.location.pathname === '/' + url) {
+				window.location.href = '/' + url;
+
+			} else {
+				this.props.history.push('/' + url);
+			}
 		}
 	};
 
@@ -247,7 +257,7 @@ class App extends Component {
 				    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={this.state.uploadID} onPage={(url)=> this.handlePage(url)} />} />
 				    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route exact path="/mission" render={()=> <MissionPage onPage={(url)=> this.handlePage(url)} onRegister={()=> this.setState({ overlayAlert: 'register' })} onPayment={()=> this.setState({ overlayAlert: 'payment' })} onLogout={()=> this.handleLogout()} />} />
-				    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} />} />
+				    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
 			      <Route exact path="/privacy" render={()=> <PrivacyPage onPage={(url)=> this.handlePage(url)} />} />
 				    <Route path="/proj/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onPayment={()=> this.setState({ overlayAlert: 'payment' })} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onLogout={()=> this.handleLogout()} />} />
 				    <Route exact path="/recover" render={()=> <RecoverPage onPage={(url)=> this.handlePage(url)} />} />

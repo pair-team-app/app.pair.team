@@ -327,7 +327,7 @@ class UploadPage extends Component {
 				//console.log('UPLOAD_STATUS', response.data);
 				if (response.data.state === '3') {
 					clearInterval(this.uploadInterval);
-					//window.location.href = 'proj/' + this.state.uploadID + '/' + this.state.uploadTitle.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
+					window.location.href = 'proj/' + this.state.uploadID + '/' + this.state.uploadTitle.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
 				}
 
 				let status = response.data.message;
