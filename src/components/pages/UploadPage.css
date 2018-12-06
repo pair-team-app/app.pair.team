@@ -14,7 +14,7 @@
 
 .upload-page-progress {
 	height: 100%;
-	background-color: #61be51;
+	background-color: #68ca57;
 }
 
 .upload-page-header-dz {
@@ -35,4 +35,8 @@
 .upload-page-dz-wrapper {
 	position: relative;
 	width: 100%;
+}
+
+.home-page-artboards-wrapper {
+	/*margin-top: 20px;*/
 }

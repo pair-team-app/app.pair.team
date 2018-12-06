@@ -261,6 +261,26 @@ class UploadPage extends Component {
 			email5Valid : isEmail5Valid
 		});
 
+		if (!isEmail1Valid && this.state.email1.length > 0) {
+			this.setState({ email1 : 'Invalid Email Address' });
+		}
+
+		if (!isEmail2Valid && this.state.email2.length > 0) {
+			this.setState({ email2 : 'Invalid Email Address' });
+		}
+
+		if (!isEmail3Valid && this.state.email3.length > 0) {
+			this.setState({ email3 : 'Invalid Email Address' });
+		}
+
+		if (!isEmail4Valid && this.state.email4.length > 0) {
+			this.setState({ email4 : 'Invalid Email Address' });
+		}
+
+		if (!isEmail5Valid && this.state.email5.length > 0) {
+			this.setState({ email5 : 'Invalid Email Address' });
+		}
+
 		let emails = '';
 		if (isEmail1Valid) {
 			emails += this.state.email1 + ' ';
@@ -304,10 +324,10 @@ class UploadPage extends Component {
 		formData.append('upload_id', '' + this.state.uploadID);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
-				console.log('UPLOAD_STATUS', response.data);
+				//console.log('UPLOAD_STATUS', response.data);
 				if (response.data.state === '3') {
 					clearInterval(this.uploadInterval);
-					window.location.href = 'proj/' + this.state.uploadID + '/' + this.state.uploadTitle.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
+					//window.location.href = 'proj/' + this.state.uploadID + '/' + this.state.uploadTitle.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
 				}
 
 				let status = response.data.message;
@@ -459,8 +479,15 @@ class UploadPage extends Component {
 
 					<div>
 						<h3>Processing…</h3>
-						<Row horizontal="space-between" className="home-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
-							{artboards.map((artboard) => {
+						<Row horizontal="space-between" className="upload-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
+							{(artboards.length === 0) ? (
+								<Column key="0">
+									<ArtboardItem
+										title=""
+										image=""
+										size="landscape" />
+								</Column>
+							) : (artboards.map((artboard) => {
 								return (
 									<Column key={artboard.id}>
 										<ArtboardItem
@@ -470,7 +497,7 @@ class UploadPage extends Component {
 											onClick={() => this.props.onArtboardClicked(artboard)} />
 									</Column>
 								);
-							})}
+							}))}
 						</Row>
 					</div>
 
@@ -479,11 +506,11 @@ class UploadPage extends Component {
 						Enter the email address of each member of your team to invite them to this project.
 						<div className="upload-page-form-wrapper">
 							<div style={{width:"33%"}}>
-								<div className={email1Class}><input type="text" name="email1" placeholder="Enter Email Address" value={email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-								<div className={email2Class}><input type="text" name="email2" placeholder="Enter Email Address" value={email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-								<div className={email3Class}><input type="text" name="email3" placeholder="Enter Email Address" value={email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-								<div className={email4Class}><input type="text" name="email4" placeholder="Enter Email Address" value={email4} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-								<div className={email5Class}><input type="text" name="email5" placeholder="Enter Email Address" value={email5} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+								<div className={email1Class}><input type="text" name="email1" placeholder="Enter Email Address" value={email1} onFocus={()=> this.setState({ action : '', email1 : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+								<div className={email2Class}><input type="text" name="email2" placeholder="Enter Email Address" value={email2} onFocus={()=> this.setState({ action : '', email2 : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+								<div className={email3Class}><input type="text" name="email3" placeholder="Enter Email Address" value={email3} onFocus={()=> this.setState({ action : '', email3 : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+								<div className={email4Class}><input type="text" name="email4" placeholder="Enter Email Address" value={email4} onFocus={()=> this.setState({ action : '', email4 : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+								<div className={email5Class}><input type="text" name="email5" placeholder="Enter Email Address" value={email5} onFocus={()=> this.setState({ action : '', email5 : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 							</div>
 							<button className={inviteButtonClass} onClick={() => this.handleInvite()}>Submit</button>
 						</div>
