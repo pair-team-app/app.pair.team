@@ -232,7 +232,7 @@ class SideNav extends Component {
 			});
 		}
 
-		wrapper.current.scrollTo(0, 0);
+		//wrapper.current.scrollTo(0, 0);
 		this.props.onUploadItem(upload);
 	};
 
