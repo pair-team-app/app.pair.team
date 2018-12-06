@@ -2,7 +2,7 @@
 .bottom-nav-wrapper {
 	width: 100%;
 	margin: 20px 0;
-	font-family: "San Francisco Text Bold", sans-serif;
+	font-family: "San Francisco Text", sans-serif;
 	font-size: 12px;
 	letter-spacing: -0.4px;
 }
@@ -30,7 +30,7 @@
 }
 
 .copyright {
-	font-family: "San Francisco Text SemiBold", sans-serif;
+	font-family: "San Francisco Text", sans-serif;
 	letter-spacing: -0.4px;
 	color: #9b9b9b;
 }
