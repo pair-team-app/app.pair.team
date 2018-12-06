@@ -142,7 +142,6 @@ class App extends Component {
 
 	handleArtboardClicked = (artboard)=> {
 		console.log('handleArtboardClicked()', artboard);
-		wrapper.current.scrollTo(0, 0);
 
 		let formData = new FormData();
 		formData.append('action', 'ADD_VIEW');
@@ -155,6 +154,7 @@ class App extends Component {
 					pageID     : artboard.pageID,
 					artboardID : artboard.id
 				});
+				wrapper.current.scrollTo(0, 0);
 			}).catch((error) => {
 		});
 	};
