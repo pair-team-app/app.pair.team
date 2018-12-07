@@ -48,18 +48,21 @@
 
 .artboard-item-image {
 	position: absolute;
-	top: 35px;
+	/*top: 35px;*/
+	top: 50%;
 	left: 50%;
-	transform: translate(-50%, 0);
-	-webkit-transform: translate(-50%, 0);
+	/*transform: translate(-50%, 0);*/
+	transform: translate(-50%, -50%);
+	/*-webkit-transform: translate(-50%, 0);*/
+	-webkit-transform: translate(-50%, -50%);
 }
 
 .artboard-item-image-landscape {
-	width: 45%
+	width: 65%
 }
 
 .artboard-item-image-portrait {
-	height: 45%;
+	height: 65%;
 }
 
 .artboard-item-details-wrapper {
