@@ -22,9 +22,9 @@ class ArtboardItem extends Component {
 				{(this.props.title !== '') && (<div>
 					<img className={imageClass} src={this.props.image} alt={this.props.title} />
 					<div className="artboard-item-overlay" />
-					<img className="artboard-item-icon" src="/images/icon-sketch.png" />
+					<img className="artboard-item-icon" src="/images/icon-sketch.png" alt="Icon" />
 					<div className="artboard-item-details-wrapper">
-						<img className="artboard-item-avatar" src="/images/default-avatar.png" />
+						<img className="artboard-item-avatar" src="/images/default-avatar.png" alt="Avatar" />
 						<div className="artboard-item-title">{this.state.title}</div>
 					</div>
 				</div>)}

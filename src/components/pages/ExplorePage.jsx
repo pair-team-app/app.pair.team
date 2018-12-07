@@ -7,7 +7,6 @@ import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
 import BottomNav from '../elements/BottomNav';
-import ActivityItem from '../iterables/ActivityItem';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Popup from '../elements/Popup';
 
