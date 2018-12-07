@@ -12,7 +12,7 @@
 	height: 100%;
 	overflow-x: hidden;
 	overflow-y: scroll;
-	padding: 23px 20px;
+	padding: 19px;
 }
 
 .page-wrapper {
@@ -22,7 +22,7 @@
 }
 
 .page-header {
-	padding: 30px;
+	padding: 29px 29px 42px 29px;
 	margin-bottom: 20px;
 	width: 100%;
 	background-color: #fafbfc;
@@ -33,10 +33,10 @@
 .page-header-text {
 	text-align: center;
 	margin: 0 0 28px 0;
-	line-height: 40px;
+	line-height: 30px;
 	font-family: "San Francisco Text", sans-serif;
-	font-size: 20px;
-	letter-spacing: -0.3px;
+	font-size: 16px;
+	letter-spacing: -0.24px;
 }
 
 .page-header-subtext {
@@ -49,6 +49,10 @@
 	margin-top: 18px;
 	font-size: 14px;
 	letter-spacing: -0.23px;
+}
+
+.long-button {
+	padding: 9px 45px;
 }
 
 .narrow-button {

@@ -188,7 +188,7 @@ class HomePage extends Component {
 								<Row horizontal="center">
 									<button className="adjacent-button" onClick={()=> this.handleDownload()}>Download Parts</button>
 									<button className="adjacent-button">Clone Project</button>
-									<button className="adjacent-button" onClick={()=> this.props.onPage('invite-team')}>Invite Team Members</button>
+									<button onClick={()=> this.props.onPage('invite-team')}>Invite Team Members</button>
 									<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={this.state.uploadURL}>
 										<button>Copy Project URL</button>
 									</CopyToClipboard>
@@ -210,7 +210,7 @@ class HomePage extends Component {
 								<div className="page-header-text">Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.</div>
 								<Row horizontal="center">
 									<button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign Up with Email</button>
-									<button className="adjacent-button" onClick={()=> this.props.onPage('login')}>Login</button>
+									<button className="long-button" onClick={()=> this.props.onPage('login')}>Login</button>
 								</Row>
 							</div>
 						</Column>
