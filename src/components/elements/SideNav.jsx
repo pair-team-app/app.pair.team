@@ -326,9 +326,9 @@ class SideNav extends Component {
 					</Row></h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
 						{(cookie.load('user_id') === '0') ? (<div>
-							You must be logged in.
+							<span className="side-nav-subtext">You must be logged in.</span>
 						</div>) : (<div>
-								{(uploads.length === 0) ? 'You don\'t have any projects yet!' : uploads.map((upload, i) => {
+								{(uploads.length === 0) ? <span className="side-nav-subtext">You don't have any projects yet!</span> : uploads.map((upload, i) => {
 								return (
 									<UploadTreeItem
 										key={i}

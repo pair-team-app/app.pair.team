@@ -94,7 +94,7 @@ class RegisterPage extends Component {
 
 		return (
 			<div className="page-wrapper register-page-wrapper">
-				<h4>Sign Up</h4>
+				<h3>Sign Up</h3>
 				Enter the email address of each member of your team to invite them to this project.
 				<div className="register-page-form-wrapper">
 					{(errorMsg !== '') && (<div className="input-wrapper input-wrapper-error"><input type="text" placeholder="" value={errorMsg} disabled /></div>)}

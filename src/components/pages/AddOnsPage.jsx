@@ -41,7 +41,7 @@ class AddOnsPage extends Component {
 						<button onClick={()=> window.open('https://spectrum.chat/designengine')}>Spectrum</button>
 					</Row>
 				</div>
-				<h4>Add Ons</h4>
+				<h3>Add Ons</h3>
 				<Row horizontal="space-between" className="add-ons-plugins-wrapper" style={{flexWrap:'wrap'}}>
 					{items}
 				</Row>

@@ -7,12 +7,12 @@
 .content-wrapper {
 	position: fixed;
 	top: 58px;
-	left: 300px;
-	width: calc(100% - 300px);
+	left: 301px;
+	width: calc(100% - 301px);
 	height: 100%;
 	overflow-x: hidden;
 	overflow-y: scroll;
-	padding: 25px 20px;
+	padding: 23px 20px;
 }
 
 .page-wrapper {
@@ -52,11 +52,11 @@
 }
 
 .narrow-button {
-	padding: 12px 20px;
+	padding: 14px 24px;
 }
 
 .adjacent-button {
-	margin-right: 14px;
+	margin-right: 20px;
 }
 
 .stack-button {
@@ -69,7 +69,7 @@
 	/*background-image: none;*/
 	/*border-color: #9f9f9f;*/
 	/*color: #e9e9e9;*/
-	opacity : 0.5;
+	opacity : 0.75;
 }
 
 .page-link, .page-link a, .page-link a:active, .page-link a:link, .page-link a:visited {
@@ -95,7 +95,7 @@
 }
 
 .input-wrapper {
-	margin-bottom: 20px;
+	margin-bottom: 18px;
 	border: 1px solid rgba(0, 0, 0, 0);
 	border-radius: 4px;
 }

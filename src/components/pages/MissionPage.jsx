@@ -42,7 +42,7 @@ class MissionPage extends Component {
 					<Row><p>Design Engine was created by Matt Holcombe (Engineer) &amp; Jason Festa (Designer). Matt &amp; Jason co-founded Design Engine with two values, 1) We wanted to create Design Software we would actually use and 2) We wanted to provide a tool to allow engineers to build interfaces faster. Matt &amp; Jason together have developed…
 						{/*<span className="page-link">Read More</span>*/}
 					</p></Row>
-					<Row><h4>Customer Reviews</h4></Row>
+					<Row><h3>Customer Reviews</h3></Row>
 					<Row horizontal="space-around" className="mission-page-reviews-wrapper" style={{flexWrap:'wrap'}}>
 						{items}
 					</Row>

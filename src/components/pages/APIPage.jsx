@@ -58,7 +58,7 @@ class APIPage extends Component {
 				</div>
 
 				<div className="api-topic-wrapper">
-					<h4>Project</h4>
+					<h3>Project</h3>
 					<p className="api-page-paragraph">Renders entire Design Engine Project in JSON format.</p>
 					<div className="api-page-url-box">
 						<a href={this.state.urls[0]} target="_blank" rel="noopener noreferrer">{this.state.urls[0]}</a>
@@ -69,7 +69,7 @@ class APIPage extends Component {
 				</div>
 
 				<div className="api-topic-wrapper">
-					<h4>Pages</h4>
+					<h3>Pages</h3>
 					<p className="api-page-paragraph">Renders ALL pages from your Design Engine Project in JSON format.</p>
 					<div className="api-page-url-box">
 						<a href={this.state.urls[0]} target="_blank" rel="noopener noreferrer">{this.state.urls[0]}</a>
@@ -80,7 +80,7 @@ class APIPage extends Component {
 				</div>
 
 				<div className="api-topic-wrapper">
-					<h4>Artboards</h4>
+					<h3>Artboards</h3>
 					<p className="api-page-paragraph">Renders ALL artboards found inside EACH Page from your Design Engine Project in JSON format.</p>
 					<div className="api-page-url-box">
 						<a href={this.state.urls[1]} target="_blank" rel="noopener noreferrer">{this.state.urls[1]}</a>
@@ -91,7 +91,7 @@ class APIPage extends Component {
 				</div>
 
 				<div className="api-topic-wrapper">
-					<h4>Slices</h4>
+					<h3>Slices</h3>
 					<p className="api-page-paragraph">Renders ALL Slices found inside EACH Artboard from your Design Engine Project in JSON format.</p>
 					<div className="api-page-url-box">
 						<a href={this.state.urls[0]} target="_blank" rel="noopener noreferrer">{this.state.urls[0]}</a>
@@ -102,7 +102,7 @@ class APIPage extends Component {
 				</div>
 
 				<div className="api-topic-wrapper">
-					<h4>Text Fields</h4>
+					<h3>Text Fields</h3>
 					<p className="api-page-paragraph">Renders ALL Text Fields found inside EACH Artboard from your Design Engine Project in JSON format.</p>
 					<div className="api-page-url-box">
 						<a href={this.state.urls[0]} target="_blank" rel="noopener noreferrer">{this.state.urls[0]}</a>
@@ -113,7 +113,7 @@ class APIPage extends Component {
 				</div>
 
 				<div className="api-topic-wrapper">
-					<h4>Backgrounds</h4>
+					<h3>Backgrounds</h3>
 					<p className="api-page-paragraph">Renders ALL Backgrounds found inside EACH Artboard from your Design Engine Project in JSON format.</p>
 					<div className="api-page-url-box">
 						<a href={this.state.urls[0]} target="_blank" rel="noopener noreferrer">{this.state.urls[0]}</a>
@@ -124,7 +124,7 @@ class APIPage extends Component {
 				</div>
 
 				<div className="api-topic-wrapper">
-					<h4>Buttons</h4>
+					<h3>Buttons</h3>
 					<p className="api-page-paragraph">Renders ALL Buttons or Hot Zones found inside EACH Artboard from your Design Engine Project in JSON format.</p>
 					<div className="api-page-url-box">
 						<a href={this.state.urls[0]} target="_blank" rel="noopener noreferrer">{this.state.urls[0]}</a>
@@ -135,7 +135,7 @@ class APIPage extends Component {
 				</div>
 
 				{/*<div className="api-topic-wrapper">*/}
-					{/*<h4>Code Snippet</h4>*/}
+					{/*<h3>Code Snippet</h3>*/}
 					{/*<p className="api-page-paragraph">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p>*/}
 					{/*<div className="code-snippet api-page-code-box">*/}
 						{/*<span dangerouslySetInnerHTML={{ __html : this.state.codes[0].html }} />*/}

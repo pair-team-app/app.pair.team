@@ -32,7 +32,7 @@ class StripeOverlay extends Component {
 							<div className="page-header-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</div>
 							<Row horizontal="center"><button onClick={()=> this.props.onClick('cancel')}>Cancel</button></Row>
 						</div>
-						<h4>Payment details</h4>
+						<h3>Payment details</h3>
 						<StripeProvider apiKey={this.STRIPE_TEST_TOKEN}>
 							{/*<StripeProvider apiKey={this.STRIPE_LIVE_TOKEN}>*/}
 							<Elements>

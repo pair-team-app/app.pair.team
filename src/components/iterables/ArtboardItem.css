@@ -3,7 +3,7 @@
 	position: relative;
 	width: 260px;
 	height: 350px;
-	background-color: #111111;
+	background: #111111 url("/images/checkerboard.png") repeat;
 	margin-bottom: 18px;
 	border-radius: 8px;
 	color: #0267d8;
@@ -38,6 +38,14 @@
 	cursor: default;
 }
 
+.artboard-item-icon {
+	position: absolute;
+	left: 10px;
+	top: 10px;
+	width: 18px;
+	height: 18px;
+}
+
 .artboard-item-image {
 	position: absolute;
 	top: 35px;
@@ -60,10 +68,22 @@
 	bottom: 0;
 	width: 100%;
 	padding: 16px;
+	display: table;
+}
+
+.artboard-item-avatar {
+	width: 28px;
+	height: 28px;
+	margin-right: 8px;
+	display: table-cell;
+	border-radius: 4px;
 }
 
 .artboard-item-title {
 	width: 100%;
-	height: 25px;
+	height: 28px;
 	padding: 4px 0;
+	display: table-cell;
+	vertical-align: middle;
+	text-decoration: underline;
 }

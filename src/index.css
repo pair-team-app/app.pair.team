@@ -27,8 +27,8 @@ a:hover {
 
 button {
   padding: 12px 35px;
-  background: #28a745 linear-gradient(-180deg, #34d058, #28a745 90%);
-  border: 1px solid rgba(27, 31, 35, 0.2);
+  background: #57aa48 linear-gradient(-180deg, #69cd58, #57aa48 90%) -0.5em;
+  border: 1px solid #4e9500;
   border-radius: 4px;
   font-family: "San Francisco Text Bold", sans-serif;
   font-size: 18px;
@@ -38,7 +38,7 @@ button {
 
 button:hover, button:active {
   cursor: pointer;
-  background: #269f42 linear-gradient(-180deg, #2fcb53, #269f42 90%) -0.5em;
+  background: #28a745 linear-gradient(-180deg, #34d058, #28a745 90%);
   border-color: rgba(27, 31, 35, 0.5);
 }
 
@@ -53,6 +53,7 @@ h1, h2, h3, h4, h5 {
 /** Page header */
 h1 {
   font-family: "San Francisco Text SemiBold", sans-serif;
+  font-weight: 600;
   font-size: 48px;
   letter-spacing: -0.6px;
   color: #1c1c1c;
@@ -61,6 +62,7 @@ h1 {
 /** FAQ title */
 h2 {
   font-family: "San Francisco Text SemiBold", sans-serif;
+  font-weight: 600;
   font-size: 35px;
   letter-spacing: -0.66px;
   color: #1c1c1c;
@@ -69,41 +71,46 @@ h2 {
 /** Section title */
 h3 {
   font-family: "San Francisco Text SemiBold", sans-serif;
+  font-weight: 600;
   font-size: 20px;
   letter-spacing: -0.33px;
   color: #1c1c1c;
+  margin-bottom: 17px;
 }
 
 /** Subsection title */
 h4 {
-  font-family: "San Francisco Text SemiBold", sans-serif;
-  font-size: 20px;
-  letter-spacing: -0.33px;
-  margin-bottom: 20px;
-  color: #1c1c1c;
+  font-family: "San Francisco Text", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: -0.24px;
+  margin-bottom: 28px;
+  color: #696969;
 }
 
 h5 {
   margin-bottom: 10px;
   font-family: "San Francisco Text Medium", sans-serif;
+  font-weight: 500;
   font-size: 20px;
   color: #1c1c1c;
 }
 
 h6 {
   font-family: "San Francisco Text Bold", sans-serif;
+  font-weight: 700;
   font-size: 12px;
   color: #483e37;
-  margin: 0 0 15px 0;
+  margin: 0 0 11px 0;
 }
 
-input[type=text], input[type=password], input[type=tel], .input-txt {
+input[type=text], input[type=password], input[type=tel], textarea, .input-txt {
   background-color: #fafbfc;
   color: #1c1c1c;
-  padding: 15px 10px;
+  padding: 18px 12px;
   width: 100%;
   border: 1px solid #eaecef;
-  border-radius: 4px;
+  border-radius: 3px;
   font-family: "San Francisco Text", sans-serif;
   font-size: 16px;
   letter-spacing: -0.3px;
@@ -126,14 +133,6 @@ sup {
 }
 
 textarea {
-  width: 100%;
-  border: 1px solid #eaecef;
-  background-color: #fafbfc;
-  border-radius: 4px;
-  font-family: "San Francisco Text Medium", sans-serif;
-  font-size: 16px;
-  letter-spacing: -0.3px;
-  color: #4a4a4a;
   resize: none;
 }
 

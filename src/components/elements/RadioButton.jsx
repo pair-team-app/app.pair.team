@@ -16,9 +16,9 @@ class RadioButton extends Component {
 	}
 
 	render() {
-		const buttonClass = (this.props.enabled) ? 'radio-button-button' : 'radio-button-button';//'radio-button-button radio-button-button-disabled button-disabled';
-		const titleClass = (this.props.enabled) ? 'radio-button-title' : 'radio-button-title';//'radio-button-title radio-button-title-disabled';
-		const subtextClass = (this.props.enabled) ? 'radio-button-subtext' : 'radio-button-subtext';//'radio-button-subtext radio-button-subtext-disabled';
+		const buttonClass = (this.props.enabled) ? 'radio-button-button' : 'radio-button-button radio-button-button-disabled button-disabled';
+		const titleClass = (this.props.enabled) ? 'radio-button-title' : 'radio-button-title radio-button-title-disabled';
+		const subtextClass = (this.props.enabled) ? 'radio-button-subtext' : 'radio-button-subtext radio-button-subtext-disabled';
 
 		return (
 			<div className="radio-button"><Row vertical="center">

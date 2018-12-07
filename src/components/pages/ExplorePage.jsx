@@ -76,7 +76,7 @@ class ExplorePage extends Component {
 					</Column>
 				</Row>
 
-				<Row><h4>Explore</h4></Row>
+				<Row><h3>Explore</h3></Row>
 				<Row horizontal="space-between" className="explore-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
 					{items}
 				</Row>

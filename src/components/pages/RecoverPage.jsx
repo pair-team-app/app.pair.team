@@ -55,7 +55,7 @@ class RecoverPage extends Component {
 
 		return (
 			<div className="page-wrapper recover-page-wrapper">
-				<h4>Forgot Password</h4>
+				<h3>Forgot Password</h3>
 				Enter the email address of each member of your team to invite them to this project.
 				<div className="recover-page-form-wrapper">
 					{(errorMsg !== '') && (<div className="input-wrapper input-wrapper-error"><input type="text" placeholder="" value={errorMsg} disabled /></div>)}
