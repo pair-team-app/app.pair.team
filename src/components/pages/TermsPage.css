@@ -1,12 +1,9 @@
 
 .terms-page-wrapper {
+	margin-top: 5px;
 }
 
-.terms-text {
-	margin-top: 20px;
+.terms-page-text {
+	margin-top: 24px;
 	text-align: left;
-}
-
-.terms-list {
-	margin-bottom: 20px;
 }

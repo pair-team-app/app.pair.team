@@ -321,7 +321,7 @@ class SideNav extends Component {
 				<div className="side-nav-top-wrapper">
 					{/*<button className="side-nav-invite-button" onClick={()=> this.handleInvite()}>Invite Team Members</button>*/}
 					<h3 className="side-nav-header"><Row vertical="center" style={{width:'100%'}}>
-						<Column flexGrow={1} horizontal="start">Projects</Column>
+						<Column flexGrow={1} horizontal="start">{(window.location.pathname.includes('/explore')) ? 'Explore' : 'Projects'}</Column>
 						<Column flexGrow={1} horizontal="end"><button className="side-nav-upload-button" onClick={()=> this.handleUplaod()}>New</button></Column>
 					</Row></h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>

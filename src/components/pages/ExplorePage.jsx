@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './ExplorePage.css';
 
 import axios from "axios/index";
-import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
 import BottomNav from '../elements/BottomNav';
@@ -62,20 +61,7 @@ class ExplorePage extends Component {
 
 		return (
 			<div className="page-wrapper explore-page-wrapper">
-				<Row vertical="start">
-					<Column flexGrow={1} horizontal="center">
-						{(cookie.load('user_id') === '0') && (<div className="page-header">
-							<Row horizontal="center"><h1>Design for Engineers</h1></Row>
-							<div className="page-header-text">Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.</div>
-							<Row horizontal="center">
-								<button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign Up with Email</button>
-								<button onClick={()=> this.props.onPage('login')}>Sign In</button>
-							</Row>
-						</div>)}
-					</Column>
-				</Row>
-
-				<Row><h3>Explore</h3></Row>
+				<Row><h3>Recent</h3></Row>
 				<Row horizontal="space-between" className="explore-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
 					{items}
 				</Row>

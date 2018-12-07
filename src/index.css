@@ -26,7 +26,7 @@ a:hover {
 }
 
 button {
-  padding: 9px 30px;
+  padding: 9px 24px;
   background: #57aa48 linear-gradient(-180deg, #69cd58, #57aa48 90%) -0.5em;
   border: 1px solid #4e9500;
   border-radius: 4px;
@@ -74,7 +74,7 @@ h3 {
   font-family: "San Francisco Text SemiBold", sans-serif;
   font-weight: 600;
   font-size: 20px;
-  letter-spacing: -0.33px;
+  letter-spacing: -0.6px;
   color: #1c1c1c;
   margin-bottom: 17px;
 }
@@ -119,9 +119,8 @@ input[type=text], input[type=password], input[type=tel], textarea, .input-txt {
 
 p {
   font-family: "San Francisco Text", sans-serif;
-  font-size: 20px;
-  line-height: 40px;
-  margin-bottom: 40px;
+  line-height: 32px;
+  margin-bottom: 32px;
   color: #696969;
 }
 
