@@ -335,6 +335,7 @@ class UploadPage extends Component {
 
 				formData.append('action', 'ARTBOARDS');
 				formData.append('upload_id', '' + this.state.uploadID);
+				formData.append('slices', '0');
 				formData.append('page_id', '-1');
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response)=> {

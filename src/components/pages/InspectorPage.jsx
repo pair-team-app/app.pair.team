@@ -5,7 +5,6 @@ import './InspectorPage.css';
 import axios from 'axios';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
-import panAndZoomHoc from 'react-pan-and-zoom-hoc';
 import { Column, Row } from 'simple-flexbox';
 
 import CommentItem from '../iterables/CommentItem';
@@ -18,8 +17,6 @@ const dragWrapper = React.createRef();
 const heroWrapper = React.createRef();
 const heroImage = React.createRef();
 const canvas = React.createRef();
-
-const InteractiveDiv = panAndZoomHoc('div');
 
 class InspectorPage extends Component {
 	constructor(props) {
@@ -139,6 +136,8 @@ class InspectorPage extends Component {
 // 				console.log('PAGE', response.data);
 				this.setState({ page : response.data.page });
 
+
+
 				formData.append('action', 'ARTBOARD');
 				formData.append('artboard_id', '' + artboardID);
 				axios.post('https://api.designengine.ai/system.php', formData)
@@ -160,7 +159,6 @@ class InspectorPage extends Component {
 								pageID    : response.data.artboard.page_id,
 								title     : response.data.artboard.title,
 								filename  : response.data.artboard.filename,
-// 								filename  : (response.data.artboard.type === 'slice') ? response.data.artboard.filename : 'https://via.placeholder.com/' + JSON.parse(response.data.artboard.meta).frame.size.width + 'x' + JSON.parse(response.data.artboard.meta).frame.size.height,
 								meta      : JSON.parse(response.data.artboard.meta),
 								views     : response.data.artboard.views,
 								downloads : response.data.artboard.downloads,
@@ -534,12 +532,7 @@ class InspectorPage extends Component {
 // 		const { page, artboard, slice } = this.state;
 		const { page, artboard, slice } = this.state;
 		const { visibleTypes } = this.state;
-// 		const { scale } = this.state;
-
-
-		const { x, y, scale } = this.state;
-		const p1 = this.transformPoint({x: 0.5, y: 0.5});
-
+		const { scale } = this.state;
 
 		//this.scale = (artboard && heroImage && heroImage.current) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? heroImage.current.clientWidth / artboard.meta.frame.size.width : heroImage.current.clientHeight / artboard.meta.frame.size.height : 1;
 
@@ -717,7 +710,8 @@ class InspectorPage extends Component {
 			position        : 'absolute',
 			width           : (artboard) ? 3 * (50 + (artboard.meta.frame.size.width * this.state.scale)) : 0,
 			height          : (artboard) ? artboard.meta.frame.size.height * this.state.scale : 0,
-			transform       : `translate(${p1.x * 500}px, ${p1.y * 500}px)`
+// 			transform       : (artboard) ? 'translate(' + ((3 * (50 + (artboard.meta.frame.size.width * this.state.scale))) * -0.5) + 'px, ' + ((artboard.meta.frame.size.height * this.state.scale) * 0.5) + 'px)' : 'translate(0px, 0px)'
+			transform       : (artboard) ? 'translate(0px, ' + ((artboard.meta.frame.size.height * this.state.scale) * 0.5) + 'px)' : 'translate(0px, 0px)'
 		};
 
 
@@ -746,25 +740,25 @@ class InspectorPage extends Component {
 								</Column>
 							</Row></div>
 						)}
-						<div className="inspector-page-zoom-wrapper">
-							<button className={'inspector-page-float-button' + ((scale >= 2) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 2) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button><br />
-							<button className={'inspector-page-float-button' + ((scale <= 0.5) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.5) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button><br />
-							<button className="inspector-page-float-button" onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src="/images/layer-off_selected.svg" alt="0" /></button>
-						</div>
-						<div className="inspector-page-toggle-wrapper">
-							<SliceToggle type="hotspot" selected={visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} />
-							<SliceToggle type="slice" selected={visibleTypes.slice} onClick={()=> this.handleSliceToggle('slice')} />
-							<SliceToggle type="textfield" selected={visibleTypes.textfield} onClick={()=> this.handleSliceToggle('textfield')} />
-							<SliceToggle type="background" selected={visibleTypes.background} onClick={()=> this.handleSliceToggle('background')} />
-							<SliceToggle type="" selected={(visibleTypes.all)} onClick={()=> this.handleSliceToggle('all')} />
-						</div>
-						<div className="inspector-page-button-wrapper"><Row>
-							<Column flex={1}><button className="inspector-page-button adjacent-button" onClick={()=> this.handleDownload()}>Download Parts</button></Column>
-							<Column flex={1}><button className="inspector-page-button adjacent-button" onClick={()=> this.handleDownload()}>Clone Project</button></Column>
-							<Column flex={1}><button className="inspector-page-button adjacent-button" onClick={()=> this.handleDownload()}>Invite Team</button></Column>
-							<Column flex={1}><button className="inspector-page-button" onClick={()=> this.handleDownload()}>Comment</button></Column>
-						</Row></div>
 					</div>
+					<div className="inspector-page-zoom-wrapper">
+						<button className={'inspector-page-float-button' + ((scale >= 2) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 2) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button><br />
+						<button className={'inspector-page-float-button' + ((scale <= 0.5) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.5) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button><br />
+						<button className="inspector-page-float-button" onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src="/images/layer-off_selected.svg" alt="0" /></button>
+					</div>
+					<div className="inspector-page-toggle-wrapper">
+						<SliceToggle type="hotspot" selected={visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} />
+						<SliceToggle type="slice" selected={visibleTypes.slice} onClick={()=> this.handleSliceToggle('slice')} />
+						<SliceToggle type="textfield" selected={visibleTypes.textfield} onClick={()=> this.handleSliceToggle('textfield')} />
+						<SliceToggle type="background" selected={visibleTypes.background} onClick={()=> this.handleSliceToggle('background')} />
+						<SliceToggle type="" selected={(visibleTypes.all)} onClick={()=> this.handleSliceToggle('all')} />
+					</div>
+					<div className="inspector-page-button-wrapper"><Row>
+						<Column flex={1}><button className="inspector-page-button adjacent-button" onClick={()=> this.handleDownload()}>Download Parts</button></Column>
+						<Column flex={1}><button className="inspector-page-button adjacent-button" onClick={()=> this.handleDownload()}>Clone Project</button></Column>
+						<Column flex={1}><button className="inspector-page-button adjacent-button" onClick={()=> this.handleDownload()}>Invite Team</button></Column>
+						<Column flex={1}><button className="inspector-page-button" onClick={()=> this.handleDownload()}>Comment</button></Column>
+					</Row></div>
 				</div>
 				<div className="inspector-page-panel">
 					<div className="inspector-page-panel-content-wrapper">
