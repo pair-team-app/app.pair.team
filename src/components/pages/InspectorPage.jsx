@@ -5,10 +5,9 @@ import './InspectorPage.css';
 import axios from 'axios';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
-import Draggable from 'react-draggable';
+import panAndZoomHoc from 'react-pan-and-zoom-hoc';
 import { Column, Row } from 'simple-flexbox';
 
-import BottomNav from '../elements/BottomNav';
 import CommentItem from '../iterables/CommentItem';
 import Dropdown from '../elements/Dropdown';
 import SliceItem from '../iterables/SliceItem';
@@ -20,18 +19,22 @@ const heroWrapper = React.createRef();
 const heroImage = React.createRef();
 const canvas = React.createRef();
 
+const InteractiveDiv = panAndZoomHoc('div');
+
 class InspectorPage extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
+			x: 0.5,
+			y: 0.5,
+			scale: 0.5,
 			pageID        : this.props.match.params.pageID,
 			artboardID    : this.props.match.params.artboardID,
 			sliceID       : this.props.match.params.sliceID,
 			slice         : null,
 			hoverSlice    : null,
 			canvasVisible : true,
-			scale         : 0.85,
 			page          : null,
 			artboard      : null,
 			code          : {
@@ -79,6 +82,22 @@ class InspectorPage extends Component {
 
 		cookie.save('upload_id', this.props.match.params.uploadID, { path : '/' });
 	}
+
+	handlePanAndZoom = (x, y, scale) => {
+		this.setState({ x, y, scale });
+	};
+
+	handlePanMove = (x, y) => {
+		this.setState({ x, y });
+	};
+
+	transformPoint({ x, y }) {
+		return {
+			x: 0.5 + this.state.scale * (x - this.state.x),
+			y: 0.5 + this.state.scale * (y - this.state.y)
+		};
+	}
+
 
 	componentDidMount() {
 		this.refreshData();
@@ -251,7 +270,7 @@ class InspectorPage extends Component {
 	handleZoom = (direction)=> {
 		const { scale } = this.state;
 
-		this.setState({ scale : (direction === 0) ? 1 : Math.min(Math.max(scale + (direction * 0.025), 1), 3) });
+		this.setState({ scale : (direction === 0) ? 1 : Math.min(Math.max(scale + (direction * 0.025), 0.5), 2) });
 	};
 
 	handleSliceRollOver = (ind, slice)=> {
@@ -515,7 +534,12 @@ class InspectorPage extends Component {
 // 		const { page, artboard, slice } = this.state;
 		const { page, artboard, slice } = this.state;
 		const { visibleTypes } = this.state;
-		const { scale } = this.state;
+// 		const { scale } = this.state;
+
+
+		const { x, y, scale } = this.state;
+		const p1 = this.transformPoint({x: 0.5, y: 0.5});
+
 
 		//this.scale = (artboard && heroImage && heroImage.current) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? heroImage.current.clientWidth / artboard.meta.frame.size.width : heroImage.current.clientHeight / artboard.meta.frame.size.height : 1;
 
@@ -526,15 +550,6 @@ class InspectorPage extends Component {
 			width   : '100%',
 			height  : '100%'
 		};
-
-
-// 		const selectedOffset = (dragWrapper.current) ? {
-// 			x : parseInt(dragWrapper.current.style.transform.split('(')[1].slice(0, -1).split(', ')[0].replace('px', ''), 10),
-// 			y : parseInt(dragWrapper.current.style.transform.split('(')[1].slice(0, -1).split(', ')[1].replace('px', ''), 10),
-// 		} : {
-// 			x : 0,
-// 			y : 0
-// 		};
 
 		let self = this;
 		if (this.rerender === 0) {
@@ -602,10 +617,12 @@ class InspectorPage extends Component {
 		const heroImageStyle = {
 			width              : (artboard) ? (scale * artboard.meta.frame.size.width) + 'px' : '0',
 			height             : (artboard) ? (scale * artboard.meta.frame.size.height) + 'px' : '0',
+			backgroundColor    : '#000000',
 			backgroundImage    : (artboard) ? 'url("' + artboard.filename + '")' : 'none',
 			backgroundSize     : 'cover',
 			backgroundRepeat   : 'no-repeat',
-			backgroundPosition : 'center'
+			backgroundPosition : 'center',
+			marginRight        : '50px'
 		};
 
 		const canvasClass = 'inspector-page-hero-canvas-wrapper' + ((this.state.canvasVisible) ? '' : ' is-hidden');
@@ -696,75 +713,61 @@ class InspectorPage extends Component {
 		}) : [];
 
 
+		const wrapperStyle = {
+			position        : 'absolute',
+			width           : (artboard) ? 3 * (50 + (artboard.meta.frame.size.width * this.state.scale)) : 0,
+			height          : (artboard) ? artboard.meta.frame.size.height * this.state.scale : 0,
+			transform       : `translate(${p1.x * 500}px, ${p1.y * 500}px)`
+		};
+
+
 		console.log('InspectorPage.render()', scale, draggableBounds);
 
 		return (<div style={{paddingBottom:'30px'}}>
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
-					{/*<div className="inspector-page-title">{(artboard) ? artboard.title : 'Loading…'}</div>*/}
 					<div className="inspector-page-hero-wrapper" ref={heroWrapper}>
-						{(artboard) && (<Draggable
-							defaultPosition={draggablePosition}
-							bounds={draggableBounds}
-							onStart={this.handleDrag}
-							onDrag={this.handleDrag}
-							onStop={this.handleDrag}><div className="inspector-page-drag-wrapper" ref={dragWrapper}>
-								<div style={heroImageStyle} ref={heroImage} />
-								<div className="inspector-page-hero-slices-wrapper" style={slicesStyle}>
-									<div className="inspector-page-background-wrapper">{backgroundSlices}</div>
-									<div className="inspector-page-hotspot-wrapper">{hotspotSlices}</div>
-									<div className="inspector-page-textfield-wrapper">{textfieldSlices}</div>
-									<div className="inspector-page-slice-wrapper">{sliceSlices}</div>
-								</div>
-							</div>
-						</Draggable>)}
-						<div className={canvasClass} onMouseDown={()=> this.handleMouseDown()} onMouseUp={()=> this.handleMouseUp()}>
-							<canvas width={(heroWrapper.current) ? heroWrapper.current.clientWidth : 0} height="600" ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
-						</div>
+						{(artboard) && (
+							<div style={wrapperStyle} ref={heroImage}><Row>
+								<Column>
+									<div style={heroImageStyle} />
+									<div className="inspector-page-hero-slices-wrapper" style={slicesStyle}>
+										<div className="inspector-page-background-wrapper">{backgroundSlices}</div>
+										<div className="inspector-page-hotspot-wrapper">{hotspotSlices}</div>
+										<div className="inspector-page-textfield-wrapper">{textfieldSlices}</div>
+										<div className="inspector-page-slice-wrapper">{sliceSlices}</div>
+									</div>
+								</Column>
+								<Column>
+									<div style={heroImageStyle} />
+								</Column>
+								<Column>
+									<div style={heroImageStyle} />
+								</Column>
+							</Row></div>
+						)}
 						<div className="inspector-page-zoom-wrapper">
-							<button className={'inspector-page-float-button' + ((scale >= 3) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)} style={{marginRight:'20px'}}><img className="inspector-page-float-button-image" src={(scale < 3) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button>
-							<button className={'inspector-page-float-button' + ((scale <= 1) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)} style={{marginRight:'20px'}}><img className="inspector-page-float-button-image" src={(scale > 1) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button>
+							<button className={'inspector-page-float-button' + ((scale >= 2) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 2) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button><br />
+							<button className={'inspector-page-float-button' + ((scale <= 0.5) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.5) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button><br />
 							<button className="inspector-page-float-button" onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src="/images/layer-off_selected.svg" alt="0" /></button>
 						</div>
 						<div className="inspector-page-toggle-wrapper">
-							<SliceToggle type="hotspot" selected={visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} /><br />
-							<SliceToggle type="slice" selected={visibleTypes.slice} onClick={()=> this.handleSliceToggle('slice')} /><br />
-							<SliceToggle type="textfield" selected={visibleTypes.textfield} onClick={()=> this.handleSliceToggle('textfield')} /><br />
-							<SliceToggle type="background" selected={visibleTypes.background} onClick={()=> this.handleSliceToggle('background')} /><br />
+							<SliceToggle type="hotspot" selected={visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} />
+							<SliceToggle type="slice" selected={visibleTypes.slice} onClick={()=> this.handleSliceToggle('slice')} />
+							<SliceToggle type="textfield" selected={visibleTypes.textfield} onClick={()=> this.handleSliceToggle('textfield')} />
+							<SliceToggle type="background" selected={visibleTypes.background} onClick={()=> this.handleSliceToggle('background')} />
 							<SliceToggle type="" selected={(visibleTypes.all)} onClick={()=> this.handleSliceToggle('all')} />
 						</div>
-					</div>
-					<div>
-						<button className="inspector-page-download-button" onClick={()=> this.handleDownload()}>Download</button>
-						{/*<button className="inspector-page-add-button" onClick={()=> this.handleDownload()}>Add to My Projects</button>*/}
-					</div>
-					<form onSubmit={this.submitComment}>
-						<textarea className="inspector-page-comment-txt" autocomplete="off" type="text" name="comment" placeholder="Enter Comment" value={this.state.comment} onChange={(event)=> this.handleCommentChange(event)} />
-						<button type="submit" className={commentButtonClass} onClick={(event)=> this.submitComment(event)}>Comment</button>
-					</form>
-
-					<div className="inspector-page-comment-wrapper">
-						{comments}
+						<div className="inspector-page-button-wrapper"><Row>
+							<Column flex={1}><button className="inspector-page-button adjacent-button" onClick={()=> this.handleDownload()}>Download Parts</button></Column>
+							<Column flex={1}><button className="inspector-page-button adjacent-button" onClick={()=> this.handleDownload()}>Clone Project</button></Column>
+							<Column flex={1}><button className="inspector-page-button adjacent-button" onClick={()=> this.handleDownload()}>Invite Team</button></Column>
+							<Column flex={1}><button className="inspector-page-button" onClick={()=> this.handleDownload()}>Comment</button></Column>
+						</Row></div>
 					</div>
 				</div>
 				<div className="inspector-page-panel">
 					<div className="inspector-page-panel-content-wrapper">
-						<div className="inspector-page-panel-display">
-							{(artboard && !slice) && (
-								<img className={panelImageClass} src={artboard.filename} alt={artboard.title} />
-							)}
-
-							{(slice) && (
-								<img className={panelImageClass} src={panelSliceImage} alt={(slice.title + ' @3x')} />
-							)}
-						</div>
-					</div>
-					<div className="inspector-page-panel-content-wrapper">
-						<Dropdown
-							title="Add Ons"
-							list={this.state.languages}
-							resetThenSet={this.resetThenSet}
-						/>
 						<div className="inspector-page-panel-code-wrapper">
 							<div className="code-snippet inspector-page-panel-code"><span dangerouslySetInnerHTML={{ __html : this.state.code.html }} /></div>
 							<CopyToClipboard onCopy={()=> this.handleCodeCopy()} text={this.state.code.syntax}>
@@ -838,7 +841,6 @@ class InspectorPage extends Component {
 					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
 				)}
 			</div>
-			<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 		</div>);
 	}
 }

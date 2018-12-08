@@ -160,6 +160,42 @@ textarea {
 }
 
 
+/** Bold */
+@font-face {
+  font-family: "RobotoMono Bold";
+  font-weight: 700;
+  src: url("./fonts/RobotoMono-Bold.otf");
+}
+
+/** Medium */
+@font-face {
+  font-family: "RobotoMono Medium";
+  font-weight: 500;
+  src: url("./fonts/RobotoMono-Medium.otf");
+}
+
+/** Regular */
+@font-face {
+  font-family: "RobotoMono";
+  font-weight: 400;
+  src: url("./fonts/RobotoMono-Regular.otf");
+}
+
+/** Light */
+@font-face {
+  font-family: "RobotoMono Light";
+  font-weight: 400;
+  src: url("./fonts/RobotoMono-Light.otf");
+}
+
+/** Thin */
+@font-face {
+  font-family: "RobotoMono Thin";
+  font-weight: 400;
+  src: url("./fonts/RobotoMono-Thin.otf");
+}
+
+
 /** Heavy */
 @font-face {
   font-family: "San Francisco Text Heavy";
