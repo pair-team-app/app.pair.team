@@ -189,6 +189,8 @@ class App extends Component {
 		cookie.save('user_id', '0', { path : '/' });
 		cookie.remove('user_email', { path : '/' });
 		this.setState({ userID : 0 });
+
+		this.props.history.push('/');
 	};
 
 	handlePage = (url)=> {
