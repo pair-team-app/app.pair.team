@@ -102,6 +102,7 @@ class InspectorPage extends Component {
 		this.antsInterval = setInterval(this.redrawAnts, 75);
 
 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
+		document.addEventListener('wheel', this.handleWheel.bind(this));
 	}
 
 	componentDidUpdate(prevProps) {
@@ -243,6 +244,15 @@ class InspectorPage extends Component {
 				this.refreshData();
 			}).catch((error) => {
 		});
+	};
+
+	handleWheel = (event)=> {
+		//console.log(event.type, event.deltaX, event.deltaY, event.target);
+
+		if (event.ctrlKey) {
+			event.preventDefault();
+			this.setState({ scale : Math.min(Math.max(this.state.scale - (event.deltaY * 0.005), 0.5), 2)});
+		}
 	};
 
 	handleDrag = (event)=> {
@@ -651,7 +661,7 @@ class InspectorPage extends Component {
 			});
 
 			items.push(
-				<Column>
+				<Column key={i}>
 					<div style={heroStyle}>
 						<div className="inspector-page-caption">{artboard.title}</div>
 					</div>
@@ -692,14 +702,14 @@ class InspectorPage extends Component {
 			} : null
 		} : null;
 
-		console.log('InspectorPage.render()', scale);
+// 		console.log('InspectorPage.render()', scale);
 
 		return (<div style={{paddingBottom:'30px'}}>
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
-					<div className="inspector-page-hero-canvas-wrapper">
-						<canvas width={(heroWrapper.current) ? heroWrapper.current.clientWidth : 0} height="300" ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
-					</div>
+					{/*<div className="inspector-page-hero-canvas-wrapper">*/}
+						{/*<canvas width={(heroWrapper.current) ? heroWrapper.current.clientWidth : 0} height="300" ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>*/}
+					{/*</div>*/}
 					<div className="inspector-page-hero-wrapper" ref={heroWrapper}>
 						{(artboards.length > 0) && (
 							<div style={wrapperStyle} ref={heroImage}><Row>

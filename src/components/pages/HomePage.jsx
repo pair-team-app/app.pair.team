@@ -189,7 +189,7 @@ class HomePage extends Component {
 								<Row horizontal="center">
 									<button className="adjacent-button" onClick={()=> this.handleDownload()}>Download Parts</button>
 									<button className="adjacent-button">Clone Project</button>
-									<button onClick={()=> this.props.onPage('invite-team')}>Invite Team Members</button>
+									<button className="adjacent-button" onClick={()=> this.props.onPage('invite-team')}>Invite Team Members</button>
 									<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={this.state.uploadURL}>
 										<button>Copy Project URL</button>
 									</CopyToClipboard>
