@@ -555,6 +555,7 @@ class InspectorPage extends Component {
 			transform       : (artboards.length > 0) ? 'translate(100px, 50px)' : 'translate(0px, 0px)'
 		};
 
+		let maxH = 0;
 		let offset = {
 			x : 0,
 			y : 0
@@ -564,10 +565,9 @@ class InspectorPage extends Component {
 		for (let i=0; i<artboards.length; i++) {
 			const artboard = artboards[i];
 
-			offset = {
-				x : (i % 5) * (50 + (artboard.meta.frame.size.width * scale)),
-				y : Math.floor(i / 5) * (50 +  (artboard.meta.frame.size.height * scale))
-			};
+			if (artboard.meta.frame.size.height > maxH) {
+				maxH = artboard.meta.frame.size.height;
+			}
 
 			const heroStyle = {
 				position       : 'absolute',
@@ -673,6 +673,11 @@ class InspectorPage extends Component {
 					</div>
 				</Column>
 			);
+
+			offset = {
+				x : (i % 5) * (100 + (artboard.meta.frame.size.width * scale)),
+				y : Math.floor(i / 5) * (50 + (maxH * scale))
+			};
 		}
 
 
