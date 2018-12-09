@@ -7,8 +7,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
-import CommentItem from '../iterables/CommentItem';
-import Dropdown from '../elements/Dropdown';
+// import Dropdown from '../elements/Dropdown';
 import SliceItem from '../iterables/SliceItem';
 import SliceToggle from '../elements/SliceToggle';
 import Popup from '../elements/Popup';
@@ -358,8 +357,8 @@ class InspectorPage extends Component {
 		const context = canvas.current.getContext('2d');
 		context.clearRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
 
-		context.fillStyle = 'rgba(0, 0, 0, 0.25)';
-		context.fillRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
+// 		context.fillStyle = 'rgba(0, 0, 0, 0.25)';
+// 		context.fillRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
 
 		if (slice) {
 			const selectedSrcFrame = slice.meta.frame;
@@ -509,11 +508,6 @@ class InspectorPage extends Component {
 		}
 	};
 
-	eventLogger = (e, data) => {
-		console.log('Event: ', e);
-		console.log('Data: ', data);
-	};
-
 	redrawAnts = ()=> {
 		if (this.antsOffset++ > 16) {
 			this.antsOffset = 0;
@@ -572,7 +566,8 @@ class InspectorPage extends Component {
 				width          : (scale * artboard.meta.frame.size.width) + 'px',
 				height         : (scale * artboard.meta.frame.size.height) + 'px',
 				background     : '#000000 url("' + artboard.filename + '") no-repeat center',
-				backgroundSize : 'cover'
+				backgroundSize : 'cover',
+				border         : '1px dotted #ffff00'
 			};
 
 			const sliceWrapperStyle = {
@@ -657,7 +652,9 @@ class InspectorPage extends Component {
 
 			items.push(
 				<Column>
-					<div style={heroStyle} />
+					<div style={heroStyle}>
+						<div className="inspector-page-caption">{artboard.title}</div>
+					</div>
 					<div className="inspector-page-hero-slices-wrapper" style={sliceWrapperStyle}>
 						<div className="inspector-page-background-wrapper">{backgroundSlices}</div>
 						<div className="inspector-page-hotspot-wrapper">{hotspotSlices}</div>
@@ -701,7 +698,7 @@ class InspectorPage extends Component {
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<div className="inspector-page-hero-canvas-wrapper">
-						<canvas width={(heroWrapper.current) ? heroWrapper.current.clientWidth : 0} height="100%" ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
+						<canvas width={(heroWrapper.current) ? heroWrapper.current.clientWidth : 0} height="300" ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
 					</div>
 					<div className="inspector-page-hero-wrapper" ref={heroWrapper}>
 						{(artboards.length > 0) && (
@@ -709,7 +706,6 @@ class InspectorPage extends Component {
 								{items}
 							</Row></div>
 						)}
-
 					</div>
 					<div className="inspector-page-zoom-wrapper">
 						<button className={'inspector-page-float-button' + ((scale >= 2) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 2) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button><br />
