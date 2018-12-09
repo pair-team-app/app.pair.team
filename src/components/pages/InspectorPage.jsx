@@ -33,7 +33,6 @@ class InspectorPage extends Component {
 			sliceID       : this.props.match.params.sliceID,
 			slice         : null,
 			hoverSlice    : null,
-			canvasVisible : true,
 			page          : null,
 			artboards     : [],
 			artboard      : null,
@@ -256,16 +255,16 @@ class InspectorPage extends Component {
 // 			this.forceUpdate();
 
 		} else if (event.type === 'mouseup') {
-			this.setState({ canvasVisible : true });
+// 			this.setState({ canvasVisible : true });
 		}
 	};
 
 	handleMouseDown = ()=> {
-		this.setState({ canvasVisible : false });
+// 		this.setState({ canvasVisible : false });
 	};
 
 	handleMouseUp = ()=> {
-		this.setState({ canvasVisible : true });
+// 		this.setState({ canvasVisible : true });
 	};
 
 	handleZoom = (direction)=> {
@@ -552,8 +551,6 @@ class InspectorPage extends Component {
 			transform       : (artboards.length > 0) ? 'translate(100px, 50px)' : 'translate(0px, 0px)'
 		};
 
-		const canvasClass = 'inspector-page-hero-canvas-wrapper' + ((this.state.canvasVisible) ? '' : ' is-hidden');
-
 		let offset = {
 			x : 0,
 			y : 0
@@ -703,10 +700,10 @@ class InspectorPage extends Component {
 		return (<div style={{paddingBottom:'30px'}}>
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
+					<div className="inspector-page-hero-canvas-wrapper">
+						<canvas width={(heroWrapper.current) ? heroWrapper.current.clientWidth : 0} height="600" ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
+					</div>
 					<div className="inspector-page-hero-wrapper" ref={heroWrapper}>
-						<div className={canvasClass}>
-							<canvas width={(heroWrapper.current) ? heroWrapper.current.clientWidth : 0} height="600" ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
-						</div>
 						{(artboards.length > 0) && (
 							<div style={wrapperStyle} ref={heroImage}><Row>
 								{items}

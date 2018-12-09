@@ -23,6 +23,14 @@
 	height: 100%;
 	background: #111111 url("/images/checkerboard.png") repeat;
 	overflow: scroll;
+	z-index: 1;
+}
+
+.inspector-page-hero-canvas-wrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
 }
 
 .inspector-page-hero-slices-wrapper {
@@ -46,14 +54,6 @@
 
 .inspector-page-slice-wrapper {
 	z-index: 7;
-}
-
-.inspector-page-hero-canvas-wrapper {
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 2;
-	display: none;
 }
 
 .inspector-page-zoom-wrapper {
