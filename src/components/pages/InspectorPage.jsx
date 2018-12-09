@@ -13,6 +13,8 @@ import SliceItem from '../iterables/SliceItem';
 import SliceToggle from '../elements/SliceToggle';
 import Popup from '../elements/Popup';
 
+import { randomElement } from '../../utils/lang.js';
+
 const dragWrapper = React.createRef();
 const heroWrapper = React.createRef();
 const heroImage = React.createRef();
@@ -33,6 +35,7 @@ class InspectorPage extends Component {
 			hoverSlice    : null,
 			canvasVisible : true,
 			page          : null,
+			artboards     : [],
 			artboard      : null,
 			code          : {
 				html   : '',
@@ -136,38 +139,38 @@ class InspectorPage extends Component {
 // 				console.log('PAGE', response.data);
 				this.setState({ page : response.data.page });
 
-
-
-				formData.append('action', 'ARTBOARD');
-				formData.append('artboard_id', '' + artboardID);
+				formData.append('action', 'ARTBOARDS');
+				formData.append('upload_id', '');
+				formData.append('page_id', '' + pageID);
+				formData.append('slices', '1');
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response)=> {
-						console.log('ARTBOARD', response.data);
+						console.log('ARTBOARDS', response.data);
 
-						const slices = response.data.artboard.slices.map((item)=> ({
-							id       : item.id,
-							title    : item.title,
-							type     : item.type,
-							filename : item.filename,
-							meta     : JSON.parse(item.meta),
-							added    : item.added
+						const artboards = response.data.artboards.map((artboard)=> ({
+							id        : artboard.id,
+							pageID    : artboard.page_id,
+							title     : artboard.title,
+							filename  : artboard.filename,
+							meta      : JSON.parse(artboard.meta),
+							views     : artboard.views,
+							downloads : artboard.downloads,
+							added     : artboard.added,
+							system    : artboard.system,
+							slices    : artboard.slices.map((item)=> ({
+								id       : item.id,
+								title    : item.title,
+								type     : item.type,
+								filename : item.filename,
+								meta     : JSON.parse(item.meta),
+								added    : item.added
+							})),
+							comments  : artboard.comments
 						}));
 
-						this.setState({
-							artboard : {
-								id        : response.data.artboard.id,
-								pageID    : response.data.artboard.page_id,
-								title     : response.data.artboard.title,
-								filename  : response.data.artboard.filename,
-								meta      : JSON.parse(response.data.artboard.meta),
-								views     : response.data.artboard.views,
-								downloads : response.data.artboard.downloads,
-								added     : response.data.artboard.added,
-								system    : response.data.artboard.system,
-								slices    : slices,
-								comments  : response.data.artboard.comments
-							}
-						});
+						console.log('randomElement', randomElement(artboards));
+						this.setState({ artboard : randomElement(artboards) });
+						this.setState({ artboards : artboards });
 					}).catch((error) => {
 				});
 			}).catch((error) => {
@@ -268,7 +271,7 @@ class InspectorPage extends Component {
 	handleZoom = (direction)=> {
 		const { scale } = this.state;
 
-		this.setState({ scale : (direction === 0) ? 1 : Math.min(Math.max(scale + (direction * 0.025), 0.5), 2) });
+		this.setState({ scale : (direction === 0) ? 0.5 : Math.min(Math.max(scale + (direction * 0.02), 0.5), 2) });
 	};
 
 	handleSliceRollOver = (ind, slice)=> {
@@ -529,20 +532,9 @@ class InspectorPage extends Component {
 			day    : 'numeric'
 		};
 
-// 		const { page, artboard, slice } = this.state;
-		const { page, artboard, slice } = this.state;
+		const { page, artboards, artboard, slice } = this.state;
 		const { visibleTypes } = this.state;
 		const { scale } = this.state;
-
-		//this.scale = (artboard && heroImage && heroImage.current) ? (artboard.meta.frame.size.width > artboard.meta.frame.size.height) ? heroImage.current.clientWidth / artboard.meta.frame.size.width : heroImage.current.clientHeight / artboard.meta.frame.size.height : 1;
-
-		const slicesStyle = (artboard) ? {
-			width   : (scale * artboard.meta.frame.size.width) + 'px',
-			height  : (scale * artboard.meta.frame.size.height) + 'px'
-		} : {
-			width   : '100%',
-			height  : '100%'
-		};
 
 		let self = this;
 		if (this.rerender === 0) {
@@ -552,15 +544,135 @@ class InspectorPage extends Component {
 			}, 1000);
 		}
 
-		const commentButtonClass = (this.state.comment.length !== 0) ? 'inspector-page-comment-button' : 'inspector-page-comment-button button-disabled';
-// 		const panelFrame = (artboard && !slice) ? artboard.meta.frame : (slice) ? slice.meta.frame : null;
+		const wrapperStyle = {
+			position        : 'absolute',
+			width           : (artboards.length > 0) ? artboards.length * (50 + (artboard.meta.frame.size.width * this.state.scale)) : 0,
+			height          : (artboards.length > 0) ? (artboard.meta.frame.size.height * this.state.scale) : 0,
+// 			transform       : (artboards.length > 0) ? 'translate(' + ((3 * (50 + (artboard.meta.frame.size.width * this.state.scale))) * -0.5) + 'px, ' + ((artboard.meta.frame.size.height * this.state.scale) * 0.5) + 'px)' : 'translate(0px, 0px)'
+			transform       : (artboards.length > 0) ? 'translate(100px, 50px)' : 'translate(0px, 0px)'
+		};
 
-		const panelImageClass = 'inspector-page-panel-image' + ((artboard && !slice) ? ' inspector-page-panel-image-artboard' : ((slice) ? ((slice.meta.frame.size.width > slice.meta.frame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait')  + ' ' + ((slice.type === 'slice') ? 'inspector-page-panel-image-slice' : (slice.type === 'hotspot') ? 'inspector-page-panel-image-hotspot' : (slice.type === 'textfield') ? 'inspector-page-panel-image-textfield' : 'inspector-page-panel-image-background') : ''));
-// 		const panelImageClass = 'inspector-page-panel-image' + ((artboard && !slice) ? ' inspector-page-panel-image-artboard' + ((panelFrame.size.width > panelFrame.size.height) ? ' inspector-page-panel-image-landscape' : ' inspector-page-panel-image-portrait') : '');
-// 		const panelSliceImage = (slice) ? ((slice.type === 'slice') ? slice.filename + '@' + scaleSize + 'x.png' : ('https://via.placeholder.com/' + (slice.meta.frame.size.width * scaleSize) + 'x' + (slice.meta.frame.size.height * scaleSize))) : null;
-		const panelSliceImage = (slice) ? slice.filename + '@3x.png' : null;
+		const canvasClass = 'inspector-page-hero-canvas-wrapper' + ((this.state.canvasVisible) ? '' : ' is-hidden');
 
-		const styles = (slice &&  slice.meta.styles && slice.meta.styles.length > 0) ? {
+		let offset = {
+			x : 0,
+			y : 0
+		};
+
+		let items = [];
+		for (let i=0; i<artboards.length; i++) {
+			const artboard = artboards[i];
+
+			offset = {
+				x : (i % 5) * (50 + (artboard.meta.frame.size.width * scale)),
+				y : Math.floor(i / 5) * (50 +  (artboard.meta.frame.size.height * scale))
+			};
+
+			const heroStyle = {
+				position       : 'absolute',
+				top            : offset.y,
+				left           : offset.x + 'px',
+				width          : (scale * artboard.meta.frame.size.width) + 'px',
+				height         : (scale * artboard.meta.frame.size.height) + 'px',
+				background     : '#000000 url("' + artboard.filename + '") no-repeat center',
+				backgroundSize : 'cover'
+			};
+
+			const sliceWrapperStyle = {
+				position : 'absolute',
+				top      : offset.y,
+				left     : offset.x + 'px',
+				width    : (scale * artboard.meta.frame.size.width) + 'px',
+				height   : (scale * artboard.meta.frame.size.height) + 'px'
+			};
+
+			const backgroundSlices = artboard.slices.map((slice, i) => {
+				return ((slice.type === 'background') ?
+					<SliceItem
+						key={i}
+						title={slice.title}
+						type={slice.type}
+						visible={visibleTypes[slice.type]}
+						top={slice.meta.frame.origin.y}
+						left={slice.meta.frame.origin.x}
+						width={slice.meta.frame.size.width}
+						height={slice.meta.frame.size.height}
+						scale={scale}
+						onRollOver={()=> this.handleSliceRollOver(i, slice)}
+						onRollOut={()=> this.handleSliceRollOut(i, slice)}
+						onClick={() => this.handleSliceClick(i, slice)} />
+					: null);
+			});
+
+			const hotspotSlices = artboard.slices.map((slice, i) => {
+				return ((slice.type === 'hotspot') ?
+					<SliceItem
+						key={i}
+						title={slice.title}
+						type={slice.type}
+						visible={visibleTypes[slice.type]}
+						top={slice.meta.frame.origin.y}
+						left={slice.meta.frame.origin.x}
+						width={slice.meta.frame.size.width}
+						height={slice.meta.frame.size.height}
+						scale={scale}
+						onRollOver={()=> this.handleSliceRollOver(i, slice)}
+						onRollOut={()=> this.handleSliceRollOut(i, slice)}
+						onClick={() => this.handleSliceClick(i, slice)} />
+					: null);
+			});
+
+			const textfieldSlices = artboard.slices.map((slice, i) => {
+				return ((slice.type === 'textfield') ?
+					<SliceItem
+						key={i}
+						title={slice.title}
+						type={slice.type}
+						visible={visibleTypes[slice.type]}
+						top={slice.meta.frame.origin.y}
+						left={slice.meta.frame.origin.x}
+						width={slice.meta.frame.size.width}
+						height={slice.meta.frame.size.height}
+						scale={scale}
+						onRollOver={()=> this.handleSliceRollOver(i, slice)}
+						onRollOut={()=> this.handleSliceRollOut(i, slice)}
+						onClick={() => this.handleSliceClick(i, slice)} />
+					: null);
+			});
+
+			const sliceSlices = artboard.slices.map((slice, i) => {
+				return ((slice.type === 'slice') ?
+					<SliceItem
+						key={i}
+						title={slice.title}
+						type={slice.type}
+						visible={visibleTypes[slice.type]}
+						top={slice.meta.frame.origin.y}
+						left={slice.meta.frame.origin.x}
+						width={slice.meta.frame.size.width}
+						height={slice.meta.frame.size.height}
+						scale={scale}
+						onRollOver={()=> this.handleSliceRollOver(i, slice)}
+						onRollOut={()=> this.handleSliceRollOut(i, slice)}
+						onClick={() => this.handleSliceClick(i, slice)} />
+					: null);
+			});
+
+			items.push(
+				<Column>
+					<div style={heroStyle} />
+					<div className="inspector-page-hero-slices-wrapper" style={sliceWrapperStyle}>
+						<div className="inspector-page-background-wrapper">{backgroundSlices}</div>
+						<div className="inspector-page-hotspot-wrapper">{hotspotSlices}</div>
+						<div className="inspector-page-textfield-wrapper">{textfieldSlices}</div>
+						<div className="inspector-page-slice-wrapper">{sliceSlices}</div>
+					</div>
+				</Column>
+			);
+		}
+
+
+		const styles = (slice && slice.meta.styles && slice.meta.styles.length > 0) ? {
 			stroke : (slice.meta.styles[0].border.length > 0) ? {
 				color     : slice.meta.styles[0].border[0].color.toUpperCase(),
 				position  : slice.meta.styles[0].border[0].position,
@@ -586,160 +698,21 @@ class InspectorPage extends Component {
 			} : null
 		} : null;
 
-
-		const draggablePosition = (heroWrapper.current && artboard) ? {
-			x : Math.floor((heroWrapper.current.clientWidth - (scale * artboard.meta.frame.size.width)) * 0.5),
-			y : Math.floor((heroWrapper.current.clientHeight - (scale * artboard.meta.frame.size.height)) * 0.5)
-		} : {
-			x : 0,
-			y : 0
-		};
-
-		const draggableBounds = (artboard && heroWrapper.current) ? {
-			left   : (artboard.meta.frame.size.width * scale) * -0.5,
-			top    : (artboard.meta.frame.size.height * scale) * -0.5,
-			right  : heroWrapper.current.clientWidth - ((artboard.meta.frame.size.width * scale) * 0.5),
-			bottom : heroWrapper.current.clientHeight - ((artboard.meta.frame.size.height * scale) * 0.5)
-		} : {
-			left   : 0,
-			top    : 0,
-			right  : 0,
-			bottom : 0
-		};
-
-		const heroImageStyle = {
-			width              : (artboard) ? (scale * artboard.meta.frame.size.width) + 'px' : '0',
-			height             : (artboard) ? (scale * artboard.meta.frame.size.height) + 'px' : '0',
-			backgroundColor    : '#000000',
-			backgroundImage    : (artboard) ? 'url("' + artboard.filename + '")' : 'none',
-			backgroundSize     : 'cover',
-			backgroundRepeat   : 'no-repeat',
-			backgroundPosition : 'center',
-			marginRight        : '50px'
-		};
-
-		const canvasClass = 'inspector-page-hero-canvas-wrapper' + ((this.state.canvasVisible) ? '' : ' is-hidden');
-
-		const backgroundSlices = (artboard) ? artboard.slices.map((slice, i) => {
-			return ((slice.type === 'background') ?
-				<SliceItem
-					key={i}
-					title={slice.title}
-					type={slice.type}
-					visible={visibleTypes[slice.type]}
-					top={slice.meta.frame.origin.y}
-					left={slice.meta.frame.origin.x}
-					width={slice.meta.frame.size.width}
-					height={slice.meta.frame.size.height}
-					scale={scale}
-					onRollOver={()=> this.handleSliceRollOver(i, slice)}
-					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={() => this.handleSliceClick(i, slice)} />
-			: null);
-		}) : [];
-
-		const hotspotSlices = (artboard) ? artboard.slices.map((slice, i) => {
-			return ((slice.type === 'hotspot') ?
-				<SliceItem
-					key={i}
-					title={slice.title}
-					type={slice.type}
-					visible={visibleTypes[slice.type]}
-					top={slice.meta.frame.origin.y}
-					left={slice.meta.frame.origin.x}
-					width={slice.meta.frame.size.width}
-					height={slice.meta.frame.size.height}
-					scale={scale}
-					onRollOver={()=> this.handleSliceRollOver(i, slice)}
-					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={() => this.handleSliceClick(i, slice)} />
-			: null);
-		}) : [];
-
-		const textfieldSlices = (artboard) ? artboard.slices.map((slice, i) => {
-			return ((slice.type === 'textfield') ?
-				<SliceItem
-					key={i}
-					title={slice.title}
-					type={slice.type}
-					visible={visibleTypes[slice.type]}
-					top={slice.meta.frame.origin.y}
-					left={slice.meta.frame.origin.x}
-					width={slice.meta.frame.size.width}
-					height={slice.meta.frame.size.height}
-					scale={scale}
-					onRollOver={()=> this.handleSliceRollOver(i, slice)}
-					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={() => this.handleSliceClick(i, slice)} />
-			: null);
-		}) : [];
-
-		const sliceSlices = (artboard) ? artboard.slices.map((slice, i) => {
-			return ((slice.type === 'slice') ?
-				<SliceItem
-					key={i}
-					title={slice.title}
-					type={slice.type}
-					visible={visibleTypes[slice.type]}
-					top={slice.meta.frame.origin.y}
-					left={slice.meta.frame.origin.x}
-					width={slice.meta.frame.size.width}
-					height={slice.meta.frame.size.height}
-					scale={scale}
-					onRollOver={()=> this.handleSliceRollOver(i, slice)}
-					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={() => this.handleSliceClick(i, slice)} />
-			: null);
-		}) : [];
-
-		const comments = (artboard) ? artboard.comments.map((item, i) => {
-			return (
-				<CommentItem
-					key={i}
-					id={item.id}
-					votes={item.votes}
-					author={item.author}
-					content={item.content}
-					added={item.added}
-					onVote={(score)=> this.handleVote(item.id, score)}
-				/>);
-		}) : [];
-
-
-		const wrapperStyle = {
-			position        : 'absolute',
-			width           : (artboard) ? 3 * (50 + (artboard.meta.frame.size.width * this.state.scale)) : 0,
-			height          : (artboard) ? artboard.meta.frame.size.height * this.state.scale : 0,
-// 			transform       : (artboard) ? 'translate(' + ((3 * (50 + (artboard.meta.frame.size.width * this.state.scale))) * -0.5) + 'px, ' + ((artboard.meta.frame.size.height * this.state.scale) * 0.5) + 'px)' : 'translate(0px, 0px)'
-			transform       : (artboard) ? 'translate(0px, ' + ((artboard.meta.frame.size.height * this.state.scale) * 0.5) + 'px)' : 'translate(0px, 0px)'
-		};
-
-
-		console.log('InspectorPage.render()', scale, draggableBounds);
+		console.log('InspectorPage.render()', scale);
 
 		return (<div style={{paddingBottom:'30px'}}>
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<div className="inspector-page-hero-wrapper" ref={heroWrapper}>
-						{(artboard) && (
+						<div className={canvasClass}>
+							<canvas width={(heroWrapper.current) ? heroWrapper.current.clientWidth : 0} height="600" ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
+						</div>
+						{(artboards.length > 0) && (
 							<div style={wrapperStyle} ref={heroImage}><Row>
-								<Column>
-									<div style={heroImageStyle} />
-									<div className="inspector-page-hero-slices-wrapper" style={slicesStyle}>
-										<div className="inspector-page-background-wrapper">{backgroundSlices}</div>
-										<div className="inspector-page-hotspot-wrapper">{hotspotSlices}</div>
-										<div className="inspector-page-textfield-wrapper">{textfieldSlices}</div>
-										<div className="inspector-page-slice-wrapper">{sliceSlices}</div>
-									</div>
-								</Column>
-								<Column>
-									<div style={heroImageStyle} />
-								</Column>
-								<Column>
-									<div style={heroImageStyle} />
-								</Column>
+								{items}
 							</Row></div>
 						)}
+
 					</div>
 					<div className="inspector-page-zoom-wrapper">
 						<button className={'inspector-page-float-button' + ((scale >= 2) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 2) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button><br />
