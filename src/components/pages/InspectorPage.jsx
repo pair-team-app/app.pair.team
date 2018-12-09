@@ -712,10 +712,10 @@ class InspectorPage extends Component {
 		return (<div style={{paddingBottom:'30px'}}>
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
-					{/*<div className="inspector-page-hero-canvas-wrapper">*/}
-						{/*<canvas width={(heroWrapper.current) ? heroWrapper.current.clientWidth : 0} height="300" ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>*/}
-					{/*</div>*/}
 					<div className="inspector-page-hero-wrapper" ref={heroWrapper}>
+						<div className="inspector-page-hero-canvas-wrapper">
+							<canvas width={(heroWrapper.current) ? heroWrapper.current.clientWidth : 0} height="300" ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
+						</div>
 						{(artboards.length > 0) && (
 							<div style={wrapperStyle} ref={heroImage}><Row>
 								{items}
