@@ -37,8 +37,8 @@
 
 .inspector-page-hero-canvas-wrapper {
 	position: absolute;
-	top: 0;
-	left: 0;
+	top: -50px;
+	left: -100px;
 	z-index: 2;
 }
 

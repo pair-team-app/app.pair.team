@@ -14,7 +14,6 @@ import Popup from '../elements/Popup';
 
 import { randomElement } from '../../utils/lang.js';
 
-const dragWrapper = React.createRef();
 const heroWrapper = React.createRef();
 const heroImage = React.createRef();
 const canvas = React.createRef();
@@ -34,6 +33,7 @@ class InspectorPage extends Component {
 			hoverSlice    : null,
 			page          : null,
 			artboards     : [],
+			offset        : null,
 			artboard      : null,
 			code          : {
 				html   : '',
@@ -167,7 +167,6 @@ class InspectorPage extends Component {
 							comments  : artboard.comments
 						}));
 
-						console.log('randomElement', randomElement(artboards));
 						this.setState({ artboard : randomElement(artboards) });
 						this.setState({ artboards : artboards });
 					}).catch((error) => {
@@ -278,20 +277,27 @@ class InspectorPage extends Component {
 
 	handleZoom = (direction)=> {
 		const { scale } = this.state;
-
 		this.setState({ scale : (direction === 0) ? 0.5 : Math.min(Math.max(scale + (direction * 0.02), 0.5), 2) });
 	};
 
-	handleSliceRollOver = (ind, slice)=> {
-		this.setState({ hoverSlice : slice });
+	handleSliceRollOver = (ind, slice, offset)=> {
+		this.setState({
+			hoverSlice : slice,
+			offset     : offset
+		});
 	};
 
 	handleSliceRollOut = (ind, slice)=> {
-		this.setState({ hoverSlice : null });
+		this.setState({
+			hoverSlice : null
+		});
 	};
 
-	handleSliceClick = (ind, slice)=> {
-		this.setState({ slice : slice });
+	handleSliceClick = (ind, slice, offset)=> {
+		this.setState({
+			slice  : slice,
+			offset : offset
+		});
 	};
 
 	handleDownload = ()=> {
@@ -360,9 +366,7 @@ class InspectorPage extends Component {
 	};
 
 	updateCanvas = ()=> {
-// 		console.log('updateCanvas()', heroWrapper, heroImage);
-
-		const { scale } = this.state;
+		const { scale, offset } = this.state;
 		const slice = this.state.slice;
 		const context = canvas.current.getContext('2d');
 		context.clearRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
@@ -372,20 +376,9 @@ class InspectorPage extends Component {
 
 		if (slice) {
 			const selectedSrcFrame = slice.meta.frame;
-// 			const selectedOffset = (heroWrapper.current && heroImage.current) ? {
-// 				x : heroImage.current.offsetLeft,//(heroWrapper.current.clientWidth - heroImage.current.clientWidth) * 0.5,
-// 				y : heroImage.current.offsetTop//(heroWrapper.current.clientHeight - heroImage.current.clientHeight) * 0.5
-// 			} : {
-// 				x : 0,
-// 				y : 0
-// 			};
-
-			const selectedOffset = (dragWrapper.current) ? {
-				x : parseInt(dragWrapper.current.style.transform.split('(')[1].slice(0, -1).split(', ')[0].replace('px', ''), 10),
-				y : parseInt(dragWrapper.current.style.transform.split('(')[1].slice(0, -1).split(', ')[1].replace('px', ''), 10),
-			} : {
-				x : 0,
-				y : 0
+			const selectedOffset = {
+				x : 100 + offset.x,
+				y : 50 + offset.y
 			};
 
 			const selectedFrame = {
@@ -398,6 +391,8 @@ class InspectorPage extends Component {
 					height : Math.round(selectedSrcFrame.size.height * scale)
 				}
 			};
+
+			//console.log('updateCanvas()', selectedOffset, selectedFrame);
 
 			context.fillStyle = (slice.type === 'slice') ? 'rgba(255, 127, 0, 0.25)' : (slice.type === 'hotspot') ? 'rgba(0, 255, 0, 0.25)' : (slice.type === 'textfield') ? 'rgba(0, 0, 155, 0.25)' : 'rgba(127, 0, 0, 0.25)';
 			context.fillRect(selectedFrame.origin.x, selectedFrame.origin.y, selectedFrame.size.width, selectedFrame.size.height);
@@ -458,7 +453,7 @@ class InspectorPage extends Component {
 					}
 				};
 
-				console.log('updateCanvas()', frame);
+				//console.log('updateCanvas()', srcFrame, offset, frame);
 
 				context.fillStyle = (this.state.hoverSlice.type === 'slice') ? 'rgba(255, 127, 0, 0.25)' : (this.state.hoverSlice.type === 'hotspot') ? 'rgba(0, 255, 0, 0.25)' : (this.state.hoverSlice.type === 'textfield') ? 'rgba(0, 0, 255, 0.25)' : 'rgba(255, 0, 0, 0.25)';
 				context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
@@ -549,7 +544,7 @@ class InspectorPage extends Component {
 
 		const wrapperStyle = {
 			position        : 'absolute',
-			width           : (artboards.length > 0) ? artboards.length * (50 + (artboard.meta.frame.size.width * this.state.scale)) : 0,
+			width           : (artboards.length > 0) ? artboards.length * (100 + (artboard.meta.frame.size.width * this.state.scale)) : 0,
 			height          : (artboards.length > 0) ? (artboard.meta.frame.size.height * this.state.scale) : 0,
 // 			transform       : (artboards.length > 0) ? 'translate(' + ((3 * (50 + (artboard.meta.frame.size.width * this.state.scale))) * -0.5) + 'px, ' + ((artboard.meta.frame.size.height * this.state.scale) * 0.5) + 'px)' : 'translate(0px, 0px)'
 			transform       : (artboards.length > 0) ? 'translate(100px, 50px)' : 'translate(0px, 0px)'
@@ -561,7 +556,9 @@ class InspectorPage extends Component {
 			y : 0
 		};
 
-		let items = [];
+		let heroes = [];
+		let slices = [];
+
 		for (let i=0; i<artboards.length; i++) {
 			const artboard = artboards[i];
 
@@ -582,7 +579,7 @@ class InspectorPage extends Component {
 
 			const sliceWrapperStyle = {
 				position : 'absolute',
-				top      : offset.y,
+				top      : offset.y + 'px',
 				left     : offset.x + 'px',
 				width    : (scale * artboard.meta.frame.size.width) + 'px',
 				height   : (scale * artboard.meta.frame.size.height) + 'px'
@@ -600,9 +597,11 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						onRollOver={()=> this.handleSliceRollOver(i, slice)}
+						offsetX={offset.x}
+						offsetY={offset.y}
+						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
-						onClick={() => this.handleSliceClick(i, slice)} />
+						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
 					: null);
 			});
 
@@ -618,9 +617,11 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						onRollOver={()=> this.handleSliceRollOver(i, slice)}
+						offsetX={offset.x}
+						offsetY={offset.y}
+						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
-						onClick={() => this.handleSliceClick(i, slice)} />
+						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
 					: null);
 			});
 
@@ -636,9 +637,11 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						onRollOver={()=> this.handleSliceRollOver(i, slice)}
+						offsetX={offset.x}
+						offsetY={offset.y}
+						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
-						onClick={() => this.handleSliceClick(i, slice)} />
+						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
 					: null);
 			});
 
@@ -654,29 +657,34 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						onRollOver={()=> this.handleSliceRollOver(i, slice)}
+						offsetX={offset.x}
+						offsetY={offset.y}
+						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
-						onClick={() => this.handleSliceClick(i, slice)} />
+						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
 					: null);
 			});
 
-			items.push(
-				<Column key={i}>
+			heroes.push(
+				<div>
 					<div style={heroStyle}>
 						<div className="inspector-page-caption">{artboard.title}</div>
 					</div>
-					<div className="inspector-page-hero-slices-wrapper" style={sliceWrapperStyle}>
-						<div className="inspector-page-background-wrapper">{backgroundSlices}</div>
-						<div className="inspector-page-hotspot-wrapper">{hotspotSlices}</div>
-						<div className="inspector-page-textfield-wrapper">{textfieldSlices}</div>
-						<div className="inspector-page-slice-wrapper">{sliceSlices}</div>
-					</div>
-				</Column>
+				</div>
+			);
+
+			slices.push(
+				<div className="inspector-page-hero-slices-wrapper" style={sliceWrapperStyle}>
+					<div className="inspector-page-background-wrapper">{backgroundSlices}</div>
+					<div className="inspector-page-hotspot-wrapper">{hotspotSlices}</div>
+					<div className="inspector-page-textfield-wrapper">{textfieldSlices}</div>
+					<div className="inspector-page-slice-wrapper">{sliceSlices}</div>
+				</div>
 			);
 
 			offset = {
-				x : (i % 5) * (100 + (artboard.meta.frame.size.width * scale)),
-				y : Math.floor(i / 5) * (50 + (maxH * scale))
+				x : Math.round((i % 5) * (100 + (artboard.meta.frame.size.width * scale))),
+				y : Math.round(Math.floor(i / 5) * (50 + (maxH * scale)))
 			};
 		}
 
@@ -713,13 +721,14 @@ class InspectorPage extends Component {
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<div className="inspector-page-hero-wrapper" ref={heroWrapper}>
-						<div className="inspector-page-hero-canvas-wrapper">
-							<canvas width={(heroWrapper.current) ? heroWrapper.current.clientWidth : 0} height="300" ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
-						</div>
 						{(artboards.length > 0) && (
-							<div style={wrapperStyle} ref={heroImage}><Row>
-								{items}
-							</Row></div>
+							<div style={wrapperStyle} ref={heroImage}>
+								{heroes}
+								<div className="inspector-page-hero-canvas-wrapper">
+									<canvas width={(heroImage.current) ? heroImage.current.clientWidth : 0} height={(heroWrapper.current) ? heroWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
+								</div>
+								{slices}
+							</div>
 						)}
 					</div>
 					<div className="inspector-page-zoom-wrapper">

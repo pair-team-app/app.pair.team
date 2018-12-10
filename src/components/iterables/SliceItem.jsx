@@ -23,7 +23,7 @@ class SliceItem extends Component {
 		};
 
 		return (
-			<div className={className + ((this.props.visible) ? '-selected' : '')} style={style} onMouseEnter={()=> this.props.onRollOver()} onMouseLeave={()=> this.props.onRollOut()} onClick={()=> this.props.onClick()}>
+			<div className={className + ((this.props.visible) ? '-selected' : '')} style={style} onMouseEnter={()=> this.props.onRollOver({ x : this.props.offsetX, y : this.props.offsetY })} onMouseLeave={()=> this.props.onRollOut()} onClick={()=> this.props.onClick({ x : this.props.offsetX, y : this.props.offsetY })}>
 				<FontAwesome name="plus-circle" className="slice-item-plus" />
 			</div>
 		);
