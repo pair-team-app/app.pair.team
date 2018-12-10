@@ -33,6 +33,7 @@ class InspectorPage extends Component {
 			hoverSlice    : null,
 			page          : null,
 			artboards     : [],
+			hoverOffset   : null,
 			offset        : null,
 			artboard      : null,
 			code          : {
@@ -278,12 +279,13 @@ class InspectorPage extends Component {
 	handleZoom = (direction)=> {
 		const { scale } = this.state;
 		this.setState({ scale : (direction === 0) ? 0.5 : Math.min(Math.max(scale + (direction * 0.02), 0.5), 2) });
+		this.updateCanvas();
 	};
 
 	handleSliceRollOver = (ind, slice, offset)=> {
 		this.setState({
-			hoverSlice : slice,
-			offset     : offset
+			hoverSlice  : slice,
+			hoverOffset : offset
 		});
 	};
 
@@ -394,7 +396,7 @@ class InspectorPage extends Component {
 
 			//console.log('updateCanvas()', selectedOffset, selectedFrame);
 
-			context.fillStyle = (slice.type === 'slice') ? 'rgba(255, 127, 0, 0.25)' : (slice.type === 'hotspot') ? 'rgba(0, 255, 0, 0.25)' : (slice.type === 'textfield') ? 'rgba(0, 0, 155, 0.25)' : 'rgba(127, 0, 0, 0.25)';
+			context.fillStyle = (slice.type === 'slice') ? 'rgba(255, 181, 18, 0.5)' : (slice.type === 'hotspot') ? 'rgba(62, 84, 255, 0.5)' : (slice.type === 'textfield') ? 'rgba(255, 88, 62, 0.5)' : 'rgba(62, 255, 109, 0.5)';
 			context.fillRect(selectedFrame.origin.x, selectedFrame.origin.y, selectedFrame.size.width, selectedFrame.size.height);
 			context.fillStyle = '#00ff00';
 			context.fillRect(selectedFrame.origin.x, selectedFrame.origin.y - 13, selectedFrame.size.width, 13);
@@ -421,7 +423,6 @@ class InspectorPage extends Component {
 			let visible = false;
 			let self = this;
 			Object.keys(this.state.visibleTypes).forEach(function(key) {
-// 				console.log('hoverslice', self.state.visibleTypes, self.state.hoverSlice.type, key);
 				if (self.state.visibleTypes[key] && self.state.hoverSlice.type === key) {
 					visible = true;
 				}
@@ -432,20 +433,12 @@ class InspectorPage extends Component {
 			}
 
 			if (visible) {
-				const offset = (heroWrapper.current && heroImage.current) ? {
-					x : (heroWrapper.current.clientWidth - heroImage.current.clientWidth) * 0.5,
-					y : (heroWrapper.current.clientHeight - heroImage.current.clientHeight) * 0.5
-				} : {
-					x : 0,
-					y : 0
-				};
-
 				const srcFrame = this.state.hoverSlice.meta.frame;
 
 				const frame = {
 					origin : {
-						x : offset.x + Math.round(srcFrame.origin.x * scale),
-						y : offset.y + Math.round(srcFrame.origin.y * scale)
+						x : 100 + this.state.hoverOffset.x + Math.round(srcFrame.origin.x * scale),
+						y : 50 + this.state.hoverOffset.y + Math.round(srcFrame.origin.y * scale)
 					},
 					size   : {
 						width  : Math.round(srcFrame.size.width * scale),
@@ -455,7 +448,8 @@ class InspectorPage extends Component {
 
 				//console.log('updateCanvas()', srcFrame, offset, frame);
 
-				context.fillStyle = (this.state.hoverSlice.type === 'slice') ? 'rgba(255, 127, 0, 0.25)' : (this.state.hoverSlice.type === 'hotspot') ? 'rgba(0, 255, 0, 0.25)' : (this.state.hoverSlice.type === 'textfield') ? 'rgba(0, 0, 255, 0.25)' : 'rgba(255, 0, 0, 0.25)';
+				context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+				context.fillStyle = (this.state.hoverSlice.type === 'slice') ? 'rgba(255, 127, 0, 0.25)' : (this.state.hoverSlice.type === 'hotspot') ? 'rgba(0, 255, 0, 0.25)' : (this.state.hoverSlice.type === 'textfield') ? 'rgba(0, 0, 255, 0.25)' : 'rgba(62, 255, 109, 0.25)';
 				context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 				context.strokeStyle = 'rgba(0, 255, 0, 1.0)';
 				context.beginPath();
@@ -552,8 +546,8 @@ class InspectorPage extends Component {
 
 		let maxH = 0;
 		let offset = {
-			x : 0,
-			y : 0
+			x : -500,
+			y : -300
 		};
 
 		let heroes = [];
@@ -568,7 +562,7 @@ class InspectorPage extends Component {
 
 			const heroStyle = {
 				position       : 'absolute',
-				top            : offset.y,
+				top            : offset.y + 'px',
 				left           : offset.x + 'px',
 				width          : (scale * artboard.meta.frame.size.width) + 'px',
 				height         : (scale * artboard.meta.frame.size.height) + 'px',
