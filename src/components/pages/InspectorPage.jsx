@@ -568,7 +568,7 @@ class InspectorPage extends Component {
 				height         : (scale * artboard.meta.frame.size.height) + 'px',
 				background     : '#000000 url("' + artboard.filename + '") no-repeat center',
 				backgroundSize : 'cover',
-				border         : '1px dotted #ffff00'
+				border         : '1px solid #ffffff'
 			};
 
 			const sliceWrapperStyle = {
