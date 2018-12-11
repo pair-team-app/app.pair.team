@@ -1,10 +1,13 @@
 
 import React, { Component } from 'react';
 import './InspectorPage.css';
+import 'react-tabs/style/react-tabs.css';
+import '../elements/react-tabs.css';
 
 import axios from 'axios';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Column, Row } from 'simple-flexbox';
 
 // import Dropdown from '../elements/Dropdown';
@@ -746,12 +749,23 @@ class InspectorPage extends Component {
 				</div>
 				<div className="inspector-page-panel">
 					<div className="inspector-page-panel-content-wrapper">
-						<div className="inspector-page-panel-code-wrapper">
-							<div className="code-snippet inspector-page-panel-code"><span dangerouslySetInnerHTML={{ __html : this.state.code.html }} /></div>
-							<CopyToClipboard onCopy={()=> this.handleCodeCopy()} text={this.state.code.syntax}>
-								<button className="inspector-page-float-button inspector-page-copy-code-button"><img className="inspector-page-float-button-image" src="/images/copy-code.svg" alt="Copy" /></button>
-							</CopyToClipboard>
-						</div>
+						<Tabs>
+							<TabList>
+								<Tab>Title 1</Tab>
+								<Tab>Title 2</Tab>
+								<Tab>Title 3</Tab>
+								<Tab>Title 4</Tab>
+								<Tab>Title 5</Tab>
+								<Tab>Title 6</Tab>
+							</TabList>
+
+							<TabPanel>Any content 1</TabPanel>
+							<TabPanel>Any content 2</TabPanel>
+							<TabPanel>Any content 3</TabPanel>
+							<TabPanel>Any content 4</TabPanel>
+							<TabPanel>Any content 5</TabPanel>
+							<TabPanel>Any content 6</TabPanel>
+						</Tabs>
 					</div>
 					<div className="inspector-page-panel-content-wrapper" style={{borderBottom:'none'}}>
 						<div className="inspector-page-panel-info-wrapper">

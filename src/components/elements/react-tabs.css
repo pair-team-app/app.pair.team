@@ -1,0 +1,36 @@
+
+.react-tabs {
+}
+
+.react-tabs__tab-list {
+	border: none;
+}
+
+.react-tabs__tab {
+	background-color: #111111;
+	color: #999999;
+}
+
+.react-tabs__tab--selected {
+	background-color: #1c1c1c;
+	color: #ffffff;
+	border-radius: 0;
+	border: 1px solid transparent;
+	border-bottom: 1px solid #002fff;
+}
+
+.react-tabs__tab--disabled {
+}
+
+.react-tabs__tab:focus {
+}
+
+.react-tabs__tab:focus:after {
+}
+
+.react-tabs__tab-panel {
+	background-color: #333333;
+}
+
+.react-tabs__tab-panel--selected {
+}
