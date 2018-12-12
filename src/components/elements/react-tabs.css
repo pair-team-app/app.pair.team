@@ -7,8 +7,10 @@
 }
 
 .react-tabs__tab {
+	font-size: 12px;
 	background-color: #111111;
 	color: #999999;
+	padding: 20px 10px;
 }
 
 .react-tabs__tab--selected {
@@ -16,7 +18,7 @@
 	color: #ffffff;
 	border-radius: 0;
 	border: 1px solid transparent;
-	border-bottom: 1px solid #002fff;
+	border-bottom: 1px solid #7ed321;
 }
 
 .react-tabs__tab--disabled {
@@ -30,6 +32,10 @@
 
 .react-tabs__tab-panel {
 	background-color: #333333;
+	overflow: scroll;
+	font-family: "Roboto Mono", monospace;
+	font-size: 12px;
+	padding: 4px;
 }
 
 .react-tabs__tab-panel--selected {

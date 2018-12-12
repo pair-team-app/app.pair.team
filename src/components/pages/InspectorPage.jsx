@@ -7,6 +7,7 @@ import '../elements/react-tabs.css';
 import axios from 'axios';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
+import Dropzone from 'react-dropzone';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Column, Row } from 'simple-flexbox';
 
@@ -29,6 +30,7 @@ class InspectorPage extends Component {
 			x: 0.5,
 			y: 0.5,
 			scale: 0.5,
+			uploadID      : this.props.match.params.uploadID,
 			pageID        : this.props.match.params.pageID,
 			artboardID    : this.props.match.params.artboardID,
 			sliceID       : this.props.match.params.sliceID,
@@ -36,6 +38,7 @@ class InspectorPage extends Component {
 			hoverSlice    : null,
 			page          : null,
 			artboards     : [],
+			files         : [],
 			hoverOffset   : null,
 			offset        : null,
 			artboard      : null,
@@ -140,7 +143,7 @@ class InspectorPage extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response)=> {
 // 				console.log('PAGE', response.data);
-				this.setState({ page : response.data.page });
+				const page = response.data.page;
 
 				formData.append('action', 'ARTBOARDS');
 				formData.append('upload_id', '');
@@ -171,11 +174,96 @@ class InspectorPage extends Component {
 							comments  : artboard.comments
 						}));
 
-						this.setState({ artboard : randomElement(artboards) });
-						this.setState({ artboards : artboards });
+						formData.append('action', 'FILES');
+						formData.append('upload_id', '' + this.state.uploadID);
+						axios.post('https://api.designengine.ai/system.php', formData)
+							.then((response)=> {
+								console.log('FILES', response.data);
+
+								const files = response.data.files.map((file) => ({
+									id       : file.id,
+									title    : file.title,
+									filename : file.filename,
+									contents : file.contents,
+									added    : file.added
+								}));
+
+								this.setState({
+									files     : files,
+									page      : page,
+									artboard  : randomElement(artboards),
+									artboards : artboards
+								});
+							}).catch((error) => {
+						});
 					}).catch((error) => {
 				});
 			}).catch((error) => {
+		});
+	};
+
+	onDrop(files) {
+		console.log('onDrop()', files);
+		if (files.length > 0 && files[0].name.split('.').pop() === 'zip') {
+				let self = this;
+				const config = {
+					headers : {
+						'content-type' : 'multipart/form-data'
+					}, onUploadProgress : function (progressEvent) {
+						const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+						self.setState({ percent : percent });
+
+						if (progressEvent.loaded === progressEvent.total) {
+							self.onUploadComplete();
+						}
+					}
+				};
+
+				files.forEach(file => {
+					let formData = new FormData();
+					formData.append('file', file);
+
+					axios.post('http://cdn.designengine.ai/files/upload.php?user_id=' + cookie.load('user_id') + '&upload_id=' + this.state.uploadID, formData, config)
+						.then((response) => {
+							console.log("UPLOAD", response.data);
+						}).catch((error) => {
+					});
+				});
+
+		} else {
+			const popup = {
+				visible : true,
+				content : 'error::Only zip archives are support at this time.'
+			};
+			this.setState({ popup : popup });
+		}
+	}
+
+	onUploadComplete = ()=> {
+		let formData = new FormData();
+		formData.append('action', 'FILES');
+		formData.append('upload_id', '' + this.state.uploadID);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response)=> {
+				console.log('FILES', response.data);
+
+				const files = response.data.entries.map((file) => ({
+					id       : file.id,
+					title    : file.title,
+					filename : file.filename,
+					contents : file.contents,
+					added    : file.added
+				}));
+
+				this.setState({
+					files           : files
+				});
+			}).catch((error) => {
+		});
+
+		this.setState({
+			uploading      : false,
+			uploadComplete : true
 		});
 	};
 
@@ -204,6 +292,10 @@ class InspectorPage extends Component {
 			content : 'Copied to Clipboard!'
 		};
 		this.setState({ popup : popup });
+	};
+
+	handleContribute = ()=> {
+
 	};
 
 	handleCommentChange = (event)=> {
@@ -492,20 +584,20 @@ class InspectorPage extends Component {
 				context.textAlign = 'right';
 				context.textBaseline = 'middle';
 				context.fillText(srcFrame.size.height + 'PX', frame.origin.x - 2, frame.origin.y + (frame.size.height * 0.5));
-
-				context.fillStyle = 'rgba(0, 255, 0, 1)';
-				context.textAlign = 'right';
-				context.textBaseline = 'top';
-				context.fillText(srcFrame.origin.x + 'px', frame.origin.x - 2, 1);
-
-				context.textAlign = 'left';
-				context.fillText((srcFrame.origin.x + srcFrame.size.width) + 'px', (frame.origin.x + frame.size.width) + 2, 1);
-
-				context.textBaseline = 'bottom';
-				context.fillText(srcFrame.origin.y + 'px', 1, frame.origin.y);
-
-				context.textBaseline = 'top';
-				context.fillText((srcFrame.origin.y + srcFrame.size.height) + 'px', 1, frame.origin.y + frame.size.height);
+//
+// 				context.fillStyle = 'rgba(0, 255, 0, 1)';
+// 				context.textAlign = 'right';
+// 				context.textBaseline = 'top';
+// 				context.fillText(srcFrame.origin.x + 'px', frame.origin.x - 2, 1);
+//
+// 				context.textAlign = 'left';
+// 				context.fillText((srcFrame.origin.x + srcFrame.size.width) + 'px', (frame.origin.x + frame.size.width) + 2, 1);
+//
+// 				context.textBaseline = 'bottom';
+// 				context.fillText(srcFrame.origin.y + 'px', 1, frame.origin.y);
+//
+// 				context.textBaseline = 'top';
+// 				context.fillText((srcFrame.origin.y + srcFrame.size.height) + 'px', 1, frame.origin.y + frame.size.height);
 			}
 		}
 	};
@@ -527,7 +619,7 @@ class InspectorPage extends Component {
 			day    : 'numeric'
 		};
 
-		const { page, artboards, artboard, slice } = this.state;
+		const { page, artboards, artboard, slice, files } = this.state;
 		const { visibleTypes } = this.state;
 		const { scale } = this.state;
 
@@ -549,8 +641,8 @@ class InspectorPage extends Component {
 
 		let maxH = 0;
 		let offset = {
-			x : -500,
-			y : -300
+			x : 0,
+			y : 0
 		};
 
 		let heroes = [];
@@ -559,8 +651,14 @@ class InspectorPage extends Component {
 		for (let i=0; i<artboards.length; i++) {
 			const artboard = artboards[i];
 
-			if (artboard.meta.frame.size.height > maxH) {
-				maxH = artboard.meta.frame.size.height;
+			if (Math.floor(i % 5) === 0) {
+				offset.x = 0;
+				offset.y += maxH + 50;
+				maxH = 0;
+			}
+
+			if (artboard.meta.frame.size.height * scale > maxH) {
+				maxH = artboard.meta.frame.size.height * scale;
 			}
 
 			const heroStyle = {
@@ -571,7 +669,7 @@ class InspectorPage extends Component {
 				height         : (scale * artboard.meta.frame.size.height) + 'px',
 				background     : '#000000 url("' + artboard.filename + '") no-repeat center',
 				backgroundSize : 'cover',
-				border         : '1px solid #ffffff'
+				border         : '2px dotted #00ff00'
 			};
 
 			const sliceWrapperStyle = {
@@ -586,6 +684,7 @@ class InspectorPage extends Component {
 				return ((slice.type === 'background') ?
 					<SliceItem
 						key={i}
+						id={slice.id}
 						title={slice.title}
 						type={slice.type}
 						visible={visibleTypes[slice.type]}
@@ -606,6 +705,7 @@ class InspectorPage extends Component {
 				return ((slice.type === 'hotspot') ?
 					<SliceItem
 						key={i}
+						id={slice.id}
 						title={slice.title}
 						type={slice.type}
 						visible={visibleTypes[slice.type]}
@@ -626,6 +726,7 @@ class InspectorPage extends Component {
 				return ((slice.type === 'textfield') ?
 					<SliceItem
 						key={i}
+						id={slice.id}
 						title={slice.title}
 						type={slice.type}
 						visible={visibleTypes[slice.type]}
@@ -646,6 +747,7 @@ class InspectorPage extends Component {
 				return ((slice.type === 'slice') ?
 					<SliceItem
 						key={i}
+						id={slice.id}
 						title={slice.title}
 						type={slice.type}
 						visible={visibleTypes[slice.type]}
@@ -679,10 +781,7 @@ class InspectorPage extends Component {
 				</div>
 			);
 
-			offset = {
-				x : Math.round((i % 5) * (100 + (artboard.meta.frame.size.width * scale))),
-				y : Math.round(Math.floor(i / 5) * (50 + (maxH * scale)))
-			};
+			offset.x += Math.round(50 + (artboard.meta.frame.size.width * scale));
 		}
 
 
@@ -751,21 +850,20 @@ class InspectorPage extends Component {
 					<div className="inspector-page-panel-content-wrapper">
 						<Tabs>
 							<TabList>
-								<Tab>Title 1</Tab>
-								<Tab>Title 2</Tab>
-								<Tab>Title 3</Tab>
-								<Tab>Title 4</Tab>
-								<Tab>Title 5</Tab>
-								<Tab>Title 6</Tab>
+								{(files.map((file) => {
+									return (<Tab>{file.title}</Tab>);
+								}))}
 							</TabList>
 
-							<TabPanel>Any content 1</TabPanel>
-							<TabPanel>Any content 2</TabPanel>
-							<TabPanel>Any content 3</TabPanel>
-							<TabPanel>Any content 4</TabPanel>
-							<TabPanel>Any content 5</TabPanel>
-							<TabPanel>Any content 6</TabPanel>
+							{(files.map((file) => {
+								return (<TabPanel><span dangerouslySetInnerHTML={{ __html : String(JSON.parse(file.contents)).replace(/\n/g, '<br />') }} /></TabPanel>);
+							}))}
 						</Tabs>
+					</div>
+					<div className="inspector-page-panel-button-wrapper">
+						<Dropzone className="upload-page-dz-wrapper" onDrop={this.onDrop.bind(this)}>
+							<button>Contribute</button>
+						</Dropzone>
 					</div>
 					<div className="inspector-page-panel-content-wrapper" style={{borderBottom:'none'}}>
 						<div className="inspector-page-panel-info-wrapper">

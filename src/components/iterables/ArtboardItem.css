@@ -58,7 +58,7 @@
 }
 
 .artboard-item-image-landscape {
-	width: 65%
+	width: 55%
 }
 
 .artboard-item-image-portrait {
@@ -72,6 +72,7 @@
 	width: 100%;
 	padding: 16px;
 	display: table;
+	background-color: rgba(0, 0, 0, 0.5);
 }
 
 .artboard-item-avatar {

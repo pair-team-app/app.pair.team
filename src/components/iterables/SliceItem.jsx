@@ -2,8 +2,6 @@
 import React, { Component } from 'react';
 import './SliceItem.css'
 
-import FontAwesome from 'react-fontawesome';
-
 class SliceItem extends Component {
 	constructor(props) {
 		super(props);
@@ -19,13 +17,12 @@ class SliceItem extends Component {
 			width   : this.props.width + 'px',
 			height  : this.props.height + 'px',
 			zoom    : this.props.scale,
-			transform : 'scale(' + this.props.scale + ')'
+// 			transform : 'scale(' + this.props.scale + ')'
 // 			display : (this.props.visible) ? 'block' : 'none'
 		};
 
 		return (
-			<div className={className + ((this.props.visible) ? '-selected' : '')} style={style} onMouseEnter={()=> this.props.onRollOver({ x : this.props.offsetX, y : this.props.offsetY })} onMouseLeave={()=> this.props.onRollOut()} onClick={()=> this.props.onClick({ x : this.props.offsetX, y : this.props.offsetY })}>
-				<FontAwesome name="plus-circle" className="slice-item-plus" />
+			<div data-id={this.props.id} className={className + ((this.props.visible) ? '-selected' : '')} style={style} onMouseEnter={()=> this.props.onRollOver({ x : this.props.offsetX, y : this.props.offsetY })} onMouseLeave={()=> this.props.onRollOut()} onClick={()=> this.props.onClick({ x : this.props.offsetX, y : this.props.offsetY })}>
 			</div>
 		);
 	}
