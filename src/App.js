@@ -115,7 +115,36 @@ class App extends Component {
 
 	handleSideNavPageItem = (obj)=> {
 		console.log('handleSideNavPageItem()', obj);
-		this.setState({ pageID : (obj.selected) ? obj.id : 0 });
+
+		if (obj.selected) {
+			let formData = new FormData();
+			formData.append('action', 'ARTBOARDS');
+			formData.append('upload_id', this.state.uploadID);
+			formData.append('page_id', obj.id);
+			formData.append('slices', '0');
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response) => {
+					console.log('ARTBOARDS', response.data);
+
+					const artboard = response.data.artboards[0];
+					formData.append('action', 'ADD_VIEW');
+					formData.append('artboard_id', obj.id);
+					axios.post('https://api.designengine.ai/system.php', formData)
+						.then((response) => {
+							console.log('ADD_VIEW', response.data);
+							this.props.history.push('/artboard/' + this.state.uploadID + '/' + obj.id + '/' + artboard.id + '/' + artboard.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+							this.setState({
+								pageID     : obj.id,
+								artboardID : artboard.id
+							});
+						}).catch((error) => {
+					});
+				}).catch((error) => {
+			});
+
+		} else {
+			this.setState({ pageID : 0 });
+		}
 	};
 
 	handleSideNavArtboardItem = (obj)=> {
