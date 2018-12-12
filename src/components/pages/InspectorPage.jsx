@@ -447,9 +447,7 @@ class InspectorPage extends Component {
 				if (ind === 2) {
 					syntax = syntax.replace(/: (.+?);/g, ':\'$1\',').replace(/(-.)/g, function(v){ return (v[1].toUpperCase()); });
 					html = syntax;
-
 				}
-
 			}
 		}
 
@@ -633,8 +631,8 @@ class InspectorPage extends Component {
 
 		const wrapperStyle = {
 			position        : 'absolute',
-			width           : (artboards.length > 0) ? artboards.length * (100 + (artboard.meta.frame.size.width * this.state.scale)) : 0,
-			height          : (artboards.length > 0) ? (artboard.meta.frame.size.height * this.state.scale) : 0,
+			width           : (artboards.length > 0) ? Math.floor(artboards.length * (50 + (artboards[0].meta.frame.size.width * this.state.scale)) * 0.75) : 0,
+			height          : (artboards.length > 0) ? Math.floor(artboards.length * (50 + (artboards[0].meta.frame.size.height * this.state.scale)) * 0.5) : 0,
 // 			transform       : (artboards.length > 0) ? 'translate(' + ((3 * (50 + (artboard.meta.frame.size.width * this.state.scale))) * -0.5) + 'px, ' + ((artboard.meta.frame.size.height * this.state.scale) * 0.5) + 'px)' : 'translate(0px, 0px)'
 			transform       : (artboards.length > 0) ? 'translate(100px, 50px)' : 'translate(0px, 0px)'
 		};
@@ -821,7 +819,7 @@ class InspectorPage extends Component {
 							<div style={wrapperStyle} ref={heroImage}>
 								{heroes}
 								<div className="inspector-page-hero-canvas-wrapper">
-									<canvas width={(heroImage.current) ? heroImage.current.clientWidth : 0} height={(heroWrapper.current) ? heroWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
+									<canvas width={wrapperStyle.width} height={wrapperStyle.height} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
 								</div>
 								{slices}
 							</div>
