@@ -41,6 +41,7 @@
 	top: -50px;
 	left: -100px;
 	z-index: 2;
+	cursor: grab;
 }
 
 .inspector-page-hero-slices-wrapper {
@@ -189,4 +190,9 @@
 .inspector-page-float-button-image {
 	width: 100%;
 	height: 100%;
+}
+
+
+.inspector-page-tooltip {
+
 }

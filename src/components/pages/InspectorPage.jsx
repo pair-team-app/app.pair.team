@@ -542,7 +542,7 @@ class InspectorPage extends Component {
 				//console.log('updateCanvas()', srcFrame, offset, frame);
 
 				context.fillStyle = 'rgba(0, 0, 0, 0.5)';
-				context.fillStyle = (this.state.hoverSlice.type === 'slice') ? 'rgba(255, 127, 0, 0.25)' : (this.state.hoverSlice.type === 'hotspot') ? 'rgba(0, 255, 0, 0.25)' : (this.state.hoverSlice.type === 'textfield') ? 'rgba(0, 0, 255, 0.25)' : 'rgba(62, 255, 109, 0.25)';
+				context.fillStyle = (this.state.hoverSlice.type === 'slice') ? 'rgba(255, 181, 18, 0.5)' : (this.state.hoverSlice.type === 'hotspot') ? 'rgba(62, 84, 255, 0.5)' : (this.state.hoverSlice.type === 'textfield') ? 'rgba(255, 88, 62, 0.5)' : 'rgba(62, 255, 109, 0.5)';
 				context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 				context.strokeStyle = 'rgba(0, 255, 0, 1.0)';
 				context.beginPath();
