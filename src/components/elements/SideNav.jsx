@@ -31,7 +31,7 @@ class SideNav extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-// 		console.log('SideNav.componentDidUpdate()', prevProps, this.props);
+		console.log('SideNav.componentDidUpdate()', prevProps, this.props);
 // 		if (this.props.uploadID === 0 && (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID)) {
 		if (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID) {
 			let self = this;
@@ -126,6 +126,26 @@ class SideNav extends Component {
 					});
 				}
 			});
+
+		} else if (window.location.pathname.includes('/explore')) {
+			let uploads = [...this.state.uploads];
+			let isFound = false;
+
+			uploads.forEach(function(item, i) {
+				if (item.selected) {
+					isFound = true;
+				}
+			});
+
+			if (isFound) {
+				uploads.forEach(function(item, i) {
+					if (item.selected) {
+						item.selected = false;
+					}
+				});
+
+				this.setState({ uploads : uploads });
+			}
 		}
 	}
 
