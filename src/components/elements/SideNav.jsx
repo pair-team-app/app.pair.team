@@ -287,7 +287,9 @@ class SideNav extends Component {
 		let artboards = [...this.state.artboards];
 		artboards.forEach(function(item, i) {
 			if (item.id === artboard.id) {
-				item.selected = !item.selected;
+				if (!item.selected) {
+					item.selected = true;
+				}
 
 			} else {
 				item.selected = false;
@@ -328,7 +330,7 @@ class SideNav extends Component {
 						{(cookie.load('user_id') === '0') ? (<div>
 							<span className="side-nav-subtext">You must be logged in.</span>
 						</div>) : (<div>
-								{(uploads.length === 0) ? <span className="side-nav-subtext">Loading projects…</span> : uploads.map((upload, i) => {
+								{(uploads.length === 0) ? <span className="side-nav-subtext">You don't have any projects yet!</span> : uploads.map((upload, i) => {
 								return (
 									<UploadTreeItem
 										key={i}
