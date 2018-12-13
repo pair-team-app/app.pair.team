@@ -20,7 +20,7 @@ class ArtboardItem extends Component {
 		return (
 			<div className={className} onClick={()=> (this.props.title !== '') ? this.props.onClick() : null}>
 				{(this.props.title !== '') && (<div>
-					<img className={imageClass} src={this.props.image} alt={this.props.title} />
+					<img className={imageClass} src={this.props.image.replace('@3x', '@0.25x')} alt={this.props.title} />
 					<div className="artboard-item-overlay" />
 					<img className="artboard-item-icon" src="/images/icon-sketch.png" alt="Icon" />
 					<div className="artboard-item-details-wrapper">

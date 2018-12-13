@@ -58,11 +58,11 @@
 }
 
 .artboard-item-image-landscape {
-	width: 55%
+	width: 90%
 }
 
 .artboard-item-image-portrait {
-	height: 65%;
+	height: 100%;
 }
 
 .artboard-item-details-wrapper {

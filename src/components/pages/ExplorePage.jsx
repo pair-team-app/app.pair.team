@@ -34,7 +34,7 @@ class ExplorePage extends Component {
 					pageID   : item.page_id,
 					title    : item.title,
 					type     : item.type,
-					filename : item.filename.replace('@3x', '@1x'),
+					filename : item.filename,
 					meta     : JSON.parse(item.meta),
 					added    : item.added,
 					selected : false

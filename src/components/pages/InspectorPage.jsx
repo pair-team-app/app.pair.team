@@ -55,7 +55,7 @@ class InspectorPage extends Component {
 				slice      : false,
 				hotspot    : false,
 				textfield  : false,
-				background : false,
+				group      : false,
 				all        : true
 			},
 			languages     : [{
@@ -376,8 +376,8 @@ class InspectorPage extends Component {
 			this.setState({ scale : Math.min(Math.max(this.state.scale - (event.deltaY * 0.0025), 0.03), 3).toFixed(2) });
 
 		} else {
-			artboardsWrapper.current.scrollTop = artboardsWrapper.current.scrollTop + event.deltaY;
-			artboardsWrapper.current.scrollLeft = artboardsWrapper.current.scrollLeft + event.deltaX;
+			artboardsWrapper.current.scrollTop += event.deltaY;
+			artboardsWrapper.current.scrollLeft += event.deltaX;
 
 			this.setState({
 				scrollOffset : {
@@ -805,7 +805,7 @@ class InspectorPage extends Component {
 			};
 
 			const backgroundSlices = artboard.slices.map((slice, i) => {
-				return ((slice.type === 'background') ?
+				return ((slice.type === 'group') ?
 					<SliceItem
 						key={i}
 						id={slice.id}
@@ -965,7 +965,7 @@ class InspectorPage extends Component {
 						<SliceToggle type="hotspot" selected={visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} />
 						<SliceToggle type="slice" selected={visibleTypes.slice} onClick={()=> this.handleSliceToggle('slice')} />
 						<SliceToggle type="textfield" selected={visibleTypes.textfield} onClick={()=> this.handleSliceToggle('textfield')} />
-						<SliceToggle type="background" selected={visibleTypes.background} onClick={()=> this.handleSliceToggle('background')} />
+						<SliceToggle type="group" selected={visibleTypes.group} onClick={()=> this.handleSliceToggle('group')} />
 						<SliceToggle type="" selected={(visibleTypes.all)} onClick={()=> this.handleSliceToggle('all')} />
 					</div>
 					<div className="inspector-page-button-wrapper"><Row>
