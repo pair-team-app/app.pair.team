@@ -45,6 +45,7 @@ class InspectorPage extends Component {
 				y : 0
 			},
 			offset        : null,
+			scrolling     : false,
 			code          : {
 				html   : '',
 				syntax : ''
@@ -84,6 +85,8 @@ class InspectorPage extends Component {
 			}
 		};
 
+		this.lastScroll = 0;
+		this.scrollInterval = null;
 		this.rerender = 0;
 		this.antsOffset = 0;
 		this.antsInterval = null;
@@ -360,6 +363,15 @@ class InspectorPage extends Component {
 
 		event.preventDefault();
 
+		this.lastScroll = (new Date()).getUTCSeconds();
+		clearTimeout(this.scrollInterval);
+		this.scrollInterval = setTimeout(this.handleWheelStop, 50);
+
+
+		if (!this.state.scrolling) {
+			this.setState({ scrolling : true });
+		}
+
 		if (event.ctrlKey) {
 			this.setState({ scale : Math.min(Math.max(this.state.scale - (event.deltaY * 0.0025), 0.03), 3).toFixed(2) });
 
@@ -367,10 +379,12 @@ class InspectorPage extends Component {
 			artboardsWrapper.current.scrollTop = artboardsWrapper.current.scrollTop + event.deltaY;
 			artboardsWrapper.current.scrollLeft = artboardsWrapper.current.scrollLeft + event.deltaX;
 
-			this.setState({ scrollOffset : {
+			this.setState({
+				scrollOffset : {
 					x : artboardsWrapper.current.scrollLeft,
 					y : artboardsWrapper.current.scrollTop
-				}});
+				}
+			});
 		}
 	};
 
@@ -437,6 +451,11 @@ class InspectorPage extends Component {
 // 		});
 //
 // 		this.setState({ artboards : artboards });
+	};
+	
+	handleWheelStop = ()=> {
+		clearTimeout(this.scrollInterval);
+		this.setState({ scrolling : false });
 	};
 
 	handleZoom = (direction)=> {
@@ -709,6 +728,7 @@ class InspectorPage extends Component {
 		}
 	};
 
+
 	render() {
 		const tsOptions = {
 			year   : 'numeric',
@@ -734,6 +754,12 @@ class InspectorPage extends Component {
 			height          : (artboards.length > 0) ? Math.floor(artboards.length * (50 + (artboards[0].meta.frame.size.height * this.state.scale)) * 0.75) : 0,
 // 			transform       : (artboards.length > 0) ? 'translate(' + ((3 * (50 + (artboard.meta.frame.size.width * this.state.scale))) * -0.5) + 'px, ' + ((artboard.meta.frame.size.height * this.state.scale) * 0.5) + 'px)' : 'translate(0px, 0px)'
 			transform       : (artboards.length > 0) ? 'translate(100px, 50px)' : 'translate(0px, 0px)'
+		};
+
+		const canvasStyle = {
+			top     : (-50 + this.state.scrollOffset.y) + 'px',
+			left    : (-100 + this.state.scrollOffset.x) + 'px',
+			display : (this.state.scrolling) ? 'none' : 'block'
 		};
 
 		let maxH = 0;
@@ -786,6 +812,7 @@ class InspectorPage extends Component {
 						title={slice.title}
 						type={slice.type}
 						filled={visibleTypes[slice.type]}
+						visible={(!this.state.scrolling)}
 						top={slice.meta.frame.origin.y}
 						left={slice.meta.frame.origin.x}
 						width={slice.meta.frame.size.width}
@@ -807,6 +834,7 @@ class InspectorPage extends Component {
 						title={slice.title}
 						type={slice.type}
 						filled={visibleTypes[slice.type]}
+						visible={(!this.state.scrolling)}
 						top={slice.meta.frame.origin.y}
 						left={slice.meta.frame.origin.x}
 						width={slice.meta.frame.size.width}
@@ -828,6 +856,7 @@ class InspectorPage extends Component {
 						title={slice.title}
 						type={slice.type}
 						filled={visibleTypes[slice.type]}
+						visible={(!this.state.scrolling)}
 						top={slice.meta.frame.origin.y}
 						left={slice.meta.frame.origin.x}
 						width={slice.meta.frame.size.width}
@@ -849,6 +878,7 @@ class InspectorPage extends Component {
 						title={slice.title}
 						type={slice.type}
 						filled={visibleTypes[slice.type]}
+						visible={(!this.state.scrolling)}
 						top={slice.meta.frame.origin.y}
 						left={slice.meta.frame.origin.x}
 						width={slice.meta.frame.size.width}
@@ -912,11 +942,6 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.render()', scale);
 // 		console.log(window.performance.memory);
 
-		const canvasStyle = {
-			top  : (-50 + this.state.scrollOffset.y) + 'px',
-			left : (-100 + this.state.scrollOffset.x) + 'px'
-		};
-
 		return (<div style={{paddingBottom:'30px'}}>
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
@@ -934,7 +959,7 @@ class InspectorPage extends Component {
 					<div className="inspector-page-zoom-wrapper">
 						<button className={'inspector-page-float-button' + ((scale >= 3) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button><br />
 						<button className={'inspector-page-float-button' + ((scale <= 0.03) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button><br />
-						<button className={'inspector-page-float-button' + ((scale === 1.0) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 1.0) ? '/images/layer-off.svg' : '/images/layer-off_disabled.svg'} alt="0" /></button>
+						<button className={'inspector-page-float-button' + ((scale === 1.0) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 1.0) ? '/images/zoom-reset.svg' : '/images/zoom-reset_disabled.svg'} alt="0" /></button>
 					</div>
 					<div className="inspector-page-toggle-wrapper">
 						<SliceToggle type="hotspot" selected={visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} />

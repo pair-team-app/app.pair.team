@@ -18,7 +18,7 @@ class SliceItem extends Component {
 			height  : this.props.height + 'px',
 			zoom    : this.props.scale,
 // 			transform : 'scale(' + this.props.scale + ')'
-// 			display : (this.props.visible) ? 'block' : 'none'
+			display : (this.props.visible) ? 'block' : 'none'
 		};
 
 		return (
