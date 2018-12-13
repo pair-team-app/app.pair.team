@@ -126,7 +126,7 @@ class InspectorPage extends Component {
 		this.antsInterval = setInterval(this.redrawAnts, 75);
 
 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
-		document.addEventListener('wheel', this.handleWheel.bind(this));
+		document.addEventListener('wheel', this.handleWheelStart.bind(this));
 	}
 
 	componentDidUpdate(prevProps) {
@@ -357,7 +357,7 @@ class InspectorPage extends Component {
 		});
 	};
 
-	handleWheel = (event)=> {
+	handleWheelStart = (event)=> {
 // 		console.log(event.type, event.deltaX, event.deltaY, event.target);
 		//console.log('wheel', artboardsWrapper.current.clientWidth, artboardsWrapper.current.clientHeight, artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft);
 
@@ -386,6 +386,11 @@ class InspectorPage extends Component {
 				}
 			});
 		}
+	};
+
+	handleWheelStop = ()=> {
+		clearTimeout(this.scrollInterval);
+		this.setState({ scrolling : false });
 	};
 
 	handleDrag = (event)=> {
@@ -451,11 +456,6 @@ class InspectorPage extends Component {
 // 		});
 //
 // 		this.setState({ artboards : artboards });
-	};
-	
-	handleWheelStop = ()=> {
-		clearTimeout(this.scrollInterval);
-		this.setState({ scrolling : false });
 	};
 
 	handleZoom = (direction)=> {
