@@ -16,10 +16,10 @@ import SliceItem from '../iterables/SliceItem';
 import SliceToggle from '../elements/SliceToggle';
 import Popup from '../elements/Popup';
 
-import { randomElement } from '../../utils/lang.js';
+//import { randomElement } from '../../utils/lang.js';
 
-const heroWrapper = React.createRef();
-const heroImage = React.createRef();
+const artboardsWrapper = React.createRef();
+const canvasWrapper = React.createRef();
 const canvas = React.createRef();
 
 class InspectorPage extends Component {
@@ -40,8 +40,11 @@ class InspectorPage extends Component {
 			artboards     : [],
 			files         : [],
 			hoverOffset   : null,
+			scrollOffset  : {
+				x : 0,
+				y : 0
+			},
 			offset        : null,
-			artboard      : null,
 			code          : {
 				html   : '',
 				syntax : ''
@@ -84,6 +87,17 @@ class InspectorPage extends Component {
 		this.rerender = 0;
 		this.antsOffset = 0;
 		this.antsInterval = null;
+
+		this.zoomNotches = [
+			0.03,
+			0.06,
+			0.13,
+			0.25,
+			0.50,
+			1.00,
+			1.75,
+			3.00
+		];
 
 		cookie.save('upload_id', this.props.match.params.uploadID, { path : '/' });
 	}
@@ -148,12 +162,12 @@ class InspectorPage extends Component {
 				formData.append('action', 'ARTBOARDS');
 				formData.append('upload_id', '');
 				formData.append('page_id', '' + pageID);
-				formData.append('slices', '1');
+				formData.append('slices', '0');
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response)=> {
 						console.log('ARTBOARDS', response.data);
 
-						const artboards = response.data.artboards.map((artboard)=> ({
+						const artboards = response.data.artboards.map((artboard, i)=> ({
 							id        : artboard.id,
 							pageID    : artboard.page_id,
 							title     : artboard.title,
@@ -163,7 +177,7 @@ class InspectorPage extends Component {
 							downloads : artboard.downloads,
 							added     : artboard.added,
 							system    : artboard.system,
-							slices    : artboard.slices.map((item)=> ({
+							slices    : artboard.slices.map((item) => ({
 								id       : item.id,
 								title    : item.title,
 								type     : item.type,
@@ -191,7 +205,6 @@ class InspectorPage extends Component {
 								this.setState({
 									files     : files,
 									page      : page,
-									artboard  : randomElement(artboards),
 									artboards : artboards
 								});
 							}).catch((error) => {
@@ -342,11 +355,17 @@ class InspectorPage extends Component {
 	};
 
 	handleWheel = (event)=> {
-		//console.log(event.type, event.deltaX, event.deltaY, event.target);
+// 		console.log(event.type, event.deltaX, event.deltaY, event.target);
+		//console.log('wheel', artboardsWrapper.current.clientWidth, artboardsWrapper.current.clientHeight, artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft);
+
+		this.setState({ scrollOffset : {
+			x : artboardsWrapper.current.scrollLeft,
+			y : artboardsWrapper.current.scrollTop
+		}});
 
 		if (event.ctrlKey) {
 			event.preventDefault();
-			this.setState({ scale : Math.min(Math.max(this.state.scale - (event.deltaY * 0.005), 0.5), 2)});
+			this.setState({ scale : Math.min(Math.max(this.state.scale - (event.deltaY * 0.001), 0.03), 3)});
 		}
 	};
 
@@ -371,16 +390,91 @@ class InspectorPage extends Component {
 // 		this.setState({ canvasVisible : true });
 	};
 
+	handleArtboardOver = (event)=> {
+// 		console.log('handleArtboardOver()', event.target);
+		const artboardID = event.target.getAttribute('data-id');
+
+		let formData = new FormData();
+		formData.append('action', 'SLICES');
+		formData.append('artboard_id', event.target.getAttribute('data-id'));
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+// 				console.log('SLICES', response.data);
+
+				let artboards = this.state.artboards;
+				artboards.forEach((artboard)=> {
+					if (artboard.id === artboardID && artboard.slices.length === 0) {
+						artboard.slices = response.data.slices.map((item) => ({
+							id       : item.id,
+							title    : item.title,
+							type     : item.type,
+							filename : item.filename,
+							meta     : JSON.parse(item.meta),
+							added    : item.added
+						}));
+					}
+				});
+
+				this.setState({ artboards : artboards });
+			}).catch((error) => {
+		});
+	};
+
+	handleArtboardOut = (event)=> {
+// 		console.log('handleArtboardOut()', event.target);
+		const artboardID = event.target.getAttribute('data-id');
+
+// 		let artboards = this.state.artboards;
+// 		artboards.forEach((artboard)=> {
+// 			if (artboard.id === artboardID) {
+// 				artboard.slices = [];
+// 			}
+// 		});
+//
+// 		this.setState({ artboards : artboards });
+	};
+
 	handleZoom = (direction)=> {
 		const { scale } = this.state;
-		this.setState({ scale : (direction === 0) ? 0.5 : Math.min(Math.max(scale + (direction * 0.02), 0.5), 2) });
+
+		if (direction === 0) {
+			this.setState({ scale : this.zoomNotches[5] });
+
+		} else {
+			let ind = -1;
+			this.zoomNotches.forEach((amt, i)=> {
+				if (scale === amt) {
+					ind = i;
+				}
+			});
+
+			if (ind === -1) {
+				let diff = 3;
+				this.zoomNotches.forEach((amt, i)=> {
+					if (Math.abs(amt - scale) < diff) {
+						diff = Math.abs(amt - scale);
+						ind = i;
+					}
+				});
+			}
+
+			this.setState({ scale : this.zoomNotches[Math.min(Math.max(0, ind + direction), this.zoomNotches.length - 1)] });
+		}
+
+
+		//this.setState({ scale : (direction === 0) ? 0.5 : Math.min(Math.max(scale + (direction * 0.02), 0.5), 2) });
 		this.updateCanvas();
 	};
 
 	handleSliceRollOver = (ind, slice, offset)=> {
+		const scrollOffset = {
+			x : (offset.x > artboardsWrapper.current.clientWidth) ? offset.x - artboardsWrapper.current.scrollLeft : offset.x,
+			y : (offset.y > artboardsWrapper.current.clientHeight) ? offset.y - artboardsWrapper.current.scrollTop : offset.y
+		};
+
 		this.setState({
 			hoverSlice  : slice,
-			hoverOffset : offset
+			hoverOffset : scrollOffset
 		});
 	};
 
@@ -617,7 +711,7 @@ class InspectorPage extends Component {
 			day    : 'numeric'
 		};
 
-		const { page, artboards, artboard, slice, files } = this.state;
+		const { page, artboards, slice, files } = this.state;
 		const { visibleTypes } = this.state;
 		const { scale } = this.state;
 
@@ -646,6 +740,7 @@ class InspectorPage extends Component {
 		let heroes = [];
 		let slices = [];
 
+// 		for (let i=0; i<((artboards.length > 0) ? Math.min(artboards.length, 10) : 0); i++) {
 		for (let i=0; i<artboards.length; i++) {
 			const artboard = artboards[i];
 
@@ -661,10 +756,10 @@ class InspectorPage extends Component {
 
 			const heroStyle = {
 				position       : 'absolute',
-				top            : offset.y + 'px',
-				left           : offset.x + 'px',
-				width          : (scale * artboard.meta.frame.size.width) + 'px',
-				height         : (scale * artboard.meta.frame.size.height) + 'px',
+				top            : Math.floor(offset.y) + 'px',
+				left           : Math.floor(offset.x) + 'px',
+				width          : Math.floor(scale * artboard.meta.frame.size.width) + 'px',
+				height         : Math.floor(scale * artboard.meta.frame.size.height) + 'px',
 				background     : '#000000 url("' + artboard.filename + '") no-repeat center',
 				backgroundSize : 'cover',
 				border         : '2px dotted #00ff00'
@@ -672,8 +767,8 @@ class InspectorPage extends Component {
 
 			const sliceWrapperStyle = {
 				position : 'absolute',
-				top      : offset.y + 'px',
-				left     : offset.x + 'px',
+				top      : Math.floor(offset.y) + 'px',
+				left     : Math.floor(offset.x) + 'px',
 				width    : (scale * artboard.meta.frame.size.width) + 'px',
 				height   : (scale * artboard.meta.frame.size.height) + 'px'
 			};
@@ -685,7 +780,7 @@ class InspectorPage extends Component {
 						id={slice.id}
 						title={slice.title}
 						type={slice.type}
-						visible={visibleTypes[slice.type]}
+						filled={visibleTypes[slice.type]}
 						top={slice.meta.frame.origin.y}
 						left={slice.meta.frame.origin.x}
 						width={slice.meta.frame.size.width}
@@ -706,7 +801,7 @@ class InspectorPage extends Component {
 						id={slice.id}
 						title={slice.title}
 						type={slice.type}
-						visible={visibleTypes[slice.type]}
+						filled={visibleTypes[slice.type]}
 						top={slice.meta.frame.origin.y}
 						left={slice.meta.frame.origin.x}
 						width={slice.meta.frame.size.width}
@@ -727,7 +822,7 @@ class InspectorPage extends Component {
 						id={slice.id}
 						title={slice.title}
 						type={slice.type}
-						visible={visibleTypes[slice.type]}
+						filled={visibleTypes[slice.type]}
 						top={slice.meta.frame.origin.y}
 						left={slice.meta.frame.origin.x}
 						width={slice.meta.frame.size.width}
@@ -748,7 +843,7 @@ class InspectorPage extends Component {
 						id={slice.id}
 						title={slice.title}
 						type={slice.type}
-						visible={visibleTypes[slice.type]}
+						filled={visibleTypes[slice.type]}
 						top={slice.meta.frame.origin.y}
 						left={slice.meta.frame.origin.x}
 						width={slice.meta.frame.size.width}
@@ -771,8 +866,8 @@ class InspectorPage extends Component {
 			);
 
 			slices.push(
-				<div className="inspector-page-hero-slices-wrapper" style={sliceWrapperStyle}>
-					<div className="inspector-page-background-wrapper">{backgroundSlices}</div>
+				<div className="inspector-page-hero-slices-wrapper" style={sliceWrapperStyle} onMouseOver={this.handleArtboardOver} onMouseOut={this.handleArtboardOut}>
+					<div data-id={artboard.id} className="inspector-page-background-wrapper">{backgroundSlices}</div>
 					<div className="inspector-page-hotspot-wrapper">{hotspotSlices}</div>
 					<div className="inspector-page-textfield-wrapper">{textfieldSlices}</div>
 					<div className="inspector-page-slice-wrapper">{sliceSlices}</div>
@@ -810,24 +905,30 @@ class InspectorPage extends Component {
 		} : null;
 
 // 		console.log('InspectorPage.render()', scale);
+// 		console.log(window.performance.memory);
+
+		const canvasStyle = {
+			top  : (-50 + this.state.scrollOffset.y) + 'px',
+			left : (-100 + this.state.scrollOffset.x) + 'px'
+		};
 
 		return (<div style={{paddingBottom:'30px'}}>
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
-					<div className="inspector-page-hero-wrapper" ref={heroWrapper}>
+					<div className="inspector-page-hero-wrapper" ref={artboardsWrapper}>
 						{(artboards.length > 0) && (
-							<div style={wrapperStyle} ref={heroImage}>
+							<div style={wrapperStyle}>
 								{heroes}
-								<div className="inspector-page-hero-canvas-wrapper">
-									<canvas width={wrapperStyle.width} height={wrapperStyle.height} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
+								<div className="inspector-page-hero-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>
+									<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
 								</div>
 								{slices}
 							</div>
 						)}
 					</div>
 					<div className="inspector-page-zoom-wrapper">
-						<button className={'inspector-page-float-button' + ((scale >= 2) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 2) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button><br />
-						<button className={'inspector-page-float-button' + ((scale <= 0.5) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.5) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button><br />
+						<button className={'inspector-page-float-button' + ((scale >= 3) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button><br />
+						<button className={'inspector-page-float-button' + ((scale <= 0.03) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button><br />
 						<button className="inspector-page-float-button" onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src="/images/layer-off_selected.svg" alt="0" /></button>
 					</div>
 					<div className="inspector-page-toggle-wrapper">

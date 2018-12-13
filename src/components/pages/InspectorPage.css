@@ -37,7 +37,7 @@
 }
 
 .inspector-page-hero-canvas-wrapper {
-	position: absolute;
+	position: fixed;
 	top: -50px;
 	left: -100px;
 	z-index: 2;
@@ -194,5 +194,14 @@
 
 
 .inspector-page-tooltip {
-
+	z-index: 1001;
+	position: fixed;
+	left: 50%;
+	top: 100px;
+	transform: translate(-50%, 0%);
+	-webkit-transform: translate(-50%, 0%);
+	color: #ffffff;
+	border-radius: 3px;
+	background-color: #000000;
+	padding: 4px;
 }

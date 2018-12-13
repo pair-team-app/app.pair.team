@@ -22,7 +22,7 @@ class SliceItem extends Component {
 		};
 
 		return (
-			<div data-id={this.props.id} className={className + ((this.props.visible) ? '-selected' : '')} style={style} onMouseEnter={()=> this.props.onRollOver({ x : this.props.offsetX, y : this.props.offsetY })} onMouseLeave={()=> this.props.onRollOut()} onClick={()=> this.props.onClick({ x : this.props.offsetX, y : this.props.offsetY })}>
+			<div data-id={this.props.id} className={className + ((this.props.filled) ? '-filled' : '')} style={style} onMouseEnter={()=> this.props.onRollOver({ x : this.props.offsetX, y : this.props.offsetY })} onMouseLeave={()=> this.props.onRollOut()} onClick={()=> this.props.onClick({ x : this.props.offsetX, y : this.props.offsetY })}>
 			</div>
 		);
 	}
