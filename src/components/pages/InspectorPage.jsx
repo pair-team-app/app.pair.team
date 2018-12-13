@@ -29,7 +29,7 @@ class InspectorPage extends Component {
 		this.state = {
 			x: 0.5,
 			y: 0.5,
-			scale: 0.5,
+			scale: 1.0,
 			uploadID      : this.props.match.params.uploadID,
 			pageID        : this.props.match.params.pageID,
 			artboardID    : this.props.match.params.artboardID,
@@ -358,14 +358,19 @@ class InspectorPage extends Component {
 // 		console.log(event.type, event.deltaX, event.deltaY, event.target);
 		//console.log('wheel', artboardsWrapper.current.clientWidth, artboardsWrapper.current.clientHeight, artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft);
 
-		this.setState({ scrollOffset : {
-			x : artboardsWrapper.current.scrollLeft,
-			y : artboardsWrapper.current.scrollTop
-		}});
+		event.preventDefault();
 
 		if (event.ctrlKey) {
-			event.preventDefault();
-			this.setState({ scale : Math.min(Math.max(this.state.scale - (event.deltaY * 0.001), 0.03), 3)});
+			this.setState({ scale : Math.min(Math.max(this.state.scale - (event.deltaY * 0.0025), 0.03), 3).toFixed(2) });
+
+		} else {
+			artboardsWrapper.current.scrollTop = artboardsWrapper.current.scrollTop + event.deltaY;
+			artboardsWrapper.current.scrollLeft = artboardsWrapper.current.scrollLeft + event.deltaX;
+
+			this.setState({ scrollOffset : {
+					x : artboardsWrapper.current.scrollLeft,
+					y : artboardsWrapper.current.scrollTop
+				}});
 		}
 	};
 
@@ -929,7 +934,7 @@ class InspectorPage extends Component {
 					<div className="inspector-page-zoom-wrapper">
 						<button className={'inspector-page-float-button' + ((scale >= 3) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button><br />
 						<button className={'inspector-page-float-button' + ((scale <= 0.03) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button><br />
-						<button className="inspector-page-float-button" onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src="/images/layer-off_selected.svg" alt="0" /></button>
+						<button className={'inspector-page-float-button' + ((scale === 1.0) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 1.0) ? '/images/layer-off.svg' : '/images/layer-off_disabled.svg'} alt="0" /></button>
 					</div>
 					<div className="inspector-page-toggle-wrapper">
 						<SliceToggle type="hotspot" selected={visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} />

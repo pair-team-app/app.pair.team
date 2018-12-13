@@ -69,6 +69,7 @@
 
 .button-disabled, .button-disabled:hover {
 	cursor: default;
+	background: none;
 	/*background-color: #9f9f9f;*/
 	/*background-image: none;*/
 	/*border-color: #9f9f9f;*/
