@@ -44,7 +44,7 @@ class App extends Component {
 			selectedArtboards : [],
 			overlayAlert      : null,
 			userID            : 0,
-			popupVisible      : false
+			processing        : false
 		};
 	}
 
@@ -222,6 +222,10 @@ class App extends Component {
 		this.props.history.push('/');
 	};
 
+	handleProcess = ()=> {
+		this.setState({ processing : true });
+	};
+
 	handlePage = (url)=> {
 		console.log('handlePage()', url);
 		wrapper.current.scrollTo(0, 0);
@@ -270,6 +274,7 @@ class App extends Component {
 			    pageID={this.state.pageID}
 			    artboardID={this.state.artboardID}
 			    sliceID={this.state.sliceID}
+			    processing={this.state.processing}
 			    onUploadItem={(obj)=> this.handleSideNavUploadItem(obj)}
 			    onPageItem={(obj)=> this.handleSideNavPageItem(obj)}
 			    onArtboardItem={(obj)=> this.handleSideNavArtboardItem(obj)}
@@ -290,7 +295,7 @@ class App extends Component {
 				    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={this.state.uploadID} onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
 				    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
 			      <Route exact path="/mission" render={()=> <MissionPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
-				    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onLogout={()=> this.handleLogout()} />} />
+				    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={()=> this.handleProcess()} onLogout={()=> this.handleLogout()} />} />
 			      <Route exact path="/privacy" render={()=> <PrivacyPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
 				    <Route path="/proj/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onLogout={()=> this.handleLogout()} />} />
 				    <Route exact path="/recover" render={()=> <RecoverPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />

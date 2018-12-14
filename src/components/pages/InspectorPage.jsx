@@ -39,6 +39,7 @@ class InspectorPage extends Component {
 			page          : null,
 			artboards     : [],
 			files         : [],
+			tooltip       : 'Loading…',
 			hoverOffset   : null,
 			scrollOffset  : {
 				x : 0,
@@ -151,7 +152,8 @@ class InspectorPage extends Component {
 		this.setState({
 			pageID     : pageID,
 			artboardID : artboardID,
-			slice      : sliceID
+			slice      : sliceID,
+			tooltip    : 'Loading…'
 		});
 
 		let formData = new FormData();
@@ -208,7 +210,8 @@ class InspectorPage extends Component {
 								this.setState({
 									files     : files,
 									page      : page,
-									artboards : artboards
+									artboards : artboards,
+									tooltip   : ''
 								});
 							}).catch((error) => {
 						});
@@ -1056,10 +1059,15 @@ class InspectorPage extends Component {
 						</div>
 					</div>
 				</div>
+
 				{this.state.popup.visible && (
 					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
 				)}
 			</div>
+
+			{(this.state.tooltip !== '') && (<div className="inspector-page-tooltip">
+				{this.state.tooltip}
+			</div>)}
 		</div>);
 	}
 }
