@@ -14,9 +14,6 @@
 	vertical-align: top;
 }
 
-.inspector-page-drag-wrapper {
-}
-
 .inspector-page-hero-wrapper {
 	position: relative;
 	width: 100%;
@@ -86,6 +83,7 @@
 	z-index: 10;
 	background-color: #000000;
 	border-radius: 4px;
+	opacity: 0.75;
 }
 
 .inspector-page-toggle-wrapper {
@@ -97,6 +95,7 @@
 	z-index: 10;
 	background-color: #000000;
 	border-radius: 4px;
+	opacity: 0.75;
 }
 
 .inspector-page-button-wrapper {
@@ -120,26 +119,63 @@
 }
 
 .inspector-page-panel {
+	max-width: 364px;
 	width: 364px;
 	height: 100%;
 	display: table-cell;
 	vertical-align: top;
-	background-color: #202020;
+	background-color: #111111;
 }
 
 .inspector-page-panel-content-wrapper {
-	height: 50vh;
+	width: 100%;
+	height: calc(50vh - 70px);
 	/*padding: 20px;*/
 }
 
-.inspector-page-zoom-button {
-	padding: 8px 8px;
-	margin: 0 0 4px 10px;
+.inspector-page-panel-tab-wrapper {
+	list-style: none;
+	display: flex;
+	padding: 0;
+	margin : 0;
 }
 
-.inspector-page-zoom-button-disabled {
-	cursor: default;
-	background-color: #3e3e3e;
+.inspector-page-panel-tab {
+	background-color: #181818;
+	padding: 15px 20px;
+	white-space: nowrap;
+	cursor: pointer;
+	font-size: 12px;
+}
+
+.inspector-page-panel-tab-selected {
+	border-bottom: 2px solid #68ca57;
+	background-color: #2f3132;
+}
+
+.inspector-page-panel-tab-content-wrapper {
+	overflow: auto;
+	background-color: #202020;
+	width: 100%;
+	height: 100%
+}
+
+.inspector-page-panel-tab-content {
+	width: 100%;
+	font-family: "Roboto Mono", sans-serif;
+	font-size: 10px;
+	letter-spacing: 0.31px;
+	color: #ffffff;
+	padding: 8px;
+	white-space: nowrap;
+}
+
+.inspector-page-panel-button-wrapper {
+	padding: 0 8px;
+}
+
+.inspector-page-panel-button {
+	width: 47%;
 }
 
 .inspector-page-panel-info-wrapper {
@@ -153,24 +189,6 @@
 
 .inspector-page-panel-info-val {
 	color: #0267d8;
-}
-
-.inspector-page-panel-code-wrapper {
-	position: relative;
-	height: 100%;
-}
-
-.inspector-page-panel-code {
-	height: 100%;
-	padding: 14px;
-	font-size: 12px;
-}
-
-.inspector-page-copy-code-button {
-	position: absolute;
-	bottom: 0;
-	right: 20px;
-	z-index: 2;
 }
 
 .inspector-page-float-button {
@@ -205,4 +223,10 @@
 	background-color: #000000;
 	padding: 6px;
 	font-size: 14px;
+}
+
+
+.inspector-page-dz-wrapper {
+	width: 100%;
+	display: inline;
 }
