@@ -513,24 +513,6 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceRollOver = (ind, slice, offset)=> {
-		const scrollOffset = {
-			x : (offset.x > artboardsWrapper.current.clientWidth) ? offset.x - artboardsWrapper.current.scrollLeft : offset.x,
-			y : (offset.y > artboardsWrapper.current.clientHeight) ? offset.y - artboardsWrapper.current.scrollTop : offset.y
-		};
-
-		this.setState({
-			hoverSlice  : slice,
-			hoverOffset : scrollOffset
-		});
-	};
-
-	handleSliceRollOut = (ind, slice)=> {
-		this.setState({
-			hoverSlice : null
-		});
-	};
-
-	handleSliceClick = (ind, slice, offset)=> {
 		let files = this.state.files;
 
 		let html = '';
@@ -564,10 +546,29 @@ class InspectorPage extends Component {
 
 		files[files.length - 1].contents = JSON.stringify(html);
 
+
+		const scrollOffset = {
+			x : (offset.x > artboardsWrapper.current.clientWidth) ? offset.x - artboardsWrapper.current.scrollLeft : offset.x,
+			y : (offset.y > artboardsWrapper.current.clientHeight) ? offset.y - artboardsWrapper.current.scrollTop : offset.y
+		};
+
+		this.setState({
+			files       : files,
+			hoverSlice  : slice,
+			hoverOffset : scrollOffset
+		});
+	};
+
+	handleSliceRollOut = (ind, slice)=> {
+		this.setState({
+			hoverSlice : null
+		});
+	};
+
+	handleSliceClick = (ind, slice, offset)=> {
 		this.setState({
 			slice  : slice,
-			offset : offset,
-			files  : files
+			offset : offset
 		});
 	};
 
