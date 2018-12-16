@@ -513,6 +513,7 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceRollOver = (ind, slice, offset)=> {
+		console.log('handleSliceRollOver', offset);
 		let files = this.state.files;
 
 		let html = '';
@@ -546,16 +547,10 @@ class InspectorPage extends Component {
 
 		files[files.length - 1].contents = JSON.stringify(html);
 
-
-		const scrollOffset = {
-			x : (offset.x > artboardsWrapper.current.clientWidth) ? offset.x - artboardsWrapper.current.scrollLeft : offset.x,
-			y : (offset.y > artboardsWrapper.current.clientHeight) ? offset.y - artboardsWrapper.current.scrollTop : offset.y
-		};
-
 		this.setState({
 			files       : files,
 			hoverSlice  : slice,
-			hoverOffset : scrollOffset
+			hoverOffset : offset
 		});
 	};
 
@@ -566,6 +561,8 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceClick = (ind, slice, offset)=> {
+		console.log('handleSliceClick', offset);
+
 		this.setState({
 			slice  : slice,
 			offset : offset
@@ -636,7 +633,7 @@ class InspectorPage extends Component {
 	};
 
 	updateCanvas = ()=> {
-		const { scale, offset } = this.state;
+		const { scale, offset, scrollOffset } = this.state;
 		const slice = this.state.slice;
 		const context = canvas.current.getContext('2d');
 		context.clearRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
@@ -647,8 +644,8 @@ class InspectorPage extends Component {
 		if (slice) {
 			const selectedSrcFrame = slice.meta.frame;
 			const selectedOffset = {
-				x : 100 + offset.x,
-				y : 50 + offset.y
+				x : 100 + offset.x - scrollOffset.x,
+				y : 50 + offset.y - scrollOffset.y
 			};
 
 			const selectedFrame = {
@@ -662,7 +659,7 @@ class InspectorPage extends Component {
 				}
 			};
 
-			//console.log('updateCanvas()', selectedOffset, selectedFrame);
+			console.log('SELECTED', selectedOffset, selectedFrame.origin);
 
 			context.fillStyle = (slice.type === 'slice') ? 'rgba(255, 181, 18, 0.5)' : (slice.type === 'hotspot') ? 'rgba(62, 84, 255, 0.5)' : (slice.type === 'textfield') ? 'rgba(255, 88, 62, 0.5)' : 'rgba(62, 255, 109, 0.5)';
 			context.fillRect(selectedFrame.origin.x, selectedFrame.origin.y, selectedFrame.size.width, selectedFrame.size.height);
@@ -703,10 +700,15 @@ class InspectorPage extends Component {
 			if (visible) {
 				const srcFrame = this.state.hoverSlice.meta.frame;
 
+				const hoverOffset = {
+					x : 100 + this.state.hoverOffset.x - scrollOffset.x,
+					y : 50 + this.state.hoverOffset.y - scrollOffset.y
+				};
+
 				const frame = {
 					origin : {
-						x : 100 + this.state.hoverOffset.x + Math.round(srcFrame.origin.x * scale),
-						y : 50 + this.state.hoverOffset.y + Math.round(srcFrame.origin.y * scale)
+						x : hoverOffset.x + Math.round(srcFrame.origin.x * scale),
+						y : hoverOffset.y + Math.round(srcFrame.origin.y * scale)
 					},
 					size   : {
 						width  : Math.round(srcFrame.size.width * scale),
@@ -714,7 +716,7 @@ class InspectorPage extends Component {
 					}
 				};
 
-				//console.log('updateCanvas()', srcFrame, offset, frame);
+				console.log('HOVER:', hoverOffset, frame.origin);
 
 				context.fillStyle = 'rgba(0, 0, 0, 0.5)';
 				context.fillStyle = (this.state.hoverSlice.type === 'slice') ? 'rgba(255, 181, 18, 0.5)' : (this.state.hoverSlice.type === 'hotspot') ? 'rgba(62, 84, 255, 0.5)' : (this.state.hoverSlice.type === 'textfield') ? 'rgba(255, 88, 62, 0.5)' : 'rgba(62, 255, 109, 0.5)';
