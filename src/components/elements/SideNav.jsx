@@ -331,7 +331,11 @@ class SideNav extends Component {
 
 	handleUplaod = ()=> {
 		cookie.save('msg', 'start a new project.', { path : '/' });
-		this.props.onPage((cookie.load('user_id') === '0') ? 'login' : 'new');
+
+		let self = this;
+		setTimeout(function() {
+			self.props.onPage((cookie.load('user_id') === '0') ? 'login' : 'new');
+		}, 100);
 	};
 
 	render() {
