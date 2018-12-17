@@ -86,11 +86,17 @@ class InspectorPage extends Component {
 			}
 		};
 
+		this.jumpedOffset = false;
+		this.offsets = [];
 		this.lastScroll = 0;
 		this.scrollInterval = null;
 		this.rerender = 0;
 		this.antsOffset = 0;
 		this.antsInterval = null;
+		this.size = {
+			x : 0,
+			y : 0
+		};
 
 		this.zoomNotches = [
 			0.03,
@@ -123,15 +129,17 @@ class InspectorPage extends Component {
 
 
 	componentDidMount() {
+		console.log('componentDidMount()');
+
 		this.refreshData();
-		this.antsInterval = setInterval(this.redrawAnts, 75);
+		this.antsInterval = setInterval(this.redrawAnts, 100);
 
 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
 		document.addEventListener('wheel', this.handleWheelStart.bind(this));
 	}
 
 	componentDidUpdate(prevProps) {
-// 		console.log('componentDidUpdate()', prevProps, this.props);
+		console.log('componentDidUpdate()', prevProps, this.props);
 		if (this.props.match.params.artboardID !== prevProps.match.params.artboardID) {
 			this.refreshData();
 			return (null);
@@ -139,6 +147,24 @@ class InspectorPage extends Component {
 
 		if (canvas.current) {
 			this.updateCanvas();
+		}
+
+// 		if (artboardsWrapper.current && !this.jumpedOffset) {
+// 			this.state.artboards.forEach((artboard, i)=> {
+// 				if (artboard.id === this.props.match.params.artboardID && artboardsWrapper.current.scrollTop !== artboard.offset.y && artboardsWrapper.current.scrollLeft !== artboard.offset.x) {
+// 					this.jumpedOffset = true;
+// 					artboardsWrapper.current.scrollTop = artboard.offset.y;
+// 					artboardsWrapper.current.scrollLeft = artboard.offset.x;
+// 				}
+// 			});
+// 		}
+
+		if (canvasWrapper.current) {
+			const scale = canvasWrapper.current.clientWidth / (canvasWrapper.current.clientWidth + (this.size.x + 700));// Math.min(canvasWrapper.current.clientWidth / (canvasWrapper.current.clientWidth + this.size.x), canvasWrapper.current.clientHeight / (canvasWrapper.current.clientHeight + this.size.y));
+			if (this.state.scale !== scale && !this.jumpedOffset) {
+				this.jumpedOffset = true;
+				this.setState({ scale : scale });
+			}
 		}
 	}
 
@@ -172,26 +198,59 @@ class InspectorPage extends Component {
 					.then((response)=> {
 						console.log('ARTBOARDS', response.data);
 
-						const artboards = response.data.artboards.map((artboard, i)=> ({
-							id        : artboard.id,
-							pageID    : artboard.page_id,
-							title     : artboard.title,
-							filename  : artboard.filename,
-							meta      : JSON.parse(artboard.meta),
-							views     : artboard.views,
-							downloads : artboard.downloads,
-							added     : artboard.added,
-							system    : artboard.system,
-							slices    : artboard.slices.map((item) => ({
-								id       : item.id,
-								title    : item.title,
-								type     : item.type,
-								filename : item.filename,
-								meta     : JSON.parse(item.meta),
-								added    : item.added
-							})),
-							comments  : artboard.comments
-						}));
+						let maxH = 0;
+						let offset = {
+							x : 0,
+							y : 0
+						};
+						const { scale } = this.state;
+
+						let artboards = [];
+						response.data.artboards.forEach((artboard, i)=> {
+							if (Math.floor(i % 5) === 0) {
+								this.size.x = 0;
+								this.size.y += maxH + 50;
+								offset.x = 0;
+								offset.y += maxH + 50;
+								maxH = 0;
+							}
+
+							if (JSON.parse(artboard.meta).frame.size.height * scale > maxH) {
+								maxH = JSON.parse(artboard.meta).frame.size.height * scale;
+							}
+
+							this.offsets.push(offset);
+							console.log('artboard', artboard, i, offset, this.offsets[i]);
+
+							artboards.push({
+								id        : artboard.id,
+								pageID    : artboard.page_id,
+								title     : artboard.title,
+								filename  : artboard.filename,
+								meta      : JSON.parse(artboard.meta),
+								views     : artboard.views,
+								downloads : artboard.downloads,
+								added     : artboard.added,
+								system    : artboard.system,
+								offset    : offset,
+								slices    : artboard.slices.map((item) => ({
+									id       : item.id,
+									title    : item.title,
+									type     : item.type,
+									filename : item.filename,
+									meta     : JSON.parse(item.meta),
+									added    : item.added
+								})),
+								comments  : artboard.comments
+							});
+
+							this.size.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - ((canvasWrapper.current) ? canvasWrapper.current.clientWidth : 0);
+							if (i < response.data.artboards.length - 1) {
+								offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - ((canvasWrapper.current) ? canvasWrapper.current.clientWidth : 0);
+							}
+						});
+
+						console.log('offsets', offset, this.offsets);
 
 						formData.append('action', 'FILES');
 						formData.append('upload_id', '' + this.state.uploadID);
@@ -504,16 +563,42 @@ class InspectorPage extends Component {
 				});
 			}
 
+			if (this.state.slice) {
+				let maxH = 0;
+				let offset = {
+					x : 0,
+					y : 0
+				};
+
+				for (let i=0; i<this.state.artboards.length; i++) {
+					const artboard = this.state.artboards[i];
+
+					if (Math.floor(i % 5) === 0) {
+						offset.x = 0;
+						offset.y += maxH + 50;
+						maxH = 0;
+					}
+
+					if (artboard.meta.frame.size.height * scale > maxH) {
+						maxH = artboard.meta.frame.size.height * scale;
+					}
+
+					artboard.slices.forEach((slice) => {
+						if (slice.id === this.state.slice.id) {
+							console.log('zoom', this.state.offset, offset);
+							this.setState({ offset : offset });
+						}
+					});
+
+					offset.x += Math.round(50 + (artboard.meta.frame.size.width * scale));
+				}
+			}
+
 			this.setState({ scale : this.zoomNotches[Math.min(Math.max(0, ind + direction), this.zoomNotches.length - 1)] });
 		}
-
-
-		//this.setState({ scale : (direction === 0) ? 0.5 : Math.min(Math.max(scale + (direction * 0.02), 0.5), 2) });
-		this.updateCanvas();
 	};
 
 	handleSliceRollOver = (ind, slice, offset)=> {
-		console.log('handleSliceRollOver', offset);
 		let files = this.state.files;
 
 		let html = '';
@@ -561,8 +646,6 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceClick = (ind, slice, offset)=> {
-		console.log('handleSliceClick', offset);
-
 		this.setState({
 			slice  : slice,
 			offset : offset
@@ -638,6 +721,7 @@ class InspectorPage extends Component {
 		const context = canvas.current.getContext('2d');
 		context.clearRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
 
+
 // 		context.fillStyle = 'rgba(0, 0, 0, 0.25)';
 // 		context.fillRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
 
@@ -645,7 +729,7 @@ class InspectorPage extends Component {
 			const selectedSrcFrame = slice.meta.frame;
 			const selectedOffset = {
 				x : 100 + offset.x - scrollOffset.x,
-				y : 50 + offset.y - scrollOffset.y
+				y : 0 + offset.y - scrollOffset.y
 			};
 
 			const selectedFrame = {
@@ -659,7 +743,7 @@ class InspectorPage extends Component {
 				}
 			};
 
-			console.log('SELECTED', selectedOffset, selectedFrame.origin);
+// 			console.log('SELECTED', scale, selectedOffset, selectedFrame.origin);
 
 			context.fillStyle = (slice.type === 'slice') ? 'rgba(255, 181, 18, 0.5)' : (slice.type === 'hotspot') ? 'rgba(62, 84, 255, 0.5)' : (slice.type === 'textfield') ? 'rgba(255, 88, 62, 0.5)' : 'rgba(62, 255, 109, 0.5)';
 			context.fillRect(selectedFrame.origin.x, selectedFrame.origin.y, selectedFrame.size.width, selectedFrame.size.height);
@@ -702,7 +786,7 @@ class InspectorPage extends Component {
 
 				const hoverOffset = {
 					x : 100 + this.state.hoverOffset.x - scrollOffset.x,
-					y : 50 + this.state.hoverOffset.y - scrollOffset.y
+					y : 0 + this.state.hoverOffset.y - scrollOffset.y
 				};
 
 				const frame = {
@@ -716,7 +800,7 @@ class InspectorPage extends Component {
 					}
 				};
 
-				console.log('HOVER:', hoverOffset, frame.origin);
+// 				console.log('HOVER:', hoverOffset, frame.origin);
 
 				context.fillStyle = 'rgba(0, 0, 0, 0.5)';
 				context.fillStyle = (this.state.hoverSlice.type === 'slice') ? 'rgba(255, 181, 18, 0.5)' : (this.state.hoverSlice.type === 'hotspot') ? 'rgba(62, 84, 255, 0.5)' : (this.state.hoverSlice.type === 'textfield') ? 'rgba(255, 88, 62, 0.5)' : 'rgba(62, 255, 109, 0.5)';
@@ -759,20 +843,6 @@ class InspectorPage extends Component {
 				context.textAlign = 'right';
 				context.textBaseline = 'middle';
 				context.fillText(srcFrame.size.height + 'PX', frame.origin.x - 2, frame.origin.y + (frame.size.height * 0.5));
-//
-// 				context.fillStyle = 'rgba(0, 255, 0, 1)';
-// 				context.textAlign = 'right';
-// 				context.textBaseline = 'top';
-// 				context.fillText(srcFrame.origin.x + 'px', frame.origin.x - 2, 1);
-//
-// 				context.textAlign = 'left';
-// 				context.fillText((srcFrame.origin.x + srcFrame.size.width) + 'px', (frame.origin.x + frame.size.width) + 2, 1);
-//
-// 				context.textBaseline = 'bottom';
-// 				context.fillText(srcFrame.origin.y + 'px', 1, frame.origin.y);
-//
-// 				context.textBaseline = 'top';
-// 				context.fillText((srcFrame.origin.y + srcFrame.size.height) + 'px', 1, frame.origin.y + frame.size.height);
 			}
 		}
 	};
@@ -830,10 +900,6 @@ class InspectorPage extends Component {
 		let heroes = [];
 		let slices = [];
 
-		let size = {
-			width  : 0,
-			height : 0
-		};
 
 // 		for (let i=0; i<((artboards.length > 0) ? Math.min(artboards.length, 10) : 0); i++) {
 		for (let i=0; i<artboards.length; i++) {
@@ -957,7 +1023,7 @@ class InspectorPage extends Component {
 			});
 
 			heroes.push(
-				<div>
+				<div key={i}>
 					<div style={heroStyle}>
 						<div className="inspector-page-caption">{artboard.title}</div>
 					</div>
@@ -965,7 +1031,7 @@ class InspectorPage extends Component {
 			);
 
 			slices.push(
-				<div className="inspector-page-hero-slices-wrapper" style={sliceWrapperStyle} onMouseOver={this.handleArtboardOver} onMouseOut={this.handleArtboardOut}>
+				<div key={i} className="inspector-page-hero-slices-wrapper" style={sliceWrapperStyle} onMouseOver={this.handleArtboardOver} onMouseOut={this.handleArtboardOut}>
 					<div data-id={artboard.id} className="inspector-page-background-wrapper">{backgroundSlices}</div>
 					<div className="inspector-page-hotspot-wrapper">{hotspotSlices}</div>
 					<div className="inspector-page-textfield-wrapper">{textfieldSlices}</div>
@@ -1038,13 +1104,13 @@ class InspectorPage extends Component {
 						<div style={{overflowX:'auto'}}>
 							<ul className="inspector-page-panel-tab-wrapper">
 								{(files.map((file, i) => {
-									return (<li className={'inspector-page-panel-tab' + ((this.state.selectedTab === i) ? ' inspector-page-panel-tab-selected' : '')} onClick={()=> this.handleTab(i)}>{file.title}</li>);
+									return (<li key={i} className={'inspector-page-panel-tab' + ((this.state.selectedTab === i) ? ' inspector-page-panel-tab-selected' : '')} onClick={()=> this.handleTab(i)}>{file.title}</li>);
 								}))}
 							</ul>
 						</div>
 						<div className="inspector-page-panel-tab-content-wrapper">
 							{(files.map((file, i) => {
-								return ((i === this.state.selectedTab) ? <div className="inspector-page-panel-tab-content"><span dangerouslySetInnerHTML={{ __html : (file.contents) ? String(JSON.parse(file.contents)).replace(/ /g, '&nbsp;').replace(/\n/g, '<br />') : '' }} /></div> : null);
+								return ((i === this.state.selectedTab) ? <div key={i} className="inspector-page-panel-tab-content"><span dangerouslySetInnerHTML={{ __html : (file.contents) ? String(JSON.parse(file.contents)).replace(/ /g, '&nbsp;').replace(/\n/g, '<br />') : '' }} /></div> : null);
 							}))}
 						</div>
 					</div>
@@ -1071,15 +1137,15 @@ class InspectorPage extends Component {
 									{/*<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? slice.type.replace(/(\b\w)/gi, function(m) {return (m.toUpperCase());}) : ''}</Column></Row>*/}
 									{/*<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(slice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(slice.added))) : ''}</Column></Row>*/}
 									<Row>
-										<Column flexGrow={1} flexBasis={1}>Export Size:</Column>
-										<Row flexGrow={1} flexBasis={1} className="inspector-page-panel-info-val">
+										<Column flexGrow={1}>Export Size:</Column>
+										<Row flexGrow={1} className="inspector-page-panel-info-val">
 											<div style={{width:'50%'}}>W: {(slice) ? slice.meta.frame.size.width : 0}px</div>
 											<div style={{width:'50%', textAlign:'right'}}>H: {(slice) ? slice.meta.frame.size.height : 0}px</div>
 										</Row>
 									</Row>
 									<Row>
-										<Column flexGrow={1} flexBasis={1}>Position:</Column>
-										<Row flexGrow={1} flexBasis={1} className="inspector-page-panel-info-val">
+										<Column flexGrow={1}>Position:</Column>
+										<Row flexGrow={1} className="inspector-page-panel-info-val">
 											<div style={{width:'50%'}}>X: {(slice) ? slice.meta.frame.origin.x : 0}px</div>
 											<div style={{width:'50%', textAlign:'right'}}>Y: {(slice) ? slice.meta.frame.origin.y : 0}px</div>
 										</Row>
@@ -1107,8 +1173,8 @@ class InspectorPage extends Component {
 										<Row><Column flexGrow={1}>Blur:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>
 									</div>)}
 									{(slice && slice.meta.padding) && (<Row>
-										<Column flexGrow={1} flexBasis={1}>Padding:</Column>
-										<Row flexGrow={1} flexBasis={1} className="inspector-page-panel-info-val">
+										<Column flexGrow={1}>Padding:</Column>
+										<Row flexGrow={1} className="inspector-page-panel-info-val">
 											<div style={{width:'50%'}}>{(slice) ? slice.meta.padding.top : 0}px</div>
 											<div style={{width:'50%'}}>{(slice) ? slice.meta.padding.left : 0}px</div>
 											<div style={{width:'50%', textAlign:'right'}}>{(slice) ? slice.meta.padding.bottom : 0}px</div>
