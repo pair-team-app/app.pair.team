@@ -9,6 +9,7 @@ import { Route, Switch, withRouter } from 'react-router-dom'
 
 import SideNav from './components/elements/SideNav';
 import TopNav from './components/elements/TopNav';
+import BottomNav from './components/elements/BottomNav';
 import AddOnsPage from './components/pages/AddOnsPage';
 import APIPage from './components/pages/APIPage';
 import ExplorePage from './components/pages/ExplorePage';
@@ -221,6 +222,7 @@ class App extends Component {
 	};
 
 	handleProcess = ()=> {
+		wrapper.current.scrollTo(0, 0);
 		this.setState({ processing : true });
 	};
 
@@ -258,7 +260,7 @@ class App extends Component {
   render() {
   	console.log('App.state', this.state);
 
-    return (
+  	return (
     	<div className="site-wrapper">
 		    <TopNav
 			    parts={this.state.selectedArtboards}
@@ -285,23 +287,25 @@ class App extends Component {
 
 		    <div className="content-wrapper" ref={wrapper}>
 			    <Switch>
-				    <Route exact path="/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onLogout={()=> this.handleLogout()}m/>} />
-			      <Route exact path="/add-ons" render={()=> <AddOnsPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
+				    <Route exact path="/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
+			      <Route exact path="/add-ons" render={()=> <AddOnsPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route exact path="/api" render={()=> <APIPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
-				    <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
-				    <Route exact path="/explore" render={()=> <ExplorePage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onLogout={()=> this.handleLogout()} />} />
-				    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={this.state.uploadID} onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
-				    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
-			      <Route exact path="/mission" render={()=> <MissionPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
-				    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={()=> this.handleProcess()} onLogout={()=> this.handleLogout()} />} />
-			      <Route exact path="/privacy" render={()=> <PrivacyPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
-				    <Route path="/proj/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onLogout={()=> this.handleLogout()} />} />
-				    <Route exact path="/recover" render={()=> <RecoverPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
-				    <Route exact path="/recover/password" render={()=> <RecoverPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
-				    <Route exact path="/register" render={()=> <RegisterPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
-			      <Route exact path="/terms" render={()=> <TermsPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
-			      <Route render={()=> <Status404Page onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
+				    <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={(url)=> this.handlePage(url)} />} />
+				    <Route exact path="/explore" render={()=> <ExplorePage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
+				    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={this.state.uploadID} />} />
+				    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} />} />
+			      <Route exact path="/mission" render={()=> <MissionPage />} />
+				    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={()=> this.handleProcess()} />} />
+			      <Route exact path="/privacy" render={()=> <PrivacyPage />} />
+				    <Route path="/proj/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
+				    <Route exact path="/recover" render={()=> <RecoverPage />} />
+				    <Route exact path="/recover/password" render={()=> <RecoverPage />} />
+				    <Route exact path="/register" render={()=> <RegisterPage />} />
+			      <Route exact path="/terms" render={()=> <TermsPage />} />
+			      <Route render={()=> <Status404Page />} />
 			    </Switch>
+
+			    <BottomNav wrapperHeight={(wrapper.current) ? wrapper.current.clientHeight : 0} onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />
 		    </div>
 
 		    {(this.state.overlayAlert === 'payment') && (

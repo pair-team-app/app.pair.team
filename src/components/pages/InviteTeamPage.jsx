@@ -7,7 +7,6 @@ import { Row } from 'simple-flexbox';
 import cookie from "react-cookies";
 import axios from "axios/index";
 
-import BottomNav from '../elements/BottomNav';
 import Dropdown from '../elements/Dropdown';
 import Popup from '../elements/Popup';
 
@@ -199,7 +198,6 @@ class InviteTeamPage extends Component {
 						</form>
 					</div>)
 					: (<h3>Invitations sent.</h3>)}
-				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 
 				{this.state.popup.visible && (
 					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />

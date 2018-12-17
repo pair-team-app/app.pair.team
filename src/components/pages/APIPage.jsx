@@ -5,7 +5,6 @@ import './APIPage.css';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Row } from 'simple-flexbox';
 
-import BottomNav from '../elements/BottomNav';
 import Popup from '../elements/Popup';
 
 class APIPage extends Component {
@@ -146,7 +145,6 @@ class APIPage extends Component {
 				{/*</div>*/}
 
 				<div className="updated-timestamp">Last Updated: 10-13-2018</div>
-				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 				{this.state.popup.visible && (
 					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
 				)}

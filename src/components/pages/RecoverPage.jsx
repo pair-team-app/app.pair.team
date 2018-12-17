@@ -5,8 +5,6 @@ import './RecoverPage.css';
 import axios from "axios/index";
 import { Column, Row } from 'simple-flexbox';
 
-// import BottomNav from '../elements/BottomNav';
-
 class RecoverPage extends Component {
 	constructor(props) {
 		super(props);
@@ -66,7 +64,6 @@ class RecoverPage extends Component {
 						</Row></div>
 					</form>
 				</div>
-				{/*<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />*/}
 			</div>
 		);
 	}

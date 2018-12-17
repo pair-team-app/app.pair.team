@@ -18,8 +18,17 @@ class BottomNav extends Component {
 	render() {
 		const year = new Date().getFullYear();
 
+		const pathname = window.location.pathname;
+		const style = (pathname.includes('artboard')) ? {
+			display : 'none'
+		} : (!pathname.includes('proj') && !pathname.includes('explore') && !pathname.includes('invite') && !pathname.includes('new') && !pathname.includes('terms') && !pathname.includes('privacy')) ? {
+			position : 'fixed',
+			left     : '320px',
+			bottom   : '10px'
+		} : null;
+
 		return (
-			<div className="bottom-nav-wrapper">
+			<div className="bottom-nav-wrapper" style={style}>
 				<div className="bottom-nav-link-wrapper">
 					<div className="bottom-nav-link" onClick={()=> this.props.onPage('terms')}>Terms</div>
 					<div className="bottom-nav-link" onClick={()=> this.props.onPage('privacy')}>Privacy</div>

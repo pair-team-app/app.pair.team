@@ -5,7 +5,6 @@ import './ExplorePage.css';
 import axios from "axios/index";
 import { Column, Row } from 'simple-flexbox';
 
-import BottomNav from '../elements/BottomNav';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Popup from '../elements/Popup';
 
@@ -65,7 +64,6 @@ class ExplorePage extends Component {
 				<Row horizontal="space-between" className="explore-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
 					{items}
 				</Row>
-				<BottomNav onPage={(url)=> this.props.onPage(url)} onLogout={()=> this.props.onLogout()} />
 
 				{this.state.popup.visible && (
 					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />

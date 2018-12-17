@@ -9,7 +9,7 @@
 	top: 58px;
 	left: 301px;
 	width: calc(100% - 301px);
-	height: 100%;
+	height: calc(100% - 45px);
 	overflow-x: hidden;
 	overflow-y: scroll;
 	padding: 19px;
@@ -17,8 +17,7 @@
 
 .page-wrapper {
 	width: 100%;
-	margin-bottom: 50px;
-	/*min-height: 1200px;*/
+	margin-bottom: 20px;
 }
 
 .page-header {
