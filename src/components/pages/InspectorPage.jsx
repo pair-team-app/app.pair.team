@@ -207,7 +207,7 @@ class InspectorPage extends Component {
 
 						let artboards = [];
 						response.data.artboards.forEach((artboard, i)=> {
-							if (Math.floor(i % 5) === 0) {
+							if (Math.floor(i % 5) === 0 && i !== 0) {
 								this.size.x = 0;
 								this.size.y += maxH + 50;
 								offset.x = 0;
@@ -886,7 +886,7 @@ class InspectorPage extends Component {
 		};
 
 		const canvasStyle = {
-			top     : (-50 + this.state.scrollOffset.y) + 'px',
+			top     : (this.state.scrollOffset.y) + 'px',
 			left    : (-100 + this.state.scrollOffset.x) + 'px',
 			display : (this.state.scrolling) ? 'none' : 'block'
 		};
@@ -905,7 +905,7 @@ class InspectorPage extends Component {
 		for (let i=0; i<artboards.length; i++) {
 			const artboard = artboards[i];
 
-			if (Math.floor(i % 5) === 0) {
+			if (Math.floor(i % 5) === 0 && i > 0) {
 				offset.x = 0;
 				offset.y += maxH + 50;
 				maxH = 0;
