@@ -34,7 +34,7 @@ class HomePage extends Component {
 
 	componentDidMount() {
 		console.log('HomePage().componentDidMount()', this.props);
-		if (this.props.uploadID !== 0 && this.props.pageID !== 0) {
+		if (this.props.uploadID !== 0) {
 			this.refreshData();
 
 		} else {
