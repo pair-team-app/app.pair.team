@@ -10,7 +10,7 @@ class ArtboardItem extends Component {
 	}
 
 	static getDerivedStateFromProps(nextProps) {
-		return ({ title : (nextProps.title.length > 32) ? (nextProps.title.substring(0, 31) + '…') : nextProps.title });
+		return ({ title : (nextProps.title.length > 27) ? (nextProps.title.substring(0, 26) + '…') : nextProps.title });
 	}
 
 	render() {

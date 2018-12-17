@@ -213,13 +213,11 @@ class App extends Component {
 	};
 
 	handleLogout = ()=> {
-		this.props.history.push('/');
-
 		cookie.save('user_id', '0', { path : '/' });
+		cookie.save('upload_id', '0', { path : '/' });
 		cookie.remove('user_email', { path : '/' });
-		this.setState({ userID : 0 });
+		window.location.href = '/';
 
-		this.props.history.push('/');
 	};
 
 	handleProcess = ()=> {
