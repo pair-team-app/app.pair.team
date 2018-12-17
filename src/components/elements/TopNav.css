@@ -15,6 +15,7 @@
 
 .top-nav-column-left {
 	width: 800px;
+	padding-left: 25px;
 }
 
 .top-nav-column-right {
@@ -23,9 +24,8 @@
 }
 
 .top-nav-logo {
-	width: 48px;
+	width: 50px;
 	height: 22px;
-	padding-left: 25px;
 }
 
 .top-nav-logo:hover {
