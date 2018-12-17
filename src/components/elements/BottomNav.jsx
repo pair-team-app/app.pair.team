@@ -20,7 +20,7 @@ class BottomNav extends Component {
 
 		const pathname = window.location.pathname;
 		const style = (pathname.includes('artboard')) ? {
-			display : 'none'
+			display  : 'none'
 		} : (!pathname.includes('proj') && !pathname.includes('explore') && !pathname.includes('invite') && !pathname.includes('new') && !pathname.includes('terms') && !pathname.includes('privacy')) ? {
 			position : 'fixed',
 			left     : '320px',

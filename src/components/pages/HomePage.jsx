@@ -7,7 +7,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
-import ActivityItem from '../iterables/ActivityItem';
+import HomeExpo from '../elements/HomeExpo';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Popup from '../elements/Popup';
 
@@ -35,28 +35,6 @@ class HomePage extends Component {
 		console.log('HomePage().componentDidMount()', this.props);
 		if (this.props.uploadID !== 0) {
 			this.refreshData();
-
-		} else {
-			let formData = new FormData();
-			formData.append('action', 'EXPLORE');
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					console.log('EXPLORE', response.data);
-
-					const artboards = response.data.artboards.map((item) => ({
-						id       : item.id,
-						pageID   : item.page_id,
-						title    : item.title,
-						type     : item.type,
-						filename : item.filename,
-						meta     : JSON.parse(item.meta),
-						added    : item.added,
-						selected : false
-					}));
-
-					this.setState({ artboards : artboards });
-				}).catch((error) => {
-			});
 		}
 	}
 
@@ -140,6 +118,18 @@ class HomePage extends Component {
 		});
 	};
 
+	handleHomeExpoItem = (ind)=> {
+		if (ind === 0) {
+			this.props.onPage('artboard/1/1/1/notifications');
+
+		} else if (ind === 1) {
+			this.props.onPage('register');
+
+		} else if (ind === 2) {
+			this.props.onPage('artboard/36/153/1186/home');
+		}
+	};
+
 	handleDownload = ()=> {
 		let link = document.createElement('a');
 		const filePath = 'http://cdn.designengine.ai/document.php?upload_id=' + this.state.uploadID;
@@ -179,23 +169,9 @@ class HomePage extends Component {
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
+				<HomeExpo onClick={(ind)=> this.handleHomeExpoItem(ind)} />
+
 				{(parseInt(this.props.uploadID, 10) !== 0) && (<div>
-					<Row vertical="start">
-						<Column flexGrow={1} horizontal="center">
-							<div className="page-header">
-								<Row horizontal="center"><h1>{this.state.uploadTitle}</h1></Row>
-								<div className="page-header-text">{(this.state.uploadDescription !== '') ? this.state.uploadDescription + '. ' : ''}Design Engine parsed {this.state.uploadTotal} pages, artboards, symbols, fonts, and more from {this.state.uploadTitle}'s Design Source.</div>
-								<Row horizontal="center">
-									<button className="adjacent-button" onClick={()=> this.handleDownload()}>Download Parts</button>
-									<button className="adjacent-button">Clone Project</button>
-									<button className="adjacent-button" onClick={()=> this.props.onPage('invite-team')}>Invite Team Members</button>
-									<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={this.state.uploadURL}>
-										<button>Copy Project URL</button>
-									</CopyToClipboard>
-								</Row>
-							</div>
-						</Column>
-					</Row>
 					<Row><h3>{this.state.pageTitle}</h3></Row>
 					<Row horizontal="space-between" className="home-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
 						{items}
@@ -203,28 +179,18 @@ class HomePage extends Component {
 				</div>)}
 
 				{(cookie.load('user_id') === '0') ? (<div>
-					<Row vertical="start">
-						<Column flexGrow={1} horizontal="center">
-							<div className="page-header">
-								<Row horizontal="center"><h1>Design for Engineers</h1></Row>
-								<div className="page-header-text">Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect designs, download parts, copy code, and build interfaces faster.</div>
-								<Row horizontal="center">
-									<button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign Up with Email</button>
-									<button className="long-button" onClick={()=> this.props.onPage('login')}>Login</button>
-								</Row>
-							</div>
-						</Column>
-					</Row>
-					<Row><h3>Explore</h3></Row>
-					<Row horizontal="space-between" className="home-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
-						{items}
-					</Row>
-				</div>) : (<div>
-						{(this.props.uploadID === 0) && (<div><Row><h3>Activity</h3></Row>
-					<Row horizontal="space-between" className="explore-page-activity-wrapper" style={{flexWrap:'wrap'}}>
-						<ActivityItem content="To begin start a <a class='page-link' href='/new'>New Project</a> or <a class='page-link' href='/explore'>Explore</a>." avatar="/images/default-avatar.png" />
-						<ActivityItem content="Welcome to Design Engine, to begin start a new project." avatar="/images/default-avatar.png" />
-					</Row></div>)}
+					<Row><h3>Sign up or Login</h3></Row>
+					A design project contains all the files for your project, inclusing specifications, parts, and code examples.
+					<div style={{marginTop:'20px'}}>
+						<button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign up with Email</button>
+						<button onClick={()=> this.props.onPage('login')}>Login</button>
+					</div>
+				</div>) : (parseInt(this.props.uploadID, 10) === 0) && (<div>
+					<Row><h3>Create a new design project</h3></Row>
+					A design project contains all the files for your project, inclusing specifications, parts, and code examples.
+					<div style={{marginTop:'20px'}}>
+						<button onClick={()=> this.props.onPage('new')}>New Project</button>
+					</div>
 				</div>)}
 
 				{this.state.popup.visible && (

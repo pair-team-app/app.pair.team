@@ -452,6 +452,7 @@ class InspectorPage extends Component {
 		}
 
 		if (event.ctrlKey) {
+			event.preventDefault();
 			this.setState({ scale : Math.min(Math.max(this.state.scale - (event.deltaY * 0.0025), 0.03), 3).toFixed(2) });
 
 		} else {

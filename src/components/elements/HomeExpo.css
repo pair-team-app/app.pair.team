@@ -1,0 +1,21 @@
+
+.home-expo {
+	width: calc(100% + 40px);
+	margin: -20px -20px 20px -20px;
+	background-color: #2e363d;
+	overflow-x: scroll;
+	overflow-y: hidden;
+	padding: 2px 5px 1px 5px;
+}
+
+.home-expo-item-wrapper {
+}
+
+.home-expo-item {
+	margin: 8px 6px;
+	cursor: pointer;
+}
+
+.home-expo-item-image {
+	height: 300px;
+}
