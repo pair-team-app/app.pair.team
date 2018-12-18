@@ -16,8 +16,12 @@ export function randomElement(array) {
 	return ((array.length > 0) ? array[randomInt(0, array.length)] : null);
 }
 
+export function randomFloat(lower, upper) {
+	return ((Math.random() * (upper - lower)) + lower);
+}
+
 export function randomInt(lower, upper) {
-	return (Math.floor(Math.random() * (upper - lower)) + lower);
+	return (Math.floor(randomFloat(lower, upper)));
 }
 
 export function urlSlugTitle(text) {
