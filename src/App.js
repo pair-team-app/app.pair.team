@@ -42,7 +42,7 @@ class App extends Component {
 			uploadID          : (artboardPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/(\d+)\/.*$/)[1] : (uploadPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/proj\/(\d+)\/.*$/)[1] : 0,
 			pageID            : (artboardPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/\d+\/(\d+)\/.*$/)[1] : 0,
 			artboardID        : (artboardPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
-			sliceID           : 0,//(window.location.pathname.includes('/artboard/')) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/.+\/(\d+)?/)[1] : 0,
+			sliceID           : 0,
 			selectedArtboards : [],
 			overlayAlert      : null,
 			userID            : 0,

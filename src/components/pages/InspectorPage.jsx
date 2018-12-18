@@ -129,7 +129,7 @@ class InspectorPage extends Component {
 
 
 	componentDidMount() {
-		console.log('componentDidMount()');
+// 		console.log('componentDidMount()');
 
 		this.refreshData();
 		this.antsInterval = setInterval(this.redrawAnts, 100);
@@ -139,7 +139,7 @@ class InspectorPage extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		console.log('componentDidUpdate()', prevProps, this.props);
+// 		console.log('componentDidUpdate()', prevProps, this.props);
 		if (this.props.match.params.artboardID !== prevProps.match.params.artboardID) {
 			this.refreshData();
 			return (null);
@@ -922,8 +922,10 @@ class InspectorPage extends Component {
 				left           : Math.floor(offset.x) + 'px',
 				width          : Math.floor(scale * artboard.meta.frame.size.width) + 'px',
 				height         : Math.floor(scale * artboard.meta.frame.size.height) + 'px',
-				background     : '#000000 url("' + artboard.filename + '") no-repeat center',
-				backgroundSize : 'cover',
+				background     : '#111111 url("' + artboard.filename + '") no-repeat center',
+// 				backgroundSize : 'cover',
+// 				backgroundSize : '100% auto',
+				backgroundSize : Math.floor(scale * artboard.meta.frame.size.width) + 'px ' + Math.floor(scale * artboard.meta.frame.size.height) + 'px',
 				border         : '2px dotted #00ff00'
 			};
 
