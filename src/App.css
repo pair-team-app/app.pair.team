@@ -107,11 +107,11 @@
 }
 
 .input-wrapper-error {
-	border: 1px solid #ff001f;
+	border: 1px solid #ff5166;
 }
 
 .input-wrapper-error input[type=text], .input-wrapper-error input[type=password], .input-wrapper-error input[type=tel], .input-wrapper-error .input-txt {
-	color: #ff001f;
+	color: #ff5166;
 }
 
 .code-snippet {

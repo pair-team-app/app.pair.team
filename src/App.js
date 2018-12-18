@@ -27,6 +27,7 @@ import UploadPage from './components/pages/UploadPage';
 
 import StripeOverlay from './components/elements/StripeOverlay';
 
+import { urlSlugTitle } from "./utils/lang";
 
 const wrapper = React.createRef();
 
@@ -103,8 +104,8 @@ class App extends Component {
 		console.log('handleSideNavUploadItem()', obj);
 
 		//if (obj.selected) {
-		this.handlePage('proj/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
-			//this.props.history.push('/proj/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+		this.handlePage('proj/' + obj.id + '/' + urlSlugTitle(obj.title));
+			//this.props.history.push('/proj/' + obj.id + '/' + urlSlugTitle(obj.title));
 		//}
 
 		this.setState({
@@ -133,7 +134,7 @@ class App extends Component {
 					axios.post('https://api.designengine.ai/system.php', formData)
 						.then((response) => {
 							console.log('ADD_VIEW', response.data);
-							this.props.history.push('/artboard/' + this.state.uploadID + '/' + obj.id + '/' + artboard.id + '/' + artboard.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+							this.props.history.push('/artboard/' + this.state.uploadID + '/' + obj.id + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
 							this.setState({
 								pageID     : obj.id,
 								artboardID : artboard.id
@@ -156,7 +157,7 @@ class App extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
-				this.props.history.push('/artboard/' + this.state.uploadID + '/' + obj.pageID + '/' + obj.id + '/' + obj.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+				this.props.history.push('/artboard/' + this.state.uploadID + '/' + obj.pageID + '/' + obj.id + '/' + urlSlugTitle(obj.title));
 				this.setState({
 					pageID     : obj.pageID,
 					artboardID : obj.id
@@ -180,7 +181,7 @@ class App extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
-				this.props.history.push('/artboard/' + this.state.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + artboard.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+				this.props.history.push('/artboard/' + this.state.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
 				this.setState({
 					pageID     : artboard.pageID,
 					artboardID : artboard.id

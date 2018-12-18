@@ -333,7 +333,7 @@ class SideNav extends Component {
 		this.props.onPage((cookie.load('user_id') !== '0') ? 'invite-team' : 'login');
 	};
 
-	handleUplaod = ()=> {
+	handleUpload = ()=> {
 		cookie.save('msg', 'start a new project.', { path : '/' });
 
 		let self = this;
@@ -351,7 +351,7 @@ class SideNav extends Component {
 				<div className="side-nav-top-wrapper">
 					<h3 className="side-nav-header"><Row vertical="center" style={{width:'100%'}}>
 						<Column flexGrow={1} horizontal="start">{(window.location.pathname.includes('/explore')) ? 'Explore' : 'Projects'}</Column>
-						<Column flexGrow={1} horizontal="end"><button className="side-nav-upload-button" onClick={()=> this.handleUplaod()}>New</button></Column>
+						<Column flexGrow={1} horizontal="end"><button className="side-nav-upload-button" onClick={()=> this.handleUpload()}>New</button></Column>
 					</Row></h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
 						{(cookie.load('user_id') === '0') ? (<div>
@@ -372,7 +372,7 @@ class SideNav extends Component {
 							})}
 						</div>)}
 					</div>
-					<div className="side-nav-link" onClick={()=> this.handleUplaod()}>New Project</div>
+					<div className="side-nav-link" onClick={()=> this.handleUpload()}>New Project</div>
 				</div>
 				<div className="side-nav-team-wrapper">
 					<h6>Your teams</h6>
