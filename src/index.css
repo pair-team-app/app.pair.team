@@ -30,7 +30,7 @@ a:hover {
 }
 
 button {
-  padding: 9px 24px;
+  padding: 9px 20px;
   background: #57aa48 linear-gradient(-180deg, #69cd58, #57aa48 90%) -0.5em;
   border: 1px solid #4e9500;
   border-radius: 4px;
@@ -52,11 +52,11 @@ h1, h2, h3, h4, h5 {
 
 /** Page header */
 h1 {
-  font-family: "San Francisco Text Bold", sans-serif;
+  font-family: "San Francisco Text SemiBold", sans-serif;
   font-weight: 600;
-  font-size: 28px;
-  letter-spacing: -0.52px;
-  color: #9B9B9B;
+  font-size: 48px;
+  letter-spacing: -0.9px;
+  color: #1c1c1c;
   margin-bottom: 24px;
 }
 

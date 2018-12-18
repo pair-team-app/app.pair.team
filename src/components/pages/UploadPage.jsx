@@ -430,7 +430,7 @@ class UploadPage extends Component {
 						<div className="page-header upload-page-header-dz">
 								<div>
 									<Row horizontal="center"><img className="upload-page-icon" src="/images/upload.png" alt="Upload" /></Row>
-									<Row horizontal="center"><h1>{title}</h1></Row>
+									<Row horizontal="center"><h1 className="sub-h1">{title}</h1></Row>
 									<div className="page-header-subtext">Or choose your file</div>
 									</div>
 						</div>

@@ -21,7 +21,7 @@
 }
 
 .page-header {
-	padding: 45px 29px 45px 29px;
+	padding: 30px 50px 45px 50px;
 	margin-bottom: 32px;
 	width: 100%;
 	background-color: #fafbfc;
@@ -91,11 +91,12 @@
 }
 
 .sub-h1 {
-	/*font-family: "San Francisco Text Bold", sans-serif;*/
+	font-family: "San Francisco Text Bold", sans-serif;
+	font-weight: 600;
 	font-size: 28px;
-	color: #9b9b9b;
 	letter-spacing: -0.52px;
-	margin: 20px 0;
+	color: #9b9b9b;
+	margin-bottom: 24px;
 }
 
 .input-wrapper {
