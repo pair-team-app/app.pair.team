@@ -53,6 +53,10 @@ class SideNav extends Component {
 			this.refreshUploads();
 		}
 
+		if (this.props.processing) {
+			this.refreshUploads();
+		}
+
 
 		if ((window.location.pathname.includes('/artboard/') || window.location.pathname.includes('/proj/')) && this.state.pages.length === 0) {
 			let self = this;
@@ -345,7 +349,6 @@ class SideNav extends Component {
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>
 				<div className="side-nav-top-wrapper">
-					{/*<button className="side-nav-invite-button" onClick={()=> this.handleInvite()}>Invite Team Members</button>*/}
 					<h3 className="side-nav-header"><Row vertical="center" style={{width:'100%'}}>
 						<Column flexGrow={1} horizontal="start">{(window.location.pathname.includes('/explore')) ? 'Explore' : 'Projects'}</Column>
 						<Column flexGrow={1} horizontal="end"><button className="side-nav-upload-button" onClick={()=> this.handleUplaod()}>New</button></Column>

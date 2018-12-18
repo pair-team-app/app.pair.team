@@ -52,11 +52,11 @@ h1, h2, h3, h4, h5 {
 
 /** Page header */
 h1 {
-  font-family: "San Francisco Text SemiBold", sans-serif;
+  font-family: "San Francisco Text Bold", sans-serif;
   font-weight: 600;
-  font-size: 48px;
-  letter-spacing: -0.9px;
-  color: #1c1c1c;
+  font-size: 28px;
+  letter-spacing: -0.52px;
+  color: #9B9B9B;
   margin-bottom: 24px;
 }
 
@@ -108,7 +108,7 @@ h6 {
 input[type=text], input[type=password], input[type=tel], textarea, .input-txt {
   background-color: #fafbfc;
   color: #1c1c1c;
-  padding: 18px 12px;
+  padding: 19px 12px;
   width: 100%;
   border: 1px solid #eaecef;
   border-radius: 3px;

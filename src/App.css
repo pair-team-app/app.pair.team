@@ -21,8 +21,8 @@
 }
 
 .page-header {
-	padding: 29px 29px 42px 29px;
-	margin-bottom: 20px;
+	padding: 45px 29px 45px 29px;
+	margin-bottom: 32px;
 	width: 100%;
 	background-color: #fafbfc;
 	border: 1px solid #eaecef;
@@ -54,8 +54,8 @@
 	padding: 9px 45px;
 }
 
-.narrow-button {
-	padding: 14px 24px;
+.fat-button {
+	padding: 14px 28px;
 }
 
 .adjacent-button {
@@ -102,6 +102,7 @@
 	margin-bottom: 18px;
 	border: 1px solid rgba(0, 0, 0, 0);
 	border-radius: 4px;
+	width: 100%;
 }
 
 .input-wrapper-error {

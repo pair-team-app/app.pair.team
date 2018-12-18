@@ -221,9 +221,9 @@ class App extends Component {
 
 	};
 
-	handleProcess = ()=> {
+	handleProcess = (state)=> {
 		wrapper.current.scrollTo(0, 0);
-		this.setState({ processing : true });
+		this.setState({ processing : (state === 0) });
 	};
 
 	handlePage = (url)=> {
@@ -295,7 +295,7 @@ class App extends Component {
 				    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={this.state.uploadID} />} />
 				    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route exact path="/mission" render={()=> <MissionPage />} />
-				    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={()=> this.handleProcess()} />} />
+				    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={(state)=> this.handleProcess(state)} />} />
 			      <Route exact path="/privacy" render={()=> <PrivacyPage />} />
 				    <Route path="/proj/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
 				    <Route exact path="/recover" render={()=> <RecoverPage />} />

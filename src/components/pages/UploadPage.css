@@ -1,6 +1,6 @@
 
 .upload-page-wrapper {
-	/*margin-top: -20px;*/
+	margin-bottom: 50px;
 }
 
 .upload-page-progress-wrapper {
@@ -22,9 +22,9 @@
 }
 
 .upload-page-icon {
-	width: 48px;
-	height: 48px;
-	margin-top: 20px;
+	width: 50px;
+	height: 50px;
+	margin: 20px 0 23px 0;
 }
 
 .upload-page-form-wrapper {
@@ -37,6 +37,31 @@
 	width: 100%;
 }
 
-.home-page-artboards-wrapper {
-	/*margin-top: 20px;*/
+.upload-page-artboards-wrapper {
+	margin-top: 25px;
+}
+
+.upload-page-radio-wrapper {
+	margin-top: 30px;
+}
+
+.upload-page-invite-wrapper {
+	margin-top: 20px;
+}
+
+.upload-page-more-link {
+	margin: 0 0 20px 20px;
+	color: #0267D8;
+	text-decoration: underline;
+}
+
+.upload-page-more-link:hover {
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.upload-page-more-link-hidden, .upload-page-more-link-hidden:hover {
+	text-decoration: none;
+	cursor: none;
+	color: #ffffff
 }

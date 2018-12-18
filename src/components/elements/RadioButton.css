@@ -15,6 +15,7 @@
 
 .radio-button-button:hover {
 	background: #fafbfc none;
+	border: 1px solid #bec0c2;
 }
 
 .radio-button-button-disabled, .radio-button-button-disabled:hover {
