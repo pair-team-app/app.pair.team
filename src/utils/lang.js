@@ -1,4 +1,8 @@
 
+export function hasBit(val, bit) {
+	return ((val & bit) === bit);
+}
+
 export function hiddenText(text, char='*') {
 	return (Array(text.length + 1).join(char));
 }

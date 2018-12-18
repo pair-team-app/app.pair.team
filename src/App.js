@@ -4,7 +4,6 @@ import './App.css';
 
 import axios from 'axios';
 import cookie from 'react-cookies';
-import ReactPixel from 'react-facebook-pixel';
 import { Route, Switch, withRouter } from 'react-router-dom'
 
 import SideNav from './components/elements/SideNav';
@@ -28,6 +27,7 @@ import UploadPage from './components/pages/UploadPage';
 import StripeOverlay from './components/elements/StripeOverlay';
 
 import { urlSlugTitle } from "./utils/lang";
+import { initTracker, trackEvent } from "./utils/tracking";
 
 const wrapper = React.createRef();
 
@@ -61,8 +61,8 @@ class App extends Component {
 			cookie.save('user_id', '0', { path : '/' });
 		}
 
-		ReactPixel.init('318191662273348', advancedMatching, options);
-		ReactPixel.trackCustom('load');
+		initTracker();
+		trackEvent('load');
 
 		if (window.location.pathname.includes('/artboard/')) {
 			let formData = new FormData();
@@ -293,15 +293,15 @@ class App extends Component {
 			      <Route exact path="/api" render={()=> <APIPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
 				    <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={(url)=> this.handlePage(url)} />} />
 				    <Route exact path="/explore" render={()=> <ExplorePage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
-				    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={this.state.uploadID} />} />
+				    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={this.state.uploadID} onPage={(url)=> this.handlePage(url)} />} />
 				    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route exact path="/mission" render={()=> <MissionPage />} />
 				    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={(state)=> this.handleProcess(state)} />} />
 			      <Route exact path="/privacy" render={()=> <PrivacyPage />} />
 				    <Route path="/proj/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
-				    <Route exact path="/recover" render={()=> <RecoverPage />} />
-				    <Route exact path="/recover/password" render={()=> <RecoverPage />} />
-				    <Route exact path="/register" render={()=> <RegisterPage />} />
+				    <Route exact path="/recover" render={()=> <RecoverPage onPage={(url)=> this.handlePage(url)} />} />
+				    <Route exact path="/recover/password" render={()=> <RecoverPage onPage={(url)=> this.handlePage(url)} />} />
+				    <Route exact path="/register" render={()=> <RegisterPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route exact path="/terms" render={()=> <TermsPage />} />
 			      <Route render={()=> <Status404Page />} />
 			    </Switch>

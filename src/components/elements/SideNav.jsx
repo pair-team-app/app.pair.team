@@ -329,12 +329,12 @@ class SideNav extends Component {
 	};
 
 	handleInvite = ()=> {
-		cookie.save('msg', 'invite team members.', { path : '/' });
+		cookie.save('msg', 'use this feature.', { path : '/' });
 		this.props.onPage((cookie.load('user_id') !== '0') ? 'invite-team' : 'login');
 	};
 
 	handleUpload = ()=> {
-		cookie.save('msg', 'start a new project.', { path : '/' });
+		cookie.save('msg', 'use this feature.', { path : '/' });
 
 		let self = this;
 		setTimeout(function() {

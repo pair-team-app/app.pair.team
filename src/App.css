@@ -110,7 +110,7 @@
 	border: 1px solid #ff5166;
 }
 
-.input-wrapper-error input[type=text], .input-wrapper-error input[type=password], .input-wrapper-error input[type=tel], .input-wrapper-error .input-txt {
+.input-wrapper-error input[type=text], .input-wrapper-error input[type=password], .input-wrapper-error input[type=tel], .input-wrapper-error .input-txt, .password-error {
 	color: #ff5166;
 }
 

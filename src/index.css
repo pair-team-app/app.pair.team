@@ -105,7 +105,7 @@ h6 {
   margin: 0 0 11px 0;
 }
 
-input[type=text], input[type=password], input[type=tel], textarea, .input-txt {
+input[type=text], input[type=password], input[type=tel], textarea, .input-txt, .password-error {
   background-color: #fafbfc;
   color: #1c1c1c;
   padding: 19px 12px;
@@ -115,6 +115,7 @@ input[type=text], input[type=password], input[type=tel], textarea, .input-txt {
   font-family: "San Francisco Text", sans-serif;
   font-size: 16px;
   letter-spacing: -0.3px;
+  cursor: text;
 }
 
 p {

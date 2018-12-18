@@ -655,7 +655,7 @@ class InspectorPage extends Component {
 
 	handleDownload = ()=> {
 		if (cookie.load('user_id') === '0') {
-			cookie.save('msg', 'download these parts.', { path : '/' });
+			cookie.save('msg', 'use this feature.', { path : '/' });
 			this.props.onPage('login');
 
 		} else {
