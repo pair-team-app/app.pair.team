@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './HomePage.css';
 
 import axios from 'axios';
-import CopyToClipboard from 'react-copy-to-clipboard';
+// import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 

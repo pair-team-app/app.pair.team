@@ -6,7 +6,7 @@ import axios from "axios/index";
 import cookie from "react-cookies";
 import { Column, Row } from 'simple-flexbox';
 
-import { hasBit, isValidEmail } from '../../utils/lang';
+import { hasBit, isValidEmail } from '../../utils/funcs';
 
 const passwordTextfield = React.createRef();
 

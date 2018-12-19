@@ -5,7 +5,7 @@ import './RecoverPage.css';
 import axios from "axios/index";
 import { Column, Row } from 'simple-flexbox';
 
-import { isValidEmail } from '../../utils/lang';
+import { isValidEmail } from '../../utils/funcs';
 
 class RecoverPage extends Component {
 	constructor(props) {

@@ -168,6 +168,7 @@
 	color: #ffffff;
 	padding: 8px;
 	white-space: nowrap;
+	overflow-wrap: break-word;
 }
 
 .inspector-page-panel-button-wrapper {

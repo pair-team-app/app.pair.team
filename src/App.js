@@ -27,7 +27,7 @@ import UploadPage from './components/pages/UploadPage';
 
 import StripeOverlay from './components/elements/StripeOverlay';
 
-import { urlSlugTitle } from "./utils/lang";
+import { urlSlugTitle } from "./utils/funcs";
 import { initTracker, trackEvent } from "./utils/tracking";
 
 const wrapper = React.createRef();

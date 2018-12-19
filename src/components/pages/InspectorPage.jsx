@@ -5,17 +5,17 @@ import 'react-tabs/style/react-tabs.css';
 import '../elements/react-tabs.css';
 
 import axios from 'axios';
-import CopyToClipboard from 'react-copy-to-clipboard';
+// import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
 import Dropzone from 'react-dropzone';
 import { Column, Row } from 'simple-flexbox';
 
-// import Dropdown from '../elements/Dropdown';
 import SliceItem from '../iterables/SliceItem';
 import SliceToggle from '../elements/SliceToggle';
 import Popup from '../elements/Popup';
 
-//import { randomElement } from '../../utils/lang.js';
+import { capitalizeText } from '../../utils/funcs.js';
+import { toCSS, toReactCSS } from '../../utils/langs.js';
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
@@ -528,8 +528,8 @@ class InspectorPage extends Component {
 
 	handleArtboardOut = (event)=> {
 // 		console.log('handleArtboardOut()', event.target);
-		const artboardID = event.target.getAttribute('data-id');
-
+// 		const artboardID = event.target.getAttribute('data-id');
+//
 // 		let artboards = this.state.artboards;
 // 		artboards.forEach((artboard)=> {
 // 			if (artboard.id === artboardID) {
@@ -602,36 +602,43 @@ class InspectorPage extends Component {
 	handleSliceRollOver = (ind, slice, offset)=> {
 		let files = this.state.files;
 
-		let html = '';
-		let syntax = '';
+		const css = toCSS(slice);
+		const reactCSS = toReactCSS(slice);
 
-		html += '{';
-		html += '&nbsp;&nbsp;position: absolute;\n';
-		html += '&nbsp;&nbsp;top: ' + slice.meta.frame.origin.y + 'px;\n';
-		html += '&nbsp;&nbsp;left: ' + slice.meta.frame.origin.x + 'px;\n';
-		html += '&nbsp;&nbsp;width: ' + slice.meta.frame.size.width + 'px;\n';
-		html += '&nbsp;&nbsp;height: ' + slice.meta.frame.size.height + 'px;\n';
-		if (slice.type === 'textfield') {
-			html += '&nbsp;&nbsp;font-family: "' + 'San Francisco Text' + '", sans-serif;\n';
-			html += '&nbsp;&nbsp;font-size: ' + slice.meta.font.size + 'px;\n';
-			html += '&nbsp;&nbsp;color: ' + slice.meta.font.color.toUpperCase() + ';\n';
-			html += '&nbsp;&nbsp;letter-spacing: ' + slice.meta.font.kerning.toFixed(2) + 'px;\n';
-			html += '&nbsp;&nbsp;line-height: ' + slice.meta.font.lineHeight + 'px;\n';
-			html += '&nbsp;&nbsp;text-align: ' + 'left' + ';\n';
+		files[files.length - 1].contents = reactCSS.html;
+		files[files.length - 2].contents = css.html;
 
-		} else if (slice.type === 'slice') {
-			html += '&nbsp;&nbsp;background: url("' + slice.filename.split('/').pop() + '@3x.png");\n';
-		}
-		html += '}';
-
-		syntax = html.replace(/&nbsp;/g, '').replace(/<br \/>/g, '\n');
-
-		files[files.length - 2].contents = JSON.stringify('.' + slice.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase() + ' ' + [html.slice(0, 1), '\n', html.slice(1)].join(''));
-
-		syntax = syntax.replace(/: (.+?);/g, ':\'$1\',').replace(/(-.)/g, function(v){ return (v[1].toUpperCase()); }).replace(/,\n}/, '}');
-		html = syntax;
-
-		files[files.length - 1].contents = JSON.stringify(html);
+// 		let html = '';
+// 		let syntax = '';
+//
+// 		html += '{';
+// 		html += '&nbsp;&nbsp;position: absolute;\n';
+// 		html += '&nbsp;&nbsp;top: ' + slice.meta.frame.origin.y + 'px;\n';
+// 		html += '&nbsp;&nbsp;left: ' + slice.meta.frame.origin.x + 'px;\n';
+// 		html += '&nbsp;&nbsp;width: ' + slice.meta.frame.size.width + 'px;\n';
+// 		html += '&nbsp;&nbsp;height: ' + slice.meta.frame.size.height + 'px;\n';
+// 		if (slice.type === 'textfield') {
+// 			html += '&nbsp;&nbsp;font-family: "' + 'San Francisco Text' + '", sans-serif;\n';
+// 			html += '&nbsp;&nbsp;font-size: ' + slice.meta.font.size + 'px;\n';
+// 			html += '&nbsp;&nbsp;color: ' + slice.meta.font.color.toUpperCase() + ';\n';
+// 			html += '&nbsp;&nbsp;letter-spacing: ' + slice.meta.font.kerning.toFixed(2) + 'px;\n';
+// 			html += '&nbsp;&nbsp;line-height: ' + slice.meta.font.lineHeight + 'px;\n';
+// 			html += '&nbsp;&nbsp;text-align: ' + 'left' + ';\n';
+//
+// 		} else if (slice.type === 'slice') {
+// 			html += '&nbsp;&nbsp;background: url("' + slice.filename.split('/').pop() + '@3x.png");\n';
+// 		}
+// 		html += '}';
+//
+// // 		syntax = html.replace(/&nbsp;/g, '').replace(/<br \/>/g, '\n');
+// 		syntax = html.replace(/(&nbsp;)+/g, ' ');
+//
+// 		files[files.length - 2].contents = JSON.stringify('.' + urlSlugTitle(slice.title) + ' ' + [html.slice(0, 1), '\n', html.slice(1)].join(''));
+//
+// 		syntax = syntax.replace(/: (.+?);/g, ':\'$1\',').replace(/(-.)/g, function(v){ return (v[1].toUpperCase()); }).replace(/,\n}/, '}');
+// 		html = syntax;
+//
+// 		files[files.length - 1].contents = JSON.stringify(html);
 
 		this.setState({
 			files       : files,
@@ -641,15 +648,36 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceRollOut = (ind, slice)=> {
+		let files = this.state.files;
+
+		if (this.state.slice) {
+			const css = toCSS(this.state.slice);
+			const reactCSS = toReactCSS(this.state.slice);
+
+			files[files.length - 1].contents = reactCSS.html;
+			files[files.length - 2].contents = css.html;
+		}
+
 		this.setState({
+			files      : files,
 			hoverSlice : null
 		});
 	};
 
 	handleSliceClick = (ind, slice, offset)=> {
+		let files = this.state.files;
+
+		const css = toCSS(slice);
+		const reactCSS = toReactCSS(slice);
+
+		files[files.length - 1].contents = reactCSS.html;
+		files[files.length - 2].contents = css.html;
+
 		this.setState({
-			slice  : slice,
-			offset : offset
+			files      : files,
+			hoverSlice : null,
+			slice      : slice,
+			offset     : offset
 		});
 	};
 
@@ -667,54 +695,6 @@ class InspectorPage extends Component {
 		}
 	};
 
-	resetThenSet = (ind, key) => {
-		console.log('resetThenSet()', ind, key);
-		let tmp = [...this.state[key]];
-		tmp.forEach(item => item.selected = false);
-		tmp[ind].selected = true;
-
-		const { slice } = this.state;
-		let html = '';
-		let syntax = '';
-
-		if (slice) {
-			if (ind === 1 || ind === 2) {
-				html += (ind === 2) ? '{' : '.' + slice.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase() + ' {<br />';
-				html += '&nbsp;&nbsp;position: absolute;<br />';
-				html += '&nbsp;&nbsp;top: ' + slice.meta.frame.origin.y + 'px;<br />';
-				html += '&nbsp;&nbsp;left: ' + slice.meta.frame.origin.x + 'px;<br />';
-				html += '&nbsp;&nbsp;width: ' + slice.meta.frame.size.width + 'px;<br />';
-				html += '&nbsp;&nbsp;height: ' + slice.meta.frame.size.height + 'px;<br />';
-				if (slice.type === 'textfield') {
-					html += '&nbsp;&nbsp;font-family: "' + 'San Francisco Text' + '", sans-serif;<br />';
-					html += '&nbsp;&nbsp;font-size: ' + slice.meta.font.size + 'px;<br />';
-					html += '&nbsp;&nbsp;color: ' + slice.meta.font.color.toUpperCase() + ';<br />';
-					html += '&nbsp;&nbsp;letter-spacing: ' + slice.meta.font.kerning + 'px;<br />';
-					html += '&nbsp;&nbsp;line-height: ' + slice.meta.font.lineHeight + 'px;<br />';
-					html += '&nbsp;&nbsp;text-align: ' + 'left' + ';<br />';
-
-				} else if (slice.type === 'slice') {
-					html += '&nbsp;&nbsp;background: url("' + slice.filename.split('/').pop() + '@3x.png");<br />';
-				}
-				html += '}';
-
-				syntax = html.replace(/&nbsp;/g, '').replace(/<br \/>/g, '\n');
-
-				if (ind === 2) {
-					syntax = syntax.replace(/: (.+?);/g, ':\'$1\',').replace(/(-.)/g, function(v){ return (v[1].toUpperCase()); });
-					html = syntax;
-				}
-			}
-		}
-
-		this.setState({
-			[key] : tmp,
-			code  : {
-				html   : html,
-				syntax : syntax
-			}
-		});
-	};
 
 	updateCanvas = ()=> {
 		const { scale, offset, scrollOffset } = this.state;
@@ -869,6 +849,8 @@ class InspectorPage extends Component {
 		const { page, artboards, slice, hoverSlice, files } = this.state;
 		const { visibleTypes } = this.state;
 		const { scale } = this.state;
+
+		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 
 		let self = this;
 		if (this.rerender === 0) {
@@ -1046,29 +1028,29 @@ class InspectorPage extends Component {
 		}
 
 
-		const styles = (hoverSlice && hoverSlice.meta.styles && hoverSlice.meta.styles.length > 0) ? {
-			stroke : (hoverSlice.meta.styles[0].border.length > 0) ? {
-				color     : hoverSlice.meta.styles[0].border[0].color.toUpperCase(),
-				position  : hoverSlice.meta.styles[0].border[0].position,
-				thickness : hoverSlice.meta.styles[0].border[0].thickness + 'px'
+		const styles = (activeSlice && activeSlice.meta.styles && activeSlice.meta.styles.length > 0) ? {
+			stroke : (activeSlice.meta.styles[0].border.length > 0) ? {
+				color     : activeSlice.meta.styles[0].border[0].color.toUpperCase(),
+				position  : activeSlice.meta.styles[0].border[0].position,
+				thickness : activeSlice.meta.styles[0].border[0].thickness + 'px'
 			} : null,
-			shadow : (hoverSlice.meta.styles[0].shadow.length > 0) ? {
-				color  : hoverSlice.meta.styles[0].shadow[0].color.toUpperCase(),
+			shadow : (activeSlice.meta.styles[0].shadow.length > 0) ? {
+				color  : activeSlice.meta.styles[0].shadow[0].color.toUpperCase(),
 				offset : {
-					x : hoverSlice.meta.styles[0].shadow[0].offset.x,
-					y : hoverSlice.meta.styles[0].shadow[0].offset.y
+					x : activeSlice.meta.styles[0].shadow[0].offset.x,
+					y : activeSlice.meta.styles[0].shadow[0].offset.y
 				},
-				spread : hoverSlice.meta.styles[0].shadow[0].spread + 'px',
-				blur   : hoverSlice.meta.styles[0].shadow[0].blur + 'px'
+				spread : activeSlice.meta.styles[0].shadow[0].spread + 'px',
+				blur   : activeSlice.meta.styles[0].shadow[0].blur + 'px'
 			} : null,
-			innerShadow : (hoverSlice.meta.styles[0].innerShadow.length > 0) ? {
-				color  : hoverSlice.meta.styles[0].shadow[0].color.toUpperCase(),
+			innerShadow : (activeSlice.meta.styles[0].innerShadow.length > 0) ? {
+				color  : activeSlice.meta.styles[0].shadow[0].color.toUpperCase(),
 				offset : {
-					x : hoverSlice.meta.styles[0].shadow[0].offset.x,
-					y : hoverSlice.meta.styles[0].shadow[0].offset.y
+					x : activeSlice.meta.styles[0].shadow[0].offset.x,
+					y : activeSlice.meta.styles[0].shadow[0].offset.y
 				},
-				spread : hoverSlice.meta.styles[0].shadow[0].spread + 'px',
-				blur   : hoverSlice.meta.styles[0].shadow[0].blur + 'px'
+				spread : activeSlice.meta.styles[0].shadow[0].spread + 'px',
+				blur   : activeSlice.meta.styles[0].shadow[0].blur + 'px'
 			} : null
 		} : null;
 
@@ -1135,58 +1117,57 @@ class InspectorPage extends Component {
 									{/*<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val"><a href={'mailto:' + ((artboard && artboard.system) ? artboard.system.author : '#')} style={{textDecoration:'none'}}>{(artboard && artboard.system) ? artboard.system.author : ''}</a></Column></Row>*/}
 									{/*<Row><Column flexGrow={1}>Page</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(page) ? page.title : ''}</Column></Row>*/}
 									{/*<Row><Column flexGrow={1}>Artboard</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard) ? artboard.title : ''}</Column></Row>*/}
-									{/*<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(hoverSlice) ? hoverSlice.title : ''} {(hoverSlice) ? '(' + hoverSlice.type.replace(/(\b\w)/gi, function(m) {return (m.toUpperCase());}) + ')' : ''}</Column></Row>*/}
-									<Row><Column flexGrow={1}>Name:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(hoverSlice) ? hoverSlice.title : ''}</Column></Row>
-									{/*<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(hoverSlice) ? hoverSlice.type.replace(/(\b\w)/gi, function(m) {return (m.toUpperCase());}) : ''}</Column></Row>*/}
-									{/*<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(hoverSlice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(hoverSlice.added))) : ''}</Column></Row>*/}
+									<Row><Column flexGrow={1}>Name:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? activeSlice.title : ''}</Column></Row>
+									{/*<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? capitalizeText(activeSlice.type, true) : ''}</Column></Row>*/}
+									{/*<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(activeSlice.added))) : ''}</Column></Row>*/}
 									<Row>
 										<Column flexGrow={1}>Export Size:</Column>
 										<Row flexGrow={1} className="inspector-page-panel-info-val">
-											<div style={{width:'50%'}}>W: {(hoverSlice) ? hoverSlice.meta.frame.size.width : 0}px</div>
-											<div style={{width:'50%', textAlign:'right'}}>H: {(hoverSlice) ? hoverSlice.meta.frame.size.height : 0}px</div>
+											<div style={{width:'50%'}}>W: {(activeSlice) ? activeSlice.meta.frame.size.width : 0}px</div>
+											<div style={{width:'50%', textAlign:'right'}}>H: {(activeSlice) ? activeSlice.meta.frame.size.height : 0}px</div>
 										</Row>
 									</Row>
 									<Row>
 										<Column flexGrow={1}>Position:</Column>
 										<Row flexGrow={1} className="inspector-page-panel-info-val">
-											<div style={{width:'50%'}}>X: {(hoverSlice) ? hoverSlice.meta.frame.origin.x : 0}px</div>
-											<div style={{width:'50%', textAlign:'right'}}>Y: {(hoverSlice) ? hoverSlice.meta.frame.origin.y : 0}px</div>
+											<div style={{width:'50%'}}>X: {(activeSlice) ? activeSlice.meta.frame.origin.x : 0}px</div>
+											<div style={{width:'50%', textAlign:'right'}}>Y: {(activeSlice) ? activeSlice.meta.frame.origin.y : 0}px</div>
 										</Row>
 									</Row>
 									{/*<Row><Column flexGrow={1}>Scale</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(scaleSize + 'x')}</Column></Row>*/}
-									<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(hoverSlice) ? hoverSlice.meta.rotation : 0}&deg;</Column></Row>
-									<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(hoverSlice) ? (hoverSlice.meta.opacity * 100) : 100}%</Column></Row>
-									<Row><Column flexGrow={1}>Fill:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(hoverSlice) ? hoverSlice.meta.fillColor.toUpperCase() : ''}</Column></Row>
+									<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? activeSlice.meta.rotation : 0}&deg;</Column></Row>
+									<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? (activeSlice.meta.opacity * 100) : 100}%</Column></Row>
+									<Row><Column flexGrow={1}>Fill:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? (activeSlice.type === 'textfield' && activeSlice.meta.font.color) ? activeSlice.meta.font.color.toUpperCase() : activeSlice.meta.fillColor.toUpperCase() : ''}</Column></Row>
 									<Row><Column flexGrow={1}>Border:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>
-									{(hoverSlice && hoverSlice.type === 'textfield') && (<div>
-										{/*<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(hoverSlice.meta.font.family) ? hoverSlice.meta.font.family : ''}</Column></Row>*/}
-										<Row><Column flexGrow={1}>Font:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">San Francisco Text</Column></Row>
-										<Row><Column flexGrow={1}>Font size:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(hoverSlice.meta.font.size + 'px')}</Column></Row>
-										<Row><Column flexGrow={1}>Font color:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(hoverSlice.meta.font.color) ? hoverSlice.meta.font.color.toUpperCase() : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(hoverSlice.meta.font.lineHeight) ? (hoverSlice.meta.font.lineHeight + 'px') : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Font Line Height:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(hoverSlice.meta.font.lineHeight) ? (hoverSlice.meta.font.lineHeight + 'px') : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Font Letter Spacing:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(hoverSlice.meta.font.kerning) ? (hoverSlice.meta.font.kerning.toFixed(2) + 'px') : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Horizontal Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{'Left'}</Column></Row>
+									{(activeSlice && activeSlice.type === 'textfield') && (<div>
+										{/*<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.family) ? activeSlice.meta.font.family : ''}</Column></Row>*/}
+										<Row><Column flexGrow={1}>Font:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.family) ? activeSlice.meta.font.family : ''}</Column></Row>
+										<Row><Column flexGrow={1}>Font size:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.size + 'px')}</Column></Row>
+										<Row><Column flexGrow={1}>Font color:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.color) ? activeSlice.meta.font.color.toUpperCase() : ''}</Column></Row>
+										<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.alignment) ? capitalizeText(activeSlice.meta.font.alignment) : 'Left'}</Column></Row>
+										<Row><Column flexGrow={1}>Font Line Height:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.lineHeight) ? (activeSlice.meta.font.lineHeight + 'px') : ''}</Column></Row>
+										<Row><Column flexGrow={1}>Font Letter Spacing:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.kerning) ? (activeSlice.meta.font.kerning.toFixed(2) + 'px') : ''}</Column></Row>
+										<Row><Column flexGrow={1}>Horizontal Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.alignment) ? capitalizeText(activeSlice.meta.font.alignment) : 'Left'}</Column></Row>
 										<Row><Column flexGrow={1}>Vertical Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{'Top'}</Column></Row>
 									</div>)}
 									{(styles) && (<div>
-										<Row><Column flexGrow={1}>Stroke:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.stroke) ? (styles.stroke.position.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) + ' S: ' + styles.stroke.thickness + ' ' + styles.stroke.color) : ''}</Column></Row>
+										<Row><Column flexGrow={1}>Stroke:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.stroke) ? (capitalizeText(styles.stroke.position, true) + ' S: ' + styles.stroke.thickness + ' ' + styles.stroke.color) : ''}</Column></Row>
 										<Row><Column flexGrow={1}>Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.shadow) ? ('X: ' + styles.shadow.offset.x + ' Y: ' + styles.shadow.offset.y + ' B: ' + styles.shadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>
 										<Row><Column flexGrow={1}>Inner Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>
 										<Row><Column flexGrow={1}>Blur:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>
 									</div>)}
-									{(hoverSlice && hoverSlice.meta.padding) && (<Row>
+									{(activeSlice && activeSlice.meta.padding) && (<Row>
 										<Column flexGrow={1}>Padding:</Column>
 										<Row flexGrow={1} className="inspector-page-panel-info-val">
-											<div style={{width:'50%'}}>{(hoverSlice) ? hoverSlice.meta.padding.top : 0}px</div>
-											<div style={{width:'50%'}}>{(hoverSlice) ? hoverSlice.meta.padding.left : 0}px</div>
-											<div style={{width:'50%', textAlign:'right'}}>{(hoverSlice) ? hoverSlice.meta.padding.bottom : 0}px</div>
-											<div style={{width:'50%', textAlign:'right'}}>{(hoverSlice) ? hoverSlice.meta.padding.right : 0}px</div>
+											<div style={{width:'50%'}}>{(activeSlice) ? activeSlice.meta.padding.top : 0}px</div>
+											<div style={{width:'50%'}}>{(activeSlice) ? activeSlice.meta.padding.left : 0}px</div>
+											<div style={{width:'50%', textAlign:'right'}}>{(activeSlice) ? activeSlice.meta.padding.bottom : 0}px</div>
+											<div style={{width:'50%', textAlign:'right'}}>{(activeSlice) ? activeSlice.meta.padding.right : 0}px</div>
 										</Row>
 									</Row>)}
 									<Row><Column flexGrow={1}>Inner Padding:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>
-									<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(hoverSlice) ? hoverSlice.meta.blendMode.toLowerCase().replace(/(\b\w)/gi, function(m) { return m.toUpperCase(); }) : ''}</Column></Row>
-									<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(hoverSlice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(hoverSlice.added))) : ''}</Column></Row>
+									<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? capitalizeText(activeSlice.meta.blendMode, true) : ''}</Column></Row>
+									<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(activeSlice.added))) : ''}</Column></Row>
 									<Row><Column flexGrow={1}>Author:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(page) ? page.author : ''}</Column></Row>
 								</div>
 							</div>

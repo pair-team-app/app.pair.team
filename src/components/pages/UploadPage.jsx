@@ -210,10 +210,9 @@ class UploadPage extends Component {
 	handleMoreEmail = ()=> {
 		const { emailCounter } = this.state;
 		this.setState({ emailCounter : Math.min(emailCounter + 1, 5) });
-	}
+	};
 
 	handleRadioButton = (radioButton)=> {
-		let ind = 1;
 		let radioButtons = [...this.state.radioButtons];
 		radioButtons.forEach((item)=> {
 			item.selected = (item.id === radioButton.id);

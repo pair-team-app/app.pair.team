@@ -1,4 +1,9 @@
 
+export function capitalizeText(text, toLower) {
+	toLower = (toLower || false);
+	return ((toLower) ? text.toLowerCase().replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }) : text.replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }));
+}
+
 export function hasBit(val, bit) {
 	return ((val & bit) === bit);
 }

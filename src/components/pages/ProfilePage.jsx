@@ -5,12 +5,11 @@ import './ProfilePage.css';
 import axios from "axios/index";
 import cookie from "react-cookies";
 import Dropzone from 'react-dropzone';
-import { Column, Row } from 'simple-flexbox';
+import { Row } from 'simple-flexbox';
 
 import InputField from '../elements/InputField';
-import { hasBit, isValidEmail } from '../../utils/lang';
+import { hasBit, isValidEmail } from '../../utils/funcs';
 
-const passwordTextfield = React.createRef();
 
 class ProfilePage extends Component {
 	constructor(props) {
