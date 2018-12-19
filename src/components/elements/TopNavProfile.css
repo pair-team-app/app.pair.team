@@ -21,18 +21,26 @@
 
 .top-nav-profile-bubble-wrapper {
 	position: absolute;
-	top: 54px;
-	right: 10px;
-	width: 160px;
+	top: 55px;
+	right: 18px;
+	width: 120px;
 	background-color: #ffffff;
-	padding: 10px;
-	border-radius: 8px;
+	padding: 8px 8px 6px 8px;
+	border-radius: 4px;
 }
 
 .top-nav-profile-bubble-notch {
 	position: absolute;
 	top: -12px;
-	right: 12px;
+	right: 8px;
 	font-size: 18px;
 	color: #ffffff;
+}
+
+.top-nav-profile-link {
+	margin-bottom: 6px;
+	font-family: "San Francisco Text SemiBold", sans-serif;
+	font-weight: 600;
+	letter-spacing: -0.23px;
+	color: #0267D8;
 }
