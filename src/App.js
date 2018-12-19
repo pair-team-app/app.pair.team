@@ -83,7 +83,7 @@ class App extends Component {
 		}
 	}
 
-	handleHome = ()=> {
+	handleHomeReset = ()=> {
 		wrapper.current.scrollTo(0, 0);
 
 		this.setState({
@@ -259,11 +259,12 @@ class App extends Component {
   	return (
     	<div className="site-wrapper">
 		    <TopNav
-			    parts={this.state.selectedArtboards}
-			    uploadID={this.state.uploadID}
-			    onHome={()=> this.handleHome()}
+			    loadProfile={cookie.load('user_id') !== '0'}
+			    onHome={()=> this.handleHomeReset()}
 			    onPage={(url)=> this.handlePage(url)}
+			    onLogout={()=> this.handleLogout()}
 		    />
+
 		    <SideNav
 			    userID={cookie.load('user_id')}
 			    uploadID={this.state.uploadID}

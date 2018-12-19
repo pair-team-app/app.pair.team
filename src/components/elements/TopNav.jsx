@@ -3,22 +3,47 @@ import React, { Component } from 'react';
 import './TopNav.css';
 
 import cookie from 'react-cookies';
-import FontAwesome from 'react-fontawesome';
 import { Row } from 'simple-flexbox';
+
+import TopNavProfile from './TopNavProfile';
+import axios from "axios/index";
 
 class TopNav extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			uploads  : [],
-			devices  : [],
-			colors   : []
+			loadProfile : props.loadProfile,
+			avatar      : 'http://cdn.designengine.ai/profiles/default-avatar.png'
 		};
 	}
 
 	componentDidMount() {
+		this.refreshData();
 	}
+
+	componentDidUpdate(prevProps) {
+		if (this.props.loadProfile !== prevProps.loadProfile && this.props.loadProfile) {
+			this.refreshData();
+		}
+	}
+
+	refreshData = ()=> {
+		let formData = new FormData();
+		formData.append('action', 'PROFILE');
+		formData.append('user_id', cookie.load('user_id'));
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response)=> {
+				console.log('PROFILE', response.data);
+
+				this.setState({
+					loadProfile : false,
+					avatar      : response.data.avatar
+				});
+			}).catch((error) => {
+		});
+	};
+
 
 	handleUplaod = ()=> {
 		cookie.save('msg', 'use this feature.', { path : '/' });
@@ -26,6 +51,8 @@ class TopNav extends Component {
 	};
 
 	render() {
+		const { avatar } = this.state;
+
 		return (
 			<div className="top-nav-wrapper">
 				<div className="top-nav-column top-nav-column-left"><Row horizontal="start" vertical="center">
@@ -41,8 +68,11 @@ class TopNav extends Component {
 						{(cookie.load('user_id') === '0')
 							? (<button className="top-nav-upload-button" onClick={()=> this.props.onPage('register')}>Sign Up with Email</button>)
 							: (<Row vertical="center">
-									<img src="/images/default-avatar.png" className="top-nav-avatar" alt="Avatar" />
-									<FontAwesome name="caret-down" className="top-nav-profile-arrow" />
+									<TopNavProfile
+										avatar={avatar}
+										onPage={(url)=> this.props.onPage(url)}
+										onLogout={()=> this.props.onLogout()}
+									/>
 							</Row>)}
 					</Row>
 				</div>

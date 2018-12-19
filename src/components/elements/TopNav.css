@@ -52,20 +52,3 @@
 	font-size: 13px;
 	padding: 6px 16px;
 }
-
-.top-nav-avatar {
-	width: 30px;
-	height: 30px;
-	border-radius: 4px;
-	margin-right: 10px;
-}
-
-.top-nav-profile-arrow {
-	font-size: 18px;
-	color: #ffffff;
-}
-
-.top-nav-avatar:hover, .top-nav-profile-arrow:hover {
-	cursor: pointer;
-	opacity: 0.8;
-}
