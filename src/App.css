@@ -58,6 +58,14 @@
 	padding: 14px 28px;
 }
 
+.tiny-button {
+	font-family: "San Francisco Text Bold", sans-serif;
+	font-size: 13px;
+	letter-spacing: -0.43px;
+	padding: 4px 14px;
+	border-radius: 5px;
+}
+
 .adjacent-button {
 	margin-right: 20px;
 }
@@ -76,14 +84,18 @@
 	opacity : 0.75;
 }
 
-.page-link, .page-link a, .page-link a:active, .page-link a:link, .page-link a:visited {
+.page-link, .page-link a, .page-link a:active, .page-link a:link, .page-link a:visited, .page-link-small, .page-link-small a, .page-link-small a:active, .page-link-small a:link, .page-link-small a:visited {
 	color: #0267d8;
 	text-decoration: underline;
 }
 
-.page-link:hover, .page-link a:hover {
+.page-link:hover, .page-link a:hover, .page-link-small:hover, .page-link-small a:hover {
 	cursor: pointer;
 	text-decoration: none;
+}
+
+.page-link-small {
+	font-size: 14px;
 }
 
 .page-footer {
@@ -110,7 +122,7 @@
 	border: 1px solid #ff5166;
 }
 
-.input-wrapper-error input[type=text], .input-wrapper-error input[type=password], .input-wrapper-error input[type=tel], .input-wrapper-error .input-txt, .password-error {
+.input-wrapper-error input[type=text], .input-wrapper-error input[type=password], .input-wrapper-error input[type=tel], .input-wrapper-error .input-txt, .field-error {
 	color: #ff5166;
 }
 

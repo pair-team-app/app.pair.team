@@ -17,6 +17,7 @@ import InspectorPage from './components/pages/InspectorPage';
 import InviteTeamPage from "./components/pages/InviteTeamPage";
 import LoginPage from './components/pages/LoginPage';
 import MissionPage from './components/pages/MissionPage';
+import ProfilePage from './components/pages/ProfilePage';
 import PrivacyPage from './components/pages/PrivacyPage';
 import RecoverPage from './components/pages/RecoverPage';
 import RegisterPage from './components/pages/RegisterPage';
@@ -51,12 +52,6 @@ class App extends Component {
 	}
 
 	componentDidMount() {
-		const advancedMatching = { em: 'some@email.com' };
-		const options = {
-			autoConfig : true,
-			debug      : false
-		};
-
 		if (typeof cookie.load('user_id') === 'undefined') {
 			cookie.save('user_id', '0', { path : '/' });
 		}
@@ -297,6 +292,7 @@ class App extends Component {
 				    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route exact path="/mission" render={()=> <MissionPage />} />
 				    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={(state)=> this.handleProcess(state)} />} />
+			      <Route exact path="/profile" render={()=> <ProfilePage onPage={(url)=> this.handlePage(url)} />} />
 			      <Route exact path="/privacy" render={()=> <PrivacyPage />} />
 				    <Route path="/proj/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
 				    <Route exact path="/recover" render={()=> <RecoverPage onPage={(url)=> this.handlePage(url)} />} />

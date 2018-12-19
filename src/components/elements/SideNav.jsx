@@ -351,7 +351,7 @@ class SideNav extends Component {
 				<div className="side-nav-top-wrapper">
 					<h3 className="side-nav-header"><Row vertical="center" style={{width:'100%'}}>
 						<Column flexGrow={1} horizontal="start">{(window.location.pathname.includes('/explore')) ? 'Explore' : 'Projects'}</Column>
-						<Column flexGrow={1} horizontal="end"><button className="side-nav-upload-button" onClick={()=> this.handleUpload()}>New</button></Column>
+						<Column flexGrow={1} horizontal="end"><button className="tiny-button" onClick={()=> this.handleUpload()}>New</button></Column>
 					</Row></h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
 						{(cookie.load('user_id') === '0') ? (<div>

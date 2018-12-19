@@ -32,7 +32,7 @@ class LoginPage extends Component {
 
 		setTimeout(function() {
 			passwordTextfield.current.focus();
-		}, 250);
+		}, 69);
 	};
 
 	handleSubmit = (event)=> {
@@ -96,7 +96,7 @@ class LoginPage extends Component {
 		}
 
 		return (
-			<div className="page-wrapper register-page-wrapper">
+			<div className="page-wrapper login-page-wrapper">
 				<h3>{title}</h3>
 				<h4>Enter the email address of each member of your team to invite them to this project.</h4>
 				<div className="login-page-form-wrapper">
@@ -104,12 +104,12 @@ class LoginPage extends Component {
 						<div className={emailClass}><input type="text" name="email" placeholder="Enter Email or Username" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<div className={passwordClass} onClick={()=> this.handlePassword()}>
 							<input type="password" name="password" placeholder="Enter Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
-							<div className="password-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
+							<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
 						</div>
-						<div className="overlay-button-wrapper"><Row vertical="center">
+						<Row vertical="center">
 							<Column><button type="submit" className={buttonClass} onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
 							<Column><div className="page-link" style={{fontSize:'14px'}} onClick={()=> this.props.onPage('recover')}>Forgot Password?</div></Column>
-						</Row></div>
+						</Row>
 					</form>
 				</div>
 			</div>

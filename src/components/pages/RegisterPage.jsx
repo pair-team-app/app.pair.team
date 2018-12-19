@@ -16,10 +16,10 @@ class RegisterPage extends Component {
 		super(props);
 
 		this.state = {
-			username      : 'gullinbursti',
-			email         : 'matt.holcombe@gmail.com',
-			password      : '1',
-			password2     : '1',
+			username      : '',
+			email         : '',
+			password      : '',
+			password2     : '',
 			usernameValid : true,
 			emailValid    : true,
 			passwordValid : true,
@@ -40,7 +40,7 @@ class RegisterPage extends Component {
 
 		setTimeout(function() {
 			passwordTextfield.current.focus();
-		}, 250);
+		}, 69);
 	};
 
 	handleSubmit = (event)=> {
@@ -128,7 +128,7 @@ class RegisterPage extends Component {
 						<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<div className={passwordClass} onClick={()=> this.handlePassword()}>
 							<input type="password" name="password" placeholder="Enter Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
-							<div className="password-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
+							<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
 						</div>
 						<div className={password2Class}><input type="password" name="password2" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<Row vertical="center">
