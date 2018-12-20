@@ -173,7 +173,7 @@ class SideNav extends Component {
 
 		//wrapper.current.scrollTo(0, 0);
 
-		if (window.location.pathname.includes('/proj')) {
+		if (window.location.pathname === '/' || window.location.pathname.includes('/proj')) {
 			this.props.onUploadItem(upload);
 		}
 	};
