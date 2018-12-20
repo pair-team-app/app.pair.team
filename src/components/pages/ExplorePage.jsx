@@ -18,6 +18,7 @@ class ExplorePage extends Component {
 			artboards  : [],
 			loadOffset : 0,
 			loadAmt    : 24,
+			fecthing   : false,
 			popup      : {
 				visible : false,
 				content : ''
@@ -31,6 +32,8 @@ class ExplorePage extends Component {
 
 	handleLoadNext= ()=> {
 		const prevArtboards = this.state.artboards;
+
+		this.setState({ fecthing : true });
 
 		let formData = new FormData();
 		formData.append('action', 'EXPLORE');
