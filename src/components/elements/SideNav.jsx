@@ -22,141 +22,60 @@ class SideNav extends Component {
 			sliceID    : this.props.sliceID,
 			uploads    : [],
 			pages      : [],
-			artboards  : []
+			artboards  : [],
+			loadOffset : 0,
+			loadAmt    : 10,
+			fetching   : false
 		};
 	}
 
 	componentDidMount() {
-		this.refreshUploads();
+		this.fetchNextUploads();
 	}
 
-	componentDidUpdate(prevProps) {
-		console.log('SideNav.componentDidUpdate()', prevProps, this.props);
-// 		if (this.props.uploadID === 0 && (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID)) {
-		if (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID) {
-			let self = this;
-			let uploads = [...this.state.uploads];
-			uploads.forEach((upload)=> {
-				upload.selected = (upload.id === this.props.uploadID);
-				upload.pages.forEach((page)=> {
-					page.selected = (page.id === self.props.pageID);
-					page.artboards.forEach((artboard)=> {
-						artboard.selected = (artboard.id === self.props.artboardID);
-					});
+
+	onTreeEffect = ()=> {
+		let self = this;
+		let uploads = [...this.state.uploads];
+		uploads.forEach((upload)=> {
+			upload.selected = (upload.id === this.props.uploadID);
+			upload.pages.forEach((page)=> {
+				page.selected = (page.id === self.props.pageID);
+				page.artboards.forEach((artboard)=> {
+					artboard.selected = (artboard.id === self.props.artboardID);
 				});
 			});
+		});
 
-			this.setState({ uploads : uploads });
+		this.setState({ uploads : uploads });
+	};
+
+
+	componentDidUpdate(prevProps) {
+		console.log('SideNav.componentDidUpdate()', prevProps, this.props, this.state);
+// 		if (this.props.uploadID === 0 && (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID)) {
+		if (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID) {
+			this.onTreeEffect();
 		}
 
 		if (this.props.userID !== prevProps.userID) {
-			this.refreshUploads();
+			this.fetchNextUploads();
 		}
 
 		if (this.props.processing) {
-			this.refreshUploads();
-		}
-
-
-		if ((window.location.pathname.includes('/artboard/') || window.location.pathname.includes('/proj/')) && this.state.pages.length === 0) {
-			let self = this;
-			let uploads = [...this.state.uploads];
-			uploads.forEach(function(upload, i) {
-				if (upload.id === self.props.uploadID) {
-					upload.selected = true;
-
-					let formData = new FormData();
-					formData.append('action', 'PAGE_NAMES');
-					formData.append('upload_id', upload.id);
-					axios.post('https://api.designengine.ai/system.php', formData)
-						.then((response) => {
-							console.log('PAGE_NAMES', response.data);
-
-							const pages = response.data.pages.map((page) => ({
-								id          : page.id,
-								title       : page.title,
-								description : page.description,
-								total       : page.total,
-								added       : page.added,
-								selected    : (self.props.pageID === page.id),
-								artboards   : page.artboards.map((artboard)=> ({
-									id       : artboard.id,
-									pageID   : artboard.page_id,
-									title    : artboard.title,
-									filename : artboard.filename,
-									total    : artboard.total,
-									meta     : JSON.parse(artboard.meta),
-									added    : artboard.added,
-									selected : (self.props.artboardID === artboard.id)
-								}))
-							}));
-
-							upload.pages = pages;
-							self.setState( { pages : pages });
-
-							pages.forEach(function(page, i) {
-								if (page.id === self.props.pageID) {
-									let formData = new FormData();
-									formData.append('action', 'ARTBOARD_NAMES');
-									formData.append('page_id', self.props.pageID);
-									axios.post('https://api.designengine.ai/system.php', formData)
-										.then((response) => {
-											//console.log('ARTBOARD_NAMES', response.data);
-
-											const artboards = response.data.artboards.map((artboard) => ({
-												id       : artboard.id,
-												pageID   : artboard.page_id,
-												title    : artboard.title,
-												filename : artboard.filename,
-												total    : artboard.total,
-												meta     : JSON.parse(artboard.meta),
-												added    : artboard.added,
-												selected : (self.props.artboardID === artboard.id)
-											}));
-
-											page.artboards = artboards;
-
-											self.setState({
-												uploads   : uploads,
-												pages     : pages,
-												artboards : artboards
-											});
-										}).catch((error) => {
-									});
-								}
-							});
-
-						}).catch((error) => {
-					});
-				}
-			});
-
-		} else if (window.location.pathname.includes('/explore')) {
-			let uploads = [...this.state.uploads];
-			let isFound = false;
-
-			uploads.forEach(function(item, i) {
-				if (item.selected) {
-					isFound = true;
-				}
-			});
-
-			if (isFound) {
-				uploads.forEach(function(item, i) {
-					if (item.selected) {
-						item.selected = false;
-					}
-				});
-
-				this.setState({ uploads : uploads });
-			}
+			this.fetchNextUploads();
 		}
 	}
 
-	refreshUploads = ()=> {
+	fetchNextUploads = ()=> {
+		const prevUploads = this.state.uploads;
+		this.setState({ fetching : true });
+
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
-		formData.append('user_id', (typeof cookie.load('user_id') !== 'undefined') ? cookie.load('user_id') : '0');
+		formData.append('user_id', (typeof cookie.load('user_id') !== 'undefined' && !window.location.pathname.includes('/explore')) ? cookie.load('user_id') : '0');
+		formData.append('offset', this.state.loadOffset);
+		formData.append('length', this.state.loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD_NAMES', response.data);
@@ -175,20 +94,16 @@ class SideNav extends Component {
 						total       : page.total,
 						added       : page.added,
 						selected    : (this.props.pageID === page.id),
-						artboards   : page.artboards.map((artboard)=> ({
-							id       : artboard.id,
-							pageID   : artboard.page_id,
-							title    : artboard.title,
-							filename : artboard.filename,
-							total    : artboard.total,
-							meta     : JSON.parse(artboard.meta),
-							added    : artboard.added,
-							selected : (this.props.artboardID === artboard.id)
-						}))
+						artboards   : []
 					}))
 				}));
 
-				this.setState({ uploads : uploads });
+				this.setState({
+					uploads     : prevUploads.concat(uploads),
+					loadOffset  : this.state.loadOffset + this.state.loadAmt,
+					loadAmt     : (this.state.loadAmt < 40) ? 40 : 10,
+					fetching    : false
+				});
 			}).catch((error) => {
 		});
 	};
@@ -343,7 +258,8 @@ class SideNav extends Component {
 	};
 
 	render() {
-		const { uploads } = this.state;
+		const { uploads, fetching } = this.state;
+
 		//console.log('SideNav.render()', scrollHeight, (wrapper.current) ? wrapper.current.clientHeight : '');
 
 		return (
@@ -354,25 +270,28 @@ class SideNav extends Component {
 						<Column flexGrow={1} horizontal="end"><button className="tiny-button" onClick={()=> this.handleUpload()}>New</button></Column>
 					</Row></h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
-						{(cookie.load('user_id') === '0') ? (<div>
-							<span className="side-nav-subtext">You must be logged in.</span>
-						</div>) : (<div>
+						{(cookie.load('user_id') !== '0' || (window.location.pathname.includes('/explore'))) ? (<div>
 								{(uploads.length === 0) ? <span className="side-nav-subtext">You don't have any projects yet!</span> : uploads.map((upload, i) => {
-								return (
-									<UploadTreeItem
-										key={i}
-										title={upload.title}
-										author={upload.author}
-										pages={upload.pages}
-										selected={upload.selected}
-										onClick={()=> this.handleUploadClick(upload)}
-										onPageClick={(page)=> this.handlePageClick(page)}
-										onArtboardClick={(artboard)=> this.handleArtboardClick(artboard)} />
-								);
-							})}
+									return (
+										<UploadTreeItem
+											key={i}
+											title={upload.title}
+											author={upload.author}
+											pages={upload.pages}
+											selected={upload.selected}
+											onClick={()=> this.handleUploadClick(upload)}
+											onPageClick={(page)=> this.handlePageClick(page)}
+											onArtboardClick={(artboard)=> this.handleArtboardClick(artboard)} />
+									);
+								})}
+							</div>) : (<div>
+							<span className="side-nav-subtext">You must be logged in.</span>
 						</div>)}
 					</div>
-					<div className="side-nav-link" onClick={()=> this.handleUpload()}>New Project</div>
+					{(window.location.pathname.includes('/explore'))
+						? (<div className="side-nav-link" onClick={()=> this.fetchNextUploads()}>{(fetching) ? 'Loading…' : 'Explore More'}</div>)
+						: (<div className="side-nav-link" onClick={()=> this.handleUpload()}>New Project</div>)
+					}
 				</div>
 				<div className="side-nav-team-wrapper">
 					<h6>Your teams</h6>

@@ -4,6 +4,10 @@ export function capitalizeText(text, toLower) {
 	return ((toLower) ? text.toLowerCase().replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }) : text.replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }));
 }
 
+export function binaryClassName(condition, state1, state2, base) {
+	return((condition) ? ((base) ? base + ' ' : '') + state1 : ((base) ? base + ' ' : '') + state2);
+}
+
 export function hasBit(val, bit) {
 	return ((val & bit) === bit);
 }

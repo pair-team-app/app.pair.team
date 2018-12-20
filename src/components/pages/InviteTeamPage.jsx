@@ -27,6 +27,8 @@ class InviteTeamPage extends Component {
 			email2Valid : false,
 			email3Valid : false,
 			sentInvites : false,
+			loadOffset  : 0,
+			loadAmt     : 111,
 			popup : {
 				visible : false,
 				content : ''
@@ -38,6 +40,8 @@ class InviteTeamPage extends Component {
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
 		formData.append('user_id', cookie.load('user_id'));
+		formData.append('offset', this.state.loadOffset);
+		formData.append('length', this.state.loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD_NAMES', response.data);
