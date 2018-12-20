@@ -165,14 +165,17 @@ class SideNav extends Component {
 			});
 
 		} else {
-			this.setState({
-				pages     : [],
-				artboards : []
-			});
+// 			this.setState({
+// 				pages     : [],
+// 				artboards : []
+// 			});
 		}
 
 		//wrapper.current.scrollTo(0, 0);
-		this.props.onUploadItem(upload);
+
+		if (window.location.pathname.includes('/proj')) {
+			this.props.onUploadItem(upload);
+		}
 	};
 
 	handlePageClick = (page)=> {
