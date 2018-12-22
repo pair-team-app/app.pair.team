@@ -33,6 +33,21 @@ class SideNav extends Component {
 		this.fetchNextUploads();
 	}
 
+	componentDidUpdate(prevProps) {
+// 		console.log('SideNav.componentDidUpdate()', prevProps, this.props, this.state);
+// 		if (this.props.uploadID === 0 && (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID)) {
+		if (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID) {
+			this.onTreeEffect();
+		}
+
+		if (this.props.userID !== prevProps.userID) {
+			this.fetchNextUploads();
+		}
+
+		if (this.props.processing) {
+			this.fetchNextUploads();
+		}
+	}
 
 	onTreeEffect = ()=> {
 		let self = this;
@@ -50,22 +65,6 @@ class SideNav extends Component {
 		this.setState({ uploads : uploads });
 	};
 
-
-	componentDidUpdate(prevProps) {
-		console.log('SideNav.componentDidUpdate()', prevProps, this.props, this.state);
-// 		if (this.props.uploadID === 0 && (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID)) {
-		if (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID) {
-			this.onTreeEffect();
-		}
-
-		if (this.props.userID !== prevProps.userID) {
-			this.fetchNextUploads();
-		}
-
-		if (this.props.processing) {
-			this.fetchNextUploads();
-		}
-	}
 
 	fetchNextUploads = ()=> {
 		const prevUploads = this.state.uploads;
@@ -92,6 +91,7 @@ class SideNav extends Component {
 					selected : (this.props.uploadID === upload.id),
 					pages    : upload.pages.map((page) => ({
 						id          : page.id,
+						uploadID    : page.upload_id,
 						title       : page.title,
 						description : page.description,
 						total       : page.total,
@@ -140,6 +140,7 @@ class SideNav extends Component {
 
 					const pages = response.data.pages.map((page) => ({
 						id          : page.id,
+						uploadID    : page.upload_id,
 						title       : page.title,
 						description : page.description,
 						total       : page.total,
@@ -148,6 +149,7 @@ class SideNav extends Component {
 						artboards   : page.artboards.map((artboard) => ({
 							id       : artboard.id,
 							pageID   : artboard.page_id,
+							uploadID : artboard.upload_id,
 							title    : artboard.title,
 							filename : artboard.filename,
 							total    : artboard.total,
@@ -203,6 +205,7 @@ class SideNav extends Component {
 					const artboards = response.data.artboards.map((artboard) => ({
 						id       : artboard.id,
 						pageID   : artboard.page_id,
+						uploadID : artboard.upload_id,
 						title    : artboard.title,
 						filename : artboard.filename,
 						total    : artboard.total,

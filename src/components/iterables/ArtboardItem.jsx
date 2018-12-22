@@ -10,23 +10,25 @@ class ArtboardItem extends Component {
 	}
 
 	static getDerivedStateFromProps(nextProps) {
-		return ({ title : (nextProps.title.length > 27) ? (nextProps.title.substring(0, 26) + '…') : nextProps.title });
+		return ({ title : (nextProps.title) ? (nextProps.title.length > 27) ? (nextProps.title.substring(0, 26) + '…') : nextProps.title : null });
 	}
 
 	render() {
-		const className = (this.props.title !== '') ? 'artboard-item' : 'artboard-item artboard-item-loading';
+		const { title, image } = this.props;
+
+		const className = (this.props.title) ? 'artboard-item' : 'artboard-item artboard-item-loading';
 		const imageClass = (this.props.size === 'landscape') ? 'artboard-item-image artboard-item-image-landscape' : 'artboard-item-image artboard-item-image-portrait';
 
 		return (
-			<div className={className} onClick={()=> (this.props.title !== '') ? this.props.onClick() : null}>
+			<div className={className} onClick={()=> (title !== '') ? this.props.onClick() : null}>
 				{(this.props.title !== '') && (<div>
-					<img className={imageClass} src={this.props.image.replace('@3x', '@0.25x')} alt={this.props.title} />
+					{(image) && (<img className={imageClass} src={image.replace('@3x', '@0.25x')} alt={title} />)}
 					<div className="artboard-item-overlay" />
-					<img className="artboard-item-icon" src="/images/icon-sketch.png" alt="Icon" />
-					<div className="artboard-item-details-wrapper">
+					{(image) && (<img className="artboard-item-icon" src="/images/icon-sketch.png" alt="Icon" />)}
+					{(image) && (<div className="artboard-item-details-wrapper">
 						<img className="artboard-item-avatar" src="/images/default-avatar.png" alt="Avatar" />
-						<div className="artboard-item-title">{this.state.title}</div>
-					</div>
+						<div className="artboard-item-title">{title}</div>
+					</div>)}
 				</div>)}
 			</div>
 		);

@@ -97,6 +97,7 @@ class HomePage extends Component {
 								const artboards = response.data.artboards.map((item) => ({
 									id       : item.id,
 									pageID   : item.page_id,
+									uploadID : item.upload_id,
 									title    : item.title,
 									type     : item.type,
 									filename : item.filename,

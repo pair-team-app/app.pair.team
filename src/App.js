@@ -74,7 +74,7 @@ class App extends Component {
 			}
 
 			formData.append('action', 'ADD_VIEW');
-			formData.append('artboard_id', this.state.artboardID);
+			formData.append('page_id', this.state.pageID);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log('ADD_VIEW', response.data);
@@ -125,12 +125,13 @@ class App extends Component {
 
 					const artboard = response.data.artboards[0];
 					formData.append('action', 'ADD_VIEW');
-					formData.append('artboard_id', obj.id);
+					formData.append('page_id', obj.id);
 					axios.post('https://api.designengine.ai/system.php', formData)
 						.then((response) => {
 							console.log('ADD_VIEW', response.data);
-							this.props.history.push('/artboard/' + this.state.uploadID + '/' + obj.id + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
+							this.props.history.push('/artboard/' + obj.uploadID + '/' + obj.id + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
 							this.setState({
+								uploadID   : obj.uploadID,
 								pageID     : obj.id,
 								artboardID : artboard.id
 							});
@@ -148,12 +149,13 @@ class App extends Component {
 		console.log('handleSideNavArtboardItem()', obj);
 		let formData = new FormData();
 		formData.append('action', 'ADD_VIEW');
-		formData.append('artboard_id', obj.id);
+		formData.append('page_id', obj.pageID);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
-				this.props.history.push('/artboard/' + this.state.uploadID + '/' + obj.pageID + '/' + obj.id + '/' + urlSlugTitle(obj.title));
+				this.props.history.push('/artboard/' + obj.uploadID + '/' + obj.pageID + '/' + obj.id + '/' + urlSlugTitle(obj.title));
 				this.setState({
+					uploadID   : obj.uploadID,
 					pageID     : obj.pageID,
 					artboardID : obj.id
 				});
@@ -172,12 +174,13 @@ class App extends Component {
 
 		let formData = new FormData();
 		formData.append('action', 'ADD_VIEW');
-		formData.append('artboard_id', artboard.id);
+		formData.append('page_id', artboard.pageID);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
-				this.props.history.push('/artboard/' + this.state.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
+				this.props.history.push('/artboard/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
 				this.setState({
+					uploadID   : artboard.uploadID,
 					pageID     : artboard.pageID,
 					artboardID : artboard.id
 				});

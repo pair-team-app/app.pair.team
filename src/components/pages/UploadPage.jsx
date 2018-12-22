@@ -263,7 +263,6 @@ class UploadPage extends Component {
 	handleInvite = ()=> {
 		const { email1, email2, email3, email4, email5 } = this.state;
 
-		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		const isEmail1Valid = isValidEmail(email1);
 		const isEmail2Valid = isValidEmail(email2);
 		const isEmail3Valid = isValidEmail(email3);

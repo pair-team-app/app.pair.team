@@ -10,6 +10,8 @@ import axios from "axios/index";
 import Dropdown from '../elements/Dropdown';
 import Popup from '../elements/Popup';
 
+import { isValidEmail } from "../../utils/funcs";
+
 class InviteTeamPage extends Component {
 	constructor(props) {
 		super(props);
@@ -122,10 +124,10 @@ class InviteTeamPage extends Component {
 	handleSubmit = (event)=> {
 		event.preventDefault();
 
-		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		const isEmail1Valid = re.test(String(this.state.email1).toLowerCase());
-		const isEmail2Valid = re.test(String(this.state.email2).toLowerCase());
-		const isEmail3Valid = re.test(String(this.state.email3).toLowerCase());
+		const { email1, email2, email3 } = this.state;
+		const isEmail1Valid = isValidEmail(email1);
+		const isEmail2Valid = isValidEmail(email2);
+		const isEmail3Valid = isValidEmail(email3);
 
 		this.setState({
 			action      : 'INVITE',

@@ -11,16 +11,19 @@ import HomeExpo from '../elements/HomeExpo';
 import Popup from '../elements/Popup';
 
 import { binaryClassName } from '../../utils/funcs';
+import { artboardFiller } from "../../utils/vo";
 
 class ExplorePage extends Component {
 	constructor(props) {
+		console.log('ExplorePage.constructor()', props);
+
 		super(props);
 
 		this.state = {
-			artboards  : [],
+			artboards  : artboardFiller(12),
 			loadOffset : 0,
 			loadAmt    : 24,
-			fecthing   : false,
+			fetching   : false,
 			popup      : {
 				visible : false,
 				content : ''
@@ -29,6 +32,7 @@ class ExplorePage extends Component {
 	}
 
 	componentDidMount() {
+		console.log('ExplorePage.componentDidMount()');
 		this.handleLoadNext();
 	}
 
@@ -45,9 +49,10 @@ class ExplorePage extends Component {
 	};
 
 	handleLoadNext= ()=> {
-		const prevArtboards = this.state.artboards;
+		console.log('ExplorePage.handleLoadNext()', this.state.artboards);
 
-		this.setState({ fecthing : true });
+		const prevArtboards = (this.state.artboards.length === 12) ? [] : this.state.artboards;
+		this.setState({ fetching : true });
 
 		let formData = new FormData();
 		formData.append('action', 'EXPLORE');
@@ -57,19 +62,21 @@ class ExplorePage extends Component {
 			.then((response) => {
 				console.log('EXPLORE', response.data);
 
-				const artboards = response.data.artboards.map((item) => ({
-					id       : item.id,
-					pageID   : item.page_id,
-					title    : item.title,
-					type     : item.type,
-					filename : item.filename,
-					meta     : JSON.parse(item.meta),
-					added    : item.added,
+				const artboards = response.data.artboards.map((artboard) => ({
+					id       : artboard.id,
+					pageID   : artboard.page_id,
+					uploadID : artboard.upload_id,
+					title    : artboard.title,
+					type     : artboard.type,
+					filename : artboard.filename,
+					meta     : JSON.parse(artboard.meta),
+					added    : artboard.added,
 					selected : false
 				}));
 
 				this.setState({
 					artboards  : prevArtboards.concat(artboards),
+					fetching   : false,
 					loadOffset : this.state.loadOffset + this.state.loadAmt
 				});
 			}).catch((error) => {
@@ -78,9 +85,9 @@ class ExplorePage extends Component {
 
 	render() {
 		const artboards = this.state.artboards;
-		const items = artboards.map((artboard) => {
+		const items = artboards.map((artboard, i) => {
 			return (
-				<Column key={artboard.id}>
+				<Column key={i}>
 					<ArtboardItem
 						title={artboard.title}
 						image={artboard.filename}
@@ -90,8 +97,8 @@ class ExplorePage extends Component {
 			);
 		});
 
-		const condi = function(len, val) { return (len > val); };
-		const btnClass = binaryClassName(condi(artboards.length, 0), '', ' is-hidden', 'fat-button');
+		const condi = function(loading) { return (loading); };
+		const btnClass = binaryClassName(condi(this.state.fetching), 'is-hidden', '', 'fat-button');
 
 		return (
 			<div className="page-wrapper explore-page-wrapper">
@@ -114,7 +121,7 @@ class ExplorePage extends Component {
 					</div>)
 				}
 
-				<Row><h3>Recent</h3></Row>
+				<Row><h3>{(this.state.fetching ? 'Loading…' : 'Recent')}</h3></Row>
 				<Row horizontal="space-between" className="explore-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
 					{items}
 				</Row>
