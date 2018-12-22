@@ -69,7 +69,10 @@ class SideNav extends Component {
 
 	fetchNextUploads = ()=> {
 		const prevUploads = this.state.uploads;
-		this.setState({ fetching : true });
+
+		if (!this.state.fetching) {
+			this.setState({ fetching : true });
+		}
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
