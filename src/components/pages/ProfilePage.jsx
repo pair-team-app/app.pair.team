@@ -185,7 +185,7 @@ class ProfilePage extends Component {
 		console.log('validateFields()', state);
 
 		this.setState({
-			username      : (usernameValid) ? username : 'Invalid Username',
+			username      : (usernameValid) ? username : (username.includes('@')) ? 'Usernames cannot contain \'@\'' : 'Invalid Username',
 			email         : (emailValid) ? email : 'Invalid Email',
 			passMsg       : (passwordValid) ? password : 'Invalid Password',
 			usernameValid : usernameValid,
