@@ -38,6 +38,8 @@ class InspectorPage extends Component {
 			page          : null,
 			artboards     : [],
 			files         : [],
+			uploading     : false,
+			percent       : 0,
 			selectedTab   : 0,
 			tooltip       : 'Loading…',
 			hoverOffset   : null,
@@ -297,30 +299,56 @@ class InspectorPage extends Component {
 	onDrop(files) {
 		console.log('onDrop()', files);
 		if (files.length > 0 && files[0].name.split('.').pop() === 'zip') {
-				let self = this;
-				const config = {
-					headers : {
-						'content-type' : 'multipart/form-data'
-					}, onUploadProgress : function (progressEvent) {
-						const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-						self.setState({ percent : percent });
 
-						if (progressEvent.loaded === progressEvent.total) {
-							self.onUploadComplete();
-						}
-					}
-				};
-
-				files.forEach(file => {
-					let formData = new FormData();
-					formData.append('file', file);
-
-					axios.post('http://cdn.designengine.ai/files/upload.php?user_id=' + cookie.load('user_id') + '&upload_id=' + this.state.uploadID, formData, config)
-						.then((response) => {
-							console.log("UPLOAD", response.data);
-						}).catch((error) => {
+			let self = this;
+			const config = {
+				headers : {
+					'content-type' : 'multipart/form-data'
+				}, onUploadProgress : function (progressEvent) {
+					const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+					self.setState({
+						percent : percent,
+						tooltip : percent + '%'
 					});
+				}
+			};
+
+			this.setState({ uploading : true });
+
+			files.forEach(file => {
+				let formData = new FormData();
+				formData.append('file', file);
+
+				axios.post('http://cdn.designengine.ai/files/upload.php?user_id=' + cookie.load('user_id') + '&upload_id=' + this.state.uploadID, formData, config)
+					.then((response) => {
+						console.log("UPLOAD", response.data);
+
+						let formData = new FormData();
+						formData.append('action', 'FILES');
+						formData.append('upload_id', '' + this.state.uploadID);
+						axios.post('https://api.designengine.ai/system.php', formData)
+							.then((response)=> {
+								console.log('FILES', response.data);
+
+								const files = response.data.files.map((file) => ({
+									id       : file.id,
+									title    : file.title,
+									filename : file.filename,
+									contents : file.contents,
+									added    : file.added
+								}));
+
+								this.setState({
+									files     : files,
+									uploading : false,
+									tooltip   : ''
+								});
+							}).catch((error) => {
+						});
+
+					}).catch((error) => {
 				});
+			});
 
 		} else {
 			const popup = {
@@ -330,32 +358,6 @@ class InspectorPage extends Component {
 			this.setState({ popup : popup });
 		}
 	}
-
-	onUploadComplete = ()=> {
-		let formData = new FormData();
-		formData.append('action', 'FILES');
-		formData.append('upload_id', '' + this.state.uploadID);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response)=> {
-				console.log('FILES', response.data);
-
-				const files = response.data.entries.map((file) => ({
-					id       : file.id,
-					title    : file.title,
-					filename : file.filename,
-					contents : file.contents,
-					added    : file.added
-				}));
-
-				this.setState({ files : files });
-			}).catch((error) => {
-		});
-
-		this.setState({
-			uploading      : false,
-			uploadComplete : true
-		});
-	};
 
 	handleKeyDown = (event)=> {
 		if (event.keyCode === 187) {
@@ -608,38 +610,6 @@ class InspectorPage extends Component {
 		files[files.length - 1].contents = reactCSS.html;
 		files[files.length - 2].contents = css.html;
 
-// 		let html = '';
-// 		let syntax = '';
-//
-// 		html += '{';
-// 		html += '&nbsp;&nbsp;position: absolute;\n';
-// 		html += '&nbsp;&nbsp;top: ' + slice.meta.frame.origin.y + 'px;\n';
-// 		html += '&nbsp;&nbsp;left: ' + slice.meta.frame.origin.x + 'px;\n';
-// 		html += '&nbsp;&nbsp;width: ' + slice.meta.frame.size.width + 'px;\n';
-// 		html += '&nbsp;&nbsp;height: ' + slice.meta.frame.size.height + 'px;\n';
-// 		if (slice.type === 'textfield') {
-// 			html += '&nbsp;&nbsp;font-family: "' + 'San Francisco Text' + '", sans-serif;\n';
-// 			html += '&nbsp;&nbsp;font-size: ' + slice.meta.font.size + 'px;\n';
-// 			html += '&nbsp;&nbsp;color: ' + slice.meta.font.color.toUpperCase() + ';\n';
-// 			html += '&nbsp;&nbsp;letter-spacing: ' + slice.meta.font.kerning.toFixed(2) + 'px;\n';
-// 			html += '&nbsp;&nbsp;line-height: ' + slice.meta.font.lineHeight + 'px;\n';
-// 			html += '&nbsp;&nbsp;text-align: ' + 'left' + ';\n';
-//
-// 		} else if (slice.type === 'slice') {
-// 			html += '&nbsp;&nbsp;background: url("' + slice.filename.split('/').pop() + '@3x.png");\n';
-// 		}
-// 		html += '}';
-//
-// // 		syntax = html.replace(/&nbsp;/g, '').replace(/<br \/>/g, '\n');
-// 		syntax = html.replace(/(&nbsp;)+/g, ' ');
-//
-// 		files[files.length - 2].contents = JSON.stringify('.' + urlSlugTitle(slice.title) + ' ' + [html.slice(0, 1), '\n', html.slice(1)].join(''));
-//
-// 		syntax = syntax.replace(/: (.+?);/g, ':\'$1\',').replace(/(-.)/g, function(v){ return (v[1].toUpperCase()); }).replace(/,\n}/, '}');
-// 		html = syntax;
-//
-// 		files[files.length - 1].contents = JSON.stringify(html);
-
 		this.setState({
 			files       : files,
 			hoverSlice  : slice,
@@ -860,6 +830,8 @@ class InspectorPage extends Component {
 			}, 1000);
 		}
 
+		const progressStyle = { width : this.state.percent + '%' };
+
 		const wrapperStyle = {
 			position        : 'absolute',
 			width           : (artboards.length > 0) ? Math.floor(artboards.length * (50 + (artboards[0].meta.frame.size.width * this.state.scale)) * 0.75) : 0,
@@ -1058,6 +1030,9 @@ class InspectorPage extends Component {
 // 		console.log(window.performance.memory);
 
 		return (<div style={{paddingBottom:'30px'}}>
+			{(this.state.uploading) && (<div className="inspector-page-upload-progress-wrapper">
+				<div className="inspector-page-upload-progress" style={progressStyle} />
+			</div>)}
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<div className="inspector-page-hero-wrapper" ref={artboardsWrapper}>

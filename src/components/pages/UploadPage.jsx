@@ -13,6 +13,8 @@ import Dropdown from '../elements/Dropdown';
 import Popup from '../elements/Popup';
 import RadioButton from '../elements/RadioButton';
 
+import { isValidEmail } from "../../utils/funcs";
+
 const dzWrapper = React.createRef();
 const titleTextfield = React.createRef();
 
@@ -259,12 +261,14 @@ class UploadPage extends Component {
 	};
 
 	handleInvite = ()=> {
+		const { email1, email2, email3, email4, email5 } = this.state;
+
 		let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		const isEmail1Valid = re.test(String(this.state.email1).toLowerCase());
-		const isEmail2Valid = re.test(String(this.state.email2).toLowerCase());
-		const isEmail3Valid = re.test(String(this.state.email3).toLowerCase());
-		const isEmail4Valid = re.test(String(this.state.email4).toLowerCase());
-		const isEmail5Valid = re.test(String(this.state.email5).toLowerCase());
+		const isEmail1Valid = isValidEmail(email1);
+		const isEmail2Valid = isValidEmail(email2);
+		const isEmail3Valid = isValidEmail(email3);
+		const isEmail4Valid = isValidEmail(email4);
+		const isEmail5Valid = isValidEmail(email5);
 
 		this.setState({
 			action      : 'INVITE',
@@ -275,45 +279,45 @@ class UploadPage extends Component {
 			email5Valid : isEmail5Valid
 		});
 
-		if (!isEmail1Valid && this.state.email1.length > 0) {
+		if (!isEmail1Valid && email1.length > 0) {
 			this.setState({ email1 : 'Invalid Email Address' });
 		}
 
-		if (!isEmail2Valid && this.state.email2.length > 0) {
+		if (!isEmail2Valid && email2.length > 0) {
 			this.setState({ email2 : 'Invalid Email Address' });
 		}
 
-		if (!isEmail3Valid && this.state.email3.length > 0) {
+		if (!isEmail3Valid && email3.length > 0) {
 			this.setState({ email3 : 'Invalid Email Address' });
 		}
 
-		if (!isEmail4Valid && this.state.email4.length > 0) {
+		if (!isEmail4Valid && email4.length > 0) {
 			this.setState({ email4 : 'Invalid Email Address' });
 		}
 
-		if (!isEmail5Valid && this.state.email5.length > 0) {
+		if (!isEmail5Valid && email5.length > 0) {
 			this.setState({ email5 : 'Invalid Email Address' });
 		}
 
 		let emails = '';
 		if (isEmail1Valid) {
-			emails += this.state.email1 + ' ';
+			emails += email1 + ' ';
 		}
 
 		if (isEmail2Valid) {
-			emails += this.state.email2 + ' ';
+			emails += email2 + ' ';
 		}
 
 		if (isEmail3Valid) {
-			emails += this.state.email3 + ' ';
+			emails += email3 + ' ';
 		}
 
 		if (isEmail4Valid) {
-			emails += this.state.email4 + ' ';
+			emails += email4 + ' ';
 		}
 
 		if (isEmail5Valid) {
-			emails += this.state.email5;
+			emails += email5;
 		}
 
 		if (isEmail1Valid || isEmail2Valid || isEmail3Valid || isEmail4Valid || isEmail5Valid) {
