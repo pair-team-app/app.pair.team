@@ -185,14 +185,14 @@ class HomePage extends Component {
 
 				{(cookie.load('user_id') === '0') ? (<div>
 					<Row><h3>Sign up or Login</h3></Row>
-					A design project contains all the files for your project, inclusing specifications, parts, and code examples.
+					<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
 					<div style={{marginTop:'20px'}}>
 						<button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign up with Email</button>
 						<button onClick={()=> this.props.onPage('login')}>Login</button>
 					</div>
 				</div>) : (parseInt(this.props.uploadID, 10) === 0) && (<div>
 					<Row><h3>Create a new design project</h3></Row>
-					A design project contains all the files for your project, inclusing specifications, parts, and code examples.
+					<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
 					<div style={{marginTop:'20px'}}>
 						<button onClick={()=> this.props.onPage('new')}>New Project</button>
 					</div>

@@ -3,9 +3,11 @@ import React, { Component } from 'react';
 import './ExplorePage.css';
 
 import axios from "axios/index";
+import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
 import ArtboardItem from '../iterables/ArtboardItem';
+import HomeExpo from '../elements/HomeExpo';
 import Popup from '../elements/Popup';
 
 import { binaryClassName } from '../../utils/funcs';
@@ -29,6 +31,18 @@ class ExplorePage extends Component {
 	componentDidMount() {
 		this.handleLoadNext();
 	}
+
+	handleHomeExpoItem = (ind)=> {
+		if (ind === 0) {
+			this.props.onPage('artboard/1/1/1/notifications');
+
+		} else if (ind === 1) {
+			this.props.onPage('register');
+
+		} else if (ind === 2) {
+			this.props.onPage('artboard/36/153/1186/home');
+		}
+	};
 
 	handleLoadNext= ()=> {
 		const prevArtboards = this.state.artboards;
@@ -81,6 +95,25 @@ class ExplorePage extends Component {
 
 		return (
 			<div className="page-wrapper explore-page-wrapper">
+				<HomeExpo onClick={(ind)=> this.handleHomeExpoItem(ind)} />
+
+				{(cookie.load('user_id') === '0')
+					? (<div>
+							<h3>Signup or login</h3>
+							<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
+							<div className="explore-page-button-wrapper">
+								<button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign up with Email</button>
+								<button onClick={()=> this.props.onPage('login')}>Login</button>
+							</div>
+					</div>) : (<div>
+						<h3>Create a new design project</h3>
+						<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
+						<div className="explore-page-button-wrapper">
+							<button onClick={()=> this.props.onPage('new')}>New Project</button>
+						</div>
+					</div>)
+				}
+
 				<Row><h3>Recent</h3></Row>
 				<Row horizontal="space-between" className="explore-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
 					{items}
