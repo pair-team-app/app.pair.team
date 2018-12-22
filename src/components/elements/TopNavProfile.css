@@ -27,6 +27,7 @@
 	background-color: #ffffff;
 	padding: 8px 8px 6px 8px;
 	border-radius: 4px;
+	box-shadow: 0 5px 10px #808080;
 }
 
 .top-nav-profile-bubble-notch {
@@ -39,8 +40,9 @@
 
 .top-nav-profile-link {
 	margin-bottom: 6px;
-	font-family: "San Francisco Text SemiBold", sans-serif;
-	font-weight: 600;
+	font-family: "San Francisco Text", sans-serif;
+	font-weight: 400;
+	font-size: 14px;
 	letter-spacing: -0.23px;
 	color: #0267D8;
 }
