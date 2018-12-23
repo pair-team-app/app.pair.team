@@ -112,8 +112,6 @@ class SideNav extends Component {
 	};
 
 	handleUploadClick = (upload)=> {
-		cookie.save('upload_id', upload.id, { path : '/' });
-
 		let uploads = [...this.state.uploads];
 		uploads.forEach(function(item, i) {
 			if (item.id === upload.id) {
@@ -131,6 +129,8 @@ class SideNav extends Component {
 		});
 
 		if (upload.selected) {
+			cookie.save('upload_id', upload.id, { path : '/' });
+
 			let formData = new FormData();
 			formData.append('action', 'PAGE_NAMES');
 			formData.append('upload_id', upload.id);
@@ -170,10 +170,10 @@ class SideNav extends Component {
 			});
 
 		} else {
-// 			this.setState({
-// 				pages     : [],
-// 				artboards : []
-// 			});
+			this.setState({
+				pages     : [],
+				artboards : []
+			});
 		}
 
 		//wrapper.current.scrollTo(0, 0);
@@ -195,34 +195,36 @@ class SideNav extends Component {
 		});
 
 		if (page.selected) {
-			let formData = new FormData();
-			formData.append('action', 'ARTBOARD_NAMES');
-			formData.append('page_id', page.id);
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					//console.log('ARTBOARD_NAMES', response.data);
+			if (!window.location.pathname.includes('/explore')) {
+				let formData = new FormData();
+				formData.append('action', 'ARTBOARD_NAMES');
+				formData.append('page_id', page.id);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response) => {
+						//console.log('ARTBOARD_NAMES', response.data);
 
-					const artboards = response.data.artboards.map((artboard) => ({
-						id       : artboard.id,
-						pageID   : artboard.page_id,
-						uploadID : artboard.upload_id,
-						title    : artboard.title,
-						filename : artboard.filename,
-						total    : artboard.total,
-						meta     : JSON.parse(artboard.meta),
-						added    : artboard.added,
-						selected : (this.props.artboardID === artboard.id)
-					}));
+						const artboards = response.data.artboards.map((artboard) => ({
+							id       : artboard.id,
+							pageID   : artboard.page_id,
+							uploadID : artboard.upload_id,
+							title    : artboard.title,
+							filename : artboard.filename,
+							total    : artboard.total,
+							meta     : JSON.parse(artboard.meta),
+							added    : artboard.added,
+							selected : (this.props.artboardID === artboard.id)
+						}));
 
-					page.artboards = artboards;
+						page.artboards = artboards;
 
-					this.setState({
-						pageID    : page.id,
-						pages     : pages,
-						artboards : artboards
-					});
-				}).catch((error) => {
-			});
+						this.setState({
+							pageID    : page.id,
+							pages     : pages,
+							artboards : artboards
+						});
+					}).catch((error) => {
+				});
+			}
 
 			this.props.onPageItem(page);
 
