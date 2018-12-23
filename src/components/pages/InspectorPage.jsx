@@ -196,6 +196,8 @@ class InspectorPage extends Component {
 				formData.append('upload_id', '');
 				formData.append('page_id', '' + pageID);
 				formData.append('slices', '0');
+				formData.append('offset', '0');
+				formData.append('length', '-1');
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response)=> {
 						console.log('ARTBOARDS', response.data);

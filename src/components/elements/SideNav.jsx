@@ -75,7 +75,7 @@ class SideNav extends Component {
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
-		formData.append('user_id', (typeof cookie.load('user_id') !== 'undefined' && !window.location.pathname.includes('/explore')) ? cookie.load('user_id') : '0');
+		formData.append('user_id', (window.location.pathname.includes('/explore') || cookie.load('user_id') === '0') ? '0' : cookie.load('user_id'));
 		formData.append('offset', this.state.loadOffset);
 		formData.append('length', this.state.loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
@@ -268,8 +268,7 @@ class SideNav extends Component {
 
 	render() {
 		const { uploads, fetching } = this.state;
-
-		//console.log('SideNav.render()', scrollHeight, (wrapper.current) ? wrapper.current.clientHeight : '');
+		console.log('SideNav.render()', this.props, this.state);
 
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>

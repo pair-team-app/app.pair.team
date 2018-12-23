@@ -119,6 +119,8 @@ class App extends Component {
 			formData.append('upload_id', this.state.uploadID);
 			formData.append('page_id', obj.id);
 			formData.append('slices', '0');
+			formData.append('offset', '0');
+			formData.append('length', '-1');
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log('ARTBOARDS', response.data);
