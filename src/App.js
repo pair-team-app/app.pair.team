@@ -98,16 +98,15 @@ class App extends Component {
 	handleSideNavUploadItem = (obj)=> {
 		console.log('handleSideNavUploadItem()', obj);
 
-		//if (obj.selected) {
-		this.handlePage('proj/' + obj.id + '/' + urlSlugTitle(obj.title));
-			//this.props.history.push('/proj/' + obj.id + '/' + urlSlugTitle(obj.title));
-		//}
+		if (obj.selected && this.state.uploadID !== obj.id) {
+			this.setState({
+				uploadID   : obj.id,
+				pageID     : 0,
+				artboardID : 0
+			});
 
-		this.setState({
-			uploadID   : (obj.selected) ? obj.id : -1,
-			pageID     : 0,
-			artboardID : 0
-		});
+			this.handlePage('proj/' + obj.id + '/' + urlSlugTitle(obj.title));
+		}
 	};
 
 	handleSideNavPageItem = (obj)=> {

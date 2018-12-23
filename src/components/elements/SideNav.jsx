@@ -24,7 +24,7 @@ class SideNav extends Component {
 			pages      : [],
 			artboards  : [],
 			loadOffset : 0,
-			loadAmt    : 10,
+			loadAmt    : (cookie.load('user_id') !== '0' && !window.location.pathname.includes('/explore')) ? 666 : 10,
 			fetching   : false
 		};
 	}
@@ -130,53 +130,11 @@ class SideNav extends Component {
 
 		if (upload.selected) {
 			cookie.save('upload_id', upload.id, { path : '/' });
-
-			let formData = new FormData();
-			formData.append('action', 'PAGE_NAMES');
-			formData.append('upload_id', upload.id);
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					console.log('PAGE_NAMES', response.data);
-
-					const pages = response.data.pages.map((page) => ({
-						id          : page.id,
-						uploadID    : page.upload_id,
-						title       : page.title,
-						description : page.description,
-						total       : page.total,
-						added       : page.added,
-						selected    : (this.props.pageID === page.id),
-						artboards   : page.artboards.map((artboard) => ({
-							id       : artboard.id,
-							pageID   : artboard.page_id,
-							uploadID : artboard.upload_id,
-							title    : artboard.title,
-							filename : artboard.filename,
-							total    : artboard.total,
-							meta     : JSON.parse(artboard.meta),
-							added    : artboard.added,
-							selected : (this.props.artboardID === artboard.id)
-						}))
-					}));
-
-					upload.pages = pages;
-
-					this.setState({
-						uploadID : upload.id,
-						uploads  : uploads,
-						pages    : pages
-					});
-				}).catch((error) => {
-			});
-
-		} else {
-			this.setState({
-				pages     : [],
-				artboards : []
-			});
 		}
 
-		//wrapper.current.scrollTo(0, 0);
+		this.setState({ uploads : uploads });
+
+// 		wrapper.current.scrollTo(0, 0);
 
 		if (window.location.pathname === '/' || window.location.pathname.includes('/proj')) {
 			this.props.onUploadItem(upload);
@@ -184,13 +142,17 @@ class SideNav extends Component {
 	};
 
 	handlePageClick = (page)=> {
-		let pages = [...this.state.pages];
-		pages.forEach(function(item, i) {
-			if (item.id === page.id) {
-				item.selected = !item.selected;
+		let uploads = [...this.state.uploads];
+		uploads.forEach((upload)=> {
+			if (upload.selected) {
+				upload.pages.forEach((item)=> {
+					if (item.id === page.id) {
+						item.selected = !item.selected;
 
-			} else {
-				item.selected = false;
+					} else {
+						item.selected = false;
+					}
+				});
 			}
 		});
 
@@ -202,8 +164,7 @@ class SideNav extends Component {
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response) => {
 						//console.log('ARTBOARD_NAMES', response.data);
-
-						const artboards = response.data.artboards.map((artboard) => ({
+						page.artboards = response.data.artboards.map((artboard) => ({
 							id       : artboard.id,
 							pageID   : artboard.page_id,
 							uploadID : artboard.upload_id,
@@ -215,13 +176,7 @@ class SideNav extends Component {
 							selected : (this.props.artboardID === artboard.id)
 						}));
 
-						page.artboards = artboards;
-
-						this.setState({
-							pageID    : page.id,
-							pages     : pages,
-							artboards : artboards
-						});
+						this.setState({ uploads : uploads });
 					}).catch((error) => {
 				});
 			}
@@ -229,7 +184,7 @@ class SideNav extends Component {
 			this.props.onPageItem(page);
 
 		} else {
-			this.setState({ artboards : [] });
+			this.setState({ uploads : uploads });
 		}
 	};
 

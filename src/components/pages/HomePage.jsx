@@ -11,21 +11,20 @@ import HomeExpo from '../elements/HomeExpo';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Popup from '../elements/Popup';
 
+import {binaryClassName} from "../../utils/funcs";
+
 class HomePage extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			action            : '',
-			uploadID          : 0,
-			uploadTitle       : 'Loading Project…',
-			uploadDescription : '',
-			uploadTotal       : 0,
-			pageTitle         : 'Loading…',
-			uploadURL         : '…',
-			artboards         : [],
-			loadOffset        : 0,
-			loadAmt           : 10,
+			action     : '',
+			uploadID   : 0,
+			title      : 'Loading…',
+			artboards  : [],
+			fetching   : false,
+			loadOffset : 0,
+			loadAmt    : 24,
 			popup : {
 				visible : false,
 				content : ''
@@ -36,87 +35,79 @@ class HomePage extends Component {
 	componentDidMount() {
 		console.log('HomePage().componentDidMount()', this.props);
 		if (this.props.uploadID !== 0) {
-			this.refreshData();
+			this.handleLoadNext();
 		}
 	}
 
 	componentDidUpdate(prevProps) {
-// 		console.log('HomePage.componentDidUpdate()', this.props, prevProps);
+		console.log('HomePage.componentDidUpdate()', this.props, prevProps);
+
 		if (this.props.uploadID !== -1 && this.props.uploadID !== prevProps.uploadID) {
-			this.refreshData();
-			return (null);
+			this.setState({
+				artboards  : [],
+				loadOffset : 0,
+				loadAmt    : 24
+			});
+
+			setTimeout(this.handleLoadNext, 125);
 		}
 	}
 
-	refreshData = ()=> {
+	handleLoadNext = ()=> {
+		console.log('handleLoadNext()', this.state.artboards);
+
+		const { uploadID, pageID } = this.props;
+		const { loadOffset, loadAmt } = this.state;
+
 		this.setState({
-			pageTitle : 'Loading…',
-			uploadURL : (this.props.pageID === 0) ? '…' : this.state.uploadURL,
-			artboards : []
+			fetching : true,
+			title    : 'Loading…'
 		});
 
 		let formData = new FormData();
-		formData.append('action', 'UPLOAD_NAMES');
-		formData.append('user_id', cookie.load('user_id'));
-		formData.append('offset', this.state.loadOffset);
-		formData.append('length', this.state.loadAmt);
+		formData.append('action', 'UPLOAD');
+		formData.append('upload_id', uploadID);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
-				console.log('UPLOAD_NAMES', response.data);
-				let self = this;
-				let uploadID = 0;
-				let title = '';
-				let description = '';
-				let total = 0;
-				let uploadURL = '';
-				response.data.uploads.forEach(function(upload, i) {
-					if (upload.id === self.props.uploadID) {
-						uploadID = upload.id;
-						title = upload.title;
-						description = upload.description;
-						total = upload.total;
-						uploadURL = 'https://earlyaccess.designengine.ai/proj/' + self.props.uploadID + '/' + upload.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
-					}
-				});
+				console.log('UPLOAD', response.data);
+				const uploadTitle = response.data.upload.title;
 
 				formData.append('action', 'PAGE');
-				formData.append('page_id', this.props.pageID);
+				formData.append('page_id', pageID);
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response) => {
 						console.log('PAGE', response.data);
-						this.setState({ pageTitle : (this.props.pageID === 0) ? title : response.data.page.title });
+						const pageTitle = response.data.page.title;
 
 						formData.append('action', 'ARTBOARDS');
-						formData.append('upload_id', this.props.uploadID);
-						formData.append('page_id', (this.props.pageID === 0) ? '-1' : this.props.pageID);
+						formData.append('upload_id', uploadID);
+						formData.append('page_id', pageID);
 						formData.append('slices', '0');
-						formData.append('offset', this.state.loadOffset);
-						formData.append('length', this.state.loadAmt);
+						formData.append('offset', loadOffset);
+						formData.append('length', loadAmt);
 						axios.post('https://api.designengine.ai/system.php', formData)
 							.then((response) => {
 								console.log('ARTBOARDS', response.data);
 
 								const artboards = response.data.artboards.map((item) => ({
-									id       : item.id,
-									pageID   : item.page_id,
-									uploadID : item.upload_id,
-									title    : item.title,
-									type     : item.type,
-									filename : item.filename,
-									meta     : JSON.parse(item.meta),
-									added    : item.added,
-									selected : false
+									id        : item.id,
+									pageID    : item.page_id,
+									uploadID  : item.upload_id,
+									title     : item.title,
+									pageTitle : item.page_title,
+									type      : item.type,
+									filename  : item.filename,
+									meta      : JSON.parse(item.meta),
+									added     : item.added,
+									selected  : false
 								}));
 
+								const prevArtboards = this.state.artboards;
 								this.setState({
-									uploadID          : uploadID,
-									uploadTitle       : title,
-									uploadDescription : description,
-									uploadTotal       : total,
-									uploadURL         : uploadURL,
-									artboards         : artboards,
-									pageTitle         : this.state.pageTitle + ' (' + (artboards.length) + ')',
-									loadOffset        : this.state.loadOffset + this.state.loadAmt
+									artboards  : prevArtboards.concat(artboards),
+									fetching   : false,
+									title      : ((this.props.pageID === 0) ? uploadTitle : pageTitle) + ' (' + (prevArtboards.length + artboards.length) + ')',
+									loadOffset : loadOffset + loadAmt
 								});
 							}).catch((error) => {
 						});
@@ -138,33 +129,17 @@ class HomePage extends Component {
 		}
 	};
 
-	handleDownload = ()=> {
-		let link = document.createElement('a');
-		const filePath = 'http://cdn.designengine.ai/document.php?upload_id=' + this.state.uploadID;
-		link.href = filePath;
-		link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
-		link.click();
-	};
-
-	handleURLCopy = ()=> {
-		const popup = {
-			visible : true,
-			content : 'Copied to Clipboard!'
-		};
-		this.setState({ popup : popup });
-	};
-
 
 	render() {
-		const artboards = this.state.artboards;
+		const { title, artboards, fetching, loadOffset } = this.state;
+
 		const items = artboards.map((artboard) => {
-			if (artboard.type !== 'hero' && (this.props.pageID <= 0 || this.props.pageID === artboard.pageID)) {
+			if (this.props.pageID <= 0 || this.props.pageID === artboard.pageID) {
 				return (
 					<Column key={artboard.id}>
 						<ArtboardItem
-							title={artboard.title}
+							title={artboard.pageTitle + ': ' + artboard.title}
 							image={artboard.filename}
-							size="landscape"//{(artboard.meta.frame.size.width > artboard.meta.frame.size.height || artboard.meta.frame.size.width === artboard.meta.frame.size.height) ? 'landscape' : 'portrait'}
 							onClick={() => this.props.onArtboardClicked(artboard)} />
 					</Column>
 				);
@@ -174,16 +149,17 @@ class HomePage extends Component {
 			}
 		});
 
+		const btnClass = binaryClassName((fetching || artboards.length !== loadOffset), 'is-hidden', '', 'fat-button');
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
 				<HomeExpo onClick={(ind)=> this.handleHomeExpoItem(ind)} />
-
-				{(parseInt(this.props.uploadID, 10) !== 0) && (<div>
-					<Row><h3>{this.state.pageTitle}</h3></Row>
+				{(items.length > 0) && (<div>
+					<Row><h3>{title}</h3></Row>
 					<Row horizontal="space-between" className="home-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
 						{items}
 					</Row>
+					<Row horizontal="center"><button className={btnClass} onClick={()=> this.handleLoadNext()}>More</button></Row>
 				</div>)}
 
 				{(cookie.load('user_id') === '0') ? (<div>
@@ -193,6 +169,7 @@ class HomePage extends Component {
 						<button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign up with Email</button>
 						<button onClick={()=> this.props.onPage('login')}>Login</button>
 					</div>
+
 				</div>) : (parseInt(this.props.uploadID, 10) === 0) && (<div>
 					<Row><h3>Create a new design project</h3></Row>
 					<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>

@@ -232,7 +232,7 @@ class UploadPage extends Component {
 		if (this.state.uploadComplete && !this.state.submitted) {
 			this.setState({ submitted : true });
 			let formData = new FormData();
-			formData.append('action', 'UPLOAD');
+			formData.append('action', 'NEW_UPLOAD');
 			formData.append('user_id', cookie.load('user_id'));
 			formData.append('title', this.state.uploadTitle);
 			formData.append('description', this.state.description);
@@ -240,7 +240,7 @@ class UploadPage extends Component {
 			formData.append('filename', "http://cdn.designengine.ai/system/" + this.state.files[0].name);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
-					console.log('UPLOAD', response.data);
+					console.log('NEW_UPLOAD', response.data);
 					cookie.save('upload_id', response.data.upload_id, { path : '/' });
 					this.setState({
 						uploadID        : response.data.upload_id,

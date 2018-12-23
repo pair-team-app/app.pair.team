@@ -48,7 +48,7 @@ class ExplorePage extends Component {
 		}
 	};
 
-	handleLoadNext= ()=> {
+	handleLoadNext = ()=> {
 		console.log('ExplorePage.handleLoadNext()', this.state.artboards);
 
 		const prevArtboards = (this.state.artboards.length === 12) ? [] : this.state.artboards;
@@ -63,15 +63,16 @@ class ExplorePage extends Component {
 				console.log('EXPLORE', response.data);
 
 				const artboards = response.data.artboards.map((artboard) => ({
-					id       : artboard.id,
-					pageID   : artboard.page_id,
-					uploadID : artboard.upload_id,
-					title    : artboard.title,
-					type     : artboard.type,
-					filename : artboard.filename,
-					meta     : JSON.parse(artboard.meta),
-					added    : artboard.added,
-					selected : false
+					id        : artboard.id,
+					pageID    : artboard.page_id,
+					uploadID  : artboard.upload_id,
+					title     : artboard.title,
+					pageTitle : artboard.page_title,
+					type      : artboard.type,
+					filename  : artboard.filename,
+					meta      : JSON.parse(artboard.meta),
+					added     : artboard.added,
+					selected  : false
 				}));
 
 				this.setState({
@@ -91,7 +92,6 @@ class ExplorePage extends Component {
 					<ArtboardItem
 						title={artboard.title}
 						image={artboard.filename}
-						size="landscape"//{(artboard.meta.frame.size.width > artboard.meta.frame.size.height || artboard.meta.frame.size.width === artboard.meta.frame.size.height) ? 'landscape' : 'portrait'}
 						onClick={() => this.props.onArtboardClicked(artboard)} />
 				</Column>
 			);

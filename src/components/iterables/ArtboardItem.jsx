@@ -15,14 +15,12 @@ class ArtboardItem extends Component {
 
 	render() {
 		const { title, image } = this.props;
-
-		const className = (this.props.title) ? 'artboard-item' : 'artboard-item artboard-item-loading';
-		const imageClass = (this.props.size === 'landscape') ? 'artboard-item-image artboard-item-image-landscape' : 'artboard-item-image artboard-item-image-portrait';
+		const className = (title) ? 'artboard-item' : 'artboard-item artboard-item-loading';
 
 		return (
 			<div className={className} onClick={()=> (title !== '') ? this.props.onClick() : null}>
 				{(this.props.title !== '') && (<div>
-					{(image) && (<img className={imageClass} src={image.replace('@3x', '@0.25x')} alt={title} />)}
+					{(image) && (<img className="artboard-item-image" src={image.replace('@3x', '@0.25x')} alt={title} />)}
 					<div className="artboard-item-overlay" />
 					{(image) && (<img className="artboard-item-icon" src="/images/icon-sketch.png" alt="Icon" />)}
 					{(image) && (<div className="artboard-item-details-wrapper">
