@@ -17,6 +17,8 @@ import Popup from '../elements/Popup';
 import { capitalizeText } from '../../utils/funcs.js';
 import { toCSS, toReactCSS } from '../../utils/langs.js';
 
+// import { ArtboardVO } from '../../model/vo.js';
+
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
 const canvas = React.createRef();
@@ -225,6 +227,9 @@ class InspectorPage extends Component {
 
 							this.offsets.push(offset);
 							console.log('artboard', artboard, i, offset, this.offsets[i]);
+
+// 							const vo = new ArtboardVO(artboard);
+// 							console.log('vo', vo);
 
 							artboards.push({
 								id        : artboard.id,

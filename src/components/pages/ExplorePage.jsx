@@ -11,7 +11,6 @@ import HomeExpo from '../elements/HomeExpo';
 import Popup from '../elements/Popup';
 
 import { binaryClassName } from '../../utils/funcs';
-import { artboardFiller } from "../../utils/vo";
 
 class ExplorePage extends Component {
 	constructor(props) {
@@ -20,7 +19,7 @@ class ExplorePage extends Component {
 		super(props);
 
 		this.state = {
-			artboards  : artboardFiller(12),
+			artboards  : [],
 			loadOffset : 0,
 			loadAmt    : 24,
 			fetching   : false,
