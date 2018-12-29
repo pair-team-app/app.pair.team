@@ -1036,7 +1036,7 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.render()', scale);
 // 		console.log(window.performance.memory);
 
-		return (<div style={{paddingBottom:'30px'}}>
+		return (<div>
 			{(this.state.uploading) && (<div className="inspector-page-upload-progress-wrapper">
 				<div className="inspector-page-upload-progress" style={progressStyle} />
 			</div>)}
