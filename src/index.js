@@ -3,6 +3,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+import index from './redux/index';
+
 import { BrowserRouter } from 'react-router-dom'
 
 import App from './App';
