@@ -4,8 +4,20 @@ import './AddOnsPage.css';
 
 import { Column, Row } from 'simple-flexbox';
 
-import AddonItem from '../iterables/AddOnItem';
 import addOns from '../../json/add-ons.json';
+
+
+function AddOnItem(props) {
+	return (
+		<div className="add-on-item" onClick={()=> props.onClick(props.url)}>
+			<img className="add-on-item-image" src={props.image} alt={props.title} />
+			<div className="add-on-item-overlay" />
+			<div className="add-on-item-title-wrapper">
+				<div className="add-on-item-title">{props.title}</div>
+			</div>
+		</div>
+	);
+}
 
 class AddOnsPage extends Component {
 	constructor(props) {
@@ -23,7 +35,7 @@ class AddOnsPage extends Component {
 		const items = addOns.map((item, i)=> {
 			return (
 				<Column key={i}>
-					<AddonItem title={item.title} image={item.image} url={item.url} onClick={(url=> this.handleURL(url))} />
+					<AddOnItem title={item.title} image={item.image} url={item.url} onClick={(url=> this.handleURL(url))} />
 				</Column>
 			);
 		});

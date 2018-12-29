@@ -16,14 +16,6 @@ class Popup extends Component {
 
 	componentDidMount() {
 		let self = this;
-// 		TweenMax.to(this.wrapper, 0.75, {
-// 			opacity    : 0,
-// 			y          : '-20px',
-// 			ease       : Power2.easeOut,
-// 			delay      : 1.125,
-// 			onComplete : self.props.onComplete
-// 		});
-
 		this.timeline = new TimelineMax();
 		this.timeline.from(this.wrapper, 0.25, {
 			opacity    : 0,
@@ -47,7 +39,6 @@ class Popup extends Component {
 		if (this.timeline) {
 			this.timeline.restart();
 		}
-
 
 		const icon = (this.props.content.split('::')[0] === 'error') ? '/images/icon-error.png' : '/images/copy-code.svg';
 

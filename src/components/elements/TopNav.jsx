@@ -2,11 +2,12 @@
 import React, { Component } from 'react';
 import './TopNav.css';
 
+import axios from "axios/index";
 import cookie from 'react-cookies';
 import { Row } from 'simple-flexbox';
 
 import TopNavProfile from './TopNavProfile';
-import axios from "axios/index";
+
 
 class TopNav extends Component {
 	constructor(props) {

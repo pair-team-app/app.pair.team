@@ -10,18 +10,88 @@ import cookie from 'react-cookies';
 import Dropzone from 'react-dropzone';
 import { Column, Row } from 'simple-flexbox';
 
-import SliceItem from '../iterables/SliceItem';
-import SliceToggle from '../elements/SliceToggle';
 import Popup from '../elements/Popup';
 
 import { capitalizeText } from '../../utils/funcs.js';
 import { toCSS, toReactCSS } from '../../utils/langs.js';
+import FontAwesome from "react-fontawesome";
 
 // import { ArtboardVO } from '../../model/vo.js';
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
 const canvas = React.createRef();
+
+
+function CommentItem(props) {
+	const options = {
+		year   : 'numeric',
+		month  : 'numeric',
+		day    : 'numeric',
+		hour   : 'numeric',
+		minute : 'numeric'
+	};
+
+	const userID = cookie.load('user_id');
+	let isUpVoted = false;
+	let isDnVoted = false;
+	let score = 1;
+	props.votes.forEach(function(item, i) {
+		if (item.user_id === userID) {
+			isUpVoted = (parseInt(item.value, 10) === 1);
+			isDnVoted = (parseInt(item.value, 10) === -1);
+		}
+
+		score += parseInt(item.value, 10);
+	});
+
+	const arrowUpClass = (isUpVoted) ? 'comment-item-arrow comment-item-arrow-voted' : 'comment-item-arrow';
+	const arrowDnClass = (isDnVoted) ? 'comment-item-arrow comment-item-arrow-voted' : 'comment-item-arrow';
+
+	return (
+		<div className="comment-item">
+			<img className="comment-item-avatar" src="/images/default-avatar.png" alt={props.author} />
+			<div className="comment-item-vote-wrapper">
+				<FontAwesome name="arrow-up" className={arrowUpClass} onClick={()=> props.onVote(1)} /><br />
+				<div className="comment-item-score">{score}</div>
+				<FontAwesome name="arrow-down" className={arrowDnClass} onClick={()=> props.onVote(-1)} /><br />
+			</div>
+			<div className="comment-item-content-wrapper">
+				<div className="comment-item-date">{(new Intl.DateTimeFormat('en-US', options).format(Date.parse(props.added))).replace(',', '').replace(/ (.{2})$/g, '$1').toLowerCase()}</div>
+				<div className="comment-item-text">{props.content}</div>
+			</div>
+		</div>
+	);
+}
+
+function SliceItem(props) {
+	const className = (props.type === 'slice') ? 'slice-item slice-item-slice' : (props.type === 'hotspot') ? 'slice-item slice-item-hotspot' : (props.type === 'textfield') ? 'slice-item slice-item-textfield' : 'slice-item slice-item-background';
+	const style = {
+		top     : props.top + 'px',
+		left    : props.left + 'px',
+		width   : props.width + 'px',
+		height  : props.height + 'px',
+		zoom    : props.scale,
+// 			transform : 'scale(' + props.scale + ')'
+		display : (props.visible) ? 'block' : 'none'
+	};
+
+	return (
+		<div data-id={props.id} className={className + ((props.filled) ? '-filled' : '')} style={style} onMouseEnter={()=> props.onRollOver({ x : props.offsetX, y : props.offsetY })} onMouseLeave={()=> props.onRollOut()} onClick={()=> props.onClick({ x : props.offsetX, y : props.offsetY })}>
+		</div>
+	);
+}
+
+function SliceToggle(props) {
+	const icon = (props.type === 'slice') ? '/images/layer-slice' : (props.type === 'hotspot') ? '/images/layer-hotspot' : (props.type === 'textfield') ? '/images/layer-textfield' : (props.type === 'group') ? '/images/layer-background' : '/images/layer-off';
+
+	return (
+		<div className="slice-toggle" onClick={()=> props.onClick()}>
+			<button className="inspector-page-float-button"><img className="inspector-page-float-button-image" src={(props.selected) ? icon + '_selected.svg' : icon + '.svg'} alt="Toggle" /></button>
+		</div>
+	);
+}
+
 
 class InspectorPage extends Component {
 	constructor(props) {
@@ -176,6 +246,7 @@ class InspectorPage extends Component {
 		document.removeEventListener("keydown", this.handleKeyDown.bind(this));
 		clearInterval(this.antsInterval);
 	}
+
 
 	refreshData = ()=> {
 		const { pageID, artboardID, sliceID } = this.props.match.params;

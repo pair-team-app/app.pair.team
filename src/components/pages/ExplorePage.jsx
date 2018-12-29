@@ -39,18 +39,6 @@ class ExplorePage extends Component {
 		this.handleLoadNext();
 	}
 
-	handleHomeExpoItem = (ind)=> {
-		if (ind === 0) {
-			this.props.onPage('artboard/1/1/1/notifications');
-
-		} else if (ind === 1) {
-			this.props.onPage('register');
-
-		} else if (ind === 2) {
-			this.props.onPage('artboard/36/153/1186/home');
-		}
-	};
-
 	handleLoadNext = ()=> {
 		console.log('ExplorePage.handleLoadNext()', this.state.artboards);
 
@@ -123,7 +111,7 @@ class ExplorePage extends Component {
 
 		return (
 			<div className="page-wrapper explore-page-wrapper">
-				<HomeExpo onClick={(ind)=> this.handleHomeExpoItem(ind)} />
+				<HomeExpo onClick={(url)=> this.props.onPage(url)} />
 
 				{(cookie.load('user_id') === '0')
 					? (<div>

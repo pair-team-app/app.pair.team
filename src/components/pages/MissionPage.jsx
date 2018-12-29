@@ -4,8 +4,21 @@ import './MissionPage.css';
 
 import { Column, Row } from 'simple-flexbox';
 
-import ReviewItem from '../iterables/ReviewItem';
 import reviews from '../../json/reviews.json';
+
+
+function ReviewItem(props) {
+	return (
+		<div className="review-item">
+			<img className="review-item-image" src={props.image} alt={props.author} />
+			<div className="review-item-text">
+				<div className="review-item-quote">{props.quote}</div>
+				<div className="review-item-author">{props.author}</div>
+			</div>
+		</div>
+	);
+}
+
 
 class MissionPage extends Component {
 	constructor(props) {

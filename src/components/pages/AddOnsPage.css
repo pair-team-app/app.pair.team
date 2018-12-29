@@ -6,3 +6,55 @@
 	width: 100%;
 	margin: 10px 0;
 }
+
+
+.add-on-item {
+	position: relative;
+	width: 260px;
+	height: 350px;
+	margin-bottom: 28px;
+	background-color: #fafbfc;
+	border: 1px solid #eaecef;
+	border-radius: 4px;
+}
+
+.add-on-item:hover {
+	cursor: pointer;
+}
+
+.add-on-item-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #000000;
+	opacity: 0;
+	border-radius: 4px;
+	transition: opacity 0.125s ease-out;
+	-moz-transition: opacity 0.125s ease-out;
+	-webkit-transition: opacity 0.125s ease-out;
+}
+
+.add-on-item:hover .add-on-item-overlay {
+	opacity: 0.125;
+}
+
+.add-on-item-image {
+	width: 125px;
+	height: 125px;
+	padding: 71px;
+}
+
+.add-on-item-title-wrapper {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	padding: 16px;
+}
+
+.add-on-item-title {
+	font-size: 14px;
+	letter-spacing: -0.23;
+	color: #0267d8;
+}

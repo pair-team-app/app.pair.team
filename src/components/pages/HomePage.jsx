@@ -117,18 +117,6 @@ class HomePage extends Component {
 		});
 	};
 
-	handleHomeExpoItem = (ind)=> {
-		if (ind === 0) {
-			this.props.onPage('artboard/1/1/1/notifications');
-
-		} else if (ind === 1) {
-			this.props.onPage('register');
-
-		} else if (ind === 2) {
-			this.props.onPage('artboard/36/153/1186/home');
-		}
-	};
-
 
 	render() {
 		const { title, artboards, fetching, loadOffset } = this.state;
@@ -138,7 +126,7 @@ class HomePage extends Component {
 				return (
 					<Column key={artboard.id}>
 						<ArtboardItem
-							title={artboard.pageTitle + ': ' + artboard.title}
+							title={artboard.title}
 							image={artboard.filename}
 							onClick={() => this.props.onArtboardClicked(artboard)} />
 					</Column>
@@ -153,7 +141,7 @@ class HomePage extends Component {
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
-				<HomeExpo onClick={(ind)=> this.handleHomeExpoItem(ind)} />
+				<HomeExpo onClick={(url)=> this.props.onPage(url)} />
 				{(items.length > 0) && (<div>
 					<Row><h3>{title}</h3></Row>
 					<Row horizontal="space-between" className="home-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
