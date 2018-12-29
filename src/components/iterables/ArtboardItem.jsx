@@ -15,7 +15,7 @@ class ArtboardItem extends Component {
 
 	render() {
 		const { title, image } = this.props;
-		const className = (title) ? 'artboard-item' : 'artboard-item artboard-item-loading';
+		const className = (image) ? 'artboard-item' : 'artboard-item artboard-item-loading';
 
 		return (
 			<div className={className} onClick={()=> (title !== '') ? this.props.onClick() : null}>
