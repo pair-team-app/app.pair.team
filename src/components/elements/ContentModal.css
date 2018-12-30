@@ -1,5 +1,5 @@
 
-.modal-wrapper {
+.content-modal-wrapper {
 	z-index: 101;
 	position: fixed;
 	top: 0;
@@ -10,7 +10,7 @@
 	background-color: rgba(0, 0, 0, 0.875);
 }
 
-.modal-container {
+.content-modal-container {
 	position: fixed;
 	width: auto;
 	max-width: 600px;
@@ -24,7 +24,7 @@
 	overflow: hidden;
 }
 
-.modal-content {
+.content-modal-content {
 	overflow-x: hidden;
 	overflow-y: auto;
 }

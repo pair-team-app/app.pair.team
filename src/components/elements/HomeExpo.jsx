@@ -2,7 +2,11 @@
 import React, { Component } from 'react';
 import './HomeExpo.css';
 
-import { Row } from 'simple-flexbox';
+import cookie from 'react-cookies';
+import {Row} from 'simple-flexbox';
+
+import homeExpo from '../../json/home-expo.json';
+
 
 class HomeExpo extends Component {
 	constructor(props) {
@@ -12,22 +16,19 @@ class HomeExpo extends Component {
 		};
 	}
 
-	componentDidMount() {
-	}
-
 	render() {
+		const items = (cookie.load('user_id') === '0') ? homeExpo.loggedOut : homeExpo.loggedIn;
+
 		return (
 			<div className="home-expo">
 				<Row className="home-page-artboards-wrapper">
-					<div className="home-expo-item" onClick={()=> this.props.onClick(0)}>
-						<img className="home-expo-item-image" src="/images/home-expo_01.png" alt="Expo I" />
-					</div>
-					<div className="home-expo-item" onClick={()=> this.props.onClick(1)}>
-						<img className="home-expo-item-image" src="/images/home-expo_02.png" alt="Expo II" />
-					</div>
-					<div className="home-expo-item" onClick={()=> this.props.onClick(2)}>
-						<img className="home-expo-item-image" src="/images/home-expo_03.png" style={{marginRight:'10px'}} alt="Expo III" />
-					</div>
+					{items.map((item, i)=> {
+						return (
+							<div key={i} className="home-expo-item" onClick={()=> this.props.onClick(item.url)}>
+								<img className="home-expo-item-image" src={item.image} alt={item.title} />
+							</div>
+						);
+					})}
 				</Row>
 			</div>
 		);

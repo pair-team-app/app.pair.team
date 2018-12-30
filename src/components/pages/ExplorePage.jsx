@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './ExplorePage.css';
 
 import axios from "axios/index";
+import createjs from 'preload-js';
 import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
@@ -28,24 +29,15 @@ class ExplorePage extends Component {
 				content : ''
 			}
 		};
+
+		this.queue = new createjs.LoadQueue(false);
 	}
 
 	componentDidMount() {
 		console.log('ExplorePage.componentDidMount()');
+		this.queue.on('fileload', this.handleFileLoaded);
 		this.handleLoadNext();
 	}
-
-	handleHomeExpoItem = (ind)=> {
-		if (ind === 0) {
-			this.props.onPage('artboard/1/1/1/notifications');
-
-		} else if (ind === 1) {
-			this.props.onPage('register');
-
-		} else if (ind === 2) {
-			this.props.onPage('artboard/36/153/1186/home');
-		}
-	};
 
 	handleLoadNext = ()=> {
 		console.log('ExplorePage.handleLoadNext()', this.state.artboards);
@@ -61,18 +53,25 @@ class ExplorePage extends Component {
 			.then((response) => {
 				console.log('EXPLORE', response.data);
 
-				const artboards = response.data.artboards.map((artboard) => ({
-					id        : artboard.id,
-					pageID    : artboard.page_id,
-					uploadID  : artboard.upload_id,
-					title     : artboard.title,
-					pageTitle : artboard.page_title,
-					type      : artboard.type,
-					filename  : artboard.filename,
-					meta      : JSON.parse(artboard.meta),
-					added     : artboard.added,
-					selected  : false
-				}));
+				const artboards = response.data.artboards.map((artboard) => {
+					this.queue.loadFile({
+						id  : artboard.id,
+						src : artboard.filename.replace('@3x', '@0.25x')
+					});
+
+					return ({
+						id        : artboard.id,
+						pageID    : artboard.page_id,
+						uploadID  : artboard.upload_id,
+						title     : artboard.title,
+						pageTitle : artboard.page_title,
+						type      : artboard.type,
+						filename  : null,
+						meta      : JSON.parse(artboard.meta),
+						added     : artboard.added,
+						selected  : false
+					});
+				});
 
 				this.setState({
 					artboards  : prevArtboards.concat(artboards),
@@ -83,6 +82,17 @@ class ExplorePage extends Component {
 		});
 	};
 
+	handleFileLoaded = (event)=> {
+		let artboards = [...this.state.artboards];
+		artboards.forEach((artboard)=> {
+			if (artboard.id === event.item.id) {
+				artboard.filename = event.item.src;
+			}
+		});
+
+		this.setState({ artboards : artboards });
+	};
+
 	render() {
 		const artboards = this.state.artboards;
 		const items = artboards.map((artboard, i) => {
@@ -91,7 +101,7 @@ class ExplorePage extends Component {
 					<ArtboardItem
 						title={artboard.title}
 						image={artboard.filename}
-						onClick={() => this.props.onArtboardClicked(artboard)} />
+						onClick={()=> this.props.onArtboardClicked(artboard)} />
 				</Column>
 			);
 		});
@@ -101,7 +111,7 @@ class ExplorePage extends Component {
 
 		return (
 			<div className="page-wrapper explore-page-wrapper">
-				<HomeExpo onClick={(ind)=> this.handleHomeExpoItem(ind)} />
+				<HomeExpo onClick={(url)=> this.props.onPage(url)} />
 
 				{(cookie.load('user_id') === '0')
 					? (<div>

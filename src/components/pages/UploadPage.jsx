@@ -83,7 +83,7 @@ class UploadPage extends Component {
 	onDrop(files) {
 		console.log('onDrop()', files);
 		if (files.length > 0 && files[0].name.split('.').pop() === 'sketch') {
-			if (files[0].size < 100 * 1024 * 1024) {
+			if (files[0].size < 150 * 1024 * 1024) {
 
 				let formData = new FormData();
 				formData.append('action', 'SLACK');
