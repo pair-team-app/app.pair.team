@@ -14,7 +14,7 @@ import Popup from '../elements/Popup';
 
 import { capitalizeText } from '../../utils/funcs.js';
 import { toCSS, toReactCSS } from '../../utils/langs.js';
-import FontAwesome from "react-fontawesome";
+// import FontAwesome from "react-fontawesome";
 
 // import { ArtboardVO } from '../../model/vo.js';
 
@@ -23,7 +23,7 @@ const canvasWrapper = React.createRef();
 const canvas = React.createRef();
 
 
-function CommentItem(props) {
+/*function CommentItem(props) {
 	const options = {
 		year   : 'numeric',
 		month  : 'numeric',
@@ -62,7 +62,7 @@ function CommentItem(props) {
 			</div>
 		</div>
 	);
-}
+}*/
 
 function SliceItem(props) {
 	const className = (props.type === 'slice') ? 'slice-item slice-item-slice' : (props.type === 'hotspot') ? 'slice-item slice-item-hotspot' : (props.type === 'textfield') ? 'slice-item slice-item-textfield' : 'slice-item slice-item-background';

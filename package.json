@@ -32,6 +32,7 @@
     "react-stripe-elements": "^2.0.1",
     "react-tabs": "^2.3.0",
     "react-treeview": "^0.4.7",
+    "redux": "^4.0.1",
     "simple-flexbox": "^1.2.0"
   },
   "scripts": {
