@@ -306,7 +306,7 @@ class InspectorPage extends Component {
 								id        : artboard.id,
 								pageID    : artboard.page_id,
 								title     : artboard.title,
-								filename  : artboard.filename,
+								filename  : (artboard.filename.includes('@3x')) ? artboard.filename : artboard.filename + '@3x.png',
 								meta      : JSON.parse(artboard.meta),
 								views     : artboard.views,
 								downloads : artboard.downloads,
