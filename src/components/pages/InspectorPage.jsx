@@ -22,6 +22,11 @@ const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
 const canvas = React.createRef();
 
+const tsOptions = {
+	year   : 'numeric',
+	month  : 'numeric',
+	day    : 'numeric'
+};
 
 function CommentItem(props) {
 	const options = {
@@ -88,6 +93,81 @@ function SliceToggle(props) {
 	return (
 		<div className="slice-toggle" onClick={()=> props.onClick()}>
 			<button className="inspector-page-float-button"><img className="inspector-page-float-button-image" src={(props.selected) ? icon + '_selected.svg' : icon + '.svg'} alt="Toggle" /></button>
+		</div>
+	);
+}
+
+function SpecsList(props) {
+	const sliceStyles = (props.slice && props.slice.meta.styles && props.slice.meta.styles.length > 0) ? props.slice.meta.styles[0] : null;
+	const stroke = (sliceStyles && sliceStyles.border.length > 0) ? sliceStyles.border[0] : null;
+	const shadow = (sliceStyles && sliceStyles.shadow.length > 0) ? sliceStyles.shadow[0] : null;
+	const innerShadow = (sliceStyles && sliceStyles.innerShadow.length > 0) ? sliceStyles.innerShadow[0] : null;
+
+	const styles = (sliceStyles) ? {
+		stroke : (stroke) ? {
+			color     : stroke.color.toUpperCase(),
+			position  : stroke.position,
+			thickness : stroke.thickness + 'px'
+		} : null,
+		shadow : (shadow) ? {
+			color  : shadow.color.toUpperCase(),
+			offset : {
+				x : shadow.offset.x,
+				y : shadow.offset.y
+			},
+			spread : shadow.spread + 'px',
+			blur   : shadow.blur + 'px'
+		} : null,
+		innerShadow : (innerShadow) ? {
+			color  : innerShadow.color.toUpperCase(),
+			offset : {
+				x : innerShadow.offset.x,
+				y : innerShadow.offset.y
+			},
+			spread : innerShadow.spread + 'px',
+			blur   : innerShadow.blur + 'px'
+		} : null
+	} : null;
+
+	return (
+		<div className="inspector-page-panel-info-wrapper">
+			{/*<Row><Column flexGrow={1}>System</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard && artboard.system) ? artboard.system.title : ''}</Column></Row>*/}
+			{/*<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val"><a href={'mailto:' + ((artboard && artboard.system) ? artboard.system.author : '#')} style={{textDecoration:'none'}}>{(artboard && artboard.system) ? artboard.system.author : ''}</a></Column></Row>*/}
+			{/*<Row><Column flexGrow={1}>Page</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(page) ? page.title : ''}</Column></Row>*/}
+			{/*<Row><Column flexGrow={1}>Artboard</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard) ? artboard.title : ''}</Column></Row>*/}
+			<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? props.slice.title : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? capitalizeText(props.slice.type, true) : ''}</Column></Row>
+			{/*<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(props.slice.added))) : ''}</Column></Row>*/}
+			<Row><Column flexGrow={1}>Export Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">W: {(props.slice) ? props.slice.meta.frame.size.width : 0}px H: {(props.slice) ? props.slice.meta.frame.size.height : 0}px</Column></Row>
+			<Row><Column flexGrow={1}>Position</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">X: {(props.slice) ? props.slice.meta.frame.origin.x : 0}px Y: {(props.slice) ? props.slice.meta.frame.origin.y : 0}px</Column></Row>
+			<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? props.slice.meta.rotation : 0}&deg;</Column></Row>
+			<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (props.slice.meta.opacity * 100) : 100}%</Column></Row>
+			<Row><Column flexGrow={1}>Fills</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (props.slice.type === 'textfield' && props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : props.slice.meta.fillColor.toUpperCase() : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Borders</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>
+			{(props.slice && props.slice.type === 'textfield') && (<div>
+				{/*<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.family) ? props.slice.meta.font.family : ''}</Column></Row>*/}
+				<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.family) ? props.slice.meta.font.family : ''}</Column></Row>
+				<Row><Column flexGrow={1}>Font Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.size + 'px')}</Column></Row>
+				<Row><Column flexGrow={1}>Font Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : ''}</Column></Row>
+				{/*<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.alignment) ? capitalizeText(props.slice.meta.font.alignment) : 'Left'}</Column></Row>*/}
+				<Row><Column flexGrow={1}>Line Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.lineHeight) ? (props.slice.meta.font.lineHeight + 'px') : ''}</Column></Row>
+				<Row><Column flexGrow={1}>Char Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.kerning) ? (props.slice.meta.font.kerning.toFixed(2) + 'px') : ''}</Column></Row>
+				{/*<Row><Column flexGrow={1}>Horizontal Alignment</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.alignment) ? capitalizeText(props.slice.meta.font.alignment) : 'Left'}</Column></Row>*/}
+				{/*<Row><Column flexGrow={1}>Vertical Alignment</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{'Top'}</Column></Row>*/}
+			</div>)}
+			{(styles) && (<div>
+				{/*<Row><Column flexGrow={1}>Stroke:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.stroke) ? (capitalizeText(styles.stroke.position, true) + ' S: ' + styles.stroke.thickness + ' ' + styles.stroke.color) : ''}</Column></Row>*/}
+				{/*<Row><Column flexGrow={1}>Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.shadow) ? ('X: ' + styles.shadow.offset.x + ' Y: ' + styles.shadow.offset.y + ' B: ' + styles.shadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>*/}
+				{/*<Row><Column flexGrow={1}>Inner Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>*/}
+				{/*<Row><Column flexGrow={1}>Blur:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>*/}
+			</div>)}
+			{(props.slice && props.slice.meta.padding) && (<Row>
+				<Column flexGrow={1}>Padding</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{props.slice.meta.padding.top}px {props.slice.meta.padding.left}px {props.slice.meta.padding.bottom}px {props.slice.meta.padding.right}px</Column>
+			</Row>)}
+			{/*<Row><Column flexGrow={1}>Inner Padding:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>*/}
+			{/*<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? capitalizeText(props.slice.meta.blendMode, true) : ''}</Column></Row>*/}
+			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(props.slice.added))) : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.page) ? props.page.author : ''}</Column></Row>
 		</div>
 	);
 }
@@ -249,8 +329,9 @@ class InspectorPage extends Component {
 
 
 	refreshData = ()=> {
-		const { pageID, artboardID, sliceID } = this.props.match.params;
+		const { uploadID, pageID, artboardID, sliceID } = this.props.match.params;
 		this.setState({
+			uploadID   : uploadID,
 			pageID     : pageID,
 			artboardID : artboardID,
 			slice      : sliceID,
@@ -262,7 +343,7 @@ class InspectorPage extends Component {
 		formData.append('page_id', '' + pageID);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response)=> {
-// 				console.log('PAGE', response.data);
+				console.log('PAGE', response.data);
 				const page = response.data.page;
 
 				formData.append('action', 'ARTBOARDS');
@@ -888,12 +969,6 @@ class InspectorPage extends Component {
 
 
 	render() {
-		const tsOptions = {
-			year   : 'numeric',
-			month  : 'numeric',
-			day    : 'numeric'
-		};
-
 		const { page, artboards, slice, hoverSlice, files } = this.state;
 		const { visibleTypes } = this.state;
 		const { scale } = this.state;
@@ -905,12 +980,12 @@ class InspectorPage extends Component {
 			this.rerender = 1;
 			setTimeout(function() {
 				self.forceUpdate();
-			}, 1000);
+			}, 3333);
 		}
 
 		const progressStyle = { width : this.state.percent + '%' };
 
-		const wrapperStyle = {
+		const artboardsStyle = {
 			position        : 'absolute',
 			width           : (artboards.length > 0) ? Math.floor(artboards.length * (50 + (artboards[0].meta.frame.size.width * this.state.scale)) * 0.75) : 0,
 			height          : (artboards.length > 0) ? Math.floor(artboards.length * (50 + (artboards[0].meta.frame.size.height * this.state.scale)) * 0.75) : 0,
@@ -930,11 +1005,10 @@ class InspectorPage extends Component {
 			y : 0
 		};
 
-		let heroes = [];
+		let artboardBackgrounds = [];
 		let slices = [];
 
 
-// 		for (let i=0; i<((artboards.length > 0) ? Math.min(artboards.length, 10) : 0); i++) {
 		for (let i=0; i<artboards.length; i++) {
 			const artboard = artboards[i];
 
@@ -948,7 +1022,7 @@ class InspectorPage extends Component {
 				maxH = artboard.meta.frame.size.height * scale;
 			}
 
-			const heroStyle = {
+			const artboardStyle = {
 				position       : 'absolute',
 				top            : Math.floor(offset.y) + 'px',
 				left           : Math.floor(offset.x) + 'px',
@@ -1057,9 +1131,9 @@ class InspectorPage extends Component {
 					: null);
 			});
 
-			heroes.push(
+			artboardBackgrounds.push(
 				<div key={i}>
-					<div style={heroStyle}>
+					<div style={artboardStyle}>
 						<div className="inspector-page-caption">{artboard.title}</div>
 					</div>
 				</div>
@@ -1078,32 +1152,6 @@ class InspectorPage extends Component {
 		}
 
 
-		const styles = (activeSlice && activeSlice.meta.styles && activeSlice.meta.styles.length > 0) ? {
-			stroke : (activeSlice.meta.styles[0].border.length > 0) ? {
-				color     : activeSlice.meta.styles[0].border[0].color.toUpperCase(),
-				position  : activeSlice.meta.styles[0].border[0].position,
-				thickness : activeSlice.meta.styles[0].border[0].thickness + 'px'
-			} : null,
-			shadow : (activeSlice.meta.styles[0].shadow.length > 0) ? {
-				color  : activeSlice.meta.styles[0].shadow[0].color.toUpperCase(),
-				offset : {
-					x : activeSlice.meta.styles[0].shadow[0].offset.x,
-					y : activeSlice.meta.styles[0].shadow[0].offset.y
-				},
-				spread : activeSlice.meta.styles[0].shadow[0].spread + 'px',
-				blur   : activeSlice.meta.styles[0].shadow[0].blur + 'px'
-			} : null,
-			innerShadow : (activeSlice.meta.styles[0].innerShadow.length > 0) ? {
-				color  : activeSlice.meta.styles[0].shadow[0].color.toUpperCase(),
-				offset : {
-					x : activeSlice.meta.styles[0].shadow[0].offset.x,
-					y : activeSlice.meta.styles[0].shadow[0].offset.y
-				},
-				spread : activeSlice.meta.styles[0].shadow[0].spread + 'px',
-				blur   : activeSlice.meta.styles[0].shadow[0].blur + 'px'
-			} : null
-		} : null;
-
 // 		console.log('InspectorPage.render()', scale);
 // 		console.log(window.performance.memory);
 
@@ -1115,8 +1163,8 @@ class InspectorPage extends Component {
 				<div className="inspector-page-content">
 					<div className="inspector-page-hero-wrapper" ref={artboardsWrapper}>
 						{(artboards.length > 0) && (
-							<div style={wrapperStyle}>
-								{heroes}
+							<div style={artboardsStyle}>
+								{artboardBackgrounds}
 								<div className="inspector-page-hero-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>
 									<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
 								</div>
@@ -1165,64 +1213,7 @@ class InspectorPage extends Component {
 						</ul>
 						<div className="inspector-page-panel-tab-content-wrapper">
 							<div className="inspector-page-panel-tab-content">
-								<div className="inspector-page-panel-info-wrapper">
-									{/*<Row><Column flexGrow={1}>System</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard && artboard.system) ? artboard.system.title : ''}</Column></Row>*/}
-									{/*<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val"><a href={'mailto:' + ((artboard && artboard.system) ? artboard.system.author : '#')} style={{textDecoration:'none'}}>{(artboard && artboard.system) ? artboard.system.author : ''}</a></Column></Row>*/}
-									{/*<Row><Column flexGrow={1}>Page</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(page) ? page.title : ''}</Column></Row>*/}
-									{/*<Row><Column flexGrow={1}>Artboard</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard) ? artboard.title : ''}</Column></Row>*/}
-									<Row><Column flexGrow={1}>Name:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? activeSlice.title : ''}</Column></Row>
-									{/*<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? capitalizeText(activeSlice.type, true) : ''}</Column></Row>*/}
-									{/*<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(activeSlice.added))) : ''}</Column></Row>*/}
-									<Row>
-										<Column flexGrow={1}>Export Size:</Column>
-										<Row flexGrow={1} className="inspector-page-panel-info-val">
-											<div style={{width:'50%'}}>W: {(activeSlice) ? activeSlice.meta.frame.size.width : 0}px</div>
-											<div style={{width:'50%', textAlign:'right'}}>H: {(activeSlice) ? activeSlice.meta.frame.size.height : 0}px</div>
-										</Row>
-									</Row>
-									<Row>
-										<Column flexGrow={1}>Position:</Column>
-										<Row flexGrow={1} className="inspector-page-panel-info-val">
-											<div style={{width:'50%'}}>X: {(activeSlice) ? activeSlice.meta.frame.origin.x : 0}px</div>
-											<div style={{width:'50%', textAlign:'right'}}>Y: {(activeSlice) ? activeSlice.meta.frame.origin.y : 0}px</div>
-										</Row>
-									</Row>
-									{/*<Row><Column flexGrow={1}>Scale</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(scaleSize + 'x')}</Column></Row>*/}
-									<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? activeSlice.meta.rotation : 0}&deg;</Column></Row>
-									<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? (activeSlice.meta.opacity * 100) : 100}%</Column></Row>
-									<Row><Column flexGrow={1}>Fill:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? (activeSlice.type === 'textfield' && activeSlice.meta.font.color) ? activeSlice.meta.font.color.toUpperCase() : activeSlice.meta.fillColor.toUpperCase() : ''}</Column></Row>
-									<Row><Column flexGrow={1}>Border:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>
-									{(activeSlice && activeSlice.type === 'textfield') && (<div>
-										{/*<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.family) ? activeSlice.meta.font.family : ''}</Column></Row>*/}
-										<Row><Column flexGrow={1}>Font:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.family) ? activeSlice.meta.font.family : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Font size:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.size + 'px')}</Column></Row>
-										<Row><Column flexGrow={1}>Font color:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.color) ? activeSlice.meta.font.color.toUpperCase() : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.alignment) ? capitalizeText(activeSlice.meta.font.alignment) : 'Left'}</Column></Row>
-										<Row><Column flexGrow={1}>Font Line Height:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.lineHeight) ? (activeSlice.meta.font.lineHeight + 'px') : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Font Letter Spacing:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.kerning) ? (activeSlice.meta.font.kerning.toFixed(2) + 'px') : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Horizontal Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.alignment) ? capitalizeText(activeSlice.meta.font.alignment) : 'Left'}</Column></Row>
-										<Row><Column flexGrow={1}>Vertical Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{'Top'}</Column></Row>
-									</div>)}
-									{(styles) && (<div>
-										<Row><Column flexGrow={1}>Stroke:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.stroke) ? (capitalizeText(styles.stroke.position, true) + ' S: ' + styles.stroke.thickness + ' ' + styles.stroke.color) : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.shadow) ? ('X: ' + styles.shadow.offset.x + ' Y: ' + styles.shadow.offset.y + ' B: ' + styles.shadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Inner Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Blur:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>
-									</div>)}
-									{(activeSlice && activeSlice.meta.padding) && (<Row>
-										<Column flexGrow={1}>Padding:</Column>
-										<Row flexGrow={1} className="inspector-page-panel-info-val">
-											<div style={{width:'50%'}}>{(activeSlice) ? activeSlice.meta.padding.top : 0}px</div>
-											<div style={{width:'50%'}}>{(activeSlice) ? activeSlice.meta.padding.left : 0}px</div>
-											<div style={{width:'50%', textAlign:'right'}}>{(activeSlice) ? activeSlice.meta.padding.bottom : 0}px</div>
-											<div style={{width:'50%', textAlign:'right'}}>{(activeSlice) ? activeSlice.meta.padding.right : 0}px</div>
-										</Row>
-									</Row>)}
-									<Row><Column flexGrow={1}>Inner Padding:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>
-									<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? capitalizeText(activeSlice.meta.blendMode, true) : ''}</Column></Row>
-									<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(activeSlice.added))) : ''}</Column></Row>
-									<Row><Column flexGrow={1}>Author:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(page) ? page.author : ''}</Column></Row>
-								</div>
+								<SpecsList page={page} slice={activeSlice} />
 							</div>
 						</div>
 					</div>
