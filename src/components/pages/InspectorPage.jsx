@@ -305,7 +305,7 @@ class InspectorPage extends Component {
 
 // 		if (artboardsWrapper.current && !this.jumpedOffset) {
 // 			this.state.artboards.forEach((artboard, i)=> {
-// 				if (artboard.id === this.props.match.params.artboardID && artboardsWrapper.current.scrollTop !== artboard.offset.y && artboardsWrapper.current.scrollLeft !== artboard.offset.x) {
+// 				if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
 // 					this.jumpedOffset = true;
 // 					artboardsWrapper.current.scrollTop = artboard.offset.y;
 // 					artboardsWrapper.current.scrollLeft = artboard.offset.x;
@@ -314,7 +314,9 @@ class InspectorPage extends Component {
 // 		}
 
 		if (canvasWrapper.current) {
-			const scale = canvasWrapper.current.clientWidth / (canvasWrapper.current.clientWidth + (this.size.x + 700));// Math.min(canvasWrapper.current.clientWidth / (canvasWrapper.current.clientWidth + this.size.x), canvasWrapper.current.clientHeight / (canvasWrapper.current.clientHeight + this.size.y));
+// 			const scale = canvasWrapper.current.clientWidth / (canvasWrapper.current.clientWidth + (this.size.x + 700));
+			const scale = Math.min(canvasWrapper.current.clientWidth / (canvasWrapper.current.clientWidth + this.size.x), canvasWrapper.current.clientHeight / (canvasWrapper.current.clientHeight + this.size.y));
+			console.log('componentDidUpdate()', scale);
 			if (this.state.scale !== scale && !this.jumpedOffset) {
 				this.jumpedOffset = true;
 				this.setState({ scale : scale });
@@ -1132,10 +1134,8 @@ class InspectorPage extends Component {
 			});
 
 			artboardBackgrounds.push(
-				<div key={i}>
-					<div style={artboardStyle}>
-						<div className="inspector-page-caption">{artboard.title}</div>
-					</div>
+				<div key={i} style={artboardStyle}>
+					<div className="inspector-page-caption">{artboard.title}</div>
 				</div>
 			);
 
