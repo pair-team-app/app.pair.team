@@ -1,8 +1,8 @@
 
 import React, { Component } from 'react';
 import './InspectorPage.css';
-import 'react-tabs/style/react-tabs.css';
-import '../elements/react-tabs.css';
+// import 'react-tabs/style/react-tabs.css';
+// import '../elements/react-tabs.css';
 
 import axios from 'axios';
 // import CopyToClipboard from 'react-copy-to-clipboard';
@@ -15,8 +15,6 @@ import Popup from '../elements/Popup';
 import { capitalizeText } from '../../utils/funcs.js';
 import { toCSS, toReactCSS } from '../../utils/langs.js';
 import FontAwesome from "react-fontawesome";
-
-// import { ArtboardVO } from '../../model/vo.js';
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
@@ -82,8 +80,7 @@ function SliceItem(props) {
 	};
 
 	return (
-		<div data-id={props.id} className={className + ((props.filled) ? '-filled' : '')} style={style} onMouseEnter={()=> props.onRollOver({ x : props.offsetX, y : props.offsetY })} onMouseLeave={()=> props.onRollOut()} onClick={()=> props.onClick({ x : props.offsetX, y : props.offsetY })}>
-		</div>
+		<div data-id={props.id} className={className + ((props.filled) ? '-filled' : '')} style={style} onMouseEnter={()=> props.onRollOver(props.offset)} onMouseLeave={()=> props.onRollOut()} onClick={()=> props.onClick(props.offset)} />
 	);
 }
 
@@ -178,9 +175,6 @@ class InspectorPage extends Component {
 		super(props);
 
 		this.state = {
-			x: 0.5,
-			y: 0.5,
-			scale: 1.0,
 			uploadID      : this.props.match.params.uploadID,
 			pageID        : this.props.match.params.pageID,
 			artboardID    : this.props.match.params.artboardID,
@@ -195,6 +189,7 @@ class InspectorPage extends Component {
 			selectedTab   : 0,
 			tooltip       : 'Loading…',
 			hoverOffset   : null,
+			scale         : 1.0,
 			scrollOffset  : {
 				x : 0,
 				y : 0
@@ -240,16 +235,16 @@ class InspectorPage extends Component {
 			}
 		};
 
+		this.initialScaled = false;
 		this.jumpedOffset = false;
-		this.offsets = [];
 		this.lastScroll = 0;
 		this.scrollInterval = null;
 		this.rerender = 0;
 		this.antsOffset = 0;
 		this.antsInterval = null;
 		this.size = {
-			x : 0,
-			y : 0
+			width  : 0,
+			height : 0
 		};
 
 		this.zoomNotches = [
@@ -266,22 +261,6 @@ class InspectorPage extends Component {
 		cookie.save('upload_id', this.props.match.params.uploadID, { path : '/' });
 	}
 
-	handlePanAndZoom = (x, y, scale) => {
-		this.setState({ x, y, scale });
-	};
-
-	handlePanMove = (x, y) => {
-		this.setState({ x, y });
-	};
-
-	transformPoint({ x, y }) {
-		return {
-			x: 0.5 + this.state.scale * (x - this.state.x),
-			y: 0.5 + this.state.scale * (y - this.state.y)
-		};
-	}
-
-
 	componentDidMount() {
 // 		console.log('componentDidMount()');
 
@@ -289,43 +268,54 @@ class InspectorPage extends Component {
 		this.antsInterval = setInterval(this.redrawAnts, 100);
 
 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
-		document.addEventListener('wheel', this.handleWheelStart.bind(this));
+		document.addEventListener('wheel', this.handleWheel.bind(this));
 	}
 
 	componentDidUpdate(prevProps) {
-// 		console.log('componentDidUpdate()', prevProps, this.props);
-		if (this.props.match.params.artboardID !== prevProps.match.params.artboardID) {
+		console.log('componentDidUpdate()', prevProps.match.params.artboardID, this.props.match.params.artboardID);
+		if (this.props.match.params.pageID !== prevProps.match.params.pageID) {
 			this.refreshData();
 			return (null);
+		}
+
+		if (canvasWrapper.current) {
+			const scale = Math.min(canvasWrapper.current.clientWidth / (this.size.width - canvasWrapper.current.clientWidth), canvasWrapper.current.clientHeight / (this.size.height - canvasWrapper.current.clientHeight));
+			if (this.state.scale !== scale && !this.initialScaled) {
+				this.initialScaled = true;
+				this.setState({ scale : scale });
+
+				if (artboardsWrapper.current) {
+					this.state.artboards.forEach((artboard, i)=> {
+						if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
+							console.log('componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
+							artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * scale);
+							artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * scale);
+						}
+					});
+				}
+			}
+
+			if (this.props.match.params.artboardID !== prevProps.match.params.artboardID) {
+				if (artboardsWrapper.current) {
+					this.state.artboards.forEach((artboard, i)=> {
+						if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
+							console.log('componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
+							artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * this.state.scale);
+							artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * this.state.scale);
+						}
+					});
+				}
+			}
 		}
 
 		if (canvas.current) {
 			this.updateCanvas();
 		}
-
-// 		if (artboardsWrapper.current && !this.jumpedOffset) {
-// 			this.state.artboards.forEach((artboard, i)=> {
-// 				if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
-// 					this.jumpedOffset = true;
-// 					artboardsWrapper.current.scrollTop = artboard.offset.y;
-// 					artboardsWrapper.current.scrollLeft = artboard.offset.x;
-// 				}
-// 			});
-// 		}
-
-		if (canvasWrapper.current) {
-// 			const scale = canvasWrapper.current.clientWidth / (canvasWrapper.current.clientWidth + (this.size.x + 700));
-			const scale = Math.min(canvasWrapper.current.clientWidth / (canvasWrapper.current.clientWidth + this.size.x), canvasWrapper.current.clientHeight / (canvasWrapper.current.clientHeight + this.size.y));
-			console.log('componentDidUpdate()', scale);
-			if (this.state.scale !== scale && !this.jumpedOffset) {
-				this.jumpedOffset = true;
-				this.setState({ scale : scale });
-			}
-		}
 	}
 
 	componentWillUnmount() {
 		document.removeEventListener("keydown", this.handleKeyDown.bind(this));
+		document.removeEventListener("wheel", this.handleWheel.bind(this));
 		clearInterval(this.antsInterval);
 	}
 
@@ -368,22 +358,13 @@ class InspectorPage extends Component {
 						let artboards = [];
 						response.data.artboards.forEach((artboard, i)=> {
 							if (Math.floor(i % 5) === 0 && i !== 0) {
-								this.size.x = 0;
-								this.size.y += maxH + 50;
+								this.size.height += maxH + 50;
 								offset.x = 0;
 								offset.y += maxH + 50;
 								maxH = 0;
 							}
 
-							if (JSON.parse(artboard.meta).frame.size.height * scale > maxH) {
-								maxH = JSON.parse(artboard.meta).frame.size.height * scale;
-							}
-
-							this.offsets.push(offset);
-							console.log('artboard', artboard, i, offset, this.offsets[i]);
-
-// 							const vo = new ArtboardVO(artboard);
-// 							console.log('vo', vo);
+							maxH = Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale);
 
 							artboards.push({
 								id        : artboard.id,
@@ -395,7 +376,14 @@ class InspectorPage extends Component {
 								downloads : artboard.downloads,
 								added     : artboard.added,
 								system    : artboard.system,
-								offset    : offset,
+								grid      : {
+									col : i % 5,
+									row : Math.floor(i / 5)
+								},
+								offset    : {
+									x : offset.x,
+									y : offset.y
+								},
 								slices    : artboard.slices.map((item) => ({
 									id       : item.id,
 									title    : item.title,
@@ -407,13 +395,13 @@ class InspectorPage extends Component {
 								comments  : artboard.comments
 							});
 
-							this.size.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - ((canvasWrapper.current) ? canvasWrapper.current.clientWidth : 0);
-							if (i < response.data.artboards.length - 1) {
-								offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - ((canvasWrapper.current) ? canvasWrapper.current.clientWidth : 0);
-							}
-						});
 
-						console.log('offsets', offset, this.offsets);
+							if (i < response.data.artboards.length - 1) {
+								offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
+							}
+
+							this.size.width = Math.max(this.size.width, offset.x);
+						});
 
 						formData.append('action', 'FILES');
 						formData.append('upload_id', '' + this.state.uploadID);
@@ -599,7 +587,7 @@ class InspectorPage extends Component {
 		});
 	};
 
-	handleWheelStart = (event)=> {
+	handleWheel = (event)=> {
 // 		console.log(event.type, event.deltaX, event.deltaY, event.target);
 		//console.log('wheel', artboardsWrapper.current.clientWidth, artboardsWrapper.current.clientHeight, artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft);
 
@@ -670,7 +658,7 @@ class InspectorPage extends Component {
 			.then((response) => {
 // 				console.log('SLICES', response.data);
 
-				let artboards = this.state.artboards;
+				let artboards = [...this.state.artboards];
 				artboards.forEach((artboard)=> {
 					if (artboard.id === artboardID && artboard.slices.length === 0) {
 						artboard.slices = response.data.slices.map((item) => ({
@@ -743,9 +731,10 @@ class InspectorPage extends Component {
 						maxH = 0;
 					}
 
-					if (artboard.meta.frame.size.height * scale > maxH) {
-						maxH = artboard.meta.frame.size.height * scale;
-					}
+					maxH = Math.max(maxH, artboard.meta.frame.size.height * scale);
+// 					if (artboard.meta.frame.size.height * scale > maxH) {
+// 						maxH = artboard.meta.frame.size.height * scale;
+// 					}
 
 					artboard.slices.forEach((slice) => {
 						if (slice.id === this.state.slice.id) {
@@ -974,6 +963,7 @@ class InspectorPage extends Component {
 		const { page, artboards, slice, hoverSlice, files } = this.state;
 		const { visibleTypes } = this.state;
 		const { scale } = this.state;
+		const { scrollOffset, scrolling } = this.state;
 
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 
@@ -989,16 +979,18 @@ class InspectorPage extends Component {
 
 		const artboardsStyle = {
 			position        : 'absolute',
-			width           : (artboards.length > 0) ? Math.floor(artboards.length * (50 + (artboards[0].meta.frame.size.width * this.state.scale)) * 0.75) : 0,
-			height          : (artboards.length > 0) ? Math.floor(artboards.length * (50 + (artboards[0].meta.frame.size.height * this.state.scale)) * 0.75) : 0,
-// 			transform       : (artboards.length > 0) ? 'translate(' + ((3 * (50 + (artboard.meta.frame.size.width * this.state.scale))) * -0.5) + 'px, ' + ((artboard.meta.frame.size.height * this.state.scale) * 0.5) + 'px)' : 'translate(0px, 0px)'
+// 			width           : (artboards.length > 0) ? Math.floor(artboards.length * (50 + (artboards[0].meta.frame.size.width * scale)) * 0.75) : 0,
+			width           : this.size.width,
+// 			height          : (artboards.length > 0) ? Math.floor(artboards.length * (50 + (artboards[0].meta.frame.size.height * scale)) * 0.75) : 0,
+			height          : this.size.height,
+// 			transform       : (artboards.length > 0) ? 'translate(' + ((3 * (50 + (artboard.meta.frame.size.width * scale))) * -0.5) + 'px, ' + ((artboard.meta.frame.size.height * this.state.scale) * 0.5) + 'px)' : 'translate(0px, 0px)'
 			transform       : (artboards.length > 0) ? 'translate(100px, 20px)' : 'translate(0px, 0px)'
 		};
 
 		const canvasStyle = {
-			top     : (this.state.scrollOffset.y) + 'px',
-			left    : (-100 + this.state.scrollOffset.x) + 'px',
-			display : (this.state.scrolling) ? 'none' : 'block'
+			top     : (scrollOffset.y) + 'px',
+			left    : (-100 + scrollOffset.x) + 'px',
+			display : (scrolling) ? 'none' : 'block'
 		};
 
 		let maxH = 0;
@@ -1020,9 +1012,7 @@ class InspectorPage extends Component {
 				maxH = 0;
 			}
 
-			if (artboard.meta.frame.size.height * scale > maxH) {
-				maxH = artboard.meta.frame.size.height * scale;
-			}
+			maxH = Math.max(maxH, artboard.meta.frame.size.height * scale);
 
 			const artboardStyle = {
 				position       : 'absolute',
@@ -1059,8 +1049,7 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						offsetX={offset.x}
-						offsetY={offset.y}
+						offset={{x:offset.x, y:offset.y}}
 						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
 						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
@@ -1081,8 +1070,7 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						offsetX={offset.x}
-						offsetY={offset.y}
+						offset={{x:offset.x, y:offset.y}}
 						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
 						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
@@ -1103,8 +1091,7 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						offsetX={offset.x}
-						offsetY={offset.y}
+						offset={{x:offset.x, y:offset.y}}
 						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
 						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
@@ -1125,8 +1112,7 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						offsetX={offset.x}
-						offsetY={offset.y}
+						offset={{x:offset.x, y:offset.y}}
 						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
 						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
@@ -1151,9 +1137,9 @@ class InspectorPage extends Component {
 			offset.x += Math.round(50 + (artboard.meta.frame.size.width * scale));
 		}
 
-
-// 		console.log('InspectorPage.render()', scale);
+		console.log('InspectorPage.render()', (artboardsWrapper.current) ? artboardsWrapper.current.scrollTop : 0, (artboardsWrapper.current) ? artboardsWrapper.current.scrollLeft : 0, scale);
 // 		console.log(window.performance.memory);
+
 
 		return (<div>
 			{(this.state.uploading) && (<div className="inspector-page-upload-progress-wrapper">
@@ -1161,11 +1147,15 @@ class InspectorPage extends Component {
 			</div>)}
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
-					<div className="inspector-page-hero-wrapper" ref={artboardsWrapper}>
+					<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
+						{/*<MapInteractionCSS scale={scale} translation={translation} onChange={({ scale, translation }) => this.setState({ scale, translation })}>*/}
+							{/*<div style={{width:'426px',height:'240px',background:'#111111 url("https://i.imgur.com/WJ17gs5.jpg") no-repeat center',}}>*/}
+							{/*</div>*/}
+						{/*</MapInteractionCSS>*/}
 						{(artboards.length > 0) && (
 							<div style={artboardsStyle}>
 								{artboardBackgrounds}
-								<div className="inspector-page-hero-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>
+								<div className="inspector-page-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>
 									<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
 								</div>
 								{slices}

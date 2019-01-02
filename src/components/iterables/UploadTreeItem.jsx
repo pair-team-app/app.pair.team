@@ -19,7 +19,7 @@ class UploadTreeItem extends Component {
 	}
 
 	static getDerivedStateFromProps(nextProps) {
-		return ({ title : (nextProps.title.length > 28) ? (nextProps.title.substring(0, 27) + '…') : nextProps.title });
+		return ({ title : (nextProps.title.length > 26) ? (nextProps.title.substring(0, 25) + '…') : nextProps.title });
 	}
 
 	render() {
