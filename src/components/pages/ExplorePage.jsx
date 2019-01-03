@@ -9,9 +9,6 @@ import { Column, Row } from 'simple-flexbox';
 
 import ArtboardItem from '../iterables/ArtboardItem';
 import HomeExpo from '../elements/HomeExpo';
-import Popup from '../elements/Popup';
-
-import { binaryClassName } from '../../utils/funcs';
 
 class ExplorePage extends Component {
 	constructor(props) {
@@ -23,11 +20,7 @@ class ExplorePage extends Component {
 			artboards  : [],
 			loadOffset : 0,
 			loadAmt    : 24,
-			fetching   : false,
-			popup      : {
-				visible : false,
-				content : ''
-			}
+			fetching   : false
 		};
 
 		this.queue = new createjs.LoadQueue(false);
@@ -86,7 +79,7 @@ class ExplorePage extends Component {
 		let artboards = [...this.state.artboards];
 		artboards.forEach((artboard)=> {
 			if (artboard.id === event.item.id) {
-				artboard.filename = event.item.src;
+				artboard.filename = event.item.src.replace('@0.25x.png', '');
 			}
 		});
 
@@ -94,20 +87,8 @@ class ExplorePage extends Component {
 	};
 
 	render() {
-		const artboards = this.state.artboards;
-		const items = artboards.map((artboard, i) => {
-			return (
-				<Column key={i}>
-					<ArtboardItem
-						title={artboard.title}
-						image={artboard.filename}
-						onClick={()=> this.props.onArtboardClicked(artboard)} />
-				</Column>
-			);
-		});
-
-		const condi = function(loading) { return (loading); };
-		const btnClass = binaryClassName(condi(this.state.fetching), 'is-hidden', '', 'fat-button');
+		const { artboards } = this.state;
+		const btnClass = (this.state.fetching) ? 'fat-button is-hidden' : 'fat-button';
 
 		return (
 			<div className="page-wrapper explore-page-wrapper">
@@ -132,12 +113,18 @@ class ExplorePage extends Component {
 
 				<Row><h3>{(this.state.fetching ? 'Loading…' : 'Recent')}</h3></Row>
 				<Row horizontal="space-between" className="explore-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
-					{items}
+					{artboards.map((artboard, i) => {
+						return (
+							<Column key={i}>
+								<ArtboardItem
+									title={artboard.title}
+									image={artboard.filename}
+									onClick={()=> this.props.onArtboardClicked(artboard)} />
+							</Column>
+						);
+					})}
 				</Row>
 				<Row horizontal="center"><button className={btnClass} onClick={()=> this.handleLoadNext()}>More</button></Row>
-				{this.state.popup.visible && (
-					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
-				)}
 			</div>
 		);
 	}

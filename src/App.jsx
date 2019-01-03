@@ -27,7 +27,7 @@ import UploadPage from './components/pages/UploadPage';
 
 import StripeOverlay from './components/elements/StripeOverlay';
 
-import { urlSlugTitle } from "./utils/funcs";
+import { idsFromPath, urlSlugTitle } from "./utils/funcs";
 import { initTracker, trackEvent } from "./utils/tracking";
 
 const wrapper = React.createRef();
@@ -36,18 +36,16 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 
-		const artboardPatt = /\/artboard\/\d+\/\d+\/\d+\/.*$/;
-		const uploadPatt = /\/proj\/\d+\/.*$/;
+		const pathIDs = idsFromPath();
 
 		this.state = {
-			uploadID          : (artboardPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/(\d+)\/.*$/)[1] : (uploadPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/proj\/(\d+)\/.*$/)[1] : 0,
-			pageID            : (artboardPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/\d+\/(\d+)\/.*$/)[1] : 0,
-			artboardID        : (artboardPatt.test(window.location.pathname)) ? window.location.pathname.match(/\/artboard\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
-			sliceID           : 0,
-			selectedArtboards : [],
-			overlayAlert      : null,
-			userID            : 0,
-			processing        : false
+			userID       : 0,
+			uploadID     : pathIDs.uploadID,
+			pageID       : pathIDs.pageID,
+			artboardID   : pathIDs.artboardID,
+			sliceID      : pathIDs.sliceID,
+			overlayAlert : null,
+			processing   : false
 		};
 	}
 
@@ -59,12 +57,14 @@ class App extends Component {
 		initTracker();
 		trackEvent('load');
 
+		const { uploadID, pageID } = this.state;
+
 		if (window.location.pathname.includes('/artboard/')) {
 			let formData = new FormData();
 
-			if (this.state.uploadID === 0) {
+			if (uploadID === 0) {
 				formData.append('action', 'PAGE');
-				formData.append('page_id', this.state.pageID);
+				formData.append('page_id', pageID);
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response) => {
 						console.log('PAGE', response.data);
@@ -73,15 +73,38 @@ class App extends Component {
 				});
 			}
 
-			formData.append('action', 'ADD_VIEW');
-			formData.append('page_id', this.state.pageID);
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					console.log('ADD_VIEW', response.data);
-				}).catch((error) => {
-			});
+			this.handleAddPageView(pageID);
 		}
 	}
+
+	handleAddPageView = (pageID)=> {
+		let formData = new FormData();
+		formData.append('action', 'ADD_VIEW');
+		formData.append('page_id', pageID);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+				console.log('ADD_VIEW', response.data);
+			}).catch((error) => {
+		});
+	};
+
+	handleArtboardClicked = (artboard)=> {
+		console.log('handleArtboardClicked()', artboard);
+		this.handleAddPageView(artboard.pageID);
+
+		this.props.history.push('/artboard/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
+		this.setState({
+			uploadID   : artboard.uploadID,
+			pageID     : artboard.pageID,
+			artboardID : artboard.id
+		});
+		wrapper.current.scrollTo(0, 0);
+	};
+
+	handleAddOns = ()=> {
+		console.log('handleAddOns()');
+// 		this.setState({ overlayAlert: 'download' });
+	};
 
 	handleHomeReset = ()=> {
 		wrapper.current.scrollTo(0, 0);
@@ -95,99 +118,11 @@ class App extends Component {
 		this.props.history.push('/');
 	};
 
-	handleSideNavUploadItem = (obj)=> {
-		console.log('handleSideNavUploadItem()', obj);
-
-		if (obj.selected && this.state.uploadID !== obj.id) {
-			this.setState({
-				uploadID   : obj.id,
-				pageID     : 0,
-				artboardID : 0
-			});
-
-			this.handlePage('proj/' + obj.id + '/' + urlSlugTitle(obj.title));
-		}
-	};
-
-	handleSideNavPageItem = (obj)=> {
-		console.log('handleSideNavPageItem()', obj);
-
-		if (obj.selected) {
-			let formData = new FormData();
-			formData.append('action', 'ARTBOARDS');
-			formData.append('upload_id', this.state.uploadID);
-			formData.append('page_id', obj.id);
-			formData.append('slices', '0');
-			formData.append('offset', '0');
-			formData.append('length', '-1');
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					console.log('ARTBOARDS', response.data);
-
-					const artboard = response.data.artboards[0];
-					formData.append('action', 'ADD_VIEW');
-					formData.append('page_id', obj.id);
-					axios.post('https://api.designengine.ai/system.php', formData)
-						.then((response) => {
-							console.log('ADD_VIEW', response.data);
-							this.props.history.push('/artboard/' + obj.uploadID + '/' + obj.id + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
-							this.setState({
-								uploadID   : obj.uploadID,
-								pageID     : obj.id,
-								artboardID : artboard.id
-							});
-						}).catch((error) => {
-					});
-				}).catch((error) => {
-			});
-
-		} else {
-			this.setState({ pageID : 0 });
-		}
-	};
-
-	handleSideNavArtboardItem = (obj)=> {
-		console.log('handleSideNavArtboardItem()', obj);
-		let formData = new FormData();
-		formData.append('action', 'ADD_VIEW');
-		formData.append('page_id', obj.pageID);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-				console.log('ADD_VIEW', response.data);
-				this.props.history.push('/artboard/' + obj.uploadID + '/' + obj.pageID + '/' + obj.id + '/' + urlSlugTitle(obj.title));
-				this.setState({
-					uploadID   : obj.uploadID,
-					pageID     : obj.pageID,
-					artboardID : obj.id
-				});
-			}).catch((error) => {
-		});
-	};
-
-	handleSideNavSliceItem = (obj)=> {
-		console.log('handleSideNavSliceItem()', obj);
-// 		this.props.history.push('/artboard/' + this.state.pageID + '/' + this.state.artboardID + '/' + obj.id);
-// 		this.setState({ sliceID : obj.id });
-	};
-
-	handleArtboardClicked = (artboard)=> {
-		console.log('handleArtboardClicked()', artboard);
-
-		let formData = new FormData();
-		formData.append('action', 'ADD_VIEW');
-		formData.append('page_id', artboard.pageID);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-				console.log('ADD_VIEW', response.data);
-				this.props.history.push('/artboard/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
-				this.setState({
-					uploadID   : artboard.uploadID,
-					pageID     : artboard.pageID,
-					artboardID : artboard.id
-				});
-				wrapper.current.scrollTo(0, 0);
-			}).catch((error) => {
-		});
+	handleLogout = ()=> {
+		cookie.save('user_id', '0', { path : '/' });
+		cookie.save('upload_id', '0', { path : '/' });
+		cookie.remove('user_email', { path : '/' });
+		window.location.href = '/';
 	};
 
 	handleOverlay = (overlayType, buttonType)=> {
@@ -206,24 +141,6 @@ class App extends Component {
 				window.location.reload();
 			}
 		}
-	};
-
-	handleAddOns = ()=> {
-		console.log('handleAddOns()');
-// 		this.setState({ overlayAlert: 'download' });
-	};
-
-	handleLogout = ()=> {
-		cookie.save('user_id', '0', { path : '/' });
-		cookie.save('upload_id', '0', { path : '/' });
-		cookie.remove('user_email', { path : '/' });
-		window.location.href = '/';
-
-	};
-
-	handleProcess = (state)=> {
-		wrapper.current.scrollTo(0, 0);
-		this.setState({ processing : (state === 0) });
 	};
 
 	handlePage = (url)=> {
@@ -257,8 +174,80 @@ class App extends Component {
 		}
 	};
 
-  render() {
+	handleProcess = (state)=> {
+		wrapper.current.scrollTo(0, 0);
+		this.setState({ processing : (state === 0) });
+	};
+
+	handleSideNavUploadItem = (upload)=> {
+		console.log('handleSideNavUploadItem()', upload);
+
+		if (upload.selected && this.state.uploadID !== upload.id) {
+			this.setState({
+				uploadID   : upload.id,
+				pageID     : 0,
+				artboardID : 0
+			});
+
+			this.handlePage('proj/' + upload.id + '/' + urlSlugTitle(upload.title));
+		}
+	};
+
+	handleSideNavPageItem = (page)=> {
+		console.log('handleSideNavPageItem()', page);
+
+		if (page.selected) {
+			let formData = new FormData();
+			formData.append('action', 'ARTBOARDS');
+			formData.append('upload_id', this.state.uploadID);
+			formData.append('page_id', page.id);
+			formData.append('slices', '0');
+			formData.append('offset', '0');
+			formData.append('length', '-1');
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response) => {
+					console.log('ARTBOARDS', response.data);
+
+					const artboard = response.data.artboards[0];
+					this.handleAddPageView(page.id);
+					this.props.history.push('/artboard/' + page.uploadID + '/' + page.id + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
+					this.setState({
+						uploadID   : page.uploadID,
+						pageID     : page.id,
+						artboardID : artboard.id
+					});
+				}).catch((error) => {
+			});
+
+		} else {
+			this.setState({ pageID : 0 });
+		}
+	};
+
+	handleSideNavArtboardItem = (artboard)=> {
+		console.log('handleSideNavArtboardItem()', artboard);
+
+		this.handleAddPageView(artboard.pageID);
+		this.props.history.push('/artboard/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
+		this.setState({
+			uploadID   : artboard.uploadID,
+			pageID     : artboard.pageID,
+			artboardID : artboard.id
+		});
+	};
+
+	handleSideNavSliceItem = (obj)=> {
+		console.log('handleSideNavSliceItem()', obj);
+// 		this.props.history.push('/artboard/' + this.state.pageID + '/' + this.state.artboardID + '/' + obj.id);
+// 		this.setState({ sliceID : obj.id });
+	};
+
+
+	render() {
   	console.log('App.state', this.state);
+
+  	const { uploadID, pageID, artboardID, sliceID } = this.state;
+  	const { processing } = this.state;
 
   	return (
     	<div className="site-wrapper">
@@ -273,16 +262,15 @@ class App extends Component {
 
 				    <SideNav
 					    userID={cookie.load('user_id')}
-					    uploadID={this.state.uploadID}
-					    pageID={this.state.pageID}
-					    artboardID={this.state.artboardID}
-					    sliceID={this.state.sliceID}
-					    processing={this.state.processing}
+					    uploadID={uploadID}
+					    pageID={pageID}
+					    artboardID={artboardID}
+					    sliceID={sliceID}
+					    processing={processing}
 					    onUploadItem={(obj)=> this.handleSideNavUploadItem(obj)}
 					    onPageItem={(obj)=> this.handleSideNavPageItem(obj)}
 					    onArtboardItem={(obj)=> this.handleSideNavArtboardItem(obj)}
 					    onSliceItem={(obj)=> this.handleSideNavSliceItem(obj)}
-					    onRegister={()=> this.setState({ overlayAlert: 'register' })}
 					    onLogout={()=> this.handleLogout()}
 					    onUpload={()=> this.handlePage('upload')}
 					    onPage={(url)=> this.handlePage(url)}
@@ -290,18 +278,18 @@ class App extends Component {
 
 				    <div className="content-wrapper" ref={wrapper}>
 					    <Switch>
-						    <Route exact path="/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
+						    <Route exact path="/" render={()=> <HomePage uploadID={uploadID} pageID={pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
 					      <Route exact path="/add-ons" render={()=> <AddOnsPage onPage={(url)=> this.handlePage(url)} />} />
 					      <Route exact path="/api" render={()=> <APIPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
 						    <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={(url)=> this.handlePage(url)} />} />
 						    <Route exact path="/explore" render={()=> <ExplorePage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
-						    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={this.state.uploadID} onPage={(url)=> this.handlePage(url)} />} />
+						    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={(url)=> this.handlePage(url)} />} />
 						    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} />} />
 					      <Route exact path="/mission" render={()=> <MissionPage />} />
 						    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={(state)=> this.handleProcess(state)} />} />
 					      <Route exact path="/profile" render={()=> <ProfilePage onPage={(url)=> this.handlePage(url)} />} />
 					      <Route exact path="/privacy" render={()=> <PrivacyPage />} />
-						    <Route path="/proj/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
+						    <Route path="/proj/" render={()=> <HomePage uploadID={uploadID} pageID={pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
 						    <Route exact path="/recover" render={()=> <RecoverPage onPage={(url)=> this.handlePage(url)} />} />
 						    <Route exact path="/recover/password" render={()=> <RecoverPage onPage={(url)=> this.handlePage(url)} />} />
 						    <Route exact path="/register" render={()=> <RegisterPage onPage={(url)=> this.handlePage(url)} />} />

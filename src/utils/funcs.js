@@ -4,16 +4,25 @@ export function capitalizeText(text, toLower) {
 	return ((toLower) ? text.toLowerCase().replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }) : text.replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }));
 }
 
-export function binaryClassName(condition, state1, state2, base) {
-	return((condition) ? ((base) ? base + ' ' : '') + state1 : ((base) ? base + ' ' : '') + state2);
-}
-
 export function hasBit(val, bit) {
 	return ((val & bit) === bit);
 }
 
 export function hiddenText(text, char='*') {
 	return (Array(text.length + 1).join(char));
+}
+
+export function idsFromPath() {
+	const pathname = window.location.pathname;
+	const artboardPath = /\/artboard\/\d+\/\d+\/\d+\/.*$/;
+	const projPath = /\/proj\/\d+\/.*$/;
+
+	return ({
+		uploadID   : (artboardPath.test(pathname)) ? pathname.match(/\/artboard\/(\d+)\/.*$/)[1] : (projPath.test(pathname)) ? pathname.match(/\/proj\/(\d+)\/.*$/)[1] : 0,
+		pageID     : (artboardPath.test(pathname)) ? pathname.match(/\/artboard\/\d+\/(\d+)\/.*$/)[1] : 0,
+		artboardID : (artboardPath.test(pathname)) ? pathname.match(/\/artboard\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
+		sliceID    : 0
+	});
 }
 
 export function isValidEmail(email) {

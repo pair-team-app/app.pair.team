@@ -224,18 +224,20 @@ class SideNav extends Component {
 	};
 
 	render() {
-		const { uploads, fetching } = this.state;
 		console.log('SideNav.render()', this.props, this.state);
+
+		const isExplore = (window.location.pathname.includes('/explore'));
+		const { uploads, fetching } = this.state;
 
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>
 				<div className="side-nav-top-wrapper">
 					<h3 className="side-nav-header"><Row vertical="center" style={{width:'100%'}}>
-						<Column flexGrow={1} horizontal="start">{(window.location.pathname.includes('/explore')) ? 'Explore' : 'Projects'}</Column>
+						<Column flexGrow={1} horizontal="start">{(isExplore) ? 'Explore' : 'Projects'}</Column>
 						<Column flexGrow={1} horizontal="end"><button className="tiny-button" onClick={()=> this.handleUpload()}>New</button></Column>
 					</Row></h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
-						{(cookie.load('user_id') !== '0' || (window.location.pathname.includes('/explore'))) ? (<div>
+						{(cookie.load('user_id') !== '0' || isExplore) ? (<div>
 								{(uploads.length === 0) ? <span className="side-nav-subtext">You don't have any projects yet!</span> : uploads.map((upload, i) => {
 									return (
 										<UploadTreeItem

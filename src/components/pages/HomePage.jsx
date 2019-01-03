@@ -11,8 +11,6 @@ import HomeExpo from '../elements/HomeExpo';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Popup from '../elements/Popup';
 
-import {binaryClassName} from "../../utils/funcs";
-
 class HomePage extends Component {
 	constructor(props) {
 		super(props);
@@ -137,7 +135,7 @@ class HomePage extends Component {
 			}
 		});
 
-		const btnClass = binaryClassName((fetching || artboards.length !== loadOffset), 'is-hidden', '', 'fat-button');
+		const btnClass = (fetching || artboards.length !== loadOffset) ? 'fat-button is-hidden' : 'fat-button';
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
