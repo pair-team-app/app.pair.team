@@ -272,7 +272,7 @@ class InspectorPage extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		console.log('componentDidUpdate()', prevProps.match.params.artboardID, this.props.match.params.artboardID);
+// 		console.log('componentDidUpdate()', prevProps.match.params.artboardID, this.props.match.params.artboardID);
 		if (this.props.match.params.pageID !== prevProps.match.params.pageID) {
 			this.refreshData();
 			return (null);
@@ -1137,7 +1137,7 @@ class InspectorPage extends Component {
 			offset.x += Math.round(50 + (artboard.meta.frame.size.width * scale));
 		}
 
-		console.log('InspectorPage.render()', (artboardsWrapper.current) ? artboardsWrapper.current.scrollTop : 0, (artboardsWrapper.current) ? artboardsWrapper.current.scrollLeft : 0, scale);
+// 		console.log('InspectorPage.render()', (artboardsWrapper.current) ? artboardsWrapper.current.scrollTop : 0, (artboardsWrapper.current) ? artboardsWrapper.current.scrollLeft : 0, scale);
 // 		console.log(window.performance.memory);
 
 

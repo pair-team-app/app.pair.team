@@ -262,57 +262,63 @@ class App extends Component {
 
   	return (
     	<div className="site-wrapper">
-		    <TopNav
-			    loadProfile={cookie.load('user_id') !== '0'}
-			    onHome={()=> this.handleHomeReset()}
-			    onPage={(url)=> this.handlePage(url)}
-			    onLogout={()=> this.handleLogout()}
-		    />
+		    {(/chrom(e|ium)/.test(navigator.userAgent.toLowerCase()))
+			    ? (<div>
+				    <TopNav
+					    loadProfile={cookie.load('user_id') !== '0'}
+					    onHome={()=> this.handleHomeReset()}
+					    onPage={(url)=> this.handlePage(url)}
+					    onLogout={()=> this.handleLogout()}
+				    />
 
-		    <SideNav
-			    userID={cookie.load('user_id')}
-			    uploadID={this.state.uploadID}
-			    pageID={this.state.pageID}
-			    artboardID={this.state.artboardID}
-			    sliceID={this.state.sliceID}
-			    processing={this.state.processing}
-			    onUploadItem={(obj)=> this.handleSideNavUploadItem(obj)}
-			    onPageItem={(obj)=> this.handleSideNavPageItem(obj)}
-			    onArtboardItem={(obj)=> this.handleSideNavArtboardItem(obj)}
-			    onSliceItem={(obj)=> this.handleSideNavSliceItem(obj)}
-			    onRegister={()=> this.setState({ overlayAlert: 'register' })}
-			    onLogout={()=> this.handleLogout()}
-			    onUpload={()=> this.handlePage('upload')}
-			    onPage={(url)=> this.handlePage(url)}
-		    />
+				    <SideNav
+					    userID={cookie.load('user_id')}
+					    uploadID={this.state.uploadID}
+					    pageID={this.state.pageID}
+					    artboardID={this.state.artboardID}
+					    sliceID={this.state.sliceID}
+					    processing={this.state.processing}
+					    onUploadItem={(obj)=> this.handleSideNavUploadItem(obj)}
+					    onPageItem={(obj)=> this.handleSideNavPageItem(obj)}
+					    onArtboardItem={(obj)=> this.handleSideNavArtboardItem(obj)}
+					    onSliceItem={(obj)=> this.handleSideNavSliceItem(obj)}
+					    onRegister={()=> this.setState({ overlayAlert: 'register' })}
+					    onLogout={()=> this.handleLogout()}
+					    onUpload={()=> this.handlePage('upload')}
+					    onPage={(url)=> this.handlePage(url)}
+				    />
 
-		    <div className="content-wrapper" ref={wrapper}>
-			    <Switch>
-				    <Route exact path="/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
-			      <Route exact path="/add-ons" render={()=> <AddOnsPage onPage={(url)=> this.handlePage(url)} />} />
-			      <Route exact path="/api" render={()=> <APIPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
-				    <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={(url)=> this.handlePage(url)} />} />
-				    <Route exact path="/explore" render={()=> <ExplorePage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
-				    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={this.state.uploadID} onPage={(url)=> this.handlePage(url)} />} />
-				    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} />} />
-			      <Route exact path="/mission" render={()=> <MissionPage />} />
-				    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={(state)=> this.handleProcess(state)} />} />
-			      <Route exact path="/profile" render={()=> <ProfilePage onPage={(url)=> this.handlePage(url)} />} />
-			      <Route exact path="/privacy" render={()=> <PrivacyPage />} />
-				    <Route path="/proj/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
-				    <Route exact path="/recover" render={()=> <RecoverPage onPage={(url)=> this.handlePage(url)} />} />
-				    <Route exact path="/recover/password" render={()=> <RecoverPage onPage={(url)=> this.handlePage(url)} />} />
-				    <Route exact path="/register" render={()=> <RegisterPage onPage={(url)=> this.handlePage(url)} />} />
-			      <Route exact path="/terms" render={()=> <TermsPage />} />
-			      <Route render={()=> <Status404Page />} />
-			    </Switch>
+				    <div className="content-wrapper" ref={wrapper}>
+					    <Switch>
+						    <Route exact path="/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
+					      <Route exact path="/add-ons" render={()=> <AddOnsPage onPage={(url)=> this.handlePage(url)} />} />
+					      <Route exact path="/api" render={()=> <APIPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
+						    <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={(url)=> this.handlePage(url)} />} />
+						    <Route exact path="/explore" render={()=> <ExplorePage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
+						    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={this.state.uploadID} onPage={(url)=> this.handlePage(url)} />} />
+						    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} />} />
+					      <Route exact path="/mission" render={()=> <MissionPage />} />
+						    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={(state)=> this.handleProcess(state)} />} />
+					      <Route exact path="/profile" render={()=> <ProfilePage onPage={(url)=> this.handlePage(url)} />} />
+					      <Route exact path="/privacy" render={()=> <PrivacyPage />} />
+						    <Route path="/proj/" render={()=> <HomePage uploadID={this.state.uploadID} pageID={this.state.pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />
+						    <Route exact path="/recover" render={()=> <RecoverPage onPage={(url)=> this.handlePage(url)} />} />
+						    <Route exact path="/recover/password" render={()=> <RecoverPage onPage={(url)=> this.handlePage(url)} />} />
+						    <Route exact path="/register" render={()=> <RegisterPage onPage={(url)=> this.handlePage(url)} />} />
+					      <Route exact path="/terms" render={()=> <TermsPage />} />
+					      <Route render={()=> <Status404Page />} />
+					    </Switch>
 
-			    <BottomNav wrapperHeight={(wrapper.current) ? wrapper.current.clientHeight : 0} onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />
-		    </div>
+					    <BottomNav wrapperHeight={(wrapper.current) ? wrapper.current.clientHeight : 0} onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />
+				    </div>
 
-		    {(this.state.overlayAlert === 'payment') && (
-			    <StripeOverlay onClick={(buttonType)=> this.handleOverlay('download', buttonType)} />
-		    )}
+				    {(this.state.overlayAlert === 'payment') && (
+					    <StripeOverlay onClick={(buttonType)=> this.handleOverlay('download', buttonType)} />
+				    )}
+				    </div>)
+			    : (<div className="unsupported-browser">
+				      This site best viewed in Chrome.
+			      </div>)}
 	    </div>
     );
   }

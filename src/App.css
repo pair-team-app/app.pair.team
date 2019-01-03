@@ -4,6 +4,10 @@
 	height: 100%;
 }
 
+.unsupported-browser {
+	text-align: center;
+}
+
 .content-wrapper {
 	position: fixed;
 	top: 58px;
