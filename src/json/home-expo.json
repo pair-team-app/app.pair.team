@@ -3,7 +3,7 @@
     "id": 1,
     "title": "Expo I",
     "image": "/images/home-expo_01.png",
-    "url": "artboard/1/1/1/notifications"
+    "url": "artboard/2/41/404/notification-illustration"
   }, {
     "id": 2,
     "title": "Expo II",
@@ -13,13 +13,13 @@
     "id": 3,
     "title": "Expo III",
     "image": "/images/home-expo_03.png",
-    "url": "artboard/36/153/1186/home"
+    "url": "artboard/3/65/611/board"
   }],
   "loggedOut" : [{
     "id": 1,
     "title": "Expo I",
     "image": "/images/home-expo_01.png",
-    "url": "artboard/1/1/1/notifications"
+    "url": "artboard/2/41/404/notification-illustration"
   }, {
     "id": 2,
     "title": "Expo II",
@@ -29,6 +29,6 @@
     "id": 3,
     "title": "Expo III",
     "image": "/images/home-expo_03.png",
-    "url": "artboard/36/153/1186/home"
+    "url": "artboard/3/65/611/board"
   }]
 }
