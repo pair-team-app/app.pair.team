@@ -9,9 +9,7 @@ import { Row } from 'simple-flexbox';
 
 import HomeExpo from '../elements/HomeExpo';
 import ExploreArtboardGrid from '../elements/ExploreArtboardGrid';
-
 import { appendExploreArtboards } from '../../redux/actions';
-
 import { isUserLoggedIn } from '../../utils/funcs';
 
 
@@ -94,6 +92,7 @@ class ExplorePage extends Component {
 						uploadID  : artboard.upload_id,
 						title     : artboard.title,
 						pageTitle : artboard.page_title,
+						system    : artboard.system,
 						type      : artboard.type,
 						filename  : artboard.filename,
 						meta      : JSON.parse(artboard.meta),

@@ -92,6 +92,7 @@ class HomePage extends Component {
 									id        : item.id,
 									pageID    : item.page_id,
 									uploadID  : item.upload_id,
+									system    : item.system,
 									title     : item.title,
 									pageTitle : item.page_title,
 									type      : item.type,
@@ -127,6 +128,7 @@ class HomePage extends Component {
 						<ArtboardItem
 							title={artboard.title}
 							image={artboard.filename}
+							avatar={artboard.system.avatar}
 							onClick={() => this.props.onArtboardClicked(artboard)} />
 					</Column>
 				);

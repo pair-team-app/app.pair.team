@@ -12,19 +12,20 @@ const mapStateToProps = (state)=> {
 	return ({ artboards : state.exploreArtboards });
 };
 
-const ExploreArtboardGrid = ({ artboards })=> (
-	<Row horizontal="space-between" className="explore-artboard-grid" style={{flexWrap:'wrap'}}>
-		{artboards.map((artboard, i) => {
+function ExploreArtboardGrid(props) {
+	return (<Row horizontal="space-between" className="explore-artboard-grid" style={{ flexWrap : 'wrap' }}>
+		{props.artboards.map((artboard, i) => {
 			return (
 				<Column key={i}>
 					<ArtboardItem
 						title={artboard.title}
 						image={artboard.filename}
-						onClick={()=> this.props.onClick(artboard)} />
+						avatar={artboard.system.avatar}
+						onClick={() => props.onClick(artboard)} />
 				</Column>
 			);
 		})}
-	</Row>
-);
+	</Row>);
+}
 
 export default connect(mapStateToProps)(ExploreArtboardGrid);
