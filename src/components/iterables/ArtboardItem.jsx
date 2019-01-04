@@ -18,7 +18,7 @@ class ArtboardItem extends Component {
 	static getDerivedStateFromProps(nextProps) {
 		return ({
 			title : (nextProps.title) ? (nextProps.title.length > 27) ? (nextProps.title.substring(0, 26) + '…') : nextProps.title : null,
-			image : (nextProps.image) ? (nextProps.image.includes('@3x')) ? nextProps.image.replace('@3x', '@0.25x') : nextProps.image + '@0.25x.png' : null
+			image : (nextProps.image) ? (!nextProps.image.includes('@')) ? nextProps.image + '@0.25x.png' : nextProps.image : null
 		});
 	}
 

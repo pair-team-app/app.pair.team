@@ -1,6 +1,6 @@
 
-import { hasBit } from '../../utils/funcs';
-import { USER_PROFILE_ERROR, USER_PROFILE_UPDATED } from "../../consts/action-types";
+//import { hasBit } from '../../utils/funcs';
+import { USER_PROFILE_UPDATED } from "../../consts/action-types";
 
 export function userProfileUpdateErrorMiddleware({ dispatch }) {
 	return (function(next) {

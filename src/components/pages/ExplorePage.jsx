@@ -95,7 +95,7 @@ class ExplorePage extends Component {
 						title     : artboard.title,
 						pageTitle : artboard.page_title,
 						type      : artboard.type,
-						filename  : artboard.filename.replace('@3x.png', ''),
+						filename  : artboard.filename,
 						meta      : JSON.parse(artboard.meta),
 						added     : artboard.added,
 						selected  : false
