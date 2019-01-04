@@ -65,7 +65,7 @@ class ProfilePage extends Component {
 	}
 
 	onDrop(files) {
-		console.log('onDrop()', files);
+		console.log('ProfilePage.onDrop()', files);
 
 		this.setState({ files : files });
 
@@ -102,7 +102,7 @@ class ProfilePage extends Component {
 
 
 	onProfileUpdate = ()=> {
-		console.log('onProfileUpdate()', this.state);
+		console.log('ProfilePage.onProfileUpdate()', this.state);
 
 		const { avatar, username, email, password } = this.state;
 		const { usernameValid, emailValid, passwordValid } = this.state;
@@ -185,7 +185,7 @@ class ProfilePage extends Component {
 	validateFields = (key, val)=> {
 		let state = this.state;
 		Object.keys(state).forEach((k, i) => {
-// 			console.log('onProfileUpdate()', k, key, val);
+// 			console.log('validateFields()', k, key, val);
 			if (k === key) {
 				state[key] = val;
 			}
@@ -197,7 +197,7 @@ class ProfilePage extends Component {
 		const emailValid = isValidEmail(email);
 		const passwordValid = true;//(password.length > 0);
 
-		console.log('validateFields()', state);
+		console.log('ProfilePage.validateFields()', state);
 
 		this.setState({
 			username      : (usernameValid) ? username : (username.includes('@')) ? 'Usernames cannot contain \'@\'' : 'Invalid Username',

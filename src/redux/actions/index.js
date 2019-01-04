@@ -59,29 +59,17 @@ export function updateUserProfile(payload) {
 				console.log('updateUserProfile()=> UPDATE_PROFILE', response.data);
 
 				const status = parseInt(response.data.status, 16);
-				if (status === 0x00) {
-					const { avatar, username, email } = response.data.user;
-					dispatch({
-						type    : USER_PROFILE_UPDATED,
-						payload : {
-							status   : status,
-							avatar   : avatar,
-							username : username,
-							email    : email
-						}
-					});
+				const { avatar, username, email } = response.data.user;
 
-				} else {
-					dispatch({
-						type    : USER_PROFILE_ERROR,
-						payload : {
-							status   : status,
-							avatar   : payload.avatar,
-							username : (hasBit(status, 0x01)) ? 'Username Already in Use' : payload.user,
-							email    : (hasBit(status, 0x10)) ? 'Email Already in Use' : payload.email,
-						}
-					});
-				}
+				dispatch({
+					type    : (status === 0x00) ? USER_PROFILE_UPDATED : USER_PROFILE_ERROR,
+					payload : {
+						status   : status,
+						avatar   : avatar,
+						username : (hasBit(status, 0x01)) ? 'Username Already in Use' : username,
+						email    : (hasBit(status, 0x10)) ? 'Email Already in Use' : email
+					}
+				});
 			}).catch((error) => {
 		});
 	});
