@@ -80,7 +80,7 @@ class UploadTreeItem extends Component {
 					<img src={sketchIcon} className="upload-tree-item-icon" alt="Icon" />
 					<div className={textClass} onClick={()=> this.props.onClick()}>{this.state.title}</div>
 				</Row>
-				{(selected) && (<div className="upload-tree-item-artboards">
+				{(selected) && (<div className="upload-tree-item-pages">
 					{pages.map((page, i)=> {
 						return (
 							<PageTreeItem

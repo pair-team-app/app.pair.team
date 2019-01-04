@@ -13,6 +13,7 @@ import { isUserLoggedIn } from '../../utils/funcs';
 const wrapper = React.createRef();
 const scrollWrapper = React.createRef();
 
+
 class SideNav extends Component {
 	constructor(props) {
 		super(props);
@@ -23,8 +24,6 @@ class SideNav extends Component {
 			artboardID : this.props.artboardID,
 			sliceID    : this.props.sliceID,
 			uploads    : [],
-			pages      : [],
-			artboards  : [],
 			loadOffset : 0,
 			loadAmt    : (isUserLoggedIn() && !window.location.pathname.includes('/explore')) ? 666 : 10,
 			fetching   : false
@@ -37,7 +36,6 @@ class SideNav extends Component {
 
 	componentDidUpdate(prevProps) {
 // 		console.log('SideNav.componentDidUpdate()', prevProps, this.props, this.state);
-// 		if (this.props.uploadID === 0 && (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID)) {
 		if (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID) {
 			this.onTreeEffect();
 		}
@@ -65,6 +63,38 @@ class SideNav extends Component {
 		});
 
 		this.setState({ uploads : uploads });
+	};
+
+	fetchPageArtboards = (uploads)=> {
+		console.log('fetchPageArtboards()', uploads);
+
+		uploads.forEach((upload)=> {
+			upload.pages.forEach((page)=> {
+				if (page.id === this.props.pageID) {
+					let formData = new FormData();
+					formData.append('action', 'ARTBOARD_NAMES');
+					formData.append('page_id', this.props.pageID);
+					axios.post('https://api.designengine.ai/system.php', formData)
+						.then((response) => {
+							console.log('ARTBOARD_NAMES', response.data);
+							page.artboards = response.data.artboards.map((artboard) => ({
+								id       : artboard.id,
+								pageID   : artboard.page_id,
+								uploadID : artboard.upload_id,
+								title    : artboard.title,
+								filename : artboard.filename,
+								total    : artboard.total,
+								meta     : JSON.parse(artboard.meta),
+								added    : artboard.added,
+								selected : (this.props.artboardID === artboard.id)
+							}));
+
+							this.setState({ uploads : uploads });
+						}).catch((error) => {
+					});
+				}
+			});
+		});
 	};
 
 
@@ -103,6 +133,10 @@ class SideNav extends Component {
 					}))
 				}));
 
+				if (this.props.artboardID !== 0) {
+					this.fetchPageArtboards(uploads);
+				}
+
 				this.setState({
 					uploads     : prevUploads.concat(uploads),
 					loadOffset  : this.state.loadOffset + this.state.loadAmt,
@@ -132,13 +166,14 @@ class SideNav extends Component {
 
 		if (upload.selected) {
 			cookie.save('upload_id', upload.id, { path : '/' });
+
+		} else {
+			wrapper.current.scrollTo(0, 0);
 		}
 
 		this.setState({ uploads : uploads });
 
-// 		wrapper.current.scrollTo(0, 0);
-
-		if (window.location.pathname === '/' || window.location.pathname.includes('/proj')) {
+		if (window.location.pathname === '/' || window.location.pathname === '/explore' || window.location.pathname.includes('/proj')) {
 			this.props.onUploadItem(upload);
 		}
 	};
@@ -160,27 +195,7 @@ class SideNav extends Component {
 
 		if (page.selected) {
 			if (!window.location.pathname.includes('/explore')) {
-				let formData = new FormData();
-				formData.append('action', 'ARTBOARD_NAMES');
-				formData.append('page_id', page.id);
-				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response) => {
-						//console.log('ARTBOARD_NAMES', response.data);
-						page.artboards = response.data.artboards.map((artboard) => ({
-							id       : artboard.id,
-							pageID   : artboard.page_id,
-							uploadID : artboard.upload_id,
-							title    : artboard.title,
-							filename : artboard.filename,
-							total    : artboard.total,
-							meta     : JSON.parse(artboard.meta),
-							added    : artboard.added,
-							selected : (this.props.artboardID === artboard.id)
-						}));
-
-						this.setState({ uploads : uploads });
-					}).catch((error) => {
-				});
+				this.fetchPageArtboards(uploads);
 			}
 
 			this.props.onPageItem(page);
@@ -191,23 +206,22 @@ class SideNav extends Component {
 	};
 
 	handleArtboardClick = (artboard)=> {
-		let artboards = [...this.state.artboards];
-		artboards.forEach(function(item, i) {
-			if (item.id === artboard.id) {
-				if (!item.selected) {
-					item.selected = true;
-				}
-
-			} else {
-				item.selected = false;
+		let uploads = [...this.state.uploads];
+		uploads.forEach((upload)=> {
+			if (upload.selected) {
+				upload.pages.forEach((page) => {
+					if (page.selected) {
+						page.artboards.forEach((item) => {
+							if (item.id === artboard.id) {
+								item.selected = true;
+							}
+						});
+					}
+				});
 			}
 		});
 
-		this.setState({
-			artboardID : artboard.id,
-			artboards  : artboards
-		});
-
+		this.setState({ uploads : uploads });
 		this.props.onArtboardItem(artboard)
 	};
 
@@ -226,7 +240,7 @@ class SideNav extends Component {
 	};
 
 	render() {
-// 		console.log('SideNav.render()', this.props, this.state);
+		console.log('SideNav.render()', this.props, this.state);
 
 		const isExplore = (window.location.pathname.includes('/explore'));
 		const { uploads, fetching } = this.state;

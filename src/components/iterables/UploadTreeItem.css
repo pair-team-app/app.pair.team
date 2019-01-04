@@ -26,9 +26,15 @@
 	text-decoration: underline;
 }
 
-.upload-tree-item-artboards {
+.upload-tree-item-pages {
 	margin: 12px 0 0 40px;
 }
+
+.upload-tree-item-list {
+	margin: 12px 0 0 40px;
+}
+
+
 
 
 .page-tree-item {
