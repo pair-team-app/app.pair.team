@@ -6,6 +6,8 @@ import { limitString } from '../../utils/funcs';
 import defaultAvatar from '../../images/default-avatar.png';
 import sketchIcon from '../../images/icon-sketch.png';
 
+const TITLE_CHAR_LIMIT = 27;
+
 
 class ArtboardItem extends Component {
 	constructor(props) {
@@ -16,7 +18,7 @@ class ArtboardItem extends Component {
 
 	static getDerivedStateFromProps(nextProps) {
 		return ({
-			title : (nextProps.title) ? limitString(nextProps.title, 27) : null,
+			title : (nextProps.title) ? limitString(nextProps.title, TITLE_CHAR_LIMIT) : null,
 			image : (nextProps.image) ? (!nextProps.image.includes('@')) ? nextProps.image + '@0.25x.png' : nextProps.image : null
 		});
 	}

@@ -4,41 +4,42 @@ import './UploadTreeItem.css';
 
 import { Row } from 'simple-flexbox';
 
-import sketchIcon from '../../images/icon-sketch.png';
 import { limitString } from '../../utils/funcs';
+import sketchIcon from '../../images/icon-sketch.png';
+
+const UPLOAD_CHAR_LIMIT = 26;
+const PAGE_CHAR_LIMIT = 27;
+const ARTBOARD_CHAR_LIMIT = 21;
+
 
 function ArtboardTreeItem(props) {
 	const textClass = (props.selected) ? 'artboard-tree-item-text page-tree-item-text-selected' : 'artboard-tree-item-text';
-	const title = limitString(props.title, 24);
 
 	return (
 		<div className="artboard-tree-item">
-			<div className={textClass} onClick={()=> props.onClick()}>{title}</div>
+			<div className={textClass} onClick={()=> props.onClick()}>{limitString(props.title, ARTBOARD_CHAR_LIMIT)}</div>
 		</div>
 	);
 }
 
 function PageTreeItem(props) {
 	const textClass = (props.selected) ? 'page-tree-item-text page-tree-item-text-selected' : 'page-tree-item-text';
-	const title = limitString(props.title, 27);
-
-	const artboards = props.artboards.map((artboard, i)=> {
-		return (
-			<ArtboardTreeItem
-				key={artboard.id}
-				title={artboard.title}
-				description=""
-				slices={artboard.slices}
-				selected={artboard.selected}
-				onClick={()=> props.onArtboardClick(artboard)} />
-		);
-	});
 
 	return (
 		<div className="page-tree-item">
-			<div className={textClass} onClick={()=> props.onClick()}>{title}</div>
+			<div className={textClass} onClick={()=> props.onClick()}>{limitString(props.title, PAGE_CHAR_LIMIT)}</div>
 			{(props.selected) && (<div className="page-tree-item-artboards">
-				{artboards}
+				{props.artboards.map((artboard, i)=> {
+					return (
+						<ArtboardTreeItem
+							key={artboard.id}
+							title={artboard.title}
+							description=""
+							slices={artboard.slices}
+							selected={artboard.selected}
+							onClick={()=> props.onArtboardClick(artboard)} />
+					);
+				})}
 			</div>)}
 		</div>
 	);
@@ -47,7 +48,7 @@ function PageTreeItem(props) {
 // function SliceTreeItem(props) {
 // 	const icon = (props.type === 'slice') ? '/images/layer-slice' : (props.type === 'hotspot') ? '/images/layer-hotspot' : (props.type === 'textfield') ? '/images/layer-textfield' : '/images/layer-background';
 // 	const textClass = (props.selected) ? 'slice-tree-item-text slice-tree-item-text-selected' : 'slice-tree-item-text';
-// 	const title = limitString(props.title, 24);
+// 	const title = limitString(props.title, 17);
 //
 // 	return (
 // 		<div className="slice-tree-item" onClick={()=> props.onClick()}>
@@ -62,32 +63,16 @@ class UploadTreeItem extends Component {
 		super(props);
 
 		this.state = {
-			title : this.props.title
 		};
 	}
 
-	componentDidMount() {
-	}
-
 	static getDerivedStateFromProps(nextProps) {
-		return ({ title : limitString(nextProps.title, 26) });
+		return ({ title : limitString(nextProps.title, UPLOAD_CHAR_LIMIT) });
 	}
 
 	render() {
+		const { selected, pages } = this.props;
 		const textClass = (this.props.selected) ? 'upload-tree-item-text upload-tree-item-text-selected' : 'upload-tree-item-text';
-
-		const pages = this.props.pages.map((page, i)=> {
-			return (
-				<PageTreeItem
-					key={i}
-					title={page.title}
-					description={page.description}
-					artboards={page.artboards}
-					selected={page.selected}
-					onClick={()=> this.props.onPageClick(page)}
-					onArtboardClick={(artboard)=> this.props.onArtboardClick(artboard)} />
-			);
-		});
 
 		return (
 			<div className="upload-tree-item">
@@ -95,8 +80,19 @@ class UploadTreeItem extends Component {
 					<img src={sketchIcon} className="upload-tree-item-icon" alt="Icon" />
 					<div className={textClass} onClick={()=> this.props.onClick()}>{this.state.title}</div>
 				</Row>
-				{(this.props.selected) && (<div className="upload-tree-item-artboards">
-					{pages}
+				{(selected) && (<div className="upload-tree-item-artboards">
+					{pages.map((page, i)=> {
+						return (
+							<PageTreeItem
+								key={i}
+								title={page.title}
+								description={page.description}
+								artboards={page.artboards}
+								selected={page.selected}
+								onClick={()=> this.props.onPageClick(page)}
+								onArtboardClick={(artboard)=> this.props.onArtboardClick(artboard)} />
+						);
+					})}
 				</div>)}
 			</div>
 		);
