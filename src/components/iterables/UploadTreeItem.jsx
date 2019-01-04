@@ -1,9 +1,6 @@
 
 import React, { Component } from 'react';
 import './UploadTreeItem.css';
-import './PageTreeItem.css';
-import './ArtboardTreeItem.css';
-import './SliceTreeItem.css';
 
 import { Row } from 'simple-flexbox';
 
