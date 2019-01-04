@@ -56,7 +56,7 @@ class ExplorePage extends Component {
 				const artboards = response.data.artboards.map((artboard) => {
 					this.queue.loadFile({
 						id  : artboard.id,
-						src : artboard.filename.replace('@3x', '@0.25x')
+						src : artboard.filename + '@0.25x.png'
 					});
 
 					return ({
