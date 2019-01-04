@@ -5,7 +5,7 @@ import './ExploreArtboardGrid.css';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
-import ArtboardItem from "../iterables/ArtboardItem";
+import ArtboardItem from '../iterables/ArtboardItem';
 
 
 const mapStateToProps = (state)=> {

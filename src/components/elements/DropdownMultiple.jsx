@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import FontAwesome from 'react-fontawesome';
-import onClickOutside from "react-onclickoutside";
+import onClickOutside from 'react-onclickoutside';
 import './Dropdown.css';
 
 class DropdownMultiple extends Component{

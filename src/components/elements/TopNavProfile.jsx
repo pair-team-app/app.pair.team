@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import './TopNavProfile.css';
 
 import FontAwesome from 'react-fontawesome';
-import onClickOutside from "react-onclickoutside";
+import onClickOutside from 'react-onclickoutside';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import { fetchUserProfile } from '../../redux/actions';
-import { isUserLoggedIn } from "../../utils/funcs";
+import { isUserLoggedIn } from '../../utils/funcs';
 
 
 const mapStateToProps = (state)=> {

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './Dropdown.css';
 
-import onClickOutside from "react-onclickoutside";
+import onClickOutside from 'react-onclickoutside';
 import { Column, Row } from 'simple-flexbox';
 
 

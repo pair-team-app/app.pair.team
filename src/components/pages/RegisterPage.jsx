@@ -2,12 +2,12 @@
 import React, { Component } from 'react';
 import './RegisterPage.css';
 
-import axios from "axios/index";
-import cookie from "react-cookies";
+import axios from 'axios/index';
+import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
 import { hasBit, isValidEmail } from '../../utils/funcs';
-import { trackEvent } from "../../utils/tracking";
+import { trackEvent } from '../../utils/tracking';
 
 const passwordTextfield = React.createRef();
 

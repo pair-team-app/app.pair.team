@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import './LoginPage.css';
 
-import axios from "axios/index";
-import cookie from "react-cookies";
+import axios from 'axios/index';
+import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
 import { hasBit, isValidEmail } from '../../utils/funcs';

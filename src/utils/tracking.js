@@ -1,5 +1,5 @@
 
-import ReactPixel from "react-facebook-pixel";
+import ReactPixel from 'react-facebook-pixel';
 
 export function initTracker(email) {
 	email = (email || 'tracking@designengine.ai');

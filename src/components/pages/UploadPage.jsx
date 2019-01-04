@@ -13,7 +13,7 @@ import Dropdown from '../elements/Dropdown';
 import Popup from '../elements/Popup';
 import RadioButton from '../elements/RadioButton';
 
-import { isValidEmail } from "../../utils/funcs";
+import { isValidEmail } from '../../utils/funcs';
 
 const dzWrapper = React.createRef();
 const titleTextfield = React.createRef();

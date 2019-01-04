@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './ExplorePage.css';
 
-import axios from "axios/index";
+import axios from 'axios/index';
 import createjs from 'preload-js';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
@@ -10,7 +10,7 @@ import { Row } from 'simple-flexbox';
 import HomeExpo from '../elements/HomeExpo';
 import ExploreArtboardGrid from '../elements/ExploreArtboardGrid';
 
-import { appendExploreArtboards } from "../../redux/actions";
+import { appendExploreArtboards } from '../../redux/actions';
 
 import { isUserLoggedIn } from '../../utils/funcs';
 

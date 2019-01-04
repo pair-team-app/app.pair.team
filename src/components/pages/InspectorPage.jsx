@@ -14,7 +14,7 @@ import Popup from '../elements/Popup';
 
 import { capitalizeText, isUserLoggedIn } from '../../utils/funcs.js';
 import { toCSS, toReactCSS } from '../../utils/langs.js';
-// import FontAwesome from "react-fontawesome";
+// import FontAwesome from 'react-fontawesome';
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();

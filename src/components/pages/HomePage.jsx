@@ -10,7 +10,7 @@ import HomeExpo from '../elements/HomeExpo';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Popup from '../elements/Popup';
 
-import { isUserLoggedIn } from "../../utils/funcs";
+import { isUserLoggedIn } from '../../utils/funcs';
 
 class HomePage extends Component {
 	constructor(props) {

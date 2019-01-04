@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import './ProfilePage.css';
 
-import axios from "axios/index";
-import cookie from "react-cookies";
+import axios from 'axios/index';
+import cookie from 'react-cookies';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';

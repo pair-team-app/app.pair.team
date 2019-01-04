@@ -14,7 +14,7 @@ import APIPage from './components/pages/APIPage';
 import ExplorePage from './components/pages/ExplorePage';
 import HomePage from './components/pages/HomePage';
 import InspectorPage from './components/pages/InspectorPage';
-import InviteTeamPage from "./components/pages/InviteTeamPage";
+import InviteTeamPage from './components/pages/InviteTeamPage';
 import LoginPage from './components/pages/LoginPage';
 import MissionPage from './components/pages/MissionPage';
 import ProfilePage from './components/pages/ProfilePage';
@@ -27,8 +27,8 @@ import UploadPage from './components/pages/UploadPage';
 
 import StripeOverlay from './components/elements/StripeOverlay';
 
-import { idsFromPath, urlSlugTitle } from "./utils/funcs";
-import { initTracker, trackEvent } from "./utils/tracking";
+import { idsFromPath, urlSlugTitle } from './utils/funcs';
+import { initTracker, trackEvent } from './utils/tracking';
 
 const wrapper = React.createRef();
 

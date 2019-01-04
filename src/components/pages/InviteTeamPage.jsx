@@ -2,15 +2,15 @@
 import React, { Component } from 'react';
 import './InviteTeamPage.css';
 
+import axios from 'axios/index';
+import cookie from 'react-cookies';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Row } from 'simple-flexbox';
-import cookie from "react-cookies";
-import axios from "axios/index";
 
 import Dropdown from '../elements/Dropdown';
 import Popup from '../elements/Popup';
 
-import { isValidEmail } from "../../utils/funcs";
+import { isValidEmail } from '../../utils/funcs';
 
 class InviteTeamPage extends Component {
 	constructor(props) {

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './RecoverPage.css';
 
-import axios from "axios/index";
+import axios from 'axios/index';
 import { Column, Row } from 'simple-flexbox';
 
 import { isValidEmail } from '../../utils/funcs';

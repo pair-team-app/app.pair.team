@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './BottomNav.css';
 
-import { isUserLoggedIn } from "../../utils/funcs";
+import { isUserLoggedIn } from '../../utils/funcs';
 
 class BottomNav extends Component {
 	constructor(props) {
