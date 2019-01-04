@@ -45,13 +45,13 @@ class Dropdown extends Component{
 		const items = list.map((item, i)=> {
 			let thumbImage = null;
 			if (item.title.match(/ios/i)) {
-				thumbImage = '/images/icon-ios12.png';
+				thumbImage = '/images/favicon-ios12.png';
 
 			} else if (item.title.match(/material/i)) {
-				thumbImage = '/images/icon-material.png';
+				thumbImage = '/images/favicon-material.png';
 
 			} else if (item.title.match(/android/i)) {
-				thumbImage = '/images/icon-android.png';
+				thumbImage = '/images/favicon-android.png';
 
 			} else if (item.title.match(/new/i)) {
 				thumbImage = '/images/plus-square.png';

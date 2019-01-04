@@ -4,7 +4,16 @@ import './TopNavProfile.css';
 
 import FontAwesome from 'react-fontawesome';
 import onClickOutside from "react-onclickoutside";
+import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
+
+import { fetchUserProfile } from '../../redux/actions';
+import { isUserLoggedIn } from "../../utils/funcs";
+
+
+const mapStateToProps = (state)=> {
+	return ({ profile : state.userProfile });
+};
 
 class TopNavProfile extends Component {
 	constructor(props) {
@@ -16,6 +25,15 @@ class TopNavProfile extends Component {
 	}
 
 	componentDidMount() {
+		if (isUserLoggedIn() && !this.props.profile) {
+			this.props.fetchUserProfile();
+		}
+	}
+
+	componentDidUpdate(prevProps) {
+		if (isUserLoggedIn() && !this.props.profile) {
+			this.props.fetchUserProfile();
+		}
 	}
 
 	handleClickOutside(e) {
@@ -34,12 +52,13 @@ class TopNavProfile extends Component {
 	};
 
 	render() {
+		const { avatar } = (this.props.profile) ? this.props.profile : 'http://cdn.designengine.ai/profiles/default-avatar.png';
 		const { bubble } = this.state;
 
 		return (
 			<div className="top-nav-profile">
 				<div className="top-nav-profile-wrapper"><Row vertical="center">
-					<img src={this.props.avatar} className="top-nav-profile-avatar" alt="Avatar" />
+					<img src={avatar} className="top-nav-profile-avatar" alt="Avatar" />
 					<FontAwesome name="caret-down" className="top-nav-profile-arrow" onClick={()=> this.setState({ bubble : !bubble })} />
 				</Row></div>
 
@@ -53,4 +72,4 @@ class TopNavProfile extends Component {
 	}
 }
 
-export default onClickOutside(TopNavProfile);
+export default connect(mapStateToProps, { fetchUserProfile })(onClickOutside(TopNavProfile));

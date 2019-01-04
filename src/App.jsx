@@ -254,7 +254,6 @@ class App extends Component {
 		    {(/chrom(e|ium)/.test(navigator.userAgent.toLowerCase()))
 			    ? (<div>
 				    <TopNav
-					    loadProfile={cookie.load('user_id') !== '0'}
 					    onHome={()=> this.handleHomeReset()}
 					    onPage={(url)=> this.handlePage(url)}
 					    onLogout={()=> this.handleLogout()}

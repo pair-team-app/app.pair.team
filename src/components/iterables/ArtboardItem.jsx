@@ -2,6 +2,10 @@
 import React, { Component } from 'react';
 import './ArtboardItem.css'
 
+import defaultAvatar from '../../images/default-avatar.png';
+import sketchIcon from '../../images/icon-sketch.png';
+
+
 class ArtboardItem extends Component {
 	constructor(props) {
 		super(props);
@@ -27,9 +31,9 @@ class ArtboardItem extends Component {
 				{(this.props.title !== '') && (<div>
 					{(image) && (<img className="artboard-item-image" src={image} alt={title} />)}
 					<div className="artboard-item-overlay" />
-					{(image) && (<img className="artboard-item-icon" src="/images/icon-sketch.png" alt="Icon" />)}
+					{(image) && (<img className="artboard-item-icon" src={sketchIcon} alt="Icon" />)}
 					{(image) && (<div className="artboard-item-details-wrapper">
-						<img className="artboard-item-avatar" src="/images/default-avatar.png" alt="Avatar" />
+						<img className="artboard-item-avatar" src={defaultAvatar} alt="Avatar" />
 						<div className="artboard-item-title">{title}</div>
 					</div>)}
 				</div>)}

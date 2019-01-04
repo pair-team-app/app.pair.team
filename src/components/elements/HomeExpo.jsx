@@ -2,8 +2,9 @@
 import React, { Component } from 'react';
 import './HomeExpo.css';
 
-import cookie from 'react-cookies';
 import {Row} from 'simple-flexbox';
+
+import { isUserLoggedIn } from "../../utils/funcs";
 
 import homeExpo from '../../json/home-expo.json';
 
@@ -17,7 +18,7 @@ class HomeExpo extends Component {
 	}
 
 	render() {
-		const items = (cookie.load('user_id') === '0') ? homeExpo.loggedOut : homeExpo.loggedIn;
+		const items = (isUserLoggedIn()) ? homeExpo.loggedIn : homeExpo.loggedOut;
 
 		return (
 			<div className="home-expo">

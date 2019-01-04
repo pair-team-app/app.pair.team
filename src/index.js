@@ -9,6 +9,8 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import store from './redux/store/index';
 
+window.store = store;
+
 
 ReactDOM.render(
 	<Provider store={store}>

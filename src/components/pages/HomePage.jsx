@@ -4,12 +4,13 @@ import './HomePage.css';
 
 import axios from 'axios';
 // import CopyToClipboard from 'react-copy-to-clipboard';
-import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
 import HomeExpo from '../elements/HomeExpo';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Popup from '../elements/Popup';
+
+import { isUserLoggedIn } from "../../utils/funcs";
 
 class HomePage extends Component {
 	constructor(props) {
@@ -148,7 +149,7 @@ class HomePage extends Component {
 					<Row horizontal="center"><button className={btnClass} onClick={()=> this.handleLoadNext()}>More</button></Row>
 				</div>)}
 
-				{(cookie.load('user_id') === '0') ? (<div>
+				{(!isUserLoggedIn()) ? (<div>
 					<Row><h3>Sign up or Login</h3></Row>
 					<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
 					<div style={{marginTop:'20px'}}>

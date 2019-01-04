@@ -8,6 +8,8 @@ import { Column, Row } from 'simple-flexbox';
 
 import UploadTreeItem from '../iterables/UploadTreeItem';
 
+import { isUserLoggedIn } from '../../utils/funcs';
+
 const wrapper = React.createRef();
 const scrollWrapper = React.createRef();
 
@@ -24,7 +26,7 @@ class SideNav extends Component {
 			pages      : [],
 			artboards  : [],
 			loadOffset : 0,
-			loadAmt    : (cookie.load('user_id') !== '0' && !window.location.pathname.includes('/explore')) ? 666 : 10,
+			loadAmt    : (isUserLoggedIn() && !window.location.pathname.includes('/explore')) ? 666 : 10,
 			fetching   : false
 		};
 	}
@@ -75,7 +77,7 @@ class SideNav extends Component {
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
-		formData.append('user_id', (window.location.pathname.includes('/explore') || cookie.load('user_id') === '0') ? '0' : cookie.load('user_id'));
+		formData.append('user_id', (window.location.pathname.includes('/explore') || !isUserLoggedIn()) ? '0' : cookie.load('user_id'));
 		formData.append('offset', this.state.loadOffset);
 		formData.append('length', this.state.loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
@@ -211,7 +213,7 @@ class SideNav extends Component {
 
 	handleInvite = ()=> {
 		cookie.save('msg', 'use this feature.', { path : '/' });
-		this.props.onPage((cookie.load('user_id') !== '0') ? 'invite-team' : 'login');
+		this.props.onPage((isUserLoggedIn()) ? 'invite-team' : 'login');
 	};
 
 	handleUpload = ()=> {
@@ -219,12 +221,12 @@ class SideNav extends Component {
 
 		let self = this;
 		setTimeout(function() {
-			self.props.onPage((cookie.load('user_id') === '0') ? 'login' : 'new');
+			self.props.onPage((!isUserLoggedIn()) ? 'login' : 'new');
 		}, 100);
 	};
 
 	render() {
-		console.log('SideNav.render()', this.props, this.state);
+// 		console.log('SideNav.render()', this.props, this.state);
 
 		const isExplore = (window.location.pathname.includes('/explore'));
 		const { uploads, fetching } = this.state;
@@ -237,7 +239,7 @@ class SideNav extends Component {
 						<Column flexGrow={1} horizontal="end"><button className="tiny-button" onClick={()=> this.handleUpload()}>New</button></Column>
 					</Row></h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
-						{(cookie.load('user_id') !== '0' || isExplore) ? (<div>
+						{(isUserLoggedIn() || isExplore) ? (<div>
 								{(uploads.length === 0) ? <span className="side-nav-subtext">You don't have any projects yet!</span> : uploads.map((upload, i) => {
 									return (
 										<UploadTreeItem
@@ -266,13 +268,13 @@ class SideNav extends Component {
 				</div>
 				<div className="side-nav-account-wrapper">
 					<h6>Account</h6>
-					{(cookie.load('user_id') !== '0') && (<div className="nav-link" onClick={() => this.props.onPage('profile')}>Profile</div>)}
-					{(cookie.load('user_id') === '0') && (<div>
+					{(isUserLoggedIn()) && (<div className="nav-link" onClick={() => this.props.onPage('profile')}>Profile</div>)}
+					{(!isUserLoggedIn()) && (<div>
 						<div className="nav-link" onClick={() => this.props.onPage('register')}>Sign Up</div>
 						<div className="nav-link" onClick={() => this.props.onPage('login')}>Login</div>
 					</div>)}
 
-					{(cookie.load('user_id') !== '0') && (<div className="nav-link" onClick={() => this.props.onLogout()}>Sign Out</div>)}
+					{(isUserLoggedIn()) && (<div className="nav-link" onClick={() => this.props.onLogout()}>Sign Out</div>)}
 				</div>
 			</div>
 		);

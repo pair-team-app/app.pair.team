@@ -40,7 +40,7 @@ class Popup extends Component {
 			this.timeline.restart();
 		}
 
-		const icon = (this.props.content.split('::')[0] === 'error') ? '/images/icon-error.png' : '/images/copy-code.svg';
+		const icon = (this.props.content.split('::')[0] === 'error') ? '/images/favicon-error.png' : '/images/copy-code.svg';
 
 		return (
 			<div className="popup-wrapper" ref={(div)=> this.wrapper = div}>

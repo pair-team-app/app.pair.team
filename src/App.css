@@ -80,12 +80,9 @@
 
 .button-disabled, .button-disabled:hover {
 	cursor: default;
-	/*background: none;*/
-	/*background-color: #9f9f9f;*/
-	/*background-image: none;*/
-	/*border-color: #9f9f9f;*/
-	/*color: #e9e9e9;*/
-	opacity : 0.75;
+	background: #57aa48 linear-gradient(-180deg, #69cd58, #57aa48 90%) -0.5em;
+	border: 1px solid #4e9500;
+	opacity : 0.85;
 }
 
 .page-link, .page-link a, .page-link a:active, .page-link a:link, .page-link a:visited, .page-link-small, .page-link-small a, .page-link-small a:active, .page-link-small a:link, .page-link-small a:visited {

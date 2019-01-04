@@ -31,6 +31,7 @@
     "react-scrollable-anchor": "^0.6.1",
     "react-stripe-elements": "^2.0.1",
     "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
     "simple-flexbox": "^1.2.0"
   },
   "scripts": {

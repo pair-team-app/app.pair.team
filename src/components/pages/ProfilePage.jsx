@@ -5,11 +5,23 @@ import './ProfilePage.css';
 import axios from "axios/index";
 import cookie from "react-cookies";
 import Dropzone from 'react-dropzone';
+import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import InputField from '../elements/InputField';
+import { updateUserProfile } from '../../redux/actions';
 import { hasBit, isValidEmail } from '../../utils/funcs';
 
+
+const mapStateToProps = (state)=> {
+	return ({ profile : state.userProfile });
+};
+
+function mapDispatchToProps(dispatch) {
+	return ({
+		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+	});
+}
 
 class ProfilePage extends Component {
 	constructor(props) {
@@ -25,30 +37,32 @@ class ProfilePage extends Component {
 			emailValid    : true,
 			passwordValid : true,
 			passMsg       : '',
+			status        : 0x00,
 			percent       : 0
 		};
 	}
 
 	componentDidMount() {
-		this.refreshData();
+		if (!this.props.profile) {
+			//this.props.fetchUserProfile();
+		}
 	}
 
-	refreshData = ()=> {
-		let formData = new FormData();
-		formData.append('action', 'PROFILE');
-		formData.append('user_id', cookie.load('user_id'));
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response)=> {
-				console.log('PROFILE', response.data);
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('ProfilePage.componentDidUpdate()', prevProps.profile, this.props.profile);
+		if (prevProps.profile !== this.props.profile) {
+			console.log('!!UPDATE!!');
+			const { avatar, username, email, status } = this.props.profile;
 
-				this.setState({
-					avatar   : response.data.avatar,
-					username : response.data.username,
-					email    : response.data.email
-				});
-			}).catch((error) => {
-		});
-	};
+			this.setState({
+				avatar        : avatar,
+				username      : username,
+				email         : email,
+				usernameValid : !hasBit(status, 0x01),
+				emailValid    : !hasBit(status, 0x10)
+			});
+		}
+	}
 
 	onDrop(files) {
 		console.log('onDrop()', files);
@@ -94,38 +108,39 @@ class ProfilePage extends Component {
 		const { usernameValid, emailValid, passwordValid } = this.state;
 
 		if (usernameValid && emailValid && passwordValid) {
-			let formData = new FormData();
-			formData.append('action', 'UPDATE_PROFILE');
-			formData.append('user_id', cookie.load('user_id'));
-			formData.append('username', username);
-			formData.append('email', email);
-			formData.append('filename', avatar);
-			formData.append('password', password);
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					console.log('UPDATE_PROFILE', response.data);
-					const status = parseInt(response.data.status, 16);
-// 					console.log('status', status, hasBit(status, 0x01), hasBit(status, 0x10));
-
-					if (status === 0x00) {
-						this.setState({
-							avatar   : response.data.user.avatar,
-							username : response.data.user.username,
-							email    : response.data.user.email,
-							passMsg  : ''
-						});
-
-					} else {
-						this.setState({
-							username      : hasBit(status, 0x01) ? 'Username Already in Use' : username,
-							email         : hasBit(status, 0x10) ? 'Email Already in Use' : email,
-							usernameValid : !hasBit(status, 0x01),
-							emailValid    : !hasBit(status, 0x10)
-						});
-					}
-
-				}).catch((error) => {
+			this.props.updateUserProfile({
+				avatar   : avatar,
+				username : username,
+				email    : email,
+				password : password
 			});
+
+// 			let formData = new FormData();
+// 			formData.append('action', 'UPDATE_PROFILE');
+// 			formData.append('user_id', cookie.load('user_id'));
+// 			formData.append('username', username);
+// 			formData.append('email', email);
+// 			formData.append('filename', avatar);
+// 			formData.append('password', password);
+// 			axios.post('https://api.designengine.ai/system.php', formData)
+// 				.then((response) => {
+// 					console.log('UPDATE_PROFILE', response.data);
+// 					const status = parseInt(response.data.status, 16);
+//
+// 					if (status === 0x00) {
+// 						this.props.updateUserProfile(response.data.user);
+// 						this.setState({ passMsg  : '' });
+//
+// 					} else {
+// 						this.setState({
+// 							username      : hasBit(status, 0x01) ? 'Username Already in Use' : username,
+// 							email         : hasBit(status, 0x10) ? 'Email Already in Use' : email,
+// 							usernameValid : !hasBit(status, 0x01),
+// 							emailValid    : !hasBit(status, 0x10)
+// 						});
+// 					}
+// 				}).catch((error) => {
+// 			});
 		}
 	};
 
@@ -195,7 +210,9 @@ class ProfilePage extends Component {
 	};
 
 	render() {
-		const { avatar, username, email, passMsg } = this.state;
+		console.log('ProfilePage.render()', this.props, this.state);
+
+		const { avatar, username, email, passMsg } = (this.props.profile) ? this.props.profile : this.state;
 		const { usernameValid, emailValid, passwordValid } = this.state;
 
 		return (
@@ -253,4 +270,5 @@ class ProfilePage extends Component {
 	}
 }
 
-export default ProfilePage;
+export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
+//export default connect(mapStateToProps, { fetchUserProfile })(ProfilePage);

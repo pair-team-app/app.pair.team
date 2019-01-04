@@ -12,7 +12,7 @@ import { Column, Row } from 'simple-flexbox';
 
 import Popup from '../elements/Popup';
 
-import { capitalizeText } from '../../utils/funcs.js';
+import { capitalizeText, isUserLoggedIn } from '../../utils/funcs.js';
 import { toCSS, toReactCSS } from '../../utils/langs.js';
 // import FontAwesome from "react-fontawesome";
 
@@ -802,7 +802,7 @@ class InspectorPage extends Component {
 	};
 
 	handleDownload = ()=> {
-		if (cookie.load('user_id') === '0') {
+		if (!isUserLoggedIn()) {
 			cookie.save('msg', 'use this feature.', { path : '/' });
 			this.props.onPage('login');
 

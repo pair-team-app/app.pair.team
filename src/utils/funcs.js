@@ -1,4 +1,6 @@
 
+import cookie from 'react-cookies';
+
 export function capitalizeText(text, toLower) {
 	toLower = (toLower || false);
 	return ((toLower) ? text.toLowerCase().replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }) : text.replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }));
@@ -23,6 +25,10 @@ export function idsFromPath() {
 		artboardID : (artboardPath.test(pathname)) ? pathname.match(/\/artboard\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
 		sliceID    : 0
 	});
+}
+
+export function isUserLoggedIn() {
+	return (cookie.load('user_id') !== '0');
 }
 
 export function isValidEmail(email) {
