@@ -10,7 +10,7 @@ export function hasBit(val, bit) {
 	return ((val & bit) === bit);
 }
 
-export function hiddenText(text, char='*') {
+export function hideText(text, char='*') {
 	return (Array(text.length + 1).join(char));
 }
 
@@ -34,6 +34,10 @@ export function isUserLoggedIn() {
 export function isValidEmail(email) {
 	const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	return (re.test(String(email).toLowerCase()));
+}
+
+export function limitString(str, len) {
+	return ((str.length > len) ? str.substr(0, len - 1) + '…' : str);
 }
 
 export function randomElement(array) {

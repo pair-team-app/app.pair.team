@@ -8,10 +8,11 @@ import './SliceTreeItem.css';
 import { Row } from 'simple-flexbox';
 
 import sketchIcon from '../../images/icon-sketch.png';
+import { limitString } from '../../utils/funcs';
 
 function ArtboardTreeItem(props) {
 	const textClass = (props.selected) ? 'artboard-tree-item-text page-tree-item-text-selected' : 'artboard-tree-item-text';
-	const title = (props.title.length > 24) ? (props.title.substring(0, 23) + '…') : props.title;
+	const title = limitString(props.title, 24);
 
 	return (
 		<div className="artboard-tree-item">
@@ -22,7 +23,7 @@ function ArtboardTreeItem(props) {
 
 function PageTreeItem(props) {
 	const textClass = (props.selected) ? 'page-tree-item-text page-tree-item-text-selected' : 'page-tree-item-text';
-	const title = (props.title.length > 27) ? (props.title.substring(0, 26) + '…') : props.title;
+	const title = limitString(props.title, 27);
 
 	const artboards = props.artboards.map((artboard, i)=> {
 		return (
@@ -49,7 +50,7 @@ function PageTreeItem(props) {
 // function SliceTreeItem(props) {
 // 	const icon = (props.type === 'slice') ? '/images/layer-slice' : (props.type === 'hotspot') ? '/images/layer-hotspot' : (props.type === 'textfield') ? '/images/layer-textfield' : '/images/layer-background';
 // 	const textClass = (props.selected) ? 'slice-tree-item-text slice-tree-item-text-selected' : 'slice-tree-item-text';
-// 	const title = (props.title.length > 24) ? (props.title.substring(0, 23) + '…') : props.title;
+// 	const title = limitString(props.title, 24);
 //
 // 	return (
 // 		<div className="slice-tree-item" onClick={()=> props.onClick()}>
@@ -72,7 +73,7 @@ class UploadTreeItem extends Component {
 	}
 
 	static getDerivedStateFromProps(nextProps) {
-		return ({ title : (nextProps.title.length > 26) ? (nextProps.title.substring(0, 25) + '…') : nextProps.title });
+		return ({ title : limitString(nextProps.title, 26) });
 	}
 
 	render() {

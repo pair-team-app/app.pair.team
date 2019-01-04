@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './ArtboardItem.css'
 
+import { limitString } from '../../utils/funcs';
 import defaultAvatar from '../../images/default-avatar.png';
 import sketchIcon from '../../images/icon-sketch.png';
 
@@ -10,14 +11,12 @@ class ArtboardItem extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			title : '',
-			image : null
 		};
 	}
 
 	static getDerivedStateFromProps(nextProps) {
 		return ({
-			title : (nextProps.title) ? (nextProps.title.length > 27) ? (nextProps.title.substring(0, 26) + '…') : nextProps.title : null,
+			title : (nextProps.title) ? limitString(nextProps.title, 27) : null,
 			image : (nextProps.image) ? (!nextProps.image.includes('@')) ? nextProps.image + '@0.25x.png' : nextProps.image : null
 		});
 	}
@@ -28,7 +27,7 @@ class ArtboardItem extends Component {
 
 		return (
 			<div className={className} onClick={()=> (title !== '') ? this.props.onClick() : null}>
-				{(this.props.title !== '') && (<div>
+				{(title !== '') && (<div>
 					{(image) && (<img className="artboard-item-image" src={image} alt={title} />)}
 					<div className="artboard-item-overlay" />
 					{(image) && (<img className="artboard-item-icon" src={sketchIcon} alt="Icon" />)}
