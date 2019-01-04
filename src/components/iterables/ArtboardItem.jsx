@@ -10,17 +10,20 @@ class ArtboardItem extends Component {
 	}
 
 	static getDerivedStateFromProps(nextProps) {
-		return ({ title : (nextProps.title) ? (nextProps.title.length > 27) ? (nextProps.title.substring(0, 26) + '…') : nextProps.title : null });
+		return ({
+			title : (nextProps.title) ? (nextProps.title.length > 27) ? (nextProps.title.substring(0, 26) + '…') : nextProps.title : null,
+			image : nextProps.image
+		});
 	}
 
 	render() {
-		const { title, image } = this.props;
+		const { title, image } = this.state;
 		const className = (image) ? 'artboard-item' : 'artboard-item artboard-item-loading';
 
 		return (
 			<div className={className} onClick={()=> (title !== '') ? this.props.onClick() : null}>
-				{(this.props.title !== '') && (<div>
-					{(image) && (<img className="artboard-item-image" src={(image.includes('@3x')) ? image.replace('@3x', '@0.25x') : image + '@0.25x.png'} alt={title} />)}
+				{(title !== '') && (<div>
+					{(image) && (<img className="artboard-item-image" src={image} alt={title} />)}
 					<div className="artboard-item-overlay" />
 					{(image) && (<img className="artboard-item-icon" src="/images/icon-sketch.png" alt="Icon" />)}
 					{(image) && (<div className="artboard-item-details-wrapper">

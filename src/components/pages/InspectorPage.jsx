@@ -1,8 +1,8 @@
 
 import React, { Component } from 'react';
 import './InspectorPage.css';
-import 'react-tabs/style/react-tabs.css';
-import '../elements/react-tabs.css';
+// import 'react-tabs/style/react-tabs.css';
+// import '../elements/react-tabs.css';
 
 import axios from 'axios';
 // import CopyToClipboard from 'react-copy-to-clipboard';
