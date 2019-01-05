@@ -37,6 +37,7 @@ export function isValidEmail(email) {
 }
 
 export function limitString(str, len) {
+	str = (str || '');
 	return ((str.length > len) ? str.substr(0, len - 1) + '…' : str);
 }
 

@@ -34,9 +34,9 @@ class SideNav extends Component {
 		this.fetchNextUploads();
 	}
 
-	componentDidUpdate(prevProps) {
+	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('SideNav.componentDidUpdate()', prevProps, this.props, this.state);
-		if (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID) {
+		if (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID) {
 			this.onTreeEffect();
 		}
 
@@ -56,13 +56,70 @@ class SideNav extends Component {
 			upload.selected = (upload.id === this.props.uploadID);
 			upload.pages.forEach((page)=> {
 				page.selected = (page.id === self.props.pageID);
-				page.artboards.forEach((artboard)=> {
-					artboard.selected = (artboard.id === self.props.artboardID);
-				});
 			});
 		});
 
 		this.setState({ uploads : uploads });
+	};
+
+	fetchNextUploads = ()=> {
+		const prevUploads = this.state.uploads;
+
+		if (!this.state.fetching) {
+			this.setState({ fetching : true });
+		}
+
+		let formData = new FormData();
+		formData.append('action', 'UPLOAD_NAMES');
+		formData.append('user_id', (window.location.pathname.includes('/explore') || !isUserLoggedIn()) ? '0' : cookie.load('user_id'));
+		formData.append('offset', this.state.loadOffset);
+		formData.append('length', this.state.loadAmt);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+				console.log('UPLOAD_NAMES', response.data);
+
+				const uploads = response.data.uploads.map((upload)=> ({
+					id           : upload.id,
+					title        : upload.title,
+					author       : upload.author,
+					total        : upload.total,
+					added        : upload.added,
+					selected     : (this.props.uploadID === upload.id),
+					fonts        : upload.fonts.map((font)=> ({
+					})),
+					colors       : upload.colors.map((color)=> ({
+					})),
+					symbols      : upload.fonts.map((symbol)=> ({
+					})),
+					pages        : upload.pages.map((page) => ({
+						id          : page.id,
+						uploadID    : page.upload_id,
+						title       : page.title,
+						description : page.description,
+						total       : page.total,
+						added       : page.added,
+						selected    : (this.props.pageID === page.id),
+						artboards   : []
+					})),
+					contributors : upload.contributors.map((contributor)=> ({
+						id     : contributor.id,
+						title  : contributor.username,
+						avatar : contributor.avatar
+					})),
+				}));
+
+// 				if (this.props.artboardID !== 0) {
+// 					this.fetchPageArtboards(uploads);
+// 				}
+
+				this.setState({
+					uploads     : prevUploads.concat(uploads),
+					loadOffset  : this.state.loadOffset + this.state.loadAmt,
+					loadAmt     : (this.state.loadAmt < 40) ? 40 : 10,
+					fetching    : false
+				});
+			}).catch((error) => {
+		});
 	};
 
 	fetchPageArtboards = (uploads)=> {
@@ -98,55 +155,6 @@ class SideNav extends Component {
 	};
 
 
-	fetchNextUploads = ()=> {
-		const prevUploads = this.state.uploads;
-
-		if (!this.state.fetching) {
-			this.setState({ fetching : true });
-		}
-
-		let formData = new FormData();
-		formData.append('action', 'UPLOAD_NAMES');
-		formData.append('user_id', (window.location.pathname.includes('/explore') || !isUserLoggedIn()) ? '0' : cookie.load('user_id'));
-		formData.append('offset', this.state.loadOffset);
-		formData.append('length', this.state.loadAmt);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-				console.log('UPLOAD_NAMES', response.data);
-
-				const uploads = response.data.uploads.map((upload)=> ({
-					id       : upload.id,
-					title    : upload.title,
-					author   : upload.author,
-					total    : upload.total,
-					added    : upload.added,
-					selected : (this.props.uploadID === upload.id),
-					pages    : upload.pages.map((page) => ({
-						id          : page.id,
-						uploadID    : page.upload_id,
-						title       : page.title,
-						description : page.description,
-						total       : page.total,
-						added       : page.added,
-						selected    : (this.props.pageID === page.id),
-						artboards   : []
-					}))
-				}));
-
-				if (this.props.artboardID !== 0) {
-					this.fetchPageArtboards(uploads);
-				}
-
-				this.setState({
-					uploads     : prevUploads.concat(uploads),
-					loadOffset  : this.state.loadOffset + this.state.loadAmt,
-					loadAmt     : (this.state.loadAmt < 40) ? 40 : 10,
-					fetching    : false
-				});
-			}).catch((error) => {
-		});
-	};
-
 	handleUploadClick = (upload)=> {
 		let uploads = [...this.state.uploads];
 		uploads.forEach(function(item, i) {
@@ -164,10 +172,7 @@ class SideNav extends Component {
 			}
 		});
 
-		if (upload.selected) {
-			cookie.save('upload_id', upload.id, { path : '/' });
-
-		} else {
+		if (!upload.selected) {
 			wrapper.current.scrollTo(0, 0);
 		}
 
@@ -176,6 +181,22 @@ class SideNav extends Component {
 		if (window.location.pathname === '/' || window.location.pathname === '/explore' || window.location.pathname.includes('/proj')) {
 			this.props.onUploadItem(upload);
 		}
+	};
+
+	handleCategoryClick = (category)=> {
+		console.log('handleCategoryClick()', category);
+	};
+
+	handleFontClick = (font)=> {
+		console.log('handleFontClick()', font);
+	};
+
+	handleColorClick = (color)=> {
+		console.log('handleColorClick()', color);
+	};
+
+	handleSymbolClick = (symbol)=> {
+		console.log('handleSymbolClick()', symbol);
 	};
 
 	handlePageClick = (page)=> {
@@ -194,9 +215,9 @@ class SideNav extends Component {
 		});
 
 		if (page.selected) {
-			if (!window.location.pathname.includes('/explore')) {
-				this.fetchPageArtboards(uploads);
-			}
+// 			if (!window.location.pathname.includes('/explore')) {
+// 				this.fetchPageArtboards(uploads);
+// 			}
 
 			this.props.onPageItem(page);
 
@@ -205,25 +226,11 @@ class SideNav extends Component {
 		}
 	};
 
-	handleArtboardClick = (artboard)=> {
-		let uploads = [...this.state.uploads];
-		uploads.forEach((upload)=> {
-			if (upload.selected) {
-				upload.pages.forEach((page) => {
-					if (page.selected) {
-						page.artboards.forEach((item) => {
-							if (item.id === artboard.id) {
-								item.selected = true;
-							}
-						});
-					}
-				});
-			}
-		});
-
-		this.setState({ uploads : uploads });
-		this.props.onArtboardItem(artboard)
+	handleContributorClick = (contributor)=> {
+		console.log('handleContributorClick()', contributor);
 	};
+
+
 
 	handleInvite = ()=> {
 		cookie.save('msg', 'use this feature.', { path : '/' });
@@ -259,12 +266,20 @@ class SideNav extends Component {
 										<UploadTreeItem
 											key={i}
 											title={upload.title}
-											author={upload.author}
+											fonts={upload.fonts}
+											colors={upload.colors}
+											symbols={upload.symbols}
 											pages={upload.pages}
+											contributors={upload.contributors}
 											selected={upload.selected}
 											onClick={()=> this.handleUploadClick(upload)}
+											onCategoryClick={(category)=> this.handleCategoryClick(category)}
+											onFontClick={(font)=> this.handleFontClick(font)}
+											onColorClick={(color)=> this.handleColorClick(color)}
+											onSymbolClick={(symbol)=> this.handleSymbolClick(symbol)}
 											onPageClick={(page)=> this.handlePageClick(page)}
-											onArtboardClick={(artboard)=> this.handleArtboardClick(artboard)} />
+											onContributorClick={(contributor)=> this.handleContributorClick(contributor)}
+											 />
 									);
 								})}
 							</div>) : (<div>

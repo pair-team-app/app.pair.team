@@ -58,16 +58,17 @@ class App extends Component {
 		trackEvent('load');
 
 		const { uploadID, pageID } = this.state;
+		cookie.save('upload_id', uploadID, { path : '/' });
 
 		if (window.location.pathname.includes('/artboard/')) {
-			let formData = new FormData();
-
 			if (uploadID === 0) {
+				let formData = new FormData();
 				formData.append('action', 'PAGE');
 				formData.append('page_id', pageID);
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response) => {
 						console.log('PAGE', response.data);
+						cookie.save('upload_id', response.data.page.upload_id, { path : '/' });
 						this.setState({ uploadID : response.data.page.upload_id });
 					}).catch((error) => {
 				});
@@ -183,6 +184,8 @@ class App extends Component {
 		console.log('handleSideNavUploadItem()', upload);
 
 		if (upload.selected && this.state.uploadID !== upload.id) {
+			cookie.save('upload_id', upload.id, { path : '/' });
+
 			this.setState({
 				uploadID   : upload.id,
 				pageID     : 0,

@@ -8,36 +8,24 @@ import { limitString } from '../../utils/funcs';
 import sketchIcon from '../../images/icon-sketch.png';
 
 const UPLOAD_CHAR_LIMIT = 26;
-const PAGE_CHAR_LIMIT = 27;
-const ARTBOARD_CHAR_LIMIT = 21;
+const CATEGORY_CHAR_LIMIT = 23;
+const INNER_CHAR_LIMIT = 20;
 
 
-function ArtboardTreeItem(props) {
-	const textClass = (props.selected) ? 'artboard-tree-item-text page-tree-item-text-selected' : 'artboard-tree-item-text';
-
-	return (
-		<div className="artboard-tree-item">
-			<div className={textClass} onClick={()=> props.onClick()}>{limitString(props.title, ARTBOARD_CHAR_LIMIT)}</div>
-		</div>
-	);
-}
-
-function PageTreeItem(props) {
-	const textClass = (props.selected) ? 'page-tree-item-text page-tree-item-text-selected' : 'page-tree-item-text';
+function CategoryTreeItem(props) {
+	const textClass = (props.selected) ? 'tree-item-text tree-item-text-selected' : 'tree-item-text';
 
 	return (
-		<div className="page-tree-item">
-			<div className={textClass} onClick={()=> props.onClick()}>{limitString(props.title, PAGE_CHAR_LIMIT)}</div>
-			{(props.selected) && (<div className="page-tree-item-artboards">
-				{props.artboards.map((artboard, i)=> {
+		<div className="category-tree-item">
+			<div className={textClass} onClick={()=> props.onClick()}>{limitString(props.title, CATEGORY_CHAR_LIMIT)}</div>
+			{(props.selected) && (<div className="category-tree-item-list">
+				{props.items.map((item, i)=> {
 					return (
-						<ArtboardTreeItem
-							key={artboard.id}
-							title={artboard.title}
-							description=""
-							slices={artboard.slices}
-							selected={artboard.selected}
-							onClick={()=> props.onArtboardClick(artboard)} />
+						<InnerTreeItem
+							key={item.id}
+							title={item.title}
+							selected={item.selected}
+							onClick={()=> props.onInnerClick(props.id, item)} />
 					);
 				})}
 			</div>)}
@@ -45,17 +33,16 @@ function PageTreeItem(props) {
 	);
 }
 
-// function SliceTreeItem(props) {
-// 	const icon = (props.type === 'slice') ? '/images/layer-slice' : (props.type === 'hotspot') ? '/images/layer-hotspot' : (props.type === 'textfield') ? '/images/layer-textfield' : '/images/layer-background';
-// 	const textClass = (props.selected) ? 'slice-tree-item-text slice-tree-item-text-selected' : 'slice-tree-item-text';
-// 	const title = limitString(props.title, 17);
-//
-// 	return (
-// 		<div className="slice-tree-item" onClick={()=> props.onClick()}>
-// 			<div className={textClass}><img className="slice-tree-item-icon" src={(props.selected) ? icon + '_selected.svg' : icon + '.svg'} alt='icon' />{title}</div>
-// 		</div>
-// 	);
-// }
+
+function InnerTreeItem(props) {
+	const textClass = (props.selected) ? 'tree-item-text tree-item-text-selected' : 'tree-item-text';
+
+	return (
+		<div className="inner-tree-item">
+			<div className={textClass} onClick={()=> props.onClick()}>{limitString(props.title, INNER_CHAR_LIMIT)}</div>
+		</div>
+	);
+}
 
 
 class UploadTreeItem extends Component {
@@ -63,6 +50,32 @@ class UploadTreeItem extends Component {
 		super(props);
 
 		this.state = {
+			categories : [{
+				id       : 1,
+				title    : 'Fonts',
+				selected : false,
+				items    : props.fonts
+			}, {
+				id       : 2,
+				title    : 'Colors',
+				selected : false,
+				items    : props.colors
+			}, {
+				id       : 3,
+				title    : 'Symbols',
+				selected : false,
+				items    : props.symbols
+			}, {
+				id       : 4,
+				title    : 'Views',
+				selected : window.location.pathname.includes('/artboard'),
+				items    : props.pages
+			}, {
+				id       : 5,
+				title    : 'Contributors',
+				selected : false,
+				items    : props.contributors
+			}]
 		};
 	}
 
@@ -70,27 +83,72 @@ class UploadTreeItem extends Component {
 		return ({ title : limitString(nextProps.title, UPLOAD_CHAR_LIMIT) });
 	}
 
+	handleCategoryClick = (category)=> {
+		console.log('handleCategoryClick()', category);
+		let categories = [...this.state.categories];
+		categories.forEach((item)=> {
+			if (category.id === item.id) {
+				item.selected = !item.selected;
+
+			} else {
+				item.selected = false;
+			}
+
+			if (!item.selected) {
+				item.items.forEach((i)=> {
+					i.selected = false;
+				});
+			}
+		});
+
+		this.props.onCategoryClick(category);
+		this.setState({ categories });
+	};
+
+	handleInnerClick = (id, item)=> {
+		console.log('handleInnerClick()', id, item);
+
+		if (id === 1) {
+			this.props.onFontClick(item);
+
+		} else if (id === 2) {
+			this.props.onColorClick(item);
+
+		} else if (id === 3) {
+			this.props.onSymbolClick(item);
+
+		} else if (id === 4) {
+			this.props.onPageClick(item);
+
+		} else if (id === 5) {
+			this.props.onContributorClick(item);
+		}
+	};
+
 	render() {
-		const { selected, pages } = this.props;
-		const textClass = (this.props.selected) ? 'upload-tree-item-text upload-tree-item-text-selected' : 'upload-tree-item-text';
+		const { selected } = this.props;
+		const { title, categories } = this.state;
+
+		const textClass = (selected) ? 'tree-item-text tree-item-text-selected' : 'tree-item-text';
 
 		return (
 			<div className="upload-tree-item">
 				<Row vertical="center">
 					<img src={sketchIcon} className="upload-tree-item-icon" alt="Icon" />
-					<div className={textClass} onClick={()=> this.props.onClick()}>{this.state.title}</div>
+					<div className={textClass} onClick={()=> this.props.onClick()}>{title}</div>
 				</Row>
-				{(selected) && (<div className="upload-tree-item-pages">
-					{pages.map((page, i)=> {
+				{(selected) && (<div className="upload-tree-item-list">
+					{categories.map((category, i)=> {
 						return (
-							<PageTreeItem
+							<CategoryTreeItem
 								key={i}
-								title={page.title}
-								description={page.description}
-								artboards={page.artboards}
-								selected={page.selected}
-								onClick={()=> this.props.onPageClick(page)}
-								onArtboardClick={(artboard)=> this.props.onArtboardClick(artboard)} />
+								id={category.id}
+								title={category.title}
+								items={category.items}
+								selected={category.selected}
+								onClick={()=> this.handleCategoryClick(category)}
+								onInnerClick={(id, item)=> this.handleInnerClick(id, item)}
+							/>
 						);
 					})}
 				</div>)}

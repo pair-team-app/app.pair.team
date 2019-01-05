@@ -13,21 +13,16 @@
 }
 
 .upload-tree-item-text {
-	padding-bottom: 1px;
 }
 
-.upload-tree-item-text:hover {
+.tree-item-text:hover {
 	cursor: pointer;
 	text-decoration: underline;
 }
 
-.upload-tree-item-arrow-selected, .upload-tree-item-text-selected {
+.tree-item-text-selected {
 	font-family: "San Francisco Text Bold", sans-serif;
 	text-decoration: underline;
-}
-
-.upload-tree-item-pages {
-	margin: 12px 0 0 40px;
 }
 
 .upload-tree-item-list {
@@ -35,73 +30,22 @@
 }
 
 
-
-
-.page-tree-item {
+.category-tree-item {
 	margin-bottom: 12px;
 	font-weight: 400;
 	width: fit-content;
 }
 
-.page-tree-item-text {
+.category-tree-item-text {
 }
 
-.page-tree-item-text:hover {
-	cursor: pointer;
-	text-decoration: underline;
-}
-
-.page-tree-item-arrow-selected, .page-tree-item-text-selected {
-	font-weight: bold;
-	text-decoration: underline;
-}
-
-.page-tree-item-artboards {
+.category-tree-item-list {
 	margin: 12px 0 0 18px;
 }
 
 
-.artboard-tree-item {
+.inner-tree-item {
 	margin-bottom: 12px;
 	font-weight: 400;
 	width: fit-content;
-}
-
-.artboard-tree-item-text:hover {
-	text-decoration: underline;
-	cursor: pointer;
-}
-
-.artboard-tree-item-text-selected {
-	font-weight: bold;
-	text-decoration: underline;
-}
-
-.artboard-tree-item-slices, .artboard-tree-item-hotspots, .artboard-tree-item-textfields, .artboard-tree-item-backgrounds {
-	margin: 12px 0 0 20px;
-}
-
-
-.slice-tree-item {
-	margin: 12px 0 0 48px;
-	font-weight: 400;
-}
-
-.slice-tree-item:hover {
-	cursor: pointer;
-	text-decoration: underline;
-}
-
-.slice-tree-item-icon {
-	margin-right: 10px;
-	width: 10px;
-	height: 10px;
-}
-
-.slice-tree-item-text {
-
-}
-
-.slice-tree-item-text-selected {
-	color: #7ed321;
 }

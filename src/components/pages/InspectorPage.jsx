@@ -257,8 +257,6 @@ class InspectorPage extends Component {
 			1.75,
 			3.00
 		];
-
-		cookie.save('upload_id', this.props.match.params.uploadID, { path : '/' });
 	}
 
 	componentDidMount() {
@@ -271,7 +269,7 @@ class InspectorPage extends Component {
 		document.addEventListener('wheel', this.handleWheel.bind(this));
 	}
 
-	componentDidUpdate(prevProps) {
+	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('componentDidUpdate()', prevProps.match.params.artboardID, this.props.match.params.artboardID);
 		if (this.props.match.params.pageID !== prevProps.match.params.pageID) {
 			this.refreshData();

@@ -28,7 +28,7 @@ class InputField extends Component {
 		});
 	}
 
-	componentDidUpdate(prevProps) {
+	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('componentDidUpdate', prevProps, this.props, this.state);
 
 		if (this.props.value !== prevProps.value) {

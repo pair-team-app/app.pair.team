@@ -15,7 +15,8 @@ class Dropdown extends Component{
 			headerTitle : this.props.title
 		};
 	}
-	componentDidUpdate(prevProps) {
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
 		if (this.props.title !== prevProps.title) {
 			this.setState({ headerTitle : this.props.title });
 		}

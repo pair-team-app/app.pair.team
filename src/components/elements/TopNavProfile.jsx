@@ -30,7 +30,7 @@ class TopNavProfile extends Component {
 		}
 	}
 
-	componentDidUpdate(prevProps) {
+	componentDidUpdate(prevProps, prevState, snapshot) {
 		if (isUserLoggedIn() && !this.props.profile) {
 			this.props.fetchUserProfile();
 		}
