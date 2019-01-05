@@ -32,7 +32,7 @@ class APIPage extends Component {
 			visible : true,
 			content : 'Copied to Clipboard!'
 		};
-		this.setState({ popup : popup });
+		this.setState({ popup });
 	};
 
 	handleURLCopy = (url)=> {
@@ -40,7 +40,7 @@ class APIPage extends Component {
 			visible : true,
 			content : 'Copied to Clipboard!'
 		};
-		this.setState({ popup : popup });
+		this.setState({ popup });
 	};
 
 	render() {

@@ -68,7 +68,7 @@ class UploadTreeItem extends Component {
 			}, {
 				id       : 4,
 				title    : 'Views',
-				selected : window.location.pathname.includes('/artboard'),
+				selected : (window.location.pathname.includes('/proj') || window.location.pathname.includes('/artboard')),
 				items    : props.pages
 			}, {
 				id       : 5,
@@ -87,9 +87,9 @@ class UploadTreeItem extends Component {
 		console.log('UploadTreeItem.handleClick()');
 		let categories = [...this.state.categories];
 		categories.forEach((category)=> {
-			category.selected = false;
+			category.selected = (category.id === 4);
 			category.items.forEach((item)=> {
-				item.selected = false
+				item.selected = false;
 			});
 		});
 
@@ -124,6 +124,7 @@ class UploadTreeItem extends Component {
 
 	handleInnerClick = (id, item)=> {
 		console.log('UploadTreeItem.handleInnerClick()', id, item);
+		item.selected = !item.selected;
 
 		if (id === 1) {
 			this.props.onFontClick(item);

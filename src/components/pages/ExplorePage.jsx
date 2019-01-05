@@ -119,7 +119,7 @@ class ExplorePage extends Component {
 // 			}
 // 		});
 //
-// 		this.setState({ artboards : artboards });
+// 		this.setState({ artboards });
 // 	};
 
 	render() {

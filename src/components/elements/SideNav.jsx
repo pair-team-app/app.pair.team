@@ -9,7 +9,7 @@ import { Column, Row } from 'simple-flexbox';
 
 import UploadTreeItem from '../iterables/UploadTreeItem';
 
-import { isUserLoggedIn } from '../../utils/funcs';
+import {isUserLoggedIn, scrollOrigin } from '../../utils/funcs';
 
 const wrapper = React.createRef();
 const scrollWrapper = React.createRef();
@@ -67,7 +67,7 @@ class SideNav extends Component {
 			});
 		});
 
-		this.setState({ uploads : uploads });
+		this.setState({ uploads });
 	};
 
 	fetchNextUploads = ()=> {
@@ -135,7 +135,7 @@ class SideNav extends Component {
 
 				this.setState({
 					uploads     : (window.location.pathname.includes('/explore')) ? prevUploads.concat(uploads) : uploads,
-					loadOffset  : this.state.loadOffset + this.state.loadAmt,
+					loadOffset  :  (uploads.length > 0) ? this.state.loadOffset + this.state.loadAmt : -1,
 					loadAmt     : (this.state.loadAmt < 40) ? 40 : 10,
 					fetching    : false
 				});
@@ -167,7 +167,7 @@ class SideNav extends Component {
 								selected : (this.props.artboardID === artboard.id)
 							}));
 
-							this.setState({ uploads : uploads });
+							this.setState({ uploads });
 						}).catch((error) => {
 					});
 				}
@@ -193,14 +193,11 @@ class SideNav extends Component {
 		});
 
 		if (!upload.selected) {
-			wrapper.current.scrollTo(0, 0);
+			scrollOrigin(wrapper.current);
 		}
 
-		this.setState({ uploads : uploads });
-
-		if (window.location.pathname === '/' || window.location.pathname === '/explore' || window.location.pathname.includes('/proj')) {
-			this.props.onUploadItem(upload);
-		}
+		this.setState({ uploads });
+		this.props.onUploadItem(upload);
 	};
 
 	handleCategoryClick = (category)=> {
@@ -221,14 +218,13 @@ class SideNav extends Component {
 
 	handlePageClick = (page)=> {
 		console.log('SideNav.handlePageClick()', page);
-// 		page.selected = true;// !page.selected;
 
 		let uploads = [...this.state.uploads];
 		uploads.forEach((upload)=> {
 			if (upload.id === page.uploadID) {
 				upload.pages.forEach((item)=> {
 					if (item.id === page.id) {
-						item.selected = !item.selected;
+						item = page;
 
 					} else {
 						item.selected = false;
@@ -237,7 +233,7 @@ class SideNav extends Component {
 			}
 		});
 
-		this.setState({ uploads : uploads });
+		this.setState({ uploads });
 
 // 		if (!window.location.pathname.includes('/explore')) {
 // 			this.fetchPageArtboards(uploads);
@@ -269,7 +265,7 @@ class SideNav extends Component {
 		console.log('SideNav.render()', this.props, this.state);
 
 		const isExplore = (window.location.pathname.includes('/explore'));
-		const { uploads, fetching } = this.state;
+		const { uploads, fetching, loadOffset } = this.state;
 
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>
@@ -302,7 +298,7 @@ class SideNav extends Component {
 						})}
 					</div>
 					{(window.location.pathname.includes('/explore'))
-						? (<div className="side-nav-link" onClick={()=> this.fetchNextUploads()}>{(fetching) ? 'Loading…' : 'Explore More'}</div>)
+						? (<div className="side-nav-link" onClick={()=> this.fetchNextUploads()}>{(fetching) ? 'Loading…' : (loadOffset === -1) ? '' : 'Explore More'}</div>)
 						: (<div className="side-nav-link" onClick={()=> this.handleUpload()}>New Project</div>)
 					}
 				</div>

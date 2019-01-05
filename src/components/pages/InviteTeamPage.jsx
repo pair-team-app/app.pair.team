@@ -90,12 +90,7 @@ class InviteTeamPage extends Component {
 						}
 					});
 
-					this.setState({
-						uploadID    : uploadID,
-						uploadTitle : uploadTitle,
-						uploadURL   : uploadURL,
-						uploads     : uploads
-					});
+					this.setState({ uploadID, uploadTitle, uploadURL, uploads });
 
 				} else {
 					this.setState({
@@ -124,7 +119,7 @@ class InviteTeamPage extends Component {
 			visible : true,
 			content : 'Copied to Clipboard!'
 		};
-		this.setState({ popup : popup });
+		this.setState({ popup });
 	};
 
 	handleSubmit = (event)=> {

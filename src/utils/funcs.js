@@ -53,6 +53,12 @@ export function randomInt(lower, upper) {
 	return (Math.floor(randomFloat(lower, upper)));
 }
 
+export function scrollOrigin(element) {
+	if (element) {
+		element.scrollTo(0, 0);
+	}
+}
+
 export function urlSlugTitle(text) {
 	return (text.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
 }

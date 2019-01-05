@@ -15,12 +15,5 @@ export function trackPageview() {
 
 export function trackEvent(category, action, label, value, nonInteraction) {
 	nonInteraction = (nonInteraction || false);
-
-	ReactGA.event({
-		category       : category,
-		action         : action,
-		label          : label,
-		value          : value,
-		nonInteraction : nonInteraction
-	});
+	ReactGA.event({ category, action, label, value, nonInteraction });
 }

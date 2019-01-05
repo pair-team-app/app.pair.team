@@ -115,7 +115,7 @@ class UploadPage extends Component {
 						'content-type' : 'multipart/form-data'
 					}, onUploadProgress : function (progressEvent) {
 						const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-						self.setState({ percent : percent });
+						self.setState({ percent });
 
 						if (progressEvent.loaded === progressEvent.total) {
 							let formData = new FormData();
@@ -158,7 +158,7 @@ class UploadPage extends Component {
 					visible : true,
 					content : 'error::File size must be under 100MB.'
 				};
-				this.setState({ popup : popup });
+				this.setState({ popup });
 			}
 
 		} else {
@@ -175,7 +175,7 @@ class UploadPage extends Component {
 				visible : true,
 				content : (files[0].name.split('.').pop() === 'xd') ? 'Adobe XD Support Coming Soon!' : 'error::Only Sketch files are support at this time.'
 			};
-			this.setState({ popup : popup });
+			this.setState({ popup });
 		}
 	}
 
@@ -211,7 +211,7 @@ class UploadPage extends Component {
 			visible : true,
 			content : 'Copied to Clipboard!'
 		};
-		this.setState({ popup : popup });
+		this.setState({ popup });
 	};
 
 	handleMoreEmail = ()=> {
@@ -376,11 +376,7 @@ class UploadPage extends Component {
 							selected : false
 						}));
 
-						this.setState({
-							status          : status,
-							processingState : processingState,
-							artboards       : artboards
-						});
+						this.setState({ status, processingState, artboards });
 					}).catch((error) => {
 				});
 			}).catch((error) => {

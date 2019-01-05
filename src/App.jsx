@@ -29,7 +29,7 @@ import UploadPage from './components/pages/UploadPage';
 import StripeOverlay from './components/elements/StripeOverlay';
 
 import { fetchUserProfile, updateUserProfile } from './redux/actions';
-import { idsFromPath, urlSlugTitle } from './utils/funcs';
+import { idsFromPath, scrollOrigin, urlSlugTitle } from './utils/funcs';
 import { initTracker, trackEvent } from './utils/tracking';
 
 const wrapper = React.createRef();
@@ -114,7 +114,8 @@ class App extends Component {
 			pageID     : artboard.pageID,
 			artboardID : artboard.id
 		});
-		wrapper.current.scrollTo(0, 0);
+
+		scrollOrigin(wrapper.current);
 	};
 
 	handleAddOns = ()=> {
@@ -123,7 +124,7 @@ class App extends Component {
 	};
 
 	handleHomeReset = ()=> {
-		wrapper.current.scrollTo(0, 0);
+		scrollOrigin(wrapper.current);
 
 		this.setState({
 			uploadID   : 0,
@@ -163,9 +164,7 @@ class App extends Component {
 		console.log('App.handlePage()', url);
 
 		const { pathname } = window.location;
-		if (wrapper.current) {
-			wrapper.current.scrollTo(0, 0);
-		}
+		scrollOrigin(wrapper.current);
 
 		if (url === '//') {
 			this.props.history.goBack();
@@ -195,7 +194,7 @@ class App extends Component {
 	};
 
 	handleProcess = (state)=> {
-		wrapper.current.scrollTo(0, 0);
+		scrollOrigin(wrapper.current);
 		this.setState({ processing : (state === 0) });
 	};
 
@@ -208,6 +207,32 @@ class App extends Component {
 				pageID     : 0,
 				artboardID : 0
 			});
+
+// 			if (window.location.pathname.includes('/artboard')) {
+// 				const page = upload.pages[0];
+//
+// 				let formData = new FormData();
+// 				formData.append('action', 'ARTBOARDS');
+// 				formData.append('upload_id', this.state.uploadID);
+// 				formData.append('page_id', page.id);
+// 				formData.append('slices', '0');
+// 				formData.append('offset', '0');
+// 				formData.append('length', '1');
+// 				axios.post('https://api.designengine.ai/system.php', formData)
+// 					.then((response) => {
+// 						console.log('ARTBOARDS', response.data);
+//
+// 						const artboard = response.data.artboards[0];
+// 						this.handleAddPageView(page.id);
+// 						this.props.history.push('/artboard/' + page.uploadID + '/' + page.id + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
+// 						this.setState({
+// 							uploadID   : page.uploadID,
+// 							pageID     : page.id,
+// 							artboardID : artboard.id
+// 						});
+// 					}).catch((error) => {
+// 				});
+// 			}
 
 			this.handlePage('proj/' + upload.id + '/' + urlSlugTitle(upload.title));
 		}

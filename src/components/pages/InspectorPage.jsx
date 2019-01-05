@@ -286,7 +286,7 @@ class InspectorPage extends Component {
 			const scale = Math.min(canvasWrapper.current.clientWidth / (this.size.width - canvasWrapper.current.clientWidth), canvasWrapper.current.clientHeight / (this.size.height - canvasWrapper.current.clientHeight));
 			if (this.state.scale !== scale && !this.initialScaled) {
 				this.initialScaled = true;
-				//this.setState({ scale : scale });
+				//this.setState({ scale });
 
 				if (artboardsWrapper.current) {
 					this.state.artboards.forEach((artboard, i)=> {
@@ -507,7 +507,7 @@ class InspectorPage extends Component {
 				visible : true,
 				content : 'error::Only zip archives are support at this time.'
 			};
-			this.setState({ popup : popup });
+			this.setState({ popup });
 		}
 	}
 
@@ -527,7 +527,7 @@ class InspectorPage extends Component {
 
 		});
 		visibleTypes[type] = true;
-		this.setState({ visibleTypes : visibleTypes });
+		this.setState({ visibleTypes });
 	};
 
 	handleTab = (ind)=> {
@@ -540,7 +540,7 @@ class InspectorPage extends Component {
 			visible : true,
 			content : 'Copied to Clipboard!'
 		};
-		this.setState({ popup : popup });
+		this.setState({ popup });
 	};
 
 	handleContribute = ()=> {
@@ -678,7 +678,7 @@ class InspectorPage extends Component {
 					}
 				});
 
-				this.setState({ artboards : artboards });
+				this.setState({ artboards });
 			}).catch((error) => {
 		});
 	};
@@ -694,7 +694,7 @@ class InspectorPage extends Component {
 // 			}
 // 		});
 //
-// 		this.setState({ artboards : artboards });
+// 		this.setState({ artboards });
 	};
 
 	handleZoom = (direction)=> {
@@ -748,7 +748,7 @@ class InspectorPage extends Component {
 					artboard.slices.forEach((slice) => {
 						if (slice.id === this.state.slice.id) {
 							console.log('zoom', this.state.offset, offset);
-							this.setState({ offset : offset });
+							this.setState({ offset });
 						}
 					});
 

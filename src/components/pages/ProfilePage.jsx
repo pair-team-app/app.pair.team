@@ -46,12 +46,7 @@ class ProfilePage extends Component {
 		console.log('ProfilePage.componentDidMount()', this.props);
 		if (this.props.profile) {
 			const { avatar, username, email } = this.props.profile;
-
-			this.setState({
-				avatar   : avatar,
-				username : username,
-				email    : email
-			});
+			this.setState({ avatar, username, email });
 		}
 	}
 
@@ -73,7 +68,7 @@ class ProfilePage extends Component {
 	onDrop(files) {
 		console.log('ProfilePage.onDrop()', files);
 
-		this.setState({ files : files });
+		this.setState({ files });
 
 		let self = this;
 		const config = {
@@ -81,7 +76,7 @@ class ProfilePage extends Component {
 				'content-type'    : 'multipart/form-data'
 			}, onUploadProgress : function (progressEvent) {
 				const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-				self.setState({ percent : percent });
+				self.setState({ percent });
 
 				if (progressEvent.loaded >= progressEvent.total) {
 					self.onUploadComplete();
@@ -173,11 +168,7 @@ class ProfilePage extends Component {
 			passwordValid = true;
 		}
 
-		this.setState({
-			usernameValid : usernameValid,
-			emailValid    : emailValid,
-			passwordValid : passwordValid
-		});
+		this.setState({ usernameValid, emailValid, passwordValid });
 	};
 
 	handleInputFieldSubmit = (key, val)=> {
