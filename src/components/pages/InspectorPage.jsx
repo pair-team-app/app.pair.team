@@ -171,7 +171,7 @@ function SpecsList(props) {
 }
 
 
-const mapStateToProps = (state)=> {
+const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
 };
 
@@ -195,7 +195,7 @@ class InspectorPage extends Component {
 			selectedTab   : 0,
 			tooltip       : 'Loading…',
 			hoverOffset   : null,
-			scale         : 1.0,
+			scale         : 0.5,
 			scrollOffset  : {
 				x : 0,
 				y : 0
@@ -286,14 +286,14 @@ class InspectorPage extends Component {
 			const scale = Math.min(canvasWrapper.current.clientWidth / (this.size.width - canvasWrapper.current.clientWidth), canvasWrapper.current.clientHeight / (this.size.height - canvasWrapper.current.clientHeight));
 			if (this.state.scale !== scale && !this.initialScaled) {
 				this.initialScaled = true;
-				this.setState({ scale : scale });
+				//this.setState({ scale : scale });
 
 				if (artboardsWrapper.current) {
 					this.state.artboards.forEach((artboard, i)=> {
 						if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
 							console.log('InspectorPage.componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
-							artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * scale);
-							artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * scale);
+							//artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * scale);
+							//artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * scale);
 						}
 					});
 				}
@@ -304,8 +304,8 @@ class InspectorPage extends Component {
 					this.state.artboards.forEach((artboard, i)=> {
 						if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
 							console.log('InspectorPage.componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
-							artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * this.state.scale);
-							artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * this.state.scale);
+							//artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * this.state.scale);
+							//artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * this.state.scale);
 						}
 					});
 				}
@@ -498,7 +498,6 @@ class InspectorPage extends Component {
 								});
 							}).catch((error) => {
 						});
-
 					}).catch((error) => {
 				});
 			});
@@ -608,7 +607,10 @@ class InspectorPage extends Component {
 
 		if (event.ctrlKey) {
 			event.preventDefault();
-			this.setState({ scale : Math.min(Math.max(this.state.scale - (event.deltaY * 0.0025), 0.03), 3).toFixed(2) });
+			this.setState({
+				scale   : Math.min(Math.max(this.state.scale - (event.deltaY * 0.0025), 0.03), 3).toFixed(2),
+				tooltip : Math.floor(Math.min(Math.max(this.state.scale - (event.deltaY * 0.0025), 0.03), 3).toFixed(2) * 100) + '%'
+			});
 
 		} else {
 			if (artboardsWrapper.current) {
@@ -699,7 +701,10 @@ class InspectorPage extends Component {
 		const { scale } = this.state;
 
 		if (direction === 0) {
-			this.setState({ scale : this.zoomNotches[5] });
+			this.setState({
+				scale   : this.zoomNotches[5],
+				tooltip : Math.floor(this.zoomNotches[5] * 100) + '%'
+			});
 
 		} else {
 			let ind = -1;
@@ -751,8 +756,16 @@ class InspectorPage extends Component {
 				}
 			}
 
-			this.setState({ scale : this.zoomNotches[Math.min(Math.max(0, ind + direction), this.zoomNotches.length - 1)] });
+			this.setState({
+				scale   : this.zoomNotches[Math.min(Math.max(0, ind + direction), this.zoomNotches.length - 1)],
+				tooltip : Math.floor(this.zoomNotches[Math.min(Math.max(0, ind + direction), this.zoomNotches.length - 1)] * 100) + '%'
+			});
 		}
+
+		let self = this;
+		setTimeout(function() {
+			self.setState({ tooltip : '' });
+		}, 1000);
 	};
 
 	handleSliceRollOver = (ind, slice, offset)=> {

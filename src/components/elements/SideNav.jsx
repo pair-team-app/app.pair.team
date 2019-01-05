@@ -15,7 +15,7 @@ const wrapper = React.createRef();
 const scrollWrapper = React.createRef();
 
 
-const mapStateToProps = (state)=> {
+const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
 };
 
@@ -37,11 +37,13 @@ class SideNav extends Component {
 	}
 
 	componentDidMount() {
-		this.fetchNextUploads();
+		if (isUserLoggedIn()) {
+			this.fetchNextUploads();
+		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('SideNav.componentDidUpdate()', prevProps, this.props, this.state);
+		console.log('SideNav.componentDidUpdate()', prevProps, this.props, this.state);
 		if (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID) {
 			this.onTreeEffect();
 		}
@@ -79,7 +81,7 @@ class SideNav extends Component {
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
-		formData.append('user_id', (window.location.pathname.includes('/explore') || !isUserLoggedIn()) ? '0' : this.props.userID);
+		formData.append('user_id', (window.location.pathname.includes('/explore')) ? '-1' : this.props.userID);
 		formData.append('offset', (window.location.pathname.includes('/explore')) ? this.state.loadOffset : '0');
 		formData.append('length', this.state.loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
@@ -89,15 +91,26 @@ class SideNav extends Component {
 				const uploads = response.data.uploads.map((upload)=> ({
 					id           : upload.id,
 					title        : upload.title,
-					author       : upload.author,
+					description  : upload.description,
 					total        : upload.total,
 					added        : upload.added,
 					selected     : (this.props.uploadID === upload.id),
 					fonts        : upload.fonts.map((font)=> ({
+						id     : font.id,
+						family : font.family,
+						style  : font.style,
+						added  : font.added
 					})),
 					colors       : upload.colors.map((color)=> ({
+						id    : color.id,
+						hex   : color.hex_val,
+						added : color.added
 					})),
 					symbols      : upload.fonts.map((symbol)=> ({
+						id    : symbol.id,
+						uuid  : symbol.uuid,
+						title : symbol.title,
+						added : symbol.added
 					})),
 					pages        : upload.pages.map((page) => ({
 						id          : page.id,
@@ -208,6 +221,7 @@ class SideNav extends Component {
 
 	handlePageClick = (page)=> {
 		console.log('SideNav.handlePageClick()', page);
+// 		page.selected = true;// !page.selected;
 
 		let uploads = [...this.state.uploads];
 		uploads.forEach((upload)=> {
@@ -215,7 +229,6 @@ class SideNav extends Component {
 				upload.pages.forEach((item)=> {
 					if (item.id === page.id) {
 						item.selected = !item.selected;
-						page.selected = !page.selected;
 
 					} else {
 						item.selected = false;
@@ -226,13 +239,10 @@ class SideNav extends Component {
 
 		this.setState({ uploads : uploads });
 
-		if (page.selected) {
-// 			if (!window.location.pathname.includes('/explore')) {
-// 				this.fetchPageArtboards(uploads);
-// 			}
-
-			this.props.onPageItem(page);
-		}
+// 		if (!window.location.pathname.includes('/explore')) {
+// 			this.fetchPageArtboards(uploads);
+// 		}
+		this.props.onPageItem(page);
 	};
 
 	handleContributorClick = (contributor)=> {
@@ -302,13 +312,15 @@ class SideNav extends Component {
 				</div>
 				<div className="side-nav-account-wrapper">
 					<h6>Account</h6>
-					{(isUserLoggedIn()) && (<div className="nav-link" onClick={() => this.props.onPage('profile')}>Profile</div>)}
-					{(!isUserLoggedIn()) && (<div>
-						<div className="nav-link" onClick={() => this.props.onPage('register')}>Sign Up</div>
-						<div className="nav-link" onClick={() => this.props.onPage('login')}>Login</div>
-					</div>)}
-
-					{(isUserLoggedIn()) && (<div className="nav-link" onClick={() => this.props.onLogout()}>Sign Out</div>)}
+					{(isUserLoggedIn())
+						? (<div>
+								<div className="nav-link" onClick={() => this.props.onPage('profile')}>Profile</div>
+								<div className="nav-link" onClick={()=> this.props.onLogout()}>Sign Out</div>
+							</div>) : (<div>
+								<div className="nav-link" onClick={() => this.props.onPage('register')}>Sign Up</div>
+								<div className="nav-link" onClick={() => this.props.onPage('login')}>Login</div>
+							</div>
+						)}
 				</div>
 			</div>
 		);

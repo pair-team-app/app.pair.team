@@ -18,7 +18,7 @@ const dzWrapper = React.createRef();
 const titleTextfield = React.createRef();
 
 
-const mapStateToProps = (state)=> {
+const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
 };
 

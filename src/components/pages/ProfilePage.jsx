@@ -12,7 +12,7 @@ import { updateUserProfile } from '../../redux/actions';
 import { hasBit, isValidEmail } from '../../utils/funcs';
 
 
-const mapStateToProps = (state)=> {
+const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
 };
 

@@ -41,7 +41,7 @@ class HomePage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		console.log('HomePage.componentDidUpdate()', this.props, prevProps);
 
-		if (this.props.uploadID !== -1 && this.props.uploadID !== prevProps.uploadID) {
+		if (this.props.uploadID !== prevProps.uploadID) {
 			this.setState({
 				artboards  : [],
 				loadOffset : 0,

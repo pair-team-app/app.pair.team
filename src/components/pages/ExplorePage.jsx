@@ -13,7 +13,7 @@ import { appendExploreArtboards } from '../../redux/actions';
 import { isUserLoggedIn } from '../../utils/funcs';
 
 
-const mapStateToProps = (state)=> {
+const mapStateToProps = (state, ownProps)=> {
 	return ({ artboards : state.exploreArtboards });
 };
 

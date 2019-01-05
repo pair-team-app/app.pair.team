@@ -13,7 +13,7 @@ import Popup from '../elements/Popup';
 import { isValidEmail } from '../../utils/funcs';
 
 
-const mapStateToProps = (state)=> {
+const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
 };
 

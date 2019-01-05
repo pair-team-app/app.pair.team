@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 
-const mapStateToProps = (state)=> {
+const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
 };
 

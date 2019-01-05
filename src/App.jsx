@@ -35,7 +35,7 @@ import { initTracker, trackEvent } from './utils/tracking';
 const wrapper = React.createRef();
 
 
-const mapStateToProps = (state)=> {
+const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
 };
 
@@ -66,7 +66,7 @@ class App extends Component {
 
 	componentDidMount() {
 		if (typeof cookie.load('user_id') === 'undefined') {
-			cookie.save('user_id', '-1', { path : '/' });
+			cookie.save('user_id', '0', { path : '/' });
 
 		} else {
 			this.props.fetchUserProfile();
@@ -135,7 +135,7 @@ class App extends Component {
 	};
 
 	handleLogout = ()=> {
-		cookie.save('user_id', '-1', { path : '/' });
+		cookie.save('user_id', '0', { path : '/' });
 
 		this.props.updateUserProfile(null);
 		window.location.href = '/';
@@ -223,7 +223,7 @@ class App extends Component {
 			formData.append('page_id', page.id);
 			formData.append('slices', '0');
 			formData.append('offset', '0');
-			formData.append('length', '-1');
+			formData.append('length', '1');
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log('ARTBOARDS', response.data);

@@ -8,7 +8,7 @@ import { Column, Row } from 'simple-flexbox';
 import ArtboardItem from '../iterables/ArtboardItem';
 
 
-const mapStateToProps = (state)=> {
+const mapStateToProps = (state, ownProps)=> {
 	return ({ artboards : state.exploreArtboards });
 };
 

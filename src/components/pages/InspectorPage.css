@@ -237,6 +237,8 @@
 	background-color: #000000;
 	padding: 6px;
 	font-size: 14px;
+	min-width: 50px;
+	text-align: center;
 }
 
 .inspector-page-dz-wrapper {
