@@ -8,6 +8,7 @@ import axios from 'axios';
 // import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
 import Dropzone from 'react-dropzone';
+import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import Popup from '../elements/Popup';
@@ -35,7 +36,7 @@ const tsOptions = {
 		minute : 'numeric'
 	};
 
-	const userID = cookie.load('user_id');
+	const userID = this.props.profile.id;
 	let isUpVoted = false;
 	let isDnVoted = false;
 	let score = 1;
@@ -170,6 +171,11 @@ function SpecsList(props) {
 }
 
 
+const mapStateToProps = (state)=> {
+	return ({ profile : state.userProfile });
+};
+
+
 class InspectorPage extends Component {
 	constructor(props) {
 		super(props);
@@ -260,7 +266,7 @@ class InspectorPage extends Component {
 	}
 
 	componentDidMount() {
-// 		console.log('componentDidMount()');
+// 		console.log('InspectorPage.componentDidMount()');
 
 		this.refreshData();
 		this.antsInterval = setInterval(this.redrawAnts, 100);
@@ -270,7 +276,7 @@ class InspectorPage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('componentDidUpdate()', prevProps.match.params.artboardID, this.props.match.params.artboardID);
+// 		console.log('InspectorPage.componentDidUpdate()', prevProps.match.params.artboardID, this.props.match.params.artboardID);
 		if (this.props.match.params.pageID !== prevProps.match.params.pageID) {
 			this.refreshData();
 			return (null);
@@ -285,7 +291,7 @@ class InspectorPage extends Component {
 				if (artboardsWrapper.current) {
 					this.state.artboards.forEach((artboard, i)=> {
 						if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
-							console.log('componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
+							console.log('InspectorPage.componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
 							artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * scale);
 							artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * scale);
 						}
@@ -297,7 +303,7 @@ class InspectorPage extends Component {
 				if (artboardsWrapper.current) {
 					this.state.artboards.forEach((artboard, i)=> {
 						if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
-							console.log('componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
+							console.log('InspectorPage.componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
 							artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * this.state.scale);
 							artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * this.state.scale);
 						}
@@ -444,7 +450,7 @@ class InspectorPage extends Component {
 	};
 
 	onDrop(files) {
-		console.log('onDrop()', files);
+		console.log('InspectorPage.onDrop()', files);
 		if (files.length > 0 && files[0].name.split('.').pop() === 'zip') {
 
 			let self = this;
@@ -466,7 +472,7 @@ class InspectorPage extends Component {
 				let formData = new FormData();
 				formData.append('file', file);
 
-				axios.post('http://cdn.designengine.ai/files/upload.php?user_id=' + cookie.load('user_id') + '&upload_id=' + this.state.uploadID, formData, config)
+				axios.post('http://cdn.designengine.ai/files/upload.php?user_id=' + this.props.profile.id + '&upload_id=' + this.state.uploadID, formData, config)
 					.then((response) => {
 						console.log("UPLOAD", response.data);
 
@@ -526,7 +532,7 @@ class InspectorPage extends Component {
 	};
 
 	handleTab = (ind)=> {
-		console.log('handleTab');
+		console.log('InspectorPage.handleTab()', ind);
 		this.setState({ selectedTab : ind });
 	};
 
@@ -558,7 +564,7 @@ class InspectorPage extends Component {
 		if (this.state.comment.length > 0) {
 			let formData = new FormData();
 			formData.append('action', 'ADD_COMMENT');
-			formData.append('user_id', cookie.load('user_id'));
+			formData.append('user_id', this.props.profile.id);
 			formData.append('artboard_id', '' + this.state.artboardID);
 			formData.append('content', this.state.comment);
 			axios.post('https://api.designengine.ai/system.php', formData)
@@ -574,7 +580,7 @@ class InspectorPage extends Component {
 	handleVote = (commentID, score)=> {
 		let formData = new FormData();
 		formData.append('action', 'VOTE_COMMENT');
-		formData.append('user_id', cookie.load('user_id'));
+		formData.append('user_id', this.props.profile.id);
 		formData.append('comment_id', commentID);
 		formData.append('value', score);
 		axios.post('https://api.designengine.ai/system.php', formData)
@@ -586,7 +592,7 @@ class InspectorPage extends Component {
 	};
 
 	handleWheel = (event)=> {
-// 		console.log(event.type, event.deltaX, event.deltaY, event.target);
+// 		console.log('InspectorPage.handleWheel()', event.type, event.deltaX, event.deltaY, event.target);
 		//console.log('wheel', artboardsWrapper.current.clientWidth, artboardsWrapper.current.clientHeight, artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft);
 
 // 		event.preventDefault();
@@ -625,7 +631,7 @@ class InspectorPage extends Component {
 	};
 
 	handleDrag = (event)=> {
-		//console.log(event.type, event.target);
+		//console.log('InspectorPage.handleDrag()', event.type, event.target);
 		if (event.type === 'mousedown') {
 
 
@@ -646,7 +652,7 @@ class InspectorPage extends Component {
 	};
 
 	handleArtboardOver = (event)=> {
-// 		console.log('handleArtboardOver()', event.target);
+// 		console.log('InspectorPage.handleArtboardOver()', event.target);
 		const artboardID = event.target.getAttribute('data-id');
 
 		let formData = new FormData();
@@ -676,7 +682,7 @@ class InspectorPage extends Component {
 	};
 
 	handleArtboardOut = (event)=> {
-// 		console.log('handleArtboardOut()', event.target);
+// 		console.log('InspectorPage.handleArtboardOut()', event.target);
 // 		const artboardID = event.target.getAttribute('data-id');
 //
 // 		let artboards = this.state.artboards;
@@ -1136,7 +1142,7 @@ class InspectorPage extends Component {
 		}
 
 // 		console.log('InspectorPage.render()', (artboardsWrapper.current) ? artboardsWrapper.current.scrollTop : 0, (artboardsWrapper.current) ? artboardsWrapper.current.scrollLeft : 0, scale);
-// 		console.log(window.performance.memory);
+// 		console.log('InspectorPage:', window.performance.memory);
 
 
 		return (<div>
@@ -1223,4 +1229,4 @@ class InspectorPage extends Component {
 	}
 }
 
-export default InspectorPage;
+export default connect(mapStateToProps)(InspectorPage);

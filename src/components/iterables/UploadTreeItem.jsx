@@ -83,8 +83,22 @@ class UploadTreeItem extends Component {
 		return ({ title : limitString(nextProps.title, UPLOAD_CHAR_LIMIT) });
 	}
 
+	handleClick = ()=> {
+		console.log('UploadTreeItem.handleClick()');
+		let categories = [...this.state.categories];
+		categories.forEach((category)=> {
+			category.selected = false;
+			category.items.forEach((item)=> {
+				item.selected = false
+			});
+		});
+
+		this.props.onClick();
+		this.setState({ categories });
+	};
+
 	handleCategoryClick = (category)=> {
-		console.log('handleCategoryClick()', category);
+		console.log('UploadTreeItem.handleCategoryClick()', category);
 		let categories = [...this.state.categories];
 		categories.forEach((item)=> {
 			if (category.id === item.id) {
@@ -92,6 +106,9 @@ class UploadTreeItem extends Component {
 
 			} else {
 				item.selected = false;
+				item.items.forEach((i)=> {
+					i.selected = false;
+				});
 			}
 
 			if (!item.selected) {
@@ -106,7 +123,7 @@ class UploadTreeItem extends Component {
 	};
 
 	handleInnerClick = (id, item)=> {
-		console.log('handleInnerClick()', id, item);
+		console.log('UploadTreeItem.handleInnerClick()', id, item);
 
 		if (id === 1) {
 			this.props.onFontClick(item);
@@ -135,7 +152,7 @@ class UploadTreeItem extends Component {
 			<div className="upload-tree-item">
 				<Row vertical="center">
 					<img src={sketchIcon} className="upload-tree-item-icon" alt="Icon" />
-					<div className={textClass} onClick={()=> this.props.onClick()}>{title}</div>
+					<div className={textClass} onClick={()=> this.handleClick()}>{title}</div>
 				</Row>
 				{(selected) && (<div className="upload-tree-item-list">
 					{categories.map((category, i)=> {

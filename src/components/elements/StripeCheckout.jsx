@@ -31,7 +31,7 @@ class StripeCheckout extends Component {
 		ReactPixel.trackCustom('purchase');
 
 		let token = await this.props.stripe.createToken({ name : this.state.cardholder });
-		console.log("token", token);
+		console.log("StripeCheckout.submit", ev, token);
 
 		setTimeout(function() {
 			let formData = new FormData();

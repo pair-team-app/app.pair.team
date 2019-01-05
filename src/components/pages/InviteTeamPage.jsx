@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './InviteTeamPage.css';
 
 import axios from 'axios/index';
-import cookie from 'react-cookies';
+import { connect } from 'react-redux';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Row } from 'simple-flexbox';
 
@@ -12,12 +12,18 @@ import Popup from '../elements/Popup';
 
 import { isValidEmail } from '../../utils/funcs';
 
+
+const mapStateToProps = (state)=> {
+	return ({ profile : state.userProfile });
+};
+
+
 class InviteTeamPage extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			uploadID    : (typeof cookie.load('upload_id') !== 'undefined') ? cookie.load('upload_id') : this.props.uploadID,
+			uploadID    : this.props.uploadID,
 			uploadTitle : 'Select Project',
 			uploadURL   : '…',
 			uploads     : [],
@@ -41,7 +47,7 @@ class InviteTeamPage extends Component {
 	componentDidMount() {
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
-		formData.append('user_id', cookie.load('user_id'));
+		formData.append('user_id', this.props.profile.id);
 		formData.append('offset', this.state.loadOffset);
 		formData.append('length', this.state.loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
@@ -80,7 +86,7 @@ class InviteTeamPage extends Component {
 						if (upload.id === self.state.uploadID) {
 							uploadID = upload.id;
 							uploadTitle = upload.title;
-							uploadURL = 'https://earlyaccess.designengine.ai/proj/' + self.state.uploadID + '/' + upload.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
+							uploadURL = window.location.origin + '/proj/' + self.state.uploadID + '/' + upload.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
 						}
 					});
 
@@ -95,7 +101,7 @@ class InviteTeamPage extends Component {
 					this.setState({
 						uploadID    : (uploads.length > 0) ? uploads[0].id : this.state.uploadID,
 						uploadTitle : (uploads.length > 0) ? uploads[0].title : this.state.uploadTitle,
-						uploadURL   : (uploads.length > 0) ? 'https://earlyaccess.designengine.ai/proj/' + uploads[0].id + '/' + uploads[0].title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase() : this.state.uploadURL,
+						uploadURL   : (uploads.length > 0) ? window.location.origin + '/proj/' + uploads[0].id + '/' + uploads[0].title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase() : this.state.uploadURL,
 						uploads     : uploads
 					});
 				}
@@ -108,7 +114,7 @@ class InviteTeamPage extends Component {
 		uploads.forEach(upload => upload.selected = false);
 		uploads[ind].selected = true;
 		this.setState({
-			uploadURL   : 'https://earlyaccess.designengine.ai/proj/' + uploads[0].id + '/' + uploads[ind].title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase(),
+			uploadURL   : window.location.origin + '/proj/' + uploads[0].id + '/' + uploads[ind].title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase(),
 			uploads     : uploads
 		});
 	};
@@ -152,7 +158,7 @@ class InviteTeamPage extends Component {
 		if (isEmail1Valid || isEmail2Valid || isEmail3Valid) {
 			let formData = new FormData();
 			formData.append('action', 'INVITE');
-			formData.append('user_id', cookie.load('user_id'));
+			formData.append('user_id', this.props.profile.id);
 			formData.append('upload_id', this.state.uploadID);
 			formData.append('emails', emails);
 			axios.post('https://api.designengine.ai/system.php', formData)
@@ -213,4 +219,4 @@ class InviteTeamPage extends Component {
 	}
 }
 
-export default InviteTeamPage;
+export default connect(mapStateToProps)(InviteTeamPage);

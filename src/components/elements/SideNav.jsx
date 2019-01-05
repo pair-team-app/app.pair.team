@@ -4,6 +4,7 @@ import './SideNav.css'
 
 import axios from 'axios';
 import cookie from 'react-cookies';
+import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import UploadTreeItem from '../iterables/UploadTreeItem';
@@ -12,6 +13,11 @@ import { isUserLoggedIn } from '../../utils/funcs';
 
 const wrapper = React.createRef();
 const scrollWrapper = React.createRef();
+
+
+const mapStateToProps = (state)=> {
+	return ({ profile : state.userProfile });
+};
 
 
 class SideNav extends Component {
@@ -63,6 +69,8 @@ class SideNav extends Component {
 	};
 
 	fetchNextUploads = ()=> {
+// 		console.log('SideNav.fetchNextUploads()');
+
 		const prevUploads = this.state.uploads;
 
 		if (!this.state.fetching) {
@@ -71,8 +79,8 @@ class SideNav extends Component {
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
-		formData.append('user_id', (window.location.pathname.includes('/explore') || !isUserLoggedIn()) ? '0' : cookie.load('user_id'));
-		formData.append('offset', this.state.loadOffset);
+		formData.append('user_id', (window.location.pathname.includes('/explore') || !isUserLoggedIn()) ? '0' : this.props.userID);
+		formData.append('offset', (window.location.pathname.includes('/explore')) ? this.state.loadOffset : '0');
 		formData.append('length', this.state.loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
@@ -113,7 +121,7 @@ class SideNav extends Component {
 // 				}
 
 				this.setState({
-					uploads     : prevUploads.concat(uploads),
+					uploads     : (window.location.pathname.includes('/explore')) ? prevUploads.concat(uploads) : uploads,
 					loadOffset  : this.state.loadOffset + this.state.loadAmt,
 					loadAmt     : (this.state.loadAmt < 40) ? 40 : 10,
 					fetching    : false
@@ -123,7 +131,7 @@ class SideNav extends Component {
 	};
 
 	fetchPageArtboards = (uploads)=> {
-		console.log('fetchPageArtboards()', uploads);
+		console.log('SideNav.fetchPageArtboards()', uploads);
 
 		uploads.forEach((upload)=> {
 			upload.pages.forEach((page)=> {
@@ -156,6 +164,8 @@ class SideNav extends Component {
 
 
 	handleUploadClick = (upload)=> {
+		console.log('SideNav.handleUploadClick()', upload);
+
 		let uploads = [...this.state.uploads];
 		uploads.forEach(function(item, i) {
 			if (item.id === upload.id) {
@@ -165,9 +175,6 @@ class SideNav extends Component {
 				item.selected = false;
 				item.pages.forEach((page)=> {
 					page.selected = false;
-					page.artboards.forEach((artboard)=> {
-						artboard.selected = false;
-					});
 				});
 			}
 		});
@@ -184,28 +191,31 @@ class SideNav extends Component {
 	};
 
 	handleCategoryClick = (category)=> {
-		console.log('handleCategoryClick()', category);
+		console.log('SideNav.handleCategoryClick()', category);
 	};
 
 	handleFontClick = (font)=> {
-		console.log('handleFontClick()', font);
+		console.log('SideNav.handleFontClick()', font);
 	};
 
 	handleColorClick = (color)=> {
-		console.log('handleColorClick()', color);
+		console.log('SideNav.handleColorClick()', color);
 	};
 
 	handleSymbolClick = (symbol)=> {
-		console.log('handleSymbolClick()', symbol);
+		console.log('SideNav.handleSymbolClick()', symbol);
 	};
 
 	handlePageClick = (page)=> {
+		console.log('SideNav.handlePageClick()', page);
+
 		let uploads = [...this.state.uploads];
 		uploads.forEach((upload)=> {
-			if (upload.selected) {
+			if (upload.id === page.uploadID) {
 				upload.pages.forEach((item)=> {
 					if (item.id === page.id) {
 						item.selected = !item.selected;
+						page.selected = !page.selected;
 
 					} else {
 						item.selected = false;
@@ -214,20 +224,19 @@ class SideNav extends Component {
 			}
 		});
 
+		this.setState({ uploads : uploads });
+
 		if (page.selected) {
 // 			if (!window.location.pathname.includes('/explore')) {
 // 				this.fetchPageArtboards(uploads);
 // 			}
 
 			this.props.onPageItem(page);
-
-		} else {
-			this.setState({ uploads : uploads });
 		}
 	};
 
 	handleContributorClick = (contributor)=> {
-		console.log('handleContributorClick()', contributor);
+		console.log('SideNav.handleContributorClick()', contributor);
 	};
 
 
@@ -260,31 +269,27 @@ class SideNav extends Component {
 						<Column flexGrow={1} horizontal="end"><button className="tiny-button" onClick={()=> this.handleUpload()}>New</button></Column>
 					</Row></h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
-						{(isUserLoggedIn() || isExplore) ? (<div>
-								{(uploads.length === 0) ? <span className="side-nav-subtext">You don't have any projects yet!</span> : uploads.map((upload, i) => {
-									return (
-										<UploadTreeItem
-											key={i}
-											title={upload.title}
-											fonts={upload.fonts}
-											colors={upload.colors}
-											symbols={upload.symbols}
-											pages={upload.pages}
-											contributors={upload.contributors}
-											selected={upload.selected}
-											onClick={()=> this.handleUploadClick(upload)}
-											onCategoryClick={(category)=> this.handleCategoryClick(category)}
-											onFontClick={(font)=> this.handleFontClick(font)}
-											onColorClick={(color)=> this.handleColorClick(color)}
-											onSymbolClick={(symbol)=> this.handleSymbolClick(symbol)}
-											onPageClick={(page)=> this.handlePageClick(page)}
-											onContributorClick={(contributor)=> this.handleContributorClick(contributor)}
-											 />
-									);
-								})}
-							</div>) : (<div>
-							<span className="side-nav-subtext">You must be logged in.</span>
-						</div>)}
+						{(uploads.length === 0) ? <span className="side-nav-subtext">You don't have any projects yet!</span> : uploads.map((upload, i) => {
+							return (
+								<UploadTreeItem
+									key={i}
+									title={upload.title}
+									fonts={upload.fonts}
+									colors={upload.colors}
+									symbols={upload.symbols}
+									pages={upload.pages}
+									contributors={upload.contributors}
+									selected={upload.selected}
+									onClick={()=> this.handleUploadClick(upload)}
+									onCategoryClick={(category)=> this.handleCategoryClick(category)}
+									onFontClick={(font)=> this.handleFontClick(font)}
+									onColorClick={(color)=> this.handleColorClick(color)}
+									onSymbolClick={(symbol)=> this.handleSymbolClick(symbol)}
+									onPageClick={(page)=> this.handlePageClick(page)}
+									onContributorClick={(contributor)=> this.handleContributorClick(contributor)}
+							 />
+							);
+						})}
 					</div>
 					{(window.location.pathname.includes('/explore'))
 						? (<div className="side-nav-link" onClick={()=> this.fetchNextUploads()}>{(fetching) ? 'Loading…' : 'Explore More'}</div>)
@@ -310,4 +315,4 @@ class SideNav extends Component {
 	}
 }
 
-export default SideNav;
+export default connect(mapStateToProps)(SideNav);

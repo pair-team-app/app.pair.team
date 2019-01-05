@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './ProfilePage.css';
 
 import axios from 'axios/index';
-import cookie from 'react-cookies';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
@@ -22,6 +21,7 @@ function mapDispatchToProps(dispatch) {
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 }
+
 
 class ProfilePage extends Component {
 	constructor(props) {
@@ -43,15 +43,21 @@ class ProfilePage extends Component {
 	}
 
 	componentDidMount() {
-		if (!this.props.profile) {
-			//this.props.fetchUserProfile();
+		console.log('ProfilePage.componentDidMount()', this.props);
+		if (this.props.profile) {
+			const { avatar, username, email } = this.props.profile;
+
+			this.setState({
+				avatar   : avatar,
+				username : username,
+				email    : email
+			});
 		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		console.log('ProfilePage.componentDidUpdate()', prevProps.profile, this.props.profile);
 		if (prevProps.profile !== this.props.profile) {
-			console.log('!!UPDATE!!');
 			const { avatar, username, email, status } = this.props.profile;
 
 			this.setState({
@@ -87,7 +93,7 @@ class ProfilePage extends Component {
 			let formData = new FormData();
 			formData.append('file', file);
 
-			axios.post('http://cdn.designengine.ai/upload.php?dir=/profiles&prefix=' + cookie.load('user_id') + '_', formData, config)
+			axios.post('http://cdn.designengine.ai/upload.php?dir=/profiles&prefix=' + this.props.profile.userID + '_', formData, config)
 				.then((response) => {
 					console.log("UPLOAD", response.data);
 				}).catch((error) => {
@@ -96,7 +102,7 @@ class ProfilePage extends Component {
 	}
 
 	onUploadComplete = ()=> {
-		this.validateFields('avatar', 'http://cdn.designengine.ai/profiles/' + cookie.load('user_id') + '_' + this.state.files[0].name);
+		this.validateFields('avatar', 'http://cdn.designengine.ai/profiles/' + this.props.profile.userID + '_' + this.state.files[0].name);
 		this.onProfileUpdate();
 	};
 
@@ -109,6 +115,7 @@ class ProfilePage extends Component {
 
 		if (usernameValid && emailValid && passwordValid) {
 			this.props.updateUserProfile({
+				id       : this.props.profile.id,
 				avatar   : avatar,
 				username : username,
 				email    : email,
@@ -117,7 +124,7 @@ class ProfilePage extends Component {
 
 // 			let formData = new FormData();
 // 			formData.append('action', 'UPDATE_PROFILE');
-// 			formData.append('user_id', cookie.load('user_id'));
+// 			formData.append('user_id', this.props.profile.id);
 // 			formData.append('username', username);
 // 			formData.append('email', email);
 // 			formData.append('filename', avatar);
@@ -185,7 +192,7 @@ class ProfilePage extends Component {
 	validateFields = (key, val)=> {
 		let state = this.state;
 		Object.keys(state).forEach((k, i) => {
-// 			console.log('validateFields()', k, key, val);
+// 			console.log('ProfilePage.validateFields()', k, key, val);
 			if (k === key) {
 				state[key] = val;
 			}
@@ -211,6 +218,11 @@ class ProfilePage extends Component {
 
 	render() {
 		console.log('ProfilePage.render()', this.props, this.state);
+
+// 		if (!this.props.profile) {
+// 			cookie.save('msg', 'use this feature.', { path : '/' });
+// 			this.props.onPage('login');
+// 		}
 
 		const { avatar, username, email, passMsg } = (this.props.profile) ? this.props.profile : this.state;
 		const { usernameValid, emailValid, passwordValid } = this.state;
@@ -271,4 +283,3 @@ class ProfilePage extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
-//export default connect(mapStateToProps, { fetchUserProfile })(ProfilePage);

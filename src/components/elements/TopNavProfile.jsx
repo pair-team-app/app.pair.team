@@ -7,13 +7,11 @@ import onClickOutside from 'react-onclickoutside';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import { fetchUserProfile } from '../../redux/actions';
-import { isUserLoggedIn } from '../../utils/funcs';
-
 
 const mapStateToProps = (state)=> {
 	return ({ profile : state.userProfile });
 };
+
 
 class TopNavProfile extends Component {
 	constructor(props) {
@@ -25,15 +23,9 @@ class TopNavProfile extends Component {
 	}
 
 	componentDidMount() {
-		if (isUserLoggedIn() && !this.props.profile) {
-			this.props.fetchUserProfile();
-		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		if (isUserLoggedIn() && !this.props.profile) {
-			this.props.fetchUserProfile();
-		}
 	}
 
 	handleClickOutside(e) {
@@ -72,4 +64,4 @@ class TopNavProfile extends Component {
 	}
 }
 
-export default connect(mapStateToProps, { fetchUserProfile })(onClickOutside(TopNavProfile));
+export default connect(mapStateToProps)(onClickOutside(TopNavProfile));

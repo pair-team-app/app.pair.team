@@ -18,7 +18,7 @@ class RecoverPage extends Component {
 	}
 
 	handleSubmit = (event)=> {
-		console.log('submit()');
+		console.log('RecoverPage.handleSubmit()', event);
 		event.preventDefault();
 
 		const { email } = this.state;

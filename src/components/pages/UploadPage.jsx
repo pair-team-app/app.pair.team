@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import './UploadPage.css';
 
 import axios from 'axios';
-import cookie from 'react-cookies';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Dropzone from 'react-dropzone';
+import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import ArtboardItem from '../iterables/ArtboardItem';
@@ -17,6 +17,10 @@ import { isValidEmail } from '../../utils/funcs';
 const dzWrapper = React.createRef();
 const titleTextfield = React.createRef();
 
+
+const mapStateToProps = (state)=> {
+	return ({ profile : state.userProfile });
+};
 
 class UploadPage extends Component {
 	constructor(props) {
@@ -81,13 +85,15 @@ class UploadPage extends Component {
 	onDragLeave() {}
 
 	onDrop(files) {
-		console.log('onDrop()', files);
+		console.log('UploadPage.onDrop()', files);
+
+		const { id, email } = this.props.profile;
 		if (files.length > 0 && files[0].name.split('.').pop() === 'sketch') {
 			if (files[0].size < 100 * 1024 * 1024) {
 
 				let formData = new FormData();
 				formData.append('action', 'SLACK');
-				formData.append('message', '*[' + cookie.load('user_id') + ']* *' + cookie.load('user_email') + '* started uploading file "_' + files[0].name + '_"');
+				formData.append('message', '*[' + id + ']* *' + email + '* started uploading file "_' + files[0].name + '_"');
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response) => {
 						console.log("SLACK", response.data);
@@ -114,7 +120,7 @@ class UploadPage extends Component {
 						if (progressEvent.loaded === progressEvent.total) {
 							let formData = new FormData();
 							formData.append('action', 'SLACK');
-							formData.append('message', '*[' + cookie.load('user_id') + ']* *' + cookie.load('user_email') + '* - "_' + files[0].name + '_" uploaded');
+							formData.append('message', '*[' + id + ']* *' + email + '* - "_' + files[0].name + '_" uploaded');
 							axios.post('https://api.designengine.ai/system.php', formData)
 								.then((response) => {
 									console.log("SLACK", response.data);
@@ -135,7 +141,7 @@ class UploadPage extends Component {
 							console.log("UPLOAD", response.data);
 						}).catch((error) => {
 						formData.append('action', 'SLACK');
-						formData.append('message', '*' + cookie.load('user_email') + '* upload failed for file _' + files[0].name + '_');
+						formData.append('message', '*' + email + '* upload failed for file _' + files[0].name + '_');
 						axios.post('https://api.designengine.ai/system.php', formData)
 							.then((response) => {
 								console.log("SLACK", response.data);
@@ -158,7 +164,7 @@ class UploadPage extends Component {
 		} else {
 			let formData = new FormData();
 			formData.append('action', 'SLACK');
-			formData.append('message', '*[' + cookie.load('user_id') + ']* *' + cookie.load('user_email') + '* uploaded incompatible file "_' + files[0].name + '_"');
+			formData.append('message', '*[' + id + ']* *' + email + '* uploaded incompatible file "_' + files[0].name + '_"');
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log("SLACK", response.data);
@@ -184,7 +190,7 @@ class UploadPage extends Component {
 	};
 
 	handleCancel = (event)=> {
-		console.log('handleCancel()', event);
+		console.log('UploadPage.handleCancel()', event);
 		event.preventDefault();
 		event.stopPropagation();
 
@@ -195,7 +201,6 @@ class UploadPage extends Component {
 			.then((response) => {
 				console.log('UPLOAD_CANCEL', response.data);
 				clearInterval(this.uploadInterval);
-				cookie.save('upload_id', '0', { path : '/' });
 				this.props.onPage('//');
 			}).catch((error) => {
 		});
@@ -227,24 +232,23 @@ class UploadPage extends Component {
 	};
 
 	handleSubmit = ()=> {
-		console.log(this.state.radioIndex);
+		const { uploadTitle, description, radioIndex, files, uploadComplete, submitted } = this.state;
 
-		if (this.state.uploadComplete && !this.state.submitted) {
+		if (uploadComplete && !submitted) {
 			this.setState({ submitted : true });
 			let formData = new FormData();
 			formData.append('action', 'NEW_UPLOAD');
-			formData.append('user_id', cookie.load('user_id'));
-			formData.append('title', this.state.uploadTitle);
-			formData.append('description', this.state.description);
-			formData.append('private', (this.state.radioIndex === 1) ? '0' : '1');
-			formData.append('filename', "http://cdn.designengine.ai/system/" + this.state.files[0].name);
+			formData.append('user_id', this.props.profile.id);
+			formData.append('title', uploadTitle);
+			formData.append('description', description);
+			formData.append('private', (radioIndex === 1) ? '0' : '1');
+			formData.append('filename', "http://cdn.designengine.ai/system/" + files[0].name);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log('NEW_UPLOAD', response.data);
-					cookie.save('upload_id', response.data.upload_id, { path : '/' });
 					this.setState({
 						uploadID        : response.data.upload_id,
-						uploadURL       : 'https://earlyaccess.designengine.ai/proj/' + response.data.upload_id + '/' + this.state.uploadTitle.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase(),
+						uploadURL       : window.location.origin + '/proj/' + response.data.upload_id + '/' + uploadTitle.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase(),
 						processingState : 0,
 						files           : []
 					});
@@ -322,7 +326,7 @@ class UploadPage extends Component {
 		if (isEmail1Valid || isEmail2Valid || isEmail3Valid || isEmail4Valid || isEmail5Valid) {
 			let formData = new FormData();
 			formData.append('action', 'INVITE');
-			formData.append('user_id', cookie.load('user_id'));
+			formData.append('user_id', this.props.profile.id);
 			formData.append('upload_id', '' + this.state.uploadID);
 			formData.append('emails', emails);
 			axios.post('https://api.designengine.ai/system.php', formData)
@@ -384,7 +388,7 @@ class UploadPage extends Component {
 	};
 
 	render() {
-		console.log('render()', this.state);
+		console.log('UploadPage.render()', this.props);
 
 		const { action } = this.state;
 		const { emailCounter, email1, email2, email3, email4, email5, email1Valid, email2Valid, email3Valid, email4Valid, email5Valid } = this.state;
@@ -548,4 +552,4 @@ class UploadPage extends Component {
 	}
 }
 
-export default UploadPage;
+export default connect(mapStateToProps)(UploadPage);

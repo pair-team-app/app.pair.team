@@ -4,11 +4,21 @@ import './LoginPage.css';
 
 import axios from 'axios/index';
 import cookie from 'react-cookies';
+import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
+import { updateUserProfile } from '../../redux/actions';
 import { hasBit, isValidEmail } from '../../utils/funcs';
 
 const passwordTextfield = React.createRef();
+
+
+function mapDispatchToProps(dispatch) {
+	return ({
+		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+	});
+}
+
 
 class LoginPage extends Component {
 	constructor(props) {
@@ -36,7 +46,7 @@ class LoginPage extends Component {
 	};
 
 	handleSubmit = (event)=> {
-		console.log('submit()');
+		console.log('LoginPage.submit()');
 		event.preventDefault();
 
 		const { email, password } = this.state;
@@ -63,7 +73,15 @@ class LoginPage extends Component {
 
 					if (hasBit(status, 0x11)) {
 						cookie.save('user_id', response.data.user_id, { path : '/' });
-						cookie.save('user_email', email, { path : '/' });
+
+						this.props.updateUserProfile({
+							id       : response.data.user_id,
+							avatar   : response.data.avatar,
+							username : response.data.username,
+							email    : response.data.email,
+							password : password
+						});
+
 						this.props.onPage('');
 
 					} else {
@@ -117,4 +135,4 @@ class LoginPage extends Component {
 	}
 }
 
-export default LoginPage;
+export default connect(null, mapDispatchToProps)(LoginPage);

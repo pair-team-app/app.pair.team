@@ -4,12 +4,22 @@ import './RegisterPage.css';
 
 import axios from 'axios/index';
 import cookie from 'react-cookies';
+import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import { hasBit, isValidEmail } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
+import {updateUserProfile} from "../../redux/actions";
 
 const passwordTextfield = React.createRef();
+
+
+function mapDispatchToProps(dispatch) {
+	return ({
+		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+	});
+}
+
 
 class RegisterPage extends Component {
 	constructor(props) {
@@ -89,6 +99,14 @@ class RegisterPage extends Component {
 					if (status === 0x11) {
 						trackEvent('sign-up');
 						cookie.save('user_id', response.data.user_id, { path : '/' });
+
+						this.props.updateUserProfile({
+							id       : response.data.user_id,
+							avatar   : response.data.avatar,
+							username : response.data.username,
+							email    : response.data.email,
+							password : password
+						});
 						this.props.onPage('');
 
 					} else {
@@ -142,4 +160,4 @@ class RegisterPage extends Component {
 	}
 }
 
-export default RegisterPage;
+export default connect(null, mapDispatchToProps)(RegisterPage);

@@ -4,6 +4,7 @@ import './App.css';
 
 import axios from 'axios';
 import cookie from 'react-cookies';
+import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom'
 
 import SideNav from './components/elements/SideNav';
@@ -27,10 +28,24 @@ import UploadPage from './components/pages/UploadPage';
 
 import StripeOverlay from './components/elements/StripeOverlay';
 
+import { fetchUserProfile, updateUserProfile } from './redux/actions';
 import { idsFromPath, urlSlugTitle } from './utils/funcs';
 import { initTracker, trackEvent } from './utils/tracking';
 
 const wrapper = React.createRef();
+
+
+const mapStateToProps = (state)=> {
+	return ({ profile : state.userProfile });
+};
+
+function mapDispatchToProps(dispatch) {
+	return ({
+		fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
+		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+	});
+}
+
 
 class App extends Component {
 	constructor(props) {
@@ -51,15 +66,16 @@ class App extends Component {
 
 	componentDidMount() {
 		if (typeof cookie.load('user_id') === 'undefined') {
-			cookie.save('user_id', '0', { path : '/' });
+			cookie.save('user_id', '-1', { path : '/' });
+
+		} else {
+			this.props.fetchUserProfile();
 		}
 
 		initTracker();
 		trackEvent('load');
 
 		const { uploadID, pageID } = this.state;
-		cookie.save('upload_id', uploadID, { path : '/' });
-
 		if (window.location.pathname.includes('/artboard/')) {
 			if (uploadID === 0) {
 				let formData = new FormData();
@@ -68,7 +84,6 @@ class App extends Component {
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response) => {
 						console.log('PAGE', response.data);
-						cookie.save('upload_id', response.data.page.upload_id, { path : '/' });
 						this.setState({ uploadID : response.data.page.upload_id });
 					}).catch((error) => {
 				});
@@ -90,7 +105,7 @@ class App extends Component {
 	};
 
 	handleArtboardClicked = (artboard)=> {
-		console.log('handleArtboardClicked()', artboard);
+		console.log('App.handleArtboardClicked()', artboard);
 		this.handleAddPageView(artboard.pageID);
 
 		this.props.history.push('/artboard/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
@@ -103,7 +118,7 @@ class App extends Component {
 	};
 
 	handleAddOns = ()=> {
-		console.log('handleAddOns()');
+		console.log('App.handleAddOns()');
 // 		this.setState({ overlayAlert: 'download' });
 	};
 
@@ -120,14 +135,14 @@ class App extends Component {
 	};
 
 	handleLogout = ()=> {
-		cookie.save('user_id', '0', { path : '/' });
-		cookie.save('upload_id', '0', { path : '/' });
-		cookie.remove('user_email', { path : '/' });
+		cookie.save('user_id', '-1', { path : '/' });
+
+		this.props.updateUserProfile(null);
 		window.location.href = '/';
 	};
 
 	handleOverlay = (overlayType, buttonType)=> {
-		console.log('handleOverlay()', overlayType, buttonType);
+		console.log('App.handleOverlay()', overlayType, buttonType);
 		this.setState({ overlayAlert : null });
 		if (overlayType === 'register') {
 			if (buttonType === 'submit') {
@@ -145,8 +160,12 @@ class App extends Component {
 	};
 
 	handlePage = (url)=> {
-		console.log('handlePage()', url);
-		wrapper.current.scrollTo(0, 0);
+		console.log('App.handlePage()', url);
+
+		const { pathname } = window.location;
+		if (wrapper.current) {
+			wrapper.current.scrollTo(0, 0);
+		}
 
 		if (url === '//') {
 			this.props.history.goBack();
@@ -158,7 +177,7 @@ class App extends Component {
 				artboardID : 0
 			});
 
-			if (window.location.pathname === '/') {
+			if (pathname === '/') {
 				window.location.href = '/';
 
 			} else {
@@ -166,7 +185,7 @@ class App extends Component {
 			}
 
 		} else {
-			if (window.location.pathname === '/' + url) {
+			if (pathname === '/' + url) {
 				window.location.href = '/' + url;
 
 			} else {
@@ -181,11 +200,9 @@ class App extends Component {
 	};
 
 	handleSideNavUploadItem = (upload)=> {
-		console.log('handleSideNavUploadItem()', upload);
+		console.log('App.handleSideNavUploadItem()', upload);
 
 		if (upload.selected && this.state.uploadID !== upload.id) {
-			cookie.save('upload_id', upload.id, { path : '/' });
-
 			this.setState({
 				uploadID   : upload.id,
 				pageID     : 0,
@@ -197,7 +214,7 @@ class App extends Component {
 	};
 
 	handleSideNavPageItem = (page)=> {
-		console.log('handleSideNavPageItem()', page);
+		console.log('App.handleSideNavPageItem()', page);
 
 		if (page.selected) {
 			let formData = new FormData();
@@ -228,7 +245,7 @@ class App extends Component {
 	};
 
 	handleSideNavArtboardItem = (artboard)=> {
-		console.log('handleSideNavArtboardItem()', artboard);
+		console.log('App.handleSideNavArtboardItem()', artboard);
 
 		this.handleAddPageView(artboard.pageID);
 		this.props.history.push('/artboard/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
@@ -240,14 +257,14 @@ class App extends Component {
 	};
 
 	handleSideNavSliceItem = (obj)=> {
-		console.log('handleSideNavSliceItem()', obj);
+		console.log('App.handleSideNavSliceItem()', obj);
 // 		this.props.history.push('/artboard/' + this.state.pageID + '/' + this.state.artboardID + '/' + obj.id);
 // 		this.setState({ sliceID : obj.id });
 	};
 
 
 	render() {
-  	console.log('App.state', this.state);
+  	console.log('App.render()', this.props, this.state);
 
   	const { uploadID, pageID, artboardID, sliceID } = this.state;
   	const { processing } = this.state;
@@ -263,7 +280,7 @@ class App extends Component {
 				    />
 
 				    <SideNav
-					    userID={cookie.load('user_id')}
+					    userID={(this.props.profile) ? this.props.profile.id : 0}
 					    uploadID={uploadID}
 					    pageID={pageID}
 					    artboardID={artboardID}
@@ -314,4 +331,4 @@ class App extends Component {
   }
 }
 
-export default withRouter(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

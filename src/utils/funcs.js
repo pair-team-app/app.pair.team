@@ -28,7 +28,7 @@ export function idsFromPath() {
 }
 
 export function isUserLoggedIn() {
-	return (cookie.load('user_id') !== '0');
+	return (cookie.load('user_id') !== '-1');
 }
 
 export function isValidEmail(email) {

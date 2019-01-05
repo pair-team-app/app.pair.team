@@ -53,7 +53,7 @@ class HomePage extends Component {
 	}
 
 	handleLoadNext = ()=> {
-		console.log('handleLoadNext()', this.state.artboards);
+		console.log('HomePage.handleLoadNext()', this.state.artboards);
 
 		const { uploadID, pageID } = this.props;
 		const { loadOffset, loadAmt } = this.state;
