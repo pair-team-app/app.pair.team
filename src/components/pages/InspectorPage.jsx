@@ -1171,7 +1171,7 @@ class InspectorPage extends Component {
 						<button className={'inspector-page-float-button' + ((scale <= 0.03) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button><br />
 						<button className={'inspector-page-float-button' + ((scale === 1.0) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 1.0) ? '/images/zoom-reset.svg' : '/images/zoom-reset_disabled.svg'} alt="0" /></button>
 					</div>
-					<div className="inspector-page-toggle-wrapper">
+					<div className="inspector-page-toggle-wrapper is-hidden">
 						<SliceToggle type="hotspot" selected={visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} />
 						<SliceToggle type="slice" selected={visibleTypes.slice} onClick={()=> this.handleSliceToggle('slice')} />
 						<SliceToggle type="textfield" selected={visibleTypes.textfield} onClick={()=> this.handleSliceToggle('textfield')} />
