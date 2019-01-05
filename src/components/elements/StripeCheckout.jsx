@@ -3,7 +3,6 @@ import React, {Component} from 'react';
 
 import axios from 'axios';
 // import CurrencyFormat from 'react-currency-format';
-import ReactPixel from 'react-facebook-pixel';
 import { CardCVCElement, CardExpiryElement, CardNumberElement, injectStripe } from 'react-stripe-elements';
 
 
@@ -19,17 +18,9 @@ class StripeCheckout extends Component {
 	}
 
 	componentDidMount() {
-		const advancedMatching = { em : 'some@email.com' };
-		const options = {
-			autoConfig : true,
-			debug      : false
-		};
-		ReactPixel.init('318191662273348', advancedMatching, options);
 	}
 
 	async submit(ev) {
-		ReactPixel.trackCustom('purchase');
-
 		let token = await this.props.stripe.createToken({ name : this.state.cardholder });
 		console.log("StripeCheckout.submit", ev, token);
 
