@@ -97,7 +97,7 @@ class RegisterPage extends Component {
 					console.log('status', status, hasBit(status, 0x01), hasBit(status, 0x10));
 
 					if (status === 0x11) {
-						trackEvent('sign-up');
+						trackEvent('user', 'sign-up');
 						cookie.save('user_id', response.data.user_id, { path : '/' });
 
 						this.props.updateUserProfile({

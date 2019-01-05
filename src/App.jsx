@@ -72,8 +72,8 @@ class App extends Component {
 			this.props.fetchUserProfile();
 		}
 
-		initTracker();
-		trackEvent('load');
+		initTracker(cookie.load('user_id'));
+		trackEvent('site', 'load');
 
 		const { uploadID, pageID } = this.state;
 		if (window.location.pathname.includes('/artboard/')) {
