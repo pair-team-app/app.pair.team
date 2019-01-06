@@ -134,7 +134,7 @@ class SideNav extends Component {
 						id     : contributor.id,
 						title  : contributor.username,
 						avatar : contributor.avatar
-					})).concat([{
+					})).concat((upload.id === '2' || upload.id === '3') ? [] : [{
 						id     : 0,
 						title  : 'Invite Team',
 						avatar : defaultAvatar
