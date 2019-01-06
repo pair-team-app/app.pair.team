@@ -8,31 +8,10 @@ import { Column, Row } from 'simple-flexbox';
 
 import HomeExpo from '../elements/HomeExpo';
 import ArtboardItem from '../iterables/ArtboardItem';
+import GridHeader from '../elements/GridHeader';
 import Popup from '../elements/Popup';
 
-import { isHomePage, isUserLoggedIn} from '../../utils/funcs';
-
-
-function LoggedInHeader(props) {
-	return (<div>
-		<h3>Create a new design project</h3>
-		<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
-		<div className="explore-page-button-wrapper">
-			<button onClick={()=> props.onPage('new')}>New Project</button>
-		</div>
-	</div>);
-}
-
-function LoggedOutHeader(props) {
-	return (<div>
-		<h3>Signup or login</h3>
-		<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
-		<div className="explore-page-button-wrapper">
-			<button className="adjacent-button" onClick={()=> props.onPage('register')}>Sign up with Email</button>
-			<button onClick={()=> props.onPage('login')}>Login</button>
-		</div>
-	</div>);
-}
+//import { isHomePage } from '../../utils/funcs';
 
 
 class HomePage extends Component {
@@ -150,10 +129,9 @@ class HomePage extends Component {
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
+				{/*{(isHomePage()) && (<GridHeader onPage={(url)=> this.props.onPage(url)} />)}*/}
 				<HomeExpo onClick={(url)=> this.props.onPage(url)} />
-				{(isHomePage()) && (<div>
-					{(isUserLoggedIn()) ? (<LoggedInHeader onPage={(url)=> this.props.onPage(url)} />) : (<LoggedOutHeader onPage={(url)=> this.props.onPage(url)} />)}
-				</div>)}
+				<GridHeader onPage={(url)=> this.props.onPage(url)} />
 
 				<Row><h3>{title}</h3></Row>
 				{(artboards.length > 0) && (<div>

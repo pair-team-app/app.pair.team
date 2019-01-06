@@ -65,13 +65,13 @@ class InviteTeamPage extends Component {
 		console.log('InviteTeamPage.refreshData()');
 
 		const { pageID, artboardID } = this.props;
-		const { uploadID, uploadTitle, loadOffset, loadAmt } = this.state;
+		const { uploadID } = this.state;
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
 		formData.append('user_id', this.props.profile.id);
-		formData.append('offset', loadOffset);
-		formData.append('length', loadAmt);
+		formData.append('offset', '0');
+		formData.append('length', '-1');
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD_NAMES', response.data);
