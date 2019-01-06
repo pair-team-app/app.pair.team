@@ -135,7 +135,7 @@ class HomePage extends Component {
 
 				<Row><h3>{title}</h3></Row>
 				{(artboards.length > 0) && (<div>
-					<Row horizontal="space-around" className="home-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
+					<Row horizontal="space-around" className="home-page-artboards-wrapper" style={{ flexWrap : 'wrap' }}>
 						{artboards.map((artboard) => {
 							return (
 								<Column key={artboard.id}>

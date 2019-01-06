@@ -9,7 +9,7 @@ import { Column, Row } from 'simple-flexbox';
 
 import UploadTreeItem from '../iterables/UploadTreeItem';
 
-import {isExplorePage, isInspectorPage, isUserLoggedIn, scrollOrigin } from '../../utils/funcs';
+import { isExplorePage, isInspectorPage, isUserLoggedIn, scrollOrigin } from '../../utils/funcs';
 import defaultAvatar from "../../images/default-avatar.png";
 
 const wrapper = React.createRef();
@@ -280,7 +280,7 @@ class SideNav extends Component {
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>
 				<div className="side-nav-top-wrapper">
-					<h3 className="side-nav-header"><Row vertical="center" style={{width:'100%'}}>
+					<h3 className="side-nav-header"><Row vertical="center" style={{ width : '100%' }}>
 						<Column flexGrow={1} horizontal="start">{(isExplorePage()) ? 'Explore' : 'Projects'}</Column>
 						<Column flexGrow={1} horizontal="end"><button className="tiny-button" onClick={()=> this.handleUpload()}>New</button></Column>
 					</Row></h3>

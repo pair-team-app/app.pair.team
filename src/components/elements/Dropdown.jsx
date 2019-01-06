@@ -60,7 +60,7 @@ class Dropdown extends Component{
 
 			return (
 				<li className="dd-list-item" key={i} onClick={() => this.selectItem(item.title, i, item.key)}><Row>
-					{(thumbImage) && (<Column flexGrow={1} horizontal="start" vertical="center"><img src={thumbImage} style={{width:'20px',height:'20px',marginRight:'8px'}} alt={item.title} /></Column>)}
+					{(thumbImage) && (<Column flexGrow={1} horizontal="start" vertical="center"><img src={thumbImage} style={{ width : '20px', height : '20px', marginRight : '8px' }} alt={item.title} /></Column>)}
 					<Column flexGrow={666} horizontal="start" vertical="center">{item.title}</Column>
 					{/*<Column flexGrow={150} horizontal="start" vertical="center">{item.selected && <FontAwesome name="check"/>}</Column>*/}
 				</Row></li>

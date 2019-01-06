@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './BottomNav.css';
 
-import { isExplorePage, isProjectPage, isInspectorPage, isUploadPage, isUserLoggedIn} from '../../utils/funcs';
+import { isExplorePage, isProjectPage, isInspectorPage, isUploadPage, isUserLoggedIn } from '../../utils/funcs';
 
 class BottomNav extends Component {
 	constructor(props) {

@@ -2,10 +2,9 @@
 import React, { Component } from 'react';
 import './HomeExpo.css';
 
-import {Row} from 'simple-flexbox';
+import { Row } from 'simple-flexbox';
 
 import { isUserLoggedIn } from '../../utils/funcs';
-
 import homeExpo from '../../json/home-expo.json';
 
 

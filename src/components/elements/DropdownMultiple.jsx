@@ -38,8 +38,8 @@ class DropdownMultiple extends Component{
 	}
 
 	render() {
-		const {list, toggleItem} = this.props;
-		const {listOpen, headerTitle} = this.state;
+		const { list, toggleItem } = this.props;
+		const { listOpen, headerTitle } = this.state;
 
 		return (
 			<div className="dd-wrapper">
@@ -53,7 +53,7 @@ class DropdownMultiple extends Component{
 				{listOpen && <ul className="dd-list">
 					{list.map((item, i) => (
 						<li className="dd-list-item" key={i} onClick={() => toggleItem(item.id, i, item.key)}>
-							<span style={{width:'20px',height:'20px',marginRight:'6px',backgroundImage:'linear-gradient(to right, #'+item.gradient+' , #'+item.hex+')'}}>&nbsp;&nbsp;</span>
+							<span style={{ width : '20px', height : '20px', marginRight : '6px', backgroundImage : 'linear-gradient(to right, #' + item.gradient + ' , #' + item.hex + ')' }}>&nbsp;&nbsp;</span>
 							{item.title} {item.selected && <FontAwesome name="check"/>}
 						</li>
 					))}

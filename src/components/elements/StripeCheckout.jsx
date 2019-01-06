@@ -1,5 +1,5 @@
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import axios from 'axios';
 // import CurrencyFormat from 'react-currency-format';
@@ -40,7 +40,7 @@ class StripeCheckout extends Component {
 		return (
 			<div className="checkout">
 				<div className="input-wrapper">
-					<input className="textfield-input" style={{textAlign:'left'}} type="text" name="customer-name" placeholder="Name" value={this.state.cardholder} onChange={(event)=> this.setState({ cardholder : event.target.value })} />
+					<input className="textfield-input" style={{ textAlign : 'left' }} type="text" name="customer-name" placeholder="Name" value={this.state.cardholder} onChange={(event)=> this.setState({ cardholder : event.target.value })} />
 				</div>
 
 				<div className="input-wrapper">

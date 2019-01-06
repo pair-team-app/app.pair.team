@@ -126,7 +126,7 @@ class LoginPage extends Component {
 						</div>
 						<Row vertical="center">
 							<Column><button type="submit" className={buttonClass} onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-							<Column><div className="page-link" style={{fontSize:'14px'}} onClick={()=> this.props.onPage('recover')}>Forgot Password?</div></Column>
+							<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> this.props.onPage('recover')}>Forgot Password?</div></Column>
 						</Row>
 					</form>
 				</div>

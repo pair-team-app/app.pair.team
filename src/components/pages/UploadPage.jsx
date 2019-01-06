@@ -440,11 +440,11 @@ class UploadPage extends Component {
 						</div>
 					</Dropzone>
 
-					<div style={{width:'100%'}}>
+					<div style={{ width : '100%' }}>
 						<h3>Create a new design project</h3>
 						<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
 						<div className="upload-page-form-wrapper">
-							<div style={{width:"33%"}}>
+							<div style={{ width : '33%' }}>
 								<Dropdown
 									title="Select team (soon)"
 									list={[]}
@@ -466,11 +466,11 @@ class UploadPage extends Component {
 						{(this.state.uploading) && (<div className="upload-page-progress" style={progressStyle} />)}
 					</div>
 
-					<div style={{width:'100%'}}>
+					<div style={{ width : '100%' }}>
 						<h3>Create a new design project</h3>
 						A design project contains all the files for your project, including specifications, parts, and code examples.
 						<div className="upload-page-form-wrapper">
-							<div style={{width:"33%"}}>
+							<div style={{ width : '33%' }}>
 								<Dropdown
 									title="Select team (soon)"
 									list={[]}
@@ -502,7 +502,7 @@ class UploadPage extends Component {
 
 					<div>
 						<h3>Processing…</h3>
-						<Row horizontal="space-between" className="upload-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
+						<Row horizontal="space-between" className="upload-page-artboards-wrapper" style={{ flexWrap : 'wrap' }}>
 							{(artboards.length === 0) ? (
 								<Column key="0">
 									<ArtboardItem
@@ -528,7 +528,7 @@ class UploadPage extends Component {
 						<h3>Invite Team</h3>
 						Enter the email address of each member of your team to invite them to this project.
 						<div className="upload-page-form-wrapper">
-							<div style={{width:"38%"}}><Column>
+							<div style={{ width : '38%' }}><Column>
 								{(emailCounter >= 1) && (<Row vertical="center"><div className={email1Class}><input type="text" name="email1" placeholder="Enter Email Address" value={email1} onFocus={()=> this.setState({ action : '', email1 : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div><span className="upload-page-more-link" onClick={()=> this.handleMoreEmail()}>More</span></Row>)}
 								{(emailCounter >= 2) && (<Row vertical="center"><div className={email2Class}><input type="text" name="email2" placeholder="Enter Email Address" value={email2} onFocus={()=> this.setState({ action : '', email2 : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div><span className="upload-page-more-link" onClick={()=> this.handleMoreEmail()}>More</span></Row>)}
 								{(emailCounter >= 3) && (<Row vertical="center"><div className={email3Class}><input type="text" name="email3" placeholder="Enter Email Address" value={email3} onFocus={()=> this.setState({ action : '', email3 : '' })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div><span className="upload-page-more-link" onClick={()=> this.handleMoreEmail()}>More</span></Row>)}

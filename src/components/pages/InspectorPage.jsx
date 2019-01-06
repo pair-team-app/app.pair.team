@@ -130,7 +130,7 @@ function SpecsList(props) {
 	return (
 		<div className="inspector-page-panel-info-wrapper">
 			{/*<Row><Column flexGrow={1}>System</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard && artboard.system) ? artboard.system.title : ''}</Column></Row>*/}
-			{/*<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val"><a href={'mailto:' + ((artboard && artboard.system) ? artboard.system.author : '#')} style={{textDecoration:'none'}}>{(artboard && artboard.system) ? artboard.system.author : ''}</a></Column></Row>*/}
+			{/*<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val"><a href={'mailto:' + ((artboard && artboard.system) ? artboard.system.author : '#')} style={{ textDecoration : 'none' }}>{(artboard && artboard.system) ? artboard.system.author : ''}</a></Column></Row>*/}
 			{/*<Row><Column flexGrow={1}>Page</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(page) ? page.title : ''}</Column></Row>*/}
 			{/*<Row><Column flexGrow={1}>Artboard</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard) ? artboard.title : ''}</Column></Row>*/}
 			<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? props.slice.title : ''}</Column></Row>
@@ -1066,7 +1066,7 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						offset={{x:offset.x, y:offset.y}}
+						offset={{ x : offset.x, y : offset.y }}
 						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
 						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
@@ -1087,7 +1087,7 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						offset={{x:offset.x, y:offset.y}}
+						offset={{ x : offset.x, y : offset.y }}
 						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
 						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
@@ -1108,7 +1108,7 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						offset={{x:offset.x, y:offset.y}}
+						offset={{ x : offset.x, y : offset.y }}
 						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
 						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
@@ -1129,7 +1129,7 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						offset={{x:offset.x, y:offset.y}}
+						offset={{ x : offset.x, y : offset.y }}
 						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
 						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
@@ -1166,7 +1166,7 @@ class InspectorPage extends Component {
 				<div className="inspector-page-content">
 					<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
 						{/*<MapInteractionCSS scale={scale} translation={translation} onChange={({ scale, translation }) => this.setState({ scale, translation })}>*/}
-							{/*<div style={{width:'426px',height:'240px',background:'#111111 url("https://i.imgur.com/WJ17gs5.jpg") no-repeat center',}}>*/}
+							{/*<div style={{ width : '426px' ,height : '240px', background :' #111111 url("https://i.imgur.com/WJ17gs5.jpg") no-repeat center' }}>*/}
 							{/*</div>*/}
 						{/*</MapInteractionCSS>*/}
 						{(artboards.length > 0) && (
@@ -1194,7 +1194,7 @@ class InspectorPage extends Component {
 				</div>
 				<div className="inspector-page-panel">
 					<div className="inspector-page-panel-content-wrapper">
-						<div style={{overflowX:'auto'}}>
+						<div style={{ overflowX : 'auto' }}>
 							<ul className="inspector-page-panel-tab-wrapper">
 								{(files.map((file, i) => {
 									return (<li key={i} className={'inspector-page-panel-tab' + ((this.state.selectedTab === i) ? ' inspector-page-panel-tab-selected' : '')} onClick={()=> this.handleTab(i)}>{file.title}</li>);
