@@ -57,7 +57,7 @@ class SideNav extends Component {
 			this.fetchNextUploads();
 		}
 
-		if (this.props.profile !== prevProps.profile || this.props.path !== prevProps.path) {
+		if (!this.state.fetching && (this.props.profile !== prevProps.profile || this.props.path !== prevProps.path)) {
 			this.setState({
 				loadOffset : 0,
 				loadAmt    : (isUserLoggedIn() && !isExplorePage()) ? -1 : 10
@@ -151,10 +151,10 @@ class SideNav extends Component {
 // 				}
 
 				this.setState({
-// 					uploads     : (isExplorePage()) ? prevUploads.concat(uploads) : uploads,
-					uploads     : uploads,
-// 					loadOffset  :  (uploads.length > 0) ? loadOffset + loadAmt : -1,
-// 					loadAmt     : (loadAmt < 40) ? 40 : 10,
+					uploads     : (isExplorePage()) ? prevUploads.concat(uploads) : uploads,
+// 					uploads     : uploads,
+					loadOffset  :  (uploads.length > 0 && this.props.profile) ? loadOffset + loadAmt : -1,
+					loadAmt     : (loadAmt < 40) ? 40 : 10,
 					fetching    : false
 				});
 			}).catch((error) => {
@@ -291,7 +291,7 @@ class SideNav extends Component {
 						<Column flexGrow={1} horizontal="end"><button className="tiny-button" onClick={()=> this.handleUpload()}>New</button></Column>
 					</Row></h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
-						{(uploads.length === 0) ? <span className="side-nav-subtext">You don't have any projects yet!</span> : uploads.map((upload, i) => {
+						{(!fetching && uploads.length === 0) ? <span className="side-nav-subtext">You don't have any projects yet!</span> : uploads.map((upload, i) => {
 							return (
 								<UploadTreeItem
 									key={i}
