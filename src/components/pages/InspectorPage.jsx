@@ -824,7 +824,7 @@ class InspectorPage extends Component {
 			this.props.onPage('login');
 
 		} else {
-			const filePath = 'http://cdn.designengine.ai/artboard.php?artboard_id=' + this.state.artboard.id;
+			const filePath = 'http://cdn.designengine.ai/page.php?artboard_id=' + this.state.artboard.id;
 			let link = document.createElement('a');
 			link.href = filePath;
 			link.download = filePath.substr(filePath.lastIndexOf('/') + 1);

@@ -4,7 +4,7 @@ import './UploadTreeItem.css';
 
 import { Row } from 'simple-flexbox';
 
-import { limitString } from '../../utils/funcs';
+import { isProjectPage, isInspectorPage, limitString } from '../../utils/funcs';
 import sketchIcon from '../../images/icon-sketch.png';
 
 const UPLOAD_CHAR_LIMIT = 26;
@@ -68,7 +68,7 @@ class UploadTreeItem extends Component {
 			}, {
 				id       : 4,
 				title    : 'Views',
-				selected : (window.location.pathname.includes('/proj') || window.location.pathname.includes('/artboard')),
+				selected : (isProjectPage() || isInspectorPage()),
 				items    : props.pages
 			}, {
 				id       : 5,
@@ -81,6 +81,10 @@ class UploadTreeItem extends Component {
 
 	static getDerivedStateFromProps(nextProps) {
 		return ({ title : limitString(nextProps.title, UPLOAD_CHAR_LIMIT) });
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('UploadTreeItem.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
 	}
 
 	handleClick = ()=> {
@@ -115,10 +119,15 @@ class UploadTreeItem extends Component {
 				item.items.forEach((i)=> {
 					i.selected = false;
 				});
+
+			} else {
+// 				if (category.id === 4 && !isInspectorPage()) {
+					this.props.onCategoryClick(category);
+// 				}
 			}
 		});
 
-		this.props.onCategoryClick(category);
+
 		this.setState({ categories });
 	};
 

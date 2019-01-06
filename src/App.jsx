@@ -29,7 +29,7 @@ import UploadPage from './components/pages/UploadPage';
 import StripeOverlay from './components/elements/StripeOverlay';
 
 import { fetchUserProfile, updateUserProfile } from './redux/actions';
-import { idsFromPath, scrollOrigin, urlSlugTitle } from './utils/funcs';
+import { className, idsFromPath, isInspectorPage, scrollOrigin, urlSlugTitle } from './utils/funcs';
 import { initTracker, trackEvent } from './utils/tracking';
 
 const wrapper = React.createRef();
@@ -76,7 +76,7 @@ class App extends Component {
 		trackEvent('site', 'load');
 
 		const { uploadID, pageID } = this.state;
-		if (window.location.pathname.includes('/artboard/')) {
+		if (isInspectorPage()) {
 			if (uploadID === 0) {
 				let formData = new FormData();
 				formData.append('action', 'PAGE');
@@ -108,7 +108,7 @@ class App extends Component {
 		console.log('App.handleArtboardClicked()', artboard);
 		this.handleAddPageView(artboard.pageID);
 
-		this.props.history.push('/artboard/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
+		this.props.history.push('/page/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
 		this.setState({
 			uploadID   : artboard.uploadID,
 			pageID     : artboard.pageID,
@@ -184,12 +184,13 @@ class App extends Component {
 			}
 
 		} else {
-			if (pathname === '/' + url) {
-				window.location.href = '/' + url;
-
-			} else {
-				this.props.history.push('/' + url);
-			}
+			this.props.history.push('/' + url);
+// 			if (pathname === '/' + url) {
+// 				window.location.href = '/' + url;
+//
+// 			} else {
+// 				this.props.history.push('/' + url);
+// 			}
 		}
 	};
 
@@ -208,34 +209,28 @@ class App extends Component {
 				artboardID : 0
 			});
 
-// 			if (window.location.pathname.includes('/artboard')) {
-// 				const page = upload.pages[0];
-//
-// 				let formData = new FormData();
-// 				formData.append('action', 'ARTBOARDS');
-// 				formData.append('upload_id', this.state.uploadID);
-// 				formData.append('page_id', page.id);
-// 				formData.append('slices', '0');
-// 				formData.append('offset', '0');
-// 				formData.append('length', '1');
-// 				axios.post('https://api.designengine.ai/system.php', formData)
-// 					.then((response) => {
-// 						console.log('ARTBOARDS', response.data);
-//
-// 						const artboard = response.data.artboards[0];
-// 						this.handleAddPageView(page.id);
-// 						this.props.history.push('/artboard/' + page.uploadID + '/' + page.id + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
-// 						this.setState({
-// 							uploadID   : page.uploadID,
-// 							pageID     : page.id,
-// 							artboardID : artboard.id
-// 						});
-// 					}).catch((error) => {
-// 				});
-// 			}
-
-			this.handlePage('proj/' + upload.id + '/' + urlSlugTitle(upload.title));
+			this.handlePage('proj/' + upload.id + '/' + urlSlugTitle(upload.title) + '/views');
 		}
+	};
+
+	handleSideNavCategoryItem = (category)=> {
+		console.log('App.handleSideNavCategoryItem()', category);
+
+		if (category.selected) {
+			let formData = new FormData();
+			formData.append('action', 'UPLOAD');
+			formData.append('upload_id', this.state.uploadID);
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response) => {
+					console.log('UPLOAD', response.data);
+					const { id, title } = response.data.upload;
+
+					this.handlePage('proj/' + id + '/' + urlSlugTitle(title) + '/' + category.title.toLowerCase());
+				}).catch((error) => {
+			});
+		}
+
+		//this.handlePage(window.location.pathname.substring(1).replace(/\/[\w\-]+$/, '/' + category.title.toLowerCase()));
 	};
 
 	handleSideNavPageItem = (page)=> {
@@ -251,11 +246,11 @@ class App extends Component {
 			formData.append('length', '1');
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
-					console.log('ARTBOARDS', response.data);
+					console.log(className(this) + '=/> ARTBOARDS', response.data);
 
-					const artboard = response.data.artboards[0];
+					const artboard = response.data.artboards.pop();
 					this.handleAddPageView(page.id);
-					this.props.history.push('/artboard/' + page.uploadID + '/' + page.id + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
+					this.props.history.push('/page/' + page.uploadID + '/' + page.id + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
 					this.setState({
 						uploadID   : page.uploadID,
 						pageID     : page.id,
@@ -269,22 +264,20 @@ class App extends Component {
 		}
 	};
 
+	handleSideNavContributorItem = (contributor)=> {
+		console.log('App.handleSideNavContributorItem()', contributor);
+	};
+
 	handleSideNavArtboardItem = (artboard)=> {
 		console.log('App.handleSideNavArtboardItem()', artboard);
 
 		this.handleAddPageView(artboard.pageID);
-		this.props.history.push('/artboard/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
+		this.props.history.push('/page/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
 		this.setState({
 			uploadID   : artboard.uploadID,
 			pageID     : artboard.pageID,
 			artboardID : artboard.id
 		});
-	};
-
-	handleSideNavSliceItem = (obj)=> {
-		console.log('App.handleSideNavSliceItem()', obj);
-// 		this.props.history.push('/artboard/' + this.state.pageID + '/' + this.state.artboardID + '/' + obj.id);
-// 		this.setState({ sliceID : obj.id });
 	};
 
 
@@ -311,10 +304,11 @@ class App extends Component {
 					    artboardID={artboardID}
 					    sliceID={sliceID}
 					    processing={processing}
-					    onUploadItem={(obj)=> this.handleSideNavUploadItem(obj)}
-					    onPageItem={(obj)=> this.handleSideNavPageItem(obj)}
-					    onArtboardItem={(obj)=> this.handleSideNavArtboardItem(obj)}
-					    onSliceItem={(obj)=> this.handleSideNavSliceItem(obj)}
+					    onUploadItem={(upload)=> this.handleSideNavUploadItem(upload)}
+					    onCategoryItem={(category)=> this.handleSideNavCategoryItem(category)}
+					    onPageItem={(page)=> this.handleSideNavPageItem(page)}
+					    onContributorItem={(contributor)=> this.handleSideNavContributorItem(contributor)}
+					    onArtboardItem={(artboard)=> this.handleSideNavArtboardItem(artboard)}
 					    onLogout={()=> this.handleLogout()}
 					    onUpload={()=> this.handlePage('upload')}
 					    onPage={(url)=> this.handlePage(url)}
@@ -331,6 +325,7 @@ class App extends Component {
 						    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} />} />
 					      <Route exact path="/mission" render={()=> <MissionPage />} />
 						    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={(state)=> this.handleProcess(state)} />} />
+						    <Route exact path="/page/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={(url)=> this.handlePage(url)} />} />
 					      <Route exact path="/profile" render={()=> <ProfilePage onPage={(url)=> this.handlePage(url)} />} />
 					      <Route exact path="/privacy" render={()=> <PrivacyPage />} />
 						    <Route path="/proj/" render={()=> <HomePage uploadID={uploadID} pageID={pageID} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} />

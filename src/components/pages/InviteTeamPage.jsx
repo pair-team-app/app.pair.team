@@ -10,7 +10,7 @@ import { Row } from 'simple-flexbox';
 import Dropdown from '../elements/Dropdown';
 import Popup from '../elements/Popup';
 
-import { isValidEmail } from '../../utils/funcs';
+import { isValidEmail, urlSlugTitle } from '../../utils/funcs';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -45,11 +45,14 @@ class InviteTeamPage extends Component {
 	}
 
 	componentDidMount() {
+		const { uploadID, uploadTitle, loadOffset, loadAmt } = this.state;
+		const { pageID, artboardID } = this.props;
+
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
 		formData.append('user_id', this.props.profile.id);
-		formData.append('offset', this.state.loadOffset);
-		formData.append('length', this.state.loadAmt);
+		formData.append('offset', loadOffset);
+		formData.append('length', loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD_NAMES', response.data);
@@ -58,13 +61,13 @@ class InviteTeamPage extends Component {
 					title    : upload.title,
 					author   : upload.author,
 					added    : upload.added,
-					selected : (this.state.uploadID === upload.id),
+					selected : (uploadID === upload.id),
 					pages    : upload.pages.map((page) => ({
 						id          : page.id,
 						title       : page.title,
 						description : page.description,
 						added       : page.added,
-						selected    : (this.props.pageID === page.id),
+						selected    : (pageID === page.id),
 						artboards   : page.artboards.map((artboard)=> ({
 							id       : artboard.id,
 							pageID   : artboard.page_id,
@@ -72,21 +75,20 @@ class InviteTeamPage extends Component {
 							filename : artboard.filename,
 							meta     : JSON.parse(artboard.meta),
 							added    : artboard.added,
-							selected : (this.props.artboardID === artboard.id)
+							selected : (artboardID === artboard.id)
 						}))
 					}))
 				}));
 
-				if (this.state.uploadID !== 0) {
-					let self = this;
+				if (uploadID !== 0) {
 					let uploadID = 0;
 					let uploadTitle = 'Select Project';
 					let uploadURL = '';
 					uploads.forEach(function(upload) {
-						if (upload.id === self.state.uploadID) {
+						if (upload.id === uploadID) {
 							uploadID = upload.id;
 							uploadTitle = upload.title;
-							uploadURL = window.location.origin + '/proj/' + self.state.uploadID + '/' + upload.title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
+							uploadURL = window.location.origin + '/proj/' + uploadID + '/' + urlSlugTitle(upload.title) + '/views';
 						}
 					});
 
@@ -94,9 +96,9 @@ class InviteTeamPage extends Component {
 
 				} else {
 					this.setState({
-						uploadID    : (uploads.length > 0) ? uploads[0].id : this.state.uploadID,
-						uploadTitle : (uploads.length > 0) ? uploads[0].title : this.state.uploadTitle,
-						uploadURL   : (uploads.length > 0) ? window.location.origin + '/proj/' + uploads[0].id + '/' + uploads[0].title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase() : this.state.uploadURL,
+						uploadID    : (uploads.length > 0) ? uploads[0].id : uploadID,
+						uploadTitle : (uploads.length > 0) ? uploads[0].title : uploadTitle,
+						uploadURL   : (uploads.length > 0) ? window.location.origin + '/proj/' + uploads[0].id + '/' + urlSlugTitle(uploads[0].title) : this.state.uploadURL,
 						uploads     : uploads
 					});
 				}
@@ -109,8 +111,8 @@ class InviteTeamPage extends Component {
 		uploads.forEach(upload => upload.selected = false);
 		uploads[ind].selected = true;
 		this.setState({
-			uploadURL   : window.location.origin + '/proj/' + uploads[0].id + '/' + uploads[ind].title.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase(),
-			uploads     : uploads
+			uploadURL : window.location.origin + '/proj/' + uploads[0].id + '/' + urlSlugTitle(uploads[ind].title) + '/views',
+			uploads   : uploads
 		});
 	};
 
@@ -139,15 +141,15 @@ class InviteTeamPage extends Component {
 
 		let emails = '';
 		if (isEmail1Valid) {
-			emails += this.state.email1 + " ";
+			emails += email1 + " ";
 		}
 
 		if (isEmail2Valid) {
-			emails += this.state.email2 + " ";
+			emails += email2 + " ";
 		}
 
 		if (isEmail3Valid) {
-			emails += this.state.email3;
+			emails += email3;
 		}
 
 		if (isEmail1Valid || isEmail2Valid || isEmail3Valid) {
@@ -167,12 +169,13 @@ class InviteTeamPage extends Component {
 	};
 
 	render() {
+		const { action, sentInvites, uploadURL, uploadTitle } = this.state;
 		const { email1, email2, email3 } = this.state;
 		const { email1Valid, email2Valid, email3Valid } = this.state;
 
-		const email1Class = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'INVITE' && !email1Valid && email1.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
-		const email2Class = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'INVITE' && !email2Valid && email2.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
-		const email3Class = (this.state.action === '') ? 'input-wrapper' : (this.state.action === 'INVITE' && !email3Valid && email3.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+		const email1Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email1Valid && email1.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+		const email2Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email2Valid && email2.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+		const email3Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email3Valid && email3.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 
 		const inviteButtonClass = (email1.length > 0 || email2.length > 0 || email3.length > 0) ? '' : 'button-disabled';
 
@@ -182,8 +185,8 @@ class InviteTeamPage extends Component {
 					<Row horizontal="center"><h1>Invite Team Members</h1></Row>
 					<div className="page-header-text">Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along.</div>
 					<Row horizontal="center">
-						{(!this.state.sentInvites)
-							? (<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={this.state.uploadURL}>
+						{(!sentInvites)
+							? (<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={uploadURL}>
 									<button>Copy Project Link</button>
 								</CopyToClipboard>)
 							: (<button onClick={()=> this.props.onPage('//')}>Go Back</button>)
@@ -191,16 +194,16 @@ class InviteTeamPage extends Component {
 					</Row>
 				</div>
 				{(!this.state.sentInvites)
-					? (<div style={{width:'100%'}}>
+					? (<div style={{ width : '100%' }}>
 						<Dropdown
-							title={this.state.uploadTitle}
+							title={uploadTitle}
 							list={this.state.uploads}
 							resetThenSet={this.resetThenSet}
 						/>
 						<form onSubmit={this.handleSubmit}>
-							<div className={email1Class}><input type="text" name="email1" placeholder="Enter Email Address" value={this.state.email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-							<div className={email2Class}><input type="text" name="email2" placeholder="Enter Email Address" value={this.state.email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-							<div className={email3Class}><input type="text" name="email3" placeholder="Enter Email Address" value={this.state.email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<div className={email1Class}><input type="text" name="email1" placeholder="Enter Email Address" value={email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<div className={email2Class}><input type="text" name="email2" placeholder="Enter Email Address" value={email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+							<div className={email3Class}><input type="text" name="email3" placeholder="Enter Email Address" value={email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 							<button type="submit" className={inviteButtonClass} onClick={(event) => this.handleSubmit(event)}>Send Invites</button>
 						</form>
 					</div>)

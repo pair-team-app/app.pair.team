@@ -6,6 +6,10 @@ export function capitalizeText(text, toLower) {
 	return ((toLower) ? text.toLowerCase().replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }) : text.replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }));
 }
 
+export function className(obj) {
+	return (obj.constructor.name);
+}
+
 export function hasBit(val, bit) {
 	return ((val & bit) === bit);
 }
@@ -16,15 +20,35 @@ export function hideText(text, char='*') {
 
 export function idsFromPath() {
 	const pathname = window.location.pathname;
-	const artboardPath = /\/artboard\/\d+\/\d+\/\d+\/.*$/;
+	const artboardPath = /\/artboard|page\/\d+\/\d+\/\d+\/.*$/;
 	const projPath = /\/proj\/\d+\/.*$/;
 
 	return ({
-		uploadID   : (artboardPath.test(pathname)) ? pathname.match(/\/artboard\/(\d+)\/.*$/)[1] : (projPath.test(pathname)) ? pathname.match(/\/proj\/(\d+)\/.*$/)[1] : 0,
-		pageID     : (artboardPath.test(pathname)) ? pathname.match(/\/artboard\/\d+\/(\d+)\/.*$/)[1] : 0,
-		artboardID : (artboardPath.test(pathname)) ? pathname.match(/\/artboard\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
+		uploadID   : (artboardPath.test(pathname)) ? pathname.match(/\/artboard|page\/(\d+)\/.*$/)[1] : (projPath.test(pathname)) ? pathname.match(/\/proj\/(\d+)\/.*$/)[1] : 0,
+		pageID     : (artboardPath.test(pathname)) ? pathname.match(/\/artboard|page\/\d+\/(\d+)\/.*$/)[1] : 0,
+		artboardID : (artboardPath.test(pathname)) ? pathname.match(/\/artboard|page\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
 		sliceID    : 0
 	});
+}
+
+export function isExplorePage() {
+	return (window.location.pathname.includes('/explore'));
+}
+
+export function isHomePage() {
+	return (window.location.pathname === '' || window.location.pathname === '/');
+}
+
+export function isInspectorPage() {
+	return (window.location.pathname.includes('/artboard') || window.location.pathname.includes('/page'));
+}
+
+export function isProjectPage() {
+	return (window.location.pathname.includes('/proj'));
+}
+
+export function isUploadPage() {
+	return (window.location.pathname.includes('/new'));
 }
 
 export function isUserLoggedIn() {

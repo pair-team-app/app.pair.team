@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './BottomNav.css';
 
-import { isUserLoggedIn } from '../../utils/funcs';
+import { isExplorePage, isProjectPage, isInspectorPage, isUploadPage, isUserLoggedIn} from '../../utils/funcs';
 
 class BottomNav extends Component {
 	constructor(props) {
@@ -19,9 +19,9 @@ class BottomNav extends Component {
 		const year = new Date().getFullYear();
 
 		const pathname = window.location.pathname;
-		const style = (pathname.includes('artboard')) ? {
+		const style = (isInspectorPage()) ? {
 			display  : 'none'
-		} : (!pathname.includes('proj') && !pathname.includes('explore') && !pathname.includes('invite') && !pathname.includes('new') && !pathname.includes('terms') && !pathname.includes('privacy')) ? {
+		} : (!isProjectPage() && !isExplorePage() && !pathname.includes('invite') && !isUploadPage() && !pathname.includes('terms') && !pathname.includes('privacy')) ? {
 			position : 'fixed',
 			left     : '320px',
 			bottom   : '10px'

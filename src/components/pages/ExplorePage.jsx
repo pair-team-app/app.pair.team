@@ -125,8 +125,8 @@ class ExplorePage extends Component {
 	render() {
 		console.log('ExplorePage.render()', this.state);
 
-		const { fetching } = this.state;
-		const btnClass = (fetching) ? 'fat-button button-disabled' : 'fat-button';
+		const { fetching, loadOffset } = this.state;
+		const btnClass = (fetching) ? 'fat-button button-disabled' : (loadOffset !== this.props.artboards.length) ? 'fat-button is-hidden' : 'fat-button';
 		const btnCaption = (fetching) ? 'Loading…' : 'More';
 
 		return (
@@ -135,9 +135,9 @@ class ExplorePage extends Component {
 
 				{(isUserLoggedIn()) ? (<LoggedInHeader onPage={(url)=> this.props.onPage(url)} />) : (<LoggedOutHeader onPage={(url)=> this.props.onPage(url)} />)}
 
-				<Row><h3>{(this.state.fetching ? 'Loading…' : 'Recent')}</h3></Row>
+				<Row><h3>{(fetching) ? 'Loading…' : 'Recent'}</h3></Row>
 				<ExploreArtboardGrid onClick={(artboard)=> this.props.onArtboardClicked(artboard)} />
-				<Row horizontal="center"><button className={btnClass} onClick={()=> (!this.state.fetching) ? this.handleLoadNext() : null}>{btnCaption}</button></Row>
+				<Row horizontal="center"><button className={btnClass} onClick={()=> (!fetching) ? this.handleLoadNext() : null}>{btnCaption}</button></Row>
 			</div>
 		);
 	}

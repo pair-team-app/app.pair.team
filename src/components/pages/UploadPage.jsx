@@ -12,7 +12,7 @@ import ArtboardItem from '../iterables/ArtboardItem';
 import Dropdown from '../elements/Dropdown';
 import Popup from '../elements/Popup';
 import RadioButton from '../elements/RadioButton';
-import { isValidEmail } from '../../utils/funcs';
+import { isValidEmail, urlSlugTitle } from '../../utils/funcs';
 
 const dzWrapper = React.createRef();
 const titleTextfield = React.createRef();
@@ -248,7 +248,7 @@ class UploadPage extends Component {
 					console.log('NEW_UPLOAD', response.data);
 					this.setState({
 						uploadID        : response.data.upload_id,
-						uploadURL       : window.location.origin + '/proj/' + response.data.upload_id + '/' + uploadTitle.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase(),
+						uploadURL       : window.location.origin + '/proj/' + response.data.upload_id + '/' + urlSlugTitle(uploadTitle) + '/views',
 						processingState : 0,
 						files           : []
 					});
@@ -349,7 +349,7 @@ class UploadPage extends Component {
 				if (response.data.state === '3') {
 					clearInterval(this.uploadInterval);
 					this.props.onProcess(1);
-					window.location.href = 'proj/' + this.state.uploadID + '/' + this.state.uploadTitle.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase();
+					window.location.href = window.location.origin + 'proj/' + this.state.uploadID + '/' + urlSlugTitle(this.state.uploadTitle) + '/views';
 				}
 
 				let status = response.data.message;

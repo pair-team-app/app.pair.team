@@ -10,7 +10,30 @@ import HomeExpo from '../elements/HomeExpo';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Popup from '../elements/Popup';
 
-import { isUserLoggedIn } from '../../utils/funcs';
+import { isHomePage, isUserLoggedIn} from '../../utils/funcs';
+
+
+function LoggedInHeader(props) {
+	return (<div>
+		<h3>Create a new design project</h3>
+		<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
+		<div className="explore-page-button-wrapper">
+			<button onClick={()=> props.onPage('new')}>New Project</button>
+		</div>
+	</div>);
+}
+
+function LoggedOutHeader(props) {
+	return (<div>
+		<h3>Signup or login</h3>
+		<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
+		<div className="explore-page-button-wrapper">
+			<button className="adjacent-button" onClick={()=> props.onPage('register')}>Sign up with Email</button>
+			<button onClick={()=> props.onPage('login')}>Login</button>
+		</div>
+	</div>);
+}
+
 
 class HomePage extends Component {
 	constructor(props) {
@@ -18,12 +41,11 @@ class HomePage extends Component {
 
 		this.state = {
 			action     : '',
-			uploadID   : 0,
-			title      : 'Loading…',
+			upload     : null,
 			artboards  : [],
 			fetching   : false,
 			loadOffset : 0,
-			loadAmt    : 24,
+			loadAmt    : 1,
 			popup : {
 				visible : false,
 				content : ''
@@ -41,7 +63,14 @@ class HomePage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		console.log('HomePage.componentDidUpdate()', this.props, prevProps);
 
-		if (this.props.uploadID !== prevProps.uploadID) {
+		if (this.props.uploadID === 0 && this.state.upload) {
+			this.setState({
+				artboards : [],
+				upload    : null
+			});
+		}
+
+		if (this.props.uploadID !== prevProps.uploadID && this.props.uploadID !== 0) {
 			this.setState({
 				artboards  : [],
 				loadOffset : 0,
@@ -55,7 +84,7 @@ class HomePage extends Component {
 	handleLoadNext = ()=> {
 		console.log('HomePage.handleLoadNext()', this.state.artboards);
 
-		const { uploadID, pageID } = this.props;
+		const { uploadID } = this.props;
 		const { loadOffset, loadAmt } = this.state;
 
 		this.setState({
@@ -69,47 +98,39 @@ class HomePage extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD', response.data);
-				const uploadTitle = response.data.upload.title;
+				const { upload } = response.data;
 
-				formData.append('action', 'PAGE');
-				formData.append('page_id', pageID);
+				formData.append('action', 'PAGES');
+				formData.append('upload_id', uploadID);
+				formData.append('offset', loadOffset);
+				formData.append('limit', loadAmt);
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response) => {
-						console.log('PAGE', response.data);
-						const pageTitle = response.data.page.title;
+						console.log('PAGES', response.data);
 
-						formData.append('action', 'ARTBOARDS');
-						formData.append('upload_id', uploadID);
-						formData.append('page_id', pageID);
-						formData.append('slices', '0');
-						formData.append('offset', loadOffset);
-						formData.append('length', loadAmt);
-						axios.post('https://api.designengine.ai/system.php', formData)
-							.then((response) => {
-								console.log('ARTBOARDS', response.data);
+						let artboards = [];
+						response.data.pages.forEach((page) => {
+							artboards = artboards.concat(page.artboards.map((artboard) => ({
+								id        : artboard.id,
+								pageID    : artboard.page_id,
+								uploadID  : artboard.upload_id,
+								system    : artboard.system,
+								title     : artboard.title,
+								pageTitle : artboard.page_title,
+								type      : artboard.type,
+								filename  : artboard.filename,
+								meta      : JSON.parse(artboard.meta),
+								added     : artboard.added,
+								selected  : false
+							})));
+						});
 
-								const artboards = response.data.artboards.map((item) => ({
-									id        : item.id,
-									pageID    : item.page_id,
-									uploadID  : item.upload_id,
-									system    : item.system,
-									title     : item.title,
-									pageTitle : item.page_title,
-									type      : item.type,
-									filename  : item.filename,
-									meta      : JSON.parse(item.meta),
-									added     : item.added,
-									selected  : false
-								}));
-
-								const prevArtboards = this.state.artboards;
-								this.setState({
-									artboards  : prevArtboards.concat(artboards),
-									fetching   : false,
-									title      : ((this.props.pageID === 0) ? uploadTitle : pageTitle) + ' (' + (prevArtboards.length + artboards.length) + ')',
-									loadOffset : loadOffset + loadAmt
-								});
-							}).catch((error) => {
+						const prevArtboards = this.state.artboards;
+						this.setState({
+							upload     : upload,
+							artboards  : prevArtboards.concat(artboards),
+							fetching   : false,
+							loadOffset : loadOffset + loadAmt
 						});
 					}).catch((error) => {
 				});
@@ -119,52 +140,43 @@ class HomePage extends Component {
 
 
 	render() {
-		const { title, artboards, fetching, loadOffset } = this.state;
+		console.log('HomePage.render()', this.props, this.state);
 
-		const items = artboards.map((artboard) => {
-			if (this.props.pageID <= 0 || this.props.pageID === artboard.pageID) {
-				return (
-					<Column key={artboard.id}>
-						<ArtboardItem
-							title={artboard.title}
-							image={artboard.filename}
-							avatar={artboard.system.avatar}
-							onClick={() => this.props.onArtboardClicked(artboard)} />
-					</Column>
-				);
+		const { pageID } = this.props;
+		const { upload, artboards, fetching } = this.state;
+		const title = (fetching) ? 'Loading…' : (upload) ? upload.title + ' (' + (upload.total.artboards) + ')' : '';
 
-			} else {
-				return (null);
-			}
-		});
-
-		const btnClass = (fetching || artboards.length !== loadOffset) ? 'fat-button is-hidden' : 'fat-button';
+		const btnClass = (!upload || fetching) ? 'fat-button button-disabled' : (upload && artboards) ? (artboards.length === upload.total.artboards) ? 'fat-button is-hidden' : 'fat-button' : 'fat-button';
+		const btnCaption = (!upload || fetching) ? 'Loading…' : 'More';
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
 				<HomeExpo onClick={(url)=> this.props.onPage(url)} />
-				{(items.length > 0) && (<div>
-					<Row><h3>{title}</h3></Row>
-					<Row horizontal="space-between" className="home-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
-						{items}
-					</Row>
-					<Row horizontal="center"><button className={btnClass} onClick={()=> this.handleLoadNext()}>More</button></Row>
+				{(isHomePage()) && (<div>
+					{(isUserLoggedIn()) ? (<LoggedInHeader onPage={(url)=> this.props.onPage(url)} />) : (<LoggedOutHeader onPage={(url)=> this.props.onPage(url)} />)}
 				</div>)}
 
-				{(!isUserLoggedIn()) ? (<div>
-					<Row><h3>Sign up or Login</h3></Row>
-					<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
-					<div style={{marginTop:'20px'}}>
-						<button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign up with Email</button>
-						<button onClick={()=> this.props.onPage('login')}>Login</button>
-					</div>
+				<Row><h3>{title}</h3></Row>
+				{(artboards.length > 0) && (<div>
+					<Row horizontal="space-around" className="home-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
+						{artboards.map((artboard) => {
+							if (pageID <= 0 || pageID === artboard.pageID) {
+								return (
+									<Column key={artboard.id}>
+										<ArtboardItem
+											title={artboard.title}
+											image={artboard.filename}
+											avatar={artboard.system.avatar}
+											onClick={() => this.props.onArtboardClicked(artboard)} />
+									</Column>
+								);
 
-				</div>) : (parseInt(this.props.uploadID, 10) === 0) && (<div>
-					<Row><h3>Create a new design project</h3></Row>
-					<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
-					<div style={{marginTop:'20px'}}>
-						<button onClick={()=> this.props.onPage('new')}>New Project</button>
-					</div>
+							} else {
+								return (null);
+							}
+						})}
+					</Row>
+					<Row horizontal="center"><button className={btnClass} onClick={()=> this.handleLoadNext()}>{btnCaption}</button></Row>
 				</div>)}
 
 				{this.state.popup.visible && (

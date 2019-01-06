@@ -9,7 +9,7 @@ import { Column, Row } from 'simple-flexbox';
 
 import UploadTreeItem from '../iterables/UploadTreeItem';
 
-import {isUserLoggedIn, scrollOrigin } from '../../utils/funcs';
+import { isExplorePage, isUserLoggedIn, scrollOrigin } from '../../utils/funcs';
 
 const wrapper = React.createRef();
 const scrollWrapper = React.createRef();
@@ -24,14 +24,15 @@ class SideNav extends Component {
 	constructor(props) {
 		super(props);
 
+		const { uploadID, pageID, artboardID, sliceID } = props;
 		this.state = {
-			uploadID   : this.props.uploadID,
-			pageID     : this.props.pageID,
-			artboardID : this.props.artboardID,
-			sliceID    : this.props.sliceID,
+			uploadID   : uploadID,
+			pageID     : pageID,
+			artboardID : artboardID,
+			sliceID    : sliceID,
 			uploads    : [],
 			loadOffset : 0,
-			loadAmt    : (isUserLoggedIn() && !window.location.pathname.includes('/explore')) ? 666 : 10,
+			loadAmt    : (isUserLoggedIn() && !isExplorePage()) ? 666 : 10,
 			fetching   : false
 		};
 	}
@@ -44,6 +45,13 @@ class SideNav extends Component {
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		console.log('SideNav.componentDidUpdate()', prevProps, this.props, this.state);
+
+		if (this.props.pageID !== this.state.pageID || this.props.artboardID !== this.state.artboardID) {
+			const { uploadID, pageID, artboardID, sliceID } = this.props;
+			this.setState ({ uploadID, pageID, artboardID, sliceID });
+			this.onTreeEffect();
+		}
+
 		if (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID) {
 			this.onTreeEffect();
 		}
@@ -58,12 +66,11 @@ class SideNav extends Component {
 	}
 
 	onTreeEffect = ()=> {
-		let self = this;
 		let uploads = [...this.state.uploads];
 		uploads.forEach((upload)=> {
 			upload.selected = (upload.id === this.props.uploadID);
 			upload.pages.forEach((page)=> {
-				page.selected = (page.id === self.props.pageID);
+				page.selected = (page.id === this.props.pageID);
 			});
 		});
 
@@ -71,7 +78,7 @@ class SideNav extends Component {
 	};
 
 	fetchNextUploads = ()=> {
-// 		console.log('SideNav.fetchNextUploads()');
+		console.log('SideNav.fetchNextUploads()');
 
 		const prevUploads = this.state.uploads;
 
@@ -81,8 +88,8 @@ class SideNav extends Component {
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
-		formData.append('user_id', (window.location.pathname.includes('/explore')) ? '-1' : this.props.userID);
-		formData.append('offset', (window.location.pathname.includes('/explore')) ? this.state.loadOffset : '0');
+		formData.append('user_id', (isExplorePage()) ? '-1' : this.props.userID);
+		formData.append('offset', (isExplorePage()) ? this.state.loadOffset : '0');
 		formData.append('length', this.state.loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
@@ -134,7 +141,7 @@ class SideNav extends Component {
 // 				}
 
 				this.setState({
-					uploads     : (window.location.pathname.includes('/explore')) ? prevUploads.concat(uploads) : uploads,
+					uploads     : (isExplorePage()) ? prevUploads.concat(uploads) : uploads,
 					loadOffset  :  (uploads.length > 0) ? this.state.loadOffset + this.state.loadAmt : -1,
 					loadAmt     : (this.state.loadAmt < 40) ? 40 : 10,
 					fetching    : false
@@ -202,6 +209,7 @@ class SideNav extends Component {
 
 	handleCategoryClick = (category)=> {
 		console.log('SideNav.handleCategoryClick()', category);
+		this.props.onCategoryItem(category);
 	};
 
 	handleFontClick = (font)=> {
@@ -234,10 +242,6 @@ class SideNav extends Component {
 		});
 
 		this.setState({ uploads });
-
-// 		if (!window.location.pathname.includes('/explore')) {
-// 			this.fetchPageArtboards(uploads);
-// 		}
 		this.props.onPageItem(page);
 	};
 
@@ -263,15 +267,13 @@ class SideNav extends Component {
 
 	render() {
 		console.log('SideNav.render()', this.props, this.state);
-
-		const isExplore = (window.location.pathname.includes('/explore'));
 		const { uploads, fetching, loadOffset } = this.state;
 
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>
 				<div className="side-nav-top-wrapper">
 					<h3 className="side-nav-header"><Row vertical="center" style={{width:'100%'}}>
-						<Column flexGrow={1} horizontal="start">{(isExplore) ? 'Explore' : 'Projects'}</Column>
+						<Column flexGrow={1} horizontal="start">{(isExplorePage()) ? 'Explore' : 'Projects'}</Column>
 						<Column flexGrow={1} horizontal="end"><button className="tiny-button" onClick={()=> this.handleUpload()}>New</button></Column>
 					</Row></h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
@@ -297,7 +299,7 @@ class SideNav extends Component {
 							);
 						})}
 					</div>
-					{(window.location.pathname.includes('/explore'))
+					{(isExplorePage())
 						? (<div className="side-nav-link" onClick={()=> this.fetchNextUploads()}>{(fetching) ? 'Loading…' : (loadOffset === -1) ? '' : 'Explore More'}</div>)
 						: (<div className="side-nav-link" onClick={()=> this.handleUpload()}>New Project</div>)
 					}
