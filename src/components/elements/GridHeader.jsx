@@ -4,6 +4,7 @@ import './GridHeader.css';
 
 import { isUserLoggedIn } from '../../utils/funcs';
 
+
 function LoggedInHeader(props) {
 	return (<div className="grid-header-wrapper">
 		<h3>Create a new design project</h3>
@@ -24,6 +25,7 @@ function LoggedOutHeader(props) {
 		</div>
 	</div>);
 }
+
 
 function GridHeader(props) {
 	return ((isUserLoggedIn())
