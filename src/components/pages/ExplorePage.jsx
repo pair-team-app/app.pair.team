@@ -14,7 +14,10 @@ import { appendExploreArtboards } from '../../redux/actions';
 
 
 const mapStateToProps = (state, ownProps)=> {
-	return ({ artboards : state.exploreArtboards });
+	return ({
+		artboards : state.exploreArtboards,
+		profile   : state.userProfile
+	});
 };
 
 function mapDispatchToProps(dispatch) {
@@ -53,6 +56,7 @@ class ExplorePage extends Component {
 		this.setState({ fetching : true });
 		let formData = new FormData();
 		formData.append('action', 'EXPLORE');
+		formData.append('user_id', (this.props.profile) ? this.props.profile.id : 0);
 		formData.append('offset', loadOffset);
 		formData.append('length', loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)

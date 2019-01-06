@@ -98,13 +98,14 @@ class RegisterPage extends Component {
 
 					if (status === 0x11) {
 						trackEvent('user', 'sign-up');
-						cookie.save('user_id', response.data.user_id, { path : '/' });
+						const { id, username, email, avatar } = response.data.user;
+						cookie.save('user_id',id, { path : '/' });
 
 						this.props.updateUserProfile({
-							id       : response.data.user_id,
-							avatar   : response.data.avatar,
-							username : response.data.username,
-							email    : response.data.email,
+							id       : id,
+							avatar   : avatar,
+							username : username,
+							email    : email,
 							password : password
 						});
 						this.props.onPage('');

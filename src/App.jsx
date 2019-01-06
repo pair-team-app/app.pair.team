@@ -312,7 +312,7 @@ class App extends Component {
 				    />
 
 				    <SideNav
-					    userID={(this.props.profile) ? this.props.profile.id : 0}
+					    path={this.props.location.pathname}
 					    uploadID={uploadID}
 					    pageID={pageID}
 					    artboardID={artboardID}

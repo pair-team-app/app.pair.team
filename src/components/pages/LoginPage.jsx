@@ -72,13 +72,14 @@ class LoginPage extends Component {
 					const status = parseInt(response.data.status, 16);
 
 					if (hasBit(status, 0x11)) {
-						cookie.save('user_id', response.data.user_id, { path : '/' });
+						const { id, username, email, avatar } = response.data.user;
 
+						cookie.save('user_id', id, { path : '/' });
 						this.props.updateUserProfile({
-							id       : response.data.user_id,
-							avatar   : response.data.avatar,
-							username : response.data.username,
-							email    : response.data.email,
+							id       : id,
+							avatar   : avatar,
+							username : username,
+							email    : email,
 							password : password
 						});
 

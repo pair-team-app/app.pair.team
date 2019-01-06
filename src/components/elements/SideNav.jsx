@@ -33,7 +33,7 @@ class SideNav extends Component {
 			sliceID    : sliceID,
 			uploads    : [],
 			loadOffset : 0,
-			loadAmt    : (isUserLoggedIn() && !isExplorePage()) ? 666 : 10,
+			loadAmt    : (isUserLoggedIn() && !isExplorePage()) ? -1 : 10,
 			fetching   : false
 		};
 	}
@@ -57,11 +57,20 @@ class SideNav extends Component {
 			this.onTreeEffect();
 		}
 
-		if (this.props.userID !== prevProps.userID) {
+// 		if (this.props.userID !== prevProps.userID) {
+// 			this.fetchNextUploads();
+// 		}
+
+		if (this.props.processing) {
 			this.fetchNextUploads();
 		}
 
-		if (this.props.processing) {
+		if (this.props.profile !== prevProps.profile || this.props.path !== prevProps.path) {
+			this.setState({
+				loadOffset : 0,
+				loadAmt    : (isUserLoggedIn() && !isExplorePage()) ? -1 : 10
+			});
+
 			this.fetchNextUploads();
 		}
 	}
@@ -82,6 +91,8 @@ class SideNav extends Component {
 		console.log('SideNav.fetchNextUploads()');
 
 		const prevUploads = this.state.uploads;
+		const { uploadID, pageID } = this.props;
+		const { loadOffset, loadAmt } = this.state;
 
 		if (!this.state.fetching) {
 			this.setState({ fetching : true });
@@ -89,9 +100,9 @@ class SideNav extends Component {
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
-		formData.append('user_id', (isExplorePage()) ? '-1' : this.props.userID);
-		formData.append('offset', (isExplorePage()) ? this.state.loadOffset : '0');
-		formData.append('length', this.state.loadAmt);
+		formData.append('user_id', (isExplorePage()) ? '-1' : (this.props.profile) ? this.props.profile.id : '0');
+		formData.append('offset', (isExplorePage()) ? loadOffset : '0');
+		formData.append('length', '' + loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD_NAMES', response.data);
@@ -102,7 +113,7 @@ class SideNav extends Component {
 					description  : upload.description,
 					total        : upload.total,
 					added        : upload.added,
-					selected     : (this.props.uploadID === upload.id),
+					selected     : (uploadID === upload.id),
 					fonts        : upload.fonts.map((font)=> ({
 						id     : font.id,
 						family : font.family,
@@ -127,14 +138,14 @@ class SideNav extends Component {
 						description : page.description,
 						total       : page.total,
 						added       : page.added,
-						selected    : (this.props.pageID === page.id && isInspectorPage()),
+						selected    : (pageID === page.id && isInspectorPage()),
 						artboards   : []
 					})),
 					contributors : upload.contributors.map((contributor)=> ({
 						id     : contributor.id,
 						title  : contributor.username,
 						avatar : contributor.avatar
-					})).concat((upload.id === '2' || upload.id === '3') ? [] : [{
+					})).concat([{
 						id     : 0,
 						title  : 'Invite Team',
 						avatar : defaultAvatar
@@ -146,9 +157,10 @@ class SideNav extends Component {
 // 				}
 
 				this.setState({
-					uploads     : (isExplorePage()) ? prevUploads.concat(uploads) : uploads,
-					loadOffset  :  (uploads.length > 0) ? this.state.loadOffset + this.state.loadAmt : -1,
-					loadAmt     : (this.state.loadAmt < 40) ? 40 : 10,
+// 					uploads     : (isExplorePage()) ? prevUploads.concat(uploads) : uploads,
+					uploads     : uploads,
+// 					loadOffset  :  (uploads.length > 0) ? loadOffset + loadAmt : -1,
+// 					loadAmt     : (loadAmt < 40) ? 40 : 10,
 					fetching    : false
 				});
 			}).catch((error) => {

@@ -26,7 +26,7 @@ export function fetchUserProfile() {
 				console.log('fetchUserProfile()=> PROFILE', response.data);
 				dispatch({
 					type    : USER_PROFILE_LOADED,
-					payload : response.data
+					payload : response.data.user
 				});
 			}).catch((error) => {
 		});
