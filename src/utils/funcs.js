@@ -6,6 +6,17 @@ export function capitalizeText(text, toLower) {
 	return ((toLower) ? text.toLowerCase().replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }) : text.replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }));
 }
 
+export function copyTextToClipboard(text) {
+// 	navigator.clipboard.writeText(text);
+
+	const textField = document.createElement('textarea');
+	textField.innerText = text;
+	document.body.appendChild(textField);
+	textField.select();
+	document.execCommand('copy');
+	textField.remove();
+}
+
 export function className(obj) {
 	return (obj.constructor.name);
 }

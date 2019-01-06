@@ -209,7 +209,7 @@ class UploadPage extends Component {
 	handleURLCopy = ()=> {
 		const popup = {
 			visible : true,
-			content : 'Copied to Clipboard!'
+			content : 'Project URL copied to clipboard!'
 		};
 		this.setState({ popup });
 	};
@@ -246,11 +246,17 @@ class UploadPage extends Component {
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log('NEW_UPLOAD', response.data);
+					const url = window.location.origin + '/proj/' + response.data.upload_id + '/' + urlSlugTitle(uploadTitle) + '/views';
+
 					this.setState({
 						uploadID        : response.data.upload_id,
-						uploadURL       : window.location.origin + '/proj/' + response.data.upload_id + '/' + urlSlugTitle(uploadTitle) + '/views',
+						uploadURL       : url,
 						processingState : 0,
-						files           : []
+						files           : [],
+						popup           : {
+							visible : true,
+							content : 'Project URL copied to clipboard!'
+						}
 					});
 
 					this.props.onProcess(0);
@@ -479,7 +485,9 @@ class UploadPage extends Component {
 								<div className={titleClass}><input type="text" name="uploadTitle" placeholder="Project Name" value={this.state.uploadTitle} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={titleTextfield} /></div>
 							</div>
 							<div className="input-wrapper"><input type="text" name="description" placeholder="Project Description (optional)" value={this.state.description} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-							{radioButtons}
+							<div className="upload-page-radio-wrapper">
+								{radioButtons}
+							</div>
 							<button className={nextButtonClass} onClick={() => this.handleSubmit()}>{(uploading) ? 'Uploading' : 'Submit'}</button>
 						</div>
 					</div>
