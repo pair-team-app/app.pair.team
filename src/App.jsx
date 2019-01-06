@@ -28,7 +28,7 @@ import UploadPage from './components/pages/UploadPage';
 
 import StripeOverlay from './components/elements/StripeOverlay';
 
-import { fetchUserProfile, updateUserProfile } from './redux/actions';
+import { fetchUserProfile, updateNavigation, updateUserProfile } from './redux/actions';
 import { className, idsFromPath, isInspectorPage, scrollOrigin, urlSlugTitle } from './utils/funcs';
 import { initTracker, trackEvent } from './utils/tracking';
 
@@ -36,12 +36,16 @@ const wrapper = React.createRef();
 
 
 const mapStateToProps = (state, ownProps)=> {
-	return ({ profile : state.userProfile });
+	return ({
+		navigation : state.navigation,
+		profile    : state.userProfile
+	});
 };
 
 function mapDispatchToProps(dispatch) {
 	return ({
 		fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
+		updateNavigation  : (navIDs)=> dispatch(updateNavigation(navIDs)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 }
@@ -51,14 +55,13 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 
-		const pathIDs = idsFromPath();
-
+// 		const pathIDs = idsFromPath();
 		this.state = {
 			userID       : 0,
-			uploadID     : pathIDs.uploadID,
-			pageID       : pathIDs.pageID,
-			artboardID   : pathIDs.artboardID,
-			sliceID      : pathIDs.sliceID,
+// 			uploadID     : pathIDs.uploadID,
+// 			pageID       : pathIDs.pageID,
+// 			artboardID   : pathIDs.artboardID,
+// 			sliceID      : pathIDs.sliceID,
 			overlayAlert : null,
 			processing   : false
 		};
@@ -75,35 +78,40 @@ class App extends Component {
 		initTracker(cookie.load('user_id'));
 		trackEvent('site', 'load');
 
-		const { uploadID, pageID } = this.state;
-		if (isInspectorPage()) {
-			if (uploadID === 0) {
-				let formData = new FormData();
-				formData.append('action', 'PAGE');
-				formData.append('page_id', pageID);
-				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response) => {
-						console.log('PAGE', response.data);
-						this.setState({ uploadID : response.data.page.upload_id });
-					}).catch((error) => {
-				});
-			}
+		const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
+		this.props.updateNavigation({ uploadID, pageID, artboardID, sliceID });
 
-			this.handleAddPageView(pageID);
+		//const { uploadID, pageID } = this.state;
+		if (isInspectorPage() && uploadID === 0) {
+			let formData = new FormData();
+			formData.append('action', 'PAGE');
+			formData.append('page_id', pageID);
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response) => {
+					console.log('PAGE', response.data);
+					this.handleAddPageView(pageID);
+// 					this.setState({ uploadID : response.data.page.upload_id });
+
+					this.props.updateNavigation({ uploadID : response.data.page.upload_id });
+				}).catch((error) => {
+			});
 		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('App.componentDidUpdate()', prevProps, this.props, this.state);
+		console.log('App.componentDidUpdate()', prevProps, this.props, prevState);
 
-		const pathIDs = idsFromPath();
-		if (this.state.uploadID !== pathIDs.uploadID || this.state.pageID !== pathIDs.pageID || this.state.artboardID !== pathIDs.artboardID || this.state.sliceID !== pathIDs.sliceID) {
-			this.setState({
-				uploadID   : pathIDs.uploadID,
-				pageID     : pathIDs.pageID,
-				artboardID : pathIDs.artboardID,
-				sliceID    : pathIDs.sliceID
-			});
+// 		const pathIDs = idsFromPath();
+// 		if (isInspectorPage() && (this.state.uploadID !== pathIDs.uploadID || this.state.pageID !== pathIDs.pageID || this.state.artboardID !== pathIDs.artboardID || this.state.sliceID !== pathIDs.sliceID)) {
+// 			const { uploadID, pageID, artboardID, sliceID } = pathIDs;
+// 			this.props.updateNavigation({ uploadID, pageID, artboardID, sliceID });
+// 			this.setState({ uploadID, pageID, artboardID, sliceID });
+// 		}
+
+		if (prevProps.navigation !== this.props.navigation) {
+// 			const { uploadID, pageID, artboardID, sliceID } = this.props;
+// 			this.props.updateNavigation({ uploadID, pageID, artboardID, sliceID });
+// 			this.setState({ uploadID, pageID, artboardID, sliceID });
 		}
 	}
 
@@ -123,11 +131,17 @@ class App extends Component {
 		this.handleAddPageView(artboard.pageID);
 
 		this.props.history.push('/page/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
-		this.setState({
+		this.props.updateNavigation({
 			uploadID   : artboard.uploadID,
 			pageID     : artboard.pageID,
 			artboardID : artboard.id
 		});
+
+// 		this.setState({
+// 			uploadID   : artboard.uploadID,
+// 			pageID     : artboard.pageID,
+// 			artboardID : artboard.id
+// 		});
 
 		scrollOrigin(wrapper.current);
 	};
@@ -140,11 +154,16 @@ class App extends Component {
 	handleHomeReset = ()=> {
 		scrollOrigin(wrapper.current);
 
-		this.setState({
+		this.props.updateNavigation({
 			uploadID   : 0,
 			pageID     : 0,
 			artboardID : 0
 		});
+		// 			this.setState({
+// 				uploadID   : 0,
+// 				pageID     : 0,
+// 				artboardID : 0
+// 			});
 
 		this.props.history.push('/');
 	};
@@ -178,17 +197,25 @@ class App extends Component {
 		console.log('App.handlePage()', url);
 
 		const { pathname } = window.location;
-		scrollOrigin(wrapper.current);
+
+		if (pathname.split('/')[1] !== url.split('/')[0]) {
+			scrollOrigin(wrapper.current);
+		}
 
 		if (url === '//') {
 			this.props.history.goBack();
 
 		} else if (url === '') {
-			this.setState({
+			this.props.updateNavigation({
 				uploadID   : 0,
 				pageID     : 0,
 				artboardID : 0
 			});
+// 			this.setState({
+// 				uploadID   : 0,
+// 				pageID     : 0,
+// 				artboardID : 0
+// 			});
 
 			if (pathname === '/') {
 				window.location.href = '/';
@@ -216,14 +243,22 @@ class App extends Component {
 	handleSideNavUploadItem = (upload)=> {
 		console.log('App.handleSideNavUploadItem()', upload);
 
-		if (upload.selected && this.state.uploadID !== upload.id) {
-			this.setState({
+		if (upload.selected && this.props.navigation.uploadID !== upload.id) {
+			this.props.updateNavigation({
 				uploadID   : upload.id,
 				pageID     : 0,
 				artboardID : 0
 			});
 
-			this.handlePage('proj/' + upload.id + '/' + urlSlugTitle(upload.title) + '/views');
+// 			this.setState({
+// 				uploadID   : upload.id,
+// 				pageID     : 0,
+// 				artboardID : 0
+// 			});
+		}
+
+		if (upload.selected && !isInspectorPage()) {
+			this.handlePage('proj/' + upload.id + '/' + urlSlugTitle(upload.title));
 		}
 	};
 
@@ -233,13 +268,15 @@ class App extends Component {
 		if (category.selected) {
 			let formData = new FormData();
 			formData.append('action', 'UPLOAD');
-			formData.append('upload_id', this.state.uploadID);
+			formData.append('upload_id', this.props.navigation.uploadID);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log('UPLOAD', response.data);
 					const { id, title } = response.data.upload;
 
-					this.handlePage('proj/' + id + '/' + urlSlugTitle(title) + '/' + category.title.toLowerCase());
+					if (!isInspectorPage()) {
+						this.handlePage('proj/' + id + '/' + urlSlugTitle(title) + '/' + category.title.toLowerCase());
+					}
 				}).catch((error) => {
 			});
 		}
@@ -253,7 +290,7 @@ class App extends Component {
 		if (page.selected) {
 			let formData = new FormData();
 			formData.append('action', 'ARTBOARDS');
-			formData.append('upload_id', this.state.uploadID);
+			formData.append('upload_id', this.props.navigation.uploadID);
 			formData.append('page_id', page.id);
 			formData.append('slices', '0');
 			formData.append('offset', '0');
@@ -265,16 +302,23 @@ class App extends Component {
 					const artboard = response.data.artboards.pop();
 					this.handleAddPageView(page.id);
 					this.props.history.push('/page/' + page.uploadID + '/' + page.id + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
-					this.setState({
+					this.props.updateNavigation({
 						uploadID   : page.uploadID,
 						pageID     : page.id,
 						artboardID : artboard.id
 					});
+
+// 					this.setState({
+// 						uploadID   : page.uploadID,
+// 						pageID     : page.id,
+// 						artboardID : artboard.id
+// 					});
 				}).catch((error) => {
 			});
 
 		} else {
-			this.setState({ pageID : 0 });
+			this.props.updateNavigation({ pageID : 0 });
+// 			this.setState({ pageID : 0 });
 		}
 	};
 
@@ -287,18 +331,30 @@ class App extends Component {
 
 		this.handleAddPageView(artboard.pageID);
 		this.props.history.push('/page/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
-		this.setState({
+
+		this.props.updateNavigation({
 			uploadID   : artboard.uploadID,
 			pageID     : artboard.pageID,
 			artboardID : artboard.id
 		});
+// 		this.setState({
+// 			uploadID   : artboard.uploadID,
+// 			pageID     : artboard.pageID,
+// 			artboardID : artboard.id
+// 		});
 	};
 
 
 	render() {
   	console.log('App.render()', this.props, this.state);
 
-  	const { uploadID, pageID, artboardID, sliceID } = this.state;
+  	const { uploadID, pageID } = this.props.navigation;
+//   	const { uploadID, pageID } = (this.props.navigation) ? this.props.navigation : {
+// 		  uploadID : 0,
+// 		  pageID : 0,
+// 		  artboardID : 0,
+// 		  sliceID : 0
+// 	  };
   	const { processing } = this.state;
 
   	return (
@@ -313,10 +369,6 @@ class App extends Component {
 
 				    <SideNav
 					    path={this.props.location.pathname}
-					    uploadID={uploadID}
-					    pageID={pageID}
-					    artboardID={artboardID}
-					    sliceID={sliceID}
 					    processing={processing}
 					    onUploadItem={(upload)=> this.handleSideNavUploadItem(upload)}
 					    onCategoryItem={(category)=> this.handleSideNavCategoryItem(category)}

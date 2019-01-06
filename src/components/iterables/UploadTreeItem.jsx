@@ -146,7 +146,7 @@ class UploadTreeItem extends Component {
 		console.log('UploadTreeItem.handleClick()');
 		let categories = [...this.state.categories];
 		categories.forEach((category)=> {
-			category.selected = (category.id === 4);
+			category.selected = false;//(category.id === 4);
 			category.items.forEach((item)=> {
 				item.selected = false;
 			});

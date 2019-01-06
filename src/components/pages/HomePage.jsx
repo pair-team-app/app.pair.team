@@ -19,12 +19,13 @@ class HomePage extends Component {
 		super(props);
 
 		this.state = {
-			action     : '',
-			upload     : null,
-			artboards  : [],
-			fetching   : false,
-			loadOffset : 0,
-			loadAmt    : 1,
+			action        : '',
+			upload        : null,
+			artboards     : [],
+			pendingUpdate : false,
+			fetching      : false,
+			loadOffset    : 0,
+			loadAmt       : 1,
 			popup : {
 				visible : false,
 				content : ''
@@ -34,26 +35,22 @@ class HomePage extends Component {
 
 	componentDidMount() {
 		console.log('HomePage().componentDidMount()', this.props);
-		if (this.props.uploadID !== 0) {
-			this.handleLoadNext();
-		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('HomePage.componentDidUpdate()', this.props, prevProps);
+		console.log('HomePage.componentDidUpdate()', prevProps, this.props);
 
-		if (this.props.uploadID === 0 && this.state.upload) {
-			this.setState({
-				artboards : [],
-				upload    : null
-			});
+		if (prevProps.uploadID !== this.props.uploadID && !this.state.pendingUpdate) {
+			this.setState({ pendingUpdate : true });
 		}
 
-		if (this.props.uploadID !== prevProps.uploadID && this.props.uploadID !== 0) {
+		if (window.location.pathname.includes('/views') && this.state.pendingUpdate) {
 			this.setState({
-				artboards  : [],
-				loadOffset : 0,
-				loadAmt    : 24
+				upload        : null,
+				artboards     : [],
+				loadOffset    : 0,
+				loadAmt       : 24,
+				pendingUpdate : false
 			});
 
 			setTimeout(this.handleLoadNext, 125);
