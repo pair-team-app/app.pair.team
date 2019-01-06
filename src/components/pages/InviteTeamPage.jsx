@@ -10,7 +10,8 @@ import { Row } from 'simple-flexbox';
 import Dropdown from '../elements/Dropdown';
 import Popup from '../elements/Popup';
 
-import { isValidEmail, urlSlugTitle } from '../../utils/funcs';
+import { isValidEmail, isUserLoggedIn, urlSlugTitle } from '../../utils/funcs';
+import cookie from "react-cookies";
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -45,8 +46,26 @@ class InviteTeamPage extends Component {
 	}
 
 	componentDidMount() {
-		const { uploadID, uploadTitle, loadOffset, loadAmt } = this.state;
+		console.log('InviteTeamPage.componentDidMount()', this.props, this.state);
+
+		if (!isUserLoggedIn()) {
+			cookie.save('msg', 'use this feature.', { path : '/' });
+			this.props.onPage('login');
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('InviteTeamPage.componentDidUpdate()', prevProps, this.props, this.state);
+		if (this.props.profile !== prevProps.profile || prevProps.uploadID !== this.props.uploadID) {
+			this.refreshData();
+		}
+	}
+
+	refreshData = ()=> {
+		console.log('InviteTeamPage.refreshData()');
+
 		const { pageID, artboardID } = this.props;
+		const { uploadID, uploadTitle, loadOffset, loadAmt } = this.state;
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
@@ -56,7 +75,7 @@ class InviteTeamPage extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD_NAMES', response.data);
-				const uploads = response.data.uploads.map((upload)=> ({
+				const uploads = response.data.uploads.filter((upload)=> (upload.id !== '2' && upload.id !== '3')).map((upload)=> ({
 					id       : upload.id,
 					title    : upload.title,
 					author   : upload.author,
@@ -68,7 +87,7 @@ class InviteTeamPage extends Component {
 						description : page.description,
 						added       : page.added,
 						selected    : (pageID === page.id),
-						artboards   : page.artboards.map((artboard)=> ({
+						artboards   : page.artboards.map((artboard) => ({
 							id       : artboard.id,
 							pageID   : artboard.page_id,
 							title    : artboard.title,
@@ -81,38 +100,32 @@ class InviteTeamPage extends Component {
 				}));
 
 				if (uploadID !== 0) {
-					let uploadID = 0;
-					let uploadTitle = 'Select Project';
-					let uploadURL = '';
-					uploads.forEach(function(upload) {
+					uploads.forEach((upload)=> {
 						if (upload.id === uploadID) {
-							uploadID = upload.id;
-							uploadTitle = upload.title;
-							uploadURL = window.location.origin + '/proj/' + uploadID + '/' + urlSlugTitle(upload.title) + '/views';
+							this.setState({
+								uploadTitle : upload.title,
+								uploadURL   : window.location.origin + '/proj/' + uploadID + '/' + urlSlugTitle(upload.title)
+							});
 						}
 					});
-
-					this.setState({ uploadID, uploadTitle, uploadURL, uploads });
-
-				} else {
-					this.setState({
-						uploadID    : (uploads.length > 0) ? uploads[0].id : uploadID,
-						uploadTitle : (uploads.length > 0) ? uploads[0].title : uploadTitle,
-						uploadURL   : (uploads.length > 0) ? window.location.origin + '/proj/' + uploads[0].id + '/' + urlSlugTitle(uploads[0].title) : this.state.uploadURL,
-						uploads     : uploads
-					});
 				}
+
+				this.setState({ uploads });
 			}).catch((error) => {
 		});
-	}
+	};
 
 	resetThenSet = (ind, key) => {
 		let uploads = [...this.state.uploads];
 		uploads.forEach(upload => upload.selected = false);
-		uploads[ind].selected = true;
+
+		let upload = uploads[ind];
+		upload.selected = true;
 		this.setState({
-			uploadURL : window.location.origin + '/proj/' + uploads[0].id + '/' + urlSlugTitle(uploads[ind].title) + '/views',
-			uploads   : uploads
+			uploadID    : upload.id,
+			uploadTitle : upload.title,
+			uploadURL   : window.location.origin + '/proj/' + upload.id + '/' + urlSlugTitle(upload.title),
+			uploads     : uploads
 		});
 	};
 
@@ -169,6 +182,8 @@ class InviteTeamPage extends Component {
 	};
 
 	render() {
+		console.log('InviteTeamPage.render()', this.props, this.state);
+
 		const { action, sentInvites, uploadURL, uploadTitle } = this.state;
 		const { email1, email2, email3 } = this.state;
 		const { email1Valid, email2Valid, email3Valid } = this.state;

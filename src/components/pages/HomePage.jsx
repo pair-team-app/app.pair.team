@@ -142,7 +142,6 @@ class HomePage extends Component {
 	render() {
 		console.log('HomePage.render()', this.props, this.state);
 
-		const { pageID } = this.props;
 		const { upload, artboards, fetching } = this.state;
 		const title = (fetching) ? 'Loading…' : (upload) ? upload.title + ' (' + (upload.total.artboards) + ')' : '';
 
@@ -160,20 +159,15 @@ class HomePage extends Component {
 				{(artboards.length > 0) && (<div>
 					<Row horizontal="space-around" className="home-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
 						{artboards.map((artboard) => {
-							if (pageID <= 0 || pageID === artboard.pageID) {
-								return (
-									<Column key={artboard.id}>
-										<ArtboardItem
-											title={artboard.title}
-											image={artboard.filename}
-											avatar={artboard.system.avatar}
-											onClick={() => this.props.onArtboardClicked(artboard)} />
-									</Column>
-								);
-
-							} else {
-								return (null);
-							}
+							return (
+								<Column key={artboard.id}>
+									<ArtboardItem
+										title={artboard.title}
+										image={artboard.filename}
+										avatar={artboard.system.avatar}
+										onClick={() => this.props.onArtboardClicked(artboard)} />
+								</Column>
+							);
 						})}
 					</Row>
 					<Row horizontal="center"><button className={btnClass} onClick={()=> this.handleLoadNext()}>{btnCaption}</button></Row>

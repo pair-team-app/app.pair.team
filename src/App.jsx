@@ -93,6 +93,20 @@ class App extends Component {
 		}
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('App.componentDidUpdate()', prevProps, this.props, this.state);
+
+		const pathIDs = idsFromPath();
+		if (this.state.uploadID !== pathIDs.uploadID || this.state.pageID !== pathIDs.pageID || this.state.artboardID !== pathIDs.artboardID || this.state.sliceID !== pathIDs.sliceID) {
+			this.setState({
+				uploadID   : pathIDs.uploadID,
+				pageID     : pathIDs.pageID,
+				artboardID : pathIDs.artboardID,
+				sliceID    : pathIDs.sliceID
+			});
+		}
+	}
+
 	handleAddPageView = (pageID)=> {
 		let formData = new FormData();
 		formData.append('action', 'ADD_VIEW');

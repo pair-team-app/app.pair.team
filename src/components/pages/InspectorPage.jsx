@@ -8,6 +8,7 @@ import axios from 'axios';
 // import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
 import Dropzone from 'react-dropzone';
+// import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
@@ -15,7 +16,6 @@ import Popup from '../elements/Popup';
 
 import { capitalizeText, isUserLoggedIn } from '../../utils/funcs.js';
 import { toCSS, toReactCSS } from '../../utils/langs.js';
-// import FontAwesome from 'react-fontawesome';
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
@@ -54,7 +54,7 @@ const tsOptions = {
 
 	return (
 		<div className="comment-item">
-			<img className="comment-item-avatar" src="/images/default-avatar.png" alt={props.author} />
+			<img className="comment-item-avatar" src={defaultAvatar} alt={props.author} />
 			<div className="comment-item-vote-wrapper">
 				<FontAwesome name="arrow-up" className={arrowUpClass} onClick={()=> props.onVote(1)} /><br />
 				<div className="comment-item-score">{score}</div>

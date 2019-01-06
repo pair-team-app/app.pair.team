@@ -4,7 +4,7 @@ import './UploadTreeItem.css';
 
 import { Row } from 'simple-flexbox';
 
-import { isProjectPage, isInspectorPage, limitString } from '../../utils/funcs';
+import { isInspectorPage, limitString } from '../../utils/funcs';
 import sketchIcon from '../../images/icon-sketch.png';
 
 const UPLOAD_CHAR_LIMIT = 26;
@@ -53,27 +53,27 @@ class UploadTreeItem extends Component {
 			categories : [{
 				id       : 1,
 				title    : 'Fonts',
-				selected : false,
+				selected : (window.location.pathname.split('/').pop() === 'fonts'),
 				items    : props.fonts
 			}, {
 				id       : 2,
 				title    : 'Colors',
-				selected : false,
+				selected : (window.location.pathname.split('/').pop() === 'colors'),
 				items    : props.colors
 			}, {
 				id       : 3,
 				title    : 'Symbols',
-				selected : false,
+				selected : (window.location.pathname.split('/').pop() === 'symbols'),
 				items    : props.symbols
 			}, {
 				id       : 4,
 				title    : 'Views',
-				selected : (isProjectPage() || isInspectorPage()),
+				selected : (window.location.pathname.split('/').pop() === 'views' || isInspectorPage()),
 				items    : props.pages
 			}, {
 				id       : 5,
 				title    : 'Contributors',
-				selected : false,
+				selected : (window.location.pathname.split('/').pop() === 'contributors'),
 				items    : props.contributors
 			}]
 		};
@@ -84,7 +84,62 @@ class UploadTreeItem extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('UploadTreeItem.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
+		//console.log('UploadTreeItem.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
+
+		if (prevProps.fonts !== this.props.fonts) {
+			let categories = [...this.state.categories];
+			categories.forEach((category)=> {
+				if (category.id === 1) {
+					category.items = this.props.fonts;
+				}
+			});
+
+			this.setState({ categories });
+		}
+
+		if (prevProps.colors !== this.props.colors) {
+			let categories = [...this.state.categories];
+			categories.forEach((category)=> {
+				if (category.id === 2) {
+					category.items = this.props.colors;
+				}
+			});
+
+			this.setState({ categories });
+		}
+
+		if (prevProps.symbols !== this.props.symbols) {
+			let categories = [...this.state.categories];
+			categories.forEach((category)=> {
+				if (category.id === 3) {
+					category.items = this.props.symbols;
+				}
+			});
+
+			this.setState({ categories });
+		}
+
+		if (prevProps.pages !== this.props.pages) {
+			let categories = [...this.state.categories];
+			categories.forEach((category)=> {
+				if (category.id === 4) {
+					category.items = this.props.pages;
+				}
+			});
+
+			this.setState({ categories });
+		}
+
+		if (prevProps.contributors !== this.props.contributors) {
+			let categories = [...this.state.categories];
+			categories.forEach((category)=> {
+				if (category.id === 5) {
+					category.items = this.props.contributors;
+				}
+			});
+
+			this.setState({ categories });
+		}
 	}
 
 	handleClick = ()=> {
@@ -153,6 +208,8 @@ class UploadTreeItem extends Component {
 	};
 
 	render() {
+		//console.log('UploadTreeItem.render()',this.props, this.state);
+
 		const { selected } = this.props;
 		const { title, categories } = this.state;
 
@@ -168,7 +225,7 @@ class UploadTreeItem extends Component {
 					{categories.map((category, i)=> {
 						return (
 							<CategoryTreeItem
-								key={i}
+								key={category.id}
 								id={category.id}
 								title={category.title}
 								items={category.items}

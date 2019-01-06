@@ -9,7 +9,8 @@ import { Column, Row } from 'simple-flexbox';
 
 import UploadTreeItem from '../iterables/UploadTreeItem';
 
-import { isExplorePage, isUserLoggedIn, scrollOrigin } from '../../utils/funcs';
+import {isExplorePage, isInspectorPage, isUserLoggedIn, scrollOrigin } from '../../utils/funcs';
+import defaultAvatar from "../../images/default-avatar.png";
 
 const wrapper = React.createRef();
 const scrollWrapper = React.createRef();
@@ -126,14 +127,18 @@ class SideNav extends Component {
 						description : page.description,
 						total       : page.total,
 						added       : page.added,
-						selected    : (this.props.pageID === page.id),
+						selected    : (this.props.pageID === page.id && isInspectorPage()),
 						artboards   : []
 					})),
 					contributors : upload.contributors.map((contributor)=> ({
 						id     : contributor.id,
 						title  : contributor.username,
 						avatar : contributor.avatar
-					})),
+					})).concat([{
+						id     : 0,
+						title  : 'Invite Team',
+						avatar : defaultAvatar
+					}])
 				}));
 
 // 				if (this.props.artboardID !== 0) {
@@ -247,6 +252,9 @@ class SideNav extends Component {
 
 	handleContributorClick = (contributor)=> {
 		console.log('SideNav.handleContributorClick()', contributor);
+		if (contributor.id === 0) {
+			this.props.onPage('invite-team');
+		}
 	};
 
 
