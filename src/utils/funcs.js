@@ -1,24 +1,100 @@
 
+import cookie from 'react-cookies';
+
+
+export function buildInspectorPath(uploadID, pageID, artboardID, artboardTitle) {
+	return ('/page/' + uploadID + '/' + pageID + '/' + artboardID + '/' + convertURLSlug(artboardTitle));
+}
+
+export function buildInspectorURL(uploadID, pageID, artboardID, artboardTitle) {
+	return (window.location.origin + buildInspectorPath(uploadID, pageID, artboardID, artboardTitle));
+}
+
+export function buildProjectPath(uploadID, title) {
+	return ('/proj/' + uploadID + '/' + convertURLSlug(title));
+}
+
+export function buildProjectURL(uploadID, title) {
+	return (window.location.origin + buildProjectPath(uploadID, title));
+}
+
 export function capitalizeText(text, toLower) {
 	toLower = (toLower || false);
 	return ((toLower) ? text.toLowerCase().replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }) : text.replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }));
 }
 
-export function binaryClassName(condition, state1, state2, base) {
-	return((condition) ? ((base) ? base + ' ' : '') + state1 : ((base) ? base + ' ' : '') + state2);
+export function convertURLSlug(text) {
+	return (text.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+}
+
+export function copyTextToClipboard(text) {
+// 	navigator.clipboard.writeText(text);
+
+	const textField = document.createElement('textarea');
+	textField.innerText = text;
+	document.body.appendChild(textField);
+	textField.select();
+	document.execCommand('copy');
+	textField.remove();
+}
+
+export function className(obj) {
+	return (obj.constructor.name);
 }
 
 export function hasBit(val, bit) {
 	return ((val & bit) === bit);
 }
 
-export function hiddenText(text, char='*') {
+export function hideText(text, char='*') {
 	return (Array(text.length + 1).join(char));
+}
+
+export function idsFromPath() {
+	const pathname = window.location.pathname;
+	const artboardPath = /\/artboard|page\/\d+\/\d+\/\d+\/.*$/;
+	const projPath = /\/proj\/\d+\/.*$/;
+
+	return ({
+		uploadID   : (artboardPath.test(pathname)) ? pathname.match(/\/artboard|page\/(\d+)\/.*$/)[1] : (projPath.test(pathname)) ? pathname.match(/\/proj\/(\d+)\/.*$/)[1] : 0,
+		pageID     : (artboardPath.test(pathname)) ? pathname.match(/\/artboard|page\/\d+\/(\d+)\/.*$/)[1] : 0,
+		artboardID : (artboardPath.test(pathname)) ? pathname.match(/\/artboard|page\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
+		sliceID    : 0
+	});
+}
+
+export function isExplorePage() {
+	return (window.location.pathname.includes('/explore'));
+}
+
+export function isHomePage() {
+	return (window.location.pathname === '' || window.location.pathname === '/');
+}
+
+export function isInspectorPage() {
+	return (window.location.pathname.includes('/artboard') || window.location.pathname.includes('/page'));
+}
+
+export function isProjectPage() {
+	return (window.location.pathname.includes('/proj'));
+}
+
+export function isUploadPage() {
+	return (window.location.pathname.includes('/new'));
+}
+
+export function isUserLoggedIn() {
+	return (cookie.load('user_id') !== '0');
 }
 
 export function isValidEmail(email) {
 	const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	return (re.test(String(email).toLowerCase()));
+}
+
+export function limitString(str, len) {
+	str = (str || '');
+	return ((str.length > len) ? str.substr(0, len - 1) + '…' : str);
 }
 
 export function randomElement(array) {
@@ -33,6 +109,9 @@ export function randomInt(lower, upper) {
 	return (Math.floor(randomFloat(lower, upper)));
 }
 
-export function urlSlugTitle(text) {
-	return (text.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
+export function scrollOrigin(element) {
+	if (element) {
+		element.scrollTo(0, 0);
+	}
 }
+

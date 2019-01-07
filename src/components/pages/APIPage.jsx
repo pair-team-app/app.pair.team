@@ -17,8 +17,8 @@ class APIPage extends Component {
 				syntax : '#block {width: 100%; color: #ffffff;}'
 			}],
 			urls  : [
-				'https://earlyaccess.designengine.ai/proj/111/ios-12-design-system',
-				'https://earlyaccess.designengine.ai/artboard/111/22/321/tab-bars',
+				'https://earlyaccess.designengine.ai/proj/111/ios-12-design-system/views',
+				'https://earlyaccess.designengine.ai/page/111/22/321/tab-bars/views',
 			],
 			popup : {
 			visible : false,
@@ -32,7 +32,7 @@ class APIPage extends Component {
 			visible : true,
 			content : 'Copied to Clipboard!'
 		};
-		this.setState({ popup : popup });
+		this.setState({ popup });
 	};
 
 	handleURLCopy = (url)=> {
@@ -40,7 +40,7 @@ class APIPage extends Component {
 			visible : true,
 			content : 'Copied to Clipboard!'
 		};
-		this.setState({ popup : popup });
+		this.setState({ popup });
 	};
 
 	render() {

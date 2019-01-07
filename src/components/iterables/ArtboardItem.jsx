@@ -1,39 +1,30 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 import './ArtboardItem.css'
 
-class ArtboardItem extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-		};
-	}
+import { limitString } from '../../utils/funcs';
+import sketchIcon from '../../images/icon-sketch.png';
 
-	static getDerivedStateFromProps(nextProps) {
-		return ({
-			title : (nextProps.title) ? (nextProps.title.length > 27) ? (nextProps.title.substring(0, 26) + '…') : nextProps.title : null,
-			image : nextProps.image
-		});
-	}
+const TITLE_CHAR_LIMIT = 28;
 
-	render() {
-		const { title, image } = this.state;
-		const className = (image) ? 'artboard-item' : 'artboard-item artboard-item-loading';
 
-		return (
-			<div className={className} onClick={()=> (title !== '') ? this.props.onClick() : null}>
-				{(title !== '') && (<div>
-					{(image) && (<img className="artboard-item-image" src={image} alt={title} />)}
-					<div className="artboard-item-overlay" />
-					{(image) && (<img className="artboard-item-icon" src="/images/icon-sketch.png" alt="Icon" />)}
-					{(image) && (<div className="artboard-item-details-wrapper">
-						<img className="artboard-item-avatar" src="/images/default-avatar.png" alt="Avatar" />
-						<div className="artboard-item-title">{title}</div>
-					</div>)}
-				</div>)}
-			</div>
-		);
-	}
+function ArtboardItem(props) {
+	const { title, image, avatar } = props;
+	const className = (image) ? 'artboard-item' : 'artboard-item artboard-item-loading';
+
+	return (
+		<div className={className} onClick={()=> (image) ? props.onClick() : null}>
+			{(image) && (<div>
+				<img className="artboard-item-image" src={(!image.includes('@')) ? image + '@0.25x.png' : image} alt={limitString(title, TITLE_CHAR_LIMIT)} />
+				<div className="artboard-item-overlay" />
+				<img className="artboard-item-icon" src={sketchIcon} alt="Icon" />
+				<div className="artboard-item-details-wrapper">
+					<img className="artboard-item-avatar" src={avatar} alt="Avatar" />
+					<div className="artboard-item-title">{limitString(title, TITLE_CHAR_LIMIT)}</div>
+				</div>
+			</div>)}
+		</div>
+	);
 }
 
 export default ArtboardItem;

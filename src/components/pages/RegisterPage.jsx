@@ -2,14 +2,24 @@
 import React, { Component } from 'react';
 import './RegisterPage.css';
 
-import axios from "axios/index";
-import cookie from "react-cookies";
+import axios from 'axios/index';
+import cookie from 'react-cookies';
+import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import { hasBit, isValidEmail } from '../../utils/funcs';
-import { trackEvent } from "../../utils/tracking";
+import { trackEvent } from '../../utils/tracking';
+import { updateUserProfile } from "../../redux/actions";
 
 const passwordTextfield = React.createRef();
+
+
+function mapDispatchToProps(dispatch) {
+	return ({
+		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+	});
+}
+
 
 class RegisterPage extends Component {
 	constructor(props) {
@@ -38,7 +48,7 @@ class RegisterPage extends Component {
 			passMsg       : ''
 		});
 
-		setTimeout(function() {
+		setTimeout(()=> {
 			passwordTextfield.current.focus();
 		}, 69);
 	};
@@ -87,8 +97,17 @@ class RegisterPage extends Component {
 					console.log('status', status, hasBit(status, 0x01), hasBit(status, 0x10));
 
 					if (status === 0x11) {
-						trackEvent('sign-up');
-						cookie.save('user_id', response.data.user_id, { path : '/' });
+						trackEvent('user', 'sign-up');
+						const { id, username, email, avatar } = response.data.user;
+						cookie.save('user_id',id, { path : '/' });
+
+						this.props.updateUserProfile({
+							id       : id,
+							avatar   : avatar,
+							username : username,
+							email    : email,
+							password : password
+						});
 						this.props.onPage('');
 
 					} else {
@@ -133,7 +152,7 @@ class RegisterPage extends Component {
 						<div className={password2Class}><input type="password" name="password2" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<Row vertical="center">
 							<Column><button type="submit" className={buttonClass} onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-							<Column><div className="page-link" style={{fontSize:'14px'}} onClick={()=> this.props.onPage('login')}>Already have an account?</div></Column>
+							<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> this.props.onPage('login')}>Already have an account?</div></Column>
 						</Row>
 					</form>
 				</div>
@@ -142,4 +161,4 @@ class RegisterPage extends Component {
 	}
 }
 
-export default RegisterPage;
+export default connect(null, mapDispatchToProps)(RegisterPage);

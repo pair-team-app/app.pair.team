@@ -4,6 +4,10 @@
 	height: 100%;
 }
 
+.unsupported-browser {
+	text-align: center;
+}
+
 .content-wrapper {
 	position: fixed;
 	top: 58px;
@@ -76,11 +80,8 @@
 
 .button-disabled, .button-disabled:hover {
 	cursor: default;
-	/*background: none;*/
-	/*background-color: #9f9f9f;*/
-	/*background-image: none;*/
-	/*border-color: #9f9f9f;*/
-	/*color: #e9e9e9;*/
+	background: #57aa48 linear-gradient(-180deg, #69cd58, #57aa48 90%) -0.5em;
+	border: 1px solid #4e9500;
 	opacity : 0.75;
 }
 

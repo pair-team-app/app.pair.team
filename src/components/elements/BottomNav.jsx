@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './BottomNav.css';
 
-import cookie from 'react-cookies';
+import { isExplorePage, isProjectPage, isInspectorPage, isUploadPage, isUserLoggedIn } from '../../utils/funcs';
 
 class BottomNav extends Component {
 	constructor(props) {
@@ -19,9 +19,9 @@ class BottomNav extends Component {
 		const year = new Date().getFullYear();
 
 		const pathname = window.location.pathname;
-		const style = (pathname.includes('artboard')) ? {
+		const style = (isInspectorPage()) ? {
 			display  : 'none'
-		} : (!pathname.includes('proj') && !pathname.includes('explore') && !pathname.includes('invite') && !pathname.includes('new') && !pathname.includes('terms') && !pathname.includes('privacy')) ? {
+		} : (!isProjectPage() && !isExplorePage() && !pathname.includes('invite') && !isUploadPage() && !pathname.includes('terms') && !pathname.includes('privacy')) ? {
 			position : 'fixed',
 			left     : '320px',
 			bottom   : '10px'
@@ -36,9 +36,9 @@ class BottomNav extends Component {
 					<div className="bottom-nav-link" onClick={()=> window.open('https://spectrum.chat/designengine')}>Spectrum</div>
 					{/*<div className="bottom-nav-link" onClick={()=> this.props.onPage('api')}>API</div>*/}
 					<div className="bottom-nav-link" onClick={()=> window.open('https://github.com/de-ai/designengine.ai/projects/1')}>Roadmap</div>
-					{(cookie.load('user_id') === '0') && (<div className="bottom-nav-link" onClick={() => this.props.onPage('register')}>Sign Up</div>)}
-					{(cookie.load('user_id') === '0') && (<div className="bottom-nav-link" onClick={() => this.props.onPage('login')}>Login</div>)}
-					{(cookie.load('user_id') !== '0') && (<div className="bottom-nav-link" onClick={() => this.props.onLogout()}>Sign Out</div>)}
+					{(!isUserLoggedIn()) && (<div className="bottom-nav-link" onClick={() => this.props.onPage('register')}>Sign Up</div>)}
+					{(!isUserLoggedIn()) && (<div className="bottom-nav-link" onClick={() => this.props.onPage('login')}>Login</div>)}
+					{(!isUserLoggedIn()) && (<div className="bottom-nav-link" onClick={() => this.props.onLogout()}>Sign Out</div>)}
 				</div>
 
 				<div className="copyright">&copy; {year} Design Engine AI, Inc</div>

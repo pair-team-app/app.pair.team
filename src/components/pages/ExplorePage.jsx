@@ -2,16 +2,30 @@
 import React, { Component } from 'react';
 import './ExplorePage.css';
 
-import axios from "axios/index";
+import axios from 'axios/index';
 import createjs from 'preload-js';
-import cookie from 'react-cookies';
-import { Column, Row } from 'simple-flexbox';
+import { connect } from 'react-redux';
+import { Row } from 'simple-flexbox';
 
-import ArtboardItem from '../iterables/ArtboardItem';
 import HomeExpo from '../elements/HomeExpo';
-import Popup from '../elements/Popup';
+import ExploreArtboardGrid from '../elements/ExploreArtboardGrid';
+import GridHeader from '../elements/GridHeader';
+import { appendExploreArtboards } from '../../redux/actions';
 
-import { binaryClassName } from '../../utils/funcs';
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		artboards : state.exploreArtboards,
+		profile   : state.userProfile
+	});
+};
+
+function mapDispatchToProps(dispatch) {
+	return ({
+		appendExploreArtboards : (artboards)=> dispatch(appendExploreArtboards(artboards))
+	});
+}
+
 
 class ExplorePage extends Component {
 	constructor(props) {
@@ -20,14 +34,9 @@ class ExplorePage extends Component {
 		super(props);
 
 		this.state = {
-			artboards  : [],
-			loadOffset : 0,
+			loadOffset : props.artboards.length,
 			loadAmt    : 24,
-			fetching   : false,
-			popup      : {
-				visible : false,
-				content : ''
-			}
+			fetching   : false
 		};
 
 		this.queue = new createjs.LoadQueue(false);
@@ -35,29 +44,30 @@ class ExplorePage extends Component {
 
 	componentDidMount() {
 		console.log('ExplorePage.componentDidMount()');
-		this.queue.on('fileload', this.handleFileLoaded);
+// 		this.queue.on('fileload', this.handleFileLoaded);
 		this.handleLoadNext();
 	}
 
 	handleLoadNext = ()=> {
-		console.log('ExplorePage.handleLoadNext()', this.state.artboards);
+// 		console.log('ExplorePage.handleLoadNext()');
 
-		const prevArtboards = (this.state.artboards.length === 12) ? [] : this.state.artboards;
+		const { loadOffset, loadAmt } = this.state;
+
 		this.setState({ fetching : true });
-
 		let formData = new FormData();
 		formData.append('action', 'EXPLORE');
-		formData.append('offset', this.state.loadOffset);
-		formData.append('length', this.state.loadAmt);
+		formData.append('user_id', (this.props.profile) ? this.props.profile.id : 0);
+		formData.append('offset', loadOffset);
+		formData.append('length', loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('EXPLORE', response.data);
 
 				const artboards = response.data.artboards.map((artboard) => {
-					this.queue.loadFile({
-						id  : artboard.id,
-						src : artboard.filename + '@0.25x.png'
-					});
+// 					this.queue.loadFile({
+// 						id  : artboard.id,
+// 						src : artboard.filename.replace('@3x', '@0.25x')
+// 					});
 
 					return ({
 						id        : artboard.id,
@@ -65,82 +75,54 @@ class ExplorePage extends Component {
 						uploadID  : artboard.upload_id,
 						title     : artboard.title,
 						pageTitle : artboard.page_title,
+						system    : artboard.system,
 						type      : artboard.type,
-						filename  : null,
+						filename  : artboard.filename,
 						meta      : JSON.parse(artboard.meta),
 						added     : artboard.added,
 						selected  : false
 					});
 				});
 
+				this.props.appendExploreArtboards(artboards);
+
 				this.setState({
-					artboards  : prevArtboards.concat(artboards),
 					fetching   : false,
-					loadOffset : this.state.loadOffset + this.state.loadAmt
+					loadOffset : loadOffset + artboards.length
 				});
 			}).catch((error) => {
 		});
 	};
 
-	handleFileLoaded = (event)=> {
-		let artboards = [...this.state.artboards];
-		artboards.forEach((artboard)=> {
-			if (artboard.id === event.item.id) {
-				artboard.filename = event.item.src;
-			}
-		});
-
-		this.setState({ artboards : artboards });
-	};
+// 	handleFileLoaded = (event)=> {
+// 		let artboards = [...this.state.artboards];
+// 		artboards.forEach((artboard)=> {
+// 			if (artboard.id === event.item.id) {
+// 				artboard.filename = event.item.src.replace('@0.25x.png', '');
+// 			}
+// 		});
+//
+// 		this.setState({ artboards });
+// 	};
 
 	render() {
-		const artboards = this.state.artboards;
-		const items = artboards.map((artboard, i) => {
-			return (
-				<Column key={i}>
-					<ArtboardItem
-						title={artboard.title}
-						image={artboard.filename}
-						onClick={()=> this.props.onArtboardClicked(artboard)} />
-				</Column>
-			);
-		});
+		console.log('ExplorePage.render()', this.state);
 
-		const condi = function(loading) { return (loading); };
-		const btnClass = binaryClassName(condi(this.state.fetching), 'is-hidden', '', 'fat-button');
+		const { fetching, loadOffset } = this.state;
+		const btnClass = (fetching) ? 'fat-button button-disabled' : (loadOffset !== this.props.artboards.length) ? 'fat-button is-hidden' : 'fat-button';
+		const btnCaption = (fetching) ? 'Loading…' : 'More';
 
 		return (
 			<div className="page-wrapper explore-page-wrapper">
 				<HomeExpo onClick={(url)=> this.props.onPage(url)} />
+				<GridHeader onPage={(url)=> this.props.onPage(url)} />
 
-				{(cookie.load('user_id') === '0')
-					? (<div>
-							<h3>Signup or login</h3>
-							<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
-							<div className="explore-page-button-wrapper">
-								<button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign up with Email</button>
-								<button onClick={()=> this.props.onPage('login')}>Login</button>
-							</div>
-					</div>) : (<div>
-						<h3>Create a new design project</h3>
-						<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
-						<div className="explore-page-button-wrapper">
-							<button onClick={()=> this.props.onPage('new')}>New Project</button>
-						</div>
-					</div>)
-				}
-
-				<Row><h3>{(this.state.fetching ? 'Loading…' : 'Recent')}</h3></Row>
-				<Row horizontal="space-between" className="explore-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
-					{items}
-				</Row>
-				<Row horizontal="center"><button className={btnClass} onClick={()=> this.handleLoadNext()}>More</button></Row>
-				{this.state.popup.visible && (
-					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
-				)}
+				<Row><h3>{(fetching) ? 'Loading…' : 'Recent'}</h3></Row>
+				<ExploreArtboardGrid onClick={(artboard)=> this.props.onArtboardClicked(artboard)} />
+				<Row horizontal="center"><button className={btnClass} onClick={()=> (!fetching) ? this.handleLoadNext() : null}>{btnCaption}</button></Row>
 			</div>
 		);
 	}
 }
 
-export default ExplorePage;
+export default connect(mapStateToProps, mapDispatchToProps)(ExplorePage);

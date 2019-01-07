@@ -53,7 +53,7 @@ class AddOnsPage extends Component {
 					</Row>
 				</div>
 				<h3>Add Ons</h3>
-				<Row horizontal="space-between" className="add-ons-plugins-wrapper" style={{flexWrap:'wrap'}}>
+				<Row horizontal="space-between" className="add-ons-plugins-wrapper" style={{ flexWrap : 'wrap' }}>
 					{items}
 				</Row>
 				<div className="updated-timestamp">Last Updated: 10-13-2018</div>

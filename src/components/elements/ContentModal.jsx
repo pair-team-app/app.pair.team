@@ -13,7 +13,7 @@ class ContentModal extends Component {
 
 	render() {
 		if (this.contentElement) {
-			console.log(this.contentElement.width, this.contentElement.height);
+			console.log('ContentModal.render()', this.contentElement.width, this.contentElement.height);
 		}
 
 		return (

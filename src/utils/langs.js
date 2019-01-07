@@ -1,5 +1,5 @@
 
-import {urlSlugTitle} from './funcs';
+import { convertURLSlug } from './funcs';
 
 export function toCSS(slice) {
 	let html = '';
@@ -23,7 +23,7 @@ export function toCSS(slice) {
 	}
 	html += '}';
 
-	html = '.' + urlSlugTitle(slice.title) + ' ' + html;
+	html = '.' + convertURLSlug(slice.title) + ' ' + html;
 
 	return ({
 		html   : JSON.stringify(html),

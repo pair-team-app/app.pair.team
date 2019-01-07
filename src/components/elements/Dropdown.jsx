@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './Dropdown.css';
 
-import onClickOutside from "react-onclickoutside";
+import onClickOutside from 'react-onclickoutside';
 import { Column, Row } from 'simple-flexbox';
 
 
@@ -15,7 +15,8 @@ class Dropdown extends Component{
 			headerTitle : this.props.title
 		};
 	}
-	componentDidUpdate(prevProps) {
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
 		if (this.props.title !== prevProps.title) {
 			this.setState({ headerTitle : this.props.title });
 		}
@@ -45,13 +46,13 @@ class Dropdown extends Component{
 		const items = list.map((item, i)=> {
 			let thumbImage = null;
 			if (item.title.match(/ios/i)) {
-				thumbImage = '/images/icon-ios12.png';
+				thumbImage = '/images/favicon-ios12.png';
 
 			} else if (item.title.match(/material/i)) {
-				thumbImage = '/images/icon-material.png';
+				thumbImage = '/images/favicon-material.png';
 
 			} else if (item.title.match(/android/i)) {
-				thumbImage = '/images/icon-android.png';
+				thumbImage = '/images/favicon-android.png';
 
 			} else if (item.title.match(/new/i)) {
 				thumbImage = '/images/plus-square.png';
@@ -59,7 +60,7 @@ class Dropdown extends Component{
 
 			return (
 				<li className="dd-list-item" key={i} onClick={() => this.selectItem(item.title, i, item.key)}><Row>
-					{(thumbImage) && (<Column flexGrow={1} horizontal="start" vertical="center"><img src={thumbImage} style={{width:'20px',height:'20px',marginRight:'8px'}} alt={item.title} /></Column>)}
+					{(thumbImage) && (<Column flexGrow={1} horizontal="start" vertical="center"><img src={thumbImage} style={{ width : '20px', height : '20px', marginRight : '8px' }} alt={item.title} /></Column>)}
 					<Column flexGrow={666} horizontal="start" vertical="center">{item.title}</Column>
 					{/*<Column flexGrow={150} horizontal="start" vertical="center">{item.selected && <FontAwesome name="check"/>}</Column>*/}
 				</Row></li>

@@ -55,7 +55,7 @@ class MissionPage extends Component {
 						{/*<span className="page-link">Read More</span>*/}
 					</p></Row>
 					<Row><h3>Customer Reviews</h3></Row>
-					<Row horizontal="space-around" className="mission-page-reviews-wrapper" style={{flexWrap:'wrap'}}>
+					<Row horizontal="space-around" className="mission-page-reviews-wrapper" style={{ flexWrap : 'wrap' }}>
 						{items}
 					</Row>
 					<Row>

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './RecoverPage.css';
 
-import axios from "axios/index";
+import axios from 'axios/index';
 import { Column, Row } from 'simple-flexbox';
 
 import { isValidEmail } from '../../utils/funcs';
@@ -18,7 +18,7 @@ class RecoverPage extends Component {
 	}
 
 	handleSubmit = (event)=> {
-		console.log('submit()');
+		console.log('RecoverPage.handleSubmit()', event);
 		event.preventDefault();
 
 		const { email } = this.state;

@@ -6,7 +6,7 @@ const textfield = React.createRef();
 
 class InputField extends Component {
 	constructor(props) {
-// 		console.log('constructor', props);
+// 		console.log('InputField.constructor()', props);
 
 		super(props);
 
@@ -19,7 +19,7 @@ class InputField extends Component {
 	}
 
 	componentDidMount() {
-// 		console.log('componentDidMount', this.props, this.state);
+// 		console.log('InputField.componentDidMount()', this.props, this.state);
 
 		this.setState({
 			org    : this.props.value,
@@ -28,8 +28,8 @@ class InputField extends Component {
 		});
 	}
 
-	componentDidUpdate(prevProps) {
-// 		console.log('componentDidUpdate', prevProps, this.props, this.state);
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('InputField.componentDidUpdate', prevProps, this.props, this.state);
 
 		if (this.props.value !== prevProps.value) {
 			this.setState({ value : this.props.value });
@@ -55,7 +55,7 @@ class InputField extends Component {
 			status : 'idle'
 		});
 
-// 		setTimeout(function() {
+// 		setTimeout(()=> {
 // 			textfield.current.focus();
 // 		}, 69);
 
@@ -79,7 +79,7 @@ class InputField extends Component {
 		const textfieldClass = 'input-field-textfield' + ((status === 'error') ? ' is-hidden' : '');
 		const buttonClass = 'tiny-button input-field-button';
 
-// 		console.log('render', this.props, this.state);
+// 		console.log('InputField.render()', this.props, this.state);
 
 		return (
 			<div className="input-field">

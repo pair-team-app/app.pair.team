@@ -8,22 +8,26 @@ import axios from 'axios';
 // import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
 import Dropzone from 'react-dropzone';
+// import FontAwesome from 'react-fontawesome';
+import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import Popup from '../elements/Popup';
 
-import { capitalizeText } from '../../utils/funcs.js';
+import { capitalizeText, isUserLoggedIn } from '../../utils/funcs.js';
 import { toCSS, toReactCSS } from '../../utils/langs.js';
-import FontAwesome from "react-fontawesome";
-
-// import { ArtboardVO } from '../../model/vo.js';
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
 const canvas = React.createRef();
 
+const tsOptions = {
+	year   : 'numeric',
+	month  : 'numeric',
+	day    : 'numeric'
+};
 
-function CommentItem(props) {
+/*function CommentItem(props) {
 	const options = {
 		year   : 'numeric',
 		month  : 'numeric',
@@ -32,7 +36,7 @@ function CommentItem(props) {
 		minute : 'numeric'
 	};
 
-	const userID = cookie.load('user_id');
+	const userID = this.props.profile.id;
 	let isUpVoted = false;
 	let isDnVoted = false;
 	let score = 1;
@@ -50,7 +54,7 @@ function CommentItem(props) {
 
 	return (
 		<div className="comment-item">
-			<img className="comment-item-avatar" src="/images/default-avatar.png" alt={props.author} />
+			<img className="comment-item-avatar" src={defaultAvatar} alt={props.author} />
 			<div className="comment-item-vote-wrapper">
 				<FontAwesome name="arrow-up" className={arrowUpClass} onClick={()=> props.onVote(1)} /><br />
 				<div className="comment-item-score">{score}</div>
@@ -62,7 +66,7 @@ function CommentItem(props) {
 			</div>
 		</div>
 	);
-}
+}*/
 
 function SliceItem(props) {
 	const className = (props.type === 'slice') ? 'slice-item slice-item-slice' : (props.type === 'hotspot') ? 'slice-item slice-item-hotspot' : (props.type === 'textfield') ? 'slice-item slice-item-textfield' : 'slice-item slice-item-background';
@@ -77,8 +81,7 @@ function SliceItem(props) {
 	};
 
 	return (
-		<div data-id={props.id} className={className + ((props.filled) ? '-filled' : '')} style={style} onMouseEnter={()=> props.onRollOver({ x : props.offsetX, y : props.offsetY })} onMouseLeave={()=> props.onRollOut()} onClick={()=> props.onClick({ x : props.offsetX, y : props.offsetY })}>
-		</div>
+		<div data-id={props.id} className={className + ((props.filled) ? '-filled' : '')} style={style} onMouseEnter={()=> props.onRollOver(props.offset)} onMouseLeave={()=> props.onRollOut()} onClick={()=> props.onClick(props.offset)} />
 	);
 }
 
@@ -92,15 +95,92 @@ function SliceToggle(props) {
 	);
 }
 
+function SpecsList(props) {
+	const sliceStyles = (props.slice && props.slice.meta.styles && props.slice.meta.styles.length > 0) ? props.slice.meta.styles[0] : null;
+	const stroke = (sliceStyles && sliceStyles.border.length > 0) ? sliceStyles.border[0] : null;
+	const shadow = (sliceStyles && sliceStyles.shadow.length > 0) ? sliceStyles.shadow[0] : null;
+	const innerShadow = (sliceStyles && sliceStyles.innerShadow.length > 0) ? sliceStyles.innerShadow[0] : null;
+
+	const styles = (sliceStyles) ? {
+		stroke : (stroke) ? {
+			color     : stroke.color.toUpperCase(),
+			position  : stroke.position,
+			thickness : stroke.thickness + 'px'
+		} : null,
+		shadow : (shadow) ? {
+			color  : shadow.color.toUpperCase(),
+			offset : {
+				x : shadow.offset.x,
+				y : shadow.offset.y
+			},
+			spread : shadow.spread + 'px',
+			blur   : shadow.blur + 'px'
+		} : null,
+		innerShadow : (innerShadow) ? {
+			color  : innerShadow.color.toUpperCase(),
+			offset : {
+				x : innerShadow.offset.x,
+				y : innerShadow.offset.y
+			},
+			spread : innerShadow.spread + 'px',
+			blur   : innerShadow.blur + 'px'
+		} : null
+	} : null;
+
+	return (
+		<div className="inspector-page-panel-info-wrapper">
+			{/*<Row><Column flexGrow={1}>System</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard && artboard.system) ? artboard.system.title : ''}</Column></Row>*/}
+			{/*<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val"><a href={'mailto:' + ((artboard && artboard.system) ? artboard.system.author : '#')} style={{ textDecoration : 'none' }}>{(artboard && artboard.system) ? artboard.system.author : ''}</a></Column></Row>*/}
+			{/*<Row><Column flexGrow={1}>Page</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(page) ? page.title : ''}</Column></Row>*/}
+			{/*<Row><Column flexGrow={1}>Artboard</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard) ? artboard.title : ''}</Column></Row>*/}
+			<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? props.slice.title : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? capitalizeText(props.slice.type, true) : ''}</Column></Row>
+			{/*<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(props.slice.added))) : ''}</Column></Row>*/}
+			<Row><Column flexGrow={1}>Export Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">W: {(props.slice) ? props.slice.meta.frame.size.width : 0}px H: {(props.slice) ? props.slice.meta.frame.size.height : 0}px</Column></Row>
+			<Row><Column flexGrow={1}>Position</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">X: {(props.slice) ? props.slice.meta.frame.origin.x : 0}px Y: {(props.slice) ? props.slice.meta.frame.origin.y : 0}px</Column></Row>
+			<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? props.slice.meta.rotation : 0}&deg;</Column></Row>
+			<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (props.slice.meta.opacity * 100) : 100}%</Column></Row>
+			<Row><Column flexGrow={1}>Fills</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (props.slice.type === 'textfield' && props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : props.slice.meta.fillColor.toUpperCase() : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Borders</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>
+			{(props.slice && props.slice.type === 'textfield') && (<div>
+				{/*<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.family) ? props.slice.meta.font.family : ''}</Column></Row>*/}
+				<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.family) ? props.slice.meta.font.family : ''}</Column></Row>
+				<Row><Column flexGrow={1}>Font Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.size + 'px')}</Column></Row>
+				<Row><Column flexGrow={1}>Font Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : ''}</Column></Row>
+				{/*<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.alignment) ? capitalizeText(props.slice.meta.font.alignment) : 'Left'}</Column></Row>*/}
+				<Row><Column flexGrow={1}>Line Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.lineHeight) ? (props.slice.meta.font.lineHeight + 'px') : ''}</Column></Row>
+				<Row><Column flexGrow={1}>Char Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.kerning) ? (props.slice.meta.font.kerning.toFixed(2) + 'px') : ''}</Column></Row>
+				{/*<Row><Column flexGrow={1}>Horizontal Alignment</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.alignment) ? capitalizeText(props.slice.meta.font.alignment) : 'Left'}</Column></Row>*/}
+				{/*<Row><Column flexGrow={1}>Vertical Alignment</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{'Top'}</Column></Row>*/}
+			</div>)}
+			{(styles) && (<div>
+				{/*<Row><Column flexGrow={1}>Stroke:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.stroke) ? (capitalizeText(styles.stroke.position, true) + ' S: ' + styles.stroke.thickness + ' ' + styles.stroke.color) : ''}</Column></Row>*/}
+				{/*<Row><Column flexGrow={1}>Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.shadow) ? ('X: ' + styles.shadow.offset.x + ' Y: ' + styles.shadow.offset.y + ' B: ' + styles.shadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>*/}
+				{/*<Row><Column flexGrow={1}>Inner Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>*/}
+				{/*<Row><Column flexGrow={1}>Blur:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>*/}
+			</div>)}
+			{(props.slice && props.slice.meta.padding) && (<Row>
+				<Column flexGrow={1}>Padding</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{props.slice.meta.padding.top}px {props.slice.meta.padding.left}px {props.slice.meta.padding.bottom}px {props.slice.meta.padding.right}px</Column>
+			</Row>)}
+			{/*<Row><Column flexGrow={1}>Inner Padding:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>*/}
+			{/*<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? capitalizeText(props.slice.meta.blendMode, true) : ''}</Column></Row>*/}
+			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(props.slice.added))) : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.page) ? props.page.author : ''}</Column></Row>
+		</div>
+	);
+}
+
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({ profile : state.userProfile });
+};
+
 
 class InspectorPage extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			x: 0.5,
-			y: 0.5,
-			scale: 1.0,
 			uploadID      : this.props.match.params.uploadID,
 			pageID        : this.props.match.params.pageID,
 			artboardID    : this.props.match.params.artboardID,
@@ -115,6 +195,7 @@ class InspectorPage extends Component {
 			selectedTab   : 0,
 			tooltip       : 'Loading…',
 			hoverOffset   : null,
+			scale         : 0.5,
 			scrollOffset  : {
 				x : 0,
 				y : 0
@@ -160,16 +241,16 @@ class InspectorPage extends Component {
 			}
 		};
 
+		this.initialScaled = false;
 		this.jumpedOffset = false;
-		this.offsets = [];
 		this.lastScroll = 0;
 		this.scrollInterval = null;
 		this.rerender = 0;
 		this.antsOffset = 0;
 		this.antsInterval = null;
 		this.size = {
-			x : 0,
-			y : 0
+			width  : 0,
+			height : 0
 		};
 
 		this.zoomNotches = [
@@ -182,75 +263,71 @@ class InspectorPage extends Component {
 			1.75,
 			3.00
 		];
-
-		cookie.save('upload_id', this.props.match.params.uploadID, { path : '/' });
 	}
-
-	handlePanAndZoom = (x, y, scale) => {
-		this.setState({ x, y, scale });
-	};
-
-	handlePanMove = (x, y) => {
-		this.setState({ x, y });
-	};
-
-	transformPoint({ x, y }) {
-		return {
-			x: 0.5 + this.state.scale * (x - this.state.x),
-			y: 0.5 + this.state.scale * (y - this.state.y)
-		};
-	}
-
 
 	componentDidMount() {
-// 		console.log('componentDidMount()');
+// 		console.log('InspectorPage.componentDidMount()');
 
 		this.refreshData();
 		this.antsInterval = setInterval(this.redrawAnts, 100);
 
 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
-		document.addEventListener('wheel', this.handleWheelStart.bind(this));
+		document.addEventListener('wheel', this.handleWheel.bind(this));
 	}
 
-	componentDidUpdate(prevProps) {
-// 		console.log('componentDidUpdate()', prevProps, this.props);
-		if (this.props.match.params.artboardID !== prevProps.match.params.artboardID) {
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('InspectorPage.componentDidUpdate()', prevProps.match.params.artboardID, this.props.match.params.artboardID);
+		if (this.props.match.params.pageID !== prevProps.match.params.pageID) {
 			this.refreshData();
 			return (null);
+		}
+
+		if (canvasWrapper.current) {
+			const scale = Math.min(canvasWrapper.current.clientWidth / (this.size.width - canvasWrapper.current.clientWidth), canvasWrapper.current.clientHeight / (this.size.height - canvasWrapper.current.clientHeight));
+			if (this.state.scale !== scale && !this.initialScaled) {
+				this.initialScaled = true;
+				//this.setState({ scale });
+
+				if (artboardsWrapper.current) {
+					this.state.artboards.forEach((artboard, i)=> {
+						if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
+							console.log('InspectorPage.componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
+							//artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * scale);
+							//artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * scale);
+						}
+					});
+				}
+			}
+
+			if (this.props.match.params.artboardID !== prevProps.match.params.artboardID) {
+				if (artboardsWrapper.current) {
+					this.state.artboards.forEach((artboard, i)=> {
+						if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
+							console.log('InspectorPage.componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
+							//artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * this.state.scale);
+							//artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * this.state.scale);
+						}
+					});
+				}
+			}
 		}
 
 		if (canvas.current) {
 			this.updateCanvas();
 		}
-
-// 		if (artboardsWrapper.current && !this.jumpedOffset) {
-// 			this.state.artboards.forEach((artboard, i)=> {
-// 				if (artboard.id === this.props.match.params.artboardID && artboardsWrapper.current.scrollTop !== artboard.offset.y && artboardsWrapper.current.scrollLeft !== artboard.offset.x) {
-// 					this.jumpedOffset = true;
-// 					artboardsWrapper.current.scrollTop = artboard.offset.y;
-// 					artboardsWrapper.current.scrollLeft = artboard.offset.x;
-// 				}
-// 			});
-// 		}
-
-		if (canvasWrapper.current) {
-			const scale = canvasWrapper.current.clientWidth / (canvasWrapper.current.clientWidth + (this.size.x + 700));// Math.min(canvasWrapper.current.clientWidth / (canvasWrapper.current.clientWidth + this.size.x), canvasWrapper.current.clientHeight / (canvasWrapper.current.clientHeight + this.size.y));
-			if (this.state.scale !== scale && !this.jumpedOffset) {
-				this.jumpedOffset = true;
-				this.setState({ scale : scale });
-			}
-		}
 	}
 
 	componentWillUnmount() {
 		document.removeEventListener("keydown", this.handleKeyDown.bind(this));
+		document.removeEventListener("wheel", this.handleWheel.bind(this));
 		clearInterval(this.antsInterval);
 	}
 
 
 	refreshData = ()=> {
-		const { pageID, artboardID, sliceID } = this.props.match.params;
+		const { uploadID, pageID, artboardID, sliceID } = this.props.match.params;
 		this.setState({
+			uploadID   : uploadID,
 			pageID     : pageID,
 			artboardID : artboardID,
 			slice      : sliceID,
@@ -262,7 +339,7 @@ class InspectorPage extends Component {
 		formData.append('page_id', '' + pageID);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response)=> {
-// 				console.log('PAGE', response.data);
+				console.log('PAGE', response.data);
 				const page = response.data.page;
 
 				formData.append('action', 'ARTBOARDS');
@@ -285,22 +362,13 @@ class InspectorPage extends Component {
 						let artboards = [];
 						response.data.artboards.forEach((artboard, i)=> {
 							if (Math.floor(i % 5) === 0 && i !== 0) {
-								this.size.x = 0;
-								this.size.y += maxH + 50;
+								this.size.height += maxH + 50;
 								offset.x = 0;
 								offset.y += maxH + 50;
 								maxH = 0;
 							}
 
-							if (JSON.parse(artboard.meta).frame.size.height * scale > maxH) {
-								maxH = JSON.parse(artboard.meta).frame.size.height * scale;
-							}
-
-							this.offsets.push(offset);
-							console.log('artboard', artboard, i, offset, this.offsets[i]);
-
-// 							const vo = new ArtboardVO(artboard);
-// 							console.log('vo', vo);
+							maxH = Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale);
 
 							artboards.push({
 								id        : artboard.id,
@@ -312,7 +380,14 @@ class InspectorPage extends Component {
 								downloads : artboard.downloads,
 								added     : artboard.added,
 								system    : artboard.system,
-								offset    : offset,
+								grid      : {
+									col : i % 5,
+									row : Math.floor(i / 5)
+								},
+								offset    : {
+									x : offset.x,
+									y : offset.y
+								},
 								slices    : artboard.slices.map((item) => ({
 									id       : item.id,
 									title    : item.title,
@@ -324,13 +399,13 @@ class InspectorPage extends Component {
 								comments  : artboard.comments
 							});
 
-							this.size.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - ((canvasWrapper.current) ? canvasWrapper.current.clientWidth : 0);
-							if (i < response.data.artboards.length - 1) {
-								offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - ((canvasWrapper.current) ? canvasWrapper.current.clientWidth : 0);
-							}
-						});
 
-						console.log('offsets', offset, this.offsets);
+							if (i < response.data.artboards.length - 1) {
+								offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
+							}
+
+							this.size.width = Math.max(this.size.width, offset.x);
+						});
 
 						formData.append('action', 'FILES');
 						formData.append('upload_id', '' + this.state.uploadID);
@@ -375,7 +450,7 @@ class InspectorPage extends Component {
 	};
 
 	onDrop(files) {
-		console.log('onDrop()', files);
+		console.log('InspectorPage.onDrop()', files);
 		if (files.length > 0 && files[0].name.split('.').pop() === 'zip') {
 
 			let self = this;
@@ -397,7 +472,7 @@ class InspectorPage extends Component {
 				let formData = new FormData();
 				formData.append('file', file);
 
-				axios.post('http://cdn.designengine.ai/files/upload.php?user_id=' + cookie.load('user_id') + '&upload_id=' + this.state.uploadID, formData, config)
+				axios.post('http://cdn.designengine.ai/files/upload.php?user_id=' + this.props.profile.id + '&upload_id=' + this.state.uploadID, formData, config)
 					.then((response) => {
 						console.log("UPLOAD", response.data);
 
@@ -423,7 +498,6 @@ class InspectorPage extends Component {
 								});
 							}).catch((error) => {
 						});
-
 					}).catch((error) => {
 				});
 			});
@@ -433,7 +507,7 @@ class InspectorPage extends Component {
 				visible : true,
 				content : 'error::Only zip archives are support at this time.'
 			};
-			this.setState({ popup : popup });
+			this.setState({ popup });
 		}
 	}
 
@@ -453,11 +527,11 @@ class InspectorPage extends Component {
 
 		});
 		visibleTypes[type] = true;
-		this.setState({ visibleTypes : visibleTypes });
+		this.setState({ visibleTypes });
 	};
 
 	handleTab = (ind)=> {
-		console.log('handleTab');
+		console.log('InspectorPage.handleTab()', ind);
 		this.setState({ selectedTab : ind });
 	};
 
@@ -466,7 +540,7 @@ class InspectorPage extends Component {
 			visible : true,
 			content : 'Copied to Clipboard!'
 		};
-		this.setState({ popup : popup });
+		this.setState({ popup });
 	};
 
 	handleContribute = ()=> {
@@ -489,7 +563,7 @@ class InspectorPage extends Component {
 		if (this.state.comment.length > 0) {
 			let formData = new FormData();
 			formData.append('action', 'ADD_COMMENT');
-			formData.append('user_id', cookie.load('user_id'));
+			formData.append('user_id', this.props.profile.id);
 			formData.append('artboard_id', '' + this.state.artboardID);
 			formData.append('content', this.state.comment);
 			axios.post('https://api.designengine.ai/system.php', formData)
@@ -505,7 +579,7 @@ class InspectorPage extends Component {
 	handleVote = (commentID, score)=> {
 		let formData = new FormData();
 		formData.append('action', 'VOTE_COMMENT');
-		formData.append('user_id', cookie.load('user_id'));
+		formData.append('user_id', this.props.profile.id);
 		formData.append('comment_id', commentID);
 		formData.append('value', score);
 		axios.post('https://api.designengine.ai/system.php', formData)
@@ -516,8 +590,8 @@ class InspectorPage extends Component {
 		});
 	};
 
-	handleWheelStart = (event)=> {
-// 		console.log(event.type, event.deltaX, event.deltaY, event.target);
+	handleWheel = (event)=> {
+// 		console.log('InspectorPage.handleWheel()', event.type, event.deltaX, event.deltaY, event.target);
 		//console.log('wheel', artboardsWrapper.current.clientWidth, artboardsWrapper.current.clientHeight, artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft);
 
 // 		event.preventDefault();
@@ -533,7 +607,10 @@ class InspectorPage extends Component {
 
 		if (event.ctrlKey) {
 			event.preventDefault();
-			this.setState({ scale : Math.min(Math.max(this.state.scale - (event.deltaY * 0.0025), 0.03), 3).toFixed(2) });
+			this.setState({
+				scale   : Math.min(Math.max(this.state.scale - (event.deltaY * 0.0025), 0.03), 3).toFixed(2),
+				tooltip : Math.floor(Math.min(Math.max(this.state.scale - (event.deltaY * 0.0025), 0.03), 3).toFixed(2) * 100) + '%'
+			});
 
 		} else {
 			if (artboardsWrapper.current) {
@@ -556,7 +633,7 @@ class InspectorPage extends Component {
 	};
 
 	handleDrag = (event)=> {
-		//console.log(event.type, event.target);
+		//console.log('InspectorPage.handleDrag()', event.type, event.target);
 		if (event.type === 'mousedown') {
 
 
@@ -577,7 +654,7 @@ class InspectorPage extends Component {
 	};
 
 	handleArtboardOver = (event)=> {
-// 		console.log('handleArtboardOver()', event.target);
+// 		console.log('InspectorPage.handleArtboardOver()', event.target);
 		const artboardID = event.target.getAttribute('data-id');
 
 		let formData = new FormData();
@@ -587,7 +664,7 @@ class InspectorPage extends Component {
 			.then((response) => {
 // 				console.log('SLICES', response.data);
 
-				let artboards = this.state.artboards;
+				let artboards = [...this.state.artboards];
 				artboards.forEach((artboard)=> {
 					if (artboard.id === artboardID && artboard.slices.length === 0) {
 						artboard.slices = response.data.slices.map((item) => ({
@@ -601,13 +678,13 @@ class InspectorPage extends Component {
 					}
 				});
 
-				this.setState({ artboards : artboards });
+				this.setState({ artboards });
 			}).catch((error) => {
 		});
 	};
 
 	handleArtboardOut = (event)=> {
-// 		console.log('handleArtboardOut()', event.target);
+// 		console.log('InspectorPage.handleArtboardOut()', event.target);
 // 		const artboardID = event.target.getAttribute('data-id');
 //
 // 		let artboards = this.state.artboards;
@@ -617,14 +694,17 @@ class InspectorPage extends Component {
 // 			}
 // 		});
 //
-// 		this.setState({ artboards : artboards });
+// 		this.setState({ artboards });
 	};
 
 	handleZoom = (direction)=> {
 		const { scale } = this.state;
 
 		if (direction === 0) {
-			this.setState({ scale : this.zoomNotches[5] });
+			this.setState({
+				scale   : this.zoomNotches[5],
+				tooltip : Math.floor(this.zoomNotches[5] * 100) + '%'
+			});
 
 		} else {
 			let ind = -1;
@@ -660,14 +740,15 @@ class InspectorPage extends Component {
 						maxH = 0;
 					}
 
-					if (artboard.meta.frame.size.height * scale > maxH) {
-						maxH = artboard.meta.frame.size.height * scale;
-					}
+					maxH = Math.max(maxH, artboard.meta.frame.size.height * scale);
+// 					if (artboard.meta.frame.size.height * scale > maxH) {
+// 						maxH = artboard.meta.frame.size.height * scale;
+// 					}
 
 					artboard.slices.forEach((slice) => {
 						if (slice.id === this.state.slice.id) {
 							console.log('zoom', this.state.offset, offset);
-							this.setState({ offset : offset });
+							this.setState({ offset });
 						}
 					});
 
@@ -675,8 +756,15 @@ class InspectorPage extends Component {
 				}
 			}
 
-			this.setState({ scale : this.zoomNotches[Math.min(Math.max(0, ind + direction), this.zoomNotches.length - 1)] });
+			this.setState({
+				scale   : this.zoomNotches[Math.min(Math.max(0, ind + direction), this.zoomNotches.length - 1)],
+				tooltip : Math.floor(this.zoomNotches[Math.min(Math.max(0, ind + direction), this.zoomNotches.length - 1)] * 100) + '%'
+			});
 		}
+
+		setTimeout(()=> {
+			this.setState({ tooltip : '' });
+		}, 1000);
 	};
 
 	handleSliceRollOver = (ind, slice, offset)=> {
@@ -730,12 +818,12 @@ class InspectorPage extends Component {
 	};
 
 	handleDownload = ()=> {
-		if (cookie.load('user_id') === '0') {
+		if (!isUserLoggedIn()) {
 			cookie.save('msg', 'use this feature.', { path : '/' });
 			this.props.onPage('login');
 
 		} else {
-			const filePath = 'http://cdn.designengine.ai/artboard.php?artboard_id=' + this.state.artboard.id;
+			const filePath = 'http://cdn.designengine.ai/page.php?artboard_id=' + this.state.artboard.id;
 			let link = document.createElement('a');
 			link.href = filePath;
 			link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
@@ -888,40 +976,36 @@ class InspectorPage extends Component {
 
 
 	render() {
-		const tsOptions = {
-			year   : 'numeric',
-			month  : 'numeric',
-			day    : 'numeric'
-		};
+		if (this.rerender === 0) {
+			this.rerender = 1;
+			setTimeout(()=> {
+				this.forceUpdate();
+			}, 3333);
+		}
 
 		const { page, artboards, slice, hoverSlice, files } = this.state;
 		const { visibleTypes } = this.state;
 		const { scale } = this.state;
+		const { scrollOffset, scrolling } = this.state;
 
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 
-		let self = this;
-		if (this.rerender === 0) {
-			this.rerender = 1;
-			setTimeout(function() {
-				self.forceUpdate();
-			}, 1000);
-		}
-
 		const progressStyle = { width : this.state.percent + '%' };
 
-		const wrapperStyle = {
+		const artboardsStyle = {
 			position        : 'absolute',
-			width           : (artboards.length > 0) ? Math.floor(artboards.length * (50 + (artboards[0].meta.frame.size.width * this.state.scale)) * 0.75) : 0,
-			height          : (artboards.length > 0) ? Math.floor(artboards.length * (50 + (artboards[0].meta.frame.size.height * this.state.scale)) * 0.75) : 0,
-// 			transform       : (artboards.length > 0) ? 'translate(' + ((3 * (50 + (artboard.meta.frame.size.width * this.state.scale))) * -0.5) + 'px, ' + ((artboard.meta.frame.size.height * this.state.scale) * 0.5) + 'px)' : 'translate(0px, 0px)'
+// 			width           : (artboards.length > 0) ? Math.floor(artboards.length * (50 + (artboards[0].meta.frame.size.width * scale)) * 0.75) : 0,
+			width           : this.size.width,
+// 			height          : (artboards.length > 0) ? Math.floor(artboards.length * (50 + (artboards[0].meta.frame.size.height * scale)) * 0.75) : 0,
+			height          : this.size.height,
+// 			transform       : (artboards.length > 0) ? 'translate(' + ((3 * (50 + (artboard.meta.frame.size.width * scale))) * -0.5) + 'px, ' + ((artboard.meta.frame.size.height * this.state.scale) * 0.5) + 'px)' : 'translate(0px, 0px)'
 			transform       : (artboards.length > 0) ? 'translate(100px, 20px)' : 'translate(0px, 0px)'
 		};
 
 		const canvasStyle = {
-			top     : (this.state.scrollOffset.y) + 'px',
-			left    : (-100 + this.state.scrollOffset.x) + 'px',
-			display : (this.state.scrolling) ? 'none' : 'block'
+			top     : (scrollOffset.y) + 'px',
+			left    : (-100 + scrollOffset.x) + 'px',
+			display : (scrolling) ? 'none' : 'block'
 		};
 
 		let maxH = 0;
@@ -930,11 +1014,10 @@ class InspectorPage extends Component {
 			y : 0
 		};
 
-		let heroes = [];
+		let artboardBackgrounds = [];
 		let slices = [];
 
 
-// 		for (let i=0; i<((artboards.length > 0) ? Math.min(artboards.length, 10) : 0); i++) {
 		for (let i=0; i<artboards.length; i++) {
 			const artboard = artboards[i];
 
@@ -944,11 +1027,9 @@ class InspectorPage extends Component {
 				maxH = 0;
 			}
 
-			if (artboard.meta.frame.size.height * scale > maxH) {
-				maxH = artboard.meta.frame.size.height * scale;
-			}
+			maxH = Math.max(maxH, artboard.meta.frame.size.height * scale);
 
-			const heroStyle = {
+			const artboardStyle = {
 				position       : 'absolute',
 				top            : Math.floor(offset.y) + 'px',
 				left           : Math.floor(offset.x) + 'px',
@@ -983,8 +1064,7 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						offsetX={offset.x}
-						offsetY={offset.y}
+						offset={{ x : offset.x, y : offset.y }}
 						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
 						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
@@ -1005,8 +1085,7 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						offsetX={offset.x}
-						offsetY={offset.y}
+						offset={{ x : offset.x, y : offset.y }}
 						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
 						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
@@ -1027,8 +1106,7 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						offsetX={offset.x}
-						offsetY={offset.y}
+						offset={{ x : offset.x, y : offset.y }}
 						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
 						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
@@ -1049,19 +1127,16 @@ class InspectorPage extends Component {
 						width={slice.meta.frame.size.width}
 						height={slice.meta.frame.size.height}
 						scale={scale}
-						offsetX={offset.x}
-						offsetY={offset.y}
+						offset={{ x : offset.x, y : offset.y }}
 						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 						onRollOut={()=> this.handleSliceRollOut(i, slice)}
 						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
 					: null);
 			});
 
-			heroes.push(
-				<div key={i}>
-					<div style={heroStyle}>
-						<div className="inspector-page-caption">{artboard.title}</div>
-					</div>
+			artboardBackgrounds.push(
+				<div key={i} style={artboardStyle}>
+					<div className="inspector-page-caption">{artboard.title}</div>
 				</div>
 			);
 
@@ -1077,35 +1152,9 @@ class InspectorPage extends Component {
 			offset.x += Math.round(50 + (artboard.meta.frame.size.width * scale));
 		}
 
+// 		console.log('InspectorPage.render()', (artboardsWrapper.current) ? artboardsWrapper.current.scrollTop : 0, (artboardsWrapper.current) ? artboardsWrapper.current.scrollLeft : 0, scale);
+// 		console.log('InspectorPage:', window.performance.memory);
 
-		const styles = (activeSlice && activeSlice.meta.styles && activeSlice.meta.styles.length > 0) ? {
-			stroke : (activeSlice.meta.styles[0].border.length > 0) ? {
-				color     : activeSlice.meta.styles[0].border[0].color.toUpperCase(),
-				position  : activeSlice.meta.styles[0].border[0].position,
-				thickness : activeSlice.meta.styles[0].border[0].thickness + 'px'
-			} : null,
-			shadow : (activeSlice.meta.styles[0].shadow.length > 0) ? {
-				color  : activeSlice.meta.styles[0].shadow[0].color.toUpperCase(),
-				offset : {
-					x : activeSlice.meta.styles[0].shadow[0].offset.x,
-					y : activeSlice.meta.styles[0].shadow[0].offset.y
-				},
-				spread : activeSlice.meta.styles[0].shadow[0].spread + 'px',
-				blur   : activeSlice.meta.styles[0].shadow[0].blur + 'px'
-			} : null,
-			innerShadow : (activeSlice.meta.styles[0].innerShadow.length > 0) ? {
-				color  : activeSlice.meta.styles[0].shadow[0].color.toUpperCase(),
-				offset : {
-					x : activeSlice.meta.styles[0].shadow[0].offset.x,
-					y : activeSlice.meta.styles[0].shadow[0].offset.y
-				},
-				spread : activeSlice.meta.styles[0].shadow[0].spread + 'px',
-				blur   : activeSlice.meta.styles[0].shadow[0].blur + 'px'
-			} : null
-		} : null;
-
-// 		console.log('InspectorPage.render()', scale);
-// 		console.log(window.performance.memory);
 
 		return (<div>
 			{(this.state.uploading) && (<div className="inspector-page-upload-progress-wrapper">
@@ -1113,11 +1162,15 @@ class InspectorPage extends Component {
 			</div>)}
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
-					<div className="inspector-page-hero-wrapper" ref={artboardsWrapper}>
+					<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
+						{/*<MapInteractionCSS scale={scale} translation={translation} onChange={({ scale, translation }) => this.setState({ scale, translation })}>*/}
+							{/*<div style={{ width : '426px' ,height : '240px', background :' #111111 url("https://i.imgur.com/WJ17gs5.jpg") no-repeat center' }}>*/}
+							{/*</div>*/}
+						{/*</MapInteractionCSS>*/}
 						{(artboards.length > 0) && (
-							<div style={wrapperStyle}>
-								{heroes}
-								<div className="inspector-page-hero-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>
+							<div style={artboardsStyle}>
+								{artboardBackgrounds}
+								<div className="inspector-page-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>
 									<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
 								</div>
 								{slices}
@@ -1129,7 +1182,7 @@ class InspectorPage extends Component {
 						<button className={'inspector-page-float-button' + ((scale <= 0.03) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button><br />
 						<button className={'inspector-page-float-button' + ((scale === 1.0) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 1.0) ? '/images/zoom-reset.svg' : '/images/zoom-reset_disabled.svg'} alt="0" /></button>
 					</div>
-					<div className="inspector-page-toggle-wrapper">
+					<div className="inspector-page-toggle-wrapper is-hidden">
 						<SliceToggle type="hotspot" selected={visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} />
 						<SliceToggle type="slice" selected={visibleTypes.slice} onClick={()=> this.handleSliceToggle('slice')} />
 						<SliceToggle type="textfield" selected={visibleTypes.textfield} onClick={()=> this.handleSliceToggle('textfield')} />
@@ -1139,7 +1192,7 @@ class InspectorPage extends Component {
 				</div>
 				<div className="inspector-page-panel">
 					<div className="inspector-page-panel-content-wrapper">
-						<div style={{overflowX:'auto'}}>
+						<div style={{ overflowX : 'auto' }}>
 							<ul className="inspector-page-panel-tab-wrapper">
 								{(files.map((file, i) => {
 									return (<li key={i} className={'inspector-page-panel-tab' + ((this.state.selectedTab === i) ? ' inspector-page-panel-tab-selected' : '')} onClick={()=> this.handleTab(i)}>{file.title}</li>);
@@ -1165,64 +1218,7 @@ class InspectorPage extends Component {
 						</ul>
 						<div className="inspector-page-panel-tab-content-wrapper">
 							<div className="inspector-page-panel-tab-content">
-								<div className="inspector-page-panel-info-wrapper">
-									{/*<Row><Column flexGrow={1}>System</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard && artboard.system) ? artboard.system.title : ''}</Column></Row>*/}
-									{/*<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val"><a href={'mailto:' + ((artboard && artboard.system) ? artboard.system.author : '#')} style={{textDecoration:'none'}}>{(artboard && artboard.system) ? artboard.system.author : ''}</a></Column></Row>*/}
-									{/*<Row><Column flexGrow={1}>Page</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(page) ? page.title : ''}</Column></Row>*/}
-									{/*<Row><Column flexGrow={1}>Artboard</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard) ? artboard.title : ''}</Column></Row>*/}
-									<Row><Column flexGrow={1}>Name:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? activeSlice.title : ''}</Column></Row>
-									{/*<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? capitalizeText(activeSlice.type, true) : ''}</Column></Row>*/}
-									{/*<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(activeSlice.added))) : ''}</Column></Row>*/}
-									<Row>
-										<Column flexGrow={1}>Export Size:</Column>
-										<Row flexGrow={1} className="inspector-page-panel-info-val">
-											<div style={{width:'50%'}}>W: {(activeSlice) ? activeSlice.meta.frame.size.width : 0}px</div>
-											<div style={{width:'50%', textAlign:'right'}}>H: {(activeSlice) ? activeSlice.meta.frame.size.height : 0}px</div>
-										</Row>
-									</Row>
-									<Row>
-										<Column flexGrow={1}>Position:</Column>
-										<Row flexGrow={1} className="inspector-page-panel-info-val">
-											<div style={{width:'50%'}}>X: {(activeSlice) ? activeSlice.meta.frame.origin.x : 0}px</div>
-											<div style={{width:'50%', textAlign:'right'}}>Y: {(activeSlice) ? activeSlice.meta.frame.origin.y : 0}px</div>
-										</Row>
-									</Row>
-									{/*<Row><Column flexGrow={1}>Scale</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(scaleSize + 'x')}</Column></Row>*/}
-									<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? activeSlice.meta.rotation : 0}&deg;</Column></Row>
-									<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? (activeSlice.meta.opacity * 100) : 100}%</Column></Row>
-									<Row><Column flexGrow={1}>Fill:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? (activeSlice.type === 'textfield' && activeSlice.meta.font.color) ? activeSlice.meta.font.color.toUpperCase() : activeSlice.meta.fillColor.toUpperCase() : ''}</Column></Row>
-									<Row><Column flexGrow={1}>Border:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>
-									{(activeSlice && activeSlice.type === 'textfield') && (<div>
-										{/*<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.family) ? activeSlice.meta.font.family : ''}</Column></Row>*/}
-										<Row><Column flexGrow={1}>Font:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.family) ? activeSlice.meta.font.family : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Font size:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.size + 'px')}</Column></Row>
-										<Row><Column flexGrow={1}>Font color:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.color) ? activeSlice.meta.font.color.toUpperCase() : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.alignment) ? capitalizeText(activeSlice.meta.font.alignment) : 'Left'}</Column></Row>
-										<Row><Column flexGrow={1}>Font Line Height:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.lineHeight) ? (activeSlice.meta.font.lineHeight + 'px') : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Font Letter Spacing:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.kerning) ? (activeSlice.meta.font.kerning.toFixed(2) + 'px') : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Horizontal Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice.meta.font.alignment) ? capitalizeText(activeSlice.meta.font.alignment) : 'Left'}</Column></Row>
-										<Row><Column flexGrow={1}>Vertical Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{'Top'}</Column></Row>
-									</div>)}
-									{(styles) && (<div>
-										<Row><Column flexGrow={1}>Stroke:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.stroke) ? (capitalizeText(styles.stroke.position, true) + ' S: ' + styles.stroke.thickness + ' ' + styles.stroke.color) : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.shadow) ? ('X: ' + styles.shadow.offset.x + ' Y: ' + styles.shadow.offset.y + ' B: ' + styles.shadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Inner Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>
-										<Row><Column flexGrow={1}>Blur:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>
-									</div>)}
-									{(activeSlice && activeSlice.meta.padding) && (<Row>
-										<Column flexGrow={1}>Padding:</Column>
-										<Row flexGrow={1} className="inspector-page-panel-info-val">
-											<div style={{width:'50%'}}>{(activeSlice) ? activeSlice.meta.padding.top : 0}px</div>
-											<div style={{width:'50%'}}>{(activeSlice) ? activeSlice.meta.padding.left : 0}px</div>
-											<div style={{width:'50%', textAlign:'right'}}>{(activeSlice) ? activeSlice.meta.padding.bottom : 0}px</div>
-											<div style={{width:'50%', textAlign:'right'}}>{(activeSlice) ? activeSlice.meta.padding.right : 0}px</div>
-										</Row>
-									</Row>)}
-									<Row><Column flexGrow={1}>Inner Padding:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>
-									<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? capitalizeText(activeSlice.meta.blendMode, true) : ''}</Column></Row>
-									<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(activeSlice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(activeSlice.added))) : ''}</Column></Row>
-									<Row><Column flexGrow={1}>Author:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(page) ? page.author : ''}</Column></Row>
-								</div>
+								<SpecsList page={page} slice={activeSlice} />
 							</div>
 						</div>
 					</div>
@@ -1244,4 +1240,4 @@ class InspectorPage extends Component {
 	}
 }
 
-export default InspectorPage;
+export default connect(mapStateToProps)(InspectorPage);

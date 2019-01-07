@@ -4,70 +4,97 @@ import './SideNav.css'
 
 import axios from 'axios';
 import cookie from 'react-cookies';
+import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import UploadTreeItem from '../iterables/UploadTreeItem';
 
+import { isExplorePage, isInspectorPage, isUserLoggedIn, scrollOrigin } from '../../utils/funcs';
+import defaultAvatar from "../../images/default-avatar.png";
+
 const wrapper = React.createRef();
 const scrollWrapper = React.createRef();
+
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		navigation : state.navigation,
+		profile    : state.userProfile
+	});
+};
+
 
 class SideNav extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			uploadID   : this.props.uploadID,
-			pageID     : this.props.pageID,
-			artboardID : this.props.artboardID,
-			sliceID    : this.props.sliceID,
+// 			uploadID   : uploadID,
+// 			pageID     : pageID,
+// 			artboardID : artboardID,
+// 			sliceID    : sliceID,
 			uploads    : [],
-			pages      : [],
-			artboards  : [],
 			loadOffset : 0,
-			loadAmt    : (cookie.load('user_id') !== '0' && !window.location.pathname.includes('/explore')) ? 666 : 10,
+			loadAmt    : (isUserLoggedIn() && !isExplorePage()) ? -1 : 10,
 			fetching   : false
 		};
 	}
 
 	componentDidMount() {
-		this.fetchNextUploads();
+		if (isUserLoggedIn() || isExplorePage()) {
+			this.fetchNextUploads();
+		}
 	}
 
-	componentDidUpdate(prevProps) {
-// 		console.log('SideNav.componentDidUpdate()', prevProps, this.props, this.state);
-// 		if (this.props.uploadID === 0 && (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID)) {
-		if (prevProps.uploadID !== this.props.uploadID || prevProps.pageID !== this.props.pageID || prevProps.artboardID !== this.props.artboardID) {
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('SideNav.componentDidUpdate()', prevProps, this.props, this.state);
+
+		if (prevProps.navigation !== this.props.navigation) {
 			this.onTreeEffect();
 		}
 
-		if (this.props.userID !== prevProps.userID) {
-			this.fetchNextUploads();
+		if (!this.state.fetching && this.props.processing) {
+			this.setState({
+				fetching   : true,
+				loadOffset : 0,
+				loadAmt    : -1
+			});
+
+			setTimeout(this.fetchNextUploads, 333);
 		}
 
-		if (this.props.processing) {
-			this.fetchNextUploads();
+		if (!this.state.fetching && (this.props.profile !== prevProps.profile || ((prevProps.path.includes('/explore') || this.props.path.includes('/explore')) && this.props.path.substring(1).split('/').shift() !== prevProps.path.substring(1).split('/').shift()))) {
+			this.setState({
+				fetching   : true,
+				uploads    : [],
+				loadOffset : 0,
+				loadAmt    : (isUserLoggedIn() && !isExplorePage()) ? -1 : 10
+			});
+
+			setTimeout(this.fetchNextUploads, 333);
 		}
 	}
 
 	onTreeEffect = ()=> {
-		let self = this;
+		console.log('SideNav.onTreeEffect()', this.props, this.state);
+
 		let uploads = [...this.state.uploads];
 		uploads.forEach((upload)=> {
-			upload.selected = (upload.id === this.props.uploadID);
+			upload.selected = (upload.id === this.props.navigation.uploadID);
 			upload.pages.forEach((page)=> {
-				page.selected = (page.id === self.props.pageID);
-				page.artboards.forEach((artboard)=> {
-					artboard.selected = (artboard.id === self.props.artboardID);
-				});
+				page.selected = (page.id === this.props.navigation.pageID);
 			});
 		});
 
-		this.setState({ uploads : uploads });
+		this.setState({ uploads });
 	};
 
-
 	fetchNextUploads = ()=> {
-		const prevUploads = this.state.uploads;
+		console.log('SideNav.fetchNextUploads()', this.state.loadOffset, this.state.loadAmt);
+
+// 		const prevUploads = this.state.uploads;
+		const { uploadID, pageID } = this.props.navigation;
+		const { loadOffset, loadAmt } = this.state;
 
 		if (!this.state.fetching) {
 			this.setState({ fetching : true });
@@ -75,43 +102,109 @@ class SideNav extends Component {
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
-		formData.append('user_id', (window.location.pathname.includes('/explore') || cookie.load('user_id') === '0') ? '0' : cookie.load('user_id'));
-		formData.append('offset', this.state.loadOffset);
-		formData.append('length', this.state.loadAmt);
+		formData.append('user_id', (isExplorePage()) ? '-1' : (this.props.profile) ? this.props.profile.id : '0');
+		formData.append('offset', (isExplorePage()) ? Math.max(0, loadOffset) : '0');
+		formData.append('length', '' + loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD_NAMES', response.data);
 
 				const uploads = response.data.uploads.map((upload)=> ({
-					id       : upload.id,
-					title    : upload.title,
-					author   : upload.author,
-					total    : upload.total,
-					added    : upload.added,
-					selected : (this.props.uploadID === upload.id),
-					pages    : upload.pages.map((page) => ({
+					id           : upload.id,
+					title        : upload.title,
+					description  : upload.description,
+					total        : upload.total,
+					added        : upload.added,
+					selected     : (uploadID === upload.id),
+					fonts        : upload.fonts.map((font)=> ({
+						id     : font.id,
+						family : font.family,
+						style  : font.style,
+						added  : font.added
+					})),
+					colors       : upload.colors.map((color)=> ({
+						id    : color.id,
+						hex   : color.hex_val,
+						added : color.added
+					})),
+					symbols      : upload.fonts.map((symbol)=> ({
+						id    : symbol.id,
+						uuid  : symbol.uuid,
+						title : symbol.title,
+						added : symbol.added
+					})),
+					pages        : upload.pages.map((page) => ({
 						id          : page.id,
 						uploadID    : page.upload_id,
 						title       : page.title,
 						description : page.description,
 						total       : page.total,
 						added       : page.added,
-						selected    : (this.props.pageID === page.id),
+						selected    : (pageID === page.id && isInspectorPage()),
 						artboards   : []
-					}))
+					})),
+					contributors : upload.contributors.map((contributor)=> ({
+						id     : contributor.id,
+						title  : contributor.username,
+						avatar : contributor.avatar
+					})).concat([{
+						id     : 0,
+						title  : 'Invite Team',
+						avatar : defaultAvatar
+					}])
 				}));
 
+// 				if (this.props.artboardID !== 0) {
+// 					this.fetchPageArtboards(uploads);
+// 				}
+
 				this.setState({
-					uploads     : prevUploads.concat(uploads),
-					loadOffset  : this.state.loadOffset + this.state.loadAmt,
-					loadAmt     : (this.state.loadAmt < 40) ? 40 : 10,
+// 					uploads     : (isExplorePage()) ? prevUploads.concat(uploads) : uploads,
+					uploads     : uploads,
+					loadOffset  :  (uploads.length === loadAmt) ? loadOffset + loadAmt : -1,
+					loadAmt     : (loadAmt < 40) ? 40 : 10,
 					fetching    : false
 				});
 			}).catch((error) => {
 		});
 	};
 
+	fetchPageArtboards = (uploads)=> {
+		console.log('SideNav.fetchPageArtboards()', uploads);
+
+		uploads.forEach((upload)=> {
+			upload.pages.forEach((page)=> {
+				if (page.id === this.props.pageID) {
+					let formData = new FormData();
+					formData.append('action', 'ARTBOARD_NAMES');
+					formData.append('page_id', this.props.navigation.pageID);
+					axios.post('https://api.designengine.ai/system.php', formData)
+						.then((response) => {
+							console.log('ARTBOARD_NAMES', response.data);
+							page.artboards = response.data.artboards.map((artboard) => ({
+								id       : artboard.id,
+								pageID   : artboard.page_id,
+								uploadID : artboard.upload_id,
+								title    : artboard.title,
+								filename : artboard.filename,
+								total    : artboard.total,
+								meta     : JSON.parse(artboard.meta),
+								added    : artboard.added,
+								selected : (this.props.navigation.artboardID === artboard.id)
+							}));
+
+							this.setState({ uploads });
+						}).catch((error) => {
+					});
+				}
+			});
+		});
+	};
+
+
 	handleUploadClick = (upload)=> {
+		console.log('SideNav.handleUploadClick()', upload);
+
 		let uploads = [...this.state.uploads];
 		uploads.forEach(function(item, i) {
 			if (item.id === upload.id) {
@@ -121,33 +214,44 @@ class SideNav extends Component {
 				item.selected = false;
 				item.pages.forEach((page)=> {
 					page.selected = false;
-					page.artboards.forEach((artboard)=> {
-						artboard.selected = false;
-					});
 				});
 			}
 		});
 
-		if (upload.selected) {
-			cookie.save('upload_id', upload.id, { path : '/' });
+		if (!upload.selected) {
+			scrollOrigin(wrapper.current);
 		}
 
-		this.setState({ uploads : uploads });
+		this.setState({ uploads });
+		this.props.onUploadItem(upload);
+	};
 
-// 		wrapper.current.scrollTo(0, 0);
+	handleCategoryClick = (category)=> {
+		console.log('SideNav.handleCategoryClick()', category);
+		this.props.onCategoryItem(category);
+	};
 
-		if (window.location.pathname === '/' || window.location.pathname.includes('/proj')) {
-			this.props.onUploadItem(upload);
-		}
+	handleFontClick = (font)=> {
+		console.log('SideNav.handleFontClick()', font);
+	};
+
+	handleColorClick = (color)=> {
+		console.log('SideNav.handleColorClick()', color);
+	};
+
+	handleSymbolClick = (symbol)=> {
+		console.log('SideNav.handleSymbolClick()', symbol);
 	};
 
 	handlePageClick = (page)=> {
+		console.log('SideNav.handlePageClick()', page);
+
 		let uploads = [...this.state.uploads];
 		uploads.forEach((upload)=> {
-			if (upload.selected) {
+			if (upload.id === page.uploadID) {
 				upload.pages.forEach((item)=> {
 					if (item.id === page.id) {
-						item.selected = !item.selected;
+						item = page;
 
 					} else {
 						item.selected = false;
@@ -156,106 +260,73 @@ class SideNav extends Component {
 			}
 		});
 
-		if (page.selected) {
-			if (!window.location.pathname.includes('/explore')) {
-				let formData = new FormData();
-				formData.append('action', 'ARTBOARD_NAMES');
-				formData.append('page_id', page.id);
-				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response) => {
-						//console.log('ARTBOARD_NAMES', response.data);
-						page.artboards = response.data.artboards.map((artboard) => ({
-							id       : artboard.id,
-							pageID   : artboard.page_id,
-							uploadID : artboard.upload_id,
-							title    : artboard.title,
-							filename : artboard.filename,
-							total    : artboard.total,
-							meta     : JSON.parse(artboard.meta),
-							added    : artboard.added,
-							selected : (this.props.artboardID === artboard.id)
-						}));
-
-						this.setState({ uploads : uploads });
-					}).catch((error) => {
-				});
-			}
-
-			this.props.onPageItem(page);
-
-		} else {
-			this.setState({ uploads : uploads });
-		}
+		this.setState({ uploads });
+		this.props.onPageItem(page);
 	};
 
-	handleArtboardClick = (artboard)=> {
-		let artboards = [...this.state.artboards];
-		artboards.forEach(function(item, i) {
-			if (item.id === artboard.id) {
-				if (!item.selected) {
-					item.selected = true;
-				}
-
-			} else {
-				item.selected = false;
-			}
-		});
-
-		this.setState({
-			artboardID : artboard.id,
-			artboards  : artboards
-		});
-
-		this.props.onArtboardItem(artboard)
+	handleContributorClick = (contributor)=> {
+		console.log('SideNav.handleContributorClick()', contributor);
+		if (contributor.id === 0) {
+			this.props.onPage('invite-team');
+		}
 	};
 
 	handleInvite = ()=> {
 		cookie.save('msg', 'use this feature.', { path : '/' });
-		this.props.onPage((cookie.load('user_id') !== '0') ? 'invite-team' : 'login');
+		this.props.onPage((isUserLoggedIn()) ? 'invite-team' : 'login');
 	};
 
 	handleUpload = ()=> {
 		cookie.save('msg', 'use this feature.', { path : '/' });
 
-		let self = this;
-		setTimeout(function() {
-			self.props.onPage((cookie.load('user_id') === '0') ? 'login' : 'new');
+		setTimeout(()=> {
+			this.props.onPage((!isUserLoggedIn()) ? 'login' : 'new');
 		}, 100);
 	};
 
+
 	render() {
-		const { uploads, fetching } = this.state;
 		console.log('SideNav.render()', this.props, this.state);
+		const { uploads, fetching, loadOffset } = this.state;
+
+		const btnClass = (isUserLoggedIn()) ? 'tiny-button' : 'tiny-button button-disabled';
 
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>
 				<div className="side-nav-top-wrapper">
-					<h3 className="side-nav-header"><Row vertical="center" style={{width:'100%'}}>
-						<Column flexGrow={1} horizontal="start">{(window.location.pathname.includes('/explore')) ? 'Explore' : 'Projects'}</Column>
-						<Column flexGrow={1} horizontal="end"><button className="tiny-button" onClick={()=> this.handleUpload()}>New</button></Column>
+					<h3 className="side-nav-header"><Row vertical="center" style={{ width : '100%' }}>
+						<Column flexGrow={1} horizontal="start">{(isExplorePage()) ? 'Explore' : 'Projects'}</Column>
+						<Column flexGrow={1} horizontal="end"><button className={btnClass} onClick={()=> (isUserLoggedIn()) ? this.handleUpload() : null}>New</button></Column>
 					</Row></h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
-						{(cookie.load('user_id') !== '0' || (window.location.pathname.includes('/explore'))) ? (<div>
-								{(uploads.length === 0) ? <span className="side-nav-subtext">You don't have any projects yet!</span> : uploads.map((upload, i) => {
-									return (
-										<UploadTreeItem
-											key={i}
-											title={upload.title}
-											author={upload.author}
-											pages={upload.pages}
-											selected={upload.selected}
-											onClick={()=> this.handleUploadClick(upload)}
-											onPageClick={(page)=> this.handlePageClick(page)}
-											onArtboardClick={(artboard)=> this.handleArtboardClick(artboard)} />
-									);
-								})}
-							</div>) : (<div>
-							<span className="side-nav-subtext">You must be logged in.</span>
-						</div>)}
+						{(uploads.length === 0)
+							? <span className="side-nav-subtext">{(!fetching) ? (!isExplorePage()) ? (!isUserLoggedIn()) ? 'You must be signed in.' : 'You don\'t have any projects yet!' : '' : ''}</span>
+							: uploads.map((upload, i) => {
+								return (
+									<UploadTreeItem
+										key={i}
+										title={upload.title}
+										fonts={upload.fonts}
+										colors={upload.colors}
+										symbols={upload.symbols}
+										pages={upload.pages}
+										contributors={upload.contributors}
+										selected={upload.selected}
+										onClick={()=> this.handleUploadClick(upload)}
+										onCategoryClick={(category)=> this.handleCategoryClick(category)}
+										onFontClick={(font)=> this.handleFontClick(font)}
+										onColorClick={(color)=> this.handleColorClick(color)}
+										onSymbolClick={(symbol)=> this.handleSymbolClick(symbol)}
+										onPageClick={(page)=> this.handlePageClick(page)}
+										onContributorClick={(contributor)=> this.handleContributorClick(contributor)}
+								 />
+								);
+							}
+						)}
 					</div>
-					{(window.location.pathname.includes('/explore'))
-						? (<div className="side-nav-link" onClick={()=> this.fetchNextUploads()}>{(fetching) ? 'Loading…' : 'Explore More'}</div>)
-						: (<div className="side-nav-link" onClick={()=> this.handleUpload()}>New Project</div>)
+					{(isExplorePage())
+						? (<div className="side-nav-link" onClick={()=> this.fetchNextUploads()}>{(fetching) ? 'Loading…' : (loadOffset === -1) ? '' : 'Explore More'}</div>)
+						: (<div className="side-nav-link" onClick={()=> this.handleUpload()}>{(isUserLoggedIn()) ? 'New Project' : ''}</div>)
 					}
 				</div>
 				<div className="side-nav-team-wrapper">
@@ -264,17 +335,19 @@ class SideNav extends Component {
 				</div>
 				<div className="side-nav-account-wrapper">
 					<h6>Account</h6>
-					{(cookie.load('user_id') !== '0') && (<div className="nav-link" onClick={() => this.props.onPage('profile')}>Profile</div>)}
-					{(cookie.load('user_id') === '0') && (<div>
-						<div className="nav-link" onClick={() => this.props.onPage('register')}>Sign Up</div>
-						<div className="nav-link" onClick={() => this.props.onPage('login')}>Login</div>
-					</div>)}
-
-					{(cookie.load('user_id') !== '0') && (<div className="nav-link" onClick={() => this.props.onLogout()}>Sign Out</div>)}
+					{(isUserLoggedIn())
+						? (<div>
+								<div className="nav-link" onClick={() => this.props.onPage('profile')}>Profile</div>
+								<div className="nav-link" onClick={()=> this.props.onLogout()}>Sign Out</div>
+							</div>) : (<div>
+								<div className="nav-link" onClick={() => this.props.onPage('register')}>Sign Up</div>
+								<div className="nav-link" onClick={() => this.props.onPage('login')}>Login</div>
+							</div>
+						)}
 				</div>
 			</div>
 		);
 	}
 }
 
-export default SideNav;
+export default connect(mapStateToProps)(SideNav);

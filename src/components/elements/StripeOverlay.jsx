@@ -45,7 +45,7 @@ class StripeOverlay extends Component {
 						<Row horizontal="center">
 							<img className="stripe-overlay-logo" src="/images/stripe-logo.png" alt="Stripe logo" />
 						</Row>
-						<Row horizontal="space-between" style={{flexWrap:'wrap'}}>
+						<Row horizontal="space-between" style={{ flexWrap : 'wrap' }}>
 							<Column className="stripe-overlay-faq">
 								<div className="stripe-overlay-faq-title">Will Design Engine be a web app or desktop app?</div>
 								<div className="stripe-overlay-faq-content"><p>Design Engine is the first design platform built for engineers. From open source projects to enterprise, you can inspect parts, download source, and build interface along worldclass designers.</p></div>

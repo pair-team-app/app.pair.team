@@ -2,13 +2,23 @@
 import React, { Component } from 'react';
 import './LoginPage.css';
 
-import axios from "axios/index";
-import cookie from "react-cookies";
+import axios from 'axios/index';
+import cookie from 'react-cookies';
+import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
+import { updateUserProfile } from '../../redux/actions';
 import { hasBit, isValidEmail } from '../../utils/funcs';
 
 const passwordTextfield = React.createRef();
+
+
+function mapDispatchToProps(dispatch) {
+	return ({
+		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+	});
+}
+
 
 class LoginPage extends Component {
 	constructor(props) {
@@ -30,13 +40,13 @@ class LoginPage extends Component {
 			passMsg       : ''
 		});
 
-		setTimeout(function() {
+		setTimeout(()=> {
 			passwordTextfield.current.focus();
 		}, 69);
 	};
 
 	handleSubmit = (event)=> {
-		console.log('submit()');
+		console.log('LoginPage.submit()');
 		event.preventDefault();
 
 		const { email, password } = this.state;
@@ -62,8 +72,17 @@ class LoginPage extends Component {
 					const status = parseInt(response.data.status, 16);
 
 					if (hasBit(status, 0x11)) {
-						cookie.save('user_id', response.data.user_id, { path : '/' });
-						cookie.save('user_email', email, { path : '/' });
+						const { id, username, email, avatar } = response.data.user;
+
+						cookie.save('user_id', id, { path : '/' });
+						this.props.updateUserProfile({
+							id       : id,
+							avatar   : avatar,
+							username : username,
+							email    : email,
+							password : password
+						});
+
 						this.props.onPage('');
 
 					} else {
@@ -108,7 +127,7 @@ class LoginPage extends Component {
 						</div>
 						<Row vertical="center">
 							<Column><button type="submit" className={buttonClass} onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-							<Column><div className="page-link" style={{fontSize:'14px'}} onClick={()=> this.props.onPage('recover')}>Forgot Password?</div></Column>
+							<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> this.props.onPage('recover')}>Forgot Password?</div></Column>
 						</Row>
 					</form>
 				</div>
@@ -117,4 +136,4 @@ class LoginPage extends Component {
 	}
 }
 
-export default LoginPage;
+export default connect(null, mapDispatchToProps)(LoginPage);

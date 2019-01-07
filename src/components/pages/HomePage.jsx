@@ -4,27 +4,28 @@ import './HomePage.css';
 
 import axios from 'axios';
 // import CopyToClipboard from 'react-copy-to-clipboard';
-import cookie from 'react-cookies';
 import { Column, Row } from 'simple-flexbox';
 
 import HomeExpo from '../elements/HomeExpo';
 import ArtboardItem from '../iterables/ArtboardItem';
+import GridHeader from '../elements/GridHeader';
 import Popup from '../elements/Popup';
 
-import {binaryClassName} from "../../utils/funcs";
+//import { isHomePage } from '../../utils/funcs';
+
 
 class HomePage extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			action     : '',
-			uploadID   : 0,
-			title      : 'Loading…',
-			artboards  : [],
-			fetching   : false,
-			loadOffset : 0,
-			loadAmt    : 24,
+			action        : '',
+			upload        : null,
+			artboards     : [],
+			pendingUpdate : false,
+			fetching      : false,
+			loadOffset    : 0,
+			loadAmt       : 1,
 			popup : {
 				visible : false,
 				content : ''
@@ -34,19 +35,26 @@ class HomePage extends Component {
 
 	componentDidMount() {
 		console.log('HomePage().componentDidMount()', this.props);
-		if (this.props.uploadID !== 0) {
+
+		if (this.props.match) {
 			this.handleLoadNext();
 		}
 	}
 
-	componentDidUpdate(prevProps) {
-		console.log('HomePage.componentDidUpdate()', this.props, prevProps);
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('HomePage.componentDidUpdate()', prevProps, this.props);
 
-		if (this.props.uploadID !== -1 && this.props.uploadID !== prevProps.uploadID) {
+		if (!this.state.pendingUpdate && ((!prevProps.match && this.props.match) || (prevProps.match && this.props.match && prevProps.match.params.uploadID !== this.props.match.params.uploadID))) {
+			this.setState({ pendingUpdate : true });
+		}
+
+		if (this.props.location && this.props.location.pathname.includes('/views') && this.state.pendingUpdate) {
 			this.setState({
-				artboards  : [],
-				loadOffset : 0,
-				loadAmt    : 24
+				upload        : null,
+				artboards     : [],
+				loadOffset    : 0,
+				loadAmt       : 24,
+				pendingUpdate : false
 			});
 
 			setTimeout(this.handleLoadNext, 125);
@@ -54,9 +62,9 @@ class HomePage extends Component {
 	}
 
 	handleLoadNext = ()=> {
-		console.log('handleLoadNext()', this.state.artboards);
+		console.log('HomePage.handleLoadNext()', this.state.artboards);
 
-		const { uploadID, pageID } = this.props;
+		const { uploadID } = this.props.match.params;
 		const { loadOffset, loadAmt } = this.state;
 
 		this.setState({
@@ -70,46 +78,39 @@ class HomePage extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD', response.data);
-				const uploadTitle = response.data.upload.title;
+				const { upload } = response.data;
 
-				formData.append('action', 'PAGE');
-				formData.append('page_id', pageID);
+				formData.append('action', 'PAGES');
+				formData.append('upload_id', uploadID);
+				formData.append('offset', loadOffset);
+				formData.append('limit', loadAmt);
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response) => {
-						console.log('PAGE', response.data);
-						const pageTitle = response.data.page.title;
+						console.log('PAGES', response.data);
 
-						formData.append('action', 'ARTBOARDS');
-						formData.append('upload_id', uploadID);
-						formData.append('page_id', pageID);
-						formData.append('slices', '0');
-						formData.append('offset', loadOffset);
-						formData.append('length', loadAmt);
-						axios.post('https://api.designengine.ai/system.php', formData)
-							.then((response) => {
-								console.log('ARTBOARDS', response.data);
+						let artboards = [];
+						response.data.pages.forEach((page) => {
+							artboards = artboards.concat(page.artboards.map((artboard) => ({
+								id        : artboard.id,
+								pageID    : artboard.page_id,
+								uploadID  : artboard.upload_id,
+								system    : artboard.system,
+								title     : artboard.title,
+								pageTitle : artboard.page_title,
+								type      : artboard.type,
+								filename  : artboard.filename,
+								meta      : JSON.parse(artboard.meta),
+								added     : artboard.added,
+								selected  : false
+							})));
+						});
 
-								const artboards = response.data.artboards.map((item) => ({
-									id        : item.id,
-									pageID    : item.page_id,
-									uploadID  : item.upload_id,
-									title     : item.title,
-									pageTitle : item.page_title,
-									type      : item.type,
-									filename  : item.filename,
-									meta      : JSON.parse(item.meta),
-									added     : item.added,
-									selected  : false
-								}));
-
-								const prevArtboards = this.state.artboards;
-								this.setState({
-									artboards  : prevArtboards.concat(artboards),
-									fetching   : false,
-									title      : ((this.props.pageID === 0) ? uploadTitle : pageTitle) + ' (' + (prevArtboards.length + artboards.length) + ')',
-									loadOffset : loadOffset + loadAmt
-								});
-							}).catch((error) => {
+						const prevArtboards = this.state.artboards;
+						this.setState({
+							upload     : upload,
+							artboards  : prevArtboards.concat(artboards),
+							fetching   : false,
+							loadOffset : loadOffset + loadAmt
 						});
 					}).catch((error) => {
 				});
@@ -119,51 +120,36 @@ class HomePage extends Component {
 
 
 	render() {
-		const { title, artboards, fetching, loadOffset } = this.state;
+		console.log('HomePage.render()', this.props, this.state);
 
-		const items = artboards.map((artboard) => {
-			if (this.props.pageID <= 0 || this.props.pageID === artboard.pageID) {
-				return (
-					<Column key={artboard.id}>
-						<ArtboardItem
-							title={artboard.title}
-							image={artboard.filename}
-							onClick={() => this.props.onArtboardClicked(artboard)} />
-					</Column>
-				);
+		const { upload, artboards, fetching } = this.state;
+		const title = (fetching) ? 'Loading…' : (upload) ? upload.title + ' (' + (upload.total.artboards) + ')' : '';
 
-			} else {
-				return (null);
-			}
-		});
-
-		const btnClass = binaryClassName((fetching || artboards.length !== loadOffset), 'is-hidden', '', 'fat-button');
+		const btnClass = (!upload || fetching) ? 'fat-button button-disabled' : (upload && artboards) ? (artboards.length === upload.total.artboards) ? 'fat-button is-hidden' : 'fat-button' : 'fat-button';
+		const btnCaption = (!upload || fetching) ? 'Loading…' : 'More';
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
+				{/*{(isHomePage()) && (<GridHeader onPage={(url)=> this.props.onPage(url)} />)}*/}
 				<HomeExpo onClick={(url)=> this.props.onPage(url)} />
-				{(items.length > 0) && (<div>
-					<Row><h3>{title}</h3></Row>
-					<Row horizontal="space-between" className="home-page-artboards-wrapper" style={{flexWrap:'wrap'}}>
-						{items}
+				<GridHeader onPage={(url)=> this.props.onPage(url)} />
+
+				<Row><h3>{title}</h3></Row>
+				{(artboards.length > 0) && (<div>
+					<Row horizontal="space-around" className="home-page-artboards-wrapper" style={{ flexWrap : 'wrap' }}>
+						{artboards.map((artboard) => {
+							return (
+								<Column key={artboard.id}>
+									<ArtboardItem
+										title={artboard.title}
+										image={artboard.filename}
+										avatar={artboard.system.avatar}
+										onClick={() => this.props.onArtboardClicked(artboard)} />
+								</Column>
+							);
+						})}
 					</Row>
-					<Row horizontal="center"><button className={btnClass} onClick={()=> this.handleLoadNext()}>More</button></Row>
-				</div>)}
-
-				{(cookie.load('user_id') === '0') ? (<div>
-					<Row><h3>Sign up or Login</h3></Row>
-					<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
-					<div style={{marginTop:'20px'}}>
-						<button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign up with Email</button>
-						<button onClick={()=> this.props.onPage('login')}>Login</button>
-					</div>
-
-				</div>) : (parseInt(this.props.uploadID, 10) === 0) && (<div>
-					<Row><h3>Create a new design project</h3></Row>
-					<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
-					<div style={{marginTop:'20px'}}>
-						<button onClick={()=> this.props.onPage('new')}>New Project</button>
-					</div>
+					<Row horizontal="center"><button className={btnClass} onClick={()=> this.handleLoadNext()}>{btnCaption}</button></Row>
 				</div>)}
 
 				{this.state.popup.visible && (
