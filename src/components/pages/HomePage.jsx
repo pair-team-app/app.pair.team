@@ -44,11 +44,11 @@ class HomePage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		console.log('HomePage.componentDidUpdate()', prevProps, this.props);
 
-		if (prevProps.match && prevProps.match.params.uploadID !== this.props.match.params.uploadID && !this.state.pendingUpdate) {
+		if (!this.state.pendingUpdate && ((!prevProps.match && this.props.match) || (prevProps.match && this.props.match && prevProps.match.params.uploadID !== this.props.match.params.uploadID))) {
 			this.setState({ pendingUpdate : true });
 		}
 
-		if (window.location.pathname.includes('/views') && this.state.pendingUpdate) {
+		if (this.props.location && this.props.location.pathname.includes('/views') && this.state.pendingUpdate) {
 			this.setState({
 				upload        : null,
 				artboards     : [],
