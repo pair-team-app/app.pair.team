@@ -241,6 +241,7 @@ class UploadPage extends Component {
 			formData.append('user_id', this.props.profile.id);
 			formData.append('title', uploadTitle);
 			formData.append('description', description);
+			formData.append('filesize', files[0].size);
 			formData.append('private', (radioIndex === 1) ? '0' : '1');
 			formData.append('filename', "http://cdn.designengine.ai/system/" + files[0].name);
 			axios.post('https://api.designengine.ai/system.php', formData)
