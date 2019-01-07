@@ -204,7 +204,7 @@ class App extends Component {
 			scrollOrigin(wrapper.current);
 		}
 
-		if (url === '//') {
+		if (url === '<<') {
 			this.props.history.goBack();
 
 		} else if (url === '') {
@@ -237,9 +237,9 @@ class App extends Component {
 		}
 	};
 
-	handleProcess = (state)=> {
+	handleProcess = (processing)=> {
 		scrollOrigin(wrapper.current);
-		this.setState({ processing : (state === 0) });
+		this.setState({ processing });
 	};
 
 	handleSideNavUploadItem = (upload)=> {
@@ -397,7 +397,7 @@ class App extends Component {
 						    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={(url)=> this.handlePage(url)} />} />
 						    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} />} />
 					      <Route exact path="/mission" render={()=> <MissionPage />} />
-						    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={(state)=> this.handleProcess(state)} />} />
+						    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={(processing)=> this.handleProcess(processing)} />} />
 						    <Route exact path="/page/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={(url)=> this.handlePage(url)} />} />
 					      <Route exact path="/profile" render={()=> <ProfilePage onPage={(url)=> this.handlePage(url)} />} />
 					      <Route exact path="/privacy" render={()=> <PrivacyPage />} />

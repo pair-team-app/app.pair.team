@@ -190,7 +190,7 @@ class InviteTeamPage extends Component {
 							? (<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={uploadURL}>
 									<button>Copy Project Link</button>
 								</CopyToClipboard>)
-							: (<button onClick={()=> this.props.onPage('//')}>Go Back</button>)
+							: (<button onClick={()=> this.props.onPage('<<')}>Go Back</button>)
 						}
 					</Row>
 				</div>
