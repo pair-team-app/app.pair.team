@@ -1,9 +1,30 @@
 
 import cookie from 'react-cookies';
 
+
+export function buildInspectorPath(uploadID, pageID, artboardID, artboardTitle) {
+	return ('/page/' + uploadID + '/' + pageID + '/' + artboardID + '/' + convertURLSlug(artboardTitle));
+}
+
+export function buildInspectorURL(uploadID, pageID, artboardID, artboardTitle) {
+	return (window.location.origin + buildInspectorPath(uploadID, pageID, artboardID, artboardTitle));
+}
+
+export function buildProjectPath(uploadID, title) {
+	return ('/proj/' + uploadID + '/' + convertURLSlug(title));
+}
+
+export function buildProjectURL(uploadID, title) {
+	return (window.location.origin + buildProjectPath(uploadID, title));
+}
+
 export function capitalizeText(text, toLower) {
 	toLower = (toLower || false);
 	return ((toLower) ? text.toLowerCase().replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }) : text.replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }));
+}
+
+export function convertURLSlug(text) {
+	return (text.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
 }
 
 export function copyTextToClipboard(text) {
@@ -94,6 +115,3 @@ export function scrollOrigin(element) {
 	}
 }
 
-export function urlSlugTitle(text) {
-	return (text.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
-}

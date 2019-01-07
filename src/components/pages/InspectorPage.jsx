@@ -976,20 +976,19 @@ class InspectorPage extends Component {
 
 
 	render() {
-		const { page, artboards, slice, hoverSlice, files } = this.state;
-		const { visibleTypes } = this.state;
-		const { scale } = this.state;
-		const { scrollOffset, scrolling } = this.state;
-
-		const activeSlice = (hoverSlice) ? hoverSlice : slice;
-
-		let self = this;
 		if (this.rerender === 0) {
 			this.rerender = 1;
 			setTimeout(()=> {
 				this.forceUpdate();
 			}, 3333);
 		}
+
+		const { page, artboards, slice, hoverSlice, files } = this.state;
+		const { visibleTypes } = this.state;
+		const { scale } = this.state;
+		const { scrollOffset, scrolling } = this.state;
+
+		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 
 		const progressStyle = { width : this.state.percent + '%' };
 

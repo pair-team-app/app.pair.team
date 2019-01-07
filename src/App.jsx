@@ -29,7 +29,7 @@ import UploadPage from './components/pages/UploadPage';
 import StripeOverlay from './components/elements/StripeOverlay';
 
 import { fetchUserProfile, updateNavigation, updateUserProfile } from './redux/actions';
-import { className, idsFromPath, isExplorePage, isInspectorPage, scrollOrigin, urlSlugTitle } from './utils/funcs';
+import { buildInspectorPath, className, idsFromPath, isExplorePage, isInspectorPage, scrollOrigin, buildProjectPath } from './utils/funcs';
 import { initTracker, trackEvent } from './utils/tracking';
 
 const wrapper = React.createRef();
@@ -130,7 +130,8 @@ class App extends Component {
 		console.log('App.handleArtboardClicked()', artboard);
 		this.handleAddPageView(artboard.pageID);
 
-		this.props.history.push('/page/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
+		this.handlePage(buildInspectorPath(artboard.uploadID, artboard.pageID, artboard.id, artboard.title).substring(1));
+// 		this.props.history.push('/page/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + convertURLSlug(artboard.title));
 		this.props.updateNavigation({
 			uploadID   : artboard.uploadID,
 			pageID     : artboard.pageID,
@@ -195,6 +196,7 @@ class App extends Component {
 
 	handlePage = (url)=> {
 		console.log('App.handlePage()', url);
+		url = url.substring((url.charAt(0) === '/') ? 1 : 0);
 
 		const { pathname } = window.location;
 
@@ -258,7 +260,8 @@ class App extends Component {
 		}
 
 		if (upload.selected && !isInspectorPage() && !isExplorePage()) {
-			this.handlePage('proj/' + upload.id + '/' + urlSlugTitle(upload.title));
+			this.handlePage(buildProjectPath(upload.id, upload.title));
+// 			this.handlePage('proj/' + upload.id + '/' + convertURLSlug(upload.title));
 		}
 	};
 
@@ -275,7 +278,8 @@ class App extends Component {
 					const { id, title } = response.data.upload;
 
 					if (!isInspectorPage() && !isExplorePage()) {
-						this.handlePage('proj/' + id + '/' + urlSlugTitle(title) + '/' + category.title.toLowerCase());
+// 						this.handlePage('proj/' + id + '/' + convertURLSlug(title) + '/' + category.title.toLowerCase());
+						this.handlePage(buildProjectPath(id, title) + '/' + category.title.toLowerCase());
 					}
 				}).catch((error) => {
 			});
@@ -301,7 +305,8 @@ class App extends Component {
 
 					const artboard = response.data.artboards.pop();
 					this.handleAddPageView(page.id);
-					this.props.history.push('/page/' + page.uploadID + '/' + page.id + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
+					this.handlePage(buildInspectorPath(page.uploadID, page.id, artboard.id, artboard.title));
+// 					this.props.history.push('/page/' + page.uploadID + '/' + page.id + '/' + artboard.id + '/' + convertURLSlug(artboard.title));
 					this.props.updateNavigation({
 						uploadID   : page.uploadID,
 						pageID     : page.id,
@@ -330,7 +335,9 @@ class App extends Component {
 		console.log('App.handleSideNavArtboardItem()', artboard);
 
 		this.handleAddPageView(artboard.pageID);
-		this.props.history.push('/page/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + urlSlugTitle(artboard.title));
+
+// 		this.props.history.push('/page/' + artboard.uploadID + '/' + artboard.pageID + '/' + artboard.id + '/' + convertURLSlug(artboard.title));
+		this.handlePage(buildInspectorPath(artboard.uploadID, artboard.pageID, artboard.id, artboard.title));
 
 		this.props.updateNavigation({
 			uploadID   : artboard.uploadID,

@@ -35,12 +35,16 @@ class HomePage extends Component {
 
 	componentDidMount() {
 		console.log('HomePage().componentDidMount()', this.props);
+
+		if (this.props.match) {
+			this.handleLoadNext();
+		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		console.log('HomePage.componentDidUpdate()', prevProps, this.props);
 
-		if (prevProps.uploadID !== this.props.uploadID && !this.state.pendingUpdate) {
+		if (prevProps.match && prevProps.match.params.uploadID !== this.props.match.params.uploadID && !this.state.pendingUpdate) {
 			this.setState({ pendingUpdate : true });
 		}
 

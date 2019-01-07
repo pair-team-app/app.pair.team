@@ -12,7 +12,7 @@ import ArtboardItem from '../iterables/ArtboardItem';
 import Dropdown from '../elements/Dropdown';
 import Popup from '../elements/Popup';
 import RadioButton from '../elements/RadioButton';
-import { isValidEmail, urlSlugTitle } from '../../utils/funcs';
+import { buildProjectURL, isValidEmail } from '../../utils/funcs';
 
 const dzWrapper = React.createRef();
 const titleTextfield = React.createRef();
@@ -246,7 +246,7 @@ class UploadPage extends Component {
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log('NEW_UPLOAD', response.data);
-					const url = window.location.origin + '/proj/' + response.data.upload_id + '/' + urlSlugTitle(uploadTitle) + '/views';
+					const url = buildProjectURL(response.data.upload_id, uploadTitle) + '/views';
 
 					this.setState({
 						uploadID        : response.data.upload_id,
@@ -260,8 +260,6 @@ class UploadPage extends Component {
 					});
 
 					this.props.onProcess(0);
-
-					let self = this;
 					this.uploadInterval = setInterval(()=> {
 						this.statusInterval();
 					}, 1000);
@@ -355,7 +353,7 @@ class UploadPage extends Component {
 				if (response.data.state === '3') {
 					clearInterval(this.uploadInterval);
 					this.props.onProcess(1);
-					window.location.href = window.location.origin + 'proj/' + this.state.uploadID + '/' + urlSlugTitle(this.state.uploadTitle) + '/views';
+					window.location.href = buildProjectURL(this.state.uploadID, this.state.uploadTitle) + '/views';
 				}
 
 				let status = response.data.message;

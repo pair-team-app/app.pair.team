@@ -10,7 +10,7 @@ import { Row } from 'simple-flexbox';
 import Dropdown from '../elements/Dropdown';
 import Popup from '../elements/Popup';
 
-import { isValidEmail, isUserLoggedIn, urlSlugTitle } from '../../utils/funcs';
+import { buildProjectURL, isValidEmail, isUserLoggedIn } from '../../utils/funcs';
 import cookie from "react-cookies";
 
 
@@ -52,6 +52,10 @@ class InviteTeamPage extends Component {
 			cookie.save('msg', 'use this feature.', { path : '/' });
 			this.props.onPage('login');
 		}
+
+		if (this.props.profile) {
+			this.refreshData();
+		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -64,8 +68,7 @@ class InviteTeamPage extends Component {
 	refreshData = ()=> {
 		console.log('InviteTeamPage.refreshData()');
 
-		const { pageID, artboardID } = this.props;
-		const { uploadID } = this.state;
+		const { uploadID } = this.props;
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
@@ -81,34 +84,17 @@ class InviteTeamPage extends Component {
 					author   : upload.author,
 					added    : upload.added,
 					selected : (uploadID === upload.id),
-					pages    : upload.pages.map((page) => ({
-						id          : page.id,
-						title       : page.title,
-						description : page.description,
-						added       : page.added,
-						selected    : (pageID === page.id),
-						artboards   : page.artboards.map((artboard) => ({
-							id       : artboard.id,
-							pageID   : artboard.page_id,
-							title    : artboard.title,
-							filename : artboard.filename,
-							meta     : JSON.parse(artboard.meta),
-							added    : artboard.added,
-							selected : (artboardID === artboard.id)
-						}))
-					}))
+					pages    : []
 				}));
 
-				if (uploadID !== 0) {
-					uploads.forEach((upload)=> {
-						if (upload.id === uploadID) {
-							this.setState({
-								uploadTitle : upload.title,
-								uploadURL   : window.location.origin + '/proj/' + uploadID + '/' + urlSlugTitle(upload.title)
-							});
-						}
-					});
-				}
+				uploads.forEach((upload)=> {
+					if (upload.id === uploadID) {
+						this.setState({
+							uploadTitle : upload.title,
+							uploadURL   : buildProjectURL(uploadID, upload.title)
+						});
+					}
+				});
 
 				this.setState({ uploads });
 			}).catch((error) => {
@@ -124,7 +110,7 @@ class InviteTeamPage extends Component {
 		this.setState({
 			uploadID    : upload.id,
 			uploadTitle : upload.title,
-			uploadURL   : window.location.origin + '/proj/' + upload.id + '/' + urlSlugTitle(upload.title),
+			uploadURL   : buildProjectURL(upload.id, upload.title),
 			uploads     : uploads
 		});
 	};
