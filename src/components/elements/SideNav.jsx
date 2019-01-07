@@ -57,7 +57,7 @@ class SideNav extends Component {
 			this.fetchNextUploads();
 		}
 
-		if (!this.state.fetching && (this.props.profile !== prevProps.profile || this.props.path !== prevProps.path)) {
+		if ((this.props.profile !== prevProps.profile || this.props.path !== prevProps.path)) {
 			this.setState({
 				fetching   : true,
 				uploads    : [],
@@ -65,7 +65,7 @@ class SideNav extends Component {
 				loadAmt    : (isUserLoggedIn() && !isExplorePage()) ? -1 : 10
 			});
 
-			setTimeout(this.fetchNextUploads, 333);
+			setTimeout(this.fetchNextUploads, 125);
 		}
 	}
 
@@ -86,7 +86,7 @@ class SideNav extends Component {
 	fetchNextUploads = ()=> {
 		console.log('SideNav.fetchNextUploads()', this.state.loadOffset, this.state.loadAmt);
 
-		const prevUploads = this.state.uploads;
+// 		const prevUploads = this.state.uploads;
 		const { uploadID, pageID } = this.props.navigation;
 		const { loadOffset, loadAmt } = this.state;
 
@@ -153,8 +153,8 @@ class SideNav extends Component {
 // 				}
 
 				this.setState({
-					uploads     : (isExplorePage()) ? prevUploads.concat(uploads) : uploads,
-// 					uploads     : uploads,
+// 					uploads     : (isExplorePage()) ? prevUploads.concat(uploads) : uploads,
+					uploads     : uploads,
 					loadOffset  :  (uploads.length === loadAmt) ? loadOffset + loadAmt : -1,
 					loadAmt     : (loadAmt < 40) ? 40 : 10,
 					fetching    : false
