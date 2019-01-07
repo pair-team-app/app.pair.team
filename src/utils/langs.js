@@ -1,5 +1,5 @@
 
-import {convertURLSlug} from './funcs';
+import { convertURLSlug } from './funcs';
 
 export function toCSS(slice) {
 	let html = '';
