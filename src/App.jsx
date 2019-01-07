@@ -29,7 +29,7 @@ import UploadPage from './components/pages/UploadPage';
 import StripeOverlay from './components/elements/StripeOverlay';
 
 import { fetchUserProfile, updateNavigation, updateUserProfile } from './redux/actions';
-import { className, idsFromPath, isInspectorPage, scrollOrigin, urlSlugTitle } from './utils/funcs';
+import { className, idsFromPath, isExplorePage, isInspectorPage, scrollOrigin, urlSlugTitle } from './utils/funcs';
 import { initTracker, trackEvent } from './utils/tracking';
 
 const wrapper = React.createRef();
@@ -257,7 +257,7 @@ class App extends Component {
 // 			});
 		}
 
-		if (upload.selected && !isInspectorPage()) {
+		if (upload.selected && !isInspectorPage() && !isExplorePage()) {
 			this.handlePage('proj/' + upload.id + '/' + urlSlugTitle(upload.title));
 		}
 	};
@@ -274,7 +274,7 @@ class App extends Component {
 					console.log('UPLOAD', response.data);
 					const { id, title } = response.data.upload;
 
-					if (!isInspectorPage()) {
+					if (!isInspectorPage() && !isExplorePage()) {
 						this.handlePage('proj/' + id + '/' + urlSlugTitle(title) + '/' + category.title.toLowerCase());
 					}
 				}).catch((error) => {

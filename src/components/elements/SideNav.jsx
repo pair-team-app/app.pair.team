@@ -41,7 +41,7 @@ class SideNav extends Component {
 	}
 
 	componentDidMount() {
-		if (isUserLoggedIn()) {
+		if (isUserLoggedIn() || isExplorePage()) {
 			this.fetchNextUploads();
 		}
 	}
@@ -59,11 +59,13 @@ class SideNav extends Component {
 
 		if (!this.state.fetching && (this.props.profile !== prevProps.profile || this.props.path !== prevProps.path)) {
 			this.setState({
+				fetching   : true,
+				uploads    : [],
 				loadOffset : 0,
 				loadAmt    : (isUserLoggedIn() && !isExplorePage()) ? -1 : 10
 			});
 
-			this.fetchNextUploads();
+			setTimeout(this.fetchNextUploads, 333);
 		}
 	}
 
@@ -82,7 +84,7 @@ class SideNav extends Component {
 	};
 
 	fetchNextUploads = ()=> {
-		console.log('SideNav.fetchNextUploads()');
+		console.log('SideNav.fetchNextUploads()', this.state.loadOffset, this.state.loadAmt);
 
 		const prevUploads = this.state.uploads;
 		const { uploadID, pageID } = this.props.navigation;
@@ -95,7 +97,7 @@ class SideNav extends Component {
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_NAMES');
 		formData.append('user_id', (isExplorePage()) ? '-1' : (this.props.profile) ? this.props.profile.id : '0');
-		formData.append('offset', (isExplorePage()) ? loadOffset : '0');
+		formData.append('offset', (isExplorePage()) ? Math.max(0, loadOffset) : '0');
 		formData.append('length', '' + loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
@@ -153,7 +155,7 @@ class SideNav extends Component {
 				this.setState({
 					uploads     : (isExplorePage()) ? prevUploads.concat(uploads) : uploads,
 // 					uploads     : uploads,
-					loadOffset  :  (uploads.length > 0 && this.props.profile) ? loadOffset + loadAmt : -1,
+					loadOffset  :  (uploads.length === loadAmt) ? loadOffset + loadAmt : -1,
 					loadAmt     : (loadAmt < 40) ? 40 : 10,
 					fetching    : false
 				});
