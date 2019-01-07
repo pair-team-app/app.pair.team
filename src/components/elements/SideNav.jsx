@@ -53,8 +53,14 @@ class SideNav extends Component {
 			this.onTreeEffect();
 		}
 
-		if (this.props.processing) {
-			this.fetchNextUploads();
+		if (!this.state.fetching && this.props.processing) {
+			this.setState({
+				fetching   : true,
+				loadOffset : 0,
+				loadAmt    : -1
+			});
+
+			setTimeout(this.fetchNextUploads, 333);
 		}
 
 		if (!this.state.fetching && (this.props.profile !== prevProps.profile || ((prevProps.path.includes('/explore') || this.props.path.includes('/explore')) && this.props.path.substring(1).split('/').shift() !== prevProps.path.substring(1).split('/').shift()))) {

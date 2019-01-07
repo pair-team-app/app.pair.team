@@ -12,8 +12,10 @@ import ArtboardItem from '../iterables/ArtboardItem';
 import Dropdown from '../elements/Dropdown';
 import Popup from '../elements/Popup';
 import RadioButton from '../elements/RadioButton';
-import { buildProjectURL, isValidEmail } from '../../utils/funcs';
+import {buildProjectPath, buildProjectURL, isValidEmail} from '../../utils/funcs';
 import uploadIcon from '../../images/upload.png';
+import defaultAvatar from '../../images/default-avatar.png';
+
 
 const dzWrapper = React.createRef();
 const titleTextfield = React.createRef();
@@ -75,6 +77,7 @@ function ProcessingStatus(props) {
 						<ArtboardItem
 							title=""
 							image=""
+							avatar={defaultAvatar}
 							size="landscape" />
 					</Column>
 				) : (artboards.map((artboard) => {
@@ -83,6 +86,7 @@ function ProcessingStatus(props) {
 							<ArtboardItem
 								title={artboard.title}
 								image={artboard.filename}
+								avatar={artboard.system.avatar}
 								size="landscape"
 								onClick={() => this.props.onArtboardClicked(artboard)} />
 						</Column>
@@ -413,9 +417,7 @@ class UploadPage extends Component {
 					});
 
 					this.props.onProcess(true);
-					this.uploadInterval = setInterval(()=> {
-						this.statusInterval();
-					}, 1000);
+					this.uploadInterval = setInterval(this.statusInterval, 2500);
 				}).catch((error) => {
 			});
 		}
@@ -504,21 +506,21 @@ class UploadPage extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD_STATUS', response.data);
-				if (response.data.status.state === '3') {
-					clearInterval(this.uploadInterval);
-					this.props.onProcess(false);
-					window.location.href = buildProjectURL(uploadID, uploadTitle) + '/views';
+				const processingState = parseInt(response.data.status.state, 10);
 
-				} else if (response.data.status.state === '2') {
-					let status = response.data.message;
-					let processingState = parseInt(response.data.status.state, 10);
+				console.log('::::::::::-- processingState --:::::::::::::::::', processingState);
+				if (processingState === 1) {
+					this.props.onProcess(false);
+
+				} else if (processingState === 2) {
+					let status = response.data.status.message;
 
 					formData.append('action', 'ARTBOARDS');
 					formData.append('upload_id', '' + uploadID);
 					formData.append('slices', '0');
-					formData.append('page_id', '-1');
+					formData.append('page_id', '0');
 					formData.append('offset', '0');
-					formData.append('length', '1');
+					formData.append('length', '-1');
 					axios.post('https://api.designengine.ai/system.php', formData)
 						.then((response)=> {
 							console.log('ARTBOARDS', response.data);
@@ -540,10 +542,16 @@ class UploadPage extends Component {
 							this.setState({ status, processingState, artboards });
 						}).catch((error) => {
 					});
+
+				} else if (processingState === 3) {
+					clearInterval(this.uploadInterval);
+					this.props.onPage(buildProjectPath(uploadID, uploadTitle) + '/views');
+// 					window.location.href = buildProjectURL(uploadID, uploadTitle) + '/views';
 				}
 			}).catch((error) => {
 		});
 	};
+
 
 	render() {
 		console.log('UploadPage.render()', this.props, this.state);
