@@ -10,6 +10,7 @@ import { Route, Switch, withRouter } from 'react-router-dom'
 import SideNav from './components/elements/SideNav';
 import TopNav from './components/elements/TopNav';
 import BottomNav from './components/elements/BottomNav';
+import Popup from './components/elements/Popup';
 import AddOnsPage from './components/pages/AddOnsPage';
 import APIPage from './components/pages/APIPage';
 import ExplorePage from './components/pages/ExplorePage';
@@ -63,7 +64,8 @@ class App extends Component {
 // 			artboardID   : pathIDs.artboardID,
 // 			sliceID      : pathIDs.sliceID,
 			overlayAlert : null,
-			processing   : false
+			processing   : false,
+			popup        : null
 		};
 	}
 
@@ -237,6 +239,11 @@ class App extends Component {
 		}
 	};
 
+	handlePopup = (payload)=> {
+		console.log('App.handlePopup()', payload);
+		this.setState({ popup : payload });
+	};
+
 	handleProcess = (processing)=> {
 		scrollOrigin(wrapper.current);
 		this.setState({ processing });
@@ -362,7 +369,7 @@ class App extends Component {
 // 		  artboardID : 0,
 // 		  sliceID : 0
 // 	  };
-  	const { processing } = this.state;
+  	const { popup, processing } = this.state;
 
   	return (
     	<div className="site-wrapper">
@@ -397,7 +404,7 @@ class App extends Component {
 						    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={(url)=> this.handlePage(url)} />} />
 						    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} />} />
 					      <Route exact path="/mission" render={()=> <MissionPage />} />
-						    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={(processing)=> this.handleProcess(processing)} />} />
+						    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={(processing)=> this.handleProcess(processing)} onPopup={(payload)=> this.handlePopup(payload)} />} />
 						    <Route exact path="/page/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={(url)=> this.handlePage(url)} />} />
 					      <Route exact path="/profile" render={()=> <ProfilePage onPage={(url)=> this.handlePage(url)} />} />
 					      <Route exact path="/privacy" render={()=> <PrivacyPage />} />
@@ -420,6 +427,10 @@ class App extends Component {
 			    : (<div className="unsupported-browser">
 				      This site best viewed in Chrome.
 			      </div>)}
+
+		    {popup && (
+			    <Popup payload={popup} onComplete={()=> this.setState({ popup : null })} />
+		    )}
 	    </div>
     );
   }

@@ -126,7 +126,7 @@ class RegisterPage extends Component {
 	};
 
 	render() {
-		console.log('RegisterPage.render()');
+		console.log('RegisterPage.render()', this.props, this.state);
 
 		const { username, email, password, password2 } = this.state;
 		const { usernameValid, emailValid, passwordValid, passMsg } = this.state;

@@ -2,24 +2,23 @@
 import cookie from 'react-cookies';
 
 
-export function buildInspectorPath(uploadID, pageID, artboardID, artboardTitle) {
-	return ('/page/' + uploadID + '/' + pageID + '/' + artboardID + '/' + convertURLSlug(artboardTitle));
+export function buildInspectorPath(uploadID, pageID, artboardID, artboardTitle, suffix='') {
+	return ('/page/' + uploadID + '/' + pageID + '/' + artboardID + '/' + convertURLSlug(artboardTitle) + suffix);
 }
 
-export function buildInspectorURL(uploadID, pageID, artboardID, artboardTitle) {
-	return (window.location.origin + buildInspectorPath(uploadID, pageID, artboardID, artboardTitle));
+export function buildInspectorURL(uploadID, pageID, artboardID, artboardTitle, suffix=null) {
+	return (window.location.origin + buildInspectorPath(uploadID, pageID, artboardID, artboardTitle, suffix));
 }
 
-export function buildProjectPath(uploadID, title) {
-	return ('/proj/' + uploadID + '/' + convertURLSlug(title));
+export function buildProjectPath(uploadID, title, suffix=null) {
+	return ('/proj/' + uploadID + '/' + convertURLSlug(title) + suffix);
 }
 
-export function buildProjectURL(uploadID, title) {
-	return (window.location.origin + buildProjectPath(uploadID, title));
+export function buildProjectURL(uploadID, title, suffix=null) {
+	return (window.location.origin + buildProjectPath(uploadID, title, suffix));
 }
 
-export function capitalizeText(text, toLower) {
-	toLower = (toLower || false);
+export function capitalizeText(text, toLower=false) {
 	return ((toLower) ? text.toLowerCase().replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }) : text.replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }));
 }
 
@@ -92,8 +91,7 @@ export function isValidEmail(email) {
 	return (re.test(String(email).toLowerCase()));
 }
 
-export function limitString(str, len) {
-	str = (str || '');
+export function limitString(str='', len) {
 	return ((str.length > len) ? str.substr(0, len - 1) + '…' : str);
 }
 

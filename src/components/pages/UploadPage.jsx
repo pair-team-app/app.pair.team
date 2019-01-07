@@ -8,13 +8,16 @@ import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
+import RegisterForm from '../elements/RegisterForm';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Dropdown from '../elements/Dropdown';
-import Popup from '../elements/Popup';
 import RadioButton from '../elements/RadioButton';
-import {buildProjectPath, buildProjectURL, isValidEmail} from '../../utils/funcs';
+import {buildProjectPath, buildProjectURL, isUserLoggedIn, isValidEmail} from '../../utils/funcs';
 import uploadIcon from '../../images/upload.png';
 import defaultAvatar from '../../images/default-avatar.png';
+import { updateUserProfile } from '../../redux/actions';
+import {trackEvent} from "../../utils/tracking";
+import cookie from "react-cookies";
 
 
 const dzWrapper = React.createRef();
@@ -25,45 +28,51 @@ const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
 };
 
+function mapDispatchToProps(dispatch) {
+	return ({
+		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+	});
+}
+
 
 function InviteForm(props) {
-	const { action, emailCounter, validEmail, email1, email2, email3, email4, email5 } = props;
+	const { action, invites } = props;
 
-	const email1Class = (action === 'INVITE' && !validEmail[0] && email1.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
-	const email2Class = (action === 'INVITE' && !validEmail[1] && email2.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
-	const email3Class = (action === 'INVITE' && !validEmail[2] && email3.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
-	const email4Class = (action === 'INVITE' && !validEmail[3] && email4.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
-	const email5Class = (action === 'INVITE' && !validEmail[4] && email5.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+	invites.forEach((invite)=> {
+		invite.txtClass = (action === 'INVITE' && !invite.valid && invite.email.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+	});
 
-	const inviteButtonClass = (email1.length > 0 || email2.length > 0 || email3.length > 0) ? 'fat-button' : 'fat-button button-disabled';
+	const inviteButtonClass = (invites.reduce((acc, val)=> acc + val.valid) > 0) ? 'fat-button' : 'fat-button button-disabled';
 
 	return (<div className="upload-page-invite-wrapper">
 		<h3>Invite Team</h3>
 		Enter the email address of each member of your team to invite them to this project.
 		<div className="upload-page-form-wrapper">
 			<div style={{ width : '38%' }}><Column>
-				{(emailCounter >= 1) && (<Row vertical="center"><div className={email1Class}><input type="text" name="email1" placeholder="Enter Email Address" value={email1} onFocus={(event)=> props.onFocus(event)} onChange={(event)=> props.onChange(event)} /></div><span className="upload-page-more-link" onClick={()=> props.onMoreEmail()}>More</span></Row>)}
-				{(emailCounter >= 2) && (<Row vertical="center"><div className={email2Class}><input type="text" name="email2" placeholder="Enter Email Address" value={email2} onFocus={(event)=> props.onFocus(event)} onChange={(event)=> props.onChange(event)} /></div><span className="upload-page-more-link" onClick={()=> props.onMoreEmail()}>More</span></Row>)}
-				{(emailCounter >= 3) && (<Row vertical="center"><div className={email3Class}><input type="text" name="email3" placeholder="Enter Email Address" value={email3} onFocus={(event)=> props.onFocus(event)} onChange={(event)=> props.onChange(event)} /></div><span className="upload-page-more-link" onClick={()=> props.onMoreEmail()}>More</span></Row>)}
-				{(emailCounter >= 4) && (<Row vertical="center"><div className={email4Class}><input type="text" name="email4" placeholder="Enter Email Address" value={email4} onFocus={(event)=> props.onFocus(event)} onChange={(event)=> props.onChange(event)} /></div><span className="upload-page-more-link" onClick={()=> props.onMoreEmail()}>More</span></Row>)}
-				{(emailCounter === 5) && (<Row vertical="center"><div className={email5Class}><input type="text" name="email5" placeholder="Enter Email Address" value={email5} onFocus={(event)=> props.onFocus(event)} onChange={(event)=> props.onChange(event)} /></div><span className="upload-page-more-link upload-page-more-link-hidden">More</span></Row>)}
+				{invites.map((invite, i)=> {
+					const txtName = 'email' + (i + 1);
+					const moreClass = (i <= 5) ? 'upload-page-more-link' : 'upload-page-more-link upload-page-more-link-hidden';
+					return (
+						<Row key={i} vertical="center"><div className={invite.txtClass}><input type="text" name={txtName} placeholder="Enter Email Address" value={invite.email} onFocus={(event)=> props.onFocus(event)} onChange={(event)=> props.onInviteChange(event)} /></div><span className={moreClass} onClick={()=> props.onMoreEmail()}>More</span></Row>
+					);
+				})};
 			</Column></div>
-			<button className={inviteButtonClass} onClick={() => (email1.length > 0 || email2.length > 0 || email3.length > 0) ? props.onInvite() : null}>Submit</button>
+			<button className={inviteButtonClass} onClick={() => (invites.reduce((acc, val)=> acc + val.valid) > 0) ? props.onInvite() : null}>Submit</button>
 		</div>
 	</div>);
 }
 
-function ProcessingStatus(props) {
-	const { uploadTitle, uploadURL, status, artboards } = props;
+function ProcessingGrid(props) {
+	const { upload, status, artboards } = props;
 
 	return (<div>
 		<div className="page-header">
 			<div className="upload-page-progress-wrapper" />
-			<Row horizontal="center"><h1>{uploadTitle}</h1></Row>
-			<div className="page-header-text">{(status === '') ? 'Design Engine parsed 0 pages, artboards, symbols, fonts, and more from ' + uploadTitle + '\'s Design Source.' : status}</div>
+			<Row horizontal="center"><h1>{upload.title}</h1></Row>
+			<div className="page-header-text">{(status === '') ? 'Design Engine parsed 0 pages, artboards, symbols, fonts, and more from ' + upload.title + '\'s Design Source.' : status}</div>
 			<Row horizontal="center">
 				<button className="adjacent-button" onClick={() => this.props.onPage('invite-team')}>Invite Team</button>
-				<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={uploadURL}>
+				<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={buildProjectURL(upload.id, upload.title)}>
 					<button>Copy Link</button>
 				</CopyToClipboard>
 			</Row>
@@ -97,11 +106,11 @@ function ProcessingStatus(props) {
 	</div>);
 }
 
-function UploadHeader(props) {
-	const { action, processingState, uploadTitle, description, radioButtons, percent, uploading, uploadComplete } = props;
+function UploadForm(props) {
+	const { action, processingState, title, description, radioButtons, percent, uploading, uploadComplete } = props;
 
-	const titleClass = (action === 'UPLOAD' && uploadTitle === '') ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
-	const nextButtonClass = (uploadComplete && uploadTitle.length > 0) ? 'fat-button' : 'fat-button button-disabled';
+	const titleClass = (action === 'UPLOAD' && title === '') ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+	const nextButtonClass = (uploadComplete && title.length > 0) ? 'fat-button' : 'fat-button button-disabled';
 
 	const progressStyle = { width : percent + '%' };
 
@@ -141,7 +150,7 @@ function UploadHeader(props) {
 						resetThenSet={()=> props.resetThenSet()}
 					/>
 					<div className={titleClass}>
-						<input type="text" name="uploadTitle" placeholder="Project Name" value={uploadTitle} onChange={(event)=> props.onChange(event)} ref={titleTextfield} />
+						<input type="text" name="title" placeholder="Project Name" value={title} onChange={(event)=> props.onChange(event)} ref={titleTextfield} />
 					</div>
 				</div>
 				<div className="input-wrapper">
@@ -163,7 +172,7 @@ function UploadHeader(props) {
 						);
 					})}
 				</div>
-				<button className={nextButtonClass} onClick={() => (uploadComplete && uploadTitle.length > 0) ? props.onSubmit() : null}>{(uploading) ? 'Uploading' : 'Submit'}</button>
+				<button className={nextButtonClass} onClick={() => (uploadComplete && title.length > 0) ? props.onSubmit() : null}>{(uploading) ? 'Uploading' : 'Submit'}</button>
 			</div>
 		</div>
 	</div>);
@@ -176,28 +185,31 @@ class UploadPage extends Component {
 		this.state = {
 			files           : [],
 			percent         : 0,
-			uploadID        : 0,
-			uploadTitle     : '',
+			upload          : null,
+			title           : '',
 			description     : '',
-			uploadURL       : '',
 			processingState : -2,
 			status          : '',
+			action          : '',
 			uploading       : false,
 			uploadComplete  : false,
 			submitted       : false,
 			sentInvites     : false,
-			action          : '',
-			email1          : '',
-			email2          : '',
-			email3          : '',
-			email4          : '',
-			email5          : '',
-			email1Valid     : false,
-			email2Valid     : false,
-			email3Valid     : false,
-			email4Valid     : false,
-			email5Valid     : false,
-			emailCounter    : 1,
+			invites         : [{
+				email    : '',
+				valid    : true,
+				txtClass : 'input-wrapper'
+			}],
+			register        : {
+				username      : '',
+				email         : '',
+				password      : '',
+				password2     : '',
+				usernameValid : true,
+				emailValid    : true,
+				passwordValid : true,
+				passMsg       : ''
+			},
 			artboards       : [],
 			radioButtons    : [{
 				id       : 1,
@@ -212,11 +224,7 @@ class UploadPage extends Component {
 				selected : false,
 				enabled  : true
 			}],
-			radioIndex : 1,
-			popup : {
-				visible : false,
-				content : ''
-			}
+			radioIndex : 1
 		};
 
 		this.uploadInterval = null;
@@ -249,7 +257,7 @@ class UploadPage extends Component {
 				this.setState({
 					processingState : -1,
 					files           : files,
-					uploadTitle     : files[0].name.split('.').slice(0, -1).join('.'),
+					title     : files[0].name.split('.').slice(0, -1).join('.'),
 					uploading       : true,
 					action          : 'UPLOAD'
 				});
@@ -299,11 +307,11 @@ class UploadPage extends Component {
 				titleTextfield.current.select();
 
 			} else {
-				const popup = {
-					visible : true,
-					content : 'error::File size must be under 100MB.'
-				};
-				this.setState({ popup });
+				this.props.onPopUp({
+					type     : 'ERROR',
+					content  : 'File size must be under 100MB.',
+					duration : 500
+				});
 			}
 
 		} else {
@@ -316,11 +324,11 @@ class UploadPage extends Component {
 				}).catch((error) => {
 			});
 
-			const popup = {
-				visible : true,
-				content : (files[0].name.split('.').pop() === 'xd') ? 'Adobe XD Support Coming Soon!' : 'error::Only Sketch files are support at this time.'
-			};
-			this.setState({ popup });
+			this.props.onPopUp({
+				type     : 'ERROR',
+				content  : (files[0].name.split('.').pop() === 'xd') ? 'Adobe XD Support Coming Soon!' : 'error::Only Sketch files are support at this time.',
+				duration : 1500
+			});
 		}
 	}
 
@@ -334,18 +342,41 @@ class UploadPage extends Component {
 	resetThenSet = (ind, key) => {
 	};
 
-	handleChange = (event)=> {
-		console.log('UploadPage.handleChange()', event);
+	handleInviteChange = (event)=> {
+		console.log('UploadPage.handleInviteChange()', event.target);
+		let { invites } = this.state;
+		invites.forEach((invite, i)=> {
+			if (i === parseInt([event.target.name].substr(-1), 10)) {
+				invite.email = event.target.value;
+			}
+		});
+
+		this.setState({ invites });
+	};
+
+	handleUploadChange = (event)=> {
+		console.log('UploadPage.handleUploadChange()', event.target);
 		this.setState({ [event.target.name] : event.target.value });
 	};
 
 	handleFocus = (event)=> {
-		console.log('UploadPage.handleFocus()', event);
-		this.setState({ action : '', [event.target.name] : '' });
+		console.log('UploadPage.handleFocus()', event.target);
+
+		let { invites } = this.state;
+		invites.forEach((invite, i)=> {
+			if (i === parseInt([event.target.name].substr(-1), 10)) {
+				invite.email = '';
+			}
+		});
+
+		this.setState({
+			action  : '',
+			invites : invites
+		});
 	};
 
 	handleCancel = (event)=> {
-		console.log('UploadPage.handleCancel()', event);
+		console.log('UploadPage.handleCancel()', event.target);
 		event.preventDefault();
 		event.stopPropagation();
 
@@ -363,16 +394,22 @@ class UploadPage extends Component {
 	};
 
 	handleURLCopy = ()=> {
-		const popup = {
-			visible : true,
-			content : 'Project URL copied to clipboard!'
-		};
-		this.setState({ popup });
+		this.props.onPopup({
+			type     : 'INFO',
+			content  : 'Project URL copied to clipboard!',
+			duration : 1500
+		});
 	};
 
 	handleMoreEmail = ()=> {
-		const { emailCounter } = this.state;
-		this.setState({ emailCounter : Math.min(emailCounter + 1, 5) });
+		let { invites } = this.state;
+		invites.push({
+			email    : '',
+			valid    : true,
+			txtClass : 'input-wrapper'
+		});
+
+		this.setState({ invites });
 	};
 
 	handleRadioButton = (radioButton)=> {
@@ -388,32 +425,26 @@ class UploadPage extends Component {
 	};
 
 	handleSubmit = ()=> {
-		const { uploadTitle, description, radioIndex, files, uploadComplete, submitted } = this.state;
+		const { title, description, radioIndex, uploadComplete, submitted } = this.state;
+		const { name, size } = this.state.files[0];
 
 		if (uploadComplete && !submitted) {
 			this.setState({ submitted : true });
 			let formData = new FormData();
 			formData.append('action', 'NEW_UPLOAD');
 			formData.append('user_id', this.props.profile.id);
-			formData.append('title', uploadTitle);
+			formData.append('title', title);
 			formData.append('description', description);
-			formData.append('filesize', files[0].size);
+			formData.append('filesize', size);
 			formData.append('private', (radioIndex === 1) ? '0' : '1');
-			formData.append('filename', "http://cdn.designengine.ai/system/" + files[0].name);
+			formData.append('filename', "http://cdn.designengine.ai/system/" + name);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log('NEW_UPLOAD', response.data);
-					const url = buildProjectURL(response.data.upload_id, uploadTitle) + '/views';
-
 					this.setState({
-						uploadID        : response.data.upload_id,
-						uploadURL       : url,
+						upload          : response.data.upload,
 						processingState : 0,
-						files           : [],
-// 						popup           : {
-// 							visible : true,
-// 							content : 'Project URL copied to clipboard!'
-// 						}
+						files           : []
 					});
 
 					this.props.onProcess(true);
@@ -424,70 +455,31 @@ class UploadPage extends Component {
 	};
 
 	handleInvite = ()=> {
-		const { uploadID, email1, email2, email3, email4, email5 } = this.state;
-
-		const isEmail1Valid = isValidEmail(email1);
-		const isEmail2Valid = isValidEmail(email2);
-		const isEmail3Valid = isValidEmail(email3);
-		const isEmail4Valid = isValidEmail(email4);
-		const isEmail5Valid = isValidEmail(email5);
-
-		this.setState({
-			action      : 'INVITE',
-			email1Valid : isEmail1Valid,
-			email2Valid : isEmail2Valid,
-			email3Valid : isEmail3Valid,
-			email4Valid : isEmail4Valid,
-			email5Valid : isEmail5Valid
-		});
-
-		if (!isEmail1Valid && email1.length > 0) {
-			this.setState({ email1 : 'Invalid Email Address' });
-		}
-
-		if (!isEmail2Valid && email2.length > 0) {
-			this.setState({ email2 : 'Invalid Email Address' });
-		}
-
-		if (!isEmail3Valid && email3.length > 0) {
-			this.setState({ email3 : 'Invalid Email Address' });
-		}
-
-		if (!isEmail4Valid && email4.length > 0) {
-			this.setState({ email4 : 'Invalid Email Address' });
-		}
-
-		if (!isEmail5Valid && email5.length > 0) {
-			this.setState({ email5 : 'Invalid Email Address' });
-		}
+		const { upload, invites } = this.state;
 
 		let emails = '';
-		if (isEmail1Valid) {
-			emails += email1 + ' ';
-		}
+		this.setState({
+			action  : 'INVITE',
+			invites : invites.forEach((invite)=> {
+				invite.valid = isValidEmail(invite.email);
+				if (!invite.valid && invite.email.length > 0) {
+					invite.email = 'Invalid Email Address';
 
-		if (isEmail2Valid) {
-			emails += email2 + ' ';
-		}
+				} else {
+					emails += invite.email + ' ';
+				}
+			})
+		});
 
-		if (isEmail3Valid) {
-			emails += email3 + ' ';
-		}
+		const isValid = invites.reduce((acc, val)=> acc + val.valid);
+		console.log('REDUCER:', isValid);
 
-		if (isEmail4Valid) {
-			emails += email4 + ' ';
-		}
-
-		if (isEmail5Valid) {
-			emails += email5;
-		}
-
-		if (isEmail1Valid || isEmail2Valid || isEmail3Valid || isEmail4Valid || isEmail5Valid) {
+		if (isValid > 0) {
 			let formData = new FormData();
 			formData.append('action', 'INVITE');
 			formData.append('user_id', this.props.profile.id);
-			formData.append('upload_id', '' + uploadID);
-			formData.append('emails', emails);
+			formData.append('upload_id', '' + upload.id);
+			formData.append('emails', emails.slice(0, -1));
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log('INVITE', response.data);
@@ -498,17 +490,25 @@ class UploadPage extends Component {
 		}
 	};
 
+	handleRegistered = (profile)=> {
+		console.log('UploadPage.handleRegistered()', profile);
+
+		trackEvent('user', 'sign-up', profile.username + ' (' + profile.email + ')', parseInt(profile.id, 10));
+		cookie.save('user_id', profile.id, { path : '/' });
+		this.props.updateUserProfile(profile);
+	};
+
 	statusInterval = ()=> {
-		const { uploadID, uploadTitle } = this.state;
+		const { upload } = this.state;
+
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_STATUS');
-		formData.append('upload_id', '' + uploadID);
+		formData.append('upload_id', '' + upload.id);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD_STATUS', response.data);
 				const processingState = parseInt(response.data.status.state, 10);
 
-				console.log('::::::::::-- processingState --:::::::::::::::::', processingState);
 				if (processingState === 1) {
 					this.props.onProcess(false);
 
@@ -516,7 +516,7 @@ class UploadPage extends Component {
 					let status = response.data.status.message;
 
 					formData.append('action', 'ARTBOARDS');
-					formData.append('upload_id', '' + uploadID);
+					formData.append('upload_id', '' + upload.id);
 					formData.append('slices', '0');
 					formData.append('page_id', '0');
 					formData.append('offset', '0');
@@ -545,8 +545,10 @@ class UploadPage extends Component {
 
 				} else if (processingState === 3) {
 					clearInterval(this.uploadInterval);
-					this.props.onPage(buildProjectPath(uploadID, uploadTitle) + '/views');
-// 					window.location.href = buildProjectURL(uploadID, uploadTitle) + '/views';
+					this.props.onPage(buildProjectPath(upload.id, upload.title, '/views'));
+
+				} else if (processingState === 4) {
+					// processing error
 				}
 			}).catch((error) => {
 		});
@@ -557,17 +559,16 @@ class UploadPage extends Component {
 		console.log('UploadPage.render()', this.props, this.state);
 
 		const { action } = this.state;
-		const { emailCounter, email1, email2, email3, email4, email5, email1Valid, email2Valid, email3Valid, email4Valid, email5Valid } = this.state;
-		const { uploadTitle, uploadURL, description, radioButtons, status, artboards } = this.state;
+		const { upload, title, description, radioButtons, status, artboards, invites } = this.state;
 		const { processingState, percent, uploading, uploadComplete, sentInvites } = this.state;
 
 		return (
 			<div className="page-wrapper upload-page-wrapper">
-				{(processingState < 0) && (
-					<UploadHeader
+				{(processingState < 0) && (<div>
+					<UploadForm
 						action={action}
 						processingState={processingState}
-						uploadTitle={uploadTitle}
+						title={title}
 						description={description}
 						radioButtons={radioButtons}
 						percent={percent}
@@ -576,43 +577,41 @@ class UploadPage extends Component {
 						onDrop={this.onDrop.bind(this)}
 						onDragEnter={this.onDragEnter.bind(this)}
 						onDragLeave={this.onDragLeave.bind(this)}
-						onChange={this.handleChange}
+						onChange={this.handleUploadChange}
 						onFocus={(event)=> this.handleFocus(event)}
 						onRadioButton={(radioButton)=> this.handleRadioButton(radioButton)}
 						onSubmit={()=> this.handleSubmit()}
 					/>
-				)}
+
+					{(!isUserLoggedIn()) && (<div className="upload-page-register-wrapper">
+						<h3>Sign Up</h3>
+						Enter the email address of each member of your team to invite them to this project.
+						<RegisterForm
+							onPage={(url)=> this.props.onPage(url)}
+							onRegistered={(profile)=> this.handleRegistered(profile)} />
+					</div>)}
+				</div>)}
 
 				{(processingState >= 0) && (<div>
-					<ProcessingStatus
-						uploadTitle={uploadTitle}
-						uploadURL={uploadURL}
+					<ProcessingGrid
+						title={title}
+						upload={upload}
 						status={status}
 						artboards={artboards}
 					/>
 
 					{(!sentInvites) && (<InviteForm
 						action={action}
-						emailCounter={emailCounter}
-						validEmail={[email1Valid, email2Valid, email3Valid, email4Valid, email5Valid]}
-						email1={email1}
-						email2={email2}
-						email3={email3}
-						email4={email4}
-						email5={email5}
-						onChange={this.handleChange}
+						invites={invites}
+						onInviteChange={this.handleInviteChange}
 						onFocus={(event)=> this.handleFocus(event)}
 						onMoreEmail={this.handleMoreEmail}
 						onInvite={this.handleInvite}
 					/>)}
 				</div>)}
-
-				{this.state.popup.visible && (
-					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
-				)}
 			</div>
 		);
 	}
 }
 
-export default connect(mapStateToProps)(UploadPage);
+export default connect(mapStateToProps, mapDispatchToProps)(UploadPage);

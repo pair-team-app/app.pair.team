@@ -5,6 +5,10 @@ import './Popup.css'
 import { TimelineMax, Power1, Power2 } from 'gsap/TweenMax';
 import { Column, Row } from 'simple-flexbox';
 
+import { capitalizeText } from '../../utils/funcs';
+import errorIcon from '../../images/icon-error.png';
+import infoIcon from '../../images/icon-info.svg';
+
 class Popup extends Component {
 	constructor(props) {
 		super(props);
@@ -15,7 +19,10 @@ class Popup extends Component {
 	}
 
 	componentDidMount() {
-		let self = this;
+		console.log('Popup.componentDidMount()', this.props, this.state);
+
+		const { payload, onComplete } = this.props;
+
 		this.timeline = new TimelineMax();
 		this.timeline.from(this.wrapper, 0.25, {
 			opacity    : 0,
@@ -25,8 +32,8 @@ class Popup extends Component {
 			opacity    : 0,
 			y          : '-30px',
 			ease       : Power2.easeOut,
-			delay      : 1,
-			onComplete : self.props.onComplete
+			delay      : payload.duration * 0.001,
+			onComplete : onComplete
 		});
 	}
 
@@ -36,18 +43,21 @@ class Popup extends Component {
 
 
 	render() {
+		console.log('Popup.render()', this.props, this.state);
+
 		if (this.timeline) {
 			this.timeline.restart();
 		}
 
-		const icon = (this.props.content.split('::')[0] === 'error') ? '/images/favicon-error.png' : '/images/copy-code.svg';
+		const { payload } = this.props;
+		const icon = (payload.type === 'ERROR') ? errorIcon : infoIcon;
 
 		return (
 			<div className="popup-wrapper" ref={(div)=> this.wrapper = div}>
 				<Row>
-					<Column><img src={icon} className="popup-icon" alt={this.props.content.split('::')[0]} /></Column>
+					<Column><img src={icon} className="popup-icon" alt={capitalizeText(payload.type, true)} /></Column>
 					<Column className="popup-content">
-						<Row vertical="center" className="popup-text">{this.props.content.split('::').pop()}</Row>
+						<Row vertical="center" className="popup-text">{payload.content}</Row>
 					</Column>
 				</Row>
 			</div>
