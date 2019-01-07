@@ -762,9 +762,8 @@ class InspectorPage extends Component {
 			});
 		}
 
-		let self = this;
-		setTimeout(function() {
-			self.setState({ tooltip : '' });
+		setTimeout(()=> {
+			this.setState({ tooltip : '' });
 		}, 1000);
 	};
 
@@ -987,8 +986,8 @@ class InspectorPage extends Component {
 		let self = this;
 		if (this.rerender === 0) {
 			this.rerender = 1;
-			setTimeout(function() {
-				self.forceUpdate();
+			setTimeout(()=> {
+				this.forceUpdate();
 			}, 3333);
 		}
 

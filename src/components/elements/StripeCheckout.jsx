@@ -24,7 +24,7 @@ class StripeCheckout extends Component {
 		let token = await this.props.stripe.createToken({ name : this.state.cardholder });
 		console.log("StripeCheckout.submit", ev, token);
 
-		setTimeout(function() {
+		setTimeout(()=> {
 			let formData = new FormData();
 			formData.append('token_id', token.token.id);
 			formData.append('amount', '499');

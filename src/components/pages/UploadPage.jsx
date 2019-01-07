@@ -262,8 +262,8 @@ class UploadPage extends Component {
 					this.props.onProcess(0);
 
 					let self = this;
-					this.uploadInterval = setInterval(function() {
-						self.statusInterval();
+					this.uploadInterval = setInterval(()=> {
+						this.statusInterval();
 					}, 1000);
 				}).catch((error) => {
 			});

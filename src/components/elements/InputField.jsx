@@ -55,7 +55,7 @@ class InputField extends Component {
 			status : 'idle'
 		});
 
-// 		setTimeout(function() {
+// 		setTimeout(()=> {
 // 			textfield.current.focus();
 // 		}, 69);
 

@@ -40,7 +40,7 @@ class LoginPage extends Component {
 			passMsg       : ''
 		});
 
-		setTimeout(function() {
+		setTimeout(()=> {
 			passwordTextfield.current.focus();
 		}, 69);
 	};
