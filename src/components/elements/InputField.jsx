@@ -63,6 +63,10 @@ class InputField extends Component {
 
 	handleFocus = (event)=> {
 		console.log('InputField.handleFocus()', event.target);
+		this.setState({
+			value  : '',
+			status : 'IDLE'
+		});
 	};
 
 	handleSubmit = (event)=> {

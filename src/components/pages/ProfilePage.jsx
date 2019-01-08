@@ -125,7 +125,9 @@ class ProfilePage extends Component {
 	};
 
 	handleInputFieldBlur = (key, val)=> {
-		this.validateFields(key, val);
+		if (val.length > 0) {
+			this.validateFields(key, val);
+		}
 	};
 
 	handleInputFieldClick = (key)=> {

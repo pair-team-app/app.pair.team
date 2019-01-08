@@ -5,7 +5,7 @@ import './GridHeader.css';
 import { isUserLoggedIn } from '../../utils/funcs';
 
 
-function LoggedInHeader(props) {
+const LoggedInHeader = (props)=> {
 	return (<div className="grid-header-wrapper">
 		<h3>Create a new design project</h3>
 		<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
@@ -13,9 +13,9 @@ function LoggedInHeader(props) {
 			<button onClick={()=> props.onPage('new')}>New Project</button>
 		</div>
 	</div>);
-}
+};
 
-function LoggedOutHeader(props) {
+const LoggedOutHeader = (props)=> {
 	return (<div className="grid-header-wrapper">
 		<h3>Sign up or Login</h3>
 		<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
@@ -24,7 +24,7 @@ function LoggedOutHeader(props) {
 			<button onClick={()=> props.onPage('login')}>Login</button>
 		</div>
 	</div>);
-}
+};
 
 
 function GridHeader(props) {
