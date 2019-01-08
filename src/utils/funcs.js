@@ -1,20 +1,21 @@
 
 import cookie from 'react-cookies';
+import axios from "axios";
 
 
 export function buildInspectorPath(uploadID, pageID, artboardID, artboardTitle, suffix='') {
 	return ('/page/' + uploadID + '/' + pageID + '/' + artboardID + '/' + convertURLSlug(artboardTitle) + suffix);
 }
 
-export function buildInspectorURL(uploadID, pageID, artboardID, artboardTitle, suffix=null) {
+export function buildInspectorURL(uploadID, pageID, artboardID, artboardTitle, suffix='') {
 	return (window.location.origin + buildInspectorPath(uploadID, pageID, artboardID, artboardTitle, suffix));
 }
 
-export function buildProjectPath(uploadID, title, suffix=null) {
+export function buildProjectPath(uploadID, title, suffix='') {
 	return ('/proj/' + uploadID + '/' + convertURLSlug(title) + suffix);
 }
 
-export function buildProjectURL(uploadID, title, suffix=null) {
+export function buildProjectURL(uploadID, title, suffix='') {
 	return (window.location.origin + buildProjectPath(uploadID, title, suffix));
 }
 
@@ -113,3 +114,16 @@ export function scrollOrigin(element) {
 	}
 }
 
+export function sendToSlack(message, callback=null) {
+	let formData = new FormData();
+	formData.append('action', 'SLACK');
+	formData.append('message', message);
+	axios.post('https://api.designengine.ai/system.php', formData)
+		.then((response) => {
+			console.log("SLACK", response.data);
+			if (callback) {
+				callback();
+			}
+		}).catch((error) => {
+	});
+}

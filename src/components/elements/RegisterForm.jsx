@@ -3,11 +3,9 @@ import React, { Component } from 'react';
 import './RegisterForm.css'
 
 import axios from "axios";
-import cookie from "react-cookies";
 import { Column, Row } from 'simple-flexbox';
 
 import { hasBit, isValidEmail } from "../../utils/funcs";
-import { trackEvent } from "../../utils/tracking";
 
 
 const passwordTextfield = React.createRef();

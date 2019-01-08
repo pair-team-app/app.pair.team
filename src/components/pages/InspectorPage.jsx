@@ -1157,8 +1157,8 @@ class InspectorPage extends Component {
 
 
 		return (<div>
-			{(this.state.uploading) && (<div className="inspector-page-upload-progress-wrapper">
-				<div className="inspector-page-upload-progress" style={progressStyle} />
+			{(this.state.uploading) && (<div className="upload-progress-bar-wrapper">
+				<div className="upload-progress-bar" style={progressStyle} />
 			</div>)}
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">

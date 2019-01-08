@@ -277,11 +277,7 @@ class SideNav extends Component {
 	};
 
 	handleUpload = ()=> {
-		cookie.save('msg', 'use this feature.', { path : '/' });
-
-		setTimeout(()=> {
-			this.props.onPage((!isUserLoggedIn()) ? 'login' : 'new');
-		}, 100);
+		this.props.onPage('new');
 	};
 
 
@@ -289,14 +285,12 @@ class SideNav extends Component {
 		console.log('SideNav.render()', this.props, this.state);
 		const { uploads, fetching, loadOffset } = this.state;
 
-		const btnClass = (isUserLoggedIn()) ? 'tiny-button' : 'tiny-button button-disabled';
-
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>
 				<div className="side-nav-top-wrapper">
 					<h3 className="side-nav-header"><Row vertical="center" style={{ width : '100%' }}>
 						<Column flexGrow={1} horizontal="start">{(isExplorePage()) ? 'Explore' : 'Projects'}</Column>
-						<Column flexGrow={1} horizontal="end"><button className={btnClass} onClick={()=> (isUserLoggedIn()) ? this.handleUpload() : null}>New</button></Column>
+						<Column flexGrow={1} horizontal="end"><button className="tiny-button" onClick={()=> this.handleUpload()}>New</button></Column>
 					</Row></h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
 						{(uploads.length === 0)

@@ -13,7 +13,7 @@ function ArtboardItem(props) {
 	const className = (image) ? 'artboard-item' : 'artboard-item artboard-item-loading';
 
 	return (
-		<div className={className} onClick={()=> (image) ? props.onClick() : null}>
+		<div className={className} onClick={()=> (image) ? props.onClick() : null} style={(title !== '') ? { opacity : '33%' } : null}>
 			{(image) && (<div>
 				<img className="artboard-item-image" src={(!image.includes('@')) ? image + '@0.25x.png' : image} alt={limitString(title, TITLE_CHAR_LIMIT)} />
 				<div className="artboard-item-overlay" />

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './UploadPage.css';
 
 import axios from 'axios';
+import cookie from "react-cookies";
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
@@ -12,12 +13,11 @@ import RegisterForm from '../elements/RegisterForm';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Dropdown from '../elements/Dropdown';
 import RadioButton from '../elements/RadioButton';
-import {buildProjectPath, buildProjectURL, isUserLoggedIn, isValidEmail} from '../../utils/funcs';
+import {buildProjectPath, buildProjectURL, isUserLoggedIn, isValidEmail, sendToSlack} from '../../utils/funcs';
 import uploadIcon from '../../images/upload.png';
 import defaultAvatar from '../../images/default-avatar.png';
 import { updateUserProfile } from '../../redux/actions';
-import {trackEvent} from "../../utils/tracking";
-import cookie from "react-cookies";
+import { trackEvent } from "../../utils/tracking";
 
 
 const dzWrapper = React.createRef();
@@ -25,7 +25,10 @@ const titleTextfield = React.createRef();
 
 
 const mapStateToProps = (state, ownProps)=> {
-	return ({ profile : state.userProfile });
+	return ({
+		file    : state.file,
+		profile : state.userProfile
+	});
 };
 
 function mapDispatchToProps(dispatch) {
@@ -36,10 +39,10 @@ function mapDispatchToProps(dispatch) {
 
 
 function InviteForm(props) {
-	const { action, invites } = props;
+	const { invites } = props;
 
 	invites.forEach((invite)=> {
-		invite.txtClass = (action === 'INVITE' && !invite.valid && invite.email.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
+		invite.txtClass = (invite.valid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
 	});
 
 	const inviteButtonClass = (invites.reduce((acc, val)=> acc + val.valid) > 0) ? 'fat-button' : 'fat-button button-disabled';
@@ -55,14 +58,14 @@ function InviteForm(props) {
 					return (
 						<Row key={i} vertical="center"><div className={invite.txtClass}><input type="text" name={txtName} placeholder="Enter Email Address" value={invite.email} onFocus={(event)=> props.onFocus(event)} onChange={(event)=> props.onInviteChange(event)} /></div><span className={moreClass} onClick={()=> props.onMoreEmail()}>More</span></Row>
 					);
-				})};
+				})}
 			</Column></div>
 			<button className={inviteButtonClass} onClick={() => (invites.reduce((acc, val)=> acc + val.valid) > 0) ? props.onInvite() : null}>Submit</button>
 		</div>
 	</div>);
 }
 
-function ProcessingGrid(props) {
+function ProcessingContent(props) {
 	const { upload, status, artboards } = props;
 
 	return (<div>
@@ -107,37 +110,12 @@ function ProcessingGrid(props) {
 }
 
 function UploadForm(props) {
-	const { action, processingState, title, description, radioButtons, percent, uploading, uploadComplete } = props;
+	const { title, description, radioButtons, percent, uploadComplete, titleValid } = props;
 
-	const titleClass = (action === 'UPLOAD' && title === '') ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
-	const nextButtonClass = (uploadComplete && title.length > 0) ? 'fat-button' : 'fat-button button-disabled';
-
-	const progressStyle = { width : percent + '%' };
+	const titleClass = (titleValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
+	const nextButtonClass = (uploadComplete && titleValid) ? 'fat-button' : 'fat-button button-disabled';
 
 	return (<div>
-		{(processingState === -2) && (
-			<Dropzone
-				ref={dzWrapper}
-				className="upload-page-dz-wrapper"
-				onDrop={props.onDrop}
-				onDragEnter={props.onDragEnter}
-				onDragLeave={props.onDragLeave}>
-				<div className="page-header upload-page-header-dz">
-					<div>
-						<Row horizontal="center"><img className="upload-page-icon" src={uploadIcon} alt="Upload" /></Row>
-						<Row horizontal="center"><h1 className="sub-h1">Drag &amp; drop your design</h1></Row>
-						<div className="page-header-subtext">Or choose your file</div>
-					</div>
-				</div>
-			</Dropzone>
-		)}
-
-		{(processingState === -1) && (<div>
-			<div className="upload-page-progress-wrapper">
-				{(uploading) && (<div className="upload-page-progress" style={progressStyle} />)}
-			</div>
-		</div>)}
-
 		<div style={{ width : '100%' }}>
 			<h3>Create a new design project</h3>
 			<h4>A design project contains all the files for your project, including specifications, parts, and code
@@ -172,9 +150,39 @@ function UploadForm(props) {
 						);
 					})}
 				</div>
-				<button className={nextButtonClass} onClick={() => (uploadComplete && title.length > 0) ? props.onSubmit() : null}>{(uploading) ? 'Uploading' : 'Submit'}</button>
+				<button className={nextButtonClass} onClick={() => (uploadComplete && title.length > 0) ? props.onSubmit() : null}>{(percent > 0 && percent < 100) ? 'Uploading' : 'Submit'}</button>
 			</div>
 		</div>
+	</div>);
+}
+
+function UploadHeader(props) {
+	const { processingState, percent } = props;
+	const progressStyle = { width : percent + '%' };
+
+	return (<div>
+		{(processingState === -2) && (
+			<Dropzone
+				ref={dzWrapper}
+				className="upload-page-dz-wrapper"
+				onDrop={props.onDrop}
+				onDragEnter={props.onDragEnter}
+				onDragLeave={props.onDragLeave}>
+				<div className="page-header upload-page-header-dz">
+					<div>
+						<Row horizontal="center"><img className="upload-page-icon" src={uploadIcon} alt="Upload" /></Row>
+						<Row horizontal="center"><h1 className="sub-h1">Drag &amp; drop your design</h1></Row>
+						<div className="page-header-subtext">Or choose your file</div>
+					</div>
+				</div>
+			</Dropzone>
+		)}
+
+		{(processingState === -1) && (<div>
+			<div className="upload-progress-bar-wrapper">
+				{(percent > 0 && percent < 100) && (<div className="upload-progress-bar" style={progressStyle} />)}
+			</div>
+		</div>)}
 	</div>);
 }
 
@@ -183,18 +191,21 @@ class UploadPage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			files           : [],
+			file            : null,
 			percent         : 0,
 			upload          : null,
 			title           : '',
 			description     : '',
 			processingState : -2,
 			status          : '',
-			action          : '',
-			uploading       : false,
+			titleValid      : true,
 			uploadComplete  : false,
 			submitted       : false,
 			sentInvites     : false,
+			profile   : {
+				id    : 0,
+				email : ''
+			},
 			invites         : [{
 				email    : '',
 				valid    : true,
@@ -230,7 +241,15 @@ class UploadPage extends Component {
 		this.uploadInterval = null;
 	}
 
+	componentDidMount() {
+		console.log('UploadPage.componentDidMount()', this.props, this.state);
+		if (this.props.file) {
+			this.onStoreFile()
+		}
+	}
+
 	componentWillUnmount() {
+		console.log('UploadPage.componentWillUnmount()');
 		clearInterval(this.uploadInterval);
 	}
 
@@ -240,103 +259,91 @@ class UploadPage extends Component {
 	onDrop(files) {
 		console.log('UploadPage.onDrop()', files);
 
-		const { id, email } = this.props.profile;
-		if (files.length > 0 && files[0].name.split('.').pop() === 'sketch') {
-			if (files[0].size < 100 * 1024 * 1024) {
+		const { id, email } = (this.props.profile) ? this.props.profile : this.state;
+		if (files.length > 0) {
+			const file = files.pop();
 
-				let formData = new FormData();
-				formData.append('action', 'SLACK');
-				formData.append('message', '*[' + id + ']* *' + email + '* started uploading file "_' + files[0].name + '_"');
-				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response) => {
-						console.log("SLACK", response.data);
-					}).catch((error) => {
-				});
+			if (file.name.split('.').pop() === 'sketch') {
+				if (file.size < 100 * (1024 * 1024)) {
+					this.setState({ file });
 
+					sendToSlack('*[' + id + ']* *' + email + '* started uploading file "_' + file.name + '_"');
 
-				this.setState({
-					processingState : -1,
-					files           : files,
-					title     : files[0].name.split('.').slice(0, -1).join('.'),
-					uploading       : true,
-					action          : 'UPLOAD'
-				});
+					this.setState({
+						processingState : -1,
+						file            : file,
+						title           : file.name.split('.').slice(0, -1).join('.'),
+						action          : 'UPLOAD'
+					});
 
-				let self = this;
-				const config = {
-					headers : {
-						'content-type' : 'multipart/form-data'
-					}, onUploadProgress : function (progressEvent) {
-						const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-						self.setState({ percent });
+					const config = {
+						headers             : { 'content-type' : 'multipart/form-data' },
+						onDownloadProgress  : (progressEvent)=> {
+// 							console.log('HomeExpo.onDownloadProgress()', progressEvent);
+						},
+						onUploadProgress    : (progressEvent)=> {
+// 							console.log('HomeExpo.onUploadProgress()', progressEvent);
 
-						if (progressEvent.loaded === progressEvent.total) {
-							let formData = new FormData();
-							formData.append('action', 'SLACK');
-							formData.append('message', '*[' + id + ']* *' + email + '* - "_' + files[0].name + '_" uploaded');
-							axios.post('https://api.designengine.ai/system.php', formData)
-								.then((response) => {
-									console.log("SLACK", response.data);
-								}).catch((error) => {
-							});
+							const { loaded, total } = progressEvent;
+							const percent = Math.round((loaded * 100) / total);
+							this.setState({ percent });
 
-							self.onUploadComplete();
+							if (progressEvent.loaded === progressEvent.total) {
+								this.onUploadComplete();
+							}
 						}
-					}
-				};
+					};
 
-				files.forEach(file => {
 					let formData = new FormData();
 					formData.append('file', file);
-
 					axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
 						.then((response) => {
 							console.log("UPLOAD", response.data);
 						}).catch((error) => {
-						formData.append('action', 'SLACK');
-						formData.append('message', '*' + email + '* upload failed for file _' + files[0].name + '_');
-						axios.post('https://api.designengine.ai/system.php', formData)
-							.then((response) => {
-								console.log("SLACK", response.data);
-							}).catch((error) => {
-						});
+						sendToSlack('*' + email + '* upload failed for file _' + file.name + '_');
 					});
-				});
 
-				titleTextfield.current.focus();
-				titleTextfield.current.select();
+				} else {
+					sendToSlack('*[' + id + ']* *' + email + '* uploaded oversized file (' + Math.round(file.size * (1 / (1024 * 1024))) + 'MB) "_' + file.name + '_"');
+					this.props.onPopup({
+						type     : 'ERROR',
+						content  : 'File size must be under 100MB.',
+						duration : 500
+					});
+				}
 
 			} else {
-				this.props.onPopUp({
+				sendToSlack('*[' + id + ']* *' + email + '* uploaded incompatible file "_' + file.name + '_"');
+				this.props.onPopup({
 					type     : 'ERROR',
-					content  : 'File size must be under 100MB.',
-					duration : 500
+					content  : (file.name.split('.').pop() === 'xd') ? 'Adobe XD Support Coming Soon!' : 'Only Sketch files are support at this time.',
+					duration : 1500
 				});
 			}
-
-		} else {
-			let formData = new FormData();
-			formData.append('action', 'SLACK');
-			formData.append('message', '*[' + id + ']* *' + email + '* uploaded incompatible file "_' + files[0].name + '_"');
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					console.log("SLACK", response.data);
-				}).catch((error) => {
-			});
-
-			this.props.onPopUp({
-				type     : 'ERROR',
-				content  : (files[0].name.split('.').pop() === 'xd') ? 'Adobe XD Support Coming Soon!' : 'error::Only Sketch files are support at this time.',
-				duration : 1500
-			});
 		}
 	}
 
+	onStoreFile = ()=> {
+		console.log('UploadPage.onStoreFile()', this.props.file);
+
+		const { file } = this.props;
+		this.onDrop([file]);
+
+// 		this.setState({
+// 			processingState : -1,
+// 			file            : file,
+// 			title           : file.name.split('.').slice(0, -1).join('.'),
+// 			action          : 'UPLOAD',
+// 			uploadComplete : true
+// 		});
+	};
+
 	onUploadComplete = ()=> {
-		this.setState({
-			uploading      : false,
-			uploadComplete : true
-		});
+		const { id, email } = (this.props.profile) ? this.props.profile : this.state;
+		const { file } = this.state;
+
+		sendToSlack('*[' + id + ']* *' + email + '* - "_' + file.name + '_" uploaded');
+		this.setState({ uploadComplete : true });
 	};
 
 	resetThenSet = (ind, key) => {
@@ -364,7 +371,7 @@ class UploadPage extends Component {
 
 		let { invites } = this.state;
 		invites.forEach((invite, i)=> {
-			if (i === parseInt([event.target.name].substr(-1), 10)) {
+			if (i === parseInt(event.target.name.substr(-1), 10)) {
 				invite.email = '';
 			}
 		});
@@ -426,31 +433,38 @@ class UploadPage extends Component {
 
 	handleSubmit = ()=> {
 		const { title, description, radioIndex, uploadComplete, submitted } = this.state;
-		const { name, size } = this.state.files[0];
+		const { name, size } = this.state.file;
+		const titleValid = (title.length > 0);
 
-		if (uploadComplete && !submitted) {
-			this.setState({ submitted : true });
-			let formData = new FormData();
-			formData.append('action', 'NEW_UPLOAD');
-			formData.append('user_id', this.props.profile.id);
-			formData.append('title', title);
-			formData.append('description', description);
-			formData.append('filesize', size);
-			formData.append('private', (radioIndex === 1) ? '0' : '1');
-			formData.append('filename', "http://cdn.designengine.ai/system/" + name);
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					console.log('NEW_UPLOAD', response.data);
-					this.setState({
-						upload          : response.data.upload,
-						processingState : 0,
-						files           : []
-					});
-
-					this.props.onProcess(true);
-					this.uploadInterval = setInterval(this.statusInterval, 2500);
-				}).catch((error) => {
+		if (titleValid && uploadComplete && !submitted) {
+			this.setState({
+				titleValid : titleValid,
+				submitted  : true
 			});
+
+			if (isUserLoggedIn()) {
+				let formData = new FormData();
+				formData.append('action', 'NEW_UPLOAD');
+				formData.append('user_id', this.props.profile.id);
+				formData.append('title', title);
+				formData.append('description', description);
+				formData.append('filesize', size);
+				formData.append('private', (radioIndex === 1) ? '0' : '1');
+				formData.append('filename', "http://cdn.designengine.ai/system/" + name);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response) => {
+						console.log('NEW_UPLOAD', response.data);
+						this.setState({
+							upload          : response.data.upload,
+							processingState : 0,
+							file            : null
+						});
+
+						this.props.onProcess(true);
+						this.uploadInterval = setInterval(this.statusInterval, 2500);
+					}).catch((error) => {
+				});
+			}
 		}
 	};
 
@@ -496,6 +510,31 @@ class UploadPage extends Component {
 		trackEvent('user', 'sign-up', profile.username + ' (' + profile.email + ')', parseInt(profile.id, 10));
 		cookie.save('user_id', profile.id, { path : '/' });
 		this.props.updateUserProfile(profile);
+
+		const { title, description, radioIndex } = this.state;
+		const { name, size } = this.state.file;
+
+		let formData = new FormData();
+		formData.append('action', 'NEW_UPLOAD');
+		formData.append('user_id', profile.id);
+		formData.append('title', title);
+		formData.append('description', description);
+		formData.append('filesize', size);
+		formData.append('private', (radioIndex === 1) ? '0' : '1');
+		formData.append('filename', "http://cdn.designengine.ai/system/" + name);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+				console.log('NEW_UPLOAD', response.data);
+				this.setState({
+					upload          : response.data.upload,
+					processingState : 0,
+					file            : null
+				});
+
+				this.props.onProcess(true);
+				this.uploadInterval = setInterval(this.statusInterval, 2500);
+			}).catch((error) => {
+		});
 	};
 
 	statusInterval = ()=> {
@@ -527,14 +566,15 @@ class UploadPage extends Component {
 
 							let { artboards } = this.state;
 							if (response.data.artboards.length !== this.state.artboards.length) {
-								artboards = response.data.artboards.map((item) => ({
-									id       : item.id,
-									pageID   : item.page_id,
-									title    : item.title,
-									type     : item.type,
-									filename : item.filename,
-									meta     : JSON.parse(item.meta),
-									added    : item.added,
+								artboards = response.data.artboards.map((artboard) => ({
+									id       : artboard.id,
+									pageID   : artboard.page_id,
+									system   : artboard.system,
+									title    : artboard.title,
+									type     : artboard.type,
+									filename : artboard.filename,
+									meta     : JSON.parse(artboard.meta),
+									added    : artboard.added,
 									selected : false
 								}));
 							}
@@ -558,42 +598,45 @@ class UploadPage extends Component {
 	render() {
 		console.log('UploadPage.render()', this.props, this.state);
 
-		const { action } = this.state;
 		const { upload, title, description, radioButtons, status, artboards, invites } = this.state;
-		const { processingState, percent, uploading, uploadComplete, sentInvites } = this.state;
+		const { processingState, percent, uploadComplete, submitted, sentInvites, titleValid } = this.state;
 
 		return (
 			<div className="page-wrapper upload-page-wrapper">
-				{(processingState < 0) && (<div>
+				{(processingState < 0) && (<UploadHeader
+					processingState={processingState}
+					percent={percent}
+					onDrop={this.onDrop.bind(this)}
+					onDragEnter={this.onDragEnter.bind(this)}
+					onDragLeave={this.onDragLeave.bind(this)}
+				/>)}
+
+				{(processingState < 0 && !submitted) && (<div className="upload-page-upload-wrapper">
 					<UploadForm
-						action={action}
 						processingState={processingState}
 						title={title}
 						description={description}
 						radioButtons={radioButtons}
+						titleValid={titleValid}
 						percent={percent}
-						uploading={uploading}
 						uploadComplete={uploadComplete}
-						onDrop={this.onDrop.bind(this)}
-						onDragEnter={this.onDragEnter.bind(this)}
-						onDragLeave={this.onDragLeave.bind(this)}
 						onChange={this.handleUploadChange}
 						onFocus={(event)=> this.handleFocus(event)}
 						onRadioButton={(radioButton)=> this.handleRadioButton(radioButton)}
 						onSubmit={()=> this.handleSubmit()}
 					/>
+				</div>)}
 
-					{(!isUserLoggedIn()) && (<div className="upload-page-register-wrapper">
-						<h3>Sign Up</h3>
-						Enter the email address of each member of your team to invite them to this project.
-						<RegisterForm
-							onPage={(url)=> this.props.onPage(url)}
-							onRegistered={(profile)=> this.handleRegistered(profile)} />
-					</div>)}
+				{(!isUserLoggedIn() && submitted) && (<div className="upload-page-register-wrapper">
+					<h3>Sign Up</h3>
+					Enter registration details to submit design file.
+					<RegisterForm
+						onPage={(url)=> this.props.onPage(url)}
+						onRegistered={(profile)=> this.handleRegistered(profile)} />
 				</div>)}
 
 				{(processingState >= 0) && (<div>
-					<ProcessingGrid
+					<ProcessingContent
 						title={title}
 						upload={upload}
 						status={status}
@@ -601,7 +644,6 @@ class UploadPage extends Component {
 					/>
 
 					{(!sentInvites) && (<InviteForm
-						action={action}
 						invites={invites}
 						onInviteChange={this.handleInviteChange}
 						onFocus={(event)=> this.handleFocus(event)}

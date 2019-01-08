@@ -1,10 +1,18 @@
 
-import { ADD_ARTICLE, APPEND_EXPLORE_ARTBOARDS, UPDATE_NAVIGATION, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
+import {
+	ADD_ARTICLE,
+	ADD_FILE_UPLOAD,
+	APPEND_EXPLORE_ARTBOARDS,
+	UPDATE_NAVIGATION,
+	USER_PROFILE_ERROR,
+	USER_PROFILE_LOADED,
+	USER_PROFILE_UPDATED } from '../../consts/action-types';
 
 const initialState = {
 	articles         : [],
 	exploreArtboards : [],
 	userProfile      : null,
+	file             : null,
 	navigation       : {
 		uploadID   : 0,
 		pageID     : 0,
@@ -19,6 +27,11 @@ function rootReducer(state=initialState, action) {
 	if (action.type === ADD_ARTICLE) {
 		return (Object.assign({}, state, {
 			articles : state.articles.concat(action.payload)
+		}));
+
+	} else if (action.type === ADD_FILE_UPLOAD) {
+		return (Object.assign({}, state, {
+			file : action.payload
 		}));
 
 	} else if (action.type === APPEND_EXPLORE_ARTBOARDS) {
