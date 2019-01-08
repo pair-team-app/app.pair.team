@@ -29,10 +29,6 @@ class SideNav extends Component {
 		super(props);
 
 		this.state = {
-// 			uploadID   : uploadID,
-// 			pageID     : pageID,
-// 			artboardID : artboardID,
-// 			sliceID    : sliceID,
 			uploads    : [],
 			loadOffset : 0,
 			loadAmt    : (isUserLoggedIn() && !isExplorePage()) ? -1 : 10,
@@ -277,11 +273,7 @@ class SideNav extends Component {
 	};
 
 	handleUpload = ()=> {
-		cookie.save('msg', 'use this feature.', { path : '/' });
-
-		setTimeout(()=> {
-			this.props.onPage((!isUserLoggedIn()) ? 'login' : 'new');
-		}, 100);
+		this.props.onPage('new');
 	};
 
 
@@ -289,21 +281,18 @@ class SideNav extends Component {
 		console.log('SideNav.render()', this.props, this.state);
 		const { uploads, fetching, loadOffset } = this.state;
 
-		const btnClass = (isUserLoggedIn()) ? 'tiny-button' : 'tiny-button button-disabled';
-
 		return (
 			<div className="side-nav-wrapper" ref={wrapper}>
 				<div className="side-nav-top-wrapper">
 					<h3 className="side-nav-header"><Row vertical="center" style={{ width : '100%' }}>
 						<Column flexGrow={1} horizontal="start">{(isExplorePage()) ? 'Explore' : 'Projects'}</Column>
-						<Column flexGrow={1} horizontal="end"><button className={btnClass} onClick={()=> (isUserLoggedIn()) ? this.handleUpload() : null}>New</button></Column>
+						<Column flexGrow={1} horizontal="end"><button className="tiny-button" onClick={()=> this.handleUpload()}>New</button></Column>
 					</Row></h3>
 					<div className="side-nav-tree-wrapper" ref={scrollWrapper}>
 						{(uploads.length === 0)
 							? <span className="side-nav-subtext">{(!fetching) ? (!isExplorePage()) ? (!isUserLoggedIn()) ? 'You must be signed in.' : 'You don\'t have any projects yet!' : '' : ''}</span>
 							: uploads.map((upload, i) => {
-								return (
-									<UploadTreeItem
+									return (<UploadTreeItem
 										key={i}
 										title={upload.title}
 										fonts={upload.fonts}
@@ -319,15 +308,12 @@ class SideNav extends Component {
 										onSymbolClick={(symbol)=> this.handleSymbolClick(symbol)}
 										onPageClick={(page)=> this.handlePageClick(page)}
 										onContributorClick={(contributor)=> this.handleContributorClick(contributor)}
-								 />
-								);
+								 />);
 							}
 						)}
 					</div>
-					{(isExplorePage())
-						? (<div className="side-nav-link" onClick={()=> this.fetchNextUploads()}>{(fetching) ? 'Loading…' : (loadOffset === -1) ? '' : 'Explore More'}</div>)
-						: (<div className="side-nav-link" onClick={()=> this.handleUpload()}>{(isUserLoggedIn()) ? 'New Project' : ''}</div>)
-					}
+					<div className="side-nav-link" onClick={()=> this.fetchNextUploads()}>{(fetching) ? 'Loading…' : (loadOffset === -1) ? '' : (isExplorePage()) ? 'Explore More' : ''}</div>
+					{(!isExplorePage()) && (<div className="side-nav-link" onClick={()=> this.handleUpload()}>{(!fetching) ? 'New Project' : ''}</div>)}
 				</div>
 				<div className="side-nav-team-wrapper">
 					<h6>Your teams</h6>

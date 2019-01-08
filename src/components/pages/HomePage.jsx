@@ -3,15 +3,20 @@ import React, { Component } from 'react';
 import './HomePage.css';
 
 import axios from 'axios';
-// import CopyToClipboard from 'react-copy-to-clipboard';
+import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import HomeExpo from '../elements/HomeExpo';
 import ArtboardItem from '../iterables/ArtboardItem';
 import GridHeader from '../elements/GridHeader';
-import Popup from '../elements/Popup';
+import { addFileUpload } from '../../redux/actions';
 
-//import { isHomePage } from '../../utils/funcs';
+
+function mapDispatchToProps(dispatch) {
+	return ({
+		addFileUpload : (file)=> dispatch(addFileUpload(file))
+	});
+}
 
 
 class HomePage extends Component {
@@ -25,11 +30,7 @@ class HomePage extends Component {
 			pendingUpdate : false,
 			fetching      : false,
 			loadOffset    : 0,
-			loadAmt       : 1,
-			popup : {
-				visible : false,
-				content : ''
-			}
+			loadAmt       : 1
 		};
 	}
 
@@ -115,7 +116,29 @@ class HomePage extends Component {
 					}).catch((error) => {
 				});
 			}).catch((error) => {
+			if (error.response) {
+				// The request was made and the server responded with a status code
+				// that falls out of the range of 2xx
+				console.log(error.response.data);
+				console.log(error.response.status);
+				console.log(error.response.headers);
+			} else if (error.request) {
+				// The request was made but no response was received
+				// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+				// http.ClientRequest in node.js
+				console.log(error.request);
+			} else {
+				// Something happened in setting up the request that triggered an Error
+				console.log('Error', error.message);
+			}
+			console.log(error.config);
 		});
+	};
+
+	handleFile = (file)=> {
+		console.log('HomePage.handleUploadComplete()', file);
+		this.props.addFileUpload(file);
+		this.props.onPage('new');
 	};
 
 
@@ -130,8 +153,12 @@ class HomePage extends Component {
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
-				{/*{(isHomePage()) && (<GridHeader onPage={(url)=> this.props.onPage(url)} />)}*/}
-				<HomeExpo onClick={(url)=> this.props.onPage(url)} />
+				<HomeExpo
+					onFile={(file)=> this.handleFile(file)}
+					onItemClick={(url)=> this.props.onPage(url)}
+					onPopup={(payload)=> this.props.onPopup(payload)}
+				/>
+
 				<GridHeader onPage={(url)=> this.props.onPage(url)} />
 
 				<Row><h3>{title}</h3></Row>
@@ -151,13 +178,9 @@ class HomePage extends Component {
 					</Row>
 					<Row horizontal="center"><button className={btnClass} onClick={()=> this.handleLoadNext()}>{btnCaption}</button></Row>
 				</div>)}
-
-				{this.state.popup.visible && (
-					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
-				)}
 			</div>
 		);
 	}
 }
 
-export default HomePage;
+export default connect(null, mapDispatchToProps)(HomePage);

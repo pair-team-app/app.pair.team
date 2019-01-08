@@ -11,48 +11,47 @@ class InputField extends Component {
 		super(props);
 
 		this.state = {
-			org    : '',
-			value  : '',
-			status : 'idle',
-
+			value  : props.value,
+			status : 'IDLE'
 		};
 	}
 
 	componentDidMount() {
 // 		console.log('InputField.componentDidMount()', this.props, this.state);
-
-		this.setState({
-			org    : this.props.value,
-			value  : this.props.value,
-			status : this.props.status
-		});
+		const { value, status } = this.props;
+		this.setState({ value, status });
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('InputField.componentDidUpdate', prevProps, this.props, this.state);
+// 		console.log('InputField.componentDidUpdate()', prevProps, this.props, this.state);
 
-		if (this.props.value !== prevProps.value) {
-			this.setState({ value : this.props.value });
+		const { value, status } = this.props;
+		if (value !== prevProps.value) {
+			this.setState({ value });
 		}
 
-		if (this.props.status !== prevProps.status) {
-			this.setState({ status : this.props.status });
+		if (status !== prevProps.status) {
+			this.setState({ status });
 		}
 	}
 
 	handleBlur = (event)=> {
+		console.log('InputField.handleBlur()', event.target);
+
 		const { value } = this.state;
 		this.props.onBlur(value);
 	};
 
 	handleChange = (event)=> {
+		console.log('InputField.handleChange()', event.target);
 		this.setState({ value : event.target.value });
 	};
 
-	handleClick = ()=> {
+	handleClick = (event)=> {
+		console.log('InputField.handleClick()', event.target);
 		this.setState({
 			value  : '',
-			status : 'idle'
+			status : 'IDLE'
 		});
 
 // 		setTimeout(()=> {
@@ -63,31 +62,35 @@ class InputField extends Component {
 	};
 
 	handleFocus = (event)=> {
+// 		console.log('InputField.handleFocus()', event.target);
 	};
 
-	handleSubmit = ()=> {
+	handleSubmit = (event)=> {
+		console.log('InputField.handleSubmit()', event.target);
+
 		const { value } = this.state;
 		this.props.onSubmit(value);
 	};
 
 
 	render() {
+// 		console.log('InputField.render()', this.props, this.state);
+
 		const { type, name, placeholder, button } = this.props;
 		const { value, status } = this.state;
 
-		const wrapperClass = 'input-wrapper input-field-wrapper' + ((status === 'error') ? ' input-wrapper-error' : '');
-		const textfieldClass = 'input-field-textfield' + ((status === 'error') ? ' is-hidden' : '');
+		const wrapperClass = 'input-wrapper input-field-wrapper' + ((status === 'ERROR') ? ' input-wrapper-error' : '');
+		const textfieldClass = 'input-field-textfield' + ((status === 'ERROR') ? ' is-hidden' : '');
 		const buttonClass = 'tiny-button input-field-button';
-
-// 		console.log('InputField.render()', this.props, this.state);
+		const errorStyle = { display : ((status === 'error') ? 'block' : 'none') };
 
 		return (
 			<div className="input-field">
 				<div className={wrapperClass}>
-					<input type={type} name={name} className={textfieldClass} placeholder={placeholder} value={value} onFocus={(e)=> this.handleFocus(e)} onChange={(e)=> this.handleChange(e)} onBlur={(e)=> this.handleBlur(e)} ref={textfield} />
-					<div className="field-error" onClick={()=> this.handleClick()} style={{ display : (status === 'error') ? 'block' : 'none' }}>{value}</div>
+					<input autoFocus type={type} name={name} className={textfieldClass} placeholder={placeholder} value={value} onFocus={(e)=> this.handleFocus(e)} onChange={(e)=> this.handleChange(e)} onBlur={(e)=> this.handleBlur(e)} ref={textfield} />
+					<div className="field-error" onClick={this.handleClick} style={errorStyle}>{value}</div>
 				</div>
-				<button className={buttonClass} onClick={()=> this.handleSubmit()}>{button}</button>
+				<button className={buttonClass} onClick={this.handleSubmit}>{button}</button>
 			</div>
 		);
 	}

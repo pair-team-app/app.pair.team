@@ -10,7 +10,7 @@ import { Row } from 'simple-flexbox';
 import HomeExpo from '../elements/HomeExpo';
 import ExploreArtboardGrid from '../elements/ExploreArtboardGrid';
 import GridHeader from '../elements/GridHeader';
-import { appendExploreArtboards } from '../../redux/actions';
+import { addFileUpload, appendExploreArtboards } from '../../redux/actions';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -22,6 +22,7 @@ const mapStateToProps = (state, ownProps)=> {
 
 function mapDispatchToProps(dispatch) {
 	return ({
+		addFileUpload          : (file)=> dispatch(addFileUpload(file)),
 		appendExploreArtboards : (artboards)=> dispatch(appendExploreArtboards(artboards))
 	});
 }
@@ -105,6 +106,13 @@ class ExplorePage extends Component {
 // 		this.setState({ artboards });
 // 	};
 
+	handleFile = (file)=> {
+		console.log('ExplorePage.handleUploadComplete()', file);
+		this.props.addFileUpload(file);
+		this.props.onPage('new');
+	};
+
+
 	render() {
 		console.log('ExplorePage.render()', this.state);
 
@@ -114,7 +122,10 @@ class ExplorePage extends Component {
 
 		return (
 			<div className="page-wrapper explore-page-wrapper">
-				<HomeExpo onClick={(url)=> this.props.onPage(url)} />
+				<HomeExpo
+					onFile={(file)=> this.handleFile(file)}
+					onItemClick={(url)=> this.props.onPage(url)}
+					onPopup={(payload)=> this.props.onPopup(payload)} />
 				<GridHeader onPage={(url)=> this.props.onPage(url)} />
 
 				<Row><h3>{(fetching) ? 'Loading…' : 'Recent'}</h3></Row>

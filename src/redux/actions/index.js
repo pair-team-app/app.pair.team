@@ -3,11 +3,22 @@ import axios from 'axios/index';
 import cookie from 'react-cookies';
 
 import { hasBit } from '../../utils/funcs';
-import { ADD_ARTICLE, APPEND_EXPLORE_ARTBOARDS, USER_PROFILE_ERROR, UPDATE_NAVIGATION, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
+import {
+	ADD_ARTICLE,
+	ADD_FILE_UPLOAD,
+	APPEND_EXPLORE_ARTBOARDS,
+	USER_PROFILE_ERROR,
+	UPDATE_NAVIGATION,
+	USER_PROFILE_LOADED,
+	USER_PROFILE_UPDATED } from '../../consts/action-types';
 
 
 export function addArticle(payload) {
 	return ({ type : ADD_ARTICLE, payload });
+}
+
+export function addFileUpload(payload) {
+	return ({ type : ADD_FILE_UPLOAD, payload });
 }
 
 export function appendExploreArtboards(payload) {

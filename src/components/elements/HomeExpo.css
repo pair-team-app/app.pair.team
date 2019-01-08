@@ -1,21 +1,26 @@
 
 .home-expo {
-	width: calc(100% + 40px);
-	margin: -20px -20px 20px -20px;
-	background-color: #2e363d;
+	width: 100%;
+	height: 250px;
+	background: #111111 url("/images/checkerboard.png") repeat;
+	margin-bottom:20px;
+	padding: 2px 5px 1px 5px;
 	overflow-x: scroll;
 	overflow-y: hidden;
-	padding: 2px 5px 1px 5px;
+	color: #999999;
 }
 
 .home-expo-item-wrapper {
 }
 
-.home-expo-item {
-	margin: 8px 6px;
-	cursor: pointer;
+.home-expo-dz-wrapper {
+	width: 100%;
+	height: 100%;
+	cursor: copy;
 }
 
-.home-expo-item-image {
-	height: 300px;
+.home-expo-upload-icon {
+	width: 50px;
+	height: 50px;
+	margin: 70px 0 30px 0;
 }
