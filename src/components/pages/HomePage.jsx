@@ -141,12 +141,6 @@ class HomePage extends Component {
 		this.props.onPage('new');
 	};
 
-// 	handleUploadComplete = (file)=> {
-// 		console.log('HomePage.handleUploadComplete()', file);
-// 		this.props.addFileUpload(file);
-// 		this.props.onPage('new');
-// 	};
-
 
 	render() {
 		console.log('HomePage.render()', this.props, this.state);
@@ -159,10 +153,8 @@ class HomePage extends Component {
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
-				{/*{(isHomePage()) && (<GridHeader onPage={(url)=> this.props.onPage(url)} />)}*/}
 				<HomeExpo
 					onFile={(file)=> this.handleFile(file)}
-					onUploadComplete={(file)=> this.handleUploadComplete(file)}
 					onItemClick={(url)=> this.props.onPage(url)}
 					onPopup={(payload)=> this.props.onPopup(payload)}
 				/>

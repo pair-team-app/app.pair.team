@@ -60,7 +60,7 @@ class RegisterForm extends Component {
 		const { username, email, password, password2 } = this.state;
 		const usernameValid = (username.length > 0 && !username.includes('@'));
 		const emailValid = isValidEmail(email);
-		const passwordValid = (password.length > 0);
+		const passwordValid = (password.length > 0 && password === password2);
 
 		if (password !== password2) {
 			this.setState({
@@ -94,8 +94,7 @@ class RegisterForm extends Component {
 				.then((response) => {
 					console.log('REGISTER', response.data);
 					const status = parseInt(response.data.status, 16);
-
-					console.log('status', status, hasBit(status, 0x01), hasBit(status, 0x10));
+// 					console.log('status', status, hasBit(status, 0x01), hasBit(status, 0x10));
 
 					if (status === 0x11) {
 						this.props.onRegistered(response.data.user);

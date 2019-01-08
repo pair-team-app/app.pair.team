@@ -13,10 +13,10 @@ import RegisterForm from '../elements/RegisterForm';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Dropdown from '../elements/Dropdown';
 import RadioButton from '../elements/RadioButton';
-import {buildProjectPath, buildProjectURL, isUserLoggedIn, isValidEmail, sendToSlack} from '../../utils/funcs';
+import { buildProjectPath, buildProjectURL, isUserLoggedIn, isValidEmail, sendToSlack } from '../../utils/funcs';
 import uploadIcon from '../../images/upload.png';
 import defaultAvatar from '../../images/default-avatar.png';
-import { updateUserProfile } from '../../redux/actions';
+import { addFileUpload, updateUserProfile } from '../../redux/actions';
 import { trackEvent } from "../../utils/tracking";
 
 const titleTextfield = React.createRef();
@@ -31,6 +31,7 @@ const mapStateToProps = (state, ownProps)=> {
 
 function mapDispatchToProps(dispatch) {
 	return ({
+		addFileUpload     : (file)=> dispatch(addFileUpload(file)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 }
@@ -185,16 +186,17 @@ class UploadPage extends Component {
 		super(props);
 		this.state = {
 			file            : null,
-			percent         : 0,
 			upload          : null,
 			title           : '',
 			description     : '',
+			percent         : 0,
 			processingState : -2,
 			status          : '',
 			titleValid      : true,
 			uploadComplete  : false,
 			submitted       : false,
 			sentInvites     : false,
+			shownStarted    : false,
 			profile   : {
 				id    : 0,
 				email : ''
@@ -236,8 +238,10 @@ class UploadPage extends Component {
 
 	componentDidMount() {
 		console.log('UploadPage.componentDidMount()', this.props, this.state);
-		if (this.props.file) {
-			this.onStoreFile()
+
+		const { file } = this.props;
+		if (file) {
+			this.onDrop([file]);
 		}
 	}
 
@@ -312,21 +316,6 @@ class UploadPage extends Component {
 			}
 		}
 	}
-
-	onStoreFile = ()=> {
-		console.log('UploadPage.onStoreFile()', this.props.file);
-
-		const { file } = this.props;
-		this.onDrop([file]);
-
-// 		this.setState({
-// 			processingState : -1,
-// 			file            : file,
-// 			title           : file.name.split('.').slice(0, -1).join('.'),
-// 			action          : 'UPLOAD',
-// 			uploadComplete : true
-// 		});
-	};
 
 	onUploadComplete = ()=> {
 		const { id, email } = (this.props.profile) ? this.props.profile : this.state;
@@ -450,6 +439,7 @@ class UploadPage extends Component {
 							file            : null
 						});
 
+						this.props.addFileUpload(null);
 						this.props.onProcess(true);
 						this.uploadInterval = setInterval(this.statusInterval, 2500);
 					}).catch((error) => {
@@ -479,9 +469,10 @@ class UploadPage extends Component {
 		console.log('REDUCER:', isValid);
 
 		if (isValid > 0) {
+			const { profile } = this.props;
 			let formData = new FormData();
 			formData.append('action', 'INVITE');
-			formData.append('user_id', this.props.profile.id);
+			formData.append('user_id', profile.id);
 			formData.append('upload_id', '' + upload.id);
 			formData.append('emails', emails.slice(0, -1));
 			axios.post('https://api.designengine.ai/system.php', formData)
@@ -496,17 +487,17 @@ class UploadPage extends Component {
 
 	handleRegistered = (profile)=> {
 		console.log('UploadPage.handleRegistered()', profile);
+		const { id } = profile;
 
 		trackEvent('user', 'sign-up', profile.username + ' (' + profile.email + ')', parseInt(profile.id, 10));
 		cookie.save('user_id', profile.id, { path : '/' });
-		this.props.updateUserProfile(profile);
 
 		const { title, description, radioIndex } = this.state;
 		const { name, size } = this.state.file;
 
 		let formData = new FormData();
 		formData.append('action', 'NEW_UPLOAD');
-		formData.append('user_id', profile.id);
+		formData.append('user_id', id);
 		formData.append('title', title);
 		formData.append('description', description);
 		formData.append('filesize', size);
@@ -522,17 +513,18 @@ class UploadPage extends Component {
 				});
 
 				this.props.onProcess(true);
+				this.props.updateUserProfile(profile);
 				this.uploadInterval = setInterval(this.statusInterval, 2500);
 			}).catch((error) => {
 		});
 	};
 
 	statusInterval = ()=> {
-		const { upload } = this.state;
+		const { upload, shownStarted } = this.state;
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_STATUS');
-		formData.append('upload_id', '' + upload.id);
+		formData.append('upload_id', upload.id);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD_STATUS', response.data);
@@ -541,11 +533,20 @@ class UploadPage extends Component {
 				if (processingState === 1) {
 					this.props.onProcess(false);
 
+					if (!shownStarted) {
+						this.setState({ shownStarted : true });
+						this.props.onPopup({
+							type     : 'INFO',
+							content  : 'Processing has started',
+							duration : 1250
+						});
+					}
+
 				} else if (processingState === 2) {
 					let status = response.data.status.message;
 
 					formData.append('action', 'ARTBOARDS');
-					formData.append('upload_id', '' + upload.id);
+					formData.append('upload_id', upload.id);
 					formData.append('slices', '0');
 					formData.append('page_id', '0');
 					formData.append('offset', '0');
