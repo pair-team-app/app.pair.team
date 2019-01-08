@@ -29,10 +29,6 @@ class SideNav extends Component {
 		super(props);
 
 		this.state = {
-// 			uploadID   : uploadID,
-// 			pageID     : pageID,
-// 			artboardID : artboardID,
-// 			sliceID    : sliceID,
 			uploads    : [],
 			loadOffset : 0,
 			loadAmt    : (isUserLoggedIn() && !isExplorePage()) ? -1 : 10,
@@ -296,8 +292,7 @@ class SideNav extends Component {
 						{(uploads.length === 0)
 							? <span className="side-nav-subtext">{(!fetching) ? (!isExplorePage()) ? (!isUserLoggedIn()) ? 'You must be signed in.' : 'You don\'t have any projects yet!' : '' : ''}</span>
 							: uploads.map((upload, i) => {
-								return (
-									<UploadTreeItem
+									return (<UploadTreeItem
 										key={i}
 										title={upload.title}
 										fonts={upload.fonts}
@@ -313,15 +308,12 @@ class SideNav extends Component {
 										onSymbolClick={(symbol)=> this.handleSymbolClick(symbol)}
 										onPageClick={(page)=> this.handlePageClick(page)}
 										onContributorClick={(contributor)=> this.handleContributorClick(contributor)}
-								 />
-								);
+								 />);
 							}
 						)}
 					</div>
-					{(isExplorePage())
-						? (<div className="side-nav-link" onClick={()=> this.fetchNextUploads()}>{(fetching) ? 'Loading…' : (loadOffset === -1) ? '' : 'Explore More'}</div>)
-						: (<div className="side-nav-link" onClick={()=> this.handleUpload()}>{(isUserLoggedIn()) ? 'New Project' : ''}</div>)
-					}
+					<div className="side-nav-link" onClick={()=> this.fetchNextUploads()}>{(fetching) ? 'Loading…' : (loadOffset === -1) ? '' : (isExplorePage()) ? 'Explore More' : ''}</div>
+					{(!isExplorePage()) && (<div className="side-nav-link" onClick={()=> this.handleUpload()}>{(!fetching) ? 'New Project' : ''}</div>)}
 				</div>
 				<div className="side-nav-team-wrapper">
 					<h6>Your teams</h6>
