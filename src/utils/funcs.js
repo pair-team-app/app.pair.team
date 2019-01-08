@@ -75,6 +75,10 @@ export function isInspectorPage() {
 	return (window.location.pathname.includes('/artboard') || window.location.pathname.includes('/page'));
 }
 
+export function isProfilePage() {
+	return (window.location.pathname.includes('/profile'));
+}
+
 export function isProjectPage() {
 	return (window.location.pathname.includes('/proj'));
 }

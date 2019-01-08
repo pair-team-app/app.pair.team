@@ -11,21 +11,21 @@ class InputField extends Component {
 		super(props);
 
 		this.state = {
-			value  : '',
+			value  : props.value,
 			status : 'IDLE'
 		};
 	}
 
 	componentDidMount() {
 // 		console.log('InputField.componentDidMount()', this.props, this.state);
-		const { status } = this.props;
-		this.setState({ status })
+		const { value, status } = this.props;
+		this.setState({ value, status });
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('InputField.componentDidUpdate()', prevProps, this.props, this.state);
 
-		const {value, status } = this.props;
+		const { value, status } = this.props;
 		if (value !== prevProps.value) {
 			this.setState({ value });
 		}
@@ -62,11 +62,7 @@ class InputField extends Component {
 	};
 
 	handleFocus = (event)=> {
-		console.log('InputField.handleFocus()', event.target);
-		this.setState({
-			value  : '',
-			status : 'IDLE'
-		});
+// 		console.log('InputField.handleFocus()', event.target);
 	};
 
 	handleSubmit = (event)=> {

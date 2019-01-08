@@ -45,6 +45,10 @@ class ProfilePage extends Component {
 
 	componentDidMount() {
 		console.log('ProfilePage.componentDidMount()', this.props, this.state);
+		if (this.props.profile) {
+			const { avatar, username, email } = this.props.profile;
+			this.setState({ avatar, username, email });
+		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -125,9 +129,10 @@ class ProfilePage extends Component {
 	};
 
 	handleInputFieldBlur = (key, val)=> {
-		if (val.length > 0) {
-			this.validateFields(key, val);
-		}
+		console.log('ProfilePage.handleInputFieldBlur()', key, val);
+// 		if (val.length > 0) {
+// 			this.validateFields(key, val);
+// 		}
 	};
 
 	handleInputFieldClick = (key)=> {
