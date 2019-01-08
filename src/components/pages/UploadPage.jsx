@@ -597,8 +597,6 @@ class UploadPage extends Component {
 					processingState={processingState}
 					percent={percent}
 					onDrop={this.onDrop.bind(this)}
-					onDragEnter={this.onDragEnter.bind(this)}
-					onDragLeave={this.onDragLeave.bind(this)}
 				/>)}
 
 				{(processingState < 0 && !submitted) && (<div className="upload-page-upload-wrapper">
