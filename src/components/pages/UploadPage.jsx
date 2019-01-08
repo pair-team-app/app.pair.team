@@ -19,8 +19,6 @@ import defaultAvatar from '../../images/default-avatar.png';
 import { updateUserProfile } from '../../redux/actions';
 import { trackEvent } from "../../utils/tracking";
 
-
-const dzWrapper = React.createRef();
 const titleTextfield = React.createRef();
 
 
@@ -85,7 +83,7 @@ function ProcessingContent(props) {
 			<h3>Processing…</h3>
 			<Row horizontal="space-between" className="upload-page-artboards-wrapper" style={{ flexWrap : 'wrap' }}>
 				{(artboards.length === 0) ? (
-					<Column key="0">
+					<Column>
 						<ArtboardItem
 							title=""
 							image=""
@@ -162,12 +160,7 @@ function UploadHeader(props) {
 
 	return (<div>
 		{(processingState === -2) && (
-			<Dropzone
-				ref={dzWrapper}
-				className="upload-page-dz-wrapper"
-				onDrop={props.onDrop}
-				onDragEnter={props.onDragEnter}
-				onDragLeave={props.onDragLeave}>
+			<Dropzone className="upload-page-dz-wrapper" onDrop={props.onDrop}>
 				<div className="page-header upload-page-header-dz">
 					<div>
 						<Row horizontal="center"><img className="upload-page-icon" src={uploadIcon} alt="Upload" /></Row>
@@ -252,9 +245,6 @@ class UploadPage extends Component {
 		console.log('UploadPage.componentWillUnmount()');
 		clearInterval(this.uploadInterval);
 	}
-
-	onDragEnter() {}
-	onDragLeave() {}
 
 	onDrop(files) {
 		console.log('UploadPage.onDrop()', files);

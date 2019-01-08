@@ -10,9 +10,6 @@ import { sendToSlack } from '../../utils/funcs';
 import uploadIcon from "../../images/upload.png";
 
 
-const dzWrapper = React.createRef();
-
-
 const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
 };
@@ -72,7 +69,7 @@ class HomeExpo extends Component {
 				<div className="upload-progress-bar-wrapper">
 					<div className="upload-progress-bar" style={progressStyle} />
 				</div>
-				<Dropzone ref={dzWrapper} className="home-expo-dz-wrapper" onDrop={this.onDrop.bind(this)}>
+				<Dropzone className="home-expo-dz-wrapper" onDrop={this.onDrop.bind(this)}>
 					<div>
 						<Row horizontal="center"><img className="home-expo-upload-icon" src={uploadIcon} alt="Upload" /></Row>
 						<Row horizontal="center">Drag &amp; Upload to turn any sketch file into an organized system of fonts, colors, symbols, views, and more.</Row>
