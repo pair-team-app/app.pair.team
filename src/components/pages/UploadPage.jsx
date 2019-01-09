@@ -17,6 +17,7 @@ import { addFileUpload, updateUserProfile } from '../../redux/actions';
 import { buildProjectPath, buildProjectURL, isUserLoggedIn, isValidEmail, sendToSlack } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 
+import radioButtons from '../../json/radio-buttons_upload';
 import uploadIcon from '../../images/upload.png';
 import defaultAvatar from '../../images/default-avatar.png';
 
@@ -219,8 +220,8 @@ class UploadPage extends Component {
 				passMsg       : ''
 			},
 			artboards       : [],
-			radioButtons    : ,
-			radioIndex : 2
+			radioButtons    : radioButtons,
+			radioIndex      : 2
 		};
 
 		this.uploadInterval = null;
@@ -624,7 +625,7 @@ class UploadPage extends Component {
 					<h3>Sign Up</h3>
 					Enter registration details to submit design file.
 					<RegisterForm
-						onPage={(url)=> this.props.onPage(url)}
+						onPage={this.props.onPage}
 						onRegistered={(profile)=> this.handleRegistered(profile)} />
 				</div>)}
 

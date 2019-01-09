@@ -33,7 +33,7 @@ class TopNav extends Component {
 							? (<button className="top-nav-upload-button" onClick={()=> this.props.onPage('register')}>Sign Up with Email</button>)
 							: (<Row vertical="center">
 									<TopNavProfile
-										onPage={(url)=> this.props.onPage(url)}
+										onPage={this.props.onPage}
 										onLogout={()=> this.props.onLogout()}
 									/>
 							</Row>)}
