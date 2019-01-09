@@ -18,7 +18,7 @@ import { buildProjectPath, buildProjectURL, isUserLoggedIn, isValidEmail, sendTo
 import { trackEvent } from '../../utils/tracking';
 
 import radioButtons from '../../json/radio-buttons_upload';
-import uploadIcon from '../../images/upload.png';
+import uploadIcon from '../../images/icons/ico-upload.png';
 import defaultAvatar from '../../images/default-avatar.png';
 
 const titleTextfield = React.createRef();

@@ -5,7 +5,7 @@ import './APIPage.css';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Row } from 'simple-flexbox';
 
-import Popup from '../elements/Popup';
+import enabledCopyCodeButton from '../../images/buttons/btn-copy-code_enabled.svg';
 
 class APIPage extends Component {
 	constructor(props) {
@@ -20,27 +20,21 @@ class APIPage extends Component {
 				'https://earlyaccess.designengine.ai/proj/111/ios-12-design-system/views',
 				'https://earlyaccess.designengine.ai/page/111/22/321/tab-bars/views',
 			],
-			popup : {
-			visible : false,
-				content : ''
-		}
 		};
 	}
 
 	handleCodeCopy = (code)=> {
-		const popup = {
+		this.props.onPopup({
 			visible : true,
 			content : 'Copied to Clipboard!'
-		};
-		this.setState({ popup });
+		});
 	};
 
 	handleURLCopy = (url)=> {
-		const popup = {
+		this.props.onPopup({
 			visible : true,
 			content : 'Copied to Clipboard!'
-		};
-		this.setState({ popup });
+		});
 	};
 
 	render() {
@@ -62,7 +56,7 @@ class APIPage extends Component {
 					<div className="api-page-url-box">
 						<a href={this.state.urls[0]} target="_blank" rel="noopener noreferrer">{this.state.urls[0]}</a>
 						<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={this.state.urls[0]}>
-							<button className="api-page-float-button"><img src="/images/copy-code.svg" alt="Copy" /></button>
+							<button className="api-page-float-button"><img src={enabledCopyCodeButton} alt="Copy" /></button>
 						</CopyToClipboard>
 					</div>
 				</div>
@@ -73,7 +67,7 @@ class APIPage extends Component {
 					<div className="api-page-url-box">
 						<a href={this.state.urls[0]} target="_blank" rel="noopener noreferrer">{this.state.urls[0]}</a>
 						<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={this.state.urls[0]}>
-							<button className="api-page-float-button"><img src="/images/copy-code.svg" alt="Copy" /></button>
+							<button className="api-page-float-button"><img src={enabledCopyCodeButton} alt="Copy" /></button>
 						</CopyToClipboard>
 					</div>
 				</div>
@@ -84,7 +78,7 @@ class APIPage extends Component {
 					<div className="api-page-url-box">
 						<a href={this.state.urls[1]} target="_blank" rel="noopener noreferrer">{this.state.urls[1]}</a>
 						<CopyToClipboard onCopy={()=> this.handleURLCopy(this.state.urls[1])} text={this.state.urls[1]}>
-							<button className="api-page-float-button"><img src="/images/copy-code.svg" alt="Copy" /></button>
+							<button className="api-page-float-button"><img src={enabledCopyCodeButton} alt="Copy" /></button>
 						</CopyToClipboard>
 					</div>
 				</div>
@@ -95,7 +89,7 @@ class APIPage extends Component {
 					<div className="api-page-url-box">
 						<a href={this.state.urls[0]} target="_blank" rel="noopener noreferrer">{this.state.urls[0]}</a>
 						<CopyToClipboard onCopy={()=> this.handleURLCopy(this.state.urls[0])} text={this.state.urls[0]}>
-							<button className="api-page-float-button"><img src="/images/copy-code.svg" alt="Copy" /></button>
+							<button className="api-page-float-button"><img src={enabledCopyCodeButton} alt="Copy" /></button>
 						</CopyToClipboard>
 					</div>
 				</div>
@@ -106,7 +100,7 @@ class APIPage extends Component {
 					<div className="api-page-url-box">
 						<a href={this.state.urls[0]} target="_blank" rel="noopener noreferrer">{this.state.urls[0]}</a>
 						<CopyToClipboard onCopy={()=> this.handleURLCopy(this.state.urls[0])} text={this.state.urls[0]}>
-							<button className="api-page-float-button"><img src="/images/copy-code.svg" alt="Copy" /></button>
+							<button className="api-page-float-button"><img src={enabledCopyCodeButton} alt="Copy" /></button>
 						</CopyToClipboard>
 					</div>
 				</div>
@@ -117,7 +111,7 @@ class APIPage extends Component {
 					<div className="api-page-url-box">
 						<a href={this.state.urls[0]} target="_blank" rel="noopener noreferrer">{this.state.urls[0]}</a>
 						<CopyToClipboard onCopy={()=> this.handleURLCopy(this.state.urls[0])} text={this.state.urls[0]}>
-							<button className="api-page-float-button"><img src="/images/copy-code.svg" alt="Copy" /></button>
+							<button className="api-page-float-button"><img src={enabledCopyCodeButton} alt="Copy" /></button>
 						</CopyToClipboard>
 					</div>
 				</div>
@@ -128,7 +122,7 @@ class APIPage extends Component {
 					<div className="api-page-url-box">
 						<a href={this.state.urls[0]} target="_blank" rel="noopener noreferrer">{this.state.urls[0]}</a>
 						<CopyToClipboard onCopy={()=> this.handleURLCopy(this.state.urls[0])} text={this.state.urls[0]}>
-							<button className="api-page-float-button"><img src="/images/copy-code.svg" alt="Copy" /></button>
+							<button className="api-page-float-button"><img src={enabledCopyCodeButton} alt="Copy" /></button>
 						</CopyToClipboard>
 					</div>
 				</div>
@@ -139,15 +133,12 @@ class APIPage extends Component {
 					{/*<div className="code-snippet api-page-code-box">*/}
 						{/*<span dangerouslySetInnerHTML={{ __html : this.state.codes[0].html }} />*/}
 						{/*<CopyToClipboard onCopy={()=> this.handleCodeCopy(this.state.codes[0].syntax)} text={this.state.codes[0].syntax}>*/}
-							{/*<button className="api-page-float-button"><img src="/images/copy-code.svg" alt="Copy" /></button>*/}
+							{/*<button className="api-page-float-button"><img src={enabledCopyCodeButton} alt="Copy" /></button>*/}
 						{/*</CopyToClipboard>*/}
 					{/*</div>*/}
 				{/*</div>*/}
 
 				<div className="updated-timestamp">Last Updated: 10-13-2018</div>
-				{this.state.popup.visible && (
-					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
-				)}
 			</div>
 		);
 	}

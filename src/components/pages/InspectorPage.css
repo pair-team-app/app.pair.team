@@ -18,7 +18,7 @@
 	position: relative;
 	width: 100%;
 	height: 100%;
-	background: #111111 url(../../images/bg-checkerboard.png) repeat;
+	background: #111111 url(../../images/backgrounds/bg-checkerboard.png) repeat;
 	overflow: scroll;
 	z-index: 1;
 	-ms-touch-action: none;
@@ -162,6 +162,7 @@
 .inspector-page-panel-tab-content {
 	width: 100%;
 	font-family: "Roboto Mono", sans-serif;
+	font-weight: 400;
 	font-size: 10px;
 	letter-spacing: 0.31px;
 	color: #ffffff;
@@ -181,6 +182,7 @@
 .inspector-page-panel-info-wrapper {
 	width: 100%;
 	font-family: "Roboto Mono", sans-serif;
+	font-weight: 400;
 	font-size: 10px;
 	letter-spacing: 0.31px;
 	color: #ffffff;

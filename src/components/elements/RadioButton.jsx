@@ -4,6 +4,8 @@ import './RadioButton.css';
 
 import { Column, Row } from 'simple-flexbox';
 
+import radButtonSelected from '../../images/buttons/btn-radio-button_selected.png'
+
 class RadioButton extends Component {
 	constructor(props) {
 		super(props);
@@ -23,7 +25,7 @@ class RadioButton extends Component {
 		return (
 			<div className="radio-button"><Row vertical="center">
 				<Column vertical="center"><button className={buttonClass} onClick={()=> (this.props.enabled) ? this.props.onClick() : null}>
-					{(this.props.selected) && (<img className="radio-button-image" src="/images/radio-button_selected.png" alt={this.props.title} />)}
+					{(this.props.selected) && (<img className="radio-button-image" src={radButtonSelected} alt={this.props.title} />)}
 				</button></Column>
 				<Column vertical="center"><div className={titleClass}>{this.props.title}</div></Column></Row>
 				<div className={subtextClass}>{this.props.subtext}</div>

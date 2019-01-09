@@ -1,8 +1,6 @@
 
 import React, { Component } from 'react';
 import './InspectorPage.css';
-// import 'react-tabs/style/react-tabs.css';
-// import '../elements/react-tabs.css';
 
 import axios from 'axios';
 // import CopyToClipboard from 'react-copy-to-clipboard';
@@ -17,6 +15,13 @@ import Popup from '../elements/Popup';
 import { capitalizeText, isUserLoggedIn } from '../../utils/funcs.js';
 import { toCSS, toReactCSS } from '../../utils/langs.js';
 
+import enabledZoomInButton from '../../images/buttons/btn-zoom-in_enabled.svg';
+import disabledZoomInButton from '../../images/buttons/btn-zoom-in_disabled.svg';
+import enabledZoomOutButton from '../../images/buttons/btn-zoom-out_enabled.svg';
+import disabledZoomOutButton from '../../images/buttons/btn-zoom-out_disabled.svg';
+import enabledZooResetButton from '../../images/buttons/btn-zoom-reset_enabled.svg';
+import disabledZoomResetButton from '../../images/buttons/btn-zoom-reset_disabled.svg';
+
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
 const canvas = React.createRef();
@@ -27,48 +32,10 @@ const tsOptions = {
 	day    : 'numeric'
 };
 
-/*function CommentItem(props) {
-	const options = {
-		year   : 'numeric',
-		month  : 'numeric',
-		day    : 'numeric',
-		hour   : 'numeric',
-		minute : 'numeric'
-	};
 
-	const userID = this.props.profile.id;
-	let isUpVoted = false;
-	let isDnVoted = false;
-	let score = 1;
-	props.votes.forEach(function(item, i) {
-		if (item.user_id === userID) {
-			isUpVoted = (parseInt(item.value, 10) === 1);
-			isDnVoted = (parseInt(item.value, 10) === -1);
-		}
+const SliceItem = (props)=> {
+// 	console.log('InspectorPage.SliceItem()', props);
 
-		score += parseInt(item.value, 10);
-	});
-
-	const arrowUpClass = (isUpVoted) ? 'comment-item-arrow comment-item-arrow-voted' : 'comment-item-arrow';
-	const arrowDnClass = (isDnVoted) ? 'comment-item-arrow comment-item-arrow-voted' : 'comment-item-arrow';
-
-	return (
-		<div className="comment-item">
-			<img className="comment-item-avatar" src={defaultAvatar} alt={props.author} />
-			<div className="comment-item-vote-wrapper">
-				<FontAwesome name="arrow-up" className={arrowUpClass} onClick={()=> props.onVote(1)} /><br />
-				<div className="comment-item-score">{score}</div>
-				<FontAwesome name="arrow-down" className={arrowDnClass} onClick={()=> props.onVote(-1)} /><br />
-			</div>
-			<div className="comment-item-content-wrapper">
-				<div className="comment-item-date">{(new Intl.DateTimeFormat('en-US', options).format(Date.parse(props.added))).replace(',', '').replace(/ (.{2})$/g, '$1').toLowerCase()}</div>
-				<div className="comment-item-text">{props.content}</div>
-			</div>
-		</div>
-	);
-}*/
-
-function SliceItem(props) {
 	const className = (props.type === 'slice') ? 'slice-item slice-item-slice' : (props.type === 'hotspot') ? 'slice-item slice-item-hotspot' : (props.type === 'textfield') ? 'slice-item slice-item-textfield' : 'slice-item slice-item-background';
 	const style = {
 		top     : props.top + 'px',
@@ -83,9 +50,10 @@ function SliceItem(props) {
 	return (
 		<div data-id={props.id} className={className + ((props.filled) ? '-filled' : '')} style={style} onMouseEnter={()=> props.onRollOver(props.offset)} onMouseLeave={()=> props.onRollOut()} onClick={()=> props.onClick(props.offset)} />
 	);
-}
+};
 
-function SliceToggle(props) {
+
+const SliceToggle = (props)=> {
 	const icon = (props.type === 'slice') ? '/images/layer-slice' : (props.type === 'hotspot') ? '/images/layer-hotspot' : (props.type === 'textfield') ? '/images/layer-textfield' : (props.type === 'group') ? '/images/layer-background' : '/images/layer-off';
 
 	return (
@@ -93,9 +61,13 @@ function SliceToggle(props) {
 			<button className="inspector-page-float-button"><img className="inspector-page-float-button-image" src={(props.selected) ? icon + '_selected.svg' : icon + '.svg'} alt="Toggle" /></button>
 		</div>
 	);
-}
+};
 
-function SpecsList(props) {
+
+
+const SpecsList = (props)=> {
+// 		console.log('InspectorPage.SpecsList()', props);
+
 	const sliceStyles = (props.slice && props.slice.meta.styles && props.slice.meta.styles.length > 0) ? props.slice.meta.styles[0] : null;
 	const stroke = (sliceStyles && sliceStyles.border.length > 0) ? sliceStyles.border[0] : null;
 	const shadow = (sliceStyles && sliceStyles.shadow.length > 0) ? sliceStyles.shadow[0] : null;
@@ -168,7 +140,7 @@ function SpecsList(props) {
 			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.page) ? props.page.author : ''}</Column></Row>
 		</div>
 	);
-}
+};
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -180,11 +152,13 @@ class InspectorPage extends Component {
 	constructor(props) {
 		super(props);
 
+		const { uploadID, pageID, artboardID, sliceID } = this.props.match.params;
+
 		this.state = {
-			uploadID      : this.props.match.params.uploadID,
-			pageID        : this.props.match.params.pageID,
-			artboardID    : this.props.match.params.artboardID,
-			sliceID       : this.props.match.params.sliceID,
+			uploadID      : uploadID,
+			pageID        : pageID,
+			artboardID    : artboardID,
+			sliceID       : sliceID,
 			slice         : null,
 			hoverSlice    : null,
 			page          : null,
@@ -273,6 +247,11 @@ class InspectorPage extends Component {
 
 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
 		document.addEventListener('wheel', this.handleWheel.bind(this));
+	}
+
+	shouldComponentUpdate(nextProps, nextState, nextContext) {
+// 		console.log('InspectorPage.shouldComponentUpdate()', this.props, nextProps, this.state, nextState, nextContext);
+		return (true);
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -1178,9 +1157,9 @@ class InspectorPage extends Component {
 						)}
 					</div>
 					<div className="inspector-page-zoom-wrapper">
-						<button className={'inspector-page-float-button' + ((scale >= 3) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? '/images/zoom-in.svg' : '/images/zoom-in_disabled.svg'} alt="+" /></button><br />
-						<button className={'inspector-page-float-button' + ((scale <= 0.03) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? '/images/zoom-out.svg' : '/images/zoom-out_disabled.svg'} alt="-" /></button><br />
-						<button className={'inspector-page-float-button' + ((scale === 1.0) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 1.0) ? '/images/zoom-reset.svg' : '/images/zoom-reset_disabled.svg'} alt="0" /></button>
+						<button className={'inspector-page-float-button' + ((scale >= 3) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
+						<button className={'inspector-page-float-button' + ((scale <= 0.03) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
+						<button className={'inspector-page-float-button' + ((scale === 1.0) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 1.0) ? enabledZooResetButton : disabledZoomResetButton} alt="0" /></button>
 					</div>
 					<div className="inspector-page-toggle-wrapper is-hidden">
 						<SliceToggle type="hotspot" selected={visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} />

@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import { isUserLoggedIn, sendToSlack } from '../../utils/funcs';
-import uploadIcon from '../../images/upload.png';
+import uploadIcon from '../../images/icons/ico-upload.png';
 
 
 const mapStateToProps = (state, ownProps)=> {

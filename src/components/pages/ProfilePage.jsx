@@ -207,7 +207,7 @@ class ProfilePage extends Component {
 					<Dropzone className="profile-page-dz-wrapper" onDrop={this.onDrop.bind(this)}>
 						<button className="tiny-button adjacent-button">Change</button>
 					</Dropzone>
-					{(!avatar.includes('/default-avatar.png')) && (<span className="page-link-small" onClick={()=> this.handleDropAvatar()}>Remove</span>)}
+					{(!avatar.includes('default-avatar.png')) && (<span className="page-link-small" onClick={()=> this.handleDropAvatar()}>Remove</span>)}
 				</Row></div>
 				<div className="profile-page-form-wrapper">
 					<InputField

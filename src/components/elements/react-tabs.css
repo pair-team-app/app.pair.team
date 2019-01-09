@@ -34,6 +34,7 @@
 	background-color: #333333;
 	overflow: scroll;
 	font-family: "Roboto Mono", monospace;
+	font-weight: 400;
 	font-size: 12px;
 	padding: 4px;
 }

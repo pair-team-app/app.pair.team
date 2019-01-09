@@ -2,6 +2,7 @@
 .bottom-nav-wrapper {
 	width: 100%;
 	font-family: "San Francisco Text", sans-serif;
+	font-weight: 400;
 	font-size: 12px;
 	letter-spacing: -0.4px;
 
@@ -39,6 +40,7 @@
 
 .copyright {
 	font-family: "San Francisco Text", sans-serif;
+	font-weight: 400;
 	letter-spacing: -0.4px;
 	color: #9b9b9b;
 }
