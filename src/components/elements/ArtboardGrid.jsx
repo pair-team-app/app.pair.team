@@ -42,14 +42,6 @@ const LoggedOutHeader = (props)=> {
 };
 
 
-
-function GridHeader(props) {
-	console.log('GridHeader()', props);
-}
-
-
-
-
 class ArtboardGrid extends Component {
 	constructor(props) {
 		super(props);
@@ -121,20 +113,22 @@ class ArtboardGrid extends Component {
 				? <LoggedInHeader onPage={this.props.onPage} />
 				: <LoggedOutHeader onPage={this.props.onPage} />}
 
-			<Row style={titleStyle}><h3>{title}</h3></Row>
-			<Row horizontal="space-between" className="artboard-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
-				{(artboards) && artboards.map((artboard, i) => {
-					return (
-						<Column key={i}>
-							<ArtboardItem
-								title={artboard.title}
-								image={artboard.filename}
-								avatar={artboard.system.avatar}
-								onClick={()=> this.props.onClick(artboard)} />
-						</Column>
-					);
-				})}
-			</Row>
+			<Row style={titleStyle}><h3>{(!fetching && artboards.length === 0) ? '' : title}</h3></Row>
+			{(isUserLoggedIn() && artboards.length > 0) && (
+				<Row horizontal="space-between" className="artboard-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
+					{(artboards) && artboards.map((artboard, i) => {
+						return (
+							<Column key={i}>
+								<ArtboardItem
+									title={artboard.title}
+									image={artboard.filename}
+									avatar={artboard.system.avatar}
+									onClick={()=> this.props.onClick(artboard)} />
+							</Column>
+						);
+					})}
+				</Row>
+			)}
 			{(artboards.length > 0) && (<Row horizontal="center"><button className={btnClass} onClick={()=> (!fetching) ? this.props.onLoadNext() : null}>{btnCaption}</button></Row>)}
 		</div>);
 	}

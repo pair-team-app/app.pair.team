@@ -192,6 +192,10 @@ class HomePage extends Component {
 					loadOffset  : loadOffset + loadAmt
 				});
 
+				if (uploads.length === 0) {
+					this.setState({ fetching : false });
+				}
+
 				uploads.forEach((upload)=> {
 					this.handleNextUpload(upload);
 				});

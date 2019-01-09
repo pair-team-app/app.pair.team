@@ -41,6 +41,7 @@
 	margin: 0 0 29px 0;
 	line-height: 30px;
 	font-family: "San Francisco Text", sans-serif;
+	font-weight: 400;
 	font-size: 16px;
 	letter-spacing: -0.24px;
 }
@@ -67,6 +68,7 @@
 
 .tiny-button {
 	font-family: "San Francisco Text Bold", sans-serif;
+	font-weight: 700;
 	font-size: 13px;
 	letter-spacing: -0.43px;
 	padding: 4px 14px;
@@ -107,7 +109,7 @@
 
 .sub-h1 {
 	font-family: "San Francisco Text Bold", sans-serif;
-	font-weight: 600;
+	font-weight: 700;
 	font-size: 28px;
 	letter-spacing: -0.52px;
 	color: #9b9b9b;
