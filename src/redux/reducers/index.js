@@ -1,16 +1,21 @@
 
+import '../../utils/lang-protos.js';
+
 import {
 	ADD_ARTICLE,
 	ADD_FILE_UPLOAD,
 	APPEND_EXPLORE_ARTBOARDS,
+	APPEND_UPLOAD_ARTBOARDS,
 	UPDATE_NAVIGATION,
 	USER_PROFILE_ERROR,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED } from '../../consts/action-types';
 
+
 const initialState = {
 	articles         : [],
 	exploreArtboards : [],
+	uploadArtboards  : [],
 	userProfile      : null,
 	file             : null,
 	navigation       : {
@@ -21,8 +26,37 @@ const initialState = {
 	}
 };
 
+
+const LOG_PREFIX = '[:|:]';
+const LOG_ACT_PREFIX = '\t-=\\';
+
+
+/*
+
+const uniqueArray = (arr)=> {
+	return (
+		arr.reduce((acc, inc) => {
+			if (!acc.find((i)=> (i === inc))) {
+				acc.push(inc);
+			}
+
+			return (acc);
+			}, []
+		)
+	);
+};
+*/
+
+
+const pruneArtboards = (artboards)=> {
+	return (artboards.reduce((acc, inc)=>
+		[...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], []
+	));
+};
+
+
 function rootReducer(state=initialState, action) {
-	console.log('rootReducer()', state, action);
+	invokeLogFormat(state, action);
 
 	if (action.type === ADD_ARTICLE) {
 		return (Object.assign({}, state, {
@@ -30,21 +64,41 @@ function rootReducer(state=initialState, action) {
 		}));
 
 	} else if (action.type === ADD_FILE_UPLOAD) {
+		actionLogFormat(action);
+
 		return (Object.assign({}, state, {
 			file : action.payload
 		}));
 
 	} else if (action.type === APPEND_EXPLORE_ARTBOARDS) {
+		actionLogFormat(action, state.exploreArtboards);
+
 		return (Object.assign({}, state, {
-			exploreArtboards : state.exploreArtboards.concat(action.payload)
+// 			exploreArtboards : state.exploreArtboards.concat(action.payload).reduce((acc, inc)=> [...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], [])
+			exploreArtboards : pruneArtboards(state.exploreArtboards.concat(action.payload))
+		}));
+
+	} else if (action.type === APPEND_UPLOAD_ARTBOARDS) {
+		actionLogFormat(action, state.uploadArtboards);
+
+// 		const artboard = action.payload.entries().next().value.pop();
+// 		const { uploadID, pageID, id } = (artboard) ? artboard : null;
+
+		return (Object.assign({}, state, {
+// 			uploadArtboards : state.uploadArtboards.concat(action.payload).reduce((acc, inc)=> [...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], [])
+			uploadArtboards : pruneArtboards(state.uploadArtboards.concat(action.payload))
 		}));
 
 	} else if (action.type === USER_PROFILE_ERROR || action.type === USER_PROFILE_LOADED || action.type === USER_PROFILE_UPDATED) {
+		actionLogFormat(action);
+
 		return (Object.assign({}, state, {
 			userProfile : action.payload
 		}));
 
 	} else if (action.type === UPDATE_NAVIGATION) {
+		actionLogFormat(action);
+
 		return (Object.assign({}, state, {
 			navigation : Object.assign({}, state.navigation, action.payload)
 		}));
@@ -52,5 +106,17 @@ function rootReducer(state=initialState, action) {
 
 	return (state);
 }
+
+
+
+const actionLogFormat = (action, meta='')=> {
+	const { type, payload } = action;
+	console.log(LOG_ACT_PREFIX, type, payload, meta);
+};
+
+const invokeLogFormat = (state, action)=> {
+	const { type, payload } = action;
+	console.log(LOG_PREFIX, 'rootReducer()', state, type, payload);
+};
 
 export default rootReducer;

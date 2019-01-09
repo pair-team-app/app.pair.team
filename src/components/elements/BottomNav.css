@@ -5,14 +5,19 @@
 	font-size: 12px;
 	letter-spacing: -0.4px;
 
-	/*position: fixed;*/
-	/*left: 320px;*/
-	/*bottom: 10px;*/
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	background-color: #ffffff;
+	padding: 20px;
+	z-index: 3;
 }
 
 .bottom-nav-link-wrapper {
 	display: table;
-	margin-bottom: 5px;
+	/*margin-bottom: 5px;*/
+	padding: 0 20px 10px 0;
+	width: 100%;
 }
 
 .bottom-nav-link {

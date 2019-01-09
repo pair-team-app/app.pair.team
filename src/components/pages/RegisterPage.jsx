@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import RegisterForm from '../elements/RegisterForm';
 import { updateUserProfile } from "../../redux/actions";
-import {trackEvent} from "../../utils/tracking";
+import { trackEvent } from "../../utils/tracking";
 
 
 function mapDispatchToProps(dispatch) {
@@ -27,7 +27,7 @@ class RegisterPage extends Component {
 
 	handleRegistered = (profile)=> {
 		console.log('RegisterPage.handleRegistered()', profile);
-		trackEvent('user', 'sign-up', profile.username + ' (' + profile.email + ')', parseInt(profile.id, 10));
+		trackEvent('user', 'sign-up');
 		cookie.save('user_id', profile.id, { path : '/' });
 		this.props.updateUserProfile(profile);
 		this.props.onPage('');

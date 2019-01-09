@@ -43,7 +43,7 @@ class SideNav extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('SideNav.componentDidUpdate()', prevProps, this.props, this.state);
+		//#- console.log('SideNav.componentDidUpdate()', prevProps, this.props, this.state);
 
 		if (prevProps.navigation !== this.props.navigation) {
 			this.onTreeEffect();
@@ -72,7 +72,7 @@ class SideNav extends Component {
 	}
 
 	onTreeEffect = ()=> {
-		console.log('SideNav.onTreeEffect()', this.props, this.state);
+		//#- console.log('SideNav.onTreeEffect()', this.props, this.state);
 
 		let uploads = [...this.state.uploads];
 		uploads.forEach((upload)=> {
@@ -86,7 +86,7 @@ class SideNav extends Component {
 	};
 
 	fetchNextUploads = ()=> {
-		console.log('SideNav.fetchNextUploads()', this.state.loadOffset, this.state.loadAmt);
+		//#- console.log('SideNav.fetchNextUploads()', this.state.loadOffset, this.state.loadAmt);
 
 // 		const prevUploads = this.state.uploads;
 		const { uploadID, pageID } = this.props.navigation;
@@ -103,7 +103,7 @@ class SideNav extends Component {
 		formData.append('length', '' + loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
-				console.log('UPLOAD_NAMES', response.data);
+				//#- console.log('UPLOAD_NAMES', response.data);
 
 				const uploads = response.data.uploads.map((upload)=> ({
 					id           : upload.id,
@@ -166,7 +166,7 @@ class SideNav extends Component {
 	};
 
 	fetchPageArtboards = (uploads)=> {
-		console.log('SideNav.fetchPageArtboards()', uploads);
+		//#- console.log('SideNav.fetchPageArtboards()', uploads);
 
 		uploads.forEach((upload)=> {
 			upload.pages.forEach((page)=> {
@@ -176,7 +176,7 @@ class SideNav extends Component {
 					formData.append('page_id', this.props.navigation.pageID);
 					axios.post('https://api.designengine.ai/system.php', formData)
 						.then((response) => {
-							console.log('ARTBOARD_NAMES', response.data);
+							//#- console.log('ARTBOARD_NAMES', response.data);
 							page.artboards = response.data.artboards.map((artboard) => ({
 								id       : artboard.id,
 								pageID   : artboard.page_id,
@@ -199,7 +199,7 @@ class SideNav extends Component {
 
 
 	handleUploadClick = (upload)=> {
-		console.log('SideNav.handleUploadClick()', upload);
+		//#- console.log('SideNav.handleUploadClick()', upload);
 
 		let uploads = [...this.state.uploads];
 		uploads.forEach(function(item, i) {
@@ -223,24 +223,24 @@ class SideNav extends Component {
 	};
 
 	handleCategoryClick = (category)=> {
-		console.log('SideNav.handleCategoryClick()', category);
+		//#- console.log('SideNav.handleCategoryClick()', category);
 		this.props.onCategoryItem(category);
 	};
 
 	handleFontClick = (font)=> {
-		console.log('SideNav.handleFontClick()', font);
+		//#- console.log('SideNav.handleFontClick()', font);
 	};
 
 	handleColorClick = (color)=> {
-		console.log('SideNav.handleColorClick()', color);
+		//#- console.log('SideNav.handleColorClick()', color);
 	};
 
 	handleSymbolClick = (symbol)=> {
-		console.log('SideNav.handleSymbolClick()', symbol);
+		//#- console.log('SideNav.handleSymbolClick()', symbol);
 	};
 
 	handlePageClick = (page)=> {
-		console.log('SideNav.handlePageClick()', page);
+		//#- console.log('SideNav.handlePageClick()', page);
 
 		let uploads = [...this.state.uploads];
 		uploads.forEach((upload)=> {
@@ -261,7 +261,7 @@ class SideNav extends Component {
 	};
 
 	handleContributorClick = (contributor)=> {
-		console.log('SideNav.handleContributorClick()', contributor);
+		//#- console.log('SideNav.handleContributorClick()', contributor);
 		if (contributor.id === 0) {
 			this.props.onPage('invite-team');
 		}
@@ -278,7 +278,7 @@ class SideNav extends Component {
 
 
 	render() {
-		console.log('SideNav.render()', this.props, this.state);
+		//#- console.log('SideNav.render()', this.props, this.state);
 		const { uploads, fetching, loadOffset } = this.state;
 
 		return (

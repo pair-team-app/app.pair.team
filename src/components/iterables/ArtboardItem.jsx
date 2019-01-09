@@ -5,7 +5,7 @@ import './ArtboardItem.css'
 import { limitString } from '../../utils/funcs';
 import sketchIcon from '../../images/icon-sketch.png';
 
-const TITLE_CHAR_LIMIT = 28;
+const TITLE_CHAR_LIMIT = 26;
 
 
 function ArtboardItem(props) {

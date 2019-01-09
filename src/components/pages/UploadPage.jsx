@@ -194,6 +194,7 @@ class UploadPage extends Component {
 			status          : '',
 			titleValid      : true,
 			uploadComplete  : false,
+			registering     : false,
 			submitted       : false,
 			sentInvites     : false,
 			shownStarted    : false,
@@ -221,16 +222,16 @@ class UploadPage extends Component {
 				id       : 1,
 				title    : 'Public',
 				subtext  : 'Anyone can see, download, & clone this design project.',
-				selected : true,
+				selected : false,
 				enabled  : true
 			}, {
 				id       : 2,
 				title    : 'Private',
 				subtext  : 'You choose who can see, download, & clone this design project.',
-				selected : false,
+				selected : true,
 				enabled  : true
 			}],
-			radioIndex : 1
+			radioIndex : 2
 		};
 
 		this.uploadInterval = null;
@@ -410,12 +411,15 @@ class UploadPage extends Component {
 		});
 	};
 
-	handleSubmit = ()=> {
-		const { title, description, radioIndex, uploadComplete, submitted } = this.state;
-		const { name, size } = this.state.file;
+	handleSubmit = (userProfile)=> {
+		console.log('UploadPage.handleSubmit()', userProfile, this.state);
+
+		const profile = (!this.props.profile) ? userProfile : this.state.profile;
+		const { title, description, radioIndex, file, uploadComplete, registering, submitted } = this.state;
+		const { name, size } = file;
 		const titleValid = (title.length > 0);
 
-		if (titleValid && uploadComplete && !submitted) {
+		if (titleValid && uploadComplete && (!submitted || registering)) {
 			this.setState({
 				titleValid : titleValid,
 				submitted  : true
@@ -424,7 +428,7 @@ class UploadPage extends Component {
 			if (isUserLoggedIn()) {
 				let formData = new FormData();
 				formData.append('action', 'NEW_UPLOAD');
-				formData.append('user_id', this.props.profile.id);
+				formData.append('user_id', profile.id);
 				formData.append('title', title);
 				formData.append('description', description);
 				formData.append('filesize', size);
@@ -436,7 +440,8 @@ class UploadPage extends Component {
 						this.setState({
 							upload          : response.data.upload,
 							processingState : 0,
-							file            : null
+							file            : null,
+							registering     : false
 						});
 
 						this.props.addFileUpload(null);
@@ -444,6 +449,9 @@ class UploadPage extends Component {
 						this.uploadInterval = setInterval(this.statusInterval, 2500);
 					}).catch((error) => {
 				});
+
+			} else {
+				this.setState({ registering : true });
 			}
 		}
 	};
@@ -487,36 +495,43 @@ class UploadPage extends Component {
 
 	handleRegistered = (profile)=> {
 		console.log('UploadPage.handleRegistered()', profile);
-		const { id } = profile;
 
-		trackEvent('user', 'sign-up', profile.username + ' (' + profile.email + ')', parseInt(profile.id, 10));
+		trackEvent('user', 'sign-up');
 		cookie.save('user_id', profile.id, { path : '/' });
 
-		const { title, description, radioIndex } = this.state;
-		const { name, size } = this.state.file;
 
-		let formData = new FormData();
-		formData.append('action', 'NEW_UPLOAD');
-		formData.append('user_id', id);
-		formData.append('title', title);
-		formData.append('description', description);
-		formData.append('filesize', size);
-		formData.append('private', (radioIndex === 1) ? '0' : '1');
-		formData.append('filename', "http://cdn.designengine.ai/system/" + name);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-				console.log('NEW_UPLOAD', response.data);
-				this.setState({
-					upload          : response.data.upload,
-					processingState : 0,
-					file            : null
-				});
 
-				this.props.onProcess(true);
-				this.props.updateUserProfile(profile);
-				this.uploadInterval = setInterval(this.statusInterval, 2500);
-			}).catch((error) => {
-		});
+		setTimeout(()=> {
+			this.props.updateUserProfile(profile);
+			this.handleSubmit(profile);
+		}, 750);
+
+
+// 		const { title, description, radioIndex } = this.state;
+// 		const { name, size } = this.state.file;
+//
+// 		let formData = new FormData();
+// 		formData.append('action', 'NEW_UPLOAD');
+// 		formData.append('user_id', id);
+// 		formData.append('title', title);
+// 		formData.append('description', description);
+// 		formData.append('filesize', size);
+// 		formData.append('private', (radioIndex === 1) ? '0' : '1');
+// 		formData.append('filename', "http://cdn.designengine.ai/system/" + name);
+// 		axios.post('https://api.designengine.ai/system.php', formData)
+// 			.then((response) => {
+// 				console.log('NEW_UPLOAD', response.data);
+// 				this.setState({
+// 					upload          : response.data.upload,
+// 					processingState : 0,
+// 					file            : null
+// 				});
+//
+// 				this.props.onProcess(true);
+// 				this.props.updateUserProfile(profile);
+// 				this.uploadInterval = setInterval(this.statusInterval, 2500);
+// 			}).catch((error) => {
+// 		});
 	};
 
 	statusInterval = ()=> {
@@ -556,7 +571,7 @@ class UploadPage extends Component {
 							console.log('ARTBOARDS', response.data);
 
 							let { artboards } = this.state;
-							if (response.data.artboards.length !== this.state.artboards.length) {
+							if (response.data.artboards.length !== artboards.length) {
 								artboards = response.data.artboards.map((artboard) => ({
 									id       : artboard.id,
 									pageID   : artboard.page_id,

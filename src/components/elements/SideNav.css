@@ -2,13 +2,16 @@
 .side-nav-wrapper {
 	position: fixed;
 	top: 58px;
-	width: 301px;
+	/*width: 301px;*/
+	width: 0;
 	overflow-y: scroll;
 	height: calc(100% - 58px);
 	background-color: #fafbfc;
 	border-right: 1px solid #eaecef;
 	padding: 22px 20px 22px 25px;
 	color: #9b9b9b;
+	display : none;
+	visibility: hidden;
 }
 
 .side-nav-top-wrapper {

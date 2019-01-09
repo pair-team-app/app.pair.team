@@ -30,7 +30,7 @@ import UploadPage from './components/pages/UploadPage';
 import StripeOverlay from './components/elements/StripeOverlay';
 
 import { fetchUserProfile, updateNavigation, updateUserProfile } from './redux/actions';
-import { buildInspectorPath, className, idsFromPath, isExplorePage, isInspectorPage, scrollOrigin, buildProjectPath } from './utils/funcs';
+import { buildInspectorPath, className, idsFromPath, isInspectorPage, scrollOrigin, buildProjectPath } from './utils/funcs';
 import { initTracker, trackEvent } from './utils/tracking';
 
 const wrapper = React.createRef();
@@ -205,8 +205,13 @@ class App extends Component {
 			});
 		}
 
-		if (upload.selected && !isInspectorPage() && !isExplorePage()) {
-			this.handlePage(buildProjectPath(upload.id, upload.title));
+		if (upload.selected && !isInspectorPage()) {
+			const orgPath = window.location.pathname.split('/').slice(1, 2).pop();
+			const projPath = buildProjectPath(upload.id, upload.title);
+			const newPath = projPath.replace(/^\/(\w+)\//, ((orgPath.length > 0) ? orgPath : 'proj') + '/');
+			console.log(':::::::: App.handleSideNavUploadItem()', projPath, newPath);
+			scrollOrigin(wrapper.current);
+			this.handlePage(newPath);
 		}
 	};
 
@@ -222,7 +227,7 @@ class App extends Component {
 					console.log('UPLOAD', response.data);
 					const { id, title } = response.data.upload;
 
-					if (!isInspectorPage() && !isExplorePage()) {
+					if (!isInspectorPage()) {
 						this.handlePage(buildProjectPath(id, title) + '/' + category.title.toLowerCase());
 					}
 				}).catch((error) => {
@@ -286,6 +291,22 @@ class App extends Component {
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);
 			}).catch((error) => {
+				if (error.response) {
+					// The request was made and the server responded with a status code
+					// that falls out of the range of 2xx
+					console.log(error.response.data);
+					console.log(error.response.status);
+					console.log(error.response.headers);
+				} else if (error.request) {
+					// The request was made but no response was received
+					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+					// http.ClientRequest in node.js
+					console.log(error.request);
+				} else {
+					// Something happened in setting up the request that triggered an Error
+					console.log('Error', error.message);
+				}
+				console.log(error.config);
 		});
 	};
 
@@ -302,7 +323,7 @@ class App extends Component {
 			    ? (<div>
 				    <TopNav
 					    onHome={()=> this.handleHomeReset()}
-					    onPage={(url)=> this.handlePage(url)}
+					    onPage={this.handlePage}
 					    onLogout={()=> this.handleLogout()}
 				    />
 
@@ -316,33 +337,34 @@ class App extends Component {
 					    onArtboardItem={(artboard)=> this.handleSideNavArtboardItem(artboard)}
 					    onLogout={()=> this.handleLogout()}
 					    onUpload={()=> this.handlePage('upload')}
-					    onPage={(url)=> this.handlePage(url)}
+					    onPage={this.handlePage}
 				    />
 
 				    <div className="content-wrapper" ref={wrapper}>
 					    <Switch>
-						    <Route exact path="/" render={()=> <HomePage uploadID={0} pageID={0} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onPopup={(payload)=> this.handlePopup(payload)} />} />
-					      <Route exact path="/add-ons" render={()=> <AddOnsPage onPage={(url)=> this.handlePage(url)} />} />
-					      <Route exact path="/api" render={()=> <APIPage onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />} />
-						    <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={(url)=> this.handlePage(url)} />} onPopup={(payload)=> this.handlePopup(payload)} />
-						    <Route exact path="/explore" render={()=> <ExplorePage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onPopup={(payload)=> this.handlePopup(payload)} />} />
-						    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={(url)=> this.handlePage(url)} onPopup={(payload)=> this.handlePopup(payload)} />} />
-						    <Route exact path="/login" render={()=> <LoginPage onPage={(url)=> this.handlePage(url)} />} onPopup={(payload)=> this.handlePopup(payload)} />
+						    <Route exact path="/" render={()=> <HomePage uploadID={0} pageID={0} onPage={this.handlePage} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onPopup={(payload)=> this.handlePopup(payload)} />} />
+					      <Route exact path="/add-ons" render={()=> <AddOnsPage onPage={this.handlePage} />} />
+					      <Route exact path="/api" render={()=> <APIPage onPage={this.handlePage} onLogout={()=> this.handleLogout()} />} />
+						    <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={this.handlePage} />} onPopup={(payload)=> this.handlePopup(payload)} />
+						    <Route exact path="/explore" render={()=> <ExplorePage onPage={this.handlePage} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onPopup={(payload)=> this.handlePopup(payload)} />} />
+						    <Route path="/explore/:uploadID/:uploadSlug" render={(props)=> <ExplorePage {...props} onPage={this.handlePage} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onPopup={(payload)=> this.handlePopup(payload)} />} />
+						    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={(payload)=> this.handlePopup(payload)} />} />
+						    <Route exact path="/login" render={()=> <LoginPage onPage={this.handlePage} />} onPopup={(payload)=> this.handlePopup(payload)} />
 					      <Route exact path="/mission" render={()=> <MissionPage />} />
-						    <Route exact path="/new" render={()=> <UploadPage onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={(processing)=> this.handleProcess(processing)} onPopup={(payload)=> this.handlePopup(payload)} />} />
-						    <Route exact path="/page/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={(url)=> this.handlePage(url)} onPopup={(payload)=> this.handlePopup(payload)} />} />
-					      <Route exact path="/profile" render={()=> <ProfilePage onPage={(url)=> this.handlePage(url)} />} />
+						    <Route exact path="/new" render={()=> <UploadPage onPage={this.handlePage} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={(processing)=> this.handleProcess(processing)} onPopup={(payload)=> this.handlePopup(payload)} />} />
+						    <Route exact path="/page/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={this.handlePage} onPopup={(payload)=> this.handlePopup(payload)} />} />
+					      <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} />} />
 					      <Route exact path="/privacy" render={()=> <PrivacyPage />} />
-						    <Route path="/proj/:uploadID/:uploadSlug" render={(props)=> <HomePage {...props} onPage={(url)=> this.handlePage(url)} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} onPopup={(payload)=> this.handlePopup(payload)} />
-						    <Route exact path="/recover" render={()=> <RecoverPage onPage={(url)=> this.handlePage(url)} />} />
-						    <Route exact path="/recover/password" render={()=> <RecoverPage onPage={(url)=> this.handlePage(url)} />} />
-						    <Route exact path="/register" render={()=> <RegisterPage onPage={(url)=> this.handlePage(url)} />} onPopup={(payload)=> this.handlePopup(payload)} />
+						    <Route path="/proj/:uploadID/:uploadSlug" render={(props)=> <HomePage {...props} onPage={this.handlePage} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} onPopup={(payload)=> this.handlePopup(payload)} />
+						    <Route exact path="/recover" render={()=> <RecoverPage onPage={this.handlePage} />} />
+						    <Route exact path="/recover/password" render={()=> <RecoverPage onPage={this.handlePage} />} />
+						    <Route exact path="/register" render={()=> <RegisterPage onPage={this.handlePage} />} onPopup={(payload)=> this.handlePopup(payload)} />
 					      <Route exact path="/terms" render={()=> <TermsPage />} />
 					      <Route render={()=> <Status404Page />} />
 					    </Switch>
-
-					    <BottomNav wrapperHeight={(wrapper.current) ? wrapper.current.clientHeight : 0} onPage={(url)=> this.handlePage(url)} onLogout={()=> this.handleLogout()} />
 				    </div>
+
+				    <BottomNav wrapperHeight={(wrapper.current) ? wrapper.current.clientHeight : 0} onPage={this.handlePage} onLogout={()=> this.handleLogout()} />
 
 				    {(this.state.overlayAlert === 'payment') && (
 					    <StripeOverlay onClick={(buttonType)=> this.handleOverlay('download', buttonType)} />
