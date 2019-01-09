@@ -26,6 +26,17 @@ const canvasWrapper = React.createRef();
 const canvas = React.createRef();
 
 
+const zoomNotches = [
+	0.03,
+	0.06,
+	0.13,
+	0.25,
+	0.50,
+	1.00,
+	1.75,
+	3.00
+];
+
 const SliceItem = (props)=> {
 // 	console.log('InspectorPage.SliceItem()', props);
 
@@ -215,17 +226,6 @@ class InspectorPage extends Component {
 			width  : 0,
 			height : 0
 		};
-
-		this.zoomNotches = [
-			0.03,
-			0.06,
-			0.13,
-			0.25,
-			0.50,
-			1.00,
-			1.75,
-			3.00
-		];
 	}
 
 	componentDidMount() {
@@ -472,8 +472,9 @@ class InspectorPage extends Component {
 
 		} else {
 			this.props.onPopup({
-				type    : "ERROR",
-				content : 'Only zip archives are support at this time.'
+				type     : "ERROR",
+				content  : 'Only zip archives are support at this time.',
+				duration : 1500
 			});
 		}
 	}
@@ -668,13 +669,13 @@ class InspectorPage extends Component {
 
 		if (direction === 0) {
 			this.setState({
-				scale   : this.zoomNotches[5],
-				tooltip : Math.floor(this.zoomNotches[5] * 100) + '%'
+				scale   : zoomNotches[5],
+				tooltip : Math.floor(zoomNotches[5] * 100) + '%'
 			});
 
 		} else {
 			let ind = -1;
-			this.zoomNotches.forEach((amt, i)=> {
+			zoomNotches.forEach((amt, i)=> {
 				if (scale === amt) {
 					ind = i;
 				}
@@ -682,7 +683,7 @@ class InspectorPage extends Component {
 
 			if (ind === -1) {
 				let diff = 3;
-				this.zoomNotches.forEach((amt, i)=> {
+				zoomNotches.forEach((amt, i)=> {
 					if (Math.abs(amt - scale) < diff) {
 						diff = Math.abs(amt - scale);
 						ind = i;
@@ -723,8 +724,8 @@ class InspectorPage extends Component {
 			}
 
 			this.setState({
-				scale   : this.zoomNotches[Math.min(Math.max(0, ind + direction), this.zoomNotches.length - 1)],
-				tooltip : Math.floor(this.zoomNotches[Math.min(Math.max(0, ind + direction), this.zoomNotches.length - 1)] * 100) + '%'
+				scale   : zoomNotches[Math.min(Math.max(0, ind + direction), zoomNotches.length - 1)],
+				tooltip : Math.floor(zoomNotches[Math.min(Math.max(0, ind + direction), zoomNotches.length - 1)] * 100) + '%'
 			});
 		}
 

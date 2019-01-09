@@ -208,10 +208,9 @@ class App extends Component {
 		if (upload.selected && !isInspectorPage()) {
 			const orgPath = window.location.pathname.split('/').slice(1, 2).pop();
 			const projPath = buildProjectPath(upload.id, upload.title);
-			const newPath = projPath.replace(/^\/(\w+)\//, ((orgPath.length > 0) ? orgPath : 'proj') + '/');
-			console.log(':::::::: App.handleSideNavUploadItem()', projPath, newPath);
+
 			scrollOrigin(wrapper.current);
-			this.handlePage(newPath);
+			this.handlePage(projPath.replace(/^\/(\w+)\//, ((orgPath.length > 0) ? orgPath : 'proj') + '/'));
 		}
 	};
 

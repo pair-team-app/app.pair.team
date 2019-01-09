@@ -542,8 +542,7 @@ class UploadPage extends Component {
 						this.setState({ shownStarted : true });
 						this.props.onPopup({
 							type     : 'INFO',
-							content  : 'Processing has started',
-							duration : 1250
+							content  : 'Processing has started'
 						});
 					}
 

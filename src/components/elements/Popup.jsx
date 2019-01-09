@@ -33,7 +33,7 @@ class Popup extends Component {
 			opacity    : 0,
 			y          : '-30px',
 			ease       : Power2.easeOut,
-			delay      : (payload.duration) ? payload.duration * 0.001 : 1,
+			delay      : (payload.duration) ? payload.duration * 0.001 : 1.125,
 			onComplete : onComplete
 		});
 	}
