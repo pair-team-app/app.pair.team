@@ -11,8 +11,10 @@
 .content-wrapper {
 	position: fixed;
 	top: 58px;
-	left: 301px;
-	width: calc(100% - 301px);
+	/*left: 301px;*/
+	left: 0;
+	/*width: calc(100% - 301px);*/
+	width: calc(100%);
 	height: calc(100% - 45px);
 	overflow-x: hidden;
 	overflow-y: scroll;
@@ -21,7 +23,8 @@
 
 .page-wrapper {
 	width: 100%;
-	margin-bottom: 20px;
+	/*margin-bottom: 20px;*/
+	margin-bottom: 75px;
 }
 
 .page-header {

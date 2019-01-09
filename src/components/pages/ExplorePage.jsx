@@ -6,7 +6,6 @@ import axios from 'axios/index';
 import createjs from 'preload-js';
 import { connect } from 'react-redux';
 
-import ArtboardGridHeader from '../elements/ArtboardGridHeader';
 import ArtboardGrid from '../elements/ArtboardGrid';
 import { addFileUpload, appendExploreArtboards } from '../../redux/actions';
 import {isExplorePage, isProjectPage} from "../../utils/funcs";
@@ -119,25 +118,23 @@ class ExplorePage extends Component {
 		console.log('ExplorePage.render()', this.props, this.state);
 
 		const { uploadID } = this.props.navigation;
-		const artboards = [...this.props.artboards].filter((artboard)=> (artboard.uploadID === uploadID));
+		const artboards = [...this.props.artboards].filter((artboard)=> (uploadID === 0 || artboard.uploadID === uploadID));
 		const { fetching, loadOffset } = this.state;
 
-		const title = (artboards) ? (fetching) ? 'Loading' : 'Recent' : null;
+		const title = (artboards) ? (fetching) ? 'Loading…' : 'Recent (' + artboards.length + ')' : null;
 
 		return (
 			<div className="page-wrapper explore-page-wrapper">
-				<ArtboardGridHeader
-					onItemClick={this.props.onPage}
-					onPage={this.props.onPage}
-					onFile={(file)=> this.handleFile(file)}
-					onPopup={(payload)=> this.props.onPopup(payload)} />
-
 				<ArtboardGrid
 					title={title}
 					artboards={artboards}
 					loadOffset={loadOffset}
 					fetching={fetching}
+					onPage={this.props.onPage}
+					onFile={(file)=> this.handleFile(file)}
+					onItemClick={this.props.onPage}
 					onClick={(artboard)=> this.props.onArtboardClicked(artboard)}
+					onPopup={this.props.onPopup}
 					onLoadNext={this.handleLoadNext} />
 			</div>
 		);

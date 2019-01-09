@@ -17,16 +17,16 @@ class BottomNav extends Component {
 		const pathname = window.location.pathname;
 		const year = new Date().getFullYear();
 
-		const style = (isInspectorPage()) ? {
-			display  : 'none'
-		} : (!isProjectPage() && !isExplorePage() && !pathname.includes('invite') && !isUploadPage() && !pathname.includes('terms') && !pathname.includes('privacy')) ? {
-			position : 'fixed',
-			left     : '320px',
-			bottom   : '10px'
-		} : null;
+// 		const style = (isInspectorPage()) ? {
+// 			display  : 'none'
+// 		} : (!isProjectPage() && !isExplorePage() && !pathname.includes('invite') && !isUploadPage() && !pathname.includes('terms') && !pathname.includes('privacy')) ? {
+// 			position : 'fixed',
+// 			left     : '320px',
+// 			bottom   : '10px'
+// 		} : null;
 
 		return (
-			<div className="bottom-nav-wrapper" style={style}>
+			<div className="bottom-nav-wrapper">
 				<div className="bottom-nav-link-wrapper">
 					{(isUserLoggedIn())
 						? (<div>

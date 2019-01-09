@@ -222,16 +222,16 @@ class UploadPage extends Component {
 				id       : 1,
 				title    : 'Public',
 				subtext  : 'Anyone can see, download, & clone this design project.',
-				selected : true,
+				selected : false,
 				enabled  : true
 			}, {
 				id       : 2,
 				title    : 'Private',
 				subtext  : 'You choose who can see, download, & clone this design project.',
-				selected : false,
+				selected : true,
 				enabled  : true
 			}],
-			radioIndex : 1
+			radioIndex : 2
 		};
 
 		this.uploadInterval = null;
@@ -411,9 +411,10 @@ class UploadPage extends Component {
 		});
 	};
 
-	handleSubmit = ()=> {
-		console.log('UploadPage.handleSubmit()', this.state);
+	handleSubmit = (userProfile)=> {
+		console.log('UploadPage.handleSubmit()', userProfile, this.state);
 
+		const profile = (!this.props.profile) ? userProfile : this.state.profile;
 		const { title, description, radioIndex, file, uploadComplete, registering, submitted } = this.state;
 		const { name, size } = file;
 		const titleValid = (title.length > 0);
@@ -427,7 +428,7 @@ class UploadPage extends Component {
 			if (isUserLoggedIn()) {
 				let formData = new FormData();
 				formData.append('action', 'NEW_UPLOAD');
-				formData.append('user_id', this.props.profile.id);
+				formData.append('user_id', profile.id);
 				formData.append('title', title);
 				formData.append('description', description);
 				formData.append('filesize', size);
@@ -498,7 +499,14 @@ class UploadPage extends Component {
 		trackEvent('user', 'sign-up');
 		cookie.save('user_id', profile.id, { path : '/' });
 
-		this.handleSubmit();
+
+
+		setTimeout(()=> {
+			this.props.updateUserProfile(profile);
+			this.handleSubmit(profile);
+		}, 750);
+
+
 // 		const { title, description, radioIndex } = this.state;
 // 		const { name, size } = this.state.file;
 //
