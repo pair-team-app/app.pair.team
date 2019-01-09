@@ -57,7 +57,7 @@ function InviteForm(props) {
 					const txtName = 'email' + (i + 1);
 					const moreClass = (i <= 5) ? 'upload-page-more-link' : 'upload-page-more-link upload-page-more-link-hidden';
 					return (
-						<Row key={i} vertical="center"><div className={invite.txtClass}><input type="text" name={txtName} placeholder="Enter Email Address" value={invite.email} onFocus={(event)=> props.onFocus(event)} onChange={(event)=> props.onInviteChange(event)} /></div><span className={moreClass} onClick={()=> props.onMoreEmail()}>More</span></Row>
+						<Row key={i} vertical="center"><div className={invite.txtClass}><input type="text" name={txtName} placeholder="Enter Email Address" value={invite.email} onFocus={props.onFocus} onChange={props.onInviteChange} /></div><span className={moreClass} onClick={()=> props.onMoreEmail()}>More</span></Row>
 					);
 				})}
 			</Column></div>
@@ -129,11 +129,11 @@ function UploadForm(props) {
 						resetThenSet={()=> props.resetThenSet()}
 					/>
 					<div className={titleClass}>
-						<input type="text" name="title" placeholder="Project Name" value={title} onChange={(event)=> props.onChange(event)} ref={titleTextfield} />
+						<input type="text" name="title" placeholder="Project Name" value={title} onChange={props.onChange} ref={titleTextfield} />
 					</div>
 				</div>
 				<div className="input-wrapper">
-					<input type="text" name="description" placeholder="Project Description (optional)" value={description} onChange={(event)=> props.onChange(event)} />
+					<input type="text" name="description" placeholder="Project Description (optional)" value={description} onChange={props.onChange} />
 				</div>
 				<div className="upload-page-radio-wrapper">
 					{radioButtons.map((radioButton, i)=> {
@@ -615,7 +615,7 @@ class UploadPage extends Component {
 						percent={percent}
 						uploadComplete={uploadComplete}
 						onChange={this.handleUploadChange}
-						onFocus={(event)=> this.handleFocus(event)}
+						onFocus={this.handleFocus}
 						onRadioButton={(radioButton)=> this.handleRadioButton(radioButton)}
 						onSubmit={()=> this.handleSubmit()}
 					/>
@@ -640,7 +640,7 @@ class UploadPage extends Component {
 					{(!sentInvites) && (<InviteForm
 						invites={invites}
 						onInviteChange={this.handleInviteChange}
-						onFocus={(event)=> this.handleFocus(event)}
+						onFocus={this.handleFocus}
 						onMoreEmail={this.handleMoreEmail}
 						onInvite={this.handleInvite}
 					/>)}
