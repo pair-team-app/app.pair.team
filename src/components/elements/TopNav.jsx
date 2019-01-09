@@ -34,7 +34,7 @@ class TopNav extends Component {
 							: (<Row vertical="center">
 									<TopNavProfile
 										onPage={this.props.onPage}
-										onLogout={()=> this.props.onLogout()}
+										onLogout={this.props.onLogout}
 									/>
 							</Row>)}
 					</Row>

@@ -25,14 +25,14 @@ class APIPage extends Component {
 
 	handleCodeCopy = (code)=> {
 		this.props.onPopup({
-			visible : true,
+			type    : 'INFO',
 			content : 'Copied to Clipboard!'
 		});
 	};
 
 	handleURLCopy = (url)=> {
 		this.props.onPopup({
-			visible : true,
+			type    : 'INFO',
 			content : 'Copied to Clipboard!'
 		});
 	};
@@ -138,7 +138,7 @@ class APIPage extends Component {
 					{/*</div>*/}
 				{/*</div>*/}
 
-				<div className="updated-timestamp">Last Updated: 10-13-2018</div>
+				<div className="updated-timestamp">Last Updated: 13-OCT-2018</div>
 			</div>
 		);
 	}

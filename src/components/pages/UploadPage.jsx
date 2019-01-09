@@ -76,7 +76,7 @@ function ProcessingContent(props) {
 			<div className="page-header-text">{(status === '') ? 'Design Engine parsed 0 pages, artboards, symbols, fonts, and more from ' + upload.title + '\'s Design Source.' : status}</div>
 			<Row horizontal="center">
 				<button className="adjacent-button" onClick={() => this.props.onPage('invite-team')}>Invite Team</button>
-				<CopyToClipboard onCopy={()=> this.handleURLCopy()} text={buildProjectURL(upload.id, upload.title)}>
+				<CopyToClipboard onCopy={this.handleURLCopy} text={buildProjectURL(upload.id, upload.title)}>
 					<button>Copy Link</button>
 				</CopyToClipboard>
 			</Row>
@@ -126,7 +126,7 @@ function UploadForm(props) {
 					<Dropdown
 						title="Select team (soon)"
 						list={[]}
-						resetThenSet={()=> props.resetThenSet()}
+						resetThenSet={props.resetThenSet}
 					/>
 					<div className={titleClass}>
 						<input type="text" name="title" placeholder="Project Name" value={title} onChange={props.onChange} ref={titleTextfield} />
@@ -616,8 +616,8 @@ class UploadPage extends Component {
 						uploadComplete={uploadComplete}
 						onChange={this.handleUploadChange}
 						onFocus={this.handleFocus}
-						onRadioButton={(radioButton)=> this.handleRadioButton(radioButton)}
-						onSubmit={()=> this.handleSubmit()}
+						onRadioButton={this.handleRadioButton}
+						onSubmit={this.handleSubmit}
 					/>
 				</div>)}
 
@@ -626,7 +626,7 @@ class UploadPage extends Component {
 					Enter registration details to submit design file.
 					<RegisterForm
 						onPage={this.props.onPage}
-						onRegistered={(profile)=> this.handleRegistered(profile)} />
+						onRegistered={this.handleRegistered} />
 				</div>)}
 
 				{(processingState >= 0) && (<div>

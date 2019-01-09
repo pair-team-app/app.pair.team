@@ -40,7 +40,7 @@ class RegisterPage extends Component {
 			<div className="page-wrapper register-page-wrapper">
 				<h3>Sign Up</h3>
 				Enter registration details to submit design file.
-				<RegisterForm onPage={this.props.onPage} onRegistered={(profile)=> this.handleRegistered(profile)} />
+				<RegisterForm onPage={this.props.onPage} onRegistered={this.handleRegistered} />
 			</div>
 		);
 	}

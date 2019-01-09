@@ -10,8 +10,7 @@ import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
-import Popup from '../elements/Popup';
-
+import { timestampOpts } from '../../consts/formats';
 import { capitalizeText, isUserLoggedIn } from '../../utils/funcs.js';
 import { toCSS, toReactCSS } from '../../utils/langs.js';
 
@@ -25,12 +24,6 @@ import disabledZoomResetButton from '../../images/buttons/btn-zoom-reset_disable
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
 const canvas = React.createRef();
-
-const tsOptions = {
-	year   : 'numeric',
-	month  : 'numeric',
-	day    : 'numeric'
-};
 
 
 const SliceItem = (props)=> {
@@ -107,7 +100,7 @@ const SpecsList = (props)=> {
 			{/*<Row><Column flexGrow={1}>Artboard</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard) ? artboard.title : ''}</Column></Row>*/}
 			<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? props.slice.title : ''}</Column></Row>
 			<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? capitalizeText(props.slice.type, true) : ''}</Column></Row>
-			{/*<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(props.slice.added))) : ''}</Column></Row>*/}
+			{/*<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', timestampOpts).format(Date.parse(props.slice.added))) : ''}</Column></Row>*/}
 			<Row><Column flexGrow={1}>Export Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">W: {(props.slice) ? props.slice.meta.frame.size.width : 0}px H: {(props.slice) ? props.slice.meta.frame.size.height : 0}px</Column></Row>
 			<Row><Column flexGrow={1}>Position</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">X: {(props.slice) ? props.slice.meta.frame.origin.x : 0}px Y: {(props.slice) ? props.slice.meta.frame.origin.y : 0}px</Column></Row>
 			<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? props.slice.meta.rotation : 0}&deg;</Column></Row>
@@ -136,7 +129,7 @@ const SpecsList = (props)=> {
 			</Row>)}
 			{/*<Row><Column flexGrow={1}>Inner Padding:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>*/}
 			{/*<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? capitalizeText(props.slice.meta.blendMode, true) : ''}</Column></Row>*/}
-			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', tsOptions).format(Date.parse(props.slice.added))) : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', timestampOpts).format(Date.parse(props.slice.added))) : ''}</Column></Row>
 			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.page) ? props.page.author : ''}</Column></Row>
 		</div>
 	);
@@ -208,11 +201,7 @@ class InspectorPage extends Component {
 				title    : 'LESS',
 				selected : false,
 				key      : 'languages'
-			}],
-			popup : {
-				visible : false,
-				content : ''
-			}
+			}]
 		};
 
 		this.initialScaled = false;
@@ -482,11 +471,10 @@ class InspectorPage extends Component {
 			});
 
 		} else {
-			const popup = {
-				visible : true,
-				content : 'error::Only zip archives are support at this time.'
-			};
-			this.setState({ popup });
+			this.props.onPopup({
+				type    : "ERROR",
+				content : 'Only zip archives are support at this time.'
+			});
 		}
 	}
 
@@ -515,11 +503,10 @@ class InspectorPage extends Component {
 	};
 
 	handleCodeCopy = ()=> {
-		const popup = {
-			visible : true,
+		this.props.onPopup({
+			type    : 'INFO',
 			content : 'Copied to Clipboard!'
-		};
-		this.setState({ popup });
+		});
 	};
 
 	handleContribute = ()=> {
@@ -1206,10 +1193,6 @@ class InspectorPage extends Component {
 						<button className="inspector-page-panel-button">Download</button>
 					</div>
 				</div>
-
-				{this.state.popup.visible && (
-					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
-				)}
 			</div>
 
 			{(this.state.tooltip !== '') && (<div className="inspector-page-tooltip">

@@ -211,10 +211,10 @@ class HomePage extends Component {
 					artboards={artboards.sort((a, b)=> (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0))}
 					loadOffset={loadOffset}
 					fetching={fetching}
-					onClick={(artboard)=> this.props.onArtboardClicked(artboard)}
+					onClick={this.props.onArtboardClicked}
 					onItemClick={this.props.onPage}
 					onPage={this.props.onPage}
-					onFile={(file)=> this.handleFile(file)}
+					onFile={this.handleFile}
 					onPopup={this.props.onPopup}
 					onLoadNext={this.handleLoadNext} />
 			</div>

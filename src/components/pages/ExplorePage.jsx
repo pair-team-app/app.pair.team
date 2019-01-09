@@ -131,9 +131,9 @@ class ExplorePage extends Component {
 					loadOffset={loadOffset}
 					fetching={fetching}
 					onPage={this.props.onPage}
-					onFile={(file)=> this.handleFile(file)}
+					onFile={this.handleFile}
 					onItemClick={this.props.onPage}
-					onClick={(artboard)=> this.props.onArtboardClicked(artboard)}
+					onClick={this.props.onArtboardClicked}
 					onPopup={this.props.onPopup}
 					onLoadNext={this.handleLoadNext} />
 			</div>
