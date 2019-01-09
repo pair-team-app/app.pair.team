@@ -346,15 +346,15 @@ class App extends Component {
 					      <Route exact path="/api" render={()=> <APIPage onPage={this.handlePage} onLogout={this.handleLogout} onPopup={this.handlePopup} />} />
 						    <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={this.handlePage} />} onPopup={this.handlePopup} />
 						    <Route exact path="/explore" render={()=> <ExplorePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
-						    <Route path="/explore/:uploadID/:uploadSlug" render={(props)=> <ExplorePage {...props} onPage={this.handlePage} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onPopup={this.handlePopup} />} />
+						    <Route path="/explore/:uploadID/:uploadSlug" render={(props)=> <ExplorePage {...props} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 						    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 						    <Route exact path="/login" render={()=> <LoginPage onPage={this.handlePage} />} onPopup={this.handlePopup} />
 					      <Route exact path="/mission" render={()=> <MissionPage />} />
-						    <Route exact path="/new" render={()=> <UploadPage onPage={this.handlePage} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} onProcess={(processing)=> this.handleProcess(processing)} onPopup={this.handlePopup} />} />
+						    <Route exact path="/new" render={()=> <UploadPage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onProcess={this.handleProcess} onPopup={this.handlePopup} />} />
 						    <Route exact path="/page/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					      <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} />} />
 					      <Route exact path="/privacy" render={()=> <PrivacyPage />} />
-						    <Route path="/proj/:uploadID/:uploadSlug" render={(props)=> <HomePage {...props} onPage={this.handlePage} onArtboardClicked={(artboard)=> this.handleArtboardClicked(artboard)} />} onPopup={this.handlePopup} />
+						    <Route path="/proj/:uploadID/:uploadSlug" render={(props)=> <HomePage {...props} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} />} onPopup={this.handlePopup} />
 						    <Route exact path="/recover" render={()=> <RecoverPage onPage={this.handlePage} />} />
 						    <Route exact path="/recover/password" render={()=> <RecoverPage onPage={this.handlePage} />} />
 						    <Route exact path="/register" render={()=> <RegisterPage onPage={this.handlePage} />} onPopup={this.handlePopup} />
