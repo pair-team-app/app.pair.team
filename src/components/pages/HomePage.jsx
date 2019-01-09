@@ -7,8 +7,7 @@ import { connect } from 'react-redux';
 
 import ArtboardGrid from '../elements/ArtboardGrid';
 import { addFileUpload, appendUploadArtboards } from '../../redux/actions';
-import { isExplorePage, isInspectorPage, isProjectPage, limitString } from '../../utils/funcs';
-import defaultAvatar from '../../images/default-avatar.png';
+import { isInspectorPage, limitString } from '../../utils/funcs';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -74,60 +73,6 @@ class HomePage extends Component {
 			this.setState({ fetching : false });
 		}
 	}
-
-	/*handleLoadNext = ()=> {
-		console.log('HomePage.handleLoadNext()', this.props.artboards);
-
-		const { uploadID } = this.props.match.params;
-		const { loadOffset, loadAmt } = this.state;
-
-		this.setState({ fetching : true });
-
-		let formData = new FormData();
-		formData.append('action', 'UPLOAD');
-		formData.append('upload_id', uploadID);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-				console.log('UPLOAD', response.data);
-				const { upload } = response.data;
-
-
-				formData.append('action', 'ARTBOARDS');
-				formData.append('upload_id', uploadID);
-				formData.append('page_id', '0');
-				formData.append('offset', loadOffset);
-				formData.append('length', loadAmt);
-				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response) => {
-						console.log('ARTBOARDS', response.data);
-
-						const artboards = response.data.artboards.map((artboard) => ({
-							id        : artboard.id,
-							pageID    : artboard.page_id,
-							uploadID  : artboard.upload_id,
-							system    : artboard.system,
-							title     : artboard.title,
-							pageTitle : artboard.page_title,
-							type      : artboard.type,
-							filename  : artboard.filename,
-							creator   : artboard.creator,
-							meta      : JSON.parse(artboard.meta),
-							added     : artboard.added,
-							selected  : false
-						}));
-
-						this.setState({
-							upload     : upload,
-							fetching   : false,
-							loadOffset : loadOffset + artboards.length
-						});
-
-						this.props.appendUploadArtboards(artboards);
-					}).catch((error) => {
-				});
-			}).catch((error) => {
-		});
-	};*/
 
 
 	handleLoadNext = ()=> {
@@ -208,7 +153,7 @@ class HomePage extends Component {
 		console.log('!¡!¡!¡!¡!¡!¡!¡!¡!¡— HomePage.handleNextUpload()', upload);
 
 		const prevArtboards = [...this.props.artboards];
-		const { loadOffset, loadAmt } = this.state;
+		const { loadOffset } = this.state;
 
 		let formData = new FormData();
 		formData.append('action', 'ARTBOARDS');
@@ -254,11 +199,9 @@ class HomePage extends Component {
 	render() {
 		console.log('HomePage.render()', this.props, this.state);
 
-// 		const artboards = [...this.props.artboards].filter((artboard)=> (artboard.uploadID === uploadID));
 		const { profile, artboards } = this.props;
 		const { fetching, loadOffset, uploadTotal } = this.state;
 
-// 		const title = (upload) ? (upload.title + ' (' + (upload.total.artboards) + ')') : (fetching) ? 'Loading…' : null;
 		const title = (profile) ? (fetching) ? 'Loading…' : 'Showing most viewed from ' + uploadTotal + ' project' + ((uploadTotal === 1) ? '' : 's') + '.' : null;
 		return (
 			<div className="page-wrapper home-page-wrapper">

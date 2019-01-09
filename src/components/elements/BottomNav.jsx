@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './BottomNav.css';
 
-import { isExplorePage, isProjectPage, isInspectorPage, isUploadPage, isUserLoggedIn } from '../../utils/funcs';
+import { isUserLoggedIn } from '../../utils/funcs';
 
 
 class BottomNav extends Component {
@@ -14,16 +14,7 @@ class BottomNav extends Component {
 	}
 
 	render() {
-		const pathname = window.location.pathname;
 		const year = new Date().getFullYear();
-
-// 		const style = (isInspectorPage()) ? {
-// 			display  : 'none'
-// 		} : (!isProjectPage() && !isExplorePage() && !pathname.includes('invite') && !isUploadPage() && !pathname.includes('terms') && !pathname.includes('privacy')) ? {
-// 			position : 'fixed',
-// 			left     : '320px',
-// 			bottom   : '10px'
-// 		} : null;
 
 		return (
 			<div className="bottom-nav-wrapper">
