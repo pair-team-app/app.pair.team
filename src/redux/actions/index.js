@@ -7,6 +7,7 @@ import {
 	ADD_ARTICLE,
 	ADD_FILE_UPLOAD,
 	APPEND_EXPLORE_ARTBOARDS,
+	APPEND_UPLOAD_ARTBOARDS,
 	USER_PROFILE_ERROR,
 	UPDATE_NAVIGATION,
 	USER_PROFILE_LOADED,
@@ -23,6 +24,10 @@ export function addFileUpload(payload) {
 
 export function appendExploreArtboards(payload) {
 	return ({ type : APPEND_EXPLORE_ARTBOARDS, payload });
+}
+
+export function appendUploadArtboards(payload) {
+	return ({ type : APPEND_UPLOAD_ARTBOARDS, payload });
 }
 
 export function updateNavigation(payload) {

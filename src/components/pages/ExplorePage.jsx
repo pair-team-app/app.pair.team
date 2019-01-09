@@ -5,18 +5,18 @@ import './ExplorePage.css';
 import axios from 'axios/index';
 import createjs from 'preload-js';
 import { connect } from 'react-redux';
-import { Row } from 'simple-flexbox';
 
-import HomeExpo from '../elements/HomeExpo';
-import ExploreArtboardGrid from '../elements/ExploreArtboardGrid';
-import GridHeader from '../elements/GridHeader';
+import ArtboardGridHeader from '../elements/ArtboardGridHeader';
+import ArtboardGrid from '../elements/ArtboardGrid';
 import { addFileUpload, appendExploreArtboards } from '../../redux/actions';
+import {isExplorePage, isProjectPage} from "../../utils/funcs";
 
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		artboards : state.exploreArtboards,
-		profile   : state.userProfile
+		artboards  : state.exploreArtboards,
+		navigation : state.navigation,
+		profile    : state.userProfile
 	});
 };
 
@@ -45,12 +45,29 @@ class ExplorePage extends Component {
 
 	componentDidMount() {
 		console.log('ExplorePage.componentDidMount()');
-// 		this.queue.on('fileload', this.handleFileLoaded);
-		this.handleLoadNext();
+		if (!this.props.artboards || this.props.artboards.length === 0) {
+			this.handleLoadNext();
+		}
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('ExplorePage.componentDidUpdate()', prevProps, this.props);
+
+		if ((isProjectPage() || isExplorePage()) && (prevProps.match && prevProps.match.params.uploadID !== this.props.match.params.uploadID)) {
+			this.setState({
+				upload     : null,
+				artboards  : [],
+				loadOffset : 0,
+				loadAmt    : 24
+			});
+
+			setTimeout(this.handleLoadNext, 125);
+		}
+	}
+
+
 	handleLoadNext = ()=> {
-// 		console.log('ExplorePage.handleLoadNext()');
+		console.log('ExplorePage.handleLoadNext()', this.props.artboards);
 
 		const { loadOffset, loadAmt } = this.state;
 
@@ -58,6 +75,7 @@ class ExplorePage extends Component {
 		let formData = new FormData();
 		formData.append('action', 'EXPLORE');
 		formData.append('user_id', (this.props.profile) ? this.props.profile.id : 0);
+		formData.append('upload_id', (this.props.navigation) ? this.props.navigation.uploadID : 0);
 		formData.append('offset', loadOffset);
 		formData.append('length', loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
@@ -65,11 +83,6 @@ class ExplorePage extends Component {
 				console.log('EXPLORE', response.data);
 
 				const artboards = response.data.artboards.map((artboard) => {
-// 					this.queue.loadFile({
-// 						id  : artboard.id,
-// 						src : artboard.filename.replace('@3x', '@0.25x')
-// 					});
-
 					return ({
 						id        : artboard.id,
 						pageID    : artboard.page_id,
@@ -85,26 +98,15 @@ class ExplorePage extends Component {
 					});
 				});
 
-				this.props.appendExploreArtboards(artboards);
-
 				this.setState({
 					fetching   : false,
 					loadOffset : loadOffset + artboards.length
 				});
+				this.props.appendExploreArtboards(artboards);
+
 			}).catch((error) => {
 		});
 	};
-
-// 	handleFileLoaded = (event)=> {
-// 		let artboards = [...this.state.artboards];
-// 		artboards.forEach((artboard)=> {
-// 			if (artboard.id === event.item.id) {
-// 				artboard.filename = event.item.src.replace('@0.25x.png', '');
-// 			}
-// 		});
-//
-// 		this.setState({ artboards });
-// 	};
 
 	handleFile = (file)=> {
 		console.log('ExplorePage.handleUploadComplete()', file);
@@ -114,23 +116,29 @@ class ExplorePage extends Component {
 
 
 	render() {
-		console.log('ExplorePage.render()', this.state);
+		console.log('ExplorePage.render()', this.props, this.state);
 
+		const { uploadID } = this.props.navigation;
+		const artboards = [...this.props.artboards].filter((artboard)=> (artboard.uploadID === uploadID));
 		const { fetching, loadOffset } = this.state;
-		const btnClass = (fetching) ? 'fat-button button-disabled' : (loadOffset !== this.props.artboards.length) ? 'fat-button is-hidden' : 'fat-button';
-		const btnCaption = (fetching) ? 'Loading…' : 'More';
+
+		const title = (artboards) ? (fetching) ? 'Loading' : 'Recent' : null;
 
 		return (
 			<div className="page-wrapper explore-page-wrapper">
-				<HomeExpo
+				<ArtboardGridHeader
+					onItemClick={this.props.onPage}
+					onPage={this.props.onPage}
 					onFile={(file)=> this.handleFile(file)}
-					onItemClick={(url)=> this.props.onPage(url)}
 					onPopup={(payload)=> this.props.onPopup(payload)} />
-				<GridHeader onPage={(url)=> this.props.onPage(url)} />
 
-				<Row><h3>{(fetching) ? 'Loading…' : 'Recent'}</h3></Row>
-				<ExploreArtboardGrid onClick={(artboard)=> this.props.onArtboardClicked(artboard)} />
-				<Row horizontal="center"><button className={btnClass} onClick={()=> (!fetching) ? this.handleLoadNext() : null}>{btnCaption}</button></Row>
+				<ArtboardGrid
+					title={title}
+					artboards={artboards}
+					loadOffset={loadOffset}
+					fetching={fetching}
+					onClick={(artboard)=> this.props.onArtboardClicked(artboard)}
+					onLoadNext={this.handleLoadNext} />
 			</div>
 		);
 	}
