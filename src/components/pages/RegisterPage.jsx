@@ -6,8 +6,8 @@ import cookie from "react-cookies";
 import { connect } from 'react-redux';
 
 import RegisterForm from '../elements/RegisterForm';
-import { updateUserProfile } from "../../redux/actions";
-import { trackEvent } from "../../utils/tracking";
+import { updateUserProfile } from '../../redux/actions';
+import { trackEvent } from '../../utils/tracking';
 
 
 function mapDispatchToProps(dispatch) {

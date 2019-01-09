@@ -8,7 +8,7 @@ import { Column, Row } from 'simple-flexbox';
 
 import ArtboardItem from '../iterables/ArtboardItem';
 import { isUserLoggedIn, sendToSlack } from '../../utils/funcs';
-import uploadIcon from "../../images/upload.png";
+import uploadIcon from '../../images/upload.png';
 
 
 const mapStateToProps = (state, ownProps)=> {

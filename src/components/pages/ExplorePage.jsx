@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 
 import ArtboardGrid from '../elements/ArtboardGrid';
 import { addFileUpload, appendExploreArtboards } from '../../redux/actions';
-import {isExplorePage, isProjectPage} from "../../utils/funcs";
+import { isExplorePage, isProjectPage } from '../../utils/funcs';
 
 
 const mapStateToProps = (state, ownProps)=> {

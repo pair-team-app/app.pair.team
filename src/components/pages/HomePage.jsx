@@ -7,8 +7,8 @@ import { connect } from 'react-redux';
 
 import ArtboardGrid from '../elements/ArtboardGrid';
 import { addFileUpload, appendUploadArtboards } from '../../redux/actions';
-import { isExplorePage, isInspectorPage, isProjectPage, limitString } from "../../utils/funcs";
-import defaultAvatar from "../../images/default-avatar.png";
+import { isExplorePage, isInspectorPage, isProjectPage, limitString } from '../../utils/funcs';
+import defaultAvatar from '../../images/default-avatar.png';
 
 
 const mapStateToProps = (state, ownProps)=> {

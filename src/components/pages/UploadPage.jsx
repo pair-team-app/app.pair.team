@@ -13,11 +13,12 @@ import RegisterForm from '../elements/RegisterForm';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Dropdown from '../elements/Dropdown';
 import RadioButton from '../elements/RadioButton';
+import { addFileUpload, updateUserProfile } from '../../redux/actions';
 import { buildProjectPath, buildProjectURL, isUserLoggedIn, isValidEmail, sendToSlack } from '../../utils/funcs';
+import { trackEvent } from '../../utils/tracking';
+
 import uploadIcon from '../../images/upload.png';
 import defaultAvatar from '../../images/default-avatar.png';
-import { addFileUpload, updateUserProfile } from '../../redux/actions';
-import { trackEvent } from "../../utils/tracking";
 
 const titleTextfield = React.createRef();
 
@@ -218,19 +219,7 @@ class UploadPage extends Component {
 				passMsg       : ''
 			},
 			artboards       : [],
-			radioButtons    : [{
-				id       : 1,
-				title    : 'Public',
-				subtext  : 'Anyone can see, download, & clone this design project.',
-				selected : false,
-				enabled  : true
-			}, {
-				id       : 2,
-				title    : 'Private',
-				subtext  : 'You choose who can see, download, & clone this design project.',
-				selected : true,
-				enabled  : true
-			}],
+			radioButtons    : ,
 			radioIndex : 2
 		};
 

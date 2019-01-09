@@ -5,7 +5,7 @@ import './RegisterForm.css'
 import axios from "axios";
 import { Column, Row } from 'simple-flexbox';
 
-import { hasBit, isValidEmail } from "../../utils/funcs";
+import { hasBit, isValidEmail } from '../../utils/funcs';
 
 
 const passwordTextfield = React.createRef();
