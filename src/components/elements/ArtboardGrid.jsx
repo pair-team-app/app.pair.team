@@ -115,7 +115,7 @@ class ArtboardGrid extends Component {
 
 			<Row style={titleStyle}><h3>{(!fetching && artboards.length === 0) ? '' : title}</h3></Row>
 			{(isUserLoggedIn() && artboards.length > 0) && (
-				<Row horizontal="space-between" className="artboard-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
+				<Row horizontal="space-around" className="artboard-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
 					{(artboards) && artboards.map((artboard, i) => {
 						return (
 							<Column key={i}>

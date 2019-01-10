@@ -10,7 +10,8 @@ import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
-import { timestampOpts } from '../../consts/formats';
+import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
+import { TIMESTAMP_OPTS } from '../../consts/formats';
 import { capitalizeText, isUserLoggedIn } from '../../utils/funcs.js';
 import { toCSS, toReactCSS } from '../../utils/langs.js';
 
@@ -21,12 +22,11 @@ import disabledZoomOutButton from '../../images/buttons/btn-zoom-out_disabled.sv
 import enabledZooResetButton from '../../images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../images/buttons/btn-zoom-reset_disabled.svg';
 import { updateNavigation } from "../../redux/actions";
-import {sendToSlack} from "../../utils/funcs";
+import { buildInspectorPath, buildInspectorURL, sendToSlack } from "../../utils/funcs";
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
 const canvas = React.createRef();
-
 
 const zoomNotches = [
 	0.03,
@@ -38,6 +38,20 @@ const zoomNotches = [
 	1.75,
 	3.00
 ];
+
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		navigation : state.navigation,
+		profile    : state.userProfile
+	});
+};
+
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		updateNavigation  : (navIDs)=> dispatch(updateNavigation(navIDs))
+	});
+};
 
 
 const SliceItem = (props)=> {
@@ -59,6 +73,15 @@ const SliceItem = (props)=> {
 	);
 };
 
+
+
+const LandingButtons = (props)=> {
+	return (<Column horizontal="start" vertical="center" className="inspector-page-landing-button-wrapper">
+		<button className="fat-button inspector-page-landing-button" onClick={()=> props.onClick('UPLOAD')}>Upload</button>
+		<button className="fat-button inspector-page-landing-button" onClick={()=> props.onClick('REQUEST')}>Request</button>
+		<button className="fat-button inspector-page-landing-button" onClick={()=> props.onClick('DEMO')}>Demo</button>
+	</Column>);
+};
 
 
 const SpecsList = (props)=> {
@@ -103,7 +126,7 @@ const SpecsList = (props)=> {
 			{/*<Row><Column flexGrow={1}>Artboard</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard) ? artboard.title : ''}</Column></Row>*/}
 			<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? props.slice.title : ''}</Column></Row>
 			<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? capitalizeText(props.slice.type, true) : ''}</Column></Row>
-			{/*<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', timestampOpts).format(Date.parse(props.slice.added))) : ''}</Column></Row>*/}
+			{/*<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', TIMESTAMP_OPTS).format(Date.parse(props.slice.added))) : ''}</Column></Row>*/}
 			<Row><Column flexGrow={1}>Export Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">W: {(props.slice) ? props.slice.meta.frame.size.width : 0}px H: {(props.slice) ? props.slice.meta.frame.size.height : 0}px</Column></Row>
 			<Row><Column flexGrow={1}>Position</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">X: {(props.slice) ? props.slice.meta.frame.origin.x : 0}px Y: {(props.slice) ? props.slice.meta.frame.origin.y : 0}px</Column></Row>
 			<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? props.slice.meta.rotation : 0}&deg;</Column></Row>
@@ -132,24 +155,10 @@ const SpecsList = (props)=> {
 			</Row>)}
 			{/*<Row><Column flexGrow={1}>Inner Padding:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>*/}
 			{/*<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? capitalizeText(props.slice.meta.blendMode, true) : ''}</Column></Row>*/}
-			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', timestampOpts).format(Date.parse(props.slice.added))) : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', TIMESTAMP_OPTS).format(Date.parse(props.slice.added))) : ''}</Column></Row>
 			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.page) ? props.page.author : ''}</Column></Row>
 		</div>
 	);
-};
-
-
-const mapStateToProps = (state, ownProps)=> {
-	return ({
-		navigation : state.navigation,
-		profile    : state.userProfile
-	});
-};
-
-const mapDispatchToProps = (dispatch)=> {
-	return ({
-		updateNavigation  : (navIDs)=> dispatch(updateNavigation(navIDs))
-	});
 };
 
 
@@ -166,7 +175,7 @@ class InspectorPage extends Component {
 			uploading     : false,
 			percent       : 0,
 			selectedTab   : 0,
-			tooltip       : 'Loading…',
+			tooltip       : '',
 			hoverOffset   : null,
 			scale         : 0.5,
 			scrollOffset  : {
@@ -223,11 +232,17 @@ class InspectorPage extends Component {
 		};
 	}
 
+	hasNavIDs() {
+		const { navigation } = this.props;
+		return (navigation && (navigation.uploadID !== 0 && navigation.pageID !== 0));
+	}
+
+
 	componentDidMount() {
 		console.log('InspectorPage.componentDidMount()', this.props, this.state);
-
-		this.refreshData();
-		this.antsInterval = setInterval(this.redrawAnts, 100);
+		if (this.hasNavIDs()) {
+			this.refreshData();
+		}
 
 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
 		document.addEventListener('wheel', this.handleWheelStart.bind(this));
@@ -239,11 +254,11 @@ class InspectorPage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('InspectorPage.componentDidUpdate()', prevProps, this.props);
+		console.log('InspectorPage.componentDidUpdate()', prevProps, this.props, this.state);
 // 		const { uploadID, pageID, artboardID, sliceID } = this.state;
 // 		this.setState({ uploadID, pageID, artboardID, sliceID });
-		if (this.props.navigation !== prevProps.navigation) {
-// 			this.refreshData();
+		if (this.props.navigation !== prevProps.navigation && this.hasNavIDs()) {
+			this.refreshData();
 		}
 
 		if (canvasWrapper.current) {
@@ -276,22 +291,31 @@ class InspectorPage extends Component {
 // 			}
 		}
 
-		if (canvas.current && this.antsInterval) {
-			this.updateCanvas();
-		}
+// 		if (canvas.current && this.antsInterval) {
+// 			this.onUpdateCanvas();
+// 		}
 	}
 
 	componentWillUnmount() {
 		document.removeEventListener("keydown", this.handleKeyDown.bind(this));
 		document.removeEventListener("wheel", this.handleWheelStart.bind(this));
 		clearInterval(this.antsInterval);
+		this.antsInterval = null;
 	}
 
 
 	refreshData = ()=> {
 		console.log('InspectorPage.refreshData()', this.props);
+		this.setState({ tooltip : 'Loading…' });
 
 		const { uploadID, pageID } = this.props.navigation;
+		const { scale } = this.state;
+
+		let maxH = 0;
+		let offset = {
+			x : 0,
+			y : 0
+		};
 
 		let formData = new FormData();
 		formData.append('action', 'PAGE');
@@ -300,106 +324,88 @@ class InspectorPage extends Component {
 			.then((response)=> {
 				console.log('PAGE', response.data);
 				const page = response.data.page;
+				let artboards = [];
+				page.artboards.forEach((artboard, i, arr)=> {
+					if (Math.floor(i % 5) === 0 && i !== 0) {
+						this.size.height += maxH + 50;
+						offset.x = 0;
+						offset.y += 50 + maxH;
+						maxH = 0;
+					}
 
-				formData.append('action', 'ARTBOARDS');
-				formData.append('upload_id', uploadID);
-				formData.append('page_id', pageID);
-				formData.append('slices', '0');
-				formData.append('offset', '0');
-				formData.append('length', '-1');
+					maxH = Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale);
+
+					artboards.push({
+						id        : artboard.id,
+						pageID    : artboard.page_id,
+						title     : artboard.title,
+						filename  : (artboard.filename.includes('@3x')) ? artboard.filename : artboard.filename + '@3x.png',
+						meta      : JSON.parse(artboard.meta),
+						views     : artboard.views,
+						downloads : artboard.downloads,
+						added     : artboard.added,
+						system    : artboard.system,
+						grid      : {
+							col : i % 5,
+							row : Math.floor(i / 5)
+						},
+						offset    : {
+							x : offset.x,
+							y : offset.y
+						},
+						slices    : artboard.slices.map((item) => ({
+							id       : item.id,
+							title    : item.title,
+							type     : item.type,
+							filename : item.filename,
+							meta     : JSON.parse(item.meta),
+							added    : item.added
+						})),
+						comments  : artboard.comments
+					});
+
+
+					if (i < arr.length - 1) {
+						offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
+					}
+
+					this.size.width = Math.max(this.size.width, offset.x);
+				});
+
+
+				formData.append('action', 'FILES');
+				formData.append('upload_id', '' + uploadID);
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response)=> {
-						console.log('ARTBOARDS', response.data);
+						console.log('FILES', response.data);
 
-						let maxH = 0;
-						let offset = {
-							x : 0,
-							y : 0
-						};
-						const { scale } = this.state;
-
-						let artboards = [];
-						response.data.artboards.forEach((artboard, i)=> {
-							if (Math.floor(i % 5) === 0 && i !== 0) {
-								this.size.height += maxH + 50;
-								offset.x = 0;
-								offset.y += maxH + 50;
-								maxH = 0;
+						const files = response.data.files.map((file) => ({
+							id       : file.id,
+							title    : file.title,
+							filename : file.filename,
+							contents : file.contents,
+							added    : file.added
+						})).concat([
+							{
+								id       : 0,
+								title    : 'CSS',
+								filename : 'CSS',
+								contents : null,
+								added    : null
+							}, {
+								id       : 0,
+								title    : 'React CSS',
+								filename : 'React CSS',
+								contents : null,
+								added    : null
 							}
+						]);
 
-							maxH = Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale);
-							artboards.push({
-								id        : artboard.id,
-								pageID    : artboard.page_id,
-								title     : artboard.title,
-								filename  : (artboard.filename.includes('@3x')) ? artboard.filename : artboard.filename + '@3x.png',
-								meta      : JSON.parse(artboard.meta),
-								views     : artboard.views,
-								downloads : artboard.downloads,
-								added     : artboard.added,
-								system    : artboard.system,
-								grid      : {
-									col : i % 5,
-									row : Math.floor(i / 5)
-								},
-								offset    : {
-									x : offset.x,
-									y : offset.y
-								},
-								slices    : artboard.slices.map((item) => ({
-									id       : item.id,
-									title    : item.title,
-									type     : item.type,
-									filename : item.filename,
-									meta     : JSON.parse(item.meta),
-									added    : item.added
-								})),
-								comments  : artboard.comments
-							});
-
-
-							if (i < response.data.artboards.length - 1) {
-								offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
-							}
-
-							this.size.width = Math.max(this.size.width, offset.x);
-						});
-
-						formData.append('action', 'FILES');
-						formData.append('upload_id', '' + uploadID);
-						axios.post('https://api.designengine.ai/system.php', formData)
-							.then((response)=> {
-								console.log('FILES', response.data);
-
-								const files = response.data.files.map((file) => ({
-									id       : file.id,
-									title    : file.title,
-									filename : file.filename,
-									contents : file.contents,
-									added    : file.added
-								})).concat([
-									{
-										id       : 0,
-										title    : 'CSS',
-										filename : 'CSS',
-										contents : null,
-										added    : null
-									}, {
-										id       : 0,
-										title    : 'React CSS',
-										filename : 'React CSS',
-										contents : null,
-										added    : null
-									}
-								]);
-
-								this.setState({
-									files     : files,
-									page      : page,
-									artboards : artboards,
-									tooltip   : 'Error!'
-								});
-							}).catch((error) => {
+						this.setState({
+							page      : page,
+							artboards : artboards,
+							files     : files,
+							tooltip   : ''
 						});
 					}).catch((error) => {
 				});
@@ -407,109 +413,41 @@ class InspectorPage extends Component {
 		});
 	};
 
-	onDrop(files) {
-		console.log('InspectorPage.onDrop()', files);
+	handleArtboardOut = (event)=> {
+	};
 
-		const { id, email } = this.props.profile;
+	handleArtboardOver = (event)=> {
+// 		console.log('InspectorPage.handleArtboardOver()', event.target);
+		const artboardID = event.target.getAttribute('data-id');
 
-		if (files.length > 0 && files[0].name.split('.').pop() === 'zip') {
-			const file = files.pop();
-			if (file.size < 100 * (1024 * 1024)) {
-				this.setState({ uploading : true });
-// 				sendToSlack('*[' + id + ']* *' + email + '* started uploading file "_' + file.name + '_"');
+		if (!this.antsInterval) {
+			this.antsInterval = setInterval(this.redrawAnts, 100);
+		}
 
+		let formData = new FormData();
+		formData.append('action', 'SLICES');
+		formData.append('artboard_id', artboardID);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+// 				console.log('SLICES', response.data);
 
-				const config = {
-					headers             : { 'content-type' : 'multipart/form-data' },
-					onDownloadProgress  : (progressEvent)=> {
-// 							console.log('HomeExpo.onDownloadProgress()', progressEvent);
-					},
-					onUploadProgress    : (progressEvent)=> {
-// 							console.log('HomeExpo.onUploadProgress()', progressEvent);
-
-						const { loaded, total } = progressEvent;
-						const percent = Math.round((loaded * 100) / total);
-						this.setState({
-							percent : percent,
-							tooltip : percent + '%'
-						});
-
-						if (progressEvent.loaded >= progressEvent.total) {
-							this.setState({
-								uploading : false,
-								tooltip   : ''
-							});
-
-							let formData = new FormData();
-							formData.append('action', 'FILES');
-							formData.append('upload_id', '' + this.props.navigation.uploadID);
-							axios.post('https://api.designengine.ai/system.php', formData)
-								.then((response)=> {
-									console.log('FILES', response.data);
-
-									const files = response.data.files.map((file) => ({
-										id       : file.id,
-										title    : file.title,
-										filename : file.filename,
-										contents : file.contents,
-										added    : file.added
-									}));
-
-									this.setState({ files });
-								}).catch((error) => {
-							});
-						}
+				let artboards = [...this.state.artboards];
+				artboards.forEach((artboard)=> {
+					if (artboard.id === artboardID && artboard.slices.length === 0) {
+						artboard.slices = response.data.slices.map((item) => ({
+							id       : item.id,
+							title    : item.title,
+							type     : item.type,
+							filename : item.filename,
+							meta     : JSON.parse(item.meta),
+							added    : item.added
+						}));
 					}
-				};
-
-				let formData = new FormData();
-				formData.append('file', file);
-				axios.post('http://cdn.designengine.ai/files/upload.php?user_id=' + id + '&upload_id=' + this.props.navigation.uploadID, formData, config)
-					.then((response) => {
-						console.log("UPLOAD", response.data);
-					}).catch((error) => {
-					sendToSlack('*' + email + '* upload failed for file _' + file.name + '_');
 				});
 
-			} else {
-				this.props.onPopup({
-					type     : 'ERROR',
-					content  : 'File size must be under 100MB.',
-					duration : 500
-				});
-			}
-
-		} else {
-			this.props.onPopup({
-				type     : "ERROR",
-				content  : 'Only zip archives are support at this time.',
-				duration : 1500
-			});
-		}
-	}
-
-	handleKeyDown = (event)=> {
-		if (event.keyCode === 187) {
-			this.handleZoom(1);
-
-		} else if (event.keyCode === 189) {
-			this.handleZoom(-1);
-		}
-	};
-
-	handleSliceToggle = (type)=> {
-		let visibleTypes = this.state.visibleTypes;
-		Object.keys(visibleTypes).forEach(function(key) {
-			visibleTypes[key] = false;
-
+				this.setState({ artboards });
+			}).catch((error) => {
 		});
-		visibleTypes[type] = true;
-		this.setState({ visibleTypes });
-	};
-
-	handleTab = (ind)=> {
-		console.log('InspectorPage.handleTab()', ind);
-		this.setState({ selectedTab : ind });
 	};
 
 	handleCodeCopy = ()=> {
@@ -522,30 +460,117 @@ class InspectorPage extends Component {
 	handleCommentChange = (event)=> {
 		event.persist();
 		if (/\r|\n/.exec(event.target.value)) {
-			this.submitComment(event);
+			this.onSubmitComment(event);
 
 		} else {
 			this.setState({ [event.target.name] : event.target.value })
 		}
 	};
 
-	submitComment = (event)=> {
-		event.preventDefault();
+	handleDownload = ()=> {
+		if (!isUserLoggedIn()) {
+			cookie.save('msg', 'use this feature.', { path : '/' });
+			this.props.onPage('login');
 
-		if (this.state.comment.length > 0) {
-			let formData = new FormData();
-			formData.append('action', 'ADD_COMMENT');
-			formData.append('user_id', this.props.profile.id);
-			formData.append('artboard_id', '' + this.props.navigation.artboardID);
-			formData.append('content', this.state.comment);
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					console.log('ADD_COMMENT', response.data);
-					this.setState({ comment : '' });
-					this.refreshData();
-				}).catch((error) => {
+		} else {
+			const filePath = 'http://cdn.designengine.ai/page.php?artboard_id=' + this.props.navigation.artboardID;
+			let link = document.createElement('a');
+			link.href = filePath;
+			link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
+			link.click();
+		}
+	};
+
+	handleDrag = (event)=> {
+		//console.log('InspectorPage.handleDrag()', event.type, event.target);
+		if (event.type === 'mousedown') {
+		} else if (event.type === 'mousemove') {
+		} else if (event.type === 'mouseup') {
+		}
+	};
+
+	handleKeyDown = (event)=> {
+		if (event.keyCode === PLUS_KEY) {
+			this.handleZoom(1);
+
+		} else if (event.keyCode === MINUS_KEY) {
+			this.handleZoom(-1);
+		}
+	};
+
+	handleLandingButtonClick = (type)=> {
+		console.log('InspectorPage.handleLandingButtonClick()', type);
+
+		if (type === 'UPLOAD') {
+			this.props.onPage('new');
+
+		} else if (type === 'REQUEST') {
+
+
+		} else if (type === 'DEMO') {
+// 			window.location.href = buildInspectorURL(1, 2, 4, 'account');
+			this.props.onPage(buildInspectorPath(1, 2, 4, 'account'));
+			this.props.updateNavigation({
+				uploadID   : 1,
+				pageID     : 2,
+				artboardID : 4
 			});
 		}
+	};
+
+	handleSliceClick = (ind, slice, offset)=> {
+		let files = this.state.files;
+
+		const css = toCSS(slice);
+		const reactCSS = toReactCSS(slice);
+
+		files[files.length - 1].contents = reactCSS.html;
+		files[files.length - 2].contents = css.html;
+
+		this.setState({
+			files      : files,
+			hoverSlice : null,
+			slice      : slice,
+			offset     : offset
+		});
+	};
+
+	handleSliceRollOut = (ind, slice)=> {
+		let files = this.state.files;
+
+		if (this.state.slice) {
+			const css = toCSS(this.state.slice);
+			const reactCSS = toReactCSS(this.state.slice);
+
+			files[files.length - 1].contents = reactCSS.html;
+			files[files.length - 2].contents = css.html;
+		}
+
+		this.setState({
+			files      : files,
+			hoverSlice : null
+		});
+	};
+
+	handleSliceRollOver = (ind, slice, offset)=> {
+		let files = this.state.files;
+
+		const css = toCSS(slice);
+		const reactCSS = toReactCSS(slice);
+
+		files[files.length - 1].contents = reactCSS.html;
+		files[files.length - 2].contents = css.html;
+
+		this.setState({
+			files       : files,
+			hoverSlice  : slice,
+			hoverOffset : offset
+		});
+	};
+
+	handleTab = (ind)=> {
+		console.log('InspectorPage.handleTab()', ind);
+		this.setState({ selectedTab : ind });
 	};
 
 	handleVote = (commentID, score)=> {
@@ -602,47 +627,6 @@ class InspectorPage extends Component {
 	handleWheelStop = ()=> {
 		clearTimeout(this.scrollInterval);
 		this.setState({ scrolling : false });
-	};
-
-	handleDrag = (event)=> {
-		//console.log('InspectorPage.handleDrag()', event.type, event.target);
-		if (event.type === 'mousedown') {
-		} else if (event.type === 'mousemove') {
-		} else if (event.type === 'mouseup') {
-		}
-	};
-
-	handleArtboardOver = (event)=> {
-// 		console.log('InspectorPage.handleArtboardOver()', event.target);
-		const artboardID = event.target.getAttribute('data-id');
-
-		let formData = new FormData();
-		formData.append('action', 'SLICES');
-		formData.append('artboard_id', event.target.getAttribute('data-id'));
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-// 				console.log('SLICES', response.data);
-
-				let artboards = [...this.state.artboards];
-				artboards.forEach((artboard)=> {
-					if (artboard.id === artboardID && artboard.slices.length === 0) {
-						artboard.slices = response.data.slices.map((item) => ({
-							id       : item.id,
-							title    : item.title,
-							type     : item.type,
-							filename : item.filename,
-							meta     : JSON.parse(item.meta),
-							added    : item.added
-						}));
-					}
-				});
-
-				this.setState({ artboards });
-			}).catch((error) => {
-		});
-	};
-
-	handleArtboardOut = (event)=> {
 	};
 
 	handleZoom = (direction)=> {
@@ -715,72 +699,103 @@ class InspectorPage extends Component {
 		}, 1000);
 	};
 
-	handleSliceRollOver = (ind, slice, offset)=> {
-		let files = this.state.files;
+	onDrop = (files)=> {
+		console.log('InspectorPage.onDrop()', files);
+		const { id, email } = this.props.profile;
 
-		const css = toCSS(slice);
-		const reactCSS = toReactCSS(slice);
+		if (files.length > 0 && files[0].name.split('.').pop() === 'zip') {
+			const file = files.pop();
+			if (file.size < 100 * (1024 * 1024)) {
+				this.setState({ uploading : true });
+				const config = {
+					headers             : { 'content-type' : 'multipart/form-data' },
+					onDownloadProgress  : (progressEvent)=> {
+// 							console.log('HomeExpo.onDownloadProgress()', progressEvent);
+					},
+					onUploadProgress    : (progressEvent)=> {
+// 							console.log('HomeExpo.onUploadProgress()', progressEvent);
 
-		files[files.length - 1].contents = reactCSS.html;
-		files[files.length - 2].contents = css.html;
+						const { loaded, total } = progressEvent;
+						const percent = Math.round((loaded * 100) / total);
+						this.setState({
+							percent : percent,
+							tooltip : percent + '%'
+						});
 
-		this.setState({
-			files       : files,
-			hoverSlice  : slice,
-			hoverOffset : offset
-		});
-	};
+						if (progressEvent.loaded >= progressEvent.total) {
+							this.setState({
+								uploading : false,
+								tooltip   : ''
+							});
 
-	handleSliceRollOut = (ind, slice)=> {
-		let files = this.state.files;
+							let formData = new FormData();
+							formData.append('action', 'FILES');
+							formData.append('upload_id', '' + this.props.navigation.uploadID);
+							axios.post('https://api.designengine.ai/system.php', formData)
+								.then((response)=> {
+									console.log('FILES', response.data);
 
-		if (this.state.slice) {
-			const css = toCSS(this.state.slice);
-			const reactCSS = toReactCSS(this.state.slice);
+									const files = response.data.files.map((file) => ({
+										id       : file.id,
+										title    : file.title,
+										filename : file.filename,
+										contents : file.contents,
+										added    : file.added
+									}));
 
-			files[files.length - 1].contents = reactCSS.html;
-			files[files.length - 2].contents = css.html;
-		}
+									this.setState({ files });
+								}).catch((error) => {
+							});
+						}
+					}
+				};
 
-		this.setState({
-			files      : files,
-			hoverSlice : null
-		});
-	};
+				let formData = new FormData();
+				formData.append('file', file);
+				axios.post('http://cdn.designengine.ai/files/upload.php?user_id=' + id + '&upload_id=' + this.props.navigation.uploadID, formData, config)
+					.then((response) => {
+						console.log("UPLOAD", response.data);
+					}).catch((error) => {
+					sendToSlack('*' + email + '* upload failed for file _' + file.name + '_');
+				});
 
-	handleSliceClick = (ind, slice, offset)=> {
-		let files = this.state.files;
-
-		const css = toCSS(slice);
-		const reactCSS = toReactCSS(slice);
-
-		files[files.length - 1].contents = reactCSS.html;
-		files[files.length - 2].contents = css.html;
-
-		this.setState({
-			files      : files,
-			hoverSlice : null,
-			slice      : slice,
-			offset     : offset
-		});
-	};
-
-	handleDownload = ()=> {
-		if (!isUserLoggedIn()) {
-			cookie.save('msg', 'use this feature.', { path : '/' });
-			this.props.onPage('login');
+			} else {
+				this.props.onPopup({
+					type     : 'ERROR',
+					content  : 'File size must be under 100MB.',
+					duration : 500
+				});
+			}
 
 		} else {
-			const filePath = 'http://cdn.designengine.ai/page.php?artboard_id=' + this.props.navigation.artboardID;
-			let link = document.createElement('a');
-			link.href = filePath;
-			link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
-			link.click();
+			this.props.onPopup({
+				type     : "ERROR",
+				content  : 'Only zip archives are support at this time.',
+				duration : 1500
+			});
 		}
 	};
 
+	onSubmitComment = (event)=> {
+		event.preventDefault();
 
-	updateCanvas = ()=> {
+		if (this.state.comment.length > 0) {
+			let formData = new FormData();
+			formData.append('action', 'ADD_COMMENT');
+			formData.append('user_id', this.props.profile.id);
+			formData.append('artboard_id', '' + this.props.navigation.artboardID);
+			formData.append('content', this.state.comment);
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response) => {
+					console.log('ADD_COMMENT', response.data);
+					this.setState({ comment : '' });
+					this.refreshData();
+				}).catch((error) => {
+			});
+		}
+	};
+
+	onUpdateCanvas = ()=> {
 		const { scale, offset, scrollOffset } = this.state;
 		const slice = this.state.slice;
 		const context = canvas.current.getContext('2d');
@@ -913,27 +928,22 @@ class InspectorPage extends Component {
 	};
 
 	redrawAnts = ()=> {
-		if (this.antsOffset++ > 16) {
-			this.antsOffset = 0;
-		}
-
 		if (canvas.current) {
-			this.updateCanvas();
+			this.antsOffset = (++this.antsOffset % 16);
+			this.onUpdateCanvas();
 		}
 	};
 
 
 	render() {
-		if (this.rerender === 0) {
-			this.rerender = 1;
-			setTimeout(()=> {
-				this.forceUpdate();
-			}, 3333);
-		}
+// 		if (this.rerender === 0) {
+// 			this.rerender = 1;
+// 			setTimeout(()=> {
+// 				this.forceUpdate();
+// 			}, 3333);
+// 		}
 
-		const { page, artboards, slice, hoverSlice, files } = this.state;
-		const { visibleTypes } = this.state;
-		const { scale } = this.state;
+		const { page, artboards, slice, hoverSlice, files, visibleTypes, scale } = this.state;
 		const { scrollOffset, scrolling } = this.state;
 
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
@@ -1095,6 +1105,7 @@ class InspectorPage extends Component {
 			offset.x += Math.round(50 + (artboard.meta.frame.size.width * scale));
 		}
 
+		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage.render()', (artboardsWrapper.current) ? artboardsWrapper.current.scrollTop : 0, (artboardsWrapper.current) ? artboardsWrapper.current.scrollLeft : 0, scale);
 // 		console.log('InspectorPage:', window.performance.memory);
 
@@ -1106,25 +1117,22 @@ class InspectorPage extends Component {
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
-						{/*<MapInteractionCSS scale={scale} translation={translation} onChange={({ scale, translation }) => this.setState({ scale, translation })}>*/}
-							{/*<div style={{ width : '426px' ,height : '240px', background :' #111111 url("https://i.imgur.com/WJ17gs5.jpg") no-repeat center' }}>*/}
-							{/*</div>*/}
-						{/*</MapInteractionCSS>*/}
-						{(artboards.length > 0) && (
-							<div style={artboardsStyle}>
-								{artboardBackgrounds}
-								<div className="inspector-page-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>
-									<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
-								</div>
-								{slices}
-							</div>
-						)}
+						{(artboards.length > 0)
+							? (<div style={artboardsStyle}>
+									{artboardBackgrounds}
+									<div className="inspector-page-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>
+										<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
+									</div>
+									{slices}
+								</div>)
+							: (<LandingButtons onClick={this.handleLandingButtonClick} />)
+						}
 					</div>
-					<div className="inspector-page-zoom-wrapper">
-						<button className={'inspector-page-float-button' + ((scale >= 3) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
-						<button className={'inspector-page-float-button' + ((scale <= 0.03) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
+					{(artboards.length > 0) && (<div className="inspector-page-zoom-wrapper">
+						<button className={'inspector-page-float-button' + ((scale >= Math.max(...zoomNotches)) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
+						<button className={'inspector-page-float-button' + ((scale <= Math.min(...zoomNotches)) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
 						<button className={'inspector-page-float-button' + ((scale === 1.0) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 1.0) ? enabledZooResetButton : disabledZoomResetButton} alt="0" /></button>
-					</div>
+					</div>)}
 				</div>
 				<div className="inspector-page-panel">
 					<div className="inspector-page-panel-content-wrapper">

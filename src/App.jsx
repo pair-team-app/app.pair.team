@@ -30,7 +30,15 @@ import UploadPage from './components/pages/UploadPage';
 import StripeOverlay from './components/elements/StripeOverlay';
 
 import { fetchUserProfile, updateNavigation, updateUserProfile } from './redux/actions';
-import { buildInspectorPath, className, idsFromPath, isInspectorPage, scrollOrigin, buildProjectPath } from './utils/funcs';
+import {
+	buildInspectorPath,
+	className,
+	idsFromPath,
+	isInspectorPage,
+	scrollOrigin,
+	buildProjectPath,
+	isHomePage
+} from './utils/funcs';
 import { initTracker, trackEvent } from './utils/tracking';
 
 const wrapper = React.createRef();
@@ -76,6 +84,10 @@ class App extends Component {
 		const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
 		this.props.updateNavigation({ uploadID, pageID, artboardID, sliceID });
 
+		if (isHomePage()) {
+			this.handlePage('page');
+		}
+
 		if (isInspectorPage() && uploadID === 0 && pageID !== 0) {
 			let formData = new FormData();
 			formData.append('action', 'PAGE');
@@ -120,7 +132,7 @@ class App extends Component {
 			pageID     : 0,
 			artboardID : 0
 		});
-		this.props.history.push('/');
+		window.location.href = '/';
 	};
 
 	handleLogout = ()=> {

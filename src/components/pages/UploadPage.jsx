@@ -84,7 +84,7 @@ function ProcessingContent(props) {
 
 		<div>
 			<h3>Processing…</h3>
-			<Row horizontal="space-between" className="upload-page-artboards-wrapper" style={{ flexWrap : 'wrap' }}>
+			<Row horizontal="space-around" className="upload-page-artboards-wrapper" style={{ flexWrap : 'wrap' }}>
 				{(artboards.length === 0) ? (
 					<Column>
 						<ArtboardItem

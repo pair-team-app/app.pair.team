@@ -5,10 +5,10 @@ import { USER_PROFILE_UPDATED } from '../../consts/action-types';
 
 
 export function onMiddleware({ dispatch }) {
-	console.log('onMiddleware().dispatch', dispatch);
+// 	console.log('onMiddleware().dispatch', dispatch);
 
 	return (function(next) {
-		console.log('onMiddleware().next', next);
+// 		console.log('onMiddleware().next', next);
 
 		return (function(action) {
 			console.log('onMiddleware().action', action);

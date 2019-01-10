@@ -103,6 +103,17 @@ export function limitString(str='', len) {
 	return ((str.length > len) ? str.substr(0, len - 1) + '…' : str);
 }
 
+export function numberedName(name, list) {
+	if (list[name].length) {
+		const cnt = ++list[name];
+		return (name + '_' + cnt);
+
+	} else {
+		list[name] = 1;
+		return (name);
+	}
+}
+
 export function randomElement(array) {
 	return ((array.length > 0) ? array[randomInt(0, array.length)] : null);
 }
