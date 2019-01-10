@@ -250,8 +250,6 @@ class UploadPage extends Component {
 
 			if (file.name.split('.').pop() === 'sketch') {
 				if (file.size < 100 * (1024 * 1024)) {
-					this.setState({ file });
-
 					sendToSlack('*[' + id + ']* *' + email + '* started uploading file "_' + file.name + '_"');
 
 					this.setState({
@@ -273,7 +271,7 @@ class UploadPage extends Component {
 							const percent = Math.round((loaded * 100) / total);
 							this.setState({ percent });
 
-							if (progressEvent.loaded === progressEvent.total) {
+							if (progressEvent.loaded >= progressEvent.total) {
 								this.onUploadComplete();
 							}
 						}

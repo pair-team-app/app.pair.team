@@ -81,7 +81,7 @@ class ProfilePage extends Component {
 				const percent = Math.round((loaded * 100) / total);
 				this.setState({ percent });
 
-				if (progressEvent.loaded === progressEvent.total) {
+				if (progressEvent.loaded >= progressEvent.total) {
 					this.onUploadComplete();
 				}
 			}

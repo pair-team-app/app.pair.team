@@ -76,7 +76,7 @@ class App extends Component {
 		const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
 		this.props.updateNavigation({ uploadID, pageID, artboardID, sliceID });
 
-		if (isInspectorPage() && uploadID === 0) {
+		if (isInspectorPage() && uploadID === 0 && pageID !== 0) {
 			let formData = new FormData();
 			formData.append('action', 'PAGE');
 			formData.append('page_id', pageID);
@@ -128,24 +128,6 @@ class App extends Component {
 
 		this.props.updateUserProfile(null);
 		window.location.href = '/';
-	};
-
-	handleOverlay = (overlayType, buttonType)=> {
-		console.log('App.handleOverlay()', overlayType, buttonType);
-		this.setState({ overlayAlert : null });
-		if (overlayType === 'register') {
-			if (buttonType === 'submit') {
-				window.location.reload();
-			}
-
-		} else if (overlayType === 'upload') {
-			if (buttonType === 'background') {
-				window.location.reload();
-
-			} else if (buttonType === 'complete') {
-				window.location.reload();
-			}
-		}
 	};
 
 	handlePage = (url)=> {
@@ -340,7 +322,7 @@ class App extends Component {
 
 				    <div className="content-wrapper" ref={wrapper}>
 					    <Switch>
-						    <Route exact path="/" render={()=> <HomePage uploadID={0} pageID={0} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+						    <Route exact path="/" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 					      <Route exact path="/add-ons" render={()=> <AddOnsPage onPage={this.handlePage} />} />
 					      <Route exact path="/api" render={()=> <APIPage onPage={this.handlePage} onLogout={this.handleLogout} onPopup={this.handlePopup} />} />
 						    <Route exact path="/artboard/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={this.handlePage} />} onPopup={this.handlePopup} />
@@ -366,7 +348,7 @@ class App extends Component {
 				    <BottomNav wrapperHeight={(wrapper.current) ? wrapper.current.clientHeight : 0} onPage={this.handlePage} onLogout={()=> this.handleLogout()} />
 
 				    {(this.state.overlayAlert === 'payment') && (
-					    <StripeOverlay onClick={(buttonType)=> this.handleOverlay('download', buttonType)} />
+					    <StripeOverlay />
 				    )}
 				    </div>)
 			    : (<div className="unsupported-browser">

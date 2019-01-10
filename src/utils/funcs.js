@@ -56,12 +56,14 @@ export function idsFromPath() {
 	const explorePath = /\/explore\/\d+\/.*$/;
 	const projPath = /\/proj\/\d+\/.*$/;
 
-	return ({
+	const navIDs = {
 		uploadID   : (artboardPath.test(pathname)) ? pathname.match(/\/artboard|page\/(\d+)\/.*$/)[1] : (explorePath.test(pathname)) ? pathname.match(/\/explore\/(\d+)\/.*$/)[1] : (projPath.test(pathname)) ? pathname.match(/\/proj\/(\d+)\/.*$/)[1] : 0,
 		pageID     : (artboardPath.test(pathname)) ? pathname.match(/\/artboard|page\/\d+\/(\d+)\/.*$/)[1] : 0,
 		artboardID : (artboardPath.test(pathname)) ? pathname.match(/\/artboard|page\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
 		sliceID    : 0
-	});
+	};
+
+	return (navIDs);
 }
 
 export function isExplorePage() {

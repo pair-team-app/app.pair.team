@@ -86,18 +86,6 @@
 	opacity: 0.75;
 }
 
-.inspector-page-toggle-wrapper {
-	position: absolute;
-	top: 0;
-	right: 364px;
-	margin: 12px;
-	padding: 15px;
-	z-index: 10;
-	background-color: #000000;
-	border-radius: 4px;
-	opacity: 0.75;
-}
-
 .inspector-page-button-wrapper {
 	position: absolute;
 	bottom: 0;
@@ -225,7 +213,7 @@
 	background-color: #000000;
 	padding: 6px;
 	font-size: 14px;
-	min-width: 50px;
+	min-width: 80px;
 	text-align: center;
 }
 

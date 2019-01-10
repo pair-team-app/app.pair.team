@@ -21,6 +21,7 @@ import disabledZoomOutButton from '../../images/buttons/btn-zoom-out_disabled.sv
 import enabledZooResetButton from '../../images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../images/buttons/btn-zoom-reset_disabled.svg';
 import { updateNavigation } from "../../redux/actions";
+import {sendToSlack} from "../../utils/funcs";
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
@@ -59,24 +60,14 @@ const SliceItem = (props)=> {
 };
 
 
-const SliceToggle = (props)=> {
-	const icon = (props.type === 'slice') ? '/images/layer-slice' : (props.type === 'hotspot') ? '/images/layer-hotspot' : (props.type === 'textfield') ? '/images/layer-textfield' : (props.type === 'group') ? '/images/layer-background' : '/images/layer-off';
-
-	return (
-		<div className="slice-toggle" onClick={()=> props.onClick()}>
-			<button className="inspector-page-float-button"><img className="inspector-page-float-button-image" src={(props.selected) ? icon + '_selected.svg' : icon + '.svg'} alt="Toggle" /></button>
-		</div>
-	);
-};
-
 
 const SpecsList = (props)=> {
 // 		console.log('InspectorPage.SpecsList()', props);
 
-	const sliceStyles = (props.slice && props.slice.meta.styles && props.slice.meta.styles.length > 0) ? props.slice.meta.styles[0] : null;
-	const stroke = (sliceStyles && sliceStyles.border.length > 0) ? sliceStyles.border[0] : null;
-	const shadow = (sliceStyles && sliceStyles.shadow.length > 0) ? sliceStyles.shadow[0] : null;
-	const innerShadow = (sliceStyles && sliceStyles.innerShadow.length > 0) ? sliceStyles.innerShadow[0] : null;
+	const sliceStyles = (props.slice && props.slice.meta.styles && props.slice.meta.styles.length > 0) ? props.slice.meta.styles.pop() : null;
+	const stroke = (sliceStyles && sliceStyles.border.length > 0) ? sliceStyles.border.pop() : null;
+	const shadow = (sliceStyles && sliceStyles.shadow.length > 0) ? sliceStyles.shadow.pop() : null;
+	const innerShadow = (sliceStyles && sliceStyles.innerShadow.length > 0) ? sliceStyles.innerShadow.pop() : null;
 
 	const styles = (sliceStyles) ? {
 		stroke : (stroke) ? {
@@ -167,11 +158,11 @@ class InspectorPage extends Component {
 		super(props);
 
 		this.state = {
+			files         : [],
 			slice         : null,
 			hoverSlice    : null,
 			page          : null,
 			artboards     : [],
-			files         : [],
 			uploading     : false,
 			percent       : 0,
 			selectedTab   : 0,
@@ -233,7 +224,7 @@ class InspectorPage extends Component {
 	}
 
 	componentDidMount() {
-// 		console.log('InspectorPage.componentDidMount()');
+		console.log('InspectorPage.componentDidMount()', this.props, this.state);
 
 		this.refreshData();
 		this.antsInterval = setInterval(this.redrawAnts, 100);
@@ -248,16 +239,11 @@ class InspectorPage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('InspectorPage.componentDidUpdate()', prevProps.match.params.artboardID, this.props.match.params.artboardID);
-		if (this.props.match.params.pageID !== prevProps.match.params.pageID) {
-			this.refreshData();
-		}
-
-		const { uploadID, pageID, artboardID, sliceID } = this.state;
-		this.setState({ uploadID, pageID, artboardID, sliceID });
+		console.log('InspectorPage.componentDidUpdate()', prevProps, this.props);
+// 		const { uploadID, pageID, artboardID, sliceID } = this.state;
+// 		this.setState({ uploadID, pageID, artboardID, sliceID });
 		if (this.props.navigation !== prevProps.navigation) {
-// 			const { uploadID, pageID, artboardID, sliceID } = this.props.navigation;
-			this.refreshData();
+			//this.refreshData();
 		}
 
 		if (canvasWrapper.current) {
@@ -309,15 +295,15 @@ class InspectorPage extends Component {
 
 		let formData = new FormData();
 		formData.append('action', 'PAGE');
-		formData.append('page_id', '' + pageID);
+		formData.append('page_id', pageID);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response)=> {
 				console.log('PAGE', response.data);
 				const page = response.data.page;
 
 				formData.append('action', 'ARTBOARDS');
-				formData.append('upload_id', '');
-				formData.append('page_id', '' + pageID);
+				formData.append('upload_id', uploadID);
+				formData.append('page_id', pageID);
 				formData.append('slices', '0');
 				formData.append('offset', '0');
 				formData.append('length', '-1');
@@ -411,7 +397,7 @@ class InspectorPage extends Component {
 									files     : files,
 									page      : page,
 									artboards : artboards,
-									tooltip   : ''
+									tooltip   : 'Error!'
 								});
 							}).catch((error) => {
 						});
@@ -423,56 +409,75 @@ class InspectorPage extends Component {
 
 	onDrop(files) {
 		console.log('InspectorPage.onDrop()', files);
+
+		const { id, email } = this.props.profile;
+
 		if (files.length > 0 && files[0].name.split('.').pop() === 'zip') {
+			const file = files.pop();
+			if (file.size < 100 * (1024 * 1024)) {
+				this.setState({ uploading : true });
+// 				sendToSlack('*[' + id + ']* *' + email + '* started uploading file "_' + file.name + '_"');
 
-			let self = this;
-			const config = {
-				headers : {
-					'content-type' : 'multipart/form-data'
-				}, onUploadProgress : function (progressEvent) {
-					const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-					self.setState({
-						percent : percent,
-						tooltip : percent + '%'
-					});
-				}
-			};
 
-			this.setState({ uploading : true });
+				const config = {
+					headers             : { 'content-type' : 'multipart/form-data' },
+					onDownloadProgress  : (progressEvent)=> {
+// 							console.log('HomeExpo.onDownloadProgress()', progressEvent);
+					},
+					onUploadProgress    : (progressEvent)=> {
+// 							console.log('HomeExpo.onUploadProgress()', progressEvent);
 
-			files.forEach(file => {
+						const { loaded, total } = progressEvent;
+						const percent = Math.round((loaded * 100) / total);
+						this.setState({
+							percent : percent,
+							tooltip : percent + '%'
+						});
+
+						if (progressEvent.loaded >= progressEvent.total) {
+							this.setState({
+								uploading : false,
+								tooltip   : ''
+							});
+
+							let formData = new FormData();
+							formData.append('action', 'FILES');
+							formData.append('upload_id', '' + this.props.navigation.uploadID);
+							axios.post('https://api.designengine.ai/system.php', formData)
+								.then((response)=> {
+									console.log('FILES', response.data);
+
+									const files = response.data.files.map((file) => ({
+										id       : file.id,
+										title    : file.title,
+										filename : file.filename,
+										contents : file.contents,
+										added    : file.added
+									}));
+
+									this.setState({ files });
+								}).catch((error) => {
+							});
+						}
+					}
+				};
+
 				let formData = new FormData();
 				formData.append('file', file);
-
-				axios.post('http://cdn.designengine.ai/files/upload.php?user_id=' + this.props.profile.id + '&upload_id=' + this.state.uploadID, formData, config)
+				axios.post('http://cdn.designengine.ai/files/upload.php?user_id=' + id + '&upload_id=' + this.props.navigation.uploadID, formData, config)
 					.then((response) => {
 						console.log("UPLOAD", response.data);
-
-						let formData = new FormData();
-						formData.append('action', 'FILES');
-						formData.append('upload_id', '' + this.props.navigation.uploadID);
-						axios.post('https://api.designengine.ai/system.php', formData)
-							.then((response)=> {
-								console.log('FILES', response.data);
-
-								const files = response.data.files.map((file) => ({
-									id       : file.id,
-									title    : file.title,
-									filename : file.filename,
-									contents : file.contents,
-									added    : file.added
-								}));
-
-								this.setState({
-									files     : files,
-									uploading : false,
-									tooltip   : ''
-								});
-							}).catch((error) => {
-						});
 					}).catch((error) => {
+					sendToSlack('*' + email + '* upload failed for file _' + file.name + '_');
 				});
-			});
+
+			} else {
+				this.props.onPopup({
+					type     : 'ERROR',
+					content  : 'File size must be under 100MB.',
+					duration : 500
+				});
+			}
 
 		} else {
 			this.props.onPopup({
@@ -512,10 +517,6 @@ class InspectorPage extends Component {
 			type    : 'INFO',
 			content : 'Copied to Clipboard!'
 		});
-	};
-
-	handleContribute = ()=> {
-
 	};
 
 	handleCommentChange = (event)=> {
@@ -606,22 +607,9 @@ class InspectorPage extends Component {
 	handleDrag = (event)=> {
 		//console.log('InspectorPage.handleDrag()', event.type, event.target);
 		if (event.type === 'mousedown') {
-
-
 		} else if (event.type === 'mousemove') {
-// 			this.forceUpdate();
-
 		} else if (event.type === 'mouseup') {
-// 			this.setState({ canvasVisible : true });
 		}
-	};
-
-	handleMouseDown = ()=> {
-// 		this.setState({ canvasVisible : false });
-	};
-
-	handleMouseUp = ()=> {
-// 		this.setState({ canvasVisible : true });
 	};
 
 	handleArtboardOver = (event)=> {
@@ -655,17 +643,6 @@ class InspectorPage extends Component {
 	};
 
 	handleArtboardOut = (event)=> {
-// 		console.log('InspectorPage.handleArtboardOut()', event.target);
-// 		const artboardID = event.target.getAttribute('data-id');
-//
-// 		let artboards = this.state.artboards;
-// 		artboards.forEach((artboard)=> {
-// 			if (artboard.id === artboardID) {
-// 				artboard.slices = [];
-// 			}
-// 		});
-//
-// 		this.setState({ artboards });
 	};
 
 	handleZoom = (direction)=> {
@@ -962,7 +939,6 @@ class InspectorPage extends Component {
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 
 		const progressStyle = { width : this.state.percent + '%' };
-
 		const artboardsStyle = {
 			position        : 'absolute',
 // 			width           : (artboards.length > 0) ? Math.floor(artboards.length * (50 + (artboards[0].meta.frame.size.width * scale)) * 0.75) : 0,
@@ -1152,13 +1128,6 @@ class InspectorPage extends Component {
 						<button className={'inspector-page-float-button' + ((scale >= 3) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
 						<button className={'inspector-page-float-button' + ((scale <= 0.03) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
 						<button className={'inspector-page-float-button' + ((scale === 1.0) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 1.0) ? enabledZooResetButton : disabledZoomResetButton} alt="0" /></button>
-					</div>
-					<div className="inspector-page-toggle-wrapper is-hidden">
-						<SliceToggle type="hotspot" selected={visibleTypes.hotspot} onClick={()=> this.handleSliceToggle('hotspot')} />
-						<SliceToggle type="slice" selected={visibleTypes.slice} onClick={()=> this.handleSliceToggle('slice')} />
-						<SliceToggle type="textfield" selected={visibleTypes.textfield} onClick={()=> this.handleSliceToggle('textfield')} />
-						<SliceToggle type="group" selected={visibleTypes.group} onClick={()=> this.handleSliceToggle('group')} />
-						<SliceToggle type="" selected={(visibleTypes.all)} onClick={()=> this.handleSliceToggle('all')} />
 					</div>
 				</div>
 				<div className="inspector-page-panel">
