@@ -18,12 +18,12 @@ const mapStateToProps = (state, ownProps)=> {
 	});
 };
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch)=> {
 	return ({
 		addFileUpload         : (file)=> dispatch(addFileUpload(file)),
 		appendUploadArtboards : (artboards)=> dispatch(appendUploadArtboards(artboards))
 	});
-}
+};
 
 
 class HomePage extends Component {
@@ -150,7 +150,7 @@ class HomePage extends Component {
 
 
 	handleNextUpload = (upload)=> {
-		console.log('!¡!¡!¡!¡!¡!¡!¡!¡!¡— HomePage.handleNextUpload()', upload);
+// 		console.log('!¡!¡!¡!¡!¡!¡!¡!¡!¡— HomePage.handleNextUpload()', upload);
 
 		const prevArtboards = [...this.props.artboards];
 		const { loadOffset } = this.state;

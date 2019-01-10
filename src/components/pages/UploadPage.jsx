@@ -31,12 +31,12 @@ const mapStateToProps = (state, ownProps)=> {
 	});
 };
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch)=> {
 	return ({
 		addFileUpload     : (file)=> dispatch(addFileUpload(file)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
-}
+};
 
 
 function InviteForm(props) {

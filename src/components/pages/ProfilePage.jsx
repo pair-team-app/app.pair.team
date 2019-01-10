@@ -17,11 +17,11 @@ const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
 };
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch)=> {
 	return ({
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
-}
+};
 
 
 class ProfilePage extends Component {

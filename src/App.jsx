@@ -43,13 +43,13 @@ const mapStateToProps = (state, ownProps)=> {
 	});
 };
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch)=> {
 	return ({
 		fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
 		updateNavigation  : (navIDs)=> dispatch(updateNavigation(navIDs)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
-}
+};
 
 
 class App extends Component {
@@ -350,6 +350,7 @@ class App extends Component {
 						    <Route exact path="/login" render={()=> <LoginPage onPage={this.handlePage} />} onPopup={this.handlePopup} />
 					      <Route exact path="/mission" render={()=> <MissionPage />} />
 						    <Route exact path="/new" render={()=> <UploadPage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onProcess={this.handleProcess} onPopup={this.handlePopup} />} />
+						    <Route exact path="/page" render={()=> <InspectorPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
 						    <Route exact path="/page/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					      <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} />} />
 					      <Route exact path="/privacy" render={()=> <PrivacyPage />} />

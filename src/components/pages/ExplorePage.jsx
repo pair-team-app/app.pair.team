@@ -19,12 +19,12 @@ const mapStateToProps = (state, ownProps)=> {
 	});
 };
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch)=> {
 	return ({
 		addFileUpload          : (file)=> dispatch(addFileUpload(file)),
 		appendExploreArtboards : (artboards)=> dispatch(appendExploreArtboards(artboards))
 	});
-}
+};
 
 
 class ExplorePage extends Component {

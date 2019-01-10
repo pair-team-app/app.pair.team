@@ -10,11 +10,11 @@ import { updateUserProfile } from '../../redux/actions';
 import { trackEvent } from '../../utils/tracking';
 
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch)=> {
 	return ({
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
-}
+};
 
 
 class RegisterPage extends Component {

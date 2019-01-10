@@ -20,6 +20,7 @@ import enabledZoomOutButton from '../../images/buttons/btn-zoom-out_enabled.svg'
 import disabledZoomOutButton from '../../images/buttons/btn-zoom-out_disabled.svg';
 import enabledZooResetButton from '../../images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../images/buttons/btn-zoom-reset_disabled.svg';
+import { updateNavigation } from "../../redux/actions";
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
@@ -36,6 +37,7 @@ const zoomNotches = [
 	1.75,
 	3.00
 ];
+
 
 const SliceItem = (props)=> {
 // 	console.log('InspectorPage.SliceItem()', props);
@@ -66,7 +68,6 @@ const SliceToggle = (props)=> {
 		</div>
 	);
 };
-
 
 
 const SpecsList = (props)=> {
@@ -148,7 +149,16 @@ const SpecsList = (props)=> {
 
 
 const mapStateToProps = (state, ownProps)=> {
-	return ({ profile : state.userProfile });
+	return ({
+		navigation : state.navigation,
+		profile    : state.userProfile
+	});
+};
+
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		updateNavigation  : (navIDs)=> dispatch(updateNavigation(navIDs))
+	});
 };
 
 
@@ -156,13 +166,7 @@ class InspectorPage extends Component {
 	constructor(props) {
 		super(props);
 
-		const { uploadID, pageID, artboardID, sliceID } = this.props.match.params;
-
 		this.state = {
-			uploadID      : uploadID,
-			pageID        : pageID,
-			artboardID    : artboardID,
-			sliceID       : sliceID,
 			slice         : null,
 			hoverSlice    : null,
 			page          : null,
@@ -235,7 +239,7 @@ class InspectorPage extends Component {
 		this.antsInterval = setInterval(this.redrawAnts, 100);
 
 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
-		document.addEventListener('wheel', this.handleWheel.bind(this));
+		document.addEventListener('wheel', this.handleWheelStart.bind(this));
 	}
 
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
@@ -247,7 +251,13 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.componentDidUpdate()', prevProps.match.params.artboardID, this.props.match.params.artboardID);
 		if (this.props.match.params.pageID !== prevProps.match.params.pageID) {
 			this.refreshData();
-			return (null);
+		}
+
+		const { uploadID, pageID, artboardID, sliceID } = this.state;
+		this.setState({ uploadID, pageID, artboardID, sliceID });
+		if (this.props.navigation !== prevProps.navigation) {
+// 			const { uploadID, pageID, artboardID, sliceID } = this.props.navigation;
+			this.refreshData();
 		}
 
 		if (canvasWrapper.current) {
@@ -256,51 +266,46 @@ class InspectorPage extends Component {
 				this.initialScaled = true;
 				//this.setState({ scale });
 
-				if (artboardsWrapper.current) {
-					this.state.artboards.forEach((artboard, i)=> {
-						if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
-							console.log('InspectorPage.componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
-							//artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * scale);
-							//artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * scale);
-						}
-					});
-				}
+// 				if (artboardsWrapper.current) {
+// 					this.state.artboards.forEach((artboard, i)=> {
+// 						if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
+// 							console.log('InspectorPage.componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
+// 							//artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * scale);
+// 							//artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * scale);
+// 						}
+// 					});
+// 				}
 			}
 
-			if (this.props.match.params.artboardID !== prevProps.match.params.artboardID) {
-				if (artboardsWrapper.current) {
-					this.state.artboards.forEach((artboard, i)=> {
-						if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
-							console.log('InspectorPage.componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
-							//artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * this.state.scale);
-							//artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * this.state.scale);
-						}
-					});
-				}
-			}
+// 			if (this.props.match.params.artboardID !== prevProps.match.params.artboardID) {
+// 				if (artboardsWrapper.current) {
+// 					this.state.artboards.forEach((artboard, i)=> {
+// 						if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
+// 							console.log('InspectorPage.componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
+// 							//artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * this.state.scale);
+// 							//artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * this.state.scale);
+// 						}
+// 					});
+// 				}
+// 			}
 		}
 
-		if (canvas.current) {
+		if (canvas.current && this.antsInterval) {
 			this.updateCanvas();
 		}
 	}
 
 	componentWillUnmount() {
 		document.removeEventListener("keydown", this.handleKeyDown.bind(this));
-		document.removeEventListener("wheel", this.handleWheel.bind(this));
+		document.removeEventListener("wheel", this.handleWheelStart.bind(this));
 		clearInterval(this.antsInterval);
 	}
 
 
 	refreshData = ()=> {
-		const { uploadID, pageID, artboardID, sliceID } = this.props.match.params;
-		this.setState({
-			uploadID   : uploadID,
-			pageID     : pageID,
-			artboardID : artboardID,
-			slice      : sliceID,
-			tooltip    : 'Loading…'
-		});
+		console.log('InspectorPage.refreshData()', this.props);
+
+		const { uploadID, pageID } = this.props.navigation;
 
 		let formData = new FormData();
 		formData.append('action', 'PAGE');
@@ -337,7 +342,6 @@ class InspectorPage extends Component {
 							}
 
 							maxH = Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale);
-
 							artboards.push({
 								id        : artboard.id,
 								pageID    : artboard.page_id,
@@ -376,7 +380,7 @@ class InspectorPage extends Component {
 						});
 
 						formData.append('action', 'FILES');
-						formData.append('upload_id', '' + this.state.uploadID);
+						formData.append('upload_id', '' + uploadID);
 						axios.post('https://api.designengine.ai/system.php', formData)
 							.then((response)=> {
 								console.log('FILES', response.data);
@@ -446,7 +450,7 @@ class InspectorPage extends Component {
 
 						let formData = new FormData();
 						formData.append('action', 'FILES');
-						formData.append('upload_id', '' + this.state.uploadID);
+						formData.append('upload_id', '' + this.props.navigation.uploadID);
 						axios.post('https://api.designengine.ai/system.php', formData)
 							.then((response)=> {
 								console.log('FILES', response.data);
@@ -531,7 +535,7 @@ class InspectorPage extends Component {
 			let formData = new FormData();
 			formData.append('action', 'ADD_COMMENT');
 			formData.append('user_id', this.props.profile.id);
-			formData.append('artboard_id', '' + this.state.artboardID);
+			formData.append('artboard_id', '' + this.props.navigation.artboardID);
 			formData.append('content', this.state.comment);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
@@ -557,8 +561,8 @@ class InspectorPage extends Component {
 		});
 	};
 
-	handleWheel = (event)=> {
-// 		console.log('InspectorPage.handleWheel()', event.type, event.deltaX, event.deltaY, event.target);
+	handleWheelStart = (event)=> {
+// 		console.log('InspectorPage.handleWheelStart()', event.type, event.deltaX, event.deltaY, event.target);
 		//console.log('wheel', artboardsWrapper.current.clientWidth, artboardsWrapper.current.clientHeight, artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft);
 
 // 		event.preventDefault();
@@ -790,7 +794,7 @@ class InspectorPage extends Component {
 			this.props.onPage('login');
 
 		} else {
-			const filePath = 'http://cdn.designengine.ai/page.php?artboard_id=' + this.state.artboard.id;
+			const filePath = 'http://cdn.designengine.ai/page.php?artboard_id=' + this.props.navigation.artboardID;
 			let link = document.createElement('a');
 			link.href = filePath;
 			link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
@@ -1203,4 +1207,4 @@ class InspectorPage extends Component {
 	}
 }
 
-export default connect(mapStateToProps)(InspectorPage);
+export default connect(mapStateToProps, mapDispatchToProps)(InspectorPage);

@@ -13,11 +13,11 @@ import { hasBit, isValidEmail } from '../../utils/funcs';
 const passwordTextfield = React.createRef();
 
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch)=> {
 	return ({
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
-}
+};
 
 
 class LoginPage extends Component {
