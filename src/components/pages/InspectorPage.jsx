@@ -261,6 +261,10 @@ class InspectorPage extends Component {
 			this.refreshData();
 		}
 
+		if (!this.hasNavIDs() && this.state.artboards.length > 0) {
+			this.setState({ artboards : [] });
+		}
+
 		if (canvasWrapper.current) {
 			const scale = Math.min(canvasWrapper.current.clientWidth / (this.size.width - canvasWrapper.current.clientWidth), canvasWrapper.current.clientHeight / (this.size.height - canvasWrapper.current.clientHeight));
 			if (this.state.scale !== scale && !this.initialScaled) {

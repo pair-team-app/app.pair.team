@@ -84,9 +84,9 @@ class App extends Component {
 		const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
 		this.props.updateNavigation({ uploadID, pageID, artboardID, sliceID });
 
-		if (isHomePage()) {
-			this.handlePage('page');
-		}
+// 		if (isHomePage()) {
+// 			this.handlePage('page');
+// 		}
 
 		if (isInspectorPage() && uploadID === 0 && pageID !== 0) {
 			let formData = new FormData();
@@ -132,7 +132,8 @@ class App extends Component {
 			pageID     : 0,
 			artboardID : 0
 		});
-		window.location.href = '/';
+		this.handlePage('');
+// 		window.location.href = '/';
 	};
 
 	handleLogout = ()=> {
