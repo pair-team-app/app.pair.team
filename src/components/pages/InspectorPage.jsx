@@ -243,7 +243,7 @@ class InspectorPage extends Component {
 // 		const { uploadID, pageID, artboardID, sliceID } = this.state;
 // 		this.setState({ uploadID, pageID, artboardID, sliceID });
 		if (this.props.navigation !== prevProps.navigation) {
-			//this.refreshData();
+// 			this.refreshData();
 		}
 
 		if (canvasWrapper.current) {
@@ -997,15 +997,34 @@ class InspectorPage extends Component {
 				height   : (scale * artboard.meta.frame.size.height) + 'px'
 			};
 
-			const backgroundSlices = artboard.slices.map((slice, i) => {
-				return ((slice.type === 'group') ?
+			const backgroundSlices = artboard.slices.filter((slice)=> (slice.type === 'group')).map((slice, i) => {
+				return (<SliceItem
+					key={i}
+					id={slice.id}
+					title={slice.title}
+					type={slice.type}
+					filled={visibleTypes[slice.type]}
+					visible={(!scrolling)}
+					top={slice.meta.frame.origin.y}
+					left={slice.meta.frame.origin.x}
+					width={slice.meta.frame.size.width}
+					height={slice.meta.frame.size.height}
+					scale={scale}
+					offset={{ x : offset.x, y : offset.y }}
+					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
+					onRollOut={()=> this.handleSliceRollOut(i, slice)}
+					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />);
+			});
+
+			const hotspotSlices = artboard.slices.filter((slice)=> (slice.type === 'hotspot')).map((slice, i) => {
+				return ((slice.type === '') ?
 					<SliceItem
 						key={i}
 						id={slice.id}
 						title={slice.title}
 						type={slice.type}
 						filled={visibleTypes[slice.type]}
-						visible={(!this.state.scrolling)}
+						visible={(!scrolling)}
 						top={slice.meta.frame.origin.y}
 						left={slice.meta.frame.origin.x}
 						width={slice.meta.frame.size.width}
@@ -1018,15 +1037,15 @@ class InspectorPage extends Component {
 					: null);
 			});
 
-			const hotspotSlices = artboard.slices.map((slice, i) => {
-				return ((slice.type === 'hotspot') ?
+			const textfieldSlices = artboard.slices.filter((slice)=> (slice.type === 'textfield')).map((slice, i) => {
+				return ((slice.type === '') ?
 					<SliceItem
 						key={i}
 						id={slice.id}
 						title={slice.title}
 						type={slice.type}
 						filled={visibleTypes[slice.type]}
-						visible={(!this.state.scrolling)}
+						visible={(!scrolling)}
 						top={slice.meta.frame.origin.y}
 						left={slice.meta.frame.origin.x}
 						width={slice.meta.frame.size.width}
@@ -1039,46 +1058,23 @@ class InspectorPage extends Component {
 					: null);
 			});
 
-			const textfieldSlices = artboard.slices.map((slice, i) => {
-				return ((slice.type === 'textfield') ?
-					<SliceItem
-						key={i}
-						id={slice.id}
-						title={slice.title}
-						type={slice.type}
-						filled={visibleTypes[slice.type]}
-						visible={(!this.state.scrolling)}
-						top={slice.meta.frame.origin.y}
-						left={slice.meta.frame.origin.x}
-						width={slice.meta.frame.size.width}
-						height={slice.meta.frame.size.height}
-						scale={scale}
-						offset={{ x : offset.x, y : offset.y }}
-						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
-						onRollOut={()=> this.handleSliceRollOut(i, slice)}
-						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
-					: null);
-			});
-
-			const sliceSlices = artboard.slices.map((slice, i) => {
-				return ((slice.type === 'slice') ?
-					<SliceItem
-						key={i}
-						id={slice.id}
-						title={slice.title}
-						type={slice.type}
-						filled={visibleTypes[slice.type]}
-						visible={(!this.state.scrolling)}
-						top={slice.meta.frame.origin.y}
-						left={slice.meta.frame.origin.x}
-						width={slice.meta.frame.size.width}
-						height={slice.meta.frame.size.height}
-						scale={scale}
-						offset={{ x : offset.x, y : offset.y }}
-						onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
-						onRollOut={()=> this.handleSliceRollOut(i, slice)}
-						onClick={(offset) => this.handleSliceClick(i, slice, offset)} />
-					: null);
+			const sliceSlices = artboard.slices.filter((slice)=> (slice.type === 'slice')).map((slice, i) => {
+				return (<SliceItem
+					key={i}
+					id={slice.id}
+					title={slice.title}
+					type={slice.type}
+					filled={visibleTypes[slice.type]}
+					visible={(!scrolling)}
+					top={slice.meta.frame.origin.y}
+					left={slice.meta.frame.origin.x}
+					width={slice.meta.frame.size.width}
+					height={slice.meta.frame.size.height}
+					scale={scale}
+					offset={{ x : offset.x, y : offset.y }}
+					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
+					onRollOut={()=> this.handleSliceRollOut(i, slice)}
+					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />);
 			});
 
 			artboardBackgrounds.push(
