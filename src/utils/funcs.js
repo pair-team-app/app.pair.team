@@ -3,8 +3,9 @@ import cookie from 'react-cookies';
 import axios from "axios";
 
 
-export function buildInspectorPath(uploadID, pageID, artboardID, artboardTitle, suffix='') {
-	return ('/page/' + uploadID + '/' + pageID + '/' + artboardID + '/' + convertURLSlug(artboardTitle) + suffix);
+export function buildInspectorPath(uploadID, pageID, artboardID, artboardTitle, prefix=null, suffix='') {
+	prefix = (prefix || ('/' + window.location.pathname.split('/').pop()));
+	return (prefix + '/' + uploadID + '/' + pageID + '/' + artboardID + '/' + convertURLSlug(artboardTitle) + suffix);
 }
 
 export function buildInspectorURL(uploadID, pageID, artboardID, artboardTitle, suffix='') {
@@ -89,8 +90,9 @@ export function isProjectPage() {
 	return (window.location.pathname.includes('/proj'));
 }
 
-export function isUploadPage() {
-	return (window.location.pathname.includes('/new'));
+export function isUploadPage(base=false) {
+	const { pathname } = window.location;
+	return ((base) ? pathname === '/new' : pathname.includes('/new'));
 }
 
 export function isUserLoggedIn() {

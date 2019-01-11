@@ -516,7 +516,7 @@ class InspectorPage extends Component {
 
 		} else if (type === 'DEMO') {
 // 			window.location.href = buildInspectorURL(1, 2, 4, 'account');
-			this.props.onPage(buildInspectorPath(1, 2, 4, 'account'));
+			this.props.onPage(buildInspectorPath(1, 2, 4, 'account', '/inspect'));
 			this.props.updateNavigation({
 				uploadID   : 1,
 				pageID     : 2,

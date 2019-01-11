@@ -63,7 +63,7 @@ function InviteForm(props) {
 					);
 				})}
 			</Column></div>
-			<button className={inviteButtonClass} onClick={() => (invites.reduce((acc, val)=> acc + val.valid) > 0) ? props.onInvite() : null}>Submit</button>
+			<button className={inviteButtonClass} onClick={() => (invites.reduce((acc, val)=> acc + val.valid) > 0) ? props.onSubmit() : null}>Submit</button>
 		</div>
 	</div>);
 }
@@ -211,16 +211,6 @@ class UploadPage extends Component {
 				valid    : true,
 				txtClass : 'input-wrapper'
 			}],
-			register        : {
-				username      : '',
-				email         : '',
-				password      : '',
-				password2     : '',
-				usernameValid : true,
-				emailValid    : true,
-				passwordValid : true,
-				passMsg       : ''
-			},
 			artboards       : [],
 			radioButtons    : radioButtons,
 			radioIndex      : 2
@@ -241,6 +231,7 @@ class UploadPage extends Component {
 	componentWillUnmount() {
 		console.log('UploadPage.componentWillUnmount()');
 		clearInterval(this.uploadInterval);
+		this.uploadInterval = null;
 	}
 
 	onDrop(files) {
@@ -319,38 +310,11 @@ class UploadPage extends Component {
 	resetThenSet = (ind, key) => {
 	};
 
-	handleInviteChange = (event)=> {
-		console.log('UploadPage.handleInviteChange()', event.target);
-		let { invites } = this.state;
-		invites.forEach((invite, i)=> {
-			if (i === parseInt([event.target.name].substr(-1), 10)) {
-				invite.email = event.target.value;
-			}
-		});
-
-		this.setState({ invites });
-	};
-
 	handleUploadChange = (event)=> {
 		console.log('UploadPage.handleUploadChange()', event.target);
 		this.setState({ [event.target.name] : event.target.value });
 	};
 
-	handleFocus = (event)=> {
-		console.log('UploadPage.handleFocus()', event.target);
-
-		let { invites } = this.state;
-		invites.forEach((invite, i)=> {
-			if (i === parseInt(event.target.name.substr(-1), 10)) {
-				invite.email = '';
-			}
-		});
-
-		this.setState({
-			action  : '',
-			invites : invites
-		});
-	};
 
 	handleCancel = (event)=> {
 		console.log('UploadPage.handleCancel()', event.target);
@@ -378,75 +342,35 @@ class UploadPage extends Component {
 		});
 	};
 
-	handleMoreEmail = ()=> {
+	handleInviteChange = (event)=> {
+		console.log('UploadPage.handleInviteChange()', event.target);
 		let { invites } = this.state;
-		invites.push({
-			email    : '',
-			valid    : true,
-			txtClass : 'input-wrapper'
+		invites.forEach((invite, i)=> {
+			if (i === parseInt([event.target.name].substr(-1), 10)) {
+				invite.email = event.target.value;
+			}
 		});
 
 		this.setState({ invites });
 	};
 
-	handleRadioButton = (radioButton)=> {
-		let radioButtons = [...this.state.radioButtons];
-		radioButtons.forEach((item)=> {
-			item.selected = (item.id === radioButton.id);
+	handleInviteFocus = (event)=> {
+		console.log('UploadPage.handleInviteFocus()', event.target);
+
+		let { invites } = this.state;
+		invites.forEach((invite, i)=> {
+			if (i === parseInt(event.target.name.substr(-1), 10)) {
+				invite.email = '';
+			}
 		});
 
 		this.setState({
-			radioButtons : radioButtons,
-			radioIndex   : radioButton.id
+			action  : '',
+			invites : invites
 		});
 	};
 
-	handleSubmit = (userProfile)=> {
-		console.log('UploadPage.handleSubmit()', userProfile, this.state);
-
-		const profile = (!this.props.profile) ? userProfile : this.state.profile;
-		const { title, description, radioIndex, file, uploadComplete, registering, submitted } = this.state;
-		const { name, size } = file;
-		const titleValid = (title.length > 0);
-
-		if (titleValid && uploadComplete && (!submitted || registering)) {
-			this.setState({
-				titleValid : titleValid,
-				submitted  : true
-			});
-
-			if (isUserLoggedIn()) {
-				let formData = new FormData();
-				formData.append('action', 'NEW_UPLOAD');
-				formData.append('user_id', profile.id);
-				formData.append('title', title);
-				formData.append('description', description);
-				formData.append('filesize', size);
-				formData.append('private', (radioIndex === 1) ? '0' : '1');
-				formData.append('filename', "http://cdn.designengine.ai/system/" + name);
-				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response) => {
-						console.log('NEW_UPLOAD', response.data);
-						this.setState({
-							upload          : response.data.upload,
-							processingState : 0,
-							file            : null,
-							registering     : false
-						});
-
-						this.props.addFileUpload(null);
-						this.props.onProcess(true);
-						this.uploadInterval = setInterval(this.statusInterval, 2500);
-					}).catch((error) => {
-				});
-
-			} else {
-				this.setState({ registering : true });
-			}
-		}
-	};
-
-	handleInvite = ()=> {
+	handleInviteSubmit = ()=> {
 		const { upload, invites } = this.state;
 
 		let emails = '';
@@ -489,8 +413,31 @@ class UploadPage extends Component {
 		cookie.save('user_id', profile.id, { path : '/' });
 		setTimeout(()=> {
 			this.props.updateUserProfile(profile);
-			this.handleSubmit(profile);
+			this.handleUploadSubmit(profile);
 		}, 500);
+	};
+
+	handleMoreEmail = ()=> {
+		let { invites } = this.state;
+		invites.push({
+			email    : '',
+			valid    : true,
+			txtClass : 'input-wrapper'
+		});
+
+		this.setState({ invites });
+	};
+
+	handleRadioButton = (radioButton)=> {
+		let radioButtons = [...this.state.radioButtons];
+		radioButtons.forEach((item)=> {
+			item.selected = (item.id === radioButton.id);
+		});
+
+		this.setState({
+			radioButtons : radioButtons,
+			radioIndex   : radioButton.id
+		});
 	};
 
 	handleRegistered = (profile)=> {
@@ -501,11 +448,56 @@ class UploadPage extends Component {
 
 		setTimeout(()=> {
 			this.props.updateUserProfile(profile);
-			this.handleSubmit(profile);
+			this.handleUploadSubmit(profile);
 		}, 500);
 	};
 
-	statusInterval = ()=> {
+	handleUploadSubmit = (userProfile)=> {
+		console.log('UploadPage.handleUploadSubmit()', userProfile, this.state);
+
+		const profile = (!this.props.profile) ? userProfile : this.state.profile;
+		const { title, description, radioIndex, file, uploadComplete, registering, submitted } = this.state;
+		const { name, size } = file;
+		const titleValid = (title.length > 0);
+
+		if (titleValid && uploadComplete && (!submitted || registering)) {
+			this.setState({
+				titleValid : titleValid,
+				submitted  : true
+			});
+
+			if (isUserLoggedIn()) {
+				let formData = new FormData();
+				formData.append('action', 'NEW_UPLOAD');
+				formData.append('user_id', profile.id);
+				formData.append('title', title);
+				formData.append('description', description);
+				formData.append('filesize', size);
+				formData.append('private', (radioIndex === 1) ? '0' : '1');
+				formData.append('filename', "http://cdn.designengine.ai/system/" + name);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response) => {
+						console.log('NEW_UPLOAD', response.data);
+						this.setState({
+							upload          : response.data.upload,
+							processingState : 0,
+							file            : null,
+							registering     : false
+						});
+
+						this.props.addFileUpload(null);
+						this.props.onProcess(true);
+						this.uploadInterval = setInterval(this.onStatusUpdate, 2500);
+					}).catch((error) => {
+				});
+
+			} else {
+				this.setState({ registering : true });
+			}
+		}
+	};
+
+	onStatusUpdate = ()=> {
 		const { upload, shownStarted } = this.state;
 
 		let formData = new FormData();
@@ -561,7 +553,6 @@ class UploadPage extends Component {
 
 				} else if (processingState === 3) {
 					clearInterval(this.uploadInterval);
-// 					this.props.onPage(buildProjectPath(upload.id, upload.title, '/views'));
 
 					formData.append('action', 'PAGES');
 					formData.append('upload_id', upload.id);
@@ -614,10 +605,10 @@ class UploadPage extends Component {
 						titleValid={titleValid}
 						percent={percent}
 						uploadComplete={uploadComplete}
+						resetThenSet={this.resetThenSet}
 						onChange={this.handleUploadChange}
-						onFocus={this.handleFocus}
 						onRadioButton={this.handleRadioButton}
-						onSubmit={this.handleSubmit}
+						onSubmit={this.handleUploadSubmit}
 					/>
 				</div>)}
 
@@ -649,9 +640,9 @@ class UploadPage extends Component {
 					{(!sentInvites) && (<InviteForm
 						invites={invites}
 						onInviteChange={this.handleInviteChange}
-						onFocus={this.handleFocus}
+						onFocus={this.handleInviteFocus}
 						onMoreEmail={this.handleMoreEmail}
-						onInvite={this.handleInvite}
+						onSubmit={this.handleInviteSubmit}
 					/>)}
 				</div>)}
 			</div>

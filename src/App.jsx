@@ -35,6 +35,7 @@ import {
 	idsFromPath,
 	isHomePage,
 	isInspectorPage,
+	isUploadPage,
 	scrollOrigin
 } from './utils/funcs';
 import { initTracker, trackEvent } from './utils/tracking';
@@ -82,6 +83,10 @@ class App extends Component {
 
 		if (isHomePage()) {
 			this.handlePage('inspect');
+		}
+
+		if (isUploadPage(true)) {
+			this.handlePage('new/inspect');
 		}
 
 		const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
