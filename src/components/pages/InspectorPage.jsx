@@ -22,7 +22,7 @@ import disabledZoomOutButton from '../../images/buttons/btn-zoom-out_disabled.sv
 import enabledZooResetButton from '../../images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../images/buttons/btn-zoom-reset_disabled.svg';
 import { updateNavigation } from "../../redux/actions";
-import { buildInspectorPath, buildInspectorURL, sendToSlack } from "../../utils/funcs";
+import { buildInspectorPath, sendToSlack } from "../../utils/funcs";
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();

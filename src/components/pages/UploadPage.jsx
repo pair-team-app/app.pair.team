@@ -16,7 +16,6 @@ import RadioButton from '../elements/RadioButton';
 import { addFileUpload, updateUserProfile } from '../../redux/actions';
 import {
 	buildInspectorPath,
-	buildProjectPath,
 	buildProjectURL,
 	isUserLoggedIn,
 	isValidEmail,

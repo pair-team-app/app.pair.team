@@ -15,7 +15,7 @@
 	left: 0;
 	/*width: calc(100% - 301px);*/
 	width: calc(100%);
-	height: calc(100% - 45px);
+	height: calc(100% - 136px);
 	overflow-x: hidden;
 	overflow-y: scroll;
 	padding: 19px;
@@ -23,6 +23,7 @@
 
 .page-wrapper {
 	width: 100%;
+	height: 100%;
 	/*margin-bottom: 20px;*/
 	margin-bottom: 75px;
 }

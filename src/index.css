@@ -9,6 +9,7 @@ html, body {
   letter-spacing: -0.27px;
   background-color: #ffffff;
   color: #696969;
+  min-height: 100%;
   /*-webkit-font-smoothing: antialiased;*/
   /*-moz-osx-font-smoothing: grayscale;*/
 }

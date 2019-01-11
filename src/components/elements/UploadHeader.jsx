@@ -59,8 +59,6 @@ class UploadHeader extends Component {
 
 	render() {
 		console.log('UploadHeader.render()', this.props, this.state);
-
-		//const title = 'Turn any Sketch file into an organized System of Fonts, Colors, Symbols, Views & more. (Drag & Drop)';
 		const { title } = this.props;
 
 		return (<div className="upload-header-wrapper">
@@ -70,6 +68,10 @@ class UploadHeader extends Component {
 					<Row horizontal="center">{title}</Row>
 				</div>
 			</Dropzone>
+			<div className="upload-header-content-wrapper">
+					View a demo of what this feature looks like.<br />
+					<button className="fat-button upload-header-button" onClick={()=> this.props.onDemo()}>Demo</button><br />
+			</div>
 		</div>);
 	}
 }

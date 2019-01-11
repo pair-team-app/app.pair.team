@@ -4,7 +4,7 @@ import './HomePage.css';
 
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { Switch, Route } from 'react-router-dom';
+// import { Switch, Route } from 'react-router-dom';
 
 import ArtboardGrid from '../elements/ArtboardGrid';
 import UploadHeader from '../elements/UploadHeader';
@@ -63,16 +63,21 @@ class HomePage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		console.log('HomePage.componentDidUpdate()', prevProps, this.props);
 
-		if (!this.state.firstFetch && this.props.profile && this.props.artboards.length === 0) {
+		const { artboards } = this.props;
+		if (!this.state.firstFetch && this.props.profile && artboards.length === 0) {
 			this.setState({ firstFetch : true });
 			this.handleLoadNext();
 		}
 
 		const { fetching, uploadTotal } = this.state;
-		if (fetching && this.props.artboards.length === uploadTotal && uploadTotal > 0) {
+		if (fetching && artboards.length === uploadTotal && uploadTotal > 0) {
 			this.setState({ fetching : false });
 		}
 	}
+
+	handleDemo = ()=> {
+		console.log('HomePage.handleDemo()', this.props.path);
+	};
 
 
 	handleLoadNext = ()=> {
@@ -190,9 +195,9 @@ class HomePage extends Component {
 	};
 
 	handleFile = (file)=> {
-		console.log('HomePage.handleUploadComplete()', file);
+		console.log('HomePage.handleFile()', file);
 		this.props.addFileUpload(file);
-		this.props.onPage('new');
+		this.props.onPage('new' + window.location.pathname);
 	};
 
 
@@ -202,15 +207,15 @@ class HomePage extends Component {
 		const { profile, artboards } = this.props;
 		const { fetching, loadOffset, uploadTotal } = this.state;
 
-// 		const { pathname } = window.location;
-// 		const headerTitle = (pathname === '/') ? '---HOME---' : (pathname === '/inspect') ? '---INSPECT---' : (pathname === '/parts') ? '---PARTS---' : (pathname === '/colors') ? '---COLORS---' : (pathname === '/typography') ? '---TYPOGRAPHY---' : '---OTHER---';
-		const headerTitle = 'Turn any Sketch file into an organized System of Fonts, Colors, Symbols, Views & more. (Drag & Drop)';
+		const { pathname } = window.location;
+		const headerTitle = (pathname === '/' || pathname === '/inspect') ? 'Drag & Drop any design file to inspect specs & code.' : (pathname === '/parts') ? 'Drag & Drop any design file to download parts.' : (pathname === '/colors') ? 'Drag & Drop any design file to view it\'s colors.' : (pathname === '/typography') ? 'Drag & Drop any design file to view it\'s fonts.' : 'Turn any Sketch file into an organized System of Fonts, Colors, Symbols, Views &amp; more. (Drag & Drop)';
 		const gridTitle = (profile) ? (fetching) ? 'Loading…' : 'Showing most viewed from ' + uploadTotal + ' project' + ((uploadTotal === 1) ? '' : 's') + '.' : null;
 		return (
 			<div className="page-wrapper home-page-wrapper">
 				<UploadHeader
 					title={headerTitle}
 					onFile={this.handleFile}
+					onDemo={this.handleDemo}
 					onPopup={this.props.onPopup} />
 
 				<ArtboardGrid
