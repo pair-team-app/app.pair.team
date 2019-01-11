@@ -64,10 +64,8 @@ class UploadHeader extends Component {
 
 		return (<div className="upload-header-wrapper">
 			<Dropzone className="upload-header-dz" onDrop={this.onDrop.bind(this)}>
-				{/*<div>*/}
-					<Row horizontal="center"><img className="upload-header-upload-icon" src={uploadIcon} alt="Upload" /></Row>
-					<Row horizontal="center">{title}</Row>
-				{/*</div>*/}
+				<Row horizontal="center"><img className="upload-header-upload-icon" src={uploadIcon} alt="Upload" /></Row>
+				<Row horizontal="center">{title}</Row>
 			</Dropzone>
 			<div className="upload-header-divider" />
 			<div className="upload-header-content-wrapper">

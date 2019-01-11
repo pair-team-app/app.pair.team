@@ -12,10 +12,8 @@
 
 .mobile-overlay-content {
 	position: fixed;
-	width: auto;
-	max-width: 600px;
+	width: 360px;
 	height: auto;
-	max-height: 90%;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
@@ -28,5 +26,5 @@
 }
 
 .mobile-overlay-button {
-	margin-top: 20px;
+	margin-top: 30px;
 }

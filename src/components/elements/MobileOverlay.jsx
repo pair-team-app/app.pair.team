@@ -57,7 +57,7 @@ class MobileOverlay extends Component {
 		return (<div className="mobile-overlay-wrapper" onClick={()=> this.handleClick()} ref={(element)=> { this.wrapper = element; }}>
 			<div className="mobile-overlay-content">
 				Sorry Design Engine is not ready for Mobile, head to your nearest desktop.<br />
-				<button className="fat-button mobile-overlay-button" onClick={()=> this.handleClick()}>OK</button>
+				<button className="mobile-overlay-button" onClick={()=> this.handleClick()}>OK</button>
 			</div>
 		</div>);
 	}

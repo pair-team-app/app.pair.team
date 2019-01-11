@@ -4,26 +4,23 @@
 	height: 75%;
 	background: #111111 url(../../images/backgrounds/bg-checkerboard.png) repeat;
 	margin-bottom:20px;
-	padding: 20px 10px;
 	overflow-x: scroll;
 	overflow-y: hidden;
 	color: #999999;
 	display: table;
 }
 
-.upload-header-dz {
+.upload-header-dz, .upload-header-content-wrapper {
 	display: table-cell;
 	width: 50%;
 	height: 100%;
+	padding: 20px 10px;
 	text-align: center;
 	vertical-align: middle;
-	cursor: copy;
 }
 
-.upload-header-upload-icon {
-	width: 50px;
-	height: 50px;
-	margin-bottom:30px;
+.upload-header-dz {
+	cursor: copy;
 }
 
 .upload-header-divider {
@@ -33,12 +30,10 @@
 	background: #ffffff none;
 }
 
-.upload-header-content-wrapper {
-	display: table-cell;
-	width: 50%;
-	height: 100%;
-	text-align: center;
-	vertical-align: middle;
+.upload-header-upload-icon {
+	width: 50px;
+	height: 50px;
+	margin-bottom:30px;
 }
 
 .upload-header-button {
