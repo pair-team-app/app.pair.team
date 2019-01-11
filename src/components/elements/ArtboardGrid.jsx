@@ -21,7 +21,7 @@ const LoggedInHeader = (props)=> {
 		<h3>Start a new Design Project</h3>
 		<h4>Turn any Design File into an organized System of Fonts, Colors, Symbols, Views &amp; More.</h4>
 		<div>
-			<button onClick={()=> props.onPage('new')}>New Project</button>
+			<button onClick={()=> props.onPage('new' + window.location.pathname)}>New Project</button>
 		</div>
 	</div>);
 };
