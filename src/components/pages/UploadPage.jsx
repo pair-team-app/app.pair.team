@@ -82,7 +82,7 @@ function ProcessingContent(props) {
 			<div className="page-header-text">{(status === '') ? 'Design Engine parsed 0 pages, artboards, symbols, fonts, and more from ' + upload.title + '\'s Design Source.' : status}</div>
 			<Row horizontal="center">
 				<button className="adjacent-button" onClick={() => this.props.onPage('invite-team')}>Invite Team</button>
-				<CopyToClipboard onCopy={this.handleURLCopy} text={buildProjectURL(upload.id, upload.title)}>
+				<CopyToClipboard onCopy={props.onCopy} text={buildProjectURL(upload.id, upload.title)}>
 					<button>Copy Link</button>
 				</CopyToClipboard>
 			</Row>
@@ -374,7 +374,7 @@ class UploadPage extends Component {
 		});
 	};
 
-	handleURLCopy = ()=> {
+	handleCopy = ()=> {
 		this.props.onPopup({
 			type     : 'INFO',
 			content  : 'Project URL copied to clipboard!',
@@ -625,6 +625,7 @@ class UploadPage extends Component {
 						upload={upload}
 						status={status}
 						artboards={artboards}
+						onCopy={this.handleCopy}
 					/>
 
 					{(!sentInvites) && (<InviteForm

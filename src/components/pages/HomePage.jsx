@@ -77,6 +77,8 @@ class HomePage extends Component {
 
 	handleDemo = ()=> {
 		console.log('HomePage.handleDemo()', this.props.path);
+		this.props.onPage('/page/1/2/4/account');
+// 		this.props.onPage('/page');
 	};
 
 
