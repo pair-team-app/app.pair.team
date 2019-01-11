@@ -124,9 +124,8 @@ function UploadForm(props) {
 
 	return (<div>
 		<div style={{ width : '100%' }}>
-			<h3>Create a new design project</h3>
-			<h4>A design project contains all the files for your project, including specifications, parts, and code
-			    examples.</h4>
+			<h3>Upload a design file</h3>
+			<h4>Upload a design file to begin processing.</h4>
 			<div className="upload-page-form-wrapper">
 				<div style={{ width : '33%' }}>
 					<Dropdown
