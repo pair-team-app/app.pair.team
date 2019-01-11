@@ -51,15 +51,15 @@ export function hideText(text, char='*') {
 }
 
 export function idsFromPath() {
-	const pathname = window.location.pathname;
-	const artboardPath = /\/artboard|page\/\d+\/\d+\/\d+\/.*$/;
-	const explorePath = /\/explore\/\d+\/.*$/;
-	const projPath = /\/proj\/\d+\/.*$/;
+	const { pathname } = window.location;
+	const inspectorPath = /\/artboard|page|inspect\/(\d+)\/(\d+)\/(\d+)\/.*$/;
+	const explorePath = /\/explore\/(\d+)\/.*$/;
+	const projPath = /\/proj\/(\d+)\/.*$/;
 
 	const navIDs = {
-		uploadID   : (artboardPath.test(pathname)) ? pathname.match(/\/artboard|page\/(\d+)\/.*$/)[1] : (explorePath.test(pathname)) ? pathname.match(/\/explore\/(\d+)\/.*$/)[1] : (projPath.test(pathname)) ? pathname.match(/\/proj\/(\d+)\/.*$/)[1] : 0,
-		pageID     : (artboardPath.test(pathname)) ? pathname.match(/\/artboard|page\/\d+\/(\d+)\/.*$/)[1] : 0,
-		artboardID : (artboardPath.test(pathname)) ? pathname.match(/\/artboard|page\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
+		uploadID   : (inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[1] : (explorePath.test(pathname)) ? pathname.match(explorePath)[1] : (projPath.test(pathname)) ? pathname.match(projPath)[1] : 0,
+		pageID     : (inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[2] : 0,
+		artboardID : (inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[3] : 0,
 		sliceID    : 0
 	};
 
@@ -67,15 +67,18 @@ export function idsFromPath() {
 }
 
 export function isExplorePage() {
-	return (window.location.pathname.includes('/explore'));
+	const { pathname } = window.location;
+	return (pathname.includes('/explore'));
 }
 
 export function isHomePage() {
-	return (window.location.pathname === '' || window.location.pathname === '/');
+	const { pathname } = window.location;
+	return (pathname === '' || pathname === '/');
 }
 
 export function isInspectorPage() {
-	return (window.location.pathname.includes('/artboard') || window.location.pathname.includes('/page'));
+	const { pathname } = window.location;
+	return (pathname.includes('/artboard') || pathname.includes('/page') || pathname.includes('/inspect/'));
 }
 
 export function isProfilePage() {

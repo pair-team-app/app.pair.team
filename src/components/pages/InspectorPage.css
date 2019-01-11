@@ -1,8 +1,8 @@
 
 .inspector-page-wrapper {
-	margin: -20px -20px 75px -20px;
+	margin: -20px -20px 0 -20px;
 	width: calc(100% + 40px);
-	height: calc(100% - 90px);
+	height: 100%;
 	display: table;
 	background-color: #111111;
 }

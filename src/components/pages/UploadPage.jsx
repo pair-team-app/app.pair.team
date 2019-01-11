@@ -13,14 +13,8 @@ import RegisterForm from '../elements/RegisterForm';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Dropdown from '../elements/Dropdown';
 import RadioButton from '../elements/RadioButton';
-import { addFileUpload, updateUserProfile } from '../../redux/actions';
-import {
-	buildInspectorPath,
-	buildProjectURL,
-	isUserLoggedIn,
-	isValidEmail,
-	sendToSlack
-} from '../../utils/funcs';
+import { addFileUpload, updateNavigation, updateUserProfile } from '../../redux/actions';
+import { buildInspectorPath, buildProjectURL, isUserLoggedIn, isValidEmail, sendToSlack } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 
 import radioButtons from '../../json/radio-buttons_upload';
@@ -40,6 +34,7 @@ const mapStateToProps = (state, ownProps)=> {
 const mapDispatchToProps = (dispatch)=> {
 	return ({
 		addFileUpload     : (file)=> dispatch(addFileUpload(file)),
+		updateNavigation  : (navIDs)=> dispatch(updateNavigation(navIDs)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 };
@@ -567,6 +562,12 @@ class UploadPage extends Component {
 							console.log('PAGES', response.data);
 							const page = response.data.pages.shift();
 							const artboard = page.artboards.shift();
+
+							this.props.updateNavigation({
+								uploadID   : upload.id,
+								pageID     : page.id,
+								artboardID : artboard.id
+							});
 
 							this.props.onPage(buildInspectorPath(upload.id, page.id, artboard.id, artboard.title));
 						}).catch((error) => {

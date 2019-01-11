@@ -54,10 +54,8 @@ class ArtboardGrid extends Component {
 
 	render() {
 		console.log('ArtboardGrid.render()', this.props, this.state);
-
 		const { fetching, total, title, artboards } = this.props;
 
-		const titleStyle = (!title) ? { color : '#ffffff' } : null;
 		const btnClass = (artboards && (artboards.length === parseInt(total, 10))) ? 'fat-button is-hidden' : (fetching) ? 'fat-button button-disabled' : 'fat-button';
 		const btnCaption = (fetching) ? 'Loading…' : 'More';
 
@@ -66,7 +64,7 @@ class ArtboardGrid extends Component {
 				? <LoggedInHeader onPage={this.props.onPage} />
 				: <LoggedOutHeader onPage={this.props.onPage} />}
 
-			<Row style={titleStyle}><h3>{(!fetching && artboards.length === 0) ? '' : title}</h3></Row>
+			{(title) && (<Row><h3>{(!fetching && artboards.length === 0) ? '' : title}</h3></Row>)}
 			{(isUserLoggedIn() && artboards.length > 0) && (
 				<Row horizontal="space-around" className="artboard-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
 					{(artboards) && artboards.map((artboard, i) => {

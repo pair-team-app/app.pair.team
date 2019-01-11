@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
 import { Route, Switch, withRouter } from 'react-router-dom'
 
-import SideNav from './components/elements/SideNav';
 import TopNav from './components/elements/TopNav';
 import BottomNav from './components/elements/BottomNav';
 import Popup from './components/elements/Popup';
@@ -33,8 +32,8 @@ import { fetchUserProfile, updateNavigation, updateUserProfile } from './redux/a
 import {
 	buildInspectorPath,
 	buildProjectPath,
-	className,
-	idsFromPath, isHomePage,
+	idsFromPath,
+	isHomePage,
 	isInspectorPage,
 	scrollOrigin
 } from './utils/funcs';
@@ -231,7 +230,7 @@ class App extends Component {
 			formData.append('length', '1');
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
-					console.log(className(this) + '=/> ARTBOARDS', response.data);
+					console.log('ARTBOARDS', response.data);
 
 					const artboard = response.data.artboards.pop();
 					this.onAddPageView(page.id);
@@ -304,23 +303,12 @@ class App extends Component {
   	return (
     	<div className="site-wrapper">
 		    {(/chrom(e|ium)/.test(navigator.userAgent.toLowerCase()))
-			    ? (<div>
+			    ? (<div className="browser-wrapper">
 					    <TopNav
 						    pathname={pathname}
 						    onPage={this.handlePage}
 						    onLogout={this.handleLogout}
 					    />
-
-					    {(0===1) && (<SideNav
-						    path={pathname}
-						    onUploadItem={(upload)=> this.handleSideNavUploadItem(upload)}
-						    onCategoryItem={(category)=> this.handleSideNavCategoryItem(category)}
-						    onPageItem={(page)=> this.handleSideNavPageItem(page)}
-						    onContributorItem={(contributor)=> this.handleSideNavContributorItem(contributor)}
-						    onArtboardItem={(artboard)=> this.handleSideNavArtboardItem(artboard)}
-						    onLogout={this.handleLogout}
-						    onPage={this.handlePage}
-					    />)}
 
 					    <div className="content-wrapper" ref={wrapper}>
 						    <Switch>
@@ -340,6 +328,8 @@ class App extends Component {
 							    <Route exact path="/colors" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 							    <Route exact path="/typography" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 
+							    <Route path="/inspect/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+
 							    <Route exact path="/page" render={()=> <InspectorPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
 							    <Route exact path="/page/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 						      <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} />} />
@@ -351,9 +341,8 @@ class App extends Component {
 						      <Route exact path="/terms" render={()=> <TermsPage />} />
 						      <Route render={()=> <Status404Page onPage={this.handlePage} />} />
 						    </Switch>
+						    {(!isInspectorPage()) && (<BottomNav viewHeight={(wrapper.current) ? wrapper.current.clientHeight : 0} onPage={this.handlePage} onLogout={()=> this.handleLogout()} />)}
 					    </div>
-
-					    <BottomNav wrapperHeight={(wrapper.current) ? wrapper.current.clientHeight : 0} onPage={this.handlePage} onLogout={()=> this.handleLogout()} />
 				      <MediaQuery query="(max-width: 1024px)">
 					      {(this.state.overlay) && (<MobileOverlay onComplete={()=> this.setState({ overlay : null })} />)}
 				      </MediaQuery>

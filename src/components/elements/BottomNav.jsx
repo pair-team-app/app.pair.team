@@ -16,7 +16,7 @@ class BottomNav extends Component {
 	}
 
 	render() {
-		const year = new Date().getFullYear();
+		console.log('BottomNav.render()', this.props, this.state);
 
 		return (
 			<div className="bottom-nav-wrapper">
@@ -38,7 +38,7 @@ class BottomNav extends Component {
 					}
 				</div>
 
-				<div className="copyright">&copy; {year} Design Engine AI, Inc</div>
+				<div className="copyright">&copy; {new Date().getFullYear()} Design Engine AI, Inc</div>
 			</div>
 		);
 	}

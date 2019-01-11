@@ -177,7 +177,7 @@ class InspectorPage extends Component {
 			selectedTab   : 0,
 			tooltip       : '',
 			hoverOffset   : null,
-			scale         : 0.5,
+			scale         : 0.25,
 			scrollOffset  : {
 				x : 0,
 				y : 0
@@ -301,10 +301,13 @@ class InspectorPage extends Component {
 	}
 
 	componentWillUnmount() {
-		document.removeEventListener("keydown", this.handleKeyDown.bind(this));
-		document.removeEventListener("wheel", this.handleWheelStart.bind(this));
 		clearInterval(this.antsInterval);
+		clearInterval(this.scrollInterval);
 		this.antsInterval = null;
+		this.scrollInterval = null;
+
+		document.removeEventListener('keydown', this.handleKeyDown.bind(this));
+		document.removeEventListener('wheel', this.handleWheelStart.bind(this));
 	}
 
 
