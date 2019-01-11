@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import './BottomNav.css';
 
+import { NavLink } from 'react-router-dom';
+
 import { isUserLoggedIn } from '../../utils/funcs';
 
 
@@ -19,22 +21,21 @@ class BottomNav extends Component {
 		return (
 			<div className="bottom-nav-wrapper">
 				<div className="bottom-nav-link-wrapper">
+					<NavLink to="/inspect" className="bottom-nav-link">Free Inspect</NavLink>
+					<NavLink to="/parts" className="bottom-nav-link">Parts</NavLink>
+					<NavLink to="/colors" className="bottom-nav-link">Colors</NavLink>
+					<NavLink to="/typography" className="bottom-nav-link">Typography</NavLink>
+					<NavLink to="/terms" className="bottom-nav-link">Terms of Service</NavLink>
+					<NavLink to="/privacy" className="bottom-nav-link">Privacy</NavLink>
+					<a className="bottom-nav-link" onClick={()=> window.open('https://github.com/de-ai/designengine.ai/projects/1')}>Roadmap</a>
+
 					{(isUserLoggedIn())
-						? (<div>
-							<div className="bottom-nav-link" onClick={()=> this.props.onPage('')}>Projects</div>
-							<div className="bottom-nav-link" onClick={()=> this.props.onPage('explore')}>Explore</div>
-							<div className="bottom-nav-link" onClick={()=> this.props.onPage('profile')}>Profile</div>
-							<div className="bottom-nav-link" onClick={()=> this.props.onPage('terms')}>Terms</div>
-							<div className="bottom-nav-link" onClick={()=> this.props.onPage('privacy')}>Privacy</div>
-							<div className="bottom-nav-link" onClick={() => this.props.onLogout()}>Sign Out</div>
-						</div>) : (<div>
-							<div className="bottom-nav-link" onClick={()=> this.props.onPage('')}>Projects</div>
-							<div className="bottom-nav-link" onClick={()=> this.props.onPage('explore')}>Explore</div>
-							<div className="bottom-nav-link" onClick={()=> this.props.onPage('terms')}>Terms</div>
-							<div className="bottom-nav-link" onClick={()=> this.props.onPage('privacy')}>Privacy</div>
-							<div className="bottom-nav-link" onClick={() => this.props.onPage('register')}>Sign Up</div>
-							<div className="bottom-nav-link" onClick={() => this.props.onPage('login')}>Login</div>
-						</div>)}
+						? (<a className="bottom-nav-link" onClick={() => this.props.onLogout()}>Sign Out</a>)
+						: (<div style={{ display : 'inline' }}>
+								<NavLink to="/register" className="bottom-nav-link">Sign Up</NavLink>
+								<NavLink to="/login" className="bottom-nav-link">Login</NavLink>
+						</div>)
+					}
 				</div>
 
 				<div className="copyright">&copy; {year} Design Engine AI, Inc</div>

@@ -3,11 +3,12 @@ import React, { Component } from 'react';
 import './TopNav.css';
 
 import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import { Row } from 'simple-flexbox';
 
 import TopNavProfile from './TopNavProfile';
 // import { isExplorePage, isHomePage, isProjectPage, isUploadPage, isUserLoggedIn } from '../../utils/funcs';
-import { isInspectorPage, isUserLoggedIn } from '../../utils/funcs';
+import { isUserLoggedIn } from '../../utils/funcs';
 import logo from '../../images/logo-designengine.svg';
 import { updateNavigation } from "../../redux/actions";
 
@@ -24,7 +25,24 @@ class TopNav extends Component {
 		super(props);
 
 		this.state = {
+			sections : [{
+				title : 'Free Inspect',
+				url   : '/inspect'
+			}, {
+				title : 'Parts',
+				url   : '/parts'
+			}, {
+				title : 'Colors',
+				url   : '/colors'
+			}, {
+				title : 'Typography',
+				url   : '/typography'
+			}]
 		};
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('TopNav.componentDidUpdate()', prevProps, this.props, prevState);
 	}
 
 	handleLink = (url)=> {
@@ -34,28 +52,20 @@ class TopNav extends Component {
 			artboardID : 0
 		});
 		this.props.onPage(url);
-
-// 		} else if (type === 'parts') {
-// 			this.props.updateNavigation({
-// 				uploadID   : 1,
-// 				pageID     : 2,
-// 				artboardID : 4
-// 			});
-//
-// 			this.props.onPage('page/1/2/4/account');
 	};
 
 	render() {
+		console.log('TopNav.render()', this.props, this.state);
+
 		const { pathname } = window.location;
+		const { sections } = this.state;
 
 		return (
 			<div className="top-nav-wrapper">
 				<div className="top-nav-column top-nav-column-left"><Row horizontal="start" vertical="center">
-					<img onClick={()=> this.props.onHome()} src={logo} className="top-nav-logo" alt="Design Engine" />
-					<div className={(pathname.includes('/page')) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.handleLink('page')}>Free Inspect</div>
-					<div className={(pathname.includes('/free-parts')) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.handleLink('free-parts')}>Free Parts</div>
-					<div className={(pathname.includes('/free-colors')) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.handleLink('free-colors')}>Free Colors</div>
-					<div className={(pathname.includes('/free-fonts')) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.handleLink('free-fonts')}>Free Fonts</div>
+					<img onClick={()=> this.props.onPage('')} src={logo} className="top-nav-logo" alt="Design Engine" />
+					{(sections.map((section, i)=> <NavLink key={i} to={section.url} className={(pathname.includes(section.url)) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'}>{section.title}</NavLink>))}
+
 					{/*<div className={(isHomePage() || isProjectPage() || isUploadPage()) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onHome()}>Projects</div>*/}
 					{/*<div className={(window.location.pathname.includes('/add-ons')) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage('add-ons')}>Add Ons</div>*/}
 					{/*<div className={(isExplorePage()) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage('explore')}>Explore</div>*/}

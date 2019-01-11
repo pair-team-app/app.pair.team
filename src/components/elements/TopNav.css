@@ -32,18 +32,19 @@
 	cursor: pointer;
 }
 
-.top-nav-link {
+.top-nav-link, a.top-nav-link {
 	color: #ffffff;
 	margin-left: 22px;
 	letter-spacing: -0.3px;
+	text-decoration: none;
 }
 
-.top-nav-link:hover {
+.top-nav-link:hover, .top-nav-link a:hover {
 	cursor: pointer;
 	text-decoration: underline;
 }
 
-.top-nav-link-selected {
+.top-nav-link-selected, a.top-nav-link-selected {
 	color: #9b9b9b;
 }
 

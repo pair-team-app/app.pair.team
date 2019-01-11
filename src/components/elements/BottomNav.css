@@ -11,18 +11,16 @@
 	font-weight: 400;
 	font-size: 12px;
 	letter-spacing: -0.4px;
-	display: none;
 }
 
 .bottom-nav-link-wrapper {
-	display: table;
-	/*margin-bottom: 5px;*/
+	/*display: table;*/
 	padding: 0 20px 10px 0;
 	width: 100%;
 }
 
-.bottom-nav-link {
-	display: table-cell;
+.bottom-nav-link, a.bottom-nav-link {
+	/*display: table-cell;*/
 	color: #0267D8;
 	text-decoration: underline;
 	padding-right: 24px;
