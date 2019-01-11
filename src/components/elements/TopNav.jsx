@@ -75,7 +75,10 @@ class TopNav extends Component {
 				<div className="top-nav-column top-nav-column-right">
 					<Row horizontal="end" vertical="center">
 						{(!isUserLoggedIn())
-							? (<button className="top-nav-upload-button" onClick={()=> this.props.onPage('register')}>Sign Up with Email</button>)
+							? (<div>
+									<button className="top-nav-button adjacent-button" onClick={()=> this.props.onPage('register')}>Sign Up</button>
+									<button className="top-nav-button" onClick={()=> this.props.onPage('login')}>Login</button>
+								</div>)
 							: (<Row vertical="center">
 									<TopNavProfile
 										onPage={this.props.onPage}
