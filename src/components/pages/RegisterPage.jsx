@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './RegisterPage.css';
 
-import cookie from "react-cookies";
+import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
 import RegisterForm from '../elements/RegisterForm';
@@ -40,7 +40,7 @@ class RegisterPage extends Component {
 			<div className="page-wrapper register-page-wrapper">
 				<h3>Sign Up</h3>
 				Enter registration details to submit design file.
-				<RegisterForm onPage={this.props.onPage} onRegistered={this.handleRegistered} />
+				<RegisterForm onRegistered={this.handleRegistered} onLogin={this.props.onPage('login')} />
 			</div>
 		);
 	}

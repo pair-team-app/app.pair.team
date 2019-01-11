@@ -48,8 +48,7 @@
 .upload-page-upload-wrapper {
 }
 
-.upload-page-register-wrapper {
-	margin-top: 20px;
+.upload-page-register-wrapper, .upload-page-login-wrapper {
 }
 
 .upload-page-invite-wrapper {

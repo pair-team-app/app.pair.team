@@ -7,10 +7,9 @@ import { NavLink } from 'react-router-dom';
 import { Row } from 'simple-flexbox';
 
 import TopNavProfile from './TopNavProfile';
-// import { isExplorePage, isHomePage, isProjectPage, isUploadPage, isUserLoggedIn } from '../../utils/funcs';
 import { isUserLoggedIn } from '../../utils/funcs';
-import logo from '../../images/logo-designengine.svg';
 import { updateNavigation } from "../../redux/actions";
+import logo from '../../images/logo-designengine.svg';
 
 
 const mapDispatchToProps = (dispatch)=> {

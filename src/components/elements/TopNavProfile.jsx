@@ -56,8 +56,8 @@ class TopNavProfile extends Component {
 
 				{(bubble) && (<div className="top-nav-profile-bubble-wrapper">
 					<FontAwesome name="caret-up" className="top-nav-profile-bubble-notch" />
-					<div className="nav-link top-nav-profile-link" onClick={()=> this.handleLinkClick('profile')}>Profile</div>
-					<div className="nav-link top-nav-profile-link" onClick={()=> this.handleLinkClick('logout')}>Logout</div>
+					<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick('profile')}>Profile</div>
+					<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick('logout')}>Logout</div>
 				</div>)}
 			</div>
 		);

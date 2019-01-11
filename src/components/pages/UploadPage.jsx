@@ -9,14 +9,15 @@ import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
+import LoginForm from '../elements/LoginForm';
 import RegisterForm from '../elements/RegisterForm';
 import ArtboardItem from '../iterables/ArtboardItem';
 import Dropdown from '../elements/Dropdown';
 import RadioButton from '../elements/RadioButton';
+
 import { addFileUpload, updateNavigation, updateUserProfile } from '../../redux/actions';
 import { buildInspectorPath, buildProjectURL, isUserLoggedIn, isValidEmail, sendToSlack } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
-
 import radioButtons from '../../json/radio-buttons_upload';
 import uploadIcon from '../../images/icons/ico-upload.png';
 import defaultAvatar from '../../images/default-avatar.png';
@@ -195,6 +196,7 @@ class UploadPage extends Component {
 			processingState : -2,
 			status          : '',
 			titleValid      : true,
+			login           : false,
 			uploadComplete  : false,
 			registering     : false,
 			submitted       : false,
@@ -481,18 +483,26 @@ class UploadPage extends Component {
 		}
 	};
 
+	handleLoggedIn = (profile)=> {
+		console.log('UploadPage.handleLoggedIn()', profile);
+
+		cookie.save('user_id', profile.id, { path : '/' });
+		setTimeout(()=> {
+			this.props.updateUserProfile(profile);
+			this.handleSubmit(profile);
+		}, 500);
+	};
+
 	handleRegistered = (profile)=> {
 		console.log('UploadPage.handleRegistered()', profile);
 
 		trackEvent('user', 'sign-up');
 		cookie.save('user_id', profile.id, { path : '/' });
 
-
-
 		setTimeout(()=> {
 			this.props.updateUserProfile(profile);
 			this.handleSubmit(profile);
-		}, 750);
+		}, 500);
 	};
 
 	statusInterval = ()=> {
@@ -585,7 +595,7 @@ class UploadPage extends Component {
 		console.log('UploadPage.render()', this.props, this.state);
 
 		const { upload, title, description, radioButtons, status, artboards, invites } = this.state;
-		const { processingState, percent, uploadComplete, submitted, sentInvites, titleValid } = this.state;
+		const { processingState, percent, uploadComplete, submitted, login, sentInvites, titleValid } = this.state;
 
 		return (
 			<div className="page-wrapper upload-page-wrapper">
@@ -611,12 +621,20 @@ class UploadPage extends Component {
 					/>
 				</div>)}
 
-				{(!isUserLoggedIn() && submitted) && (<div className="upload-page-register-wrapper">
+				{(!isUserLoggedIn() && submitted && !login) && (<div className="upload-page-register-wrapper">
 					<h3>Sign Up</h3>
-					Enter registration details to submit design file.
+					<h4>Enter registration details to submit design file.</h4>
 					<RegisterForm
-						onPage={this.props.onPage}
+						onLogin={()=> this.setState({ login : true })}
 						onRegistered={this.handleRegistered} />
+				</div>)}
+
+				{(!isUserLoggedIn() && submitted && login) && (<div className="upload-page-login-wrapper">
+					<h3>Login</h3>
+					<h4>Enter the email address of each member of your team to invite them to this project.</h4>
+					<LoginForm
+						onPage={this.props.onPage}
+						onLoggedIn={this.handleLoggedIn} />
 				</div>)}
 
 				{(processingState >= 0) && (<div>

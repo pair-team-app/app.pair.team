@@ -45,4 +45,10 @@
 	font-size: 14px;
 	letter-spacing: -0.23px;
 	color: #0267D8;
+	text-decoration: none;
+}
+
+.top-nav-profile-link:hover {
+	text-decoration: underline;
+	cursor: pointer;
 }

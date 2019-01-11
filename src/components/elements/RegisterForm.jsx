@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './RegisterForm.css'
 
-import axios from "axios";
+import axios from 'axios';
 import { Column, Row } from 'simple-flexbox';
 
 import { hasBit, isValidEmail } from '../../utils/funcs';
@@ -26,7 +26,7 @@ class RegisterForm extends Component {
 			password2     : '',
 			usernameValid : true,
 			emailValid    : true,
-			passwordValid : true,
+			passwordValid : true
 		};
 	}
 
@@ -139,7 +139,7 @@ class RegisterForm extends Component {
 					<div className={password2Class}><input type="password" name="password2" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<Row vertical="center">
 						<Column><button type="submit" className={buttonClass} onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-						<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> this.props.onPage('login')}>Already have an account?</div></Column>
+						<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> this.props.onLogin()}>Already have an account?</div></Column>
 					</Row>
 				</form>
 			</div>
