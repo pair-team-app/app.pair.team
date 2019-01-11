@@ -1,13 +1,13 @@
 [{
   "id"      : 1,
   "title"   : "Public",
-  "subtext" : "Anyone can see, download, & clone this design project.",
+  "subtext" : "Your design file is public and does not require an invitation link.",
   "selected": false,
   "enabled" : true
 }, {
   "id"      : 2,
   "title"   : "Private",
-  "subtext" : "You choose who can see, download, & clone this design project.",
+  "subtext" : "Your design file is private requires an invitation link.",
   "selected": true,
   "enabled" : true
 }]

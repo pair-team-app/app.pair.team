@@ -120,8 +120,8 @@ function UploadForm(props) {
 
 	return (<div>
 		<div style={{ width : '100%' }}>
-			<h3>Upload a design file</h3>
-			<h4>Upload a design file to begin processing.</h4>
+			<h3>Upload</h3>
+			<h4>Upload a design file to process.</h4>
 			<div className="upload-page-form-wrapper">
 				<div style={{ width : '33%' }}>
 					<Dropdown
@@ -130,11 +130,11 @@ function UploadForm(props) {
 						resetThenSet={props.resetThenSet}
 					/>
 					<div className={titleClass}>
-						<input type="text" name="title" placeholder="Project Name" value={title} onChange={props.onChange} ref={titleTextfield} />
+						<input type="text" name="title" placeholder="File name" value={title} onChange={props.onChange} ref={titleTextfield} />
 					</div>
 				</div>
 				<div className="input-wrapper">
-					<input type="text" name="description" placeholder="Project Description (optional)" value={description} onChange={props.onChange} />
+					<input type="text" name="description" placeholder="File description (optional)" value={description} onChange={props.onChange} />
 				</div>
 				<div className="upload-page-radio-wrapper">
 					{radioButtons.map((radioButton, i)=> {
