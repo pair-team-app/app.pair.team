@@ -27,10 +27,10 @@ class BottomNav extends Component {
 					<NavLink to="/typography" className="bottom-nav-link">Typography</NavLink>
 					<NavLink to="/terms" className="bottom-nav-link">Terms of Service</NavLink>
 					<NavLink to="/privacy" className="bottom-nav-link">Privacy</NavLink>
-					<a className="bottom-nav-link" href="" onClick={()=> window.open('https://github.com/de-ai/designengine.ai/projects/1')}>Roadmap</a>
+					<div className="bottom-nav-link" onClick={()=> window.open('https://github.com/de-ai/designengine.ai/projects/1')}>Roadmap</div>
 
 					{(isUserLoggedIn())
-						? (<a className="bottom-nav-link" href="" onClick={() => this.props.onLogout()}>Sign Out</a>)
+						? (<div className="bottom-nav-link" onClick={() => this.props.onLogout()}>Sign Out</div>)
 						: (<div style={{ display : 'inline' }}>
 								<NavLink to="/register" className="bottom-nav-link">Sign Up</NavLink>
 								<NavLink to="/login" className="bottom-nav-link">Login</NavLink>
