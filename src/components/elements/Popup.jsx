@@ -9,14 +9,14 @@ import { capitalizeText } from '../../utils/funcs';
 import errorIcon from '../../images/icons/ico-error.png';
 import infoIcon from '../../images/icons/ico-info.svg';
 
-const wrapper = React.createRef();
-
 
 class Popup extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 		};
+
+		this.wrapper = null;
 	}
 
 	componentDidMount() {
@@ -53,7 +53,7 @@ class Popup extends Component {
 		const icon = (payload.type === 'ERROR') ? errorIcon : infoIcon;
 
 		return (
-			<div className="popup-wrapper" ref={wrapper}>
+			<div className="popup-wrapper" ref={(element)=> { this.wrapper = element; }}>
 				<Row>
 					<Column><img src={icon} className="popup-icon" alt={capitalizeText(payload.type, true)} /></Column>
 					<Column className="popup-content">

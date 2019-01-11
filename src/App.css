@@ -4,7 +4,8 @@
 	height: 100%;
 }
 
-.unsupported-browser {
+.unsupported-device {
+	padding: 20px;
 	text-align: center;
 }
 
