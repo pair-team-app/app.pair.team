@@ -32,12 +32,11 @@ import StripeOverlay from './components/elements/StripeOverlay';
 import { fetchUserProfile, updateNavigation, updateUserProfile } from './redux/actions';
 import {
 	buildInspectorPath,
-	className,
-	idsFromPath,
-	isInspectorPage,
-	scrollOrigin,
 	buildProjectPath,
-	isHomePage
+	className,
+	idsFromPath, isHomePage,
+	isInspectorPage,
+	scrollOrigin
 } from './utils/funcs';
 import { initTracker, trackEvent } from './utils/tracking';
 
@@ -81,12 +80,12 @@ class App extends Component {
 		initTracker(cookie.load('user_id'));
 		trackEvent('site', 'load');
 
+		if (isHomePage()) {
+			this.handlePage('inspect');
+		}
+
 		const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
 		this.props.updateNavigation({ uploadID, pageID, artboardID, sliceID });
-
-// 		if (isHomePage()) {
-// 			this.handlePage('page');
-// 		}
 
 		if (isInspectorPage() && uploadID === 0 && pageID !== 0) {
 			let formData = new FormData();
@@ -124,18 +123,6 @@ class App extends Component {
 		console.log('App.handleAddOns()');
 	};
 
-	handleHomeReset = ()=> {
-		scrollOrigin(wrapper.current);
-
-		this.props.updateNavigation({
-			uploadID   : 0,
-			pageID     : 0,
-			artboardID : 0
-		});
-		this.handlePage('');
-// 		window.location.href = '/';
-	};
-
 	handleLogout = ()=> {
 		cookie.save('user_id', '0', { path : '/' });
 
@@ -163,12 +150,13 @@ class App extends Component {
 				artboardID : 0
 			});
 
-			if (pathname === '/') {
-				window.location.href = '/';
-
-			} else {
-				this.props.history.push('/');
-			}
+			this.handlePage('inspect');
+// 			if (pathname === '/') {
+// 				window.location.href = '/';
+//
+// 			} else {
+// 				this.props.history.push('/');
+// 			}
 
 		} else {
 			if (pathname === '/' + url) {
@@ -316,7 +304,7 @@ class App extends Component {
 		    {(/chrom(e|ium)/.test(navigator.userAgent.toLowerCase()))
 			    ? (<div>
 				    <TopNav
-					    onHome={this.handleHomeReset}
+					    pathname={this.props.location.pathname}
 					    onPage={this.handlePage}
 					    onLogout={this.handleLogout}
 				    />
@@ -345,6 +333,12 @@ class App extends Component {
 						    <Route exact path="/login" render={()=> <LoginPage onPage={this.handlePage} />} onPopup={this.handlePopup} />
 					      <Route exact path="/mission" render={()=> <MissionPage />} />
 						    <Route exact path="/new" render={()=> <UploadPage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onProcess={this.handleProcess} onPopup={this.handlePopup} />} />
+
+						    <Route exact path="/inspect" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+						    <Route exact path="/parts" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+						    <Route exact path="/colors" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+						    <Route exact path="/typography" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+
 						    <Route exact path="/page" render={()=> <InspectorPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
 						    <Route exact path="/page/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					      <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} />} />
@@ -354,7 +348,7 @@ class App extends Component {
 						    <Route exact path="/recover/password" render={()=> <RecoverPage onPage={this.handlePage} />} />
 						    <Route exact path="/register" render={()=> <RegisterPage onPage={this.handlePage} />} onPopup={this.handlePopup} />
 					      <Route exact path="/terms" render={()=> <TermsPage />} />
-					      <Route render={()=> <Status404Page />} />
+					      <Route render={()=> <Status404Page onPage={this.handlePage} />} />
 					    </Switch>
 				    </div>
 
@@ -377,3 +371,6 @@ class App extends Component {
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+
+
+// this.props.onPage('page/1/2/4/account');

@@ -4,8 +4,10 @@ import './HomePage.css';
 
 import axios from 'axios';
 import { connect } from 'react-redux';
+import { Switch, Route } from 'react-router-dom';
 
 import ArtboardGrid from '../elements/ArtboardGrid';
+import UploadHeader from '../elements/UploadHeader';
 import { addFileUpload, appendUploadArtboards } from '../../redux/actions';
 import { isInspectorPage, limitString } from '../../utils/funcs';
 
@@ -31,10 +33,8 @@ class HomePage extends Component {
 		super(props);
 
 		this.state = {
-			action      : '',
 			firstFetch  : false,
 			uploadTotal : 0,
-			upload      : null,
 			fetching    : false,
 			loadOffset  : 0,
 			loadAmt     : 1
@@ -202,11 +202,19 @@ class HomePage extends Component {
 		const { profile, artboards } = this.props;
 		const { fetching, loadOffset, uploadTotal } = this.state;
 
-		const title = (profile) ? (fetching) ? 'Loading…' : 'Showing most viewed from ' + uploadTotal + ' project' + ((uploadTotal === 1) ? '' : 's') + '.' : null;
+// 		const { pathname } = window.location;
+// 		const headerTitle = (pathname === '/') ? '---HOME---' : (pathname === '/inspect') ? '---INSPECT---' : (pathname === '/parts') ? '---PARTS---' : (pathname === '/colors') ? '---COLORS---' : (pathname === '/typography') ? '---TYPOGRAPHY---' : '---OTHER---';
+		const headerTitle = 'Turn any Sketch file into an organized System of Fonts, Colors, Symbols, Views & more. (Drag & Drop)';
+		const gridTitle = (profile) ? (fetching) ? 'Loading…' : 'Showing most viewed from ' + uploadTotal + ' project' + ((uploadTotal === 1) ? '' : 's') + '.' : null;
 		return (
 			<div className="page-wrapper home-page-wrapper">
+				<UploadHeader
+					title={headerTitle}
+					onFile={this.handleFile}
+					onPopup={this.props.onPopup} />
+
 				<ArtboardGrid
-					title={title}
+					title={gridTitle}
 					total={uploadTotal}
 					artboards={artboards.sort((a, b)=> (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0))}
 					loadOffset={loadOffset}

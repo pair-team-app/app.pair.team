@@ -14,7 +14,14 @@ import ArtboardItem from '../iterables/ArtboardItem';
 import Dropdown from '../elements/Dropdown';
 import RadioButton from '../elements/RadioButton';
 import { addFileUpload, updateUserProfile } from '../../redux/actions';
-import { buildProjectPath, buildProjectURL, isUserLoggedIn, isValidEmail, sendToSlack } from '../../utils/funcs';
+import {
+	buildInspectorPath,
+	buildProjectPath,
+	buildProjectURL,
+	isUserLoggedIn,
+	isValidEmail,
+	sendToSlack
+} from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 
 import radioButtons from '../../json/radio-buttons_upload';
@@ -493,33 +500,6 @@ class UploadPage extends Component {
 			this.props.updateUserProfile(profile);
 			this.handleSubmit(profile);
 		}, 750);
-
-
-// 		const { title, description, radioIndex } = this.state;
-// 		const { name, size } = this.state.file;
-//
-// 		let formData = new FormData();
-// 		formData.append('action', 'NEW_UPLOAD');
-// 		formData.append('user_id', id);
-// 		formData.append('title', title);
-// 		formData.append('description', description);
-// 		formData.append('filesize', size);
-// 		formData.append('private', (radioIndex === 1) ? '0' : '1');
-// 		formData.append('filename', "http://cdn.designengine.ai/system/" + name);
-// 		axios.post('https://api.designengine.ai/system.php', formData)
-// 			.then((response) => {
-// 				console.log('NEW_UPLOAD', response.data);
-// 				this.setState({
-// 					upload          : response.data.upload,
-// 					processingState : 0,
-// 					file            : null
-// 				});
-//
-// 				this.props.onProcess(true);
-// 				this.props.updateUserProfile(profile);
-// 				this.uploadInterval = setInterval(this.statusInterval, 2500);
-// 			}).catch((error) => {
-// 		});
 	};
 
 	statusInterval = ()=> {
@@ -578,7 +558,21 @@ class UploadPage extends Component {
 
 				} else if (processingState === 3) {
 					clearInterval(this.uploadInterval);
-					this.props.onPage(buildProjectPath(upload.id, upload.title, '/views'));
+// 					this.props.onPage(buildProjectPath(upload.id, upload.title, '/views'));
+
+					formData.append('action', 'PAGES');
+					formData.append('upload_id', upload.id);
+					formData.append('offset', '0');
+					formData.append('length', '1');
+					axios.post('https://api.designengine.ai/system.php', formData)
+						.then((response) => {
+							console.log('PAGES', response.data);
+							const page = response.data.pages.shift();
+							const artboard = page.artboards.shift();
+
+							this.props.onPage(buildInspectorPath(upload.id, page.id, artboard.id, artboard.title));
+						}).catch((error) => {
+					});
 
 				} else if (processingState === 4) {
 					// processing error
