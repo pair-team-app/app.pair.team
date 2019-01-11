@@ -31,30 +31,6 @@ const LOG_PREFIX = '[:|:]';
 const LOG_ACT_PREFIX = '\t-=\\';
 
 
-/*
-
-const uniqueArray = (arr)=> {
-	return (
-		arr.reduce((acc, inc) => {
-			if (!acc.find((i)=> (i === inc))) {
-				acc.push(inc);
-			}
-
-			return (acc);
-			}, []
-		)
-	);
-};
-*/
-
-
-const pruneArtboards = (artboards)=> {
-	return (artboards.reduce((acc, inc)=>
-		[...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], []
-	));
-};
-
-
 function rootReducer(state=initialState, action) {
 	invokeLogFormat(state, action);
 
@@ -74,8 +50,8 @@ function rootReducer(state=initialState, action) {
 		actionLogFormat(action, state.exploreArtboards);
 
 		return (Object.assign({}, state, {
-// 			exploreArtboards : state.exploreArtboards.concat(action.payload).reduce((acc, inc)=> [...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], [])
-			exploreArtboards : pruneArtboards(state.exploreArtboards.concat(action.payload))
+			exploreArtboards : state.exploreArtboards.concat(action.payload).reduce((acc, inc)=> [...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], [])
+// 			exploreArtboards : pruneArtboards(state.exploreArtboards.concat(action.payload))
 		}));
 
 	} else if (action.type === APPEND_UPLOAD_ARTBOARDS) {
@@ -85,8 +61,8 @@ function rootReducer(state=initialState, action) {
 // 		const { uploadID, pageID, id } = (artboard) ? artboard : null;
 
 		return (Object.assign({}, state, {
-// 			uploadArtboards : state.uploadArtboards.concat(action.payload).reduce((acc, inc)=> [...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], [])
-			uploadArtboards : pruneArtboards(state.uploadArtboards.concat(action.payload))
+			uploadArtboards : state.uploadArtboards.concat(action.payload).reduce((acc, inc)=> [...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], [])
+// 			uploadArtboards : pruneArtboards(state.uploadArtboards.concat(action.payload))
 		}));
 
 	} else if (action.type === USER_PROFILE_ERROR || action.type === USER_PROFILE_LOADED || action.type === USER_PROFILE_UPDATED) {

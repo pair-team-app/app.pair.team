@@ -49,7 +49,7 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		updateNavigation  : (navIDs)=> dispatch(updateNavigation(navIDs))
+		updateNavigation : (navIDs)=> dispatch(updateNavigation(navIDs))
 	});
 };
 
@@ -428,7 +428,7 @@ class InspectorPage extends Component {
 		const artboardID = event.target.getAttribute('data-id');
 
 		if (!this.antsInterval) {
-			this.antsInterval = setInterval(this.redrawAnts, 100);
+			this.antsInterval = setInterval(this.onUpdateAnts, 100);
 		}
 
 		let formData = new FormData();
@@ -895,7 +895,7 @@ class InspectorPage extends Component {
 				context.strokeStyle = 'rgba(0, 255, 0, 1.0)';
 				context.beginPath();
 				context.setLineDash([4, 2]);
-				context.lineDashOffset = 0;//-this.antsOffset;
+				context.lineDashOffset = 0;
 				context.moveTo(0, frame.origin.y);
 				context.lineTo(canvas.current.clientWidth, frame.origin.y);
 				context.moveTo(0, frame.origin.y + frame.size.height);
@@ -934,7 +934,7 @@ class InspectorPage extends Component {
 		}
 	};
 
-	redrawAnts = ()=> {
+	onUpdateAnts = ()=> {
 		if (canvas.current) {
 			this.antsOffset = (++this.antsOffset % 16);
 			this.onUpdateCanvas();
@@ -943,13 +943,6 @@ class InspectorPage extends Component {
 
 
 	render() {
-// 		if (this.rerender === 0) {
-// 			this.rerender = 1;
-// 			setTimeout(()=> {
-// 				this.forceUpdate();
-// 			}, 3333);
-// 		}
-
 		const { page, artboards, slice, hoverSlice, files, visibleTypes, scale } = this.state;
 		const { scrollOffset, scrolling } = this.state;
 
@@ -1124,16 +1117,13 @@ class InspectorPage extends Component {
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
-						{(artboards.length > 0)
-							? (<div style={artboardsStyle}>
-									{artboardBackgrounds}
-									<div className="inspector-page-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>
-										<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
-									</div>
-									{slices}
-								</div>)
-							: (<LandingButtons onClick={this.handleLandingButtonClick} />)
-						}
+						{(artboards.length > 0) && (<div style={artboardsStyle}>
+							{artboardBackgrounds}
+							<div className="inspector-page-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>
+								<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
+							</div>
+							{slices}
+						</div>)}
 					</div>
 					{(artboards.length > 0) && (<div className="inspector-page-zoom-wrapper">
 						<button className={'inspector-page-float-button' + ((scale >= Math.max(...zoomNotches)) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />

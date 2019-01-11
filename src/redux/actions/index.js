@@ -50,20 +50,6 @@ export function fetchUserProfile() {
 				});
 			}).catch((error) => {
 		});
-
-// 	return (
-// 		fetch('https://api.designengine.ai/system.php', {
-// 			method : 'post',
-// 			body   : {
-// 				'action'  : 'PROFILE',
-// 				'user_id' : cookie.load('user_id')
-// 			}
-// 		})
-// 			.then((response)=> response.json())
-// 			.then((json)=> {
-// 				return ({ type : 'USER_PROFILE_LOADED', payload : json });
-// 			})
-// 	);
 	});
 }
 

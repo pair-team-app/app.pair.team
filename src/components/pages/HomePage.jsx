@@ -4,12 +4,11 @@ import './HomePage.css';
 
 import axios from 'axios';
 import { connect } from 'react-redux';
-// import { Switch, Route } from 'react-router-dom';
 
 import ArtboardGrid from '../elements/ArtboardGrid';
 import UploadHeader from '../elements/UploadHeader';
-import { addFileUpload, appendUploadArtboards } from '../../redux/actions';
-import { isInspectorPage, limitString } from '../../utils/funcs';
+import { addFileUpload, appendUploadArtboards, updateNavigation } from '../../redux/actions';
+import {isInspectorPage, isUserLoggedIn, limitString} from '../../utils/funcs';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -23,8 +22,36 @@ const mapStateToProps = (state, ownProps)=> {
 const mapDispatchToProps = (dispatch)=> {
 	return ({
 		addFileUpload         : (file)=> dispatch(addFileUpload(file)),
-		appendUploadArtboards : (artboards)=> dispatch(appendUploadArtboards(artboards))
+		appendUploadArtboards : (artboards)=> dispatch(appendUploadArtboards(artboards)),
+		updateNavigation      : (navIDs)=> dispatch(updateNavigation(navIDs))
 	});
+};
+
+
+const LoggedInSectionHeader = (props)=> {
+// 	console.log('HomePage.LoggedInSectionHeader()', props);
+
+	const { title, content } = props;
+	return (<div className="home-page-section-header-wrapper">
+		<h3>{title}</h3>
+		<h4>{content}</h4>
+		<div>
+			<button onClick={()=> props.onPage('new' + window.location.pathname)}>Upload</button>
+		</div>
+	</div>);
+};
+
+const LoggedOutSectionHeader = (props)=> {
+// 	console.log('HomePage.LoggedOutSectionHeader()', props);
+
+	return (<div className="home-page-section-header-wrapper">
+		<h3>Sign up or Login</h3>
+		<h4>Start handing off &amp; understanding new Design Projects faster with your team.</h4>
+		<div>
+			<button className="adjacent-button" onClick={()=> props.onPage('register')}>Sign up</button>
+			<button onClick={()=> props.onPage('login')}>Login</button>
+		</div>
+	</div>);
 };
 
 
@@ -42,7 +69,7 @@ class HomePage extends Component {
 	}
 
 	componentDidMount() {
-		console.log('HomePage().componentDidMount()', this.props);
+		console.log('HomePage.componentDidMount()', this.props);
 
 		if (this.props.profile && this.props.artboards.length === 0) {
 			this.handleLoadNext();
@@ -77,10 +104,14 @@ class HomePage extends Component {
 
 	handleDemo = ()=> {
 		console.log('HomePage.handleDemo()', this.props.path);
-		this.props.onPage('/page/1/2/4/account');
-// 		this.props.onPage('/page');
-	};
 
+		this.props.updateNavigation({
+			uploadID   : 1,
+			pageID     : 2,
+			artboardID : 4
+		});
+		this.props.onPage(window.location.pathname + '/1/2/4/account');
+	};
 
 	handleLoadNext = ()=> {
 		console.log('HomePage.handleLoadNext()', this.props.artboards);
@@ -210,15 +241,22 @@ class HomePage extends Component {
 		const { fetching, loadOffset, uploadTotal } = this.state;
 
 		const { pathname } = window.location;
-		const headerTitle = (pathname === '/' || pathname === '/inspect') ? 'Drag & Drop any design file to inspect specs & code.' : (pathname === '/parts') ? 'Drag & Drop any design file to download parts.' : (pathname === '/colors') ? 'Drag & Drop any design file to view it\'s colors.' : (pathname === '/typography') ? 'Drag & Drop any design file to view it\'s fonts.' : 'Turn any Sketch file into an organized System of Fonts, Colors, Symbols, Views &amp; more. (Drag & Drop)';
+		const uploadTitle = (pathname === '/' || pathname === '/inspect') ? 'Drag & Drop any design file to inspect specs & code.' : (pathname === '/parts') ? 'Drag & Drop any design file to download parts.' : (pathname === '/colors') ? 'Drag & Drop any design file to view it\'s colors.' : (pathname === '/typography') ? 'Drag & Drop any design file to view it\'s fonts.' : 'Turn any Sketch file into an organized System of Fonts, Colors, Symbols, Views &amp; more. (Drag & Drop)';
+		const sectionTitle = (pathname === '/' || pathname === '/inspect') ? 'Need specs & code from a design file?' : (pathname === '/parts') ? 'Need parts from a design file?' : (pathname === '/colors') ? 'Need colors from a design file?' : (pathname === '/typography') ? 'Need typography from a design file?' : 'Start a new Design Project';
+		const sectionContent = (pathname === '/' || pathname === '/inspect') ? 'Upload & process any design file now.' : (pathname === '/parts') ? 'Upload & process any design file now.' : (pathname === '/colors') ? 'Upload & process any design file now.' : (pathname === '/typography') ? 'Upload & process any design file now.' : 'Turn any Design File into an organized System of Fonts, Colors, Symbols, Views & More.';
 		const gridTitle = (profile) ? (fetching) ? 'Loading…' : 'Showing most viewed from ' + uploadTotal + ' project' + ((uploadTotal === 1) ? '' : 's') + '.' : null;
+
 		return (
 			<div className="page-wrapper home-page-wrapper">
 				<UploadHeader
-					title={headerTitle}
+					title={uploadTitle}
 					onFile={this.handleFile}
 					onDemo={this.handleDemo}
 					onPopup={this.props.onPopup} />
+
+				{(isUserLoggedIn())
+					? <LoggedInSectionHeader title={sectionTitle} content={sectionContent} onPage={this.props.onPage} />
+					: <LoggedOutSectionHeader onPage={this.props.onPage} />}
 
 				<ArtboardGrid
 					title={gridTitle}
