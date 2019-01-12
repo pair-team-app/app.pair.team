@@ -132,7 +132,7 @@ class App extends Component {
 		cookie.save('user_id', '0', { path : '/' });
 
 		this.props.updateUserProfile(null);
-		window.location.href = '/';
+		this.handlePage('');
 	};
 
 	handlePage = (url)=> {
@@ -156,20 +156,9 @@ class App extends Component {
 			});
 
 			this.handlePage('inspect');
-// 			if (pathname === '/') {
-// 				window.location.href = '/';
-//
-// 			} else {
-// 				this.props.history.push('/');
-// 			}
 
 		} else {
-			if (pathname === '/' + url) {
-				window.location.href = '/' + url;
-
-			} else {
-				this.props.history.push('/' + url);
-			}
+			this.props.history.push('/' + url);
 		}
 	};
 

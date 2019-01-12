@@ -56,7 +56,7 @@ class TopNav extends Component {
 		return (
 			<div className="top-nav-wrapper">
 				<div className="top-nav-column top-nav-column-left"><Row horizontal="start" vertical="center">
-					<img onClick={()=> this.props.onPage('')} src={logo} className="top-nav-logo" alt="Design Engine" />
+					<img onClick={()=> this.handleLink('')} src={logo} className="top-nav-logo" alt="Design Engine" />
 					{/*{(sections.map((section, i)=> <NavLink key={i} to={section.url} className={(pathname.includes(section.url)) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'}>{section.title}</NavLink>))}*/}
 
 					{(sections.map((section, i)=> <div key={i} className={(pathname.includes(section.url)) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage(section.url)}>{section.title}</div>))}

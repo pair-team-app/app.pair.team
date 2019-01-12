@@ -30,7 +30,7 @@ class RegisterPage extends Component {
 		trackEvent('user', 'sign-up');
 		cookie.save('user_id', profile.id, { path : '/' });
 		this.props.updateUserProfile(profile);
-		this.props.onPage('');
+		this.props.onPage('<<');
 	};
 
 	render() {
