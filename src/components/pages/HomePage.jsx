@@ -256,8 +256,9 @@ class HomePage extends Component {
 					onPopup={this.props.onPopup} />
 
 				{(isUserLoggedIn())
-					? <LoggedInSectionHeader title={sectionTitle} content={sectionContent} onDemo={this.handleDemo} onPage={this.props.onPage} />
-					: <LoggedOutSectionHeader onPage={this.props.onPage} />}
+					? (<LoggedInSectionHeader title={sectionTitle} content={sectionContent} onDemo={this.handleDemo} onPage={this.props.onPage} />)
+					: (<LoggedOutSectionHeader onPage={this.props.onPage} />)
+				}
 
 				<ArtboardGrid
 					title={gridTitle}
