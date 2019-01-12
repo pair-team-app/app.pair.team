@@ -299,7 +299,6 @@ class InspectorPage extends Component {
 				const { upload } = response.data;
 
 				let pages = [];
-				let allArtboards = [];
 				upload.pages.forEach((page)=> {
 					let artboards = [];
 					page.artboards.forEach((artboard, i, arr)=> {
@@ -349,7 +348,6 @@ class InspectorPage extends Component {
 						this.size.width = Math.max(this.size.width, offset.x);
 					});
 
-					allArtboards = allArtboards.concat(artboards);
 					page.artboards = artboards;
 					pages.push(page);
 				});

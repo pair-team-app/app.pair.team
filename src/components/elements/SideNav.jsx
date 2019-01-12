@@ -155,7 +155,7 @@ class SideNav extends Component {
 // 				}
 
 				this.setState({
-// 					uploads     : (isExplorePage()) ? prevUploads.concat(uploads) : uploads,
+// 					uploads     : (isExplorePage()) ? [...prevUploads, ...uploads] : uploads,
 					uploads     : uploads,
 					loadOffset  :  (uploads.length === loadAmt) ? loadOffset + loadAmt : -1,
 					loadAmt     : (loadAmt < 40) ? 40 : 10,
