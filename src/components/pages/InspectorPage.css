@@ -59,32 +59,32 @@
 	cursor: grab;
 }
 
-.inspector-page-hero-slices-wrapper {
+.inspector-page-slices-wrapper {
 	position: absolute;
 	top: 0;
 	left: 0;
 	z-index: 3;
 }
 
-.inspector-page-background-wrapper {
+.inspector-page-background-slice-wrapper {
 	z-index: 4;
 	width: 100%;
 	height: 100%;
 }
 
-.inspector-page-hotspot-wrapper {
+.inspector-page-hotspot-slice-wrapper {
 	z-index: 5;
 	width: 100%;
 	height: 100%;
 }
 
-.inspector-page-textfield-wrapper {
+.inspector-page-textfield-slice-wrapper {
 	z-index: 6;
 	width: 100%;
 	height: 100%;
 }
 
-.inspector-page-slice-wrapper {
+.inspector-page-slice-slice-wrapper {
 	z-index: 7;
 	width: 100%;
 	height: 100%;
@@ -222,8 +222,6 @@
 
 .slice-item {
 	position: absolute;
-	/*border: 1px solid rgba(0, 0, 0, 0.125);*/
-	/*background-color: rgba(0, 0, 0, 0.125);*/
 	zoom: 0;
 }
 
@@ -232,19 +230,23 @@
 }
 
 .slice-item-slice-filled {
-	background-color: rgba(255, 181, 18, 0.5);
+	border: 1px dashed rgba(255, 181, 18, 0.5);
+	/*background-color: rgba(255, 181, 18, 0.5);*/
 }
 
 .slice-item-hotspot-filled {
-	background-color: rgba(62, 84, 255, 0.5);
+	border: 1px dashed rgba(62, 84, 255, 0.5);
+	/*background-color: rgba(62, 84, 255, 0.5);*/
 }
 
 .slice-item-textfield-filled {
-	background-color: rgba(255, 88, 62, 0.5);
+	border: 1px dashed rgba(255, 88, 62, 0.5);
+	/*background-color: rgba(255, 88, 62, 0.5);*/
 }
 
 .slice-item-background-filled {
-	background-color: rgba(62, 255, 109, 0.5);
+	border: 1px dashed rgba(62, 255, 109, 0.5);
+	/*background-color: rgba(62, 255, 109, 0.5);*/
 }
 
 .slice-item-plus {
