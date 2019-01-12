@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './TopNav.css';
 
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 import { Row } from 'simple-flexbox';
 
 import TopNavProfile from './TopNavProfile';
@@ -63,7 +62,9 @@ class TopNav extends Component {
 			<div className="top-nav-wrapper">
 				<div className="top-nav-column top-nav-column-left"><Row horizontal="start" vertical="center">
 					<img onClick={()=> this.props.onPage('')} src={logo} className="top-nav-logo" alt="Design Engine" />
-					{(sections.map((section, i)=> <NavLink key={i} to={section.url} className={(pathname.includes(section.url)) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'}>{section.title}</NavLink>))}
+					{/*{(sections.map((section, i)=> <NavLink key={i} to={section.url} className={(pathname.includes(section.url)) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'}>{section.title}</NavLink>))}*/}
+
+					{(sections.map((section, i)=> <div key={i} className={(pathname.includes(section.url)) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage(section.url)}>{section.title}</div>))}
 
 					{/*<div className={(isHomePage() || isProjectPage() || isUploadPage()) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onHome()}>Projects</div>*/}
 					{/*<div className={(window.location.pathname.includes('/add-ons')) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage('add-ons')}>Add Ons</div>*/}

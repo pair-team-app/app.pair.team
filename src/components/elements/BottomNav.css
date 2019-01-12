@@ -16,6 +16,7 @@
 }
 
 .bottom-nav-link, a.bottom-nav-link {
+	display: inline;
 	color: #0267D8;
 	text-decoration: underline;
 	padding-right: 24px;
