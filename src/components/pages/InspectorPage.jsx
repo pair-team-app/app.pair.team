@@ -147,10 +147,11 @@ class InspectorPage extends Component {
 		super(props);
 
 		this.state = {
-			files         : [],
+			section       : window.location.pathname.substr(1).split('/').shift(),
 			slice         : null,
 			hoverSlice    : null,
 			upload        : null,
+			tabs          : [],
 			uploading     : false,
 			shownStarted  : false,
 			percent       : 0,
@@ -175,28 +176,7 @@ class InspectorPage extends Component {
 				textfield  : false,
 				group      : false,
 				all        : true
-			},
-			languages     : [{
-				id       : 0,
-				title    : 'Add Ons',
-				selected : true,
-				key      : 'languages'
-			}, {
-				id       : 1,
-				title    : 'CSS/HTML',
-				selected : false,
-				key      : 'languages'
-			}, {
-				id       : 2,
-				title    : 'React CSS',
-				selected : false,
-				key      : 'languages'
-			}, {
-				id       : 3,
-				title    : 'LESS',
-				selected : false,
-				key      : 'languages'
-			}]
+			}
 		};
 
 		this.processingInterval = null;
@@ -300,7 +280,7 @@ class InspectorPage extends Component {
 		this.setState({ tooltip : 'Loading…' });
 
 		const { uploadID } = this.props.navigation;
-		const { scale } = this.state;
+		const { section, scale } = this.state;
 
 		let maxH = 0;
 		let offset = {
@@ -374,41 +354,136 @@ class InspectorPage extends Component {
 
 				upload.pages = pages;
 
-				formData.append('action', 'FILES');
-				formData.append('upload_id', '' + uploadID);
-				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response)=> {
-						console.log('FILES', response.data);
+				if (section === 'inspect') {
+					formData.append('action', 'FILES');
+					formData.append('upload_id', '' + uploadID);
+					axios.post('https://api.designengine.ai/system.php', formData)
+						.then((response) => {
+							console.log('FILES', response.data);
 
-						const files = response.data.files.map((file) => ({
-							id       : file.id,
-							title    : file.title,
-							filename : file.filename,
-							contents : file.contents,
-							added    : file.added
-						})).concat([
-							{
-								id       : 0,
-								title    : 'CSS',
-								filename : 'CSS',
-								contents : null,
-								added    : null
-							}, {
-								id       : 0,
-								title    : 'React CSS',
-								filename : 'React CSS',
-								contents : null,
-								added    : null
-							}
-						]);
+							const tabs = response.data.files.map((file) => ({
+								id       : file.id,
+								title    : file.title,
+								filename : file.filename,
+								contents : file.contents,
+								added    : file.added
+							})).concat([
+								{
+									id       : 0,
+									title    : 'CSS',
+									filename : 'CSS',
+									contents : null,
+									added    : null
+								}, {
+									id       : -1,
+									title    : 'React CSS',
+									filename : 'React CSS',
+									contents : null,
+									added    : null
+								}, {
+									id       : -2,
+									title    : 'Swift',
+									filename : 'Swift',
+									contents : null,
+									added    : null
+								}, {
+									id       : -3,
+									title    : 'Android',
+									filename : 'Android',
+									contents : null,
+									added    : null
+								}
+							]);
 
-						this.setState({
-							upload    : upload,
-							files     : files,
-							tooltip   : ''
-						});
-					}).catch((error) => {
-				});
+							this.setState({
+								upload  : upload,
+								tabs    : tabs,
+								tooltip : ''
+							});
+						}).catch((error) => {
+					});
+
+				} else if (section === 'parts') {
+					const tabs = [
+						{
+							id       : 0,
+							title    : 'Slices',
+							filename : 'Slices',
+							contents : null,
+							added    : null
+						}, {
+							id       : -1,
+							title    : 'Symbols',
+							filename : 'Symbols',
+							contents : null,
+							added    : null
+						}
+					];
+
+					this.setState({
+						upload  : upload,
+						tabs    : tabs,
+						tooltip : ''
+					});
+
+				} else if (section === 'colors') {
+					const tabs = [
+						{
+							id       : 0,
+							title    : 'Primary',
+							filename : 'Primary',
+							contents : null,
+							added    : null
+						}, {
+							id       : -1,
+							title    : 'Secondary',
+							filename : 'Secondary',
+							contents : null,
+							added    : null
+						}, {
+							id       : -2,
+							title    : 'Tertiary',
+							filename : 'Tertiary',
+							contents : null,
+							added    : null
+						}
+					];
+
+					this.setState({
+						upload  : upload,
+						tabs    : tabs,
+						tooltip : ''
+					});
+
+				} else if (section === 'typography') {
+					const tabs = [
+						{
+							id       : 0,
+							title    : 'Headlines',
+							filename : 'Headlines',
+							contents : null,
+							added    : null
+						}, {
+							id       : -1,
+							title    : 'Subheadlines',
+							filename : 'Subheadlines',
+							contents : null,
+							added    : null
+						}, {
+							id       : -2,
+							title    : 'Body',
+							filename : 'Body',
+							contents : null,
+							added    : null
+						}
+					];
+
+					this.setState({
+						upload  : upload,
+						tabs    : tabs,
+						tooltip : ''
+					});
+				}
 
 			}).catch((error) => {
 		});
@@ -539,16 +614,18 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceRollOver = (ind, slice, offset)=> {
-		let files = this.state.files;
+		let { section, tabs } = this.state;
 
 		const css = toCSS(slice);
 		const reactCSS = toReactCSS(slice);
 
-		files[files.length - 1].contents = reactCSS.html;
-		files[files.length - 2].contents = css.html;
+		if (section === 'inspect') {
+			tabs[tabs.length - 3].contents = reactCSS.html;
+			tabs[tabs.length - 4].contents = css.html;
+		}
 
 		this.setState({
-			files       : files,
+			tabs        : tabs,
 			hoverSlice  : slice,
 			hoverOffset : offset
 		});
@@ -964,7 +1041,7 @@ class InspectorPage extends Component {
 
 
 	render() {
-		const { upload, slice, hoverSlice, files, visibleTypes, scale } = this.state;
+		const { upload, slice, hoverSlice, tabs, visibleTypes, scale, selectedTab } = this.state;
 		const { scrollOffset, scrolling } = this.state;
 
 		const artboards = (upload) ? upload.pages.map((page)=> {
@@ -1160,14 +1237,14 @@ class InspectorPage extends Component {
 					<div className="inspector-page-panel-content-wrapper">
 						<div style={{ overflowX : 'auto' }}>
 							<ul className="inspector-page-panel-tab-wrapper">
-								{(files.map((file, i) => {
-									return (<li key={i} className={'inspector-page-panel-tab' + ((this.state.selectedTab === i) ? ' inspector-page-panel-tab-selected' : '')} onClick={()=> this.handleTab(i)}>{file.title}</li>);
+								{(tabs.map((tab, i) => {
+									return (<li key={i} className={'inspector-page-panel-tab' + ((selectedTab === i) ? ' inspector-page-panel-tab-selected' : '')} onClick={()=> this.handleTab(i)}>{tab.title}</li>);
 								}))}
 							</ul>
 						</div>
 						<div className="inspector-page-panel-tab-content-wrapper">
-							{(files.map((file, i) => {
-								return ((i === this.state.selectedTab) ? <div key={i} className="inspector-page-panel-tab-content"><span dangerouslySetInnerHTML={{ __html : (file.contents) ? String(JSON.parse(file.contents)).replace(/ /g, '&nbsp;').replace(/\n/g, '<br />') : '' }} /></div> : null);
+							{(tabs.map((tab, i) => {
+								return ((i === selectedTab) ? <div key={i} className="inspector-page-panel-tab-content"><span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents)).replace(/ /g, '&nbsp;').replace(/\n/g, '<br />') : '' }} /></div> : null);
 							}))}
 						</div>
 					</div>
