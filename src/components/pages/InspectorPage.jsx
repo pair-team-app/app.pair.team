@@ -580,16 +580,18 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceClick = (ind, slice, offset)=> {
-		let files = this.state.files;
+		let { section, tabs } = this.state;
 
 		const css = toCSS(slice);
 		const reactCSS = toReactCSS(slice);
 
-		files[files.length - 1].contents = reactCSS.html;
-		files[files.length - 2].contents = css.html;
+		if (section === 'inspect') {
+			tabs[tabs.length - 1].contents = reactCSS.html;
+			tabs[tabs.length - 2].contents = css.html;
+		}
 
 		this.setState({
-			files      : files,
+			tabs       : tabs,
 			hoverSlice : null,
 			slice      : slice,
 			offset     : offset
@@ -597,18 +599,20 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceRollOut = (ind, slice)=> {
-		let files = this.state.files;
+		let { section, tabs } = this.state;
 
 		if (this.state.slice) {
 			const css = toCSS(this.state.slice);
 			const reactCSS = toReactCSS(this.state.slice);
 
-			files[files.length - 1].contents = reactCSS.html;
-			files[files.length - 2].contents = css.html;
+			if (section === 'inspect') {
+				tabs[tabs.length - 3].contents = reactCSS.html;
+				tabs[tabs.length - 4].contents = css.html;
+			}
 		}
 
 		this.setState({
-			files      : files,
+			tabs       : tabs,
 			hoverSlice : null
 		});
 	};
