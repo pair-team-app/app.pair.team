@@ -36,7 +36,8 @@ const LoggedInSectionHeader = (props)=> {
 		<h3>{title}</h3>
 		<h4>{content}</h4>
 		<div>
-			<button onClick={()=> props.onPage('new' + window.location.pathname)}>Upload</button>
+			<button className="adjacent-button" onClick={()=> props.onPage('new' + window.location.pathname)}>Upload</button>
+			<button onClick={()=> props.onDemo()}>Demo</button>
 		</div>
 	</div>);
 };
@@ -255,7 +256,7 @@ class HomePage extends Component {
 					onPopup={this.props.onPopup} />
 
 				{(isUserLoggedIn())
-					? <LoggedInSectionHeader title={sectionTitle} content={sectionContent} onPage={this.props.onPage} />
+					? <LoggedInSectionHeader title={sectionTitle} content={sectionContent} onDemo={this.handleDemo} onPage={this.props.onPage} />
 					: <LoggedOutSectionHeader onPage={this.props.onPage} />}
 
 				<ArtboardGrid
