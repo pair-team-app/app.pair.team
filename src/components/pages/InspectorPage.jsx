@@ -310,7 +310,7 @@ class InspectorPage extends Component {
 							maxH = 0;
 						}
 
-						maxH = Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale);
+						maxH = Math.round(Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale));
 
 						artboards.push({
 							id        : artboard.id,
@@ -1092,7 +1092,7 @@ class InspectorPage extends Component {
 				maxH = 0;
 			}
 
-			maxH = Math.max(maxH, artboard.meta.frame.size.height * scale);
+			maxH = Math.round(Math.max(maxH, artboard.meta.frame.size.height * scale));
 
 			const artboardStyle = {
 				position       : 'absolute',
