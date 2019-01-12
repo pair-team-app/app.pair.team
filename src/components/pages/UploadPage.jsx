@@ -148,13 +148,17 @@ class UploadPage extends Component {
 			submitted      : false,
 			sentInvites    : false,
 			shownStarted   : false,
+			profile        : {
+				id    : 0,
+				email : "NOT LOGGED IN"
+			},
 			invites        : [{
 				email    : '',
 				valid    : true,
 				txtClass : 'input-wrapper'
 			}],
 			radioButtons   : radioButtons,
-			radioIndex     : 2
+			radioIndex     : 1
 		};
 	}
 
@@ -198,7 +202,11 @@ class UploadPage extends Component {
 							this.setState({ percent });
 
 							if (progressEvent.loaded >= progressEvent.total) {
-								this.onUploadComplete();
+								const { id, email } = (this.props.profile) ? this.props.profile : this.state;
+								const { file } = this.state;
+
+								sendToSlack('*[' + id + ']* *' + email + '* - "_' + file.name + '_" uploaded');
+								this.setState({ uploadComplete : true });
 							}
 						}
 					};
@@ -231,20 +239,6 @@ class UploadPage extends Component {
 			}
 		}
 	}
-
-	onUploadComplete = ()=> {
-		const { id, email } = (this.props.profile) ? this.props.profile : this.state;
-		const { file } = this.state;
-
-		sendToSlack('*[' + id + ']* *' + email + '* - "_' + file.name + '_" uploaded');
-		this.setState({ uploadComplete : true });
-	};
-
-	handleUploadChange = (event)=> {
-		console.log('UploadPage.handleUploadChange()', event.target);
-		this.setState({ [event.target.name] : event.target.value });
-	};
-
 
 	handleCancel = (event)=> {
 		console.log('UploadPage.handleCancel()', event.target);
@@ -375,6 +369,11 @@ class UploadPage extends Component {
 
 		this.props.updateUserProfile(profile);
 		this.handleUploadSubmit(profile);
+	};
+
+	handleUploadChange = (event)=> {
+		console.log('UploadPage.handleUploadChange()', event.target);
+		this.setState({ [event.target.name] : event.target.value });
 	};
 
 	handleUploadSubmit = (userProfile)=> {

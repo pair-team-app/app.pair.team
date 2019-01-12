@@ -2,11 +2,24 @@
 import cookie from 'react-cookies';
 import axios from "axios";
 
-
-// export function buildInspectorPath(uploadID, pageID, artboardID, artboardTitle, prefix=null, suffix='') {
-// 	prefix = (prefix || ('/' + window.location.pathname.split('/').pop()));
-// 	return (prefix + '/' + uploadID + '/' + pageID + '/' + artboardID + '/' + convertURLSlug(artboardTitle) + suffix);
-// }
+import {
+// 	ADD_ONS,
+// 	API,
+	HOME,
+	COLORS,
+	EXPLORE,
+	FONTS,
+	INSPECT,
+// 	LOGIN,
+// 	MISSION,
+	PARTS,
+// 	PRIVACY,
+	PROFILE,
+// 	RECOVER,
+// 	REGISTER,
+// 	TERMS,
+	UPLOAD
+} from '../consts/pathnames';
 
 export function buildInspectorPath(uploadID, uploadTitle, prefix=null, suffix='') {
 	prefix = (prefix || ('/' + window.location.pathname.split('/').pop()));
@@ -72,21 +85,21 @@ export function idsFromPath() {
 
 export function isExplorePage() {
 	const { pathname } = window.location;
-	return (pathname.includes('/explore'));
+	return (pathname.includes(EXPLORE));
 }
 
 export function isHomePage() {
 	const { pathname } = window.location;
-	return (pathname === '' || pathname === '/');
+	return (pathname === '' || pathname === HOME);
 }
 
 export function isInspectorPage() {
 	const { pathname } = window.location;
-	return (pathname.includes('/artboard') || pathname.includes('/page') || pathname.includes('/inspect/'));
+	return ((pathname.includes(INSPECT + '/') || pathname.includes(COLORS + '/') || pathname.includes(FONTS + '/') || pathname.includes(PARTS + '/')) && /^.+\/\d+\/.+$/.test(pathname));
 }
 
 export function isProfilePage() {
-	return (window.location.pathname.includes('/profile'));
+	return (window.location.pathname.includes(PROFILE));
 }
 
 export function isProjectPage() {
@@ -95,7 +108,7 @@ export function isProjectPage() {
 
 export function isUploadPage(base=false) {
 	const { pathname } = window.location;
-	return ((base) ? pathname === '/new' : pathname.includes('/new'));
+	return ((base) ? pathname === UPLOAD : pathname.includes(UPLOAD));
 }
 
 export function isUserLoggedIn() {

@@ -9,18 +9,18 @@ import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
+import ContentModal from '../elements/ContentModal';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { TIMESTAMP_OPTS } from '../../consts/formats';
-import { capitalizeText, isUserLoggedIn } from '../../utils/funcs.js';
+import { capitalizeText, isUserLoggedIn, sendToSlack } from '../../utils/funcs.js';
 import { toCSS, toReactCSS } from '../../utils/langs.js';
-
 import enabledZoomInButton from '../../images/buttons/btn-zoom-in_enabled.svg';
 import disabledZoomInButton from '../../images/buttons/btn-zoom-in_disabled.svg';
 import enabledZoomOutButton from '../../images/buttons/btn-zoom-out_enabled.svg';
 import disabledZoomOutButton from '../../images/buttons/btn-zoom-out_disabled.svg';
 import enabledZooResetButton from '../../images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../images/buttons/btn-zoom-reset_disabled.svg';
-import { sendToSlack } from '../../utils/funcs';
+
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
@@ -177,6 +177,7 @@ class InspectorPage extends Component {
 			tabs         : [],
 			uploading    : false,
 			shownStarted : false,
+			restricted   : false,
 			percent      : 0,
 			selectedTab  : 0,
 			tooltip      : '',
@@ -220,12 +221,22 @@ class InspectorPage extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
-// 		console.log('InspectorPage.shouldComponentUpdate()', this.props, nextProps, this.state, nextState, nextContext);
+		console.log('InspectorPage.shouldComponentUpdate()', this.props, nextProps, this.state, nextState, nextContext);
+
+		const { upload, restricted } = nextState;
+		if (!restricted && upload && upload.private === '1' && (!nextProps.profile || (nextProps.profile && upload.creator.user_id !== nextProps.profile.id))) {
+			this.setState({
+				restricted : true,
+				tooltip    : ''
+			});
+		}
+
 		return (true);
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('InspectorPage.componentDidUpdate()', prevProps, this.props, this.state);
+		console.log('InspectorPage.componentDidUpdate()', prevProps, this.props, this.state);
+
 		if (this.props.navigation !== prevProps.navigation && this.props.navigation && this.props.navigation.uploadID !== 0) {
 			this.refreshData();
 		}
@@ -1086,6 +1097,7 @@ class InspectorPage extends Component {
 	render() {
 		const { upload, slice, hoverSlice, tabs, scale, selectedTab } = this.state;
 		const { scrollOffset, scrolling } = this.state;
+		const { tooltip, restricted } = this.state;
 
 		const artboards = (upload) ? upload.pages.map((page)=> {
 			return (page.artboards);
@@ -1243,6 +1255,9 @@ class InspectorPage extends Component {
 			offset.x += Math.round(50 + (artboard.meta.frame.size.width * scale));
 		});
 
+		artboardImages = (!restricted) ? artboardImages : [];
+		slices = (!restricted) ? slices : [];
+
 
 // 		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage.render()', (artboardsWrapper.current) ? artboardsWrapper.current.scrollTop : 0, (artboardsWrapper.current) ? artboardsWrapper.current.scrollLeft : 0, scale);
@@ -1309,9 +1324,9 @@ class InspectorPage extends Component {
 				</div>
 			</div>
 
-			{(this.state.tooltip !== '') && (<div className="inspector-page-tooltip">
-				{this.state.tooltip}
-			</div>)}
+			{(tooltip !== '') && (<div className="inspector-page-tooltip">{tooltip}</div>)}
+			{(restricted) && (<ContentModal content="You must be signed in as the project's creator to view!" onComplete={()=> this.props.onPage('register')} />)}
+
 		</div>);
 	}
 }
