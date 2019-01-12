@@ -216,7 +216,7 @@ class InspectorPage extends Component {
 		}
 
 		if (this.props.processing && this.processingInterval === null) {
-			this.setState({ tooltip : 'Loading…' });
+			this.setState({ tooltip : 'Processing…' });
 			this.processingInterval = setInterval(this.onProcessingUpdate, 2500);
 		}
 
@@ -277,10 +277,12 @@ class InspectorPage extends Component {
 
 	refreshData = ()=> {
 		console.log('InspectorPage.refreshData()', this.props);
-		this.setState({ tooltip : 'Loading…' });
 
+		const { processing } = this.props;
 		const { uploadID } = this.props.navigation;
 		const { section, scale } = this.state;
+
+		this.setState({ tooltip : (processing) ? 'Processing…' : 'Loading…' });
 
 		let maxH = 0;
 		let offset = {
@@ -398,7 +400,7 @@ class InspectorPage extends Component {
 							this.setState({
 								upload  : upload,
 								tabs    : tabs,
-								tooltip : ''
+								tooltip : (processing) ? 'Processing…' : ''
 							});
 						}).catch((error) => {
 					});
@@ -423,7 +425,7 @@ class InspectorPage extends Component {
 					this.setState({
 						upload  : upload,
 						tabs    : tabs,
-						tooltip : ''
+						tooltip : (processing) ? 'Processing…' : ''
 					});
 
 				} else if (section === 'colors') {
@@ -452,7 +454,7 @@ class InspectorPage extends Component {
 					this.setState({
 						upload  : upload,
 						tabs    : tabs,
-						tooltip : ''
+						tooltip : (processing) ? 'Processing…' : ''
 					});
 
 				} else if (section === 'typography') {
@@ -481,7 +483,7 @@ class InspectorPage extends Component {
 					this.setState({
 						upload  : upload,
 						tabs    : tabs,
-						tooltip : ''
+						tooltip : (processing) ? 'Processing…' : ''
 					});
 				}
 
@@ -540,7 +542,7 @@ class InspectorPage extends Component {
 
 	handleCommentChange = (event)=> {
 		event.persist();
-		if (/\r|\n/.exec(event.target.value)) {
+		if (/[\r\n]/.exec(event.target.value)) {
 			this.onSubmitComment(event);
 
 		} else {
