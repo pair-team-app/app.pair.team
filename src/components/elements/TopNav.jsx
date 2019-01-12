@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './TopNav.css';
 
+import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
@@ -27,14 +28,8 @@ class TopNav extends Component {
 				title : 'Free Inspect',
 				url   : '/inspect'
 			}, {
-				title : 'Parts',
+				title : 'Free Parts',
 				url   : '/parts'
-			}, {
-				title : 'Colors',
-				url   : '/colors'
-			}, {
-				title : 'Typography',
-				url   : '/typography'
 			}]
 		};
 	}
@@ -65,8 +60,13 @@ class TopNav extends Component {
 					{/*{(sections.map((section, i)=> <NavLink key={i} to={section.url} className={(pathname.includes(section.url)) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'}>{section.title}</NavLink>))}*/}
 
 					{(sections.map((section, i)=> <div key={i} className={(pathname.includes(section.url)) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage(section.url)}>{section.title}</div>))}
-
-					{/*<div className={(isHomePage() || isProjectPage() || isUploadPage()) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onHome()}>Projects</div>*/}
+					<div className="top-nav-link" onClick={()=> null}>
+						Rate This
+						<FontAwesome name="star" className="top-nav-star" />
+						<FontAwesome name="star" className="top-nav-star" />
+						<FontAwesome name="star" className="top-nav-star" />
+						<FontAwesome name="star" className="top-nav-star" />
+					</div>
 					{/*<div className={(window.location.pathname.includes('/add-ons')) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage('add-ons')}>Add Ons</div>*/}
 					{/*<div className={(isExplorePage()) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage('explore')}>Explore</div>*/}
 					{/*<div className="top-nav-link" onClick={()=> window.open('https://docs.google.com/forms/d/e/1FAIpQLSdYZI6uIqF9D5zW5LmZQqCem6zrXh7THmVVBoOkeAQWm9o6lg/viewform?usp=sf_link')}>Survey</div>*/}
