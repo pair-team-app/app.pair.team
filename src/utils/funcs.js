@@ -3,13 +3,18 @@ import cookie from 'react-cookies';
 import axios from "axios";
 
 
-export function buildInspectorPath(uploadID, pageID, artboardID, artboardTitle, prefix=null, suffix='') {
+// export function buildInspectorPath(uploadID, pageID, artboardID, artboardTitle, prefix=null, suffix='') {
+// 	prefix = (prefix || ('/' + window.location.pathname.split('/').pop()));
+// 	return (prefix + '/' + uploadID + '/' + pageID + '/' + artboardID + '/' + convertURLSlug(artboardTitle) + suffix);
+// }
+
+export function buildInspectorPath(uploadID, uploadTitle, prefix=null, suffix='') {
 	prefix = (prefix || ('/' + window.location.pathname.split('/').pop()));
-	return (prefix + '/' + uploadID + '/' + pageID + '/' + artboardID + '/' + convertURLSlug(artboardTitle) + suffix);
+	return (prefix + '/' + uploadID + '/' + convertURLSlug(uploadTitle) + suffix);
 }
 
-export function buildInspectorURL(uploadID, pageID, artboardID, artboardTitle, suffix='') {
-	return (window.location.origin + buildInspectorPath(uploadID, pageID, artboardID, artboardTitle, suffix));
+export function buildInspectorURL(uploadID, uploadTitle, prefix=null, suffix='') {
+	return (window.location.origin + buildInspectorPath(uploadID, uploadTitle, prefix, suffix));
 }
 
 export function buildProjectPath(uploadID, title, suffix='') {
@@ -53,14 +58,12 @@ export function hideText(text, char='*') {
 
 export function idsFromPath() {
 	const { pathname } = window.location;
-	const inspectorPath = /\/artboard|page|inspect\/(\d+)\/(\d+)\/(\d+)\/.*$/;
-	const explorePath = /\/explore\/(\d+)\/.*$/;
-	const projPath = /\/proj\/(\d+)\/.*$/;
+	const inspectorPath = /\/(?:inspect|colors|parts|typography)\/(\d+)\/.+$/;
 
 	const navIDs = {
-		uploadID   : (inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[1] : (explorePath.test(pathname)) ? pathname.match(explorePath)[1] : (projPath.test(pathname)) ? pathname.match(projPath)[1] : 0,
-		pageID     : (inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[2] : 0,
-		artboardID : (inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[3] : 0,
+		uploadID   : (inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[1] : 0,
+		pageID     : 0,
+		artboardID : 0,
 		sliceID    : 0
 	};
 

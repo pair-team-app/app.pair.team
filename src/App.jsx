@@ -114,7 +114,7 @@ class App extends Component {
 		console.log('App.handleArtboardClicked()', artboard);
 		this.onAddPageView(artboard.pageID);
 
-		this.handlePage(buildInspectorPath(artboard.uploadID, artboard.pageID, artboard.id, artboard.title).substring(1));
+		this.handlePage(buildInspectorPath(artboard.uploadID, artboard.title).substring(1));
 		this.props.updateNavigation({
 			uploadID   : artboard.uploadID,
 			pageID     : artboard.pageID,
@@ -178,7 +178,7 @@ class App extends Component {
 		this.setState({ popup : payload });
 	};
 
-	handleProcess = (processing)=> {
+	handleProcessing = (processing)=> {
 		this.setState({ processing });
 	};
 
@@ -303,7 +303,7 @@ class App extends Component {
 
   	const { uploadID } = this.props.navigation;
 		const { pathname } = this.props.location;
-  	const { popup } = this.state;
+  	const { processing, popup } = this.state;
 
   	return (
     	<div className="site-wrapper">
@@ -326,14 +326,17 @@ class App extends Component {
 							    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 							    <Route exact path="/login" render={()=> <LoginPage onPage={this.handlePage} />} onPopup={this.handlePopup} />
 						      <Route exact path="/mission" render={()=> <MissionPage />} />
-							    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onProcess={this.handleProcess} onPopup={this.handlePopup} />} />
+							    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onProcessing={this.handleProcessing} onPopup={this.handlePopup} />} />
 
 							    <Route exact path="/inspect" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 							    <Route exact path="/parts" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 							    <Route exact path="/colors" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 							    <Route exact path="/typography" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 
-							    <Route path="/inspect/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+							    <Route path="/inspect/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+							    <Route path="/parts/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+							    <Route path="/colors/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+							    <Route path="/typography/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
 							    <Route exact path="/page" render={()=> <InspectorPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
 							    <Route exact path="/page/:uploadID/:pageID/:artboardID/:artboardSlug" render={(props)=> <InspectorPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} />} />

@@ -6,7 +6,6 @@ import axios from 'axios';
 // import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
 import Dropzone from 'react-dropzone';
-// import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
@@ -21,8 +20,7 @@ import enabledZoomOutButton from '../../images/buttons/btn-zoom-out_enabled.svg'
 import disabledZoomOutButton from '../../images/buttons/btn-zoom-out_disabled.svg';
 import enabledZooResetButton from '../../images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../images/buttons/btn-zoom-reset_disabled.svg';
-import { updateNavigation } from "../../redux/actions";
-import { buildInspectorPath, sendToSlack } from "../../utils/funcs";
+import { sendToSlack } from '../../utils/funcs';
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
@@ -47,12 +45,6 @@ const mapStateToProps = (state, ownProps)=> {
 	});
 };
 
-const mapDispatchToProps = (dispatch)=> {
-	return ({
-		updateNavigation : (navIDs)=> dispatch(updateNavigation(navIDs))
-	});
-};
-
 
 const SliceItem = (props)=> {
 // 	console.log('InspectorPage.SliceItem()', props);
@@ -72,17 +64,6 @@ const SliceItem = (props)=> {
 		<div data-id={props.id} className={className + ((props.filled) ? '-filled' : '')} style={style} onMouseEnter={()=> props.onRollOver(props.offset)} onMouseLeave={()=> props.onRollOut()} onClick={()=> props.onClick(props.offset)} />
 	);
 };
-
-
-
-const LandingButtons = (props)=> {
-	return (<Column horizontal="start" vertical="center" className="inspector-page-landing-button-wrapper">
-		<button className="fat-button inspector-page-landing-button" onClick={()=> props.onClick('UPLOAD')}>Upload</button>
-		<button className="fat-button inspector-page-landing-button" onClick={()=> props.onClick('REQUEST')}>Request</button>
-		<button className="fat-button inspector-page-landing-button" onClick={()=> props.onClick('DEMO')}>Demo</button>
-	</Column>);
-};
-
 
 const SpecsList = (props)=> {
 // 		console.log('InspectorPage.SpecsList()', props);
@@ -122,7 +103,6 @@ const SpecsList = (props)=> {
 		<div className="inspector-page-panel-info-wrapper">
 			{/*<Row><Column flexGrow={1}>System</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard && artboard.system) ? artboard.system.title : ''}</Column></Row>*/}
 			{/*<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val"><a href={'mailto:' + ((artboard && artboard.system) ? artboard.system.author : '#')} style={{ textDecoration : 'none' }}>{(artboard && artboard.system) ? artboard.system.author : ''}</a></Column></Row>*/}
-			{/*<Row><Column flexGrow={1}>Page</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(page) ? page.title : ''}</Column></Row>*/}
 			{/*<Row><Column flexGrow={1}>Artboard</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard) ? artboard.title : ''}</Column></Row>*/}
 			<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? props.slice.title : ''}</Column></Row>
 			<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? capitalizeText(props.slice.type, true) : ''}</Column></Row>
@@ -156,7 +136,7 @@ const SpecsList = (props)=> {
 			{/*<Row><Column flexGrow={1}>Inner Padding:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>*/}
 			{/*<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? capitalizeText(props.slice.meta.blendMode, true) : ''}</Column></Row>*/}
 			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', TIMESTAMP_OPTS).format(Date.parse(props.slice.added))) : ''}</Column></Row>
-			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.page) ? props.page.author : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.upload) ? props.upload.creator.username : ''}</Column></Row>
 		</div>
 	);
 };
@@ -170,9 +150,9 @@ class InspectorPage extends Component {
 			files         : [],
 			slice         : null,
 			hoverSlice    : null,
-			page          : null,
-			artboards     : [],
+			upload        : null,
 			uploading     : false,
+			shownStarted  : false,
 			percent       : 0,
 			selectedTab   : 0,
 			tooltip       : '',
@@ -219,6 +199,7 @@ class InspectorPage extends Component {
 			}]
 		};
 
+		this.processingInterval = null;
 		this.initialScaled = false;
 		this.jumpedOffset = false;
 		this.lastScroll = 0;
@@ -232,15 +213,10 @@ class InspectorPage extends Component {
 		};
 	}
 
-	hasNavIDs() {
-		const { navigation } = this.props;
-		return (navigation && (navigation.uploadID !== 0 && navigation.pageID !== 0));
-	}
-
-
 	componentDidMount() {
 		console.log('InspectorPage.componentDidMount()', this.props, this.state);
-		if (this.hasNavIDs()) {
+		const { navigation } = this.props;
+		if (navigation && (navigation.uploadID !== 0)) {
 			this.refreshData();
 		}
 
@@ -255,14 +231,19 @@ class InspectorPage extends Component {
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		console.log('InspectorPage.componentDidUpdate()', prevProps, this.props, this.state);
-// 		const { uploadID, pageID, artboardID, sliceID } = this.state;
-// 		this.setState({ uploadID, pageID, artboardID, sliceID });
-		if (this.props.navigation !== prevProps.navigation && this.hasNavIDs()) {
+		if (this.props.navigation !== prevProps.navigation && this.props.navigation && this.props.navigation.uploadID !== 0) {
 			this.refreshData();
 		}
 
-		if (!this.hasNavIDs() && this.state.artboards.length > 0) {
-			this.setState({ artboards : [] });
+		if (this.props.processing && this.processingInterval === null) {
+			this.setState({ tooltip : 'Loading…' });
+			this.processingInterval = setInterval(this.onProcessingUpdate, 2500);
+		}
+
+		if (!this.props.processing && this.processingInterval) {
+			clearInterval(this.processingInterval);
+			this.processingInterval = null;
+			this.refreshData();
 		}
 
 		if (canvasWrapper.current) {
@@ -301,8 +282,11 @@ class InspectorPage extends Component {
 	}
 
 	componentWillUnmount() {
+		clearInterval(this.processingInterval);
 		clearInterval(this.antsInterval);
 		clearInterval(this.scrollInterval);
+
+		this.processingInterval = null;
 		this.antsInterval = null;
 		this.scrollInterval = null;
 
@@ -315,7 +299,7 @@ class InspectorPage extends Component {
 		console.log('InspectorPage.refreshData()', this.props);
 		this.setState({ tooltip : 'Loading…' });
 
-		const { uploadID, pageID } = this.props.navigation;
+		const { uploadID } = this.props.navigation;
 		const { scale } = this.state;
 
 		let maxH = 0;
@@ -325,60 +309,70 @@ class InspectorPage extends Component {
 		};
 
 		let formData = new FormData();
-		formData.append('action', 'PAGE');
-		formData.append('page_id', pageID);
+		formData.append('action', 'UPLOAD');
+		formData.append('upload_id', uploadID);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response)=> {
-				console.log('PAGE', response.data);
-				const page = response.data.page;
-				let artboards = [];
-				page.artboards.forEach((artboard, i, arr)=> {
-					if (Math.floor(i % 5) === 0 && i !== 0) {
-						this.size.height += maxH + 50;
-						offset.x = 0;
-						offset.y += 50 + maxH;
-						maxH = 0;
-					}
+				console.log('UPLOAD', response.data);
+				const { upload } = response.data;
 
-					maxH = Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale);
+				let pages = [];
+				let allArtboards = [];
+				upload.pages.forEach((page)=> {
+					let artboards = [];
+					page.artboards.forEach((artboard, i, arr)=> {
+						if (Math.floor(i % 5) === 0 && i !== 0) {
+							this.size.height += maxH + 50;
+							offset.x = 0;
+							offset.y += 50 + maxH;
+							maxH = 0;
+						}
 
-					artboards.push({
-						id        : artboard.id,
-						pageID    : artboard.page_id,
-						title     : artboard.title,
-						filename  : (artboard.filename.includes('@3x')) ? artboard.filename : artboard.filename + '@3x.png',
-						meta      : JSON.parse(artboard.meta),
-						views     : artboard.views,
-						downloads : artboard.downloads,
-						added     : artboard.added,
-						system    : artboard.system,
-						grid      : {
-							col : i % 5,
-							row : Math.floor(i / 5)
-						},
-						offset    : {
-							x : offset.x,
-							y : offset.y
-						},
-						slices    : artboard.slices.map((item) => ({
-							id       : item.id,
-							title    : item.title,
-							type     : item.type,
-							filename : item.filename,
-							meta     : JSON.parse(item.meta),
-							added    : item.added
-						})),
-						comments  : artboard.comments
+						maxH = Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale);
+
+						artboards.push({
+							id        : artboard.id,
+							pageID    : artboard.page_id,
+							title     : artboard.title,
+							filename  : (artboard.filename.includes('@3x')) ? artboard.filename : artboard.filename + '@3x.png',
+							meta      : JSON.parse(artboard.meta),
+							views     : artboard.views,
+							downloads : artboard.downloads,
+							added     : artboard.added,
+							system    : artboard.system,
+							grid      : {
+								col : i % 5,
+								row : Math.floor(i / 5)
+							},
+							offset    : {
+								x : offset.x,
+								y : offset.y
+							},
+							slices    : artboard.slices.map((item) => ({
+								id       : item.id,
+								title    : item.title,
+								type     : item.type,
+								filename : item.filename,
+								meta     : JSON.parse(item.meta),
+								added    : item.added
+							})),
+							comments  : artboard.comments
+						});
+
+
+						if (i < arr.length - 1) {
+							offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
+						}
+
+						this.size.width = Math.max(this.size.width, offset.x);
 					});
 
-
-					if (i < arr.length - 1) {
-						offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
-					}
-
-					this.size.width = Math.max(this.size.width, offset.x);
+					allArtboards = allArtboards.concat(artboards);
+					page.artboards = artboards;
+					pages.push(page);
 				});
 
+				upload.pages = pages;
 
 				formData.append('action', 'FILES');
 				formData.append('upload_id', '' + uploadID);
@@ -409,13 +403,13 @@ class InspectorPage extends Component {
 						]);
 
 						this.setState({
-							page      : page,
-							artboards : artboards,
+							upload    : upload,
 							files     : files,
 							tooltip   : ''
 						});
 					}).catch((error) => {
 				});
+
 			}).catch((error) => {
 		});
 	};
@@ -436,23 +430,28 @@ class InspectorPage extends Component {
 		formData.append('artboard_id', artboardID);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
-// 				console.log('SLICES', response.data);
+				console.log('SLICES', response.data);
 
-				let artboards = [...this.state.artboards];
-				artboards.forEach((artboard)=> {
-					if (artboard.id === artboardID && artboard.slices.length === 0) {
-						artboard.slices = response.data.slices.map((item) => ({
-							id       : item.id,
-							title    : item.title,
-							type     : item.type,
-							filename : item.filename,
-							meta     : JSON.parse(item.meta),
-							added    : item.added
-						}));
-					}
+				let { upload } = this.state;
+				let pages = [...upload.pages];
+				pages.forEach((page)=> {
+					page.artboards.forEach((artboard) => {
+						if (artboard.id === artboardID && artboard.slices.length === 0) {
+							artboard.slices = response.data.slices.map((item) => ({
+								id       : item.id,
+								title    : item.title,
+								type     : item.type,
+								filename : item.filename,
+								meta     : JSON.parse(item.meta),
+								added    : item.added
+							}));
+						}
+					});
 				});
 
-				this.setState({ artboards });
+				upload.pages = pages;
+
+				this.setState({ upload });
 			}).catch((error) => {
 		});
 	};
@@ -502,26 +501,6 @@ class InspectorPage extends Component {
 
 		} else if (event.keyCode === MINUS_KEY) {
 			this.handleZoom(-1);
-		}
-	};
-
-	handleLandingButtonClick = (type)=> {
-		console.log('InspectorPage.handleLandingButtonClick()', type);
-
-		if (type === 'UPLOAD') {
-			this.props.onPage('new');
-
-		} else if (type === 'REQUEST') {
-
-
-		} else if (type === 'DEMO') {
-// 			window.location.href = buildInspectorURL(1, 2, 4, 'account');
-			this.props.onPage(buildInspectorPath(1, 2, 4, 'account', '/inspect'));
-			this.props.updateNavigation({
-				uploadID   : 1,
-				pageID     : 2,
-				artboardID : 4
-			});
 		}
 	};
 
@@ -637,7 +616,7 @@ class InspectorPage extends Component {
 	};
 
 	handleZoom = (direction)=> {
-		const { scale } = this.state;
+		const { upload, scale } = this.state;
 
 		if (direction === 0) {
 			this.setState({
@@ -670,8 +649,13 @@ class InspectorPage extends Component {
 					y : 0
 				};
 
-				for (let i=0; i<this.state.artboards.length; i++) {
-					const artboard = this.state.artboards[i];
+
+				const artboards = upload.pages.map((page)=> {
+					return (page.artboards);
+				}).flat();
+
+				for (let i=0; i<artboards.length; i++) {
+					const artboard = artboards[i];
 
 					if (Math.floor(i % 5) === 0) {
 						offset.x = 0;
@@ -801,6 +785,43 @@ class InspectorPage extends Component {
 			});
 		}
 	};
+
+	onProcessingUpdate = ()=> {
+		const { upload, shownStarted } = this.state;
+
+		let formData = new FormData();
+		formData.append('action', 'UPLOAD_STATUS');
+		formData.append('upload_id', upload.id);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response) => {
+				console.log('UPLOAD_STATUS', response.data);
+				const processingState = parseInt(response.data.status.state, 10);
+
+				if (processingState === 1) {
+					if (!shownStarted) {
+						this.setState({ shownStarted : true });
+						this.props.onPopup({
+							type     : 'INFO',
+							content  : 'Processing has started'
+						});
+					}
+
+				} else if (processingState === 2) {
+					this.refreshData();
+
+				} else if (processingState === 3) {
+					this.props.onProcessing(false);
+					clearInterval(this.processingInterval);
+					this.processingInterval = null;
+					this.refreshData();
+
+				} else if (processingState === 4) {
+					// processing error
+				}
+			}).catch((error) => {
+		});
+	};
+
 
 	onUpdateCanvas = ()=> {
 		const { scale, offset, scrollOffset } = this.state;
@@ -943,8 +964,12 @@ class InspectorPage extends Component {
 
 
 	render() {
-		const { page, artboards, slice, hoverSlice, files, visibleTypes, scale } = this.state;
+		const { upload, slice, hoverSlice, files, visibleTypes, scale } = this.state;
 		const { scrollOffset, scrolling } = this.state;
+
+		const artboards = (upload) ? upload.pages.map((page)=> {
+			return (page.artboards);
+		}).flat() : [];
 
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 
@@ -1159,7 +1184,7 @@ class InspectorPage extends Component {
 						</ul>
 						<div className="inspector-page-panel-tab-content-wrapper">
 							<div className="inspector-page-panel-tab-content">
-								<SpecsList page={page} slice={activeSlice} />
+								<SpecsList upload={upload} slice={activeSlice} />
 							</div>
 						</div>
 					</div>
@@ -1177,4 +1202,4 @@ class InspectorPage extends Component {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(InspectorPage);
+export default connect(mapStateToProps)(InspectorPage);

@@ -3,14 +3,14 @@ import React, { Component } from 'react';
 import './InviteTeamPage.css';
 
 import axios from 'axios/index';
-import { connect } from 'react-redux';
+import cookie from 'react-cookies';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import Dropdown from '../elements/Dropdown';
 
 import { buildProjectURL, isValidEmail, isUserLoggedIn } from '../../utils/funcs';
-import cookie from "react-cookies";
 
 
 const mapStateToProps = (state, ownProps)=> {
