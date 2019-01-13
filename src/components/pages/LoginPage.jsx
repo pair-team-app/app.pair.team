@@ -45,7 +45,7 @@ class LoginPage extends Component {
 		const { id, username, email, avatar, password } = profile;
 		cookie.save('user_id', id, { path : '/' });
 		this.props.updateUserProfile({ id, avatar, username, email, password });
-		this.props.onPage((this.props.redirectURL) ? this.props.redirectURL.substr(1) : '<<');
+		this.props.onPage((this.props.redirectURL) ? this.props.redirectURL.substr(1) : '');
 	};
 
 	render() {

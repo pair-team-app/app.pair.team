@@ -226,7 +226,7 @@ class InspectorPage extends Component {
 
 		const { navigation } = this.props;
 		if (navigation && (navigation.uploadID !== 0)) {
-			this.refreshData();
+			this.onRefreshData();
 		}
 
 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
@@ -234,7 +234,7 @@ class InspectorPage extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
-		console.log('InspectorPage.shouldComponentUpdate()', this.props, nextProps, this.state, nextState, nextContext);
+// 		console.log('InspectorPage.shouldComponentUpdate()', this.props, nextProps, this.state, nextState, nextContext);
 
 		const { upload, restricted } = nextState;
 		if (!restricted && upload && upload.private === '1' && (!nextProps.profile || (nextProps.profile && upload.creator.user_id !== nextProps.profile.id))) {
@@ -249,10 +249,10 @@ class InspectorPage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('InspectorPage.componentDidUpdate()', prevProps, this.props, this.state);
+// 		console.log('InspectorPage.componentDidUpdate()', prevProps, this.props, this.state);
 
 		if (this.props.navigation !== prevProps.navigation && this.props.navigation && this.props.navigation.uploadID !== 0) {
-			this.refreshData();
+			this.onRefreshData();
 		}
 
 		if (this.props.processing && this.processingInterval === null) {
@@ -263,7 +263,7 @@ class InspectorPage extends Component {
 		if (!this.props.processing && this.processingInterval) {
 			clearInterval(this.processingInterval);
 			this.processingInterval = null;
-			this.refreshData();
+			this.onRefreshData();
 		}
 
 		if (canvasWrapper.current) {
@@ -313,221 +313,6 @@ class InspectorPage extends Component {
 		document.removeEventListener('keydown', this.handleKeyDown.bind(this));
 		document.removeEventListener('wheel', this.handleWheelStart.bind(this));
 	}
-
-
-	refreshData = ()=> {
-		console.log('InspectorPage.refreshData()', this.props);
-
-		const { processing } = this.props;
-		const { uploadID } = this.props.navigation;
-		const { section, scale } = this.state;
-
-		this.setState({ tooltip : (processing) ? 'Processing…' : 'Loading…' });
-
-		let maxH = 0;
-		let offset = {
-			x : 0,
-			y : 0
-		};
-
-		let formData = new FormData();
-		formData.append('action', 'UPLOAD');
-		formData.append('upload_id', uploadID);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response)=> {
-				console.log('UPLOAD', response.data);
-				const { upload } = response.data;
-
-				let pages = [];
-				upload.pages.forEach((page)=> {
-					let artboards = [];
-					page.artboards.forEach((artboard, i, arr)=> {
-						if (Math.floor(i % 5) === 0 && i !== 0) {
-							this.size.height += maxH + 50;
-							offset.x = 0;
-							offset.y += 50 + maxH;
-							maxH = 0;
-						}
-
-						maxH = Math.round(Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale));
-
-						artboards.push({
-							id        : artboard.id,
-							pageID    : artboard.page_id,
-							title     : artboard.title,
-							filename  : (artboard.filename.includes('@3x')) ? artboard.filename : artboard.filename + '@3x.png',
-							meta      : JSON.parse(artboard.meta),
-							views     : artboard.views,
-							downloads : artboard.downloads,
-							added     : artboard.added,
-							system    : artboard.system,
-							grid      : {
-								col : i % 5,
-								row : Math.floor(i / 5)
-							},
-							offset    : {
-								x : offset.x,
-								y : offset.y
-							},
-							slices    : artboard.slices.map((item) => ({
-								id       : item.id,
-								title    : item.title,
-								type     : item.type,
-								filename : item.filename,
-								meta     : JSON.parse(item.meta),
-								added    : item.added
-							})),
-							comments  : artboard.comments
-						});
-
-
-						if (i < arr.length - 1) {
-							offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
-						}
-
-						this.size.width = Math.max(this.size.width, offset.x);
-					});
-
-					page.artboards = artboards;
-					pages.push(page);
-				});
-
-				upload.pages = pages;
-
-				if (section === 'inspect') {
-					formData.append('action', 'FILES');
-					formData.append('upload_id', '' + uploadID);
-					axios.post('https://api.designengine.ai/system.php', formData)
-						.then((response) => {
-							console.log('FILES', response.data);
-
-							const tabs = response.data.files.map((file) => ({
-								id       : file.id,
-								title    : file.title,
-								filename : file.filename,
-								contents : file.contents,
-								added    : file.added
-							})).concat([
-								{
-									id       : 0,
-									title    : 'CSS',
-									filename : 'CSS',
-									contents : null,
-									added    : null
-								}, {
-									id       : -1,
-									title    : 'React CSS',
-									filename : 'React CSS',
-									contents : null,
-									added    : null
-								}, {
-									id       : -2,
-									title    : 'Swift',
-									filename : 'Swift',
-									contents : null,
-									added    : null
-								}, {
-									id       : -3,
-									title    : 'Android',
-									filename : 'Android',
-									contents : null,
-									added    : null
-								}
-							]);
-
-							this.setState({
-								upload  : upload,
-								tabs    : tabs,
-								tooltip : (processing) ? 'Processing…' : ''
-							});
-						}).catch((error) => {
-					});
-
-				} else if (section === 'parts') {
-					const tabs = [
-						{
-							id       : 0,
-							title    : 'Slices',
-							filename : 'Slices',
-							contents : null,
-							added    : null
-						}, {
-							id       : -1,
-							title    : 'Symbols',
-							filename : 'Symbols',
-							contents : null,
-							added    : null
-						}
-					];
-
-					this.setState({
-						upload  : upload,
-						tabs    : tabs,
-						tooltip : (processing) ? 'Processing…' : ''
-					});
-
-				} else if (section === 'colors') {
-					const tabs = [
-						{
-							id       : 0,
-							title    : 'Primary',
-							filename : 'Primary',
-							contents : null,
-							added    : null
-						}, {
-							id       : -1,
-							title    : 'Secondary',
-							filename : 'Secondary',
-							contents : null,
-							added    : null
-						}, {
-							id       : -2,
-							title    : 'Tertiary',
-							filename : 'Tertiary',
-							contents : null,
-							added    : null
-						}
-					];
-
-					this.setState({
-						upload  : upload,
-						tabs    : tabs,
-						tooltip : (processing) ? 'Processing…' : ''
-					});
-
-				} else if (section === 'typography') {
-					const tabs = [
-						{
-							id       : 0,
-							title    : 'Headlines',
-							filename : 'Headlines',
-							contents : null,
-							added    : null
-						}, {
-							id       : -1,
-							title    : 'Subheadlines',
-							filename : 'Subheadlines',
-							contents : null,
-							added    : null
-						}, {
-							id       : -2,
-							title    : 'Body',
-							filename : 'Body',
-							contents : null,
-							added    : null
-						}
-					];
-
-					this.setState({
-						upload  : upload,
-						tabs    : tabs,
-						tooltip : (processing) ? 'Processing…' : ''
-					});
-				}
-
-			}).catch((error) => {
-		});
-	};
 
 	handleArtboardRollOut = (event)=> {
 // 		console.log('InspectorPage.handleArtboardRollOut()', event.target);
@@ -727,7 +512,7 @@ class InspectorPage extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('VOTE_COMMENT', response.data);
-				this.refreshData();
+				this.onRefreshData();
 			}).catch((error) => {
 		});
 	};
@@ -939,7 +724,7 @@ class InspectorPage extends Component {
 				.then((response) => {
 					console.log('ADD_COMMENT', response.data);
 					this.setState({ comment : '' });
-					this.refreshData();
+					this.onRefreshData();
 				}).catch((error) => {
 			});
 		}
@@ -966,13 +751,13 @@ class InspectorPage extends Component {
 					}
 
 				} else if (processingState === 2) {
-					this.refreshData();
+					this.onRefreshData();
 
 				} else if (processingState === 3) {
 					this.props.onProcessing(false);
 					clearInterval(this.processingInterval);
 					this.processingInterval = null;
-					this.refreshData();
+					this.onRefreshData();
 
 				} else if (processingState === 4) {
 					// processing error
@@ -981,6 +766,219 @@ class InspectorPage extends Component {
 		});
 	};
 
+	onRefreshData = ()=> {
+		console.log('InspectorPage.onRefreshData()', this.props);
+
+		const { processing } = this.props;
+		const { uploadID } = this.props.navigation;
+		const { section, scale } = this.state;
+
+		this.setState({ tooltip : (processing) ? 'Processing…' : 'Loading…' });
+
+		let maxH = 0;
+		let offset = {
+			x : 0,
+			y : 0
+		};
+
+		let formData = new FormData();
+		formData.append('action', 'UPLOAD');
+		formData.append('upload_id', uploadID);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response)=> {
+				console.log('UPLOAD', response.data);
+				const { upload } = response.data;
+
+				let pages = [];
+				upload.pages.forEach((page)=> {
+					let artboards = [];
+					page.artboards.forEach((artboard, i, arr)=> {
+						if (Math.floor(i % 5) === 0 && i !== 0) {
+							this.size.height += maxH + 50;
+							offset.x = 0;
+							offset.y += 50 + maxH;
+							maxH = 0;
+						}
+
+						maxH = Math.round(Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale));
+
+						artboards.push({
+							id        : artboard.id,
+							pageID    : artboard.page_id,
+							title     : artboard.title,
+							filename  : (artboard.filename.includes('@3x')) ? artboard.filename : artboard.filename + '@3x.png',
+							meta      : JSON.parse(artboard.meta),
+							views     : artboard.views,
+							downloads : artboard.downloads,
+							added     : artboard.added,
+							system    : artboard.system,
+							grid      : {
+								col : i % 5,
+								row : Math.floor(i / 5)
+							},
+							offset    : {
+								x : offset.x,
+								y : offset.y
+							},
+							slices    : artboard.slices.map((item) => ({
+								id       : item.id,
+								title    : item.title,
+								type     : item.type,
+								filename : item.filename,
+								meta     : JSON.parse(item.meta),
+								added    : item.added
+							})),
+							comments  : artboard.comments
+						});
+
+
+						if (i < arr.length - 1) {
+							offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
+						}
+
+						this.size.width = Math.max(this.size.width, offset.x);
+					});
+
+					page.artboards = artboards;
+					pages.push(page);
+				});
+
+				upload.pages = pages;
+
+				if (section === 'inspect') {
+					formData.append('action', 'FILES');
+					formData.append('upload_id', '' + uploadID);
+					axios.post('https://api.designengine.ai/system.php', formData)
+						.then((response) => {
+							console.log('FILES', response.data);
+
+							const tabs = response.data.files.map((file) => ({
+								id       : file.id,
+								title    : file.title,
+								filename : file.filename,
+								contents : file.contents,
+								added    : file.added
+							})).concat([
+								{
+									id       : 0,
+									title    : 'CSS',
+									filename : 'CSS',
+									contents : null,
+									added    : null
+								}, {
+									id       : -1,
+									title    : 'React CSS',
+									filename : 'React CSS',
+									contents : null,
+									added    : null
+								}, {
+									id       : -2,
+									title    : 'Swift',
+									filename : 'Swift',
+									contents : null,
+									added    : null
+								}, {
+									id       : -3,
+									title    : 'Android',
+									filename : 'Android',
+									contents : null,
+									added    : null
+								}
+							]);
+
+							this.setState({
+								upload  : upload,
+								tabs    : tabs,
+								tooltip : (processing) ? 'Processing…' : ''
+							});
+						}).catch((error) => {
+					});
+
+				} else if (section === 'parts') {
+					const tabs = [
+						{
+							id       : 0,
+							title    : 'Slices',
+							filename : 'Slices',
+							contents : null,
+							added    : null
+						}, {
+							id       : -1,
+							title    : 'Symbols',
+							filename : 'Symbols',
+							contents : null,
+							added    : null
+						}
+					];
+
+					this.setState({
+						upload  : upload,
+						tabs    : tabs,
+						tooltip : (processing) ? 'Processing…' : ''
+					});
+
+				} else if (section === 'colors') {
+					const tabs = [
+						{
+							id       : 0,
+							title    : 'Primary',
+							filename : 'Primary',
+							contents : null,
+							added    : null
+						}, {
+							id       : -1,
+							title    : 'Secondary',
+							filename : 'Secondary',
+							contents : null,
+							added    : null
+						}, {
+							id       : -2,
+							title    : 'Tertiary',
+							filename : 'Tertiary',
+							contents : null,
+							added    : null
+						}
+					];
+
+					this.setState({
+						upload  : upload,
+						tabs    : tabs,
+						tooltip : (processing) ? 'Processing…' : ''
+					});
+
+				} else if (section === 'typography') {
+					const tabs = [
+						{
+							id       : 0,
+							title    : 'Headlines',
+							filename : 'Headlines',
+							contents : null,
+							added    : null
+						}, {
+							id       : -1,
+							title    : 'Subheadlines',
+							filename : 'Subheadlines',
+							contents : null,
+							added    : null
+						}, {
+							id       : -2,
+							title    : 'Body',
+							filename : 'Body',
+							contents : null,
+							added    : null
+						}
+					];
+
+					this.setState({
+						upload  : upload,
+						tabs    : tabs,
+						tooltip : (processing) ? 'Processing…' : ''
+					});
+				}
+
+			}).catch((error) => {
+		});
+	};
 
 	onUpdateCanvas = ()=> {
 		const { scale, offset, scrollOffset } = this.state;

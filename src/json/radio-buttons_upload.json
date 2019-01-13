@@ -2,12 +2,12 @@
   "id"      : 1,
   "title"   : "Public",
   "subtext" : "Your design file is public and does not require an invitation link.",
-  "selected": false,
+  "selected": true,
   "enabled" : true
 }, {
   "id"      : 2,
   "title"   : "Private",
   "subtext" : "Your design file is private requires an invitation link.",
-  "selected": true,
+  "selected": false,
   "enabled" : true
 }]
