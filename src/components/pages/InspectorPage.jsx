@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import ContentModal from '../elements/ContentModal';
+import { setRedirectURL } from '../../redux/actions';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { TIMESTAMP_OPTS } from '../../consts/formats';
 import { capitalizeText, isUserLoggedIn, sendToSlack } from '../../utils/funcs.js';
@@ -63,8 +64,15 @@ const sliceContainsSlice = (baseSlice, testSlice)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		navigation : state.navigation,
-		profile    : state.userProfile
+		navigation  : state.navigation,
+		profile     : state.userProfile,
+		redirectURL : state.redirectURL
+	});
+};
+
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		setRedirectURL : (url)=> dispatch(setRedirectURL(url))
 	});
 };
 
@@ -211,6 +219,11 @@ class InspectorPage extends Component {
 
 	componentDidMount() {
 		console.log('InspectorPage.componentDidMount()', this.props, this.state);
+
+		if (this.props.redirectURL) {
+			this.props.setRedirectURL(null);
+		}
+
 		const { navigation } = this.props;
 		if (navigation && (navigation.uploadID !== 0)) {
 			this.refreshData();
@@ -225,6 +238,7 @@ class InspectorPage extends Component {
 
 		const { upload, restricted } = nextState;
 		if (!restricted && upload && upload.private === '1' && (!nextProps.profile || (nextProps.profile && upload.creator.user_id !== nextProps.profile.id))) {
+			this.props.setRedirectURL(window.location.pathname);
 			this.setState({
 				restricted : true,
 				tooltip    : ''
@@ -1331,4 +1345,4 @@ class InspectorPage extends Component {
 	}
 }
 
-export default connect(mapStateToProps)(InspectorPage);
+export default connect(mapStateToProps, mapDispatchToProps)(InspectorPage);

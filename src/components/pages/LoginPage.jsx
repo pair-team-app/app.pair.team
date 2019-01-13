@@ -9,6 +9,12 @@ import LoginForm from '../elements/LoginForm';
 import { updateUserProfile } from '../../redux/actions';
 
 
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		redirectURL : state.redirectURL
+	});
+};
+
 const mapDispatchToProps = (dispatch)=> {
 	return ({
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
@@ -29,16 +35,22 @@ class LoginPage extends Component {
 		};
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('LoginPage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+	}
+
 	handleLoggedIn = (profile)=> {
-		console.log('LoginPage.handleLoggedIn()', profile);
+		console.log('LoginPage.handleLoggedIn()', profile, this.props);
 
 		const { id, username, email, avatar, password } = profile;
 		cookie.save('user_id', id, { path : '/' });
 		this.props.updateUserProfile({ id, avatar, username, email, password });
-		this.props.onPage('');
+		this.props.onPage((this.props.redirectURL) ? this.props.redirectURL.substr(1) : '<<');
 	};
 
 	render() {
+		console.log('LoginPage.render()', this.props, this.state);
+
 		const title = (typeof cookie.load('msg') === 'undefined') ? 'Login' : 'You must be signed in to ' + cookie.load('msg');
 
 		if (typeof cookie.load('msg') !== 'undefined') {
@@ -55,4 +67,4 @@ class LoginPage extends Component {
 	}
 }
 
-export default connect(null, mapDispatchToProps)(LoginPage);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

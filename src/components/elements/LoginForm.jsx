@@ -29,7 +29,7 @@ class LoginForm extends Component {
 	}
 
 	componentDidMount() {
-		console.log('LoginForm.componentDidMount()', this.props, this.state);
+// 		console.log('LoginForm.componentDidMount()', this.props, this.state);
 	}
 
 	componentWillUnmount() {
@@ -96,7 +96,7 @@ class LoginForm extends Component {
 
 
 	render() {
-		console.log('LoginForm.render()', this.props, this.state);
+// 		console.log('LoginForm.render()', this.props, this.state);
 
 		const { email, password } = this.state;
 		const { emailValid, passwordValid, passMsg } = this.state;

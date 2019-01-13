@@ -6,6 +6,7 @@ import {
 	ADD_FILE_UPLOAD,
 	APPEND_EXPLORE_ARTBOARDS,
 	APPEND_UPLOAD_ARTBOARDS,
+	SET_REDIRECT_URL,
 	UPDATE_NAVIGATION,
 	USER_PROFILE_ERROR,
 	USER_PROFILE_LOADED,
@@ -18,6 +19,7 @@ const initialState = {
 	uploadArtboards  : [],
 	userProfile      : null,
 	file             : null,
+	redirectURL      : null,
 	navigation       : {
 		uploadID   : 0,
 		pageID     : 0,
@@ -61,8 +63,15 @@ function rootReducer(state=initialState, action) {
 // 		const { uploadID, pageID, id } = (artboard) ? artboard : null;
 
 		return (Object.assign({}, state, {
-			uploadArtboards : state.uploadArtboards.concat(action.payload).reduce((acc, inc)=> [...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], [])
+			uploadArtboards : state.uploadArtboards.concat(action.payload).reduce((acc, inc) => [...acc.filter((artboard) => (artboard.id !== inc.id)), inc], [])
 // 			uploadArtboards : pruneArtboards(state.uploadArtboards.concat(action.payload))
+		}));
+
+	} else if (action.type === SET_REDIRECT_URL) {
+		actionLogFormat(action);
+
+		return (Object.assign({}, state, {
+			redirectURL : action.payload
 		}));
 
 	} else if (action.type === USER_PROFILE_ERROR || action.type === USER_PROFILE_LOADED || action.type === USER_PROFILE_UPDATED) {

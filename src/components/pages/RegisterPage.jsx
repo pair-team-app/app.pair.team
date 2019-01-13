@@ -10,6 +10,12 @@ import { updateUserProfile } from '../../redux/actions';
 import { trackEvent } from '../../utils/tracking';
 
 
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		redirectURL : state.redirectURL
+	});
+};
+
 const mapDispatchToProps = (dispatch)=> {
 	return ({
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
@@ -25,16 +31,20 @@ class RegisterPage extends Component {
 		};
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('RegisterPage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+	}
+
 	handleRegistered = (profile)=> {
 		console.log('RegisterPage.handleRegistered()', profile);
 		trackEvent('user', 'sign-up');
 		cookie.save('user_id', profile.id, { path : '/' });
 		this.props.updateUserProfile(profile);
-		this.props.onPage('<<');
+		this.props.onPage((this.props.redirectURL) ? this.props.redirectURL.substr(1) : '<<');
 	};
 
 	render() {
-		console.log('RegisterPage.render()', this.props, this.state);
+// 		console.log('RegisterPage.render()', this.props, this.state);
 
 		return (
 			<div className="page-wrapper register-page-wrapper">
@@ -46,4 +56,4 @@ class RegisterPage extends Component {
 	}
 }
 
-export default connect(null, mapDispatchToProps)(RegisterPage);
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterPage);

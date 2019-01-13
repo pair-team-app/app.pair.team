@@ -31,7 +31,7 @@ class RegisterForm extends Component {
 	}
 
 	componentDidMount() {
-		console.log('RegisterForm.componentDidMount()', this.props, this.state);
+// 		console.log('RegisterForm.componentDidMount()', this.props, this.state);
 	}
 
 	componentWillUnmount() {
@@ -116,7 +116,7 @@ class RegisterForm extends Component {
 
 
 	render() {
-		console.log('RegisterForm.render()', this.props, this.state);
+// 		console.log('RegisterForm.render()', this.props, this.state);
 
 		const { username, email, password, password2 } = this.state;
 		const { usernameValid, emailValid, passwordValid, passMsg } = this.state;

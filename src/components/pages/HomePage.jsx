@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import ArtboardGrid from '../elements/ArtboardGrid';
 import UploadHeader from '../elements/UploadHeader';
 import { addFileUpload, appendUploadArtboards, updateNavigation } from '../../redux/actions';
-import {isInspectorPage, isUserLoggedIn, limitString} from '../../utils/funcs';
+import { isInspectorPage, isUserLoggedIn, limitString } from '../../utils/funcs';
 
 
 const mapStateToProps = (state, ownProps)=> {
