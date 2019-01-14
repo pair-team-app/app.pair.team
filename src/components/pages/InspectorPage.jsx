@@ -85,7 +85,7 @@ const ProcessingModal = (props)=> {
 		<div className="inspector-page-processing-upload-wrapper">
 			{upload.title}< br/>
 			{upload.description}< br/>
-			<a href={buildInspectorURL(upload)} target="_blank">{buildInspectorURL(upload)}</a>< br/>
+			<a href={buildInspectorURL(upload)} target="_blank" rel="noopener noreferrer">{buildInspectorURL(upload)}</a>< br/>
 			<CopyToClipboard onCopy={()=> props.onCopyURL()} text={buildInspectorURL(upload)}>
 				<button className="inspector-page-modal-button">Copy URL</button>
 			</CopyToClipboard>
