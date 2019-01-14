@@ -742,6 +742,7 @@ class InspectorPage extends Component {
 				const processingState = parseInt(response.data.status.state, 10);
 
 				if (processingState === 1) {
+				} else if (processingState === 2) {
 					if (!shownStarted) {
 						this.setState({ shownStarted : true });
 						this.props.onPopup({
@@ -750,7 +751,6 @@ class InspectorPage extends Component {
 						});
 					}
 
-				} else if (processingState === 2) {
 					this.onRefreshData();
 
 				} else if (processingState === 3) {
