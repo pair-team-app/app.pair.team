@@ -1337,7 +1337,9 @@ class InspectorPage extends Component {
 			</div>
 
 			{(tooltip !== '') && (<div className="inspector-page-tooltip">{tooltip}</div>)}
-			{(restricted) && (<ContentModal content="You must be signed in as the project's creator to view!" onComplete={()=> this.props.onPage('register')} />)}
+			{(restricted) && (<ContentModal onComplete={()=> this.props.onPage('register')}>
+				You must be signed in as the project's creator to view!
+			</ContentModal>)}
 
 		</div>);
 	}

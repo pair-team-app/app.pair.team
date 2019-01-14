@@ -329,7 +329,9 @@ class App extends Component {
 						    {(!isInspectorPage()) && (<BottomNav viewHeight={(wrapper.current) ? wrapper.current.clientHeight : 0} onPage={this.handlePage} onLogout={()=> this.handleLogout()} />)}
 					    </div>
 				      <MediaQuery query="(max-width: 1024px)">
-					      {(this.state.overlay) && (<ContentModal content="Sorry Design Engine is not ready for Mobile, head to your nearest desktop." onComplete={()=> this.setState({ overlay : null })} />)}
+					      {(this.state.overlay) && (<ContentModal onComplete={()=> this.setState({ overlay : null })}>
+						      Sorry Design Engine is not ready for Mobile, head to your nearest desktop.
+					      </ContentModal>)}
 				      </MediaQuery>
 				    </div>)
 			    : (<div className="unsupported-device">
