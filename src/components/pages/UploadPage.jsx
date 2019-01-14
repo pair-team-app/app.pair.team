@@ -169,75 +169,13 @@ class UploadPage extends Component {
 		if (file) {
 			this.onDrop([file]);
 		}
-	}
 
-	onDrop(files) {
-		console.log('UploadPage.onDrop()', files);
+		const { radioIndex } = this.state;
+		radioButtons.filter((radioButton)=> (radioButton.id === radioIndex)).forEach((radioButton)=> {
+			radioButton.selected = true;
+		});
 
-		const { id, email } = (this.props.profile) ? this.props.profile : this.state;
-		if (files.length > 0) {
-			const file = files.pop();
-
-			if (file.name.split('.').pop() === 'sketch') {
-				if (file.size < 100 * (1024 * 1024)) {
-					sendToSlack('*[' + id + ']* *' + email + '* started uploading file "_' + file.name + '_"');
-
-					this.setState({
-						formState : -1,
-						file            : file,
-						title           : file.name.split('.').slice(0, -1).join('.'),
-						action          : 'UPLOAD'
-					});
-
-					const config = {
-						headers             : { 'content-type' : 'multipart/form-data' },
-						onDownloadProgress  : (progressEvent)=> {
-// 							console.log('HomeExpo.onDownloadProgress()', progressEvent);
-						},
-						onUploadProgress    : (progressEvent)=> {
-// 							console.log('HomeExpo.onUploadProgress()', progressEvent);
-
-							const { loaded, total } = progressEvent;
-							const percent = Math.round((loaded * 100) / total);
-							this.setState({ percent });
-
-							if (progressEvent.loaded >= progressEvent.total) {
-								const { id, email } = (this.props.profile) ? this.props.profile : this.state;
-								const { file } = this.state;
-
-								sendToSlack('*[' + id + ']* *' + email + '* - "_' + file.name + '_" uploaded');
-								this.setState({ uploadComplete : true });
-							}
-						}
-					};
-
-					let formData = new FormData();
-					formData.append('file', file);
-					axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
-						.then((response) => {
-							console.log("UPLOAD", response.data);
-						}).catch((error) => {
-						sendToSlack('*' + email + '* upload failed for file _' + file.name + '_');
-					});
-
-				} else {
-					sendToSlack('*[' + id + ']* *' + email + '* uploaded oversized file (' + Math.round(file.size * (1 / (1024 * 1024))) + 'MB) "_' + file.name + '_"');
-					this.props.onPopup({
-						type     : 'ERROR',
-						content  : 'File size must be under 100MB.',
-						duration : 500
-					});
-				}
-
-			} else {
-				sendToSlack('*[' + id + ']* *' + email + '* uploaded incompatible file "_' + file.name + '_"');
-				this.props.onPopup({
-					type     : 'ERROR',
-					content  : (file.name.split('.').pop() === 'xd') ? 'Adobe XD Support Coming Soon!' : 'Only Sketch files are support at this time.',
-					duration : 1500
-				});
-			}
-		}
+		this.setState({ radioButtons });
 	}
 
 	handleCancel = (event)=> {
@@ -418,6 +356,75 @@ class UploadPage extends Component {
 
 			} else {
 				this.setState({ registering : true });
+			}
+		}
+	};
+
+	onDrop = (files)=> {
+		console.log('UploadPage.onDrop()', files);
+
+		const { id, email } = (this.props.profile) ? this.props.profile : this.state;
+		if (files.length > 0) {
+			const file = files.pop();
+
+			if (file.name.split('.').pop() === 'sketch') {
+				if (file.size < 100 * (1024 * 1024)) {
+					sendToSlack('*[' + id + ']* *' + email + '* started uploading file "_' + file.name + '_"');
+
+					this.setState({
+						formState : -1,
+						file            : file,
+						title           : file.name.split('.').slice(0, -1).join('.'),
+						action          : 'UPLOAD'
+					});
+
+					const config = {
+						headers             : { 'content-type' : 'multipart/form-data' },
+						onDownloadProgress  : (progressEvent)=> {
+// 							console.log('HomeExpo.onDownloadProgress()', progressEvent);
+						},
+						onUploadProgress    : (progressEvent)=> {
+// 							console.log('HomeExpo.onUploadProgress()', progressEvent);
+
+							const { loaded, total } = progressEvent;
+							const percent = Math.round((loaded * 100) / total);
+							this.setState({ percent });
+
+							if (progressEvent.loaded >= progressEvent.total) {
+								const { id, email } = (this.props.profile) ? this.props.profile : this.state;
+								const { file } = this.state;
+
+								sendToSlack('*[' + id + ']* *' + email + '* - "_' + file.name + '_" uploaded');
+								this.setState({ uploadComplete : true });
+							}
+						}
+					};
+
+					let formData = new FormData();
+					formData.append('file', file);
+					axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
+						.then((response) => {
+							console.log("UPLOAD", response.data);
+						}).catch((error) => {
+						sendToSlack('*' + email + '* upload failed for file _' + file.name + '_');
+					});
+
+				} else {
+					sendToSlack('*[' + id + ']* *' + email + '* uploaded oversized file (' + Math.round(file.size * (1 / (1024 * 1024))) + 'MB) "_' + file.name + '_"');
+					this.props.onPopup({
+						type     : 'ERROR',
+						content  : 'File size must be under 100MB.',
+						duration : 500
+					});
+				}
+
+			} else {
+				sendToSlack('*[' + id + ']* *' + email + '* uploaded incompatible file "_' + file.name + '_"');
+				this.props.onPopup({
+					type     : 'ERROR',
+					content  : (file.name.split('.').pop() === 'xd') ? 'Adobe XD Support Coming Soon!' : 'Only Sketch files are support at this time.',
+					duration : 1500
+				});
 			}
 		}
 	};
