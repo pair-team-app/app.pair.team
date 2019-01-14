@@ -12,7 +12,7 @@
 
 .content-modal-content {
 	position: fixed;
-	width: 360px;
+	max-width: 360px;
 	height: auto;
 	top: 50%;
 	left: 50%;
@@ -23,6 +23,12 @@
 	padding: 20px;
 	background-color: #ffffff;
 	text-align: center;
+}
+
+.content-modal-content-percent {
+	min-width: 80%;
+	max-width: 80%;
+	max-height: 70%;
 }
 
 .content-modal-button {

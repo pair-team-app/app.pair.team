@@ -17,7 +17,7 @@ class ContentModal extends Component {
 	}
 
 	componentDidMount() {
-		console.log('ContentModal.componentDidMount()', this.props, this.state);
+// 		console.log('ContentModal.componentDidMount()', this.props, this.state);
 
 		this.timeline = new TimelineMax();
 		this.timeline.from(this.wrapper, 0.125, {
@@ -27,7 +27,7 @@ class ContentModal extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('ContentModal.componentDidUpdate()', prevProps, this.props, this.state);
+// 		console.log('ContentModal.componentDidUpdate()', prevProps, this.props, this.state);
 
 		if (this.state.outro) {
 			this.setState({ outro : false });
@@ -43,23 +43,22 @@ class ContentModal extends Component {
 	}
 
 	componentWillUnmount() {
-		console.log('ContentModal.componentWillUnmount()');
+// 		console.log('ContentModal.componentWillUnmount()');
 		this.timeline = null;
 	}
 
-	handleClick = ()=> {
+	handleClose = ()=> {
 		this.setState({ outro : true });
 	};
 
 	render() {
 		console.log('ContentModal.render()', this.props, this.state);
 
-		const { content } = this.props;
-
-		return (<div className="content-modal-wrapper" onClick={()=> this.handleClick()} ref={(element)=> { this.wrapper = element; }}>
-			<div className="content-modal-content">
+		const { type } = this.props;
+		return (<div className="content-modal-wrapper" onClick={()=> this.handleClose()} ref={(element)=> { this.wrapper = element; }}>
+			<div className={(type === 'PERCENT') ? 'content-modal-content content-modal-content-percent' : 'content-modal-content'}>
 				{this.props.children}<br />
-				<button className="content-modal-button" onClick={()=> this.handleClick()}>OK</button>
+				<button className="content-modal-button" onClick={()=> this.handleClose()}>OK</button>
 			</div>
 		</div>);
 	}
