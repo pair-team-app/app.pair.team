@@ -8,12 +8,13 @@ import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
+import InviteTeamForm from '../forms/InviteTeamForm';
 import LoginForm from '../elements/LoginForm';
 import RegisterForm from '../elements/RegisterForm';
 import RadioButton from '../elements/RadioButton';
 
 import { addFileUpload, updateNavigation, updateUserProfile } from '../../redux/actions';
-import { buildInspectorPath, isUserLoggedIn, isValidEmail, sendToSlack } from '../../utils/funcs';
+import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 import radioButtons from '../../json/radio-buttons_upload';
 import uploadIcon from '../../images/icons/ico-upload.png';
@@ -37,33 +38,6 @@ const mapDispatchToProps = (dispatch)=> {
 	});
 };
 
-
-function InviteForm(props) {
-	const { invites } = props;
-
-	invites.forEach((invite)=> {
-		invite.txtClass = (invite.valid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
-	});
-
-	const inviteButtonClass = (invites.reduce((acc, val)=> acc + val.valid) > 0) ? 'fat-button' : 'fat-button button-disabled';
-
-	return (<div className="upload-page-invite-wrapper">
-		<h3>Invite Team</h3>
-		Enter the email address of each member of your team to invite them to this project.
-		<div className="upload-page-form-wrapper">
-			<div style={{ width : '38%' }}><Column>
-				{invites.map((invite, i)=> {
-					const txtName = 'email' + (i + 1);
-					const moreClass = (i <= 5) ? 'upload-page-more-link' : 'upload-page-more-link upload-page-more-link-hidden';
-					return (
-						<Row key={i} vertical="center"><div className={invite.txtClass}><input type="text" name={txtName} placeholder="Enter Email Address" value={invite.email} onFocus={props.onFocus} onChange={props.onInviteChange} /></div><span className={moreClass} onClick={()=> props.onMoreEmail()}>More</span></Row>
-					);
-				})}
-			</Column></div>
-			<button className={inviteButtonClass} onClick={() => (invites.reduce((acc, val)=> acc + val.valid) > 0) ? props.onSubmit() : null}>Submit</button>
-		</div>
-	</div>);
-}
 
 function UploadForm(props) {
 	const { title, description, radioButtons, percent, uploadComplete, titleValid } = props;
@@ -152,11 +126,7 @@ class UploadPage extends Component {
 				id    : 0,
 				email : "NOT LOGGED IN"
 			},
-			invites        : [{
-				email    : '',
-				valid    : true,
-				txtClass : 'input-wrapper'
-			}],
+			invites        : [],
 			radioButtons   : radioButtons,
 			radioIndex     : 1
 		};
@@ -203,69 +173,9 @@ class UploadPage extends Component {
 		});
 	};
 
-	handleInviteChange = (event)=> {
-		console.log('UploadPage.handleInviteChange()', event.target);
-		let { invites } = this.state;
-		invites.forEach((invite, i)=> {
-			if (i === parseInt([event.target.name].substr(-1), 10)) {
-				invite.email = event.target.value;
-			}
-		});
-
-		this.setState({ invites });
-	};
-
-	handleInviteFocus = (event)=> {
-		console.log('UploadPage.handleInviteFocus()', event.target);
-
-		let { invites } = this.state;
-		invites.forEach((invite, i)=> {
-			if (i === parseInt(event.target.name.substr(-1), 10)) {
-				invite.email = '';
-			}
-		});
-
-		this.setState({
-			action  : '',
-			invites : invites
-		});
-	};
-
-	handleInviteSubmit = ()=> {
-		const { upload, invites } = this.state;
-
-		let emails = '';
-		this.setState({
-			action  : 'INVITE',
-			invites : invites.forEach((invite)=> {
-				invite.valid = isValidEmail(invite.email);
-				if (!invite.valid && invite.email.length > 0) {
-					invite.email = 'Invalid Email Address';
-
-				} else {
-					emails += invite.email + ' ';
-				}
-			})
-		});
-
-		const isValid = invites.reduce((acc, val)=> acc + val.valid);
-		console.log('REDUCER:', isValid);
-
-		if (isValid > 0) {
-			const { profile } = this.props;
-			let formData = new FormData();
-			formData.append('action', 'INVITE');
-			formData.append('user_id', profile.id);
-			formData.append('upload_id', '' + upload.id);
-			formData.append('emails', emails.slice(0, -1));
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					console.log('INVITE', response.data);
-				}).catch((error) => {
-			});
-
-			this.setState({ sentInvites : true });
-		}
+	handleInviteTeamFormSubmitted = (result)=> {
+		console.log('UploadPage.handleInviteTeamFormSubmitted()', result);
+		this.setState({ sentInvites : true });
 	};
 
 	handleLoggedIn = (profile)=> {
@@ -274,17 +184,6 @@ class UploadPage extends Component {
 		cookie.save('user_id', profile.id, { path : '/' });
 		this.props.updateUserProfile(profile);
 		this.handleUploadSubmit(profile);
-	};
-
-	handleMoreEmail = ()=> {
-		let { invites } = this.state;
-		invites.push({
-			email    : '',
-			valid    : true,
-			txtClass : 'input-wrapper'
-		});
-
-		this.setState({ invites });
 	};
 
 	handleRadioButton = (radioButton)=> {
@@ -350,7 +249,7 @@ class UploadPage extends Component {
 
 						this.props.addFileUpload(null);
 						this.props.onProcessing(true);
-						this.props.onPage(buildInspectorPath(upload.id, upload.title));
+						this.props.onPage(buildInspectorPath(upload));
 					}).catch((error) => {
 				});
 
@@ -433,7 +332,8 @@ class UploadPage extends Component {
 	render() {
 		console.log('UploadPage.render()', this.props, this.state);
 
-		const { title, description, radioButtons, invites } = this.state;
+		const { profile } = this.props;
+		const { title, description, radioButtons } = this.state;
 		const { formState, percent, uploadComplete, submitted, login, sentInvites, titleValid } = this.state;
 
 		return (
@@ -475,14 +375,8 @@ class UploadPage extends Component {
 						onLoggedIn={this.handleLoggedIn} />
 				</div>)}
 
-				{(formState >= 0) && (<div>
-					{(!sentInvites) && (<InviteForm
-						invites={invites}
-						onInviteChange={this.handleInviteChange}
-						onFocus={this.handleInviteFocus}
-						onMoreEmail={this.handleMoreEmail}
-						onSubmit={this.handleInviteSubmit}
-					/>)}
+				{(formState >= 0 && !sentInvites) && (<div className="upload-page-invite-wrapper">
+					<InviteTeamForm profile={profile} onSubmitted={this.handleInviteTeamFormSubmitted} />
 				</div>)}
 			</div>
 		);

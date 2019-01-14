@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import './ContentModal.css';
 
 import { TimelineMax, Power1, Power2 } from 'gsap/TweenMax';
-
+import FontAwesome from 'react-fontawesome';
+import onClickOutside from 'react-onclickoutside';
 
 class ContentModal extends Component {
 	constructor(props) {
@@ -14,6 +15,7 @@ class ContentModal extends Component {
 		};
 
 		this.wrapper = null;
+		this.handleClose = this.handleClose.bind(this);
 	}
 
 	componentDidMount() {
@@ -47,22 +49,42 @@ class ContentModal extends Component {
 		this.timeline = null;
 	}
 
+	handleClickOutside(event) {
+		const { closeable } = this.props;
+		if (closeable) {
+			this.setState({ outro : true });
+		}
+	}
+
 	handleClose = ()=> {
-		this.setState({ outro : true });
+		console.log('ContentModal.handleClose()', this.props);
+
+		const { closeable } = this.props;
+		if (closeable) {
+			this.setState({ outro : true });
+		}
 	};
 
 	render() {
-		console.log('ContentModal.render()', this.props, this.state);
+// 		console.log('ContentModal.render()', this.props, this.state);
 
-		const { type } = this.props;
-		return (<div className="content-modal-wrapper" onClick={()=> this.handleClose()} ref={(element)=> { this.wrapper = element; }}>
-			<div className={(type === 'PERCENT') ? 'content-modal-content content-modal-content-percent' : 'content-modal-content'}>
-				{this.props.children}<br />
-				<button className="content-modal-button" onClick={()=> this.handleClose()}>OK</button>
+		const { type, title, closeable, defaultButton, children } = this.props;
+		const wrapperClass = (type === 'PERCENT') ? 'content-modal-content-wrapper content-modal-content-wrapper-percent' : 'content-modal-content-wrapper';
+
+		return (<div className="content-modal-wrapper" ref={(element)=> { this.wrapper = element; }}>
+			<div className={wrapperClass}>
+				{(title) && (<div className="content-modal-title-wrapper">
+					<h3>{title}</h3>
+					{(closeable && !defaultButton) && (<button className="tiny-button content-modal-close-button" onClick={()=> this.handleClose()}><FontAwesome name="times"/></button>)}
+				</div>)}
+				<div className="content-modal-content">
+					{children}
+					{(defaultButton) && (<button className="content-modal-button" onClick={()=> this.handleClose()}>{defaultButton}</button>)}
+				</div>
 			</div>
 		</div>);
 	}
 }
 
 
-export default ContentModal;
+export default onClickOutside(ContentModal);

@@ -21,21 +21,21 @@ import {
 	UPLOAD
 } from '../consts/pathnames';
 
-export function buildInspectorPath(uploadID, uploadTitle, prefix=null, suffix='') {
-	prefix = (prefix || ('/' + window.location.pathname.split('/').pop()));
-	return (prefix + '/' + uploadID + '/' + convertURLSlug(uploadTitle) + suffix);
+export function buildInspectorPath(upload, prefix=null, suffix='') {
+	prefix = (prefix || ('/' + window.location.pathname.substr(1).split('/').shift()));
+	return (prefix + '/' + upload.id + '/' + convertURLSlug(upload.title) + suffix);
 }
 
-export function buildInspectorURL(uploadID, uploadTitle, prefix=null, suffix='') {
-	return (window.location.origin + buildInspectorPath(uploadID, uploadTitle, prefix, suffix));
+export function buildInspectorURL(upload, prefix=null, suffix='') {
+	return (window.location.origin + buildInspectorPath(upload, prefix, suffix));
 }
 
-export function buildProjectPath(uploadID, title, suffix='') {
-	return ('/proj/' + uploadID + '/' + convertURLSlug(title) + suffix);
+export function buildProjectPath(upload, prefix=null, suffix='') {
+	return ('/proj/' + upload.id + '/' + convertURLSlug(upload.title) + suffix);
 }
 
-export function buildProjectURL(uploadID, title, suffix='') {
-	return (window.location.origin + buildProjectPath(uploadID, title, suffix));
+export function buildProjectURL(upload, prefix=null, suffix='') {
+	return (window.location.origin + buildProjectPath(upload, prefix, suffix));
 }
 
 export function capitalizeText(text, toLower=false) {

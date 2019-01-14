@@ -3,13 +3,14 @@ import React, { Component } from 'react';
 import './InspectorPage.css';
 
 import axios from 'axios';
-// import CopyToClipboard from 'react-copy-to-clipboard';
+import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import ContentModal from '../elements/ContentModal';
+import InviteTeamForm from '../forms/InviteTeamForm';
 import { setRedirectURL } from '../../redux/actions';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { TIMESTAMP_OPTS } from '../../consts/formats';
@@ -21,7 +22,7 @@ import enabledZoomOutButton from '../../images/buttons/btn-zoom-out_enabled.svg'
 import disabledZoomOutButton from '../../images/buttons/btn-zoom-out_disabled.svg';
 import enabledZooResetButton from '../../images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../images/buttons/btn-zoom-reset_disabled.svg';
-
+import {buildInspectorURL} from "../../utils/funcs";
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
@@ -74,6 +75,28 @@ const mapDispatchToProps = (dispatch)=> {
 	return ({
 		setRedirectURL : (url)=> dispatch(setRedirectURL(url))
 	});
+};
+
+
+const ProcessingModal = (props)=> {
+	const { profile, upload, sentInvites } = props;
+
+	return (<ContentModal type="PERCENT" closeable={true} title="Invite Team" onComplete={()=> null}>
+		<div className="inspector-page-processing-upload-wrapper">
+			{upload.title}< br/>
+			{upload.description}< br/>
+			<a href={buildInspectorURL(upload)} target="_blank">{buildInspectorURL(upload)}</a>< br/>
+			<CopyToClipboard onCopy={()=> props.onCopyURL()} text={buildInspectorURL(upload)}>
+				<button className="inspector-page-modal-button">Copy URL</button>
+			</CopyToClipboard>
+		</div>
+
+		{(!sentInvites) && (<InviteTeamForm
+			profile={profile}
+			upload={upload}
+			onSubmitted={props.onInviteTeamFormSubmitted}
+		/>)}
+	</ContentModal>);
 };
 
 
@@ -185,6 +208,7 @@ class InspectorPage extends Component {
 			tabs         : [],
 			uploading    : false,
 			shownStarted : false,
+			sentInvites  : false,
 			restricted   : false,
 			percent      : 0,
 			selectedTab  : 0,
@@ -226,7 +250,7 @@ class InspectorPage extends Component {
 
 		const { navigation } = this.props;
 		if (navigation && (navigation.uploadID !== 0)) {
-			this.onRefreshData();
+			this.onRefreshUpload();
 		}
 
 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
@@ -251,19 +275,21 @@ class InspectorPage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('InspectorPage.componentDidUpdate()', prevProps, this.props, this.state);
 
-		if (this.props.navigation !== prevProps.navigation && this.props.navigation && this.props.navigation.uploadID !== 0) {
-			this.onRefreshData();
+		const { navigation, processing } = this.props;
+		const { upload } = this.state;
+
+		if (navigation && navigation !== prevProps.navigation && navigation.uploadID !== 0) {
+			this.onRefreshUpload();
 		}
 
-		if (this.props.processing && this.processingInterval === null) {
-			this.setState({ tooltip : 'Processing…' });
+		if (upload && processing && this.processingInterval === null) {
 			this.processingInterval = setInterval(this.onProcessingUpdate, 2500);
 		}
 
-		if (!this.props.processing && this.processingInterval) {
+		if (!processing && this.processingInterval) {
 			clearInterval(this.processingInterval);
 			this.processingInterval = null;
-			this.onRefreshData();
+			this.onRefreshUpload();
 		}
 
 		if (canvasWrapper.current) {
@@ -302,6 +328,8 @@ class InspectorPage extends Component {
 	}
 
 	componentWillUnmount() {
+		console.log('InspectorPage.componentWillUnmount()', this.state);
+
 		clearInterval(this.processingInterval);
 		clearInterval(this.antsInterval);
 		clearInterval(this.scrollInterval);
@@ -371,7 +399,18 @@ class InspectorPage extends Component {
 		});
 	};
 
-	handleCodeCopy = ()=> {
+	handleCopyCode = ()=> {
+		console.log('InspectorPage.handleCopyCode()');
+
+		this.props.onPopup({
+			type    : 'INFO',
+			content : 'Copied to Clipboard!'
+		});
+	};
+
+	handleCopyURL = ()=> {
+		console.log('InspectorPage.handleCopyURL()');
+
 		this.props.onPopup({
 			type    : 'INFO',
 			content : 'Copied to Clipboard!'
@@ -379,6 +418,8 @@ class InspectorPage extends Component {
 	};
 
 	handleCommentChange = (event)=> {
+// 		console.log('InspectorPage.handleCommentChange()', event);
+
 		event.persist();
 		if (/[\r\n]/.exec(event.target.value)) {
 			this.onSubmitComment(event);
@@ -389,6 +430,8 @@ class InspectorPage extends Component {
 	};
 
 	handleDownload = ()=> {
+// 		console.log('InspectorPage.handleDownload()');
+
 		if (!isUserLoggedIn()) {
 			cookie.save('msg', 'use this feature.', { path : '/' });
 			this.props.onPage('login');
@@ -410,7 +453,14 @@ class InspectorPage extends Component {
 		}
 	};
 
+	handleInviteTeamFormSubmitted = (result)=> {
+		console.log('InspectorPage.handleInviteTeamFormSubmitted()', result);
+		this.setState({ sentInvites : true });
+	};
+
 	handleKeyDown = (event)=> {
+		console.log('InspectorPage.handleKeyDown()', event);
+
 		if (event.keyCode === PLUS_KEY) {
 			this.handleZoom(1);
 
@@ -420,6 +470,8 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceClick = (ind, slice, offset)=> {
+// 		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
+
 		let { section, tabs } = this.state;
 
 		const css = toCSS(slice);
@@ -439,6 +491,8 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceRollOut = (ind, slice)=> {
+// 		console.log('InspectorPage.handleSliceRollOut()', ind, slice);
+
 		let { upload, section, tabs } = this.state;
 		const pages = [...upload.pages];
 		pages.forEach((page)=> {
@@ -469,6 +523,8 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceRollOver = (ind, slice, offset)=> {
+// 		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
+
 		let { upload, section, tabs } = this.state;
 
 		const pages = [...upload.pages];
@@ -504,6 +560,8 @@ class InspectorPage extends Component {
 	};
 
 	handleVote = (commentID, score)=> {
+// 		console.log('InspectorPage.handleVote()', commentID, score);
+
 		let formData = new FormData();
 		formData.append('action', 'VOTE_COMMENT');
 		formData.append('user_id', this.props.profile.id);
@@ -512,7 +570,7 @@ class InspectorPage extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('VOTE_COMMENT', response.data);
-				this.onRefreshData();
+				this.onRefreshUpload();
 			}).catch((error) => {
 		});
 	};
@@ -555,11 +613,15 @@ class InspectorPage extends Component {
 	};
 
 	handleWheelStop = ()=> {
+// 		console.log('InspectorPage.handleWheelStop()');
+
 		clearTimeout(this.scrollInterval);
 		this.setState({ scrolling : false });
 	};
 
 	handleZoom = (direction)=> {
+// 		console.log('InspectorPage.handleZoom()', direction);
+
 		const { upload, scale } = this.state;
 
 		if (direction === 0) {
@@ -724,7 +786,7 @@ class InspectorPage extends Component {
 				.then((response) => {
 					console.log('ADD_COMMENT', response.data);
 					this.setState({ comment : '' });
-					this.onRefreshData();
+					this.onRefreshUpload();
 				}).catch((error) => {
 			});
 		}
@@ -743,21 +805,21 @@ class InspectorPage extends Component {
 
 				if (processingState === 1) {
 				} else if (processingState === 2) {
-					if (!shownStarted) {
-						this.setState({ shownStarted : true });
-						this.props.onPopup({
-							type     : 'INFO',
-							content  : 'Processing has started'
-						});
-					}
+// 					if (!shownStarted) {
+// 						this.setState({ shownStarted : true });
+// 						this.props.onPopup({
+// 							type     : 'INFO',
+// 							content  : 'Processing has started'
+// 						});
+// 					}
 
-					this.onRefreshData();
+					this.onRefreshUpload();
 
 				} else if (processingState === 3) {
-					this.props.onProcessing(false);
+					//this.props.onProcessing(false);
 					clearInterval(this.processingInterval);
 					this.processingInterval = null;
-					this.onRefreshData();
+					//this.onRefreshUpload();
 
 				} else if (processingState === 4) {
 					// processing error
@@ -766,14 +828,13 @@ class InspectorPage extends Component {
 		});
 	};
 
-	onRefreshData = ()=> {
-		console.log('InspectorPage.onRefreshData()', this.props);
+	onRefreshUpload = ()=> {
+		console.log('InspectorPage.onRefreshUpload()', this.props);
 
-		const { processing } = this.props;
 		const { uploadID } = this.props.navigation;
 		const { section, scale } = this.state;
 
-		this.setState({ tooltip : (processing) ? 'Processing…' : 'Loading…' });
+		this.setState({ tooltip : 'Loading…' });
 
 		let maxH = 0;
 		let offset = {
@@ -889,8 +950,9 @@ class InspectorPage extends Component {
 							this.setState({
 								upload  : upload,
 								tabs    : tabs,
-								tooltip : (processing) ? 'Processing…' : ''
+								tooltip : ''
 							});
+
 						}).catch((error) => {
 					});
 
@@ -914,7 +976,7 @@ class InspectorPage extends Component {
 					this.setState({
 						upload  : upload,
 						tabs    : tabs,
-						tooltip : (processing) ? 'Processing…' : ''
+						tooltip : ''
 					});
 
 				} else if (section === 'colors') {
@@ -943,7 +1005,7 @@ class InspectorPage extends Component {
 					this.setState({
 						upload  : upload,
 						tabs    : tabs,
-						tooltip : (processing) ? 'Processing…' : ''
+						tooltip : ''
 					});
 
 				} else if (section === 'typography') {
@@ -972,10 +1034,9 @@ class InspectorPage extends Component {
 					this.setState({
 						upload  : upload,
 						tabs    : tabs,
-						tooltip : (processing) ? 'Processing…' : ''
+						tooltip : ''
 					});
 				}
-
 			}).catch((error) => {
 		});
 	};
@@ -1107,9 +1168,11 @@ class InspectorPage extends Component {
 
 
 	render() {
+		const { profile, processing } = this.props;
+
 		const { upload, slice, hoverSlice, tabs, scale, selectedTab } = this.state;
 		const { scrollOffset, scrolling } = this.state;
-		const { tooltip, restricted } = this.state;
+		const { tooltip, restricted, sentInvites } = this.state;
 
 		const artboards = (upload) ? upload.pages.map((page)=> {
 			return (page.artboards);
@@ -1337,10 +1400,19 @@ class InspectorPage extends Component {
 			</div>
 
 			{(tooltip !== '') && (<div className="inspector-page-tooltip">{tooltip}</div>)}
-			{(restricted) && (<ContentModal onComplete={()=> this.props.onPage('register')}>
-				You must be signed in as the project's creator to view!
+			{(restricted) && (<ContentModal
+				closeable={false}
+				onComplete={()=> this.props.onPage('register')}>
+					This project is private, you must be logged in as one of its team members to view!
 			</ContentModal>)}
 
+			{(processing && upload) && (<ProcessingModal
+				profile={profile}
+				upload={upload}
+				sentInvites={sentInvites}
+				onCopyURL={this.handleCopyURL}
+				onInviteTeamFormSubmitted={this.handleInviteTeamFormSubmitted} />
+			)}
 		</div>);
 	}
 }

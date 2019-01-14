@@ -54,20 +54,3 @@
 .upload-page-invite-wrapper {
 	margin-top: 20px;
 }
-
-.upload-page-more-link {
-	margin: 0 0 20px 20px;
-	color: #0267D8;
-	text-decoration: underline;
-}
-
-.upload-page-more-link:hover {
-	text-decoration: none;
-	cursor: pointer;
-}
-
-.upload-page-more-link-hidden, .upload-page-more-link-hidden:hover {
-	text-decoration: none;
-	cursor: none;
-	color: #ffffff
-}

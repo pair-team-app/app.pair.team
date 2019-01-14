@@ -86,7 +86,7 @@ class InviteTeamPage extends Component {
 					if (upload.id === uploadID) {
 						this.setState({
 							uploadTitle : upload.title,
-							uploadURL   : buildProjectURL(uploadID, upload.title)
+							uploadURL   : buildProjectURL(upload)
 						});
 					}
 				});
@@ -105,7 +105,7 @@ class InviteTeamPage extends Component {
 		this.setState({
 			uploadID    : upload.id,
 			uploadTitle : upload.title,
-			uploadURL   : buildProjectURL(upload.id, upload.title),
+			uploadURL   : buildProjectURL(upload),
 			uploads     : uploads
 		});
 	};

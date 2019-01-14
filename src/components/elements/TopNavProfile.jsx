@@ -32,7 +32,7 @@ class TopNavProfile extends Component {
 // 		console.log('TopNavProfile.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 	}
 
-	handleClickOutside(e) {
+	handleClickOutside(event) {
 		this.setState({ bubble : false });
 	}
 

@@ -310,3 +310,13 @@
 
 .comment-item-text {
 }
+
+
+.inspector-page-processing-upload-wrapper {
+	text-align: left;
+	line-height: 20px;
+}
+
+.inspector-page-modal-button {
+	margin-top: 20px;
+}

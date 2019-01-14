@@ -65,9 +65,9 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			processing : false,
-			popup      : null,
-			overlay    : 1
+			processing    : true,
+			popup         : null,
+			mobileOverlay : true
 		};
 	}
 
@@ -102,7 +102,7 @@ class App extends Component {
 		console.log('App.handleArtboardClicked()', artboard);
 		this.onAddPageView(artboard.pageID);
 
-		this.handlePage(buildInspectorPath(artboard.uploadID, artboard.title).substring(1));
+		this.handlePage(buildInspectorPath({ id : artboard.uploadID, title : artboard.title }).substring(1));
 		this.props.updateNavigation({
 			uploadID   : artboard.uploadID,
 			pageID     : artboard.pageID,
@@ -172,7 +172,7 @@ class App extends Component {
 
 		if (upload.selected && !isInspectorPage()) {
 			const orgPath = window.location.pathname.split('/').slice(1, 2).pop();
-			const projPath = buildProjectPath(upload.id, upload.title);
+			const projPath = buildProjectPath(upload);
 
 			scrollOrigin(wrapper.current);
 			this.handlePage(projPath.replace(/^\/(\w+)\//, ((orgPath.length > 0) ? orgPath : 'proj') + '/'));
@@ -189,10 +189,10 @@ class App extends Component {
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log('UPLOAD', response.data);
-					const { id, title } = response.data.upload;
+					const { upload } = response.data;
 
 					if (!isInspectorPage()) {
-						this.handlePage(buildProjectPath(id, title) + '/' + category.title.toLowerCase());
+						this.handlePage(buildProjectPath(upload) + '/' + category.title.toLowerCase());
 					}
 				}).catch((error) => {
 			});
@@ -216,7 +216,7 @@ class App extends Component {
 
 					const artboard = response.data.artboards.pop();
 					this.onAddPageView(page.id);
-					this.handlePage(buildInspectorPath(page.uploadID, page.id, artboard.id, artboard.title));
+					this.handlePage(buildInspectorPath({ id : page.uploadID, title : artboard.title }));
 					this.props.updateNavigation({
 						uploadID   : page.uploadID,
 						pageID     : page.id,
@@ -238,7 +238,7 @@ class App extends Component {
 		console.log('App.handleSideNavArtboardItem()', artboard);
 
 		this.onAddPageView(artboard.pageID);
-		this.handlePage(buildInspectorPath(artboard.uploadID, artboard.pageID, artboard.id, artboard.title));
+		this.handlePage(buildInspectorPath({ id : artboard.uploadID, title : artboard.title }));
 
 		this.props.updateNavigation({
 			uploadID   : artboard.uploadID,
@@ -280,7 +280,7 @@ class App extends Component {
 
   	const { uploadID } = this.props.navigation;
 		const { pathname } = this.props.location;
-  	const { processing, popup } = this.state;
+  	const { mobileOverlay, processing, popup } = this.state;
 
   	return (
     	<div className="site-wrapper">
@@ -329,8 +329,11 @@ class App extends Component {
 						    {(!isInspectorPage()) && (<BottomNav viewHeight={(wrapper.current) ? wrapper.current.clientHeight : 0} onPage={this.handlePage} onLogout={()=> this.handleLogout()} />)}
 					    </div>
 				      <MediaQuery query="(max-width: 1024px)">
-					      {(this.state.overlay) && (<ContentModal onComplete={()=> this.setState({ overlay : null })}>
-						      Sorry Design Engine is not ready for Mobile, head to your nearest desktop.
+					      {(mobileOverlay) && (<ContentModal
+						      closeable={true}
+						      defaultButton="OK"
+						      onComplete={()=> this.setState({ mobileOverlay : false })}>
+						        Sorry Design Engine is not ready for Mobile, head to your nearest desktop.<br />
 					      </ContentModal>)}
 				      </MediaQuery>
 				    </div>)
