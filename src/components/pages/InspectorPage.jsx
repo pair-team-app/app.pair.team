@@ -1172,7 +1172,7 @@ class InspectorPage extends Component {
 	render() {
 		const { profile } = this.props;
 
-		const { upload, slice, hoverSlice, tabs, scale, selectedTab } = this.state;
+		const { section, upload, slice, hoverSlice, tabs, scale, selectedTab } = this.state;
 		const { scrollOffset, scrolling } = this.state;
 		const { tooltip, restricted, shownInvite, sentInvites } = this.state;
 
@@ -1390,7 +1390,7 @@ class InspectorPage extends Component {
 					<div className="inspector-page-panel-content-wrapper">
 						<ul className="inspector-page-panel-tab-wrapper">
 							<li className={'inspector-page-panel-tab inspector-page-panel-tab-selected'}>Specs</li>
-							<li className={'inspector-page-panel-tab'}>Parts</li>
+							{(section === 'parts') && (<li className={'inspector-page-panel-tab'}>Parts</li>)}
 						</ul>
 						<div className="inspector-page-panel-tab-content-wrapper">
 							<div className="inspector-page-panel-tab-content">
