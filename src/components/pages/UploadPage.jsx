@@ -9,9 +9,9 @@ import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import InviteTeamForm from '../forms/InviteTeamForm';
-import LoginForm from '../elements/LoginForm';
-import RegisterForm from '../elements/RegisterForm';
-import RadioButton from '../elements/RadioButton';
+import LoginForm from '../forms/LoginForm';
+import RegisterForm from '../forms/RegisterForm';
+import RadioButton from '../forms/elements/RadioButton';
 
 import { addFileUpload, updateNavigation, updateUserProfile } from '../../redux/actions';
 import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../utils/funcs';

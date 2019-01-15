@@ -5,7 +5,7 @@ import './LoginPage.css';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
-import LoginForm from '../elements/LoginForm';
+import LoginForm from '../forms/LoginForm';
 import { updateUserProfile } from '../../redux/actions';
 
 

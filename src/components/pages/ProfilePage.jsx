@@ -8,7 +8,7 @@ import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import InputField from '../elements/InputField';
+import InputField from '../forms/elements/InputField';
 import { updateUserProfile } from '../../redux/actions';
 import { hasBit, isUserLoggedIn, isValidEmail } from '../../utils/funcs';
 

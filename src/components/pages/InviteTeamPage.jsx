@@ -8,7 +8,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import Dropdown from '../elements/Dropdown';
+import Dropdown from '../forms/elements/Dropdown';
 
 import { buildProjectURL, isValidEmail, isUserLoggedIn } from '../../utils/funcs';
 

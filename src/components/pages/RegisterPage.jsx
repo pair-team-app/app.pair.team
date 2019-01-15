@@ -5,7 +5,7 @@ import './RegisterPage.css';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
-import RegisterForm from '../elements/RegisterForm';
+import RegisterForm from '../forms/RegisterForm';
 import { updateUserProfile } from '../../redux/actions';
 import { trackEvent } from '../../utils/tracking';
 

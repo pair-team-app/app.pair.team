@@ -5,12 +5,12 @@ import './Dropdown.css';
 import onClickOutside from 'react-onclickoutside';
 import { Column, Row } from 'simple-flexbox';
 
-import dropdownArrow from '../../images/buttons/btn-dropdown-arrow.svg';
-import sketchIcon from '../../images/icons/ico-sketch.png';
-import iosIcon from '../../images/icons/ico-ios12.png';
-import materialIcon from '../../images/icons/ico-material.png';
-import androidIcon from '../../images/icons/ico-android.png';
-import newUploadIcon from '../../images/icons/ico-plus.png';
+import dropdownArrow from '../../../images/buttons/btn-dropdown-arrow.svg';
+import sketchIcon from '../../../images/icons/ico-sketch.png';
+import iosIcon from '../../../images/icons/ico-ios12.png';
+import materialIcon from '../../../images/icons/ico-material.png';
+import androidIcon from '../../../images/icons/ico-android.png';
+import newUploadIcon from '../../../images/icons/ico-plus.png';
 
 
 class Dropdown extends Component{
