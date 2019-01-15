@@ -63,7 +63,7 @@ class UploadHeader extends Component {
 		const { title } = this.props;
 
 		return (<div className="upload-header-wrapper">
-			<Dropzone className="upload-header-dz" onDrop={this.onDrop.bind(this)}>
+			<Dropzone className="upload-header-dz" multiple={false} onDrop={this.onDrop.bind(this)}>
 				<Row horizontal="center"><img className="upload-header-upload-icon" src={uploadIcon} alt="Upload" /></Row>
 				<Row horizontal="center">{title}</Row>
 			</Dropzone>

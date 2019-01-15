@@ -19,7 +19,6 @@ import radioButtons from '../../json/radio-buttons_upload';
 
 const titleTextfield = React.createRef();
 
-
 const mapStateToProps = (state, ownProps)=> {
 	return ({
 		file       : state.file,
@@ -119,22 +118,15 @@ class UploadPage extends Component {
 		this.setState({ radioButtons });
 	}
 
-	handleCancel = (event)=> {
-		console.log('UploadPage.handleCancel()', event.target);
-		event.preventDefault();
-		event.stopPropagation();
+	componentWillUnmount() {
+		console.log('UploadPage.componentWillUnmount()', this.state);
 
-		let formData = new FormData();
-		formData.append('action', 'UPLOAD_CANCEL');
-		formData.append('upload_id', '' + this.state.uploadID);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-				console.log('UPLOAD_CANCEL', response.data);
-				this.props.onProcessing(false);
-				this.props.onPage('<<');
-			}).catch((error) => {
-		});
-	};
+		const { file } = this.state;
+		if (file) {
+			this.props.addFileUpload(null);
+			this.setState({ file : null });
+		}
+	}
 
 	handleFile = (file)=> {
 		console.log('UploadPage.handleFile()', file, this.props, this.state);
@@ -173,6 +165,9 @@ class UploadPage extends Component {
 				axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
 					.then((response) => {
 						console.log("UPLOAD", response.data);
+// 						const { file } = this.state;
+// 						if (response.data.files.pop().size !== file.size) {
+// 						}
 					}).catch((error) => {
 					sendToSlack('*' + email + '* failed uploading file _' + file.name + '_');
 				});
