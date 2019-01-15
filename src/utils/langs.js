@@ -1,5 +1,5 @@
 
-import { convertURLSlug } from './funcs';
+import {capitalizeText, convertURLSlug} from './funcs';
 
 export function toCSS(slice) {
 	let html = '';
@@ -38,4 +38,28 @@ export function toReactCSS(slice) {
 		html   : JSON.stringify(html),
 		syntax : html
 	});
+}
+
+
+export function toSpecs(slice) {
+	let content = 'Name\t' + slice.title + '\n';
+	content += 'Type\t' + capitalizeText(slice.type, true) + '\n';
+	content += 'Export Size\tW: ' + slice.meta.frame.size.width + 'px H: ' + slice.meta.frame.size.height + 'px\n';
+	content += 'Position\tX: ' + slice.meta.frame.origin.x + 'px Y: ' + slice.meta.frame.origin.y + 'px\n';
+	content += 'Rotation\t' + slice.meta.rotation + '°\n';
+	content += 'Opacity\t' + slice.meta.opacity + '%\n';
+	content += 'Fills\t' + ((slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : slice.meta.fillColor.toUpperCase()) + '\n'
+
+	if (slice.type === 'textfield') {
+		content += 'Font\t' + slice.meta.font.family + '\n';
+		content += 'Font Size\t' + slice.meta.font.size + 'px\n';
+		content += 'Font Color\t' + slice.meta.font.color.toUpperCase() + '\n';
+		content += 'Line Spacing\t' + slice.meta.font.lineHeight + 'px\n';
+		content += 'Char Spacing\t' + slice.meta.font.kerning.toFixed(2) + 'px\n';
+	}
+
+	content += 'Padding\t' + slice.meta.padding.top + 'px ' + slice.meta.padding.right + 'px ' + slice.meta.padding.bottom + 'px ' + slice.meta.padding.left + 'px\n';
+
+
+	return (content);
 }

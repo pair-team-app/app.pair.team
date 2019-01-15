@@ -5,7 +5,6 @@ import './InspectorPage.css';
 import axios from 'axios';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
-import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
@@ -15,7 +14,7 @@ import { setRedirectURL } from '../../redux/actions';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { TIMESTAMP_OPTS } from '../../consts/formats';
 import { capitalizeText, isUserLoggedIn, sendToSlack } from '../../utils/funcs.js';
-import { toCSS, toReactCSS } from '../../utils/langs.js';
+import { toCSS, toReactCSS, toSpecs } from '../../utils/langs.js';
 import enabledZoomInButton from '../../images/buttons/btn-zoom-in_enabled.svg';
 import disabledZoomInButton from '../../images/buttons/btn-zoom-in_disabled.svg';
 import enabledZoomOutButton from '../../images/buttons/btn-zoom-out_enabled.svg';
@@ -1415,7 +1414,9 @@ class InspectorPage extends Component {
 						</div>
 					</div>
 					<div className="inspector-page-panel-button-wrapper">
-						<button className="inspector-page-panel-button">Copy</button>
+						<CopyToClipboard onCopy={()=> this.handleCopyCode()} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
+							<button className="inspector-page-panel-button">Copy</button>
+						</CopyToClipboard>
 					</div>
 				</div>
 			</div>
