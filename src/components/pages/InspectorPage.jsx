@@ -812,21 +812,13 @@ class InspectorPage extends Component {
 
 				if (processingState === 1) {
 				} else if (processingState === 2) {
-// 					if (!shownStarted) {
-// 						this.setState({ shownStarted : true });
-// 						this.props.onPopup({
-// 							type     : 'INFO',
-// 							content  : 'Processing has started'
-// 						});
-// 					}
-
 					this.onRefreshUpload();
 
 				} else if (processingState === 3) {
-					//this.props.onProcessing(false);
+					this.props.onProcessing(false);
 					clearInterval(this.processingInterval);
 					this.processingInterval = null;
-					//this.onRefreshUpload();
+					this.onRefreshUpload();
 
 				} else if (processingState === 4) {
 					// processing error
