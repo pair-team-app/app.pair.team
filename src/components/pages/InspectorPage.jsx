@@ -800,7 +800,7 @@ class InspectorPage extends Component {
 	};
 
 	onProcessingUpdate = ()=> {
-		const { upload, shownStarted } = this.state;
+		const { upload } = this.state;
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_STATUS');

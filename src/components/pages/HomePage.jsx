@@ -251,7 +251,7 @@ class HomePage extends Component {
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
-				<UploadHeader title={uploadTitle} onFile={this.handleFile} />
+				<UploadHeader title={uploadTitle} onFile={this.handleFile}  onPopup={this.props.onPopup} />
 
 				{(isUserLoggedIn())
 					? (<LoggedInSectionHeader title={sectionTitle} content={sectionContent} onDemo={this.handleDemo} onPage={this.props.onPage} />)

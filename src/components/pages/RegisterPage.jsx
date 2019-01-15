@@ -38,6 +38,7 @@ class RegisterPage extends Component {
 	handleRegistered = (profile)=> {
 		console.log('RegisterPage.handleRegistered()', profile);
 		trackEvent('user', 'sign-up');
+
 		cookie.save('user_id', profile.id, { path : '/' });
 		this.props.updateUserProfile(profile);
 		this.props.onPage((this.props.redirectURL) ? this.props.redirectURL.substr(1) : '');
