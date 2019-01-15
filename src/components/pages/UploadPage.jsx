@@ -43,7 +43,7 @@ function UploadForm(props) {
 	const { header, subheader, title, description, radioButtons, percent, uploadComplete, titleValid } = props;
 
 	const titleClass = (titleValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
-	const nextButtonClass = (uploadComplete && titleValid) ? 'fat-button' : 'fat-button button-disabled';
+	const nextButtonClass = (uploadComplete && titleValid) ? 'fat-button upload-page-submit-button' : 'fat-button upload-page-submit-button button-disabled';
 
 	return (<div>
 		<div style={{ width : '100%' }}>
@@ -74,15 +74,14 @@ function UploadForm(props) {
 						);
 					})}
 				</div>
-				<button className={nextButtonClass} onClick={() => (uploadComplete && title.length > 0) ? props.onSubmit() : null}>{(percent > 0 && percent < 100) ? 'Uploading' : 'Submit'}</button>
+				<button className={nextButtonClass} onClick={() => (uploadComplete && title.length > 0) ? props.onSubmit() : null}>{(percent > 0 && percent < 100) ? 'Uploading Design' : 'Submit Design'}</button>
 			</div>
 		</div>
 	</div>);
 }
 
 function UploadHeader(props) {
-	const { formState, title, percent } = props;
-	const progressStyle = { width : percent + '%' };
+	const { formState, title } = props;
 
 	return (<div className="upload-page-header-wrapper">
 		{(formState === -2) && (
@@ -91,12 +90,6 @@ function UploadHeader(props) {
 				<Row horizontal="center">{title}</Row>
 			</Dropzone>
 		)}
-
-		{(formState === -1) && (<div>
-			<div className="upload-progress-bar-wrapper">
-				{(percent > 0 && percent < 100) && (<div className="upload-progress-bar" style={progressStyle} />)}
-			</div>
-		</div>)}
 	</div>);
 }
 
@@ -334,12 +327,19 @@ class UploadPage extends Component {
 		const header = (window.location.pathname.split('/').pop() === 'inspect') ? 'Do you need specs & code from a design file?' : 'Do you need parts & source from a design file?';
 		const subheader = (window.location.pathname.split('/').pop() === 'inspect') ? 'Upload any Sketch file to Design Engine to inspect design specs & code.' : 'Upload any Sketch file to Design Engine to download parts & source.';
 
+		const progressStyle = { width : percent + '%' };
+
 		return (
 			<div className="page-wrapper upload-page-wrapper">
+				{(formState === -1 && (percent > 0 && percent < 100)) && (
+					<div className="upload-progress-bar-wrapper">
+						<div className="upload-progress-bar" style={progressStyle} />
+					</div>
+				)}
+
 				{(formState < 0) && (<UploadHeader
 					formState={formState}
 					title={(window.location.pathname.split('/').pop() === 'inspect') ? 'Drag & Drop any Sketch file here to inspect design specs & code.' : 'Drag & Drop any Sketch file here to download parts & source.'}
-					percent={percent}
 					onDrop={this.onDrop.bind(this)}
 				/>)}
 
