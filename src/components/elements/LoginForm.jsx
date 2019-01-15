@@ -108,9 +108,9 @@ class LoginForm extends Component {
 		return (
 			<div className="login-form-wrapper">
 				<form onSubmit={this.handleSubmit}>
-					<div className={emailClass}><input type="text" name="email" placeholder="Enter Email or Username" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+					<div className={emailClass}><input type="text" name="email" placeholder="Username or Email" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className={passwordClass} onClick={()=> this.handlePassword()}>
-						<input type="password" name="password" placeholder="Enter Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
+						<input type="password" name="password" placeholder="Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
 						<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
 					</div>
 					<Row vertical="center">

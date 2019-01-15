@@ -59,8 +59,8 @@ class LoginPage extends Component {
 
 		return (
 			<div className="page-wrapper login-page-wrapper">
-				<h3>{title}</h3>
-				<h4>Enter the email address of each member of your team to invite them to this project.</h4>
+				<h3>Login to Design Engine</h3>
+				<h4>Enter Username or Email & Password to Login to Design Engine.</h4>
 				<LoginForm onLoggedIn={this.handleLoggedIn} onPage={this.props.onPage} />
 			</div>
 		);

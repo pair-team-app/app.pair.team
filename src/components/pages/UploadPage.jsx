@@ -361,16 +361,16 @@ class UploadPage extends Component {
 				</div>)}
 
 				{(!isUserLoggedIn() && submitted && !login) && (<div className="upload-page-register-wrapper">
-					<h3>Sign Up</h3>
-					<h4>Enter registration details to submit design file.</h4>
+					<h3>Sign Up for Design Engine</h3>
+					<h4>Enter Username, Email, & Password to Sign Up for Design Engine.</h4>
 					<RegisterForm
 						onLogin={()=> this.setState({ login : true })}
 						onRegistered={this.handleRegistered} />
 				</div>)}
 
 				{(!isUserLoggedIn() && submitted && login) && (<div className="upload-page-login-wrapper">
-					<h3>Login</h3>
-					<h4>Enter the email address of each member of your team to invite them to this project.</h4>
+					<h3>Login to Design Engine</h3>
+					<h4>Enter Username or Email & Password to Login to Design Engine.</h4>
 					<LoginForm
 						onPage={this.props.onPage}
 						onLoggedIn={this.handleLoggedIn} />

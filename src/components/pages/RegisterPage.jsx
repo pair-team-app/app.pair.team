@@ -48,8 +48,8 @@ class RegisterPage extends Component {
 
 		return (
 			<div className="page-wrapper register-page-wrapper">
-				<h3>Sign Up</h3>
-				Enter registration details to submit design file.
+				<h3>Sign Up for Design Engine</h3>
+				Enter Username, Email, & Password to Sign Up for Design Engine.
 				<RegisterForm onRegistered={this.handleRegistered} onLogin={()=> this.props.onPage('login')} />
 			</div>
 		);

@@ -53,13 +53,14 @@ class RecoverPage extends Component {
 		return (
 			<div className="page-wrapper recover-page-wrapper">
 				<h3>Forgot Password</h3>
-				Enter the email address of each member of your team to invite them to this project.
+				<h4>Enter your Email Address to send a password recovery link.</h4>
 				<div className="recover-page-form-wrapper">
 					<form onSubmit={this.handleSubmit}>
 						<div className={emailClass}><input type="text" name="email" placeholder="Enter Email or Username" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-						<div className="overlay-button-wrapper"><Row vertical="center">
+						<Row vertical="center">
 							<Column><button type="submit" className={buttonClass} onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-						</Row></div>
+							<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> this.props.onPage('login')}>Already have an account?</div></Column>
+						</Row>
 					</form>
 				</div>
 			</div>
