@@ -44,11 +44,12 @@ const LoggedInSectionHeader = (props)=> {
 const LoggedOutSectionHeader = (props)=> {
 // 	console.log('HomePage.LoggedOutSectionHeader()', props);
 
+	const { title, content } = props;
 	return (<div className="home-page-section-header-wrapper">
-		<h3>Sign up or Login</h3>
-		<h4>Start handing off &amp; understanding new Design Projects faster with your team.</h4>
+		<h3>{title}</h3>
+		<h4>{content}</h4>
 		<div>
-			<button className="adjacent-button" onClick={()=> props.onPage('register')}>Sign up</button>
+			<button className="adjacent-button" onClick={()=> props.onPage('register')}>Sign Up</button>
 			<button onClick={()=> props.onPage('login')}>Login</button>
 		</div>
 	</div>);
@@ -83,8 +84,10 @@ class HomePage extends Component {
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
 		console.log('HomePage.shouldComponentUpdate()', this.props, nextProps);
 
-		const { fetching, uploadTotal } = this.state;
-		return (!fetching || nextProps.artboards.length === uploadTotal);
+// 		const { fetching, uploadTotal } = this.state;
+// 		return (!fetching || nextProps.artboards.length === uploadTotal);
+
+		return (true);
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -241,9 +244,9 @@ class HomePage extends Component {
 		const { fetching, loadOffset, uploadTotal } = this.state;
 
 		const { pathname } = window.location;
-		const uploadTitle = (pathname === '/' || pathname === '/inspect') ? 'Drag & Drop any design file to inspect specs & code.' : (pathname === '/parts') ? 'Drag & Drop any design file to download parts.' : (pathname === '/colors') ? 'Drag & Drop any design file to view it\'s colors.' : (pathname === '/typography') ? 'Drag & Drop any design file to view it\'s fonts.' : 'Turn any Sketch file into an organized System of Fonts, Colors, Symbols, Views &amp; more. (Drag & Drop)';
-		const sectionTitle = (pathname === '/' || pathname === '/inspect') ? 'Need specs & code from a design file?' : (pathname === '/parts') ? 'Need parts from a design file?' : (pathname === '/colors') ? 'Need colors from a design file?' : (pathname === '/typography') ? 'Need typography from a design file?' : 'Start a new Design Project';
-		const sectionContent = (pathname === '/' || pathname === '/inspect') ? 'Upload & process any design file now.' : (pathname === '/parts') ? 'Upload & process any design file now.' : (pathname === '/colors') ? 'Upload & process any design file now.' : (pathname === '/typography') ? 'Upload & process any design file now.' : 'Turn any Design File into an organized System of Fonts, Colors, Symbols, Views & More.';
+		const uploadTitle = (pathname === '/' || pathname === '/inspect') ? 'Drag & Drop any Sketch file here to inspect design specs & code.' : (pathname === '/parts') ? 'Drag & Drop any design file to download parts.' : 'Turn any Sketch file into an organized System of Fonts, Colors, Symbols, Views &amp; more. (Drag & Drop)';
+		const sectionTitle = (pathname === '/' || pathname === '/inspect') ? (isUserLoggedIn()) ? 'Do you need specs & code from a design file?' : 'Sign Up for Design Engine' : (pathname === '/parts') ? (isUserLoggedIn()) ? '' : 'Need parts from a design file?' : 'Start a new Design Project';
+		const sectionContent = (pathname === '/' || pathname === '/inspect') ? (isUserLoggedIn()) ? 'Upload any Sketch file to Design Engine to inspect specifications & code.' : 'Design Engine is a design platform built for engineers inspired by the way you work.' : (pathname === '/parts') ? (isUserLoggedIn()) ? '' : 'Upload & process any design file now.' : 'Turn any Design File into an organized System of Fonts, Colors, Symbols, Views & More.';
 		const gridTitle = (profile) ? (fetching) ? 'Loading…' : 'Showing most viewed from ' + uploadTotal + ' project' + ((uploadTotal === 1) ? '' : 's') + '.' : null;
 
 		return (
@@ -256,7 +259,7 @@ class HomePage extends Component {
 
 				{(isUserLoggedIn())
 					? (<LoggedInSectionHeader title={sectionTitle} content={sectionContent} onDemo={this.handleDemo} onPage={this.props.onPage} />)
-					: (<LoggedOutSectionHeader onPage={this.props.onPage} />)
+					: (<LoggedOutSectionHeader title={sectionTitle} content={sectionContent} onPage={this.props.onPage} />)
 				}
 
 				<ArtboardGrid
