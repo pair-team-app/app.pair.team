@@ -249,7 +249,7 @@ class UploadPage extends Component {
 
 						this.props.addFileUpload(null);
 						this.props.onProcessing(true);
-						this.props.onPage(buildInspectorPath(upload));
+						this.props.onPage(buildInspectorPath(upload, window.location.pathname.split('/').pop()));
 					}).catch((error) => {
 				});
 
@@ -272,9 +272,9 @@ class UploadPage extends Component {
 
 					this.setState({
 						formState : -1,
-						file            : file,
-						title           : file.name.split('.').slice(0, -1).join('.'),
-						action          : 'UPLOAD'
+						file      : file,
+						title     : file.name.split('.').slice(0, -1).join('.'),
+						action    : 'UPLOAD'
 					});
 
 					const config = {

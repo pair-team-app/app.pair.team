@@ -78,12 +78,14 @@ const mapDispatchToProps = (dispatch)=> {
 };
 
 
-const ProcessingModal = (props)=> {
+const InviteTeamModal = (props)=> {
+// 	console.log('InspectorPage.InviteTeamModal()', props);
+
 	const { profile, upload, sentInvites } = props;
 
-	return (<ContentModal type="PERCENT" closeable={true} title="Invite Team" onComplete={()=> null}>
-		<div className="inspector-page-processing-upload-wrapper">
-			{upload.title}< br/>
+	return (<ContentModal type="PERCENT" closeable={true} title="Invite Team" onComplete={props.onComplete}>
+		<div className="inspector-page-invite-modal-wrapper">
+			{upload.title} ({upload.filename.split('/').pop()})< br/>
 			{upload.description}< br/>
 			<a href={buildInspectorURL(upload)} target="_blank" rel="noopener noreferrer">{buildInspectorURL(upload)}</a>< br/>
 			<CopyToClipboard onCopy={()=> props.onCopyURL()} text={buildInspectorURL(upload)}>
@@ -207,7 +209,7 @@ class InspectorPage extends Component {
 			upload       : null,
 			tabs         : [],
 			uploading    : false,
-			shownStarted : false,
+			shownInvite  : false,
 			sentInvites  : false,
 			restricted   : false,
 			percent      : 0,
@@ -1168,11 +1170,11 @@ class InspectorPage extends Component {
 
 
 	render() {
-		const { profile, processing } = this.props;
+		const { profile } = this.props;
 
 		const { upload, slice, hoverSlice, tabs, scale, selectedTab } = this.state;
 		const { scrollOffset, scrolling } = this.state;
-		const { tooltip, restricted, sentInvites } = this.state;
+		const { tooltip, restricted, shownInvite, sentInvites } = this.state;
 
 		const artboards = (upload) ? upload.pages.map((page)=> {
 			return (page.artboards);
@@ -1359,6 +1361,10 @@ class InspectorPage extends Component {
 						<button className={'inspector-page-float-button' + ((scale <= Math.min(...zoomNotches)) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
 						<button className={'inspector-page-float-button' + ((scale === 1.0) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 1.0) ? enabledZooResetButton : disabledZoomResetButton} alt="0" /></button>
 					</div>)}
+
+					{(upload && profile && upload.creator.user_id === profile.id && artboards.length > 0 && shownInvite) && (<div className="inspector-page-modal-button-wrapper">
+						<button className="tiny-button" onClick={()=> this.setState({ shownInvite : false })}>Invite Team</button>
+					</div>)}
 				</div>
 				<div className="inspector-page-panel">
 					<div className="inspector-page-panel-content-wrapper">
@@ -1406,12 +1412,14 @@ class InspectorPage extends Component {
 					This project is private, you must be logged in as one of its team members to view!
 			</ContentModal>)}
 
-			{(!restricted && processing && upload) && (<ProcessingModal
+			{(upload && !restricted && !shownInvite && upload.creator.user_id === profile.id) && (<InviteTeamModal
 				profile={profile}
 				upload={upload}
 				sentInvites={sentInvites}
 				onCopyURL={this.handleCopyURL}
-				onInviteTeamFormSubmitted={this.handleInviteTeamFormSubmitted} />
+				onInviteTeamFormSubmitted={this.handleInviteTeamFormSubmitted}
+				onComplete={()=> this.setState({ shownInvite : true })}
+				/>
 			)}
 		</div>);
 	}

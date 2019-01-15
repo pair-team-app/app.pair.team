@@ -97,9 +97,16 @@
 	margin: 12px;
 	padding: 15px;
 	z-index: 10;
-	background-color: #000000;
+	background-color: rgba(0, 0, 0, 0.75);
 	border-radius: 4px;
-	opacity: 0.75;
+}
+
+.inspector-page-modal-button-wrapper {
+	position: absolute;
+	left: 0;
+	bottom: 24px;
+	margin: 12px;
+	z-index: 10;
 }
 
 .inspector-page-panel {
@@ -312,9 +319,9 @@
 }
 
 
-.inspector-page-processing-upload-wrapper {
+.inspector-page-invite-modal-wrapper {
 	text-align: left;
-	line-height: 20px;
+	line-height: 24px;
 }
 
 .inspector-page-modal-button {
