@@ -40,15 +40,15 @@ const mapDispatchToProps = (dispatch)=> {
 
 
 function UploadForm(props) {
-	const { title, description, radioButtons, percent, uploadComplete, titleValid } = props;
+	const { header, subheader, title, description, radioButtons, percent, uploadComplete, titleValid } = props;
 
 	const titleClass = (titleValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
 	const nextButtonClass = (uploadComplete && titleValid) ? 'fat-button' : 'fat-button button-disabled';
 
 	return (<div>
 		<div style={{ width : '100%' }}>
-			<h3>Upload</h3>
-			<h4>Upload a design file to process.</h4>
+			<h3>{header}</h3>
+			<h4>{subheader}</h4>
 			<div className="upload-page-form-wrapper">
 				<div style={{ width : '33%' }}>
 					<div className={titleClass}>
@@ -56,7 +56,7 @@ function UploadForm(props) {
 					</div>
 				</div>
 				<div className="input-wrapper">
-					<input type="text" name="description" placeholder="File description (optional)" value={description} onChange={props.onChange} />
+					<input type="text" name="description" placeholder="File Description (Optional)" value={description} onChange={props.onChange} />
 				</div>
 				<div className="upload-page-radio-wrapper">
 					{radioButtons.map((radioButton, i)=> {
@@ -81,19 +81,14 @@ function UploadForm(props) {
 }
 
 function UploadHeader(props) {
-	const { formState, percent } = props;
+	const { formState, title, percent } = props;
 	const progressStyle = { width : percent + '%' };
 
-	return (<div>
+	return (<div className="upload-page-header-wrapper">
 		{(formState === -2) && (
-			<Dropzone className="upload-page-dz-wrapper" onDrop={props.onDrop}>
-				<div className="page-header upload-page-header-dz">
-					<div>
-						<Row horizontal="center"><img className="upload-page-icon" src={uploadIcon} alt="Upload" /></Row>
-						<Row horizontal="center"><h1 className="sub-h1">Drag &amp; drop your design</h1></Row>
-						<div className="page-header-subtext">Or choose your file</div>
-					</div>
-				</div>
+			<Dropzone className="upload-page-header-dz-wrapper" onDrop={props.onDrop}>
+				<Row horizontal="center"><img className="upload-page-icon" src={uploadIcon} alt="Upload" /></Row>
+				<Row horizontal="center">{title}</Row>
 			</Dropzone>
 		)}
 
@@ -336,10 +331,14 @@ class UploadPage extends Component {
 		const { title, description, radioButtons } = this.state;
 		const { formState, percent, uploadComplete, submitted, login, sentInvites, titleValid } = this.state;
 
+		const header = (window.location.pathname.split('/').pop() === 'inspect') ? 'Do you need specs & code from a design file?' : 'Do you need parts & source from a design file?';
+		const subheader = (window.location.pathname.split('/').pop() === 'inspect') ? 'Upload any Sketch file to Design Engine to inspect design specs & code.' : 'Upload any Sketch file to Design Engine to download parts & source.';
+
 		return (
 			<div className="page-wrapper upload-page-wrapper">
 				{(formState < 0) && (<UploadHeader
 					formState={formState}
+					title={(window.location.pathname.split('/').pop() === 'inspect') ? 'Drag & Drop any Sketch file here to inspect design specs & code.' : 'Drag & Drop any Sketch file here to download parts & source.'}
 					percent={percent}
 					onDrop={this.onDrop.bind(this)}
 				/>)}
@@ -347,6 +346,8 @@ class UploadPage extends Component {
 				{(formState < 0 && !submitted) && (<div className="upload-page-upload-wrapper">
 					<UploadForm
 						formState={formState}
+						header={header}
+						subheader={subheader}
 						title={title}
 						description={description}
 						radioButtons={radioButtons}

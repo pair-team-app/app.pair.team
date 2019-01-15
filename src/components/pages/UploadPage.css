@@ -16,25 +16,36 @@
 	background-color: #68ca57;
 }
 
-.upload-page-header-dz {
+.upload-page-header-wrapper {
+	width: 100%;
+	height: 350px;
 	background: #111111 url(../../images/backgrounds/bg-checkerboard.png) repeat;
+	margin-bottom: 20px;
+	overflow-x: scroll;
+	overflow-y: hidden;
+	color: #999999;
+	display: table;
+}
+
+.upload-page-header-dz-wrapper {
+	display: table-cell;
+	width: 100%;
+	height: 100%;
+	padding: 20px 10px;
+	text-align: center;
+	vertical-align: middle;
 	cursor: copy;
 }
 
 .upload-page-icon {
 	width: 50px;
 	height: 50px;
-	margin: 35px 0 23px 0;
+	margin-bottom: 30px;
 }
 
 .upload-page-form-wrapper {
 	width: 100%;
 	margin-top: 30px;
-}
-
-.upload-page-dz-wrapper {
-	position: relative;
-	width: 100%;
 }
 
 .upload-page-artboards-wrapper {

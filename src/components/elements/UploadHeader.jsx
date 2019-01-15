@@ -67,11 +67,6 @@ class UploadHeader extends Component {
 				<Row horizontal="center"><img className="upload-header-upload-icon" src={uploadIcon} alt="Upload" /></Row>
 				<Row horizontal="center">{title}</Row>
 			</Dropzone>
-			<div className="upload-header-divider" />
-			<div className="upload-header-content-wrapper">
-					View a demo of what this feature looks like.<br />
-					<button className="fat-button upload-header-button" onClick={()=> this.props.onDemo()}>Demo</button><br />
-			</div>
 		</div>);
 	}
 }
