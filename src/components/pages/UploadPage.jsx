@@ -84,12 +84,10 @@ function UploadHeader(props) {
 	const { formState, title } = props;
 
 	return (<div className="upload-page-header-wrapper">
-		{(formState === -2) && (
-			<Dropzone className="upload-page-header-dz-wrapper" onDrop={props.onDrop}>
-				<Row horizontal="center"><img className="upload-page-icon" src={uploadIcon} alt="Upload" /></Row>
-				<Row horizontal="center">{title}</Row>
-			</Dropzone>
-		)}
+		<Dropzone className="upload-page-header-dz-wrapper" onDrop={props.onDrop}>
+			<Row horizontal="center"><img className="upload-page-icon" src={uploadIcon} alt="Upload" /></Row>
+			<Row horizontal="center">{title}</Row>
+		</Dropzone>
 	</div>);
 }
 
@@ -337,7 +335,7 @@ class UploadPage extends Component {
 					</div>
 				)}
 
-				{(formState < 0) && (<UploadHeader
+				{(formState === -2) && (<UploadHeader
 					formState={formState}
 					title={(window.location.pathname.split('/').pop() === 'inspect') ? 'Drag & Drop any Sketch file here to inspect design specs & code.' : 'Drag & Drop any Sketch file here to download parts & source.'}
 					onDrop={this.onDrop.bind(this)}

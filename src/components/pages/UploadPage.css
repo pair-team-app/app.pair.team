@@ -5,6 +5,7 @@
 .upload-page-header-wrapper {
 	display: table;
 	width: 100%;
+	margin-bottom: 20px;
 }
 
 .upload-page-header-dz-wrapper {
@@ -27,7 +28,6 @@
 
 .upload-page-form-wrapper {
 	width: 100%;
-	margin-top: 30px;
 }
 
 .upload-page-submit-button {
@@ -43,7 +43,6 @@
 }
 
 .upload-page-upload-wrapper {
-	margin-top: 20px;
 }
 
 .upload-page-register-wrapper, .upload-page-login-wrapper {
