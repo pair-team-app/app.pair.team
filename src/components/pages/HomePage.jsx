@@ -37,7 +37,6 @@ const LoggedInSectionHeader = (props)=> {
 		<h4>{content}</h4>
 		<div>
 			<button className="adjacent-button" onClick={()=> props.onPage('new' + window.location.pathname)}>Upload</button>
-			<button onClick={()=> props.onDemo()}>Demo</button>
 		</div>
 	</div>);
 };

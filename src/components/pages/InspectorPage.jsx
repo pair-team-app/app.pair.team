@@ -1406,7 +1406,7 @@ class InspectorPage extends Component {
 					This project is private, you must be logged in as one of its team members to view!
 			</ContentModal>)}
 
-			{(processing && upload) && (<ProcessingModal
+			{(!restricted && processing && upload) && (<ProcessingModal
 				profile={profile}
 				upload={upload}
 				sentInvites={sentInvites}

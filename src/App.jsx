@@ -65,7 +65,7 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			processing    : true,
+			processing    : false,
 			popup         : null,
 			mobileOverlay : true
 		};
