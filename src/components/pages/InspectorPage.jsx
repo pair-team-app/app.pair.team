@@ -209,7 +209,7 @@ class InspectorPage extends Component {
 			upload       : null,
 			tabs         : [],
 			uploading    : false,
-			shownInvite  : false,
+			shownInvite  : true,
 			sentInvites  : false,
 			restricted   : false,
 			percent      : 0,
@@ -480,8 +480,10 @@ class InspectorPage extends Component {
 		const reactCSS = toReactCSS(slice);
 
 		if (section === 'inspect') {
-			tabs[tabs.length - 1].contents = reactCSS.html;
-			tabs[tabs.length - 2].contents = css.html;
+			tabs[0].contents = css.html;
+			tabs[0].syntax = css.syntax;
+			tabs[1].contents = reactCSS.html;
+			tabs[1].syntax = reactCSS.syntax;
 		}
 
 		this.setState({
@@ -513,8 +515,10 @@ class InspectorPage extends Component {
 			const reactCSS = toReactCSS(this.state.slice);
 
 			if (section === 'inspect') {
-				tabs[tabs.length - 3].contents = reactCSS.html;
-				tabs[tabs.length - 4].contents = css.html;
+				tabs[0].contents = css.html;
+				tabs[0].syntax = css.syntax;
+				tabs[1].contents = reactCSS.html;
+				tabs[1].syntax = reactCSS.syntax;
 			}
 		}
 
@@ -545,8 +549,10 @@ class InspectorPage extends Component {
 		const reactCSS = toReactCSS(slice);
 
 		if (section === 'inspect') {
-			tabs[tabs.length - 3].contents = reactCSS.html;
-			tabs[tabs.length - 4].contents = css.html;
+			tabs[0].contents = css.html;
+			tabs[0].syntax = css.syntax;
+			tabs[1].contents = reactCSS.html;
+			tabs[1].syntax = reactCSS.syntax;
 		}
 
 		this.setState({
@@ -927,24 +933,28 @@ class InspectorPage extends Component {
 									title    : 'CSS',
 									filename : 'CSS',
 									contents : null,
+									syntax   : null,
 									added    : null
 								}, {
-									id       : -1,
+									id       : 1,
 									title    : 'React CSS',
 									filename : 'React CSS',
 									contents : null,
+									syntax   : null,
 									added    : null
 								}, {
-									id       : -2,
+									id       : 2,
 									title    : 'Swift',
 									filename : 'Swift',
 									contents : null,
+									syntax   : null,
 									added    : null
 								}, {
-									id       : -3,
+									id       : 3,
 									title    : 'Android',
 									filename : 'Android',
 									contents : null,
+									syntax   : null,
 									added    : null
 								}
 							]);
@@ -965,12 +975,14 @@ class InspectorPage extends Component {
 							title    : 'Slices',
 							filename : 'Slices',
 							contents : null,
+							syntax   : null,
 							added    : null
 						}, {
 							id       : -1,
 							title    : 'Symbols',
 							filename : 'Symbols',
 							contents : null,
+							syntax   : null,
 							added    : null
 						}
 					];
@@ -988,18 +1000,21 @@ class InspectorPage extends Component {
 							title    : 'Primary',
 							filename : 'Primary',
 							contents : null,
+							syntax   : null,
 							added    : null
 						}, {
 							id       : -1,
 							title    : 'Secondary',
 							filename : 'Secondary',
 							contents : null,
+							syntax   : null,
 							added    : null
 						}, {
 							id       : -2,
 							title    : 'Tertiary',
 							filename : 'Tertiary',
 							contents : null,
+							syntax   : null,
 							added    : null
 						}
 					];
@@ -1017,6 +1032,7 @@ class InspectorPage extends Component {
 							title    : 'Headlines',
 							filename : 'Headlines',
 							contents : null,
+							syntax   : null,
 							added    : null
 						}, {
 							id       : -1,
@@ -1029,6 +1045,7 @@ class InspectorPage extends Component {
 							title    : 'Body',
 							filename : 'Body',
 							contents : null,
+							syntax   : null,
 							added    : null
 						}
 					];
@@ -1170,7 +1187,7 @@ class InspectorPage extends Component {
 
 
 	render() {
-		const { profile } = this.props;
+		const { profile, processing } = this.props;
 
 		const { section, upload, slice, hoverSlice, tabs, scale, selectedTab } = this.state;
 		const { scrollOffset, scrolling } = this.state;
@@ -1376,16 +1393,15 @@ class InspectorPage extends Component {
 							</ul>
 						</div>
 						<div className="inspector-page-panel-tab-content-wrapper">
-							{(tabs.map((tab, i) => {
-								return ((i === selectedTab) ? <div key={i} className="inspector-page-panel-tab-content"><span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents)).replace(/ /g, '&nbsp;').replace(/\n/g, '<br />') : '' }} /></div> : null);
+							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i) => {
+								return (<div key={i} className="inspector-page-panel-tab-content"><span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents)).replace(/ /g, '&nbsp;').replace(/\n/g, '<br />') : '' }} /></div>);
 							}))}
 						</div>
 					</div>
 					<div className="inspector-page-panel-button-wrapper">
-						<button className="inspector-page-panel-button adjacent-button">Copy</button>
-						<Dropzone className="inspector-page-dz-wrapper" onDrop={this.onDrop.bind(this)}>
-							<button className="inspector-page-panel-button">Contribute</button>
-						</Dropzone>
+						<CopyToClipboard onCopy={()=> this.handleCopyCode()} text={(tabs[selectedTab]) ? tabs[selectedTab].syntax : ''}>
+							<button className="inspector-page-panel-button">Copy</button>
+						</CopyToClipboard>
 					</div>
 					<div className="inspector-page-panel-content-wrapper">
 						<ul className="inspector-page-panel-tab-wrapper">
@@ -1399,8 +1415,7 @@ class InspectorPage extends Component {
 						</div>
 					</div>
 					<div className="inspector-page-panel-button-wrapper">
-						<button className="inspector-page-panel-button adjacent-button">Copy</button>
-						<button className="inspector-page-panel-button">Download</button>
+						<button className="inspector-page-panel-button">Copy</button>
 					</div>
 				</div>
 			</div>
@@ -1412,7 +1427,7 @@ class InspectorPage extends Component {
 					This project is private, you must be logged in as one of its team members to view!
 			</ContentModal>)}
 
-			{(upload && !restricted && !shownInvite && upload.creator.user_id === profile.id) && (<InviteTeamModal
+			{(upload && profile && !restricted && upload.creator.user_id === profile.id && (!shownInvite || processing)) && (<InviteTeamModal
 				profile={profile}
 				upload={upload}
 				sentInvites={sentInvites}
