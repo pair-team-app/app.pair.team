@@ -144,10 +144,12 @@
 }
 
 .inspector-page-panel-tab-content-wrapper {
-	overflow: hidden;
+	overflow-x: hidden;
+	overflow-y: auto;
 	background-color: #202020;
 	width: 100%;
-	height: 100%
+	height: 100%;
+	padding: 8px;
 }
 
 .inspector-page-panel-tab-content {
@@ -157,9 +159,8 @@
 	font-size: 10px;
 	letter-spacing: 0.31px;
 	color: #ffffff;
-	padding: 8px;
-	white-space: nowrap;
-	overflow-wrap: break-word;
+	/*white-space: pre-wrap;*/
+	word-break: break-all;
 }
 
 .inspector-page-panel-button-wrapper {

@@ -1,6 +1,6 @@
 
 import cookie from 'react-cookies';
-import axios from "axios";
+import axios from 'axios';
 
 import {
 // 	ADD_ONS,
@@ -22,8 +22,8 @@ import {
 } from '../consts/pathnames';
 
 export function buildInspectorPath(upload, prefix=null, suffix='') {
-	prefix = (prefix || ('/' + window.location.pathname.substr(1).split('/').shift()));
-	return (prefix + '/' + upload.id + '/' + convertURLSlug(upload.title) + suffix);
+	prefix = (prefix || (`/${window.location.pathname.substr(1).split('/').shift()}`));
+	return (`${prefix}/${upload.id}/${convertURLSlug(upload.title)}${suffix}`);
 }
 
 export function buildInspectorURL(upload, prefix=null, suffix='') {
@@ -38,8 +38,14 @@ export function buildProjectURL(upload, prefix=null, suffix='') {
 	return (window.location.origin + buildProjectPath(upload, prefix, suffix));
 }
 
+export function camilzeText(text, separator=' ', first=false) {
+	const camilized = text.split(separator).map((word)=> (word.replace(/^./, (c)=> (c.toUpperCase())))).join('');
+	return ((first) ? camilized : camilized.replace(/^./, (c)=> (c.toLowerCase())));
+}
+
 export function capitalizeText(text, toLower=false) {
-	return ((toLower) ? text.toLowerCase().replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }) : text.replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }));
+	text = (toLower) ? text.toLowerCase() : text;
+	return (text.replace(/(\b\w)/gi, (c)=> (c.toUpperCase())));
 }
 
 export function convertURLSlug(text) {

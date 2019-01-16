@@ -15,7 +15,7 @@ import { setRedirectURL } from '../../redux/actions';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { TIMESTAMP_OPTS } from '../../consts/formats';
 import { capitalizeText, isUserLoggedIn, sendToSlack } from '../../utils/funcs.js';
-import { toCSS, toReactCSS, toSpecs } from '../../utils/langs.js';
+import { toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/langs.js';
 import enabledZoomInButton from '../../images/buttons/btn-zoom-in_enabled.svg';
 import disabledZoomInButton from '../../images/buttons/btn-zoom-in_disabled.svg';
 import enabledZoomOutButton from '../../images/buttons/btn-zoom-out_enabled.svg';
@@ -58,9 +58,8 @@ const sliceContainsSlice = (baseSlice, testSlice)=> {
 		right  : testSlice.meta.frame.origin.x + testSlice.meta.frame.size.width
 	};
 
-// 	console.log('InspectorPage.sliceContainsSlice()', baseRect, testRect);
-
-// 	return (baseRect.top < testRect.top && baseRect.left < testRect.left && baseRect.right > testRect.right && baseRect.bottom > testRect.bottom && Math.max(baseRect.left, testRect.left) < Math.min(baseRect.right, testRect.right) && Math.max(baseRect.top, testRect.top) < Math.min(baseRect.bottom, testRect.bottom));
+	// intersects
+// 	return (Math.max(baseRect.left, testRect.left) < Math.min(baseRect.right, testRect.right) && Math.max(baseRect.top, testRect.top) < Math.min(baseRect.bottom, testRect.bottom));
 	return (baseRect.top <= testRect.top && baseRect.left <= testRect.left && baseRect.right >= testRect.right && baseRect.bottom >= testRect.bottom);
 };
 
@@ -114,7 +113,6 @@ const SliceItem = (props)=> {
 		width   : props.width + 'px',
 		height  : props.height + 'px',
 		zoom    : props.scale,
-// 			transform : 'scale(' + props.scale + ')',
 		display : (props.visible) ? 'block' : 'none'
 	};
 
@@ -159,12 +157,8 @@ const SpecsList = (props)=> {
 
 	return (
 		<div className="inspector-page-panel-info-wrapper">
-			{/*<Row><Column flexGrow={1}>System</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard && artboard.system) ? artboard.system.title : ''}</Column></Row>*/}
-			{/*<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val"><a href={'mailto:' + ((artboard && artboard.system) ? artboard.system.author : '#')} style={{ textDecoration : 'none' }}>{(artboard && artboard.system) ? artboard.system.author : ''}</a></Column></Row>*/}
-			{/*<Row><Column flexGrow={1}>Artboard</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(artboard) ? artboard.title : ''}</Column></Row>*/}
 			<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? props.slice.title : ''}</Column></Row>
 			<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? capitalizeText(props.slice.type, true) : ''}</Column></Row>
-			{/*<Row><Column flexGrow={1}>Date:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', TIMESTAMP_OPTS).format(Date.parse(props.slice.added))) : ''}</Column></Row>*/}
 			<Row><Column flexGrow={1}>Export Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">W: {(props.slice) ? props.slice.meta.frame.size.width : 0}px H: {(props.slice) ? props.slice.meta.frame.size.height : 0}px</Column></Row>
 			<Row><Column flexGrow={1}>Position</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">X: {(props.slice) ? props.slice.meta.frame.origin.x : 0}px Y: {(props.slice) ? props.slice.meta.frame.origin.y : 0}px</Column></Row>
 			<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? props.slice.meta.rotation : 0}&deg;</Column></Row>
@@ -172,15 +166,12 @@ const SpecsList = (props)=> {
 			<Row><Column flexGrow={1}>Fills</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (props.slice.type === 'textfield' && props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : props.slice.meta.fillColor.toUpperCase() : ''}</Column></Row>
 			<Row><Column flexGrow={1}>Borders</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>
 			{(props.slice && props.slice.type === 'textfield') && (<div>
-				{/*<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.family) ? props.slice.meta.font.family : ''}</Column></Row>*/}
 				<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.family) ? props.slice.meta.font.family : ''}</Column></Row>
 				<Row><Column flexGrow={1}>Font Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.size + 'px')}</Column></Row>
 				<Row><Column flexGrow={1}>Font Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : ''}</Column></Row>
 				{/*<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.alignment) ? capitalizeText(props.slice.meta.font.alignment) : 'Left'}</Column></Row>*/}
 				<Row><Column flexGrow={1}>Line Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.lineHeight) ? (props.slice.meta.font.lineHeight + 'px') : ''}</Column></Row>
 				<Row><Column flexGrow={1}>Char Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.kerning) ? (props.slice.meta.font.kerning.toFixed(2) + 'px') : ''}</Column></Row>
-				{/*<Row><Column flexGrow={1}>Horizontal Alignment</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.alignment) ? capitalizeText(props.slice.meta.font.alignment) : 'Left'}</Column></Row>*/}
-				{/*<Row><Column flexGrow={1}>Vertical Alignment</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{'Top'}</Column></Row>*/}
 			</div>)}
 			{(styles) && (<div>
 				{/*<Row><Column flexGrow={1}>Stroke:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.stroke) ? (capitalizeText(styles.stroke.position, true) + ' S: ' + styles.stroke.thickness + ' ' + styles.stroke.color) : ''}</Column></Row>*/}
@@ -191,7 +182,6 @@ const SpecsList = (props)=> {
 			{(props.slice && props.slice.meta.padding) && (<Row>
 				<Column flexGrow={1}>Padding</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{props.slice.meta.padding.top}px {props.slice.meta.padding.left}px {props.slice.meta.padding.bottom}px {props.slice.meta.padding.right}px</Column>
 			</Row>)}
-			{/*<Row><Column flexGrow={1}>Inner Padding:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>*/}
 			{/*<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? capitalizeText(props.slice.meta.blendMode, true) : ''}</Column></Row>*/}
 			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', TIMESTAMP_OPTS).format(Date.parse(props.slice.added))) : ''}</Column></Row>
 			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.upload) ? props.upload.creator.username : ''}</Column></Row>
@@ -314,40 +304,6 @@ class InspectorPage extends Component {
 				}
 			});
 		}
-
-// 		if (canvasWrapper.current) {
-// 			const scale = Math.min(canvasWrapper.current.clientWidth / (this.size.width - canvasWrapper.current.clientWidth), canvasWrapper.current.clientHeight / (this.size.height - canvasWrapper.current.clientHeight));
-// 			if (this.state.scale !== scale && !this.initialScaled) {
-// 				this.initialScaled = true;
-				//this.setState({ scale });
-
-// 				if (artboardsWrapper.current) {
-// 					this.state.artboards.forEach((artboard, i)=> {
-// 						if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
-// 							console.log('InspectorPage.componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
-// 							//artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * scale);
-// 							//artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * scale);
-// 						}
-// 					});
-// 				}
-// 			}
-
-// 			if (this.props.match.params.artboardID !== prevProps.match.params.artboardID) {
-// 				if (artboardsWrapper.current) {
-// 					this.state.artboards.forEach((artboard, i)=> {
-// 						if (artboard.id === this.props.match.params.artboardID && (artboardsWrapper.current.scrollTop !== artboard.offset.y || artboardsWrapper.current.scrollLeft !== artboard.offset.x)) {
-// 							console.log('InspectorPage.componentDidUpdate()', artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft, artboard.grid, artboard.offset);
-// 							//artboardsWrapper.current.scrollTop = (artboard.grid.row * 50) + (artboard.offset.y * this.state.scale);
-// 							//artboardsWrapper.current.scrollLeft = (artboard.grid.col * 50) + (artboard.offset.x * this.state.scale);
-// 						}
-// 					});
-// 				}
-// 			}
-// 		}
-
-// 		if (canvas.current && this.antsInterval) {
-// 			this.onUpdateCanvas();
-// 		}
 	}
 
 	componentWillUnmount() {
@@ -366,21 +322,6 @@ class InspectorPage extends Component {
 
 	handleArtboardRollOut = (event)=> {
 // 		console.log('InspectorPage.handleArtboardRollOut()', event.target);
-//
-// 		const artboardID = event.target.getAttribute('data-artboard-id');
-// 		let { upload } = this.state;
-//
-// 		const pages = [...upload.pages];
-// 		pages.forEach((page)=> {
-// 			page.artboards.filter((artboard)=> (artboard.id === artboardID)).forEach((artboard) => {
-// 				artboard.slices.forEach((item)=> {
-// 					item.filled = false;
-// 				});
-// 			});
-// 		});
-//
-// 		upload.pages = pages;
-// 		this.setState({ upload });
 	};
 
 	handleArtboardRollOver = (event)=> {
@@ -388,7 +329,7 @@ class InspectorPage extends Component {
 		const artboardID = event.target.getAttribute('data-artboard-id');
 
 		if (!this.antsInterval) {
-			this.antsInterval = setInterval(this.onUpdateAnts, 50);
+			this.antsInterval = setInterval(this.onUpdateAnts, 75);
 		}
 
 		let formData = new FormData();
@@ -535,12 +476,15 @@ class InspectorPage extends Component {
 
 		const css = toCSS(slice);
 		const reactCSS = toReactCSS(slice);
+		const swift = toSwift(slice);
 
 		if (section === 'inspect') {
 			tabs[0].contents = css.html;
 			tabs[0].syntax = css.syntax;
 			tabs[1].contents = reactCSS.html;
 			tabs[1].syntax = reactCSS.syntax;
+			tabs[2].contents = swift.html;
+			tabs[2].syntax = swift.syntax;
 		}
 
 		this.setState({
@@ -646,10 +590,7 @@ class InspectorPage extends Component {
 		const { x, y, scale } = this.state;
 
 		if (direction === 0) {
-			this.setState({
-				scale   : zoomNotches[5],
-				tooltip : Math.floor(zoomNotches[5] * 100) + '%'
-			});
+			this.handlePanAndZoom(x + 0.01, y + 0.01, zoomNotches[5]);
 
 		} else {
 			let ind = -1;
@@ -682,12 +623,10 @@ class InspectorPage extends Component {
 			if (file.size < 100 * (1024 * 1024)) {
 				this.setState({ uploading : true });
 				const config = {
-					headers             : { 'content-type' : 'multipart/form-data' },
-					onDownloadProgress  : (progressEvent)=> {
-// 							console.log('HomeExpo.onDownloadProgress()', progressEvent);
-					},
-					onUploadProgress    : (progressEvent)=> {
-// 							console.log('HomeExpo.onUploadProgress()', progressEvent);
+					headers            : { 'content-type' : 'multipart/form-data' },
+					onDownloadProgress : (progressEvent)=> {},
+					onUploadProgress   : (progressEvent)=> {
+// 							console.log('InspectorPage.onUploadProgress()', progressEvent);
 
 						const { loaded, total } = progressEvent;
 						const percent = Math.round((loaded * 100) / total);
@@ -1349,8 +1288,7 @@ class InspectorPage extends Component {
 						style={{ width : '100%', height : '100%' }}
 						onPanStart={this.handlePanStart}
 						onPanMove={this.handlePanMove}
-						onPanEnd={this.handlePanEnd}
-					>
+						onPanEnd={this.handlePanEnd}>
 						<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
 							{(artboards.length > 0) && (<div style={style}>
 								{artboardImages}
@@ -1360,17 +1298,6 @@ class InspectorPage extends Component {
 								{slices}
 							</div>)}
 						</div>
-
-
-						{/*<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>*/}
-							{/*{(artboards.length > 0) && (<div style={artboardsStyle}>*/}
-								{/*{artboardImages}*/}
-								{/*<div className="inspector-page-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>*/}
-									{/*<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>*/}
-								{/*</div>*/}
-								{/*{slices}*/}
-							{/*</div>)}*/}
-						{/*</div>*/}
 					</InteractiveDiv>
 					{(artboards.length > 0) && (<div className="inspector-page-zoom-wrapper">
 						<button className={'inspector-page-float-button' + ((scale >= Math.max(...zoomNotches)) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
