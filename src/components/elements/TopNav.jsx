@@ -66,6 +66,7 @@ class TopNav extends Component {
 						<FontAwesome name="star" className="top-nav-star" />
 						<FontAwesome name="star" className="top-nav-star" />
 						<FontAwesome name="star" className="top-nav-star" />
+						<FontAwesome name="star" className="top-nav-star" />
 					</div>
 					{/*<div className={(window.location.pathname.includes('/add-ons')) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage('add-ons')}>Add Ons</div>*/}
 					{/*<div className={(isExplorePage()) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage('explore')}>Explore</div>*/}

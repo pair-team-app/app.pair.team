@@ -245,9 +245,7 @@ class UploadPage extends Component {
 		this.setState({ titleValid });
 
 		if (titleValid && uploadComplete) {
-			console.log(':::::: GOOD FOR SUBMIT ::::::::');
 			if (isUserLoggedIn()) {
-				console.log(':::::: LOGGED IN ::::::::');
 				this.setState({ formState : 2 });
 
 				let formData = new FormData();
@@ -276,7 +274,6 @@ class UploadPage extends Component {
 				});
 
 			} else {
-				console.log(':::::: NEED LOG IN ::::::::');
 				this.setState({ showRegister : true });
 			}
 		}

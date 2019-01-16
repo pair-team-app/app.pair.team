@@ -5,6 +5,7 @@ import './InspectorPage.css';
 import axios from 'axios';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
+import panAndZoomHoc from 'react-pan-and-zoom-hoc';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
@@ -22,6 +23,9 @@ import disabledZoomOutButton from '../../images/buttons/btn-zoom-out_disabled.sv
 import enabledZooResetButton from '../../images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../images/buttons/btn-zoom-reset_disabled.svg';
 import {buildInspectorURL} from "../../utils/funcs";
+
+
+const InteractiveDiv = panAndZoomHoc('div');
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
@@ -59,7 +63,6 @@ const sliceContainsSlice = (baseSlice, testSlice)=> {
 // 	return (baseRect.top < testRect.top && baseRect.left < testRect.left && baseRect.right > testRect.right && baseRect.bottom > testRect.bottom && Math.max(baseRect.left, testRect.left) < Math.min(baseRect.right, testRect.right) && Math.max(baseRect.top, testRect.top) < Math.min(baseRect.bottom, testRect.bottom));
 	return (baseRect.top <= testRect.top && baseRect.left <= testRect.left && baseRect.right >= testRect.right && baseRect.bottom >= testRect.bottom);
 };
-
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -111,7 +114,7 @@ const SliceItem = (props)=> {
 		width   : props.width + 'px',
 		height  : props.height + 'px',
 		zoom    : props.scale,
-// 			transform : 'scale(' + props.scale + ')'
+// 			transform : 'scale(' + props.scale + ')',
 		display : (props.visible) ? 'block' : 'none'
 	};
 
@@ -215,7 +218,9 @@ class InspectorPage extends Component {
 			selectedTab  : 0,
 			tooltip      : '',
 			hoverOffset  : null,
-			scale        : 0.25,
+			x            : 0.5,
+			y            : 0.5,
+			scale        : 1,
 			scrollOffset : {
 				x : 0,
 				y : 0
@@ -242,6 +247,29 @@ class InspectorPage extends Component {
 		};
 	}
 
+	handlePanAndZoom = (x, y, scale)=> {
+		console.log('InspectorPage.handlePanAndZoom()', x, y, scale);
+		this.setState({
+			x     : x,
+			y     : y,
+			scale : Math.min(Math.max(scale, zoomNotches[0]), zoomNotches.slice(-1)[0])
+		});
+	};
+
+	handlePanMove = (x, y)=> {
+		console.log('InspectorPage.handlePanMove()', x, y);
+		this.setState({ x, y });
+	};
+
+	transformPoint = ({ x, y })=> {
+// 		console.log('InspectorPage.transformPoint()', x, y);
+		const { scale } = this.state;
+		return ({
+			x : 0.5 + (scale * (x - this.state.x)),
+			y : 0.5 + (scale * (y - this.state.y))
+		});
+	};
+
 	componentDidMount() {
 		console.log('InspectorPage.componentDidMount()', this.props, this.state);
 
@@ -254,8 +282,8 @@ class InspectorPage extends Component {
 			this.onRefreshUpload();
 		}
 
-		document.addEventListener('keydown', this.handleKeyDown.bind(this));
-		document.addEventListener('wheel', this.handleWheelStart.bind(this));
+// 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
+// 		document.addEventListener('wheel', this.handleWheelStart.bind(this));
 	}
 
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
@@ -1053,7 +1081,7 @@ class InspectorPage extends Component {
 
 	onUpdateCanvas = ()=> {
 		const { scale, offset, scrollOffset } = this.state;
-		const slice = this.state.slice;
+		const { slice, hoverSlice } = this.state;
 		const context = canvas.current.getContext('2d');
 		context.clearRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
 
@@ -1064,8 +1092,8 @@ class InspectorPage extends Component {
 		if (slice) {
 			const selectedSrcFrame = slice.meta.frame;
 			const selectedOffset = {
-				x : 100 + offset.x - scrollOffset.x,
-				y : 0 + offset.y - scrollOffset.y
+				x : offset.x,// - scrollOffset.x,
+				y : offset.y// - scrollOffset.y
 			};
 
 			const selectedFrame = {
@@ -1104,12 +1132,12 @@ class InspectorPage extends Component {
 			context.strokeRect(selectedFrame.origin.x, selectedFrame.origin.y, selectedFrame.size.width, selectedFrame.size.height);
 		}
 
-		if (this.state.hoverSlice) {
-			const srcFrame = this.state.hoverSlice.meta.frame;
+		if (hoverSlice) {
+			const srcFrame = hoverSlice.meta.frame;
 
 			const hoverOffset = {
-				x : 100 + this.state.hoverOffset.x - scrollOffset.x,
-				y : 0 + this.state.hoverOffset.y - scrollOffset.y
+				x : 0 + this.state.hoverOffset.x,// - scrollOffset.x,
+				y : 0 + this.state.hoverOffset.y// - scrollOffset.y
 			};
 
 			const frame = {
@@ -1126,7 +1154,7 @@ class InspectorPage extends Component {
 // 				console.log('HOVER:', hoverOffset, frame.origin);
 
 			context.fillStyle = 'rgba(0, 0, 0, 0.5)';
-			context.fillStyle = (this.state.hoverSlice.type === 'slice') ? 'rgba(255, 181, 18, 0.5)' : (this.state.hoverSlice.type === 'hotspot') ? 'rgba(62, 84, 255, 0.5)' : (this.state.hoverSlice.type === 'textfield') ? 'rgba(255, 88, 62, 0.5)' : 'rgba(62, 255, 109, 0.5)';
+			context.fillStyle = (hoverSlice.type === 'slice') ? 'rgba(255, 181, 18, 0.5)' : (hoverSlice.type === 'hotspot') ? 'rgba(62, 84, 255, 0.5)' : (hoverSlice.type === 'textfield') ? 'rgba(255, 88, 62, 0.5)' : 'rgba(62, 255, 109, 0.5)';
 			context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 			context.strokeStyle = 'rgba(0, 255, 0, 1.0)';
 			context.beginPath();
@@ -1203,7 +1231,7 @@ class InspectorPage extends Component {
 
 		const canvasStyle = {
 			top     : (scrollOffset.y) + 'px',
-			left    : (-100 + scrollOffset.x) + 'px',
+			left    : (scrollOffset.x) + 'px',
 			display : (scrolling) ? 'none' : 'block'
 		};
 
@@ -1344,10 +1372,29 @@ class InspectorPage extends Component {
 		slices = (!restricted) ? slices : [];
 
 
-// 		console.log('InspectorPage.render()', this.props, this.state);
+		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage.render()', (artboardsWrapper.current) ? artboardsWrapper.current.scrollTop : 0, (artboardsWrapper.current) ? artboardsWrapper.current.scrollLeft : 0, scale);
 // 		console.log('InspectorPage:', window.performance.memory);
 
+
+
+		const { x, y } = this.state;
+		const p1 = this.transformPoint({ x : 0.5, y : 0.5 });
+
+
+		const viewSize = {
+			width  : (artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0,
+			height : (artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0
+		};
+
+		console.log('::::::::: viewSize', viewSize);
+
+		const style = {
+			position  : 'absolute',
+			width     : (this.size.width * scale) + 'px',
+			height    : (this.size.height * scale) + 'px',
+			transform : `translate(${p1.x * viewSize.width}px, ${p1.y * viewSize.height}px) translate(${(viewSize.width * -0.5) * scale}px, ${(viewSize.height * -0.5) * scale}px)`
+		};
 
 		return (<div>
 			{(this.state.uploading) && (<div className="upload-progress-bar-wrapper">
@@ -1355,15 +1402,38 @@ class InspectorPage extends Component {
 			</div>)}
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
-					<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
-						{(artboards.length > 0) && (<div style={artboardsStyle}>
-							{artboardImages}
-							<div className="inspector-page-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>
-								<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
-							</div>
-							{slices}
-						</div>)}
-					</div>
+					<InteractiveDiv
+						x={x}
+						y={y}
+						scale={scale}
+						scaleFactor={1.1}
+						minScale={zoomNotches[0]}
+						maxScale={zoomNotches.slice(-1)[0]}
+						onPanAndZoom={this.handlePanAndZoom}
+						renderOnChange={true}
+						style={{ width : '100%', height : '100%', backgroundColor : '#ff0000' }}
+						onPanMove={this.handlePanMove}>
+						<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
+							{(artboards.length > 0) && (<div style={style}>
+								{artboardImages}
+								<div className="inspector-page-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>
+									<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
+								</div>
+								{slices}
+							</div>)}
+						</div>
+
+
+						{/*<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>*/}
+							{/*{(artboards.length > 0) && (<div style={artboardsStyle}>*/}
+								{/*{artboardImages}*/}
+								{/*<div className="inspector-page-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>*/}
+									{/*<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>*/}
+								{/*</div>*/}
+								{/*{slices}*/}
+							{/*</div>)}*/}
+						{/*</div>*/}
+					</InteractiveDiv>
 					{(artboards.length > 0) && (<div className="inspector-page-zoom-wrapper">
 						<button className={'inspector-page-float-button' + ((scale >= Math.max(...zoomNotches)) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
 						<button className={'inspector-page-float-button' + ((scale <= Math.min(...zoomNotches)) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
