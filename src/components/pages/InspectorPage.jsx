@@ -467,21 +467,13 @@ class InspectorPage extends Component {
 		}
 	};
 
-	handleDrag = (event)=> {
-		//console.log('InspectorPage.handleDrag()', event.type, event.target);
-		if (event.type === 'mousedown') {
-		} else if (event.type === 'mousemove') {
-		} else if (event.type === 'mouseup') {
-		}
-	};
-
 	handleInviteTeamFormSubmitted = (result)=> {
 		console.log('InspectorPage.handleInviteTeamFormSubmitted()', result);
 		this.setState({ sentInvites : true });
 	};
 
 	handleKeyDown = (event)=> {
-		console.log('InspectorPage.handleKeyDown()', event);
+// 		console.log('InspectorPage.handleKeyDown()', event);
 
 		if (event.keyCode === PLUS_KEY) {
 			this.handleZoom(1);
@@ -492,7 +484,7 @@ class InspectorPage extends Component {
 	};
 
 	handlePanAndZoom = (x, y, scale)=> {
-		console.log('InspectorPage.handlePanAndZoom()', x, y, scale);
+// 		console.log('InspectorPage.handlePanAndZoom()', x, y, scale);
 
 		const { viewport } = this.state;
 		const p1 = this.transformPoint({ x : 0.5, y : 0.5 });
@@ -514,7 +506,7 @@ class InspectorPage extends Component {
 	};
 
 	handlePanEnd = (event)=> {
-		console.log('InspectorPage.handlePanEnd()', event);
+// 		console.log('InspectorPage.handlePanEnd()', event);
 		this.setState({ scrolling : false });
 	};
 
@@ -1348,7 +1340,7 @@ class InspectorPage extends Component {
 						x={x}
 						y={y}
 						scale={scale}
-						scaleFactor={1.05}
+						scaleFactor={1.0875}
 						minScale={zoomNotches[0]}
 						maxScale={zoomNotches.slice(-1)[0]}
 						onPanAndZoom={this.handlePanAndZoom}
