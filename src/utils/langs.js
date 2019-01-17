@@ -72,13 +72,40 @@ export function toSpecs(slice) {
 	return (content);
 }
 
-export function toSwift(slice) {
-	let html = '';
+export function toSwift(slice, artboard) {
+	console.log('funcs.toSwift()', slice, artboard);
 
-	if (slice.type === 'textfield') {
-		let family = slice.meta.font.family.split(' ').slice(0, -1).join(' ').replace(' ', '');
-		let name = slice.meta.font.name.replace(family, '');
-		let postscript = (slice.meta.font.psName) ? slice.meta.font.psName : `${family}-${name}`;
+	const badChars = /[\\.,_+=\[\](){}]/g;
+
+	let html = '';
+	if (slice.type === 'slice' || slice.type === 'group') {
+		const artboardName = camilzeText(artboard.title.replace(/[-\/—]+/g, ' ').replace(badChars, ''), null, true);
+		const sliceName = camilzeText(convertURLSlug(slice.title).replace(/[-\/—]+/g, ' ').replace(badChars, ''));
+
+		html += '// Asset\n';
+		html += 'enum Asset {\n';
+		html += `${HTML_TAB}enum ${artboardName} {\n`;
+		html += `${HTML_TAB}${HTML_TAB}static let ${sliceName}: AssetType = "${artboardName}/${capitalizeText(sliceName)}"\n`;
+		html += `${HTML_TAB}}\n`;
+		html += '}\n\n';
+		html += `let ${sliceName}Image = UIImage(asset: Asset.${artboardName}.${sliceName})\n`;
+		html += `let alt${sliceName}Image = Asset.${artboardName}.${sliceName}.image\n`;
+
+		if (slice.meta.fillColor.length > 0) {
+			html += '\n\n// Color \n';
+			html += 'struct ColorName {\n';
+			html += `${HTML_TAB}let rgbaValue: UInt32\n`;
+			html += `${HTML_TAB}var color: Color { return Color(named: self) }\n`;
+			html += `${HTML_TAB}static let ${camilzeText(slice.title)} = ColorName(rgbValue: 0x${slice.meta.fillColor.replace('#', '')}ff)\n`;
+			html += '\n';
+			html += `let ${camilzeText(slice.title)}Color = UIColor(named: .${camilzeText(slice.title)})\n`;
+			html += `let ${camilzeText('alt' + slice.title)}Color = ColorName.${camilzeText(slice.title)}.color\n`;
+		}
+
+	} else if (slice.type === 'textfield') {
+		const family = slice.meta.font.family.split(' ').slice(0, -1).join(' ').replace(' ', '');
+		const name = slice.meta.font.name.replace(family, '');
+		const postscript = (slice.meta.font.psName) ? slice.meta.font.psName : `${family}-${name}`;
 
 		html += '// Font\n';
 		html += 'enum FontFamily {\n';
@@ -87,13 +114,13 @@ export function toSwift(slice) {
 		html += `${HTML_TAB}}\n`;
 		html += '}\n\n';
 		html += `let ${camilzeText(slice.meta.font.family.split(' ').slice(0, -1).join(' ') + name)} = UIFont(font: FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
-		html += `let ${camilzeText('alt' + slice.meta.font.family.split(' ').slice(0, -1).join(' ') + name)} = FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`
+		html += `let ${camilzeText('alt' + slice.meta.font.family.split(' ').slice(0, -1).join(' ') + name)} = FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
 		html += '\n\n';
 		html += '// Color\n';
 		html += 'struct ColorName {\n';
 		html += `${HTML_TAB}let rgbaValue: UInt32\n`;
 		html += `${HTML_TAB}var color: Color { return Color(named: self) }\n`;
-		html += `${HTML_TAB}static let ${camilzeText(slice.title)} = ColorName(rgbValue: 0x${slice.meta.font.color.replace('#', '')}ff)\n`
+		html += `${HTML_TAB}static let ${camilzeText(slice.title)} = ColorName(rgbValue: 0x${slice.meta.font.color.replace('#', '')}ff)\n`;
 		html += '\n';
 		html += `let ${camilzeText(slice.title)}Color = UIColor(named: .${camilzeText(slice.title)})\n`;
 		html += `let ${camilzeText('alt' + slice.title)}Color = ColorName.${camilzeText(slice.title)}.color\n`;

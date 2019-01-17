@@ -39,6 +39,8 @@ export function buildProjectURL(upload, prefix=null, suffix='') {
 }
 
 export function camilzeText(text, separator=' ', first=false) {
+	separator = (separator || ' ');
+
 	const camilized = text.split(separator).map((word)=> (word.replace(/^./, (c)=> (c.toUpperCase())))).join('');
 	return ((first) ? camilized : camilized.replace(/^./, (c)=> (c.toLowerCase())));
 }

@@ -106,7 +106,7 @@ const InviteTeamModal = (props)=> {
 const SliceItem = (props)=> {
 // 	console.log('InspectorPage.SliceItem()', props);
 
-	const className = (props.type === 'slice') ? 'slice-item slice-item-slice' : (props.type === 'hotspot') ? 'slice-item slice-item-hotspot' : (props.type === 'textfield') ? 'slice-item slice-item-textfield' : 'slice-item slice-item-background';
+	const className = (props.type === 'slice') ? 'slice-item slice-item-slice' : (props.type === 'hotspot') ? 'slice-item slice-item-hotspot' : (props.type === 'textfield') ? 'slice-item slice-item-textfield' : 'slice-item slice-item-group';
 	const style = {
 		top     : props.top + 'px',
 		left    : props.left + 'px',
@@ -472,11 +472,20 @@ class InspectorPage extends Component {
 	handleSliceClick = (ind, slice, offset)=> {
 // 		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
 
-		let { section, tabs } = this.state;
+		const { upload, section } = this.state;
+		let { tabs } = this.state;
+		let artboard = null;
+
+		const pages = [...upload.pages];
+		pages.forEach((page)=> {
+			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item) => {
+				artboard = item;
+			});
+		});
 
 		const css = toCSS(slice);
 		const reactCSS = toReactCSS(slice);
-		const swift = toSwift(slice);
+		const swift = toSwift(slice, artboard);
 
 		if (section === 'inspect') {
 			tabs[0].contents = css.html;
@@ -1158,7 +1167,7 @@ class InspectorPage extends Component {
 				height   : (scale * artboard.meta.frame.size.height) + 'px'
 			};
 
-			const backgroundSlices = artboard.slices.filter((slice)=> (slice.type === 'group')).map((slice, i) => {
+			const groupSlices = artboard.slices.filter((slice)=> (slice.type === 'group')).map((slice, i) => {
 				return (<SliceItem
 					key={i}
 					id={slice.id}
@@ -1242,7 +1251,7 @@ class InspectorPage extends Component {
 
 			slices.push(
 				<div key={i} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={sliceWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut}>
-					<div data-artboard-id={artboard.id} className="inspector-page-background-slice-wrapper">{backgroundSlices}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-group-slice-wrapper">{groupSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-hotspot-slice-wrapper">{hotspotSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slice-wrapper">{textfieldSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-slice-slice-wrapper">{sliceSlices}</div>
