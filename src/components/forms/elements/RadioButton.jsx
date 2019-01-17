@@ -4,7 +4,7 @@ import './RadioButton.css';
 
 import { Column, Row } from 'simple-flexbox';
 
-import radButtonSelected from '../../../images/buttons/btn-radio-button_selected.png'
+import radButtonSelected from '../../../assets/images/buttons/btn-radio-button_selected.png'
 
 class RadioButton extends Component {
 	constructor(props) {

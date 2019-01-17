@@ -6,8 +6,8 @@ import { TimelineMax, Power1, Power2 } from 'gsap/TweenMax';
 import { Column, Row } from 'simple-flexbox';
 
 import { capitalizeText } from '../../utils/funcs';
-import errorIcon from '../../images/icons/ico-error.png';
-import infoIcon from '../../images/icons/ico-info.svg';
+import errorIcon from '../../assets/images/icons/ico-error.png';
+import infoIcon from '../../assets/images/icons/ico-info.svg';
 
 
 class Popup extends Component {

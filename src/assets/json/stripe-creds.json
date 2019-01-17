@@ -1,0 +1,11 @@
+{
+  "test": {
+    "publish": "pk_test_m71106DUgNqIOZak8zgiGCZ6",
+    "secret": "sk_test_uGJtInSgRzyLWH2hLGysmzSE"
+  },
+
+  "live": {
+    "publish": "pk_live_qLWkiNL6AT3b4LNl8OusI0Kt",
+    "secret": "sk_live_C9ogtT6mIWECHJRyXJ8hrqoG"
+  }
+}

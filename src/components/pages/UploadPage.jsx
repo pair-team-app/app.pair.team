@@ -15,7 +15,7 @@ import RadioButton from '../forms/elements/RadioButton';
 import { addFileUpload, updateNavigation, updateUserProfile } from '../../redux/actions';
 import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
-import radioButtons from '../../json/radio-buttons_upload';
+import radioButtons from '../../assets/json/radio-buttons_upload';
 
 const titleTextfield = React.createRef();
 

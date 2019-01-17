@@ -10,7 +10,7 @@ import { Column, Row } from 'simple-flexbox';
 import UploadTreeItem from '../iterables/UploadTreeItem';
 
 import { isExplorePage, isInspectorPage, isUserLoggedIn, scrollOrigin } from '../../utils/funcs';
-import defaultAvatar from '../../images/default-avatar.png';
+import defaultAvatar from '../../assets/images/default-avatar.png';
 
 const wrapper = React.createRef();
 const scrollWrapper = React.createRef();

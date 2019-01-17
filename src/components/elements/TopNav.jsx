@@ -9,7 +9,7 @@ import { Row } from 'simple-flexbox';
 import TopNavProfile from './TopNavProfile';
 import { isUserLoggedIn } from '../../utils/funcs';
 import { updateNavigation } from '../../redux/actions';
-import logo from '../../images/logo-designengine.svg';
+import logo from '../../assets/images/logo-designengine.svg';
 
 
 const mapDispatchToProps = (dispatch)=> {

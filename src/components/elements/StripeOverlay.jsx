@@ -6,7 +6,7 @@ import { Elements, StripeProvider } from 'react-stripe-elements';
 import { Column, Row } from 'simple-flexbox';
 
 import StripeCheckout from './StripeCheckout';
-import stripe from '../../json/stripe-creds.json';
+import stripe from '../../assets/json/stripe-creds.json';
 
 class StripeOverlay extends Component {
 	constructor(props) {

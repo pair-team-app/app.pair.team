@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Column, Row } from 'simple-flexbox';
 
 import { isValidEmail } from '../../utils/funcs';
-import spinner from '../../images/spinner.gif';
+import spinner from '../../assets/images/spinner.gif';
 
 const MAX_FIELDS = 4;
 

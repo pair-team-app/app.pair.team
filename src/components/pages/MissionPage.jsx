@@ -4,7 +4,7 @@ import './MissionPage.css';
 
 import { Column, Row } from 'simple-flexbox';
 
-import reviews from '../../json/reviews.json';
+import reviews from '../../assets/json/reviews.json';
 
 
 function ReviewItem(props) {

@@ -16,12 +16,12 @@ import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { TIMESTAMP_OPTS } from '../../consts/formats';
 import { buildInspectorURL, capitalizeText, isUserLoggedIn, sendToSlack } from '../../utils/funcs.js';
 import { toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/langs.js';
-import enabledZoomInButton from '../../images/buttons/btn-zoom-in_enabled.svg';
-import disabledZoomInButton from '../../images/buttons/btn-zoom-in_disabled.svg';
-import enabledZoomOutButton from '../../images/buttons/btn-zoom-out_enabled.svg';
-import disabledZoomOutButton from '../../images/buttons/btn-zoom-out_disabled.svg';
-import enabledZooResetButton from '../../images/buttons/btn-zoom-reset_enabled.svg';
-import disabledZoomResetButton from '../../images/buttons/btn-zoom-reset_disabled.svg';
+import enabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_enabled.svg';
+import disabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_disabled.svg';
+import enabledZoomOutButton from '../../assets/images/buttons/btn-zoom-out_enabled.svg';
+import disabledZoomOutButton from '../../assets/images/buttons/btn-zoom-out_disabled.svg';
+import enabledZooResetButton from '../../assets/images/buttons/btn-zoom-reset_enabled.svg';
+import disabledZoomResetButton from '../../assets/images/buttons/btn-zoom-reset_disabled.svg';
 
 
 const InteractiveDiv = panAndZoomHoc('div');

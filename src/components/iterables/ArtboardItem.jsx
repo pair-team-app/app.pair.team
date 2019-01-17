@@ -3,7 +3,7 @@ import React from 'react';
 import './ArtboardItem.css'
 
 import { limitString } from '../../utils/funcs';
-import sketchIcon from '../../images/icons/ico-sketch.png';
+import sketchIcon from '../../assets/images/icons/ico-sketch.png';
 
 const TITLE_CHAR_LIMIT = 26;
 

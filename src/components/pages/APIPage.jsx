@@ -5,7 +5,7 @@ import './APIPage.css';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Row } from 'simple-flexbox';
 
-import enabledCopyCodeButton from '../../images/buttons/btn-copy-code_enabled.svg';
+import enabledCopyCodeButton from '../../assets/images/buttons/btn-copy-code_enabled.svg';
 
 class APIPage extends Component {
 	constructor(props) {
