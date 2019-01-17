@@ -175,20 +175,20 @@ const SpecsList = (props)=> {
 			<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (props.slice.meta.opacity * 100) : 100}%</Column></Row>
 			<Row><Column flexGrow={1}>Fills</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (props.slice.type === 'textfield' && props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : props.slice.meta.fillColor.toUpperCase() : ''}</Column></Row>
 			<Row><Column flexGrow={1}>Borders</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>
-			{(props.slice && props.slice.type === 'textfield') && (<div>
+			{(props.slice && props.slice.type === 'textfield') && (<>
 				<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.family) ? props.slice.meta.font.family : ''} {(props.slice.meta.font.name) ? props.slice.meta.font.name : ''}</Column></Row>
 				<Row><Column flexGrow={1}>Font Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.size + 'px')}</Column></Row>
 				<Row><Column flexGrow={1}>Font Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : ''}</Column></Row>
 				{/*<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.alignment) ? capitalizeText(props.slice.meta.font.alignment) : 'Left'}</Column></Row>*/}
 				<Row><Column flexGrow={1}>Line Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.lineHeight) ? (props.slice.meta.font.lineHeight + 'px') : ''}</Column></Row>
 				<Row><Column flexGrow={1}>Char Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.kerning) ? (props.slice.meta.font.kerning.toFixed(2) + 'px') : ''}</Column></Row>
-			</div>)}
-			{(styles) && (<div>
+			</>)}
+			{(styles) && (<>
 				{/*<Row><Column flexGrow={1}>Stroke:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.stroke) ? (capitalizeText(styles.stroke.position, true) + ' S: ' + styles.stroke.thickness + ' ' + styles.stroke.color) : ''}</Column></Row>*/}
 				{/*<Row><Column flexGrow={1}>Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.shadow) ? ('X: ' + styles.shadow.offset.x + ' Y: ' + styles.shadow.offset.y + ' B: ' + styles.shadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>*/}
 				{/*<Row><Column flexGrow={1}>Inner Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>*/}
 				{/*<Row><Column flexGrow={1}>Blur:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>*/}
-			</div>)}
+			</>)}
 			{(props.slice && props.slice.meta.padding) && (<Row>
 				<Column flexGrow={1}>Padding</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{props.slice.meta.padding.top}px {props.slice.meta.padding.left}px {props.slice.meta.padding.bottom}px {props.slice.meta.padding.right}px</Column>
 			</Row>)}
@@ -430,7 +430,8 @@ class InspectorPage extends Component {
 			const filePath = 'http://cdn.designengine.ai/arboard.php?artboard_id=' + this.props.navigation.artboardID;
 			let link = document.createElement('a');
 			link.href = filePath;
-			link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
+// 			link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
+			link.download = filePath.split('/').pop();
 			link.click();
 		}
 	};
@@ -1345,7 +1346,7 @@ class InspectorPage extends Component {
 			transform : `translate(${p1.x * viewport.width}px, ${p1.y * viewport.height}px) translate(${(viewport.width * -0.5) * scale}px, ${(viewport.height * -0.5) * scale}px)`
 		};
 
-		return (<div>
+		return (<>
 			{(this.state.uploading) && (<div className="upload-progress-bar-wrapper">
 				<div className="upload-progress-bar" style={progressStyle} />
 			</div>)}
@@ -1454,7 +1455,7 @@ class InspectorPage extends Component {
 				onComplete={()=> this.setState({ shownInvite : true })}
 				/>
 			)}
-		</div>);
+		</>);
 	}
 }
 

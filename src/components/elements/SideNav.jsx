@@ -322,13 +322,13 @@ class SideNav extends Component {
 				<div className="side-nav-account-wrapper">
 					<h6>Account</h6>
 					{(isUserLoggedIn())
-						? (<div>
+						? (<>
 								<div className="nav-link" onClick={() => this.props.onPage('profile')}>Profile</div>
 								<div className="nav-link" onClick={()=> this.props.onLogout()}>Sign Out</div>
-							</div>) : (<div>
+							</>) : (<>
 								<div className="nav-link" onClick={() => this.props.onPage('register')}>Sign Up</div>
 								<div className="nav-link" onClick={() => this.props.onPage('login')}>Login</div>
-							</div>
+							</>
 						)}
 				</div>
 			</div>

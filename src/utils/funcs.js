@@ -74,7 +74,7 @@ export function hasBit(val, bit) {
 }
 
 export function hideText(text, char='*') {
-	return (Array(text.length + 1).join(char));
+	return ((text.length > 0) ? Array(text.length + 1).join(char) : '');
 }
 
 export function idsFromPath() {

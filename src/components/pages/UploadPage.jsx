@@ -42,7 +42,7 @@ function UploadForm(props) {
 	const titleClass = (titleValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
 	const nextButtonClass = (uploadComplete && titleValid) ? 'fat-button upload-page-submit-button' : 'fat-button upload-page-submit-button button-disabled';
 
-	return (<div>
+	return (<>
 		<div style={{ width : '100%' }}>
 			<h3>{header}</h3>
 			<h4>{subheader}</h4>
@@ -74,7 +74,7 @@ function UploadForm(props) {
 				{(formState > 0) && (<button className={nextButtonClass} onClick={() => (uploadComplete && title.length > 0) ? props.onSubmit() : null}>{(!uploadComplete) ? 'Uploading Design' : 'Submit Design'}</button>)}
 			</div>
 		</div>
-	</div>);
+	</>);
 }
 
 
