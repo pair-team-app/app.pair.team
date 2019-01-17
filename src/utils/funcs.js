@@ -133,13 +133,19 @@ export function limitString(str='', len) {
 }
 
 export function numberedName(name, list) {
-	if (list[name].length) {
+	if (list[name].length > 0) {
 		const cnt = ++list[name];
-		return (name + '_' + cnt);
+		return ({
+			name : `${name}_${cnt}`,
+			list : list
+		});
 
 	} else {
 		list[name] = 1;
-		return (name);
+		return ({
+			name : `${name}_1`,
+			list : list
+		});
 	}
 }
 

@@ -192,7 +192,7 @@ const SpecsList = (props)=> {
 
 
 const tabContent = (html, slices)=> {
-	return (`${html.replace(/ /g, '&nbsp;').replace(/\\n/g, '<br />')}${JSON.stringify('\n<p>' + slices.map((slice)=> (`<p>${slice.title}<br /><img src="${slice.filename}@1x.png" width="${slice.meta.frame.size.width * 0.25}" height="${slice.meta.frame.size.height * 0.25}" style="border: 1px dotted #00ffff" alt="${slice.title}" /></p>`)).join('\n') + '</p>')}`.replace('""', ''));
+	return (`${html.replace(/ /g, '&nbsp;').replace(/\\n/g, '<br />')}${JSON.stringify('\n<p>' + slices.filter((slice)=> (slice.type === 'group')).map((slice)=> (`<p>${slice.title}<br /><img src="${slice.filename}@1x.png" width="${slice.meta.frame.size.width * 0.25}" height="${slice.meta.frame.size.height * 0.25}" style="border: 1px dotted #00ffff" alt="${slice.title}" /></p>`)).join('\n') + '</p>')}`.replace('""', ''));
 };
 
 class InspectorPage extends Component {
