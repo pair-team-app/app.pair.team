@@ -5,7 +5,7 @@ import './UploadTreeItem.css';
 import { Row } from 'simple-flexbox';
 
 import { isInspectorPage, limitString } from '../../utils/funcs';
-import sketchIcon from '../../images/icon-sketch.png';
+import sketchIcon from '../../assets/images/icons/ico-sketch.png';
 
 const UPLOAD_CHAR_LIMIT = 26;
 const CATEGORY_CHAR_LIMIT = 23;

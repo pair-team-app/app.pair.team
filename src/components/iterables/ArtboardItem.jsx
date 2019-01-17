@@ -3,7 +3,7 @@ import React from 'react';
 import './ArtboardItem.css'
 
 import { limitString } from '../../utils/funcs';
-import sketchIcon from '../../images/icon-sketch.png';
+import sketchIcon from '../../assets/images/icons/ico-sketch.png';
 
 const TITLE_CHAR_LIMIT = 26;
 
@@ -14,7 +14,7 @@ function ArtboardItem(props) {
 
 	return (
 		<div className={className} onClick={()=> (image) ? props.onClick() : null} style={{ opacity : (title === '') ? '33%' : '100%' }}>
-			{(image) && (<div>
+			{(image) && (<>
 				<img className="artboard-item-image" src={(!image.includes('@')) ? image + '@0.25x.png' : image} alt={limitString(title, TITLE_CHAR_LIMIT)} />
 				<div className="artboard-item-overlay" />
 				<img className="artboard-item-icon" src={sketchIcon} alt="Icon" />
@@ -22,7 +22,7 @@ function ArtboardItem(props) {
 					<img className="artboard-item-avatar" src={avatar} alt="Avatar" />
 					<div className="artboard-item-title">{limitString(title, TITLE_CHAR_LIMIT)}</div>
 				</div>
-			</div>)}
+			</>)}
 		</div>
 	);
 }

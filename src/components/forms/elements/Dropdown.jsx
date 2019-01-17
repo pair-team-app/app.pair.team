@@ -5,6 +5,13 @@ import './Dropdown.css';
 import onClickOutside from 'react-onclickoutside';
 import { Column, Row } from 'simple-flexbox';
 
+import dropdownArrow from '../../../assets/images/buttons/btn-dropdown-arrow.svg';
+import sketchIcon from '../../../assets/images/icons/ico-sketch.png';
+import iosIcon from '../../../assets/images/icons/ico-ios12.png';
+import materialIcon from '../../../assets/images/icons/ico-material.png';
+import androidIcon from '../../../assets/images/icons/ico-android.png';
+import newUploadIcon from '../../../assets/images/icons/ico-plus.png';
+
 
 class Dropdown extends Component{
 	constructor(props) {
@@ -44,18 +51,18 @@ class Dropdown extends Component{
 		const { listOpen, headerTitle } = this.state;
 
 		const items = list.map((item, i)=> {
-			let thumbImage = null;
+			let thumbImage = sketchIcon;
 			if (item.title.match(/ios/i)) {
-				thumbImage = '/images/favicon-ios12.png';
+				thumbImage = iosIcon;
 
 			} else if (item.title.match(/material/i)) {
-				thumbImage = '/images/favicon-material.png';
+				thumbImage = materialIcon;
 
 			} else if (item.title.match(/android/i)) {
-				thumbImage = '/images/favicon-android.png';
+				thumbImage = androidIcon;
 
 			} else if (item.title.match(/new/i)) {
-				thumbImage = '/images/plus-square.png';
+				thumbImage = newUploadIcon
 			}
 
 			return (
@@ -71,7 +78,7 @@ class Dropdown extends Component{
 			<div className="dd-wrapper">
 				<div className="dd-header" onClick={this.toggleList}>
 					<div className="dd-header-title">{headerTitle}</div>
-					<img className="dd-angle-down" src="/images/dropdown-arrow.svg" alt="Arrow" />
+					<img className="dd-angle-down" src={dropdownArrow} alt="Arrow" />
 					{/*{listOpen*/}
 						{/*? <FontAwesome name="angle-up" />*/}
 						{/*: <FontAwesome name="angle-down" />*/}

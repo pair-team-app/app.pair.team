@@ -6,9 +6,9 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 
 import ArtboardGrid from '../elements/ArtboardGrid';
-import { addFileUpload, appendUploadArtboards } from '../../redux/actions';
-import { isExplorePage, isInspectorPage, isProjectPage, limitString } from "../../utils/funcs";
-import defaultAvatar from "../../images/default-avatar.png";
+import UploadHeader from '../elements/UploadHeader';
+import { addFileUpload, appendUploadArtboards, updateNavigation } from '../../redux/actions';
+import { isInspectorPage, isUserLoggedIn, limitString } from '../../utils/funcs';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -19,12 +19,41 @@ const mapStateToProps = (state, ownProps)=> {
 	});
 };
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch)=> {
 	return ({
 		addFileUpload         : (file)=> dispatch(addFileUpload(file)),
-		appendUploadArtboards : (artboards)=> dispatch(appendUploadArtboards(artboards))
+		appendUploadArtboards : (artboards)=> dispatch(appendUploadArtboards(artboards)),
+		updateNavigation      : (navIDs)=> dispatch(updateNavigation(navIDs))
 	});
-}
+};
+
+
+const LoggedInSectionHeader = (props)=> {
+// 	console.log('HomePage.LoggedInSectionHeader()', props);
+
+	const { title, content } = props;
+	return (<div className="home-page-section-header-wrapper">
+		<h3>{title}</h3>
+		<h4>{content}</h4>
+		<div>
+			<button className="adjacent-button" onClick={()=> props.onPage('new' + window.location.pathname)}>Upload</button>
+		</div>
+	</div>);
+};
+
+const LoggedOutSectionHeader = (props)=> {
+// 	console.log('HomePage.LoggedOutSectionHeader()', props);
+
+	const { title, content } = props;
+	return (<div className="home-page-section-header-wrapper">
+		<h3>{title}</h3>
+		<h4>{content}</h4>
+		<div>
+			<button className="adjacent-button" onClick={()=> props.onPage('register')}>Sign Up</button>
+			<button onClick={()=> props.onPage('login')}>Login</button>
+		</div>
+	</div>);
+};
 
 
 class HomePage extends Component {
@@ -32,10 +61,8 @@ class HomePage extends Component {
 		super(props);
 
 		this.state = {
-			action      : '',
 			firstFetch  : false,
 			uploadTotal : 0,
-			upload      : null,
 			fetching    : false,
 			loadOffset  : 0,
 			loadAmt     : 1
@@ -43,7 +70,7 @@ class HomePage extends Component {
 	}
 
 	componentDidMount() {
-		console.log('HomePage().componentDidMount()', this.props);
+		console.log('HomePage.componentDidMount()', this.props);
 
 		if (this.props.profile && this.props.artboards.length === 0) {
 			this.handleLoadNext();
@@ -57,78 +84,37 @@ class HomePage extends Component {
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
 		console.log('HomePage.shouldComponentUpdate()', this.props, nextProps);
 
-		const { fetching, uploadTotal } = this.state;
-		return (!fetching || nextProps.artboards.length === uploadTotal);
+// 		const { fetching, uploadTotal } = this.state;
+// 		return (!fetching || nextProps.artboards.length === uploadTotal);
+
+		return (true);
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		console.log('HomePage.componentDidUpdate()', prevProps, this.props);
 
-		if (!this.state.firstFetch && this.props.profile && this.props.artboards.length === 0) {
+		const { artboards } = this.props;
+		if (!this.state.firstFetch && this.props.profile && artboards.length === 0) {
 			this.setState({ firstFetch : true });
 			this.handleLoadNext();
 		}
 
 		const { fetching, uploadTotal } = this.state;
-		if (fetching && this.props.artboards.length === uploadTotal && uploadTotal > 0) {
+		if (fetching && artboards.length === uploadTotal && uploadTotal > 0) {
 			this.setState({ fetching : false });
 		}
 	}
 
-	/*handleLoadNext = ()=> {
-		console.log('HomePage.handleLoadNext()', this.props.artboards);
+	handleDemo = ()=> {
+		console.log('HomePage.handleDemo()', this.props.path);
 
-		const { uploadID } = this.props.match.params;
-		const { loadOffset, loadAmt } = this.state;
-
-		this.setState({ fetching : true });
-
-		let formData = new FormData();
-		formData.append('action', 'UPLOAD');
-		formData.append('upload_id', uploadID);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-				console.log('UPLOAD', response.data);
-				const { upload } = response.data;
-
-
-				formData.append('action', 'ARTBOARDS');
-				formData.append('upload_id', uploadID);
-				formData.append('page_id', '0');
-				formData.append('offset', loadOffset);
-				formData.append('length', loadAmt);
-				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response) => {
-						console.log('ARTBOARDS', response.data);
-
-						const artboards = response.data.artboards.map((artboard) => ({
-							id        : artboard.id,
-							pageID    : artboard.page_id,
-							uploadID  : artboard.upload_id,
-							system    : artboard.system,
-							title     : artboard.title,
-							pageTitle : artboard.page_title,
-							type      : artboard.type,
-							filename  : artboard.filename,
-							creator   : artboard.creator,
-							meta      : JSON.parse(artboard.meta),
-							added     : artboard.added,
-							selected  : false
-						}));
-
-						this.setState({
-							upload     : upload,
-							fetching   : false,
-							loadOffset : loadOffset + artboards.length
-						});
-
-						this.props.appendUploadArtboards(artboards);
-					}).catch((error) => {
-				});
-			}).catch((error) => {
+		this.props.updateNavigation({
+			uploadID   : 1,
+			pageID     : 2,
+			artboardID : 4
 		});
-	};*/
-
+		this.props.onPage(window.location.pathname + '/1/2/4/account');
+	};
 
 	handleLoadNext = ()=> {
 		console.log('HomePage.handleLoadNext()', this.props.artboards);
@@ -192,6 +178,10 @@ class HomePage extends Component {
 					loadOffset  : loadOffset + loadAmt
 				});
 
+				if (uploads.length === 0) {
+					this.setState({ fetching : false });
+				}
+
 				uploads.forEach((upload)=> {
 					this.handleNextUpload(upload);
 				});
@@ -201,10 +191,10 @@ class HomePage extends Component {
 
 
 	handleNextUpload = (upload)=> {
-		console.log('!¡!¡!¡!¡!¡!¡!¡!¡!¡— HomePage.handleNextUpload()', upload);
+// 		console.log('!¡!¡!¡!¡!¡!¡!¡!¡!¡— HomePage.handleNextUpload()', upload);
 
 		const prevArtboards = [...this.props.artboards];
-		const { loadOffset, loadAmt } = this.state;
+		const { loadOffset } = this.state;
 
 		let formData = new FormData();
 		formData.append('action', 'ARTBOARDS');
@@ -241,33 +231,43 @@ class HomePage extends Component {
 	};
 
 	handleFile = (file)=> {
-		console.log('HomePage.handleUploadComplete()', file);
+		console.log('HomePage.handleFile()', file);
 		this.props.addFileUpload(file);
-		this.props.onPage('new');
+		this.props.onPage('new' + window.location.pathname);
 	};
 
 
 	render() {
 		console.log('HomePage.render()', this.props, this.state);
 
-// 		const artboards = [...this.props.artboards].filter((artboard)=> (artboard.uploadID === uploadID));
 		const { profile, artboards } = this.props;
 		const { fetching, loadOffset, uploadTotal } = this.state;
 
-// 		const title = (upload) ? (upload.title + ' (' + (upload.total.artboards) + ')') : (fetching) ? 'Loading…' : null;
-		const title = (profile) ? (fetching) ? 'Loading…' : 'Showing most viewed from ' + uploadTotal + ' project' + ((uploadTotal === 1) ? '' : 's') + '.' : null;
+		const { pathname } = window.location;
+		const uploadTitle = (pathname === '/' || pathname === '/inspect') ? 'Drag & Drop any Sketch file here to inspect design specs & code.' : (pathname === '/parts') ? 'Drag & Drop any Sketch file here to download design parts & source.' : 'Turn any Sketch file into an organized System of Fonts, Colors, Symbols, Views &amp; more. (Drag & Drop)';
+		const sectionTitle = (pathname === '/' || pathname === '/inspect') ? (isUserLoggedIn()) ? 'Do you need specs & code from a design file?' : 'Sign Up for Design Engine' : (pathname === '/parts') ? (isUserLoggedIn()) ? 'Do you need parts & source from a design file?' : 'Sign Up for Design Engine' : 'Start a new Design Project';
+		const sectionContent = (pathname === '/' || pathname === '/inspect') ? (isUserLoggedIn()) ? 'Upload any Sketch file to Design Engine to inspect specifications & code.' : 'Design Engine is a design platform built for engineers inspired by the way you work.' : (pathname === '/parts') ? (isUserLoggedIn()) ? 'Upload any Sketch file to Design Engine to export design parts & source.' : 'Design Engine is a design platform built for engineers inspired by the way you work.' : 'Turn any Design File into an organized System of Fonts, Colors, Symbols, Views & More.';
+		const gridTitle = (profile) ? (fetching) ? 'Loading…' : 'Showing most viewed from ' + uploadTotal + ' project' + ((uploadTotal === 1) ? '' : 's') + '.' : null;
+
 		return (
 			<div className="page-wrapper home-page-wrapper">
+				<UploadHeader title={uploadTitle} onFile={this.handleFile}  onPopup={this.props.onPopup} />
+
+				{(isUserLoggedIn())
+					? (<LoggedInSectionHeader title={sectionTitle} content={sectionContent} onDemo={this.handleDemo} onPage={this.props.onPage} />)
+					: (<LoggedOutSectionHeader title={sectionTitle} content={sectionContent} onPage={this.props.onPage} />)
+				}
+
 				<ArtboardGrid
-					title={title}
+					title={gridTitle}
 					total={uploadTotal}
 					artboards={artboards.sort((a, b)=> (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0))}
 					loadOffset={loadOffset}
 					fetching={fetching}
-					onClick={(artboard)=> this.props.onArtboardClicked(artboard)}
+					onClick={this.props.onArtboardClicked}
 					onItemClick={this.props.onPage}
 					onPage={this.props.onPage}
-					onFile={(file)=> this.handleFile(file)}
+					onFile={this.handleFile}
 					onPopup={this.props.onPopup}
 					onLoadNext={this.handleLoadNext} />
 			</div>

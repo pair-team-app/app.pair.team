@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import './ProfilePage.css';
 
 import axios from 'axios/index';
-import cookie from "react-cookies";
+import cookie from 'react-cookies';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import InputField from '../elements/InputField';
+import InputField from '../forms/elements/InputField';
 import { updateUserProfile } from '../../redux/actions';
 import { hasBit, isUserLoggedIn, isValidEmail } from '../../utils/funcs';
 
@@ -17,11 +17,11 @@ const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
 };
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch)=> {
 	return ({
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
-}
+};
 
 
 class ProfilePage extends Component {
@@ -81,7 +81,7 @@ class ProfilePage extends Component {
 				const percent = Math.round((loaded * 100) / total);
 				this.setState({ percent });
 
-				if (progressEvent.loaded === progressEvent.total) {
+				if (progressEvent.loaded >= progressEvent.total) {
 					this.onUploadComplete();
 				}
 			}
@@ -207,7 +207,7 @@ class ProfilePage extends Component {
 					<Dropzone className="profile-page-dz-wrapper" onDrop={this.onDrop.bind(this)}>
 						<button className="tiny-button adjacent-button">Change</button>
 					</Dropzone>
-					{(!avatar.includes('/default-avatar.png')) && (<span className="page-link-small" onClick={()=> this.handleDropAvatar()}>Remove</span>)}
+					{(!avatar.includes('default-avatar.png')) && (<span className="page-link-small" onClick={()=> this.handleDropAvatar()}>Remove</span>)}
 				</Row></div>
 				<div className="profile-page-form-wrapper">
 					<InputField

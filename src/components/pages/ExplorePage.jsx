@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 
 import ArtboardGrid from '../elements/ArtboardGrid';
 import { addFileUpload, appendExploreArtboards } from '../../redux/actions';
-import {isExplorePage, isProjectPage} from "../../utils/funcs";
+import { isExplorePage, isProjectPage } from '../../utils/funcs';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -19,12 +19,12 @@ const mapStateToProps = (state, ownProps)=> {
 	});
 };
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch)=> {
 	return ({
 		addFileUpload          : (file)=> dispatch(addFileUpload(file)),
 		appendExploreArtboards : (artboards)=> dispatch(appendExploreArtboards(artboards))
 	});
-}
+};
 
 
 class ExplorePage extends Component {
@@ -131,9 +131,9 @@ class ExplorePage extends Component {
 					loadOffset={loadOffset}
 					fetching={fetching}
 					onPage={this.props.onPage}
-					onFile={(file)=> this.handleFile(file)}
+					onFile={this.handleFile}
 					onItemClick={this.props.onPage}
-					onClick={(artboard)=> this.props.onArtboardClicked(artboard)}
+					onClick={this.props.onArtboardClicked}
 					onPopup={this.props.onPopup}
 					onLoadNext={this.handleLoadNext} />
 			</div>

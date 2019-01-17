@@ -10,7 +10,7 @@ import { Column, Row } from 'simple-flexbox';
 import UploadTreeItem from '../iterables/UploadTreeItem';
 
 import { isExplorePage, isInspectorPage, isUserLoggedIn, scrollOrigin } from '../../utils/funcs';
-import defaultAvatar from "../../images/default-avatar.png";
+import defaultAvatar from '../../assets/images/default-avatar.png';
 
 const wrapper = React.createRef();
 const scrollWrapper = React.createRef();
@@ -155,7 +155,7 @@ class SideNav extends Component {
 // 				}
 
 				this.setState({
-// 					uploads     : (isExplorePage()) ? prevUploads.concat(uploads) : uploads,
+// 					uploads     : (isExplorePage()) ? [...prevUploads, ...uploads] : uploads,
 					uploads     : uploads,
 					loadOffset  :  (uploads.length === loadAmt) ? loadOffset + loadAmt : -1,
 					loadAmt     : (loadAmt < 40) ? 40 : 10,
@@ -322,13 +322,13 @@ class SideNav extends Component {
 				<div className="side-nav-account-wrapper">
 					<h6>Account</h6>
 					{(isUserLoggedIn())
-						? (<div>
+						? (<>
 								<div className="nav-link" onClick={() => this.props.onPage('profile')}>Profile</div>
 								<div className="nav-link" onClick={()=> this.props.onLogout()}>Sign Out</div>
-							</div>) : (<div>
+							</>) : (<>
 								<div className="nav-link" onClick={() => this.props.onPage('register')}>Sign Up</div>
 								<div className="nav-link" onClick={() => this.props.onPage('login')}>Login</div>
-							</div>
+							</>
 						)}
 				</div>
 			</div>

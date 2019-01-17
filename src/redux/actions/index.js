@@ -8,6 +8,7 @@ import {
 	ADD_FILE_UPLOAD,
 	APPEND_EXPLORE_ARTBOARDS,
 	APPEND_UPLOAD_ARTBOARDS,
+	SET_REDIRECT_URL,
 	USER_PROFILE_ERROR,
 	UPDATE_NAVIGATION,
 	USER_PROFILE_LOADED,
@@ -50,21 +51,11 @@ export function fetchUserProfile() {
 				});
 			}).catch((error) => {
 		});
-
-// 	return (
-// 		fetch('https://api.designengine.ai/system.php', {
-// 			method : 'post',
-// 			body   : {
-// 				'action'  : 'PROFILE',
-// 				'user_id' : cookie.load('user_id')
-// 			}
-// 		})
-// 			.then((response)=> response.json())
-// 			.then((json)=> {
-// 				return ({ type : 'USER_PROFILE_LOADED', payload : json });
-// 			})
-// 	);
 	});
+}
+
+export function setRedirectURL(payload) {
+	return ({ type : SET_REDIRECT_URL, payload });
 }
 
 export function updateUserProfile(payload) {

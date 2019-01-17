@@ -6,8 +6,9 @@ import { TimelineMax, Power1, Power2 } from 'gsap/TweenMax';
 import { Column, Row } from 'simple-flexbox';
 
 import { capitalizeText } from '../../utils/funcs';
-import errorIcon from '../../images/icon-error.png';
-import infoIcon from '../../images/icon-info.svg';
+import errorIcon from '../../assets/images/icons/ico-error.png';
+import infoIcon from '../../assets/images/icons/ico-info.svg';
+
 
 class Popup extends Component {
 	constructor(props) {
@@ -32,7 +33,7 @@ class Popup extends Component {
 			opacity    : 0,
 			y          : '-30px',
 			ease       : Power2.easeOut,
-			delay      : payload.duration * 0.001,
+			delay      : (payload.duration) ? payload.duration * 0.001 : 1.125,
 			onComplete : onComplete
 		});
 	}
@@ -40,7 +41,6 @@ class Popup extends Component {
 	componentWillUnmount() {
 		this.timeline = null;
 	}
-
 
 	render() {
 		console.log('Popup.render()', this.props, this.state);
@@ -53,7 +53,7 @@ class Popup extends Component {
 		const icon = (payload.type === 'ERROR') ? errorIcon : infoIcon;
 
 		return (
-			<div className="popup-wrapper" ref={(div)=> this.wrapper = div}>
+			<div className="popup-wrapper" ref={(element)=> { this.wrapper = element; }}>
 				<Row>
 					<Column><img src={icon} className="popup-icon" alt={capitalizeText(payload.type, true)} /></Column>
 					<Column className="popup-content">

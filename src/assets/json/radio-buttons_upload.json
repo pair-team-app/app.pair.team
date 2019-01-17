@@ -1,0 +1,13 @@
+[{
+  "id"      : 1,
+  "title"   : "Public File",
+  "subtext" : "You can share your design file link without sending invitations.",
+  "selected": false,
+  "enabled" : true
+}, {
+  "id"      : 2,
+  "title"   : "Private File",
+  "subtext" : "You can share your design by invitation only.",
+  "selected": false,
+  "enabled" : true
+}]

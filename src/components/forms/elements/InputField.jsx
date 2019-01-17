@@ -87,7 +87,7 @@ class InputField extends Component {
 		return (
 			<div className="input-field">
 				<div className={wrapperClass}>
-					<input autoFocus type={type} name={name} className={textfieldClass} placeholder={placeholder} value={value} onFocus={(e)=> this.handleFocus(e)} onChange={(e)=> this.handleChange(e)} onBlur={(e)=> this.handleBlur(e)} ref={textfield} />
+					<input autoFocus type={type} name={name} className={textfieldClass} placeholder={placeholder} value={value} onFocus={this.handleFocus} onChange={this.handleChange} onBlur={this.handleBlur} ref={textfield} />
 					<div className="field-error" onClick={this.handleClick} style={errorStyle}>{value}</div>
 				</div>
 				<button className={buttonClass} onClick={this.handleSubmit}>{button}</button>

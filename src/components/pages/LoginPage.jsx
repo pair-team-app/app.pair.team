@@ -2,22 +2,24 @@
 import React, { Component } from 'react';
 import './LoginPage.css';
 
-import axios from 'axios/index';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
-import { Column, Row } from 'simple-flexbox';
 
+import LoginForm from '../forms/LoginForm';
 import { updateUserProfile } from '../../redux/actions';
-import { hasBit, isValidEmail } from '../../utils/funcs';
-
-const passwordTextfield = React.createRef();
 
 
-function mapDispatchToProps(dispatch) {
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		redirectURL : state.redirectURL
+	});
+};
+
+const mapDispatchToProps = (dispatch)=> {
 	return ({
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
-}
+};
 
 
 class LoginPage extends Component {
@@ -33,107 +35,29 @@ class LoginPage extends Component {
 		};
 	}
 
-	handlePassword = ()=> {
-		this.setState({
-			password      : '',
-			passwordValid : true,
-			passMsg       : ''
-		});
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('LoginPage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+	}
 
-		setTimeout(()=> {
-			passwordTextfield.current.focus();
-		}, 69);
+	handleLoggedIn = (profile)=> {
+		console.log('LoginPage.handleLoggedIn()', profile, this.props);
+
+		cookie.save('user_id', profile.id, { path : '/' });
+		this.props.updateUserProfile(profile);
+		this.props.onPage((this.props.redirectURL) ? this.props.redirectURL.substr(1) : '');
 	};
-
-	handleSubmit = (event)=> {
-		console.log('LoginPage.submit()');
-		event.preventDefault();
-
-		const { email, password } = this.state;
-
-		const emailValid = (email.includes('@')) ? isValidEmail(email) : (email.length > 0);
-		const passwordValid = (password.length > 0);
-
-		this.setState({
-			email         : (emailValid) ? email : 'Invalid Email or Username',
-			passMsg       : (passwordValid) ? '' : 'Invalid Password',
-			emailValid    : emailValid,
-			passwordValid : passwordValid
-		});
-
-		if (emailValid && passwordValid) {
-			let formData = new FormData();
-			formData.append('action', 'LOGIN');
-			formData.append('email', email);
-			formData.append('password', password);
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response)=> {
-					console.log('LOGIN', response.data);
-					const status = parseInt(response.data.status, 16);
-
-					if (hasBit(status, 0x11)) {
-						const { id, username, email, avatar } = response.data.user;
-
-						cookie.save('user_id', id, { path : '/' });
-						this.props.updateUserProfile({
-							id       : id,
-							avatar   : avatar,
-							username : username,
-							email    : email,
-							password : password
-						});
-
-						this.props.onPage('');
-
-					} else {
-						this.setState({
-							email         : hasBit(status, 0x01) ? email : 'Wrong Email or Username',
-							password      : '',
-							emailValid    : hasBit(status, 0x01),
-							passwordValid : hasBit(status, 0x10),
-							passMsg       : hasBit(status, 0x10) ? '' : 'Wrong Password'
-						});
-					}
-				}).catch((error) => {
-			});
-		}
-	};
-
 
 	render() {
-		const { email, password } = this.state;
-		const { emailValid, passwordValid, passMsg } = this.state;
-
-		const title = (typeof cookie.load('msg') === 'undefined') ? 'Login' : 'You must be signed in to ' + cookie.load('msg');
-
-		const emailClass = (emailValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
-		const passwordClass = (passwordValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
-		const buttonClass = (emailValid && passwordValid) ? 'fat-button adjacent-button' : 'fat-button adjacent-button button-disabled';
-
-		if (typeof cookie.load('msg') !== 'undefined') {
-			cookie.remove('msg');
-		}
+		console.log('LoginPage.render()', this.props, this.state);
 
 		return (
 			<div className="page-wrapper login-page-wrapper">
-				<h3>{title}</h3>
-				<h4>Enter the email address of each member of your team to invite them to this project.</h4>
-				<div className="login-page-form-wrapper">
-					<form onSubmit={this.handleSubmit}>
-						<div className={emailClass}><input type="text" name="email" placeholder="Enter Email or Username" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-						<div className={passwordClass} onClick={()=> this.handlePassword()}>
-							<input type="password" name="password" placeholder="Enter Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
-							<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
-						</div>
-						<Row vertical="center">
-							<Column><button type="submit" className={buttonClass} onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-							<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> this.props.onPage('recover')}>Forgot Password?</div></Column>
-						</Row>
-					</form>
-				</div>
+				<h3>Login to Design Engine</h3>
+				<h4>Enter Username or Email & Password to Login to Design Engine.</h4>
+				<LoginForm onLoggedIn={this.handleLoggedIn} onPage={this.props.onPage} />
 			</div>
 		);
 	}
 }
 
-export default connect(null, mapDispatchToProps)(LoginPage);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

@@ -3,15 +3,14 @@ import React, { Component } from 'react';
 import './InviteTeamPage.css';
 
 import axios from 'axios/index';
-import { connect } from 'react-redux';
+import cookie from 'react-cookies';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import Dropdown from '../elements/Dropdown';
-import Popup from '../elements/Popup';
+import Dropdown from '../forms/elements/Dropdown';
 
 import { buildProjectURL, isValidEmail, isUserLoggedIn } from '../../utils/funcs';
-import cookie from "react-cookies";
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -37,11 +36,7 @@ class InviteTeamPage extends Component {
 			email3Valid : false,
 			sentInvites : false,
 			loadOffset  : 0,
-			loadAmt     : 111,
-			popup : {
-				visible : false,
-				content : ''
-			}
+			loadAmt     : 111
 		};
 	}
 
@@ -91,7 +86,7 @@ class InviteTeamPage extends Component {
 					if (upload.id === uploadID) {
 						this.setState({
 							uploadTitle : upload.title,
-							uploadURL   : buildProjectURL(uploadID, upload.title)
+							uploadURL   : buildProjectURL(upload)
 						});
 					}
 				});
@@ -110,17 +105,16 @@ class InviteTeamPage extends Component {
 		this.setState({
 			uploadID    : upload.id,
 			uploadTitle : upload.title,
-			uploadURL   : buildProjectURL(upload.id, upload.title),
+			uploadURL   : buildProjectURL(upload),
 			uploads     : uploads
 		});
 	};
 
 	handleURLCopy = ()=> {
-		const popup = {
-			visible : true,
+		this.props.onPopup({
+			type    : 'INFO',
 			content : 'Copied to Clipboard!'
-		};
-		this.setState({ popup });
+		});
 	};
 
 	handleSubmit = (event)=> {
@@ -209,10 +203,6 @@ class InviteTeamPage extends Component {
 						</form>
 					</div>)
 					: (<h3>Invitations sent.</h3>)}
-
-				{this.state.popup.visible && (
-					<Popup content={this.state.popup.content} onComplete={()=> this.setState({ popup : { visible : false, content : '' }})} />
-				)}
 			</div>
 		);
 	}

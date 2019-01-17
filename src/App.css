@@ -4,18 +4,22 @@
 	height: 100%;
 }
 
-.unsupported-browser {
+.browser-wrapper {
+	width: 100%;
+	height: 100%;
+}
+
+.unsupported-device {
+	padding: 20px;
 	text-align: center;
 }
 
 .content-wrapper {
 	position: fixed;
 	top: 58px;
-	/*left: 301px;*/
 	left: 0;
-	/*width: calc(100% - 301px);*/
-	width: calc(100%);
-	height: calc(100% - 45px);
+	width: 100%;
+	height: calc(100% - 38px);
 	overflow-x: hidden;
 	overflow-y: scroll;
 	padding: 19px;
@@ -23,8 +27,8 @@
 
 .page-wrapper {
 	width: 100%;
-	/*margin-bottom: 20px;*/
-	margin-bottom: 75px;
+	min-height: calc(100% - 90px);
+	margin-bottom: 30px;
 }
 
 .page-header {
@@ -41,6 +45,7 @@
 	margin: 0 0 29px 0;
 	line-height: 30px;
 	font-family: "San Francisco Text", sans-serif;
+	font-weight: 400;
 	font-size: 16px;
 	letter-spacing: -0.24px;
 }
@@ -67,6 +72,7 @@
 
 .tiny-button {
 	font-family: "San Francisco Text Bold", sans-serif;
+	font-weight: 700;
 	font-size: 13px;
 	letter-spacing: -0.43px;
 	padding: 4px 14px;
@@ -107,7 +113,7 @@
 
 .sub-h1 {
 	font-family: "San Francisco Text Bold", sans-serif;
-	font-weight: 600;
+	font-weight: 700;
 	font-size: 28px;
 	letter-spacing: -0.52px;
 	color: #9b9b9b;
@@ -132,6 +138,7 @@
 .code-snippet {
 	background-color: #111111;
 	font-family: "AndaleMono", Monaco, Consolas, monospace;
+	font-weight: 400;
 	color: #7ed321;
 }
 
@@ -145,13 +152,14 @@
 }
 
 .upload-progress-bar {
-	width: 0;
+	width: 100;
 	height: 100%;
 	background-color: #68ca57;
 }
 
 .updated-timestamp {
 	font-family: "San Francisco Text", sans-serif;
+	font-weight: 400;
 	font-size: 18px;
 	font-style: italic;
 }

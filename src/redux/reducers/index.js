@@ -6,6 +6,7 @@ import {
 	ADD_FILE_UPLOAD,
 	APPEND_EXPLORE_ARTBOARDS,
 	APPEND_UPLOAD_ARTBOARDS,
+	SET_REDIRECT_URL,
 	UPDATE_NAVIGATION,
 	USER_PROFILE_ERROR,
 	USER_PROFILE_LOADED,
@@ -18,6 +19,7 @@ const initialState = {
 	uploadArtboards  : [],
 	userProfile      : null,
 	file             : null,
+	redirectURL      : null,
 	navigation       : {
 		uploadID   : 0,
 		pageID     : 0,
@@ -29,30 +31,6 @@ const initialState = {
 
 const LOG_PREFIX = '[:|:]';
 const LOG_ACT_PREFIX = '\t-=\\';
-
-
-/*
-
-const uniqueArray = (arr)=> {
-	return (
-		arr.reduce((acc, inc) => {
-			if (!acc.find((i)=> (i === inc))) {
-				acc.push(inc);
-			}
-
-			return (acc);
-			}, []
-		)
-	);
-};
-*/
-
-
-const pruneArtboards = (artboards)=> {
-	return (artboards.reduce((acc, inc)=>
-		[...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], []
-	));
-};
 
 
 function rootReducer(state=initialState, action) {
@@ -74,8 +52,8 @@ function rootReducer(state=initialState, action) {
 		actionLogFormat(action, state.exploreArtboards);
 
 		return (Object.assign({}, state, {
-// 			exploreArtboards : state.exploreArtboards.concat(action.payload).reduce((acc, inc)=> [...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], [])
-			exploreArtboards : pruneArtboards(state.exploreArtboards.concat(action.payload))
+			exploreArtboards : state.exploreArtboards.concat(action.payload).reduce((acc, inc)=> [...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], [])
+// 			exploreArtboards : pruneArtboards(state.exploreArtboards.concat(action.payload))
 		}));
 
 	} else if (action.type === APPEND_UPLOAD_ARTBOARDS) {
@@ -85,8 +63,15 @@ function rootReducer(state=initialState, action) {
 // 		const { uploadID, pageID, id } = (artboard) ? artboard : null;
 
 		return (Object.assign({}, state, {
-// 			uploadArtboards : state.uploadArtboards.concat(action.payload).reduce((acc, inc)=> [...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], [])
-			uploadArtboards : pruneArtboards(state.uploadArtboards.concat(action.payload))
+			uploadArtboards : state.uploadArtboards.concat(action.payload).reduce((acc, inc) => [...acc.filter((artboard) => (artboard.id !== inc.id)), inc], [])
+// 			uploadArtboards : pruneArtboards(state.uploadArtboards.concat(action.payload))
+		}));
+
+	} else if (action.type === SET_REDIRECT_URL) {
+		actionLogFormat(action);
+
+		return (Object.assign({}, state, {
+			redirectURL : action.payload
 		}));
 
 	} else if (action.type === USER_PROFILE_ERROR || action.type === USER_PROFILE_LOADED || action.type === USER_PROFILE_UPDATED) {

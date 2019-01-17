@@ -1,7 +1,10 @@
+
 import React, { Component } from 'react';
+import './Dropdown.css';
+
 import FontAwesome from 'react-fontawesome';
 import onClickOutside from 'react-onclickoutside';
-import './Dropdown.css';
+
 
 class DropdownMultiple extends Component{
 	constructor(props) {

@@ -3,7 +3,7 @@
 	position: relative;
 	width: 260px;
 	height: 350px;
-	background: #111111 url("/images/checkerboard.png") repeat;
+	background: #111111 url(../../assets/images/backgrounds/bg-checkerboard.png) repeat;
 	margin-bottom: 18px;
 	border-radius: 4px;
 	color: #0267d8;

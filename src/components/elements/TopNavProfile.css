@@ -7,6 +7,7 @@
 	height: 30px;
 	border-radius: 4px;
 	margin-right: 10px;
+	background-image: url(../../assets/images/default-avatar.png);
 }
 
 .top-nav-profile-arrow {
@@ -45,4 +46,10 @@
 	font-size: 14px;
 	letter-spacing: -0.23px;
 	color: #0267D8;
+	text-decoration: none;
+}
+
+.top-nav-profile-link:hover {
+	text-decoration: underline;
+	cursor: pointer;
 }

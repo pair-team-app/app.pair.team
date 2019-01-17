@@ -2,10 +2,10 @@
 import React, { Component } from 'react';
 import './RegisterForm.css'
 
-import axios from "axios";
+import axios from 'axios';
 import { Column, Row } from 'simple-flexbox';
 
-import { hasBit, isValidEmail } from "../../utils/funcs";
+import { hasBit, isValidEmail } from '../../utils/funcs';
 
 
 const passwordTextfield = React.createRef();
@@ -26,12 +26,12 @@ class RegisterForm extends Component {
 			password2     : '',
 			usernameValid : true,
 			emailValid    : true,
-			passwordValid : true,
+			passwordValid : true
 		};
 	}
 
 	componentDidMount() {
-		console.log('RegisterForm.componentDidMount()', this.props, this.state);
+// 		console.log('RegisterForm.componentDidMount()', this.props, this.state);
 	}
 
 	componentWillUnmount() {
@@ -116,7 +116,7 @@ class RegisterForm extends Component {
 
 
 	render() {
-		console.log('RegisterForm.render()', this.props, this.state);
+// 		console.log('RegisterForm.render()', this.props, this.state);
 
 		const { username, email, password, password2 } = this.state;
 		const { usernameValid, emailValid, passwordValid, passMsg } = this.state;
@@ -130,16 +130,16 @@ class RegisterForm extends Component {
 		return (
 			<div className="register-form-wrapper">
 				<form onSubmit={this.handleSubmit}>
-					<div className={usernameClass}><input type="text" name="username" placeholder="Enter Username" value={username} onFocus={()=> this.setState({ username : '', usernameValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-					<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+					<div className={usernameClass}><input type="text" name="username" placeholder="Username" value={username} onFocus={()=> this.setState({ username : '', usernameValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+					<div className={emailClass}><input type="text" name="email" placeholder="Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className={passwordClass} onClick={()=> this.handlePassword()}>
-						<input type="password" name="password" placeholder="Enter Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
+						<input type="password" name="password" placeholder="Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
 						<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
 					</div>
 					<div className={password2Class}><input type="password" name="password2" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<Row vertical="center">
 						<Column><button type="submit" className={buttonClass} onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-						<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> this.props.onPage('login')}>Already have an account?</div></Column>
+						<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> this.props.onLogin()}>Already have an account?</div></Column>
 					</Row>
 				</form>
 			</div>

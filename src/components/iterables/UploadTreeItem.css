@@ -22,6 +22,7 @@
 
 .tree-item-text-selected {
 	font-family: "San Francisco Text Bold", sans-serif;
+	font-weight: 700;
 	text-decoration: underline;
 }
 

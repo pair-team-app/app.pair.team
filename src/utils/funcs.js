@@ -1,26 +1,53 @@
 
 import cookie from 'react-cookies';
-import axios from "axios";
+import axios from 'axios';
 
+import {
+// 	ADD_ONS,
+// 	API,
+	HOME,
+	COLORS,
+	EXPLORE,
+	FONTS,
+	INSPECT,
+// 	LOGIN,
+// 	MISSION,
+	PARTS,
+// 	PRIVACY,
+	PROFILE,
+// 	RECOVER,
+// 	REGISTER,
+// 	TERMS,
+	UPLOAD
+} from '../consts/pathnames';
 
-export function buildInspectorPath(uploadID, pageID, artboardID, artboardTitle, suffix='') {
-	return ('/page/' + uploadID + '/' + pageID + '/' + artboardID + '/' + convertURLSlug(artboardTitle) + suffix);
+export function buildInspectorPath(upload, prefix=null, suffix='') {
+	prefix = (prefix || (`/${window.location.pathname.substr(1).split('/').shift()}`));
+	return (`${prefix}/${upload.id}/${convertURLSlug(upload.title)}${suffix}`);
 }
 
-export function buildInspectorURL(uploadID, pageID, artboardID, artboardTitle, suffix='') {
-	return (window.location.origin + buildInspectorPath(uploadID, pageID, artboardID, artboardTitle, suffix));
+export function buildInspectorURL(upload, prefix=null, suffix='') {
+	return (window.location.origin + buildInspectorPath(upload, prefix, suffix));
 }
 
-export function buildProjectPath(uploadID, title, suffix='') {
-	return ('/proj/' + uploadID + '/' + convertURLSlug(title) + suffix);
+export function buildProjectPath(upload, prefix=null, suffix='') {
+	return ('/proj/' + upload.id + '/' + convertURLSlug(upload.title) + suffix);
 }
 
-export function buildProjectURL(uploadID, title, suffix='') {
-	return (window.location.origin + buildProjectPath(uploadID, title, suffix));
+export function buildProjectURL(upload, prefix=null, suffix='') {
+	return (window.location.origin + buildProjectPath(upload, prefix, suffix));
+}
+
+export function camilzeText(text, separator=' ', first=false) {
+	separator = (separator || ' ');
+
+	const camilized = text.split(separator).map((word)=> (word.replace(/^./, (c)=> (c.toUpperCase())))).join('');
+	return ((first) ? camilized : camilized.replace(/^./, (c)=> (c.toLowerCase())));
 }
 
 export function capitalizeText(text, toLower=false) {
-	return ((toLower) ? text.toLowerCase().replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }) : text.replace(/(\b\w)/gi, function(c) { return (c.toUpperCase()); }));
+	text = (toLower) ? text.toLowerCase() : text;
+	return (text.replace(/(\b\w)/gi, (c)=> (c.toUpperCase())));
 }
 
 export function convertURLSlug(text) {
@@ -47,45 +74,49 @@ export function hasBit(val, bit) {
 }
 
 export function hideText(text, char='*') {
-	return (Array(text.length + 1).join(char));
+	return ((text.length > 0) ? Array(text.length + 1).join(char) : '');
 }
 
 export function idsFromPath() {
-	const pathname = window.location.pathname;
-	const artboardPath = /\/artboard|page\/\d+\/\d+\/\d+\/.*$/;
-	const explorePath = /\/explore\/\d+\/.*$/;
-	const projPath = /\/proj\/\d+\/.*$/;
+	const { pathname } = window.location;
+	const inspectorPath = /\/(?:inspect|colors|parts|typography)\/(\d+)\/.+$/;
 
-	return ({
-		uploadID   : (artboardPath.test(pathname)) ? pathname.match(/\/artboard|page\/(\d+)\/.*$/)[1] : (explorePath.test(pathname)) ? pathname.match(/\/explore\/(\d+)\/.*$/)[1] : (projPath.test(pathname)) ? pathname.match(/\/proj\/(\d+)\/.*$/)[1] : 0,
-		pageID     : (artboardPath.test(pathname)) ? pathname.match(/\/artboard|page\/\d+\/(\d+)\/.*$/)[1] : 0,
-		artboardID : (artboardPath.test(pathname)) ? pathname.match(/\/artboard|page\/\d+\/\d+\/(\d+)\/.*$/)[1] : 0,
+	const navIDs = {
+		uploadID   : (inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[1] : 0,
+		pageID     : 0,
+		artboardID : 0,
 		sliceID    : 0
-	});
+	};
+
+	return (navIDs);
 }
 
 export function isExplorePage() {
-	return (window.location.pathname.includes('/explore'));
+	const { pathname } = window.location;
+	return (pathname.includes(EXPLORE));
 }
 
 export function isHomePage() {
-	return (window.location.pathname === '' || window.location.pathname === '/');
+	const { pathname } = window.location;
+	return (pathname === '' || pathname === HOME);
 }
 
 export function isInspectorPage() {
-	return (window.location.pathname.includes('/artboard') || window.location.pathname.includes('/page'));
+	const { pathname } = window.location;
+	return ((pathname.includes(INSPECT + '/') || pathname.includes(COLORS + '/') || pathname.includes(FONTS + '/') || pathname.includes(PARTS + '/')) && /^.+\/\d+\/.+$/.test(pathname));
 }
 
 export function isProfilePage() {
-	return (window.location.pathname.includes('/profile'));
+	return (window.location.pathname.includes(PROFILE));
 }
 
 export function isProjectPage() {
 	return (window.location.pathname.includes('/proj'));
 }
 
-export function isUploadPage() {
-	return (window.location.pathname.includes('/new'));
+export function isUploadPage(base=false) {
+	const { pathname } = window.location;
+	return ((base) ? pathname === UPLOAD : pathname.includes(UPLOAD));
 }
 
 export function isUserLoggedIn() {
@@ -99,6 +130,23 @@ export function isValidEmail(email) {
 
 export function limitString(str='', len) {
 	return ((str.length > len) ? str.substr(0, len - 1) + '…' : str);
+}
+
+export function numberedName(name, list) {
+	if (list[name].length > 0) {
+		const cnt = ++list[name];
+		return ({
+			name : `${name}_${cnt}`,
+			list : list
+		});
+
+	} else {
+		list[name] = 1;
+		return ({
+			name : `${name}_1`,
+			list : list
+		});
+	}
 }
 
 export function randomElement(array) {

@@ -4,10 +4,12 @@ html, body {
   padding: 0;
   height: 100%;
   font-family: "San Francisco Text Medium", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-weight: 500;
   font-size: 16px;
   letter-spacing: -0.27px;
   background-color: #ffffff;
   color: #696969;
+  min-height: 100%;
   /*-webkit-font-smoothing: antialiased;*/
   /*-moz-osx-font-smoothing: grayscale;*/
 }
@@ -35,6 +37,7 @@ button {
   border: 1px solid #4e9500;
   border-radius: 4px;
   font-family: "San Francisco Text Bold", sans-serif;
+  font-weight: 700;
   font-size: 16px;
   letter-spacing: -0.6px;
   color : #ffffff;
@@ -113,6 +116,7 @@ input[type=text], input[type=password], input[type=tel], textarea, .input-txt, .
   border: 1px solid #eaecef;
   border-radius: 3px;
   font-family: "San Francisco Text", sans-serif;
+  font-weight: 400;
   font-size: 16px;
   letter-spacing: -0.3px;
   cursor: text;
@@ -120,6 +124,7 @@ input[type=text], input[type=password], input[type=tel], textarea, .input-txt, .
 
 p {
   font-family: "San Francisco Text", sans-serif;
+  font-weight: 400;
   line-height: 32px;
   margin-bottom: 32px;
   color: #696969;
@@ -127,6 +132,7 @@ p {
 
 sup {
   font-family: "San Francisco Text", sans-serif;
+  font-weight: 400;
   font-size: 10px;
   color: #7ed321;
   text-transform: uppercase;
@@ -135,6 +141,11 @@ sup {
 
 textarea {
   resize: none;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
 }
 
 ::-webkit-scrollbar {
@@ -157,84 +168,34 @@ textarea {
 @font-face {
   font-family: "AndaleMono";
   font-weight: 400;
-  src: url("./fonts/AndaleMono.otf");
+  src: url(assets/fonts/AndaleMono.otf);
 }
 
-
-/** Bold */
-@font-face {
-  font-family: "RobotoMono Bold";
-  font-weight: 700;
-  src: url("./fonts/RobotoMono-Bold.otf");
-}
-
-/** Medium */
-@font-face {
-  font-family: "RobotoMono Medium";
-  font-weight: 500;
-  src: url("./fonts/RobotoMono-Medium.otf");
-}
-
-/** Regular */
-@font-face {
-  font-family: "RobotoMono";
-  font-weight: 400;
-  src: url("./fonts/RobotoMono-Regular.otf");
-}
-
-/** Light */
-@font-face {
-  font-family: "RobotoMono Light";
-  font-weight: 400;
-  src: url("./fonts/RobotoMono-Light.otf");
-}
-
-/** Thin */
-@font-face {
-  font-family: "RobotoMono Thin";
-  font-weight: 400;
-  src: url("./fonts/RobotoMono-Thin.otf");
-}
-
-
-/** Heavy */
-@font-face {
-  font-family: "San Francisco Text Heavy";
-  font-weight: 800;
-  src: url("./fonts/SanFranciscoText-Heavy.otf");
-}
 
 /** Bold */
 @font-face {
   font-family: "San Francisco Text Bold";
   font-weight: 700;
-  src: url("./fonts/SanFranciscoText-Bold.otf");
+  src: url(assets/fonts/SanFranciscoText-Bold.otf);
 }
 
 /** Semi-Bold */
 @font-face {
   font-family: "San Francisco Text SemiBold";
   font-weight: 600;
-  src: url("./fonts/SanFranciscoText-Semibold.otf");
+  src: url(assets/fonts/SanFranciscoText-Semibold.otf);
 }
 
 /** Medium */
 @font-face {
   font-family: "San Francisco Text Medium";
   font-weight: 500;
-  src: url("./fonts/SanFranciscoText-Medium.otf");
+  src: url(assets/fonts/SanFranciscoText-Medium.otf);
 }
 
 /** Regular */
 @font-face {
   font-family: "San Francisco Text";
   font-weight: 400;
-  src: url("./fonts/SanFranciscoText-Regular.otf");
-}
-
-/** Light */
-@font-face {
-  font-family: "San Francisco Text Light";
-  font-weight: 300;
-  src: url("./fonts/SanFranciscoText-Light.otf");
+  src: url(assets/fonts/SanFranciscoText-Regular.otf);
 }

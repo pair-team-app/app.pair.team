@@ -1,17 +1,14 @@
 
 import cookie from "react-cookies";
 
-import {
-// 	APPEND_EXPLORE_ARTBOARDS,
-// 	APPEND_UPLOAD_ARTBOARDS,
-	USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { USER_PROFILE_UPDATED } from '../../consts/action-types';
 
 
 export function onMiddleware({ dispatch }) {
-	console.log('onMiddleware().dispatch', dispatch);
+// 	console.log('onMiddleware().dispatch', dispatch);
 
 	return (function(next) {
-		console.log('onMiddleware().next', next);
+// 		console.log('onMiddleware().next', next);
 
 		return (function(action) {
 			console.log('onMiddleware().action', action);
@@ -20,16 +17,7 @@ export function onMiddleware({ dispatch }) {
 			if (action.type === USER_PROFILE_UPDATED) {
 				cookie.save('user_id', (payload) ? payload.id : '0', { path : '/' });
 				cookie.save('username', (payload) ? payload.username : '', { path : '/' });
-
-// 			} else if (action.type === APPEND_EXPLORE_ARTBOARDS) {
-// 				console.log('onMiddleware()', payload.unique());
-// 				return (
-// 					dispatch({
-// 						type    : action.type,
-// 						payload : payload.unique()
-// 					})
-// 				);
-//
+				//
 // 			} else if (action.type === APPEND_UPLOAD_ARTBOARDS) {
 // 				console.log('onMiddleware()', payload.unique());
 //

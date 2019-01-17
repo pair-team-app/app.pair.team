@@ -4,7 +4,7 @@ import './AddOnsPage.css';
 
 import { Column, Row } from 'simple-flexbox';
 
-import addOns from '../../json/add-ons.json';
+import addOns from '../../assets/json/add-ons.json';
 
 
 function AddOnItem(props) {
