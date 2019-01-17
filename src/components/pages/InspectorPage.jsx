@@ -14,7 +14,7 @@ import InviteTeamForm from '../forms/InviteTeamForm';
 import { setRedirectURL } from '../../redux/actions';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { TIMESTAMP_OPTS } from '../../consts/formats';
-import { capitalizeText, isUserLoggedIn, sendToSlack } from '../../utils/funcs.js';
+import { buildInspectorURL, capitalizeText, isUserLoggedIn, sendToSlack } from '../../utils/funcs.js';
 import { toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/langs.js';
 import enabledZoomInButton from '../../images/buttons/btn-zoom-in_enabled.svg';
 import disabledZoomInButton from '../../images/buttons/btn-zoom-in_disabled.svg';
@@ -22,7 +22,6 @@ import enabledZoomOutButton from '../../images/buttons/btn-zoom-out_enabled.svg'
 import disabledZoomOutButton from '../../images/buttons/btn-zoom-out_disabled.svg';
 import enabledZooResetButton from '../../images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../images/buttons/btn-zoom-reset_disabled.svg';
-import {buildInspectorURL} from "../../utils/funcs";
 
 
 const InteractiveDiv = panAndZoomHoc('div');
@@ -103,10 +102,10 @@ const InviteTeamModal = (props)=> {
 };
 
 
-const SliceItem = (props)=> {
-// 	console.log('InspectorPage.SliceItem()', props);
+const SliceRolloverItem = (props)=> {
+// 	console.log('InspectorPage.SliceRolloverItem()', props);
 
-	const className = (props.type === 'slice') ? 'slice-item slice-item-slice' : (props.type === 'hotspot') ? 'slice-item slice-item-hotspot' : (props.type === 'textfield') ? 'slice-item slice-item-textfield' : 'slice-item slice-item-group';
+	const className = (props.type === 'slice') ? 'slice-rollover-item slice-rollover-item-slice' : (props.type === 'hotspot') ? 'slice-rollover-item slice-rollover-item-hotspot' : (props.type === 'textfield') ? 'slice-rollover-item slice-rollover-item-textfield' : 'slice-rollover-item slice-rollover-item-group';
 	const style = {
 		top     : props.top + 'px',
 		left    : props.left + 'px',
@@ -119,6 +118,17 @@ const SliceItem = (props)=> {
 	return (
 		<div data-slice-id={props.id} className={className + ((props.filled) ? '-filled' : '')} style={style} onMouseEnter={()=> props.onRollOver(props.offset)} onMouseLeave={()=> props.onRollOut()} onClick={()=> props.onClick(props.offset)} />
 	);
+};
+
+const SlicePreviewItem = (props)=> {
+// 	console.log('InspectorPage.SlicePreviewItem()', props);
+
+	const { id, filename, title, size } = props;
+
+	return (<div data-slice-id={id} className="slice-preview-item" onClick={()=> props.onClick()}>
+		<img src={`${filename}@1x.png`} className="slice-preview-item-image" width={size.width * 0.25} height={size.height * 0.25} alt={title} />
+		<div className="slice-preview-item-title">{title}</div>
+	</div>);
 };
 
 const SpecsList = (props)=> {
@@ -190,10 +200,22 @@ const SpecsList = (props)=> {
 };
 
 
+const buildSlicePreviews = (upload, slice)=> {
+	let slices = [];
+	const pages = [...upload.pages];
+	pages.forEach((page)=> {
+		page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item) => {
+			item.slices.filter((itm)=> (itm.id !== slice.id)).forEach((itm)=> {
+				if (sliceContainsSlice(slice, itm)) {
+					slices.push(itm);
+				}
+			});
+		});
+	});
 
-const tabContent = (html, slices)=> {
-	return (`${html.replace(/ /g, '&nbsp;').replace(/\\n/g, '<br />')}${JSON.stringify('\n<p>' + slices.filter((slice)=> (slice.type === 'group')).map((slice)=> (`<p>${slice.title}<br /><img src="${slice.filename}@1x.png" width="${slice.meta.frame.size.width * 0.25}" height="${slice.meta.frame.size.height * 0.25}" style="border: 1px dotted #00ffff" alt="${slice.title}" /></p>`)).join('\n') + '</p>')}`.replace('""', ''));
+	return (slices);
 };
+
 
 class InspectorPage extends Component {
 	constructor(props) {
@@ -480,17 +502,11 @@ class InspectorPage extends Component {
 		const { upload, section } = this.state;
 		let { tabs } = this.state;
 		let artboard = null;
-		let slices = [];
 
 		const pages = [...upload.pages];
 		pages.forEach((page)=> {
 			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item) => {
 				artboard = item;
-				item.slices.filter((itm)=> (itm.id !== slice.id)).forEach((itm)=> {
-					if (sliceContainsSlice(slice, itm)) {
-						slices.push(itm);
-					}
-				});
 			});
 		});
 
@@ -499,13 +515,15 @@ class InspectorPage extends Component {
 		const swift = toSwift(slice, artboard);
 
 		if (section === 'inspect') {
-// 			tabs[0].contents = css.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
-			tabs[0].contents = tabContent(css.html, slices);
+			tabs[0].contents = css.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
 			tabs[0].syntax = css.syntax;
 			tabs[1].contents = reactCSS.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
 			tabs[1].syntax = reactCSS.syntax;
 			tabs[2].contents = swift.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
 			tabs[2].syntax = swift.syntax;
+
+		} else if (section === 'parts') {
+			tabs[0].contents = buildSlicePreviews(upload, slice);
 		}
 
 		this.setState({
@@ -514,6 +532,11 @@ class InspectorPage extends Component {
 			slice      : slice,
 			offset     : offset
 		});
+	};
+
+
+	handleSlicePreview = (sliceID)=> {
+		console.log('InspectorPage.handleSlicePreview()', sliceID);
 	};
 
 	handleSliceRollOut = (ind, slice)=> {
@@ -536,16 +559,12 @@ class InspectorPage extends Component {
 		this.setState({ upload });
 
 		if (this.state.slice) {
-			let slices = [];
 			const pages = [...upload.pages];
 			pages.forEach((page)=> {
 				page.artboards.filter((artboard)=> (artboard.id === this.state.slice.artboardID)).forEach((item) => {
 					artboard = item;
 					item.slices.filter((itm)=> (itm.id !== this.state.slice.id)).forEach((itm)=> {
 						itm.filled = sliceContainsSlice(this.state.slice, itm);
-						if (itm.filled) {
-							slices.push(itm);
-						}
 					});
 				});
 			});
@@ -555,13 +574,15 @@ class InspectorPage extends Component {
 			const swift = toSwift(this.state.slice, artboard);
 
 			if (section === 'inspect') {
-// 				tabs[0].contents = css.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
-				tabs[0].contents = tabContent(css.html, slices);
+				tabs[0].contents = css.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
 				tabs[0].syntax = css.syntax;
 				tabs[1].contents = reactCSS.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
 				tabs[1].syntax = reactCSS.syntax;
 				tabs[2].contents = swift.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
 				tabs[2].syntax = swift.syntax;
+
+			} else if (section === 'parts') {
+				tabs[0].contents = buildSlicePreviews(upload, this.state.slice);
 			}
 		}
 
@@ -578,7 +599,6 @@ class InspectorPage extends Component {
 		const { upload, section } = this.state;
 		let { tabs } = this.state;
 		let artboard = null;
-		let slices = [];
 
 		const pages = [...upload.pages];
 		pages.forEach((page)=> {
@@ -586,9 +606,6 @@ class InspectorPage extends Component {
 				artboard = item;
 				item.slices.filter((itm)=> (itm.id !== slice.id)).forEach((itm)=> {
 					itm.filled = sliceContainsSlice(slice, itm);
-					if (itm.filled) {
-						slices.push(itm);
-					}
 				});
 			});
 		});
@@ -604,13 +621,15 @@ class InspectorPage extends Component {
 		//console.log('::::::::::::', String(JSON.parse(contents)));
 
 		if (section === 'inspect') {
-// 			tabs[0].contents = css.html;
-			tabs[0].contents = tabContent(css.html, slices);
+			tabs[0].contents = css.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
 			tabs[0].syntax = css.syntax;
 			tabs[1].contents = reactCSS.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
 			tabs[1].syntax = reactCSS.syntax;
 			tabs[2].contents = swift.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
 			tabs[2].syntax = swift.syntax;
+
+		} else if (section === 'parts') {
+			tabs[0].contents = buildSlicePreviews(upload, slice);
 		}
 
 		this.setState({
@@ -1216,7 +1235,7 @@ class InspectorPage extends Component {
 			};
 
 			const groupSlices = artboard.slices.filter((slice)=> (slice.type === 'group')).map((slice, i) => {
-				return (<SliceItem
+				return (<SliceRolloverItem
 					key={i}
 					id={slice.id}
 					title={slice.title}
@@ -1235,7 +1254,7 @@ class InspectorPage extends Component {
 			});
 
 			const hotspotSlices = artboard.slices.filter((slice)=> (slice.type === 'hotspot')).map((slice, i) => {
-				return (<SliceItem
+				return (<SliceRolloverItem
 					key={i}
 					id={slice.id}
 					title={slice.title}
@@ -1254,7 +1273,7 @@ class InspectorPage extends Component {
 			});
 
 			const textfieldSlices = artboard.slices.filter((slice)=> (slice.type === 'textfield')).map((slice, i) => {
-				return (<SliceItem
+				return (<SliceRolloverItem
 					key={i}
 					id={slice.id}
 					title={slice.title}
@@ -1273,7 +1292,7 @@ class InspectorPage extends Component {
 			});
 
 			const sliceSlices = artboard.slices.filter((slice)=> (slice.type === 'slice')).map((slice, i) => {
-				return (<SliceItem
+				return (<SliceRolloverItem
 					key={i}
 					id={slice.id}
 					title={slice.title}
@@ -1377,7 +1396,21 @@ class InspectorPage extends Component {
 						</div>
 						<div className="inspector-page-panel-tab-content-wrapper">
 							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i) => {
-								return (<div key={i} className="inspector-page-panel-tab-content"><span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents)) : '' }} /></div>);
+								if (section === 'inspect') {
+									return (<div key={i} className="inspector-page-panel-tab-content">
+										<span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents)) : '' }} />
+									</div>);
+
+								} else {
+									return ((tab.contents)
+										? <Row key={0} horizontal="space-around" className="slice-preview-item-wrapper" style={{ flexWrap : 'wrap' }}>
+												{tab.contents.filter((slice)=> (slice.type === 'group')).map((slice, i)=> {
+													return(<Column key={i}><SlicePreviewItem id={slice.id} filename={slice.filename} title={slice.title} size={slice.meta.frame.size} onClick={()=> this.handleSlicePreview(slice.id)} /></Column>);
+												})}
+											</Row>
+										: ''
+									);
+								}
 							}))}
 						</div>
 					</div>
