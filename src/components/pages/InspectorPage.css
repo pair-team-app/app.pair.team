@@ -111,6 +111,7 @@
 
 .inspector-page-panel {
 	width: 364px;
+	max-width: 364px;
 	height: calc(100vh - 57px);
 	display: table-cell;
 	vertical-align: top;

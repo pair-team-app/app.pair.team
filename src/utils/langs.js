@@ -1,7 +1,7 @@
 
 import { camilzeText, capitalizeText, convertURLSlug } from './funcs';
 
-const HTML_TAB = '&nbsp;&nbsp;';
+const HTML_TAB = '  ';
 
 
 export function toCSS(slice) {
@@ -29,7 +29,7 @@ export function toCSS(slice) {
 
 	return ({
 		html   : JSON.stringify(html),
-		syntax : html.replace(/(&nbsp)+;/g, ' ')
+		syntax : html.replace(HTML_TAB, '\t')
 	});
 }
 
@@ -41,7 +41,7 @@ export function toJava(slice) {
 }
 
 export function toReactCSS(slice) {
-	const html = toCSS(slice).syntax.replace(/: (.+?);/g, ': \'$1\',').replace(/(-.)/g, function(v){ return (v[1].toUpperCase()); }).replace(/,\n}/, ' }').replace(/^.+{\n/, '{').replace(/ +/g, ' ').replace(/\n/g, '');
+	const html = toCSS(slice).syntax.replace(/: (.+?);/g, ': \'$1\',').replace(/(-.)/g, (c)=> (c[1].toUpperCase())).replace(/,\n}/, ' }').replace(/^.+{\n/, '{').replace(/ +/g, ' ').replace(/\n/g, '');
 
 	return ({
 		html   : JSON.stringify(html),
@@ -68,19 +68,18 @@ export function toSpecs(slice) {
 
 	content += `Padding\t${slice.meta.padding.top}px ${slice.meta.padding.right}px ${slice.meta.padding.bottom}px ${slice.meta.padding.left}px\n`;
 
-
 	return (content);
 }
 
 export function toSwift(slice, artboard) {
-	console.log('funcs.toSwift()', slice, artboard);
+// 	console.log('funcs.toSwift()', slice, artboard);
 
-	const badChars = /[\\.,_+=\[\](){}]/g;
+	const badChars = /[\\.,_+=[\](){}]/g;
 
 	let html = '';
 	if (slice.type === 'slice' || slice.type === 'group') {
-		const artboardName = camilzeText(artboard.title.replace(/[-\/—]+/g, ' ').replace(badChars, ''), null, true);
-		const sliceName = camilzeText(convertURLSlug(slice.title).replace(/[-\/—]+/g, ' ').replace(badChars, ''));
+		const artboardName = camilzeText(artboard.title.replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
+		const sliceName = camilzeText(convertURLSlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''));
 
 		html += '// Asset\n';
 		html += 'enum Asset {\n';
@@ -96,14 +95,14 @@ export function toSwift(slice, artboard) {
 			html += 'struct ColorName {\n';
 			html += `${HTML_TAB}let rgbaValue: UInt32\n`;
 			html += `${HTML_TAB}var color: Color { return Color(named: self) }\n`;
-			html += `${HTML_TAB}static let ${camilzeText(slice.title)} = ColorName(rgbValue: 0x${slice.meta.fillColor.replace('#', '')}ff)\n`;
+			html += `${HTML_TAB}static let ${camilzeText(slice.title)} = ColorName(rgbaValue: 0x${slice.meta.fillColor.replace('#', '')}ff)\n`;
 			html += '\n';
 			html += `let ${camilzeText(slice.title)}Color = UIColor(named: .${camilzeText(slice.title)})\n`;
 			html += `let ${camilzeText('alt' + slice.title)}Color = ColorName.${camilzeText(slice.title)}.color\n`;
 		}
 
 	} else if (slice.type === 'textfield') {
-		const family = slice.meta.font.family.split(' ').slice(0, -1).join(' ').replace(' ', '');
+		const family = (slice.meta.font.family.includes(' ')) ? slice.meta.font.family.split(' ').slice(0, -1).join(' ').replace(' ', '') : slice.meta.font.family;
 		const name = slice.meta.font.name.replace(family, '');
 		const postscript = (slice.meta.font.psName) ? slice.meta.font.psName : `${family}-${name}`;
 
@@ -113,14 +112,14 @@ export function toSwift(slice, artboard) {
 		html += `${HTML_TAB}${HTML_TAB}static let ${name.toLowerCase()} = FontConvertible(name: "${family}-${name}", family: "${slice.meta.font.family}", path: "${postscript}.otf")\n`;
 		html += `${HTML_TAB}}\n`;
 		html += '}\n\n';
-		html += `let ${camilzeText(slice.meta.font.family.split(' ').slice(0, -1).join(' ') + name)} = UIFont(font: FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
-		html += `let ${camilzeText('alt' + slice.meta.font.family.split(' ').slice(0, -1).join(' ') + name)} = FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
+		html += `let ${camilzeText([family,name].join(' '))} = UIFont(font: FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
+		html += `let ${camilzeText(['alt', family, name].join(' '))} = FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
 		html += '\n\n';
 		html += '// Color\n';
 		html += 'struct ColorName {\n';
 		html += `${HTML_TAB}let rgbaValue: UInt32\n`;
 		html += `${HTML_TAB}var color: Color { return Color(named: self) }\n`;
-		html += `${HTML_TAB}static let ${camilzeText(slice.title)} = ColorName(rgbValue: 0x${slice.meta.font.color.replace('#', '')}ff)\n`;
+		html += `${HTML_TAB}static let ${camilzeText(slice.title)} = ColorName(rgbaValue: 0x${slice.meta.font.color.replace('#', '')}ff)\n`;
 		html += '\n';
 		html += `let ${camilzeText(slice.title)}Color = UIColor(named: .${camilzeText(slice.title)})\n`;
 		html += `let ${camilzeText('alt' + slice.title)}Color = ColorName.${camilzeText(slice.title)}.color\n`;

@@ -166,7 +166,7 @@ const SpecsList = (props)=> {
 			<Row><Column flexGrow={1}>Fills</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (props.slice.type === 'textfield' && props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : props.slice.meta.fillColor.toUpperCase() : ''}</Column></Row>
 			<Row><Column flexGrow={1}>Borders</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>
 			{(props.slice && props.slice.type === 'textfield') && (<div>
-				<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.family) ? props.slice.meta.font.family : ''}</Column></Row>
+				<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.family) ? props.slice.meta.font.family : ''} {(props.slice.meta.font.name) ? props.slice.meta.font.name : ''}</Column></Row>
 				<Row><Column flexGrow={1}>Font Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.size + 'px')}</Column></Row>
 				<Row><Column flexGrow={1}>Font Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : ''}</Column></Row>
 				{/*<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.alignment) ? capitalizeText(props.slice.meta.font.alignment) : 'Left'}</Column></Row>*/}
@@ -189,6 +189,11 @@ const SpecsList = (props)=> {
 	);
 };
 
+
+
+const tabContent = (html, slices)=> {
+	return (`${html.replace(/ /g, '&nbsp;').replace(/\\n/g, '<br />')}${JSON.stringify('\n<p>' + slices.map((slice)=> (`<p>${slice.title}<br /><img src="${slice.filename}@1x.png" width="${slice.meta.frame.size.width * 0.25}" height="${slice.meta.frame.size.height * 0.25}" style="border: 1px dotted #00ffff" alt="${slice.title}" /></p>`)).join('\n') + '</p>')}`.replace('""', ''));
+};
 
 class InspectorPage extends Component {
 	constructor(props) {
@@ -475,11 +480,17 @@ class InspectorPage extends Component {
 		const { upload, section } = this.state;
 		let { tabs } = this.state;
 		let artboard = null;
+		let slices = [];
 
 		const pages = [...upload.pages];
 		pages.forEach((page)=> {
 			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item) => {
 				artboard = item;
+				item.slices.filter((itm)=> (itm.id !== slice.id)).forEach((itm)=> {
+					if (sliceContainsSlice(slice, itm)) {
+						slices.push(itm);
+					}
+				});
 			});
 		});
 
@@ -488,11 +499,12 @@ class InspectorPage extends Component {
 		const swift = toSwift(slice, artboard);
 
 		if (section === 'inspect') {
-			tabs[0].contents = css.html;
+// 			tabs[0].contents = css.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
+			tabs[0].contents = tabContent(css.html, slices);
 			tabs[0].syntax = css.syntax;
-			tabs[1].contents = reactCSS.html;
+			tabs[1].contents = reactCSS.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
 			tabs[1].syntax = reactCSS.syntax;
-			tabs[2].contents = swift.html;
+			tabs[2].contents = swift.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
 			tabs[2].syntax = swift.syntax;
 		}
 
@@ -507,7 +519,10 @@ class InspectorPage extends Component {
 	handleSliceRollOut = (ind, slice)=> {
 // 		console.log('InspectorPage.handleSliceRollOut()', ind, slice);
 
-		let { upload, section, tabs } = this.state;
+		const { upload, section } = this.state;
+		let { tabs } = this.state;
+		let artboard = null;
+
 		const pages = [...upload.pages];
 		pages.forEach((page)=> {
 			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((artboard) => {
@@ -521,14 +536,32 @@ class InspectorPage extends Component {
 		this.setState({ upload });
 
 		if (this.state.slice) {
+			let slices = [];
+			const pages = [...upload.pages];
+			pages.forEach((page)=> {
+				page.artboards.filter((artboard)=> (artboard.id === this.state.slice.artboardID)).forEach((item) => {
+					artboard = item;
+					item.slices.filter((itm)=> (itm.id !== this.state.slice.id)).forEach((itm)=> {
+						itm.filled = sliceContainsSlice(this.state.slice, itm);
+						if (itm.filled) {
+							slices.push(itm);
+						}
+					});
+				});
+			});
+
 			const css = toCSS(this.state.slice);
 			const reactCSS = toReactCSS(this.state.slice);
+			const swift = toSwift(this.state.slice, artboard);
 
 			if (section === 'inspect') {
-				tabs[0].contents = css.html;
+// 				tabs[0].contents = css.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
+				tabs[0].contents = tabContent(css.html, slices);
 				tabs[0].syntax = css.syntax;
-				tabs[1].contents = reactCSS.html;
+				tabs[1].contents = reactCSS.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
 				tabs[1].syntax = reactCSS.syntax;
+				tabs[2].contents = swift.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
+				tabs[2].syntax = swift.syntax;
 			}
 		}
 
@@ -541,13 +574,21 @@ class InspectorPage extends Component {
 	handleSliceRollOver = (ind, slice, offset)=> {
 // 		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
 
-		let { upload, section, tabs } = this.state;
+
+		const { upload, section } = this.state;
+		let { tabs } = this.state;
+		let artboard = null;
+		let slices = [];
 
 		const pages = [...upload.pages];
 		pages.forEach((page)=> {
-			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((artboard) => {
-				artboard.slices.filter((item)=> (item.id !== slice.id)).forEach((item)=> {
-					item.filled = sliceContainsSlice(slice, item);
+			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item) => {
+				artboard = item;
+				item.slices.filter((itm)=> (itm.id !== slice.id)).forEach((itm)=> {
+					itm.filled = sliceContainsSlice(slice, itm);
+					if (itm.filled) {
+						slices.push(itm);
+					}
 				});
 			});
 		});
@@ -557,12 +598,19 @@ class InspectorPage extends Component {
 
 		const css = toCSS(slice);
 		const reactCSS = toReactCSS(slice);
+		const swift = toSwift(slice, artboard);
+
+		//const contents =`${css.html.replace(/ /g, '&nbsp;').replace(/\\n/g, '<br />')}${JSON.stringify('\n' + slices.map((slice)=> (`<img src="${slice.filename}@1x.png" alt="${slice.title}" />`)).join('\n'))}`.replace('""', '');
+		//console.log('::::::::::::', String(JSON.parse(contents)));
 
 		if (section === 'inspect') {
-			tabs[0].contents = css.html;
+// 			tabs[0].contents = css.html;
+			tabs[0].contents = tabContent(css.html, slices);
 			tabs[0].syntax = css.syntax;
-			tabs[1].contents = reactCSS.html;
+			tabs[1].contents = reactCSS.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
 			tabs[1].syntax = reactCSS.syntax;
+			tabs[2].contents = swift.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
+			tabs[2].syntax = swift.syntax;
 		}
 
 		this.setState({
@@ -1329,7 +1377,7 @@ class InspectorPage extends Component {
 						</div>
 						<div className="inspector-page-panel-tab-content-wrapper">
 							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i) => {
-								return (<div key={i} className="inspector-page-panel-tab-content"><span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents)).replace(/ /g, '&nbsp;').replace(/\n/g, '<br />') : '' }} /></div>);
+								return (<div key={i} className="inspector-page-panel-tab-content"><span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents)) : '' }} /></div>);
 							}))}
 						</div>
 					</div>
