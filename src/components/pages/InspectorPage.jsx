@@ -5,7 +5,7 @@ import './InspectorPage.css';
 import axios from 'axios';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
-import Moment from 'react-moment';
+// import Moment from 'react-moment';
 import 'moment-timezone';
 import panAndZoomHoc from 'react-pan-and-zoom-hoc';
 import { connect } from 'react-redux';

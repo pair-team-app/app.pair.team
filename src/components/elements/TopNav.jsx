@@ -4,6 +4,7 @@ import './TopNav.css';
 
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
+// import Popover from 'react-tiny-popover';
 import { Row } from 'simple-flexbox';
 
 import TopNavProfile from './TopNavProfile';
@@ -17,17 +18,21 @@ import xdIcon from '../../assets/images/icons/ico-xd.png';
 
 
 
-const TopNavIcon = (props)=> {
-	console.log('TopNav.TopNavIcon()', props);
+const TopNavDemo = (props)=> {
+	console.log('TopNav.TopNavDemo()', props);
 
 	const { enabled, title, image } = props;
-	const className = (enabled) ? 'top-nav-icon' : 'top-nav-icon top-nav-icon-disabled';
+	const className = (enabled) ? 'top-nav-demo' : 'top-nav-demo top-nav-demo-disabled';
 
-	return (<div className={className} onClick={()=> (enabled) ? props.onClick() : null}>
-		<img src={image} className="top-nav-icon-image" alt={title} />
+	return (<div className={className} onClick={()=> (enabled) ? props.onClick() : null} >
+		<img src={image} className="top-nav-demo-image" alt={title} />
+
+		{/*<Popover isOpen={popover} position={'bottom'} content={(*/}
+			{/*<div>{title}</div>*/}
+		{/*)}><div onClick={()=> props.onPopover()}>WTF</div></Popover>*/}
+		{/*<img src={image} className="top-nav-icon-image" alt={title} onClick={()=> (enabled) ? props.onClick() : null} />*/}
 	</div>);
 };
-
 
 
 const mapDispatchToProps = (dispatch)=> {
@@ -42,6 +47,7 @@ class TopNav extends Component {
 		super(props);
 
 		this.state = {
+			popover  : false,
 			sections : [{
 				title : 'Free Inspect',
 				url   : '/inspect'
@@ -49,7 +55,7 @@ class TopNav extends Component {
 				title : 'Free Parts',
 				url   : '/parts'
 			}],
-			icons    : [{
+			demos    : [{
 				title   : 'Sketch',
 				image   : sketchIcon,
 				enabled : true,
@@ -60,13 +66,13 @@ class TopNav extends Component {
 				enabled : false,
 				url     : '/1/account'
 			}, {
-				title   : 'Photoshop',
-				image   : photoshopIcon,
+				title   : 'XD',
+				image   : xdIcon,
 				enabled : false,
 				url     : '/1/account'
 			}, {
-				title   : 'XD',
-				image   : xdIcon,
+				title   : 'Photoshop',
+				image   : photoshopIcon,
 				enabled : false,
 				url     : '/1/account'
 			}]
@@ -74,7 +80,7 @@ class TopNav extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('TopNav.componentDidUpdate()', prevProps, this.props, prevState);
+		console.log('TopNav.componentDidUpdate()', prevProps, this.props, this.state);
 	}
 
 	handleDemo = (url)=> {
@@ -99,11 +105,11 @@ class TopNav extends Component {
 		console.log('TopNav.render()', this.props, this.state);
 
 		const { pathname } = window.location;
-		const { sections, icons } = this.state;
+		const { sections, demos, popover } = this.state;
 
 		return (
 			<div className="top-nav-wrapper">
-				<div className="top-nav-column top-nav-column-left"><Row flex={4} horizontal="start" vertical="center">
+				<div className="top-nav-column top-nav-column-left"><Row flexGrow={4} horizontal="start" vertical="center">
 					<img onClick={()=> this.handleLink('')} src={logo} className="top-nav-logo" alt="Design Engine" />
 					{(sections.map((section, i)=> <div key={i} className={(pathname.includes(section.url)) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage(section.url)}>{section.title}</div>))}
 					<div className="top-nav-link" onClick={()=> null}>
@@ -117,17 +123,18 @@ class TopNav extends Component {
 				</Row></div>
 
 				<div className="top-nav-column top-nav-column-middle">
-					<Row flex={2} horizontal="end" vertical="center">
-						{icons.map((icon)=> (<TopNavIcon
-							title={icon.title}
-							image={icon.image}
-							enabled={icon.enabled}
-							onClick={()=> this.handleDemo(icon.url)} />
+					<Row flexGrow={2} horizontal="end" vertical="center">
+						{demos.map((demo, i)=> (<TopNavDemo key={i}
+							title={demo.title}
+							image={demo.image}
+							enabled={demo.enabled}
+							popover={popover}
+							onClick={()=> this.handleDemo(demo.url)} />
 						))}
 					</Row>
 				</div>
 				<div className="top-nav-column top-nav-column-right">
-					<Row flex={1} horizontal="end" vertical="center">
+					<Row flexGrow={1} horizontal="end" vertical="center">
 						{(!isUserLoggedIn())
 							? (<>
 									<button className="top-nav-button adjacent-button" onClick={()=> this.props.onPage('register')}>Sign Up</button>

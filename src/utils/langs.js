@@ -103,7 +103,7 @@ export function toSwift(slice, artboard) {
 
 	} else if (slice.type === 'textfield') {
 		const family = (slice.meta.font.family.includes(' ')) ? slice.meta.font.family.split(' ').slice(0, -1).join(' ').replace(' ', '') : slice.meta.font.family;
-		const name = slice.meta.font.name.replace(family, '');
+		const name = (slice.meta.font.name) ? slice.meta.font.name.replace(family, '') : family;
 		const postscript = (slice.meta.font.psName) ? slice.meta.font.psName : `${family}-${name}`;
 
 		html += '// Font\n';
