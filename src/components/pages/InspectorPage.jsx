@@ -518,11 +518,12 @@ class InspectorPage extends Component {
 		const swift = toSwift(slice, artboard);
 
 		if (section === 'inspect') {
-			tabs[0].contents = css.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
+			console.log('::::::::', css.html);
+			tabs[0].contents = css.html;
 			tabs[0].syntax = css.syntax;
-			tabs[1].contents = reactCSS.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
+			tabs[1].contents = reactCSS.html;
 			tabs[1].syntax = reactCSS.syntax;
-			tabs[2].contents = swift.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
+			tabs[2].contents = swift.html;
 			tabs[2].syntax = swift.syntax;
 
 		} else if (section === 'parts') {
@@ -577,11 +578,11 @@ class InspectorPage extends Component {
 			const swift = toSwift(this.state.slice, artboard);
 
 			if (section === 'inspect') {
-				tabs[0].contents = css.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
+				tabs[0].contents = css.html;
 				tabs[0].syntax = css.syntax;
-				tabs[1].contents = reactCSS.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
+				tabs[1].contents = reactCSS.html;
 				tabs[1].syntax = reactCSS.syntax;
-				tabs[2].contents = swift.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
+				tabs[2].contents = swift.html;
 				tabs[2].syntax = swift.syntax;
 
 			} else if (section === 'parts') {
@@ -624,11 +625,11 @@ class InspectorPage extends Component {
 		//console.log('::::::::::::', String(JSON.parse(contents)));
 
 		if (section === 'inspect') {
-			tabs[0].contents = css.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
+			tabs[0].contents = css.html;
 			tabs[0].syntax = css.syntax;
-			tabs[1].contents = reactCSS.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
+			tabs[1].contents = reactCSS.html;
 			tabs[1].syntax = reactCSS.syntax;
-			tabs[2].contents = swift.html.replace(/ /g, '&nbsp;').replace(/\n/g, '<br />');
+			tabs[2].contents = swift.html;
 			tabs[2].syntax = swift.syntax;
 
 		} else if (section === 'parts') {
@@ -1401,7 +1402,7 @@ class InspectorPage extends Component {
 							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i) => {
 								if (section === 'inspect') {
 									return (<div key={i} className="inspector-page-panel-tab-content">
-										<span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents)) : '' }} />
+										<span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents).replace(/ /g, '&nbsp;').replace(/\n/g, '<br />')) : '' }} />
 									</div>);
 
 								} else {
