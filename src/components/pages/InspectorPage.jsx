@@ -15,7 +15,7 @@ import ContentModal from '../elements/ContentModal';
 import InviteTeamForm from '../forms/InviteTeamForm';
 import { setRedirectURL } from '../../redux/actions';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
-import { TIMESTAMP_OPTS } from '../../consts/formats';
+import { MOMENT_TIMESTAMP } from '../../consts/formats';
 import { buildInspectorURL, capitalizeText, frameToRect, makeDownload, rectContainsRect, sendToSlack } from '../../utils/funcs.js';
 import { toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/langs.js';
 import enabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_enabled.svg';
@@ -211,8 +211,8 @@ function SpecsList(props) {
 				<Column flexGrow={1}>Padding</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{props.slice.meta.padding.top}px {props.slice.meta.padding.left}px {props.slice.meta.padding.bottom}px {props.slice.meta.padding.right}px</Column>
 			</Row>)}
 			{/*<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? capitalizeText(props.slice.meta.blendMode, true) : ''}</Column></Row>*/}
-			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', TIMESTAMP_OPTS).format(Date.parse(props.slice.added))) : ''}</Column></Row>
-			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? (<Moment format="DD-MMM-YYYY">{props.slice.added}</Moment>) : ''}</Column></Row>
+			{/*<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', TIMESTAMP_OPTS).format(Date.parse(`${props.slice.added} GMT+0000`))) : ''}</Column></Row>*/}
+			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? (<Moment format={MOMENT_TIMESTAMP}>{`${props.slice.added.replace(' ', 'T')}Z`}</Moment>) : ''}</Column></Row>
 			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.upload) ? props.upload.creator.username : ''}</Column></Row>
 		</div>
 	);
@@ -514,7 +514,6 @@ class InspectorPage extends Component {
 		const swift = toSwift(slice, artboard);
 
 		if (section === 'inspect') {
-			console.log('::::::::', css.html);
 			tabs[0].contents = css.html;
 			tabs[0].syntax = css.syntax;
 			tabs[1].contents = reactCSS.html;
