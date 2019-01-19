@@ -14,8 +14,11 @@
 }
 
 .top-nav-column-left {
-	width: 800px;
 	padding-left: 24px;
+}
+
+.top-nav-column-middle {
+	padding: 0 24px;
 }
 
 .top-nav-column-right {
@@ -51,6 +54,33 @@
 	margin-left: 4px;
 	font-size: 12px;
 	color: #ffffff;
+}
+
+.top-nav-icon {
+	position: relative;
+	top: 0;
+	left: 0;
+	width: 20px;
+	height: 20px;
+	margin: 0 10px;
+	opacity: 0.75;
+	cursor: pointer;
+}
+
+.top-nav-icon:hover {
+	opacity: 1;
+	transition: opacity 0.25s ease-out;
+	-moz-transition: opacity 0.25s ease-out;
+	-webkit-transition: opacity 0.25s ease-out;
+}
+
+.top-nav-icon-disabled, .top-nav-icon-disabled:hover {
+	cursor: default;
+	opacity: 0.33;
+}
+.top-nav-icon-image {
+	width: 20px;
+	height: 20px;
 }
 
 .top-nav-button {

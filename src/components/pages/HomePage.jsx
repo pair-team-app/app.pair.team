@@ -110,10 +110,10 @@ class HomePage extends Component {
 
 		this.props.updateNavigation({
 			uploadID   : 1,
-			pageID     : 2,
-			artboardID : 4
+			pageID     : 0,
+			artboardID : 0
 		});
-		this.props.onPage(window.location.pathname + '/1/2/4/account');
+		this.props.onPage(window.location.pathname + '/1/account');
 	};
 
 	handleLoadNext = ()=> {

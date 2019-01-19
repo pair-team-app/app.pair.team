@@ -10,6 +10,24 @@ import TopNavProfile from './TopNavProfile';
 import { isUserLoggedIn } from '../../utils/funcs';
 import { updateNavigation } from '../../redux/actions';
 import logo from '../../assets/images/logo-designengine.svg';
+import sketchIcon from '../../assets/images/icons/ico-sketch.png';
+import figmaIcon from '../../assets/images/icons/ico-figma.png';
+import photoshopIcon from '../../assets/images/icons/ico-photoshop.png';
+import xdIcon from '../../assets/images/icons/ico-xd.png';
+
+
+
+const TopNavIcon = (props)=> {
+	console.log('TopNav.TopNavIcon()', props);
+
+	const { enabled, title, image } = props;
+	const className = (enabled) ? 'top-nav-icon' : 'top-nav-icon top-nav-icon-disabled';
+
+	return (<div className={className} onClick={()=> (enabled) ? props.onClick() : null}>
+		<img src={image} className="top-nav-icon-image" alt={title} />
+	</div>);
+};
+
 
 
 const mapDispatchToProps = (dispatch)=> {
@@ -30,6 +48,27 @@ class TopNav extends Component {
 			}, {
 				title : 'Free Parts',
 				url   : '/parts'
+			}],
+			icons    : [{
+				title   : 'Sketch',
+				image   : sketchIcon,
+				enabled : true,
+				url     : '/1/account'
+			}, {
+				title   : 'Figma',
+				image   : figmaIcon,
+				enabled : false,
+				url     : '/1/account'
+			}, {
+				title   : 'Photoshop',
+				image   : photoshopIcon,
+				enabled : false,
+				url     : '/1/account'
+			}, {
+				title   : 'XD',
+				image   : xdIcon,
+				enabled : false,
+				url     : '/1/account'
 			}]
 		};
 	}
@@ -37,6 +76,15 @@ class TopNav extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		console.log('TopNav.componentDidUpdate()', prevProps, this.props, prevState);
 	}
+
+	handleDemo = (url)=> {
+		this.props.updateNavigation({
+			uploadID   : url.substr(1).split('/').shift(),
+			pageID     : 0,
+			artboardID : 0
+		});
+		this.props.onPage(`${window.location.pathname}${url}`);
+	};
 
 	handleLink = (url)=> {
 		this.props.updateNavigation({
@@ -51,14 +99,12 @@ class TopNav extends Component {
 		console.log('TopNav.render()', this.props, this.state);
 
 		const { pathname } = window.location;
-		const { sections } = this.state;
+		const { sections, icons } = this.state;
 
 		return (
 			<div className="top-nav-wrapper">
-				<div className="top-nav-column top-nav-column-left"><Row horizontal="start" vertical="center">
+				<div className="top-nav-column top-nav-column-left"><Row flex={4} horizontal="start" vertical="center">
 					<img onClick={()=> this.handleLink('')} src={logo} className="top-nav-logo" alt="Design Engine" />
-					{/*{(sections.map((section, i)=> <NavLink key={i} to={section.url} className={(pathname.includes(section.url)) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'}>{section.title}</NavLink>))}*/}
-
 					{(sections.map((section, i)=> <div key={i} className={(pathname.includes(section.url)) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage(section.url)}>{section.title}</div>))}
 					<div className="top-nav-link" onClick={()=> null}>
 						Rate This
@@ -68,18 +114,25 @@ class TopNav extends Component {
 						<FontAwesome name="star" className="top-nav-star" />
 						<FontAwesome name="star" className="top-nav-star" />
 					</div>
-					{/*<div className={(window.location.pathname.includes('/add-ons')) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage('add-ons')}>Add Ons</div>*/}
-					{/*<div className={(isExplorePage()) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage('explore')}>Explore</div>*/}
-					{/*<div className="top-nav-link" onClick={()=> window.open('https://docs.google.com/forms/d/e/1FAIpQLSdYZI6uIqF9D5zW5LmZQqCem6zrXh7THmVVBoOkeAQWm9o6lg/viewform?usp=sf_link')}>Survey</div>*/}
 				</Row></div>
 
+				<div className="top-nav-column top-nav-column-middle">
+					<Row flex={2} horizontal="end" vertical="center">
+						{icons.map((icon)=> (<TopNavIcon
+							title={icon.title}
+							image={icon.image}
+							enabled={icon.enabled}
+							onClick={()=> this.handleDemo(icon.url)} />
+						))}
+					</Row>
+				</div>
 				<div className="top-nav-column top-nav-column-right">
-					<Row horizontal="end" vertical="center">
+					<Row flex={1} horizontal="end" vertical="center">
 						{(!isUserLoggedIn())
-							? (<div>
+							? (<>
 									<button className="top-nav-button adjacent-button" onClick={()=> this.props.onPage('register')}>Sign Up</button>
 									<button className="top-nav-button" onClick={()=> this.props.onPage('login')}>Login</button>
-								</div>)
+								</>)
 							: (<Row vertical="center">
 									<TopNavProfile
 										onPage={this.props.onPage}
