@@ -23,7 +23,7 @@ import {
 
 export function buildInspectorPath(upload, prefix=null, suffix='') {
 	prefix = (prefix || (`/${window.location.pathname.substr(1).split('/').shift()}`));
-	return (`${prefix}/${upload.id}/${convertURLSlug(upload.title)}${suffix}`);
+	return (`${prefix}/${upload.id}/${convertURISlug(upload.title)}${suffix}`);
 }
 
 export function buildInspectorURL(upload, prefix=null, suffix='') {
@@ -31,7 +31,7 @@ export function buildInspectorURL(upload, prefix=null, suffix='') {
 }
 
 export function buildProjectPath(upload, prefix=null, suffix='') {
-	return ('/proj/' + upload.id + '/' + convertURLSlug(upload.title) + suffix);
+	return ('/proj/' + upload.id + '/' + convertURISlug(upload.title) + suffix);
 }
 
 export function buildProjectURL(upload, prefix=null, suffix='') {
@@ -50,7 +50,7 @@ export function capitalizeText(text, toLower=false) {
 	return (text.replace(/(\b\w)/gi, (c)=> (c.toUpperCase())));
 }
 
-export function convertURLSlug(text) {
+export function convertURISlug(text) {
 	return (text.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
 }
 
@@ -67,6 +67,15 @@ export function copyTextToClipboard(text) {
 
 export function className(obj) {
 	return (obj.constructor.name);
+}
+
+export function frameToRect(frame) {
+	return ({
+		top    : frame.origin.y,
+		left   : frame.origin.x,
+		bottom : frame.origin.y + frame.size.height,
+		right  : frame.origin.x + frame.size.width
+	});
 }
 
 export function hasBit(val, bit) {
@@ -159,6 +168,14 @@ export function randomFloat(lower, upper) {
 
 export function randomInt(lower, upper) {
 	return (Math.floor(randomFloat(lower, upper)));
+}
+
+export function rectContainsRect(baseRect, testRect) {
+	return (baseRect.top <= testRect.top && baseRect.left <= testRect.left && baseRect.right >= testRect.right && baseRect.bottom >= testRect.bottom);
+}
+
+export function rectIntersectsRect(baseRect, testRect) {
+	return (Math.max(baseRect.left, testRect.left) < Math.min(baseRect.right, testRect.right) && Math.max(baseRect.top, testRect.top) < Math.min(baseRect.bottom, testRect.bottom));
 }
 
 export function scrollOrigin(element) {

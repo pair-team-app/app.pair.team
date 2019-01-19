@@ -1,5 +1,5 @@
 
-import { camilzeText, capitalizeText, convertURLSlug } from './funcs';
+import { camilzeText, capitalizeText, convertURISlug } from './funcs';
 
 const HTML_TAB = '  ';
 
@@ -25,7 +25,7 @@ export function toCSS(slice) {
 		html += `${HTML_TAB}background: url("${slice.filename.split('/').pop()}@3x.png");\n`;
 	}
 	html += '}';
-	html = `.${convertURLSlug(slice.title)} ${html}`;
+	html = `.${convertURISlug(slice.title)} ${html}`;
 
 	return ({
 		html   : JSON.stringify(html),
@@ -79,7 +79,7 @@ export function toSwift(slice, artboard) {
 	let html = '';
 	if (slice.type === 'slice' || slice.type === 'group') {
 		const artboardName = camilzeText(artboard.title.replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
-		const sliceName = camilzeText(convertURLSlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''));
+		const sliceName = camilzeText(convertURISlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''));
 
 		html += '// Asset\n';
 		html += 'enum Asset {\n';

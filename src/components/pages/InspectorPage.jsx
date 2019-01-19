@@ -16,7 +16,7 @@ import InviteTeamForm from '../forms/InviteTeamForm';
 import { setRedirectURL } from '../../redux/actions';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { TIMESTAMP_OPTS } from '../../consts/formats';
-import { buildInspectorURL, capitalizeText, isUserLoggedIn, sendToSlack } from '../../utils/funcs.js';
+import { buildInspectorURL, capitalizeText, frameToRect, isUserLoggedIn, rectContainsRect, sendToSlack } from '../../utils/funcs.js';
 import { toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/langs.js';
 import enabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_enabled.svg';
 import disabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_disabled.svg';
@@ -42,27 +42,6 @@ const zoomNotches = [
 	1.75,
 	3.00
 ];
-
-
-const sliceContainsSlice = (baseSlice, testSlice)=> {
-	const baseRect = {
-		top    : baseSlice.meta.frame.origin.y,
-		left   : baseSlice.meta.frame.origin.x,
-		bottom : baseSlice.meta.frame.origin.y + baseSlice.meta.frame.size.height,
-		right  : baseSlice.meta.frame.origin.x + baseSlice.meta.frame.size.width
-	};
-
-	const testRect = {
-		top    : testSlice.meta.frame.origin.y,
-		left   : testSlice.meta.frame.origin.x,
-		bottom : testSlice.meta.frame.origin.y + testSlice.meta.frame.size.height,
-		right  : testSlice.meta.frame.origin.x + testSlice.meta.frame.size.width
-	};
-
-	// intersects
-// 	return (Math.max(baseRect.left, testRect.left) < Math.min(baseRect.right, testRect.right) && Math.max(baseRect.top, testRect.top) < Math.min(baseRect.bottom, testRect.bottom));
-	return (baseRect.top <= testRect.top && baseRect.left <= testRect.left && baseRect.right >= testRect.right && baseRect.bottom >= testRect.bottom);
-};
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -208,7 +187,7 @@ const buildSlicePreviews = (upload, slice)=> {
 	pages.forEach((page)=> {
 		page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item) => {
 			item.slices.filter((itm)=> (itm.id !== slice.id)).forEach((itm)=> {
-				if (sliceContainsSlice(slice, itm)) {
+				if (rectContainsRect(frameToRect(slice.meta.frame), frameToRect(itm.meta.frame))) {
 					slices.push(itm);
 				}
 			});
@@ -568,7 +547,7 @@ class InspectorPage extends Component {
 				page.artboards.filter((artboard)=> (artboard.id === this.state.slice.artboardID)).forEach((item) => {
 					artboard = item;
 					item.slices.filter((itm)=> (itm.id !== this.state.slice.id)).forEach((itm)=> {
-						itm.filled = sliceContainsSlice(this.state.slice, itm);
+						itm.filled = rectContainsRect(frameToRect(this.state.slice.meta.frame), frameToRect(itm.meta.frame));
 					});
 				});
 			});
@@ -609,7 +588,7 @@ class InspectorPage extends Component {
 			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item) => {
 				artboard = item;
 				item.slices.filter((itm)=> (itm.id !== slice.id)).forEach((itm)=> {
-					itm.filled = sliceContainsSlice(slice, itm);
+					itm.filled = rectContainsRect(frameToRect(slice.meta.frame), frameToRect(itm.meta.frame));
 				});
 			});
 		});
