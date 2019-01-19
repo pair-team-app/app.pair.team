@@ -5,7 +5,7 @@ import './InspectorPage.css';
 import axios from 'axios';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import cookie from 'react-cookies';
-// import Moment from 'react-moment';
+import Moment from 'react-moment';
 import 'moment-timezone';
 import panAndZoomHoc from 'react-pan-and-zoom-hoc';
 import { connect } from 'react-redux';
@@ -32,7 +32,8 @@ const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
 const canvas = React.createRef();
 
-const zoomNotches = [
+const ZOOM_FACTOR = 1.0875;
+const ZOOM_NOTCHES = [
 	0.03,
 	0.06,
 	0.13,
@@ -57,6 +58,11 @@ const mapDispatchToProps = (dispatch)=> {
 		setRedirectURL : (url)=> dispatch(setRedirectURL(url))
 	});
 };
+
+
+function InspectPagePanel(props) {
+
+}
 
 
 const InviteTeamModal = (props)=> {
@@ -175,6 +181,7 @@ const SpecsList = (props)=> {
 			</Row>)}
 			{/*<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? capitalizeText(props.slice.meta.blendMode, true) : ''}</Column></Row>*/}
 			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', TIMESTAMP_OPTS).format(Date.parse(props.slice.added))) : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (<Moment format="DD-MMM-YYYY">{props.slice.added}</Moment>) : ''}</Column></Row>
 			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.upload) ? props.upload.creator.username : ''}</Column></Row>
 		</div>
 	);
@@ -442,12 +449,12 @@ class InspectorPage extends Component {
 		this.setState({
 			x            : x,
 			y            : y,
-			scale        : Math.min(Math.max(scale, zoomNotches[0]), zoomNotches.slice(-1)[0]),
+			scale        : Math.min(Math.max(scale, ZOOM_NOTCHES[0]), ZOOM_NOTCHES.slice(-1)[0]),
 			scrollOffset : {
 				x : -Math.round((p1.x * viewport.width) + ((viewport.width * -0.5) * scale)),
 				y : -Math.round((p1.y * viewport.height) + ((viewport.height * -0.5) * scale))
 			},
-			tooltip      : Math.round(Math.min(Math.max(scale, zoomNotches[0]), zoomNotches.slice(-1)[0]) * 100) + '%'
+			tooltip      : Math.round(Math.min(Math.max(scale, ZOOM_NOTCHES[0]), ZOOM_NOTCHES.slice(-1)[0]) * 100) + '%'
 		});
 
 		setTimeout(()=> {
@@ -649,11 +656,11 @@ class InspectorPage extends Component {
 		const { x, y, scale } = this.state;
 
 		if (direction === 0) {
-			this.handlePanAndZoom(x + 0.01, y + 0.01, zoomNotches[5]);
+			this.handlePanAndZoom(x + 0.01, y + 0.01, ZOOM_NOTCHES[5]);
 
 		} else {
 			let ind = -1;
-			zoomNotches.forEach((amt, i)=> {
+			ZOOM_NOTCHES.forEach((amt, i)=> {
 				if (scale === amt) {
 					ind = i;
 				}
@@ -661,7 +668,7 @@ class InspectorPage extends Component {
 
 			if (ind === -1) {
 				let diff = 3;
-				zoomNotches.forEach((amt, i)=> {
+				ZOOM_NOTCHES.forEach((amt, i)=> {
 					if (Math.abs(amt - scale) < diff) {
 						diff = Math.abs(amt - scale);
 						ind = i;
@@ -669,7 +676,7 @@ class InspectorPage extends Component {
 				});
 			}
 
-			this.handlePanAndZoom(x + 0.01, y + 0.01, zoomNotches[Math.min(Math.max(0, ind + direction), zoomNotches.length - 1)]);
+			this.handlePanAndZoom(x + 0.01, y + 0.01, ZOOM_NOTCHES[Math.min(Math.max(0, ind + direction), ZOOM_NOTCHES.length - 1)]);
 		}
 	};
 
@@ -1157,26 +1164,31 @@ class InspectorPage extends Component {
 	render() {
 		const { profile, processing } = this.props;
 
-		const { section, upload, slice, hoverSlice, tabs, scale, selectedTab, scrolling, viewport } = this.state;
+		const { section, upload, slice, hoverSlice, tabs, scale, selectedTab, scrolling, viewport, x, y, percent } = this.state;
 		const { tooltip, restricted, shownInvite, sentInvites } = this.state;
 
-		const { x, y } = this.state;
+
+		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 		const p1 = this.transformPoint({ x : 0.5, y : 0.5 });
-
-
 		const artboards = (upload) ? upload.pages.map((page)=> {
 			return (page.artboards);
 		}).flat() : [];
 
-		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 
-		const progressStyle = { width : this.state.percent + '%' };
+		const artboardsStyle = {
+			position  : 'absolute',
+			width     : (this.size.width * scale) + 'px',
+			height    : (this.size.height * scale) + 'px',
+			transform : `translate(${p1.x * viewport.width}px, ${p1.y * viewport.height}px) translate(${(viewport.width * -0.5) * scale}px, ${(viewport.height * -0.5) * scale}px)`
+		};
 
 		const canvasStyle = {
 			top     : (-((p1.y * viewport.height) + ((viewport.height * -0.5) * scale))) + 'px',
 			left    : (-((p1.x * viewport.width) + ((viewport.width * -0.5) * scale))) + 'px',
 			display : (scrolling) ? 'none' : 'block'
 		};
+		const progressStyle = { width : percent + '%' };
+
 
 		let maxH = 0;
 		let offset = {
@@ -1217,8 +1229,8 @@ class InspectorPage extends Component {
 				height   : (scale * artboard.meta.frame.size.height) + 'px'
 			};
 
-			const groupSlices = artboard.slices.filter((slice)=> (slice.type === 'group')).map((slice, i) => {
-				return (<SliceRolloverItem
+			const groupSlices = artboard.slices.filter((slice)=> (slice.type === 'group')).map((slice, i) => (
+				<SliceRolloverItem
 					key={i}
 					id={slice.id}
 					title={slice.title}
@@ -1233,11 +1245,11 @@ class InspectorPage extends Component {
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />);
-			});
+					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />)
+			);
 
-			const hotspotSlices = artboard.slices.filter((slice)=> (slice.type === 'hotspot')).map((slice, i) => {
-				return (<SliceRolloverItem
+			const hotspotSlices = artboard.slices.filter((slice)=> (slice.type === 'hotspot')).map((slice, i) => (
+				<SliceRolloverItem
 					key={i}
 					id={slice.id}
 					title={slice.title}
@@ -1252,11 +1264,11 @@ class InspectorPage extends Component {
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />);
-			});
+					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />)
+			);
 
-			const textfieldSlices = artboard.slices.filter((slice)=> (slice.type === 'textfield')).map((slice, i) => {
-				return (<SliceRolloverItem
+			const textfieldSlices = artboard.slices.filter((slice)=> (slice.type === 'textfield')).map((slice, i) => (
+				<SliceRolloverItem
 					key={i}
 					id={slice.id}
 					title={slice.title}
@@ -1271,11 +1283,11 @@ class InspectorPage extends Component {
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />);
-			});
+					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />)
+			);
 
-			const sliceSlices = artboard.slices.filter((slice)=> (slice.type === 'slice')).map((slice, i) => {
-				return (<SliceRolloverItem
+			const sliceSlices = artboard.slices.filter((slice)=> (slice.type === 'slice')).map((slice, i) => (
+				<SliceRolloverItem
 					key={i}
 					id={slice.id}
 					title={slice.title}
@@ -1290,8 +1302,8 @@ class InspectorPage extends Component {
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />);
-			});
+					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />)
+			);
 
 			artboardImages.push(
 				<div key={i} style={artboardStyle}>
@@ -1321,13 +1333,6 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.render()', (artboardsWrapper.current) ? artboardsWrapper.current.scrollTop : 0, (artboardsWrapper.current) ? artboardsWrapper.current.scrollLeft : 0, scale);
 // 		console.log('InspectorPage:', window.performance.memory);
 
-		const style = {
-			position  : 'absolute',
-			width     : (this.size.width * scale) + 'px',
-			height    : (this.size.height * scale) + 'px',
-			transform : `translate(${p1.x * viewport.width}px, ${p1.y * viewport.height}px) translate(${(viewport.width * -0.5) * scale}px, ${(viewport.height * -0.5) * scale}px)`
-		};
-
 		return (<>
 			{(this.state.uploading) && (<div className="upload-progress-bar-wrapper">
 				<div className="upload-progress-bar" style={progressStyle} />
@@ -1338,9 +1343,9 @@ class InspectorPage extends Component {
 						x={x}
 						y={y}
 						scale={scale}
-						scaleFactor={1.0875}
-						minScale={zoomNotches[0]}
-						maxScale={zoomNotches.slice(-1)[0]}
+						scaleFactor={ZOOM_FACTOR}
+						minScale={ZOOM_NOTCHES[0]}
+						maxScale={ZOOM_NOTCHES.slice(-1)[0]}
 						onPanAndZoom={this.handlePanAndZoom}
 						ignorePanOutside={true}
 						renderOnChange={true}
@@ -1349,7 +1354,7 @@ class InspectorPage extends Component {
 						onPanMove={this.handlePanMove}
 						onPanEnd={this.handlePanEnd}>
 						<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
-							{(artboards.length > 0) && (<div style={style}>
+							{(artboards.length > 0) && (<div style={artboardsStyle}>
 								{artboardImages}
 								<div className="inspector-page-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>
 									<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
@@ -1359,8 +1364,8 @@ class InspectorPage extends Component {
 						</div>
 					</InteractiveDiv>
 					{(artboards.length > 0) && (<div className="inspector-page-zoom-wrapper">
-						<button className={'inspector-page-float-button' + ((scale >= Math.max(...zoomNotches)) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
-						<button className={'inspector-page-float-button' + ((scale <= Math.min(...zoomNotches)) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
+						<button className={'inspector-page-float-button' + ((scale >= Math.max(...ZOOM_NOTCHES)) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
+						<button className={'inspector-page-float-button' + ((scale <= Math.min(...ZOOM_NOTCHES)) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
 						<button className={'inspector-page-float-button' + ((scale === 1.0) ? ' button-disabled' : '')} onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 1.0) ? enabledZooResetButton : disabledZoomResetButton} alt="0" /></button>
 					</div>)}
 
@@ -1370,13 +1375,9 @@ class InspectorPage extends Component {
 				</div>
 				<div className="inspector-page-panel">
 					<div className="inspector-page-panel-content-wrapper">
-						<div style={{ overflowX : 'auto' }}>
-							<ul className="inspector-page-panel-tab-wrapper">
-								{(tabs.map((tab, i) => {
-									return (<li key={i} className={'inspector-page-panel-tab' + ((selectedTab === i) ? ' inspector-page-panel-tab-selected' : '')} onClick={()=> this.handleTab(i)}>{tab.title}</li>);
-								}))}
-							</ul>
-						</div>
+						<ul className="inspector-page-panel-tab-wrapper">
+							{(tabs.map((tab, i) => (<li key={i} className={'inspector-page-panel-tab' + ((selectedTab === i) ? ' inspector-page-panel-tab-selected' : '')} onClick={()=> this.handleTab(i)}>{tab.title}</li>)))}
+						</ul>
 						<div className="inspector-page-panel-tab-content-wrapper">
 							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i) => {
 								if (section === 'inspect') {

@@ -14,21 +14,6 @@
 	vertical-align: top;
 }
 
-.inspector-page-landing-button-wrapper {
-	height: 100%;
-	padding: 20px;
-}
-
-
-.inspector-page-landing-button {
-	width: 120px;
-	padding: 10px;
-	margin-bottom: 10px;
-}
-
-.inspector-page-landing-button:hover {
-}
-
 
 .inspector-page-artboards-wrapper {
 	position: relative;
@@ -138,6 +123,7 @@
 	display: flex;
 	padding: 0;
 	margin : 0;
+	overflow-x: auto;
 }
 
 .inspector-page-panel-tab {
