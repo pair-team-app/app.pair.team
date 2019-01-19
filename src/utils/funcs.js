@@ -141,6 +141,15 @@ export function limitString(str='', len) {
 	return ((str.length > len) ? str.substr(0, len - 1) + '…' : str);
 }
 
+export function makeDownload(url) {
+	let link = document.createElement('a');
+	link.target = '_blank';
+	link.href = url;
+	link.download = url.split('/').pop();
+	link.click();
+	link.remove();
+}
+
 export function numberedName(name, list) {
 	if (list[name].length > 0) {
 		const cnt = ++list[name];

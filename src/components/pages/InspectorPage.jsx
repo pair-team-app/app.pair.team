@@ -4,7 +4,7 @@ import './InspectorPage.css';
 
 import axios from 'axios';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import cookie from 'react-cookies';
+import FontAwesome from 'react-fontawesome';
 import Moment from 'react-moment';
 import 'moment-timezone';
 import panAndZoomHoc from 'react-pan-and-zoom-hoc';
@@ -16,7 +16,7 @@ import InviteTeamForm from '../forms/InviteTeamForm';
 import { setRedirectURL } from '../../redux/actions';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { TIMESTAMP_OPTS } from '../../consts/formats';
-import { buildInspectorURL, capitalizeText, frameToRect, isUserLoggedIn, rectContainsRect, sendToSlack } from '../../utils/funcs.js';
+import { buildInspectorURL, capitalizeText, frameToRect, makeDownload, rectContainsRect, sendToSlack } from '../../utils/funcs.js';
 import { toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/langs.js';
 import enabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_enabled.svg';
 import disabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_disabled.svg';
@@ -45,6 +45,22 @@ const ZOOM_NOTCHES = [
 ];
 
 
+const buildSlicePreviews = (upload, slice)=> {
+	let slices = [];
+	const pages = [...upload.pages];
+	pages.forEach((page)=> {
+		page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item) => {
+			item.slices.filter((itm)=> (itm.id !== slice.id)).forEach((itm)=> {
+				if (rectContainsRect(frameToRect(slice.meta.frame), frameToRect(itm.meta.frame))) {
+					slices.push(itm);
+				}
+			});
+		});
+	});
+
+	return (slices);
+};
+
 const mapStateToProps = (state, ownProps)=> {
 	return ({
 		navigation  : state.navigation,
@@ -58,11 +74,6 @@ const mapDispatchToProps = (dispatch)=> {
 		setRedirectURL : (url)=> dispatch(setRedirectURL(url))
 	});
 };
-
-
-function InspectPagePanel(props) {
-
-}
 
 
 const InviteTeamModal = (props)=> {
@@ -88,6 +99,37 @@ const InviteTeamModal = (props)=> {
 	</ContentModal>);
 };
 
+const PartItem = (props)=> {
+// 	console.log('InspectorPage.SlicePreviewItem()', props);
+
+	const { id, filename, title, size } = props;
+
+	return (<div data-slice-id={id} className="part-item"><Row vertical="center">
+		<img src={`${filename}@1x.png`} className="part-item-image" width={size.width * 0.25} height={size.height * 0.25} alt={title} />
+		<div className="part-item-title">{title}</div>
+		<button className="tiny-button part-item-button" onClick={()=> props.onClick()}><FontAwesome name="download" /></button>
+	</Row></div>);
+};
+
+const PartsList = (props)=> {
+// 	console.log('InspectorPage.PartsList()', props);
+
+	const { contents } = props;
+	return (<div className="parts-list-wrapper">
+		{contents.filter((slice)=> (slice.type === 'group')).map((slice, i)=> {
+			return (
+				<PartItem
+					key={i}
+					id={slice.id}
+					filename={slice.filename}
+					title={slice.title}
+					size={slice.meta.frame.size}
+					onClick={()=> props.onPartItem(slice.id)}
+				/>
+			);
+		})}
+	</div>);
+};
 
 const SliceRolloverItem = (props)=> {
 // 	console.log('InspectorPage.SliceRolloverItem()', props);
@@ -107,18 +149,7 @@ const SliceRolloverItem = (props)=> {
 	);
 };
 
-const SlicePreviewItem = (props)=> {
-// 	console.log('InspectorPage.SlicePreviewItem()', props);
-
-	const { id, filename, title, size } = props;
-
-	return (<div data-slice-id={id} className="slice-preview-item" onClick={()=> props.onClick()}>
-		<img src={`${filename}@1x.png`} className="slice-preview-item-image" width={size.width * 0.25} height={size.height * 0.25} alt={title} />
-		<div className="slice-preview-item-title">{title}</div>
-	</div>);
-};
-
-const SpecsList = (props)=> {
+function SpecsList(props) {
 // 		console.log('InspectorPage.SpecsList()', props);
 
 	const sliceStyles = (props.slice && props.slice.meta.styles && props.slice.meta.styles.length > 0) ? props.slice.meta.styles.pop() : null;
@@ -153,56 +184,39 @@ const SpecsList = (props)=> {
 	} : null;
 
 	return (
-		<div className="inspector-page-panel-info-wrapper">
-			<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? props.slice.title : ''}</Column></Row>
-			<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? capitalizeText(props.slice.type, true) : ''}</Column></Row>
-			<Row><Column flexGrow={1}>Export Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">W: {(props.slice) ? props.slice.meta.frame.size.width : 0}px H: {(props.slice) ? props.slice.meta.frame.size.height : 0}px</Column></Row>
-			<Row><Column flexGrow={1}>Position</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">X: {(props.slice) ? props.slice.meta.frame.origin.x : 0}px Y: {(props.slice) ? props.slice.meta.frame.origin.y : 0}px</Column></Row>
-			<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? props.slice.meta.rotation : 0}&deg;</Column></Row>
-			<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (props.slice.meta.opacity * 100) : 100}%</Column></Row>
-			<Row><Column flexGrow={1}>Fills</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (props.slice.type === 'textfield' && props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : props.slice.meta.fillColor.toUpperCase() : ''}</Column></Row>
-			<Row><Column flexGrow={1}>Borders</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{''}</Column></Row>
+		<div className="inspector-page-specs-list-wrapper">
+			<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? props.slice.title : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? capitalizeText(props.slice.type, true) : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Export Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">W: {(props.slice) ? props.slice.meta.frame.size.width : 0}px H: {(props.slice) ? props.slice.meta.frame.size.height : 0}px</Column></Row>
+			<Row><Column flexGrow={1}>Position</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">X: {(props.slice) ? props.slice.meta.frame.origin.x : 0}px Y: {(props.slice) ? props.slice.meta.frame.origin.y : 0}px</Column></Row>
+			<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? props.slice.meta.rotation : 0}&deg;</Column></Row>
+			<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? (props.slice.meta.opacity * 100) : 100}%</Column></Row>
+			<Row><Column flexGrow={1}>Fills</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? (props.slice.type === 'textfield' && props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : props.slice.meta.fillColor.toUpperCase() : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Borders</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{''}</Column></Row>
 			{(props.slice && props.slice.type === 'textfield') && (<>
-				<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.family) ? props.slice.meta.font.family : ''} {(props.slice.meta.font.name) ? props.slice.meta.font.name : ''}</Column></Row>
-				<Row><Column flexGrow={1}>Font Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.size + 'px')}</Column></Row>
-				<Row><Column flexGrow={1}>Font Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : ''}</Column></Row>
-				{/*<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.alignment) ? capitalizeText(props.slice.meta.font.alignment) : 'Left'}</Column></Row>*/}
-				<Row><Column flexGrow={1}>Line Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.lineHeight) ? (props.slice.meta.font.lineHeight + 'px') : ''}</Column></Row>
-				<Row><Column flexGrow={1}>Char Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice.meta.font.kerning) ? (props.slice.meta.font.kerning.toFixed(2) + 'px') : ''}</Column></Row>
+				<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.family) ? props.slice.meta.font.family : ''} {(props.slice.meta.font.name) ? props.slice.meta.font.name : ''}</Column></Row>
+				<Row><Column flexGrow={1}>Font Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.size + 'px')}</Column></Row>
+				<Row><Column flexGrow={1}>Font Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : ''}</Column></Row>
+				{/*<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.alignment) ? capitalizeText(props.slice.meta.font.alignment) : 'Left'}</Column></Row>*/}
+				<Row><Column flexGrow={1}>Line Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.lineHeight) ? (props.slice.meta.font.lineHeight + 'px') : ''}</Column></Row>
+				<Row><Column flexGrow={1}>Char Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.kerning) ? (props.slice.meta.font.kerning.toFixed(2) + 'px') : ''}</Column></Row>
 			</>)}
 			{(styles) && (<>
-				{/*<Row><Column flexGrow={1}>Stroke:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.stroke) ? (capitalizeText(styles.stroke.position, true) + ' S: ' + styles.stroke.thickness + ' ' + styles.stroke.color) : ''}</Column></Row>*/}
-				{/*<Row><Column flexGrow={1}>Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.shadow) ? ('X: ' + styles.shadow.offset.x + ' Y: ' + styles.shadow.offset.y + ' B: ' + styles.shadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>*/}
-				{/*<Row><Column flexGrow={1}>Inner Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>*/}
-				{/*<Row><Column flexGrow={1}>Blur:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>*/}
+				{/*<Row><Column flexGrow={1}>Stroke:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(styles.stroke) ? (capitalizeText(styles.stroke.position, true) + ' S: ' + styles.stroke.thickness + ' ' + styles.stroke.color) : ''}</Column></Row>*/}
+				{/*<Row><Column flexGrow={1}>Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(styles.shadow) ? ('X: ' + styles.shadow.offset.x + ' Y: ' + styles.shadow.offset.y + ' B: ' + styles.shadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>*/}
+				{/*<Row><Column flexGrow={1}>Inner Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>*/}
+				{/*<Row><Column flexGrow={1}>Blur:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(styles.innerShadow) ? ('X: ' + styles.innerShadow.offset.x + ' Y: ' + styles.innerShadow.offset.y + ' B: ' + styles.innerShadow.blur + ' S: ' + styles.shadow.spread) : ''}</Column></Row>*/}
 			</>)}
 			{(props.slice && props.slice.meta.padding) && (<Row>
-				<Column flexGrow={1}>Padding</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{props.slice.meta.padding.top}px {props.slice.meta.padding.left}px {props.slice.meta.padding.bottom}px {props.slice.meta.padding.right}px</Column>
+				<Column flexGrow={1}>Padding</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{props.slice.meta.padding.top}px {props.slice.meta.padding.left}px {props.slice.meta.padding.bottom}px {props.slice.meta.padding.right}px</Column>
 			</Row>)}
-			{/*<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? capitalizeText(props.slice.meta.blendMode, true) : ''}</Column></Row>*/}
-			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', TIMESTAMP_OPTS).format(Date.parse(props.slice.added))) : ''}</Column></Row>
-			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.slice) ? (<Moment format="DD-MMM-YYYY">{props.slice.added}</Moment>) : ''}</Column></Row>
-			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-panel-info-val">{(props.upload) ? props.upload.creator.username : ''}</Column></Row>
+			{/*<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? capitalizeText(props.slice.meta.blendMode, true) : ''}</Column></Row>*/}
+			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', TIMESTAMP_OPTS).format(Date.parse(props.slice.added))) : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? (<Moment format="DD-MMM-YYYY">{props.slice.added}</Moment>) : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.upload) ? props.upload.creator.username : ''}</Column></Row>
 		</div>
 	);
-};
-
-
-const buildSlicePreviews = (upload, slice)=> {
-	let slices = [];
-	const pages = [...upload.pages];
-	pages.forEach((page)=> {
-		page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item) => {
-			item.slices.filter((itm)=> (itm.id !== slice.id)).forEach((itm)=> {
-				if (rectContainsRect(frameToRect(slice.meta.frame), frameToRect(itm.meta.frame))) {
-					slices.push(itm);
-				}
-			});
-		});
-	});
-
-	return (slices);
-};
+}
 
 
 class InspectorPage extends Component {
@@ -410,18 +424,9 @@ class InspectorPage extends Component {
 	handleDownload = ()=> {
 // 		console.log('InspectorPage.handleDownload()');
 
-		if (!isUserLoggedIn()) {
-			cookie.save('msg', 'use this feature.', { path : '/' });
-			this.props.onPage('login');
-
-		} else {
-			const filePath = 'http://cdn.designengine.ai/arboard.php?artboard_id=' + this.props.navigation.artboardID;
-			let link = document.createElement('a');
-			link.href = filePath;
-// 			link.download = filePath.substr(filePath.lastIndexOf('/') + 1);
-			link.download = filePath.split('/').pop();
-			link.click();
-		}
+		const { upload, slice } = this.state;
+		const sliceIDs = buildSlicePreviews(upload, slice).map((slice)=> (slice.id)).join(',');
+		makeDownload(`http://cdn.designengine.ai/slices.php?title=${slice.title}&slice_ids=${sliceIDs}`);
 	};
 
 	handleInviteTeamFormSubmitted = (result)=> {
@@ -485,6 +490,11 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.handlePanStart()', event);
 	};
 
+	handlePartItem = (sliceID)=> {
+// 		console.log('InspectorPage.handlePartItem()', sliceID);
+		makeDownload(`http://cdn.designengine.ai/slice.php?slice_id=${sliceID}`);
+	};
+
 	handleSliceClick = (ind, slice, offset)=> {
 // 		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
 
@@ -522,11 +532,6 @@ class InspectorPage extends Component {
 			slice      : slice,
 			offset     : offset
 		});
-	};
-
-
-	handleSlicePreview = (sliceID)=> {
-		console.log('InspectorPage.handleSlicePreview()', sliceID);
 	};
 
 	handleSliceRollOut = (ind, slice)=> {
@@ -938,8 +943,8 @@ class InspectorPage extends Component {
 					const tabs = [
 						{
 							id       : 0,
-							title    : 'Slices',
-							filename : 'Slices',
+							title    : 'Parts',
+							filename : 'Parts',
 							contents : null,
 							syntax   : null,
 							added    : null
@@ -1373,28 +1378,17 @@ class InspectorPage extends Component {
 						<button className="tiny-button" onClick={()=> this.setState({ shownInvite : false })}>Invite Team</button>
 					</div>)}
 				</div>
-				<div className="inspector-page-panel">
-					<div className="inspector-page-panel-content-wrapper">
+
+				{(section === 'inspect') && (<div className="inspector-page-panel">
+					<div className="inspector-page-panel-split-content-wrapper">
 						<ul className="inspector-page-panel-tab-wrapper">
 							{(tabs.map((tab, i) => (<li key={i} className={'inspector-page-panel-tab' + ((selectedTab === i) ? ' inspector-page-panel-tab-selected' : '')} onClick={()=> this.handleTab(i)}>{tab.title}</li>)))}
 						</ul>
 						<div className="inspector-page-panel-tab-content-wrapper">
 							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i) => {
-								if (section === 'inspect') {
-									return (<div key={i} className="inspector-page-panel-tab-content">
-										<span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents).replace(/ /g, '&nbsp;').replace(/\n/g, '<br />')) : '' }} />
-									</div>);
-
-								} else {
-									return ((tab.contents)
-										? <Row key={0} horizontal="space-around" className="slice-preview-item-wrapper" style={{ flexWrap : 'wrap' }}>
-												{tab.contents.filter((slice)=> (slice.type === 'group')).map((slice, i)=> {
-													return(<Column key={i}><SlicePreviewItem id={slice.id} filename={slice.filename} title={slice.title} size={slice.meta.frame.size} onClick={()=> this.handleSlicePreview(slice.id)} /></Column>);
-												})}
-											</Row>
-										: ''
-									);
-								}
+								return (<div key={i} className="inspector-page-panel-tab-content">
+									<span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents).replace(/ /g, '&nbsp;').replace(/\n/g, '<br />')) : '' }} />
+								</div>);
 							}))}
 						</div>
 					</div>
@@ -1403,7 +1397,7 @@ class InspectorPage extends Component {
 							<button className="inspector-page-panel-button">Copy</button>
 						</CopyToClipboard>
 					</div>
-					<div className="inspector-page-panel-content-wrapper">
+					<div className="inspector-page-panel-split-content-wrapper">
 						<ul className="inspector-page-panel-tab-wrapper">
 							<li className={'inspector-page-panel-tab inspector-page-panel-tab-selected'}>Specs</li>
 							{(section === 'parts') && (<li className={'inspector-page-panel-tab'}>Parts</li>)}
@@ -1419,7 +1413,26 @@ class InspectorPage extends Component {
 							<button className="inspector-page-panel-button">Copy</button>
 						</CopyToClipboard>
 					</div>
-				</div>
+				</div>)}
+
+				{(section === 'parts') && (<div className="inspector-page-panel">
+					<div className="inspector-page-panel-full-content-wrapper">
+						<ul className="inspector-page-panel-tab-wrapper">
+							{(tabs.map((tab, i) => (<li key={i} className={'inspector-page-panel-tab' + ((selectedTab === i) ? ' inspector-page-panel-tab-selected' : '')} onClick={()=> this.handleTab(i)}>{tab.title}</li>)))}
+						</ul>
+						<div className="inspector-page-panel-tab-content-wrapper">
+							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i) => {
+								return ((tab.contents)
+									? (<PartsList key={i} contents={tab.contents} onPartItem={(sliceID)=> this.handlePartItem(sliceID)} onDownload={this.handleDownload} />)
+									: ('')
+								);
+							}))}
+						</div>
+					</div>
+					<div className="inspector-page-panel-button-wrapper">
+						<button className="inspector-page-panel-button" onClick={()=> this.handleDownload()}><FontAwesome name="download" style={{ fontSize:'12px', marginRight:'8px' }} />Download All</button>
+					</div>
+				</div>)}
 			</div>
 
 			{(tooltip !== '') && (<div className="inspector-page-tooltip">{tooltip}</div>)}
