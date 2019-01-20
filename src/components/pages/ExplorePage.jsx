@@ -121,7 +121,7 @@ class ExplorePage extends Component {
 		const artboards = [...this.props.artboards].filter((artboard)=> (uploadID === 0 || artboard.uploadID === uploadID));
 		const { fetching, loadOffset } = this.state;
 
-		const title = (artboards) ? (fetching) ? 'Loading…' : 'Recent (' + artboards.length + ')' : null;
+		const title = (artboards) ? (fetching) ? 'Loading…' : `Recent (${artboards.length})` : null;
 
 		return (
 			<div className="page-wrapper explore-page-wrapper">

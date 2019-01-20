@@ -15,7 +15,7 @@ function ArtboardItem(props) {
 	return (
 		<div className={className} onClick={()=> (image) ? props.onClick() : null} style={{ opacity : (title === '') ? '33%' : '100%' }}>
 			{(image) && (<>
-				<img className="artboard-item-image" src={(!image.includes('@')) ? image + '@0.25x.png' : image} alt={limitString(title, TITLE_CHAR_LIMIT)} />
+				<img className="artboard-item-image" src={(!image.includes('@')) ? `${image}@0.25x.png` : image} alt={limitString(title, TITLE_CHAR_LIMIT)} />
 				<div className="artboard-item-overlay" />
 				<img className="artboard-item-icon" src={sketchIcon} alt="Icon" />
 				<div className="artboard-item-details-wrapper">

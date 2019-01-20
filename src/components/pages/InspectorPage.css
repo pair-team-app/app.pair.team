@@ -149,19 +149,18 @@
 	background-color: #202020;
 	width: 100%;
 	height: calc(100% - 46px);
-	padding: 8px;
 }
 
 .inspector-page-panel-tab-content {
 	width: 100%;
 	height: 100%;
+	padding: 8px;
 	font-family: "Roboto Mono", sans-serif;
 	font-weight: 400;
 	font-size: 10px;
 	letter-spacing: 0.31px;
 	color: #ffffff;
-	/*white-space: pre-wrap;*/
-	word-break: break-all;
+	word-break: break-word;
 	overflow: auto;
 }
 
@@ -263,19 +262,29 @@
 	width: 100%;
 	height: 100%;
 	overflow-y: auto;
+	padding: 8px 0;
 }
 
 
 .part-item {
-	width: 100%;
-	margin-bottom: 18px;
-	padding: 4px;
+	margin: 0 8px;
+	padding: 10px 0;
+	border-bottom: 1px solid #2f3132;
+}
+
+.part-item:nth-child(even) {
+	background-color: #262626;
+}
+
+.part-item:first-child {
+	padding-top: 0;
 }
 
 .part-item-image {
 	width: 25%;
 	height: 25%;
 	margin-right: 20px;
+	padding: 4px;
 	background: #111111 url(../../assets/images/backgrounds/bg-checkerboard.png) repeat;
 }
 
@@ -287,6 +296,7 @@
 }
 
 .part-item-button {
+	margin-right: 2px;
 	font-size: 10px;
 }
 

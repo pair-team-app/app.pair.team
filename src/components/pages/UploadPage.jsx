@@ -132,63 +132,40 @@ class UploadPage extends Component {
 		console.log('UploadPage.handleFile()', file, this.props, this.state);
 
 		const { id, email } = (this.props.profile) ? this.props.profile : this.state.profile;
-		if (file.name.split('.').pop() === 'sketch') {
-			if (file.size < 100 * (1024 * 1024)) {
-				sendToSlack(`*[${id}]* *${email}* started uploading file "_${file.name}_"`);
+		sendToSlack(`*[${id}]* *${email}* started uploading file "_${file.name}_"`);
 
-				this.setState({
-					formState : 1,
-					file      : file,
-					title     : file.name.split('.').slice(0, -1).join('.')
-				});
+		this.setState({
+			formState : 1,
+			file      : file,
+			title     : file.name.split('.').slice(0, -1).join('.')
+		});
 
-				const config = {
-					headers            : { 'content-type' : 'multipart/form-data' },
-					onDownloadProgress : (progressEvent)=> {},
-					onUploadProgress   : (progressEvent)=> {
-						const { loaded, total } = progressEvent;
-						const percent = Math.round((loaded * 100) / total);
-						this.setState({ percent });
+		const config = {
+			headers            : { 'content-type' : 'multipart/form-data' },
+			onDownloadProgress : (progressEvent)=> {},
+			onUploadProgress   : (progressEvent)=> {
+				const { loaded, total } = progressEvent;
+				const percent = Math.round((loaded * 100) / total);
+				this.setState({ percent });
 
-						if (progressEvent.loaded >= progressEvent.total) {
-							sendToSlack(`*[${id}]* *${email}* completed uploading file "_${file.name}_" uploaded`);
-							this.setState({
-								percent        : 100,
-								uploadComplete : true
-							});
-						}
-					}
-				};
-
-				let formData = new FormData();
-				formData.append('file', file);
-				axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
-					.then((response) => {
-						console.log("UPLOAD", response.data);
-// 						const { file } = this.state;
-// 						if (response.data.files.pop().size !== file.size) {
-// 						}
-					}).catch((error) => {
-					sendToSlack(`*${email}* failed uploading file _${file.name}_`);
-				});
-
-			} else {
-				sendToSlack(`*[${id}]* *${email}* uploaded oversized file "_${file.name}_" (${Math.round(file.size * (1 / (1024 * 1024)))}MB)`);
-				this.props.onPopup({
-					type     : 'ERROR',
-					content  : 'File size must be under 100MB.',
-					duration : 500
-				});
+				if (progressEvent.loaded >= progressEvent.total) {
+					sendToSlack(`*[${id}]* *${email}* completed uploading file "_${file.name}_" uploaded`);
+					this.setState({
+						percent        : 100,
+						uploadComplete : true
+					});
+				}
 			}
+		};
 
-		} else {
-			sendToSlack(`*[${id}]* *${email}* uploaded incompatible file "_${file.name}_"`);
-			this.props.onPopup({
-				type     : 'ERROR',
-				content  : (file.name.split('.').pop() === 'xd') ? 'Adobe XD Support Coming Soon!' : 'Only Sketch files are support at this time.',
-				duration : 1500
-			});
-		}
+		let formData = new FormData();
+		formData.append('file', file);
+		axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
+			.then((response) => {
+				console.log("UPLOAD", response.data);
+			}).catch((error) => {
+			sendToSlack(`*${email}* failed uploading file _${file.name}_`);
+		});
 	};
 
 	handleLogin = ()=> {
@@ -255,7 +232,7 @@ class UploadPage extends Component {
 				formData.append('description', description);
 				formData.append('filesize', size);
 				formData.append('private', (radioIndex === 1) ? '0' : '1');
-				formData.append('filename', "http://cdn.designengine.ai/system/" + name);
+				formData.append('filename', `http://cdn.designengine.ai/system/${name}`);
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response) => {
 						console.log('NEW_UPLOAD', response.data);
@@ -288,9 +265,9 @@ class UploadPage extends Component {
 
 		const uploadTitle = (window.location.pathname.split('/').pop() === 'inspect') ? 'Drag & Drop any Sketch file here to inspect design specs & code.' : 'Drag & Drop any Sketch file here to download parts & source.';
 		const header = (formState === 1 && !uploadComplete) ? 'Uploading' : (window.location.pathname.split('/').pop() === 'inspect') ? 'Do you need specs & code from a design file?' : 'Do you need parts & source from a design file?';
-		const subheader = (formState === 1 && !uploadComplete) ? 'Currently uploading "' + file.name + '" to be processed by Design Engine.' : (window.location.pathname.split('/').pop() === 'inspect') ? 'Upload any Sketch file to Design Engine to inspect design specs & code.' : 'Upload any Sketch file to Design Engine to download parts & source.';
+		const subheader = (formState === 1 && !uploadComplete) ? `Currently uploading "${file.name}" to be processed by Design Engine.` : (window.location.pathname.split('/').pop() === 'inspect') ? 'Upload any Sketch file to Design Engine to inspect design specs & code.' : 'Upload any Sketch file to Design Engine to download parts & source.';
 
-		const progressStyle = { width : percent + '%' };
+		const progressStyle = { width : `${percent}%` };
 
 		return (
 			<div className="page-wrapper upload-page-wrapper">

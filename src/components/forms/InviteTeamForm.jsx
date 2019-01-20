@@ -12,7 +12,7 @@ const MAX_FIELDS = 4;
 
 
 const InviteTeamField = (props)=> {
-	const txtName = 'email' + (props.ind + 1);
+	const txtName = `email${props.ind + 1}`;
 	const addClass = (props.ind === props.arr.length - 1 && props.ind < MAX_FIELDS) ? 'invite-team-form-add-link' : 'invite-team-form-add-link invite-team-form-add-link-hidden';
 
 	return (<Row vertical="center">
@@ -100,7 +100,7 @@ class InviteTeamForm extends Component {
 				invite.valid = false;
 
 			} else {
-				emails += invite.email + ' ';
+				emails += `${invite.email} `;
 			}
 		});
 
@@ -111,7 +111,7 @@ class InviteTeamForm extends Component {
 			let formData = new FormData();
 			formData.append('action', 'INVITE');
 			formData.append('user_id', profile.id);
-			formData.append('upload_id', '' + upload.id);
+			formData.append('upload_id', upload.id);
 			formData.append('emails', emails.slice(0, -1));
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {

@@ -152,7 +152,7 @@ class App extends Component {
 			this.handlePage('inspect');
 
 		} else {
-			this.props.history.push('/' + url);
+			this.props.history.push(`/${url}`);
 		}
 	};
 
@@ -187,7 +187,7 @@ class App extends Component {
 			const projPath = buildProjectPath(upload);
 
 			scrollOrigin(wrapper.current);
-			this.handlePage(projPath.replace(/^\/(\w+)\//, ((orgPath.length > 0) ? orgPath : 'proj') + '/'));
+			this.handlePage(projPath.replace(/^\/(\w+)\//, `${(orgPath.length > 0) ? orgPath : 'proj'}/`));
 		}
 	};
 
@@ -204,7 +204,7 @@ class App extends Component {
 					const { upload } = response.data;
 
 					if (!isInspectorPage()) {
-						this.handlePage(buildProjectPath(upload) + '/' + category.title.toLowerCase());
+						this.handlePage(`${buildProjectPath(upload)}/${category.title.toLowerCase()}`);
 					}
 				}).catch((error) => {
 			});

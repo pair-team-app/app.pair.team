@@ -96,7 +96,7 @@ class ProfilePage extends Component {
 
 				let formData = new FormData();
 				formData.append('file', file);
-				axios.post('http://cdn.designengine.ai/upload.php?dir=/profiles&prefix=' + this.props.profile.userID + '_', formData, config)
+				axios.post(`http://cdn.designengine.ai/upload.php?dir=/profiles&prefix=${this.props.profile.userI}_`, formData, config)
 					.then((response) => {
 						console.log("UPLOAD", response.data);
 					}).catch((error) => {
@@ -106,7 +106,7 @@ class ProfilePage extends Component {
 	}
 
 	onUploadComplete = ()=> {
-		this.validateFields('avatar', 'http://cdn.designengine.ai/profiles/' + this.props.profile.userID + '_' + this.state.file.name);
+		this.validateFields('avatar', `http://cdn.designengine.ai/profiles/${this.props.profile.userID}_${this.state.file.name}`);
 		this.onProfileUpdate();
 	};
 

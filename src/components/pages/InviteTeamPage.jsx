@@ -134,11 +134,11 @@ class InviteTeamPage extends Component {
 
 		let emails = '';
 		if (isEmail1Valid) {
-			emails += email1 + " ";
+			emails += `${email1} `;
 		}
 
 		if (isEmail2Valid) {
-			emails += email2 + " ";
+			emails += `${email2} `;
 		}
 
 		if (isEmail3Valid) {

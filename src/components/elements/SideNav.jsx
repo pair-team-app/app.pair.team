@@ -100,7 +100,7 @@ class SideNav extends Component {
 		formData.append('action', 'UPLOAD_NAMES');
 		formData.append('user_id', (isExplorePage()) ? '-1' : (this.props.profile) ? this.props.profile.id : '0');
 		formData.append('offset', (isExplorePage()) ? Math.max(0, loadOffset) : '0');
-		formData.append('length', '' + loadAmt);
+		formData.append('length', `${loadAmt}`);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				//#- console.log('UPLOAD_NAMES', response.data);

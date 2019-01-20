@@ -79,8 +79,8 @@ class InputField extends Component {
 		const { type, name, placeholder, button } = this.props;
 		const { value, status } = this.state;
 
-		const wrapperClass = 'input-wrapper input-field-wrapper' + ((status === 'ERROR') ? ' input-wrapper-error' : '');
-		const textfieldClass = 'input-field-textfield' + ((status === 'ERROR') ? ' is-hidden' : '');
+		const wrapperClass = `input-wrapper input-field-wrapper${((status === 'ERROR') ? ' input-wrapper-error' : '')}`;
+		const textfieldClass = `input-field-textfield${((status === 'ERROR') ? ' is-hidden' : '')}`;
 		const buttonClass = 'tiny-button input-field-button';
 		const errorStyle = { display : ((status === 'error') ? 'block' : 'none') };
 
