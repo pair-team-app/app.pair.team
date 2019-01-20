@@ -20,10 +20,20 @@
 	cursor: copy;
 }
 
-.upload-header-upload-icon {
+.upload-header-button {
+	height: fit-content;
+	margin: 0 15px 30px 0;
+	padding: 7px 10px;
+	font-size: 28px;
+}
+
+.upload-header-button:last-child {
+	margin-right: 0;
+}
+
+.upload-header-upload-image {
 	width: 50px;
 	height: 50px;
-	margin: 0 20px 30px 0;
 }
 
 .upload-header-upload-icon:last-child {

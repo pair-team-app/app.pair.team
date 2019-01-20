@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './UploadHeader.css';
 
 import Dropzone from 'react-dropzone';
+import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
@@ -65,10 +66,11 @@ class UploadHeader extends Component {
 		return (<div className="upload-header-wrapper">
 			<Dropzone className="upload-header-dz" multiple={false} onDrop={this.onDrop.bind(this)}>
 				<Row horizontal="center">
-					<img className="upload-header-upload-icon" src={uploadIcon} alt="Upload" />
-					<img className="upload-header-upload-icon" src={uploadIcon} alt="Upload" />
-					<img className="upload-header-upload-icon" src={uploadIcon} alt="Upload" />
-					<img className="upload-header-upload-icon" src={uploadIcon} alt="Upload" />
+					<button className="upload-header-button"><FontAwesome name="upload" /></button>
+					<button className="upload-header-button"><FontAwesome name="dropbox" /></button>
+					<button className="upload-header-button"><FontAwesome name="slack" /></button>
+					<button className="upload-header-button"><FontAwesome name="windows" /></button>
+					{/*<button className="upload-header-button"><FontAwesome name="square" /></button>*/}
 				</Row>
 				<Row horizontal="center">{title}</Row>
 			</Dropzone>

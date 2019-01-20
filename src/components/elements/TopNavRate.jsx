@@ -5,6 +5,7 @@ import './TopNavRate.css';
 import FontAwesome from 'react-fontawesome';
 import { Row } from 'simple-flexbox';
 
+
 const RateStarItem = (props)=> {
 	const { ind, filled } = props;
 	return (<FontAwesome
