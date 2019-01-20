@@ -94,6 +94,10 @@ class App extends Component {
 
 		const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
 		this.props.updateNavigation({ uploadID, pageID, artboardID, sliceID });
+
+		if (isInspectorPage()) {
+			this.onAddUploadView(uploadID);
+		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -102,7 +106,7 @@ class App extends Component {
 
 	handleArtboardClicked = (artboard)=> {
 		console.log('App.handleArtboardClicked()', artboard);
-		this.onAddPageView(artboard.pageID);
+		this.onAddUploadView(artboard.uploadID);
 
 		this.handlePage(buildInspectorPath({ id : artboard.uploadID, title : artboard.title }).substring(1));
 		this.props.updateNavigation({
@@ -223,7 +227,7 @@ class App extends Component {
 					console.log('ARTBOARDS', response.data);
 
 					const artboard = response.data.artboards.pop();
-					this.onAddPageView(page.id);
+					this.onAddUploadView(page.uploadID);
 					this.handlePage(buildInspectorPath({ id : page.uploadID, title : artboard.title }));
 					this.props.updateNavigation({
 						uploadID   : page.uploadID,
@@ -245,7 +249,7 @@ class App extends Component {
 	handleSideNavArtboardItem = (artboard)=> {
 		console.log('App.handleSideNavArtboardItem()', artboard);
 
-		this.onAddPageView(artboard.pageID);
+		this.onAddUploadView(artboard.uploadID);
 		this.handlePage(buildInspectorPath({ id : artboard.uploadID, title : artboard.title }));
 
 		this.props.updateNavigation({
@@ -255,10 +259,10 @@ class App extends Component {
 		});
 	};
 
-	onAddPageView = (pageID)=> {
+	onAddUploadView = (uploadID)=> {
 		let formData = new FormData();
 		formData.append('action', 'ADD_VIEW');
-		formData.append('page_id', pageID);
+		formData.append('upload_id', uploadID);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('ADD_VIEW', response.data);

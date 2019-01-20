@@ -18,29 +18,25 @@ class ArtboardGrid extends Component {
 
 	render() {
 		console.log('ArtboardGrid.render()', this.props, this.state);
-		const { fetching, total, title, artboards } = this.props;
-
-		const btnClass = (artboards && (artboards.length === parseInt(total, 10))) ? 'fat-button is-hidden' : (fetching) ? 'fat-button button-disabled' : 'fat-button';
-		const btnCaption = (fetching) ? 'Loading…' : 'More';
+		const { title, artboards } = this.props;
 
 		return (<div className="artboard-grid">
-			{(title) && (<Row><h3>{(!fetching && artboards.length === 0) ? '' : title}</h3></Row>)}
+			{(title) && (<Row><h3>{title}</h3></Row>)}
 			{(isUserLoggedIn() && artboards.length > 0) && (
-				<Row horizontal="space-around" className="artboard-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
+				<Row horizontal="space-between" className="artboard-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
 					{(artboards) && artboards.map((artboard, i) => {
 						return (
 							<Column key={i}>
 								<ArtboardItem
 									title={artboard.title}
 									image={artboard.filename}
-									avatar={artboard.system.avatar}
+									avatar={artboard.creator.avatar}
 									onClick={()=> this.props.onClick(artboard)} />
 							</Column>
 						);
 					})}
 				</Row>
 			)}
-			{(artboards.length > 0) && (<Row horizontal="center"><button className={btnClass} onClick={()=> (!fetching) ? this.props.onLoadNext() : null}>{btnCaption}</button></Row>)}
 		</div>);
 	}
 }

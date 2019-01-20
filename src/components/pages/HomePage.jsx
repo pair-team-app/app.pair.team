@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import ArtboardGrid from '../elements/ArtboardGrid';
 import UploadHeader from '../elements/UploadHeader';
 import { addFileUpload, appendUploadArtboards, updateNavigation } from '../../redux/actions';
-import { isInspectorPage, isUserLoggedIn, limitString } from '../../utils/funcs';
+import { isUserLoggedIn, limitString } from '../../utils/funcs';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -62,10 +62,9 @@ class HomePage extends Component {
 
 		this.state = {
 			firstFetch  : false,
-			uploadTotal : 0,
 			fetching    : false,
 			loadOffset  : 0,
-			loadAmt     : 1
+			loadAmt     : -1
 		};
 	}
 
@@ -75,18 +74,10 @@ class HomePage extends Component {
 		if (this.props.profile && this.props.artboards.length === 0) {
 			this.handleLoadNext();
 		}
-
-		if (this.props.artboards.length > 0) {
-			this.setState({ uploadTotal : this.props.artboards.length })
-		}
 	}
 
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
 		console.log('HomePage.shouldComponentUpdate()', this.props, nextProps);
-
-// 		const { fetching, uploadTotal } = this.state;
-// 		return (!fetching || nextProps.artboards.length === uploadTotal);
-
 		return (true);
 	}
 
@@ -99,10 +90,10 @@ class HomePage extends Component {
 			this.handleLoadNext();
 		}
 
-		const { fetching, uploadTotal } = this.state;
-		if (fetching && artboards.length === uploadTotal && uploadTotal > 0) {
-			this.setState({ fetching : false });
-		}
+// 		const { fetching } = this.state;
+// 		if (fetching && artboards.length > 0) {
+// 			this.setState({ fetching : false });
+// 		}
 	}
 
 	handleDemo = ()=> {
@@ -113,24 +104,24 @@ class HomePage extends Component {
 			pageID     : 0,
 			artboardID : 0
 		});
-		this.props.onPage(window.location.pathname + '/1/account');
+		this.props.onPage(`${window.location.pathname}/1/account`);
 	};
 
 	handleLoadNext = ()=> {
 		console.log('HomePage.handleLoadNext()', this.props.artboards);
 
-		const { profile, navigation } = this.props;
+		const { profile } = this.props;
 		const { loadOffset, loadAmt } = this.state;
 		this.setState({ fetching : true });
 
 		let formData = new FormData();
-		formData.append('action', 'UPLOAD_NAMES');
+		formData.append('action', 'USER_UPLOADS');
 		formData.append('user_id', profile.id);
-		formData.append('offset', '0');
-		formData.append('length', '-1');
+		formData.append('offset', loadOffset);
+		formData.append('length', loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
-				console.log('UPLOAD_NAMES', response.data);
+				console.log('USER_UPLOADS', response.data);
 
 				const uploads = response.data.uploads.map((upload)=> ({
 					id           : upload.id,
@@ -138,7 +129,7 @@ class HomePage extends Component {
 					description  : upload.description,
 					total        : upload.total,
 					added        : upload.added,
-					selected     : (navigation.uploadID === upload.id),
+					selected     : false,
 					fonts        : upload.fonts.map((font)=> ({
 						id     : font.id,
 						family : font.family,
@@ -156,6 +147,11 @@ class HomePage extends Component {
 						title : symbol.title,
 						added : symbol.added
 					})),
+					contributors : upload.contributors.map((contributor)=> ({
+						id     : contributor.id,
+						title  : contributor.username,
+						avatar : contributor.avatar
+					})),
 					pages        : upload.pages.map((page) => ({
 						id          : page.id,
 						uploadID    : page.upload_id,
@@ -163,69 +159,34 @@ class HomePage extends Component {
 						description : page.description,
 						total       : page.total,
 						added       : page.added,
-						selected    : (navigation.pageID === page.id && isInspectorPage()),
-						artboards   : []
-					})),
-					contributors : upload.contributors.map((contributor)=> ({
-						id     : contributor.id,
-						title  : contributor.username,
-						avatar : contributor.avatar
+						selected    : false,
+						artboards   : page.artboards.map((artboard) => ({
+							id        : artboard.id,
+							pageID    : artboard.page_id,
+							uploadID  : artboard.upload_id,
+							title     : limitString(upload.title, 25),
+							pageTitle : artboard.page_title,
+							filename  : artboard.filename,
+							creator   : artboard.creator,
+							meta      : JSON.parse(artboard.meta),
+							added     : artboard.added,
+							selected  : false
+						}))
 					}))
 				}));
 
-				this.setState({
-					uploadTotal : uploads.length,
-					loadOffset  : loadOffset + loadAmt
+				const artboards = uploads.filter((upload)=> (upload.pages.length > 0)).map((upload)=> {
+					return (upload.pages.shift().artboards.shift());
 				});
 
-				if (uploads.length === 0) {
-					this.setState({ fetching : false });
+				this.setState({
+					fetching   : false,
+					loadOffset : artboards.length
+				});
+
+				if (artboards.length > 0) {
+					this.props.appendUploadArtboards(artboards);
 				}
-
-				uploads.forEach((upload)=> {
-					this.handleNextUpload(upload);
-				});
-			}).catch((error) => {
-		});
-	};
-
-
-	handleNextUpload = (upload)=> {
-// 		console.log('!¡!¡!¡!¡!¡!¡!¡!¡!¡— HomePage.handleNextUpload()', upload);
-
-		const prevArtboards = [...this.props.artboards];
-		const { loadOffset } = this.state;
-
-		let formData = new FormData();
-		formData.append('action', 'ARTBOARDS');
-		formData.append('upload_id', upload.id);
-		formData.append('page_id', '0');
-		formData.append('offset', '0');
-		formData.append('length', '1');
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-				console.log('ARTBOARDS', response.data);
-				const artboards = prevArtboards.concat(response.data.artboards.map((artboard) => ({
-					id        : artboard.id,
-					pageID    : artboard.page_id,
-					uploadID  : artboard.upload_id,
-					system    : artboard.system,
-					title     : limitString(upload.title, 16) + ' - ' + artboard.title,
-					pageTitle : artboard.page_title,
-					type      : artboard.type,
-					filename  : artboard.filename,
-					creator   : artboard.creator,
-					meta      : JSON.parse(artboard.meta),
-					added     : artboard.added,
-					selected  : false
-				})));
-
-				this.setState({
-					loadOffset : loadOffset + artboards.length,
-					fetching   : artboards.length !== this.props.artboards.length
-				});
-
-				this.props.appendUploadArtboards(artboards);
 			}).catch((error) => {
 		});
 	};
@@ -233,7 +194,7 @@ class HomePage extends Component {
 	handleFile = (file)=> {
 		console.log('HomePage.handleFile()', file);
 		this.props.addFileUpload(file);
-		this.props.onPage('new' + window.location.pathname);
+		this.props.onPage(`new${window.location.pathname}`);
 	};
 
 
@@ -241,13 +202,13 @@ class HomePage extends Component {
 		console.log('HomePage.render()', this.props, this.state);
 
 		const { profile, artboards } = this.props;
-		const { fetching, loadOffset, uploadTotal } = this.state;
+		const { fetching, loadOffset } = this.state;
 
 		const { pathname } = window.location;
 		const uploadTitle = (pathname === '/' || pathname === '/inspect') ? 'Drag & Drop any Sketch file here to inspect design specs & code.' : (pathname === '/parts') ? 'Drag & Drop any Sketch file here to download design parts & source.' : 'Turn any Sketch file into an organized System of Fonts, Colors, Symbols, Views &amp; more. (Drag & Drop)';
 		const sectionTitle = (pathname === '/' || pathname === '/inspect') ? (isUserLoggedIn()) ? 'Do you need specs & code from a design file?' : 'Sign Up for Design Engine' : (pathname === '/parts') ? (isUserLoggedIn()) ? 'Do you need parts & source from a design file?' : 'Sign Up for Design Engine' : 'Start a new Design Project';
 		const sectionContent = (pathname === '/' || pathname === '/inspect') ? (isUserLoggedIn()) ? 'Upload any Sketch file to Design Engine to inspect specifications & code.' : 'Design Engine is a design platform built for engineers inspired by the way you work.' : (pathname === '/parts') ? (isUserLoggedIn()) ? 'Upload any Sketch file to Design Engine to export design parts & source.' : 'Design Engine is a design platform built for engineers inspired by the way you work.' : 'Turn any Design File into an organized System of Fonts, Colors, Symbols, Views & More.';
-		const gridTitle = (profile) ? (fetching) ? 'Loading…' : 'Showing most viewed from ' + uploadTotal + ' project' + ((uploadTotal === 1) ? '' : 's') + '.' : null;
+		const gridTitle = (profile) ? (fetching) ? 'Loading…' : `Showing ${artboards.length} project${((artboards.length === 1) ? '' : 's')}.` : null;
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
@@ -260,8 +221,7 @@ class HomePage extends Component {
 
 				<ArtboardGrid
 					title={gridTitle}
-					total={uploadTotal}
-					artboards={artboards.sort((a, b)=> (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0))}
+					artboards={artboards}
 					loadOffset={loadOffset}
 					fetching={fetching}
 					onClick={this.props.onArtboardClicked}

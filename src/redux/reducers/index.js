@@ -53,18 +53,13 @@ function rootReducer(state=initialState, action) {
 
 		return (Object.assign({}, state, {
 			exploreArtboards : state.exploreArtboards.concat(action.payload).reduce((acc, inc)=> [...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], [])
-// 			exploreArtboards : pruneArtboards(state.exploreArtboards.concat(action.payload))
 		}));
 
 	} else if (action.type === APPEND_UPLOAD_ARTBOARDS) {
 		actionLogFormat(action, state.uploadArtboards);
 
-// 		const artboard = action.payload.entries().next().value.pop();
-// 		const { uploadID, pageID, id } = (artboard) ? artboard : null;
-
 		return (Object.assign({}, state, {
 			uploadArtboards : state.uploadArtboards.concat(action.payload).reduce((acc, inc) => [...acc.filter((artboard) => (artboard.id !== inc.id)), inc], [])
-// 			uploadArtboards : pruneArtboards(state.uploadArtboards.concat(action.payload))
 		}));
 
 	} else if (action.type === SET_REDIRECT_URL) {
