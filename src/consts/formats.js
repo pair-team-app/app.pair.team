@@ -1,8 +1,3 @@
 
 export const MOMENT_TIMESTAMP = 'DD-MMM-YYYY';
-
-export const TIMESTAMP_OPTS = {
-	year   : 'numeric',
-	month  : 'numeric',
-	day    : 'numeric'
-};
+// export const MOMENT_TIMESTAMP = 'DD-MMM-YYYY HH:mm:ss Z';

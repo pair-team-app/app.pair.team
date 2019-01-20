@@ -6,7 +6,6 @@ import axios from 'axios';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import FontAwesome from 'react-fontawesome';
 import Moment from 'react-moment';
-import 'moment-timezone';
 import panAndZoomHoc from 'react-pan-and-zoom-hoc';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
@@ -202,12 +201,12 @@ function SpecsList(props) {
 				<Row><Column flexGrow={1}>Line Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.lineHeight) ? `${props.slice.meta.font.lineHeight}px` : ''}</Column></Row>
 				<Row><Column flexGrow={1}>Char Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.kerning) ? `${props.slice.meta.font.kerning.toFixed(2)}px` : '0'}</Column></Row>
 			</>)}
-			{/*{(styles) && (<>*/}
+			{(styles) && (<>
 				{/*<Row><Column flexGrow={1}>Stroke:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(styles.stroke) ? `${capitalizeText(styles.stroke.position, true)} S: ${styles.stroke.thickness} ${styles.stroke.color}` : ''}</Column></Row>*/}
 				{/*<Row><Column flexGrow={1}>Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(styles.shadow) ? `X: ${styles.shadow.offset.x} Y: ${styles.shadow.offset.y} B: ${styles.shadow.blur} S: ${styles.shadow.spread}` : ''}</Column></Row>*/}
 				{/*<Row><Column flexGrow={1}>Inner Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(styles.innerShadow) ? `X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}` : ''}</Column></Row>*/}
 				{/*<Row><Column flexGrow={1}>Blur:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(styles.innerShadow) ? `X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}` : ''}</Column></Row>*/}
-			{/*</>)}*/}
+			</>)}
 			{(props.slice && props.slice.meta.padding) && (<Row>
 				<Column flexGrow={1}>Padding</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{props.slice.meta.padding.top}px {props.slice.meta.padding.left}px {props.slice.meta.padding.bottom}px {props.slice.meta.padding.right}px</Column>
 			</Row>)}
@@ -225,35 +224,37 @@ class InspectorPage extends Component {
 
 		this.state = {
 			section      : window.location.pathname.substr(1).split('/').shift(),
+			upload       : null,
 			slice        : null,
 			hoverSlice   : null,
-			upload       : null,
-			tabs         : [],
-			uploading    : false,
-			shownInvite  : true,
-			sentInvites  : false,
-			restricted   : false,
-			percent      : 0,
-			selectedTab  : 0,
-			tooltip      : '',
+			offset       : null,
 			hoverOffset  : null,
+			selectedTab  : 0,
+			tabs         : [],
+			scale        : 0.5,
+			panCoords    : {
+				x : 0.5,
+				y : 0.5,
+			},
 			viewport     : {
 				width  : 0,
 				height : 0
 			},
-			x            : 0.5,
-			y            : 0.5,
-			scale        : 0.5,
 			scrollOffset : {
 				x : 0,
 				y : 0
 			},
-			offset       : null,
+			uploading    : false,
+			shownInvite  : true,
+			sentInvites  : false,
+			restricted   : false,
 			scrolling    : false,
 			code         : {
 				html   : '',
 				syntax : ''
 			},
+			percent      : 0,
+			tooltip      : '',
 			comment      : ''
 		};
 
@@ -268,6 +269,10 @@ class InspectorPage extends Component {
 
 	componentDidMount() {
 		console.log('InspectorPage.componentDidMount()', this.props, this.state);
+
+// 		var utc = moment('2019-01-20T12:00:00Z');
+// 		utc.tz(moment.tz(moment.tz.guess()).zoneName()).format('ha z');
+// 		console.log(':::::::::::', moment.tz.guess(), moment.tz.guess()).zoneName());
 
 		if (this.props.redirectURL) {
 			this.props.setRedirectURL(null);
@@ -448,8 +453,7 @@ class InspectorPage extends Component {
 		const p1 = this.transformPoint({ x : 0.5, y : 0.5 });
 
 		this.setState({
-			x            : x,
-			y            : y,
+			panCoords    : { x, y },
 			scale        : Math.min(Math.max(scale, ZOOM_NOTCHES[0]), ZOOM_NOTCHES.slice(-1)[0]),
 			scrollOffset : {
 				x : -Math.round((p1.x * viewport.width) + ((viewport.width * -0.5) * scale)),
@@ -478,8 +482,9 @@ class InspectorPage extends Component {
 			y : -Math.round((p1.y * viewport.height) + ((viewport.height * -0.5) * scale))
 		};
 
+		const panCoords = { x, y };
 		const scrolling = true;
-		this.setState({ x, y, scrollOffset, scrolling });
+		this.setState({ panCoords, scrollOffset, scrolling });
 	};
 
 	handlePanStart = (event)=> {
@@ -627,7 +632,7 @@ class InspectorPage extends Component {
 	};
 
 	handleTab = (ind)=> {
-		console.log('InspectorPage.handleTab()', ind);
+// 		console.log('InspectorPage.handleTab()', ind);
 		this.setState({ selectedTab : ind });
 	};
 
@@ -648,12 +653,12 @@ class InspectorPage extends Component {
 	};
 
 	handleZoom = (direction)=> {
-		console.log('InspectorPage.handleZoom()', direction);
+// 		console.log('InspectorPage.handleZoom()', direction);
 
-		const { x, y, scale } = this.state;
+		const { panCoords, scale } = this.state;
 
 		if (direction === 0) {
-			this.handlePanAndZoom(x + 0.01, y + 0.01, ZOOM_NOTCHES[5]);
+			this.handlePanAndZoom(panCoords.x + 0.01, panCoords.y + 0.01, ZOOM_NOTCHES[5]);
 
 		} else {
 			let ind = -1;
@@ -673,7 +678,7 @@ class InspectorPage extends Component {
 				});
 			}
 
-			this.handlePanAndZoom(x + 0.01, y + 0.01, ZOOM_NOTCHES[Math.min(Math.max(0, ind + direction), ZOOM_NOTCHES.length - 1)]);
+			this.handlePanAndZoom(panCoords.x + 0.01, panCoords.y + 0.01, ZOOM_NOTCHES[Math.min(Math.max(0, ind + direction), ZOOM_NOTCHES.length - 1)]);
 		}
 	};
 
@@ -1138,10 +1143,10 @@ class InspectorPage extends Component {
 
 	transformPoint = ({ x, y })=> {
 // 		console.log('InspectorPage.transformPoint()', x, y);
-		const { scale } = this.state;
+		const { panCoords, scale } = this.state;
 		return ({
-			x : 0.5 + (scale * (x - this.state.x)),
-			y : 0.5 + (scale * (y - this.state.y))
+			x : 0.5 + (scale * (x - panCoords.x)),
+			y : 0.5 + (scale * (y - panCoords.y))
 		});
 	};
 
@@ -1149,7 +1154,7 @@ class InspectorPage extends Component {
 	render() {
 		const { profile, processing } = this.props;
 
-		const { section, upload, slice, hoverSlice, tabs, scale, selectedTab, scrolling, viewport, x, y, percent } = this.state;
+		const { section, upload, slice, hoverSlice, tabs, scale, selectedTab, scrolling, viewport, panCoords, percent } = this.state;
 		const { tooltip, restricted, shownInvite, sentInvites } = this.state;
 
 
@@ -1325,8 +1330,8 @@ class InspectorPage extends Component {
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<InteractiveDiv
-						x={x}
-						y={y}
+						x={panCoords.x}
+						y={panCoords.y}
 						scale={scale}
 						scaleFactor={ZOOM_FACTOR}
 						minScale={ZOOM_NOTCHES[0]}
