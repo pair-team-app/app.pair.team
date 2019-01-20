@@ -80,7 +80,7 @@ const InviteTeamModal = (props)=> {
 
 	const { profile, upload, sentInvites } = props;
 
-	return (<ContentModal type="PERCENT" closeable={true} title="Invite Team" onComplete={props.onComplete}>
+	return (<ContentModal type="modal-invite" size="PERCENT" closeable={true} title="Invite Team" onComplete={props.onComplete}>
 		<div className="inspector-page-invite-modal-wrapper">
 			{upload.title} ({upload.filename.split('/').pop()})< br/>
 			{upload.description}< br/>
@@ -1422,6 +1422,7 @@ class InspectorPage extends Component {
 
 			{(tooltip !== '') && (<div className="inspector-page-tooltip">{tooltip}</div>)}
 			{(restricted) && (<ContentModal
+				type="modal-private"
 				closeable={false}
 				onComplete={()=> this.props.onPage('register')}>
 					This project is private, you must be logged in as one of its team members to view!

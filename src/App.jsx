@@ -39,7 +39,7 @@ import {
 	isUploadPage,
 	scrollOrigin
 } from './utils/funcs';
-import { initTracker, trackEvent } from './utils/tracking';
+import { initTracker, trackEvent, trackPageview } from './utils/tracking';
 
 
 const wrapper = React.createRef();
@@ -143,6 +143,8 @@ class App extends Component {
 			this.props.history.goBack();
 
 		} else if (url === '') {
+			trackPageview('/');
+
 			this.props.updateNavigation({
 				uploadID   : 0,
 				pageID     : 0,
@@ -152,6 +154,7 @@ class App extends Component {
 			this.handlePage('inspect');
 
 		} else {
+			trackPageview(`/${url}`);
 			this.props.history.push(`/${url}`);
 		}
 	};
@@ -343,6 +346,7 @@ class App extends Component {
 					    </div>
 				      <MediaQuery query="(max-width: 1024px)">
 					      {(mobileOverlay) && (<ContentModal
+						      type="modal-mobile"
 						      closeable={true}
 						      defaultButton="OK"
 						      onComplete={()=> this.setState({ mobileOverlay : false })}>

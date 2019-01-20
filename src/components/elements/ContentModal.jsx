@@ -6,6 +6,8 @@ import { TimelineMax, Power1, Power2 } from 'gsap/TweenMax';
 import FontAwesome from 'react-fontawesome';
 import onClickOutside from 'react-onclickoutside';
 
+import { trackModal } from '../../utils/tracking';
+
 class ContentModal extends Component {
 	constructor(props) {
 		super(props);
@@ -20,6 +22,8 @@ class ContentModal extends Component {
 
 	componentDidMount() {
 // 		console.log('ContentModal.componentDidMount()', this.props, this.state);
+
+		trackModal(this.props.type);
 
 		this.timeline = new TimelineMax();
 		this.timeline.from(this.wrapper, 0.125, {
@@ -68,8 +72,8 @@ class ContentModal extends Component {
 	render() {
 		console.log('ContentModal.render()', this.props, this.state);
 
-		const { type, title, closeable, defaultButton, children } = this.props;
-		const wrapperClass = (type === 'PERCENT') ? 'content-modal-content-wrapper content-modal-content-wrapper-percent' : 'content-modal-content-wrapper';
+		const { size, title, closeable, defaultButton, children } = this.props;
+		const wrapperClass = (size === 'PERCENT') ? 'content-modal-content-wrapper content-modal-content-wrapper-percent' : 'content-modal-content-wrapper';
 
 		return (<div className="content-modal-wrapper" onClick={()=> (closeable) ? this.handleClose() : null} ref={(element)=> { this.wrapper = element; }}>
 			<div className={wrapperClass}>
@@ -78,7 +82,7 @@ class ContentModal extends Component {
 					{(closeable && !defaultButton) && (<button className="tiny-button content-modal-close-button" onClick={()=> this.handleClose()}><FontAwesome name="times"/></button>)}
 				</div>)}
 				<div className="content-modal-content">
-					{children}
+					{children}< br/>
 					{(defaultButton) && (<button className="content-modal-button" onClick={()=> this.handleClose()}>{defaultButton}</button>)}
 				</div>
 			</div>

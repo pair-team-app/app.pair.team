@@ -25,6 +25,6 @@ export function trackModal(type) {
 	ReactGA.pageview(`${window.location.pathname}/${type}`);
 }
 
-export function trackPageview() {
-	ReactGA.pageview(`${window.location.pathname}${window.location.search}`);
+export function trackPageview(uri) {
+	ReactGA.pageview(`${uri}`);
 }

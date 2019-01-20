@@ -9,7 +9,7 @@ import ContentModal from '../elements/ContentModal';
 import TopNavProfile from './TopNavProfile';
 import TopNavRate from './TopNavRate';
 import { GITHUB_ROADMAP } from '../../consts/uris';
-import { isUserLoggedIn } from '../../utils/funcs';
+import { convertURISlug, isUserLoggedIn } from '../../utils/funcs';
 import { updateNavigation } from '../../redux/actions';
 import logo from '../../assets/images/logo-designengine.svg';
 import sketchIcon from '../../assets/images/icons/ico-sketch.png';
@@ -58,7 +58,7 @@ class TopNav extends Component {
 				enabled : false,
 				url     : '/1/account'
 			}, {
-				title   : 'XD',
+				title   : 'Adobe XD',
 				image   : xdIcon,
 				enabled : false,
 				url     : '/1/account'
@@ -68,6 +68,7 @@ class TopNav extends Component {
 				enabled : false,
 				url     : '/1/account'
 			}],
+			demoTitle : '',
 			demoModal : false
 		};
 	}
@@ -88,7 +89,10 @@ class TopNav extends Component {
 			this.props.onPage(`${window.location.pathname}${demo.url}`);
 
 		} else {
-			this.setState({ demoModal : true });
+			this.setState({
+				demoTitle : demo.title,
+				demoModal : true
+			});
 		}
 	};
 
@@ -115,7 +119,7 @@ class TopNav extends Component {
 		console.log('TopNav.render()', this.props, this.state);
 
 		const { pathname } = window.location;
-		const { sections, demos, demoModal } = this.state;
+		const { sections, demos, demoTitle, demoModal } = this.state;
 
 		return (
 			<div className="top-nav-wrapper">
@@ -151,10 +155,11 @@ class TopNav extends Component {
 					</Row>
 				</div>
 				{(demoModal) && (<ContentModal
+					type={`modal-demo-${convertURISlug(demoTitle)}`}
 					closeable={true}
 					defaultButton="OK"
 					onComplete={()=> this.setState({ demoModal : false })}>
-					Coming soon, check out our <span className="page-link" onClick={()=> this.handleDemoModal()}>roadmap</span>!
+						{demoTitle} demo coming soon, check out our <span className="page-link" onClick={()=> this.handleDemoModal()}>roadmap</span>!
 				</ContentModal>)}
 			</div>
 		);
