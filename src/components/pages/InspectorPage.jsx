@@ -264,10 +264,6 @@ class InspectorPage extends Component {
 		this.scrollInterval = null;
 		this.antsOffset = 0;
 		this.antsInterval = null;
-		this.size = {
-			width  : 0,
-			height : 0
-		};
 	}
 
 	componentDidMount() {
@@ -807,7 +803,7 @@ class InspectorPage extends Component {
 		console.log('InspectorPage.onRefreshUpload()', this.props);
 
 		const { uploadID } = this.props.navigation;
-		const { section, scale } = this.state;
+		const { section, scale, viewport } = this.state;
 
 		this.setState({ tooltip : 'Loading…' });
 
@@ -830,7 +826,7 @@ class InspectorPage extends Component {
 					let artboards = [];
 					page.artboards.forEach((artboard, i, arr)=> {
 						if (Math.floor(i % 5) === 0 && i !== 0) {
-							this.size.height += maxH + 50;
+							viewport.height += maxH + 50;
 							offset.x = 0;
 							offset.y += 50 + maxH;
 							maxH = 0;
@@ -872,12 +868,14 @@ class InspectorPage extends Component {
 							offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
 						}
 
-						this.size.width = Math.max(this.size.width, offset.x);
+						viewport.width = Math.max(viewport.width, offset.x);
 					});
 
 					page.artboards = artboards;
 					pages.push(page);
 				});
+
+				this.setState({ viewport });
 
 				upload.pages = pages;
 
@@ -1164,8 +1162,8 @@ class InspectorPage extends Component {
 
 		const artboardsStyle = {
 			position  : 'absolute',
-			width     : `${this.size.width * scale}px`,
-			height    : `${this.size.height * scale}px`,
+			width     : `${viewport.width * scale}px`,
+			height    : `${viewport.height * scale}px`,
 			transform : `translate(${p1.x * viewport.width}px, ${p1.y * viewport.height}px) translate(${(viewport.width * -0.5) * scale}px, ${(viewport.height * -0.5) * scale}px)`
 		};
 
