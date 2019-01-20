@@ -117,7 +117,7 @@ class RateThisPage extends Component {
 
 		const { profile, score } = this.props;
 		const { ratingID } = this.state;
-		
+
 		if (score !== prevProps.score && ratingID === 0) {
 			let formData = new FormData();
 			formData.append('action', 'ADD_RATE');

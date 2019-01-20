@@ -50,7 +50,7 @@ class TopNavRate extends Component {
 	};
 
 	render() {
-		console.log('TopNavRate.render()', this.props, this.state);
+// 		console.log('TopNavRate.render()', this.props, this.state);
 
 		const { selected } = this.props;
 		const { stars } = this.state;
