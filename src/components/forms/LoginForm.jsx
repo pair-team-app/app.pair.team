@@ -11,7 +11,7 @@ import { hasBit, isValidEmail } from '../../utils/funcs';
 const passwordTextfield = React.createRef();
 
 
-const txtClass = (isValid)=> {
+const txtfieldClass = (isValid)=> {
 	return ((isValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error');
 };
 
@@ -101,8 +101,8 @@ class LoginForm extends Component {
 		const { email, password } = this.state;
 		const { emailValid, passwordValid, passMsg } = this.state;
 
-		const emailClass = txtClass(emailValid);
-		const passwordClass = txtClass(passwordValid);
+		const emailClass = txtfieldClass(emailValid);
+		const passwordClass = txtfieldClass(passwordValid);
 		const buttonClass = (emailValid && passwordValid) ? 'fat-button adjacent-button' : 'fat-button adjacent-button button-disabled';
 
 		return (
