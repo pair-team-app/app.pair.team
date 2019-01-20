@@ -5,8 +5,10 @@ import './TopNav.css';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
+import ContentModal from '../elements/ContentModal';
 import TopNavProfile from './TopNavProfile';
 import TopNavRate from './TopNavRate';
+import { GITHUB_ROADMAP } from '../../consts/uris';
 import { isUserLoggedIn } from '../../utils/funcs';
 import { updateNavigation } from '../../redux/actions';
 import logo from '../../assets/images/logo-designengine.svg';
@@ -16,21 +18,20 @@ import photoshopIcon from '../../assets/images/icons/ico-photoshop.png';
 import xdIcon from '../../assets/images/icons/ico-xd.png';
 
 
-
-const TopNavDemo = (props)=> {
-	const { enabled, title, image } = props;
-	const className = (enabled) ? 'top-nav-demo' : 'top-nav-demo top-nav-demo-disabled';
-
-	return (<div className={className} onClick={()=> (enabled) ? props.onClick() : null} >
-		<img src={image} className="top-nav-demo-image" alt={title} />
-	</div>);
-};
-
-
 const mapDispatchToProps = (dispatch)=> {
 	return ({
 		updateNavigation  : (navIDs)=> dispatch(updateNavigation(navIDs))
 	});
+};
+
+
+const TopNavDemoIcon = (props)=> {
+// 	console.log('TopNav.TopNavDemoIcon()', props);
+
+	const { title, image } = props;
+	return (<div className="top-nav-demo-icon" onClick={()=> props.onClick()} >
+		<img src={image} className="top-nav-demo-icon-image" alt={title} />
+	</div>);
 };
 
 
@@ -39,15 +40,14 @@ class TopNav extends Component {
 		super(props);
 
 		this.state = {
-			popover  : false,
-			sections : [{
+			sections  : [{
 				title : 'Free Inspect',
 				url   : '/inspect'
 			}, {
 				title : 'Free Parts',
 				url   : '/parts'
 			}],
-			demos    : [{
+			demos     : [{
 				title   : 'Sketch',
 				image   : sketchIcon,
 				enabled : true,
@@ -67,7 +67,8 @@ class TopNav extends Component {
 				image   : photoshopIcon,
 				enabled : false,
 				url     : '/1/account'
-			}]
+			}],
+			demoModal : false
 		};
 	}
 
@@ -75,13 +76,25 @@ class TopNav extends Component {
 		console.log('TopNav.componentDidUpdate()', prevProps, this.props, this.state);
 	}
 
-	handleDemo = (url)=> {
-		this.props.updateNavigation({
-			uploadID   : url.substr(1).split('/').shift(),
-			pageID     : 0,
-			artboardID : 0
-		});
-		this.props.onPage(`${window.location.pathname}${url}`);
+	handleDemo = (ind)=> {
+		const demo = this.state.demos[ind];
+
+		if (demo.enabled) {
+			this.props.updateNavigation({
+				uploadID   : demo.url.substr(1).split('/').shift(),
+				pageID     : 0,
+				artboardID : 0
+			});
+			this.props.onPage(`${window.location.pathname}${demo.url}`);
+
+		} else {
+			this.setState({ demoModal : true });
+		}
+	};
+
+	handleDemoModal = ()=> {
+		this.setState({ demoModal : false });
+		window.open(GITHUB_ROADMAP);
 	};
 
 	handleLink = (url)=> {
@@ -102,7 +115,7 @@ class TopNav extends Component {
 		console.log('TopNav.render()', this.props, this.state);
 
 		const { pathname } = window.location;
-		const { sections, demos, popover } = this.state;
+		const { sections, demos, demoModal } = this.state;
 
 		return (
 			<div className="top-nav-wrapper">
@@ -115,12 +128,10 @@ class TopNav extends Component {
 				<div className="top-nav-column top-nav-column-middle">
 					<Row flexGrow={2} horizontal="end" vertical="center">
 						Demo:
-						{demos.map((demo, i)=> (<TopNavDemo key={i}
+						{demos.map((demo, i)=> (<TopNavDemoIcon key={i}
 							title={demo.title}
 							image={demo.image}
-							enabled={demo.enabled}
-							popover={popover}
-							onClick={()=> this.handleDemo(demo.url)} />
+							onClick={()=> this.handleDemo(i)} />
 						))}
 					</Row>
 				</div>
@@ -139,6 +150,12 @@ class TopNav extends Component {
 							</Row>)}
 					</Row>
 				</div>
+				{(demoModal) && (<ContentModal
+					closeable={true}
+					defaultButton="OK"
+					onComplete={()=> this.handleDemoModal()}>
+					Coming soon, check out our <span className="page-link" onClick={()=> this.handleDemoModal()}>Roadmap</span>!
+				</ContentModal>)}
 			</div>
 		);
 	}

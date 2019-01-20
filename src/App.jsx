@@ -10,7 +10,7 @@ import { Route, Switch, withRouter } from 'react-router-dom'
 
 import TopNav from './components/elements/TopNav';
 import BottomNav from './components/elements/BottomNav';
-import ContentModal from "./components/elements/ContentModal";
+import ContentModal from './components/elements/ContentModal';
 import Popup from './components/elements/Popup';
 import AddOnsPage from './components/pages/AddOnsPage';
 import APIPage from './components/pages/APIPage';
@@ -347,7 +347,7 @@ class App extends Component {
 						      closeable={true}
 						      defaultButton="OK"
 						      onComplete={()=> this.setState({ mobileOverlay : false })}>
-						        Sorry Design Engine is not ready for Mobile, head to your nearest desktop.<br />
+						        Sorry Design Engine is not ready for Mobile, head to your nearest desktop.
 					      </ContentModal>)}
 				      </MediaQuery>
 				    </div>)

@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import UploadTreeItem from '../iterables/UploadTreeItem';
-
+import { GITHUB_ROADMAP } from '../../consts/uris';
 import { isExplorePage, isInspectorPage, isUserLoggedIn, scrollOrigin } from '../../utils/funcs';
 import defaultAvatar from '../../assets/images/default-avatar.png';
 
@@ -317,7 +317,7 @@ class SideNav extends Component {
 				</div>
 				<div className="side-nav-team-wrapper">
 					<h6>Your teams</h6>
-					Team support coming soon. <span className="page-link" onClick={()=> window.open('https://github.com/de-ai/designengine.ai/projects/1')}>Roadmap</span>
+					Team support coming soon. <span className="page-link" onClick={()=> window.open(GITHUB_ROADMAP)}>Roadmap</span>
 				</div>
 				<div className="side-nav-account-wrapper">
 					<h6>Account</h6>

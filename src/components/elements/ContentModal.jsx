@@ -71,7 +71,7 @@ class ContentModal extends Component {
 		const { type, title, closeable, defaultButton, children } = this.props;
 		const wrapperClass = (type === 'PERCENT') ? 'content-modal-content-wrapper content-modal-content-wrapper-percent' : 'content-modal-content-wrapper';
 
-		return (<div className="content-modal-wrapper" ref={(element)=> { this.wrapper = element; }}>
+		return (<div className="content-modal-wrapper" onClick={()=> (closeable) ? this.handleClose() : null} ref={(element)=> { this.wrapper = element; }}>
 			<div className={wrapperClass}>
 				{(title) && (<div className="content-modal-title-wrapper">
 					<h3>{title}</h3>

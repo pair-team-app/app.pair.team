@@ -4,6 +4,7 @@ import './MissionPage.css';
 
 import { Column, Row } from 'simple-flexbox';
 
+import { GITHUB_REPO, SLACK_INVITE, SPECTRUM_DOCS } from '../../consts/uris';
 import reviews from '../../assets/json/reviews.json';
 
 
@@ -44,9 +45,9 @@ class MissionPage extends Component {
 					<div className="page-header-text">Our mission is to provide a design platform that connects designers with engineers worldwide using web based tools to help them make software together, faster.</div>
 					<Row horizontal="center">
 						<button className="adjacent-button" onClick={()=> this.props.onPage('api')}>API</button>
-						<button className="adjacent-button" onClick={()=> window.open('https://www.github.com/de-ai')}>Github</button>
-						<button className="adjacent-button" onClick={()=> window.open('https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA')}>Slack</button>
-						<button onClick={()=> window.open('https://spectrum.chat/designengine')}>Spectrum</button>
+						<button className="adjacent-button" onClick={()=> window.open(GITHUB_REPO)}>Github</button>
+						<button className="adjacent-button" onClick={()=> window.open(SLACK_INVITE)}>Slack</button>
+						<button onClick={()=> window.open(SPECTRUM_DOCS)}>Spectrum</button>
 					</Row>
 				</div>
 				<div>

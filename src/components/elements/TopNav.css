@@ -51,7 +51,7 @@
 	color: #9b9b9b;
 }
 
-.top-nav-demo {
+.top-nav-demo-icon {
 	position: relative;
 	top: 0;
 	left: 0;
@@ -62,19 +62,19 @@
 	cursor: pointer;
 }
 
-.top-nav-demo:hover {
+.top-nav-demo-icon:hover {
 	opacity: 1;
 	transition: opacity 0.25s ease-out;
 	-moz-transition: opacity 0.25s ease-out;
 	-webkit-transition: opacity 0.25s ease-out;
 }
 
-.top-nav-demo-disabled, .top-nav-demo-disabled:hover {
+.top-nav-demo-icon-disabled, .top-nav-demo-icon-disabled:hover {
 	cursor: default;
 	opacity: 0.33;
 }
 
-.top-nav-demo-image {
+.top-nav-demo-icon-image {
 	width: 20px;
 	height: 20px;
 }

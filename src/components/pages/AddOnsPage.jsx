@@ -4,6 +4,7 @@ import './AddOnsPage.css';
 
 import { Column, Row } from 'simple-flexbox';
 
+import { GITHUB_REPO, SLACK_INVITE } from '../../consts/uris';
 import addOns from '../../assets/json/add-ons.json';
 
 
@@ -47,8 +48,8 @@ class AddOnsPage extends Component {
 					<div className="page-header-text">Design Engine Add Ons are community driven application Add Ons theat render code and components from Design Engine project JSON format.</div>
 					<Row horizontal="center">
 						<button className="adjacent-button" onClick={()=> this.props.onPage('api')}>API</button>
-						<button className="adjacent-button" onClick={()=> window.open('https://www.github.com/de-ai')}>Github</button>
-						<button className="adjacent-button" onClick={()=> window.open('https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA')}>Slack</button>
+						<button className="adjacent-button" onClick={()=> window.open(GITHUB_REPO)}>Github</button>
+						<button className="adjacent-button" onClick={()=> window.open(SLACK_INVITE)}>Slack</button>
 						<button onClick={()=> window.open('https://spectrum.chat/designengine')}>Spectrum</button>
 					</Row>
 				</div>

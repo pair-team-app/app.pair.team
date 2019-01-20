@@ -19,7 +19,7 @@ import {
 // 	REGISTER,
 // 	TERMS,
 	UPLOAD
-} from '../consts/pathnames';
+} from '../consts/uris';
 
 export function buildInspectorPath(upload, prefix=null, suffix='') {
 	prefix = (prefix || (`/${window.location.pathname.substr(1).split('/').shift()}`));

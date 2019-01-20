@@ -5,6 +5,7 @@ import './APIPage.css';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Row } from 'simple-flexbox';
 
+import { GITHUB_REPO, SLACK_INVITE, SPECTRUM_DOCS } from '../../consts/uris';
 import enabledCopyCodeButton from '../../assets/images/buttons/btn-copy-code_enabled.svg';
 
 class APIPage extends Component {
@@ -44,9 +45,9 @@ class APIPage extends Component {
 					<Row horizontal="center"><h1>API Docs</h1></Row>
 					<div className="page-header-text">Design Engine’s API provides the ability to GET objects from your organizations design projects pages, artboards, buttons, & more.</div>
 					<Row horizontal="center">
-						<button className="adjacent-button" onClick={()=> window.open('https://www.github.com/de-ai')}>Github</button>
-						<button className="adjacent-button" onClick={()=> window.open('https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA')}>Slack</button>
-						<button onClick={()=> window.open('https://spectrum.chat/designengine')}>Spectrum</button>
+						<button className="adjacent-button" onClick={()=> window.open(GITHUB_REPO)}>Github</button>
+						<button className="adjacent-button" onClick={()=> window.open(SLACK_INVITE)}>Slack</button>
+						<button onClick={()=> window.open(SPECTRUM_DOCS)}>Spectrum</button>
 					</Row>
 				</div>
 
