@@ -180,17 +180,18 @@ class RateThisPage extends Component {
 	render() {
 		console.log('RateThisPage.render()', this.props, this.state);
 
-		const { comment, commentValid, ratings } = this.state;
+		const { score } = this.props;
+		const { ratingID, comment, commentValid, ratings } = this.state;
 		return (<div className="page-wrapper rate-this-page-wrapper">
 			<h3>Rate This Title</h3>
 			<h4>Rate This subtitle</h4>
 
-			<RateThisForm
+			{(ratingID === 0 && score > 0) && (<RateThisForm
 				comment={comment}
 				commentValid={commentValid}
 				onFocus={()=> this.setState({ comment : '', commentValid : true })}
 				onChange={(event)=> this.setState({ [event.target.name] : event.target.value })}
-				onSubmit={this.handleSubmit} />
+				onSubmit={this.handleSubmit} />)}
 
 			<RateThisList ratings={ratings} />
 		</div>);
