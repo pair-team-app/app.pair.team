@@ -739,7 +739,7 @@ class InspectorPage extends Component {
 					.then((response) => {
 						console.log("UPLOAD", response.data);
 					}).catch((error) => {
-					sendToSlack('*' + email + '* upload failed for file _' + file.name + '_');
+					sendToSlack(`*${email}* failed uploading file _${file.name}_`);
 				});
 
 			} else {

@@ -57,12 +57,12 @@ export function convertURISlug(text) {
 export function copyTextToClipboard(text) {
 // 	navigator.clipboard.writeText(text);
 
-	const textField = document.createElement('textarea');
-	textField.innerText = text;
-	document.body.appendChild(textField);
-	textField.select();
+	const txtArea = document.createElement('textarea');
+	txtArea.innerText = text;
+	document.body.appendChild(txtArea);
+	txtArea.select();
 	document.execCommand('copy');
-	textField.remove();
+	txtArea.remove();
 }
 
 export function className(obj) {
@@ -115,8 +115,9 @@ export function isInspectorPage() {
 	return ((pathname.includes(INSPECT + '/') || pathname.includes(COLORS + '/') || pathname.includes(FONTS + '/') || pathname.includes(PARTS + '/')) && /^.+\/\d+\/.+$/.test(pathname));
 }
 
-export function isProfilePage() {
-	return (window.location.pathname.includes(PROFILE));
+export function isProfilePage(base=false) {
+	const { pathname } = window.location;
+	return ((base) ? pathname === PROFILE : pathname.includes(PROFILE));
 }
 
 export function isProjectPage() {
@@ -150,25 +151,19 @@ export function makeDownload(url) {
 	link.remove();
 }
 
-export function numberedName(name, list) {
-	if (list[name].length > 0) {
-		const cnt = ++list[name];
-		return ({
-			name : `${name}_${cnt}`,
-			list : list
-		});
-
-	} else {
-		list[name] = 1;
-		return ({
-			name : `${name}_1`,
-			list : list
-		});
+export function numberedName(name, list, divider='_') {
+	if (list[name].length === 0) {
+		list[name] = 0;
 	}
+
+	return ({
+		name : `${name}${divider}${++list[name]}`,
+		list : list
+	});
 }
 
 export function randomElement(array) {
-	return ((array.length > 0) ? array[randomInt(0, array.length)] : null);
+	return ((array.length > 0) ? array.slice(randomInt(0, array.length), 1).pop() : null);
 }
 
 export function randomFloat(lower, upper) {

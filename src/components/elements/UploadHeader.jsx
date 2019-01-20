@@ -43,12 +43,12 @@ class UploadHeader extends Component {
 					this.props.onPopup({
 						type     : 'ERROR',
 						content  : 'File size must be under 100MB.',
-						duration : 500
+						duration : 750
 					});
 				}
 
 			} else {
-				sendToSlack('*[' + id + ']* *' + email + '* uploaded incompatible file "_' + file.name + '_"');
+// 				sendToSlack('*[' + id + ']* *' + email + '* uploaded incompatible file "_' + file.name + '_"');
 				this.props.onPopup({
 					type     : 'ERROR',
 					content  : (file.name.split('.').pop() === 'xd') ? 'Adobe XD Support Coming Soon!' : 'Only Sketch files are support at this time.',

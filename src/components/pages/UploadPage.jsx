@@ -134,7 +134,7 @@ class UploadPage extends Component {
 		const { id, email } = (this.props.profile) ? this.props.profile : this.state.profile;
 		if (file.name.split('.').pop() === 'sketch') {
 			if (file.size < 100 * (1024 * 1024)) {
-				sendToSlack('*[' + id + ']* *' + email + '* started uploading file "_' + file.name + '_"');
+				sendToSlack(`*[${id}]* *${email}* started uploading file "_${file.name}_"`);
 
 				this.setState({
 					formState : 1,
@@ -151,7 +151,7 @@ class UploadPage extends Component {
 						this.setState({ percent });
 
 						if (progressEvent.loaded >= progressEvent.total) {
-							sendToSlack('*[' + id + ']* *' + email + '* completed uploading file "_' + file.name + '_" uploaded');
+							sendToSlack(`*[${id}]* *${email}* completed uploading file "_${file.name}_" uploaded`);
 							this.setState({
 								percent        : 100,
 								uploadComplete : true
@@ -169,11 +169,11 @@ class UploadPage extends Component {
 // 						if (response.data.files.pop().size !== file.size) {
 // 						}
 					}).catch((error) => {
-					sendToSlack('*' + email + '* failed uploading file _' + file.name + '_');
+					sendToSlack(`*${email}* failed uploading file _${file.name}_`);
 				});
 
 			} else {
-				sendToSlack('*[' + id + ']* *' + email + '* uploaded oversized file "_' + file.name + '_" (' + Math.round(file.size * (1 / (1024 * 1024))) + 'MB)');
+				sendToSlack(`*[${id}]* *${email}* uploaded oversized file "_${file.name}_" (${Math.round(file.size * (1 / (1024 * 1024)))}MB)`);
 				this.props.onPopup({
 					type     : 'ERROR',
 					content  : 'File size must be under 100MB.',
@@ -182,7 +182,7 @@ class UploadPage extends Component {
 			}
 
 		} else {
-			sendToSlack('*[' + id + ']* *' + email + '* uploaded incompatible file "_' + file.name + '_"');
+			sendToSlack(`*[${id}]* *${email}* uploaded incompatible file "_${file.name}_"`);
 			this.props.onPopup({
 				type     : 'ERROR',
 				content  : (file.name.split('.').pop() === 'xd') ? 'Adobe XD Support Coming Soon!' : 'Only Sketch files are support at this time.',

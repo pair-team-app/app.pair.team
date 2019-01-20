@@ -9,7 +9,7 @@
 	height: 100%;
 }
 
-.unsupported-device {
+.unsupported-browser {
 	padding: 20px;
 	text-align: center;
 }
@@ -189,7 +189,4 @@
 
 .debug-border {
 	border: 1px dashed #ff00ff;
-}
-
-@media only screen and (max-width: 600px) {
 }

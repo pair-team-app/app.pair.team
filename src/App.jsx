@@ -351,7 +351,7 @@ class App extends Component {
 					      </ContentModal>)}
 				      </MediaQuery>
 				    </div>)
-			    : (<div className="unsupported-device">
+			    : (<div className="unsupported-browser">
 				      This site best viewed in Chrome.
 			      </div>)}
 

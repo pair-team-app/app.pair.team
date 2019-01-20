@@ -3,11 +3,8 @@ import React, { Component } from 'react';
 import './Popup.css'
 
 import { TimelineMax, Power1, Power2 } from 'gsap/TweenMax';
-import { Column, Row } from 'simple-flexbox';
-
-import { capitalizeText } from '../../utils/funcs';
-import errorIcon from '../../assets/images/icons/ico-error.png';
-import infoIcon from '../../assets/images/icons/ico-info.svg';
+import FontAwesome from 'react-fontawesome';
+import { Row } from 'simple-flexbox';
 
 
 class Popup extends Component {
@@ -50,15 +47,13 @@ class Popup extends Component {
 		}
 
 		const { payload } = this.props;
-		const icon = (payload.type === 'ERROR') ? errorIcon : infoIcon;
+		const icon = (payload.type === 'ERROR') ? 'exclamation' : 'info';
 
 		return (
 			<div className="popup-wrapper" ref={(element)=> { this.wrapper = element; }}>
-				<Row>
-					<Column><img src={icon} className="popup-icon" alt={capitalizeText(payload.type, true)} /></Column>
-					<Column className="popup-content">
-						<Row vertical="center" className="popup-text">{payload.content}</Row>
-					</Column>
+				<Row vertical="center">
+					<FontAwesome name={icon} className="popup-icon" />
+					<div className="popup-content">{payload.content}</div>
 				</Row>
 			</div>
 		);
