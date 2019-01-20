@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import { sendToSlack } from '../../utils/funcs';
-import uploadIcon from '../../assets/images/icons/ico-upload.png';
 
 
 const mapStateToProps = (state, ownProps)=> {
