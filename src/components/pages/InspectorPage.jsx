@@ -194,7 +194,8 @@ function SpecsList(props) {
 			<Row><Column flexGrow={1}>Fills</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? (props.slice.type === 'textfield' && props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : props.slice.meta.fillColor.toUpperCase() : ''}</Column></Row>
 			<Row><Column flexGrow={1}>Borders</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{''}</Column></Row>
 			{(props.slice && props.slice.type === 'textfield') && (<>
-				<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.family) ? props.slice.meta.font.family : ''} {(props.slice.meta.font.name) ? props.slice.meta.font.name : ''}</Column></Row>
+				<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.family) ? props.slice.meta.font.family : ''}</Column></Row>
+				<Row><Column flexGrow={1}>Font Style</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.name) ? props.slice.meta.font.name : 'Regular'}</Column></Row>
 				<Row><Column flexGrow={1}>Font Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{`${props.slice.meta.font.size}px`}</Column></Row>
 				<Row><Column flexGrow={1}>Font Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : ''}</Column></Row>
 				{/*<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.alignment) ? capitalizeText(props.slice.meta.font.alignment) : 'Left'}</Column></Row>*/}
@@ -211,7 +212,6 @@ function SpecsList(props) {
 				<Column flexGrow={1}>Padding</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{props.slice.meta.padding.top}px {props.slice.meta.padding.left}px {props.slice.meta.padding.bottom}px {props.slice.meta.padding.right}px</Column>
 			</Row>)}
 			{/*<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? capitalizeText(props.slice.meta.blendMode, true) : ''}</Column></Row>*/}
-			{/*<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? (new Intl.DateTimeFormat('en-US', TIMESTAMP_OPTS).format(Date.parse(`${props.slice.added} GMT+0000`))) : ''}</Column></Row>*/}
 			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? (<Moment format={MOMENT_TIMESTAMP}>{`${props.slice.added.replace(' ', 'T')}Z`}</Moment>) : ''}</Column></Row>
 			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.upload) ? props.upload.creator.username : ''}</Column></Row>
 		</div>
