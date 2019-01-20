@@ -153,8 +153,8 @@ class TopNav extends Component {
 				{(demoModal) && (<ContentModal
 					closeable={true}
 					defaultButton="OK"
-					onComplete={()=> this.handleDemoModal()}>
-					Coming soon, check out our <span className="page-link" onClick={()=> this.handleDemoModal()}>Roadmap</span>!
+					onComplete={()=> this.setState({ demoModal : false })}>
+					Coming soon, check out our <span className="page-link" onClick={()=> this.handleDemoModal()}>roadmap</span>!
 				</ContentModal>)}
 			</div>
 		);

@@ -66,7 +66,7 @@ class ContentModal extends Component {
 	};
 
 	render() {
-// 		console.log('ContentModal.render()', this.props, this.state);
+		console.log('ContentModal.render()', this.props, this.state);
 
 		const { type, title, closeable, defaultButton, children } = this.props;
 		const wrapperClass = (type === 'PERCENT') ? 'content-modal-content-wrapper content-modal-content-wrapper-percent' : 'content-modal-content-wrapper';
