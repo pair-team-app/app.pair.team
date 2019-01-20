@@ -919,13 +919,6 @@ class InspectorPage extends Component {
 									contents : null,
 									syntax   : null,
 									added    : null
-								}, {
-									id       : 3,
-									title    : 'Android',
-									filename : 'Android',
-									contents : null,
-									syntax   : null,
-									added    : null
 								}
 							]);
 
@@ -944,13 +937,6 @@ class InspectorPage extends Component {
 							id       : 0,
 							title    : 'Parts',
 							filename : 'Parts',
-							contents : null,
-							syntax   : null,
-							added    : null
-						}, {
-							id       : -1,
-							title    : 'Symbols',
-							filename : 'Symbols',
 							contents : null,
 							syntax   : null,
 							added    : null
