@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 import './TopNav.css';
 
 import { connect } from 'react-redux';
-// import Popover from 'react-tiny-popover';
 import { Row } from 'simple-flexbox';
 
 import TopNavProfile from './TopNavProfile';
+import TopNavRate from './TopNavRate';
 import { isUserLoggedIn } from '../../utils/funcs';
 import { updateNavigation } from '../../redux/actions';
 import logo from '../../assets/images/logo-designengine.svg';
@@ -18,18 +18,11 @@ import xdIcon from '../../assets/images/icons/ico-xd.png';
 
 
 const TopNavDemo = (props)=> {
-// 	console.log('TopNav.TopNavDemo()', props);
-
 	const { enabled, title, image } = props;
 	const className = (enabled) ? 'top-nav-demo' : 'top-nav-demo top-nav-demo-disabled';
 
 	return (<div className={className} onClick={()=> (enabled) ? props.onClick() : null} >
 		<img src={image} className="top-nav-demo-image" alt={title} />
-
-		{/*<Popover isOpen={popover} position={'bottom'} content={(*/}
-			{/*<div>{title}</div>*/}
-		{/*)}><div onClick={()=> props.onPopover()}>WTF</div></Popover>*/}
-		{/*<img src={image} className="top-nav-icon-image" alt={title} onClick={()=> (enabled) ? props.onClick() : null} />*/}
 	</div>);
 };
 
@@ -53,9 +46,6 @@ class TopNav extends Component {
 			}, {
 				title : 'Free Parts',
 				url   : '/parts'
-			}, {
-				title : 'Rate This',
-				url   : '/rate-this'
 			}],
 			demos    : [{
 				title   : 'Sketch',
@@ -103,6 +93,11 @@ class TopNav extends Component {
 		this.props.onPage(url);
 	};
 
+	handleScore = (score)=> {
+		console.log('TopNav.handleScore()', score);
+		this.props.onScore(score);
+	};
+
 	render() {
 		console.log('TopNav.render()', this.props, this.state);
 
@@ -114,6 +109,7 @@ class TopNav extends Component {
 				<div className="top-nav-column top-nav-column-left"><Row flexGrow={4} horizontal="start" vertical="center">
 					<img onClick={()=> this.handleLink('')} src={logo} className="top-nav-logo" alt="Design Engine" />
 					{(sections.map((section, i)=> <div key={i} className={(pathname.includes(section.url)) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage(section.url)}>{section.title}</div>))}
+					<TopNavRate selected={(pathname.includes('/rate-this'))} onPage={this.handleLink} onScore={this.handleScore} />
 				</Row></div>
 
 				<div className="top-nav-column top-nav-column-middle">

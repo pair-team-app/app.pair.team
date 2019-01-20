@@ -63,7 +63,3 @@
 .rate-item-column-comment {
 	font-style: italic;
 }
-
-.rate-item-column-comment:before, .rate-item-column-comment:after {
-	content: "\"";
-}

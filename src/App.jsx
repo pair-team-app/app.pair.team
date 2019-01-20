@@ -161,8 +161,8 @@ class App extends Component {
 		this.setState({ processing });
 	};
 
-	handleRate = (score)=> {
-		console.log('App.handleRate()', score);
+	handleScore = (score)=> {
+		console.log('App.handleScore()', score);
 		this.setState({ rating : score });
 		this.handlePage('rate-this');
 	};
@@ -298,7 +298,7 @@ class App extends Component {
 						    pathname={pathname}
 						    onPage={this.handlePage}
 						    onLogout={this.handleLogout}
-						    onRate={this.handleRate}
+						    onScore={this.handleScore}
 					    />
 
 					    <div className="content-wrapper" ref={wrapper}>

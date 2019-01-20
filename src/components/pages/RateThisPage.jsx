@@ -21,7 +21,7 @@ const txtfieldClass = (isValid)=> {
 
 
 const RateItem = (props)=> {
-	console.log('RateThisPage.RateItem()', props);
+// 	console.log('RateThisPage.RateItem()', props);
 
 	const { ind, username, avatar, score, comment } = props;
 	const stars = [0, 0, 0, 0, 0].fill(1, 0, score);
@@ -35,12 +35,12 @@ const RateItem = (props)=> {
 		<div className="rate-item-column rate-item-column-score">{stars.map((score, i)=> {
 			return (<FontAwesome key={i} name={(score === 1) ? 'star' : 'star-o'} className="rate-item-star" />);
 		})}</div>
-		<div className="rate-item-column rate-item-column-comment">{comment}</div>
+		<div className="rate-item-column rate-item-column-comment">{(comment.length > 0) ? `"${comment}"` : comment}</div>
 	</Row></div>);
 };
 
 const RateThisForm = (props)=> {
-	console.log('RateThisPage.RateThisForm()', props);
+// 	console.log('RateThisPage.RateThisForm()', props);
 
 	const { comment, commentValid } = props;
 	const commentClass = txtfieldClass(commentValid);
@@ -54,7 +54,7 @@ const RateThisForm = (props)=> {
 };
 
 const RateThisList = (props)=> {
-	console.log('RateThisPage.RateThisList()', props);
+// 	console.log('RateThisPage.RateThisList()', props);
 
 	const { ratings } = props;
 
@@ -108,8 +108,30 @@ class RateThisPage extends Component {
 		}
 	}
 
+	componentWillUnmount() {
+		console.log('RateThisPage.componentWillUnmount()', this.props, this.state);
+	}
+
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('RateThisPage.componentDidUpdate()', prevProps, this.props, this.state);
+		console.log('RateThisPage.componentDidUpdate()', prevProps, this.props, this.state);
+
+		const { profile, score } = this.props;
+		const { ratingID } = this.state;
+		
+		if (score !== prevProps.score && ratingID === 0) {
+			let formData = new FormData();
+			formData.append('action', 'ADD_RATE');
+			formData.append('user_id', (profile) ? profile.id : '0');
+			formData.append('score', score);
+			formData.append('comment', '');
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response)=> {
+					console.log('ADD_RATE', response.data);
+					this.setState({ ratingID : response.data.rating.id });
+					this.onFetchRates();
+				}).catch((error) => {
+			});
+		}
 	}
 
 

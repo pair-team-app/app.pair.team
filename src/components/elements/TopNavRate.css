@@ -1,0 +1,26 @@
+
+.top-nav-rate-wrapper {
+}
+
+.top-nav-rate-star-wrapper {
+	margin: 0 0 2px 8px;
+}
+
+.top-nav-rate-star {
+	padding-right:6px;
+	font-size: 12px;
+	color: #ffffff;
+}
+
+.top-nav-rate-star:hover {
+	cursor: pointer;
+}
+
+.top-nav-rate-star-filled {
+	font-size: 14px;
+	color: #00ff00;
+}
+
+.top-nav-rate-star:last-child {
+	padding-right: 0;
+}

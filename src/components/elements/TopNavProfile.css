@@ -1,5 +1,6 @@
 
-.top-nav-profile {
+.top-nav-profile-wrapper {
+	position: relative;
 }
 
 .top-nav-profile-avatar {
@@ -22,8 +23,8 @@
 
 .top-nav-profile-bubble-wrapper {
 	position: absolute;
-	top: 55px;
-	right: 18px;
+	top: 40px;
+	right: 15px;
 	width: 120px;
 	background-color: #ffffff;
 	padding: 8px 8px 6px 8px;
