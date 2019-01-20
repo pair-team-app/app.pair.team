@@ -4,6 +4,40 @@ import { camilzeText, capitalizeText, convertURISlug } from './funcs';
 const HTML_TAB = '  ';
 
 
+const fontWeight = (style)=> {
+	if (style.toLowerCase() === 'thin') {
+		return (100);
+
+	} else if (style.toLowerCase() === 'extralight' || style.toLowerCase() === 'ultralight') {
+		return (200);
+
+	} else if (style.toLowerCase() === 'light') {
+		return (300);
+
+	} else if (style.toLowerCase() === 'book' || style.toLowerCase() === 'normal' || style.toLowerCase() === 'regular' || style.toLowerCase() === 'roman') {
+		return (400);
+
+	} else if (style.toLowerCase() === 'medium') {
+		return (500);
+
+	} else if (style.toLowerCase() === 'semibold' || style.toLowerCase() === 'demibold') {
+		return (600);
+
+	} else if (style.toLowerCase() === 'bold' || style.toLowerCase() === 'boldmt' || style.toLowerCase() === 'psboldmt') {
+		return (700);
+
+	} else if (style.toLowerCase() === 'extrabold' || style.toLowerCase() === 'ultrabold') {
+		return (800);
+
+	} else if (style.toLowerCase() === 'black' || style.toLowerCase() === 'heavy') {
+		return (900);
+
+	} else {
+		return (400);
+	}
+};
+
+
 export function toCSS(slice) {
 	let html = '';
 
@@ -14,7 +48,8 @@ export function toCSS(slice) {
 	html += `${HTML_TAB}width: ${slice.meta.frame.size.width}px;\n`;
 	html += `${HTML_TAB}height: ${slice.meta.frame.size.height}px;\n`;
 	if (slice.type === 'textfield') {
-		html += `${HTML_TAB}font-family: "${slice.meta.font.family}", sans-serif;\n`;
+		html += `${HTML_TAB}font-family: "${slice.meta.font.family}-${slice.meta.font.name}", sans-serif;\n`;
+		html += `${HTML_TAB}font-weight: ${fontWeight(slice.meta.font.name)};\n`;
 		html += `${HTML_TAB}font-size: ${slice.meta.font.size}px;\n`;
 		html += `${HTML_TAB}color: ${slice.meta.font.color.toUpperCase()};\n`;
 		html += `${HTML_TAB}letter-spacing: ${slice.meta.font.kerning.toFixed(2)}px;\n`;
@@ -104,7 +139,7 @@ export function toSwift(slice, artboard) {
 	} else if (slice.type === 'textfield') {
 		const family = (slice.meta.font.family.includes(' ')) ? slice.meta.font.family.split(' ').slice(0, -1).join(' ').replace(' ', '') : slice.meta.font.family;
 		const name = (slice.meta.font.name) ? slice.meta.font.name.replace(family, '') : family;
-		const postscript = (slice.meta.font.psName) ? slice.meta.font.psName : `${family}-${name}`;
+		const postscript = (slice.meta.font.psName && Object.keys(slice.meta.font.psName).length > 0) ? slice.meta.font.psName : `${family}-${name}`;
 
 		html += '// Font\n';
 		html += 'enum FontFamily {\n';
