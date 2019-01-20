@@ -95,6 +95,7 @@ export function toSpecs(slice) {
 
 	if (slice.type === 'textfield') {
 		content += `Font\t${slice.meta.font.family} ${slice.meta.font.name}\n`;
+		content += `Font Weight\t${fontWeight(slice.meta.font.name)}\n`;
 		content += `Font Size\t${slice.meta.font.size}px\n`;
 		content += `Font Color\t${slice.meta.font.color.toUpperCase()}\n`;
 		content += `Line Spacing\t${slice.meta.font.lineHeight}px\n`;
