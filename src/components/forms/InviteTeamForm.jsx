@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 import './InviteTeamForm.css';
 
 import axios from 'axios';
+import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
 
 import { isValidEmail } from '../../utils/funcs';
-import spinner from '../../assets/images/spinner.gif';
 
 const MAX_FIELDS = 4;
 
@@ -135,10 +135,8 @@ class InviteTeamForm extends Component {
 
 		return (<div className="invite-team-form-wrapper">
 			{(submitting) && (<div className="invite-team-form-submitting-overlay">
-				<img className="invite-team-form-spinner" src={spinner} width="50" height="50" alt="Spinner" />
+				<FontAwesome className="invite-team-form-spinner" name="spinner" size="3x" pulse fixedWidth />
 			</div>)}
-			{/*<h3>Invite Team</h3>*/}
-			{/*Enter the email address of each member of your team to invite them to this project.*/}
 			<div className="invite-team-form-form-wrapper">
 				<div style={{ width : '80%' }}><Column>
 					{invites.map((invite, i, arr)=> {
