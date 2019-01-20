@@ -2,9 +2,10 @@
 .top-nav-wrapper {
 	position: fixed;
 	width: 100%;
-	background-color: #1c1c1c;
 	display: table;
 	z-index: 3;
+	background-color: #1c1c1c;
+	color: #e0e0e0;
 }
 
 .top-nav-column {
@@ -48,12 +49,6 @@
 
 .top-nav-link-selected, a.top-nav-link-selected {
 	color: #9b9b9b;
-}
-
-.top-nav-star {
-	margin-left: 4px;
-	font-size: 12px;
-	color: #ffffff;
 }
 
 .top-nav-demo {

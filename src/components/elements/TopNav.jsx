@@ -114,6 +114,7 @@ class TopNav extends Component {
 
 				<div className="top-nav-column top-nav-column-middle">
 					<Row flexGrow={2} horizontal="end" vertical="center">
+						Demo:
 						{demos.map((demo, i)=> (<TopNavDemo key={i}
 							title={demo.title}
 							image={demo.image}
