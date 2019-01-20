@@ -22,6 +22,7 @@ import LoginPage from './components/pages/LoginPage';
 import MissionPage from './components/pages/MissionPage';
 import ProfilePage from './components/pages/ProfilePage';
 import PrivacyPage from './components/pages/PrivacyPage';
+import RateThisPage from './components/pages/RateThisPage';
 import RecoverPage from './components/pages/RecoverPage';
 import RegisterPage from './components/pages/RegisterPage';
 import Status404Page from './components/pages/Status404Page';
@@ -65,6 +66,7 @@ class App extends Component {
 		super(props);
 
 		this.state = {
+			rating        : 0,
 			processing    : false,
 			popup         : null,
 			mobileOverlay : true
@@ -157,6 +159,12 @@ class App extends Component {
 
 	handleProcessing = (processing)=> {
 		this.setState({ processing });
+	};
+
+	handleRate = (score)=> {
+		console.log('App.handleRate()', score);
+		this.setState({ rating : score });
+		this.handlePage('rate-this');
 	};
 
 	handleSideNavUploadItem = (upload)=> {
@@ -280,7 +288,7 @@ class App extends Component {
 
   	const { uploadID } = this.props.navigation;
 		const { pathname } = this.props.location;
-  	const { mobileOverlay, processing, popup } = this.state;
+  	const { rating, mobileOverlay, processing, popup } = this.state;
 
   	return (
     	<div className="site-wrapper">
@@ -290,6 +298,7 @@ class App extends Component {
 						    pathname={pathname}
 						    onPage={this.handlePage}
 						    onLogout={this.handleLogout}
+						    onRate={this.handleRate}
 					    />
 
 					    <div className="content-wrapper" ref={wrapper}>
@@ -320,6 +329,7 @@ class App extends Component {
 						      <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} />} />
 						      <Route exact path="/privacy" render={()=> <PrivacyPage />} />
 							    <Route path="/proj/:uploadID/:uploadSlug" render={(props)=> <HomePage {...props} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} />} onPopup={this.handlePopup} />
+							    <Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />
 							    <Route exact path="/recover" render={()=> <RecoverPage onPage={this.handlePage} />} />
 							    <Route exact path="/recover/password" render={()=> <RecoverPage onPage={this.handlePage} />} />
 							    <Route exact path="/register" render={()=> <RegisterPage onPage={this.handlePage} />} onPopup={this.handlePopup} />

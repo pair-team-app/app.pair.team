@@ -1,0 +1,69 @@
+
+.rate-this-page-wrapper {
+}
+
+
+.rate-this-page-form-wrapper {
+	width: 80%;
+}
+
+.rate-this-page-submit-button {
+	margin: 0 0 18px 20px;
+}
+
+.rate-this-page-item-wrapper {
+	margin-top: 20px;
+}
+
+.rate-item {
+	width: 100%;
+	padding: 10px 0;
+	vertical-align: middle;
+}
+
+.rate-item:nth-child(even) {
+	background-color: #fafbfc;
+}
+
+.rate-item:not(:last-child) {
+	border-bottom: 1px solid #eaecef;
+}
+
+.rate-item-image {
+	width: 40px;
+	height: 40px;
+}
+
+.rate-item-star {
+	margin-right: 4px;
+	font-size: 14px;
+	color: #000000;
+}
+
+.rate-item-column {
+	padding: 4px;
+}
+
+.rate-item-column-index {
+	width: 80px;
+}
+
+.rate-item-column-avatar {
+	height: 50px;
+}
+
+.rate-item-column-username {
+	width: 200px;
+}
+
+.rate-item-column-score {
+	width: 100px;
+}
+
+.rate-item-column-comment {
+	font-style: italic;
+}
+
+.rate-item-column-comment:before, .rate-item-column-comment:after {
+	content: "\"";
+}

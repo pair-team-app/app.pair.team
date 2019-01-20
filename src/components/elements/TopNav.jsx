@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './TopNav.css';
 
-import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 // import Popover from 'react-tiny-popover';
 import { Row } from 'simple-flexbox';
@@ -19,7 +18,7 @@ import xdIcon from '../../assets/images/icons/ico-xd.png';
 
 
 const TopNavDemo = (props)=> {
-	console.log('TopNav.TopNavDemo()', props);
+// 	console.log('TopNav.TopNavDemo()', props);
 
 	const { enabled, title, image } = props;
 	const className = (enabled) ? 'top-nav-demo' : 'top-nav-demo top-nav-demo-disabled';
@@ -54,6 +53,9 @@ class TopNav extends Component {
 			}, {
 				title : 'Free Parts',
 				url   : '/parts'
+			}, {
+				title : 'Rate This',
+				url   : '/rate-this'
 			}],
 			demos    : [{
 				title   : 'Sketch',
@@ -112,14 +114,6 @@ class TopNav extends Component {
 				<div className="top-nav-column top-nav-column-left"><Row flexGrow={4} horizontal="start" vertical="center">
 					<img onClick={()=> this.handleLink('')} src={logo} className="top-nav-logo" alt="Design Engine" />
 					{(sections.map((section, i)=> <div key={i} className={(pathname.includes(section.url)) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage(section.url)}>{section.title}</div>))}
-					<div className="top-nav-link" onClick={()=> null}>
-						Rate This
-						<FontAwesome name="star" className="top-nav-star" />
-						<FontAwesome name="star" className="top-nav-star" />
-						<FontAwesome name="star" className="top-nav-star" />
-						<FontAwesome name="star" className="top-nav-star" />
-						<FontAwesome name="star" className="top-nav-star" />
-					</div>
 				</Row></div>
 
 				<div className="top-nav-column top-nav-column-middle">
