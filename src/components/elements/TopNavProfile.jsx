@@ -10,6 +10,7 @@ import { Row } from 'simple-flexbox';
 const PROFILE = 'PROFILE';
 const LOGOUT = 'LOGOUT';
 
+
 const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
 };

@@ -1,6 +1,5 @@
 
 import {
-	ADD_ARTICLE,
 	ADD_FILE_UPLOAD,
 	APPEND_EXPLORE_ARTBOARDS,
 	APPEND_UPLOAD_ARTBOARDS,
@@ -12,7 +11,6 @@ import {
 
 
 const initialState = {
-	articles         : [],
 	exploreArtboards : [],
 	uploadArtboards  : [],
 	userProfile      : null,
@@ -34,12 +32,7 @@ const LOG_ACT_PREFIX = '\t-=\\';
 function rootReducer(state=initialState, action) {
 	invokeLogFormat(state, action);
 
-	if (action.type === ADD_ARTICLE) {
-		return (Object.assign({}, state, {
-			articles : state.articles.concat(action.payload)
-		}));
-
-	} else if (action.type === ADD_FILE_UPLOAD) {
+	if (action.type === ADD_FILE_UPLOAD) {
 		actionLogFormat(action);
 
 		return (Object.assign({}, state, {

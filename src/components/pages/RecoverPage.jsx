@@ -7,6 +7,7 @@ import { Column, Row } from 'simple-flexbox';
 
 import { isValidEmail } from '../../utils/funcs';
 
+
 class RecoverPage extends Component {
 	constructor(props) {
 		super(props);

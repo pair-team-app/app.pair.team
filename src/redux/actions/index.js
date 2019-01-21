@@ -4,7 +4,6 @@ import cookie from 'react-cookies';
 
 import { hasBit } from '../../utils/funcs';
 import {
-	ADD_ARTICLE,
 	ADD_FILE_UPLOAD,
 	APPEND_EXPLORE_ARTBOARDS,
 	APPEND_UPLOAD_ARTBOARDS,
@@ -14,10 +13,6 @@ import {
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED } from '../../consts/action-types';
 
-
-export function addArticle(payload) {
-	return ({ type : ADD_ARTICLE, payload });
-}
 
 export function addFileUpload(payload) {
 	return ({ type : ADD_FILE_UPLOAD, payload });

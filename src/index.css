@@ -1,4 +1,12 @@
 
+* {
+  box-sizing: border-box;
+}
+
+*:focus {
+  outline: none;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -10,16 +18,8 @@ html, body {
   background-color: #ffffff;
   color: #696969;
   min-height: 100%;
-  /*-webkit-font-smoothing: antialiased;*/
-  /*-moz-osx-font-smoothing: grayscale;*/
-}
-
-* {
-  box-sizing: border-box;
-}
-
-*:focus {
-  outline: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a, a:link, a:active, a:visited {

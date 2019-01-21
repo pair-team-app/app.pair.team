@@ -8,9 +8,11 @@ import { Row } from 'simple-flexbox';
 import ContentModal from '../elements/ContentModal';
 import TopNavProfile from './TopNavProfile';
 import TopNavRate from './TopNavRate';
+
 import { GITHUB_ROADMAP } from '../../consts/uris';
 import { convertURISlug, isUserLoggedIn } from '../../utils/funcs';
 import { updateNavigation } from '../../redux/actions';
+
 import logo from '../../assets/images/logo-designengine.svg';
 import sketchIcon from '../../assets/images/icons/ico-sketch.png';
 import figmaIcon from '../../assets/images/icons/ico-figma.png';

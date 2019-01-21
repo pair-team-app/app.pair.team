@@ -15,7 +15,7 @@ class BottomNav extends Component {
 	}
 
 	render() {
-		console.log('BottomNav.render()', this.props, this.state);
+// 		console.log('BottomNav.render()', this.props, this.state);
 
 		return (
 			<div className="bottom-nav-wrapper">

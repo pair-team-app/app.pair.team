@@ -7,7 +7,6 @@ import { Column, Row } from 'simple-flexbox';
 
 import { hasBit, isValidEmail } from '../../utils/funcs';
 
-
 const passwordTextfield = React.createRef();
 
 

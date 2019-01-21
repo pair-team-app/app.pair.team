@@ -4,7 +4,7 @@ import './ArtboardGrid.css';
 
 import { Column, Row } from 'simple-flexbox';
 
-import ArtboardItem from '../iterables/ArtboardItem';
+import ArtboardItem from './ArtboardItem';
 import { isUserLoggedIn } from '../../utils/funcs';
 
 

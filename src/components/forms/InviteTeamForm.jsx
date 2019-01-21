@@ -39,11 +39,11 @@ class InviteTeamForm extends Component {
 	}
 
 	componentDidMount() {
-		console.log('InviteTeamForm.componentDidMount()', this.props, this.state);
+// 		console.log('InviteTeamForm.componentDidMount()', this.props, this.state);
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('InviteTeamForm.componentDidUpdate()', prevProps, this.props, this.state);
+// 		console.log('InviteTeamForm.componentDidUpdate()', prevProps, this.props, this.state);
 	}
 
 	componentWillUnmount() {
@@ -51,7 +51,7 @@ class InviteTeamForm extends Component {
 	}
 
 	handleChange = (event)=> {
-		console.log('InviteTeamForm.handleChange()', event.target);
+// 		console.log('InviteTeamForm.handleChange()', event.target);
 
 		let { invites } = this.state;
 		invites.filter((invite, i)=> (i === parseInt(event.target.name.substr(-1), 10) - 1)).forEach((invite, i)=> {
@@ -63,7 +63,7 @@ class InviteTeamForm extends Component {
 	};
 
 	handleFocus = (event)=> {
-		console.log('InviteTeamForm.handleFocus()', event.target);
+// 		console.log('InviteTeamForm.handleFocus()', event.target);
 
 		let { invites } = this.state;
 		invites.filter((invite, i)=> (i === parseInt(event.target.name.substr(-1), 10) - 1 && !invite.valid)).forEach((invite, i)=> {
@@ -74,7 +74,7 @@ class InviteTeamForm extends Component {
 	};
 
 	handleAddEmailField = ()=> {
-		console.log('InviteTeamForm.handleAddEmailField()', this.state);
+// 		console.log('InviteTeamForm.handleAddEmailField()', this.state);
 
 		let { invites } = this.state;
 		invites.push({
@@ -127,7 +127,7 @@ class InviteTeamForm extends Component {
 	};
 
 	render() {
-		console.log('InviteTeamForm.render()', this.props, this.state);
+// 		console.log('InviteTeamForm.render()', this.props, this.state);
 
 		const { invites, submitting } = this.state;
 		const submitValid = (invites.map((invite)=> ((invite.email.length > 0 && invite.valid) ? 1 : 0)).reduce((acc, val)=> acc + val) === invites.length);

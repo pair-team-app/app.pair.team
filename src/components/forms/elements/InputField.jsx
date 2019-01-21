@@ -4,6 +4,7 @@ import './InputField.css';
 
 const textfield = React.createRef();
 
+
 class InputField extends Component {
 	constructor(props) {
 // 		console.log('InputField.constructor()', props);
@@ -36,19 +37,19 @@ class InputField extends Component {
 	}
 
 	handleBlur = (event)=> {
-		console.log('InputField.handleBlur()', event.target);
+// 		console.log('InputField.handleBlur()', event.target);
 
 		const { value } = this.state;
 		this.props.onBlur(value);
 	};
 
 	handleChange = (event)=> {
-		console.log('InputField.handleChange()', event.target);
+// 		console.log('InputField.handleChange()', event.target);
 		this.setState({ value : event.target.value });
 	};
 
 	handleClick = (event)=> {
-		console.log('InputField.handleClick()', event.target);
+// 		console.log('InputField.handleClick()', event.target);
 		this.setState({
 			value  : '',
 			status : 'IDLE'

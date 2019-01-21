@@ -17,7 +17,7 @@ class Popup extends Component {
 	}
 
 	componentDidMount() {
-		console.log('Popup.componentDidMount()', this.props, this.state);
+// 		console.log('Popup.componentDidMount()', this.props, this.state);
 
 		const { payload, onComplete } = this.props;
 
@@ -40,7 +40,7 @@ class Popup extends Component {
 	}
 
 	render() {
-		console.log('Popup.render()', this.props, this.state);
+// 		console.log('Popup.render()', this.props, this.state);
 
 		if (this.timeline) {
 			this.timeline.restart();

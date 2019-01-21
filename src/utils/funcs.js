@@ -3,15 +3,12 @@ import cookie from 'react-cookies';
 import axios from 'axios';
 
 import {
-// 	ADD_ONS,
-// 	API,
 	HOME,
 	COLORS,
 	EXPLORE,
 	FONTS,
 	INSPECT,
 // 	LOGIN,
-// 	MISSION,
 	PARTS,
 // 	PRIVACY,
 	PROFILE,

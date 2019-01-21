@@ -8,6 +8,7 @@ import onClickOutside from 'react-onclickoutside';
 
 import { trackModal } from '../../utils/tracking';
 
+
 class ContentModal extends Component {
 	constructor(props) {
 		super(props);
@@ -61,7 +62,7 @@ class ContentModal extends Component {
 	}
 
 	handleClose = ()=> {
-		console.log('ContentModal.handleClose()', this.props);
+// 		console.log('ContentModal.handleClose()', this.props);
 
 		const { closeable } = this.props;
 		if (closeable) {
@@ -70,7 +71,7 @@ class ContentModal extends Component {
 	};
 
 	render() {
-		console.log('ContentModal.render()', this.props, this.state);
+// 		console.log('ContentModal.render()', this.props, this.state);
 
 		const { size, title, closeable, defaultButton, children } = this.props;
 		const wrapperClass = (size === 'PERCENT') ? 'content-modal-content-wrapper content-modal-content-wrapper-percent' : 'content-modal-content-wrapper';

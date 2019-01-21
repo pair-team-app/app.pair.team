@@ -9,6 +9,8 @@ const TITLE_CHAR_LIMIT = 26;
 
 
 function ArtboardItem(props) {
+// 	console.log('ArtboardItem()', props);
+
 	const { title, image, avatar } = props;
 	const className = (image) ? 'artboard-item' : 'artboard-item artboard-item-loading';
 

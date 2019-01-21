@@ -19,6 +19,7 @@ import radioButtons from '../../assets/json/radio-buttons_upload';
 
 const titleTextfield = React.createRef();
 
+
 const mapStateToProps = (state, ownProps)=> {
 	return ({
 		file       : state.file,
@@ -36,7 +37,7 @@ const mapDispatchToProps = (dispatch)=> {
 };
 
 
-function UploadForm(props) {
+const UploadForm = (props)=> {
 // 	console.log('UploadPage.UploadForm()', props);
 
 	const { header, subheader, title, description, radioButtons, formState, uploadComplete, titleValid } = props;
@@ -75,7 +76,7 @@ function UploadForm(props) {
 			</div>
 		</div>
 	</>);
-}
+};
 
 
 class UploadPage extends Component {

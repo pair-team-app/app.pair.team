@@ -69,35 +69,30 @@ class HomePage extends Component {
 	}
 
 	componentDidMount() {
-		console.log('HomePage.componentDidMount()', this.props);
+// 		console.log('HomePage.componentDidMount()', this.props);
 
 		if (this.props.profile && this.props.artboards.length === 0) {
-			this.handleLoadNext();
+			this.handleLoadNextUploads();
 		}
 	}
 
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
-		console.log('HomePage.shouldComponentUpdate()', this.props, nextProps);
+// 		console.log('HomePage.shouldComponentUpdate()', this.props, nextProps);
 		return (true);
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('HomePage.componentDidUpdate()', prevProps, this.props);
+// 		console.log('HomePage.componentDidUpdate()', prevProps, this.props);
 
 		const { artboards } = this.props;
 		if (!this.state.firstFetch && this.props.profile && artboards.length === 0) {
 			this.setState({ firstFetch : true });
-			this.handleLoadNext();
+			this.handleLoadNextUploads();
 		}
-
-// 		const { fetching } = this.state;
-// 		if (fetching && artboards.length > 0) {
-// 			this.setState({ fetching : false });
-// 		}
 	}
 
 	handleDemo = ()=> {
-		console.log('HomePage.handleDemo()', this.props.path);
+// 		console.log('HomePage.handleDemo()', this.props.path);
 
 		this.props.updateNavigation({
 			uploadID   : 1,
@@ -107,8 +102,8 @@ class HomePage extends Component {
 		this.props.onPage(`${window.location.pathname}/1/account`);
 	};
 
-	handleLoadNext = ()=> {
-		console.log('HomePage.handleLoadNext()', this.props.artboards);
+	handleLoadNextUploads = ()=> {
+// 		console.log('HomePage.handleLoadNextUploads()', this.props.artboards);
 
 		const { profile } = this.props;
 		const { loadOffset, loadAmt } = this.state;
@@ -192,14 +187,14 @@ class HomePage extends Component {
 	};
 
 	handleFile = (file)=> {
-		console.log('HomePage.handleFile()', file);
+// 		console.log('HomePage.handleFile()', file);
 		this.props.addFileUpload(file);
 		this.props.onPage(`new${window.location.pathname}`);
 	};
 
 
 	render() {
-		console.log('HomePage.render()', this.props, this.state);
+// 		console.log('HomePage.render()', this.props, this.state);
 
 		const { profile, artboards } = this.props;
 		const { fetching, loadOffset } = this.state;
@@ -229,7 +224,7 @@ class HomePage extends Component {
 					onPage={this.props.onPage}
 					onFile={this.handleFile}
 					onPopup={this.props.onPopup}
-					onLoadNext={this.handleLoadNext} />
+					onLoadNext={this.handleLoadNextUploads} />
 			</div>
 		);
 	}

@@ -12,6 +12,7 @@ import { Column, Row } from 'simple-flexbox';
 
 import ContentModal from '../elements/ContentModal';
 import InviteTeamForm from '../forms/InviteTeamForm';
+
 import { setRedirectURL } from '../../redux/actions';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { MOMENT_TIMESTAMP } from '../../consts/formats';
@@ -367,7 +368,7 @@ class InspectorPage extends Component {
 		formData.append('artboard_id', artboardID);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
-// 					console.log('SLICES', response.data);
+				console.log('SLICES', response.data);
 
 				let { upload } = this.state;
 				let pages = [...upload.pages];

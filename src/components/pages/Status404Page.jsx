@@ -1,9 +1,9 @@
 
-
 import React, { Component } from 'react';
 import './Status404Page.css';
 
 import { Row } from 'simple-flexbox';
+
 
 class DevelopersPage extends Component {
 	constructor(props) {
