@@ -172,38 +172,38 @@ textarea {
   /*background: #111111;*/
 /*}*/
 
+
 /** Regular */
 @font-face {
   font-family: "AndaleMono";
   font-weight: 400;
-  src: url(assets/fonts/AndaleMono.otf);
+  src: url(./assets/fonts/AndaleMono.otf);
 }
-
 
 /** Bold */
 @font-face {
   font-family: "San Francisco Text Bold";
   font-weight: 700;
-  src: url(assets/fonts/SanFranciscoText-Bold.otf);
+  src: url(./assets/fonts/SanFranciscoText-Bold.otf);
 }
 
 /** Semi-Bold */
 @font-face {
   font-family: "San Francisco Text SemiBold";
   font-weight: 600;
-  src: url(assets/fonts/SanFranciscoText-Semibold.otf);
+  src: url(./assets/fonts/SanFranciscoText-Semibold.otf);
 }
 
 /** Medium */
 @font-face {
   font-family: "San Francisco Text Medium";
   font-weight: 500;
-  src: url(assets/fonts/SanFranciscoText-Medium.otf);
+  src: url(./assets/fonts/SanFranciscoText-Medium.otf);
 }
 
 /** Regular */
 @font-face {
   font-family: "San Francisco Text";
   font-weight: 400;
-  src: url(assets/fonts/SanFranciscoText-Regular.otf);
+  src: url(./assets/fonts/SanFranciscoText-Regular.otf);
 }

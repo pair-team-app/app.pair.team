@@ -28,7 +28,6 @@ import RegisterPage from './components/pages/RegisterPage';
 import Status404Page from './components/pages/Status404Page';
 import TermsPage from './components/pages/TermsPage';
 import UploadPage from './components/pages/UploadPage';
-
 import { fetchUserProfile, updateNavigation, updateUserProfile } from './redux/actions';
 import {
 	buildInspectorPath,
