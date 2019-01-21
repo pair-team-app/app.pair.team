@@ -1,8 +1,11 @@
 
 RewriteEngine on
+		#-- php redirects --#
 		RewriteRule ^invite/(.*)$ /invite.php?email=$1 [R=301,P]
 		RewriteRule ^verify/(\d+)$ /verify.php?user_id=$1 [R=301,P]
-		#RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [R=301,P]
+
+		#-- file downloads --# 
+		# RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [R=301,P]
     # RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [L,R=301,NC]
 
 		#-- react router fix --#
@@ -10,6 +13,7 @@ RewriteEngine on
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ / [QSA,L]
+
 
 #-- don't cache these --#
 <IfModule mod_expires.c>
