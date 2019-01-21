@@ -4,7 +4,7 @@ RewriteEngine on
 		RewriteRule ^invite/(.*)$ /invite.php?email=$1 [R=301,P]
 		RewriteRule ^verify/(\d+)$ /verify.php?user_id=$1 [R=301,P]
 
-		#-- file downloads --# 
+		#-- file downloads --#
 		# RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [R=301,P]
     # RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [L,R=301,NC]
 
