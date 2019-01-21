@@ -237,6 +237,7 @@ class App extends Component {
 						    </Switch>
 						    {(!isInspectorPage()) && (<BottomNav viewHeight={(wrapper.current) ? wrapper.current.clientHeight : 0} onPage={this.handlePage} onLogout={()=> this.handleLogout()} />)}
 					    </div>
+
 				      <MediaQuery query="(max-width: 1024px)">
 					      {(mobileOverlay) && (<ContentModal
 						      type="modal-mobile"
@@ -247,6 +248,7 @@ class App extends Component {
 					      </ContentModal>)}
 				      </MediaQuery>
 				    </div>)
+
 			    : (<div className="unsupported-browser">
 				      This site best viewed in Chrome.
 			      </div>)}

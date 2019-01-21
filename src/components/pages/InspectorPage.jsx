@@ -255,8 +255,7 @@ class InspectorPage extends Component {
 				syntax : ''
 			},
 			percent      : 0,
-			tooltip      : '',
-			comment      : ''
+			tooltip      : ''
 		};
 
 		this.processingInterval = null;
@@ -409,18 +408,6 @@ class InspectorPage extends Component {
 			type    : 'INFO',
 			content : 'Copied to Clipboard!'
 		});
-	};
-
-	handleCommentChange = (event)=> {
-// 		console.log('InspectorPage.handleCommentChange()', event);
-
-		event.persist();
-		if (/[\r\n]/.exec(event.target.value)) {
-			this.onSubmitComment(event);
-
-		} else {
-			this.setState({ [event.target.name] : event.target.value })
-		}
 	};
 
 	handleDownload = ()=> {
@@ -637,22 +624,6 @@ class InspectorPage extends Component {
 		this.setState({ selectedTab : ind });
 	};
 
-	handleVote = (commentID, score)=> {
-// 		console.log('InspectorPage.handleVote()', commentID, score);
-
-		let formData = new FormData();
-		formData.append('action', 'VOTE_COMMENT');
-		formData.append('user_id', this.props.profile.id);
-		formData.append('comment_id', commentID);
-		formData.append('value', score);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-				console.log('VOTE_COMMENT', response.data);
-				this.onRefreshUpload();
-			}).catch((error) => {
-		});
-	};
-
 	handleZoom = (direction)=> {
 // 		console.log('InspectorPage.handleZoom()', direction);
 
@@ -758,25 +729,6 @@ class InspectorPage extends Component {
 		}
 	};
 
-	onSubmitComment = (event)=> {
-		event.preventDefault();
-
-		if (this.state.comment.length > 0) {
-			let formData = new FormData();
-			formData.append('action', 'ADD_COMMENT');
-			formData.append('user_id', this.props.profile.id);
-			formData.append('artboard_id', `${this.props.navigation.artboardID}`);
-			formData.append('content', this.state.comment);
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					console.log('ADD_COMMENT', response.data);
-					this.setState({ comment : '' });
-					this.onRefreshUpload();
-				}).catch((error) => {
-			});
-		}
-	};
-
 	onProcessingUpdate = ()=> {
 		const { upload } = this.state;
 
@@ -865,8 +817,7 @@ class InspectorPage extends Component {
 								filename : item.filename,
 								meta     : JSON.parse(item.meta),
 								added    : item.added
-							})),
-							comments  : artboard.comments
+							}))
 						});
 
 
