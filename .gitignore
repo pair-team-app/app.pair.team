@@ -24,6 +24,6 @@
 
 npm-debug.log*
 
-*.php
+/public/php/*.php
 
 /src/assets/json/stripe.json
