@@ -245,11 +245,11 @@ class App extends Component {
 	};
 
 	handleSideNavContributorItem = (contributor)=> {
-		console.log('App.handleSideNavContributorItem()', contributor);
+// 		console.log('App.handleSideNavContributorItem()', contributor);
 	};
 
 	handleSideNavArtboardItem = (artboard)=> {
-		console.log('App.handleSideNavArtboardItem()', artboard);
+// 		console.log('App.handleSideNavArtboardItem()', artboard);
 
 		this.onAddUploadView(artboard.uploadID);
 		this.handlePage(buildInspectorPath({ id : artboard.uploadID, title : artboard.title }));

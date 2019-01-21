@@ -1,15 +1,14 @@
-# See https://help.github.com/ignore-files/ for more about ignoring files.
 
-# dependencies
+#-- dependencies
 /node_modules
 
-# testing
+#-- testing
 /coverage
 
-# production
+#-- production
 /build
 
-# ide meta
+#-- ide meta
 /.idea
 
 #-- temp dir
@@ -24,6 +23,8 @@
 
 npm-debug.log*
 
+#-- php files
 /public/php/*.php
 
+#-- stripe tokens
 /src/assets/json/stripe.json

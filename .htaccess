@@ -4,6 +4,7 @@ RewriteEngine on
 		RewriteCond %{REQUEST_URI} !^/(pdf)(/|$)
     RewriteRule ^(.*)$ pdf/designengine.pdf [L,QSA]
 
+
 #-- don't cache these --#
 <IfModule mod_expires.c>
     <FilesMatch "\.(css|html?|js|json|pdf|php)$">

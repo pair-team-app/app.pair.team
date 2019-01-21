@@ -1,6 +1,4 @@
 
-import '../../utils/lang-protos.js';
-
 import {
 	ADD_ARTICLE,
 	ADD_FILE_UPLOAD,
