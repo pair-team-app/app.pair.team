@@ -37,10 +37,10 @@ const mapDispatchToProps = (dispatch)=> {
 
 
 function UploadForm(props) {
-	const { header, subheader, title, description, radioButtons, formState, uploadComplete, titleValid } = props;
+// 	console.log('UploadPage.UploadForm()', props);
 
+	const { header, subheader, title, description, radioButtons, formState, uploadComplete, titleValid } = props;
 	const titleClass = (titleValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
-	const nextButtonClass = (uploadComplete && titleValid) ? 'fat-button upload-page-submit-button' : 'fat-button upload-page-submit-button button-disabled';
 
 	return (<>
 		<div style={{ width : '100%' }}>
@@ -71,7 +71,7 @@ function UploadForm(props) {
 						);
 					})}
 				</div>
-				{(formState > 0) && (<button className={nextButtonClass} onClick={() => (uploadComplete && title.length > 0) ? props.onSubmit() : null}>{(!uploadComplete) ? 'Uploading Design' : 'Submit Design'}</button>)}
+				{(formState > 0) && (<button disabled={(!uploadComplete || !titleValid)} className="fat-button upload-page-submit-button" onClick={() => (uploadComplete && title.length > 0) ? props.onSubmit() : null}>{(!uploadComplete) ? 'Uploading Design' : 'Submit Design'}</button>)}
 			</div>
 		</div>
 	</>);

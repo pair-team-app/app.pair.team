@@ -125,7 +125,6 @@ class RegisterForm extends Component {
 		const emailClass = txtfieldClass(emailValid);
 		const passwordClass = txtfieldClass(passwordValid);
 		const password2Class = txtfieldClass(passwordValid);
-		const buttonClass = (usernameValid && emailValid && passwordValid) ? 'fat-button adjacent-button' : 'fat-button adjacent-button button-disabled';
 
 		return (
 			<div className="register-form-wrapper">
@@ -138,7 +137,7 @@ class RegisterForm extends Component {
 					</div>
 					<div className={password2Class}><input type="password" name="password2" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<Row vertical="center">
-						<Column><button type="submit" className={buttonClass} onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
+						<Column><button disabled={(!usernameValid || !emailValid || !passwordValid)} type="submit" className="fat-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
 						<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> this.props.onLogin()}>Already have an account?</div></Column>
 					</Row>
 				</form>

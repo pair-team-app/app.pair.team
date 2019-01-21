@@ -1354,9 +1354,9 @@ class InspectorPage extends Component {
 						</div>
 					</InteractiveDiv>
 					{(artboards.length > 0) && (<div className="inspector-page-zoom-wrapper">
-						<button className={`inspector-page-float-button${(scale >= Math.max(...ZOOM_NOTCHES)) ? ' button-disabled' : ''}`} onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
-						<button className={`inspector-page-float-button${(scale <= Math.min(...ZOOM_NOTCHES)) ? ' button-disabled' : ''}`} onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
-						<button className={`inspector-page-float-button${(scale === 1.0) ? ' button-disabled' : ''}`} onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 1.0) ? enabledZooResetButton : disabledZoomResetButton} alt="0" /></button>
+						<button disabled={(scale >= Math.max(...ZOOM_NOTCHES))} className="inspector-page-float-button" onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
+						<button disabled={(scale <= Math.min(...ZOOM_NOTCHES))} className="inspector-page-float-button" onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
+						<button disabled={(scale === 1.0)} className="inspector-page-float-button" onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 1.0) ? enabledZooResetButton : disabledZoomResetButton} alt="0" /></button>
 					</div>)}
 
 					{(upload && profile && upload.creator.user_id === profile.id && artboards.length > 0 && shownInvite) && (<div className="inspector-page-modal-button-wrapper">

@@ -103,7 +103,6 @@ class LoginForm extends Component {
 
 		const emailClass = txtfieldClass(emailValid);
 		const passwordClass = txtfieldClass(passwordValid);
-		const buttonClass = (emailValid && passwordValid) ? 'fat-button adjacent-button' : 'fat-button adjacent-button button-disabled';
 
 		return (
 			<div className="login-form-wrapper">
@@ -114,7 +113,7 @@ class LoginForm extends Component {
 						<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
 					</div>
 					<Row vertical="center">
-						<Column><button type="submit" className={buttonClass} onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
+						<Column><button disabled={(!emailValid || !passwordValid)} type="submit" className="fat-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
 						<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> this.props.onPage('recover')}>Forgot Password?</div></Column>
 					</Row>
 				</form>

@@ -172,8 +172,6 @@ class InviteTeamPage extends Component {
 		const email2Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email2Valid && email2.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 		const email3Class = (action === '') ? 'input-wrapper' : (action === 'INVITE' && !email3Valid && email3.length > 0) ? 'input-wrapper input-wrapper-error' : 'input-wrapper';
 
-		const inviteButtonClass = (email1.length > 0 || email2.length > 0 || email3.length > 0) ? '' : 'button-disabled';
-
 		return (
 			<div className="page-wrapper invite-team-page-wrapper">
 				<div className="page-header">
@@ -199,7 +197,7 @@ class InviteTeamPage extends Component {
 							<div className={email1Class}><input type="text" name="email1" placeholder="Enter Email Address" value={email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 							<div className={email2Class}><input type="text" name="email2" placeholder="Enter Email Address" value={email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 							<div className={email3Class}><input type="text" name="email3" placeholder="Enter Email Address" value={email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-							<button type="submit" className={inviteButtonClass} onClick={(event) => this.handleSubmit(event)}>Send Invites</button>
+							<button disabled={(email1.length === 0 && email2.length === 0 && email3.length > 0)} type="submit" onClick={(event) => this.handleSubmit(event)}>Send Invites</button>
 						</form>
 					</div>)
 					: (<h3>Invitations sent.</h3>)}

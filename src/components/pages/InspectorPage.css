@@ -186,7 +186,7 @@
 	color: #0267d8;
 }
 
-.inspector-page-float-button {
+.inspector-page-float-button, .inspector-page-float-button:disabled, .inspector-page-float-button:disabled:hover {
 	background: #000000 none;
 	border: 1px dashed #7a7c7e;
 	border-radius: 2px;
@@ -200,6 +200,7 @@
 	background: #1c1c1c none;
 	border: 1px dashed #7a7c7e;
 }
+
 
 .inspector-page-float-button-image {
 	width: 100%;

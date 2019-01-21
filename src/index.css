@@ -49,6 +49,14 @@ button:hover, button:active {
   border-color: rgba(27, 31, 35, 0.5);
 }
 
+button:disabled, button:disabled:hover {
+  cursor: default;
+  background: #57aa48 linear-gradient(-180deg, #69cd58, #57aa48 90%) -0.5em;
+  border: 1px solid #4e9500;
+  color: #f0f0f0;
+  opacity : 0.75;
+}
+
 h1, h2, h3, h4, h5 {
   margin-top: 0;
 }

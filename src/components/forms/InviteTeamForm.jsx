@@ -131,7 +131,6 @@ class InviteTeamForm extends Component {
 
 		const { invites, submitting } = this.state;
 		const submitValid = (invites.map((invite)=> ((invite.email.length > 0 && invite.valid) ? 1 : 0)).reduce((acc, val)=> acc + val) === invites.length);
-		const inviteButtonClass = (submitValid && !submitting) ? 'fat-button' : 'fat-button button-disabled';
 
 		return (<div className="invite-team-form-wrapper">
 			{(submitting) && (<div className="invite-team-form-submitting-overlay">
@@ -151,7 +150,7 @@ class InviteTeamForm extends Component {
 						/>);
 					})}
 				</Column></div>
-				<button className={inviteButtonClass} onClick={() => ((submitValid) ? this.handleSubmit() : null)}>Invite</button>
+				<button disabled={(!submitValid || submitting)} className="fat-button" onClick={() => ((submitValid) ? this.handleSubmit() : null)}>Invite</button>
 			</div>
 		</div>);
 	}
