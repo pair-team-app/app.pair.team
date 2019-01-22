@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 import './ArtboardGrid.css';
 
 import { Column, Row } from 'simple-flexbox';
@@ -8,37 +8,30 @@ import ArtboardItem from './ArtboardItem';
 import { isUserLoggedIn } from '../../utils/funcs';
 
 
-class ArtboardGrid extends Component {
-	constructor(props) {
-		super(props);
+function ArtboardGrid(props) {
+// 	console.log('ArtboardGrid()', props);
 
-		this.state = {
-		};
-	}
-
-	render() {
-// 		console.log('ArtboardGrid.render()', this.props, this.state);
-		const { title, artboards } = this.props;
-
-		return (<div className="artboard-grid">
-			{(title) && (<Row><h3>{title}</h3></Row>)}
-			{(isUserLoggedIn() && artboards.length > 0) && (
-				<Row horizontal="space-between" className="artboard-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
-					{(artboards) && artboards.map((artboard, i) => {
-						return (
-							<Column key={i}>
-								<ArtboardItem
-									title={artboard.title}
-									image={artboard.filename}
-									avatar={artboard.creator.avatar}
-									onClick={()=> this.props.onClick(artboard)} />
-							</Column>
-						);
-					})}
-				</Row>
-			)}
-		</div>);
-	}
+	const { title, artboards } = props;
+	return (<div className="artboard-grid">
+		{(title) && (<Row><h3>{title}</h3></Row>)}
+		{(isUserLoggedIn() && artboards.length > 0) && (
+			<Row horizontal="start" className="artboard-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
+				{(artboards) && artboards.map((artboard, i) => {
+					return (
+						<Column key={i}>
+							<ArtboardItem
+								title={artboard.title}
+								image={artboard.filename}
+								avatar={artboard.creator.avatar}
+								onClick={()=> props.onClick(artboard)} />
+						</Column>
+					);
+				})}
+			</Row>
+		)}
+	</div>);
 }
+
+//["start","center","end","spaced","space-between","around","space-around"]
 
 export default ArtboardGrid;
