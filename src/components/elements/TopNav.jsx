@@ -11,6 +11,7 @@ import TopNavRate from './TopNavRate';
 
 import { GITHUB_ROADMAP } from '../../consts/uris';
 import { convertURISlug, isUserLoggedIn } from '../../utils/funcs';
+import { trackEvent } from '../../utils/tracking';
 import { updateNavigation } from '../../redux/actions';
 
 import logo from '../../assets/images/logo-designengine.svg';
@@ -31,7 +32,7 @@ const TopNavDemoIcon = (props)=> {
 // 	console.log('TopNav.TopNavDemoIcon()', props);
 
 	const { title, image } = props;
-	return (<div className="top-nav-demo-icon" onClick={()=> props.onClick()} >
+	return (<div className="top-nav-demo-icon" onClick={()=> props.onClick()}>
 		<img src={image} className="top-nav-demo-icon-image" alt={title} />
 	</div>);
 };
@@ -81,6 +82,7 @@ class TopNav extends Component {
 
 	handleDemo = (ind)=> {
 		const demo = this.state.demos[ind];
+		trackEvent('demo', convertURISlug(demo.title));
 
 		if (demo.enabled) {
 			this.props.updateNavigation({
@@ -114,6 +116,7 @@ class TopNav extends Component {
 
 	handleScore = (score)=> {
 		console.log('TopNav.handleScore()', score);
+		trackEvent('rate', 'score', null, score);
 		this.props.onScore(score);
 	};
 
@@ -157,7 +160,7 @@ class TopNav extends Component {
 					</Row>
 				</div>
 				{(demoModal) && (<ContentModal
-					type={`modal-demo-${convertURISlug(demoTitle)}`}
+					type={`demo/${convertURISlug(demoTitle)}`}
 					title="Coming Soon"
 					closeable={true}
 					onComplete={()=> this.setState({ demoModal : false })}>

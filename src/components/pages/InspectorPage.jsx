@@ -84,7 +84,7 @@ const InviteTeamModal = (props)=> {
 
 	const { profile, upload, processing, sentInvites } = props;
 
-	return (<ContentModal type="modal-invite" size="PERCENT" closeable={true} title="Invite Team" onComplete={props.onComplete}>
+	return (<ContentModal type="inspector/invite-team" size="PERCENT" closeable={true} title="Invite Team" onComplete={props.onComplete}>
 		<div className="inspector-page-invite-modal-wrapper">
 			<div className="inspector-page-invite-modal-message">
 				{(processing.state < 3) && (<div><FontAwesome className="inspector-page-processing-spinner" name="spinner" size="2x" pulse fixedWidth /></div>)}
@@ -1456,7 +1456,7 @@ class InspectorPage extends Component {
 
 			{(tooltip !== '' && !this.props.processing) && (<div className="inspector-page-tooltip">{tooltip}</div>)}
 			{(restricted) && (<ContentModal
-				type="modal-private"
+				type="inspector/private"
 				closeable={false}
 				onComplete={()=> this.props.onPage('register')}>
 					This project is private, you must be logged in as one of its team members to view!

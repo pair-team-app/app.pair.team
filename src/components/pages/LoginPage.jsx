@@ -6,6 +6,7 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
 import LoginForm from '../forms/LoginForm';
+import { trackEvent } from '../../utils/tracking';
 import { updateUserProfile } from '../../redux/actions';
 
 
@@ -42,6 +43,7 @@ class LoginPage extends Component {
 	handleLoggedIn = (profile)=> {
 		console.log('LoginPage.handleLoggedIn()', profile, this.props);
 
+		trackEvent('user', 'login');
 		cookie.save('user_id', profile.id, { path : '/' });
 		this.props.updateUserProfile(profile);
 		this.props.onPage((this.props.redirectURL) ? this.props.redirectURL.substr(1) : '');

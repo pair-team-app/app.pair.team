@@ -9,6 +9,7 @@ import ArtboardGrid from '../elements/ArtboardGrid';
 import UploadHeader from '../elements/UploadHeader';
 import { addFileUpload, appendUploadArtboards, updateNavigation } from '../../redux/actions';
 import { isUserLoggedIn } from '../../utils/funcs';
+import { trackEvent } from '../../utils/tracking';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -36,7 +37,7 @@ const LoggedInSectionHeader = (props)=> {
 		<h3>{title}</h3>
 		<h4>{content}</h4>
 		<div>
-			<button className="adjacent-button" onClick={()=> props.onPage(`new${window.location.pathname}`)}>Upload</button>
+			<button className="adjacent-button" onClick={()=> {trackEvent('button', 'upload'); props.onPage(`new${window.location.pathname}`)}}>Upload</button>
 		</div>
 	</div>);
 };
@@ -49,8 +50,8 @@ const LoggedOutSectionHeader = (props)=> {
 		<h3>{title}</h3>
 		<h4>{content}</h4>
 		<div>
-			<button className="adjacent-button" onClick={()=> props.onPage('register')}>Sign Up</button>
-			<button onClick={()=> props.onPage('login')}>Login</button>
+			<button className="adjacent-button" onClick={()=> {trackEvent('button', 'register'); props.onPage('register')}}>Sign Up</button>
+			<button onClick={()=> {trackEvent('button', 'login'); props.onPage('login')}}>Login</button>
 		</div>
 	</div>);
 };
@@ -90,17 +91,6 @@ class HomePage extends Component {
 			this.handleLoadNextUploads();
 		}
 	}
-
-	handleDemo = ()=> {
-// 		console.log('HomePage.handleDemo()', this.props.path);
-
-		this.props.updateNavigation({
-			uploadID   : 1,
-			pageID     : 0,
-			artboardID : 0
-		});
-		this.props.onPage(`${window.location.pathname}/1/account`);
-	};
 
 	handleLoadNextUploads = ()=> {
 // 		console.log('HomePage.handleLoadNextUploads()', this.props.artboards);
@@ -196,7 +186,7 @@ class HomePage extends Component {
 // 		console.log('HomePage.render()', this.props, this.state);
 
 		const { profile, artboards } = this.props;
-		const { fetching, loadOffset } = this.state;
+		const { fetching } = this.state;
 
 		const { pathname } = window.location;
 		const uploadTitle = (pathname === '/' || pathname === '/inspect') ? 'Drag & Drop any Sketch file here to inspect design specs & code.' : (pathname === '/parts') ? 'Drag & Drop any Sketch file here to download design parts & source.' : 'Turn any Sketch file into an organized System of Fonts, Colors, Symbols, Views &amp; more. (Drag & Drop)';
@@ -209,21 +199,16 @@ class HomePage extends Component {
 				<UploadHeader title={uploadTitle} onFile={this.handleFile}  onPopup={this.props.onPopup} />
 
 				{(isUserLoggedIn())
-					? (<LoggedInSectionHeader title={sectionTitle} content={sectionContent} onDemo={this.handleDemo} onPage={this.props.onPage} />)
+					? (<LoggedInSectionHeader title={sectionTitle} content={sectionContent} onPage={this.props.onPage} />)
 					: (<LoggedOutSectionHeader title={sectionTitle} content={sectionContent} onPage={this.props.onPage} />)
 				}
 
 				<ArtboardGrid
 					title={gridTitle}
 					artboards={artboards}
-					loadOffset={loadOffset}
-					fetching={fetching}
-					onClick={this.props.onArtboardClicked}
-					onItemClick={this.props.onPage}
+					onClick={(artboard)=> {trackEvent('artboard', 'click'); this.props.onArtboardClicked(artboard)}}
 					onPage={this.props.onPage}
-					onFile={this.handleFile}
-					onPopup={this.props.onPopup}
-					onLoadNext={this.handleLoadNextUploads} />
+					onPopup={this.props.onPopup} />
 			</div>
 		);
 	}

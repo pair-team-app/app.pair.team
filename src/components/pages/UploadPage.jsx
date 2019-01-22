@@ -134,6 +134,7 @@ class UploadPage extends Component {
 
 		const { id, email } = (this.props.profile) ? this.props.profile : this.state.profile;
 		sendToSlack(`*[${id}]* *${email}* started uploading file "_${file.name}_"`);
+		trackEvent('upload', 'file');
 
 		this.setState({
 			formState : 1,
@@ -171,6 +172,8 @@ class UploadPage extends Component {
 
 	handleLogin = ()=> {
 		console.log('UploadPage.handleLogin()');
+
+		trackEvent('button', 'login');
 		this.setState({
 			showRegister : false,
 			showLogin    : true
@@ -180,6 +183,7 @@ class UploadPage extends Component {
 	handleLoggedIn = (profile)=> {
 		console.log('UploadPage.handleLoggedIn()', profile);
 
+		trackEvent('user', 'login');
 		cookie.save('user_id', profile.id, { path : '/' });
 		this.props.updateUserProfile(profile);
 		this.handleUploadSubmit(profile);
@@ -190,6 +194,8 @@ class UploadPage extends Component {
 		radioButtons.forEach((item)=> {
 			item.selected = (item.id === radioButton.id);
 		});
+
+		trackEvent('button', radioButton.title);
 
 		this.setState({
 			radioButtons : radioButtons,
@@ -207,8 +213,8 @@ class UploadPage extends Component {
 		this.handleUploadSubmit(profile);
 	};
 
-	handleUploadChange = (event)=> {
-		console.log('UploadPage.handleUploadChange()', event.target);
+	handleUploadFieldChange = (event)=> {
+		console.log('UploadPage.handleUploadFieldChange()', event.target);
 		this.setState({ [event.target.name] : event.target.value });
 	};
 
@@ -224,6 +230,7 @@ class UploadPage extends Component {
 
 		if (titleValid && uploadComplete) {
 			if (isUserLoggedIn()) {
+				trackEvent('button', 'submit');
 				this.setState({ formState : 2 });
 
 				let formData = new FormData();
@@ -294,7 +301,7 @@ class UploadPage extends Component {
 						radioButtons={radioButtons}
 						titleValid={titleValid}
 						uploadComplete={uploadComplete}
-						onChange={this.handleUploadChange}
+						onChange={this.handleUploadFieldChange}
 						onRadioButton={this.handleRadioButton}
 						onSubmit={this.handleUploadSubmit}
 					/>

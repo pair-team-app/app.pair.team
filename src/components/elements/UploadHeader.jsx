@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import { sendToSlack } from '../../utils/funcs';
+import { trackEvent } from '../../utils/tracking';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -58,6 +59,11 @@ class UploadHeader extends Component {
 		}
 	};
 
+	handleUploadType = (type)=> {
+		console.log('UploadHeader.handleUploadType()', type);
+		trackEvent('button', type);
+	};
+
 	render() {
 		console.log('UploadHeader.render()', this.props, this.state);
 		const { title } = this.props;
@@ -65,10 +71,10 @@ class UploadHeader extends Component {
 		return (<div className="upload-header-wrapper">
 			<Dropzone className="upload-header-dz" multiple={false} onDrop={this.onDrop.bind(this)}>
 				<Row horizontal="center">
-					<button className="upload-header-button"><FontAwesome name="upload" /></button>
-					<button className="upload-header-button"><FontAwesome name="dropbox" /></button>
-					<button className="upload-header-button"><FontAwesome name="slack" /></button>
-					<button className="upload-header-button"><FontAwesome name="windows" /></button>
+					<button className="upload-header-button" onClick={()=> this.handleUploadType('local')}><FontAwesome name="upload" /></button>
+					<button className="upload-header-button" onClick={()=> this.handleUploadType('dropbox')}><FontAwesome name="dropbox" /></button>
+					<button className="upload-header-button" onClick={()=> this.handleUploadType('slack')}><FontAwesome name="slack" /></button>
+					<button className="upload-header-button" onClick={()=> this.handleUploadType('one-drive')}><FontAwesome name="windows" /></button>
 					{/*<button className="upload-header-button"><FontAwesome name="square" /></button>*/}
 				</Row>
 				<Row horizontal="center">{title}</Row>

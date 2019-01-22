@@ -7,6 +7,8 @@ import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
+import { trackEvent } from '../../utils/tracking';
+
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
@@ -149,6 +151,7 @@ class RateThisPage extends Component {
 		});
 
 		if (commentValid) {
+			trackEvent('rate', 'comment');
 			let formData = new FormData();
 			formData.append('action', 'EDIT_RATE');
 			formData.append('rating_id', ratingID);
@@ -157,6 +160,7 @@ class RateThisPage extends Component {
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response)=> {
 					console.log('EDIT_RATE', response.data);
+					this.setState({ ratingID : 0 });
 					this.onFetchRates();
 				}).catch((error) => {
 			});
@@ -186,7 +190,7 @@ class RateThisPage extends Component {
 			<h3>Rate This Title</h3>
 			<h4>Rate This subtitle</h4>
 
-			{(ratingID === 0 && score > 0) && (<RateThisForm
+			{(ratingID > 0 && score > 0) && (<RateThisForm
 				comment={comment}
 				commentValid={commentValid}
 				onFocus={()=> this.setState({ comment : '', commentValid : true })}

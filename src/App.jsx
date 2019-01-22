@@ -115,7 +115,7 @@ class App extends Component {
 
 	handleLogout = ()=> {
 		cookie.save('user_id', '0', { path : '/' });
-
+		trackEvent('user', 'sign-out');
 		this.props.updateUserProfile(null);
 		this.handlePage('');
 	};
@@ -240,7 +240,7 @@ class App extends Component {
 
 				      <MediaQuery query="(max-width: 1024px)">
 					      {(mobileOverlay) && (<ContentModal
-						      type="modal-mobile"
+						      type="root/mobile"
 						      closeable={true}
 						      defaultButton="OK"
 						      onComplete={()=> this.setState({ mobileOverlay : false })}>

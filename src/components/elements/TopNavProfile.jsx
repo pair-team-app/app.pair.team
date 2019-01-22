@@ -7,6 +7,8 @@ import onClickOutside from 'react-onclickoutside';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
+import { trackEvent } from '../../utils/tracking';
+
 const PROFILE = 'PROFILE';
 const LOGOUT = 'LOGOUT';
 
@@ -32,6 +34,7 @@ class TopNavProfile extends Component {
 	handleLinkClick = (type)=> {
 		this.setState({ bubble : false });
 
+		trackEvent('top-nav', type.toLowerCase());
 		if (type === PROFILE) {
 			this.props.onPage('profile');
 

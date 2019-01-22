@@ -11,6 +11,7 @@ import { Row } from 'simple-flexbox';
 import InputField from '../forms/elements/InputField';
 import { updateUserProfile } from '../../redux/actions';
 import { hasBit, isUserLoggedIn, isValidEmail } from '../../utils/funcs';
+import { trackEvent } from '../../utils/tracking';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -92,6 +93,7 @@ class ProfilePage extends Component {
 
 			const re = /jpe?g|png|svg/;
 			if (re.test(file.name.split('.').pop())) {
+				trackEvent('button', 'change-avatar');
 				this.setState({ file });
 
 				let formData = new FormData();
@@ -124,6 +126,7 @@ class ProfilePage extends Component {
 	};
 
 	handleDropAvatar = ()=> {
+		trackEvent('button', 'drop-avatar');
 		this.validateFields('avatar', 'http://cdn.designengine.ai/profiles/default-avatar.png');
 		this.onProfileUpdate();
 	};
@@ -152,25 +155,25 @@ class ProfilePage extends Component {
 	};
 
 	handleInputFieldSubmit = (key, val)=> {
+		trackEvent('button', key);
 		this.validateFields(key, val);
 		this.onProfileUpdate();
 	};
 
 	handleSubmit = ()=> {
+		trackEvent('button', 'save');
 		this.onProfileUpdate();
 	};
 
 	validateFields = (key, val)=> {
 		let state = this.state;
 		Object.keys(state).forEach((k, i) => {
-// 			console.log('ProfilePage.validateFields()', k, key, val);
 			if (k === key) {
 				state[key] = val;
 			}
 		});
 
 		const { username, email, password } = state;
-
 		const usernameValid = (username.length > 0 && !username.includes('@'));
 		const emailValid = isValidEmail(email);
 		const passwordValid = true;//(password.length > 0);

@@ -6,6 +6,8 @@ import axios from 'axios';
 import { Column, Row } from 'simple-flexbox';
 
 import { hasBit, isValidEmail } from '../../utils/funcs';
+import { trackEvent } from '../../utils/tracking';
+
 
 const passwordTextfield = React.createRef();
 
@@ -137,7 +139,7 @@ class RegisterForm extends Component {
 					<div className={password2Class}><input type="password" name="password2" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<Row vertical="center">
 						<Column><button disabled={(!usernameValid || !emailValid || !passwordValid)} type="submit" className="fat-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-						<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> this.props.onLogin()}>Already have an account?</div></Column>
+						<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> {trackEvent('button', 'login'); this.props.onLogin()}}>Already have an account?</div></Column>
 					</Row>
 				</form>
 			</div>

@@ -6,7 +6,7 @@ import { TimelineMax, Power1, Power2 } from 'gsap/TweenMax';
 import FontAwesome from 'react-fontawesome';
 import onClickOutside from 'react-onclickoutside';
 
-// import { trackModal } from '../../utils/tracking';
+import { trackEvent } from '../../utils/tracking';
 
 
 class ContentModal extends Component {
@@ -24,7 +24,9 @@ class ContentModal extends Component {
 	componentDidMount() {
 // 		console.log('ContentModal.componentDidMount()', this.props, this.state);
 
-// 		trackModal(this.props.type);
+		const { type } = this.props;
+// 		trackModal(type);
+		trackEvent('modal', type.split('/').slice().shift(), type.split('/').slice().pop());
 
 		this.timeline = new TimelineMax();
 		this.timeline.from(this.wrapper, 0.125, {
