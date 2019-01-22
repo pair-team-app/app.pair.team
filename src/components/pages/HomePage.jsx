@@ -183,8 +183,8 @@ class HomePage extends Component {
 		});
 	};
 
-	handleUpload = ()=> {
-// 		console.log('HomePage.handleUpload()');
+	handleUploadClick = ()=> {
+// 		console.log('HomePage.handleUploadClick()');
 
 		setTimeout(()=> {
 			this.setState({ dialog : false });
@@ -211,7 +211,7 @@ class HomePage extends Component {
 				<UploadHeader title={uploadTitle} dialog={dialog} onFile={this.handleFile} onPopup={this.props.onPopup} />
 
 				{(isUserLoggedIn())
-					? (<LoggedInSectionHeader title={sectionTitle} content={sectionContent} onUpload={()=> this.handleUpload()} />)
+					? (<LoggedInSectionHeader title={sectionTitle} content={sectionContent} onUpload={()=> this.handleUploadClick()} />)
 					: (<LoggedOutSectionHeader title={sectionTitle} content={sectionContent} onPage={this.props.onPage} />)
 				}
 
