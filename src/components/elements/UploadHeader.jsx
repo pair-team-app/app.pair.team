@@ -7,6 +7,7 @@ import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
+import { POPUP_TYPE_ERROR } from './Popup';
 import { sendToSlack } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 
@@ -67,7 +68,7 @@ class UploadHeader extends Component {
 				} else {
 					sendToSlack(`*[${id}]* *${email}* uploaded oversized file "_${file.name}_" (${Math.round(file.size * (1 / (1024 * 1024)))}MB)`);
 					this.props.onPopup({
-						type     : 'ERROR',
+						type     : POPUP_TYPE_ERROR,
 						content  : 'File size must be under 100MB.',
 						duration : 750
 					});
@@ -76,7 +77,7 @@ class UploadHeader extends Component {
 			} else {
 				sendToSlack(`*[${id}]* *${email}* uploaded incompatible file "_${file.name}_"`);
 				this.props.onPopup({
-					type     : 'ERROR',
+					type     : POPUP_TYPE_ERROR,
 					content  : (file.name.split('.').pop() === 'xd') ? 'Adobe XD Support Coming Soon!' : 'Only Sketch files are support at this time.',
 					duration : 1500
 				});

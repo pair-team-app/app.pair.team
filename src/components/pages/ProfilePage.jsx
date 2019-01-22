@@ -7,7 +7,8 @@ import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import InputField, { ERROR_STATUS, IDLE_STATUS } from '../forms/elements/InputField';
+import { POPUP_TYPE_INFO } from '../elements/Popup';
+import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../forms/elements/InputField';
 import { DEFAULT_AVATAR } from '../../consts/uris';
 import { updateUserProfile } from '../../redux/actions';
 import { hasBit, isValidEmail } from '../../utils/funcs';
@@ -163,8 +164,8 @@ class ProfilePage extends Component {
 			this.setState({ passMsg : '' });
 
 			this.props.onPopup({
-				type    : 'INFO',
-				content : `Profile updated.`
+				type    : POPUP_TYPE_INFO,
+				content : 'Profile updated.'
 			});
 		}
 	};
@@ -218,7 +219,7 @@ class ProfilePage extends Component {
 						placeholder="Enter new username"
 						value={username}
 						button="Change"
-						status={(usernameValid) ? IDLE_STATUS : ERROR_STATUS}
+						status={(usernameValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
 						onChange={(val)=> this.handleInputFieldChange('username', val)}
 						onClick={()=> this.handleInputFieldClick()}
 						onSubmit={(val)=> this.handleInputFieldSubmit('username', val)}
@@ -230,7 +231,7 @@ class ProfilePage extends Component {
 						placeholder="Enter new email"
 						value={email}
 						button="Change"
-						status={(emailValid) ? IDLE_STATUS : ERROR_STATUS}
+						status={(emailValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
 						onChange={(val)=> this.handleInputFieldChange('email', val)}
 						onClick={()=> this.handleInputFieldClick()}
 						onSubmit={(val)=> this.handleInputFieldSubmit('email', val)}
@@ -242,7 +243,7 @@ class ProfilePage extends Component {
 						placeholder="Enter new password"
 						value={passMsg}
 						button="Change"
-						status={(passwordValid) ? IDLE_STATUS : ERROR_STATUS}
+						status={(passwordValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
 						onChange={(val)=> this.handleInputFieldChange('password', val)}
 						onClick={()=> this.handleInputFieldClick()}
 						onSubmit={(val)=> this.handleInputFieldSubmit('password', val)}

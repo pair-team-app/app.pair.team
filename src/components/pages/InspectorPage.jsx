@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import ContentModal from '../elements/ContentModal';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_INFO } from '../elements/Popup';
 import InviteTeamForm from '../forms/InviteTeamForm';
 
 import { MOMENT_TIMESTAMP } from '../../consts/formats';
@@ -432,7 +433,7 @@ class InspectorPage extends Component {
 
 		trackEvent('button', 'copy-code');
 		this.props.onPopup({
-			type    : 'INFO',
+			type    : POPUP_TYPE_INFO,
 			content : 'Copied to Clipboard!'
 		});
 	};
@@ -442,7 +443,7 @@ class InspectorPage extends Component {
 
 		trackEvent('button', 'copy-url');
 		this.props.onPopup({
-			type    : 'INFO',
+			type    : POPUP_TYPE_INFO,
 			content : 'Copied to Clipboard!'
 		});
 	};
@@ -776,7 +777,7 @@ class InspectorPage extends Component {
 
 			} else {
 				this.props.onPopup({
-					type     : 'ERROR',
+					type     : POPUP_TYPE_ERROR,
 					content  : 'File size must be under 100MB.',
 					duration : 500
 				});
@@ -784,7 +785,7 @@ class InspectorPage extends Component {
 
 		} else {
 			this.props.onPopup({
-				type     : "ERROR",
+				type     : POPUP_TYPE_ERROR,
 				content  : 'Only zip archives are support at this time.',
 				duration : 1500
 			});

@@ -2,9 +2,10 @@
 import React, { Component } from 'react';
 import './InputField.css';
 
-export const IDLE_STATUS = 'IDLE';
-export const ERROR_STATUS = 'ERROR';
-export const MODIFY_STATUS = 'MODIFY';
+export const INPUTFIELD_STATUS_IDLE = 'INPUTFIELD_STATUS_IDLE';
+export const INPUTFIELD_STATUS_ERROR = 'INPUTFIELD_STATUS_ERROR';
+export const INPUTFIELD_STATUS_WORKING = 'INPUTFIELD_STATUS_WORKING';
+
 const textfield = React.createRef();
 
 
@@ -16,7 +17,7 @@ class InputField extends Component {
 
 		this.state = {
 			value  : props.value,
-			status : IDLE_STATUS
+			status : INPUTFIELD_STATUS_IDLE
 		};
 	}
 
@@ -56,7 +57,7 @@ class InputField extends Component {
 // 		console.log('InputField.handleClick()', event.target);
 		this.setState({
 			value  : '',
-			status : IDLE_STATUS
+			status : INPUTFIELD_STATUS_IDLE
 		});
 
 // 		setTimeout(()=> {
@@ -84,9 +85,9 @@ class InputField extends Component {
 		const { type, name, placeholder, button } = this.props;
 		const { value, status } = this.state;
 
-		const wrapperClass = `input-wrapper input-field-wrapper${((status === ERROR_STATUS) ? ' input-wrapper-error' : '')}`;
-		const textfieldClass = `input-field-textfield${((status === ERROR_STATUS) ? ' is-hidden' : '')}`;
-		const errorStyle = { display : ((status === ERROR_STATUS) ? 'block' : 'none') };
+		const wrapperClass = `input-wrapper input-field-wrapper${((status === INPUTFIELD_STATUS_ERROR) ? ' input-wrapper-error' : '')}`;
+		const textfieldClass = `input-field-textfield${((status === INPUTFIELD_STATUS_ERROR) ? ' is-hidden' : '')}`;
+		const errorStyle = { display : ((status === INPUTFIELD_STATUS_ERROR) ? 'block' : 'none') };
 
 		return (
 			<div className="input-field">

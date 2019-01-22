@@ -9,6 +9,9 @@ import { Row } from 'simple-flexbox';
 const START_LBL = 'START';
 const END_LBL = 'END';
 
+export const POPUP_TYPE_ERROR = 'POPUP_TYPE_ERROR';
+export const POPUP_TYPE_INFO = 'POPUP_TYPE_INFO';
+
 
 class Popup extends Component {
 	constructor(props) {
@@ -51,7 +54,7 @@ class Popup extends Component {
 		}
 
 		const { payload } = this.props;
-		const icon = (payload.type === 'ERROR') ? 'exclamation' : 'info';
+		const icon = (payload.type === POPUP_TYPE_ERROR) ? 'exclamation' : 'info';
 
 		return (
 			<div className="popup-wrapper" ref={(element)=> { this.wrapper = element; }}>

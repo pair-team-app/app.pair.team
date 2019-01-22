@@ -8,8 +8,8 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
+import { POPUP_TYPE_INFO } from '../elements/Popup';
 import Dropdown from '../forms/elements/Dropdown';
-
 import { buildProjectURL, isValidEmail, isUserLoggedIn } from '../../utils/funcs';
 
 
@@ -112,7 +112,7 @@ class InviteTeamPage extends Component {
 
 	handleURLCopy = ()=> {
 		this.props.onPopup({
-			type    : 'INFO',
+			type    : POPUP_TYPE_INFO,
 			content : 'Copied to Clipboard!'
 		});
 	};
