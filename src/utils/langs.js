@@ -1,35 +1,39 @@
 
-import { camilzeText, capitalizeText, convertURISlug } from './funcs';
+import { camilzeText, capitalizeText, convertURISlug, isEmptyObject } from './funcs';
 
 const HTML_TAB = '  ';
 
 
 const fontWeight = (style)=> {
-	if (style.toLowerCase() === 'thin') {
+	if (!style || typeof style === 'undefined') {
+		return (400);
+	}
+
+	if (style.toLowerCase().includes('thin')) {
 		return (100);
 
-	} else if (style.toLowerCase() === 'extralight' || style.toLowerCase() === 'ultralight') {
+	} else if (style.toLowerCase().includes('extralight') || style.toLowerCase().includes('ultralight')) {
 		return (200);
 
-	} else if (style.toLowerCase() === 'light') {
+	} else if (style.toLowerCase().includes('light')) {
 		return (300);
 
-	} else if (style.toLowerCase() === 'book' || style.toLowerCase() === 'normal' || style.toLowerCase() === 'regular' || style.toLowerCase() === 'roman') {
+	} else if (style.toLowerCase().includes('book') || style.toLowerCase().includes('normal') || style.toLowerCase().includes('regular') || style.toLowerCase().includes('roman')) {
 		return (400);
 
-	} else if (style.toLowerCase() === 'medium') {
+	} else if (style.toLowerCase().includes('medium')) {
 		return (500);
 
-	} else if (style.toLowerCase() === 'semibold' || style.toLowerCase() === 'demibold') {
+	} else if (style.toLowerCase().includes('semibold') || style.toLowerCase().includes('demibold')) {
 		return (600);
 
-	} else if (style.toLowerCase() === 'bold' || style.toLowerCase() === 'boldmt' || style.toLowerCase() === 'psboldmt') {
+	} else if (style.toLowerCase().includes('bold') || style.toLowerCase().includes('boldmt') || style.toLowerCase().includes('psboldmt')) {
 		return (700);
 
-	} else if (style.toLowerCase() === 'extrabold' || style.toLowerCase() === 'ultrabold') {
+	} else if (style.toLowerCase().includes('extrabold') || style.toLowerCase().includes('ultrabold')) {
 		return (800);
 
-	} else if (style.toLowerCase() === 'black' || style.toLowerCase() === 'heavy') {
+	} else if (style.toLowerCase().includes('black') || style.toLowerCase().includes('heavy')) {
 		return (900);
 
 	} else {
@@ -38,23 +42,38 @@ const fontWeight = (style)=> {
 };
 
 
-export function toCSS(slice) {
-	let html = '';
+export function fontSpecs(font) {
+	let { name, family, psName, size, lineHeight } = font;
 
-	html += '{\n';
+	name = (name) ? name : (family) ? (family.includes(' ')) ? family.split(' ').slice().pop() : family.split('-').slice().pop() : 'Regular';
+	family = (family) ? (family.includes(' ')) ? family.split(' ').slice().shift() : family.split('-').slice().shift() : '';
+	name = name.replace(family, '').replace(' ', '');
+	family = family.replace(name, '').replace(' ', '');
+	psName = (psName && !isEmptyObject(psName)) ? psName : `${family}-${name}`.replace(' ', '');
+	lineHeight = (lineHeight) ? lineHeight : (size) ? (size + Math.floor(size / 3)) : 0;
+	size = (size) ? size : (lineHeight) ? Math.round((lineHeight * 3) * 0.25) : 0;
+	const weight = fontWeight(name);
+
+	return (Object.assign({}, font, { family, name, psName, weight, size, lineHeight }));
+}
+
+export function toCSS(slice) {
+	const font = fontSpecs(slice.meta.font);
+
+	let html = '{\n';
 	html += `${HTML_TAB}position: absolute;\n`;
 	html += `${HTML_TAB}top: ${slice.meta.frame.origin.y}px;\n`;
 	html += `${HTML_TAB}left: ${slice.meta.frame.origin.x}px;\n`;
 	html += `${HTML_TAB}width: ${slice.meta.frame.size.width}px;\n`;
 	html += `${HTML_TAB}height: ${slice.meta.frame.size.height}px;\n`;
 	if (slice.type === 'textfield') {
-		html += `${HTML_TAB}font-family: "${slice.meta.font.family}-${slice.meta.font.name}", sans-serif;\n`;
-		html += `${HTML_TAB}font-weight: ${fontWeight(slice.meta.font.name)};\n`;
-		html += `${HTML_TAB}font-size: ${slice.meta.font.size}px;\n`;
-		html += `${HTML_TAB}color: ${slice.meta.font.color.toUpperCase()};\n`;
-		html += `${HTML_TAB}letter-spacing: ${slice.meta.font.kerning.toFixed(2)}px;\n`;
-		html += `${HTML_TAB}line-height: ${slice.meta.font.lineHeight}px;\n`;
-		html += `${HTML_TAB}text-align: ${slice.meta.font.alignment};\n`;
+		html += `${HTML_TAB}font-family: "${font.family} ${font.name}", sans-serif;\n`;
+		html += `${HTML_TAB}font-weight: ${font.weight};\n`;
+		html += `${HTML_TAB}font-size: ${font.size}px;\n`;
+		html += `${HTML_TAB}color: ${font.color.toUpperCase()};\n`;
+		html += `${HTML_TAB}letter-spacing: ${font.kerning.toFixed(2)}px;\n`;
+		html += `${HTML_TAB}line-height: ${font.lineHeight}px;\n`;
+		html += `${HTML_TAB}text-align: ${font.alignment};\n`;
 
 	} else if (slice.type === 'slice') {
 		html += `${HTML_TAB}background: url("${slice.filename.split('/').pop()}@3x.png");\n`;
@@ -85,6 +104,8 @@ export function toReactCSS(slice) {
 }
 
 export function toSpecs(slice) {
+	const font = fontSpecs(slice.meta.font);
+
 	let content = `Name\t${slice.title}\n`;
 	content += `Type\t${capitalizeText(slice.type, true)}\n`;
 	content += `Export Size\tW: ${slice.meta.frame.size.width}px H: ${slice.meta.frame.size.height}px\n`;
@@ -94,12 +115,12 @@ export function toSpecs(slice) {
 	content += `Fills\t${((slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : slice.meta.fillColor.toUpperCase())}\n`;
 
 	if (slice.type === 'textfield') {
-		content += `Font\t${slice.meta.font.family} ${slice.meta.font.name}\n`;
-		content += `Font Weight\t${fontWeight(slice.meta.font.name)}\n`;
-		content += `Font Size\t${slice.meta.font.size}px\n`;
-		content += `Font Color\t${slice.meta.font.color.toUpperCase()}\n`;
-		content += `Line Spacing\t${slice.meta.font.lineHeight}px\n`;
-		content += `Char Spacing\t${slice.meta.font.kerning.toFixed(2)}px\n`;
+		content += `Font\t${font.family} ${font.name}\n`;
+		content += `Font Weight\t${font.weight}\n`;
+		content += `Font Size\t${font.size}px\n`;
+		content += `Font Color\t${font.color.toUpperCase()}\n`;
+		content += `Line Spacing\t${font.lineHeight}px\n`;
+		content += `Char Spacing\t${font.kerning.toFixed(2)}px\n`;
 	}
 
 	content += `Padding\t${slice.meta.padding.top}px ${slice.meta.padding.right}px ${slice.meta.padding.bottom}px ${slice.meta.padding.left}px\n`;
@@ -138,14 +159,16 @@ export function toSwift(slice, artboard) {
 		}
 
 	} else if (slice.type === 'textfield') {
-		const family = (slice.meta.font.family.includes(' ')) ? slice.meta.font.family.split(' ').slice(0, -1).join(' ').replace(' ', '') : slice.meta.font.family;
-		const name = (slice.meta.font.name) ? slice.meta.font.name.replace(family, '') : family;
-		const postscript = (slice.meta.font.psName && Object.keys(slice.meta.font.psName).length > 0) ? slice.meta.font.psName : `${family}-${name}`;
+		//const family = (slice.meta.font.family.includes(' ')) ? slice.meta.font.family.split(' ').slice(0, -1).join(' ').replace(' ', '') : slice.meta.font.family;
+		//const name = (slice.meta.font.name) ? slice.meta.font.name.replace(family, '') : family;
+		//const postscript = (slice.meta.font.psName && Object.keys(slice.meta.font.psName).length > 0) ? slice.meta.font.psName : `${family}-${name}`;
+
+		const { family, name, psName } = fontSpecs(slice.meta.font);
 
 		html += '// Font\n';
 		html += 'enum FontFamily {\n';
 		html += `${HTML_TAB}enum ${family}: String, FontConvertible {\n`;
-		html += `${HTML_TAB}${HTML_TAB}static let ${name.toLowerCase()} = FontConvertible(name: "${family}-${name}", family: "${slice.meta.font.family}", path: "${postscript}.otf")\n`;
+		html += `${HTML_TAB}${HTML_TAB}static let ${name.toLowerCase()} = FontConvertible(name: "${family}-${name}", family: "${slice.meta.font.family}", path: "${psName}.otf")\n`;
 		html += `${HTML_TAB}}\n`;
 		html += '}\n\n';
 		html += `let ${camilzeText([family,name].join(' '))} = UIFont(font: FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;

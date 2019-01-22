@@ -159,6 +159,14 @@ export function numberedName(name, list, divider='_') {
 	});
 }
 
+export function isEmptyArray(arr) {
+	return (arr.length === 0);
+}
+
+export function isEmptyObject(obj) {
+	return (Object.keys(obj).length === 0);
+}
+
 export function randomElement(array) {
 	return ((array.length > 0) ? array.slice(randomInt(0, array.length), 1).pop() : null);
 }
