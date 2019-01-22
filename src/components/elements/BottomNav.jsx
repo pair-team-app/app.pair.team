@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './BottomNav.css';
 
-import { GITHUB_ROADMAP } from '../../consts/uris';
 import { isUserLoggedIn } from '../../utils/funcs';
 
 
@@ -24,7 +23,6 @@ class BottomNav extends Component {
 					<div className="bottom-nav-link" onClick={()=> this.props.onPage('parts')}>Free Parts</div>
 					<div className="bottom-nav-link" onClick={()=> this.props.onPage('terms')}>Terms</div>
 					<div className="bottom-nav-link" onClick={()=> this.props.onPage('privacy')}>Privacy</div>
-					<div className="bottom-nav-link" onClick={()=> window.open(GITHUB_ROADMAP)}>Roadmap</div>
 
 					{(isUserLoggedIn())
 						? (<div className="bottom-nav-link" onClick={() => this.props.onLogout()}>Sign Out</div>)
