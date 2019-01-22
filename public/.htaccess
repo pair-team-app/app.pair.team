@@ -1,12 +1,15 @@
 
 RewriteEngine on
+		#-- drop www subdomain --#
+		RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^(.*)$ http://%1/$1 [L,R=301]
+
 		#-- php redirects --#
-		RewriteRule ^invite/(.*)$ /invite.php?email=$1 [R=301,P]
-		RewriteRule ^verify/(\d+)$ /verify.php?user_id=$1 [R=301,P]
+		RewriteRule ^invite/(.*)$ /php/invite.php?email=$1 [R=301,P]
+		RewriteRule ^verify/(\d+)$ /php/verify.php?user_id=$1 [R=301,P]
 
 		#-- file downloads --#
-		# RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [R=301,P]
-    # RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [L,R=301,NC]
+    #RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [L,R=301,NC]
 
 		#-- react router fix --#
     Options -MultiViews
