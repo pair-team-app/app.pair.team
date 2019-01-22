@@ -14,7 +14,7 @@ import { convertURISlug, isUserLoggedIn } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 import { updateNavigation } from '../../redux/actions';
 
-import deLogo from '../../assets/images/logo-designengine.svg';
+import deLogo from '../../assets/images/logos/logo-designengine.svg';
 import sketchIcon from '../../assets/images/icons/ico-sketch.png';
 import figmaIcon from '../../assets/images/icons/ico-figma.png';
 import photoshopIcon from '../../assets/images/icons/ico-photoshop.png';

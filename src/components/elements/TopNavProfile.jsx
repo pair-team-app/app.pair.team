@@ -7,6 +7,7 @@ import onClickOutside from 'react-onclickoutside';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
+import { DEFAULT_AVATAR } from '../../consts/uris';
 import { trackEvent } from '../../utils/tracking';
 
 const PROFILE = 'PROFILE';
@@ -46,7 +47,7 @@ class TopNavProfile extends Component {
 	render() {
 // 		console.log('TopNavProfile.render()', this.props, this.state);
 
-		const { avatar } = (this.props.profile) ? this.props.profile : { avatar : 'http://cdn.designengine.ai/profiles/default-avatar.png' };
+		const { avatar } = (this.props.profile) ? this.props.profile : { avatar : DEFAULT_AVATAR };
 		const { bubble } = this.state;
 
 		return (<div className="top-nav-profile-wrapper">

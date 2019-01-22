@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import InputField from '../forms/elements/InputField';
+import { DEFAULT_AVATAR } from '../../consts/uris';
 import { updateUserProfile } from '../../redux/actions';
 import { hasBit, isUserLoggedIn, isValidEmail } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
@@ -31,7 +32,7 @@ class ProfilePage extends Component {
 
 		this.state = {
 			file          : null,
-			avatar        : 'http://cdn.designengine.ai/profiles/default-avatar.png',
+			avatar        : DEFAULT_AVATAR,
 			username      : '',
 			email         : '',
 			password      : '',
@@ -127,7 +128,7 @@ class ProfilePage extends Component {
 
 	handleDropAvatar = ()=> {
 		trackEvent('button', 'drop-avatar');
-		this.validateFields('avatar', 'http://cdn.designengine.ai/profiles/default-avatar.png');
+		this.validateFields('avatar', DEFAULT_AVATAR);
 		this.onProfileUpdate();
 	};
 

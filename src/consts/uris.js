@@ -14,6 +14,7 @@ export const TERMS = '/terms';
 export const UPLOAD = '/new';
 
 export const DE_LOGO_SMALL = 'http://cdn.designengine.ai/assets/logo-email.png';
+export const DEFAULT_AVATAR = 'http://cdn.designengine.ai/profiles/avatar-default.png';
 
 export const GITHUB_REPO = 'https://www.github.com/de-ai';
 export const GITHUB_ROADMAP = 'https://github.com/de-ai/designengine.ai/projects/1';
