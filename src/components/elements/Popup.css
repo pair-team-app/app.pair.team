@@ -11,6 +11,7 @@
 	border-radius: 8px;
 	background-color: #fafbfc;
 	padding: 16px;
+	box-shadow: 3px 3px 10px #808080;
 }
 
 .popup-icon {

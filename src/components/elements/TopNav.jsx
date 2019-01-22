@@ -158,8 +158,8 @@ class TopNav extends Component {
 				</div>
 				{(demoModal) && (<ContentModal
 					type={`modal-demo-${convertURISlug(demoTitle)}`}
+					title="Coming Soon"
 					closeable={true}
-					defaultButton="OK"
 					onComplete={()=> this.setState({ demoModal : false })}>
 						{demoTitle} demo coming soon, check out our <span className="page-link" onClick={()=> this.handleDemoModal()}>roadmap</span>!
 				</ContentModal>)}

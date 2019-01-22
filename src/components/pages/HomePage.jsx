@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import ArtboardGrid from '../elements/ArtboardGrid';
 import UploadHeader from '../elements/UploadHeader';
 import { addFileUpload, appendUploadArtboards, updateNavigation } from '../../redux/actions';
-import { isUserLoggedIn, limitString } from '../../utils/funcs';
+import { isUserLoggedIn } from '../../utils/funcs';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -122,7 +122,7 @@ class HomePage extends Component {
 					id           : upload.id,
 					title        : upload.title,
 					description  : upload.description,
-					total        : upload.total,
+					totals       : upload.totals,
 					added        : upload.added,
 					selected     : false,
 					fonts        : upload.fonts.map((font)=> ({
@@ -152,14 +152,13 @@ class HomePage extends Component {
 						uploadID    : page.upload_id,
 						title       : page.title,
 						description : page.description,
-						total       : page.total,
 						added       : page.added,
 						selected    : false,
 						artboards   : page.artboards.map((artboard) => ({
 							id        : artboard.id,
 							pageID    : artboard.page_id,
 							uploadID  : artboard.upload_id,
-							title     : limitString(upload.title, 25),
+							title     : upload.title,
 							pageTitle : artboard.page_title,
 							filename  : artboard.filename,
 							creator   : artboard.creator,
