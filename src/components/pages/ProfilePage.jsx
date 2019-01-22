@@ -11,7 +11,7 @@ import { Row } from 'simple-flexbox';
 import InputField from '../forms/elements/InputField';
 import { DEFAULT_AVATAR } from '../../consts/uris';
 import { updateUserProfile } from '../../redux/actions';
-import { hasBit, isUserLoggedIn, isValidEmail } from '../../utils/funcs';
+import { capitalizeText, hasBit, isUserLoggedIn, isValidEmail } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 
 
@@ -54,7 +54,8 @@ class ProfilePage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('ProfilePage.componentDidUpdate()', prevProps.profile, this.props.profile);
+		console.log('ProfilePage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+
 		if (prevProps.profile !== this.props.profile) {
 			const { avatar, username, email, status } = this.props.profile;
 
@@ -68,75 +69,49 @@ class ProfilePage extends Component {
 		}
 	}
 
-	onDrop(files) {
-		console.log('ProfilePage.onDrop()', files);
 
-		const config = {
-			headers             : { 'content-type' : 'multipart/form-data' },
-			onDownloadProgress  : (progressEvent)=> {
-// 							console.log('HomeExpo.onDownloadProgress()', progressEvent);
-			},
-			onUploadProgress    : (progressEvent)=> {
-// 							console.log('HomeExpo.onUploadProgress()', progressEvent);
+	handleDropAvatar = ()=> {
+		trackEvent('button', 'drop-avatar');
+		this.onValidateFields('avatar', DEFAULT_AVATAR);
+		this.onProfileUpdate();
+	};
 
-				const { loaded, total } = progressEvent;
-				const percent = Math.round((loaded * 100) / total);
-				this.setState({ percent });
-
-				if (progressEvent.loaded >= progressEvent.total) {
-					this.onUploadComplete();
-				}
-			}
-		};
+	handleFileDrop = (files)=> {
+		console.log('ProfilePage.handleFileDrop()', files);
 
 		if (files.length > 0) {
 			const file = files.pop();
+			const { profile } = this.props;
+
+			const config = {
+				headers             : { 'content-type' : 'multipart/form-data' },
+				onDownloadProgress  : (progressEvent)=> {},
+				onUploadProgress    : (progressEvent)=> {
+					const { loaded, total } = progressEvent;
+					const percent = Math.round((loaded * 100) / total);
+					this.setState({ percent });
+
+					if (progressEvent.loaded >= progressEvent.total) {
+						this.onValidateFields('avatar', `http://cdn.designengine.ai/profiles/${profile.id}_${file.name}`);
+						this.onProfileUpdate();
+					}
+				}
+			};
 
 			const re = /jpe?g|png|svg/;
-			if (re.test(file.name.split('.').pop())) {
-				trackEvent('button', 'change-avatar');
+			if (re.test(file.name.split('.').slice().pop())) {
 				this.setState({ file });
+				trackEvent('button', 'change-avatar');
 
 				let formData = new FormData();
 				formData.append('file', file);
-				axios.post(`http://cdn.designengine.ai/upload.php?dir=/profiles&prefix=${this.props.profile.userI}_`, formData, config)
+				axios.post(`http://cdn.designengine.ai/upload.php?dir=/profiles&prefix=${profile.id}_`, formData, config)
 					.then((response) => {
-						console.log("UPLOAD", response.data);
+						console.log("AVATAR_UPLOAD", response.data);
 					}).catch((error) => {
 				});
 			}
 		}
-	}
-
-	onUploadComplete = ()=> {
-		this.validateFields('avatar', `http://cdn.designengine.ai/profiles/${this.props.profile.userID}_${this.state.file.name}`);
-		this.onProfileUpdate();
-	};
-
-
-	onProfileUpdate = ()=> {
-		console.log('ProfilePage.onProfileUpdate()', this.state);
-
-		const { avatar, username, email, password } = this.state;
-		const { usernameValid, emailValid, passwordValid } = this.state;
-
-		if (usernameValid && emailValid && passwordValid) {
-			const { id } = this.props.profile;
-			this.props.updateUserProfile({ id, avatar, username, email, password });
-		}
-	};
-
-	handleDropAvatar = ()=> {
-		trackEvent('button', 'drop-avatar');
-		this.validateFields('avatar', DEFAULT_AVATAR);
-		this.onProfileUpdate();
-	};
-
-	handleInputFieldBlur = (key, val)=> {
-		console.log('ProfilePage.handleInputFieldBlur()', key, val);
-// 		if (val.length > 0) {
-// 			this.validateFields(key, val);
-// 		}
 	};
 
 	handleInputFieldClick = (key)=> {
@@ -155,18 +130,47 @@ class ProfilePage extends Component {
 		this.setState({ usernameValid, emailValid, passwordValid });
 	};
 
+	handleInputFieldChange = (key, val)=> {
+		this.onValidateFields(key, val);
+	};
+
 	handleInputFieldSubmit = (key, val)=> {
+		console.log('ProfilePage.handleInputFieldSubmit()', key, val);
+
 		trackEvent('button', key);
-		this.validateFields(key, val);
+
+		this.onValidateFields(key, val);
 		this.onProfileUpdate();
 	};
 
 	handleSubmit = ()=> {
+		console.log('ProfilePage.handleSubmit()');
+
 		trackEvent('button', 'save');
+
+		this.onValidateFields();
 		this.onProfileUpdate();
 	};
 
-	validateFields = (key, val)=> {
+	onProfileUpdate = ()=> {
+		console.log('ProfilePage.onProfileUpdate()', this.state);
+
+		const { avatar, username, email, password } = this.state;
+		const { usernameValid, emailValid, passwordValid } = this.state;
+
+		if (usernameValid && emailValid && passwordValid) {
+			const { id } = this.props.profile;
+			this.props.updateUserProfile({ id, avatar, username, email, password });
+			this.setState({ passMsg : '' });
+
+			this.props.onPopup({
+				type    : 'INFO',
+				content : `Profile updated.`
+			});
+		}
+	};
+
+	onValidateFields = (key=null, val=null)=> {
 		let state = this.state;
 		Object.keys(state).forEach((k, i) => {
 			if (k === key) {
@@ -179,7 +183,7 @@ class ProfilePage extends Component {
 		const emailValid = isValidEmail(email);
 		const passwordValid = true;//(password.length > 0);
 
-		console.log('ProfilePage.validateFields()', state);
+		console.log('ProfilePage.onValidateFields()', state);
 
 		this.setState({
 			username      : (usernameValid) ? username : (username.includes('@')) ? 'Usernames cannot contain \'@\'' : 'Invalid Username',
@@ -199,8 +203,8 @@ class ProfilePage extends Component {
 			this.props.onPage('login');
 		}
 
-		const { avatar, username, email, passMsg } = (this.props.profile) ? this.props.profile : this.state;
-		const { usernameValid, emailValid, passwordValid } = this.state;
+		const { avatar, username, email } = (this.props.profile) ? this.props.profile : this.state;
+		const { passMsg, usernameValid, emailValid, passwordValid } = this.state;
 
 		return (
 			<div className="page-wrapper profile-page-wrapper">
@@ -208,7 +212,7 @@ class ProfilePage extends Component {
 				<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
 				<div className="profile-page-avatar-wrapper"><Row vertical="center">
 					<img className="profile-page-avatar-image" src={avatar} alt="Avatar" />
-					<Dropzone className="profile-page-dz-wrapper" onDrop={this.onDrop.bind(this)}>
+					<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)}>
 						<button className="tiny-button adjacent-button">Change</button>
 					</Dropzone>
 					{(!avatar.includes('default-avatar.png')) && (<span className="page-link-small" onClick={()=> this.handleDropAvatar()}>Remove</span>)}
@@ -221,7 +225,7 @@ class ProfilePage extends Component {
 						value={username}
 						button="Change"
 						status={(usernameValid) ? 'IDLE' : 'ERROR'}
-						onBlur={(val)=> this.handleInputFieldBlur('username', val)}
+						onChange={(val)=> this.handleInputFieldChange('username', val)}
 						onClick={()=> this.handleInputFieldClick()}
 						onSubmit={(val)=> this.handleInputFieldSubmit('username', val)}
 					/>
@@ -233,7 +237,7 @@ class ProfilePage extends Component {
 						value={email}
 						button="Change"
 						status={(emailValid) ? 'IDLE' : 'ERROR'}
-						onBlur={(val)=> this.handleInputFieldBlur('email', val)}
+						onChange={(val)=> this.handleInputFieldChange('email', val)}
 						onClick={()=> this.handleInputFieldClick()}
 						onSubmit={(val)=> this.handleInputFieldSubmit('email', val)}
 					/>
@@ -245,7 +249,7 @@ class ProfilePage extends Component {
 						value={passMsg}
 						button="Change"
 						status={(passwordValid) ? 'IDLE' : 'ERROR'}
-						onBlur={(val)=> this.handleInputFieldBlur('password', val)}
+						onChange={(val)=> this.handleInputFieldChange('password', val)}
 						onClick={()=> this.handleInputFieldClick()}
 						onSubmit={(val)=> this.handleInputFieldSubmit('password', val)}
 					/>

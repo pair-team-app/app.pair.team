@@ -38,14 +38,15 @@ class InputField extends Component {
 
 	handleBlur = (event)=> {
 // 		console.log('InputField.handleBlur()', event.target);
-
-		const { value } = this.state;
-		this.props.onBlur(value);
+// 		const { value } = this.state;
 	};
 
 	handleChange = (event)=> {
 // 		console.log('InputField.handleChange()', event.target);
-		this.setState({ value : event.target.value });
+
+		const { value } = event.target;
+		this.setState({ value });
+		this.props.onChange(value);
 	};
 
 	handleClick = (event)=> {
