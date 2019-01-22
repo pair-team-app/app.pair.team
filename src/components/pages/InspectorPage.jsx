@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './InspectorPage.css';
 
 import axios from 'axios';
+import moment from 'moment-timezone';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import FontAwesome from 'react-fontawesome';
 import Moment from 'react-moment';
@@ -17,7 +18,7 @@ import { setRedirectURL } from '../../redux/actions';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { MOMENT_TIMESTAMP } from '../../consts/formats';
 import { buildInspectorURL, capitalizeText, frameToRect, makeDownload, rectContainsRect, sendToSlack } from '../../utils/funcs.js';
-import { toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/langs.js';
+import { fontSpecs, toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/langs.js';
 import enabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_enabled.svg';
 import disabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_disabled.svg';
 import enabledZoomOutButton from '../../assets/images/buttons/btn-zoom-out_enabled.svg';
@@ -32,6 +33,8 @@ const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
 const canvas = React.createRef();
 
+const ANTS_INTERVAL = 50;
+const STATUS_INTERVAL = 1250;
 const ZOOM_FACTOR = 1.0875;
 const ZOOM_NOTCHES = [
 	0.03,
@@ -79,12 +82,16 @@ const mapDispatchToProps = (dispatch)=> {
 const InviteTeamModal = (props)=> {
 // 	console.log('InspectorPage.InviteTeamModal()', props);
 
-	const { profile, upload, sentInvites } = props;
+	const { profile, upload, processing, sentInvites } = props;
 
 	return (<ContentModal type="modal-invite" size="PERCENT" closeable={true} title="Invite Team" onComplete={props.onComplete}>
 		<div className="inspector-page-invite-modal-wrapper">
-			{upload.title} ({upload.filename.split('/').pop()})< br/>
-			{upload.description}< br/>
+			<div className="inspector-page-invite-modal-message">
+				{(processing.state < 3) && (<div><FontAwesome className="inspector-page-processing-spinner" name="spinner" size="2x" pulse fixedWidth /></div>)}
+				{processing.message}
+			</div>
+			<div>{upload.title} ({upload.filename.split('/').pop()})</div>
+			{(upload.description.length > 0) && (<div>{upload.description}</div>)}
 			<a href={buildInspectorURL(upload)} target="_blank" rel="noopener noreferrer">{buildInspectorURL(upload)}</a>< br/>
 			<CopyToClipboard onCopy={()=> props.onCopyURL()} text={buildInspectorURL(upload)}>
 				<button className="inspector-page-modal-button">Copy URL</button>
@@ -152,7 +159,10 @@ const SliceRolloverItem = (props)=> {
 function SpecsList(props) {
 // 		console.log('InspectorPage.SpecsList()', props);
 
-	const sliceStyles = (props.slice && props.slice.meta.styles && props.slice.meta.styles.length > 0) ? props.slice.meta.styles.pop() : null;
+	const { upload, slice } = props;
+
+	const font = (slice && slice.meta.font) ? fontSpecs(slice.meta.font) : null;
+	const sliceStyles = (slice && slice.meta.styles && slice.meta.styles.length > 0) ? slice.meta.styles.pop() : null;
 	const stroke = (sliceStyles && sliceStyles.border.length > 0) ? sliceStyles.border.pop() : null;
 	const shadow = (sliceStyles && sliceStyles.shadow.length > 0) ? sliceStyles.shadow.pop() : null;
 	const innerShadow = (sliceStyles && sliceStyles.innerShadow.length > 0) ? sliceStyles.innerShadow.pop() : null;
@@ -185,22 +195,22 @@ function SpecsList(props) {
 
 	return (
 		<div className="inspector-page-specs-list-wrapper">
-			<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? props.slice.title : ''}</Column></Row>
-			<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? capitalizeText(props.slice.type, true) : ''}</Column></Row>
-			<Row><Column flexGrow={1}>Export Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">W: {(props.slice) ? props.slice.meta.frame.size.width : 0}px H: {(props.slice) ? props.slice.meta.frame.size.height : 0}px</Column></Row>
-			<Row><Column flexGrow={1}>Position</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">X: {(props.slice) ? props.slice.meta.frame.origin.x : 0}px Y: {(props.slice) ? props.slice.meta.frame.origin.y : 0}px</Column></Row>
-			<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? props.slice.meta.rotation : 0}&deg;</Column></Row>
-			<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? (props.slice.meta.opacity * 100) : 100}%</Column></Row>
-			<Row><Column flexGrow={1}>Fills</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? (props.slice.type === 'textfield' && props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : props.slice.meta.fillColor.toUpperCase() : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? slice.title : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? capitalizeText(slice.type, true) : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Export Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">W: {(slice) ? slice.meta.frame.size.width : 0}px H: {(slice) ? slice.meta.frame.size.height : 0}px</Column></Row>
+			<Row><Column flexGrow={1}>Position</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">X: {(slice) ? slice.meta.frame.origin.x : 0}px Y: {(slice) ? slice.meta.frame.origin.y : 0}px</Column></Row>
+			<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? slice.meta.rotation : 0}&deg;</Column></Row>
+			<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? (slice.meta.opacity * 100) : 100}%</Column></Row>
+			<Row><Column flexGrow={1}>Fills</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? (slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : slice.meta.fillColor.toUpperCase() : ''}</Column></Row>
 			<Row><Column flexGrow={1}>Borders</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{''}</Column></Row>
-			{(props.slice && props.slice.type === 'textfield') && (<>
-				<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.family) ? props.slice.meta.font.family : ''}</Column></Row>
-				<Row><Column flexGrow={1}>Font Style</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.name) ? props.slice.meta.font.name : 'Regular'}</Column></Row>
-				<Row><Column flexGrow={1}>Font Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{`${props.slice.meta.font.size}px`}</Column></Row>
-				<Row><Column flexGrow={1}>Font Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.color) ? props.slice.meta.font.color.toUpperCase() : ''}</Column></Row>
-				{/*<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.alignment) ? capitalizeText(props.slice.meta.font.alignment) : 'Left'}</Column></Row>*/}
-				<Row><Column flexGrow={1}>Line Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.lineHeight) ? `${props.slice.meta.font.lineHeight}px` : ''}</Column></Row>
-				<Row><Column flexGrow={1}>Char Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice.meta.font.kerning) ? `${props.slice.meta.font.kerning.toFixed(2)}px` : '0'}</Column></Row>
+			{(slice && slice.type === 'textfield') && (<>
+				<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(font) ? `${font.family} ${font.name}` : ''}</Column></Row>
+				<Row><Column flexGrow={1}>Font Weight</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(font) ? font.weight : '400'}</Column></Row>
+				<Row><Column flexGrow={1}>Font Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{`${font.size}px`}</Column></Row>
+				<Row><Column flexGrow={1}>Font Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(font.color) ? font.color.toUpperCase() : ''}</Column></Row>
+				{/*<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice.meta.font.alignment) ? capitalizeText(slice.meta.font.alignment) : 'Left'}</Column></Row>*/}
+				<Row><Column flexGrow={1}>Line Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(font.lineHeight) ? `${font.lineHeight}px` : ''}</Column></Row>
+				<Row><Column flexGrow={1}>Char Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(font.kerning) ? `${font.kerning.toFixed(2)}px` : '0'}</Column></Row>
 			</>)}
 			{(styles) && (<>
 				{/*<Row><Column flexGrow={1}>Stroke:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(styles.stroke) ? `${capitalizeText(styles.stroke.position, true)} S: ${styles.stroke.thickness} ${styles.stroke.color}` : ''}</Column></Row>*/}
@@ -208,12 +218,12 @@ function SpecsList(props) {
 				{/*<Row><Column flexGrow={1}>Inner Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(styles.innerShadow) ? `X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}` : ''}</Column></Row>*/}
 				{/*<Row><Column flexGrow={1}>Blur:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(styles.innerShadow) ? `X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}` : ''}</Column></Row>*/}
 			</>)}
-			{(props.slice && props.slice.meta.padding) && (<Row>
-				<Column flexGrow={1}>Padding</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{props.slice.meta.padding.top}px {props.slice.meta.padding.left}px {props.slice.meta.padding.bottom}px {props.slice.meta.padding.right}px</Column>
+			{(slice && slice.meta.padding) && (<Row>
+				<Column flexGrow={1}>Padding</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{slice.meta.padding.top}px {slice.meta.padding.left}px {slice.meta.padding.bottom}px {slice.meta.padding.right}px</Column>
 			</Row>)}
-			{/*<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? capitalizeText(props.slice.meta.blendMode, true) : ''}</Column></Row>*/}
-			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.slice) ? (<Moment format={MOMENT_TIMESTAMP}>{`${props.slice.added.replace(' ', 'T')}Z`}</Moment>) : ''}</Column></Row>
-			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(props.upload) ? props.upload.creator.username : ''}</Column></Row>
+			{/*<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? capitalizeText(slice.meta.blendMode, true) : ''}</Column></Row>*/}
+			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? (<Moment format={MOMENT_TIMESTAMP}>{`${slice.added.replace(' ', 'T')}Z`}</Moment>) : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(upload) ? upload.creator.username : ''}</Column></Row>
 		</div>
 	);
 }
@@ -254,6 +264,10 @@ class InspectorPage extends Component {
 				html   : '',
 				syntax : ''
 			},
+			processing   : {
+				state   : 3,
+				message : ''
+			},
 			percent      : 0,
 			tooltip      : ''
 		};
@@ -270,9 +284,9 @@ class InspectorPage extends Component {
 	componentDidMount() {
 		console.log('InspectorPage.componentDidMount()', this.props, this.state);
 
-// 		var utc = moment('2019-01-20T12:00:00Z');
+// 		let utc = moment('2019-01-20T12:00:00Z');
 // 		utc.tz(moment.tz(moment.tz.guess()).zoneName()).format('ha z');
-// 		console.log(':::::::::::', moment.tz.guess(), moment.tz.guess()).zoneName());
+// 		console.log(':::::::::::', moment.tz.guess());
 
 		if (this.props.redirectURL) {
 			this.props.setRedirectURL(null);
@@ -312,7 +326,14 @@ class InspectorPage extends Component {
 		}
 
 		if (upload && processing && this.processingInterval === null) {
-			this.processingInterval = setInterval(this.onProcessingUpdate, 2500);
+			this.setState({
+				processing : {
+					state   : 0,
+					message : 'Please wait…'
+				}
+			});
+
+			this.processingInterval = setInterval(this.onProcessingUpdate, STATUS_INTERVAL);
 		}
 
 		if (!processing && this.processingInterval) {
@@ -359,7 +380,7 @@ class InspectorPage extends Component {
 		const artboardID = event.target.getAttribute('data-artboard-id');
 
 		if (!this.antsInterval) {
-			this.antsInterval = setInterval(this.onUpdateAnts, 75);
+			this.antsInterval = setInterval(this.onUpdateAnts, ANTS_INTERVAL);
 		}
 
 		let formData = new FormData();
@@ -367,7 +388,7 @@ class InspectorPage extends Component {
 		formData.append('artboard_id', artboardID);
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
-				console.log('SLICES', response.data);
+// 				console.log('SLICES', response.data);
 
 				let { upload } = this.state;
 				let pages = [...upload.pages];
@@ -421,6 +442,17 @@ class InspectorPage extends Component {
 	handleInviteTeamFormSubmitted = (result)=> {
 		console.log('InspectorPage.handleInviteTeamFormSubmitted()', result);
 		this.setState({ sentInvites : true });
+	};
+
+	handleInviteModalClose = ()=> {
+		const { processing } = this.state;
+		this.setState({
+			processing : {
+				state : processing.state,
+				message : ''
+			},
+			shownInvite : true
+		})
 	};
 
 	handleKeyDown = (event)=> {
@@ -738,20 +770,67 @@ class InspectorPage extends Component {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response) => {
 				console.log('UPLOAD_STATUS', response.data);
-				const processingState = parseInt(response.data.status.state, 10);
+				const { status } = response.data;
+				const processingState = parseInt(status.state, 10);
 
-				if (processingState === 1) {
+				if (processingState === 0) {
+					const { queue } = status;
+					this.setState({
+						processing : {
+							state   : processingState,
+							message : `You are in queue position ${queue.position}/${queue.total}, please wait…`
+						}
+					});
+
+				} else if (processingState === 1) {
+					this.setState({
+						processing : {
+							state   : processingState,
+							message : 'Your file is being prepared…'
+						}
+					});
+
 				} else if (processingState === 2) {
+					const { totals } = status;
+					const total = Object.values(totals).reduce((acc, val)=> (parseInt(acc, 10) + parseInt(val, 10)));
+
+					const mins = moment.duration(moment(Date.now()).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
+					const secs = Math.floor((mins - Math.floor(mins)) * 60);
+
+					this.setState({
+						processing : {
+							state   : processingState,
+							message : `Your file is processing, parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s…`
+						}
+					});
 					this.onRefreshUpload();
 
 				} else if (processingState === 3) {
+					const { totals } = status;
+					const total = Object.values(totals).reduce((acc, val)=> (parseInt(acc, 10) + parseInt(val, 10)));
+
+					const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
+					const secs = Math.floor((mins - Math.floor(mins)) * 60);
+
 					this.props.onProcessing(false);
 					clearInterval(this.processingInterval);
 					this.processingInterval = null;
+
+					this.setState({
+						processing : {
+							state   : processingState,
+							message : `Your file has completed processing. Parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s.`
+						}
+					});
 					this.onRefreshUpload();
 
 				} else if (processingState === 4) {
-					// processing error
+					this.setState({
+						processing : {
+							state   : processingState,
+							message : 'An error has occurred during processing!'
+						}
+					});
 				}
 			}).catch((error) => {
 		});
@@ -798,10 +877,7 @@ class InspectorPage extends Component {
 							title     : artboard.title,
 							filename  : (artboard.filename.includes('@3x')) ? artboard.filename : `${artboard.filename}@3x.png`,
 							meta      : JSON.parse(artboard.meta),
-							views     : artboard.views,
-							downloads : artboard.downloads,
 							added     : artboard.added,
-							system    : artboard.system,
 							grid      : {
 								col : i % 5,
 								row : Math.floor(i / 5)
@@ -1104,17 +1180,17 @@ class InspectorPage extends Component {
 
 
 	render() {
-		const { profile, processing } = this.props;
+		const { profile } = this.props;
 
 		const { section, upload, slice, hoverSlice, tabs, scale, selectedTab, scrolling, viewport, panCoords, percent } = this.state;
-		const { tooltip, restricted, shownInvite, sentInvites } = this.state;
+		const { tooltip, restricted, shownInvite, sentInvites, processing } = this.state;
 
 
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 		const p1 = this.transformPoint({ x : 0.5, y : 0.5 });
-		const artboards = (upload) ? upload.pages.map((page)=> {
+		const artboards = (upload) ? upload.pages.flatMap((page)=> {
 			return (page.artboards);
-		}).flat() : [];
+		}) : [];
 
 
 		const artboardsStyle = {
@@ -1311,7 +1387,7 @@ class InspectorPage extends Component {
 						<button disabled={(scale === 1.0)} className="inspector-page-float-button" onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 1.0) ? enabledZooResetButton : disabledZoomResetButton} alt="0" /></button>
 					</div>)}
 
-					{(upload && profile && upload.creator.user_id === profile.id && artboards.length > 0 && shownInvite) && (<div className="inspector-page-modal-button-wrapper">
+					{(upload && profile && upload.creator.user_id === profile.id) && (<div className="inspector-page-modal-button-wrapper">
 						<button className="tiny-button" onClick={()=> this.setState({ shownInvite : false })}>Invite Team</button>
 					</div>)}
 				</div>
@@ -1372,7 +1448,7 @@ class InspectorPage extends Component {
 				</div>)}
 			</div>
 
-			{(tooltip !== '') && (<div className="inspector-page-tooltip">{tooltip}</div>)}
+			{(tooltip !== '' && !this.props.processing) && (<div className="inspector-page-tooltip">{tooltip}</div>)}
 			{(restricted) && (<ContentModal
 				type="modal-private"
 				closeable={false}
@@ -1380,13 +1456,14 @@ class InspectorPage extends Component {
 					This project is private, you must be logged in as one of its team members to view!
 			</ContentModal>)}
 
-			{(upload && profile && !restricted && upload.creator.user_id === profile.id && (!shownInvite || processing)) && (<InviteTeamModal
+			{(upload && profile && !restricted && upload.creator.user_id === profile.id && (!shownInvite || this.props.processing)) && (<InviteTeamModal
 				profile={profile}
 				upload={upload}
+				processing={processing}
 				sentInvites={sentInvites}
 				onCopyURL={this.handleCopyURL}
 				onInviteTeamFormSubmitted={this.handleInviteTeamFormSubmitted}
-				onComplete={()=> this.setState({ shownInvite : true })}
+				onComplete={()=> this.handleInviteModalClose()}
 				/>
 			)}
 		</>);
