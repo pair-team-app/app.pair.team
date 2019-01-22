@@ -11,6 +11,9 @@ import { sendToSlack } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 
 
+const dropZone = React.createRef();
+
+
 const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
 };
@@ -21,6 +24,7 @@ class UploadHeader extends Component {
 		super(props);
 
 		this.state = {
+			dialog  : false,
 			profile : {
 				id       : 0,
 				username : ''
@@ -28,8 +32,29 @@ class UploadHeader extends Component {
 		};
 	}
 
-	onDrop = (files)=> {
-		console.log('UploadHeader.onDrop()', files);
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('UploadHeader.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
+
+		const { dialog } = this.props;
+		if (dialog !== this.state.dialog) {
+			this.setState({ dialog });
+		}
+
+		if (this.state.dialog) {
+			if (dropZone.current && dropZone.current.fileInputEl) {
+				dropZone.current.fileInputEl.click();
+			}
+		}
+	}
+
+
+	handleDialogCancel = ()=> {
+		console.log('UploadHeader.handleDialogCancel()');
+		this.setState({ dialog : false });
+	};
+
+	handleFileDrop = (files)=> {
+		console.log('UploadHeader.handleFileDrop()', files);
 
 		const { id, email } = (this.props.profile) ? this.props.profile : this.state.profile;
 		if (files.length > 0) {
@@ -69,7 +94,7 @@ class UploadHeader extends Component {
 		const { title } = this.props;
 
 		return (<div className="upload-header-wrapper">
-			<Dropzone className="upload-header-dz" multiple={false} onDrop={this.onDrop.bind(this)}>
+			<Dropzone className="upload-header-dz" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)} onFileDialogCancel={this.handleDialogCancel} ref={dropZone}>
 				<Row horizontal="center">
 					<button className="upload-header-button" onClick={()=> this.handleUploadType('local')}><FontAwesome name="upload" /></button>
 					<button className="upload-header-button" onClick={()=> this.handleUploadType('dropbox')}><FontAwesome name="dropbox" /></button>

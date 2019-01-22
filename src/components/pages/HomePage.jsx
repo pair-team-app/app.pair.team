@@ -37,7 +37,8 @@ const LoggedInSectionHeader = (props)=> {
 		<h3>{title}</h3>
 		<h4>{content}</h4>
 		<div>
-			<button className="adjacent-button" onClick={()=> {trackEvent('button', 'upload'); props.onPage(`new${window.location.pathname}`)}}>Upload</button>
+			{/*<button onClick={()=> {trackEvent('button', 'upload'); props.onPage(`new${window.location.pathname}`)}}>Upload</button>*/}
+			<button onClick={()=> {trackEvent('button', 'upload'); props.onUpload()}}>Upload</button>
 		</div>
 	</div>);
 };
@@ -65,7 +66,8 @@ class HomePage extends Component {
 			firstFetch  : false,
 			fetching    : false,
 			loadOffset  : 0,
-			loadAmt     : -1
+			loadAmt     : -1,
+			dialog      : false
 		};
 	}
 
@@ -91,6 +93,12 @@ class HomePage extends Component {
 			this.handleLoadNextUploads();
 		}
 	}
+
+	handleFile = (file)=> {
+// 		console.log('HomePage.handleFile()', file);
+		this.props.addFileUpload(file);
+		this.props.onPage(`new${window.location.pathname}`);
+	};
 
 	handleLoadNextUploads = ()=> {
 // 		console.log('HomePage.handleLoadNextUploads()', this.props.artboards);
@@ -175,10 +183,14 @@ class HomePage extends Component {
 		});
 	};
 
-	handleFile = (file)=> {
-// 		console.log('HomePage.handleFile()', file);
-		this.props.addFileUpload(file);
-		this.props.onPage(`new${window.location.pathname}`);
+	handleUpload = ()=> {
+// 		console.log('HomePage.handleUpload()');
+
+		setTimeout(()=> {
+			this.setState({ dialog : false });
+		}, 3333);
+
+		this.setState({ dialog : true });
 	};
 
 
@@ -186,7 +198,7 @@ class HomePage extends Component {
 // 		console.log('HomePage.render()', this.props, this.state);
 
 		const { profile, artboards } = this.props;
-		const { fetching } = this.state;
+		const { fetching, dialog } = this.state;
 
 		const { pathname } = window.location;
 		const uploadTitle = (pathname === '/' || pathname === '/inspect') ? 'Drag & Drop any Sketch file here to inspect design specs & code.' : (pathname === '/parts') ? 'Drag & Drop any Sketch file here to download design parts & source.' : 'Turn any Sketch file into an organized System of Fonts, Colors, Symbols, Views &amp; more. (Drag & Drop)';
@@ -196,10 +208,10 @@ class HomePage extends Component {
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
-				<UploadHeader title={uploadTitle} onFile={this.handleFile}  onPopup={this.props.onPopup} />
+				<UploadHeader title={uploadTitle} dialog={dialog} onFile={this.handleFile} onPopup={this.props.onPopup} />
 
 				{(isUserLoggedIn())
-					? (<LoggedInSectionHeader title={sectionTitle} content={sectionContent} onPage={this.props.onPage} />)
+					? (<LoggedInSectionHeader title={sectionTitle} content={sectionContent} onUpload={()=> this.handleUpload()} />)
 					: (<LoggedOutSectionHeader title={sectionTitle} content={sectionContent} onPage={this.props.onPage} />)
 				}
 
