@@ -4,6 +4,7 @@ import './InspectorPage.css';
 
 import axios from 'axios';
 import moment from 'moment-timezone';
+import ReactNotifications from 'react-browser-notifications';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import FontAwesome from 'react-fontawesome';
 import Moment from 'react-moment';
@@ -16,6 +17,7 @@ import InviteTeamForm from '../forms/InviteTeamForm';
 
 import { MOMENT_TIMESTAMP } from '../../consts/formats';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
+import { DE_LOGO_SMALL } from '../../consts/uris';
 import { setRedirectURL } from '../../redux/actions';
 import { buildInspectorURL, capitalizeText, frameToRect, makeDownload, rectContainsRect, sendToSlack } from '../../utils/funcs.js';
 import { fontSpecs, toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/langs.js';
@@ -34,6 +36,7 @@ const InteractiveDiv = panAndZoomHoc('div');
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
 const canvas = React.createRef();
+// const notifications = React.createRef();
 
 const ANTS_INTERVAL = 50;
 const STATUS_INTERVAL = 1250;
@@ -282,6 +285,8 @@ class InspectorPage extends Component {
 		this.scrollInterval = null;
 		this.antsOffset = 0;
 		this.antsInterval = null;
+
+		this.notification = null;
 	}
 
 	componentDidMount() {
@@ -416,6 +421,12 @@ class InspectorPage extends Component {
 		});
 	};
 
+	handleCloseNotification = (event)=> {
+// 		console.log('InspectorPage.handleCloseNotification()', event, this.notification);
+		window.focus();
+		this.notification.close(event.target.tag);
+	};
+
 	handleCopyCode = ()=> {
 		console.log('InspectorPage.handleCopyCode()');
 
@@ -451,6 +462,8 @@ class InspectorPage extends Component {
 	};
 
 	handleInviteModalClose = ()=> {
+		this.onShowNotification();
+
 		const { processing } = this.state;
 		this.setState({
 			processing : {
@@ -458,7 +471,7 @@ class InspectorPage extends Component {
 				message : ''
 			},
 			shownInvite : true
-		})
+		});
 	};
 
 	handleKeyDown = (event)=> {
@@ -833,6 +846,8 @@ class InspectorPage extends Component {
 					clearInterval(this.processingInterval);
 					this.processingInterval = null;
 
+					this.onShowNotification();
+
 					this.setState({
 						processing : {
 							state   : processingState,
@@ -1059,6 +1074,13 @@ class InspectorPage extends Component {
 				}
 			}).catch((error) => {
 		});
+	};
+
+	onShowNotification = ()=> {
+		console.log('InspectorPage.onShowNotification()', this.notification);
+		if (this.notification.supported()) {
+			this.notification.show();
+		}
 	};
 
 	onUpdateCanvas = ()=> {
@@ -1483,6 +1505,16 @@ class InspectorPage extends Component {
 				onComplete={()=> this.handleInviteModalClose()}
 				/>
 			)}
+
+			{(upload) && (<ReactNotifications
+				onRef={(ref)=> (this.notification = ref)}
+				title="Completed Processing"
+				body={`Your design file "${upload.title}" is ready.`}
+				icon={DE_LOGO_SMALL}
+				timeout="6660"
+				tag="processing-complete"
+				onClick={(event)=> this.handleCloseNotification(event)}
+			/>)}
 		</>);
 	}
 }

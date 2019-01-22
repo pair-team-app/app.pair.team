@@ -14,7 +14,7 @@ import { convertURISlug, isUserLoggedIn } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 import { updateNavigation } from '../../redux/actions';
 
-import logo from '../../assets/images/logo-designengine.svg';
+import deLogo from '../../assets/images/logo-designengine.svg';
 import sketchIcon from '../../assets/images/icons/ico-sketch.png';
 import figmaIcon from '../../assets/images/icons/ico-figma.png';
 import photoshopIcon from '../../assets/images/icons/ico-photoshop.png';
@@ -129,7 +129,7 @@ class TopNav extends Component {
 		return (
 			<div className="top-nav-wrapper">
 				<div className="top-nav-column top-nav-column-left"><Row flexGrow={4} horizontal="start" vertical="center">
-					<img onClick={()=> this.handleLink('')} src={logo} className="top-nav-logo" alt="Design Engine" />
+					<img onClick={()=> this.handleLink('')} src={deLogo} className="top-nav-logo" alt="Design Engine" />
 					{(sections.map((section, i)=> <div key={i} className={(pathname.includes(section.url)) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage(section.url)}>{section.title}</div>))}
 					<TopNavRate selected={(pathname.includes('/rate-this'))} onPage={this.handleLink} onScore={this.handleScore} />
 				</Row></div>
