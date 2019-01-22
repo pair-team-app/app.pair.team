@@ -6,6 +6,9 @@ import { TimelineMax, Power1, Power2 } from 'gsap/TweenMax';
 import FontAwesome from 'react-fontawesome';
 import { Row } from 'simple-flexbox';
 
+const START_LBL = 'START';
+const END_LBL = 'END';
+
 
 class Popup extends Component {
 	constructor(props) {
@@ -22,8 +25,9 @@ class Popup extends Component {
 		const { payload, onComplete } = this.props;
 
 		this.timeline = new TimelineMax();
-		this.timeline.from(this.wrapper, 0.25, {
-			opacity    : 0,
+		this.timeline.addLabel(START_LBL, '0').from(this.wrapper, 0.125, {
+			opacity    : 0.25,
+			y          : '+1px',
 			ease       : Power1.easeIn
 
 		}).to(this.wrapper, 0.75, {
@@ -32,7 +36,7 @@ class Popup extends Component {
 			ease       : Power2.easeOut,
 			delay      : (payload.duration) ? payload.duration * 0.001 : 1.125,
 			onComplete : onComplete
-		});
+		}).addLabel(END_LBL);
 	}
 
 	componentWillUnmount() {
@@ -40,9 +44,9 @@ class Popup extends Component {
 	}
 
 	render() {
-// 		console.log('Popup.render()', this.props, this.state);
+		console.log('Popup.render()', this.props, this.state, this.timeline);
 
-		if (this.timeline) {
+		if (this.timeline && !this.timeline.isActive()) {
 			this.timeline.restart();
 		}
 
