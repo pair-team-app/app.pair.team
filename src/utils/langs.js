@@ -47,9 +47,9 @@ export function fontSpecs(font) {
 
 	name = (name) ? name : (family) ? (family.includes(' ')) ? family.split(' ').slice().pop() : family.split('-').slice().pop() : 'Regular';
 	family = (family) ? (family.includes(' ')) ? family.split(' ').slice().shift() : family.split('-').slice().shift() : '';
-	name = name.replace(family, '').replace(' ', '');
-	family = family.replace(name, '').replace(' ', '');
-	psName = (psName && !isEmptyObject(psName)) ? psName : `${family}-${name}`.replace(' ', '');
+	name = name.replace(family, '').replace(/ +/g, '');
+	family = family.replace(name, '').replace(/ +/g, '');
+	psName = (psName && !isEmptyObject(psName)) ? psName : `${family}-${name}`.replace(/ +/g, '');
 	lineHeight = (lineHeight) ? lineHeight : (size) ? (size + Math.floor(size / 3)) : 0;
 	size = (size) ? size : (lineHeight) ? Math.round((lineHeight * 3) * 0.25) : 0;
 	const weight = fontWeight(name);
@@ -83,14 +83,7 @@ export function toCSS(slice) {
 
 	return ({
 		html   : JSON.stringify(html),
-		syntax : html.replace(HTML_TAB, '\t')
-	});
-}
-
-export function toJava(slice) {
-	return ({
-		html   : '',
-		syntax : ''
+		syntax : `${html.replace(HTML_TAB, '\t')}\n`
 	});
 }
 
@@ -99,31 +92,32 @@ export function toReactCSS(slice) {
 
 	return ({
 		html   : JSON.stringify(html),
-		syntax : html
+		syntax : `${html}\n`
 	});
 }
 
 export function toSpecs(slice) {
-	const font = fontSpecs(slice.meta.font);
-
-	let content = `Name\t${slice.title}\n`;
-	content += `Type\t${capitalizeText(slice.type, true)}\n`;
-	content += `Export Size\tW: ${slice.meta.frame.size.width}px H: ${slice.meta.frame.size.height}px\n`;
-	content += `Position\tX: ${slice.meta.frame.origin.x}px Y: ${slice.meta.frame.origin.y}px\n`;
-	content += `Rotation\t${slice.meta.rotation}°\n`;
-	content += `Opacity\t${slice.meta.opacity}%\n`;
-	content += `Fills\t${((slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : slice.meta.fillColor.toUpperCase())}\n`;
+	let content = `Name\t\t\t\t\t${slice.title}\n`;
+	content += `Type\t\t\t\t\t${capitalizeText(slice.type, true)}\n`;
+	content += `Export Size\t\tW: ${slice.meta.frame.size.width}px H: ${slice.meta.frame.size.height}px\n`;
+	content += `Position\t\t\tX: ${slice.meta.frame.origin.x}px Y: ${slice.meta.frame.origin.y}px\n`;
+	content += `Rotation\t\t\t${slice.meta.rotation}°\n`;
+	content += `Opacity\t\t\t\t${slice.meta.opacity}%\n`;
+	content += `Fills\t\t\t\t\t${((slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : slice.meta.fillColor.toUpperCase())}\n`;
 
 	if (slice.type === 'textfield') {
-		content += `Font\t${font.family} ${font.name}\n`;
-		content += `Font Weight\t${font.weight}\n`;
-		content += `Font Size\t${font.size}px\n`;
-		content += `Font Color\t${font.color.toUpperCase()}\n`;
+		const font = fontSpecs(slice.meta.font);
+
+		content += `Font\t\t\t\t\t${font.family} ${font.name}\n`;
+		content += `Font Weight\t\t${font.weight}\n`;
+		content += `Font Size\t\t\t${font.size}px\n`;
+		content += `Font Color\t\t${font.color.toUpperCase()}\n`;
 		content += `Line Spacing\t${font.lineHeight}px\n`;
 		content += `Char Spacing\t${font.kerning.toFixed(2)}px\n`;
 	}
 
-	content += `Padding\t${slice.meta.padding.top}px ${slice.meta.padding.right}px ${slice.meta.padding.bottom}px ${slice.meta.padding.left}px\n`;
+	content += `Padding\t\t\t\t${slice.meta.padding.top}px ${slice.meta.padding.right}px ${slice.meta.padding.bottom}px ${slice.meta.padding.left}px\n`;
+	content += '\n';
 
 	return (content);
 }
@@ -159,10 +153,6 @@ export function toSwift(slice, artboard) {
 		}
 
 	} else if (slice.type === 'textfield') {
-		//const family = (slice.meta.font.family.includes(' ')) ? slice.meta.font.family.split(' ').slice(0, -1).join(' ').replace(' ', '') : slice.meta.font.family;
-		//const name = (slice.meta.font.name) ? slice.meta.font.name.replace(family, '') : family;
-		//const postscript = (slice.meta.font.psName && Object.keys(slice.meta.font.psName).length > 0) ? slice.meta.font.psName : `${family}-${name}`;
-
 		const { family, name, psName } = fontSpecs(slice.meta.font);
 
 		html += '// Font\n';
@@ -186,6 +176,6 @@ export function toSwift(slice, artboard) {
 
 	return ({
 		html   : JSON.stringify(html),
-		syntax : html.replace(/(&nbsp)+;/g, ' ')
+		syntax : `${html.replace(/(&nbsp)+;/g, '\t')}\n`
 	});
 }

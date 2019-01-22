@@ -293,6 +293,10 @@
 	padding-top: 0;
 }
 
+.part-item:last-child {
+	border-bottom: none;
+}
+
 .part-item-image {
 	width: 25%;
 	height: 25%;
