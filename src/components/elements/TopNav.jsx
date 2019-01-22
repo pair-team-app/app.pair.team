@@ -76,9 +76,6 @@ class TopNav extends Component {
 		};
 	}
 
-	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('TopNav.componentDidUpdate()', prevProps, this.props, this.state);
-	}
 
 	handleDemo = (ind)=> {
 		const demo = this.state.demos[ind];
@@ -115,13 +112,13 @@ class TopNav extends Component {
 	};
 
 	handleScore = (score)=> {
-		console.log('TopNav.handleScore()', score);
+// 		console.log('TopNav.handleScore()', score);
 		trackEvent('rate', 'score', null, score);
 		this.props.onScore(score);
 	};
 
 	render() {
-		console.log('TopNav.render()', this.props, this.state);
+// 		console.log('TopNav.render()', this.props, this.state);
 
 		const { pathname } = window.location;
 		const { sections, demos, demoTitle, demoModal } = this.state;

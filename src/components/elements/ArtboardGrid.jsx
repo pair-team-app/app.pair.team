@@ -17,7 +17,7 @@ class ArtboardGrid extends Component {
 	}
 
 	render() {
-		console.log('ArtboardGrid.render()', this.props, this.state);
+// 		console.log('ArtboardGrid.render()', this.props, this.state);
 		const { title, artboards } = this.props;
 
 		return (<div className="artboard-grid">

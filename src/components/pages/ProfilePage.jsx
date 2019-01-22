@@ -196,7 +196,7 @@ class ProfilePage extends Component {
 	};
 
 	render() {
-		console.log('ProfilePage.render()', this.props, this.state);
+// 		console.log('ProfilePage.render()', this.props, this.state);
 
 		const { avatar, username, email } = (this.props.profile) ? this.props.profile : this.state;
 		const { passMsg, usernameValid, emailValid, passwordValid } = this.state;
