@@ -12,7 +12,7 @@
 
 .content-modal-content-wrapper {
 	position: fixed;
-	width: 360px;
+	width: 400px;
 	height: auto;
 	max-height: 75%;
 	top: 50%;
@@ -23,10 +23,11 @@
 	overflow-x: hidden;
 	overflow-y: auto;
 	border-radius: 2px;
-	padding: 20px;
+	padding: 15px;
 	background-color: #ffffff;
 	text-align: center;
 	color: #9b9b9b;
+	box-shadow: 3px 3px 10px #1c1c1c;
 }
 
 .content-modal-content-wrapper-percent {
@@ -35,16 +36,23 @@
 
 .content-modal-title-wrapper {
 	width: 100%;
-	margin-bottom: 30px;
+	margin-bottom: 20px;
+	font-family: "San Francisco Text SemiBold", sans-serif;
+	font-weight: 600;
+	font-size: 16px;
+	letter-spacing: -0.24px;
+	color: #1c1c1c;
 }
 
 .content-modal-close-button {
 	position: absolute;
-	right: 15px;
-	top: 15px;
+	right: 12px;
+	top: 12px;
+	padding: 3px 12px;
 }
 
 .content-modal-content {
+	line-height: 24px;
 }
 
 .content-modal-button {
