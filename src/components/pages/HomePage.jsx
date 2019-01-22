@@ -204,7 +204,7 @@ class HomePage extends Component {
 		const uploadTitle = (pathname === '/' || pathname === '/inspect') ? 'Drag & Drop any Sketch file here to inspect design specs & code.' : (pathname === '/parts') ? 'Drag & Drop any Sketch file here to download design parts & source.' : 'Turn any Sketch file into an organized System of Fonts, Colors, Symbols, Views &amp; more. (Drag & Drop)';
 		const sectionTitle = (pathname === '/' || pathname === '/inspect') ? (isUserLoggedIn()) ? 'Do you need specs & code from a design file?' : 'Sign Up for Design Engine' : (pathname === '/parts') ? (isUserLoggedIn()) ? 'Do you need parts & source from a design file?' : 'Sign Up for Design Engine' : 'Start a new Design Project';
 		const sectionContent = (pathname === '/' || pathname === '/inspect') ? (isUserLoggedIn()) ? 'Upload any Sketch file to Design Engine to inspect specifications & code.' : 'Design Engine is a design platform built for engineers inspired by the way you work.' : (pathname === '/parts') ? (isUserLoggedIn()) ? 'Upload any Sketch file to Design Engine to export design parts & source.' : 'Design Engine is a design platform built for engineers inspired by the way you work.' : 'Turn any Design File into an organized System of Fonts, Colors, Symbols, Views & More.';
-		const gridTitle = (profile) ? (fetching) ? 'Loading…' : `Showing ${artboards.length} project${((artboards.length === 1) ? '' : 's')}.` : null;
+		const gridTitle = (profile) ? (fetching) ? 'Loading…' : (artboards.length > 0) ? `Showing ${artboards.length} project${((artboards.length === 1) ? '' : 's')}.` : null : null;
 
 		return (
 			<div className="page-wrapper home-page-wrapper">

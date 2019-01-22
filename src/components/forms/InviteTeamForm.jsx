@@ -7,6 +7,8 @@ import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
 
 import { isValidEmail } from '../../utils/funcs';
+import { trackEvent } from '../../utils/tracking';
+
 
 const MAX_FIELDS = 4;
 
@@ -76,6 +78,7 @@ class InviteTeamForm extends Component {
 	handleAddEmailField = ()=> {
 // 		console.log('InviteTeamForm.handleAddEmailField()', this.state);
 
+		trackEvent('button', 'more-email');
 		let { invites } = this.state;
 		invites.push({
 			email    : '',
@@ -106,6 +109,7 @@ class InviteTeamForm extends Component {
 
 		const reducer = invites.map((invite)=> ((invite.email.length > 0 && invite.valid) ? 1 : 0)).reduce((acc, val)=> acc + val);
 		if (reducer === invites.length) {
+			trackEvent('button', 'invite-submit');
 			this.setState({ submitting : true });
 
 			let formData = new FormData();

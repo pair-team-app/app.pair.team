@@ -78,6 +78,7 @@ class App extends Component {
 
 		initTracker(cookie.load('user_id'));
 		trackEvent('site', 'load');
+		trackPageview();
 
 		if (isHomePage()) {
 			this.handlePage('inspect');

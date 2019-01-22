@@ -112,18 +112,18 @@ export function isInspectorPage() {
 	return ((pathname.includes(INSPECT + '/') || pathname.includes(COLORS + '/') || pathname.includes(FONTS + '/') || pathname.includes(PARTS + '/')) && /^.+\/\d+\/.+$/.test(pathname));
 }
 
-export function isProfilePage(base=false) {
+export function isProfilePage(exact=false) {
 	const { pathname } = window.location;
-	return ((base) ? pathname === PROFILE : pathname.includes(PROFILE));
+	return ((exact) ? pathname === PROFILE : pathname.includes(PROFILE));
 }
 
 export function isProjectPage() {
 	return (window.location.pathname.includes('/proj'));
 }
 
-export function isUploadPage(base=false) {
+export function isUploadPage(exact=false) {
 	const { pathname } = window.location;
-	return ((base) ? pathname === UPLOAD : pathname.includes(UPLOAD));
+	return ((exact) ? pathname === UPLOAD : pathname.includes(UPLOAD));
 }
 
 export function isUserLoggedIn() {

@@ -14,17 +14,19 @@ import { Column, Row } from 'simple-flexbox';
 import ContentModal from '../elements/ContentModal';
 import InviteTeamForm from '../forms/InviteTeamForm';
 
-import { setRedirectURL } from '../../redux/actions';
-import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { MOMENT_TIMESTAMP } from '../../consts/formats';
+import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
+import { setRedirectURL } from '../../redux/actions';
 import { buildInspectorURL, capitalizeText, frameToRect, makeDownload, rectContainsRect, sendToSlack } from '../../utils/funcs.js';
 import { fontSpecs, toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/langs.js';
+import { trackEvent } from '../../utils/tracking';
 import enabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_enabled.svg';
 import disabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_disabled.svg';
 import enabledZoomOutButton from '../../assets/images/buttons/btn-zoom-out_enabled.svg';
 import disabledZoomOutButton from '../../assets/images/buttons/btn-zoom-out_disabled.svg';
 import enabledZooResetButton from '../../assets/images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../assets/images/buttons/btn-zoom-reset_disabled.svg';
+import {convertURISlug} from "../../utils/funcs";
 
 
 const InteractiveDiv = panAndZoomHoc('div');
@@ -92,7 +94,8 @@ const InviteTeamModal = (props)=> {
 			</div>
 			<div>{upload.title} ({upload.filename.split('/').pop()})</div>
 			{(upload.description.length > 0) && (<div>{upload.description}</div>)}
-			<a href={buildInspectorURL(upload)} target="_blank" rel="noopener noreferrer">{buildInspectorURL(upload)}</a>< br/>
+			<div className="page-link" onClick={()=> window.open(buildInspectorURL(upload))}>{buildInspectorURL(upload)}</div>
+			{/*<a href={buildInspectorURL(upload)} target="_blank" rel="noopener noreferrer">{buildInspectorURL(upload)}</a>< br/>*/}
 			<CopyToClipboard onCopy={()=> props.onCopyURL()} text={buildInspectorURL(upload)}>
 				<button className="inspector-page-modal-button">Copy URL</button>
 			</CopyToClipboard>
@@ -416,6 +419,7 @@ class InspectorPage extends Component {
 	handleCopyCode = ()=> {
 		console.log('InspectorPage.handleCopyCode()');
 
+		trackEvent('button', 'copy-code');
 		this.props.onPopup({
 			type    : 'INFO',
 			content : 'Copied to Clipboard!'
@@ -425,6 +429,7 @@ class InspectorPage extends Component {
 	handleCopyURL = ()=> {
 		console.log('InspectorPage.handleCopyURL()');
 
+		trackEvent('button', 'copy-url');
 		this.props.onPopup({
 			type    : 'INFO',
 			content : 'Copied to Clipboard!'
@@ -434,6 +439,7 @@ class InspectorPage extends Component {
 	handleDownload = ()=> {
 // 		console.log('InspectorPage.handleDownload()');
 
+		trackEvent('button', 'download-all');
 		const { upload, slice } = this.state;
 		const sliceIDs = buildSlicePreviews(upload, slice).map((slice)=> (slice.id)).join(',');
 		makeDownload(`http://cdn.designengine.ai/slices.php?title=${slice.title}&slice_ids=${sliceIDs}`);
@@ -458,6 +464,7 @@ class InspectorPage extends Component {
 	handleKeyDown = (event)=> {
 // 		console.log('InspectorPage.handleKeyDown()', event);
 
+		trackEvent('keypress', (event.keyCode === PLUS_KEY) ? 'plus' : 'minus');
 		if (event.keyCode === PLUS_KEY) {
 			this.handleZoom(1);
 
@@ -518,6 +525,8 @@ class InspectorPage extends Component {
 
 	handleSliceClick = (ind, slice, offset)=> {
 // 		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
+
+		trackEvent('slice', `${slice.id}_${convertURISlug(slice.title)}`);
 
 		const { upload, section } = this.state;
 		let { tabs } = this.state;
@@ -653,6 +662,8 @@ class InspectorPage extends Component {
 
 	handleTab = (ind)=> {
 // 		console.log('InspectorPage.handleTab()', ind);
+		const { tabs } = this.state;
+		trackEvent('tab', convertURISlug(tabs[ind].title));
 		this.setState({ selectedTab : ind });
 	};
 
@@ -784,7 +795,7 @@ class InspectorPage extends Component {
 					this.setState({
 						processing : {
 							state   : processingState,
-							message : `You are in queue position ${queue.position}/${queue.total}, please wait…`
+							message : `You are in queue position ${queue.position}/${queue.total}, please wait your turn…`
 						}
 					});
 
@@ -1388,13 +1399,13 @@ class InspectorPage extends Component {
 						</div>
 					</InteractiveDiv>
 					{(artboards.length > 0) && (<div className="inspector-page-zoom-wrapper">
-						<button disabled={(scale >= Math.max(...ZOOM_NOTCHES))} className="inspector-page-float-button" onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < Math.max(...ZOOM_NOTCHES)) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
-						<button disabled={(scale <= Math.min(...ZOOM_NOTCHES))} className="inspector-page-float-button" onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > Math.min(...ZOOM_NOTCHES)) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
-						<button disabled={(scale === 0.5)} className="inspector-page-float-button" onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 0.5) ? enabledZooResetButton : disabledZoomResetButton} alt="Reset" /></button>
+						<button disabled={(scale >= Math.max(...ZOOM_NOTCHES))} className="inspector-page-float-button" onClick={()=> {trackEvent('button', 'zoom-in'); this.handleZoom(1)}}><img className="inspector-page-float-button-image" src={(scale < Math.max(...ZOOM_NOTCHES)) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
+						<button disabled={(scale <= Math.min(...ZOOM_NOTCHES))} className="inspector-page-float-button" onClick={()=> {trackEvent('button', 'zoom-out'); this.handleZoom(-1)}}><img className="inspector-page-float-button-image" src={(scale > Math.min(...ZOOM_NOTCHES)) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
+						<button disabled={(scale === 0.5)} className="inspector-page-float-button" onClick={()=> {trackEvent('button', 'zoom-reset'); this.handleZoom(0)}}><img className="inspector-page-float-button-image" src={(scale !== 0.5) ? enabledZooResetButton : disabledZoomResetButton} alt="Reset" /></button>
 					</div>)}
 
 					{(upload && profile && upload.creator.user_id === profile.id) && (<div className="inspector-page-modal-button-wrapper">
-						<button className="tiny-button" onClick={()=> this.setState({ shownInvite : false })}>Invite Team</button>
+						<button className="tiny-button" onClick={()=> {trackEvent('button', 'invite-team'); this.setState({ shownInvite : false })}}>Invite Team</button>
 					</div>)}
 				</div>
 
