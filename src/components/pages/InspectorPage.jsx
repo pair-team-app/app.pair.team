@@ -662,27 +662,33 @@ class InspectorPage extends Component {
 		const { panCoords, scale } = this.state;
 
 		if (direction === 0) {
-			this.handlePanAndZoom(panCoords.x + 0.01, panCoords.y + 0.01, ZOOM_NOTCHES[5]);
+			this.handlePanAndZoom(panCoords.x + 0.01, panCoords.y + 0.01, ZOOM_NOTCHES[4]);
 
 		} else {
 			let ind = -1;
 			ZOOM_NOTCHES.forEach((amt, i)=> {
-				if (scale === amt) {
-					ind = i;
+				if (amt === scale) {
+					ind = i + direction;
 				}
 			});
 
-			if (ind === -1) {
-				let diff = 3;
-				ZOOM_NOTCHES.forEach((amt, i)=> {
-					if (Math.abs(amt - scale) < diff) {
-						diff = Math.abs(amt - scale);
-						ind = i;
-					}
-				});
-			}
+			ZOOM_NOTCHES.forEach((amt, i)=> {
+				if (ind === -1) {
+					if (direction > 0) {
+						if (amt > scale) {
+							ind = i;
+						}
 
-			this.handlePanAndZoom(panCoords.x + 0.01, panCoords.y + 0.01, ZOOM_NOTCHES[Math.min(Math.max(0, ind + direction), ZOOM_NOTCHES.length - 1)]);
+					} else {
+						if (amt > scale) {
+							ind = i - 1;
+						}
+					}
+				}
+			});
+
+
+			this.handlePanAndZoom(panCoords.x + 0.01, panCoords.y + 0.01, ZOOM_NOTCHES[Math.min(Math.max(0, ind), ZOOM_NOTCHES.length - 1)]);
 		}
 	};
 
@@ -1382,9 +1388,9 @@ class InspectorPage extends Component {
 						</div>
 					</InteractiveDiv>
 					{(artboards.length > 0) && (<div className="inspector-page-zoom-wrapper">
-						<button disabled={(scale >= Math.max(...ZOOM_NOTCHES))} className="inspector-page-float-button" onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < 3) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
-						<button disabled={(scale <= Math.min(...ZOOM_NOTCHES))} className="inspector-page-float-button" onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > 0.03) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
-						<button disabled={(scale === 1.0)} className="inspector-page-float-button" onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 1.0) ? enabledZooResetButton : disabledZoomResetButton} alt="0" /></button>
+						<button disabled={(scale >= Math.max(...ZOOM_NOTCHES))} className="inspector-page-float-button" onClick={()=> this.handleZoom(1)}><img className="inspector-page-float-button-image" src={(scale < Math.max(...ZOOM_NOTCHES)) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
+						<button disabled={(scale <= Math.min(...ZOOM_NOTCHES))} className="inspector-page-float-button" onClick={()=> this.handleZoom(-1)}><img className="inspector-page-float-button-image" src={(scale > Math.min(...ZOOM_NOTCHES)) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
+						<button disabled={(scale === 0.5)} className="inspector-page-float-button" onClick={()=> this.handleZoom(0)}><img className="inspector-page-float-button-image" src={(scale !== 0.5) ? enabledZooResetButton : disabledZoomResetButton} alt="Reset" /></button>
 					</div>)}
 
 					{(upload && profile && upload.creator.user_id === profile.id) && (<div className="inspector-page-modal-button-wrapper">
