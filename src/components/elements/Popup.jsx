@@ -30,7 +30,7 @@ class Popup extends Component {
 			y          : '+1px',
 			ease       : Power1.easeIn
 
-		}).to(this.wrapper, 0.75, {
+		}).to(this.wrapper, (2/3), {
 			opacity    : 0,
 			y          : '-30px',
 			ease       : Power2.easeOut,

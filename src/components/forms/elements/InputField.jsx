@@ -2,6 +2,9 @@
 import React, { Component } from 'react';
 import './InputField.css';
 
+export const IDLE_STATUS = 'IDLE';
+export const ERROR_STATUS = 'ERROR';
+export const MODIFY_STATUS = 'MODIFY';
 const textfield = React.createRef();
 
 
@@ -13,7 +16,7 @@ class InputField extends Component {
 
 		this.state = {
 			value  : props.value,
-			status : 'IDLE'
+			status : IDLE_STATUS
 		};
 	}
 
@@ -24,7 +27,7 @@ class InputField extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('InputField.componentDidUpdate()', prevProps, this.props, this.state);
+		console.log('InputField.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
 
 		const { value, status } = this.props;
 		if (value !== prevProps.value) {
@@ -53,7 +56,7 @@ class InputField extends Component {
 // 		console.log('InputField.handleClick()', event.target);
 		this.setState({
 			value  : '',
-			status : 'IDLE'
+			status : IDLE_STATUS
 		});
 
 // 		setTimeout(()=> {
@@ -76,15 +79,14 @@ class InputField extends Component {
 
 
 	render() {
-// 		console.log('InputField.render()', this.props, this.state);
+		console.log('InputField.render()', this.props, this.state);
 
 		const { type, name, placeholder, button } = this.props;
 		const { value, status } = this.state;
 
-		const wrapperClass = `input-wrapper input-field-wrapper${((status === 'ERROR') ? ' input-wrapper-error' : '')}`;
-		const textfieldClass = `input-field-textfield${((status === 'ERROR') ? ' is-hidden' : '')}`;
-		const buttonClass = 'tiny-button input-field-button';
-		const errorStyle = { display : ((status === 'error') ? 'block' : 'none') };
+		const wrapperClass = `input-wrapper input-field-wrapper${((status === ERROR_STATUS) ? ' input-wrapper-error' : '')}`;
+		const textfieldClass = `input-field-textfield${((status === ERROR_STATUS) ? ' is-hidden' : '')}`;
+		const errorStyle = { display : ((status === ERROR_STATUS) ? 'block' : 'none') };
 
 		return (
 			<div className="input-field">
@@ -92,7 +94,7 @@ class InputField extends Component {
 					<input autoFocus type={type} name={name} className={textfieldClass} placeholder={placeholder} value={value} onFocus={this.handleFocus} onChange={this.handleChange} onBlur={this.handleBlur} ref={textfield} />
 					<div className="field-error" onClick={this.handleClick} style={errorStyle}>{value}</div>
 				</div>
-				<button className={buttonClass} onClick={this.handleSubmit}>{button}</button>
+				{(button) && (<button disabled={(value.length === 0)} className="tiny-button input-field-button" onClick={this.handleSubmit}>{button}</button>)}
 			</div>
 		);
 	}

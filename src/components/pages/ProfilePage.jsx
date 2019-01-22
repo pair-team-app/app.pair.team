@@ -3,15 +3,14 @@ import React, { Component } from 'react';
 import './ProfilePage.css';
 
 import axios from 'axios/index';
-import cookie from 'react-cookies';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import InputField from '../forms/elements/InputField';
+import InputField, { ERROR_STATUS, IDLE_STATUS } from '../forms/elements/InputField';
 import { DEFAULT_AVATAR } from '../../consts/uris';
 import { updateUserProfile } from '../../redux/actions';
-import { capitalizeText, hasBit, isUserLoggedIn, isValidEmail } from '../../utils/funcs';
+import { hasBit, isValidEmail } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 
 
@@ -46,7 +45,7 @@ class ProfilePage extends Component {
 	}
 
 	componentDidMount() {
-		console.log('ProfilePage.componentDidMount()', this.props, this.state);
+// 		console.log('ProfilePage.componentDidMount()', this.props, this.state);
 		if (this.props.profile) {
 			const { avatar, username, email } = this.props.profile;
 			this.setState({ avatar, username, email });
@@ -54,7 +53,7 @@ class ProfilePage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('ProfilePage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+// 		console.log('ProfilePage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		if (prevProps.profile !== this.props.profile) {
 			const { avatar, username, email, status } = this.props.profile;
@@ -77,7 +76,7 @@ class ProfilePage extends Component {
 	};
 
 	handleFileDrop = (files)=> {
-		console.log('ProfilePage.handleFileDrop()', files);
+// 		console.log('ProfilePage.handleFileDrop()', files);
 
 		if (files.length > 0) {
 			const file = files.pop();
@@ -131,11 +130,11 @@ class ProfilePage extends Component {
 	};
 
 	handleInputFieldChange = (key, val)=> {
-		this.onValidateFields(key, val);
+		this.setState({ [key] : val });
 	};
 
 	handleInputFieldSubmit = (key, val)=> {
-		console.log('ProfilePage.handleInputFieldSubmit()', key, val);
+// 		console.log('ProfilePage.handleInputFieldSubmit()', key, val);
 
 		trackEvent('button', key);
 
@@ -144,7 +143,7 @@ class ProfilePage extends Component {
 	};
 
 	handleSubmit = ()=> {
-		console.log('ProfilePage.handleSubmit()');
+// 		console.log('ProfilePage.handleSubmit()');
 
 		trackEvent('button', 'save');
 
@@ -198,11 +197,6 @@ class ProfilePage extends Component {
 	render() {
 		console.log('ProfilePage.render()', this.props, this.state);
 
-		if (!isUserLoggedIn()) {
-			cookie.save('msg', 'use this feature.', { path : '/' });
-			this.props.onPage('login');
-		}
-
 		const { avatar, username, email } = (this.props.profile) ? this.props.profile : this.state;
 		const { passMsg, usernameValid, emailValid, passwordValid } = this.state;
 
@@ -210,13 +204,13 @@ class ProfilePage extends Component {
 			<div className="page-wrapper profile-page-wrapper">
 				<h3>Profile</h3>
 				<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
-				<div className="profile-page-avatar-wrapper"><Row vertical="center">
-					<img className="profile-page-avatar-image" src={avatar} alt="Avatar" />
-					<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)}>
+				<div className="profile-page-avatar-wrapper">
+					<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)}><Row vertical="center">
+						<img className="profile-page-avatar-image" src={avatar} alt="Avatar" />
 						<button className="tiny-button adjacent-button">Change</button>
-					</Dropzone>
-					{(!avatar.includes('default-avatar.png')) && (<span className="page-link-small" onClick={()=> this.handleDropAvatar()}>Remove</span>)}
-				</Row></div>
+					</Row></Dropzone>
+					{(!avatar.includes('avatar-default.png')) && (<div className="page-link-small" style={{ width : '58px', textAlign : 'center' }} onClick={()=> this.handleDropAvatar()}>Remove</div>)}
+				</div>
 				<div className="profile-page-form-wrapper">
 					<InputField
 						type="text"
@@ -224,7 +218,7 @@ class ProfilePage extends Component {
 						placeholder="Enter new username"
 						value={username}
 						button="Change"
-						status={(usernameValid) ? 'IDLE' : 'ERROR'}
+						status={(usernameValid) ? IDLE_STATUS : ERROR_STATUS}
 						onChange={(val)=> this.handleInputFieldChange('username', val)}
 						onClick={()=> this.handleInputFieldClick()}
 						onSubmit={(val)=> this.handleInputFieldSubmit('username', val)}
@@ -236,7 +230,7 @@ class ProfilePage extends Component {
 						placeholder="Enter new email"
 						value={email}
 						button="Change"
-						status={(emailValid) ? 'IDLE' : 'ERROR'}
+						status={(emailValid) ? IDLE_STATUS : ERROR_STATUS}
 						onChange={(val)=> this.handleInputFieldChange('email', val)}
 						onClick={()=> this.handleInputFieldClick()}
 						onSubmit={(val)=> this.handleInputFieldSubmit('email', val)}
@@ -248,7 +242,7 @@ class ProfilePage extends Component {
 						placeholder="Enter new password"
 						value={passMsg}
 						button="Change"
-						status={(passwordValid) ? 'IDLE' : 'ERROR'}
+						status={(passwordValid) ? IDLE_STATUS : ERROR_STATUS}
 						onChange={(val)=> this.handleInputFieldChange('password', val)}
 						onClick={()=> this.handleInputFieldClick()}
 						onSubmit={(val)=> this.handleInputFieldSubmit('password', val)}

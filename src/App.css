@@ -118,6 +118,7 @@
 	border: 1px solid rgba(0, 0, 0, 0);
 	border-radius: 4px;
 	width: 100%;
+	height: 59px;
 }
 
 .input-wrapper-error {
@@ -125,6 +126,8 @@
 }
 
 .input-wrapper-error input[type=text], .input-wrapper-error input[type=password], .input-wrapper-error input[type=tel], .input-wrapper-error .input-txt, .field-error {
+	width: 100%;
+	height: 100%;
 	color: #ff5166;
 }
 
