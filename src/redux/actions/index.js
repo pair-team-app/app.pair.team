@@ -11,6 +11,12 @@ import {
 	UPDATE_NAVIGATION,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
+
+
+const logFormat = (action, payload=null)=> {
+	console.log(LOG_ACTION_PREFIX, `${action}()`, payload);
+};
 
 
 export function addFileUpload(payload) {
@@ -26,7 +32,7 @@ export function updateNavigation(payload) {
 }
 
 export function fetchUserProfile() {
-	console.log('fetchUserProfile()');
+	logFormat('fetchUserProfile');
 
 	return (function(dispatch) {
 		let formData = new FormData();
@@ -34,7 +40,7 @@ export function fetchUserProfile() {
 		formData.append('user_id', cookie.load('user_id'));
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response)=> {
-				console.log('fetchUserProfile()=> PROFILE', response.data);
+				console.log('PROFILE', response.data);
 				dispatch({
 					type    : USER_PROFILE_LOADED,
 					payload : response.data.user
@@ -49,7 +55,7 @@ export function setRedirectURL(payload) {
 }
 
 export function updateUserProfile(payload) {
-	console.log('updateUserProfile()', payload);
+	logFormat('updateUserProfile', payload);
 
 	return (function(dispatch) {
 		if (payload) {
@@ -63,7 +69,7 @@ export function updateUserProfile(payload) {
 			formData.append('password', password);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
-					console.log('updateUserProfile()=> UPDATE_PROFILE', response.data);
+					console.log('UPDATE_PROFILE', response.data);
 
 					const status = parseInt(response.data.status, 16);
 					const { id, avatar, username, email } = response.data.user;
