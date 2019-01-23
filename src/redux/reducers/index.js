@@ -1,8 +1,7 @@
 
 import {
 	ADD_FILE_UPLOAD,
-	APPEND_EXPLORE_ARTBOARDS,
-	APPEND_UPLOAD_ARTBOARDS,
+	APPEND_HOME_ARTBOARDS,
 	SET_REDIRECT_URL,
 	UPDATE_NAVIGATION,
 	USER_PROFILE_ERROR,
@@ -11,12 +10,11 @@ import {
 
 
 const initialState = {
-	exploreArtboards : [],
-	uploadArtboards  : [],
-	userProfile      : null,
-	file             : null,
-	redirectURL      : null,
-	navigation       : {
+	homeArtboards : [],
+	userProfile   : null,
+	file          : null,
+	redirectURL   : null,
+	navigation    : {
 		uploadID   : 0,
 		pageID     : 0,
 		artboardID : 0,
@@ -25,50 +23,45 @@ const initialState = {
 };
 
 
-const LOG_PREFIX = '[:|:]';
-const LOG_ACT_PREFIX = '\t-=\\';
+const LOG_ACT_INVOKE_PREFIX = '[:|:]';
+const LOG_ACT_TYPE_PREFIX = '\t-=\\';
 
 
 function rootReducer(state=initialState, action) {
 	invokeLogFormat(state, action);
 
 	if (action.type === ADD_FILE_UPLOAD) {
-		actionLogFormat(action);
+		typeLogFormat(action);
 
 		return (Object.assign({}, state, {
 			file : action.payload
 		}));
 
-	} else if (action.type === APPEND_EXPLORE_ARTBOARDS) {
-		actionLogFormat(action, state.exploreArtboards);
+	} else if (action.type === APPEND_HOME_ARTBOARDS) {
+		typeLogFormat(action, state.homeArtboards);
 
 		return (Object.assign({}, state, {
-			exploreArtboards : state.exploreArtboards.concat(action.payload).reduce((acc, inc)=> [...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], [])
-		}));
-
-	} else if (action.type === APPEND_UPLOAD_ARTBOARDS) {
-		actionLogFormat(action, state.uploadArtboards);
-
-		return (Object.assign({}, state, {
-			uploadArtboards : state.uploadArtboards.concat(action.payload).reduce((acc, inc) => [...acc.filter((artboard) => (artboard.id !== inc.id)), inc], [])
+			homeArtboards : (action.payload) ? state.homeArtboards.concat(action.payload).reduce((acc, inc)=>
+				[...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], []
+			) : []
 		}));
 
 	} else if (action.type === SET_REDIRECT_URL) {
-		actionLogFormat(action);
+		typeLogFormat(action);
 
 		return (Object.assign({}, state, {
 			redirectURL : action.payload
 		}));
 
 	} else if (action.type === USER_PROFILE_ERROR || action.type === USER_PROFILE_LOADED || action.type === USER_PROFILE_UPDATED) {
-		actionLogFormat(action);
+		typeLogFormat(action);
 
 		return (Object.assign({}, state, {
 			userProfile : action.payload
 		}));
 
 	} else if (action.type === UPDATE_NAVIGATION) {
-		actionLogFormat(action);
+		typeLogFormat(action);
 
 		return (Object.assign({}, state, {
 			navigation : Object.assign({}, state.navigation, action.payload)
@@ -79,15 +72,14 @@ function rootReducer(state=initialState, action) {
 }
 
 
-
-const actionLogFormat = (action, meta='')=> {
-	const { type, payload } = action;
-	console.log(LOG_ACT_PREFIX, type, payload, meta);
-};
-
 const invokeLogFormat = (state, action)=> {
 	const { type, payload } = action;
-	console.log(LOG_PREFIX, 'rootReducer()', state, type, payload);
+	console.log(LOG_ACT_INVOKE_PREFIX, 'rootReducer()', state, type, payload);
+};
+
+const typeLogFormat = (action, meta='')=> {
+	const { type, payload } = action;
+	console.log(LOG_ACT_TYPE_PREFIX, type, payload, meta);
 };
 
 

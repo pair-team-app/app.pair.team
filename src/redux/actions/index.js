@@ -5,8 +5,7 @@ import cookie from 'react-cookies';
 import { hasBit } from '../../utils/funcs';
 import {
 	ADD_FILE_UPLOAD,
-	APPEND_EXPLORE_ARTBOARDS,
-	APPEND_UPLOAD_ARTBOARDS,
+	APPEND_HOME_ARTBOARDS,
 	SET_REDIRECT_URL,
 	USER_PROFILE_ERROR,
 	UPDATE_NAVIGATION,
@@ -18,12 +17,8 @@ export function addFileUpload(payload) {
 	return ({ type : ADD_FILE_UPLOAD, payload });
 }
 
-export function appendExploreArtboards(payload) {
-	return ({ type : APPEND_EXPLORE_ARTBOARDS, payload });
-}
-
-export function appendUploadArtboards(payload) {
-	return ({ type : APPEND_UPLOAD_ARTBOARDS, payload });
+export function appendHomeArtboards(payload) {
+	return ({ type : APPEND_HOME_ARTBOARDS, payload });
 }
 
 export function updateNavigation(payload) {

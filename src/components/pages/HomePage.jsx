@@ -7,14 +7,14 @@ import { connect } from 'react-redux';
 
 import ArtboardGrid from '../elements/ArtboardGrid';
 import UploadHeader from '../elements/UploadHeader';
-import { addFileUpload, appendUploadArtboards, updateNavigation } from '../../redux/actions';
+import { addFileUpload, appendHomeArtboards, updateNavigation } from '../../redux/actions';
 import { isUserLoggedIn } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		artboards  : state.uploadArtboards,
+		artboards  : state.homeArtboards,
 		navigation : state.navigation,
 		profile    : state.userProfile
 	});
@@ -22,9 +22,9 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		addFileUpload         : (file)=> dispatch(addFileUpload(file)),
-		appendUploadArtboards : (artboards)=> dispatch(appendUploadArtboards(artboards)),
-		updateNavigation      : (navIDs)=> dispatch(updateNavigation(navIDs))
+		addFileUpload       : (file)=> dispatch(addFileUpload(file)),
+		appendHomeArtboards : (artboards)=> dispatch(appendHomeArtboards(artboards)),
+		updateNavigation    : (navIDs)=> dispatch(updateNavigation(navIDs))
 	});
 };
 
@@ -177,7 +177,7 @@ class HomePage extends Component {
 				});
 
 				if (artboards.length > 0) {
-					this.props.appendUploadArtboards(artboards);
+					this.props.appendHomeArtboards(artboards);
 				}
 			}).catch((error) => {
 		});
@@ -195,7 +195,7 @@ class HomePage extends Component {
 
 
 	render() {
-// 		console.log('HomePage.render()', this.props, this.state);
+		console.log('HomePage.render()', this.props, this.state);
 
 		const { profile, artboards } = this.props;
 		const { fetching, dialog } = this.state;

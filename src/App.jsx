@@ -25,7 +25,7 @@ import Status404Page from './components/pages/Status404Page';
 import TermsPage from './components/pages/TermsPage';
 import UploadPage from './components/pages/UploadPage';
 
-import { fetchUserProfile, updateNavigation, updateUserProfile } from './redux/actions';
+import { appendHomeArtboards, fetchUserProfile, updateNavigation, updateUserProfile } from './redux/actions';
 import {
 	buildInspectorPath,
 	idsFromPath,
@@ -49,9 +49,10 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
-		updateNavigation  : (navIDs)=> dispatch(updateNavigation(navIDs)),
-		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+		appendHomeArtboards : ()=> dispatch(appendHomeArtboards(null)),
+		fetchUserProfile    : ()=> dispatch(fetchUserProfile()),
+		updateNavigation    : (navIDs)=> dispatch(updateNavigation(navIDs)),
+		updateUserProfile   : (profile)=> dispatch(updateUserProfile(profile))
 	});
 };
 
@@ -118,6 +119,7 @@ class App extends Component {
 		cookie.save('user_id', '0', { path : '/' });
 		trackEvent('user', 'sign-out');
 		this.props.updateUserProfile(null);
+		this.props.appendHomeArtboards();
 		this.handlePage('');
 	};
 
