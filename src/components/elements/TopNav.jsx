@@ -87,7 +87,7 @@ class TopNav extends Component {
 				pageID     : 0,
 				artboardID : 0
 			});
-			this.props.onPage(`${window.location.pathname}${demo.url}`);
+			this.props.onPage(`${window.location.pathname.substr(1).split('/').slice().shift()}${demo.url}`);
 
 		} else {
 			this.setState({
