@@ -461,8 +461,6 @@ class InspectorPage extends Component {
 	};
 
 	handleInviteModalClose = ()=> {
-		this.onShowNotification();
-
 		const { processing } = this.state;
 		this.setState({
 			processing : {
