@@ -70,7 +70,7 @@ const buildSlicePreviews = (upload, slice)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		navigation  : state.navigation,
+		deeplink    : state.deeplink,
 		profile     : state.userProfile,
 		redirectURL : state.redirectURL
 	});
@@ -305,8 +305,8 @@ class InspectorPage extends Component {
 			this.props.setRedirectURL(null);
 		}
 
-		const { navigation } = this.props;
-		if (navigation && (navigation.uploadID !== 0)) {
+		const { deeplink } = this.props;
+		if (deeplink && (deeplink.uploadID !== 0)) {
 			this.onRefreshUpload();
 		}
 
@@ -331,10 +331,10 @@ class InspectorPage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('InspectorPage.componentDidUpdate()', prevProps, this.props, this.state);
 
-		const { navigation, processing } = this.props;
+		const { deeplink, processing } = this.props;
 		const { upload, viewport, scale } = this.state;
 
-		if (navigation && navigation !== prevProps.navigation && navigation.uploadID !== 0) {
+		if (deeplink && deeplink !== prevProps.deeplink && deeplink.uploadID !== 0) {
 			this.onRefreshUpload();
 		}
 
@@ -405,7 +405,7 @@ class InspectorPage extends Component {
 
 				let { upload } = this.state;
 				let pages = [...upload.pages];
-				pages.forEach((page) => {
+				pages.forEach((page)=> {
 					page.artboards.filter((artboard) => (artboard.id === artboardID && artboard.slices.length === 0)).forEach((artboard) => {
 						artboard.slices = response.data.slices.map((item) => ({
 							id         : item.id,
@@ -748,7 +748,7 @@ class InspectorPage extends Component {
 
 							let formData = new FormData();
 							formData.append('action', 'FILES');
-							formData.append('upload_id', `${this.props.navigation.uploadID}`);
+							formData.append('upload_id', `${this.props.deeplink.uploadID}`);
 							axios.post('https://api.designengine.ai/system.php', formData)
 								.then((response)=> {
 									console.log('FILES', response.data);
@@ -770,7 +770,7 @@ class InspectorPage extends Component {
 
 				let formData = new FormData();
 				formData.append('file', file);
-				axios.post(`http://cdn.designengine.ai/files/upload.php?user_id=${id}&upload_id=${this.props.navigation.uploadID}`, formData, config)
+				axios.post(`http://cdn.designengine.ai/files/upload.php?user_id=${id}&upload_id=${this.props.deeplink.uploadID}`, formData, config)
 					.then((response) => {
 						console.log("UPLOAD", response.data);
 					}).catch((error) => {
@@ -874,7 +874,7 @@ class InspectorPage extends Component {
 	onRefreshUpload = ()=> {
 		console.log('InspectorPage.onRefreshUpload()', this.props);
 
-		const { uploadID } = this.props.navigation;
+		const { uploadID } = this.props.deeplink;
 		const { section, scale, viewport } = this.state;
 
 		this.setState({ tooltip : 'Loading…' });

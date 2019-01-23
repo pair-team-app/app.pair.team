@@ -12,7 +12,7 @@ import LoginForm from '../forms/LoginForm';
 import RegisterForm from '../forms/RegisterForm';
 import RadioButton from '../forms/elements/RadioButton';
 
-import { addFileUpload, updateNavigation, updateUserProfile } from '../../redux/actions';
+import { addFileUpload, updateDeeplink, updateUserProfile } from '../../redux/actions';
 import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 import radioButtons from '../../assets/json/radio-buttons_upload';
@@ -22,16 +22,16 @@ const titleTextfield = React.createRef();
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		file       : state.file,
-		navigation : state.navigation,
-		profile    : state.userProfile
+		file     : state.file,
+		deeplink : state.deeplink,
+		profile  : state.userProfile
 	});
 };
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
 		addFileUpload     : (file)=> dispatch(addFileUpload(file)),
-		updateNavigation  : (navIDs)=> dispatch(updateNavigation(navIDs)),
+		updateDeeplink    : (navIDs)=> dispatch(updateDeeplink(navIDs)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 };
@@ -246,10 +246,10 @@ class UploadPage extends Component {
 						console.log('NEW_UPLOAD', response.data);
 						const { upload } = response.data;
 
-						this.props.updateNavigation({
+						this.props.updateDeeplink({
 							uploadID   : upload.id,
-							pageID     : this.props.navigation.pageID,
-							artboardID : this.props.navigation.artboardID
+							pageID     : this.props.deeplink.pageID,
+							artboardID : this.props.deeplink.artboardID
 						});
 
 						this.props.addFileUpload(null);

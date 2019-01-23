@@ -25,7 +25,7 @@ import Status404Page from './components/pages/Status404Page';
 import TermsPage from './components/pages/TermsPage';
 import UploadPage from './components/pages/UploadPage';
 
-import { appendHomeArtboards, fetchUserProfile, updateNavigation, updateUserProfile } from './redux/actions';
+import { appendHomeArtboards, fetchUserProfile, updateDeeplink, updateUserProfile } from './redux/actions';
 import {
 	buildInspectorPath,
 	idsFromPath,
@@ -42,8 +42,8 @@ const wrapper = React.createRef();
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		navigation : state.navigation,
-		profile    : state.userProfile
+		deeplink : state.deeplink,
+		profile  : state.userProfile
 	});
 };
 
@@ -51,7 +51,7 @@ const mapDispatchToProps = (dispatch)=> {
 	return ({
 		appendHomeArtboards : ()=> dispatch(appendHomeArtboards(null)),
 		fetchUserProfile    : ()=> dispatch(fetchUserProfile()),
-		updateNavigation    : (navIDs)=> dispatch(updateNavigation(navIDs)),
+		updateDeeplink      : (navIDs)=> dispatch(updateDeeplink(navIDs)),
 		updateUserProfile   : (profile)=> dispatch(updateUserProfile(profile))
 	});
 };
@@ -90,7 +90,7 @@ class App extends Component {
 		}
 
 		const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
-		this.props.updateNavigation({ uploadID, pageID, artboardID, sliceID });
+		this.props.updateDeeplink({ uploadID, pageID, artboardID, sliceID });
 
 		if (isInspectorPage()) {
 			this.onAddUploadView(uploadID);
@@ -106,7 +106,7 @@ class App extends Component {
 		this.onAddUploadView(artboard.uploadID);
 
 		this.handlePage(buildInspectorPath({ id : artboard.uploadID, title : artboard.title }).substring(1));
-		this.props.updateNavigation({
+		this.props.updateDeeplink({
 			uploadID   : artboard.uploadID,
 			pageID     : artboard.pageID,
 			artboardID : artboard.id
@@ -139,12 +139,7 @@ class App extends Component {
 		} else if (url === '') {
 			trackPageview('/');
 
-			this.props.updateNavigation({
-				uploadID   : 0,
-				pageID     : 0,
-				artboardID : 0
-			});
-
+			this.props.updateDeeplink(null);
 			this.handlePage('inspect');
 
 		} else {
@@ -199,7 +194,7 @@ class App extends Component {
 	render() {
   	console.log('App.render()', this.props, this.state);
 
-  	const { uploadID } = this.props.navigation;
+  	const { uploadID } = this.props.deeplink;
 		const { pathname } = this.props.location;
   	const { rating, mobileOverlay, processing, popup } = this.state;
 

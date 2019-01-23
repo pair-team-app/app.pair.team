@@ -12,7 +12,7 @@ import TopNavRate from './TopNavRate';
 import { GITHUB_ROADMAP } from '../../consts/uris';
 import { convertURISlug, isUserLoggedIn } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
-import { updateNavigation } from '../../redux/actions';
+import { updateDeeplink } from '../../redux/actions';
 
 import deLogo from '../../assets/images/logos/logo-designengine.svg';
 import sketchIcon from '../../assets/images/icons/ico-sketch.png';
@@ -23,7 +23,7 @@ import xdIcon from '../../assets/images/icons/ico-xd.png';
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		updateNavigation  : (navIDs)=> dispatch(updateNavigation(navIDs))
+		updateDeeplink  : (navIDs)=> dispatch(updateDeeplink(navIDs))
 	});
 };
 
@@ -82,11 +82,7 @@ class TopNav extends Component {
 		trackEvent('demo', convertURISlug(demo.title));
 
 		if (demo.enabled) {
-			this.props.updateNavigation({
-				uploadID   : demo.url.substr(1).split('/')[1],
-				pageID     : 0,
-				artboardID : 0
-			});
+			this.props.updateDeeplink({ uploadID : demo.url.substr(1).split('/')[1] });
 			this.props.onPage(demo.url.substr(1));
 
 		} else {
@@ -103,11 +99,7 @@ class TopNav extends Component {
 	};
 
 	handleLink = (url)=> {
-		this.props.updateNavigation({
-			uploadID   : 0,
-			pageID     : 0,
-			artboardID : 0
-		});
+		this.props.updateDeeplink(null);
 		this.props.onPage(url);
 	};
 

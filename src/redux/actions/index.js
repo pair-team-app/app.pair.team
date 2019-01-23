@@ -5,17 +5,18 @@ import cookie from 'react-cookies';
 import { hasBit } from '../../utils/funcs';
 import {
 	ADD_FILE_UPLOAD,
+	APPEND_ARTBOARD_SLICES,
 	APPEND_HOME_ARTBOARDS,
 	SET_REDIRECT_URL,
 	USER_PROFILE_ERROR,
-	UPDATE_NAVIGATION,
+	UPDATE_DEEPLINK,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 
 
-const logFormat = (action, payload=null)=> {
-	console.log(LOG_ACTION_PREFIX, `${action}()`, payload);
+const logFormat = (action, payload=null, meta='')=> {
+	console.log(LOG_ACTION_PREFIX, `${action}()`, payload, meta);
 };
 
 
@@ -23,12 +24,16 @@ export function addFileUpload(payload) {
 	return ({ type : ADD_FILE_UPLOAD, payload });
 }
 
+export function appendArtboardSlices(payload) {
+	return ({ type : APPEND_ARTBOARD_SLICES, payload });
+}
+
 export function appendHomeArtboards(payload) {
 	return ({ type : APPEND_HOME_ARTBOARDS, payload });
 }
 
-export function updateNavigation(payload) {
-	return ({ type : UPDATE_NAVIGATION, payload });
+export function updateDeeplink(payload) {
+	return ({ type : UPDATE_DEEPLINK, payload });
 }
 
 export function fetchUserProfile() {
