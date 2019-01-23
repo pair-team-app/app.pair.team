@@ -12,7 +12,7 @@ import panAndZoomHoc from 'react-pan-and-zoom-hoc';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
-import ContentModal from '../elements/ContentModal';
+import ContentModal, { MODAL_SIZE_PERCENT } from '../elements/ContentModal';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_INFO } from '../elements/Popup';
 import InviteTeamForm from '../forms/InviteTeamForm';
 
@@ -88,27 +88,33 @@ const InviteTeamModal = (props)=> {
 
 	const { profile, upload, processing, sentInvites } = props;
 
-	return (<ContentModal type="inspector/invite-team" size="PERCENT" closeable={true} title="Invite Team" onComplete={props.onComplete}>
-		<div className="inspector-page-invite-modal-wrapper">
-			<div className="inspector-page-invite-modal-message">
-				{(processing.state < 3) && (<div><FontAwesome className="inspector-page-processing-spinner" name="spinner" size="2x" pulse fixedWidth /></div>)}
-				{processing.message}
+	return (<ContentModal
+		tracking="invite-team/inspector"
+		size={MODAL_SIZE_PERCENT}
+		closeable={true}
+		title="Invite Team"
+		onComplete={props.onComplete}>
+			<div className="inspector-page-invite-modal-wrapper">
+				<div className="inspector-page-invite-modal-message">
+					{(processing.state < 3) && (<div><FontAwesome className="inspector-page-processing-spinner" name="spinner" size="2x" pulse fixedWidth /></div>)}
+					{processing.message}
+				</div>
+				<div>{upload.title} ({upload.filename.split('/').pop()})</div>
+				{(upload.description.length > 0) && (<div>{upload.description}</div>)}
+				<div className="page-link" onClick={()=> window.open(buildInspectorURL(upload))}>{buildInspectorURL(upload)}</div>
+				{/*<a href={buildInspectorURL(upload)} target="_blank" rel="noopener noreferrer">{buildInspectorURL(upload)}</a>< br/>*/}
+				<CopyToClipboard onCopy={()=> props.onCopyURL()} text={buildInspectorURL(upload)}>
+					<button className="inspector-page-modal-button">Copy URL</button>
+				</CopyToClipboard>
 			</div>
-			<div>{upload.title} ({upload.filename.split('/').pop()})</div>
-			{(upload.description.length > 0) && (<div>{upload.description}</div>)}
-			<div className="page-link" onClick={()=> window.open(buildInspectorURL(upload))}>{buildInspectorURL(upload)}</div>
-			{/*<a href={buildInspectorURL(upload)} target="_blank" rel="noopener noreferrer">{buildInspectorURL(upload)}</a>< br/>*/}
-			<CopyToClipboard onCopy={()=> props.onCopyURL()} text={buildInspectorURL(upload)}>
-				<button className="inspector-page-modal-button">Copy URL</button>
-			</CopyToClipboard>
-		</div>
 
-		{(!sentInvites) && (<InviteTeamForm
-			profile={profile}
-			upload={upload}
-			onSubmitted={props.onInviteTeamFormSubmitted}
-		/>)}
-	</ContentModal>);
+			{(!sentInvites) && (<InviteTeamForm
+				profile={profile}
+				upload={upload}
+				onSubmitted={props.onInviteTeamFormSubmitted}
+			/>)}
+		</ContentModal>
+	);
 };
 
 const PartItem = (props)=> {
@@ -1486,7 +1492,7 @@ class InspectorPage extends Component {
 
 			{(tooltip !== '' && !this.props.processing) && (<div className="inspector-page-tooltip">{tooltip}</div>)}
 			{(restricted) && (<ContentModal
-				type="inspector/private"
+				tracking="private/inspector"
 				closeable={false}
 				onComplete={()=> this.props.onPage('register')}>
 					This project is private, you must be logged in as one of its team members to view!

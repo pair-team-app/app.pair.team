@@ -157,7 +157,7 @@ class TopNav extends Component {
 					</Row>
 				</div>
 				{(demoModal) && (<ContentModal
-					type={`demo/${convertURISlug(demoTitle)}`}
+					tracking={`demo/${convertURISlug(demoTitle)}`}
 					title="Coming Soon"
 					closeable={true}
 					onComplete={()=> this.setState({ demoModal : false })}>

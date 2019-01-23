@@ -241,7 +241,7 @@ class App extends Component {
 
 				      <MediaQuery query="(max-width: 1024px)">
 					      {(mobileOverlay) && (<ContentModal
-						      type="root/mobile"
+						      tracking="modal/site"
 						      closeable={true}
 						      defaultButton="OK"
 						      onComplete={()=> this.setState({ mobileOverlay : false })}>
@@ -254,18 +254,10 @@ class App extends Component {
 				      This site best viewed in Chrome.
 			      </div>)}
 
-		    {popup && (
-			    <Popup payload={popup} onComplete={()=> this.setState({ popup : null })} />
-			    )}
+		    {popup && (<Popup payload={popup} onComplete={()=> this.setState({ popup : null })} />)}
 	    </div>
     );
   }
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
-
-/**
- * [||]:  !]¡[!  ¡]![¡
- * [!~¡]  ¡]![¡  !]¡[!  \}|{/
- * <//>   _>\\<.
-**/

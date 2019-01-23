@@ -6,7 +6,11 @@ import { TimelineMax, Power1, Power2 } from 'gsap/TweenMax';
 import FontAwesome from 'react-fontawesome';
 import onClickOutside from 'react-onclickoutside';
 
-import { trackEvent } from '../../utils/tracking';
+import { trackModal } from '../../utils/tracking';
+
+
+export const MODAL_SIZE_FIXED = 'MODAL_SIZE_FIXED';
+export const MODAL_SIZE_PERCENT = 'MODAL_SIZE_PERCENT';
 
 
 class ContentModal extends Component {
@@ -24,9 +28,8 @@ class ContentModal extends Component {
 	componentDidMount() {
 // 		console.log('ContentModal.componentDidMount()', this.props, this.state);
 
-		const { type } = this.props;
-// 		trackModal(type);
-		trackEvent('modal', type.split('/').slice().shift(), type.split('/').slice().pop());
+		const { tracking } = this.props;
+		trackModal(tracking);
 
 		this.timeline = new TimelineMax();
 		this.timeline.from(this.wrapper, 0.125, {
@@ -76,7 +79,7 @@ class ContentModal extends Component {
 // 		console.log('ContentModal.render()', this.props, this.state);
 
 		const { size, title, closeable, defaultButton, children } = this.props;
-		const wrapperClass = (size === 'PERCENT') ? 'content-modal-content-wrapper content-modal-content-wrapper-percent' : 'content-modal-content-wrapper';
+		const wrapperClass = (size === MODAL_SIZE_FIXED) ? 'content-modal-content-wrapper' : 'content-modal-content-wrapper content-modal-content-wrapper-percent';
 
 		return (<div className="content-modal-wrapper" onClick={()=> (closeable) ? this.handleClose() : null} ref={(element)=> { this.wrapper = element; }}>
 			<div className={wrapperClass} onClick={(event)=> event.stopPropagation()}>
