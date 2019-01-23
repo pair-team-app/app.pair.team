@@ -10,7 +10,7 @@ import { Route, Switch, withRouter } from 'react-router-dom'
 
 import TopNav from './components/elements/TopNav';
 import BottomNav from './components/elements/BottomNav';
-import ContentModal from './components/elements/ContentModal';
+import ContentModal, { MODAL_SIZE_FIXED } from './components/elements/ContentModal';
 import Popup from './components/elements/Popup';
 import HomePage from './components/pages/HomePage';
 import InspectorPage from './components/pages/InspectorPage';
@@ -203,56 +203,57 @@ class App extends Component {
 
   	return (
     	<div className="site-wrapper">
-		    {(/chrom(e|ium)/.test(navigator.userAgent.toLowerCase()))
-			    ? (<div className="browser-wrapper">
-					    <TopNav
-						    pathname={pathname}
-						    onPage={this.handlePage}
-						    onLogout={this.handleLogout}
-						    onScore={this.handleScore}
-					    />
+		    <TopNav
+			    pathname={pathname}
+			    onPage={this.handlePage}
+			    onLogout={this.handleLogout}
+			    onScore={this.handleScore}
+		    />
 
-					    <div className="content-wrapper" ref={wrapper}>
-						    <Switch>
-							    <Route exact path="/" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
-							    <Route exact path="/colors" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
-							    <Route path="/colors/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-							    <Route exact path="/inspect" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
-							    <Route path="/inspect/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-							    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-							    <Route exact path="/login" render={()=> <LoginPage onPage={this.handlePage} />} onPopup={this.handlePopup} />
-							    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onProcessing={this.handleProcessing} onPopup={this.handlePopup} />} />
-							    <Route exact path="/parts" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
-							    <Route path="/parts/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-							    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
-							    <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} onPopup={this.handlePopup} />} />
-							    <Route path="/profile/:username?" render={(props)=> <ProfilePage {...props} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-							    <Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />
-							    <Route exact path="/recover" render={()=> <RecoverPage onPage={this.handlePage} />} />
-							    <Route exact path="/recover/password" render={()=> <RecoverPage onPage={this.handlePage} />} />
-							    <Route exact path="/register" render={()=> <RegisterPage onPage={this.handlePage} />} onPopup={this.handlePopup} />
-							    <Route exact path="/terms" render={()=> <TermsPage />} />
-							    <Route exact path="/typography" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
-							    <Route path="/typography/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-						      <Route render={()=> <Status404Page onPage={this.handlePage} />} />
-						    </Switch>
-						    {(!isInspectorPage()) && (<BottomNav viewHeight={(wrapper.current) ? wrapper.current.clientHeight : 0} onPage={this.handlePage} onLogout={()=> this.handleLogout()} />)}
-					    </div>
+		    <div className="content-wrapper" ref={wrapper}>
+			    <Switch>
+				    <Route exact path="/" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+				    <Route exact path="/colors" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+				    <Route path="/colors/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+				    <Route exact path="/inspect" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+				    <Route path="/inspect/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+				    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+				    <Route exact path="/login" render={()=> <LoginPage onPage={this.handlePage} />} onPopup={this.handlePopup} />
+				    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onProcessing={this.handleProcessing} onPopup={this.handlePopup} />} />
+				    <Route exact path="/parts" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+				    <Route path="/parts/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+				    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
+				    <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} onPopup={this.handlePopup} />} />
+				    <Route path="/profile/:username?" render={(props)=> <ProfilePage {...props} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+				    <Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />
+				    <Route exact path="/recover" render={()=> <RecoverPage onPage={this.handlePage} />} />
+				    <Route exact path="/recover/password" render={()=> <RecoverPage onPage={this.handlePage} />} />
+				    <Route exact path="/register" render={()=> <RegisterPage onPage={this.handlePage} />} onPopup={this.handlePopup} />
+				    <Route exact path="/terms" render={()=> <TermsPage />} />
+				    <Route exact path="/typography" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+				    <Route path="/typography/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+			      <Route render={()=> <Status404Page onPage={this.handlePage} />} />
+			    </Switch>
+			    {(!isInspectorPage()) && (<BottomNav viewHeight={(wrapper.current) ? wrapper.current.clientHeight : 0} onPage={this.handlePage} onLogout={()=> this.handleLogout()} />)}
+		    </div>
 
-				      <MediaQuery query="(max-width: 1024px)">
-					      {(mobileOverlay) && (<ContentModal
-						      tracking="modal/site"
-						      closeable={true}
-						      defaultButton="OK"
-						      onComplete={()=> this.setState({ mobileOverlay : false })}>
-						        Sorry Design Engine is not ready for Mobile, head to your nearest desktop.
-					      </ContentModal>)}
-				      </MediaQuery>
-				    </div>)
+	      <MediaQuery query="(max-width: 1024px)">
+		      {(mobileOverlay) && (<ContentModal
+			      tracking="modal/site"
+			      size={MODAL_SIZE_FIXED}
+			      closeable={true}
+			      defaultButton="OK"
+			      onComplete={()=> this.setState({ mobileOverlay : false })}>
+			        Sorry Design Engine is not ready for Mobile, head to your nearest desktop.
+		      </ContentModal>)}
+	      </MediaQuery>
 
-			    : (<div className="unsupported-browser">
-				      This site best viewed in Chrome.
-			      </div>)}
+		    {!(/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) && (<ContentModal
+			    tracking="modal/site"
+			    closeable={false}
+			    onComplete={()=> null}>
+			    This site best viewed in Chrome.
+		    </ContentModal>)}
 
 		    {popup && (<Popup payload={popup} onComplete={()=> this.setState({ popup : null })} />)}
 	    </div>

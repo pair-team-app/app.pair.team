@@ -54,22 +54,22 @@ class TopNav extends Component {
 				title   : 'Sketch',
 				image   : sketchIcon,
 				enabled : true,
-				url     : '/1/account'
+				url     : '/inspect/1/account'
 			}, {
 				title   : 'Figma',
 				image   : figmaIcon,
 				enabled : false,
-				url     : '/1/account'
+				url     : '/inspect/1/account'
 			}, {
 				title   : 'Adobe XD',
 				image   : xdIcon,
 				enabled : false,
-				url     : '/1/account'
+				url     : '/inspect/1/account'
 			}, {
 				title   : 'Photoshop',
 				image   : photoshopIcon,
 				enabled : false,
-				url     : '/1/account'
+				url     : '/inspect/1/account'
 			}],
 			demoTitle : '',
 			demoModal : false
@@ -83,11 +83,11 @@ class TopNav extends Component {
 
 		if (demo.enabled) {
 			this.props.updateNavigation({
-				uploadID   : demo.url.substr(1).split('/').shift(),
+				uploadID   : demo.url.substr(1).split('/')[1],
 				pageID     : 0,
 				artboardID : 0
 			});
-			this.props.onPage(`${window.location.pathname.substr(1).split('/').slice().shift()}${demo.url}`);
+			this.props.onPage(demo.url.substr(1));
 
 		} else {
 			this.setState({

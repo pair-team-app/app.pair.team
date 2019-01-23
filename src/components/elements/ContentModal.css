@@ -12,7 +12,6 @@
 
 .content-modal-content-wrapper {
 	position: fixed;
-	width: 400px;
 	height: auto;
 	max-height: 75%;
 	top: 50%;
@@ -28,6 +27,14 @@
 	text-align: center;
 	color: #9b9b9b;
 	box-shadow: 3px 3px 10px #1c1c1c;
+}
+
+.content-modal-content-wrapper-auto {
+	width: auto;
+}
+
+.content-modal-content-wrapper-fixed {
+	max-width: 480px;
 }
 
 .content-modal-content-wrapper-percent {
@@ -55,6 +62,9 @@
 	line-height: 24px;
 }
 
-.content-modal-button {
+.content-modal-button-wrapper {
 	margin-top: 20px;
+}
+
+.content-modal-button {
 }

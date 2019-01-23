@@ -9,6 +9,7 @@ import onClickOutside from 'react-onclickoutside';
 import { trackModal } from '../../utils/tracking';
 
 
+export const MODAL_SIZE_AUTO = 'MODAL_SIZE_AUTO';
 export const MODAL_SIZE_FIXED = 'MODAL_SIZE_FIXED';
 export const MODAL_SIZE_PERCENT = 'MODAL_SIZE_PERCENT';
 
@@ -79,7 +80,7 @@ class ContentModal extends Component {
 // 		console.log('ContentModal.render()', this.props, this.state);
 
 		const { size, title, closeable, defaultButton, children } = this.props;
-		const wrapperClass = (size === MODAL_SIZE_FIXED) ? 'content-modal-content-wrapper' : 'content-modal-content-wrapper content-modal-content-wrapper-percent';
+		const wrapperClass = `content-modal-content-wrapper content-modal-content-wrapper${(size === MODAL_SIZE_FIXED) ? '-fixed' : (size === MODAL_SIZE_PERCENT) ? '-percent' : '-auto'}`;
 
 		return (<div className="content-modal-wrapper" onClick={()=> (closeable) ? this.handleClose() : null} ref={(element)=> { this.wrapper = element; }}>
 			<div className={wrapperClass} onClick={(event)=> event.stopPropagation()}>
@@ -89,7 +90,9 @@ class ContentModal extends Component {
 				</div>)}
 				<div className="content-modal-content">
 					{children}
-					{(defaultButton) && (<button className="content-modal-button" onClick={()=> this.handleClose()}>{defaultButton}</button>)}
+					{(defaultButton) && (<div className="content-modal-button-wrapper">
+						<button className="content-modal-button" onClick={()=> this.handleClose()}>{defaultButton}</button>
+					</div>)}
 				</div>
 			</div>
 		</div>);
