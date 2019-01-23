@@ -32,13 +32,6 @@ import disabledZoomResetButton from '../../assets/images/buttons/btn-zoom-reset_
 import {convertURISlug} from "../../utils/funcs";
 
 
-const InteractiveDiv = panAndZoomHoc('div');
-
-const artboardsWrapper = React.createRef();
-const canvasWrapper = React.createRef();
-const canvas = React.createRef();
-// const notifications = React.createRef();
-
 const ANTS_INTERVAL = 50;
 const STATUS_INTERVAL = 1250;
 const ZOOM_FACTOR = 1.0875;
@@ -52,6 +45,11 @@ const ZOOM_NOTCHES = [
 	1.75,
 	3.00
 ];
+
+const artboardsWrapper = React.createRef();
+const canvasWrapper = React.createRef();
+const canvas = React.createRef();
+const InteractiveDiv = panAndZoomHoc('div');
 
 
 const buildSlicePreviews = (upload, slice)=> {

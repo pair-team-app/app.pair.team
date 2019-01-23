@@ -18,6 +18,7 @@ import {
 	UPLOAD
 } from '../consts/uris';
 
+
 export function buildInspectorPath(upload, prefix=null, suffix='') {
 	prefix = (prefix || (`/${window.location.pathname.substr(1).split('/').shift()}`));
 	return (`${prefix}/${upload.id}/${convertURISlug(upload.title)}${suffix}`);
