@@ -30,23 +30,20 @@ export function onMiddleware({ dispatch }) {
 							uploadID   : 0,
 							pageID     : 0,
 							artboardID : 0,
-							sliceID    : 0 }
+							sliceID    : 0
+						}
 					});
 
 				} else {
-					let isNumbers = true;
 					let payloadCopy = Object.assign({}, payload);
 					Object.keys(payload).filter((key)=> (typeof payload[key] !== 'number')).forEach((key)=> {
-						isNumbers = false;
 						payloadCopy[key] = parseInt(payload[key], 10);
 					});
 
-					if (!isNumbers) {
-						dispatch({
-							type    : CONVERTED_DEEPLINK,
-							payload : payloadCopy
-						});
-					}
+					dispatch({
+						type    : CONVERTED_DEEPLINK,
+						payload : payloadCopy
+					});
 				}
 			}
 
