@@ -149,6 +149,16 @@ const PartsList = (props)=> {
 	</div>);
 };
 
+const ShareUploadFloatingURL = (props)=> {
+
+	const { url } = props;
+	return (<div className="share-upload-floating-url-wrapper">
+		<CopyToClipboard onCopy={()=> props.onCopy()} text={url}>
+			<button className="share-upload-floating-url-button">{url}</button>
+		</CopyToClipboard>
+	</div>);
+};
+
 const SliceRolloverItem = (props)=> {
 // 	console.log('InspectorPage.SliceRolloverItem()', props);
 
@@ -297,10 +307,6 @@ class InspectorPage extends Component {
 	componentDidMount() {
 		console.log('InspectorPage.componentDidMount()', this.props, this.state);
 
-// 		let utc = moment('2019-01-20T12:00:00Z');
-// 		utc.tz(moment.tz(moment.tz.guess()).zoneName()).format('ha z');
-// 		console.log(':::::::::::', moment.tz.guess());
-
 		if (this.props.redirectURL) {
 			this.props.setRedirectURL(null);
 		}
@@ -314,7 +320,7 @@ class InspectorPage extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
-// 		console.log('InspectorPage.shouldComponentUpdate()', this.props, nextProps, this.state, nextState, nextContext);
+		console.log('InspectorPage.shouldComponentUpdate()', this.props, nextProps, this.state, nextState, nextContext);
 
 		const { upload, restricted } = nextState;
 		if (!restricted && upload && upload.private === '1' && (!nextProps.profile || (nextProps.profile && upload.creator.user_id !== nextProps.profile.id))) {
@@ -1367,7 +1373,7 @@ class InspectorPage extends Component {
 
 			artboardImages.push(
 				<div key={i} style={artboardStyle}>
-					<div className="inspector-page-caption">{artboard.title}</div>
+					<div className="inspector-page-artboard-caption">{artboard.title}</div>
 				</div>
 			);
 
@@ -1424,9 +1430,9 @@ class InspectorPage extends Component {
 						</div>
 					</InteractiveDiv>
 					{(artboards.length > 0) && (<div className="inspector-page-zoom-wrapper">
-						<button disabled={(scale >= Math.max(...ZOOM_NOTCHES))} className="inspector-page-float-button" onClick={()=> {trackEvent('button', 'zoom-in'); this.handleZoom(1)}}><img className="inspector-page-float-button-image" src={(scale < Math.max(...ZOOM_NOTCHES)) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
-						<button disabled={(scale <= Math.min(...ZOOM_NOTCHES))} className="inspector-page-float-button" onClick={()=> {trackEvent('button', 'zoom-out'); this.handleZoom(-1)}}><img className="inspector-page-float-button-image" src={(scale > Math.min(...ZOOM_NOTCHES)) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
-						<button disabled={(scale === 0.5)} className="inspector-page-float-button" onClick={()=> {trackEvent('button', 'zoom-reset'); this.handleZoom(0)}}><img className="inspector-page-float-button-image" src={(scale !== 0.5) ? enabledZooResetButton : disabledZoomResetButton} alt="Reset" /></button>
+						<button disabled={(scale >= Math.max(...ZOOM_NOTCHES))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-in'); this.handleZoom(1)}}><img className="inspector-page-zoom-button-image" src={(scale < Math.max(...ZOOM_NOTCHES)) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
+						<button disabled={(scale <= Math.min(...ZOOM_NOTCHES))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-out'); this.handleZoom(-1)}}><img className="inspector-page-zoom-button-image" src={(scale > Math.min(...ZOOM_NOTCHES)) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
+						<button disabled={(scale === 0.5)} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-reset'); this.handleZoom(0)}}><img className="inspector-page-zoom-button-image" src={(scale !== 0.5) ? enabledZooResetButton : disabledZoomResetButton} alt="Reset" /></button>
 					</div>)}
 
 					{(upload && profile && upload.creator.user_id === profile.id) && (<div className="inspector-page-modal-button-wrapper">
@@ -1491,12 +1497,18 @@ class InspectorPage extends Component {
 			</div>
 
 			{(tooltip !== '' && !this.props.processing) && (<div className="inspector-page-tooltip">{tooltip}</div>)}
-			{(restricted) && (<ContentModal
-				tracking="private/inspector"
-				closeable={false}
-				onComplete={()=> this.props.onPage('register')}>
-					This project is private, you must be logged in as one of its team members to view!
-			</ContentModal>)}
+			{(restricted)
+				? (<ContentModal
+						tracking="private/inspector"
+						closeable={false}
+						onComplete={()=> this.props.onPage('register')}>
+							This project is private, you must be logged in as one of its team members to view!
+					</ContentModal>)
+				: (<>{(upload) && (<ShareUploadFloatingURL
+						url={buildInspectorURL(upload)}
+						onCopy={this.handleCopyURL}
+					/>)}</>)
+			}
 
 			{(upload && profile && !restricted && upload.creator.user_id === profile.id && (!shownInvite || this.props.processing)) && (<InviteTeamModal
 				profile={profile}
