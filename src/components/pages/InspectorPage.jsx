@@ -298,7 +298,6 @@ class InspectorPage extends Component {
 		this.scrollInterval = null;
 		this.antsOffset = 0;
 		this.antsInterval = null;
-
 		this.notification = null;
 	}
 
@@ -310,7 +309,7 @@ class InspectorPage extends Component {
 		}
 
 		const { deeplink } = this.props;
-		if (deeplink && (deeplink.uploadID !== 0)) {
+		if (deeplink) {
 			this.onRefreshUpload();
 		}
 
@@ -318,7 +317,7 @@ class InspectorPage extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
-		console.log('InspectorPage.shouldComponentUpdate()', this.props, nextProps, this.state, nextState, nextContext);
+// 		console.log('InspectorPage.shouldComponentUpdate()', this.props, nextProps, this.state, nextState, nextContext);
 
 		const { upload, restricted } = nextState;
 		if (!restricted && upload && upload.private === '1' && (!nextProps.profile || (nextProps.profile && upload.creator.user_id !== nextProps.profile.id))) {

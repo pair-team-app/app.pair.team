@@ -21,18 +21,23 @@
 	background: #111111 url(../../assets/images/backgrounds/bg-checkerboard.png) repeat;
 	overflow: scroll;
 	z-index: 1;
+	cursor: grab;
 	-ms-touch-action: none;
 	touch-action: none;
 }
 
+.inspector-page-artboards-wrapper:active {
+	cursor: grab;
+}
+
 .inspector-page-artboard-caption {
-	position : absolute;
-	top       : -15px;
-	left      : 0;
-	width     : 100%;
-	height    : 15px;
-	font-size : 10px;
-	color     : #00ff00;
+	position: absolute;
+	top: -15px;
+	left: 0;
+	width: 100%;
+	height: 15px;
+	font-size: 10px;
+	color: #00ff00;
 }
 
 .inspector-page-canvas-wrapper {
@@ -40,7 +45,6 @@
 	top: -50px;
 	left: -100px;
 	z-index: 2;
-	cursor: grab;
 }
 
 .inspector-page-slices-wrapper {
@@ -341,5 +345,5 @@
 }
 
 .share-upload-floating-url-button:active {
-	padding: 6px 24px;
+	color: #eaecef;
 }
