@@ -171,7 +171,6 @@
 .inspector-page-panel-tab {
 	background-color: #181818;
 	padding: 15px 20px;
-	white-space: nowrap;
 	cursor: pointer;
 	font-size: 12px;
 }
@@ -196,7 +195,7 @@
 	font-size: 10px;
 	letter-spacing: 0.31px;
 	color: #ffffff;
-	word-break: break-word;
+	word-break: break-all;
 	overflow: auto;
 }
 

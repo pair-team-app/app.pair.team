@@ -5,6 +5,7 @@ import './InspectorPage.css';
 import axios from 'axios';
 import moment from 'moment-timezone';
 import ReactNotifications from 'react-browser-notifications';
+import cookie from 'react-cookies';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import FontAwesome from 'react-fontawesome';
 import Moment from 'react-moment';
@@ -309,6 +310,10 @@ class InspectorPage extends Component {
 		const { deeplink } = this.props;
 		if (deeplink) {
 			this.onRefreshUpload();
+		}
+
+		if (cookie.load('tutorial') !== 'undefined') {
+			cookie.remove('tutorial');
 		}
 
 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
@@ -677,11 +682,11 @@ class InspectorPage extends Component {
 		});
 	};
 
-	handleTab = (ind)=> {
-// 		console.log('InspectorPage.handleTab()', ind);
+	handleTab = (tab)=> {
+// 		console.log('InspectorPage.handleTab()', tab);
 		const { tabs } = this.state;
-		trackEvent('tab', convertURISlug(tabs[ind].title));
-		this.setState({ selectedTab : ind });
+		trackEvent('tab', convertURISlug(tab.title));
+		this.setState({ selectedTab : tabs.indexOf(tab) });
 	};
 
 	handleZoom = (direction)=> {
@@ -1232,7 +1237,7 @@ class InspectorPage extends Component {
 				{(section === 'inspect') && (<div className="inspector-page-panel">
 					<div className="inspector-page-panel-split-content-wrapper">
 						<ul className="inspector-page-panel-tab-wrapper">
-							{(tabs.map((tab, i) => (<li key={i} className={`inspector-page-panel-tab${(selectedTab === i) ? ' inspector-page-panel-tab-selected' : ''}`} onClick={()=> this.handleTab(i)}>{tab.title}</li>)))}
+							{(tabs.map((tab, i) => (<li key={i} className={`inspector-page-panel-tab${(selectedTab === i) ? ' inspector-page-panel-tab-selected' : ''}`} onClick={()=> this.handleTab(tab)}>{tab.title}</li>)))}
 						</ul>
 						<div className="inspector-page-panel-tab-content-wrapper">
 							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i) => {
@@ -1268,7 +1273,7 @@ class InspectorPage extends Component {
 				{(section === 'parts') && (<div className="inspector-page-panel">
 					<div className="inspector-page-panel-full-content-wrapper">
 						<ul className="inspector-page-panel-tab-wrapper">
-							{(tabs.map((tab, i) => (<li key={i} className={`inspector-page-panel-tab${(selectedTab === i) ? ' inspector-page-panel-tab-selected' : ''}`} onClick={()=> this.handleTab(i)}>{tab.title}</li>)))}
+							{(tabs.map((tab, i) => (<li key={i} className={`inspector-page-panel-tab${(selectedTab === i) ? ' inspector-page-panel-tab-selected' : ''}`} onClick={()=> this.handleTab(tab)}>{tab.title}</li>)))}
 						</ul>
 						<div className="inspector-page-panel-tab-content-wrapper">
 							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i) => {
