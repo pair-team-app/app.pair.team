@@ -292,8 +292,6 @@ class InspectorPage extends Component {
 		};
 
 		this.processingInterval = null;
-		this.initialScaled = false;
-		this.jumpedOffset = false;
 		this.lastScroll = 0;
 		this.scrollInterval = null;
 		this.antsOffset = 0;
