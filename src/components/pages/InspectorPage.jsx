@@ -20,7 +20,7 @@ import { MOMENT_TIMESTAMP } from '../../consts/formats';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { DE_LOGO_SMALL } from '../../consts/uris';
 import { setRedirectURL } from '../../redux/actions';
-import { buildInspectorURL, capitalizeText, frameToRect, makeDownload, rectContainsRect, sendToSlack } from '../../utils/funcs.js';
+import { buildInspectorURL, capitalizeText, convertURISlug, frameToRect, makeDownload, rectContainsRect } from '../../utils/funcs.js';
 import { fontSpecs, toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/langs.js';
 import { trackEvent } from '../../utils/tracking';
 import enabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_enabled.svg';
@@ -29,7 +29,7 @@ import enabledZoomOutButton from '../../assets/images/buttons/btn-zoom-out_enabl
 import disabledZoomOutButton from '../../assets/images/buttons/btn-zoom-out_disabled.svg';
 import enabledZooResetButton from '../../assets/images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../assets/images/buttons/btn-zoom-reset_disabled.svg';
-import {convertURISlug} from "../../utils/funcs";
+import inspectorTabs from '../../assets/json/inspector-tabs';
 
 
 const ANTS_INTERVAL = 50;
@@ -873,98 +873,8 @@ class InspectorPage extends Component {
 				});
 
 				upload.pages = pages;
+				const tabs = inspectorTabs[section];
 				const tooltip = '';
-				let tabs = [];
-
-				if (section === 'inspect') {
-					tabs = [
-						{
-							id       : 0,
-							title    : 'CSS',
-							filename : 'CSS',
-							contents : null,
-							syntax   : null,
-							added    : null
-						}, {
-							id       : 1,
-							title    : 'React CSS',
-							filename : 'React CSS',
-							contents : null,
-							syntax   : null,
-							added    : null
-						}, {
-							id       : 2,
-							title    : 'Swift',
-							filename : 'Swift',
-							contents : null,
-							syntax   : null,
-							added    : null
-						}
-					];
-
-				} else if (section === 'parts') {
-					tabs = [
-						{
-							id       : 0,
-							title    : 'Parts',
-							filename : 'Parts',
-							contents : null,
-							syntax   : null,
-							added    : null
-						}
-					];
-
-				} else if (section === 'colors') {
-					tabs = [
-						{
-							id       : 0,
-							title    : 'Primary',
-							filename : 'Primary',
-							contents : null,
-							syntax   : null,
-							added    : null
-						}, {
-							id       : 1,
-							title    : 'Secondary',
-							filename : 'Secondary',
-							contents : null,
-							syntax   : null,
-							added    : null
-						}, {
-							id       : 2,
-							title    : 'Tertiary',
-							filename : 'Tertiary',
-							contents : null,
-							syntax   : null,
-							added    : null
-						}
-					];
-
-				} else if (section === 'typography') {
-					tabs = [
-						{
-							id       : 0,
-							title    : 'Headlines',
-							filename : 'Headlines',
-							contents : null,
-							syntax   : null,
-							added    : null
-						}, {
-							id       : 1,
-							title    : 'Subheadlines',
-							filename : 'Subheadlines',
-							contents : null,
-							added    : null
-						}, {
-							id       : 2,
-							title    : 'Body',
-							filename : 'Body',
-							contents : null,
-							syntax   : null,
-							added    : null
-						}
-					];
-				}
 
 				this.setState({ upload, tabs, viewport, tooltip });
 			}).catch((error) => {
