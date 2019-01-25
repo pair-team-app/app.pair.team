@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import ContentModal, { MODAL_SIZE_PERCENT } from '../elements/ContentModal';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_INFO } from '../elements/Popup';
+import { POPUP_TYPE_INFO } from '../elements/Popup';
 import InviteTeamForm from '../forms/InviteTeamForm';
 
 import { MOMENT_TIMESTAMP } from '../../consts/formats';
@@ -276,7 +276,6 @@ class InspectorPage extends Component {
 				x : 0,
 				y : 0
 			},
-			uploading    : false,
 			shownInvite  : true,
 			sentInvites  : false,
 			restricted   : false,
@@ -289,7 +288,6 @@ class InspectorPage extends Component {
 				state   : 3,
 				message : ''
 			},
-			percent      : 0,
 			tooltip      : ''
 		};
 
@@ -725,81 +723,6 @@ class InspectorPage extends Component {
 		}
 	};
 
-	onDrop = (files)=> {
-		console.log('InspectorPage.onDrop()', files);
-		const { id, email } = this.props.profile;
-
-		if (files.length > 0 && files[0].name.split('.').pop() === 'zip') {
-			const file = files.pop();
-			if (file.size < 100 * (1024 * 1024)) {
-				this.setState({ uploading : true });
-				const config = {
-					headers            : { 'content-type' : 'multipart/form-data' },
-					onDownloadProgress : (progressEvent)=> {},
-					onUploadProgress   : (progressEvent)=> {
-// 							console.log('InspectorPage.onUploadProgress()', progressEvent);
-
-						const { loaded, total } = progressEvent;
-						const percent = Math.round((loaded * 100) / total);
-						this.setState({
-							percent : percent,
-							tooltip : `${percent}%`
-						});
-
-						if (progressEvent.loaded >= progressEvent.total) {
-							this.setState({
-								uploading : false,
-								tooltip   : ''
-							});
-
-							let formData = new FormData();
-							formData.append('action', 'FILES');
-							formData.append('upload_id', `${this.props.deeplink.uploadID}`);
-							axios.post('https://api.designengine.ai/system.php', formData)
-								.then((response)=> {
-									console.log('FILES', response.data);
-
-									const files = response.data.files.map((file) => ({
-										id       : file.id,
-										title    : file.title,
-										filename : file.filename,
-										contents : file.contents,
-										added    : file.added
-									}));
-
-									this.setState({ files });
-								}).catch((error) => {
-							});
-						}
-					}
-				};
-
-				let formData = new FormData();
-				formData.append('file', file);
-				axios.post(`http://cdn.designengine.ai/files/upload.php?user_id=${id}&upload_id=${this.props.deeplink.uploadID}`, formData, config)
-					.then((response) => {
-						console.log("UPLOAD", response.data);
-					}).catch((error) => {
-					sendToSlack(`*${email}* failed uploading file _${file.name}_`);
-				});
-
-			} else {
-				this.props.onPopup({
-					type     : POPUP_TYPE_ERROR,
-					content  : 'File size must be under 100MB.',
-					duration : 500
-				});
-			}
-
-		} else {
-			this.props.onPopup({
-				type     : POPUP_TYPE_ERROR,
-				content  : 'Only zip archives are support at this time.',
-				duration : 1500
-			});
-		}
-	};
-
 	onProcessingUpdate = ()=> {
 		const { upload } = this.state;
 
@@ -949,59 +872,38 @@ class InspectorPage extends Component {
 					pages.push(page);
 				});
 
-				this.setState({ viewport });
-
 				upload.pages = pages;
+				const tooltip = '';
+				let tabs = [];
 
 				if (section === 'inspect') {
-					formData.append('action', 'FILES');
-					formData.append('upload_id', uploadID);
-					axios.post('https://api.designengine.ai/system.php', formData)
-						.then((response) => {
-							console.log('FILES', response.data);
-
-							const tabs = response.data.files.map((file) => ({
-								id       : file.id,
-								title    : file.title,
-								filename : file.filename,
-								contents : file.contents,
-								added    : file.added
-							})).concat([
-								{
-									id       : 0,
-									title    : 'CSS',
-									filename : 'CSS',
-									contents : null,
-									syntax   : null,
-									added    : null
-								}, {
-									id       : 1,
-									title    : 'React CSS',
-									filename : 'React CSS',
-									contents : null,
-									syntax   : null,
-									added    : null
-								}, {
-									id       : 2,
-									title    : 'Swift',
-									filename : 'Swift',
-									contents : null,
-									syntax   : null,
-									added    : null
-								}
-							]);
-
-							this.setState({
-								upload  : upload,
-								tabs    : tabs,
-								tooltip : ''
-							});
-
-						}).catch((error) => {
-					});
+					tabs = [
+						{
+							id       : 0,
+							title    : 'CSS',
+							filename : 'CSS',
+							contents : null,
+							syntax   : null,
+							added    : null
+						}, {
+							id       : 1,
+							title    : 'React CSS',
+							filename : 'React CSS',
+							contents : null,
+							syntax   : null,
+							added    : null
+						}, {
+							id       : 2,
+							title    : 'Swift',
+							filename : 'Swift',
+							contents : null,
+							syntax   : null,
+							added    : null
+						}
+					];
 
 				} else if (section === 'parts') {
-					const tabs = [
+					tabs = [
 						{
 							id       : 0,
 							title    : 'Parts',
@@ -1012,14 +914,8 @@ class InspectorPage extends Component {
 						}
 					];
 
-					this.setState({
-						upload  : upload,
-						tabs    : tabs,
-						tooltip : ''
-					});
-
 				} else if (section === 'colors') {
-					const tabs = [
+					tabs = [
 						{
 							id       : 0,
 							title    : 'Primary',
@@ -1028,14 +924,14 @@ class InspectorPage extends Component {
 							syntax   : null,
 							added    : null
 						}, {
-							id       : -1,
+							id       : 1,
 							title    : 'Secondary',
 							filename : 'Secondary',
 							contents : null,
 							syntax   : null,
 							added    : null
 						}, {
-							id       : -2,
+							id       : 2,
 							title    : 'Tertiary',
 							filename : 'Tertiary',
 							contents : null,
@@ -1044,14 +940,8 @@ class InspectorPage extends Component {
 						}
 					];
 
-					this.setState({
-						upload  : upload,
-						tabs    : tabs,
-						tooltip : ''
-					});
-
 				} else if (section === 'typography') {
-					const tabs = [
+					tabs = [
 						{
 							id       : 0,
 							title    : 'Headlines',
@@ -1060,13 +950,13 @@ class InspectorPage extends Component {
 							syntax   : null,
 							added    : null
 						}, {
-							id       : -1,
+							id       : 1,
 							title    : 'Subheadlines',
 							filename : 'Subheadlines',
 							contents : null,
 							added    : null
 						}, {
-							id       : -2,
+							id       : 2,
 							title    : 'Body',
 							filename : 'Body',
 							contents : null,
@@ -1074,13 +964,9 @@ class InspectorPage extends Component {
 							added    : null
 						}
 					];
-
-					this.setState({
-						upload  : upload,
-						tabs    : tabs,
-						tooltip : ''
-					});
 				}
+
+				this.setState({ upload, tabs, viewport, tooltip });
 			}).catch((error) => {
 		});
 	};
@@ -1230,7 +1116,7 @@ class InspectorPage extends Component {
 	render() {
 		const { profile } = this.props;
 
-		const { section, upload, slice, hoverSlice, tabs, scale, selectedTab, scrolling, viewport, panCoords, percent } = this.state;
+		const { section, upload, slice, hoverSlice, tabs, scale, selectedTab, scrolling, viewport, panCoords } = this.state;
 		const { tooltip, restricted, shownInvite, sentInvites, processing } = this.state;
 
 
@@ -1253,7 +1139,6 @@ class InspectorPage extends Component {
 			left    : `${-((p1.x * viewport.width) + ((viewport.width * -0.5) * scale))}px`,
 			display : (scrolling) ? 'none' : 'block'
 		};
-		const progressStyle = { width : `${percent}%` };
 
 
 		let maxH = 0;
@@ -1400,9 +1285,6 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage:', window.performance.memory);
 
 		return (<>
-			{(this.state.uploading) && (<div className="upload-progress-bar-wrapper">
-				<div className="upload-progress-bar" style={progressStyle} />
-			</div>)}
 			<div className="page-wrapper inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<InteractiveDiv
