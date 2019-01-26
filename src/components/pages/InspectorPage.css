@@ -21,13 +21,13 @@
 	background: #111111 url(../../assets/images/backgrounds/bg-checkerboard.png) repeat;
 	overflow: scroll;
 	z-index: 1;
-	cursor: grab;
+	cursor: crosshair;
 	-ms-touch-action: none;
 	touch-action: none;
 }
 
-.inspector-page-artboards-wrapper:active {
-	cursor: grab;
+.inspector-page-artboards-wrapper-scrolling, .inspector-page-artboards-wrapper:active {
+	cursor: move;
 }
 
 .inspector-page-artboard-caption {
@@ -45,6 +45,7 @@
 	top: -50px;
 	left: -100px;
 	z-index: 2;
+	/*background-color: rgba(255, 0, 255, 0.33);*/
 }
 
 .inspector-page-slices-wrapper {

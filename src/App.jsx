@@ -93,7 +93,10 @@ class App extends Component {
 		this.props.updateDeeplink({ uploadID, pageID, artboardID, sliceID });
 
 		if (isInspectorPage()) {
-			cookie.save('tutorial', '1');
+			if (typeof cookie.load('tutorial') === 'undefined') {
+				cookie.save('tutorial', '0');
+			}
+
 			this.onAddUploadView(uploadID);
 		}
 	}
@@ -105,6 +108,9 @@ class App extends Component {
 	handleArtboardClicked = (artboard)=> {
 		console.log('App.handleArtboardClicked()', artboard);
 		this.onAddUploadView(artboard.uploadID);
+		if (typeof cookie.load('tutorial') === 'undefined') {
+			cookie.save('tutorial', '0');
+		}
 
 		this.handlePage(buildInspectorPath({ id : artboard.uploadID, title : artboard.title }).substring(1));
 		this.props.updateDeeplink({

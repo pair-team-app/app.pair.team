@@ -69,11 +69,7 @@ class ContentModal extends Component {
 
 	handleClose = ()=> {
 // 		console.log('ContentModal.handleClose()', this.props);
-
-		const { closeable } = this.props;
-		if (closeable) {
-			this.setState({ outro : true });
-		}
+		this.setState({ outro : true });
 	};
 
 	render() {
