@@ -15,6 +15,7 @@ import { Column, Row } from 'simple-flexbox';
 
 import ContentModal, { MODAL_SIZE_PERCENT } from '../elements/ContentModal';
 import { POPUP_TYPE_INFO } from '../elements/Popup';
+import TutorialOverlay from '../elements/TutorialOverlay';
 import InviteTeamForm from '../forms/InviteTeamForm';
 
 import { MOMENT_TIMESTAMP } from '../../consts/formats';
@@ -68,6 +69,7 @@ const buildSlicePreviews = (upload, slice)=> {
 
 	return (slices);
 };
+
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
@@ -147,16 +149,6 @@ const PartsList = (props)=> {
 				/>
 			);
 		})}
-	</div>);
-};
-
-const ShareUploadFloatingURL = (props)=> {
-
-	const { url } = props;
-	return (<div className="share-upload-floating-url-wrapper">
-		<CopyToClipboard onCopy={()=> props.onCopy()} text={url}>
-			<button className="share-upload-floating-url-button">{url}</button>
-		</CopyToClipboard>
 	</div>);
 };
 
@@ -277,10 +269,11 @@ class InspectorPage extends Component {
 				x : 0,
 				y : 0
 			},
+			restricted   : false,
 			shownInvite  : true,
 			sentInvites  : false,
-			restricted   : false,
 			scrolling    : false,
+			tutorial     : null,
 			code         : {
 				html   : '',
 				syntax : ''
@@ -310,10 +303,6 @@ class InspectorPage extends Component {
 		const { deeplink } = this.props;
 		if (deeplink) {
 			this.onRefreshUpload();
-		}
-
-		if (cookie.load('tutorial') !== 'undefined') {
-			cookie.remove('tutorial');
 		}
 
 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
@@ -373,6 +362,22 @@ class InspectorPage extends Component {
 					y : -Math.round((p1.y * artboardsWrapper.current.clientHeight) + ((artboardsWrapper.current.clientHeight * -0.5) * scale))
 				}
 			});
+		}
+
+		if (typeof cookie.load('tutorial') !== 'undefined' && upload && canvasWrapper.current && !this.state.tutorial) {
+			cookie.remove('tutorial');
+
+// 			let artboard = [...upload.pages].shift().artboards.shift();
+
+			const pt = this.transformPoint({ x : 0.5, y : 0.5 });
+			const tutorial = {
+				origin : {
+					top  : `${62 + Math.round((pt.y * canvasWrapper.current.clientHeight) - ((canvasWrapper.current.clientHeight * 0.5) * scale))}px`,
+					left : `${5 + Math.round((pt.x * canvasWrapper.current.clientWidth) - ((canvasWrapper.current.clientWidth * 0.5) * scale))}px`
+				}
+			};
+
+			this.setState({ tutorial });
 		}
 	}
 
@@ -546,7 +551,7 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceClick = (ind, slice, offset)=> {
-// 		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
+		console.log('InspectorPage.handleSliceClick()', ind, slice, offset, artboardsWrapper);
 
 		trackEvent('slice', `${slice.id}_${convertURISlug(slice.title)}`);
 
@@ -683,10 +688,22 @@ class InspectorPage extends Component {
 	};
 
 	handleTab = (tab)=> {
-// 		console.log('InspectorPage.handleTab()', tab);
+// 		 console.log('InspectorPage.handleTab()', tab);
 		const { tabs } = this.state;
 		trackEvent('tab', convertURISlug(tab.title));
 		this.setState({ selectedTab : tabs.indexOf(tab) });
+	};
+
+	handleTutorialNextStep = (step)=> {
+		console.log('InspectorPage.handleTutorialNextStep()', step);
+		const tutorial = {
+			origin : {
+				top  : (step === 1) ? '240px' : '140px',
+				left : (step === 1) ? `${artboardsWrapper.current.clientWidth - 250}px` : '50%',
+			}
+		};
+
+		this.setState({ tutorial : tutorial });
 	};
 
 	handleZoom = (direction)=> {
@@ -1029,11 +1046,11 @@ class InspectorPage extends Component {
 		const { profile } = this.props;
 
 		const { section, upload, slice, hoverSlice, tabs, scale, selectedTab, scrolling, viewport, panCoords } = this.state;
-		const { tooltip, restricted, shownInvite, sentInvites, processing } = this.state;
+		const { tooltip, restricted, shownInvite, sentInvites, processing, tutorial } = this.state;
 
 
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
-		const p1 = this.transformPoint({ x : 0.5, y : 0.5 });
+		const pt = this.transformPoint({ x : 0.5, y : 0.5 });
 		const artboards = (upload) ? upload.pages.flatMap((page)=> {
 			return (page.artboards);
 		}) : [];
@@ -1043,12 +1060,12 @@ class InspectorPage extends Component {
 			position  : 'absolute',
 			width     : `${viewport.width * scale}px`,
 			height    : `${viewport.height * scale}px`,
-			transform : `translate(${p1.x * viewport.width}px, ${p1.y * viewport.height}px) translate(${(viewport.width * -0.5) * scale}px, ${(viewport.height * -0.5) * scale}px)`
+			transform : `translate(${Math.round(pt.x * viewport.width)}px, ${Math.round(pt.y * viewport.height)}px) translate(${Math.round((viewport.width * -0.5) * scale)}px, ${Math.round((viewport.height * -0.5) * scale)}px)`
 		};
 
 		const canvasStyle = {
-			top     : `${-((p1.y * viewport.height) + ((viewport.height * -0.5) * scale))}px`,
-			left    : `${-((p1.x * viewport.width) + ((viewport.width * -0.5) * scale))}px`,
+			top     : `${Math.round(-((pt.y * viewport.height) + ((viewport.height * -0.5) * scale)))}px`,
+			left    : `${Math.round(-((pt.x * viewport.width) + ((viewport.width * -0.5) * scale)))}px`,
 			display : (scrolling) ? 'none' : 'block'
 		};
 
@@ -1298,10 +1315,9 @@ class InspectorPage extends Component {
 						onComplete={()=> this.props.onPage('register')}>
 							This project is private, you must be logged in as one of its team members to view!
 					</ContentModal>)
-				: (<>{(upload) && (<ShareUploadFloatingURL
-						url={buildInspectorURL(upload)}
-						onCopy={this.handleCopyURL}
-					/>)}</>)
+				: (<>{(upload) && (<CopyToClipboard onCopy={()=> this.handleCopyURL()} text={buildInspectorURL(upload)}>
+						<button className="inspector-page-floating-url-button">{buildInspectorURL(upload)}</button>
+					</CopyToClipboard>)}</>)
 			}
 
 			{(upload && profile && !restricted && upload.creator.user_id === profile.id && (!shownInvite || this.props.processing)) && (<InviteTeamModal
@@ -1314,6 +1330,12 @@ class InspectorPage extends Component {
 				onComplete={()=> this.handleInviteModalClose()}
 				/>
 			)}
+
+			{(tutorial) && (<TutorialOverlay
+				origin={tutorial.origin}
+				onNext={this.handleTutorialNextStep}
+				onClose={()=> this.setState({ tutorial : null })}
+			/>)}
 
 			{(upload) && (<ReactNotifications
 				onRef={(ref)=> (this.notification = ref)}

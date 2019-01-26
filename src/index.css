@@ -180,18 +180,12 @@ textarea {
   src: url(./assets/fonts/AndaleMono.otf);
 }
 
-/** Bold */
-@font-face {
-  font-family: "San Francisco Text Bold";
-  font-weight: 700;
-  src: url(./assets/fonts/SanFranciscoText-Bold.otf);
-}
 
-/** Semi-Bold */
+/** Regular */
 @font-face {
-  font-family: "San Francisco Text SemiBold";
-  font-weight: 600;
-  src: url(./assets/fonts/SanFranciscoText-Semibold.otf);
+  font-family: "San Francisco Text";
+  font-weight: 400;
+  src: url(./assets/fonts/SanFranciscoText-Regular.otf);
 }
 
 /** Medium */
@@ -201,9 +195,16 @@ textarea {
   src: url(./assets/fonts/SanFranciscoText-Medium.otf);
 }
 
-/** Regular */
+/** Semi-Bold */
 @font-face {
-  font-family: "San Francisco Text";
-  font-weight: 400;
-  src: url(./assets/fonts/SanFranciscoText-Regular.otf);
+  font-family: "San Francisco Text SemiBold";
+  font-weight: 600;
+  src: url(./assets/fonts/SanFranciscoText-Semibold.otf);
+}
+
+/** Bold */
+@font-face {
+  font-family: "San Francisco Text Bold";
+  font-weight: 700;
+  src: url(./assets/fonts/SanFranciscoText-Bold.otf);
 }

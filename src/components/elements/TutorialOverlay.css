@@ -1,0 +1,28 @@
+
+.tutorial-overlay-wrapper {
+	z-index: 10;
+	position: fixed;
+	top: 194px;
+	left: 180px;
+	width: 236px;
+	opacity: 0;
+	padding: 10px;
+	border: 1px solid #57aa48;
+	border-radius: 4px;
+	background-color: #000000;
+	color: #ffffff;
+	box-shadow: 0 0 15px #1c1c1c;
+	font-size: 14px;
+	letter-spacing: -0.23px;
+}
+
+.tutorial-overlay-content {
+	margin-bottom: 10px;
+}
+
+.tutorial-overlay-button-wrapper {
+}
+
+.tutorial-overlay-button {
+	padding: 3px 12px;
+}

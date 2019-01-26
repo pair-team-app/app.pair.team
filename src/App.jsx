@@ -6,7 +6,7 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch, withRouter } from 'react-router-dom';
 
 import TopNav from './components/elements/TopNav';
 import BottomNav from './components/elements/BottomNav';
@@ -93,6 +93,7 @@ class App extends Component {
 		this.props.updateDeeplink({ uploadID, pageID, artboardID, sliceID });
 
 		if (isInspectorPage()) {
+			cookie.save('tutorial', '1');
 			this.onAddUploadView(uploadID);
 		}
 	}
