@@ -5,7 +5,7 @@ RewriteEngine on
     RewriteRule ^(.*)$ http://%1/$1 [L,R=301]
 
 		#-- php redirects --#
-		RewriteRule ^invite/(.*)$ /php/invite.php?invite_id=$1 [R=301,P]
+		RewriteRule ^invite/(\d+)$ /php/invite.php?invite_id=$1 [R=301,P]
 		RewriteRule ^verify/(\d+)$ /php/verify.php?user_id=$1 [R=301,P]
 
 		#-- file downloads --#
