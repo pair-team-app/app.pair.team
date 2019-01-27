@@ -288,13 +288,13 @@ class InspectorPage extends Component {
 			tooltip      : ''
 		};
 
+		this.initialScaled = false;
 		this.processingInterval = null;
-		this.lastScroll = 0;
-		this.scrollInterval = null;
 		this.antsOffset = 0;
 		this.antsInterval = null;
+		this.scrollTimeout = null;
+		this.lastScroll = 0;
 		this.notification = null;
-		this.initialScaled = false;
 	}
 
 	componentDidMount() {
@@ -398,11 +398,11 @@ class InspectorPage extends Component {
 
 		clearInterval(this.processingInterval);
 		clearInterval(this.antsInterval);
-		clearInterval(this.scrollInterval);
+		clearTimeout(this.scrollTimeout);
 
 		this.processingInterval = null;
 		this.antsInterval = null;
-		this.scrollInterval = null;
+		this.scrollTimeout = null;
 
 		document.removeEventListener('keydown', this.handleKeyDown.bind(this));
 		document.removeEventListener('wheel', this.handleWheelStart.bind(this));
@@ -691,8 +691,8 @@ class InspectorPage extends Component {
 // 		event.preventDefault();
 
 		this.lastScroll = (new Date()).getUTCSeconds();
-		clearTimeout(this.scrollInterval);
-		this.scrollInterval = setTimeout(this.handleWheelStop, 50);
+		clearTimeout(this.scrollTimeout);
+		this.scrollTimeout = setTimeout(this.handleWheelStop, 50);
 
 
 		if (!this.state.scrolling) {
@@ -721,7 +721,7 @@ class InspectorPage extends Component {
 	handleWheelStop = ()=> {
 // 		console.log('InspectorPage.handleWheelStop()');
 
-		clearTimeout(this.scrollInterval);
+		clearTimeout(this.scrollTimeout);
 		this.setState({ scrolling : false });
 	};
 
