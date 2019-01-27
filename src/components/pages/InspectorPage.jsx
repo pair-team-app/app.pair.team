@@ -4,6 +4,7 @@ import './InspectorPage.css';
 
 import axios from 'axios';
 import moment from 'moment-timezone';
+import qs from 'qs';
 import ReactNotifications from 'react-browser-notifications';
 import cookie from 'react-cookies';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -293,7 +294,6 @@ class InspectorPage extends Component {
 		this.antsOffset = 0;
 		this.antsInterval = null;
 		this.scrollTimeout = null;
-		this.lastScroll = 0;
 		this.notification = null;
 	}
 
@@ -301,7 +301,7 @@ class InspectorPage extends Component {
 		console.log('InspectorPage.componentDidMount()', this.props, this.state);
 
 		if (this.props.redirectURI) {
-			this.props.redirectURI(null);
+			this.props.setRedirectURI(null);
 		}
 
 		const { deeplink } = this.props;
@@ -688,27 +688,21 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.handleWheelStart()', event.type, event.deltaX, event.deltaY, event.target);
 		//console.log('wheel', artboardsWrapper.current.clientWidth, artboardsWrapper.current.clientHeight, artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft);
 
-// 		event.preventDefault();
-
-		this.lastScroll = (new Date()).getUTCSeconds();
 		clearTimeout(this.scrollTimeout);
-		this.scrollTimeout = setTimeout(this.handleWheelStop, 50);
-
-
-		if (!this.state.scrolling) {
-			this.setState({ scrolling : true });
-		}
+		this.scrollTimeout = null;
 
 		if (event.ctrlKey) {
 			event.preventDefault();
 			this.setState({
-				scale   : Math.min(Math.max(this.state.scale - (event.deltaY * PAN_FACTOR), 0.03), 3).toFixed(2),
-				tooltip : Math.floor(Math.min(Math.max(this.state.scale - (event.deltaY * PAN_FACTOR), 0.03), 3).toFixed(2) * 100) + '%'
+				scrolling : true,
+				scale     : Math.min(Math.max(this.state.scale - (event.deltaY * PAN_FACTOR), 0.03), 3).toFixed(2),
+				tooltip   : Math.floor(Math.min(Math.max(this.state.scale - (event.deltaY * PAN_FACTOR), 0.03), 3).toFixed(2) * 100) + '%'
 			});
 
 		} else {
 			if (artboardsWrapper.current) {
 				this.setState({
+					scrolling    : true,
 					scrollOffset : {
 						x : artboardsWrapper.current.scrollLeft,
 						y : artboardsWrapper.current.scrollTop
@@ -716,6 +710,8 @@ class InspectorPage extends Component {
 				});
 			}
 		}
+
+		this.scrollTimeout = setTimeout(this.handleWheelStop, 50);
 	};
 
 	handleWheelStop = ()=> {
@@ -866,70 +862,69 @@ class InspectorPage extends Component {
 			y : 0
 		};
 
-		let formData = new FormData();
-		formData.append('action', 'UPLOAD');
-		formData.append('upload_id', uploadID);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response)=> {
-				console.log('UPLOAD', response.data);
-				const { upload } = response.data;
+		axios.post('https://api.designengine.ai/system.php', qs.stringify({
+			action    : 'UPLOAD',
+			upload_id : uploadID
+		})).then((response) => {
+			console.log('UPLOAD', response.data);
+			const { upload } = response.data;
 
-				let pages = [];
-				upload.pages.forEach((page)=> {
-					let artboards = [];
-					page.artboards.forEach((artboard, i, arr)=> {
-						if (Math.floor(i % 5) === 0 && i !== 0) {
-							viewport.height += maxH + 50;
-							offset.x = 0;
-							offset.y += 50 + maxH;
-							maxH = 0;
-						}
+			let pages = [];
+			upload.pages.forEach((page)=> {
+				let artboards = [];
+				page.artboards.forEach((artboard, i, arr)=> {
+					if (Math.floor(i % 5) === 0 && i !== 0) {
+						viewport.height += maxH + 50;
+						offset.x = 0;
+						offset.y += 50 + maxH;
+						maxH = 0;
+					}
 
-						maxH = Math.round(Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale));
+					maxH = Math.round(Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale));
 
-						artboards.push({
-							id        : artboard.id,
-							pageID    : artboard.page_id,
-							title     : artboard.title,
-							filename  : (artboard.filename.includes('@3x')) ? artboard.filename : `${artboard.filename}@3x.png`,
-							meta      : JSON.parse(artboard.meta),
-							added     : artboard.added,
-							grid      : {
-								col : i % 5,
-								row : Math.floor(i / 5)
-							},
-							offset    : {
-								x : offset.x,
-								y : offset.y
-							},
-							slices    : artboard.slices.map((item) => ({
-								id       : item.id,
-								title    : item.title,
-								type     : item.type,
-								filename : item.filename,
-								meta     : JSON.parse(item.meta),
-								added    : item.added
-							}))
-						});
-
-
-						if (i < arr.length - 1) {
-							offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
-						}
-
-						viewport.width = Math.max(viewport.width, offset.x);
+					artboards.push({
+						id        : artboard.id,
+						pageID    : artboard.page_id,
+						title     : artboard.title,
+						filename  : (artboard.filename.includes('@3x')) ? artboard.filename : `${artboard.filename}@3x.png`,
+						meta      : JSON.parse(artboard.meta),
+						added     : artboard.added,
+						grid      : {
+							col : i % 5,
+							row : Math.floor(i / 5)
+						},
+						offset    : {
+							x : offset.x,
+							y : offset.y
+						},
+						slices    : artboard.slices.map((item) => ({
+							id       : item.id,
+							title    : item.title,
+							type     : item.type,
+							filename : item.filename,
+							meta     : JSON.parse(item.meta),
+							added    : item.added
+						}))
 					});
 
-					page.artboards = artboards;
-					pages.push(page);
+
+					if (i < arr.length - 1) {
+						offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
+					}
+
+					viewport.width = Math.max(viewport.width, offset.x);
 				});
 
-				upload.pages = pages;
-				const tabs = inspectorTabs[section];
-				const tooltip = '';
+				page.artboards = artboards;
+				pages.push(page);
+			});
 
-				this.setState({ upload, tabs, viewport, tooltip });
-			}).catch((error) => {
+			upload.pages = pages;
+			const tabs = inspectorTabs[section];
+			const tooltip = '';
+
+			this.setState({ upload, tabs, viewport, tooltip });
+		}).catch((error) => {
 		});
 	};
 
