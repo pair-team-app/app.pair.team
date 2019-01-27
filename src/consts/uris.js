@@ -1,7 +1,6 @@
 
 export const HOME = '/';
 export const COLORS = '/colors';
-export const EXPLORE = '/explore';
 export const FONTS = '/typography';
 export const INSPECT = '/inspect';
 export const LOGIN = '/login';

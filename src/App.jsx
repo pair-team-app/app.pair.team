@@ -119,7 +119,7 @@ class App extends Component {
 			cookie.save('tutorial', '0', { path : '/' });
 		}
 
-		this.handlePage(buildInspectorPath({ id : artboard.uploadID, title : artboard.title }).substring(1));
+		this.handlePage(buildInspectorPath({ id : artboard.uploadID, title : artboard.title }));
 		this.props.updateDeeplink({
 			uploadID   : artboard.uploadID,
 			pageID     : artboard.pageID,
@@ -139,10 +139,9 @@ class App extends Component {
 
 	handlePage = (url)=> {
 		console.log('App.handlePage()', url);
-		url = url.substring((url.charAt(0) === '/') ? 1 : 0);
+		url = url.replace(/^\/(.+)$/, '$1');
 
 		const { pathname } = window.location;
-
 		if (pathname.split('/')[1] !== url.split('/')[0]) {
 			scrollOrigin(wrapper.current);
 		}

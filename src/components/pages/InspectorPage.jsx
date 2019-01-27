@@ -20,7 +20,7 @@ import InviteTeamForm from '../forms/InviteTeamForm';
 import { MOMENT_TIMESTAMP } from '../../consts/formats';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { DE_LOGO_SMALL } from '../../consts/uris';
-import { setRedirectURL } from '../../redux/actions';
+import { setRedirectURI } from '../../redux/actions';
 import { buildInspectorURL, capitalizeText, convertURISlug, frameToRect, makeDownload, rectContainsRect } from '../../utils/funcs.js';
 import { fontSpecs, toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/langs.js';
 import { trackEvent } from '../../utils/tracking';
@@ -31,6 +31,7 @@ import disabledZoomOutButton from '../../assets/images/buttons/btn-zoom-out_disa
 import enabledZooResetButton from '../../assets/images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../assets/images/buttons/btn-zoom-reset_disabled.svg';
 import inspectorTabs from '../../assets/json/inspector-tabs';
+import {buildInspectorPath} from "../../utils/funcs";
 
 
 const ANTS_INTERVAL = 50;
@@ -78,13 +79,13 @@ const mapStateToProps = (state, ownProps)=> {
 	return ({
 		deeplink    : state.deeplink,
 		profile     : state.userProfile,
-		redirectURL : state.redirectURL
+		redirectURI : state.redirectURI
 	});
 };
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		setRedirectURL : (url)=> dispatch(setRedirectURL(url))
+		setRedirectURI : (url)=> dispatch(setRedirectURI(url))
 	});
 };
 
@@ -300,8 +301,8 @@ class InspectorPage extends Component {
 	componentDidMount() {
 		console.log('InspectorPage.componentDidMount()', this.props, this.state);
 
-		if (this.props.redirectURL) {
-			this.props.setRedirectURL(null);
+		if (this.props.redirectURI) {
+			this.props.redirectURI(null);
 		}
 
 		const { deeplink } = this.props;
@@ -322,7 +323,6 @@ class InspectorPage extends Component {
 			const isContributor = (nextProps.profile && !isOwner && (upload.contributors.filter((contributor)=> (contributor.id === nextProps.profile.id)).length > 0));
 
 			if (!restricted && (!isOwner && !isContributor)) {
-				this.props.setRedirectURL(window.location.pathname);
 				this.setState({
 					restricted : true,
 					tooltip    : ''
@@ -407,6 +407,11 @@ class InspectorPage extends Component {
 
 		document.removeEventListener('keydown', this.handleKeyDown.bind(this));
 		document.removeEventListener('wheel', this.handleWheelStart.bind(this));
+
+		const { section, upload } = this.state;
+		if (upload) {
+			this.props.setRedirectURI(buildInspectorPath(upload), section);
+		}
 	}
 
 	handleArtboardRollOut = (event)=> {
@@ -1230,7 +1235,7 @@ class InspectorPage extends Component {
 
 
 // 		console.log('InspectorPage.render()', this.state);
-		console.log('InspectorPage.render()', this.props, this.state);
+// 		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage:', window.performance.memory);
 
 		return (<>
@@ -1251,7 +1256,7 @@ class InspectorPage extends Component {
 						<button disabled={(scale === 0.25)} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-reset'); this.handleZoom(0)}}><img className="inspector-page-zoom-button-image" src={(scale !== 0.25) ? enabledZooResetButton : disabledZoomResetButton} alt="Reset" /></button>
 					</div>)}
 
-					{(upload && profile && !restricted) && (<div className="inspector-page-modal-button-wrapper">
+					{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<div className="inspector-page-modal-button-wrapper">
 						<button className="tiny-button" onClick={()=> {trackEvent('button', 'invite-team'); this.setState({ shownInvite : false })}}>Invite Team</button>
 					</div>)}
 				</div>
@@ -1326,7 +1331,7 @@ class InspectorPage extends Component {
 					</CopyToClipboard>)}</>)
 			}
 
-			{(upload && profile && !restricted && (!shownInvite || this.props.processing)) && (<InviteTeamModal
+			{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0) && (!shownInvite || this.props.processing)) && (<InviteTeamModal
 				profile={profile}
 				upload={upload}
 				processing={processing}

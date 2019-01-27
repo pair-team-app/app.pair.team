@@ -3,7 +3,7 @@ import {
 	ADD_FILE_UPLOAD,
 	APPEND_ARTBOARD_SLICES,
 	APPEND_HOME_ARTBOARDS,
-	SET_REDIRECT_URL,
+	SET_REDIRECT_URI,
 	CONVERTED_DEEPLINK,
 	USER_PROFILE_ERROR,
 	USER_PROFILE_LOADED,
@@ -20,7 +20,7 @@ const initialState = {
 		artboardID : 0,
 		sliceID    : 0
 	},
-	redirectURL   : null,
+	redirectURI   : null,
 	uploadSlices  : [],
 	userProfile   : null
 };
@@ -57,9 +57,9 @@ function rootReducer(state=initialState, action) {
 			) : []
 		}));
 
-	} else if (action.type === SET_REDIRECT_URL) {
+	} else if (action.type === SET_REDIRECT_URI) {
 		return (Object.assign({}, state, {
-			redirectURL : action.payload
+			redirectURI : action.payload
 		}));
 
 	} else if (action.type === USER_PROFILE_ERROR || action.type === USER_PROFILE_LOADED || action.type === USER_PROFILE_UPDATED) {

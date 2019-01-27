@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import ArtboardGrid from '../elements/ArtboardGrid';
 import UploadHeader from '../elements/UploadHeader';
-import { addFileUpload, appendHomeArtboards, updateDeeplink } from '../../redux/actions';
+import { addFileUpload, appendHomeArtboards } from '../../redux/actions';
 import { isUserLoggedIn } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 
@@ -23,8 +23,7 @@ const mapStateToProps = (state, ownProps)=> {
 const mapDispatchToProps = (dispatch)=> {
 	return ({
 		addFileUpload       : (file)=> dispatch(addFileUpload(file)),
-		appendHomeArtboards : (artboards)=> dispatch(appendHomeArtboards(artboards)),
-		updateDeeplink      : (navIDs)=> dispatch(updateDeeplink(navIDs))
+		appendHomeArtboards : (artboards)=> dispatch(appendHomeArtboards(artboards))
 	});
 };
 

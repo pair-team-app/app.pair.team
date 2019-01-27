@@ -7,7 +7,7 @@ import {
 	ADD_FILE_UPLOAD,
 	APPEND_ARTBOARD_SLICES,
 	APPEND_HOME_ARTBOARDS,
-	SET_REDIRECT_URL,
+	SET_REDIRECT_URI,
 	USER_PROFILE_ERROR,
 	UPDATE_DEEPLINK,
 	USER_PROFILE_LOADED,
@@ -55,8 +55,8 @@ export function fetchUserProfile() {
 	});
 }
 
-export function setRedirectURL(payload) {
-	return ({ type : SET_REDIRECT_URL, payload });
+export function setRedirectURI(payload) {
+	return ({ type : SET_REDIRECT_URI, payload });
 }
 
 export function updateUserProfile(payload) {

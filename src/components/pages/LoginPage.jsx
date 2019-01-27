@@ -7,20 +7,20 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
 import LoginForm from '../forms/LoginForm';
-import { setRedirectURL, updateDeeplink, updateUserProfile } from '../../redux/actions';
+import { setRedirectURI, updateDeeplink, updateUserProfile } from '../../redux/actions';
 import { buildInspectorPath, isUserLoggedIn } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		redirectURL : state.redirectURL
+		redirectURI : state.redirectURI
 	});
 };
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		setRedirectURL    : (url)=> dispatch(setRedirectURL(url)),
+		setRedirectURI    : (url)=> dispatch(setRedirectURI(url)),
 		updateDeeplink    : (navIDs)=> dispatch(updateDeeplink(navIDs)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
@@ -53,8 +53,9 @@ class LoginPage extends Component {
 
 					if (invite.id === inviteID) {
 						const { email } = invite;
+						trackEvent('user', 'invite');
 						this.setState({ email, upload });
-						this.props.setRedirectURL(buildInspectorPath(upload, '/inspect'));
+						this.props.setRedirectURI(buildInspectorPath(upload));
 					}
 				}).catch((error) => {
 			});
@@ -65,12 +66,12 @@ class LoginPage extends Component {
 		console.log('LoginPage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		if (isUserLoggedIn()) {
-			const { redirectURL } = this.props;
+			const { redirectURI } = this.props;
 			const { upload } = this.state;
 
-			if (redirectURL && upload) {
+			if (redirectURI && upload) {
 				this.props.updateDeeplink({ uploadID : upload.id });
-				this.props.onPage(redirectURL.substr(1));
+				this.props.onPage(redirectURI.substr(1));
 			}
 		}
 	}
@@ -82,13 +83,13 @@ class LoginPage extends Component {
 		cookie.save('user_id', profile.id, { path : '/' });
 		this.props.updateUserProfile(profile);
 
-		const { redirectURL } = this.props;
+		const { redirectURI } = this.props;
 		const { upload } = this.state;
-		if (redirectURL && upload) {
+		if (redirectURI && upload) {
 			this.props.updateDeeplink({ uploadID : upload.id });
 		}
 
-		this.props.onPage((redirectURL) ? redirectURL.substr(1) : '');
+		this.props.onPage((redirectURI) ? redirectURI.substr(1) : '');
 	};
 
 	render() {

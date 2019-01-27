@@ -5,7 +5,6 @@ import axios from 'axios';
 import {
 	HOME,
 	COLORS,
-// 	EXPLORE,
 	FONTS,
 	INSPECT,
 	LOGIN,
@@ -19,12 +18,11 @@ import {
 } from '../consts/uris';
 
 
-export function buildInspectorPath(upload, prefix=null, suffix='') {
-	prefix = (prefix || `/${window.location.pathname.substr(1).split('/').shift()}`);
-	return (`${prefix}/${upload.id}/${convertURISlug(upload.title)}${suffix}`);
+export function buildInspectorPath(upload, prefix='/inspect', suffix='') {
+	return (`${trimSlashes(prefix)}/${upload.id}/${convertURISlug(upload.title)}${trimSlashes(suffix)}`);
 }
 
-export function buildInspectorURL(upload, prefix=null, suffix='') {
+export function buildInspectorURL(upload, prefix='/inspect', suffix='') {
 	return (`${window.location.origin}${buildInspectorPath(upload, prefix, suffix)}`);
 }
 
@@ -78,7 +76,7 @@ export function hideText(text, char='*') {
 
 export function idsFromPath() {
 	const { pathname } = window.location;
-	const inspectorPath = /\/(?:inspect|colors|parts|typography)\/(\d+)\/.+$/;
+	const inspectorPath = /\/(?:inspect|colors|parts|typography)\/(\d+)\/.+$/i;
 
 	const navIDs = {
 		uploadID   : (inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[1] : 0,
@@ -88,6 +86,14 @@ export function idsFromPath() {
 	};
 
 	return (navIDs);
+}
+
+export function isEmptyArray(arr) {
+	return (arr.length === 0);
+}
+
+export function isEmptyObject(obj) {
+	return (Object.keys(obj).length === 0);
 }
 
 export function isHomePage() {
@@ -153,14 +159,6 @@ export function numberedName(name, list, divider='_') {
 	});
 }
 
-export function isEmptyArray(arr) {
-	return (arr.length === 0);
-}
-
-export function isEmptyObject(obj) {
-	return (Object.keys(obj).length === 0);
-}
-
 export function randomElement(array) {
 	return ((array.length > 0) ? array.slice(randomInt(0, array.length), 1).pop() : null);
 }
@@ -199,4 +197,8 @@ export function sendToSlack(message, callback=null) {
 			}
 		}).catch((error) => {
 	});
+}
+
+export function trimSlashes(text, leading=true, trailing=true) {
+	return (text.replace(((leading && trailing) ? /^\/?(.+)\// : (leading && !trailing) ? /^\/(.+)$/ : (!leading && trailing) ? /^(.+)\/$/ : /^(.+)$/), '$1'));
 }
