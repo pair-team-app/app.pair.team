@@ -10,7 +10,7 @@ import { Row } from 'simple-flexbox';
 
 import { POPUP_TYPE_INFO } from '../elements/Popup';
 import Dropdown from '../forms/elements/Dropdown';
-import { buildProjectURL, isValidEmail, isUserLoggedIn } from '../../utils/funcs';
+import { buildInspectorURL, isValidEmail, isUserLoggedIn } from '../../utils/funcs';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -86,7 +86,7 @@ class InviteTeamPage extends Component {
 					if (upload.id === uploadID) {
 						this.setState({
 							uploadTitle : upload.title,
-							uploadURL   : buildProjectURL(upload)
+							uploadURL   : buildInspectorURL(upload)
 						});
 					}
 				});
@@ -105,7 +105,7 @@ class InviteTeamPage extends Component {
 		this.setState({
 			uploadID    : upload.id,
 			uploadTitle : upload.title,
-			uploadURL   : buildProjectURL(upload),
+			uploadURL   : buildInspectorURL(upload),
 			uploads     : uploads
 		});
 	};

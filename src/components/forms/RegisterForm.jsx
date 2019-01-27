@@ -21,8 +21,9 @@ class RegisterForm extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			inviteID      : props.inviteID,
 			username      : '',
-			email         : '',
+			email         : (props.email) ? props.email : '',
 			password      : '',
 			password2     : '',
 			usernameValid : true,
@@ -35,12 +36,21 @@ class RegisterForm extends Component {
 // 		console.log('RegisterForm.componentDidMount()', this.props, this.state);
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('RegisterForm.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+
+		if (prevProps.email !== this.props.email) {
+			const { email } = this.props;
+			this.setState({ email });
+		}
+	}
+
 	componentWillUnmount() {
 		this.timeline = null;
 	}
 
 	handlePassword = ()=> {
-		console.log('RegisterForm.handlePassword()');
+// 		console.log('RegisterForm.handlePassword()');
 
 		this.setState({
 			password      : '',
@@ -58,7 +68,7 @@ class RegisterForm extends Component {
 		console.log('RegisterForm.handleSubmit()', event.target);
 		event.preventDefault();
 
-		const { username, email, password, password2 } = this.state;
+		const { inviteID, username, email, password, password2 } = this.state;
 		const usernameValid = (username.length > 0 && !username.includes('@'));
 		const emailValid = isValidEmail(email);
 		const passwordValid = (password.length > 0 && password === password2);
@@ -91,6 +101,7 @@ class RegisterForm extends Component {
 			formData.append('email', email);
 			formData.append('password', password);
 			formData.append('type', 'user');
+			formData.append('invite_id', (inviteID) ? inviteID : '0');
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log('REGISTER', response.data);

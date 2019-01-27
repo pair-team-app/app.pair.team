@@ -305,7 +305,7 @@ class InspectorPage extends Component {
 		}
 
 		const { deeplink } = this.props;
-		if (deeplink) {
+		if (deeplink.uploadID !== 0) {
 			this.onRefreshUpload();
 		}
 
@@ -317,12 +317,17 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.shouldComponentUpdate()', this.props, nextProps, this.state, nextState, nextContext);
 
 		const { upload, restricted } = nextState;
-		if (!restricted && upload && upload.private === '1' && (!nextProps.profile || (nextProps.profile && upload.creator.user_id !== nextProps.profile.id))) {
-			this.props.setRedirectURL(window.location.pathname);
-			this.setState({
-				restricted : true,
-				tooltip    : ''
-			});
+		if (upload && upload.private === '1' ) {
+			const isOwner = (nextProps.profile && upload.creator.user_id === nextProps.profile.id);
+			const isContributor = (nextProps.profile && !isOwner && (upload.contributors.filter((contributor)=> (contributor.id === nextProps.profile.id)).length > 0));
+
+			if (!restricted && (!isOwner && !isContributor)) {
+				this.props.setRedirectURL(window.location.pathname);
+				this.setState({
+					restricted : true,
+					tooltip    : ''
+				});
+			}
 		}
 
 		return (true);
@@ -374,7 +379,7 @@ class InspectorPage extends Component {
 
 		if (upload && canvasWrapper.current) {
 			if (!this.state.tutorial && cookie.load('tutorial') === '0') {
-				cookie.save('tutorial', '1');
+				cookie.save('tutorial', '1', { path : '/' });
 
 // 				let artboard = [...upload.pages].shift().artboards.shift();
 				const tutorial = {
@@ -1225,7 +1230,7 @@ class InspectorPage extends Component {
 
 
 // 		console.log('InspectorPage.render()', this.state);
-// 		console.log('InspectorPage.render()', this.props, this.state);
+		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage:', window.performance.memory);
 
 		return (<>
@@ -1246,7 +1251,7 @@ class InspectorPage extends Component {
 						<button disabled={(scale === 0.25)} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-reset'); this.handleZoom(0)}}><img className="inspector-page-zoom-button-image" src={(scale !== 0.25) ? enabledZooResetButton : disabledZoomResetButton} alt="Reset" /></button>
 					</div>)}
 
-					{(upload && profile && upload.creator.user_id === profile.id) && (<div className="inspector-page-modal-button-wrapper">
+					{(upload && profile && !restricted) && (<div className="inspector-page-modal-button-wrapper">
 						<button className="tiny-button" onClick={()=> {trackEvent('button', 'invite-team'); this.setState({ shownInvite : false })}}>Invite Team</button>
 					</div>)}
 				</div>
@@ -1321,7 +1326,7 @@ class InspectorPage extends Component {
 					</CopyToClipboard>)}</>)
 			}
 
-			{(upload && profile && !restricted && upload.creator.user_id === profile.id && (!shownInvite || this.props.processing)) && (<InviteTeamModal
+			{(upload && profile && !restricted && (!shownInvite || this.props.processing)) && (<InviteTeamModal
 				profile={profile}
 				upload={upload}
 				processing={processing}

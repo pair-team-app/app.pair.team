@@ -25,7 +25,12 @@ import Status404Page from './components/pages/Status404Page';
 import TermsPage from './components/pages/TermsPage';
 import UploadPage from './components/pages/UploadPage';
 
-import { appendHomeArtboards, fetchUserProfile, updateDeeplink, updateUserProfile } from './redux/actions';
+import {
+	appendHomeArtboards,
+	fetchUserProfile,
+	updateDeeplink,
+	updateUserProfile
+} from './redux/actions';
 import {
 	buildInspectorPath,
 	idsFromPath,
@@ -77,6 +82,8 @@ class App extends Component {
 			this.props.fetchUserProfile();
 		}
 
+// 		const { pathname } = window.location;
+
 		initTracker(cookie.load('user_id'));
 		trackEvent('site', 'load');
 		trackPageview();
@@ -94,7 +101,7 @@ class App extends Component {
 
 		if (isInspectorPage()) {
 			if (typeof cookie.load('tutorial') === 'undefined') {
-				cookie.save('tutorial', '0');
+				cookie.save('tutorial', '0', { path : '/' });
 			}
 
 			this.onAddUploadView(uploadID);
@@ -109,7 +116,7 @@ class App extends Component {
 		console.log('App.handleArtboardClicked()', artboard);
 		this.onAddUploadView(artboard.uploadID);
 		if (typeof cookie.load('tutorial') === 'undefined') {
-			cookie.save('tutorial', '0');
+			cookie.save('tutorial', '0', { path : '/' });
 		}
 
 		this.handlePage(buildInspectorPath({ id : artboard.uploadID, title : artboard.title }).substring(1));
@@ -222,7 +229,7 @@ class App extends Component {
 				    <Route exact path="/inspect" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 				    <Route path="/inspect/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 				    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-				    <Route exact path="/login" render={()=> <LoginPage onPage={this.handlePage} />} onPopup={this.handlePopup} />
+				    <Route path="/login/:inviteID?" render={(props)=> <LoginPage {...props} onPage={this.handlePage} />} onPopup={this.handlePopup} />
 				    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onProcessing={this.handleProcessing} onPopup={this.handlePopup} />} />
 				    <Route exact path="/parts" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 				    <Route path="/parts/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
@@ -232,7 +239,7 @@ class App extends Component {
 				    <Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />
 				    <Route exact path="/recover" render={()=> <RecoverPage onPage={this.handlePage} />} />
 				    <Route exact path="/recover/password" render={()=> <RecoverPage onPage={this.handlePage} />} />
-				    <Route exact path="/register" render={()=> <RegisterPage onPage={this.handlePage} />} onPopup={this.handlePopup} />
+				    <Route path="/register/:inviteID?" render={(props)=> <RegisterPage {...props} onPage={this.handlePage} />} onPopup={this.handlePopup} />
 				    <Route exact path="/terms" render={()=> <TermsPage />} />
 				    <Route exact path="/typography" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 				    <Route path="/typography/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />

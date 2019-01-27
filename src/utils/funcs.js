@@ -5,35 +5,27 @@ import axios from 'axios';
 import {
 	HOME,
 	COLORS,
-	EXPLORE,
+// 	EXPLORE,
 	FONTS,
 	INSPECT,
-// 	LOGIN,
+	LOGIN,
 	PARTS,
 // 	PRIVACY,
 	PROFILE,
 // 	RECOVER,
-// 	REGISTER,
+	REGISTER,
 // 	TERMS,
 	UPLOAD
 } from '../consts/uris';
 
 
 export function buildInspectorPath(upload, prefix=null, suffix='') {
-	prefix = (prefix || (`/${window.location.pathname.substr(1).split('/').shift()}`));
+	prefix = (prefix || `/${window.location.pathname.substr(1).split('/').shift()}`);
 	return (`${prefix}/${upload.id}/${convertURISlug(upload.title)}${suffix}`);
 }
 
 export function buildInspectorURL(upload, prefix=null, suffix='') {
-	return (window.location.origin + buildInspectorPath(upload, prefix, suffix));
-}
-
-export function buildProjectPath(upload, prefix=null, suffix='') {
-	return ('/proj/' + upload.id + '/' + convertURISlug(upload.title) + suffix);
-}
-
-export function buildProjectURL(upload, prefix=null, suffix='') {
-	return (window.location.origin + buildProjectPath(upload, prefix, suffix));
+	return (`${window.location.origin}${buildInspectorPath(upload, prefix, suffix)}`);
 }
 
 export function camilzeText(text, separator=' ', first=false) {
@@ -98,11 +90,6 @@ export function idsFromPath() {
 	return (navIDs);
 }
 
-export function isExplorePage() {
-	const { pathname } = window.location;
-	return (pathname.includes(EXPLORE));
-}
-
 export function isHomePage() {
 	const { pathname } = window.location;
 	return (pathname === '' || pathname === HOME);
@@ -113,13 +100,19 @@ export function isInspectorPage() {
 	return ((pathname.includes(INSPECT + '/') || pathname.includes(COLORS + '/') || pathname.includes(FONTS + '/') || pathname.includes(PARTS + '/')) && /^.+\/\d+\/.+$/.test(pathname));
 }
 
+export function isLoginPage(exact=false) {
+	const { pathname } = window.location;
+	return ((exact) ? pathname === LOGIN : pathname.includes(LOGIN));
+}
+
 export function isProfilePage(exact=false) {
 	const { pathname } = window.location;
 	return ((exact) ? pathname === PROFILE : pathname.includes(PROFILE));
 }
 
-export function isProjectPage() {
-	return (window.location.pathname.includes('/proj'));
+export function isRegisterPage(exact=false) {
+	const { pathname } = window.location;
+	return ((exact) ? pathname === REGISTER : pathname.includes(REGISTER));
 }
 
 export function isUploadPage(exact=false) {

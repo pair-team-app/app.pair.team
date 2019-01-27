@@ -21,7 +21,8 @@ class LoginForm extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email         : '',
+			inviteID      : props.inviteID,
+			email         : (props.email) ? props.email : '',
 			password      : '',
 			emailValid    : true,
 			passwordValid : true,
@@ -33,12 +34,21 @@ class LoginForm extends Component {
 // 		console.log('LoginForm.componentDidMount()', this.props, this.state);
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('LoginForm.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+
+		if (prevProps.email !== this.props.email) {
+			const { email } = this.props;
+			this.setState({ email });
+		}
+	}
+
 	componentWillUnmount() {
 		this.timeline = null;
 	}
 
 	handlePassword = ()=> {
-		console.log('LoginForm.handlePassword()');
+// 		console.log('LoginForm.handlePassword()');
 
 		this.setState({
 			password      : '',
@@ -55,7 +65,7 @@ class LoginForm extends Component {
 		console.log('LoginForm.handleSubmit()', event.target);
 		event.preventDefault();
 
-		const { email, password } = this.state;
+		const { inviteID, email, password } = this.state;
 
 		const emailValid = (email.includes('@')) ? isValidEmail(email) : (email.length > 0);
 		const passwordValid = (password.length > 0);
@@ -72,6 +82,7 @@ class LoginForm extends Component {
 			formData.append('action', 'LOGIN');
 			formData.append('email', email);
 			formData.append('password', password);
+			formData.append('invite_id', (inviteID) ? inviteID : '0');
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response)=> {
 					console.log('LOGIN', response.data);
