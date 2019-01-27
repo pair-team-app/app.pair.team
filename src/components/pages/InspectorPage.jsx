@@ -91,9 +91,9 @@ const mapDispatchToProps = (dispatch)=> {
 
 
 const InviteTeamModal = (props)=> {
-// 	console.log('InspectorPage.InviteTeamModal()', props);
+	console.log('InspectorPage.InviteTeamModal()', props);
 
-	const { profile, upload, processing, sentInvites } = props;
+	const { profile, upload, processing } = props;
 
 	return (<ContentModal
 		tracking="invite-team/inspector"
@@ -115,11 +115,11 @@ const InviteTeamModal = (props)=> {
 				</CopyToClipboard>
 			</div>
 
-			{(!sentInvites) && (<InviteTeamForm
+			<InviteTeamForm
 				profile={profile}
 				upload={upload}
 				onSubmitted={props.onInviteTeamFormSubmitted}
-			/>)}
+			/>
 		</ContentModal>
 	);
 };
@@ -274,8 +274,7 @@ class InspectorPage extends Component {
 				y : 0
 			},
 			restricted   : false,
-			shownInvite  : true,
-			sentInvites  : false,
+			inviteModal  : false,
 			scrolling    : false,
 			tutorial     : null,
 			code         : {
@@ -493,7 +492,11 @@ class InspectorPage extends Component {
 
 	handleInviteTeamFormSubmitted = (result)=> {
 		console.log('InspectorPage.handleInviteTeamFormSubmitted()', result);
-		this.setState({ sentInvites : true });
+
+		this.props.onPopup({
+			type    : POPUP_TYPE_INFO,
+			content : `Sent ${result.sent.length} invite${(result.sent.length === 1) ? '' : 's'}!`
+		});
 	};
 
 	handleInviteModalClose = ()=> {
@@ -503,7 +506,7 @@ class InspectorPage extends Component {
 				state : processing.state,
 				message : ''
 			},
-			shownInvite : true
+			inviteModal : false
 		});
 	};
 
@@ -1067,7 +1070,7 @@ class InspectorPage extends Component {
 		const { profile } = this.props;
 
 		const { section, upload, slice, hoverSlice, tabs, scale, selectedTab, scrolling, viewport, scrollOffset } = this.state;
-		const { tooltip, restricted, shownInvite, sentInvites, processing, tutorial } = this.state;
+		const { tooltip, restricted, inviteModal, processing, tutorial } = this.state;
 
 
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
@@ -1257,7 +1260,7 @@ class InspectorPage extends Component {
 					</div>)}
 
 					{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<div className="inspector-page-modal-button-wrapper">
-						<button className="tiny-button" onClick={()=> {trackEvent('button', 'invite-team'); this.setState({ shownInvite : false })}}>Invite Team</button>
+						<button className="tiny-button" onClick={()=> {trackEvent('button', 'invite-team'); this.setState({ inviteModal : true })}}>Invite Team</button>
 					</div>)}
 				</div>
 
@@ -1331,11 +1334,10 @@ class InspectorPage extends Component {
 					</CopyToClipboard>)}</>)
 			}
 
-			{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0) && (!shownInvite || this.props.processing)) && (<InviteTeamModal
+			{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0) && (inviteModal || this.props.processing)) && (<InviteTeamModal
 				profile={profile}
 				upload={upload}
 				processing={processing}
-				sentInvites={sentInvites}
 				onCopyURL={this.handleCopyURL}
 				onInviteTeamFormSubmitted={this.handleInviteTeamFormSubmitted}
 				onComplete={()=> this.handleInviteModalClose()}

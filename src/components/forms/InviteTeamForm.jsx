@@ -120,8 +120,18 @@ class InviteTeamForm extends Component {
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log('INVITE', response.data);
-					this.setState({ submitting : false });
-					this.props.onSubmitted(response.data.invites);
+					this.setState({
+						submitting : false,
+						invites     : [{
+							email    : '',
+							valid    : true,
+							txtClass : 'input-wrapper'
+						}]
+					});
+					this.props.onSubmitted({
+						write : response.data.invites_write,
+						sent : response.data.invites_sent
+					});
 				}).catch((error) => {
 			});
 
