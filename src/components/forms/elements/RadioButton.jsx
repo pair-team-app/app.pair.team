@@ -15,7 +15,7 @@ function RadioButton(props) {
 
 	return (
 		<div className="radio-button"><Row vertical="center">
-			<Column vertical="center"><button disabled={(!enabled)} className="radio-button-button" onClick={()=> this.props.onClick()}>
+			<Column vertical="center"><button disabled={(!enabled)} className="radio-button-button" onClick={()=> props.onClick()}>
 				{(selected) && (<img className="radio-button-image" src={radButtonSelected} alt={title} />)}
 			</button></Column>
 			<Column vertical="center"><div className={titleClass}>{title}</div></Column></Row>

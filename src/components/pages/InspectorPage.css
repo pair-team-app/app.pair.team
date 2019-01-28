@@ -176,7 +176,8 @@
 
 .inspector-page-panel-full-content-wrapper {
 	width: 100%;
-	height: calc(100vh - 104px);
+	/*height: calc(100vh - 104px);*/
+	height: calc(100vh - 146px);
 	overflow: hidden;
 }
 
@@ -233,6 +234,10 @@
 	width: 100%;
 }
 
+.inspector-page-panel-button:not(:last-child) {
+	margin-bottom: 4px;
+}
+
 .inspector-page-tooltip {
 	z-index: 10;
 	position: fixed;
@@ -262,6 +267,11 @@
 
 .inspector-page-specs-list-val {
 	color: #0267d8;
+}
+
+.inspector-page-download-button-icon {
+	font-size: 12px;
+	margin-right: 8px;
 }
 
 

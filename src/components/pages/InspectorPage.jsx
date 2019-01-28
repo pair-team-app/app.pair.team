@@ -150,7 +150,7 @@ const PartsList = (props)=> {
 					filename={slice.filename}
 					title={slice.title}
 					size={slice.meta.frame.size}
-					onClick={()=> props.onPartItem(slice.id)}
+					onClick={()=> props.onPartItem(slice)}
 				/>
 			);
 		})}
@@ -481,13 +481,29 @@ class InspectorPage extends Component {
 		});
 	};
 
-	handleDownload = ()=> {
-// 		console.log('InspectorPage.handleDownload()');
+	handleDownloadAllParts = ()=> {
+		console.log('InspectorPage.handleDownloadAllParts()');
 
 		trackEvent('button', 'download-all');
+		const { upload } = this.state;
+		makeDownload(`http://cdn.designengine.ai/download-project.php?upload_id=${upload.id}`);
+	};
+
+	handleDownloadPartItem = (slice)=> {
+// 		console.log('InspectorPage.handleDownloadPartItem()', slice);
+
+		trackEvent('button', 'download-part');
+		const { upload } = this.state;
+		makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${[slice.id]}`);
+	};
+
+	handleDownloadPartsList = ()=> {
+// 		console.log('InspectorPage.handleDownloadPartsList()');
+
+		trackEvent('button', 'download-list');
 		const { upload, slice } = this.state;
 		const sliceIDs = buildSlicePreviews(upload, slice).map((slice)=> (slice.id)).join(',');
-		makeDownload(`http://cdn.designengine.ai/slices.php?title=${slice.title}&slice_ids=${sliceIDs}`);
+		makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
 	};
 
 	handleInviteTeamFormSubmitted = (result)=> {
@@ -520,11 +536,6 @@ class InspectorPage extends Component {
 		} else if (event.keyCode === MINUS_KEY) {
 			this.handleZoom(-1);
 		}
-	};
-
-	handlePartItem = (sliceID)=> {
-// 		console.log('InspectorPage.handlePartItem()', sliceID);
-		makeDownload(`http://cdn.designengine.ai/slice.php?slice_id=${sliceID}`);
 	};
 
 	handleSliceClick = (ind, slice, offset)=> {
@@ -1303,14 +1314,15 @@ class InspectorPage extends Component {
 						<div className="inspector-page-panel-tab-content-wrapper">
 							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i) => {
 								return ((tab.contents)
-									? (<PartsList key={i} contents={tab.contents} onPartItem={(sliceID)=> this.handlePartItem(sliceID)} onDownload={this.handleDownload} />)
+									? (<PartsList key={i} contents={tab.contents} onPartItem={(slice)=> this.handleDownloadPartItem(slice)} onDownload={this.handleDownload} />)
 									: ('')
 								);
 							}))}
 						</div>
 					</div>
 					<div className="inspector-page-panel-button-wrapper">
-						<button className="inspector-page-panel-button" onClick={()=> this.handleDownload()}><FontAwesome name="download" style={{ fontSize:'12px', marginRight:'8px' }} />Download All</button>
+						<button disabled={tabs.length === 0 || !tabs[0].contents} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download List Parts</button>
+						<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAllParts()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download All Project Parts</button>
 					</div>
 				</div>)}
 			</div>
