@@ -22,8 +22,8 @@ import { MOMENT_TIMESTAMP } from '../../consts/formats';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { DE_LOGO_SMALL } from '../../consts/uris';
 import { setRedirectURI } from '../../redux/actions';
-import { buildInspectorURL, capitalizeText, convertURISlug, frameToRect, makeDownload, rectContainsRect } from '../../utils/funcs.js';
-import { fontSpecs, toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/langs.js';
+import { buildInspectorPath, buildInspectorURL, capitalizeText, convertURISlug, cropFrame, frameToRect, makeDownload, rectContainsRect } from '../../utils/funcs.js';
+import { fontSpecs, toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/inspector-langs.js';
 import { trackEvent } from '../../utils/tracking';
 import enabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_enabled.svg';
 import disabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_disabled.svg';
@@ -32,9 +32,9 @@ import disabledZoomOutButton from '../../assets/images/buttons/btn-zoom-out_disa
 import enabledZooResetButton from '../../assets/images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../assets/images/buttons/btn-zoom-reset_disabled.svg';
 import inspectorTabs from '../../assets/json/inspector-tabs';
-import {buildInspectorPath} from "../../utils/funcs";
 
 
+const ANTS_LINE_SIZE = [4, 2];
 const ANTS_INTERVAL = 50;
 const ARTBOARD_ORIGIN = {
 	x : 100,
@@ -59,17 +59,22 @@ const canvasWrapper = React.createRef();
 const canvas = React.createRef();
 
 
+
+const buildUploadArtboards = (upload)=> {
+	return ([...upload.pages].flatMap((page)=> (page.artboards)));
+};
+
+const artboardByID = (upload, artboardID)=> {
+	return (buildUploadArtboards(upload).filter((artboard) => (artboard.id === artboardID)).pop());
+};
+
 const buildSlicePreviews = (upload, slice)=> {
-	let slices = [];
-	const pages = [...upload.pages];
-	pages.forEach((page)=> {
-		page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item) => {
-			item.slices.filter((itm)=> (itm.id !== slice.id)).forEach((itm)=> {
-				if (rectContainsRect(frameToRect(slice.meta.frame), frameToRect(itm.meta.frame))) {
-					slices.push(itm);
-				}
-			});
-		});
+	let slices = [slice];
+
+	artboardByID(upload, slice.artboardID).slices.filter((item)=> (item.id !== slice.id)).forEach((item)=> {
+		if (rectContainsRect(frameToRect(slice.meta.frame), frameToRect(item.meta.frame))) {
+			slices.push(item);
+		}
 	});
 
 	return (slices);
@@ -160,18 +165,21 @@ const PartsList = (props)=> {
 const SliceRolloverItem = (props)=> {
 // 	console.log('InspectorPage.SliceRolloverItem()', props);
 
-	const className = (props.type === 'slice') ? 'slice-rollover-item slice-rollover-item-slice' : (props.type === 'hotspot') ? 'slice-rollover-item slice-rollover-item-hotspot' : (props.type === 'textfield') ? 'slice-rollover-item slice-rollover-item-textfield' : 'slice-rollover-item slice-rollover-item-group';
+	const { id, artboardID, type, offset, top, left, width, height, scale, visible, filled } = props;
+
+	const className = (type === 'background') ? 'slice-rollover-item slice-rollover-item-background' : (type === 'slice') ? 'slice-rollover-item slice-rollover-item-slice' : (type === 'symbol') ? 'slice-rollover-item slice-rollover-item-symbol' : (type === 'textfield') ? 'slice-rollover-item slice-rollover-item-textfield' : 'slice-rollover-item slice-rollover-item-group';
 	const style = {
-		top     : `${props.top}px`,
-		left    : `${props.left}px`,
-		width   : `${props.width}px`,
-		height  : `${props.height}px`,
-		zoom    : props.scale,
-		display : (props.visible) ? 'block' : 'none'
+		top     : `${top}px`,
+		left    : `${left}px`,
+		width   : `${width}px`,
+		height  : `${height}px`,
+		zoom    : scale,
+// 		transform : `scale(${scale})`,
+		display : (visible) ? 'block' : 'none'
 	};
 
 	return (
-		<div data-slice-id={props.id} className={`${className}${(props.filled) ? '-filled' : ''}`} style={style} onMouseEnter={()=> props.onRollOver(props.offset)} onMouseLeave={()=> props.onRollOut()} onClick={()=> props.onClick(props.offset)} />
+		<div data-slice-id={id} data-artboard-id={artboardID} className={`${className}${(filled) ? '-filled' : ''}`} style={style} onMouseEnter={()=> props.onRollOver(offset)} onMouseLeave={()=> props.onRollOut()} onClick={()=> props.onClick(offset)} />
 	);
 };
 
@@ -255,6 +263,7 @@ class InspectorPage extends Component {
 		this.state = {
 			section      : window.location.pathname.substr(1).split('/').shift(),
 			upload       : null,
+			artboard     : null,
 			slice        : null,
 			hoverSlice   : null,
 			offset       : null,
@@ -415,11 +424,28 @@ class InspectorPage extends Component {
 
 	handleArtboardRollOut = (event)=> {
 // 		console.log('InspectorPage.handleArtboardRollOut()', event.target);
+		const { slice } = this.state;
+		if (!slice) {
+			this.setState({ artboard : null });
+		}
 	};
 
 	handleArtboardRollOver = (event)=> {
 // 		console.log('InspectorPage.handleArtboardRollOver()', event.target);
+
 		const artboardID = event.target.getAttribute('data-artboard-id');
+
+		let { upload, artboard } = this.state;
+		if (!artboard || artboard.id !== artboardID) {
+			artboard = artboardByID(upload, artboardID);
+// 			artboard = [...upload.pages].flatMap((page)=> {
+// 				return (page.artboards);
+// 			}).filter((artboard) => (artboard.id === artboardID)).pop();
+
+			if (artboard) {
+				this.setState({ artboard });
+			}
+		}
 
 		if (!this.antsInterval) {
 			this.antsInterval = setInterval(this.onUpdateAnts, ANTS_INTERVAL);
@@ -481,10 +507,10 @@ class InspectorPage extends Component {
 		});
 	};
 
-	handleDownloadAllParts = ()=> {
-		console.log('InspectorPage.handleDownloadAllParts()');
+	handleDownloadAll = ()=> {
+		console.log('InspectorPage.handleDownloadAll()');
 
-		trackEvent('button', 'download-all');
+		trackEvent('button', 'download-project');
 		const { upload } = this.state;
 		makeDownload(`http://cdn.designengine.ai/download-project.php?upload_id=${upload.id}`);
 	};
@@ -545,18 +571,10 @@ class InspectorPage extends Component {
 
 		const { upload, section } = this.state;
 		let { tabs } = this.state;
-		let artboard = null;
-
-		const pages = [...upload.pages];
-		pages.forEach((page)=> {
-			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item) => {
-				artboard = item;
-			});
-		});
 
 		const css = toCSS(slice);
 		const reactCSS = toReactCSS(slice);
-		const swift = toSwift(slice, artboard);
+		const swift = toSwift(slice, artboardByID(upload, slice.artboardID));
 
 		if (section === 'inspect') {
 			tabs[0].contents = css.html;
@@ -583,7 +601,6 @@ class InspectorPage extends Component {
 
 		const { upload, section } = this.state;
 		let { tabs } = this.state;
-		let artboard = null;
 
 		const pages = [...upload.pages];
 		pages.forEach((page)=> {
@@ -595,22 +612,22 @@ class InspectorPage extends Component {
 		});
 
 		upload.pages = pages;
-		this.setState({ upload });
+		slice.filled = false;
 
 		if (this.state.slice) {
 			const pages = [...upload.pages];
 			pages.forEach((page)=> {
 				page.artboards.filter((artboard)=> (artboard.id === this.state.slice.artboardID)).forEach((item) => {
-					artboard = item;
 					item.slices.filter((itm)=> (itm.id !== this.state.slice.id)).forEach((itm)=> {
-						itm.filled = rectContainsRect(frameToRect(this.state.slice.meta.frame), frameToRect(itm.meta.frame));
+// 						itm.filled = rectContainsRect(frameToRect(this.state.slice.meta.frame), frameToRect(itm.meta.frame));
+						itm.filled = false;
 					});
 				});
 			});
 
 			const css = toCSS(this.state.slice);
 			const reactCSS = toReactCSS(this.state.slice);
-			const swift = toSwift(this.state.slice, artboard);
+			const swift = toSwift(this.state.slice, artboardByID(upload, this.state.slice.artboardID));
 
 			if (section === 'inspect') {
 				tabs[0].contents = css.html;
@@ -626,6 +643,7 @@ class InspectorPage extends Component {
 		}
 
 		this.setState({
+			upload     : upload,
 			tabs       : tabs,
 			hoverSlice : null
 		});
@@ -634,27 +652,25 @@ class InspectorPage extends Component {
 	handleSliceRollOver = (ind, slice, offset)=> {
 // 		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
 
-
 		const { upload, section } = this.state;
 		let { tabs } = this.state;
-		let artboard = null;
 
 		const pages = [...upload.pages];
 		pages.forEach((page)=> {
 			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item) => {
-				artboard = item;
-				item.slices.filter((itm)=> (itm.id !== slice.id)).forEach((itm)=> {
-					itm.filled = rectContainsRect(frameToRect(slice.meta.frame), frameToRect(itm.meta.frame));
+				item.slices.filter((itm)=> (itm.id === slice.id)).forEach((itm)=> {
+					//itm.filled = rectContainsRect(frameToRect(slice.meta.frame), frameToRect(itm.meta.frame));
+					itm.filled = true;
 				});
 			});
 		});
 
 		upload.pages = pages;
-		this.setState({ upload });
+		slice.filled = true;
 
 		const css = toCSS(slice);
 		const reactCSS = toReactCSS(slice);
-		const swift = toSwift(slice, artboard);
+		const swift = toSwift(slice, artboardByID(upload, slice.artboardID));
 
 		if (section === 'inspect') {
 			tabs[0].contents = css.html;
@@ -669,6 +685,7 @@ class InspectorPage extends Component {
 		}
 
 		this.setState({
+			upload      : upload,
 			tabs        : tabs,
 			hoverSlice  : slice,
 			hoverOffset : offset
@@ -948,7 +965,8 @@ class InspectorPage extends Component {
 
 	onUpdateCanvas = ()=> {
 		const { scale, offset, scrollOffset } = this.state;
-		const { slice, hoverSlice } = this.state;
+		const { artboard, slice, hoverSlice } = this.state;
+
 		const context = canvas.current.getContext('2d');
 		context.clearRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
 
@@ -957,7 +975,8 @@ class InspectorPage extends Component {
 // 		context.fillRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
 
 		if (slice) {
-			const selectedSrcFrame = slice.meta.frame;
+			const selectedSrcFrame = cropFrame(slice.meta.frame, artboard.meta.frame);
+// 			const selectedSrcFrame = slice.meta.frame;
 			const selectedOffset = {
 				x : offset.x - (scrollOffset.x - ARTBOARD_ORIGIN.x),
 				y : offset.y - (scrollOffset.y - ARTBOARD_ORIGIN.y)
@@ -967,6 +986,7 @@ class InspectorPage extends Component {
 				origin : {
 					x : selectedOffset.x + Math.round(selectedSrcFrame.origin.x * scale),
 					y : selectedOffset.y + Math.round(selectedSrcFrame.origin.y * scale)
+
 				},
 				size   : {
 					width  : Math.round(selectedSrcFrame.size.width * scale),
@@ -974,33 +994,37 @@ class InspectorPage extends Component {
 				}
 			};
 
-// 			console.log('SELECTED', scale, selectedOffset, selectedFrame.origin);
+			context.font = '10px AndaleMono';
+			const txtWidth = context.measureText(`${slice.meta.frame.size.width}PX`).width + 4;
 
-			context.fillStyle = (slice.type === 'slice') ? 'rgba(255, 181, 18, 0.5)' : (slice.type === 'hotspot') ? 'rgba(62, 84, 255, 0.5)' : (slice.type === 'textfield') ? 'rgba(255, 88, 62, 0.5)' : 'rgba(62, 255, 109, 0.5)';
+// 			console.log('SELECTED', selectedSrcFrame, selectedFrame.origin);
+
+			context.fillStyle = (slice.type === 'slice') ? 'rgba(255, 181, 18, 0.5)' : (slice.type === 'symbol') ? 'rgba(62, 84, 255, 0.5)' : (slice.type === 'textfield') ? 'rgba(255, 88, 62, 0.5)' : 'rgba(62, 255, 109, 0.5)';
 			context.fillRect(selectedFrame.origin.x, selectedFrame.origin.y, selectedFrame.size.width, selectedFrame.size.height);
 			context.fillStyle = '#00ff00';
 			context.fillRect(selectedFrame.origin.x, selectedFrame.origin.y - 13, selectedFrame.size.width, 13);
-			context.fillRect(selectedFrame.origin.x - 30, selectedFrame.origin.y, 30, selectedFrame.size.height);
+			context.fillRect(selectedFrame.origin.x - txtWidth, selectedFrame.origin.y, txtWidth, selectedFrame.size.height);
 
 			context.font = '10px AndaleMono';
 			context.fillStyle = '#ffffff';
 			context.textAlign = 'center';
 			context.textBaseline = 'bottom';
-			context.fillText(`${selectedSrcFrame.size.width}PX`, selectedFrame.origin.x + (selectedFrame.size.width * 0.5), selectedFrame.origin.y - 1);
+			context.fillText(`${slice.meta.frame.size.width}PX`, selectedFrame.origin.x + (selectedFrame.size.width * 0.5), selectedFrame.origin.y - 1);
 
 			context.textAlign = 'right';
 			context.textBaseline = 'middle';
-			context.fillText(`${selectedSrcFrame.size.height}PX`, selectedFrame.origin.x - 2, selectedFrame.origin.y + (selectedFrame.size.height * 0.5));
+			context.fillText(`${slice.meta.frame.size.height}PX`, selectedFrame.origin.x - 2, selectedFrame.origin.y + (selectedFrame.size.height * 0.5));
 
 			context.strokeStyle = 'rgba(0, 0, 0, 0.5)';
 			context.beginPath();
-			context.setLineDash([4, 2]);
+			context.setLineDash(ANTS_LINE_SIZE);
 			context.lineDashOffset = this.antsOffset;
 			context.strokeRect(selectedFrame.origin.x, selectedFrame.origin.y, selectedFrame.size.width, selectedFrame.size.height);
 		}
 
 		if (hoverSlice) {
-			const srcFrame = hoverSlice.meta.frame;
+			const srcFrame = cropFrame(hoverSlice.meta.frame, artboard.meta.frame);
+// 			const srcFrame = hoverSlice.meta.frame;
 
 			const hoverOffset = {
 				x : this.state.hoverOffset.x - (scrollOffset.x - ARTBOARD_ORIGIN.x),
@@ -1018,10 +1042,13 @@ class InspectorPage extends Component {
 				}
 			};
 
+			context.font = '10px AndaleMono';
+			const txtWidth = context.measureText(`${hoverSlice.meta.frame.size.width}PX`).width + 4;
+
 // 			console.log('HOVER:', hoverOffset, frame.origin);
 
 			context.fillStyle = 'rgba(0, 0, 0, 0.5)';
-			context.fillStyle = (hoverSlice.type === 'slice') ? 'rgba(255, 181, 18, 0.5)' : (hoverSlice.type === 'hotspot') ? 'rgba(62, 84, 255, 0.5)' : (hoverSlice.type === 'textfield') ? 'rgba(255, 88, 62, 0.5)' : 'rgba(62, 255, 109, 0.5)';
+			context.fillStyle = (hoverSlice.type === 'slice') ? 'rgba(255, 181, 18, 0.5)' : (hoverSlice.type === 'symbol') ? 'rgba(62, 84, 255, 0.5)' : (hoverSlice.type === 'textfield') ? 'rgba(255, 88, 62, 0.5)' : 'rgba(62, 255, 109, 0.5)';
 			context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 			context.strokeStyle = 'rgba(0, 255, 0, 1.0)';
 			context.beginPath();
@@ -1045,22 +1072,20 @@ class InspectorPage extends Component {
 			context.beginPath();
 			context.moveTo(0, 0);
 			context.strokeRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-			// 		  context.lineWidth = 2;
 			context.stroke();
 
 			context.fillStyle = '#00ff00';
 			context.fillRect(frame.origin.x, frame.origin.y - 13, frame.size.width, 13);
-			context.fillRect(frame.origin.x - 30, frame.origin.y, 30, frame.size.height);
+			context.fillRect(frame.origin.x - txtWidth, frame.origin.y, txtWidth, frame.size.height);
 
-			context.font = '10px AndaleMono';
 			context.fillStyle = '#ffffff';
 			context.textAlign = 'center';
 			context.textBaseline = 'bottom';
-			context.fillText(`${srcFrame.size.width}PX`, frame.origin.x + (frame.size.width * 0.5), frame.origin.y - 1);
+			context.fillText(`${hoverSlice.meta.frame.size.width}PX`, frame.origin.x + (frame.size.width * 0.5), frame.origin.y - 1);
 
 			context.textAlign = 'right';
 			context.textBaseline = 'middle';
-			context.fillText(`${srcFrame.size.height}PX`, frame.origin.x - 2, frame.origin.y + (frame.size.height * 0.5));
+			context.fillText(`${hoverSlice.meta.frame.size.height}PX`, frame.origin.x - 2, frame.origin.y + (frame.size.height * 0.5));
 		}
 	};
 
@@ -1149,6 +1174,7 @@ class InspectorPage extends Component {
 				<SliceRolloverItem
 					key={i}
 					id={slice.id}
+					artboardID={artboard.id}
 					title={slice.title}
 					type={slice.type}
 					filled={slice.filled}
@@ -1164,10 +1190,31 @@ class InspectorPage extends Component {
 					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />)
 			);
 
-			const hotspotSlices = artboard.slices.filter((slice)=> (slice.type === 'hotspot')).map((slice, i) => (
+			const backgroundSlices = artboard.slices.filter((slice)=> (slice.type === 'background')).map((slice, i) => (
 				<SliceRolloverItem
 					key={i}
 					id={slice.id}
+					artboardID={artboard.id}
+					title={slice.title}
+					type={slice.type}
+					filled={slice.filled}
+					visible={(!scrolling)}
+					top={slice.meta.frame.origin.y}
+					left={slice.meta.frame.origin.x}
+					width={slice.meta.frame.size.width}
+					height={slice.meta.frame.size.height}
+					scale={scale}
+					offset={{ x : offset.x, y : offset.y }}
+					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
+					onRollOut={()=> this.handleSliceRollOut(i, slice)}
+					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />)
+			);
+
+			const symbolSlices = artboard.slices.filter((slice)=> (slice.type === 'symbol')).map((slice, i) => (
+				<SliceRolloverItem
+					key={i}
+					id={slice.id}
+					artboardID={artboard.id}
 					title={slice.title}
 					type={slice.type}
 					filled={slice.filled}
@@ -1187,6 +1234,7 @@ class InspectorPage extends Component {
 				<SliceRolloverItem
 					key={i}
 					id={slice.id}
+					artboardID={artboard.id}
 					title={slice.title}
 					type={slice.type}
 					filled={slice.filled}
@@ -1206,6 +1254,7 @@ class InspectorPage extends Component {
 				<SliceRolloverItem
 					key={i}
 					id={slice.id}
+					artboardID={artboard.id}
 					title={slice.title}
 					type={slice.type}
 					filled={slice.filled}
@@ -1230,7 +1279,8 @@ class InspectorPage extends Component {
 			slices.push(
 				<div key={i} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={sliceWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut}>
 					<div data-artboard-id={artboard.id} className="inspector-page-group-slice-wrapper">{groupSlices}</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-hotspot-slice-wrapper">{hotspotSlices}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-background-slice-wrapper">{backgroundSlices}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slice-wrapper">{symbolSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slice-wrapper">{textfieldSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-slice-slice-wrapper">{sliceSlices}</div>
 				</div>
@@ -1314,15 +1364,15 @@ class InspectorPage extends Component {
 						<div className="inspector-page-panel-tab-content-wrapper">
 							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i) => {
 								return ((tab.contents)
-									? (<PartsList key={i} contents={tab.contents} onPartItem={(slice)=> this.handleDownloadPartItem(slice)} onDownload={this.handleDownload} />)
+									? (<PartsList key={i} contents={tab.contents} onPartItem={(slice)=> this.handleDownloadPartItem(slice)} />)
 									: ('')
 								);
 							}))}
 						</div>
 					</div>
 					<div className="inspector-page-panel-button-wrapper">
-						<button disabled={tabs.length === 0 || !tabs[0].contents} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download List Parts</button>
-						<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAllParts()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download All Project Parts</button>
+						<button disabled={tabs.length === 0 || !tabs[0].contents || tabs[0].contents.length === 0} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download List Parts</button>
+						<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download Project</button>
 					</div>
 				</div>)}
 			</div>

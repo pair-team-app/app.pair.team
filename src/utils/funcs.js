@@ -38,6 +38,27 @@ export function capitalizeText(text, toLower=false) {
 	return (text.replace(/(\b\w)/gi, (c)=> (c.toUpperCase())));
 }
 
+export function cropFrame(srcFrame, cropFrame) {
+	return ({
+		origin : {
+			x : Math.max(srcFrame.origin.x, cropFrame.origin.x),
+			y : Math.max(srcFrame.origin.y, cropFrame.origin.y)
+		},
+		size   : {
+			width  : Math.min(srcFrame.size.width, cropFrame.size.width),
+			height : Math.min(srcFrame.size.height, cropFrame.size.height)
+		}
+	});
+}
+
+export function clampVal(val, lower, upper) {
+	return (Math.min(Math.max(lower, val), upper));
+}
+
+export function commaFormat(val) {
+	return (val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
+}
+
 export function convertURISlug(text) {
 	return (text.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase());
 }
@@ -159,18 +180,6 @@ export function numberedName(name, list, divider='_') {
 	});
 }
 
-export function randomElement(array) {
-	return ((array.length > 0) ? array.slice(randomInt(0, array.length), 1).pop() : null);
-}
-
-export function randomFloat(lower, upper) {
-	return ((Math.random() * (upper - lower)) + lower);
-}
-
-export function randomInt(lower, upper) {
-	return (Math.floor(randomFloat(lower, upper)));
-}
-
 export function rectContainsRect(baseRect, testRect) {
 	return (baseRect.top <= testRect.top && baseRect.left <= testRect.left && baseRect.right >= testRect.right && baseRect.bottom >= testRect.bottom);
 }
@@ -197,6 +206,10 @@ export function sendToSlack(message, callback=null) {
 			}
 		}).catch((error) => {
 	});
+}
+
+export function sizeOutboundsSize(size1, size2) {
+	return (size1.width > size2.width || size1.height > size2.height);
 }
 
 export function trimSlashes(text, leading=true, trailing=true) {
