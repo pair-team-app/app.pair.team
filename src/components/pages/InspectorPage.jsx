@@ -32,6 +32,7 @@ import disabledZoomOutButton from '../../assets/images/buttons/btn-zoom-out_disa
 import enabledZooResetButton from '../../assets/images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../assets/images/buttons/btn-zoom-reset_disabled.svg';
 import inspectorTabs from '../../assets/json/inspector-tabs';
+import {limitString} from "../../utils/funcs";
 
 
 const ANTS_LINE_SIZE = [4, 2];
@@ -96,6 +97,13 @@ const mapDispatchToProps = (dispatch)=> {
 };
 
 
+const ColorSwatch = (props)=> {
+// 	console.log('InspectorPage.ColorSwatch()', props);
+
+	const { fill } = props;
+	return (<div className="inspector-page-color-swatch" style={{ backgroundColor : fill }} />);
+};
+
 const InviteTeamModal = (props)=> {
 	console.log('InspectorPage.InviteTeamModal()', props);
 
@@ -115,7 +123,6 @@ const InviteTeamModal = (props)=> {
 				<div>{upload.title} ({upload.filename.split('/').pop()})</div>
 				{(upload.description.length > 0) && (<div>{upload.description}</div>)}
 				<div className="page-link" onClick={()=> window.open(buildInspectorURL(upload))}>{buildInspectorURL(upload)}</div>
-				{/*<a href={buildInspectorURL(upload)} target="_blank" rel="noopener noreferrer">{buildInspectorURL(upload)}</a>< br/>*/}
 				<CopyToClipboard onCopy={()=> props.onCopyURL()} text={buildInspectorURL(upload)}>
 					<button className="inspector-page-modal-button">Copy URL</button>
 				</CopyToClipboard>
@@ -133,11 +140,10 @@ const InviteTeamModal = (props)=> {
 const PartItem = (props)=> {
 // 	console.log('InspectorPage.SlicePreviewItem()', props);
 
-	const { id, filename, title, size } = props;
-
+	const { id, filename, title, type, size } = props;
 	return (<div data-slice-id={id} className="part-item"><Row vertical="center">
 		<img src={`${filename}@3x.png`} className="part-item-image" width={size.width * 0.25} height={size.height * 0.25} alt={title} />
-		<div className="part-item-title">{title}</div>
+		<div className="part-item-title">{`${limitString(title, Math.max(26 - type.length, 1))} (${capitalizeText(type, true)})`}</div>
 		<button className="tiny-button part-item-button" onClick={()=> props.onClick()}><FontAwesome name="download" /></button>
 	</Row></div>);
 };
@@ -147,13 +153,14 @@ const PartsList = (props)=> {
 
 	const { contents } = props;
 	return (<div className="parts-list-wrapper">
-		{contents.filter((slice)=> (slice.type === 'group')).map((slice, i)=> {
+		{contents.map((slice, i)=> {
 			return (
 				<PartItem
 					key={i}
 					id={slice.id}
 					filename={slice.filename}
 					title={slice.title}
+					type={slice.type}
 					size={slice.meta.frame.size}
 					onClick={()=> props.onPartItem(slice)}
 				/>
@@ -188,6 +195,7 @@ function SpecsList(props) {
 
 	const { upload, slice } = props;
 
+	const fillColor = ((slice) ? (slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color : slice.meta.fillColor : '').toUpperCase();
 	const font = (slice && slice.meta.font) ? fontSpecs(slice.meta.font) : null;
 	const sliceStyles = (slice && slice.meta.styles && slice.meta.styles.length > 0) ? slice.meta.styles.pop() : null;
 	const stroke = (sliceStyles && sliceStyles.border.length > 0) ? sliceStyles.border.pop() : null;
@@ -228,7 +236,7 @@ function SpecsList(props) {
 			<Row><Column flexGrow={1}>Position</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">X: {(slice) ? slice.meta.frame.origin.x : 0}px Y: {(slice) ? slice.meta.frame.origin.y : 0}px</Column></Row>
 			<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? slice.meta.rotation : 0}&deg;</Column></Row>
 			<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? (slice.meta.opacity * 100) : 100}%</Column></Row>
-			<Row><Column flexGrow={1}>Fills</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? (slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : slice.meta.fillColor.toUpperCase() : ''}</Column></Row>
+			<Row><Column flexGrow={1}>Fills</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val"><Row vertical="center">{fillColor}<ColorSwatch fill={fillColor} /></Row></Column></Row>
 			<Row><Column flexGrow={1}>Borders</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{''}</Column></Row>
 			{(slice && slice.type === 'textfield') && (<>
 				<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(font) ? `${font.family} ${font.name}` : ''}</Column></Row>

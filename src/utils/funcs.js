@@ -156,8 +156,8 @@ export function isValidEmail(email) {
 	return (re.test(String(email).toLowerCase()));
 }
 
-export function limitString(str='', len) {
-	return ((str.length > len) ? str.substr(0, len - 1) + '…' : str);
+export function limitString(str='', len, char='…') {
+	return ((str.length > len) ? str.substr(0, len - 1) + char : str);
 }
 
 export function makeDownload(url) {
