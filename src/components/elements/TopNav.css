@@ -4,12 +4,13 @@
 	width: 100%;
 	display: table;
 	z-index: 3;
-	background-color: #1c1c1c;
-	color: #e0e0e0;
+	background-color: #24282e;
+	color: #abdafd;
 }
 
 .top-nav-column {
 	display: table-cell;
+	width: 50%;
 	height: 58px;
 	vertical-align: middle;
 }
@@ -18,17 +19,14 @@
 	padding-left: 24px;
 }
 
-.top-nav-column-middle {
-	padding: 0 24px;
-}
-
 .top-nav-column-right {
 	padding-right: 19px;
+	text-align: right;
 }
 
 .top-nav-logo {
-	width: 50px;
-	height: 22px;
+	width: 41px;
+	height: 19px;
 }
 
 .top-nav-logo:hover {
@@ -36,7 +34,7 @@
 }
 
 .top-nav-link, a.top-nav-link {
-	color: #ffffff;
+	color: #abdafd;
 	margin-left: 22px;
 	letter-spacing: -0.3px;
 	text-decoration: none;
@@ -47,41 +45,15 @@
 	text-decoration: underline;
 }
 
+.top-nav-link:active, .top-nav-link a:active {
+	color: #2288fb;
+}
+
 .top-nav-link-selected, a.top-nav-link-selected {
-	color: #9b9b9b;
-}
-
-.top-nav-demo-icon {
-	position: relative;
-	top: 0;
-	left: 0;
-	width: 20px;
-	height: 20px;
-	margin: 0 10px;
-	opacity: 0.875;
-	cursor: pointer;
-}
-
-.top-nav-demo-icon:hover {
-	opacity: 1;
-	transition: opacity 0.25s ease-out;
-	-moz-transition: opacity 0.25s ease-out;
-	-webkit-transition: opacity 0.25s ease-out;
-}
-
-.top-nav-demo-icon-disabled, .top-nav-demo-icon-disabled:hover {
-	cursor: default;
-	opacity: 0.33;
-}
-
-.top-nav-demo-icon-image {
-	width: 20px;
-	height: 20px;
+	color: #2288fb;
+	text-decoration: underline;
 }
 
 .top-nav-button {
-	font-family: "San Francisco Text Bold", sans-serif;
-	font-weight: 700;
-	font-size: 13px;
-	padding: 6px 16px;
+	width: 100px;
 }

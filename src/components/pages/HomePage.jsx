@@ -10,6 +10,7 @@ import UploadHeader from '../elements/UploadHeader';
 import { addFileUpload, appendHomeArtboards } from '../../redux/actions';
 import { isUserLoggedIn } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
+import bannerPanel from '../../assets/json/banner-panel';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -27,6 +28,15 @@ const mapDispatchToProps = (dispatch)=> {
 	});
 };
 
+
+const BannerPanel = (props)=> {
+	console.log('HomePage.BannerPanel()', props);
+
+	const { image, caption } = props;
+	return (<div className="home-page-banner-panel-wrapper" onClick={()=> props.onClick()}>
+		<img src={image} className="home-page-banner-panel-image" alt={caption} />
+	</div>);
+};
 
 const LoggedInSectionHeader = (props)=> {
 // 	console.log('HomePage.LoggedInSectionHeader()', props);
@@ -92,6 +102,12 @@ class HomePage extends Component {
 			this.handleLoadNextUploads();
 		}
 	}
+
+	handleBanner = ()=> {
+		console.log('HomePage.handleBanner()');
+		trackEvent('banner', 'click');
+		window.open(bannerPanel.url);
+	};
 
 	handleFile = (file)=> {
 // 		console.log('HomePage.handleFile()', file);
@@ -220,6 +236,8 @@ class HomePage extends Component {
 					onClick={(artboard)=> {trackEvent('artboard', 'click'); this.props.onArtboardClicked(artboard)}}
 					onPage={this.props.onPage}
 					onPopup={this.props.onPopup} />
+
+				<BannerPanel title={bannerPanel.title} image={bannerPanel.image} onClick={this.handleBanner} />
 			</div>
 		);
 	}

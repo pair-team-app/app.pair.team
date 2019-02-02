@@ -4,10 +4,9 @@
 	font-family: "San Francisco Text", sans-serif;
 	font-weight: 400;
 	font-size: 12px;
-	letter-spacing: -0.4px;
+	letter-spacing: -0.3px;
 	margin: 0 -20px;
 	padding: 10px 20px;
-	border-top: 1px solid #eaecef;
 }
 
 .bottom-nav-link-wrapper {
@@ -17,7 +16,7 @@
 
 .bottom-nav-link, a.bottom-nav-link {
 	display: inline;
-	color: #0267D8;
+	color: #0267d8;
 	text-decoration: underline;
 	padding-right: 24px;
 }
@@ -29,12 +28,11 @@
 
 .bottom-nav-link a, .bottom-nav-link a:active, .bottom-nav-link a:link, .bottom-nav-link a:visited {
 	text-decoration: underline;
-	color: #0267D8;
+	color: #0267d8;
 }
 
 .copyright {
 	font-family: "San Francisco Text", sans-serif;
 	font-weight: 400;
-	letter-spacing: -0.4px;
 	color: #9b9b9b;
 }

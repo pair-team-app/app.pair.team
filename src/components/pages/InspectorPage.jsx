@@ -11,7 +11,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import FontAwesome from 'react-fontawesome';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
-import { Column, Row } from 'simple-flexbox';
+import { Row } from 'simple-flexbox';
 
 import ContentModal, { MODAL_SIZE_PERCENT } from '../elements/ContentModal';
 import { POPUP_TYPE_INFO } from '../elements/Popup';
@@ -36,7 +36,7 @@ import {limitString} from "../../utils/funcs";
 
 
 const ANTS_LINE_SIZE = [4, 2];
-const ANTS_INTERVAL = 50;
+const ANTS_INTERVAL = 33;
 const ARTBOARD_ORIGIN = {
 	x : 100,
 	y : 50
@@ -66,7 +66,7 @@ const buildUploadArtboards = (upload)=> {
 };
 
 const artboardByID = (upload, artboardID)=> {
-	return (buildUploadArtboards(upload).filter((artboard) => (artboard.id === artboardID)).pop());
+	return (buildUploadArtboards(upload).filter((artboard)=> (artboard.id === artboardID)).pop());
 };
 
 const buildSlicePreviews = (upload, slice)=> {
@@ -193,9 +193,11 @@ const SliceRolloverItem = (props)=> {
 function SpecsList(props) {
 // 	console.log('InspectorPage.SpecsList()', props);
 
-	const { upload, slice } = props;
+	const { upload, slice, creatorID } = props;
 
 	const fillColor = ((slice) ? (slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color : slice.meta.fillColor : '').toUpperCase();
+	const padding = (slice) ?`${slice.meta.padding.top}px ${slice.meta.padding.left}px ${slice.meta.padding.bottom}px ${slice.meta.padding.right}px` : null;
+	const added = (upload) ? (slice) ? `${slice.added.replace(' ', 'T')}Z` : `${upload.added.replace(' ', 'T')}Z` : '';
 	const font = (slice && slice.meta.font) ? fontSpecs(slice.meta.font) : null;
 	const sliceStyles = (slice && slice.meta.styles) ? slice.meta.styles : null;
 	const border = (sliceStyles && sliceStyles.border) ? sliceStyles.border : null;
@@ -228,34 +230,31 @@ function SpecsList(props) {
 		} : null
 	} : null;
 
-
 	return (
 		<div className="inspector-page-specs-list-wrapper">
-			<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? slice.title : ''}</Column></Row>
-			<Row><Column flexGrow={1}>Type</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? capitalizeText(slice.type, true) : ''}</Column></Row>
-			<Row><Column flexGrow={1}>Export Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">W: {(slice) ? slice.meta.frame.size.width : 0}px H: {(slice) ? slice.meta.frame.size.height : 0}px</Column></Row>
-			<Row><Column flexGrow={1}>Position</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">X: {(slice) ? slice.meta.frame.origin.x : 0}px Y: {(slice) ? slice.meta.frame.origin.y : 0}px</Column></Row>
-			<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? slice.meta.rotation : 0}&deg;</Column></Row>
-			<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? (slice.meta.opacity * 100) : 100}%</Column></Row>
-			<Row><Column flexGrow={1}>Fills</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val"><Row vertical="center">{fillColor}<ColorSwatch fill={fillColor} /></Row></Column></Row>
-			<Row><Column flexGrow={1}>Border</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val"><Row vertical="center">{(border) ? `${styles.border.position} S: ${styles.border.thickness} ${styles.border.color}` : ''}{(border) && (<ColorSwatch fill={styles.border.color} />)}</Row></Column></Row>
-			<Row><Column flexGrow={1}>Shadow</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val"><Row vertical="center">{(shadow) ? `X: ${styles.shadow.offset.x} Y: ${styles.shadow.offset.y} B: ${styles.shadow.blur} S: ${styles.shadow.spread}` : ''}{(shadow) && (<ColorSwatch fill={styles.shadow.color} />)}</Row></Column></Row>
-			<Row><Column flexGrow={1}>Inner Shadow</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val"><Row vertical="center">{(innerShadow) ? `X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}` : ''}{(innerShadow) && (<ColorSwatch fill={styles.innerShadow.color} />)}</Row></Column></Row>
+			<Row><div className="inspector-page-specs-list-attribute">Name</div>{(slice) && (<div className="inspector-page-specs-list-val">{slice.title}</div>)}</Row>
+			<Row><div className="inspector-page-specs-list-attribute">Type</div>{(slice) && (<div className="inspector-page-specs-list-val">{capitalizeText(slice.type, true)}</div>)}</Row>
+			<Row><div className="inspector-page-specs-list-attribute">Export Size</div>{(slice) && (<div className="inspector-page-specs-list-val">{`W: ${slice.meta.frame.size.width}px H: ${slice.meta.frame.size.height}px`}</div>)}</Row>
+			<Row><div className="inspector-page-specs-list-attribute">Position</div>{(slice) && (<div className="inspector-page-specs-list-val">{`X: ${slice.meta.frame.origin.x}px Y: ${slice.meta.frame.origin.y}px`}</div>)}</Row>
+			<Row><div className="inspector-page-specs-list-attribute">Rotation</div>{(slice) && (<div className="inspector-page-specs-list-val">{slice.meta.rotation}&deg;</div>)}</Row>
+			<Row><div className="inspector-page-specs-list-attribute">Opacity</div>{(slice) && (<div className="inspector-page-specs-list-val">{slice.meta.opacity * 100}%</div>)}</Row>
+			<Row><div className="inspector-page-specs-list-attribute">Fill</div>{(fillColor.length > 0) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{fillColor}<ColorSwatch fill={fillColor} /></Row></div>)}</Row>
+			<Row><div className="inspector-page-specs-list-attribute">Border</div>{(border) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{`${styles.border.position} S: ${styles.border.thickness} ${styles.border.color}`}<ColorSwatch fill={styles.border.color} /></Row></div>)}</Row>
+			<Row><div className="inspector-page-specs-list-attribute">Shadow</div>{(shadow) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{`X: ${styles.shadow.offset.x} Y: ${styles.shadow.offset.y} B: ${styles.shadow.blur} S: ${styles.shadow.spread}`}<ColorSwatch fill={styles.shadow.color} /></Row></div>)}</Row>
+			<Row><div className="inspector-page-specs-list-attribute">Inner Shadow</div>{(innerShadow) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{`X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}`}<ColorSwatch fill={styles.innerShadow.color} /></Row></div>)}</Row>
 			{(slice && slice.type === 'textfield') && (<>
-				<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(font) ? `${font.family} ${font.name}` : ''}</Column></Row>
-				<Row><Column flexGrow={1}>Font Weight</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(font) ? font.weight : '400'}</Column></Row>
-				<Row><Column flexGrow={1}>Font Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{`${font.size}px`}</Column></Row>
-				<Row><Column flexGrow={1}>Font Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val"><Row vertical="center">{(font.color) ? font.color.toUpperCase() : ''}<ColorSwatch fill={font.color} /></Row></Column></Row>
-				{/*<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice.meta.font.alignment) ? capitalizeText(slice.meta.font.alignment) : 'Left'}</Column></Row>*/}
-				<Row><Column flexGrow={1}>Line Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(font.lineHeight) ? `${font.lineHeight}px` : ''}</Column></Row>
-				<Row><Column flexGrow={1}>Char Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(font.kerning) ? `${font.kerning.toFixed(2)}px` : '0'}</Column></Row>
+				<Row><div className="inspector-page-specs-list-attribute">Font</div><div className="inspector-page-specs-list-val">{`${font.family} ${font.name}`}</div></Row>
+				<Row><div className="inspector-page-specs-list-attribute">Font Weight</div><div className="inspector-page-specs-list-val">{font.weight}</div></Row>
+				<Row><div className="inspector-page-specs-list-attribute">Font Size</div><div className="inspector-page-specs-list-val">{`${font.size}px`}</div></Row>
+				<Row><div className="inspector-page-specs-list-attribute">Font Color</div><div className="inspector-page-specs-list-val"><Row vertical="center">{(font.color) ? font.color.toUpperCase() : ''}<ColorSwatch fill={font.color} /></Row></div></Row>
+				<Row><div className="inspector-page-specs-list-attribute">Alignment</div><div className="inspector-page-specs-list-val">{(slice.meta.font.alignment) ? capitalizeText(slice.meta.font.alignment) : 'Left'}</div></Row>
+				<Row><div className="inspector-page-specs-list-attribute">Line Spacing</div>{(font.lineHeight) && (<div className="inspector-page-specs-list-val">{`${font.lineHeight}px`}</div>)}</Row>
+				<Row><div className="inspector-page-specs-list-attribute">Char Spacing</div>{(font.kerning) && (<div className="inspector-page-specs-list-val">{`${font.kerning.toFixed(2)}px`}</div>)}</Row>
 			</>)}
-			{(slice && slice.meta.padding) && (<Row>
-				<Column flexGrow={1}>Padding</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{slice.meta.padding.top}px {slice.meta.padding.left}px {slice.meta.padding.bottom}px {slice.meta.padding.right}px</Column>
-			</Row>)}
-			{/*<Row><Column flexGrow={1}>Blend:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? capitalizeText(slice.meta.blendMode, true) : ''}</Column></Row>*/}
-			<Row><Column flexGrow={1}>Date</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? (<Moment format={MOMENT_TIMESTAMP}>{`${slice.added.replace(' ', 'T')}Z`}</Moment>) : ''}</Column></Row>
-			<Row><Column flexGrow={1}>Author</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(upload) ? upload.creator.username : ''}</Column></Row>
+			<Row><div className="inspector-page-specs-list-attribute">Padding</div>{(padding) && (<div className="inspector-page-specs-list-val">{padding}</div>)}</Row>
+			<Row><div className="inspector-page-specs-list-attribute">Blend Mode</div>{(slice) && (<div className="inspector-page-specs-list-val">{capitalizeText(slice.meta.blendMode, true)}</div>)}</Row>
+			<Row><div className="inspector-page-specs-list-attribute">Date</div>{(added) && (<div className="inspector-page-specs-list-val"><Moment format={MOMENT_TIMESTAMP}>{added}</Moment></div>)}</Row>
+			<Row><div className="inspector-page-specs-list-attribute">Uploader</div>{(upload) && (<div className="inspector-page-specs-list-val">{upload.creator.username + ((creatorID === upload.creator.user_id) ? ' (You)' : '')}</div>)}</Row>
 		</div>
 	);
 }
@@ -306,8 +305,8 @@ class InspectorPage extends Component {
 		this.initialScaled = false;
 		this.processingInterval = null;
 		this.antsOffset = 0;
-		this.antsInterval = null;
-		this.scrollTimeout = null;
+		this.canvasInterval = null;
+// 		this.scrollTimeout = null;
 		this.notification = null;
 	}
 
@@ -411,12 +410,12 @@ class InspectorPage extends Component {
 		console.log('InspectorPage.componentWillUnmount()', this.state);
 
 		clearInterval(this.processingInterval);
-		clearInterval(this.antsInterval);
-		clearTimeout(this.scrollTimeout);
+		clearInterval(this.canvasInterval);
+// 		clearTimeout(this.scrollTimeout);
 
 		this.processingInterval = null;
-		this.antsInterval = null;
-		this.scrollTimeout = null;
+		this.canvasInterval = null;
+// 		this.scrollTimeout = null;
 
 		document.removeEventListener('keydown', this.handleKeyDown.bind(this));
 		document.removeEventListener('wheel', this.handleWheelStart.bind(this));
@@ -448,8 +447,8 @@ class InspectorPage extends Component {
 			}
 		}
 
-		if (!this.antsInterval) {
-			this.antsInterval = setInterval(this.onUpdateAnts, ANTS_INTERVAL);
+		if (!this.canvasInterval) {
+			this.canvasInterval = setInterval(this.onCanvasInterval, ANTS_INTERVAL);
 		}
 
 		if (artboard.slices.length === 0) {
@@ -457,14 +456,14 @@ class InspectorPage extends Component {
 			formData.append('action', 'SLICES');
 			formData.append('artboard_id', artboardID);
 			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					console.log('SLICES', response.data);
+				.then((response)=> {
+// 					console.log('SLICES', response.data);
 
 					let { upload } = this.state;
 					let pages = [...upload.pages];
-					pages.forEach((page) => {
-						page.artboards.filter((artboard) => (artboard.id === artboardID && artboard.slices.length === 0)).forEach((artboard) => {
-							artboard.slices = response.data.slices.map((item) => ({
+					pages.forEach((page)=> {
+						page.artboards.filter((artboard)=> (artboard.id === artboardID)).forEach((artboard)=> {
+							artboard.slices = response.data.slices.map((item)=> ({
 								id         : item.id,
 								artboardID : item.artboard_id,
 								title      : item.title,
@@ -479,494 +478,12 @@ class InspectorPage extends Component {
 
 					upload.pages = pages;
 					this.setState({ upload });
-				}).catch((error) => {
+				}).catch((error)=> {
 			});
 		}
 	};
 
-	handleCloseNotification = (event)=> {
-// 		console.log('InspectorPage.handleCloseNotification()', event, this.notification);
-		window.focus();
-		this.notification.close(event.target.tag);
-	};
-
-	handleCopyCode = ()=> {
-		console.log('InspectorPage.handleCopyCode()');
-
-		trackEvent('button', 'copy-code');
-		this.props.onPopup({
-			type    : POPUP_TYPE_INFO,
-			content : 'Copied to Clipboard!'
-		});
-	};
-
-	handleCopyURL = ()=> {
-		console.log('InspectorPage.handleCopyURL()');
-
-		trackEvent('button', 'copy-url');
-		this.props.onPopup({
-			type    : POPUP_TYPE_INFO,
-			content : 'Copied to Clipboard!'
-		});
-	};
-
-	handleDownloadAll = ()=> {
-		console.log('InspectorPage.handleDownloadAll()');
-
-		trackEvent('button', 'download-project');
-		const { upload } = this.state;
-		makeDownload(`http://cdn.designengine.ai/download-project.php?upload_id=${upload.id}`);
-	};
-
-	handleDownloadPartItem = (slice)=> {
-// 		console.log('InspectorPage.handleDownloadPartItem()', slice);
-
-		trackEvent('button', 'download-part');
-		const { upload } = this.state;
-		makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${[slice.id]}`);
-	};
-
-	handleDownloadPartsList = ()=> {
-// 		console.log('InspectorPage.handleDownloadPartsList()');
-
-		trackEvent('button', 'download-list');
-		const { upload, slice } = this.state;
-		const sliceIDs = buildSlicePreviews(upload, slice).map((slice)=> (slice.id)).join(',');
-		makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
-	};
-
-	handleInviteTeamFormSubmitted = (result)=> {
-		console.log('InspectorPage.handleInviteTeamFormSubmitted()', result);
-
-		this.props.onPopup({
-			type    : POPUP_TYPE_INFO,
-			content : `Sent ${result.sent.length} invite${(result.sent.length === 1) ? '' : 's'}!`
-		});
-	};
-
-	handleInviteModalClose = ()=> {
-		const { processing } = this.state;
-		this.setState({
-			processing : {
-				state : processing.state,
-				message : ''
-			},
-			inviteModal : false
-		});
-	};
-
-	handleKeyDown = (event)=> {
-// 		console.log('InspectorPage.handleKeyDown()', event);
-
-		trackEvent('keypress', (event.keyCode === PLUS_KEY) ? 'plus' : 'minus');
-		if (event.keyCode === PLUS_KEY) {
-			this.handleZoom(1);
-
-		} else if (event.keyCode === MINUS_KEY) {
-			this.handleZoom(-1);
-		}
-	};
-
-	handleSliceClick = (ind, slice, offset)=> {
-		console.log('InspectorPage.handleSliceClick()', ind, slice, offset, artboardsWrapper);
-
-		trackEvent('slice', `${slice.id}_${convertURISlug(slice.title)}`);
-
-		const { upload, section } = this.state;
-		let { tabs } = this.state;
-
-		const css = toCSS(slice);
-		const reactCSS = toReactCSS(slice);
-		const swift = toSwift(slice, artboardByID(upload, slice.artboardID));
-
-		if (section === 'inspect') {
-			tabs[0].contents = css.html;
-			tabs[0].syntax = css.syntax;
-			tabs[1].contents = reactCSS.html;
-			tabs[1].syntax = reactCSS.syntax;
-			tabs[2].contents = swift.html;
-			tabs[2].syntax = swift.syntax;
-
-		} else if (section === 'parts') {
-			tabs[0].contents = buildSlicePreviews(upload, slice);
-		}
-
-		this.setState({
-			tabs       : tabs,
-			hoverSlice : null,
-			slice      : slice,
-			offset     : offset
-		});
-	};
-
-	handleSliceRollOut = (ind, slice)=> {
-// 		console.log('InspectorPage.handleSliceRollOut()', ind, slice);
-
-		const { upload, section } = this.state;
-		let { tabs } = this.state;
-
-		const pages = [...upload.pages];
-		pages.forEach((page)=> {
-			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((artboard) => {
-				artboard.slices.filter((item)=> (item.filled)).forEach((item)=> {
-					item.filled = false;
-				});
-			});
-		});
-
-		upload.pages = pages;
-		slice.filled = false;
-
-		if (this.state.slice) {
-			const pages = [...upload.pages];
-			pages.forEach((page)=> {
-				page.artboards.filter((artboard)=> (artboard.id === this.state.slice.artboardID)).forEach((item) => {
-					item.slices.filter((itm)=> (itm.id !== this.state.slice.id)).forEach((itm)=> {
-// 						itm.filled = rectContainsRect(frameToRect(this.state.slice.meta.frame), frameToRect(itm.meta.frame));
-						itm.filled = false;
-					});
-				});
-			});
-
-			const css = toCSS(this.state.slice);
-			const reactCSS = toReactCSS(this.state.slice);
-			const swift = toSwift(this.state.slice, artboardByID(upload, this.state.slice.artboardID));
-
-			if (section === 'inspect') {
-				tabs[0].contents = css.html;
-				tabs[0].syntax = css.syntax;
-				tabs[1].contents = reactCSS.html;
-				tabs[1].syntax = reactCSS.syntax;
-				tabs[2].contents = swift.html;
-				tabs[2].syntax = swift.syntax;
-
-			} else if (section === 'parts') {
-				tabs[0].contents = buildSlicePreviews(upload, this.state.slice);
-			}
-		}
-
-		this.setState({
-			upload     : upload,
-			tabs       : tabs,
-			hoverSlice : null
-		});
-	};
-
-	handleSliceRollOver = (ind, slice, offset)=> {
-// 		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
-
-		const { upload, section } = this.state;
-		let { tabs } = this.state;
-
-		const pages = [...upload.pages];
-		pages.forEach((page)=> {
-			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item) => {
-				item.slices.filter((itm)=> (itm.id === slice.id)).forEach((itm)=> {
-					//itm.filled = rectContainsRect(frameToRect(slice.meta.frame), frameToRect(itm.meta.frame));
-					itm.filled = true;
-				});
-			});
-		});
-
-		upload.pages = pages;
-		slice.filled = true;
-
-		const css = toCSS(slice);
-		const reactCSS = toReactCSS(slice);
-		const swift = toSwift(slice, artboardByID(upload, slice.artboardID));
-
-		if (section === 'inspect') {
-			tabs[0].contents = css.html;
-			tabs[0].syntax = css.syntax;
-			tabs[1].contents = reactCSS.html;
-			tabs[1].syntax = reactCSS.syntax;
-			tabs[2].contents = swift.html;
-			tabs[2].syntax = swift.syntax;
-
-		} else if (section === 'parts') {
-			tabs[0].contents = buildSlicePreviews(upload, slice);
-		}
-
-		this.setState({
-			upload      : upload,
-			tabs        : tabs,
-			hoverSlice  : slice,
-			hoverOffset : offset
-		});
-	};
-
-	handleTab = (tab)=> {
-// 		 console.log('InspectorPage.handleTab()', tab);
-		const { tabs } = this.state;
-		trackEvent('tab', convertURISlug(tab.title));
-		this.setState({ selectedTab : tabs.indexOf(tab) });
-	};
-
-	handleTutorialNextStep = (step)=> {
-		console.log('InspectorPage.handleTutorialNextStep()', step);
-		const tutorial = {
-			origin : {
-				top  : (step === 1) ? '240px' : '140px',
-				left : (step === 1) ? `${artboardsWrapper.current.clientWidth - 250}px` : '50%',
-			}
-		};
-
-		this.setState({ tutorial : tutorial });
-	};
-
-
-	handleWheelStart = (event)=> {
-// 		console.log('InspectorPage.handleWheelStart()', event.type, event.deltaX, event.deltaY, event.target);
-		//console.log('wheel', artboardsWrapper.current.clientWidth, artboardsWrapper.current.clientHeight, artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft);
-
-		clearTimeout(this.scrollTimeout);
-		this.scrollTimeout = null;
-
-		if (event.ctrlKey) {
-			event.preventDefault();
-			this.setState({
-				scrolling : true,
-				scale     : Math.min(Math.max(this.state.scale - (event.deltaY * PAN_FACTOR), 0.03), 3).toFixed(2),
-				tooltip   : Math.floor(Math.min(Math.max(this.state.scale - (event.deltaY * PAN_FACTOR), 0.03), 3).toFixed(2) * 100) + '%'
-			});
-
-		} else {
-			if (artboardsWrapper.current) {
-				this.setState({
-					scrolling    : true,
-					scrollOffset : {
-						x : artboardsWrapper.current.scrollLeft,
-						y : artboardsWrapper.current.scrollTop
-					}
-				});
-			}
-		}
-
-		this.scrollTimeout = setTimeout(this.handleWheelStop, 50);
-	};
-
-	handleWheelStop = ()=> {
-// 		console.log('InspectorPage.handleWheelStop()');
-
-		clearTimeout(this.scrollTimeout);
-		this.setState({ scrolling : false });
-	};
-
-	handleZoom = (direction)=> {
-// 		console.log('InspectorPage.handleZoom()', direction);
-
-		const { scale } = this.state;
-
-		if (direction === 0) {
-			artboardsWrapper.current.scrollTo(0, 0);
-			this.setState({
-				scrollOffset : {
-					x : 0,
-					y : 0
-				},
-				scale        : ZOOM_NOTCHES[3],
-				tooltip      : Math.floor(ZOOM_NOTCHES[3] * 100) + '%'
-			});
-
-		} else {
-			let ind = -1;
-			ZOOM_NOTCHES.forEach((amt, i)=> {
-				if (amt === scale) {
-					ind = i + direction;
-				}
-			});
-
-			ZOOM_NOTCHES.forEach((amt, i)=> {
-				if (ind === -1) {
-					if (direction > 0) {
-						if (amt > scale) {
-							ind = i;
-						}
-
-					} else {
-						if (amt > scale) {
-							ind = i - 1;
-						}
-					}
-				}
-			});
-
-			this.setState({
-				scale   : ZOOM_NOTCHES[Math.min(Math.max(0, ind + direction), ZOOM_NOTCHES.length - 1)],
-				tooltip : Math.floor(ZOOM_NOTCHES[Math.min(Math.max(0, ind + direction), ZOOM_NOTCHES.length - 1)] * 100) + '%'
-			});
-		}
-
-		setTimeout(()=> {
-			this.setState({ tooltip : '' });
-		}, 1000);
-	};
-
-	onProcessingUpdate = ()=> {
-		const { upload } = this.state;
-
-		let formData = new FormData();
-		formData.append('action', 'UPLOAD_STATUS');
-		formData.append('upload_id', upload.id);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-				console.log('UPLOAD_STATUS', response.data);
-				const { status } = response.data;
-				const processingState = parseInt(status.state, 10);
-
-				if (processingState === 0) {
-					const { queue } = status;
-					this.setState({
-						processing : {
-							state   : processingState,
-							message : `You are in queue position ${queue.position}/${queue.total}, please wait your turn…`
-						}
-					});
-
-				} else if (processingState === 1) {
-					this.setState({
-						processing : {
-							state   : processingState,
-							message : 'Your file is being prepared…'
-						}
-					});
-
-				} else if (processingState === 2) {
-					const { totals } = status;
-					const total = Object.values(totals).reduce((acc, val)=> (parseInt(acc, 10) + parseInt(val, 10)));
-
-					const mins = moment.duration(moment(Date.now()).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
-					const secs = Math.floor((mins - Math.floor(mins)) * 60);
-
-					this.setState({
-						processing : {
-							state   : processingState,
-							message : `Your file is processing, parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s…`
-						}
-					});
-					this.onRefreshUpload();
-
-				} else if (processingState === 3) {
-					const { totals } = status;
-					const total = Object.values(totals).reduce((acc, val)=> (parseInt(acc, 10) + parseInt(val, 10)));
-
-					const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
-					const secs = Math.floor((mins - Math.floor(mins)) * 60);
-
-					this.props.onProcessing(false);
-					clearInterval(this.processingInterval);
-					this.processingInterval = null;
-
-					this.onShowNotification();
-
-					this.setState({
-						processing : {
-							state   : processingState,
-							message : `Your file has completed processing. Parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s.`
-						}
-					});
-					this.onRefreshUpload();
-
-				} else if (processingState === 4) {
-					this.setState({
-						processing : {
-							state   : processingState,
-							message : 'An error has occurred during processing!'
-						}
-					});
-				}
-			}).catch((error) => {
-		});
-	};
-
-	onRefreshUpload = ()=> {
-		console.log('InspectorPage.onRefreshUpload()', this.props);
-
-		const { uploadID } = this.props.deeplink;
-		const { section, scale, viewport } = this.state;
-
-		this.setState({ tooltip : 'Loading…' });
-
-		let maxH = 0;
-		let offset = {
-			x : 0,
-			y : 0
-		};
-
-		axios.post('https://api.designengine.ai/system.php', qs.stringify({
-			action    : 'UPLOAD',
-			upload_id : uploadID
-		})).then((response) => {
-			console.log('UPLOAD', response.data);
-			const { upload } = response.data;
-
-			let pages = [];
-			upload.pages.forEach((page)=> {
-				let artboards = [];
-				page.artboards.forEach((artboard, i, arr)=> {
-					if (Math.floor(i % 5) === 0 && i !== 0) {
-						viewport.height += maxH + 50;
-						offset.x = 0;
-						offset.y += 50 + maxH;
-						maxH = 0;
-					}
-
-					maxH = Math.round(Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale));
-
-					artboards.push({
-						id        : artboard.id,
-						pageID    : artboard.page_id,
-						title     : artboard.title,
-						filename  : (artboard.filename.includes('@3x')) ? artboard.filename : `${artboard.filename}@3x.png`,
-						meta      : JSON.parse(artboard.meta),
-						added     : artboard.added,
-						grid      : {
-							col : i % 5,
-							row : Math.floor(i / 5)
-						},
-						offset    : {
-							x : offset.x,
-							y : offset.y
-						},
-						slices    : artboard.slices.map((item) => ({
-							id       : item.id,
-							title    : item.title,
-							type     : item.type,
-							filename : item.filename,
-							meta     : JSON.parse(item.meta),
-							added    : item.added
-						}))
-					});
-
-
-					if (i < arr.length - 1) {
-						offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
-					}
-
-					viewport.width = Math.max(viewport.width, offset.x);
-				});
-
-				page.artboards = artboards;
-				pages.push(page);
-			});
-
-			upload.pages = pages;
-			const tabs = inspectorTabs[section];
-			const tooltip = '';
-
-			this.setState({ upload, tabs, viewport, tooltip });
-		}).catch((error) => {
-		});
-	};
-
-	onShowNotification = ()=> {
-		console.log('InspectorPage.onShowNotification()', this.notification);
-		if (this.notification.supported()) {
-			this.notification.show();
-		}
-	};
-
-	onUpdateCanvas = ()=> {
+	handleCanvasUpdate = ()=> {
 		const { scale, offset, scrollOffset } = this.state;
 		const { artboard, slice, hoverSlice } = this.state;
 
@@ -1092,10 +609,494 @@ class InspectorPage extends Component {
 		}
 	};
 
-	onUpdateAnts = ()=> {
+	handleCloseNotification = (event)=> {
+// 		console.log('InspectorPage.handleCloseNotification()', event, this.notification);
+		window.focus();
+		this.notification.close(event.target.tag);
+	};
+
+	handleCopyCode = ()=> {
+		console.log('InspectorPage.handleCopyCode()');
+
+		trackEvent('button', 'copy-code');
+		this.props.onPopup({
+			type    : POPUP_TYPE_INFO,
+			content : 'Copied to Clipboard!'
+		});
+	};
+
+	handleCopyURL = ()=> {
+		console.log('InspectorPage.handleCopyURL()');
+
+		trackEvent('button', 'copy-url');
+		this.props.onPopup({
+			type    : POPUP_TYPE_INFO,
+			content : 'Copied to Clipboard!'
+		});
+	};
+
+	handleDownloadAll = ()=> {
+		console.log('InspectorPage.handleDownloadAll()');
+
+		trackEvent('button', 'download-project');
+		const { upload } = this.state;
+		makeDownload(`http://cdn.designengine.ai/download-project.php?upload_id=${upload.id}`);
+	};
+
+	handleDownloadPartItem = (slice)=> {
+// 		console.log('InspectorPage.handleDownloadPartItem()', slice);
+
+		trackEvent('button', 'download-part');
+		const { upload } = this.state;
+		makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${[slice.id]}`);
+	};
+
+	handleDownloadPartsList = ()=> {
+// 		console.log('InspectorPage.handleDownloadPartsList()');
+
+		trackEvent('button', 'download-list');
+		const { upload, slice } = this.state;
+		const sliceIDs = buildSlicePreviews(upload, slice).map((slice)=> (slice.id)).join(',');
+		makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
+	};
+
+	handleInviteTeamFormSubmitted = (result)=> {
+		console.log('InspectorPage.handleInviteTeamFormSubmitted()', result);
+
+		this.props.onPopup({
+			type    : POPUP_TYPE_INFO,
+			content : `Sent ${result.sent.length} invite${(result.sent.length === 1) ? '' : 's'}!`
+		});
+	};
+
+	handleInviteModalClose = ()=> {
+		const { processing } = this.state;
+		this.setState({
+			processing : {
+				state : processing.state,
+				message : ''
+			},
+			inviteModal : false
+		});
+	};
+
+	handleKeyDown = (event)=> {
+// 		console.log('InspectorPage.handleKeyDown()', event);
+
+		trackEvent('keypress', (event.keyCode === PLUS_KEY) ? 'plus' : 'minus');
+		if (event.keyCode === PLUS_KEY) {
+			this.handleZoom(1);
+
+		} else if (event.keyCode === MINUS_KEY) {
+			this.handleZoom(-1);
+		}
+	};
+
+	handleSliceClick = (ind, slice, offset)=> {
+		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
+
+		trackEvent('slice', `${slice.id}_${convertURISlug(slice.title)}`);
+
+		const { upload, section } = this.state;
+		let { tabs } = this.state;
+
+		const css = toCSS(slice);
+		const reactCSS = toReactCSS(slice);
+		const swift = toSwift(slice, artboardByID(upload, slice.artboardID));
+
+		if (section === 'inspect') {
+			tabs[0].contents = css.html;
+			tabs[0].syntax = css.syntax;
+			tabs[1].contents = reactCSS.html;
+			tabs[1].syntax = reactCSS.syntax;
+			tabs[2].contents = swift.html;
+			tabs[2].syntax = swift.syntax;
+
+		} else if (section === 'parts') {
+			tabs[0].contents = buildSlicePreviews(upload, slice);
+		}
+
+		this.setState({
+			tabs       : tabs,
+			hoverSlice : null,
+			slice      : slice,
+			offset     : offset
+		});
+	};
+
+	handleSliceRollOut = (ind, slice)=> {
+// 		console.log('InspectorPage.handleSliceRollOut()', ind, slice);
+
+		const { upload, section } = this.state;
+		let { tabs } = this.state;
+
+		const pages = [...upload.pages];
+		pages.forEach((page)=> {
+			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((artboard)=> {
+				artboard.slices.filter((item)=> (item.filled)).forEach((item)=> {
+					item.filled = false;
+				});
+			});
+		});
+
+		upload.pages = pages;
+		slice.filled = false;
+
+		if (this.state.slice) {
+			const pages = [...upload.pages];
+			pages.forEach((page)=> {
+				page.artboards.filter((artboard)=> (artboard.id === this.state.slice.artboardID)).forEach((item)=> {
+					item.slices.filter((itm)=> (itm.id !== this.state.slice.id)).forEach((itm)=> {
+// 						itm.filled = rectContainsRect(frameToRect(this.state.slice.meta.frame), frameToRect(itm.meta.frame));
+						itm.filled = false;
+					});
+				});
+			});
+
+			const css = toCSS(this.state.slice);
+			const reactCSS = toReactCSS(this.state.slice);
+			const swift = toSwift(this.state.slice, artboardByID(upload, this.state.slice.artboardID));
+
+			if (section === 'inspect') {
+				tabs[0].contents = css.html;
+				tabs[0].syntax = css.syntax;
+				tabs[1].contents = reactCSS.html;
+				tabs[1].syntax = reactCSS.syntax;
+				tabs[2].contents = swift.html;
+				tabs[2].syntax = swift.syntax;
+
+			} else if (section === 'parts') {
+				tabs[0].contents = buildSlicePreviews(upload, this.state.slice);
+			}
+		}
+
+		this.setState({
+			upload     : upload,
+			tabs       : tabs,
+			hoverSlice : null
+		});
+	};
+
+	handleSliceRollOver = (ind, slice, offset)=> {
+// 		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
+
+		const { upload, section } = this.state;
+		let { tabs } = this.state;
+
+		const pages = [...upload.pages];
+		pages.forEach((page)=> {
+			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item)=> {
+				item.slices.filter((itm)=> (itm.id === slice.id)).forEach((itm)=> {
+					//itm.filled = rectContainsRect(frameToRect(slice.meta.frame), frameToRect(itm.meta.frame));
+					itm.filled = true;
+				});
+			});
+		});
+
+		upload.pages = pages;
+		slice.filled = true;
+
+		const css = toCSS(slice);
+		const reactCSS = toReactCSS(slice);
+		const swift = toSwift(slice, artboardByID(upload, slice.artboardID));
+
+		if (section === 'inspect') {
+			tabs[0].contents = css.html;
+			tabs[0].syntax = css.syntax;
+			tabs[1].contents = reactCSS.html;
+			tabs[1].syntax = reactCSS.syntax;
+			tabs[2].contents = swift.html;
+			tabs[2].syntax = swift.syntax;
+
+		} else if (section === 'parts') {
+			tabs[0].contents = buildSlicePreviews(upload, slice);
+		}
+
+		this.setState({
+			upload      : upload,
+			tabs        : tabs,
+			hoverSlice  : slice,
+			hoverOffset : offset
+		});
+	};
+
+	handleTab = (tab)=> {
+// 		 console.log('InspectorPage.handleTab()', tab);
+		const { tabs } = this.state;
+		trackEvent('tab', convertURISlug(tab.title));
+		this.setState({ selectedTab : tabs.indexOf(tab) });
+	};
+
+	handleTutorialNextStep = (step)=> {
+		console.log('InspectorPage.handleTutorialNextStep()', step);
+		const tutorial = {
+			origin : {
+				top  : (step === 1) ? '240px' : '140px',
+				left : (step === 1) ? `${artboardsWrapper.current.clientWidth - 250}px` : '50%',
+			}
+		};
+
+		this.setState({ tutorial : tutorial });
+	};
+
+
+	handleWheelStart = (event)=> {
+// 		console.log('InspectorPage.handleWheelStart()', event.type, event.deltaX, event.deltaY, event.target);
+		//console.log('wheel', artboardsWrapper.current.clientWidth, artboardsWrapper.current.clientHeight, artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft);
+
+		event.stopPropagation();
+
+// 		clearTimeout(this.scrollTimeout);
+// 		this.scrollTimeout = null;
+
+		if (event.ctrlKey) {
+			event.preventDefault();
+			this.setState({
+// 				scrolling : true,
+				scale     : Math.min(Math.max(this.state.scale - (event.deltaY * PAN_FACTOR), 0.03), 3).toFixed(2),
+				tooltip   : Math.floor(Math.min(Math.max(this.state.scale - (event.deltaY * PAN_FACTOR), 0.03), 3).toFixed(2) * 100) + '%'
+			});
+
+		} else {
+			if (artboardsWrapper.current) {
+				this.setState({
+// 					scrolling    : true,
+					scrollOffset : {
+						x : artboardsWrapper.current.scrollLeft,
+						y : artboardsWrapper.current.scrollTop
+					}
+				});
+			}
+		}
+
+// 		this.scrollTimeout = setTimeout(this.handleWheelStop, 50);
+	};
+
+	handleWheelStop = ()=> {
+// 		console.log('InspectorPage.handleWheelStop()');
+
+// 		clearTimeout(this.scrollTimeout);
+		this.setState({ scrolling : false });
+	};
+
+	handleZoom = (direction)=> {
+// 		console.log('InspectorPage.handleZoom()', direction);
+
+		const { scale } = this.state;
+
+		if (direction === 0) {
+			artboardsWrapper.current.scrollTo(0, 0);
+			this.setState({
+				scrollOffset : {
+					x : 0,
+					y : 0
+				},
+				scale        : ZOOM_NOTCHES[3],
+				tooltip      : Math.floor(ZOOM_NOTCHES[3] * 100) + '%'
+			});
+
+		} else {
+			let ind = -1;
+			ZOOM_NOTCHES.forEach((amt, i)=> {
+				if (amt === scale) {
+					ind = i + direction;
+				}
+			});
+
+			ZOOM_NOTCHES.forEach((amt, i)=> {
+				if (ind === -1) {
+					if (direction > 0) {
+						if (amt > scale) {
+							ind = i;
+						}
+
+					} else {
+						if (amt > scale) {
+							ind = i - 1;
+						}
+					}
+				}
+			});
+
+			this.setState({
+				scale   : ZOOM_NOTCHES[Math.min(Math.max(0, ind + direction), ZOOM_NOTCHES.length - 1)],
+				tooltip : Math.floor(ZOOM_NOTCHES[Math.min(Math.max(0, ind + direction), ZOOM_NOTCHES.length - 1)] * 100) + '%'
+			});
+		}
+
+		setTimeout(()=> {
+			this.setState({ tooltip : '' });
+		}, 1000);
+	};
+
+	onCanvasInterval = ()=> {
 		if (canvas.current) {
-			this.antsOffset = (++this.antsOffset % 12);
-			this.onUpdateCanvas();
+			this.antsOffset = ((this.antsOffset + 0.5) % 12);
+			this.handleCanvasUpdate();
+		}
+	};
+
+	onProcessingUpdate = ()=> {
+		const { upload } = this.state;
+
+		let formData = new FormData();
+		formData.append('action', 'UPLOAD_STATUS');
+		formData.append('upload_id', upload.id);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response)=> {
+				console.log('UPLOAD_STATUS', response.data);
+				const { status } = response.data;
+				const processingState = parseInt(status.state, 10);
+
+				if (processingState === 0) {
+					const { queue } = status;
+					this.setState({
+						processing : {
+							state   : processingState,
+							message : `You are in queue position ${queue.position}/${queue.total}, please wait your turn…`
+						}
+					});
+
+				} else if (processingState === 1) {
+					this.setState({
+						processing : {
+							state   : processingState,
+							message : 'Your file is being prepared…'
+						}
+					});
+
+				} else if (processingState === 2) {
+					const { totals } = status;
+					const total = Object.values(totals).reduce((acc, val)=> (parseInt(acc, 10) + parseInt(val, 10)));
+
+					const mins = moment.duration(moment(Date.now()).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
+					const secs = Math.floor((mins - Math.floor(mins)) * 60);
+
+					this.setState({
+						processing : {
+							state   : processingState,
+							message : `Your file is processing, parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s…`
+						}
+					});
+					this.onRefreshUpload();
+
+				} else if (processingState === 3) {
+					const { totals } = status;
+					const total = Object.values(totals).reduce((acc, val)=> (parseInt(acc, 10) + parseInt(val, 10)));
+
+					const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
+					const secs = Math.floor((mins - Math.floor(mins)) * 60);
+
+					this.props.onProcessing(false);
+					clearInterval(this.processingInterval);
+					this.processingInterval = null;
+
+					this.onShowNotification();
+
+					this.setState({
+						processing : {
+							state   : processingState,
+							message : `Your file has completed processing. Parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s.`
+						}
+					});
+					this.onRefreshUpload();
+
+				} else if (processingState === 4) {
+					this.setState({
+						processing : {
+							state   : processingState,
+							message : 'An error has occurred during processing!'
+						}
+					});
+				}
+			}).catch((error)=> {
+		});
+	};
+
+	onRefreshUpload = ()=> {
+		console.log('InspectorPage.onRefreshUpload()', this.props);
+
+		const { uploadID } = this.props.deeplink;
+		const { section, scale, viewport } = this.state;
+
+		this.setState({ tooltip : 'Loading…' });
+
+		let maxH = 0;
+		let offset = {
+			x : 0,
+			y : 0
+		};
+
+		axios.post('https://api.designengine.ai/system.php', qs.stringify({
+			action    : 'UPLOAD',
+			upload_id : uploadID
+		})).then((response)=> {
+			console.log('UPLOAD', response.data);
+			const { upload } = response.data;
+
+			let pages = [];
+			upload.pages.forEach((page)=> {
+				let artboards = [];
+				page.artboards.forEach((artboard, i, arr)=> {
+					if (Math.floor(i % 5) === 0 && i !== 0) {
+						viewport.height += maxH + 50;
+						offset.x = 0;
+						offset.y += 50 + maxH;
+						maxH = 0;
+					}
+
+					maxH = Math.round(Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale));
+
+					artboards.push({
+						id        : artboard.id,
+						pageID    : artboard.page_id,
+						title     : artboard.title,
+						filename  : (artboard.filename.includes('@3x')) ? artboard.filename : `${artboard.filename}@3x.png`,
+						meta      : JSON.parse(artboard.meta),
+						added     : artboard.added,
+						grid      : {
+							col : i % 5,
+							row : Math.floor(i / 5)
+						},
+						offset    : {
+							x : offset.x,
+							y : offset.y
+						},
+						slices    : artboard.slices.map((item)=> ({
+							id       : item.id,
+							title    : item.title,
+							type     : item.type,
+							filename : item.filename,
+							meta     : JSON.parse(item.meta),
+							added    : item.added
+						}))
+					});
+
+
+					if (i < arr.length - 1) {
+						offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
+					}
+
+					viewport.width = Math.max(viewport.width, offset.x);
+				});
+
+				page.artboards = artboards;
+				pages.push(page);
+			});
+
+			upload.pages = pages;
+			const tabs = inspectorTabs[section];
+			const tooltip = '';
+
+			this.setState({ upload, tabs, viewport, tooltip });
+		}).catch((error)=> {
+		});
+	};
+
+	onShowNotification = ()=> {
+		console.log('InspectorPage.onShowNotification()', this.notification);
+		if (this.notification.supported()) {
+			this.notification.show();
 		}
 	};
 
@@ -1174,7 +1175,7 @@ class InspectorPage extends Component {
 				height   : `${(scale * artboard.meta.frame.size.height)}px`
 			};
 
-			const groupSlices = artboard.slices.filter((slice)=> (slice.type === 'group')).map((slice, i) => (
+			const groupSlices = artboard.slices.filter((slice)=> (slice.type === 'group')).map((slice, i)=> (
 				<SliceRolloverItem
 					key={i}
 					id={slice.id}
@@ -1191,10 +1192,10 @@ class InspectorPage extends Component {
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />)
+					onClick={(offset)=> this.handleSliceClick(i, slice, offset)} />)
 			);
 
-			const backgroundSlices = artboard.slices.filter((slice)=> (slice.type === 'background')).map((slice, i) => (
+			const backgroundSlices = artboard.slices.filter((slice)=> (slice.type === 'background')).map((slice, i)=> (
 				<SliceRolloverItem
 					key={i}
 					id={slice.id}
@@ -1211,10 +1212,10 @@ class InspectorPage extends Component {
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />)
+					onClick={(offset)=> this.handleSliceClick(i, slice, offset)} />)
 			);
 
-			const symbolSlices = artboard.slices.filter((slice)=> (slice.type === 'symbol')).map((slice, i) => (
+			const symbolSlices = artboard.slices.filter((slice)=> (slice.type === 'symbol')).map((slice, i)=> (
 				<SliceRolloverItem
 					key={i}
 					id={slice.id}
@@ -1231,10 +1232,10 @@ class InspectorPage extends Component {
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />)
+					onClick={(offset)=> this.handleSliceClick(i, slice, offset)} />)
 			);
 
-			const textfieldSlices = artboard.slices.filter((slice)=> (slice.type === 'textfield')).map((slice, i) => (
+			const textfieldSlices = artboard.slices.filter((slice)=> (slice.type === 'textfield')).map((slice, i)=> (
 				<SliceRolloverItem
 					key={i}
 					id={slice.id}
@@ -1251,10 +1252,10 @@ class InspectorPage extends Component {
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />)
+					onClick={(offset)=> this.handleSliceClick(i, slice, offset)} />)
 			);
 
-			const sliceSlices = artboard.slices.filter((slice)=> (slice.type === 'slice')).map((slice, i) => (
+			const sliceSlices = artboard.slices.filter((slice)=> (slice.type === 'slice')).map((slice, i)=> (
 				<SliceRolloverItem
 					key={i}
 					id={slice.id}
@@ -1271,7 +1272,7 @@ class InspectorPage extends Component {
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={(offset) => this.handleSliceClick(i, slice, offset)} />)
+					onClick={(offset)=> this.handleSliceClick(i, slice, offset)} />)
 			);
 
 			artboardImages.push(
@@ -1282,11 +1283,11 @@ class InspectorPage extends Component {
 
 			slices.push(
 				<div key={i} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={sliceWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut}>
-					<div data-artboard-id={artboard.id} className="inspector-page-group-slice-wrapper">{groupSlices}</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-background-slice-wrapper">{backgroundSlices}</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slice-wrapper">{symbolSlices}</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slice-wrapper">{textfieldSlices}</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-slice-slice-wrapper">{sliceSlices}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-group-slices-wrapper">{groupSlices}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{symbolSlices}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{textfieldSlices}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-slice-slices-wrapper">{sliceSlices}</div>
 				</div>
 			);
 
@@ -1327,10 +1328,10 @@ class InspectorPage extends Component {
 				{(section === 'inspect') && (<div className="inspector-page-panel">
 					<div className="inspector-page-panel-split-content-wrapper">
 						<ul className="inspector-page-panel-tab-wrapper">
-							{(tabs.map((tab, i) => (<li key={i} className={`inspector-page-panel-tab${(selectedTab === i) ? ' inspector-page-panel-tab-selected' : ''}`} onClick={()=> this.handleTab(tab)}>{tab.title}</li>)))}
+							{(tabs.map((tab, i)=> (<li key={i} className={`inspector-page-panel-tab${(selectedTab === i) ? ' inspector-page-panel-tab-selected' : ''}`} onClick={()=> this.handleTab(tab)}>{tab.title}</li>)))}
 						</ul>
 						<div className="inspector-page-panel-tab-content-wrapper">
-							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i) => {
+							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i)=> {
 								return (<div key={i} className="inspector-page-panel-tab-content">
 									<span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents).replace(/ /g, '&nbsp;').replace(/\n/g, '<br />')) : '' }} />
 								</div>);
@@ -1339,23 +1340,23 @@ class InspectorPage extends Component {
 					</div>
 					<div className="inspector-page-panel-button-wrapper">
 						<CopyToClipboard onCopy={()=> this.handleCopyCode()} text={(tabs[selectedTab]) ? tabs[selectedTab].syntax : ''}>
-							<button className="inspector-page-panel-button">Copy</button>
+							<button className="inspector-page-panel-button">Copy to Clipboard</button>
 						</CopyToClipboard>
 					</div>
 					<div className="inspector-page-panel-split-content-wrapper">
 						<ul className="inspector-page-panel-tab-wrapper">
-							<li className={'inspector-page-panel-tab inspector-page-panel-tab-selected'}>Specs</li>
-							{(section === 'parts') && (<li className={'inspector-page-panel-tab'}>Parts</li>)}
+							<li className="inspector-page-panel-tab inspector-page-panel-tab-selected">Specs</li>
+							<li className="inspector-page-panel-tab inspector-page-panel-tab-blank" />
 						</ul>
 						<div className="inspector-page-panel-tab-content-wrapper">
 							<div className="inspector-page-panel-tab-content">
-								<SpecsList upload={upload} slice={activeSlice} />
+								<SpecsList upload={upload} slice={activeSlice} creatorID={(profile) ? profile.id : 0} />
 							</div>
 						</div>
 					</div>
 					<div className="inspector-page-panel-button-wrapper">
 						<CopyToClipboard onCopy={()=> this.handleCopyCode()} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
-							<button className="inspector-page-panel-button">Copy</button>
+							<button className="inspector-page-panel-button">Copy to Clipboard</button>
 						</CopyToClipboard>
 					</div>
 				</div>)}
@@ -1363,10 +1364,10 @@ class InspectorPage extends Component {
 				{(section === 'parts') && (<div className="inspector-page-panel">
 					<div className="inspector-page-panel-full-content-wrapper">
 						<ul className="inspector-page-panel-tab-wrapper">
-							{(tabs.map((tab, i) => (<li key={i} className={`inspector-page-panel-tab${(selectedTab === i) ? ' inspector-page-panel-tab-selected' : ''}`} onClick={()=> this.handleTab(tab)}>{tab.title}</li>)))}
+							{(tabs.map((tab, i)=> (<li key={i} className={`inspector-page-panel-tab${(selectedTab === i) ? ' inspector-page-panel-tab-selected' : ''}`} onClick={()=> this.handleTab(tab)}>{tab.title}</li>)))}
 						</ul>
 						<div className="inspector-page-panel-tab-content-wrapper">
-							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i) => {
+							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i)=> {
 								return ((tab.contents)
 									? (<PartsList key={i} contents={tab.contents} onPartItem={(slice)=> this.handleDownloadPartItem(slice)} />)
 									: ('')
