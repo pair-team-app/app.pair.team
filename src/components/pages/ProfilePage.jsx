@@ -106,9 +106,9 @@ class ProfilePage extends Component {
 				let formData = new FormData();
 				formData.append('file', file);
 				axios.post(`http://cdn.designengine.ai/upload.php?dir=/profiles&prefix=${profile.id}_`, formData, config)
-					.then((response) => {
+					.then((response)=> {
 						console.log("AVATAR_UPLOAD", response.data);
-					}).catch((error) => {
+					}).catch((error)=> {
 				});
 			}
 		}
@@ -172,7 +172,7 @@ class ProfilePage extends Component {
 
 	onValidateFields = (key=null, val=null)=> {
 		let state = this.state;
-		Object.keys(state).forEach((k, i) => {
+		Object.keys(state).forEach((k, i)=> {
 			if (k === key) {
 				state[key] = val;
 			}

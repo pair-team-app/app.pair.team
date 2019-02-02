@@ -57,7 +57,7 @@ class LoginPage extends Component {
 						this.setState({ email, upload });
 						this.props.setRedirectURI(buildInspectorPath(upload));
 					}
-				}).catch((error) => {
+				}).catch((error)=> {
 			});
 		}
 	}

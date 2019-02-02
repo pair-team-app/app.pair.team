@@ -103,7 +103,7 @@ class RegisterForm extends Component {
 			formData.append('type', 'user');
 			formData.append('invite_id', (inviteID) ? inviteID : '0');
 			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
+				.then((response)=> {
 					console.log('REGISTER', response.data);
 					const status = parseInt(response.data.status, 16);
 // 					console.log('status', status, hasBit(status, 0x01), hasBit(status, 0x10));
@@ -121,7 +121,7 @@ class RegisterForm extends Component {
 							emailValid    : hasBit(status, 0x10)
 						});
 					}
-				}).catch((error) => {
+				}).catch((error)=> {
 			});
 		}
 	};

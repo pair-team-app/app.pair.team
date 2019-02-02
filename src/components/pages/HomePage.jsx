@@ -128,7 +128,7 @@ class HomePage extends Component {
 		formData.append('offset', loadOffset);
 		formData.append('length', loadAmt);
 		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
+			.then((response)=> {
 				console.log('USER_UPLOADS', response.data);
 
 				const uploads = response.data.uploads.map((upload)=> ({
@@ -160,14 +160,14 @@ class HomePage extends Component {
 						title  : contributor.username,
 						avatar : contributor.avatar
 					})),
-					pages        : upload.pages.map((page) => ({
+					pages        : upload.pages.map((page)=> ({
 						id          : page.id,
 						uploadID    : page.upload_id,
 						title       : page.title,
 						description : page.description,
 						added       : page.added,
 						selected    : false,
-						artboards   : page.artboards.map((artboard) => ({
+						artboards   : page.artboards.map((artboard)=> ({
 							id        : artboard.id,
 							pageID    : artboard.page_id,
 							uploadID  : artboard.upload_id,
@@ -194,7 +194,7 @@ class HomePage extends Component {
 				if (artboards.length > 0) {
 					this.props.appendHomeArtboards(artboards);
 				}
-			}).catch((error) => {
+			}).catch((error)=> {
 		});
 	};
 

@@ -37,7 +37,7 @@ class RecoverPage extends Component {
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response)=> {
 					console.log('RESET_PASSWORD', response.data);
-				}).catch((error) => {
+				}).catch((error)=> {
 			});
 
 			this.props.onPage('');

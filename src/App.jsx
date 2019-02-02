@@ -181,10 +181,10 @@ class App extends Component {
 		axios.post('https://api.designengine.ai/system.php', qs.stringify({
 			action    : 'ADD_VIEW',
 			upload_id : uploadID
-		})).then((response) => {
+		})).then((response)=> {
 			console.log('ADD_VIEW', response.data);
 
-		}).catch((error) => {
+		}).catch((error)=> {
 			console.log(error);
 
 			if (axios.isCancel(error)) {

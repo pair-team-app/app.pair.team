@@ -118,7 +118,7 @@ class InviteTeamForm extends Component {
 			formData.append('upload_id', upload.id);
 			formData.append('emails', emails.slice(0, -1));
 			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
+				.then((response)=> {
 					console.log('INVITE', response.data);
 					this.setState({
 						submitting : false,
@@ -132,7 +132,7 @@ class InviteTeamForm extends Component {
 						write : response.data.invites_write,
 						sent : response.data.invites_sent
 					});
-				}).catch((error) => {
+				}).catch((error)=> {
 			});
 
 		} else {
@@ -164,7 +164,7 @@ class InviteTeamForm extends Component {
 						/>);
 					})}
 				</Column></div>
-				<button disabled={(!submitValid || submitting)} className="fat-button" onClick={() => ((submitValid) ? this.handleSubmit() : null)}>Invite</button>
+				<button disabled={(!submitValid || submitting)} className="fat-button" onClick={()=> ((submitValid) ? this.handleSubmit() : null)}>Invite</button>
 			</div>
 		</div>);
 	}

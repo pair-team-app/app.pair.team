@@ -102,7 +102,7 @@ class RateThisPage extends Component {
 					console.log('ADD_RATE', response.data);
 					this.setState({ ratingID : response.data.rating.id });
 					this.onFetchRates();
-				}).catch((error) => {
+				}).catch((error)=> {
 			});
 
 		} else {
@@ -131,7 +131,7 @@ class RateThisPage extends Component {
 					console.log('ADD_RATE', response.data);
 					this.setState({ ratingID : response.data.rating.id });
 					this.onFetchRates();
-				}).catch((error) => {
+				}).catch((error)=> {
 			});
 		}
 	}
@@ -162,7 +162,7 @@ class RateThisPage extends Component {
 					console.log('EDIT_RATE', response.data);
 					this.setState({ ratingID : 0 });
 					this.onFetchRates();
-				}).catch((error) => {
+				}).catch((error)=> {
 			});
 		}
 	};
@@ -176,7 +176,7 @@ class RateThisPage extends Component {
 			.then((response)=> {
 				console.log('RATES', response.data);
 				this.setState({ ratings : response.data.ratings });
-			}).catch((error) => {
+			}).catch((error)=> {
 		});
 	};
 

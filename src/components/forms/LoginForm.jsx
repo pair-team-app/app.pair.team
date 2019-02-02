@@ -56,7 +56,7 @@ class LoginForm extends Component {
 			passMsg       : ''
 		});
 
-		setTimeout(() => {
+		setTimeout(()=> {
 			passwordTextfield.current.focus();
 		}, 69);
 	};
@@ -101,7 +101,7 @@ class LoginForm extends Component {
 							passMsg       : hasBit(status, 0x10) ? '' : 'Wrong Password'
 						});
 					}
-				}).catch((error) => {
+				}).catch((error)=> {
 			});
 		}
 	};

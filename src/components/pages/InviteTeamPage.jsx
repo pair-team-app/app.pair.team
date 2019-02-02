@@ -71,7 +71,7 @@ class InviteTeamPage extends Component {
 		formData.append('offset', '0');
 		formData.append('length', '-1');
 		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
+			.then((response)=> {
 				console.log('UPLOAD_NAMES', response.data);
 				const uploads = response.data.uploads.filter((upload)=> (upload.id !== '2' && upload.id !== '3')).map((upload)=> ({
 					id       : upload.id,
@@ -92,11 +92,11 @@ class InviteTeamPage extends Component {
 				});
 
 				this.setState({ uploads });
-			}).catch((error) => {
+			}).catch((error)=> {
 		});
 	};
 
-	resetThenSet = (ind, key) => {
+	resetThenSet = (ind, key)=> {
 		let uploads = [...this.state.uploads];
 		uploads.forEach(upload => upload.selected = false);
 
@@ -152,9 +152,9 @@ class InviteTeamPage extends Component {
 			formData.append('upload_id', this.state.uploadID);
 			formData.append('emails', emails);
 			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
+				.then((response)=> {
 					console.log('INVITE', response.data);
-				}).catch((error) => {
+				}).catch((error)=> {
 			});
 
 			this.setState({ sentInvites : true });
@@ -197,7 +197,7 @@ class InviteTeamPage extends Component {
 							<div className={email1Class}><input type="text" name="email1" placeholder="Enter Email Address" value={email1} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 							<div className={email2Class}><input type="text" name="email2" placeholder="Enter Email Address" value={email2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 							<div className={email3Class}><input type="text" name="email3" placeholder="Enter Email Address" value={email3} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-							<button disabled={(email1.length === 0 && email2.length === 0 && email3.length > 0)} type="submit" onClick={(event) => this.handleSubmit(event)}>Send Invites</button>
+							<button disabled={(email1.length === 0 && email2.length === 0 && email3.length > 0)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Send Invites</button>
 						</form>
 					</div>)
 					: (<h3>Invitations sent.</h3>)}

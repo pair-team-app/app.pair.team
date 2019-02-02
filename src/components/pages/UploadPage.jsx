@@ -72,7 +72,7 @@ const UploadForm = (props)=> {
 						);
 					})}
 				</div>
-				{(formState > 0) && (<button disabled={(!uploadComplete || !titleValid)} className="fat-button upload-page-submit-button" onClick={() => (uploadComplete && title.length > 0) ? props.onSubmit() : null}>{(!uploadComplete) ? 'Uploading Design' : 'Submit Design'}</button>)}
+				{(formState > 0) && (<button disabled={(!uploadComplete || !titleValid)} className="fat-button upload-page-submit-button" onClick={()=> (uploadComplete && title.length > 0) ? props.onSubmit() : null}>{(!uploadComplete) ? 'Uploading Design' : 'Submit Design'}</button>)}
 			</div>
 		</div>
 	</>);
@@ -163,9 +163,9 @@ class UploadPage extends Component {
 		let formData = new FormData();
 		formData.append('file', file);
 		axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
-			.then((response) => {
+			.then((response)=> {
 				console.log("UPLOAD", response.data);
-			}).catch((error) => {
+			}).catch((error)=> {
 			sendToSlack(`*${email}* failed uploading file _${file.name}_`);
 		});
 	};
@@ -242,7 +242,7 @@ class UploadPage extends Component {
 				formData.append('private', (radioIndex === 1) ? '0' : '1');
 				formData.append('filename', `http://cdn.designengine.ai/system/${name}`);
 				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response) => {
+					.then((response)=> {
 						console.log('NEW_UPLOAD', response.data);
 						const { upload } = response.data;
 
@@ -255,7 +255,7 @@ class UploadPage extends Component {
 						this.props.addFileUpload(null);
 						this.props.onProcessing(true);
 						this.props.onPage(buildInspectorPath(upload, window.location.pathname.split('/').pop()));
-					}).catch((error) => {
+					}).catch((error)=> {
 				});
 
 			} else {
