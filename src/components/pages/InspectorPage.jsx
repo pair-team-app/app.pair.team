@@ -191,22 +191,22 @@ const SliceRolloverItem = (props)=> {
 };
 
 function SpecsList(props) {
-// 		console.log('InspectorPage.SpecsList()', props);
+// 	console.log('InspectorPage.SpecsList()', props);
 
 	const { upload, slice } = props;
 
 	const fillColor = ((slice) ? (slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color : slice.meta.fillColor : '').toUpperCase();
 	const font = (slice && slice.meta.font) ? fontSpecs(slice.meta.font) : null;
-	const sliceStyles = (slice && slice.meta.styles && slice.meta.styles.length > 0) ? slice.meta.styles.pop() : null;
-	const stroke = (sliceStyles && sliceStyles.border.length > 0) ? sliceStyles.border.pop() : null;
-	const shadow = (sliceStyles && sliceStyles.shadow.length > 0) ? sliceStyles.shadow.pop() : null;
-	const innerShadow = (sliceStyles && sliceStyles.innerShadow.length > 0) ? sliceStyles.innerShadow.pop() : null;
+	const sliceStyles = (slice && slice.meta.styles) ? slice.meta.styles : null;
+	const border = (sliceStyles && sliceStyles.border) ? sliceStyles.border : null;
+	const shadow = (sliceStyles && sliceStyles.shadow) ? sliceStyles.shadow : null;
+	const innerShadow = (sliceStyles && sliceStyles.innerShadow) ? sliceStyles.innerShadow : null;
 
 	const styles = (sliceStyles) ? {
-		stroke : (stroke) ? {
-			color     : stroke.color.toUpperCase(),
-			position  : stroke.position,
-			thickness : `${stroke.thickness}px`
+		border : (border) ? {
+			color     : border.color.toUpperCase(),
+			position  : capitalizeText(border.position, true),
+			thickness : `${border.thickness}px`
 		} : null,
 		shadow : (shadow) ? {
 			color  : shadow.color.toUpperCase(),
@@ -228,6 +228,7 @@ function SpecsList(props) {
 		} : null
 	} : null;
 
+
 	return (
 		<div className="inspector-page-specs-list-wrapper">
 			<Row><Column flexGrow={1}>Name</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? slice.title : ''}</Column></Row>
@@ -237,21 +238,17 @@ function SpecsList(props) {
 			<Row><Column flexGrow={1}>Rotation</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? slice.meta.rotation : 0}&deg;</Column></Row>
 			<Row><Column flexGrow={1}>Opacity</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice) ? (slice.meta.opacity * 100) : 100}%</Column></Row>
 			<Row><Column flexGrow={1}>Fills</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val"><Row vertical="center">{fillColor}<ColorSwatch fill={fillColor} /></Row></Column></Row>
-			<Row><Column flexGrow={1}>Borders</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{''}</Column></Row>
+			<Row><Column flexGrow={1}>Border</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val"><Row vertical="center">{(border) ? `${styles.border.position} S: ${styles.border.thickness} ${styles.border.color}` : ''}{(border) && (<ColorSwatch fill={styles.border.color} />)}</Row></Column></Row>
+			<Row><Column flexGrow={1}>Shadow</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val"><Row vertical="center">{(shadow) ? `X: ${styles.shadow.offset.x} Y: ${styles.shadow.offset.y} B: ${styles.shadow.blur} S: ${styles.shadow.spread}` : ''}{(shadow) && (<ColorSwatch fill={styles.shadow.color} />)}</Row></Column></Row>
+			<Row><Column flexGrow={1}>Inner Shadow</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val"><Row vertical="center">{(innerShadow) ? `X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}` : ''}{(innerShadow) && (<ColorSwatch fill={styles.innerShadow.color} />)}</Row></Column></Row>
 			{(slice && slice.type === 'textfield') && (<>
 				<Row><Column flexGrow={1}>Font</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(font) ? `${font.family} ${font.name}` : ''}</Column></Row>
 				<Row><Column flexGrow={1}>Font Weight</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(font) ? font.weight : '400'}</Column></Row>
 				<Row><Column flexGrow={1}>Font Size</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{`${font.size}px`}</Column></Row>
-				<Row><Column flexGrow={1}>Font Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(font.color) ? font.color.toUpperCase() : ''}</Column></Row>
+				<Row><Column flexGrow={1}>Font Color</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val"><Row vertical="center">{(font.color) ? font.color.toUpperCase() : ''}<ColorSwatch fill={font.color} /></Row></Column></Row>
 				{/*<Row><Column flexGrow={1}>Text Alignment:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(slice.meta.font.alignment) ? capitalizeText(slice.meta.font.alignment) : 'Left'}</Column></Row>*/}
 				<Row><Column flexGrow={1}>Line Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(font.lineHeight) ? `${font.lineHeight}px` : ''}</Column></Row>
 				<Row><Column flexGrow={1}>Char Spacing</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(font.kerning) ? `${font.kerning.toFixed(2)}px` : '0'}</Column></Row>
-			</>)}
-			{(styles) && (<>
-				{/*<Row><Column flexGrow={1}>Stroke:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(styles.stroke) ? `${capitalizeText(styles.stroke.position, true)} S: ${styles.stroke.thickness} ${styles.stroke.color}` : ''}</Column></Row>*/}
-				{/*<Row><Column flexGrow={1}>Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(styles.shadow) ? `X: ${styles.shadow.offset.x} Y: ${styles.shadow.offset.y} B: ${styles.shadow.blur} S: ${styles.shadow.spread}` : ''}</Column></Row>*/}
-				{/*<Row><Column flexGrow={1}>Inner Shadow:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(styles.innerShadow) ? `X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}` : ''}</Column></Row>*/}
-				{/*<Row><Column flexGrow={1}>Blur:</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{(styles.innerShadow) ? `X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}` : ''}</Column></Row>*/}
 			</>)}
 			{(slice && slice.meta.padding) && (<Row>
 				<Column flexGrow={1}>Padding</Column><Column flexGrow={1} horizontal="end" className="inspector-page-specs-list-val">{slice.meta.padding.top}px {slice.meta.padding.left}px {slice.meta.padding.bottom}px {slice.meta.padding.right}px</Column>
@@ -446,10 +443,6 @@ class InspectorPage extends Component {
 		let { upload, artboard } = this.state;
 		if (!artboard || artboard.id !== artboardID) {
 			artboard = artboardByID(upload, artboardID);
-// 			artboard = [...upload.pages].flatMap((page)=> {
-// 				return (page.artboards);
-// 			}).filter((artboard) => (artboard.id === artboardID)).pop();
-
 			if (artboard) {
 				this.setState({ artboard });
 			}
@@ -459,34 +452,36 @@ class InspectorPage extends Component {
 			this.antsInterval = setInterval(this.onUpdateAnts, ANTS_INTERVAL);
 		}
 
-		let formData = new FormData();
-		formData.append('action', 'SLICES');
-		formData.append('artboard_id', artboardID);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response) => {
-// 				console.log('SLICES', response.data);
+		if (artboard.slices.length === 0) {
+			let formData = new FormData();
+			formData.append('action', 'SLICES');
+			formData.append('artboard_id', artboardID);
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response) => {
+					console.log('SLICES', response.data);
 
-				let { upload } = this.state;
-				let pages = [...upload.pages];
-				pages.forEach((page)=> {
-					page.artboards.filter((artboard) => (artboard.id === artboardID && artboard.slices.length === 0)).forEach((artboard) => {
-						artboard.slices = response.data.slices.map((item) => ({
-							id         : item.id,
-							artboardID : item.artboard_id,
-							title      : item.title,
-							type       : item.type,
-							filename   : item.filename,
-							meta       : JSON.parse(item.meta),
-							added      : item.added,
-							filled     : false
-						}));
+					let { upload } = this.state;
+					let pages = [...upload.pages];
+					pages.forEach((page) => {
+						page.artboards.filter((artboard) => (artboard.id === artboardID && artboard.slices.length === 0)).forEach((artboard) => {
+							artboard.slices = response.data.slices.map((item) => ({
+								id         : item.id,
+								artboardID : item.artboard_id,
+								title      : item.title,
+								type       : item.type,
+								filename   : item.filename,
+								meta       : JSON.parse(item.meta),
+								added      : item.added,
+								filled     : false
+							}));
+						});
 					});
-				});
 
-				upload.pages = pages;
-				this.setState({ upload });
-			}).catch((error) => {
-		});
+					upload.pages = pages;
+					this.setState({ upload });
+				}).catch((error) => {
+			});
+		}
 	};
 
 	handleCloseNotification = (event)=> {
@@ -1135,7 +1130,8 @@ class InspectorPage extends Component {
 		const canvasStyle = {
 			top     : `${(scrollOffset.y - ARTBOARD_ORIGIN.y)}px`,
 			left    : `${(scrollOffset.x - ARTBOARD_ORIGIN.x)}px`,
-			display : (scrolling) ? 'none' : 'block'
+// 			display : (scrolling) ? 'none' : 'block'
+			display : 'block'
 		};
 
 

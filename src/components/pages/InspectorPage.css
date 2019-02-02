@@ -288,6 +288,7 @@
 .inspector-page-color-swatch {
 	width: 10px;
 	height: 10px;
+	border: 1px solid #3d3e40;
 	border-radius: 2px;
 	margin-left: 6px;
 }

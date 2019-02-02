@@ -58,8 +58,6 @@ export function fontSpecs(font) {
 }
 
 export function toCSS(slice) {
-	const font = fontSpecs(slice.meta.font);
-
 	let html = '{\n';
 	html += `${HTML_TAB}position: absolute;\n`;
 	html += `${HTML_TAB}top: ${slice.meta.frame.origin.y}px;\n`;
@@ -67,6 +65,8 @@ export function toCSS(slice) {
 	html += `${HTML_TAB}width: ${slice.meta.frame.size.width}px;\n`;
 	html += `${HTML_TAB}height: ${slice.meta.frame.size.height}px;\n`;
 	if (slice.type === 'textfield') {
+		const font = fontSpecs(slice.meta.font);
+
 		html += `${HTML_TAB}font-family: "${font.family} ${font.name}", sans-serif;\n`;
 		html += `${HTML_TAB}font-weight: ${font.weight};\n`;
 		html += `${HTML_TAB}font-size: ${font.size}px;\n`;
