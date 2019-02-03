@@ -22,7 +22,7 @@ import { MOMENT_TIMESTAMP } from '../../consts/formats';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { DE_LOGO_SMALL } from '../../consts/uris';
 import { setRedirectURI } from '../../redux/actions';
-import { buildInspectorPath, buildInspectorURL, capitalizeText, convertURISlug, cropFrame, frameToRect, makeDownload, rectContainsRect } from '../../utils/funcs.js';
+import { buildInspectorPath, buildInspectorURL, capitalizeText, convertURISlug, cropFrame, frameToRect, limitString, makeDownload, rectContainsRect } from '../../utils/funcs.js';
 import { fontSpecs, toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/inspector-langs.js';
 import { trackEvent } from '../../utils/tracking';
 import enabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_enabled.svg';
@@ -32,7 +32,6 @@ import disabledZoomOutButton from '../../assets/images/buttons/btn-zoom-out_disa
 import enabledZooResetButton from '../../assets/images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../assets/images/buttons/btn-zoom-reset_disabled.svg';
 import inspectorTabs from '../../assets/json/inspector-tabs';
-import {limitString} from "../../utils/funcs";
 
 
 const ANTS_LINE_SIZE = [4, 2];

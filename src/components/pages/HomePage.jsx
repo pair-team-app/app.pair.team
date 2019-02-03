@@ -103,6 +103,13 @@ class HomePage extends Component {
 		}
 	}
 
+	handleArtboardClicked = (artboard)=> {
+		console.log('HomePage.handleArtboardClicked()', artboard);
+
+		trackEvent('artboard', 'click');
+		this.props.onArtboardClicked(artboard)
+	};
+
 	handleBanner = ()=> {
 		console.log('HomePage.handleBanner()');
 		trackEvent('banner', 'click');
@@ -230,12 +237,12 @@ class HomePage extends Component {
 					: (<LoggedOutSectionHeader title={sectionTitle} content={sectionContent} onPage={this.props.onPage} />)
 				}
 
-				<ArtboardGrid
+				{(isUserLoggedIn()) && (<ArtboardGrid
 					title={gridTitle}
 					artboards={artboards}
-					onClick={(artboard)=> {trackEvent('artboard', 'click'); this.props.onArtboardClicked(artboard)}}
+					onClick={this.handleArtboardClicked}
 					onPage={this.props.onPage}
-					onPopup={this.props.onPopup} />
+					onPopup={this.props.onPopup} />)}
 
 				<BannerPanel title={bannerPanel.title} image={bannerPanel.image} onClick={this.handleBanner} />
 			</div>

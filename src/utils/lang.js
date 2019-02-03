@@ -23,11 +23,11 @@ Number.prototype.clamp = (lower, upper)=> {
 };
 
 Number.prototype.commaFormat = ()=> {
-	return (this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+	return (this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
 };
 
 Number.prototype.padLeft = function (length, str) {
-	return ((new Array(length - String(this).length + 1)).join(str || "0") + this);
+	return ((new Array(length - String(this).length + 1)).join(str || '0') + this);
 };
 
 
@@ -41,12 +41,12 @@ String.prototype.countOf = (substr)=> {
 };
 
 String.prototype.replaceAll = (needle, replacement)=> {
-	return (this.replace(new RegExp(needle.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replacement));
-	//return (this.split(needle).join(replacement));
+// 	return (this.replace(new RegExp(needle.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replacement));
+	return (this.split(needle).join(replacement));
 };
 
 String.prototype.reverse = ()=> {
-	return (Array.prototype.reverse.apply(this.split("")).join(""));
+	return ([...this].reverse().join(''));
 };
 
 String.prototype.truncate = (len, ellipsis='…')=> {

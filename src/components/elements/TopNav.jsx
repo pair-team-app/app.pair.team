@@ -11,7 +11,6 @@ import TopNavRate from './TopNavRate';
 import { isUserLoggedIn } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 import { updateDeeplink } from '../../redux/actions';
-import deLogo from '../../assets/images/logos/logo-designengine.svg';
 
 
 const mapDispatchToProps = (dispatch)=> {
@@ -57,7 +56,6 @@ class TopNav extends Component {
 		return (
 			<div className="top-nav-wrapper">
 				<div className="top-nav-column top-nav-column-left"><Row vertical="center" style={{ height : '100%' }}>
-					<img onClick={()=> this.handleLink('')} src={deLogo} className="top-nav-logo" alt="Design Engine" />
 					{(sections.map((section, i)=> <div key={i} className={(pathname.includes(section.url)) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link'} onClick={()=> this.props.onPage(section.url)}>{section.title}</div>))}
 					<TopNavRate selected={(pathname.includes('/rate-this'))} onPage={this.handleLink} onScore={this.handleScore} />
 				</Row></div>
@@ -65,10 +63,10 @@ class TopNav extends Component {
 				<div className="top-nav-column top-nav-column-right">
 					{(!isUserLoggedIn())
 						? (<>
-								<button className="top-nav-button adjacent-button" onClick={()=> this.props.onPage('register')}>Sign Up</button>
-								<button className="top-nav-button" onClick={()=> this.props.onPage('login')}>Login</button>
+								<button className="adjacent-button" onClick={()=> this.props.onPage('register')}>Sign Up</button>
+								<button onClick={()=> this.props.onPage('login')}>Login</button>
 							</>)
-						: (<Row vertical="center">
+						: (<Row vertical="center" horizontal="end">
 								<TopNavProfile
 									onPage={this.props.onPage}
 									onLogout={this.props.onLogout}

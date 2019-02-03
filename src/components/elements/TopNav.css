@@ -16,26 +16,17 @@
 }
 
 .top-nav-column-left {
-	padding-left: 24px;
+	padding-left: 20px;
 }
 
 .top-nav-column-right {
-	padding-right: 19px;
+	padding-right: 20px;
 	text-align: right;
-}
-
-.top-nav-logo {
-	width: 41px;
-	height: 19px;
-}
-
-.top-nav-logo:hover {
-	cursor: pointer;
 }
 
 .top-nav-link, a.top-nav-link {
 	color: #abdafd;
-	margin-left: 22px;
+	margin-right: 22px;
 	letter-spacing: -0.3px;
 	text-decoration: none;
 }
@@ -52,8 +43,4 @@
 .top-nav-link-selected, a.top-nav-link-selected {
 	color: #2288fb;
 	text-decoration: underline;
-}
-
-.top-nav-button {
-	width: 100px;
 }

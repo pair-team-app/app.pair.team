@@ -120,7 +120,7 @@ class App extends Component {
 			cookie.save('tutorial', '0', { path : '/' });
 		}
 
-		this.handlePage(buildInspectorPath({ id : artboard.uploadID, title : artboard.title }));
+		this.handlePage(buildInspectorPath({ id : artboard.uploadID, title : artboard.title }, (window.location.pathname.includes('/parts')) ? '/parts' : '/inspect'));
 		this.props.updateDeeplink({
 			uploadID   : artboard.uploadID,
 			pageID     : artboard.pageID,

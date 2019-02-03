@@ -7,9 +7,9 @@
 }
 
 .home-page-banner-panel-wrapper {
-	position: absolute;
+	position: fixed;
 	right: 20px;
-	bottom: 40px;
+	bottom: 20px;
 	width: 260px;
 	height: 200px;
 	z-index: 2;

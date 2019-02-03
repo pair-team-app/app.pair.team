@@ -9,6 +9,16 @@
 	padding: 10px 20px;
 }
 
+.bottom-nav-logo {
+	width: 41px;
+	height: 19px;
+	margin-bottom: 10px;
+}
+
+.bottom-nav-logo:hover {
+	cursor: pointer;
+}
+
 .bottom-nav-link-wrapper {
 	padding-bottom: 10px;
 	width: 100%;
@@ -29,10 +39,4 @@
 .bottom-nav-link a, .bottom-nav-link a:active, .bottom-nav-link a:link, .bottom-nav-link a:visited {
 	text-decoration: underline;
 	color: #0267d8;
-}
-
-.copyright {
-	font-family: "San Francisco Text", sans-serif;
-	font-weight: 400;
-	color: #9b9b9b;
 }

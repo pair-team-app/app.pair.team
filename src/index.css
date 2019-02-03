@@ -32,7 +32,8 @@ a:hover {
 }
 
 button {
-  padding: 9px 20px;
+  width: 100px;
+  padding: 9px 0;
   background: #005cc5;
   border: none;
   font-family: "San Francisco Text SemiBold", sans-serif;

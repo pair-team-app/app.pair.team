@@ -3,6 +3,7 @@ import React from 'react';
 import './BottomNav.css';
 
 import { isUserLoggedIn } from '../../utils/funcs';
+import deLogo from '../../assets/images/logos/logo-designengine.svg';
 
 
 function BottomNav(props) {
@@ -10,6 +11,7 @@ function BottomNav(props) {
 
 	return (
 		<div className="bottom-nav-wrapper">
+			<img onClick={()=> props.onPage('')} src={deLogo} className="bottom-nav-logo" alt="Design Engine" />
 			<div className="bottom-nav-link-wrapper">
 				<div className="bottom-nav-link" onClick={()=> props.onPage('inspect')}>Free Inspect</div>
 				<div className="bottom-nav-link" onClick={()=> props.onPage('parts')}>Free Parts</div>
@@ -24,8 +26,6 @@ function BottomNav(props) {
 					</span>)
 				}
 			</div>
-
-			<div className="copyright">&copy; {new Date().getFullYear()} Design Engine AI, Inc</div>
 		</div>
 	);
 }

@@ -23,7 +23,7 @@ class TopNavRate extends Component {
 		super(props);
 
 		this.state = {
-			stars : [false, false, false, false, false]
+			stars : new Array(5).fill(false)
 		};
 	}
 

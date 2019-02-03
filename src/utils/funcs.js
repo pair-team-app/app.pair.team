@@ -188,6 +188,19 @@ export function rectIntersectsRect(baseRect, testRect) {
 	return (Math.max(baseRect.left, testRect.left) < Math.min(baseRect.right, testRect.right) && Math.max(baseRect.top, testRect.top) < Math.min(baseRect.bottom, testRect.bottom));
 }
 
+export function rectToFrame(rect) {
+	return ({
+		origin : {
+			x : rect.left,
+			y : rect.top
+		},
+		size   : {
+			width  : rect.right - rect.left,
+			height : rect.bottom - rect.top
+		}
+	});
+}
+
 export function scrollOrigin(element) {
 	if (element) {
 		element.scrollTo(0, 0);
