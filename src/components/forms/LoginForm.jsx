@@ -125,7 +125,7 @@ class LoginForm extends Component {
 						<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
 					</div>
 					<Row vertical="center">
-						<Column><button disabled={(!emailValid || !passwordValid)} type="submit" className="fat-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
+						<Column><button disabled={(!emailValid || !passwordValid)} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
 						<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> {trackEvent('button', 'forgot-password'); this.props.onPage('recover')}}>Forgot Password?</div></Column>
 					</Row>
 				</form>

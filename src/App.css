@@ -58,11 +58,7 @@
 }
 
 .long-button {
-	padding: 9px 45px;
-}
-
-.fat-button {
-	padding: 14px 28px;
+	width: 243px;
 }
 
 .tiny-button {

@@ -164,7 +164,7 @@ class InviteTeamForm extends Component {
 						/>);
 					})}
 				</Column></div>
-				<button disabled={(!submitValid || submitting)} className="fat-button" onClick={()=> ((submitValid) ? this.handleSubmit() : null)}>Invite</button>
+				<button disabled={(!submitValid || submitting)} className="long-button" onClick={()=> ((submitValid) ? this.handleSubmit() : null)}>Invite</button>
 			</div>
 		</div>);
 	}

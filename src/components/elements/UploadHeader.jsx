@@ -92,18 +92,12 @@ class UploadHeader extends Component {
 
 	render() {
 // 		console.log('UploadHeader.render()', this.props, this.state);
-		const { title } = this.props;
+		const { subtitle } = this.props;
 
 		return (<div className="upload-header-wrapper">
 			<Dropzone className="upload-header-dz" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)} onFileDialogCancel={this.handleDialogCancel} ref={dropZone}>
-				<Row horizontal="center">
-					<button className="upload-header-button" onClick={()=> this.handleUploadType('local')}><FontAwesome name="upload" /></button>
-					<button className="upload-header-button" onClick={()=> this.handleUploadType('dropbox')}><FontAwesome name="dropbox" /></button>
-					<button className="upload-header-button" onClick={()=> this.handleUploadType('slack')}><FontAwesome name="slack" /></button>
-					<button className="upload-header-button" onClick={()=> this.handleUploadType('one-drive')}><FontAwesome name="windows" /></button>
-					{/*<button className="upload-header-button"><FontAwesome name="square" /></button>*/}
-				</Row>
-				<Row horizontal="center">{title}</Row>
+				<Row horizontal="center"><h2>Upload any design file for interface specs</h2></Row>
+				<Row horizontal="center"><div className="upload-header-subtitle">Drag, drop, or click to upload.</div></Row>
 			</Dropzone>
 		</div>);
 	}

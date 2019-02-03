@@ -57,7 +57,7 @@ class RecoverPage extends Component {
 					<form onSubmit={this.handleSubmit}>
 						<div className={emailClass}><input type="text" name="email" placeholder="Enter Email or Username" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 						<Row vertical="center">
-							<Column><button disabled={emailValid} type="submit" className="fat-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
+							<Column><button disabled={emailValid} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
 							<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> this.props.onPage('login')}>Already have an account?</div></Column>
 						</Row>
 					</form>

@@ -250,7 +250,7 @@ class ProfilePage extends Component {
 					/>
 				</div>
 
-				<button type="submit" className="fat-button" onClick={()=> this.handleSubmit()}>Save</button>
+				<button type="submit" className="long-button" onClick={()=> this.handleSubmit()}>Save</button>
 			</div>
 		);
 	}

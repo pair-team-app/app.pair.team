@@ -59,21 +59,23 @@ h1, h2, h3, h4, h5 {
   margin-top: 0;
 }
 
-/** Page header */
+/** Homepage CTA */
 h1 {
-  font-family: "San Francisco Text SemiBold", sans-serif;
-  font-weight: 600;
-  font-size: 48px;
-  letter-spacing: -0.9px;
-  margin-bottom: 24px;
+  font-family: "San Francisco Text Medium", sans-serif;
+  font-weight: 500;
+  font-size: 46px;
+  letter-spacing: -1.8px;
+  color: #c8e1fd;
+  width: 50%;
 }
 
-/** FAQ title */
+/** Upload Header */
 h2 {
-  font-family: "San Francisco Text SemiBold", sans-serif;
-  font-weight: 600;
-  font-size: 35px;
-  letter-spacing: -0.66px;
+  font-family: "San Francisco Text Medium", sans-serif;
+  font-weight: 500;
+  font-size: 44px;
+  letter-spacing: -2.32px;
+  color: #c8e1fd;
 }
 
 /** Section title */

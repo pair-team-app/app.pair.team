@@ -72,7 +72,7 @@ const UploadForm = (props)=> {
 						);
 					})}
 				</div>
-				{(formState > 0) && (<button disabled={(!uploadComplete || !titleValid)} className="fat-button upload-page-submit-button" onClick={()=> (uploadComplete && title.length > 0) ? props.onSubmit() : null}>{(!uploadComplete) ? 'Uploading Design' : 'Submit Design'}</button>)}
+				{(formState > 0) && (<button disabled={(!uploadComplete || !titleValid)} className="long-button upload-page-submit-button" onClick={()=> (uploadComplete && title.length > 0) ? props.onSubmit() : null}>{(!uploadComplete) ? 'Uploading Design' : 'Submit Design'}</button>)}
 			</div>
 		</div>
 	</>);
@@ -280,7 +280,7 @@ class UploadPage extends Component {
 		return (
 			<div className="page-wrapper upload-page-wrapper">
 				{(formState === 0) && (<UploadHeader
-					title={uploadTitle}
+					subtitle={uploadTitle}
 					onFile={this.handleFile}
 					onPopup={this.props.onPopup} />)
 				}

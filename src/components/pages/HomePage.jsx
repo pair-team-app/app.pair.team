@@ -41,13 +41,12 @@ const BannerPanel = (props)=> {
 const LoggedInSectionHeader = (props)=> {
 // 	console.log('HomePage.LoggedInSectionHeader()', props);
 
-	const { title, content } = props;
+	const { title } = props;
 	return (<div className="home-page-section-header-wrapper">
-		<h3>{title}</h3>
-		<h4>{content}</h4>
+		<h1>{title}</h1>
 		<div>
 			{/*<button onClick={()=> {trackEvent('button', 'upload'); props.onPage(`new${window.location.pathname}`)}}>Upload</button>*/}
-			<button onClick={()=> {trackEvent('button', 'upload'); props.onUpload()}}>Upload</button>
+			<button className="long-button" onClick={()=> {trackEvent('button', 'upload'); props.onUpload()}}>Upload</button>
 		</div>
 	</div>);
 };
@@ -55,13 +54,12 @@ const LoggedInSectionHeader = (props)=> {
 const LoggedOutSectionHeader = (props)=> {
 // 	console.log('HomePage.LoggedOutSectionHeader()', props);
 
-	const { title, content } = props;
+	const { title } = props;
 	return (<div className="home-page-section-header-wrapper">
-		<h3>{title}</h3>
-		<h4>{content}</h4>
+		<h1>{title}</h1>
 		<div>
-			<button className="adjacent-button" onClick={()=> {trackEvent('button', 'register'); props.onPage('register')}}>Sign Up</button>
-			<button onClick={()=> {trackEvent('button', 'login'); props.onPage('login')}}>Login</button>
+			<button className="long-button stack-button" onClick={()=> {trackEvent('button', 'register'); props.onPage('register')}}>Sign Up for Free</button><br />
+			<button className="long-button" onClick={()=> {trackEvent('button', 'login'); props.onPage('login')}}>Login</button>
 		</div>
 	</div>);
 };
@@ -223,14 +221,13 @@ class HomePage extends Component {
 		const { fetching, dialog } = this.state;
 
 		const { pathname } = window.location;
-		const uploadTitle = (pathname === '/' || pathname === '/inspect') ? 'Drag & Drop any Sketch file here to inspect design specs & code.' : (pathname === '/parts') ? 'Drag & Drop any Sketch file here to download design parts & source.' : 'Turn any Sketch file into an organized System of Fonts, Colors, Symbols, Views &amp; more. (Drag & Drop)';
-		const sectionTitle = (pathname === '/' || pathname === '/inspect') ? (isUserLoggedIn()) ? 'Do you need specs & code from a design file?' : 'Sign Up for Design Engine' : (pathname === '/parts') ? (isUserLoggedIn()) ? 'Do you need parts & source from a design file?' : 'Sign Up for Design Engine' : 'Start a new Design Project';
+		const sectionTitle = 'Get Specifications, Parts, and Present interface design for any engineer.';
 		const sectionContent = (pathname === '/' || pathname === '/inspect') ? (isUserLoggedIn()) ? 'Upload any Sketch file to Design Engine to inspect specifications & code.' : 'Design Engine is a design platform built for engineers inspired by the way you work.' : (pathname === '/parts') ? (isUserLoggedIn()) ? 'Upload any Sketch file to Design Engine to export design parts & source.' : 'Design Engine is a design platform built for engineers inspired by the way you work.' : 'Turn any Design File into an organized System of Fonts, Colors, Symbols, Views & More.';
 		const gridTitle = (profile) ? (fetching) ? 'Loading…' : (artboards.length > 0) ? `Showing ${artboards.length} project${((artboards.length === 1) ? '' : 's')}.` : null : null;
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
-				<UploadHeader title={uploadTitle} dialog={dialog} onFile={this.handleFile} onPopup={this.props.onPopup} />
+				<UploadHeader dialog={dialog} onFile={this.handleFile} onPopup={this.props.onPopup} />
 
 				{(isUserLoggedIn())
 					? (<LoggedInSectionHeader title={sectionTitle} content={sectionContent} onUpload={()=> this.handleUploadClick()} />)
