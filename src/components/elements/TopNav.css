@@ -5,7 +5,11 @@
 	display: table;
 	z-index: 3;
 	background-color: #24282e;
-	color: #abdafd;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-weight: 500;
+	font-size: 16px;
+	line-height: 0;
+	letter-spacing: -0.3px;
 }
 
 .top-nav-column {

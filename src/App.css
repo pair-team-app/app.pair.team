@@ -67,6 +67,8 @@
 }
 
 .page-link, .page-link a, .page-link a:active, .page-link a:link, .page-link a:visited, .page-link-small, .page-link-small a, .page-link-small a:active, .page-link-small a:link, .page-link-small a:visited {
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-weight: 400;
 	font-size: 14px;
 	letter-spacing: -0.26px;
 	color: #abdafd;
