@@ -262,7 +262,7 @@ class App extends Component {
 			      <Route render={()=> <Status404Page onPage={this.handlePage} />} />
 			    </Switch>
 
-			    {(isHomePage() || isUploadPage()) && (<BannerPanel title={bannerPanel.title} image={bannerPanel.image} onClick={()=> this.handleBanner(bannerPanel.url)} />)}
+			    {(!isInspectorPage()) && (<BannerPanel title={bannerPanel.title} image={bannerPanel.image} onClick={()=> this.handleBanner(bannerPanel.url)} />)}
 			    {(!isInspectorPage()) && (<BottomNav onLogout={()=> this.handleLogout()} onPage={this.handlePage} />)}
 		    </div>
 

@@ -150,8 +150,8 @@ class RegisterForm extends Component {
 					</div>
 					<div className={password2Class}><input type="password" name="password2" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<Row vertical="center">
-						<Column><button disabled={(!usernameValid || !emailValid || !passwordValid)} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-						<Column><div className="page-link-small" onClick={()=> {trackEvent('button', 'login'); this.props.onLogin()}}>Already have an account?</div></Column>
+						<Column><button disabled={(!usernameValid || !emailValid || !passwordValid)} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Sign Up</button></Column>
+						<Column><div className="page-link" onClick={()=> {trackEvent('button', 'login'); this.props.onLogin()}}>Want to Login?</div></Column>
 					</Row>
 				</form>
 			</div>

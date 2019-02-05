@@ -14,7 +14,7 @@ html, body {
   font-family: "San Francisco Text Medium", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-weight: 500;
   font-size: 16px;
-  letter-spacing: -0.27px;
+  letter-spacing: -0.26px;
   background-color: #1a1e23;
   color: #c8e1fd;
   min-height: 100%;
@@ -113,14 +113,14 @@ h5 {
 }
 
 input[type=text], input[type=password], input[type=tel], textarea, .input-txt, .field-error {
-  background-color: #24272f;
-  color: #ffffff;
-  padding: 19px 12px;
+  background-color: #2d3239;
+  color: #abdafd;
+  padding: 14px 10px;
   width: 100%;
-  border: 1px solid #24272f;
+  border: 1px solid #2d3239;
   border-radius: 2px;
-  font-family: "San Francisco Text", sans-serif;
-  font-weight: 400;
+  font-family: "San Francisco Text Medium", sans-serif;
+  font-weight: 500;
   font-size: 16px;
   letter-spacing: -0.3px;
   cursor: text;

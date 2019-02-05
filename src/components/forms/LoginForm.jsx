@@ -127,7 +127,7 @@ class LoginForm extends Component {
 					</div>
 					<Row vertical="center">
 						<Column><button disabled={(!emailValid || !passwordValid)} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-						<Column><div className="page-link-small" onClick={()=> {trackEvent('button', 'forgot-password'); this.props.onPage('recover')}}>Forgot Password?</div></Column>
+						<Column><div className="page-link" onClick={()=> {trackEvent('button', 'forgot-password'); this.props.onPage('recover')}}>Forgot Password?</div></Column>
 					</Row>
 				</form>
 			</div>

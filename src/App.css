@@ -46,7 +46,7 @@
 }
 
 .long-button {
-	width: 243px;
+	width: 188px;
 }
 
 .tiny-button {
@@ -67,36 +67,34 @@
 }
 
 .page-link, .page-link a, .page-link a:active, .page-link a:link, .page-link a:visited, .page-link-small, .page-link-small a, .page-link-small a:active, .page-link-small a:link, .page-link-small a:visited {
-	color: #0267d8;
-	text-decoration: underline;
+	font-size: 14px;
+	letter-spacing: -0.26px;
+	color: #abdafd;
+	text-decoration: none;
 }
 
 .page-link:hover, .page-link a:hover, .page-link-small:hover, .page-link-small a:hover {
 	cursor: pointer;
-	text-decoration: none;
-}
-
-.page-link-small {
-	font-size: 14px;
+	text-decoration: underline;
 }
 
 .input-wrapper {
-	margin-bottom: 18px;
+	margin-bottom: 20px;
 	border: 1px solid rgba(0, 0, 0, 0);
 	border-radius: 2px;
 	width: 100%;
-	height: 59px;
+	height: 48px;
 }
 
 .input-wrapper-error {
-	border: 1px solid #9c4b4b;
+	border: 1px solid #ff4646;
 }
 
 .input-wrapper-error input[type=text], .input-wrapper-error input[type=password], .input-wrapper-error input[type=tel], .input-wrapper-error .input-txt, .field-error {
 	width: 100%;
 	height: 100%;
-	background-color: #0f1215;
-	color: #9c4b4b;
+	background-color: #1a1e23;
+	color: #ff4646;
 }
 
 .upload-progress-bar-wrapper {

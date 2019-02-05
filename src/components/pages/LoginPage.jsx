@@ -99,7 +99,7 @@ class LoginPage extends Component {
 		return (
 			<div className="page-wrapper login-page-wrapper">
 				<LoginForm
-					title="Login to Design Engine"
+					title="Login"
 					inviteID={inviteID}
 					email={email}
 					onLoggedIn={this.handleLoggedIn}

@@ -209,7 +209,7 @@ class ProfilePage extends Component {
 						<img className="profile-page-avatar-image" src={avatar} alt="Avatar" />
 						<button className="tiny-button adjacent-button">Change</button>
 					</Row></Dropzone>
-					{(!avatar.includes('avatar-default.png')) && (<div className="page-link-small" style={{ width : '58px', textAlign : 'center' }} onClick={()=> this.handleDropAvatar()}>Remove</div>)}
+					{(!avatar.includes('avatar-default.png')) && (<div className="page-link" style={{ width : '58px', textAlign : 'center' }} onClick={()=> this.handleDropAvatar()}>Remove</div>)}
 				</div>
 				<div className="profile-page-form-wrapper">
 					<InputField
