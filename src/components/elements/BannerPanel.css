@@ -1,0 +1,19 @@
+
+.banner-panel-wrapper {
+	position: fixed;
+	right: 20px;
+	bottom: 20px;
+	width: 260px;
+	height: 200px;
+	z-index: 2;
+	background-color: #1c1c1c;
+}
+
+.banner-panel-image {
+	width: 100%;
+	height: 100%;
+}
+
+.banner-panel-image:hover {
+	cursor: pointer;
+}
