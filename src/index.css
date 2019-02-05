@@ -82,12 +82,16 @@ h2 {
 
 /** Section title **/
 h3 {
-  font-family: "San Francisco Text SemiBold", sans-serif;
-  font-weight: 600;
+  /*font-family: "San Francisco Text SemiBold", sans-serif;*/
+  font-family: "San Francisco Text Medium", sans-serif;
+  font-weight: 500;
+  /*font-size: 22px;*/
   font-size: 20px;
-  letter-spacing: -0.6px;
+  /*letter-spacing: -0.6px;*/
+  letter-spacing: -1px;
   margin-bottom: 17px;
-	color: #2087fb;
+	/*color: #2087fb;*/
+	color: #c8e1fd;
 }
 
 /** Section subtitle **/

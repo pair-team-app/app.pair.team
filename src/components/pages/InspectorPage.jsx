@@ -1103,10 +1103,8 @@ class InspectorPage extends Component {
 		const { tooltip, restricted, shareModal, urlBanner, processing, tutorial } = this.state;
 
 
+		const artboards = (upload) ? buildUploadArtboards(upload).reverse() : [];
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
-		const artboards = (upload) ? upload.pages.flatMap((page)=> {
-			return (page.artboards);
-		}) : [];
 
 		const urlClass = `inspector-page-url-wrapper${(!urlBanner) ? ' inspector-page-url-outro' : ''}`;
 
@@ -1156,9 +1154,7 @@ class InspectorPage extends Component {
 				left           : `${Math.floor(offset.x)}px`,
 				width          : `${Math.floor(scale * artboard.meta.frame.size.width)}px`,
 				height         : `${Math.floor(scale * artboard.meta.frame.size.height)}px`,
-				background     : `#111111 url("${artboard.filename}") no-repeat center`,
-// 				backgroundSize : 'cover',
-// 				backgroundSize : '100% auto',
+				background     : `#24282e url("${artboard.filename}") no-repeat center`,
 				backgroundSize : `${Math.floor(scale * artboard.meta.frame.size.width)}px ${Math.floor(scale * artboard.meta.frame.size.height)}px`,
 				border         : '2px dotted #00ff00'
 			};

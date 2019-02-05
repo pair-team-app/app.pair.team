@@ -31,6 +31,9 @@ class TopNav extends Component {
 			}, {
 				title : 'Free Parts',
 				url   : '/parts'
+			}, {
+				title : 'Presenter',
+				url   : '/presenter'
 			}]
 		};
 	}

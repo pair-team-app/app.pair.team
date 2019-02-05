@@ -6,9 +6,9 @@
 }
 
 .inspector-page-wrapper {
-	margin: -20px 0 0 -20px;
+	margin: -20px 0 -20px -20px;
 	width: calc(100% + 40px);
-	height: calc(100% + 20px);
+	height: calc(100vh - 64px);
 	display: table;
 	background-color: #111111;
 }
@@ -152,6 +152,7 @@
 .inspector-page-footer-logo {
 	width: 35px;
 	height: 16px;
+	filter: saturate(0) brightness(2);
 }
 
 .inspector-page-footer-button-wrapper {
@@ -183,7 +184,7 @@
 
 .inspector-page-panel-full-content-wrapper {
 	width: 100%;
-	height: calc(100vh - 154px);
+	height: calc(100vh - 150px);
 	overflow: hidden;
 }
 

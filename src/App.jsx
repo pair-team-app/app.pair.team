@@ -13,6 +13,7 @@ import TopNav from './components/elements/TopNav';
 import BottomNav from './components/elements/BottomNav';
 import ContentModal, { MODAL_SIZE_FIXED } from './components/elements/ContentModal';
 import Popup from './components/elements/Popup';
+import BannerPanel from './components/elements/BannerPanel';
 import HomePage from './components/pages/HomePage';
 import InspectorPage from './components/pages/InspectorPage';
 import InviteTeamPage from './components/pages/InviteTeamPage';
@@ -41,6 +42,7 @@ import {
 	scrollOrigin
 } from './utils/funcs';
 import { initTracker, trackEvent, trackPageview } from './utils/tracking';
+import bannerPanel from './assets/json/banner-panel';
 
 
 const wrapper = React.createRef();
@@ -127,6 +129,14 @@ class App extends Component {
 
 		scrollOrigin(wrapper.current);
 	};
+
+	handleBanner = (url)=> {
+// 		console.log('App.handleBanner()', url);
+
+		trackEvent('banner', 'click');
+		window.open(url);
+	};
+
 
 	handleLogout = ()=> {
 		cookie.save('user_id', '0', { path : '/' });
@@ -251,7 +261,9 @@ class App extends Component {
 				    <Route path="/typography/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 			      <Route render={()=> <Status404Page onPage={this.handlePage} />} />
 			    </Switch>
-			    {(!isInspectorPage()) && (<BottomNav viewHeight={(wrapper.current) ? wrapper.current.clientHeight : 0} onPage={this.handlePage} onLogout={()=> this.handleLogout()} />)}
+
+			    {(isHomePage() || isUploadPage()) && (<BannerPanel title={bannerPanel.title} image={bannerPanel.image} onClick={()=> this.handleBanner(bannerPanel.url)} />)}
+			    {(!isInspectorPage()) && (<BottomNav onLogout={()=> this.handleLogout()} onPage={this.handlePage} />)}
 		    </div>
 
 	      <MediaQuery query="(max-width: 1024px)">

@@ -10,11 +10,11 @@
 }
 
 .content-wrapper {
-	position: fixed;
+	position: relative;
 	top: 64px;
 	left: 0;
 	width: 100%;
-	height: calc(100% - 48px);
+	height: calc(100% - 64px);
 	overflow-x: hidden;
 	overflow-y: scroll;
 	padding: 20px;
@@ -22,7 +22,7 @@
 
 .page-wrapper {
 	width: 100%;
-	min-height: calc(100% - 66px);
+	min-height: calc(100% - 64px);
 	margin-bottom: 30px;
 }
 
@@ -131,6 +131,7 @@
 	display: none;
 	visibility: hidden;
 }
+
 
 
 .debug-border {

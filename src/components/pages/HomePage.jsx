@@ -10,7 +10,6 @@ import UploadHeader from '../elements/UploadHeader';
 import { addFileUpload, appendHomeArtboards } from '../../redux/actions';
 import { isUserLoggedIn } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
-import bannerPanel from '../../assets/json/banner-panel';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -28,15 +27,6 @@ const mapDispatchToProps = (dispatch)=> {
 	});
 };
 
-
-const BannerPanel = (props)=> {
-// 	console.log('HomePage.BannerPanel()', props);
-
-	const { image, caption } = props;
-	return (<div className="home-page-banner-panel-wrapper" onClick={()=> props.onClick()}>
-		<img src={image} className="home-page-banner-panel-image" alt={caption} />
-	</div>);
-};
 
 class HomePage extends Component {
 	constructor(props) {
@@ -79,13 +69,6 @@ class HomePage extends Component {
 
 		trackEvent('artboard', 'click');
 		this.props.onArtboardClicked(artboard)
-	};
-
-	handleBanner = ()=> {
-// 		console.log('HomePage.handleBanner()');
-
-		trackEvent('banner', 'click');
-		window.open(bannerPanel.url);
 	};
 
 	handleFile = (file)=> {
@@ -210,8 +193,7 @@ class HomePage extends Component {
 		const { profile, artboards } = this.props;
 		const { fetching, dialog } = this.state;
 
-		const sectionTitle = (isUserLoggedIn()) ? 'Design specs, parts, & code to engineer amazing pixel-perfect  interfaces.' : 'Get Specifications, Parts, and Present interface design for any engineer.';
-		const gridTitle = (profile) ? (fetching) ? 'Loading…' : (artboards.length > 0) ? `Showing ${artboards.length} project${((artboards.length === 1) ? '' : 's')}.` : null : null;
+		const gridTitle = (profile) ? (fetching) ? 'Loading…' : (artboards.length > 0) ? 'Previous' : null : null;
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
@@ -225,13 +207,13 @@ class HomePage extends Component {
 					onPopup={this.props.onPopup} />
 
 				<div className="home-page-section-header-wrapper">
-					<h1>{sectionTitle}</h1>
+					<h1>Free specs, parts, & code to engineer pixel-perfect  interfaces.</h1>
 					{(isUserLoggedIn())
 						? (<>
 								<button className="long-button" onClick={()=> this.handleUploadClick()}>Upload</button>
 							</>)
 						: (<>
-								<button className="long-button stack-button" onClick={()=> this.handleRegister()}>Sign Up for Free</button>
+								<button className="long-button stack-button" onClick={()=> this.handleRegister()}>Sign Up</button>
 								<button className="long-button" onClick={()=> this.handleLogin()}>Login</button>
 							</>)
 					}
@@ -243,8 +225,6 @@ class HomePage extends Component {
 					onClick={this.handleArtboardClicked}
 					onPage={this.props.onPage}
 					onPopup={this.props.onPopup} />)}
-
-				<BannerPanel title={bannerPanel.title} image={bannerPanel.image} onClick={this.handleBanner} />
 			</div>
 		);
 	}

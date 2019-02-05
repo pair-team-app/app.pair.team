@@ -11,10 +11,11 @@ function BottomNav(props) {
 
 	return (
 		<div className="bottom-nav-wrapper">
-			<img onClick={()=> props.onPage('')} src={deLogo} className="bottom-nav-logo" alt="Design Engine" />
+			<img className="bottom-nav-logo" src={deLogo} onClick={()=> props.onPage('')} alt="Design Engine" />
 			<div className="bottom-nav-link-wrapper">
 				<div className="bottom-nav-link" onClick={()=> props.onPage('inspect')}>Free Inspect</div>
 				<div className="bottom-nav-link" onClick={()=> props.onPage('parts')}>Free Parts</div>
+				<div className="bottom-nav-link" onClick={()=> props.onPage('presenter')}>Presenter</div>
 				<div className="bottom-nav-link" onClick={()=> props.onPage('terms')}>Terms</div>
 				<div className="bottom-nav-link" onClick={()=> props.onPage('privacy')}>Privacy</div>
 

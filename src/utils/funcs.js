@@ -119,7 +119,7 @@ export function isEmptyObject(obj) {
 
 export function isHomePage() {
 	const { pathname } = window.location;
-	return (pathname === '' || pathname === HOME);
+	return (pathname === '' || pathname === HOME || pathname === INSPECT || pathname === PARTS);
 }
 
 export function isInspectorPage() {
