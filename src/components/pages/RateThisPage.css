@@ -22,11 +22,12 @@
 }
 
 .rate-item:nth-child(even) {
-	background-color: #fafbfc;
+	background-color: #24282e;
 }
 
 .rate-item:not(:last-child) {
-	border-bottom: 1px solid #eaecef;
+	/*border-bottom: 1px solid rgba(255, 255, 255, 0.1);*/
+	border-bottom: 1px solid #4b4b4b;
 }
 
 .rate-item-image {
@@ -46,6 +47,10 @@
 
 .rate-item-column-index {
 	width: 80px;
+}
+
+.rate-item-column-index:before {
+	content: "#";
 }
 
 .rate-item-column-avatar {

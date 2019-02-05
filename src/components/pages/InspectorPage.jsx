@@ -104,7 +104,7 @@ const ColorSwatch = (props)=> {
 };
 
 const InviteTeamModal = (props)=> {
-	console.log('InspectorPage.InviteTeamModal()', props);
+// 	console.log('InspectorPage.InviteTeamModal()', props);
 
 	const { profile, upload, processing } = props;
 

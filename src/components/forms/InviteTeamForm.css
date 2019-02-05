@@ -9,7 +9,7 @@
 .invite-team-form-add-link {
 	margin: 0 0 20px 20px;
 	font-size: 14px;
-	color: #0267D8;
+	color: #0267d8;
 	text-decoration: underline;
 }
 
@@ -20,24 +20,25 @@
 
 .invite-team-form-add-link-hidden, .invite-team-form-add-link-hidden:hover {
 	cursor: none;
-	color: #ffffff;
+	color: rgba(2, 103, 216, 0);
 }
 
 .invite-team-form-submitting-overlay {
+	display: flex;
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	opacity: 0.5;
-	vertical-align: middle;
-	text-align: center;
-	display: flex;
 	justify-content: center;
 	align-items: center;
+	vertical-align: middle;
+	text-align: center;
+	opacity: 0.5;
 }
 
 .invite-team-form-spinner {
+	display: block;
 	width: 48px;
 	height: 48px;
 	color: #000000;

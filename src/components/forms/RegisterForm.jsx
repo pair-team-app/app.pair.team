@@ -11,7 +11,6 @@ import { trackEvent } from '../../utils/tracking';
 
 const passwordTextfield = React.createRef();
 
-
 const txtfieldClass = (isValid)=> {
 	return ((isValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error');
 };
@@ -130,6 +129,7 @@ class RegisterForm extends Component {
 	render() {
 // 		console.log('RegisterForm.render()', this.props, this.state);
 
+		const { title, subtitle } = this.props;
 		const { username, email, password, password2 } = this.state;
 		const { usernameValid, emailValid, passwordValid, passMsg } = this.state;
 
@@ -140,6 +140,8 @@ class RegisterForm extends Component {
 
 		return (
 			<div className="register-form-wrapper">
+				<h3>{title}</h3>
+				<h4>{subtitle}</h4>
 				<form onSubmit={this.handleSubmit}>
 					<div className={usernameClass}><input type="text" name="username" placeholder="Username" value={username} onFocus={()=> this.setState({ username : '', usernameValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className={emailClass}><input type="text" name="email" placeholder="Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
@@ -150,7 +152,7 @@ class RegisterForm extends Component {
 					<div className={password2Class}><input type="password" name="password2" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<Row vertical="center">
 						<Column><button disabled={(!usernameValid || !emailValid || !passwordValid)} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-						<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> {trackEvent('button', 'login'); this.props.onLogin()}}>Already have an account?</div></Column>
+						<Column><div className="page-link-small" onClick={()=> {trackEvent('button', 'login'); this.props.onLogin()}}>Already have an account?</div></Column>
 					</Row>
 				</form>
 			</div>

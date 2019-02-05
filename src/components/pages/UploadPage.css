@@ -2,52 +2,6 @@
 .upload-page-wrapper {
 }
 
-.upload-page-header-wrapper {
-	display: table;
-	width: 100%;
-	margin-bottom: 20px;
-}
-
-.upload-page-header-dz-wrapper {
-	display: table-cell;
-	width: 100%;
-	height: 350px;
-	background: #111111 url(../../assets/images/backgrounds/bg-checkerboard.png) repeat;
-	padding: 20px 10px;
-	text-align: center;
-	vertical-align: middle;
-	cursor: copy;
-	color: #999999;
-}
-
-.upload-page-icon {
-	width: 50px;
-	height: 50px;
-	margin-bottom: 30px;
-}
-
-.upload-page-form-wrapper {
-	width: 100%;
-}
-
-.upload-page-submit-button {
-	width: 183px;
-}
-
-.upload-page-artboards-wrapper {
-	margin-top: 25px;
-}
-
-.upload-page-radio-wrapper {
-	margin-top: 30px;
-}
-
-.upload-page-upload-wrapper {
-}
-
 .upload-page-register-wrapper, .upload-page-login-wrapper {
-}
-
-.upload-page-invite-wrapper {
-	margin-top: 20px;
+	margin-top: 7px;
 }

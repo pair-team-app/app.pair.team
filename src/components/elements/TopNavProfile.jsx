@@ -50,14 +50,16 @@ class TopNavProfile extends Component {
 		const { avatar } = (this.props.profile) ? this.props.profile : { avatar : DEFAULT_AVATAR };
 		const { bubble } = this.state;
 
+		const faName = (bubble) ? 'caret-up' : 'caret-down';
+		const bubbleClass = `top-nav-profile-bubble-wrapper ${(bubble) ? 'top-nav-profile-intro' : 'top-nav-profile-outro'}`;
+
 		return (<div className="top-nav-profile-wrapper">
 			<Row vertical="center">
+				<FontAwesome name={faName} className="top-nav-profile-arrow" onClick={()=> this.setState({ bubble : !bubble })} />
 				<img src={avatar} className="top-nav-profile-avatar" alt="Avatar" onClick={()=> this.setState({ bubble : !bubble })} />
-				<FontAwesome name="caret-down" className="top-nav-profile-arrow" onClick={()=> this.setState({ bubble : !bubble })} />
 			</Row>
 
-			{(bubble) && (<div className="top-nav-profile-bubble-wrapper">
-				<FontAwesome name="caret-up" className="top-nav-profile-bubble-notch" />
+			{(bubble) && (<div className={bubbleClass}>
 				<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(PROFILE)}>Profile</div>
 				<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(LOGOUT)}>Logout</div>
 			</div>)}

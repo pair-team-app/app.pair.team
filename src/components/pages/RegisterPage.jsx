@@ -97,9 +97,13 @@ class RegisterPage extends Component {
 		const { email, inviteID } = this.state;
 		return (
 			<div className="page-wrapper register-page-wrapper">
-				<h3>Sign Up for Design Engine</h3>
-				Enter Username, Email, & Password to Sign Up for Design Engine.
-				<RegisterForm inviteID={inviteID} email={email} onRegistered={this.handleRegistered} onLogin={()=> this.props.onPage((inviteID) ? `login/${inviteID}` : 'login')} />
+				<RegisterForm
+					title="Sign Up for Design Engine"
+					subtitle="Enter Username, Email, & Password to Sign Up for Design Engine."
+					inviteID={inviteID}
+					email={email}
+					onRegistered={this.handleRegistered}
+					onLogin={()=> this.props.onPage((inviteID) ? `login/${inviteID}` : 'login')} />
 			</div>
 		);
 	}

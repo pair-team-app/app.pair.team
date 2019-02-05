@@ -83,8 +83,6 @@ class App extends Component {
 			this.props.fetchUserProfile();
 		}
 
-// 		const { pathname } = window.location;
-
 		initTracker(cookie.load('user_id'));
 		trackEvent('site', 'load');
 		trackPageview();
@@ -168,7 +166,13 @@ class App extends Component {
 	};
 
 	handleProcessing = (processing)=> {
+// 		console.log('App.handleProcessing()');
 		this.setState({ processing });
+	};
+
+	handleScrollOrigin = ()=> {
+		console.log('App.handleScrollOrigin()');
+		scrollOrigin(wrapper.current);
 	};
 
 	handleScore = (score)=> {
@@ -232,7 +236,7 @@ class App extends Component {
 				    <Route path="/inspect/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 				    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 				    <Route path="/login/:inviteID?" render={(props)=> <LoginPage {...props} onPage={this.handlePage} />} onPopup={this.handlePopup} />
-				    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onProcessing={this.handleProcessing} onPopup={this.handlePopup} />} />
+				    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} />} />
 				    <Route exact path="/parts" render={()=> <HomePage path={pathname} onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 				    <Route path="/parts/:uploadID/:artboardSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 				    <Route exact path="/privacy" render={()=> <PrivacyPage />} />

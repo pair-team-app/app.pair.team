@@ -34,8 +34,9 @@ a:hover {
 button {
   width: 100px;
   padding: 9px 0;
-  background: #005cc5;
+  background-color: #005cc5;
   border: none;
+  border-radius: 1px;
   font-family: "San Francisco Text SemiBold", sans-serif;
   font-weight: 600;
   font-size: 16px;
@@ -45,12 +46,12 @@ button {
 
 button:hover, button:active {
   cursor: pointer;
-  background: #00449c;
+  background-color: #00449c;
 }
 
 button:disabled, button:disabled:hover {
   cursor: default;
-  background: #4679b0;
+  background-color: #4679b0;
   color: #f0f0f0;
   opacity : 0.75;
 }
@@ -75,27 +76,31 @@ h2 {
   font-weight: 500;
   font-size: 44px;
   letter-spacing: -2.32px;
+  line-height: 0;
   color: #c8e1fd;
 }
 
-/** Section title */
+/** Section title **/
 h3 {
   font-family: "San Francisco Text SemiBold", sans-serif;
   font-weight: 600;
   font-size: 20px;
   letter-spacing: -0.6px;
   margin-bottom: 17px;
+	color: #2087fb;
 }
 
-/** Subsection title */
+/** Section subtitle **/
 h4 {
   font-family: "San Francisco Text", sans-serif;
   font-weight: 400;
   font-size: 16px;
   letter-spacing: -0.24px;
   margin-bottom: 28px;
+	color: #aadafd;
 }
 
+/** Legal section title **/
 h5 {
   margin-bottom: 10px;
   font-family: "San Francisco Text Medium", sans-serif;
@@ -103,20 +108,13 @@ h5 {
   font-size: 20px;
 }
 
-h6 {
-  font-family: "San Francisco Text Bold", sans-serif;
-  font-weight: 700;
-  font-size: 12px;
-  margin: 0 0 11px 0;
-}
-
 input[type=text], input[type=password], input[type=tel], textarea, .input-txt, .field-error {
-  background-color: #fafbfc;
-  color: #1c1c1c;
+  background-color: #24272f;
+  color: #ffffff;
   padding: 19px 12px;
   width: 100%;
-  border: 1px solid #eaecef;
-  border-radius: 3px;
+  border: 1px solid #24272f;
+  border-radius: 2px;
   font-family: "San Francisco Text", sans-serif;
   font-weight: 400;
   font-size: 16px;

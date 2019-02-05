@@ -1,4 +1,32 @@
 
+@keyframes top-nav-profile-intro {
+	0% { opacity: 0; }
+	100% { opacity: 1; }
+}
+
+@keyframes top-nav-profile-outro {
+	100% { opacity: 1; }
+	0% { opacity: 0; }
+}
+
+
+.top-nav-profile-intro {
+	opacity: 1;
+	animation-name: top-nav-profile-intro;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-out;
+	animation-duration: 0.125s;
+}
+
+.top-nav-profile-outro {
+	opacity: 1;
+	animation-name: top-nav-profile-outro;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-out;
+	animation-duration: 0.25s;
+}
+
+
 .top-nav-profile-wrapper {
 	position: relative;
 }
@@ -6,14 +34,14 @@
 .top-nav-profile-avatar {
 	width: 30px;
 	height: 30px;
-	border-radius: 4px;
-	margin-right: 10px;
-	background-image: url(../../assets/images/avatars/avatar-default.png);
+	border-radius: 2px 2px 0 0;
+	margin-left: 10px;
+	background: #1a1e23 url(../../assets/images/avatars/avatar-default.png) no-repeat;
 }
 
 .top-nav-profile-arrow {
 	font-size: 18px;
-	color: #ffffff;
+	color: #abdafd;
 }
 
 .top-nav-profile-avatar:hover, .top-nav-profile-arrow:hover {
@@ -23,31 +51,25 @@
 
 .top-nav-profile-bubble-wrapper {
 	position: absolute;
-	top: 40px;
-	right: 15px;
-	width: 120px;
-	background-color: #ffffff;
+	top: 30px;
+	right: 0;
+	width: 92px;
+	background-color: #1a1e23;
 	padding: 8px 8px 6px 8px;
 	border-radius: 4px;
 	box-shadow: 0 3px 5px #1c1c1c;
-}
-
-.top-nav-profile-bubble-notch {
-	position: absolute;
-	top: -12px;
-	right: 8px;
-	font-size: 18px;
-	color: #ffffff;
+	text-align: left;
 }
 
 .top-nav-profile-link {
-	margin-bottom: 6px;
+	/*margin-bottom: 6px;*/
+	text-decoration: none;
 	font-family: "San Francisco Text", sans-serif;
 	font-weight: 400;
 	font-size: 14px;
-	letter-spacing: -0.23px;
-	color: #0267D8;
-	text-decoration: none;
+	line-height: 26px;
+	letter-spacing: -0.22px;
+	color: #abdafd;
 }
 
 .top-nav-profile-link:hover {

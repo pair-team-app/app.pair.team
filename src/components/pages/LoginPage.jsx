@@ -98,9 +98,13 @@ class LoginPage extends Component {
 		const { inviteID, email } = this.state;
 		return (
 			<div className="page-wrapper login-page-wrapper">
-				<h3>Login to Design Engine</h3>
-				<h4>Enter Username or Email & Password to Login to Design Engine.</h4>
-				<LoginForm inviteID={inviteID} email={email} onLoggedIn={this.handleLoggedIn} onPage={this.props.onPage} />
+				<LoginForm
+					title="Login to Design Engine"
+					subtitle="Enter Username or Email & Password to Login to Design Engine."
+					inviteID={inviteID}
+					email={email}
+					onLoggedIn={this.handleLoggedIn}
+					onPage={this.props.onPage} />
 			</div>
 		);
 	}

@@ -1,12 +1,12 @@
 
 .bottom-nav-wrapper {
 	width: calc(100% + 40px);
-	font-family: "San Francisco Text", sans-serif;
-	font-weight: 400;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-weight: 500;
 	font-size: 12px;
 	letter-spacing: -0.3px;
 	margin: 0 -20px;
-	padding: 10px 20px;
+	padding: 0 20px;
 }
 
 .bottom-nav-logo {
@@ -25,18 +25,22 @@
 }
 
 .bottom-nav-link, a.bottom-nav-link {
-	display: inline;
-	color: #0267d8;
-	text-decoration: underline;
 	padding-right: 24px;
+	display: inline;
+	text-decoration: none;
+	color: #c8E1fd;
+}
+
+.bottom-nav-link:last-child, a.bottom-nav-link:last-child {
+	padding-right: 0;
 }
 
 .bottom-nav-link:hover, .bottom-nav-link a:hover {
-	text-decoration: none;
+	text-decoration: underline;
 	cursor: pointer;
 }
 
 .bottom-nav-link a, .bottom-nav-link a:active, .bottom-nav-link a:link, .bottom-nav-link a:visited {
 	text-decoration: underline;
-	color: #0267d8;
+	color: #c8E1fd;
 }

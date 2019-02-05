@@ -30,40 +30,13 @@ const mapDispatchToProps = (dispatch)=> {
 
 
 const BannerPanel = (props)=> {
-	console.log('HomePage.BannerPanel()', props);
+// 	console.log('HomePage.BannerPanel()', props);
 
 	const { image, caption } = props;
 	return (<div className="home-page-banner-panel-wrapper" onClick={()=> props.onClick()}>
 		<img src={image} className="home-page-banner-panel-image" alt={caption} />
 	</div>);
 };
-
-const LoggedInSectionHeader = (props)=> {
-// 	console.log('HomePage.LoggedInSectionHeader()', props);
-
-	const { title } = props;
-	return (<div className="home-page-section-header-wrapper">
-		<h1>{title}</h1>
-		<div>
-			{/*<button onClick={()=> {trackEvent('button', 'upload'); props.onPage(`new${window.location.pathname}`)}}>Upload</button>*/}
-			<button className="long-button" onClick={()=> {trackEvent('button', 'upload'); props.onUpload()}}>Upload</button>
-		</div>
-	</div>);
-};
-
-const LoggedOutSectionHeader = (props)=> {
-// 	console.log('HomePage.LoggedOutSectionHeader()', props);
-
-	const { title } = props;
-	return (<div className="home-page-section-header-wrapper">
-		<h1>{title}</h1>
-		<div>
-			<button className="long-button stack-button" onClick={()=> {trackEvent('button', 'register'); props.onPage('register')}}>Sign Up for Free</button><br />
-			<button className="long-button" onClick={()=> {trackEvent('button', 'login'); props.onPage('login')}}>Login</button>
-		</div>
-	</div>);
-};
-
 
 class HomePage extends Component {
 	constructor(props) {
@@ -82,7 +55,7 @@ class HomePage extends Component {
 // 		console.log('HomePage.componentDidMount()', this.props);
 
 		if (this.props.profile && this.props.artboards.length === 0) {
-			this.handleLoadNextUploads();
+			this.onLoadNextUploads();
 		}
 	}
 
@@ -97,7 +70,7 @@ class HomePage extends Component {
 		const { artboards } = this.props;
 		if (!this.state.firstFetch && this.props.profile && artboards.length === 0) {
 			this.setState({ firstFetch : true });
-			this.handleLoadNextUploads();
+			this.onLoadNextUploads();
 		}
 	}
 
@@ -109,19 +82,46 @@ class HomePage extends Component {
 	};
 
 	handleBanner = ()=> {
-		console.log('HomePage.handleBanner()');
+// 		console.log('HomePage.handleBanner()');
+
 		trackEvent('banner', 'click');
 		window.open(bannerPanel.url);
 	};
 
 	handleFile = (file)=> {
 // 		console.log('HomePage.handleFile()', file);
+
 		this.props.addFileUpload(file);
 		this.props.onPage(`new${window.location.pathname}`);
 	};
 
-	handleLoadNextUploads = ()=> {
-// 		console.log('HomePage.handleLoadNextUploads()', this.props.artboards);
+	handleLogin = ()=> {
+// 		console.log('HomePage.handleLogin()');
+
+		trackEvent('button', 'login');
+		this.props.onPage('login');
+	};
+
+	handleRegister = ()=> {
+// 		console.log('HomePage.handleRegister()');
+
+		trackEvent('button', 'register');
+		this.props.onPage('register');
+	};
+
+	handleUploadClick = ()=> {
+// 		console.log('HomePage.handleUploadClick()');
+
+		trackEvent('button', 'upload');
+		setTimeout(()=> {
+			this.setState({ dialog : false });
+		}, 3333);
+
+		this.setState({ dialog : true });
+	};
+
+	onLoadNextUploads = ()=> {
+// 		console.log('HomePage.onLoadNextUploads()', this.props.artboards);
 
 		const { profile } = this.props;
 		const { loadOffset, loadAmt } = this.state;
@@ -203,36 +203,39 @@ class HomePage extends Component {
 		});
 	};
 
-	handleUploadClick = ()=> {
-// 		console.log('HomePage.handleUploadClick()');
-
-		setTimeout(()=> {
-			this.setState({ dialog : false });
-		}, 3333);
-
-		this.setState({ dialog : true });
-	};
-
 
 	render() {
-		console.log('HomePage.render()', this.props, this.state);
+// 		console.log('HomePage.render()', this.props, this.state);
 
 		const { profile, artboards } = this.props;
 		const { fetching, dialog } = this.state;
 
-		const { pathname } = window.location;
-		const sectionTitle = 'Get Specifications, Parts, and Present interface design for any engineer.';
-		const sectionContent = (pathname === '/' || pathname === '/inspect') ? (isUserLoggedIn()) ? 'Upload any Sketch file to Design Engine to inspect specifications & code.' : 'Design Engine is a design platform built for engineers inspired by the way you work.' : (pathname === '/parts') ? (isUserLoggedIn()) ? 'Upload any Sketch file to Design Engine to export design parts & source.' : 'Design Engine is a design platform built for engineers inspired by the way you work.' : 'Turn any Design File into an organized System of Fonts, Colors, Symbols, Views & More.';
+		const sectionTitle = (isUserLoggedIn()) ? 'Design specs, parts, & code to engineer amazing pixel-perfect  interfaces.' : 'Get Specifications, Parts, and Present interface design for any engineer.';
 		const gridTitle = (profile) ? (fetching) ? 'Loading…' : (artboards.length > 0) ? `Showing ${artboards.length} project${((artboards.length === 1) ? '' : 's')}.` : null : null;
 
 		return (
 			<div className="page-wrapper home-page-wrapper">
-				<UploadHeader dialog={dialog} onFile={this.handleFile} onPopup={this.props.onPopup} />
+				<UploadHeader
+					title="Upload any design file for interface specs"
+					subtitle="Drag, drop, or click to upload."
+					uploading={false}
+					dialog={dialog}
+					onFile={this.handleFile}
+					onPage={this.props.onPage}
+					onPopup={this.props.onPopup} />
 
-				{(isUserLoggedIn())
-					? (<LoggedInSectionHeader title={sectionTitle} content={sectionContent} onUpload={()=> this.handleUploadClick()} />)
-					: (<LoggedOutSectionHeader title={sectionTitle} content={sectionContent} onPage={this.props.onPage} />)
-				}
+				<div className="home-page-section-header-wrapper">
+					<h1>{sectionTitle}</h1>
+					{(isUserLoggedIn())
+						? (<>
+								<button className="long-button" onClick={()=> this.handleUploadClick()}>Upload</button>
+							</>)
+						: (<>
+								<button className="long-button stack-button" onClick={()=> this.handleRegister()}>Sign Up for Free</button>
+								<button className="long-button" onClick={()=> this.handleLogin()}>Login</button>
+							</>)
+					}
+				</div>
 
 				{(isUserLoggedIn()) && (<ArtboardGrid
 					title={gridTitle}

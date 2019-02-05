@@ -3,20 +3,24 @@ import React, { Component } from 'react';
 import './UploadHeader.css';
 
 import Dropzone from 'react-dropzone';
-import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
-import { Row } from 'simple-flexbox';
 
 import { POPUP_TYPE_ERROR } from './Popup';
+import { updateDeeplink } from '../../redux/actions';
 import { sendToSlack } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
-
 
 const dropZone = React.createRef();
 
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
+};
+
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		updateDeeplink : (navIDs)=> dispatch(updateDeeplink(navIDs))
+	});
 };
 
 
@@ -48,6 +52,28 @@ class UploadHeader extends Component {
 		}
 	}
 
+
+	handleCancel = (event)=> {
+		console.log('UploadHeader.handleCancel()', event);
+
+		event.preventDefault();
+		trackEvent('button', 'cancel-upload');
+		this.props.onCancel();
+	};
+
+	handleDemo = (event)=> {
+// 		console.log('UploadHeader.handleDemo()', event);
+
+		event.preventDefault();
+		trackEvent('button', 'demo');
+
+		this.props.updateDeeplink({
+			uploadID   : 1,
+			pageID     : 0,
+			artboardID : 0
+		});
+		this.props.onPage(`${window.location.pathname.substr(1).split('/').pop()}/1/ios-12-design-system`);
+	};
 
 	handleDialogCancel = ()=> {
 // 		console.log('UploadHeader.handleDialogCancel()');
@@ -85,22 +111,28 @@ class UploadHeader extends Component {
 		}
 	};
 
-	handleUploadType = (type)=> {
-// 		console.log('UploadHeader.handleUploadType()', type);
-		trackEvent('button', type);
-	};
 
 	render() {
 // 		console.log('UploadHeader.render()', this.props, this.state);
-		const { subtitle } = this.props;
+
+		const { title, subtitle, uploading } = this.props;
 
 		return (<div className="upload-header-wrapper">
 			<Dropzone className="upload-header-dz" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)} onFileDialogCancel={this.handleDialogCancel} ref={dropZone}>
-				<Row horizontal="center"><h2>Upload any design file for interface specs</h2></Row>
-				<Row horizontal="center"><div className="upload-header-subtitle">Drag, drop, or click to upload.</div></Row>
+				<h2>{title}</h2>
+				<div className="upload-header-subtitle">{subtitle}</div>
+				{(uploading)
+					? (<div className="upload-header-button-wrapper">
+							<button onClick={(event)=> this.handleCancel(event)}>Cancel</button>
+						</div>)
+					: (<div className="upload-header-button-wrapper">
+							<button className="adjacent-button" onClick={()=> trackEvent('button', 'upload')}>Upload</button>
+							<button onClick={(event)=> this.handleDemo(event)}>Try Demo</button>
+					</div>)
+				}
 			</Dropzone>
 		</div>);
 	}
 }
 
-export default connect(mapStateToProps)(UploadHeader);
+export default connect(mapStateToProps, mapDispatchToProps)(UploadHeader);
