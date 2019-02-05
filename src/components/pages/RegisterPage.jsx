@@ -99,7 +99,6 @@ class RegisterPage extends Component {
 			<div className="page-wrapper register-page-wrapper">
 				<RegisterForm
 					title="Sign Up for Design Engine"
-					subtitle="Enter Username, Email, & Password to Sign Up for Design Engine."
 					inviteID={inviteID}
 					email={email}
 					onRegistered={this.handleRegistered}

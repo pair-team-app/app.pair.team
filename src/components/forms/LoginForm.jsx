@@ -109,7 +109,7 @@ class LoginForm extends Component {
 	render() {
 // 		console.log('LoginForm.render()', this.props, this.state);
 
-		const { title, subtitle } = this.props;
+		const { title } = this.props;
 		const { email, password } = this.state;
 		const { emailValid, passwordValid, passMsg } = this.state;
 
@@ -118,8 +118,7 @@ class LoginForm extends Component {
 
 		return (
 			<div className="login-form-wrapper">
-				<h3>{title}</h3>
-				<h4>{subtitle}</h4>
+				{(title && title.length > 0) && (<h3>{title}</h3>)}
 				<form onSubmit={this.handleSubmit}>
 					<div className={emailClass}><input type="text" name="email" placeholder="Username or Email" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className={passwordClass} onClick={()=> this.handlePassword()}>

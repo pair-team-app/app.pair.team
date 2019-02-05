@@ -188,8 +188,6 @@ class RateThisPage extends Component {
 		const { ratingID, comment, commentValid, ratings } = this.state;
 		return (<div className="page-wrapper rate-this-page-wrapper">
 			<h3>Rate This Title</h3>
-			<h4>Rate This subtitle</h4>
-
 			{(ratingID > 0 && score > 0) && (<RateThisForm
 				comment={comment}
 				commentValid={commentValid}

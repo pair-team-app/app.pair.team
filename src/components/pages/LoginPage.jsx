@@ -100,7 +100,6 @@ class LoginPage extends Component {
 			<div className="page-wrapper login-page-wrapper">
 				<LoginForm
 					title="Login to Design Engine"
-					subtitle="Enter Username or Email & Password to Login to Design Engine."
 					inviteID={inviteID}
 					email={email}
 					onLoggedIn={this.handleLoggedIn}

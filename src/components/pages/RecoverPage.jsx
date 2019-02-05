@@ -52,7 +52,6 @@ class RecoverPage extends Component {
 		return (
 			<div className="page-wrapper recover-page-wrapper">
 				<h3>Forgot Password</h3>
-				<h4>Enter your Email Address to send a password recovery link.</h4>
 				<div className="recover-page-form-wrapper">
 					<form onSubmit={this.handleSubmit}>
 						<div className={emailClass}><input type="text" name="email" placeholder="Enter Email or Username" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>

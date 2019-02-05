@@ -251,7 +251,6 @@ class UploadPage extends Component {
 				{(!isUserLoggedIn() && showRegister && !showLogin) && (<div className="upload-page-register-wrapper">
 					<RegisterForm
 						title="To finish uploading, please sign up."
-						subtitle="Enter the following details"
 						onLogin={this.handleLogin}
 						onRegistered={this.handleRegistered} />
 				</div>)}
@@ -259,7 +258,6 @@ class UploadPage extends Component {
 				{(!isUserLoggedIn() && showLogin && !showRegister) && (<div className="upload-page-login-wrapper">
 					<LoginForm
 						title="To finish uploading, please login."
-						subtitle="Enter the following details."
 						onPage={this.props.onPage}
 						onLoggedIn={this.handleLoggedIn} />
 				</div>)}

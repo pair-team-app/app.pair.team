@@ -204,7 +204,6 @@ class ProfilePage extends Component {
 		return (
 			<div className="page-wrapper profile-page-wrapper">
 				<h3>Profile</h3>
-				<h4>A design project contains all the files for your project, including specifications, parts, and code examples.</h4>
 				<div className="profile-page-avatar-wrapper">
 					<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)}><Row vertical="center">
 						<img className="profile-page-avatar-image" src={avatar} alt="Avatar" />

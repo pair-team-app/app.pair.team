@@ -1,5 +1,6 @@
 
 .upload-page-wrapper {
+	min-height: calc(100% - 54px);
 }
 
 .upload-page-register-wrapper, .upload-page-login-wrapper {

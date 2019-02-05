@@ -123,6 +123,7 @@ const InviteTeamModal = (props)=> {
 			</div>
 
 			<InviteTeamForm
+				title=""
 				profile={profile}
 				upload={upload}
 				onSubmitted={props.onInviteTeamFormSubmitted}

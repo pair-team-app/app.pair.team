@@ -143,10 +143,12 @@ class InviteTeamForm extends Component {
 	render() {
 // 		console.log('InviteTeamForm.render()', this.props, this.state);
 
+		const { title } = this.props;
 		const { invites, submitting } = this.state;
 		const submitValid = (invites.map((invite)=> ((invite.email.length > 0 && invite.valid) ? 1 : 0)).reduce((acc, val)=> acc + val) === invites.length);
 
 		return (<div className="invite-team-form-wrapper">
+			{(title && title.length > 0) && (<h3>{title}</h3>)}
 			{(submitting) && (<div className="invite-team-form-submitting-overlay">
 				<FontAwesome className="invite-team-form-spinner" name="spinner" size="3x" pulse fixedWidth />
 			</div>)}

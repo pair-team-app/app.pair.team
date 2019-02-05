@@ -13,7 +13,7 @@ function ArtboardGrid(props) {
 
 	const { title, artboards } = props;
 	return (<div className="artboard-grid">
-		{(title) && (<Row><h3>{title}</h3></Row>)}
+		{(title && title.length > 0) && (<h3>{title}</h3>)}
 		{(isUserLoggedIn() && artboards.length > 0) && (
 			<Row horizontal="start" className="artboard-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
 				{(artboards) && artboards.map((artboard, i) => {

@@ -129,7 +129,7 @@ class RegisterForm extends Component {
 	render() {
 // 		console.log('RegisterForm.render()', this.props, this.state);
 
-		const { title, subtitle } = this.props;
+		const { title } = this.props;
 		const { username, email, password, password2 } = this.state;
 		const { usernameValid, emailValid, passwordValid, passMsg } = this.state;
 
@@ -140,8 +140,7 @@ class RegisterForm extends Component {
 
 		return (
 			<div className="register-form-wrapper">
-				<h3>{title}</h3>
-				<h4>{subtitle}</h4>
+				{(title && title.length > 0) && (<h3>{title}</h3>)}
 				<form onSubmit={this.handleSubmit}>
 					<div className={usernameClass}><input type="text" name="username" placeholder="Username" value={username} onFocus={()=> this.setState({ username : '', usernameValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className={emailClass}><input type="text" name="email" placeholder="Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
