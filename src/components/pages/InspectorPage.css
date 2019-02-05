@@ -104,7 +104,7 @@
 }
 
 .inspector-page-url-outro {
-	animation: 0.125s ease-out 0s 1 forwards inspector-page-url-outro;
+	animation: 0.2s ease-out 0s 1 forwards inspector-page-url-outro;
 }
 
 .inspector-page-url:hover {
@@ -114,7 +114,7 @@
 .inspector-page-url-close-button {
 	position: absolute;
 	right: 10px;
-	top: 7px;
+	top: 8px;
 	color: #ffffff;
 }
 
@@ -165,15 +165,11 @@
 	width: 37px;
 	height: 37px;
 	margin-right: 20px;
+	font-size: 14px;
 }
 
 .inspector-page-zoom-button:last-child {
 	margin-right: 0;
-}
-
-.inspector-page-zoom-button-image {
-	width: 15px;
-	height: 15px;
 }
 
 .inspector-page-panel {

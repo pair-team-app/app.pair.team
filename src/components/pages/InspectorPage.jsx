@@ -25,12 +25,6 @@ import { setRedirectURI } from '../../redux/actions';
 import { buildInspectorPath, buildInspectorURL, capitalizeText, convertURISlug, cropFrame, frameToRect, limitString, makeDownload, rectContainsRect } from '../../utils/funcs.js';
 import { fontSpecs, toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/inspector-langs.js';
 import { trackEvent } from '../../utils/tracking';
-import enabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_enabled.svg';
-import disabledZoomInButton from '../../assets/images/buttons/btn-zoom-in_disabled.svg';
-import enabledZoomOutButton from '../../assets/images/buttons/btn-zoom-out_enabled.svg';
-import disabledZoomOutButton from '../../assets/images/buttons/btn-zoom-out_disabled.svg';
-import enabledZooResetButton from '../../assets/images/buttons/btn-zoom-reset_enabled.svg';
-import disabledZoomResetButton from '../../assets/images/buttons/btn-zoom-reset_disabled.svg';
 import deLogo from '../../assets/images/logos/logo-designengine.svg';
 import inspectorTabs from '../../assets/json/inspector-tabs';
 
@@ -1321,9 +1315,9 @@ class InspectorPage extends Component {
 						<img src={deLogo} className="inspector-page-footer-logo" alt="Design Engine" />
 						<div className="inspector-page-footer-button-wrapper">
 							{(profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true })}}>Share</button>)}
-							<button disabled={(scale >= Math.max(...ZOOM_NOTCHES))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-in'); this.handleZoom(1)}}><img className="inspector-page-zoom-button-image" src={(scale < Math.max(...ZOOM_NOTCHES)) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button>
-							<button disabled={(scale <= Math.min(...ZOOM_NOTCHES))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-out'); this.handleZoom(-1)}}><img className="inspector-page-zoom-button-image" src={(scale > Math.min(...ZOOM_NOTCHES)) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button>
-							<button disabled={(scale === 0.25)} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-reset'); this.handleZoom(0)}}><img className="inspector-page-zoom-button-image" src={(scale !== 0.25) ? enabledZooResetButton : disabledZoomResetButton} alt="Reset" /></button>
+							<button disabled={(scale >= Math.max(...ZOOM_NOTCHES))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-in'); this.handleZoom(1)}}><FontAwesome name="search-plus" /></button>
+							<button disabled={(scale <= Math.min(...ZOOM_NOTCHES))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-out'); this.handleZoom(-1)}}><FontAwesome name="search-minus" /></button>
+							<button disabled={(scale === 0.25)} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-reset'); this.handleZoom(0)}}><FontAwesome name="ban" /></button>
 						</div>
 					</Row></div>)}
 				</div>

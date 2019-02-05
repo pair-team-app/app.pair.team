@@ -52,7 +52,7 @@ class UploadPage extends Component {
 				email    : 'anon@designengine.ai'
 			},
 			radioButtons   : radioButtons,
-			radioIndex     : 2
+			radioIndex     : 1
 		};
 	}
 
