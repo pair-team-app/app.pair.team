@@ -31,6 +31,7 @@ import enabledZoomOutButton from '../../assets/images/buttons/btn-zoom-out_enabl
 import disabledZoomOutButton from '../../assets/images/buttons/btn-zoom-out_disabled.svg';
 import enabledZooResetButton from '../../assets/images/buttons/btn-zoom-reset_enabled.svg';
 import disabledZoomResetButton from '../../assets/images/buttons/btn-zoom-reset_disabled.svg';
+import deLogo from '../../assets/images/logos/logo-designengine.svg';
 import inspectorTabs from '../../assets/json/inspector-tabs';
 
 
@@ -123,7 +124,7 @@ const InviteTeamModal = (props)=> {
 				{(upload.description.length > 0) && (<div>{upload.description}</div>)}
 				<div className="page-link" onClick={()=> window.open(buildInspectorURL(upload))}>{buildInspectorURL(upload)}</div>
 				<CopyToClipboard onCopy={()=> props.onCopyURL()} text={buildInspectorURL(upload)}>
-					<button className="inspector-page-modal-button">Copy URL</button>
+					<button>Copy URL</button>
 				</CopyToClipboard>
 			</div>
 
@@ -287,7 +288,8 @@ class InspectorPage extends Component {
 				y : 0
 			},
 			restricted   : false,
-			inviteModal  : false,
+			shareModal   : false,
+			urlBanner    : true,
 			scrolling    : false,
 			tutorial     : null,
 			code         : {
@@ -675,7 +677,7 @@ class InspectorPage extends Component {
 				state : processing.state,
 				message : ''
 			},
-			inviteModal : false
+			shareModal : false
 		});
 	};
 
@@ -1104,7 +1106,7 @@ class InspectorPage extends Component {
 		const { profile } = this.props;
 
 		const { section, upload, slice, hoverSlice, tabs, scale, selectedTab, scrolling, viewport, scrollOffset } = this.state;
-		const { tooltip, restricted, inviteModal, processing, tutorial } = this.state;
+		const { tooltip, restricted, shareModal, urlBanner, processing, tutorial } = this.state;
 
 
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
@@ -1112,6 +1114,7 @@ class InspectorPage extends Component {
 			return (page.artboards);
 		}) : [];
 
+		const urlClass = `inspector-page-url-wrapper${(!urlBanner) ? ' inspector-page-url-outro' : ''}`;
 
 		const artboardsStyle = {
 			position  : 'absolute',
@@ -1313,15 +1316,16 @@ class InspectorPage extends Component {
 							{slices}
 						</div>)}
 					</div>
-					{(artboards.length > 0) && (<div className="inspector-page-zoom-wrapper">
-						<button disabled={(scale >= Math.max(...ZOOM_NOTCHES))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-in'); this.handleZoom(1)}}><img className="inspector-page-zoom-button-image" src={(scale < Math.max(...ZOOM_NOTCHES)) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button><br />
-						<button disabled={(scale <= Math.min(...ZOOM_NOTCHES))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-out'); this.handleZoom(-1)}}><img className="inspector-page-zoom-button-image" src={(scale > Math.min(...ZOOM_NOTCHES)) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button><br />
-						<button disabled={(scale === 0.25)} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-reset'); this.handleZoom(0)}}><img className="inspector-page-zoom-button-image" src={(scale !== 0.25) ? enabledZooResetButton : disabledZoomResetButton} alt="Reset" /></button>
-					</div>)}
 
-					{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<div className="inspector-page-modal-button-wrapper">
-						<button className="tiny-button" onClick={()=> {trackEvent('button', 'invite-team'); this.setState({ inviteModal : true })}}>Invite Team</button>
-					</div>)}
+					{(upload) && (<div className="inspector-page-footer-wrapper"><Row vertical="center">
+						<img src={deLogo} className="inspector-page-footer-logo" alt="Design Engine" />
+						<div className="inspector-page-footer-button-wrapper">
+							{(profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true })}}>Share</button>)}
+							<button disabled={(scale >= Math.max(...ZOOM_NOTCHES))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-in'); this.handleZoom(1)}}><img className="inspector-page-zoom-button-image" src={(scale < Math.max(...ZOOM_NOTCHES)) ? enabledZoomInButton : disabledZoomInButton} alt="+" /></button>
+							<button disabled={(scale <= Math.min(...ZOOM_NOTCHES))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-out'); this.handleZoom(-1)}}><img className="inspector-page-zoom-button-image" src={(scale > Math.min(...ZOOM_NOTCHES)) ? enabledZoomOutButton : disabledZoomOutButton} alt="-" /></button>
+							<button disabled={(scale === 0.25)} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-reset'); this.handleZoom(0)}}><img className="inspector-page-zoom-button-image" src={(scale !== 0.25) ? enabledZooResetButton : disabledZoomResetButton} alt="Reset" /></button>
+						</div>
+					</Row></div>)}
 				</div>
 
 				{(section === 'inspect') && (<div className="inspector-page-panel">
@@ -1390,12 +1394,15 @@ class InspectorPage extends Component {
 						onComplete={()=> this.props.onPage('register')}>
 							This project is private, you must be logged in as one of its team members to view!
 					</ContentModal>)
-				: (<>{(upload) && (<CopyToClipboard onCopy={()=> this.handleCopyURL()} text={buildInspectorURL(upload)}>
-						<button className="inspector-page-floating-url-button">{buildInspectorURL(upload)}</button>
-					</CopyToClipboard>)}</>)
+				: (<>{(upload) && (<div className={urlClass}>
+						<CopyToClipboard onCopy={()=> this.handleCopyURL()} text={buildInspectorURL(upload)}>
+							<div className="inspector-page-url">{buildInspectorURL(upload)}</div>
+						</CopyToClipboard>
+						<FontAwesome name="times" className="inspector-page-url-close-button" onClick={()=> this.setState({ urlBanner : false })} />
+					</div>)}</>)
 			}
 
-			{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0) && (inviteModal || this.props.processing)) && (<InviteTeamModal
+			{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0) && (shareModal || this.props.processing)) && (<InviteTeamModal
 				profile={profile}
 				upload={upload}
 				processing={processing}
