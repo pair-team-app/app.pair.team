@@ -3,9 +3,19 @@ import React, { Component } from 'react';
 import './RecoverPage.css';
 
 import axios from 'axios/index';
-import { Column, Row } from 'simple-flexbox';
+import { connect } from 'react-redux';
+import { Row } from 'simple-flexbox';
 
+import { POPUP_TYPE_INFO } from '../elements/Popup';
 import { isValidEmail } from '../../utils/funcs';
+import { trackEvent } from '../../utils/tracking';
+
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		profile : state.userProfile
+	});
+};
 
 
 class RecoverPage extends Component {
@@ -13,13 +23,34 @@ class RecoverPage extends Component {
 		super(props);
 
 		this.state = {
-			email      : '',
-			emailValid : true
+			email         : '',
+			emailValid    : true,
+			password      : '',
+			passMsg       : '',
+			passwordValid : true
 		};
 	}
 
-	handleSubmit = (event)=> {
-		console.log('RecoverPage.handleSubmit()', event);
+
+	handleTextfieldChange = (event)=> {
+// 		console.log('RecoverPage.handleTextfieldChange()', event.target.name);
+
+		if (event.target.name === 'email') {
+			const email = event.target.value;
+			const emailValid = (email.includes('@')) ? isValidEmail(email) : (email > 0);
+
+			this.setState({ email, emailValid });
+
+		} else {
+			const password = event.target.value;
+			const passwordValid = (password > 0);
+
+			this.setState({ password, passwordValid });
+		}
+	};
+
+	handleEmailSubmit = (event)=> {
+		console.log('RecoverPage.handleEmailSubmit()', event);
 		event.preventDefault();
 
 		const { email } = this.state;
@@ -31,6 +62,8 @@ class RecoverPage extends Component {
 		});
 
 		if (emailValid) {
+			trackEvent('button', 'submit-email');
+
 			let formData = new FormData();
 			formData.append('action', 'RESET_PASSWORD');
 			formData.append('email', email);
@@ -40,30 +73,87 @@ class RecoverPage extends Component {
 				}).catch((error)=> {
 			});
 
+			this.props.onPopup({
+				type     : POPUP_TYPE_INFO,
+				content  : 'Check email for reset link.',
+				duration : 2000
+			});
+
 			this.props.onPage('');
 		}
 	};
 
+	handlePasswordSubmit = (event)=> {
+		console.log('RecoverPage.handlePasswordSubmit()', event);
+		event.preventDefault();
+
+		const { password } = this.state;
+		const passwordValid = (password.length > 0);
+
+		this.setState({
+			password      : (passwordValid) ? password : 'Invalid Password',
+			passwordValid : passwordValid
+		});
+
+		if (passwordValid) {
+			trackEvent('button', 'submit-password');
+
+			let formData = new FormData();
+			formData.append('action', 'CHANGE_PASSWORD');
+			formData.append('user_id', window.atob(this.props.match.params.userID));
+			formData.append('password', password);
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response)=> {
+					console.log('CHANGE_PASSWORD', response.data);
+					this.props.onPopup({
+						type    : POPUP_TYPE_INFO,
+						content : 'Password changed.'
+					});
+
+					this.props.onLogout();
+					this.props.onPage('login');
+				}).catch((error)=> {
+			});
+		}
+	};
 
 	render() {
-		const { email, emailValid } = this.state;
+// 		console.log('RecoverPage.render()', this.props, this.state);
+
+		const { email, password, passMsg, emailValid, passwordValid } = this.state;
 		const emailClass = (emailValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
+		const passwordClass = (passwordValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
 
 		return (
 			<div className="page-wrapper recover-page-wrapper">
-				<h3>Forgot Password</h3>
-				<div className="recover-page-form-wrapper">
-					<form onSubmit={this.handleSubmit}>
-						<div className={emailClass}><input type="text" name="email" placeholder="Enter Email or Username" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-						<Row vertical="center">
-							<Column><button disabled={emailValid} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-							<Column><div className="page-link" onClick={()=> this.props.onPage('login')}>Already have an account?</div></Column>
-						</Row>
-					</form>
-				</div>
+				{(typeof this.props.match.params.userID === 'undefined')
+					? (<div className="recover-page-form-wrapper">
+							<h3>Forgot Password</h3>
+							<form onSubmit={this.handleEmailSubmit}>
+								<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.handleTextfieldChange(event)} /></div>
+								<Row vertical="center">
+									<button disabled={!emailValid || email.length === 0} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleEmailSubmit(event)}>Submit</button>
+									<div className="page-link" onClick={()=> this.props.onPage('login')}>Want to Login?</div>
+								</Row>
+							</form>
+						</div>)
+
+					: (<div className="recover-page-form-wrapper">
+						<h3>Reset Password</h3>
+						<form onSubmit={this.handlePasswordSubmit}>
+							<div className={passwordClass}>
+								<input type="password" name="password" placeholder="Enter New Password" value={password} onFocus={()=> this.setState({ password : '', passwordValid : true })} onChange={(event)=> this.handleTextfieldChange(event)} />
+								<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
+							</div>
+							<Row vertical="center">
+								<button disabled={!passwordValid || password.length === 0} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handlePasswordSubmit(event)}>Submit</button>
+								<div className="page-link" onClick={()=> this.props.onPage('login')}>Want to Login?</div>
+							</Row>
+						</form>
+					</div>)}
 			</div>
 		);
 	}
 }
 
-export default RecoverPage;
+export default connect(mapStateToProps)(RecoverPage);

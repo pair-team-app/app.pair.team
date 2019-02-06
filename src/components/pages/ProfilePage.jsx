@@ -18,7 +18,9 @@ const dropZone = React.createRef();
 
 
 const mapStateToProps = (state, ownProps)=> {
-	return ({ profile : state.userProfile });
+	return ({
+		profile : state.userProfile
+	});
 };
 
 const mapDispatchToProps = (dispatch)=> {
@@ -106,7 +108,6 @@ class ProfilePage extends Component {
 	handleDropAvatar = ()=> {
 		trackEvent('button', 'drop-avatar');
 		this.onValidateFields('avatar', DEFAULT_AVATAR);
-// 		this.onProfileUpdate();
 	};
 
 	handleFileDialogCancel = ()=> {
@@ -131,7 +132,6 @@ class ProfilePage extends Component {
 
 					if (progressEvent.loaded >= progressEvent.total) {
 						this.onValidateFields('avatar', `http://cdn.designengine.ai/profiles/${profile.id}_${file.name}`);
-// 						this.onProfileUpdate();
 					}
 				}
 			};
@@ -191,7 +191,6 @@ class ProfilePage extends Component {
 		trackEvent('button', key);
 
 		this.onValidateFields(key, val);
-// 		this.onProfileUpdate();
 	};
 
 	handleSubmit = ()=> {
@@ -200,7 +199,6 @@ class ProfilePage extends Component {
 		trackEvent('button', 'save');
 
 		this.onValidateFields();
-// 		this.onProfileUpdate();
 	};
 
 	onProfileUpdate = ()=> {
