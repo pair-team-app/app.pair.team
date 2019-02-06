@@ -4,30 +4,32 @@
 
 
 .rate-this-page-form-wrapper {
-	width: 80%;
+	width: 50%;
 }
 
 .rate-this-page-submit-button {
 	margin: 0 0 18px 20px;
 }
 
-.rate-this-page-item-wrapper {
-	margin-top: 20px;
+.rate-this-page-list-wrapper {
+	width: 50%;
 }
 
 .rate-item {
 	width: 100%;
 	padding: 10px 0;
-	vertical-align: middle;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-weight: 500;
+	letter-spacing: -0.3px;
+	color: #abdafd;
 }
 
 .rate-item:nth-child(even) {
-	background-color: #24282e;
+	/*background-color: #24282e;*/
 }
 
 .rate-item:not(:last-child) {
-	/*border-bottom: 1px solid rgba(255, 255, 255, 0.1);*/
-	border-bottom: 1px solid #2f3132;
+	border-bottom: 1px solid #24282e;
 }
 
 .rate-item-image {
@@ -36,35 +38,39 @@
 }
 
 .rate-item-star {
-	margin-right: 4px;
+	margin-right: 10px;
 	font-size: 14px;
-	color: #000000;
+	color: #24282e;
+}
+
+.rate-item-star:last-child {
+	margin-right: -20px;
+}
+
+.rate-item-star-filled {
+	color: #2288fb;
 }
 
 .rate-item-column {
-	padding: 4px;
+	padding-right: 20px;
+}
+
+.rate-item-column:last-child {
+	text-align: right;
+	margin-right: 0;
 }
 
 .rate-item-column-index {
-	width: 80px;
-}
-
-.rate-item-column-index:before {
-	content: "#";
+	min-width: 36px;
+	width: 36px;
+	max-width: 36px;
 }
 
 .rate-item-column-avatar {
-	height: 50px;
 }
 
 .rate-item-column-username {
-	width: 200px;
 }
 
 .rate-item-column-score {
-	width: 100px;
-}
-
-.rate-item-column-comment {
-	font-style: italic;
 }

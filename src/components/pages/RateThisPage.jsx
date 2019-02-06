@@ -5,7 +5,7 @@ import './RateThisPage.css';
 import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
-import { Row } from 'simple-flexbox';
+import { Row, Column } from 'simple-flexbox';
 
 import { trackEvent } from '../../utils/tracking';
 
@@ -29,15 +29,10 @@ const RateItem = (props)=> {
 	const stars = [0, 0, 0, 0, 0].fill(1, 0, score);
 
 	return (<div className="rate-item"><Row vertical="center">
-		<div className="rate-item-column rate-item-column-index">{ind}</div>
-		<div className="rate-item-column rate-item-column-avatar">
-			<img src={avatar} className="rate-item-image" alt={ind} />
-		</div>
-		<div className="rate-item-column rate-item-column-username">{username}</div>
-		<div className="rate-item-column rate-item-column-score">{stars.map((score, i)=> {
-			return (<FontAwesome key={i} name={(score === 1) ? 'star' : 'star-o'} className="rate-item-star" />);
-		})}</div>
-		<div className="rate-item-column rate-item-column-comment">{(comment.length > 0) ? `"${comment}"` : comment}</div>
+		<Column flexBasis="30px" horizontal="start" className="rate-item-column rate-item-column-index">#{ind}</Column>
+		<Column flexBasis="60px" horizontal="center" className="rate-item-column rate-item-column-avatar"><img src={avatar} className="rate-item-image" alt={ind} /></Column>
+		<Column flexGrow={1} flexShrink={1} flexBasis="auto" horizontal="start" className="rate-item-column rate-item-column-username">{username}{(comment) && ('*')}</Column>
+		<Column flexBasis="138px" horizontal="end" className="rate-item-column rate-item-column-score"><Row horizontal="end">{stars.map((score, i)=> { return (<FontAwesome key={i} name="star" className={`rate-item-star${(score === 1) ? ' rate-item-star-filled' : ''}`} />); })}</Row></Column>
 	</Row></div>);
 };
 
@@ -59,8 +54,11 @@ const RateThisList = (props)=> {
 // 	console.log('RateThisPage.RateThisList()', props);
 
 	const { ratings } = props;
+	const avgScore = (ratings.reduce((acc, val)=> ({ score : parseInt(acc.score, 10) + parseInt(val.score, 10)})).score / ratings.length).toFixed(1);
+	const commentTotal = ratings.filter((rating)=> (rating.comment.length > 0)).length;
 
-	return (<div className="rate-this-page-item-wrapper">
+	return (<div className="rate-this-page-list-wrapper">
+		<h3>{`${avgScore}/5 star rating`} &amp; {`${commentTotal} comment${(commentTotal === 1) ? '' : 's'}`}</h3>
 		{ratings.map((rating, i)=> {
 			return (<RateItem
 				key={i}
@@ -68,7 +66,7 @@ const RateThisList = (props)=> {
         username={rating.username}
 				avatar={rating.avatar}
 				score={parseInt(rating.score, 10)}
-				comment={rating.comment}
+				comment={rating.comment.length > 0}
 			/>);
 		})}
 	</div>);
@@ -187,7 +185,7 @@ class RateThisPage extends Component {
 		const { score } = this.props;
 		const { ratingID, comment, commentValid, ratings } = this.state;
 		return (<div className="page-wrapper rate-this-page-wrapper">
-			<h3>Rate This Title</h3>
+			<h3>Please Rate &amp; Comment</h3>
 			{(ratingID > 0 && score > 0) && (<RateThisForm
 				comment={comment}
 				commentValid={commentValid}
@@ -195,7 +193,7 @@ class RateThisPage extends Component {
 				onChange={(event)=> this.setState({ [event.target.name] : event.target.value })}
 				onSubmit={this.handleSubmit} />)}
 
-			<RateThisList ratings={ratings} />
+			{(ratings.length > 0) && (<RateThisList ratings={ratings} />)}
 		</div>);
 	}
 }
