@@ -14,6 +14,8 @@ import { updateUserProfile } from '../../redux/actions';
 import { hasBit, isValidEmail } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 
+const dropZone = React.createRef();
+
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
@@ -41,7 +43,8 @@ class ProfilePage extends Component {
 			passwordValid : true,
 			passMsg       : '',
 			status        : 0x00,
-			percent       : 0
+			percent       : 0,
+			dialog        : false
 		};
 	}
 
@@ -67,13 +70,48 @@ class ProfilePage extends Component {
 				emailValid    : !hasBit(status, 0x10)
 			});
 		}
+
+		if (this.state.dialog) {
+			if (dropZone.current && dropZone.current.fileInputEl) {
+				dropZone.current.fileInputEl.click();
+			}
+		}
 	}
 
+
+	handleAvatarClick = ()=> {
+		console.log('ProfilePage.handleAvatarClick()');
+		trackEvent('button', 'upload');
+
+		this.setState({ dialog : true });
+	};
+
+	handleCancel = ()=> {
+		console.log('ProfilePage.handleCancel()');
+
+		trackEvent('button', 'cancel');
+		const { avatar, username, email } = this.props.profile;
+
+		this.setState({
+			avatar        : avatar,
+			username      : username,
+			email         : email,
+			password      : '',
+			passMsg       : '',
+			usernameValid : true,
+			emailValid    : true
+		});
+	};
 
 	handleDropAvatar = ()=> {
 		trackEvent('button', 'drop-avatar');
 		this.onValidateFields('avatar', DEFAULT_AVATAR);
-		this.onProfileUpdate();
+// 		this.onProfileUpdate();
+	};
+
+	handleFileDialogCancel = ()=> {
+		console.log('ProfilePage.handleFileDialogCancel()');
+		this.setState({ dialog : false });
 	};
 
 	handleFileDrop = (files)=> {
@@ -93,7 +131,7 @@ class ProfilePage extends Component {
 
 					if (progressEvent.loaded >= progressEvent.total) {
 						this.onValidateFields('avatar', `http://cdn.designengine.ai/profiles/${profile.id}_${file.name}`);
-						this.onProfileUpdate();
+// 						this.onProfileUpdate();
 					}
 				}
 			};
@@ -115,23 +153,36 @@ class ProfilePage extends Component {
 	};
 
 	handleInputFieldClick = (key)=> {
-		let { usernameValid, emailValid, passwordValid } = this.state;
+		console.log('ProfilePage.handleInputFieldClick()', key, this.state);
+
+		let { username, email, usernameValid, emailValid, passwordValid } = this.state;
 
 		if (key === 'username') {
+			if (!usernameValid) {
+				username = this.props.profile.username;
+			}
 			usernameValid = true;
 
 		} else if (key === 'email') {
+			if (!emailValid) {
+				email = this.props.profile.email;
+			}
 			emailValid = true;
 
 		} else if (key === 'password') {
 			passwordValid = true;
 		}
 
-		this.setState({ usernameValid, emailValid, passwordValid });
+		this.setState({ username, email, usernameValid, emailValid, passwordValid });
 	};
 
 	handleInputFieldChange = (key, val)=> {
-		this.setState({ [key] : val });
+// 		console.log('ProfilePage.handleInputFieldChange()', key, val);
+
+		this.setState({
+			[key]   : val,
+			passMsg : (key === 'password') ? val : this.state.passMsg
+		});
 	};
 
 	handleInputFieldSubmit = (key, val)=> {
@@ -140,7 +191,7 @@ class ProfilePage extends Component {
 		trackEvent('button', key);
 
 		this.onValidateFields(key, val);
-		this.onProfileUpdate();
+// 		this.onProfileUpdate();
 	};
 
 	handleSubmit = ()=> {
@@ -149,7 +200,7 @@ class ProfilePage extends Component {
 		trackEvent('button', 'save');
 
 		this.onValidateFields();
-		this.onProfileUpdate();
+// 		this.onProfileUpdate();
 	};
 
 	onProfileUpdate = ()=> {
@@ -183,7 +234,7 @@ class ProfilePage extends Component {
 		const emailValid = isValidEmail(email);
 		const passwordValid = true;//(password.length > 0);
 
-		console.log('ProfilePage.onValidateFields()', state);
+		console.log(' -=- ProfilePage.onValidateFields()', emailValid, state);
 
 		this.setState({
 			username      : (usernameValid) ? username : (username.includes('@')) ? 'Usernames cannot contain \'@\'' : 'Invalid Username',
@@ -193,23 +244,32 @@ class ProfilePage extends Component {
 			emailValid    : emailValid,
 			passwordValid : passwordValid
 		});
+
+		if (usernameValid && emailValid && passwordValid) {
+			this.onProfileUpdate();
+		}
 	};
 
 	render() {
 // 		console.log('ProfilePage.render()', this.props, this.state);
 
-		const { avatar, username, email } = (this.props.profile) ? this.props.profile : this.state;
+// 		const { avatar, username, email } = (this.props.profile) ? this.props.profile : this.state;
+		const { profile } = this.props;
+		const { avatar, username, email, password } = this.state;
 		const { passMsg, usernameValid, emailValid, passwordValid } = this.state;
 
 		return (
 			<div className="page-wrapper profile-page-wrapper">
 				<h3>Profile</h3>
 				<div className="profile-page-avatar-wrapper">
-					<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)}><Row vertical="center">
-						<img className="profile-page-avatar-image" src={avatar} alt="Avatar" />
-						<button className="tiny-button adjacent-button">Change</button>
-					</Row></Dropzone>
-					{(!avatar.includes('avatar-default.png')) && (<div className="page-link" style={{ width : '58px', textAlign : 'center' }} onClick={()=> this.handleDropAvatar()}>Remove</div>)}
+					<Row vertical="center">
+						<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)} onFileDialogCancel={this.handleFileDialogCancel} ref={dropZone}>
+							<img className="profile-page-avatar-image" src={avatar} alt="Avatar" />
+						</Dropzone>
+						<button className="adjacent-button" onClick={()=> this.handleAvatarClick()}>Upload</button>
+						{(!avatar.includes('avatar-default.png')) && (<div className="page-link" onClick={()=> this.handleDropAvatar()}>Remove</div>)}
+					</Row>
+
 				</div>
 				<div className="profile-page-form-wrapper">
 					<InputField
@@ -220,7 +280,7 @@ class ProfilePage extends Component {
 						button="Change"
 						status={(usernameValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
 						onChange={(val)=> this.handleInputFieldChange('username', val)}
-						onClick={()=> this.handleInputFieldClick()}
+						onClick={()=> this.handleInputFieldClick('username')}
 						onSubmit={(val)=> this.handleInputFieldSubmit('username', val)}
 					/>
 
@@ -232,7 +292,7 @@ class ProfilePage extends Component {
 						button="Change"
 						status={(emailValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
 						onChange={(val)=> this.handleInputFieldChange('email', val)}
-						onClick={()=> this.handleInputFieldClick()}
+						onClick={()=> this.handleInputFieldClick('email')}
 						onSubmit={(val)=> this.handleInputFieldSubmit('email', val)}
 					/>
 
@@ -244,12 +304,16 @@ class ProfilePage extends Component {
 						button="Change"
 						status={(passwordValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
 						onChange={(val)=> this.handleInputFieldChange('password', val)}
-						onClick={()=> this.handleInputFieldClick()}
+						onClick={()=> this.handleInputFieldClick('password')}
 						onSubmit={(val)=> this.handleInputFieldSubmit('password', val)}
 					/>
 				</div>
 
-				<button type="submit" className="long-button" onClick={()=> this.handleSubmit()}>Save</button>
+				<Row vertical="center">
+					<button type="submit" className="long-button adjacent-button" onClick={()=> this.handleSubmit()}>Save</button>
+					{(profile && (profile.avatar !== avatar || profile.username !== username || profile.email !== email || password.length > 0)) && (<div className="page-link" onClick={()=> this.handleCancel()}>Cancel</div>)}
+				</Row>
+
 			</div>
 		);
 	}

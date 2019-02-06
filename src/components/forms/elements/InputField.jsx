@@ -28,7 +28,7 @@ class InputField extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('InputField.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
+// 		console.log('InputField.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
 
 		const { value, status } = this.props;
 		if (value !== prevProps.value) {
@@ -80,7 +80,7 @@ class InputField extends Component {
 
 
 	render() {
-		console.log('InputField.render()', this.props, this.state);
+// 		console.log('InputField.render()', this.props, this.state);
 
 		const { type, name, placeholder, button } = this.props;
 		const { value, status } = this.state;
@@ -95,7 +95,7 @@ class InputField extends Component {
 					<input autoFocus type={type} name={name} className={textfieldClass} placeholder={placeholder} value={value} onFocus={this.handleFocus} onChange={this.handleChange} onBlur={this.handleBlur} ref={textfield} />
 					<div className="field-error" onClick={this.handleClick} style={errorStyle}>{value}</div>
 				</div>
-				{(button) && (<button disabled={(value.length === 0)} className="tiny-button input-field-button" onClick={this.handleSubmit}>{button}</button>)}
+				{(button) && (<button disabled={(value.length === 0)} className="input-field-button" onClick={this.handleSubmit}>{button}</button>)}
 			</div>
 		);
 	}

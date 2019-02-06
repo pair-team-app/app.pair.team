@@ -34,14 +34,14 @@ a:hover {
 
 button {
   width: 100px;
-  height: 37px;
+  height: 38px;
   background-color: #005cc5;
   border: none;
   border-radius: 1px;
   font-family: "San Francisco Text SemiBold", sans-serif;
   font-weight: 600;
   font-size: 16px;
-  letter-spacing: -0.53px;
+  letter-spacing: -0.3px;
   color : #ffffff;
 }
 
@@ -113,6 +113,11 @@ h6 {
   line-height: 0;
 }
 
+input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hover, input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 50px #2d3239 inset;
+  -webkit-text-fill-color: #abdafd;
+}
+
 input[type=text], input[type=password], input[type=tel], textarea, .input-txt, .field-error {
   background-color: #2d3239;
   color: #abdafd;
@@ -132,6 +137,10 @@ p {
   font-weight: 400;
   line-height: 32px;
   margin: 10px 0 20px 0;
+}
+
+p:first-child {
+	margin-top: -5px;
 }
 
 p:last-child {

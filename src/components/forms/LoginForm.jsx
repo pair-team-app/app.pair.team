@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './LoginForm.css'
 
 import axios from 'axios';
-import { Column, Row } from 'simple-flexbox';
+import { Row } from 'simple-flexbox';
 
 import { hasBit, isValidEmail } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
@@ -126,8 +126,8 @@ class LoginForm extends Component {
 						<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
 					</div>
 					<Row vertical="center">
-						<Column><button disabled={(!emailValid || !passwordValid)} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-						<Column><div className="page-link" onClick={()=> {trackEvent('button', 'forgot-password'); this.props.onPage('recover')}}>Forgot Password?</div></Column>
+						<button disabled={(!emailValid || !passwordValid)} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button>
+						<div className="page-link" onClick={()=> {trackEvent('button', 'forgot-password'); this.props.onPage('recover')}}>Forgot Password?</div>
 					</Row>
 				</form>
 			</div>

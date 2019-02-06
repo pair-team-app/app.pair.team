@@ -1,18 +1,19 @@
 
 .bottom-nav-wrapper {
 	width: calc(100% + 40px);
+	margin: 0 -20px;
+	padding: 0 20px;
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-weight: 500;
 	font-size: 12px;
 	letter-spacing: -0.3px;
-	margin: 0 -20px;
-	padding: 0 20px;
+	line-height: normal;
 }
 
 .bottom-nav-logo {
 	width: 35px;
 	height: 16px;
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 }
 
 .bottom-nav-logo:hover {

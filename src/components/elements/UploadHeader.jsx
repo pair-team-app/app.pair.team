@@ -75,8 +75,8 @@ class UploadHeader extends Component {
 		this.props.onPage(`${window.location.pathname.substr(1).split('/').pop()}/1/ios-12-design-system`);
 	};
 
-	handleDialogCancel = ()=> {
-// 		console.log('UploadHeader.handleDialogCancel()');
+	handleFileDialogCancel = ()=> {
+// 		console.log('UploadHeader.handleFileDialogCancel()');
 		this.setState({ dialog : false });
 	};
 
@@ -118,7 +118,7 @@ class UploadHeader extends Component {
 		const { title, subtitle, uploading } = this.props;
 
 		return (<div className="upload-header-wrapper">
-			<Dropzone className="upload-header-dz" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)} onFileDialogCancel={this.handleDialogCancel} ref={dropZone}>
+			<Dropzone className="upload-header-dz" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)} onFileDialogCancel={this.handleFileDialogCancel} ref={dropZone}>
 				<h2>{title}</h2>
 				<div className="upload-header-subtitle">{subtitle}</div>
 				{(uploading)
