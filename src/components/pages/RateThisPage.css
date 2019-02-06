@@ -2,17 +2,40 @@
 .rate-this-page-wrapper {
 }
 
+.rate-this-page-star-wrapper {
+	margin-bottom: 20px;
+}
+
+.rate-this-star-item {
+	padding-right: 20px;
+	font-size: 30px;
+	color: #24282e;
+}
+
+.rate-this-star-item:hover {
+	cursor: pointer;
+}
+
+.rate-this-star-item:last-child {
+	padding-right: 0;
+}
+
+.rate-this-star-item-filled {
+	color: #2288fb;
+}
+
+.rate-this-comment-text {
+	width: 100%;
+	height: 68px;
+}
 
 .rate-this-page-form-wrapper {
 	width: 50%;
 }
 
-.rate-this-page-submit-button {
-	margin: 0 0 18px 20px;
-}
-
 .rate-this-page-list-wrapper {
 	width: 50%;
+	margin-top: 20px;
 }
 
 .rate-item {

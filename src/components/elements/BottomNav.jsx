@@ -7,7 +7,7 @@ import deLogo from '../../assets/images/logos/logo-designengine.svg';
 
 
 function BottomNav(props) {
-	console.log('BottomNav()', props);
+// 	console.log('BottomNav()', props);
 
 	return (
 		<div className="bottom-nav-wrapper">

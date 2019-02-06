@@ -17,36 +17,61 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
-const txtfieldClass = (isValid)=> {
-	return ((isValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error');
+const RateStarItem = (props)=> {
+	const { ind, filled } = props;
+	return (<FontAwesome
+		name="star"
+		className={(filled) ? 'rate-this-star-item rate-this-star-item-filled' : 'rate-this-star-item'}
+		onClick={()=> props.onClick(ind)}
+		onMouseEnter={()=> props.onRollOver(ind)}
+		onMouseLeave={()=> props.onRollOut(ind)}
+	/>);
 };
 
-
-const RateItem = (props)=> {
-// 	console.log('RateThisPage.RateItem()', props);
+const RateThisItem = (props)=> {
+// 	console.log('RateThisPage.RateThisItem()', props);
 
 	const { ind, username, avatar, score, comment } = props;
-	const stars = [0, 0, 0, 0, 0].fill(1, 0, score);
+	const stars = new Array(5).fill(false).fill(true, 0, score);
 
 	return (<div className="rate-item"><Row vertical="center">
 		<Column flexBasis="30px" horizontal="start" className="rate-item-column rate-item-column-index">#{ind}</Column>
 		<Column flexBasis="60px" horizontal="center" className="rate-item-column rate-item-column-avatar"><img src={avatar} className="rate-item-image" alt={ind} /></Column>
 		<Column flexGrow={1} flexShrink={1} flexBasis="auto" horizontal="start" className="rate-item-column rate-item-column-username">{username}{(comment) && ('*')}</Column>
-		<Column flexBasis="138px" horizontal="end" className="rate-item-column rate-item-column-score"><Row horizontal="end">{stars.map((score, i)=> { return (<FontAwesome key={i} name="star" className={`rate-item-star${(score === 1) ? ' rate-item-star-filled' : ''}`} />); })}</Row></Column>
+		<Column flexBasis="138px" horizontal="end" className="rate-item-column rate-item-column-score"><Row horizontal="end">{stars.map((score, i)=> { return (<FontAwesome key={i} name="star" className={`rate-item-star${(score) ? ' rate-item-star-filled' : ''}`} />); })}</Row></Column>
 	</Row></div>);
 };
 
 const RateThisForm = (props)=> {
 // 	console.log('RateThisPage.RateThisForm()', props);
 
-	const { comment, commentValid } = props;
-	const commentClass = txtfieldClass(commentValid);
+	const { score, comment, commentValid } = props;
+// 	const stars = new Array(5).fill(false).fill(true, 0, score);
+
+	let stars = [...props.stars];
+	stars.forEach((star, i)=> {
+		star = (star === true || i <= score);
+	});
+
+	const commentClass = (commentValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
 
 	return (<div className="rate-this-page-form-wrapper">
-		<form onSubmit={props.onSubmit}><Row vertical="center">
-			<div className={commentClass}><input type="text" name="comment" placeholder="Comment here" value={comment} onFocus={props.onFocus} onChange={props.onChange} /></div>
-			<button type="submit" className="rate-this-page-submit-button" onClick={(event)=> props.onSubmit(event)}>Comment</button>
-		</Row></form>
+		<div className="rate-this-page-star-wrapper">
+			{stars.map((star, i)=> {
+				return (<RateStarItem
+					key={i}
+					ind={i}
+					filled={(star)}
+					onClick={props.onStarClick}
+					onRollOver={props.onStarRollOver}
+					onRollOut={props.onStarRollOut}
+				/>);
+			})}
+		</div>
+		<form onSubmit={props.onSubmit}>
+			<div className={commentClass}><textarea className="rate-this-comment-text" name="comment" value={comment} placeholder="Add Comment" onFocus={props.onFocus} onChange={props.onChange} /></div>
+			<button disabled={(stars.reduce((acc, val)=> (acc + val)) === 0)} className="long-button" type="submit" onClick={(event)=> props.onSubmit(event)}>Comment</button>
+		</form>
 	</div>);
 };
 
@@ -60,7 +85,7 @@ const RateThisList = (props)=> {
 	return (<div className="rate-this-page-list-wrapper">
 		<h3>{`${avgScore}/5 star rating`} &amp; {`${commentTotal} comment${(commentTotal === 1) ? '' : 's'}`}</h3>
 		{ratings.map((rating, i)=> {
-			return (<RateItem
+			return (<RateThisItem
 				key={i}
 				ind={ratings.length - i}
         username={rating.username}
@@ -78,10 +103,12 @@ class RateThisPage extends Component {
 		super(props);
 
 		this.state = {
-			ratingID     : 0,
-			ratings      : [],
+			stars        : new Array(5).fill(false),
+			score        : (props.score) ? props.score : 0,
 			comment      : '',
-			commentValid : true
+			commentValid : true,
+			ratingID     : 0,
+			ratings      : []
 		};
 	}
 
@@ -89,7 +116,11 @@ class RateThisPage extends Component {
 		console.log('RateThisPage.componentDidMount()', this.props, this.state);
 		const { profile, score } = this.props;
 
+
 		if (score > 0) {
+			const stars = [...this.state.stars].fill(true, 0, score);
+			this.setState({ stars });
+
 			let formData = new FormData();
 			formData.append('action', 'ADD_RATE');
 			formData.append('user_id', (profile) ? profile.id : '0');
@@ -108,12 +139,8 @@ class RateThisPage extends Component {
 		}
 	}
 
-	componentWillUnmount() {
-		console.log('RateThisPage.componentWillUnmount()', this.props, this.state);
-	}
-
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('RateThisPage.componentDidUpdate()', prevProps, this.props, this.state);
+// 		console.log('RateThisPage.componentDidUpdate()', prevProps, this.props, this.state);
 
 		const { profile, score } = this.props;
 		const { ratingID } = this.state;
@@ -135,12 +162,44 @@ class RateThisPage extends Component {
 	}
 
 
+	handleStarClick = (ind)=> {
+		console.log('RateThisPage.handleStarClick()', ind);
+
+		const score = ind + 1;
+		const stars = new Array(5).fill(false).fill(true, 0, score);
+		this.setState({ stars, score });
+	};
+
+	handleStarRollOut = (ind)=> {
+// 		console.log('RateThisPage.handleStarRollOut()', ind);
+
+		const { score } = this.state;
+		let stars = [...this.state.stars];
+		stars.forEach((star, i)=> {
+			stars[i] = (i < score);
+// 			star = (i < score);
+		});
+
+		this.setState({ stars });
+	};
+
+	handleStarRollOver = (ind)=> {
+// 		console.log('RateThisPage.handleStarRollOver()', ind);
+
+		let stars = [...this.state.stars];
+		stars.forEach((star, i)=> {
+			stars[i] = (i <= ind);
+// 			star = (i <= ind);
+		});
+
+		this.setState({ stars });
+	};
+
 	handleSubmit = (event)=> {
 		console.log('RateThisPage.handleSubmit()', this.props, this.state);
 		event.preventDefault();
 
-		const { score } = this.props;
-		const { ratingID, comment } = this.state;
+		const { score, ratingID, comment } = this.state;
 		const commentValid = (comment.length > 0);
 
 		this.setState({
@@ -166,7 +225,7 @@ class RateThisPage extends Component {
 	};
 
 	onFetchRates = ()=> {
-		console.log('RateThisPage.onFetchRates()');
+// 		console.log('RateThisPage.onFetchRates()');
 
 		let formData = new FormData();
 		formData.append('action', 'RATES');
@@ -180,15 +239,19 @@ class RateThisPage extends Component {
 
 
 	render() {
-		console.log('RateThisPage.render()', this.props, this.state);
+// 		console.log('RateThisPage.render()', this.props, this.state);
 
-		const { score } = this.props;
-		const { ratingID, comment, commentValid, ratings } = this.state;
+		const { stars, score, ratingID, comment, commentValid, ratings } = this.state;
 		return (<div className="page-wrapper rate-this-page-wrapper">
 			<h3>Please Rate &amp; Comment</h3>
-			{(ratingID > 0 && score > 0) && (<RateThisForm
+			{(ratingID === 0) && (<RateThisForm
+				stars={stars}
+				score={score}
 				comment={comment}
 				commentValid={commentValid}
+				onStarClick={this.handleStarClick}
+				onStarRollOver={this.handleStarRollOver}
+				onStarRollOut={this.handleStarRollOut}
 				onFocus={()=> this.setState({ comment : '', commentValid : true })}
 				onChange={(event)=> this.setState({ [event.target.name] : event.target.value })}
 				onSubmit={this.handleSubmit} />)}
