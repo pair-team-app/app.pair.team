@@ -301,7 +301,7 @@ class InspectorPage extends Component {
 		this.processingInterval = null;
 		this.antsOffset = 0;
 		this.canvasInterval = null;
-// 		this.scrollTimeout = null;
+		this.scrollTimeout = null;
 		this.notification = null;
 	}
 
@@ -406,11 +406,11 @@ class InspectorPage extends Component {
 
 		clearInterval(this.processingInterval);
 		clearInterval(this.canvasInterval);
-// 		clearTimeout(this.scrollTimeout);
+		clearTimeout(this.scrollTimeout);
 
 		this.processingInterval = null;
 		this.canvasInterval = null;
-// 		this.scrollTimeout = null;
+		this.scrollTimeout = null;
 
 		document.removeEventListener('keydown', this.handleKeyDown.bind(this));
 		document.removeEventListener('wheel', this.handleWheelStart.bind(this));
@@ -841,13 +841,13 @@ class InspectorPage extends Component {
 
 		event.stopPropagation();
 
-// 		clearTimeout(this.scrollTimeout);
-// 		this.scrollTimeout = null;
+		clearTimeout(this.scrollTimeout);
+		this.scrollTimeout = null;
 
 		if (event.ctrlKey) {
 			event.preventDefault();
 			this.setState({
-// 				scrolling : true,
+				scrolling : true,
 				scale     : Math.min(Math.max(this.state.scale - (event.deltaY * PAN_FACTOR), 0.03), 3).toFixed(2),
 				tooltip   : Math.floor(Math.min(Math.max(this.state.scale - (event.deltaY * PAN_FACTOR), 0.03), 3).toFixed(2) * 100) + '%'
 			});
@@ -855,7 +855,7 @@ class InspectorPage extends Component {
 		} else {
 			if (artboardsWrapper.current) {
 				this.setState({
-// 					scrolling    : true,
+					scrolling    : true,
 					scrollOffset : {
 						x : artboardsWrapper.current.scrollLeft,
 						y : artboardsWrapper.current.scrollTop
@@ -864,14 +864,7 @@ class InspectorPage extends Component {
 			}
 		}
 
-// 		this.scrollTimeout = setTimeout(this.handleWheelStop, 50);
-	};
-
-	handleWheelStop = ()=> {
-// 		console.log('InspectorPage.handleWheelStop()');
-
-// 		clearTimeout(this.scrollTimeout);
-		this.setState({ scrolling : false });
+		this.scrollTimeout = setTimeout(this.onWheelTimeout, 50);
 	};
 
 	handleZoom = (direction)=> {
@@ -1095,6 +1088,13 @@ class InspectorPage extends Component {
 		}
 	};
 
+	onWheelTimeout = ()=> {
+// 		console.log('InspectorPage.onWheelTimeout()');
+
+		clearTimeout(this.scrollTimeout);
+		this.setState({ scrolling : false });
+	};
+
 
 	render() {
 		const { profile } = this.props;
@@ -1125,8 +1125,8 @@ class InspectorPage extends Component {
 		const canvasStyle = {
 			top     : `${(scrollOffset.y - ARTBOARD_ORIGIN.y)}px`,
 			left    : `${(scrollOffset.x - ARTBOARD_ORIGIN.x)}px`,
-// 			display : (scrolling) ? 'none' : 'block'
-			display : 'block'
+			display : (scrolling) ? 'none' : 'block'
+// 			display : 'block'
 		};
 
 
