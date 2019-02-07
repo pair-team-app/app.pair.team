@@ -1075,8 +1075,11 @@ class InspectorPage extends Component {
 			upload.pages = pages;
 			const tabs = inspectorTabs[section];
 			const tooltip = '';
-
 			this.setState({ upload, tabs, viewport, tooltip });
+
+			if (parseInt(upload.state, 10) < 3) {
+				this.props.onProcessing(true);
+			}
 		}).catch((error)=> {
 		});
 	};
@@ -1159,12 +1162,13 @@ class InspectorPage extends Component {
 				border         : '2px dotted #00ff00'
 			};
 
-			const sliceWrapperStyle = {
+			const slicesWrapperStyle = {
 				position : 'absolute',
 				top      : `${Math.floor(offset.y)}px`,
 				left     : `${Math.floor(offset.x)}px`,
 				width    : `${(scale * artboard.meta.frame.size.width)}px`,
-				height   : `${(scale * artboard.meta.frame.size.height)}px`
+				height   : `${(scale * artboard.meta.frame.size.height)}px`,
+				display  : (processing) ? 'none' : 'block'
 			};
 
 			const groupSlices = artboard.slices.filter((slice)=> (slice.type === 'group')).map((slice, i)=> (
@@ -1274,7 +1278,7 @@ class InspectorPage extends Component {
 			);
 
 			slices.push(
-				<div key={i} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={sliceWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut}>
+				<div key={i} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut}>
 					<div data-artboard-id={artboard.id} className="inspector-page-group-slices-wrapper">{groupSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{symbolSlices}</div>
@@ -1291,7 +1295,7 @@ class InspectorPage extends Component {
 
 
 // 		console.log('InspectorPage.render()', this.state);
-// 		console.log('InspectorPage.render()', this.props, this.state);
+		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage:', window.performance.memory);
 
 		return (<>
