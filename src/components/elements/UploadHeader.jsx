@@ -67,12 +67,7 @@ class UploadHeader extends Component {
 		event.preventDefault();
 		trackEvent('button', 'demo');
 
-		this.props.updateDeeplink({
-			uploadID   : 1,
-			pageID     : 0,
-			artboardID : 0
-		});
-		this.props.onPage(`${window.location.pathname.substr(1).split('/').pop()}/1/ios-12-design-system`);
+		window.location.replace('http://demo.designengine.ai/');
 	};
 
 	handleFileDialogCancel = ()=> {
