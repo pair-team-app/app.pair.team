@@ -54,6 +54,20 @@ const canvasWrapper = React.createRef();
 const canvas = React.createRef();
 
 
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		deeplink    : state.deeplink,
+		profile     : state.userProfile,
+		redirectURI : state.redirectURI
+	});
+};
+
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		setRedirectURI : (url)=> dispatch(setRedirectURI(url))
+	});
+};
+
 
 const buildUploadArtboards = (upload)=> {
 	return ([...upload.pages].flatMap((page)=> (page.artboards)));
@@ -73,21 +87,6 @@ const buildSlicePreviews = (upload, slice)=> {
 	});
 
 	return (slices);
-};
-
-
-const mapStateToProps = (state, ownProps)=> {
-	return ({
-		deeplink    : state.deeplink,
-		profile     : state.userProfile,
-		redirectURI : state.redirectURI
-	});
-};
-
-const mapDispatchToProps = (dispatch)=> {
-	return ({
-		setRedirectURI : (url)=> dispatch(setRedirectURI(url))
-	});
 };
 
 
