@@ -107,6 +107,12 @@
 	letter-spacing: -0.3px;
 }
 
+.input-error {
+	border: 1px solid #ff4646;
+	background-color: #1a1e23;
+	color: #ff4646;
+}
+
 .upload-progress-bar-wrapper {
 	position: fixed;
 	top: 64px;

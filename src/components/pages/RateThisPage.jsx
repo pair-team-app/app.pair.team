@@ -31,14 +31,14 @@ const RateStarItem = (props)=> {
 const RateThisItem = (props)=> {
 // 	console.log('RateThisPage.RateThisItem()', props);
 
-	const { ind, username, avatar, score, comment } = props;
+	const { id, ind, username, avatar, score, comment } = props;
 	const stars = new Array(5).fill(false).fill(true, 0, score);
 
-	return (<div className="rate-item"><Row vertical="center">
-		<Column flexBasis="30px" horizontal="start" className="rate-item-column rate-item-column-index">#{ind}</Column>
-		<Column flexBasis="60px" horizontal="center" className="rate-item-column rate-item-column-avatar"><img src={avatar} className="rate-item-image" alt={ind} /></Column>
-		<Column flexGrow={1} flexShrink={1} flexBasis="auto" horizontal="start" className="rate-item-column rate-item-column-username">{username}{(comment) && ('*')}</Column>
-		<Column flexBasis="138px" horizontal="end" className="rate-item-column rate-item-column-score"><Row horizontal="end">{stars.map((score, i)=> { return (<FontAwesome key={i} name="star" className={`rate-item-star${(score) ? ' rate-item-star-filled' : ''}`} />); })}</Row></Column>
+	return (<div className="rate-item" data-rate-id={id}><Row>
+		<Column horizontal="start" vertical="center" className="rate-item-column rate-item-column-index">#{ind}</Column>
+		<Column flexBasis="63px" horizontal="start" vertical="center" className="rate-item-column rate-item-column-avatar"><img src={avatar} className="rate-item-image" alt={ind} /></Column>
+		<Column flexGrow={1} flexShrink={1} flexBasis="auto" horizontal="start" vertical="center" className="rate-item-column rate-item-column-username"><Row>{username}{(comment.length > 0) && (<span className="rate-item-comment">{comment}</span>)}</Row></Column>
+		<Column flexBasis="120px" horizontal="end" vertical="center" className="rate-item-column rate-item-column-score"><Row>{stars.map((score, i)=> { return (<FontAwesome key={i} name="star" className={`rate-item-star${(score) ? ' rate-item-star-filled' : ''}`} />); })}</Row></Column>
 	</Row></div>);
 };
 
@@ -53,7 +53,7 @@ const RateThisForm = (props)=> {
 		star = (star === true || i <= score);
 	});
 
-	const commentClass = (commentValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
+	const commentClass = (commentValid) ? '' : ' input-error';
 
 	return (<div className="rate-this-page-form-wrapper">
 		<div className="rate-this-page-star-wrapper">
@@ -69,8 +69,8 @@ const RateThisForm = (props)=> {
 			})}
 		</div>
 		<form onSubmit={props.onSubmit}>
-			<div className={commentClass}><textarea className="rate-this-comment-text" name="comment" value={comment} placeholder="Add Comment" onFocus={props.onFocus} onChange={props.onChange} /></div>
-			<button disabled={(stars.reduce((acc, val)=> (acc + val)) === 0)} className="long-button" type="submit" onClick={(event)=> props.onSubmit(event)}>Comment</button>
+			<div className="input-wrapper"><textarea className={`rate-this-comment-text${commentClass}`} name="comment" value={comment} placeholder="Add Comment" onFocus={props.onFocus} onChange={props.onChange} /></div>
+			<button disabled={(comment.length === 0 || score === 0)} className="long-button" type="submit" onClick={(event)=> props.onSubmit(event)}>Comment</button>
 		</form>
 	</div>);
 };
@@ -88,10 +88,11 @@ const RateThisList = (props)=> {
 			return (<RateThisItem
 				key={i}
 				ind={ratings.length - i}
+				id={rating.id}
         username={rating.username}
 				avatar={rating.avatar}
 				score={parseInt(rating.score, 10)}
-				comment={rating.comment.length > 0}
+				comment={rating.comment}
 			/>);
 		})}
 	</div>);
@@ -114,25 +115,13 @@ class RateThisPage extends Component {
 
 	componentDidMount() {
 		console.log('RateThisPage.componentDidMount()', this.props, this.state);
-		const { profile, score } = this.props;
+		const { score } = this.props;
 
 
 		if (score > 0) {
 			const stars = [...this.state.stars].fill(true, 0, score);
 			this.setState({ stars });
-
-			let formData = new FormData();
-			formData.append('action', 'ADD_RATE');
-			formData.append('user_id', (profile) ? profile.id : '0');
-			formData.append('score', score);
-			formData.append('comment', '');
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response)=> {
-					console.log('ADD_RATE', response.data);
-					this.setState({ ratingID : response.data.rating.id });
-					this.onFetchRates();
-				}).catch((error)=> {
-			});
+			this.onSubmitScore(score);
 
 		} else {
 			this.onFetchRates();
@@ -165,9 +154,18 @@ class RateThisPage extends Component {
 	handleStarClick = (ind)=> {
 		console.log('RateThisPage.handleStarClick()', ind);
 
+		const { ratingID } = this.state;
+
 		const score = ind + 1;
 		const stars = new Array(5).fill(false).fill(true, 0, score);
 		this.setState({ stars, score });
+
+		if (ratingID === 0) {
+			this.onSubmitScore(score);
+
+		} else {
+			this.onSubmitComment(score);
+		}
 	};
 
 	handleStarRollOut = (ind)=> {
@@ -177,7 +175,6 @@ class RateThisPage extends Component {
 		let stars = [...this.state.stars];
 		stars.forEach((star, i)=> {
 			stars[i] = (i < score);
-// 			star = (i < score);
 		});
 
 		this.setState({ stars });
@@ -189,17 +186,16 @@ class RateThisPage extends Component {
 		let stars = [...this.state.stars];
 		stars.forEach((star, i)=> {
 			stars[i] = (i <= ind);
-// 			star = (i <= ind);
 		});
 
 		this.setState({ stars });
 	};
 
-	handleSubmit = (event)=> {
-		console.log('RateThisPage.handleSubmit()', this.props, this.state);
+	handleSubmitComment = (event)=> {
+		console.log('RateThisPage.handleSubmitComment()', this.props, this.state);
 		event.preventDefault();
 
-		const { score, ratingID, comment } = this.state;
+		const { score, comment } = this.state;
 		const commentValid = (comment.length > 0);
 
 		this.setState({
@@ -208,19 +204,7 @@ class RateThisPage extends Component {
 		});
 
 		if (commentValid) {
-			trackEvent('rate', 'comment');
-			let formData = new FormData();
-			formData.append('action', 'EDIT_RATE');
-			formData.append('rating_id', ratingID);
-			formData.append('score', score);
-			formData.append('comment', comment);
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response)=> {
-					console.log('EDIT_RATE', response.data);
-					this.setState({ ratingID : 0 });
-					this.onFetchRates();
-				}).catch((error)=> {
-			});
+			this.onSubmitComment(score);
 		}
 	};
 
@@ -237,14 +221,60 @@ class RateThisPage extends Component {
 		});
 	};
 
+	onSubmitComment = (score)=> {
+// 		console.log('RateThisPage.onSubmitComment()');
+
+		const { ratingID, comment } = this.state;
+
+		trackEvent('rate', 'comment');
+		let formData = new FormData();
+		formData.append('action', 'EDIT_RATE');
+		formData.append('rating_id', ratingID);
+		formData.append('score', score);
+		formData.append('comment', comment);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response)=> {
+				console.log('EDIT_RATE', response.data);
+				this.setState({
+					comment      : '',
+					commentValid : true
+				});
+				this.onFetchRates();
+			}).catch((error)=> {
+		});
+	};
+
+	onSubmitScore = (score)=> {
+// 		console.log('RateThisPage.onSubmitScore()', score);
+
+		const { profile } = this.props;
+
+		trackEvent('rate', 'score');
+		let formData = new FormData();
+		formData.append('action', 'ADD_RATE');
+		formData.append('user_id', (profile) ? profile.id : '0');
+		formData.append('score', score);
+		formData.append('comment', '');
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response)=> {
+				console.log('ADD_RATE', response.data);
+				this.setState({
+					score    : score,
+					ratingID : response.data.rating.id
+				});
+				this.onFetchRates();
+			}).catch((error)=> {
+		});
+	};
+
 
 	render() {
 // 		console.log('RateThisPage.render()', this.props, this.state);
 
-		const { stars, score, ratingID, comment, commentValid, ratings } = this.state;
+		const { stars, score, comment, commentValid, ratings } = this.state;
 		return (<div className="page-wrapper rate-this-page-wrapper">
 			<h3>Please Rate &amp; Comment</h3>
-			{(ratingID === 0) && (<RateThisForm
+			<RateThisForm
 				stars={stars}
 				score={score}
 				comment={comment}
@@ -254,7 +284,7 @@ class RateThisPage extends Component {
 				onStarRollOut={this.handleStarRollOut}
 				onFocus={()=> this.setState({ comment : '', commentValid : true })}
 				onChange={(event)=> this.setState({ [event.target.name] : event.target.value })}
-				onSubmit={this.handleSubmit} />)}
+				onSubmit={this.handleSubmitComment} />
 
 			{(ratings.length > 0) && (<RateThisList ratings={ratings} />)}
 		</div>);

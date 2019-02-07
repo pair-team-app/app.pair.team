@@ -40,7 +40,7 @@
 
 .rate-item {
 	width: 100%;
-	padding: 10px 0;
+	height: 63px;
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-weight: 500;
 	letter-spacing: -0.3px;
@@ -60,14 +60,27 @@
 	height: 40px;
 }
 
+.rate-item-comment {
+	color: #323940;
+	padding-left: 20px;
+}
+
+.rate-item-comment:before {
+	content: "“";
+}
+
+.rate-item-comment:after {
+	content: "”";
+}
+
 .rate-item-star {
-	margin-right: 10px;
+	margin-left: 10px;
 	font-size: 14px;
 	color: #24282e;
 }
 
-.rate-item-star:last-child {
-	margin-right: -20px;
+.rate-item-star:first-child {
+	margin-left: 0;
 }
 
 .rate-item-star-filled {
@@ -75,12 +88,8 @@
 }
 
 .rate-item-column {
-	padding-right: 20px;
-}
-
-.rate-item-column:last-child {
-	text-align: right;
-	margin-right: 0;
+	height: 63px;
+	/*border : 1px solid #ff00ff;*/
 }
 
 .rate-item-column-index {
@@ -96,4 +105,5 @@
 }
 
 .rate-item-column-score {
+	width: 120px;
 }
