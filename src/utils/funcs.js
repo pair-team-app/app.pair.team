@@ -45,8 +45,8 @@ export function cropFrame(srcFrame, cropFrame) {
 			y : Math.max(srcFrame.origin.y, cropFrame.origin.y)
 		},
 		size   : {
-			width  : Math.min(srcFrame.size.width, cropFrame.size.width),
-			height : Math.min(srcFrame.size.height, cropFrame.size.height)
+			width  : Math.min(srcFrame.origin.x + srcFrame.size.width, cropFrame.origin.x + cropFrame.size.width) - Math.max(srcFrame.origin.x, cropFrame.origin.x),
+			height : Math.min(srcFrame.origin.y + srcFrame.size.height, cropFrame.origin.y + cropFrame.size.height) - Math.max(srcFrame.origin.y, cropFrame.origin.y)
 		}
 	});
 }

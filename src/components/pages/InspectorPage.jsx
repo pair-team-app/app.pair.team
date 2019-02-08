@@ -11,12 +11,13 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import FontAwesome from 'react-fontawesome';
 import Moment from 'react-moment';
 import { connect } from 'react-redux';
-import { Row } from 'simple-flexbox';
+import { Column, Row } from 'simple-flexbox';
 
-import ContentModal, { MODAL_SIZE_PERCENT } from '../elements/ContentModal';
+// import ContentModal, { MODAL_SIZE_PERCENT } from '../elements/ContentModal';
+import ContentModal from '../elements/ContentModal';
 import { POPUP_TYPE_INFO } from '../elements/Popup';
 import TutorialOverlay from '../elements/TutorialOverlay';
-import InviteTeamForm from '../forms/InviteTeamForm';
+// import InviteTeamForm from '../forms/InviteTeamForm';
 
 import { MOMENT_TIMESTAMP } from '../../consts/formats';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
@@ -26,6 +27,7 @@ import { buildInspectorPath, buildInspectorURL, capitalizeText, convertURISlug, 
 import { fontSpecs, toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/inspector-langs.js';
 import { trackEvent } from '../../utils/tracking';
 import deLogo from '../../assets/images/logos/logo-designengine.svg';
+import bannerPanel from '../../assets/json/banner-panel';
 import inspectorTabs from '../../assets/json/inspector-tabs';
 
 
@@ -97,7 +99,7 @@ const ColorSwatch = (props)=> {
 	return (<div className="inspector-page-color-swatch" style={{ backgroundColor : fill }} />);
 };
 
-const InviteTeamModal = (props)=> {
+/*const InviteTeamModal = (props)=> {
 // 	console.log('InspectorPage.InviteTeamModal()', props);
 
 	const { profile, upload, processing } = props;
@@ -129,7 +131,7 @@ const InviteTeamModal = (props)=> {
 			/>
 		</ContentModal>
 	);
-};
+};*/
 
 const PartItem = (props)=> {
 // 	console.log('InspectorPage.SlicePreviewItem()', props);
@@ -161,6 +163,30 @@ const PartsList = (props)=> {
 			);
 		})}
 	</div>);
+};
+
+const UploadProcessing = (props)=> {
+	console.log('InspectorPage.UploadProcessing()', props);
+
+	const { upload, processing } = props;
+	const artboard = (upload.pages.length > 0) ? upload.pages.shift().artboards.shift() : null;
+
+	return (<div className="upload-processing-wrapper"><Column horizontal="center" vertical="start">
+		<div className="upload-processing-title">{processing.message}</div>
+		<div className="upload-processing-url">{buildInspectorURL(upload)}</div>
+
+		<div className="upload-processing-button-wrapper">
+			<CopyToClipboard onCopy={()=> props.onCopyURL()} text={buildInspectorURL(upload)}>
+				<button className="adjacent-button">Copy</button>
+			</CopyToClipboard>
+			<button onClick={()=> props.onCancel()}>Cancel</button>
+		</div>
+
+		{(artboard)
+			? (<img className="upload-processing-image" src={(!artboard.filename.includes('@')) ? `${artboard.filename}@0.25x.png` : artboard.filename} alt={upload.title} />)
+			: (<img className="upload-processing-image" src={bannerPanel.image} alt={bannerPanel.title} />)
+		}
+	</Column></div>);
 };
 
 const SliceRolloverItem = (props)=> {
@@ -291,7 +317,7 @@ class InspectorPage extends Component {
 				syntax : ''
 			},
 			processing   : {
-				state   : 3,
+				state   : 0,
 				message : ''
 			},
 			tooltip      : ''
@@ -354,11 +380,11 @@ class InspectorPage extends Component {
 			this.setState({
 				processing : {
 					state   : 0,
-					message : 'Please wait…'
+					message : `Processing ${upload.filename.split('/').pop()}…`
 				}
 			});
 
-			this.processingInterval = setInterval(this.onProcessingUpdate, STATUS_INTERVAL);
+			this.processingInterval = setInterval(()=> this.onProcessingUpdate(), STATUS_INTERVAL);
 		}
 
 		if (!processing && this.processingInterval) {
@@ -388,7 +414,8 @@ class InspectorPage extends Component {
 			if (!this.state.tutorial && cookie.load('tutorial') === '0') {
 				cookie.save('tutorial', '1', { path : '/' });
 
-// 				let artboard = [...upload.pages].shift().artboards.shift();
+				let artboard =buildUploadArtboards(upload).pop();
+				artboard.meta = JSON.parse(artboard.meta);
 				const tutorial = {
 					origin : {
 						top  : `${62 + ARTBOARD_ORIGIN.y}px`,
@@ -443,7 +470,7 @@ class InspectorPage extends Component {
 		}
 
 		if (!this.canvasInterval) {
-			this.canvasInterval = setInterval(this.onCanvasInterval, ANTS_INTERVAL);
+			this.canvasInterval = setInterval(()=> this.onCanvasInterval(), ANTS_INTERVAL);
 		}
 
 		if (artboard.slices.length === 0) {
@@ -834,6 +861,17 @@ class InspectorPage extends Component {
 		this.setState({ tutorial : tutorial });
 	};
 
+	handleUploadProcessingCancel = ()=> {
+		console.log('InspectorPage.handleUploadProcessingCancel()');
+
+		if (this.processingInterval) {
+			clearInterval(this.processingInterval);
+			this.processingInterval = null;
+		}
+		this.props.onProcessing(false);
+		this.onRefreshUpload();
+	};
+
 
 	handleWheelStart = (event)=> {
 // 		console.log('InspectorPage.handleWheelStart()', event.type, event.deltaX, event.deltaY, event.target);
@@ -864,7 +902,7 @@ class InspectorPage extends Component {
 			}
 		}
 
-		this.scrollTimeout = setTimeout(this.onWheelTimeout, 50);
+		this.scrollTimeout = setTimeout(()=> this.onWheelTimeout(), 50);
 	};
 
 	handleZoom = (direction)=> {
@@ -925,6 +963,8 @@ class InspectorPage extends Component {
 	};
 
 	onProcessingUpdate = ()=> {
+		console.log('InspectorPage.onProcessingUpdate()');
+
 		const { upload } = this.state;
 
 		let formData = new FormData();
@@ -941,7 +981,7 @@ class InspectorPage extends Component {
 					this.setState({
 						processing : {
 							state   : processingState,
-							message : `You are in queue position ${queue.position}/${queue.total}, please wait your turn…`
+							message : `Queued position ${queue.position}/${queue.total}, please wait…`
 						}
 					});
 
@@ -949,7 +989,7 @@ class InspectorPage extends Component {
 					this.setState({
 						processing : {
 							state   : processingState,
-							message : 'Your file is being prepared…'
+							message : `Preparing ${upload.filename.split('/').pop()}…`
 						}
 					});
 
@@ -963,31 +1003,31 @@ class InspectorPage extends Component {
 					this.setState({
 						processing : {
 							state   : processingState,
-							message : `Your file is processing, parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s…`
+							message : `Processing ${upload.filename.split('/').pop()}, parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s…`
 						}
 					});
 					this.onRefreshUpload();
 
 				} else if (processingState === 3) {
+					clearInterval(this.processingInterval);
+					this.processingInterval = null;
+
 					const { totals } = status;
 					const total = Object.values(totals).reduce((acc, val)=> (parseInt(acc, 10) + parseInt(val, 10)));
 
 					const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
 					const secs = Math.floor((mins - Math.floor(mins)) * 60);
 
-					this.props.onProcessing(false);
-					clearInterval(this.processingInterval);
-					this.processingInterval = null;
-
 					this.onShowNotification();
 
 					this.setState({
 						processing : {
 							state   : processingState,
-							message : `Your file has completed processing. Parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s.`
+							message : `Completed processing. Parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s.`
 						}
 					});
-					this.onRefreshUpload();
+
+					this.props.onProcessing(false);
 
 				} else if (processingState === 4) {
 					this.setState({
@@ -1005,81 +1045,79 @@ class InspectorPage extends Component {
 		console.log('InspectorPage.onRefreshUpload()', this.props);
 
 		const { uploadID } = this.props.deeplink;
-		const { section, scale, viewport } = this.state;
+// 		const { section, scale, viewport } = this.state;
+		const { section } = this.state;
 
 		this.setState({ tooltip : 'Loading…' });
 
-		let maxH = 0;
-		let offset = {
-			x : 0,
-			y : 0
-		};
+// 		let maxH = 0;
+// 		let offset = {
+// 			x : 0,
+// 			y : 0
+// 		};
 
 		axios.post('https://api.designengine.ai/system.php', qs.stringify({
 			action    : 'UPLOAD',
 			upload_id : uploadID
 		})).then((response)=> {
 			console.log('UPLOAD', response.data);
-			const { upload } = response.data;
 
-			let pages = [];
-			upload.pages.forEach((page)=> {
-				let artboards = [];
-				page.artboards.forEach((artboard, i, arr)=> {
-					if (Math.floor(i % 5) === 0 && i !== 0) {
-						viewport.height += maxH + 50;
-						offset.x = 0;
-						offset.y += 50 + maxH;
-						maxH = 0;
-					}
+			let { upload } = response.data;
+// 			upload.pages = upload.pages.map((page)=> {
+// 				page.artboards = page.artboards.map((artboard, i, arr)=> {
+// 					if (Math.floor(i % 5) === 0 && i !== 0) {
+// 						viewport.height += maxH + 50;
+// 						offset.x = 0;
+// 						offset.y += 50 + maxH;
+// 						maxH = 0;
+// 					}
+//
+// 					maxH = Math.round(Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale));
+//
+// 					if (i > 0 && i < arr.length - 1) {
+// 						offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
+// 					}
+//
+// 					viewport.width = Math.max(viewport.width, offset.x);
+//
+// 					return ({
+// 						id        : artboard.id,
+// 						pageID    : artboard.page_id,
+// 						title     : artboard.title,
+// 						filename  : (artboard.filename.includes('@3x')) ? artboard.filename : `${artboard.filename}@3x.png`,
+// 						meta      : JSON.parse(artboard.meta),
+// 						added     : artboard.added,
+// 						grid      : {
+// 							col : i % 5,
+// 							row : Math.floor(i / 5)
+// 						},
+// 						offset    : {
+// 							x : offset.x,
+// 							y : offset.y
+// 						},
+// 						slices    : artboard.slices.map((item)=> ({
+// 							id       : item.id,
+// 							title    : item.title,
+// 							type     : item.type,
+// 							filename : item.filename,
+// 							meta     : JSON.parse(item.meta),
+// 							added    : item.added
+// 						}))
+// 					});
+// 				});
+//
+// 				return (page);
+// 			});
 
-					maxH = Math.round(Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale));
 
-					artboards.push({
-						id        : artboard.id,
-						pageID    : artboard.page_id,
-						title     : artboard.title,
-						filename  : (artboard.filename.includes('@3x')) ? artboard.filename : `${artboard.filename}@3x.png`,
-						meta      : JSON.parse(artboard.meta),
-						added     : artboard.added,
-						grid      : {
-							col : i % 5,
-							row : Math.floor(i / 5)
-						},
-						offset    : {
-							x : offset.x,
-							y : offset.y
-						},
-						slices    : artboard.slices.map((item)=> ({
-							id       : item.id,
-							title    : item.title,
-							type     : item.type,
-							filename : item.filename,
-							meta     : JSON.parse(item.meta),
-							added    : item.added
-						}))
-					});
-
-
-					if (i < arr.length - 1) {
-						offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
-					}
-
-					viewport.width = Math.max(viewport.width, offset.x);
-				});
-
-				page.artboards = artboards;
-				pages.push(page);
-			});
-
-			upload.pages = pages;
 			const tabs = inspectorTabs[section];
 			const tooltip = '';
-			this.setState({ upload, tabs, viewport, tooltip });
+			this.setState({ upload, tabs, tooltip });
 
-			if (parseInt(upload.state, 10) < 3) {
-				this.props.onProcessing(true);
-			}
+// 			const processing = (parseInt(upload.state, 10) < 3);
+// 			if (this.props.processing !== processing) {
+// 				this.props.onProcessing(processing);
+// 			}
 		}).catch((error)=> {
 		});
 	};
@@ -1095,15 +1133,17 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.onWheelTimeout()');
 
 		clearTimeout(this.scrollTimeout);
+		this.scrollTimeout = null;
+
 		this.setState({ scrolling : false });
 	};
 
 
 	render() {
-		const { profile } = this.props;
+		const { processing, profile } = this.props;
 
 		const { section, upload, slice, hoverSlice, tabs, scale, selectedTab, scrolling, viewport, scrollOffset } = this.state;
-		const { tooltip, restricted, shareModal, urlBanner, processing, tutorial } = this.state;
+		const { restricted, urlBanner, tutorial } = this.state;
 
 
 		const artboards = (upload) ? buildUploadArtboards(upload).reverse() : [];
@@ -1116,7 +1156,8 @@ class InspectorPage extends Component {
 			width     : `${viewport.width * scale}px`,
 			height    : `${viewport.height * scale}px`,
 // 			transform : `translate(${Math.round(pt.x * viewport.width)}px, ${Math.round(pt.y * viewport.height)}px) translate(${Math.round((viewport.width * -0.5) * scale)}px, ${Math.round((viewport.height * -0.5) * scale)}px)`
-			transform : `translate(${ARTBOARD_ORIGIN.x}px, ${ARTBOARD_ORIGIN.y}px)`
+			transform : `translate(${ARTBOARD_ORIGIN.x}px, ${ARTBOARD_ORIGIN.y}px)`,
+			opacity   : (processing) ? '0.33' : '1'
 		};
 
 // 		const canvasStyle = {
@@ -1143,6 +1184,9 @@ class InspectorPage extends Component {
 		let slices = [];
 
 		artboards.forEach((artboard, i)=> {
+			artboard.filename = (!artboard.filename.includes('@')) ? `${artboard.filename}@3x.png` : artboard.filename;
+			artboard.meta = (typeof artboard.meta === 'string') ? JSON.parse(artboard.meta) : artboard.meta;
+
 			if (Math.floor(i % 5) === 0 && i > 0) {
 				offset.x = 0;
 				offset.y += maxH + 50;
@@ -1168,7 +1212,6 @@ class InspectorPage extends Component {
 				left     : `${Math.floor(offset.x)}px`,
 				width    : `${(scale * artboard.meta.frame.size.width)}px`,
 				height   : `${(scale * artboard.meta.frame.size.height)}px`,
-				display  : (processing) ? 'none' : 'block'
 			};
 
 			const groupSlices = artboard.slices.filter((slice)=> (slice.type === 'group')).map((slice, i)=> (
@@ -1295,7 +1338,7 @@ class InspectorPage extends Component {
 
 
 // 		console.log('InspectorPage.render()', this.state);
-		console.log('InspectorPage.render()', this.props, this.state);
+// 		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage:', window.performance.memory);
 
 		return (<>
@@ -1311,7 +1354,7 @@ class InspectorPage extends Component {
 						</div>)}
 					</div>
 
-					{(upload) && (<div className="inspector-page-footer-wrapper"><Row vertical="center">
+					{(upload && !processing) && (<div className="inspector-page-footer-wrapper"><Row vertical="center">
 						<img src={deLogo} className="inspector-page-footer-logo" alt="Design Engine" />
 						<div className="inspector-page-footer-button-wrapper">
 							{(profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true })}}>Share</button>)}
@@ -1379,7 +1422,7 @@ class InspectorPage extends Component {
 				</div>)}
 			</div>
 
-			{(tooltip !== '' && !this.props.processing) && (<div className="inspector-page-tooltip">{tooltip}</div>)}
+			{/*{(tooltip !== '' && !processing) && (<div className="inspector-page-tooltip">{tooltip}</div>)}*/}
 			{(restricted)
 				? (<ContentModal
 						tracking="private/inspector"
@@ -1388,7 +1431,8 @@ class InspectorPage extends Component {
 						onComplete={()=> this.props.onPage('register')}>
 							This project is private, you must be logged in as one of its team members to view!
 					</ContentModal>)
-				: (<>{(upload) && (<div className={urlClass}>
+
+				: (<>{(upload && !processing) && (<div className={urlClass}>
 						<CopyToClipboard onCopy={()=> this.handleCopyURL()} text={buildInspectorURL(upload)}>
 							<div className="inspector-page-url">{buildInspectorURL(upload)}</div>
 						</CopyToClipboard>
@@ -1396,21 +1440,22 @@ class InspectorPage extends Component {
 					</div>)}</>)
 			}
 
-			{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0) && (shareModal || this.props.processing)) && (<InviteTeamModal
-				profile={profile}
+
+			{/*{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing*/}
+			{(upload && profile && (processing && upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing
 				upload={upload}
-				processing={processing}
+				processing={this.state.processing}
 				onCopyURL={this.handleCopyURL}
-				onInviteTeamFormSubmitted={this.handleInviteTeamFormSubmitted}
-				onComplete={()=> this.handleInviteModalClose()}
-				/>
-			)}
+				onCancel={this.handleUploadProcessingCancel}
+			/>)}
+
 
 			{(tutorial) && (<TutorialOverlay
 				origin={tutorial.origin}
 				onNext={this.handleTutorialNextStep}
 				onClose={()=> this.setState({ tutorial : null })}
 			/>)}
+
 
 			{(upload) && (<ReactNotifications
 				onRef={(ref)=> (this.notification = ref)}

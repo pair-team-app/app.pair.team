@@ -310,6 +310,43 @@
 }
 
 
+.upload-processing-wrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: calc(100% - 360px);
+	height: 100%;
+	padding-top: 70px;
+	z-index : 10;
+}
+
+.upload-processing-title {
+	margin-bottom: 45px;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-weight: 500;
+	font-size: 48px;
+	letter-spacing: -2.53px;
+	color: #c8e1fd;
+}
+
+.upload-processing-url {
+	margin-bottom: 50px;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-weight: 500;
+	font-size: 28px;
+	letter-spacing: -1.47px;
+	color: #005cc5;
+}
+
+.upload-processing-button-wrapper {
+	margin-bottom: 55px;
+}
+
+.upload-processing-image {
+	width: 260px;
+}
+
+
 .slice-rollover-item {
 	position: absolute;
 	zoom: 0;
