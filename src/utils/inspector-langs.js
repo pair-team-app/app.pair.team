@@ -73,7 +73,7 @@ export function toCSS(slice) {
 		html += `${HTML_TAB}color: ${font.color.toUpperCase()};\n`;
 		html += `${HTML_TAB}letter-spacing: ${font.kerning.toFixed(2)}px;\n`;
 		html += `${HTML_TAB}line-height: ${font.lineHeight}px;\n`;
-		html += `${HTML_TAB}text-align: ${font.alignment};\n`;
+		html += `${HTML_TAB}text-align: ${font.alignment.toLowerCase()};\n`;
 
 	} else if (slice.type === 'slice') {
 		html += `${HTML_TAB}background: url("${slice.filename.split('/').pop()}@3x.png");\n`;
@@ -128,7 +128,7 @@ export function toSwift(slice, artboard) {
 	const badChars = /[\\.,_+=[\](){}]/g;
 
 	let html = '';
-	if (slice.type === 'slice' || slice.type === 'group') {
+	if (slice.type === 'background' || slice.type === 'group' || slice.type === 'slice' || slice.type === 'symbol' || slice.type === 'textfield') {
 		const artboardName = camilzeText(artboard.title.replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 		const sliceName = camilzeText(convertURISlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''));
 

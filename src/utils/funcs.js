@@ -91,10 +91,6 @@ export function hasBit(val, bit) {
 	return ((val & bit) === bit);
 }
 
-export function hideText(text, char='*') {
-	return ((text.length > 0) ? Array(text.length + 1).join(char) : '');
-}
-
 export function idsFromPath() {
 	const { pathname } = window.location;
 	const inspectorPath = /\/(?:inspect|colors|parts|typography)\/(\d+)\/.+$/i;
@@ -180,6 +176,14 @@ export function numberedName(name, list, divider='_') {
 	});
 }
 
+export function padLeft(txt, len, char='') {
+	return ((txt.length < len) ? `${(new Array(len - String(txt).length + 1)).join(char)}${txt}` : txt);
+}
+
+export function padRight(txt, len, char='') {
+	return ((txt.length < len) ? `${txt}${(new Array(len - String(txt).length + 1)).join(char)}` : txt);
+}
+
 export function rectContainsRect(baseRect, testRect) {
 	return (baseRect.top <= testRect.top && baseRect.left <= testRect.left && baseRect.right >= testRect.right && baseRect.bottom >= testRect.bottom);
 }
@@ -199,6 +203,15 @@ export function rectToFrame(rect) {
 			height : rect.bottom - rect.top
 		}
 	});
+}
+
+export function repeatString(txt, amt) {
+	return ((new Array(amt).fill(txt)).join(''));
+}
+
+export function replaceStringChars(txt, char=' ') {
+// 	return ((txt.length > 0) ? Array(txt.length + 1).join(char) : '');
+	return (repeatString(char, txt.length));
 }
 
 export function scrollOrigin(element) {

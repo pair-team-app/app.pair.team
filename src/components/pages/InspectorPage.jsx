@@ -169,10 +169,10 @@ const UploadProcessing = (props)=> {
 	console.log('InspectorPage.UploadProcessing()', props);
 
 	const { upload, processing } = props;
-	const artboard = (upload.pages.length > 0) ? upload.pages.shift().artboards.shift() : null;
+	const artboard = buildUploadArtboards(upload).pop();
 
 	return (<div className="upload-processing-wrapper"><Column horizontal="center" vertical="start">
-		<div className="upload-processing-title">{processing.message}</div>
+		{(processing.message.length > 0) && (<div className="upload-processing-title">{processing.message}</div>)}
 		<div className="upload-processing-url">{buildInspectorURL(upload)}</div>
 
 		<div className="upload-processing-button-wrapper">
@@ -380,11 +380,12 @@ class InspectorPage extends Component {
 			this.setState({
 				processing : {
 					state   : 0,
-					message : `Processing ${upload.filename.split('/').pop()}…`
+					message : ``
 				}
 			});
 
 			this.processingInterval = setInterval(()=> this.onProcessingUpdate(), STATUS_INTERVAL);
+			this.onProcessingUpdate();
 		}
 
 		if (!processing && this.processingInterval) {
@@ -975,13 +976,14 @@ class InspectorPage extends Component {
 				console.log('UPLOAD_STATUS', response.data);
 				const { status } = response.data;
 				const processingState = parseInt(status.state, 10);
+				const ellipsis = Array(((((new Date()).getTime() * 0.001) << 0) % 4) + 1).join('.');
 
 				if (processingState === 0) {
 					const { queue } = status;
 					this.setState({
 						processing : {
 							state   : processingState,
-							message : `Queued position ${queue.position}/${queue.total}, please wait…`
+							message : `Queued position ${queue.position}/${queue.total}, please wait${ellipsis}`
 						}
 					});
 
@@ -989,21 +991,22 @@ class InspectorPage extends Component {
 					this.setState({
 						processing : {
 							state   : processingState,
-							message : `Preparing ${upload.filename.split('/').pop()}…`
+							message : `Preparing "${limitString(upload.filename.split('/').pop(), 27, '')}"${ellipsis}`
 						}
 					});
 
 				} else if (processingState === 2) {
-					const { totals } = status;
-					const total = Object.values(totals).reduce((acc, val)=> (parseInt(acc, 10) + parseInt(val, 10)));
+// 					const { totals } = status;
+// 					const total = Object.values(totals).reduce((acc, val)=> (parseInt(acc, 10) + parseInt(val, 10)));
 
-					const mins = moment.duration(moment(Date.now()).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
-					const secs = Math.floor((mins - Math.floor(mins)) * 60);
+// 					const mins = moment.duration(moment(Date.now()).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
+// 					const secs = Math.floor((mins - (mins << 0)) * 60);
 
 					this.setState({
 						processing : {
 							state   : processingState,
-							message : `Processing ${upload.filename.split('/').pop()}, parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s…`
+// 							message : `Processing ${upload.filename.split('/').pop()}, parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s…`
+							message : `Processing "${limitString(upload.filename.split('/').pop(), 27, '')}"${ellipsis}`
 						}
 					});
 					this.onRefreshUpload();
@@ -1016,14 +1019,15 @@ class InspectorPage extends Component {
 					const total = Object.values(totals).reduce((acc, val)=> (parseInt(acc, 10) + parseInt(val, 10)));
 
 					const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
-					const secs = Math.floor((mins - Math.floor(mins)) * 60);
+					const secs = Math.floor((mins - (mins << 0)) * 60);
 
 					this.onShowNotification();
 
 					this.setState({
 						processing : {
 							state   : processingState,
-							message : `Completed processing. Parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s.`
+// 							message : `Completed processing. Parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s.`
+							message : `Completed processing ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s.`
 						}
 					});
 
@@ -1114,7 +1118,11 @@ class InspectorPage extends Component {
 			const tooltip = '';
 			this.setState({ upload, tabs, tooltip });
 
-// 			const processing = (parseInt(upload.state, 10) < 3);
+
+			const processing = (parseInt(upload.state, 10) < 3);
+			if (processing && !this.props.processing && !this.processingInterval) {
+				this.props.onProcessing(true);
+			}
 // 			if (this.props.processing !== processing) {
 // 				this.props.onProcessing(processing);
 // 			}
@@ -1157,7 +1165,7 @@ class InspectorPage extends Component {
 			height    : `${viewport.height * scale}px`,
 // 			transform : `translate(${Math.round(pt.x * viewport.width)}px, ${Math.round(pt.y * viewport.height)}px) translate(${Math.round((viewport.width * -0.5) * scale)}px, ${Math.round((viewport.height * -0.5) * scale)}px)`
 			transform : `translate(${ARTBOARD_ORIGIN.x}px, ${ARTBOARD_ORIGIN.y}px)`,
-			opacity   : (processing) ? '0.33' : '1'
+			opacity   : (processing) ? '0' : '1'
 		};
 
 // 		const canvasStyle = {
