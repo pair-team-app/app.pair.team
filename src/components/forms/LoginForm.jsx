@@ -118,7 +118,7 @@ class LoginForm extends Component {
 
 		return (
 			<div className="login-form-wrapper">
-				{(title && title.length > 0) && (<h3>{title}</h3>)}
+				{(title && title.length > 0) && (<h4>{title}</h4>)}
 				<form onSubmit={this.handleSubmit}>
 					<div className={emailClass}><input type="text" name="email" placeholder="Username or Email" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className={passwordClass} onClick={()=> this.handlePassword()}>

@@ -200,7 +200,7 @@ class InviteTeamPage extends Component {
 							<button disabled={(email1.length === 0 && email2.length === 0 && email3.length > 0)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Send Invites</button>
 						</form>
 					</div>)
-					: (<h3>Invitations sent.</h3>)}
+					: (<h4>Invitations sent.</h4>)}
 			</div>
 		);
 	}

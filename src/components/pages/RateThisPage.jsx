@@ -83,7 +83,7 @@ const RateThisList = (props)=> {
 	const commentTotal = ratings.filter((rating)=> (rating.comment.length > 0)).length;
 
 	return (<div className="rate-this-page-list-wrapper">
-		<h3>{`${avgScore}/5 star rating`} &amp; {`${commentTotal} comment${(commentTotal === 1) ? '' : 's'}`}</h3>
+		<h4>{`${avgScore}/5 star rating`} &amp; {`${commentTotal} comment${(commentTotal === 1) ? '' : 's'}`}</h4>
 		{ratings.map((rating, i)=> {
 			return (<RateThisItem
 				key={i}
@@ -273,7 +273,7 @@ class RateThisPage extends Component {
 
 		const { stars, score, comment, commentValid, ratings } = this.state;
 		return (<div className="page-wrapper rate-this-page-wrapper">
-			<h3>Please Rate &amp; Comment</h3>
+			<h4>Please Rate &amp; Comment</h4>
 			<RateThisForm
 				stars={stars}
 				score={score}

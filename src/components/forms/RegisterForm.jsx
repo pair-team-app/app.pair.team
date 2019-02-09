@@ -140,7 +140,7 @@ class RegisterForm extends Component {
 
 		return (
 			<div className="register-form-wrapper">
-				{(title && title.length > 0) && (<h3>{title}</h3>)}
+				{(title && title.length > 0) && (<h4>{title}</h4>)}
 				<form onSubmit={this.handleSubmit}>
 					<div className={usernameClass}><input type="text" name="username" placeholder="Username" value={username} onFocus={()=> this.setState({ username : '', usernameValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className={emailClass}><input type="text" name="email" placeholder="Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>

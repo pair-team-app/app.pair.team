@@ -73,24 +73,38 @@ h1 {
   color: #c8e1fd;
 }
 
-/** Page / Upload Header */
+h1.mobile {
+  width: 100%;
+}
+
+/** Mobile / Page / Upload Header */
 h2 {
   font-family: "San Francisco Text Medium", sans-serif;
   font-weight: 500;
   font-size: 44px;
   letter-spacing: -2.32px;
-  line-height: 0;
+  line-height: normal;
   color: #c8e1fd;
 }
 
-/** Section / Form Title **/
+/** Mobile Title **/
 h3 {
+  font-family: "San Francisco Text Medium", sans-serif;
+  font-weight: 500;
+  font-size: 28px;
+  letter-spacing: -1px;
+  line-height: normal;
+	color: #005cc5;
+}
+
+/** Section / Form Title **/
+h4 {
   font-family: "San Francisco Text Medium", sans-serif;
   font-weight: 500;
   font-size: 20px;
   letter-spacing: -1px;
   margin-bottom: 17px;
-	color: #c8e1fd;
+  color: #c8e1fd;
 }
 
 /** Legal Section Title **/

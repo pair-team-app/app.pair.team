@@ -258,7 +258,7 @@ class ProfilePage extends Component {
 
 		return (
 			<div className="page-wrapper profile-page-wrapper">
-				<h3>Profile</h3>
+				<h4>Profile</h4>
 				<div className="profile-page-avatar-wrapper">
 					<Row vertical="center">
 						<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)} onFileDialogCancel={this.handleFileDialogCancel} ref={dropZone}>

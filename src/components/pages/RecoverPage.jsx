@@ -128,7 +128,7 @@ class RecoverPage extends Component {
 			<div className="page-wrapper recover-page-wrapper">
 				{(typeof this.props.match.params.userID === 'undefined')
 					? (<div className="recover-page-form-wrapper">
-							<h3>Forgot Password</h3>
+							<h4>Forgot Password</h4>
 							<form onSubmit={this.handleEmailSubmit}>
 								<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.handleTextfieldChange(event)} /></div>
 								<Row vertical="center">
@@ -139,7 +139,7 @@ class RecoverPage extends Component {
 						</div>)
 
 					: (<div className="recover-page-form-wrapper">
-						<h3>Reset Password</h3>
+						<h4>Reset Password</h4>
 						<form onSubmit={this.handlePasswordSubmit}>
 							<div className={passwordClass}>
 								<input type="password" name="password" placeholder="Enter New Password" value={password} onFocus={()=> this.setState({ password : '', passwordValid : true })} onChange={(event)=> this.handleTextfieldChange(event)} />

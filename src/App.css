@@ -1,5 +1,5 @@
 
-.site-wrapper {
+.desktop-site-wrapper, .mobile-site-wrapper {
   width: 100%;
 	height: 100%;
 }
@@ -61,6 +61,10 @@
 
 .adjacent-button {
 	margin-right: 20px;
+}
+
+.adjacent-button-mobile {
+	margin-right: 15px;
 }
 
 .stack-button {
