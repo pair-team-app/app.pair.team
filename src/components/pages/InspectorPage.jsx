@@ -21,6 +21,7 @@ import TutorialOverlay from '../elements/TutorialOverlay';
 
 import { MOMENT_TIMESTAMP } from '../../consts/formats';
 import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
+import { CANVAS_CAPTION, CANVAS_COLORS, MARCHING_ANTS } from '../../consts/slice-canvas';
 import { DE_LOGO_SMALL } from '../../consts/uris';
 import { setRedirectURI } from '../../redux/actions';
 import { buildInspectorPath, buildInspectorURL, capitalizeText, convertURISlug, cropFrame, frameToRect, limitString, makeDownload, rectContainsRect } from '../../utils/funcs.js';
@@ -31,8 +32,6 @@ import bannerPanel from '../../assets/json/banner-panel';
 import inspectorTabs from '../../assets/json/inspector-tabs';
 
 
-const ANTS_LINE_SIZE = [4, 2];
-const ANTS_INTERVAL = 33;
 const ARTBOARD_ORIGIN = {
 	x : 100,
 	y : 50
@@ -50,6 +49,8 @@ const ZOOM_NOTCHES = [
 	1.75,
 	3.00
 ];
+
+// const CANVAS_FONT = new FontFace('SFText', 'url()');
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
@@ -89,6 +90,68 @@ const buildSlicePreviews = (upload, slice)=> {
 	});
 
 	return (slices);
+};
+
+const drawSliceCaption = (context, text, origin)=> {
+	const txtMetrics = {
+		width   : context.measureText(text.toUpperCase()).width << 0,
+		height  : CANVAS_CAPTION.height,
+		padding : CANVAS_CAPTION.padding
+	};
+
+	context.fillStyle = 'rgba(0, 0, 0, 0.125)';
+	context.fillRect(origin.x + 1, (origin.y - txtMetrics.height) + 1, (txtMetrics.width + (txtMetrics.padding * 2)) - 2, txtMetrics.height - 2);
+
+	context.strokeStyle = CANVAS_CAPTION.lineColor;
+	context.lineWidth = 1;
+	context.setLineDash([]);
+	context.beginPath();
+	context.strokeRect(origin.x, origin.y - txtMetrics.height, txtMetrics.width + (txtMetrics.padding * 2), txtMetrics.height);
+	context.stroke();
+
+	context.fillStyle = CANVAS_CAPTION.textColor;
+	context.fillText(text.toUpperCase(), txtMetrics.padding + origin.x, txtMetrics.padding + (origin.y - txtMetrics.height));
+};
+
+const drawSliceBorder = (context, frame)=> {
+	context.strokeStyle = CANVAS_COLORS.border;
+	context.lineWidth = 1;
+	context.setLineDash([]);
+	context.beginPath();
+	context.strokeRect(frame.origin.x + 1, frame.origin.y + 1, frame.size.width - 2, frame.size.height - 2);
+	context.stroke();
+};
+
+const drawSliceFill = (context, frame, color)=> {
+	context.fillStyle = color;
+	context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+};
+
+const drawSliceGuides = (context, frame, size, color)=> {
+	context.strokeStyle = color;
+	context.lineWidth = 2;
+	context.setLineDash([4, 2]);
+	context.lineDashOffset = 0;
+	context.beginPath();
+	context.moveTo(0, frame.origin.y);
+	context.lineTo(size.width, frame.origin.y); // h-top
+	context.moveTo(0, frame.origin.y + frame.size.height);
+	context.lineTo(size.width, frame.origin.y + frame.size.height); // h-bottom
+	context.moveTo(frame.origin.x, 0);
+	context.lineTo(frame.origin.x, size.height); // v-left
+	context.moveTo(frame.origin.x + frame.size.width, 0);
+	context.lineTo(frame.origin.x + frame.size.width, size.height); // v-right
+	context.stroke();
+};
+
+const drawSliceMarchingAnts = (context, frame, offset)=> {
+	context.strokeStyle = MARCHING_ANTS.STROKE;
+	context.lineWidth = MARCHING_ANTS.LINE_WIDTH;
+	context.setLineDash(MARCHING_ANTS.LINE_DASH);
+	context.lineDashOffset = offset;
+	context.beginPath();
+	context.strokeRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+	context.stroke();
 };
 
 
@@ -194,7 +257,7 @@ const SliceRolloverItem = (props)=> {
 
 	const { id, artboardID, type, offset, top, left, width, height, scale, visible, filled } = props;
 
-	const className = (type === 'background') ? 'slice-rollover-item slice-rollover-item-background' : (type === 'slice') ? 'slice-rollover-item slice-rollover-item-slice' : (type === 'symbol') ? 'slice-rollover-item slice-rollover-item-symbol' : (type === 'textfield') ? 'slice-rollover-item slice-rollover-item-textfield' : 'slice-rollover-item slice-rollover-item-group';
+	const className = `slice-rollover-item slice-rollover-item-${type}`;
 	const style = {
 		top     : `${top}px`,
 		left    : `${left}px`,
@@ -205,9 +268,16 @@ const SliceRolloverItem = (props)=> {
 		display : (visible) ? 'block' : 'none'
 	};
 
-	return (
-		<div data-slice-id={id} data-artboard-id={artboardID} className={`${className}${(filled) ? '-filled' : ''}`} style={style} onMouseEnter={()=> props.onRollOver(offset)} onMouseLeave={()=> props.onRollOut()} onClick={()=> props.onClick(offset)} />
-	);
+	return (<div
+		data-slice-id={id}
+		data-artboard-id={artboardID}
+		className={`${className}${(filled) ? '-filled' : ''}`}
+		style={style}
+		onMouseEnter={()=> props.onRollOver(offset)}
+		onMouseLeave={()=> props.onRollOut()}
+		onClick={()=> props.onClick(offset)}>
+		{/*<div data-slice-id={id} data-artboard-id={artboardID} className={`slice-rollover-item-caption${(!filled) ? ' is-hidden' : ''}`}>{type}</div>*/}
+	</div>);
 };
 
 function SpecsList(props) {
@@ -449,192 +519,138 @@ class InspectorPage extends Component {
 		}
 	}
 
+
+	canvasSliceFrame = (slice, artboard, offset, scrollOffset)=> {
+		console.log('InspectorPage.canvasSliceFrame()', slice, artboard, offset, scrollOffset);
+
+		const { scale } = this.state;
+		const srcFrame = cropFrame(slice.meta.frame, artboard.meta.frame);
+		const srcOffset = {
+			x : (offset.x - (scrollOffset.x - ARTBOARD_ORIGIN.x)) << 0,
+			y : (offset.y - (scrollOffset.y - ARTBOARD_ORIGIN.y)) << 0
+		};
+
+		return ({
+			origin : {
+				x : (srcOffset.x + (srcFrame.origin.x * scale)) << 0,
+				y : (srcOffset.y + (srcFrame.origin.y * scale)) << 0
+
+			},
+			size   : {
+				width  : (srcFrame.size.width * scale) << 0,
+				height : (srcFrame.size.height * scale) << 0
+			}
+		});
+	};
+
 	handleArtboardRollOut = (event)=> {
 // 		console.log('InspectorPage.handleArtboardRollOut()', event.target);
-		const { slice } = this.state;
-		if (!slice) {
-			this.setState({ artboard : null });
-		}
+
+		const { artboard, slice } = this.state;
+		artboard.slices.filter((item)=> (slice && slice.id !== item.id)).forEach((item)=> {
+			item.filled = false;
+		});
+
+		this.setState({
+			artboard    : (slice) ? artboard : null,
+			hoverSlice  : null,
+			hoverOffset : null
+		});
 	};
 
 	handleArtboardRollOver = (event)=> {
-// 		console.log('InspectorPage.handleArtboardRollOver()', event.target);
+		console.log('InspectorPage.handleArtboardRollOver()', event.target);
 
+// 		event.stopPropagation();
 		const artboardID = event.target.getAttribute('data-artboard-id');
 
-		let { upload, artboard } = this.state;
-		if (!artboard || artboard.id !== artboardID) {
-			artboard = artboardByID(upload, artboardID);
-			if (artboard) {
-				this.setState({ artboard });
+		if (artboardID) {
+			let { upload, artboard } = this.state;
+			if (!artboard || artboard.id !== artboardID) {
+				artboard = artboardByID(upload, artboardID);
+				if (artboard) {
+					this.setState({ artboard });
+				}
 			}
-		}
 
-		if (!this.canvasInterval) {
-			this.canvasInterval = setInterval(()=> this.onCanvasInterval(), ANTS_INTERVAL);
-		}
+			if (!this.canvasInterval) {
+				this.canvasInterval = setInterval(()=> this.onCanvasInterval(), MARCHING_ANTS.INTERVAL);
+			}
 
-		if (artboard.slices.length === 0) {
-			let formData = new FormData();
-			formData.append('action', 'SLICES');
-			formData.append('artboard_id', artboardID);
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response)=> {
-// 					console.log('SLICES', response.data);
+			if (artboard.slices.length === 0) {
+				let formData = new FormData();
+				formData.append('action', 'SLICES');
+				formData.append('artboard_id', artboardID);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response) => {
+// 						console.log('SLICES', response.data);
 
-					let { upload } = this.state;
-					let pages = [...upload.pages];
-					pages.forEach((page)=> {
-						page.artboards.filter((artboard)=> (artboard.id === artboardID)).forEach((artboard)=> {
-							artboard.slices = response.data.slices.map((item)=> ({
-								id         : item.id,
-								artboardID : item.artboard_id,
-								title      : item.title,
-								type       : item.type,
-								filename   : item.filename,
-								meta       : JSON.parse(item.meta),
-								added      : item.added,
-								filled     : false
-							}));
+						let { upload } = this.state;
+						let pages = [...upload.pages];
+						pages.forEach((page) => {
+							page.artboards.filter((artboard)=> (artboard.id === artboardID)).forEach((artboard)=> {
+								artboard.slices = response.data.slices.map((item)=> ({
+									id         : item.id,
+									artboardID : item.artboard_id,
+									title      : item.title,
+									type       : item.type,
+									filename   : item.filename,
+									meta       : JSON.parse(item.meta),
+									added      : item.added,
+									filled     : false
+								}));
+							});
 						});
-					});
 
-					upload.pages = pages;
-					this.setState({ upload });
-				}).catch((error)=> {
-			});
+						upload.pages = pages;
+						this.setState({ upload });
+					}).catch((error)=> {
+				});
+			}
 		}
 	};
 
 	handleCanvasUpdate = ()=> {
-		const { scale, offset, scrollOffset } = this.state;
+		const { scrollOffset, offset, hoverOffset } = this.state;
 		const { artboard, slice, hoverSlice } = this.state;
 
 		const context = canvas.current.getContext('2d');
 		context.clearRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
 
+		context.font = CANVAS_CAPTION.fontFace;
+		context.textAlign = CANVAS_CAPTION.align;
+		context.textBaseline = CANVAS_CAPTION.baseline;
 
+		// debug fill 100%
 // 		context.fillStyle = 'rgba(0, 0, 0, 0.25)';
 // 		context.fillRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
 
-		if (slice) {
-			const selectedSrcFrame = cropFrame(slice.meta.frame, artboard.meta.frame);
-// 			const selectedSrcFrame = slice.meta.frame;
-			const selectedOffset = {
-				x : offset.x - (scrollOffset.x - ARTBOARD_ORIGIN.x),
-				y : offset.y - (scrollOffset.y - ARTBOARD_ORIGIN.y)
-			};
 
-			const selectedFrame = {
-				origin : {
-					x : selectedOffset.x + Math.round(selectedSrcFrame.origin.x * scale),
-					y : selectedOffset.y + Math.round(selectedSrcFrame.origin.y * scale)
+		if (artboard) {
+			if (slice) {
+				const frame = this.canvasSliceFrame(slice, artboard, offset, scrollOffset);
+				drawSliceFill(context, frame, CANVAS_COLORS.types[slice.type].fill);
+				drawSliceCaption(context, slice.type, frame.origin);
+				drawSliceBorder(context, frame);
+				drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS_COLORS.types[slice.type].guides);
+				drawSliceMarchingAnts(context, frame, this.antsOffset);
+			}
 
-				},
-				size   : {
-					width  : Math.round(selectedSrcFrame.size.width * scale),
-					height : Math.round(selectedSrcFrame.size.height * scale)
+			if (hoverSlice) {
+				if (!slice || (slice && slice.id !== hoverSlice.id)) {
+					const frame = this.canvasSliceFrame(hoverSlice, artboard, hoverOffset, scrollOffset);
+					drawSliceFill(context, frame, CANVAS_COLORS.types[hoverSlice.type].fill);
+					drawSliceCaption(context, hoverSlice.type, frame.origin);
+					drawSliceBorder(context, frame);
 				}
-			};
-
-			context.font = '10px AndaleMono';
-			const txtWidth = context.measureText(`${slice.meta.frame.size.width}PX`).width + 4;
-
-// 			console.log('SELECTED', selectedSrcFrame, selectedFrame.origin);
-
-			context.fillStyle = (slice.type === 'slice') ? 'rgba(255, 181, 18, 0.5)' : (slice.type === 'symbol') ? 'rgba(62, 84, 255, 0.5)' : (slice.type === 'textfield') ? 'rgba(255, 88, 62, 0.5)' : 'rgba(62, 255, 109, 0.5)';
-			context.fillRect(selectedFrame.origin.x, selectedFrame.origin.y, selectedFrame.size.width, selectedFrame.size.height);
-			context.fillStyle = '#00ff00';
-			context.fillRect(selectedFrame.origin.x, selectedFrame.origin.y - 13, selectedFrame.size.width, 13);
-			context.fillRect(selectedFrame.origin.x - txtWidth, selectedFrame.origin.y, txtWidth, selectedFrame.size.height);
-
-			context.font = '10px AndaleMono';
-			context.fillStyle = '#ffffff';
-			context.textAlign = 'center';
-			context.textBaseline = 'bottom';
-			context.fillText(`${slice.meta.frame.size.width}PX`, selectedFrame.origin.x + (selectedFrame.size.width * 0.5), selectedFrame.origin.y - 1);
-
-			context.textAlign = 'right';
-			context.textBaseline = 'middle';
-			context.fillText(`${slice.meta.frame.size.height}PX`, selectedFrame.origin.x - 2, selectedFrame.origin.y + (selectedFrame.size.height * 0.5));
-
-			context.strokeStyle = 'rgba(0, 0, 0, 0.5)';
-			context.beginPath();
-			context.setLineDash(ANTS_LINE_SIZE);
-			context.lineDashOffset = this.antsOffset;
-			context.strokeRect(selectedFrame.origin.x, selectedFrame.origin.y, selectedFrame.size.width, selectedFrame.size.height);
-		}
-
-		if (hoverSlice) {
-			const srcFrame = cropFrame(hoverSlice.meta.frame, artboard.meta.frame);
-// 			const srcFrame = hoverSlice.meta.frame;
-
-			const hoverOffset = {
-				x : this.state.hoverOffset.x - (scrollOffset.x - ARTBOARD_ORIGIN.x),
-				y : this.state.hoverOffset.y - (scrollOffset.y - ARTBOARD_ORIGIN.y)
-			};
-
-			const frame = {
-				origin : {
-					x : hoverOffset.x + Math.round(srcFrame.origin.x * scale),
-					y : hoverOffset.y + Math.round(srcFrame.origin.y * scale)
-				},
-				size   : {
-					width  : Math.round(srcFrame.size.width * scale),
-					height : Math.round(srcFrame.size.height * scale)
-				}
-			};
-
-			context.font = '10px AndaleMono';
-			const txtWidth = context.measureText(`${hoverSlice.meta.frame.size.width}PX`).width + 4;
-
-// 			console.log('HOVER:', hoverOffset, frame.origin);
-
-			context.fillStyle = 'rgba(0, 0, 0, 0.5)';
-			context.fillStyle = (hoverSlice.type === 'slice') ? 'rgba(255, 181, 18, 0.5)' : (hoverSlice.type === 'symbol') ? 'rgba(62, 84, 255, 0.5)' : (hoverSlice.type === 'textfield') ? 'rgba(255, 88, 62, 0.5)' : 'rgba(62, 255, 109, 0.5)';
-			context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-			context.strokeStyle = 'rgba(0, 255, 0, 1.0)';
-			context.beginPath();
-			context.setLineDash([4, 2]);
-			context.lineDashOffset = 0;
-			context.moveTo(0, frame.origin.y);
-			context.lineTo(canvas.current.clientWidth, frame.origin.y);
-			context.moveTo(0, frame.origin.y + frame.size.height);
-			context.lineTo(canvas.current.clientWidth, frame.origin.y + frame.size.height);
-			context.moveTo(frame.origin.x, 0);
-			context.lineTo(frame.origin.x, canvas.current.clientHeight);
-			context.moveTo(frame.origin.x + frame.size.width, 0);
-			context.lineTo(frame.origin.x + frame.size.width, canvas.current.clientHeight);
-			context.stroke();
-
-			context.setLineDash([1, 0]);
-			context.lineDashOffset = 0;
-			context.fillStyle = 'rgba(0, 0, 0, 0.0)';
-			context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-			context.strokeStyle = '#00ff00';
-			context.beginPath();
-			context.moveTo(0, 0);
-			context.strokeRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-			context.stroke();
-
-			context.fillStyle = '#00ff00';
-			context.fillRect(frame.origin.x, frame.origin.y - 13, frame.size.width, 13);
-			context.fillRect(frame.origin.x - txtWidth, frame.origin.y, txtWidth, frame.size.height);
-
-			context.fillStyle = '#ffffff';
-			context.textAlign = 'center';
-			context.textBaseline = 'bottom';
-			context.fillText(`${hoverSlice.meta.frame.size.width}PX`, frame.origin.x + (frame.size.width * 0.5), frame.origin.y - 1);
-
-			context.textAlign = 'right';
-			context.textBaseline = 'middle';
-			context.fillText(`${hoverSlice.meta.frame.size.height}PX`, frame.origin.x - 2, frame.origin.y + (frame.size.height * 0.5));
+			}
 		}
 	};
 
 	handleCloseNotification = (event)=> {
 // 		console.log('InspectorPage.handleCloseNotification()', event, this.notification);
 		window.focus();
+		trackEvent('notification', 'close');
 		this.notification.close(event.target.tag);
 	};
 
@@ -720,103 +736,20 @@ class InspectorPage extends Component {
 
 		trackEvent('slice', `${slice.id}_${convertURISlug(slice.title)}`);
 
-		const { upload, section } = this.state;
+		const { upload, artboard, section } = this.state;
 		let { tabs } = this.state;
 
-		const css = toCSS(slice);
-		const reactCSS = toReactCSS(slice);
-		const swift = toSwift(slice, artboardByID(upload, slice.artboardID));
+// 		buildUploadArtboards(upload).filter((artboard)=> (artboard.id === slice.artboardID)).forEach((artboard)=> {
+// 			artboard.slices.filter((item)=> (!item.id === slice.id)).forEach((item)=> {
+// 				item.filled = true;
+// 			});
+// 		});
 
-		if (section === 'inspect') {
-			tabs[0].contents = css.html;
-			tabs[0].syntax = css.syntax;
-			tabs[1].contents = reactCSS.html;
-			tabs[1].syntax = reactCSS.syntax;
-			tabs[2].contents = swift.html;
-			tabs[2].syntax = swift.syntax;
 
-		} else if (section === 'parts') {
-			tabs[0].contents = buildSlicePreviews(upload, slice);
-		}
-
-		this.setState({
-			tabs       : tabs,
-			hoverSlice : null,
-			slice      : slice,
-			offset     : offset
-		});
-	};
-
-	handleSliceRollOut = (ind, slice)=> {
-// 		console.log('InspectorPage.handleSliceRollOut()', ind, slice);
-
-		const { upload, section } = this.state;
-		let { tabs } = this.state;
-
-		const pages = [...upload.pages];
-		pages.forEach((page)=> {
-			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((artboard)=> {
-				artboard.slices.filter((item)=> (item.filled)).forEach((item)=> {
-					item.filled = false;
-				});
-			});
+		artboard.slices.filter((item)=> (item.id !== slice.id)).forEach((item)=> {
+			item.filled = false;
 		});
 
-		upload.pages = pages;
-		slice.filled = false;
-
-		if (this.state.slice) {
-			const pages = [...upload.pages];
-			pages.forEach((page)=> {
-				page.artboards.filter((artboard)=> (artboard.id === this.state.slice.artboardID)).forEach((item)=> {
-					item.slices.filter((itm)=> (itm.id !== this.state.slice.id)).forEach((itm)=> {
-// 						itm.filled = rectContainsRect(frameToRect(this.state.slice.meta.frame), frameToRect(itm.meta.frame));
-						itm.filled = false;
-					});
-				});
-			});
-
-			const css = toCSS(this.state.slice);
-			const reactCSS = toReactCSS(this.state.slice);
-			const swift = toSwift(this.state.slice, artboardByID(upload, this.state.slice.artboardID));
-
-			if (section === 'inspect') {
-				tabs[0].contents = css.html;
-				tabs[0].syntax = css.syntax;
-				tabs[1].contents = reactCSS.html;
-				tabs[1].syntax = reactCSS.syntax;
-				tabs[2].contents = swift.html;
-				tabs[2].syntax = swift.syntax;
-
-			} else if (section === 'parts') {
-				tabs[0].contents = buildSlicePreviews(upload, this.state.slice);
-			}
-		}
-
-		this.setState({
-			upload     : upload,
-			tabs       : tabs,
-			hoverSlice : null
-		});
-	};
-
-	handleSliceRollOver = (ind, slice, offset)=> {
-// 		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
-
-		const { upload, section } = this.state;
-		let { tabs } = this.state;
-
-		const pages = [...upload.pages];
-		pages.forEach((page)=> {
-			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item)=> {
-				item.slices.filter((itm)=> (itm.id === slice.id)).forEach((itm)=> {
-					//itm.filled = rectContainsRect(frameToRect(slice.meta.frame), frameToRect(itm.meta.frame));
-					itm.filled = true;
-				});
-			});
-		});
-
-		upload.pages = pages;
 		slice.filled = true;
 
 		const css = toCSS(slice);
@@ -836,7 +769,135 @@ class InspectorPage extends Component {
 		}
 
 		this.setState({
-			upload      : upload,
+			tabs        : tabs,
+			artboard    : artboard,
+			slice       : slice,
+			offset      : offset,
+			hoverSlice  : null,
+			hoverOffset : null
+		});
+	};
+
+	handleSliceRollOut = (ind, slice)=> {
+		console.log('InspectorPage.handleSliceRollOut()', ind, slice, this.state);
+
+		const { upload, artboard, section } = this.state;
+		let { tabs } = this.state;
+
+// 		slice.filled = (this.state.slice && this.state.slice.id === slice.id);
+
+// 		buildUploadArtboards(upload).filter((artboard)=> (artboard.id === slice.artboardID)).forEach((artboard)=> {
+// 			artboard.slices.filter((item)=> (item.filled)).forEach((item)=> {
+// 				if (!this.state.slice) {
+// 					item.filled = false;
+//
+// 				} else {
+// 					item.filled = (item.id !== this.state.slice.id);
+// 				}
+// 			});
+// 		});
+
+// 		const pages = [...upload.pages];
+// 		pages.forEach((page)=> {
+// 			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((artboard)=> {
+// 				artboard.slices.filter((item)=> (item.filled)).forEach((item)=> {
+// 					item.filled = false;
+// 				});
+// 			});
+// 		});
+//
+// 		upload.pages = pages;
+
+		if (this.state.slice) {
+// 			buildUploadArtboards(upload).filter((artboard)=> (artboard.id === this.state.slice.artboardID)).forEach((artboard)=> {
+// 				artboard.slices.filter((item)=> (item.id !== this.state.slice.id)).forEach((item)=> {
+// 					item.filled = false;
+// 				});
+// 			});
+
+// 			const pages = [...upload.pages];
+// 			pages.forEach((page)=> {
+// 				page.artboards.filter((artboard)=> (artboard.id === this.state.slice.artboardID)).forEach((item)=> {
+// 					item.slices.filter((itm)=> (itm.id !== this.state.slice.id)).forEach((itm)=> {
+// 						itm.filled = false;
+// 					});
+// 				});
+// 			});
+
+			const css = toCSS(this.state.slice);
+			const reactCSS = toReactCSS(this.state.slice);
+			const swift = toSwift(this.state.slice, artboardByID(upload, this.state.slice.artboardID));
+
+			if (section === 'inspect') {
+				tabs[0].contents = css.html;
+				tabs[0].syntax = css.syntax;
+				tabs[1].contents = reactCSS.html;
+				tabs[1].syntax = reactCSS.syntax;
+				tabs[2].contents = swift.html;
+				tabs[2].syntax = swift.syntax;
+
+			} else if (section === 'parts') {
+				tabs[0].contents = buildSlicePreviews(upload, this.state.slice);
+			}
+
+		} else {
+			artboard.slices.forEach((item)=> {
+				item.filled = false;
+			});
+		}
+
+		this.setState({
+// 			upload     : upload,
+			artboard    : artboard,
+			tabs        : tabs,
+			hoverSlice  : null,
+			hoverOffset : null
+		});
+	};
+
+	handleSliceRollOver = (ind, slice, offset)=> {
+// 		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
+
+		const { upload, artboard, section } = this.state;
+		let { tabs } = this.state;
+
+// 		const pages = [...upload.pages];
+// 		pages.forEach((page)=> {
+// 			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item)=> {
+// 				item.slices.filter((itm)=> (itm.id === slice.id)).forEach((itm)=> {
+// 					//itm.filled = rectContainsRect(frameToRect(slice.meta.frame), frameToRect(itm.meta.frame));
+// 					itm.filled = true;
+// 				});
+// 			});
+// 		});
+//
+// 		upload.pages = pages;
+
+		artboard.slices.filter((item)=> (this.state.slice && this.state.slice.id !== item.id)).forEach((item)=> {
+			item.filled = false;
+		});
+
+		slice.filled = true;
+
+		const css = toCSS(slice);
+		const reactCSS = toReactCSS(slice);
+		const swift = toSwift(slice, artboardByID(upload, slice.artboardID));
+
+		if (section === 'inspect') {
+			tabs[0].contents = css.html;
+			tabs[0].syntax = css.syntax;
+			tabs[1].contents = reactCSS.html;
+			tabs[1].syntax = reactCSS.syntax;
+			tabs[2].contents = swift.html;
+			tabs[2].syntax = swift.syntax;
+
+		} else if (section === 'parts') {
+			tabs[0].contents = buildSlicePreviews(upload, slice);
+		}
+
+		this.setState({
+// 			upload      : upload,
+			artboard    : artboard,
 			tabs        : tabs,
 			hoverSlice  : slice,
 			hoverOffset : offset
@@ -888,7 +949,7 @@ class InspectorPage extends Component {
 			this.setState({
 				scrolling : true,
 				scale     : Math.min(Math.max(this.state.scale - (event.deltaY * PAN_FACTOR), 0.03), 3).toFixed(2),
-				tooltip   : Math.floor(Math.min(Math.max(this.state.scale - (event.deltaY * PAN_FACTOR), 0.03), 3).toFixed(2) * 100) + '%'
+				tooltip   : `${(Math.min(Math.max(this.state.scale - (event.deltaY * PAN_FACTOR), 0.03), 3).toFixed(2) * 100) << 0}%`
 			});
 
 		} else {
@@ -919,7 +980,7 @@ class InspectorPage extends Component {
 					y : 0
 				},
 				scale        : ZOOM_NOTCHES[3],
-				tooltip      : Math.floor(ZOOM_NOTCHES[3] * 100) + '%'
+				tooltip      : `${(ZOOM_NOTCHES[3] * 100) << 0}%`
 			});
 
 		} else {
@@ -947,7 +1008,7 @@ class InspectorPage extends Component {
 
 			this.setState({
 				scale   : ZOOM_NOTCHES[Math.min(Math.max(0, ind + direction), ZOOM_NOTCHES.length - 1)],
-				tooltip : Math.floor(ZOOM_NOTCHES[Math.min(Math.max(0, ind + direction), ZOOM_NOTCHES.length - 1)] * 100) + '%'
+				tooltip : `${(ZOOM_NOTCHES[Math.min(Math.max(0, ind + direction), ZOOM_NOTCHES.length - 1)] * 100) << 0}%`
 			});
 		}
 
@@ -958,7 +1019,7 @@ class InspectorPage extends Component {
 
 	onCanvasInterval = ()=> {
 		if (canvas.current) {
-			this.antsOffset = ((this.antsOffset + 0.5) % 12);
+			this.antsOffset = ((this.antsOffset + MARCHING_ANTS.INCREMENT) % MARCHING_ANTS.OFFSET_MOD);
 			this.handleCanvasUpdate();
 		}
 	};
@@ -1000,12 +1061,12 @@ class InspectorPage extends Component {
 // 					const total = Object.values(totals).reduce((acc, val)=> (parseInt(acc, 10) + parseInt(val, 10)));
 
 // 					const mins = moment.duration(moment(Date.now()).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
-// 					const secs = Math.floor((mins - (mins << 0)) * 60);
+// 					const secs = ((mins - (mins << 0)) * 60) << 0;
 
 					this.setState({
 						processing : {
 							state   : processingState,
-// 							message : `Processing ${upload.filename.split('/').pop()}, parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s…`
+// 							message : `Processing ${upload.filename.split('/').pop()}, parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s…`
 							message : `Processing "${limitString(upload.filename.split('/').pop(), 27, '')}"${ellipsis}`
 						}
 					});
@@ -1019,14 +1080,14 @@ class InspectorPage extends Component {
 					const total = Object.values(totals).reduce((acc, val)=> (parseInt(acc, 10) + parseInt(val, 10)));
 
 					const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
-					const secs = Math.floor((mins - (mins << 0)) * 60);
+					const secs = ((mins - (mins << 0)) * 60) << 0;
 
 					this.onShowNotification();
 
 					this.setState({
 						processing : {
 							state   : processingState,
-// 							message : `Completed processing. Parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? Math.floor(mins) + 'm' : ''} ${secs}s.`
+// 							message : `Completed processing. Parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s.`
 							message : `Completed processing ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s.`
 						}
 					});
@@ -1069,7 +1130,7 @@ class InspectorPage extends Component {
 			let { upload } = response.data;
 // 			upload.pages = upload.pages.map((page)=> {
 // 				page.artboards = page.artboards.map((artboard, i, arr)=> {
-// 					if (Math.floor(i % 5) === 0 && i !== 0) {
+// 					if ((i % 5) << 0 === 0 && i !== 0) {
 // 						viewport.height += maxH + 50;
 // 						offset.x = 0;
 // 						offset.y += 50 + maxH;
@@ -1093,7 +1154,7 @@ class InspectorPage extends Component {
 // 						added     : artboard.added,
 // 						grid      : {
 // 							col : i % 5,
-// 							row : Math.floor(i / 5)
+// 							row : (i / 5) << 0
 // 						},
 // 						offset    : {
 // 							x : offset.x,
@@ -1195,7 +1256,7 @@ class InspectorPage extends Component {
 			artboard.filename = (!artboard.filename.includes('@')) ? `${artboard.filename}@3x.png` : artboard.filename;
 			artboard.meta = (typeof artboard.meta === 'string') ? JSON.parse(artboard.meta) : artboard.meta;
 
-			if (Math.floor(i % 5) === 0 && i > 0) {
+			if ((i % 5) << 0 === 0 && i > 0) {
 				offset.x = 0;
 				offset.y += maxH + 50;
 				maxH = 0;
@@ -1205,21 +1266,21 @@ class InspectorPage extends Component {
 
 			const artboardStyle = {
 				position       : 'absolute',
-				top            : `${Math.floor(offset.y)}px`,
-				left           : `${Math.floor(offset.x)}px`,
-				width          : `${Math.floor(scale * artboard.meta.frame.size.width)}px`,
-				height         : `${Math.floor(scale * artboard.meta.frame.size.height)}px`,
+				top            : `${offset.y << 0}px`,
+				left           : `${offset.x << 0}px`,
+				width          : `${(scale * artboard.meta.frame.size.width) << 0}px`,
+				height         : `${(scale * artboard.meta.frame.size.height) << 0}px`,
 				background     : `#24282e url("${artboard.filename}") no-repeat center`,
-				backgroundSize : `${Math.floor(scale * artboard.meta.frame.size.width)}px ${Math.floor(scale * artboard.meta.frame.size.height)}px`,
-				border         : '2px dotted #00ff00'
+				backgroundSize : `${(scale * artboard.meta.frame.size.width) << 0}px ${(scale * artboard.meta.frame.size.height) << 0}px`,
+				border         : '1px solid #005cc5'
 			};
 
 			const slicesWrapperStyle = {
 				position : 'absolute',
-				top      : `${Math.floor(offset.y)}px`,
-				left     : `${Math.floor(offset.x)}px`,
-				width    : `${(scale * artboard.meta.frame.size.width)}px`,
-				height   : `${(scale * artboard.meta.frame.size.height)}px`,
+				top      : `${offset.y << 0}px`,
+				left     : `${offset.x << 0}px`,
+				width    : `${(scale * artboard.meta.frame.size.width) << 0}px`,
+				height   : `${(scale * artboard.meta.frame.size.height) << 0}px`,
 			};
 
 			const groupSlices = artboard.slices.filter((slice)=> (slice.type === 'group')).map((slice, i)=> (

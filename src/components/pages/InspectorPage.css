@@ -38,12 +38,16 @@
 
 .inspector-page-artboard-caption {
 	position: absolute;
-	top: -22px;
-	left: 0;
-	width: 100%;
-	height: 15px;
+	top: -24px;
+	left: -1px;
+	border: 1px solid #005cc5;
+	padding: 5px;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-weight: 500;
 	font-size: 10px;
-	color: #00ff00;
+	line-height: normal;
+	color: #005cc5;
+	text-transform: uppercase;
 }
 
 .inspector-page-canvas-wrapper {
@@ -351,35 +355,59 @@
 .slice-rollover-item {
 	position: absolute;
 	zoom: 0;
+	background-color: rgba(0, 0, 0, 0.0);
+	border: 1px solid rgba(0, 92, 197, 0.0);
 }
 
 .slice-rollover-item:hover {
 	cursor: pointer;
+	/*border: 1px solid #005cc5;*/
+	/*border-color: rgba(0, 92, 197, 0.75);*/
+}
+
+.slice-rollover-item-slice:hover {
+	/*background-color: rgba(255, 148, 0, 0.6);*/
+}
+
+.slice-rollover-item-symbol:hover {
+	/*background-color: rgba(255, 236, 0, 0.6);*/
+}
+
+.slice-rollover-item-textfield:hover {
+	/*background-color: rgba(9, 248, 16, 0.6);*/
+}
+
+.slice-rollover-item-background:hover {
+	/*background-color: rgba(255, 127, 240, 0.6);*/
+}
+
+.slice-rollover-item-group:hover {
+	/*background-color: rgba(0, 120, 255, 0.6);*/
 }
 
 .slice-rollover-item-slice-filled {
-	border: 1px dashed rgba(255, 181, 18, 0.5);
-	/*background-color: rgba(255, 181, 18, 0.5);*/
+	/*background-color: rgba(255, 148, 0, 0.6);*/
+	border-color: rgba(0, 92, 197, 0.0);
 }
 
 .slice-rollover-item-symbol-filled {
-	border: 1px dashed rgba(62, 84, 255, 0.5);
-	/*background-color: rgba(62, 84, 255, 0.5);*/
+	/*background-color: rgba(255, 236, 0, 0.6);*/
+	border-color: rgba(0, 92, 197, 0.0);
 }
 
 .slice-rollover-item-textfield-filled {
-	border: 1px dashed rgba(255, 88, 62, 0.5);
-	/*background-color: rgba(255, 88, 62, 0.5);*/
+	/*background-color: rgba(9, 248, 16, 0.6);*/
+	border-color: rgba(0, 92, 197, 0.0);
 }
 
 .slice-rollover-item-background-filled {
-	border: 1px dashed rgba(145, 182, 204, 0.5);
-	/*background-color: rgba(145, 182, 204, 0.5);*/
+	/*background-color: rgba(255, 127, 240, 0.6);*/
+	border-color: rgba(0, 92, 197, 0.0);
 }
 
 .slice-rollover-item-group-filled {
-	border: 1px dashed rgba(62, 255, 109, 0.5);
-	/*background-color: rgba(62, 255, 109, 0.5);*/
+	/*background-color: rgba(0, 120, 255, 0.6);*/
+	border-color: rgba(0, 92, 197, 0.0);
 }
 
 
