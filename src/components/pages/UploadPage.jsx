@@ -135,7 +135,7 @@ class UploadPage extends Component {
 
 		let formData = new FormData();
 		formData.append('file', file);
-		axios.post('http://cdn.designengine.ai/upload.php?dir=%2Fsystem', formData, config)
+		axios.post('http://cdn.designengine.ai/upload.php?dir=/system', formData, config)
 			.then((response)=> {
 				console.log("UPLOAD", response.data);
 			}).catch((error)=> {
