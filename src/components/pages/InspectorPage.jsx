@@ -543,6 +543,7 @@ class InspectorPage extends Component {
 		});
 	};
 
+
 	handleArtboardRollOut = (event)=> {
 // 		console.log('InspectorPage.handleArtboardRollOut()', event.target);
 
@@ -610,7 +611,18 @@ class InspectorPage extends Component {
 		}
 	};
 
+	handleCanvasClick = (event)=> {
+		console.log('InspectorPage.handleCanvasClick()', event.target);
+
+		event.stopPropagation();
+		this.setState({
+			slice : null
+		});
+	};
+
 	handleCanvasUpdate = ()=> {
+// 		console.log('InspectorPage.handleCanvasUpdate()', this.antsOffset);
+
 		const { scrollOffset, offset, hoverOffset } = this.state;
 		const { artboard, slice, hoverSlice } = this.state;
 
@@ -1416,7 +1428,7 @@ class InspectorPage extends Component {
 					<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
 						{(artboards.length > 0) && (<div style={artboardsStyle}>
 							{artboardImages}
-							<div className="inspector-page-canvas-wrapper" style={canvasStyle} ref={canvasWrapper}>
+							<div className="inspector-page-canvas-wrapper" onClick={(event)=> this.handleCanvasClick(event)} style={canvasStyle} ref={canvasWrapper}>
 								<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
 							</div>
 							{slices}
