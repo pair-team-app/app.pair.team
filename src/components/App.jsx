@@ -8,31 +8,31 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import TopNav from './components/elements/TopNav';
-import BottomNav from './components/elements/BottomNav';
-import ContentModal, { MODAL_SIZE_AUTO } from './components/elements/ContentModal';
-import Popup from './components/elements/Popup';
-import BannerPanel from './components/elements/BannerPanel';
-import HomePage from './components/pages/HomePage';
-import InspectorPage from './components/pages/InspectorPage';
-import InviteTeamPage from './components/pages/InviteTeamPage';
-import LoginPage from './components/pages/LoginPage';
-import ProfilePage from './components/pages/ProfilePage';
-import PrivacyPage from './components/pages/PrivacyPage';
-import RateThisPage from './components/pages/RateThisPage';
-import RecoverPage from './components/pages/RecoverPage';
-import RegisterPage from './components/pages/RegisterPage';
-import Status404Page from './components/pages/Status404Page';
-import TermsPage from './components/pages/TermsPage';
-import UploadPage from './components/pages/UploadPage';
-import MobilePage from './components/pages/MobilePage';
+import TopNav from './elements/TopNav';
+import BottomNav from './elements/BottomNav';
+import ContentModal, { MODAL_SIZE_AUTO } from './elements/ContentModal';
+import Popup from './elements/Popup';
+import BannerPanel from './elements/BannerPanel';
+import HomePage from './pages/HomePage';
+import InspectorPage from './pages/InspectorPage';
+import InviteTeamPage from './pages/InviteTeamPage';
+import LoginPage from './pages/LoginPage';
+import ProfilePage from './pages/ProfilePage';
+import PrivacyPage from './pages/PrivacyPage';
+import RateThisPage from './pages/RateThisPage';
+import RecoverPage from './pages/RecoverPage';
+import RegisterPage from './pages/RegisterPage';
+import Status404Page from './pages/Status404Page';
+import TermsPage from './pages/TermsPage';
+import UploadPage from './pages/UploadPage';
+import MobilePage from './pages/MobilePage';
 
 import {
 	appendHomeArtboards,
 	fetchUserProfile,
 	updateDeeplink,
 	updateUserProfile
-} from './redux/actions';
+} from '../redux/actions';
 import {
 	buildInspectorPath,
 	idsFromPath,
@@ -41,9 +41,9 @@ import {
 	isMobile,
 	isUploadPage,
 	scrollOrigin
-} from './utils/funcs';
-import { initTracker, trackEvent, trackPageview } from './utils/tracking';
-import bannerPanel from './assets/json/banner-panel';
+} from '../utils/funcs';
+import { initTracker, trackEvent, trackPageview } from '../utils/tracking';
+import bannerPanel from '../assets/json/banner-panel';
 
 
 const wrapper = React.createRef();
