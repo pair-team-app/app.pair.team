@@ -46,9 +46,13 @@ export function fetchUserProfile() {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response)=> {
 				console.log('PROFILE', response.data);
+				const { id, username, email, avatar, type, joined } = response.data.user;
 				dispatch({
 					type    : USER_PROFILE_LOADED,
-					payload : response.data.user
+// 					payload : response.data.user
+					payload : { id, username, email, avatar, joined,
+						paid : (type.includes('paid'))
+					}
 				});
 			}).catch((error) => {
 		});

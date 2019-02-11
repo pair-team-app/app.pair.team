@@ -99,7 +99,6 @@ class RegisterForm extends Component {
 			formData.append('username', username);
 			formData.append('email', email);
 			formData.append('password', password);
-			formData.append('type', 'user');
 			formData.append('invite_id', (inviteID) ? inviteID : '0');
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response)=> {
