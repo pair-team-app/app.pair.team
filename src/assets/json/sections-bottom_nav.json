@@ -5,6 +5,12 @@
   }, {
     "title": "Free Parts",
     "url": "/parts"
+  }, {
+    "title": "Terms",
+    "url": "/terms"
+  }, {
+    "title": "Privacy",
+    "url": "/privacy"
   }],
   "mobile": [{
     "title": "Free Inspect",
@@ -12,5 +18,11 @@
   }, {
     "title": "Free Parts",
     "url": "/parts"
+  }, {
+    "title": "Terms",
+    "url": "/terms"
+  }, {
+    "title": "Privacy",
+    "url": "/privacy"
   }]
 }

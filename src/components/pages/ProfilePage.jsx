@@ -274,10 +274,10 @@ class ProfilePage extends Component {
 					</Row>
 				</div>
 
-				{(profile) && (<div className="profile-page-paid-wrapper">
-					<h5>Account Type: {(profile.paid) ? 'Paid' : 'Free'}</h5>
-					{(!profile.paid) && (<button onClick={()=> this.handleBuyClick()}>Unlimited</button>)}
-				</div>)}
+				{/*{(profile) && (<div className="profile-page-paid-wrapper">*/}
+					{/*<h5>Account Type: {(profile.paid) ? 'Paid' : 'Free'}</h5>*/}
+					{/*{(!profile.paid) && (<button onClick={()=> this.handleBuyClick()}>Unlimited</button>)}*/}
+				{/*</div>)}*/}
 
 				<div className="profile-page-form-wrapper">
 					<InputField
