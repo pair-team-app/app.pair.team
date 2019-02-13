@@ -2,7 +2,7 @@
 import { camilzeText, capitalizeText, convertURISlug, isEmptyObject } from './funcs';
 
 const HTML_TAB = '  ';
-
+const badChars = /[\\.,_+=[\](){}]/g;
 
 const fontWeight = (style)=> {
 	if (!style || typeof style === 'undefined') {
@@ -55,6 +55,42 @@ export function fontSpecs(font) {
 	const weight = fontWeight(name);
 
 	return (Object.assign({}, font, { family, name, psName, weight, size, lineHeight }));
+}
+
+export function toAndroid(slice, artboard) {
+	const artboardName = camilzeText(convertURISlug(artboard.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
+	const sliceName = camilzeText(convertURISlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
+
+	const viewType = (slice.type === 'textfield') ? 'Text View' : 'Image View';
+	const caption = viewType;
+
+	let html = '<?xml version="1.0" encoding="utf-8"?>\n';
+	html += '<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" ';
+	html += `${HTML_TAB}xmlns:app="http://schemas.android.com/apk/res-auto" \n`;
+	html += `${HTML_TAB}xmlns:tools="http://schemas.android.com/tools" \n`;
+	html += `${HTML_TAB}android:id="@+id/activity_${artboardName}" \n`;
+	html += `${HTML_TAB}android:layout_width="match_parent" \n`;
+	html += `${HTML_TAB}android:layout_height="match_parent" \n`;
+	html += `${HTML_TAB}android:paddingLeft="${slice.meta.frame.origin.x}px" \n`;
+	html += `${HTML_TAB}android:paddingTop="${slice.meta.frame.origin.y}px" \n`;
+	html += `${HTML_TAB}android:paddingRight="${artboard.meta.frame.size.width - slice.meta.frame.size.width}px" \n`;
+	html += `${HTML_TAB}android:paddingBottom="${artboard.meta.frame.size.height - slice.meta.frame.size.height}px" \n`;
+	html += `${HTML_TAB}tools:context=".${artboardName}Activity">\n\n`;
+	html += `${HTML_TAB}<${viewType.replace(/ /g, '')} \n`;
+	html += `${HTML_TAB}${HTML_TAB}android:id="@+id/${camilzeText(viewType)}_${sliceName}" \n`;
+	html += `${HTML_TAB}${HTML_TAB}android:layout_width="wrap_content" \n`;
+	html += `${HTML_TAB}${HTML_TAB}android:layout_height="wrap_content" \n`;
+	html += `${HTML_TAB}${HTML_TAB}android:text="${caption}" \n`;
+	html += `${HTML_TAB}${HTML_TAB}app:layout_constraintBottom_toBottomOf="parent" \n`;
+	html += `${HTML_TAB}${HTML_TAB}app:layout_constraintEnd_toEndOf="parent" \n`;
+	html += `${HTML_TAB}${HTML_TAB}app:layout_constraintStart_toStartOf="parent" \n`;
+	html += `${HTML_TAB}${HTML_TAB}app:layout_constraintTop_toTopOf="parent" />\n`;
+	html += '</android.support.constraint.ConstraintLayout>';
+
+	return ({
+		html   : JSON.stringify(html),
+		syntax : `${html.replace(HTML_TAB, '\t')}\n`
+	})
 }
 
 export function toCSS(slice) {
@@ -124,8 +160,6 @@ export function toSpecs(slice) {
 
 export function toSwift(slice, artboard) {
 // 	console.log('funcs.toSwift()', slice, artboard);
-
-	const badChars = /[\\.,_+=[\](){}]/g;
 
 	let html = '';
 	if (slice.type === 'background' || slice.type === 'group' || slice.type === 'slice' || slice.type === 'symbol' || slice.type === 'textfield') {

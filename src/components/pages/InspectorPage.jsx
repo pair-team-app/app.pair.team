@@ -25,7 +25,7 @@ import { CANVAS_CAPTION, CANVAS_COLORS, MARCHING_ANTS } from '../../consts/slice
 import { DE_LOGO_SMALL } from '../../consts/uris';
 import { setRedirectURI } from '../../redux/actions';
 import { buildInspectorPath, buildInspectorURL, capitalizeText, convertURISlug, cropFrame, frameToRect, limitString, makeDownload, rectContainsRect } from '../../utils/funcs.js';
-import { fontSpecs, toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/inspector-langs.js';
+import { fontSpecs, toAndroid, toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/inspector-langs.js';
 import { trackEvent } from '../../utils/tracking';
 import deLogo from '../../assets/images/logos/logo-designengine.svg';
 import bannerPanel from '../../assets/json/banner-panel';
@@ -766,7 +766,8 @@ class InspectorPage extends Component {
 
 		const css = toCSS(slice);
 		const reactCSS = toReactCSS(slice);
-		const swift = toSwift(slice, artboardByID(upload, slice.artboardID));
+		const swift = toSwift(slice, artboard);
+		const android = toAndroid(slice, artboard);
 
 		if (section === 'inspect') {
 			tabs[0].contents = css.html;
@@ -775,6 +776,8 @@ class InspectorPage extends Component {
 			tabs[1].syntax = reactCSS.syntax;
 			tabs[2].contents = swift.html;
 			tabs[2].syntax = swift.syntax;
+			tabs[3].contents = android.html;
+			tabs[3].syntax = android.syntax;
 
 		} else if (section === 'parts') {
 			tabs[0].contents = buildSlicePreviews(upload, slice);
@@ -839,6 +842,7 @@ class InspectorPage extends Component {
 			const css = toCSS(this.state.slice);
 			const reactCSS = toReactCSS(this.state.slice);
 			const swift = toSwift(this.state.slice, artboardByID(upload, this.state.slice.artboardID));
+			const android = toAndroid(this.state.slice, artboard);
 
 			if (section === 'inspect') {
 				tabs[0].contents = css.html;
@@ -847,6 +851,8 @@ class InspectorPage extends Component {
 				tabs[1].syntax = reactCSS.syntax;
 				tabs[2].contents = swift.html;
 				tabs[2].syntax = swift.syntax;
+				tabs[3].contents = android.html;
+				tabs[3].syntax = android.syntax;
 
 			} else if (section === 'parts') {
 				tabs[0].contents = buildSlicePreviews(upload, this.state.slice);
@@ -855,6 +861,15 @@ class InspectorPage extends Component {
 		} else {
 			artboard.slices.forEach((item)=> {
 				item.filled = false;
+
+				tabs[0].contents = null;
+				tabs[0].syntax = null;
+				tabs[1].contents = null;
+				tabs[1].syntax = null;
+				tabs[2].contents = null;
+				tabs[2].syntax = null;
+				tabs[3].contents = null;
+				tabs[3].syntax = null;
 			});
 		}
 
@@ -894,6 +909,7 @@ class InspectorPage extends Component {
 		const css = toCSS(slice);
 		const reactCSS = toReactCSS(slice);
 		const swift = toSwift(slice, artboardByID(upload, slice.artboardID));
+		const android = toAndroid(slice, artboard);
 
 		if (section === 'inspect') {
 			tabs[0].contents = css.html;
@@ -902,6 +918,8 @@ class InspectorPage extends Component {
 			tabs[1].syntax = reactCSS.syntax;
 			tabs[2].contents = swift.html;
 			tabs[2].syntax = swift.syntax;
+			tabs[3].contents = android.html;
+			tabs[3].syntax = android.syntax;
 
 		} else if (section === 'parts') {
 			tabs[0].contents = buildSlicePreviews(upload, slice);
@@ -1438,7 +1456,7 @@ class InspectorPage extends Component {
 					{(upload && !processing) && (<div className="inspector-page-footer-wrapper"><Row vertical="center">
 						<img src={deLogo} className="inspector-page-footer-logo" alt="Design Engine" />
 						<div className="inspector-page-footer-button-wrapper">
-							{(profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true })}}>Share</button>)}
+							{(profile && (parseInt(upload.id, 10) === 1 || upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true })}}>Share</button>)}
 							<button disabled={(scale >= Math.max(...ZOOM_NOTCHES))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-in'); this.handleZoom(1)}}><FontAwesome name="search-plus" /></button>
 							<button disabled={(scale <= Math.min(...ZOOM_NOTCHES))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-out'); this.handleZoom(-1)}}><FontAwesome name="search-minus" /></button>
 							<button disabled={(scale === 0.25)} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-reset'); this.handleZoom(0)}}><FontAwesome name="ban" /></button>
@@ -1454,7 +1472,7 @@ class InspectorPage extends Component {
 						<div className="inspector-page-panel-tab-content-wrapper">
 							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i)=> {
 								return (<div key={i} className="inspector-page-panel-tab-content">
-									<span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents).replace(/ /g, '&nbsp;').replace(/\n/g, '<br />')) : '' }} />
+									<span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : '' }} />
 								</div>);
 							}))}
 						</div>
