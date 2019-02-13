@@ -107,6 +107,16 @@ h4 {
   color: #c8e1fd;
 }
 
+/** Section Subtitle **/
+h5 {
+  font-family: "San Francisco Text Medium", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: -0.3px;
+  margin-bottom: 14px;
+  color: #c8e1fd;
+}
+
 /** Legal Section Title **/
 h6 {
   margin-bottom: 0;

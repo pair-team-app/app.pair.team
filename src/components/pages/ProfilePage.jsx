@@ -88,6 +88,11 @@ class ProfilePage extends Component {
 		this.setState({ dialog : true });
 	};
 
+	handleBuyClick = ()=> {
+		console.log('ProfilePage.handleBuyCLick()');
+		trackEvent('button', 'buy');
+	};
+
 	handleCancel = ()=> {
 		console.log('ProfilePage.handleCancel()');
 
@@ -267,8 +272,13 @@ class ProfilePage extends Component {
 						<button className="adjacent-button" onClick={()=> this.handleAvatarClick()}>Upload</button>
 						{(!avatar.includes('avatar-default.png')) && (<div className="page-link" onClick={()=> this.handleDropAvatar()}>Remove</div>)}
 					</Row>
-
 				</div>
+
+				{(profile) && (<div className="profile-page-paid-wrapper">
+					<h5>Account Type: {(profile.paid) ? 'Paid' : 'Free'}</h5>
+					{(!profile.paid) && (<button onClick={()=> this.handleBuyClick()}>Unlimited</button>)}
+				</div>)}
+
 				<div className="profile-page-form-wrapper">
 					<InputField
 						type="text"
