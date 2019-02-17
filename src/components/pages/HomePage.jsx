@@ -171,7 +171,7 @@ class HomePage extends Component {
 				}));
 
 				const artboards = uploads.filter((upload)=> (upload.pages.length > 0)).map((upload)=> {
-					return (upload.pages.shift().artboards.shift());
+					return (upload.pages.pop().artboards.pop());
 				});
 
 				this.setState({

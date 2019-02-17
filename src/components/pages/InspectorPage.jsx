@@ -24,7 +24,7 @@ import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
 import { CANVAS_CAPTION, CANVAS_COLORS, MARCHING_ANTS } from '../../consts/slice-canvas';
 import { DE_LOGO_SMALL } from '../../consts/uris';
 import { setRedirectURI } from '../../redux/actions';
-import { buildInspectorPath, buildInspectorURL, capitalizeText, convertURISlug, cropFrame, frameToRect, limitString, makeDownload, rectContainsRect } from '../../utils/funcs.js';
+import { buildInspectorPath, buildInspectorURL, capitalizeText, convertURISlug, cropFrame, epochDate, frameToRect, limitString, makeDownload, rectContainsRect } from '../../utils/funcs.js';
 import { fontSpecs, toAndroid, toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/inspector-langs.js';
 import { trackEvent } from '../../utils/tracking';
 import deLogo from '../../assets/images/logos/logo-designengine.svg';
@@ -33,8 +33,8 @@ import inspectorTabs from '../../assets/json/inspector-tabs';
 
 
 const ARTBOARD_ORIGIN = {
-	x : 100,
-	y : 50
+	x : 0,
+	y : 0
 };
 const STATUS_INTERVAL = 1250;
 const PAN_FACTOR = 0.0025;
@@ -49,8 +49,6 @@ const ZOOM_NOTCHES = [
 	1.75,
 	3.00
 ];
-
-// const CANVAS_FONT = new FontFace('SFText', 'url()');
 
 const artboardsWrapper = React.createRef();
 const canvasWrapper = React.createRef();
@@ -92,25 +90,35 @@ const buildSlicePreviews = (upload, slice)=> {
 	return (slices);
 };
 
-const drawSliceCaption = (context, text, origin)=> {
+const drawSliceCaption = (context, text, origin, maxWidth)=> {
+	let caption = text;
+	let txtWidth = context.measureText(caption.toUpperCase()).width << 0;
+	while ((txtWidth + CANVAS_CAPTION.padding) > maxWidth) {
+		caption = `${caption.substring(0, -3)}…`;
+		txtWidth = context.measureText(caption.toUpperCase()).width << 0;
+		if (caption.length === 1) {
+			break;
+		}
+	}
+
 	const txtMetrics = {
-		width   : context.measureText(text.toUpperCase()).width << 0,
+		width   : txtWidth,
 		height  : CANVAS_CAPTION.height,
 		padding : CANVAS_CAPTION.padding
 	};
 
 	context.fillStyle = 'rgba(0, 0, 0, 0.125)';
-	context.fillRect(origin.x + 1, (origin.y - txtMetrics.height) + 1, (txtMetrics.width + (txtMetrics.padding * 2)) - 2, txtMetrics.height - 2);
+	context.fillRect(origin.x + 1, (origin.y - txtMetrics.height) + 1, (txtMetrics.width + (txtMetrics.padding * 2)) - 2, txtMetrics.height - 1);
 
 	context.strokeStyle = CANVAS_CAPTION.lineColor;
 	context.lineWidth = 1;
 	context.setLineDash([]);
 	context.beginPath();
-	context.strokeRect(origin.x, origin.y - txtMetrics.height, txtMetrics.width + (txtMetrics.padding * 2), txtMetrics.height);
+	context.strokeRect(origin.x + 1, (origin.y - txtMetrics.height) + 1, (txtMetrics.width + (txtMetrics.padding * 2)) - 2, txtMetrics.height);
 	context.stroke();
 
 	context.fillStyle = CANVAS_CAPTION.textColor;
-	context.fillText(text.toUpperCase(), txtMetrics.padding + origin.x, txtMetrics.padding + (origin.y - txtMetrics.height));
+	context.fillText(caption.toUpperCase(), txtMetrics.padding + origin.x, txtMetrics.padding + (origin.y - txtMetrics.height));
 };
 
 const drawSliceBorder = (context, frame)=> {
@@ -263,8 +271,8 @@ const SliceRolloverItem = (props)=> {
 		left    : `${left}px`,
 		width   : `${width}px`,
 		height  : `${height}px`,
-		zoom    : scale,
-// 		transform : `scale(${scale})`,
+// 		zoom    : scale,
+		transform : `scale(${scale})`,
 		display : (visible) ? 'block' : 'none'
 	};
 
@@ -276,7 +284,6 @@ const SliceRolloverItem = (props)=> {
 		onMouseEnter={()=> props.onRollOver(offset)}
 		onMouseLeave={()=> props.onRollOut()}
 		onClick={()=> props.onClick(offset)}>
-		{/*<div data-slice-id={id} data-artboard-id={artboardID} className={`slice-rollover-item-caption${(!filled) ? ' is-hidden' : ''}`}>{type}</div>*/}
 	</div>);
 };
 
@@ -439,8 +446,12 @@ class InspectorPage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('InspectorPage.componentDidUpdate()', prevProps, this.props, this.state);
 
-		const { deeplink, processing } = this.props;
+		const { profile, deeplink, processing } = this.props;
 		const { upload, viewport } = this.state;
+
+		if (profile && upload && deeplink && deeplink.uploadID !== 0) {
+			this.onAddHistory();
+		}
 
 		if (deeplink && deeplink !== prevProps.deeplink && deeplink.uploadID !== 0) {
 			this.onRefreshUpload();
@@ -471,13 +482,13 @@ class InspectorPage extends Component {
 					height : artboardsWrapper.current.clientHeight
 				}
 			});
+		}
 
-			if (canvasWrapper.current) {
-				const scale = Math.min(Math.max(Math.min(canvasWrapper.current.clientWidth / (artboardsWrapper.current.clientWidth - canvasWrapper.current.clientWidth), canvasWrapper.current.clientHeight / (artboardsWrapper.current.clientHeight - canvasWrapper.current.clientHeight)), 0.25), 3);
-				if (this.state.scale !== scale && !this.initialScaled) {
-					this.initialScaled = true;
-					this.setState({ scale });
-				}
+		if (artboardsWrapper.current && canvasWrapper.current && !this.initialScaled) {
+			const scale = Math.min(Math.max(Math.min(canvasWrapper.current.clientWidth / (artboardsWrapper.current.clientWidth - canvasWrapper.current.clientWidth), canvasWrapper.current.clientHeight / (artboardsWrapper.current.clientHeight - canvasWrapper.current.clientHeight)), 0.25), 3);
+			if (this.state.scale !== scale) {
+				this.initialScaled = true;
+				this.setState({ scale });
 			}
 		}
 
@@ -485,7 +496,7 @@ class InspectorPage extends Component {
 			if (!this.state.tutorial && cookie.load('tutorial') === '0') {
 				cookie.save('tutorial', '1', { path : '/' });
 
-				let artboard =buildUploadArtboards(upload).pop();
+				let artboard = buildUploadArtboards(upload).pop();
 				artboard.meta = JSON.parse(artboard.meta);
 				const tutorial = {
 					origin : {
@@ -521,7 +532,7 @@ class InspectorPage extends Component {
 
 
 	canvasSliceFrame = (slice, artboard, offset, scrollOffset)=> {
-		console.log('InspectorPage.canvasSliceFrame()', slice, artboard, offset, scrollOffset);
+// 		console.log('InspectorPage.canvasSliceFrame()', slice, artboard, offset, scrollOffset);
 
 		const { scale } = this.state;
 		const srcFrame = cropFrame(slice.meta.frame, artboard.meta.frame);
@@ -560,7 +571,7 @@ class InspectorPage extends Component {
 	};
 
 	handleArtboardRollOver = (event)=> {
-		console.log('InspectorPage.handleArtboardRollOver()', event.target);
+// 		console.log('InspectorPage.handleArtboardRollOver()', event.target);
 
 // 		event.stopPropagation();
 		const artboardID = event.target.getAttribute('data-artboard-id');
@@ -612,11 +623,27 @@ class InspectorPage extends Component {
 	};
 
 	handleCanvasClick = (event)=> {
-		console.log('InspectorPage.handleCanvasClick()', event.target);
+// 		console.log('InspectorPage.handleCanvasClick()', event.target);
+
+		let { section, tabs } = this.state;
+		if (section === 'inspect') {
+			tabs[0].contents = null;
+			tabs[0].syntax = null;
+			tabs[1].contents = null;
+			tabs[1].syntax = null;
+			tabs[2].contents = null;
+			tabs[2].syntax = null;
+			tabs[3].contents = null;
+			tabs[3].syntax = null;
+
+		} else if (section === 'parts') {
+			tabs[0].contents = null;
+		}
 
 		event.stopPropagation();
 		this.setState({
-			slice : null
+			slice : null,
+			tabs  : tabs
 		});
 	};
 
@@ -642,7 +669,7 @@ class InspectorPage extends Component {
 			if (slice) {
 				const frame = this.canvasSliceFrame(slice, artboard, offset, scrollOffset);
 				drawSliceFill(context, frame, CANVAS_COLORS.types[slice.type].fill);
-				drawSliceCaption(context, slice.type, frame.origin);
+				drawSliceCaption(context, slice.type, frame.origin, frame.size.width);
 				drawSliceBorder(context, frame);
 				drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS_COLORS.types[slice.type].guides);
 				drawSliceMarchingAnts(context, frame, this.antsOffset);
@@ -652,7 +679,7 @@ class InspectorPage extends Component {
 				if (!slice || (slice && slice.id !== hoverSlice.id)) {
 					const frame = this.canvasSliceFrame(hoverSlice, artboard, hoverOffset, scrollOffset);
 					drawSliceFill(context, frame, CANVAS_COLORS.types[hoverSlice.type].fill);
-					drawSliceCaption(context, hoverSlice.type, frame.origin);
+					drawSliceCaption(context, hoverSlice.type, frame.origin, frame.size.width);
 					drawSliceBorder(context, frame);
 				}
 			}
@@ -744,7 +771,7 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceClick = (ind, slice, offset)=> {
-		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
+// 		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
 
 		trackEvent('slice', `${slice.id}_${convertURISlug(slice.title)}`);
 
@@ -794,7 +821,7 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceRollOut = (ind, slice)=> {
-		console.log('InspectorPage.handleSliceRollOut()', ind, slice, this.state);
+// 		console.log('InspectorPage.handleSliceRollOut()', ind, slice, this.state);
 
 		const { upload, artboard, section } = this.state;
 		let { tabs } = this.state;
@@ -861,16 +888,16 @@ class InspectorPage extends Component {
 		} else {
 			artboard.slices.forEach((item)=> {
 				item.filled = false;
-
-				tabs[0].contents = null;
-				tabs[0].syntax = null;
-				tabs[1].contents = null;
-				tabs[1].syntax = null;
-				tabs[2].contents = null;
-				tabs[2].syntax = null;
-				tabs[3].contents = null;
-				tabs[3].syntax = null;
 			});
+
+			tabs[0].contents = null;
+			tabs[0].syntax = null;
+			tabs[1].contents = null;
+			tabs[1].syntax = null;
+			tabs[2].contents = null;
+			tabs[2].syntax = null;
+			tabs[3].contents = null;
+			tabs[3].syntax = null;
 		}
 
 		this.setState({
@@ -900,38 +927,40 @@ class InspectorPage extends Component {
 //
 // 		upload.pages = pages;
 
-		artboard.slices.filter((item)=> (this.state.slice && this.state.slice.id !== item.id)).forEach((item)=> {
-			item.filled = false;
-		});
+		if (artboard) {
+			artboard.slices.filter((item) => (this.state.slice && this.state.slice.id !== item.id)).forEach((item) => {
+				item.filled = false;
+			});
 
-		slice.filled = true;
+			slice.filled = true;
 
-		const css = toCSS(slice);
-		const reactCSS = toReactCSS(slice);
-		const swift = toSwift(slice, artboardByID(upload, slice.artboardID));
-		const android = toAndroid(slice, artboard);
+			const css = toCSS(slice);
+			const reactCSS = toReactCSS(slice);
+			const swift = toSwift(slice, artboardByID(upload, slice.artboardID));
+			const android = toAndroid(slice, artboard);
 
-		if (section === 'inspect') {
-			tabs[0].contents = css.html;
-			tabs[0].syntax = css.syntax;
-			tabs[1].contents = reactCSS.html;
-			tabs[1].syntax = reactCSS.syntax;
-			tabs[2].contents = swift.html;
-			tabs[2].syntax = swift.syntax;
-			tabs[3].contents = android.html;
-			tabs[3].syntax = android.syntax;
+			if (section === 'inspect') {
+				tabs[0].contents = css.html;
+				tabs[0].syntax = css.syntax;
+				tabs[1].contents = reactCSS.html;
+				tabs[1].syntax = reactCSS.syntax;
+				tabs[2].contents = swift.html;
+				tabs[2].syntax = swift.syntax;
+				tabs[3].contents = android.html;
+				tabs[3].syntax = android.syntax;
 
-		} else if (section === 'parts') {
-			tabs[0].contents = buildSlicePreviews(upload, slice);
+			} else if (section === 'parts') {
+				tabs[0].contents = buildSlicePreviews(upload, slice);
+			}
+
+			this.setState({
+// 				upload      : upload,
+				artboard    : artboard,
+				tabs        : tabs,
+				hoverSlice  : slice,
+				hoverOffset : offset
+			});
 		}
-
-		this.setState({
-// 			upload      : upload,
-			artboard    : artboard,
-			tabs        : tabs,
-			hoverSlice  : slice,
-			hoverOffset : offset
-		});
 	};
 
 	handleTab = (tab)=> {
@@ -969,10 +998,10 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.handleWheelStart()', event.type, event.deltaX, event.deltaY, event.target);
 		//console.log('wheel', artboardsWrapper.current.clientWidth, artboardsWrapper.current.clientHeight, artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft);
 
-		event.stopPropagation();
-
 		clearTimeout(this.scrollTimeout);
 		this.scrollTimeout = null;
+
+		event.stopPropagation();
 
 		if (event.ctrlKey) {
 			event.preventDefault();
@@ -1047,7 +1076,25 @@ class InspectorPage extends Component {
 		}, 1000);
 	};
 
+	onAddHistory = ()=> {
+		console.log('InspectorPage.onAddHistory()');
+
+		const { deeplink, profile } = this.props;
+
+		let formData = new FormData();
+		formData.append('action', 'ADD_HISTORY');
+		formData.append('user_id', profile.id);
+		formData.append('upload_id', deeplink.uploadID);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response)=> {
+				console.log('ADD_HISTORY', response.data);
+			}).catch((error)=> {
+		});
+	};
+
 	onCanvasInterval = ()=> {
+// 		console.log('InspectorPage.onCanvasInterval()', this.antsOffset);
+
 		if (canvas.current) {
 			this.antsOffset = ((this.antsOffset + MARCHING_ANTS.INCREMENT) % MARCHING_ANTS.OFFSET_MOD);
 			this.handleCanvasUpdate();
@@ -1067,7 +1114,7 @@ class InspectorPage extends Component {
 				console.log('UPLOAD_STATUS', response.data);
 				const { status } = response.data;
 				const processingState = parseInt(status.state, 10);
-				const ellipsis = Array(((((new Date()).getTime() * 0.001) << 0) % 4) + 1).join('.');
+				const ellipsis = Array((epochDate() % 4) + 1).join('.');
 
 				if (processingState === 0) {
 					const { queue } = status;
@@ -1140,16 +1187,9 @@ class InspectorPage extends Component {
 		console.log('InspectorPage.onRefreshUpload()', this.props);
 
 		const { uploadID } = this.props.deeplink;
-// 		const { section, scale, viewport } = this.state;
 		const { section } = this.state;
 
 		this.setState({ tooltip : 'Loading…' });
-
-// 		let maxH = 0;
-// 		let offset = {
-// 			x : 0,
-// 			y : 0
-// 		};
 
 		axios.post('https://api.designengine.ai/system.php', qs.stringify({
 			action    : 'UPLOAD',
@@ -1158,18 +1198,6 @@ class InspectorPage extends Component {
 			console.log('UPLOAD', response.data);
 
 			let { upload } = response.data;
-// 			upload.pages = upload.pages.map((page)=> {
-// 				page.artboards = page.artboards.map((artboard, i, arr)=> {
-// 					if ((i % 5) << 0 === 0 && i !== 0) {
-// 						viewport.height += maxH + 50;
-// 						offset.x = 0;
-// 						offset.y += 50 + maxH;
-// 						maxH = 0;
-// 					}
-//
-// 					maxH = Math.round(Math.max(maxH, JSON.parse(artboard.meta).frame.size.height * scale));
-//
-// 					if (i > 0 && i < arr.length - 1) {
 // 						offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
 // 					}
 //
@@ -1269,7 +1297,6 @@ class InspectorPage extends Component {
 			top     : `${(scrollOffset.y - ARTBOARD_ORIGIN.y)}px`,
 			left    : `${(scrollOffset.x - ARTBOARD_ORIGIN.x)}px`,
 			display : (scrolling) ? 'none' : 'block'
-// 			display : 'block'
 		};
 
 

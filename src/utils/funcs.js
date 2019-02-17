@@ -68,6 +68,10 @@ export function clampVal(val, lower, upper) {
 	return (Math.min(Math.max(lower, val), upper));
 }
 
+export function className(obj) {
+	return (obj.constructor.name);
+}
+
 export function commaFormat(val) {
 	return (val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
 }
@@ -87,8 +91,8 @@ export function copyTextToClipboard(text) {
 	txtArea.remove();
 }
 
-export function className(obj) {
-	return (obj.constructor.name);
+export function epochDate(millisecs=false) {
+	return ((millisecs) ? (new Date()).getTime() : ((new Date()).getTime() * 0.001) << 0);
 }
 
 export function frameToRect(frame) {
