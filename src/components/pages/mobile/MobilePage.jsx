@@ -4,7 +4,7 @@ import './MobilePage.css';
 
 import { Column } from 'simple-flexbox';
 
-import deLogo from '../../assets/images/logos/logo-designengine.svg';
+import deLogo from '../../../assets/images/logos/logo-designengine.svg';
 
 class MobilePage extends Component {
 	constructor(props) {
