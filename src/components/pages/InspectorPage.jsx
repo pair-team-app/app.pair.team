@@ -546,7 +546,7 @@ class InspectorPage extends Component {
 				artboard.meta = JSON.parse(artboard.meta);
 				const tutorial = {
 					origin : {
-						top  : `${62 + ARTBOARD_ORIGIN.y}px`,
+						top  : `${5 + ARTBOARD_ORIGIN.y}px`,
 						left : `${5 + ARTBOARD_ORIGIN.x}px`
 					}
 				};
@@ -1399,7 +1399,8 @@ class InspectorPage extends Component {
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={(offset)=> this.handleSliceClick(i, slice, offset)} />)
+					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
+				/>)
 			);
 
 			const backgroundSlices = artboard.slices.filter((slice)=> (slice.type === 'background')).map((slice, i)=> (
@@ -1419,7 +1420,8 @@ class InspectorPage extends Component {
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={(offset)=> this.handleSliceClick(i, slice, offset)} />)
+					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
+				/>)
 			);
 
 			const symbolSlices = artboard.slices.filter((slice)=> (slice.type === 'symbol')).map((slice, i)=> (
@@ -1439,7 +1441,8 @@ class InspectorPage extends Component {
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={(offset)=> this.handleSliceClick(i, slice, offset)} />)
+					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
+				/>)
 			);
 
 			const textfieldSlices = artboard.slices.filter((slice)=> (slice.type === 'textfield')).map((slice, i)=> (
@@ -1459,7 +1462,8 @@ class InspectorPage extends Component {
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={(offset)=> this.handleSliceClick(i, slice, offset)} />)
+					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
+				/>)
 			);
 
 			const sliceSlices = artboard.slices.filter((slice)=> (slice.type === 'slice')).map((slice, i)=> (
@@ -1479,7 +1483,8 @@ class InspectorPage extends Component {
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 					onRollOut={()=> this.handleSliceRollOut(i, slice)}
-					onClick={(offset)=> this.handleSliceClick(i, slice, offset)} />)
+					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
+				/>)
 			);
 
 			artboardImages.push(
@@ -1489,7 +1494,7 @@ class InspectorPage extends Component {
 			);
 
 			slices.push(
-				<div key={i} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut}>
+				<div key={i} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut} onDoubleClick={(event)=> this.handleZoom(1)}>
 					<div data-artboard-id={artboard.id} className="inspector-page-group-slices-wrapper">{groupSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{symbolSlices}</div>
@@ -1515,7 +1520,7 @@ class InspectorPage extends Component {
 					<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
 						{(artboards.length > 0) && (<div style={artboardsStyle}>
 							{artboardImages}
-							<div className="inspector-page-canvas-wrapper" onClick={(event)=> this.handleCanvasClick(event)} style={canvasStyle} ref={canvasWrapper}>
+							<div className="inspector-page-canvas-wrapper" onClick={(event)=> this.handleCanvasClick(event)} onDoubleClick={()=> this.handleZoom(1)} style={canvasStyle} ref={canvasWrapper}>
 								<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
 							</div>
 							{slices}
