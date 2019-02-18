@@ -298,6 +298,10 @@
 	width: 50%;
 }
 
+.inspector-page-specs-list-attribute:hover, .inspector-page-specs-list-val:hover {
+	cursor: pointer;
+}
+
 .inspector-page-specs-list-val {
 	color: #00ff0f;
 }

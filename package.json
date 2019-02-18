@@ -1,6 +1,6 @@
 {
   "name": "designengine.ai",
-  "version": "1.4.0-next.0",
+  "version": "1.0.0-next.0",
   "private": true,
   "dependencies": {
     "acorn": "^6.0.4",

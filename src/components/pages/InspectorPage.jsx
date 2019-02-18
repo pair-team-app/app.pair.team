@@ -33,8 +33,8 @@ import inspectorTabs from '../../assets/json/inspector-tabs';
 
 
 const ARTBOARD_ORIGIN = {
-	x : 0,
-	y : 0
+	x : 50,
+	y : 100
 };
 const STATUS_INTERVAL = 1250;
 const PAN_FACTOR = 0.0025;
@@ -292,11 +292,11 @@ function SpecsList(props) {
 
 	const { upload, slice, creatorID } = props;
 
-	const fillColor = ((slice) ? (slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color : slice.meta.fillColor : '').toUpperCase();
-	const padding = (slice) ?`${slice.meta.padding.top}px ${slice.meta.padding.left}px ${slice.meta.padding.bottom}px ${slice.meta.padding.right}px` : null;
-	const added = (upload) ? (slice) ? `${slice.added.replace(' ', 'T')}Z` : `${upload.added.replace(' ', 'T')}Z` : '';
-	const font = (slice && slice.meta.font) ? fontSpecs(slice.meta.font) : null;
-	const sliceStyles = (slice && slice.meta.styles) ? slice.meta.styles : null;
+	const fillColor = ((slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color : slice.meta.fillColor).toUpperCase();
+	const padding = `${slice.meta.padding.top}px ${slice.meta.padding.left}px ${slice.meta.padding.bottom}px ${slice.meta.padding.right}px`;
+	const added = `${slice.added.replace(' ', 'T')}Z`;//moment(`${slice.added.replace(' ', 'T')}Z`);
+	const font = (slice.meta.font) ? fontSpecs(slice.meta.font) : null;
+	const sliceStyles = (slice.meta.styles) ? slice.meta.styles : null;
 	const border = (sliceStyles && sliceStyles.border) ? sliceStyles.border : null;
 	const shadow = (sliceStyles && sliceStyles.shadow) ? sliceStyles.shadow : null;
 	const innerShadow = (sliceStyles && sliceStyles.innerShadow) ? sliceStyles.innerShadow : null;
@@ -327,31 +327,75 @@ function SpecsList(props) {
 		} : null
 	} : null;
 
+	// <CopyToClipboard onCopy={()=> props.onCopySpec()} text={}>
+
 	return (
 		<div className="inspector-page-specs-list-wrapper">
-			<Row><div className="inspector-page-specs-list-attribute">Name</div>{(slice) && (<div className="inspector-page-specs-list-val">{slice.title}</div>)}</Row>
-			<Row><div className="inspector-page-specs-list-attribute">Type</div>{(slice) && (<div className="inspector-page-specs-list-val">{capitalizeText(slice.type, true)}</div>)}</Row>
-			<Row><div className="inspector-page-specs-list-attribute">Export Size</div>{(slice) && (<div className="inspector-page-specs-list-val">{`W: ${slice.meta.frame.size.width}px H: ${slice.meta.frame.size.height}px`}</div>)}</Row>
-			<Row><div className="inspector-page-specs-list-attribute">Position</div>{(slice) && (<div className="inspector-page-specs-list-val">{`X: ${slice.meta.frame.origin.x}px Y: ${slice.meta.frame.origin.y}px`}</div>)}</Row>
-			<Row><div className="inspector-page-specs-list-attribute">Rotation</div>{(slice) && (<div className="inspector-page-specs-list-val">{slice.meta.rotation}&deg;</div>)}</Row>
-			<Row><div className="inspector-page-specs-list-attribute">Opacity</div>{(slice) && (<div className="inspector-page-specs-list-val">{slice.meta.opacity * 100}%</div>)}</Row>
-			<Row><div className="inspector-page-specs-list-attribute">Fill</div>{(fillColor.length > 0) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{fillColor}<ColorSwatch fill={fillColor} /></Row></div>)}</Row>
-			<Row><div className="inspector-page-specs-list-attribute">Border</div>{(border) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{`${styles.border.position} S: ${styles.border.thickness} ${styles.border.color}`}<ColorSwatch fill={styles.border.color} /></Row></div>)}</Row>
-			<Row><div className="inspector-page-specs-list-attribute">Shadow</div>{(shadow) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{`X: ${styles.shadow.offset.x} Y: ${styles.shadow.offset.y} B: ${styles.shadow.blur} S: ${styles.shadow.spread}`}<ColorSwatch fill={styles.shadow.color} /></Row></div>)}</Row>
-			<Row><div className="inspector-page-specs-list-attribute">Inner Shadow</div>{(innerShadow) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{`X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}`}<ColorSwatch fill={styles.innerShadow.color} /></Row></div>)}</Row>
-			{(slice && slice.type === 'textfield') && (<>
-				<Row><div className="inspector-page-specs-list-attribute">Font</div><div className="inspector-page-specs-list-val">{`${font.family} ${font.name}`}</div></Row>
-				<Row><div className="inspector-page-specs-list-attribute">Font Weight</div><div className="inspector-page-specs-list-val">{font.weight}</div></Row>
-				<Row><div className="inspector-page-specs-list-attribute">Font Size</div><div className="inspector-page-specs-list-val">{`${font.size}px`}</div></Row>
-				<Row><div className="inspector-page-specs-list-attribute">Font Color</div><div className="inspector-page-specs-list-val"><Row vertical="center">{(font.color) ? font.color.toUpperCase() : ''}<ColorSwatch fill={font.color} /></Row></div></Row>
-				<Row><div className="inspector-page-specs-list-attribute">Alignment</div><div className="inspector-page-specs-list-val">{(slice.meta.font.alignment) ? capitalizeText(slice.meta.font.alignment) : 'Left'}</div></Row>
-				<Row><div className="inspector-page-specs-list-attribute">Line Spacing</div>{(font.lineHeight) && (<div className="inspector-page-specs-list-val">{`${font.lineHeight}px`}</div>)}</Row>
-				<Row><div className="inspector-page-specs-list-attribute">Char Spacing</div>{(font.kerning) && (<div className="inspector-page-specs-list-val">{`${font.kerning.toFixed(2)}px`}</div>)}</Row>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={slice.title}>
+				<Row><div className="inspector-page-specs-list-attribute">Name</div><div className="inspector-page-specs-list-val">{slice.title}</div></Row>
+			</CopyToClipboard>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={capitalizeText(slice.type, true)}>
+				<Row><div className="inspector-page-specs-list-attribute">Type</div><div className="inspector-page-specs-list-val">{capitalizeText(slice.type, true)}</div></Row>
+			</CopyToClipboard>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`W: ${slice.meta.frame.size.width}px H: ${slice.meta.frame.size.height}px`}>
+				<Row><div className="inspector-page-specs-list-attribute">Export Size</div><div className="inspector-page-specs-list-val">{`W: ${slice.meta.frame.size.width}px H: ${slice.meta.frame.size.height}px`}</div></Row>
+			</CopyToClipboard>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`X: ${slice.meta.frame.origin.x}px Y: ${slice.meta.frame.origin.y}px`}>
+				<Row><div className="inspector-page-specs-list-attribute">Position</div><div className="inspector-page-specs-list-val">{`X: ${slice.meta.frame.origin.x}px Y: ${slice.meta.frame.origin.y}px`}</div></Row>
+			</CopyToClipboard>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`${slice.meta.rotation}°`}>
+				<Row><div className="inspector-page-specs-list-attribute">Rotation</div><div className="inspector-page-specs-list-val">{slice.meta.rotation}&deg;</div></Row>
+			</CopyToClipboard>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`${slice.meta.opacity * 100}%`}>
+				<Row><div className="inspector-page-specs-list-attribute">Opacity</div><div className="inspector-page-specs-list-val">{slice.meta.opacity * 100}%</div></Row>
+			</CopyToClipboard>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(fillColor.length > 0) ? fillColor : ''}>
+				<Row><div className="inspector-page-specs-list-attribute">Fill</div>{(fillColor.length > 0) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{fillColor}<ColorSwatch fill={fillColor} /></Row></div>)}</Row>
+			</CopyToClipboard>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(border) ? `${styles.border.position} S: ${styles.border.thickness} ${styles.border.color}` : ''}>
+				<Row><div className="inspector-page-specs-list-attribute">Border</div>{(border) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{`${styles.border.position} S: ${styles.border.thickness} ${styles.border.color}`}<ColorSwatch fill={styles.border.color} /></Row></div>)}</Row>
+			</CopyToClipboard>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(shadow) ? `X: ${styles.shadow.offset.x} Y: ${styles.shadow.offset.y} B: ${styles.shadow.blur} S: ${styles.shadow.spread}` : ''}>
+				<Row><div className="inspector-page-specs-list-attribute">Shadow</div>{(shadow) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{`X: ${styles.shadow.offset.x} Y: ${styles.shadow.offset.y} B: ${styles.shadow.blur} S: ${styles.shadow.spread}`}<ColorSwatch fill={styles.shadow.color} /></Row></div>)}</Row>
+			</CopyToClipboard>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(innerShadow) ? `X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}` : ''}>
+				<Row><div className="inspector-page-specs-list-attribute">Inner Shadow</div>{(innerShadow) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{`X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}`}<ColorSwatch fill={styles.innerShadow.color} /></Row></div>)}</Row>
+			</CopyToClipboard>
+			{(slice.type === 'textfield') && (<>
+				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`${font.family} ${font.name}`}>
+					<Row><div className="inspector-page-specs-list-attribute">Font</div><div className="inspector-page-specs-list-val">{`${font.family} ${font.name}`}</div></Row>
+				</CopyToClipboard>
+				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={font.weight}>
+					<Row><div className="inspector-page-specs-list-attribute">Font Weight</div><div className="inspector-page-specs-list-val">{font.weight}</div></Row>
+				</CopyToClipboard>
+				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`${font.size}px`}>
+					<Row><div className="inspector-page-specs-list-attribute">Font Size</div><div className="inspector-page-specs-list-val">{`${font.size}px`}</div></Row>
+				</CopyToClipboard>
+				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.color) ? font.color.toUpperCase() : ''}>
+					<Row><div className="inspector-page-specs-list-attribute">Font Color</div><div className="inspector-page-specs-list-val"><Row vertical="center">{(font.color) ? font.color.toUpperCase() : ''}<ColorSwatch fill={font.color} /></Row></div></Row>
+				</CopyToClipboard>
+				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.alignment) ? capitalizeText(font.alignment) : 'Left'}>
+					<Row><div className="inspector-page-specs-list-attribute">Alignment</div><div className="inspector-page-specs-list-val">{(font.alignment) ? capitalizeText(font.alignment) : 'Left'}</div></Row>
+				</CopyToClipboard>
+				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.lineHeight) ? `${font.lineHeight}px` : ''}>
+					<Row><div className="inspector-page-specs-list-attribute">Line Spacing</div>{(font.lineHeight) && (<div className="inspector-page-specs-list-val">{`${font.lineHeight}px`}</div>)}</Row>
+				</CopyToClipboard>
+				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.kerning) ? `${font.kerning.toFixed(2)}px` : ''}>
+					<Row><div className="inspector-page-specs-list-attribute">Char Spacing</div>{(font.kerning) && (<div className="inspector-page-specs-list-val">{`${font.kerning.toFixed(2)}px`}</div>)}</Row>
+				</CopyToClipboard>
 			</>)}
-			<Row><div className="inspector-page-specs-list-attribute">Padding</div>{(padding) && (<div className="inspector-page-specs-list-val">{padding}</div>)}</Row>
-			<Row><div className="inspector-page-specs-list-attribute">Blend Mode</div>{(slice) && (<div className="inspector-page-specs-list-val">{capitalizeText(slice.meta.blendMode, true)}</div>)}</Row>
-			<Row><div className="inspector-page-specs-list-attribute">Date</div>{(added) && (<div className="inspector-page-specs-list-val"><Moment format={MOMENT_TIMESTAMP}>{added}</Moment></div>)}</Row>
-			<Row><div className="inspector-page-specs-list-attribute">Uploader</div>{(upload) && (<div className="inspector-page-specs-list-val">{upload.creator.username + ((creatorID === upload.creator.user_id) ? ' (You)' : '')}</div>)}</Row>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(padding) ? padding : ''}>
+				<Row><div className="inspector-page-specs-list-attribute">Padding</div>{(padding) && (<div className="inspector-page-specs-list-val">{padding}</div>)}</Row>
+			</CopyToClipboard>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={capitalizeText(slice.meta.blendMode, true)}>
+				<Row><div className="inspector-page-specs-list-attribute">Blend Mode</div><div className="inspector-page-specs-list-val">{capitalizeText(slice.meta.blendMode, true)}</div></Row>
+			</CopyToClipboard>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={added}>
+				<Row><div className="inspector-page-specs-list-attribute">Date</div>{(added) && (<div className="inspector-page-specs-list-val"><Moment format={MOMENT_TIMESTAMP}>{added}</Moment></div>)}</Row>
+			</CopyToClipboard>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={upload.creator.username}>
+				<Row><div className="inspector-page-specs-list-attribute">Uploader</div><div className="inspector-page-specs-list-val">{upload.creator.username + ((creatorID === upload.creator.user_id) ? ' (You)' : '')}</div></Row>
+			</CopyToClipboard>
 		</div>
 	);
 }
@@ -484,13 +528,13 @@ class InspectorPage extends Component {
 			});
 		}
 
-		if (artboardsWrapper.current && canvasWrapper.current && !this.initialScaled) {
-			const scale = Math.min(Math.max(Math.min(canvasWrapper.current.clientWidth / (artboardsWrapper.current.clientWidth - canvasWrapper.current.clientWidth), canvasWrapper.current.clientHeight / (artboardsWrapper.current.clientHeight - canvasWrapper.current.clientHeight)), 0.25), 3);
-			if (this.state.scale !== scale) {
-				this.initialScaled = true;
-				this.setState({ scale });
-			}
-		}
+// 		if (artboardsWrapper.current && canvasWrapper.current && !this.initialScaled) {
+// 			const scale = Math.min(Math.max(Math.min(canvasWrapper.current.clientWidth / (artboardsWrapper.current.clientWidth - canvasWrapper.current.clientWidth), canvasWrapper.current.clientHeight / (artboardsWrapper.current.clientHeight - canvasWrapper.current.clientHeight)), 0.25), 3);
+// 			if (this.state.scale !== scale) {
+// 				this.initialScaled = true;
+// 				this.setState({ scale });
+// 			}
+// 		}
 
 		if (upload && canvasWrapper.current) {
 			if (!this.state.tutorial && cookie.load('tutorial') === '0') {
@@ -697,6 +741,16 @@ class InspectorPage extends Component {
 		console.log('InspectorPage.handleCopyCode()');
 
 		trackEvent('button', 'copy-code');
+		this.props.onPopup({
+			type    : POPUP_TYPE_INFO,
+			content : 'Copied to Clipboard!'
+		});
+	};
+
+	handleCopySpec = ()=> {
+		console.log('InspectorPage.handleCopySpec()');
+
+		trackEvent('button', 'copy-spec');
 		this.props.onPopup({
 			type    : POPUP_TYPE_INFO,
 			content : 'Copied to Clipboard!'
@@ -1197,14 +1251,7 @@ class InspectorPage extends Component {
 		})).then((response)=> {
 			console.log('UPLOAD', response.data);
 
-			let { upload } = response.data;
-// 						offset.x += Math.round(50 + (JSON.parse(artboard.meta).frame.size.width * scale)) - (0);
-// 					}
-//
-// 					viewport.width = Math.max(viewport.width, offset.x);
-//
-// 					return ({
-// 						id        : artboard.id,
+			const { upload } = response.data;
 // 						pageID    : artboard.page_id,
 // 						title     : artboard.title,
 // 						filename  : (artboard.filename.includes('@3x')) ? artboard.filename : `${artboard.filename}@3x.png`,
@@ -1228,10 +1275,6 @@ class InspectorPage extends Component {
 // 						}))
 // 					});
 // 				});
-//
-// 				return (page);
-// 			});
-
 
 			const tabs = inspectorTabs[section];
 			const tooltip = '';
@@ -1242,9 +1285,6 @@ class InspectorPage extends Component {
 			if (processing && !this.props.processing && !this.processingInterval) {
 				this.props.onProcessing(true);
 			}
-// 			if (this.props.processing !== processing) {
-// 				this.props.onProcessing(processing);
-// 			}
 		}).catch((error)=> {
 		});
 	};
@@ -1516,7 +1556,12 @@ class InspectorPage extends Component {
 						</ul>
 						<div className="inspector-page-panel-tab-content-wrapper">
 							<div className="inspector-page-panel-tab-content">
-								<SpecsList upload={upload} slice={activeSlice} creatorID={(profile) ? profile.id : 0} />
+								{(upload && activeSlice) && (<SpecsList
+									upload={upload}
+									slice={activeSlice}
+									creatorID={(profile) ? profile.id : 0}
+									onCopySpec={this.handleCopySpec}
+								/>)}
 							</div>
 						</div>
 					</div>
