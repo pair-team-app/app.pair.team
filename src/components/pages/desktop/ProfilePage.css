@@ -15,7 +15,7 @@
 	height: 78px;
 	margin-right: 20px;
 	border-radius: 2px;
-	background: #fafbfc url(../../assets/images/avatars/avatar-default.png) no-repeat center;
+	background: #fafbfc url(../../../assets/images/avatars/avatar-default.png) no-repeat center;
 	background-size: cover;
 }
 

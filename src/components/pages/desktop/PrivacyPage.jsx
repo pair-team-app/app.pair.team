@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import './PrivacyPage.css';
 
+import BaseDesktopPage from './BaseDesktopPage';
+
 class PrivacyPage extends Component {
 	constructor(props) {
 		super(props);
@@ -12,7 +14,7 @@ class PrivacyPage extends Component {
 
 	render() {
 		return (
-			<div className="page-wrapper privacy-page-wrapper">
+			<BaseDesktopPage className="privacy-page-wrapper">
 				<h4>Privacy Policy</h4>
 				<div className="privacy-page-text">
 					<p>We only collect data that can be directly used to improve your product experience. Every piece of data we collect, from your company name to the number of adjectives you use, is collected with specific intentions. We use data to improve our predictive models, so that the more you use Design Engine's products, the better results you get. We aggregate data into patterns to provide smarter writing guidance over time. We don't sell your data. We are committed to making Design Engine so useful that it is an indispensable part of your company's operations and productivity. We store your document text in order to understand company and industry language patterns, but we will not share your data with anyone outside your company or ours, except for trusted third-party services providers that support us in providing our services to you. We are committed to the security of your private data. Privacy and security go hand in hand. Our commitment to your privacy means that we also take the security of your data seriously. We take steps to ensure that your Personal Information is treated securely and in accordance with this Privacy Policy. In this document, Design Engine refers to the products and services that we offer at https://designengine.ai/ (&ldquo;Service&rdquo; or &ldquo;Services&rdquo;). It also refers to our company, Design Engine AI, Inc., as &ldquo;Design Engine,&rdquo; &ldquo;we,&rdquo; &ldquo;our,&rdquo; or &ldquo;us.&rdquo;</p>
@@ -46,7 +48,7 @@ class PrivacyPage extends Component {
 					<p>Children's Privacy Services are not directed to nor does Design Engine knowingly collect Personal Information from children under 13 years of age. If you learn that your child has provided us with Personal Information without your consent, you may alert us at privacy@Design Engine.com. If we learn that we have collected any Personal Information from children under 13, we will promptly take steps to delete such Personal Information and terminate the child's account.</p>
 					<p>California Privacy Rights California law permits users who are California residents to request and obtain from us once a year, free of charge, a list of the third parties to whom we have disclosed their Personal Information (if any) for their direct marketing purposes in the prior calendar year, as well as the type of Personal Information disclosed to those parties. We do not share Personal Information with third parties for their own marketing purposes.</p>
 				</div>
-			</div>
+			</BaseDesktopPage>
 		);
 	}
 }

@@ -7,7 +7,8 @@ import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { Row, Column } from 'simple-flexbox';
 
-import { trackEvent } from '../../utils/tracking';
+import BaseDesktopPage from './BaseDesktopPage';
+import { trackEvent } from '../../../utils/tracking';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -272,22 +273,24 @@ class RateThisPage extends Component {
 // 		console.log('RateThisPage.render()', this.props, this.state);
 
 		const { stars, score, comment, commentValid, ratings } = this.state;
-		return (<div className="page-wrapper rate-this-page-wrapper">
-			<h4>Please Rate &amp; Comment</h4>
-			<RateThisForm
-				stars={stars}
-				score={score}
-				comment={comment}
-				commentValid={commentValid}
-				onStarClick={this.handleStarClick}
-				onStarRollOver={this.handleStarRollOver}
-				onStarRollOut={this.handleStarRollOut}
-				onFocus={()=> this.setState({ comment : '', commentValid : true })}
-				onChange={(event)=> this.setState({ [event.target.name] : event.target.value })}
-				onSubmit={this.handleSubmitComment} />
+		return (
+			<BaseDesktopPage className="rate-this-page-wrapper">
+				<h4>Please Rate &amp; Comment</h4>
+				<RateThisForm
+					stars={stars}
+					score={score}
+					comment={comment}
+					commentValid={commentValid}
+					onStarClick={this.handleStarClick}
+					onStarRollOver={this.handleStarRollOver}
+					onStarRollOut={this.handleStarRollOut}
+					onFocus={()=> this.setState({ comment : '', commentValid : true })}
+					onChange={(event)=> this.setState({ [event.target.name] : event.target.value })}
+					onSubmit={this.handleSubmitComment} />
 
-			{(ratings.length > 0) && (<RateThisList ratings={ratings} />)}
-		</div>);
+				{(ratings.length > 0) && (<RateThisList ratings={ratings} />)}
+			</BaseDesktopPage>
+		);
 	}
 }
 

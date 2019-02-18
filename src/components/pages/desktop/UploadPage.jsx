@@ -6,14 +6,15 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
-import UploadHeader from '../elements/UploadHeader';
-import LoginForm from '../forms/LoginForm';
-import RegisterForm from '../forms/RegisterForm';
+import BaseDesktopPage from './BaseDesktopPage';
+import UploadHeader from '../../elements/UploadHeader';
+import LoginForm from '../../forms/LoginForm';
+import RegisterForm from '../../forms/RegisterForm';
 
-import { addFileUpload, updateDeeplink, updateUserProfile } from '../../redux/actions';
-import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../utils/funcs';
-import { trackEvent } from '../../utils/tracking';
-import radioButtons from '../../assets/json/radio-buttons_upload';
+import { addFileUpload, updateDeeplink, updateUserProfile } from '../../../redux/actions';
+import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../../utils/funcs';
+import { trackEvent } from '../../../utils/tracking';
+import radioButtons from '../../../assets/json/radio-buttons_upload';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -233,7 +234,7 @@ class UploadPage extends Component {
 		const progressStyle = { width : `${percent}%` };
 
 		return (
-			<div className="page-wrapper upload-page-wrapper" style={pageStyle}>
+			<BaseDesktopPage className="upload-page-wrapper" style={pageStyle}>
 				{(formState === 1) && (<div className="upload-progress-bar-wrapper">
 					<div className="upload-progress-bar" style={progressStyle} />
 				</div>)}
@@ -261,7 +262,7 @@ class UploadPage extends Component {
 						onPage={this.props.onPage}
 						onLoggedIn={this.handleLoggedIn} />
 				</div>)}
-			</div>
+			</BaseDesktopPage>
 		);
 	}
 }

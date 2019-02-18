@@ -6,9 +6,10 @@ import axios from 'axios/index';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import { POPUP_TYPE_INFO } from '../elements/Popup';
-import { isValidEmail } from '../../utils/funcs';
-import { trackEvent } from '../../utils/tracking';
+import BaseDesktopPage from './BaseDesktopPage';
+import { POPUP_TYPE_INFO } from '../../elements/Popup';
+import { isValidEmail } from '../../../utils/funcs';
+import { trackEvent } from '../../../utils/tracking';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -125,18 +126,18 @@ class RecoverPage extends Component {
 		const passwordClass = (passwordValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
 
 		return (
-			<div className="page-wrapper recover-page-wrapper">
+			<BaseDesktopPage className="recover-page-wrapper">
 				{(typeof this.props.match.params.userID === 'undefined')
 					? (<div className="recover-page-form-wrapper">
-							<h4>Forgot Password</h4>
-							<form onSubmit={this.handleEmailSubmit}>
-								<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.handleTextfieldChange(event)} /></div>
-								<Row vertical="center">
-									<button disabled={!emailValid || email.length === 0} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleEmailSubmit(event)}>Submit</button>
-									<div className="page-link" onClick={()=> this.props.onPage('login')}>Want to Login?</div>
-								</Row>
-							</form>
-						</div>)
+						<h4>Forgot Password</h4>
+						<form onSubmit={this.handleEmailSubmit}>
+							<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.handleTextfieldChange(event)} /></div>
+							<Row vertical="center">
+								<button disabled={!emailValid || email.length === 0} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleEmailSubmit(event)}>Submit</button>
+								<div className="page-link" onClick={()=> this.props.onPage('login')}>Want to Login?</div>
+							</Row>
+						</form>
+					</div>)
 
 					: (<div className="recover-page-form-wrapper">
 						<h4>Reset Password</h4>
@@ -151,7 +152,7 @@ class RecoverPage extends Component {
 							</Row>
 						</form>
 					</div>)}
-			</div>
+			</BaseDesktopPage>
 		);
 	}
 }

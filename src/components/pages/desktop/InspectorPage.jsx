@@ -13,23 +13,23 @@ import Moment from 'react-moment';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
-// import ContentModal, { MODAL_SIZE_PERCENT } from '../elements/ContentModal';
-import ContentModal from '../elements/ContentModal';
-import { POPUP_TYPE_INFO } from '../elements/Popup';
-import TutorialOverlay from '../elements/TutorialOverlay';
+import BaseDesktopPage from './BaseDesktopPage';
+import ContentModal from '../../elements/ContentModal';
+import { POPUP_TYPE_INFO } from '../../elements/Popup';
+import TutorialOverlay from '../../elements/TutorialOverlay';
 // import InviteTeamForm from '../forms/InviteTeamForm';
 
-import { MOMENT_TIMESTAMP } from '../../consts/formats';
-import { MINUS_KEY, PLUS_KEY } from '../../consts/key-codes';
-import { CANVAS_CAPTION, CANVAS_COLORS, MARCHING_ANTS } from '../../consts/slice-canvas';
-import { DE_LOGO_SMALL } from '../../consts/uris';
-import { setRedirectURI } from '../../redux/actions';
-import { buildInspectorPath, buildInspectorURL, capitalizeText, convertURISlug, cropFrame, epochDate, frameToRect, limitString, makeDownload, rectContainsRect } from '../../utils/funcs.js';
-import { fontSpecs, toAndroid, toCSS, toReactCSS, toSpecs, toSwift } from '../../utils/inspector-langs.js';
-import { trackEvent } from '../../utils/tracking';
-import deLogo from '../../assets/images/logos/logo-designengine.svg';
-import bannerPanel from '../../assets/json/banner-panel';
-import inspectorTabs from '../../assets/json/inspector-tabs';
+import { MOMENT_TIMESTAMP } from '../../../consts/formats';
+import { MINUS_KEY, PLUS_KEY } from '../../../consts/key-codes';
+import { CANVAS_CAPTION, CANVAS_COLORS, MARCHING_ANTS } from '../../../consts/slice-canvas';
+import { DE_LOGO_SMALL } from '../../../consts/uris';
+import { setRedirectURI } from '../../../redux/actions';
+import { buildInspectorPath, buildInspectorURL, capitalizeText, convertURISlug, cropFrame, epochDate, frameToRect, limitString, makeDownload, rectContainsRect } from '../../../utils/funcs.js';
+import { fontSpecs, toAndroid, toCSS, toReactCSS, toSpecs, toSwift } from '../../../utils/inspector-langs.js';
+import { trackEvent } from '../../../utils/tracking';
+import deLogo from '../../../assets/images/logos/logo-designengine.svg';
+import bannerPanel from '../../../assets/json/banner-panel';
+import inspectorTabs from '../../../assets/json/inspector-tabs';
 
 
 const ARTBOARD_ORIGIN = {
@@ -1312,7 +1312,7 @@ class InspectorPage extends Component {
 		const { processing, profile } = this.props;
 
 		const { section, upload, slice, hoverSlice, tabs, scale, selectedTab, scrolling, viewport, scrollOffset } = this.state;
-		const { restricted, urlBanner, tutorial } = this.state;
+		const { restricted, urlBanner, tutorial, tooltip } = this.state;
 
 
 		const artboards = (upload) ? buildUploadArtboards(upload).reverse() : [];
@@ -1515,7 +1515,7 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage:', window.performance.memory);
 
 		return (<>
-			<div className="page-wrapper inspector-page-wrapper">
+			<BaseDesktopPage className="inspector-page-wrapper">
 				<div className="inspector-page-content">
 					<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
 						{(artboards.length > 0) && (<div style={artboardsStyle}>
@@ -1587,8 +1587,8 @@ class InspectorPage extends Component {
 						<div className="inspector-page-panel-tab-content-wrapper">
 							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i)=> {
 								return ((tab.contents)
-									? (<PartsList key={i} contents={tab.contents} onPartItem={(slice)=> this.handleDownloadPartItem(slice)} />)
-									: ('')
+										? (<PartsList key={i} contents={tab.contents} onPartItem={(slice)=> this.handleDownloadPartItem(slice)} />)
+										: ('')
 								);
 							}))}
 						</div>
@@ -1598,26 +1598,26 @@ class InspectorPage extends Component {
 						<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download Project</button>
 					</div>
 				</div>)}
-			</div>
+			</BaseDesktopPage>
 
-			{/*{(tooltip !== '' && !processing) && (<div className="inspector-page-tooltip">{tooltip}</div>)}*/}
+
+			{(tooltip !== '' && !processing) && (<div className="inspector-page-tooltip">{tooltip}</div>)}
 			{(restricted)
 				? (<ContentModal
-						tracking="private/inspector"
-						closeable={false}
-						defaultButton="Register / Login"
-						onComplete={()=> this.props.onPage('register')}>
-							This project is private, you must be logged in as one of its team members to view!
-					</ContentModal>)
+					tracking="private/inspector"
+					closeable={false}
+					defaultButton="Register / Login"
+					onComplete={()=> this.props.onPage('register')}>
+					This project is private, you must be logged in as one of its team members to view!
+				</ContentModal>)
 
 				: (<>{(upload && !processing) && (<div className={urlClass}>
-						<CopyToClipboard onCopy={()=> this.handleCopyURL()} text={buildInspectorURL(upload)}>
-							<div className="inspector-page-url">{buildInspectorURL(upload)}</div>
-						</CopyToClipboard>
-						<FontAwesome name="times" className="inspector-page-url-close-button" onClick={()=> this.setState({ urlBanner : false })} />
-					</div>)}</>)
+					<CopyToClipboard onCopy={()=> this.handleCopyURL()} text={buildInspectorURL(upload)}>
+						<div className="inspector-page-url">{buildInspectorURL(upload)}</div>
+					</CopyToClipboard>
+					<FontAwesome name="times" className="inspector-page-url-close-button" onClick={()=> this.setState({ urlBanner : false })} />
+				</div>)}</>)
 			}
-
 
 			{/*{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing*/}
 			{(upload && profile && (processing && upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing
@@ -1626,7 +1626,6 @@ class InspectorPage extends Component {
 				onCopyURL={this.handleCopyURL}
 				onCancel={this.handleUploadProcessingCancel}
 			/>)}
-
 
 			{(tutorial) && (<TutorialOverlay
 				origin={tutorial.origin}

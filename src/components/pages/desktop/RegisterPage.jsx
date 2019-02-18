@@ -6,10 +6,11 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
-import RegisterForm from '../forms/RegisterForm';
-import { setRedirectURI, updateDeeplink, updateUserProfile } from '../../redux/actions';
-import { buildInspectorPath, isUserLoggedIn } from '../../utils/funcs';
-import { trackEvent } from '../../utils/tracking';
+import BaseDesktopPage from './BaseDesktopPage';
+import RegisterForm from '../../forms/RegisterForm';
+import { setRedirectURI, updateDeeplink, updateUserProfile } from '../../../redux/actions';
+import { buildInspectorPath, isUserLoggedIn } from '../../../utils/funcs';
+import { trackEvent } from '../../../utils/tracking';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -96,14 +97,14 @@ class RegisterPage extends Component {
 
 		const { email, inviteID } = this.state;
 		return (
-			<div className="page-wrapper register-page-wrapper">
+			<BaseDesktopPage className="register-page-wrapper">
 				<RegisterForm
 					title="Sign up"
 					inviteID={inviteID}
 					email={email}
 					onRegistered={this.handleRegistered}
 					onLogin={()=> this.props.onPage((inviteID) ? `login/${inviteID}` : 'login')} />
-			</div>
+			</BaseDesktopPage>
 		);
 	}
 }

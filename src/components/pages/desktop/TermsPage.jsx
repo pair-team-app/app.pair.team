@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import './TermsPage.css';
 
+import BaseDesktopPage from './BaseDesktopPage';
+
 class TermsPage extends Component {
 	constructor(props) {
 		super(props);
@@ -12,7 +14,7 @@ class TermsPage extends Component {
 
 	render() {
 		return (
-			<div className="page-wrapper terms-page-wrapper">
+			<BaseDesktopPage className="terms-page-wrapper">
 				<h4>Terms of Service</h4>
 				<div className="terms-page-text">
 					<p>Please read these terms of service (&ldquo;Agreement&rdquo;) carefully because it is an agreement between you (&ldquo;you&rdquo;) and Design Engine AI, Inc. (&ldquo;Design Engine&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;), and governs your access to and use of Design Engine’s platform, client-side plug-in (the &ldquo;Plug-in&rdquo;) (where applicable), our website located at https://designengine.ai/ (the &ldquo;Site&rdquo;), and related services (Design Engine’s platform, the Terminal application, the macOS application, the Site and related services are collectively referred as the &ldquo;Services&rdquo;).</p>
@@ -79,7 +81,7 @@ class TermsPage extends Component {
 					<p>10.11 Equitable Relief<br />Each party acknowledges that a breach by the other party of any confidentiality or proprietary rights provision of this Agreement may cause the non-breaching party irreparable damage, for which the award of damages would not be adequate compensation. Consequently, the non-breaching party may seek injunctive relief enjoining any breach or threatened breach of those provisions, in addition to any other relief to which the non-breaching party may be entitled at law or in equity.</p>
 					<p>10.12 Entire Agreement<br />This Agreement constitutes the entire agreement between the parties regarding the Services, and it supersedes and replaces any prior agreements and understandings between the parties regarding the Services and it shall take precedence over all terms, conditions, and provisions on any purchase order or other acknowledgment, order release or business form that you may use in connection with the Services.</p>
 				</div>
-			</div>
+			</BaseDesktopPage>
 		);
 	}
 }

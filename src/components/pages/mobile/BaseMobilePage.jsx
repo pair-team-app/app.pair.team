@@ -6,7 +6,7 @@ import {Column} from "simple-flexbox";
 
 
 const UnsupportedMobilePage = (props)=> {
-	console.log('BaseMobilePage().UnsupportedMobilePage()', props);
+// 	console.log('BaseMobilePage().UnsupportedMobilePage()', props);
 
 	return (<div className="unsupported-mobile-page-wrapper">
 		<Column horizontal="center">
@@ -18,7 +18,7 @@ const UnsupportedMobilePage = (props)=> {
 
 
 function BaseMobilePage(props) {
-	console.log('BaseMobilePage()', props);
+// 	console.log('BaseMobilePage()', props);
 
 	const { className, children } = props;
 	return (

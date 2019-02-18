@@ -7,12 +7,13 @@ import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import { POPUP_TYPE_INFO } from '../elements/Popup';
-import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../forms/elements/InputField';
-import { DEFAULT_AVATAR } from '../../consts/uris';
-import { updateUserProfile } from '../../redux/actions';
-import { hasBit, isValidEmail } from '../../utils/funcs';
-import { trackEvent } from '../../utils/tracking';
+import BaseDesktopPage from './BaseDesktopPage';
+import { POPUP_TYPE_INFO } from '../../elements/Popup';
+import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../forms/elements/InputField';
+import { DEFAULT_AVATAR } from '../../../consts/uris';
+import { updateUserProfile } from '../../../redux/actions';
+import { hasBit, isValidEmail } from '../../../utils/funcs';
+import { trackEvent } from '../../../utils/tracking';
 
 const dropZone = React.createRef();
 
@@ -262,7 +263,7 @@ class ProfilePage extends Component {
 		const { passMsg, usernameValid, emailValid, passwordValid } = this.state;
 
 		return (
-			<div className="page-wrapper profile-page-wrapper">
+			<BaseDesktopPage className="profile-page-wrapper">
 				<h4>Profile</h4>
 				<div className="profile-page-avatar-wrapper">
 					<Row vertical="center">
@@ -275,8 +276,8 @@ class ProfilePage extends Component {
 				</div>
 
 				{/*{(profile) && (<div className="profile-page-paid-wrapper">*/}
-					{/*<h5>Account Type: {(profile.paid) ? 'Paid' : 'Free'}</h5>*/}
-					{/*{(!profile.paid) && (<button onClick={()=> this.handleBuyClick()}>Unlimited</button>)}*/}
+				{/*<h5>Account Type: {(profile.paid) ? 'Paid' : 'Free'}</h5>*/}
+				{/*{(!profile.paid) && (<button onClick={()=> this.handleBuyClick()}>Unlimited</button>)}*/}
 				{/*</div>)}*/}
 
 				<div className="profile-page-form-wrapper">
@@ -321,8 +322,7 @@ class ProfilePage extends Component {
 					<button type="submit" className="long-button adjacent-button" onClick={()=> this.handleSubmit()}>Save</button>
 					{(profile && (profile.avatar !== avatar || profile.username !== username || profile.email !== email || password.length > 0)) && (<div className="page-link" onClick={()=> this.handleCancel()}>Cancel</div>)}
 				</Row>
-
-			</div>
+			</BaseDesktopPage>
 		);
 	}
 }

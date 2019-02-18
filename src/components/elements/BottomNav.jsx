@@ -8,7 +8,7 @@ import sections from '../../assets/json/sections-bottom_nav';
 
 
 const BottomNavDesktop = (props)=> {
-	console.log('BottomNav().BottomNavDesktop()', props);
+// 	console.log('BottomNav().BottomNavDesktop()', props);
 
 	return (<div className="bottom-nav-desktop-wrapper">
 		<img className="bottom-nav-desktop-logo" src={deLogo} onClick={()=> props.onPage('')} alt="Design Engine" />
@@ -29,7 +29,7 @@ const BottomNavDesktop = (props)=> {
 };
 
 const BottomNavMobile = (props)=> {
-	console.log('BottomNav().BottomNavMobile()', props);
+// 	console.log('BottomNav().BottomNavMobile()', props);
 
 	return (<div className="bottom-nav-mobile-wrapper">
 		<img className="bottom-nav-mobile-logo" src={deLogo} onClick={()=> props.onPage('')} alt="Design Engine" />

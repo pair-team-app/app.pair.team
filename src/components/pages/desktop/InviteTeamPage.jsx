@@ -8,9 +8,10 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import { POPUP_TYPE_INFO } from '../elements/Popup';
-import Dropdown from '../forms/elements/Dropdown';
-import { buildInspectorURL, isValidEmail, isUserLoggedIn } from '../../utils/funcs';
+// import BaseDesktopPage from './BaseDesktopPage';
+import { POPUP_TYPE_INFO } from '../../elements/Popup';
+import Dropdown from '../../forms/elements/Dropdown';
+import { buildInspectorURL, isValidEmail, isUserLoggedIn } from '../../../utils/funcs';
 
 
 const mapStateToProps = (state, ownProps)=> {

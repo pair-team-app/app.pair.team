@@ -5,11 +5,12 @@ import './HomePage.css';
 import axios from 'axios';
 import { connect } from 'react-redux';
 
-import ArtboardGrid from '../elements/ArtboardGrid';
-import UploadHeader from '../elements/UploadHeader';
-import { addFileUpload, appendHomeArtboards } from '../../redux/actions';
-import { isUserLoggedIn } from '../../utils/funcs';
-import { trackEvent } from '../../utils/tracking';
+import BaseDesktopPage from './BaseDesktopPage';
+import ArtboardGrid from '../../elements/ArtboardGrid';
+import UploadHeader from '../../elements/UploadHeader';
+import { addFileUpload, appendHomeArtboards } from '../../../redux/actions';
+import { isUserLoggedIn } from '../../../utils/funcs';
+import { trackEvent } from '../../../utils/tracking';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -196,7 +197,7 @@ class HomePage extends Component {
 		const gridTitle = (profile) ? (fetching) ? 'Loading…' : (artboards.length > 0) ? 'Previous' : null : null;
 
 		return (
-			<div className="page-wrapper home-page-wrapper">
+			<BaseDesktopPage className="home-page-wrapper">
 				<UploadHeader
 					title="Upload any design file for interface specs"
 					subtitle="Drag, drop, or click to upload."
@@ -210,12 +211,12 @@ class HomePage extends Component {
 					<h1>Free specs, parts, & code to engineer pixel-perfect  interfaces.</h1>
 					{(isUserLoggedIn())
 						? (<>
-								<button className="long-button" onClick={()=> this.handleUploadClick()}>Upload</button>
-							</>)
+							<button className="long-button" onClick={()=> this.handleUploadClick()}>Upload</button>
+						</>)
 						: (<>
-								<button className="long-button stack-button" onClick={()=> this.handleRegister()}>Sign Up</button>
-								<button className="long-button" onClick={()=> this.handleLogin()}>Login</button>
-							</>)
+							<button className="long-button stack-button" onClick={()=> this.handleRegister()}>Sign Up</button>
+							<button className="long-button" onClick={()=> this.handleLogin()}>Login</button>
+						</>)
 					}
 				</div>
 
@@ -225,7 +226,7 @@ class HomePage extends Component {
 					onClick={this.handleArtboardClicked}
 					onPage={this.props.onPage}
 					onPopup={this.props.onPopup} />)}
-			</div>
+			</BaseDesktopPage>
 		);
 	}
 }
