@@ -444,6 +444,7 @@ class InspectorPage extends Component {
 			tooltip      : ''
 		};
 
+		this.recordedHistory = false;
 		this.initialScaled = false;
 		this.processingInterval = null;
 		this.antsOffset = 0;
@@ -493,12 +494,13 @@ class InspectorPage extends Component {
 		const { profile, deeplink, processing } = this.props;
 		const { upload, viewport } = this.state;
 
-		if (profile && upload && deeplink && deeplink.uploadID !== 0) {
-			this.onAddHistory();
-		}
-
 		if (deeplink && deeplink !== prevProps.deeplink && deeplink.uploadID !== 0) {
 			this.onRefreshUpload();
+		}
+
+		if (!this.recordedHistory && profile && upload && deeplink && deeplink.uploadID !== 0) {
+			this.recordedHistory = true;
+			this.onAddHistory();
 		}
 
 		if (upload && processing && this.processingInterval === null) {

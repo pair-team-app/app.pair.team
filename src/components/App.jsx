@@ -108,6 +108,10 @@ class App extends Component {
 
 			this.onAddUploadView(uploadID);
 		}
+
+		window.onpopstate = function(event) {
+			console.log('window.onpopstate()', event);
+		};
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -263,7 +267,7 @@ class App extends Component {
 				    {(!isInspectorPage()) && (<BottomNav onLogout={()=> this.handleLogout()} onPage={this.handlePage} />)}
 			    </div>
 
-		      {!(/chrom(e|ium)/.test(navigator.userAgent.toLowerCase())) && (<ContentModal
+		      {!(/chrom(e|ium)/i.test(navigator.userAgent.toLowerCase())) && (<ContentModal
 			      size={MODAL_SIZE_AUTO}
 				    tracking="modal/site"
 				    closeable={false}
