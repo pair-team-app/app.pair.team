@@ -25,7 +25,7 @@ import RegisterPage from './pages/RegisterPage';
 import Status404Page from './pages/Status404Page';
 import TermsPage from './pages/TermsPage';
 import UploadPage from './pages/UploadPage';
-import MobilePage from './pages/MobilePage';
+import BaseMobilePage from './pages/mobile/BaseMobilePage';
 
 import {
 	appendHomeArtboards,
@@ -109,7 +109,7 @@ class App extends Component {
 			this.onAddUploadView(uploadID);
 		}
 
-		window.onpopstate = function(event) {
+		window.onpopstate = (event)=> {
 			console.log('window.onpopstate()', event);
 		};
 	}
@@ -264,7 +264,7 @@ class App extends Component {
 				    </Switch>
 
 				    {(!isInspectorPage()) && (<BannerPanel title={bannerPanel.title} image={bannerPanel.image} onClick={()=> this.handleBanner(bannerPanel.url)} />)}
-				    {(!isInspectorPage()) && (<BottomNav onLogout={()=> this.handleLogout()} onPage={this.handlePage} />)}
+				    {(!isInspectorPage()) && (<BottomNav mobileLayout={false} onLogout={()=> this.handleLogout()} onPage={this.handlePage} />)}
 			    </div>
 
 		      {!(/chrom(e|ium)/i.test(navigator.userAgent.toLowerCase())) && (<ContentModal
@@ -288,7 +288,12 @@ class App extends Component {
 				  />
 
 			    <div className="content-wrapper" ref={wrapper}>
-				    {(mobileOverlay) && (<MobilePage onPage={this.handlePage} />)}
+				    {(mobileOverlay) && (<BaseMobilePage
+					    className={null}
+					    onPage={this.handlePage} />)
+				    }
+
+				    <BottomNav mobileLayout={true} onLogout={()=> this.handleLogout()} onPage={this.handlePage} />
 			    </div>
 		    </div>)
     );

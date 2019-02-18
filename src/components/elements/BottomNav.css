@@ -10,13 +10,26 @@
 	line-height: normal;
 }
 
-.bottom-nav-logo {
+.bottom-nav-desktop-wrapper {
+}
+
+.bottom-nav-mobile-wrapper {
+	width: 100%;
+	text-align: center;
+}
+
+.bottom-nav-desktop-logo {
 	width: 35px;
 	height: 16px;
 	margin-bottom: 20px;
 }
 
-.bottom-nav-logo:hover {
+.bottom-nav-mobile-logo {
+	width: 48px;
+	height: 25px;
+}
+
+.bottom-nav-desktop-logo:hover, .bottom-nav-mobile-logo:hover {
 	cursor: pointer;
 }
 
