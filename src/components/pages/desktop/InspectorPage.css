@@ -40,8 +40,9 @@
 	position: absolute;
 	top: -24px;
 	left: -1px;
-	border: 1px solid #005cc5;
+	width: max-content;
 	padding: 5px;
+	border: 1px solid #005cc5;
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-weight: 500;
 	font-size: 10px;
@@ -359,60 +360,16 @@
 
 .slice-rollover-item {
 	position: absolute;
-	zoom: 0;
-	/*background-color: rgba(0, 0, 0, 0.0);*/
-	background-color: rgba(0, 92, 197, 0.75);
+	transform-origin: 0 0;
+	background-color: rgba(0, 92, 197, 0.0);
 	border: 1px solid rgba(0, 92, 197, 0.0);
 }
 
 .slice-rollover-item:hover {
 	cursor: pointer;
-	/*border: 1px solid #005cc5;*/
-	/*border-color: rgba(0, 92, 197, 0.75);*/
 }
 
-.slice-rollover-item-slice:hover {
-	/*background-color: rgba(255, 148, 0, 0.6);*/
-}
-
-.slice-rollover-item-symbol:hover {
-	/*background-color: rgba(255, 236, 0, 0.6);*/
-}
-
-.slice-rollover-item-textfield:hover {
-	/*background-color: rgba(9, 248, 16, 0.6);*/
-}
-
-.slice-rollover-item-background:hover {
-	/*background-color: rgba(255, 127, 240, 0.6);*/
-}
-
-.slice-rollover-item-group:hover {
-	/*background-color: rgba(0, 120, 255, 0.6);*/
-}
-
-.slice-rollover-item-slice-filled {
-	/*background-color: rgba(255, 148, 0, 0.6);*/
-	border-color: rgba(0, 92, 197, 0.0);
-}
-
-.slice-rollover-item-symbol-filled {
-	/*background-color: rgba(255, 236, 0, 0.6);*/
-	border-color: rgba(0, 92, 197, 0.0);
-}
-
-.slice-rollover-item-textfield-filled {
-	/*background-color: rgba(9, 248, 16, 0.6);*/
-	border-color: rgba(0, 92, 197, 0.0);
-}
-
-.slice-rollover-item-background-filled {
-	/*background-color: rgba(255, 127, 240, 0.6);*/
-	border-color: rgba(0, 92, 197, 0.0);
-}
-
-.slice-rollover-item-group-filled {
-	/*background-color: rgba(0, 120, 255, 0.6);*/
+.slice-rollover-item-slice-filled, .slice-rollover-item-symbol-filled, .slice-rollover-item-textfield-filled, .slice-rollover-item-background-filled, .slice-rollover-item-group-filled {
 	border-color: rgba(0, 92, 197, 0.0);
 }
 
