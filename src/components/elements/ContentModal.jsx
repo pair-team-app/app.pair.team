@@ -83,7 +83,7 @@ class ContentModal extends Component {
 			<div className={wrapperClass} onClick={(event)=> event.stopPropagation()}>
 				{(title) && (<div className="content-modal-header-wrapper"><Row>
 					<Column flexGrow={1}><div className="content-modal-title">{title}</div></Column>
-					<Column flexGrow={1} horizontal="end">{(closeable && !defaultButton) && (<button className="tiny-button content-modal-close-button" onClick={()=> this.handleClose()}><FontAwesome name="times"/></button>)}</Column>
+					<Column flexGrow={1} vertical="center" horizontal="end">{(closeable && !defaultButton) && (<button className="tiny-button content-modal-close-button" onClick={()=> this.handleClose()}><FontAwesome name="times"/></button>)}</Column>
 				</Row></div>)}
 				<div className="content-modal-content">
 					{children}

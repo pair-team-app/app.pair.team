@@ -1773,8 +1773,8 @@ class InspectorPage extends Component {
 				closeable={true}
 				defaultButton={null}
 				title="Error Loading Project"
-				onComplete={()=> this.props.onPage('<<')}>
-				This project was not found, please check your link!
+				onComplete={()=> this.props.onPage('')}>
+				Design file not found.
 			</ContentModal>)}
 
 
