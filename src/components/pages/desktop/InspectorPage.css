@@ -100,7 +100,7 @@
 	width: calc(100% - 360px);
 	z-index: 2;
 	padding: 4px 0;
-	background-color: rgba(0, 92, 197, 0.9);
+	background-color: rgba(0, 92, 197, 0.95);
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 15px;
 	letter-spacing: -0.3px;

@@ -522,8 +522,8 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.componentDidUpdate()', prevProps, this.props, this.state);
 
 		const { profile, deeplink, processing } = this.props;
-		const { upload, panMultPt } = this.state;
-// 		const { upload } = this.state;
+// 		const { upload, panMultPt } = this.state;
+		const { upload } = this.state;
 
 		if (!this.recordedHistory && profile && upload && deeplink && deeplink.uploadID !== 0) {
 			this.recordedHistory = true;
@@ -825,28 +825,21 @@ class InspectorPage extends Component {
 
 	handleCanvasClick = (event)=> {
 // 		console.log('InspectorPage.handleCanvasClick()', event.target);
-		return;
+// 		return;
 
-		/*let { section, tabs } = this.state;
-		if (section === 'inspect') {
-			tabs[0].contents = null;
-			tabs[0].syntax = null;
-			tabs[1].contents = null;
-			tabs[1].syntax = null;
-			tabs[2].contents = null;
-			tabs[2].syntax = null;
-			tabs[3].contents = null;
-			tabs[3].syntax = null;
-
-		} else if (section === 'parts') {
-			tabs[0].contents = null;
-		}
+		let { tabs } = this.state;
+		tabs.forEach((tab, i)=> {
+			tabs[i] = {
+				contents : null,
+				syntax   : null
+			}
+		});
 
 		event.stopPropagation();
 		this.setState({
 			slice : null,
 			tabs  : tabs
-		});*/
+		});
 	};
 
 	handleCanvasUpdate = ()=> {
@@ -883,6 +876,8 @@ class InspectorPage extends Component {
 					drawSliceFill(context, frame, CANVAS_COLORS.types[hoverSlice.type].fill);
 					drawSliceCaption(context, hoverSlice.type, frame.origin, frame.size.width);
 					drawSliceBorder(context, frame);
+					drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS_COLORS.types[hoverSlice.type].guides);
+					drawSliceMarchingAnts(context, frame, this.antsOffset);
 				}
 			}
 		}
@@ -1246,23 +1241,15 @@ class InspectorPage extends Component {
 			});
 
 		} else {
-			const { scale, viewSize } = this.state;
 			const panMultPt = {
 				x : this.state.panMultPt.x + (event.deltaX * PAN_FACTOR),
 				y : this.state.panMultPt.y + (event.deltaY * PAN_FACTOR)
 			};
 
-// 			const scrollPt = {
-// 				x : -Math.round(((0.5 + scale * (0.5 - panMultPt.x)) * viewSize.width) + (this.contentSize.width * -0.5)),
-// 				y : -Math.round(((0.5 + scale * (0.5 - panMultPt.y)) * viewSize.height) + (this.contentSize.height * -0.5))
-// 			};
-
 			this.setState({
 				scrolling : true,
 				panMultPt : panMultPt,
-// 				scrollPt  : scrollPt
-			});
-			this.handlePanMove(panMultPt.x, panMultPt.y);
+			}, ()=> (this.handlePanMove(panMultPt.x, panMultPt.y)));
 		}
 
 		this.scrollTimeout = setTimeout(()=> this.onWheelTimeout(), 50);
@@ -1685,15 +1672,8 @@ class InspectorPage extends Component {
 			display : 'none'
 		};
 
-// 		const canvasStyle = (!scrolling) ? {
-// 			top     : `${scrollPt.x}px`,
-// 			left    : `${scrollPt.y}px`
-// 		} : {
-// 			display : 'none'
-// 		};
 
-
-		console.log('InspectorPage.render()', this.state, this.contentSize);
+// 		console.log('InspectorPage.render()', this.state, this.contentSize);
 // 		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage:', window.performance.memory);
 
