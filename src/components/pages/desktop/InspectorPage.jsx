@@ -510,7 +510,7 @@ class InspectorPage extends Component {
 		}
 
 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
-		document.addEventListener('wheel', this.handleWheelStart.bind(this));
+// 		document.addEventListener('wheel', this.handleWheelStart.bind(this));
 	}
 
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
@@ -621,7 +621,7 @@ class InspectorPage extends Component {
 		this.scrollTimeout = null;
 
 		document.removeEventListener('keydown', this.handleKeyDown.bind(this));
-		document.removeEventListener('wheel', this.handleWheelStart.bind(this));
+// 		document.removeEventListener('wheel', this.handleWheelStart.bind(this));
 
 		const { section, upload } = this.state;
 		if (upload) {
@@ -1172,7 +1172,7 @@ class InspectorPage extends Component {
 
 
 	handleWheelStart = (event)=> {
-		console.log('InspectorPage.handleWheelStart()', event, event.type, event.deltaX, event.deltaY, event.target);
+// 		console.log('InspectorPage.handleWheelStart()', event, event.type, event.deltaX, event.deltaY, event.target);
 		//console.log('wheel', artboardsWrapper.current.clientWidth, artboardsWrapper.current.clientHeight, artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft);
 
 		clearTimeout(this.scrollTimeout);
@@ -1627,12 +1627,12 @@ class InspectorPage extends Component {
 
 
 // 		console.log('InspectorPage.render()', this.state, this.contentSize);
-		console.log('InspectorPage.render()', this.props, this.state);
+// 		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage:', window.performance.memory);
 
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
-				<div className="inspector-page-content">
+				<div className="inspector-page-content" onWheel={this.handleWheelStart}>
 					<InteractiveDiv
 						x={panMultPt.x}
 						y={panMultPt.y}
