@@ -264,24 +264,37 @@ const PartsList = (props)=> {
 const UploadProcessing = (props)=> {
 	console.log('InspectorPage.UploadProcessing()', props);
 
-	const { upload, processing } = props;
-	const artboard = buildUploadArtboards(upload).pop();
+	const { upload, processing, vpHeight } = props;
+	const artboard = buildUploadArtboards(upload).shift();
+	const url = buildInspectorURL(upload);
+
+	const imgStyle = (artboard) ? {
+		width  : `${artboard.meta.frame.size.width * ((vpHeight - 300) / artboard.meta.frame.size.height)}px`,
+		height : `${artboard.meta.frame.size.height * ((vpHeight - 300) / artboard.meta.frame.size.height)}px`
+	} : null;
 
 	return (<div className="upload-processing-wrapper"><Column horizontal="center" vertical="start">
-		{(processing.message.length > 0) && (<div className="upload-processing-title">{processing.message}</div>)}
-		<div className="upload-processing-url">{buildInspectorURL(upload)}</div>
+		{(processing.message.length > 0) && (<Row><div className="upload-processing-title">{processing.message}</div></Row>)}
+		<Row><CopyToClipboard onCopy={()=> props.onCopyURL()} text={url}>
+			<div className="upload-processing-url">{url}</div>
+		</CopyToClipboard></Row>
 
-		<div className="upload-processing-button-wrapper">
-			<CopyToClipboard onCopy={()=> props.onCopyURL()} text={buildInspectorURL(upload)}>
+		<Row><div className="upload-processing-button-wrapper">
+			<CopyToClipboard onCopy={()=> props.onCopyURL()} text={url}>
 				<button className="adjacent-button">Copy</button>
 			</CopyToClipboard>
 			<button onClick={()=> props.onCancel()}>Cancel</button>
-		</div>
+		</div></Row>
 
-		{(artboard)
-			? (<img className="upload-processing-image" src={(!artboard.filename.includes('@')) ? `${artboard.filename}@0.25x.png` : artboard.filename} alt={upload.title} />)
+		<Row horizontal="center">{(artboard)
+			? (<ImageLoader
+					src={(!artboard.filename.includes('@')) ? `${artboard.filename}@0.25x.png` : artboard.filename}
+					image={()=> (<img className="upload-processing-image" src={(!artboard.filename.includes('@')) ? `${artboard.filename}@0.25x.png` : artboard.filename} style={imgStyle} alt={upload.title} />)}
+					loading={()=> (<div className="upload-processing-image upload-processing-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+					error={()=> (<div className="upload-processing-image upload-processing-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+				/>)
 			: (<img className="upload-processing-image" src={bannerPanel.image} alt={bannerPanel.title} />)
-		}
+		}</Row>
 	</Column></div>);
 };
 
@@ -1733,10 +1746,11 @@ class InspectorPage extends Component {
 				</div>)}</>)
 			}
 
-			{/*{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing*/}
-			{(upload && profile && (processing && upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing
+			{/*{(upload && profile && (processing && upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing*/}
+			{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing
 				upload={upload}
 				processing={this.state.processing}
+				vpHeight={viewSize.height}
 				onCopyURL={this.handleCopyURL}
 				onCancel={this.handleUploadProcessingCancel}
 			/>)}
