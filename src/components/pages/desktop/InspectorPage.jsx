@@ -825,21 +825,19 @@ class InspectorPage extends Component {
 
 	handleCanvasClick = (event)=> {
 // 		console.log('InspectorPage.handleCanvasClick()', event.target);
-// 		return;
+		event.stopPropagation();
 
-		let { tabs } = this.state;
+		const tabs = [...this.state.tabs];
 		tabs.forEach((tab, i)=> {
 			tabs[i] = {
+				id       : tab.id,
+				title    : tab.title,
 				contents : null,
 				syntax   : null
 			}
 		});
 
-		event.stopPropagation();
-		this.setState({
-			slice : null,
-			tabs  : tabs
-		});
+// 		this.setState({ tabs, slice : null });
 	};
 
 	handleCanvasUpdate = ()=> {
@@ -987,7 +985,7 @@ class InspectorPage extends Component {
 	};
 
 	handlePanMove = (x, y) => {
-		console.log('InspectorPage.handlePanMove()', x, y, this.state.scale);
+// 		console.log('InspectorPage.handlePanMove()', x, y, this.state.scale);
 
 		const panMultPt = { x, y };
 		const { viewSize } = this.state;
@@ -1123,6 +1121,8 @@ class InspectorPage extends Component {
 
 			tabs.forEach((tab, i)=> {
 				tabs[i] = {
+					id       : tab.id,
+					title    : tab.title,
 					contents : null,
 					syntax   : null
 				}
@@ -1224,7 +1224,7 @@ class InspectorPage extends Component {
 
 
 	handleWheelStart = (event)=> {
-// 		console.log('InspectorPage.handleWheelStart()', event.type, event.deltaX, event.deltaY, event.target);
+		console.log('InspectorPage.handleWheelStart()', event, event.type, event.deltaX, event.deltaY, event.target);
 		//console.log('wheel', artboardsWrapper.current.clientWidth, artboardsWrapper.current.clientHeight, artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft);
 
 		clearTimeout(this.scrollTimeout);
@@ -1674,7 +1674,7 @@ class InspectorPage extends Component {
 
 
 // 		console.log('InspectorPage.render()', this.state, this.contentSize);
-// 		console.log('InspectorPage.render()', this.props, this.state);
+		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage:', window.performance.memory);
 
 		return (<>
@@ -1687,8 +1687,8 @@ class InspectorPage extends Component {
 						scaleFactor={1.0875}
 						minScale={Math.min(...ZOOM_NOTCHES)}
 						maxScale={Math.max(...ZOOM_NOTCHES)}
-						ignorePanOutside={false}
-						renderOnChange={true}
+						ignorePanOutside={true}
+						renderOnChange={false}
 						style={{ width : '100%', height : '100%' }}
 // 						onPanStart={()=> this.setState({ scrolling : true })}
 						onPanMove={this.handlePanMove}
