@@ -468,6 +468,7 @@ class InspectorPage extends Component {
 				x : 0,
 				y : 0
 			},
+			valid       : true,
 			restricted  : false,
 			shareModal  : false,
 			urlBanner   : true,
@@ -1371,29 +1372,33 @@ class InspectorPage extends Component {
 			console.log('UPLOAD', response.data);
 
 			const { upload } = response.data;
-			const artboards = buildUploadArtboards(upload);
-			const tabs = inspectorTabs[section];
-			const tooltip = '';
+			if (Object.keys(upload).length > 0) {
+				const artboards = buildUploadArtboards(upload);
+				const tabs = inspectorTabs[section];
+				const tooltip = '';
 
+				const baseMetrics = this.calcArtboardBaseMetrics(artboards, viewSize);
+				console.log(':::::BASE METRICS:::::', baseMetrics);
 
-			const baseMetrics = this.calcArtboardBaseMetrics(artboards, viewSize);
-			console.log(':::::BASE METRICS:::::', baseMetrics);
+				const fitScale = this.calcFitScale(baseMetrics.size, viewSize);
+				console.log(':::::FIT SCALE:::::', fitScale);
 
-			const fitScale = this.calcFitScale(baseMetrics.size, viewSize);
-			console.log(':::::FIT SCALE:::::', fitScale);
-
-			const scaledMetrics = this.calcArtboardScaledMetrics(artboards, baseMetrics, fitScale);
-			console.log(':::::SCALED METRICS:::::', scaledMetrics);
+				const scaledMetrics = this.calcArtboardScaledMetrics(artboards, baseMetrics, fitScale);
+				console.log(':::::SCALED METRICS:::::', scaledMetrics);
 
 // 			this.setState({ upload, tabs, scale : fitScale, fitScale, tooltip });
+				this.setState({ upload, tabs, tooltip });
 
+				const processing = (parseInt(upload.state, 10) < 3);
+				if (processing && !this.props.processing && !this.processingInterval) {
+					this.props.onProcessing(true);
+				}
 
-			this.setState({ upload, tabs, tooltip });
-
-
-			const processing = (parseInt(upload.state, 10) < 3);
-			if (processing && !this.props.processing && !this.processingInterval) {
-				this.props.onProcessing(true);
+			} else {
+				this.setState({
+					valid   : false,
+					tooltip : ''
+				});
 			}
 		}).catch((error)=> {
 		});
@@ -1420,7 +1425,7 @@ class InspectorPage extends Component {
 		const { processing, profile } = this.props;
 
 		const { section, upload, slice, hoverSlice, tabs, scale, fitScale, selectedTab, scrolling, viewSize, panMultPt } = this.state;
-		const { restricted, urlBanner, tutorial, tooltip } = this.state;
+		const { valid, restricted, urlBanner, tutorial, tooltip } = this.state;
 
 		const artboards = (upload) ? buildUploadArtboards(upload).reverse() : [];
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
@@ -1665,65 +1670,67 @@ class InspectorPage extends Component {
 					</Row></div>)}
 				</div>
 
-				{(section === 'inspect') && (<div className="inspector-page-panel">
-					<div className="inspector-page-panel-split-content-wrapper">
-						<ul className="inspector-page-panel-tab-wrapper">
-							{(tabs.map((tab, i)=> (<li key={i} className={`inspector-page-panel-tab${(selectedTab === i) ? ' inspector-page-panel-tab-selected' : ''}`} onClick={()=> this.handleTab(tab)}>{tab.title}</li>)))}
-						</ul>
-						<div className="inspector-page-panel-tab-content-wrapper">
-							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i)=> {
-								return (<div key={i} className="inspector-page-panel-tab-content">
-									<span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : '' }} />
-								</div>);
-							}))}
-						</div>
-					</div>
-					<div className="inspector-page-panel-button-wrapper">
-						<CopyToClipboard onCopy={()=> this.handleCopyCode()} text={(tabs[selectedTab]) ? tabs[selectedTab].syntax : ''}>
-							<button className="inspector-page-panel-button">Copy to Clipboard</button>
-						</CopyToClipboard>
-					</div>
-					<div className="inspector-page-panel-split-content-wrapper">
-						<ul className="inspector-page-panel-tab-wrapper">
-							<li className="inspector-page-panel-tab inspector-page-panel-tab-selected">Specs</li>
-							<li className="inspector-page-panel-tab inspector-page-panel-tab-blank" />
-						</ul>
-						<div className="inspector-page-panel-tab-content-wrapper">
-							<div className="inspector-page-panel-tab-content">
-								{(upload && activeSlice) && (<SpecsList
-									upload={upload}
-									slice={activeSlice}
-									creatorID={(profile) ? profile.id : 0}
-									onCopySpec={this.handleCopySpec}
-								/>)}
+				{(valid) && (<div className="inspector-page-panel">
+					{(section === 'inspect') && (<>
+						<div className="inspector-page-panel-split-content-wrapper">
+							<ul className="inspector-page-panel-tab-wrapper">
+								{(tabs.map((tab, i)=> (<li key={i} className={`inspector-page-panel-tab${(selectedTab === i) ? ' inspector-page-panel-tab-selected' : ''}`} onClick={()=> this.handleTab(tab)}>{tab.title}</li>)))}
+							</ul>
+							<div className="inspector-page-panel-tab-content-wrapper">
+								{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i)=> {
+									return (<div key={i} className="inspector-page-panel-tab-content">
+										<span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : '' }} />
+									</div>);
+								}))}
 							</div>
 						</div>
-					</div>
-					<div className="inspector-page-panel-button-wrapper">
-						<CopyToClipboard onCopy={()=> this.handleCopyCode()} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
-							<button className="inspector-page-panel-button">Copy to Clipboard</button>
-						</CopyToClipboard>
-					</div>
-				</div>)}
-
-				{(section === 'parts') && (<div className="inspector-page-panel">
-					<div className="inspector-page-panel-full-content-wrapper">
-						<ul className="inspector-page-panel-tab-wrapper">
-							{(tabs.map((tab, i)=> (<li key={i} className={`inspector-page-panel-tab${(selectedTab === i) ? ' inspector-page-panel-tab-selected' : ''}`} onClick={()=> this.handleTab(tab)}>{tab.title}</li>)))}
-						</ul>
-						<div className="inspector-page-panel-tab-content-wrapper">
-							{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i)=> {
-								return ((tab.contents)
-										? (<PartsList key={i} contents={tab.contents} onPartItem={(slice)=> this.handleDownloadPartItem(slice)} />)
-										: ('')
-								);
-							}))}
+						<div className="inspector-page-panel-button-wrapper">
+							<CopyToClipboard onCopy={()=> this.handleCopyCode()} text={(tabs[selectedTab]) ? tabs[selectedTab].syntax : ''}>
+								<button className="inspector-page-panel-button">Copy to Clipboard</button>
+							</CopyToClipboard>
 						</div>
-					</div>
-					<div className="inspector-page-panel-button-wrapper">
-						<button disabled={tabs.length === 0 || !tabs[0].contents || tabs[0].contents.length === 0} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download List Parts</button>
-						<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download Project</button>
-					</div>
+						<div className="inspector-page-panel-split-content-wrapper">
+							<ul className="inspector-page-panel-tab-wrapper">
+								<li className="inspector-page-panel-tab inspector-page-panel-tab-selected">Specs</li>
+								<li className="inspector-page-panel-tab inspector-page-panel-tab-blank" />
+							</ul>
+							<div className="inspector-page-panel-tab-content-wrapper">
+								<div className="inspector-page-panel-tab-content">
+									{(upload && activeSlice) && (<SpecsList
+										upload={upload}
+										slice={activeSlice}
+										creatorID={(profile) ? profile.id : 0}
+										onCopySpec={this.handleCopySpec}
+									/>)}
+								</div>
+							</div>
+						</div>
+						<div className="inspector-page-panel-button-wrapper">
+							<CopyToClipboard onCopy={()=> this.handleCopyCode()} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
+								<button className="inspector-page-panel-button">Copy to Clipboard</button>
+							</CopyToClipboard>
+						</div>
+					</>)}
+
+					{(section === 'parts') && (<>
+						<div className="inspector-page-panel-full-content-wrapper">
+							<ul className="inspector-page-panel-tab-wrapper">
+								{(tabs.map((tab, i)=> (<li key={i} className={`inspector-page-panel-tab${(selectedTab === i) ? ' inspector-page-panel-tab-selected' : ''}`} onClick={()=> this.handleTab(tab)}>{tab.title}</li>)))}
+							</ul>
+							<div className="inspector-page-panel-tab-content-wrapper">
+								{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i)=> {
+									return ((tab.contents)
+											? (<PartsList key={i} contents={tab.contents} onPartItem={(slice)=> this.handleDownloadPartItem(slice)} />)
+											: ('')
+									);
+								}))}
+							</div>
+						</div>
+						<div className="inspector-page-panel-button-wrapper">
+							<button disabled={tabs.length === 0 || !tabs[0].contents || tabs[0].contents.length === 0} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download List Parts</button>
+							<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download Project</button>
+						</div>
+					</>)}
 				</div>)}
 			</BaseDesktopPage>
 
@@ -1746,8 +1753,8 @@ class InspectorPage extends Component {
 				</div>)}</>)
 			}
 
-			{/*{(upload && profile && (processing && upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing*/}
-			{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing
+			{/*{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing*/}
+			{(upload && profile && (processing && upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing
 				upload={upload}
 				processing={this.state.processing}
 				vpHeight={viewSize.height}
@@ -1760,6 +1767,15 @@ class InspectorPage extends Component {
 				onNext={this.handleTutorialNextStep}
 				onClose={()=> this.setState({ tutorial : null })}
 			/>)}
+
+			{(!upload && !valid) && (<ContentModal
+				tracking="invalid/inspector"
+				closeable={true}
+				defaultButton={null}
+				title="Error Loading Project"
+				onComplete={()=> this.props.onPage('<<')}>
+				This project was not found, please check your link!
+			</ContentModal>)}
 
 
 			{(upload) && (<ReactNotifications

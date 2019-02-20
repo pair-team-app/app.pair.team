@@ -5,6 +5,7 @@ import './ContentModal.css';
 import { TimelineMax, Power1, Power2 } from 'gsap/TweenMax';
 import FontAwesome from 'react-fontawesome';
 import onClickOutside from 'react-onclickoutside';
+import { Column, Row } from 'simple-flexbox';
 
 import { trackModal } from '../../utils/tracking';
 
@@ -80,10 +81,10 @@ class ContentModal extends Component {
 
 		return (<div className="content-modal-wrapper" onClick={()=> (closeable) ? this.handleClose() : null} ref={(element)=> { this.wrapper = element; }}>
 			<div className={wrapperClass} onClick={(event)=> event.stopPropagation()}>
-				{(title) && (<div className="content-modal-title-wrapper">
-					{title}
-					{(closeable && !defaultButton) && (<button className="tiny-button content-modal-close-button" onClick={()=> this.handleClose()}><FontAwesome name="times"/></button>)}
-				</div>)}
+				{(title) && (<div className="content-modal-header-wrapper"><Row>
+					<Column flexGrow={1}><div className="content-modal-title">{title}</div></Column>
+					<Column flexGrow={1} horizontal="end">{(closeable && !defaultButton) && (<button className="tiny-button content-modal-close-button" onClick={()=> this.handleClose()}><FontAwesome name="times"/></button>)}</Column>
+				</Row></div>)}
 				<div className="content-modal-content">
 					{children}
 					{(defaultButton) && (<div className="content-modal-button-wrapper">
