@@ -311,7 +311,7 @@ const SliceRolloverItem = (props)=> {
 		className={`${className}${(filled) ? '-filled' : ''}`}
 		style={style}
 		onMouseEnter={()=> props.onRollOver(offset)}
-		onMouseLeave={()=> props.onRollOut()}
+		onMouseLeave={()=> props.onRollOut(offset)}
 		onClick={()=> props.onClick(offset)}>
 	</div>);
 };
@@ -1007,13 +1007,6 @@ class InspectorPage extends Component {
 		const { upload, artboard, section } = this.state;
 		let { tabs } = this.state;
 
-// 		buildUploadArtboards(upload).filter((artboard)=> (artboard.id === slice.artboardID)).forEach((artboard)=> {
-// 			artboard.slices.filter((item)=> (!item.id === slice.id)).forEach((item)=> {
-// 				item.filled = true;
-// 			});
-// 		});
-
-
 		artboard.slices.filter((item)=> (item.id !== slice.id)).forEach((item)=> {
 			item.filled = false;
 		});
@@ -1039,62 +1032,19 @@ class InspectorPage extends Component {
 			tabs[0].contents = buildSlicePreviews(upload, slice);
 		}
 
-		this.setState({
-			tabs        : tabs,
-			artboard    : artboard,
-			slice       : slice,
-			offset      : offset,
+		this.setState({ tabs, artboard, slice, offset,
 			hoverSlice  : null,
 			hoverOffset : null
 		});
 	};
 
-	handleSliceRollOut = (ind, slice)=> {
-// 		console.log('InspectorPage.handleSliceRollOut()', ind, slice, this.state);
+	handleSliceRollOut = (ind, slice, offset)=> {
+// 		console.log('InspectorPage.handleSliceRollOut()', ind, slice, offset, this.state);
 
 		const { upload, artboard, section } = this.state;
-		let { tabs } = this.state;
-
-// 		slice.filled = (this.state.slice && this.state.slice.id === slice.id);
-
-// 		buildUploadArtboards(upload).filter((artboard)=> (artboard.id === slice.artboardID)).forEach((artboard)=> {
-// 			artboard.slices.filter((item)=> (item.filled)).forEach((item)=> {
-// 				if (!this.state.slice) {
-// 					item.filled = false;
-//
-// 				} else {
-// 					item.filled = (item.id !== this.state.slice.id);
-// 				}
-// 			});
-// 		});
-
-// 		const pages = [...upload.pages];
-// 		pages.forEach((page)=> {
-// 			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((artboard)=> {
-// 				artboard.slices.filter((item)=> (item.filled)).forEach((item)=> {
-// 					item.filled = false;
-// 				});
-// 			});
-// 		});
-//
-// 		upload.pages = pages;
+		let tabs = [...this.state.tabs];
 
 		if (this.state.slice) {
-// 			buildUploadArtboards(upload).filter((artboard)=> (artboard.id === this.state.slice.artboardID)).forEach((artboard)=> {
-// 				artboard.slices.filter((item)=> (item.id !== this.state.slice.id)).forEach((item)=> {
-// 					item.filled = false;
-// 				});
-// 			});
-
-// 			const pages = [...upload.pages];
-// 			pages.forEach((page)=> {
-// 				page.artboards.filter((artboard)=> (artboard.id === this.state.slice.artboardID)).forEach((item)=> {
-// 					item.slices.filter((itm)=> (itm.id !== this.state.slice.id)).forEach((itm)=> {
-// 						itm.filled = false;
-// 					});
-// 				});
-// 			});
-
 			const css = toCSS(this.state.slice);
 			const reactCSS = toReactCSS(this.state.slice);
 			const swift = toSwift(this.state.slice, artboardByID(upload, this.state.slice.artboardID));
@@ -1115,24 +1065,23 @@ class InspectorPage extends Component {
 			}
 
 		} else {
-			artboard.slices.forEach((item)=> {
-				item.filled = false;
-			});
+			this.handleSliceClick(ind, slice, offset);
 
-			tabs.forEach((tab, i)=> {
-				tabs[i] = {
-					id       : tab.id,
-					title    : tab.title,
-					contents : null,
-					syntax   : null
-				}
-			});
+// 			artboard.slices.forEach((item)=> {
+// 				item.filled = false;
+// 			});
+//
+// 			tabs.forEach((tab, i)=> {
+// 				tabs[i] = {
+// 					id       : tab.id,
+// 					title    : tab.title,
+// 					contents : null,
+// 					syntax   : null
+// 				}
+// 			});
 		}
 
-		this.setState({
-// 			upload     : upload,
-			artboard    : artboard,
-			tabs        : tabs,
+		this.setState({ artboard, tabs,
 			hoverSlice  : null,
 			hoverOffset : null
 		});
@@ -1142,19 +1091,7 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
 
 		const { upload, artboard, section } = this.state;
-		let { tabs } = this.state;
-
-// 		const pages = [...upload.pages];
-// 		pages.forEach((page)=> {
-// 			page.artboards.filter((artboard)=> (artboard.id === slice.artboardID)).forEach((item)=> {
-// 				item.slices.filter((itm)=> (itm.id === slice.id)).forEach((itm)=> {
-// 					//itm.filled = rectContainsRect(frameToRect(slice.meta.frame), frameToRect(itm.meta.frame));
-// 					itm.filled = true;
-// 				});
-// 			});
-// 		});
-//
-// 		upload.pages = pages;
+		let tabs = [...this.state.tabs];
 
 		if (artboard) {
 			artboard.slices.filter((item) => (this.state.slice && this.state.slice.id !== item.id)).forEach((item) => {
@@ -1182,10 +1119,7 @@ class InspectorPage extends Component {
 				tabs[0].contents = buildSlicePreviews(upload, slice);
 			}
 
-			this.setState({
-// 				upload      : upload,
-				artboard    : artboard,
-				tabs        : tabs,
+			this.setState({ artboard, tabs,
 				hoverSlice  : slice,
 				hoverOffset : offset
 			});
@@ -1289,6 +1223,7 @@ class InspectorPage extends Component {
 
 		this.setState({
 			slice     : null,
+			offset    : null,
 			panMultPt : PAN_MULT_OFFSET_PT,
 			scale     : scale,
 			tooltip   : `${(scale * 100) << 0}%`
@@ -1542,7 +1477,7 @@ class InspectorPage extends Component {
 					scale={scale}
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
-					onRollOut={()=> this.handleSliceRollOut(i, slice)}
+					onRollOut={(offset)=> this.handleSliceRollOut(i, slice, offset)}
 					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
 				/>)
 			);
@@ -1563,7 +1498,7 @@ class InspectorPage extends Component {
 					scale={scale}
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
-					onRollOut={()=> this.handleSliceRollOut(i, slice)}
+					onRollOut={(offset)=> this.handleSliceRollOut(i, slice, offset)}
 					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
 				/>)
 			);
@@ -1584,7 +1519,7 @@ class InspectorPage extends Component {
 					scale={scale}
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
-					onRollOut={()=> this.handleSliceRollOut(i, slice)}
+					onRollOut={(offset)=> this.handleSliceRollOut(i, slice, offset)}
 					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
 				/>)
 			);
@@ -1605,7 +1540,7 @@ class InspectorPage extends Component {
 					scale={scale}
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
-					onRollOut={()=> this.handleSliceRollOut(i, slice)}
+					onRollOut={(offset)=> this.handleSliceRollOut(i, slice, offset)}
 					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
 				/>)
 			);
@@ -1626,7 +1561,7 @@ class InspectorPage extends Component {
 					scale={scale}
 					offset={{ x : offset.x, y : offset.y }}
 					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
-					onRollOut={()=> this.handleSliceRollOut(i, slice)}
+					onRollOut={(offset)=> this.handleSliceRollOut(i, slice, offset)}
 					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
 				/>)
 			);
