@@ -26,7 +26,7 @@ import { MINUS_KEY, PLUS_KEY } from '../../../consts/key-codes';
 import { CANVAS_CAPTION, CANVAS_COLORS, MARCHING_ANTS } from '../../../consts/slice-canvas';
 import { DE_LOGO_SMALL } from '../../../consts/uris';
 import { setRedirectURI } from '../../../redux/actions';
-import { buildInspectorPath, buildInspectorURL, capitalizeText, convertURISlug, cropFrame, epochDate, frameToRect, limitString, makeDownload, rectContainsRect } from '../../../utils/funcs.js';
+import { buildInspectorPath, buildInspectorURL, capitalizeText, convertURISlug, cropFrame, epochDate, frameToRect, isSizeDimensioned, limitString, makeDownload, rectContainsRect } from '../../../utils/funcs.js';
 import { fontSpecs, toAndroid, toCSS, toReactCSS, toSpecs, toSwift } from '../../../utils/inspector-langs.js';
 import { trackEvent } from '../../../utils/tracking';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
@@ -73,6 +73,7 @@ const mapDispatchToProps = (dispatch)=> {
 };
 
 
+
 const buildUploadArtboards = (upload)=> {
 	return ([...upload.pages].flatMap((page)=> (page.artboards)));
 };
@@ -82,6 +83,7 @@ const artboardByID = (upload, artboardID)=> {
 };
 
 const buildSlicePreviews = (upload, slice)=> {
+// 	console.log('buildSlicePreviews()', upload, slice);
 	let slices = [slice];
 
 	artboardByID(upload, slice.artboardID).slices.filter((item)=> (item.id !== slice.id)).forEach((item)=> {
@@ -208,7 +210,7 @@ const ColorSwatch = (props)=> {
 };*/
 
 const PartItem = (props)=> {
-// 	console.log('InspectorPage.PartItem()', props);
+	console.log('InspectorPage.PartItem()', props);
 
 	const { id, filename, title, type, size } = props;
 
@@ -224,7 +226,7 @@ const PartItem = (props)=> {
 			style={thumbStyle}
 			src={filename}
 			image={(props)=> <PartItemThumb {...props} width={size.width * 0.25} height={size.height * 0.25} />}
-			loading={()=> (<div className="part-item-image part-item-image-loading" style={thumbStyle}><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+			loading={()=> (<div className="part-item-image part-item-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
 			error={()=> (<div className="part-item-image part-item-image-error"><FontAwesome name="exclamation-circle" /></div>)}
 			onError={(event)=> (errored = true)}
 		/>
@@ -234,7 +236,7 @@ const PartItem = (props)=> {
 };
 
 const PartItemThumb = (props)=> {
-// 	console.log('InspectorPage.PartItemThumb()', props);
+	console.log('InspectorPage.PartItemThumb()', props);
 
 	const { src, title, width, height } = props;
 	return (<img src={src} className="part-item-image" width={width} height={height} alt={title} />);
@@ -443,6 +445,67 @@ function SpecsList(props) {
 }
 
 
+
+function TabbedFilingSet(props) {
+// 	console.log('InspectorPage.TabbedFilingSet()', props);
+
+	const { tabs, selectedIndex } = props;
+
+
+	return (<div className="tabbed-filing-set">
+		<ul className="inspector-page-panel-tab-wrapper">
+			{tabs.map((tab, i)=> (
+				<TabbedFilingTab
+					key={i}
+					ind={i}
+					title={tab.title}
+					selected={i === selectedIndex}
+					onClick={()=> props.onTabClick(tab)}
+				/>
+			))}
+		</ul>
+
+		<div className="inspector-page-panel-tab-content-wrapper">
+			{tabs.filter((tab, i)=> (i === selectedIndex)).map((tab, i)=> (
+				<TabbedFilingContent
+					key={i}
+					ind={i}
+					type={tab.type}
+					contents={tab.contents}
+					onClick={()=> props.onContentClick(tab)}
+				/>
+			))}
+		</div>
+	</div>);
+}
+
+
+const TabbedFilingContent = (props)=> {
+// 	console.log('InspectorPage.TabbedFilingContent()', props);
+
+	const { ind, type, contents } = props;
+	return (<div key={ind} className="inspector-page-panel-tab-content">
+		{(!type || type === 'json_html') && (<span dangerouslySetInnerHTML={{ __html : (contents && contents.length > 0) ? String(JSON.parse(contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : '' }} />)}
+		{(type === 'component') && (contents)}
+	</div>);
+};
+
+
+const TabbedFilingTab = (props)=> {
+// 	console.log('InspectorPage.TabbedFilingTab()', props);
+
+	const { ind, title, selected } = props;
+	let className = `inspector-page-panel-tab${(!title || title.length === 0) ? ' inspector-page-panel-tab-blank' : ''}${(selected) ? ' inspector-page-panel-tab-selected' : ''}`;
+
+
+	return (<React.Fragment key={ind}>
+		<li key={ind} className={className} onClick={()=> props.onClick()}>{title}</li>
+	</React.Fragment>);
+};
+
+
+
+
 class InspectorPage extends Component {
 	constructor(props) {
 		super(props);
@@ -568,7 +631,7 @@ class InspectorPage extends Component {
 		}
 
 
-		if (artboardsWrapper.current && (this.state.viewSize.width + this.state.viewSize.height) === 0) {
+		if (artboardsWrapper.current && isSizeDimensioned({ width : artboardsWrapper.current.clientWidth, height : artboardsWrapper.current.clientHeight}) && !isSizeDimensioned(this.state.viewSize)) {
 			const viewSize = {
 				width  : artboardsWrapper.current.clientWidth,
 				height : artboardsWrapper.current.clientHeight
@@ -577,15 +640,10 @@ class InspectorPage extends Component {
 			this.setState({ viewSize });
 		}
 
-		if (this.state.fitScale === 0.0 && (this.contentSize.width + this.contentSize.height) > 0 && (this.state.viewSize.width + this.state.viewSize.height) > 0) {
+		if (this.state.fitScale === 0.0 && isSizeDimensioned(this.contentSize) && isSizeDimensioned(this.state.viewSize)) {
 			const fitScale = Math.max(Math.min(this.state.viewSize.height / this.contentSize.height, this.state.viewSize.width / this.contentSize.width, ZOOM_NOTCHES.slice(-1)[0]), ZOOM_NOTCHES[0]);
 			const scrollPt = this.calcScrollPoint(PAN_MULT_OFFSET_PT, this.state.viewSize, this.contentSize, fitScale);
-
-// 			const scrollPt = {
-// 				x : -Math.round(((0.5 + scale * (0.5 - panMultPt.x)) * this.state.viewSize.width) + ((this.contentSize.width * scale) * -0.5)),
-// 				y : -Math.round(((0.5 + scale * (0.5 - panMultPt.y)) * this.state.viewSize.height) + ((this.contentSize.height * scale) * -0.5))
-// 			};
-
+//
 			console.log('-=-=-=-=-=-', this.state.viewSize, this.contentSize, fitScale, scrollPt);
 			this.setState({ scale : fitScale, fitScale }, ()=> (this.handlePanMove(PAN_MULT_OFFSET_PT.x, PAN_MULT_OFFSET_PT.y)));
 		}
@@ -596,7 +654,7 @@ class InspectorPage extends Component {
 
 				const { scrollPt } = this.state;
 				let artboard = buildUploadArtboards(upload).pop();
-				artboard.meta = JSON.parse(artboard.meta);
+				artboard.meta = (typeof artboard.meta === 'string') ? JSON.parse(artboard.meta) : artboard.meta;
 				const tutorial = {
 					origin : {
 						top  : `${5 + -scrollPt.y}px`,
@@ -1014,7 +1072,7 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceClick = (ind, slice, offset)=> {
-// 		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
+		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
 
 		trackEvent('slice', `${slice.id}_${convertURISlug(slice.title)}`);
 
@@ -1043,7 +1101,10 @@ class InspectorPage extends Component {
 			tabs[3].syntax = android.syntax;
 
 		} else if (section === 'parts') {
-			tabs[0].contents = buildSlicePreviews(upload, slice);
+			tabs[0].type = 'component';
+			tabs[0].contents = <PartsList
+				contents={buildSlicePreviews(upload, slice)}
+				onPartItem={(slice)=> this.handleDownloadPartItem(slice)} />;
 		}
 
 		this.setState({ tabs, artboard, slice, offset,
@@ -1075,7 +1136,10 @@ class InspectorPage extends Component {
 				tabs[3].syntax = android.syntax;
 
 			} else if (section === 'parts') {
-				tabs[0].contents = buildSlicePreviews(upload, this.state.slice);
+				tabs[0].type = 'component';
+				tabs[0].contents = <PartsList
+					contents={buildSlicePreviews(upload, this.state.slice)}
+					onPartItem={(slice)=> this.handleDownloadPartItem(slice)} />;
 			}
 
 		} else {
@@ -1130,7 +1194,10 @@ class InspectorPage extends Component {
 				tabs[3].syntax = android.syntax;
 
 			} else if (section === 'parts') {
-				tabs[0].contents = buildSlicePreviews(upload, slice);
+				tabs[0].type = 'component';
+				tabs[0].contents = <PartsList
+					contents={buildSlicePreviews(upload, slice)}
+					onPartItem={(slice)=> this.handleDownloadPartItem(slice)} />;
 			}
 
 			this.setState({ artboard, tabs,
@@ -1628,7 +1695,28 @@ class InspectorPage extends Component {
 
 // 		console.log('InspectorPage.render()', this.state, this.contentSize);
 // 		console.log('InspectorPage.render()', this.props, this.state);
+// 		console.log('InspectorPage.render()', upload, activeSlice);
 // 		console.log('InspectorPage:', window.performance.memory);
+
+
+
+
+
+
+		const specTabs = [{
+			title    : 'Specs',
+			type     : 'component',
+			contents : (upload && activeSlice) ? (<SpecsList
+				upload={upload}
+				slice={activeSlice}
+				creatorID={(profile) ? profile.id : 0}
+				onCopySpec={this.handleCopySpec}
+			/>) : ''
+		}, {
+			title    : '',
+			contents : ''
+		}];
+
 
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
@@ -1673,16 +1761,14 @@ class InspectorPage extends Component {
 				{(valid) && (<div className="inspector-page-panel">
 					{(section === 'inspect') && (<>
 						<div className="inspector-page-panel-split-content-wrapper">
-							<ul className="inspector-page-panel-tab-wrapper">
-								{(tabs.map((tab, i)=> (<li key={i} className={`inspector-page-panel-tab${(selectedTab === i) ? ' inspector-page-panel-tab-selected' : ''}`} onClick={()=> this.handleTab(tab)}>{tab.title}</li>)))}
-							</ul>
-							<div className="inspector-page-panel-tab-content-wrapper">
-								{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i)=> {
-									return (<div key={i} className="inspector-page-panel-tab-content">
-										<span dangerouslySetInnerHTML={{ __html : (tab.contents) ? String(JSON.parse(tab.contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : '' }} />
-									</div>);
-								}))}
-							</div>
+
+							{(tabs.length > 0) && (<TabbedFilingSet
+								tabs={tabs}
+								selectedIndex={selectedTab}
+								onTabClick={(tab)=> this.handleTab(tab)}
+								onContentClick={(tab)=> console.log('::::::::::: onContentClick', tab)}
+							/>)}
+
 						</div>
 						<div className="inspector-page-panel-button-wrapper">
 							<CopyToClipboard onCopy={()=> this.handleCopyCode()} text={(tabs[selectedTab]) ? tabs[selectedTab].syntax : ''}>
@@ -1690,20 +1776,14 @@ class InspectorPage extends Component {
 							</CopyToClipboard>
 						</div>
 						<div className="inspector-page-panel-split-content-wrapper">
-							<ul className="inspector-page-panel-tab-wrapper">
-								<li className="inspector-page-panel-tab inspector-page-panel-tab-selected">Specs</li>
-								<li className="inspector-page-panel-tab inspector-page-panel-tab-blank" />
-							</ul>
-							<div className="inspector-page-panel-tab-content-wrapper">
-								<div className="inspector-page-panel-tab-content">
-									{(upload && activeSlice) && (<SpecsList
-										upload={upload}
-										slice={activeSlice}
-										creatorID={(profile) ? profile.id : 0}
-										onCopySpec={this.handleCopySpec}
-									/>)}
-								</div>
-							</div>
+
+							<TabbedFilingSet
+								tabs={specTabs}
+								selectedIndex={0}
+								onTabClick={(tab)=> this.handleTab(tab)}
+								onContentClick={(tab)=> console.log('::::::::::: onContentClick', tab)}
+							/>
+
 						</div>
 						<div className="inspector-page-panel-button-wrapper">
 							<CopyToClipboard onCopy={()=> this.handleCopyCode()} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
@@ -1714,17 +1794,14 @@ class InspectorPage extends Component {
 
 					{(section === 'parts') && (<>
 						<div className="inspector-page-panel-full-content-wrapper">
-							<ul className="inspector-page-panel-tab-wrapper">
-								{(tabs.map((tab, i)=> (<li key={i} className={`inspector-page-panel-tab${(selectedTab === i) ? ' inspector-page-panel-tab-selected' : ''}`} onClick={()=> this.handleTab(tab)}>{tab.title}</li>)))}
-							</ul>
-							<div className="inspector-page-panel-tab-content-wrapper">
-								{(tabs.filter((tab, i)=> (i === selectedTab)).map((tab, i)=> {
-									return ((tab.contents)
-											? (<PartsList key={i} contents={tab.contents} onPartItem={(slice)=> this.handleDownloadPartItem(slice)} />)
-											: ('')
-									);
-								}))}
-							</div>
+
+							{(tabs.length > 0) && (<TabbedFilingSet
+								tabs={tabs}
+								selectedIndex={selectedTab}
+								onTabClick={(tab)=> this.handleTab(tab)}
+								onContentClick={(tab)=> console.log('::::::::::: onContentClick', tab)}
+							/>)}
+
 						</div>
 						<div className="inspector-page-panel-button-wrapper">
 							<button disabled={tabs.length === 0 || !tabs[0].contents || tabs[0].contents.length === 0} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download List Parts</button>

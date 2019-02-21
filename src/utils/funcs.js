@@ -171,6 +171,10 @@ export function isRegisterPage(exact=false) {
 	return ((exact) ? pathname === REGISTER : pathname.includes(REGISTER));
 }
 
+export function isSizeDimensioned(size, flag=0x11) {
+	return (size.width !== 0 && size.height !== 0);
+}
+
 export function isUploadPage(exact=false) {
 	const { pathname } = window.location;
 	return ((exact) ? pathname === UPLOAD : pathname.includes(UPLOAD));
