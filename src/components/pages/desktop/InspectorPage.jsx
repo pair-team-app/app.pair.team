@@ -210,7 +210,7 @@ const ColorSwatch = (props)=> {
 };*/
 
 const PartItem = (props)=> {
-	console.log('InspectorPage.PartItem()', props);
+// 	console.log('InspectorPage.PartItem()', props);
 
 	const { id, filename, title, type, size } = props;
 
@@ -226,7 +226,7 @@ const PartItem = (props)=> {
 			style={thumbStyle}
 			src={filename}
 			image={(props)=> <PartItemThumb {...props} width={size.width * 0.25} height={size.height * 0.25} />}
-			loading={()=> (<div className="part-item-image part-item-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+			loading={()=> (<div className="part-item-image part-item-image-loading" style={thumbStyle}><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
 			error={()=> (<div className="part-item-image part-item-image-error"><FontAwesome name="exclamation-circle" /></div>)}
 			onError={(event)=> (errored = true)}
 		/>
@@ -236,7 +236,7 @@ const PartItem = (props)=> {
 };
 
 const PartItemThumb = (props)=> {
-	console.log('InspectorPage.PartItemThumb()', props);
+// 	console.log('InspectorPage.PartItemThumb()', props);
 
 	const { src, title, width, height } = props;
 	return (<img src={src} className="part-item-image" width={width} height={height} alt={title} />);
@@ -896,20 +896,24 @@ class InspectorPage extends Component {
 	};
 
 	handleCanvasClick = (event)=> {
-// 		console.log('InspectorPage.handleCanvasClick()', event.target);
+		console.log('InspectorPage.handleCanvasClick()', event.target, this.state.scrolling);
 		event.stopPropagation();
 
-		const tabs = [...this.state.tabs];
-		tabs.forEach((tab, i)=> {
-			tabs[i] = {
-				id       : tab.id,
-				title    : tab.title,
-				contents : null,
-				syntax   : null
-			}
-		});
+		const { scrolling } = this.state;
 
-// 		this.setState({ tabs, slice : null });
+		if (!scrolling) {
+			let tabs = [...this.state.tabs];
+			tabs.forEach((tab, i) => {
+				tabs[i] = {
+					id       : tab.id,
+					title    : tab.title,
+					contents : null,
+					syntax   : null
+				}
+			});
+
+			this.setState({ tabs, slice : null });
+		}
 	};
 
 	handleCanvasUpdate = ()=> {
@@ -1068,7 +1072,7 @@ class InspectorPage extends Component {
 			y : -Math.round((pt.y * viewSize.height) + (this.contentSize.height * -0.5))
 		};
 
-		this.setState({ panMultPt, scrollPt });
+		this.setState({ panMultPt, scrollPt, scrolling : true });
 	};
 
 	handleSliceClick = (ind, slice, offset)=> {
@@ -1733,7 +1737,7 @@ class InspectorPage extends Component {
 						style={{ width : '100%', height : '100%' }}
 // 						onPanStart={()=> this.setState({ scrolling : true })}
 						onPanMove={this.handlePanMove}
-// 						onPanEnd={()=> (this.setState({ scrolling : false }))}
+						onPanEnd={()=> (this.setState({ scrolling : false }))}
 						onPanAndZoom={this.handlePanAndZoom}
 					>
 						<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
