@@ -266,46 +266,68 @@
 }
 
 
-.upload-processing-wrapper {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: calc(100% - 360px);
+
+.filing-tab-set {
+	width: 100%;
 	height: 100%;
-	z-index : 10;
-	padding-top: 70px;
-	background-color: rgba(0, 0, 0, 0.875);
 }
 
-.upload-processing-title {
-	margin-bottom: 45px;
-	font-family: "San Francisco Text Medium", sans-serif;
-	font-weight: 500;
-	font-size: 48px;
-	letter-spacing: -2.53px;
-	color: #c8e1fd;
+.filing-tab-set-title-wrapper {
+	list-style: none;
+	display: flex;
+	justify-content: flex-start;
+	padding: 0;
+	margin : 0;
+	height: 48px;
+	overflow-x: auto;
 }
 
-.upload-processing-url {
-	margin-bottom: 50px;
-	font-family: "San Francisco Text Medium", sans-serif;
-	font-weight: 500;
-	font-size: 28px;
-	letter-spacing: -1.47px;
-	color: #005cc5;
+.filing-tab-set-content-wrapper {
+	width: 100%;
+	height: calc(100% - 46px);
 }
 
-.upload-processing-url:hover {
+.filing-tab-title {
+	flex: 1 1 0;
+	padding: 14px 14px;
+	background-color: #14161b;
+	font-family: "San Francisco Text", sans-serif;
+	font-size: 14px;
+	line-height: normal;
+	letter-spacing: -0.26px;
+	color: #abdafd;
+}
+
+.filing-tab-title:hover {
+	background-color: #171b21;
 	cursor: pointer;
 }
 
-.upload-processing-button-wrapper {
-	margin-bottom: 55px;
+.filing-tab-title-selected {
+	border-bottom: 2px solid #005cc5;
+	background-color: #171b21;
+	color: #005cc5;
+	text-decoration: underline;
 }
 
-.upload-processing-image {
+.filing-tab-title-blank, .filing-tab-title-blank:hover {
+	background-color: #171b21;
+	cursor: default;
+}
+
+.filing-tab-content {
 	width: 100%;
 	height: 100%;
+	padding: 10px;
+	font-family: "San Francisco Text", sans-serif;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: normal;
+	letter-spacing: 0.44px;
+	color: #00ff0f;
+	white-space: nowrap;
+	word-break: keep-all;
+	overflow: auto;
 }
 
 
@@ -389,66 +411,44 @@
 }
 
 
-
-.tabbed-filing-set {
-	width: 100%;
+.upload-processing-wrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: calc(100% - 360px);
 	height: 100%;
+	z-index : 10;
+	padding-top: 70px;
+	background-color: rgba(0, 0, 0, 0.875);
 }
 
-.inspector-page-panel-tab-wrapper {
-	list-style: none;
-	display: flex;
-	justify-content: flex-start;
-	padding: 0;
-	margin : 0;
-	height: 48px;
-	overflow-x: auto;
+.upload-processing-title {
+	margin-bottom: 45px;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-weight: 500;
+	font-size: 48px;
+	letter-spacing: -2.53px;
+	color: #c8e1fd;
 }
 
-.inspector-page-panel-tab {
-	flex: 1 1 0;
-	padding: 14px 14px;
-	background-color: #14161b;
-	font-family: "San Francisco Text", sans-serif;
-	font-size: 14px;
-	line-height: normal;
-	letter-spacing: -0.26px;
-	color: #abdafd;
+.upload-processing-url {
+	margin-bottom: 50px;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-weight: 500;
+	font-size: 28px;
+	letter-spacing: -1.47px;
+	color: #005cc5;
 }
 
-.inspector-page-panel-tab:hover {
-	background-color: #171b21;
+.upload-processing-url:hover {
 	cursor: pointer;
 }
 
-.inspector-page-panel-tab-selected {
-	border-bottom: 2px solid #005cc5;
-	background-color: #171b21;
-	color: #005cc5;
-	text-decoration: underline;
+.upload-processing-button-wrapper {
+	margin-bottom: 55px;
 }
 
-.inspector-page-panel-tab-blank, .inspector-page-panel-tab-blank:hover {
-	background-color: #171b21;
-	cursor: default;
-}
-
-.inspector-page-panel-tab-content-wrapper {
-	width: 100%;
-	height: calc(100% - 46px);
-}
-
-.inspector-page-panel-tab-content {
+.upload-processing-image {
 	width: 100%;
 	height: 100%;
-	padding: 10px;
-	font-family: "San Francisco Text", sans-serif;
-	font-weight: 400;
-	font-size: 14px;
-	line-height: normal;
-	letter-spacing: 0.44px;
-	color: #00ff0f;
-	white-space: nowrap;
-	word-break: keep-all;
-	overflow: auto;
 }

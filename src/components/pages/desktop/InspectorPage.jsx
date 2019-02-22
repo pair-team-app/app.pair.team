@@ -428,7 +428,7 @@ function SpecsList(props) {
 
 
 function SpecsItem(props) {
-	console.log('InspectorPage.SpecsItem()', props);
+// 	console.log('InspectorPage.SpecsItem()', props);
 
 	const { copyText, children } = props;
 	return (<CopyToClipboard onCopy={()=> props.onCopy()} text={copyText}>{children}</CopyToClipboard>);
@@ -436,16 +436,16 @@ function SpecsItem(props) {
 
 
 
-function TabbedFilingSet(props) {
-// 	console.log('InspectorPage.TabbedFilingSet()', props);
+function FilingTabSet(props) {
+// 	console.log('InspectorPage.FilingTabSet()', props);
 
 	const { tabs, selectedIndex } = props;
 
 
-	return (<div className="tabbed-filing-set">
-		<ul className="inspector-page-panel-tab-wrapper">
+	return (<div className="filing-tab-set">
+		<ul className="filing-tab-set-title-wrapper">
 			{tabs.map((tab, i)=> (
-				<TabbedFilingTab
+				<FilingTabTitle
 					key={i}
 					ind={i}
 					title={tab.title}
@@ -455,9 +455,9 @@ function TabbedFilingSet(props) {
 			))}
 		</ul>
 
-		<div className="inspector-page-panel-tab-content-wrapper">
+		<div className="filing-tab-set-content-wrapper">
 			{tabs.filter((tab, i)=> (i === selectedIndex)).map((tab, i)=> (
-				<TabbedFilingContent
+				<FilingTabContent
 					key={i}
 					ind={i}
 					type={tab.type}
@@ -470,22 +470,22 @@ function TabbedFilingSet(props) {
 }
 
 
-const TabbedFilingContent = (props)=> {
-// 	console.log('InspectorPage.TabbedFilingContent()', props);
+const FilingTabContent = (props)=> {
+// 	console.log('InspectorPage.FilingTabContent()', props);
 
 	const { ind, type, contents } = props;
-	return (<div key={ind} className="inspector-page-panel-tab-content">
+	return (<div key={ind} className="filing-tab-content">
 		{(!type || type === 'json_html') && (<span dangerouslySetInnerHTML={{ __html : (contents && contents.length > 0) ? String(JSON.parse(contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : '' }} />)}
 		{(type === 'component') && (contents)}
 	</div>);
 };
 
 
-const TabbedFilingTab = (props)=> {
-// 	console.log('InspectorPage.TabbedFilingTab()', props);
+const FilingTabTitle = (props)=> {
+// 	console.log('InspectorPage.FilingTabTitle()', props);
 
 	const { ind, title, selected } = props;
-	let className = `inspector-page-panel-tab${(!title || title.length === 0) ? ' inspector-page-panel-tab-blank' : ''}${(selected) ? ' inspector-page-panel-tab-selected' : ''}`;
+	let className = `filing-tab-title${(!title || title.length === 0) ? ' filing-tab-title-blank' : ''}${(selected) ? ' filing-tab-title-selected' : ''}`;
 
 
 	return (<React.Fragment key={ind}>
@@ -1755,7 +1755,7 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.INSPECT) && (<>
 						<div className="inspector-page-panel-split-content-wrapper">
 
-							{(tabs.length > 0) && (<TabbedFilingSet
+							{(tabs.length > 0) && (<FilingTabSet
 								tabs={tabs}
 								selectedIndex={selectedTab}
 								onTabClick={(tab)=> this.handleTab(tab)}
@@ -1770,7 +1770,7 @@ class InspectorPage extends Component {
 						</div>
 						<div className="inspector-page-panel-split-content-wrapper">
 
-							<TabbedFilingSet
+							<FilingTabSet
 								tabs={specTabs}
 								selectedIndex={0}
 								onTabClick={(tab)=> this.handleTab(tab)}
@@ -1788,7 +1788,7 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.PARTS) && (<>
 						<div className="inspector-page-panel-full-content-wrapper">
 
-							{(tabs.length > 0) && (<TabbedFilingSet
+							{(tabs.length > 0) && (<FilingTabSet
 								tabs={tabs}
 								selectedIndex={selectedTab}
 								onTabClick={(tab)=> this.handleTab(tab)}
