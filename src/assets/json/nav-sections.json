@@ -1,0 +1,43 @@
+{
+  "bottom": {
+    "desktop": [{
+      "title": "Free Inspect",
+      "url": "/inspect"
+    }, {
+      "title": "Free Parts",
+      "url": "/parts"
+    }, {
+      "title": "Presenter",
+      "url": "/present"
+    }, {
+      "title": "Terms",
+      "url": "/terms"
+    }, {
+      "title": "Privacy",
+      "url": "/privacy"
+    }],
+    "mobile": []
+  },
+  "top": {
+    "desktop": [{
+      "title": "Free Inspect",
+      "url": "/inspect"
+    }, {
+      "title": "Free Parts",
+      "url": "/parts"
+    }, {
+      "title": "Presenter",
+      "url": "/present"
+    }],
+    "mobile": [{
+      "title": "Free Inspect",
+      "url": "/inspect"
+    }, {
+      "title": "Free Parts",
+      "url": "/parts"
+    }, {
+      "title": "Presenter",
+      "url": "/present"
+    }]
+  }
+}

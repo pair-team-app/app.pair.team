@@ -12,7 +12,7 @@ import TopNavRate from './TopNavRate';
 import { isUserLoggedIn } from '../../utils/funcs';
 import { trackEvent } from '../../utils/tracking';
 import { updateDeeplink } from '../../redux/actions';
-import sections from '../../assets/json/sections-top_nav';
+import sections from '../../assets/json/nav-sections';
 
 
 const mapDispatchToProps = (dispatch)=> {
@@ -109,7 +109,7 @@ class TopNav extends Component {
 		return ((!mobileLayout)
 			? (<TopNavDesktop
 					pathname={pathname}
-					sections={sections.desktop}
+					sections={sections.top.desktop}
 					onPage={this.handleLink}
 					onScore={this.handleScore}
 					onLogout={this.props.onLogout}
@@ -117,7 +117,7 @@ class TopNav extends Component {
 
 			: (<TopNavMobile
 					pathname={pathname}
-					sections={sections.mobile}
+					sections={sections.top.mobile}
 					onPage={this.handleLink}
 					onLogout={this.props.onLogout}
 				/>)

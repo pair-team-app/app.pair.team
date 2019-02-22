@@ -4,7 +4,7 @@ import './BottomNav.css';
 
 import { isUserLoggedIn } from '../../utils/funcs';
 import deLogo from '../../assets/images/logos/logo-designengine.svg';
-import sections from '../../assets/json/sections-bottom_nav';
+import sections from '../../assets/json/nav-sections';
 
 
 const BottomNavDesktop = (props)=> {
@@ -13,7 +13,7 @@ const BottomNavDesktop = (props)=> {
 	return (<div className="bottom-nav-desktop-wrapper">
 		<img className="bottom-nav-desktop-logo" src={deLogo} onClick={()=> props.onPage('')} alt="Design Engine" />
 		<div className="bottom-nav-link-wrapper">
-			{(sections.desktop.map((section, i)=> (
+			{(sections.bottom.desktop.map((section, i)=> (
 				<div key={i} className="bottom-nav-link" onClick={()=> props.onPage(section.url.substr(1))}>{section.title}</div>
 			)))}
 
@@ -33,6 +33,11 @@ const BottomNavMobile = (props)=> {
 
 	return (<div className="bottom-nav-mobile-wrapper">
 		<img className="bottom-nav-mobile-logo" src={deLogo} onClick={()=> props.onPage('')} alt="Design Engine" />
+		<div className="bottom-nav-link-wrapper">
+			{(sections.bottom.mobile.map((section, i)=> (
+				<div key={i} className="bottom-nav-link" onClick={()=> props.onPage(section.url.substr(1))}>{section.title}</div>
+			)))}
+		</div>
 	</div>);
 };
 
