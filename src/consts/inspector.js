@@ -38,13 +38,13 @@ export const CANVAS = {
 	}
 };
 
-
 export const PAN_ZOOM = {
-	panFactor : 0.0025,
-	panMultPt : {
+	panFactor   : 0.0025,
+	panMultPt   : {
 		x : 0.5,
 		y : 0.5
 	},
+	zoomFactor  : 1.0875,
 	zoomNotches : [
 		0.03,
 		0.06,
@@ -57,13 +57,10 @@ export const PAN_ZOOM = {
 	]
 };
 
-
 export const SECTIONS = {
 	INSPECT   : 'inspect',
 	PARTS     : 'parts',
 	PRESENTER : 'present'
 };
 
-
 export const STATUS_INTERVAL = 1250;
-

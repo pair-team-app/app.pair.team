@@ -1435,8 +1435,6 @@ class InspectorPage extends Component {
 			const { upload } = response.data;
 			if (Object.keys(upload).length > 0) {
 				const artboards = buildUploadArtboards(upload);
-				const tabs = inspectorTabs[section];
-				const tooltip = '';
 
 				const baseMetrics = this.calcArtboardBaseMetrics(artboards, viewSize);
 				console.log(':::::BASE METRICS:::::', baseMetrics);
@@ -1448,7 +1446,10 @@ class InspectorPage extends Component {
 				console.log(':::::SCALED METRICS:::::', scaledMetrics);
 
 // 			this.setState({ upload, tabs, scale : fitScale, fitScale, tooltip });
-				this.setState({ upload, tabs, tooltip });
+				this.setState({ upload,
+					tabs    : inspectorTabs[section][(section === SECTIONS.INSPECT || section === SECTIONS.PARTS) ? 0 : 0],
+					tooltip : ''
+				});
 
 				const processing = (parseInt(upload.state, 10) < 3);
 				if (processing && !this.props.processing && !this.processingInterval) {
@@ -1490,8 +1491,6 @@ class InspectorPage extends Component {
 
 		const artboards = (upload) ? buildUploadArtboards(upload).reverse() : [];
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
-
-		const urlClass = `inspector-page-url-wrapper${(!urlBanner) ? ' inspector-page-url-outro' : ''}`;
 
 		const pt = this.calcTransformPoint();
 
@@ -1688,12 +1687,16 @@ class InspectorPage extends Component {
 
 
 // 		console.log('InspectorPage.render()', this.state, this.contentSize);
-// 		console.log('InspectorPage.render()', this.props, this.state);
+		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage.render()', upload, activeSlice);
 // 		console.log('InspectorPage:', window.performance.memory);
 
 
 
+
+		const contentClass = `inspector-page-content${(section === SECTIONS.PRESENTER) ? ' inspector-page-content-presenter' : ''}`;
+		const panelClass = `inspector-page-panel${(section === SECTIONS.PRESENTER) ? ' inspector-page-panel-presenter' : ''}`;
+		const urlClass = `inspector-page-url-wrapper${(!urlBanner) ? ' inspector-page-url-outro' : ''}`;
 
 
 
@@ -1714,12 +1717,19 @@ class InspectorPage extends Component {
 
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
-				<div className="inspector-page-content" onWheel={this.handleWheelStart}>
+				<div className={contentClass} onWheel={this.handleWheelStart}>
+					{(upload && !processing) && (<div className={urlClass}>
+						<CopyToClipboard onCopy={()=> this.handleCopyURL()} text={buildInspectorURL(upload)}>
+							<div className="inspector-page-url">{buildInspectorURL(upload)}</div>
+						</CopyToClipboard>
+						<FontAwesome name="times" className="inspector-page-url-close-button" onClick={()=> this.setState({ urlBanner : false })} />
+					</div>)}
+
 					<InteractiveDiv
 						x={panMultPt.x}
 						y={panMultPt.y}
 						scale={scale}
-						scaleFactor={1.0875}
+						scaleFactor={PAN_ZOOM.zoomFactor}
 						minScale={Math.min(...PAN_ZOOM.zoomNotches)}
 						maxScale={Math.max(...PAN_ZOOM.zoomNotches)}
 						ignorePanOutside={true}
@@ -1751,7 +1761,7 @@ class InspectorPage extends Component {
 					</Row></div>)}
 				</div>
 
-				{(valid) && (<div className="inspector-page-panel">
+				{(valid) && (<div className={panelClass}>
 					{(section === SECTIONS.INSPECT) && (<>
 						<div className="inspector-page-panel-split-content-wrapper">
 
@@ -1801,27 +1811,37 @@ class InspectorPage extends Component {
 							<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download Project</button>
 						</div>
 					</>)}
+
+					{(section === SECTIONS.PRESENTER) && (<>
+						<div className="inspector-page-panel-full-content-wrapper">
+
+							{(tabs.length > 0) && (<FilingTabSet
+								tabs={tabs}
+								selectedIndex={selectedTab}
+								onTabClick={(tab)=> this.handleTab(tab)}
+								onContentClick={(tab)=> console.log('::::::::::: onContentClick', tab)}
+							/>)}
+
+						</div>
+						<div className="inspector-page-panel-button-wrapper">
+							<button disabled={tabs.length === 0 || !tabs[0].contents || tabs[0].contents.length === 0} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download List Parts</button>
+							<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download Project</button>
+						</div>
+					</>)}
+
+
 				</div>)}
 			</BaseDesktopPage>
 
 
 			{(tooltip !== '' && !processing) && (<div className="inspector-page-tooltip">{tooltip}</div>)}
-			{(restricted)
-				? (<ContentModal
-					tracking="private/inspector"
-					closeable={false}
-					defaultButton="Register / Login"
-					onComplete={()=> this.props.onPage('register')}>
-					This project is private, you must be logged in as one of its team members to view!
-				</ContentModal>)
-
-				: (<>{(upload && !processing) && (<div className={urlClass}>
-					<CopyToClipboard onCopy={()=> this.handleCopyURL()} text={buildInspectorURL(upload)}>
-						<div className="inspector-page-url">{buildInspectorURL(upload)}</div>
-					</CopyToClipboard>
-					<FontAwesome name="times" className="inspector-page-url-close-button" onClick={()=> this.setState({ urlBanner : false })} />
-				</div>)}</>)
-			}
+			{(restricted) && (<ContentModal
+				tracking="private/inspector"
+				closeable={false}
+				defaultButton="Register / Login"
+				onComplete={()=> this.props.onPage('register')}>
+				This project is private, you must be logged in as one of its team members to view!
+			</ContentModal>)}
 
 			{/*{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing*/}
 			{(upload && profile && (processing && upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing

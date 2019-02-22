@@ -1,10 +1,9 @@
 
 export const HOME = '/';
-export const COLORS = '/colors';
-export const FONTS = '/typography';
 export const INSPECT = '/inspect';
 export const LOGIN = '/login';
 export const PARTS = '/parts';
+export const PRESENT = '/present';
 export const PRIVACY = '/privacy';
 export const PROFILE = '/profile';
 export const RECOVER = '/recover';

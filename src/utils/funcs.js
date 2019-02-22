@@ -4,11 +4,10 @@ import axios from 'axios';
 
 import {
 	HOME,
-	COLORS,
-	FONTS,
 	INSPECT,
 	LOGIN,
 	PARTS,
+	PRESENT,
 // 	PRIVACY,
 	PROFILE,
 // 	RECOVER,
@@ -110,7 +109,7 @@ export function hasBit(val, bit) {
 
 export function idsFromPath() {
 	const { pathname } = window.location;
-	const inspectorPath = /\/(?:inspect|colors|parts|typography)\/(\d+)\/.+$/i;
+	const inspectorPath = /\/(?:inspect|parts|present)\/(\d+)\/.+$/i;
 
 	const navIDs = {
 		uploadID   : (inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[1] : 0,
@@ -137,7 +136,7 @@ export function isHomePage() {
 
 export function isInspectorPage() {
 	const { pathname } = window.location;
-	return ((pathname.includes(INSPECT + '/') || pathname.includes(COLORS + '/') || pathname.includes(FONTS + '/') || pathname.includes(PARTS + '/')) && /^.+\/\d+\/.+$/.test(pathname));
+	return ((pathname.includes(INSPECT + '/') || pathname.includes(PARTS + '/') || pathname.includes(PRESENT + '/')) && /^.+\/\d+\/.+$/.test(pathname));
 }
 
 export function isLoginPage(exact=false) {
