@@ -23,7 +23,7 @@ import TutorialOverlay from '../../elements/TutorialOverlay';
 
 import { MOMENT_TIMESTAMP } from '../../../consts/formats';
 import { MINUS_KEY, PLUS_KEY } from '../../../consts/key-codes';
-import { CANVAS_CAPTION, CANVAS_COLORS, MARCHING_ANTS } from '../../../consts/slice-canvas';
+import { CANVAS, PAN_ZOOM, SECTIONS, STATUS_INTERVAL } from '../../../consts/inspector';
 import { DE_LOGO_SMALL } from '../../../consts/uris';
 import { setRedirectURI } from '../../../redux/actions';
 import { buildInspectorPath, buildInspectorURL, capitalizeText, convertURISlug, cropFrame, epochDate, frameToRect, isSizeDimensioned, limitString, makeDownload, rectContainsRect } from '../../../utils/funcs.js';
@@ -33,24 +33,6 @@ import deLogo from '../../../assets/images/logos/logo-designengine.svg';
 import bannerPanel from '../../../assets/json/banner-panel';
 import inspectorTabs from '../../../assets/json/inspector-tabs';
 
-
-const STATUS_INTERVAL = 1250;
-const PAN_MULT_OFFSET_PT = {
-	x : 0.5,
-	y : 0.5
-};
-const PAN_FACTOR = 0.0025;
-// const ZOOM_FACTOR = Math.sqrt(1.5);
-const ZOOM_NOTCHES = [
-	0.03,
-	0.06,
-	0.13,
-	0.25,
-	0.50,
-	1.00,
-	1.75,
-	3.00
-];
 
 const InteractiveDiv = panAndZoomHoc('div');
 const artboardsWrapper = React.createRef();
@@ -98,7 +80,7 @@ const buildSlicePreviews = (upload, slice)=> {
 const drawSliceCaption = (context, text, origin, maxWidth)=> {
 	let caption = text;
 	let txtWidth = context.measureText(caption.toUpperCase()).width << 0;
-	while ((txtWidth + CANVAS_CAPTION.padding) > maxWidth) {
+	while ((txtWidth + CANVAS.caption.padding) > maxWidth) {
 		caption = `${caption.substring(0, -3)}…`;
 		txtWidth = context.measureText(caption.toUpperCase()).width << 0;
 		if (caption.length === 1) {
@@ -108,26 +90,26 @@ const drawSliceCaption = (context, text, origin, maxWidth)=> {
 
 	const txtMetrics = {
 		width   : txtWidth,
-		height  : CANVAS_CAPTION.height,
-		padding : CANVAS_CAPTION.padding
+		height  : CANVAS.caption.height,
+		padding : CANVAS.caption.padding
 	};
 
 	context.fillStyle = 'rgba(0, 0, 0, 0.125)';
 	context.fillRect(origin.x + 1, (origin.y - txtMetrics.height) + 1, (txtMetrics.width + (txtMetrics.padding * 2)) - 2, txtMetrics.height - 1);
 
-	context.strokeStyle = CANVAS_CAPTION.lineColor;
+	context.strokeStyle = CANVAS.caption.lineColor;
 	context.lineWidth = 1;
 	context.setLineDash([]);
 	context.beginPath();
 	context.strokeRect(origin.x + 1, (origin.y - txtMetrics.height) + 1, (txtMetrics.width + (txtMetrics.padding * 2)) - 2, txtMetrics.height);
 	context.stroke();
 
-	context.fillStyle = CANVAS_CAPTION.textColor;
+	context.fillStyle = CANVAS.caption.textColor;
 	context.fillText(caption.toUpperCase(), txtMetrics.padding + origin.x, txtMetrics.padding + (origin.y - txtMetrics.height));
 };
 
 const drawSliceBorder = (context, frame)=> {
-	context.strokeStyle = CANVAS_COLORS.border;
+	context.strokeStyle = CANVAS.colors.border;
 	context.lineWidth = 1;
 	context.setLineDash([]);
 	context.beginPath();
@@ -158,9 +140,9 @@ const drawSliceGuides = (context, frame, size, color)=> {
 };
 
 const drawSliceMarchingAnts = (context, frame, offset)=> {
-	context.strokeStyle = MARCHING_ANTS.STROKE;
-	context.lineWidth = MARCHING_ANTS.LINE_WIDTH;
-	context.setLineDash(MARCHING_ANTS.LINE_DASH);
+	context.strokeStyle = CANVAS.marchingAnts.stroke;
+	context.lineWidth = CANVAS.marchingAnts.lineWidth;
+	context.setLineDash(CANVAS.marchingAnts.lineDash);
 	context.lineDashOffset = offset;
 	context.beginPath();
 	context.strokeRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
@@ -522,7 +504,7 @@ class InspectorPage extends Component {
 			tabs        : [],
 			scale       : 1.0,
 			fitScale    : 0.0,
-			panMultPt   : PAN_MULT_OFFSET_PT,
+			panMultPt   : PAN_ZOOM.panMultPt,
 			viewSize    : {
 				width  : 0,
 				height : 0
@@ -641,11 +623,11 @@ class InspectorPage extends Component {
 		}
 
 		if (this.state.fitScale === 0.0 && isSizeDimensioned(this.contentSize) && isSizeDimensioned(this.state.viewSize)) {
-			const fitScale = Math.max(Math.min(this.state.viewSize.height / this.contentSize.height, this.state.viewSize.width / this.contentSize.width, ZOOM_NOTCHES.slice(-1)[0]), ZOOM_NOTCHES[0]);
-			const scrollPt = this.calcScrollPoint(PAN_MULT_OFFSET_PT, this.state.viewSize, this.contentSize, fitScale);
+			const fitScale = Math.max(Math.min(this.state.viewSize.height / this.contentSize.height, this.state.viewSize.width / this.contentSize.width, PAN_ZOOM.zoomNotches.slice(-1)[0]), PAN_ZOOM.zoomNotches[0]);
+			const scrollPt = this.calcScrollPoint(PAN_ZOOM.panMultPt, this.state.viewSize, this.contentSize, fitScale);
 //
 			console.log('-=-=-=-=-=-', this.state.viewSize, this.contentSize, fitScale, scrollPt);
-			this.setState({ scale : fitScale, fitScale }, ()=> (this.handlePanMove(PAN_MULT_OFFSET_PT.x, PAN_MULT_OFFSET_PT.y)));
+			this.setState({ scale : fitScale, fitScale }, ()=> (this.handlePanMove(PAN_ZOOM.panMultPt.x, PAN_ZOOM.panMultPt.y)));
 		}
 
 		if (upload && canvasWrapper.current) {
@@ -803,7 +785,7 @@ class InspectorPage extends Component {
 
 	calcFitScale = (baseSize, vpSize)=> {
 		console.log('InspectorPage.calcFitScale()', baseSize, vpSize);
-		return (Math.max(Math.min(vpSize.height / baseSize.height, vpSize.width / baseSize.width, Math.max(...ZOOM_NOTCHES)), Math.min(...ZOOM_NOTCHES)));
+		return (Math.max(Math.min(vpSize.height / baseSize.height, vpSize.width / baseSize.width, Math.max(...PAN_ZOOM.zoomNotches)), Math.min(...PAN_ZOOM.zoomNotches)));
 	};
 
 	calcScrollPoint = (panPt, vpSize, baseSize, scale)=> {
@@ -822,8 +804,8 @@ class InspectorPage extends Component {
 
 		const { panMultPt, scale } = this.state;
 		return {
-			x : 0.5 + scale * (PAN_MULT_OFFSET_PT.x - panMultPt.x),
-			y : 0.5 + scale * (PAN_MULT_OFFSET_PT.y - panMultPt.y)
+			x : 0.5 + scale * (PAN_ZOOM.panMultPt.x - panMultPt.x),
+			y : 0.5 + scale * (PAN_ZOOM.panMultPt.y - panMultPt.y)
 		};
 	};
 
@@ -859,7 +841,7 @@ class InspectorPage extends Component {
 			}
 
 			if (!this.canvasInterval) {
-				this.canvasInterval = setInterval(()=> this.onCanvasInterval(), MARCHING_ANTS.INTERVAL);
+				this.canvasInterval = setInterval(()=> this.onCanvasInterval(), CANVAS.marchingAnts.interval);
 			}
 
 			if (artboard.slices.length === 0) {
@@ -925,9 +907,9 @@ class InspectorPage extends Component {
 		const context = canvas.current.getContext('2d');
 		context.clearRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
 
-		context.font = CANVAS_CAPTION.fontFace;
-		context.textAlign = CANVAS_CAPTION.align;
-		context.textBaseline = CANVAS_CAPTION.baseline;
+		context.font = CANVAS.caption.fontFace;
+		context.textAlign = CANVAS.caption.align;
+		context.textBaseline = CANVAS.caption.baseline;
 
 		// debug fill 100%
 // 		context.fillStyle = 'rgba(0, 0, 0, 0.25)';
@@ -937,20 +919,20 @@ class InspectorPage extends Component {
 		if (artboard) {
 			if (slice) {
 				const frame = this.calcCanvasSliceFrame(slice, artboard, offset, scrollPt);
-				drawSliceFill(context, frame, CANVAS_COLORS.types[slice.type].fill);
+				drawSliceFill(context, frame, CANVAS.colors.types[slice.type].fill);
 				drawSliceCaption(context, slice.type, frame.origin, frame.size.width);
 				drawSliceBorder(context, frame);
-				drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS_COLORS.types[slice.type].guides);
+				drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.colors.types[slice.type].guides);
 				drawSliceMarchingAnts(context, frame, this.antsOffset);
 			}
 
 			if (hoverSlice) {
 				if (!slice || (slice && slice.id !== hoverSlice.id)) {
 					const frame = this.calcCanvasSliceFrame(hoverSlice, artboard, hoverOffset, scrollPt);
-					drawSliceFill(context, frame, CANVAS_COLORS.types[hoverSlice.type].fill);
+					drawSliceFill(context, frame, CANVAS.colors.types[hoverSlice.type].fill);
 					drawSliceCaption(context, hoverSlice.type, frame.origin, frame.size.width);
 					drawSliceBorder(context, frame);
-					drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS_COLORS.types[hoverSlice.type].guides);
+					drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.colors.types[hoverSlice.type].guides);
 					drawSliceMarchingAnts(context, frame, this.antsOffset);
 				}
 			}
@@ -1094,7 +1076,7 @@ class InspectorPage extends Component {
 		const swift = toSwift(slice, artboard);
 		const android = toAndroid(slice, artboard);
 
-		if (section === 'inspect') {
+		if (section === SECTIONS.INSPECT) {
 			tabs[0].contents = css.html;
 			tabs[0].syntax = css.syntax;
 			tabs[1].contents = reactCSS.html;
@@ -1104,7 +1086,7 @@ class InspectorPage extends Component {
 			tabs[3].contents = android.html;
 			tabs[3].syntax = android.syntax;
 
-		} else if (section === 'parts') {
+		} else if (section === SECTIONS.PARTS) {
 			tabs[0].type = 'component';
 			tabs[0].contents = <PartsList
 				contents={buildSlicePreviews(upload, slice)}
@@ -1129,7 +1111,7 @@ class InspectorPage extends Component {
 			const swift = toSwift(this.state.slice, artboardByID(upload, this.state.slice.artboardID));
 			const android = toAndroid(this.state.slice, artboard);
 
-			if (section === 'inspect') {
+			if (section === SECTIONS.INSPECT) {
 				tabs[0].contents = css.html;
 				tabs[0].syntax = css.syntax;
 				tabs[1].contents = reactCSS.html;
@@ -1139,7 +1121,7 @@ class InspectorPage extends Component {
 				tabs[3].contents = android.html;
 				tabs[3].syntax = android.syntax;
 
-			} else if (section === 'parts') {
+			} else if (section === SECTIONS.PARTS) {
 				tabs[0].type = 'component';
 				tabs[0].contents = <PartsList
 					contents={buildSlicePreviews(upload, this.state.slice)}
@@ -1187,7 +1169,7 @@ class InspectorPage extends Component {
 			const swift = toSwift(slice, artboardByID(upload, slice.artboardID));
 			const android = toAndroid(slice, artboard);
 
-			if (section === 'inspect') {
+			if (section === SECTIONS.INSPECT) {
 				tabs[0].contents = css.html;
 				tabs[0].syntax = css.syntax;
 				tabs[1].contents = reactCSS.html;
@@ -1197,7 +1179,7 @@ class InspectorPage extends Component {
 				tabs[3].contents = android.html;
 				tabs[3].syntax = android.syntax;
 
-			} else if (section === 'parts') {
+			} else if (section === SECTIONS.PARTS) {
 				tabs[0].type = 'component';
 				tabs[0].contents = <PartsList
 					contents={buildSlicePreviews(upload, slice)}
@@ -1255,14 +1237,14 @@ class InspectorPage extends Component {
 			event.preventDefault();
 			this.setState({
 				scrolling : true,
-				scale     : Math.min(Math.max(this.state.scale - (event.deltaY * PAN_FACTOR), 0.03), 3).toFixed(2),
-				tooltip   : `${(Math.min(Math.max(this.state.scale - (event.deltaY * PAN_FACTOR), 0.03), 3).toFixed(2) * 100) << 0}%`
+				scale     : Math.min(Math.max(this.state.scale - (event.deltaY * PAN_ZOOM.panFactor), 0.03), 3).toFixed(2),
+				tooltip   : `${(Math.min(Math.max(this.state.scale - (event.deltaY * PAN_ZOOM.panFactor), 0.03), 3).toFixed(2) * 100) << 0}%`
 			});
 
 		} else {
 			const panMultPt = {
-				x : this.state.panMultPt.x + (event.deltaX * PAN_FACTOR),
-				y : this.state.panMultPt.y + (event.deltaY * PAN_FACTOR)
+				x : this.state.panMultPt.x + (event.deltaX * PAN_ZOOM.panFactor),
+				y : this.state.panMultPt.y + (event.deltaY * PAN_ZOOM.panFactor)
 			};
 
 			this.setState({
@@ -1282,13 +1264,13 @@ class InspectorPage extends Component {
 
 		if (direction !== 0) {
 			let ind = -1;
-			ZOOM_NOTCHES.forEach((amt, i)=> {
+			PAN_ZOOM.zoomNotches.forEach((amt, i)=> {
 				if (amt === this.state.scale) {
 					ind = i + direction;
 				}
 			});
 
-			ZOOM_NOTCHES.forEach((amt, i)=> {
+			PAN_ZOOM.zoomNotches.forEach((amt, i)=> {
 				if (ind === -1) {
 					if (direction === 1) {
 						if (amt > this.state.scale) {
@@ -1303,16 +1285,16 @@ class InspectorPage extends Component {
 				}
 			});
 
-			scale = ZOOM_NOTCHES[Math.min(Math.max(0, ind), ZOOM_NOTCHES.length - 1)];
+			scale = PAN_ZOOM.zoomNotches[Math.min(Math.max(0, ind), PAN_ZOOM.zoomNotches.length - 1)];
 		}
 
 		this.setState({
 			slice     : null,
 			offset    : null,
-			panMultPt : PAN_MULT_OFFSET_PT,
+			panMultPt : PAN_ZOOM.panMultPt,
 			scale     : scale,
 			tooltip   : `${(scale * 100) << 0}%`
-		}, ()=> this.handlePanMove(PAN_MULT_OFFSET_PT.x, PAN_MULT_OFFSET_PT.y));
+		}, ()=> this.handlePanMove(PAN_ZOOM.panMultPt.x, PAN_ZOOM.panMultPt.y));
 
 		setTimeout(()=> {
 			this.setState({ tooltip : '' });
@@ -1341,7 +1323,7 @@ class InspectorPage extends Component {
 		const { scrolling } = this.state;
 
 		if (canvas.current && !scrolling) {
-			this.antsOffset = ((this.antsOffset + MARCHING_ANTS.INCREMENT) % MARCHING_ANTS.OFFSET_MOD);
+			this.antsOffset = ((this.antsOffset + CANVAS.marchingAnts.increment) % CANVAS.marchingAnts.modOffset);
 			this.handleCanvasUpdate();
 		}
 	};
@@ -1730,8 +1712,8 @@ class InspectorPage extends Component {
 						y={panMultPt.y}
 						scale={scale}
 						scaleFactor={1.0875}
-						minScale={Math.min(...ZOOM_NOTCHES)}
-						maxScale={Math.max(...ZOOM_NOTCHES)}
+						minScale={Math.min(...PAN_ZOOM.zoomNotches)}
+						maxScale={Math.max(...PAN_ZOOM.zoomNotches)}
 						ignorePanOutside={true}
 						renderOnChange={false}
 						style={{ width : '100%', height : '100%' }}
@@ -1755,15 +1737,15 @@ class InspectorPage extends Component {
 						<img src={deLogo} className="inspector-page-footer-logo" alt="Design Engine" />
 						<div className="inspector-page-footer-button-wrapper">
 							{(profile && (parseInt(upload.id, 10) === 1 || upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true })}}>Share</button>)}
-							<button disabled={(scale >= Math.max(...ZOOM_NOTCHES))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-in'); this.handleZoom(1)}}><FontAwesome name="search-plus" /></button>
-							<button disabled={(scale <= Math.min(...ZOOM_NOTCHES))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-out'); this.handleZoom(-1)}}><FontAwesome name="search-minus" /></button>
+							<button disabled={(scale >= Math.max(...PAN_ZOOM.zoomNotches))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-in'); this.handleZoom(1)}}><FontAwesome name="search-plus" /></button>
+							<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-out'); this.handleZoom(-1)}}><FontAwesome name="search-minus" /></button>
 							<button disabled={(scale === fitScale)} className="inspector-page-zoom-button" onClick={()=> {trackEvent('button', 'zoom-reset'); this.handleZoom(0)}}><FontAwesome name="ban" /></button>
 						</div>
 					</Row></div>)}
 				</div>
 
 				{(valid) && (<div className="inspector-page-panel">
-					{(section === 'inspect') && (<>
+					{(section === SECTIONS.INSPECT) && (<>
 						<div className="inspector-page-panel-split-content-wrapper">
 
 							{(tabs.length > 0) && (<TabbedFilingSet
@@ -1796,7 +1778,7 @@ class InspectorPage extends Component {
 						</div>
 					</>)}
 
-					{(section === 'parts') && (<>
+					{(section === SECTIONS.PARTS) && (<>
 						<div className="inspector-page-panel-full-content-wrapper">
 
 							{(tabs.length > 0) && (<TabbedFilingSet
