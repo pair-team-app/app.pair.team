@@ -109,8 +109,8 @@ const drawSliceCaption = (context, text, origin, maxWidth)=> {
 };
 
 const drawSliceBorder = (context, frame)=> {
-	context.strokeStyle = CANVAS.colors.border;
-	context.lineWidth = 1;
+	context.strokeStyle = CANVAS.slices.borderColor;
+	context.lineWidth = CANVAS.slices.lineWidth;
 	context.setLineDash([]);
 	context.beginPath();
 	context.strokeRect(frame.origin.x + 1, frame.origin.y + 1, frame.size.width - 2, frame.size.height - 2);
@@ -124,18 +124,18 @@ const drawSliceFill = (context, frame, color)=> {
 
 const drawSliceGuides = (context, frame, size, color)=> {
 	context.strokeStyle = color;
-	context.lineWidth = 2;
-	context.setLineDash([4, 2]);
+	context.lineWidth = CANVAS.guides.lineWidth;
+	context.setLineDash(CANVAS.guides.lineDash);
 	context.lineDashOffset = 0;
 	context.beginPath();
-	context.moveTo(0, frame.origin.y);
-	context.lineTo(size.width, frame.origin.y); // h-top
-	context.moveTo(0, frame.origin.y + frame.size.height);
-	context.lineTo(size.width, frame.origin.y + frame.size.height); // h-bottom
-	context.moveTo(frame.origin.x, 0);
-	context.lineTo(frame.origin.x, size.height); // v-left
-	context.moveTo(frame.origin.x + frame.size.width, 0);
-	context.lineTo(frame.origin.x + frame.size.width, size.height); // v-right
+	context.moveTo(0, frame.origin.y); // h-top
+	context.lineTo(size.width, frame.origin.y);
+	context.moveTo(0, frame.origin.y + frame.size.height); // h-bottom
+	context.lineTo(size.width, frame.origin.y + frame.size.height);
+	context.moveTo(frame.origin.x, 0); // v-left
+	context.lineTo(frame.origin.x, size.height);
+	context.moveTo(frame.origin.x + frame.size.width, 0); // v-right
+	context.lineTo(frame.origin.x + frame.size.width, size.height);
 	context.stroke();
 };
 
@@ -357,9 +357,9 @@ function SpecsList(props) {
 
 	return (
 		<div className="inspector-page-specs-list-wrapper">
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={slice.title}>
+			<SpecsItem copyText={slice.title} onCopy={props.onCopySpec}>
 				<Row><div className="inspector-page-specs-list-attribute">Name</div><div className="inspector-page-specs-list-val">{slice.title}</div></Row>
-			</CopyToClipboard>
+			</SpecsItem>
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={capitalizeText(slice.type, true)}>
 				<Row><div className="inspector-page-specs-list-attribute">Type</div><div className="inspector-page-specs-list-val">{capitalizeText(slice.type, true)}</div></Row>
 			</CopyToClipboard>
@@ -424,6 +424,14 @@ function SpecsList(props) {
 			</CopyToClipboard>
 		</div>
 	);
+}
+
+
+function SpecsItem(props) {
+	console.log('InspectorPage.SpecsItem()', props);
+
+	const { copyText, children } = props;
+	return (<CopyToClipboard onCopy={()=> props.onCopy()} text={copyText}>{children}</CopyToClipboard>);
 }
 
 
@@ -850,7 +858,7 @@ class InspectorPage extends Component {
 				formData.append('artboard_id', artboardID);
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response) => {
-// 						console.log('SLICES', response.data);
+						console.log('SLICES', response.data);
 
 						let { upload } = this.state;
 						let pages = [...upload.pages];
@@ -919,21 +927,21 @@ class InspectorPage extends Component {
 		if (artboard) {
 			if (slice) {
 				const frame = this.calcCanvasSliceFrame(slice, artboard, offset, scrollPt);
-				drawSliceFill(context, frame, CANVAS.colors.types[slice.type].fill);
+				drawSliceFill(context, frame, CANVAS.slices.fillColor);
 				drawSliceCaption(context, slice.type, frame.origin, frame.size.width);
 				drawSliceBorder(context, frame);
-				drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.colors.types[slice.type].guides);
+				drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.guides.color);
 				drawSliceMarchingAnts(context, frame, this.antsOffset);
 			}
 
 			if (hoverSlice) {
 				if (!slice || (slice && slice.id !== hoverSlice.id)) {
 					const frame = this.calcCanvasSliceFrame(hoverSlice, artboard, hoverOffset, scrollPt);
-					drawSliceFill(context, frame, CANVAS.colors.types[hoverSlice.type].fill);
+					drawSliceFill(context, frame, CANVAS.slices.fillColor);
 					drawSliceCaption(context, hoverSlice.type, frame.origin, frame.size.width);
-					drawSliceBorder(context, frame);
-					drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.colors.types[hoverSlice.type].guides);
-					drawSliceMarchingAnts(context, frame, this.antsOffset);
+// 					drawSliceBorder(context, frame);
+					drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.guides.color);
+// 					drawSliceMarchingAnts(context, frame, this.antsOffset);
 				}
 			}
 		}
@@ -1717,10 +1725,9 @@ class InspectorPage extends Component {
 						ignorePanOutside={true}
 						renderOnChange={false}
 						style={{ width : '100%', height : '100%' }}
-// 						onPanStart={()=> this.setState({ scrolling : true })}
-						onPanMove={this.handlePanMove}
-						onPanEnd={()=> (this.setState({ scrolling : false }))}
 						onPanAndZoom={this.handlePanAndZoom}
+						onPanEnd={()=> (this.setState({ scrolling : false }))}
+						onPanMove={this.handlePanMove}
 					>
 						<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
 							{(artboards.length > 0) && (<div style={artboardsStyle}>

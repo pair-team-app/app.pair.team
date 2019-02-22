@@ -1,36 +1,10 @@
 
 const CANVAS_FONT_SIZE = 10;
 const CANVAS_CAPTION_PADDING = 10;
-const CANVAS_LINE_DASH = [8, 4];
+const CANVAS_LINE_DASH = [4, 4];
 
 
 export const CANVAS = {
-	colors       : {
-		border : '#005cc5',
-		types  : {
-			slice      : {
-				fill   : 'rgba(255, 148, 0, 0.6)',
-				guides : '#ff9400'
-			},
-			textfield  : {
-				fill   : 'rgba(9, 248, 16, 0.6)',
-				guides : '#00ff0f'
-			},
-			background : {
-				fill   : 'rgba(255, 127, 240, 0.6)',
-				guides : '#ff7ff0'
-			},
-			group      : {
-				fill   : 'rgba(0, 120, 255, 0.6)',
-				guides : '#93c6ff'
-			},
-			symbol     : {
-				fill   : 'rgba(255, 236, 0, 0.6)',
-				guides : '#ffec00'
-			}
-		}
-	},
-
 	caption      : {
 		padding   : CANVAS_CAPTION_PADDING,
 		height    : (CANVAS_CAPTION_PADDING * 2) + CANVAS_FONT_SIZE,
@@ -42,14 +16,26 @@ export const CANVAS = {
 		align     : 'left'
 	},
 
+	guides       : {
+		color     : '#00ff0f',
+		lineDash  : CANVAS_LINE_DASH,
+		lineWidth : 2,
+	},
+
 	marchingAnts : {
 		lineDash  : CANVAS_LINE_DASH,
 		lineWidth : 2,
 		stroke    : 'rgba(0, 92, 197, 0.5)',
 		interval  : 50,
 		increment : 0.5,
-		modOffset : 12////(CANVAS_LINE_DASH.reduce((acc, val)=> (acc * val)) * 0.5) << 0
+		modOffset : CANVAS_LINE_DASH.reduce((acc, val)=> (acc * val)) << 0
 	},
+
+	slices       : {
+		borderColor : '#00ff0f',
+		fillColor   : 'rgba(9, 248, 16, 0.6)',
+		lineWidth   : 1
+	}
 };
 
 
