@@ -19,7 +19,6 @@ import BaseDesktopPage from './BaseDesktopPage';
 import ContentModal from '../../elements/ContentModal';
 import { POPUP_TYPE_INFO } from '../../elements/Popup';
 import TutorialOverlay from '../../elements/TutorialOverlay';
-// import InviteTeamForm from '../forms/InviteTeamForm';
 
 import { MOMENT_TIMESTAMP } from '../../../consts/formats';
 import { MINUS_KEY, PLUS_KEY } from '../../../consts/key-codes';
@@ -156,40 +155,6 @@ const ColorSwatch = (props)=> {
 	const { fill } = props;
 	return (<div className="inspector-page-color-swatch" style={{ backgroundColor : fill }} />);
 };
-
-/*const InviteTeamModal = (props)=> {
-// 	console.log('InspectorPage.InviteTeamModal()', props);
-
-	const { profile, upload, processing } = props;
-
-	return (<ContentModal
-		tracking="invite-team/inspector"
-		size={MODAL_SIZE_PERCENT}
-		closeable={true}
-		title="Invite Team"
-		onComplete={props.onComplete}>
-			<div className="inspector-page-invite-modal-wrapper">
-				<div className="inspector-page-invite-modal-message">
-					{(processing.state < 3) && (<div><FontAwesome className="inspector-page-processing-spinner" name="spinner" size="2x" pulse fixedWidth /></div>)}
-					{processing.message}
-				</div>
-				<div>{upload.title} ({upload.filename.split('/').pop()})</div>
-				{(upload.description.length > 0) && (<div>{upload.description}</div>)}
-				<div className="page-link" onClick={()=> window.open(buildInspectorURL(upload))}>{buildInspectorURL(upload)}</div>
-				<CopyToClipboard onCopy={()=> props.onCopyURL()} text={buildInspectorURL(upload)}>
-					<button>Copy URL</button>
-				</CopyToClipboard>
-			</div>
-
-			<InviteTeamForm
-				title=""
-				profile={profile}
-				upload={upload}
-				onSubmitted={props.onInviteTeamFormSubmitted}
-			/>
-		</ContentModal>
-	);
-};*/
 
 const PartItem = (props)=> {
 // 	console.log('InspectorPage.PartItem()', props);
