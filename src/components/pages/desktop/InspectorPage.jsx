@@ -219,7 +219,7 @@ const PartListItem = (props)=> {
 			error={()=> (<div className="part-list-item-image part-list-item-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
 			onError={(event)=> (errored = true)}
 		/>
-		<div className="part-item-title">{`${limitString(title, Math.max(26 - type.length, 1))} (${capitalizeText(type, true)})`}</div>
+		<div className="part-list-item-title">{`${limitString(title, Math.max(26 - type.length, 1))} (${capitalizeText(type, true)})`}</div>
 		{(!errored) && (<button className="tiny-button part-list-item-button" onClick={()=> props.onClick()}><FontAwesome name="download" /></button>)}
 	</Row></div>);
 };
@@ -1802,7 +1802,7 @@ class InspectorPage extends Component {
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
 				<div className={contentClass} onWheel={this.handleWheelStart}>
-					{(upload && !processing) && (<div className={urlClass}>
+					{(1===1 && upload && !processing) && (<div className={urlClass}>
 						<CopyToClipboard onCopy={()=> this.handleCopyURL()} text={buildInspectorURL(upload)}>
 							<div className="inspector-page-url">{buildInspectorURL(upload)}</div>
 						</CopyToClipboard>
@@ -1816,8 +1816,8 @@ class InspectorPage extends Component {
 						scaleFactor={PAN_ZOOM.zoomFactor}
 						minScale={Math.min(...PAN_ZOOM.zoomNotches)}
 						maxScale={Math.max(...PAN_ZOOM.zoomNotches)}
-						ignorePanOutside={true}
-						renderOnChange={false}
+						ignorePanOutside={false}
+						renderOnChange={true}
 						style={{ width : '100%', height : '100%' }}
 						onPanAndZoom={this.handlePanAndZoom}
 						onPanEnd={()=> (this.setState({ scrolling : false }))}
