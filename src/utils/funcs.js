@@ -194,7 +194,7 @@ export function limitString(str='', len, char='…') {
 
 export function makeDownload(url) {
 	let link = document.createElement('a');
-	link.target = '_blank';
+	link.target = '_self';
 	link.href = url;
 	link.download = url.split('/').pop();
 	link.click();
