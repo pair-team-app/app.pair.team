@@ -99,11 +99,11 @@
 }
 
 .inspector-page-url-wrapper {
-	position: relative;
+	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
-	z-index: 10;
+	z-index: 9;
 	padding: 4px 0;
 	background-color: rgba(0, 92, 197, 0.95);
 	font-family: "San Francisco Text Medium", sans-serif;
@@ -187,21 +187,25 @@
 	width: 880px;
 	max-width: 880px;
 	height: 100%;
+	max-height: calc(100vh - 64px);
 }
 
 .inspector-page-panel-content-wrapper {
 	height: 100%;
-	overflow: hidden;
+	/*height: calc(100vh - 64px);*/
+	overflow: auto;
 }
 
 .inspector-page-panel-presenter-wrapper {
-	display: table;
+	/*display: table;*/
+	display: flex;
 	width: 100%;
-	overflow: hidden;
 }
 
 .inspector-page-panel-full-height-content-wrapper {
-	height: calc(100vh - 150px);
+	/*height: calc(100vh - 150px);*/
+	/*height: calc(100vh - 112px);*/
+	height: calc(100vh - 64px);
 }
 
 .inspector-page-panel-split-height-content-wrapper {
@@ -213,12 +217,13 @@
 }
 
 .inspector-page-panel-split-width-content-wrapper {
-	display: table-cell;
+	/*display: table-cell;*/
+	display: flex;
 	width: 50%;
 }
 
 .inspector-page-panel-button-wrapper {
-	padding: 4px 10px;
+	padding: 0 4px 4px 4px;
 }
 
 .inspector-page-panel-button {
@@ -284,7 +289,6 @@
 .filing-tab-set {
 	width: 100%;
 	height: 100%;
-	overflow: hidden;
 }
 
 .filing-tab-set-title-wrapper {
@@ -342,7 +346,7 @@
 	color: #00ff0f;
 	white-space: nowrap;
 	word-break: keep-all;
-	overflow: auto;
+	overflow: scroll;
 }
 
 

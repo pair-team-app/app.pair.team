@@ -1802,7 +1802,7 @@ class InspectorPage extends Component {
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
 				<div className={contentClass} onWheel={this.handleWheelStart}>
-					{(1===1 && upload && !processing) && (<div className={urlClass}>
+					{(1===1 && upload && !processing) && (<div className={urlClass} style={{ width : `calc(100% - ${(section === SECTIONS.PRESENTER) ? 880 : 360}px)` }}>
 						<CopyToClipboard onCopy={()=> this.handleCopyURL()} text={buildInspectorURL(upload)}>
 							<div className="inspector-page-url">{buildInspectorURL(upload)}</div>
 						</CopyToClipboard>
@@ -1897,17 +1897,21 @@ class InspectorPage extends Component {
 					</>)}
 
 					{(section === SECTIONS.PRESENTER) && (<>
-						<div className="inspector-page-panel-presenter-wrapper">
-							{(tabs.map((tab, i)=> (
-								<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-split-width-content-wrapper inspector-page-panel-full-height-content-wrapper">
-									<FilingTabSet
-										tabs={tab}
-										selectedIndex={selectedTab}
-										onTabClick={(tab)=> this.handleTab(tab)}
-										onContentClick={(tab)=> console.log('::::::::::: onContentClick', tab)}
-									/>
-								</div>
-							)))}
+					<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-presenter-wrapper">
+						{(tabs.map((tab, i)=> (
+							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-split-width-content-wrapper inspector-page-panel-full-height-content-wrapper">
+								<div style={{width:'100%'}}>
+								<FilingTabSet
+									tabs={tab}
+									selectedIndex={selectedTab}
+									onTabClick={(tab)=> this.handleTab(tab)}
+									onContentClick={(tab)=> console.log('::::::::::: onContentClick', tab)}
+								/>
+								{(i === 1) && (<div className="inspector-page-panel-button-wrapper">
+									<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download Zip</button>
+								</div>)}</div>
+							</div>
+						)))}
 						</div>
 					</>)}
 				</div>)}

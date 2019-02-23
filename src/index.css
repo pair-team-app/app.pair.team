@@ -183,17 +183,17 @@ textarea {
   display: none;
 }
 
-/*::-webkit-scrollbar-track {*/
-  /*background: #151619;*/
-/*}*/
+::-webkit-scrollbar-track {
+  background: #151619;
+}
 
-/*::-webkit-scrollbar-thumb {*/
-  /*background: #151619;*/
-/*}*/
+::-webkit-scrollbar-thumb {
+  background: #4b4b4b;
+}
 
-/*::-webkit-scrollbar-thumb:hover {*/
-  /*background: #111111;*/
-/*}*/
+::-webkit-scrollbar-thumb:hover {
+  background: #333333;
+}
 
 
 /** Regular */
