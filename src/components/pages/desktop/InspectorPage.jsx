@@ -153,7 +153,7 @@ const ArtboardsList = (props)=> {
 	console.log('InspectorPage.ArtboardsList()', props);
 
 	const { contents } = props;
-	return (<div className="parts-list-wrapper">
+	return (<div className="artboards-list-wrapper">
 		{contents.map((slice, i)=> {
 			return (
 				<ArtboardListItem
@@ -210,17 +210,17 @@ const PartListItem = (props)=> {
 
 	let errored = false;
 
-	return (<div data-slice-id={id} className="part-item"><Row vertical="center">
+	return (<div data-slice-id={id} className="part-list-item"><Row vertical="center">
 		<ImageLoader
 			style={thumbStyle}
 			src={filename}
 			image={(props)=> <PartListItemThumb {...props} width={size.width * 0.25} height={size.height * 0.25} />}
-			loading={()=> (<div className="part-item-image part-item-image-loading" style={thumbStyle}><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
-			error={()=> (<div className="part-item-image part-item-image-error"><FontAwesome name="exclamation-circle" /></div>)}
+			loading={()=> (<div className="part-list-item-image part-list-item-image-loading" style={thumbStyle}><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+			error={()=> (<div className="part-list-item-image part-list-item-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
 			onError={(event)=> (errored = true)}
 		/>
 		<div className="part-item-title">{`${limitString(title, Math.max(26 - type.length, 1))} (${capitalizeText(type, true)})`}</div>
-		{(!errored) && (<button className="tiny-button part-item-button" onClick={()=> props.onClick()}><FontAwesome name="download" /></button>)}
+		{(!errored) && (<button className="tiny-button part-list-item-button" onClick={()=> props.onClick()}><FontAwesome name="download" /></button>)}
 	</Row></div>);
 };
 
@@ -228,7 +228,7 @@ const PartListItemThumb = (props)=> {
 // 	console.log('InspectorPage.PartListItemThumb()', props);
 
 	const { src, title, width, height } = props;
-	return (<img src={src} className="part-item-image" width={width} height={height} alt={title} />);
+	return (<img src={src} className="part-list-item-image" width={width} height={height} alt={title} />);
 };
 
 
@@ -1771,7 +1771,7 @@ class InspectorPage extends Component {
 
 // 		console.log('InspectorPage.render()', this.state, this.contentSize);
 // 		console.log('InspectorPage.render()', this.props, this.state);
-		console.log('InspectorPage.render()', slices);
+// 		console.log('InspectorPage.render()', slices);
 // 		console.log('InspectorPage.render()', upload, activeSlice);
 // 		console.log('InspectorPage:', window.performance.memory);
 
