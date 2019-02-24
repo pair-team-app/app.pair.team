@@ -154,6 +154,10 @@
 	filter: saturate(0) brightness(2);
 }
 
+.inspector-page-footer-logo:hover {
+	cursor: pointer;
+}
+
 .inspector-page-footer-button-wrapper {
 	width: 100%;
 	height: 100%;

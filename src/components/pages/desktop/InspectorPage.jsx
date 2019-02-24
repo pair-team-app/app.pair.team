@@ -1840,7 +1840,7 @@ class InspectorPage extends Component {
 					</InteractiveDiv>
 
 					{(upload && !processing) && (<div className="inspector-page-footer-wrapper"><Row vertical="center">
-						<img src={deLogo} className="inspector-page-footer-logo" alt="Design Engine" />
+						<img src={deLogo} className="inspector-page-footer-logo" onClick={()=> this.props.onPage('')} alt="Design Engine" />
 						<div className="inspector-page-footer-button-wrapper">
 							{/*{(profile && (parseInt(upload.id, 10) === 1 || upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true })}}>Share</button>)}*/}
 
