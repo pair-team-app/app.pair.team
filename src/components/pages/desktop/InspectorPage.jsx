@@ -9,6 +9,7 @@ import ReactNotifications from 'react-browser-notifications';
 import cookie from 'react-cookies';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import FontAwesome from 'react-fontawesome';
+// import { Helmet } from 'react-helmet';
 import ImageLoader from 'react-loading-image';
 import Moment from 'react-moment';
 import panAndZoomHoc from 'react-pan-and-zoom-hoc';
@@ -1802,7 +1803,7 @@ class InspectorPage extends Component {
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
 				<div className={contentClass} onWheel={this.handleWheelStart}>
-					{(1===1 && upload && !processing) && (<div className={urlClass} style={{ width : `calc(100% - ${(section === SECTIONS.PRESENTER) ? 880 : 360}px)` }}>
+					{(upload && !processing) && (<div className={urlClass} style={{ width : `calc(100% - ${(section === SECTIONS.PRESENTER) ? 880 : 360}px)` }}>
 						<CopyToClipboard onCopy={()=> this.handleCopyURL()} text={buildInspectorURL(upload)}>
 							<div className="inspector-page-url">{buildInspectorURL(upload)}</div>
 						</CopyToClipboard>

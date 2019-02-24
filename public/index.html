@@ -7,12 +7,16 @@
     <meta name="msapplication-TileColor" content="#000000">
     <meta name="msapplication-TileImage" content="%PUBLIC_URL%/images/favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#000000">
-    <meta content="http://designengine.ai" property="og:url">
-    <meta content="website" property="og:type">
-    <meta content="designengine.ai" property="og:title">
-    <meta content="Design Engine - Early Access" property="og:description">
 
-    <title>Design Engine - Early Access</title>
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Design Engine">
+    <meta property="og:title" content="Design Engine - Free Code, Specs, Parts & Present">
+    <meta property="og:description" content="Free Code, Specs, Parts & Present">
+    <meta property="og:image" content="http://dev.designengine.ai/images/favicon/apple-icon-180x180.png">
+    <meta property="og:image:alt" content="http://dev.designengine.ai/images/favicon/apple-icon-180x180.png">
+    <meta property="og:url" content="http://dev.designengine.ai">
+
+    <title>Design Engine - Free Code, Specs, Parts & Present</title>
 
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <link rel="apple-touch-icon" sizes="57x57" href="%PUBLIC_URL%/images/favicon/apple-icon-57x57.png">
@@ -37,5 +41,19 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+
+    <script type="text/javascript">
+      window.onload = function(e) {
+        fetch('https://api.designengine.ai/meta.php?upload_id=' + window.location.pathname.split('/')[2])
+          .then(function(res) { return (res.json()); }).then(function(data) {
+          var title = "Design Engine - Free Code, Specs, Parts & Present // " + data.upload.title;
+
+          document.title = title;
+          document.querySelector('meta[property="og:title"]').setAttribute('content', title);
+          document.querySelector('meta[property="og:url"]').setAttribute('content', window.location.href);
+          document.querySelector('meta[property="og:image"]').setAttribute('content', data.artboard.filename);
+        }).catch(function(err) { throw (err) });
+      };
+    </script>
   </body>
 </html>

@@ -25,6 +25,7 @@
 npm-debug.log*
 
 #-- php files
+/public/index.php
 /public/php/*.php
 
 #-- stripe tokens

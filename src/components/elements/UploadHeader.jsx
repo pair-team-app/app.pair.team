@@ -67,7 +67,7 @@ class UploadHeader extends Component {
 		event.preventDefault();
 		trackEvent('button', 'demo');
 
-		window.location.replace('http://demo.designengine.ai/');
+		window.location.replace(`http://demo.designengine.ai${window.location.pathname}`);
 	};
 
 	handleFileDialogCancel = ()=> {
