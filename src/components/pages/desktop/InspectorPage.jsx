@@ -22,7 +22,7 @@ import { POPUP_TYPE_INFO } from '../../elements/Popup';
 import TutorialOverlay from '../../elements/TutorialOverlay';
 
 import { MOMENT_TIMESTAMP } from '../../../consts/formats';
-import { MINUS_KEY, PLUS_KEY } from '../../../consts/key-codes';
+import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../consts/key-codes';
 import { CANVAS, PAN_ZOOM, SECTIONS, STATUS_INTERVAL } from '../../../consts/inspector';
 import { DE_LOGO_SMALL } from '../../../consts/uris';
 import { setRedirectURI } from '../../../redux/actions';
@@ -506,7 +506,7 @@ const FilingTabTitle = (props)=> {
 };
 
 const InspectorFooter = (props)=> {
-	console.log('InspectorPage.InspectorFooter()', props);
+// 	console.log('InspectorPage.InspectorFooter()', props);
 
 	const { section, scale, fitScale } = props;
 
@@ -1004,7 +1004,7 @@ class InspectorPage extends Component {
 	};
 
 	handleChangeArtboard = (dir)=> {
-		console.log('InspectorPage.handleChangeArtboard()', dir);
+// 		console.log('InspectorPage.handleChangeArtboard()', dir);
 
 		const { upload, artboard } = this.state;
 
@@ -1098,12 +1098,23 @@ class InspectorPage extends Component {
 	handleKeyDown = (event)=> {
 // 		console.log('InspectorPage.handleKeyDown()', event);
 
+		const { section } = this.state;
+
 		trackEvent('keypress', (event.keyCode === PLUS_KEY) ? 'plus' : 'minus');
 		if (event.keyCode === PLUS_KEY) {
 			this.handleZoom(1);
 
 		} else if (event.keyCode === MINUS_KEY) {
 			this.handleZoom(-1);
+		}
+
+		if (section === SECTIONS.PRESENTER) {
+			if (event.keyCode === ARROW_LT_KEY) {
+				this.handleChangeArtboard(-1);
+
+			} else if (event.keyCode === ARROW_RT_KEY) {
+				this.handleChangeArtboard(1);
+			}
 		}
 	};
 
@@ -1349,15 +1360,7 @@ class InspectorPage extends Component {
 
 		event.stopPropagation();
 
-		if (event.ctrlKey) {
-			event.preventDefault();
-			this.setState({
-				scrolling : true,
-				scale     : Math.min(Math.max(this.state.scale - (event.deltaY * PAN_ZOOM.panFactor), 0.03), 3).toFixed(2),
-				tooltip   : `${(Math.min(Math.max(this.state.scale - (event.deltaY * PAN_ZOOM.panFactor), 0.03), 3).toFixed(2) * 100) << 0}%`
-			});
-
-		} else {
+		if (!event.ctrlKey) {
 			const panMultPt = {
 				x : this.state.panMultPt.x + (event.deltaX * PAN_ZOOM.panFactor),
 				y : this.state.panMultPt.y + (event.deltaY * PAN_ZOOM.panFactor)
