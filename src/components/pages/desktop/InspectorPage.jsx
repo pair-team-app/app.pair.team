@@ -667,7 +667,7 @@ class InspectorPage extends Component {
 		if (this.state.fitScale === 0.0 && isSizeDimensioned(this.contentSize) && isSizeDimensioned(this.state.viewSize)) {
 			const fitScale = Math.max(Math.min(this.state.viewSize.height / this.contentSize.height, this.state.viewSize.width / this.contentSize.width, PAN_ZOOM.zoomNotches.slice(-1)[0]), PAN_ZOOM.zoomNotches[0]);
 			const scrollPt = this.calcScrollPoint(PAN_ZOOM.panMultPt, this.state.viewSize, this.contentSize, fitScale);
-//
+
 			console.log('-=-=-=-=-=-', this.state.viewSize, this.contentSize, fitScale, scrollPt);
 			this.setState({ scale : fitScale, fitScale }, ()=> {this.handlePanMove(PAN_ZOOM.panMultPt.x, PAN_ZOOM.panMultPt.y); this.setState({ scrolling : false })});
 		}
@@ -852,7 +852,7 @@ class InspectorPage extends Component {
 	};
 
 	handleArtboardClick = (event)=> {
-		console.log('InspectorPage.handleArtboardClick()', event.target);
+// 		console.log('InspectorPage.handleArtboardClick()', event.target);
 
 		const { upload } = this.state;
 		const artboardID = event.target.getAttribute('data-artboard-id');
@@ -931,7 +931,7 @@ class InspectorPage extends Component {
 	};
 
 	handleCanvasClick = (event)=> {
-		console.log('InspectorPage.handleCanvasClick()', event.target, this.state.scrolling);
+// 		console.log('InspectorPage.handleCanvasClick()', event.target, this.state.scrolling);
 		event.stopPropagation();
 
 		const { scrolling } = this.state;
@@ -1025,38 +1025,18 @@ class InspectorPage extends Component {
 		}
 	};
 
-	handleCopyCode = ()=> {
-		console.log('InspectorPage.handleCopyCode()');
+	handleClipboardCopy = (trackType, msg='Copied to Clipboard!')=> {
+		console.log('InspectorPage.handleClipboardCopy()', trackType, msg);
 
-		trackEvent('button', 'copy-code');
+		trackEvent('button', `copy-${trackType}`);
 		this.props.onPopup({
 			type    : POPUP_TYPE_INFO,
-			content : 'Copied to Clipboard!'
-		});
-	};
-
-	handleCopySpec = ()=> {
-		console.log('InspectorPage.handleCopySpec()');
-
-		trackEvent('button', 'copy-spec');
-		this.props.onPopup({
-			type    : POPUP_TYPE_INFO,
-			content : 'Copied to Clipboard!'
-		});
-	};
-
-	handleCopyURL = ()=> {
-		console.log('InspectorPage.handleCopyURL()');
-
-		trackEvent('button', 'copy-url');
-		this.props.onPopup({
-			type    : POPUP_TYPE_INFO,
-			content : 'Copied to Clipboard!'
+			content : msg
 		});
 	};
 
 	handleDownloadAll = ()=> {
-		console.log('InspectorPage.handleDownloadAll()');
+// 		console.log('InspectorPage.handleDownloadAll()');
 
 		trackEvent('button', 'download-project');
 		const { upload } = this.state;
@@ -1081,7 +1061,7 @@ class InspectorPage extends Component {
 	};
 
 	handleInviteTeamFormSubmitted = (result)=> {
-		console.log('InspectorPage.handleInviteTeamFormSubmitted()', result);
+// 		console.log('InspectorPage.handleInviteTeamFormSubmitted()', result);
 
 		this.props.onPopup({
 			type    : POPUP_TYPE_INFO,
@@ -1148,7 +1128,7 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceClick = (ind, slice, offset)=> {
-		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
+// 		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
 
 		trackEvent('slice', `${slice.id}_${convertURISlug(slice.title)}`);
 
@@ -1330,6 +1310,10 @@ class InspectorPage extends Component {
 		const { tabs } = this.state;
 		trackEvent('tab', convertURISlug(tab.title));
 		this.setState({ selectedTab : tabs.indexOf(tab) });
+	};
+
+	handleTabContent = (tab)=> {
+		 console.log('InspectorPage.handleTabContent()', tab);
 	};
 
 	handleTutorialNextStep = (step)=> {
@@ -1521,7 +1505,7 @@ class InspectorPage extends Component {
 					});
 
 					this.props.onProcessing(false);
-					setTimeout(()=> window.location.replace(window.location.href), 666);
+					setTimeout(()=> window.location.replace(window.location.href), 333);
 
 				} else if (processingState === 4) {
 					this.setState({
@@ -1585,7 +1569,7 @@ class InspectorPage extends Component {
 	};
 
 	onShowNotification = ()=> {
-		console.log('InspectorPage.onShowNotification()', this.notification);
+// 		console.log('InspectorPage.onShowNotification()', this.notification);
 		if (this.notification.supported()) {
 			this.notification.show();
 		}
@@ -1826,7 +1810,7 @@ class InspectorPage extends Component {
 				upload={upload}
 				slice={activeSlice}
 				creatorID={(profile) ? profile.id : 0}
-				onCopySpec={this.handleCopySpec}
+				onCopySpec={()=> this.handleClipboardCopy('spec')}
 			/>) : ''
 		}, {
 			title    : '',
@@ -1838,7 +1822,7 @@ class InspectorPage extends Component {
 			<BaseDesktopPage className="inspector-page-wrapper">
 				<div className={contentClass} onWheel={this.handleWheelStart}>
 					{(upload && !processing) && (<div className={urlClass} style={{ width : `calc(100% - ${(section === SECTIONS.PRESENTER) ? 880 : 360}px)` }}>
-						<CopyToClipboard onCopy={()=> this.handleCopyURL()} text={buildInspectorURL(upload)}>
+						<CopyToClipboard onCopy={()=> this.handleClipboardCopy('url')} text={buildInspectorURL(upload)}>
 							<div className="inspector-page-url">{buildInspectorURL(upload)}</div>
 						</CopyToClipboard>
 						<FontAwesome name="times" className="inspector-page-url-close-button" onClick={()=> this.setState({ urlBanner : false })} />
@@ -1891,7 +1875,7 @@ class InspectorPage extends Component {
 							/>)}
 						</div>
 						<div className="inspector-page-panel-button-wrapper">
-							<CopyToClipboard onCopy={()=> this.handleCopyCode()} text={(tabs[selectedTab]) ? tabs[selectedTab].syntax : ''}>
+							<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code')} text={(tabs[selectedTab]) ? tabs[selectedTab].syntax : ''}>
 								<button className="inspector-page-panel-button">Copy to Clipboard</button>
 							</CopyToClipboard>
 						</div>
@@ -1904,7 +1888,7 @@ class InspectorPage extends Component {
 							/>
 						</div>
 						<div className="inspector-page-panel-button-wrapper">
-							<CopyToClipboard onCopy={()=> this.handleCopyCode()} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
+							<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code')} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
 								<button className="inspector-page-panel-button">Copy to Clipboard</button>
 							</CopyToClipboard>
 						</div>
@@ -1961,7 +1945,7 @@ class InspectorPage extends Component {
 				upload={upload}
 				processing={this.state.processing}
 				vpHeight={viewSize.height}
-				onCopyURL={this.handleCopyURL}
+				onCopyURL={()=> this.handleClipboardCopy('url')}
 				onCancel={this.handleUploadProcessingCancel}
 			/>)}
 
