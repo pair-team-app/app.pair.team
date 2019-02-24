@@ -151,7 +151,7 @@ const drawSliceMarchingAnts = (context, frame, offset)=> {
 
 
 const ArtboardsList = (props)=> {
-	console.log('InspectorPage.ArtboardsList()', props);
+// 	console.log('InspectorPage.ArtboardsList()', props);
 
 	const { contents } = props;
 	return (<div className="artboards-list-wrapper">
@@ -172,7 +172,7 @@ const ArtboardsList = (props)=> {
 };
 
 const ArtboardListItem = (props)=> {
-	console.log('InspectorPage.ArtboardListItem()', props);
+// 	console.log('InspectorPage.ArtboardListItem()', props);
 
 	const { id, filename, title, type, size } = props;
 
@@ -508,7 +508,7 @@ const FilingTabTitle = (props)=> {
 const InspectorFooter = (props)=> {
 // 	console.log('InspectorPage.InspectorFooter()', props);
 
-	const { section, scale, fitScale } = props;
+	const { section, scale, fitScale, artboards } = props;
 
 	return (<div className="inspector-page-footer-wrapper"><Row vertical="center">
 		<img src={deLogo} className="inspector-page-footer-logo" onClick={()=> props.onPage('')} alt="Design Engine" />
@@ -519,7 +519,7 @@ const InspectorFooter = (props)=> {
 			<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-out'); props.onZoom(-1)}}><FontAwesome name="search-minus" /></button>
 			<button disabled={false} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-reset'); props.onZoom(0)}}>Reset ({(fitScale * 100) << 0}%)</button>
 
-			{(section === SECTIONS.PRESENTER) && (<>
+			{(section === SECTIONS.PRESENTER && artboards.length > 1) && (<>
 				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'prev-artboard'); props.onChangeArtboard(-1)}}><FontAwesome name="arrow-left" /></button>
 				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'next-artboard'); props.onChangeArtboard(1)}}><FontAwesome name="arrow-right" /></button>
 			</>)}
@@ -1011,13 +1011,18 @@ class InspectorPage extends Component {
 		const artboards = buildUploadArtboards(upload);
 		const ind = (artboards.findIndex((item)=> (item.id === artboard.id)) + dir) % artboards.length;
 
-		this.setState({
-			artboard    : artboards[((ind < 0) ? artboards.length + ind : ind) % artboards.length],
-			slice       : null,
-			offset      : null,
-			hoverSlice  : null,
-			hoverOffset : null,
-		}, ()=> this.handleZoom(0));
+		if (artboard.id !== artboards[((ind < 0) ? artboards.length + ind : ind)].id) {
+			this.setState({
+				artboard    : artboards[((ind < 0) ? artboards.length + ind : ind)],
+				slice       : null,
+				offset      : null,
+				hoverSlice  : null,
+				hoverOffset : null,
+			}, ()=> {
+				this.handleZoom(-1);
+				setTimeout(()=> this.handleZoom(0), 12);
+			});
+		}
 	};
 
 	handleCopyCode = ()=> {
@@ -1868,6 +1873,7 @@ class InspectorPage extends Component {
 						scale={scale}
 						fitScale={fitScale}
 						section={section}
+						artboards={buildUploadArtboards(upload)}
 						onChangeArtboard={this.handleChangeArtboard}
 						onPage={this.props.onPage}
 						onZoom={this.handleZoom}
