@@ -50,7 +50,7 @@ export function fontSpecs(font) {
 	name = name.replace(family, '').replace(/ +/g, '');
 	family = family.replace(name, '').replace(/ +/g, '');
 	psName = (psName && !isEmptyObject(psName)) ? psName : `${family}-${name}`.replace(/ +/g, '');
-	lineHeight = (lineHeight) ? lineHeight : (size) ? (size + Math.floor(size / 3)) : 0;
+	lineHeight = (lineHeight) ? lineHeight : (size) ? (size + (size / 3) << 0) : 0;
 	size = (size) ? size : (lineHeight) ? Math.round((lineHeight * 3) * 0.25) : 0;
 	const weight = fontWeight(name);
 

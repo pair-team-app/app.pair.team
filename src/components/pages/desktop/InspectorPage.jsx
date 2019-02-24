@@ -505,6 +505,28 @@ const FilingTabTitle = (props)=> {
 	</React.Fragment>);
 };
 
+const InspectorFooter = (props)=> {
+	console.log('InspectorPage.InspectorFooter()', props);
+
+	const { section, scale, fitScale } = props;
+
+	return (<div className="inspector-page-footer-wrapper"><Row vertical="center">
+		<img src={deLogo} className="inspector-page-footer-logo" onClick={()=> props.onPage('')} alt="Design Engine" />
+		<div className="inspector-page-footer-button-wrapper">
+			{/*{(profile && (parseInt(upload.id, 10) === 1 || upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true })}}>Share</button>)}*/}
+
+			<button disabled={(scale >= Math.max(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-in'); props.onZoom(1)}}><FontAwesome name="search-plus" /></button>
+			<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-out'); props.onZoom(-1)}}><FontAwesome name="search-minus" /></button>
+			<button disabled={false} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-reset'); props.onZoom(0)}}>Reset ({(fitScale * 100) << 0}%)</button>
+
+			{(section === SECTIONS.PRESENTER) && (<>
+				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'prev-artboard'); props.onChangeArtboard(-1)}}><FontAwesome name="arrow-left" /></button>
+				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'next-artboard'); props.onChangeArtboard(1)}}><FontAwesome name="arrow-right" /></button>
+			</>)}
+		</div>
+	</Row></div>);
+};
+
 
 
 
@@ -1839,21 +1861,14 @@ class InspectorPage extends Component {
 						</div>
 					</InteractiveDiv>
 
-					{(upload && !processing) && (<div className="inspector-page-footer-wrapper"><Row vertical="center">
-						<img src={deLogo} className="inspector-page-footer-logo" onClick={()=> this.props.onPage('')} alt="Design Engine" />
-						<div className="inspector-page-footer-button-wrapper">
-							{/*{(profile && (parseInt(upload.id, 10) === 1 || upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true })}}>Share</button>)}*/}
-
-							<button disabled={(scale >= Math.max(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-in'); this.handleZoom(1)}}><FontAwesome name="search-plus" /></button>
-							<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-out'); this.handleZoom(-1)}}><FontAwesome name="search-minus" /></button>
-							<button disabled={false} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-reset'); this.handleZoom(0)}}>Reset ({(fitScale * 100) << 0}%)</button>
-
-							{(section === SECTIONS.PRESENTER) && (<>
-								<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'prev-artboard'); this.handleChangeArtboard(-1)}}><FontAwesome name="arrow-left" /></button>
-								<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'next-artboard'); this.handleChangeArtboard(1)}}><FontAwesome name="arrow-right" /></button>
-							</>)}
-						</div>
-					</Row></div>)}
+					{(upload && !processing) && (<InspectorFooter
+						scale={scale}
+						fitScale={fitScale}
+						section={section}
+						onChangeArtboard={this.handleChangeArtboard}
+						onPage={this.props.onPage}
+						onZoom={this.handleZoom}
+					/>)}
 				</div>
 
 				{(valid) && (<div className={panelClass}>
