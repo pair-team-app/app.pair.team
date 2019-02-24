@@ -49,8 +49,8 @@ function BottomNav(props) {
 	return (
 		<div className="bottom-nav-wrapper">
 			{(!mobileLayout)
-				? (<BottomNavDesktop onPage={props.onPage} />)
-				: (<BottomNavMobile onPage={props.onPage} />)
+				? (<BottomNavDesktop onPage={props.onPage} onLogout={props.onLogout} />)
+				: (<BottomNavMobile onPage={props.onPage} onLogout={props.onLogout} />)
 			}
 		</div>
 	);

@@ -369,9 +369,12 @@ function SpecsList(props) {
 			<SpecsItem copyText={slice.title} onCopy={props.onCopySpec}>
 				<Row><div className="inspector-page-specs-list-attribute">Name</div><div className="inspector-page-specs-list-val">{slice.title}</div></Row>
 			</SpecsItem>
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={capitalizeText(slice.type, true)}>
+			<SpecsItem copyText={capitalizeText(slice.type, true)} onCopy={props.onCopySpec}>
 				<Row><div className="inspector-page-specs-list-attribute">Type</div><div className="inspector-page-specs-list-val">{capitalizeText(slice.type, true)}</div></Row>
-			</CopyToClipboard>
+			</SpecsItem>
+			{/*<SpecsItem copyText={} onCopy={props.onCopySpec}>*/}
+			{/*</SpecsItem>*/}
+
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`W: ${slice.meta.frame.size.width}px H: ${slice.meta.frame.size.height}px`}>
 				<Row><div className="inspector-page-specs-list-attribute">Export Size</div><div className="inspector-page-specs-list-val">{`W: ${slice.meta.frame.size.width}px H: ${slice.meta.frame.size.height}px`}</div></Row>
 			</CopyToClipboard>
@@ -854,7 +857,7 @@ class InspectorPage extends Component {
 	};
 
 	handleArtboardRollOver = (event)=> {
-		console.log('InspectorPage.handleArtboardRollOver()', event.target);
+// 		console.log('InspectorPage.handleArtboardRollOver()', event.target);
 
 // 		event.stopPropagation();
 		const artboardID = event.target.getAttribute('data-artboard-id');
@@ -878,7 +881,7 @@ class InspectorPage extends Component {
 				formData.append('artboard_id', artboardID);
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response) => {
-						console.log('SLICES', response.data);
+// 						console.log('SLICES', response.data);
 
 						let { upload } = this.state;
 						let pages = [...upload.pages];
