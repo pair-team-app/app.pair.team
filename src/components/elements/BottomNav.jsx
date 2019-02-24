@@ -18,7 +18,7 @@ const BottomNavDesktop = (props)=> {
 			)))}
 
 			{(isUserLoggedIn())
-				? (<div className="bottom-nav-link" onClick={() => props.onLogout()}>Sign Out</div>)
+				? (<div className="bottom-nav-link" onClick={() => props.onLogout()}>Logout</div>)
 				: (<span style={{ display : 'inline' }}>
 							<div className="bottom-nav-link" onClick={()=> props.onPage('register')}>Sign Up</div>
 							<div className="bottom-nav-link" onClick={()=> props.onPage('login')}>Login</div>
