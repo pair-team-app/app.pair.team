@@ -486,7 +486,7 @@ const FilingTabContent = (props)=> {
 // 	console.log('InspectorPage.FilingTabContent()', props);
 
 	const { ind, type, contents } = props;
-	return (<div key={ind} className="filing-tab-content">
+	return (<div key={ind} className="filing-tab-content" onClick={()=> props.onClick()}>
 		{(!type || type === 'json_html') && (<span dangerouslySetInnerHTML={{ __html : (contents && contents.length > 0) ? String(JSON.parse(contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : '' }} />)}
 		{(type === 'component') && (contents)}
 	</div>);
@@ -569,7 +569,7 @@ class InspectorPage extends Component {
 				state   : 0,
 				message : ''
 			},
-			tooltip     : ''
+			tooltip     : null
 		};
 
 		this.recordedHistory = false;
@@ -611,7 +611,7 @@ class InspectorPage extends Component {
 			if (!restricted && (!isOwner && !isContributor)) {
 				this.setState({
 					restricted : true,
-					tooltip    : ''
+					tooltip    : null
 				});
 			}
 		}
@@ -1413,7 +1413,7 @@ class InspectorPage extends Component {
 		}, ()=> this.handlePanMove(PAN_ZOOM.panMultPt.x, PAN_ZOOM.panMultPt.y));
 
 		setTimeout(()=> {
-			this.setState({ tooltip : '' });
+			this.setState({ tooltip : null });
 		}, 1000);
 	};
 
@@ -1558,7 +1558,7 @@ class InspectorPage extends Component {
 // 			this.setState({ upload, tabs, scale : fitScale, fitScale, tooltip });
 				this.setState({ upload, tabs,
 					artboard : (section === SECTIONS.PRESENTER) ? artboards[0] : null,
-					tooltip  : ''
+					tooltip  : null
 				});
 
 				const processing = (parseInt(upload.state, 10) < 3);
@@ -1569,7 +1569,7 @@ class InspectorPage extends Component {
 			} else {
 				this.setState({
 					valid   : false,
-					tooltip : ''
+					tooltip : null
 				});
 			}
 		}).catch((error)=> {
@@ -1878,7 +1878,7 @@ class InspectorPage extends Component {
 								tabs={tabs}
 								selectedIndex={selectedTab}
 								onTabClick={(tab)=> this.handleTab(tab)}
-								onContentClick={(tab)=> console.log('::::::::::: onContentClick', tab)}
+								onContentClick={(tab)=> console.log('onContentClick', tab)}
 							/>)}
 						</div>
 						<div className="inspector-page-panel-button-wrapper">
@@ -1891,7 +1891,7 @@ class InspectorPage extends Component {
 								tabs={specTabs}
 								selectedIndex={0}
 								onTabClick={(tab)=> this.handleTab(tab)}
-								onContentClick={(tab)=> console.log('::::::::::: onContentClick', tab)}
+								onContentClick={(tab)=> console.log('onContentClick', tab)}
 							/>
 						</div>
 						<div className="inspector-page-panel-button-wrapper">
@@ -1907,7 +1907,7 @@ class InspectorPage extends Component {
 								tabs={tabs}
 								selectedIndex={selectedTab}
 								onTabClick={(tab)=> this.handleTab(tab)}
-								onContentClick={(tab)=> console.log('::::::::::: onContentClick', tab)}
+								onContentClick={(tab)=> console.log('onContentClick', tab)}
 							/>)}
 						</div>
 						<div className="inspector-page-panel-button-wrapper">
@@ -1925,7 +1925,7 @@ class InspectorPage extends Component {
 									tabs={tab}
 									selectedIndex={selectedTab}
 									onTabClick={(tab)=> this.handleTab(tab)}
-									onContentClick={(tab)=> console.log('::::::::::: onContentClick', tab)}
+									onContentClick={(tab)=> console.log('onContentClick', tab)}
 								/>
 								{(i === 1) && (<div className="inspector-page-panel-button-wrapper">
 									<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download Zip</button>
@@ -1938,7 +1938,7 @@ class InspectorPage extends Component {
 			</BaseDesktopPage>
 
 
-			{(tooltip !== '' && !processing) && (<div className="inspector-page-tooltip">{tooltip}</div>)}
+			{(tooltip && !processing) && (<div className="inspector-page-tooltip">{tooltip}</div>)}
 			{(restricted) && (<ContentModal
 				tracking="private/inspector"
 				closeable={false}
