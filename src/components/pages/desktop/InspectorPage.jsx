@@ -255,7 +255,7 @@ const PartsList = (props)=> {
 };
 
 const UploadProcessing = (props)=> {
-	console.log('InspectorPage.UploadProcessing()', props);
+// 	console.log('InspectorPage.UploadProcessing()', props);
 
 	const { upload, processing, vpHeight } = props;
 	const artboard = buildUploadArtboards(upload).shift();
@@ -1488,6 +1488,7 @@ class InspectorPage extends Component {
 					});
 
 					this.props.onProcessing(false);
+					setTimeout(()=> window.location.replace(window.location.href), 666);
 
 				} else if (processingState === 4) {
 					this.setState({
@@ -1929,7 +1930,7 @@ class InspectorPage extends Component {
 			</ContentModal>)}
 
 			{/*{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing*/}
-			{(upload && profile && (processing && upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing
+			{(!restricted && upload && processing) && (<UploadProcessing
 				upload={upload}
 				processing={this.state.processing}
 				vpHeight={viewSize.height}
@@ -1937,7 +1938,7 @@ class InspectorPage extends Component {
 				onCancel={this.handleUploadProcessingCancel}
 			/>)}
 
-			{(tutorial) && (<TutorialOverlay
+			{(!restricted && tutorial) && (<TutorialOverlay
 				origin={tutorial.origin}
 				onNext={this.handleTutorialNextStep}
 				onClose={()=> this.setState({ tutorial : null })}
@@ -1953,7 +1954,7 @@ class InspectorPage extends Component {
 			</ContentModal>)}
 
 
-			{(upload) && (<ReactNotifications
+			{(!restricted && upload) && (<ReactNotifications
 				onRef={(ref)=> (this.notification = ref)}
 				title="Completed Processing"
 				body={`Your design file "${upload.title}" is ready.`}
