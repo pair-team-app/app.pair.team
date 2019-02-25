@@ -30,6 +30,10 @@ export const isMobile = {
 };
 
 
+export function areaSize(size) {
+	return (size.width * size.height);
+}
+
 export function buildInspectorPath(upload, prefix='/inspect', suffix='') {
 	return (`${trimSlashes(prefix)}/${upload.id}/${convertURISlug(upload.title)}${trimSlashes(suffix)}`);
 }

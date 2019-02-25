@@ -264,15 +264,15 @@
 	color: #ffffff;
 }
 
-.inspector-page-specs-list-attribute, .inspector-page-specs-list-val {
+.inspector-page-specs-list-item-attribute, .inspector-page-specs-list-item-val {
 	width: 50%;
 }
 
-.inspector-page-specs-list-attribute:hover, .inspector-page-specs-list-val:hover {
+.inspector-page-specs-list-item-attribute:hover, .inspector-page-specs-list-item-val:hover {
 	cursor: pointer;
 }
 
-.inspector-page-specs-list-val {
+.inspector-page-specs-list-item-val {
 	color: #00ff0f;
 }
 
@@ -365,7 +365,7 @@
 	cursor: pointer;
 }
 
-.slice-rollover-item-slice-filled, .slice-rollover-item-symbol-filled, .slice-rollover-item-textfield-filled, .slice-rollover-item-background-filled, .slice-rollover-item-group-filled {
+.slice-rollover-item-artboard-filled, .slice-rollover-item-slice-filled, .slice-rollover-item-symbol-filled, .slice-rollover-item-textfield-filled, .slice-rollover-item-background-filled, .slice-rollover-item-group-filled {
 	border-color: rgba(0, 92, 197, 0.0);
 }
 
@@ -378,6 +378,10 @@
 
 .artboard-list-item {
 	padding: 28px 20px;
+}
+
+.artboard-list-item:hover {
+	cursor: pointer;
 }
 
 .artboard-list-item-content-wrapper {

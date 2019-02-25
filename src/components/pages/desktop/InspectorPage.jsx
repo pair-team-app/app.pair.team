@@ -26,7 +26,19 @@ import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../consts
 import { CANVAS, PAN_ZOOM, SECTIONS, STATUS_INTERVAL } from '../../../consts/inspector';
 import { DE_LOGO_SMALL } from '../../../consts/uris';
 import { setRedirectURI } from '../../../redux/actions';
-import { buildInspectorPath, buildInspectorURL, capitalizeText, convertURISlug, cropFrame, epochDate, frameToRect, isSizeDimensioned, limitString, makeDownload, rectContainsRect } from '../../../utils/funcs.js';
+import {
+	areaSize,
+	buildInspectorPath,
+	buildInspectorURL,
+	capitalizeText,
+	convertURISlug,
+	cropFrame,
+	epochDate,
+	frameToRect,
+	isSizeDimensioned,
+	limitString,
+	makeDownload,
+	rectContainsRect} from '../../../utils/funcs.js';
 import { fontSpecs, toAndroid, toCSS, toReactCSS, toSpecs, toSwift } from '../../../utils/inspector-langs.js';
 import { trackEvent } from '../../../utils/tracking';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
@@ -56,25 +68,17 @@ const mapDispatchToProps = (dispatch)=> {
 
 
 
-const buildUploadArtboards = (upload)=> {
-	return ([...upload.pages].flatMap((page)=> (page.artboards)));
+const artboardForID = (upload, artboardID)=> {
+	return (flattenUploadArtboards(upload).filter((artboard)=> (artboard.id === artboardID)).pop());
 };
 
-const artboardByID = (upload, artboardID)=> {
-	return (buildUploadArtboards(upload).filter((artboard)=> (artboard.id === artboardID)).pop());
-};
-
-const buildSlicePreviews = (upload, slice)=> {
-// 	console.log('buildSlicePreviews()', upload, slice);
-	let slices = [slice];
-
-	artboardByID(upload, slice.artboardID).slices.filter((item)=> (item.id !== slice.id)).forEach((item)=> {
-		if (rectContainsRect(frameToRect(slice.meta.frame), frameToRect(item.meta.frame)) || window.location.pathname.includes('/parts')) {
-			slices.push(item);
-		}
-	});
-
-	return (slices.filter((item, i)=> (i < 200)));
+const drawSliceBorder = (context, frame)=> {
+	context.strokeStyle = CANVAS.slices.borderColor;
+	context.lineWidth = CANVAS.slices.lineWidth;
+	context.setLineDash([]);
+	context.beginPath();
+	context.strokeRect(frame.origin.x + 1, frame.origin.y + 1, frame.size.width - 2, frame.size.height - 2);
+	context.stroke();
 };
 
 const drawSliceCaption = (context, text, origin, maxWidth)=> {
@@ -106,15 +110,6 @@ const drawSliceCaption = (context, text, origin, maxWidth)=> {
 
 	context.fillStyle = CANVAS.caption.textColor;
 	context.fillText(caption.toUpperCase(), txtMetrics.padding + origin.x, txtMetrics.padding + (origin.y - txtMetrics.height));
-};
-
-const drawSliceBorder = (context, frame)=> {
-	context.strokeStyle = CANVAS.slices.borderColor;
-	context.lineWidth = CANVAS.slices.lineWidth;
-	context.setLineDash([]);
-	context.beginPath();
-	context.strokeRect(frame.origin.x + 1, frame.origin.y + 1, frame.size.width - 2, frame.size.height - 2);
-	context.stroke();
 };
 
 const drawSliceFill = (context, frame, color)=> {
@@ -149,22 +144,47 @@ const drawSliceMarchingAnts = (context, frame, offset)=> {
 	context.stroke();
 };
 
+const flattenUploadArtboards = (upload)=> {
+	return ([...upload.pages].flatMap((page)=> (page.artboards)).reverse());
+};
+
+const slicesByArea = (slices)=> {
+	console.log('slicesByArea()', slices);
+	return(slices.sort((s1, s2)=> ((areaSize(s1.meta.frame.size) < areaSize(s2.meta.frame.size)) ? -1 : (areaSize(s1.meta.frame.size) > areaSize(s2.meta.frame.size)) ? 1 : 0)));
+};
+
+const slicesForPartItems = (upload, slice)=> {
+// 	console.log('slicesForPartItems()', upload, slice);
+	let slices = [slice];
+
+	artboardForID(upload, slice.artboardID).slices.filter((item)=> ((item.type === 'group' || item.type === 'slice' || item.type== 'symbol') && item.id !== slice.id)).forEach((item)=> {
+		if (rectContainsRect(frameToRect(slice.meta.frame), frameToRect(item.meta.frame)) || window.location.pathname.includes('/parts')) {
+			slices.push(item);
+		}
+	});
+
+	return (slices);
+};
+
+
+
 
 const ArtboardsList = (props)=> {
 // 	console.log('InspectorPage.ArtboardsList()', props);
 
 	const { contents } = props;
 	return (<div className="artboards-list-wrapper">
-		{contents.map((slice, i)=> {
+		{contents.map((artboard, i)=> {
+			const meta = (typeof artboard.meta === 'string') ? JSON.parse(artboard.meta) : artboard.meta;
+
 			return (
 				<ArtboardListItem
 					key={i}
-					id={slice.id}
-					filename={`${slice.filename}@3x.png`}
-					title={slice.title}
-					type={slice.type}
-					size={slice.meta.frame.size}
-					onClick={()=> props.onPartListItem(slice)}
+					id={artboard.id}
+					filename={(artboard.filename.includes('@')) ? artboard.filename : `${artboard.filename}@1x.png`}
+					title={artboard.title}
+					size={meta.frame.size}
+					onClick={()=> props.onArtboardListItem(artboard)}
 				/>
 			);
 		})}
@@ -172,9 +192,9 @@ const ArtboardsList = (props)=> {
 };
 
 const ArtboardListItem = (props)=> {
-// 	console.log('InspectorPage.ArtboardListItem()', props);
+// 	console.log('InspectorPage.ArtboardListItem()', props)
 
-	const { id, filename, title, type, size } = props;
+	const { id, filename, title, size } = props;
 
 	const thumbStyle = {
 		width  : `${size.width * 0.25}px`,
@@ -186,7 +206,7 @@ const ArtboardListItem = (props)=> {
 	return (<div data-slice-id={id} className="artboard-list-item"><Row vertical="center">
 		<div className="artboard-list-item-content-wrapper">
 			<img className="artboard-list-item-image" style={thumbStyle} src={filename} alt={title} />
-			<div className="artboard-list-item-title">{limitString(title, Math.max(26 - type.length, 1))}</div>
+			<div className="artboard-list-item-title">{limitString(title, Math.max(26, 1))}</div>
 		</div>
 		{(!errored) && (<button className="tiny-button artboard-list-item-button" onClick={()=> props.onClick()}><FontAwesome name="download" /></button>)}
 	</Row></div>);
@@ -258,7 +278,7 @@ const UploadProcessing = (props)=> {
 // 	console.log('InspectorPage.UploadProcessing()', props);
 
 	const { upload, processing, vpHeight } = props;
-	const artboard = buildUploadArtboards(upload).shift();
+	const artboard = flattenUploadArtboards(upload).shift();
 	const url = buildInspectorURL(upload);
 
 	const imgStyle = (artboard) ? {
@@ -362,88 +382,96 @@ function SpecsList(props) {
 		} : null
 	} : null;
 
-	// <CopyToClipboard onCopy={()=> props.onCopySpec()} text={}>
+	/*
+			<SpecsListItem*
+				attribute=""
+				value={}
+				copyText={}
+				onCopy={props.onCopySpec} />
+	*/
 
 	return (
 		<div className="inspector-page-specs-list-wrapper">
-			<SpecsItem copyText={slice.title} onCopy={props.onCopySpec}>
-				<Row><div className="inspector-page-specs-list-attribute">Name</div><div className="inspector-page-specs-list-val">{slice.title}</div></Row>
-			</SpecsItem>
-			<SpecsItem copyText={capitalizeText(slice.type, true)} onCopy={props.onCopySpec}>
-				<Row><div className="inspector-page-specs-list-attribute">Type</div><div className="inspector-page-specs-list-val">{capitalizeText(slice.type, true)}</div></Row>
-			</SpecsItem>
-			{/*<SpecsItem copyText={} onCopy={props.onCopySpec}>*/}
-			{/*</SpecsItem>*/}
+			<SpecsListItem
+				attribute="Name"
+				value={slice.title}
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Type"
+				value={capitalizeText(slice.type, true)}
+				onCopy={props.onCopySpec} />
 
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`W: ${slice.meta.frame.size.width}px H: ${slice.meta.frame.size.height}px`}>
-				<Row><div className="inspector-page-specs-list-attribute">Export Size</div><div className="inspector-page-specs-list-val">{`W: ${slice.meta.frame.size.width}px H: ${slice.meta.frame.size.height}px`}</div></Row>
+				<Row><div className="inspector-page-specs-list-item-attribute">Export Size</div><div className="inspector-page-specs-list-item-val">{`W: ${slice.meta.frame.size.width}px H: ${slice.meta.frame.size.height}px`}</div></Row>
 			</CopyToClipboard>
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`X: ${slice.meta.frame.origin.x}px Y: ${slice.meta.frame.origin.y}px`}>
-				<Row><div className="inspector-page-specs-list-attribute">Position</div><div className="inspector-page-specs-list-val">{`X: ${slice.meta.frame.origin.x}px Y: ${slice.meta.frame.origin.y}px`}</div></Row>
+				<Row><div className="inspector-page-specs-list-item-attribute">Position</div><div className="inspector-page-specs-list-item-val">{`X: ${slice.meta.frame.origin.x}px Y: ${slice.meta.frame.origin.y}px`}</div></Row>
 			</CopyToClipboard>
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`${slice.meta.rotation}°`}>
-				<Row><div className="inspector-page-specs-list-attribute">Rotation</div><div className="inspector-page-specs-list-val">{slice.meta.rotation}&deg;</div></Row>
+				<Row><div className="inspector-page-specs-list-item-attribute">Rotation</div><div className="inspector-page-specs-list-item-val">{slice.meta.rotation}&deg;</div></Row>
 			</CopyToClipboard>
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`${slice.meta.opacity * 100}%`}>
-				<Row><div className="inspector-page-specs-list-attribute">Opacity</div><div className="inspector-page-specs-list-val">{slice.meta.opacity * 100}%</div></Row>
+				<Row><div className="inspector-page-specs-list-item-attribute">Opacity</div><div className="inspector-page-specs-list-item-val">{slice.meta.opacity * 100}%</div></Row>
 			</CopyToClipboard>
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(fillColor.length > 0) ? fillColor : ''}>
-				<Row><div className="inspector-page-specs-list-attribute">Fill</div>{(fillColor.length > 0) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{fillColor}<ColorSwatch fill={fillColor} /></Row></div>)}</Row>
+				<Row><div className="inspector-page-specs-list-item-attribute">Fill</div>{(fillColor.length > 0) && (<div className="inspector-page-specs-list-item-val"><Row vertical="center">{fillColor}<ColorSwatch fill={fillColor} /></Row></div>)}</Row>
 			</CopyToClipboard>
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(border) ? `${styles.border.position} S: ${styles.border.thickness} ${styles.border.color}` : ''}>
-				<Row><div className="inspector-page-specs-list-attribute">Border</div>{(border) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{`${styles.border.position} S: ${styles.border.thickness} ${styles.border.color}`}<ColorSwatch fill={styles.border.color} /></Row></div>)}</Row>
+				<Row><div className="inspector-page-specs-list-item-attribute">Border</div>{(border) && (<div className="inspector-page-specs-list-item-val"><Row vertical="center">{`${styles.border.position} S: ${styles.border.thickness} ${styles.border.color}`}<ColorSwatch fill={styles.border.color} /></Row></div>)}</Row>
 			</CopyToClipboard>
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(shadow) ? `X: ${styles.shadow.offset.x} Y: ${styles.shadow.offset.y} B: ${styles.shadow.blur} S: ${styles.shadow.spread}` : ''}>
-				<Row><div className="inspector-page-specs-list-attribute">Shadow</div>{(shadow) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{`X: ${styles.shadow.offset.x} Y: ${styles.shadow.offset.y} B: ${styles.shadow.blur} S: ${styles.shadow.spread}`}<ColorSwatch fill={styles.shadow.color} /></Row></div>)}</Row>
+				<Row><div className="inspector-page-specs-list-item-attribute">Shadow</div>{(shadow) && (<div className="inspector-page-specs-list-item-val"><Row vertical="center">{`X: ${styles.shadow.offset.x} Y: ${styles.shadow.offset.y} B: ${styles.shadow.blur} S: ${styles.shadow.spread}`}<ColorSwatch fill={styles.shadow.color} /></Row></div>)}</Row>
 			</CopyToClipboard>
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(innerShadow) ? `X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}` : ''}>
-				<Row><div className="inspector-page-specs-list-attribute">Inner Shadow</div>{(innerShadow) && (<div className="inspector-page-specs-list-val"><Row vertical="center">{`X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}`}<ColorSwatch fill={styles.innerShadow.color} /></Row></div>)}</Row>
+				<Row><div className="inspector-page-specs-list-item-attribute">Inner Shadow</div>{(innerShadow) && (<div className="inspector-page-specs-list-item-val"><Row vertical="center">{`X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}`}<ColorSwatch fill={styles.innerShadow.color} /></Row></div>)}</Row>
 			</CopyToClipboard>
 			{(slice.type === 'textfield') && (<>
 				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`${font.family} ${font.name}`}>
-					<Row><div className="inspector-page-specs-list-attribute">Font</div><div className="inspector-page-specs-list-val">{`${font.family} ${font.name}`}</div></Row>
+					<Row><div className="inspector-page-specs-list-item-attribute">Font</div><div className="inspector-page-specs-list-item-val">{`${font.family} ${font.name}`}</div></Row>
 				</CopyToClipboard>
 				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={font.weight}>
-					<Row><div className="inspector-page-specs-list-attribute">Font Weight</div><div className="inspector-page-specs-list-val">{font.weight}</div></Row>
+					<Row><div className="inspector-page-specs-list-item-attribute">Font Weight</div><div className="inspector-page-specs-list-item-val">{font.weight}</div></Row>
 				</CopyToClipboard>
 				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`${font.size}px`}>
-					<Row><div className="inspector-page-specs-list-attribute">Font Size</div><div className="inspector-page-specs-list-val">{`${font.size}px`}</div></Row>
+					<Row><div className="inspector-page-specs-list-item-attribute">Font Size</div><div className="inspector-page-specs-list-item-val">{`${font.size}px`}</div></Row>
 				</CopyToClipboard>
 				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.color) ? font.color.toUpperCase() : ''}>
-					<Row><div className="inspector-page-specs-list-attribute">Font Color</div><div className="inspector-page-specs-list-val"><Row vertical="center">{(font.color) ? font.color.toUpperCase() : ''}<ColorSwatch fill={font.color} /></Row></div></Row>
+					<Row><div className="inspector-page-specs-list-item-attribute">Font Color</div><div className="inspector-page-specs-list-item-val"><Row vertical="center">{(font.color) ? font.color.toUpperCase() : ''}<ColorSwatch fill={font.color} /></Row></div></Row>
 				</CopyToClipboard>
 				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.alignment) ? capitalizeText(font.alignment) : 'Left'}>
-					<Row><div className="inspector-page-specs-list-attribute">Alignment</div><div className="inspector-page-specs-list-val">{(font.alignment) ? capitalizeText(font.alignment) : 'Left'}</div></Row>
+					<Row><div className="inspector-page-specs-list-item-attribute">Alignment</div><div className="inspector-page-specs-list-item-val">{(font.alignment) ? capitalizeText(font.alignment) : 'Left'}</div></Row>
 				</CopyToClipboard>
 				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.lineHeight) ? `${font.lineHeight}px` : ''}>
-					<Row><div className="inspector-page-specs-list-attribute">Line Spacing</div>{(font.lineHeight) && (<div className="inspector-page-specs-list-val">{`${font.lineHeight}px`}</div>)}</Row>
+					<Row><div className="inspector-page-specs-list-item-attribute">Line Spacing</div>{(font.lineHeight) && (<div className="inspector-page-specs-list-item-val">{`${font.lineHeight}px`}</div>)}</Row>
 				</CopyToClipboard>
 				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.kerning) ? `${font.kerning.toFixed(2)}px` : ''}>
-					<Row><div className="inspector-page-specs-list-attribute">Char Spacing</div>{(font.kerning) && (<div className="inspector-page-specs-list-val">{`${font.kerning.toFixed(2)}px`}</div>)}</Row>
+					<Row><div className="inspector-page-specs-list-item-attribute">Char Spacing</div>{(font.kerning) && (<div className="inspector-page-specs-list-item-val">{`${font.kerning.toFixed(2)}px`}</div>)}</Row>
 				</CopyToClipboard>
 			</>)}
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(padding) ? padding : ''}>
-				<Row><div className="inspector-page-specs-list-attribute">Padding</div>{(padding) && (<div className="inspector-page-specs-list-val">{padding}</div>)}</Row>
+				<Row><div className="inspector-page-specs-list-item-attribute">Padding</div>{(padding) && (<div className="inspector-page-specs-list-item-val">{padding}</div>)}</Row>
 			</CopyToClipboard>
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={capitalizeText(slice.meta.blendMode, true)}>
-				<Row><div className="inspector-page-specs-list-attribute">Blend Mode</div><div className="inspector-page-specs-list-val">{capitalizeText(slice.meta.blendMode, true)}</div></Row>
+				<Row><div className="inspector-page-specs-list-item-attribute">Blend Mode</div><div className="inspector-page-specs-list-item-val">{capitalizeText(slice.meta.blendMode, true)}</div></Row>
 			</CopyToClipboard>
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={added}>
-				<Row><div className="inspector-page-specs-list-attribute">Date</div>{(added) && (<div className="inspector-page-specs-list-val"><Moment format={MOMENT_TIMESTAMP}>{added}</Moment></div>)}</Row>
+				<Row><div className="inspector-page-specs-list-item-attribute">Date</div>{(added) && (<div className="inspector-page-specs-list-item-val"><Moment format={MOMENT_TIMESTAMP}>{added}</Moment></div>)}</Row>
 			</CopyToClipboard>
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={upload.creator.username}>
-				<Row><div className="inspector-page-specs-list-attribute">Uploader</div><div className="inspector-page-specs-list-val">{upload.creator.username + ((creatorID === upload.creator.user_id) ? ' (You)' : '')}</div></Row>
+				<Row><div className="inspector-page-specs-list-item-attribute">Uploader</div><div className="inspector-page-specs-list-item-val">{upload.creator.username + ((creatorID === upload.creator.user_id) ? ' (You)' : '')}</div></Row>
 			</CopyToClipboard>
 		</div>
 	);
 }
 
 
-function SpecsItem(props) {
-// 	console.log('InspectorPage.SpecsItem()', props);
+function SpecsListItem(props) {
+// 	console.log('InspectorPage.SpecsListItem()', props);
 
-	const { copyText, children } = props;
-	return (<CopyToClipboard onCopy={()=> props.onCopy()} text={copyText}>{children}</CopyToClipboard>);
+	const { attribute, value, copyText } = props;
+	return (<CopyToClipboard onCopy={()=> props.onCopy()} text={(copyText) ? copyText : value}>
+		<Row><div className="inspector-page-specs-list-item-attribute">{attribute}</div><div className="inspector-page-specs-list-item-val">{value}</div></Row>
+	</CopyToClipboard>);
 }
 
 
@@ -474,7 +502,7 @@ function FilingTabSet(props) {
 					ind={i}
 					type={tab.type}
 					contents={tab.contents}
-					onClick={()=> props.onContentClick(tab)}
+					onClick={(payload)=> props.onContentClick(payload)}
 				/>
 			))}
 		</div>
@@ -658,7 +686,7 @@ class InspectorPage extends Component {
 		if (artboardsWrapper.current && isSizeDimensioned({ width : artboardsWrapper.current.clientWidth, height : artboardsWrapper.current.clientHeight}) && !isSizeDimensioned(this.state.viewSize)) {
 			const viewSize = {
 				width  : artboardsWrapper.current.clientWidth,
-				height : artboardsWrapper.current.clientHeight
+				height : artboardsWrapper.current.clientHeight - 150
 			};
 
 			this.setState({ viewSize });
@@ -677,7 +705,7 @@ class InspectorPage extends Component {
 				cookie.save('tutorial', '1', { path : '/' });
 
 				const { scrollPt } = this.state;
-				let artboard = buildUploadArtboards(upload).pop();
+				let artboard = flattenUploadArtboards(upload).pop();
 				artboard.meta = (typeof artboard.meta === 'string') ? JSON.parse(artboard.meta) : artboard.meta;
 				const tutorial = {
 					origin : {
@@ -740,7 +768,7 @@ class InspectorPage extends Component {
 				width  : JSON.parse(artboard.meta).frame.size.width,
 				height : JSON.parse(artboard.meta).frame.size.height
 			},
-			area : JSON.parse(artboard.meta).frame.size.width * JSON.parse(artboard.meta).frame.size.height
+			area : areaSize(JSON.parse(artboard.meta).frame.size)
 
 		})).sort((a, b)=> { // desc
 			return ((a.area > b.area) ? -1 : (a.area < b.area) ? 1 : 0);
@@ -858,7 +886,7 @@ class InspectorPage extends Component {
 		const artboardID = event.target.getAttribute('data-artboard-id');
 
 		if (artboardID) {
-			const artboard = artboardByID(upload, artboardID);
+			const artboard = artboardForID(upload, artboardID);
 			this.setState({ artboard });
 		}
 	};
@@ -879,7 +907,7 @@ class InspectorPage extends Component {
 	};
 
 	handleArtboardRollOver = (event)=> {
-// 		console.log('InspectorPage.handleArtboardRollOver()', event.target);
+		console.log('InspectorPage.handleArtboardRollOver()', event.target);
 
 // 		event.stopPropagation();
 		const artboardID = event.target.getAttribute('data-artboard-id');
@@ -887,7 +915,7 @@ class InspectorPage extends Component {
 		if (artboardID) {
 			let { upload, artboard } = this.state;
 			if (!artboard || artboard.id !== artboardID) {
-				artboard = artboardByID(upload, artboardID);
+				artboard = artboardForID(upload, artboardID);
 				if (artboard) {
 					this.setState({ artboard });
 				}
@@ -903,7 +931,7 @@ class InspectorPage extends Component {
 				formData.append('artboard_id', artboardID);
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response) => {
-// 						console.log('SLICES', response.data);
+						console.log('SLICES', response.data);
 
 						let { upload } = this.state;
 						let pages = [...upload.pages];
@@ -1008,7 +1036,7 @@ class InspectorPage extends Component {
 
 		const { upload, artboard } = this.state;
 
-		const artboards = buildUploadArtboards(upload);
+		const artboards = flattenUploadArtboards(upload);
 		const ind = (artboards.findIndex((item)=> (item.id === artboard.id)) + dir) % artboards.length;
 
 		if (artboard.id !== artboards[((ind < 0) ? artboards.length + ind : ind)].id) {
@@ -1056,7 +1084,7 @@ class InspectorPage extends Component {
 
 		trackEvent('button', 'download-list');
 		const { upload, slice } = this.state;
-		const sliceIDs = buildSlicePreviews(upload, slice).map((slice)=> (slice.id)).join(',');
+		const sliceIDs = slicesForPartItems(upload, slice).map((slice)=> (slice.id)).join(',');
 		makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
 	};
 
@@ -1159,7 +1187,7 @@ class InspectorPage extends Component {
 		} else if (section === SECTIONS.PARTS) {
 			tabs[0].type = 'component';
 			tabs[0].contents = <PartsList
-				contents={buildSlicePreviews(upload, slice)}
+				contents={slicesForPartItems(upload, slice)}
 				onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 
 		} else if (section === SECTIONS.PRESENTER) {
@@ -1173,8 +1201,8 @@ class InspectorPage extends Component {
 			tabs[0][3].syntax = android.syntax;
 			tabs[1][0].type = 'component';
 			tabs[1][0].contents = <ArtboardsList
-				contents={buildSlicePreviews(upload, slice)}
-				onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+				contents={flattenUploadArtboards(upload)}
+				onArtboardListItem={(artboard)=> this.handleChangeArtboard(1)} />;
 		}
 
 		this.setState({ tabs, artboard, slice, offset,
@@ -1192,7 +1220,7 @@ class InspectorPage extends Component {
 		if (this.state.slice) {
 			const css = toCSS(this.state.slice);
 			const reactCSS = toReactCSS(this.state.slice);
-			const swift = toSwift(this.state.slice, artboardByID(upload, this.state.slice.artboardID));
+			const swift = toSwift(this.state.slice, artboardForID(upload, this.state.slice.artboardID));
 			const android = toAndroid(this.state.slice, artboard);
 
 			if (section === SECTIONS.INSPECT) {
@@ -1208,7 +1236,7 @@ class InspectorPage extends Component {
 			} else if (section === SECTIONS.PARTS) {
 				tabs[0].type = 'component';
 				tabs[0].contents = <PartsList
-					contents={buildSlicePreviews(upload, this.state.slice)}
+					contents={slicesForPartItems(upload, this.state.slice)}
 					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 
 			} else if (section === SECTIONS.PRESENTER) {
@@ -1222,25 +1250,25 @@ class InspectorPage extends Component {
 				tabs[0][3].syntax = android.syntax;
 				tabs[1][0].type = 'component';
 				tabs[1][0].contents = <ArtboardsList
-					contents={buildSlicePreviews(upload, this.state.slice)}
-					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+					contents={flattenUploadArtboards(upload)}
+					onArtboardListItem={(artboard)=> this.handleChangeArtboard(1)} />;
 			}
 
 		} else {
-			this.handleSliceClick(ind, slice, offset);
+// 			this.handleSliceClick(ind, slice, offset);
 
-// 			artboard.slices.forEach((item)=> {
-// 				item.filled = false;
-// 			});
-//
-// 			tabs.forEach((tab, i)=> {
-// 				tabs[i] = {
-// 					id       : tab.id,
-// 					title    : tab.title,
-// 					contents : null,
-// 					syntax   : null
-// 				}
-// 			});
+			artboard.slices.forEach((item)=> {
+				item.filled = false;
+			});
+
+			tabs.forEach((tab, i)=> {
+				tabs[i] = {
+					id       : tab.id,
+					title    : tab.title,
+					contents : null,
+					syntax   : null
+				}
+			});
 		}
 
 		this.setState({ artboard, tabs,
@@ -1264,7 +1292,7 @@ class InspectorPage extends Component {
 
 			const css = toCSS(slice);
 			const reactCSS = toReactCSS(slice);
-			const swift = toSwift(slice, artboardByID(upload, slice.artboardID));
+			const swift = toSwift(slice, artboardForID(upload, slice.artboardID));
 			const android = toAndroid(slice, artboard);
 
 			if (section === SECTIONS.INSPECT) {
@@ -1280,7 +1308,7 @@ class InspectorPage extends Component {
 			} else if (section === SECTIONS.PARTS) {
 				tabs[0].type = 'component';
 				tabs[0].contents = <PartsList
-					contents={buildSlicePreviews(upload, slice)}
+					contents={slicesForPartItems(upload, slice)}
 					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 
 			} else if (section === SECTIONS.PRESENTER) {
@@ -1294,8 +1322,8 @@ class InspectorPage extends Component {
 				tabs[0][3].syntax = android.syntax;
 				tabs[1][0].type = 'component';
 				tabs[1][0].contents = <ArtboardsList
-					contents={buildSlicePreviews(upload, slice)}
-					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+					contents={flattenUploadArtboards(upload)}
+					onArtboardListItem={(artboard)=> this.handleChangeArtboard(1)} />;
 			}
 
 			this.setState({ artboard, tabs,
@@ -1331,12 +1359,23 @@ class InspectorPage extends Component {
 	handleUploadProcessingCancel = ()=> {
 		console.log('InspectorPage.handleUploadProcessingCancel()');
 
+		const { upload, section } = this.state;
+
 		if (this.processingInterval) {
 			clearInterval(this.processingInterval);
 			this.processingInterval = null;
 		}
-		this.props.onProcessing(false);
-		this.onRefreshUpload();
+
+		let formData = new FormData();
+		formData.append('action', 'CANCEL_PROCESSING');
+		formData.append('upload_id', upload.id);
+		axios.post('https://api.designengine.ai/system.php', formData)
+			.then((response)=> {
+				console.log('CANCEL_PROCESSING', response.data);
+				this.props.onProcessing(false);
+				this.props.onPage(section);
+			}).catch((error)=> {
+		});
 	};
 
 
@@ -1428,9 +1467,9 @@ class InspectorPage extends Component {
 	onCanvasInterval = ()=> {
 // 		console.log('InspectorPage.onCanvasInterval()', this.antsOffset);
 
-		const { scrolling } = this.state;
+		const { scrolling, section } = this.state;
 
-		if (canvas.current && !scrolling) {
+		if (canvas.current && !scrolling && section !== SECTIONS.PRESENTER) {
 			this.antsOffset = ((this.antsOffset + CANVAS.marchingAnts.increment) % CANVAS.marchingAnts.modOffset);
 			this.handleCanvasUpdate();
 		}
@@ -1439,7 +1478,7 @@ class InspectorPage extends Component {
 	onProcessingUpdate = ()=> {
 		console.log('InspectorPage.onProcessingUpdate()');
 
-		const { upload } = this.state;
+		const { upload, section } = this.state;
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_STATUS');
@@ -1514,6 +1553,9 @@ class InspectorPage extends Component {
 							message : 'An error has occurred during processing!'
 						}
 					});
+
+				} else if (processingState === 5) {
+					this.props.onPage(section);
 				}
 			}).catch((error)=> {
 		});
@@ -1536,21 +1578,21 @@ class InspectorPage extends Component {
 			const { upload } = response.data;
 			if (Object.keys(upload).length > 0) {
 				const tabs = (section === SECTIONS.INSPECT || section === SECTIONS.PARTS) ? inspectorTabs[section][0] : inspectorTabs[section];
-				const artboards = (section === SECTIONS.PRESENTER) ? buildUploadArtboards(upload).slice(-1) : buildUploadArtboards(upload).reverse();
 
-				const baseMetrics = this.calcArtboardBaseMetrics(artboards, viewSize);
+				const artboards = flattenUploadArtboards(upload);
+				const baseMetrics = this.calcArtboardBaseMetrics((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
 				console.log(':::::BASE METRICS:::::', baseMetrics);
 
 				const fitScale = this.calcFitScale(baseMetrics.size, viewSize);
 				console.log(':::::FIT SCALE:::::', fitScale);
 
-				const scaledMetrics = this.calcArtboardScaledMetrics(artboards, baseMetrics, fitScale);
+				const scaledMetrics = this.calcArtboardScaledMetrics((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, baseMetrics, fitScale);
 				console.log(':::::SCALED METRICS:::::', scaledMetrics);
 
-// 			this.setState({ upload, tabs, scale : fitScale, fitScale, tooltip });
 				this.setState({ upload, tabs,
-					artboard : (section === SECTIONS.PRESENTER) ? artboards[0] : null,
-					tooltip  : null
+// 					artboards : artboards,
+					artboard  : (section === SECTIONS.PRESENTER) ? artboards[0] : null,
+					tooltip   : null
 				});
 
 				const processing = (parseInt(upload.state, 10) < 3);
@@ -1591,7 +1633,7 @@ class InspectorPage extends Component {
 		const { section, upload, artboard, slice, hoverSlice, tabs, scale, fitScale, selectedTab, scrolling, viewSize, panMultPt } = this.state;
 		const { valid, restricted, urlBanner, tutorial, tooltip } = this.state;
 
-		const artboards = (upload) ? (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : buildUploadArtboards(upload) : [];
+		const artboards = (upload) ? (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload) : [];
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 
 		const pt = this.calcTransformPoint();
@@ -1642,6 +1684,27 @@ class InspectorPage extends Component {
 			};
 
 			const groupSlices = artboard.slices.filter((slice)=> (slice.type === 'group')).map((slice, i)=> (
+				<SliceRolloverItem
+					key={i}
+					id={slice.id}
+					artboardID={artboard.id}
+					title={slice.title}
+					type={slice.type}
+					filled={slice.filled}
+					visible={(!scrolling)}
+					top={slice.meta.frame.origin.y}
+					left={slice.meta.frame.origin.x}
+					width={slice.meta.frame.size.width}
+					height={slice.meta.frame.size.height}
+					scale={scale}
+					offset={{ x : offset.x, y : offset.y }}
+					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
+					onRollOut={(offset)=> this.handleSliceRollOut(i, slice, offset)}
+					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
+				/>)
+			);
+
+			const artboardSlices = artboard.slices.filter((slice)=> (slice.type === 'artboard')).map((slice, i)=> (
 				<SliceRolloverItem
 					key={i}
 					id={slice.id}
@@ -1754,11 +1817,11 @@ class InspectorPage extends Component {
 
 			slices.push(
 				<div key={i} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut} onDoubleClick={(event)=> this.handleZoom(1)}>
-					<div data-artboard-id={artboard.id} className="inspector-page-group-slices-wrapper">{(section !== SECTIONS.PARTS) ? groupSlices : []}</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{(section !== SECTIONS.PARTS) ? backgroundSlices : backgroundSlices.slice(0, 1)}</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{(section !== SECTIONS.PARTS) ? symbolSlices : []}</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{(section !== SECTIONS.PARTS) ? textfieldSlices : []}</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-slice-slices-wrapper">{(section !== SECTIONS.PARTS) ? sliceSlices : []}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-group-slices-wrapper">{(section === SECTIONS.PRESENTER) ? artboardSlices : groupSlices}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{(section === SECTIONS.INSPECT) ? backgroundSlices : []}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{(section === SECTIONS.PRESENTER) ? symbolSlices : []}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{(section === SECTIONS.INSPECT) ? textfieldSlices : []}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-slice-slices-wrapper">{(section === SECTIONS.INSPECT) ? sliceSlices : []}</div>
 				</div>
 			);
 
@@ -1790,6 +1853,8 @@ class InspectorPage extends Component {
 
 // 		console.log('InspectorPage.render()', this.state, this.contentSize);
 // 		console.log('InspectorPage.render()', this.props, this.state);
+// 		console.log('InspectorPage.render()', this.props);
+		console.log('InspectorPage.render()', this.state);
 // 		console.log('InspectorPage.render()', slices);
 // 		console.log('InspectorPage.render()', upload, activeSlice);
 // 		console.log('InspectorPage:', window.performance.memory);
@@ -1857,7 +1922,7 @@ class InspectorPage extends Component {
 						scale={scale}
 						fitScale={fitScale}
 						section={section}
-						artboards={buildUploadArtboards(upload)}
+						artboards={flattenUploadArtboards(upload)}
 						onChangeArtboard={this.handleChangeArtboard}
 						onPage={this.props.onPage}
 						onZoom={this.handleZoom}
@@ -1918,7 +1983,7 @@ class InspectorPage extends Component {
 									tabs={tab}
 									selectedIndex={selectedTab}
 									onTabClick={(tab)=> this.handleTab(tab)}
-									onContentClick={(tab)=> console.log('onContentClick', tab)}
+									onContentClick={(payload)=> console.log('onContentClick', payload)}
 								/>
 								{(i === 1) && (<div className="inspector-page-panel-button-wrapper">
 									<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download Zip</button>

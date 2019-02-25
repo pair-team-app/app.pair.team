@@ -3,6 +3,8 @@ import { camilzeText, capitalizeText, convertURISlug, isEmptyObject } from './fu
 
 const HTML_TAB = '  ';
 const badChars = /[\\.,_+=[\](){}]/g;
+const DISCLAIMER = 'This code is provided as is, without warranty for free by Design Engine.';
+
 
 const fontWeight = (style)=> {
 	if (!style || typeof style === 'undefined') {
@@ -64,7 +66,8 @@ export function toAndroid(slice, artboard) {
 	const viewType = (slice.type === 'textfield') ? 'Text View' : 'Image View';
 	const caption = viewType;
 
-	let html = '<?xml version="1.0" encoding="utf-8"?>\n';
+	let html = `<-- ${DISCLAIMER} -->\n`;
+	html += '<?xml version="1.0" encoding="utf-8"?>\n';
 	html += '<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" ';
 	html += `${HTML_TAB}xmlns:app="http://schemas.android.com/apk/res-auto" \n`;
 	html += `${HTML_TAB}xmlns:tools="http://schemas.android.com/tools" \n`;
@@ -94,7 +97,8 @@ export function toAndroid(slice, artboard) {
 }
 
 export function toCSS(slice) {
-	let html = '{\n';
+	let html = ``;
+	html += '{\n';
 	html += `${HTML_TAB}position: absolute;\n`;
 	html += `${HTML_TAB}top: ${slice.meta.frame.origin.y}px;\n`;
 	html += `${HTML_TAB}left: ${slice.meta.frame.origin.x}px;\n`;
@@ -118,7 +122,7 @@ export function toCSS(slice) {
 	html = `.${convertURISlug(slice.title)} ${html}`;
 
 	return ({
-		html   : JSON.stringify(html),
+		html   : JSON.stringify(`/* ${DISCLAIMER} */\n\n${html}`),
 		syntax : `${html.replace(HTML_TAB, '\t')}\n`
 	});
 }
@@ -161,7 +165,7 @@ export function toSpecs(slice) {
 export function toSwift(slice, artboard) {
 // 	console.log('funcs.toSwift()', slice, artboard);
 
-	let html = '';
+	let html = `/* ${DISCLAIMER} */`;
 	if (slice.type === 'background' || slice.type === 'group' || slice.type === 'slice' || slice.type === 'symbol' || slice.type === 'textfield') {
 		const artboardName = camilzeText(artboard.title.replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 		const sliceName = camilzeText(convertURISlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''));
