@@ -16,6 +16,7 @@ ReactGA.initialize(UA_TRACKING_ID, {
 }
 
 export function trackEvent(category, action, label=window.location.pathname, value=null, nonInteraction=false) {
+	label = (label || window.location.pathname);
 	value = parseInt(value || ((typeof cookie.load('user_id') !== 'undefined') ? cookie.load('user_id') : '0'), 10);
 	ReactGA.event({ category, action, label, value, nonInteraction });
 }

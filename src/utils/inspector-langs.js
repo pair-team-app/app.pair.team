@@ -3,7 +3,7 @@ import { camilzeText, capitalizeText, convertURISlug, isEmptyObject } from './fu
 
 const HTML_TAB = '  ';
 const badChars = /[\\.,_+=[\](){}]/g;
-const DISCLAIMER = 'This code is provided as is, without warranty for free by Design Engine.';
+const DISCLAIMER = 'This code is provided as is, without warranty \n * for free by Design Engine.\n';
 
 
 const fontWeight = (style)=> {
