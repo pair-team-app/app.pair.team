@@ -357,7 +357,7 @@
 .slice-rollover-item {
 	position: absolute;
 	transform-origin: 0 0;
-	background-color: rgba(0, 0, 0, 0.0);
+	background-color: rgba(0, 0, 0, 0.125);
 	border: 1px solid rgba(0, 92, 197, 0.0);
 }
 

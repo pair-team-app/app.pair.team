@@ -231,6 +231,8 @@ const PartListItem = (props)=> {
 
 	let errored = false;
 
+	const t = capitalizeText((type.includes('child')) ? type.split('_').pop() : type, true);
+
 	return (<div data-slice-id={id} className="part-list-item"><Row vertical="center">
 		<ImageLoader
 			style={thumbStyle}
@@ -240,7 +242,7 @@ const PartListItem = (props)=> {
 			error={()=> (<div className="part-list-item-image part-list-item-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
 			onError={(event)=> (errored = true)}
 		/>
-		<div className="part-list-item-title">{`${limitString(title, Math.max(26 - type.length, 1))} (${capitalizeText(type, true)})`}</div>
+		<div className="part-list-item-title">{`${limitString(title, Math.max(26 - t.length, 1))} (${capitalizeText(t, true)})`}</div>
 		{(!errored) && (<button className="tiny-button part-list-item-button" onClick={()=> props.onClick()}><FontAwesome name="download" /></button>)}
 	</Row></div>);
 };
@@ -263,7 +265,7 @@ const PartsList = (props)=> {
 				<PartListItem
 					key={i}
 					id={slice.id}
-					filename={`${slice.filename}@3x.png`}
+					filename={slice.filename}
 					title={slice.title}
 					type={slice.type}
 					size={slice.meta.frame.size}
@@ -1185,10 +1187,36 @@ class InspectorPage extends Component {
 			tabs[3].syntax = android.syntax;
 
 		} else if (section === SECTIONS.PARTS) {
-			tabs[0].type = 'component';
-			tabs[0].contents = <PartsList
-				contents={slicesForPartItems(upload, slice)}
-				onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+			let formData = new FormData();
+			formData.append('action', 'SYMBOL_SLICES');
+			formData.append('slice_id', slice.id);
+			axios.post('https://api.designengine.ai/system.php', formData)
+				.then((response) => {
+					console.log('SYMBOL_SLICES', response.data);
+
+					const slices = response.data.slices.map((item)=> ({
+						id         : item.id,
+						artboardID : item.artboard_id,
+						title      : item.title,
+						type       : item.type,
+						filename   : item.filename,
+						meta       : JSON.parse(item.meta),
+						added      : item.added,
+						filled     : false
+					}));
+
+					tabs[0].type = 'component';
+					tabs[0].contents = <PartsList
+						contents={slices}
+						onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+					this.setState({ tabs });
+				}).catch((error)=> {
+			});
+
+// 			tabs[0].type = 'component';
+// 			tabs[0].contents = <PartsList
+// 				contents={slicesForPartItems(upload, slice)}
+// 				onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 
 		} else if (section === SECTIONS.PRESENTER) {
 			tabs[0][0].contents = css.html;
@@ -1234,10 +1262,36 @@ class InspectorPage extends Component {
 				tabs[3].syntax = android.syntax;
 
 			} else if (section === SECTIONS.PARTS) {
-				tabs[0].type = 'component';
-				tabs[0].contents = <PartsList
-					contents={slicesForPartItems(upload, this.state.slice)}
-					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+				let formData = new FormData();
+				formData.append('action', 'SYMBOL_SLICES');
+				formData.append('slice_id', this.state.slice.id);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response) => {
+						console.log('SYMBOL_SLICES', response.data);
+
+						const slices = response.data.slices.map((item)=> ({
+							id         : item.id,
+							artboardID : item.artboard_id,
+							title      : item.title,
+							type       : item.type,
+							filename   : item.filename,
+							meta       : JSON.parse(item.meta),
+							added      : item.added,
+							filled     : false
+						}));
+
+						tabs[0].type = 'component';
+						tabs[0].contents = <PartsList
+							contents={slices}
+							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+						this.setState({ tabs });
+					}).catch((error)=> {
+				});
+
+// 				tabs[0].type = 'component';
+// 				tabs[0].contents = <PartsList
+// 					contents={slicesForPartItems(upload, this.state.slice)}
+// 					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 
 			} else if (section === SECTIONS.PRESENTER) {
 				tabs[0][0].contents = css.html;
@@ -1306,10 +1360,31 @@ class InspectorPage extends Component {
 				tabs[3].syntax = android.syntax;
 
 			} else if (section === SECTIONS.PARTS) {
-				tabs[0].type = 'component';
-				tabs[0].contents = <PartsList
-					contents={slicesForPartItems(upload, slice)}
-					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+				let formData = new FormData();
+				formData.append('action', 'SYMBOL_SLICES');
+				formData.append('slice_id', slice.id);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response) => {
+						console.log('SYMBOL_SLICES', response.data);
+
+						const slices = response.data.slices.map((item)=> ({
+							id         : item.id,
+							artboardID : item.artboard_id,
+							title      : item.title,
+							type       : item.type,
+							filename   : item.filename,
+							meta       : JSON.parse(item.meta),
+							added      : item.added,
+							filled     : false
+						}));
+
+						tabs[0].type = 'component';
+						tabs[0].contents = <PartsList
+							contents={slices}
+							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+						this.setState({ tabs });
+					}).catch((error)=> {
+				});
 
 			} else if (section === SECTIONS.PRESENTER) {
 				tabs[0][0].contents = css.html;
@@ -1838,10 +1913,10 @@ class InspectorPage extends Component {
 
 			slices.push(
 				<div key={i} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut} onDoubleClick={(event)=> this.handleZoom(1)}>
-					<div data-artboard-id={artboard.id} className="inspector-page-group-slices-wrapper">{(section === SECTIONS.PRESENTER) ? artboardSlices : groupSlices}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-group-slices-wrapper">{(section === SECTIONS.PRESENTER) ? artboardSlices : []}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{(section === SECTIONS.INSPECT) ? backgroundSlices : []}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{(section === SECTIONS.PRESENTER) ? [] : symbolSlices}</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{(section === SECTIONS.INSPECT) ? [] : []}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{(section === SECTIONS.INSPECT) ? textfieldSlices : []}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-slice-slices-wrapper">{(section === SECTIONS.INSPECT) ? sliceSlices : []}</div>
 				</div>
 			);
