@@ -157,7 +157,7 @@ const slicesForPartItems = (upload, slice)=> {
 // 	console.log('slicesForPartItems()', upload, slice);
 	let slices = [slice];
 
-	artboardForID(upload, slice.artboardID).slices.filter((item)=> ((item.type === 'group' || item.type === 'slice' || item.type== 'symbol') && item.id !== slice.id)).forEach((item)=> {
+	artboardForID(upload, slice.artboardID).slices.filter((item)=> ((item.type === 'group' || item.type === 'slice' || item.type === 'symbol' || item.type === 'symbol_child') && item.id !== slice.id)).forEach((item)=> {
 		if (rectContainsRect(frameToRect(slice.meta.frame), frameToRect(item.meta.frame)) || window.location.pathname.includes('/parts')) {
 			slices.push(item);
 		}
@@ -1589,6 +1589,27 @@ class InspectorPage extends Component {
 				const scaledMetrics = this.calcArtboardScaledMetrics((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, baseMetrics, fitScale);
 				console.log(':::::SCALED METRICS:::::', scaledMetrics);
 
+				if (section === SECTIONS.PRESENTER) {
+// 					const artboard = artboards[0];
+// 					const css = toCSS(artboard);
+// 					const reactCSS = toReactCSS(artboard);
+// 					const swift = toSwift(artboard, artboardForID(upload, artboard.id));
+// 					const android = toAndroid(artboard, artboard);
+//
+// 					tabs[0][0].contents = '';//css.html;
+// 					tabs[0][0].syntax = '';//css.syntax;
+// 					tabs[0][1].contents = '';//reactCSS.html;
+// 					tabs[0][1].syntax = '';//reactCSS.syntax;
+// 					tabs[0][2].contents = '';//swift.html;
+// 					tabs[0][2].syntax = '';//swift.syntax;
+// 					tabs[0][3].contents = '';//android.html;
+// 					tabs[0][3].syntax = '';//android.syntax;
+// 					tabs[1][0].type = 'html';
+// 					tabs[1][0].contents = <ArtboardsList
+// 						contents={flattenUploadArtboards(upload)}
+// 						onArtboardListItem={(artboard)=> this.handleChangeArtboard(1)} />;
+				}
+
 				this.setState({ upload, tabs,
 // 					artboards : artboards,
 					artboard  : (section === SECTIONS.PRESENTER) ? artboards[0] : null,
@@ -1819,8 +1840,8 @@ class InspectorPage extends Component {
 				<div key={i} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut} onDoubleClick={(event)=> this.handleZoom(1)}>
 					<div data-artboard-id={artboard.id} className="inspector-page-group-slices-wrapper">{(section === SECTIONS.PRESENTER) ? artboardSlices : groupSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{(section === SECTIONS.INSPECT) ? backgroundSlices : []}</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{(section === SECTIONS.PRESENTER) ? symbolSlices : []}</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{(section === SECTIONS.INSPECT) ? textfieldSlices : []}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{(section === SECTIONS.PRESENTER) ? [] : symbolSlices}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{(section === SECTIONS.INSPECT) ? [] : []}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-slice-slices-wrapper">{(section === SECTIONS.INSPECT) ? sliceSlices : []}</div>
 				</div>
 			);
