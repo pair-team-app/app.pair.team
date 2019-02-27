@@ -232,6 +232,103 @@ const ColorSwatch = (props)=> {
 	return (<div className="inspector-page-color-swatch" style={{ backgroundColor : fill }} />);
 };
 
+function FilingTabSet(props) {
+// 	console.log('InspectorPage.FilingTabSet()', props);
+
+	const { tabs, selectedIndex } = props;
+
+
+	return (<div className="filing-tab-set">
+		<ul className="filing-tab-set-title-wrapper">
+			{tabs.map((tab, i)=> (
+				<FilingTabTitle
+					key={i}
+					ind={i}
+					title={tab.title}
+					selected={i === selectedIndex}
+					onClick={()=> props.onTabClick(tab)}
+				/>
+			))}
+		</ul>
+
+		<div className="filing-tab-set-content-wrapper">
+			{tabs.filter((tab, i)=> (i === selectedIndex)).map((tab, i)=> (
+				<FilingTabContent
+					key={i}
+					ind={i}
+					type={tab.type}
+					contents={tab.contents}
+					onClick={()=> props.onContentClick(tab)}
+				/>
+			))}
+		</div>
+	</div>);
+}
+
+const FilingTabContent = (props)=> {
+// 	console.log('InspectorPage.FilingTabContent()', props);
+
+	const { ind, type, contents } = props;
+	return (<div key={ind} className="filing-tab-content">
+		{(!type || type === 'json_html') && (<span dangerouslySetInnerHTML={{ __html : (contents && contents.length > 0) ? String(JSON.parse(contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : '' }} />)}
+		{(type === 'component') && (contents)}
+	</div>);
+};
+
+const FilingTabTitle = (props)=> {
+// 	console.log('InspectorPage.FilingTabTitle()', props);
+
+	const { ind, title, selected } = props;
+	let className = `filing-tab-title${(!title || title.length === 0) ? ' filing-tab-title-blank' : ''}${(selected) ? ' filing-tab-title-selected' : ''}`;
+
+
+	return (<React.Fragment key={ind}>
+		<li key={ind} className={className} onClick={()=> props.onClick()}>{title}</li>
+	</React.Fragment>);
+};
+
+const InspectorFooter = (props)=> {
+// 	console.log('InspectorPage.InspectorFooter()', props);
+
+	const { section, scale, fitScale, artboards } = props;
+
+	return (<div className="inspector-page-footer-wrapper"><Row vertical="center">
+		<img src={deLogo} className="inspector-page-footer-logo" onClick={()=> props.onPage('')} alt="Design Engine" />
+		<div className="inspector-page-footer-button-wrapper">
+			{/*{(profile && ((upload.id << 0) === 1 || upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true });}}>Share</button>)}*/}
+
+			<button disabled={(scale >= Math.max(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-in'); props.onZoom(1);}}><FontAwesome name="search-plus" /></button>
+			<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-out'); props.onZoom(-1);}}><FontAwesome name="search-minus" /></button>
+			<button disabled={false} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-reset'); props.onZoom(0);}}>Reset ({(fitScale * 100) << 0}%)</button>
+
+			{(section === SECTIONS.PRESENTER && artboards.length > 1) && (<>
+				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'prev-artboard'); props.onChangeArtboard({id:-1,pageID:0});}}><FontAwesome name="arrow-left" /></button>
+				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'next-artboard'); props.onChangeArtboard({id:1,pageID:0});}}><FontAwesome name="arrow-right" /></button>
+			</>)}
+		</div>
+	</Row></div>);
+};
+
+const MarqueeBanner = (props)=> {
+	console.log('InspectorPage.MarqueeBanner()', props);
+
+	const { width, background, copyText, outro, track, children } = props;
+	const className = `marquee-banner${(outro) ? ' marquee-banner-outro' : ''}`;
+	const style = {
+		width      : `calc(100% - ${(width) ? width : 0}px)`,
+		background : background
+	};
+
+	return (<div className={className} style={style}>
+		<div className="marquee-banner-content-wrapper">
+			<CopyToClipboard onCopy={()=> props.onCopy(track)} text={copyText}>
+				{children}
+			</CopyToClipboard>
+		</div>
+		<button className="tiny-button marquee-banner-close-button" onClick={props.onClose}><FontAwesome name="times" /></button>
+	</div>);
+};
+
 const PartListItem = (props)=> {
 // 	console.log('InspectorPage.PartListItem()', props);
 
@@ -287,43 +384,6 @@ const PartsList = (props)=> {
 			);
 		})}
 	</div>);
-};
-
-const UploadProcessing = (props)=> {
-// 	console.log('InspectorPage.UploadProcessing()', props);
-
-	const { upload, processing, vpHeight } = props;
-	const artboard = flattenUploadArtboards(upload).shift();
-	const url = buildInspectorURL(upload);
-
-	const imgStyle = (artboard) ? {
-		width  : `${artboard.meta.frame.size.width * ((vpHeight - 300) / artboard.meta.frame.size.height)}px`,
-		height : `${artboard.meta.frame.size.height * ((vpHeight - 300) / artboard.meta.frame.size.height)}px`
-	} : null;
-
-	return (<div className="upload-processing-wrapper"><Column horizontal="center" vertical="start">
-		{(processing.message.length > 0) && (<Row><div className="upload-processing-title">{processing.message}</div></Row>)}
-		<Row><CopyToClipboard onCopy={()=> props.onCopyURL()} text={url}>
-			<div className="upload-processing-url">{url}</div>
-		</CopyToClipboard></Row>
-
-		<Row><div className="upload-processing-button-wrapper">
-			<CopyToClipboard onCopy={()=> props.onCopyURL()} text={url}>
-				<button className="adjacent-button">Copy</button>
-			</CopyToClipboard>
-			<button onClick={()=> props.onCancel()}>Cancel</button>
-		</div></Row>
-
-		<Row horizontal="center">{(artboard)
-			? (<ImageLoader
-					src={(!artboard.filename.includes('@')) ? `${artboard.filename}@0.25x.png` : artboard.filename}
-					image={()=> (<img className="upload-processing-image" src={(!artboard.filename.includes('@')) ? `${artboard.filename}@0.25x.png` : artboard.filename} style={imgStyle} alt={upload.title} />)}
-					loading={()=> (<div className="upload-processing-image upload-processing-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
-					error={()=> (<div className="upload-processing-image upload-processing-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
-				/>)
-			: (<img className="upload-processing-image" src={bannerPanel.image} alt={bannerPanel.title} />)
-		}</Row>
-	</Column></div>);
 };
 
 const SliceRolloverItem = (props)=> {
@@ -489,86 +549,44 @@ function SpecsListItem(props) {
 	</CopyToClipboard>);
 }
 
+const UploadProcessing = (props)=> {
+// 	console.log('InspectorPage.UploadProcessing()', props);
 
+	const { upload, processing, vpHeight } = props;
+	const artboard = flattenUploadArtboards(upload).shift();
+	const url = buildInspectorURL(upload);
 
-function FilingTabSet(props) {
-// 	console.log('InspectorPage.FilingTabSet()', props);
+	const imgStyle = (artboard) ? {
+		width  : `${artboard.meta.frame.size.width * ((vpHeight - 300) / artboard.meta.frame.size.height)}px`,
+		height : `${artboard.meta.frame.size.height * ((vpHeight - 300) / artboard.meta.frame.size.height)}px`
+	} : null;
 
-	const { tabs, selectedIndex } = props;
+	return (<div className="upload-processing-wrapper"><Column horizontal="center" vertical="start">
+		{(processing.message.length > 0) && (<Row><div className="upload-processing-title">{processing.message}</div></Row>)}
+		<Row><CopyToClipboard onCopy={()=> props.onCopyURL()} text={url}>
+			<div className="upload-processing-url">{url}</div>
+		</CopyToClipboard></Row>
 
+		<Row><div className="upload-processing-button-wrapper">
+			<CopyToClipboard onCopy={()=> props.onCopyURL()} text={url}>
+				<button className="adjacent-button">Copy</button>
+			</CopyToClipboard>
+			<button onClick={()=> props.onCancel()}>Cancel</button>
+		</div></Row>
 
-	return (<div className="filing-tab-set">
-		<ul className="filing-tab-set-title-wrapper">
-			{tabs.map((tab, i)=> (
-				<FilingTabTitle
-					key={i}
-					ind={i}
-					title={tab.title}
-					selected={i === selectedIndex}
-					onClick={()=> props.onTabClick(tab)}
-				/>
-			))}
-		</ul>
-
-		<div className="filing-tab-set-content-wrapper">
-			{tabs.filter((tab, i)=> (i === selectedIndex)).map((tab, i)=> (
-				<FilingTabContent
-					key={i}
-					ind={i}
-					type={tab.type}
-					contents={tab.contents}
-					onClick={()=> props.onContentClick(tab)}
-				/>
-			))}
-		</div>
-	</div>);
-}
-
-
-const FilingTabContent = (props)=> {
-// 	console.log('InspectorPage.FilingTabContent()', props);
-
-	const { ind, type, contents } = props;
-	return (<div key={ind} className="filing-tab-content">
-		{(!type || type === 'json_html') && (<span dangerouslySetInnerHTML={{ __html : (contents && contents.length > 0) ? String(JSON.parse(contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : '' }} />)}
-		{(type === 'component') && (contents)}
-	</div>);
+		<Row horizontal="center">{(artboard)
+			? (<ImageLoader
+				src={(!artboard.filename.includes('@')) ? `${artboard.filename}@0.25x.png` : artboard.filename}
+				image={()=> (<img className="upload-processing-image" src={(!artboard.filename.includes('@')) ? `${artboard.filename}@0.25x.png` : artboard.filename} style={imgStyle} alt={upload.title} />)}
+				loading={()=> (<div className="upload-processing-image upload-processing-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+				error={()=> (<div className="upload-processing-image upload-processing-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+			/>)
+			: (<img className="upload-processing-image" src={bannerPanel.image} alt={bannerPanel.title} />)
+		}</Row>
+	</Column></div>);
 };
 
 
-const FilingTabTitle = (props)=> {
-// 	console.log('InspectorPage.FilingTabTitle()', props);
-
-	const { ind, title, selected } = props;
-	let className = `filing-tab-title${(!title || title.length === 0) ? ' filing-tab-title-blank' : ''}${(selected) ? ' filing-tab-title-selected' : ''}`;
-
-
-	return (<React.Fragment key={ind}>
-		<li key={ind} className={className} onClick={()=> props.onClick()}>{title}</li>
-	</React.Fragment>);
-};
-
-const InspectorFooter = (props)=> {
-// 	console.log('InspectorPage.InspectorFooter()', props);
-
-	const { section, scale, fitScale, artboards } = props;
-
-	return (<div className="inspector-page-footer-wrapper"><Row vertical="center">
-		<img src={deLogo} className="inspector-page-footer-logo" onClick={()=> props.onPage('')} alt="Design Engine" />
-		<div className="inspector-page-footer-button-wrapper">
-			{/*{(profile && ((upload.id << 0) === 1 || upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true });}}>Share</button>)}*/}
-
-			<button disabled={(scale >= Math.max(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-in'); props.onZoom(1);}}><FontAwesome name="search-plus" /></button>
-			<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-out'); props.onZoom(-1);}}><FontAwesome name="search-minus" /></button>
-			<button disabled={false} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-reset'); props.onZoom(0);}}>Reset ({(fitScale * 100) << 0}%)</button>
-
-			{(section === SECTIONS.PRESENTER && artboards.length > 1) && (<>
-				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'prev-artboard'); props.onChangeArtboard({id:-1,pageID:0});}}><FontAwesome name="arrow-left" /></button>
-				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'next-artboard'); props.onChangeArtboard({id:1,pageID:0});}}><FontAwesome name="arrow-right" /></button>
-			</>)}
-		</div>
-	</Row></div>);
-};
 
 
 
@@ -1694,7 +1712,7 @@ class InspectorPage extends Component {
 		console.log('InspectorPage.onProcessingUpdate()');
 
 		const { upload, section } = this.state;
-		const title = `${limitString(upload.filename.split('/').pop().split('.').shift(), 34)}${upload.filename.split('/').pop().split('.').pop()}`;
+		const title = `${limitString(upload.filename.split('/').pop().split('.').shift(), 34)}.${upload.filename.split('/').pop().split('.').pop()}`;
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_STATUS');
@@ -2024,8 +2042,6 @@ class InspectorPage extends Component {
 
 		const contentClass = `inspector-page-content${(section === SECTIONS.PRESENTER) ? ' inspector-page-content-presenter' : ''}`;
 		const panelClass = `inspector-page-panel${(section === SECTIONS.PRESENTER) ? ' inspector-page-panel-presenter' : ''}`;
-		const urlClass = `inspector-page-url-wrapper${(!urlBanner) ? ' inspector-page-url-outro' : ''}`;
-
 
 		const listTotal = (upload && activeSlice) ? (section === SECTIONS.PRESENTER) ? flattenUploadArtboards(upload).length : (activeSlice) ? (activeSlice.type === 'group') ? fillGroupPartItemSlices(upload, activeSlice).length : activeSlice.children.length : 0 : 0;
 
@@ -2043,16 +2059,17 @@ class InspectorPage extends Component {
 			contents : ''
 		}];
 
-
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
 				<div className={contentClass} onWheel={this.handleWheelStart}>
-					{(upload && !processing) && (<div className={urlClass} style={{ width : `calc(100% - ${(section === SECTIONS.PRESENTER) ? 880 : 360}px)` }}>
-						<CopyToClipboard onCopy={()=> this.handleClipboardCopy('url')} text={buildInspectorURL(upload)}>
-							<div className="inspector-page-url">{buildInspectorURL(upload)}</div>
-						</CopyToClipboard>
-						<FontAwesome name="times" className="inspector-page-url-close-button" onClick={()=> this.setState({ urlBanner : false })} />
-					</div>)}
+					{(upload && !processing) && (<MarqueeBanner
+						width={(section === SECTIONS.PRESENTER) ? 880 : 360}
+						copyText={buildInspectorURL(upload)}
+						outro={!urlBanner}
+						onCopy={()=> this.handleClipboardCopy('url')}
+						onClose={()=> this.setState({ urlBanner : false })}>
+							<div className="marquee-banner-url">{buildInspectorURL(upload)}</div>
+					</MarqueeBanner>)}
 
 					<InteractiveDiv
 						x={panMultPt.x}
@@ -2066,17 +2083,16 @@ class InspectorPage extends Component {
 						style={{ width : '100%', height : '100%' }}
 						onPanAndZoom={this.handlePanAndZoom}
 						onPanEnd={()=> (this.setState({ scrolling : false }))}
-						onPanMove={this.handlePanMove}
-					>
-						<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
-							{(artboards.length > 0) && (<div style={artboardsStyle}>
-								{artboardImages}
-								<div className="inspector-page-canvas-wrapper" onClick={(event)=> this.handleCanvasClick(event)} onDoubleClick={()=> this.handleZoom(1)} style={canvasStyle} ref={canvasWrapper}>
-									<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
-								</div>
-								{slices}
-							</div>)}
-						</div>
+						onPanMove={this.handlePanMove}>
+							<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
+								{(artboards.length > 0) && (<div style={artboardsStyle}>
+									{artboardImages}
+									<div className="inspector-page-canvas-wrapper" onClick={(event)=> this.handleCanvasClick(event)} onDoubleClick={()=> this.handleZoom(1)} style={canvasStyle} ref={canvasWrapper}>
+										<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
+									</div>
+									{slices}
+								</div>)}
+							</div>
 					</InteractiveDiv>
 
 					{(upload && !processing) && (<InspectorFooter
