@@ -779,8 +779,8 @@ class InspectorPage extends Component {
 		document.removeEventListener('keydown', this.handleKeyDown.bind(this));
 // 		document.removeEventListener('wheel', this.handleWheelStart.bind(this));
 
-		const { section, upload } = this.state;
-		if (upload) {
+		const { upload, section, valid, restricted } = this.state;
+		if (upload && valid && restricted) {
 			this.props.setRedirectURI(buildInspectorPath(upload), section);
 		}
 	}
@@ -2041,11 +2041,11 @@ class InspectorPage extends Component {
 
 
 // 		console.log('InspectorPage.render()', this.state, this.contentSize);
-// 		console.log('InspectorPage.render()', this.props, this.state);
+		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage.render()', this.props);
 // 		console.log('InspectorPage.render()', this.state);
 // 		console.log('InspectorPage.render()', slices);
-		console.log('InspectorPage.render()', upload, activeSlice);
+// 		console.log('InspectorPage.render()', upload, activeSlice);
 // 		console.log('InspectorPage:', window.performance.memory);
 
 
