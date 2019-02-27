@@ -196,11 +196,14 @@ export function limitString(str='', len, char='…') {
 	return ((str.length > len) ? str.substr(0, len - 1) + char : str);
 }
 
-export function makeDownload(url) {
+export function makeDownload(url, blank) {
+	blank = (blank || false);
+
 	let link = document.createElement('a');
-	link.target = '_self';
+	link.target = (blank) ? '_blank' : '_self';
 	link.href = url;
 	link.download = url.split('/').pop();
+	document.body.appendChild(link);
 	link.click();
 	link.remove();
 }

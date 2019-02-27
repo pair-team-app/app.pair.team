@@ -69,7 +69,7 @@ const mapDispatchToProps = (dispatch)=> {
 
 
 const artboardForID = (upload, artboardID)=> {
-	return (flattenUploadArtboards(upload).filter((artboard)=> (artboard.id === artboardID)).pop());
+	return (flattenUploadArtboards(upload).find((artboard)=> (artboard.id === artboardID)));
 };
 
 const drawCanvasSliceBorder = (context, frame)=> {
@@ -144,12 +144,12 @@ const drawCanvasSliceMarchingAnts = (context, frame, offset)=> {
 	context.stroke();
 };
 
-const fillPartItemSlices = (upload, slice)=> {
-// 	console.log('fillPartItemSlices()', upload, slice);
+const fillGroupPartItemSlices = (upload, slice)=> {
+	console.log('fillGroupPartItemSlices()', upload, slice);
 	let slices = [slice];
 
-	artboardForID(upload, slice.artboardID).slices.filter((item)=> ((item.type === 'group' || item.type === 'slice' || item.type === 'symbol' || item.type === 'symbol_child') && item.id !== slice.id)).forEach((item)=> {
-		if (rectContainsRect(frameToRect(slice.meta.frame), frameToRect(item.meta.frame)) || window.location.pathname.includes('/parts')) {
+	artboardForID(upload, slice.artboardID).slices.filter((item)=> (item.type !== 'symbol_child' && item.id !== slice.id)).forEach((item)=> {
+		if (rectContainsRect(frameToRect(slice.meta.frame), frameToRect(item.meta.frame))) {
 			slices.push(item);
 		}
 	});
@@ -172,11 +172,12 @@ const flattenUploadArtboards = (upload)=> {
 	})).reverse());
 };
 
+/*
 const slicesByArea = (slices)=> {
 	console.log('slicesByArea()', slices);
 	return(slices.sort((s1, s2)=> ((areaSize(s1.meta.frame.size) < areaSize(s2.meta.frame.size)) ? -1 : (areaSize(s1.meta.frame.size) > areaSize(s2.meta.frame.size)) ? 1 : 0)));
 };
-
+*/
 
 
 
@@ -248,7 +249,7 @@ const PartListItem = (props)=> {
 	return (<div data-slice-id={id} className="part-list-item"><Row vertical="center">
 		<ImageLoader
 			style={thumbStyle}
-			src={filename}
+			src={`${filename}@2x.png`}
 			image={(props)=> <PartListItemThumb {...props} width={size.width * 0.25} height={size.height * 0.25} />}
 			loading={()=> (<div className="part-list-item-image part-list-item-image-loading" style={thumbStyle}><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
 			error={()=> (<div className="part-list-item-image part-list-item-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
@@ -757,7 +758,7 @@ class InspectorPage extends Component {
 
 
 	calcArtboardBaseMetrics = (artboards, vpSize)=> {
-		console.log('InspectorPage.calcArtboardBaseMetrics()', artboards, vpSize);
+// 		console.log('InspectorPage.calcArtboardBaseMetrics()', artboards, vpSize);
 
 		const vpRatio = {
 			width  : vpSize.width / vpSize.height,
@@ -818,7 +819,7 @@ class InspectorPage extends Component {
 	};
 
 	calcArtboardScaledMetrics = (artboards, baseMetrics, scale)=> {
-		console.log('InspectorPage.calcArtboardScaledMetrics()', artboards, baseMetrics, scale);
+// 		console.log('InspectorPage.calcArtboardScaledMetrics()', artboards, baseMetrics, scale);
 
 		let scaledMetrics = [];
 		let coords = {
@@ -870,12 +871,12 @@ class InspectorPage extends Component {
 	};
 
 	calcFitScale = (baseSize, vpSize)=> {
-		console.log('InspectorPage.calcFitScale()', baseSize, vpSize);
+// 		console.log('InspectorPage.calcFitScale()', baseSize, vpSize);
 		return (Math.max(Math.min(vpSize.height / baseSize.height, vpSize.width / baseSize.width, Math.max(...PAN_ZOOM.zoomNotches)), Math.min(...PAN_ZOOM.zoomNotches)));
 	};
 
 	calcScrollPoint = (panPt, vpSize, baseSize, scale)=> {
-		console.log('InspectorPage.calcScrollPoint()', panPt, vpSize, baseSize, scale);
+// 		console.log('InspectorPage.calcScrollPoint()', panPt, vpSize, baseSize, scale);
 
 		const pt = this.calcTransformPoint();
 		return ({
@@ -923,17 +924,17 @@ class InspectorPage extends Component {
 	};
 
 	handleArtboardRollOver = (event)=> {
-		console.log('InspectorPage.handleArtboardRollOver()', event.target);
+// 		console.log('InspectorPage.handleArtboardRollOver()', event.target);
 
 // 		event.stopPropagation();
-		const artboardID = event.target.getAttribute('data-artboard-id');
+		const artboardID = event.target.getAttribute('data-artboard-id') << 0;
 
 		if (this.state.section === SECTIONS.PRESENTER) {
 			return;
 		}
 
 		if (artboardID) {
-			let { upload, artboard } = this.state;
+			let { upload, artboard, section } = this.state;
 			if (!artboard || artboard.id !== artboardID) {
 				artboard = artboardForID(upload, artboardID);
 				if (artboard) {
@@ -941,22 +942,18 @@ class InspectorPage extends Component {
 				}
 			}
 
-			if (!this.canvasInterval) {
-				this.canvasInterval = setInterval(()=> this.onCanvasInterval(), CANVAS.marchingAnts.interval);
-			}
-
 			if (artboard.slices.length === 0) {
 				let formData = new FormData();
 				formData.append('action', 'ARTBOARD_SLICES');
 				formData.append('artboard_id', artboardID);
 				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response) => {
+					.then((response)=> {
 						console.log('ARTBOARD_SLICES', response.data);
 
 						let { upload } = this.state;
 						let pages = [...upload.pages];
-						pages.forEach((page) => {
-							page.artboards.filter((artboard)=> (artboard.id === artboardID)).forEach((artboard)=> {
+						pages.forEach((page)=> {
+							page.artboards.filter((artboard)=> ((artboard.id << 0) === artboardID)).forEach((artboard)=> {
 								artboard.slices = response.data.slices.map((slice)=> ({
 									id         : slice.id << 0,
 									artboardID : slice.artboard_id << 0,
@@ -965,7 +962,8 @@ class InspectorPage extends Component {
 									filename   : slice.filename,
 									meta       : JSON.parse(slice.meta),
 									added      : slice.added,
-									filled     : false
+									filled     : false,
+									children   : []
 								}));
 							});
 						});
@@ -974,6 +972,10 @@ class InspectorPage extends Component {
 						this.setState({ upload });
 					}).catch((error)=> {
 				});
+			}
+
+			if (section !== SECTIONS.PRESENTER && !this.canvasInterval) {
+				this.canvasInterval = setInterval(()=> this.onCanvasInterval(), CANVAS.marchingAnts.interval);
 			}
 		}
 	};
@@ -986,7 +988,7 @@ class InspectorPage extends Component {
 
 		if (!scrolling) {
 			let tabs = [...this.state.tabs];
-			tabs.forEach((tab, i) => {
+			tabs.forEach((tab, i)=> {
 				tabs[i] = {
 					id       : tab.id,
 					title    : tab.title,
@@ -1052,7 +1054,7 @@ class InspectorPage extends Component {
 	};
 
 	handleChangeArtboard = (artboard)=> {
-		console.log('InspectorPage.handleChangeArtboard()', artboard);
+// 		console.log('InspectorPage.handleChangeArtboard()', artboard);
 
 		if (artboard.pageID <= 0) {
 			const { upload } = this.state;
@@ -1089,7 +1091,7 @@ class InspectorPage extends Component {
 	};
 
 	handleClipboardCopy = (trackType, msg='Copied to Clipboard!')=> {
-		console.log('InspectorPage.handleClipboardCopy()', trackType, msg);
+// 		console.log('InspectorPage.handleClipboardCopy()', trackType, msg);
 
 		trackEvent('button', `copy-${trackType}`);
 		this.props.onPopup({
@@ -1106,6 +1108,14 @@ class InspectorPage extends Component {
 		makeDownload(`http://cdn.designengine.ai/download-project.php?upload_id=${upload.id}`);
 	};
 
+	handleDownloadArtboardPDF = ()=> {
+		console.log('InspectorPage.handleDownloadArtboardPDF()');
+
+		trackEvent('button', 'download-pdf');
+		const { upload } = this.state;
+		makeDownload(`http://cdn.designengine.ai/download-pdf.php?upload_id=${upload.id}`);
+	};
+
 	handleDownloadPartListItem = (slice)=> {
 // 		console.log('InspectorPage.handleDownloadPartListItem()', slice);
 
@@ -1119,7 +1129,10 @@ class InspectorPage extends Component {
 
 		trackEvent('button', 'download-list');
 		const { upload, slice } = this.state;
-		const sliceIDs = fillPartItemSlices(upload, slice).map((slice)=> (slice.id)).join(',');
+		const sliceIDs = (slice.type === 'group') ? fillGroupPartItemSlices(upload, slice).map((slice)=> (slice.id)).join(',') : slice.children.map((slice)=> (slice.id)).join(',');
+
+		console.log('::::::::::', `http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
+
 		makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
 	};
 
@@ -1172,7 +1185,7 @@ class InspectorPage extends Component {
 		}
 	};
 
-	handlePanAndZoom = (x, y, scale) => {
+	handlePanAndZoom = (x, y, scale)=> {
 // 		console.log('InspectorPage.handlePanAndZoom()', x, y, scale);
 
 // 		const panMultPt = { x, y };
@@ -1181,7 +1194,7 @@ class InspectorPage extends Component {
 // 		this.setState({ scale });
 	};
 
-	handlePanMove = (x, y) => {
+	handlePanMove = (x, y)=> {
 // 		console.log('InspectorPage.handlePanMove()', x, y, this.state.scale);
 
 		const panMultPt = { x, y };
@@ -1226,36 +1239,40 @@ class InspectorPage extends Component {
 			tabs[3].syntax = android.syntax;
 
 		} else if (section === SECTIONS.PARTS) {
-			let formData = new FormData();
-			formData.append('action', 'SYMBOL_SLICES');
-			formData.append('slice_id', slice.id);
-			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
-					console.log('SYMBOL_SLICES', response.data);
+			tabs[0].type = 'component';
 
-					const slices = response.data.slices.map((item)=> ({
-						id         : item.id,
-						artboardID : item.artboard_id,
-						title      : item.title,
-						type       : item.type,
-						filename   : item.filename,
-						meta       : JSON.parse(item.meta),
-						added      : item.added,
-						filled     : false
-					}));
+			if (slice.type === 'symbol') {
+				let formData = new FormData();
+				formData.append('action', 'SYMBOL_SLICES');
+				formData.append('slice_id', slice.id);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response)=> {
+						console.log('SYMBOL_SLICES', response.data);
 
-					tabs[0].type = 'component';
-					tabs[0].contents = <PartsList
-						contents={slices}
-						onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-					this.setState({ tabs });
-				}).catch((error)=> {
-			});
+						const slices = response.data.slices.map((item)=> ({
+							id         : item.id << 0,
+							artboardID : item.artboard_id << 0,
+							title      : item.title,
+							type       : item.type,
+							filename   : item.filename,
+							meta       : JSON.parse(item.meta),
+							added      : item.added,
+							filled     : false,
+						}));
 
-// 			tabs[0].type = 'component';
-// 			tabs[0].contents = <PartsList
-// 				contents={fillPartItemSlices(upload, slice)}
-// 				onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+						slice.children = slices;
+						tabs[0].contents = <PartsList
+							contents={slices}
+							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+						this.setState({ tabs });
+					}).catch((error)=> {
+				});
+
+			} else if (slice.type === 'group') {
+				tabs[0].contents = <PartsList
+					contents={fillGroupPartItemSlices(upload, slice)}
+					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+			}
 
 		} else if (section === SECTIONS.PRESENTER) {
 			tabs[0][0].contents = css.html;
@@ -1301,36 +1318,40 @@ class InspectorPage extends Component {
 				tabs[3].syntax = android.syntax;
 
 			} else if (section === SECTIONS.PARTS) {
-				let formData = new FormData();
-				formData.append('action', 'SYMBOL_SLICES');
-				formData.append('slice_id', this.state.slice.id);
-				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response) => {
-						console.log('SYMBOL_SLICES', response.data);
+				tabs[0].type = 'component';
 
-						const slices = response.data.slices.map((item)=> ({
-							id         : item.id,
-							artboardID : item.artboard_id,
-							title      : item.title,
-							type       : item.type,
-							filename   : item.filename,
-							meta       : JSON.parse(item.meta),
-							added      : item.added,
-							filled     : false
-						}));
+				if (this.state.slice.type === 'symbol') {
+					let formData = new FormData();
+					formData.append('action', 'SYMBOL_SLICES');
+					formData.append('slice_id', this.state.slice.id);
+					axios.post('https://api.designengine.ai/system.php', formData)
+						.then((response)=> {
+							console.log('SYMBOL_SLICES', response.data);
 
-						tabs[0].type = 'component';
-						tabs[0].contents = <PartsList
-							contents={slices}
-							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-						this.setState({ tabs });
-					}).catch((error)=> {
-				});
+							const slices = response.data.slices.map((item)=> ({
+								id         : item.id << 0,
+								artboardID : item.artboard_id << 0,
+								title      : item.title,
+								type       : item.type,
+								filename   : item.filename,
+								meta       : JSON.parse(item.meta),
+								added      : item.added,
+								filled     : false,
+							}));
 
-// 				tabs[0].type = 'component';
-// 				tabs[0].contents = <PartsList
-// 					contents={fillPartItemSlices(upload, this.state.slice)}
-// 					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+							slice.children = slices;
+							tabs[0].contents = <PartsList
+								contents={slices}
+								onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+							this.setState({ tabs });
+						}).catch((error)=> {
+					});
+
+				} else if (this.state.slice.type === 'group') {
+					tabs[0].contents = <PartsList
+						contents={fillGroupPartItemSlices(upload, this.state.slice)}
+						onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+				}
 
 			} else if (section === SECTIONS.PRESENTER) {
 				tabs[0][0].contents = css.html;
@@ -1377,7 +1398,7 @@ class InspectorPage extends Component {
 		let tabs = [...this.state.tabs];
 
 		if (artboard) {
-			artboard.slices.filter((item) => (this.state.slice && this.state.slice.id !== item.id)).forEach((item) => {
+			artboard.slices.filter((item)=> (this.state.slice && this.state.slice.id !== item.id)).forEach((item)=> {
 				item.filled = false;
 			});
 
@@ -1399,31 +1420,41 @@ class InspectorPage extends Component {
 				tabs[3].syntax = android.syntax;
 
 			} else if (section === SECTIONS.PARTS) {
-				let formData = new FormData();
-				formData.append('action', 'SYMBOL_SLICES');
-				formData.append('slice_id', slice.id);
-				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response) => {
-						console.log('SYMBOL_SLICES', response.data);
+				tabs[0].type = 'component';
 
-						const slices = response.data.slices.map((item)=> ({
-							id         : item.id << 0,
-							artboardID : item.artboard_id << 0,
-							title      : item.title,
-							type       : item.type,
-							filename   : item.filename,
-							meta       : JSON.parse(item.meta),
-							added      : item.added,
-							filled     : false
-						}));
+				if (slice.type === 'symbol') {
+					let formData = new FormData();
+					formData.append('action', 'SYMBOL_SLICES');
+					formData.append('slice_id', slice.id);
+					axios.post('https://api.designengine.ai/system.php', formData)
+						.then((response)=> {
+							console.log('SYMBOL_SLICES', response.data);
 
-						tabs[0].type = 'component';
-						tabs[0].contents = <PartsList
-							contents={slices}
-							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-						this.setState({ tabs });
-					}).catch((error)=> {
-				});
+							const slices = response.data.slices.map((item)=> ({
+								id         : item.id << 0,
+								artboardID : item.artboard_id << 0,
+								title      : item.title,
+								type       : item.type,
+								filename   : item.filename,
+								meta       : JSON.parse(item.meta),
+								added      : item.added,
+								filled     : false
+							}));
+
+							slice.children.push([...slices]);
+							tabs[0].contents = <PartsList
+								contents={slices}
+								onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+							this.setState({ tabs });
+						}).catch((error)=> {
+					});
+
+				} else if (slice.type === 'group') {
+					tabs[0].contents = <PartsList
+						contents={fillGroupPartItemSlices(upload, slice)}
+						onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+					this.setState({ tabs });
+				}
 
 			} else if (section === SECTIONS.PRESENTER) {
 				tabs[0][0].contents = css.html;
@@ -1471,7 +1502,7 @@ class InspectorPage extends Component {
 	};
 
 	handleUploadProcessingCancel = ()=> {
-		console.log('InspectorPage.handleUploadProcessingCancel()');
+// 		console.log('InspectorPage.handleUploadProcessingCancel()');
 
 		const { upload, section } = this.state;
 
@@ -1563,7 +1594,7 @@ class InspectorPage extends Component {
 	};
 
 	onAddHistory = ()=> {
-		console.log('InspectorPage.onAddHistory()');
+// 		console.log('InspectorPage.onAddHistory()');
 
 		const { deeplink, profile } = this.props;
 
@@ -1663,6 +1694,7 @@ class InspectorPage extends Component {
 		console.log('InspectorPage.onProcessingUpdate()');
 
 		const { upload, section } = this.state;
+		const title = `${limitString(upload.filename.split('/').pop().split('.').shift(), 34)}${upload.filename.split('/').pop().split('.').pop()}`;
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_STATUS');
@@ -1671,8 +1703,13 @@ class InspectorPage extends Component {
 			.then((response)=> {
 				console.log('UPLOAD_STATUS', response.data);
 				const { status } = response.data;
+				const { totals } = status;
 				const processingState = status.state << 0;
+
 				const ellipsis = Array((epochDate() % 4) + 1).join('.');
+				const total = Object.values(totals).reduce((acc, val)=> ((acc << 0) + (val << 0)));
+				const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
+				const secs = ((mins - (mins << 0)) * 60) << 0;
 
 				if (processingState === 0) {
 					const { queue } = status;
@@ -1687,22 +1724,16 @@ class InspectorPage extends Component {
 					this.setState({
 						processing : {
 							state   : processingState,
-							message : `Preparing "${limitString(upload.filename.split('/').pop(), 27, '')}"${ellipsis}`
+							message : `Preparing "${title}"${ellipsis}`
 						}
 					});
 
 				} else if (processingState === 2) {
-// 					const { totals } = status;
-// 					const total = Object.values(totals).reduce((acc, val)=> ((acc << 0) + (val << 0)));
-
-// 					const mins = moment.duration(moment(Date.now()).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
-// 					const secs = ((mins - (mins << 0)) * 60) << 0;
-
 					this.setState({
 						processing : {
 							state   : processingState,
-// 							message : `Processing ${upload.filename.split('/').pop()}, parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s…`
-							message : `Processing "${limitString(upload.filename.split('/').pop(), 27, '')}"${ellipsis}`
+// 							message : `Processing ${title}, parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s…`
+							message : `Processing "${title}"${ellipsis}`
 						}
 					});
 					this.onFetchUpload();
@@ -1710,13 +1741,6 @@ class InspectorPage extends Component {
 				} else if (processingState === 3) {
 					clearInterval(this.processingInterval);
 					this.processingInterval = null;
-
-					const { totals } = status;
-					const total = Object.values(totals).reduce((acc, val)=> ((acc << 0) + (val << 0)));
-
-					const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
-					const secs = ((mins - (mins << 0)) * 60) << 0;
-
 					this.onShowNotification();
 
 					this.setState({
@@ -1728,7 +1752,7 @@ class InspectorPage extends Component {
 					});
 
 					this.props.onProcessing(false);
-					setTimeout(()=> window.location.replace(window.location.href), 333);
+// 					setTimeout(()=> window.location.replace(window.location.href), 333);
 
 				} else if (processingState === 4) {
 					this.setState({
@@ -1953,11 +1977,11 @@ class InspectorPage extends Component {
 
 			slices.push(
 				<div key={i} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut} onDoubleClick={(event)=> this.handleZoom(1)}>
-					<div data-artboard-id={artboard.id} className="inspector-page-group-slices-wrapper">{(section === SECTIONS.PRESENTER) ? artboardSlices : groupSlices }</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{(section === SECTIONS.INSPECT) ? backgroundSlices : []}</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{(section === SECTIONS.PRESENTER) ? [] : symbolSlices}</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{(section === SECTIONS.INSPECT) ? textfieldSlices : []}</div>
-					<div data-artboard-id={artboard.id} className="inspector-page-slice-slices-wrapper">{(section === SECTIONS.INSPECT) ? sliceSlices : []}</div>
+					<div data-artboard-id={artboard.id} className={`inspector-page-${(section === SECTIONS.PRESENTER) ? 'artboard' : 'group'}-slices-wrapper`}>{(section === SECTIONS.PRESENTER) ? artboardSlices : groupSlices }</div>
+					{(section === SECTIONS.INSPECT) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>)}
+					{(section !== SECTIONS.PRESENTER) && (<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{symbolSlices}</div>)}
+					{(section === SECTIONS.INSPECT) && (<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{textfieldSlices}</div>)}
+					{(section === SECTIONS.INSPECT) && (<div data-artboard-id={artboard.id} className="inspector-page-slice-slices-wrapper">{sliceSlices}</div>)}
 				</div>
 			);
 
@@ -1992,7 +2016,7 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.render()', this.props);
 // 		console.log('InspectorPage.render()', this.state);
 // 		console.log('InspectorPage.render()', slices);
-// 		console.log('InspectorPage.render()', upload, activeSlice);
+		console.log('InspectorPage.render()', upload, activeSlice);
 // 		console.log('InspectorPage:', window.performance.memory);
 
 
@@ -2003,6 +2027,7 @@ class InspectorPage extends Component {
 		const urlClass = `inspector-page-url-wrapper${(!urlBanner) ? ' inspector-page-url-outro' : ''}`;
 
 
+		const listTotal = (upload && activeSlice) ? (section === SECTIONS.PRESENTER) ? flattenUploadArtboards(upload).length : (activeSlice) ? (activeSlice.type === 'group') ? fillGroupPartItemSlices(upload, activeSlice).length : activeSlice.children.length : 0 : 0;
 
 		const specTabs = [{
 			title    : 'Specs',
@@ -2105,8 +2130,7 @@ class InspectorPage extends Component {
 							/>)}
 						</div>
 						<div className="inspector-page-panel-button-wrapper">
-							<button disabled={tabs.length === 0 || !tabs[0].contents || tabs[0].contents.length === 0} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download List Parts</button>
-							{/*<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download Project</button>*/}
+							{(tabs.length > 0) && (<button disabled={!tabs[0].contents || tabs[0].contents.length === 0} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download ({listTotal}) Part{(listTotal === 1) ? '' : 's'}</button>)}
 						</div>
 					</>)}
 
@@ -2122,7 +2146,7 @@ class InspectorPage extends Component {
 										onContentClick={(payload)=> console.log('onContentClick', payload)}
 									/>
 									<div className="inspector-page-panel-button-wrapper">
-										<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download Zip</button>
+										<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download PDF</button>
 									</div>
 								</div>)}
 							</div>
