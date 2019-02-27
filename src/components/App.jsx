@@ -119,6 +119,10 @@ class App extends Component {
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		console.log('App.componentDidUpdate()', prevProps, this.props, prevState);
+
+		if (!prevProps.profile && this.props.profile && this.state.ranking !== 0) {
+			this.setState({ rating : 0 });
+		}
 	}
 
 	handleArtboardClicked = (artboard)=> {

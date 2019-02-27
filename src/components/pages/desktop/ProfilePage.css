@@ -21,6 +21,10 @@
 	vertical-align: middle;
 }
 
+.profile-page-avatar-image:hover {
+	cursor: pointer;
+}
+
 .profile-page-avatar-image-loading {
 	padding: 24px;
 }

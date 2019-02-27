@@ -88,7 +88,7 @@ class ProfilePage extends Component {
 		console.log('ProfilePage.handleAvatarClick()');
 		trackEvent('button', 'upload');
 
-		this.setState({ dialog : true });
+		this.setState({ dialog : true }, ()=> this.setState({ dialog : false }));
 	};
 
 	handleBuyClick = ()=> {
