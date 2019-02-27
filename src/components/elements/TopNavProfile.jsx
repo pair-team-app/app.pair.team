@@ -56,7 +56,7 @@ class TopNavProfile extends Component {
 		return (<div className="top-nav-profile-wrapper">
 			<Row vertical="center">
 				<FontAwesome name={faName} className="top-nav-profile-arrow" onClick={()=> this.setState({ bubble : !bubble })} />
-				<img src={avatar} className="top-nav-profile-avatar" alt="Avatar" onClick={()=> this.setState({ bubble : !bubble })} />
+				<img src={avatar} className="top-nav-profile-avatar" alt="" onClick={()=> this.setState({ bubble : !bubble })} />
 			</Row>
 
 			{(bubble) && (<div className={bubbleClass}>

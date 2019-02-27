@@ -592,7 +592,7 @@ const UploadProcessing = (props)=> {
 				src={`${artboard.filename}@1x.png`}
 				image={()=> (<img className="upload-processing-image" src={`${artboard.filename}@1x.png`} style={imgStyle} alt={upload.title} />)}
 				loading={()=> (<div className="upload-processing-image upload-processing-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
-				error={()=> (<div className="upload-processing-image upload-processing-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+				error={()=> (<div className="upload-processing-image upload-processing-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
 			/>)
 			: (<img className="upload-processing-image" src={bannerPanel.image} alt={bannerPanel.title} />)
 		}</Row>

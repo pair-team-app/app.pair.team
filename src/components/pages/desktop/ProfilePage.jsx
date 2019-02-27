@@ -4,6 +4,8 @@ import './ProfilePage.css';
 
 import axios from 'axios/index';
 import Dropzone from 'react-dropzone';
+import FontAwesome from 'react-fontawesome';
+import ImageLoader from 'react-loading-image';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
@@ -268,7 +270,15 @@ class ProfilePage extends Component {
 				<div className="profile-page-avatar-wrapper">
 					<Row vertical="center">
 						<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)} onFileDialogCancel={this.handleFileDialogCancel} ref={dropZone}>
-							<img className="profile-page-avatar-image" src={avatar} alt="Avatar" />
+
+							<ImageLoader
+								src={avatar}
+								image={(props)=> (<img className="profile-page-avatar-image" {...props} src={avatar} alt="" />)}
+								loading={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+								error={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
+							/>
+
+							{/*<img className="profile-page-avatar-image" src={avatar} alt="" />*/}
 						</Dropzone>
 						<button className="adjacent-button" onClick={()=> this.handleAvatarClick()}>Upload</button>
 						{(!avatar.includes('avatar-default.png')) && (<div className="page-link" onClick={()=> this.handleDropAvatar()}>Remove</div>)}
