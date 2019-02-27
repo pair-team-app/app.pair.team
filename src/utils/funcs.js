@@ -227,6 +227,22 @@ export function padRight(txt, len, char='') {
 	return ((txt.length < len) ? `${txt}${(new Array(len - String(txt).length + 1)).join(char)}` : txt);
 }
 
+export function randElement(arr) {
+	return (arr[randIndex(arr)]);
+}
+
+export function randFloat(lower, upper) {
+	return ((Math.random() * (upper - lower)) + lower);
+}
+
+export function randIndex(arr) {
+	return (randInt(0, arr.length - 1));
+}
+
+export function randInt(lower, upper) {
+	return (randFloat(lower, upper) << 0);
+}
+
 export function rectContainsRect(baseRect, testRect) {
 	return (baseRect.top <= testRect.top && baseRect.left <= testRect.left && baseRect.right >= testRect.right && baseRect.bottom >= testRect.bottom);
 }

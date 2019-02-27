@@ -290,11 +290,20 @@ const FilingTabTitle = (props)=> {
 const InspectorFooter = (props)=> {
 // 	console.log('InspectorPage.InspectorFooter()', props);
 
-	const { section, scale, fitScale, artboards } = props;
+	const { section, scale, fitScale, artboards, processing } = props;
+	const prevArtboard = {
+		id     : -1,
+		pageID : 0
+	};
+
+	const nextArtboard = {
+		id     : 1,
+		pageID : 0
+	};
 
 	return (<div className="inspector-page-footer-wrapper"><Row vertical="center">
 		<img src={deLogo} className="inspector-page-footer-logo" onClick={()=> props.onPage('')} alt="Design Engine" />
-		<div className="inspector-page-footer-button-wrapper">
+		{(!processing) && (<div className="inspector-page-footer-button-wrapper">
 			{/*{(profile && ((upload.id << 0) === 1 || upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true });}}>Share</button>)}*/}
 
 			<button disabled={(scale >= Math.max(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-in'); props.onZoom(1);}}><FontAwesome name="search-plus" /></button>
@@ -302,10 +311,10 @@ const InspectorFooter = (props)=> {
 			<button disabled={false} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-reset'); props.onZoom(0);}}>Reset ({(fitScale * 100) << 0}%)</button>
 
 			{(section === SECTIONS.PRESENTER && artboards.length > 1) && (<>
-				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'prev-artboard'); props.onChangeArtboard({id:-1,pageID:0});}}><FontAwesome name="arrow-left" /></button>
-				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'next-artboard'); props.onChangeArtboard({id:1,pageID:0});}}><FontAwesome name="arrow-right" /></button>
+				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'prev-artboard'); props.onChangeArtboard(prevArtboard);}}><FontAwesome name="arrow-left" /></button>
+				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'next-artboard'); props.onChangeArtboard(nextArtboard);}}><FontAwesome name="arrow-right" /></button>
 			</>)}
-		</div>
+		</div>)}
 	</Row></div>);
 };
 
@@ -553,22 +562,26 @@ const UploadProcessing = (props)=> {
 // 	console.log('InspectorPage.UploadProcessing()', props);
 
 	const { upload, processing, vpHeight } = props;
-	const artboard = flattenUploadArtboards(upload).shift();
+	const artboards = flattenUploadArtboards(upload);
 	const url = buildInspectorURL(upload);
 
+	const secs = String((epochDate() * 0.01).toFixed(2)).substr(-2) << 0;
+	const ind = (secs / (100 / artboards.length)) << 0;
+
+	const artboard = artboards[ind];
 	const imgStyle = (artboard) ? {
-		width  : `${artboard.meta.frame.size.width * ((vpHeight - 300) / artboard.meta.frame.size.height)}px`,
-		height : `${artboard.meta.frame.size.height * ((vpHeight - 300) / artboard.meta.frame.size.height)}px`
+		width  : `${artboard.meta.frame.size.width * ((vpHeight - 250) / artboard.meta.frame.size.height)}px`,
+		height : `${artboard.meta.frame.size.height * ((vpHeight - 250) / artboard.meta.frame.size.height)}px`
 	} : null;
 
 	return (<div className="upload-processing-wrapper"><Column horizontal="center" vertical="start">
 		{(processing.message.length > 0) && (<Row><div className="upload-processing-title">{processing.message}</div></Row>)}
-		<Row><CopyToClipboard onCopy={()=> props.onCopyURL()} text={url}>
+		<Row><CopyToClipboard onCopy={props.onCopyURL} text={url}>
 			<div className="upload-processing-url">{url}</div>
 		</CopyToClipboard></Row>
 
 		<Row><div className="upload-processing-button-wrapper">
-			<CopyToClipboard onCopy={()=> props.onCopyURL()} text={url}>
+			<CopyToClipboard onCopy={props.onCopyURL} text={url}>
 				<button className="adjacent-button">Copy</button>
 			</CopyToClipboard>
 			<button onClick={()=> props.onCancel()}>Cancel</button>
@@ -576,8 +589,8 @@ const UploadProcessing = (props)=> {
 
 		<Row horizontal="center">{(artboard)
 			? (<ImageLoader
-				src={(!artboard.filename.includes('@')) ? `${artboard.filename}@0.25x.png` : artboard.filename}
-				image={()=> (<img className="upload-processing-image" src={(!artboard.filename.includes('@')) ? `${artboard.filename}@0.25x.png` : artboard.filename} style={imgStyle} alt={upload.title} />)}
+				src={`${artboard.filename}@1x.png`}
+				image={()=> (<img className="upload-processing-image" src={`${artboard.filename}@1x.png`} style={imgStyle} alt={upload.title} />)}
 				loading={()=> (<div className="upload-processing-image upload-processing-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
 				error={()=> (<div className="upload-processing-image upload-processing-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
 			/>)
@@ -585,8 +598,6 @@ const UploadProcessing = (props)=> {
 		}</Row>
 	</Column></div>);
 };
-
-
 
 
 
@@ -2095,10 +2106,11 @@ class InspectorPage extends Component {
 							</div>
 					</InteractiveDiv>
 
-					{(upload && !processing) && (<InspectorFooter
+					{(upload) && (<InspectorFooter
 						scale={scale}
 						fitScale={fitScale}
 						section={section}
+						processing={processing}
 						artboards={flattenUploadArtboards(upload)}
 						onChangeArtboard={this.handleChangeArtboard}
 						onPage={this.props.onPage}
@@ -2161,9 +2173,9 @@ class InspectorPage extends Component {
 										onTabClick={(tab)=> this.handleTab(tab)}
 										onContentClick={(payload)=> console.log('onContentClick', payload)}
 									/>
-									<div className="inspector-page-panel-button-wrapper">
+										{(i === 1) && (<div className="inspector-page-panel-button-wrapper">
 										<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download PDF</button>
-									</div>
+									</div>)}
 								</div>)}
 							</div>
 						)))}
@@ -2207,7 +2219,7 @@ class InspectorPage extends Component {
 			</ContentModal>)}
 
 
-			{(!restricted && upload) && (<ReactNotifications
+			{(upload) && (<ReactNotifications
 				onRef={(ref)=> (this.notification = ref)}
 				title="Completed Processing"
 				body={`Your design file "${upload.title}" is ready.`}

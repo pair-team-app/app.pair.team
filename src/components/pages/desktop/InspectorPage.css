@@ -155,7 +155,7 @@
 	bottom: 58px;
 	left: 0;
 	width: 100%;
-	z-index: 9;
+	z-index: 10;
 	padding: 10px 20px;
 	background-color: rgba(0, 0, 0, 0.25);
 	vertical-align: middle;
@@ -194,6 +194,7 @@
 .inspector-page-panel {
 	width: 360px;
 	max-width: 360px;
+	height: calc(100vh - 64px);
 	max-height: calc(100vh - 64px);
 	display: table-cell;
 	vertical-align: top;
@@ -221,12 +222,12 @@
 
 .inspector-page-panel-full-height-content-wrapper {
 	/*height: calc(100vh - 150px);*/
-	/*height: calc(100vh - 112px);*/
-	height: calc(100vh - 64px);
+	height: calc(100vh - 112px);
+	/*height: calc(100vh - 64px);*/
 }
 
 .inspector-page-panel-split-height-content-wrapper {
-	height: calc(50vh - 78px);
+	height: calc(50vh - 74px);
 }
 
 .inspector-page-panel-full-width-content-wrapper {
@@ -252,7 +253,7 @@
 }
 
 .inspector-page-tooltip {
-	z-index: 10;
+	z-index: 9;
 	position: fixed;
 	left: 50%;
 	top: 80px;
@@ -510,7 +511,7 @@
 	left: 0;
 	width: calc(100% - 360px);
 	height: 100%;
-	z-index : 10;
+	z-index : 8;
 	padding-top: 70px;
 	background-color: rgba(0, 0, 0, 0.875);
 }
