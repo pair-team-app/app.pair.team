@@ -710,9 +710,10 @@ class InspectorPage extends Component {
 
 		if (upload && processing && this.processingInterval === null) {
 			this.setState({
+				tabs       : [],
 				processing : {
 					state   : 0,
-					message : ``
+					message : `…`
 				}
 			});
 
@@ -2130,7 +2131,7 @@ class InspectorPage extends Component {
 						</div>
 						<div className="inspector-page-panel-button-wrapper">
 							<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code')} text={(tabs[selectedTab]) ? tabs[selectedTab].syntax : ''}>
-								<button className="inspector-page-panel-button">Copy to Clipboard</button>
+								<button disabled={processing} className="inspector-page-panel-button">Copy to Clipboard</button>
 							</CopyToClipboard>
 						</div>
 						<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
@@ -2143,7 +2144,7 @@ class InspectorPage extends Component {
 						</div>
 						<div className="inspector-page-panel-button-wrapper">
 							<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code')} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
-								<button className="inspector-page-panel-button">Copy to Clipboard</button>
+								<button disabled={processing} className="inspector-page-panel-button">Copy to Clipboard</button>
 							</CopyToClipboard>
 						</div>
 					</>)}
@@ -2173,9 +2174,9 @@ class InspectorPage extends Component {
 										onTabClick={(tab)=> this.handleTab(tab)}
 										onContentClick={(payload)=> console.log('onContentClick', payload)}
 									/>
-										{(i === 1) && (<div className="inspector-page-panel-button-wrapper">
-										<button disabled={!upload} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download PDF</button>
-									</div>)}
+										<div className="inspector-page-panel-button-wrapper">
+											<button disabled={!upload || processing} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download PDF</button>
+										</div>
 								</div>)}
 							</div>
 						)))}
