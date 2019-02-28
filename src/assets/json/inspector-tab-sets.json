@@ -24,7 +24,7 @@
   ],
   "parts": [
     [{
-      "id": 0,
+      "id": 1,
       "title": "Parts",
       "contents": null,
       "syntax": null
@@ -52,7 +52,7 @@
       "contents": null,
       "syntax": null
     }], [{
-      "id": 0,
+      "id": 5,
       "title": "Views",
       "contents": null,
       "syntax": null
