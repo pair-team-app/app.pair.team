@@ -43,7 +43,7 @@ import { fontSpecs, toAndroid, toCSS, toReactCSS, toSpecs, toSwift } from '../..
 import { trackEvent } from '../../../utils/tracking';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
 import bannerPanel from '../../../assets/json/banner-panel';
-import inspectorTabs from '../../../assets/json/inspector-tabs';
+import inspectorTabSets from '../../../assets/json/inspector-tab-sets';
 
 
 const InteractiveDiv = panAndZoomHoc('div');
@@ -236,8 +236,6 @@ function FilingTabSet(props) {
 // 	console.log('InspectorPage.FilingTabSet()', props);
 
 	const { tabs, selectedIndex } = props;
-
-
 	return (<div className="filing-tab-set">
 		<ul className="filing-tab-set-title-wrapper">
 			{tabs.map((tab, i)=> (
@@ -245,7 +243,7 @@ function FilingTabSet(props) {
 					key={i}
 					ind={i}
 					title={tab.title}
-					selected={i === selectedIndex}
+					selected={i === selectedIndex || tabs.length === 1}
 					onClick={()=> props.onTabClick(tab)}
 				/>
 			))}
@@ -615,7 +613,7 @@ class InspectorPage extends Component {
 			offset      : null,
 			hoverOffset : null,
 			selectedTab : 0,
-			tabs        : [],
+			tabSets     : [],
 			scale       : 1.0,
 			fitScale    : 0.0,
 			panMultPt   : PAN_ZOOM.panMultPt,
@@ -710,7 +708,7 @@ class InspectorPage extends Component {
 
 		if (upload && processing && this.processingInterval === null) {
 			this.setState({
-				tabs       : [],
+				tabSets    : [],
 				processing : {
 					state   : 0,
 					message : `…`
@@ -1011,23 +1009,16 @@ class InspectorPage extends Component {
 	};
 
 	handleCanvasClick = (event)=> {
-// 		console.log('InspectorPage.handleCanvasClick()', event.target, this.state.scrolling);
+		console.log('InspectorPage.handleCanvasClick()', this.state.tabSets);
 		event.stopPropagation();
 
-		const { scrolling } = this.state;
+		const { section, scrolling } = this.state;
 
 		if (!scrolling) {
-			let tabs = [...this.state.tabs];
-			tabs.forEach((tab, i)=> {
-				tabs[i] = {
-					id       : tab.id,
-					title    : tab.title,
-					contents : null,
-					syntax   : null
-				}
+			this.setState({
+				tabSets : inspectorTabSets[section],
+				slice   : null
 			});
-
-			this.setState({ tabs, slice : null });
 		}
 	};
 
@@ -1245,7 +1236,7 @@ class InspectorPage extends Component {
 		trackEvent('slice', `${slice.id}_${convertURISlug(slice.title)}`);
 
 		const { upload, artboard, section } = this.state;
-		let { tabs } = this.state;
+		let { tabSets } = this.state;
 
 		artboard.slices.filter((item)=> (item.id !== slice.id)).forEach((item)=> {
 			item.filled = false;
@@ -1259,17 +1250,17 @@ class InspectorPage extends Component {
 		const android = toAndroid(slice, artboard);
 
 		if (section === SECTIONS.INSPECT) {
-			tabs[0].contents = css.html;
-			tabs[0].syntax = css.syntax;
-			tabs[1].contents = reactCSS.html;
-			tabs[1].syntax = reactCSS.syntax;
-			tabs[2].contents = swift.html;
-			tabs[2].syntax = swift.syntax;
-			tabs[3].contents = android.html;
-			tabs[3].syntax = android.syntax;
+			tabSets[0][0].contents = css.html;
+			tabSets[0][0].syntax = css.syntax;
+			tabSets[0][1].contents = reactCSS.html;
+			tabSets[0][1].syntax = reactCSS.syntax;
+			tabSets[0][2].contents = swift.html;
+			tabSets[0][2].syntax = swift.syntax;
+			tabSets[0][3].contents = android.html;
+			tabSets[0][3].syntax = android.syntax;
 
 		} else if (section === SECTIONS.PARTS) {
-			tabs[0].type = 'component';
+			tabSets[0][0].type = 'component';
 
 			if (slice.type === 'symbol') {
 				let formData = new FormData();
@@ -1291,35 +1282,35 @@ class InspectorPage extends Component {
 						}));
 
 						slice.children = slices;
-						tabs[0].contents = <PartsList
+						tabSets[0][0].contents = <PartsList
 							contents={slices}
 							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-						this.setState({ tabs });
+						this.setState({ tabSets });
 					}).catch((error)=> {
 				});
 
 			} else if (slice.type === 'group') {
-				tabs[0].contents = <PartsList
+				tabSets[0][0].contents = <PartsList
 					contents={fillGroupPartItemSlices(upload, slice)}
 					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 			}
 
 		} else if (section === SECTIONS.PRESENTER) {
-			tabs[0][0].contents = css.html;
-			tabs[0][0].syntax = css.syntax;
-			tabs[0][1].contents = reactCSS.html;
-			tabs[0][1].syntax = reactCSS.syntax;
-			tabs[0][2].contents = swift.html;
-			tabs[0][2].syntax = swift.syntax;
-			tabs[0][3].contents = android.html;
-			tabs[0][3].syntax = android.syntax;
-			tabs[1][0].type = 'component';
-			tabs[1][0].contents = <ArtboardsList
+			tabSets[0][0].contents = css.html;
+			tabSets[0][0].syntax = css.syntax;
+			tabSets[0][1].contents = reactCSS.html;
+			tabSets[0][1].syntax = reactCSS.syntax;
+			tabSets[0][2].contents = swift.html;
+			tabSets[0][2].syntax = swift.syntax;
+			tabSets[0][3].contents = android.html;
+			tabSets[0][3].syntax = android.syntax;
+			tabSets[1][0].type = 'component';
+			tabSets[1][0].contents = <ArtboardsList
 				contents={flattenUploadArtboards(upload)}
 				onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />;
 		}
 
-		this.setState({ tabs, artboard, slice, offset,
+		this.setState({ tabSets, artboard, slice, offset,
 			hoverSlice  : null,
 			hoverOffset : null
 		});
@@ -1329,7 +1320,7 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.handleSliceRollOut()', ind, slice, offset, this.state);
 
 		const { upload, artboard, section } = this.state;
-		let tabs = [...this.state.tabs];
+		let tabSets = [...this.state.tabSets];
 
 		if (this.state.slice) {
 			const css = toCSS(this.state.slice);
@@ -1338,17 +1329,17 @@ class InspectorPage extends Component {
 			const android = toAndroid(this.state.slice, artboard);
 
 			if (section === SECTIONS.INSPECT) {
-				tabs[0].contents = css.html;
-				tabs[0].syntax = css.syntax;
-				tabs[1].contents = reactCSS.html;
-				tabs[1].syntax = reactCSS.syntax;
-				tabs[2].contents = swift.html;
-				tabs[2].syntax = swift.syntax;
-				tabs[3].contents = android.html;
-				tabs[3].syntax = android.syntax;
+				tabSets[0][0].contents = css.html;
+				tabSets[0][0].syntax = css.syntax;
+				tabSets[0][1].contents = reactCSS.html;
+				tabSets[0][1].syntax = reactCSS.syntax;
+				tabSets[0][2].contents = swift.html;
+				tabSets[0][2].syntax = swift.syntax;
+				tabSets[0][3].contents = android.html;
+				tabSets[0][3].syntax = android.syntax;
 
 			} else if (section === SECTIONS.PARTS) {
-				tabs[0].type = 'component';
+				tabSets[0][0].type = 'component';
 
 				if (this.state.slice.type === 'symbol') {
 					let formData = new FormData();
@@ -1370,30 +1361,30 @@ class InspectorPage extends Component {
 							}));
 
 							slice.children = slices;
-							tabs[0].contents = <PartsList
+							tabSets[0][0].contents = <PartsList
 								contents={slices}
 								onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-							this.setState({ tabs });
+							this.setState({ tabSets });
 						}).catch((error)=> {
 					});
 
 				} else if (this.state.slice.type === 'group') {
-					tabs[0].contents = <PartsList
+					tabSets[0][0].contents = <PartsList
 						contents={fillGroupPartItemSlices(upload, this.state.slice)}
 						onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 				}
 
 			} else if (section === SECTIONS.PRESENTER) {
-				tabs[0][0].contents = css.html;
-				tabs[0][0].syntax = css.syntax;
-				tabs[0][1].contents = reactCSS.html;
-				tabs[0][1].syntax = reactCSS.syntax;
-				tabs[0][2].contents = swift.html;
-				tabs[0][2].syntax = swift.syntax;
-				tabs[0][3].contents = android.html;
-				tabs[0][3].syntax = android.syntax;
-				tabs[1][0].type = 'component';
-				tabs[1][0].contents = <ArtboardsList
+				tabSets[0][0].contents = css.html;
+				tabSets[0][0].syntax = css.syntax;
+				tabSets[0][1].contents = reactCSS.html;
+				tabSets[0][1].syntax = reactCSS.syntax;
+				tabSets[0][2].contents = swift.html;
+				tabSets[0][2].syntax = swift.syntax;
+				tabSets[0][3].contents = android.html;
+				tabSets[0][3].syntax = android.syntax;
+				tabSets[1][0].type = 'component';
+				tabSets[1][0].contents = <ArtboardsList
 					contents={flattenUploadArtboards(upload)}
 					onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />;
 			}
@@ -1404,18 +1395,9 @@ class InspectorPage extends Component {
 			artboard.slices.forEach((item)=> {
 				item.filled = false;
 			});
-
-			tabs.forEach((tab, i)=> {
-				tabs[i] = {
-					id       : tab.id,
-					title    : tab.title,
-					contents : null,
-					syntax   : null
-				}
-			});
 		}
 
-		this.setState({ artboard, tabs,
+		this.setState({ artboard, tabSets,
 			hoverSlice  : null,
 			hoverOffset : null
 		});
@@ -1425,7 +1407,7 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
 
 		const { upload, artboard, section } = this.state;
-		let tabs = [...this.state.tabs];
+		let tabSets = [...this.state.tabSets];
 
 		if (artboard) {
 			artboard.slices.filter((item)=> (this.state.slice && this.state.slice.id !== item.id)).forEach((item)=> {
@@ -1440,17 +1422,17 @@ class InspectorPage extends Component {
 			const android = toAndroid(slice, artboard);
 
 			if (section === SECTIONS.INSPECT) {
-				tabs[0].contents = css.html;
-				tabs[0].syntax = css.syntax;
-				tabs[1].contents = reactCSS.html;
-				tabs[1].syntax = reactCSS.syntax;
-				tabs[2].contents = swift.html;
-				tabs[2].syntax = swift.syntax;
-				tabs[3].contents = android.html;
-				tabs[3].syntax = android.syntax;
+				tabSets[0][0].contents = css.html;
+				tabSets[0][0].syntax = css.syntax;
+				tabSets[0][1].contents = reactCSS.html;
+				tabSets[0][1].syntax = reactCSS.syntax;
+				tabSets[0][2].contents = swift.html;
+				tabSets[0][2].syntax = swift.syntax;
+				tabSets[0][3].contents = android.html;
+				tabSets[0][3].syntax = android.syntax;
 
 			} else if (section === SECTIONS.PARTS) {
-				tabs[0].type = 'component';
+				tabSets[0][0].type = 'component';
 
 				if (slice.type === 'symbol') {
 					let formData = new FormData();
@@ -1472,36 +1454,36 @@ class InspectorPage extends Component {
 							}));
 
 							slice.children.push([...slices]);
-							tabs[0].contents = <PartsList
+							tabSets[0][0].contents = <PartsList
 								contents={slices}
 								onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-							this.setState({ tabs });
+							this.setState({ tabSets });
 						}).catch((error)=> {
 					});
 
 				} else if (slice.type === 'group') {
-					tabs[0].contents = <PartsList
+					tabSets[0][0].contents = <PartsList
 						contents={fillGroupPartItemSlices(upload, slice)}
 						onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-					this.setState({ tabs });
+					this.setState({ tabSets });
 				}
 
 			} else if (section === SECTIONS.PRESENTER) {
-				tabs[0][0].contents = css.html;
-				tabs[0][0].syntax = css.syntax;
-				tabs[0][1].contents = reactCSS.html;
-				tabs[0][1].syntax = reactCSS.syntax;
-				tabs[0][2].contents = swift.html;
-				tabs[0][2].syntax = swift.syntax;
-				tabs[0][3].contents = android.html;
-				tabs[0][3].syntax = android.syntax;
-				tabs[1][0].type = 'component';
-				tabs[1][0].contents = <ArtboardsList
+				tabSets[0][0].contents = css.html;
+				tabSets[0][0].syntax = css.syntax;
+				tabSets[0][1].contents = reactCSS.html;
+				tabSets[0][1].syntax = reactCSS.syntax;
+				tabSets[0][2].contents = swift.html;
+				tabSets[0][2].syntax = swift.syntax;
+				tabSets[0][3].contents = android.html;
+				tabSets[0][3].syntax = android.syntax;
+				tabSets[1][0].type = 'component';
+				tabSets[1][0].contents = <ArtboardsList
 					contents={flattenUploadArtboards(upload)}
 					onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />;
 			}
 
-			this.setState({ artboard, tabs,
+			this.setState({ artboard, tabSets,
 				hoverSlice  : slice,
 				hoverOffset : offset
 			});
@@ -1510,9 +1492,9 @@ class InspectorPage extends Component {
 
 	handleTab = (tab)=> {
 // 		 console.log('InspectorPage.handleTab()', tab);
-		const { tabs } = this.state;
+		const { tabSets } = this.state;
 		trackEvent('tab', convertURISlug(tab.title));
-		this.setState({ selectedTab : tabs.indexOf(tab) });
+// 		this.setState({ selectedTab : tabSets.indexOf(tab) });
 	};
 
 	handleTabContent = (tab)=> {
@@ -1666,7 +1648,7 @@ class InspectorPage extends Component {
 
 			const { upload } = response.data;
 			if (Object.keys(upload).length > 0) {
-				const tabs = (section === SECTIONS.INSPECT || section === SECTIONS.PARTS) ? inspectorTabs[section][0] : inspectorTabs[section];
+				const tabSets = inspectorTabSets[section];
 
 				const artboards = flattenUploadArtboards(upload);
 				const baseMetrics = this.calcArtboardBaseMetrics((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
@@ -1685,21 +1667,21 @@ class InspectorPage extends Component {
 					const swift = toSwift(artboard, artboard);
 					const android = toAndroid(artboard, artboard);
 
-					tabs[0][0].contents = css.html;
-					tabs[0][0].syntax = css.syntax;
-					tabs[0][1].contents = reactCSS.html;
-					tabs[0][1].syntax = reactCSS.syntax;
-					tabs[0][2].contents = swift.html;
-					tabs[0][2].syntax = swift.syntax;
-					tabs[0][3].contents = android.html;
-					tabs[0][3].syntax = android.syntax;
-					tabs[1][0].type = 'component';
-					tabs[1][0].contents = <ArtboardsList
+					tabSets[0][0].contents = css.html;
+					tabSets[0][0].syntax = css.syntax;
+					tabSets[0][1].contents = reactCSS.html;
+					tabSets[0][1].syntax = reactCSS.syntax;
+					tabSets[0][2].contents = swift.html;
+					tabSets[0][2].syntax = swift.syntax;
+					tabSets[0][3].contents = android.html;
+					tabSets[0][3].syntax = android.syntax;
+					tabSets[1][0].type = 'component';
+					tabSets[1][0].contents = <ArtboardsList
 						contents={flattenUploadArtboards(upload)}
 						onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />;
 				}
 
-				this.setState({ upload, tabs,
+				this.setState({ upload, tabSets,
 // 					artboards : artboards,
 					artboard  : (section === SECTIONS.PRESENTER) ? artboards[0] : null,
 					tooltip   : null
@@ -1820,7 +1802,7 @@ class InspectorPage extends Component {
 	render() {
 		const { processing, profile } = this.props;
 
-		const { section, upload, artboard, slice, hoverSlice, tabs, scale, fitScale, selectedTab, scrolling, viewSize, panMultPt } = this.state;
+		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, selectedTab, scrolling, viewSize, panMultPt } = this.state;
 		const { valid, restricted, urlBanner, tutorial, tooltip } = this.state;
 
 		const artboards = (upload) ? (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload) : [];
@@ -2122,15 +2104,19 @@ class InspectorPage extends Component {
 				{(valid) && (<div className={panelClass}>
 					{(section === SECTIONS.INSPECT) && (<>
 						<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
-							{(tabs && tabs.length > 0) && (<FilingTabSet
-								tabs={tabs}
-								selectedIndex={selectedTab}
-								onTabClick={(tab)=> this.handleTab(tab)}
-								onContentClick={(tab)=> console.log('onContentClick', tab)}
-							/>)}
+							{(tabSets.map((tabSet, i)=> (
+								<div style={{width:'100%'}}>
+									<FilingTabSet
+										tabs={tabSet}
+										selectedIndex={selectedTab}
+										onTabClick={(tab)=> this.handleTab(tab)}
+										onContentClick={(payload)=> console.log('onContentClick', payload)}
+									/>
+								</div>)
+							))}
 						</div>
 						<div className="inspector-page-panel-button-wrapper">
-							<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code')} text={(tabs[selectedTab]) ? tabs[selectedTab].syntax : ''}>
+							<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code')} text={(tabSets[selectedTab]) ? tabSets[selectedTab].syntax : ''}>
 								<button disabled={processing} className="inspector-page-panel-button">Copy to Clipboard</button>
 							</CopyToClipboard>
 						</div>
@@ -2151,25 +2137,29 @@ class InspectorPage extends Component {
 
 					{(section === SECTIONS.PARTS) && (<>
 						<div className="inspetabs.mapctor-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper">
-							{(tabs && tabs.length > 0) && (<FilingTabSet
-								tabs={tabs}
-								selectedIndex={selectedTab}
-								onTabClick={(tab)=> this.handleTab(tab)}
-								onContentClick={(tab)=> console.log('onContentClick', tab)}
-							/>)}
+							{(tabSets.map((tabSet, i)=> (
+								<div style={{width:'100%'}}>
+									<FilingTabSet
+										tabs={tabSet}
+										selectedIndex={selectedTab}
+										onTabClick={(tab)=> this.handleTab(tab)}
+										onContentClick={(payload)=> console.log('onContentClick', payload)}
+									/>
+								</div>)
+							))}
 						</div>
 						<div className="inspector-page-panel-button-wrapper">
-							{(tabs.length > 0) && (<button disabled={!tabs[0].contents || tabs[0].contents.length === 0} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download ({listTotal}) Part{(listTotal === 1) ? '' : 's'}</button>)}
+							{(tabSets.length > 0) && (<button disabled={!tabSets[0][0].contents || tabSets[0][0].contents.length === 0} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download ({listTotal}) Part{(listTotal === 1) ? '' : 's'}</button>)}
 						</div>
 					</>)}
 
-					{(section === SECTIONS.PRESENTER && tabs) && (<>
+					{(section === SECTIONS.PRESENTER && tabSets) && (<>
 					<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-presenter-wrapper">
-						{(tabs.map((tab, i)=> (
+						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-split-width-content-wrapper inspector-page-panel-full-height-content-wrapper">
-								{(tab) && (<div style={{width:'100%'}}>
+								{(tabSet) && (<div style={{width:'100%'}}>
 									<FilingTabSet
-										tabs={tab}
+										tabs={tabSet}
 										selectedIndex={selectedTab}
 										onTabClick={(tab)=> this.handleTab(tab)}
 										onContentClick={(payload)=> console.log('onContentClick', payload)}
