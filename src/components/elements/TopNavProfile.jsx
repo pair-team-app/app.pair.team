@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './TopNavProfile.css';
 
 import FontAwesome from 'react-fontawesome';
+import ImageLoader from 'react-loading-image';
 import onClickOutside from 'react-onclickoutside';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
@@ -56,7 +57,18 @@ class TopNavProfile extends Component {
 		return (<div className="top-nav-profile-wrapper">
 			<Row vertical="center">
 				<FontAwesome name={faName} className="top-nav-profile-arrow" onClick={()=> this.setState({ bubble : !bubble })} />
-				<img src={avatar} className="top-nav-profile-avatar" alt="" onClick={()=> this.setState({ bubble : !bubble })} />
+
+
+				<div className="top-nav-profile-avatar-wrapper" onClick={()=> this.setState({ bubble : !bubble })}>
+					<ImageLoader
+						src={avatar}
+						image={(props)=> (<img className="top-nav-profile-avatar-image" {...props} src={avatar} alt="" />)}
+						loading={()=> (<div className="top-nav-profile-avatar-image top-nav-profile-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+						error={()=> (<div className="top-nav-profile-avatar-image top-nav-profile-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
+					/>
+				</div>
+
+				{/*<img src={avatar} className="top-nav-profile-avatar" alt="" onClick={()=> this.setState({ bubble : !bubble })} />*/}
 			</Row>
 
 			{(bubble) && (<div className={bubbleClass}>

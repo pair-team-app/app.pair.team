@@ -16,9 +16,9 @@
 	height: 78px;
 	margin-right: 20px;
 	border-radius: 2px;
-	background-color: #2d3239;
 	background-size: cover;
 	overflow: hidden;
+	background: #111111 url(../../../assets/images/backgrounds/bg-checkerboard.png) repeat;
 }
 
 .profile-page-avatar-image {
@@ -30,6 +30,7 @@
 	object-fit: scale-down;
 	max-width: 100%;
 	/*min-height: 85%;*/
+	border-radius: 2px;
 }
 
 .profile-page-avatar-image:hover {
