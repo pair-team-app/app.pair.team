@@ -85,6 +85,8 @@ const fillGroupPartItemSlices = (upload, slice)=> {
 };
 
 const flattenUploadArtboards = (upload)=> {
+// 	console.log('flattenUploadArtboards()', upload);
+
 	return ([...upload.pages].flatMap((page)=> (page.artboards)).map((artboard)=> ({
 		id        : artboard.id << 0,
 		pageID    : artboard.page_id << 0,
@@ -94,7 +96,17 @@ const flattenUploadArtboards = (upload)=> {
 		filename  : artboard.filename,
 		creator   : artboard.creator,
 		meta      : (typeof artboard.meta === 'string') ? JSON.parse(artboard.meta) : artboard.meta,
-		slices    : artboard.slices,
+		slices    : [...artboard.slices].map((slice, i)=> ({
+			id         : slice.id << 0,
+			artboardID : artboard.id << 0,
+			title      : slice.title,
+			type       : slice.type,
+			filename   : slice.filename,
+			meta       : (typeof slice.meta === 'string') ? JSON.parse(slice.meta) : slice.meta,
+			added      : slice.added,
+			filled     : false,
+			children   : slice.children
+		})),
 		added     : artboard.added
 	})).reverse());
 };
@@ -794,6 +806,33 @@ class InspectorPage extends Component {
 		}
 	}
 
+	buildSliceRollOverItemTypes = (artboard, type, offset, scale, scrolling)=> {
+// 		console.log('InspectorPage.buildSliceRollOverItemTypes()', artboard, type, offset, scale, scrolling);
+
+		const slices = artboard.slices.filter((slice)=> (slice.type === type)).map((slice, i)=> {
+			return (<SliceRolloverItem
+				key={i}
+				id={slice.id}
+				artboardID={artboard.id}
+				title={slice.title}
+				type={slice.type}
+				filled={slice.filled}
+				visible={(!scrolling)}
+				top={slice.meta.frame.origin.y}
+				left={slice.meta.frame.origin.x}
+				width={slice.meta.frame.size.width}
+				height={slice.meta.frame.size.height}
+				scale={scale}
+				offset={{ x : offset.x, y : offset.y }}
+				onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
+				onRollOut={(offset)=> this.handleSliceRollOut(i, slice, offset)}
+				onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
+			/>);
+		});
+
+// 		console.log('::::::::::', slices, artboard.slices);
+		return(slices);
+	};
 
 	calcArtboardBaseMetrics = (artboards, vpSize)=> {
 // 		console.log('InspectorPage.calcArtboardBaseMetrics()', artboards, vpSize);
@@ -962,7 +1001,7 @@ class InspectorPage extends Component {
 	};
 
 	handleArtboardRollOver = (event)=> {
-// 		console.log('InspectorPage.handleArtboardRollOver()', event.target);
+		console.log('InspectorPage.handleArtboardRollOver()', event.target.getAttribute('data-artboard-id'));
 
 // 		event.stopPropagation();
 		const artboardID = event.target.getAttribute('data-artboard-id') << 0;
@@ -991,7 +1030,7 @@ class InspectorPage extends Component {
 						let { upload } = this.state;
 						let pages = [...upload.pages];
 						pages.forEach((page)=> {
-							page.artboards.filter((artboard)=> ((artboard.id << 0) === artboardID)).forEach((artboard)=> {
+							page.artboards.filter((artboard)=> ((artboard.id << 0) === artboardID)).map((artboard)=> {
 								artboard.slices = response.data.slices.map((slice)=> ({
 									id         : slice.id << 0,
 									artboardID : slice.artboard_id << 0,
@@ -1053,9 +1092,7 @@ class InspectorPage extends Component {
 			if (slice) {
 				const frame = this.calcCanvasSliceFrame(slice, artboard, offset, scrollPt);
 // 				drawCanvasSliceFill(context, frame, CANVAS.slices.fillColor);
-				if (section !== SECTIONS.PARTS) {
-// 					drawCanvasSliceTooltip(context, slice.type, frame.origin, frame.size.width);
-				}
+// 				drawCanvasSliceTooltip(context, slice.type, frame.origin, frame.size.width);
 				drawCanvasSliceBorder(context, frame);
 				drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.guides.color);
 				drawCanvasSliceMarchingAnts(context, frame, this.antsOffset);
@@ -1065,9 +1102,7 @@ class InspectorPage extends Component {
 				if (!slice || (slice && slice.id !== hoverSlice.id)) {
 					const frame = this.calcCanvasSliceFrame(hoverSlice, artboard, hoverOffset, scrollPt);
 // 					drawCanvasSliceFill(context, frame, CANVAS.slices.fillColor);
-					if (section !== SECTIONS.PARTS) {
-						drawCanvasSliceTooltip(context, `W:${frame.size.width}px H:${frame.size.height}px`, frame.origin, frame.size.width * 7);
-					}
+// 					drawCanvasSliceTooltip(context, `W:${frame.size.width}px H:${frame.size.height}px`, frame.origin, frame.size.width * 7);
 					drawCanvasSliceBorder(context, frame);
 					drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.guides.color);
 				}
@@ -1125,7 +1160,7 @@ class InspectorPage extends Component {
 		trackEvent('button', `copy-${type}`);
 		this.props.onPopup({
 			type    : POPUP_TYPE_INFO,
-			content : (msg.length >= 100) ? `Copied ${type} to clipboard` : msg
+			content : (msg.length >= 80) ? `Copied ${type} to clipboard` : msg
 		});
 	};
 
@@ -1282,31 +1317,6 @@ class InspectorPage extends Component {
 				}
 			});
 
-
-// 			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
-// 				return (tabSet.map((tab, j)=> {
-// 					console.log(':::::::::::::::::', i, j);
-// 					return ((j === 1) ? Object.assign({}, tab, {
-// 						type     : 'component',
-// 						contents : <SpecsList
-// 							upload={upload}
-// 							slice={slice}
-// 							creatorID={(profile) ? profile.id : 0}
-// 							onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
-// 						/>
-// 					}) : tab);
-// 				}));
-// 			});
-
-// 			tabSets = [...this.state.tabSets].map((tabSet)=> {
-// 				return (tabSet.map((tab, i)=> {
-// 					return (Object.assign({}, tab, {
-// 						contents : langs[i].html,
-// 						syntax   : langs[i].syntax
-// 					}));
-// 				}));
-// 			});
-
 		} else if (section === SECTIONS.PARTS) {
 			tabSets[0][0].type = 'component';
 
@@ -1419,31 +1429,6 @@ class InspectorPage extends Component {
 						}));
 					}
 				});
-
-
-// 				tabSets = [...this.state.tabSets].map((tabSet, i)=> {
-// 					return (tabSet.map((tab, j)=> {
-// 						console.log(':::::::::::::::::', i, j);
-// 						return ((j === 0) ? Object.assign({}, tab, {
-// 							type     : 'component',
-// 							contents : <SpecsList
-// 								upload={upload}
-// 								slice={this.state.slice}
-// 								creatorID={(profile) ? profile.id : 0}
-// 								onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
-// 							/>
-// 						}) : tab);
-// 					}));
-// 				});
-
-// 				tabSets = [...this.state.tabSets].map((tabSet)=> {
-// 					return (tabSet.map((tab, i)=> {
-// 						return (Object.assign({}, tab, {
-// 							contents : langs[i].html,
-// 							syntax   : langs[i].syntax
-// 						}));
-// 					}));
-// 				});
 
 			} else if (section === SECTIONS.PARTS) {
 				tabSets[0][0].type = 'component';
@@ -1580,32 +1565,6 @@ class InspectorPage extends Component {
 					}
 				});
 
-
-// 				tabSets = [...this.state.tabSets].map((tabSet, i)=> {
-// 					if (i === 0) {
-// 						return (tabSet.map((tab, j)=> {
-// 							console.log(':::::::::::::::::', i, j);
-// 							return ((j === 0) ? Object.assign({}, tab, {
-// 								type     : 'component',
-// 								contents : <SpecsList
-// 									upload={upload}
-// 									slice={slice}
-// 									creatorID={(profile) ? profile.id : 0}
-// 									onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
-// 								/>
-// 							}) : tab);
-// 						}));
-//
-// 					} else {
-// 						return (tabSet.map((tab, i)=> {
-// 							return (Object.assign({}, tab, {
-// 								contents : langs[i].html,
-// 								syntax   : langs[i].syntax
-// 							}));
-// 						}));
-// 					}
-// 				});
-
 			} else if (section === SECTIONS.PARTS) {
 				tabSets[0][0].type = 'component';
 
@@ -1684,13 +1643,6 @@ class InspectorPage extends Component {
 		const activeTabs = [...this.state.activeTabs].map((activeTab, i)=> {
 			return ((tabSets[i].find((item)=> (item.id === tab.id))) ? tab : activeTab);
 		});
-
-// 			return (tabSet.map((tab, i)=> {
-// 				return (Object.assign({}, tab, {
-// 					contents : langs[i].html,
-// 					syntax   : langs[i].syntax
-// 				}));
-// 			}));
 
 		this.setState({ activeTabs });
 	};
@@ -2109,131 +2061,12 @@ class InspectorPage extends Component {
 				height   : `${(scale * artboard.meta.frame.size.height) << 0}px`,
 			};
 
-			const artboardSlices = artboard.slices.filter((slice)=> (slice.type === 'artboard')).map((slice, i)=> (
-				<SliceRolloverItem
-					key={i}
-					id={slice.id}
-					artboardID={artboard.id}
-					title={slice.title}
-					type={slice.type}
-					filled={slice.filled}
-					visible={(!scrolling)}
-					top={slice.meta.frame.origin.y}
-					left={slice.meta.frame.origin.x}
-					width={slice.meta.frame.size.width}
-					height={slice.meta.frame.size.height}
-					scale={scale}
-					offset={{ x : offset.x, y : offset.y }}
-					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
-					onRollOut={(offset)=> this.handleSliceRollOut(i, slice, offset)}
-					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
-				/>)
-			);
-
-			const groupSlices = artboard.slices.filter((slice)=> (slice.type === 'group')).map((slice, i)=> (
-				<SliceRolloverItem
-					key={i}
-					id={slice.id}
-					artboardID={artboard.id}
-					title={slice.title}
-					type={slice.type}
-					filled={slice.filled}
-					visible={(!scrolling)}
-					top={slice.meta.frame.origin.y}
-					left={slice.meta.frame.origin.x}
-					width={slice.meta.frame.size.width}
-					height={slice.meta.frame.size.height}
-					scale={scale}
-					offset={{ x : offset.x, y : offset.y }}
-					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
-					onRollOut={(offset)=> this.handleSliceRollOut(i, slice, offset)}
-					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
-				/>)
-			);
-
-			const backgroundSlices = artboard.slices.filter((slice)=> (slice.type === 'background')).map((slice, i)=> (
-				<SliceRolloverItem
-					key={i}
-					id={slice.id}
-					artboardID={artboard.id}
-					title={slice.title}
-					type={slice.type}
-					filled={slice.filled}
-					visible={(!scrolling)}
-					top={slice.meta.frame.origin.y}
-					left={slice.meta.frame.origin.x}
-					width={slice.meta.frame.size.width}
-					height={slice.meta.frame.size.height}
-					scale={scale}
-					offset={{ x : offset.x, y : offset.y }}
-					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
-					onRollOut={(offset)=> this.handleSliceRollOut(i, slice, offset)}
-					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
-				/>)
-			);
-
-			const symbolSlices = artboard.slices.filter((slice)=> (slice.type === 'symbol')).map((slice, i)=> (
-				<SliceRolloverItem
-					key={i}
-					id={slice.id}
-					artboardID={artboard.id}
-					title={slice.title}
-					type={slice.type}
-					filled={slice.filled}
-					visible={(!scrolling)}
-					top={slice.meta.frame.origin.y}
-					left={slice.meta.frame.origin.x}
-					width={slice.meta.frame.size.width}
-					height={slice.meta.frame.size.height}
-					scale={scale}
-					offset={{ x : offset.x, y : offset.y }}
-					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
-					onRollOut={(offset)=> this.handleSliceRollOut(i, slice, offset)}
-					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
-				/>)
-			);
-
-			const textfieldSlices = artboard.slices.filter((slice)=> (slice.type === 'textfield')).map((slice, i)=> (
-				<SliceRolloverItem
-					key={i}
-					id={slice.id}
-					artboardID={artboard.id}
-					title={slice.title}
-					type={slice.type}
-					filled={slice.filled}
-					visible={(!scrolling)}
-					top={slice.meta.frame.origin.y}
-					left={slice.meta.frame.origin.x}
-					width={slice.meta.frame.size.width}
-					height={slice.meta.frame.size.height}
-					scale={scale}
-					offset={{ x : offset.x, y : offset.y }}
-					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
-					onRollOut={(offset)=> this.handleSliceRollOut(i, slice, offset)}
-					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
-				/>)
-			);
-
-			const sliceSlices = artboard.slices.filter((slice)=> (slice.type === 'slice')).map((slice, i)=> (
-				<SliceRolloverItem
-					key={i}
-					id={slice.id}
-					artboardID={artboard.id}
-					title={slice.title}
-					type={slice.type}
-					filled={slice.filled}
-					visible={(!scrolling)}
-					top={slice.meta.frame.origin.y}
-					left={slice.meta.frame.origin.x}
-					width={slice.meta.frame.size.width}
-					height={slice.meta.frame.size.height}
-					scale={scale}
-					offset={{ x : offset.x, y : offset.y }}
-					onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
-					onRollOut={(offset)=> this.handleSliceRollOut(i, slice, offset)}
-					onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
-				/>)
-			);
+			const artboardSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'artboard', offset, scale, scrolling) : [];
+			const groupSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'group', offset, scale, scrolling) : [];
+			const backgroundSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'background', offset, scale, scrolling) : [];
+			const textfieldSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'textfield', offset, scale, scrolling) : [];
+			const symbolSlices =(artboard.slices.length > 0) ?  this.buildSliceRollOverItemTypes(artboard, 'symbol', offset, scale, scrolling) : [];
+			const sliceSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'slice', offset, scale, scrolling) : [];
 
 			artboardImages.push(
 				<div key={i} data-artboard-id={artboard.id} style={artboardStyle}>
