@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './InspectorPage.css';
 
 import axios from 'axios';
-import moment from 'moment-timezone';
+// import moment from 'moment-timezone';
 import qs from 'qs';
 import ReactNotifications from 'react-browser-notifications';
 import cookie from 'react-cookies';
@@ -234,12 +234,12 @@ const ColorSwatch = (props)=> {
 };
 
 const FilingTabContent = (props)=> {
-// 	console.log('InspectorPage.FilingTabContent()', props);
+	console.log('InspectorPage.FilingTabContent()', props);
 
-	const { key, tab } = props;
+	const { tab } = props;
 	const { type, contents } = tab;
 
-	return (<div key={key} className="filing-tab-content">
+	return (<div key={tab.id} className="filing-tab-content">
 		{(!type || type === 'json_html') && (<span dangerouslySetInnerHTML={{ __html : (contents && contents.length > 0) ? String(JSON.parse(contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : '' }} />)}
 		{(type === 'component') && (contents)}
 	</div>);
@@ -274,15 +274,14 @@ const FilingTabSet = (props)=> {
 };
 
 const FilingTabTitle = (props)=> {
-// 	console.log('InspectorPage.FilingTabTitle()', props);
+	console.log('InspectorPage.FilingTabTitle()', props);
 
-// 	const { ind, title, selected } = props;
-	const { key, tab, selected } = props;
+	const { tab, selected } = props;
 	const { title } = tab;
 
 	const className = `filing-tab-title${(!title || title.length === 0) ? ' filing-tab-title-blank' : ''}${(selected) ? ' filing-tab-title-selected' : ''}`;
-	return (<React.Fragment key={key}>
-		<li key={key} className={className} onClick={()=> props.onClick()}>{title}</li>
+	return (<React.Fragment key={tab.id}>
+		<li className={className} onClick={()=> props.onClick()}>{title}</li>
 	</React.Fragment>);
 };
 
@@ -1264,7 +1263,6 @@ class InspectorPage extends Component {
 			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 				if (i === 1) {
 					return (tabSet.map((tab, j)=> {
-						console.log(':::::::::::::::::', i, j);
 						return ((j === 0) ? Object.assign({}, tab, {
 							type     : 'component',
 							contents : <SpecsList
@@ -1392,7 +1390,6 @@ class InspectorPage extends Component {
 				tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 					if (i === 1) {
 						return (tabSet.map((tab, j)=> {
-							console.log(':::::::::::::::::', i, j);
 							return ((j === 0) ? Object.assign({}, tab, {
 								type     : 'component',
 								contents : <SpecsList
@@ -1543,7 +1540,6 @@ class InspectorPage extends Component {
 				tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 					if (i === 1) {
 						return (tabSet.map((tab, j)=> {
-							console.log(':::::::::::::::::', i, j);
 							return ((j === 0) ? Object.assign({}, tab, {
 								type     : 'component',
 								contents : <SpecsList
@@ -1932,13 +1928,13 @@ class InspectorPage extends Component {
 			.then((response)=> {
 				console.log('UPLOAD_STATUS', response.data);
 				const { status } = response.data;
-				const { totals } = status;
+// 				const { totals } = status;
 				const processingState = status.state << 0;
 
 				const ellipsis = Array((epochDate() % 4) + 1).join('.');
-				const total = Object.values(totals).reduce((acc, val)=> ((acc << 0) + (val << 0)));
-				const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
-				const secs = ((mins - (mins << 0)) * 60) << 0;
+// 				const total = totals.all << 0;//Object.values(totals).reduce((acc, val)=> ((acc << 0) + (val << 0)));
+// 				const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
+// 				const secs = ((mins - (mins << 0)) * 60) << 0;
 
 				if (processingState === 0) {
 					const { queue } = status;
@@ -2022,7 +2018,7 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.render()', this.state);
 
 
-		const { processing, profile } = this.props;
+		const { processing } = this.props;
 
 		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, activeTabs, scrolling, viewSize, panMultPt } = this.state;
 		const { valid, restricted, urlBanner, tutorial, tooltip } = this.state;
@@ -2258,22 +2254,22 @@ class InspectorPage extends Component {
 
 		const listTotal = (upload && activeSlice) ? (section === SECTIONS.PRESENTER) ? flattenUploadArtboards(upload).length : (activeSlice) ? (activeSlice.type === 'group') ? fillGroupPartItemSlices(upload, activeSlice).length : activeSlice.children.length : 0 : 0;
 
-		const specTabs = [{
-			id       : 5,
-			title    : 'Specs',
-			type     : 'component',
-			contents : (upload && activeSlice) ? (<SpecsList
-				upload={upload}
-				slice={activeSlice}
-				creatorID={(profile) ? profile.id : 0}
-				onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
-			/>) : '',
-			syntax   : null
-		}, {
-			title    : '',
-			contents : null,
-			syntax   : null
-		}];
+// 		const specTabs = [{
+// 			id       : 5,
+// 			title    : 'Specs',
+// 			type     : 'component',
+// 			contents : (upload && activeSlice) ? (<SpecsList
+// 				upload={upload}
+// 				slice={activeSlice}
+// 				creatorID={(profile) ? profile.id : 0}
+// 				onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
+// 			/>) : '',
+// 			syntax   : null
+// 		}, {
+// 			title    : '',
+// 			contents : null,
+// 			syntax   : null
+// 		}];
 
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
