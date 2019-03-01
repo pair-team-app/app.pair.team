@@ -10,19 +10,36 @@
 	margin-bottom: 20px;
 }
 
-.profile-page-avatar-image {
+.profile-page-avatar-image-wrapper {
+	position: relative;
 	width: 78px;
 	height: 78px;
 	margin-right: 20px;
 	border-radius: 2px;
-	background: #fafbfc url(../../../assets/images/avatars/avatar-default.png) no-repeat center;
+	background-color: #2d3239;
 	background-size: cover;
-	text-align: center;
-	vertical-align: middle;
+	overflow: hidden;
+}
+
+.profile-page-avatar-image {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	object-fit: scale-down;
+	max-width: 100%;
+	/*min-height: 85%;*/
 }
 
 .profile-page-avatar-image:hover {
 	cursor: pointer;
+}
+
+.profile-page-avatar-image-landscape {
+}
+
+.profile-page-avatar-image-portrait {
 }
 
 .profile-page-avatar-image-loading {
@@ -34,9 +51,9 @@
 	color: #ff4646;
 }
 
-.profile-page-paid-wrapper {
-	margin-bottom: 20px;
+.profile-page-dz-wrapper {
 }
 
-.profile-page-dz-wrapper {
+.profile-page-paid-wrapper {
+	margin-bottom: 20px;
 }

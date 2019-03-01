@@ -270,13 +270,14 @@ class ProfilePage extends Component {
 				<div className="profile-page-avatar-wrapper">
 					<Row vertical="center">
 						<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)} onFileDialogCancel={this.handleFileDialogCancel} ref={dropZone}>
-
-							<ImageLoader
-								src={avatar}
-								image={(props)=> (<img className="profile-page-avatar-image" {...props} src={avatar} alt="" />)}
-								loading={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
-								error={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
-							/>
+							<div className="profile-page-avatar-image-wrapper">
+								<ImageLoader
+									src={avatar}
+									image={(props)=> (<img className="profile-page-avatar-image" {...props} src={avatar} alt="" />)}
+									loading={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+									error={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
+								/>
+							</div>
 
 							{/*<img className="profile-page-avatar-image" src={avatar} alt="" />*/}
 						</Dropzone>
