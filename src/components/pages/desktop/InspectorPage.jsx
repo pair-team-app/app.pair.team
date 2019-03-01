@@ -72,7 +72,7 @@ const artboardForID = (upload, artboardID)=> {
 };
 
 const fillGroupPartItemSlices = (upload, slice)=> {
-	console.log('fillGroupPartItemSlices()', upload, slice);
+// 	console.log('fillGroupPartItemSlices()', upload, slice);
 	let slices = [slice];
 
 	artboardForID(upload, slice.artboardID).slices.filter((item)=> (item.type !== 'symbol_child' && item.id !== slice.id)).forEach((item)=> {
@@ -100,7 +100,7 @@ const flattenUploadArtboards = (upload)=> {
 };
 
 const slicesByArea = (slices)=> {
-	console.log('slicesByArea()', slices);
+// 	console.log('slicesByArea()', slices);
 	return(slices.sort((s1, s2)=> ((areaSize(s1.meta.frame.size) < areaSize(s2.meta.frame.size)) ? -1 : (areaSize(s1.meta.frame.size) > areaSize(s2.meta.frame.size)) ? 1 : 0)));
 };
 
@@ -182,12 +182,11 @@ const drawCanvasSliceTooltip = (context, text, origin, maxWidth=-1)=> {
 
 
 const ArtboardsList = (props)=> {
-	console.log('InspectorPage.ArtboardsList()', props);
+// 	console.log('InspectorPage.ArtboardsList()', props);
 
 	const { contents } = props;
 	return ((contents.length > 0) ? <div className="artboards-list-wrapper">
 		{contents.map((artboard, i)=> {
-// 			const meta = (typeof artboard.meta === 'string') ? JSON.parse(artboard.meta) : artboard.meta;
 			const { meta } = artboard;
 
 			return (
@@ -423,7 +422,7 @@ const SliceRolloverItem = (props)=> {
 };
 
 const SpecsList = (props)=> {
-	console.log('InspectorPage.SpecsList()', props);
+// 	console.log('InspectorPage.SpecsList()', props);
 
 	const { upload, slice, creatorID } = props;
 
@@ -682,7 +681,7 @@ class InspectorPage extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
-		console.log('InspectorPage.shouldComponentUpdate()', this.props, nextProps, this.state, nextState, nextContext);
+// 		console.log('InspectorPage.shouldComponentUpdate()', this.props, nextProps, this.state, nextState, nextContext);
 
 		const { upload, restricted } = nextState;
 		if (upload && (upload.private << 0) === 1) {
@@ -1126,7 +1125,7 @@ class InspectorPage extends Component {
 		trackEvent('button', `copy-${type}`);
 		this.props.onPopup({
 			type    : POPUP_TYPE_INFO,
-			content : (msg.length >= 150) ? `Copied ${type} to clipboard` : msg
+			content : (msg.length >= 100) ? `Copied ${type} to clipboard` : msg
 		});
 	};
 
@@ -1157,7 +1156,7 @@ class InspectorPage extends Component {
 	handleDownloadPartsList = ()=> {
 // 		console.log('InspectorPage.handleDownloadPartsList()');
 
-		trackEvent('button', 'download-list');
+		trackEvent('button', 'download-parts');
 		const { upload, slice } = this.state;
 		const sliceIDs = (slice.type === 'group') ? fillGroupPartItemSlices(upload, slice).map((slice)=> (slice.id)).join(',') : slice.children.map((slice)=> (slice.id)).join(',');
 
@@ -1283,6 +1282,7 @@ class InspectorPage extends Component {
 				}
 			});
 
+
 // 			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 // 				return (tabSet.map((tab, j)=> {
 // 					console.log(':::::::::::::::::', i, j);
@@ -1364,7 +1364,16 @@ class InspectorPage extends Component {
 			});
 		}
 
-		this.setState({ tabSets, artboard, slice, offset,
+		const activeTabs = [...this.state.activeTabs].map((activeTab, i)=> {
+			const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
+			return ((tab) ? tab : activeTab);
+		});
+
+// 		const activeTabs = tabSets.map((tabSet)=> {
+// 			return ((tabSet.find((tab)=> (tab.id === activeTab.id))) ? tab : activeTab );
+// 		});
+
+		this.setState({ tabSets, activeTabs, artboard, slice, offset,
 			hoverSlice  : null,
 			hoverOffset : null
 		});
@@ -1376,6 +1385,7 @@ class InspectorPage extends Component {
 		const { profile } = this.props;
 		const { upload, artboard, section } = this.state;
 		let tabSets = [...this.state.tabSets];
+		let activeTabs = [...this.state.activeTabs];
 
 		if (this.state.slice) {
 			const langs = [
@@ -1492,6 +1502,11 @@ class InspectorPage extends Component {
 				});
 			}
 
+			activeTabs = activeTabs.map((activeTab, i)=> {
+				const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
+				return ((tab) ? tab : activeTab);
+			});
+
 		} else {
 // 			this.handleSliceClick(ind, slice, offset);
 
@@ -1507,9 +1522,14 @@ class InspectorPage extends Component {
 					}));
 				}));
 			});
+
+			activeTabs = activeTabs.map((activeTab, i)=> {
+				const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
+				return ((tab) ? tab : activeTab);
+			});
 		}
 
-		this.setState({ artboard, tabSets,
+		this.setState({ artboard, tabSets, activeTabs,
 			hoverSlice  : null,
 			hoverOffset : null
 		});
@@ -1644,7 +1664,12 @@ class InspectorPage extends Component {
 				});
 			}
 
-			this.setState({ artboard, tabSets,
+			const activeTabs = [...this.state.activeTabs].map((activeTab, i)=> {
+				const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
+				return ((tab) ? tab : activeTab);
+			});
+
+			this.setState({ artboard, tabSets, activeTabs,
 				hoverSlice  : slice,
 				hoverOffset : offset
 			});
@@ -1822,9 +1847,6 @@ class InspectorPage extends Component {
 			const { upload } = response.data;
 			if (Object.keys(upload).length > 0 && ((upload.state << 0) <= 3)) {
 				let tabSets = inspectorTabSets[section];
-				const activeTabs = tabSets.map((tabSet)=> {
-					return (tabSet.slice(0, 1).pop());
-				});
 
 				const artboards = flattenUploadArtboards(upload);
 				const baseMetrics = this.calcArtboardBaseMetrics((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
@@ -1844,7 +1866,6 @@ class InspectorPage extends Component {
 
 						} else {
 							return (tabSet.map((tab, j) => {
-								console.log(':::::::::::::::::', i, j);
 								return ((j === 0) ? Object.assign({}, tab, {
 									type     : 'component',
 									contents : <SpecsList
@@ -1905,8 +1926,13 @@ class InspectorPage extends Component {
 					});
 				}
 
+				const activeTabs = tabSets.map((tabSet)=> {
+					return (tabSet.slice(0, 1).pop());
+				});
+
 				this.setState({ upload, tabSets, activeTabs,
 					artboard  : (section === SECTIONS.PRESENTER) ? artboards[0] : null,
+					slice     : null,
 					tooltip   : null
 				});
 
@@ -2025,7 +2051,7 @@ class InspectorPage extends Component {
 	render() {
 // 		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage.render()', this.props);
-// 		console.log('InspectorPage.render()', this.state);
+		console.log('InspectorPage.render()', this.state);
 
 
 		const { processing } = this.props;
@@ -2319,8 +2345,8 @@ class InspectorPage extends Component {
 				{(valid) && (<div className={panelClass}>
 					{(section === SECTIONS.INSPECT) && (<>
 						{(tabSets.map((tabSet, i)=> (
-							<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
-								<div key={i} style={tabSetWrapperStyle}>
+							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
+								<div style={tabSetWrapperStyle}>
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}
@@ -2329,7 +2355,7 @@ class InspectorPage extends Component {
 									/>
 									<div className="inspector-page-panel-button-wrapper">
 										<CopyToClipboard onCopy={()=> this.handleClipboardCopy((i === 0) ? 'code' : 'specs', (i === 0) ? activeTabs[i].syntax : toSpecs(activeSlice))} text={(i === 0) ? (activeTabs && activeTabs[i]) ? activeTabs[i].syntax : '' : (activeSlice) ? toSpecs(activeSlice) : ''}>
-											<button disabled={activeTabs[i].contents} className="inspector-page-panel-button">Copy to Clipboard</button>
+											<button disabled={!slice} className="inspector-page-panel-button">Copy to Clipboard</button>
 										</CopyToClipboard>
 									</div>
 								</div>
@@ -2337,26 +2363,23 @@ class InspectorPage extends Component {
 						))}
 					</>)}
 
-					{(section === SECTIONS.PARTS) && (<>
-						<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper">
-							{(tabSets.map((tabSet, i)=> (
-								<div key={i} style={tabSetWrapperStyle}>
-									<FilingTabSet
-										tabs={tabSet}
-										activeTab={activeTabs[i]}
-										onTabClick={(tab)=> this.handleTab(tab)}
-										onContentClick={(payload)=> console.log('onContentClick', payload)}
-									/>
-									<div className="inspector-page-panel-button-wrapper">
-										<button disabled={activeTabs[i].contents} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download ({listTotal}) Part{(listTotal === 1) ? '' : 's'}</button>
-									</div>
-								</div>)
-							))}
-						</div>
-					</>)}
+					{(section === SECTIONS.PARTS) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper">
+						{(tabSets.map((tabSet, i)=> (
+							<div key={i} style={tabSetWrapperStyle}>
+								<FilingTabSet
+									tabs={tabSet}
+									activeTab={activeTabs[i]}
+									onTabClick={(tab)=> this.handleTab(tab)}
+									onContentClick={(payload)=> console.log('onContentClick', payload)}
+								/>
+								<div className="inspector-page-panel-button-wrapper">
+									<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download ({listTotal}) Part{(listTotal === 1) ? '' : 's'}</button>
+								</div>
+							</div>)
+						))}
+					</div>)}
 
-					{(section === SECTIONS.PRESENTER && tabSets) && (<>
-					<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-presenter-wrapper">
+					{(section === SECTIONS.PRESENTER) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-presenter-wrapper">
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-split-width-content-wrapper inspector-page-panel-full-height-content-wrapper" style={{width:`${(i === 0) ? 520 : 360}px`}}>
 								<div style={tabSetWrapperStyle}>
@@ -2369,15 +2392,14 @@ class InspectorPage extends Component {
 										<div className="inspector-page-panel-button-wrapper">
 											{(i === 0)
 												? (<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
-														<button disabled={activeTabs[i].contents} className="inspector-page-panel-button">Copy to Clipboard</button>
+														<button disabled={!activeTabs[i].contents} className="inspector-page-panel-button">Copy to Clipboard</button>
 													</CopyToClipboard>)
-												: (<button disabled={activeTabs[i].contents} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download PDF</button>)}
+												: (<button disabled={(artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download PDF</button>)}
 										</div>
 								</div>
 							</div>
 						)))}
-						</div>
-					</>)}
+					</div>)}
 				</div>)}
 			</BaseDesktopPage>
 
