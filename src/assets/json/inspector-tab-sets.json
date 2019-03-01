@@ -3,31 +3,37 @@
     [{
       "id": 1,
       "title": "CSS",
+      "type": "json_html",
       "contents": null,
       "syntax": null
     }, {
       "id": 2,
       "title": "React",
+      "type": "json_html",
       "contents": null,
       "syntax": null
     }, {
       "id": 3,
       "title": "Swift",
+      "type": "json_html",
       "contents": null,
       "syntax": null
     }, {
       "id": 4,
       "title": "Android",
+      "type": "json_html",
       "contents": null,
       "syntax": null
     }], [{
       "id": 5,
       "title": "Specs",
+      "type": "component",
       "contents": null,
       "syntax": null
     }, {
       "id": 6,
       "title": null,
+      "type": "blank",
       "contents": null,
       "syntax": null
     }]
@@ -37,6 +43,7 @@
     [{
       "id": 1,
       "title": "Parts",
+      "type": "component",
       "contents": null,
       "syntax": null
     }]
@@ -46,26 +53,31 @@
     [{
       "id": 1,
       "title": "CSS",
+      "type": "json_html",
       "contents": null,
       "syntax": null
     }, {
       "id": 2,
       "title": "React",
+      "type": "json_html",
       "contents": null,
       "syntax": null
     }, {
       "id": 3,
       "title": "Swift",
+      "type": "json_html",
       "contents": null,
       "syntax": null
     }, {
       "id": 4,
       "title": "Android",
+      "type": "json_html",
       "contents": null,
       "syntax": null
     }], [{
       "id": 5,
       "title": "Views",
+      "type": "component",
       "contents": null,
       "syntax": null
     }]

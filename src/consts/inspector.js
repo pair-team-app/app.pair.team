@@ -65,3 +65,11 @@ export const SECTIONS = {
 };
 
 export const STATUS_INTERVAL = 1250;
+
+export const TAB_CONTENT_PLACEHOLDERS = {
+	ARTBOARDS : '…',
+	CODE      : 'Rollover to display code…',
+	PARTS     : 'Rollover to display parts…',
+	SPECS     : 'Rollover to display specs…',
+	SYNTAX    : null
+};

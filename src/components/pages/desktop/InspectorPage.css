@@ -222,12 +222,13 @@
 
 .inspector-page-panel-full-height-content-wrapper {
 	/*height: calc(100vh - 150px);*/
-	height: calc(100vh - 112px);
-	/*height: calc(100vh - 64px);*/
+	/*height: calc(100vh - 112px);*/
+	height: calc(100vh - 64px);
 }
 
 .inspector-page-panel-split-height-content-wrapper {
-	height: calc(50vh - 74px);
+	/*height: calc(50vh - 74px);*/
+	height: calc(50vh - 32px);
 }
 
 .inspector-page-panel-full-width-content-wrapper {
