@@ -147,7 +147,9 @@ const drawCanvasSliceMarchingAnts = (context, frame, offset)=> {
 	context.stroke();
 };
 
-const drawCanvasSliceTooltip = (context, text, origin, maxWidth)=> {
+const drawCanvasSliceTooltip = (context, text, origin, maxWidth=-1)=> {
+	maxWidth = (maxWidth === -1) ? 500 : maxWidth;
+
 	let caption = text;
 	let txtWidth = context.measureText(caption.toUpperCase()).width << 0;
 	while ((txtWidth + CANVAS.caption.padding) > maxWidth) {
@@ -164,14 +166,14 @@ const drawCanvasSliceTooltip = (context, text, origin, maxWidth)=> {
 		padding : CANVAS.caption.padding
 	};
 
-	context.fillStyle = 'rgba(0, 0, 0, 0.125)';
-	context.fillRect(origin.x + 1, (origin.y - txtMetrics.height) + 1, (txtMetrics.width + (txtMetrics.padding * 2)) - 2, txtMetrics.height - 1);
+	context.fillStyle = CANVAS.caption.bgColor;
+	context.fillRect(origin.x + 1, (origin.y - txtMetrics.height), (txtMetrics.width + (txtMetrics.padding * 2)) - 2, txtMetrics.height);
 
 	context.strokeStyle = CANVAS.caption.lineColor;
 	context.lineWidth = 1;
 	context.setLineDash([]);
 	context.beginPath();
-	context.strokeRect(origin.x + 1, (origin.y - txtMetrics.height) + 1, (txtMetrics.width + (txtMetrics.padding * 2)) - 2, txtMetrics.height);
+	context.strokeRect(origin.x + 1, (origin.y - txtMetrics.height), (txtMetrics.width + (txtMetrics.padding * 2)) - 2, txtMetrics.height);
 	context.stroke();
 
 	context.fillStyle = CANVAS.caption.textColor;
@@ -423,9 +425,13 @@ const SliceRolloverItem = (props)=> {
 };
 
 const SpecsList = (props)=> {
-// 	console.log('InspectorPage.SpecsList()', props);
+	console.log('InspectorPage.SpecsList()', props);
 
 	const { upload, slice, creatorID } = props;
+
+	if (!slice) {
+		return (<div className="inspector-page-specs-list-wrapper" />);
+	}
 
 	const fillColor = ((slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color : slice.meta.fillColor).toUpperCase();
 	const padding = `${slice.meta.padding.top}px ${slice.meta.padding.left}px ${slice.meta.padding.bottom}px ${slice.meta.padding.right}px`;
@@ -548,7 +554,7 @@ const SpecsListItem = (props)=> {
 // 	console.log('InspectorPage.SpecsListItem()', props);
 
 	const { attribute, value, copyText } = props;
-	return (<CopyToClipboard onCopy={()=> props.onCopy()} text={(copyText) ? copyText : value}>
+	return (<CopyToClipboard onCopy={()=> props.onCopy((copyText) ? copyText : value)} text={(copyText) ? copyText : value}>
 		<Row><div className="inspector-page-specs-list-item-attribute">{attribute}</div><div className="inspector-page-specs-list-item-val">{value}</div></Row>
 	</CopyToClipboard>);
 };
@@ -1016,11 +1022,10 @@ class InspectorPage extends Component {
 	};
 
 	handleCanvasClick = (event)=> {
-		console.log('InspectorPage.handleCanvasClick()', this.state.tabSets);
+// 		console.log('InspectorPage.handleCanvasClick()', this.state.tabSets);
 		event.stopPropagation();
 
 		const { section, scrolling } = this.state;
-
 		if (!scrolling) {
 			this.setState({
 				tabSets : inspectorTabSets[section],
@@ -1064,7 +1069,7 @@ class InspectorPage extends Component {
 					const frame = this.calcCanvasSliceFrame(hoverSlice, artboard, hoverOffset, scrollPt);
 // 					drawCanvasSliceFill(context, frame, CANVAS.slices.fillColor);
 					if (section !== SECTIONS.PARTS) {
-						drawCanvasSliceTooltip(context, `W: ${frame.size.width}px H: ${frame.size.height}px`, frame.origin, frame.size.width);
+						drawCanvasSliceTooltip(context, `W:${frame.size.width}px H:${frame.size.height}px`, frame.origin, frame.size.width * 7);
 					}
 					drawCanvasSliceBorder(context, frame);
 					drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.guides.color);
@@ -1117,13 +1122,13 @@ class InspectorPage extends Component {
 		}
 	};
 
-	handleClipboardCopy = (trackType, msg='Copied to Clipboard!')=> {
-// 		console.log('InspectorPage.handleClipboardCopy()', trackType, msg);
+	handleClipboardCopy = (type, msg='Copied to Clipboard!')=> {
+		console.log('InspectorPage.handleClipboardCopy()', type, msg);
 
-		trackEvent('button', `copy-${trackType}`);
+		trackEvent('button', `copy-${type}`);
 		this.props.onPopup({
 			type    : POPUP_TYPE_INFO,
-			content : msg
+			content : (msg.length >= 150) ? `Copied ${type} to clipboard` : msg
 		});
 	};
 
@@ -1136,7 +1141,7 @@ class InspectorPage extends Component {
 	};
 
 	handleDownloadArtboardPDF = ()=> {
-		console.log('InspectorPage.handleDownloadArtboardPDF()');
+// 		console.log('InspectorPage.handleDownloadArtboardPDF()');
 
 		trackEvent('button', 'download-pdf');
 		const { upload } = this.state;
@@ -1157,8 +1162,6 @@ class InspectorPage extends Component {
 		trackEvent('button', 'download-list');
 		const { upload, slice } = this.state;
 		const sliceIDs = (slice.type === 'group') ? fillGroupPartItemSlices(upload, slice).map((slice)=> (slice.id)).join(',') : slice.children.map((slice)=> (slice.id)).join(',');
-
-		console.log('::::::::::', `http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
 
 		makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
 	};
@@ -1240,6 +1243,8 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
 
 		trackEvent('slice', `${slice.id}_${convertURISlug(slice.title)}`);
+
+		const { profile } = this.props;
 		const { upload, artboard, section } = this.state;
 		let { tabSets } = this.state;
 
@@ -1256,14 +1261,54 @@ class InspectorPage extends Component {
 		];
 
 		if (section === SECTIONS.INSPECT) {
-			tabSets = [...this.state.tabSets].map((tabSet)=> {
-				return (tabSet.map((tab, i)=> {
-					return (Object.assign({}, tab, {
-						contents : langs[i].html,
-						syntax   : langs[i].syntax
+			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
+				if (i === 1) {
+					return (tabSet.map((tab, j)=> {
+						console.log(':::::::::::::::::', i, j);
+						return ((j === 0) ? Object.assign({}, tab, {
+							type     : 'component',
+							contents : <SpecsList
+								upload={upload}
+								slice={slice}
+								creatorID={(profile) ? profile.id : 0}
+								onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
+							/>
+						}) : tab);
 					}));
-				}));
+
+				} else {
+					return (tabSet.map((tab, i)=> {
+						return (Object.assign({}, tab, {
+							contents : langs[i].html,
+							syntax   : langs[i].syntax
+						}));
+					}));
+				}
 			});
+
+// 			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
+// 				return (tabSet.map((tab, j)=> {
+// 					console.log(':::::::::::::::::', i, j);
+// 					return ((j === 1) ? Object.assign({}, tab, {
+// 						type     : 'component',
+// 						contents : <SpecsList
+// 							upload={upload}
+// 							slice={slice}
+// 							creatorID={(profile) ? profile.id : 0}
+// 							onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
+// 						/>
+// 					}) : tab);
+// 				}));
+// 			});
+
+// 			tabSets = [...this.state.tabSets].map((tabSet)=> {
+// 				return (tabSet.map((tab, i)=> {
+// 					return (Object.assign({}, tab, {
+// 						contents : langs[i].html,
+// 						syntax   : langs[i].syntax
+// 					}));
+// 				}));
+// 			});
 
 		} else if (section === SECTIONS.PARTS) {
 			tabSets[0][0].type = 'component';
@@ -1331,6 +1376,7 @@ class InspectorPage extends Component {
 	handleSliceRollOut = (ind, slice, offset)=> {
 // 		console.log('InspectorPage.handleSliceRollOut()', ind, slice, offset, this.state);
 
+		const { profile } = this.props;
 		const { upload, artboard, section } = this.state;
 		let tabSets = [...this.state.tabSets];
 
@@ -1343,14 +1389,55 @@ class InspectorPage extends Component {
 			];
 
 			if (section === SECTIONS.INSPECT) {
-				tabSets = [...this.state.tabSets].map((tabSet)=> {
-					return (tabSet.map((tab, i)=> {
-						return (Object.assign({}, tab, {
-							contents : langs[i].html,
-							syntax   : langs[i].syntax
+				tabSets = [...this.state.tabSets].map((tabSet, i)=> {
+					if (i === 1) {
+						return (tabSet.map((tab, j)=> {
+							console.log(':::::::::::::::::', i, j);
+							return ((j === 0) ? Object.assign({}, tab, {
+								type     : 'component',
+								contents : <SpecsList
+									upload={upload}
+									slice={this.state.slice}
+									creatorID={(profile) ? profile.id : 0}
+									onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
+								/>
+							}) : tab);
 						}));
-					}));
+
+					} else {
+						return (tabSet.map((tab, i)=> {
+							return (Object.assign({}, tab, {
+								contents : langs[i].html,
+								syntax   : langs[i].syntax
+							}));
+						}));
+					}
 				});
+
+
+// 				tabSets = [...this.state.tabSets].map((tabSet, i)=> {
+// 					return (tabSet.map((tab, j)=> {
+// 						console.log(':::::::::::::::::', i, j);
+// 						return ((j === 0) ? Object.assign({}, tab, {
+// 							type     : 'component',
+// 							contents : <SpecsList
+// 								upload={upload}
+// 								slice={this.state.slice}
+// 								creatorID={(profile) ? profile.id : 0}
+// 								onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
+// 							/>
+// 						}) : tab);
+// 					}));
+// 				});
+
+// 				tabSets = [...this.state.tabSets].map((tabSet)=> {
+// 					return (tabSet.map((tab, i)=> {
+// 						return (Object.assign({}, tab, {
+// 							contents : langs[i].html,
+// 							syntax   : langs[i].syntax
+// 						}));
+// 					}));
+// 				});
 
 			} else if (section === SECTIONS.PARTS) {
 				tabSets[0][0].type = 'component';
@@ -1435,6 +1522,7 @@ class InspectorPage extends Component {
 	handleSliceRollOver = (ind, slice, offset)=> {
 // 		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
 
+		const { profile } = this.props;
 		const { upload, artboard, section } = this.state;
 		let tabSets = [...this.state.tabSets];
 
@@ -1452,14 +1540,56 @@ class InspectorPage extends Component {
 			];
 
 			if (section === SECTIONS.INSPECT) {
-				tabSets = [...this.state.tabSets].map((tabSet)=> {
-					return (tabSet.map((tab, i)=> {
-						return (Object.assign({}, tab, {
-							contents : langs[i].html,
-							syntax   : langs[i].syntax
+				tabSets = [...this.state.tabSets].map((tabSet, i)=> {
+					if (i === 1) {
+						return (tabSet.map((tab, j)=> {
+							console.log(':::::::::::::::::', i, j);
+							return ((j === 0) ? Object.assign({}, tab, {
+								type     : 'component',
+								contents : <SpecsList
+									upload={upload}
+									slice={slice}
+									creatorID={(profile) ? profile.id : 0}
+									onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
+								/>
+							}) : tab);
 						}));
-					}));
+
+					} else {
+						return (tabSet.map((tab, i)=> {
+							return (Object.assign({}, tab, {
+								contents : langs[i].html,
+								syntax   : langs[i].syntax
+							}));
+						}));
+					}
 				});
+
+
+// 				tabSets = [...this.state.tabSets].map((tabSet, i)=> {
+// 					if (i === 0) {
+// 						return (tabSet.map((tab, j)=> {
+// 							console.log(':::::::::::::::::', i, j);
+// 							return ((j === 0) ? Object.assign({}, tab, {
+// 								type     : 'component',
+// 								contents : <SpecsList
+// 									upload={upload}
+// 									slice={slice}
+// 									creatorID={(profile) ? profile.id : 0}
+// 									onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
+// 								/>
+// 							}) : tab);
+// 						}));
+//
+// 					} else {
+// 						return (tabSet.map((tab, i)=> {
+// 							return (Object.assign({}, tab, {
+// 								contents : langs[i].html,
+// 								syntax   : langs[i].syntax
+// 							}));
+// 						}));
+// 					}
+// 				});
 
 			} else if (section === SECTIONS.PARTS) {
 				tabSets[0][0].type = 'component';
@@ -1527,7 +1657,7 @@ class InspectorPage extends Component {
 	};
 
 	handleTab = (tab)=> {
-		 console.log('InspectorPage.handleTab()', tab);
+// 		 console.log('InspectorPage.handleTab()', tab);
 		trackEvent('tab', convertURISlug(tab.title));
 
 		const { tabSets } = this.state;
@@ -1541,9 +1671,6 @@ class InspectorPage extends Component {
 // 					syntax   : langs[i].syntax
 // 				}));
 // 			}));
-
-
-		console.log('::::::::::', activeTabs);
 
 		this.setState({ activeTabs });
 	};
@@ -1714,9 +1841,9 @@ class InspectorPage extends Component {
 // 				const scaledMetrics = this.calcArtboardScaledMetrics((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, baseMetrics, fitScale);
 // 				console.log(':::::SCALED METRICS:::::', scaledMetrics);
 
+
 				if (section === SECTIONS.PRESENTER) {
 					const artboard = artboards[0];
-
 					const langs = [
 						toCSS(artboard),
 						toReactCSS(artboard),
@@ -1741,6 +1868,27 @@ class InspectorPage extends Component {
 								}));
 							}
 						}));
+					});
+
+				} else if (section === SECTIONS.INSPECT) {
+					tabSets = [...tabSets].map((tabSet, i)=> {
+						if (i === 0) {
+							return (tabSet);
+
+						} else {
+							return (tabSet.map((tab, j)=> {
+								console.log(':::::::::::::::::', i, j);
+								return ((j === 0) ? Object.assign({}, tab, {
+									type     : 'component',
+									contents : <SpecsList
+										upload={upload}
+										slice={null}
+										creatorID={0}
+										onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
+									/>
+								}) : tab);
+							}));
+						}
 
 // 						return (tabSet.map((tab, i)=> {
 // 							return (Object.assign({}, tab, {
@@ -1772,7 +1920,7 @@ class InspectorPage extends Component {
 	};
 
 	onProcessingUpdate = ()=> {
-		console.log('InspectorPage.onProcessingUpdate()');
+// 		console.log('InspectorPage.onProcessingUpdate()');
 
 		const { upload, section } = this.state;
 		const title = `${limitString(upload.filename.split('/').pop().split('.').shift(), 34)}.${upload.filename.split('/').pop().split('.').pop()}`;
@@ -2118,7 +2266,7 @@ class InspectorPage extends Component {
 				upload={upload}
 				slice={activeSlice}
 				creatorID={(profile) ? profile.id : 0}
-				onCopySpec={()=> this.handleClipboardCopy('spec')}
+				onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
 			/>) : '',
 			syntax   : null
 		}, {
@@ -2134,7 +2282,7 @@ class InspectorPage extends Component {
 						width={(section === SECTIONS.PRESENTER) ? 880 : 360}
 						copyText={buildInspectorURL(upload)}
 						outro={!urlBanner}
-						onCopy={()=> this.handleClipboardCopy('url')}
+						onCopy={()=> this.handleClipboardCopy('url', buildInspectorURL(upload))}
 						onClose={()=> this.setState({ urlBanner : false })}>
 							<div className="marquee-banner-url">{buildInspectorURL(upload)}</div>
 					</MarqueeBanner>)}
@@ -2177,8 +2325,8 @@ class InspectorPage extends Component {
 
 				{(valid) && (<div className={panelClass}>
 					{(section === SECTIONS.INSPECT) && (<>
-						<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
-							{(tabSets.map((tabSet, i)=> (
+						{(tabSets.map((tabSet, i)=> (
+							<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
 								<div key={i} style={{width:'100%'}}>
 									<FilingTabSet
 										tabs={tabSet}
@@ -2186,27 +2334,14 @@ class InspectorPage extends Component {
 										onTabClick={(tab)=> this.handleTab(tab)}
 										onContentClick={(payload)=> console.log('onContentClick', payload)}
 									/>
-								</div>)
-							))}
-						</div>
-						<div className="inspector-page-panel-button-wrapper">
-							<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code')} text={(activeTabs && activeTabs[0]) ? activeTabs[0].syntax : ''}>
-								<button disabled={processing} className="inspector-page-panel-button">Copy to Clipboard</button>
-							</CopyToClipboard>
-						</div>
-						<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
-							<FilingTabSet
-								tabs={specTabs}
-								activeTab={specTabs[0]}
-								onTabClick={(tab)=> this.handleTab(tab)}
-								onContentClick={(tab)=> console.log('onContentClick', tab)}
-							/>
-						</div>
-						<div className="inspector-page-panel-button-wrapper">
-							<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code')} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
-								<button disabled={processing} className="inspector-page-panel-button">Copy to Clipboard</button>
-							</CopyToClipboard>
-						</div>
+									<div className="inspector-page-panel-button-wrapper">
+										<CopyToClipboard onCopy={()=> this.handleClipboardCopy((i === 0) ? 'code' : 'specs', (i === 0) ? activeTabs[i].syntax : toSpecs(activeSlice))} text={(i === 0) ? (activeTabs && activeTabs[i]) ? activeTabs[i].syntax : '' : (activeSlice) ? toSpecs(activeSlice) : ''}>
+											<button disabled={processing} className="inspector-page-panel-button">Copy to Clipboard</button>
+										</CopyToClipboard>
+									</div>
+								</div>
+							</div>)
+						))}
 					</>)}
 
 					{(section === SECTIONS.PARTS) && (<>
@@ -2264,7 +2399,7 @@ class InspectorPage extends Component {
 				upload={upload}
 				processing={this.state.processing}
 				vpHeight={viewSize.height}
-				onCopyURL={()=> this.handleClipboardCopy('url')}
+				onCopyURL={()=> this.handleClipboardCopy('url', buildInspectorURL(upload))}
 				onCancel={this.handleUploadProcessingCancel}
 			/>)}
 

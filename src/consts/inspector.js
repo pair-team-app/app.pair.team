@@ -1,5 +1,5 @@
 
-const CANVAS_FONT_SIZE = 10;
+const CANVAS_FONT_SIZE = 9;
 const CANVAS_CAPTION_PADDING = 10;
 const CANVAS_LINE_DASH = [4, 4];
 
@@ -9,6 +9,7 @@ export const CANVAS = {
 		padding   : CANVAS_CAPTION_PADDING,
 		height    : (CANVAS_CAPTION_PADDING * 2) + CANVAS_FONT_SIZE,
 		lineColor : '#005cc5',
+		bgColor   : 'rgba(23, 27, 33, 0.875)',
 		fontFace  : `normal 600 ${CANVAS_FONT_SIZE}px "San Francisco Text SemiBold"`,
 		fontSize  : CANVAS_FONT_SIZE,
 		textColor : '#005cc5',
