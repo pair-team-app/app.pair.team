@@ -159,7 +159,7 @@ const drawCanvasSliceMarchingAnts = (context, frame, offset)=> {
 };
 
 const drawCanvasSliceTooltip = (context, text, origin, maxWidth=-1)=> {
-	maxWidth = (maxWidth === -1) ? 500 : maxWidth;
+	maxWidth = (maxWidth === -1) ? 250 : maxWidth;
 
 	let caption = text;
 	let txtWidth = context.measureText(caption.toUpperCase()).width << 0;
@@ -1001,7 +1001,7 @@ class InspectorPage extends Component {
 	};
 
 	handleArtboardRollOver = (event)=> {
-		console.log('InspectorPage.handleArtboardRollOver()', event.target.getAttribute('data-artboard-id'));
+// 		console.log('InspectorPage.handleArtboardRollOver()', event.target);
 
 // 		event.stopPropagation();
 		const artboardID = event.target.getAttribute('data-artboard-id') << 0;
