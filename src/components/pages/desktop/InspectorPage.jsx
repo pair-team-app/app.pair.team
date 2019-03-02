@@ -2121,7 +2121,7 @@ class InspectorPage extends Component {
 						outro={!urlBanner}
 						onCopy={()=> this.handleClipboardCopy('url', buildInspectorURL(upload))}
 						onClose={()=> this.setState({ urlBanner : false })}>
-							<div className="marquee-banner-url">{buildInspectorURL(upload)}</div>
+						<div className="marquee-banner-url"><span className="txt-bold" style={{paddingRight:'5px'}}>Share on Slack:</span> {buildInspectorURL(upload)}</div>
 					</MarqueeBanner>)}
 
 					<InteractiveDiv

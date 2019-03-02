@@ -50,13 +50,11 @@
 }
 
 .tiny-button {
+	min-width: 38px;
+	min-height: 38px;
 	width: auto;
 	height: auto;
-	padding: 6px 15px;
-	font-family: "San Francisco Text Medium", sans-serif;
-	font-weight: 500;
-	font-size: 13px;
-	letter-spacing: -0.3px;
+	padding: 10px;
 }
 
 .adjacent-button {
@@ -154,7 +152,19 @@
 	width: 100%;
 }
 
-.text-underline {
+.txt-bold {
+	font-weight: bold;
+}
+
+.txt-italics {
+	font-style: italic;
+}
+
+.txt-strikethru {
+	text-decoration: line-through;
+}
+
+.txt-underline {
 	text-decoration: underline;
 }
 

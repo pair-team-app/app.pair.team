@@ -128,8 +128,10 @@
 
 .marquee-banner-close-button {
 	position: absolute;
-	top: 6px;
+	top: 4px;
 	right: 8px;
+	min-width: fit-content;
+	min-height: fit-content;
 	padding: 0;
 	background-color: rgba(0, 92, 197, 0.0);
 }
