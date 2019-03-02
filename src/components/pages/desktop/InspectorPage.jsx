@@ -2073,7 +2073,7 @@ class InspectorPage extends Component {
 			width     : `${this.contentSize.width}px`,
 // 			height    : `${viewSize.height * scale}px`,
 			height    : `${this.contentSize.height}px`,
-			transform : `translate(${Math.round(pt.x * viewSize.width)}px, ${Math.round(pt.y * viewSize.height)}px) translate(${Math.round(this.contentSize.width * -0.5)}px, ${Math.round(this.contentSize.height * -0.5)}px)`,
+			transform : `translate(${Math.round(pt.x * viewSize.width)}px, ${Math.round(pt.y * viewSize.height)}px) translate(${Math.round(this.contentSize.width * -0.5)}px, ${Math.round(this.contentSize.height * -0.5)}px) translate(${0}px, ${75}px)`,
 // 			transform : `translate(${ARTBOARD_ORIGIN.x}px, ${ARTBOARD_ORIGIN.y}px)`,
 			opacity   : (processing) ? '0' : '1'
 		};
