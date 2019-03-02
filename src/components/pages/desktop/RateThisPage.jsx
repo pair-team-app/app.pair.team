@@ -18,7 +18,9 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
-const RateStarItem = (props)=> {
+const RateThisStarItem = (props)=> {
+// 	console.log('RateThisPage.RateThisStarItem()', props);
+
 	const { ind, filled } = props;
 	return (<FontAwesome
 		name="star"
@@ -35,11 +37,11 @@ const RateThisItem = (props)=> {
 	const { id, ind, username, avatar, score, comment } = props;
 	const stars = new Array(5).fill(false).fill(true, 0, score);
 
-	return (<div className="rate-item" data-rate-id={id}><Row>
-		<Column horizontal="start" vertical="center" className="rate-item-column rate-item-column-index">#{ind}</Column>
-		<Column flexBasis="63px" horizontal="start" vertical="center" className="rate-item-column rate-item-column-avatar"><img src={avatar} className="rate-item-image" alt={ind} /></Column>
-		<Column flexGrow={1} flexShrink={1} flexBasis="auto" horizontal="start" vertical="center" className="rate-item-column rate-item-column-username"><Row>{username}{(comment.length > 0) && (<span className="rate-item-comment">{comment}</span>)}</Row></Column>
-		<Column flexBasis="120px" horizontal="end" vertical="center" className="rate-item-column rate-item-column-score"><Row>{stars.map((score, i)=> { return (<FontAwesome key={i} name="star" className={`rate-item-star${(score) ? ' rate-item-star-filled' : ''}`} />); })}</Row></Column>
+	return (<div className="rate-this-item" data-rate-id={id}><Row>
+		<Column horizontal="start" vertical="center" className="rate-this-item-column rate-this-item-column-index">#{ind}</Column>
+		<Column flexBasis="48px" horizontal="start" vertical="center" className="rate-this-item-column rate-this-item-column-avatar"><div className="rate-this-item-image-wrapper"><img src={avatar} className="rate-this-item-image" alt={ind} /></div></Column>
+		<Column flexGrow={1} flexShrink={1} flexBasis="auto" horizontal="start" vertical="center" className="rate-this-item-column rate-this-item-column-username"><Row>{username}{(comment.length > 0) && (<span className="rate-this-item-comment">{comment}</span>)}</Row></Column>
+		<Column flexBasis="120px" horizontal="end" vertical="center" className="rate-this-item-column rate-this-item-column-score"><Row>{stars.map((score, i)=> { return (<FontAwesome key={i} name="star" className={`rate-this-item-star${(score) ? ' rate-this-item-star-filled' : ''}`} />); })}</Row></Column>
 	</Row></div>);
 };
 
@@ -59,7 +61,7 @@ const RateThisForm = (props)=> {
 	return (<div className="rate-this-page-form-wrapper">
 		<div className="rate-this-page-star-wrapper">
 			{stars.map((star, i)=> {
-				return (<RateStarItem
+				return (<RateThisStarItem
 					key={i}
 					ind={i}
 					filled={(star)}
@@ -84,7 +86,7 @@ const RateThisList = (props)=> {
 	const commentTotal = ratings.filter((rating)=> (rating.comment.length > 0)).length;
 
 	return (<div className="rate-this-page-list-wrapper">
-		<h4>{`${avgScore}/5 star rating`} &amp; {`${commentTotal} comment${(commentTotal === 1) ? '' : 's'}`}</h4>
+		<h4 className="table-header">{`${avgScore}/5 star rating`} &amp; {`${commentTotal} comment${(commentTotal === 1) ? '' : 's'}`}</h4>
 		{ratings.map((rating, i)=> {
 			return (<RateThisItem
 				key={i}
@@ -275,7 +277,7 @@ class RateThisPage extends Component {
 		const { stars, score, comment, commentValid, ratings } = this.state;
 		return (
 			<BaseDesktopPage className="rate-this-page-wrapper">
-				<h4>Please Rate &amp; Comment</h4>
+				<h4 className="table-header">Please Rate &amp; Comment</h4>
 				<RateThisForm
 					stars={stars}
 					score={score}

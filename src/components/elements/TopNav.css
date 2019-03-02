@@ -29,7 +29,7 @@
 }
 
 .top-nav-column-right {
-	padding-right: 20px;
+	padding-right: 15px;
 	text-align: right;
 }
 
@@ -39,10 +39,15 @@
 }
 
 .top-nav-link, a.top-nav-link {
-	color: #abdafd;
-	margin-right: 22px;
+	width: fit-content;
+	margin-right: 20px;
 	letter-spacing: -0.3px;
 	text-decoration: none;
+	color: #abdafd;
+}
+
+.top-nav-link:last-child, a.top-nav-link:last-child {
+	margin-right: 0;
 }
 
 .top-nav-link:hover, .top-nav-link a:hover {

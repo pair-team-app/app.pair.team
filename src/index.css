@@ -1,5 +1,5 @@
 
-* {
+*, *:before, *:after {
   box-sizing: border-box;
 }
 
@@ -51,10 +51,14 @@ button:hover, button:active {
 }
 
 button:disabled, button:disabled:hover {
-  cursor: default;
-  background-color: #4679b0;
-  color: #c8e1fd;
-  opacity : 0.67;
+  cursor: not-allowed;
+  background-color: #3178c4;
+  color: #abdafd;
+  opacity : 0.5;
+}
+
+form {
+  width: 48%;
 }
 
 h1, h2, h3, h4, h5 {
@@ -99,21 +103,27 @@ h3 {
 
 /** Section / Form Title **/
 h4 {
+  margin-top: -5px;
+  margin-bottom: 17px;
   font-family: "San Francisco Text Medium", sans-serif;
   font-weight: 500;
-  font-size: 20px;
+  font-size: 22px;
   letter-spacing: -1px;
-  margin-bottom: 17px;
   color: #c8e1fd;
+}
+
+h4.table-header {
+  margin-bottom: 26px;
 }
 
 /** Section Subtitle **/
 h5 {
+  height: fit-content;
+  margin-bottom: 14px;
   font-family: "San Francisco Text Medium", sans-serif;
   font-weight: 500;
   font-size: 16px;
   letter-spacing: -0.3px;
-  margin-bottom: 14px;
   color: #c8e1fd;
 }
 
@@ -128,16 +138,16 @@ h6 {
 }
 
 input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hover, input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 50px #2d3239 inset;
+  -webkit-box-shadow: 0 0 0 50px #24282e inset;
   -webkit-text-fill-color: #abdafd;
 }
 
 input[type=text], input[type=password], input[type=tel], textarea, .input-txt, .field-error {
-  background-color: #2d3239;
-  color: #abdafd;
-  padding: 14px 10px;
+  background-color: #24282e;
+  color: #ffffff;
+  padding: 14px 11px;
   width: 100%;
-  border: 1px solid #2d3239;
+  border: 1px solid #24282e;
   border-radius: 2px;
   font-family: "San Francisco Text Medium", sans-serif;
   font-weight: 500;
@@ -146,15 +156,21 @@ input[type=text], input[type=password], input[type=tel], textarea, .input-txt, .
   cursor: text;
 }
 
+input[type=text]:disabled, input[type=password]:disabled, input[type=tel]:disabled, textarea:disabled {
+  cursor: not-allowed;
+  /*color: #abdafd;*/
+  color: #727d8d;
+}
+
 p {
   font-family: "San Francisco Text", sans-serif;
   font-weight: 400;
-  line-height: 32px;
-  margin: 10px 0 20px 0;
+  line-height: 26px;
+  margin: 14px 0 28px 0;
 }
 
 p:first-child {
-	margin-top: -5px;
+	margin-top: -8px;
 }
 
 p:last-child {

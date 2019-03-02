@@ -70,8 +70,8 @@ class LoginForm extends Component {
 		const passwordValid = (password.length > 0);
 
 		this.setState({
-			email         : (emailValid) ? email : 'Invalid Email or Username',
-			passMsg       : (passwordValid) ? '' : 'Invalid Password',
+			email         : (emailValid) ? email : 'Email Address or Username Invalid',
+			passMsg       : (passwordValid) ? '' : 'Password Invalid',
 			emailValid    : emailValid,
 			passwordValid : passwordValid
 		});
@@ -93,11 +93,11 @@ class LoginForm extends Component {
 
 					} else {
 						this.setState({
-							email         : hasBit(status, 0x01) ? email : 'Wrong Email or Username',
+							email         : hasBit(status, 0x01) ? email : 'Email Address or Username In Use',
 							password      : '',
 							emailValid    : hasBit(status, 0x01),
 							passwordValid : hasBit(status, 0x10),
-							passMsg       : hasBit(status, 0x10) ? '' : 'Wrong Password'
+							passMsg       : hasBit(status, 0x10) ? '' : 'Password Invalid'
 						});
 					}
 				}).catch((error)=> {
@@ -120,13 +120,13 @@ class LoginForm extends Component {
 			<div className="login-form-wrapper">
 				{(title && title.length > 0) && (<h4>{title}</h4>)}
 				<form onSubmit={this.handleSubmit}>
-					<div className={emailClass}><input type="text" name="email" placeholder="Username or Email" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+					<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className={passwordClass} onClick={()=> this.handlePassword()}>
-						<input type="password" name="password" placeholder="Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
+						<input type="password" name="password" placeholder="Enter Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
 						<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
 					</div>
 					<Row vertical="center">
-						<button disabled={(!emailValid || !passwordValid)} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button>
+						<button disabled={(!emailValid || !passwordValid)} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Login</button>
 						<div className="page-link" onClick={()=> {trackEvent('button', 'forgot-password'); this.props.onPage('recover')}}>Forgot Password?</div>
 					</Row>
 				</form>

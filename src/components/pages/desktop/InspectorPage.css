@@ -457,14 +457,27 @@
 	padding: 10px 0;
 }
 
-.part-list-item-image {
-	width: 25%;
-	height: 25%;
+.part-list-item-image-wrapper {
+	position: relative;
+	min-width: 100px;
+	min-height: 100px;
+	max-width: 100px;
+	max-height: 100px;
+	width: fit-content;
+	height: fit-content;
 	margin: 0 20px 0 10px;
-	padding: 4px;
 	background: #1a1b1d url(../../../assets/images/backgrounds/bg-checkerboard.png) repeat;
 	border: 1px solid #18191a;
-	text-align: center;
+}
+.part-list-item-image {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	object-fit: scale-down;
+	max-width: 90%;
+	max-height: 90%;
 }
 
 .part-list-item-image-loading, .part-list-item-image-error {
@@ -474,7 +487,6 @@
 }
 
 .part-list-item-image-loading {
-	display: none;
 	color: #c8e1fd;
 }
 

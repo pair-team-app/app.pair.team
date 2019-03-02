@@ -94,6 +94,24 @@ export function copyTextToClipboard(text) {
 	txtArea.remove();
 }
 
+export function durationFormat(secs=0, frmt='mm:ss') {
+	const hours = '' + ((secs / 3600) << 0);
+	const mins = '' + ((secs - ((hours * 3600)) / 60) << 0);
+	secs -= '' + (mins * 60);
+
+	return (frmt.split('').map((char, i)=> {
+		if (char === 'm') {
+			return ((i < mins.length) ? mins.split('').reverse()[i] : '0');
+
+		} else if (char === 's') {
+			return ((i < secs.length) ? secs.split('').reverse()[i] : '0');
+
+		} else {
+			return (char);
+		}
+	}).reverse().join(''));
+}
+
 export function epochDate(millisecs=false) {
 	return ((millisecs) ? (new Date()).getTime() : ((new Date()).getTime() * 0.001) << 0);
 }

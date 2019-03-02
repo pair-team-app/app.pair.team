@@ -1,19 +1,22 @@
 
 .top-nav-rate-wrapper {
+	height: 100%;
 }
 
 .top-nav-rate-star-wrapper {
+	height: 100%;
 }
 
 .top-nav-rate-star {
-	padding-right: 8px;
+	width: 15px;
+	height: 15px;
+	margin-right: 10px;
 	vertical-align: middle;
-	font-size: 16px;
 	color: rgba(255, 255, 255, 0.2);
 }
 
 .top-nav-rate-star:last-child {
-	padding-right: 0;
+	margin-right: 0;
 }
 
 .top-nav-rate-star:hover {

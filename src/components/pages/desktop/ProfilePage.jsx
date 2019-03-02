@@ -11,7 +11,11 @@ import { Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import { POPUP_TYPE_INFO } from '../../elements/Popup';
-import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../forms/elements/InputField';
+import InputField, {
+	INPUTFIELD_STATUS_DISABLED,
+	INPUTFIELD_STATUS_ERROR,
+	INPUTFIELD_STATUS_IDLE
+} from '../../forms/elements/InputField';
 import { DEFAULT_AVATAR } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { hasBit, isValidEmail } from '../../../utils/funcs';
@@ -243,9 +247,9 @@ class ProfilePage extends Component {
 		console.log(' -=- ProfilePage.onValidateFields()', emailValid, state);
 
 		this.setState({
-			username      : (usernameValid) ? username : (username.includes('@')) ? 'Usernames cannot contain \'@\'' : 'Invalid Username',
-			email         : (emailValid) ? email : 'Invalid Email',
-			passMsg       : (passwordValid) ? password : 'Invalid Password',
+			username      : (usernameValid) ? username : (username.includes('@')) ? 'Usernames Cannot Contain \'@\'' : 'Username Invalid',
+			email         : (emailValid) ? email : 'Email Address Invalid',
+			passMsg       : (passwordValid) ? password : 'Password Invalid',
 			usernameValid : usernameValid,
 			emailValid    : emailValid,
 			passwordValid : passwordValid
@@ -281,8 +285,8 @@ class ProfilePage extends Component {
 
 							{/*<img className="profile-page-avatar-image" src={avatar} alt="" />*/}
 						</Dropzone>
-						<button className="adjacent-button" onClick={()=> this.handleAvatarClick()}>Upload</button>
-						{(!avatar.includes('avatar-default.png')) && (<div className="page-link" onClick={()=> this.handleDropAvatar()}>Remove</div>)}
+						<button className="adjacent-button" onClick={()=> this.handleAvatarClick()}>{(avatar.includes('avatar-default.png')) ? 'Upload' : 'Replace'}</button>
+						<div className={`page-link${(avatar.includes('avatar-default.png')) ? ' page-link-disabled' : ''}`} onClick={()=> this.handleDropAvatar()}>Remove</div>
 					</Row>
 				</div>
 
@@ -295,7 +299,7 @@ class ProfilePage extends Component {
 					<InputField
 						type="text"
 						name="username"
-						placeholder="Enter new username"
+						placeholder="Enter New Username"
 						value={username}
 						button="Change"
 						status={(usernameValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
@@ -307,7 +311,7 @@ class ProfilePage extends Component {
 					<InputField
 						type="text"
 						name="email"
-						placeholder="Enter new email"
+						placeholder="Enter New Email Address"
 						value={email}
 						button="Change"
 						status={(emailValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
@@ -319,7 +323,7 @@ class ProfilePage extends Component {
 					<InputField
 						type="password"
 						name="password"
-						placeholder="Enter new password"
+						placeholder="Enter New Password"
 						value={passMsg}
 						button="Change"
 						status={(passwordValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
@@ -327,11 +331,23 @@ class ProfilePage extends Component {
 						onClick={()=> this.handleInputFieldClick('password')}
 						onSubmit={(val)=> this.handleInputFieldSubmit('password', val)}
 					/>
+
+					<InputField
+						type="text"
+						name="paid"
+						placeholder="Free Account"
+						value={(profile.paid) ? 'Unlimited Account' : 'Free Account'}
+						button={(profile.paid) ? 'Free' : 'Unlimited'}
+						status={INPUTFIELD_STATUS_DISABLED}
+						onChange={(val)=> this.handleInputFieldChange('paid', val)}
+						onClick={()=> this.handleInputFieldClick('paid')}
+						onSubmit={(val)=> this.handleInputFieldSubmit('paid', val)}
+					/>
 				</div>
 
 				<Row vertical="center">
-					<button type="submit" className="long-button adjacent-button" onClick={()=> this.handleSubmit()}>Save</button>
-					{(profile && (profile.avatar !== avatar || profile.username !== username || profile.email !== email || password.length > 0)) && (<div className="page-link" onClick={()=> this.handleCancel()}>Cancel</div>)}
+					<button type="submit" disabled={(!profile || (profile.avatar === avatar && profile.username === username && profile.email === email && password.length === 0))} className="long-button adjacent-button" onClick={()=> this.handleSubmit()}>Save</button>
+					<div className={`page-link${(profile && (profile.avatar !== avatar || profile.username !== username || profile.email !== email || password.length > 0)) ? '' : ' page-link-disabled'}`} onClick={()=> this.handleCancel()}>Cancel</div>
 				</Row>
 			</BaseDesktopPage>
 		);

@@ -24,19 +24,20 @@
 }
 
 .top-nav-profile-arrow {
-	font-size: 18px;
+	width: 10px;
+	padding-bottom: 10px;
+	/*font-size: 18px;*/
 	color: #abdafd;
 }
 
 .top-nav-profile-avatar-wrapper {
 	position: relative;
-	width: 30px;
-	height: 30px;
-	border-radius: 2px 2px 0 0;
+	width: 38px;
+	height: 38px;
 	margin-left: 10px;
 	background-size: cover;
 	overflow: hidden;
-	background: #111111 url(../../assets/images/backgrounds/bg-checkerboard.png) repeat;
+	background-color: #1a1e23;
 }
 
 .top-nav-profile-avatar-image {
@@ -49,11 +50,13 @@
 	max-width: 100%;
 	/*min-height: 85%;*/
 	border-radius: 2px;
+	opacity: 0.875;
 }
 
 .top-nav-profile-avatar-image:hover, .top-nav-profile-arrow:hover {
 	cursor: pointer;
-	opacity: 0.875;
+	opacity: 1;
+	color: #f7fafc;
 }
 
 .top-nav-profile-bubble-wrapper {
@@ -62,20 +65,18 @@
 	right: 0;
 	width: 92px;
 	background-color: #1a1e23;
-	padding: 8px 8px 6px 8px;
-	border-radius: 4px;
+	padding: 5px 6px;
 	box-shadow: 0 3px 5px #1c1c1c;
 	text-align: left;
 }
 
 .top-nav-profile-link {
-	/*margin-bottom: 6px;*/
 	text-decoration: none;
-	font-family: "San Francisco Text", sans-serif;
-	font-weight: 400;
-	font-size: 14px;
-	line-height: 26px;
-	letter-spacing: -0.22px;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-weight: 500;
+	font-size: 12px;
+	line-height: 18px;
+	letter-spacing: -0.2px;
 	color: #abdafd;
 }
 

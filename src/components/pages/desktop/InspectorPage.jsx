@@ -26,6 +26,7 @@ import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../consts
 import { CANVAS, PAN_ZOOM, SECTIONS, STATUS_INTERVAL, TAB_CONTENT_PLACEHOLDERS } from '../../../consts/inspector';
 import { DE_LOGO_SMALL } from '../../../consts/uris';
 import { setRedirectURI } from '../../../redux/actions';
+import { Maths } from '../../../utils/lang.js';
 import {
 	areaSize,
 	buildInspectorPath,
@@ -33,6 +34,7 @@ import {
 	capitalizeText,
 	convertURISlug,
 	cropFrame,
+	durationFormat,
 	epochDate,
 	frameToRect,
 	isSizeDimensioned,
@@ -348,27 +350,30 @@ const PartsList = (props)=> {
 const PartListItem = (props)=> {
 // 	console.log('InspectorPage.PartListItem()', props);
 
+	const SCALE_MULT = 0.5;
 	const { id, filename, title, type, size } = props;
 
 	const thumbStyle = {
-		width  : `${size.width * 0.25}px`,
-		height : `${size.height * 0.25}px`
+		width  : `${size.width * SCALE_MULT}px`,
+		height : `${size.height * SCALE_MULT}px`
 	};
 
 	let errored = false;
 
-	const t = capitalizeText((type.includes('child')) ? type.split('_').pop() : type, true);
+	const typeLbl = capitalizeText((type.includes('child')) ? type.replace(/_/g, ' ') : type, true);
 
 	return (<div data-slice-id={id} className="part-list-item"><Row vertical="center">
-		<ImageLoader
-			style={thumbStyle}
-			src={`${filename}@2x.png`}
-			image={(props)=> <PartListItemThumb {...props} width={size.width * 0.25} height={size.height * 0.25} />}
-			loading={()=> (<div className="part-list-item-image part-list-item-image-loading" style={thumbStyle}><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
-			error={()=> (<div className="part-list-item-image part-list-item-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
-			onError={(event)=> (errored = true)}
-		/>
-		<div className="part-list-item-title">{`${limitString(title, Math.max(26 - t.length, 1))} (${capitalizeText(t, true)})`}</div>
+		<div className="part-list-item-image-wrapper">
+			<ImageLoader
+				style={thumbStyle}
+				src={`${filename}@2x.png`}
+				image={(props)=> <PartListItemThumb {...props} width={size.width * SCALE_MULT} height={size.height * SCALE_MULT} />}
+				loading={()=> (<div className="part-list-item-image part-list-item-image-loading" style={thumbStyle}><FontAwesome name="refresh" size="2x" /></div>)}
+				error={()=> (<div className="part-list-item-image part-list-item-image-loading"><FontAwesome name="refresh" size="2x" /></div>)}
+				onError={(event)=> (errored = true)}
+			/>
+		</div>
+		<div className="part-list-item-title">{`${limitString(title, Math.max(26 - typeLbl.length, 1))} (${typeLbl})`}</div>
 		{(!errored) && (<button className="tiny-button part-list-item-button" onClick={()=> props.onClick()}><FontAwesome name="download" /></button>)}
 	</Row></div>);
 };
@@ -420,6 +425,7 @@ const SpecsList = (props)=> {
 		return (<div className="inspector-page-specs-list-wrapper">Rollover to display specs…</div>);
 	}
 
+	const { frame } = slice.meta;
 	const fillColor = ((slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color : slice.meta.fillColor).toUpperCase();
 	const padding = `${slice.meta.padding.top}px ${slice.meta.padding.left}px ${slice.meta.padding.bottom}px ${slice.meta.padding.right}px`;
 	const added = `${slice.added.replace(' ', 'T')}Z`;//moment(`${slice.added.replace(' ', 'T')}Z`);
@@ -474,11 +480,11 @@ const SpecsList = (props)=> {
 				value={capitalizeText(slice.type, true)}
 				onCopy={props.onCopySpec} />
 
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`W: ${slice.meta.frame.size.width}px H: ${slice.meta.frame.size.height}px`}>
-				<Row><div className="inspector-page-specs-list-item-attribute">Export Size</div><div className="inspector-page-specs-list-item-val">{`W: ${slice.meta.frame.size.width}px H: ${slice.meta.frame.size.height}px`}</div></Row>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`W: ${frame.size.width}px H: ${frame.size.height}px`}>
+				<Row><div className="inspector-page-specs-list-item-attribute">Export Size</div><div className="inspector-page-specs-list-item-val">{`W: ${frame.size.width}px H: ${frame.size.height}px`}</div></Row>
 			</CopyToClipboard>
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`X: ${slice.meta.frame.origin.x}px Y: ${slice.meta.frame.origin.y}px`}>
-				<Row><div className="inspector-page-specs-list-item-attribute">Position</div><div className="inspector-page-specs-list-item-val">{`X: ${slice.meta.frame.origin.x}px Y: ${slice.meta.frame.origin.y}px`}</div></Row>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`X: ${frame.origin.x}px Y: ${frame.origin.y}px`}>
+				<Row><div className="inspector-page-specs-list-item-attribute">Position</div><div className="inspector-page-specs-list-item-val">{`X: ${frame.origin.x}px Y: ${frame.origin.y}px`}</div></Row>
 			</CopyToClipboard>
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`${slice.meta.rotation}°`}>
 				<Row><div className="inspector-page-specs-list-item-attribute">Rotation</div><div className="inspector-page-specs-list-item-val">{slice.meta.rotation}&deg;</div></Row>
@@ -788,6 +794,7 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.buildSliceRollOverItemTypes()', artboard, type, offset, scale, scrolling);
 
 		const slices = artboard.slices.filter((slice)=> (slice.type === type)).map((slice, i)=> {
+			const { frame } = slice.meta;
 			return (<SliceRolloverItem
 				key={i}
 				id={slice.id}
@@ -796,10 +803,10 @@ class InspectorPage extends Component {
 				type={slice.type}
 				filled={slice.filled}
 				visible={(!scrolling)}
-				top={slice.meta.frame.origin.y}
-				left={slice.meta.frame.origin.x}
-				width={slice.meta.frame.size.width}
-				height={slice.meta.frame.size.height}
+				top={frame.origin.y}
+				left={frame.origin.x}
+				width={frame.size.width}
+				height={frame.size.height}
 				scale={scale}
 				offset={offset}
 				onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
@@ -900,8 +907,10 @@ class InspectorPage extends Component {
 	};
 
 	calcFitScale = (baseSize, vpSize)=> {
-// 		console.log('InspectorPage.calcFitScale()', baseSize, vpSize);
-		return (Math.max(Math.min(vpSize.height / baseSize.height, vpSize.width / baseSize.width, Math.max(...PAN_ZOOM.zoomNotches)), Math.min(...PAN_ZOOM.zoomNotches)));
+		console.log('InspectorPage.calcFitScale()', baseSize, vpSize);
+    //const fitScale = Math.max(Math.min(this.state.viewSize.height / this.contentSize.height, this.state.viewSize.width / this.contentSize.width, PAN_ZOOM.zoomNotches.slice(-1)[0]), PAN_ZOOM.zoomNotches[0]);
+		//return (Math.max(Math.min(vpSize.height / baseSize.height, vpSize.width / baseSize.width, Math.max(...PAN_ZOOM.zoomNotches)), Math.min(...PAN_ZOOM.zoomNotches)));
+		return (Math.max(Math.min(vpSize.height / baseSize.height, vpSize.width / baseSize.width, 3), 0.001));
 	};
 
 	calcScrollPoint = (panPt, vpSize, baseSize, scale)=> {
@@ -979,17 +988,23 @@ class InspectorPage extends Component {
 					.then((response)=> {
 						console.log('ARTBOARD_SLICES', response.data);
 
-						artboard.slices = response.data.slices.map((slice)=> ({
-							id         : slice.id << 0,
-							artboardID : slice.artboard_id << 0,
-							title      : slice.title,
-							type       : slice.type,
-							filename   : slice.filename,
-							meta       : JSON.parse(slice.meta.replace(/\n/g, '\\\\n')),
-							added      : slice.added,
-							filled     : false,
-							children   : []
-						}));
+						artboard.slices = response.data.slices.map((slice)=> {
+							const meta = JSON.parse(slice.meta.replace(/\n/g, '\\\\n'));
+							return ({
+								id         : slice.id << 0,
+								artboardID : slice.artboard_id << 0,
+								title      : slice.title,
+								type       : slice.type,
+								filename   : slice.filename,
+								meta       : Object.assign({}, meta, {
+									orgFrame : meta.frame,
+									frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
+								}),
+								added      : slice.added,
+								filled     : false,
+								children   : []
+							});
+						});
 
 						upload.pages = upload.pages.map((page)=> (Object.assign({}, page, {
 							artboards : page.artboards.map((item) => ((item.id === artboardID) ? artboard : item))
@@ -1525,16 +1540,22 @@ class InspectorPage extends Component {
 						.then((response)=> {
 							console.log('SYMBOL_SLICES', response.data);
 
-							slice.children = response.data.slices.map((item)=> ({
-								id         : item.id << 0,
-								artboardID : item.artboard_id << 0,
-								title      : item.title,
-								type       : item.type,
-								filename   : item.filename,
-								meta       : JSON.parse(item.meta.replace(/\n/g, '\\\\n')),
-								added      : item.added,
-								filled     : false
-							}));
+							slice.children = response.data.slices.map((item)=> {
+								const meta = JSON.parse(item.meta.replace(/\n/g, '\\\\n'));
+								return ({
+									id         : item.id << 0,
+									artboardID : item.artboard_id << 0,
+									title      : item.title,
+									type       : item.type,
+									filename   : item.filename,
+									meta       : Object.assign({}, meta, {
+										orgFrame : meta.frame,
+										frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
+									}),
+									added      : item.added,
+									filled     : false
+								});
+							});
 
 							tabSets[0][0].contents = <PartsList
 								contents={slice.children}
@@ -1765,13 +1786,13 @@ class InspectorPage extends Component {
 
 				const artboards = flattenUploadArtboards(upload);
 				const baseSize = this.calcArtboardBaseSize((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
-				console.log('-_-_-_BASE SIZE_-_-_-', baseSize);
+				console.log('-_-_-_]BASE SIZE[_-_-_-', baseSize);
 
 				const fitScale = this.calcFitScale(baseSize, viewSize);
-				console.log(':::::FIT SCALE:::::', fitScale);
+				console.log('-_-_-_]FIT SCALE[_-_-_-', fitScale);
 
 				const scaledCoords = this.calcArtboardScaledCoords((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, fitScale);
-				console.log(':::::SCALED COORDS:::::', scaledCoords);
+				console.log('-_-_-_]SCALED COORDS[_-_-_-', scaledCoords);
 
 
 				if (section === SECTIONS.INSPECT) {
@@ -1966,7 +1987,7 @@ class InspectorPage extends Component {
 	render() {
 // 		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage.render()', this.props);
-		console.log('InspectorPage.render()', this.state);
+		console.log('InspectorPage.render()', ([].fill(0, 100).map((i)=> (Maths.randomInt(1, 10))).join(' ')), this.state);
 
 
 		const { processing } = this.props;

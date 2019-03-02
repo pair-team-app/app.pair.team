@@ -1,54 +1,30 @@
 
-
-Array.prototype.randomElement = ()=> {
-	return (this[this.randomIndex()]);
+export const Arrays = {
+	randomElement : (arr)=> (arr[arr.randomIndex()]),
+	randomIndex   : (arr)=> (Maths.randomInt(0, arr.length - 1))
 };
 
-Array.prototype.randomIndex = ()=> {
-	return (Math.randomInt(0, this.length - 1));
+export const Maths = {
+	clamp       : (val, lower, upper)=> (Math.min(Math.max(val, lower), upper)),
+	randomFloat : (lower, upper)=> ((Math.random() * (upper - lower)) + lower),
+	randomInt   : (lower, upper)=> (Maths.randomFloat(lower, upper) << 0)
 };
 
-
-Math.randomFloat = (lower, upper)=> {
-	return ((this.random() * (upper - lower)) + lower);
+export const Numbers = {
+	commaFormat : (val)=> (val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','))
 };
 
-Math.randomInt = (lower, upper)=> {
-	return (this.randomFloat(lower, upper) << 0);
+export const Objects = {
+	isEmpty : (obj)=> (Object.keys(obj).length === 0)
 };
 
-
-Number.prototype.clamp = (lower, upper)=> {
-	return (Math.min(Math.max(this, lower), upper));
-};
-
-Number.prototype.commaFormat = ()=> {
-	return (this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
-};
-
-Number.prototype.padLeft = function (length, str) {
-	return ((new Array(length - String(this).length + 1)).join(str || '0') + this);
-};
-
-
-Object.prototype.isEmpty = ()=> {
-	return (Object.keys(this).length === 0);
-};
-
-
-String.prototype.countOf = (substr)=> {
-	return ((this.match(new RegExp(substr.toString(), 'g')) || []).length);
-};
-
-String.prototype.replaceAll = (needle, replacement)=> {
-// 	return (this.replace(new RegExp(needle.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replacement));
-	return (this.split(needle).join(replacement));
-};
-
-String.prototype.reverse = ()=> {
-	return ([...this].reverse().join(''));
-};
-
-String.prototype.truncate = (len, ellipsis='…')=> {
-	return ((this.length > len) ? this.substring(0, len - 1) + ellipsis : this);
+export const Strings = {
+	countOf    : (str, substr)=> ((str.match(new RegExp(substr.toString(), 'g')) || []).length),
+// 	lPad       : (str, amt, char)=> ((new Array(amt - String(str).length + 1)).join(str || char) + str),
+	lPad       : (str, amt, char)=> ((str.length < amt) ? `${(new Array(amt - String(str).length + 1)).join(char)}${str}` : str),
+	replaceAll : (str, needle, replacement)=> (str.split(needle).join(replacement)),
+// 	rPad       : (str, amt, char)=> ((new Array(amt - String(str).length + 1)).join(str || char) + str),
+	rPad       : (str, amt, char)=> ((str.length < amt) ? `${str}${(new Array(amt - String(str).length + 1)).join(char)}` : str),
+	reverse    : (str)=> ([...str].reverse().join('')),
+	truncate   : (str, len, ellipsis='…')=> ((str.length > len) ? str.substring(0, len - 1) + ellipsis : str)
 };

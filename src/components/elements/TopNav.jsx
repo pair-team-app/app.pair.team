@@ -27,7 +27,7 @@ const TopNavDesktop = (props)=> {
 
 	const { pathname, sections } = props;
 	return (<div className="top-nav-wrapper">
-		<div className="top-nav-column top-nav-column-left"><Row vertical="center" style={{ height : '100%' }}>
+		<div className="top-nav-column top-nav-column-left"><Row vertical="center">
 			{(sections.map((section, i)=> (
 				<div key={i} className={`top-nav-link${(pathname.includes(section.url)) ? ' top-nav-link-selected' : ''}`} onClick={()=> props.onPage(section.url)}>{section.title}</div>
 			)))}

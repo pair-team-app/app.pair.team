@@ -86,7 +86,15 @@
 	text-decoration: underline;
 }
 
+.page-link-disabled, .page-link-disabled:hover {
+	cursor: not-allowed;
+	color: #8facbf;
+	opacity : 0.5;
+	text-decoration: none;
+}
+
 .input-wrapper {
+	cursor: pointer;
 	margin-bottom: 20px;
 	border: 1px solid rgba(0, 0, 0, 0);
 	border-radius: 2px;
@@ -103,12 +111,17 @@
 }
 
 .input-wrapper-error .field-error {
-	height: 49px;
+	height: 53px;
 	padding-top: 11px;
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-weight: 500;
 	font-size: 16px;
 	letter-spacing: -0.3px;
+}
+
+.input-wrapper-disabled, .input-wrapper-disabled:hover {
+	cursor: not-allowed;
+	opacity: 0.5;
 }
 
 .input-error {

@@ -18,7 +18,7 @@
 	border-radius: 2px;
 	background-size: cover;
 	overflow: hidden;
-	background: #111111 url(../../../assets/images/backgrounds/bg-checkerboard.png) repeat;
+	background-color: #24282e;
 }
 
 .profile-page-avatar-image {

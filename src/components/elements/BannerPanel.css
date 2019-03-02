@@ -1,12 +1,12 @@
 
 .banner-panel-wrapper {
 	position: fixed;
-	right: 20px;
-	bottom: 20px;
+	right: 26px;
+	bottom: 26px;
 	width: 260px;
 	height: 200px;
 	z-index: 2;
-	background-color: #1c1c1c;
+	background-color: #24282e;
 	box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
 }
 

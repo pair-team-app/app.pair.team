@@ -84,9 +84,9 @@ class RegisterForm extends Component {
 		}
 
 		this.setState({
-			username      : (usernameValid) ? username : 'Invalid Username',
-			email         : (emailValid) ? email : 'Invalid Email',
-			passMsg       : (passwordValid) ? '' : 'Invalid Password',
+			username      : (usernameValid) ? username : 'Username Invalid',
+			email         : (emailValid) ? email : 'Email Address Invalid',
+			passMsg       : (passwordValid) ? '' : 'Password Invalid',
 			usernameValid : usernameValid,
 			emailValid    : emailValid,
 			passwordValid : passwordValid
@@ -112,7 +112,7 @@ class RegisterForm extends Component {
 					} else {
 						this.setState({
 							username      : hasBit(status, 0x01) ? username : 'Username Already in Use',
-							email         : hasBit(status, 0x10) ? email : 'Email Already in Use',
+							email         : hasBit(status, 0x10) ? email : 'Email Address Already in Use',
 							password      : '',
 							password2     : '',
 							usernameValid : hasBit(status, 0x01),
@@ -141,10 +141,10 @@ class RegisterForm extends Component {
 			<div className="register-form-wrapper">
 				{(title && title.length > 0) && (<h4>{title}</h4>)}
 				<form onSubmit={this.handleSubmit}>
-					<div className={usernameClass}><input type="text" name="username" autoComplete="new-password" placeholder="Username" value={username} onFocus={()=> this.setState({ username : '', usernameValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-					<div className={emailClass}><input type="text" name="email" autoComplete="new-password" placeholder="Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+					<div className={usernameClass}><input type="text" name="username" autoComplete="new-password" placeholder="Enter Username" value={username} onFocus={()=> this.setState({ username : '', usernameValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+					<div className={emailClass}><input type="text" name="email" autoComplete="new-password" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className={passwordClass} onClick={()=> this.handlePassword()}>
-						<input type="password" name="password" autoComplete="new-password" placeholder="Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
+						<input type="password" name="password" autoComplete="new-password" placeholder="Enter Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
 						<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
 					</div>
 					<div className={password2Class}><input type="password" name="password2" autoComplete="new-password" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
