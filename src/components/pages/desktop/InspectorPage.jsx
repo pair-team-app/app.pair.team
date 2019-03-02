@@ -86,29 +86,7 @@ const fillGroupPartItemSlices = (upload, slice)=> {
 
 const flattenUploadArtboards = (upload)=> {
 // 	console.log('flattenUploadArtboards()', upload);
-
-	return ([...upload.pages].flatMap((page)=> (page.artboards)).map((artboard)=> ({
-		id        : artboard.id << 0,
-		pageID    : artboard.page_id << 0,
-		uploadID  : artboard.upload_id << 0,
-		title     : artboard.title,
-		pageTitle : artboard.page_title,
-		filename  : artboard.filename,
-		creator   : artboard.creator,
-		meta      : (typeof artboard.meta === 'string') ? JSON.parse(artboard.meta) : artboard.meta,
-		slices    : [...artboard.slices].map((slice, i)=> ({
-			id         : slice.id << 0,
-			artboardID : artboard.id << 0,
-			title      : slice.title,
-			type       : slice.type,
-			filename   : slice.filename,
-			meta       : (typeof slice.meta === 'string') ? JSON.parse(slice.meta) : slice.meta,
-			added      : slice.added,
-			filled     : false,
-			children   : slice.children
-		})),
-		added     : artboard.added
-	})).reverse());
+	return (upload.pages.flatMap((page)=> (page.artboards)).reverse());
 };
 
 const slicesByArea = (slices)=> {
@@ -823,105 +801,79 @@ class InspectorPage extends Component {
 				width={slice.meta.frame.size.width}
 				height={slice.meta.frame.size.height}
 				scale={scale}
-				offset={{ x : offset.x, y : offset.y }}
+				offset={offset}
 				onRollOver={(offset)=> this.handleSliceRollOver(i, slice, offset)}
 				onRollOut={(offset)=> this.handleSliceRollOut(i, slice, offset)}
 				onClick={(offset)=> this.handleSliceClick(i, slice, offset)}
 			/>);
 		});
 
-// 		console.log('::::::::::', slices, artboard.slices);
 		return(slices);
 	};
 
-	calcArtboardBaseMetrics = (artboards, vpSize)=> {
-// 		console.log('InspectorPage.calcArtboardBaseMetrics()', artboards, vpSize);
+	calcArtboardBaseSize = (artboards, vpSize)=> {
+// 		console.log('InspectorPage.calcArtboardBaseSize()', artboards, vpSize);
 
-		const vpRatio = {
-			width  : vpSize.width / vpSize.height,
-			height : vpSize.height / vpSize.width
-		};
+		const MAX_COLS = 5;
 
-		let baseMetrics = {
-			size  : {
-				width  : 1,
-				height : 1
-			},
-			grid  : {
-				cols : 0,
-				rows : 0
-			},
-			grids : []
-		};
 
-		artboards.map((artboard, i)=> ({
-			id   : artboard.id,
-			row  : 0,
-			col  : 0,
-			size : {
-				width  : artboard.meta.frame.size.width,
-				height : artboard.meta.frame.size.height
-			},
-			area : areaSize(artboard.meta.frame.size)
-
-		})).sort((a, b)=> { // desc
-			return ((a.area > b.area) ? -1 : (a.area < b.area) ? 1 : 0);
-
-		}).forEach((metric, i)=> {
-			const baseRatio = {
-				width  : baseMetrics.size.width / baseMetrics.size.height,
-				height : baseMetrics.size.height / baseMetrics.size.width
-			};
-
-			if (baseRatio.width < vpRatio.width || baseRatio.height > vpRatio.height) {
-				baseMetrics.grid.cols++;
-				baseMetrics.size.width += metric.size.width;
-				metric.col++;
-
-			} else {
-				baseMetrics.grid.cols = 0;
-				baseMetrics.grid.rows++;
-				baseMetrics.size.height += metric.size.height;
-				metric.row++;
-			}
-
-			baseMetrics.grids.push({
-				id  : metric.id,
-				row : metric.row,
-				col : metric.col
-			});
-		});
-
-		return (baseMetrics);
-	};
-
-	calcArtboardScaledMetrics = (artboards, baseMetrics, scale)=> {
-// 		console.log('InspectorPage.calcArtboardScaledMetrics()', artboards, baseMetrics, scale);
-
-		let scaledMetrics = [];
-		let coords = {
+		let maxH = 0;
+		let offset = {
 			x : 0,
 			y : 0
 		};
 
-		let rowHeight = 0;
+		let baseSize = {
+			width  : 0,
+			height : 0
+		};
+
+
 		artboards.forEach((artboard, i)=> {
-			const frame = artboard.meta.frame;
-			const grid = baseMetrics.grids.filter((metric)=> (metric.id === artboard.id)).pop();
+			if ((i % MAX_COLS) << 0 === 0 && i > 0) {
+				offset.x = 0;
+				offset.y += maxH + 50;
+				maxH = 0;
+			}
 
-// 			rowHeight = Math.round((grid.col === 0) ? ((grid.row !== 0 && grid.row < baseMetrics.grid.rows) ? 50 : 0) + (scale * frame.size.height) : Math.max(rowHeight, scale * frame.size.height));
-			rowHeight = Math.round((grid.col === 0) ? 0 : Math.max(rowHeight, scale * frame.size.height));
-			coords = {
-// 				x : Math.round(((grid.col !== 0 && grid.col < baseMetrics.grid.cols) ? 50 : 0) + (grid.col * (scale * frame.size.width))),
-				x : Math.round(grid.col * (scale * frame.size.width)),
-				y : Math.round((grid.row > 0 && grid.col === 0) ? rowHeight : coords.y)
-			};
+			maxH = Math.round(Math.max(maxH, artboard.meta.frame.size.height));
+			baseSize.height = Math.max(baseSize.height, offset.y + maxH);
 
-			scaledMetrics.push({ artboard, coords });
+			offset.x += Math.round(((i % MAX_COLS < (MAX_COLS - 1)) ? 50 : 0) + (artboard.meta.frame.size.width));
+			baseSize.width = Math.max(baseSize.width, offset.x);
 		});
 
+		return (baseSize);
+	};
 
-		return (scaledMetrics);
+	calcArtboardScaledCoords = (artboards, scale)=> {
+// 		console.log('InspectorPage.calcArtboardScaledCoords()', artboards, scale);
+
+		const MAX_COLS = 5;
+
+		let maxH = 0;
+		let offset = {
+			x : 0,
+			y : 0
+		};
+
+		let scaledCoords = [];
+		artboards.forEach((artboard, i)=> {
+			if (((i % MAX_COLS) << 0) === 0 && i > 0) {
+				offset.x = 0;
+				offset.y += maxH + 50;
+				maxH = 0;
+			}
+
+			scaledCoords.push({ artboard,
+				coords : Object.assign({}, offset)
+			});
+
+			maxH = Math.round(Math.max(maxH, artboard.meta.frame.size.height * scale));
+			offset.x += Math.round(((i % MAX_COLS < (MAX_COLS - 1)) ? 50 : 0) + (artboard.meta.frame.size.width * scale));
+		});
+
+		return (scaledCoords);
 	};
 
 	calcCanvasSliceFrame = (slice, artboard, offset, scrollPt)=> {
@@ -1027,26 +979,23 @@ class InspectorPage extends Component {
 					.then((response)=> {
 						console.log('ARTBOARD_SLICES', response.data);
 
-						let { upload } = this.state;
-						let pages = [...upload.pages];
-						pages.forEach((page)=> {
-							page.artboards.filter((artboard)=> ((artboard.id << 0) === artboardID)).map((artboard)=> {
-								artboard.slices = response.data.slices.map((slice)=> ({
-									id         : slice.id << 0,
-									artboardID : slice.artboard_id << 0,
-									title      : slice.title,
-									type       : slice.type,
-									filename   : slice.filename,
-									meta       : JSON.parse(slice.meta),
-									added      : slice.added,
-									filled     : false,
-									children   : []
-								}));
-							});
-						});
+						artboard.slices = response.data.slices.map((slice)=> ({
+							id         : slice.id << 0,
+							artboardID : slice.artboard_id << 0,
+							title      : slice.title,
+							type       : slice.type,
+							filename   : slice.filename,
+							meta       : JSON.parse(slice.meta.replace(/\n/g, '\\\\n')),
+							added      : slice.added,
+							filled     : false,
+							children   : []
+						}));
 
-						upload.pages = pages;
-						this.setState({ upload });
+						upload.pages = upload.pages.map((page)=> (Object.assign({}, page, {
+							artboards : page.artboards.map((item) => ((item.id === artboardID) ? artboard : item))
+						})));
+
+						this.setState({ upload, artboard });
 					}).catch((error)=> {
 				});
 			}
@@ -1074,7 +1023,7 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.handleCanvasUpdate()', this.antsOffset);
 
 		const { scrollPt, offset, hoverOffset } = this.state;
-		const { section, artboard, slice, hoverSlice } = this.state;
+		const { artboard, slice, hoverSlice } = this.state;
 
 		const context = canvas.current.getContext('2d');
 		context.clearRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
@@ -1576,20 +1525,19 @@ class InspectorPage extends Component {
 						.then((response)=> {
 							console.log('SYMBOL_SLICES', response.data);
 
-							const slices = response.data.slices.map((item)=> ({
+							slice.children = response.data.slices.map((item)=> ({
 								id         : item.id << 0,
 								artboardID : item.artboard_id << 0,
 								title      : item.title,
 								type       : item.type,
 								filename   : item.filename,
-								meta       : JSON.parse(item.meta),
+								meta       : JSON.parse(item.meta.replace(/\n/g, '\\\\n')),
 								added      : item.added,
 								filled     : false
 							}));
 
-							slice.children.push([...slices]);
 							tabSets[0][0].contents = <PartsList
-								contents={slices}
+								contents={slice.children}
 								onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 							this.setState({ tabSets });
 						}).catch((error)=> {
@@ -1798,17 +1746,32 @@ class InspectorPage extends Component {
 
 			const { upload } = response.data;
 			if (Object.keys(upload).length > 0 && ((upload.state << 0) <= 3)) {
+				upload.pages = upload.pages.map((page)=> (
+					Object.assign({}, page, {
+						id        : page.id << 0,
+						uploadID  : page.upload_id << 0,
+						artboards : page.artboards.map((artboard) => (
+							Object.assign({}, artboard, {
+								id       : artboard.id << 0,
+								pageID   : artboard.page_id << 0,
+								uploadID : artboard.upload_id << 0,
+								meta     : JSON.parse(artboard.meta.replace(/\n/g, '\\\\n'))
+							})
+						))
+					})
+				));
+
 				let tabSets = inspectorTabSets[section];
 
 				const artboards = flattenUploadArtboards(upload);
-				const baseMetrics = this.calcArtboardBaseMetrics((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
-				console.log('-_-_-_BASE METRICS_-_-_-', baseMetrics);
+				const baseSize = this.calcArtboardBaseSize((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
+				console.log('-_-_-_BASE SIZE_-_-_-', baseSize);
 
-// 				const fitScale = this.calcFitScale(baseMetrics.size, viewSize);
-// 				console.log(':::::FIT SCALE:::::', fitScale);
-//
-// 				const scaledMetrics = this.calcArtboardScaledMetrics((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, baseMetrics, fitScale);
-// 				console.log(':::::SCALED METRICS:::::', scaledMetrics);
+				const fitScale = this.calcFitScale(baseSize, viewSize);
+				console.log(':::::FIT SCALE:::::', fitScale);
+
+				const scaledCoords = this.calcArtboardScaledCoords((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, fitScale);
+				console.log(':::::SCALED COORDS:::::', scaledCoords);
 
 
 				if (section === SECTIONS.INSPECT) {
@@ -2061,12 +2024,13 @@ class InspectorPage extends Component {
 				height   : `${(scale * artboard.meta.frame.size.height) << 0}px`,
 			};
 
-			const artboardSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'artboard', offset, scale, scrolling) : [];
-			const groupSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'group', offset, scale, scrolling) : [];
-			const backgroundSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'background', offset, scale, scrolling) : [];
-			const textfieldSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'textfield', offset, scale, scrolling) : [];
-			const symbolSlices =(artboard.slices.length > 0) ?  this.buildSliceRollOverItemTypes(artboard, 'symbol', offset, scale, scrolling) : [];
-			const sliceSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'slice', offset, scale, scrolling) : [];
+			const sliceOffset = Object.assign({}, offset);
+			const artboardSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'artboard', sliceOffset, scale, scrolling) : [];
+			const groupSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'group', sliceOffset, scale, scrolling) : [];
+			const backgroundSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'background', sliceOffset, scale, scrolling) : [];
+			const textfieldSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'textfield', sliceOffset, scale, scrolling) : [];
+			const symbolSlices =(artboard.slices.length > 0) ?  this.buildSliceRollOverItemTypes(artboard, 'symbol', sliceOffset, scale, scrolling) : [];
+			const sliceSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'slice', sliceOffset, scale, scrolling) : [];
 
 			artboardImages.push(
 				<div key={i} data-artboard-id={artboard.id} style={artboardStyle}>
