@@ -40,6 +40,10 @@ export const CANVAS = {
 };
 
 export const PAN_ZOOM = {
+	insetSize   : {
+		width  : 50,
+		height : 65
+	},
 	panFactor   : 0.0025,
 	panMultPt   : {
 		x : 0.5,
@@ -58,13 +62,21 @@ export const PAN_ZOOM = {
 	]
 };
 
+export const GRID = {
+	padding : {
+		col : 50,
+		row : 50
+	},
+	colsMax : 5
+};
+
 export const SECTIONS = {
 	INSPECT   : 'inspect',
 	PARTS     : 'parts',
 	PRESENTER : 'present'
 };
 
-export const STATUS_INTERVAL = 1250;
+export const STATUS_INTERVAL = 750;
 
 export const TAB_CONTENT_PLACEHOLDERS = {
 	ARTBOARDS : '…',
@@ -73,3 +85,5 @@ export const TAB_CONTENT_PLACEHOLDERS = {
 	SPECS     : 'Rollover to display specs…',
 	SYNTAX    : null
 };
+
+

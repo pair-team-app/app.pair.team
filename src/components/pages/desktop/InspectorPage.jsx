@@ -23,7 +23,7 @@ import TutorialOverlay from '../../elements/TutorialOverlay';
 
 import { MOMENT_TIMESTAMP } from '../../../consts/formats';
 import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../consts/key-codes';
-import { CANVAS, PAN_ZOOM, SECTIONS, STATUS_INTERVAL, TAB_CONTENT_PLACEHOLDERS } from '../../../consts/inspector';
+import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL, TAB_CONTENT_PLACEHOLDERS } from '../../../consts/inspector';
 import { DE_LOGO_SMALL } from '../../../consts/uris';
 import { setRedirectURI } from '../../../redux/actions';
 import { Maths } from '../../../utils/lang.js';
@@ -461,14 +461,15 @@ const SpecsList = (props)=> {
 			blur   : `${innerShadow.blur}px`
 		} : null
 	} : null;
-
-
+	
 	/*
+	
 			<SpecsListItem
 				attribute=""
 				value={}
 				copyText={}
 				onCopy={props.onCopySpec} />
+				
 	*/
 
 	return (
@@ -481,17 +482,12 @@ const SpecsList = (props)=> {
 				attribute="Type"
 				value={capitalizeText(slice.type, true)}
 				onCopy={props.onCopySpec} />
-
-
 			<SpecsListItem
 				attribute="Export Size"
-				value={`X: ${frame.origin.x}px Y: ${frame.origin.y}px`}
+				value={`W: ${frame.size.width}px H: ${frame.size.height}px`}
 				onCopy={props.onCopySpec} />
 
 
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`W: ${frame.size.width}px H: ${frame.size.height}px`}>
-				<Row><div className="inspector-page-specs-list-item-attribute">Export Size</div><div className="inspector-page-specs-list-item-val">{`W: ${frame.size.width}px H: ${frame.size.height}px`}</div></Row>
-			</CopyToClipboard>
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`X: ${frame.origin.x}px Y: ${frame.origin.y}px`}>
 				<Row><div className="inspector-page-specs-list-item-attribute">Position</div><div className="inspector-page-specs-list-item-val">{`X: ${frame.origin.x}px Y: ${frame.origin.y}px`}</div></Row>
 			</CopyToClipboard>
@@ -580,7 +576,7 @@ const UploadProcessing = (props)=> {
 	return (<div className="upload-processing-wrapper"><Column horizontal="center" vertical="start">
 		{(processing.message.length > 0) && (<Row><div className="upload-processing-title">{processing.message}</div></Row>)}
 		<Row>
-			<a href={url} target="_blank" className="upload-processing-url">{url}</a>
+			<a href={url} className="upload-processing-url" rel="noopener noreferrer" target="_blank">{url}</a>
 		</Row>
 
 		<Row><div className="upload-processing-button-wrapper">
@@ -830,9 +826,6 @@ class InspectorPage extends Component {
 	calcArtboardBaseSize = (artboards, vpSize)=> {
 // 		console.log('InspectorPage.calcArtboardBaseSize()', artboards, vpSize);
 
-		const MAX_COLS = 5;
-
-
 		let maxH = 0;
 		let offset = {
 			x : 0,
@@ -846,16 +839,16 @@ class InspectorPage extends Component {
 
 
 		artboards.forEach((artboard, i)=> {
-			if ((i % MAX_COLS) << 0 === 0 && i > 0) {
+			if ((i % GRID.colsMax) << 0 === 0 && i > 0) {
 				offset.x = 0;
-				offset.y += maxH + 50;
+				offset.y += maxH + GRID.padding.row;
 				maxH = 0;
 			}
 
 			maxH = Math.round(Math.max(maxH, artboard.meta.frame.size.height));
 			baseSize.height = Math.max(baseSize.height, offset.y + maxH);
 
-			offset.x += Math.round(((i % MAX_COLS < (MAX_COLS - 1)) ? 50 : 0) + (artboard.meta.frame.size.width));
+			offset.x += Math.round(((i % GRID.colsMax < (GRID.colsMax - 1)) ? GRID.padding.col : 0) + (artboard.meta.frame.size.width));
 			baseSize.width = Math.max(baseSize.width, offset.x);
 		});
 
@@ -877,7 +870,7 @@ class InspectorPage extends Component {
 		artboards.forEach((artboard, i)=> {
 			if (((i % MAX_COLS) << 0) === 0 && i > 0) {
 				offset.x = 0;
-				offset.y += maxH + 50;
+				offset.y += maxH + GRID.padding.row;
 				maxH = 0;
 			}
 
@@ -886,7 +879,7 @@ class InspectorPage extends Component {
 			});
 
 			maxH = Math.round(Math.max(maxH, artboard.meta.frame.size.height * scale));
-			offset.x += Math.round(((i % MAX_COLS < (MAX_COLS - 1)) ? 50 : 0) + (artboard.meta.frame.size.width * scale));
+			offset.x += Math.round(((i % MAX_COLS < (MAX_COLS - 1)) ? GRID.padding.col : 0) + (artboard.meta.frame.size.width * scale));
 		});
 
 		return (scaledCoords);
@@ -895,11 +888,18 @@ class InspectorPage extends Component {
 	calcCanvasSliceFrame = (slice, artboard, offset, scrollPt)=> {
 // 		console.log('InspectorPage.calcCanvasSliceFrame()', slice, artboard, offset, scrollPt);
 
-		const { scale } = this.state;
+		const { upload, scale } = this.state;
+		const artboards = flattenUploadArtboards(upload);
+
+		const baseOffset = {
+			x : (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.width : 0,
+			y : (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 0,
+		};
+
 		const srcFrame = cropFrame(slice.meta.frame, artboard.meta.frame);
 		const srcOffset = {
-			x : 25 + ((offset.x - scrollPt.x) << 0),
-			y : 75 + ((offset.y - scrollPt.y) << 0)
+			x : baseOffset.x + ((offset.x - scrollPt.x) << 0),
+			y : baseOffset.y + ((offset.y - scrollPt.y) << 0)
 		};
 
 		return ({
@@ -1827,13 +1827,6 @@ class InspectorPage extends Component {
 								}) : tab);
 							}));
 						}
-
-						// 						return (tabSet.map((tab, i)=> {
-						// 							return (Object.assign({}, tab, {
-						// 								contents : langs[i].html,
-						// 								syntax   : langs[i].syntax
-						// 							}));
-						// 						}));
 					});
 
 				} else if (section === SECTIONS.PARTS) {
@@ -2036,9 +2029,9 @@ class InspectorPage extends Component {
 		let slices = [];
 
 		artboards.forEach((artboard, i)=> {
-			if ((i % 5) << 0 === 0 && i > 0) {
+			if ((i % GRID.colsMax) << 0 === 0 && i > 0) {
 				offset.x = 0;
-				offset.y += maxH + 50;
+				offset.y += maxH + GRID.padding.row;
 				maxH = 0;
 			}
 
@@ -2088,7 +2081,7 @@ class InspectorPage extends Component {
 				</div>
 			);
 
-			offset.x += Math.round(((i % 5 < 4) ? 50 : 0) + (artboard.meta.frame.size.width * scale));
+			offset.x += Math.round(((i % GRID.colsMax < (GRID.colsMax -1)) ? GRID.padding.col : 0) + (artboard.meta.frame.size.width * scale));
 			this.contentSize.width = Math.max(this.contentSize.width, offset.x);
 		});
 
@@ -2107,13 +2100,18 @@ class InspectorPage extends Component {
 		const contentClass = `inspector-page-content${(section === SECTIONS.PRESENTER) ? ' inspector-page-content-presenter' : ''}`;
 		const panelClass = `inspector-page-panel${(section === SECTIONS.PRESENTER) ? ' inspector-page-panel-presenter' : ''}`;
 
+		const baseOffset = {
+			x : (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.width : 0,
+			y : (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 0,
+		};
+
 		const artboardsStyle = {
 			position  : 'absolute',
 // 			width     : `${viewSize.width * scale}px`,
 			width     : `${this.contentSize.width}px`,
 // 			height    : `${viewSize.height * scale}px`,
 			height    : `${this.contentSize.height}px`,
-			transform : `translate(${Math.round(pt.x * viewSize.width)}px, ${Math.round(pt.y * viewSize.height)}px) translate(${Math.round(this.contentSize.width * -0.5)}px, ${Math.round(this.contentSize.height * -0.5)}px) translate(${50}px, ${65}px)`,
+			transform : `translate(${Math.round(pt.x * viewSize.width)}px, ${Math.round(pt.y * viewSize.height)}px) translate(${Math.round(this.contentSize.width * -0.5)}px, ${Math.round(this.contentSize.height * -0.5)}px) translate(${baseOffset.x}px, ${baseOffset.y}px)`,
 // 			transform : `translate(${ARTBOARD_ORIGIN.x}px, ${ARTBOARD_ORIGIN.y}px)`,
 			opacity   : (processing) ? '0' : '1'
 		};
@@ -2121,7 +2119,7 @@ class InspectorPage extends Component {
 		const canvasStyle = (!scrolling) ? {
 			top     : `${-Math.round((pt.y * viewSize.height) + (this.contentSize.height * -0.5))}px`,
 			left    : `${-Math.round((pt.x * viewSize.width) + (this.contentSize.width * -0.5))}px`,
-			transform : `translate(${-50}px, ${-75}px)`,
+			transform : `translate(${-baseOffset.x}px, ${-baseOffset.y}px)`,
 		} : {
 			display : 'none'
 		};
