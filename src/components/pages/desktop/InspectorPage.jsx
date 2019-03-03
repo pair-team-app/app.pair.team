@@ -1783,7 +1783,7 @@ class InspectorPage extends Component {
 						Object.assign({}, page, {
 							id        : page.id << 0,
 							uploadID  : page.upload_id << 0,
-							artboards : page.artboards.map((artboard) => (
+							artboards : page.artboards.reverse().map((artboard) => (
 								Object.assign({}, artboard, {
 									id       : artboard.id << 0,
 									pageID   : artboard.page_id << 0,
@@ -2059,9 +2059,9 @@ class InspectorPage extends Component {
 
 			const sliceOffset = Object.assign({}, offset);
 			const artboardSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'artboard', sliceOffset, scale, scrolling) : [];
-			const groupSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'group', sliceOffset, scale, scrolling) : [];
+			const groupSlices = [];//(artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'group', sliceOffset, scale, scrolling) : [];
 			const backgroundSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'background', sliceOffset, scale, scrolling) : [];
-			const textfieldSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'textfield', sliceOffset, scale, scrolling) : [];
+			const textfieldSlices = [];//(artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'textfield', sliceOffset, scale, scrolling) : [];
 			const symbolSlices =(artboard.slices.length > 0) ?  this.buildSliceRollOverItemTypes(artboard, 'symbol', sliceOffset, scale, scrolling) : [];
 			const sliceSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'slice', sliceOffset, scale, scrolling) : [];
 

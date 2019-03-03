@@ -117,6 +117,9 @@ export function toCSS(slice) {
 
 	} else if (slice.type === 'slice') {
 		html += `${HTML_TAB}background: url("${slice.filename.split('/').pop()}@3x.png");\n`;
+
+	} else if (slice.type === 'background' || slice.type === 'group') {
+		html += `${HTML_TAB}background-color: ${slice.meta.fillColor.toUpperCase()};\n`;
 	}
 	html += '}';
 	html = `.${convertURISlug(slice.title)} ${html}`;
