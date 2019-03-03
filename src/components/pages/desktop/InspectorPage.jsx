@@ -227,9 +227,9 @@ const FilingTabContent = (props)=> {
 // 	console.log('InspectorPage.FilingTabContent()', props);
 
 	const { tab } = props;
-	const { type, contents } = tab;
+	const { type, enabled, contents } = tab;
 
-	return (<div key={tab.id} className="filing-tab-content">
+	return (<div key={tab.id} className="filing-tab-content" disabled={!enabled}>
 		{(!type || type === 'json_html') && (<span dangerouslySetInnerHTML={{ __html : (contents && contents.length > 0) ? String(JSON.parse(contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : TAB_CONTENT_PLACEHOLDERS.CODE }} />)}
 		{(type === 'component') && (contents)}
 	</div>);
@@ -245,6 +245,7 @@ const FilingTabSet = (props)=> {
 				<FilingTabTitle
 					key={i}
 					tab={tab}
+					enabled={tab.enabled}
 					selected={activeTab && tab.id === activeTab.id}
 					onClick={()=> props.onTabClick(tab)}
 				/>
@@ -266,12 +267,12 @@ const FilingTabSet = (props)=> {
 const FilingTabTitle = (props)=> {
 // 	console.log('InspectorPage.FilingTabTitle()', props);
 
-	const { tab, selected } = props;
+	const { tab, enabled, selected } = props;
 	const { title } = tab;
 
 	const className = `filing-tab-title${(!title || title.length === 0) ? ' filing-tab-title-blank' : ''}${(selected) ? ' filing-tab-title-selected' : ''}`;
 	return (<React.Fragment key={tab.id}>
-		<li className={className} onClick={()=> props.onClick()}>{title}</li>
+		<li disabled={!enabled} className={className} onClick={()=> props.onClick()}>{title}</li>
 	</React.Fragment>);
 };
 
@@ -421,7 +422,7 @@ const SpecsList = (props)=> {
 
 	const { upload, slice, creatorID } = props;
 
-	if (!upload || !slice) {
+	if (!upload || !slice || (upload && (upload.state << 0) < 3)) {
 		return (<div className="inspector-page-specs-list-wrapper">Rollover to display specs…</div>);
 	}
 
@@ -570,9 +571,9 @@ const UploadProcessing = (props)=> {
 
 	return (<div className="upload-processing-wrapper"><Column horizontal="center" vertical="start">
 		{(processing.message.length > 0) && (<Row><div className="upload-processing-title">{processing.message}</div></Row>)}
-		<Row><CopyToClipboard onCopy={props.onCopyURL} text={url}>
-			<div className="upload-processing-url">{url}</div>
-		</CopyToClipboard></Row>
+		<Row>
+			<a href={url} target="_blank" className="upload-processing-url">{url}</a>
+		</Row>
 
 		<Row><div className="upload-processing-button-wrapper">
 			<CopyToClipboard onCopy={props.onCopyURL} text={url}>
@@ -1804,6 +1805,7 @@ class InspectorPage extends Component {
 							return (tabSet.map((tab, j) => {
 								return ((j === 0) ? Object.assign({}, tab, {
 									type     : 'component',
+									enabled  : ((upload.state << 0) === 3),
 									contents : <SpecsList
 										upload={upload}
 										slice={null}
@@ -1814,21 +1816,22 @@ class InspectorPage extends Component {
 							}));
 						}
 
-// 						return (tabSet.map((tab, i)=> {
-// 							return (Object.assign({}, tab, {
-// 								contents : langs[i].html,
-// 								syntax   : langs[i].syntax
-// 							}));
-// 						}));
+						// 						return (tabSet.map((tab, i)=> {
+						// 							return (Object.assign({}, tab, {
+						// 								contents : langs[i].html,
+						// 								syntax   : langs[i].syntax
+						// 							}));
+						// 						}));
 					});
 
 				} else if (section === SECTIONS.PARTS) {
-					tabSets = [...tabSets].map((tabSet, i)=> {
-						return (tabSet.map((tab, j)=> {
+					tabSets = [...tabSets].map((tabSet, i) => {
+						return (tabSet.map((tab, j) => {
 							return (Object.assign({}, tab, {
+								enabled  : ((upload.state << 0) === 3),
 								contents : <PartsList
 									contents={null}
-									onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />
+									onPartListItem={(slice) => this.handleDownloadPartListItem(slice)} />
 							}));
 						}));
 					});
@@ -1842,10 +1845,11 @@ class InspectorPage extends Component {
 						toAndroid(artboard, artboard)
 					];
 
-					tabSets = [...tabSets].map((tabSet, i)=> {
-						return (tabSet.map((tab, j)=> {
+					tabSets = [...tabSets].map((tabSet, i) => {
+						return (tabSet.map((tab, j) => {
 							if (i === 0) {
 								return (Object.assign({}, tab, {
+									enabled  : ((upload.state << 0) === 3),
 									contents : langs[j].html,
 									syntax   : langs[j].syntax
 								}));
@@ -1853,9 +1857,10 @@ class InspectorPage extends Component {
 							} else {
 								return (Object.assign({}, tab, {
 									type     : 'component',
+									enabled  : ((upload.state << 0) === 3),
 									contents : <ArtboardsList
 										contents={flattenUploadArtboards(upload)}
-										onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />
+										onArtboardListItem={(artboard) => this.handleChangeArtboard(artboard)} />
 								}));
 							}
 						}));
@@ -2173,7 +2178,7 @@ class InspectorPage extends Component {
 									/>
 									<div className="inspector-page-panel-button-wrapper">
 										<CopyToClipboard onCopy={()=> this.handleClipboardCopy((i === 0) ? 'code' : 'specs', (i === 0) ? activeTabs[i].syntax : toSpecs(activeSlice))} text={(i === 0) ? (activeTabs && activeTabs[i]) ? activeTabs[i].syntax : '' : (activeSlice) ? toSpecs(activeSlice) : ''}>
-											<button disabled={!slice} className="inspector-page-panel-button">Copy to Clipboard</button>
+											<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing…' : 'Copy to Clipboard'}</button>
 										</CopyToClipboard>
 									</div>
 								</div>
@@ -2210,9 +2215,9 @@ class InspectorPage extends Component {
 										<div className="inspector-page-panel-button-wrapper">
 											{(i === 0)
 												? (<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
-														<button disabled={!activeTabs[i].contents} className="inspector-page-panel-button">Copy to Clipboard</button>
+														<button disabled={!activeTabs[i].contents} className="inspector-page-panel-button">{(processing) ? 'Processing…' : 'Copy to Clipboard'}</button>
 													</CopyToClipboard>)
-												: (<button disabled={(artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download PDF</button>)}
+												: (<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}><FontAwesome name="download" className="inspector-page-download-button-icon" />{(processing) ? 'Processing…' : 'Download PDF'}</button>)}
 										</div>
 								</div>
 							</div>

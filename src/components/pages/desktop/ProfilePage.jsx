@@ -336,8 +336,8 @@ class ProfilePage extends Component {
 						type="text"
 						name="paid"
 						placeholder="Free Account"
-						value={(profile.paid) ? 'Unlimited Account' : 'Free Account'}
-						button={(profile.paid) ? 'Free' : 'Unlimited'}
+						value={(profile && profile.paid) ? 'Unlimited Account' : 'Free Account'}
+						button={(profile && profile.paid) ? 'Free' : 'Unlimited'}
 						status={INPUTFIELD_STATUS_DISABLED}
 						onChange={(val)=> this.handleInputFieldChange('paid', val)}
 						onClick={()=> this.handleInputFieldClick('paid')}

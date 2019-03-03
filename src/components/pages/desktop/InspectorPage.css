@@ -350,6 +350,11 @@
 	text-decoration: underline;
 }
 
+.filing-tab-title:disabled {
+	cursor: default;
+	background-color: #303540;
+}
+
 .filing-tab-title-blank, .filing-tab-title-blank:hover {
 	background-color: #171b21;
 	cursor: default;
@@ -370,6 +375,9 @@
 	overflow: scroll;
 }
 
+.filing-tab-content:disabled {
+	cursor: not-allowed;
+}
 
 .slice-rollover-item {
 	position: absolute;
@@ -540,17 +548,19 @@
 	color: #c8e1fd;
 }
 
-.upload-processing-url {
+.upload-processing-url, a.upload-processing-url, a:link.upload-processing-url, a:visited.upload-processing-url, a:active.upload-processing-url {
 	margin-bottom: 50px;
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-weight: 500;
 	font-size: 28px;
+	text-decoration: none;
 	letter-spacing: -1.47px;
 	color: #005cc5;
 }
 
-.upload-processing-url:hover {
+.upload-processing-url:hover, a:hover.upload-processing-url {
 	cursor: pointer;
+	text-decoration: underline;
 }
 
 .upload-processing-button-wrapper {
