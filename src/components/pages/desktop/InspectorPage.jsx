@@ -176,7 +176,7 @@ const drawCanvasSliceTooltip = (context, text, origin, maxWidth=-1)=> {
 const ArtboardsList = (props)=> {
 // 	console.log('InspectorPage.ArtboardsList()', props);
 
-	const { contents } = props;
+	const { enabled, contents } = props;
 	return ((contents.length > 0) ? <div className="artboards-list-wrapper">
 		{contents.map((artboard, i)=> {
 			const { meta } = artboard;
@@ -192,7 +192,7 @@ const ArtboardsList = (props)=> {
 				/>
 			);
 		})}
-	</div> : <div className="artboards-list-wrapper">{TAB_CONTENT_PLACEHOLDERS.ARTBOARDS}</div>);
+	</div> : <div className="artboards-list-wrapper">{(enabled) ? TAB_CONTENT_PLACEHOLDERS.ARTBOARDS : ''}</div>);
 };
 
 const ArtboardListItem = (props)=> {
@@ -330,7 +330,7 @@ const MarqueeBanner = (props)=> {
 const PartsList = (props)=> {
 // 	console.log('InspectorPage.PartsList()', props);
 
-	const { contents } = props;
+	const { enabled, contents } = props;
 	return ((contents) ? <div className="parts-list-wrapper">
 		{contents.map((slice, i)=> {
 			return (
@@ -345,7 +345,7 @@ const PartsList = (props)=> {
 				/>
 			);
 		})}
-	</div> : <div className="parts-list-wrapper">{TAB_CONTENT_PLACEHOLDERS.PARTS}</div>);
+	</div> : <div className="parts-list-wrapper">{(enabled) ? TAB_CONTENT_PLACEHOLDERS.PARTS : ''}</div>);
 };
 
 const PartListItem = (props)=> {
@@ -369,8 +369,8 @@ const PartListItem = (props)=> {
 				style={thumbStyle}
 				src={`${filename}@2x.png`}
 				image={(props)=> <PartListItemThumb {...props} width={size.width * SCALE_MULT} height={size.height * SCALE_MULT} />}
-				loading={()=> (<div className="part-list-item-image part-list-item-image-loading" style={thumbStyle}><FontAwesome name="refresh" size="2x" /></div>)}
-				error={()=> (<div className="part-list-item-image part-list-item-image-loading"><FontAwesome name="refresh" size="2x" /></div>)}
+				loading={()=> (<div className="part-list-item-image part-list-item-image-loading" style={thumbStyle}><FontAwesome className="part-list-item-fa-status" name="clock-o" size="2x" /></div>)}
+				error={()=> (<div className="part-list-item-image part-list-item-image-loading"><FontAwesome className="part-list-item-fa-status" name="clock-o" size="2x" /></div>)}
 				onError={(event)=> (errored = true)}
 			/>
 		</div>
@@ -423,7 +423,7 @@ const SpecsList = (props)=> {
 	const { upload, slice, creatorID } = props;
 
 	if (!upload || !slice || (upload && (upload.state << 0) < 3)) {
-		return (<div className="inspector-page-specs-list-wrapper">Rollover to display specs…</div>);
+		return (<div className="inspector-page-specs-list-wrapper">{((upload.state << 0) < 3) ? '' :  TAB_CONTENT_PLACEHOLDERS.SPECS}</div>);
 	}
 
 	const { frame } = slice.meta;
@@ -462,8 +462,9 @@ const SpecsList = (props)=> {
 		} : null
 	} : null;
 
+
 	/*
-			<SpecsListItem*
+			<SpecsListItem
 				attribute=""
 				value={}
 				copyText={}
@@ -480,6 +481,13 @@ const SpecsList = (props)=> {
 				attribute="Type"
 				value={capitalizeText(slice.type, true)}
 				onCopy={props.onCopySpec} />
+
+
+			<SpecsListItem
+				attribute="Export Size"
+				value={`X: ${frame.origin.x}px Y: ${frame.origin.y}px`}
+				onCopy={props.onCopySpec} />
+
 
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`W: ${frame.size.width}px H: ${frame.size.height}px`}>
 				<Row><div className="inspector-page-specs-list-item-attribute">Export Size</div><div className="inspector-page-specs-list-item-val">{`W: ${frame.size.width}px H: ${frame.size.height}px`}</div></Row>
@@ -735,8 +743,8 @@ class InspectorPage extends Component {
 
 		if (artboardsWrapper.current && isSizeDimensioned({ width : artboardsWrapper.current.clientWidth, height : artboardsWrapper.current.clientHeight}) && !isSizeDimensioned(this.state.viewSize)) {
 			const viewSize = {
-				width  : artboardsWrapper.current.clientWidth,
-				height : artboardsWrapper.current.clientHeight - 150
+				width  : artboardsWrapper.current.clientWidth - 50,
+				height : artboardsWrapper.current.clientHeight - 130
 			};
 
 			this.setState({ viewSize });
@@ -890,8 +898,8 @@ class InspectorPage extends Component {
 		const { scale } = this.state;
 		const srcFrame = cropFrame(slice.meta.frame, artboard.meta.frame);
 		const srcOffset = {
-			x : ((offset.x - scrollPt.x) << 0),
-			y : ((offset.y - scrollPt.y) << 0)
+			x : 25 + ((offset.x - scrollPt.x) << 0),
+			y : 75 + ((offset.y - scrollPt.y) << 0)
 		};
 
 		return ({
@@ -1766,22 +1774,26 @@ class InspectorPage extends Component {
 		})).then((response)=> {
 			console.log('UPLOAD', response.data);
 
-			const { upload } = response.data;
+			let upload = response.data.upload;
 			if (Object.keys(upload).length > 0 && ((upload.state << 0) <= 3)) {
-				upload.pages = upload.pages.map((page)=> (
-					Object.assign({}, page, {
-						id        : page.id << 0,
-						uploadID  : page.upload_id << 0,
-						artboards : page.artboards.map((artboard) => (
-							Object.assign({}, artboard, {
-								id       : artboard.id << 0,
-								pageID   : artboard.page_id << 0,
-								uploadID : artboard.upload_id << 0,
-								meta     : JSON.parse(artboard.meta.replace(/\n/g, '\\\\n'))
-							})
-						))
-					})
-				));
+				upload = Object.assign({}, response.data.upload, {
+					id    : upload.id << 0,
+					state : upload.state << 0,
+					pages : upload.pages.map((page)=> (
+						Object.assign({}, page, {
+							id        : page.id << 0,
+							uploadID  : page.upload_id << 0,
+							artboards : page.artboards.map((artboard) => (
+								Object.assign({}, artboard, {
+									id       : artboard.id << 0,
+									pageID   : artboard.page_id << 0,
+									uploadID : artboard.upload_id << 0,
+									meta     : JSON.parse(artboard.meta.replace(/\n/g, '\\\\n'))
+								})
+							))
+						})
+					))
+				});
 
 				let tabSets = inspectorTabSets[section];
 
@@ -1830,6 +1842,7 @@ class InspectorPage extends Component {
 							return (Object.assign({}, tab, {
 								enabled  : ((upload.state << 0) === 3),
 								contents : <PartsList
+									enabled={((upload.state << 0) === 3)}
 									contents={null}
 									onPartListItem={(slice) => this.handleDownloadPartListItem(slice)} />
 							}));
@@ -1859,6 +1872,7 @@ class InspectorPage extends Component {
 									type     : 'component',
 									enabled  : ((upload.state << 0) === 3),
 									contents : <ArtboardsList
+										enabled={((upload.state << 0) === 3)}
 										contents={flattenUploadArtboards(upload)}
 										onArtboardListItem={(artboard) => this.handleChangeArtboard(artboard)} />
 								}));
@@ -2099,14 +2113,15 @@ class InspectorPage extends Component {
 			width     : `${this.contentSize.width}px`,
 // 			height    : `${viewSize.height * scale}px`,
 			height    : `${this.contentSize.height}px`,
-			transform : `translate(${Math.round(pt.x * viewSize.width)}px, ${Math.round(pt.y * viewSize.height)}px) translate(${Math.round(this.contentSize.width * -0.5)}px, ${Math.round(this.contentSize.height * -0.5)}px) translate(${0}px, ${75}px)`,
+			transform : `translate(${Math.round(pt.x * viewSize.width)}px, ${Math.round(pt.y * viewSize.height)}px) translate(${Math.round(this.contentSize.width * -0.5)}px, ${Math.round(this.contentSize.height * -0.5)}px) translate(${50}px, ${65}px)`,
 // 			transform : `translate(${ARTBOARD_ORIGIN.x}px, ${ARTBOARD_ORIGIN.y}px)`,
 			opacity   : (processing) ? '0' : '1'
 		};
 
 		const canvasStyle = (!scrolling) ? {
 			top     : `${-Math.round((pt.y * viewSize.height) + (this.contentSize.height * -0.5))}px`,
-			left    : `${-Math.round((pt.x * viewSize.width) + (this.contentSize.width * -0.5))}px`
+			left    : `${-Math.round((pt.x * viewSize.width) + (this.contentSize.width * -0.5))}px`,
+			transform : `translate(${-50}px, ${-75}px)`,
 		} : {
 			display : 'none'
 		};
