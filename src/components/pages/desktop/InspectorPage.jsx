@@ -18,7 +18,7 @@ import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import ContentModal from '../../elements/ContentModal';
-import { POPUP_TYPE_INFO } from '../../elements/Popup';
+// import { POPUP_TYPE_INFO } from '../../elements/Popup';
 import TutorialOverlay from '../../elements/TutorialOverlay';
 
 import { MOMENT_TIMESTAMP } from '../../../consts/formats';
@@ -310,20 +310,22 @@ const InspectorFooter = (props)=> {
 const MarqueeBanner = (props)=> {
 // 	console.log('InspectorPage.MarqueeBanner()', props);
 
-	const { width, background, copyText, outro, track, children } = props;
-	const className = `marquee-banner${(outro) ? ' marquee-banner-outro' : ''}`;
+	const { background, copyText, outro, removable, track, children } = props;
+	const className = `marquee-banner${(outro) ? (removable) ? '  marquee-banner-outro-remove' : ' marquee-banner-outro' : ''}`;
 	const style = {
-		width      : `calc(100% - ${(width) ? width : 0}px)`,
+		width      : '100%',//`calc(100% - ${(width) ? width : 0}px)`,
 		background : background
 	};
 
 	return (<div className={className} style={style}>
 		<div className="marquee-banner-content-wrapper">
-			<CopyToClipboard onCopy={()=> props.onCopy(track)} text={copyText}>
-				{children}
-			</CopyToClipboard>
+			{(copyText)
+				? (<CopyToClipboard onCopy={()=> props.onCopy(track)} text={copyText}>
+						{children}
+					</CopyToClipboard>)
+				: (children)}
 		</div>
-		<button className="tiny-button marquee-banner-close-button" onClick={props.onClose}><FontAwesome name="times" /></button>
+		{(copyText) && (<button className="tiny-button marquee-banner-close-button" onClick={props.onClose}><FontAwesome name="times" /></button>)}
 	</div>);
 };
 
@@ -1131,10 +1133,17 @@ class InspectorPage extends Component {
 		console.log('InspectorPage.handleClipboardCopy()', type, msg);
 
 		trackEvent('button', `copy-${type}`);
-		this.props.onPopup({
-			type    : POPUP_TYPE_INFO,
-			content : (msg.length >= 80) ? `Copied ${type} to clipboard` : msg
+		this.setState({
+			tooltip : (msg.length >= 80) ? `Copied ${type} to clipboard` : msg
+		}, ()=> {
+			setTimeout(()=> (this.setState({ tooltip : null })), 1750);
 		});
+
+
+// 		this.props.onPopup({
+// 			type    : POPUP_TYPE_INFO,
+// 			content : (msg.length >= 80) ? `Copied ${type} to clipboard` : msg
+// 		});
 	};
 
 	handleDownloadAll = ()=> {
@@ -1174,10 +1183,10 @@ class InspectorPage extends Component {
 	handleInviteTeamFormSubmitted = (result)=> {
 // 		console.log('InspectorPage.handleInviteTeamFormSubmitted()', result);
 
-		this.props.onPopup({
-			type    : POPUP_TYPE_INFO,
-			content : `Sent ${result.sent.length} invite${(result.sent.length === 1) ? '' : 's'}!`
-		});
+// 		this.props.onPopup({
+// 			type    : POPUP_TYPE_INFO,
+// 			content : `Sent ${result.sent.length} invite${(result.sent.length === 1) ? '' : 's'}!`
+// 		});
 	};
 
 	handleInviteModalClose = ()=> {
@@ -2133,14 +2142,26 @@ class InspectorPage extends Component {
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
 				<div className={contentClass} onWheel={this.handleWheelStart}>
-					{(upload && !processing) && (<MarqueeBanner
-						width={(section === SECTIONS.PRESENTER) ? 880 : 360}
-						copyText={buildInspectorURL(upload)}
-						outro={!urlBanner}
-						onCopy={()=> this.handleClipboardCopy('url', buildInspectorURL(upload))}
-						onClose={()=> this.setState({ urlBanner : false })}>
-						<div className="marquee-banner-url"><span className="txt-bold" style={{paddingRight:'5px'}}>Share on Slack:</span> {buildInspectorURL(upload)}</div>
-					</MarqueeBanner>)}
+					{(upload && !processing) && (<div className="inspector-page-marquee-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.PRESENTER) ? 880 : 360}px)`}}>
+						{(urlBanner) && (<MarqueeBanner
+							width={(section === SECTIONS.PRESENTER) ? 880 : 360}
+							copyText={buildInspectorURL(upload)}
+							removable={true}
+							outro={!urlBanner}
+							onCopy={()=> this.handleClipboardCopy('url', buildInspectorURL(upload))}
+							onClose={()=> this.setState({ urlBanner : false })}>
+							<div className="marquee-banner-content marquee-banner-content-url"><span className="txt-bold" style={{paddingRight:'5px'}}>Share on Slack:</span> {buildInspectorURL(upload)}</div>
+						</MarqueeBanner>)}
+
+						{(tooltip) && (<MarqueeBanner
+							width={(section === SECTIONS.PRESENTER) ? 880 : 360}
+							copyText={null}
+							outro={!tooltip}
+							onCopy={null}
+							onClose={()=> this.setState({ tooltip : null })}>
+							<div className="marquee-banner-content marquee-banner-content-tooltip">{tooltip}</div>
+						</MarqueeBanner>)}
+					</div>)}
 
 					<InteractiveDiv
 						x={panMultPt.x}
@@ -2240,7 +2261,6 @@ class InspectorPage extends Component {
 			</BaseDesktopPage>
 
 
-			{(tooltip && !processing) && (<div className="inspector-page-tooltip">{tooltip}</div>)}
 			{(restricted) && (<ContentModal
 				tracking="private/inspector"
 				closeable={false}
