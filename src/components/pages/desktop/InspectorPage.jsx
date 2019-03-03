@@ -1159,7 +1159,7 @@ class InspectorPage extends Component {
 
 		trackEvent('button', 'download-pdf');
 		const { upload } = this.state;
-		makeDownload(`http://cdn.designengine.ai/download-pdf.php?upload_id=${upload.id}`);
+		makeDownload(`http://cdn.designengine.ai/download-pdf.php?upload_id=${upload.id}&res=0.25`);
 	};
 
 	handleDownloadPartListItem = (slice)=> {
