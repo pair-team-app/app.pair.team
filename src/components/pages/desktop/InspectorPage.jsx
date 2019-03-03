@@ -1159,7 +1159,7 @@ class InspectorPage extends Component {
 
 		trackEvent('button', 'download-pdf');
 		const { upload } = this.state;
-		makeDownload(`http://cdn.designengine.ai/download-pdf.php?upload_id=${upload.id}&res=0.25`);
+		makeDownload(`http://cdn.designengine.ai/download-pdf.php?upload_id=${upload.id}`);
 	};
 
 	handleDownloadPartListItem = (slice)=> {
@@ -2068,9 +2068,9 @@ class InspectorPage extends Component {
 
 			const sliceOffset = Object.assign({}, offset);
 			const artboardSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'artboard', sliceOffset, scale, scrolling) : [];
-			const groupSlices = [];//(artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'group', sliceOffset, scale, scrolling) : [];
+			const groupSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'group', sliceOffset, scale, scrolling) : [];
 			const backgroundSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'background', sliceOffset, scale, scrolling) : [];
-			const textfieldSlices = [];//(artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'textfield', sliceOffset, scale, scrolling) : [];
+			const textfieldSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'textfield', sliceOffset, scale, scrolling) : [];
 			const symbolSlices =(artboard.slices.length > 0) ?  this.buildSliceRollOverItemTypes(artboard, 'symbol', sliceOffset, scale, scrolling) : [];
 			const sliceSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'slice', sliceOffset, scale, scrolling) : [];
 
@@ -2111,7 +2111,7 @@ class InspectorPage extends Component {
 
 		const baseOffset = {
 			x : (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.width : 0,
-			y : (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 0,
+			y : ((artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 0) + (26 * (urlBanner << 0)),
 		};
 
 		const artboardsStyle = {
