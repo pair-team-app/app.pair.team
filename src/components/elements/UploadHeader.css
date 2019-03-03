@@ -2,7 +2,7 @@
 .upload-header-wrapper {
 	display: table;
 	width: calc(100% + 40px);
-	height: 368px;
+	height: 306px;
 	margin: -20px -20px 20px -20px;
 	background: #1a1b1d url(../../assets/images/backgrounds/bg-checkerboard.png) repeat;
 }

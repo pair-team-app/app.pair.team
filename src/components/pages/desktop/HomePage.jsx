@@ -127,36 +127,19 @@ class HomePage extends Component {
 					totals       : upload.totals,
 					added        : upload.added,
 					selected     : false,
-					fonts        : upload.fonts.map((font)=> ({
-						id     : font.id,
-						family : font.family,
-						style  : font.style,
-						added  : font.added
-					})),
-					colors       : upload.colors.map((color)=> ({
-						id    : color.id,
-						hex   : color.hex_val,
-						added : color.added
-					})),
-					symbols      : upload.fonts.map((symbol)=> ({
-						id    : symbol.id,
-						uuid  : symbol.uuid,
-						title : symbol.title,
-						added : symbol.added
-					})),
 					contributors : upload.contributors.map((contributor)=> ({
 						id     : contributor.id,
 						title  : contributor.username,
 						avatar : contributor.avatar
 					})),
-					pages        : upload.pages.map((page)=> ({
+					pages        : upload.pages.filter((page)=> (!page.title.includes('__'))).map((page)=> ({
 						id          : page.id,
 						uploadID    : page.upload_id,
 						title       : page.title,
 						description : page.description,
 						added       : page.added,
 						selected    : false,
-						artboards   : page.artboards.map((artboard)=> ({
+						artboards   : page.artboards.filter((artboard)=> (typeof artboard !== 'undefined' && artboard.type !== 'symbol_container')).map((artboard)=> ({
 							id        : artboard.id,
 							pageID    : artboard.page_id,
 							uploadID  : artboard.upload_id,
@@ -164,7 +147,7 @@ class HomePage extends Component {
 							pageTitle : artboard.page_title,
 							filename  : artboard.filename,
 							creator   : artboard.creator,
-							meta      : JSON.parse(artboard.meta),
+							meta      : JSON.parse(artboard.meta),//s
 							added     : artboard.added,
 							selected  : false
 						}))

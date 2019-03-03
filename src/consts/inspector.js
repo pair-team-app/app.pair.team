@@ -76,7 +76,7 @@ export const SECTIONS = {
 	PRESENTER : 'present'
 };
 
-export const STATUS_INTERVAL = 2000;
+export const STATUS_INTERVAL = 500;
 
 export const TAB_CONTENT_PLACEHOLDERS = {
 	ARTBOARDS : '…',

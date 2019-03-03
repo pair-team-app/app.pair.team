@@ -211,6 +211,7 @@ export function isValidEmail(email) {
 }
 
 export function limitString(str='', len, char='…') {
+	str = str.trim();
 	return ((str.length > len) ? str.substr(0, len - 1) + char : str);
 }
 

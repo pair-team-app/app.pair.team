@@ -137,9 +137,8 @@
 	text-decoration: underline;
 }
 
-.filing-tab-title:disabled {
+.filing-tab-title-disabled, .filing-tab-title-disabled:hover {
 	cursor: default;
-	background-color: #303540;
 }
 
 .filing-tab-title-blank, .filing-tab-title-blank:hover {
@@ -162,8 +161,8 @@
 	overflow: scroll;
 }
 
-.filing-tab-content:disabled {
-	cursor: not-allowed;
+.filing-tab-content-disabled, .filing-tab-content-disabled:hover {
+	cursor: default;
 }
 
 
@@ -605,4 +604,8 @@
 .upload-processing-image {
 	width: 100%;
 	height: 100%;
+}
+
+.upload-processing-image-placeholder:hover {
+	cursor: pointer;
 }

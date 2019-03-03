@@ -48,8 +48,6 @@
 	-webkit-transform: translate(-50%, -50%);
 	object-fit: scale-down;
 	max-width: 100%;
-	/*min-height: 85%;*/
-	border-radius: 2px;
 	opacity: 0.875;
 }
 
@@ -65,8 +63,8 @@
 	right: 0;
 	width: 92px;
 	background-color: #1a1e23;
-	padding: 5px 6px;
-	box-shadow: 0 3px 5px #1c1c1c;
+	padding: 6px 6px;
+	box-shadow: 0 0 2px rgba(14, 14, 14, 0.125), 0 1px 1px rgba(14, 14, 14, 0.125);
 	text-align: left;
 }
 
@@ -75,7 +73,7 @@
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-weight: 500;
 	font-size: 12px;
-	line-height: 18px;
+	line-height: 17px;
 	letter-spacing: -0.2px;
 	color: #abdafd;
 }

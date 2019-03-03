@@ -138,17 +138,16 @@ h6 {
 }
 
 input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hover, input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 50px #24282e inset;
-  -webkit-text-fill-color: #abdafd;
+  -webkit-box-shadow: 0 0 1px 50px #24282e inset;
+  -webkit-text-fill-color: #abdafb;
 }
 
 input[type=text], input[type=password], input[type=tel], textarea, .input-txt, .field-error {
   background-color: #24282e;
-  color: #ffffff;
+  color: #abdafb;
   padding: 14px 11px;
   width: 100%;
   border: 1px solid #24282e;
-  border-radius: 2px;
   font-family: "San Francisco Text Medium", sans-serif;
   font-weight: 500;
   font-size: 16px;

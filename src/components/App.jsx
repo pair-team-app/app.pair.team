@@ -12,7 +12,7 @@ import TopNav from './elements/TopNav';
 import BottomNav from './elements/BottomNav';
 import ContentModal, { MODAL_SIZE_AUTO } from './elements/ContentModal';
 import Popup from './elements/Popup';
-import BannerPanel from './elements/BannerPanel';
+import AdBannerPanel from './elements/AdBannerPanel';
 import HomePage from './pages/desktop/HomePage';
 import InspectorPage from './pages/desktop/InspectorPage';
 import InviteTeamPage from './pages/desktop/InviteTeamPage';
@@ -43,7 +43,7 @@ import {
 	scrollOrigin
 } from '../utils/funcs';
 import { initTracker, trackEvent, trackPageview } from '../utils/tracking';
-import bannerPanel from '../assets/json/banner-panel';
+import adBannerPanel from '../assets/json/ad-banner-panel';
 
 
 const wrapper = React.createRef();
@@ -142,10 +142,10 @@ class App extends Component {
 		scrollOrigin(wrapper.current);
 	};
 
-	handleBanner = (url)=> {
-// 		console.log('App.handleBanner()', url);
+	handleAdBanner = (url)=> {
+// 		console.log('App.handleAdBanner()', url);
 
-		trackEvent('banner', 'click');
+		trackEvent('ad-banner', 'click');
 		window.open(url);
 	};
 
@@ -272,7 +272,7 @@ class App extends Component {
 				      <Route render={()=> <Status404Page onPage={this.handlePage} />} />
 				    </Switch>
 
-				    {(!isInspectorPage()) && (<BannerPanel title={bannerPanel.title} image={bannerPanel.image} onClick={()=> this.handleBanner(bannerPanel.url)} />)}
+				    {(!isInspectorPage()) && (<AdBannerPanel title={adBannerPanel.title} image={adBannerPanel.image} onClick={()=> this.handleAdBanner(adBannerPanel.url)} />)}
 				    {(!isInspectorPage()) && (<BottomNav mobileLayout={false} onLogout={()=> this.handleLogout()} onPage={this.handlePage} />)}
 			    </div>
 

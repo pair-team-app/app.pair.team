@@ -44,7 +44,7 @@ import {
 import { fontSpecs, toAndroid, toCSS, toReactCSS, toSpecs, toSwift } from '../../../utils/inspector-langs.js';
 import { trackEvent } from '../../../utils/tracking';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
-import bannerPanel from '../../../assets/json/banner-panel';
+import adBannerPanel from '../../../assets/json/ad-banner-panel';
 import inspectorTabSets from '../../../assets/json/inspector-tab-sets';
 
 
@@ -77,7 +77,7 @@ const fillGroupPartItemSlices = (upload, slice)=> {
 // 	console.log('fillGroupPartItemSlices()', upload, slice);
 	let slices = [slice];
 
-	artboardForID(upload, slice.artboardID).slices.filter((item)=> (item.type !== 'symbol_child' && item.id !== slice.id)).forEach((item)=> {
+	artboardForID(upload, slice.artboardID).slices.filter((item)=> (item.id !== slice.id)).forEach((item)=> {
 		if (rectContainsRect(frameToRect(slice.meta.frame), frameToRect(item.meta.frame))) {
 			slices.push(item);
 		}
@@ -86,9 +86,9 @@ const fillGroupPartItemSlices = (upload, slice)=> {
 	return (slices);
 };
 
-const flattenUploadArtboards = (upload)=> {
-// 	console.log('flattenUploadArtboards()', upload);
-	return (upload.pages.flatMap((page)=> (page.artboards)).reverse());
+const flattenUploadArtboards = (upload, type=null)=> {
+// 	console.log('flattenUploadArtboards()', upload, type);
+	return (upload.pages.flatMap((page)=> (page.artboards)).filter((artboard)=> ((type) ? artboard.type === type : true)).reverse());
 };
 
 const slicesByArea = (slices)=> {
@@ -228,9 +228,10 @@ const FilingTabContent = (props)=> {
 
 	const { tab } = props;
 	const { type, enabled, contents } = tab;
+	const className = `filing-tab-content${(!enabled) ? ' filing-tab-content-disabled' : ''}`;
 
-	return (<div key={tab.id} className="filing-tab-content" disabled={!enabled}>
-		{(!type || type === 'json_html') && (<span dangerouslySetInnerHTML={{ __html : (contents && contents.length > 0) ? String(JSON.parse(contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : TAB_CONTENT_PLACEHOLDERS.CODE }} />)}
+	return (<div key={tab.id} className={className}>
+		{(enabled && (!type || type === 'json_html')) && (<span dangerouslySetInnerHTML={{ __html : (contents && contents.length > 0) ? String(JSON.parse(contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : TAB_CONTENT_PLACEHOLDERS.CODE }} />)}
 		{(type === 'component') && (contents)}
 	</div>);
 };
@@ -238,14 +239,14 @@ const FilingTabContent = (props)=> {
 const FilingTabSet = (props)=> {
 // 	console.log('InspectorPage.FilingTabSet()', props);
 
-	const { tabs, activeTab } = props;
+	const { tabs, activeTab, enabled } = props;
 	return (<div className="filing-tab-set">
 		<ul className="filing-tab-set-title-wrapper">
 			{tabs.map((tab, i)=> (
 				<FilingTabTitle
 					key={i}
 					tab={tab}
-					enabled={tab.enabled}
+					enabled={enabled && tab.enabled}
 					selected={activeTab && tab.id === activeTab.id}
 					onClick={()=> props.onTabClick(tab)}
 				/>
@@ -257,6 +258,7 @@ const FilingTabSet = (props)=> {
 				<FilingTabContent
 					key={i}
 					tab={tab}
+					enabled={enabled && tab.enabled}
 					onClick={()=> props.onContentClick(tab)}
 				/>
 			))}
@@ -270,9 +272,9 @@ const FilingTabTitle = (props)=> {
 	const { tab, enabled, selected } = props;
 	const { title } = tab;
 
-	const className = `filing-tab-title${(!title || title.length === 0) ? ' filing-tab-title-blank' : ''}${(selected) ? ' filing-tab-title-selected' : ''}`;
+	const className = `filing-tab-title${(!title || title.length === 0) ? ' filing-tab-title-blank' : ''}${(selected) ? ' filing-tab-title-selected' : ''}${(!enabled) ? ' filing-tab-title-disabled' : ''}`;
 	return (<React.Fragment key={tab.id}>
-		<li disabled={!enabled} className={className} onClick={()=> props.onClick()}>{title}</li>
+		<li className={className} onClick={()=> (enabled) ? props.onClick() : null}>{title}</li>
 	</React.Fragment>);
 };
 
@@ -353,7 +355,7 @@ const PartsList = (props)=> {
 const PartListItem = (props)=> {
 // 	console.log('InspectorPage.PartListItem()', props);
 
-	const SCALE_MULT = 0.5;
+	const SCALE_MULT = 1;
 	const { id, filename, title, type, size } = props;
 
 	const thumbStyle = {
@@ -363,7 +365,7 @@ const PartListItem = (props)=> {
 
 	let errored = false;
 
-	const typeLbl = capitalizeText((type.includes('child')) ? type.replace(/_/g, ' ') : type, true);
+	const typeLbl = capitalizeText((type.includes('child')) ? 'symbol' : type, true);
 
 	return (<div data-slice-id={id} className="part-list-item"><Row vertical="center">
 		<div className="part-list-item-image-wrapper">
@@ -563,7 +565,7 @@ const UploadProcessing = (props)=> {
 // 	console.log('InspectorPage.UploadProcessing()', props);
 
 	const { upload, processing, vpHeight } = props;
-	const artboards = flattenUploadArtboards(upload);
+	const artboards = flattenUploadArtboards(upload, 'page_child');
 	const url = buildInspectorURL(upload);
 
 	const secs = String((epochDate() * 0.01).toFixed(2)).substr(-2) << 0;
@@ -595,11 +597,10 @@ const UploadProcessing = (props)=> {
 				loading={()=> (<div className="upload-processing-image upload-processing-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
 				error={()=> (<div className="upload-processing-image upload-processing-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
 			/>)
-			: (<img className="upload-processing-image" src={bannerPanel.image} alt={bannerPanel.title} />)
+			: (<img className="upload-processing-image upload-processing-image-placeholder" src={adBannerPanel.image} onClick={()=> {trackEvent('ad-banner', 'click'); window.open(adBannerPanel.url);}} alt={adBannerPanel.title} />)
 		}</Row>
 	</Column></div>);
 };
-
 
 
 
@@ -741,8 +742,8 @@ class InspectorPage extends Component {
 
 		if (artboardsWrapper.current && isSizeDimensioned({ width : artboardsWrapper.current.clientWidth, height : artboardsWrapper.current.clientHeight}) && !isSizeDimensioned(this.state.viewSize)) {
 			const viewSize = {
-				width  : artboardsWrapper.current.clientWidth - 50,
-				height : artboardsWrapper.current.clientHeight - 130
+				width  : artboardsWrapper.current.clientWidth,
+				height : artboardsWrapper.current.clientHeight - 108
 			};
 
 			this.setState({ viewSize });
@@ -764,7 +765,6 @@ class InspectorPage extends Component {
 
 				const { scrollPt } = this.state;
 // 				let artboard = flattenUploadArtboards(upload).shift();
-// 				artboard.meta = (typeof artboard.meta === 'string') ? JSON.parse(artboard.meta) : artboard.meta;
 				const tutorial = {
 					origin : {
 						top  : `${5 + -scrollPt.y}px`,
@@ -890,12 +890,12 @@ class InspectorPage extends Component {
 	calcCanvasSliceFrame = (slice, artboard, offset, scrollPt)=> {
 // 		console.log('InspectorPage.calcCanvasSliceFrame()', slice, artboard, offset, scrollPt);
 
-		const { upload, scale } = this.state;
-		const artboards = flattenUploadArtboards(upload);
+		const { section, upload, scale, urlBanner } = this.state;
+		const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'symbol_container' : 'page_child');
 
 		const baseOffset = {
 			x : (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.width : 0,
-			y : (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 0,
+			y : (26 * (urlBanner << 0)) + (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 0,
 		};
 
 		const srcFrame = cropFrame(slice.meta.frame, artboard.meta.frame);
@@ -1095,7 +1095,7 @@ class InspectorPage extends Component {
 	handleChangeArtboard = (artboard)=> {
 // 		console.log('InspectorPage.handleChangeArtboard()', artboard);
 
-		if (artboard.pageID <= 0) {
+		if (artboard.pageID === -1) {
 			const { upload } = this.state;
 			const dir = artboard.id;
 
@@ -1114,7 +1114,6 @@ class InspectorPage extends Component {
 					setTimeout(()=> this.handleZoom(0), 12);
 				});
 			}
-
 
 		} else {
 			this.setState({ artboard,
@@ -1217,13 +1216,13 @@ class InspectorPage extends Component {
 			if (event.keyCode === ARROW_LT_KEY) {
 				this.handleChangeArtboard({
 					id     : -1,
-					pageID : 0
+					pageID : -1
 				});
 
 			} else if (event.keyCode === ARROW_RT_KEY) {
 				this.handleChangeArtboard({
 					id     : 1,
-					pageID : 0
+					pageID : -1
 				});
 			}
 		}
@@ -1280,6 +1279,7 @@ class InspectorPage extends Component {
 					return (tabSet.map((tab, j)=> {
 						return ((j === 0) ? Object.assign({}, tab, {
 							type     : 'component',
+							enabled  : true,
 							contents : <SpecsList
 								upload={upload}
 								slice={slice}
@@ -1292,6 +1292,7 @@ class InspectorPage extends Component {
 				} else {
 					return (tabSet.map((tab, i)=> {
 						return (Object.assign({}, tab, {
+							enabled  : true,
 							contents : langs[i].html,
 							syntax   : langs[i].syntax
 						}));
@@ -1322,6 +1323,7 @@ class InspectorPage extends Component {
 						}));
 
 						slice.children = slices;
+						tabSets[0][0].enabled = true;
 						tabSets[0][0].contents = <PartsList
 							contents={slices}
 							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
@@ -1330,6 +1332,7 @@ class InspectorPage extends Component {
 				});
 
 			} else if (slice.type === 'group') {
+				tabSets[0][0].enabled= true;
 				tabSets[0][0].contents = <PartsList
 					contents={fillGroupPartItemSlices(upload, slice)}
 					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
@@ -1340,6 +1343,7 @@ class InspectorPage extends Component {
 				return (tabSet.map((tab, j)=> {
 						if (i === 0) {
 							return (Object.assign({}, tab, {
+								enabled  : true,
 								contents : langs[j].html,
 								syntax   : langs[j].syntax
 							}));
@@ -1347,8 +1351,9 @@ class InspectorPage extends Component {
 						} else {
 							return (Object.assign({}, tab, {
 								type     : 'component',
+								enabled  : true,
 								contents : <ArtboardsList
-									contents={flattenUploadArtboards(upload)}
+									contents={flattenUploadArtboards(upload, 'page_child')}
 									onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />
 							}));
 						}
@@ -1393,6 +1398,7 @@ class InspectorPage extends Component {
 						return (tabSet.map((tab, j)=> {
 							return ((j === 0) ? Object.assign({}, tab, {
 								type     : 'component',
+								enabled  : true,
 								contents : <SpecsList
 									upload={upload}
 									slice={this.state.slice}
@@ -1405,6 +1411,7 @@ class InspectorPage extends Component {
 					} else {
 						return (tabSet.map((tab, i)=> {
 							return (Object.assign({}, tab, {
+								enabled  : true,
 								contents : langs[i].html,
 								syntax   : langs[i].syntax
 							}));
@@ -1435,6 +1442,7 @@ class InspectorPage extends Component {
 							}));
 
 							slice.children = slices;
+							tabSets[0][0].enabled = true;
 							tabSets[0][0].contents = <PartsList
 								contents={slices}
 								onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
@@ -1443,6 +1451,7 @@ class InspectorPage extends Component {
 					});
 
 				} else if (this.state.slice.type === 'group') {
+					tabSets[0][0].enabled = true;
 					tabSets[0][0].contents = <PartsList
 						contents={fillGroupPartItemSlices(upload, this.state.slice)}
 						onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
@@ -1453,15 +1462,17 @@ class InspectorPage extends Component {
 					return (tabSet.map((tab, j)=> {
 						if (i === 0) {
 							return (Object.assign({}, tab, {
+								enabled  : true,
 								contents : langs[j].html,
 								syntax   : langs[j].syntax
 							}));
 
 						} else {
 							return (Object.assign({}, tab, {
+								enabled  : true,
 								type     : 'component',
 								contents : <ArtboardsList
-									contents={flattenUploadArtboards(upload)}
+									contents={flattenUploadArtboards(upload, 'page_child')}
 									onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />
 							}));
 						}
@@ -1528,6 +1539,7 @@ class InspectorPage extends Component {
 						return (tabSet.map((tab, j)=> {
 							return ((j === 0) ? Object.assign({}, tab, {
 								type     : 'component',
+								enabled  : true,
 								contents : <SpecsList
 									upload={upload}
 									slice={slice}
@@ -1540,6 +1552,7 @@ class InspectorPage extends Component {
 					} else {
 						return (tabSet.map((tab, i)=> {
 							return (Object.assign({}, tab, {
+								enabled  : true,
 								contents : langs[i].html,
 								syntax   : langs[i].syntax
 							}));
@@ -1549,6 +1562,7 @@ class InspectorPage extends Component {
 
 			} else if (section === SECTIONS.PARTS) {
 				tabSets[0][0].type = 'component';
+				tabSets[0][0].enabled = true;
 
 				if (slice.type === 'symbol') {
 					let formData = new FormData();
@@ -1575,6 +1589,7 @@ class InspectorPage extends Component {
 								});
 							});
 
+							tabSets[0][0].enabled = true;
 							tabSets[0][0].contents = <PartsList
 								contents={slice.children}
 								onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
@@ -1583,6 +1598,7 @@ class InspectorPage extends Component {
 					});
 
 				} else if (slice.type === 'group') {
+					tabSets[0][0].enabled = true;
 					tabSets[0][0].contents = <PartsList
 						contents={fillGroupPartItemSlices(upload, slice)}
 						onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
@@ -1594,6 +1610,7 @@ class InspectorPage extends Component {
 					return (tabSet.map((tab, j)=> {
 						if (i === 0) {
 							return (Object.assign({}, tab, {
+								enabled  : true,
 								contents : langs[j].html,
 								syntax   : langs[j].syntax
 							}));
@@ -1601,8 +1618,9 @@ class InspectorPage extends Component {
 						} else {
 							return (Object.assign({}, tab, {
 								type     : 'component',
+								enabled  : true,
 								contents : <ArtboardsList
-									contents={flattenUploadArtboards(upload)}
+									contents={flattenUploadArtboards(upload, 'page_child')}
 									onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />
 							}));
 						}
@@ -1806,7 +1824,7 @@ class InspectorPage extends Component {
 
 				let tabSets = inspectorTabSets[section];
 
-				const artboards = flattenUploadArtboards(upload);
+				const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'symbol_container' : 'page_child');
 				const baseSize = this.calcArtboardBaseSize((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
 				console.log('-_-_-_]BASE SIZE[_-_-_-', baseSize);
 
@@ -1875,7 +1893,7 @@ class InspectorPage extends Component {
 									enabled  : ((upload.state << 0) === 3),
 									contents : <ArtboardsList
 										enabled={((upload.state << 0) === 3)}
-										contents={flattenUploadArtboards(upload)}
+										contents={flattenUploadArtboards(upload, 'page_child')}
 										onArtboardListItem={(artboard) => this.handleChangeArtboard(artboard)} />
 								}));
 							}
@@ -2016,10 +2034,10 @@ class InspectorPage extends Component {
 		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, activeTabs, scrolling, viewSize, panMultPt } = this.state;
 		const { valid, restricted, urlBanner, tutorial, tooltip } = this.state;
 
-		const artboards = (upload) ? (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload) : [];
+		const artboards = (upload) ? (section === SECTIONS.PARTS) ? flattenUploadArtboards(upload, 'symbol_container') : (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, 'page_child') : [];
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 
-		const listTotal = (upload && activeSlice) ? (section === SECTIONS.PRESENTER) ? flattenUploadArtboards(upload).length : (activeSlice) ? (activeSlice.type === 'group') ? fillGroupPartItemSlices(upload, activeSlice).length : activeSlice.children.length : 0 : 0;
+		const listTotal = (upload && activeSlice) ? (section === SECTIONS.PRESENTER) ? flattenUploadArtboards(upload, 'page_child').length : (activeSlice) ? (activeSlice.type === 'group') ? fillGroupPartItemSlices(upload, activeSlice).length : activeSlice.children.length : 0 : 0;
 
 		const pt = this.calcTransformPoint();
 
@@ -2076,7 +2094,7 @@ class InspectorPage extends Component {
 
 			artboardImages.push(
 				<div key={i} data-artboard-id={artboard.id} style={artboardStyle}>
-					<div className="inspector-page-artboard-caption">{artboard.title}</div>
+					<div className="inspector-page-artboard-caption">{limitString((artboard.type === 'page_child') ? artboard.title : artboard.title.split('__').shift(), 8)}</div>
 				</div>
 			);
 
@@ -2111,8 +2129,13 @@ class InspectorPage extends Component {
 
 		const baseOffset = {
 			x : (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.width : 0,
-			y : ((artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 0) + (26 * (urlBanner << 0)),
+			y :(26 * (urlBanner << 0)) + (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 0,
 		};
+
+// 		const baseOffset = {
+// 			x : 0,
+// 			y : 50
+// 		};
 
 		const artboardsStyle = {
 			position  : 'absolute',
@@ -2171,7 +2194,7 @@ class InspectorPage extends Component {
 						minScale={Math.min(...PAN_ZOOM.zoomNotches)}
 						maxScale={Math.max(...PAN_ZOOM.zoomNotches)}
 						ignorePanOutside={false}
-						renderOnChange={true}
+						renderOnChange={false}
 						style={{ width : '100%', height : '100%' }}
 						onPanAndZoom={this.handlePanAndZoom}
 						onPanEnd={()=> (this.setState({ scrolling : false }))}
@@ -2192,7 +2215,7 @@ class InspectorPage extends Component {
 						fitScale={fitScale}
 						section={section}
 						processing={processing}
-						artboards={flattenUploadArtboards(upload)}
+						artboards={flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'symbol_container' : 'page_child')}
 						onChangeArtboard={this.handleChangeArtboard}
 						onPage={this.props.onPage}
 						onZoom={this.handleZoom}
@@ -2207,6 +2230,7 @@ class InspectorPage extends Component {
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}
+										enabled={!processing}
 										onTabClick={(tab)=> this.handleTab(tab)}
 										onContentClick={(payload)=> console.log('onContentClick', payload)}
 									/>
@@ -2226,6 +2250,7 @@ class InspectorPage extends Component {
 								<FilingTabSet
 									tabs={tabSet}
 									activeTab={activeTabs[i]}
+									enabled={!processing}
 									onTabClick={(tab)=> this.handleTab(tab)}
 									onContentClick={(payload)=> console.log('onContentClick', payload)}
 								/>
@@ -2243,6 +2268,7 @@ class InspectorPage extends Component {
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}
+										enabled={!processing}
 										onTabClick={(tab)=> this.handleTab(tab)}
 										onContentClick={(payload)=> console.log('onContentClick', payload)}
 									/>
