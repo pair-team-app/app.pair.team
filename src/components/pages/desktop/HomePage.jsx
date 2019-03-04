@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import BaseDesktopPage from './BaseDesktopPage';
 import ArtboardGrid from '../../elements/ArtboardGrid';
 import UploadHeader from '../../elements/UploadHeader';
+import homeContent from '../../../assets/json/home-content';
 import { addFileUpload, appendHomeArtboards } from '../../../redux/actions';
 import { isUserLoggedIn } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
@@ -34,6 +35,7 @@ class HomePage extends Component {
 		super(props);
 
 		this.state = {
+			section     : null,
 			firstFetch  : false,
 			fetching    : false,
 			loadOffset  : 0,
@@ -59,9 +61,15 @@ class HomePage extends Component {
 // 		console.log('HomePage.componentDidUpdate()', prevProps, this.props);
 
 		const { artboards } = this.props;
+		const { section } = this.state;
+
 		if (!this.state.firstFetch && this.props.profile && artboards.length === 0) {
 			this.setState({ firstFetch : true });
 			this.onLoadNextUploads();
+		}
+
+		if (window.location.pathname.substr(1).split('/').shift() !== section) {
+			this.setState({ section : window.location.pathname.substr(1).split('/').shift() });
 		}
 	}
 
@@ -172,18 +180,18 @@ class HomePage extends Component {
 
 
 	render() {
-// 		console.log('HomePage.render()', this.props, this.state);
+		console.log('HomePage.render()', this.props, this.state);
 
 		const { profile, artboards } = this.props;
-		const { fetching, dialog } = this.state;
+		const { section, fetching, dialog } = this.state;
 
 		const gridTitle = (profile) ? (fetching) ? 'Loading…' : (artboards.length > 0) ? 'Previous' : null : null;
 
 		return (
 			<BaseDesktopPage className="home-page-wrapper">
 				<UploadHeader
-					title="Upload any design file for interface specs"
-					subtitle="Drag, drop, or click to upload."
+					title={(section) ? homeContent[section].header.title : 'Upload a design file'}
+					subtitle={(section) ? homeContent[section].header.subtitle : 'Drag, drop, or click to upload.'}
 					uploading={false}
 					dialog={dialog}
 					onFile={this.handleFile}
@@ -191,7 +199,7 @@ class HomePage extends Component {
 					onPopup={this.props.onPopup} />
 
 				<div className="home-page-section-header-wrapper">
-					<h1>Free specs, parts, & code to engineer pixel-perfect  interfaces.</h1>
+					<h1>{(section) ? homeContent[section].body.title : 'Free code, specs, & parts to implement pixel-perfect design.'}</h1>
 					{(isUserLoggedIn())
 						? (<>
 							<button className="long-button" onClick={()=> this.handleUploadClick()}>Upload</button>
