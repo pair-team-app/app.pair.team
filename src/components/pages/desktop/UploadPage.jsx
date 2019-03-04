@@ -11,6 +11,7 @@ import UploadHeader from '../../elements/UploadHeader';
 import LoginForm from '../../forms/LoginForm';
 import RegisterForm from '../../forms/RegisterForm';
 
+import homeContent from '../../../assets/json/home-content';
 import { addFileUpload, updateDeeplink, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
@@ -38,6 +39,7 @@ class UploadPage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			section        : window.location.pathname.split('/').pop(),
 			file           : null,
 			title          : '',
 			description    : '',
@@ -225,10 +227,10 @@ class UploadPage extends Component {
 	render() {
 		console.log('UploadPage.render()', this.props, this.state);
 
-		const { formState, title, file, percent, uploadComplete, showLogin, showRegister } = this.state;
+		const { section, formState, file, percent, uploadComplete, showLogin, showRegister } = this.state;
 
-		const uploadTitle = (formState === 1 && !uploadComplete) ? `Uploading ${title}` : 'Upload any design file for interface specs';
-		const uploadSubtitle = (formState === 1 && !uploadComplete) ? `${((file.size / (1024 * 1024)) * (percent * 0.01)).toFixed(2)} of ${(file.size / (1000 * 1000)).toFixed(2)}MB has been uploaded.` : 'Drag, drop, or click to upload.';
+		const uploadTitle = (formState === 1 && !uploadComplete) ? `Uploading ${file.name}…` : (section) ? homeContent[section].header.title : '';
+		const uploadSubtitle = (formState === 1 && !uploadComplete) ? `${((file.size / (1024 * 1024)) * (percent * 0.01)).toFixed(2)} of ${(file.size / (1024 * 1024)).toFixed(2)}MB has been uploaded.` : 'Drag, drop, or click to upload.';
 
 		const pageStyle = { marginBottom : (formState === 1 && uploadComplete) ? '10px' : '30px' };
 		const progressStyle = { width : `${percent}%` };

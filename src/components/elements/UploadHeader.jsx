@@ -32,7 +32,8 @@ class UploadHeader extends Component {
 			dialog  : false,
 			profile : {
 				id       : 0,
-				username : ''
+				username : 'Anon',
+				email    : 'anonymous@designengine.ai'
 			}
 		};
 	}
@@ -111,9 +112,15 @@ class UploadHeader extends Component {
 // 		console.log('UploadHeader.render()', this.props, this.state);
 
 		const { title, subtitle, uploading } = this.props;
-
 		return (<div className="upload-header-wrapper">
-			<Dropzone className="upload-header-dz" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)} onFileDialogCancel={this.handleFileDialogCancel} ref={dropZone}>
+			<Dropzone
+				className="upload-header-dz"
+				multiple={false}
+				disablePreview={true}
+				onDrop={this.handleFileDrop.bind(this)}
+				onFileDialogCancel={this.handleFileDialogCancel}
+				ref={dropZone}
+			>
 				<h2>{title}</h2>
 				<div className="upload-header-subtitle">{subtitle}</div>
 				{(uploading)

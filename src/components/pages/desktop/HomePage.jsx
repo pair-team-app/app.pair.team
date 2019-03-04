@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import BaseDesktopPage from './BaseDesktopPage';
 import ArtboardGrid from '../../elements/ArtboardGrid';
 import UploadHeader from '../../elements/UploadHeader';
+
 import homeContent from '../../../assets/json/home-content';
 import { addFileUpload, appendHomeArtboards } from '../../../redux/actions';
 import { isUserLoggedIn } from '../../../utils/funcs';
