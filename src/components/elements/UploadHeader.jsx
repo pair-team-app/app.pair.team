@@ -121,8 +121,8 @@ class UploadHeader extends Component {
 				onFileDialogCancel={this.handleFileDialogCancel}
 				ref={dropZone}
 			>
-				<h2>{title}</h2>
-				<div className="upload-header-subtitle">{subtitle}</div>
+				<h1 className="page-header-title upload-header-title">{title}</h1>
+				<div className="page-header-subtitle upload-header-subtitle">{subtitle}</div>
 				{(uploading)
 					? (<div className="upload-header-button-wrapper">
 							<button onClick={(event)=> this.handleCancel(event)}>Cancel</button>

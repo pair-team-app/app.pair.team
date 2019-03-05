@@ -22,26 +22,30 @@
 
 .page-wrapper {
 	width: 100%;
-	min-height: calc(100% - 84px);
-	margin-bottom: 30px; /* footer spacing */
+	/*min-height: calc(100% - 84px);*/
+	/*margin-bottom: 30px; !* footer spacing *!*/
 }
 
 .page-header {
-	padding: 30px 50px 45px 50px;
-	margin-bottom: 32px;
-	width: 100%;
-	background-color: #fafbfc;
-	border: 1px solid #eaecef;
-	border-radius: 4px;
+	width: calc(100% + 40px);
+	height: 306px;
+	margin: -20px -20px 20px -20px;
+	background: #1a1b1d url(../assets/images/backgrounds/bg-checkerboard.png) repeat;
 }
 
-.page-header-text {
+h1.page-header-title {
+	width: 100%;
 	text-align: center;
-	margin: 0 0 29px 0;
-	line-height: 30px;
-	font-family: "San Francisco Text", sans-serif;
-	font-size: 16px;
-	letter-spacing: -0.24px;
+	margin-bottom: 30px;
+	vertical-align: middle;
+}
+
+.page-header-subtitle {
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-size: 28px;
+	letter-spacing: -1.47px;
+	text-align: center;
+	color: #005cc5;
 }
 
 .long-button {
