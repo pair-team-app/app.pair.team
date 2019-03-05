@@ -902,7 +902,7 @@ class InspectorPage extends Component {
 		const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'symbol_container' : 'page_child');
 
 		const baseOffset = {
-			x : (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.width : 0,
+			x : (((section === SECTIONS.PRESENTER || artboards.length === 1) << 0) * PAN_ZOOM.insetSize.width) + (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.width : 0,
 			y : (26 * (urlBanner << 0)) + (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 0,
 		};
 
@@ -986,9 +986,9 @@ class InspectorPage extends Component {
 // 		event.stopPropagation();
 		const artboardID = event.target.getAttribute('data-artboard-id') << 0;
 
-		if (this.state.section === SECTIONS.PRESENTER) {
-			return;
-		}
+// 		if (this.state.section === SECTIONS.PRESENTER) {
+// 			return;
+// 		}
 
 		if (artboardID) {
 			let { upload, artboard, section } = this.state;
@@ -1034,7 +1034,7 @@ class InspectorPage extends Component {
 				});
 			}
 
-			if (section !== SECTIONS.PRESENTER && !this.canvasInterval) {
+			if (!this.canvasInterval) {
 				this.canvasInterval = setInterval(()=> this.onCanvasInterval(), CANVAS.marchingAnts.interval);
 			}
 		}
@@ -1780,9 +1780,9 @@ class InspectorPage extends Component {
 	onCanvasInterval = ()=> {
 // 		console.log('InspectorPage.onCanvasInterval()', this.antsOffset);
 
-		const { scrolling, section } = this.state;
+		const { scrolling } = this.state;
 
-		if (canvas.current && !scrolling && section !== SECTIONS.PRESENTER) {
+		if (canvas.current && !scrolling) {
 			this.antsOffset = ((this.antsOffset + CANVAS.marchingAnts.increment) % CANVAS.marchingAnts.modOffset);
 			this.handleCanvasUpdate();
 		}
@@ -2103,9 +2103,9 @@ class InspectorPage extends Component {
 				<div key={i} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut} onDoubleClick={(event)=> this.handleZoom(1)}>
 					<div data-artboard-id={artboard.id} className={`inspector-page-${(section === SECTIONS.PRESENTER) ? 'artboard' : 'group'}-slices-wrapper`}>{(section === SECTIONS.PRESENTER) ? artboardSlices : groupSlices }</div>
 					{(section === SECTIONS.INSPECT) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>)}
-					{(section !== SECTIONS.PRESENTER) && (<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{symbolSlices}</div>)}
-					{(section === SECTIONS.INSPECT) && (<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{textfieldSlices}</div>)}
-					{(section === SECTIONS.INSPECT) && (<div data-artboard-id={artboard.id} className="inspector-page-slice-slices-wrapper">{sliceSlices}</div>)}
+					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{symbolSlices}</div>
+					{(section !== SECTIONS.PARTS) && (<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{textfieldSlices}</div>)}
+					{(section !== SECTIONS.PARTS) && (<div data-artboard-id={artboard.id} className="inspector-page-slice-slices-wrapper">{sliceSlices}</div>)}
 				</div>
 			);
 
