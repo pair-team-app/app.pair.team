@@ -238,7 +238,9 @@ class App extends Component {
 
   	const { uploadID } = this.props.deeplink;
 		const { pathname } = this.props.location;
-  	const { rating, mobileOverlay, processing, popup } = this.state;
+//   	const { rating, mobileOverlay, processing, popup } = this.state;
+  	const { rating, mobileOverlay, popup } = this.state;
+  	const processing = true;
 
   	return ((!isMobile.ANY())
 		  ? (<div className="desktop-site-wrapper">

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './InspectorPage.css';
 
 import axios from 'axios';
-// import moment from 'moment-timezone';
+import moment from 'moment-timezone';
 import qs from 'qs';
 import ReactNotifications from 'react-browser-notifications';
 import cookie from 'react-cookies';
@@ -43,8 +43,7 @@ import {
 import { fontSpecs, toAndroid, toCSS, toReactCSS, toSpecs, toSwift } from '../../../utils/inspector-langs.js';
 import { trackEvent } from '../../../utils/tracking';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
-import downloadEnabledBtn from '../../../assets/images/buttons/btn-download_enabled.svg';
-import downloadDisabledBtn from '../../../assets/images/buttons/btn-download_disabled.svg';
+import downloadButton from '../../../assets/images/buttons/btn-download.svg';
 import adBannerPanel from '../../../assets/json/ad-banner-panel';
 import inspectorTabSets from '../../../assets/json/inspector-tab-sets';
 
@@ -222,7 +221,7 @@ const ArtboardListItem = (props)=> {
 			{/*<img className="artboard-list-item-image" src={filename} width={size.width} height={size.height} style={thumbStyle} alt={title} />*/}
 			<div className="artboard-list-item-title">{limitString(title, 18)}</div>
 		</div>
-		{(!errored) && (<button className="tiny-button artboard-list-item-button" onClick={()=> props.onClick()}><img src={downloadEnabledBtn} width="20" height="14" alt="Download" /></button>)}
+		{(!errored) && (<button className="tiny-button artboard-list-item-button" onClick={()=> props.onClick()}><img src={downloadButton} width="20" height="14" alt="Download" /></button>)}
 	</Row></div>);
 };
 
@@ -345,7 +344,7 @@ const PartsList = (props)=> {
 // 	console.log('InspectorPage.PartsList()', props);
 
 	const { enabled, contents } = props;
-	return ((contents) ? <div className="parts-list-wrapper">
+	return ((contents && contents.length > 0) ? <div className="parts-list-wrapper">
 		{contents.map((slice, i)=> {
 			return (
 				<PartListItem
@@ -365,9 +364,7 @@ const PartsList = (props)=> {
 const PartListItem = (props)=> {
 // 	console.log('InspectorPage.PartListItem()', props);
 
-	const SCALE_MULT = 1;
 	const { id, filename, title, type, size } = props;
-
 	const thumbStyle = {
 		width  : `${size.width}px`,
 		height : `${size.height}px`
@@ -387,7 +384,7 @@ const PartListItem = (props)=> {
 			/>
 			<div className="part-list-item-title">{`${limitString(`${title}${title}`, 18)}`}</div>
 		</div>
-		{(!errored) && (<button className="tiny-button part-list-item-button" onClick={()=> props.onClick()}><img src={downloadEnabledBtn} width="20" height="14" alt="Download" /></button>)}
+		{(!errored) && (<button className="tiny-button part-list-item-button" onClick={()=> props.onClick()}><img src={downloadButton} width="20" height="14" alt="Download" /></button>)}
 	</Row></div>);
 };
 
@@ -578,6 +575,8 @@ const UploadProcessing = (props)=> {
 
 	const secs = String((epochDate() * 0.01).toFixed(2)).substr(-2) << 0;
 	const ind = (secs / (100 / artboards.length)) << 0;
+
+	console.log(':::::::::', secs, ind);
 
 	const artboard = artboards[ind];
 	const imgStyle = (artboard) ? {
@@ -1140,15 +1139,16 @@ class InspectorPage extends Component {
 		console.log('InspectorPage.handleClipboardCopy()', type, msg);
 
 		trackEvent('button', `copy-${type}`);
-		const { viewSize, urlBanner } = this.state;
+		const { processing } = this.props;
+		const { section, urlBanner } = this.state;
 
 		this.props.onPopup({
 			type     : POPUP_TYPE_OK,
 			offset   : {
 				top   : (urlBanner << 0) * 38,
-				right : window.innerWidth - viewSize.width
+				right : window.innerWidth - ((section === SECTIONS.PRESENTER && !processing) ? 880 : 360)
 			},
-			content  : (msg.length >= 100) ? `Copied ${type} to clipboard` : msg,
+			content  : (type === 'url' || msg.length >= 100) ? `Copied ${type} to clipboard` : msg,
 			duration : 1750
 		});
 	};
@@ -1940,13 +1940,13 @@ class InspectorPage extends Component {
 			.then((response)=> {
 				console.log('UPLOAD_STATUS', response.data);
 				const { status } = response.data;
-// 				const { totals } = status;
-				const processingState = status.state << 0;
+				const { totals } = status;
+				const processingState = status.state;
 
 				const ellipsis = Array((epochDate() % 4) + 1).join('.');
-// 				const total = totals.all << 0;//Object.values(totals).reduce((acc, val)=> ((acc << 0) + (val << 0)));
-// 				const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
-// 				const secs = ((mins - (mins << 0)) * 60) << 0;
+				const total = totals.all << 0;//Object.values(totals).reduce((acc, val)=> ((acc << 0) + (val << 0)));
+				const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
+				const secs = ((mins - (mins << 0)) * 60) << 0;
 
 				if (processingState === 0) {
 					const { queue } = status;
@@ -1980,13 +1980,12 @@ class InspectorPage extends Component {
 					this.processingInterval = null;
 					this.setState({
 						processing : {
-							state   : processingState,
-// 							message : `Completed processing. Parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s.`
-// 							message : `Completed processing ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s.`
-							message : `Your design file "${upload.title}" is ready.`
+// 							state   : processingState,
+							message : `Completed processing ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s.`
 						}
-					}, ()=> this.onShowNotification());
-					this.props.onProcessing(false);
+					});
+// 					}, ()=> this.onShowNotification());
+// 					this.props.onProcessing(false);
 
 				} else if (processingState === 4) {
 					clearInterval(this.processingInterval);
@@ -2133,11 +2132,6 @@ class InspectorPage extends Component {
 			y :(26 * (urlBanner << 0)) + (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 0,
 		};
 
-// 		const baseOffset = {
-// 			x : 0,
-// 			y : 50
-// 		};
-
 		const artboardsStyle = {
 			position  : 'absolute',
 // 			width     : `${viewSize.width * scale}px`,
@@ -2166,9 +2160,8 @@ class InspectorPage extends Component {
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
 				<div className={contentClass} onWheel={this.handleWheelStart}>
-					{(!processing) && (<div className="inspector-page-marquee-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.PRESENTER) ? 880 : 360}px)`}}>
+					<div className="inspector-page-marquee-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.PRESENTER && !processing) ? 880 : 360}px)`}}>
 						{(upload && urlBanner) && (<MarqueeBanner
-							width={(section === SECTIONS.PRESENTER) ? 880 : 360}
 							copyText={buildInspectorURL(upload)}
 							removable={true}
 							outro={!urlBanner}
@@ -2178,14 +2171,13 @@ class InspectorPage extends Component {
 						</MarqueeBanner>)}
 
 						{(tooltip) && (<MarqueeBanner
-							width={(section === SECTIONS.PRESENTER) ? 880 : 360}
 							copyText={null}
 							outro={!tooltip}
 							onCopy={null}
 							onClose={()=> this.setState({ tooltip : null })}>
 							<div className="marquee-banner-content marquee-banner-content-tooltip">{tooltip}</div>
 						</MarqueeBanner>)}
-					</div>)}
+					</div>
 
 					<InteractiveDiv
 						x={panMultPt.x}

@@ -67,12 +67,25 @@
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
-.artboard-item-avatar {
+.artboard-item-avatar-wrapper {
+	position: relative;
 	width: 28px;
 	height: 28px;
 	margin-right: 8px;
-	display: table-cell;
 	border-radius: 4px;
+	text-align: center;
+	vertical-align: middle;
+	overflow: hidden;
+}
+
+.artboard-item-avatar {
+	position: absolute;
+	max-width: 95%;
+	max-height: 55%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	object-fit: scale-down;
 }
 
 .artboard-item-title {
