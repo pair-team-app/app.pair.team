@@ -1,32 +1,50 @@
 
 import cookie from "react-cookies";
 
-import { USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { CONVERTED_DEEPLINK, UPDATE_DEEPLINK, USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
+
+
+const logFormat = (action, meta='')=> {
+	if (typeof action !== 'function') {
+		const { type, payload } = action;
+		console.log(LOG_MIDDLEWARE_PREFIX, `“${type}”`, payload, meta);
+	}
+};
 
 
 export function onMiddleware({ dispatch }) {
-// 	console.log('onMiddleware().dispatch', dispatch);
-
 	return (function(next) {
-// 		console.log('onMiddleware().next', next);
-
 		return (function(action) {
-			console.log('onMiddleware().action', action);
+			logFormat(action);
 
-			const { payload } = action;
-			if (action.type === USER_PROFILE_UPDATED) {
+			const { type, payload } = action;
+			if (type === USER_PROFILE_UPDATED) {
 				cookie.save('user_id', (payload) ? payload.id : '0', { path : '/' });
-				cookie.save('username', (payload) ? payload.username : '', { path : '/' });
-				//
-// 			} else if (action.type === APPEND_UPLOAD_ARTBOARDS) {
-// 				console.log('onMiddleware()', payload.unique());
-//
-// 				return (
-// 					dispatch({
-// 						type    : action.type,
-// 						payload : payload.unique()
-// 					})
-// 				);
+
+			} else if (type === UPDATE_DEEPLINK) {
+				if (!payload) {
+					dispatch({
+						type : CONVERTED_DEEPLINK,
+						payload : {
+							uploadID   : 0,
+							pageID     : 0,
+							artboardID : 0,
+							sliceID    : 0
+						}
+					});
+
+				} else {
+					let payloadCopy = Object.assign({}, payload);
+					Object.keys(payload).filter((key)=> (typeof payload[key] !== 'number')).forEach((key)=> {
+						payloadCopy[key] = parseInt(payload[key], 10);
+					});
+
+					dispatch({
+						type    : CONVERTED_DEEPLINK,
+						payload : payloadCopy
+					});
+				}
 			}
 
 			return (next(action));

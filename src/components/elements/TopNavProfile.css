@@ -1,52 +1,80 @@
 
-.top-nav-profile {
+@keyframes top-nav-profile-intro {
+	0% { opacity: 0; }
+	100% { opacity: 1; }
 }
 
-.top-nav-profile-avatar {
-	width: 30px;
-	height: 30px;
-	border-radius: 4px;
-	margin-right: 10px;
-	background-image: url(../../assets/images/default-avatar.png);
+@keyframes top-nav-profile-outro {
+	0% { opacity: 1; }
+	100% { opacity: 0; }
+}
+
+
+.top-nav-profile-intro {
+	animation: 0.125s ease-out 0s 1 forwards top-nav-profile-intro;
+}
+
+.top-nav-profile-outro {
+	animation: 0.25s ease-out 0s 1 forwards top-nav-profile-outro;
+}
+
+
+.top-nav-profile-wrapper {
+	position: relative;
 }
 
 .top-nav-profile-arrow {
-	font-size: 18px;
-	color: #ffffff;
+	width: 10px;
+	padding-bottom: 10px;
+	/*font-size: 18px;*/
+	color: #abdafd;
 }
 
-.top-nav-profile-arrow:hover {
+.top-nav-profile-avatar-wrapper {
+	position: relative;
+	width: 38px;
+	height: 38px;
+	margin-left: 10px;
+	background-size: cover;
+	overflow: hidden;
+	background-color: #1a1e23;
+}
+
+.top-nav-profile-avatar-image {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	object-fit: scale-down;
+	max-width: 100%;
+	opacity: 0.875;
+}
+
+.top-nav-profile-avatar-image:hover, .top-nav-profile-arrow:hover {
 	cursor: pointer;
-	opacity: 0.8;
+	opacity: 1;
+	color: #f7fafc;
 }
 
 .top-nav-profile-bubble-wrapper {
 	position: absolute;
-	top: 55px;
-	right: 18px;
-	width: 120px;
-	background-color: #ffffff;
-	padding: 8px 8px 6px 8px;
-	border-radius: 4px;
-	box-shadow: 0 5px 10px #808080;
-}
-
-.top-nav-profile-bubble-notch {
-	position: absolute;
-	top: -12px;
-	right: 8px;
-	font-size: 18px;
-	color: #ffffff;
+	top: 30px;
+	right: 0;
+	width: 92px;
+	background-color: #1a1e23;
+	padding: 6px 6px;
+	box-shadow: 0 0 2px rgba(14, 14, 14, 0.125), 0 1px 1px rgba(14, 14, 14, 0.125);
+	text-align: left;
 }
 
 .top-nav-profile-link {
-	margin-bottom: 6px;
-	font-family: "San Francisco Text", sans-serif;
-	font-weight: 400;
-	font-size: 14px;
-	letter-spacing: -0.23px;
-	color: #0267D8;
 	text-decoration: none;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-size: 12px;
+	line-height: 17px;
+	letter-spacing: -0.2px;
+	color: #abdafd;
 }
 
 .top-nav-profile-link:hover {

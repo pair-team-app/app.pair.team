@@ -18,8 +18,9 @@
 	border: 1px solid #bec0c2;
 }
 
-.radio-button-button-disabled, .radio-button-button-disabled:hover {
+.radio-button-button:disabled, .radio-button-button:disabled:hover {
 	cursor: default;
+	background: #fafbfc none;
 	border: 1px solid #eaecef;
 }
 
@@ -28,7 +29,7 @@
 	height: 100%;
 }
 
-.radio-button-button-disabled .radio-button-image {
+.radio-button-button:disabled .radio-button-image {
 	opacity: 0;
 }
 
@@ -44,5 +45,4 @@
 
 .radio-button-subtext {
 	font-family: "San Francisco Text", sans-serif;
-	font-weight: 400;
 }

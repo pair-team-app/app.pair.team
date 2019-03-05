@@ -1,0 +1,28 @@
+
+.top-nav-rate-wrapper {
+	height: 100%;
+}
+
+.top-nav-rate-star-wrapper {
+	height: 100%;
+}
+
+.top-nav-rate-star {
+	width: 15px;
+	height: 15px;
+	margin-right: 10px;
+	vertical-align: middle;
+	color: rgba(255, 255, 255, 0.2);
+}
+
+.top-nav-rate-star:last-child {
+	margin-right: 0;
+}
+
+.top-nav-rate-star:hover {
+	cursor: pointer;
+}
+
+.top-nav-rate-star-filled {
+	color: #2288fb;
+}

@@ -1,0 +1,29 @@
+{
+  "inspect": {
+    "header" : {
+      "title": "Upload a design file for code & specs",
+      "subtitle": "Drag, drop, or click to upload."
+    },
+    "body": {
+      "title": "Free code, specs, & parts to implement pixel-perfect design."
+    }
+  },
+  "parts": {
+    "header" : {
+      "title": "Upload a design file for parts",
+      "subtitle": "Drag, drop, or click to upload."
+    },
+    "body": {
+      "title": "Free code, specs, & parts to implement pixel-perfect design."
+    }
+  },
+  "present": {
+    "header" : {
+      "title": "Upload a design file to present",
+      "subtitle": "Drag, drop, or click to upload."
+    },
+    "body": {
+      "title": "Free code, specs, & parts to implement pixel-perfect design."
+    }
+  }
+}

@@ -3,15 +3,15 @@ import React, { Component } from 'react';
 import './LoginForm.css'
 
 import axios from 'axios';
-import { Column, Row } from 'simple-flexbox';
+import { Row } from 'simple-flexbox';
 
 import { hasBit, isValidEmail } from '../../utils/funcs';
+import { trackEvent } from '../../utils/tracking';
 
 
 const passwordTextfield = React.createRef();
 
-
-const txtClass = (isValid)=> {
+const txtfieldClass = (isValid)=> {
 	return ((isValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error');
 };
 
@@ -20,7 +20,8 @@ class LoginForm extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email         : '',
+			inviteID      : props.inviteID,
+			email         : (props.email) ? props.email : '',
 			password      : '',
 			emailValid    : true,
 			passwordValid : true,
@@ -32,12 +33,21 @@ class LoginForm extends Component {
 // 		console.log('LoginForm.componentDidMount()', this.props, this.state);
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('LoginForm.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+
+		if (prevProps.email !== this.props.email) {
+			const { email } = this.props;
+			this.setState({ email });
+		}
+	}
+
 	componentWillUnmount() {
 		this.timeline = null;
 	}
 
 	handlePassword = ()=> {
-		console.log('LoginForm.handlePassword()');
+// 		console.log('LoginForm.handlePassword()');
 
 		this.setState({
 			password      : '',
@@ -45,7 +55,7 @@ class LoginForm extends Component {
 			passMsg       : ''
 		});
 
-		setTimeout(() => {
+		setTimeout(()=> {
 			passwordTextfield.current.focus();
 		}, 69);
 	};
@@ -54,14 +64,14 @@ class LoginForm extends Component {
 		console.log('LoginForm.handleSubmit()', event.target);
 		event.preventDefault();
 
-		const { email, password } = this.state;
+		const { inviteID, email, password } = this.state;
 
 		const emailValid = (email.includes('@')) ? isValidEmail(email) : (email.length > 0);
 		const passwordValid = (password.length > 0);
 
 		this.setState({
-			email         : (emailValid) ? email : 'Invalid Email or Username',
-			passMsg       : (passwordValid) ? '' : 'Invalid Password',
+			email         : (emailValid) ? email : 'Email Address or Username Invalid',
+			passMsg       : (passwordValid) ? '' : 'Password Invalid',
 			emailValid    : emailValid,
 			passwordValid : passwordValid
 		});
@@ -71,6 +81,7 @@ class LoginForm extends Component {
 			formData.append('action', 'LOGIN');
 			formData.append('email', email);
 			formData.append('password', password);
+			formData.append('invite_id', (inviteID) ? inviteID : '0');
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response)=> {
 					console.log('LOGIN', response.data);
@@ -82,14 +93,14 @@ class LoginForm extends Component {
 
 					} else {
 						this.setState({
-							email         : hasBit(status, 0x01) ? email : 'Wrong Email or Username',
+							email         : hasBit(status, 0x01) ? email : 'Email Address or Username In Use',
 							password      : '',
 							emailValid    : hasBit(status, 0x01),
 							passwordValid : hasBit(status, 0x10),
-							passMsg       : hasBit(status, 0x10) ? '' : 'Wrong Password'
+							passMsg       : hasBit(status, 0x10) ? '' : 'Password Invalid'
 						});
 					}
-				}).catch((error) => {
+				}).catch((error)=> {
 			});
 		}
 	};
@@ -98,24 +109,25 @@ class LoginForm extends Component {
 	render() {
 // 		console.log('LoginForm.render()', this.props, this.state);
 
+		const { title } = this.props;
 		const { email, password } = this.state;
 		const { emailValid, passwordValid, passMsg } = this.state;
 
-		const emailClass = txtClass(emailValid);
-		const passwordClass = txtClass(passwordValid);
-		const buttonClass = (emailValid && passwordValid) ? 'fat-button adjacent-button' : 'fat-button adjacent-button button-disabled';
+		const emailClass = txtfieldClass(emailValid);
+		const passwordClass = txtfieldClass(passwordValid);
 
 		return (
 			<div className="login-form-wrapper">
+				{(title && title.length > 0) && (<h4>{title}</h4>)}
 				<form onSubmit={this.handleSubmit}>
-					<div className={emailClass}><input type="text" name="email" placeholder="Username or Email" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+					<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className={passwordClass} onClick={()=> this.handlePassword()}>
-						<input type="password" name="password" placeholder="Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
+						<input type="password" name="password" placeholder="Enter Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
 						<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
 					</div>
 					<Row vertical="center">
-						<Column><button type="submit" className={buttonClass} onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-						<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> this.props.onPage('recover')}>Forgot Password?</div></Column>
+						<button disabled={(!emailValid || !passwordValid)} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Login</button>
+						<div className="page-link" onClick={()=> {trackEvent('button', 'forgot-password'); this.props.onPage('recover')}}>Forgot Password?</div>
 					</Row>
 				</form>
 			</div>

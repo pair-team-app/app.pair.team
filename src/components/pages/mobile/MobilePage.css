@@ -1,0 +1,24 @@
+
+.mobile-page-wrapper {
+	width: calc(100% + 6px);
+	min-height: 100%;
+	margin: 0 -3px 30px -3px;
+	text-align: center;
+}
+
+.mobile-page-footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	margin-bottom: 15px;
+}
+
+.mobile-page-footer-logo {
+	width: 48px;
+	height: 22px;
+}
+
+.mobile-page-footer-logo:hover {
+	cursor: pointer;
+}

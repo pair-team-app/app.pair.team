@@ -2,40 +2,51 @@
 .top-nav-wrapper {
 	position: fixed;
 	width: 100%;
-	background-color: #1c1c1c;
 	display: table;
 	z-index: 3;
+	background-color: #24282e;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-size: 16px;
+	line-height: 0;
+	letter-spacing: -0.3px;
 }
 
 .top-nav-column {
 	display: table-cell;
-	height: 58px;
+	width: 50%;
+	height: 64px;
 	vertical-align: middle;
 }
 
 .top-nav-column-left {
-	width: 800px;
-	padding-left: 24px;
+	padding-left: 20px;
+}
+
+.top-nav-column-left-mobile {
+	padding-left: 15px;
+	width: 30%;
 }
 
 .top-nav-column-right {
-	padding-right: 19px;
+	padding-right: 15px;
+	text-align: right;
 }
 
-.top-nav-logo {
-	width: 50px;
-	height: 22px;
-}
-
-.top-nav-logo:hover {
-	cursor: pointer;
+.top-nav-column-right-mobile {
+	width: 70%;
+	padding-right: 15px;
 }
 
 .top-nav-link, a.top-nav-link {
-	color: #ffffff;
-	margin-left: 22px;
+	width: fit-content;
+	margin-right: 20px;
 	letter-spacing: -0.3px;
 	text-decoration: none;
+	color: #abdafd;
+}
+
+.top-nav-link:last-child, a.top-nav-link:last-child {
+	margin-right: 0;
 }
 
 .top-nav-link:hover, .top-nav-link a:hover {
@@ -43,19 +54,11 @@
 	text-decoration: underline;
 }
 
+.top-nav-link:active, .top-nav-link a:active {
+	color: #2288fb;
+}
+
 .top-nav-link-selected, a.top-nav-link-selected {
-	color: #9b9b9b;
-}
-
-.top-nav-star {
-	margin-left: 4px;
-	font-size: 12px;
-	color: #ffffff;
-}
-
-.top-nav-button {
-	font-family: "San Francisco Text Bold", sans-serif;
-	font-weight: 700;
-	font-size: 13px;
-	padding: 6px 16px;
+	color: #2288fb;
+	text-decoration: underline;
 }

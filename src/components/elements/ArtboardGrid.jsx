@@ -1,48 +1,37 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 import './ArtboardGrid.css';
 
 import { Column, Row } from 'simple-flexbox';
 
-import ArtboardItem from '../iterables/ArtboardItem';
+import ArtboardItem from './ArtboardItem';
 import { isUserLoggedIn } from '../../utils/funcs';
 
 
-class ArtboardGrid extends Component {
-	constructor(props) {
-		super(props);
+function ArtboardGrid(props) {
+// 	console.log('ArtboardGrid()', props);
 
-		this.state = {
-		};
-	}
-
-	render() {
-		console.log('ArtboardGrid.render()', this.props, this.state);
-		const { fetching, total, title, artboards } = this.props;
-
-		const btnClass = (artboards && (artboards.length === parseInt(total, 10))) ? 'fat-button is-hidden' : (fetching) ? 'fat-button button-disabled' : 'fat-button';
-		const btnCaption = (fetching) ? 'Loading…' : 'More';
-
-		return (<div className="artboard-grid">
-			{(title) && (<Row><h3>{(!fetching && artboards.length === 0) ? '' : title}</h3></Row>)}
-			{(isUserLoggedIn() && artboards.length > 0) && (
-				<Row horizontal="space-around" className="artboard-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
-					{(artboards) && artboards.map((artboard, i) => {
-						return (
-							<Column key={i}>
-								<ArtboardItem
-									title={artboard.title}
-									image={artboard.filename}
-									avatar={artboard.system.avatar}
-									onClick={()=> this.props.onClick(artboard)} />
-							</Column>
-						);
-					})}
-				</Row>
-			)}
-			{(artboards.length > 0) && (<Row horizontal="center"><button className={btnClass} onClick={()=> (!fetching) ? this.props.onLoadNext() : null}>{btnCaption}</button></Row>)}
-		</div>);
-	}
+	const { title, artboards } = props;
+	return (<div className="artboard-grid">
+		{(title && title.length > 0) && (<h4>{title}</h4>)}
+		{(isUserLoggedIn() && artboards.length > 0) && (
+			<Row horizontal="start" className="artboard-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
+				{(artboards) && artboards.map((artboard, i) => {
+					return (
+						<Column key={i}>
+							<ArtboardItem
+								title={artboard.title}
+								image={artboard.filename}
+								avatar={artboard.creator.avatar}
+								onClick={()=> props.onClick(artboard)} />
+						</Column>
+					);
+				})}
+			</Row>
+		)}
+	</div>);
 }
+
+//["start","center","end","spaced","space-between","around","space-around"]
 
 export default ArtboardGrid;

@@ -1,13 +1,16 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom'
+// import 'primer/index.scss';
 import './index.css';
 
-import App from './App';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom'
+
+import App from './components/App';
 import registerServiceWorker from './registerServiceWorker';
 import store from './redux/store/index';
+// import './utils/lang';
 
 window.store = store;
 
@@ -20,4 +23,5 @@ ReactDOM.render(
 	</Provider>,
 	document.getElementById('root')
 );
+
 registerServiceWorker();

@@ -1,0 +1,177 @@
+
+.desktop-site-wrapper, .mobile-site-wrapper {
+  width: 100%;
+	height: 100%;
+}
+
+.unsupported-browser {
+	padding: 20px;
+	text-align: center;
+}
+
+.content-wrapper {
+	position: relative;
+	top: 64px;
+	left: 0;
+	width: 100%;
+	height: calc(100% - 64px);
+	overflow-x: hidden;
+	overflow-y: scroll;
+	padding: 20px;
+}
+
+.page-wrapper {
+	width: 100%;
+	min-height: calc(100% - 84px);
+	margin-bottom: 30px; /* footer spacing */
+}
+
+.page-header {
+	padding: 30px 50px 45px 50px;
+	margin-bottom: 32px;
+	width: 100%;
+	background-color: #fafbfc;
+	border: 1px solid #eaecef;
+	border-radius: 4px;
+}
+
+.page-header-text {
+	text-align: center;
+	margin: 0 0 29px 0;
+	line-height: 30px;
+	font-family: "San Francisco Text", sans-serif;
+	font-size: 16px;
+	letter-spacing: -0.24px;
+}
+
+.long-button {
+	width: 188px;
+}
+
+.tiny-button {
+	min-width: 38px;
+	min-height: 38px;
+	width: auto;
+	height: auto;
+	padding: 10px;
+}
+
+.adjacent-button {
+	margin-right: 20px;
+}
+
+.adjacent-button-mobile {
+	margin-right: 15px;
+}
+
+.stack-button {
+	display: block;
+	margin-bottom: 14px;
+}
+
+.page-link, .page-link a, .page-link a:active, .page-link a:link, .page-link a:visited, .page-link-small, .page-link-small a, .page-link-small a:active, .page-link-small a:link, .page-link-small a:visited {
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-size: 14px;
+	letter-spacing: -0.26px;
+	color: #abdafd;
+	text-decoration: none;
+}
+
+.page-link:hover, .page-link a:hover, .page-link-small:hover, .page-link-small a:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.page-link-disabled, .page-link-disabled:hover {
+	cursor: not-allowed;
+	color: #8facbf;
+	opacity : 0.5;
+	text-decoration: none;
+}
+
+.input-wrapper {
+	cursor: pointer;
+	margin-bottom: 20px;
+	border: 1px solid rgba(0, 0, 0, 0);
+	border-radius: 2px;
+	width: 100%;
+}
+
+.input-wrapper-error {
+	border: 1px solid #ff4646;
+}
+
+.input-wrapper-error input[type=text], .input-wrapper-error input[type=password], .input-wrapper-error input[type=tel], .input-wrapper-error .input-txt, .input-wrapper-error .field-error {
+	background-color: #1a1e23;
+	color: #ff4646;
+}
+
+.input-wrapper-error .field-error {
+	height: 53px;
+	padding-top: 11px;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-size: 16px;
+	letter-spacing: -0.3px;
+}
+
+.input-wrapper-disabled, .input-wrapper-disabled:hover {
+	cursor: not-allowed;
+	opacity: 0.5;
+}
+
+.input-error {
+	border: 1px solid #ff4646;
+	background-color: #1a1e23;
+	color: #ff4646;
+}
+
+.upload-progress-bar-wrapper {
+	position: fixed;
+	top: 64px;
+	left: 0;
+	width: 100%;
+	height: 7px;
+	z-index: 5;
+}
+
+.upload-progress-bar {
+	width: 100%;
+	height: 100%;
+	background-color: #005cc5;
+}
+
+.flex-wrapper {
+	width: 100%;
+	flex-wrap: wrap;
+}
+
+.full-width {
+	width: 100%;
+}
+
+.txt-bold {
+	font-weight: bold;
+}
+
+.txt-italics {
+	font-style: italic;
+}
+
+.txt-strikethru {
+	text-decoration: line-through;
+}
+
+.txt-underline {
+	text-decoration: underline;
+}
+
+.is-hidden {
+	display: none;
+	visibility: hidden;
+}
+
+
+
+.debug-border {
+	border: 1px dashed #ff00ff;
+}

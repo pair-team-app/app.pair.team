@@ -1,43 +1,59 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 import './BottomNav.css';
 
 import { isUserLoggedIn } from '../../utils/funcs';
+import deLogo from '../../assets/images/logos/logo-designengine.svg';
+import sections from '../../assets/json/nav-sections';
 
 
-class BottomNav extends Component {
-	constructor(props) {
-		super(props);
+const BottomNavDesktop = (props)=> {
+// 	console.log('BottomNav().BottomNavDesktop()', props);
 
-		this.state = {
-		};
-	}
+	return (<div className="bottom-nav-desktop-wrapper">
+		<img className="bottom-nav-desktop-logo" src={deLogo} onClick={()=> props.onPage('')} alt="Design Engine" />
+		<div className="bottom-nav-link-wrapper">
+			{(sections.bottom.desktop.map((section, i)=> (
+				<div key={i} className="bottom-nav-link" onClick={()=> props.onPage(section.url.substr(1))}>{section.title}</div>
+			)))}
 
-	render() {
-		console.log('BottomNav.render()', this.props, this.state);
+			{(isUserLoggedIn())
+				? (<div className="bottom-nav-link" onClick={() => props.onLogout()}>Logout</div>)
+				: (<span style={{ display : 'inline' }}>
+							<div className="bottom-nav-link" onClick={()=> props.onPage('register')}>Sign Up</div>
+							<div className="bottom-nav-link" onClick={()=> props.onPage('login')}>Login</div>
+					</span>)
+			}
+		</div>
+	</div>);
+};
 
-		return (
-			<div className="bottom-nav-wrapper">
-				<div className="bottom-nav-link-wrapper">
-					<div className="bottom-nav-link" onClick={()=> this.props.onPage('inspect')}>Free Inspect</div>
-					<div className="bottom-nav-link" onClick={()=> this.props.onPage('parts')}>Free Parts</div>
-					<div className="bottom-nav-link" onClick={()=> this.props.onPage('terms')}>Terms</div>
-					<div className="bottom-nav-link" onClick={()=> this.props.onPage('privacy')}>Privacy</div>
-					<div className="bottom-nav-link" onClick={()=> window.open('https://github.com/de-ai/designengine.ai/projects/1')}>Roadmap</div>
+const BottomNavMobile = (props)=> {
+// 	console.log('BottomNav().BottomNavMobile()', props);
 
-					{(isUserLoggedIn())
-						? (<div className="bottom-nav-link" onClick={() => this.props.onLogout()}>Sign Out</div>)
-						: (<span style={{ display : 'inline' }}>
-								<div className="bottom-nav-link" onClick={()=> this.props.onPage('register')}>Sign Up</div>
-								<div className="bottom-nav-link" onClick={()=> this.props.onPage('login')}>Login</div>
-						</span>)
-					}
-				</div>
+	return (<div className="bottom-nav-mobile-wrapper">
+		<img className="bottom-nav-mobile-logo" src={deLogo} onClick={()=> props.onPage('')} alt="Design Engine" />
+		<div className="bottom-nav-link-wrapper">
+			{(sections.bottom.mobile.map((section, i)=> (
+				<div key={i} className="bottom-nav-link" onClick={()=> props.onPage(section.url.substr(1))}>{section.title}</div>
+			)))}
+		</div>
+	</div>);
+};
 
-				<div className="copyright">&copy; {new Date().getFullYear()} Design Engine AI, Inc</div>
-			</div>
-		);
-	}
+
+function BottomNav(props) {
+// 	console.log('BottomNav()', props);
+
+	const { mobileLayout } = props;
+	return (
+		<div className="bottom-nav-wrapper">
+			{(!mobileLayout)
+				? (<BottomNavDesktop onPage={props.onPage} onLogout={props.onLogout} />)
+				: (<BottomNavMobile onPage={props.onPage} onLogout={props.onLogout} />)
+			}
+		</div>
+	);
 }
 
 export default BottomNav;

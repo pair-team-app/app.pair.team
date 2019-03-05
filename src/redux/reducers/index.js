@@ -1,107 +1,80 @@
 
-import '../../utils/lang-protos.js';
-
 import {
-	ADD_ARTICLE,
 	ADD_FILE_UPLOAD,
-	APPEND_EXPLORE_ARTBOARDS,
-	APPEND_UPLOAD_ARTBOARDS,
-	SET_REDIRECT_URL,
-	UPDATE_NAVIGATION,
+	APPEND_ARTBOARD_SLICES,
+	APPEND_HOME_ARTBOARDS,
+	SET_REDIRECT_URI,
+	CONVERTED_DEEPLINK,
 	USER_PROFILE_ERROR,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 
 const initialState = {
-	articles         : [],
-	exploreArtboards : [],
-	uploadArtboards  : [],
-	userProfile      : null,
-	file             : null,
-	redirectURL      : null,
-	navigation       : {
+	file          : null,
+	homeArtboards : [],
+	deeplink      : {
 		uploadID   : 0,
 		pageID     : 0,
 		artboardID : 0,
 		sliceID    : 0
-	}
+	},
+	redirectURI   : null,
+	uploadSlices  : [],
+	userProfile   : null
+};
+
+const logFormat = (state, action, meta='')=> {
+	const { type, payload } = action;
+	console.log(LOG_REDUCER_PREFIX, state, `“${type}”`, payload, meta);
 };
 
 
-const LOG_PREFIX = '[:|:]';
-const LOG_ACT_PREFIX = '\t-=\\';
-
-
 function rootReducer(state=initialState, action) {
-	invokeLogFormat(state, action);
+	logFormat(state, action);
 
-	if (action.type === ADD_ARTICLE) {
-		return (Object.assign({}, state, {
-			articles : state.articles.concat(action.payload)
-		}));
-
-	} else if (action.type === ADD_FILE_UPLOAD) {
-		actionLogFormat(action);
-
+	if (action.type === ADD_FILE_UPLOAD) {
 		return (Object.assign({}, state, {
 			file : action.payload
 		}));
 
-	} else if (action.type === APPEND_EXPLORE_ARTBOARDS) {
-		actionLogFormat(action, state.exploreArtboards);
+	} else if (action.type === APPEND_ARTBOARD_SLICES) {
+		const { payload } = action;
+		const { artboardID, slices } = payload;
 
 		return (Object.assign({}, state, {
-			exploreArtboards : state.exploreArtboards.concat(action.payload).reduce((acc, inc)=> [...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], [])
-// 			exploreArtboards : pruneArtboards(state.exploreArtboards.concat(action.payload))
+			uploadSlices : Object.assign({}, (state.uploadSlices.findIndex((artboard)=>
+				(artboard.artboardID === artboardID)) > -1)
+					? state.uploadSlices.filter((artboard)=> (artboard.artboardID === artboardID))
+					: state.uploadSlices, { artboardID, slices })
 		}));
 
-	} else if (action.type === APPEND_UPLOAD_ARTBOARDS) {
-		actionLogFormat(action, state.uploadArtboards);
-
-// 		const artboard = action.payload.entries().next().value.pop();
-// 		const { uploadID, pageID, id } = (artboard) ? artboard : null;
-
+	} else if (action.type === APPEND_HOME_ARTBOARDS) {
 		return (Object.assign({}, state, {
-			uploadArtboards : state.uploadArtboards.concat(action.payload).reduce((acc, inc) => [...acc.filter((artboard) => (artboard.id !== inc.id)), inc], [])
-// 			uploadArtboards : pruneArtboards(state.uploadArtboards.concat(action.payload))
+			homeArtboards : (action.payload) ? state.homeArtboards.concat(action.payload).reduce((acc, inc)=>
+				[...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], []
+			) : []
 		}));
 
-	} else if (action.type === SET_REDIRECT_URL) {
-		actionLogFormat(action);
-
+	} else if (action.type === SET_REDIRECT_URI) {
 		return (Object.assign({}, state, {
-			redirectURL : action.payload
+			redirectURI : action.payload
 		}));
 
 	} else if (action.type === USER_PROFILE_ERROR || action.type === USER_PROFILE_LOADED || action.type === USER_PROFILE_UPDATED) {
-		actionLogFormat(action);
-
 		return (Object.assign({}, state, {
 			userProfile : action.payload
 		}));
 
-	} else if (action.type === UPDATE_NAVIGATION) {
-		actionLogFormat(action);
-
+	} else if (action.type === CONVERTED_DEEPLINK) {
 		return (Object.assign({}, state, {
-			navigation : Object.assign({}, state.navigation, action.payload)
+			deeplink : Object.assign({}, state.deeplink, action.payload)
 		}));
 	}
 
 	return (state);
 }
 
-
-
-const actionLogFormat = (action, meta='')=> {
-	const { type, payload } = action;
-	console.log(LOG_ACT_PREFIX, type, payload, meta);
-};
-
-const invokeLogFormat = (state, action)=> {
-	const { type, payload } = action;
-	console.log(LOG_PREFIX, 'rootReducer()', state, type, payload);
-};
 
 export default rootReducer;

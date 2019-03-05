@@ -1,7 +1,9 @@
 
 .artboard-grid {
+	width: 100%;
 }
 
 .artboard-grid-item-wrapper {
-	margin-top: 8px;
+	width: 100%;
+	margin: 8px -10px 0 -10px;
 }

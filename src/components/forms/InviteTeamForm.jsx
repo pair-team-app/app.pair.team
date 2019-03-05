@@ -3,16 +3,18 @@ import React, { Component } from 'react';
 import './InviteTeamForm.css';
 
 import axios from 'axios';
+import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
 
 import { isValidEmail } from '../../utils/funcs';
-import spinner from '../../assets/images/spinner.gif';
+import { trackEvent } from '../../utils/tracking';
+
 
 const MAX_FIELDS = 4;
 
 
 const InviteTeamField = (props)=> {
-	const txtName = 'email' + (props.ind + 1);
+	const txtName = `email${props.ind + 1}`;
 	const addClass = (props.ind === props.arr.length - 1 && props.ind < MAX_FIELDS) ? 'invite-team-form-add-link' : 'invite-team-form-add-link invite-team-form-add-link-hidden';
 
 	return (<Row vertical="center">
@@ -39,11 +41,11 @@ class InviteTeamForm extends Component {
 	}
 
 	componentDidMount() {
-		console.log('InviteTeamForm.componentDidMount()', this.props, this.state);
+// 		console.log('InviteTeamForm.componentDidMount()', this.props, this.state);
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('InviteTeamForm.componentDidUpdate()', prevProps, this.props, this.state);
+// 		console.log('InviteTeamForm.componentDidUpdate()', prevProps, this.props, this.state);
 	}
 
 	componentWillUnmount() {
@@ -51,7 +53,7 @@ class InviteTeamForm extends Component {
 	}
 
 	handleChange = (event)=> {
-		console.log('InviteTeamForm.handleChange()', event.target);
+// 		console.log('InviteTeamForm.handleChange()', event.target);
 
 		let { invites } = this.state;
 		invites.filter((invite, i)=> (i === parseInt(event.target.name.substr(-1), 10) - 1)).forEach((invite, i)=> {
@@ -63,7 +65,7 @@ class InviteTeamForm extends Component {
 	};
 
 	handleFocus = (event)=> {
-		console.log('InviteTeamForm.handleFocus()', event.target);
+// 		console.log('InviteTeamForm.handleFocus()', event.target);
 
 		let { invites } = this.state;
 		invites.filter((invite, i)=> (i === parseInt(event.target.name.substr(-1), 10) - 1 && !invite.valid)).forEach((invite, i)=> {
@@ -74,8 +76,9 @@ class InviteTeamForm extends Component {
 	};
 
 	handleAddEmailField = ()=> {
-		console.log('InviteTeamForm.handleAddEmailField()', this.state);
+// 		console.log('InviteTeamForm.handleAddEmailField()', this.state);
 
+		trackEvent('button', 'more-email');
 		let { invites } = this.state;
 		invites.push({
 			email    : '',
@@ -100,25 +103,36 @@ class InviteTeamForm extends Component {
 				invite.valid = false;
 
 			} else {
-				emails += invite.email + ' ';
+				emails += `${invite.email} `;
 			}
 		});
 
 		const reducer = invites.map((invite)=> ((invite.email.length > 0 && invite.valid) ? 1 : 0)).reduce((acc, val)=> acc + val);
 		if (reducer === invites.length) {
+			trackEvent('button', 'invite-submit');
 			this.setState({ submitting : true });
 
 			let formData = new FormData();
 			formData.append('action', 'INVITE');
 			formData.append('user_id', profile.id);
-			formData.append('upload_id', '' + upload.id);
+			formData.append('upload_id', upload.id);
 			formData.append('emails', emails.slice(0, -1));
 			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
+				.then((response)=> {
 					console.log('INVITE', response.data);
-					this.setState({ submitting : false });
-					this.props.onSubmitted(response.data.invites);
-				}).catch((error) => {
+					this.setState({
+						submitting : false,
+						invites     : [{
+							email    : '',
+							valid    : true,
+							txtClass : 'input-wrapper'
+						}]
+					});
+					this.props.onSubmitted({
+						write : response.data.invites_write,
+						sent : response.data.invites_sent
+					});
+				}).catch((error)=> {
 			});
 
 		} else {
@@ -127,18 +141,17 @@ class InviteTeamForm extends Component {
 	};
 
 	render() {
-		console.log('InviteTeamForm.render()', this.props, this.state);
+// 		console.log('InviteTeamForm.render()', this.props, this.state);
 
+		const { title } = this.props;
 		const { invites, submitting } = this.state;
 		const submitValid = (invites.map((invite)=> ((invite.email.length > 0 && invite.valid) ? 1 : 0)).reduce((acc, val)=> acc + val) === invites.length);
-		const inviteButtonClass = (submitValid && !submitting) ? 'fat-button' : 'fat-button button-disabled';
 
 		return (<div className="invite-team-form-wrapper">
+			{(title && title.length > 0) && (<h4>{title}</h4>)}
 			{(submitting) && (<div className="invite-team-form-submitting-overlay">
-				<img className="invite-team-form-spinner" src={spinner} width="50" height="50" alt="Spinner" />
+				<FontAwesome className="invite-team-form-spinner" name="spinner" size="3x" pulse fixedWidth />
 			</div>)}
-			{/*<h3>Invite Team</h3>*/}
-			{/*Enter the email address of each member of your team to invite them to this project.*/}
 			<div className="invite-team-form-form-wrapper">
 				<div style={{ width : '80%' }}><Column>
 					{invites.map((invite, i, arr)=> {
@@ -153,7 +166,7 @@ class InviteTeamForm extends Component {
 						/>);
 					})}
 				</Column></div>
-				<button className={inviteButtonClass} onClick={() => ((submitValid) ? this.handleSubmit() : null)}>Invite</button>
+				<button disabled={(!submitValid || submitting)} className="long-button" onClick={()=> ((submitValid) ? this.handleSubmit() : null)}>Invite</button>
 			</div>
 		</div>);
 	}

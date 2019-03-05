@@ -3,12 +3,17 @@ import React, { Component } from 'react';
 import './TopNavProfile.css';
 
 import FontAwesome from 'react-fontawesome';
+import ImageLoader from 'react-loading-image';
 import onClickOutside from 'react-onclickoutside';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
+import { DEFAULT_AVATAR } from '../../consts/uris';
+import { trackEvent } from '../../utils/tracking';
+
 const PROFILE = 'PROFILE';
 const LOGOUT = 'LOGOUT';
+
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({ profile : state.userProfile });
@@ -24,14 +29,6 @@ class TopNavProfile extends Component {
 		};
 	}
 
-	componentDidMount() {
-// 		console.log('TopNavProfile.componentDidMount()', this.props, this.state);
-	}
-
-	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('TopNavProfile.componentDidUpdate()', prevProps, this.props, prevState, this.state);
-	}
-
 	handleClickOutside(event) {
 		this.setState({ bubble : false });
 	}
@@ -39,6 +36,7 @@ class TopNavProfile extends Component {
 	handleLinkClick = (type)=> {
 		this.setState({ bubble : false });
 
+		trackEvent('top-nav', type.toLowerCase());
 		if (type === PROFILE) {
 			this.props.onPage('profile');
 
@@ -50,23 +48,34 @@ class TopNavProfile extends Component {
 	render() {
 // 		console.log('TopNavProfile.render()', this.props, this.state);
 
-		const { avatar } = (this.props.profile) ? this.props.profile : { avatar : 'http://cdn.designengine.ai/profiles/default-avatar.png' };
+		const { avatar } = (this.props.profile) ? this.props.profile : { avatar : DEFAULT_AVATAR };
 		const { bubble } = this.state;
 
-		return (
-			<div className="top-nav-profile">
-				<div className="top-nav-profile-wrapper"><Row vertical="center">
-					<img src={avatar} className="top-nav-profile-avatar" alt="Avatar" />
-					<FontAwesome name="caret-down" className="top-nav-profile-arrow" onClick={()=> this.setState({ bubble : !bubble })} />
-				</Row></div>
+		const faName = (bubble) ? 'caret-up' : 'caret-down';
+		const bubbleClass = `top-nav-profile-bubble-wrapper ${(bubble) ? 'top-nav-profile-intro' : 'top-nav-profile-outro'}`;
 
-				{(bubble) && (<div className="top-nav-profile-bubble-wrapper">
-					<FontAwesome name="caret-up" className="top-nav-profile-bubble-notch" />
-					<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(PROFILE)}>Profile</div>
-					<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(LOGOUT)}>Logout</div>
-				</div>)}
-			</div>
-		);
+		return (<div className="top-nav-profile-wrapper">
+			<Row vertical="center">
+				<FontAwesome name={faName} className="top-nav-profile-arrow" onClick={()=> this.setState({ bubble : !bubble })} />
+
+
+				<div className="top-nav-profile-avatar-wrapper" onClick={()=> this.setState({ bubble : !bubble })}>
+					<ImageLoader
+						src={avatar}
+						image={(props)=> (<img className="top-nav-profile-avatar-image" {...props} src={avatar} alt="" />)}
+						loading={()=> (<div className="top-nav-profile-avatar-image top-nav-profile-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+						error={()=> (<div className="top-nav-profile-avatar-image top-nav-profile-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
+					/>
+				</div>
+
+				{/*<img src={avatar} className="top-nav-profile-avatar" alt="" onClick={()=> this.setState({ bubble : !bubble })} />*/}
+			</Row>
+
+			{(bubble) && (<div className={bubbleClass}>
+				<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(PROFILE)}>Profile</div>
+				<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(LOGOUT)}>Logout</div>
+			</div>)}
+			</div>);
 	}
 }
 

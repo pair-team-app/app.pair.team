@@ -1,0 +1,11 @@
+
+.base-mobile-page-wrapper {
+	width: calc(100% + 6px);
+	min-height: calc(100% - 60px);
+	margin: 0 -3px 30px -3px;
+	text-align: center;
+}
+
+.unsupported-mobile-page-wrapper h1, .unsupported-mobile-page-wrapper h3 {
+	width: 100%;
+}

@@ -4,39 +4,40 @@ import cookie from 'react-cookies';
 
 import { hasBit } from '../../utils/funcs';
 import {
-	ADD_ARTICLE,
 	ADD_FILE_UPLOAD,
-	APPEND_EXPLORE_ARTBOARDS,
-	APPEND_UPLOAD_ARTBOARDS,
-	SET_REDIRECT_URL,
+	APPEND_ARTBOARD_SLICES,
+	APPEND_HOME_ARTBOARDS,
+	SET_REDIRECT_URI,
 	USER_PROFILE_ERROR,
-	UPDATE_NAVIGATION,
+	UPDATE_DEEPLINK,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 
 
-export function addArticle(payload) {
-	return ({ type : ADD_ARTICLE, payload });
-}
+const logFormat = (action, payload=null, meta='')=> {
+	console.log(LOG_ACTION_PREFIX, `${action}()`, payload, meta);
+};
+
 
 export function addFileUpload(payload) {
 	return ({ type : ADD_FILE_UPLOAD, payload });
 }
 
-export function appendExploreArtboards(payload) {
-	return ({ type : APPEND_EXPLORE_ARTBOARDS, payload });
+export function appendArtboardSlices(payload) {
+	return ({ type : APPEND_ARTBOARD_SLICES, payload });
 }
 
-export function appendUploadArtboards(payload) {
-	return ({ type : APPEND_UPLOAD_ARTBOARDS, payload });
+export function appendHomeArtboards(payload) {
+	return ({ type : APPEND_HOME_ARTBOARDS, payload });
 }
 
-export function updateNavigation(payload) {
-	return ({ type : UPDATE_NAVIGATION, payload });
+export function updateDeeplink(payload) {
+	return ({ type : UPDATE_DEEPLINK, payload });
 }
 
 export function fetchUserProfile() {
-	console.log('fetchUserProfile()');
+	logFormat('fetchUserProfile');
 
 	return (function(dispatch) {
 		let formData = new FormData();
@@ -44,22 +45,26 @@ export function fetchUserProfile() {
 		formData.append('user_id', cookie.load('user_id'));
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response)=> {
-				console.log('fetchUserProfile()=> PROFILE', response.data);
+				console.log('PROFILE', response.data);
+				const { id, username, email, avatar, type, joined } = response.data.user;
 				dispatch({
 					type    : USER_PROFILE_LOADED,
-					payload : response.data.user
+// 					payload : response.data.user
+					payload : { id, username, email, avatar, joined,
+						paid : (type.includes('paid'))
+					}
 				});
 			}).catch((error) => {
 		});
 	});
 }
 
-export function setRedirectURL(payload) {
-	return ({ type : SET_REDIRECT_URL, payload });
+export function setRedirectURI(payload) {
+	return ({ type : SET_REDIRECT_URI, payload });
 }
 
 export function updateUserProfile(payload) {
-	console.log('updateUserProfile()', payload);
+	logFormat('updateUserProfile', payload);
 
 	return (function(dispatch) {
 		if (payload) {
@@ -73,7 +78,7 @@ export function updateUserProfile(payload) {
 			formData.append('password', password);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
-					console.log('updateUserProfile()=> UPDATE_PROFILE', response.data);
+					console.log('UPDATE_PROFILE', response.data);
 
 					const status = parseInt(response.data.status, 16);
 					const { id, avatar, username, email } = response.data.user;

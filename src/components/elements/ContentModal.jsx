@@ -5,6 +5,15 @@ import './ContentModal.css';
 import { TimelineMax, Power1, Power2 } from 'gsap/TweenMax';
 import FontAwesome from 'react-fontawesome';
 import onClickOutside from 'react-onclickoutside';
+import { Column, Row } from 'simple-flexbox';
+
+import { trackModal } from '../../utils/tracking';
+
+
+export const MODAL_SIZE_AUTO = 'MODAL_SIZE_AUTO';
+export const MODAL_SIZE_FIXED = 'MODAL_SIZE_FIXED';
+export const MODAL_SIZE_PERCENT = 'MODAL_SIZE_PERCENT';
+
 
 class ContentModal extends Component {
 	constructor(props) {
@@ -20,6 +29,9 @@ class ContentModal extends Component {
 
 	componentDidMount() {
 // 		console.log('ContentModal.componentDidMount()', this.props, this.state);
+
+		const { tracking } = this.props;
+		trackModal(tracking);
 
 		this.timeline = new TimelineMax();
 		this.timeline.from(this.wrapper, 0.125, {
@@ -57,29 +69,27 @@ class ContentModal extends Component {
 	}
 
 	handleClose = ()=> {
-		console.log('ContentModal.handleClose()', this.props);
-
-		const { closeable } = this.props;
-		if (closeable) {
-			this.setState({ outro : true });
-		}
+// 		console.log('ContentModal.handleClose()', this.props);
+		this.setState({ outro : true });
 	};
 
 	render() {
 // 		console.log('ContentModal.render()', this.props, this.state);
 
-		const { type, title, closeable, defaultButton, children } = this.props;
-		const wrapperClass = (type === 'PERCENT') ? 'content-modal-content-wrapper content-modal-content-wrapper-percent' : 'content-modal-content-wrapper';
+		const { size, title, closeable, defaultButton, children } = this.props;
+		const wrapperClass = `content-modal-content-wrapper content-modal-content-wrapper${(size === MODAL_SIZE_FIXED) ? '-fixed' : (size === MODAL_SIZE_PERCENT) ? '-percent' : '-auto'}`;
 
-		return (<div className="content-modal-wrapper" ref={(element)=> { this.wrapper = element; }}>
-			<div className={wrapperClass}>
-				{(title) && (<div className="content-modal-title-wrapper">
-					<h3>{title}</h3>
-					{(closeable && !defaultButton) && (<button className="tiny-button content-modal-close-button" onClick={()=> this.handleClose()}><FontAwesome name="times"/></button>)}
-				</div>)}
+		return (<div className="content-modal-wrapper" onClick={()=> (closeable) ? this.handleClose() : null} ref={(element)=> { this.wrapper = element; }}>
+			<div className={wrapperClass} onClick={(event)=> event.stopPropagation()}>
+				{(title) && (<div className="content-modal-header-wrapper"><Row>
+					<Column flexGrow={1}><div className="content-modal-title">{title}</div></Column>
+					<Column flexGrow={1} vertical="center" horizontal="end">{(closeable && !defaultButton) && (<button className="tiny-button content-modal-close-button" onClick={()=> this.handleClose()}><FontAwesome name="times"/></button>)}</Column>
+				</Row></div>)}
 				<div className="content-modal-content">
 					{children}
-					{(defaultButton) && (<button className="content-modal-button" onClick={()=> this.handleClose()}>{defaultButton}</button>)}
+					{(defaultButton) && (<div className="content-modal-button-wrapper">
+						<button className="content-modal-button" onClick={()=> this.handleClose()}>{defaultButton}</button>
+					</div>)}
 				</div>
 			</div>
 		</div>);

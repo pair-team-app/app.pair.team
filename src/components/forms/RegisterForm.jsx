@@ -3,15 +3,15 @@ import React, { Component } from 'react';
 import './RegisterForm.css'
 
 import axios from 'axios';
-import { Column, Row } from 'simple-flexbox';
+import { Row } from 'simple-flexbox';
 
 import { hasBit, isValidEmail } from '../../utils/funcs';
+import { trackEvent } from '../../utils/tracking';
 
 
 const passwordTextfield = React.createRef();
 
-
-const txtClass = (isValid)=> {
+const txtfieldClass = (isValid)=> {
 	return ((isValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error');
 };
 
@@ -20,8 +20,9 @@ class RegisterForm extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			inviteID      : props.inviteID,
 			username      : '',
-			email         : '',
+			email         : (props.email) ? props.email : '',
 			password      : '',
 			password2     : '',
 			usernameValid : true,
@@ -34,12 +35,21 @@ class RegisterForm extends Component {
 // 		console.log('RegisterForm.componentDidMount()', this.props, this.state);
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('RegisterForm.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+
+		if (prevProps.email !== this.props.email) {
+			const { email } = this.props;
+			this.setState({ email });
+		}
+	}
+
 	componentWillUnmount() {
 		this.timeline = null;
 	}
 
 	handlePassword = ()=> {
-		console.log('RegisterForm.handlePassword()');
+// 		console.log('RegisterForm.handlePassword()');
 
 		this.setState({
 			password      : '',
@@ -57,7 +67,7 @@ class RegisterForm extends Component {
 		console.log('RegisterForm.handleSubmit()', event.target);
 		event.preventDefault();
 
-		const { username, email, password, password2 } = this.state;
+		const { inviteID, username, email, password, password2 } = this.state;
 		const usernameValid = (username.length > 0 && !username.includes('@'));
 		const emailValid = isValidEmail(email);
 		const passwordValid = (password.length > 0 && password === password2);
@@ -74,9 +84,9 @@ class RegisterForm extends Component {
 		}
 
 		this.setState({
-			username      : (usernameValid) ? username : 'Invalid Username',
-			email         : (emailValid) ? email : 'Invalid Email',
-			passMsg       : (passwordValid) ? '' : 'Invalid Password',
+			username      : (usernameValid) ? username : 'Username Invalid',
+			email         : (emailValid) ? email : 'Email Address Invalid',
+			passMsg       : (passwordValid) ? '' : 'Password Invalid',
 			usernameValid : usernameValid,
 			emailValid    : emailValid,
 			passwordValid : passwordValid
@@ -89,9 +99,9 @@ class RegisterForm extends Component {
 			formData.append('username', username);
 			formData.append('email', email);
 			formData.append('password', password);
-			formData.append('type', 'user');
+			formData.append('invite_id', (inviteID) ? inviteID : '0');
 			axios.post('https://api.designengine.ai/system.php', formData)
-				.then((response) => {
+				.then((response)=> {
 					console.log('REGISTER', response.data);
 					const status = parseInt(response.data.status, 16);
 // 					console.log('status', status, hasBit(status, 0x01), hasBit(status, 0x10));
@@ -102,14 +112,14 @@ class RegisterForm extends Component {
 					} else {
 						this.setState({
 							username      : hasBit(status, 0x01) ? username : 'Username Already in Use',
-							email         : hasBit(status, 0x10) ? email : 'Email Already in Use',
+							email         : hasBit(status, 0x10) ? email : 'Email Address Already in Use',
 							password      : '',
 							password2     : '',
 							usernameValid : hasBit(status, 0x01),
 							emailValid    : hasBit(status, 0x10)
 						});
 					}
-				}).catch((error) => {
+				}).catch((error)=> {
 			});
 		}
 	};
@@ -118,28 +128,29 @@ class RegisterForm extends Component {
 	render() {
 // 		console.log('RegisterForm.render()', this.props, this.state);
 
+		const { title } = this.props;
 		const { username, email, password, password2 } = this.state;
 		const { usernameValid, emailValid, passwordValid, passMsg } = this.state;
 
-		const usernameClass = txtClass(usernameValid);
-		const emailClass = txtClass(emailValid);
-		const passwordClass = txtClass(passwordValid);
-		const password2Class = txtClass(passwordValid);
-		const buttonClass = (usernameValid && emailValid && passwordValid) ? 'fat-button adjacent-button' : 'fat-button adjacent-button button-disabled';
+		const usernameClass = txtfieldClass(usernameValid);
+		const emailClass = txtfieldClass(emailValid);
+		const passwordClass = txtfieldClass(passwordValid);
+		const password2Class = txtfieldClass(passwordValid);
 
 		return (
 			<div className="register-form-wrapper">
+				{(title && title.length > 0) && (<h4>{title}</h4>)}
 				<form onSubmit={this.handleSubmit}>
-					<div className={usernameClass}><input type="text" name="username" placeholder="Username" value={username} onFocus={()=> this.setState({ username : '', usernameValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-					<div className={emailClass}><input type="text" name="email" placeholder="Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+					<div className={usernameClass}><input type="text" name="username" autoComplete="new-password" placeholder="Enter Username" value={username} onFocus={()=> this.setState({ username : '', usernameValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+					<div className={emailClass}><input type="text" name="email" autoComplete="new-password" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<div className={passwordClass} onClick={()=> this.handlePassword()}>
-						<input type="password" name="password" placeholder="Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
+						<input type="password" name="password" autoComplete="new-password" placeholder="Enter Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
 						<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
 					</div>
-					<div className={password2Class}><input type="password" name="password2" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
+					<div className={password2Class}><input type="password" name="password2" autoComplete="new-password" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<Row vertical="center">
-						<Column><button type="submit" className={buttonClass} onClick={(event)=> this.handleSubmit(event)}>Submit</button></Column>
-						<Column><div className="page-link" style={{ fontSize : '14px' }} onClick={()=> this.props.onLogin()}>Already have an account?</div></Column>
+						<button disabled={(!usernameValid || !emailValid || !passwordValid)} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Sign Up</button>
+						<div className="page-link" onClick={()=> {trackEvent('button', 'login'); this.props.onLogin()}}>Want to Login?</div>
 					</Row>
 				</form>
 			</div>
