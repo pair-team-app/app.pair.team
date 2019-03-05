@@ -43,6 +43,8 @@ import {
 import { fontSpecs, toAndroid, toCSS, toReactCSS, toSpecs, toSwift } from '../../../utils/inspector-langs.js';
 import { trackEvent } from '../../../utils/tracking';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
+import downloadEnabledBtn from '../../../assets/images/buttons/btn-download_enabled.svg';
+import downloadDisabledBtn from '../../../assets/images/buttons/btn-download_disabled.svg';
 import adBannerPanel from '../../../assets/json/ad-banner-panel';
 import inspectorTabSets from '../../../assets/json/inspector-tab-sets';
 
@@ -200,18 +202,27 @@ const ArtboardListItem = (props)=> {
 	const { id, filename, title, size } = props;
 
 	const thumbStyle = {
-		width  : `${size.width * 0.25}px`,
-		height : `${size.height * 0.25}px`
+		width  : `${size.width}px`,
+		height : `${size.height}px`
 	};
 
 	let errored = false;
 
 	return (<div data-slice-id={id} className="artboard-list-item" onClick={()=> props.onClick()}><Row vertical="center">
 		<div className="artboard-list-item-content-wrapper">
-			<img className="artboard-list-item-image" style={thumbStyle} src={filename} alt={title} />
-			<div className="artboard-list-item-title">{limitString(title, Math.max(26, 1))}</div>
+			<ImageLoader
+				style={thumbStyle}
+				src={filename}
+				image={(props)=> <PartListItemThumb {...props} width={size.width} height={size.height} />}
+				loading={()=> (<div className="artboard-list-item-image artboard-list-item-image-loading" style={thumbStyle}><FontAwesome className="artboard-list-item-fa-status" name="clock-o" size="2x" /></div>)}
+				error={()=> (<div className="artboard-list-item-image artboard-list-item-image-loading"><FontAwesome className="artboard-list-item-fa-status" name="clock-o" size="2x" /></div>)}
+				onError={(event)=> (errored = true)}
+			/>
+
+			{/*<img className="artboard-list-item-image" src={filename} width={size.width} height={size.height} style={thumbStyle} alt={title} />*/}
+			<div className="artboard-list-item-title">{limitString(title, 18)}</div>
 		</div>
-		{(!errored) && (<button className="tiny-button artboard-list-item-button" onClick={()=> props.onClick()}><FontAwesome name="download" /></button>)}
+		{(!errored) && (<button className="tiny-button artboard-list-item-button" onClick={()=> props.onClick()}><img src={downloadEnabledBtn} width="20" height="14" alt="Download" /></button>)}
 	</Row></div>);
 };
 
@@ -283,12 +294,12 @@ const InspectorFooter = (props)=> {
 	const { section, scale, fitScale, artboards, processing } = props;
 	const prevArtboard = {
 		id     : -1,
-		pageID : 0
+		pageID : -1
 	};
 
 	const nextArtboard = {
 		id     : 1,
-		pageID : 0
+		pageID : -1
 	};
 
 	return (<div className="inspector-page-footer-wrapper"><Row vertical="center">
@@ -358,27 +369,25 @@ const PartListItem = (props)=> {
 	const { id, filename, title, type, size } = props;
 
 	const thumbStyle = {
-		width  : `${size.width * SCALE_MULT}px`,
-		height : `${size.height * SCALE_MULT}px`
+		width  : `${size.width}px`,
+		height : `${size.height}px`
 	};
 
 	let errored = false;
 
-	const typeLbl = capitalizeText((type.includes('child')) ? 'symbol' : type, true);
-
-	return (<div data-slice-id={id} className="part-list-item"><Row vertical="center">
-		<div className="part-list-item-image-wrapper">
+	return (<div data-slice-id={id} className="part-list-item"><Row vertical="center" horizontal="center">
+		<div className="part-list-item-content-wrapper">
 			<ImageLoader
 				style={thumbStyle}
 				src={`${filename}@2x.png`}
-				image={(props)=> <PartListItemThumb {...props} width={size.width * SCALE_MULT} height={size.height * SCALE_MULT} />}
+				image={(props)=> <PartListItemThumb {...props} width={size.width} height={size.height} />}
 				loading={()=> (<div className="part-list-item-image part-list-item-image-loading" style={thumbStyle}><FontAwesome className="part-list-item-fa-status" name="clock-o" size="2x" /></div>)}
 				error={()=> (<div className="part-list-item-image part-list-item-image-loading"><FontAwesome className="part-list-item-fa-status" name="clock-o" size="2x" /></div>)}
 				onError={(event)=> (errored = true)}
 			/>
+			<div className="part-list-item-title">{`${limitString(`${title}${title}`, 18)}`}</div>
 		</div>
-		<div className="part-list-item-title">{`${limitString(title, Math.max(26 - typeLbl.length, 1))} (${typeLbl})`}</div>
-		{(!errored) && (<button className="tiny-button part-list-item-button" onClick={()=> props.onClick()}><FontAwesome name="download" /></button>)}
+		{(!errored) && (<button className="tiny-button part-list-item-button" onClick={()=> props.onClick()}><img src={downloadEnabledBtn} width="20" height="14" alt="Download" /></button>)}
 	</Row></div>);
 };
 
@@ -1110,7 +1119,7 @@ class InspectorPage extends Component {
 					hoverOffset : null,
 				}, ()=> {
 					this.handleZoom(-1);
-					setTimeout(()=> this.handleZoom(0), 12);
+					setTimeout(()=> this.handleZoom(0), 5);
 				});
 			}
 
@@ -1122,7 +1131,7 @@ class InspectorPage extends Component {
 				hoverOffset : null,
 			}, ()=> {
 				this.handleZoom(-1);
-				setTimeout(()=> this.handleZoom(0), 12);
+				setTimeout(()=> this.handleZoom(0), 5);
 			});
 		}
 	};
@@ -1715,8 +1724,8 @@ class InspectorPage extends Component {
 		const { fitScale, viewSize, urlBanner } = this.state;
 		let scale = fitScale;
 
+		let ind = -1;
 		if (direction !== 0) {
-			let ind = -1;
 			PAN_ZOOM.zoomNotches.forEach((amt, i)=> {
 				if (amt === this.state.scale) {
 					ind = i + direction;
@@ -1741,6 +1750,7 @@ class InspectorPage extends Component {
 			scale = PAN_ZOOM.zoomNotches[Math.min(Math.max(0, ind), PAN_ZOOM.zoomNotches.length - 1)];
 		}
 
+		this.setState({ scale });
 		this.props.onPopup({
 			type    : POPUP_TYPE_STATUS,
 			offset  : {
@@ -2149,7 +2159,7 @@ class InspectorPage extends Component {
 
 		const tabSetWrapperStyle = {
 			width  : '100%',
-			height : 'calc(100% - 42px)'
+			height : `calc(100% - ${(section === SECTIONS.PARTS ? 108 : 58)}px)`
 		};
 
 
@@ -2246,7 +2256,8 @@ class InspectorPage extends Component {
 									onContentClick={(payload)=> console.log('onContentClick', payload)}
 								/>
 								<div className="inspector-page-panel-button-wrapper">
-									<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}><FontAwesome name="download" className="inspector-page-download-button-icon" />Download ({listTotal}) Part{(listTotal === 1) ? '' : 's'}</button>
+									<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}>Download ({listTotal}) Part{(listTotal === 1) ? '' : 's'}</button>
+									<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}>Download All Parts</button>
 								</div>
 							</div>)
 						))}
@@ -2268,7 +2279,7 @@ class InspectorPage extends Component {
 												? (<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
 														<button disabled={!activeTabs[i].contents} className="inspector-page-panel-button">{(processing) ? 'Processing…' : 'Copy to Clipboard'}</button>
 													</CopyToClipboard>)
-												: (<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}><FontAwesome name="download" className="inspector-page-download-button-icon" />{(processing) ? 'Processing…' : 'Download PDF'}</button>)}
+												: (<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing…' : 'Download PDF'}</button>)}
 										</div>
 								</div>
 							</div>
