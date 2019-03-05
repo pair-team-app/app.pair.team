@@ -11,7 +11,7 @@ import UploadHeader from '../../elements/UploadHeader';
 
 import homeContent from '../../../assets/json/home-content';
 import { addFileUpload, appendHomeArtboards } from '../../../redux/actions';
-import { isUserLoggedIn } from '../../../utils/funcs';
+import { epochDate, isUserLoggedIn } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
 
 
@@ -182,12 +182,14 @@ class HomePage extends Component {
 
 
 	render() {
-		console.log('HomePage.render()', this.props, this.state);
+
+// 		const ellipsis = Array((epochDate() % 4) + 1).join('.');
+// 		console.log('HomePage.render()', this.props, this.state);
 
 		const { profile, artboards } = this.props;
 		const { section, fetching, dialog } = this.state;
 
-		const gridTitle = (profile) ? (fetching) ? 'Loading…' : (artboards.length > 0) ? 'Previous' : null : null;
+		const gridTitle = (profile) ? (fetching) ? `Loading${'…'}` : (artboards.length > 0) ? 'Previous' : 'N/A' : 'N/A';
 
 		return (
 			<BaseDesktopPage className="home-page-wrapper">

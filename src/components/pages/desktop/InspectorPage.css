@@ -540,6 +540,11 @@
 .upload-processing-image {
 	width: 100%;
 	height: 100%;
+	color: #005cc5;
+}
+
+.upload-processing-image-loading, .upload-processing-image-error {
+	font-size: 64px;
 }
 
 .upload-processing-image-placeholder:hover {

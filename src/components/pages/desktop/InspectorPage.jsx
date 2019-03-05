@@ -573,13 +573,12 @@ const UploadProcessing = (props)=> {
 	const artboards = flattenUploadArtboards(upload, 'page_child');
 	const url = buildInspectorURL(upload);
 
-	const secs = String((epochDate() * 0.01).toFixed(2)).substr(-2) << 0;
-	const ind = (secs / (100 / artboards.length)) << 0;
 
-	console.log(':::::::::', secs, ind);
+	const secs = String((epochDate() * 0.01).toFixed(2)).substr(-2, 1) << 0;
+	const ind = (secs) % artboards.length;
 
 	const artboard = artboards[ind];
-	const imgStyle = (artboard) ? {
+	const imgStyle = (artboard && ((secs - 1) % artboards.length !== ind)) ? {
 		width  : `${artboard.meta.frame.size.width * ((vpHeight - 250) / artboard.meta.frame.size.height)}px`,
 		height : `${artboard.meta.frame.size.height * ((vpHeight - 250) / artboard.meta.frame.size.height)}px`
 	} : null;
@@ -597,12 +596,12 @@ const UploadProcessing = (props)=> {
 			<button onClick={()=> props.onCancel()}>Cancel</button>
 		</div></Row>
 
-		<Row horizontal="center">{(artboard)
+		<Row horizontal="center">{(artboard && ((secs - 1) % artboards.length !== ind))
 			? (<ImageLoader
-				src={`${artboard.filename}@1x.png`}
-				image={()=> (<img className="upload-processing-image" src={`${artboard.filename}@1x.png`} style={imgStyle} alt={upload.title} />)}
-				loading={()=> (<div className="upload-processing-image upload-processing-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
-				error={()=> (<div className="upload-processing-image upload-processing-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
+				src={`${artboard.filename}@0.25x.png`}
+				image={()=> (<img className="upload-processing-image" src={`${artboard.filename}@0.25x.png`} style={imgStyle} alt={upload.title} />)}
+				loading={()=> (<div className="upload-processing-image upload-processing-image-loading" style={imgStyle}>…</div>)}
+				error={()=> (<div className="upload-processing-image upload-processing-image-error" style={imgStyle}>…</div>)}
 			/>)
 			: (<img className="upload-processing-image upload-processing-image-placeholder" src={adBannerPanel.image} onClick={()=> {trackEvent('ad-banner', 'click'); window.open(adBannerPanel.url);}} alt={adBannerPanel.title} />)
 		}</Row>
@@ -1791,10 +1790,11 @@ class InspectorPage extends Component {
 	onFetchUpload = ()=> {
 		console.log('InspectorPage.onFetchUpload()', this.props);
 
+		const { processing } = this.props;
 		const { uploadID } = this.props.deeplink;
 		const { viewSize, section } = this.state;
 
-		this.setState({ tooltip : 'Loading…' });
+		this.setState({ tooltip : (!processing) ? 'Loading…' : null });
 
 		axios.post('https://api.designengine.ai/system.php', qs.stringify({
 			action    : 'UPLOAD',
