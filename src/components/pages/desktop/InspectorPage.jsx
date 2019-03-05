@@ -241,7 +241,7 @@ const FilingTabContent = (props)=> {
 	const className = `filing-tab-content${(!enabled) ? ' filing-tab-content-disabled' : ''}`;
 
 	return (<div key={tab.id} className={className}>
-		{(enabled && (!type || type === 'json_html')) && (<span dangerouslySetInnerHTML={{ __html : (contents && contents.length > 0) ? String(JSON.parse(contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : TAB_CONTENT_PLACEHOLDERS.CODE }} />)}
+		{(enabled && (!type || type === 'json_html')) && (<span style={{padding:'20px'}} dangerouslySetInnerHTML={{ __html : (contents && contents.length > 0) ? String(JSON.parse(contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : TAB_CONTENT_PLACEHOLDERS.CODE }} />)}
 		{(type === 'component') && (contents)}
 	</div>);
 };
@@ -2257,7 +2257,7 @@ class InspectorPage extends Component {
 								/>
 								<div className="inspector-page-panel-button-wrapper">
 									<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}>Download ({listTotal}) Part{(listTotal === 1) ? '' : 's'}</button>
-									<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}>Download All Parts</button>
+									<button disabled={!upload || processing} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}>Download All Parts</button>
 								</div>
 							</div>)
 						))}
