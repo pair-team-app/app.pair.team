@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
-import { POPUP_TYPE_INFO } from '../../elements/Popup';
+import { POPUP_TYPE_OK } from '../../elements/Popup';
 import { isValidEmail } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -75,7 +75,7 @@ class RecoverPage extends Component {
 			});
 
 			this.props.onPopup({
-				type     : POPUP_TYPE_INFO,
+				type     : POPUP_TYPE_OK,
 				content  : 'Check email for reset link.',
 				duration : 2000
 			});
@@ -107,7 +107,7 @@ class RecoverPage extends Component {
 				.then((response)=> {
 					console.log('CHANGE_PASSWORD', response.data);
 					this.props.onPopup({
-						type    : POPUP_TYPE_INFO,
+						type    : POPUP_TYPE_OK,
 						content : 'Password changed.'
 					});
 

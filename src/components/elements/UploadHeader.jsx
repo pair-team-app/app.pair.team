@@ -92,7 +92,7 @@ class UploadHeader extends Component {
 					this.props.onPopup({
 						type     : POPUP_TYPE_ERROR,
 						content  : 'File size must be under 100MB.',
-						duration : 750
+						duration : 1750
 					});
 				}
 
@@ -101,7 +101,7 @@ class UploadHeader extends Component {
 				this.props.onPopup({
 					type     : POPUP_TYPE_ERROR,
 					content  : (file.name.split('.').pop() === 'xd') ? 'Adobe XD Support Coming Soon!' : 'Only Sketch files are support at this time.',
-					duration : 1500
+					duration : 2500
 				});
 			}
 		}

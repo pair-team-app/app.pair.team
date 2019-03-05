@@ -151,7 +151,6 @@
 	height: 100%;
 	padding: 10px;
 	font-family: "San Francisco Text", sans-serif;
-	font-weight: 400;
 	font-size: 14px;
 	line-height: normal;
 	letter-spacing: 0.44px;
@@ -219,7 +218,6 @@
 	padding: 5px;
 	border: 1px solid #005cc5;
 	font-family: "San Francisco Text Medium", sans-serif;
-	font-weight: 500;
 	font-size: 10px;
 	line-height: normal;
 	color: #005cc5;
@@ -378,7 +376,6 @@
 .inspector-page-specs-list-wrapper {
 	width: 100%;
 	font-family: "San Francisco Text", sans-serif;
-	font-weight: 400;
 	font-size: 14px;
 	letter-spacing: 0.44px;
 	line-height: 20px;
@@ -413,12 +410,10 @@
 
 .marquee-banner {
 	position: relative;
-	height: 26px;
-	display: table;
+	height: 38px;
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 15px;
-	letter-spacing: -0.3px;
-	text-align: center;
+	letter-spacing: -0.5px;
 	overflow: hidden;
 }
 
@@ -431,16 +426,15 @@
 }
 
 .marquee-banner-content-wrapper {
-	display: table-cell;
+	position: absolute;
 	width: 100%;
 	height: 100%;
-	vertical-align: middle;
 }
 
 .marquee-banner-close-button {
 	position: absolute;
-	top: 4px;
-	right: 8px;
+	top: 9px;
+	right: 12px;
 	min-width: fit-content;
 	min-height: fit-content;
 	padding: 0;
@@ -455,11 +449,14 @@
 .marquee-banner-content {
 	width: 100%;
 	height: 100%;
+	padding: 5px 0;
+	text-align: center;
+	color: #abdafd;
 }
 
 .marquee-banner-content-url {
 	background-color: rgba(0, 92, 197, 0.95);
-	color: #abdafd;
+	color: #ffffff;
 }
 
 .marquee-banner-content-url:hover {
@@ -576,7 +573,6 @@
 .upload-processing-title {
 	margin-bottom: 45px;
 	font-family: "San Francisco Text Medium", sans-serif;
-	font-weight: 500;
 	font-size: 48px;
 	letter-spacing: -2.53px;
 	color: #c8e1fd;
@@ -585,7 +581,6 @@
 .upload-processing-url, a.upload-processing-url, a:link.upload-processing-url, a:visited.upload-processing-url, a:active.upload-processing-url {
 	margin-bottom: 50px;
 	font-family: "San Francisco Text Medium", sans-serif;
-	font-weight: 500;
 	font-size: 28px;
 	text-decoration: none;
 	letter-spacing: -1.47px;

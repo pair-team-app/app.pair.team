@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 // import BaseDesktopPage from './BaseDesktopPage';
-import { POPUP_TYPE_INFO } from '../../elements/Popup';
+import { POPUP_TYPE_OK } from '../../elements/Popup';
 import Dropdown from '../../forms/elements/Dropdown';
 import { buildInspectorURL, isValidEmail, isUserLoggedIn } from '../../../utils/funcs';
 
@@ -113,7 +113,7 @@ class InviteTeamPage extends Component {
 
 	handleURLCopy = ()=> {
 		this.props.onPopup({
-			type    : POPUP_TYPE_INFO,
+			type    : POPUP_TYPE_OK,
 			content : 'Copied to Clipboard!'
 		});
 	};

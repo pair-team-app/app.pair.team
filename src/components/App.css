@@ -40,7 +40,6 @@
 	margin: 0 0 29px 0;
 	line-height: 30px;
 	font-family: "San Francisco Text", sans-serif;
-	font-weight: 400;
 	font-size: 16px;
 	letter-spacing: -0.24px;
 }
@@ -72,7 +71,6 @@
 
 .page-link, .page-link a, .page-link a:active, .page-link a:link, .page-link a:visited, .page-link-small, .page-link-small a, .page-link-small a:active, .page-link-small a:link, .page-link-small a:visited {
 	font-family: "San Francisco Text Medium", sans-serif;
-	font-weight: 400;
 	font-size: 14px;
 	letter-spacing: -0.26px;
 	color: #abdafd;
@@ -112,7 +110,6 @@
 	height: 53px;
 	padding-top: 11px;
 	font-family: "San Francisco Text Medium", sans-serif;
-	font-weight: 500;
 	font-size: 16px;
 	letter-spacing: -0.3px;
 }

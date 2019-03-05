@@ -284,7 +284,11 @@ class App extends Component {
 				    This site best viewed in Chrome.
 			    </ContentModal>)}
 
-			    {(popup) && (<Popup payload={popup} onComplete={()=> this.setState({ popup : null })} />)}
+				  {(popup) && (
+				  	<Popup payload={popup} onComplete={()=> this.setState({ popup : null })}>
+					    {popup.content}
+			      </Popup>
+				  )}
 		    </div>)
 
 		  : (<div className="mobile-site-wrapper">

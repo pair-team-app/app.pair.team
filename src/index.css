@@ -39,7 +39,6 @@ button {
   border: none;
   border-radius: 1px;
   font-family: "San Francisco Text SemiBold", sans-serif;
-  font-weight: 600;
   font-size: 16px;
   letter-spacing: -0.3px;
   color : #ffffff;
@@ -70,7 +69,6 @@ h1 {
   width: 50%;
   margin-bottom: 20px;
   font-family: "San Francisco Text Medium", sans-serif;
-  font-weight: 500;
   font-size: 52px;
   line-height: 64px;
   letter-spacing: -2px;
@@ -84,7 +82,6 @@ h1.mobile {
 /** Mobile / Page / Upload Header */
 h2 {
   font-family: "San Francisco Text Medium", sans-serif;
-  font-weight: 500;
   font-size: 44px;
   letter-spacing: -2.32px;
   line-height: normal;
@@ -94,7 +91,6 @@ h2 {
 /** Mobile Title **/
 h3 {
   font-family: "San Francisco Text Medium", sans-serif;
-  font-weight: 500;
   font-size: 28px;
   letter-spacing: -1px;
   line-height: normal;
@@ -106,7 +102,6 @@ h4 {
   margin-top: -5px;
   margin-bottom: 17px;
   font-family: "San Francisco Text Medium", sans-serif;
-  font-weight: 500;
   font-size: 22px;
   letter-spacing: -1px;
   color: #c8e1fd;
@@ -121,7 +116,6 @@ h5 {
   height: fit-content;
   margin-bottom: 14px;
   font-family: "San Francisco Text Medium", sans-serif;
-  font-weight: 500;
   font-size: 16px;
   letter-spacing: -0.3px;
   color: #c8e1fd;
@@ -132,7 +126,6 @@ h6 {
   margin-bottom: 0;
   text-transform: uppercase;
   font-family: "San Francisco Text", sans-serif;
-  font-weight: 400;
   font-size: 14px;
   line-height: 0;
 }
@@ -149,7 +142,6 @@ input[type=text], input[type=password], input[type=tel], textarea, .input-txt, .
   width: 100%;
   border: 1px solid #24282e;
   font-family: "San Francisco Text Medium", sans-serif;
-  font-weight: 500;
   font-size: 16px;
   letter-spacing: -0.3px;
   cursor: text;
@@ -163,7 +155,6 @@ input[type=text]:disabled, input[type=password]:disabled, input[type=tel]:disabl
 
 p {
   font-family: "San Francisco Text", sans-serif;
-  font-weight: 400;
   line-height: 26px;
   margin: 14px 0 28px 0;
 }
@@ -178,7 +169,6 @@ p:last-child {
 
 sup {
   font-family: "San Francisco Text", sans-serif;
-  font-weight: 400;
   font-size: 10px;
   color: #7ed321;
   text-transform: uppercase;

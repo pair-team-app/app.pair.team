@@ -18,7 +18,7 @@ import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import ContentModal from '../../elements/ContentModal';
-// import { POPUP_TYPE_INFO } from '../../elements/Popup';
+import { POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../elements/Popup';
 import TutorialOverlay from '../../elements/TutorialOverlay';
 
 import { MOMENT_TIMESTAMP } from '../../../consts/formats';
@@ -34,7 +34,6 @@ import {
 	capitalizeText,
 	convertURISlug,
 	cropFrame,
-	durationFormat,
 	epochDate,
 	frameToRect,
 	isSizeDimensioned,
@@ -315,7 +314,7 @@ const MarqueeBanner = (props)=> {
 	const { background, copyText, outro, removable, track, children } = props;
 	const className = `marquee-banner${(outro) ? (removable) ? '  marquee-banner-outro-remove' : ' marquee-banner-outro' : ''}`;
 	const style = {
-		width      : '100%',//`calc(100% - ${(width) ? width : 0}px)`,
+		width      : '100%',
 		background : background
 	};
 
@@ -643,7 +642,7 @@ class InspectorPage extends Component {
 				state   : 0,
 				message : ''
 			},
-			tooltip     : null
+			tooltip     : 'Loading…'
 		};
 
 		this.recordedHistory = false;
@@ -1132,17 +1131,17 @@ class InspectorPage extends Component {
 		console.log('InspectorPage.handleClipboardCopy()', type, msg);
 
 		trackEvent('button', `copy-${type}`);
-		this.setState({
-			tooltip : (msg.length >= 80) ? `Copied ${type} to clipboard` : msg
-		}, ()=> {
-			setTimeout(()=> (this.setState({ tooltip : null })), 1750);
+		const { viewSize, urlBanner } = this.state;
+
+		this.props.onPopup({
+			type     : POPUP_TYPE_OK,
+			offset   : {
+				top   : (urlBanner << 0) * 38,
+				right : window.innerWidth - viewSize.width
+			},
+			content  : (msg.length >= 100) ? `Copied ${type} to clipboard` : msg,
+			duration : 1750
 		});
-
-
-// 		this.props.onPopup({
-// 			type    : POPUP_TYPE_INFO,
-// 			content : (msg.length >= 80) ? `Copied ${type} to clipboard` : msg
-// 		});
 	};
 
 	handleDownloadAll = ()=> {
@@ -1181,11 +1180,6 @@ class InspectorPage extends Component {
 
 	handleInviteTeamFormSubmitted = (result)=> {
 // 		console.log('InspectorPage.handleInviteTeamFormSubmitted()', result);
-
-// 		this.props.onPopup({
-// 			type    : POPUP_TYPE_INFO,
-// 			content : `Sent ${result.sent.length} invite${(result.sent.length === 1) ? '' : 's'}!`
-// 		});
 	};
 
 	handleInviteModalClose = ()=> {
@@ -1718,7 +1712,7 @@ class InspectorPage extends Component {
 	handleZoom = (direction)=> {
 // 		console.log('InspectorPage.handleZoom()', direction);
 
-		const { fitScale } = this.state;
+		const { fitScale, viewSize, urlBanner } = this.state;
 		let scale = fitScale;
 
 		if (direction !== 0) {
@@ -1747,17 +1741,14 @@ class InspectorPage extends Component {
 			scale = PAN_ZOOM.zoomNotches[Math.min(Math.max(0, ind), PAN_ZOOM.zoomNotches.length - 1)];
 		}
 
-		this.setState({
-			slice     : null,
-			offset    : null,
-			panMultPt : PAN_ZOOM.panMultPt,
-			scale     : scale,
-			tooltip   : `${(scale * 100) << 0}%`
-		}, ()=> this.handlePanMove(PAN_ZOOM.panMultPt.x, PAN_ZOOM.panMultPt.y));
-
-		setTimeout(()=> {
-			this.setState({ tooltip : null });
-		}, 1000);
+		this.props.onPopup({
+			type    : POPUP_TYPE_STATUS,
+			offset  : {
+				top   : (urlBanner << 0) * 38,
+				right : window.innerWidth - viewSize.width
+			},
+			content : `${(scale * 100) << 0}%`
+		})
 	};
 
 	onAddHistory = ()=> {
@@ -2165,8 +2156,8 @@ class InspectorPage extends Component {
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
 				<div className={contentClass} onWheel={this.handleWheelStart}>
-					{(upload && !processing) && (<div className="inspector-page-marquee-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.PRESENTER) ? 880 : 360}px)`}}>
-						{(urlBanner) && (<MarqueeBanner
+					{(!processing) && (<div className="inspector-page-marquee-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.PRESENTER) ? 880 : 360}px)`}}>
+						{(upload && urlBanner) && (<MarqueeBanner
 							width={(section === SECTIONS.PRESENTER) ? 880 : 360}
 							copyText={buildInspectorURL(upload)}
 							removable={true}

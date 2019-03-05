@@ -1,23 +1,48 @@
 
 .popup-wrapper {
-	z-index: 1001;
 	position: fixed;
-	left: 50%;
-	top: 55px;
-	transform: translate(-50%, 0%);
-	-webkit-transform: translate(-50%, 0%);
-	color: #0267d8;
-	border: 1px solid #eaecef;
-	border-radius: 8px;
-	background-color: #fafbfc;
-	padding: 16px;
-	box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.25);
+	top: 64px;
+	left: 0;
+	width: 100%;
+	height: 38px;
+	z-index: 1001;
+	overflow: hidden;
 }
 
-.popup-icon {
-	font-size: 28px;
+.popup-content-wrapper {
+	width: 100%;
+	height: 100%;
 }
 
 .popup-content {
-	margin-left: 16px;
+	width: 100%;
+	height: 100%;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-size: 15px;
+	letter-spacing: -0.5px;
+	text-align: center;
+	vertical-align: middle;
+	color: #abdafb;
 }
+
+.popup-content-error {
+	background-color : rgba(255, 70, 70, 0.33);
+	color : #ff4646;
+}
+
+.popup-content-ok {
+	background-color: rgba(42, 174, 57, 0.9);
+	color: #ffffff;
+}
+
+.popup-content-status {
+	background-color: rgba(0, 0, 0, 0.0);
+	font-weight: bold;
+	color: #ffffff;
+	text-shadow:
+			-1px -1px 0 rgba(26, 27, 29, 0.5),
+			1px -1px 0 rgba(26, 27, 29, 0.5),
+			-1px  1px 0 rgba(26, 27, 29, 0.5),
+			1px  1px 0 rgba(26, 27, 29, 0.5);
+}
+

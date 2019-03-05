@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
-import { POPUP_TYPE_INFO } from '../../elements/Popup';
+import { POPUP_TYPE_OK } from '../../elements/Popup';
 import InputField, {
 	INPUTFIELD_STATUS_DISABLED,
 	INPUTFIELD_STATUS_ERROR,
@@ -225,7 +225,7 @@ class ProfilePage extends Component {
 			this.setState({ passMsg : '' });
 
 			this.props.onPopup({
-				type    : POPUP_TYPE_INFO,
+				type    : POPUP_TYPE_OK,
 				content : 'Profile updated.'
 			});
 		}
@@ -346,7 +346,7 @@ class ProfilePage extends Component {
 				</div>
 
 				<Row vertical="center">
-					<button type="submit" disabled={(!profile || (profile.avatar === avatar && profile.username === username && profile.email === email && password.length === 0))} className="long-button adjacent-button" onClick={()=> this.handleSubmit()}>Save</button>
+					<button type="submit" disabled={false && (!profile || (profile.avatar === avatar && profile.username === username && profile.email === email && password.length === 0))} className="long-button adjacent-button" onClick={()=> this.handleSubmit()}>Save</button>
 					<div className={`page-link${(profile && (profile.avatar !== avatar || profile.username !== username || profile.email !== email || password.length > 0)) ? '' : ' page-link-disabled'}`} onClick={()=> this.handleCancel()}>Cancel</div>
 				</Row>
 			</BaseDesktopPage>
