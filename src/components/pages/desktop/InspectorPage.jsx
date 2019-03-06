@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './InspectorPage.css';
 
 import axios from 'axios';
-import moment from 'moment-timezone';
+// import moment from 'moment-timezone';
 import qs from 'qs';
 import ReactNotifications from 'react-browser-notifications';
 import cookie from 'react-cookies';
@@ -88,7 +88,7 @@ const fillGroupPartItemSlices = (upload, slice)=> {
 
 const flattenUploadArtboards = (upload, type=null)=> {
 // 	console.log('flattenUploadArtboards()', upload, type);
-	return (upload.pages.flatMap((page)=> (page.artboards)).filter((artboard)=> ((type) ? artboard.type === type : true)).reverse());
+	return ((upload) ? upload.pages.flatMap((page)=> (page.artboards)).filter((artboard)=> ((type) ? artboard.type === type : true)).reverse() : []);
 };
 
 const slicesByArea = (slices)=> {
@@ -384,7 +384,7 @@ const PartListItem = (props)=> {
 				error={()=> (<div className="part-list-item-image part-list-item-image-loading"><FontAwesome className="part-list-item-fa-status" name="clock-o" size="2x" /></div>)}
 				onError={(event)=> (errored = true)}
 			/>
-			<div className="part-list-item-title">{`${limitString(`${title}${title}`, 18)}`}</div>
+			<div className="part-list-item-title">{`${limitString(`${title}`, 18)}`}</div>
 		</div>
 		{(!errored) && (<button className="tiny-button part-list-item-button" onClick={()=> props.onClick()}><img src={downloadButton} width="20" height="14" alt="Download" /></button>)}
 	</Row></div>);
@@ -689,7 +689,6 @@ class InspectorPage extends Component {
 		}
 
 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
-// 		document.addEventListener('wheel', this.handleWheelStart.bind(this));
 	}
 
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
@@ -716,7 +715,7 @@ class InspectorPage extends Component {
 
 		const { profile, deeplink, processing } = this.props;
 // 		const { upload, panMultPt } = this.state;
-		const { upload } = this.state;
+		const { section, upload } = this.state;
 
 		if (!this.recordedHistory && profile && upload && deeplink && deeplink.uploadID !== 0) {
 			this.recordedHistory = true;
@@ -755,6 +754,19 @@ class InspectorPage extends Component {
 				height : artboardsWrapper.current.clientHeight - 108
 			};
 
+
+			const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'symbol_container' : 'page_child');
+			if (artboards.length > 0) {
+				const baseSize = this.calcArtboardBaseSize((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
+				console.log('_-]BASE SIZE[-_', baseSize);
+
+				const fitScale = this.calcFitScale(baseSize, viewSize);
+				console.log('_-]FIT SCALE[-_', fitScale);
+
+				const scaledCoords = this.calcArtboardScaledCoords((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, fitScale);
+				console.log('_-]SCALED COORDS[-_', scaledCoords);
+			}
+
 			if (isSizeDimensioned(this.contentSize)) {
 				const fitScale = Math.max(Math.min(viewSize.height / this.contentSize.height, viewSize.width / this.contentSize.width, PAN_ZOOM.zoomNotches.slice(-1)[0]), PAN_ZOOM.zoomNotches[0]);
 				const scrollPt = this.calcScrollPoint(PAN_ZOOM.panMultPt, viewSize, this.contentSize, fitScale);
@@ -768,14 +780,11 @@ class InspectorPage extends Component {
 			}
 		}
 
-
-
 		if (upload && canvasWrapper.current) {
 			if (!this.state.tutorial && cookie.load('tutorial') === '0' && this.state.section === SECTIONS.INSPECT) {
 				cookie.save('tutorial', '1', { path : '/' });
 
 				const { scrollPt } = this.state;
-// 				let artboard = flattenUploadArtboards(upload).shift();
 				const tutorial = {
 					origin : {
 						top  : `${5 + -scrollPt.y}px`,
@@ -871,7 +880,10 @@ class InspectorPage extends Component {
 	calcArtboardScaledCoords = (artboards, scale)=> {
 // 		console.log('InspectorPage.calcArtboardScaledCoords()', artboards, scale);
 
-		const MAX_COLS = 5;
+// 		const grid = {
+// 			cols : (Math.min(artboards.length, GRID.colsMax) - 1) * 50,
+// 			rows : ((artboards.length > 0) ? ((artboards.length / GRID.colsMax) << 0) : 0) * 50
+// 		};
 
 		let maxH = 0;
 		let offset = {
@@ -881,7 +893,7 @@ class InspectorPage extends Component {
 
 		let scaledCoords = [];
 		artboards.forEach((artboard, i)=> {
-			if (((i % MAX_COLS) << 0) === 0 && i > 0) {
+			if (((i % GRID.colsMax) << 0) === 0 && i > 0) {
 				offset.x = 0;
 				offset.y += maxH + GRID.padding.row;
 				maxH = 0;
@@ -892,7 +904,7 @@ class InspectorPage extends Component {
 			});
 
 			maxH = Math.round(Math.max(maxH, artboard.meta.frame.size.height * scale));
-			offset.x += Math.round(((i % MAX_COLS < (MAX_COLS - 1)) ? GRID.padding.col : 0) + (artboard.meta.frame.size.width * scale));
+			offset.x += Math.round(((i % GRID.colsMax < (GRID.colsMax - 1)) ? GRID.padding.col : 0) + (artboard.meta.frame.size.width * scale));
 		});
 
 		return (scaledCoords);
@@ -988,13 +1000,9 @@ class InspectorPage extends Component {
 
 // 		event.stopPropagation();
 		const artboardID = event.target.getAttribute('data-artboard-id') << 0;
-
-// 		if (this.state.section === SECTIONS.PRESENTER) {
-// 			return;
-// 		}
-
 		if (artboardID) {
-			let { upload, artboard, section } = this.state;
+// 			let { upload, artboard, section } = this.state;
+			let { upload, artboard } = this.state;
 			if (!artboard || artboard.id !== artboardID) {
 				artboard = artboardForID(upload, artboardID);
 				if (artboard) {
@@ -1579,6 +1587,31 @@ class InspectorPage extends Component {
 						.then((response)=> {
 							console.log('SYMBOL_SLICES', response.data);
 
+
+
+// 							artboard.slices = response.data.slices.map((slice)=> {
+// 								const meta = JSON.parse(slice.meta.replace(/\n/g, '\\\\n'));
+// 								return ({
+// 									id         : slice.id << 0,
+// 									artboardID : slice.artboard_id << 0,
+// 									title      : slice.title,
+// 									type       : slice.type,
+// 									filename   : slice.filename,
+// 									meta       : Object.assign({}, meta, {
+// 										orgFrame : meta.frame,
+// 										frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
+// 									}),
+// 									added      : slice.added,
+// 									filled     : false,
+// 									children   : []
+// 								});
+// 							});
+//
+// 							upload.pages = upload.pages.map((page)=> (Object.assign({}, page, {
+// 								artboards : page.artboards.map((item) => ((item.id === artboard.id) ? artboard : item))
+// 							})));
+
+
 							slice.children = response.data.slices.map((item)=> {
 								const meta = JSON.parse(item.meta.replace(/\n/g, '\\\\n'));
 								return ({
@@ -1598,7 +1631,8 @@ class InspectorPage extends Component {
 
 							tabSets[0][0].enabled = true;
 							tabSets[0][0].contents = <PartsList
-								contents={slice.children}
+// 								contents={slice.children}
+								contents={artboard.slices}
 								onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 							this.setState({ tabSets });
 						}).catch((error)=> {
@@ -1640,7 +1674,7 @@ class InspectorPage extends Component {
 				return ((tab) ? tab : activeTab);
 			});
 
-			this.setState({ artboard, tabSets, activeTabs,
+			this.setState({ upload, artboard, tabSets, activeTabs,
 				hoverSlice  : slice,
 				hoverOffset : offset
 			});
@@ -1903,18 +1937,6 @@ class InspectorPage extends Component {
 					return (tabSet.slice(0, 1).pop());
 				});
 
-				if (artboards.length > 0) {
-					const baseSize = this.calcArtboardBaseSize((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
-					console.log('-_-_-_]BASE SIZE[_-_-_-', baseSize);
-
-					const fitScale = this.calcFitScale(baseSize, viewSize);
-					console.log('-_-_-_]FIT SCALE[_-_-_-', fitScale);
-
-					const scaledCoords = this.calcArtboardScaledCoords((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, fitScale);
-					console.log('-_-_-_]SCALED COORDS[_-_-_-', scaledCoords);
-				}
-
-
 				this.setState({ upload, tabSets, activeTabs,
 					artboard  : (section === SECTIONS.PRESENTER) ? (artboards.length > 0) ? artboards[0] : null : null,
 					slice     : null,
@@ -2033,9 +2055,9 @@ class InspectorPage extends Component {
 
 
 	render() {
-// 		console.log('InspectorPage.render()', this.props, this.state);
+		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage.render()', this.props);
-		console.log('InspectorPage.render()', ([].fill(0, 100).map((i)=> (Maths.randomInt(1, 10))).join(' ')), this.state);
+// 		console.log('InspectorPage.render()', ([].fill(0, 100).map((i)=> (Maths.randomInt(1, 10))).join(' ')), this.state);
 
 
 		const { processing } = this.props;
@@ -2110,10 +2132,10 @@ class InspectorPage extends Component {
 			slices.push(
 				<div key={i} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut} onDoubleClick={(event)=> this.handleZoom(1)}>
 					<div data-artboard-id={artboard.id} className={`inspector-page-${(section === SECTIONS.PRESENTER) ? 'artboard' : 'group'}-slices-wrapper`}>{(section === SECTIONS.PRESENTER) ? artboardSlices : groupSlices }</div>
-					{(section === SECTIONS.INSPECT) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>)}
+					{(section !== SECTIONS.PRESENTER) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>)}
 					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{symbolSlices}</div>
 					{(section !== SECTIONS.PARTS) && (<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{textfieldSlices}</div>)}
-					{(section !== SECTIONS.PARTS) && (<div data-artboard-id={artboard.id} className="inspector-page-slice-slices-wrapper">{sliceSlices}</div>)}
+					<div data-artboard-id={artboard.id} className="inspector-page-slice-slices-wrapper">{sliceSlices}</div>
 				</div>
 			);
 
@@ -2224,7 +2246,7 @@ class InspectorPage extends Component {
 					/>)}
 				</div>
 
-				{(valid && upload) && (<div className={panelClass}>
+				{(valid) && (<div className={panelClass}>
 					{(section === SECTIONS.INSPECT) && (<>
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
@@ -2257,7 +2279,7 @@ class InspectorPage extends Component {
 									onContentClick={(payload)=> console.log('onContentClick', payload)}
 								/>
 								<div className="inspector-page-panel-button-wrapper">
-									<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing <<0)}} onClick={()=> this.handleDownloadPartsList()}>{(processing) ? 'Processing' : `Download (${listTotal}) Part${(listTotal === 1) ? '' : 's'}`}</button>
+									<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> this.handleDownloadPartsList()}>{(processing) ? 'Processing' : `Download (${listTotal}) Part${(listTotal === 1) ? '' : 's'}`}</button>
 									<button disabled={!upload || processing} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}>{(processing) ? 'Processing' : 'Download All Parts'}</button>
 								</div>
 							</div>)

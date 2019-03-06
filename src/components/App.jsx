@@ -110,6 +110,8 @@ class App extends Component {
 			this.onAddUploadView(uploadID);
 		}
 
+		document.addEventListener('resize', this.handleResize.bind(this));
+
 		window.onpopstate = (event)=> {
 			console.log('|||||||||||||||||-', 'window.onpopstate()', '-|||||||||||||||||', event);
 
@@ -191,6 +193,10 @@ class App extends Component {
 	handleProcessing = (processing)=> {
 		console.log('App.handleProcessing()', processing);
 		this.setState({ processing });
+	};
+
+	handleResize = (event)=> {
+		console.log('App.handleResize()', event);
 	};
 
 	handleScrollOrigin = ()=> {
