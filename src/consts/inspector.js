@@ -80,9 +80,9 @@ export const STATUS_INTERVAL = 1000;
 
 export const TAB_CONTENT_PLACEHOLDERS = {
 	ARTBOARDS : '…',
-	CODE      : 'Rollover to display code…',
-	PARTS     : 'Rollover to display parts…',
-	SPECS     : 'Rollover to display specs…',
+	CODE      : '/* Rollover to display code.\n*/',
+	PARTS     : '/* Rollover to display parts.\n*/',
+	SPECS     : '/* Rollover to display specs.<br />*/',
 	SYNTAX    : null
 };
 

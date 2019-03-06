@@ -4,7 +4,7 @@ import './ArtboardItem.css'
 
 import ImageLoader from 'react-loading-image';
 
-import { limitString } from '../../utils/funcs';
+import { Strings } from '../../utils/lang';
 import defaultAvatar from '../../assets/images/avatars/avatar-default.png';
 import sketchIcon from '../../assets/images/icons/ico-sketch.png';
 
@@ -20,7 +20,7 @@ function ArtboardItem(props) {
 	return (
 		<div className={className} onClick={()=> (image) ? props.onClick() : null} style={{ opacity : (title === '') ? '33%' : '100%' }}>
 			{(image) && (<>
-				<img className="artboard-item-image" src={(!image.includes('@')) ? `${image}@0.25x.png` : image} alt={limitString(title, TITLE_CHAR_LIMIT)} />
+				<img className="artboard-item-image" src={(!image.includes('@')) ? `${image}@0.25x.png` : image} alt={Strings.truncate(title, TITLE_CHAR_LIMIT)} />
 				<div className="artboard-item-overlay" />
 				<img className="artboard-item-icon" src={sketchIcon} alt="Icon" />
 				<div className="artboard-item-details-wrapper">
@@ -34,7 +34,7 @@ function ArtboardItem(props) {
 						/>
 						{/*<img className="artboard-item-avatar" src={avatar} alt="Avatar" />*/}
 					</div>
-					<div className="artboard-item-title">{limitString(title, TITLE_CHAR_LIMIT)}</div>
+					<div className="artboard-item-title">{Strings.truncate(title, TITLE_CHAR_LIMIT)}</div>
 				</div>
 			</>)}
 		</div>

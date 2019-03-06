@@ -5,35 +5,35 @@
       "title": "CSS",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "/* Rollover to display code.\\n*/",
       "syntax": null
     }, {
       "id": 2,
       "title": "React",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "/* Rollover to display code.\\n*/",
       "syntax": null
     }, {
       "id": 3,
       "title": "Swift",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "/* Rollover to display code.\\n*/",
       "syntax": null
     }, {
       "id": 4,
       "title": "Android",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "/* Rollover to display code.\\n*/",
       "syntax": null
     }], [{
       "id": 5,
       "title": "Specs",
       "type": "component",
       "enabled": false,
-      "contents": null,
+      "contents": "/* Rollover to display specs.\\n*/",
       "syntax": null
     }]
   ],
@@ -44,7 +44,7 @@
       "title": "Parts",
       "type": "component",
       "enabled": false,
-      "contents": null,
+      "contents": "/* Rollover to display parts.\\n*/",
       "syntax": null
     }]
   ],
@@ -55,35 +55,35 @@
       "title": "CSS",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "/* Rollover to display code.\\n*/",
       "syntax": null
     }, {
       "id": 2,
       "title": "React",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "/* Rollover to display code.\\n*/",
       "syntax": null
     }, {
       "id": 3,
       "title": "Swift",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "/* Rollover to display code.\\n*/",
       "syntax": null
     }, {
       "id": 4,
       "title": "Android",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "/* Rollover to display code.\\n*/",
       "syntax": null
     }], [{
       "id": 5,
       "title": "Views",
       "type": "component",
       "enabled": false,
-      "contents": null,
+      "contents": "/* Rollover to display views.\\n*/",
       "syntax": null
     }]
   ]

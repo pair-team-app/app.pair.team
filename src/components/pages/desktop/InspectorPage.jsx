@@ -23,23 +23,18 @@ import TutorialOverlay from '../../elements/TutorialOverlay';
 
 import { MOMENT_TIMESTAMP } from '../../../consts/formats';
 import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../consts/key-codes';
-import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL, TAB_CONTENT_PLACEHOLDERS } from '../../../consts/inspector';
+import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL } from '../../../consts/inspector';
 import { DE_LOGO_SMALL } from '../../../consts/uris';
 import { setRedirectURI } from '../../../redux/actions';
-import { Maths } from '../../../utils/lang.js';
 import {
 	areaSize,
 	buildInspectorPath,
 	buildInspectorURL,
-	capitalizeText,
 	convertURISlug,
-	cropFrame,
 	epochDate,
-	frameToRect,
 	isSizeDimensioned,
-	limitString,
-	makeDownload,
-	rectContainsRect} from '../../../utils/funcs.js';
+	makeDownload } from '../../../utils/funcs.js';
+import { Maths, Strings } from '../../../utils/lang.js';
 import { fontSpecs, toAndroid, toCSS, toReactCSS, toSpecs, toSwift } from '../../../utils/inspector-langs.js';
 import { trackEvent } from '../../../utils/tracking';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
@@ -78,7 +73,7 @@ const fillGroupPartItemSlices = (upload, slice)=> {
 	let slices = [slice];
 
 	artboardForID(upload, slice.artboardID).slices.filter((item)=> (item.id !== slice.id)).forEach((item)=> {
-		if (rectContainsRect(frameToRect(slice.meta.frame), frameToRect(item.meta.frame))) {
+		if (Maths.geom.rectContainsRect(Maths.geom.frameToRect(slice.meta.frame), Maths.geom.frameToRect(item.meta.frame))) {
 			slices.push(item);
 		}
 	});
@@ -193,7 +188,7 @@ const ArtboardsList = (props)=> {
 				/>
 			);
 		})}
-	</div> : <div className="artboards-list-wrapper">{(enabled) ? TAB_CONTENT_PLACEHOLDERS.ARTBOARDS : ''}</div>);
+	</div> : <div className="artboards-list-wrapper">{(enabled) ? 'N/A' : '2'}</div>);
 };
 
 const ArtboardListItem = (props)=> {
@@ -221,7 +216,7 @@ const ArtboardListItem = (props)=> {
 			/>
 
 			{/*<img className="artboard-list-item-image" src={filename} width={size.width} height={size.height} style={thumbStyle} alt={title} />*/}
-			<div className="artboard-list-item-title">{limitString(title, 18)}</div>
+			<div className="artboard-list-item-title">{Strings.truncate(title, 18)}</div>
 		</div>
 		{(!errored) && (<button className="tiny-button artboard-list-item-button" onClick={()=> (enabled) ? props.onClick() : null}><img src={downloadButton} width="20" height="14" alt="Download" /></button>)}
 	</Row></div>);
@@ -235,14 +230,14 @@ const ColorSwatch = (props)=> {
 };
 
 const FilingTabContent = (props)=> {
-// 	console.log('InspectorPage.FilingTabContent()', props);
+	console.log('InspectorPage.FilingTabContent()', props);
 
 	const { tab } = props;
 	const { type, enabled, contents } = tab;
 	const className = `filing-tab-content${(!enabled) ? ' filing-tab-content-disabled' : ''}`;
 
 	return (<div key={tab.id} className={className}>
-		{(enabled && (!type || type === 'json_html')) && (<span style={{padding:'20px'}} dangerouslySetInnerHTML={{ __html : (contents && contents.length > 0) ? String(JSON.parse(contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : TAB_CONTENT_PLACEHOLDERS.CODE }} />)}
+		{(enabled && (!type || type === 'json_html')) && (<span dangerouslySetInnerHTML={{ __html : (contents && contents.length > 0) ? String(JSON.parse(contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : 'N/A' }} />)}
 		{(type === 'component') && (contents)}
 	</div>);
 };
@@ -360,13 +355,14 @@ const PartsList = (props)=> {
 				/>
 			);
 		})}
-	</div> : <div className="parts-list-wrapper">{(enabled) ? TAB_CONTENT_PLACEHOLDERS.PARTS : ''}</div>);
+	</div> : <div className="parts-list-wrapper">{(enabled) ? 'N/A' : ''}</div>);
 };
 
 const PartListItem = (props)=> {
 // 	console.log('InspectorPage.PartListItem()', props);
 
-	const { id, filename, title, type, size } = props;
+// 	const { id, filename, title, type, size } = props;
+	const { id, filename, title, size } = props;
 	const thumbStyle = {
 		width  : `${size.width}px`,
 		height : `${size.height}px`
@@ -384,7 +380,7 @@ const PartListItem = (props)=> {
 				error={()=> (<div className="part-list-item-image part-list-item-image-loading"><FontAwesome className="part-list-item-fa-status" name="clock-o" size="2x" /></div>)}
 				onError={(event)=> (errored = true)}
 			/>
-			<div className="part-list-item-title">{`${limitString(`${title}`, 18)}`}</div>
+			<div className="part-list-item-title">{`${Strings.truncate(`${title}`, 18)}`}</div>
 		</div>
 		{(!errored) && (<button className="tiny-button part-list-item-button" onClick={()=> props.onClick()}><img src={downloadButton} width="20" height="14" alt="Download" /></button>)}
 	</Row></div>);
@@ -434,7 +430,7 @@ const SpecsList = (props)=> {
 	const { upload, slice, creatorID } = props;
 
 	if (!upload || !slice || (upload && (upload.state << 0) < 3)) {
-		return (<div className="inspector-page-specs-list-wrapper">{((upload.state << 0) < 3) ? '' :  TAB_CONTENT_PLACEHOLDERS.SPECS}</div>);
+		return (<div className="inspector-page-specs-list-wrapper">{((upload.state << 0) < 3) ? '' : '/* Rollover to display specs.\n*/'}</div>);
 	}
 
 	const { frame } = slice.meta;
@@ -450,7 +446,7 @@ const SpecsList = (props)=> {
 	const styles = (sliceStyles) ? {
 		border : (border) ? {
 			color     : border.color.toUpperCase(),
-			position  : capitalizeText(border.position, true),
+			position  : Strings.capitalize(border.position, true),
 			thickness : `${border.thickness}px`
 		} : null,
 		shadow : (shadow) ? {
@@ -491,7 +487,7 @@ const SpecsList = (props)=> {
 				onCopy={props.onCopySpec} />
 			<SpecsListItem
 				attribute="Type"
-				value={capitalizeText(slice.type, true)}
+				value={Strings.capitalize(slice.type, true)}
 				onCopy={props.onCopySpec} />
 			<SpecsListItem
 				attribute="Export Size"
@@ -533,8 +529,8 @@ const SpecsList = (props)=> {
 				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.color) ? font.color.toUpperCase() : ''}>
 					<Row><div className="inspector-page-specs-list-item-attribute">Font Color</div><div className="inspector-page-specs-list-item-val"><Row vertical="center">{(font.color) ? font.color.toUpperCase() : ''}<ColorSwatch fill={font.color} /></Row></div></Row>
 				</CopyToClipboard>
-				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.alignment) ? capitalizeText(font.alignment) : 'Left'}>
-					<Row><div className="inspector-page-specs-list-item-attribute">Alignment</div><div className="inspector-page-specs-list-item-val">{(font.alignment) ? capitalizeText(font.alignment) : 'Left'}</div></Row>
+				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.alignment) ? Strings.capitalize(font.alignment) : 'Left'}>
+					<Row><div className="inspector-page-specs-list-item-attribute">Alignment</div><div className="inspector-page-specs-list-item-val">{(font.alignment) ? Strings.capitalize(font.alignment) : 'Left'}</div></Row>
 				</CopyToClipboard>
 				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.lineHeight) ? `${font.lineHeight}px` : ''}>
 					<Row><div className="inspector-page-specs-list-item-attribute">Line Spacing</div>{(font.lineHeight) && (<div className="inspector-page-specs-list-item-val">{`${font.lineHeight}px`}</div>)}</Row>
@@ -546,8 +542,8 @@ const SpecsList = (props)=> {
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(padding) ? padding : ''}>
 				<Row><div className="inspector-page-specs-list-item-attribute">Padding</div>{(padding) && (<div className="inspector-page-specs-list-item-val">{padding}</div>)}</Row>
 			</CopyToClipboard>
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={capitalizeText(slice.meta.blendMode, true)}>
-				<Row><div className="inspector-page-specs-list-item-attribute">Blend Mode</div><div className="inspector-page-specs-list-item-val">{capitalizeText(slice.meta.blendMode, true)}</div></Row>
+			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={Strings.capitalize(slice.meta.blendMode, true)}>
+				<Row><div className="inspector-page-specs-list-item-attribute">Blend Mode</div><div className="inspector-page-specs-list-item-val">{Strings.capitalize(slice.meta.blendMode, true)}</div></Row>
 			</CopyToClipboard>
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={added}>
 				<Row><div className="inspector-page-specs-list-item-attribute">Date</div>{(added) && (<div className="inspector-page-specs-list-item-val"><Moment format={MOMENT_TIMESTAMP}>{added}</Moment></div>)}</Row>
@@ -817,10 +813,9 @@ class InspectorPage extends Component {
 	}
 
 	buildSliceRollOverItemTypes = (artboard, type, offset, scale, scrolling)=> {
-		console.log('InspectorPage.buildSliceRollOverItemTypes()', artboard, type, offset, scale, scrolling);
+// 		console.log('InspectorPage.buildSliceRollOverItemTypes()', artboard, type, offset, scale, scrolling);
 
 		const slices = artboard.slices.filter((slice)=> (slice.type === type)).map((slice, i)=> {
-			console.log('::::::::::::', slice);
 			const { frame } = slice.meta;
 			return (<SliceRolloverItem
 				key={i}
@@ -921,7 +916,7 @@ class InspectorPage extends Component {
 			y : (26 * (urlBanner << 0)) + (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 0,
 		};
 
-		const srcFrame = cropFrame(slice.meta.frame, artboard.meta.frame);
+		const srcFrame = Maths.geom.cropFrame(slice.meta.frame, artboard.meta.frame);
 		const srcOffset = {
 			x : baseOffset.x + ((offset.x - scrollPt.x) << 0),
 			y : baseOffset.y + ((offset.y - scrollPt.y) << 0)
@@ -1962,7 +1957,7 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.onProcessingUpdate()');
 
 		const { upload, section } = this.state;
-		const title = `${limitString(upload.filename.split('/').pop().split('.').shift(), 34)}.${upload.filename.split('/').pop().split('.').pop()}`;
+		const title = `${Strings.truncate(upload.filename.split('/').pop().split('.').shift(), 34)}.${upload.filename.split('/').pop().split('.').pop()}`;
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_STATUS');
@@ -2057,7 +2052,8 @@ class InspectorPage extends Component {
 	render() {
 		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage.render()', this.props);
-// 		console.log('InspectorPage.render()', ([].fill(0, 100).map((i)=> (Maths.randomInt(1, 10))).join(' ')), this.state);
+// 		console.log('InspectorPage.render()', this.state);
+// 		console.log('InspectorPage.render()', (new Array(100)).fill(null).map((i)=> (Maths.randomInt(1, 10))).join(','), this.state);
 
 
 		const { processing } = this.props;
@@ -2125,7 +2121,7 @@ class InspectorPage extends Component {
 
 			artboardImages.push(
 				<div key={i} data-artboard-id={artboard.id} style={artboardStyle}>
-					<div className="inspector-page-artboard-caption">{limitString((artboard.type === 'page_child') ? artboard.title : artboard.title.split('__').shift(), 8)}</div>
+					<div className="inspector-page-artboard-caption">{Strings.truncate((artboard.type === 'page_child') ? artboard.title : artboard.title.split('__').shift(), 8)}</div>
 				</div>
 			);
 

@@ -42,41 +42,8 @@ export function buildInspectorURL(upload, prefix='/inspect', suffix='') {
 	return (`${window.location.origin}${buildInspectorPath(upload, prefix, suffix)}`);
 }
 
-export function camilzeText(text, separator=' ', first=false) {
-	separator = (separator || ' ');
-
-	const camilized = text.split(separator).map((word)=> (word.replace(/^./, (c)=> (c.toUpperCase())))).join('');
-	return ((first) ? camilized : camilized.replace(/^./, (c)=> (c.toLowerCase())));
-}
-
-export function capitalizeText(text, toLower=false) {
-	text = (toLower) ? text.toLowerCase() : text;
-	return (text.replace(/(\b\w)/gi, (c)=> (c.toUpperCase())));
-}
-
-export function cropFrame(srcFrame, cropFrame) {
-	return ({
-		origin : {
-			x : Math.max(srcFrame.origin.x, cropFrame.origin.x),
-			y : Math.max(srcFrame.origin.y, cropFrame.origin.y)
-		},
-		size   : {
-			width  : Math.min(srcFrame.origin.x + srcFrame.size.width, cropFrame.origin.x + cropFrame.size.width) - Math.max(srcFrame.origin.x, cropFrame.origin.x),
-			height : Math.min(srcFrame.origin.y + srcFrame.size.height, cropFrame.origin.y + cropFrame.size.height) - Math.max(srcFrame.origin.y, cropFrame.origin.y)
-		}
-	});
-}
-
-export function clampVal(val, lower, upper) {
-	return (Math.min(Math.max(lower, val), upper));
-}
-
 export function className(obj) {
 	return (obj.constructor.name);
-}
-
-export function commaFormat(val) {
-	return (val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
 }
 
 export function convertURISlug(text) {
@@ -114,15 +81,6 @@ export function durationFormat(secs=0, frmt='mm:ss') {
 
 export function epochDate(millisecs=false) {
 	return ((millisecs) ? (new Date()).getTime() : ((new Date()).getTime() * 0.001) << 0);
-}
-
-export function frameToRect(frame) {
-	return ({
-		top    : frame.origin.y,
-		left   : frame.origin.x,
-		bottom : frame.origin.y + frame.size.height,
-		right  : frame.origin.x + frame.size.width
-	});
 }
 
 export function hasBit(val, bit) {
@@ -209,12 +167,6 @@ export function isValidEmail(email) {
 	const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	return (re.test(String(email).toLowerCase()));
 }
-
-export function limitString(str='', len, char='…') {
-	str = str.trim();
-	return ((str.length > len) ? str.substr(0, len - 1) + char : str);
-}
-
 export function makeDownload(url, blank) {
 	blank = (blank || false);
 
@@ -260,27 +212,6 @@ export function randIndex(arr) {
 
 export function randInt(lower, upper) {
 	return (randFloat(lower, upper) << 0);
-}
-
-export function rectContainsRect(baseRect, testRect) {
-	return (baseRect.top <= testRect.top && baseRect.left <= testRect.left && baseRect.right >= testRect.right && baseRect.bottom >= testRect.bottom);
-}
-
-export function rectIntersectsRect(baseRect, testRect) {
-	return (Math.max(baseRect.left, testRect.left) < Math.min(baseRect.right, testRect.right) && Math.max(baseRect.top, testRect.top) < Math.min(baseRect.bottom, testRect.bottom));
-}
-
-export function rectToFrame(rect) {
-	return ({
-		origin : {
-			x : rect.left,
-			y : rect.top
-		},
-		size   : {
-			width  : rect.right - rect.left,
-			height : rect.bottom - rect.top
-		}
-	});
 }
 
 export function repeatString(txt, amt) {
