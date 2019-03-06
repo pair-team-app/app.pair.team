@@ -74,6 +74,13 @@ export const DateTimes = {
 };
 
 
+export const Files = {
+	basename  : (path)=> (path.split('/').pop()),
+	dirname   : (path)=> (path.split('/').slice(0, -2).pop()),
+	extension : (path)=> (path.split('.').pop())
+};
+
+
 export const Maths = {
 	clamp       : (val, lower, upper)=> (Math.min(Math.max(val, lower), upper)),
 	randomFloat : (lower, upper, precision=15)=> ((Math.random() * (upper - lower)) + lower).toFixed(precision),

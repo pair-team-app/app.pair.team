@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { POPUP_TYPE_ERROR } from './Popup';
 import { updateDeeplink } from '../../redux/actions';
 import { sendToSlack } from '../../utils/funcs';
+import { Files } from '../../utils/lang';
 import { trackEvent } from '../../utils/tracking';
 
 const dropZone = React.createRef();
@@ -100,7 +101,7 @@ class UploadHeader extends Component {
 				sendToSlack(`*[${id}]* *${email}* uploaded incompatible file "_${file.name}_"`);
 				this.props.onPopup({
 					type     : POPUP_TYPE_ERROR,
-					content  : (file.name.split('.').pop() === 'xd') ? 'Adobe XD Support Coming Soon!' : 'Only Sketch files are support at this time.',
+					content  : (Files.extension(file.name) === 'fig') ? 'Figma Support Coming Soon!' : (Files.extension(file.name) === 'psd') ? 'Photoshop Support Coming Soon!' :  (Files.extension(file.name) === 'xd') ? 'Adobe XD Support Coming Soon!' : 'Only Sketch files are support at this time.',
 					duration : 2500
 				});
 			}
