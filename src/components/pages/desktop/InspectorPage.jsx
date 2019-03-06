@@ -511,15 +511,18 @@ const SpecsList = (props)=> {
 			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(fillColor.length > 0) ? fillColor : ''}>
 				<Row><div className="inspector-page-specs-list-item-attribute">Fill</div>{(fillColor.length > 0) && (<div className="inspector-page-specs-list-item-val"><Row vertical="center">{fillColor}<ColorSwatch fill={fillColor} /></Row></div>)}</Row>
 			</CopyToClipboard>
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(border) ? `${styles.border.position} S: ${styles.border.thickness} ${styles.border.color}` : ''}>
-				<Row><div className="inspector-page-specs-list-item-attribute">Border</div>{(border) && (<div className="inspector-page-specs-list-item-val"><Row vertical="center">{`${styles.border.position} S: ${styles.border.thickness} ${styles.border.color}`}<ColorSwatch fill={styles.border.color} /></Row></div>)}</Row>
-			</CopyToClipboard>
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(shadow) ? `X: ${styles.shadow.offset.x} Y: ${styles.shadow.offset.y} B: ${styles.shadow.blur} S: ${styles.shadow.spread}` : ''}>
-				<Row><div className="inspector-page-specs-list-item-attribute">Shadow</div>{(shadow) && (<div className="inspector-page-specs-list-item-val"><Row vertical="center">{`X: ${styles.shadow.offset.x} Y: ${styles.shadow.offset.y} B: ${styles.shadow.blur} S: ${styles.shadow.spread}`}<ColorSwatch fill={styles.shadow.color} /></Row></div>)}</Row>
-			</CopyToClipboard>
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(innerShadow) ? `X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}` : ''}>
-				<Row><div className="inspector-page-specs-list-item-attribute">Inner Shadow</div>{(innerShadow) && (<div className="inspector-page-specs-list-item-val"><Row vertical="center">{`X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.shadow.spread}`}<ColorSwatch fill={styles.innerShadow.color} /></Row></div>)}</Row>
-			</CopyToClipboard>
+			<SpecsListItem
+				attribute="Border"
+				value={(border) ? `${styles.border.position} S: ${styles.border.thickness} ${styles.border.color}` : null}
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Shadow"
+				value={(shadow) ? `X: ${styles.shadow.offset.x} Y: ${styles.shadow.offset.y} B: ${styles.shadow.blur} S: ${styles.shadow.spread}` : null}
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Inner Shadow"
+				value={(innerShadow) ? `X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.innerShadow.spread}` : null}
+				onCopy={props.onCopySpec} />
 			{(slice.type === 'textfield') && (<>
 				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`${font.family} ${font.name}`}>
 					<Row><div className="inspector-page-specs-list-item-attribute">Font</div><div className="inspector-page-specs-list-item-val">{`${font.family} ${font.name}`}</div></Row>
@@ -562,9 +565,17 @@ const SpecsList = (props)=> {
 const SpecsListItem = (props)=> {
 // 	console.log('InspectorPage.SpecsListItem()', props);
 
+	const VAL_PLACEHOLDER = '—';
+
 	const { attribute, value, copyText } = props;
-	return (<CopyToClipboard onCopy={()=> props.onCopy((copyText) ? copyText : value)} text={(copyText) ? copyText : value}>
-		<Row><div className="inspector-page-specs-list-item-attribute">{attribute}</div><div className="inspector-page-specs-list-item-val">{value}</div></Row>
+	const attrClass = `inspector-page-specs-list-item-attribute${(!value) ? ' inspector-page-specs-list-item-attribute-empty' : ''}`;
+	const valClass = `inspector-page-specs-list-item-val${(!value) ? ' inspector-page-specs-list-item-val-empty' : ''}`;
+
+	return (<CopyToClipboard onCopy={()=> (copyText || value) ? props.onCopy((copyText) ? copyText : (value) ? value : '') : null} text={(copyText) ? copyText : (value) ? value : ''}>
+		<Row>
+			<div className={attrClass}>{attribute}</div>
+			<div className={valClass}>{(value) ? value : VAL_PLACEHOLDER}</div>
+		</Row>
 	</CopyToClipboard>);
 };
 

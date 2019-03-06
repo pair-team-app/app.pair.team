@@ -435,6 +435,10 @@
 	cursor: pointer;
 }
 
+.inspector-page-specs-list-item-attribute-empty:hover, .inspector-page-specs-list-item-val-empty:hover {
+	cursor: default;
+}
+
 .inspector-page-specs-list-item-val {
 	color: #00ff0f;
 }
