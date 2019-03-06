@@ -11,7 +11,7 @@ import UploadHeader from '../../elements/UploadHeader';
 
 import homeContent from '../../../assets/json/home-content';
 import { addFileUpload, appendHomeArtboards } from '../../../redux/actions';
-import { epochDate, isUserLoggedIn } from '../../../utils/funcs';
+import { isUserLoggedIn } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
 
 

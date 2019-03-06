@@ -50,10 +50,10 @@ button:hover, button:active {
 }
 
 button:disabled, button:disabled:hover {
-  cursor: not-allowed;
-  background-color: #3178c4;
+  cursor: default;
+  background-color: #005cc5;
   color: #abdafd;
-  opacity : 0.5;
+  opacity : 0.875;
 }
 
 form {

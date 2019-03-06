@@ -184,6 +184,7 @@ const ArtboardsList = (props)=> {
 			return (
 				<ArtboardListItem
 					key={i}
+					enabled={enabled}
 					id={artboard.id}
 					filename={`${artboard.filename}@1x.png`}
 					title={artboard.title}
@@ -196,10 +197,11 @@ const ArtboardsList = (props)=> {
 };
 
 const ArtboardListItem = (props)=> {
-// 	console.log('InspectorPage.ArtboardListItem()', props)
+// 	console.log('InspectorPage.ArtboardListItem()', props);
 
-	const { id, filename, title, size } = props;
+	const { enabled, id, filename, title, size } = props;
 
+	const className = `artboard-list-item${(!enabled) ? ' artboard-list-item-disabled' : ''}`;
 	const thumbStyle = {
 		width  : `${size.width}px`,
 		height : `${size.height}px`
@@ -207,7 +209,7 @@ const ArtboardListItem = (props)=> {
 
 	let errored = false;
 
-	return (<div data-slice-id={id} className="artboard-list-item" onClick={()=> props.onClick()}><Row vertical="center">
+	return (<div data-slice-id={id} className={className} onClick={()=> (enabled) ? props.onClick() : null}><Row vertical="center">
 		<div className="artboard-list-item-content-wrapper">
 			<ImageLoader
 				style={thumbStyle}
@@ -221,7 +223,7 @@ const ArtboardListItem = (props)=> {
 			{/*<img className="artboard-list-item-image" src={filename} width={size.width} height={size.height} style={thumbStyle} alt={title} />*/}
 			<div className="artboard-list-item-title">{limitString(title, 18)}</div>
 		</div>
-		{(!errored) && (<button className="tiny-button artboard-list-item-button" onClick={()=> props.onClick()}><img src={downloadButton} width="20" height="14" alt="Download" /></button>)}
+		{(!errored) && (<button className="tiny-button artboard-list-item-button" onClick={()=> (enabled) ? props.onClick() : null}><img src={downloadButton} width="20" height="14" alt="Download" /></button>)}
 	</Row></div>);
 };
 
@@ -255,9 +257,9 @@ const FilingTabSet = (props)=> {
 				<FilingTabTitle
 					key={i}
 					tab={tab}
-					enabled={enabled && tab.enabled}
+					enabled={enabled || tab.enabled}
 					selected={activeTab && tab.id === activeTab.id}
-					onClick={()=> props.onTabClick(tab)}
+					onClick={()=> (enabled) ? props.onTabClick(tab) : null}
 				/>
 			))}
 		</ul>
@@ -267,8 +269,8 @@ const FilingTabSet = (props)=> {
 				<FilingTabContent
 					key={i}
 					tab={tab}
-					enabled={enabled && tab.enabled}
-					onClick={()=> props.onContentClick(tab)}
+					enabled={enabled || tab.enabled}
+					onClick={()=> (enabled) ? props.onContentClick(tab) : null}
 				/>
 			))}
 		</div>
@@ -583,6 +585,8 @@ const UploadProcessing = (props)=> {
 		height : `${artboard.meta.frame.size.height * ((vpHeight - 250) / artboard.meta.frame.size.height)}px`
 	} : null;
 
+	console.log('::::::::::', secs, ind, artboards.length, artboard);
+
 	return (<div className="upload-processing-wrapper"><Column horizontal="center" vertical="start">
 		{(processing.message.length > 0) && (<Row><div className="upload-processing-title">{processing.message}</div></Row>)}
 		<Row>
@@ -591,7 +595,7 @@ const UploadProcessing = (props)=> {
 
 		<Row><div className="upload-processing-button-wrapper">
 			<CopyToClipboard onCopy={props.onCopyURL} text={url}>
-				<button className="adjacent-button">Copy</button>
+				<button className="adjacent-button" style={{marginRight:'10px'}}>Copy</button>
 			</CopyToClipboard>
 			<button onClick={()=> props.onCancel()}>Cancel</button>
 		</div></Row>
@@ -746,24 +750,27 @@ class InspectorPage extends Component {
 		}
 
 
-		if (artboardsWrapper.current && isSizeDimensioned({ width : artboardsWrapper.current.clientWidth, height : artboardsWrapper.current.clientHeight}) && !isSizeDimensioned(this.state.viewSize)) {
+// 		if (artboardsWrapper.current && isSizeDimensioned({ width : artboardsWrapper.current.clientWidth, height : artboardsWrapper.current.clientHeight}) && !isSizeDimensioned(this.state.viewSize)) {
+		if (artboardsWrapper.current && artboardsWrapper.current.clientWidth !== this.state.viewSize.width && artboardsWrapper.current.clientHeight - 108 !== this.state.viewSize.height) {
 			const viewSize = {
 				width  : artboardsWrapper.current.clientWidth,
 				height : artboardsWrapper.current.clientHeight - 108
 			};
 
-			this.setState({ viewSize });
+			if (isSizeDimensioned(this.contentSize)) {
+				const fitScale = Math.max(Math.min(viewSize.height / this.contentSize.height, viewSize.width / this.contentSize.width, PAN_ZOOM.zoomNotches.slice(-1)[0]), PAN_ZOOM.zoomNotches[0]);
+				const scrollPt = this.calcScrollPoint(PAN_ZOOM.panMultPt, viewSize, this.contentSize, fitScale);
+
+				console.log('-=-=-=-=-=-', viewSize, this.contentSize, fitScale, scrollPt);
+				this.setState({ fitScale, viewSize,
+					scale : fitScale
+				}, ()=> {
+					this.handlePanMove(PAN_ZOOM.panMultPt.x, PAN_ZOOM.panMultPt.y); this.setState({ scrolling : false });
+				});
+			}
 		}
 
-		if (this.state.fitScale === 0.0 && isSizeDimensioned(this.contentSize) && isSizeDimensioned(this.state.viewSize)) {
-			const fitScale = Math.max(Math.min(this.state.viewSize.height / this.contentSize.height, this.state.viewSize.width / this.contentSize.width, PAN_ZOOM.zoomNotches.slice(-1)[0]), PAN_ZOOM.zoomNotches[0]);
-			const scrollPt = this.calcScrollPoint(PAN_ZOOM.panMultPt, this.state.viewSize, this.contentSize, fitScale);
 
-			console.log('-=-=-=-=-=-', this.state.viewSize, this.contentSize, fitScale, scrollPt);
-			this.setState({ scale : fitScale, fitScale },
-				()=> {this.handlePanMove(PAN_ZOOM.panMultPt.x, PAN_ZOOM.panMultPt.y); this.setState({ scrolling : false });
-			});
-		}
 
 		if (upload && canvasWrapper.current) {
 			if (!this.state.tutorial && cookie.load('tutorial') === '0') {
@@ -1145,7 +1152,7 @@ class InspectorPage extends Component {
 			type     : POPUP_TYPE_OK,
 			offset   : {
 				top   : (urlBanner << 0) * 38,
-				right : window.innerWidth - ((section === SECTIONS.PRESENTER && !processing) ? 880 : 360)
+				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
 			},
 			content  : (type === 'url' || msg.length >= 100) ? `Copied ${type} to clipboard` : msg,
 			duration : 1750
@@ -1823,19 +1830,9 @@ class InspectorPage extends Component {
 					))
 				});
 
-				let tabSets = inspectorTabSets[section];
-
 				const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'symbol_container' : 'page_child');
-				const baseSize = this.calcArtboardBaseSize((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
-				console.log('-_-_-_]BASE SIZE[_-_-_-', baseSize);
 
-				const fitScale = this.calcFitScale(baseSize, viewSize);
-				console.log('-_-_-_]FIT SCALE[_-_-_-', fitScale);
-
-				const scaledCoords = this.calcArtboardScaledCoords((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, fitScale);
-				console.log('-_-_-_]SCALED COORDS[_-_-_-', scaledCoords);
-
-
+				let tabSets = inspectorTabSets[section];
 				if (section === SECTIONS.INSPECT) {
 					tabSets = [...tabSets].map((tabSet, i) => {
 						if (i === 0) {
@@ -1871,43 +1868,57 @@ class InspectorPage extends Component {
 					});
 
 				} else if (section === SECTIONS.PRESENTER) {
-					const artboard = artboards[0];
-					const langs = [
-						toCSS(artboard),
-						toReactCSS(artboard),
-						toSwift(artboard, artboard),
-						toAndroid(artboard, artboard)
-					];
+					if (artboards.length > 0) {
+						const artboard = artboards[0];
+						const langs = [
+							toCSS(artboard),
+							toReactCSS(artboard),
+							toSwift(artboard, artboard),
+							toAndroid(artboard, artboard)
+						];
 
-					tabSets = [...tabSets].map((tabSet, i) => {
-						return (tabSet.map((tab, j) => {
-							if (i === 0) {
-								return (Object.assign({}, tab, {
-									enabled  : ((upload.state << 0) === 3),
-									contents : langs[j].html,
-									syntax   : langs[j].syntax
-								}));
+						tabSets = [...tabSets].map((tabSet, i) => {
+							return (tabSet.map((tab, j) => {
+								if (i === 0) {
+									return (Object.assign({}, tab, {
+										enabled  : ((upload.state << 0) === 3),
+										contents : langs[j].html,
+										syntax   : langs[j].syntax
+									}));
 
-							} else {
-								return (Object.assign({}, tab, {
-									type     : 'component',
-									enabled  : ((upload.state << 0) === 3),
-									contents : <ArtboardsList
-										enabled={((upload.state << 0) === 3)}
-										contents={flattenUploadArtboards(upload, 'page_child')}
-										onArtboardListItem={(artboard) => this.handleChangeArtboard(artboard)} />
-								}));
-							}
-						}));
-					});
+								} else {
+									return (Object.assign({}, tab, {
+										type     : 'component',
+										enabled  : ((upload.state << 0) === 3),
+										contents : <ArtboardsList
+											enabled={((upload.state << 0) === 3)}
+											contents={flattenUploadArtboards(upload, 'page_child')}
+											onArtboardListItem={(artboard) => this.handleChangeArtboard(artboard)} />
+									}));
+								}
+							}));
+						});
+					}
 				}
 
 				const activeTabs = tabSets.map((tabSet)=> {
 					return (tabSet.slice(0, 1).pop());
 				});
 
+				if (artboards.length > 0) {
+					const baseSize = this.calcArtboardBaseSize((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
+					console.log('-_-_-_]BASE SIZE[_-_-_-', baseSize);
+
+					const fitScale = this.calcFitScale(baseSize, viewSize);
+					console.log('-_-_-_]FIT SCALE[_-_-_-', fitScale);
+
+					const scaledCoords = this.calcArtboardScaledCoords((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, fitScale);
+					console.log('-_-_-_]SCALED COORDS[_-_-_-', scaledCoords);
+				}
+
+
 				this.setState({ upload, tabSets, activeTabs,
-					artboard  : (section === SECTIONS.PRESENTER) ? artboards[0] : null,
+					artboard  : (section === SECTIONS.PRESENTER) ? (artboards.length > 0) ? artboards[0] : null : null,
 					slice     : null,
 					tooltip   : null
 				});
@@ -1956,21 +1967,23 @@ class InspectorPage extends Component {
 							message : `Queued position ${queue.position}/${queue.total}, please wait${ellipsis}`
 						}
 					});
+					this.onFetchUpload();
 
 				} else if (processingState === 1) {
 					this.setState({
 						processing : {
 							state   : processingState,
-							message : `Preparing "${title}"${ellipsis}`
+							message : `Preparing ${title}${ellipsis}`
 						}
 					});
+					this.onFetchUpload();
 
 				} else if (processingState === 2) {
 					this.setState({
 						processing : {
 							state   : processingState,
 // 							message : `Processing ${title}, parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s…`
-							message : `Processing "${title}"${ellipsis}`
+							message : `Processing ${title}${ellipsis}`
 						}
 					});
 					this.onFetchUpload();
@@ -1980,12 +1993,11 @@ class InspectorPage extends Component {
 					this.processingInterval = null;
 					this.setState({
 						processing : {
-// 							state   : processingState,
+							state   : processingState,
 							message : `Completed processing ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s.`
 						}
-					});
-// 					}, ()=> this.onShowNotification());
-// 					this.props.onProcessing(false);
+					}, ()=> this.onShowNotification());
+					this.props.onProcessing(false);
 
 				} else if (processingState === 4) {
 					clearInterval(this.processingInterval);
@@ -2215,7 +2227,7 @@ class InspectorPage extends Component {
 					/>)}
 				</div>
 
-				{(valid) && (<div className={panelClass}>
+				{(valid && upload) && (<div className={panelClass}>
 					{(section === SECTIONS.INSPECT) && (<>
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
@@ -2229,7 +2241,7 @@ class InspectorPage extends Component {
 									/>
 									<div className="inspector-page-panel-button-wrapper">
 										<CopyToClipboard onCopy={()=> this.handleClipboardCopy((i === 0) ? 'code' : 'specs', (i === 0) ? activeTabs[i].syntax : toSpecs(activeSlice))} text={(i === 0) ? (activeTabs && activeTabs[i]) ? activeTabs[i].syntax : '' : (activeSlice) ? toSpecs(activeSlice) : ''}>
-											<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing…' : 'Copy to Clipboard'}</button>
+											<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>
 										</CopyToClipboard>
 									</div>
 								</div>
@@ -2248,8 +2260,8 @@ class InspectorPage extends Component {
 									onContentClick={(payload)=> console.log('onContentClick', payload)}
 								/>
 								<div className="inspector-page-panel-button-wrapper">
-									<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleDownloadPartsList()}>Download ({listTotal}) Part{(listTotal === 1) ? '' : 's'}</button>
-									<button disabled={!upload || processing} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}>Download All Parts</button>
+									<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing <<0)}} onClick={()=> this.handleDownloadPartsList()}>{(processing) ? 'Processing' : `Download (${listTotal}) Part${(listTotal === 1) ? '' : 's'}`}</button>
+									<button disabled={!upload || processing} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}>{(processing) ? 'Processing' : 'Download All Parts'}</button>
 								</div>
 							</div>)
 						))}
@@ -2269,9 +2281,9 @@ class InspectorPage extends Component {
 										<div className="inspector-page-panel-button-wrapper">
 											{(i === 0)
 												? (<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
-														<button disabled={!activeTabs[i].contents} className="inspector-page-panel-button">{(processing) ? 'Processing…' : 'Copy to Clipboard'}</button>
+														<button disabled={!activeTabs[i].contents} style={{opacity:(!processing << 0)}} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>
 													</CopyToClipboard>)
-												: (<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing…' : 'Download PDF'}</button>)}
+												: (<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download PDF'}</button>)}
 										</div>
 								</div>
 							</div>
