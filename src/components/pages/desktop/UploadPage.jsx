@@ -100,7 +100,7 @@ class UploadPage extends Component {
 		console.log('UploadPage.handleFile()', file, this.props, this.state);
 
 		const { id, email } = (this.props.profile) ? this.props.profile : this.state.profile;
-		sendToSlack(`*[${id}]* *${email}* started uploading file "_${file.name}_"`);
+		sendToSlack(`*[${id}]* *${email}* started uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
 		trackEvent('upload', 'file');
 
 		this.setState({
@@ -121,7 +121,7 @@ class UploadPage extends Component {
 
 				if (progressEvent.loaded >= progressEvent.total && formState === 1) {
 					if (formState === 1) {
-						sendToSlack(`*[${id}]* *${email}* completed uploading file "_${file.name}_" uploaded`);
+						sendToSlack(`*[${id}]* *${email}* completed uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
 
 						this.setState({
 							percent        : 100,

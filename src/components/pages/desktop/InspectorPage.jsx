@@ -585,8 +585,6 @@ const UploadProcessing = (props)=> {
 		height : `${artboard.meta.frame.size.height * ((vpHeight - 250) / artboard.meta.frame.size.height)}px`
 	} : null;
 
-	console.log('::::::::::', secs, ind, artboards.length, artboard);
-
 	return (<div className="upload-processing-wrapper"><Column horizontal="center" vertical="start">
 		{(processing.message.length > 0) && (<Row><div className="upload-processing-title">{processing.message}</div></Row>)}
 		<Row>
@@ -1951,13 +1949,13 @@ class InspectorPage extends Component {
 			.then((response)=> {
 				console.log('UPLOAD_STATUS', response.data);
 				const { status } = response.data;
-				const { totals } = status;
 				const processingState = status.state;
+// 				const { totals } = status;
 
 				const ellipsis = Array((epochDate() % 4) + 1).join('.');
-				const total = totals.all << 0;//Object.values(totals).reduce((acc, val)=> ((acc << 0) + (val << 0)));
-				const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
-				const secs = ((mins - (mins << 0)) * 60) << 0;
+// 				const total = totals.all << 0;//Object.values(totals).reduce((acc, val)=> ((acc << 0) + (val << 0)));
+// 				const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
+// 				const secs = ((mins - (mins << 0)) * 60) << 0;
 
 				if (processingState === 0) {
 					const { queue } = status;
@@ -1967,7 +1965,6 @@ class InspectorPage extends Component {
 							message : `Queued position ${queue.position}/${queue.total}, please wait${ellipsis}`
 						}
 					});
-					this.onFetchUpload();
 
 				} else if (processingState === 1) {
 					this.setState({
@@ -1976,7 +1973,6 @@ class InspectorPage extends Component {
 							message : `Preparing ${title}${ellipsis}`
 						}
 					});
-					this.onFetchUpload();
 
 				} else if (processingState === 2) {
 					this.setState({
@@ -1994,7 +1990,8 @@ class InspectorPage extends Component {
 					this.setState({
 						processing : {
 							state   : processingState,
-							message : `Completed processing ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s.`
+// 							message : `Completed processing ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s.`
+							message : `Completed processing ${title}`
 						}
 					}, ()=> this.onShowNotification());
 					this.props.onProcessing(false);
