@@ -26,8 +26,10 @@
 }
 
 .popup-content-error {
-	background-color : rgba(255, 70, 70, 0.33);
-	color : #ff4646;
+	/*background-color : rgba(255, 70, 70, 0.33);*/
+	/*color : #ff4646;*/
+	background-color: rgba(42, 174, 57, 0.9);
+	color: #ffffff;
 }
 
 .popup-content-ok {
@@ -45,4 +47,3 @@
 			-1px  1px 0 rgba(26, 27, 29, 0.5),
 			 1px  1px 0 rgba(26, 27, 29, 0.5);
 }
-
