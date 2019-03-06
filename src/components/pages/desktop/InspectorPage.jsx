@@ -26,15 +26,8 @@ import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../consts
 import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL } from '../../../consts/inspector';
 import { DE_LOGO_SMALL } from '../../../consts/uris';
 import { setRedirectURI } from '../../../redux/actions';
-import {
-	areaSize,
-	buildInspectorPath,
-	buildInspectorURL,
-	convertURISlug,
-	epochDate,
-	isSizeDimensioned,
-	makeDownload } from '../../../utils/funcs.js';
-import { Maths, Strings } from '../../../utils/lang.js';
+import { buildInspectorPath, buildInspectorURL } from '../../../utils/funcs.js';
+import { Browsers, DateTimes, Maths, Strings } from '../../../utils/lang.js';
 import { fontSpecs, toAndroid, toCSS, toReactCSS, toSpecs, toSwift } from '../../../utils/inspector-langs.js';
 import { trackEvent } from '../../../utils/tracking';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
@@ -88,7 +81,7 @@ const flattenUploadArtboards = (upload, type=null)=> {
 
 const slicesByArea = (slices)=> {
 // 	console.log('slicesByArea()', slices);
-	return(slices.sort((s1, s2)=> ((areaSize(s1.meta.frame.size) < areaSize(s2.meta.frame.size)) ? -1 : (areaSize(s1.meta.frame.size) > areaSize(s2.meta.frame.size)) ? 1 : 0)));
+	return(slices.sort((s1, s2)=> ((Maths.geom.sizeArea(s1.meta.frame.size) < Maths.geom.sizeArea(s2.meta.frame.size)) ? -1 : (Maths.geom.sizeArea(s1.meta.frame.size) > Maths.geom.sizeArea(s2.meta.frame.size)) ? 1 : 0)));
 };
 
 
@@ -572,7 +565,7 @@ const UploadProcessing = (props)=> {
 	const url = buildInspectorURL(upload);
 
 
-	const secs = String((epochDate() * 0.01).toFixed(2)).substr(-2, 1) << 0;
+	const secs = String((DateTimes.epoch() * 0.01).toFixed(2)).substr(-2, 1) << 0;
 	const ind = (secs) % artboards.length;
 
 	const artboard = artboards[ind];
@@ -742,7 +735,7 @@ class InspectorPage extends Component {
 		}
 
 
-// 		if (artboardsWrapper.current && isSizeDimensioned({ width : artboardsWrapper.current.clientWidth, height : artboardsWrapper.current.clientHeight}) && !isSizeDimensioned(this.state.viewSize)) {
+// 		if (artboardsWrapper.current && Maths.geom.isSizeDimensioned({ width : artboardsWrapper.current.clientWidth, height : artboardsWrapper.current.clientHeight}) && !isSizeDimensioned(this.state.viewSize)) {
 		if (artboardsWrapper.current && artboardsWrapper.current.clientWidth !== this.state.viewSize.width && artboardsWrapper.current.clientHeight - 108 !== this.state.viewSize.height) {
 			const viewSize = {
 				width  : artboardsWrapper.current.clientWidth,
@@ -762,7 +755,7 @@ class InspectorPage extends Component {
 				console.log('_-]SCALED COORDS[-_', scaledCoords);
 			}
 
-			if (isSizeDimensioned(this.contentSize)) {
+			if (Maths.geom.isSizeDimensioned(this.contentSize)) {
 				const fitScale = Math.max(Math.min(viewSize.height / this.contentSize.height, viewSize.width / this.contentSize.width, PAN_ZOOM.zoomNotches.slice(-1)[0]), PAN_ZOOM.zoomNotches[0]);
 				const scrollPt = this.calcScrollPoint(PAN_ZOOM.panMultPt, viewSize, this.contentSize, fitScale);
 
@@ -1165,7 +1158,7 @@ class InspectorPage extends Component {
 
 		trackEvent('button', 'download-project');
 		const { upload } = this.state;
-		makeDownload(`http://cdn.designengine.ai/download-project.php?upload_id=${upload.id}`);
+		Browsers.makeDownload(`http://cdn.designengine.ai/download-project.php?upload_id=${upload.id}`);
 	};
 
 	handleDownloadArtboardPDF = ()=> {
@@ -1173,7 +1166,7 @@ class InspectorPage extends Component {
 
 		trackEvent('button', 'download-pdf');
 		const { upload } = this.state;
-		makeDownload(`http://cdn.designengine.ai/download-pdf.php?upload_id=${upload.id}`);
+		Browsers.makeDownload(`http://cdn.designengine.ai/download-pdf.php?upload_id=${upload.id}`);
 	};
 
 	handleDownloadPartListItem = (slice)=> {
@@ -1181,7 +1174,7 @@ class InspectorPage extends Component {
 
 		trackEvent('button', 'download-part');
 		const { upload } = this.state;
-		makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${[slice.id]}`);
+		Browsers.makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${[slice.id]}`);
 	};
 
 	handleDownloadPartsList = ()=> {
@@ -1191,7 +1184,7 @@ class InspectorPage extends Component {
 		const { upload, slice } = this.state;
 		const sliceIDs = (slice.type === 'group') ? fillGroupPartItemSlices(upload, slice).map((slice)=> (slice.id)).join(',') : slice.children.map((slice)=> (slice.id)).join(',');
 
-		makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
+		Browsers.makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
 	};
 
 	handleInviteTeamFormSubmitted = (result)=> {
@@ -1239,7 +1232,7 @@ class InspectorPage extends Component {
 	};
 
 	handlePanAndZoom = (x, y, scale)=> {
-// 		console.log('InspectorPage.handlePanAndZoom()', x, y, scale);
+		console.log('InspectorPage.handlePanAndZoom()', x, y, scale);
 
 // 		const panMultPt = { x, y };
 // 		this.setState({ panMultPt, scale });
@@ -1248,7 +1241,7 @@ class InspectorPage extends Component {
 	};
 
 	handlePanMove = (x, y)=> {
-// 		console.log('InspectorPage.handlePanMove()', x, y, this.state.scale);
+		console.log('InspectorPage.handlePanMove()', x, y, this.state.scale);
 
 		const panMultPt = { x, y };
 		const { viewSize } = this.state;
@@ -1265,7 +1258,7 @@ class InspectorPage extends Component {
 	handleSliceClick = (ind, slice, offset)=> {
 // 		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
 
-		trackEvent('slice', `${slice.id}_${convertURISlug(slice.title)}`);
+		trackEvent('slice', `${slice.id}_${Strings.uriSlug(slice.title)}`);
 
 		const { profile } = this.props;
 		const { upload, artboard, section } = this.state;
@@ -1678,7 +1671,7 @@ class InspectorPage extends Component {
 
 	handleTab = (tab)=> {
 // 		 console.log('InspectorPage.handleTab()', tab);
-		trackEvent('tab', convertURISlug(tab.title));
+		trackEvent('tab', Strings.uriSlug(tab.title));
 
 		const { tabSets } = this.state;
 		const activeTabs = [...this.state.activeTabs].map((activeTab, i)=> {
@@ -1783,7 +1776,15 @@ class InspectorPage extends Component {
 			scale = PAN_ZOOM.zoomNotches[Math.min(Math.max(0, ind), PAN_ZOOM.zoomNotches.length - 1)];
 		}
 
-		this.setState({ scale });
+		const panMultPt = {
+			x : this.state.panMultPt.x,
+			y : this.state.panMultPt.y
+		};
+
+		this.setState({ scale, panMultPt,
+			slice : null
+		}, ()=> (this.forceUpdate()));
+
 		this.props.onPopup({
 			type    : POPUP_TYPE_STATUS,
 			offset  : {
@@ -1969,7 +1970,7 @@ class InspectorPage extends Component {
 				const processingState = status.state;
 // 				const { totals } = status;
 
-				const ellipsis = Array((epochDate() % 4) + 1).join('.');
+				const ellipsis = Array((DateTimes.epoch() % 4) + 1).join('.');
 // 				const total = totals.all << 0;//Object.values(totals).reduce((acc, val)=> ((acc << 0) + (val << 0)));
 // 				const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
 // 				const secs = ((mins - (mins << 0)) * 60) << 0;

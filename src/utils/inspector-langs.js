@@ -1,6 +1,5 @@
 
-import { convertURISlug, isEmptyObject } from './funcs';
-import { Strings } from './lang';
+import { Objects, Strings } from './lang';
 
 const HTML_TAB = '  ';
 const badChars = /[\\.,_+=[\](){}]/g;
@@ -52,7 +51,7 @@ export function fontSpecs(font) {
 	family = (family) ? (family.includes(' ')) ? family.split(' ').slice().shift() : family.split('-').slice().shift() : '';
 	name = name.replace(family, '').replace(/ +/g, '');
 	family = family.replace(name, '').replace(/ +/g, '');
-	psName = (psName && !isEmptyObject(psName)) ? psName : `${family}-${name}`.replace(/ +/g, '');
+	psName = (psName && !Objects.isEmpty(psName)) ? psName : `${family}-${name}`.replace(/ +/g, '');
 	lineHeight = (lineHeight) ? lineHeight : (size) ? (size + (size / 3) << 0) : 0;
 	size = (size) ? size : (lineHeight) ? Math.round((lineHeight * 3) * 0.25) : 0;
 	const weight = fontWeight(name);
@@ -61,8 +60,8 @@ export function fontSpecs(font) {
 }
 
 export function toAndroid(slice, artboard) {
-	const artboardName = Strings.camilze(convertURISlug(artboard.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
-	const sliceName = Strings.camilze(convertURISlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
+	const artboardName = Strings.camilze(Strings.uriSlug(artboard.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
+	const sliceName = Strings.camilze(Strings.uriSlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 
 	const viewType = (slice.type === 'textfield') ? 'Text View' : 'Image View';
 	const caption = viewType;
@@ -123,7 +122,7 @@ export function toCSS(slice) {
 		html += `${HTML_TAB}background-color: ${slice.meta.fillColor.toUpperCase()};\n`;
 	}
 	html += '}';
-	html = `.${convertURISlug(slice.title)} ${html}`;
+	html = `.${Strings.uriSlug(slice.title)} ${html}`;
 
 	return ({
 		html   : JSON.stringify(`/* ${DISCLAIMER} */\n\n${html}`),
@@ -172,7 +171,7 @@ export function toSwift(slice, artboard) {
 	let html = `/* ${DISCLAIMER} */`;
 	if (slice.type === 'background' || slice.type === 'group' || slice.type === 'slice' || slice.type === 'symbol' || slice.type === 'textfield') {
 		const artboardName = Strings.camilze(artboard.title.replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
-		const sliceName = Strings.camilze(convertURISlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''));
+		const sliceName = Strings.camilze(Strings.uriSlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''));
 
 		html += '// Asset\n';
 		html += 'enum Asset {\n';

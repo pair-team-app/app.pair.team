@@ -183,7 +183,7 @@ class HomePage extends Component {
 
 	render() {
 
-// 		const ellipsis = Array((epochDate() % 4) + 1).join('.');
+// 		const ellipsis = Array((DateTimes.epoch(() % 4) + 1).join('.');
 // 		console.log('HomePage.render()', this.props, this.state);
 
 		const { profile, artboards } = this.props;

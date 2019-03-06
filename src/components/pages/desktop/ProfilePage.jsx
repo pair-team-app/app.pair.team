@@ -18,7 +18,7 @@ import InputField, {
 } from '../../forms/elements/InputField';
 import { DEFAULT_AVATAR } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
-import { hasBit, isValidEmail } from '../../../utils/funcs';
+import { Bits, Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 
 const dropZone = React.createRef();
@@ -75,8 +75,8 @@ class ProfilePage extends Component {
 				avatar        : avatar,
 				username      : username,
 				email         : email,
-				usernameValid : !hasBit(status, 0x01),
-				emailValid    : !hasBit(status, 0x10)
+				usernameValid : !Bits.contains(status, 0x01),
+				emailValid    : !Bits.contains(status, 0x10)
 			});
 		}
 
@@ -241,7 +241,7 @@ class ProfilePage extends Component {
 
 		const { username, email, password } = state;
 		const usernameValid = (username.length > 0 && !username.includes('@'));
-		const emailValid = isValidEmail(email);
+		const emailValid = Strings.isEmail(email);
 		const passwordValid = true;//(password.length > 0);
 
 		console.log(' -=- ProfilePage.onValidateFields()', emailValid, state);
