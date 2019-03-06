@@ -94,6 +94,9 @@ class UploadPage extends Component {
 			title     : '',
 			formState : 0
 		});
+
+		const { section } = this.state;
+		this.props.onPage(section);
 	};
 
 	handleFile = (file)=> {
