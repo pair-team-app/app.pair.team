@@ -729,7 +729,6 @@ class InspectorPage extends Component {
 
 		if (upload && processing && this.processingInterval === null) {
 			this.setState({
-				tabSets    : [],
 				processing : {
 					state   : 0,
 					message : `…`
@@ -818,9 +817,10 @@ class InspectorPage extends Component {
 	}
 
 	buildSliceRollOverItemTypes = (artboard, type, offset, scale, scrolling)=> {
-// 		console.log('InspectorPage.buildSliceRollOverItemTypes()', artboard, type, offset, scale, scrolling);
+		console.log('InspectorPage.buildSliceRollOverItemTypes()', artboard, type, offset, scale, scrolling);
 
 		const slices = artboard.slices.filter((slice)=> (slice.type === type)).map((slice, i)=> {
+			console.log('::::::::::::', slice);
 			const { frame } = slice.meta;
 			return (<SliceRolloverItem
 				key={i}
@@ -1831,7 +1831,7 @@ class InspectorPage extends Component {
 
 		const { processing } = this.props;
 		const { uploadID } = this.props.deeplink;
-		const { viewSize, section } = this.state;
+		const { section } = this.state;
 
 		this.setState({ tooltip : (!processing) ? 'Loading…' : null });
 
