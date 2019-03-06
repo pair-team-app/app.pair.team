@@ -771,7 +771,7 @@ class InspectorPage extends Component {
 
 
 		if (upload && canvasWrapper.current) {
-			if (!this.state.tutorial && cookie.load('tutorial') === '0') {
+			if (!this.state.tutorial && cookie.load('tutorial') === '0' && this.state.section === SECTIONS.INSPECT) {
 				cookie.save('tutorial', '1', { path : '/' });
 
 				const { scrollPt } = this.state;

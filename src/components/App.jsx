@@ -103,7 +103,8 @@ class App extends Component {
 
 		if (isInspectorPage()) {
 			if (typeof cookie.load('tutorial') === 'undefined') {
-				cookie.save('tutorial', '0', { path : '/' });
+// 				cookie.save('tutorial', '0', { path : '/' });
+				cookie.save('tutorial', '1', { path : '/' });
 			}
 
 			this.onAddUploadView(uploadID);
