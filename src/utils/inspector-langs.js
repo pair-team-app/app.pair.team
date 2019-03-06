@@ -59,36 +59,40 @@ export function fontSpecs(font) {
 	return (Object.assign({}, font, { family, name, psName, weight, size, lineHeight }));
 }
 
-export function toAndroid(slice, artboard) {
+export function toAndroid(slices, artboard) {
+// 	console.log('inspector-langs.toAndroid()', slices, artboard);
+
 	const artboardName = Strings.camilze(Strings.uriSlug(artboard.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
-	const sliceName = Strings.camilze(Strings.uriSlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 
-	const viewType = (slice.type === 'textfield') ? 'Text View' : 'Image View';
-	const caption = viewType;
+	let html = `<-- ${DISCLAIMER.replace(/\n/g, '')} * -->\n\n`;
+	slices.forEach((slice)=> {
+		const sliceName = Strings.camilze(Strings.uriSlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
+		const viewType = (slice.type === 'textfield') ? 'Text View' : 'Image View';
+		const caption = viewType;
 
-	let html = `<-- ${DISCLAIMER} -->\n`;
-	html += '<?xml version="1.0" encoding="utf-8"?>\n';
-	html += '<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" ';
-	html += `${HTML_TAB}xmlns:app="http://schemas.android.com/apk/res-auto" \n`;
-	html += `${HTML_TAB}xmlns:tools="http://schemas.android.com/tools" \n`;
-	html += `${HTML_TAB}android:id="@+id/activity_${artboardName}" \n`;
-	html += `${HTML_TAB}android:layout_width="match_parent" \n`;
-	html += `${HTML_TAB}android:layout_height="match_parent" \n`;
-	html += `${HTML_TAB}android:paddingLeft="${slice.meta.frame.origin.x}px" \n`;
-	html += `${HTML_TAB}android:paddingTop="${slice.meta.frame.origin.y}px" \n`;
-	html += `${HTML_TAB}android:paddingRight="${artboard.meta.frame.size.width - slice.meta.frame.size.width}px" \n`;
-	html += `${HTML_TAB}android:paddingBottom="${artboard.meta.frame.size.height - slice.meta.frame.size.height}px" \n`;
-	html += `${HTML_TAB}tools:context=".${artboardName}Activity">\n\n`;
-	html += `${HTML_TAB}<${viewType.replace(/ /g, '')} \n`;
-	html += `${HTML_TAB}${HTML_TAB}android:id="@+id/${Strings.camilze(viewType)}_${sliceName}" \n`;
-	html += `${HTML_TAB}${HTML_TAB}android:layout_width="wrap_content" \n`;
-	html += `${HTML_TAB}${HTML_TAB}android:layout_height="wrap_content" \n`;
-	html += `${HTML_TAB}${HTML_TAB}android:text="${caption}" \n`;
-	html += `${HTML_TAB}${HTML_TAB}app:layout_constraintBottom_toBottomOf="parent" \n`;
-	html += `${HTML_TAB}${HTML_TAB}app:layout_constraintEnd_toEndOf="parent" \n`;
-	html += `${HTML_TAB}${HTML_TAB}app:layout_constraintStart_toStartOf="parent" \n`;
-	html += `${HTML_TAB}${HTML_TAB}app:layout_constraintTop_toTopOf="parent" />\n`;
-	html += '</android.support.constraint.ConstraintLayout>';
+		html += '<?xml version="1.0" encoding="utf-8"?>\n';
+		html += '<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" ';
+		html += `${HTML_TAB}xmlns:app="http://schemas.android.com/apk/res-auto" \n`;
+		html += `${HTML_TAB}xmlns:tools="http://schemas.android.com/tools" \n`;
+		html += `${HTML_TAB}android:id="@+id/activity_${artboardName}" \n`;
+		html += `${HTML_TAB}android:layout_width="match_parent" \n`;
+		html += `${HTML_TAB}android:layout_height="match_parent" \n`;
+		html += `${HTML_TAB}android:paddingLeft="${slice.meta.frame.origin.x}px" \n`;
+		html += `${HTML_TAB}android:paddingTop="${slice.meta.frame.origin.y}px" \n`;
+		html += `${HTML_TAB}android:paddingRight="${artboard.meta.frame.size.width - slice.meta.frame.size.width}px" \n`;
+		html += `${HTML_TAB}android:paddingBottom="${artboard.meta.frame.size.height - slice.meta.frame.size.height}px" \n`;
+		html += `${HTML_TAB}tools:context=".${artboardName}Activity">\n\n`;
+		html += `${HTML_TAB}<${viewType.replace(/ /g, '')} \n`;
+		html += `${HTML_TAB}${HTML_TAB}android:id="@+id/${Strings.camilze(viewType)}_${sliceName}" \n`;
+		html += `${HTML_TAB}${HTML_TAB}android:layout_width="wrap_content" \n`;
+		html += `${HTML_TAB}${HTML_TAB}android:layout_height="wrap_content" \n`;
+		html += `${HTML_TAB}${HTML_TAB}android:text="${caption}" \n`;
+		html += `${HTML_TAB}${HTML_TAB}app:layout_constraintBottom_toBottomOf="parent" \n`;
+		html += `${HTML_TAB}${HTML_TAB}app:layout_constraintEnd_toEndOf="parent" \n`;
+		html += `${HTML_TAB}${HTML_TAB}app:layout_constraintStart_toStartOf="parent" \n`;
+		html += `${HTML_TAB}${HTML_TAB}app:layout_constraintTop_toTopOf="parent" />\n`;
+		html += '</android.support.constraint.ConstraintLayout>';
+	});
 
 	return ({
 		html   : JSON.stringify(html),
@@ -96,33 +100,36 @@ export function toAndroid(slice, artboard) {
 	})
 }
 
-export function toCSS(slice) {
+export function toCSS(slices) {
+// 	console.log('inspector-langs.toCSS()', slices);
+
 	let html = ``;
-	html += '{\n';
-	html += `${HTML_TAB}position: absolute;\n`;
-	html += `${HTML_TAB}top: ${slice.meta.frame.origin.y}px;\n`;
-	html += `${HTML_TAB}left: ${slice.meta.frame.origin.x}px;\n`;
-	html += `${HTML_TAB}width: ${slice.meta.frame.size.width}px;\n`;
-	html += `${HTML_TAB}height: ${slice.meta.frame.size.height}px;\n`;
-	if (slice.type === 'textfield') {
-		const font = fontSpecs(slice.meta.font);
+	slices.forEach((slice)=> {
+		html += `.${Strings.uriSlug(slice.title)} {\n`;
+		html += `${HTML_TAB}position: absolute;\n`;
+		html += `${HTML_TAB}top: ${slice.meta.frame.origin.y}px;\n`;
+		html += `${HTML_TAB}left: ${slice.meta.frame.origin.x}px;\n`;
+		html += `${HTML_TAB}width: ${slice.meta.frame.size.width}px;\n`;
+		html += `${HTML_TAB}height: ${slice.meta.frame.size.height}px;\n`;
+		if (slice.type === 'textfield') {
+			const font = fontSpecs(slice.meta.font);
 
-		html += `${HTML_TAB}font-family: "${font.family} ${font.name}", sans-serif;\n`;
-		html += `${HTML_TAB}font-weight: ${font.weight};\n`;
-		html += `${HTML_TAB}font-size: ${font.size}px;\n`;
-		html += `${HTML_TAB}color: ${font.color.toUpperCase()};\n`;
-		html += `${HTML_TAB}letter-spacing: ${font.kerning.toFixed(2)}px;\n`;
-		html += `${HTML_TAB}line-height: ${font.lineHeight}px;\n`;
-		html += `${HTML_TAB}text-align: ${font.alignment.toLowerCase()};\n`;
+			html += `${HTML_TAB}font-family: "${`${font.family} ${font.name}`.trim()}", sans-serif;\n`;
+			html += `${HTML_TAB}font-weight: ${font.weight};\n`;
+			html += `${HTML_TAB}font-size: ${font.size}px;\n`;
+			html += `${HTML_TAB}color: ${font.color.toUpperCase()};\n`;
+			html += `${HTML_TAB}letter-spacing: ${font.kerning.toFixed(2)}px;\n`;
+			html += `${HTML_TAB}line-height: ${font.lineHeight}px;\n`;
+			html += `${HTML_TAB}text-align: ${font.alignment.toLowerCase()};\n`;
 
-	} else if (slice.type === 'slice') {
-		html += `${HTML_TAB}background: url("${slice.filename.split('/').pop()}@3x.png");\n`;
+		} else if (slice.type === 'slice') {
+			html += `${HTML_TAB}background: url("${slice.filename.split('/').pop()}@3x.png");\n`;
 
-	} else if (slice.type === 'background' || slice.type === 'group') {
-		html += `${HTML_TAB}background-color: ${slice.meta.fillColor.toUpperCase()};\n`;
-	}
-	html += '}';
-	html = `.${Strings.uriSlug(slice.title)} ${html}`;
+		} else if (slice.type === 'background' || slice.type === 'group') {
+			html += `${HTML_TAB}background-color: ${slice.meta.fillColor.toUpperCase()};\n`;
+		}
+		html += '}\n';
+	});
 
 	return ({
 		html   : JSON.stringify(`/* ${DISCLAIMER} */\n\n${html}`),
@@ -130,11 +137,12 @@ export function toCSS(slice) {
 	});
 }
 
-export function toReactCSS(slice) {
-	const html = toCSS(slice).syntax.replace(/: (.+?);/g, ': \'$1\',').replace(/(-.)/g, (c)=> (c[1].toUpperCase())).replace(/,\n}/, ' }').replace(/^.+{\n/, '{').replace(/ +/g, ' ').replace(/\n/g, '');
+export function toReactCSS(slices) {
+// 	console.log('inspector-langs.toReactCSS()', slices);
 
+	const html = toCSS(slices).syntax.replace(/: (.+?);/g, ': \'$1\',').replace(/(-.)/g, (c)=> (c[1].toUpperCase())).replace(/,\n}/, ' }').replace(/^.+{\n/, '{').replace(/ +/g, ' ').replace(/\n/g, '');
 	return ({
-		html   : JSON.stringify(html),
+		html   : JSON.stringify(`/* ${DISCLAIMER} */\n\n${html}`),
 		syntax : `${html}\n`
 	});
 }
@@ -165,55 +173,58 @@ export function toSpecs(slice) {
 	return (content);
 }
 
-export function toSwift(slice, artboard) {
-// 	console.log('funcs.toSwift()', slice, artboard);
+export function toSwift(slices, artboard) {
+// 	console.log('inspector-langs.toSwift()', slices, artboard);
 
-	let html = `/* ${DISCLAIMER} */`;
-	if (slice.type === 'background' || slice.type === 'group' || slice.type === 'slice' || slice.type === 'symbol' || slice.type === 'textfield') {
-		const artboardName = Strings.camilze(artboard.title.replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
-		const sliceName = Strings.camilze(Strings.uriSlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''));
+	const artboardName = Strings.camilze(artboard.title.replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 
-		html += '// Asset\n';
-		html += 'enum Asset {\n';
-		html += `${HTML_TAB}enum ${artboardName} {\n`;
-		html += `${HTML_TAB}${HTML_TAB}static let ${sliceName}: AssetType = "${artboardName}/${Strings.capitalize(sliceName)}"\n`;
-		html += `${HTML_TAB}}\n`;
-		html += '}\n\n';
-		html += `let ${sliceName}Image = UIImage(asset: Asset.${artboardName}.${sliceName})\n`;
-		html += `let alt${sliceName}Image = Asset.${artboardName}.${sliceName}.image\n`;
+	let html = `/* ${DISCLAIMER} */\n\n`;
+	slices.forEach((slice)=> {
+		if (slice.type === 'background' || slice.type === 'group' || slice.type === 'slice' || slice.type === 'symbol' || slice.type === 'textfield') {
+			const sliceName = Strings.camilze(Strings.uriSlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''));
 
-		if (slice.meta.fillColor.length > 0) {
-			html += '\n\n// Color \n';
+			html += '// Asset\n';
+			html += 'enum Asset {\n';
+			html += `${HTML_TAB}enum ${artboardName} {\n`;
+			html += `${HTML_TAB}${HTML_TAB}static let ${sliceName}: AssetType = "${artboardName}/${Strings.capitalize(sliceName)}"\n`;
+			html += `${HTML_TAB}}\n`;
+			html += '}\n\n';
+			html += `let ${sliceName}Image = UIImage(asset: Asset.${artboardName}.${sliceName})\n`;
+			html += `let alt${sliceName}Image = Asset.${artboardName}.${sliceName}.image\n`;
+
+			if (slice.meta.fillColor.length > 0) {
+				html += '\n\n// Color \n';
+				html += 'struct ColorName {\n';
+				html += `${HTML_TAB}let rgbaValue: UInt32\n`;
+				html += `${HTML_TAB}var color: Color { return Color(named: self) }\n`;
+				html += `${HTML_TAB}static let ${Strings.camilze(slice.title)} = ColorName(rgbaValue: 0x${slice.meta.fillColor.replace('#', '')}ff)\n`;
+				html += '\n';
+				html += `let ${Strings.camilze(slice.title)}Color = UIColor(named: .${Strings.camilze(slice.title)})\n`;
+				html += `let ${Strings.camilze('alt' + slice.title)}Color = ColorName.${Strings.camilze(slice.title)}.color\n`;
+			}
+
+		} else if (slice.type === 'textfield') {
+			const { family, name, psName } = fontSpecs(slice.meta.font);
+
+			html += '// Font\n';
+			html += 'enum FontFamily {\n';
+			html += `${HTML_TAB}enum ${family}: String, FontConvertible {\n`;
+			html += `${HTML_TAB}${HTML_TAB}static let ${name.toLowerCase()} = FontConvertible(name: "${family}-${name}", family: "${slice.meta.font.family}", path: "${psName}.otf")\n`;
+			html += `${HTML_TAB}}\n`;
+			html += '}\n\n';
+			html += `let ${Strings.camilze([family, name].join(' '))} = UIFont(font: FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
+			html += `let ${Strings.camilze(['alt', family, name].join(' '))} = FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
+			html += '\n\n';
+			html += '// Color\n';
 			html += 'struct ColorName {\n';
 			html += `${HTML_TAB}let rgbaValue: UInt32\n`;
 			html += `${HTML_TAB}var color: Color { return Color(named: self) }\n`;
-			html += `${HTML_TAB}static let ${Strings.camilze(slice.title)} = ColorName(rgbaValue: 0x${slice.meta.fillColor.replace('#', '')}ff)\n`;
+			html += `${HTML_TAB}static let ${Strings.camilze(slice.title)} = ColorName(rgbaValue: 0x${slice.meta.font.color.replace('#', '')}ff)\n`;
 			html += '\n';
 			html += `let ${Strings.camilze(slice.title)}Color = UIColor(named: .${Strings.camilze(slice.title)})\n`;
 			html += `let ${Strings.camilze('alt' + slice.title)}Color = ColorName.${Strings.camilze(slice.title)}.color\n`;
 		}
-
-	} else if (slice.type === 'textfield') {
-		const { family, name, psName } = fontSpecs(slice.meta.font);
-
-		html += '// Font\n';
-		html += 'enum FontFamily {\n';
-		html += `${HTML_TAB}enum ${family}: String, FontConvertible {\n`;
-		html += `${HTML_TAB}${HTML_TAB}static let ${name.toLowerCase()} = FontConvertible(name: "${family}-${name}", family: "${slice.meta.font.family}", path: "${psName}.otf")\n`;
-		html += `${HTML_TAB}}\n`;
-		html += '}\n\n';
-		html += `let ${Strings.camilze([family,name].join(' '))} = UIFont(font: FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
-		html += `let ${Strings.camilze(['alt', family, name].join(' '))} = FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
-		html += '\n\n';
-		html += '// Color\n';
-		html += 'struct ColorName {\n';
-		html += `${HTML_TAB}let rgbaValue: UInt32\n`;
-		html += `${HTML_TAB}var color: Color { return Color(named: self) }\n`;
-		html += `${HTML_TAB}static let ${Strings.camilze(slice.title)} = ColorName(rgbaValue: 0x${slice.meta.font.color.replace('#', '')}ff)\n`;
-		html += '\n';
-		html += `let ${Strings.camilze(slice.title)}Color = UIColor(named: .${Strings.camilze(slice.title)})\n`;
-		html += `let ${Strings.camilze('alt' + slice.title)}Color = ColorName.${Strings.camilze(slice.title)}.color\n`;
-	}
+	});
 
 	return ({
 		html   : JSON.stringify(html),

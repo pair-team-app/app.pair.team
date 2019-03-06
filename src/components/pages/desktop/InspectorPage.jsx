@@ -74,6 +74,13 @@ const fillGroupPartItemSlices = (upload, slice)=> {
 	return (slices);
 };
 
+
+const intersectSlices = (slices, frame)=> {
+// 	console.log('interectSlices()', slices, frame);
+	return (slices.filter((slice)=> (Maths.geom.rectContainsRect(Maths.geom.frameToRect(frame), Maths.geom.frameToRect(slice.meta.frame)))));
+};
+
+
 const flattenUploadArtboards = (upload, type=null)=> {
 // 	console.log('flattenUploadArtboards()', upload, type);
 	return ((upload) ? upload.pages.flatMap((page)=> (page.artboards)).filter((artboard)=> ((type) ? artboard.type === type : true)).reverse() : []);
@@ -227,7 +234,7 @@ const ColorSwatch = (props)=> {
 };
 
 const FilingTabContent = (props)=> {
-	console.log('InspectorPage.FilingTabContent()', props);
+// 	console.log('InspectorPage.FilingTabContent()', props);
 
 	const { tab } = props;
 	const { type, enabled, contents } = tab;
@@ -671,7 +678,7 @@ class InspectorPage extends Component {
 			this.setState({
 				tabSets    : inspectorTabSets[section],
 				activeTabs : [...inspectorTabSets[section]].map((tabSet) => {
-					return (tabSet.slice(0, 1).pop());
+					return ([...tabSet].shift());
 				})
 			});
 		}
@@ -960,6 +967,383 @@ class InspectorPage extends Component {
 		};
 	};
 
+	resetTabSets = (upload, artboards)=> {
+// 		console.log('InspectorPage.resetTabSets()', upload, artboards);
+
+		const { section  } = this.state;
+		let tabSets = inspectorTabSets[section];
+		if (section === SECTIONS.INSPECT) {
+			tabSets = [...tabSets].map((tabSet, i) => {
+				if (i === 0) {
+					return (tabSet);
+
+				} else {
+					return (tabSet.map((tab, j) => {
+						return ((j === 0) ? Object.assign({}, tab, {
+							type     : 'component',
+							enabled  : ((upload.state << 0) === 3),
+							contents : <SpecsList
+								upload={upload}
+								slice={null}
+								creatorID={0}
+								onCopySpec={(msg) => this.handleClipboardCopy('spec', msg)}
+							/>
+						}) : tab);
+					}));
+				}
+			});
+
+			const activeTabs = tabSets.map((tabSet)=> {
+				return ([...tabSet].shift());
+			});
+
+			this.setState({ upload, tabSets, activeTabs,
+				artboard    : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
+				slice       : null,
+				offset      : null,
+				hoverSlice  : null,
+				hoverOffset : null,
+				tooltip     : null
+			});
+
+		} else if (section === SECTIONS.PARTS) {
+			tabSets = [...tabSets].map((tabSet, i) => {
+				return (tabSet.map((tab, j) => {
+					return (Object.assign({}, tab, {
+						enabled  : ((upload.state << 0) === 3),
+						contents : <PartsList
+							enabled={((upload.state << 0) === 3)}
+							contents={null}
+							onPartListItem={(slice) => this.handleDownloadPartListItem(slice)} />
+					}));
+				}));
+			});
+
+			const activeTabs = tabSets.map((tabSet)=> {
+				return ([...tabSet].shift());
+			});
+
+			this.setState({ upload, tabSets, activeTabs,
+				artboard  : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
+				slice     : null,
+				tooltip   : null
+			});
+
+		} else if (section === SECTIONS.PRESENTER) {
+			if (artboards.length > 0) {
+				const artboard = artboards[0];
+
+				let formData = new FormData();
+				formData.append('action', 'ARTBOARD_SLICES');
+				formData.append('artboard_id', artboard.id);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response)=> {
+						console.log('ARTBOARD_SLICES', response.data);
+
+						artboard.slices = response.data.slices.map((slice)=> {
+							const meta = JSON.parse(slice.meta.replace(/\n/g, '\\\\n'));
+							return ({
+								id         : slice.id << 0,
+								artboardID : slice.artboard_id << 0,
+								title      : slice.title,
+								type       : slice.type,
+								filename   : slice.filename,
+								meta       : Object.assign({}, meta, {
+									orgFrame : meta.frame,
+									frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
+								}),
+								added      : slice.added,
+								filled     : false,
+								children   : []
+							});
+						});
+
+						upload.pages = upload.pages.map((page)=> (Object.assign({}, page, {
+							artboards : page.artboards.map((item) => ((item.id === artboard.id) ? artboard : item))
+						})));
+
+						const slices = [...intersectSlices(artboard.slices, artboard.meta.frame)];
+						const langs = [
+							toCSS(slices),
+							toReactCSS(slices),
+							toSwift(slices, artboard),
+							toAndroid(slices, artboard)
+						];
+
+						tabSets = [...tabSets].map((tabSet, i) => {
+							return (tabSet.map((tab, j) => {
+								if (i === 0) {
+									return (Object.assign({}, tab, {
+										enabled  : ((upload.state << 0) === 3),
+										contents : langs[j].html,
+										syntax   : langs[j].syntax
+									}));
+
+								} else {
+									return (Object.assign({}, tab, {
+										type     : 'component',
+										enabled  : ((upload.state << 0) === 3),
+										contents : <ArtboardsList
+											enabled={((upload.state << 0) === 3)}
+											contents={flattenUploadArtboards(upload, 'page_child')}
+											onArtboardListItem={(artboard) => this.handleChangeArtboard(artboard)} />
+									}));
+								}
+							}));
+						});
+
+						const activeTabs = tabSets.map((tabSet)=> {
+							return ([...tabSet].shift());
+						});
+
+						this.setState({ upload, tabSets, activeTabs,
+							artboard  : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
+							slice     : slices[0],
+							offset    : artboard.meta.frame.origin,
+							tooltip   : null
+						});
+
+					}).catch((error)=> {
+				});
+			}
+		}
+	};
+
+	replaceTabSets = (artboard, slice, offset)=> {
+// 		console.log('InspectorPage.replaceTabSets()', artboard, slice, offset);
+
+
+		const { profile } = this.props;
+		const { section, upload } = this.state;
+		let tabSets = [...this.state.tabSets];
+
+		const slices = [...intersectSlices(artboard.slices, slice.meta.frame)];
+		const langs = [
+			toCSS(slices),
+			toReactCSS(slices),
+			toSwift(slices, artboard),
+			toAndroid(slices, artboard)
+		];
+
+		if (section === SECTIONS.INSPECT) {
+			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
+				if (i === 1) {
+					return (tabSet.map((tab, j)=> {
+						return ((j === 0) ? Object.assign({}, tab, {
+							type     : 'component',
+							enabled  : true,
+							contents : <SpecsList
+								upload={upload}
+								slice={slice}
+								creatorID={(profile) ? profile.id : 0}
+								onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
+							/>
+						}) : tab);
+					}));
+
+				} else {
+					return (tabSet.map((tab, i)=> {
+						return (Object.assign({}, tab, {
+							enabled  : true,
+							contents : langs[i].html,
+							syntax   : langs[i].syntax
+						}));
+					}));
+				}
+			});
+
+		} else if (section === SECTIONS.PARTS) {
+			tabSets[0][0].type = 'component';
+			tabSets[0][0].enabled = true;
+
+			if (slice.type === 'symbol') {
+				let formData = new FormData();
+				formData.append('action', 'SYMBOL_SLICES');
+				formData.append('slice_id', slice.id);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response)=> {
+						console.log('SYMBOL_SLICES', response.data);
+
+						slice.children = response.data.slices.map((item)=> {
+							const meta = JSON.parse(item.meta.replace(/\n/g, '\\\\n'));
+							return ({
+								id         : item.id << 0,
+								artboardID : item.artboard_id << 0,
+								title      : item.title,
+								type       : item.type,
+								filename   : item.filename,
+								meta       : Object.assign({}, meta, {
+									orgFrame : meta.frame,
+									frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
+								}),
+								added      : item.added,
+								filled     : false
+							});
+						});
+
+						tabSets[0][0].enabled = true;
+						tabSets[0][0].contents = <PartsList
+							// 								contents={slice.children}
+							contents={artboard.slices}
+							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+						this.setState({ tabSets });
+					}).catch((error)=> {
+				});
+
+			} else if (slice.type === 'group') {
+				tabSets[0][0].enabled = true;
+				tabSets[0][0].contents = <PartsList
+					contents={fillGroupPartItemSlices(upload, slice)}
+					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+				this.setState({ tabSets });
+			}
+
+		} else if (section === SECTIONS.PRESENTER) {
+			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
+				return (tabSet.map((tab, j)=> {
+					if (i === 0) {
+						return (Object.assign({}, tab, {
+							enabled  : true,
+							contents : langs[j].html,
+							syntax   : langs[j].syntax
+						}));
+
+					} else {
+						return (Object.assign({}, tab, {
+							type     : 'component',
+							enabled  : true,
+							contents : <ArtboardsList
+								contents={flattenUploadArtboards(upload, 'page_child')}
+								onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />
+						}));
+					}
+				}));
+			});
+		}
+
+		const activeTabs = [...this.state.activeTabs].map((activeTab, i)=> {
+			const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
+			return ((tab) ? tab : activeTab);
+		});
+
+		this.setState({ upload, artboard, tabSets, activeTabs });
+	};
+
+	restoreTabSets = (upload, artboard, slice)=> {
+// 		console.log('InspectorPage.restoreTabSets()', upload, artboard, slice);
+
+		const { profile } = this.props;
+		const { section } = this.state;
+		let tabSets = [...this.state.tabSets];
+		let activeTabs = [...this.state.activeTabs];
+
+		const slices = [...intersectSlices(artboard.slices, slice.meta.frame)];
+		const langs = [
+			toCSS(slices),
+			toReactCSS(slices),
+			toSwift(slices, artboard),
+			toAndroid(slices, artboard)
+		];
+
+		if (section === SECTIONS.INSPECT) {
+			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
+				if (i === 1) {
+					return (tabSet.map((tab, j)=> {
+						return ((j === 0) ? Object.assign({}, tab, {
+							type     : 'component',
+							enabled  : true,
+							contents : <SpecsList
+								upload={upload}
+								slice={slice}
+								creatorID={(profile) ? profile.id : 0}
+								onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
+							/>
+						}) : tab);
+					}));
+
+				} else {
+					return (tabSet.map((tab, i)=> {
+						return (Object.assign({}, tab, {
+							enabled  : true,
+							contents : langs[i].html,
+							syntax   : langs[i].syntax
+						}));
+					}));
+				}
+			});
+
+		} else if (section === SECTIONS.PARTS) {
+			tabSets[0][0].type = 'component';
+
+			if (slice.type === 'symbol') {
+				let formData = new FormData();
+				formData.append('action', 'SYMBOL_SLICES');
+				formData.append('slice_id', slice.id);
+				axios.post('https://api.designengine.ai/system.php', formData)
+					.then((response)=> {
+						console.log('SYMBOL_SLICES', response.data);
+
+						const slices = response.data.slices.map((item)=> ({
+							id         : item.id << 0,
+							artboardID : item.artboard_id << 0,
+							title      : item.title,
+							type       : item.type,
+							filename   : item.filename,
+							meta       : JSON.parse(item.meta),
+							added      : item.added,
+							filled     : false,
+						}));
+
+						slice.children = slices;
+						tabSets[0][0].enabled = true;
+						tabSets[0][0].contents = <PartsList
+							contents={slices}
+							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+						this.setState({ tabSets });
+					}).catch((error)=> {
+				});
+
+			} else if (slice.type === 'group') {
+				tabSets[0][0].enabled = true;
+				tabSets[0][0].contents = <PartsList
+					contents={fillGroupPartItemSlices(upload, slice)}
+					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+			}
+
+		} else if (section === SECTIONS.PRESENTER) {
+			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
+				return (tabSet.map((tab, j)=> {
+					if (i === 0) {
+						return (Object.assign({}, tab, {
+							enabled  : true,
+							contents : langs[j].html,
+							syntax   : langs[j].syntax
+						}));
+
+					} else {
+						return (Object.assign({}, tab, {
+							enabled  : true,
+							type     : 'component',
+							contents : <ArtboardsList
+								contents={flattenUploadArtboards(upload, 'page_child')}
+								onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />
+						}));
+					}
+				}));
+			});
+		}
+
+		activeTabs = activeTabs.map((activeTab, i)=> {
+			const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
+			return ((tab) ? tab : activeTab);
+		});
+
+		this.setState({ artboard, tabSets, activeTabs,
+			hoverSlice  : null,
+			hoverOffset : null
+		});
+	};
+
 	handleArtboardClick = (event)=> {
 // 		console.log('InspectorPage.handleArtboardClick()', event.target);
 
@@ -1047,12 +1431,9 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.handleCanvasClick()', this.state.tabSets);
 		event.stopPropagation();
 
-		const { section, scrolling } = this.state;
+		const { upload, artboard, scrolling } = this.state;
 		if (!scrolling) {
-			this.setState({
-				tabSets : inspectorTabSets[section],
-				slice   : null
-			});
+			this.resetTabSets(upload, (artboard) ? [artboard] : []);
 		}
 	};
 
@@ -1264,18 +1645,32 @@ class InspectorPage extends Component {
 
 		trackEvent('slice', `${slice.id}_${Strings.uriSlug(slice.title)}`);
 
-		const { profile } = this.props;
-		const { upload, artboard, section } = this.state;
-		let { tabSets } = this.state;
+// 		const { profile } = this.props;
+// 		const { upload, artboard, section } = this.state;
+		const { artboard } = this.state;
+// 		let { tabSets } = this.state;
 
 		slice.filled = true;
 		artboard.slices.filter((item)=> (item.id !== slice.id)).forEach((item)=> {
 			item.filled = false;
 		});
 
+		this.setState({ slice, offset,
+			hoverSlice  : null,
+			hoverOffset : null
+
+		}, ()=> (this.replaceTabSets(artboard, slice, offset)));
+
+
+
+
+
+
+
+		/*
 		const langs = [
-			toCSS(slice),
-			toReactCSS(slice),
+			toCSS([slice]),
+			toReactCSS([slice]),
 			toSwift(slice, artboard),
 			toAndroid(slice, artboard)
 		];
@@ -1373,28 +1768,47 @@ class InspectorPage extends Component {
 			return ((tab) ? tab : activeTab);
 		});
 
-// 		const activeTabs = tabSets.map((tabSet)=> {
-// 			return ((tabSet.find((tab)=> (tab.id === activeTab.id))) ? tab : activeTab );
-// 		});
-
 		this.setState({ tabSets, activeTabs, artboard, slice, offset,
 			hoverSlice  : null,
 			hoverOffset : null
 		});
+
+
+		*/
 	};
 
 	handleSliceRollOut = (ind, slice, offset)=> {
-// 		console.log('InspectorPage.handleSliceRollOut()', ind, slice, offset, this.state);
+		console.log('InspectorPage.handleSliceRollOut()', ind, slice, offset, this.state);
 
-		const { profile } = this.props;
-		const { upload, artboard, section } = this.state;
-		let tabSets = [...this.state.tabSets];
-		let activeTabs = [...this.state.activeTabs];
+// 		const { profile } = this.props;
+// 		const { upload, artboard, section } = this.state;
+		const { upload, artboard } = this.state;
+// 		let tabSets = [...this.state.tabSets];
+// 		let activeTabs = [...this.state.activeTabs];
 
+// 		this.setState({
+// 			hoverSlice  : slice,
+// 			hoverOffset : offset
+// 		}, ()=> {
+			if (this.state.slice) {
+				this.restoreTabSets(upload, artboard, this.state.slice);
+
+			} else {
+				this.resetTabSets(upload, (artboard) ? [artboard] : []);
+			}
+// 		});
+
+
+
+
+
+
+
+		/*
 		if (this.state.slice) {
 			const langs = [
-				toCSS(this.state.slice),
-				toReactCSS(this.state.slice),
+				toCSS([this.state.slice]),
+				toReactCSS([this.state.slice]),
 				toSwift(this.state.slice, artboard),
 				toAndroid(this.state.slice, artboard)
 			];
@@ -1518,14 +1932,25 @@ class InspectorPage extends Component {
 			hoverSlice  : null,
 			hoverOffset : null
 		});
+		*/
+
+
+
+
+
+
+
+
+
 	};
 
 	handleSliceRollOver = (ind, slice, offset)=> {
 // 		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
 
-		const { profile } = this.props;
-		const { upload, artboard, section } = this.state;
-		let tabSets = [...this.state.tabSets];
+// 		const { profile } = this.props;
+// 		const { upload, artboard, section } = this.state;
+		const { artboard } = this.state;
+// 		let tabSets = [...this.state.tabSets];
 
 		if (artboard) {
 			slice.filled = true;
@@ -1533,9 +1958,15 @@ class InspectorPage extends Component {
 				item.filled = false;
 			});
 
+			this.setState({
+				hoverSlice : slice,
+				hoverOffset : offset
+			}, ()=> (this.replaceTabSets(artboard, slice, offset)));
+
+			/*
 			const langs = [
-				toCSS(slice),
-				toReactCSS(slice),
+				toCSS([slice]),
+				toReactCSS([slice]),
 				toSwift(slice, artboard),
 				toAndroid(slice, artboard)
 			];
@@ -1670,6 +2101,13 @@ class InspectorPage extends Component {
 				hoverSlice  : slice,
 				hoverOffset : offset
 			});
+			*/
+
+
+
+
+
+
 		}
 	};
 
@@ -1863,7 +2301,11 @@ class InspectorPage extends Component {
 				});
 
 				const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'symbol_container' : 'page_child');
+				this.resetTabSets(upload, artboards);
 
+
+
+/*
 				let tabSets = inspectorTabSets[section];
 				if (section === SECTIONS.INSPECT) {
 					tabSets = [...tabSets].map((tabSet, i) => {
@@ -1886,6 +2328,16 @@ class InspectorPage extends Component {
 						}
 					});
 
+					const activeTabs = tabSets.map((tabSet)=> {
+						return (tabSet.slice(0, 1).pop());
+					});
+
+					this.setState({ upload, tabSets, activeTabs,
+						artboard  : (section === SECTIONS.PRESENTER) ? (artboards.length > 0) ? artboards[0] : null : null,
+						slice     : null,
+						tooltip   : null
+					});
+
 				} else if (section === SECTIONS.PARTS) {
 					tabSets = [...tabSets].map((tabSet, i) => {
 						return (tabSet.map((tab, j) => {
@@ -1899,49 +2351,97 @@ class InspectorPage extends Component {
 						}));
 					});
 
+					const activeTabs = tabSets.map((tabSet)=> {
+						return (tabSet.slice(0, 1).pop());
+					});
+
+					this.setState({ upload, tabSets, activeTabs,
+						artboard  : (section === SECTIONS.PRESENTER) ? (artboards.length > 0) ? artboards[0] : null : null,
+						slice     : null,
+						tooltip   : null
+					});
+
 				} else if (section === SECTIONS.PRESENTER) {
 					if (artboards.length > 0) {
 						const artboard = artboards[0];
-						const langs = [
-							toCSS(artboard),
-							toReactCSS(artboard),
-							toSwift(artboard, artboard),
-							toAndroid(artboard, artboard)
-						];
 
-						tabSets = [...tabSets].map((tabSet, i) => {
-							return (tabSet.map((tab, j) => {
-								if (i === 0) {
-									return (Object.assign({}, tab, {
-										enabled  : ((upload.state << 0) === 3),
-										contents : langs[j].html,
-										syntax   : langs[j].syntax
-									}));
+						let formData = new FormData();
+						formData.append('action', 'ARTBOARD_SLICES');
+						formData.append('artboard_id', artboard.id);
+						axios.post('https://api.designengine.ai/system.php', formData)
+							.then((response)=> {
+								console.log('ARTBOARD_SLICES', response.data);
 
-								} else {
-									return (Object.assign({}, tab, {
-										type     : 'component',
-										enabled  : ((upload.state << 0) === 3),
-										contents : <ArtboardsList
-											enabled={((upload.state << 0) === 3)}
-											contents={flattenUploadArtboards(upload, 'page_child')}
-											onArtboardListItem={(artboard) => this.handleChangeArtboard(artboard)} />
+								artboard.slices = response.data.slices.map((slice)=> {
+									const meta = JSON.parse(slice.meta.replace(/\n/g, '\\\\n'));
+									return ({
+										id         : slice.id << 0,
+										artboardID : slice.artboard_id << 0,
+										title      : slice.title,
+										type       : slice.type,
+										filename   : slice.filename,
+										meta       : Object.assign({}, meta, {
+											orgFrame : meta.frame,
+											frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
+										}),
+										added      : slice.added,
+										filled     : false,
+										children   : []
+									});
+								});
+
+								upload.pages = upload.pages.map((page)=> (Object.assign({}, page, {
+									artboards : page.artboards.map((item) => ((item.id === artboard.id) ? artboard : item))
+								})));
+
+								const slices = [...intersectSlices(artboard.slices, artboard.meta.frame)];
+								const langs = [
+									toCSS(slices),
+									toReactCSS(slices),
+									toSwift(slices, artboard),
+									toAndroid(slices, artboard)
+								];
+
+								tabSets = [...tabSets].map((tabSet, i) => {
+									return (tabSet.map((tab, j) => {
+										if (i === 0) {
+											return (Object.assign({}, tab, {
+												enabled  : ((upload.state << 0) === 3),
+												contents : langs[j].html,
+												syntax   : langs[j].syntax
+											}));
+
+										} else {
+											return (Object.assign({}, tab, {
+												type     : 'component',
+												enabled  : ((upload.state << 0) === 3),
+												contents : <ArtboardsList
+													enabled={((upload.state << 0) === 3)}
+													contents={flattenUploadArtboards(upload, 'page_child')}
+													onArtboardListItem={(artboard) => this.handleChangeArtboard(artboard)} />
+											}));
+										}
 									}));
-								}
-							}));
+								});
+
+								const activeTabs = tabSets.map((tabSet)=> {
+									return (tabSet.slice(0, 1).pop());
+								});
+
+								this.setState({ upload, tabSets, activeTabs,
+									artboard  : (section === SECTIONS.PRESENTER) ? (artboards.length > 0) ? artboards[0] : null : null,
+									slice     : null,
+									tooltip   : null
+								});
+
+							}).catch((error)=> {
 						});
 					}
 				}
+*/
 
-				const activeTabs = tabSets.map((tabSet)=> {
-					return (tabSet.slice(0, 1).pop());
-				});
 
-				this.setState({ upload, tabSets, activeTabs,
-					artboard  : (section === SECTIONS.PRESENTER) ? (artboards.length > 0) ? artboards[0] : null : null,
-					slice     : null,
-					tooltip   : null
-				});
+
 
 				const processing = ((upload.state << 0) < 3);
 				if (processing && !this.props.processing && !this.processingInterval) {
