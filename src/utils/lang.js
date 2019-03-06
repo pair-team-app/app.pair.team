@@ -70,7 +70,8 @@ export const DateTimes = {
 			}
 		}).reverse().join(''));
 	},
-	epoch : (millisecs=false)=> ((millisecs) ? (new Date()).getTime() : ((new Date()).getTime() * 0.001) << 0)
+	epoch          : (millisecs=false)=> ((millisecs) ? (new Date()).getTime() : ((new Date()).getTime() * 0.001) << 0),
+	secsDiff       : (date1, date2)=> (Math.abs(date1.getTime() - date2.getTime()))
 };
 
 
@@ -146,8 +147,10 @@ export const Strings = {
 	capitalize : (str, lower=false)=> (str.replace(/^(\w+)$/gi, (c)=> ((lower) ? c.toLowerCase() : c)).replace(/(\b\w)/gi, (c)=> (c.toUpperCase()))),
 	countOf    : (str, substr)=> ((str.match(new RegExp(substr.toString(), 'g')) || []).length),
 	dropChar   : (str, char)=> (Strings.replAll(str, char)),
+	firstChar  : (str)=> (str.charAt(0)),
 	isEmail    : (str)=> (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(String(str).toLowerCase())),
 // 	lPad       : (str, amt, char)=> ((new Array(amt - String(str).length + 1)).join(str || char) + str),
+	lastChar   : (str)=> (str.slice(-1)),
 	lPad       : (str, amt, char)=> ((str.length < amt) ? `${(new Array(amt - String(str).length + 1)).join(char)}${str}` : str),
 	indexedVal : (val, arr, divider='_')=> {
 		if (arr[val].length === 0) {
@@ -159,6 +162,7 @@ export const Strings = {
 			arr : [...arr]
 		});
 	},
+	pluralize  : (str, val)=> ((val === 1) ? str : (Strings.lastChar(str) === 'y') ? `${str.slice(0, -1)}ies` : (Strings.lastChar(str) === 's') ? 'es' : `${str}s`),
 	repeat     : (str, amt)=> ((new Array(amt)).fill(str).join('')),
 	replAll    : (str, needle, replacement='')=> (str.split(needle).join(replacement)),
 	reverse    : (str)=> ([...str].reverse().join('')),

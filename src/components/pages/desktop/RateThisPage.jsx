@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { Row, Column } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
+import { Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 
 
@@ -86,7 +87,7 @@ const RateThisList = (props)=> {
 	const commentTotal = ratings.filter((rating)=> (rating.comment.length > 0)).length;
 
 	return (<div className="rate-this-page-list-wrapper">
-		<h4 className="table-header">{`${avgScore}/5 star rating`} &amp; {`${commentTotal} comment${(commentTotal === 1) ? '' : 's'}`}</h4>
+		<h4 className="table-header">{`${avgScore}/5 star rating`} &amp; {`${commentTotal} ${Strings.pluralize('comment', commentTotal)}}`}</h4>
 		{ratings.map((rating, i)=> {
 			return (<RateThisItem
 				key={i}

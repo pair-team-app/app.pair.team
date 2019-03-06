@@ -79,11 +79,12 @@ const flattenUploadArtboards = (upload, type=null)=> {
 	return ((upload) ? upload.pages.flatMap((page)=> (page.artboards)).filter((artboard)=> ((type) ? artboard.type === type : true)).reverse() : []);
 };
 
+/*
 const slicesByArea = (slices)=> {
 // 	console.log('slicesByArea()', slices);
 	return(slices.sort((s1, s2)=> ((Maths.geom.sizeArea(s1.meta.frame.size) < Maths.geom.sizeArea(s2.meta.frame.size)) ? -1 : (Maths.geom.sizeArea(s1.meta.frame.size) > Maths.geom.sizeArea(s2.meta.frame.size)) ? 1 : 0)));
 };
-
+*/
 
 const drawCanvasSliceBorder = (context, frame)=> {
 	context.strokeStyle = CANVAS.slices.borderColor;
@@ -94,10 +95,12 @@ const drawCanvasSliceBorder = (context, frame)=> {
 	context.stroke();
 };
 
+/*
 const drawCanvasSliceFill = (context, frame, color)=> {
 	context.fillStyle = color;
 	context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 };
+*/
 
 const drawSliceGuides = (context, frame, size, color)=> {
 	context.strokeStyle = color;
@@ -126,6 +129,7 @@ const drawCanvasSliceMarchingAnts = (context, frame, offset)=> {
 	context.stroke();
 };
 
+/*
 const drawCanvasSliceTooltip = (context, text, origin, maxWidth=-1)=> {
 	maxWidth = (maxWidth === -1) ? 250 : maxWidth;
 
@@ -158,7 +162,7 @@ const drawCanvasSliceTooltip = (context, text, origin, maxWidth=-1)=> {
 	context.fillStyle = CANVAS.caption.textColor;
 	context.fillText(caption.toUpperCase(), txtMetrics.padding + origin.x, txtMetrics.padding + (origin.y - txtMetrics.height));
 };
-
+*/
 
 
 const ArtboardsList = (props)=> {
@@ -1996,7 +2000,7 @@ class InspectorPage extends Component {
 					this.setState({
 						processing : {
 							state   : processingState,
-// 							message : `Processing ${title}, parsed ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s…`
+// 							message : `Processing ${title}, parsed ${total} ${Strings.pluralize('element', total)} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s…`
 							message : `Processing ${title}${ellipsis}`
 						}
 					});
@@ -2008,7 +2012,7 @@ class InspectorPage extends Component {
 					this.setState({
 						processing : {
 							state   : processingState,
-// 							message : `Completed processing ${total} element${(total === 1) ? '' : 's'} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s.`
+// 							message : `Completed processing ${total} ${Strings.pluralize('element', total)} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s.`
 							message : `Completed processing ${title}`
 						}
 					}, ()=> this.onShowNotification());
@@ -2276,7 +2280,7 @@ class InspectorPage extends Component {
 									onContentClick={(payload)=> console.log('onContentClick', payload)}
 								/>
 								<div className="inspector-page-panel-button-wrapper">
-									<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> this.handleDownloadPartsList()}>{(processing) ? 'Processing' : `Download (${listTotal}) Part${(listTotal === 1) ? '' : 's'}`}</button>
+									<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> this.handleDownloadPartsList()}>{(processing) ? 'Processing' : `Download (${listTotal}) ${Strings.pluralize('Part', listTotal)}`}</button>
 									<button disabled={!upload || processing} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}>{(processing) ? 'Processing' : 'Download All Parts'}</button>
 								</div>
 							</div>)
