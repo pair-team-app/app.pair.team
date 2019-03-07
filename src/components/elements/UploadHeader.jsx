@@ -10,6 +10,8 @@ import { updateDeeplink } from '../../redux/actions';
 import { sendToSlack } from '../../utils/funcs';
 import { Files } from '../../utils/lang';
 import { trackEvent } from '../../utils/tracking';
+import demoURLs from '../../assets/json/demo-urls';
+
 
 const dropZone = React.createRef();
 
@@ -69,7 +71,7 @@ class UploadHeader extends Component {
 		event.preventDefault();
 		trackEvent('button', 'demo');
 
-		window.location.replace(`http://demo.designengine.ai${window.location.pathname}`);
+		window.location.replace(demoURLs[window.location.pathname.split('/').pop()]);
 	};
 
 	handleFileDialogCancel = ()=> {

@@ -63,27 +63,12 @@ const artboardForID = (upload, artboardID)=> {
 
 const fillGroupPartItemSlices = (upload, slice)=> {
 // 	console.log('fillGroupPartItemSlices()', upload, slice);
-	let slices = [slice];
-
-	artboardForID(upload, slice.artboardID).slices.filter((item)=> (item.id !== slice.id)).forEach((item)=> {
-		if (Maths.geom.rectContainsRect(Maths.geom.frameToRect(slice.meta.frame), Maths.geom.frameToRect(item.meta.frame))) {
-			slices.push(item);
-		}
-	});
-
-	return (slices);
+	return ([slice, ...artboardForID(upload, slice.artboardID).slices.filter((item)=> (item.type !== 'artboard' && item.id !== slice.id && (Maths.geom.rectContainsRect(Maths.geom.frameToRect(slice.meta.frame), Maths.geom.frameToRect(item.meta.frame)))))]);
 };
-
-
-const intersectSlices = (slices, frame)=> {
-// 	console.log('interectSlices()', slices, frame);
-	return (slices.filter((slice)=> (Maths.geom.rectContainsRect(Maths.geom.frameToRect(frame), Maths.geom.frameToRect(slice.meta.frame)))));
-};
-
 
 const flattenUploadArtboards = (upload, type=null)=> {
 // 	console.log('flattenUploadArtboards()', upload, type);
-	return ((upload) ? upload.pages.flatMap((page)=> (page.artboards)).filter((artboard)=> ((type) ? artboard.type === type : true)).reverse() : []);
+	return ((upload) ? upload.pages.flatMap((page)=> (page.artboards)).filter((artboard)=> ((type) ? (artboard.type === type || artboard.type.includes(type)) : true)).reverse() : []);
 };
 
 /*
@@ -171,6 +156,12 @@ const drawCanvasSliceTooltip = (context, text, origin, maxWidth=-1)=> {
 };
 */
 
+const intersectSlices = (slices, frame)=> {
+// 	console.log('interectSlices()', slices, frame);
+	return (slices.filter((slice)=> (Maths.geom.rectContainsRect(Maths.geom.frameToRect(frame), Maths.geom.frameToRect(slice.meta.frame)))));
+};
+
+
 
 const ArtboardsList = (props)=> {
 // 	console.log('InspectorPage.ArtboardsList()', props);
@@ -192,7 +183,7 @@ const ArtboardsList = (props)=> {
 				/>
 			);
 		})}
-	</div> : <div className="artboards-list-wrapper">{(enabled) ? 'N/A' : '2'}</div>);
+	</div> : <div className="artboards-list-wrapper artboards-list-wrapper-empty">{(enabled) ? '' : ''}</div>);
 };
 
 const ArtboardListItem = (props)=> {
@@ -241,7 +232,7 @@ const FilingTabContent = (props)=> {
 	const className = `filing-tab-content${(!enabled) ? ' filing-tab-content-disabled' : ''}`;
 
 	return (<div key={tab.id} className={className}>
-		{(enabled && (!type || type === 'json_html')) && (<span dangerouslySetInnerHTML={{ __html : (contents && contents.length > 0) ? String(JSON.parse(contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : 'N/A' }} />)}
+		{((!type || type === 'json_html')) && (<span dangerouslySetInnerHTML={{ __html : (contents) ? String(((enabled) ? JSON.parse(contents) : contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : '/* Rollover to display code.<br />*/' }} />)}
 		{(type === 'component') && (contents)}
 	</div>);
 };
@@ -359,7 +350,7 @@ const PartsList = (props)=> {
 				/>
 			);
 		})}
-	</div> : <div className="parts-list-wrapper">{(enabled) ? 'N/A' : ''}</div>);
+	</div> : <div className="parts-list-wrapper parts-list-wrapper-empty">{(enabled) ? '/* Rollover to display parts. */' : ''}</div>);
 };
 
 const PartListItem = (props)=> {
@@ -434,7 +425,7 @@ const SpecsList = (props)=> {
 	const { upload, slice, creatorID } = props;
 
 	if (!upload || !slice || (upload && (upload.state << 0) < 3)) {
-		return (<div className="inspector-page-specs-list-wrapper">{((upload.state << 0) < 3) ? '' : '/* Rollover to display specs.\n*/'}</div>);
+		return (<div className="inspector-page-specs-list-wrapper inspector-page-specs-list-wrapper-empty">{((upload.state << 0) < 3) ? '' : '/* Rollover to display specs.\n*/'}</div>);
 	}
 
 	const { frame } = slice.meta;
@@ -765,7 +756,7 @@ class InspectorPage extends Component {
 			};
 
 
-			const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'symbol_container' : 'page_child');
+			const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'container' : 'page_child');
 			if (artboards.length > 0) {
 				const baseSize = this.calcArtboardBaseSize((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
 				console.log('_-]BASE SIZE[-_', baseSize);
@@ -924,12 +915,17 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.calcCanvasSliceFrame()', slice, artboard, offset, scrollPt);
 
 		const { section, upload, scale, urlBanner } = this.state;
-		const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'symbol_container' : 'page_child');
+		const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'container' : 'page_child');
 
 		const baseOffset = {
-			x : (((section === SECTIONS.PRESENTER || artboards.length === 1) << 0) * PAN_ZOOM.insetSize.width) + (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.width : 0,
-			y : (26 * (urlBanner << 0)) + (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 0,
+			x : (artboards.length < GRID.colsMax || section === SECTIONS.PRESENTER) ? PAN_ZOOM.insetSize.width : 0,
+			y :(26 * (urlBanner << 0)) + (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 0,
 		};
+
+// 		const baseOffset = {
+// 			x : (((section === SECTIONS.PRESENTER || artboards.length === 1) << 0) * PAN_ZOOM.insetSize.width) + (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.width : 0,
+// 			y : (26 * (urlBanner << 0)) + (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 0,
+// 		};
 
 		const srcFrame = Maths.geom.cropFrame(slice.meta.frame, artboard.meta.frame);
 		const srcOffset = {
@@ -1004,11 +1000,11 @@ class InspectorPage extends Component {
 				}
 			});
 
-			const activeTabs = tabSets.map((tabSet)=> {
+			const activeTabs = (this.state.activeTabs.length === 0) ? tabSets.map((tabSet)=> {
 				return ([...tabSet].shift());
-			});
+			}) : this.state.activeTabs;
 
-			this.setState({ upload, tabSets, activeTabs,
+			this.setState({ tabSets, activeTabs,
 				artboard    : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
 				slice       : null,
 				offset      : null,
@@ -1030,9 +1026,9 @@ class InspectorPage extends Component {
 				}));
 			});
 
-			const activeTabs = tabSets.map((tabSet)=> {
+			const activeTabs = (this.state.activeTabs.length === 0) ? tabSets.map((tabSet)=> {
 				return ([...tabSet].shift());
-			});
+			}) : this.state.activeTabs;
 
 			this.setState({ upload, tabSets, activeTabs,
 				artboard  : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
@@ -1042,7 +1038,7 @@ class InspectorPage extends Component {
 
 		} else if (section === SECTIONS.PRESENTER) {
 			if (artboards.length > 0) {
-				const artboard = artboards[0];
+				const artboard = (this.state.artboard) ? this.state.artboard : artboards[0];
 
 				let formData = new FormData();
 				formData.append('action', 'ARTBOARD_SLICES');
@@ -1096,23 +1092,26 @@ class InspectorPage extends Component {
 										enabled  : ((upload.state << 0) === 3),
 										contents : <ArtboardsList
 											enabled={((upload.state << 0) === 3)}
-											contents={flattenUploadArtboards(upload, 'page_child')}
+											contents={flattenUploadArtboards(upload, 'page_child').reverse()}
 											onArtboardListItem={(artboard) => this.handleChangeArtboard(artboard)} />
 									}));
 								}
 							}));
 						});
 
-						const activeTabs = tabSets.map((tabSet)=> {
+						const activeTabs = (this.state.activeTabs.length === 0) ? tabSets.map((tabSet)=> {
 							return ([...tabSet].shift());
-						});
+						}) : this.state.activeTabs;
 
-						this.setState({ upload, tabSets, activeTabs,
-							artboard  : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
+						this.setState({ upload, tabSets, activeTabs, artboard,
 							slice     : slices[0],
-							offset    : artboard.meta.frame.origin,
+							offset    : slices[0].meta.frame.origin,
 							tooltip   : null
 						});
+
+						if (!this.canvasInterval) {
+							this.canvasInterval = setInterval(()=> this.onCanvasInterval(), CANVAS.marchingAnts.interval);
+						}
 
 					}).catch((error)=> {
 				});
@@ -1194,7 +1193,7 @@ class InspectorPage extends Component {
 
 						tabSets[0][0].enabled = true;
 						tabSets[0][0].contents = <PartsList
-							// 								contents={slice.children}
+							enabled={true}
 							contents={artboard.slices}
 							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 						this.setState({ tabSets });
@@ -1204,6 +1203,7 @@ class InspectorPage extends Component {
 			} else if (slice.type === 'group') {
 				tabSets[0][0].enabled = true;
 				tabSets[0][0].contents = <PartsList
+					enabled={true}
 					contents={fillGroupPartItemSlices(upload, slice)}
 					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 				this.setState({ tabSets });
@@ -1224,7 +1224,8 @@ class InspectorPage extends Component {
 							type     : 'component',
 							enabled  : true,
 							contents : <ArtboardsList
-								contents={flattenUploadArtboards(upload, 'page_child')}
+								enabled={true}
+								contents={flattenUploadArtboards(upload, 'page_child').reverse()}
 								onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />
 						}));
 					}
@@ -1308,6 +1309,7 @@ class InspectorPage extends Component {
 						slice.children = slices;
 						tabSets[0][0].enabled = true;
 						tabSets[0][0].contents = <PartsList
+							enabled={true}
 							contents={slices}
 							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 						this.setState({ tabSets });
@@ -1317,6 +1319,7 @@ class InspectorPage extends Component {
 			} else if (slice.type === 'group') {
 				tabSets[0][0].enabled = true;
 				tabSets[0][0].contents = <PartsList
+					enabled={true}
 					contents={fillGroupPartItemSlices(upload, slice)}
 					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 			}
@@ -1336,7 +1339,8 @@ class InspectorPage extends Component {
 							enabled  : true,
 							type     : 'component',
 							contents : <ArtboardsList
-								contents={flattenUploadArtboards(upload, 'page_child')}
+								enabled={true}
+								contents={flattenUploadArtboards(upload, 'page_child').reverse()}
 								onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />
 						}));
 					}
@@ -1430,6 +1434,9 @@ class InspectorPage extends Component {
 						this.setState({ upload, artboard });
 					}).catch((error)=> {
 				});
+
+			} else {
+				this.setState({ upload, artboard });
 			}
 
 			if (!this.canvasInterval) {
@@ -1444,7 +1451,8 @@ class InspectorPage extends Component {
 
 		const { upload, artboard, scrolling } = this.state;
 		if (!scrolling) {
-			this.resetTabSets(upload, (artboard) ? [artboard] : []);
+			this.resetTabSets(upload, [artboard]);
+// 			this.resetTabSets(upload, (artboard) ? [artboard] : []);
 		}
 	};
 
@@ -1498,11 +1506,11 @@ class InspectorPage extends Component {
 	handleChangeArtboard = (artboard)=> {
 // 		console.log('InspectorPage.handleChangeArtboard()', artboard);
 
+		const { upload } = this.state;
 		if (artboard.pageID === -1) {
-			const { upload } = this.state;
-			const dir = artboard.id;
+			const dir = -artboard.id;
 
-			const artboards = flattenUploadArtboards(upload);
+			const artboards = flattenUploadArtboards(upload, 'page_child');
 			const ind = (artboards.findIndex((item)=> (item.id === this.state.artboard.id)) + dir) % artboards.length;
 
 			if (this.state.artboard.id !== artboards[((ind < 0) ? artboards.length + ind : ind)].id) {
@@ -1514,6 +1522,8 @@ class InspectorPage extends Component {
 					hoverOffset : null,
 				}, ()=> {
 					this.handleZoom(-1);
+					this.resetTabSets(upload, artboards);
+// 					this.replaceTabSets(artboards[((ind < 0) ? artboards.length + ind : ind)], )
 					setTimeout(()=> this.handleZoom(0), 5);
 				});
 			}
@@ -1526,6 +1536,7 @@ class InspectorPage extends Component {
 				hoverOffset : null,
 			}, ()=> {
 				this.handleZoom(-1);
+				this.resetTabSets(upload, [artboard]);
 				setTimeout(()=> this.handleZoom(0), 5);
 			});
 		}
@@ -1789,7 +1800,7 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceRollOut = (ind, slice, offset)=> {
-		console.log('InspectorPage.handleSliceRollOut()', ind, slice, offset, this.state);
+// 		console.log('InspectorPage.handleSliceRollOut()', ind, slice, offset, this.state);
 
 // 		const { profile } = this.props;
 // 		const { upload, artboard, section } = this.state;
@@ -1956,7 +1967,7 @@ class InspectorPage extends Component {
 	};
 
 	handleSliceRollOver = (ind, slice, offset)=> {
-// 		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
+		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
 
 // 		const { profile } = this.props;
 // 		const { upload, artboard, section } = this.state;
@@ -2311,8 +2322,11 @@ class InspectorPage extends Component {
 					))
 				});
 
-				const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'symbol_container' : 'page_child');
-				this.resetTabSets(upload, artboards);
+				const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'container' : 'page_child').reverse();
+
+				this.setState({ upload,
+				}, ()=> (this.resetTabSets(upload, artboards)));
+
 
 
 
@@ -2577,7 +2591,9 @@ class InspectorPage extends Component {
 		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, activeTabs, scrolling, viewSize, panMultPt } = this.state;
 		const { valid, restricted, urlBanner, tutorial, tooltip } = this.state;
 
-		const artboards = (upload) ? (section === SECTIONS.PARTS) ? flattenUploadArtboards(upload, 'symbol_container') : (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, 'page_child') : [];
+
+// 		const artboards = (upload) ? (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, (SECTIONS.PARTS) ? 'container' : 'page_child') : [];
+		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'container' : 'page_child');
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 
 		const listTotal = (upload && activeSlice) ? (section === SECTIONS.PRESENTER) ? flattenUploadArtboards(upload, 'page_child').length : (activeSlice) ? (activeSlice.type === 'group') ? fillGroupPartItemSlices(upload, activeSlice).length : activeSlice.children.length : 0 : 0;
@@ -2633,21 +2649,21 @@ class InspectorPage extends Component {
 			const backgroundSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'background', sliceOffset, scale, scrolling) : [];
 			const textfieldSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'textfield', sliceOffset, scale, scrolling) : [];
 			const symbolSlices =(artboard.slices.length > 0) ?  this.buildSliceRollOverItemTypes(artboard, 'symbol', sliceOffset, scale, scrolling) : [];
-			const sliceSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'slice', sliceOffset, scale, scrolling) : [];
+			const sliceSlices = [];//(artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'slice', sliceOffset, scale, scrolling) : [];
 
 			artboardImages.push(
 				<div key={i} data-artboard-id={artboard.id} style={artboardStyle}>
-					<div className="inspector-page-artboard-caption">{Strings.truncate((artboard.type === 'page_child') ? artboard.title : artboard.title.split('__').shift(), 8)}</div>
+					<div className="inspector-page-artboard-caption">{Strings.truncate((artboard.type === 'page_child') ? artboard.title : artboard.title.split('[').shift(), 8)}</div>
 				</div>
 			);
 
 			slices.push(
 				<div key={i} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut} onDoubleClick={(event)=> this.handleZoom(1)}>
 					<div data-artboard-id={artboard.id} className={`inspector-page-${(section === SECTIONS.PRESENTER) ? 'artboard' : 'group'}-slices-wrapper`}>{(section === SECTIONS.PRESENTER) ? artboardSlices : groupSlices }</div>
-					{(section !== SECTIONS.PRESENTER) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>)}
+					{(section === SECTIONS.INSPECT) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>)}
 					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{symbolSlices}</div>
 					{(section !== SECTIONS.PARTS) && (<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{textfieldSlices}</div>)}
-					<div data-artboard-id={artboard.id} className="inspector-page-slice-slices-wrapper">{sliceSlices}</div>
+					{(section !== SECTIONS.PARTS) && (<div data-artboard-id={artboard.id} className="inspector-page-slice-slices-wrapper">{sliceSlices}</div>)}
 				</div>
 			);
 
@@ -2751,7 +2767,7 @@ class InspectorPage extends Component {
 						fitScale={fitScale}
 						section={section}
 						processing={processing}
-						artboards={flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'symbol_container' : 'page_child')}
+						artboards={flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'container' : 'page_child')}
 						onChangeArtboard={this.handleChangeArtboard}
 						onPage={this.props.onPage}
 						onZoom={this.handleZoom}

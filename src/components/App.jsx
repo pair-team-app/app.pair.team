@@ -113,8 +113,13 @@ class App extends Component {
 		window.onpopstate = (event)=> {
 			console.log('|||||||||||||||||-', 'window.onpopstate()', '-|||||||||||||||||', event);
 
-			const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
-			this.props.updateDeeplink({ uploadID, pageID, artboardID, sliceID });
+			if (isHomePage()) {
+				this.handlePage('<<');
+
+			} else {
+				const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
+				this.props.updateDeeplink({ uploadID, pageID, artboardID, sliceID });
+			}
 		};
 	}
 

@@ -23,6 +23,12 @@
 	padding: 40px 32px 50px 32px;
 }
 
+.artboards-list-wrapper-empty, .parts-list-wrapper-empty {
+	margin: -6px;
+	padding: 0;
+	color: #00ff0f;
+}
+
 .artboard-list-item, .part-list-item {
 	width: 100%;
 	padding-bottom: 60px;
@@ -45,6 +51,7 @@
 }
 
 .artboard-list-item:last-child, .part-list-item:last-child {
+	margin-bottom: -10px;
 	padding-bottom: 0;
 }
 
@@ -207,6 +214,7 @@
 
 .filing-tab-content-disabled, .filing-tab-content-disabled:hover {
 	cursor: default;
+	padding: 14px;
 }
 
 
@@ -425,6 +433,12 @@
 	letter-spacing: 0.44px;
 	line-height: 20px;
 	color: #ffffff;
+}
+
+.inspector-page-specs-list-wrapper-empty {
+	margin: -6px;
+	padding: 0;
+	color: #00ff0f;
 }
 
 .inspector-page-specs-list-item-attribute, .inspector-page-specs-list-item-val {
