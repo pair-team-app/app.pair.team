@@ -38,10 +38,8 @@ import {
 	idsFromPath,
 	isHomePage,
 	isInspectorPage,
-	isMobile,
-	isUploadPage,
-	scrollOrigin
-} from '../utils/funcs';
+	isUploadPage } from '../utils/funcs';
+import { Browsers } from '../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../utils/tracking';
 import adBannerPanel from '../assets/json/ad-banner-panel';
 
@@ -109,11 +107,19 @@ class App extends Component {
 			this.onAddUploadView(uploadID);
 		}
 
+		cookie.save('tutorial', '1', { path : '/' });
+		document.addEventListener('resize', this.handleResize.bind(this));
+
 		window.onpopstate = (event)=> {
 			console.log('|||||||||||||||||-', 'window.onpopstate()', '-|||||||||||||||||', event);
 
-			const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
-			this.props.updateDeeplink({ uploadID, pageID, artboardID, sliceID });
+			if (isHomePage()) {
+				this.handlePage('<<');
+
+			} else {
+				const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
+				this.props.updateDeeplink({ uploadID, pageID, artboardID, sliceID });
+			}
 		};
 	}
 
@@ -139,7 +145,7 @@ class App extends Component {
 			artboardID : artboard.id
 		});
 
-		scrollOrigin(wrapper.current);
+		Browsers.scrollOrigin(wrapper.current);
 	};
 
 	handleAdBanner = (url)=> {
@@ -164,7 +170,7 @@ class App extends Component {
 
 		const { pathname } = window.location;
 		if (pathname.split('/')[1] !== url.split('/')[0]) {
-			scrollOrigin(wrapper.current);
+			Browsers.scrollOrigin(wrapper.current);
 		}
 
 		if (url === '<<') {
@@ -192,9 +198,13 @@ class App extends Component {
 		this.setState({ processing });
 	};
 
+	handleResize = (event)=> {
+		console.log('App.handleResize()', event);
+	};
+
 	handleScrollOrigin = ()=> {
 		console.log('App.handleScrollOrigin()');
-		scrollOrigin(wrapper.current);
+		Browsers.scrollOrigin(wrapper.current);
 	};
 
 	handleScore = (score)=> {
@@ -239,8 +249,10 @@ class App extends Component {
   	const { uploadID } = this.props.deeplink;
 		const { pathname } = this.props.location;
   	const { rating, mobileOverlay, processing, popup } = this.state;
+//   	const { rating, mobileOverlay, popup } = this.state;
+//   	const processing = true;
 
-  	return ((!isMobile.ANY())
+  	return ((!Browsers.isMobile.ANY())
 		  ? (<div className="desktop-site-wrapper">
 			    <TopNav
 				    mobileLayout={false}

@@ -50,10 +50,10 @@ button:hover, button:active {
 }
 
 button:disabled, button:disabled:hover {
-  cursor: not-allowed;
-  background-color: #3178c4;
+  cursor: default;
+  background-color: #005cc5;
   color: #abdafd;
-  opacity : 0.5;
+  opacity : 0.875;
 }
 
 form {
@@ -68,7 +68,7 @@ h1, h2, h3, h4, h5 {
 h1 {
   width: 50%;
   margin-bottom: 20px;
-  font-family: "San Francisco Text Medium", sans-serif;
+  font-family: "San Francisco Text", sans-serif;
   font-size: 52px;
   line-height: 64px;
   letter-spacing: -2px;
@@ -79,7 +79,7 @@ h1.mobile {
   width: 100%;
 }
 
-/** Mobile / Page / Upload Header */
+/** Mobile / Page Header */
 h2 {
   font-family: "San Francisco Text Medium", sans-serif;
   font-size: 44px;

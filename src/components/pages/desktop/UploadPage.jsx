@@ -94,13 +94,16 @@ class UploadPage extends Component {
 			title     : '',
 			formState : 0
 		});
+
+		const { section } = this.state;
+		this.props.onPage(section);
 	};
 
 	handleFile = (file)=> {
 		console.log('UploadPage.handleFile()', file, this.props, this.state);
 
 		const { id, email } = (this.props.profile) ? this.props.profile : this.state.profile;
-		sendToSlack(`*[${id}]* *${email}* started uploading file "_${file.name}_"`);
+		sendToSlack(`*[${id}]* *${email}* started uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
 		trackEvent('upload', 'file');
 
 		this.setState({
@@ -121,7 +124,7 @@ class UploadPage extends Component {
 
 				if (progressEvent.loaded >= progressEvent.total && formState === 1) {
 					if (formState === 1) {
-						sendToSlack(`*[${id}]* *${email}* completed uploading file "_${file.name}_" uploaded`);
+						sendToSlack(`*[${id}]* *${email}* completed uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
 
 						this.setState({
 							percent        : 100,
@@ -232,7 +235,7 @@ class UploadPage extends Component {
 		const uploadTitle = (formState === 1 && !uploadComplete) ? `Uploading ${file.name}…` : (section) ? homeContent[section].header.title : '';
 		const uploadSubtitle = (formState === 1 && !uploadComplete) ? `${((file.size / (1024 * 1024)) * (percent * 0.01)).toFixed(2)} of ${(file.size / (1024 * 1024)).toFixed(2)}MB has been uploaded.` : 'Drag, drop, or click to upload.';
 
-		const pageStyle = { marginBottom : (formState === 1 && uploadComplete) ? '10px' : '30px' };
+		const pageStyle = { marginBottom : (formState === 1 && uploadComplete) ? '30px' : '30px' };
 		const progressStyle = { width : `${percent}%` };
 
 		return (

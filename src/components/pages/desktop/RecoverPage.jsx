@@ -8,7 +8,7 @@ import { Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import { POPUP_TYPE_OK } from '../../elements/Popup';
-import { isValidEmail } from '../../../utils/funcs';
+import { Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 
 
@@ -38,7 +38,7 @@ class RecoverPage extends Component {
 
 		if (event.target.name === 'email') {
 			const email = event.target.value;
-			const emailValid = (email.includes('@')) ? isValidEmail(email) : (email > 0);
+			const emailValid = (email.includes('@')) ? Strings.isEmail(email) : (email > 0);
 
 			this.setState({ email, emailValid });
 
@@ -55,7 +55,7 @@ class RecoverPage extends Component {
 		event.preventDefault();
 
 		const { email } = this.state;
-		const emailValid = (email.includes('@')) ? isValidEmail(email) : (email.length > 0);
+		const emailValid = (email.includes('@')) ? Strings.isEmail(email) : (email.length > 0);
 
 		this.setState({
 			email      : (emailValid) ? email : 'Invalid Email or Username',

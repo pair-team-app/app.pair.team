@@ -5,42 +5,35 @@
       "title": "CSS",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "\/* Rollover to display code. *\/",
       "syntax": null
     }, {
       "id": 2,
       "title": "React",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "\/* Rollover to display code. *\/",
       "syntax": null
     }, {
       "id": 3,
       "title": "Swift",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "\/* Rollover to display code. *\/",
       "syntax": null
     }, {
       "id": 4,
       "title": "Android",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "\/* Rollover to display code. *\/",
       "syntax": null
     }], [{
       "id": 5,
       "title": "Specs",
       "type": "component",
       "enabled": false,
-      "contents": null,
-      "syntax": null
-    }, {
-      "id": 6,
-      "title": null,
-      "type": "blank",
-      "enabled": false,
-      "contents": null,
+      "contents": "\/* Rollover to display specs. *\/",
       "syntax": null
     }]
   ],
@@ -51,7 +44,7 @@
       "title": "Parts",
       "type": "component",
       "enabled": false,
-      "contents": null,
+      "contents": "\/* Rollover to display parts. *\/",
       "syntax": null
     }]
   ],
@@ -62,28 +55,28 @@
       "title": "CSS",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "\/* Rollover to display code. *\/",
       "syntax": null
     }, {
       "id": 2,
       "title": "React",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "\/* Rollover to display code. *\/",
       "syntax": null
     }, {
       "id": 3,
       "title": "Swift",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "\/* Rollover to display code. *\/",
       "syntax": null
     }, {
       "id": 4,
       "title": "Android",
       "type": "json_html",
       "enabled": false,
-      "contents": null,
+      "contents": "\/* Rollover to display code. *\/",
       "syntax": null
     }], [{
       "id": 5,

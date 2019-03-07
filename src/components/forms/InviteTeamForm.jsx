@@ -6,7 +6,7 @@ import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
 
-import { isValidEmail } from '../../utils/funcs';
+import { Strings } from '../../utils/lang';
 import { trackEvent } from '../../utils/tracking';
 
 
@@ -97,7 +97,7 @@ class InviteTeamForm extends Component {
 
 		let emails = '';
 		invites.forEach((invite)=> {
-			invite.valid = isValidEmail(invite.email);
+			invite.valid = Strings.isEmail(invite.email);
 			if (!invite.valid && invite.email.length > 0) {
 				invite.email = 'Invalid Email Address';
 				invite.valid = false;

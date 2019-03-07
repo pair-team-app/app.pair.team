@@ -76,14 +76,4 @@ export const SECTIONS = {
 	PRESENTER : 'present'
 };
 
-export const STATUS_INTERVAL = 500;
-
-export const TAB_CONTENT_PLACEHOLDERS = {
-	ARTBOARDS : '…',
-	CODE      : 'Rollover to display code…',
-	PARTS     : 'Rollover to display parts…',
-	SPECS     : 'Rollover to display specs…',
-	SYNTAX    : null
-};
-
-
+export const STATUS_INTERVAL = 1000;

@@ -5,7 +5,7 @@ import './RegisterForm.css'
 import axios from 'axios';
 import { Row } from 'simple-flexbox';
 
-import { hasBit, isValidEmail } from '../../utils/funcs';
+import { Bits, Strings } from '../../utils/lang';
 import { trackEvent } from '../../utils/tracking';
 
 
@@ -69,7 +69,7 @@ class RegisterForm extends Component {
 
 		const { inviteID, username, email, password, password2 } = this.state;
 		const usernameValid = (username.length > 0 && !username.includes('@'));
-		const emailValid = isValidEmail(email);
+		const emailValid = Strings.isEmail(email);
 		const passwordValid = (password.length > 0 && password === password2);
 
 		if (password !== password2) {
@@ -104,19 +104,19 @@ class RegisterForm extends Component {
 				.then((response)=> {
 					console.log('REGISTER', response.data);
 					const status = parseInt(response.data.status, 16);
-// 					console.log('status', status, hasBit(status, 0x01), hasBit(status, 0x10));
+// 					console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));
 
 					if (status === 0x11) {
 						this.props.onRegistered(response.data.user);
 
 					} else {
 						this.setState({
-							username      : hasBit(status, 0x01) ? username : 'Username Already in Use',
-							email         : hasBit(status, 0x10) ? email : 'Email Address Already in Use',
+							username      : Bits.contains(status, 0x01) ? username : 'Username Already in Use',
+							email         : Bits.contains(status, 0x10) ? email : 'Email Address Already in Use',
 							password      : '',
 							password2     : '',
-							usernameValid : hasBit(status, 0x01),
-							emailValid    : hasBit(status, 0x10)
+							usernameValid : Bits.contains(status, 0x01),
+							emailValid    : Bits.contains(status, 0x10)
 						});
 					}
 				}).catch((error)=> {

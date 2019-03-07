@@ -8,7 +8,10 @@ import { connect } from 'react-redux';
 import { POPUP_TYPE_ERROR } from './Popup';
 import { updateDeeplink } from '../../redux/actions';
 import { sendToSlack } from '../../utils/funcs';
+import { Files } from '../../utils/lang';
 import { trackEvent } from '../../utils/tracking';
+import demoURLs from '../../assets/json/demo-urls';
+
 
 const dropZone = React.createRef();
 
@@ -68,7 +71,7 @@ class UploadHeader extends Component {
 		event.preventDefault();
 		trackEvent('button', 'demo');
 
-		window.location.replace(`http://demo.designengine.ai${window.location.pathname}`);
+		window.location.replace(demoURLs[window.location.pathname.split('/').pop()]);
 	};
 
 	handleFileDialogCancel = ()=> {
@@ -100,7 +103,7 @@ class UploadHeader extends Component {
 				sendToSlack(`*[${id}]* *${email}* uploaded incompatible file "_${file.name}_"`);
 				this.props.onPopup({
 					type     : POPUP_TYPE_ERROR,
-					content  : (file.name.split('.').pop() === 'xd') ? 'Adobe XD Support Coming Soon!' : 'Only Sketch files are support at this time.',
+					content  : (Files.extension(file.name) === 'fig') ? 'Figma Support Coming Soon!' : (Files.extension(file.name) === 'psd') ? 'Photoshop Support Coming Soon!' :  (Files.extension(file.name) === 'xd') ? 'Adobe XD Support Coming Soon!' : 'Only Sketch files are support at this time.',
 					duration : 2500
 				});
 			}
@@ -121,8 +124,8 @@ class UploadHeader extends Component {
 				onFileDialogCancel={this.handleFileDialogCancel}
 				ref={dropZone}
 			>
-				<h2>{title}</h2>
-				<div className="upload-header-subtitle">{subtitle}</div>
+				<h1 className="page-header-title upload-header-title">{title}</h1>
+				<div className="page-header-subtitle upload-header-subtitle">{subtitle}</div>
 				{(uploading)
 					? (<div className="upload-header-button-wrapper">
 							<button onClick={(event)=> this.handleCancel(event)}>Cancel</button>

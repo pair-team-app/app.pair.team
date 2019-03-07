@@ -164,8 +164,9 @@ class HomePage extends Component {
 				}));
 
 				const artboards = uploads.filter((upload)=> (upload.pages.length > 0)).map((upload)=> {
-					return (upload.pages.pop().artboards.pop());
-				});
+					const pageArtboards = upload.pages.flatMap((page)=> (page.artboards));
+					return ((pageArtboards.length > 0) ? pageArtboards.shift() : null);
+				}).filter((artboard)=> (artboard));
 
 				this.setState({
 					fetching   : false,
@@ -181,12 +182,14 @@ class HomePage extends Component {
 
 
 	render() {
-		console.log('HomePage.render()', this.props, this.state);
+
+// 		const ellipsis = Array((DateTimes.epoch(() % 4) + 1).join('.');
+// 		console.log('HomePage.render()', this.props, this.state);
 
 		const { profile, artboards } = this.props;
 		const { section, fetching, dialog } = this.state;
 
-		const gridTitle = (profile) ? (fetching) ? 'Loading…' : (artboards.length > 0) ? 'Previous' : null : null;
+		const gridTitle = (profile) ? (fetching) ? `Loading${'…'}` : (artboards.length > 0) ? 'Previous' : 'N/A' : 'N/A';
 
 		return (
 			<BaseDesktopPage className="home-page-wrapper">

@@ -11,7 +11,8 @@ import { Row } from 'simple-flexbox';
 // import BaseDesktopPage from './BaseDesktopPage';
 import { POPUP_TYPE_OK } from '../../elements/Popup';
 import Dropdown from '../../forms/elements/Dropdown';
-import { buildInspectorURL, isValidEmail, isUserLoggedIn } from '../../../utils/funcs';
+import { buildInspectorURL, isUserLoggedIn } from '../../../utils/funcs';
+import { Strings } from '../../../utils/lang';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -122,9 +123,9 @@ class InviteTeamPage extends Component {
 		event.preventDefault();
 
 		const { email1, email2, email3 } = this.state;
-		const isEmail1Valid = isValidEmail(email1);
-		const isEmail2Valid = isValidEmail(email2);
-		const isEmail3Valid = isValidEmail(email3);
+		const isEmail1Valid = Strings.isEmail(email1);
+		const isEmail2Valid = Strings.isEmail(email2);
+		const isEmail3Valid = Strings.isEmail(email3);
 
 		this.setState({
 			action      : 'INVITE',

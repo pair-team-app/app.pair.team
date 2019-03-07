@@ -16,12 +16,11 @@
 	vertical-align: middle;
 }
 
+.upload-header-title {
+}
+
 .upload-header-subtitle {
-	margin: -28px 0 20px 0;
-	font-family: "San Francisco Text Medium", sans-serif;
-	font-size: 28px;
-	letter-spacing: -1.47px;
-	color: #005cc5;
+	margin-bottom: 50px;
 }
 
 .upload-header-button-wrapper {

@@ -5,7 +5,7 @@ import './LoginForm.css'
 import axios from 'axios';
 import { Row } from 'simple-flexbox';
 
-import { hasBit, isValidEmail } from '../../utils/funcs';
+import { Bits, Strings } from '../../utils/lang';
 import { trackEvent } from '../../utils/tracking';
 
 
@@ -66,7 +66,7 @@ class LoginForm extends Component {
 
 		const { inviteID, email, password } = this.state;
 
-		const emailValid = (email.includes('@')) ? isValidEmail(email) : (email.length > 0);
+		const emailValid = (email.includes('@')) ? Strings.isEmail(email) : (email.length > 0);
 		const passwordValid = (password.length > 0);
 
 		this.setState({
@@ -87,17 +87,17 @@ class LoginForm extends Component {
 					console.log('LOGIN', response.data);
 					const status = parseInt(response.data.status, 16);
 
-					if (hasBit(status, 0x11)) {
+					if (Bits.contains(status, 0x11)) {
 						const { user } = response.data;
 						this.props.onLoggedIn(user);
 
 					} else {
 						this.setState({
-							email         : hasBit(status, 0x01) ? email : 'Email Address or Username In Use',
+							email         : Bits.contains(status, 0x01) ? email : 'Email Address or Username In Use',
 							password      : '',
-							emailValid    : hasBit(status, 0x01),
-							passwordValid : hasBit(status, 0x10),
-							passMsg       : hasBit(status, 0x10) ? '' : 'Password Invalid'
+							emailValid    : Bits.contains(status, 0x01),
+							passwordValid : Bits.contains(status, 0x10),
+							passMsg       : Bits.contains(status, 0x10) ? '' : 'Password Invalid'
 						});
 					}
 				}).catch((error)=> {

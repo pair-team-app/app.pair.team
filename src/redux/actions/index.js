@@ -2,7 +2,7 @@
 import axios from 'axios/index';
 import cookie from 'react-cookies';
 
-import { hasBit } from '../../utils/funcs';
+import { Bits } from '../../utils/lang';
 import {
 	ADD_FILE_UPLOAD,
 	APPEND_ARTBOARD_SLICES,
@@ -89,8 +89,8 @@ export function updateUserProfile(payload) {
 							status   : status,
 							id       : id,
 							avatar   : avatar,
-							username : (hasBit(status, 0x01)) ? 'Username Already in Use' : username,
-							email    : (hasBit(status, 0x10)) ? 'Email Already in Use' : email,
+							username : (Bits.contains(status, 0x01)) ? 'Username Already in Use' : username,
+							email    : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email,
 							password : ''
 						}
 					});
