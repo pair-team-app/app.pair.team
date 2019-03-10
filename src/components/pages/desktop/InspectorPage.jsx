@@ -947,7 +947,7 @@ class InspectorPage extends Component {
 	};
 
 	calcFitScale = (baseSize, vpSize)=> {
-		console.log('InspectorPage.calcFitScale()', baseSize, vpSize);
+// 		console.log('InspectorPage.calcFitScale()', baseSize, vpSize);
     //const fitScale = Math.max(Math.min(this.state.viewSize.height / this.contentSize.height, this.state.viewSize.width / this.contentSize.width, PAN_ZOOM.zoomNotches.slice(-1)[0]), PAN_ZOOM.zoomNotches[0]);
 		//return (Math.max(Math.min(vpSize.height / baseSize.height, vpSize.width / baseSize.width, Math.max(...PAN_ZOOM.zoomNotches)), Math.min(...PAN_ZOOM.zoomNotches)));
 		return (Math.max(Math.min(vpSize.height / baseSize.height, vpSize.width / baseSize.width, 3), 0.001));
@@ -1639,7 +1639,7 @@ class InspectorPage extends Component {
 	};
 
 	handlePanAndZoom = (x, y, scale)=> {
-		console.log('InspectorPage.handlePanAndZoom()', x, y, scale);
+// 		console.log('InspectorPage.handlePanAndZoom()', x, y, scale);
 
 // 		const panMultPt = { x, y };
 // 		this.setState({ panMultPt, scale });
@@ -1648,7 +1648,7 @@ class InspectorPage extends Component {
 	};
 
 	handlePanMove = (x, y)=> {
-		console.log('InspectorPage.handlePanMove()', x, y, this.state.scale);
+// 		console.log('InspectorPage.handlePanMove()', x, y, this.state.scale);
 
 		const panMultPt = { x, y };
 		const { viewSize } = this.state;
@@ -1666,11 +1666,7 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
 
 		trackEvent('slice', `${slice.id}_${Strings.uriSlug(slice.title)}`);
-
-// 		const { profile } = this.props;
-// 		const { upload, artboard, section } = this.state;
 		const { artboard } = this.state;
-// 		let { tabSets } = this.state;
 
 		slice.filled = true;
 		artboard.slices.filter((item)=> (item.id !== slice.id)).forEach((item)=> {
@@ -1682,298 +1678,24 @@ class InspectorPage extends Component {
 			hoverOffset : null
 
 		}, ()=> (this.replaceTabSets(artboard, slice, offset)));
-
-
-
-
-
-
-
-		/*
-		const langs = [
-			toCSS([slice]),
-			toReactCSS([slice]),
-			toSwift(slice, artboard),
-			toAndroid(slice, artboard)
-		];
-
-		if (section === SECTIONS.INSPECT) {
-			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
-				if (i === 1) {
-					return (tabSet.map((tab, j)=> {
-						return ((j === 0) ? Object.assign({}, tab, {
-							type     : 'component',
-							enabled  : true,
-							contents : <SpecsList
-								upload={upload}
-								slice={slice}
-								creatorID={(profile) ? profile.id : 0}
-								onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
-							/>
-						}) : tab);
-					}));
-
-				} else {
-					return (tabSet.map((tab, i)=> {
-						return (Object.assign({}, tab, {
-							enabled  : true,
-							contents : langs[i].html,
-							syntax   : langs[i].syntax
-						}));
-					}));
-				}
-			});
-
-		} else if (section === SECTIONS.PARTS) {
-			tabSets[0][0].type = 'component';
-
-			if (slice.type === 'symbol') {
-				let formData = new FormData();
-				formData.append('action', 'SYMBOL_SLICES');
-				formData.append('slice_id', slice.id);
-				axios.post('https://api.designengine.ai/system.php', formData)
-					.then((response)=> {
-						console.log('SYMBOL_SLICES', response.data);
-
-						const slices = response.data.slices.map((item)=> ({
-							id         : item.id << 0,
-							artboardID : item.artboard_id << 0,
-							title      : item.title,
-							type       : item.type,
-							filename   : item.filename,
-							meta       : JSON.parse(item.meta),
-							added      : item.added,
-							filled     : false,
-						}));
-
-						slice.children = slices;
-						tabSets[0][0].enabled = true;
-						tabSets[0][0].contents = <PartsList
-							contents={slices}
-							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-						this.setState({ tabSets });
-					}).catch((error)=> {
-				});
-
-			} else if (slice.type === 'group') {
-				tabSets[0][0].enabled= true;
-				tabSets[0][0].contents = <PartsList
-					contents={fillGroupPartItemSlices(upload, slice)}
-					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-			}
-
-		} else if (section === SECTIONS.PRESENTER) {
-			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
-				return (tabSet.map((tab, j)=> {
-						if (i === 0) {
-							return (Object.assign({}, tab, {
-								enabled  : true,
-								contents : langs[j].html,
-								syntax   : langs[j].syntax
-							}));
-
-						} else {
-							return (Object.assign({}, tab, {
-								type     : 'component',
-								enabled  : true,
-								contents : <ArtboardsList
-									contents={flattenUploadArtboards(upload, 'page_child')}
-									onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />
-							}));
-						}
-				}));
-			});
-		}
-
-		const activeTabs = [...this.state.activeTabs].map((activeTab, i)=> {
-			const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
-			return ((tab) ? tab : activeTab);
-		});
-
-		this.setState({ tabSets, activeTabs, artboard, slice, offset,
-			hoverSlice  : null,
-			hoverOffset : null
-		});
-
-
-		*/
 	};
 
 	handleSliceRollOut = (ind, slice, offset)=> {
 // 		console.log('InspectorPage.handleSliceRollOut()', ind, slice, offset, this.state);
 
-// 		const { profile } = this.props;
-// 		const { upload, artboard, section } = this.state;
 		const { upload, artboard } = this.state;
-// 		let tabSets = [...this.state.tabSets];
-// 		let activeTabs = [...this.state.activeTabs];
-
-// 		this.setState({
-// 			hoverSlice  : slice,
-// 			hoverOffset : offset
-// 		}, ()=> {
-			if (this.state.slice) {
-				this.restoreTabSets(upload, artboard, this.state.slice);
-
-			} else {
-				this.resetTabSets(upload, (artboard) ? [artboard] : []);
-			}
-// 		});
-
-
-
-
-
-
-
-		/*
 		if (this.state.slice) {
-			const langs = [
-				toCSS([this.state.slice]),
-				toReactCSS([this.state.slice]),
-				toSwift(this.state.slice, artboard),
-				toAndroid(this.state.slice, artboard)
-			];
-
-			if (section === SECTIONS.INSPECT) {
-				tabSets = [...this.state.tabSets].map((tabSet, i)=> {
-					if (i === 1) {
-						return (tabSet.map((tab, j)=> {
-							return ((j === 0) ? Object.assign({}, tab, {
-								type     : 'component',
-								enabled  : true,
-								contents : <SpecsList
-									upload={upload}
-									slice={this.state.slice}
-									creatorID={(profile) ? profile.id : 0}
-									onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
-								/>
-							}) : tab);
-						}));
-
-					} else {
-						return (tabSet.map((tab, i)=> {
-							return (Object.assign({}, tab, {
-								enabled  : true,
-								contents : langs[i].html,
-								syntax   : langs[i].syntax
-							}));
-						}));
-					}
-				});
-
-			} else if (section === SECTIONS.PARTS) {
-				tabSets[0][0].type = 'component';
-
-				if (this.state.slice.type === 'symbol') {
-					let formData = new FormData();
-					formData.append('action', 'SYMBOL_SLICES');
-					formData.append('slice_id', this.state.slice.id);
-					axios.post('https://api.designengine.ai/system.php', formData)
-						.then((response)=> {
-							console.log('SYMBOL_SLICES', response.data);
-
-							const slices = response.data.slices.map((item)=> ({
-								id         : item.id << 0,
-								artboardID : item.artboard_id << 0,
-								title      : item.title,
-								type       : item.type,
-								filename   : item.filename,
-								meta       : JSON.parse(item.meta),
-								added      : item.added,
-								filled     : false,
-							}));
-
-							slice.children = slices;
-							tabSets[0][0].enabled = true;
-							tabSets[0][0].contents = <PartsList
-								contents={slices}
-								onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-							this.setState({ tabSets });
-						}).catch((error)=> {
-					});
-
-				} else if (this.state.slice.type === 'group') {
-					tabSets[0][0].enabled = true;
-					tabSets[0][0].contents = <PartsList
-						contents={fillGroupPartItemSlices(upload, this.state.slice)}
-						onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-				}
-
-			} else if (section === SECTIONS.PRESENTER) {
-				tabSets = [...this.state.tabSets].map((tabSet, i)=> {
-					return (tabSet.map((tab, j)=> {
-						if (i === 0) {
-							return (Object.assign({}, tab, {
-								enabled  : true,
-								contents : langs[j].html,
-								syntax   : langs[j].syntax
-							}));
-
-						} else {
-							return (Object.assign({}, tab, {
-								enabled  : true,
-								type     : 'component',
-								contents : <ArtboardsList
-									contents={flattenUploadArtboards(upload, 'page_child')}
-									onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />
-							}));
-						}
-					}));
-				});
-			}
-
-			activeTabs = activeTabs.map((activeTab, i)=> {
-				const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
-				return ((tab) ? tab : activeTab);
-			});
+			this.restoreTabSets(upload, artboard, this.state.slice);
 
 		} else {
-// 			this.handleSliceClick(ind, slice, offset);
-
-			artboard.slices.forEach((item)=> {
-				item.filled = false;
-			});
-
-			tabSets = [...this.state.tabSets].map((tabSet)=> {
-				return (tabSet.map((tab, i)=> {
-					return (Object.assign({}, tab, {
-						contents : null,
-						syntax   : null
-					}));
-				}));
-			});
-
-			activeTabs = activeTabs.map((activeTab, i)=> {
-				const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
-				return ((tab) ? tab : activeTab);
-			});
+			this.resetTabSets(upload, (artboard) ? [artboard] : []);
 		}
-
-		this.setState({ artboard, tabSets, activeTabs,
-			hoverSlice  : null,
-			hoverOffset : null
-		});
-		*/
-
-
-
-
-
-
-
-
-
 	};
 
 	handleSliceRollOver = (ind, slice, offset)=> {
-		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
+// 		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
 
-// 		const { profile } = this.props;
-// 		const { upload, artboard, section } = this.state;
 		const { artboard } = this.state;
-// 		let tabSets = [...this.state.tabSets];
-
 		if (artboard) {
 			slice.filled = true;
 			artboard.slices.filter((item)=> (this.state.slice && this.state.slice.id !== item.id)).forEach((item)=> {
@@ -1984,152 +1706,6 @@ class InspectorPage extends Component {
 				hoverSlice : slice,
 				hoverOffset : offset
 			}, ()=> (this.replaceTabSets(artboard, slice, offset)));
-
-			/*
-			const langs = [
-				toCSS([slice]),
-				toReactCSS([slice]),
-				toSwift(slice, artboard),
-				toAndroid(slice, artboard)
-			];
-
-			if (section === SECTIONS.INSPECT) {
-				tabSets = [...this.state.tabSets].map((tabSet, i)=> {
-					if (i === 1) {
-						return (tabSet.map((tab, j)=> {
-							return ((j === 0) ? Object.assign({}, tab, {
-								type     : 'component',
-								enabled  : true,
-								contents : <SpecsList
-									upload={upload}
-									slice={slice}
-									creatorID={(profile) ? profile.id : 0}
-									onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
-								/>
-							}) : tab);
-						}));
-
-					} else {
-						return (tabSet.map((tab, i)=> {
-							return (Object.assign({}, tab, {
-								enabled  : true,
-								contents : langs[i].html,
-								syntax   : langs[i].syntax
-							}));
-						}));
-					}
-				});
-
-			} else if (section === SECTIONS.PARTS) {
-				tabSets[0][0].type = 'component';
-				tabSets[0][0].enabled = true;
-
-				if (slice.type === 'symbol') {
-					let formData = new FormData();
-					formData.append('action', 'SYMBOL_SLICES');
-					formData.append('slice_id', slice.id);
-					axios.post('https://api.designengine.ai/system.php', formData)
-						.then((response)=> {
-							console.log('SYMBOL_SLICES', response.data);
-
-
-
-// 							artboard.slices = response.data.slices.map((slice)=> {
-// 								const meta = JSON.parse(slice.meta.replace(/\n/g, '\\\\n'));
-// 								return ({
-// 									id         : slice.id << 0,
-// 									artboardID : slice.artboard_id << 0,
-// 									title      : slice.title,
-// 									type       : slice.type,
-// 									filename   : slice.filename,
-// 									meta       : Object.assign({}, meta, {
-// 										orgFrame : meta.frame,
-// 										frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
-// 									}),
-// 									added      : slice.added,
-// 									filled     : false,
-// 									children   : []
-// 								});
-// 							});
-//
-// 							upload.pages = upload.pages.map((page)=> (Object.assign({}, page, {
-// 								artboards : page.artboards.map((item) => ((item.id === artboard.id) ? artboard : item))
-// 							})));
-
-
-							slice.children = response.data.slices.map((item)=> {
-								const meta = JSON.parse(item.meta.replace(/\n/g, '\\\\n'));
-								return ({
-									id         : item.id << 0,
-									artboardID : item.artboard_id << 0,
-									title      : item.title,
-									type       : item.type,
-									filename   : item.filename,
-									meta       : Object.assign({}, meta, {
-										orgFrame : meta.frame,
-										frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
-									}),
-									added      : item.added,
-									filled     : false
-								});
-							});
-
-							tabSets[0][0].enabled = true;
-							tabSets[0][0].contents = <PartsList
-// 								contents={slice.children}
-								contents={artboard.slices}
-								onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-							this.setState({ tabSets });
-						}).catch((error)=> {
-					});
-
-				} else if (slice.type === 'group') {
-					tabSets[0][0].enabled = true;
-					tabSets[0][0].contents = <PartsList
-						contents={fillGroupPartItemSlices(upload, slice)}
-						onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-					this.setState({ tabSets });
-				}
-
-			} else if (section === SECTIONS.PRESENTER) {
-				tabSets = [...this.state.tabSets].map((tabSet, i)=> {
-					return (tabSet.map((tab, j)=> {
-						if (i === 0) {
-							return (Object.assign({}, tab, {
-								enabled  : true,
-								contents : langs[j].html,
-								syntax   : langs[j].syntax
-							}));
-
-						} else {
-							return (Object.assign({}, tab, {
-								type     : 'component',
-								enabled  : true,
-								contents : <ArtboardsList
-									contents={flattenUploadArtboards(upload, 'page_child')}
-									onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />
-							}));
-						}
-					}));
-				});
-			}
-
-			const activeTabs = [...this.state.activeTabs].map((activeTab, i)=> {
-				const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
-				return ((tab) ? tab : activeTab);
-			});
-
-			this.setState({ upload, artboard, tabSets, activeTabs,
-				hoverSlice  : slice,
-				hoverOffset : offset
-			});
-			*/
-
-
-
-
-
-
 		}
 	};
 
@@ -2328,146 +1904,6 @@ class InspectorPage extends Component {
 				}, ()=> (this.resetTabSets(upload, artboards)));
 
 
-
-
-/*
-				let tabSets = inspectorTabSets[section];
-				if (section === SECTIONS.INSPECT) {
-					tabSets = [...tabSets].map((tabSet, i) => {
-						if (i === 0) {
-							return (tabSet);
-
-						} else {
-							return (tabSet.map((tab, j) => {
-								return ((j === 0) ? Object.assign({}, tab, {
-									type     : 'component',
-									enabled  : ((upload.state << 0) === 3),
-									contents : <SpecsList
-										upload={upload}
-										slice={null}
-										creatorID={0}
-										onCopySpec={(msg) => this.handleClipboardCopy('spec', msg)}
-									/>
-								}) : tab);
-							}));
-						}
-					});
-
-					const activeTabs = tabSets.map((tabSet)=> {
-						return (tabSet.slice(0, 1).pop());
-					});
-
-					this.setState({ upload, tabSets, activeTabs,
-						artboard  : (section === SECTIONS.PRESENTER) ? (artboards.length > 0) ? artboards[0] : null : null,
-						slice     : null,
-						tooltip   : null
-					});
-
-				} else if (section === SECTIONS.PARTS) {
-					tabSets = [...tabSets].map((tabSet, i) => {
-						return (tabSet.map((tab, j) => {
-							return (Object.assign({}, tab, {
-								enabled  : ((upload.state << 0) === 3),
-								contents : <PartsList
-									enabled={((upload.state << 0) === 3)}
-									contents={null}
-									onPartListItem={(slice) => this.handleDownloadPartListItem(slice)} />
-							}));
-						}));
-					});
-
-					const activeTabs = tabSets.map((tabSet)=> {
-						return (tabSet.slice(0, 1).pop());
-					});
-
-					this.setState({ upload, tabSets, activeTabs,
-						artboard  : (section === SECTIONS.PRESENTER) ? (artboards.length > 0) ? artboards[0] : null : null,
-						slice     : null,
-						tooltip   : null
-					});
-
-				} else if (section === SECTIONS.PRESENTER) {
-					if (artboards.length > 0) {
-						const artboard = artboards[0];
-
-						let formData = new FormData();
-						formData.append('action', 'ARTBOARD_SLICES');
-						formData.append('artboard_id', artboard.id);
-						axios.post('https://api.designengine.ai/system.php', formData)
-							.then((response)=> {
-								console.log('ARTBOARD_SLICES', response.data);
-
-								artboard.slices = response.data.slices.map((slice)=> {
-									const meta = JSON.parse(slice.meta.replace(/\n/g, '\\\\n'));
-									return ({
-										id         : slice.id << 0,
-										artboardID : slice.artboard_id << 0,
-										title      : slice.title,
-										type       : slice.type,
-										filename   : slice.filename,
-										meta       : Object.assign({}, meta, {
-											orgFrame : meta.frame,
-											frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
-										}),
-										added      : slice.added,
-										filled     : false,
-										children   : []
-									});
-								});
-
-								upload.pages = upload.pages.map((page)=> (Object.assign({}, page, {
-									artboards : page.artboards.map((item) => ((item.id === artboard.id) ? artboard : item))
-								})));
-
-								const slices = [...intersectSlices(artboard.slices, artboard.meta.frame)];
-								const langs = [
-									toCSS(slices),
-									toReactCSS(slices),
-									toSwift(slices, artboard),
-									toAndroid(slices, artboard)
-								];
-
-								tabSets = [...tabSets].map((tabSet, i) => {
-									return (tabSet.map((tab, j) => {
-										if (i === 0) {
-											return (Object.assign({}, tab, {
-												enabled  : ((upload.state << 0) === 3),
-												contents : langs[j].html,
-												syntax   : langs[j].syntax
-											}));
-
-										} else {
-											return (Object.assign({}, tab, {
-												type     : 'component',
-												enabled  : ((upload.state << 0) === 3),
-												contents : <ArtboardsList
-													enabled={((upload.state << 0) === 3)}
-													contents={flattenUploadArtboards(upload, 'page_child')}
-													onArtboardListItem={(artboard) => this.handleChangeArtboard(artboard)} />
-											}));
-										}
-									}));
-								});
-
-								const activeTabs = tabSets.map((tabSet)=> {
-									return (tabSet.slice(0, 1).pop());
-								});
-
-								this.setState({ upload, tabSets, activeTabs,
-									artboard  : (section === SECTIONS.PRESENTER) ? (artboards.length > 0) ? artboards[0] : null : null,
-									slice     : null,
-									tooltip   : null
-								});
-
-							}).catch((error)=> {
-						});
-					}
-				}
-*/
-
-
-
-
 				const processing = ((upload.state << 0) < 3);
 				if (processing && !this.props.processing && !this.processingInterval) {
 					this.props.onProcessing(true);
@@ -2591,9 +2027,8 @@ class InspectorPage extends Component {
 		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, activeTabs, scrolling, viewSize, panMultPt } = this.state;
 		const { valid, restricted, urlBanner, tutorial, tooltip } = this.state;
 
-
-// 		const artboards = (upload) ? (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, (SECTIONS.PARTS) ? 'container' : 'page_child') : [];
 		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'container' : 'page_child');
+// 		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, 'page_child').slice(0, ((section === SECTIONS.PARTS) ? 3 : -1));
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 
 		const listTotal = (upload && activeSlice) ? (section === SECTIONS.PRESENTER) ? flattenUploadArtboards(upload, 'page_child').length : (activeSlice) ? (activeSlice.type === 'group') ? fillGroupPartItemSlices(upload, activeSlice).length : activeSlice.children.length : 0 : 0;
