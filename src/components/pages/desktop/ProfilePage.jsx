@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
-import { POPUP_TYPE_OK } from '../../elements/Popup';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../elements/Popup';
 import InputField, {
 	INPUTFIELD_STATUS_DISABLED,
 	INPUTFIELD_STATUS_ERROR,
@@ -128,7 +128,7 @@ class ProfilePage extends Component {
 	};
 
 	handleFileDrop = (files)=> {
-// 		console.log('ProfilePage.handleFileDrop()', files);
+		console.log('ProfilePage.handleFileDrop()', files);
 
 		if (files.length > 0) {
 			const file = files.pop();
@@ -143,13 +143,13 @@ class ProfilePage extends Component {
 					this.setState({ percent });
 
 					if (progressEvent.loaded >= progressEvent.total) {
-						this.onValidateFields('avatar', `http://cdn.designengine.ai/profiles/${profile.id}_${file.name}`);
+						this.onValidateFields('avatar', `http://cdn.designengine.ai/profiles/${profile.id}_${decodeURIComponent(file.name)}`);
 					}
 				}
 			};
 
-			const re = /jpe?g|png|svg/;
-			if (re.test(file.name.split('.').slice().pop())) {
+			const re = /gif|jpe?g|png|svg/;
+			if (re.test(file.name.split('.').pop())) {
 				this.setState({ file });
 				trackEvent('button', 'change-avatar');
 
@@ -159,6 +159,13 @@ class ProfilePage extends Component {
 					.then((response)=> {
 						console.log("AVATAR_UPLOAD", response.data);
 					}).catch((error)=> {
+				});
+
+			} else {
+				this.props.onPopup({
+					type     : POPUP_TYPE_ERROR,
+					content  : 'Only image files (gif, jpg, png, or svg) are supported.',
+					duration : 3333
 				});
 			}
 		}
@@ -201,7 +208,6 @@ class ProfilePage extends Component {
 // 		console.log('ProfilePage.handleInputFieldSubmit()', key, val);
 
 		trackEvent('button', key);
-
 		this.onValidateFields(key, val);
 	};
 
@@ -209,7 +215,6 @@ class ProfilePage extends Component {
 // 		console.log('ProfilePage.handleSubmit()');
 
 		trackEvent('button', 'save');
-
 		this.onValidateFields();
 	};
 
@@ -224,10 +229,12 @@ class ProfilePage extends Component {
 			this.props.updateUserProfile({ id, avatar, username, email, password });
 			this.setState({ passMsg : '' });
 
-			this.props.onPopup({
-				type    : POPUP_TYPE_OK,
-				content : 'Profile updated.'
-			});
+			setTimeout(()=> {
+				this.props.onPopup({
+					type    : POPUP_TYPE_OK,
+					content : 'Profile updated.'
+				});
+			}, 333);
 		}
 	};
 
@@ -282,8 +289,6 @@ class ProfilePage extends Component {
 									error={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
 								/>
 							</div>
-
-							{/*<img className="profile-page-avatar-image" src={avatar} alt="" />*/}
 						</Dropzone>
 						<button className="adjacent-button" onClick={()=> this.handleAvatarClick()}>{(avatar.includes('avatar-default.png')) ? 'Upload' : 'Replace'}</button>
 						<div className={`page-link${(avatar.includes('avatar-default.png')) ? ' page-link-disabled' : ''}`} onClick={()=> this.handleDropAvatar()}>Remove</div>
