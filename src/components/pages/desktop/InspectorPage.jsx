@@ -308,10 +308,10 @@ const InspectorFooter = (props)=> {
 			<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-out'); props.onZoom(-1);}}><FontAwesome name="search-minus" /></button>
 			<button disabled={false} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-reset'); props.onZoom(0);}}>Reset ({(fitScale * 100) << 0}%)</button>
 
-			{/*{(section === SECTIONS.PRESENTER && artboards.length > 1) && (<>*/}
-				{/*<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'prev-artboard'); props.onChangeArtboard(prevArtboard);}}><FontAwesome name="arrow-left" /></button>*/}
-				{/*<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'next-artboard'); props.onChangeArtboard(nextArtboard);}}><FontAwesome name="arrow-right" /></button>*/}
-			{/*</>)}*/}
+			{(section === SECTIONS.PRESENTER && artboards.length < 1) && (<>
+				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'prev-artboard'); props.onChangeArtboard(prevArtboard);}}><FontAwesome name="arrow-left" /></button>
+				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'next-artboard'); props.onChangeArtboard(nextArtboard);}}><FontAwesome name="arrow-right" /></button>
+			</>)}
 
 			{(section !== SECTIONS.INSPECT) && (<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'inspect'); props.onChangeSection('inspect');}}>Inspect</button>)}
 			{(section !== SECTIONS.PARTS) && (<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'parts'); props.onChangeSection('parts');}}>Parts</button>)}
