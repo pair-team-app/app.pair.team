@@ -41,9 +41,9 @@ export function idsFromPath() {
 	return (navIDs);
 }
 
-export function isHomePage() {
+export function isHomePage(root=true) {
 	const { pathname } = window.location;
-	return (pathname === '' || pathname === HOME || pathname === INSPECT || pathname === PARTS);
+	return ((root) ? (pathname === '' || pathname === HOME) : (pathname === '' || pathname === HOME || pathname === INSPECT || pathname === PARTS));
 }
 
 export function isInspectorPage() {
