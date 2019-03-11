@@ -21,7 +21,7 @@ function ArtboardGrid(props) {
 					return (
 						<Column key={i}>
 							<ArtboardItem
-								title={artboard.title}
+								title={artboard.pageTitle}
 								image={artboard.filename}
 								avatar={artboard.creator.avatar}
 								onClick={()=> props.onClick(artboard)} />

@@ -24,7 +24,7 @@
 }
 
 .artboards-list-wrapper-empty, .parts-list-wrapper-empty {
-	margin: -6px;
+	/*margin-top: -6px;*/
 	padding: 0;
 	color: #00ff0f;
 }
@@ -451,7 +451,7 @@
 }
 
 .inspector-page-specs-list-wrapper-empty {
-	margin: -6px;
+	margin-top: -2px;
 	padding: 0;
 	color: #00ff0f;
 }

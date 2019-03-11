@@ -231,14 +231,14 @@ const ColorSwatch = (props)=> {
 };
 
 const FilingTabContent = (props)=> {
-// 	console.log('InspectorPage.FilingTabContent()', props);
+	console.log('InspectorPage.FilingTabContent()', props);
 
-	const { tab } = props;
-	const { type, enabled, contents } = tab;
+	const { tab, enabled } = props;
+	const { type, contents } = tab;
 	const className = `filing-tab-content${(!enabled) ? ' filing-tab-content-disabled' : ''}`;
 
 	return (<div key={tab.id} className={className}>
-		{((!type || type === 'json_html')) && (<span dangerouslySetInnerHTML={{ __html : (contents) ? String(((enabled) ? JSON.parse(contents) : contents).replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) : '/* Rollover to display code.<br />*/' }} />)}
+		{((!type || type === 'json_html') && contents) && (<span dangerouslySetInnerHTML={{ __html : String(((enabled) ? JSON.parse(contents) : '').replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) }} />)}
 		{(type === 'component') && (contents)}
 	</div>);
 };
@@ -265,7 +265,7 @@ const FilingTabSet = (props)=> {
 				<FilingTabContent
 					key={i}
 					tab={tab}
-					enabled={enabled || tab.enabled}
+					enabled={enabled}
 					onClick={()=> (enabled) ? props.onContentClick(tab) : null}
 				/>
 			))}
@@ -1200,7 +1200,7 @@ class InspectorPage extends Component {
 					.then((response)=> {
 						console.log('SYMBOL_SLICES', response.data);
 
-						slice.children = response.data.slices.map((item)=> {
+						const slices = response.data.slices.map((item)=> {
 							const meta = JSON.parse(item.meta.replace(/\n/g, '\\\\n'));
 							return ({
 								id         : item.id << 0,
@@ -1217,10 +1217,11 @@ class InspectorPage extends Component {
 							});
 						});
 
+						slice.children = [...fillGroupPartItemSlices(upload, slice), ...slices];
 						tabSets[0][0].enabled = true;
 						tabSets[0][0].contents = <PartsList
 							enabled={true}
-							contents={artboard.slices}
+							contents={slice.children}
 							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 						this.setState({ tabSets });
 					}).catch((error)=> {
@@ -1268,7 +1269,7 @@ class InspectorPage extends Component {
 	};
 
 	restoreTabSets = (upload, artboard, slice)=> {
-// 		console.log('InspectorPage.restoreTabSets()', upload, artboard, slice);
+		console.log('InspectorPage.restoreTabSets()', upload, artboard, slice);
 
 		const { profile } = this.props;
 		const { section } = this.state;
@@ -1332,17 +1333,17 @@ class InspectorPage extends Component {
 							filled     : false,
 						}));
 
-						slice.children = slices;
+						slice.children = [...fillGroupPartItemSlices(upload, slice), ...slices];
 						tabSets[0][0].enabled = true;
 						tabSets[0][0].contents = <PartsList
 							enabled={true}
-							contents={slices}
+							contents={slice.children}
 							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 						this.setState({ tabSets });
 					}).catch((error)=> {
 				});
 
-			} else if (slice.type === 'group') {
+			} else if (slice.type === 'group' || slice.type === 'background') {
 				tabSets[0][0].enabled = true;
 				tabSets[0][0].contents = <PartsList
 					enabled={true}
@@ -1409,8 +1410,8 @@ class InspectorPage extends Component {
 
 		this.setState({
 			artboard    : (slice) ? artboard : null,
-			hoverSlice  : null,
-			hoverOffset : null
+// 			hoverSlice  : null,
+// 			hoverOffset : null
 		});
 	};
 
@@ -1952,11 +1953,12 @@ class InspectorPage extends Component {
 					))
 				});
 
-				const artboards = flattenUploadArtboards(upload, 'page_child');
-
 				this.setState({ upload,
-				}, ()=> (this.resetTabSets(upload, artboards)));
-
+				}, ()=> {
+					if ((upload.state << 0) === 3) {
+						this.resetTabSets(upload, flattenUploadArtboards(upload, 'page_child'));
+					}
+				});
 
 				const processing = ((upload.state << 0) < 3);
 				if (processing && !this.props.processing && !this.processingInterval) {

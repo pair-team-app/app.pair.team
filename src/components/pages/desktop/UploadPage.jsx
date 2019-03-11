@@ -261,7 +261,7 @@ class UploadPage extends Component {
 						onRegistered={this.handleRegistered} />
 				</div>)}
 
-				{(!isUserLoggedIn() && showLogin && !showRegister) && (<div className="upload-page-login-wrapper">
+				{(!isUserLoggedIn() && !showRegister && showLogin) && (<div className="upload-page-login-wrapper">
 					<LoginForm
 						title="To finish uploading, please login."
 						onPage={this.props.onPage}
