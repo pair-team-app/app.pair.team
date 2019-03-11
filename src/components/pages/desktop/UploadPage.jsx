@@ -123,18 +123,13 @@ class UploadPage extends Component {
 				this.setState({ percent });
 
 				if (progressEvent.loaded >= progressEvent.total && formState === 1) {
-					if (formState === 1) {
-						sendToSlack(`*[${id}]* *${email}* completed uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
+					sendToSlack(`*[${id}]* *${email}* completed uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
 
-						this.setState({
-							percent        : 100,
-							uploadComplete : true
-						});
-						this.onUploadSubmit();
-
-					} else {
-						this.setState({ percent : 0 });
-					}
+					this.setState({
+						percent        : 100,
+						uploadComplete : true
+					});
+					this.onUploadSubmit();
 				}
 			}
 		};
@@ -202,7 +197,7 @@ class UploadPage extends Component {
 				formData.append('description', description);
 				formData.append('filesize', size);
 				formData.append('private', (radioIndex === 1) ? '0' : '1');
-				formData.append('filename', `http://cdn.designengine.ai/system/${name}`);
+				formData.append('filename', `http://cdn.designengine.ai/system/${decodeURIComponent(name)}`);
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response)=> {
 						console.log('NEW_UPLOAD', response.data);
@@ -235,12 +230,12 @@ class UploadPage extends Component {
 		const uploadTitle = (formState === 1 && !uploadComplete) ? `Uploading ${file.name}…` : (section) ? homeContent[section].header.title : '';
 		const uploadSubtitle = (formState === 1 && !uploadComplete) ? `${((file.size / (1024 * 1024)) * (percent * 0.01)).toFixed(2)} of ${(file.size / (1024 * 1024)).toFixed(2)}MB has been uploaded.` : 'Drag, drop, or click to upload.';
 
-		const pageStyle = { marginBottom : (formState === 1 && uploadComplete) ? '30px' : '30px' };
+		const pageStyle = { marginBottom : (formState >= 1 && uploadComplete) ? '10px' : '30px' };
 		const progressStyle = { width : `${percent}%` };
 
 		return (
 			<BaseDesktopPage className="upload-page-wrapper" style={pageStyle}>
-				{(formState === 1) && (<div className="upload-progress-bar-wrapper">
+				{(formState === 1 && !uploadComplete) && (<div className="upload-progress-bar-wrapper">
 					<div className="upload-progress-bar" style={progressStyle} />
 				</div>)}
 
