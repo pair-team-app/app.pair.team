@@ -231,7 +231,7 @@ const ColorSwatch = (props)=> {
 };
 
 const FilingTabContent = (props)=> {
-	console.log('InspectorPage.FilingTabContent()', props);
+// 	console.log('InspectorPage.FilingTabContent()', props);
 
 	const { tab, enabled } = props;
 	const { type, contents } = tab;
