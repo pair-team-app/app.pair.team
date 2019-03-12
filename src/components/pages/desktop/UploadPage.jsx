@@ -187,8 +187,7 @@ class UploadPage extends Component {
 
 		if (titleValid && uploadComplete) {
 			if (isUserLoggedIn()) {
-				trackEvent('button', 'submit');
-				this.setState({ formState : 2 });
+// 				this.setState({ formState : 2 });
 
 				let formData = new FormData();
 				formData.append('action', 'NEW_UPLOAD');
@@ -203,12 +202,7 @@ class UploadPage extends Component {
 						console.log('NEW_UPLOAD', response.data);
 						const { upload } = response.data;
 
-						this.props.updateDeeplink({
-							uploadID   : upload.id,
-							pageID     : this.props.deeplink.pageID,
-							artboardID : this.props.deeplink.artboardID
-						});
-
+						this.props.updateDeeplink({ uploadID : upload.id });
 						this.props.addFileUpload(null);
 						this.props.onProcessing(true);
 						this.props.onPage(buildInspectorPath(upload, `/${pathname.split('/').pop()}`));
@@ -227,10 +221,10 @@ class UploadPage extends Component {
 
 		const { section, formState, file, percent, uploadComplete, showLogin, showRegister } = this.state;
 
-		const uploadTitle = (formState === 1 && !uploadComplete) ? `Uploading ${file.name}…` : (section) ? homeContent[section].header.title : '';
-		const uploadSubtitle = (formState === 1 && !uploadComplete) ? `${((file.size / (1024 * 1024)) * (percent * 0.01)).toFixed(2)} of ${(file.size / (1024 * 1024)).toFixed(2)}MB has been uploaded.` : 'Drag, drop, or click to upload.';
+		const uploadTitle = (formState === 1) ? `Uploading ${file.name}…` : (section) ? homeContent[section].header.title : '';
+		const uploadSubtitle = (formState === 1) ? `${((file.size / (1024 * 1024)) * (percent * 0.01)).toFixed(2)} of ${(file.size / (1024 * 1024)).toFixed(2)}MB has been uploaded.` : 'Drag, drop, or click to upload.';
 
-		const pageStyle = { marginBottom : (formState >= 1 && uploadComplete) ? '10px' : '30px' };
+		const pageStyle = { marginBottom : (formState >= 1 && uploadComplete) ? '30px' : '30px' };
 		const progressStyle = { width : `${percent}%` };
 
 		return (
@@ -239,7 +233,7 @@ class UploadPage extends Component {
 					<div className="upload-progress-bar" style={progressStyle} />
 				</div>)}
 
-				{(formState <= 1 && !uploadComplete) && (<UploadHeader
+				{(formState <= 1) && (<UploadHeader
 					dialog={false}
 					uploading={(formState === 1)}
 					title={uploadTitle}
