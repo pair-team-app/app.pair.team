@@ -1615,9 +1615,9 @@ class InspectorPage extends Component {
 					hoverSlice  : null,
 					hoverOffset : null,
 				}, ()=> {
-					this.handleZoom(-1);
 					this.resetTabSets(upload, artboards);
-					setTimeout(()=> this.handleZoom(0), 5);
+					this.handleZoom(666);
+					setTimeout(()=> this.handleZoom(0), 10);
 				});
 			}
 
@@ -1628,9 +1628,9 @@ class InspectorPage extends Component {
 				hoverSlice  : null,
 				hoverOffset : null,
 			}, ()=> {
-				this.handleZoom(-1);
 				this.resetTabSets(upload, [artboard]);
-				setTimeout(()=> this.handleZoom(0), 5);
+				this.handleZoom(666);
+				setTimeout(()=> this.handleZoom(0), 10);
 			});
 		}
 	};
@@ -2014,7 +2014,10 @@ class InspectorPage extends Component {
 		let scale = fitScale;
 
 		let ind = -1;
-		if (direction !== 0) {
+		if (direction === 666) {
+			scale -= 0.0001;
+
+		} else if (direction !== 0) {
 			PAN_ZOOM.zoomNotches.forEach((amt, i)=> {
 				if (amt === this.state.scale) {
 					ind = i + direction;
@@ -2043,6 +2046,8 @@ class InspectorPage extends Component {
 			x : this.state.panMultPt.x,
 			y : this.state.panMultPt.y
 		};
+
+		console.log(':::::::::::::', scale);
 
 		this.setState({ scale, panMultPt,
 			slice : null
@@ -2158,7 +2163,7 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.onProcessingUpdate()');
 
 		const { upload, section } = this.state;
-		const title = Files.truncateName(upload.filename);// `${Strings.truncate(upload.filename.split('/').pop().split('.').shift(), 34)}.${upload.filename.split('/').pop().split('.').pop()}`;
+		const title = Files.truncateName(upload.filename);
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_STATUS');

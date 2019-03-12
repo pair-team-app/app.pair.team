@@ -140,7 +140,7 @@ class UploadPage extends Component {
 			.then((response)=> {
 				console.log("UPLOAD", response.data);
 			}).catch((error)=> {
-			sendToSlack(`*${email}* failed uploading file _${file.name}_`);
+			sendToSlack(`*${email}* failed uploading file _${file.name}_\n\`\`\`${error}\n\`\`\`\n`);
 		});
 	};
 
