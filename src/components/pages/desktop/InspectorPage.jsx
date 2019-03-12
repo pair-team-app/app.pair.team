@@ -2015,7 +2015,7 @@ class InspectorPage extends Component {
 
 		let ind = -1;
 		if (direction === 666) {
-			scale -= 0.0001;
+			scale -= 0.0005;
 
 		} else if (direction !== 0) {
 			PAN_ZOOM.zoomNotches.forEach((amt, i)=> {
