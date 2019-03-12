@@ -41,8 +41,8 @@ export const CANVAS = {
 
 export const PAN_ZOOM = {
 	insetSize   : {
-		width  : 50,
-		height : 65
+		width  : 25,
+		height : 25
 	},
 	panFactor   : 0.0025,
 	panMultPt   : {

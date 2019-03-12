@@ -2,7 +2,7 @@
 import React from 'react';
 import './BaseMobilePage.css';
 
-import {Column} from "simple-flexbox";
+import { Column } from 'simple-flexbox';
 
 
 const UnsupportedMobilePage = (props)=> {

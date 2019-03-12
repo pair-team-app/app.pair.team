@@ -113,7 +113,7 @@ class App extends Component {
 		window.onpopstate = (event)=> {
 			console.log('|||||||||||||||||-', 'window.onpopstate()', '-|||||||||||||||||', event);
 
-			if (isHomePage()) {
+			if (isHomePage(false)) {
 				this.handlePage('<<');
 
 			} else {

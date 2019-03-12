@@ -123,18 +123,13 @@ class UploadPage extends Component {
 				this.setState({ percent });
 
 				if (progressEvent.loaded >= progressEvent.total && formState === 1) {
-					if (formState === 1) {
-						sendToSlack(`*[${id}]* *${email}* completed uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
+					sendToSlack(`*[${id}]* *${email}* completed uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
 
-						this.setState({
-							percent        : 100,
-							uploadComplete : true
-						});
-						this.onUploadSubmit();
-
-					} else {
-						this.setState({ percent : 0 });
-					}
+					this.setState({
+						percent        : 100,
+						uploadComplete : true
+					});
+					this.onUploadSubmit();
 				}
 			}
 		};
@@ -192,8 +187,7 @@ class UploadPage extends Component {
 
 		if (titleValid && uploadComplete) {
 			if (isUserLoggedIn()) {
-				trackEvent('button', 'submit');
-				this.setState({ formState : 2 });
+// 				this.setState({ formState : 2 });
 
 				let formData = new FormData();
 				formData.append('action', 'NEW_UPLOAD');
@@ -202,18 +196,13 @@ class UploadPage extends Component {
 				formData.append('description', description);
 				formData.append('filesize', size);
 				formData.append('private', (radioIndex === 1) ? '0' : '1');
-				formData.append('filename', `http://cdn.designengine.ai/system/${name}`);
+				formData.append('filename', `http://cdn.designengine.ai/system/${decodeURIComponent(name)}`);
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response)=> {
 						console.log('NEW_UPLOAD', response.data);
 						const { upload } = response.data;
 
-						this.props.updateDeeplink({
-							uploadID   : upload.id,
-							pageID     : this.props.deeplink.pageID,
-							artboardID : this.props.deeplink.artboardID
-						});
-
+						this.props.updateDeeplink({ uploadID : upload.id });
 						this.props.addFileUpload(null);
 						this.props.onProcessing(true);
 						this.props.onPage(buildInspectorPath(upload, `/${pathname.split('/').pop()}`));
@@ -232,19 +221,19 @@ class UploadPage extends Component {
 
 		const { section, formState, file, percent, uploadComplete, showLogin, showRegister } = this.state;
 
-		const uploadTitle = (formState === 1 && !uploadComplete) ? `Uploading ${file.name}…` : (section) ? homeContent[section].header.title : '';
-		const uploadSubtitle = (formState === 1 && !uploadComplete) ? `${((file.size / (1024 * 1024)) * (percent * 0.01)).toFixed(2)} of ${(file.size / (1024 * 1024)).toFixed(2)}MB has been uploaded.` : 'Drag, drop, or click to upload.';
+		const uploadTitle = (formState === 1) ? `Uploading ${file.name}…` : (section) ? homeContent[section].header.title : '';
+		const uploadSubtitle = (formState === 1) ? `${((file.size / (1024 * 1024)) * (percent * 0.01)).toFixed(2)} of ${(file.size / (1024 * 1024)).toFixed(2)}MB has been uploaded.` : 'Drag, drop, or click to upload.';
 
-		const pageStyle = { marginBottom : (formState === 1 && uploadComplete) ? '30px' : '30px' };
+		const pageStyle = { marginBottom : (formState >= 1 && uploadComplete) ? '30px' : '30px' };
 		const progressStyle = { width : `${percent}%` };
 
 		return (
 			<BaseDesktopPage className="upload-page-wrapper" style={pageStyle}>
-				{(formState === 1) && (<div className="upload-progress-bar-wrapper">
+				{(formState === 1 && !uploadComplete) && (<div className="upload-progress-bar-wrapper">
 					<div className="upload-progress-bar" style={progressStyle} />
 				</div>)}
 
-				{(formState <= 1 && !uploadComplete) && (<UploadHeader
+				{(formState <= 1) && (<UploadHeader
 					dialog={false}
 					uploading={(formState === 1)}
 					title={uploadTitle}
@@ -261,7 +250,7 @@ class UploadPage extends Component {
 						onRegistered={this.handleRegistered} />
 				</div>)}
 
-				{(!isUserLoggedIn() && showLogin && !showRegister) && (<div className="upload-page-login-wrapper">
+				{(!isUserLoggedIn() && !showRegister && showLogin) && (<div className="upload-page-login-wrapper">
 					<LoginForm
 						title="To finish uploading, please login."
 						onPage={this.props.onPage}

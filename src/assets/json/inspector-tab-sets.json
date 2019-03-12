@@ -5,35 +5,35 @@
       "title": "CSS",
       "type": "json_html",
       "enabled": false,
-      "contents": "\/* Rollover to display code. *\/",
+      "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
     }, {
       "id": 2,
       "title": "React",
       "type": "json_html",
       "enabled": false,
-      "contents": "\/* Rollover to display code. *\/",
+      "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
     }, {
       "id": 3,
       "title": "Swift",
       "type": "json_html",
       "enabled": false,
-      "contents": "\/* Rollover to display code. *\/",
+      "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
     }, {
       "id": 4,
       "title": "Android",
       "type": "json_html",
       "enabled": false,
-      "contents": "\/* Rollover to display code. *\/",
+      "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
     }], [{
       "id": 5,
       "title": "Specs",
       "type": "component",
       "enabled": false,
-      "contents": "\/* Rollover to display specs. *\/",
+      "contents": null,
       "syntax": null
     }]
   ],
@@ -55,28 +55,28 @@
       "title": "CSS",
       "type": "json_html",
       "enabled": false,
-      "contents": "\/* Rollover to display code. *\/",
+      "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
     }, {
       "id": 2,
       "title": "React",
       "type": "json_html",
       "enabled": false,
-      "contents": "\/* Rollover to display code. *\/",
+      "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
     }, {
       "id": 3,
       "title": "Swift",
       "type": "json_html",
       "enabled": false,
-      "contents": "\/* Rollover to display code. *\/",
+      "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
     }, {
       "id": 4,
       "title": "Android",
       "type": "json_html",
       "enabled": false,
-      "contents": "\/* Rollover to display code. *\/",
+      "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
     }], [{
       "id": 5,
