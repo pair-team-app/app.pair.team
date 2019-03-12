@@ -18,7 +18,7 @@ import InputField, {
 } from '../../forms/elements/InputField';
 import { DEFAULT_AVATAR } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
-import { Bits, Strings } from '../../../utils/lang';
+import { Bits, Files, Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 
 const dropZone = React.createRef();
@@ -149,7 +149,7 @@ class ProfilePage extends Component {
 			};
 
 			const re = /gif|jpe?g|png|svg/;
-			if (re.test(file.name.split('.').pop())) {
+			if (re.test(Files.extension(file.name))) {
 				this.setState({ file });
 				trackEvent('button', 'change-avatar');
 

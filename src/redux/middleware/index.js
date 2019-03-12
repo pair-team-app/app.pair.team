@@ -1,5 +1,5 @@
 
-import cookie from "react-cookies";
+import cookie from 'react-cookies';
 
 import { CONVERTED_DEEPLINK, UPDATE_DEEPLINK, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';

@@ -8,6 +8,7 @@ import qs from 'qs';
 import ReactNotifications from 'react-browser-notifications';
 import cookie from 'react-cookies';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import Dropzone from 'react-dropzone';
 import FontAwesome from 'react-fontawesome';
 // import { Helmet } from 'react-helmet';
 import ImageLoader from 'react-loading-image';
@@ -18,7 +19,7 @@ import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import ContentModal from '../../elements/ContentModal';
-import { POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../elements/Popup';
+import {POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS} from '../../elements/Popup';
 import TutorialOverlay from '../../elements/TutorialOverlay';
 
 import { MOMENT_TIMESTAMP } from '../../../consts/formats';
@@ -26,8 +27,8 @@ import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../consts
 import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL } from '../../../consts/inspector';
 import { DE_LOGO_SMALL } from '../../../consts/uris';
 import { setRedirectURI } from '../../../redux/actions';
-import { buildInspectorPath, buildInspectorURL } from '../../../utils/funcs.js';
-import { Browsers, DateTimes, Maths, Strings } from '../../../utils/lang.js';
+import { buildInspectorPath, buildInspectorURL, sendToSlack } from '../../../utils/funcs.js';
+import { Browsers, DateTimes, Files, Maths, Strings } from '../../../utils/lang.js';
 import { fontSpecs, toAndroid, toCSS, toReactCSS, toSpecs, toSwift } from '../../../utils/inspector-langs.js';
 import { trackEvent } from '../../../utils/tracking';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
@@ -288,7 +289,7 @@ const FilingTabTitle = (props)=> {
 const InspectorFooter = (props)=> {
 // 	console.log('InspectorPage.InspectorFooter()', props);
 
-	const { section, scale, fitScale, artboards, processing } = props;
+	const { section, scale, fitScale, artboards, processing, creator } = props;
 	const prevArtboard = {
 		id     : -1,
 		pageID : -1
@@ -303,6 +304,12 @@ const InspectorFooter = (props)=> {
 		<img src={deLogo} className="inspector-page-footer-logo" onClick={()=> props.onPage('')} alt="Design Engine" />
 		{(!processing) && (<div className="inspector-page-footer-button-wrapper">
 			{/*{(profile && ((upload.id << 0) === 1 || upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true });}}>Share</button>)}*/}
+			{(creator) && (<Dropzone
+				className="inspector-page-footer-dz"
+				multiple={false}
+				disablePreview={true}
+				onDrop={props.onDrop}
+			><button className="inspector-page-footer-button" onClick={()=> trackEvent('button', 'resubmit')}>Resubmit</button></Dropzone>)}
 
 			<button disabled={(scale >= Math.max(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-in'); props.onZoom(1);}}><FontAwesome name="search-plus" /></button>
 			<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-out'); props.onZoom(-1);}}><FontAwesome name="search-minus" /></button>
@@ -436,7 +443,7 @@ const SpecsList = (props)=> {
 	const { upload, slice, creatorID } = props;
 
 	if (!upload || !slice || (upload && (upload.state << 0) < 3)) {
-		return (<div className="inspector-page-specs-list-wrapper inspector-page-specs-list-wrapper-empty">{((upload.state << 0) < 3) ? '' : '/* Rollover to display specs.\n*/'}</div>);
+		return (<div className="inspector-page-specs-list-wrapper inspector-page-specs-list-wrapper-empty">{((upload.state << 0) < 3) ? '' : '/* Rollover to display specs. */'}</div>);
 	}
 
 	const { frame } = slice.meta;
@@ -662,8 +669,9 @@ class InspectorPage extends Component {
 			},
 			processing  : {
 				state   : 0,
-				message : ''
+				message : '…'
 			},
+			percent     : 100,
 			tooltip     : 'Loading…'
 		};
 
@@ -1648,6 +1656,113 @@ class InspectorPage extends Component {
 		Browsers.makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
 	};
 
+	handleFileDrop = (files)=> {
+// 		console.log('InspectorPage.handleFileDrop()', files);
+
+		const { id, email } = this.props.profile;
+		const { upload, viewSize, urlBanner } = this.state;
+
+		if (files.length > 0) {
+			const file = files.pop();
+
+			if (Files.extension(file.name) === 'sketch') {
+				if (file.size < 100 * (1024 * 1024)) {
+					if (Files.basename(upload.filename) === file.name) {
+						sendToSlack(`*[${id}]* *${email}* started uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
+						trackEvent('upload', 'file');
+
+						const config = {
+							headers            : { 'content-type' : 'multipart/form-data' },
+							onDownloadProgress : (progressEvent)=> {},
+							onUploadProgress   : (progressEvent)=> {
+								const { loaded, total } = progressEvent;
+
+								const percent = Maths.clamp(Math.round((loaded * 100) / total), 0, 99);
+								this.setState({ percent });
+
+								if (progressEvent.loaded >= progressEvent.total) {
+									sendToSlack(`*[${id}]* *${email}* completed uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
+
+									this.setState({
+										processing  : {
+											state   : 0,
+											message : 'Please wait…'
+										}
+									});
+
+									let formData = new FormData();
+									formData.append('action', 'RESET_UPLOAD');
+									formData.append('upload_id', upload.id);
+									axios.post('https://api.designengine.ai/system.php', formData)
+										.then((response)=> {
+											console.log('RESET_UPLOAD', response.data);
+											if (response.data.reset) {
+												this.setState({
+													percent : 100
+												}, ()=> this.props.onProcessing(true));
+
+											} else {
+												this.props.onPopup({
+													type     : POPUP_TYPE_ERROR,
+													content  : 'Revision error occurred, try uploading again.',
+													offset  : {
+														right : window.innerWidth - viewSize.width
+													}
+												});
+											}
+										}).catch((error)=> {
+									});
+								}
+							}
+						};
+
+						let formData = new FormData();
+						formData.append('file', file);
+						axios.post('http://cdn.designengine.ai/upload.php?dir=/system', formData, config)
+							.then((response)=> {
+								console.log("upload.php", response.data);
+							}).catch((error)=> {
+							sendToSlack(`*${email}* failed uploading file _${file.name}_`);
+						});
+
+					} else {
+						this.props.onPopup({
+							type     : POPUP_TYPE_ERROR,
+							content  : 'File names do not match',
+							offset  : {
+								top   : (urlBanner << 0) * 38,
+								right : window.innerWidth - viewSize.width
+							}
+						});
+					}
+
+				} else {
+					sendToSlack(`*[${id}]* *${email}* uploaded oversized file "_${file.name}_" (${Math.round(file.size * (1 / (1024 * 1024)))}MB)`);
+					this.props.onPopup({
+						type     : POPUP_TYPE_ERROR,
+						content  : 'File size must be under 100MB.',
+						offset  : {
+							top   : (urlBanner << 0) * 38,
+							right : window.innerWidth - viewSize.width
+						}
+					});
+				}
+
+			} else {
+				sendToSlack(`*[${id}]* *${email}* uploaded incompatible file "_${file.name}_"`);
+				this.props.onPopup({
+					type     : POPUP_TYPE_ERROR,
+					content  : (Files.extension(file.name) === 'fig') ? 'Figma Support Coming Soon!' : (Files.extension(file.name) === 'psd') ? 'Photoshop Support Coming Soon!' :  (Files.extension(file.name) === 'xd') ? 'Adobe XD Support Coming Soon!' : 'Only Sketch files are support at this time.',
+					offset  : {
+						top   : (urlBanner << 0) * 38,
+						right : window.innerWidth - viewSize.width
+					},
+					duration : 2500
+				});
+			}
+		}
+	};
+
 	handleInviteTeamFormSubmitted = (result)=> {
 // 		console.log('InspectorPage.handleInviteTeamFormSubmitted()', result);
 	};
@@ -1716,6 +1831,12 @@ class InspectorPage extends Component {
 
 			this.setState({ panMultPt, scrollPt, scrolling : true });
 		}
+	};
+
+	handleResubmit = ()=> {
+		console.log('InspectorPage.handleResubmit()');
+		trackEvent('button', 'resubmit');
+		alert('File dialog');
 	};
 
 	handleSliceClick = (ind, slice, offset)=> {
@@ -2078,10 +2199,10 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.render()', (new Array(100)).fill(null).map((i)=> (Maths.randomInt(1, 10))).join(','), this.state);
 
 
-		const { processing } = this.props;
+		const { processing, profile } = this.props;
 
 		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, activeTabs, scrolling, viewSize, panMultPt } = this.state;
-		const { valid, restricted, urlBanner, tutorial, tooltip } = this.state;
+		const { valid, restricted, urlBanner, tutorial, percent, tooltip } = this.state;
 
 		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, 'page_child');
 // 		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : (section === SECTIONS.PARTS) ? flattenUploadArtboards(upload, 'page_child').slice(0, 3) : flattenUploadArtboards(upload, 'page_child');
@@ -2222,12 +2343,17 @@ class InspectorPage extends Component {
 			height : `calc(100% - ${(section === SECTIONS.PARTS ? 154 : 58)}px)`
 		};
 
+		const progressStyle = { width : `${percent}%` };
 
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
 				<div className={contentClass} onWheel={this.handleWheelStart}>
+					{(percent < 100) && (<div className="upload-progress-bar-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.PRESENTER && !processing) ? 880 : 360}px)`}}>
+						<div className="upload-progress-bar" style={progressStyle} />
+					</div>)}
+
 					<div className="inspector-page-marquee-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.PRESENTER && !processing) ? 880 : 360}px)`}}>
-						{(upload && urlBanner) && (<MarqueeBanner
+						{(upload && urlBanner && percent === 100) && (<MarqueeBanner
 							copyText={buildInspectorURL(upload)}
 							removable={true}
 							outro={!urlBanner}
@@ -2236,7 +2362,7 @@ class InspectorPage extends Component {
 							<div className="marquee-banner-content marquee-banner-content-url"><span className="txt-bold" style={{paddingRight:'5px'}}>Share on Slack:</span> {buildInspectorURL(upload)}</div>
 						</MarqueeBanner>)}
 
-						{(tooltip) && (<MarqueeBanner
+						{(!processing && tooltip) && (<MarqueeBanner
 							copyText={null}
 							outro={!tooltip}
 							onCopy={null}
@@ -2270,11 +2396,13 @@ class InspectorPage extends Component {
 					</InteractiveDiv>
 
 					{(upload) && (<InspectorFooter
+						creator={(profile && profile.id << 0 === upload.creator.user_id << 0)}
 						scale={scale}
 						fitScale={fitScale}
 						section={section}
 						processing={processing}
 						artboards={flattenUploadArtboards(upload, 'page_child')}
+						onDrop={this.handleFileDrop}
 						onChangeArtboard={this.handleChangeArtboard}
 						onChangeSection={(section)=> this.handleChangeSection(section)}
 						onPage={this.props.onPage}
@@ -2359,7 +2487,7 @@ class InspectorPage extends Component {
 			</ContentModal>)}
 
 			{/*{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing*/}
-			{(!restricted && upload && processing) && (<UploadProcessing
+			{(!restricted && upload && (percent === 99 || processing)) && (<UploadProcessing
 				upload={upload}
 				processing={this.state.processing}
 				vpHeight={viewSize.height}

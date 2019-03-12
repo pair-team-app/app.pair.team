@@ -1,5 +1,5 @@
 
-import cookie from "react-cookies";
+import cookie from 'react-cookies';
 import ReactGA from 'react-ga';
 
 

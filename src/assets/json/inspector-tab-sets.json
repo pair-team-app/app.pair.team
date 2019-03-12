@@ -33,7 +33,7 @@
       "title": "Specs",
       "type": "component",
       "enabled": false,
-      "contents": "\/* Rollover to display specs. *\/",
+      "contents": null,
       "syntax": null
     }]
   ],

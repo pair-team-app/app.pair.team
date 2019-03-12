@@ -379,6 +379,10 @@
 	margin-right: 0;
 }
 
+.inspector-page-footer-dz {
+	display: inline;
+}
+
 .inspector-page-panel {
 	width: 360px;
 	max-width: 360px;

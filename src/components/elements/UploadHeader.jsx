@@ -86,7 +86,7 @@ class UploadHeader extends Component {
 		if (files.length > 0) {
 			const file = files.pop();
 
-			if (file.name.split('.').pop() === 'sketch') {
+			if (Files.extension(file.name) === 'sketch') {
 				if (file.size < 100 * (1024 * 1024)) {
 					this.props.onFile(file);
 
@@ -94,8 +94,7 @@ class UploadHeader extends Component {
 					sendToSlack(`*[${id}]* *${email}* uploaded oversized file "_${file.name}_" (${Math.round(file.size * (1 / (1024 * 1024)))}MB)`);
 					this.props.onPopup({
 						type     : POPUP_TYPE_ERROR,
-						content  : 'File size must be under 100MB.',
-						duration : 1750
+						content  : 'File size must be under 100MB.'
 					});
 				}
 
