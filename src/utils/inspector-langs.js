@@ -62,11 +62,11 @@ export function fontSpecs(font) {
 export function toAndroid(slices, artboard) {
 // 	console.log('inspector-langs.toAndroid()', slices, artboard);
 
-	const artboardName = Strings.camilze(Strings.uriSlug(artboard.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
+	const artboardName = Strings.camelize(Strings.uriSlug(artboard.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 
 	let html = `<-- ${DISCLAIMER.replace(/\n/g, '')} * -->\n\n`;
 	slices.forEach((slice)=> {
-		const sliceName = Strings.camilze(Strings.uriSlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
+		const sliceName = Strings.camelize(Strings.uriSlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 		const viewType = (slice.type === 'textfield') ? 'Text View' : 'Image View';
 		const caption = viewType;
 
@@ -83,7 +83,7 @@ export function toAndroid(slices, artboard) {
 		html += `${HTML_TAB}android:paddingBottom="${artboard.meta.frame.size.height - slice.meta.frame.size.height}px" \n`;
 		html += `${HTML_TAB}tools:context=".${artboardName}Activity">\n\n`;
 		html += `${HTML_TAB}<${viewType.replace(/ /g, '')} \n`;
-		html += `${HTML_TAB}${HTML_TAB}android:id="@+id/${Strings.camilze(viewType)}_${sliceName}" \n`;
+		html += `${HTML_TAB}${HTML_TAB}android:id="@+id/${Strings.camelize(viewType)}_${sliceName}" \n`;
 		html += `${HTML_TAB}${HTML_TAB}android:layout_width="wrap_content" \n`;
 		html += `${HTML_TAB}${HTML_TAB}android:layout_height="wrap_content" \n`;
 		html += `${HTML_TAB}${HTML_TAB}android:text="${caption}" \n`;
@@ -176,12 +176,12 @@ export function toSpecs(slice) {
 export function toSwift(slices, artboard) {
 // 	console.log('inspector-langs.toSwift()', slices, artboard);
 
-	const artboardName = Strings.camilze(artboard.title.replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
+	const artboardName = Strings.camelize(artboard.title.replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 
 	let html = `/* ${DISCLAIMER} */\n\n`;
 	slices.forEach((slice)=> {
 		if (slice.type === 'background' || slice.type === 'group' || slice.type === 'slice' || slice.type === 'symbol' || slice.type === 'textfield') {
-			const sliceName = Strings.camilze(Strings.uriSlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''));
+			const sliceName = Strings.camelize(Strings.uriSlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''));
 
 			html += '// Asset\n';
 			html += 'enum Asset {\n';
@@ -197,10 +197,10 @@ export function toSwift(slices, artboard) {
 				html += 'struct ColorName {\n';
 				html += `${HTML_TAB}let rgbaValue: UInt32\n`;
 				html += `${HTML_TAB}var color: Color { return Color(named: self) }\n`;
-				html += `${HTML_TAB}static let ${Strings.camilze(slice.title)} = ColorName(rgbaValue: 0x${slice.meta.fillColor.replace('#', '')}ff)\n`;
+				html += `${HTML_TAB}static let ${Strings.camelize(slice.title)} = ColorName(rgbaValue: 0x${slice.meta.fillColor.replace('#', '')}ff)\n`;
 				html += '\n';
-				html += `let ${Strings.camilze(slice.title)}Color = UIColor(named: .${Strings.camilze(slice.title)})\n`;
-				html += `let ${Strings.camilze('alt' + slice.title)}Color = ColorName.${Strings.camilze(slice.title)}.color\n`;
+				html += `let ${Strings.camelize(slice.title)}Color = UIColor(named: .${Strings.camelize(slice.title)})\n`;
+				html += `let ${Strings.camelize('alt' + slice.title)}Color = ColorName.${Strings.camelize(slice.title)}.color\n`;
 			}
 
 		} else if (slice.type === 'textfield') {
@@ -212,17 +212,17 @@ export function toSwift(slices, artboard) {
 			html += `${HTML_TAB}${HTML_TAB}static let ${name.toLowerCase()} = FontConvertible(name: "${family}-${name}", family: "${slice.meta.font.family}", path: "${psName}.otf")\n`;
 			html += `${HTML_TAB}}\n`;
 			html += '}\n\n';
-			html += `let ${Strings.camilze([family, name].join(' '))} = UIFont(font: FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
-			html += `let ${Strings.camilze(['alt', family, name].join(' '))} = FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
+			html += `let ${Strings.camelize([family, name].join(' '))} = UIFont(font: FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
+			html += `let ${Strings.camelize(['alt', family, name].join(' '))} = FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
 			html += '\n\n';
 			html += '// Color\n';
 			html += 'struct ColorName {\n';
 			html += `${HTML_TAB}let rgbaValue: UInt32\n`;
 			html += `${HTML_TAB}var color: Color { return Color(named: self) }\n`;
-			html += `${HTML_TAB}static let ${Strings.camilze(slice.title)} = ColorName(rgbaValue: 0x${slice.meta.font.color.replace('#', '')}ff)\n`;
+			html += `${HTML_TAB}static let ${Strings.camelize(slice.title)} = ColorName(rgbaValue: 0x${slice.meta.font.color.replace('#', '')}ff)\n`;
 			html += '\n';
-			html += `let ${Strings.camilze(slice.title)}Color = UIColor(named: .${Strings.camilze(slice.title)})\n`;
-			html += `let ${Strings.camilze('alt' + slice.title)}Color = ColorName.${Strings.camilze(slice.title)}.color\n`;
+			html += `let ${Strings.camelize(slice.title)}Color = UIColor(named: .${Strings.camelize(slice.title)})\n`;
+			html += `let ${Strings.camelize('alt' + slice.title)}Color = ColorName.${Strings.camelize(slice.title)}.color\n`;
 		}
 	});
 

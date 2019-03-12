@@ -8,11 +8,11 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import TopNav from './elements/TopNav';
+import AdBannerPanel from './elements/AdBannerPanel';
 import BottomNav from './elements/BottomNav';
 import ContentModal, { MODAL_SIZE_AUTO } from './elements/ContentModal';
 import Popup from './elements/Popup';
-import AdBannerPanel from './elements/AdBannerPanel';
+import TopNav from './elements/TopNav';
 import HomePage from './pages/desktop/HomePage';
 import InspectorPage from './pages/desktop/InspectorPage';
 import InviteTeamPage from './pages/desktop/InviteTeamPage';

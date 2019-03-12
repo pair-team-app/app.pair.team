@@ -228,13 +228,11 @@ class ProfilePage extends Component {
 			const { id } = this.props.profile;
 			this.props.updateUserProfile({ id, avatar, username, email, password });
 			this.setState({ passMsg : '' });
-
-			setTimeout(()=> {
-				this.props.onPopup({
-					type    : POPUP_TYPE_OK,
-					content : 'Profile updated.'
-				});
-			}, 333);
+			this.props.onPopup({
+				type    : POPUP_TYPE_OK,
+				content : 'Profile updated.',
+				delay   : 333
+			});
 		}
 	};
 

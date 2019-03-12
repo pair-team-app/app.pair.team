@@ -19,7 +19,8 @@ import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import ContentModal from '../../elements/ContentModal';
-import {POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS} from '../../elements/Popup';
+// import InputField from '../../forms/elements/InputField';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../elements/Popup';
 import TutorialOverlay from '../../elements/TutorialOverlay';
 
 import { MOMENT_TIMESTAMP } from '../../../consts/formats';
@@ -68,7 +69,8 @@ const artboardForID = (upload, artboardID)=> {
 
 const fillGroupPartItemSlices = (upload, slice)=> {
 // 	console.log('fillGroupPartItemSlices()', upload, slice);
-	return ([slice, ...artboardForID(upload, slice.artboardID).slices.filter((item)=> (item.type !== 'artboard' && item.id !== slice.id && (Maths.geom.rectContainsRect(Maths.geom.frameToRect(slice.meta.frame), Maths.geom.frameToRect(item.meta.frame)))))]);
+// 	return ([slice, ...artboardForID(upload, slice.artboardID).slices.filter((item)=> (item.type !== 'artboard' && item.id !== slice.id && (Maths.geom.rectContainsRect(Maths.geom.frameToRect(slice.meta.frame), Maths.geom.frameToRect(item.meta.frame)))))]);
+	return ([slice, ...artboardForID(upload, slice.artboardID).slices.filter((item)=> (item.type !== 'artboard' && item.id !== slice.id && Maths.geom.frameContainsFrame(slice.meta.frame, item.meta.frame)))]);
 };
 
 const flattenUploadArtboards = (upload, type=null)=> {
@@ -165,7 +167,8 @@ const drawCanvasSliceTooltip = (context, text, origin, maxWidth=-1)=> {
 
 const intersectSlices = (slices, frame)=> {
 // 	console.log('interectSlices()', slices, frame);
-	return (slices.filter((slice)=> (Maths.geom.rectContainsRect(Maths.geom.frameToRect(frame), Maths.geom.frameToRect(slice.meta.frame)))));
+// 	return (slices.filter((slice)=> (Maths.geom.rectContainsRect(Maths.geom.frameToRect(frame), Maths.geom.frameToRect(slice.meta.frame)))));
+	return (slices.filter((slice)=> (Maths.geom.frameContainsFrame(frame, slice.meta.frame))));
 };
 
 
@@ -676,6 +679,7 @@ class InspectorPage extends Component {
 		};
 
 		this.recordedHistory = false;
+		this.busyInterval = null;
 		this.processingInterval = null;
 		this.canvasInterval = null;
 		this.scrollTimeout = null;
@@ -836,10 +840,12 @@ class InspectorPage extends Component {
 	componentWillUnmount() {
 		console.log('InspectorPage.componentWillUnmount()', this.state);
 
+		clearInterval(this.busyInterval);
 		clearInterval(this.processingInterval);
 		clearInterval(this.canvasInterval);
 		clearTimeout(this.scrollTimeout);
 
+		this.busyInterval = null;
 		this.processingInterval = null;
 		this.canvasInterval = null;
 		this.scrollTimeout = null;
@@ -1682,13 +1688,15 @@ class InspectorPage extends Component {
 
 								if (progressEvent.loaded >= progressEvent.total) {
 									sendToSlack(`*[${id}]* *${email}* completed uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
+									trackEvent('button', 'resubmit');
 
-									this.setState({
-										processing  : {
-											state   : 0,
-											message : 'Please wait…'
-										}
-									});
+									if (this.busyInterval) {
+										clearInterval(this.busyInterval);
+										this.busyInterval = null;
+									}
+
+									this.busyInterval = setInterval(()=> this.onBusyInterval(), STATUS_INTERVAL);
+									this.onBusyInterval();
 
 									let formData = new FormData();
 									formData.append('action', 'RESET_UPLOAD');
@@ -1696,6 +1704,12 @@ class InspectorPage extends Component {
 									axios.post('https://api.designengine.ai/system.php', formData)
 										.then((response)=> {
 											console.log('RESET_UPLOAD', response.data);
+
+											if (this.busyInterval) {
+												clearInterval(this.busyInterval);
+												this.busyInterval = null;
+											}
+
 											if (response.data.reset) {
 												this.setState({
 													percent : 100
@@ -1831,12 +1845,6 @@ class InspectorPage extends Component {
 
 			this.setState({ panMultPt, scrollPt, scrolling : true });
 		}
-	};
-
-	handleResubmit = ()=> {
-		console.log('InspectorPage.handleResubmit()');
-		trackEvent('button', 'resubmit');
-		alert('File dialog');
 	};
 
 	handleSliceClick = (ind, slice, offset)=> {
@@ -2028,6 +2036,18 @@ class InspectorPage extends Component {
 		});
 	};
 
+	onBusyInterval = ()=> {
+		console.log('InspectorPage.onBusyInterval()');
+
+		const { upload } = this.state;
+		this.setState({
+			processing  : {
+				state   : 0,
+				message : `Versioning ${Files.truncateName(upload.filename)}${DateTimes.ellipsis()}`
+			}
+		});
+	};
+
 	onCanvasInterval = ()=> {
 // 		console.log('InspectorPage.onCanvasInterval()', this.antsOffset);
 
@@ -2100,7 +2120,7 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.onProcessingUpdate()');
 
 		const { upload, section } = this.state;
-		const title = `${Strings.truncate(upload.filename.split('/').pop().split('.').shift(), 34)}.${upload.filename.split('/').pop().split('.').pop()}`;
+		const title = Files.truncateName(upload.filename);// `${Strings.truncate(upload.filename.split('/').pop().split('.').shift(), 34)}.${upload.filename.split('/').pop().split('.').pop()}`;
 
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_STATUS');
@@ -2111,8 +2131,7 @@ class InspectorPage extends Component {
 				const { status } = response.data;
 				const processingState = status.state;
 // 				const { totals } = status;
-
-				const ellipsis = Array((DateTimes.epoch() % 4) + 1).join('.');
+//
 // 				const total = totals.all << 0;//Object.values(totals).reduce((acc, val)=> ((acc << 0) + (val << 0)));
 // 				const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
 // 				const secs = ((mins - (mins << 0)) * 60) << 0;
@@ -2122,7 +2141,7 @@ class InspectorPage extends Component {
 					this.setState({
 						processing : {
 							state   : processingState,
-							message : `Queued position ${queue.position}/${queue.total}, please wait${ellipsis}`
+							message : `Queued position ${queue.position}/${queue.total}, please wait${DateTimes.ellipsis()}`
 						}
 					});
 
@@ -2130,7 +2149,7 @@ class InspectorPage extends Component {
 					this.setState({
 						processing : {
 							state   : processingState,
-							message : `Preparing ${title}${ellipsis}`
+							message : `Preparing ${title}${DateTimes.ellipsis()}`
 						}
 					});
 
@@ -2139,7 +2158,7 @@ class InspectorPage extends Component {
 						processing : {
 							state   : processingState,
 // 							message : `Processing ${title}, parsed ${total} ${Strings.pluralize('element', total)} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s…`
-							message : `Processing ${title}${ellipsis}`
+							message : `Processing ${title}${DateTimes.ellipsis()}`
 						}
 					});
 					this.onFetchUpload();

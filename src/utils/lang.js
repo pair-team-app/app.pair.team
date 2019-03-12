@@ -70,77 +70,86 @@ export const DateTimes = {
 			}
 		}).reverse().join(''));
 	},
+	ellipsis       : ()=> (Array((DateTimes.epoch() % 4) + 1).join('.')),
 	epoch          : (millisecs=false)=> ((millisecs) ? (new Date()).getTime() : ((new Date()).getTime() * 0.001) << 0),
 	secsDiff       : (date1, date2)=> (Math.abs(date1.getTime() - date2.getTime()))
 };
 
 
 export const Files = {
-	basename  : (path)=> (path.split('/').pop()),
-	dirname   : (path)=> (path.split('/').slice(0, -2).pop()),
-	extension : (path)=> (path.split('.').pop())
+	basename     : (path)=> (path.split('/').pop()),
+	dirname      : (path)=> (path.split('/').slice(0, -2).pop()),
+	extension    : (path)=> (path.split('.').pop()),
+	filename     : (path)=> (Files.basename(path).replace(Files.extension(path), '')),
+	truncateName : (path, len)=> (`${Strings.truncate(Files.filename(path), len)}.${Files.extension(path)}`)
 };
 
 
 export const Maths = {
 	clamp       : (val, lower, upper)=> (Math.min(Math.max(val, lower), upper)),
-	randomFloat : (lower, upper, precision=15)=> ((Math.random() * (upper - lower)) + lower).toFixed(precision),
-	randomInt   : (lower, upper)=> Math.round(Maths.randomFloat(lower, upper)),
 	geom        : {
-		cropFrame          : (srcFrame, cropFrame)=> ({
-				origin : {
-					x : Math.max(srcFrame.origin.x, cropFrame.origin.x),
-					y : Math.max(srcFrame.origin.y, cropFrame.origin.y)
-				},
-				size   : {
-					width  : Math.min(srcFrame.origin.x + srcFrame.size.width, cropFrame.origin.x + cropFrame.size.width) - Math.max(srcFrame.origin.x, cropFrame.origin.x),
-					height : Math.min(srcFrame.origin.y + srcFrame.size.height, cropFrame.origin.y + cropFrame.size.height) - Math.max(srcFrame.origin.y, cropFrame.origin.y)
-				}
-			}),
-		frameToRect        : (frame)=> ({
-				top    : frame.origin.y,
-				left   : frame.origin.x,
-				bottom : frame.origin.y + frame.size.height,
-				right  : frame.origin.x + frame.size.width
-			}),
-		intersectionRect   : (rect1, rect2)=> ({
+		cropFrame            : (srcFrame, cropFrame)=> ({
+			origin : {
+				x : Math.max(srcFrame.origin.x, cropFrame.origin.x),
+				y : Math.max(srcFrame.origin.y, cropFrame.origin.y)
+			},
+			size   : {
+				width  : Math.min(srcFrame.origin.x + srcFrame.size.width, cropFrame.origin.x + cropFrame.size.width) - Math.max(srcFrame.origin.x, cropFrame.origin.x),
+				height : Math.min(srcFrame.origin.y + srcFrame.size.height, cropFrame.origin.y + cropFrame.size.height) - Math.max(srcFrame.origin.y, cropFrame.origin.y)
+			}
+		}),
+		frameContainsFrame   : (frame1, frame2)=> (Maths.geom.rectContainsRect(Maths.geom.frameToRect(frame1), Maths.geom.frameToRect(frame2))),
+		frameIntersectsFrame : (frame1, frame2)=> (Maths.geom.rectIntersectsRect(Maths.geom.frameToRect(frame1), Maths.geom.frameToRect(frame2))),
+		frameToRect          : (frame)=> ({
+			top    : frame.origin.y,
+			left   : frame.origin.x,
+			bottom : frame.origin.y + frame.size.height,
+			right  : frame.origin.x + frame.size.width
+		}),
+		intersectionRect     : (rect1, rect2)=> ({
 			top    : Math.max(rect1.top, rect2.top),
 			left   : Math.max(rect1.left, rect2.left),
 			bottom : Math.min(rect1.bottom, rect2.bottom),
 			right  : Math.min(rect1.right, rect2.right)
 		}),
-		isSizeDimensioned  : (size, flag=0x11)=> (size.width !== 0 && size.height !== 0),
-		rectContainsRect   : (rect1, rect2)=> (rect1.top <= rect2.top && rect1.left <= rect2.left && rect1.right >= rect2.right && rect1.bottom >= rect2.bottom),
-		rectIntersectsRect : (rect1, rect2)=> (Math.max(rect1.left, rect2.left) < Math.min(rect1.right, rect2.right) && Math.max(rect1.top, rect2.top) < Math.min(rect1.bottom, rect2.bottom)),
-		rectToFrame        : (rect)=> ({
-				origin : {
-					x : rect.left,
-					y : rect.top
-				},
-				size   : {
-					width  : rect.right - rect.left,
-					height : rect.bottom - rect.top
-				}
-			}),
-		sizeArea           : (size)=> (size.width * size.height),
-		sizeOutboundsSize  : (size1, size2)=> (size1.width > size2.width || size1.height > size2.height)
-	}
+		isSizeDimensioned    : (size, flag=0x11)=> (size.width !== 0 && size.height !== 0),
+		rectContainsRect     : (rect1, rect2)=> (rect1.top <= rect2.top && rect1.left <= rect2.left && rect1.right >= rect2.right && rect1.bottom >= rect2.bottom),
+		rectIntersectsRect   : (rect1, rect2)=> (Math.max(rect1.left, rect2.left) < Math.min(rect1.right, rect2.right) && Math.max(rect1.top, rect2.top) < Math.min(rect1.bottom, rect2.bottom)),
+		rectToFrame          : (rect)=> ({
+			origin : {
+				x : rect.left,
+				y : rect.top
+			},
+			size   : {
+				width  : rect.right - rect.left,
+				height : rect.bottom - rect.top
+			}
+		}),
+		sizeArea             : (size)=> (size.width * size.height),
+		sizeOutboundsSize    : (size1, size2)=> (size1.width > size2.width || size1.height > size2.height)
+	},
+	randomFloat : (lower, upper, precision=15)=> ((Math.random() * (upper - lower)) + lower).toFixed(precision),
+	randomInt   : (lower, upper)=> (Math.round(Maths.randomFloat(lower, upper)))
 };
 
 
 export const Numbers = {
-	clamp       : (val, lower, upper)=> (Math.min(Math.max(lower, val), upper)),
-	commaFormat : (val)=> (val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','))
+	commaFormat : (val)=> (val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')),
+	isEven      : (val)=> (val % 2 === 0),
+	isOdd       : (val)=> (!Numbers.isEven(val))
 };
 
 
 export const Objects = {
-	isEmpty : (obj)=> (Object.keys(obj).length === 0)
+	defineVal : (obj, key, val)=> (Object.assign({}, obj, { [key] : val })),
+	isEmpty   : (obj)=> (Object.keys(obj).length === 0),
+	hasKey    : (obj, key)=> (Object.keys(obj).some((k)=> (k === key))),
+	length    : (obj)=> (Object.keys(obj).length)
 };
 
 
 export const Strings = {
-	camilze    : (text, separator=' ', first=false)=> {
+	camelize   : (text, separator=' ', first=false)=> {
 		const camilized = text.split((separator || ' ')).map((word)=> (word.replace(/^./, (c)=> (c.toUpperCase())))).join('');
 		return ((first) ? camilized : camilized.replace(/^./, (c)=> (c.toLowerCase())));
 	},
