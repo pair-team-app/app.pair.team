@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './InspectorPage.css';
 
 import axios from 'axios';
+import copy from 'copy-to-clipboard';
 // import moment from 'moment-timezone';
 import qs from 'qs';
 import ReactNotifications from 'react-browser-notifications';
@@ -19,7 +20,7 @@ import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import ContentModal from '../../elements/ContentModal';
-// import InputField from '../../forms/elements/InputField';
+import InputField, { INPUTFIELD_STATUS_IDLE } from '../../forms/elements/InputField';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../elements/Popup';
 import TutorialOverlay from '../../elements/TutorialOverlay';
 
@@ -596,28 +597,64 @@ const UploadProcessing = (props)=> {
 
 	const { upload, processing, vpHeight } = props;
 	const artboards = flattenUploadArtboards(upload, 'page_child');
-	const url = buildInspectorURL(upload);
-
+	const urlInspect = buildInspectorURL(upload, '/inspect');
+	const urlParts = buildInspectorURL(upload, '/parts');
+	const urlPresent = buildInspectorURL(upload, '/present');
 
 	const secs = String((DateTimes.epoch() * 0.01).toFixed(2)).substr(-2, 1) << 0;
 	const ind = (secs) % artboards.length;
 
 	const artboard = artboards[ind];
 	const imgStyle = (artboard && ((secs - 1) % artboards.length !== ind)) ? {
-		width  : `${artboard.meta.frame.size.width * ((vpHeight - 200) / artboard.meta.frame.size.height)}px`,
-		height : `${artboard.meta.frame.size.height * ((vpHeight - 200) / artboard.meta.frame.size.height)}px`
+		width  : `${artboard.meta.frame.size.width * ((vpHeight - 278) / artboard.meta.frame.size.height)}px`,
+		height : `${artboard.meta.frame.size.height * ((vpHeight - 278) / artboard.meta.frame.size.height)}px`
 	} : null;
 
 	return (<div className="upload-processing-wrapper"><Column horizontal="center" vertical="start">
 		{(processing.message.length > 0) && (<Row><div className="upload-processing-title">{processing.message}</div></Row>)}
-		<Row>
-			<a href={url} className="upload-processing-url" rel="noopener noreferrer" target="_blank">{url}</a>
-		</Row>
+		<Row horizontal="center" style={{width:'100%'}}><div className="upload-processing-url-wrapper">
+			<InputField
+				type="lbl"
+				name="urlInspect"
+				placeholder={urlInspect}
+				value={urlInspect}
+				button="Copy"
+				status={INPUTFIELD_STATUS_IDLE}
+				onChange={null}
+				onErrorClick={()=> null}
+				onFieldClick={()=> {copy(urlInspect); props.onCopyURL(urlInspect)}}
+				onSubmit={()=> {copy(urlInspect); props.onCopyURL(urlInspect)}}
+			/>
+			<InputField
+				type="lbl"
+				name="urlParts"
+				placeholder={urlParts}
+				value={urlParts}
+				button="Copy"
+				status={INPUTFIELD_STATUS_IDLE}
+				onChange={null}
+				onErrorClick={()=> null}
+				onFieldClick={()=> {copy(urlParts); props.onCopyURL(urlParts)}}
+				onSubmit={()=> {copy(urlParts); props.onCopyURL(urlParts)}}
+			/>
+			<InputField
+				type="lbl"
+				name="urlPresent"
+				placeholder={urlPresent}
+				value={urlPresent}
+				button="Copy"
+				status={INPUTFIELD_STATUS_IDLE}
+				onChange={null}
+				onErrorClick={()=> null}
+				onFieldClick={()=> {copy(urlPresent); props.onCopyURL(urlPresent)}}
+				onSubmit={()=> {copy(urlPresent); props.onCopyURL(urlPresent)}}
+			/>
+		</div></Row>
 
 		<Row><div className="upload-processing-button-wrapper">
-			<CopyToClipboard onCopy={props.onCopyURL} text={url}>
-				<button className="adjacent-button" style={{marginRight:'10px'}}>Copy</button>
-			</CopyToClipboard>
+			{/*<CopyToClipboard onCopy={props.onCopyURL} text={url}>*/}
+				{/*<button className="adjacent-button" style={{marginRight:'10px'}}>Copy</button>*/}
+			{/*</CopyToClipboard>*/}
 			<button onClick={()=> props.onCancel()}>Cancel</button>
 		</div></Row>
 
@@ -754,6 +791,7 @@ class InspectorPage extends Component {
 
 		if (upload && processing && this.processingInterval === null) {
 			this.setState({
+				urlBanner  : false,
 				processing : {
 					state   : 0,
 					message : `…`
@@ -1620,7 +1658,7 @@ class InspectorPage extends Component {
 		this.props.onPopup({
 			type     : POPUP_TYPE_OK,
 			offset   : {
-				top   : (urlBanner << 0) * 38,
+				top   : (urlBanner << 0 && !processing) * 38,
 				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
 			},
 			content  : (type === 'url' || msg.length >= 100) ? `Copied ${type} to clipboard` : msg,
@@ -2139,6 +2177,7 @@ class InspectorPage extends Component {
 				if (processingState === 0) {
 					const { queue } = status;
 					this.setState({
+						urlBanner  : false,
 						processing : {
 							state   : processingState,
 							message : `Queued position ${queue.position}/${queue.total}, please wait${DateTimes.ellipsis()}`
@@ -2147,6 +2186,7 @@ class InspectorPage extends Component {
 
 				} else if (processingState === 1) {
 					this.setState({
+						urlBanner  : false,
 						processing : {
 							state   : processingState,
 							message : `Preparing ${title}${DateTimes.ellipsis()}`
@@ -2155,6 +2195,7 @@ class InspectorPage extends Component {
 
 				} else if (processingState === 2) {
 					this.setState({
+						urlBanner  : false,
 						processing : {
 							state   : processingState,
 // 							message : `Processing ${title}, parsed ${total} ${Strings.pluralize('element', total)} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s…`
@@ -2167,6 +2208,7 @@ class InspectorPage extends Component {
 					clearInterval(this.processingInterval);
 					this.processingInterval = null;
 					this.setState({
+						urlBanner  : true,
 						processing : {
 							state   : processingState,
 // 							message : `Completed processing ${total} ${Strings.pluralize('element', total)} in ${(mins >= 1) ? (mins << 0) + 'm' : ''} ${secs}s.`
@@ -2179,6 +2221,7 @@ class InspectorPage extends Component {
 					clearInterval(this.processingInterval);
 					this.processingInterval = null;
 					this.setState({
+						urlBanner  : false,
 						processing : {
 							state   : processingState,
 							message : `An error has occurred processing "${title}"!`
@@ -2510,7 +2553,7 @@ class InspectorPage extends Component {
 				upload={upload}
 				processing={this.state.processing}
 				vpHeight={viewSize.height}
-				onCopyURL={()=> this.handleClipboardCopy('url', buildInspectorURL(upload))}
+				onCopyURL={(url)=> this.handleClipboardCopy('url', url)}
 				onCancel={this.handleUploadProcessingCancel}
 			/>)}
 

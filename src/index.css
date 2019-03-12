@@ -135,7 +135,7 @@ input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hov
   -webkit-text-fill-color: #abdafb;
 }
 
-input[type=text], input[type=password], input[type=tel], textarea, .input-txt, .field-error {
+input[type="text"], input[type="password"], input[type="tel"], textarea, .input-txt, .field-error {
   background-color: #24282e;
   color: #abdafb;
   padding: 14px 11px;
@@ -147,7 +147,7 @@ input[type=text], input[type=password], input[type=tel], textarea, .input-txt, .
   cursor: text;
 }
 
-input[type=text]:disabled, input[type=password]:disabled, input[type=tel]:disabled, textarea:disabled {
+input[type="text"]:disabled, input[type="password"]:disabled, input[type="tel"]:disabled, textarea:disabled {
   cursor: not-allowed;
   /*color: #abdafd;*/
   color: #727d8d;

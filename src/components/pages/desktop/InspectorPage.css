@@ -575,20 +575,22 @@
 	width: calc(100% - 360px);
 	height: 100%;
 	z-index : 8;
-	padding-top: 95px;
+	padding-top: 25px;
 	background-color: rgba(0, 0, 0, 0.875);
 }
 
 .upload-processing-title {
-	margin-bottom: 43px;
+	margin-bottom: 38px;
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 48px;
 	letter-spacing: -2.53px;
 	color: #c8eefd;
 }
 
-.upload-processing-url, a.upload-processing-url, a:link.upload-processing-url, a:visited.upload-processing-url, a:active.upload-processing-url {
-	margin-bottom: 50px;
+.upload-processing-url-wrapper {
+	min-width: 50%;
+	max-width: 80%;
+	margin-bottom: 10px;
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 28px;
 	text-decoration: none;
@@ -596,13 +598,8 @@
 	color: #005cc5;
 }
 
-.upload-processing-url:hover, a:hover.upload-processing-url {
-	cursor: pointer;
-	text-decoration: underline;
-}
-
 .upload-processing-button-wrapper {
-	margin-bottom: 50px;
+	margin-bottom: 30px;
 }
 
 .upload-processing-image {
