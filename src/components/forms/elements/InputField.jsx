@@ -57,8 +57,8 @@ class InputField extends Component {
 		}
 	};
 
-	handleClick = (event)=> {
-// 		console.log('InputField.handleClick()', event.target);
+	handleErrorClick = (event)=> {
+// 		console.log('InputField.handleErrorClick()', event.target);
 
 		const { status } = this.state;
 		if (status !== INPUTFIELD_STATUS_DISABLED) {
@@ -71,8 +71,13 @@ class InputField extends Component {
 				textfield.current.focus();
 			}, 69);
 
-			this.props.onClick();
+			this.props.onErrorClick();
 		}
+	};
+
+	handleFieldClick = (event)=> {
+		console.log('InputField.handleFieldClick()', event.target);
+		this.props.onFieldClick();
 	};
 
 	handleFocus = (event)=> {
@@ -96,14 +101,17 @@ class InputField extends Component {
 		const { value, status } = this.state;
 
 		const wrapperClass = `input-wrapper input-field-wrapper${((status === INPUTFIELD_STATUS_ERROR) ? ' input-wrapper-error' : (status === INPUTFIELD_STATUS_DISABLED) ? ' input-wrapper-disabled' : '')}`;
-		const textfieldClass = `input-field-textfield${((status === INPUTFIELD_STATUS_ERROR) ? ' is-hidden' : '')}`;
+		const textfieldClass = `input-field-textfield${(type === 'lbl') ? ' input-field-textfield-label' : ''}${((status === INPUTFIELD_STATUS_ERROR) ? ' is-hidden' : '')}`;
 		const errorStyle = { display : ((status === INPUTFIELD_STATUS_ERROR) ? 'block' : 'none') };
 
 		return (
 			<div className="input-field">
 				<div className={wrapperClass}>
-					<input disabled={(status === INPUTFIELD_STATUS_DISABLED)} type={type} name={name} className={textfieldClass} placeholder={placeholder} value={value} onFocus={this.handleFocus} onChange={this.handleChange} onBlur={this.handleBlur} ref={textfield} />
-					<div className="field-error" onClick={this.handleClick} style={errorStyle}>{value}</div>
+					{(type === 'lbl')
+						? (<div className={textfieldClass} onClick={this.handleFieldClick}>{value}</div>)
+						: (<input disabled={(status === INPUTFIELD_STATUS_DISABLED)} type={type} name={name} className={textfieldClass} placeholder={placeholder} value={value} onFocus={this.handleFocus} onChange={this.handleChange} onBlur={this.handleBlur} ref={textfield} />)
+					}
+					<div className="field-error" onClick={this.handleErrorClick} style={errorStyle}>{value}</div>
 				</div>
 				{(button) && (<button disabled={(status === INPUTFIELD_STATUS_DISABLED || value.length === 0)} className="input-field-button" onClick={this.handleSubmit}>{button}</button>)}
 			</div>

@@ -26,11 +26,10 @@
 }
 
 .popup-content-error {
-	/*background-color : rgba(255, 70, 70, 0.33);*/
+	/*background-color : rgba(255, 70, 70, 0.5);*/
 	/*color : #ff4646;*/
 
 	background-color: rgba(42, 174, 57, 0.95);
-	/*background-color: #2aae39;*/
 	color: #ffffff;
 }
 

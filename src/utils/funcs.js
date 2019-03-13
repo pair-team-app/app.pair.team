@@ -48,7 +48,7 @@ export function isHomePage(root=true) {
 
 export function isInspectorPage() {
 	const { pathname } = window.location;
-	return ((pathname.includes(INSPECT + '/') || pathname.includes(PARTS + '/') || pathname.includes(PRESENT + '/')) && /^.+\/\d+\/.+$/.test(pathname));
+	return ((pathname.includes(`${INSPECT}/`) || pathname.includes(`${PARTS}/`) || pathname.includes(`${PRESENT}/`)) && /^.+\/\d+\/.+$/.test(pathname));
 }
 
 export function isLoginPage(exact=false) {

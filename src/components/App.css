@@ -105,7 +105,7 @@ h1.page-header-title {
 	border: 1px solid #ff4646;
 }
 
-.input-wrapper-error input[type=text], .input-wrapper-error input[type=password], .input-wrapper-error input[type=tel], .input-wrapper-error .input-txt, .input-wrapper-error .field-error {
+.input-wrapper-error input[type="text"], .input-wrapper-error input[type="password"], .input-wrapper-error input[type="tel"], .input-wrapper-error .input-txt, .input-wrapper-error .field-error {
 	background-color: #1a1e23;
 	color: #ff4646;
 }
