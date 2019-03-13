@@ -16,7 +16,7 @@ import InputField, {
 	INPUTFIELD_STATUS_ERROR,
 	INPUTFIELD_STATUS_IDLE
 } from '../../forms/elements/InputField';
-import { DEFAULT_AVATAR } from '../../../consts/uris';
+import { DEFAULT_AVATAR, CDN_URL } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { Bits, Files, Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
@@ -155,9 +155,9 @@ class ProfilePage extends Component {
 
 				let formData = new FormData();
 				formData.append('file', file);
-				axios.post(`http://cdn.designengine.ai/upload.php?dir=/profiles&prefix=${profile.id}_`, formData, config)
+				axios.post(`${CDN_URL}?dir=/profiles&prefix=${profile.id}_`, formData, config)
 					.then((response)=> {
-						console.log("AVATAR_UPLOAD", response.data);
+						console.log("CDN upload.php", response.data);
 						this.onValidateFields('avatar', `http://cdn.designengine.ai/profiles/${profile.id}_${decodeURIComponent(file.name)}`);
 
 					}).catch((error)=> {

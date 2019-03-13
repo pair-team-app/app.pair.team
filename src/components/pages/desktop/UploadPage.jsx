@@ -12,6 +12,7 @@ import LoginForm from '../../forms/LoginForm';
 import RegisterForm from '../../forms/RegisterForm';
 
 import homeContent from '../../../assets/json/home-content';
+import { CDN_URL } from '../../../consts/uris';
 import { addFileUpload, updateDeeplink, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
@@ -136,9 +137,9 @@ class UploadPage extends Component {
 
 		let formData = new FormData();
 		formData.append('file', file);
-		axios.post('http://cdn.designengine.ai/upload.php?dir=/system', formData, config)
+		axios.post(`${CDN_URL}?dir=/system`, formData, config)
 			.then((response)=> {
-				console.log("UPLOAD", response.data);
+				console.log("CDN upload.php", response.data);
 			}).catch((error)=> {
 			sendToSlack(`*${email}* failed uploading file _${file.name}_\n\`\`\`${error}\n\`\`\`\n`);
 		});

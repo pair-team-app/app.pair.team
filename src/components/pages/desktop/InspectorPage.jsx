@@ -27,7 +27,7 @@ import TutorialOverlay from '../../elements/TutorialOverlay';
 import { MOMENT_TIMESTAMP } from '../../../consts/formats';
 import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../consts/key-codes';
 import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL } from '../../../consts/inspector';
-import { DE_LOGO_SMALL } from '../../../consts/uris';
+import { DE_LOGO_SMALL, CDN_URL } from '../../../consts/uris';
 import { setRedirectURI } from '../../../redux/actions';
 import { buildInspectorPath, buildInspectorURL, sendToSlack } from '../../../utils/funcs.js';
 import { Browsers, DateTimes, Files, Maths, Strings } from '../../../utils/lang.js';
@@ -1770,9 +1770,9 @@ class InspectorPage extends Component {
 
 						let formData = new FormData();
 						formData.append('file', file);
-						axios.post('http://cdn.designengine.ai/upload.php?dir=/system', formData, config)
+						axios.post(`${CDN_URL}?dir=/system`, formData, config)
 							.then((response)=> {
-								console.log("upload.php", response.data);
+								console.log("CDN upload.php", response.data);
 							}).catch((error)=> {
 							sendToSlack(`*${email}* failed uploading file _${file.name}_`);
 						});
