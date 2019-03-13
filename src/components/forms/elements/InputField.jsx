@@ -95,7 +95,7 @@ class InputField extends Component {
 
 
 	render() {
-		console.log('InputField.render()', this.props, this.state);
+// 		console.log('InputField.render()', this.props, this.state);
 
 		const { type, name, placeholder, button } = this.props;
 		const { value, status } = this.state;

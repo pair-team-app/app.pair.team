@@ -313,7 +313,7 @@ const InspectorFooter = (props)=> {
 				multiple={false}
 				disablePreview={true}
 				onDrop={props.onDrop}
-			><button className="inspector-page-footer-button" onClick={()=> trackEvent('button', 'resubmit')}>Resubmit</button></Dropzone>)}
+			><button className="inspector-page-footer-button" onClick={()=> trackEvent('button', 'version')}>Version</button></Dropzone>)}
 
 			<button disabled={(scale >= Math.max(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-in'); props.onZoom(1);}}><FontAwesome name="search-plus" /></button>
 			<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-out'); props.onZoom(-1);}}><FontAwesome name="search-minus" /></button>
