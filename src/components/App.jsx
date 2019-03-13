@@ -84,6 +84,7 @@ class App extends Component {
 			this.props.fetchUserProfile();
 		}
 
+
 		initTracker(cookie.load('user_id'));
 		trackEvent('site', 'load');
 		trackPageview();

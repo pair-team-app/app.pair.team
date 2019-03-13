@@ -1,8 +1,11 @@
 
 export const Arrays = {
-	isEmpty       : (arr)=> (arr.length === 0),
-	randomElement : (arr)=> (arr[arr.randomIndex()]),
-	randomIndex   : (arr)=> (Maths.randomInt(0, arr.length - 1))
+// 	containsElement  : (arr, element)=> (arr.indexOf(element) > -1),
+	containsElement  : (arr, element)=> (Arrays.containsElements(arr, [element])),
+	containsElements : (arr, elements, all=true)=> ((all) ? elements.every((element)=> (arr.indexOf(element) > -1)) : elements.some((element)=> (arr.indexOf(element) > -1))),
+	isEmpty          : (arr)=> (arr.length === 0),
+	randomElement    : (arr)=> (arr[arr.randomIndex()]),
+	randomIndex      : (arr)=> (Maths.randomInt(0, arr.length - 1))
 };
 
 
@@ -142,6 +145,8 @@ export const Numbers = {
 
 export const Objects = {
 	defineVal : (obj, key, val)=> (Object.assign({}, obj, { [key] : val })),
+	dropKey   : (obj, key)=> (Objects.dropKeys(obj, [key])),
+	dropKeys  : (obj, keys)=> ({...Object.keys(obj).filter((k)=> (!Arrays.containsElement(keys, k))).reduce((newObj, k)=> ({...newObj, [k]: obj[k]}), {})}),
 	isEmpty   : (obj)=> (Object.keys(obj).length === 0),
 	hasKey    : (obj, key)=> (Object.keys(obj).some((k)=> (k === key))),
 	length    : (obj)=> (Object.keys(obj).length)
