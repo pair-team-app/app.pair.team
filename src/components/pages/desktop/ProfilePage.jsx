@@ -144,7 +144,6 @@ class ProfilePage extends Component {
 					this.setState({ percent });
 
 					if (progressEvent.loaded >= progressEvent.total) {
-						this.onValidateFields('avatar', `http://cdn.designengine.ai/profiles/${profile.id}_${decodeURIComponent(file.name)}`);
 					}
 				}
 			};
@@ -159,7 +158,14 @@ class ProfilePage extends Component {
 				axios.post(`http://cdn.designengine.ai/upload.php?dir=/profiles&prefix=${profile.id}_`, formData, config)
 					.then((response)=> {
 						console.log("AVATAR_UPLOAD", response.data);
+						this.onValidateFields('avatar', `http://cdn.designengine.ai/profiles/${profile.id}_${decodeURIComponent(file.name)}`);
+
 					}).catch((error)=> {
+					this.props.onPopup({
+						type     : POPUP_TYPE_ERROR,
+						content  : 'Error uploading image.',
+						duration : 3333
+					});
 				});
 
 			} else {
