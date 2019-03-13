@@ -652,9 +652,6 @@ const UploadProcessing = (props)=> {
 		</div></Row>
 
 		<Row><div className="upload-processing-button-wrapper">
-			{/*<CopyToClipboard onCopy={props.onCopyURL} text={url}>*/}
-				{/*<button className="adjacent-button" style={{marginRight:'10px'}}>Copy</button>*/}
-			{/*</CopyToClipboard>*/}
 			<button onClick={()=> props.onCancel()}>Cancel</button>
 		</div></Row>
 
