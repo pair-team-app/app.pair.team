@@ -21,38 +21,51 @@ const logFormat = (action, payload=null, meta='')=> {
 
 
 export function addFileUpload(payload) {
-	return ({ type : ADD_FILE_UPLOAD, payload });
+	return ({ payload,
+		type : ADD_FILE_UPLOAD
+	});
 }
 
 export function appendArtboardSlices(payload) {
-	return ({ type : APPEND_ARTBOARD_SLICES, payload });
+	return ({ payload,
+		type : APPEND_ARTBOARD_SLICES
+	});
 }
 
 export function appendHomeArtboards(payload) {
-	return ({ type : APPEND_HOME_ARTBOARDS, payload });
+	return ({ payload,
+		type : APPEND_HOME_ARTBOARDS
+	});
 }
 
 export function updateDeeplink(payload) {
-	return ({ type : UPDATE_DEEPLINK, payload });
+	return ({ payload,
+		type : UPDATE_DEEPLINK
+	});
 }
 
 export function fetchUserProfile() {
 	logFormat('fetchUserProfile');
 
-	return (function(dispatch) {
+	return ((dispatch)=> {
 		let formData = new FormData();
 		formData.append('action', 'PROFILE');
 		formData.append('user_id', cookie.load('user_id'));
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response)=> {
 				console.log('PROFILE', response.data);
-				const { id, username, email, avatar, type, joined } = response.data.user;
+// 				const { id, username, email, avatar, type, joined } = response.data.user;
+				const { id, type } = response.data.user;
 				dispatch({
 					type    : USER_PROFILE_LOADED,
-// 					payload : response.data.user
-					payload : { id, username, email, avatar, joined,
-						paid : (type.includes('paid'))
+					payload : { ...response.data.user,
+						id   : id << 0,
+						paid : type.includes('paid')
 					}
+// 					payload : response.data.user
+// 					payload : { id, username, email, avatar, joined,
+// 						paid : (type.includes('paid'))
+// 					}
 				});
 			}).catch((error) => {
 		});
@@ -60,13 +73,15 @@ export function fetchUserProfile() {
 }
 
 export function setRedirectURI(payload) {
-	return ({ type : SET_REDIRECT_URI, payload });
+	return ({ payload,
+		type : SET_REDIRECT_URI
+	});
 }
 
 export function updateUserProfile(payload) {
 	logFormat('updateUserProfile', payload);
 
-	return (function(dispatch) {
+	return ((dispatch)=> {
 		if (payload) {
 			const { id, username, email, avatar, password } = payload;
 			let formData = new FormData();
@@ -87,7 +102,7 @@ export function updateUserProfile(payload) {
 						type    : (status === 0x00) ? USER_PROFILE_UPDATED : USER_PROFILE_ERROR,
 						payload : {
 							status   : status,
-							id       : id,
+							id       : id << 0,
 							avatar   : avatar,
 							username : (Bits.contains(status, 0x01)) ? 'Username Already in Use' : username,
 							email    : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email,

@@ -7,4 +7,8 @@ import { onMiddleware } from '../middleware'
 
 const store = createStore(rootReducer, applyMiddleware(onMiddleware, thunk));
 
+//-- call api here! --//
+// store.dispatch --ACTION--
+//-------------- --------------//
+
 export default store;

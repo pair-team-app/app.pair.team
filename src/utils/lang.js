@@ -84,7 +84,7 @@ export const Files = {
 	dirname      : (path)=> (path.split('/').slice(0, -2).pop()),
 	extension    : (path)=> (path.split('.').pop()),
 	filename     : (path)=> (Files.basename(path).split('.').slice(0, -1).join('.')),
-	truncateName : (path, len)=> (`${Strings.truncate(Files.filename(path), len)}.${Files.extension(path)}`)
+	truncateName : (path, len)=> (`${Strings.truncate(Files.filename(path).split('').slice(0, -2).join(''), len - 2)}${Files.filename(path).split('').slice(-2).join('')}.${Files.extension(path)}`)
 };
 
 

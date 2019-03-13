@@ -25,7 +25,7 @@ export function onMiddleware({ dispatch }) {
 			} else if (type === UPDATE_DEEPLINK) {
 				if (!payload) {
 					dispatch({
-						type : CONVERTED_DEEPLINK,
+						type    : CONVERTED_DEEPLINK,
 						payload : {
 							uploadID   : 0,
 							pageID     : 0,
@@ -37,7 +37,7 @@ export function onMiddleware({ dispatch }) {
 				} else {
 					let payloadCopy = Object.assign({}, payload);
 					Object.keys(payload).filter((key)=> (typeof payload[key] !== 'number')).forEach((key)=> {
-						payloadCopy[key] = parseInt(payload[key], 10);
+						payloadCopy[key] = (payload[key] << 0);
 					});
 
 					dispatch({
