@@ -9,7 +9,7 @@
       "syntax": null
     }, {
       "id": 2,
-      "title": "React",
+      "title": "ReactHTML",
       "type": "json_html",
       "enabled": false,
       "contents": "\"/* Rollover to display code. */\"",
@@ -59,7 +59,7 @@
       "syntax": null
     }, {
       "id": 2,
-      "title": "React",
+      "title": "ReactHTML",
       "type": "json_html",
       "enabled": false,
       "contents": "\"/* Rollover to display code. */\"",

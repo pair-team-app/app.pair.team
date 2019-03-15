@@ -4,7 +4,6 @@ import './InspectorPage.css';
 
 import axios from 'axios';
 import copy from 'copy-to-clipboard';
-// import moment from 'moment-timezone';
 import qs from 'qs';
 import ReactNotifications from 'react-browser-notifications';
 import cookie from 'react-cookies';
@@ -31,7 +30,7 @@ import { DE_LOGO_SMALL, CDN_URL } from '../../../consts/uris';
 import { setRedirectURI } from '../../../redux/actions';
 import { buildInspectorPath, buildInspectorURL, sendToSlack } from '../../../utils/funcs.js';
 import { Browsers, DateTimes, Files, Maths, Strings } from '../../../utils/lang.js';
-import { fontSpecs, toAndroid, toCSS, toReactCSS, toSpecs, toSwift } from '../../../utils/inspector-langs.js';
+import { fontSpecs, toAndroid, toCSS, toGridHTML, toSpecs, toSwift } from '../../../utils/inspector-langs.js';
 import { trackEvent } from '../../../utils/tracking';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
 import downloadButton from '../../../assets/images/buttons/btn-download.svg';
@@ -453,7 +452,7 @@ const SpecsList = (props)=> {
 	const { frame } = slice.meta;
 	const fillColor = ((slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color : slice.meta.fillColor).toUpperCase();
 	const padding = `${slice.meta.padding.top}px ${slice.meta.padding.left}px ${slice.meta.padding.bottom}px ${slice.meta.padding.right}px`;
-	const added = `${slice.added.replace(' ', 'T')}Z`;//moment(`${slice.added.replace(' ', 'T')}Z`);
+	const added = `${slice.added.replace(' ', 'T')}Z`;
 	const font = (slice.meta.font) ? fontSpecs(slice.meta.font) : null;
 	const sliceStyles = (slice.meta.styles) ? slice.meta.styles : null;
 	const border = (sliceStyles && sliceStyles.border) ? sliceStyles.border : null;
@@ -1148,7 +1147,7 @@ class InspectorPage extends Component {
 						const slices = [...intersectSlices(artboard.slices, artboard.meta.frame)];
 						const langs = [
 							toCSS(slices),
-							toReactCSS(slices),
+							toGridHTML(slices),
 							toSwift(slices, artboard),
 							toAndroid(slices, artboard)
 						];
@@ -1205,7 +1204,7 @@ class InspectorPage extends Component {
 		const slices = [...intersectSlices(artboard.slices, slice.meta.frame)];
 		const langs = [
 			toCSS(slices),
-			toReactCSS(slices),
+			toGridHTML(slices),
 			toSwift(slices, artboard),
 			toAndroid(slices, artboard)
 		];
@@ -1328,7 +1327,7 @@ class InspectorPage extends Component {
 		const slices = [...intersectSlices(artboard.slices, slice.meta.frame)];
 		const langs = [
 			toCSS(slices),
-			toReactCSS(slices),
+			toGridHTML(slices),
 			toSwift(slices, artboard),
 			toAndroid(slices, artboard)
 		];
@@ -2172,8 +2171,8 @@ class InspectorPage extends Component {
 				const processingState = status.state;
 // 				const { totals } = status;
 //
-// 				const total = totals.all << 0;//Object.values(totals).reduce((acc, val)=> ((acc << 0) + (val << 0)));
-// 				const mins = moment.duration(moment(`${status.ended.replace(' ', 'T')}Z`).diff(`${status.started.replace(' ', 'T')}Z`)).asMinutes();
+// 				const total = totals.all << 0;//Objects.reduceVals(totals);
+// 				const mins = DateTimes.diffSecs(status.ended, status.started) * 60;
 // 				const secs = ((mins - (mins << 0)) * 60) << 0;
 
 				if (processingState === 0) {

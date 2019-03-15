@@ -207,9 +207,11 @@
 	line-height: normal;
 	letter-spacing: 0.44px;
 	color: #00ff0f;
-	white-space: nowrap;
-	word-break: keep-all;
-	overflow: scroll;
+	word-wrap: break-word;
+	/*white-space: pre-wrap;*/
+	/*word-break: break-word;*/
+	tab-size: 3;
+	overflow-y: scroll;
 }
 
 .filing-tab-content-disabled, .filing-tab-content-disabled:hover {

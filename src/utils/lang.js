@@ -1,4 +1,7 @@
 
+import moment from 'moment-timezone';
+
+
 export const Arrays = {
 // 	containsElement  : (arr, element)=> (arr.indexOf(element) > -1),
 	containsElement  : (arr, element)=> (Arrays.containsElements(arr, [element])),
@@ -56,6 +59,7 @@ export const Components = {
 
 
 export const DateTimes = {
+	diffSecs       : (startDate, endDate)=> (moment.duration(moment(`${endDate.replace(' ', 'T')}Z`).diff(`${startDate.replace(' ', 'T')}Z`)).asSeconds()),
 	durationFormat : (secs, frmt='mm:ss')=> {
 		const hours = '' + ((secs / 3600) << 0);
 		const mins = '' + ((secs - ((hours * 3600)) / 60) << 0);
@@ -83,7 +87,7 @@ export const Files = {
 	basename     : (path)=> (path.split('/').pop()),
 	dirname      : (path)=> (path.split('/').slice(0, -2).pop()),
 	extension    : (path)=> (path.split('.').pop()),
-	filename     : (path)=> (Files.basename(path).split('.').slice(0, -1).join('.')),
+	filename     : (path, sep='.')=> (Files.basename(path).split(sep).slice(0, -1).join(sep)),
 	truncateName : (path, len)=> (`${Strings.truncate(Files.filename(path).split('').slice(0, -2).join(''), len - 2)}${Files.filename(path).split('').slice(-2).join('')}.${Files.extension(path)}`)
 };
 
@@ -144,19 +148,21 @@ export const Numbers = {
 
 
 export const Objects = {
-	defineVal : (obj, key, val)=> (Object.assign({}, obj, { [key] : val })),
-	dropKey   : (obj, key)=> (Objects.dropKeys(obj, [key])),
-	dropKeys  : (obj, keys)=> ({...Object.keys(obj).filter((k)=> (!Arrays.containsElement(keys, k))).reduce((newObj, k)=> ({...newObj, [k]: obj[k]}), {})}),
-	isEmpty   : (obj)=> (Object.keys(obj).length === 0),
-	hasKey    : (obj, key)=> (Object.keys(obj).some((k)=> (k === key))),
-	length    : (obj)=> (Object.keys(obj).length)
+	defineVal  : (obj, key, val)=> (Object.assign({}, obj, { [key] : val })),
+	dropKey    : (obj, key)=> (Objects.dropKeys(obj, [key])),
+	dropKeys   : (obj, keys)=> ({...Object.keys(obj).filter((k)=> (!Arrays.containsElement(keys, k))).reduce((newObj, k)=> ({...newObj, [k]: obj[k]}), {})}),
+	isEmpty    : (obj)=> (Object.keys(obj).length === 0),
+	hasKey     : (obj, key)=> (Object.keys(obj).some((k)=> (k === key))),
+	length     : (obj)=> (Object.keys(obj).length),
+	reduceVals : (obj, init=0)=> (Object.values(obj).reduce((acc, val)=> ((acc << 0) + (val << 0)), init))
 };
 
 
 export const Strings = {
-	camelize   : (text, separator=' ', first=false)=> {
-		const camilized = text.split((separator || ' ')).map((word)=> (word.replace(/^./, (c)=> (c.toUpperCase())))).join('');
-		return ((first) ? camilized : camilized.replace(/^./, (c)=> (c.toLowerCase())));
+	camelize   : (str, separator=' ', propName=false)=> {
+// 		const camilized = str.split((separator || ' ')).map((word, i)=> (word.replace(/^./, (c)=> ((!propName && i === 0) ? c.toLowerCase() : c.toUpperCase())))).join('');
+// 		return ((propName) ? camilized : camilized.replace(/^./, (c)=> (c.toLowerCase())));
+		return (str.split((separator || ' ')).map((word, i)=> (word.replace(/^./, (c)=> ((!propName && i === 0) ? c.toLowerCase() : c.toUpperCase())))).join(''));
 	},
 	capitalize : (str, lower=false)=> (str.replace(/^(\w+)$/gi, (c)=> ((lower) ? c.toLowerCase() : c)).replace(/(\b\w)/gi, (c)=> (c.toUpperCase()))),
 	countOf    : (str, substr)=> ((str.match(new RegExp(substr.toString(), 'g')) || []).length),
@@ -185,4 +191,10 @@ export const Strings = {
 	trimSlash  : (str, leading=true, trailing=true)=> (str.replace(((leading && trailing) ? /^\/?(.+)\// : (leading && !trailing) ? /^\/(.+)$/ : (!leading && trailing) ? /^(.+)\/$/ : /^(.+)$/), '$1')),
 	truncate   : (str, len, ellipsis='…')=> ((str.length > len) ? `${str.substring(0, len - 1).trim()}${ellipsis}` : str),
 	uriSlug    : (str)=> (str.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase())
+};
+
+
+export const URLs = {
+	lastComponent : (url)=> (Files.filename(url, '')),
+	protocol      : (url)=> ((/^https?/.test(url.toLowerCase())) ? url.split(':').shift() : null)
 };
