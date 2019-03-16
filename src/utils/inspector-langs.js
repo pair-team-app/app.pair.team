@@ -139,6 +139,13 @@ export function toCSS(slices) {
 export function toGridHTML(slices) {
 	console.log('inspector-langs.toFlexBoxHTML()', slices);
 
+	if (slices.length === 0) {
+		return ({
+			html   : null,
+			syntax : null
+		});
+	}
+
 	const parentSlice = slices.shift();
 	slices = slices.slice(0, Math.min(slices.length, 4));
 
@@ -190,6 +197,13 @@ export function toGridHTML(slices) {
 
 export function toReactCSS(slices) {
 // 	console.log('inspector-langs.toReactCSS()', slices);
+
+	if (slices.length === 0) {
+		return ({
+			html   : null,
+			syntax : null
+		});
+	}
 
 	const html = toCSS(slices).syntax.replace(/: (.+?);/g, ': \'$1\',').replace(/(-.)/g, (c)=> (c[1].toUpperCase())).replace(/,\n}/, ' }').replace(/^.+{\n/, '{').replace(/ +/g, ' ').replace(/\n/g, '');
 	return ({
