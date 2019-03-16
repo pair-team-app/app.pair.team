@@ -1649,7 +1649,7 @@ class InspectorPage extends Component {
 
 		trackEvent('button', `copy-${type}`);
 		const { processing } = this.props;
-		const { section, urlBanner } = this.state;
+		const { section, activeTabs, urlBanner } = this.state;
 
 		this.props.onPopup({
 			type     : POPUP_TYPE_OK,
@@ -1660,6 +1660,16 @@ class InspectorPage extends Component {
 			content  : (type === 'url' || msg.length >= 100) ? `Copied ${type} to clipboard` : msg,
 			duration : 1750
 		});
+
+		if (type === 'code') {
+			window.postMessage({
+				action  : 'PAGE_SEND',
+				payload : {
+					lang   : (activeTabs[0].title === 'CSS') ? 'css' : (activeTabs[0].title === 'ReactHTML') ? 'html' : (activeTabs[0].title === 'Swift') ? 'swift' : (activeTabs[0].title === 'Android') ? 'xml' : 'txt',
+					syntax : msg
+				}
+			}, '*');
+		}
 	};
 
 	handleDownloadAll = ()=> {

@@ -1,5 +1,5 @@
 
-import { Files, Maths, Objects, Strings, URLs } from './lang';
+import { Maths, Objects, Strings, URLs } from './lang';
 
 const TAB = '  ';
 const badChars = /[\\.,_+=[\](){}]/g;
@@ -64,14 +64,13 @@ export function toAndroid(slices, artboard) {
 
 	const artboardName = Strings.camelize(Strings.uriSlug(artboard.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 
-	let html = `<-- ${DISCLAIMER.replace(/\n/g, '')} * -->\n\n`;
+	let html = `<!-- ${DISCLAIMER.replace(/\n/g, '')} * -->\n\n`;
+	html += '<?xml version="1.0" encoding="utf-8"?>\n';
 	slices.forEach((slice)=> {
 		const sliceName = Strings.camelize(Strings.uriSlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 		const viewType = (slice.type === 'textfield') ? 'Text View' : 'Image View';
 		const caption = viewType;
-
-		html += '<?xml version="1.0" encoding="utf-8"?>\n';
-		html += '<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" ';
+		html += '<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"\n';
 		html += `${TAB}xmlns:app="http://schemas.android.com/apk/res-auto" \n`;
 		html += `${TAB}xmlns:tools="http://schemas.android.com/tools" \n`;
 		html += `${TAB}android:id="@+id/activity_${artboardName}" \n`;
@@ -81,7 +80,7 @@ export function toAndroid(slices, artboard) {
 		html += `${TAB}android:paddingTop="${slice.meta.frame.origin.y}px" \n`;
 		html += `${TAB}android:paddingRight="${artboard.meta.frame.size.width - slice.meta.frame.size.width}px" \n`;
 		html += `${TAB}android:paddingBottom="${artboard.meta.frame.size.height - slice.meta.frame.size.height}px" \n`;
-		html += `${TAB}tools:context=".${artboardName}Activity">\n\n`;
+		html += `${TAB}tools:context=".${artboardName}Activity">\n`;
 		html += `${TAB}<${viewType.replace(/ /g, '')} \n`;
 		html += `${TAB}${TAB}android:id="@+id/${Strings.camelize(viewType)}_${sliceName}" \n`;
 		html += `${TAB}${TAB}android:layout_width="wrap_content" \n`;
@@ -91,19 +90,19 @@ export function toAndroid(slices, artboard) {
 		html += `${TAB}${TAB}app:layout_constraintEnd_toEndOf="parent" \n`;
 		html += `${TAB}${TAB}app:layout_constraintStart_toStartOf="parent" \n`;
 		html += `${TAB}${TAB}app:layout_constraintTop_toTopOf="parent" />\n`;
-		html += '</android.support.constraint.ConstraintLayout>';
+		html += '</android.support.constraint.ConstraintLayout>\n\n';
 	});
 
 	return ({
 		html   : JSON.stringify(html),
-		syntax : `${html.replace(TAB, '\t')}\n`
+		syntax : `${html.replace(TAB, '\t')}`
 	})
 }
 
 export function toCSS(slices) {
 // 	console.log('inspector-langs.toCSS()', slices);
 
-	let html = ``;
+	let html = `/* ${DISCLAIMER} */\n\n`;
 	slices.forEach((slice)=> {
 		html += `.${Strings.uriSlug(slice.title)} {\n`;
 		html += `${TAB}position: absolute;\n`;
@@ -132,18 +131,8 @@ export function toCSS(slices) {
 	});
 
 	return ({
-		html   : JSON.stringify(`/* ${DISCLAIMER} */\n\n${html}`),
-		syntax : `${html.replace(TAB, '\t')}\n`
-	});
-}
-
-export function toReactCSS(slices) {
-// 	console.log('inspector-langs.toReactCSS()', slices);
-
-	const html = toCSS(slices).syntax.replace(/: (.+?);/g, ': \'$1\',').replace(/(-.)/g, (c)=> (c[1].toUpperCase())).replace(/,\n}/, ' }').replace(/^.+{\n/, '{').replace(/ +/g, ' ').replace(/\n/g, '');
-	return ({
-		html   : JSON.stringify(`/* ${DISCLAIMER} */\n\n${html}`),
-		syntax : `${html}\n`
+		html   : JSON.stringify(html),
+		syntax : `${html.replace(TAB, '\t')}`
 	});
 }
 
@@ -186,17 +175,27 @@ export function toGridHTML(slices) {
 	html += '<div className="grid-container">\n';
 	slices.forEach((slice)=> {
 		html += `${TAB}<div className="grid-cell ${Strings.uriSlug(slice.title)}">`;
-		html += (slice.type === 'textfield') ? `${slice.meta.txtVal}\n` : `<img src="${URLs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}">`;
+		html += (slice.type === 'textfield') ? `${slice.meta.txtVal}` : `<img src="${URLs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}">`;
 		html += '</div>\n'
 	});
 	html += '</div>\n';
 
 	return ({
 		html   : JSON.stringify(html),
-		syntax : `${html.replace(/(&nbsp)+;/g, '\t')}\n`
+		syntax : `${html.replace(/(&nbsp)+;/g, '\t')}`
 	});
 
 // 	html += `${TAB}${TAB}: ;\n`;
+}
+
+export function toReactCSS(slices) {
+// 	console.log('inspector-langs.toReactCSS()', slices);
+
+	const html = toCSS(slices).syntax.replace(/: (.+?);/g, ': \'$1\',').replace(/(-.)/g, (c)=> (c[1].toUpperCase())).replace(/,\n}/, ' }').replace(/^.+{\n/, '{').replace(/ +/g, ' ').replace(/\n/g, '');
+	return ({
+		html   : JSON.stringify(`/* ${DISCLAIMER} */\n\n${html}`),
+		syntax : `${html}\n`
+	});
 }
 
 export function toSpecs(slice) {
