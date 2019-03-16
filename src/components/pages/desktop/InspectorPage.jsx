@@ -50,9 +50,10 @@ const canvas = React.createRef();
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		deeplink    : state.deeplink,
-		profile     : state.userProfile,
-		redirectURI : state.redirectURI
+		deeplink      : state.deeplink,
+		profile       : state.userProfile,
+		redirectURI   : state.redirectURI,
+		atomExtension : state.atomExtension
 	});
 };
 
@@ -1649,7 +1650,7 @@ class InspectorPage extends Component {
 
 		trackEvent('button', `copy-${type}`);
 		const { processing } = this.props;
-		const { section, activeTabs, urlBanner } = this.state;
+		const { section, urlBanner } = this.state;
 
 		this.props.onPopup({
 			type     : POPUP_TYPE_OK,
@@ -1660,16 +1661,6 @@ class InspectorPage extends Component {
 			content  : (type === 'url' || msg.length >= 100) ? `Copied ${type} to clipboard` : msg,
 			duration : 1750
 		});
-
-		if (type === 'code') {
-			window.postMessage({
-				action  : 'PAGE_SEND',
-				payload : {
-					lang   : (activeTabs[0].title === 'CSS') ? 'css' : (activeTabs[0].title === 'ReactHTML') ? 'html' : (activeTabs[0].title === 'Swift') ? 'swift' : (activeTabs[0].title === 'Android') ? 'xml' : 'txt',
-					syntax : msg
-				}
-			}, '*');
-		}
 	};
 
 	handleDownloadAll = ()=> {
@@ -1890,6 +1881,34 @@ class InspectorPage extends Component {
 			this.setState({ panMultPt, scrollPt, scrolling : true });
 		}
 	};
+
+	handleSendSyntax = (tab)=> {
+		console.log('InspectorPage.handleSendSyntax()', tab);
+
+		const lang = (tab.title === 'CSS') ? 'css' : (tab.title === 'ReactHTML') ? 'html' : (tab.title === 'Swift') ? 'swift' : (tab.title === 'Android') ? 'xml' : 'txt';
+		trackEvent('button', `send-atom-${lang}`);
+
+		const { processing } = this.props;
+		const { section, urlBanner } = this.state;
+
+		this.props.onPopup({
+			type     : POPUP_TYPE_OK,
+			offset   : {
+				top   : (urlBanner << 0 && !processing) * 38,
+				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
+			},
+			content  : `Sending ${lang} snippet to Atom…`
+		});
+
+		window.postMessage({
+			action  : 'SYNTAX_SEND',
+			payload : {
+				lang   : lang,
+				syntax : tab.syntax
+			}
+		}, '*');
+	};
+
 
 	handleSliceClick = (ind, slice, offset)=> {
 // 		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
@@ -2272,7 +2291,7 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.render()', (new Array(100)).fill(null).map((i)=> (Maths.randomInt(1, 10))).join(','), this.state);
 
 
-		const { processing, profile } = this.props;
+		const { processing, profile, atomExtension } = this.props;
 
 		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, activeTabs, scrolling, viewSize, panMultPt } = this.state;
 		const { valid, restricted, urlBanner, tutorial, percent, tooltip } = this.state;
@@ -2411,18 +2430,11 @@ class InspectorPage extends Component {
 			display : 'none'
 		};
 
-		const tabSetWrapperStyle = {
-			width  : '100%',
-			height : `calc(100% - ${(section === SECTIONS.PARTS ? 154 : 58)}px)`
-		};
-
-		const progressStyle = { width : `${percent}%` };
-
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
 				<div className={contentClass} onWheel={this.handleWheelStart}>
 					{(percent < 100) && (<div className="upload-progress-bar-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.PRESENTER && !processing) ? 880 : 360}px)`}}>
-						<div className="upload-progress-bar" style={progressStyle} />
+						<div className="upload-progress-bar" style={{ width : `${percent}%` }} />
 					</div>)}
 
 					<div className="inspector-page-marquee-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.PRESENTER && !processing) ? 880 : 360}px)`}}>
@@ -2487,7 +2499,7 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.INSPECT) && (<>
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
-								<div style={tabSetWrapperStyle}>
+								<div style={{ height : `calc(100% - ${(i === 0 ? 108 : 58)}px)` }}>
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}
@@ -2499,6 +2511,7 @@ class InspectorPage extends Component {
 										<CopyToClipboard onCopy={()=> this.handleClipboardCopy((i === 0) ? 'code' : 'specs', (i === 0) ? activeTabs[i].syntax : toSpecs(activeSlice))} text={(i === 0) ? (activeTabs && activeTabs[i]) ? activeTabs[i].syntax : '' : (activeSlice) ? toSpecs(activeSlice) : ''}>
 											<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>
 										</CopyToClipboard>
+										{(i === 0) && (<button disabled={!atomExtension || !slice} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntax(activeTabs[i])}>{(processing) ? 'Processing' : 'Send to Atom'}</button>)}
 									</div>
 								</div>
 							</div>)
@@ -2507,7 +2520,7 @@ class InspectorPage extends Component {
 
 					{(section === SECTIONS.PARTS) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper">
 						{(tabSets.map((tabSet, i)=> (
-							<div key={i} style={tabSetWrapperStyle}>
+							<div key={i} style={{ height : `calc(100% - 154px)` }}>
 								<FilingTabSet
 									tabs={tabSet}
 									activeTab={activeTabs[i]}
@@ -2519,7 +2532,6 @@ class InspectorPage extends Component {
 									<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> this.handleDownloadPartsList()}>{(processing) ? 'Processing' : `Download iOS ${Strings.pluralize('Part', listTotal)}`}</button>
 									<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> this.handleDownloadPartsList()}>{(processing) ? 'Processing' : `Download Android ${Strings.pluralize('Part', listTotal)}`}</button>
 									<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> this.handleDownloadPartsList()}>{(processing) ? 'Processing' : `Download HTML/CSS ${Strings.pluralize('Part', listTotal)}`}</button>
-									{/*<button disabled={!upload || processing} className="inspector-page-panel-button" onClick={()=> this.handleDownloadAll()}>{(processing) ? 'Processing' : 'Download All Parts'}</button>*/}
 								</div>
 							</div>)
 						))}
@@ -2528,7 +2540,7 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.PRESENTER) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-presenter-wrapper">
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-split-width-content-wrapper inspector-page-panel-full-height-content-wrapper" style={{width:`${(i === 0) ? 520 : 360}px`}}>
-								<div style={tabSetWrapperStyle}>
+								<div style={{ height : `calc(100% - ${(i === 0 ? 108 : 58)}px)` }}>
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}
@@ -2538,9 +2550,12 @@ class InspectorPage extends Component {
 									/>
 										<div className="inspector-page-panel-button-wrapper">
 											{(i === 0)
-												? (<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
-														<button disabled={!activeTabs[i].contents} style={{opacity:(!processing << 0)}} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>
-													</CopyToClipboard>)
+												? (<>
+														<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
+															<button disabled={!activeTabs[i].contents} style={{opacity:(!processing << 0)}} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>
+														</CopyToClipboard>
+														<button disabled={!atomExtension || !slice} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntax(activeTabs[i])}>{(processing) ? 'Processing' : 'Send to Atom'}</button>
+													</>)
 												: (<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download PDF'}</button>)}
 										</div>
 								</div>

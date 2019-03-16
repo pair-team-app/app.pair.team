@@ -27,9 +27,12 @@ import TermsPage from './pages/desktop/TermsPage';
 import UploadPage from './pages/desktop/UploadPage';
 import BaseMobilePage from './pages/mobile/BaseMobilePage';
 
+import adBannerPanel from '../assets/json/ad-banner-panel';
+import { EXTENSION_URL } from '../consts/uris';
 import {
 	appendHomeArtboards,
 	fetchUserProfile,
+	setAtomExtension,
 	updateDeeplink,
 	updateUserProfile
 } from '../redux/actions';
@@ -41,7 +44,6 @@ import {
 	isUploadPage } from '../utils/funcs';
 import { Browsers } from '../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../utils/tracking';
-import adBannerPanel from '../assets/json/ad-banner-panel';
 
 
 const wrapper = React.createRef();
@@ -59,7 +61,8 @@ const mapDispatchToProps = (dispatch)=> {
 		appendHomeArtboards : ()=> dispatch(appendHomeArtboards(null)),
 		fetchUserProfile    : ()=> dispatch(fetchUserProfile()),
 		updateDeeplink      : (navIDs)=> dispatch(updateDeeplink(navIDs)),
-		updateUserProfile   : (profile)=> dispatch(updateUserProfile(profile))
+		updateUserProfile   : (profile)=> dispatch(updateUserProfile(profile)),
+		setAtomExtension    : (installed)=> dispatch(setAtomExtension(installed))
 	});
 };
 
@@ -108,6 +111,8 @@ class App extends Component {
 			this.onAddUploadView(uploadID);
 		}
 
+		this.extensionCheck();
+
 		cookie.save('tutorial', '1', { path : '/' });
 		document.addEventListener('resize', this.handleResize.bind(this));
 
@@ -132,8 +137,17 @@ class App extends Component {
 		}
 	}
 
+	extensionCheck = ()=> {
+		console.log('App.extensionCheck()');
+		let img = new Image();
+		img.src = `${EXTENSION_URL}/images/pixel.png`;
+		img.onload = ()=> { this.props.setAtomExtension(true); };
+		img.onerror = ()=> { this.props.setAtomExtension(false); };
+	};
+
 	handleArtboardClicked = (artboard)=> {
 		console.log('App.handleArtboardClicked()', artboard);
+
 		this.onAddUploadView(artboard.uploadID);
 		if (typeof cookie.load('tutorial') === 'undefined') {
 			cookie.save('tutorial', '0', { path : '/' });

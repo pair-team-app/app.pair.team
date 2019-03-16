@@ -13,8 +13,7 @@ import {
 // 	RECOVER,
 	REGISTER,
 // 	TERMS,
-	UPLOAD
-} from '../consts/uris';
+	UPLOAD } from '../consts/uris';
 import { Strings } from './lang';
 
 

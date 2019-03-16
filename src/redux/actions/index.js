@@ -11,7 +11,8 @@ import {
 	USER_PROFILE_ERROR,
 	UPDATE_DEEPLINK,
 	USER_PROFILE_LOADED,
-	USER_PROFILE_UPDATED } from '../../consts/action-types';
+	USER_PROFILE_UPDATED,
+	SET_ATOM_EXTENSION } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 
 
@@ -69,6 +70,13 @@ export function fetchUserProfile() {
 				});
 			}).catch((error) => {
 		});
+	});
+}
+
+export function setAtomExtension(payload) {
+	logFormat('setAtomExtension', payload);
+	return ({ payload,
+		type : SET_ATOM_EXTENSION
 	});
 }
 
