@@ -70,7 +70,6 @@ const artboardForID = (upload, artboardID)=> {
 
 const fillGroupPartItemSlices = (upload, slice)=> {
 // 	console.log('fillGroupPartItemSlices()', upload, slice);
-// 	return ([slice, ...artboardForID(upload, slice.artboardID).slices.filter((item)=> (item.type !== 'artboard' && item.id !== slice.id && (Maths.geom.rectContainsRect(Maths.geom.frameToRect(slice.meta.frame), Maths.geom.frameToRect(item.meta.frame)))))]);
 	return ([slice, ...artboardForID(upload, slice.artboardID).slices.filter((item)=> (item.type !== 'artboard' && item.id !== slice.id && Maths.geom.frameContainsFrame(slice.meta.frame, item.meta.frame)))]);
 };
 
@@ -168,7 +167,6 @@ const drawCanvasSliceTooltip = (context, text, origin, maxWidth=-1)=> {
 
 const intersectSlices = (slices, frame)=> {
 // 	console.log('interectSlices()', slices, frame);
-// 	return (slices.filter((slice)=> (Maths.geom.rectContainsRect(Maths.geom.frameToRect(frame), Maths.geom.frameToRect(slice.meta.frame)))));
 	return (slices.filter((slice)=> (Maths.geom.frameContainsFrame(frame, slice.meta.frame))));
 };
 
@@ -433,6 +431,7 @@ const SliceRolloverItem = (props)=> {
 	return (<div
 		data-slice-id={id}
 		data-artboard-id={artboardID}
+		data-offset={`${offset.x}-${offset.y}`}
 		className={`${className}${(filled) ? '-filled' : ''}`}
 		style={style}
 		onMouseEnter={()=> props.onRollOver(offset)}
@@ -900,7 +899,7 @@ class InspectorPage extends Component {
 		const slices = artboard.slices.filter((slice)=> (slice.type === type)).map((slice, i)=> {
 			const { frame } = slice.meta;
 			return (<SliceRolloverItem
-				key={i}
+				key={slice.id}
 				id={slice.id}
 				artboardID={artboard.id}
 				title={slice.title}
@@ -998,18 +997,13 @@ class InspectorPage extends Component {
 			y : 24 + (38 * (urlBanner << 0)) + PAN_ZOOM.insetSize.height
 		};
 
-// 		const baseOffset = {
-// 			x : (artboards.length < GRID.colsMax || section === SECTIONS.PRESENTER) ? GRID.padding.col * 0.5 : 0,
-// 			y :(38 * (urlBanner << 0)) + (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 0,
-// 		};
-
 		const srcFrame = Maths.geom.cropFrame(slice.meta.frame, artboard.meta.frame);
 		const srcOffset = {
 			x : baseOffset.x + ((offset.x - scrollPt.x) << 0),
 			y : baseOffset.y + ((offset.y - scrollPt.y) << 0)
 		};
 
-		return ({
+		const scaledFrame = {
 			origin : {
 				x : (srcOffset.x + (srcFrame.origin.x * scale)) << 0,
 				y : (srcOffset.y + (srcFrame.origin.y * scale)) << 0
@@ -1019,7 +1013,10 @@ class InspectorPage extends Component {
 				width  : (srcFrame.size.width * scale) << 0,
 				height : (srcFrame.size.height * scale) << 0
 			}
-		});
+		};
+
+// 		console.log('-- InspectorPage.calcCanvasSliceFrame()', baseOffset, srcFrame, srcOffset, scaledFrame);
+		return (scaledFrame);
 	};
 
 	calcFitScale = (baseSize, vpSize)=> {
@@ -1035,7 +1032,6 @@ class InspectorPage extends Component {
 		const pt = this.calcTransformPoint();
 		return ({
 			x : -Math.round((pt.x * vpSize.width) + ((baseSize.width * scale) * -0.5)),
-// 			x : -Math.round((vpSize.width - (baseSize.height * scale)) * 0.5),
 			y : -Math.round((pt.y * vpSize.height) + ((baseSize.height * scale) * -0.5))
 		});
 	};
@@ -1122,23 +1118,18 @@ class InspectorPage extends Component {
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response)=> {
 						console.log('ARTBOARD_SLICES', response.data);
-
 						artboard.slices = response.data.slices.map((slice)=> {
 							const meta = JSON.parse(slice.meta.replace(/\n/g, '\\\\n'));
-							return ({
+							return (Object.assign({}, slice, {
 								id         : slice.id << 0,
 								artboardID : slice.artboard_id << 0,
-								title      : slice.title,
-								type       : slice.type,
-								filename   : slice.filename,
 								meta       : Object.assign({}, meta, {
 									orgFrame : meta.frame,
 									frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
 								}),
-								added      : slice.added,
 								filled     : false,
 								children   : []
-							});
+							}));
 						});
 
 						upload.pages = upload.pages.map((page)=> (Object.assign({}, page, {
@@ -1146,12 +1137,19 @@ class InspectorPage extends Component {
 						})));
 
 						const slices = [...intersectSlices(artboard.slices, artboard.meta.frame)];
+
+						console.log('1:::::::::shift:', [...slices].shift());
+						console.log('1:::::::::pop:', [...slices].pop());
+
 						const langs = [
 							toCSS(slices),
 							toGridHTML(slices),
 							toSwift(slices, artboard),
 							toAndroid(slices, artboard)
 						];
+
+						console.log('2:::::::::shift:', [...slices].shift());
+						console.log('2:::::::::pop:', [...slices].pop());
 
 						tabSets = [...tabSets].map((tabSet, i) => {
 							return (tabSet.map((tab, j) => {
@@ -1179,9 +1177,12 @@ class InspectorPage extends Component {
 							return ([...tabSet].shift());
 						});
 
+						console.log('3:::::::::shift:', [...slices].shift());
+						console.log('3:::::::::pop:', [...slices].pop());
+
 						this.setState({ upload, tabSets, activeTabs, artboard,
-							slice     : slices[0],
-							offset    : slices[0].meta.frame.origin,
+							slice     : [...slices].shift(),
+							offset    : artboard.meta.frame.origin,
 							tooltip   : null
 						});
 
@@ -1248,25 +1249,18 @@ class InspectorPage extends Component {
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response)=> {
 						console.log('SYMBOL_SLICES', response.data);
-
-						const slices = response.data.slices.map((item)=> {
+						slice.children = [...fillGroupPartItemSlices(upload, slice), ...response.data.slices.map((item)=> {
 							const meta = JSON.parse(item.meta.replace(/\n/g, '\\\\n'));
-							return ({
+							return (Object.assign({}, item, {
 								id         : item.id << 0,
 								artboardID : item.artboard_id << 0,
-								title      : item.title,
-								type       : item.type,
-								filename   : item.filename,
 								meta       : Object.assign({}, meta, {
 									orgFrame : meta.frame,
 									frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
 								}),
-								added      : item.added,
 								filled     : false
-							});
-						});
-
-						slice.children = [...fillGroupPartItemSlices(upload, slice), ...slices];
+							}))
+						})];
 						tabSets[0][0].enabled = true;
 						tabSets[0][0].contents = <PartsList
 							enabled={true}
@@ -1276,7 +1270,7 @@ class InspectorPage extends Component {
 					}).catch((error)=> {
 				});
 
-			} else if (slice.type === 'group' || slice.type === 'background') {
+			} else if (slice.type === 'artboard' || slice.type === 'group' || slice.type === 'background') {
 				tabSets[0][0].enabled = true;
 				tabSets[0][0].contents = <PartsList
 					enabled={true}
@@ -1370,19 +1364,18 @@ class InspectorPage extends Component {
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response)=> {
 						console.log('SYMBOL_SLICES', response.data);
-
-						const slices = response.data.slices.map((item)=> ({
-							id         : item.id << 0,
-							artboardID : item.artboard_id << 0,
-							title      : item.title,
-							type       : item.type,
-							filename   : item.filename,
-							meta       : JSON.parse(item.meta),
-							added      : item.added,
-							filled     : false,
-						}));
-
-						slice.children = [...fillGroupPartItemSlices(upload, slice), ...slices];
+						slice.children = [...fillGroupPartItemSlices(upload, slice), ...response.data.slices.map((item)=> {
+							const meta = JSON.parse(item.meta.replace(/\n/g, '\\\\n'));
+							return (Object.assign({}, item, {
+								id         : item.id << 0,
+								artboardID : item.artboard_id << 0,
+								meta       : Object.assign({}, meta, {
+									orgFrame : meta.frame,
+									frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
+								}),
+								filled     : false
+							}));
+						})];
 						tabSets[0][0].enabled = true;
 						tabSets[0][0].contents = <PartsList
 							enabled={true}
@@ -1459,8 +1452,8 @@ class InspectorPage extends Component {
 
 		this.setState({
 			artboard    : (slice) ? artboard : null,
-// 			hoverSlice  : null,
-// 			hoverOffset : null
+			hoverSlice  : null,
+			hoverOffset : null
 		});
 	};
 
@@ -1486,23 +1479,18 @@ class InspectorPage extends Component {
 				axios.post('https://api.designengine.ai/system.php', formData)
 					.then((response)=> {
 						console.log('ARTBOARD_SLICES', response.data);
-
 						artboard.slices = response.data.slices.map((slice)=> {
 							const meta = JSON.parse(slice.meta.replace(/\n/g, '\\\\n'));
-							return ({
+							return (Object.assign({}, slice, {
 								id         : slice.id << 0,
 								artboardID : slice.artboard_id << 0,
-								title      : slice.title,
-								type       : slice.type,
-								filename   : slice.filename,
 								meta       : Object.assign({}, meta, {
 									orgFrame : meta.frame,
 									frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
 								}),
-								added      : slice.added,
 								filled     : false,
 								children   : []
-							});
+							}));
 						});
 
 						upload.pages = upload.pages.map((page)=> (Object.assign({}, page, {
@@ -2365,7 +2353,7 @@ class InspectorPage extends Component {
 			const backgroundSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'background', sliceOffset, scale, scrolling) : [];
 			const textfieldSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'textfield', sliceOffset, scale, scrolling) : [];
 			const symbolSlices =(artboard.slices.length > 0) ?  this.buildSliceRollOverItemTypes(artboard, 'symbol', sliceOffset, scale, scrolling) : [];
-			const sliceSlices = [];//(artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'slice', sliceOffset, scale, scrolling) : [];
+			const sliceSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'slice', sliceOffset, scale, scrolling) : [];
 // 			const sliceSlices = (section !== SECTIONS.PARTS) ? [] : [<img key={i} data-artboard-id={artboard.id} src={icon} width="100%" height="100%" style={iconStyle} alt="ICON" />];
 // 			const sliceSlices = (section !== SECTIONS.PARTS) ? [] : [<img key={i} data-artboard-id={artboard.id} src={icon} style={iconStyle} alt="ICON" />];
 
@@ -2377,12 +2365,12 @@ class InspectorPage extends Component {
 			);
 
 			slices.push(
-				<div key={i} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut} onDoubleClick={(event)=> this.handleZoom(1)}>
-					<div data-artboard-id={artboard.id} className={`inspector-page-${(section === SECTIONS.PRESENTER) ? 'artboard' : 'group'}-slices-wrapper`}>{(section === SECTIONS.PRESENTER) ? artboardSlices : groupSlices }</div>
-					{(section !== SECTIONS.PRESENTER) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>)}
+				<div key={artboard.id} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut} onDoubleClick={(event)=> this.handleZoom(1)}>
+					<div data-artboard-id={artboard.id} className={`inspector-page-${(section === SECTIONS.PRESENTER) ? 'artboard' : 'group'}-slices-wrapper`}>{(section === SECTIONS.PRESENTER) ? artboardSlices : (section === SECTIONS.PARTS) ? [...artboardSlices, ...groupSlices] : groupSlices }</div>
+					{(section !== SECTIONS.PRESENTER) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{(section === SECTIONS.INSPECT) ? [...artboardSlices, ...backgroundSlices] : backgroundSlices}</div>)}
 					{/*<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>*/}
 					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{symbolSlices}</div>
-					{(section !== SECTIONS.PARTS) && (<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{textfieldSlices}</div>)}
+					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{textfieldSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-slice-slices-wrapper">{sliceSlices}</div>
 				</div>
 			);

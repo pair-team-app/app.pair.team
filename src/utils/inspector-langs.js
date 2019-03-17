@@ -146,8 +146,8 @@ export function toGridHTML(slices) {
 		});
 	}
 
-	const parentSlice = slices.shift();
-	slices = slices.slice(0, Math.min(slices.length, 4));
+	const parentSlice = [...slices].shift();
+	slices = [...slices].slice(1, Math.min(slices.length, 4));
 
 	let html = `<!-- ${DISCLAIMER} -->\n\n`;
 	html += '<style>\n';

@@ -354,6 +354,7 @@
 .inspector-page-footer-logo {
 	width: 35px;
 	height: 16px;
+	margin-right: 12px;
 	filter: saturate(0) brightness(2);
 }
 
