@@ -17,7 +17,8 @@ export const DEFAULT_AVATAR = 'http://cdn.designengine.ai/profiles/avatar-defaul
 // export const CDN_URL = 'https://cdn.designengine.ai/upload.php';
 export const CDN_URL = `${window.location.href.replace(window.location.pathname, '')}/php/upload.php`;
 
-export const EXTENSION_URL = 'chrome-extension://kkgccakiccjnlmponcggpmagkgelpbhg';
+export const EXTENSION_CONFIG_URL = 'chrome://?id=kkgccakiccjnlmponcggpmagkgelpbhg';
+export const EXTENSION_PUBLIC_URL = 'chrome-extension://kkgccakiccjnlmponcggpmagkgelpbhg';
 
 export const GITHUB_REPO = 'https://www.github.com/de-ai';
 export const GITHUB_ROADMAP = 'https://github.com/de-ai/designengine.ai/projects/1';

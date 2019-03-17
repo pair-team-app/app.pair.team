@@ -24,7 +24,7 @@ RewriteEngine on
 
 #-- don't cache these --#
 <IfModule mod_expires.c>
-    <FilesMatch "\.(css|html?|ico|js|json|php)$">
+    <FilesMatch "\.(css|gif|html?|ico|jpe?g|js|json|pdf|php)$">
         ExpiresActive On
         ExpiresDefault A1
         Header append Cache-Control must-revalidate

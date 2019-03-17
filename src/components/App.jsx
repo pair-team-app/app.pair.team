@@ -28,7 +28,7 @@ import UploadPage from './pages/desktop/UploadPage';
 import BaseMobilePage from './pages/mobile/BaseMobilePage';
 
 import adBannerPanel from '../assets/json/ad-banner-panel';
-import { EXTENSION_URL } from '../consts/uris';
+import { EXTENSION_PUBLIC_URL } from '../consts/uris';
 import {
 	appendHomeArtboards,
 	fetchUserProfile,
@@ -140,7 +140,7 @@ class App extends Component {
 	extensionCheck = ()=> {
 		console.log('App.extensionCheck()');
 		let img = new Image();
-		img.src = `${EXTENSION_URL}/images/pixel.png`;
+		img.src = `${EXTENSION_PUBLIC_URL}/images/pixel.png`;
 		img.onload = ()=> { this.props.setAtomExtension(true); };
 		img.onerror = ()=> { this.props.setAtomExtension(false); };
 	};

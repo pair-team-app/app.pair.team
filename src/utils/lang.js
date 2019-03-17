@@ -59,6 +59,7 @@ export const Components = {
 
 
 export const DateTimes = {
+	currYear       : ()=> (new Date().getFullYear()),
 	diffSecs       : (startDate, endDate)=> (moment.duration(moment(`${endDate.replace(' ', 'T')}Z`).diff(`${startDate.replace(' ', 'T')}Z`)).asSeconds()),
 	durationFormat : (secs, frmt='mm:ss')=> {
 		const hours = '' + ((secs / 3600) << 0);
