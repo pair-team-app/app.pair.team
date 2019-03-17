@@ -1175,9 +1175,9 @@ class InspectorPage extends Component {
 							}));
 						});
 
-						const activeTabs = (this.state.activeTabs.length === 0) ? tabSets.map((tabSet)=> {
+						const activeTabs = tabSets.map((tabSet)=> {
 							return ([...tabSet].shift());
-						}) : this.state.activeTabs;
+						});
 
 						this.setState({ upload, tabSets, activeTabs, artboard,
 							slice     : slices[0],
@@ -2499,7 +2499,7 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.INSPECT) && (<>
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
-								<div style={{ height : `calc(100% - ${(i === 0 ? 108 : 58)}px)` }}>
+								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 106 : 58)}px)` }}>
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}
@@ -2520,7 +2520,7 @@ class InspectorPage extends Component {
 
 					{(section === SECTIONS.PARTS) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper">
 						{(tabSets.map((tabSet, i)=> (
-							<div key={i} style={{ height : `calc(100% - 154px)` }}>
+							<div className="inspector-page-panel-filing-tab-set-wrapper" key={i} style={{ height : `calc(100% - 154px)` }}>
 								<FilingTabSet
 									tabs={tabSet}
 									activeTab={activeTabs[i]}
@@ -2540,7 +2540,7 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.PRESENTER) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-presenter-wrapper">
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-split-width-content-wrapper inspector-page-panel-full-height-content-wrapper" style={{width:`${(i === 0) ? 520 : 360}px`}}>
-								<div style={{ height : `calc(100% - ${(i === 0 ? 108 : 58)}px)` }}>
+								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 106 : 58)}px)` }}>
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}

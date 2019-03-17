@@ -434,6 +434,10 @@
 	width: 50%;
 }
 
+.inspector-page-panel-filing-tab-set-wrapper {
+	width: 100%;
+}
+
 .inspector-page-panel-button-wrapper {
 	padding: 10px;
 }
