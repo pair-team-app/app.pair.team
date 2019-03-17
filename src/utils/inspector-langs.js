@@ -3,7 +3,7 @@ import { DateTimes, Maths, Objects, Strings, URLs } from './lang';
 
 const TAB = '  ';
 const badChars = /[\\.,_+=[\](){}]/g;
-const DISCLAIMER = `__LANG__ generator v1.0\nCode snippets by Design Engine.\nCopyrght (c) ${DateTimes.currYear()} Design Engine AI\nAll Rights Reserved.\nWe make No warranties about the \ncompleteness, reliability, and/or \naccuracy of the content generated.\nUsage of code is strictly at own risk, \nand is provided on an "as is" basis.`;
+const DISCLAIMER = `__LANG__ generator v1.0\nCode snippets by Design Engine.\nCopyrght (c) ${DateTimes.currYear()} Design Engine AI\nAll Rights Reserved.\nWe make no warranties about the \ncompleteness, reliability, and/or \naccuracy of the content generated.\nUsage of code is strictly at own risk, \nand is provided on an "as is" basis.`;
 
 
 const fontWeight = (style)=> {
