@@ -87,7 +87,6 @@ class App extends Component {
 			this.props.fetchUserProfile();
 		}
 
-
 		initTracker(cookie.load('user_id'));
 		trackEvent('site', 'load');
 		trackPageview();
@@ -114,7 +113,7 @@ class App extends Component {
 		this.extensionCheck();
 
 		cookie.save('tutorial', '1', { path : '/' });
-		document.addEventListener('resize', this.handleResize.bind(this));
+		window.addEventListener('resize', this.handleResize);
 
 		window.onpopstate = (event)=> {
 			console.log('|||||||||||||||||-', 'window.onpopstate()', '-|||||||||||||||||', event);
@@ -137,8 +136,17 @@ class App extends Component {
 		}
 	}
 
+	componentWillUnmount() {
+		console.log('App.componentWillUnmount()');
+
+		window.onpopstate = null;
+		window.removeEventListener('resize', this.handleResize);
+	}
+
+
 	extensionCheck = ()=> {
-		console.log('App.extensionCheck()');
+// 		console.log('App.extensionCheck()');
+
 		let img = new Image();
 		img.src = `${EXTENSION_PUBLIC_URL}/images/pixel.png`;
 		img.onload = ()=> { this.props.setAtomExtension(true); };

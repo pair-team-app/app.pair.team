@@ -119,7 +119,7 @@ class UploadHeader extends Component {
 				className="upload-header-dz"
 				multiple={false}
 				disablePreview={true}
-				onDrop={this.handleFileDrop.bind(this)}
+				onDrop={this.handleFileDrop}
 				onFileDialogCancel={this.handleFileDialogCancel}
 				ref={dropZone}
 			>

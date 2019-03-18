@@ -1,6 +1,6 @@
 
 .content-modal-wrapper {
-	z-index: 101;
+	z-index: 1001;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -12,7 +12,6 @@
 
 .content-modal-content-wrapper {
 	position: fixed;
-	/*min-width: 300px;*/
 	height: auto;
 	max-height: 75%;
 	top: 50%;
@@ -62,8 +61,11 @@
 
 .content-modal-close-button {
 	display: table-cell;
-	margin-right: 2px;
-	padding: 2px 10px;
+	min-width: 0;
+	min-height: 0;
+	margin-right: 3px;
+	padding: 3px 8px;
+	font-size: 11px;
 }
 
 .content-modal-content {

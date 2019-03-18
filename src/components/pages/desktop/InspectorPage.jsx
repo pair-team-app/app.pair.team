@@ -746,7 +746,7 @@ class InspectorPage extends Component {
 			this.onFetchUpload();
 		}
 
-		document.addEventListener('keydown', this.handleKeyDown.bind(this));
+		document.addEventListener('keydown', this.handleKeyDown);
 	}
 
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
@@ -884,7 +884,7 @@ class InspectorPage extends Component {
 		this.canvasInterval = null;
 		this.scrollTimeout = null;
 
-		document.removeEventListener('keydown', this.handleKeyDown.bind(this));
+		document.removeEventListener('keydown', this.handleKeyDown);
 // 		document.removeEventListener('wheel', this.handleWheelStart.bind(this));
 
 		const { upload, section, valid, restricted } = this.state;
@@ -1816,7 +1816,7 @@ class InspectorPage extends Component {
 	};
 
 	handleKeyDown = (event)=> {
-// 		console.log('InspectorPage.handleKeyDown()', event);
+		console.log('InspectorPage.handleKeyDown()', event);
 
 		const { section } = this.state;
 

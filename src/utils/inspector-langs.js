@@ -11,31 +11,31 @@ const fontWeight = (style)=> {
 		return (400);
 	}
 
-	if (style.toLowerCase().includes('thin')) {
+	if (/thin/i.test(style)) {
 		return (100);
 
-	} else if (style.toLowerCase().includes('extralight') || style.toLowerCase().includes('ultralight')) {
+	} else if (/(extra|ultra)light/i.test(style)) {
 		return (200);
 
-	} else if (style.toLowerCase().includes('light')) {
+	} else if (/light/i.test(style)) {
 		return (300);
 
-	} else if (style.toLowerCase().includes('book') || style.toLowerCase().includes('normal') || style.toLowerCase().includes('regular') || style.toLowerCase().includes('roman')) {
+	} else if (/book|normal/i.test(style)) {
 		return (400);
 
-	} else if (style.toLowerCase().includes('medium')) {
+	} else if (/medium/i.test(style)) {
 		return (500);
 
-	} else if (style.toLowerCase().includes('semibold') || style.toLowerCase().includes('demibold')) {
+	} else if (/(semi|demi)bold/i.test(style)) {
 		return (600);
 
-	} else if (style.toLowerCase().includes('bold') || style.toLowerCase().includes('boldmt') || style.toLowerCase().includes('psboldmt')) {
+	} else if (/(ps)?bold(mt)?/i.test(style)) {
 		return (700);
 
-	} else if (style.toLowerCase().includes('extrabold') || style.toLowerCase().includes('ultrabold')) {
+	} else if (/(extra|ultra)bold/i.test(style)) {
 		return (800);
 
-	} else if (style.toLowerCase().includes('black') || style.toLowerCase().includes('heavy')) {
+	} else if (/black|heavy/i.test(style)) {
 		return (900);
 
 	} else {
@@ -137,7 +137,7 @@ export function toCSS(slices) {
 }
 
 export function toGridHTML(slices) {
-	console.log('inspector-langs.toFlexBoxHTML()', slices);
+// 	console.log('inspector-langs.toFlexBoxHTML()', slices);
 
 	if (slices.length === 0) {
 		return ({
@@ -182,7 +182,7 @@ export function toGridHTML(slices) {
 	html += '<div className="grid-container">\n';
 	slices.forEach((slice)=> {
 		html += `${TAB}<div className="grid-cell ${Strings.uriSlug(slice.title)}">`;
-		html += (slice.type === 'textfield') ? `${slice.meta.txtVal}` : `<img src="${URLs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}">`;
+		html += (slice.type === 'textfield') ? `${slice.meta.txtVal}` : `<img src="./images/${URLs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}">`;
 		html += '</div>\n'
 	});
 	html += '</div>\n';

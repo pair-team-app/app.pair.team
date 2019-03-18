@@ -14,6 +14,8 @@ export const MODAL_SIZE_AUTO = 'MODAL_SIZE_AUTO';
 export const MODAL_SIZE_FIXED = 'MODAL_SIZE_FIXED';
 export const MODAL_SIZE_PERCENT = 'MODAL_SIZE_PERCENT';
 
+const INTRO_DURATION = (1/8);
+const OUTRO_DURATION = (1/4);
 
 class ContentModal extends Component {
 	constructor(props) {
@@ -24,7 +26,6 @@ class ContentModal extends Component {
 		};
 
 		this.wrapper = null;
-		this.handleClose = this.handleClose.bind(this);
 	}
 
 	componentDidMount() {
@@ -34,7 +35,7 @@ class ContentModal extends Component {
 		trackModal(tracking);
 
 		this.timeline = new TimelineMax();
-		this.timeline.from(this.wrapper, 0.125, {
+		this.timeline.from(this.wrapper, INTRO_DURATION, {
 			opacity : 0,
 			ease    : Power1.easeIn
 		});
@@ -48,7 +49,7 @@ class ContentModal extends Component {
 			const { onComplete } = this.props;
 
 			this.timeline = new TimelineMax();
-			this.timeline.to(this.wrapper, 0.25, {
+			this.timeline.to(this.wrapper, OUTRO_DURATION, {
 				opacity    : 0,
 				ease       : Power2.easeOut,
 				onComplete : onComplete
@@ -76,19 +77,23 @@ class ContentModal extends Component {
 	render() {
 // 		console.log('ContentModal.render()', this.props, this.state);
 
+		if (this.wrapper && this.timeline && this.timeline.time === 0) {
+			this.timeline.seek(0);
+		}
+
 		const { size, title, closeable, defaultButton, children } = this.props;
 		const wrapperClass = `content-modal-content-wrapper content-modal-content-wrapper${(size === MODAL_SIZE_FIXED) ? '-fixed' : (size === MODAL_SIZE_PERCENT) ? '-percent' : '-auto'}`;
 
-		return (<div className="content-modal-wrapper" onClick={()=> (closeable) ? this.handleClose() : null} ref={(element)=> { this.wrapper = element; }}>
+		return (<div className="content-modal-wrapper" onClick={(closeable) ? this.handleClose : null} ref={(element)=> { this.wrapper = element; }}>
 			<div className={wrapperClass} onClick={(event)=> event.stopPropagation()}>
 				{(title) && (<div className="content-modal-header-wrapper"><Row>
 					<Column flexGrow={1}><div className="content-modal-title">{title}</div></Column>
-					<Column flexGrow={1} vertical="center" horizontal="end">{(closeable && !defaultButton) && (<button className="tiny-button content-modal-close-button" onClick={()=> this.handleClose()}><FontAwesome name="times"/></button>)}</Column>
+					<Column flexGrow={1} vertical="center" horizontal="end">{(closeable && !defaultButton) && (<button className="tiny-button content-modal-close-button" onClick={this.handleClose}><FontAwesome name="times"/></button>)}</Column>
 				</Row></div>)}
 				<div className="content-modal-content">
 					{children}
 					{(defaultButton) && (<div className="content-modal-button-wrapper">
-						<button className="content-modal-button" onClick={()=> this.handleClose()}>{defaultButton}</button>
+						<button className="content-modal-button" onClick={this.handleClose}>{defaultButton}</button>
 					</div>)}
 				</div>
 			</div>

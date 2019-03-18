@@ -6,9 +6,24 @@ export const Arrays = {
 // 	containsElement  : (arr, element)=> (arr.indexOf(element) > -1),
 	containsElement  : (arr, element)=> (Arrays.containsElements(arr, [element])),
 	containsElements : (arr, elements, all=true)=> ((all) ? elements.every((element)=> (arr.indexOf(element) > -1)) : elements.some((element)=> (arr.indexOf(element) > -1))),
+	indexFill        : (len)=> (Arrays.indexMap((new Array(len).fill(null)))),
+	indexMap         : (arr)=> (arr.map((element, i)=> (i))),
 	isEmpty          : (arr)=> (arr.length === 0),
 	randomElement    : (arr)=> (arr[arr.randomIndex()]),
-	randomIndex      : (arr)=> (Maths.randomInt(0, arr.length - 1))
+	randomIndex      : (arr)=> (Maths.randomInt(0, arr.length - 1)),
+	shuffle          : (arr)=> {
+		let indexes = Arrays.indexMap(arr);
+		indexes.forEach((element, i)=> {
+			const ind = (arr.length - 1) - i;
+			const rnd = (ind > 0) ? Maths.randomInt(0, ind - 1) : Arrays.randomIndex(indexes);
+
+			const swap = indexes[rnd];
+			indexes[rnd] = indexes[ind];
+			indexes[ind] = swap;
+		});
+
+		return (indexes.map((ind)=> (arr[ind])));
+	}
 };
 
 
@@ -160,16 +175,12 @@ export const Objects = {
 
 
 export const Strings = {
-	camelize   : (str, separator=' ', propName=false)=> {
-// 		const camilized = str.split((separator || ' ')).map((word, i)=> (word.replace(/^./, (c)=> ((!propName && i === 0) ? c.toLowerCase() : c.toUpperCase())))).join('');
-// 		return ((propName) ? camilized : camilized.replace(/^./, (c)=> (c.toLowerCase())));
-		return (str.split((separator || ' ')).map((word, i)=> (word.replace(/^./, (c)=> ((!propName && i === 0) ? c.toLowerCase() : c.toUpperCase())))).join(''));
-	},
+	camelize   : (str, separator=' ', propName=false)=> (str.split((separator || ' ')).map((word, i)=> (word.replace(/^./, (c)=> ((!propName && i === 0) ? c.toLowerCase() : c.toUpperCase())))).join('')),
 	capitalize : (str, lower=false)=> (str.replace(/^(\w+)$/gi, (c)=> ((lower) ? c.toLowerCase() : c)).replace(/(\b\w)/gi, (c)=> (c.toUpperCase()))),
 	countOf    : (str, substr)=> ((str.match(new RegExp(substr.toString(), 'g')) || []).length),
 	dropChar   : (str, char)=> (Strings.replAll(str, char)),
 	firstChar  : (str)=> (str.charAt(0)),
-	isEmail    : (str)=> (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(String(str).toLowerCase())),
+	isEmail    : (str)=> (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i.test(String(str))),
 // 	lPad       : (str, amt, char)=> ((new Array(amt - String(str).length + 1)).join(str || char) + str),
 	lastChar   : (str)=> (str.slice(-1)),
 	lPad       : (str, amt, char)=> ((str.length < amt) ? `${(new Array(amt - String(str).length + 1)).join(char)}${str}` : str),

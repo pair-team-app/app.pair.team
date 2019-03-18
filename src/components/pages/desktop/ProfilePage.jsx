@@ -292,7 +292,7 @@ class ProfilePage extends Component {
 				<h4>Profile</h4>
 				<div className="profile-page-avatar-wrapper">
 					<Row vertical="center">
-						<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={this.handleFileDrop.bind(this)} onFileDialogCancel={this.handleFileDialogCancel} ref={dropZone}>
+						<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={this.handleFileDrop} onFileDialogCancel={this.handleFileDialogCancel} ref={dropZone}>
 							<div className="profile-page-avatar-image-wrapper">
 								<ImageLoader
 									src={avatar}
