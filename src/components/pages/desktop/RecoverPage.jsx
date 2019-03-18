@@ -51,7 +51,7 @@ class RecoverPage extends Component {
 	};
 
 	handleEmailSubmit = (event)=> {
-		console.log('RecoverPage.handleEmailSubmit()', event);
+// 		console.log('RecoverPage.handleEmailSubmit()', event);
 		event.preventDefault();
 
 		const { email } = this.state;
@@ -85,7 +85,7 @@ class RecoverPage extends Component {
 	};
 
 	handlePasswordSubmit = (event)=> {
-		console.log('RecoverPage.handlePasswordSubmit()', event);
+// 		console.log('RecoverPage.handlePasswordSubmit()', event);
 		event.preventDefault();
 
 		const { password } = this.state;

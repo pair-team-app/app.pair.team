@@ -33,7 +33,7 @@ class TutorialOverlay extends Component {
 	}
 
 	handleClose = ()=> {
-		console.log('TutorialOverlay.handleClose()');
+// 		console.log('TutorialOverlay.handleClose()');
 
 		const { onClose } = this.props;
 		TweenMax.to(this.wrapper, 0.125, {
@@ -46,7 +46,7 @@ class TutorialOverlay extends Component {
 	};
 
 	onNextStep = ()=> {
-		console.log('TutorialOverlay.onNextStep()');
+// 		console.log('TutorialOverlay.onNextStep()');
 
 		const { origin } = this.props;
 		let { step } = this.state;

@@ -61,7 +61,7 @@ class LoginForm extends Component {
 	};
 
 	handleSubmit = (event)=> {
-		console.log('LoginForm.handleSubmit()', event.target);
+// 		console.log('LoginForm.handleSubmit()', event.target);
 		event.preventDefault();
 
 		const { inviteID, email, password } = this.state;

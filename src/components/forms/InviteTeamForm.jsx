@@ -90,7 +90,7 @@ class InviteTeamForm extends Component {
 	};
 
 	handleSubmit = ()=> {
-		console.log('InviteTeamForm.handleSubmit()', this.state);
+// 		console.log('InviteTeamForm.handleSubmit()', this.state);
 
 		const { profile, upload } = this.props;
 		const { invites } = this.state;

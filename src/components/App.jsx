@@ -129,7 +129,7 @@ class App extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('App.componentDidUpdate()', prevProps, this.props, prevState);
+// 		console.log('App.componentDidUpdate()', prevProps, this.props, prevState);
 
 		if (!prevProps.profile && this.props.profile && this.state.ranking !== 0) {
 			this.setState({ rating : 0 });
@@ -154,7 +154,7 @@ class App extends Component {
 	};
 
 	handleArtboardClicked = (artboard)=> {
-		console.log('App.handleArtboardClicked()', artboard);
+// 		console.log('App.handleArtboardClicked()', artboard);
 
 		this.onAddUploadView(artboard.uploadID);
 		if (typeof cookie.load('tutorial') === 'undefined') {
@@ -213,7 +213,7 @@ class App extends Component {
 	};
 
 	handlePopup = (payload)=> {
-		console.log('App.handlePopup()', payload);
+// 		console.log('App.handlePopup()', payload);
 		this.setState({ popup : payload });
 	};
 
@@ -227,12 +227,12 @@ class App extends Component {
 	};
 
 	handleScrollOrigin = ()=> {
-		console.log('App.handleScrollOrigin()');
+// 		console.log('App.handleScrollOrigin()');
 		Browsers.scrollOrigin(wrapper.current);
 	};
 
 	handleScore = (score)=> {
-		console.log('App.handleScore()', score);
+// 		console.log('App.handleScore()', score);
 		this.setState({ rating : score });
 		this.handlePage('rate-this');
 	};

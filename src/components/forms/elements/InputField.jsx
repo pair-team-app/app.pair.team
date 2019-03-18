@@ -76,7 +76,7 @@ class InputField extends Component {
 	};
 
 	handleFieldClick = (event)=> {
-		console.log('InputField.handleFieldClick()', event.target);
+// 		console.log('InputField.handleFieldClick()', event.target);
 		this.props.onFieldClick();
 	};
 
@@ -85,7 +85,7 @@ class InputField extends Component {
 	};
 
 	handleSubmit = (event)=> {
-		console.log('InputField.handleSubmit()', event.target);
+// 		console.log('InputField.handleSubmit()', event.target);
 
 		const { status, value } = this.state;
 		if (status !== INPUTFIELD_STATUS_DISABLED) {

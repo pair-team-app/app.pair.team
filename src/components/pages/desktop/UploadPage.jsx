@@ -61,7 +61,7 @@ class UploadPage extends Component {
 	}
 
 	componentDidMount() {
-		console.log('UploadPage.componentDidMount()', this.props, this.state);
+// 		console.log('UploadPage.componentDidMount()', this.props, this.state);
 
 		const { file } = this.props;
 		if (file) {
@@ -78,7 +78,7 @@ class UploadPage extends Component {
 	}
 
 	componentWillUnmount() {
-		console.log('UploadPage.componentWillUnmount()', this.state);
+// 		console.log('UploadPage.componentWillUnmount()', this.state);
 
 		const { file } = this.state;
 		if (file) {
@@ -89,7 +89,7 @@ class UploadPage extends Component {
 
 
 	handleCancel = ()=> {
-		console.log('UploadPage.handleCancel()');
+// 		console.log('UploadPage.handleCancel()');
 		this.setState({
 			file      : null,
 			title     : '',
@@ -101,7 +101,7 @@ class UploadPage extends Component {
 	};
 
 	handleFile = (file)=> {
-		console.log('UploadPage.handleFile()', file, this.props, this.state);
+// 		console.log('UploadPage.handleFile()', file, this.props, this.state);
 
 		const { id, email } = (this.props.profile) ? this.props.profile : this.state.profile;
 		sendToSlack(`*[${id}]* *${email}* started uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
@@ -146,7 +146,7 @@ class UploadPage extends Component {
 	};
 
 	handleLogin = ()=> {
-		console.log('UploadPage.handleLogin()');
+// 		console.log('UploadPage.handleLogin()');
 
 		trackEvent('button', 'login');
 		this.props.onScrollOrigin();
@@ -157,7 +157,7 @@ class UploadPage extends Component {
 	};
 
 	handleLoggedIn = (profile)=> {
-		console.log('UploadPage.handleLoggedIn()', profile);
+// 		console.log('UploadPage.handleLoggedIn()', profile);
 
 		trackEvent('user', 'login');
 		cookie.save('user_id', profile.id, { path : '/' });
@@ -166,7 +166,7 @@ class UploadPage extends Component {
 	};
 
 	handleRegistered = (profile)=> {
-		console.log('UploadPage.handleRegistered()', profile);
+// 		console.log('UploadPage.handleRegistered()', profile);
 
 		trackEvent('user', 'sign-up');
 		cookie.save('user_id', profile.id, { path : '/' });
@@ -176,7 +176,7 @@ class UploadPage extends Component {
 	};
 
 	onUploadSubmit = (userProfile)=> {
-		console.log('UploadPage.onUploadSubmit()', userProfile, this.state);
+// 		console.log('UploadPage.onUploadSubmit()', userProfile, this.state);
 
 		const { pathname } = window.location;
 		const profile = (userProfile && typeof userProfile !== 'undefined') ? userProfile : this.props.profile;
@@ -218,7 +218,7 @@ class UploadPage extends Component {
 
 
 	render() {
-		console.log('UploadPage.render()', this.props, this.state);
+// 		console.log('UploadPage.render()', this.props, this.state);
 
 		const { section, formState, file, percent, uploadComplete, showLogin, showRegister } = this.state;
 

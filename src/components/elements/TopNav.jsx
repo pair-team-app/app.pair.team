@@ -96,7 +96,7 @@ class TopNav extends Component {
 	};
 
 	handleMenuClick = (url)=> {
-		console.log('TopNav.handleLink()', url);
+// 		console.log('TopNav.handleMenuClick()', url);
 
 		trackEvent('menu', url);
 		this.props.updateDeeplink(null);

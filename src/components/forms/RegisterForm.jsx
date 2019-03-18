@@ -64,7 +64,7 @@ class RegisterForm extends Component {
 	};
 
 	handleSubmit = (event)=> {
-		console.log('RegisterForm.handleSubmit()', event.target);
+// 		console.log('RegisterForm.handleSubmit()', event.target);
 		event.preventDefault();
 
 		const { inviteID, username, email, password, password2 } = this.state;

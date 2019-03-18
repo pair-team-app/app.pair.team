@@ -40,7 +40,7 @@ class LoginPage extends Component {
 	}
 
 	componentDidMount() {
-		console.log('LoginPage.componentDidMount()', this.props, this.state);
+// 		console.log('LoginPage.componentDidMount()', this.props, this.state);
 
 		const { inviteID } = this.state;
 		if (inviteID) {
@@ -64,7 +64,7 @@ class LoginPage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('LoginPage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+// 		console.log('LoginPage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		if (isUserLoggedIn()) {
 			const { redirectURI } = this.props;
@@ -78,7 +78,7 @@ class LoginPage extends Component {
 	}
 
 	handleLoggedIn = (profile)=> {
-		console.log('LoginPage.handleLoggedIn()', profile, this.props);
+// 		console.log('LoginPage.handleLoggedIn()', profile, this.props);
 
 		trackEvent('user', 'login');
 		cookie.save('user_id', profile.id, { path : '/' });

@@ -40,7 +40,7 @@ class RegisterPage extends Component {
 	}
 
 	componentDidMount() {
-		console.log('RegisterPage.componentDidMount()', this.props, this.state);
+// 		console.log('RegisterPage.componentDidMount()', this.props, this.state);
 
 		const { inviteID } = this.state;
 		if (inviteID) {
@@ -63,7 +63,7 @@ class RegisterPage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('RegisterPage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+// 		console.log('RegisterPage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		if (isUserLoggedIn()) {
 			const { redirectURI } = this.props;
@@ -77,7 +77,7 @@ class RegisterPage extends Component {
 	}
 
 	handleRegistered = (profile)=> {
-		console.log('RegisterPage.handleRegistered()', profile);
+// 		console.log('RegisterPage.handleRegistered()', profile);
 
 		trackEvent('user', 'sign-up');
 		cookie.save('user_id', profile.id, { path : '/' });
@@ -93,7 +93,7 @@ class RegisterPage extends Component {
 	};
 
 	render() {
-		console.log('RegisterPage.render()', this.props, this.state);
+// 		console.log('RegisterPage.render()', this.props, this.state);
 
 		const { email, inviteID } = this.state;
 		return (

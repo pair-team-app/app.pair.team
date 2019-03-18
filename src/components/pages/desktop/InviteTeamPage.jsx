@@ -43,7 +43,7 @@ class InviteTeamPage extends Component {
 	}
 
 	componentDidMount() {
-		console.log('InviteTeamPage.componentDidMount()', this.props, this.state);
+// 		console.log('InviteTeamPage.componentDidMount()', this.props, this.state);
 
 		if (!isUserLoggedIn()) {
 			cookie.save('msg', 'use this feature.', { path : '/' });
@@ -56,14 +56,14 @@ class InviteTeamPage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('InviteTeamPage.componentDidUpdate()', prevProps, this.props, this.state);
+// 		console.log('InviteTeamPage.componentDidUpdate()', prevProps, this.props, this.state);
 		if (this.props.profile !== prevProps.profile || prevProps.uploadID !== this.props.uploadID) {
 			this.refreshData();
 		}
 	}
 
 	refreshData = ()=> {
-		console.log('InviteTeamPage.refreshData()');
+// 		console.log('InviteTeamPage.refreshData()');
 
 		const { uploadID } = this.props;
 
@@ -164,7 +164,7 @@ class InviteTeamPage extends Component {
 	};
 
 	render() {
-		console.log('InviteTeamPage.render()', this.props, this.state);
+// 		console.log('InviteTeamPage.render()', this.props, this.state);
 
 		const { action, sentInvites, uploadURL, uploadTitle } = this.state;
 		const { email1, email2, email3 } = this.state;

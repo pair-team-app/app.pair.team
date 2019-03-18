@@ -75,7 +75,7 @@ class HomePage extends Component {
 	}
 
 	handleArtboardClicked = (artboard)=> {
-		console.log('HomePage.handleArtboardClicked()', artboard);
+// 		console.log('HomePage.handleArtboardClicked()', artboard);
 
 		trackEvent('artboard', 'click');
 		this.props.onArtboardClicked(artboard)

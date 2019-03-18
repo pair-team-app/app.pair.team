@@ -1136,18 +1136,12 @@ class InspectorPage extends Component {
 
 						const slices = [...intersectSlices(artboard.slices, artboard.meta.frame)];
 
-						console.log('1:::::::::shift:', [...slices].shift());
-						console.log('1:::::::::pop:', [...slices].pop());
-
 						const langs = [
 							toCSS(slices),
 							toGridHTML(slices),
 							toSwift(slices, artboard),
 							toAndroid(slices, artboard)
 						];
-
-						console.log('2:::::::::shift:', [...slices].shift());
-						console.log('2:::::::::pop:', [...slices].pop());
 
 						tabSets = [...tabSets].map((tabSet, i) => {
 							return (tabSet.map((tab, j) => {
@@ -1174,9 +1168,6 @@ class InspectorPage extends Component {
 						const activeTabs = tabSets.map((tabSet)=> {
 							return ([...tabSet].shift());
 						});
-
-						console.log('3:::::::::shift:', [...slices].shift());
-						console.log('3:::::::::pop:', [...slices].pop());
 
 						this.setState({ upload, tabSets, activeTabs, artboard,
 							slice     : [...slices].shift(),
@@ -1310,7 +1301,7 @@ class InspectorPage extends Component {
 	};
 
 	restoreTabSets = (upload, artboard, slice)=> {
-		console.log('InspectorPage.restoreTabSets()', upload, artboard, slice);
+// 		console.log('InspectorPage.restoreTabSets()', upload, artboard, slice);
 
 		const { profile } = this.props;
 		const { section } = this.state;
@@ -1427,7 +1418,7 @@ class InspectorPage extends Component {
 	};
 
 	handleArtboardClick = (event)=> {
-		console.log('InspectorPage.handleArtboardClick()', event.target);
+// 		console.log('InspectorPage.handleArtboardClick()', event.target);
 
 		const { upload } = this.state;
 		const artboardID = event.target.getAttribute('data-artboard-id');
@@ -1619,7 +1610,7 @@ class InspectorPage extends Component {
 	};
 
 	handleChangeSection = (section)=> {
-		console.log('InspectorPage.handleChangeSection()', section);
+// 		console.log('InspectorPage.handleChangeSection()', section);
 
 		trackEvent('button', `section-${section}`);
 		const { upload } = this.state;
@@ -1633,7 +1624,7 @@ class InspectorPage extends Component {
 	};
 
 	handleClipboardCopy = (type, msg='Copied to Clipboard!')=> {
-		console.log('InspectorPage.handleClipboardCopy()', type, msg);
+// 		console.log('InspectorPage.handleClipboardCopy()', type, msg);
 
 		trackEvent('button', `copy-${type}`);
 		const { processing } = this.props;
@@ -1815,7 +1806,7 @@ class InspectorPage extends Component {
 	};
 
 	handleKeyDown = (event)=> {
-		console.log('InspectorPage.handleKeyDown()', event);
+// 		console.log('InspectorPage.handleKeyDown()', event);
 
 		const { section } = this.state;
 		const { keyCode } = event;
@@ -1871,7 +1862,7 @@ class InspectorPage extends Component {
 	};
 
 	handleSendSyntaxAtom = (tab)=> {
-		console.log('InspectorPage.handleSendSyntaxAtom()', tab);
+// 		console.log('InspectorPage.handleSendSyntaxAtom()', tab);
 
 		const lang = (tab.title === 'CSS') ? 'css' : (tab.title === 'ReactHTML') ? 'html' : (tab.title === 'Swift') ? 'swift' : (tab.title === 'Android') ? 'xml' : 'txt';
 		trackEvent('button', `send-atom-${lang}`);
@@ -1961,7 +1952,7 @@ class InspectorPage extends Component {
 	};
 
 	handleTutorialNextStep = (step)=> {
-		console.log('InspectorPage.handleTutorialNextStep()', step);
+// 		console.log('InspectorPage.handleTutorialNextStep()', step);
 
 		trackEvent('tutorial', `step-${step}`);
 		const tutorial = {
@@ -2095,7 +2086,7 @@ class InspectorPage extends Component {
 	};
 
 	onBusyInterval = ()=> {
-		console.log('InspectorPage.onBusyInterval()');
+// 		console.log('InspectorPage.onBusyInterval()');
 
 		const { upload } = this.state;
 		this.setState({
@@ -2275,7 +2266,7 @@ class InspectorPage extends Component {
 
 
 	render() {
-		console.log('InspectorPage.render()', this.props, this.state);
+// 		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage.render()', this.props);
 // 		console.log('InspectorPage.render()', this.state);
 // 		console.log('InspectorPage.render()', (new Array(100)).fill(null).map((i)=> (Maths.randomInt(1, 10))).join(','), this.state);

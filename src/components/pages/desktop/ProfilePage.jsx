@@ -89,19 +89,19 @@ class ProfilePage extends Component {
 
 
 	handleAvatarClick = ()=> {
-		console.log('ProfilePage.handleAvatarClick()');
+// 		console.log('ProfilePage.handleAvatarClick()');
 		trackEvent('button', 'upload');
 
 		this.setState({ dialog : true }, ()=> this.setState({ dialog : false }));
 	};
 
 	handleBuyClick = ()=> {
-		console.log('ProfilePage.handleBuyCLick()');
+// 		console.log('ProfilePage.handleBuyCLick()');
 		trackEvent('button', 'buy');
 	};
 
 	handleCancel = ()=> {
-		console.log('ProfilePage.handleCancel()');
+// 		console.log('ProfilePage.handleCancel()');
 
 		trackEvent('button', 'cancel');
 		const { avatar, username, email } = this.props.profile;
@@ -124,13 +124,13 @@ class ProfilePage extends Component {
 	};
 
 	handleFileDialogCancel = ()=> {
-		console.log('ProfilePage.handleFileDialogCancel()');
+// 		console.log('ProfilePage.handleFileDialogCancel()');
 		trackEvent('button', 'cancel-dialog');
 		this.setState({ dialog : false });
 	};
 
 	handleFileDrop = (files)=> {
-		console.log('ProfilePage.handleFileDrop()', files);
+// 		console.log('ProfilePage.handleFileDrop()', files);
 
 		if (files.length > 0) {
 			const file = files.pop();
@@ -180,7 +180,7 @@ class ProfilePage extends Component {
 	};
 
 	handleInputFieldClick = (key)=> {
-		console.log('ProfilePage.handleInputFieldClick()', key, this.state);
+// 		console.log('ProfilePage.handleInputFieldClick()', key, this.state);
 
 		let { username, email, usernameValid, emailValid, passwordValid } = this.state;
 
@@ -262,7 +262,7 @@ class ProfilePage extends Component {
 		const emailValid = Strings.isEmail(email);
 		const passwordValid = true;//(password.length > 0);
 
-		console.log(' -=- ProfilePage.onValidateFields()', emailValid, state);
+// 		console.log(' -=- ProfilePage.onValidateFields()', emailValid, state);
 
 		this.setState({
 			username      : (usernameValid) ? username : (username.includes('@')) ? 'Usernames Cannot Contain \'@\'' : 'Username Invalid',

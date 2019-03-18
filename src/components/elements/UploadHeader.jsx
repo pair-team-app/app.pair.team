@@ -58,7 +58,7 @@ class UploadHeader extends Component {
 
 
 	handleCancel = (event)=> {
-		console.log('UploadHeader.handleCancel()', event);
+// 		console.log('UploadHeader.handleCancel()', event);
 
 		event.preventDefault();
 		trackEvent('button', 'cancel-upload');

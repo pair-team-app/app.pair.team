@@ -118,7 +118,7 @@ class RateThisPage extends Component {
 	}
 
 	componentDidMount() {
-		console.log('RateThisPage.componentDidMount()', this.props, this.state);
+// 		console.log('RateThisPage.componentDidMount()', this.props, this.state);
 		const { score } = this.props;
 
 
@@ -156,7 +156,7 @@ class RateThisPage extends Component {
 
 
 	handleStarClick = (ind)=> {
-		console.log('RateThisPage.handleStarClick()', ind);
+// 		console.log('RateThisPage.handleStarClick()', ind);
 
 		const { ratingID } = this.state;
 
@@ -196,7 +196,7 @@ class RateThisPage extends Component {
 	};
 
 	handleSubmitComment = (event)=> {
-		console.log('RateThisPage.handleSubmitComment()', this.props, this.state);
+// 		console.log('RateThisPage.handleSubmitComment()', this.props, this.state);
 		event.preventDefault();
 
 		const { score, comment } = this.state;
