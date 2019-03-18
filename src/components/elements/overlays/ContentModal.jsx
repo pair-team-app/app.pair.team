@@ -7,7 +7,7 @@ import FontAwesome from 'react-fontawesome';
 import onClickOutside from 'react-onclickoutside';
 import { Column, Row } from 'simple-flexbox';
 
-import { trackModal } from '../../utils/tracking';
+import { trackModal } from '../../../utils/tracking';
 
 
 export const MODAL_SIZE_AUTO = 'MODAL_SIZE_AUTO';

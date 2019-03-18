@@ -8,7 +8,7 @@ import onClickOutside from 'react-onclickoutside';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import { DEFAULT_AVATAR } from '../../consts/uris';
+import { DEFAULT_AVATAR } from '../../../consts/uris';
 
 const PROFILE = 'PROFILE';
 const LOGOUT = 'LOGOUT';

@@ -6,7 +6,7 @@ import FontAwesome from 'react-fontawesome';
 import onClickOutside from 'react-onclickoutside';
 import { Row } from 'simple-flexbox';
 
-import { trackEvent } from '../../utils/tracking';
+import { trackEvent } from '../../../utils/tracking';
 
 
 class TopNavMenu extends Component {

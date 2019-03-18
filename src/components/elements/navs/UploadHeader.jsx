@@ -5,12 +5,12 @@ import './UploadHeader.css';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 
-import { POPUP_TYPE_ERROR } from './Popup';
-import { updateDeeplink } from '../../redux/actions';
-import { sendToSlack } from '../../utils/funcs';
-import { Files } from '../../utils/lang';
-import { trackEvent } from '../../utils/tracking';
-import demoURLs from '../../assets/json/demo-urls';
+import { POPUP_TYPE_ERROR } from '../overlays/Popup';
+import { updateDeeplink } from '../../../redux/actions';
+import { sendToSlack } from '../../../utils/funcs';
+import { Files } from '../../../utils/lang';
+import { trackEvent } from '../../../utils/tracking';
+import demoURLs from '../../../assets/json/demo-urls';
 
 
 const dropZone = React.createRef();

@@ -7,17 +7,16 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
 import BaseDesktopPage from './BaseDesktopPage';
-import UploadHeader from '../../elements/UploadHeader';
+import UploadHeader from '../../elements/navs/UploadHeader';
 import LoginForm from '../../forms/LoginForm';
 import RegisterForm from '../../forms/RegisterForm';
 
-import homeContent from '../../../assets/json/home-content';
 import { CDN_URL } from '../../../consts/uris';
 import { addFileUpload, updateDeeplink, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
+import homeContent from '../../../assets/json/home-content';
 import radioButtons from '../../../assets/json/radio-buttons_upload';
-
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({

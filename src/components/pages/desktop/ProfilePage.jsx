@@ -10,12 +10,12 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../elements/Popup';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../elements/overlays/Popup';
 import InputField, {
 	INPUTFIELD_STATUS_DISABLED,
 	INPUTFIELD_STATUS_ERROR,
 	INPUTFIELD_STATUS_IDLE
-} from '../../forms/elements/InputField';
+} from '../../elements/forms/InputField';
 import { DEFAULT_AVATAR, CDN_URL } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { Bits, Files, Strings } from '../../../utils/lang';

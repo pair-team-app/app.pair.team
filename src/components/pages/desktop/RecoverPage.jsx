@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
-import { POPUP_TYPE_OK } from '../../elements/Popup';
+import { POPUP_TYPE_OK } from '../../elements/overlays/Popup';
 import { Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 

@@ -18,10 +18,10 @@ import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
-import ContentModal from '../../elements/ContentModal';
-import InputField, { INPUTFIELD_STATUS_IDLE } from '../../forms/elements/InputField';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../elements/Popup';
-import TutorialOverlay from '../../elements/TutorialOverlay';
+import ContentModal from '../../elements/overlays/ContentModal';
+import InputField, { INPUTFIELD_STATUS_IDLE } from '../../elements/forms/InputField';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../elements/overlays/Popup';
+import TutorialBubble from '../../elements/overlays/TutorialBubble';
 
 import { MOMENT_TIMESTAMP } from '../../../consts/formats';
 import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../consts/key-codes';
@@ -32,15 +32,14 @@ import { buildInspectorPath, buildInspectorURL, sendToSlack } from '../../../uti
 import { Browsers, DateTimes, Files, Maths, Strings } from '../../../utils/lang.js';
 import { fontSpecs, toAndroid, toCSS, toGridHTML, toSpecs, toSwift } from '../../../utils/inspector-langs.js';
 import { trackEvent } from '../../../utils/tracking';
-import deLogo from '../../../assets/images/logos/logo-designengine.svg';
+
 import downloadButton from '../../../assets/images/buttons/btn-download.svg';
 // import androidIcon from '../../../assets/images/icons/ico-android.png';
-// import html5Icon from '../../../assets/images/icons/ico-html5.png';
 // import iosIcon from '../../../assets/images/icons/ico-ios.png';
-
+// import html5Icon from '../../../assets/images/icons/ico-html5.png';
 import adBannerPanel from '../../../assets/json/ad-banner-panel';
 import inspectorTabSets from '../../../assets/json/inspector-tab-sets';
-
+import deLogo from '../../../assets/images/logos/logo-designengine.svg';
 
 const InteractiveDiv = panAndZoomHoc('div');
 const artboardsWrapper = React.createRef();
@@ -2564,7 +2563,7 @@ class InspectorPage extends Component {
 				onCancel={this.handleUploadProcessingCancel}
 			/>)}
 
-			{(!restricted && tutorial) && (<TutorialOverlay
+			{(!restricted && tutorial) && (<TutorialBubble
 				origin={tutorial.origin}
 				onNext={this.handleTutorialNextStep}
 				onClose={()=> this.setState({ tutorial : null })}

@@ -9,10 +9,10 @@ import TopNavMenu from './TopNavMenu';
 import TopNavProfile from './TopNavProfile';
 import TopNavRate from './TopNavRate';
 
-import { isUserLoggedIn } from '../../utils/funcs';
-import { trackEvent } from '../../utils/tracking';
-import { updateDeeplink } from '../../redux/actions';
-import sections from '../../assets/json/nav-sections';
+import { updateDeeplink } from '../../../redux/actions';
+import { isUserLoggedIn } from '../../../utils/funcs';
+import { trackEvent } from '../../../utils/tracking';
+import sections from '../../../assets/json/nav-sections';
 
 
 const mapDispatchToProps = (dispatch)=> {

@@ -8,11 +8,11 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import AdBannerPanel from './elements/AdBannerPanel';
-import BottomNav from './elements/BottomNav';
-import ContentModal, { MODAL_SIZE_AUTO } from './elements/ContentModal';
-import Popup from './elements/Popup';
-import TopNav from './elements/TopNav';
+import AdBannerPanel from './elements/overlays/AdBannerPanel';
+import BottomNav from './elements/navs/BottomNav';
+import ContentModal, { MODAL_SIZE_AUTO } from './elements/overlays/ContentModal';
+import Popup from './elements/overlays/Popup';
+import TopNav from './elements/navs/TopNav';
 import HomePage from './pages/desktop/HomePage';
 import InspectorPage from './pages/desktop/InspectorPage';
 import InviteTeamPage from './pages/desktop/InviteTeamPage';
@@ -27,7 +27,6 @@ import TermsPage from './pages/desktop/TermsPage';
 import UploadPage from './pages/desktop/UploadPage';
 import BaseMobilePage from './pages/mobile/BaseMobilePage';
 
-import adBannerPanel from '../assets/json/ad-banner-panel';
 import { EXTENSION_PUBLIC_URL } from '../consts/uris';
 import {
 	appendHomeArtboards,
@@ -44,7 +43,7 @@ import {
 	isUploadPage } from '../utils/funcs';
 import { Browsers } from '../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../utils/tracking';
-
+import adBannerPanel from '../assets/json/ad-banner-panel';
 
 const wrapper = React.createRef();
 

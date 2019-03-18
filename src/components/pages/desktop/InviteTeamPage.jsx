@@ -9,8 +9,8 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 // import BaseDesktopPage from './BaseDesktopPage';
-import { POPUP_TYPE_OK } from '../../elements/Popup';
-import Dropdown from '../../forms/elements/Dropdown';
+import { POPUP_TYPE_OK } from '../../elements/overlays/Popup';
+import Dropdown from '../../elements/forms/Dropdown';
 import { buildInspectorURL, isUserLoggedIn } from '../../../utils/funcs';
 import { Strings } from '../../../utils/lang';
 

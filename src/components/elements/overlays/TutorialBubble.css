@@ -1,5 +1,5 @@
 
-.tutorial-overlay-wrapper {
+.tutorial-bubble-wrapper {
 	z-index: 10;
 	position: fixed;
 	top: 112px;
@@ -16,13 +16,13 @@
 	letter-spacing: -0.23px;
 }
 
-.tutorial-overlay-content {
+.tutorial-bubble-content {
 	margin-bottom: 10px;
 }
 
-.tutorial-overlay-button-wrapper {
+.tutorial-bubble-button-wrapper {
 }
 
-.tutorial-overlay-button {
+.tutorial-bubble-button {
 	padding: 3px 12px;
 }

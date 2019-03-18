@@ -7,13 +7,12 @@ import { connect } from 'react-redux';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import ArtboardGrid from '../../elements/ArtboardGrid';
-import UploadHeader from '../../elements/UploadHeader';
+import UploadHeader from '../../elements/navs/UploadHeader';
 
-import homeContent from '../../../assets/json/home-content';
 import { addFileUpload, appendHomeArtboards } from '../../../redux/actions';
 import { isUserLoggedIn } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
-
+import homeContent from '../../../assets/json/home-content';
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({

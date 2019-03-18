@@ -1,14 +1,14 @@
 
 import React, { Component } from 'react';
-import './TutorialOverlay.css'
+import './TutorialBubble.css'
 
 import { TweenMax, Elastic, Power0, Power1 } from 'gsap/TweenMax';
 import { Column } from 'simple-flexbox';
 
-import tutorialContent from '../../assets/json/tutorial-content';
+import tutorialContent from '../../../assets/json/tutorial-content';
 
 
-class TutorialOverlay extends Component {
+class TutorialBubble extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -20,12 +20,12 @@ class TutorialOverlay extends Component {
 	}
 
 	componentDidMount() {
-// 		console.log('TutorialOverlay.componentDidMount()', this.props, this.state);
+// 		console.log('TutorialBubble.componentDidMount()', this.props, this.state);
 		this.onNextStep();
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('TutorialOverlay.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
+// 		console.log('TutorialBubble.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
 
 		if (prevProps.origin !== this.props.origin) {
 			this.onNextStep();
@@ -33,7 +33,7 @@ class TutorialOverlay extends Component {
 	}
 
 	handleClose = ()=> {
-// 		console.log('TutorialOverlay.handleClose()');
+// 		console.log('TutorialBubble.handleClose()');
 
 		const { onClose } = this.props;
 		TweenMax.to(this.wrapper, 0.125, {
@@ -46,7 +46,7 @@ class TutorialOverlay extends Component {
 	};
 
 	onNextStep = ()=> {
-// 		console.log('TutorialOverlay.onNextStep()');
+// 		console.log('TutorialBubble.onNextStep()');
 
 		const { origin } = this.props;
 		let { step } = this.state;
@@ -70,16 +70,16 @@ class TutorialOverlay extends Component {
 	};
 
 	render() {
-// 		console.log('TutorialOverlay.render()', this.props, this.state);
+// 		console.log('TutorialBubble.render()', this.props, this.state);
 
 		const { step, style } = this.state;
 		return (
-			<div className="tutorial-overlay-wrapper" style={style} ref={(element)=> { this.wrapper = element; }}>
+			<div className="tutorial-bubble-wrapper" style={style} ref={(element)=> { this.wrapper = element; }}>
 				<Column horizontal="center">
-					<div className="tutorial-overlay-content">{ tutorialContent[step]}</div>
-					<div className="tutorial-overlay-button-wrapper">
-						{(step < tutorialContent.length - 1) && (<button className="tiny-button tutorial-overlay-button adjacent-button" onClick={()=> this.props.onNext(step + 1)}>Next</button>)}
-						<button className="tiny-button tutorial-overlay-button" onClick={()=> this.handleClose()}>Close</button>
+					<div className="tutorial-bubble-content">{ tutorialContent[step]}</div>
+					<div className="tutorial-bubble-button-wrapper">
+						{(step < tutorialContent.length - 1) && (<button className="tiny-button tutorial-bubble-button adjacent-button" onClick={()=> this.props.onNext(step + 1)}>Next</button>)}
+						<button className="tiny-button tutorial-bubble-button" onClick={()=> this.handleClose()}>Close</button>
 					</div>
 				</Column>
 			</div>
@@ -87,4 +87,4 @@ class TutorialOverlay extends Component {
 	}
 }
 
-export default TutorialOverlay;
+export default TutorialBubble;

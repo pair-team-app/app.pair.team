@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom'
 
 import App from './components/App';
-// import registerServiceWorker from './registerServiceWorker';
+import registerServiceWorker from './registerServiceWorker';
 import store from './redux/store/index';
 
 
@@ -24,4 +24,4 @@ ReactDOM.render(
 	document.getElementById('root')
 );
 
-// registerServiceWorker();
+registerServiceWorker();

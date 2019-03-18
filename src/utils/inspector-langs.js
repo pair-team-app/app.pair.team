@@ -1,9 +1,8 @@
 
-import { DateTimes, Maths, Objects, Strings, URLs } from './lang';
+import { Maths, Objects, Strings, URLs } from './lang';
 
 const TAB = '  ';
 const badChars = /[\\.,_+=[\](){}]/g;
-// const DISCLAIMER = `__LANG__ generator v1.0\nCode snippets by Design Engine.\nCopyrght (c) ${DateTimes.currYear()} Design Engine AI\nUsage of generated code is strictly at own risk, \nand is provided on an "as is" basis.`;
 const DISCLAIMER = '__LANG__ Generator v1.0,\nCode snippets by Design Engine.,\nMade in Mountain View, CA.\n__';
 
 const fontWeight = (style)=> {
