@@ -182,6 +182,7 @@ class App extends Component {
 	handleLogout = ()=> {
 		cookie.save('user_id', '0', { path : '/' });
 		trackEvent('user', 'sign-out');
+
 		this.props.updateUserProfile(null);
 		this.props.appendHomeArtboards();
 		this.handlePage('');

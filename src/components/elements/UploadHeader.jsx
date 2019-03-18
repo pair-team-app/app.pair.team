@@ -76,6 +76,8 @@ class UploadHeader extends Component {
 
 	handleFileDialogCancel = ()=> {
 // 		console.log('UploadHeader.handleFileDialogCancel()');
+
+		trackEvent('button', 'cancel-dialog');
 		this.setState({ dialog : false });
 	};
 

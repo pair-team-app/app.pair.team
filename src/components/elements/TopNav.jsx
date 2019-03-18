@@ -29,20 +29,20 @@ const TopNavDesktop = (props)=> {
 	return (<div className="top-nav-wrapper">
 		<div className="top-nav-column top-nav-column-left"><Row vertical="center">
 			{(sections.map((section, i)=> (
-				<div key={i} className={`top-nav-link${(pathname.includes(section.url)) ? ' top-nav-link-selected' : ''}`} onClick={()=> props.onPage(section.url)}>{section.title}</div>
+				<div key={i} className={`top-nav-link${(pathname.includes(section.url)) ? ' top-nav-link-selected' : ''}`} onClick={()=> props.onLink(section.url)}>{section.title}</div>
 			)))}
-			<TopNavRate selected={(pathname.includes('/rate-this'))} onPage={props.onPage} onScore={props.onScore} />
+			<TopNavRate selected={(pathname.includes('/rate-this'))} onLink={props.onLink} onScore={props.onScore} />
 		</Row></div>
 
 		<div className="top-nav-column top-nav-column-right">
 			{(!isUserLoggedIn())
 				? (<>
-					<button className="adjacent-button" onClick={()=> props.onPage('register')}>Sign Up</button>
-					<button onClick={()=> props.onPage('login')}>Login</button>
+					<button className="adjacent-button" onClick={()=> props.onLink('register')}>Sign Up</button>
+					<button onClick={()=> props.onLink('login')}>Login</button>
 				</>)
 				: (<Row vertical="center" horizontal="end">
 					<TopNavProfile
-						onPage={props.onPage}
+						onLink={props.onLink}
 						onLogout={props.onLogout}
 					/>
 				</Row>)}
@@ -59,7 +59,7 @@ const TopNavMobile = (props)=> {
 			<TopNavMenu
 				pathname={pathname}
 				sections={sections}
-				onPage={props.onPage} />
+				onClick={props.onMenuClick} />
 		</Row></div>
 
 		<div className="top-nav-column top-nav-column-right top-nav-column-right-mobile">
@@ -70,7 +70,7 @@ const TopNavMobile = (props)=> {
 				</>)
 				: (<Row vertical="center" horizontal="end">
 					<TopNavProfile
-						onPage={props.onPage}
+						onLink={props.onLink}
 						onLogout={props.onLogout}
 					/>
 				</Row>)}
@@ -90,6 +90,15 @@ class TopNav extends Component {
 	handleLink = (url)=> {
 // 		console.log('TopNav.handleLink()', url);
 
+		trackEvent('link', url);
+		this.props.updateDeeplink(null);
+		this.props.onPage(url);
+	};
+
+	handleMenuClick = (url)=> {
+		console.log('TopNav.handleLink()', url);
+
+		trackEvent('menu', url);
 		this.props.updateDeeplink(null);
 		this.props.onPage(url);
 	};
@@ -110,16 +119,17 @@ class TopNav extends Component {
 			? (<TopNavDesktop
 					pathname={pathname}
 					sections={sections.top.desktop}
-					onPage={this.handleLink}
-					onScore={this.handleScore}
+					onLink={this.handleLink}
 					onLogout={this.props.onLogout}
+					onScore={this.handleScore}
 				/>)
 
 			: (<TopNavMobile
 					pathname={pathname}
 					sections={sections.top.mobile}
-					onPage={this.handleLink}
+					onLink={this.handleLink}
 					onLogout={this.props.onLogout}
+					onMenuClick={this.handleMenuClick}
 				/>)
 		);
 	}

@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import { DEFAULT_AVATAR } from '../../consts/uris';
-import { trackEvent } from '../../utils/tracking';
 
 const PROFILE = 'PROFILE';
 const LOGOUT = 'LOGOUT';
@@ -36,9 +35,8 @@ class TopNavProfile extends Component {
 	handleLinkClick = (type)=> {
 		this.setState({ bubble : false });
 
-		trackEvent('top-nav', type.toLowerCase());
 		if (type === PROFILE) {
-			this.props.onPage('profile');
+			this.props.onLink('profile');
 
 		} else if (type === LOGOUT) {
 			this.props.onLogout()

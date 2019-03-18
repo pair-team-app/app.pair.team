@@ -125,6 +125,7 @@ class ProfilePage extends Component {
 
 	handleFileDialogCancel = ()=> {
 		console.log('ProfilePage.handleFileDialogCancel()');
+		trackEvent('button', 'cancel-dialog');
 		this.setState({ dialog : false });
 	};
 

@@ -322,10 +322,9 @@ const InspectorFooter = (props)=> {
 				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'next-artboard'); props.onChangeArtboard(nextArtboard);}}><FontAwesome name="arrow-right" /></button>
 			</>)}
 
-			{(section !== SECTIONS.INSPECT) && (<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'inspect'); props.onChangeSection('inspect');}}>Inspect</button>)}
-			{(section !== SECTIONS.PARTS) && (<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'parts'); props.onChangeSection('parts');}}>Parts</button>)}
-			{(section !== SECTIONS.PRESENTER) && (<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'present'); props.onChangeSection('present');}}>Presenter</button>)}
-
+			{(section !== SECTIONS.INSPECT) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('inspect')}>Inspect</button>)}
+			{(section !== SECTIONS.PARTS) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('parts')}>Parts</button>)}
+			{(section !== SECTIONS.PRESENTER) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('present')}>Presenter</button>)}
 		</div>)}
 	</Row></div>);
 };
@@ -885,7 +884,6 @@ class InspectorPage extends Component {
 		this.scrollTimeout = null;
 
 		document.removeEventListener('keydown', this.handleKeyDown);
-// 		document.removeEventListener('wheel', this.handleWheelStart.bind(this));
 
 		const { upload, section, valid, restricted } = this.state;
 		if (upload && valid && restricted) {
@@ -1623,6 +1621,7 @@ class InspectorPage extends Component {
 	handleChangeSection = (section)=> {
 		console.log('InspectorPage.handleChangeSection()', section);
 
+		trackEvent('button', `section-${section}`);
 		const { upload } = this.state;
 // 		this.setState({ section }, ()=> {
 // 			this.handleZoom(-1);
@@ -1819,8 +1818,9 @@ class InspectorPage extends Component {
 		console.log('InspectorPage.handleKeyDown()', event);
 
 		const { section } = this.state;
+		const { keyCode } = event;
 
-		trackEvent('keypress', (event.keyCode === PLUS_KEY) ? 'plus' : 'minus');
+		trackEvent('keypress', (keyCode === PLUS_KEY) ? 'plus' : (keyCode === MINUS_KEY) ? 'minus' : (keyCode === ARROW_LT_KEY) ? 'left-arrow' : (keyCode === ARROW_RT_KEY) ? 'right-arrow' : `${keyCode}`);
 		if (event.keyCode === PLUS_KEY) {
 			this.handleZoom(1);
 
@@ -1870,8 +1870,8 @@ class InspectorPage extends Component {
 		}
 	};
 
-	handleSendSyntax = (tab)=> {
-		console.log('InspectorPage.handleSendSyntax()', tab);
+	handleSendSyntaxAtom = (tab)=> {
+		console.log('InspectorPage.handleSendSyntaxAtom()', tab);
 
 		const lang = (tab.title === 'CSS') ? 'css' : (tab.title === 'ReactHTML') ? 'html' : (tab.title === 'Swift') ? 'swift' : (tab.title === 'Android') ? 'xml' : 'txt';
 		trackEvent('button', `send-atom-${lang}`);
@@ -1896,7 +1896,6 @@ class InspectorPage extends Component {
 			}
 		}, '*');
 	};
-
 
 	handleSliceClick = (ind, slice, offset)=> {
 // 		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
@@ -1963,6 +1962,8 @@ class InspectorPage extends Component {
 
 	handleTutorialNextStep = (step)=> {
 		console.log('InspectorPage.handleTutorialNextStep()', step);
+
+		trackEvent('tutorial', `step-${step}`);
 		const tutorial = {
 			origin : {
 				top  : (step === 1) ? '240px' : '140px',
@@ -1978,6 +1979,7 @@ class InspectorPage extends Component {
 
 		const { upload, section } = this.state;
 
+		trackEvent('button', 'cancel-processing');
 		if (this.processingInterval) {
 			clearInterval(this.processingInterval);
 			this.processingInterval = null;
@@ -2431,7 +2433,7 @@ class InspectorPage extends Component {
 							removable={true}
 							outro={!urlBanner}
 							onCopy={()=> this.handleClipboardCopy('url', buildInspectorURL(upload))}
-							onClose={()=> this.setState({ urlBanner : false })}>
+							onClose={()=> {trackEvent('button', 'close-url-banner'); this.setState({ urlBanner : false });}}>
 							<div className="marquee-banner-content marquee-banner-content-url"><span className="txt-bold" style={{paddingRight:'5px'}}>Share on Slack:</span> {buildInspectorURL(upload)}</div>
 						</MarqueeBanner>)}
 
@@ -2499,7 +2501,7 @@ class InspectorPage extends Component {
 										<CopyToClipboard onCopy={()=> this.handleClipboardCopy((i === 0) ? 'code' : 'specs', (i === 0) ? activeTabs[i].syntax : toSpecs(activeSlice))} text={(i === 0) ? (activeTabs && activeTabs[i]) ? activeTabs[i].syntax : '' : (activeSlice) ? toSpecs(activeSlice) : ''}>
 											<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>
 										</CopyToClipboard>
-										{(i === 0) && (<button disabled={!atomExtension || !slice} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntax(activeTabs[i])}>{(processing) ? 'Processing' : 'Send to Atom'}</button>)}
+										{(i === 0) && (<button disabled={!atomExtension || !slice} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Send to Atom'}</button>)}
 									</div>
 								</div>
 							</div>)
@@ -2542,7 +2544,7 @@ class InspectorPage extends Component {
 														<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
 															<button disabled={!activeTabs[i].contents} style={{opacity:(!processing << 0)}} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>
 														</CopyToClipboard>
-														<button disabled={!atomExtension || !slice} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntax(activeTabs[i])}>{(processing) ? 'Processing' : 'Send to Atom'}</button>
+														<button disabled={!atomExtension || !slice} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Send to Atom'}</button>
 													</>)
 												: (<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download PDF'}</button>)}
 										</div>
