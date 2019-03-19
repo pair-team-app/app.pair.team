@@ -1746,7 +1746,7 @@ class InspectorPage extends Component {
 						formData.append('file', file);
 						axios.post(`${CDN_URL}?dir=/system`, formData, config)
 							.then((response)=> {
-								console.log("CDN upload.php", response.data);
+								console.log('CDN upload.php', response.data);
 							}).catch((error)=> {
 							sendToSlack(`*${email}* failed uploading file _${file.name}_`);
 						});
@@ -2437,6 +2437,7 @@ class InspectorPage extends Component {
 					</div>
 
 					<InteractiveDiv
+						className="full-width full-height"
 						x={panMultPt.x}
 						y={panMultPt.y}
 						scale={scale}
@@ -2445,7 +2446,7 @@ class InspectorPage extends Component {
 						maxScale={Math.max(...PAN_ZOOM.zoomNotches)}
 						ignorePanOutside={false}
 						renderOnChange={false}
-						style={{ width : '100%', height : '100%' }}
+// 						style={{ width : '100%', height : '100%' }}
 						onPanAndZoom={this.handlePanAndZoom}
 						onPanEnd={()=> (this.setState({ scrolling : false }))}
 						onPanMove={this.handlePanMove}>

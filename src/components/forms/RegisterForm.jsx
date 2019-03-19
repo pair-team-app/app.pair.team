@@ -45,7 +45,7 @@ class RegisterForm extends Component {
 	}
 
 	componentWillUnmount() {
-		this.timeline = null;
+// 		console.log('RegisterForm.componentWillUnmount()');
 	}
 
 	handlePassword = ()=> {

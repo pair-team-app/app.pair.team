@@ -11,11 +11,7 @@ import { Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../elements/overlays/Popup';
-import InputField, {
-	INPUTFIELD_STATUS_DISABLED,
-	INPUTFIELD_STATUS_ERROR,
-	INPUTFIELD_STATUS_IDLE
-} from '../../elements/forms/InputField';
+import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../elements/forms/InputField';
 import { DEFAULT_AVATAR, CDN_URL } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { Bits, Files, Strings } from '../../../utils/lang';
@@ -47,6 +43,7 @@ class ProfilePage extends Component {
 			username      : '',
 			email         : '',
 			password      : '',
+			type          : '',
 			usernameValid : true,
 			emailValid    : true,
 			passwordValid : true,
@@ -61,8 +58,8 @@ class ProfilePage extends Component {
 	componentDidMount() {
 // 		console.log('ProfilePage.componentDidMount()', this.props, this.state);
 		if (this.props.profile) {
-			const { avatar, username, email } = this.props.profile;
-			this.setState({ avatar, username, email });
+			const { avatar, username, email, type } = this.props.profile;
+			this.setState({ avatar, username, email, type });
 		}
 	}
 
@@ -70,11 +67,12 @@ class ProfilePage extends Component {
 // 		console.log('ProfilePage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		if (prevProps.profile !== this.props.profile) {
-			const { avatar, username, email, status } = this.props.profile;
+			const { avatar, username, email, type, status } = this.props.profile;
 			this.setState({
 				avatar        : avatar,
 				username      : username,
 				email         : email,
+				type          : type,
 				usernameValid : !Bits.contains(status, 0x01),
 				emailValid    : !Bits.contains(status, 0x10)
 			});
@@ -86,6 +84,27 @@ class ProfilePage extends Component {
 			}
 		}
 	}
+
+
+	handleAccountType = ()=> {
+// 		console.log('ProfilePage.handleAccountType()');
+
+		const { profile } = this.props;
+		if (profile.paid) {
+			this.props.updateUserProfile(Object.assign({}, profile, {
+				type : 'free_user'
+			}));
+
+			this.props.onPopup({
+				type    : POPUP_TYPE_OK,
+				content : 'Profile updated.',
+				delay   : 333
+			});
+
+		} else {
+			this.props.onStripeOverlay();
+		}
+	};
 
 
 	handleAvatarClick = ()=> {
@@ -158,7 +177,7 @@ class ProfilePage extends Component {
 				formData.append('file', file);
 				axios.post(`${CDN_URL}?dir=/profiles&prefix=${profile.id}_`, formData, config)
 					.then((response)=> {
-						console.log("CDN upload.php", response.data);
+						console.log('CDN upload.php', response.data);
 						this.onValidateFields('avatar', `http://cdn.designengine.ai/profiles/${profile.id}_${decodeURIComponent(file.name)}`);
 
 					}).catch((error)=> {
@@ -230,12 +249,12 @@ class ProfilePage extends Component {
 	onProfileUpdate = ()=> {
 		console.log('ProfilePage.onProfileUpdate()', this.state);
 
-		const { avatar, username, email, password } = this.state;
+		const { avatar, username, email, password, type } = this.state;
 		const { usernameValid, emailValid, passwordValid } = this.state;
 
 		if (usernameValid && emailValid && passwordValid) {
 			const { id } = this.props.profile;
-			this.props.updateUserProfile({ id, avatar, username, email, password });
+			this.props.updateUserProfile({ id, avatar, username, email, password, type });
 			this.setState({
 				passMsg : '',
 				changed : false
@@ -351,15 +370,14 @@ class ProfilePage extends Component {
 					/>
 
 					<InputField
-						type="text"
+						type="lbl"
 						name="paid"
 						placeholder="Free Account"
 						value={(profile && profile.paid) ? 'Unlimited Account' : 'Free Account'}
-						button={(profile && profile.paid) ? 'Free' : 'Unlimited'}
-						status={INPUTFIELD_STATUS_DISABLED}
-						onChange={(val)=> this.handleInputFieldChange('paid', val)}
-						onErrorClick={()=> this.handleInputFieldClick('paid')}
-						onSubmit={(val)=> this.handleInputFieldSubmit('paid', val)}
+						button={(profile && profile.paid) ? 'Downgrade' : 'Upgrade'}
+						status={INPUTFIELD_STATUS_IDLE}
+						onFieldClick={()=> null}
+						onSubmit={this.handleAccountType}
 					/>
 				</div>
 

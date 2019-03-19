@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 
 import axios from 'axios';
+import qs from 'qs';
 // import CurrencyFormat from 'react-currency-format';
 import { CardCVCElement, CardExpiryElement, CardNumberElement, injectStripe } from 'react-stripe-elements';
 

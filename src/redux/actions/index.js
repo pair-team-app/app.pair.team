@@ -91,7 +91,7 @@ export function updateUserProfile(payload) {
 
 	return ((dispatch)=> {
 		if (payload) {
-			const { id, username, email, avatar, password } = payload;
+			const { id, username, email, avatar, password, type } = payload;
 			let formData = new FormData();
 			formData.append('action', 'UPDATE_PROFILE');
 			formData.append('user_id', id);
@@ -99,12 +99,13 @@ export function updateUserProfile(payload) {
 			formData.append('email', email);
 			formData.append('filename', avatar);
 			formData.append('password', password);
+			formData.append('type', type);
 			axios.post('https://api.designengine.ai/system.php', formData)
 				.then((response) => {
 					console.log('UPDATE_PROFILE', response.data);
 
 					const status = parseInt(response.data.status, 16);
-					const { id, avatar, username, email } = response.data.user;
+					const { id, avatar, username, email, type } = response.data.user;
 
 					dispatch({
 						type    : (status === 0x00) ? USER_PROFILE_UPDATED : USER_PROFILE_ERROR,
@@ -114,7 +115,9 @@ export function updateUserProfile(payload) {
 							avatar   : avatar,
 							username : (Bits.contains(status, 0x01)) ? 'Username Already in Use' : username,
 							email    : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email,
-							password : ''
+							password : '',
+							type     : type,
+							paid     : type.includes('paid')
 						}
 					});
 				}).catch((error) => {

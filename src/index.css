@@ -130,12 +130,7 @@ h6 {
   line-height: 0;
 }
 
-input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hover, input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 1px 50px #24282e inset;
-  -webkit-text-fill-color: #abdafb;
-}
-
-input[type="text"], input[type="password"], input[type="tel"], textarea, .input-txt, .field-error {
+input[type="text"], input[type="password"], input[type="tel"], select, textarea, .input-txt, .field-error {
   background-color: #24282e;
   color: #abdafb;
   padding: 14px 11px;
@@ -147,11 +142,17 @@ input[type="text"], input[type="password"], input[type="tel"], textarea, .input-
   cursor: text;
 }
 
-input[type="text"]:disabled, input[type="password"]:disabled, input[type="tel"]:disabled, textarea:disabled {
+input[type="text"]:disabled, input[type="password"]:disabled, input[type="tel"]:disabled, select:disabled, textarea:disabled {
   cursor: not-allowed;
   /*color: #abdafd;*/
   color: #727d8d;
 }
+
+input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hover, input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 1px 50px #24282e inset;
+  -webkit-text-fill-color: #abdafb;
+}
+
 
 p {
   font-family: "San Francisco Text", sans-serif;

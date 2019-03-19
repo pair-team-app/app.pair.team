@@ -42,7 +42,11 @@ class ContentModal extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('ContentModal.componentDidUpdate()', prevProps, this.props, this.state);
+		console.log('ContentModal.componentDidUpdate()', prevProps, this.props, this.state);
+
+		if (prevProps.outro !== this.props.outro && this.props.outro) {
+			this.setState({ outro : true });
+		}
 
 		if (this.state.outro) {
 			this.setState({ outro : false });
@@ -81,8 +85,8 @@ class ContentModal extends Component {
 			this.timeline.seek(0);
 		}
 
-		const { size, title, closeable, defaultButton, children } = this.props;
-		const wrapperClass = `content-modal-content-wrapper content-modal-content-wrapper${(size === MODAL_SIZE_FIXED) ? '-fixed' : (size === MODAL_SIZE_PERCENT) ? '-percent' : '-auto'}`;
+		const { size, unblurred, title, closeable, defaultButton, children } = this.props;
+		const wrapperClass = `content-modal-content-wrapper content-modal-content-wrapper${(size === MODAL_SIZE_FIXED) ? '-fixed' : (size === MODAL_SIZE_PERCENT) ? '-percent' : '-auto'}${(unblurred) ? ' content-modal-content-wrapper-unblurred' : '`'}`;
 
 		return (<div className="content-modal-wrapper" onClick={(closeable) ? this.handleClose : null} ref={(element)=> { this.wrapper = element; }}>
 			<div className={wrapperClass} onClick={(event)=> event.stopPropagation()}>

@@ -43,7 +43,7 @@ class LoginForm extends Component {
 	}
 
 	componentWillUnmount() {
-		this.timeline = null;
+// 		console.log('LoginForm.componentWillUnmount()');
 	}
 
 	handlePassword = ()=> {
@@ -64,8 +64,9 @@ class LoginForm extends Component {
 // 		console.log('LoginForm.handleSubmit()', event.target);
 		event.preventDefault();
 
-		const { inviteID, email, password } = this.state;
+		trackEvent('button', 'login');
 
+		const { inviteID, email, password } = this.state;
 		const emailValid = (email.includes('@')) ? Strings.isEmail(email) : (email.length > 0);
 		const passwordValid = (password.length > 0);
 

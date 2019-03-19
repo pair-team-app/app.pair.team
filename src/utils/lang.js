@@ -69,7 +69,8 @@ export const Browsers = {
 
 
 export const Components = {
-	className : (component)=> (component.constructor.name)
+	componentName     : (component)=> (component.constructor.name),
+	txtFieldClassName : (valid)=> (`input-wrapper${(valid) ? '' : ' input-wrapper-error'}`)
 };
 
 
@@ -207,6 +208,7 @@ export const Strings = {
 
 
 export const URLs = {
-	lastComponent : (url)=> (Files.filename(url, '')),
-	protocol      : (url)=> ((/^https?/.test(url.toLowerCase())) ? url.split(':').shift() : null)
+	firstComponent : (url=window.location.pathname)=> (url.substr(1).split('/').shift()),
+	lastComponent  : (url=window.location.pathname)=> (Files.filename(url, '')),
+	protocol       : (url)=> ((/^https?/.test(url.toLowerCase())) ? url.split(':').shift() : null)
 };

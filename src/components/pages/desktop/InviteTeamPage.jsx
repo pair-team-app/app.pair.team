@@ -189,7 +189,7 @@ class InviteTeamPage extends Component {
 					</Row>
 				</div>
 				{(!this.state.sentInvites)
-					? (<div style={{ width : '100%' }}>
+					? (<div className="full-width">
 						<Dropdown
 							title={uploadTitle}
 							list={this.state.uploads}

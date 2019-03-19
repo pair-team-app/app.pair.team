@@ -138,7 +138,7 @@ class UploadPage extends Component {
 		formData.append('file', file);
 		axios.post(`${CDN_URL}?dir=/system`, formData, config)
 			.then((response)=> {
-				console.log("CDN upload.php", response.data);
+				console.log('CDN upload.php', response.data);
 			}).catch((error)=> {
 			sendToSlack(`*${email}* failed uploading file _${file.name}_\n\`\`\`${error}\n\`\`\`\n`);
 		});

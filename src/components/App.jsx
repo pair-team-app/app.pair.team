@@ -11,6 +11,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import AdBannerPanel from './elements/overlays/AdBannerPanel';
 import BottomNav from './elements/navs/BottomNav';
 import ContentModal, { MODAL_SIZE_AUTO } from './elements/overlays/ContentModal';
+import StripeModal from './elements/overlays/StripeModal';
 import Popup from './elements/overlays/Popup';
 import TopNav from './elements/navs/TopNav';
 import HomePage from './pages/desktop/HomePage';
@@ -71,10 +72,12 @@ class App extends Component {
 		super(props);
 
 		this.state = {
+			mobileOverlay : true,
 			rating        : 0,
 			processing    : false,
 			popup         : null,
-			mobileOverlay : true
+			stripeOverlay : false
+// 			stripeOverlay : true
 		};
 	}
 
@@ -111,19 +114,14 @@ class App extends Component {
 
 		this.extensionCheck();
 
+		// cancel tutorial
 		cookie.save('tutorial', '1', { path : '/' });
+
 		window.addEventListener('resize', this.handleResize);
 
 		window.onpopstate = (event)=> {
-			console.log('|||||||||||||||||-', 'window.onpopstate()', '-|||||||||||||||||', event);
-
-			if (isHomePage(false)) {
-				this.handlePage('<<');
-
-			} else {
-				const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
-				this.props.updateDeeplink({ uploadID, pageID, artboardID, sliceID });
-			}
+			console.log('-/\\/\\/\\/\\/\\/\\-', 'window.onpopstate()', '-/\\/\\/\\/\\/\\/\\-', event);
+			this.handlePage('<<');
 		};
 	}
 
@@ -211,6 +209,13 @@ class App extends Component {
 		}
 	};
 
+	handlePurchase = (payment)=> {
+// 		console.log('App.handlePurchase()', payment);
+
+		this.setState({ stripeOverlay : false });
+		this.props.fetchUserProfile();
+	};
+
 	handlePopup = (payload)=> {
 // 		console.log('App.handlePopup()', payload);
 		this.setState({ popup : payload });
@@ -269,9 +274,10 @@ class App extends Component {
 	render() {
 //   	console.log('App.render()', this.props, this.state);
 
+		const { profile } = this.props;
   	const { uploadID } = this.props.deeplink;
 		const { pathname } = this.props.location;
-  	const { rating, mobileOverlay, processing, popup } = this.state;
+  	const { rating, mobileOverlay, processing, popup, stripeOverlay } = this.state;
 //   	const { rating, mobileOverlay, popup } = this.state;
 //   	const processing = true;
 
@@ -298,7 +304,7 @@ class App extends Component {
 					    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
 					    <Route exact path="/present" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 					    <Route path="/present/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} onPopup={this.handlePopup} />} />
 					    <Route path="/profile/:username?" render={(props)=> <ProfilePage {...props} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />
 					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage {...props} onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
@@ -323,6 +329,15 @@ class App extends Component {
 				  	<Popup payload={popup} onComplete={()=> this.setState({ popup : null })}>
 					    {popup.content}
 			      </Popup>
+				  )}
+
+				  {(stripeOverlay && (profile && !profile.paid)) && (
+				  	<StripeModal
+						  profile={profile}
+						  onPage={this.handlePage}
+						  onPopup={this.handlePopup}
+						  onPurchase={this.handlePurchase}
+						  onComplete={()=> this.setState({ stripeOverlay : false })} />
 				  )}
 		    </div>)
 

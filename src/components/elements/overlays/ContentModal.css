@@ -29,6 +29,11 @@
 	box-shadow: 3px 3px 10px #1a1b1d;
 }
 
+.content-modal-content-wrapper-unblurred {
+	background-color: rgba(0, 0, 0, 0.0);;
+	box-shadow: none;
+}
+
 .content-modal-content-wrapper-auto {
 	width: auto;
 }
@@ -44,8 +49,9 @@
 .content-modal-header-wrapper {
 	display: table;
 	width: 100%;
-	margin: -12px 10px -1px 10px;
+	margin: -12px -1px 10px 10px;
 	padding-bottom: 5px;
+	border-bottom: 1px solid #eaecef;
 	font-family: "San Francisco Text SemiBold", sans-serif;
 	font-size: 16px;
 	letter-spacing: -0.24px;
@@ -69,8 +75,6 @@
 }
 
 .content-modal-content {
-	padding-top: 10px;
-	border-top: 1px solid #eaecef;
 	line-height: 24px;
 }
 

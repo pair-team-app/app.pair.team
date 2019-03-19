@@ -81,7 +81,8 @@ function rootReducer(state=initialState, action) {
 
 		case USER_PROFILE_UPDATED:
 			return (Object.assign({}, state, {
-				userProfile : action.payload
+// 				userProfile : action.payload
+				userProfile : Object.assign({}, state.userProfile, action.payload)
 			}));
 
 		case CONVERTED_DEEPLINK:
