@@ -29,7 +29,7 @@ const mapDispatchToProps = (dispatch)=> {
 
 
 const TopNavDesktop = (props)=> {
-	console.log('TopNav.TopNavDesktop()', props);
+// 	console.log('TopNav.TopNavDesktop()', props);
 
 	const { pathname, sections } = props;
 	return (<div className="top-nav-wrapper">

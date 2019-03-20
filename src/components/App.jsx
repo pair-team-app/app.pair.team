@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 import AdBannerPanel from './elements/overlays/AdBannerPanel';
+import AlertDialog from './elements/overlays/AlertDialog';
 import BottomNav from './elements/navs/BottomNav';
 import ContentModal, { MODAL_SIZE_AUTO } from './elements/overlays/ContentModal';
 import StripeModal from './elements/overlays/StripeModal';
@@ -51,8 +52,9 @@ const wrapper = React.createRef();
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		deeplink : state.deeplink,
-		profile  : state.userProfile
+		deeplink  : state.deeplink,
+		profile   : state.userProfile,
+		artboards : state.homeArtboards
 	});
 };
 
@@ -76,6 +78,7 @@ class App extends Component {
 			rating        : 0,
 			processing    : false,
 			popup         : null,
+			paidDialog    : false,
 			stripeOverlay : false
 // 			stripeOverlay : true
 		};
@@ -121,15 +124,21 @@ class App extends Component {
 
 		window.onpopstate = (event)=> {
 			console.log('-/\\/\\/\\/\\/\\/\\-', 'window.onpopstate()', '-/\\/\\/\\/\\/\\/\\-', event);
-			this.handlePage('<<');
+// 			this.handlePage('<<');
 		};
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('App.componentDidUpdate()', prevProps, this.props, prevState);
 
-		if (!prevProps.profile && this.props.profile && this.state.ranking !== 0) {
+		const { profile, artboards } = this.props;
+		if (!prevProps.profile && profile && this.state.ranking !== 0) {
 			this.setState({ rating : 0 });
+		}
+
+		const { paidDialog } = this.state;
+		if (profile && (!profile.paid && artboards.length > 3) && !paidDialog) {
+			this.setState({ paidDialog : true });
 		}
 	}
 
@@ -209,6 +218,12 @@ class App extends Component {
 		}
 	};
 
+	handlePaidAlert = ()=> {
+		this.setState({ paidDialog : false }, ()=> {
+			this.setState(({ stripeOverlay : true }));
+		});
+	};
+
 	handlePurchase = (payment)=> {
 // 		console.log('App.handlePurchase()', payment);
 
@@ -277,7 +292,7 @@ class App extends Component {
 		const { profile } = this.props;
   	const { uploadID } = this.props.deeplink;
 		const { pathname } = this.props.location;
-  	const { rating, mobileOverlay, processing, popup, stripeOverlay } = this.state;
+  	const { rating, mobileOverlay, processing, popup, stripeOverlay, paidDialog } = this.state;
 //   	const { rating, mobileOverlay, popup } = this.state;
 //   	const processing = true;
 
@@ -294,15 +309,15 @@ class App extends Component {
 			    <div className="content-wrapper" ref={wrapper}>
 				    <Switch>
 					    <Route exact path="/" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
-					    <Route exact path="/inspect" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+					    <Route exact path="/inspect" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} />} />
 					    <Route path="/inspect/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route path="/login/:inviteID?" render={(props)=> <LoginPage {...props} onPage={this.handlePage} />} onPopup={this.handlePopup} />
-					    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} />} />
-					    <Route exact path="/parts" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+					    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} />} />
+					    <Route exact path="/parts" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} />} />
 					    <Route path="/parts/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
-					    <Route exact path="/present" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+					    <Route exact path="/present" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} />} />
 					    <Route path="/present/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} onPopup={this.handlePopup} />} />
 					    <Route path="/profile/:username?" render={(props)=> <ProfilePage {...props} onPage={this.handlePage} onPopup={this.handlePopup} />} />
@@ -330,6 +345,12 @@ class App extends Component {
 					    {popup.content}
 			      </Popup>
 				  )}
+
+				  {(paidDialog) && (<AlertDialog
+					  title="Free Account"
+					  message="You must have an unlimited account to view more projects."
+					  onComplete={this.handlePaidAlert}
+				  />)}
 
 				  {(stripeOverlay && (profile && !profile.paid)) && (
 				  	<StripeModal

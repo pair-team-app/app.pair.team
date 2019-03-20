@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
+import ConfirmDialog from '../../elements/overlays/ConfirmDialog';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../elements/overlays/Popup';
 import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../elements/forms/InputField';
 import { DEFAULT_AVATAR, CDN_URL } from '../../../consts/uris';
@@ -51,7 +52,8 @@ class ProfilePage extends Component {
 			status        : 0x00,
 			changed       : false,
 			percent       : 0,
-			dialog        : false
+			fileDialog    : false,
+			confirmDialog : false
 		};
 	}
 
@@ -78,7 +80,7 @@ class ProfilePage extends Component {
 			});
 		}
 
-		if (this.state.dialog) {
+		if (this.state.fileDialog) {
 			if (dropZone.current && dropZone.current.fileInputEl) {
 				dropZone.current.fileInputEl.click();
 			}
@@ -90,16 +92,10 @@ class ProfilePage extends Component {
 // 		console.log('ProfilePage.handleAccountType()');
 
 		const { profile } = this.props;
-		if (profile.paid) {
-			this.props.updateUserProfile(Object.assign({}, profile, {
-				type : 'free_user'
-			}));
 
-			this.props.onPopup({
-				type    : POPUP_TYPE_OK,
-				content : 'Profile updated.',
-				delay   : 333
-			});
+		trackEvent('button', 'account-');
+		if (profile.paid) {
+			this.setState({ confirmDialog : true });
 
 		} else {
 			this.props.onStripeOverlay();
@@ -109,20 +105,15 @@ class ProfilePage extends Component {
 
 	handleAvatarClick = ()=> {
 // 		console.log('ProfilePage.handleAvatarClick()');
-		trackEvent('button', 'upload');
+		trackEvent('button', 'upload-avatar');
 
-		this.setState({ dialog : true }, ()=> this.setState({ dialog : false }));
-	};
-
-	handleBuyClick = ()=> {
-// 		console.log('ProfilePage.handleBuyCLick()');
-		trackEvent('button', 'buy');
+		this.setState({ fileDialog : true }, ()=> this.setState({ fileDialog : false }));
 	};
 
 	handleCancel = ()=> {
 // 		console.log('ProfilePage.handleCancel()');
 
-		trackEvent('button', 'cancel');
+		trackEvent('button', 'cancel-changes');
 		const { avatar, username, email } = this.props.profile;
 
 		this.setState({
@@ -137,15 +128,33 @@ class ProfilePage extends Component {
 		});
 	};
 
+	handleDialogComplete = (ok)=> {
+// 		console.log('ProfilePage.handleDialogComplete()', ok);
+
+		this.setState({ confirmDialog : false }, ()=> {
+			if (ok) {
+				const { profile, updateUserProfile, onPopup } = this.props;
+				updateUserProfile(Object.assign({}, profile, {
+					type : 'free_user'
+				}));
+
+				onPopup({
+					type    : POPUP_TYPE_OK,
+					content : 'Account updated.',
+					delay   : 333
+				});
+			}
+		});
+	};
+
 	handleDropAvatar = ()=> {
 		trackEvent('button', 'drop-avatar');
 		this.onValidateFields('avatar', DEFAULT_AVATAR);
 	};
 
 	handleFileDialogCancel = ()=> {
-// 		console.log('ProfilePage.handleFileDialogCancel()');
 		trackEvent('button', 'cancel-dialog');
-		this.setState({ dialog : false });
+		this.setState({ fileDialog : false });
 	};
 
 	handleFileDrop = (files)=> {
@@ -305,7 +314,7 @@ class ProfilePage extends Component {
 // 		const { avatar, username, email } = (this.props.profile) ? this.props.profile : this.state;
 		const { profile } = this.props;
 		const { avatar, username, email } = this.state;
-		const { passMsg, usernameValid, emailValid, passwordValid, changed } = this.state;
+		const { passMsg, usernameValid, emailValid, passwordValid, changed, confirmDialog } = this.state;
 
 		return (
 			<BaseDesktopPage className="profile-page-wrapper">
@@ -326,11 +335,6 @@ class ProfilePage extends Component {
 						<div className={`page-link${(avatar.includes('avatar-default.png')) ? ' page-link-disabled' : ''}`} onClick={()=> this.handleDropAvatar()}>Remove</div>
 					</Row>
 				</div>
-
-				{/*{(profile) && (<div className="profile-page-paid-wrapper">*/}
-				{/*<h5>Account Type: {(profile.paid) ? 'Paid' : 'Free'}</h5>*/}
-				{/*{(!profile.paid) && (<button onClick={()=> this.handleBuyClick()}>Unlimited</button>)}*/}
-				{/*</div>)}*/}
 
 				<div className="profile-page-form-wrapper">
 					<InputField
@@ -385,6 +389,12 @@ class ProfilePage extends Component {
 					<button type="submit" disabled={!changed} className="long-button adjacent-button" onClick={()=> this.handleSubmit()}>Save</button>
 					{(changed) && (<div className="page-link" onClick={()=> this.handleCancel()}>Cancel</div>)}
 				</Row>
+
+				{(confirmDialog) && (<ConfirmDialog
+					title="Downgrade"
+					message="Are you sure you want to downgrade to a Free Account?"
+					onComplete={this.handleDialogComplete}
+				/>)}
 			</BaseDesktopPage>
 		);
 	}

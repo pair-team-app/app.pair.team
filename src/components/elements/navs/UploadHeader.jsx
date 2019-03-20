@@ -32,8 +32,8 @@ class UploadHeader extends Component {
 		super(props);
 
 		this.state = {
-			dialog  : false,
-			profile : {
+			fileDialog : props.fileDialog,
+			profile    : {
 				id       : 0,
 				username : 'Anon',
 				email    : 'anonymous@designengine.ai'
@@ -44,12 +44,12 @@ class UploadHeader extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('UploadHeader.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
 
-		const { dialog } = this.props;
-		if (dialog !== this.state.dialog) {
-			this.setState({ dialog });
+		const { fileDialog } = this.props;
+		if (fileDialog !== this.state.fileDialog) {
+			this.setState({ fileDialog });
 		}
 
-		if (this.state.dialog) {
+		if (this.state.fileDialog) {
 			if (dropZone.current && dropZone.current.fileInputEl) {
 				dropZone.current.fileInputEl.click();
 			}
@@ -78,7 +78,7 @@ class UploadHeader extends Component {
 // 		console.log('UploadHeader.handleFileDialogCancel()');
 
 		trackEvent('button', 'cancel-dialog');
-		this.setState({ dialog : false });
+		this.setState({ fileDialog : false });
 	};
 
 	handleFileDrop = (files)=> {

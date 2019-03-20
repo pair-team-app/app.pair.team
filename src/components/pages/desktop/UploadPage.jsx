@@ -234,7 +234,7 @@ class UploadPage extends Component {
 				</div>)}
 
 				{(formState <= 1) && (<UploadHeader
-					dialog={false}
+					fileDialog={false}
 					uploading={(formState === 1)}
 					title={uploadTitle}
 					subtitle={uploadSubtitle}

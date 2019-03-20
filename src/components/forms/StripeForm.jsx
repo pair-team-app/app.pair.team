@@ -78,25 +78,27 @@ class StripeForm extends Component {
 		return (
 			<div className="stripe-form-wrapper">
 				<Column horizontal="center" vertical="start">
-					<div className={Components.txtFieldClassName(cardHolderValid)}><input type="text" className="input-field-textfield" name="cardHolder" placeholder="Card Holder" value={cardHolder} onFocus={this.handleFocus} onChange={(event)=> this.handleChange(event.target)} /></div>
+					<form onSubmit={this.handleSubmit} method="post" className="full-width">
+						<div className={Components.txtFieldClassName(cardHolderValid)}><input type="text" className="input-field-textfield" name="cardHolder" placeholder="Card Holder" value={cardHolder} onFocus={this.handleFocus} onChange={(event)=> this.handleChange(event.target)} /></div>
 
-					<div className="input-wrapper">
-						<CardNumberElement className="input-txt" />
-					</div>
+						<div className="input-wrapper">
+							<CardNumberElement className="input-txt" />
+						</div>
 
-					<div className="input-wrapper">
-						<CardExpiryElement className="input-txt" />
-					</div>
+						<div className="input-wrapper">
+							<CardExpiryElement className="input-txt" />
+						</div>
 
-					<div className="input-wrapper">
-						<CardCVCElement className="input-txt" />
-					</div>
+						<div className="input-wrapper">
+							<CardCVCElement className="input-txt" />
+						</div>
 
-					<Row horizontal="start" vertical="center" className="full-width">
-						<button disabled={(!cardHolderValid)} className="adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Submit</button>
-						<button className="adjacent-button" onClick={()=> {trackEvent('button', 'purchase-cancel'); this.props.onCancel()}}>Cancel</button>
-						<div className="page-link page-link-form" onClick={()=> {trackEvent('link', 'terms'); this.props.onPage('terms')}}>Pay Terms</div>
-					</Row>
+						<Row horizontal="start" vertical="center" className="full-width">
+							<button disabled={(!cardHolderValid)} className="adjacent-button" type="submit">Submit</button>
+							<button className="adjacent-button" onClick={()=> {trackEvent('button', 'purchase-cancel'); this.props.onCancel()}}>Cancel</button>
+							<div className="page-link page-link-form" onClick={()=> {trackEvent('link', 'terms'); this.props.onPage('terms')}}>Pay Terms</div>
+						</Row>
+					</form>
 				</Column>
 			</div>
 		);

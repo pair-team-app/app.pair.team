@@ -10,6 +10,7 @@ import ArtboardGrid from '../../elements/ArtboardGrid';
 import UploadHeader from '../../elements/navs/UploadHeader';
 
 import { addFileUpload, appendHomeArtboards } from '../../../redux/actions';
+import { URLs } from '../../../utils/lang';
 import { isUserLoggedIn } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
 import homeContent from '../../../assets/json/home-content';
@@ -36,11 +37,10 @@ class HomePage extends Component {
 
 		this.state = {
 			section     : null,
-			firstFetch  : false,
 			fetching    : false,
 			loadOffset  : 0,
 			loadAmt     : -1,
-			dialog      : false
+			fileDialog  : false
 		};
 	}
 
@@ -60,16 +60,17 @@ class HomePage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('HomePage.componentDidUpdate()', prevProps, this.props);
 
-		const { artboards } = this.props;
-		const { section } = this.state;
+		const { profile, artboards } = this.props;
 
-		if (!this.state.firstFetch && this.props.profile && artboards.length === 0) {
-			this.setState({ firstFetch : true });
-			this.onLoadNextUploads();
+		const { section } = this.state;
+		if (URLs.firstComponent() !== section) {
+			this.setState({ section : URLs.firstComponent() });
 		}
 
-		if (window.location.pathname.substr(1).split('/').shift() !== section) {
-			this.setState({ section : window.location.pathname.substr(1).split('/').shift() });
+		if (prevProps.profile !== profile) {
+			if (artboards.length === 0) {
+				this.onLoadNextUploads();
+			}
 		}
 	}
 
@@ -106,10 +107,10 @@ class HomePage extends Component {
 
 		trackEvent('button', 'upload');
 		setTimeout(()=> {
-			this.setState({ dialog : false });
+			this.setState({ fileDialog : false });
 		}, 3333);
 
-		this.setState({ dialog : true });
+		this.setState({ fileDialog : true });
 	};
 
 	onLoadNextUploads = ()=> {
@@ -160,7 +161,7 @@ class HomePage extends Component {
 // 		console.log('HomePage.render()', this.props, this.state);
 
 		const { profile, artboards } = this.props;
-		const { section, fetching, dialog } = this.state;
+		const { section, fetching, fileDialog } = this.state;
 
 		const gridTitle = (profile) ? (fetching) ? `Loading${'…'}` : (artboards.length > 0) ? 'Previous' : 'N/A' : 'N/A';
 
@@ -170,7 +171,7 @@ class HomePage extends Component {
 					title={(section) ? homeContent[section].header.title : 'Upload a design file'}
 					subtitle={(section) ? homeContent[section].header.subtitle : 'Drag, drop, or click to upload.'}
 					uploading={false}
-					dialog={dialog}
+					fileDialog={fileDialog}
 					onFile={this.handleFile}
 					onPage={this.props.onPage}
 					onPopup={this.props.onPopup} />

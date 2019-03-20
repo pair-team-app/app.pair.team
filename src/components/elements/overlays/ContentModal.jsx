@@ -42,7 +42,7 @@ class ContentModal extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('ContentModal.componentDidUpdate()', prevProps, this.props, this.state);
+// 		console.log('ContentModal.componentDidUpdate()', prevProps, this.props, this.state);
 
 		if (prevProps.outro !== this.props.outro && this.props.outro) {
 			this.setState({ outro : true });
