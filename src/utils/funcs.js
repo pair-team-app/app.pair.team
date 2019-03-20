@@ -31,10 +31,10 @@ export function idsFromPath() {
 	const inspectorPath = /\/(?:inspect|parts|present)\/(\d+)\/.+$/i;
 
 	const navIDs = {
-		uploadID   : (inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[1] : 0,
-		pageID     : 0,
-		artboardID : 0,
-		sliceID    : 0
+		uploadID   : ((inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[1] : 0) << 0,
+		pageID     : 0 << 0,
+		artboardID : 0 << 0,
+		sliceID    : 0 << 0
 	};
 
 	return (navIDs);

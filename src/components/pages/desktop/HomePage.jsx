@@ -48,7 +48,7 @@ class HomePage extends Component {
 // 		console.log('HomePage.componentDidMount()', this.props);
 
 		if (this.props.profile && this.props.artboards.length === 0) {
-			this.onLoadNextUploads();
+// 			this.onLoadNextUploads();
 		}
 	}
 
@@ -69,7 +69,7 @@ class HomePage extends Component {
 
 		if (prevProps.profile !== profile) {
 			if (artboards.length === 0) {
-				this.onLoadNextUploads();
+// 				this.onLoadNextUploads();
 			}
 		}
 	}

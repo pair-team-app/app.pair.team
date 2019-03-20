@@ -32,6 +32,7 @@ import BaseMobilePage from './pages/mobile/BaseMobilePage';
 import { EXTENSION_PUBLIC_URL } from '../consts/uris';
 import {
 	appendHomeArtboards,
+	fetchUserHistory,
 	fetchUserProfile,
 	setAtomExtension,
 	updateDeeplink,
@@ -43,7 +44,7 @@ import {
 	isHomePage,
 	isInspectorPage,
 	isUploadPage } from '../utils/funcs';
-import { Browsers } from '../utils/lang';
+import { Browsers, URLs } from '../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../utils/tracking';
 import adBannerPanel from '../assets/json/ad-banner-panel';
 
@@ -60,7 +61,8 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		appendHomeArtboards : ()=> dispatch(appendHomeArtboards(null)),
+		purgeHomeArtboards  : ()=> dispatch(appendHomeArtboards(null)),
+		fetchUserHistory    : (payload)=> dispatch(fetchUserHistory(payload)),
 		fetchUserProfile    : ()=> dispatch(fetchUserProfile()),
 		updateDeeplink      : (navIDs)=> dispatch(updateDeeplink(navIDs)),
 		updateUserProfile   : (profile)=> dispatch(updateUserProfile(profile)),
@@ -85,43 +87,38 @@ class App extends Component {
 	}
 
 	componentDidMount() {
+		console.log('App.componentDidMount()', this.props, this.state);
+
 		if (typeof cookie.load('user_id') === 'undefined') {
 			cookie.save('user_id', '0', { path : '/' });
 
 		} else {
-			this.props.fetchUserProfile();
+// 			this.props.fetchUserProfile();
 		}
 
 		initTracker(cookie.load('user_id'));
 		trackEvent('site', 'load');
 		trackPageview();
 
+		this.extensionCheck();
+		this.props.updateDeeplink(idsFromPath());
+
+
 		if (isHomePage()) {
 			this.handlePage('inspect');
-		}
 
-		if (isUploadPage(true)) {
+		} else if (isUploadPage(true)) {
 			this.handlePage('new/inspect');
+
+		} else if (isInspectorPage()) {
+// 			if (typeof cookie.load('tutorial') === 'undefined') {
+// 				cookie.save('tutorial', '0', { path : '/' });
+// 			}
 		}
 
-		const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
-		this.props.updateDeeplink({ uploadID, pageID, artboardID, sliceID });
-
-		if (isInspectorPage()) {
-			if (typeof cookie.load('tutorial') === 'undefined') {
-				cookie.save('tutorial', '0', { path : '/' });
-			}
-
-			this.onAddUploadView(uploadID);
-		}
-
-		this.extensionCheck();
-
-		// cancel tutorial
 		cookie.save('tutorial', '1', { path : '/' });
 
 		window.addEventListener('resize', this.handleResize);
-
 		window.onpopstate = (event)=> {
 			console.log('-/\\/\\/\\/\\/\\/\\-', 'window.onpopstate()', '-/\\/\\/\\/\\/\\/\\-', event);
 // 			this.handlePage('<<');
@@ -129,16 +126,32 @@ class App extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('App.componentDidUpdate()', prevProps, this.props, prevState);
+		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
-		const { profile, artboards } = this.props;
-		if (!prevProps.profile && profile && this.state.ranking !== 0) {
-			this.setState({ rating : 0 });
-		}
+		const { profile, artboards, deeplink } = this.props;
+		const { paidDialog, stripeOverlay } = this.state;
 
-		const { paidDialog } = this.state;
-		if (profile && (!profile.paid && artboards.length > 3) && !paidDialog) {
-			this.setState({ paidDialog : true });
+		if (profile) {
+			if (!prevProps.profile) {
+				this.props.fetchUserHistory({profile});
+
+				if (this.state.ranking !== 0) {
+					this.setState({ rating : 0 });
+				}
+			}
+
+			console.log('||||||||||||||||', paidDialog, stripeOverlay, profile.paid, artboards.length, isHomePage(false), prevProps.deeplink.uploadID, deeplink.uploadID, isInspectorPage());
+			if ((!paidDialog && !stripeOverlay) && (!profile.paid && artboards.length > 3) && ((isHomePage(false) && prevProps.deeplink.uploadID !== deeplink.uploadID) || (isInspectorPage() && prevProps.uploadID !== deeplink.uploadID))) {
+				this.setState({ paidDialog : true });
+			}
+
+			if (paidDialog && profile.paid) {
+				this.setState({ paidDialog : false });
+			}
+
+// 			if (paidDialog && (profile.paid || (!profile.paid && prevProps.deeplink.uploadID === deeplink.uploadID))) {
+//
+// 			}
 		}
 	}
 
@@ -162,19 +175,31 @@ class App extends Component {
 	handleArtboardClicked = (artboard)=> {
 // 		console.log('App.handleArtboardClicked()', artboard);
 
-		this.onAddUploadView(artboard.uploadID);
-		if (typeof cookie.load('tutorial') === 'undefined') {
-			cookie.save('tutorial', '0', { path : '/' });
+		const { profile, artboards } = this.props;
+		if (!profile.paid && artboards.length > 3) {
+			this.props.updateDeeplink(null);
+// 			this.setState({ paidDialog : true });
+
+		} else {
+			this.onAddUploadView(artboard.uploadID);
+			if (typeof cookie.load('tutorial') === 'undefined') {
+				cookie.save('tutorial', '0', { path : '/' });
+			}
+
+			this.handlePage(buildInspectorPath({
+				id    : artboard.uploadID,
+				title : artboard.title
+				}, URLs.firstComponent()
+			));
+
+			Browsers.scrollOrigin(wrapper.current);
 		}
 
-		this.handlePage(buildInspectorPath({ id : artboard.uploadID, title : artboard.title }, (window.location.pathname.includes('/inspect')) ? '/inspect' : (window.location.pathname.includes('/parts')) ? '/parts' : '/present'));
 		this.props.updateDeeplink({
 			uploadID   : artboard.uploadID,
 			pageID     : artboard.pageID,
 			artboardID : artboard.id
 		});
-
-		Browsers.scrollOrigin(wrapper.current);
 	};
 
 	handleAdBanner = (url)=> {
@@ -190,7 +215,7 @@ class App extends Component {
 		trackEvent('user', 'sign-out');
 
 		this.props.updateUserProfile(null);
-		this.props.appendHomeArtboards();
+		this.props.purgeHomeArtboards();
 		this.handlePage('');
 	};
 
@@ -219,15 +244,34 @@ class App extends Component {
 	};
 
 	handlePaidAlert = ()=> {
-		this.setState({ paidDialog : false }, ()=> {
-			this.setState(({ stripeOverlay : true }));
+		this.setState({
+			paidDialog    : false,
+			stripeOverlay : true
 		});
 	};
 
-	handlePurchase = (payment)=> {
-// 		console.log('App.handlePurchase()', payment);
+	handlePurchaseCancel = ()=> {
+		console.log('App.handlePurchaseCancel()');
 
-		this.setState({ stripeOverlay : false });
+		if (isInspectorPage()) {
+			this.handlePage('');
+		}
+
+		setTimeout(()=> {
+			this.setState({
+				paidDialog    : false,
+				stripeOverlay : false
+			});
+		}, (isInspectorPage()) ? 666 : 0);
+	};
+
+	handlePurchaseSuccess = (purchase)=> {
+// 		console.log('App.handlePurchaseSucess()', purchase);
+
+		this.setState({
+			paidDialog    : false,
+			stripeOverlay : false
+		});
 		this.props.fetchUserProfile();
 	};
 
@@ -347,8 +391,8 @@ class App extends Component {
 				  )}
 
 				  {(paidDialog) && (<AlertDialog
-					  title="Free Account"
-					  message="You must have an unlimited account to view more projects."
+					  title="Limited Account"
+					  message="You must upgrade to an unlimited account to view more than 3 projects."
 					  onComplete={this.handlePaidAlert}
 				  />)}
 
@@ -357,8 +401,8 @@ class App extends Component {
 						  profile={profile}
 						  onPage={this.handlePage}
 						  onPopup={this.handlePopup}
-						  onPurchase={this.handlePurchase}
-						  onComplete={()=> this.setState({ stripeOverlay : false })} />
+						  onPurchase={this.handlePurchaseSuccess}
+						  onComplete={this.handlePurchaseCancel} />
 				  )}
 		    </div>)
 

@@ -1,6 +1,7 @@
 
 .stripe-modal-wrapper {
 	min-width: 480px;
+	height: 80%;
 	padding: 20px;
 	background-color: #1a1e23;
 }

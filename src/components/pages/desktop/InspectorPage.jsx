@@ -709,7 +709,6 @@ class InspectorPage extends Component {
 			tooltip     : 'Loading…'
 		};
 
-		this.recordedHistory = false;
 		this.busyInterval = null;
 		this.processingInterval = null;
 		this.canvasInterval = null;
@@ -772,11 +771,6 @@ class InspectorPage extends Component {
 		const { profile, deeplink, processing } = this.props;
 // 		const { upload, panMultPt } = this.state;
 		const { section, upload } = this.state;
-
-		if (!this.recordedHistory && profile && upload && deeplink && deeplink.uploadID !== 0) {
-			this.recordedHistory = true;
-			this.onAddHistory();
-		}
 
 		if (deeplink && deeplink !== prevProps.deeplink && deeplink.uploadID !== 0) {
 			this.onFetchUpload();
@@ -2066,22 +2060,6 @@ class InspectorPage extends Component {
 			},
 			content : `${(scale * 100) << 0}%`
 		})
-	};
-
-	onAddHistory = ()=> {
-// 		console.log('InspectorPage.onAddHistory()');
-
-		const { deeplink, profile } = this.props;
-
-		let formData = new FormData();
-		formData.append('action', 'ADD_HISTORY');
-		formData.append('user_id', profile.id);
-		formData.append('upload_id', deeplink.uploadID);
-		axios.post('https://api.designengine.ai/system.php', formData)
-			.then((response)=> {
-				console.log('ADD_HISTORY', response.data);
-			}).catch((error)=> {
-		});
 	};
 
 	onBusyInterval = ()=> {

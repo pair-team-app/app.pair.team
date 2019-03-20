@@ -1,5 +1,6 @@
 
 import axios from 'axios/index';
+import qs from 'qs';
 import cookie from 'react-cookies';
 
 import { Bits } from '../../utils/lang';
@@ -17,7 +18,7 @@ import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 
 
 const logFormat = (action, payload=null, meta='')=> {
-	console.log(LOG_ACTION_PREFIX, `${action}()`, payload, meta);
+	console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, payload, meta);
 };
 
 
@@ -46,7 +47,7 @@ export function updateDeeplink(payload) {
 }
 
 export function fetchUserProfile() {
-	logFormat('fetchUserProfile');
+	logFormat('fetchUserProfile()');
 
 	return ((dispatch)=> {
 		let formData = new FormData();
@@ -55,7 +56,7 @@ export function fetchUserProfile() {
 		axios.post('https://api.designengine.ai/system.php', formData)
 			.then((response)=> {
 				console.log('PROFILE', response.data);
-// 				const { id, username, email, avatar, type, joined } = response.data.user;
+
 				const { id, type } = response.data.user;
 				dispatch({
 					type    : USER_PROFILE_LOADED,
@@ -63,18 +64,52 @@ export function fetchUserProfile() {
 						id   : id << 0,
 						paid : type.includes('paid')
 					}
-// 					payload : response.data.user
-// 					payload : { id, username, email, avatar, joined,
-// 						paid : (type.includes('paid'))
-// 					}
 				});
 			}).catch((error) => {
 		});
 	});
 }
 
+export function fetchUserHistory(payload) {
+	logFormat('fetchUserHistory()', payload);
+
+	return ((dispatch)=> {
+		if (payload.profile) {
+			const { profile, loadOffset, loadAmt } = payload;
+			axios.post('https://api.designengine.ai/system.php', qs.stringify({
+				action  : 'USER_HISTORY',
+				user_id : profile.id,
+				offset  : (loadOffset || 0),
+				length  : (loadAmt || -1)
+			})).then((response)=> {
+				console.log('USER_HISTORY', response.data);
+
+				const artboards = response.data.artboards.filter((artboard)=> (artboard)).map((artboard)=> ({
+					id        : artboard.id << 0,
+					pageID    : artboard.page_id << 0,
+					uploadID  : artboard.upload_id << 0,
+					title     : artboard.page_title,
+					pageTitle : artboard.title,
+					filename  : artboard.filename,
+					creator   : artboard.creator,
+					meta      : JSON.parse(artboard.meta),
+					added     : artboard.added
+				}));
+
+				if (artboards.length > 0) {
+					dispatch({
+						type    : APPEND_HOME_ARTBOARDS,
+						payload : artboards
+					});
+				}
+			}).catch((error)=> {
+			});
+		}
+	});
+}
+
 export function setAtomExtension(payload) {
-	logFormat('setAtomExtension', payload);
+	logFormat('setAtomExtension()', payload);
 	return ({ payload,
 		type : SET_ATOM_EXTENSION
 	});
@@ -87,7 +122,7 @@ export function setRedirectURI(payload) {
 }
 
 export function updateUserProfile(payload) {
-	logFormat('updateUserProfile', payload);
+	logFormat('updateUserProfile()', payload);
 
 	return ((dispatch)=> {
 		if (payload) {

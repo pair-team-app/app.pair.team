@@ -391,7 +391,7 @@ class ProfilePage extends Component {
 				</Row>
 
 				{(confirmDialog) && (<ConfirmDialog
-					title="Downgrade"
+					title="Change Account"
 					message="Are you sure you want to downgrade to a Free Account?"
 					onComplete={this.handleDialogComplete}
 				/>)}
