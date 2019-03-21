@@ -26,8 +26,7 @@ const createElementOptions = ()=> ({
 		},
 		complete : {
 			color : '#7ed916',
-		},
-
+		}
 	}
 });
 
