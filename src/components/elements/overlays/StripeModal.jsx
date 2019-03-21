@@ -10,6 +10,7 @@ import ContentModal from './ContentModal';
 import StripeForm from '../../forms/StripeForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR, POPUP_TYPE_OK } from './Popup';
 import { API_URL } from '../../../consts/uris';
+import { sendToSlack } from '../../../utils/funcs';
 import { URLs } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 import stripe from '../../../assets/json/stripe';
@@ -34,10 +35,6 @@ class StripeModal extends Component {
 			purchase   : null,
 			redirect   : null
 		};
-	}
-
-	componentDidMount() {
-// 		console.log('StripeModal.componentDidMount()');
 	}
 
 	handleComplete = ()=> {
@@ -82,18 +79,19 @@ class StripeModal extends Component {
 		const { profile } = this.props;
 		this.setState({ submitting : true });
 
-// 		axios.post(API_URL, qs.stringify({
-		axios.post('https://api.designengine.ai/system.php', qs.stringify({
-			action      : 'MAKE_PAYMENT',
+		axios.post(API_URL, qs.stringify({
+			action      : 'MAKE_PURCHASE',
 			user_id     : profile.id,
 			token_id    : token.id,
 			product_ids : PRODUCT_IDS.join(',')
 		})).then((response)=> {
-			console.log('MAKE_PAYMENT', response.data);
+			console.log('MAKE_PURCHASE', response.data);
 			const { purchase, error } = response.data;
 			trackEvent('purchase', (error) ? 'error' : 'success');
 
 			if ((purchase.id << 0) > 0) {
+				sendToSlack(`*[\`${profile.id}\`]* *${profile.email}* purchased "_${'Unlimited Site Access'}_" for \`$${4.99}\``);
+
 				this.props.onPopup({
 					type    : POPUP_TYPE_OK,
 					content : 'Payment Processed!!'

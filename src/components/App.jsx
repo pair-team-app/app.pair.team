@@ -43,7 +43,9 @@ import {
 	idsFromPath,
 	isHomePage,
 	isInspectorPage,
-	isUploadPage } from '../utils/funcs';
+	isProfilePage,
+	isUploadPage, isUserLoggedIn
+} from '../utils/funcs';
 import { Browsers, URLs } from '../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../utils/tracking';
 import adBannerPanel from '../assets/json/ad-banner-panel';
@@ -91,9 +93,6 @@ class App extends Component {
 
 		if (typeof cookie.load('user_id') === 'undefined') {
 			cookie.save('user_id', '0', { path : '/' });
-
-		} else {
-// 			this.props.fetchUserProfile();
 		}
 
 		initTracker(cookie.load('user_id'));
@@ -114,6 +113,9 @@ class App extends Component {
 // 			if (typeof cookie.load('tutorial') === 'undefined') {
 // 				cookie.save('tutorial', '0', { path : '/' });
 // 			}
+
+		} else if (isProfilePage(true) && !isUserLoggedIn()) {
+			this.handlePage('login');
 		}
 
 		cookie.save('tutorial', '1', { path : '/' });

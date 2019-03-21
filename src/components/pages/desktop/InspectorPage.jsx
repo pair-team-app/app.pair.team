@@ -1680,7 +1680,7 @@ class InspectorPage extends Component {
 			if (Files.extension(file.name) === 'sketch') {
 				if (file.size < 100 * (1024 * 1024)) {
 					if (Files.basename(upload.filename) === file.name) {
-						sendToSlack(`*[${id}]* *${email}* started uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
+						sendToSlack(`*[\`${id}\`]* *${email}* started uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
 						trackEvent('upload', 'file');
 
 						const config = {
@@ -1693,7 +1693,7 @@ class InspectorPage extends Component {
 								this.setState({ percent });
 
 								if (progressEvent.loaded >= progressEvent.total) {
-									sendToSlack(`*[${id}]* *${email}* completed uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
+									sendToSlack(`*[\`${id}\`]* *${email}* completed uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
 									trackEvent('button', 'resubmit');
 
 									if (this.busyInterval) {
@@ -1757,7 +1757,7 @@ class InspectorPage extends Component {
 					}
 
 				} else {
-					sendToSlack(`*[${id}]* *${email}* uploaded oversized file "_${file.name}_" (${Math.round(file.size * (1 / (1024 * 1024)))}MB)`);
+					sendToSlack(`*[\`${id}\`]* *${email}* uploaded oversized file "_${file.name}_" (${Math.round(file.size * (1 / (1024 * 1024)))}MB)`);
 					this.props.onPopup({
 						type     : POPUP_TYPE_ERROR,
 						content  : 'File size must be under 100MB.',
@@ -1769,7 +1769,7 @@ class InspectorPage extends Component {
 				}
 
 			} else {
-				sendToSlack(`*[${id}]* *${email}* uploaded incompatible file "_${file.name}_"`);
+				sendToSlack(`*[\`${id}\`]* *${email}* uploaded incompatible file "_${file.name}_"`);
 				this.props.onPopup({
 					type     : POPUP_TYPE_ERROR,
 					content  : (Files.extension(file.name) === 'fig') ? 'Figma Support Coming Soon!' : (Files.extension(file.name) === 'psd') ? 'Photoshop Support Coming Soon!' :  (Files.extension(file.name) === 'xd') ? 'Adobe XD Support Coming Soon!' : 'Only Sketch files are support at this time.',

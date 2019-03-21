@@ -32,7 +32,6 @@ const createElementOptions = ()=> ({
 });
 
 
-
 class StripeForm extends Component {
 	constructor(props) {
 		super(props);
@@ -41,19 +40,6 @@ class StripeForm extends Component {
 			cardHolderValid : true
 		};
 	}
-
-	componentDidMount() {
-// 		console.log('StripeForm.componentDidMount()', this.props, this.state);
-	}
-
-	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('StripeForm.componentDidUpdate()', prevProps, this.props, prevState, this.state);
-	}
-
-	componentWillUnmount() {
-// 		console.log('StripeForm.componentWillUnmount()', this.props, this.state);
-	}
-
 
 	handleChange = (target)=> {
 // 		console.log('StripeForm.handleChange()', target);

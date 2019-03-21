@@ -43,7 +43,7 @@ export function idsFromPath() {
 
 export function isHomePage(root=true) {
 	const { pathname } = window.location;
-	return ((root) ? (pathname === '' || pathname === HOME) : (pathname === '' || pathname === HOME || pathname === INSPECT || pathname === PARTS));
+	return ((root) ? (pathname === '' || pathname === HOME) : (pathname === '' || pathname === HOME || pathname === INSPECT || pathname === PARTS || pathname === PRESENT));
 }
 
 export function isInspectorPage() {
