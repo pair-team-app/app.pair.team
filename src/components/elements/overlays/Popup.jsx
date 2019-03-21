@@ -13,6 +13,9 @@ export const POPUP_TYPE_ERROR = 'POPUP_TYPE_ERROR';
 export const POPUP_TYPE_OK = 'POPUP_TYPE_OK';
 export const POPUP_TYPE_STATUS = 'POPUP_TYPE_STATUS';
 
+export const POPUP_POSITION_EMBEDDED = 'POPUP_POSITION_EMBEDDED';
+export const POPUP_POSITION_TOPMOST = 'POPUP_POSITION_TOPMOST';
+
 const ORTHODOX_DELAY = 1000 * (2/3);
 const ORTHODOX_DURATION = 1000 * (1 + (1/8));
 const INTRO_DURATION = 1000 * (1/10);
@@ -34,7 +37,8 @@ class Popup extends Component {
 // 		console.log('Popup.componentDidMount()', this.props, this.state, this.timeline, this.wrapper);
 
 		const { payload, onComplete } = this.props;
-		const { top } = Object.assign({}, { top : 0 }, payload.offset);
+		const { position } = Object.assign({}, { position : POPUP_POSITION_EMBEDDED }, payload);
+		const { top } = Object.assign({}, { top : (((position === POPUP_POSITION_TOPMOST) << 0) * -64) }, payload.offset);
 		const { delay, duration } = Object.assign({}, {
 			delay    : ORTHODOX_DELAY,
 			duration : ORTHODOX_DURATION
@@ -69,21 +73,27 @@ class Popup extends Component {
 		}
 
 		const { payload, children } = this.props;
-		const { type } = payload;
+// 		const { position, type } = payload;
+		const { position, type } = Object.assign({}, {
+			position : POPUP_POSITION_EMBEDDED,
+			type     : POPUP_TYPE_OK
+		}, payload);
+
 		const offset = Object.assign({}, {
-			top   : 0,
+			top   : ((position === POPUP_POSITION_TOPMOST) << 0) * -64,
 			left  : 0,
 			right : 0
 		}, payload.offset);
 
+		const wrapperClass = `popup-wrapper${(position === POPUP_POSITION_TOPMOST) ? ' popup-wrapper-topmost' : ''}`;
 		const className = `popup-content${(type === POPUP_TYPE_OK) ? ' popup-content-ok' : (type === POPUP_TYPE_ERROR) ? ' popup-content-error' : ' popup-content-status'}`;
-		const style = {
+		const wrapperStyle = {
 			width     : (offset.right !== 0) ? `calc(100% - ${offset.right}px)` : '100%',
 			transform : `translate(${offset.left}px, ${offset.top}px)`
 		};
 
 		return (
-			<div className="popup-wrapper" style={style} ref={(element)=> { this.wrapper = element; }}>
+			<div className={wrapperClass} style={wrapperStyle} ref={(element)=> { this.wrapper = element; }}>
 				<Row vertical="center" horizontal="center" className={className}>
 					{children}
 				</Row>

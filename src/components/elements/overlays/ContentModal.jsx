@@ -10,12 +10,13 @@ import { Column, Row } from 'simple-flexbox';
 import { trackModal } from '../../../utils/tracking';
 
 
-export const MODAL_SIZE_AUTO = 'MODAL_SIZE_AUTO';
-export const MODAL_SIZE_FIXED = 'MODAL_SIZE_FIXED';
-export const MODAL_SIZE_PERCENT = 'MODAL_SIZE_PERCENT';
+export const MODAL_TYPE_AUTO_SIZE = 'MODAL_TYPE_AUTO_SIZE';
+export const MODAL_TYPE_FIXED_SIZE = 'MODAL_TYPE_FIXED_SIZE';
+export const MODAL_SIZE_PERCENT_SIZE = 'MODAL_SIZE_PERCENT_SIZE';
 
 const INTRO_DURATION = (1/8);
 const OUTRO_DURATION = (1/4);
+
 
 class ContentModal extends Component {
 	constructor(props) {
@@ -85,11 +86,18 @@ class ContentModal extends Component {
 			this.timeline.seek(0);
 		}
 
-		const { size, unblurred, title, closeable, defaultButton, children } = this.props;
-		const wrapperClass = `content-modal-content-wrapper content-modal-content-wrapper${(size === MODAL_SIZE_FIXED) ? '-fixed' : (size === MODAL_SIZE_PERCENT) ? '-percent' : '-auto'}${(unblurred) ? ' content-modal-content-wrapper-unblurred' : '`'}`;
+		const { type, size, unblurred, title, closeable, defaultButton, children } = this.props;
+		const wrapperClass = `content-modal-content-wrapper content-modal-content-wrapper${(type === MODAL_TYPE_FIXED_SIZE) ? '-fixed' : (type === MODAL_SIZE_PERCENT_SIZE) ? '-percent' : '-auto'}${(unblurred) ? ' content-modal-content-wrapper-unblurred' : ''}`;
+
+
+		const wrapperStyle = (type === MODAL_TYPE_FIXED_SIZE) ? {
+			width : size.width,
+			height : size.height
+		} : null;
+
 
 		return (<div className="content-modal-wrapper" onClick={(closeable) ? this.handleClose : null} ref={(element)=> { this.wrapper = element; }}>
-			<div className={wrapperClass} onClick={(event)=> event.stopPropagation()}>
+			<div className={wrapperClass} style={wrapperStyle} onClick={(event)=> event.stopPropagation()}>
 				{(title) && (<div className="content-modal-header-wrapper"><Row>
 					<Column flexGrow={1}><div className="content-modal-title">{title}</div></Column>
 					<Column flexGrow={1} vertical="center" horizontal="end">{(closeable && !defaultButton) && (<button className="tiny-button content-modal-close-button" onClick={this.handleClose}><FontAwesome name="times"/></button>)}</Column>

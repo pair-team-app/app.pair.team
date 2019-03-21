@@ -11,7 +11,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import AdBannerPanel from './elements/overlays/AdBannerPanel';
 import AlertDialog from './elements/overlays/AlertDialog';
 import BottomNav from './elements/navs/BottomNav';
-import ContentModal, { MODAL_SIZE_AUTO } from './elements/overlays/ContentModal';
+import ContentModal from './elements/overlays/ContentModal';
 import StripeModal from './elements/overlays/StripeModal';
 import Popup from './elements/overlays/Popup';
 import TopNav from './elements/navs/TopNav';
@@ -251,7 +251,7 @@ class App extends Component {
 	};
 
 	handlePurchaseCancel = ()=> {
-		console.log('App.handlePurchaseCancel()');
+// 		console.log('App.handlePurchaseCancel()');
 
 		if (isInspectorPage()) {
 			this.handlePage('');
@@ -276,7 +276,7 @@ class App extends Component {
 	};
 
 	handlePopup = (payload)=> {
-// 		console.log('App.handlePopup()', payload);
+		console.log('App.handlePopup()', payload);
 		this.setState({ popup : payload });
 	};
 
@@ -377,7 +377,6 @@ class App extends Component {
 			    </div>
 
 		      {!(/chrom(e|ium)/i.test(navigator.userAgent.toLowerCase())) && (<ContentModal
-			      size={MODAL_SIZE_AUTO}
 				    tracking="modal/site"
 				    closeable={false}
 				    onComplete={()=> null}>

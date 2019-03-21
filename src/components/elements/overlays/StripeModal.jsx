@@ -8,7 +8,7 @@ import { Elements, StripeProvider } from 'react-stripe-elements';
 
 import ContentModal from './ContentModal';
 import StripeForm from '../../forms/StripeForm';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from './Popup';
+import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR, POPUP_TYPE_OK } from './Popup';
 import { URLs } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 import stripe from '../../../assets/json/stripe';
@@ -60,8 +60,9 @@ class StripeModal extends Component {
 		console.log('StripeModal.handleError()', error);
 
 		this.props.onPopup({
-			type    : POPUP_TYPE_ERROR,
-			content : error.code
+			position : POPUP_POSITION_TOPMOST,
+			type     : POPUP_TYPE_ERROR,
+			content  : error.code
 		});
 	};
 
@@ -98,8 +99,9 @@ class StripeModal extends Component {
 
 			} else {
 				this.props.onPopup({
-					type    : POPUP_TYPE_ERROR,
-					content : error.code
+					position : POPUP_POSITION_TOPMOST,
+					type     : POPUP_TYPE_ERROR,
+					content  : error.code
 				});
 			}
 

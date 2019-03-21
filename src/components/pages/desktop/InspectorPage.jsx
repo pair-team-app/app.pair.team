@@ -768,7 +768,7 @@ class InspectorPage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('InspectorPage.componentDidUpdate()', prevProps, this.props, this.state);
 
-		const { profile, deeplink, processing } = this.props;
+		const { deeplink, processing } = this.props;
 // 		const { upload, panMultPt } = this.state;
 		const { section, upload } = this.state;
 
