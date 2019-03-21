@@ -9,6 +9,7 @@ import { Elements, StripeProvider } from 'react-stripe-elements';
 import ContentModal from './ContentModal';
 import StripeForm from '../../forms/StripeForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR, POPUP_TYPE_OK } from './Popup';
+import { API_URL } from '../../../consts/uris';
 import { URLs } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 import stripe from '../../../assets/json/stripe';
@@ -81,7 +82,8 @@ class StripeModal extends Component {
 		const { profile } = this.props;
 		this.setState({ submitting : true });
 
-		axios.post('https://api.designengine.ai/stripe.php', qs.stringify({
+// 		axios.post(API_URL, qs.stringify({
+		axios.post('https://api.designengine.ai/system.php', qs.stringify({
 			action      : 'MAKE_PAYMENT',
 			user_id     : profile.id,
 			token_id    : token.id,

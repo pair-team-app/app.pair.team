@@ -9,6 +9,30 @@ import { Components } from '../../utils/lang';
 import { trackEvent } from '../../utils/tracking';
 
 
+const createElementOptions = ()=> ({
+	style : {
+		base   : {
+			fontFamily    : '"San Francisco Text Medium", sans-serif',
+			fontSize      : '16px',
+			letterSpacing : '-0.3px',
+			color         : '#abdafb',
+
+			'::placeholder' : {
+				color : '#727d8d',
+			}
+		},
+		invalid : {
+			color : '#ff4646'
+		},
+		complete : {
+			color : '#7ed916',
+		},
+
+	}
+});
+
+
+
 class StripeForm extends Component {
 	constructor(props) {
 		super(props);
@@ -77,17 +101,20 @@ class StripeForm extends Component {
 				<Column horizontal="center" vertical="start">
 					<form onSubmit={this.handleSubmit} method="post" className="full-width">
 						<div className={Components.txtFieldClassName(cardHolder.length > 0 || cardHolderValid)}><input type="text" className="input-field-textfield" name="cardHolder" placeholder="Card Holder" value={cardHolder} onFocus={this.handleFocus} onChange={(event)=> this.handleChange(event.target)} /></div>
+						{/*<div className="input-wrapper">*/}
+							{/*<CardElement {...createOptions()} />*/}
+						{/*</div>*/}
 
 						<div className="input-wrapper">
-							<CardNumberElement className="input-txt" />
+							<CardNumberElement className="input-txt" {...createElementOptions()} />
 						</div>
 
 						<div className="input-wrapper">
-							<CardExpiryElement className="input-txt" />
+							<CardExpiryElement className="input-txt" {...createElementOptions()} />
 						</div>
 
 						<div className="input-wrapper">
-							<CardCVCElement className="input-txt" />
+							<CardCVCElement className="input-txt"  {...createElementOptions()} />
 						</div>
 
 						<Row horizontal="start" vertical="center" className="full-width">
