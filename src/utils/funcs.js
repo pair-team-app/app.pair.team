@@ -13,7 +13,8 @@ import {
 // 	RECOVER,
 	REGISTER,
 // 	TERMS,
-	UPLOAD } from '../consts/uris';
+	UPLOAD,
+	API_URL } from '../consts/uris';
 import { Strings } from './lang';
 
 
@@ -78,7 +79,7 @@ export function sendToSlack(message, callback=null) {
 	let formData = new FormData();
 	formData.append('action', 'SLACK');
 	formData.append('message', message);
-	axios.post('https://api.designengine.ai/system.php', formData)
+	axios.post(API_URL, formData)
 		.then((response) => {
 			console.log("SLACK", response.data);
 			if (callback) {

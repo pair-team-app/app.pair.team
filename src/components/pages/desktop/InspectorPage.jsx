@@ -26,7 +26,7 @@ import TutorialBubble from '../../elements/overlays/TutorialBubble';
 import { MOMENT_TIMESTAMP } from '../../../consts/formats';
 import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../consts/key-codes';
 import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL } from '../../../consts/inspector';
-import { DE_LOGO_SMALL, CDN_URL } from '../../../consts/uris';
+import { DE_LOGO_SMALL, API_URL, CDN_URL } from '../../../consts/uris';
 import { setRedirectURI } from '../../../redux/actions';
 import { buildInspectorPath, buildInspectorURL, sendToSlack } from '../../../utils/funcs.js';
 import { Browsers, DateTimes, Files, Maths, Strings } from '../../../utils/lang.js';
@@ -1106,7 +1106,7 @@ class InspectorPage extends Component {
 				let formData = new FormData();
 				formData.append('action', 'ARTBOARD_SLICES');
 				formData.append('artboard_id', artboard.id);
-				axios.post('https://api.designengine.ai/system.php', formData)
+				axios.post(API_URL, formData)
 					.then((response)=> {
 						console.log('ARTBOARD_SLICES', response.data);
 						artboard.slices = response.data.slices.map((slice)=> {
@@ -1228,7 +1228,7 @@ class InspectorPage extends Component {
 				let formData = new FormData();
 				formData.append('action', 'SYMBOL_SLICES');
 				formData.append('slice_id', slice.id);
-				axios.post('https://api.designengine.ai/system.php', formData)
+				axios.post(API_URL, formData)
 					.then((response)=> {
 						console.log('SYMBOL_SLICES', response.data);
 						slice.children = [...fillGroupPartItemSlices(upload, slice), ...response.data.slices.map((item)=> {
@@ -1343,7 +1343,7 @@ class InspectorPage extends Component {
 				let formData = new FormData();
 				formData.append('action', 'SYMBOL_SLICES');
 				formData.append('slice_id', slice.id);
-				axios.post('https://api.designengine.ai/system.php', formData)
+				axios.post(API_URL, formData)
 					.then((response)=> {
 						console.log('SYMBOL_SLICES', response.data);
 						slice.children = [...fillGroupPartItemSlices(upload, slice), ...response.data.slices.map((item)=> {
@@ -1458,7 +1458,7 @@ class InspectorPage extends Component {
 				let formData = new FormData();
 				formData.append('action', 'ARTBOARD_SLICES');
 				formData.append('artboard_id', artboardID);
-				axios.post('https://api.designengine.ai/system.php', formData)
+				axios.post(API_URL, formData)
 					.then((response)=> {
 						console.log('ARTBOARD_SLICES', response.data);
 						artboard.slices = response.data.slices.map((slice)=> {
@@ -1707,7 +1707,7 @@ class InspectorPage extends Component {
 									let formData = new FormData();
 									formData.append('action', 'RESET_UPLOAD');
 									formData.append('upload_id', upload.id);
-									axios.post('https://api.designengine.ai/system.php', formData)
+									axios.post(API_URL, formData)
 										.then((response)=> {
 											console.log('RESET_UPLOAD', response.data);
 
@@ -1972,7 +1972,7 @@ class InspectorPage extends Component {
 		let formData = new FormData();
 		formData.append('action', 'CANCEL_PROCESSING');
 		formData.append('upload_id', upload.id);
-		axios.post('https://api.designengine.ai/system.php', formData)
+		axios.post(API_URL, formData)
 			.then((response)=> {
 				console.log('CANCEL_PROCESSING', response.data);
 				this.props.onProcessing(false);
@@ -2093,7 +2093,7 @@ class InspectorPage extends Component {
 
 		this.setState({ tooltip : (!processing) ? 'Loading…' : null });
 
-		axios.post('https://api.designengine.ai/system.php', qs.stringify({
+		axios.post(API_URL, qs.stringify({
 			action    : 'UPLOAD',
 			upload_id : uploadID
 		})).then((response)=> {
@@ -2151,7 +2151,7 @@ class InspectorPage extends Component {
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_STATUS');
 		formData.append('upload_id', upload.id);
-		axios.post('https://api.designengine.ai/system.php', formData)
+		axios.post(API_URL, formData)
 			.then((response)=> {
 				console.log('UPLOAD_STATUS', response.data);
 				const { status } = response.data;

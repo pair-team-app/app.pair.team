@@ -15,6 +15,7 @@ import {
 	USER_PROFILE_UPDATED,
 	SET_ATOM_EXTENSION } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
+import { API_URL } from '../../consts/uris';
 
 
 const logFormat = (action, payload=null, meta='')=> {
@@ -53,7 +54,7 @@ export function fetchUserProfile() {
 		let formData = new FormData();
 		formData.append('action', 'PROFILE');
 		formData.append('user_id', cookie.load('user_id'));
-		axios.post('https://api.designengine.ai/system.php', formData)
+		axios.post(API_URL, formData)
 			.then((response)=> {
 				console.log('PROFILE', response.data);
 
@@ -76,7 +77,7 @@ export function fetchUserHistory(payload) {
 	return ((dispatch)=> {
 		if (payload.profile) {
 			const { profile, loadOffset, loadAmt } = payload;
-			axios.post('https://api.designengine.ai/system.php', qs.stringify({
+			axios.post(API_URL, qs.stringify({
 				action  : 'USER_HISTORY',
 				user_id : profile.id,
 				offset  : (loadOffset || 0),
@@ -135,7 +136,7 @@ export function updateUserProfile(payload) {
 			formData.append('filename', avatar);
 			formData.append('password', password);
 			formData.append('type', type);
-			axios.post('https://api.designengine.ai/system.php', formData)
+			axios.post(API_URL, formData)
 				.then((response) => {
 					console.log('UPDATE_PROFILE', response.data);
 

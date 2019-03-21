@@ -15,6 +15,7 @@ export const DE_LOGO_SMALL = 'http://cdn.designengine.ai/assets/logo-email.png';
 export const DEFAULT_AVATAR = 'http://cdn.designengine.ai/profiles/avatar-default.png';
 
 // export const CDN_URL = 'https://cdn.designengine.ai/upload.php';
+export const API_URL = 'https://api.designengine.ai/system.php';
 export const CDN_URL = `${window.location.href.replace(window.location.pathname, '')}/php/upload.php`;
 
 export const EXTENSION_CONFIG_URL = 'chrome://?id=kkgccakiccjnlmponcggpmagkgelpbhg';

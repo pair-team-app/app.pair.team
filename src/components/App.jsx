@@ -29,7 +29,7 @@ import TermsPage from './pages/desktop/TermsPage';
 import UploadPage from './pages/desktop/UploadPage';
 import BaseMobilePage from './pages/mobile/BaseMobilePage';
 
-import { EXTENSION_PUBLIC_URL } from '../consts/uris';
+import { EXTENSION_PUBLIC_URL, API_URL } from '../consts/uris';
 import {
 	appendHomeArtboards,
 	fetchUserHistory,
@@ -301,7 +301,7 @@ class App extends Component {
 	};
 
 	onAddUploadView = (uploadID)=> {
-		axios.post('https://api.designengine.ai/system.php', qs.stringify({
+		axios.post(API_URL, qs.stringify({
 			action    : 'ADD_VIEW',
 			upload_id : uploadID
 		})).then((response)=> {

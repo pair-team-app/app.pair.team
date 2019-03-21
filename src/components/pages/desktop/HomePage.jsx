@@ -9,6 +9,7 @@ import BaseDesktopPage from './BaseDesktopPage';
 import ArtboardGrid from '../../elements/ArtboardGrid';
 import UploadHeader from '../../elements/navs/UploadHeader';
 
+import { API_URL } from '../../../consts/uris';
 import { addFileUpload, appendHomeArtboards } from '../../../redux/actions';
 import { URLs } from '../../../utils/lang';
 import { isUserLoggedIn } from '../../../utils/funcs';
@@ -125,7 +126,7 @@ class HomePage extends Component {
 		formData.append('user_id', profile.id);
 		formData.append('offset', loadOffset);
 		formData.append('length', loadAmt);
-		axios.post('https://api.designengine.ai/system.php', formData)
+		axios.post(API_URL, formData)
 			.then((response)=> {
 				console.log('HOME_ARTBOARDS', response.data);
 

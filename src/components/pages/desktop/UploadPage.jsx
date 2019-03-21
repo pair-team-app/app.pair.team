@@ -11,7 +11,7 @@ import UploadHeader from '../../elements/navs/UploadHeader';
 import LoginForm from '../../forms/LoginForm';
 import RegisterForm from '../../forms/RegisterForm';
 
-import { CDN_URL } from '../../../consts/uris';
+import { API_URL, CDN_URL } from '../../../consts/uris';
 import { addFileUpload, updateDeeplink, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
@@ -197,7 +197,7 @@ class UploadPage extends Component {
 				formData.append('filesize', size);
 				formData.append('private', (radioIndex === 1) ? '0' : '1');
 				formData.append('filename', `http://cdn.designengine.ai/system/${decodeURIComponent(name)}`);
-				axios.post('https://api.designengine.ai/system.php', formData)
+				axios.post(API_URL, formData)
 					.then((response)=> {
 						console.log('NEW_UPLOAD', response.data);
 						const { upload } = response.data;
