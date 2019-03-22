@@ -176,16 +176,17 @@ export const Objects = {
 
 
 export const Strings = {
-	camelize   : (str, separator=' ', propName=false)=> (str.split((separator || ' ')).map((word, i)=> (word.replace(/^./, (c)=> ((!propName && i === 0) ? c.toLowerCase() : c.toUpperCase())))).join('')),
-	capitalize : (str, lower=false)=> (str.replace(/^(\w+)$/gi, (c)=> ((lower) ? c.toLowerCase() : c)).replace(/(\b\w)/gi, (c)=> (c.toUpperCase()))),
-	countOf    : (str, substr)=> ((str.match(new RegExp(substr.toString(), 'g')) || []).length),
-	dropChar   : (str, char)=> (Strings.replAll(str, char)),
-	firstChar  : (str)=> (str.charAt(0)),
-	isEmail    : (str)=> (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i.test(String(str))),
-// 	lPad       : (str, amt, char)=> ((new Array(amt - String(str).length + 1)).join(str || char) + str),
-	lastChar   : (str)=> (str.slice(-1)),
-	lPad       : (str, amt, char)=> ((str.length < amt) ? `${(new Array(amt - String(str).length + 1)).join(char)}${str}` : str),
-	indexedVal : (val, arr, divider='_')=> {
+	base64decode : (str, enc='utf8')=> ((new Buffer(str, 'base64')).toString(enc)),
+	base64encode : (str, enc='ascii')=> ((new Buffer(str, enc)).toString('base64')),
+	camelize     : (str, separator=' ', propName=false)=> (str.split((separator || ' ')).map((word, i)=> (word.replace(/^./, (c)=> ((!propName && i === 0) ? c.toLowerCase() : c.toUpperCase())))).join('')),
+	capitalize   : (str, lower=false)=> (str.replace(/^(\w+)$/gi, (c)=> ((lower) ? c.toLowerCase() : c)).replace(/(\b\w)/gi, (c)=> (c.toUpperCase()))),
+	countOf      : (str, substr)=> ((str.match(new RegExp(substr.toString(), 'g')) || []).length),
+	dropChar     : (str, char)=> (Strings.replAll(str, char)),
+	firstChar    : (str)=> (str.charAt(0)),
+	isEmail      : (str)=> (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i.test(String(str))),
+	lastChar     : (str)=> (str.slice(-1)),
+	lPad         : (str, amt, char)=> ((str.length < amt) ? `${(new Array(amt - String(str).length + 1)).join(char)}${str}` : str),
+	indexedVal   : (val, arr, divider='_')=> {
 		if (arr[val].length === 0) {
 			arr[val] = 0;
 		}
@@ -195,15 +196,14 @@ export const Strings = {
 			arr : [...arr]
 		});
 	},
-	pluralize  : (str, val)=> ((val === 1) ? str : (Strings.lastChar(str) === 'y') ? `${str.slice(0, -1)}ies` : (Strings.lastChar(str) === 's') ? 'es' : `${str}s`),
-	repeat     : (str, amt)=> ((new Array(amt)).fill(str).join('')),
-	replAll    : (str, needle, replacement='')=> (str.split(needle).join(replacement)),
-	reverse    : (str)=> ([...str].reverse().join('')),
-// 	rPad       : (str, amt, char)=> ((new Array(amt - String(str).length + 1)).join(str || char) + str),
-	rPad       : (str, amt, char)=> ((str.length < amt) ? `${str}${(new Array(amt - String(str).length + 1)).join(char)}` : str),
-	trimSlash  : (str, leading=true, trailing=true)=> (str.replace(((leading && trailing) ? /^\/?(.+)\// : (leading && !trailing) ? /^\/(.+)$/ : (!leading && trailing) ? /^(.+)\/$/ : /^(.+)$/), '$1')),
-	truncate   : (str, len, ellipsis='…')=> ((str.length > len) ? `${str.substring(0, len - 1).trim()}${ellipsis}` : str),
-	uriSlug    : (str)=> (str.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase())
+	pluralize    : (str, val)=> ((val === 1) ? str : (Strings.lastChar(str) === 'y') ? `${str.slice(0, -1)}ies` : (Strings.lastChar(str) === 's') ? 'es' : `${str}s`),
+	repeat       : (str, amt)=> ((new Array(amt)).fill(str).join('')),
+	replAll      : (str, needle, replacement='')=> (str.split(needle).join(replacement)),
+	reverse      : (str)=> ([...str].reverse().join('')),
+	rPad         : (str, amt, char)=> ((str.length < amt) ? `${str}${(new Array(amt - String(str).length + 1)).join(char)}` : str),
+	trimSlash    : (str, leading=true, trailing=true)=> (str.replace(((leading && trailing) ? /^\/?(.+)\// : (leading && !trailing) ? /^\/(.+)$/ : (!leading && trailing) ? /^(.+)\/$/ : /^(.+)$/), '$1')),
+	truncate     : (str, len, ellipsis='…')=> ((str.length > len) ? `${str.substring(0, len - 1).trim()}${ellipsis}` : str),
+	uriSlug      : (str)=> (str.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase())
 };
 
 
