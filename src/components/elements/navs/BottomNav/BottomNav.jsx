@@ -2,10 +2,10 @@
 import React from 'react';
 import './BottomNav.css';
 
-import { trackEvent } from '../../../utils/tracking';
-import { isUserLoggedIn } from '../../../utils/funcs';
-import deLogo from '../../../assets/images/logos/logo-designengine.svg';
-import sections from '../../../assets/json/nav-sections';
+import { trackEvent } from '../../../../utils/tracking';
+import { isUserLoggedIn } from '../../../../utils/funcs';
+import deLogo from '../../../../assets/images/logos/logo-designengine.svg';
+import sections from '../../../../assets/json/nav-sections';
 
 
 const BottomNavDesktop = (props)=> {

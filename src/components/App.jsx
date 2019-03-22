@@ -78,11 +78,15 @@ class App extends Component {
 		super(props);
 
 		this.state = {
+			contentSize   : {
+				width  : 0,
+				height : 0
+			},
 			mobileOverlay : true,
 			rating        : 0,
 			processing    : false,
 			popup         : null,
-			paidDialog    : false,
+			payDialog     : false,
 			stripeOverlay : false
 // 			stripeOverlay : true
 		};
@@ -122,7 +126,7 @@ class App extends Component {
 
 		window.addEventListener('resize', this.handleResize);
 		window.onpopstate = (event)=> {
-			console.log('-/\\/\\/\\/\\/\\/\\-', 'window.onpopstate()', '-/\\/\\/\\/\\/\\/\\-', event);
+// 			console.log('-/\\/\\/\\/\\/\\/\\-', 'window.onpopstate()', '-/\\/\\/\\/\\/\\/\\-', event);
 // 			this.handlePage('<<');
 		};
 	}
@@ -131,7 +135,7 @@ class App extends Component {
 		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		const { profile, artboards, deeplink } = this.props;
-		const { paidDialog, stripeOverlay } = this.state;
+		const { payDialog, stripeOverlay } = this.state;
 
 		if (profile) {
 			if (!prevProps.profile) {
@@ -142,18 +146,14 @@ class App extends Component {
 				}
 			}
 
-			console.log('||||||||||||||||', paidDialog, stripeOverlay, profile.paid, artboards.length, isHomePage(false), prevProps.deeplink.uploadID, deeplink.uploadID, isInspectorPage());
-			if ((!paidDialog && !stripeOverlay) && (!profile.paid && artboards.length > 3) && ((isHomePage(false) && prevProps.deeplink.uploadID !== deeplink.uploadID) || (isInspectorPage() && prevProps.uploadID !== deeplink.uploadID))) {
-				this.setState({ paidDialog : true });
+			console.log('||||||||||||||||', payDialog, stripeOverlay, profile.paid, artboards.length, isHomePage(false), prevProps.deeplink.uploadID, deeplink.uploadID, isInspectorPage());
+			if ((!payDialog && !stripeOverlay) && (!profile.paid && artboards.length > 3) && ((isHomePage(false) && prevProps.deeplink.uploadID !== deeplink.uploadID) || (isInspectorPage() && prevProps.uploadID !== deeplink.uploadID))) {
+				this.setState({ payDialog : true });
 			}
 
-			if (paidDialog && profile.paid) {
-				this.setState({ paidDialog : false });
+			if (payDialog && profile.paid) {
+				this.setState({ payDialog : false });
 			}
-
-// 			if (paidDialog && (profile.paid || (!profile.paid && prevProps.deeplink.uploadID === deeplink.uploadID))) {
-//
-// 			}
 		}
 	}
 
@@ -180,7 +180,7 @@ class App extends Component {
 		const { profile, artboards } = this.props;
 		if (!profile.paid && artboards.length > 3) {
 			this.props.updateDeeplink(null);
-// 			this.setState({ paidDialog : true });
+// 			this.setState({ payDialog : true });
 
 		} else {
 			this.onAddUploadView(artboard.uploadID);
@@ -247,7 +247,7 @@ class App extends Component {
 
 	handlePaidAlert = ()=> {
 		this.setState({
-			paidDialog    : false,
+			payDialog     : false,
 			stripeOverlay : true
 		});
 	};
@@ -261,7 +261,7 @@ class App extends Component {
 
 		setTimeout(()=> {
 			this.setState({
-				paidDialog    : false,
+				payDialog     : false,
 				stripeOverlay : false
 			});
 		}, (isInspectorPage()) ? 666 : 0);
@@ -271,7 +271,7 @@ class App extends Component {
 // 		console.log('App.handlePurchaseSucess()', purchase);
 
 		this.setState({
-			paidDialog    : false,
+			payDialog     : false,
 			stripeOverlay : false
 		});
 		this.props.fetchUserProfile();
@@ -289,6 +289,11 @@ class App extends Component {
 
 	handleResize = (event)=> {
 		console.log('App.handleResize()', event);
+
+		this.setState({ contentSize : {
+			width  : wrapper.current.innerWidth,
+			height : 	wrapper.current.innerHeight
+		} })
 	};
 
 	handleScrollOrigin = ()=> {
@@ -338,8 +343,8 @@ class App extends Component {
 		const { profile } = this.props;
   	const { uploadID } = this.props.deeplink;
 		const { pathname } = this.props.location;
-  	const { rating, mobileOverlay, processing, popup, stripeOverlay, paidDialog } = this.state;
-//   	const { rating, mobileOverlay, popup } = this.state;
+  	const { rating, mobileOverlay, processing, popup, stripeOverlay, payDialog } = this.state;
+//   	const { rating, mobileOverlay, popup, stripeOverlay, payDialog } = this.state;
 //   	const processing = true;
 
   	return ((!Browsers.isMobile.ANY())
@@ -391,7 +396,7 @@ class App extends Component {
 			      </Popup>
 				  )}
 
-				  {(paidDialog) && (<AlertDialog
+				  {(payDialog) && (<AlertDialog
 					  title="Limited Account"
 					  message="You must upgrade to an unlimited account to view more than 3 projects."
 					  onComplete={this.handlePaidAlert}
