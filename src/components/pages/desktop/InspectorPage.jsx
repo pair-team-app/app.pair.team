@@ -26,10 +26,10 @@ import TutorialBubble from '../../elements/overlays/TutorialBubble';
 import { MOMENT_TIMESTAMP } from '../../../consts/formats';
 import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../consts/key-codes';
 import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL } from '../../../consts/inspector';
-import { DE_LOGO_SMALL, API_URL, CDN_URL } from '../../../consts/uris';
+import { DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PARTS_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { setRedirectURI } from '../../../redux/actions';
 import { buildInspectorPath, buildInspectorURL, sendToSlack } from '../../../utils/funcs.js';
-import { Browsers, DateTimes, Files, Maths, Strings } from '../../../utils/lang.js';
+import { Browsers, DateTimes, Files, Maths, Strings, URLs } from '../../../utils/lang.js';
 import { fontSpecs, toAndroid, toCSS, toGridHTML, toSpecs, toSwift } from '../../../utils/inspector-langs.js';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -671,7 +671,7 @@ class InspectorPage extends Component {
 		super(props);
 
 		this.state = {
-			section     : window.location.pathname.substr(1).split('/').shift(),
+			section     : URLs.firstComponent(),
 			upload      : null,
 			artboard    : null,
 			slice       : null,
@@ -1106,7 +1106,7 @@ class InspectorPage extends Component {
 				let formData = new FormData();
 				formData.append('action', 'ARTBOARD_SLICES');
 				formData.append('artboard_id', artboard.id);
-				axios.post(API_URL, formData)
+				axios.post(API_ENDPT_URL, formData)
 					.then((response)=> {
 						console.log('ARTBOARD_SLICES', response.data);
 						artboard.slices = response.data.slices.map((slice)=> {
@@ -1228,7 +1228,7 @@ class InspectorPage extends Component {
 				let formData = new FormData();
 				formData.append('action', 'SYMBOL_SLICES');
 				formData.append('slice_id', slice.id);
-				axios.post(API_URL, formData)
+				axios.post(API_ENDPT_URL, formData)
 					.then((response)=> {
 						console.log('SYMBOL_SLICES', response.data);
 						slice.children = [...fillGroupPartItemSlices(upload, slice), ...response.data.slices.map((item)=> {
@@ -1343,7 +1343,7 @@ class InspectorPage extends Component {
 				let formData = new FormData();
 				formData.append('action', 'SYMBOL_SLICES');
 				formData.append('slice_id', slice.id);
-				axios.post(API_URL, formData)
+				axios.post(API_ENDPT_URL, formData)
 					.then((response)=> {
 						console.log('SYMBOL_SLICES', response.data);
 						slice.children = [...fillGroupPartItemSlices(upload, slice), ...response.data.slices.map((item)=> {
@@ -1458,7 +1458,7 @@ class InspectorPage extends Component {
 				let formData = new FormData();
 				formData.append('action', 'ARTBOARD_SLICES');
 				formData.append('artboard_id', artboardID);
-				axios.post(API_URL, formData)
+				axios.post(API_ENDPT_URL, formData)
 					.then((response)=> {
 						console.log('ARTBOARD_SLICES', response.data);
 						artboard.slices = response.data.slices.map((slice)=> {
@@ -1639,7 +1639,7 @@ class InspectorPage extends Component {
 
 		trackEvent('button', 'download-project');
 		const { upload } = this.state;
-		Browsers.makeDownload(`http://cdn.designengine.ai/download-project.php?upload_id=${upload.id}`);
+		Browsers.makeDownload(`${CDN_DOWNLOAD_PROJECT_URL}?upload_id=${upload.id}`);
 	};
 
 	handleDownloadArtboardPDF = ()=> {
@@ -1647,7 +1647,7 @@ class InspectorPage extends Component {
 
 		trackEvent('button', 'download-pdf');
 		const { upload } = this.state;
-		Browsers.makeDownload(`http://cdn.designengine.ai/download-pdf.php?upload_id=${upload.id}`);
+		Browsers.makeDownload(`${CDN_DOWNLOAD_PDF_URL}?upload_id=${upload.id}`);
 	};
 
 	handleDownloadPartListItem = (slice)=> {
@@ -1655,7 +1655,7 @@ class InspectorPage extends Component {
 
 		trackEvent('button', 'download-part');
 		const { upload } = this.state;
-		Browsers.makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${[slice.id]}`);
+		Browsers.makeDownload(`${CDN_DOWNLOAD_PARTS_URL}?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${[slice.id]}`);
 	};
 
 	handleDownloadPartsList = ()=> {
@@ -1665,7 +1665,7 @@ class InspectorPage extends Component {
 		const { upload, slice } = this.state;
 		const sliceIDs = (slice.type === 'group') ? fillGroupPartItemSlices(upload, slice).map((slice)=> (slice.id)).join(',') : slice.children.map((slice)=> (slice.id)).join(',');
 
-		Browsers.makeDownload(`http://cdn.designengine.ai/download-slices.php?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
+		Browsers.makeDownload(`${CDN_DOWNLOAD_PARTS_URL}?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
 	};
 
 	handleFileDrop = (files)=> {
@@ -1707,7 +1707,7 @@ class InspectorPage extends Component {
 									let formData = new FormData();
 									formData.append('action', 'RESET_UPLOAD');
 									formData.append('upload_id', upload.id);
-									axios.post(API_URL, formData)
+									axios.post(API_ENDPT_URL, formData)
 										.then((response)=> {
 											console.log('RESET_UPLOAD', response.data);
 
@@ -1738,7 +1738,7 @@ class InspectorPage extends Component {
 
 						let formData = new FormData();
 						formData.append('file', file);
-						axios.post(`${CDN_URL}?dir=/system`, formData, config)
+						axios.post(`${CDN_UPLOAD_URL}?dir=/system`, formData, config)
 							.then((response)=> {
 								console.log('CDN upload.php', response.data);
 							}).catch((error)=> {
@@ -1972,7 +1972,7 @@ class InspectorPage extends Component {
 		let formData = new FormData();
 		formData.append('action', 'CANCEL_PROCESSING');
 		formData.append('upload_id', upload.id);
-		axios.post(API_URL, formData)
+		axios.post(API_ENDPT_URL, formData)
 			.then((response)=> {
 				console.log('CANCEL_PROCESSING', response.data);
 				this.props.onProcessing(false);
@@ -2093,7 +2093,7 @@ class InspectorPage extends Component {
 
 		this.setState({ tooltip : (!processing) ? 'Loading…' : null });
 
-		axios.post(API_URL, qs.stringify({
+		axios.post(API_ENDPT_URL, qs.stringify({
 			action    : 'UPLOAD',
 			upload_id : uploadID
 		})).then((response)=> {
@@ -2151,7 +2151,7 @@ class InspectorPage extends Component {
 		let formData = new FormData();
 		formData.append('action', 'UPLOAD_STATUS');
 		formData.append('upload_id', upload.id);
-		axios.post(API_URL, formData)
+		axios.post(API_ENDPT_URL, formData)
 			.then((response)=> {
 				console.log('UPLOAD_STATUS', response.data);
 				const { status } = response.data;

@@ -9,7 +9,7 @@ import { Elements, StripeProvider } from 'react-stripe-elements';
 import ContentModal from './ContentModal';
 import StripeForm from '../../forms/StripeForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR, POPUP_TYPE_OK } from './Popup';
-import { API_URL } from '../../../consts/uris';
+import { API_ENDPT_URL } from '../../../consts/uris';
 import { sendToSlack } from '../../../utils/funcs';
 import { URLs } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
@@ -79,7 +79,7 @@ class StripeModal extends Component {
 		const { profile } = this.props;
 		this.setState({ submitting : true });
 
-		axios.post(API_URL, qs.stringify({
+		axios.post(API_ENDPT_URL, qs.stringify({
 			action      : 'MAKE_PURCHASE',
 			user_id     : profile.id,
 			token_id    : token.id,

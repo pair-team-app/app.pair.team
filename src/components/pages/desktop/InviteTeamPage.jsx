@@ -11,7 +11,7 @@ import { Row } from 'simple-flexbox';
 // import BaseDesktopPage from './BaseDesktopPage';
 import { POPUP_TYPE_OK } from '../../elements/overlays/Popup';
 import Dropdown from '../../elements/forms/Dropdown';
-import { API_URL } from '../../../consts/uris';
+import { API_ENDPT_URL } from '../../../consts/uris';
 import { buildInspectorURL, isUserLoggedIn } from '../../../utils/funcs';
 import { Strings } from '../../../utils/lang';
 
@@ -73,7 +73,7 @@ class InviteTeamPage extends Component {
 		formData.append('user_id', this.props.profile.id);
 		formData.append('offset', '0');
 		formData.append('length', '-1');
-		axios.post(API_URL, formData)
+		axios.post(API_ENDPT_URL, formData)
 			.then((response)=> {
 				console.log('UPLOAD_NAMES', response.data);
 				const uploads = response.data.uploads.filter((upload)=> (upload.id !== '2' && upload.id !== '3')).map((upload)=> ({
@@ -154,7 +154,7 @@ class InviteTeamPage extends Component {
 			formData.append('user_id', this.props.profile.id);
 			formData.append('upload_id', this.state.uploadID);
 			formData.append('emails', emails);
-			axios.post(API_URL, formData)
+			axios.post(API_ENDPT_URL, formData)
 				.then((response)=> {
 					console.log('INVITE', response.data);
 				}).catch((error)=> {

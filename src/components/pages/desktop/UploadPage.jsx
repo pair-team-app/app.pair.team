@@ -11,7 +11,7 @@ import UploadHeader from '../../elements/navs/UploadHeader';
 import LoginForm from '../../forms/LoginForm';
 import RegisterForm from '../../forms/RegisterForm';
 
-import { API_URL, CDN_URL } from '../../../consts/uris';
+import { API_ENDPT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { addFileUpload, updateDeeplink, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
@@ -136,7 +136,7 @@ class UploadPage extends Component {
 
 		let formData = new FormData();
 		formData.append('file', file);
-		axios.post(`${CDN_URL}?dir=/system`, formData, config)
+		axios.post(`${CDN_UPLOAD_URL}?dir=/system`, formData, config)
 			.then((response)=> {
 				console.log('CDN upload.php', response.data);
 			}).catch((error)=> {
@@ -197,7 +197,7 @@ class UploadPage extends Component {
 				formData.append('filesize', size);
 				formData.append('private', (radioIndex === 1) ? '0' : '1');
 				formData.append('filename', `http://cdn.designengine.ai/system/${decodeURIComponent(name)}`);
-				axios.post(API_URL, formData)
+				axios.post(API_ENDPT_URL, formData)
 					.then((response)=> {
 						console.log('NEW_UPLOAD', response.data);
 						const { upload } = response.data;

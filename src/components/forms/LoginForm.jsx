@@ -5,7 +5,7 @@ import './LoginForm.css'
 import axios from 'axios';
 import { Row } from 'simple-flexbox';
 
-import { API_URL } from '../../consts/uris';
+import { API_ENDPT_URL } from '../../consts/uris';
 import { Bits, Strings } from '../../utils/lang';
 import { trackEvent } from '../../utils/tracking';
 
@@ -84,7 +84,7 @@ class LoginForm extends Component {
 			formData.append('email', email);
 			formData.append('password', password);
 			formData.append('invite_id', (inviteID) ? inviteID : '0');
-			axios.post(API_URL, formData)
+			axios.post(API_ENDPT_URL, formData)
 				.then((response)=> {
 					console.log('LOGIN', response.data);
 					const status = parseInt(response.data.status, 16);

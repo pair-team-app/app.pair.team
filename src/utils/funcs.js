@@ -14,7 +14,7 @@ import {
 	REGISTER,
 // 	TERMS,
 	UPLOAD,
-	API_URL } from '../consts/uris';
+	API_ENDPT_URL } from '../consts/uris';
 import { Strings } from './lang';
 
 
@@ -79,7 +79,7 @@ export function sendToSlack(message, callback=null) {
 	let formData = new FormData();
 	formData.append('action', 'SLACK');
 	formData.append('message', message);
-	axios.post(API_URL, formData)
+	axios.post(API_ENDPT_URL, formData)
 		.then((response) => {
 			console.log("SLACK", response.data);
 			if (callback) {

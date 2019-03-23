@@ -13,7 +13,7 @@ import BaseDesktopPage from './BaseDesktopPage';
 import ConfirmDialog from '../../elements/overlays/ConfirmDialog';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../elements/overlays/Popup';
 import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../elements/forms/InputField';
-import { DEFAULT_AVATAR, CDN_URL } from '../../../consts/uris';
+import { DEFAULT_AVATAR, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { Bits, Files, Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
@@ -184,7 +184,7 @@ class ProfilePage extends Component {
 
 				let formData = new FormData();
 				formData.append('file', file);
-				axios.post(`${CDN_URL}?dir=/profiles&prefix=${profile.id}_`, formData, config)
+				axios.post(`${CDN_UPLOAD_URL}?dir=/profiles&prefix=${profile.id}_`, formData, config)
 					.then((response)=> {
 						console.log('CDN upload.php', response.data);
 						this.onValidateFields('avatar', `http://cdn.designengine.ai/profiles/${profile.id}_${decodeURIComponent(file.name)}`);

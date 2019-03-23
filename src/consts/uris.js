@@ -14,12 +14,15 @@ export const UPLOAD = '/new';
 export const DE_LOGO_SMALL = 'http://cdn.designengine.ai/assets/logo-email.png';
 export const DEFAULT_AVATAR = 'http://cdn.designengine.ai/profiles/avatar-default.png';
 
-// export const CDN_URL = 'https://cdn.designengine.ai/upload.php';
-export const API_URL = 'https://api.designengine.ai/system.php';
-export const CDN_URL = `${window.location.href.replace(window.location.pathname, '')}/php/upload.php`;
+// export const CDN_UPLOAD_URL = 'https://cdn.designengine.ai/upload.php';
+export const API_ENDPT_URL = 'https://api.designengine.ai/system.php';
+export const CDN_DOWNLOAD_PARTS_URL = 'http://cdn.designengine.ai/download-slices.php';
+export const CDN_DOWNLOAD_PDF_URL = 'http://cdn.designengine.ai/download-pdf.php';
+export const CDN_DOWNLOAD_PROJECT_URL = 'http://cdn.designengine.ai/download-project.php';
+export const CDN_UPLOAD_URL = `${window.location.href.replace(window.location.pathname, '')}/php/upload.php`;
 
 export const EXTENSION_CONFIG_URL = 'chrome://?id=kkgccakiccjnlmponcggpmagkgelpbhg';
-export const EXTENSION_PUBLIC_URL = 'chrome-extension://kkgccakiccjnlmponcggpmagkgelpbhg';
+export const EXTENSION_PUBLIC_HOST = 'chrome-extension://kkgccakiccjnlmponcggpmagkgelpbhg';
 
 export const GITHUB_REPO = 'https://www.github.com/de-ai';
 export const GITHUB_ROADMAP = 'https://github.com/de-ai/designengine.ai/projects/1';

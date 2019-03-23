@@ -29,7 +29,7 @@ import TermsPage from './pages/desktop/TermsPage';
 import UploadPage from './pages/desktop/UploadPage';
 import BaseMobilePage from './pages/mobile/BaseMobilePage';
 
-import { EXTENSION_PUBLIC_URL, API_URL } from '../consts/uris';
+import { EXTENSION_PUBLIC_HOST, API_ENDPT_URL } from '../consts/uris';
 import {
 	appendHomeArtboards,
 	fetchUserHistory,
@@ -146,7 +146,16 @@ class App extends Component {
 				}
 			}
 
-			console.log('||||||||||||||||', payDialog, stripeOverlay, profile.paid, artboards.length, isHomePage(false), prevProps.deeplink.uploadID, deeplink.uploadID, isInspectorPage());
+			console.log('[:::::::::::|:|:::::::::::] PAY CHECK [:::::::::::|:|:::::::::::]');
+			console.log('[::] (!payDialog && !stripeOverlay)', (!payDialog && !stripeOverlay));
+			console.log('[::] (!profile.paid && artboards.length > 3)', (!profile.paid && artboards.length > 3));
+			console.log('[::] (isHomePage(false)', isHomePage(false));
+			console.log('[::] (isInspectorPage())', isInspectorPage());
+			console.log('[::] (prevProps.deeplink.uploadID)', prevProps.deeplink.uploadID);
+			console.log('[::] (this.props.deeplink.uploadID)', deeplink.uploadID);
+			console.log('[:::::::::::|:|:::::::::::] =-=-=-=-= [:::::::::::|:|:::::::::::]');
+
+			//console.log('||||||||||||||||', payDialog, stripeOverlay, profile.paid, artboards.length, isHomePage(false), prevProps.deeplink.uploadID, deeplink.uploadID, isInspectorPage());
 			if ((!payDialog && !stripeOverlay) && (!profile.paid && artboards.length > 3) && ((isHomePage(false) && prevProps.deeplink.uploadID !== deeplink.uploadID) || (isInspectorPage() && prevProps.uploadID !== deeplink.uploadID))) {
 				this.setState({ payDialog : true });
 			}
@@ -169,7 +178,7 @@ class App extends Component {
 // 		console.log('App.extensionCheck()');
 
 		let img = new Image();
-		img.src = `${EXTENSION_PUBLIC_URL}/images/pixel.png`;
+		img.src = `${EXTENSION_PUBLIC_HOST}/images/pixel.png`;
 		img.onload = ()=> { this.props.setAtomExtension(true); };
 		img.onerror = ()=> { this.props.setAtomExtension(false); };
 	};
@@ -308,7 +317,7 @@ class App extends Component {
 	};
 
 	onAddUploadView = (uploadID)=> {
-		axios.post(API_URL, qs.stringify({
+		axios.post(API_ENDPT_URL, qs.stringify({
 			action    : 'ADD_VIEW',
 			upload_id : uploadID
 		})).then((response)=> {
