@@ -18,6 +18,7 @@ import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
+import ConfirmDialog from '../../elements/overlays/ConfirmDialog';
 import ContentModal from '../../elements/overlays/ContentModal';
 import InputField, { INPUTFIELD_STATUS_IDLE } from '../../elements/forms/InputField';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../elements/overlays/Popup';
@@ -40,6 +41,7 @@ import downloadButton from '../../../assets/images/buttons/btn-download.svg';
 import adBannerPanel from '../../../assets/json/ad-banner-panel';
 import inspectorTabSets from '../../../assets/json/inspector-tab-sets';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
+
 
 const InteractiveDiv = panAndZoomHoc('div');
 const artboardsWrapper = React.createRef();
@@ -691,6 +693,7 @@ class InspectorPage extends Component {
 				x : 0,
 				y : 0
 			},
+			fontState   : 0,
 			valid       : true,
 			restricted  : false,
 			shareModal  : false,
@@ -1783,6 +1786,11 @@ class InspectorPage extends Component {
 		}
 	};
 
+	handleFontDialogComplete = (ok)=> {
+		console.log('InspectorPage.handleFontDialogComplete()', ok);
+		this.setState({ fontState : (ok) ? 3 : 2});
+	};
+
 	handleInviteTeamFormSubmitted = (result)=> {
 // 		console.log('InspectorPage.handleInviteTeamFormSubmitted()', result);
 	};
@@ -2104,6 +2112,13 @@ class InspectorPage extends Component {
 				upload = Object.assign({}, response.data.upload, {
 					id    : upload.id << 0,
 					state : upload.state << 0,
+					fonts : upload.fonts.map((font)=> (
+						Object.assign({}, font, {
+							id        : font.id << 0,
+							installed : ((font.installed << 0) === 1),
+							weight    : font.weight << 0
+						})
+					)),
 					pages : upload.pages.map((page)=> (
 						Object.assign({}, page, {
 							id        : page.id << 0,
@@ -2155,6 +2170,7 @@ class InspectorPage extends Component {
 			.then((response)=> {
 				console.log('UPLOAD_STATUS', response.data);
 				const { status } = response.data;
+				const { fonts } = status;
 				const processingState = status.state;
 // 				const { totals } = status;
 //
@@ -2183,6 +2199,7 @@ class InspectorPage extends Component {
 
 				} else if (processingState === 2) {
 					this.setState({
+						fontState  : (this.state.fontState === 0 && fonts.length > 0) ? 1 : this.state.fontState,
 						urlBanner  : false,
 						processing : {
 							state   : processingState,
@@ -2245,20 +2262,21 @@ class InspectorPage extends Component {
 	render() {
 // 		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage.render()', this.props);
-// 		console.log('InspectorPage.render()', this.state);
+		console.log('InspectorPage.render()', this.state);
 // 		console.log('InspectorPage.render()', (new Array(100)).fill(null).map((i)=> (Maths.randomInt(1, 10))).join(','), this.state);
 
 
 		const { processing, profile, atomExtension } = this.props;
 
 		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, activeTabs, scrolling, viewSize, panMultPt } = this.state;
-		const { valid, restricted, urlBanner, tutorial, percent, tooltip } = this.state;
+		const { valid, restricted, urlBanner, tutorial, percent, tooltip, fontState } = this.state;
 
 		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, 'page_child');
 // 		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : (section === SECTIONS.PARTS) ? flattenUploadArtboards(upload, 'page_child').slice(0, 3) : flattenUploadArtboards(upload, 'page_child');
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 
 		const listTotal = (upload && activeSlice) ? (section === SECTIONS.PRESENTER) ? flattenUploadArtboards(upload, 'page_child').length : (activeSlice) ? (activeSlice.type === 'group') ? fillGroupPartItemSlices(upload, activeSlice).length : activeSlice.children.length : 0 : 0;
+		const missingFonts = (upload) ? upload.fonts.filter((font)=> (!font.installed)) : [];
 
 		const pt = this.calcTransformPoint();
 
@@ -2556,6 +2574,12 @@ class InspectorPage extends Component {
 				onComplete={()=> this.props.onPage('')}>
 				Design file not found.
 			</ContentModal>)}
+
+			{(fontState === 1) && (<ConfirmDialog
+				title="Missing Font(s)"
+				message={`Some fonts (${missingFonts.map((font)=> (font.postscript_name)).join(', ')}) need to be installed to complete processing, upload now?`}
+				onComplete={this.handleFontDialogComplete}
+			/>)}
 
 
 			{(upload) && (<ReactNotifications
