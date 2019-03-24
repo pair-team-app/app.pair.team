@@ -21,7 +21,7 @@ export function trackEvent(category, action, label=window.location.pathname, val
 	ReactGA.event({ category, action, label, value, nonInteraction });
 }
 
-export function trackModal(params) {
+export function trackOverlay(params) {
 	const type = params.split('/').slice().shift();
 	const source = params.split('/').slice().pop();
 

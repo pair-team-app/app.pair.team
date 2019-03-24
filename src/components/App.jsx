@@ -8,12 +8,12 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import AdBannerPanel from './elements/overlays/AdBannerPanel';
-import AlertDialog from './elements/overlays/AlertDialog';
+import AdvertPanel from './elements/overlays/AdvertPanel';
+import AlertDialog from './elements/overlays/AlertDialog/AlertDialog';
 import BottomNav from './elements/navs/BottomNav';
-import ContentModal from './elements/overlays/ContentModal';
+import BaseOverlay from './elements/overlays/BaseOverlay/BaseOverlay';
 import StripeModal from './elements/overlays/StripeModal';
-import Popup from './elements/overlays/Popup';
+import PopupNotification from './elements/overlays/PopupNotification';
 import TopNav from './elements/navs/TopNav';
 import HomePage from './pages/desktop/HomePage';
 import InspectorPage from './pages/desktop/InspectorPage';
@@ -388,21 +388,21 @@ class App extends Component {
 				      <Route render={()=> <Status404Page onPage={this.handlePage} />} />
 				    </Switch>
 
-				    {(!isInspectorPage()) && (<AdBannerPanel title={adBannerPanel.title} image={adBannerPanel.image} onClick={()=> this.handleAdBanner(adBannerPanel.url)} />)}
+				    {(!isInspectorPage()) && (<AdvertPanel title={adBannerPanel.title} image={adBannerPanel.image} onClick={()=> this.handleAdBanner(adBannerPanel.url)} />)}
 				    {(!isInspectorPage()) && (<BottomNav mobileLayout={false} onLogout={()=> this.handleLogout()} onPage={this.handlePage} />)}
 			    </div>
 
-		      {!(/chrom(e|ium)/i.test(navigator.userAgent.toLowerCase())) && (<ContentModal
+		      {!(/chrom(e|ium)/i.test(navigator.userAgent.toLowerCase())) && (<BaseOverlay
 				    tracking="modal/site"
 				    closeable={false}
 				    onComplete={()=> null}>
 				    This site best viewed in Chrome.
-			    </ContentModal>)}
+			    </BaseOverlay>)}
 
 				  {(popup) && (
-				  	<Popup payload={popup} onComplete={()=> this.setState({ popup : null })}>
+				  	<PopupNotification payload={popup} onComplete={()=> this.setState({ popup : null })}>
 					    {popup.content}
-			      </Popup>
+			      </PopupNotification>
 				  )}
 
 				  {(payDialog) && (<AlertDialog

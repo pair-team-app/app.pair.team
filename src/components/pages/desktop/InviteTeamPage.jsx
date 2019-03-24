@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 // import BaseDesktopPage from './BaseDesktopPage';
-import { POPUP_TYPE_OK } from '../../elements/overlays/Popup';
+import { POPUP_TYPE_OK } from '../../elements/overlays/PopupNotification';
 import Dropdown from '../../elements/forms/Dropdown';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { buildInspectorURL, isUserLoggedIn } from '../../../utils/funcs';

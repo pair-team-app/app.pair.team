@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import './AlertDialog.css'
 
-import ContentModal from './ContentModal';
-import { URLs } from '../../../utils/lang';
+import BaseOverlay from '../BaseOverlay';
+import { URLs } from '../../../../utils/lang';
 
 
 class AlertDialog extends Component {
@@ -30,7 +30,7 @@ class AlertDialog extends Component {
 		const { tracking, title, message } = this.props;
 		return (
 			<div className="alert-dialog-wrapper" ref={(element)=> { this.wrapper = element; }}>
-				<ContentModal
+				<BaseOverlay
 					tracking={`${tracking}/${URLs.firstComponent()}`}
 					outro={false}
 					closeable={true}
@@ -38,7 +38,7 @@ class AlertDialog extends Component {
 					title={title}
 					onComplete={this.props.onComplete}>
 					{message}
-				</ContentModal>
+				</BaseOverlay>
 			</div>
 		);
 	}

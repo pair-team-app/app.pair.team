@@ -5,7 +5,7 @@ import './TutorialBubble.css'
 import { TweenMax, Elastic, Power0, Power1 } from 'gsap/TweenMax';
 import { Column } from 'simple-flexbox';
 
-import tutorialContent from '../../../assets/json/tutorial-content';
+import tutorialContent from '../../../../assets/json/tutorial-content';
 
 
 class TutorialBubble extends Component {

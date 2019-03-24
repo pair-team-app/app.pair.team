@@ -6,15 +6,15 @@ import axios from 'axios';
 import qs from 'qs';
 import { Elements, StripeProvider } from 'react-stripe-elements';
 
-import ContentModal from './ContentModal';
-import StripeForm from '../../forms/StripeForm';
-import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR, POPUP_TYPE_OK } from './Popup';
-import { API_ENDPT_URL } from '../../../consts/uris';
-import { sendToSlack } from '../../../utils/funcs';
-import { URLs } from '../../../utils/lang';
-import { trackEvent } from '../../../utils/tracking';
-import stripe from '../../../assets/json/stripe';
-import stripeLogo from '../../../assets/images/logos/logo-stripe.png';
+import BaseOverlay from '../BaseOverlay';
+import StripeForm from '../../../forms/StripeForm';
+import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
+import { API_ENDPT_URL } from '../../../../consts/uris';
+import { sendToSlack } from '../../../../utils/funcs';
+import { URLs } from '../../../../utils/lang';
+import { trackEvent } from '../../../../utils/tracking';
+import stripe from '../../../../assets/json/stripe';
+import stripeLogo from '../../../../assets/images/logos/logo-stripe.png';
 
 
 const STRIPE_TEST_TOKEN = stripe.test.publish;
@@ -120,7 +120,7 @@ class StripeModal extends Component {
 
 		const { outro } = this.state;
 		return (
-			<ContentModal
+			<BaseOverlay
 				tracking={`stripe/${URLs.firstComponent()}`}
 				outro={outro}
 				unblurred={true}
@@ -147,7 +147,7 @@ class StripeModal extends Component {
 						</StripeProvider>
 					</div>
 				</div>
-			</ContentModal>);
+			</BaseOverlay>);
 	}
 }
 

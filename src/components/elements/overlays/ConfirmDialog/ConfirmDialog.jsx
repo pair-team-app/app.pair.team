@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import './ConfirmDialog.css'
 
-import ContentModal from './ContentModal';
-import { URLs } from '../../../utils/lang';
+import BaseOverlay from '../BaseOverlay';
+import { URLs } from '../../../../utils/lang';
 
 
 class ConfirmDialog extends Component {
@@ -50,18 +50,18 @@ class ConfirmDialog extends Component {
 
 		return (
 			<div className="confirm-dialog-wrapper" ref={(element)=> { this.wrapper = element; }}>
-				<ContentModal
+				<BaseOverlay
 					tracking={`${tracking}/${URLs.firstComponent()}`}
 					outro={outro}
 					closeable={true}
 					title={title}
 					onComplete={this.handleComplete}>
 					{message}
-					<div className="content-modal-button-wrapper confirm-dialog-button-wrapper">
-						<button className="content-modal-button aux-button adjacent-button" onClick={()=> this.handleClick(false)}>Cancel</button>
-						<button className="content-modal-button" onClick={()=> this.handleClick(true)}>OK</button>
+					<div className="base-overlay-button-wrapper confirm-dialog-button-wrapper">
+						<button className="base-overlay-button aux-button adjacent-button" onClick={()=> this.handleClick(false)}>Cancel</button>
+						<button className="base-overlay-button" onClick={()=> this.handleClick(true)}>OK</button>
 					</div>
-				</ContentModal>
+				</BaseOverlay>
 			</div>
 		);
 	}

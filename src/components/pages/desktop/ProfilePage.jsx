@@ -11,7 +11,7 @@ import { Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import ConfirmDialog from '../../elements/overlays/ConfirmDialog';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../elements/overlays/Popup';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../elements/overlays/PopupNotification';
 import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../elements/forms/InputField';
 import { DEFAULT_AVATAR, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';

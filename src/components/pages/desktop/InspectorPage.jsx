@@ -19,9 +19,9 @@ import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import ConfirmDialog from '../../elements/overlays/ConfirmDialog';
-import ContentModal from '../../elements/overlays/ContentModal';
+import BaseOverlay from '../../elements/overlays/BaseOverlay/BaseOverlay';
 import InputField, { INPUTFIELD_STATUS_IDLE } from '../../elements/forms/InputField';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../elements/overlays/Popup';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../elements/overlays/PopupNotification';
 import TutorialBubble from '../../elements/overlays/TutorialBubble';
 
 import { MOMENT_TIMESTAMP } from '../../../consts/formats';
@@ -2543,13 +2543,13 @@ class InspectorPage extends Component {
 			</BaseDesktopPage>
 
 
-			{(restricted) && (<ContentModal
+			{(restricted) && (<BaseOverlay
 				tracking="private/inspector"
 				closeable={false}
 				defaultButton="Register / Login"
 				onComplete={()=> this.props.onPage('register')}>
 				This project is private, you must be logged in as one of its team members to view!
-			</ContentModal>)}
+			</BaseOverlay>)}
 
 			{/*{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing*/}
 			{(!restricted && upload && (percent === 99 || processing)) && (<UploadProcessing
@@ -2566,14 +2566,14 @@ class InspectorPage extends Component {
 				onClose={()=> this.setState({ tutorial : null })}
 			/>)}
 
-			{(!upload && !valid) && (<ContentModal
+			{(!upload && !valid) && (<BaseOverlay
 				tracking="invalid/inspector"
 				closeable={true}
 				defaultButton={null}
 				title="Error Loading Project"
 				onComplete={()=> this.props.onPage('')}>
 				Design file not found.
-			</ContentModal>)}
+			</BaseOverlay>)}
 
 			{(fontState === 1) && (<ConfirmDialog
 				title="Missing Font(s)"

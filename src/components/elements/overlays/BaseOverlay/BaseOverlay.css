@@ -1,5 +1,5 @@
 
-.content-modal-wrapper {
+.base-overlay-wrapper {
 	z-index: 2000;
 	position: fixed;
 	top: 0;
@@ -10,7 +10,7 @@
 	background-color: rgba(0, 0, 0, 0.75);
 }
 
-.content-modal-content-wrapper {
+.base-overlay-content-wrapper {
 	position: fixed;
 	width: auto;
 	height: auto;
@@ -31,26 +31,26 @@
 	box-shadow: 3px 3px 10px #1a1b1d;
 }
 
-.content-modal-content-wrapper-unblurred {
+.base-overlay-content-wrapper-unblurred {
 	background-color: rgba(0, 0, 0, 0.0);;
 	box-shadow: none;
 }
 
-.content-modal-content-wrapper-auto {
+.base-overlay-content-wrapper-auto {
 }
 
-.content-modal-content-wrapper-fixed {
+.base-overlay-content-wrapper-fixed {
 	overflow-y: hidden;
 }
 
-.content-modal-content-wrapper-percent {
+.base-overlay-content-wrapper-percent {
 	width: 50%;
 }
 
-.content-modal-header-wrapper {
+.base-overlay-header-wrapper {
 	display: table;
 	width: 100%;
-	margin: -12px -1px 10px 10px;
+	margin: -10px 0 10px -5px;
 	padding-bottom: 5px;
 	border-bottom: 1px solid #eaecef;
 	font-family: "San Francisco Text SemiBold", sans-serif;
@@ -59,32 +59,31 @@
 	color: #1c1c1c;
 }
 
-.content-modal-title {
+.base-overlay-title {
 	display: table-cell;
 	text-align: left;
-	margin-left: -10px;
 	padding-right: 20px;
 }
 
-.content-modal-close-button {
+.base-overlay-close-button {
 	display: table-cell;
 	min-width: 0;
 	min-height: 0;
-	margin-right: 3px;
+	margin-right: -10px;
 	padding: 3px 8px;
 	font-size: 11px;
 }
 
-.content-modal-content {
+.base-overlay-content {
 	height: 100%;
 	line-height: 24px;
 }
 
-.content-modal-button-wrapper {
+.base-overlay-button-wrapper {
 	margin-top: 20px;
 }
 
-.content-modal-button {
+.base-overlay-button {
 	padding: 6px 4px;
 	max-width: 80px;
 	height: auto;

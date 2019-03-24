@@ -5,7 +5,7 @@ import './UploadHeader.css';
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 
-import { POPUP_TYPE_ERROR } from '../overlays/Popup';
+import { POPUP_TYPE_ERROR } from '../overlays/PopupNotification';
 import { updateDeeplink } from '../../../redux/actions';
 import { sendToSlack } from '../../../utils/funcs';
 import { Files } from '../../../utils/lang';
