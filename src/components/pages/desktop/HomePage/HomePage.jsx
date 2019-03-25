@@ -4,16 +4,16 @@ import './HomePage.css';
 
 import { connect } from 'react-redux';
 
-import BaseDesktopPage from './BaseDesktopPage';
-import ArtboardGrid from '../../elements/ArtboardGrid';
-import UploadHeader from '../../elements/navs/UploadHeader';
+import BaseDesktopPage from '../BaseDesktopPage';
+import ArtboardGrid from './ArtboardGrid';
+import UploadHeader from '../../../elements/navs/UploadHeader';
 
-import { INSPECT } from '../../../consts/uris';
-import { addFileUpload } from '../../../redux/actions';
-import {  URLs } from '../../../utils/lang';
-import { isUserLoggedIn } from '../../../utils/funcs';
-import { trackEvent } from '../../../utils/tracking';
-import homeContent from '../../../assets/json/home-content';
+import { INSPECT } from '../../../../consts/uris';
+import { addFileUpload } from '../../../../redux/actions';
+import {  URLs } from '../../../../utils/lang';
+import { isUserLoggedIn } from '../../../../utils/funcs';
+import { trackEvent } from '../../../../utils/tracking';
+import homeContent from '../../../../assets/json/home-content';
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
