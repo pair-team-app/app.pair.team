@@ -1,5 +1,5 @@
 
-import { Maths, Objects, Strings, URLs } from './lang';
+import { Maths, Objects, Strings, URLs } from '../../../../../utils/lang';
 
 const TAB = '  ';
 const badChars = /[\\.,_+=[\](){}]/g;
@@ -61,12 +61,12 @@ export function fontSpecs(font) {
 export function toAndroid(slices, artboard) {
 // 	console.log('inspector-langs.toAndroid()', slices, artboard);
 
-	const artboardName = Strings.camelize(Strings.uriSlug(artboard.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
+	const artboardName = Strings.camelize(Strings.uriSlugify(artboard.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 
 	let html = `<!-- ${DISCLAIMER.replace('__LANG__', 'XML').replace(/\n__/g, ' -->\n<!-- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -->').replace(/,\n/g, ' -->\n<!-- ')}\n\n\n`;
 	html += '<?xml version="1.0" encoding="utf-8"?>\n';
 	slices.forEach((slice)=> {
-		const sliceName = Strings.camelize(Strings.uriSlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
+		const sliceName = Strings.camelize(Strings.uriSlugify(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 		const viewType = (slice.type === 'textfield') ? 'Text View' : 'Image View';
 		const caption = viewType;
 		html += '<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"\n';
@@ -103,7 +103,7 @@ export function toCSS(slices) {
 
 	let html = `/* ${DISCLAIMER.replace('__LANG__', 'CSS').replace(/\n__/g, ' */\n/* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, ' */\n/* ')}\n\n\n`;
 	slices.forEach((slice)=> {
-		html += `.${Strings.uriSlug(slice.title)} {\n`;
+		html += `.${Strings.uriSlugify(slice.title)} {\n`;
 		html += `${TAB}position: absolute;\n`;
 		html += `${TAB}top: ${slice.meta.frame.origin.y}px;\n`;
 		html += `${TAB}left: ${slice.meta.frame.origin.x}px;\n`;
@@ -165,7 +165,7 @@ export function toGridHTML(slices) {
 		if (slice.type === 'textfield') {
 			const font = fontSpecs(slice.meta.font);
 
-			html += `${TAB}.${Strings.uriSlug(slice.title)} {\n`;
+			html += `${TAB}.${Strings.uriSlugify(slice.title)} {\n`;
 			html += `${TAB}${TAB}font-family: "${`${font.family} ${font.name}`.trim()}", sans-serif;\n`;
 			html += `${TAB}${TAB}font-weight: ${font.weight};\n`;
 			html += `${TAB}${TAB}font-size: ${font.size}px;\n`;
@@ -180,7 +180,7 @@ export function toGridHTML(slices) {
 
 	html += '<div className="grid-container">\n';
 	slices.forEach((slice)=> {
-		html += `${TAB}<div className="grid-cell ${Strings.uriSlug(slice.title)}">`;
+		html += `${TAB}<div className="grid-cell ${Strings.uriSlugify(slice.title)}">`;
 		html += (slice.type === 'textfield') ? `${slice.meta.txtVal}` : `<img src="./images/${URLs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}">`;
 		html += '</div>\n'
 	});
@@ -244,7 +244,7 @@ export function toSwift(slices, artboard) {
 	let html = `/**\n * ${DISCLAIMER.replace('__LANG__', 'Swift').replace(/\n__/g, '\n **//* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, '\n * ')}\n\n\n`;
 	slices.forEach((slice)=> {
 		if (slice.type === 'background' || slice.type === 'group' || slice.type === 'slice' || slice.type === 'symbol' || slice.type === 'textfield') {
-			const sliceName = Strings.camelize(Strings.uriSlug(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''));
+			const sliceName = Strings.camelize(Strings.uriSlugify(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''));
 
 			html += '// Asset\n';
 			html += 'enum Asset {\n';

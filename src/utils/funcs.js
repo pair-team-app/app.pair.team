@@ -8,19 +8,16 @@ import {
 	LOGIN,
 	PARTS,
 	PRESENT,
-// 	PRIVACY,
 	PROFILE,
-// 	RECOVER,
+	RECOVER,
 	REGISTER,
-// 	TERMS,
 	UPLOAD,
 	API_ENDPT_URL } from '../consts/uris';
 import { Strings } from './lang';
 
 
-
 export function buildInspectorPath(upload, prefix='/inspect', suffix='') {
-	return (`${Strings.trimSlash(prefix)}/${upload.id}/${Strings.uriSlug(upload.title)}${Strings.trimSlash(suffix)}`);
+	return (`${Strings.trimSlashes(prefix)}/${upload.id}/${Strings.uriSlugify(upload.title)}${Strings.trimSlashes(suffix)}`);
 }
 
 export function buildInspectorURL(upload, prefix='/inspect', suffix='') {
@@ -59,6 +56,11 @@ export function isLoginPage(exact=false) {
 export function isProfilePage(exact=false) {
 	const { pathname } = window.location;
 	return ((exact) ? pathname === PROFILE : pathname.includes(PROFILE));
+}
+
+export function isRecoverPage(exact=false) {
+	const { pathname } = window.location;
+	return ((exact) ? pathname === RECOVER : pathname.includes(RECOVER));
 }
 
 export function isRegisterPage(exact=false) {

@@ -17,30 +17,31 @@ import panAndZoomHoc from 'react-pan-and-zoom-hoc';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
-import BaseDesktopPage from './BaseDesktopPage';
-import ConfirmDialog from '../../elements/overlays/ConfirmDialog';
-import BaseOverlay from '../../elements/overlays/BaseOverlay/BaseOverlay';
-import InputField, { INPUTFIELD_STATUS_IDLE } from '../../elements/forms/InputField';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../elements/overlays/PopupNotification';
-import TutorialBubble from '../../elements/overlays/TutorialBubble';
+import BaseDesktopPage from '../BaseDesktopPage';
+import ConfirmDialog from '../../../elements/overlays/ConfirmDialog';
+import BaseOverlay from '../../../elements/overlays/BaseOverlay/BaseOverlay';
+import InputField, { INPUTFIELD_STATUS_IDLE } from '../../../elements/forms/InputField';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../../elements/overlays/PopupNotification';
+import TutorialBubble from '../../../elements/overlays/TutorialBubble';
 
-import { MOMENT_TIMESTAMP } from '../../../consts/formats';
-import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../consts/key-codes';
-import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL } from '../../../consts/inspector';
-import { DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PARTS_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
-import { setRedirectURI } from '../../../redux/actions';
-import { buildInspectorPath, buildInspectorURL, sendToSlack } from '../../../utils/funcs.js';
-import { Browsers, DateTimes, Files, Maths, Strings, URLs } from '../../../utils/lang.js';
-import { fontSpecs, toAndroid, toCSS, toGridHTML, toSpecs, toSwift } from '../../../utils/inspector-langs.js';
-import { trackEvent } from '../../../utils/tracking';
+import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL } from './consts';
+import { drawCanvasSliceBorder, drawCanvasSliceMarchingAnts, drawCanvasSliceGuides } from './utils/canvas';
+import { fontSpecs, toAndroid, toCSS, toGridHTML, toSpecs, toSwift } from './utils/code-generator.js';
+import { MOMENT_TIMESTAMP } from '../../../../consts/formats';
+import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../../consts/key-codes';
+import { DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PARTS_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL } from '../../../../consts/uris';
+import { setRedirectURI } from '../../../../redux/actions';
+import { buildInspectorPath, buildInspectorURL, sendToSlack } from '../../../../utils/funcs.js';
+import { Browsers, DateTimes, Files, Maths, Strings, URLs } from '../../../../utils/lang.js';
+import { trackEvent } from '../../../../utils/tracking';
 
-import downloadButton from '../../../assets/images/buttons/btn-download.svg';
-// import androidIcon from '../../../assets/images/icons/ico-android.png';
-// import iosIcon from '../../../assets/images/icons/ico-ios.png';
-// import html5Icon from '../../../assets/images/icons/ico-html5.png';
-import adBannerPanel from '../../../assets/json/ad-banner-panel';
-import inspectorTabSets from '../../../assets/json/inspector-tab-sets';
-import deLogo from '../../../assets/images/logos/logo-designengine.svg';
+import downloadButton from '../../../../assets/images/buttons/btn-download.svg';
+// import androidIcon from '../../../../assets/images/icons/ico-android.png';
+// import iosIcon from '../../../../assets/images/icons/ico-ios.png';
+// import html5Icon from '../../../../assets/images/icons/ico-html5.png';
+import adBannerPanel from '../../../../assets/json/ad-banner-panel';
+import inspectorTabSets from '../../../../assets/json/inspector-tab-sets';
+import deLogo from '../../../../assets/images/logos/logo-designengine.svg';
 
 
 const InteractiveDiv = panAndZoomHoc('div');
@@ -83,86 +84,6 @@ const flattenUploadArtboards = (upload, type=null)=> {
 const slicesByArea = (slices)=> {
 // 	console.log('slicesByArea()', slices);
 	return(slices.sort((s1, s2)=> ((Maths.geom.sizeArea(s1.meta.frame.size) < Maths.geom.sizeArea(s2.meta.frame.size)) ? -1 : (Maths.geom.sizeArea(s1.meta.frame.size) > Maths.geom.sizeArea(s2.meta.frame.size)) ? 1 : 0)));
-};
-*/
-
-const drawCanvasSliceBorder = (context, frame)=> {
-	context.strokeStyle = CANVAS.slices.borderColor;
-	context.lineWidth = CANVAS.slices.lineWidth;
-	context.setLineDash([]);
-	context.lineDashOffset = 0;
-	context.beginPath();
-	context.strokeRect(frame.origin.x + 1, frame.origin.y + 1, frame.size.width - 2, frame.size.height - 2);
-	context.stroke();
-};
-
-/*
-const drawCanvasSliceFill = (context, frame, color)=> {
-	context.fillStyle = color;
-	context.fillRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-};
-*/
-
-const drawSliceGuides = (context, frame, size, color)=> {
-	context.strokeStyle = color;
-	context.lineWidth = CANVAS.guides.lineWidth;
-	context.setLineDash(CANVAS.guides.lineDash);
-	context.lineDashOffset = 0;
-	context.beginPath();
-	context.moveTo(0, frame.origin.y); // h-top
-	context.lineTo(size.width, frame.origin.y);
-	context.moveTo(0, frame.origin.y + frame.size.height); // h-bottom
-	context.lineTo(size.width, frame.origin.y + frame.size.height);
-	context.moveTo(frame.origin.x, 0); // v-left
-	context.lineTo(frame.origin.x, size.height);
-	context.moveTo(frame.origin.x + frame.size.width, 0); // v-right
-	context.lineTo(frame.origin.x + frame.size.width, size.height);
-	context.stroke();
-};
-
-const drawCanvasSliceMarchingAnts = (context, frame, offset)=> {
-	context.strokeStyle = CANVAS.marchingAnts.stroke;
-	context.lineWidth = CANVAS.marchingAnts.lineWidth;
-	context.setLineDash(CANVAS.marchingAnts.lineDash);
-	context.lineDashOffset = offset;
-	context.beginPath();
-	context.strokeRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-	context.stroke();
-};
-
-/*
-const drawCanvasSliceTooltip = (context, text, origin, maxWidth=-1)=> {
-	maxWidth = (maxWidth === -1) ? 250 : maxWidth;
-
-	let caption = text;
-	let txtWidth = context.measureText(caption.toUpperCase()).width << 0;
-	while ((txtWidth + CANVAS.caption.padding) > maxWidth) {
-		caption = `${caption.substring(0, -3)}…`;
-		txtWidth = context.measureText(caption.toUpperCase()).width << 0;
-		if (caption.length === 1) {
-			break;
-		}
-	}
-
-	const txtMetrics = {
-		width   : txtWidth,
-		height  : CANVAS.caption.height,
-		padding : CANVAS.caption.padding
-	};
-
-	context.fillStyle = CANVAS.caption.bgColor;
-	context.fillRect(origin.x + 1, (origin.y - txtMetrics.height), (txtMetrics.width + (txtMetrics.padding * 2)) - 2, txtMetrics.height);
-
-	context.strokeStyle = CANVAS.caption.lineColor;
-	context.lineWidth = 1;
-	context.setLineDash([]);
-	context.lineDashOffset = 0;
-	context.beginPath();
-	context.strokeRect(origin.x + 1, (origin.y - txtMetrics.height), (txtMetrics.width + (txtMetrics.padding * 2)) - 2, txtMetrics.height);
-	context.stroke();
-
-	context.fillStyle = CANVAS.caption.textColor;
-	context.fillText(caption.toUpperCase(), txtMetrics.padding + origin.x, txtMetrics.padding + (origin.y - txtMetrics.height));
 };
 */
 
@@ -292,7 +213,7 @@ const FilingTabTitle = (props)=> {
 const InspectorFooter = (props)=> {
 // 	console.log('InspectorPage.InspectorFooter()', props);
 
-	const { section, scale, fitScale, artboards, processing, creator } = props;
+	const { section, scale, fitScale, artboards, processing, creator, activeTab } = props;
 	const prevArtboard = {
 		id     : -1,
 		pageID : -1
@@ -307,12 +228,15 @@ const InspectorFooter = (props)=> {
 		<img src={deLogo} className="inspector-page-footer-logo" onClick={()=> props.onPage('')} alt="Design Engine" />
 		{(!processing) && (<div className="inspector-page-footer-button-wrapper">
 			{/*{(profile && ((upload.id << 0) === 1 || upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true });}}>Share</button>)}*/}
-			{(creator) && (<Dropzone
-				className="inspector-page-footer-dz"
-				multiple={false}
-				disablePreview={true}
-				onDrop={props.onDrop}
-			><button className="inspector-page-footer-button" onClick={()=> trackEvent('button', 'version')}>Version</button></Dropzone>)}
+			{/*{(creator) && (<Dropzone*/}
+			{/*	className="inspector-page-footer-dz"*/}
+			{/*	multiple={false}*/}
+			{/*	disablePreview={true}*/}
+			{/*	onDrop={props.onDrop}>*/}
+			{/*	<button className="inspector-page-footer-button" onClick={()=> trackEvent('button', 'version')}>Version</button>*/}
+			{/*</Dropzone>)}*/}
+
+			<button className="inspector-page-footer-button" onClick={()=> props.onLinter(activeTab)}>Send to Linter</button>
 
 			<button disabled={(scale >= Math.max(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-in'); props.onZoom(1);}}><FontAwesome name="search-plus" /></button>
 			<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-out'); props.onZoom(-1);}}><FontAwesome name="search-minus" /></button>
@@ -1051,8 +975,8 @@ class InspectorPage extends Component {
 					return (tabSet);
 
 				} else {
-					return (tabSet.map((tab, j) => {
-						return ((j === 0) ? Object.assign({}, tab, {
+					return (tabSet.map((tab, ii) => {
+						return ((ii === 0) ? Object.assign({}, tab, {
 							type     : 'component',
 							enabled  : ((upload.state << 0) === 3),
 							contents : <SpecsList
@@ -1081,7 +1005,7 @@ class InspectorPage extends Component {
 
 		} else if (section === SECTIONS.PARTS) {
 			tabSets = [...tabSets].map((tabSet, i) => {
-				return (tabSet.map((tab, j) => {
+				return (tabSet.map((tab, ii) => {
 					return (Object.assign({}, tab, {
 						enabled  : ((upload.state << 0) === 3),
 						contents : <PartsList
@@ -1140,12 +1064,12 @@ class InspectorPage extends Component {
 						];
 
 						tabSets = [...tabSets].map((tabSet, i) => {
-							return (tabSet.map((tab, j) => {
+							return (tabSet.map((tab, ii) => {
 								if (i === 0) {
 									return (Object.assign({}, tab, {
 										enabled  : ((upload.state << 0) === 3),
-										contents : langs[j].html,
-										syntax   : langs[j].syntax
+										contents : langs[ii].html,
+										syntax   : langs[ii].syntax
 									}));
 
 								} else {
@@ -1199,8 +1123,8 @@ class InspectorPage extends Component {
 		if (section === SECTIONS.INSPECT) {
 			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 				if (i === 1) {
-					return (tabSet.map((tab, j)=> {
-						return ((j === 0) ? Object.assign({}, tab, {
+					return (tabSet.map((tab, ii)=> {
+						return ((ii === 0) ? Object.assign({}, tab, {
 							type     : 'component',
 							enabled  : true,
 							contents : <SpecsList
@@ -1266,12 +1190,12 @@ class InspectorPage extends Component {
 
 		} else if (section === SECTIONS.PRESENTER) {
 			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
-				return (tabSet.map((tab, j)=> {
+				return (tabSet.map((tab, ii)=> {
 					if (i === 0) {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : langs[j].html,
-							syntax   : langs[j].syntax
+							contents : langs[ii].html,
+							syntax   : langs[ii].syntax
 						}));
 
 					} else {
@@ -1315,8 +1239,8 @@ class InspectorPage extends Component {
 		if (section === SECTIONS.INSPECT) {
 			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 				if (i === 1) {
-					return (tabSet.map((tab, j)=> {
-						return ((j === 0) ? Object.assign({}, tab, {
+					return (tabSet.map((tab, ii)=> {
+						return ((ii === 0) ? Object.assign({}, tab, {
 							type     : 'component',
 							enabled  : true,
 							contents : <SpecsList
@@ -1380,12 +1304,12 @@ class InspectorPage extends Component {
 
 		} else if (section === SECTIONS.PRESENTER) {
 			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
-				return (tabSet.map((tab, j)=> {
+				return (tabSet.map((tab, ii)=> {
 					if (i === 0) {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : langs[j].html,
-							syntax   : langs[j].syntax
+							contents : langs[ii].html,
+							syntax   : langs[ii].syntax
 						}));
 
 					} else {
@@ -1502,8 +1426,8 @@ class InspectorPage extends Component {
 
 		const { upload, artboard, scrolling } = this.state;
 		if (!scrolling) {
-			this.resetTabSets(upload, [artboard]);
-// 			this.resetTabSets(upload, (artboard) ? [artboard] : []);
+// 			this.resetTabSets(upload, [artboard]);
+			this.resetTabSets(upload, (artboard) ? [artboard] : []);
 		}
 	};
 
@@ -1544,7 +1468,7 @@ class InspectorPage extends Component {
 // 				drawCanvasSliceFill(context, frame, CANVAS.slices.fillColor);
 // 				drawCanvasSliceTooltip(context, slice.type, frame.origin, frame.size.width);
 				drawCanvasSliceBorder(context, frame);
-				drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.guides.color);
+				drawCanvasSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.guides.color);
 				drawCanvasSliceMarchingAnts(context, frame, this.antsOffset);
 			}
 
@@ -1554,7 +1478,7 @@ class InspectorPage extends Component {
 // 					drawCanvasSliceFill(context, frame, CANVAS.slices.fillColor);
 // 					drawCanvasSliceTooltip(context, `W:${frame.size.width}px H:${frame.size.height}px`, frame.origin, frame.size.width * 7);
 					drawCanvasSliceBorder(context, frame);
-					drawSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.guides.color);
+					drawCanvasSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.guides.color);
 				}
 			}
 		}
@@ -1846,7 +1770,7 @@ class InspectorPage extends Component {
 	};
 
 	handlePanMove = (x, y)=> {
-		console.log('InspectorPage.handlePanMove()', x, y, this.state.viewSize, this.contentSize);
+// 		console.log('InspectorPage.handlePanMove()', x, y, this.state.viewSize, this.contentSize);
 
 		if (Maths.geom.isSizeDimensioned(this.contentSize)) {
 			const panMultPt = { x, y };
@@ -1889,10 +1813,51 @@ class InspectorPage extends Component {
 		}, '*');
 	};
 
+	handleSendSyntaxLinter = (tab)=> {
+		console.log('InspectorPage.handleSendSyntaxLinter()', tab);
+
+		const tabID = tab.id;
+		const lang = (tab.title === 'CSS') ? 'css' : (tab.title === 'ReactHTML') ? 'html' : (tab.title === 'Swift') ? 'swift' : (tab.title === 'Android') ? 'xml' : 'txt';
+
+		trackEvent('button', `send-linter-${lang}`);
+		axios.post('http://processing.designengine.ai/services/linter.php', {
+			lang   : lang,
+			config : '',
+			syntax : tab.syntax
+		}).then((response) => {
+			console.log("LINT", response.data);
+
+			const { syntax } = response.data;
+			const html = JSON.stringify(syntax);
+			const tabSets = [...this.state.tabSets].map((tabSet, i)=> {
+				return (tabSet.map((tab)=> {
+					if (i === 0) {
+						return ((tab.id === tabID) ? Object.assign({}, tab, {
+							contents : html,
+							syntax   : syntax
+						}) : tab);
+
+					} else {
+						return (tab);
+					}
+				}));
+			});
+
+			const activeTabs = [...this.state.activeTabs].map((activeTab, i)=> {
+				const tab = tabSets[i].find((tab)=> (tab.id === activeTab.id));
+				return ((tab) ? tab : activeTab);
+			});
+
+			this.setState({ tabSets, activeTabs });
+		}).catch((error) => {
+			console.log("LINT ERROR", error);
+		});
+	};
+
 	handleSliceClick = (ind, slice, offset)=> {
 // 		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
 
-		trackEvent('slice', `${slice.id}_${Strings.uriSlug(slice.title)}`);
+		trackEvent('slice', `${slice.id}_${Strings.uriSlugify(slice.title)}`);
 		const { artboard } = this.state;
 
 		slice.filled = true;
@@ -1938,7 +1903,7 @@ class InspectorPage extends Component {
 
 	handleTab = (tab)=> {
 // 		 console.log('InspectorPage.handleTab()', tab);
-		trackEvent('tab', Strings.uriSlug(tab.title));
+		trackEvent('tab', Strings.uriSlugify(tab.title));
 
 		const { tabSets } = this.state;
 		const activeTabs = [...this.state.activeTabs].map((activeTab, i)=> {
@@ -2262,7 +2227,7 @@ class InspectorPage extends Component {
 	render() {
 // 		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage.render()', this.props);
-		console.log('InspectorPage.render()', this.state);
+// 		console.log('InspectorPage.render()', this.state);
 // 		console.log('InspectorPage.render()', (new Array(100)).fill(null).map((i)=> (Maths.randomInt(1, 10))).join(','), this.state);
 
 
@@ -2464,11 +2429,13 @@ class InspectorPage extends Component {
 						section={section}
 						processing={processing}
 						artboards={flattenUploadArtboards(upload, 'page_child')}
+						activeTab={activeTabs[0]}
 						onDrop={this.handleFileDrop}
 						onChangeArtboard={this.handleChangeArtboard}
 						onChangeSection={(section)=> this.handleChangeSection(section)}
 						onPage={this.props.onPage}
 						onZoom={this.handleZoom}
+						onLinter={this.handleSendSyntaxLinter}
 					/>)}
 				</div>
 

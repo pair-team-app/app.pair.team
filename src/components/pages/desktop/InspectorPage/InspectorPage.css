@@ -1,5 +1,4 @@
 
-
 @keyframes marquee-banner-intro {
 	0%   { display: block; opacity: 0; }
 	100% { opacity: 1; }
@@ -60,7 +59,7 @@
 	position: relative;
 	width: 188px;
 	height: 172px;
-	background: #1a1b1d url(../../../assets/images/backgrounds/bg-checkerboard.png) repeat;
+	background: #1a1b1d url(../../../../assets/images/backgrounds/bg-checkerboard.png) repeat;
 	border: 1px solid #00ff0f;
 	text-align: center;
 	vertical-align: middle;
@@ -253,7 +252,7 @@
 	position: relative;
 	width: 100%;
 	height: 100%;
-	background: #111111 url(../../../assets/images/backgrounds/bg-checkerboard.png) repeat;
+	background: #111111 url(../../../../assets/images/backgrounds/bg-checkerboard.png) repeat;
 	overflow: scroll;
 	z-index: 1;
 	cursor: crosshair;
