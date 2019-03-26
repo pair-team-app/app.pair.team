@@ -17,6 +17,7 @@ import PopupNotification from './elements/overlays/PopupNotification';
 import TopNav from './elements/navs/TopNav';
 import HomePage from './pages/desktop/HomePage';
 import InspectorPage from './pages/desktop/InspectorPage';
+import IntegrationsPage from './pages/desktop/IntegrationsPage';
 import InviteTeamPage from './pages/desktop/InviteTeamPage';
 import LoginPage from './pages/desktop/LoginPage';
 import ProfilePage from './pages/desktop/ProfilePage';
@@ -375,6 +376,7 @@ class App extends Component {
 					    <Route path="/login/:inviteID?" render={(props)=> <LoginPage {...props} onPage={this.handlePage} />} onPopup={this.handlePopup} />
 					    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} />} />
 					    <Route exact path="/parts" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} />} />
+					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route path="/parts/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
 					    <Route exact path="/present" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} />} />
