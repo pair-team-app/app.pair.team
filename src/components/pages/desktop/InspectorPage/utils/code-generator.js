@@ -59,7 +59,7 @@ export function fontSpecs(font) {
 }
 
 export function toAndroid(slices, artboard) {
-// 	console.log('inspector-langs.toAndroid()', slices, artboard);
+// 	console.log('code-generator.toAndroid()', slices, artboard);
 
 	const artboardName = Strings.camelize(Strings.uriSlugify(artboard.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 
@@ -99,7 +99,7 @@ export function toAndroid(slices, artboard) {
 }
 
 export function toCSS(slices) {
-// 	console.log('inspector-langs.toCSS()', slices);
+// 	console.log('code-generator.toCSS()', slices);
 
 	let html = `/* ${DISCLAIMER.replace('__LANG__', 'CSS').replace(/\n__/g, ' */\n/* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, ' */\n/* ')}\n\n\n`;
 	slices.forEach((slice)=> {
@@ -136,7 +136,7 @@ export function toCSS(slices) {
 }
 
 export function toGridHTML(slices) {
-// 	console.log('inspector-langs.toFlexBoxHTML()', slices);
+// 	console.log('code-generator.toFlexBoxHTML()', slices);
 
 	if (slices.length === 0) {
 		return ({
@@ -195,7 +195,7 @@ export function toGridHTML(slices) {
 }
 
 export function toReactCSS(slices) {
-// 	console.log('inspector-langs.toReactCSS()', slices);
+// 	console.log('code-generator.toReactCSS()', slices);
 
 	if (slices.length === 0) {
 		return ({
@@ -208,6 +208,63 @@ export function toReactCSS(slices) {
 	return ({
 		html   : JSON.stringify(`/* ${DISCLAIMER} */\n\n${html}`),
 		syntax : `${html}\n`
+	});
+}
+
+export function toReactJS(slices) {
+// 	console.log('code-generator.toReactJS()', slices);
+
+	if (slices.length === 0) {
+		return ({
+			html   : null,
+			syntax : null
+		});
+	}
+
+	const parentSlice = [...slices].shift();
+	slices = [...slices].slice(1, Math.min(slices.length, 4));
+
+	const componentName = Strings.camelize(parentSlice.title.replace(badChars, ''), null, true);
+
+
+	let html = `/**\n * ${DISCLAIMER.replace('__LANG__', 'JSX').replace(/\n__/g, '\n **//* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, '\n * ')}\n\n\n`;
+	html += 'import React, { Component } from \'react\';\n';
+	html += `import './${componentName}.css';\n\n`;
+	html += `import axios from 'axios';\n`;
+	html += `import qs from 'qs'\n`;
+	html += `import { Column, Row } from 'simple-flexbox';\n`;
+	html += `const wrapper = React.createRef();\n\n`;
+
+
+	slices.forEach((slice)=> {
+		const title = slice.title.replace(badChars, '');
+		html += `const ${Strings.camelize(title, null, true)} = (props)=> {\n`;
+		html += `${TAB}return (<div className="${Strings.uriSlugify(title)}-wrapper">\n`;
+		html += (slice.type === 'textfield') ? `${TAB}${TAB}<div className="${Strings.uriSlugify(title)}-text">${slice.meta.txtVal}</div>\n` : `${TAB}${TAB}<img className="${Strings.uriSlugify(title)}-image" src="./images/${URLs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}" />\n`;
+		html += `${TAB}</div>);\n`;
+		html += `};\n\n`;
+	});
+
+
+	html += `class ${componentName} extends Component {\n`;
+	html += `${TAB}constructor(props) {\n`;
+	html += `${TAB}${TAB}super(props);\n`;
+	html += `${TAB}${TAB}this.state = {\n`;
+	html += `${TAB}${TAB}};\n`;
+	html += `${TAB}}\n\n`;
+	html += `${TAB}render() {\n`;
+	html += `${TAB}${TAB}return (<div className="${Strings.uriSlugify(componentName)}">\n`;
+	slices.forEach((slice)=> {
+		html += `${TAB}${TAB}${TAB}<${Strings.camelize(slice.title.replace(badChars, ''), null, true)} />\n`;
+	});
+	html += `${TAB}${TAB}</div>);\n`;
+	html += `${TAB}}\n`;
+	html += `}\n\n`;
+	html += `export default ${componentName};\n`;
+
+	return ({
+		html   : JSON.stringify(html),
+		syntax : `${html.replace(/(&nbsp)+;/g, '\t')}`
 	});
 }
 
@@ -238,7 +295,7 @@ export function toSpecs(slice) {
 }
 
 export function toSwift(slices, artboard) {
-// 	console.log('inspector-langs.toSwift()', slices, artboard);
+// 	console.log('code-generator.toSwift()', slices, artboard);
 
 	const artboardName = Strings.camelize(artboard.title.replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 	let html = `/**\n * ${DISCLAIMER.replace('__LANG__', 'Swift').replace(/\n__/g, '\n **//* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, '\n * ')}\n\n\n`;

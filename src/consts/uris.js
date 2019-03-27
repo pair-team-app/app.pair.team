@@ -20,6 +20,7 @@ export const CDN_DOWNLOAD_PARTS_URL = 'http://cdn.designengine.ai/download-slice
 export const CDN_DOWNLOAD_PDF_URL = 'http://cdn.designengine.ai/download-pdf.php';
 export const CDN_DOWNLOAD_PROJECT_URL = 'http://cdn.designengine.ai/download-project.php';
 export const CDN_UPLOAD_URL = `${window.location.href.replace(window.location.pathname, '')}/php/upload.php`;
+export const LINTER_ENDPT_URL = 'http://processing.designengine.ai/services/linter.php';
 
 export const EXTENSION_CONFIG_URL = 'chrome://?id=kkgccakiccjnlmponcggpmagkgelpbhg';
 export const EXTENSION_PUBLIC_HOST = 'chrome-extension://kkgccakiccjnlmponcggpmagkgelpbhg';
