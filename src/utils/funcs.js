@@ -17,7 +17,7 @@ import { Strings } from './lang';
 
 
 export function buildInspectorPath(upload, prefix='/inspect', suffix='') {
-	return (`${Strings.trimSlashes(prefix)}/${upload.id}/${Strings.uriSlugify(upload.title)}${Strings.trimSlashes(suffix)}`);
+	return (`${Strings.trimSlashes(prefix)}/${upload.id}/${Strings.slugifyURI(upload.title)}${Strings.trimSlashes(suffix)}`);
 }
 
 export function buildInspectorURL(upload, prefix='/inspect', suffix='') {

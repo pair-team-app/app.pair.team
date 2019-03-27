@@ -1922,7 +1922,7 @@ class InspectorPage extends Component {
 	handleSliceClick = (ind, slice, offset)=> {
 // 		console.log('InspectorPage.handleSliceClick()', ind, slice, offset);
 
-		trackEvent('slice', `${slice.id}_${Strings.uriSlugify(slice.title)}`);
+		trackEvent('slice', `${slice.id}_${Strings.slugifyURI(slice.title)}`);
 		const { artboard } = this.state;
 
 		slice.filled = true;
@@ -1968,7 +1968,7 @@ class InspectorPage extends Component {
 
 	handleTab = (tab)=> {
 // 		 console.log('InspectorPage.handleTab()', tab);
-		trackEvent('tab', Strings.uriSlugify(tab.title));
+		trackEvent('tab', Strings.slugifyURI(tab.title));
 
 		const { tabSets } = this.state;
 		const activeTabs = [...this.state.activeTabs].map((activeTab, i)=> {
