@@ -5,7 +5,7 @@ import './IntegrationsPage.css';
 import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from '../BaseDesktopPage';
-import { Strings } from '../../../../utils/lang';
+import { Arrays, Strings } from '../../../../utils/lang';
 import { trackEvent } from '../../../../utils/tracking';
 import integrationItems from '../../../../assets/json/integration-items';
 
@@ -65,7 +65,7 @@ class IntegrationsPage extends Component {
 			<BaseDesktopPage className="integrations-page-wrapper">
 				<h4>CD / CI Integrations</h4>
 				<IntegrationsPageGrid
-					integrations={integrationItems}
+					integrations={Arrays.shuffle(integrationItems)}
 					onClick={this.handleIntegrationItemClick}
 				/>
 			</BaseDesktopPage>
