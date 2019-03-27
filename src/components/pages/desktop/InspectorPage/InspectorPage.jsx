@@ -1877,6 +1877,8 @@ class InspectorPage extends Component {
 				lang   : lang,
 				config : '',
 				syntax : tab.syntax
+			}, {
+				headers : { 'Content-Type' : 'multipart/form-data' }
 			}).then((response) => {
 				console.log("LINT", response.data);
 
