@@ -214,7 +214,7 @@ const FilingTabTitle = (props)=> {
 const InspectorFooter = (props)=> {
 // 	console.log('InspectorPage.InspectorFooter()', props);
 
-	const { section, scale, fitScale, artboards, processing, creator, activeTab } = props;
+	const { section, scale, fitScale, artboards, processing, creator } = props;
 	const prevArtboard = {
 		id     : -1,
 		pageID : -1
@@ -229,15 +229,13 @@ const InspectorFooter = (props)=> {
 		<img src={deLogo} className="inspector-page-footer-logo" onClick={()=> props.onPage('')} alt="Design Engine" />
 		{(!processing) && (<div className="inspector-page-footer-button-wrapper">
 			{/*{(profile && ((upload.id << 0) === 1 || upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true });}}>Share</button>)}*/}
-			{/*{(creator) && (<Dropzone*/}
-			{/*	className="inspector-page-footer-dz"*/}
-			{/*	multiple={false}*/}
-			{/*	disablePreview={true}*/}
-			{/*	onDrop={props.onDrop}>*/}
-			{/*	<button className="inspector-page-footer-button" onClick={()=> trackEvent('button', 'version')}>Version</button>*/}
-			{/*</Dropzone>)}*/}
-
-			<button className="inspector-page-footer-button" onClick={()=> props.onLinter(activeTab)}>Send to Linter</button>
+			{(creator) && (<Dropzone
+				className="inspector-page-footer-dz"
+				multiple={false}
+				disablePreview={true}
+				onDrop={props.onDrop}>
+				<button className="inspector-page-footer-button" onClick={()=> trackEvent('button', 'version')}>Version</button>
+			</Dropzone>)}
 
 			<button disabled={(scale >= Math.max(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-in'); props.onZoom(1);}}><FontAwesome name="search-plus" /></button>
 			<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-out'); props.onZoom(-1);}}><FontAwesome name="search-minus" /></button>
@@ -1807,7 +1805,7 @@ class InspectorPage extends Component {
 	handleSendSyntaxAtom = (tab)=> {
 // 		console.log('InspectorPage.handleSendSyntaxAtom()', tab);
 
-		const lang = (tab.title === 'CSS') ? 'css' : (tab.title === 'ReactJSX') ? 'js' : (tab.title === 'Swift') ? 'swift' : (tab.title === 'Android') ? 'xml' : 'txt';
+		const lang = (tab.title === 'CSS') ? 'css' : (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Swift') ? 'swift' : (tab.title === 'Android') ? 'xml' : 'txt';
 		trackEvent('button', `send-atom-${lang}`);
 
 		const { processing } = this.props;
@@ -1836,7 +1834,7 @@ class InspectorPage extends Component {
 
 		const tabID = tab.id;
 		const lang = (tab.title === 'CSS') ? 'css' : (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Swift') ? 'swift' : (tab.title === 'Android') ? 'xml' : 'txt';
-		const linter = (lang === 'css') ? 'StyleLint' : (lang === 'html') ? 'HTMLHint' : (lang === 'js' || lang === 'jsx') ? 'ESLint + Prettier' : 'Linter';
+		const linter = (lang === 'css') ? 'StyleLint' : (lang === 'html') ? 'HTMLHint' : (lang === 'js' || lang === 'jsx') ? 'Prettier + ESLint' : 'Linter';
 
 		trackEvent('button', `send-linter-${lang}`);
 
@@ -2475,13 +2473,11 @@ class InspectorPage extends Component {
 						section={section}
 						processing={processing}
 						artboards={flattenUploadArtboards(upload, 'page_child')}
-						activeTab={activeTabs[0]}
 						onDrop={this.handleFileDrop}
 						onChangeArtboard={this.handleChangeArtboard}
 						onChangeSection={(section)=> this.handleChangeSection(section)}
 						onPage={this.props.onPage}
 						onZoom={this.handleZoom}
-						onLinter={this.handleSendSyntaxLinter}
 					/>)}
 				</div>
 
@@ -2499,7 +2495,7 @@ class InspectorPage extends Component {
 									/>
 									<div className="inspector-page-panel-button-wrapper">
 										{(i === 0)
-											? (<button disabled={!logURL} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : 'View Linter Changes'}</button>)
+											? (<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> (!logURL) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!logURL) ? 'Send to Linter' : 'View Linter Changes'}</button>)
 											: (<CopyToClipboard onCopy={()=> this.handleClipboardCopy('specs', toSpecs(activeSlice))} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
 													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>
 												</CopyToClipboard>)
@@ -2551,7 +2547,7 @@ class InspectorPage extends Component {
 														{/*<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>*/}
 														{/*	<button disabled={!activeTabs[i].contents} style={{opacity:(!processing << 0)}} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>*/}
 														{/*</CopyToClipboard>*/}
-														<button disabled={!logURL} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : 'View Linter Changes'}</button>
+														<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> (!logURL) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!logURL) ? 'Send to Linter' : 'View Linter Changes'}</button>
 														<button disabled={!atomExtension || !slice} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Send to Atom'}</button>
 													</>)
 												: (<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download PDF'}</button>)}
