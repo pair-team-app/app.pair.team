@@ -5,16 +5,17 @@ import './IntegrationsPage.css';
 import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from '../BaseDesktopPage';
+import { Strings } from '../../../../utils/lang';
 import { trackEvent } from '../../../../utils/tracking';
 import integrationItems from '../../../../assets/json/integration-items';
 
 
 const IntegrationsPageGrid = (props)=> {
-	console.log('IntegrationsPage.IntegrationsPageGrid()', props);
+// 	console.log('IntegrationsPage.IntegrationsPageGrid()', props);
 
 	const { integrations } = props;
 	return (<div className="integrations-page-grid">
-		<Row horizontal="start" className="integrations-page-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
+		<Row horizontal="space-around" className="integrations-page-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
 			{integrations.map((integration, i) => {
 				return (<Column key={i}>
 					<IntegrationsPageGridItem
@@ -29,14 +30,14 @@ const IntegrationsPageGrid = (props)=> {
 
 
 const IntegrationsPageGridItem = (props)=> {
-	console.log('IntegrationsPage.IntegrationsPageGridItem()', props);
+// 	console.log('IntegrationsPage.IntegrationsPageGridItem()', props);
 
 	const { title, image } = props;
 	return (<div className="integrations-page-grid-item" onClick={()=> props.onClick()}>
-		<img className="integrations-page-grid-item-image" src={image} alt={title} />
 		<div className="integrations-page-grid-item-overlay" />
+		<img className="integrations-page-grid-item-image" src={image} alt={title} />
 		<div className="integrations-page-grid-item-title-wrapper">
-			<div className="home-page-artboard-grid-item-title">{title}</div>
+			<div className="integrations-page-grid-item-title">{title}</div>
 		</div>
 	</div>);
 };
@@ -51,12 +52,14 @@ class IntegrationsPage extends Component {
 	}
 
 	handleIntegrationItemClick = (integration)=> {
-		console.log('IntegrationsPage.handleIntegrationItemClick()', integration);
-		trackEvent('integration', 'click', integration.title);
+// 		console.log('IntegrationsPage.handleIntegrationItemClick()', integration);
+
+		trackEvent('integration', 'click', Strings.uriSlugify(integration.title));
+		window.open(integration.url);
 	};
 
 	render() {
-		console.log('IntegrationsPage.render()', this.props, this.state);
+// 		console.log('IntegrationsPage.render()', this.props, this.state);
 
 		return (
 			<BaseDesktopPage className="integrations-page-wrapper">
