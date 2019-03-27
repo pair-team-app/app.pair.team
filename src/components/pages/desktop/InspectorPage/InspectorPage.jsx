@@ -633,8 +633,7 @@ class InspectorPage extends Component {
 			},
 			percent     : 100,
 			tooltip     : 'Loading…',
-
-			logURL      : null
+			linter      : null
 		};
 
 		this.busyInterval = null;
@@ -1002,7 +1001,7 @@ class InspectorPage extends Component {
 				hoverSlice  : null,
 				hoverOffset : null,
 				tooltip     : null,
-				logURL      : null
+				linter      : null
 			});
 
 		} else if (section === SECTIONS.PARTS) {
@@ -1023,10 +1022,10 @@ class InspectorPage extends Component {
 			}) : this.state.activeTabs;
 
 			this.setState({ upload, tabSets, activeTabs,
-				artboard  : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
-				slice     : null,
-				tooltip   : null,
-				logURL    : null
+				artboard : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
+				slice    : null,
+				tooltip  : null,
+				linter   : null
 			});
 
 		} else if (section === SECTIONS.PRESENTER) {
@@ -1096,7 +1095,7 @@ class InspectorPage extends Component {
 							slice     : [...slices].shift(),
 							offset    : artboard.meta.frame.origin,
 							tooltip   : null,
-							logURL    : null
+							linter    : null
 						});
 
 						if (!this.canvasInterval) {
@@ -1222,7 +1221,7 @@ class InspectorPage extends Component {
 		});
 
 		this.setState({ upload, artboard, tabSets, activeTabs,
-			logURL : null
+			linter : null
 		});
 	};
 
@@ -1340,7 +1339,7 @@ class InspectorPage extends Component {
 		this.setState({ artboard, tabSets, activeTabs,
 			hoverSlice  : null,
 			hoverOffset : null,
-			logURL      : null
+			linter      : null
 		});
 	};
 
@@ -1770,10 +1769,10 @@ class InspectorPage extends Component {
 	handleLinterLog = (tab)=> {
 		console.log('InspectorPage.handleLinterLog()', tab);
 
-		const { logURL } = this.state;
+		const { linter } = this.state;
 
 		trackEvent('button', 'linter-log');
-		window.open(logURL);
+		window.open(linter.logURL);
 	};
 
 	handlePanAndZoom = (x, y, scale)=> {
@@ -1838,6 +1837,18 @@ class InspectorPage extends Component {
 
 		trackEvent('button', `send-linter-${lang}`);
 
+		const { processing } = this.props;
+		const { section, urlBanner } = this.state;
+
+		this.props.onPopup({
+			type     : POPUP_TYPE_OK,
+			offset   : {
+				top   : (urlBanner << 0 && !processing) * 38,
+				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
+			},
+			content  : `Sending ${lang} snippet to ${linter}…`
+		});
+
 
 		const html = `Loading ${linter}…\n`;
 		const tabSets = [...this.state.tabSets].map((tabSet, i)=> {
@@ -1856,7 +1867,12 @@ class InspectorPage extends Component {
 			return ((tab) ? tab : activeTab);
 		});
 
-		this.setState({ tabSets, activeTabs }, ()=> {
+		this.setState({ tabSets, activeTabs,
+			linter : {
+				busy   : true,
+				logURL : null
+			}
+		}, ()=> {
 			axios.post(LINTER_ENDPT_URL, {
 				lang   : lang,
 				config : '',
@@ -1889,7 +1905,12 @@ class InspectorPage extends Component {
 					return ((tab) ? tab : activeTab);
 				});
 
-				this.setState({ tabSets, activeTabs, logURL });
+				this.setState({ tabSets, activeTabs,
+					linter : {
+						busy   : false,
+						logURL : logURL
+					}
+				});
 			}).catch((error) => {
 				console.log("LINT ERROR", error);
 			});
@@ -1953,7 +1974,7 @@ class InspectorPage extends Component {
 		});
 
 		this.setState({ activeTabs,
-			logURL : null
+			linter : null
 		});
 	};
 
@@ -2278,7 +2299,7 @@ class InspectorPage extends Component {
 		const { processing, profile, atomExtension } = this.props;
 
 		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, activeTabs, scrolling, viewSize, panMultPt } = this.state;
-		const { valid, restricted, urlBanner, tutorial, percent, tooltip, fontState, logURL } = this.state;
+		const { valid, restricted, urlBanner, tutorial, percent, tooltip, fontState, linter } = this.state;
 
 		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, 'page_child');
 // 		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : (section === SECTIONS.PARTS) ? flattenUploadArtboards(upload, 'page_child').slice(0, 3) : flattenUploadArtboards(upload, 'page_child');
@@ -2495,7 +2516,7 @@ class InspectorPage extends Component {
 									/>
 									<div className="inspector-page-panel-button-wrapper">
 										{(i === 0)
-											? (<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> (!logURL) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!logURL) ? 'Send to Linter' : 'View Linter Changes'}</button>)
+											? (<button disabled={!slice || (linter && linter.busy)} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Send to Linter' : 'View Linter Changes'}</button>)
 											: (<CopyToClipboard onCopy={()=> this.handleClipboardCopy('specs', toSpecs(activeSlice))} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
 													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>
 												</CopyToClipboard>)
@@ -2504,7 +2525,7 @@ class InspectorPage extends Component {
 										{/*<CopyToClipboard onCopy={()=> this.handleClipboardCopy((i === 0) ? 'code' : 'specs', (i === 0) ? activeTabs[i].syntax : toSpecs(activeSlice))} text={(i === 0) ? (activeTabs && activeTabs[i]) ? activeTabs[i].syntax : '' : (activeSlice) ? toSpecs(activeSlice) : ''}>*/}
 										{/*	<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>*/}
 										{/*</CopyToClipboard>*/}
-										{(i === 0) && (<button disabled={!atomExtension || !slice} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Send to Atom'}</button>)}
+										{(i === 0) && (<button disabled={!atomExtension || !slice || (linter && linter.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Send to Atom'}</button>)}
 									</div>
 								</div>
 							</div>)
@@ -2547,8 +2568,8 @@ class InspectorPage extends Component {
 														{/*<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>*/}
 														{/*	<button disabled={!activeTabs[i].contents} style={{opacity:(!processing << 0)}} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>*/}
 														{/*</CopyToClipboard>*/}
-														<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> (!logURL) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!logURL) ? 'Send to Linter' : 'View Linter Changes'}</button>
-														<button disabled={!atomExtension || !slice} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Send to Atom'}</button>
+														<button disabled={!slice || (linter && linter.busy)} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Send to Linter' : 'View Linter Changes'}</button>
+														<button disabled={!atomExtension || !slice || (linter && linter.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Send to Atom'}</button>
 													</>)
 												: (<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download PDF'}</button>)}
 										</div>
