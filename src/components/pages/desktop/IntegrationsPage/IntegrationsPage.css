@@ -16,7 +16,7 @@
 .integrations-page-grid-item {
 	position: relative;
 	width: 260px;
-	height: 350px;
+	height: 320px;
 	background-color: #24282e;
 	margin-bottom: 20px;
 	border-radius: 4px;
@@ -49,8 +49,8 @@
 	left: 50%;
 	transform: translate(-50%, -40%);
 	object-fit: scale-down;
-	width: 85%;
-	height: 85%;
+	width: 55%;
+	height: 55%;
 }
 
 .integrations-page-grid-item-title-wrapper {
@@ -58,7 +58,7 @@
 	left: 0;
 	bottom: 0;
 	width: 100%;
-	padding: 10px;
+	padding: 20px;
 	display: table;
 	text-align: center;
 	vertical-align: middle;
