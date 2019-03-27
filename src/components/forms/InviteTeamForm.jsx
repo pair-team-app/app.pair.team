@@ -6,6 +6,7 @@ import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import { Column, Row } from 'simple-flexbox';
 
+import { API_ENDPT_URL } from '../../consts/uris';
 import { Strings } from '../../utils/lang';
 import { trackEvent } from '../../utils/tracking';
 
@@ -117,7 +118,7 @@ class InviteTeamForm extends Component {
 			formData.append('user_id', profile.id);
 			formData.append('upload_id', upload.id);
 			formData.append('emails', emails.slice(0, -1));
-			axios.post('https://api.designengine.ai/system.php', formData)
+			axios.post(API_ENDPT_URL, formData)
 				.then((response)=> {
 					console.log('INVITE', response.data);
 					this.setState({

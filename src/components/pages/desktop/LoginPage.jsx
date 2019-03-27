@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import LoginForm from '../../forms/LoginForm';
+import { API_ENDPT_URL } from '../../../consts/uris';
 import { setRedirectURI, updateDeeplink, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath, isUserLoggedIn } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
@@ -47,7 +48,7 @@ class LoginPage extends Component {
 			let formData = new FormData();
 			formData.append('action', 'INVITE_LOOKUP');
 			formData.append('invite_id', inviteID);
-			axios.post('https://api.designengine.ai/system.php', formData)
+			axios.post(API_ENDPT_URL, formData)
 				.then((response)=> {
 					console.log('INVITE_LOOKUP', response.data);
 					const { invite, upload } = response.data;

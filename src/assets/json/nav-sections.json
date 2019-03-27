@@ -10,6 +10,9 @@
       "title": "Presenter",
       "url": "/present"
     }, {
+      "title": "Integrations",
+      "url": "/integrations"
+    }, {
       "title": "Terms",
       "url": "/terms"
     }, {
@@ -28,6 +31,9 @@
     }, {
       "title": "Presenter",
       "url": "/present"
+    }, {
+      "title": "Integrations",
+      "url": "/integrations"
     }],
     "mobile": [{
       "title": "Free Inspect",
@@ -38,6 +44,9 @@
     }, {
       "title": "Presenter",
       "url": "/present"
+    }, {
+      "title": "Integrations",
+      "url": "/integrations"
     }]
   }
 }

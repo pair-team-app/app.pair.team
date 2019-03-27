@@ -5,6 +5,7 @@ import './RegisterForm.css'
 import axios from 'axios';
 import { Row } from 'simple-flexbox';
 
+import { API_ENDPT_URL } from '../../consts/uris';
 import { Bits, Strings } from '../../utils/lang';
 import { trackEvent } from '../../utils/tracking';
 
@@ -45,7 +46,7 @@ class RegisterForm extends Component {
 	}
 
 	componentWillUnmount() {
-		this.timeline = null;
+// 		console.log('RegisterForm.componentWillUnmount()');
 	}
 
 	handlePassword = ()=> {
@@ -100,7 +101,7 @@ class RegisterForm extends Component {
 			formData.append('email', email);
 			formData.append('password', password);
 			formData.append('invite_id', (inviteID) ? inviteID : '0');
-			axios.post('https://api.designengine.ai/system.php', formData)
+			axios.post(API_ENDPT_URL, formData)
 				.then((response)=> {
 					console.log('REGISTER', response.data);
 					const status = parseInt(response.data.status, 16);

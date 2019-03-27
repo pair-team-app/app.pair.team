@@ -7,17 +7,16 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
 import BaseDesktopPage from './BaseDesktopPage';
-import UploadHeader from '../../elements/UploadHeader';
+import UploadHeader from '../../elements/navs/UploadHeader';
 import LoginForm from '../../forms/LoginForm';
 import RegisterForm from '../../forms/RegisterForm';
 
-import homeContent from '../../../assets/json/home-content';
-import { CDN_URL } from '../../../consts/uris';
+import { API_ENDPT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { addFileUpload, updateDeeplink, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
+import homeContent from '../../../assets/json/home-content';
 import radioButtons from '../../../assets/json/radio-buttons_upload';
-
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
@@ -104,7 +103,7 @@ class UploadPage extends Component {
 // 		console.log('UploadPage.handleFile()', file, this.props, this.state);
 
 		const { id, email } = (this.props.profile) ? this.props.profile : this.state.profile;
-		sendToSlack(`*[${id}]* *${email}* started uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
+		sendToSlack(`*[\`${id}\`]* *${email}* started uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
 		trackEvent('upload', 'file');
 
 		this.setState({
@@ -124,7 +123,7 @@ class UploadPage extends Component {
 				this.setState({ percent });
 
 				if (progressEvent.loaded >= progressEvent.total && formState === 1) {
-					sendToSlack(`*[${id}]* *${email}* completed uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
+					sendToSlack(`*[\`${id}\`]* *${email}* completed uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
 
 					this.setState({
 						percent        : 100,
@@ -137,9 +136,9 @@ class UploadPage extends Component {
 
 		let formData = new FormData();
 		formData.append('file', file);
-		axios.post(`${CDN_URL}?dir=/system`, formData, config)
+		axios.post(`${CDN_UPLOAD_URL}?dir=/system`, formData, config)
 			.then((response)=> {
-				console.log("CDN upload.php", response.data);
+				console.log('CDN upload.php', response.data);
 			}).catch((error)=> {
 			sendToSlack(`*${email}* failed uploading file _${file.name}_\n\`\`\`${error}\n\`\`\`\n`);
 		});
@@ -198,7 +197,7 @@ class UploadPage extends Component {
 				formData.append('filesize', size);
 				formData.append('private', (radioIndex === 1) ? '0' : '1');
 				formData.append('filename', `http://cdn.designengine.ai/system/${decodeURIComponent(name)}`);
-				axios.post('https://api.designengine.ai/system.php', formData)
+				axios.post(API_ENDPT_URL, formData)
 					.then((response)=> {
 						console.log('NEW_UPLOAD', response.data);
 						const { upload } = response.data;
@@ -235,7 +234,7 @@ class UploadPage extends Component {
 				</div>)}
 
 				{(formState <= 1) && (<UploadHeader
-					dialog={false}
+					fileDialog={false}
 					uploading={(formState === 1)}
 					title={uploadTitle}
 					subtitle={uploadSubtitle}

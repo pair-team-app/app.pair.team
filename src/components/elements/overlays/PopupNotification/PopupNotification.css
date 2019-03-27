@@ -1,0 +1,54 @@
+
+.popup-notification-wrapper {
+	position: fixed;
+	top: 64px;
+	left: 0;
+	width: 100%;
+	height: 38px;
+	z-index: 1000;
+	overflow: hidden;
+}
+
+.popup-notification-wrapper-topmost {
+	z-index: 3000;
+}
+
+.popup-notification-content-wrapper {
+	width: 100%;
+	height: 100%;
+}
+
+.popup-notification-content {
+	width: 100%;
+	height: 100%;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-size: 15px;
+	letter-spacing: -0.5px;
+	text-align: center;
+	vertical-align: middle;
+	color: #abdafb;
+}
+
+.popup-notification-content-error {
+	/*background-color : rgba(255, 70, 70, 0.5);*/
+	/*color : #ff4646;*/
+
+	background-color: rgba(42, 174, 57, 0.95);
+	color: #ffffff;
+}
+
+.popup-notification-content-ok {
+	background-color: rgba(42, 174, 57, 0.95);
+	color: #ffffff;
+}
+
+.popup-notification-content-status {
+	background-color: rgba(0, 0, 0, 0.0);
+	font-weight: bold;
+	color: #ffffff;
+	text-shadow:
+			-1px -1px 0 rgba(26, 27, 29, 0.5),
+			 1px -1px 0 rgba(26, 27, 29, 0.5),
+			-1px  1px 0 rgba(26, 27, 29, 0.5),
+			 1px  1px 0 rgba(26, 27, 29, 0.5);
+}

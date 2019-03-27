@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { Row, Column } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
+import { API_ENDPT_URL } from '../../../consts/uris';
 import { Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -144,7 +145,7 @@ class RateThisPage extends Component {
 			formData.append('user_id', (profile) ? profile.id : '0');
 			formData.append('score', score);
 			formData.append('comment', '');
-			axios.post('https://api.designengine.ai/system.php', formData)
+			axios.post(API_ENDPT_URL, formData)
 				.then((response)=> {
 					console.log('ADD_RATE', response.data);
 					this.setState({ ratingID : response.data.rating.id });
@@ -217,7 +218,7 @@ class RateThisPage extends Component {
 
 		let formData = new FormData();
 		formData.append('action', 'RATES');
-		axios.post('https://api.designengine.ai/system.php', formData)
+		axios.post(API_ENDPT_URL, formData)
 			.then((response)=> {
 				console.log('RATES', response.data);
 				this.setState({ ratings : response.data.ratings });
@@ -236,7 +237,7 @@ class RateThisPage extends Component {
 		formData.append('rating_id', ratingID);
 		formData.append('score', score);
 		formData.append('comment', comment);
-		axios.post('https://api.designengine.ai/system.php', formData)
+		axios.post(API_ENDPT_URL, formData)
 			.then((response)=> {
 				console.log('EDIT_RATE', response.data);
 				this.setState({
@@ -259,7 +260,7 @@ class RateThisPage extends Component {
 		formData.append('user_id', (profile) ? profile.id : '0');
 		formData.append('score', score);
 		formData.append('comment', '');
-		axios.post('https://api.designengine.ai/system.php', formData)
+		axios.post(API_ENDPT_URL, formData)
 			.then((response)=> {
 				console.log('ADD_RATE', response.data);
 				this.setState({

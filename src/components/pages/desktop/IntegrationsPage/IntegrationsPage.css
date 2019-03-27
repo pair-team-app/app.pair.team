@@ -1,0 +1,74 @@
+
+.integrations-page-wrapper {
+}
+
+
+.integrations-page-grid {
+	width: 100%;
+}
+
+.integrations-page-grid-item-wrapper {
+	width: 100%;
+	margin: 8px -10px 0 -10px;
+}
+
+
+.integrations-page-grid-item {
+	position: relative;
+	width: 260px;
+	height: 350px;
+	background-color: #24282e;
+	margin-bottom: 20px;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.integrations-page-grid-item:hover {
+	cursor: pointer;
+}
+
+.integrations-page-grid-item-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #000000;
+	opacity: 0;
+	border-radius: 4px;
+	transition: opacity 0.125s ease-out;
+}
+
+.integrations-page-grid-item:hover .integrations-page-grid-item-overlay {
+	opacity: 0.25;
+}
+
+.integrations-page-grid-item-image {
+	position: absolute;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -40%);
+	object-fit: scale-down;
+	width: 85%;
+	height: 85%;
+}
+
+.integrations-page-grid-item-title-wrapper {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	padding: 10px;
+	display: table;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.integrations-page-grid-item-title {
+	width: 100%;
+	display: table-cell;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-size: 16px;
+	letter-spacing: -0.3px;
+	color: #c8e1fd;
+}

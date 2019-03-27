@@ -1,0 +1,26 @@
+
+.advert-panel-wrapper {
+	width: 260px;
+	height: 200px;
+	z-index: 2;
+	background-color: #24282e;
+}
+
+.advert-panel-wrapper-float {
+	position: fixed;
+	right: 26px;
+	bottom: 26px;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+}
+
+.advert-panel-wrapper-fixed {
+}
+
+.advert-panel-image {
+	width: 100%;
+	height: 100%;
+}
+
+.advert-panel-image:hover {
+	cursor: pointer;
+}

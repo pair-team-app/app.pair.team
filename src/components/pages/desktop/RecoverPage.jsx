@@ -7,7 +7,8 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
-import { POPUP_TYPE_OK } from '../../elements/Popup';
+import { POPUP_TYPE_OK } from '../../elements/overlays/PopupNotification';
+import { API_ENDPT_URL } from '../../../consts/uris';
 import { Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -68,7 +69,7 @@ class RecoverPage extends Component {
 			let formData = new FormData();
 			formData.append('action', 'RESET_PASSWORD');
 			formData.append('email', email);
-			axios.post('https://api.designengine.ai/system.php', formData)
+			axios.post(API_ENDPT_URL, formData)
 				.then((response)=> {
 					console.log('RESET_PASSWORD', response.data);
 				}).catch((error)=> {
@@ -103,7 +104,7 @@ class RecoverPage extends Component {
 			formData.append('action', 'CHANGE_PASSWORD');
 			formData.append('user_id', window.atob(this.props.match.params.userID));
 			formData.append('password', password);
-			axios.post('https://api.designengine.ai/system.php', formData)
+			axios.post(API_ENDPT_URL, formData)
 				.then((response)=> {
 					console.log('CHANGE_PASSWORD', response.data);
 					this.props.onPopup({

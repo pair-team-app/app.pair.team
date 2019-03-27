@@ -10,13 +10,10 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../elements/Popup';
-import InputField, {
-	INPUTFIELD_STATUS_DISABLED,
-	INPUTFIELD_STATUS_ERROR,
-	INPUTFIELD_STATUS_IDLE
-} from '../../forms/elements/InputField';
-import { DEFAULT_AVATAR, CDN_URL } from '../../../consts/uris';
+import ConfirmDialog from '../../elements/overlays/ConfirmDialog';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../elements/overlays/PopupNotification';
+import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../elements/forms/InputField';
+import { DEFAULT_AVATAR, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { Bits, Files, Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
@@ -47,6 +44,7 @@ class ProfilePage extends Component {
 			username      : '',
 			email         : '',
 			password      : '',
+			type          : '',
 			usernameValid : true,
 			emailValid    : true,
 			passwordValid : true,
@@ -54,15 +52,16 @@ class ProfilePage extends Component {
 			status        : 0x00,
 			changed       : false,
 			percent       : 0,
-			dialog        : false
+			fileDialog    : false,
+			confirmDialog : false
 		};
 	}
 
 	componentDidMount() {
 // 		console.log('ProfilePage.componentDidMount()', this.props, this.state);
 		if (this.props.profile) {
-			const { avatar, username, email } = this.props.profile;
-			this.setState({ avatar, username, email });
+			const { avatar, username, email, type } = this.props.profile;
+			this.setState({ avatar, username, email, type });
 		}
 	}
 
@@ -70,17 +69,18 @@ class ProfilePage extends Component {
 // 		console.log('ProfilePage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		if (prevProps.profile !== this.props.profile) {
-			const { avatar, username, email, status } = this.props.profile;
+			const { avatar, username, email, type, status } = this.props.profile;
 			this.setState({
 				avatar        : avatar,
 				username      : username,
 				email         : email,
+				type          : type,
 				usernameValid : !Bits.contains(status, 0x01),
 				emailValid    : !Bits.contains(status, 0x10)
 			});
 		}
 
-		if (this.state.dialog) {
+		if (this.state.fileDialog) {
 			if (dropZone.current && dropZone.current.fileInputEl) {
 				dropZone.current.fileInputEl.click();
 			}
@@ -88,22 +88,32 @@ class ProfilePage extends Component {
 	}
 
 
-	handleAvatarClick = ()=> {
-// 		console.log('ProfilePage.handleAvatarClick()');
-		trackEvent('button', 'upload');
+	handleAccountType = ()=> {
+// 		console.log('ProfilePage.handleAccountType()');
 
-		this.setState({ dialog : true }, ()=> this.setState({ dialog : false }));
+		const { profile } = this.props;
+
+		trackEvent('button', 'account-');
+		if (profile.paid) {
+			this.setState({ confirmDialog : true });
+
+		} else {
+			this.props.onStripeOverlay();
+		}
 	};
 
-	handleBuyClick = ()=> {
-// 		console.log('ProfilePage.handleBuyCLick()');
-		trackEvent('button', 'buy');
+
+	handleAvatarClick = ()=> {
+// 		console.log('ProfilePage.handleAvatarClick()');
+		trackEvent('button', 'upload-avatar');
+
+		this.setState({ fileDialog : true }, ()=> this.setState({ fileDialog : false }));
 	};
 
 	handleCancel = ()=> {
 // 		console.log('ProfilePage.handleCancel()');
 
-		trackEvent('button', 'cancel');
+		trackEvent('button', 'cancel-changes');
 		const { avatar, username, email } = this.props.profile;
 
 		this.setState({
@@ -118,15 +128,33 @@ class ProfilePage extends Component {
 		});
 	};
 
+	handleDialogComplete = (ok)=> {
+// 		console.log('ProfilePage.handleDialogComplete()', ok);
+
+		this.setState({ confirmDialog : false }, ()=> {
+			if (ok) {
+				const { profile, updateUserProfile, onPopup } = this.props;
+				updateUserProfile(Object.assign({}, profile, {
+					type : 'free_user'
+				}));
+
+				onPopup({
+					type    : POPUP_TYPE_OK,
+					content : 'Account updated.',
+					delay   : 333
+				});
+			}
+		});
+	};
+
 	handleDropAvatar = ()=> {
 		trackEvent('button', 'drop-avatar');
 		this.onValidateFields('avatar', DEFAULT_AVATAR);
 	};
 
 	handleFileDialogCancel = ()=> {
-// 		console.log('ProfilePage.handleFileDialogCancel()');
 		trackEvent('button', 'cancel-dialog');
-		this.setState({ dialog : false });
+		this.setState({ fileDialog : false });
 	};
 
 	handleFileDrop = (files)=> {
@@ -156,9 +184,9 @@ class ProfilePage extends Component {
 
 				let formData = new FormData();
 				formData.append('file', file);
-				axios.post(`${CDN_URL}?dir=/profiles&prefix=${profile.id}_`, formData, config)
+				axios.post(`${CDN_UPLOAD_URL}?dir=/profiles&prefix=${profile.id}_`, formData, config)
 					.then((response)=> {
-						console.log("CDN upload.php", response.data);
+						console.log('CDN upload.php', response.data);
 						this.onValidateFields('avatar', `http://cdn.designengine.ai/profiles/${profile.id}_${decodeURIComponent(file.name)}`);
 
 					}).catch((error)=> {
@@ -230,12 +258,12 @@ class ProfilePage extends Component {
 	onProfileUpdate = ()=> {
 		console.log('ProfilePage.onProfileUpdate()', this.state);
 
-		const { avatar, username, email, password } = this.state;
+		const { avatar, username, email, password, type } = this.state;
 		const { usernameValid, emailValid, passwordValid } = this.state;
 
 		if (usernameValid && emailValid && passwordValid) {
 			const { id } = this.props.profile;
-			this.props.updateUserProfile({ id, avatar, username, email, password });
+			this.props.updateUserProfile({ id, avatar, username, email, password, type });
 			this.setState({
 				passMsg : '',
 				changed : false
@@ -286,7 +314,7 @@ class ProfilePage extends Component {
 // 		const { avatar, username, email } = (this.props.profile) ? this.props.profile : this.state;
 		const { profile } = this.props;
 		const { avatar, username, email } = this.state;
-		const { passMsg, usernameValid, emailValid, passwordValid, changed } = this.state;
+		const { passMsg, usernameValid, emailValid, passwordValid, changed, confirmDialog } = this.state;
 
 		return (
 			<BaseDesktopPage className="profile-page-wrapper">
@@ -307,11 +335,6 @@ class ProfilePage extends Component {
 						<div className={`page-link${(avatar.includes('avatar-default.png')) ? ' page-link-disabled' : ''}`} onClick={()=> this.handleDropAvatar()}>Remove</div>
 					</Row>
 				</div>
-
-				{/*{(profile) && (<div className="profile-page-paid-wrapper">*/}
-				{/*<h5>Account Type: {(profile.paid) ? 'Paid' : 'Free'}</h5>*/}
-				{/*{(!profile.paid) && (<button onClick={()=> this.handleBuyClick()}>Unlimited</button>)}*/}
-				{/*</div>)}*/}
 
 				<div className="profile-page-form-wrapper">
 					<InputField
@@ -351,15 +374,14 @@ class ProfilePage extends Component {
 					/>
 
 					<InputField
-						type="text"
+						type="lbl"
 						name="paid"
 						placeholder="Free Account"
 						value={(profile && profile.paid) ? 'Unlimited Account' : 'Free Account'}
-						button={(profile && profile.paid) ? 'Free' : 'Unlimited'}
-						status={INPUTFIELD_STATUS_DISABLED}
-						onChange={(val)=> this.handleInputFieldChange('paid', val)}
-						onErrorClick={()=> this.handleInputFieldClick('paid')}
-						onSubmit={(val)=> this.handleInputFieldSubmit('paid', val)}
+						button={(profile && profile.paid) ? 'Downgrade' : 'Upgrade'}
+						status={INPUTFIELD_STATUS_IDLE}
+						onFieldClick={()=> null}
+						onSubmit={this.handleAccountType}
 					/>
 				</div>
 
@@ -367,6 +389,12 @@ class ProfilePage extends Component {
 					<button type="submit" disabled={!changed} className="long-button adjacent-button" onClick={()=> this.handleSubmit()}>Save</button>
 					{(changed) && (<div className="page-link" onClick={()=> this.handleCancel()}>Cancel</div>)}
 				</Row>
+
+				{(confirmDialog) && (<ConfirmDialog
+					title="Change Account"
+					message="Are you sure you want to downgrade to a Free Account?"
+					onComplete={this.handleDialogComplete}
+				/>)}
 			</BaseDesktopPage>
 		);
 	}

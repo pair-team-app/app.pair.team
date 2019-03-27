@@ -4,6 +4,7 @@ import './TermsPage.css';
 
 import BaseDesktopPage from './BaseDesktopPage';
 
+
 class TermsPage extends Component {
 	constructor(props) {
 		super(props);

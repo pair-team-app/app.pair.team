@@ -8,18 +8,16 @@ import {
 	LOGIN,
 	PARTS,
 	PRESENT,
-// 	PRIVACY,
 	PROFILE,
-// 	RECOVER,
+	RECOVER,
 	REGISTER,
-// 	TERMS,
-	UPLOAD } from '../consts/uris';
+	UPLOAD,
+	API_ENDPT_URL } from '../consts/uris';
 import { Strings } from './lang';
 
 
-
 export function buildInspectorPath(upload, prefix='/inspect', suffix='') {
-	return (`${Strings.trimSlash(prefix)}/${upload.id}/${Strings.uriSlug(upload.title)}${Strings.trimSlash(suffix)}`);
+	return (`${Strings.trimSlashes(prefix)}/${upload.id}/${Strings.uriSlugify(upload.title)}${Strings.trimSlashes(suffix)}`);
 }
 
 export function buildInspectorURL(upload, prefix='/inspect', suffix='') {
@@ -31,10 +29,10 @@ export function idsFromPath() {
 	const inspectorPath = /\/(?:inspect|parts|present)\/(\d+)\/.+$/i;
 
 	const navIDs = {
-		uploadID   : (inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[1] : 0,
-		pageID     : 0,
-		artboardID : 0,
-		sliceID    : 0
+		uploadID   : ((inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[1] : 0) << 0,
+		pageID     : 0 << 0,
+		artboardID : 0 << 0,
+		sliceID    : 0 << 0
 	};
 
 	return (navIDs);
@@ -42,7 +40,7 @@ export function idsFromPath() {
 
 export function isHomePage(root=true) {
 	const { pathname } = window.location;
-	return ((root) ? (pathname === '' || pathname === HOME) : (pathname === '' || pathname === HOME || pathname === INSPECT || pathname === PARTS));
+	return ((root) ? (pathname === '' || pathname === HOME) : (pathname === '' || pathname === HOME || pathname === INSPECT || pathname === PARTS || pathname === PRESENT));
 }
 
 export function isInspectorPage() {
@@ -58,6 +56,11 @@ export function isLoginPage(exact=false) {
 export function isProfilePage(exact=false) {
 	const { pathname } = window.location;
 	return ((exact) ? pathname === PROFILE : pathname.includes(PROFILE));
+}
+
+export function isRecoverPage(exact=false) {
+	const { pathname } = window.location;
+	return ((exact) ? pathname === RECOVER : pathname.includes(RECOVER));
 }
 
 export function isRegisterPage(exact=false) {
@@ -78,7 +81,7 @@ export function sendToSlack(message, callback=null) {
 	let formData = new FormData();
 	formData.append('action', 'SLACK');
 	formData.append('message', message);
-	axios.post('https://api.designengine.ai/system.php', formData)
+	axios.post(API_ENDPT_URL, formData)
 		.then((response) => {
 			console.log("SLACK", response.data);
 			if (callback) {

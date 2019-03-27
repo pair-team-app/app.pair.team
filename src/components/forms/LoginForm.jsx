@@ -5,6 +5,7 @@ import './LoginForm.css'
 import axios from 'axios';
 import { Row } from 'simple-flexbox';
 
+import { API_ENDPT_URL } from '../../consts/uris';
 import { Bits, Strings } from '../../utils/lang';
 import { trackEvent } from '../../utils/tracking';
 
@@ -43,7 +44,7 @@ class LoginForm extends Component {
 	}
 
 	componentWillUnmount() {
-		this.timeline = null;
+// 		console.log('LoginForm.componentWillUnmount()');
 	}
 
 	handlePassword = ()=> {
@@ -64,8 +65,9 @@ class LoginForm extends Component {
 // 		console.log('LoginForm.handleSubmit()', event.target);
 		event.preventDefault();
 
-		const { inviteID, email, password } = this.state;
+		trackEvent('button', 'login');
 
+		const { inviteID, email, password } = this.state;
 		const emailValid = (email.includes('@')) ? Strings.isEmail(email) : (email.length > 0);
 		const passwordValid = (password.length > 0);
 
@@ -82,7 +84,7 @@ class LoginForm extends Component {
 			formData.append('email', email);
 			formData.append('password', password);
 			formData.append('invite_id', (inviteID) ? inviteID : '0');
-			axios.post('https://api.designengine.ai/system.php', formData)
+			axios.post(API_ENDPT_URL, formData)
 				.then((response)=> {
 					console.log('LOGIN', response.data);
 					const status = parseInt(response.data.status, 16);

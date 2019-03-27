@@ -8,13 +8,16 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import AdBannerPanel from './elements/AdBannerPanel';
-import BottomNav from './elements/BottomNav';
-import ContentModal, { MODAL_SIZE_AUTO } from './elements/ContentModal';
-import Popup from './elements/Popup';
-import TopNav from './elements/TopNav';
+import AdvertPanel from './elements/overlays/AdvertPanel';
+import AlertDialog from './elements/overlays/AlertDialog/AlertDialog';
+import BottomNav from './elements/navs/BottomNav';
+import BaseOverlay from './elements/overlays/BaseOverlay/BaseOverlay';
+import StripeModal from './elements/overlays/StripeModal';
+import PopupNotification from './elements/overlays/PopupNotification';
+import TopNav from './elements/navs/TopNav';
 import HomePage from './pages/desktop/HomePage';
 import InspectorPage from './pages/desktop/InspectorPage';
+import IntegrationsPage from './pages/desktop/IntegrationsPage';
 import InviteTeamPage from './pages/desktop/InviteTeamPage';
 import LoginPage from './pages/desktop/LoginPage';
 import ProfilePage from './pages/desktop/ProfilePage';
@@ -27,10 +30,10 @@ import TermsPage from './pages/desktop/TermsPage';
 import UploadPage from './pages/desktop/UploadPage';
 import BaseMobilePage from './pages/mobile/BaseMobilePage';
 
-import adBannerPanel from '../assets/json/ad-banner-panel';
-import { EXTENSION_PUBLIC_URL } from '../consts/uris';
+import { EXTENSION_PUBLIC_HOST, API_ENDPT_URL } from '../consts/uris';
 import {
 	appendHomeArtboards,
+	fetchUserHistory,
 	fetchUserProfile,
 	setAtomExtension,
 	updateDeeplink,
@@ -41,24 +44,28 @@ import {
 	idsFromPath,
 	isHomePage,
 	isInspectorPage,
-	isUploadPage } from '../utils/funcs';
-import { Browsers } from '../utils/lang';
+	isProfilePage,
+	isUploadPage, isUserLoggedIn
+} from '../utils/funcs';
+import { Browsers, URLs } from '../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../utils/tracking';
-
+import adBannerPanel from '../assets/json/ad-banner-panel';
 
 const wrapper = React.createRef();
 
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		deeplink : state.deeplink,
-		profile  : state.userProfile
+		deeplink  : state.deeplink,
+		profile   : state.userProfile,
+		artboards : state.homeArtboards
 	});
 };
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		appendHomeArtboards : ()=> dispatch(appendHomeArtboards(null)),
+		purgeHomeArtboards  : ()=> dispatch(appendHomeArtboards(null)),
+		fetchUserHistory    : (payload)=> dispatch(fetchUserHistory(payload)),
 		fetchUserProfile    : ()=> dispatch(fetchUserProfile()),
 		updateDeeplink      : (navIDs)=> dispatch(updateDeeplink(navIDs)),
 		updateUserProfile   : (profile)=> dispatch(updateUserProfile(profile)),
@@ -72,67 +79,91 @@ class App extends Component {
 		super(props);
 
 		this.state = {
+			contentSize   : {
+				width  : 0,
+				height : 0
+			},
+			mobileOverlay : true,
 			rating        : 0,
 			processing    : false,
 			popup         : null,
-			mobileOverlay : true
+			payDialog     : false,
+			stripeOverlay : false
+// 			stripeOverlay : true
 		};
 	}
 
 	componentDidMount() {
+		console.log('App.componentDidMount()', this.props, this.state);
+
 		if (typeof cookie.load('user_id') === 'undefined') {
 			cookie.save('user_id', '0', { path : '/' });
-
-		} else {
-			this.props.fetchUserProfile();
 		}
 
 		initTracker(cookie.load('user_id'));
 		trackEvent('site', 'load');
 		trackPageview();
 
+		this.extensionCheck();
+		this.props.updateDeeplink(idsFromPath());
+
+
 		if (isHomePage()) {
 			this.handlePage('inspect');
-		}
 
-		if (isUploadPage(true)) {
+		} else if (isUploadPage(true)) {
 			this.handlePage('new/inspect');
+
+		} else if (isInspectorPage()) {
+// 			if (typeof cookie.load('tutorial') === 'undefined') {
+// 				cookie.save('tutorial', '0', { path : '/' });
+// 			}
+
+		} else if (isProfilePage(true) && !isUserLoggedIn()) {
+			this.handlePage('login');
 		}
-
-		const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
-		this.props.updateDeeplink({ uploadID, pageID, artboardID, sliceID });
-
-		if (isInspectorPage()) {
-			if (typeof cookie.load('tutorial') === 'undefined') {
-				cookie.save('tutorial', '0', { path : '/' });
-			}
-
-			this.onAddUploadView(uploadID);
-		}
-
-		this.extensionCheck();
 
 		cookie.save('tutorial', '1', { path : '/' });
+
 		window.addEventListener('resize', this.handleResize);
-
 		window.onpopstate = (event)=> {
-			console.log('|||||||||||||||||-', 'window.onpopstate()', '-|||||||||||||||||', event);
-
-			if (isHomePage(false)) {
-				this.handlePage('<<');
-
-			} else {
-				const { uploadID, pageID, artboardID, sliceID } = idsFromPath();
-				this.props.updateDeeplink({ uploadID, pageID, artboardID, sliceID });
-			}
+// 			console.log('-/\\/\\/\\/\\/\\/\\-', 'window.onpopstate()', '-/\\/\\/\\/\\/\\/\\-', event);
+// 			this.handlePage('<<');
 		};
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('App.componentDidUpdate()', prevProps, this.props, prevState);
+		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
-		if (!prevProps.profile && this.props.profile && this.state.ranking !== 0) {
-			this.setState({ rating : 0 });
+		const { profile, artboards, deeplink } = this.props;
+		const { payDialog, stripeOverlay } = this.state;
+
+		if (profile) {
+			if (!prevProps.profile) {
+				this.props.fetchUserHistory({profile});
+
+				if (this.state.ranking !== 0) {
+					this.setState({ rating : 0 });
+				}
+			}
+
+			console.log('[:::::::::::|:|:::::::::::] PAY CHECK [:::::::::::|:|:::::::::::]');
+			console.log('[::] (!payDialog && !stripeOverlay)', (!payDialog && !stripeOverlay));
+			console.log('[::] (!profile.paid && artboards.length > 3)', (!profile.paid && artboards.length > 3));
+			console.log('[::] (isHomePage(false)', isHomePage(false));
+			console.log('[::] (isInspectorPage())', isInspectorPage());
+			console.log('[::] (prevProps.deeplink.uploadID)', prevProps.deeplink.uploadID);
+			console.log('[::] (this.props.deeplink.uploadID)', deeplink.uploadID);
+			console.log('[:::::::::::|:|:::::::::::] =-=-=-=-= [:::::::::::|:|:::::::::::]');
+
+			//console.log('||||||||||||||||', payDialog, stripeOverlay, profile.paid, artboards.length, isHomePage(false), prevProps.deeplink.uploadID, deeplink.uploadID, isInspectorPage());
+			if ((!payDialog && !stripeOverlay) && (!profile.paid && artboards.length > 3) && ((isHomePage(false) && prevProps.deeplink.uploadID !== deeplink.uploadID) || (isInspectorPage() && prevProps.uploadID !== deeplink.uploadID))) {
+				this.setState({ payDialog : true });
+			}
+
+			if (payDialog && profile.paid) {
+				this.setState({ payDialog : false });
+			}
 		}
 	}
 
@@ -148,7 +179,7 @@ class App extends Component {
 // 		console.log('App.extensionCheck()');
 
 		let img = new Image();
-		img.src = `${EXTENSION_PUBLIC_URL}/images/pixel.png`;
+		img.src = `${EXTENSION_PUBLIC_HOST}/images/pixel.png`;
 		img.onload = ()=> { this.props.setAtomExtension(true); };
 		img.onerror = ()=> { this.props.setAtomExtension(false); };
 	};
@@ -156,19 +187,31 @@ class App extends Component {
 	handleArtboardClicked = (artboard)=> {
 // 		console.log('App.handleArtboardClicked()', artboard);
 
-		this.onAddUploadView(artboard.uploadID);
-		if (typeof cookie.load('tutorial') === 'undefined') {
-			cookie.save('tutorial', '0', { path : '/' });
+		const { profile, artboards } = this.props;
+		if (!profile.paid && artboards.length > 3) {
+			this.props.updateDeeplink(null);
+// 			this.setState({ payDialog : true });
+
+		} else {
+			this.onAddUploadView(artboard.uploadID);
+			if (typeof cookie.load('tutorial') === 'undefined') {
+				cookie.save('tutorial', '0', { path : '/' });
+			}
+
+			this.handlePage(buildInspectorPath({
+				id    : artboard.uploadID,
+				title : artboard.title
+				}, URLs.firstComponent()
+			));
+
+			Browsers.scrollOrigin(wrapper.current);
 		}
 
-		this.handlePage(buildInspectorPath({ id : artboard.uploadID, title : artboard.title }, (window.location.pathname.includes('/inspect')) ? '/inspect' : (window.location.pathname.includes('/parts')) ? '/parts' : '/present'));
 		this.props.updateDeeplink({
 			uploadID   : artboard.uploadID,
 			pageID     : artboard.pageID,
 			artboardID : artboard.id
 		});
-
-		Browsers.scrollOrigin(wrapper.current);
 	};
 
 	handleAdBanner = (url)=> {
@@ -184,7 +227,7 @@ class App extends Component {
 		trackEvent('user', 'sign-out');
 
 		this.props.updateUserProfile(null);
-		this.props.appendHomeArtboards();
+		this.props.purgeHomeArtboards();
 		this.handlePage('');
 	};
 
@@ -212,8 +255,40 @@ class App extends Component {
 		}
 	};
 
+	handlePaidAlert = ()=> {
+		this.setState({
+			payDialog     : false,
+			stripeOverlay : true
+		});
+	};
+
+	handlePurchaseCancel = ()=> {
+// 		console.log('App.handlePurchaseCancel()');
+
+		if (isInspectorPage()) {
+			this.handlePage('');
+		}
+
+		setTimeout(()=> {
+			this.setState({
+				payDialog     : false,
+				stripeOverlay : false
+			});
+		}, (isInspectorPage()) ? 666 : 0);
+	};
+
+	handlePurchaseSuccess = (purchase)=> {
+// 		console.log('App.handlePurchaseSucess()', purchase);
+
+		this.setState({
+			payDialog     : false,
+			stripeOverlay : false
+		});
+		this.props.fetchUserProfile();
+	};
+
 	handlePopup = (payload)=> {
-// 		console.log('App.handlePopup()', payload);
+		console.log('App.handlePopup()', payload);
 		this.setState({ popup : payload });
 	};
 
@@ -224,6 +299,11 @@ class App extends Component {
 
 	handleResize = (event)=> {
 		console.log('App.handleResize()', event);
+
+		this.setState({ contentSize : {
+			width  : wrapper.current.innerWidth,
+			height : 	wrapper.current.innerHeight
+		} })
 	};
 
 	handleScrollOrigin = ()=> {
@@ -238,7 +318,7 @@ class App extends Component {
 	};
 
 	onAddUploadView = (uploadID)=> {
-		axios.post('https://api.designengine.ai/system.php', qs.stringify({
+		axios.post(API_ENDPT_URL, qs.stringify({
 			action    : 'ADD_VIEW',
 			upload_id : uploadID
 		})).then((response)=> {
@@ -270,10 +350,11 @@ class App extends Component {
 	render() {
 //   	console.log('App.render()', this.props, this.state);
 
+		const { profile } = this.props;
   	const { uploadID } = this.props.deeplink;
 		const { pathname } = this.props.location;
-  	const { rating, mobileOverlay, processing, popup } = this.state;
-//   	const { rating, mobileOverlay, popup } = this.state;
+  	const { rating, mobileOverlay, processing, popup, stripeOverlay, payDialog } = this.state;
+//   	const { rating, mobileOverlay, popup, stripeOverlay, payDialog } = this.state;
 //   	const processing = true;
 
   	return ((!Browsers.isMobile.ANY())
@@ -289,17 +370,18 @@ class App extends Component {
 			    <div className="content-wrapper" ref={wrapper}>
 				    <Switch>
 					    <Route exact path="/" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
-					    <Route exact path="/inspect" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+					    <Route exact path="/inspect" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} />} />
 					    <Route path="/inspect/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route path="/login/:inviteID?" render={(props)=> <LoginPage {...props} onPage={this.handlePage} />} onPopup={this.handlePopup} />
-					    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} />} />
-					    <Route exact path="/parts" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+					    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} />} />
+					    <Route exact path="/parts" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} />} />
+					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route path="/parts/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
-					    <Route exact path="/present" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+					    <Route exact path="/present" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} />} />
 					    <Route path="/present/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} onPopup={this.handlePopup} />} />
 					    <Route path="/profile/:username?" render={(props)=> <ProfilePage {...props} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />
 					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage {...props} onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
@@ -308,22 +390,36 @@ class App extends Component {
 				      <Route render={()=> <Status404Page onPage={this.handlePage} />} />
 				    </Switch>
 
-				    {(!isInspectorPage()) && (<AdBannerPanel title={adBannerPanel.title} image={adBannerPanel.image} onClick={()=> this.handleAdBanner(adBannerPanel.url)} />)}
+				    {(!isInspectorPage()) && (<AdvertPanel title={adBannerPanel.title} image={adBannerPanel.image} onClick={()=> this.handleAdBanner(adBannerPanel.url)} />)}
 				    {(!isInspectorPage()) && (<BottomNav mobileLayout={false} onLogout={()=> this.handleLogout()} onPage={this.handlePage} />)}
 			    </div>
 
-		      {!(/chrom(e|ium)/i.test(navigator.userAgent.toLowerCase())) && (<ContentModal
-			      size={MODAL_SIZE_AUTO}
+		      {!(/chrom(e|ium)/i.test(navigator.userAgent.toLowerCase())) && (<BaseOverlay
 				    tracking="modal/site"
 				    closeable={false}
 				    onComplete={()=> null}>
 				    This site best viewed in Chrome.
-			    </ContentModal>)}
+			    </BaseOverlay>)}
 
 				  {(popup) && (
-				  	<Popup payload={popup} onComplete={()=> this.setState({ popup : null })}>
+				  	<PopupNotification payload={popup} onComplete={()=> this.setState({ popup : null })}>
 					    {popup.content}
-			      </Popup>
+			      </PopupNotification>
+				  )}
+
+				  {(payDialog) && (<AlertDialog
+					  title="Limited Account"
+					  message="You must upgrade to an unlimited account to view more than 3 projects."
+					  onComplete={this.handlePaidAlert}
+				  />)}
+
+				  {(stripeOverlay && (profile && !profile.paid)) && (
+				  	<StripeModal
+						  profile={profile}
+						  onPage={this.handlePage}
+						  onPopup={this.handlePopup}
+						  onPurchase={this.handlePurchaseSuccess}
+						  onComplete={this.handlePurchaseCancel} />
 				  )}
 		    </div>)
 

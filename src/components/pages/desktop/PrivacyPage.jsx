@@ -4,6 +4,7 @@ import './PrivacyPage.css';
 
 import BaseDesktopPage from './BaseDesktopPage';
 
+
 class PrivacyPage extends Component {
 	constructor(props) {
 		super(props);
