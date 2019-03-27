@@ -64,7 +64,7 @@ export const Browsers = {
 			element.scrollTo(coords.x, coords.y);
 		}
 	},
-	scrollOrigin : (element)=> { Browsers.scrollElement(element)}
+	scrollOrigin : (element)=> (Browsers.scrollElement(element))
 };
 
 
