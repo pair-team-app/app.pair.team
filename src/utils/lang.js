@@ -1,12 +1,9 @@
 
-import moment from 'moment-timezone';
-
-
 export const Arrays = {
 // 	containsElement  : (arr, element)=> (arr.indexOf(element) > -1),
 	containsElement  : (arr, element)=> (Arrays.containsElements(arr, [element])),
 	containsElements : (arr, elements, all=true)=> ((all) ? elements.every((element)=> (arr.indexOf(element) > -1)) : elements.some((element)=> (arr.indexOf(element) > -1))),
-	indexFill        : (len)=> (Arrays.indexMap((new Array(len).fill(null)))),
+	indexFill        : (len, offset=0)=> (Arrays.indexMap((new Array(len).fill(null))).map((i)=> (i + offset))),
 	indexMap         : (arr)=> (arr.map((element, i)=> (i))),
 	isEmpty          : (arr)=> (arr.length === 0),
 	randomElement    : (arr)=> (arr[arr.randomIndex()]),
@@ -15,20 +12,28 @@ export const Arrays = {
 		let indexes = Arrays.indexMap(arr);
 		indexes.forEach((element, i)=> {
 			const ind = (arr.length - 1) - i;
-			const rnd = (ind > 0) ? Maths.randomInt(0, ind - 1) : Arrays.randomIndex(indexes);
-
-			const swap = indexes[rnd];
-			indexes[rnd] = indexes[ind];
-			indexes[ind] = swap;
+			Arrays.swapAtIndexes(indexes, (ind > 0) ? Maths.randomInt(0, ind - 1) : Arrays.randomIndex(indexes), ind);
 		});
 
 		return (indexes.map((ind)=> (arr[ind])));
+	},
+	swapAtIndexes    : (arr, i, ii)=> {
+		const swap = arr[i];
+		arr[i] = arr[ii];
+		arr[ii] = swap;
 	}
 };
 
 
 export const Bits = {
-	contains : (val, bit)=> (((val & bit) === bit))
+	contains : (val, bit)=> (((val & bit) === bit)),
+	random   : ()=> (Bools.random() << 0)
+};
+
+
+export const Bools = {
+	plusMinus : (bool=true)=> (((bool << 0) * 2) - 1),
+	random    : ()=> (Maths.coinFlip())
 };
 
 
@@ -43,12 +48,12 @@ export const Browsers = {
 		txtArea.remove();
 	},
 	isMobile     : {
-		Android    : ()=> { return (navigator.userAgent.match(/Android/i)); },
-		BlackBerry : ()=> { return (navigator.userAgent.match(/BlackBerry/i)); },
-		iOS        : ()=> { return (navigator.userAgent.match(/iPhone|iPad|iPod/i)); },
-		Opera      : ()=> { return (navigator.userAgent.match(/Opera Mini/i)); },
-		Windows    : ()=> { return (navigator.userAgent.match(/IEMobile|WPDesktop/i)); },
-		ANY        : ()=> { return (Browsers.isMobile.Android() || Browsers.isMobile.iOS() || Browsers.isMobile.Windows() || Browsers.isMobile.Opera() || Browsers.isMobile.BlackBerry()); }
+		Android    : ()=> (navigator.userAgent.match(/Android/i)),
+		BlackBerry : ()=> (navigator.userAgent.match(/BlackBerry/i)),
+		iOS        : ()=> (navigator.userAgent.match(/iPhone|iPad|iPod/i)),
+		Opera      : ()=> (navigator.userAgent.match(/Opera Mini/i)),
+		Windows    : ()=> (navigator.userAgent.match(/IEMobile|WPDesktop/i)),
+		ANY        : ()=> (Browsers.isMobile.Android() || Browsers.isMobile.iOS() || Browsers.isMobile.Windows() || Browsers.isMobile.Opera() || Browsers.isMobile.BlackBerry())
 	},
 	makeDownload : (url, blank=false)=> {
 		let link = document.createElement('a');
@@ -59,7 +64,7 @@ export const Browsers = {
 		link.click();
 		link.remove();
 	},
-	scrollElement : (element, coords={x:0, y:0})=> {
+	scrollElement : (element, coords={ x : 0, y : 0 })=> {
 		if (element) {
 			element.scrollTo(coords.x, coords.y);
 		}
@@ -76,7 +81,6 @@ export const Components = {
 
 export const DateTimes = {
 	currYear       : ()=> (new Date().getFullYear()),
-	diffSecs       : (startDate, endDate)=> (moment.duration(moment(`${endDate.replace(' ', 'T')}Z`).diff(`${startDate.replace(' ', 'T')}Z`)).asSeconds()),
 	durationFormat : (secs, frmt='mm:ss')=> {
 		const hours = '' + ((secs / 3600) << 0);
 		const mins = '' + ((secs - ((hours * 3600)) / 60) << 0);
@@ -96,6 +100,8 @@ export const DateTimes = {
 	},
 	ellipsis       : ()=> (Array((DateTimes.epoch() % 4) + 1).join('.')),
 	epoch          : (millisecs=false)=> ((millisecs) ? (new Date()).getTime() : ((new Date()).getTime() * 0.001) << 0),
+	isLeapYear     : (date=new Date())=> ((date.getFullYear() % 4 === 0) && ((date.getFullYear() % 100 !== 0) || (date.getFullYear() % 400 === 0))),
+	iso8601        : (date=new Date())=> (`${date.getFullYear()}-${Strings.lPad(date.getMonth(), 2, '0')}-${Strings.lPad(date.getDate(), 2, '0')}T${Strings.lPad(date.getHours(), 2, '0')}:${Strings.lPad(date.getMinutes(), 2, '0')}:${Strings.lPad(date.getSeconds(), 2, '0')}${(date.getTimezoneOffset() === 0) ? 'Z' : date.toTimeString().split(' ')[1].replace(/^.+(.\d{4})/, '$1')}`),
 	secsDiff       : (date1, date2)=> (Math.abs(date1.getTime() - date2.getTime()))
 };
 
@@ -110,7 +116,10 @@ export const Files = {
 
 
 export const Maths = {
+	coinFlip    : (range=100)=> (Maths.randomInt(range * -0.5, range * 0.5) >= 0),
 	clamp       : (val, lower, upper)=> (Math.min(Math.max(val, lower), upper)),
+	cube        : (val)=> (Math.pow(val, 3)),
+	diceRoll    : (sides=6)=> (Maths.randomInt(1, sides)),
 	geom        : {
 		cropFrame            : (srcFrame, cropFrame)=> ({
 			origin : {
@@ -137,6 +146,9 @@ export const Maths = {
 			right  : Math.min(rect1.right, rect2.right)
 		}),
 		isSizeDimensioned    : (size, flag=0x11)=> (size.width !== 0 && size.height !== 0),
+		lineMidpoint         : (pt1, pt2)=> ({ x : pt1.x + ((pt2.x - pt1.x) * 0.5), y : pt1.y + ((pt2.y - pt1.y) * 0.5) }),
+		ptAngle              : (pt1, pt2)=> (Math.atan2(pt2.y - pt1.y, pt2.x - pt1.x)),
+		ptDistance           : (pt1, pt2)=> (Math.sqrt(Maths.square(Math.abs(pt2.x - pt1.x)) + Maths.square(Math.abs(pt2.y - pt1.y)))),
 		rectContainsRect     : (rect1, rect2)=> (rect1.top <= rect2.top && rect1.left <= rect2.left && rect1.right >= rect2.right && rect1.bottom >= rect2.bottom),
 		rectIntersectsRect   : (rect1, rect2)=> (Math.max(rect1.left, rect2.left) < Math.min(rect1.right, rect2.right) && Math.max(rect1.top, rect2.top) < Math.min(rect1.bottom, rect2.bottom)),
 		rectToFrame          : (rect)=> ({
@@ -150,17 +162,28 @@ export const Maths = {
 			}
 		}),
 		sizeArea             : (size)=> (size.width * size.height),
-		sizeOutboundsSize    : (size1, size2)=> (size1.width > size2.width || size1.height > size2.height)
+		sizeOutboundsSize    : (size1, size2)=> (size1.width > size2.width || size1.height > size2.height),
+		slope                : (pt1, pt2)=> ({ x : pt2.x - pt1.x, y : pt2.y - pt1.y }),
 	},
+	factorial   : (val)=> (Arrays.indexFill(val, 1).reverse().reduce((acc, val)=> (acc * val))),
+	half        : (val)=> (val * 0.5),
+	quarter     : (val)=> (val * 0.25),
 	randomFloat : (lower, upper, precision=15)=> ((Math.random() * (upper - lower)) + lower).toFixed(precision),
-	randomInt   : (lower, upper)=> (Math.round(Maths.randomFloat(lower, upper)))
+	randomInt   : (lower, upper)=> (Math.round(Maths.randomFloat(lower, upper))),
+	reciprocal  : (val)=> (1 / val),
+	root        : (val, factor)=> (Math.pow(val, Maths.reciprocal(factor))),
+	square      : (val)=> (Math.pow(val, 2)),
+	toDegrees   : (val)=> (val * (180 / Math.PI)),
+	toRadians   : (val)=> (val * (Math.PI / 180)),
+	wrap        : (val, lower=Number.MIN_VALUE, upper=Number.MAX_VALUE)=> (lower + (val % upper))
 };
 
 
 export const Numbers = {
 	commaFormat : (val)=> (val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')),
 	isEven      : (val)=> (val % 2 === 0),
-	isOdd       : (val)=> (!Numbers.isEven(val))
+	isOdd       : (val)=> (!Numbers.isEven(val)),
+	toOrdinal   : (val)=> (`${val}${(val >= 10 && val <= 13) ? 'th' : ['th', 'st', 'nd', 'rd', 'th'][Math.min(4, val % 10)]}`)
 };
 
 
@@ -171,7 +194,12 @@ export const Objects = {
 	isEmpty    : (obj)=> (Object.keys(obj).length === 0),
 	hasKey     : (obj, key)=> (Object.keys(obj).some((k)=> (k === key))),
 	length     : (obj)=> (Object.keys(obj).length),
-	reduceVals : (obj, init=0)=> (Object.values(obj).reduce((acc, val)=> ((acc << 0) + (val << 0)), init))
+	reduceVals : (obj, init=0)=> (Object.values(obj).reduce((acc, val)=> ((acc << 0) + (val << 0)), init)),
+	swapAtKeys : (obj, key1, key2)=> {
+		const tmp = obj[key1];
+		obj[key1] = obj[key2];
+		obj[key2] = tmp;
+	}
 };
 
 
@@ -186,7 +214,7 @@ export const Strings = {
 	firstChar    : (str)=> (str.charAt(0)),
 	isEmail      : (str)=> (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i.test(String(str))),
 	lastChar     : (str)=> (str.slice(-1)),
-	lPad         : (str, amt, char)=> ((str.length < amt) ? `${(new Array(amt - String(str).length + 1)).join(char)}${str}` : str),
+	lPad         : (str, amt, char)=> ((String(str).length < amt) ? `${(new Array(amt - String(str).length + 1)).join(char)}${str}` : str),
 	indexedVal   : (val, arr, divider='_')=> {
 		if (arr[val].length === 0) {
 			arr[val] = 0;
@@ -198,13 +226,16 @@ export const Strings = {
 		});
 	},
 	pluralize   : (str, val)=> ((val === 1) ? str : (Strings.lastChar(str) === 'y') ? `${str.slice(0, -1)}ies` : (Strings.lastChar(str) === 's') ? 'es' : `${str}s`),
-	repeat      : (str, amt)=> ((new Array(amt)).fill(str).join('')),
+	remove      : (str, needle)=> (Strings.replAll(str, needle)),
+	repeat      : (str='', amt=1)=> ((new Array(amt)).fill(str).join('')),
 	replAll     : (str, needle, replacement='')=> (str.split(needle).join(replacement)),
 	reverse     : (str)=> ([...str].reverse().join('')),
+	randAlpha   : (len=1, cases=true)=> (Arrays.indexFill(len).map((i)=> ((cases && Maths.coinFlip()) ? String.fromCharCode(Maths.randomInt(65, 91)).toLowerCase() : String.fromCharCode(Maths.randomInt(65, 91)))).join('')),
 	rPad        : (str, amt, char)=> ((str.length < amt) ? `${str}${(new Array(amt - String(str).length + 1)).join(char)}` : str),
+	shuffle     : (str)=> (Arrays.shuffle([...str.split('')]).join('')),
+	slugifyURI  : (str)=> (str.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase()),
 	trimSlashes : (str, leading=true, trailing=true)=> (str.replace(((leading && trailing) ? /^\/?(.+)\// : (leading && !trailing) ? /^\/(.+)$/ : (!leading && trailing) ? /^(.+)\/$/ : /^(.+)$/), '$1')),
 	truncate    : (str, len, ellipsis='…')=> ((str.length > len) ? `${str.substring(0, len - 1).trim()}${ellipsis}` : str),
-	slugifyURI  : (str)=> (str.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase()),
 	utf8Encode  : (str, enc='ascii')=> ((new Buffer(str, enc)).toString('utf8'))
 };
 
@@ -217,3 +248,6 @@ export const URLs = {
 	subdomain      : (url=window.location.hostname)=> ((URLs.hostname(url).split('.').length === 3) ? URLs.hostname(url).split('.').shift() : null),
 	tdl            : (url=window.location.hostname)=> (URLs.hostname(url).split('.').pop())
 };
+
+
+/* …\(^_^)/… */
