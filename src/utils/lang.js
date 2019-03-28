@@ -64,7 +64,7 @@ export const Browsers = {
 			element.scrollTo(coords.x, coords.y);
 		}
 	},
-	scrollOrigin : (element)=> { Browsers.scrollElement(element)}
+	scrollOrigin : (element)=> (Browsers.scrollElement(element))
 };
 
 
@@ -204,7 +204,7 @@ export const Strings = {
 	rPad        : (str, amt, char)=> ((str.length < amt) ? `${str}${(new Array(amt - String(str).length + 1)).join(char)}` : str),
 	trimSlashes : (str, leading=true, trailing=true)=> (str.replace(((leading && trailing) ? /^\/?(.+)\// : (leading && !trailing) ? /^\/(.+)$/ : (!leading && trailing) ? /^(.+)\/$/ : /^(.+)$/), '$1')),
 	truncate    : (str, len, ellipsis='…')=> ((str.length > len) ? `${str.substring(0, len - 1).trim()}${ellipsis}` : str),
-	uriSlugify  : (str)=> (str.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase()),
+	slugifyURI  : (str)=> (str.replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase()),
 	utf8Encode  : (str, enc='ascii')=> ((new Buffer(str, enc)).toString('utf8'))
 };
 

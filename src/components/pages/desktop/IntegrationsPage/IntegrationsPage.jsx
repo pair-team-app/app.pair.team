@@ -54,7 +54,7 @@ class IntegrationsPage extends Component {
 	handleIntegrationItemClick = (integration)=> {
 // 		console.log('IntegrationsPage.handleIntegrationItemClick()', integration);
 
-		trackEvent('integration', 'click', Strings.uriSlugify(integration.title));
+		trackEvent('integration', 'click', Strings.slugifyURI(integration.title));
 		window.open(integration.url);
 	};
 
