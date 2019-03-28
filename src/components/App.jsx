@@ -8,13 +8,14 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
+import BottomNav from './elements/navs/BottomNav';
+import TopNav from './elements/navs/TopNav';
 import AdvertPanel from './elements/overlays/AdvertPanel';
 import AlertDialog from './elements/overlays/AlertDialog/AlertDialog';
-import BottomNav from './elements/navs/BottomNav';
 import BaseOverlay from './elements/overlays/BaseOverlay/BaseOverlay';
-import StripeModal from './elements/overlays/StripeModal';
 import PopupNotification from './elements/overlays/PopupNotification';
-import TopNav from './elements/navs/TopNav';
+import SignupModal from './elements/overlays/SignupModal';
+import StripeModal from './elements/overlays/StripeModal';
 import HomePage from './pages/desktop/HomePage';
 import InspectorPage from './pages/desktop/InspectorPage';
 import IntegrationsPage from './pages/desktop/IntegrationsPage';
@@ -47,6 +48,7 @@ import {
 	isProfilePage,
 	isUploadPage, isUserLoggedIn
 } from '../utils/funcs';
+// import { Maths } from '../utils/lang';
 import { Browsers, URLs } from '../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../utils/tracking';
 import adBannerPanel from '../assets/json/ad-banner-panel';
@@ -87,6 +89,7 @@ class App extends Component {
 			rating        : 0,
 			processing    : false,
 			popup         : null,
+			signupModal   : false,
 			payDialog     : false,
 			stripeOverlay : false
 // 			stripeOverlay : true
@@ -103,6 +106,8 @@ class App extends Component {
 		initTracker(cookie.load('user_id'));
 		trackEvent('site', 'load');
 		trackPageview();
+
+// 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', Maths.factorial(5), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
 
 		this.extensionCheck();
 		this.props.updateDeeplink(idsFromPath());
@@ -353,7 +358,7 @@ class App extends Component {
 		const { profile } = this.props;
   	const { uploadID } = this.props.deeplink;
 		const { pathname } = this.props.location;
-  	const { rating, mobileOverlay, processing, popup, stripeOverlay, payDialog } = this.state;
+  	const { rating, mobileOverlay, processing, popup, signupModal, stripeOverlay, payDialog } = this.state;
 //   	const { rating, mobileOverlay, popup, stripeOverlay, payDialog } = this.state;
 //   	const processing = true;
 
@@ -406,6 +411,13 @@ class App extends Component {
 					    {popup.content}
 			      </PopupNotification>
 				  )}
+
+				  {(signupModal) && (<SignupModal
+					  profile={profile}
+					  onPopup={this.handlePopup}
+					  onComplete={this.handleSignupCancel}
+					  onSignup={this.handleSignup} />
+					  )}
 
 				  {(payDialog) && (<AlertDialog
 					  title="Limited Account"
