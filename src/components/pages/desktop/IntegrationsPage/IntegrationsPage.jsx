@@ -63,7 +63,7 @@ class IntegrationsPage extends Component {
 
 		return (
 			<BaseDesktopPage className="integrations-page-wrapper">
-				<h4>CD / CI Integrations</h4>
+				{/*<h4>CD / CI Integrations</h4>*/}
 				<IntegrationsPageGrid
 					integrations={Arrays.shuffle(integrationItems)}
 					onClick={this.handleIntegrationItemClick}
