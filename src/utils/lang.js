@@ -21,7 +21,9 @@ export const Arrays = {
 		const swap = arr[i];
 		arr[i] = arr[ii];
 		arr[ii] = swap;
-	}
+	},
+	wrapElement      : (arr, ind)=> (arr[Arrays.wrapIndex(arr, ind)]),
+	wrapIndex        : (arr, ind)=> (Maths.wrap(ind, arr.length - 1))
 };
 
 
@@ -102,7 +104,7 @@ export const DateTimes = {
 	epoch          : (millisecs=false)=> ((millisecs) ? (new Date()).getTime() : ((new Date()).getTime() * 0.001) << 0),
 	isLeapYear     : (date=new Date())=> ((date.getFullYear() % 4 === 0) && ((date.getFullYear() % 100 !== 0) || (date.getFullYear() % 400 === 0))),
 	iso8601        : (date=new Date())=> (`${date.getFullYear()}-${Strings.lPad(date.getMonth(), 2, '0')}-${Strings.lPad(date.getDate(), 2, '0')}T${Strings.lPad(date.getHours(), 2, '0')}:${Strings.lPad(date.getMinutes(), 2, '0')}:${Strings.lPad(date.getSeconds(), 2, '0')}${(date.getTimezoneOffset() === 0) ? 'Z' : date.toTimeString().split(' ')[1].replace(/^.+(.\d{4})/, '$1')}`),
-	secsDiff       : (date1, date2)=> (Math.abs(date1.getTime() - date2.getTime()))
+	secsDiff       : (date1, date2=new Date())=> (Math.abs(date1.getTime() - date2.getTime()))
 };
 
 
@@ -171,11 +173,11 @@ export const Maths = {
 	randomFloat : (lower, upper, precision=15)=> ((Math.random() * (upper - lower)) + lower).toFixed(precision),
 	randomInt   : (lower, upper)=> (Math.round(Maths.randomFloat(lower, upper))),
 	reciprocal  : (val)=> (1 / val),
-	root        : (val, factor)=> (Math.pow(val, Maths.reciprocal(factor))),
+	root        : (val, root)=> (Math.pow(val, Maths.reciprocal(root))),
 	square      : (val)=> (Math.pow(val, 2)),
 	toDegrees   : (val)=> (val * (180 / Math.PI)),
 	toRadians   : (val)=> (val * (Math.PI / 180)),
-	wrap        : (val, lower=Number.MIN_VALUE, upper=Number.MAX_VALUE)=> (lower + (val % upper))
+	wrap        : (val, upper=Number.MAX_VALUE - 1, lower=0)=> ((val < lower) ? lower + (((upper + 1) - Math.abs(val)) % (upper + 1)) : lower + (val % (upper + 1)))
 };
 
 
@@ -196,9 +198,9 @@ export const Objects = {
 	length     : (obj)=> (Object.keys(obj).length),
 	reduceVals : (obj, init=0)=> (Object.values(obj).reduce((acc, val)=> ((acc << 0) + (val << 0)), init)),
 	swapAtKeys : (obj, key1, key2)=> {
-		const tmp = obj[key1];
+		const swap = obj[key1];
 		obj[key1] = obj[key2];
-		obj[key2] = tmp;
+		obj[key2] = swap;
 	}
 };
 

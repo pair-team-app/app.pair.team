@@ -14,7 +14,7 @@ import AdvertPanel from './elements/overlays/AdvertPanel';
 import AlertDialog from './elements/overlays/AlertDialog/AlertDialog';
 import BaseOverlay from './elements/overlays/BaseOverlay/BaseOverlay';
 import PopupNotification from './elements/overlays/PopupNotification';
-import SignupModal from './elements/overlays/SignupModal';
+import SetupModal from './elements/overlays/SetupModal';
 import StripeModal from './elements/overlays/StripeModal';
 import HomePage from './pages/desktop/HomePage';
 import InspectorPage from './pages/desktop/InspectorPage';
@@ -81,29 +81,29 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			contentSize   : {
+			contentSize : {
 				width  : 0,
 				height : 0
 			},
-			mobileOverlay : true,
-			rating        : 0,
-			processing    : false,
-			popup         : null,
-			signupModal   : false,
-			payDialog     : false,
-			stripeOverlay : false
-// 			stripeOverlay : true
+			rating      : 0,
+			allowMobile : true,
+			processing  : false,
+			popup       : null,
+			setupModal  : true,
+			payDialog   : false,
+			stripeModal : false
 		};
-	}
-
-	componentDidMount() {
-		console.log('App.componentDidMount()', this.props, this.state);
 
 		if (typeof cookie.load('user_id') === 'undefined') {
 			cookie.save('user_id', '0', { path : '/' });
 		}
 
 		initTracker(cookie.load('user_id'));
+	}
+
+	componentDidMount() {
+		console.log('App.componentDidMount()', this.props, this.state);
+
 		trackEvent('site', 'load');
 		trackPageview();
 
@@ -138,10 +138,10 @@ class App extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+// 		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		const { profile, artboards, deeplink } = this.props;
-		const { payDialog, stripeOverlay } = this.state;
+		const { payDialog, stripeModal } = this.state;
 
 		if (profile) {
 			if (!prevProps.profile) {
@@ -152,17 +152,17 @@ class App extends Component {
 				}
 			}
 
-			console.log('[:::::::::::|:|:::::::::::] PAY CHECK [:::::::::::|:|:::::::::::]');
-			console.log('[::] (!payDialog && !stripeOverlay)', (!payDialog && !stripeOverlay));
-			console.log('[::] (!profile.paid && artboards.length > 3)', (!profile.paid && artboards.length > 3));
-			console.log('[::] (isHomePage(false)', isHomePage(false));
-			console.log('[::] (isInspectorPage())', isInspectorPage());
-			console.log('[::] (prevProps.deeplink.uploadID)', prevProps.deeplink.uploadID);
-			console.log('[::] (this.props.deeplink.uploadID)', deeplink.uploadID);
-			console.log('[:::::::::::|:|:::::::::::] =-=-=-=-= [:::::::::::|:|:::::::::::]');
+// 			console.log('[:::::::::::|:|:::::::::::] PAY CHECK [:::::::::::|:|:::::::::::]');
+// 			console.log('[::] (!payDialog && !stripeModal)', (!payDialog && !stripeModal));
+// 			console.log('[::] (!profile.paid && artboards.length > 3)', (!profile.paid && artboards.length > 3));
+// 			console.log('[::] (isHomePage(false)', isHomePage(false));
+// 			console.log('[::] (isInspectorPage())', isInspectorPage());
+// 			console.log('[::] (prevProps.deeplink.uploadID)', prevProps.deeplink.uploadID);
+// 			console.log('[::] (this.props.deeplink.uploadID)', deeplink.uploadID);
+// 			console.log('[:::::::::::|:|:::::::::::] =-=-=-=-= [:::::::::::|:|:::::::::::]');
 
-			//console.log('||||||||||||||||', payDialog, stripeOverlay, profile.paid, artboards.length, isHomePage(false), prevProps.deeplink.uploadID, deeplink.uploadID, isInspectorPage());
-			if ((!payDialog && !stripeOverlay) && (!profile.paid && artboards.length > 3) && ((isHomePage(false) && prevProps.deeplink.uploadID !== deeplink.uploadID) || (isInspectorPage() && prevProps.uploadID !== deeplink.uploadID))) {
+			//console.log('||||||||||||||||', payDialog, stripeModal, profile.paid, artboards.length, isHomePage(false), prevProps.deeplink.uploadID, deeplink.uploadID, isInspectorPage());
+			if ((!payDialog && !stripeModal) && (!profile.paid && artboards.length > 3) && ((isHomePage(false) && prevProps.deeplink.uploadID !== deeplink.uploadID) || (isInspectorPage() && prevProps.uploadID !== deeplink.uploadID))) {
 				this.setState({ payDialog : true });
 			}
 
@@ -261,10 +261,22 @@ class App extends Component {
 	};
 
 	handlePaidAlert = ()=> {
+// 		console.log('App.handlePaidAlert()');
+
 		this.setState({
-			payDialog     : false,
-			stripeOverlay : true
+			payDialog   : false,
+			stripeModal : true
 		});
+	};
+
+	handlePopup = (payload)=> {
+// 		console.log('App.handlePopup()', payload);
+		this.setState({ popup : payload });
+	};
+
+	handleProcessing = (processing)=> {
+		console.log('App.handleProcessing()', processing);
+		this.setState({ processing });
 	};
 
 	handlePurchaseCancel = ()=> {
@@ -275,31 +287,15 @@ class App extends Component {
 		}
 
 		setTimeout(()=> {
-			this.setState({
-				payDialog     : false,
-				stripeOverlay : false
-			});
+			this.onHideStripeModal();
 		}, (isInspectorPage()) ? 666 : 0);
 	};
 
-	handlePurchaseSuccess = (purchase)=> {
-// 		console.log('App.handlePurchaseSucess()', purchase);
+	handlePurchaseSubmitted = (purchase)=> {
+// 		console.log('App.handlePurchaseSubmitted()', purchase);
 
-		this.setState({
-			payDialog     : false,
-			stripeOverlay : false
-		});
+		this.onHideStripeModal();
 		this.props.fetchUserProfile();
-	};
-
-	handlePopup = (payload)=> {
-		console.log('App.handlePopup()', payload);
-		this.setState({ popup : payload });
-	};
-
-	handleProcessing = (processing)=> {
-		console.log('App.handleProcessing()', processing);
-		this.setState({ processing });
 	};
 
 	handleResize = (event)=> {
@@ -320,6 +316,13 @@ class App extends Component {
 // 		console.log('App.handleScore()', score);
 		this.setState({ rating : score });
 		this.handlePage('rate-this');
+	};
+
+	handleSetupSubmitted = ()=> {
+		console.log('App.handleSetupSubmitted()');
+
+		this.onHideSetupModal();
+		this.props.fetchUserProfile();
 	};
 
 	onAddUploadView = (uploadID)=> {
@@ -351,6 +354,19 @@ class App extends Component {
 		});
 	};
 
+	onHideSetupModal = ()=> {
+		this.setState({ setupModal : false });
+	};
+
+	onHideStripeModal = ()=> {
+		console.log('App.onHideStripeModal()');
+
+		this.setState({
+			payDialog   : false,
+			stripeModal : false
+		});
+	};
+
 
 	render() {
 //   	console.log('App.render()', this.props, this.state);
@@ -358,11 +374,10 @@ class App extends Component {
 		const { profile } = this.props;
   	const { uploadID } = this.props.deeplink;
 		const { pathname } = this.props.location;
-  	const { rating, mobileOverlay, processing, popup, signupModal, stripeOverlay, payDialog } = this.state;
-//   	const { rating, mobileOverlay, popup, stripeOverlay, payDialog } = this.state;
+  	const { rating, allowMobile, processing, popup, setupModal, stripeModal, payDialog } = this.state;
 //   	const processing = true;
 
-  	return ((!Browsers.isMobile.ANY())
+  	return ((!Browsers.isMobile.ANY() || !allowMobile)
 		  ? (<div className="desktop-site-wrapper">
 			    <TopNav
 				    mobileLayout={false}
@@ -375,18 +390,18 @@ class App extends Component {
 			    <div className="content-wrapper" ref={wrapper}>
 				    <Switch>
 					    <Route exact path="/" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
-					    <Route exact path="/inspect" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} />} />
+					    <Route exact path="/inspect" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 					    <Route path="/inspect/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route path="/login/:inviteID?" render={(props)=> <LoginPage {...props} onPage={this.handlePage} />} onPopup={this.handlePopup} />
-					    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} />} />
-					    <Route exact path="/parts" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} />} />
+					    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onStripeModal={()=> this.setState({ stripeModal : true })} />} />
+					    <Route exact path="/parts" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route path="/parts/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
-					    <Route exact path="/present" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} />} />
+					    <Route exact path="/present" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 					    <Route path="/present/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} onStripeOverlay={()=> this.setState({ stripeOverlay : true })} onPopup={this.handlePopup} />} />
+					    <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} onStripeModal={()=> this.setState({ stripeModal : true })} onPopup={this.handlePopup} />} />
 					    <Route path="/profile/:username?" render={(props)=> <ProfilePage {...props} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />
 					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage {...props} onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
@@ -412,11 +427,11 @@ class App extends Component {
 			      </PopupNotification>
 				  )}
 
-				  {(signupModal) && (<SignupModal
+				  {(setupModal) && (<SetupModal
 					  profile={profile}
 					  onPopup={this.handlePopup}
-					  onComplete={this.handleSignupCancel}
-					  onSignup={this.handleSignup} />
+					  onComplete={this.onHideSetupModal}
+					  onSubmitted={this.handleSetupSubmitted} />
 					  )}
 
 				  {(payDialog) && (<AlertDialog
@@ -425,12 +440,12 @@ class App extends Component {
 					  onComplete={this.handlePaidAlert}
 				  />)}
 
-				  {(stripeOverlay && (profile && !profile.paid)) && (
+				  {(stripeModal) && (
 				  	<StripeModal
 						  profile={profile}
 						  onPage={this.handlePage}
 						  onPopup={this.handlePopup}
-						  onPurchase={this.handlePurchaseSuccess}
+						  onSubmitted={this.handlePurchaseSubmitted}
 						  onComplete={this.handlePurchaseCancel} />
 				  )}
 		    </div>)
@@ -445,10 +460,9 @@ class App extends Component {
 				  />
 
 			    <div className="content-wrapper" ref={wrapper}>
-				    {(mobileOverlay) && (<BaseMobilePage
+				    <BaseMobilePage
 					    className={null}
-					    onPage={this.handlePage} />)
-				    }
+					    onPage={this.handlePage} />
 
 				    <BottomNav mobileLayout={true} onLogout={()=> this.handleLogout()} onPage={this.handlePage} />
 			    </div>

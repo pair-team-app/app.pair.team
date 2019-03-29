@@ -1,0 +1,104 @@
+
+.setup-modal-wrapper {
+	height: 80%;
+	padding: 20px;
+	background-color: #1a1e23;
+}
+
+.setup-modal-header {
+	width: 100%;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #24282e;
+}
+
+.setup-modal-content-wrapper {
+}
+
+.setup-modal-content {
+}
+
+.setup-modal-button-wrapper {
+	width: 100%;
+	margin-top: 20px;
+	text-align: left;
+}
+
+
+.setup-modal-grid {
+	width: 100%;
+}
+
+.setup-modal-grid-item-wrapper {
+	margin: 8px -10px 0 -10px;
+}
+
+
+.setup-modal-grid-item {
+	position: relative;
+	width: 160px;
+	height: 200px;
+	background-color: #24282e;
+	margin: 0 10px 20px 10px;
+	border-radius: 2px;
+	overflow: hidden;
+}
+
+.setup-modal-grid-item:hover {
+	cursor: pointer;
+}
+
+.setup-modal-grid-item-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #000000;
+	opacity: 0;
+	border-radius: 2px;
+	transition: opacity 0.125s ease-out;
+}
+
+.setup-modal-grid-item:hover .setup-modal-grid-item-overlay {
+	opacity: 0.25;
+}
+
+.setup-modal-grid-item-selected .setup-modal-grid-item-overlay, .setup-modal-grid-item-selected:hover .setup-modal-grid-item-overlay {
+	opacity: 0.5;
+}
+
+.setup-modal-grid-item-image {
+	position: absolute;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -40%);
+	object-fit: scale-down;
+	width: 50%;
+	height: 50%;
+}
+
+.setup-modal-grid-item-title-wrapper {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	padding: 10px;
+}
+
+.setup-modal-grid-item-title {
+	width: 100%;
+	/*font-family: "San Francisco Text", sans-serif;*/
+	/*font-size: 14px;*/
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-size: 16px;
+	letter-spacing: -0.3px;
+	color: #c8e1fd;
+}
+
+.setup-modal-grid-item-selected-icon {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 10px;
+	color: #7ed321;
+}

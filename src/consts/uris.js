@@ -14,8 +14,8 @@ export const UPLOAD = '/new';
 export const DE_LOGO_SMALL = 'http://cdn.designengine.ai/assets/logo-email.png';
 export const DEFAULT_AVATAR = 'http://cdn.designengine.ai/profiles/avatar-default.png';
 
-// export const API_ENDPT_URL = 'https://api.designengine.ai/system.php';
-export const API_ENDPT_URL = 'https://api.designengine.ai/dev.php';
+export const API_ENDPT_URL = 'https://api.designengine.ai/system.php';
+// export const API_ENDPT_URL = 'https://api.designengine.ai/dev.php';
 export const CDN_DOWNLOAD_PARTS_URL = 'http://cdn.designengine.ai/download-slices.php';
 export const CDN_DOWNLOAD_PDF_URL = 'http://cdn.designengine.ai/download-pdf.php';
 export const CDN_DOWNLOAD_PROJECT_URL = 'http://cdn.designengine.ai/download-project.php';

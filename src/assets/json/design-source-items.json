@@ -1,0 +1,37 @@
+[{
+  "id": 1,
+  "title": "Sketch",
+  "description": "",
+  "url": "https://www.sketchapp.com/",
+  "filename": "/images/design-sources/sketch.png"
+}, {
+  "id": 2,
+  "title": "Figma",
+  "description": "",
+  "url": "https://figma.com",
+  "filename": "/images/design-sources/figma.png"
+}, {
+  "id": 3,
+  "title": "Adobe XD",
+  "description": "",
+  "url": "https://www.adobe.com/",
+  "filename": "/images/design-sources/adobe-xd.png"
+}, {
+  "id": 4,
+  "title": "Photoshop",
+  "description": "",
+  "url": "https://www.adobe.com/",
+  "filename": "/images/design-sources/photoshop.png"
+}, {
+  "id": 5,
+  "title": "Framer",
+  "description": "",
+  "url": "https://www.framer.com/",
+  "filename": "/images/design-sources/framer.png"
+}, {
+  "id": 6,
+  "title": "InVision Studio",
+  "description": "",
+  "url": "https://www.invision.com/",
+  "filename": "/images/design-sources/invision-studio.png"
+}]

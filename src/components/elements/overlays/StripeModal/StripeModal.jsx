@@ -40,17 +40,18 @@ class StripeModal extends Component {
 	handleComplete = ()=> {
 // 		console.log('StripeModal.handleComplete()');
 
-		this.setState({ outro : false}, ()=> {
+		this.setState({ outro : false }, ()=> {
 			const { approved, purchase, redirect } = this.state;
 			if (approved) {
-				this.props.onPurchase(purchase);
+				this.props.onSubmitted(purchase);
+
+			} else {
+				this.props.onComplete();
 			}
 
 			if (redirect) {
 				this.props.onPage(redirect);
 			}
-
-			this.props.onComplete();
 		});
 	};
 

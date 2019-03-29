@@ -32,7 +32,7 @@ import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../../con
 import { DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PARTS_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL, LINTER_ENDPT_URL } from '../../../../consts/uris';
 import { setRedirectURI } from '../../../../redux/actions';
 import { buildInspectorPath, buildInspectorURL, sendToSlack } from '../../../../utils/funcs.js';
-import { Browsers, DateTimes, Files, Maths, Strings, URLs } from '../../../../utils/lang.js';
+import { Arrays, Browsers, DateTimes, Files, Maths, Strings, URLs } from '../../../../utils/lang.js';
 import { trackEvent } from '../../../../utils/tracking';
 
 import downloadButton from '../../../../assets/images/buttons/btn-download.svg';
@@ -1505,11 +1505,10 @@ class InspectorPage extends Component {
 			const dir = artboard.id;
 
 			const artboards = flattenUploadArtboards(upload, 'page_child');
-			const ind = (artboards.findIndex((item)=> (item.id === this.state.artboard.id)) + dir) % artboards.length;
+			artboard = Arrays.wrapElement(artboards, artboards.findIndex((item)=> (item.id === this.state.artboard.id)) + dir);
 
-			if (this.state.artboard.id !== artboards[((ind < 0) ? artboards.length + ind : ind)].id) {
-				this.setState({
-					artboard    : artboards[((ind < 0) ? artboards.length + ind : ind)],
+			if (this.state.artboard.id !== artboard.id) {
+				this.setState({ artboard,
 					slice       : null,
 					offset      : null,
 					hoverSlice  : null,
@@ -2086,7 +2085,7 @@ class InspectorPage extends Component {
 			y : this.state.panMultPt.y
 		};
 
-		console.log(':::::::::::::', scale);
+// 		console.log(':::::::::::::', scale);
 
 		this.setState({ scale, panMultPt,
 			slice : null

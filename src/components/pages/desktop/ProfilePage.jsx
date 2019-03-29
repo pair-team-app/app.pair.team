@@ -98,7 +98,7 @@ class ProfilePage extends Component {
 			this.setState({ confirmDialog : true });
 
 		} else {
-			this.props.onStripeOverlay();
+			this.props.onStripeModal();
 		}
 	};
 
