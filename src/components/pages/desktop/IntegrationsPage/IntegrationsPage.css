@@ -59,14 +59,13 @@
 	bottom: 0;
 	width: 100%;
 	padding: 20px;
-	display: table;
+	backface-visibility: hidden;
+	transform-style: preserve-3d;
 	text-align: center;
-	vertical-align: middle;
 }
 
 .integrations-page-grid-item-title {
 	width: 100%;
-	display: table-cell;
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 16px;
 	letter-spacing: -0.3px;

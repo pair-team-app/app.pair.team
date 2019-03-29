@@ -40,11 +40,11 @@ const SetupModalGridItem = (props)=> {
 
 	const { title, image, selected } = props;
 	return (<div className={`setup-modal-grid-item${(selected) ? ' setup-modal-grid-item-selected' : ''}`} onClick={()=> props.onClick()}>
+		<div className="setup-modal-grid-item-overlay" />
+		<img className="setup-modal-grid-item-image" src={image} alt={title} />
 		<div className="setup-modal-grid-item-title-wrapper">
 			<div className="setup-modal-grid-item-title">{title}</div>
 		</div>
-		<div className="setup-modal-grid-item-overlay" />
-		<img className="setup-modal-grid-item-image" src={image} alt={title} />
 		{(selected) && (<div className="setup-modal-grid-item-selected-icon"><FontAwesome name="check-circle" size="2x" /></div>)}
 	</div>);
 };
