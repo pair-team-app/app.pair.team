@@ -40,12 +40,12 @@ const SetupModalGridItem = (props)=> {
 
 	const { title, image, selected } = props;
 	return (<div className={`setup-modal-grid-item${(selected) ? ' setup-modal-grid-item-selected' : ''}`} onClick={()=> props.onClick()}>
-		<div className="setup-modal-grid-item-overlay" />
 		<img className="setup-modal-grid-item-image" src={image} alt={title} />
+		<div className="setup-modal-grid-item-overlay" />
 		<div className="setup-modal-grid-item-title-wrapper">
 			<div className="setup-modal-grid-item-title">{title}</div>
 		</div>
-		{(selected) && (<div className="setup-modal-grid-item-selected-icon"><FontAwesome name="check-circle" size="2x" /></div>)}
+		<div className={`setup-modal-grid-item-selected-icon${(selected) ? ' setup-modal-grid-item-selected-icon-visible' : ''}`}><FontAwesome name="check-circle" size="2x" /></div>
 	</div>);
 };
 
@@ -87,8 +87,8 @@ class SetupModal extends Component {
 // 		console.log('SetupModal.handleSourceItemClick()', source);
 
 		source.selected = !source.selected;
-// 		const gridItems = this.state.gridItems.map((items, i)=> ((i === 0) ? items.map((item)=> ((item.id === source.id) ? source : item)) : items));
-// 		this.setState({ gridItems });
+		const gridItems = this.state.gridItems.map((items, i)=> ((i === 0) ? items.map((item)=> ((item.id === source.id) ? source : item)) : items));
+		this.setState({ gridItems });
 	};
 
 	handleComplete = (submitted)=> {
@@ -108,7 +108,7 @@ class SetupModal extends Component {
 // 		console.log('SetupModal.handleNextStep()');
 
 		trackEvent('button', 'next');
-// 		this.setState({ step : 1 });
+		this.setState({ step : 1 });
 	};
 
 	handlePrevStep = ()=> {
@@ -133,7 +133,7 @@ class SetupModal extends Component {
 		})).then((response) => {
 			console.log('USER_SETUP', response.data);
 
-			trackEvent('setup', 'success', null, profile.id);
+			trackEvent('setup', 'success');
 			this.setState({ submitting : false });
 			this.handleComplete(true);
 		}).catch((error)=> {
@@ -144,7 +144,8 @@ class SetupModal extends Component {
 // 		console.log('SetupModal.render()', this.props, this.state);
 
 		const { step, gridItems, outro } = this.state;
-		//const selectedItems = gridItems[step].filter((item)=> (item.selected));
+		const title = (step === 0) ? 'What design tools is your team using?' : 'What development frameworks is your team using?';
+		const selectedItems = gridItems[step].filter((item)=> (item.selected));
 
 		return (
 			<BaseOverlay
@@ -159,7 +160,7 @@ class SetupModal extends Component {
 
 				<div className="setup-modal-wrapper">
 					<div className="setup-modal-header">
-						<h1 className="full-width">Account Setup</h1>
+						<h1 className="full-width">{title}</h1>
 					</div>
 					<div className="setup-modal-content-wrapper">
 						<SetupModalGrid
@@ -170,13 +171,11 @@ class SetupModal extends Component {
 						{(step === 0)
 							? (<div className="setup-modal-button-wrapper">
 									<button className="adjacent-button" onClick={()=> { trackEvent('button', 'cancel'); this.setState({ outro : true }); }}>Cancel</button>
-									{/*<button disabled={(selectedItems.length === 0)} onClick={()=> this.handleNextStep()}>Next</button>*/}
-									<button onClick={()=> this.handleNextStep()}>Next</button>
+									<button disabled={(selectedItems.length === 0)} onClick={()=> this.handleNextStep()}>Next</button>
 								</div>)
 							: (<div className="setup-modal-button-wrapper">
 									<button className="adjacent-button" onClick={()=> this.handlePrevStep()}>Back</button>
-									{/*<button disabled={(selectedItems.length === 0)} className="adjacent-button" onClick={()=> this.handleSubmit()}>Submit</button>*/}
-									<button className="adjacent-button" onClick={()=> this.handleSubmit()}>Submit</button>
+									<button disabled={(selectedItems.length === 0)} onClick={()=> this.handleSubmit()}>Submit</button>
 								</div>)
 						}
 					</div>
