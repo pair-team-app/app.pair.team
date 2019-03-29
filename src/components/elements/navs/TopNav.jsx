@@ -111,7 +111,7 @@ class TopNav extends Component {
 
 	handleScore = (score)=> {
 // 		console.log('TopNav.handleScore()', score);
-		trackEvent('rate', 'score', null, score);
+		trackEvent('rate', 'score');
 		this.props.onScore(score);
 	};
 

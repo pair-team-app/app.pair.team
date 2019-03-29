@@ -110,7 +110,7 @@ const ArtboardsList = (props)=> {
 					filename={`${artboard.filename}@1x.png`}
 					title={artboard.title}
 					size={meta.frame.size}
-					onClick={()=> {trackEvent('button', 'change-artboard', null, artboard.id); props.onArtboardListItem(artboard);}}
+					onClick={()=> {trackEvent('button', 'change-artboard'); props.onArtboardListItem(artboard);}}
 				/>
 			);
 		})}
@@ -239,7 +239,7 @@ const InspectorFooter = (props)=> {
 
 			<button disabled={(scale >= Math.max(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-in'); props.onZoom(1);}}><FontAwesome name="search-plus" /></button>
 			<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-out'); props.onZoom(-1);}}><FontAwesome name="search-minus" /></button>
-			<button disabled={false} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-reset'); props.onZoom(0);}}>Reset ({(fitScale * 100) << 0}%)</button>
+			<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-reset'); props.onZoom(0);}}>Reset ({(fitScale * 100) << 0}%)</button>
 
 			{(section === SECTIONS.PRESENTER && artboards.length < 1) && (<>
 				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'prev-artboard'); props.onChangeArtboard(prevArtboard);}}><FontAwesome name="arrow-left" /></button>
