@@ -12,8 +12,6 @@
     "moment-timezone": "^0.5.23",
     "node-sass": "^4.11.0",
     "npm": "^6.9.0",
-    "preload-js": "^0.6.3",
-    "primer": "^10.10.5",
     "qs": "^6.6.0",
     "react": "^16.8.4",
     "react-browser-notifications": "^1.0.14",
@@ -24,7 +22,6 @@
     "react-dropzone": "^6.2.4",
     "react-fontawesome": "^1.6.1",
     "react-ga": "^2.5.7",
-    "react-helmet": "^5.2.0",
     "react-loading-image": "^0.5.0",
     "react-moment": "^0.8.4",
     "react-onclickoutside": "^6.8.0",
@@ -41,6 +38,11 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "audit": "npm audit fix",
+    "purge": "rm -rf node_modules",
+    "reinstall": "npm run purge && npm install",
+    "rebuild": "npm run purge && npm install && npm run build",
+    "backup": "tar -cf ./tmp/tar/node_modules.tar node_modules/",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
