@@ -60,7 +60,7 @@
 }
 
 
-.profile-page-grid {
+.profile-page-integrations-grid {
 	margin-top: 40px;
 }
 
@@ -69,16 +69,16 @@
 }
 
 
-.profile-page-grid-item {
+.profile-page-integrations-grid-item {
 	position: relative;
 	width: 160px;
 	height: 200px;
 	background-color: #24282e;
-	margin: 0 10px 20px 10px;
+	margin: 0 20px 20px 0;
 	overflow: hidden;
 }
 
-.profile-page-grid-item-image {
+.profile-page-integrations-grid-item-image {
 	position: absolute;
 	top: 40%;
 	left: 50%;
@@ -88,7 +88,7 @@
 	height: 50%;
 }
 
-.profile-page-grid-item-title-wrapper {
+.profile-page-integrations-grid-item-title-wrapper {
 	position: absolute;
 	left: 0;
 	bottom: 0;
@@ -97,7 +97,7 @@
 	text-align: center;
 }
 
-.profile-page-grid-item-title {
+.profile-page-integrations-grid-item-title {
 	width: 100%;
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 16px;
@@ -105,7 +105,7 @@
 	color: #c8e1fd;
 }
 
-.profile-page-grid-item-selected-icon {
+.profile-page-integrations-grid-item-selected-icon {
 	position: absolute;
 	top: 0;
 	right: 0;

@@ -14,7 +14,7 @@ import AdvertPanel from './elements/overlays/AdvertPanel';
 import AlertDialog from './elements/overlays/AlertDialog/AlertDialog';
 import BaseOverlay from './elements/overlays/BaseOverlay/BaseOverlay';
 import PopupNotification from './elements/overlays/PopupNotification';
-import SetupModal from './elements/overlays/SetupModal';
+import IntegrationsModal from './elements/overlays/IntegrationsModal';
 import StripeModal from './elements/overlays/StripeModal';
 import HomePage from './pages/desktop/HomePage';
 import InspectorPage from './pages/desktop/InspectorPage';
@@ -48,7 +48,6 @@ import {
 	isProfilePage,
 	isUploadPage, isUserLoggedIn
 } from '../utils/funcs';
-// import { Maths } from '../utils/lang';
 import { Browsers, URLs } from '../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../utils/tracking';
 import adBannerPanel from '../assets/json/ad-banner-panel';
@@ -66,12 +65,12 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		purgeHomeArtboards  : ()=> dispatch(appendHomeArtboards(null)),
-		fetchUserHistory    : (payload)=> dispatch(fetchUserHistory(payload)),
-		fetchUserProfile    : ()=> dispatch(fetchUserProfile()),
-		updateDeeplink      : (navIDs)=> dispatch(updateDeeplink(navIDs)),
-		updateUserProfile   : (profile)=> dispatch(updateUserProfile(profile)),
-		setAtomExtension    : (installed)=> dispatch(setAtomExtension(installed))
+		purgeHomeArtboards : ()=> dispatch(appendHomeArtboards(null)),
+		fetchUserHistory   : (payload)=> dispatch(fetchUserHistory(payload)),
+		fetchUserProfile   : ()=> dispatch(fetchUserProfile()),
+		updateDeeplink     : (navIDs)=> dispatch(updateDeeplink(navIDs)),
+		updateUserProfile  : (profile)=> dispatch(updateUserProfile(profile)),
+		setAtomExtension   : (installed)=> dispatch(setAtomExtension(installed))
 	});
 };
 
@@ -81,17 +80,17 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			contentSize : {
+			contentSize       : {
 				width  : 0,
 				height : 0
 			},
-			rating      : 0,
-			allowMobile : true,
-			processing  : false,
-			popup       : null,
-			setupModal  : false,
-			payDialog   : false,
-			stripeModal : false
+			rating            : 0,
+			allowMobile       : true,
+			processing        : false,
+			popup             : null,
+			integrationsModal : false,
+			payDialog         : false,
+			stripeModal       : false
 		};
 
 		if (typeof cookie.load('user_id') === 'undefined') {
@@ -298,12 +297,20 @@ class App extends Component {
 		this.props.fetchUserProfile();
 	};
 
+	handleRegistered = ()=> {
+		console.log('App.handleRegistered()');
+
+		setTimeout(()=> {
+			this.setState({ integrationsModal : true });
+		}, 1250);
+	};
+
 	handleResize = (event)=> {
-		console.log('App.handleResize()', event);
+// 		console.log('App.handleResize()', event);
 
 		this.setState({ contentSize : {
 			width  : wrapper.current.innerWidth,
-			height : 	wrapper.current.innerHeight
+			height : wrapper.current.innerHeight
 		} })
 	};
 
@@ -355,7 +362,7 @@ class App extends Component {
 	};
 
 	onHideSetupModal = ()=> {
-		this.setState({ setupModal : false });
+		this.setState({ integrationsModal : false });
 	};
 
 	onHideStripeModal = ()=> {
@@ -374,7 +381,7 @@ class App extends Component {
 		const { profile } = this.props;
   	const { uploadID } = this.props.deeplink;
 		const { pathname } = this.props.location;
-  	const { rating, allowMobile, processing, popup, setupModal, stripeModal, payDialog } = this.state;
+  	const { rating, allowMobile, processing, popup, integrationsModal, stripeModal, payDialog } = this.state;
 //   	const processing = true;
 
   	return ((!Browsers.isMobile.ANY() || !allowMobile)
@@ -394,18 +401,18 @@ class App extends Component {
 					    <Route path="/inspect/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route path="/login/:inviteID?" render={(props)=> <LoginPage {...props} onPage={this.handlePage} />} onPopup={this.handlePopup} />
-					    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onPopup={this.handlePopup} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onStripeModal={()=> this.setState({ stripeModal : true })} onRegistered={()=> this.setState({ setupModal : true })} />} />
+					    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onStripeModal={()=> this.setState({ stripeModal : true })} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
 					    <Route exact path="/parts" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route path="/parts/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
 					    <Route exact path="/present" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
 					    <Route path="/present/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} onStripeModal={()=> this.setState({ stripeModal : true })} onSetup={()=> this.setState({ setupModal : true })} onPopup={this.handlePopup} />} />
+					    <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} onStripeModal={()=> this.setState({ stripeModal : true })} onIntegrations={()=> this.setState({ integrationsModal : true })} onPopup={this.handlePopup} />} />
 					    <Route path="/profile/:username?" render={(props)=> <ProfilePage {...props} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />
 					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage {...props} onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route path="/register/:inviteID?" render={(props)=> <RegisterPage {...props} onPage={this.handlePage} onRegistered={()=> this.setState({ setupModal : true })} onPopup={this.handlePopup} />} />
+					    <Route path="/register/:inviteID?" render={(props)=> <RegisterPage {...props} onPage={this.handlePage} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
 					    <Route exact path="/terms" render={()=> <TermsPage />} />
 				      <Route render={()=> <Status404Page onPage={this.handlePage} />} />
 				    </Switch>
@@ -414,25 +421,17 @@ class App extends Component {
 				    {(!isInspectorPage()) && (<BottomNav mobileLayout={false} onLogout={()=> this.handleLogout()} onPage={this.handlePage} />)}
 			    </div>
 
-		      {!(/chrom(e|ium)/i.test(navigator.userAgent.toLowerCase())) && (<BaseOverlay
-				    tracking="modal/site"
-				    closeable={false}
-				    onComplete={()=> null}>
-				    This site best viewed in Chrome.
-			    </BaseOverlay>)}
 
-				  {(popup) && (
-				  	<PopupNotification payload={popup} onComplete={()=> this.setState({ popup : null })}>
-					    {popup.content}
-			      </PopupNotification>
-				  )}
+		      {(popup) && (<PopupNotification payload={popup} onComplete={()=> this.setState({ popup : null })}>
+				    {popup.content}
+		      </PopupNotification>)}
 
-				  {(setupModal) && (<SetupModal
+				  {(integrationsModal) && (<IntegrationsModal
 					  profile={profile}
 					  onPopup={this.handlePopup}
 					  onComplete={this.onHideSetupModal}
-					  onSubmitted={this.handleSetupSubmitted} />
-					  )}
+					  onSubmitted={this.handleSetupSubmitted}
+				  />)}
 
 				  {(payDialog) && (<AlertDialog
 					  title="Limited Account"
@@ -440,14 +439,20 @@ class App extends Component {
 					  onComplete={this.handlePaidAlert}
 				  />)}
 
-				  {(stripeModal) && (
-				  	<StripeModal
-						  profile={profile}
-						  onPage={this.handlePage}
-						  onPopup={this.handlePopup}
-						  onSubmitted={this.handlePurchaseSubmitted}
-						  onComplete={this.handlePurchaseCancel} />
-				  )}
+				  {(stripeModal) && (<StripeModal
+					  profile={profile}
+					  onPage={this.handlePage}
+					  onPopup={this.handlePopup}
+					  onSubmitted={this.handlePurchaseSubmitted}
+					  onComplete={this.handlePurchaseCancel}
+					  />)}
+
+				  {!(/chrom(e|ium)/i.test(navigator.userAgent.toLowerCase())) && (<BaseOverlay
+					  tracking="modal/site"
+					  closeable={false}
+					  onComplete={()=> null}>
+					  This site best viewed in Chrome.
+				  </BaseOverlay>)}
 		    </div>)
 
 		  : (<div className="mobile-site-wrapper">

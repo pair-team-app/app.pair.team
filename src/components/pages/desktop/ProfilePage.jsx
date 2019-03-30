@@ -37,16 +37,16 @@ const mapDispatchToProps = (dispatch)=> {
 };
 
 
-const ProfilePageGrid = (props)=> {
-// 	console.log('ProfilePage.ProfilePageGrid()', props);
+const ProfilePageIntegrationsGrid = (props)=> {
+// 	console.log('ProfilePage.ProfilePageIntegrationsGrid()', props);
 
 	const { title, items } = props;
-	return (<div className="profile-page-grid">
+	return (<div className="profile-page-integrations-grid">
 		<h4>{title}</h4>
-		<Row horizontal="start" className="profile-page-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
+		<Row horizontal="start" className="profile-page-integrations-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
 			{items.map((item, i) => {
 				return (<Column key={i}>
-					<ProfilePageGridItem
+					<ProfilePageIntegrationsGridItem
 						title={item.title}
 						image={item.filename} />
 				</Column>);
@@ -57,16 +57,16 @@ const ProfilePageGrid = (props)=> {
 };
 
 
-const ProfilePageGridItem = (props)=> {
-// 	console.log('ProfilePage.ProfilePageGridItem()', props);
+const ProfilePageIntegrationsGridItem = (props)=> {
+// 	console.log('ProfilePage.ProfilePageIntegrationsGridItem()', props);
 
 	const { title, image } = props;
-	return (<div className="profile-page-grid-item">
-		<img className="profile-page-grid-item-image" src={image} alt={title} />
-		<div className="profile-page-grid-item-title-wrapper">
-			<div className="profile-page-grid-item-title">{title}</div>
+	return (<div className="profile-page-integrations-grid-item">
+		<img className="profile-page-integrations-grid-item-image" src={image} alt={title} />
+		<div className="profile-page-integrations-grid-item-title-wrapper">
+			<div className="profile-page-integrations-grid-item-title">{title}</div>
 		</div>
-		<div className="profile-page-grid-item-selected-icon"><FontAwesome name="check-circle" size="2x" /></div>
+		<div className="profile-page-integrations-grid-item-selected-icon"><FontAwesome name="check-circle" size="2x" /></div>
 	</div>);
 };
 
@@ -216,7 +216,7 @@ class ProfilePage extends Component {
 
 			const config = {
 				headers             : { 'content-type' : 'multipart/form-data' },
-				onDownloadProgress  : (progressEvent)=> {},
+				onDownloadProgress  : (progressEvent)=> {/* …\(^_^)/… */},
 				onUploadProgress    : (progressEvent)=> {
 					const { loaded, total } = progressEvent;
 					const percent = Math.round((loaded * 100) / total);
@@ -437,11 +437,11 @@ class ProfilePage extends Component {
 					{(changed) && (<div className="page-link" onClick={()=> this.handleCancel()}>Cancel</div>)}
 				</Row>
 
-				{(profile) && (<ProfilePageGrid
+				{(profile) && (<ProfilePageIntegrationsGrid
 					title="Design Tools & Frameworks Integrations"
 					items={[...sources, ...integrations]}
 					profile={profile}
-					onClick={this.props.onSetup}
+					onClick={this.props.onIntegrations}
 				/>)}
 
 				{(confirmDialog) && (<ConfirmDialog

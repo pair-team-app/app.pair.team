@@ -1,40 +1,39 @@
 
-.setup-modal-wrapper {
-	/*height: 80%;*/
+.integrations-modal-wrapper {
 	padding: 20px;
 	background-color: #1a1e23;
 }
 
-.setup-modal-header {
+.integrations-modal-header {
 	width: 100%;
 	margin: 20px 0;
 	padding-bottom: 25px;
 	border-bottom: 1px solid #24282e;
 }
 
-.setup-modal-header h1 {
+.integrations-modal-header h1 {
 	line-height: 0;
 }
 
-.setup-modal-content-wrapper {
+.integrations-modal-content-wrapper {
 }
 
-.setup-modal-button-wrapper {
+.integrations-modal-button-wrapper {
 	width: 100%;
 	text-align: left;
 }
 
 
-.setup-modal-grid {
+.integrations-modal-grid {
 	width: 100%;
 }
 
-.setup-modal-grid-item-wrapper {
+.integrations-modal-grid-item-wrapper {
 	margin: 8px -10px 0 -10px;
 }
 
 
-.setup-modal-grid-item {
+.integrations-modal-grid-item {
 	position: relative;
 	width: 160px;
 	height: 200px;
@@ -43,14 +42,14 @@
 	overflow: hidden;
 }
 
-.setup-modal-grid-item:hover {
+.integrations-modal-grid-item:hover {
 	cursor: pointer;
 }
 
-.setup-modal-grid-item-selected {
+.integrations-modal-grid-item-selected {
 }
 
-.setup-modal-grid-item-overlay {
+.integrations-modal-grid-item-overlay {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -62,16 +61,16 @@
 	transition: opacity 0.125s ease-out;
 }
 
-.setup-modal-grid-item:hover .setup-modal-grid-item-overlay {
+.integrations-modal-grid-item:hover .integrations-modal-grid-item-overlay {
 	opacity: 0.25;
 }
 
-.setup-modal-grid-item-selected .setup-modal-grid-item-overlay, .setup-modal-grid-item-selected:hover .setup-modal-grid-item-overlay {
+.integrations-modal-grid-item-selected .integrations-modal-grid-item-overlay, .integrations-modal-grid-item-selected:hover .integrations-modal-grid-item-overlay {
 	opacity: 0.33;
 	border: 1px solid #24282e;
 }
 
-.setup-modal-grid-item-image {
+.integrations-modal-grid-item-image {
 	position: absolute;
 	top: 40%;
 	left: 50%;
@@ -81,7 +80,7 @@
 	height: 50%;
 }
 
-.setup-modal-grid-item-title-wrapper {
+.integrations-modal-grid-item-title-wrapper {
 	position: absolute;
 	left: 0;
 	bottom: 0;
@@ -91,17 +90,15 @@
 	transform-style: preserve-3d;
 }
 
-.setup-modal-grid-item-title {
+.integrations-modal-grid-item-title {
 	width: 100%;
-	/*font-family: "San Francisco Text", sans-serif;*/
-	/*font-size: 14px;*/
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 16px;
 	letter-spacing: -0.3px;
 	color: #c8e1fd;
 }
 
-.setup-modal-grid-item-selected-icon {
+.integrations-modal-grid-item-selected-icon {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -113,6 +110,6 @@
 	transform-style: preserve-3d;
 }
 
-.setup-modal-grid-item-selected-icon-visible {
+.integrations-modal-grid-item-selected-icon-visible {
 	opacity: 1;
 }

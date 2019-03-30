@@ -90,10 +90,8 @@ class RegisterPage extends Component {
 			this.props.updateDeeplink({ uploadID : upload.id });
 		}
 
-		setTimeout(()=> {
-			this.props.onRegistered();
-			this.props.onPage((redirectURI) ? redirectURI.substr(1) : '');
-		}, 1250);
+		this.props.onRegistered();
+		this.props.onPage((redirectURI) ? redirectURI.substr(1) : '');
 	};
 
 	render() {
