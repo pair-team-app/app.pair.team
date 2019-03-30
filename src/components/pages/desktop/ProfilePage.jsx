@@ -7,7 +7,7 @@ import Dropzone from 'react-dropzone';
 import FontAwesome from 'react-fontawesome';
 import ImageLoader from 'react-loading-image';
 import { connect } from 'react-redux';
-import { Row } from 'simple-flexbox';
+import {Column, Row} from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import ConfirmDialog from '../../elements/overlays/ConfirmDialog';
@@ -17,6 +17,9 @@ import { DEFAULT_AVATAR, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { Bits, Files, Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
+import integrationItems from '../../../assets/json/integration-items';
+import sourceItems from '../../../assets/json/design-source-items';
+
 
 const dropZone = React.createRef();
 
@@ -32,6 +35,41 @@ const mapDispatchToProps = (dispatch)=> {
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 };
+
+
+const ProfilePageGrid = (props)=> {
+// 	console.log('ProfilePage.ProfilePageGrid()', props);
+
+	const { title, items } = props;
+	return (<div className="profile-page-grid">
+		<h4>{title}</h4>
+		<Row horizontal="start" className="profile-page-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
+			{items.map((item, i) => {
+				return (<Column key={i}>
+					<ProfilePageGridItem
+						title={item.title}
+						image={item.filename} />
+				</Column>);
+			})}
+		</Row>
+		<button className="long-button" onClick={()=> {trackEvent('button', 'integrations'); props.onClick()}}>{(items.length === 0) ? 'Setup' : 'Change'}</button>
+	</div>);
+};
+
+
+const ProfilePageGridItem = (props)=> {
+// 	console.log('ProfilePage.ProfilePageGridItem()', props);
+
+	const { title, image } = props;
+	return (<div className="profile-page-grid-item">
+		<img className="profile-page-grid-item-image" src={image} alt={title} />
+		<div className="profile-page-grid-item-title-wrapper">
+			<div className="profile-page-grid-item-title">{title}</div>
+		</div>
+		<div className="profile-page-grid-item-selected-icon"><FontAwesome name="check-circle" size="2x" /></div>
+	</div>);
+};
+
 
 
 class ProfilePage extends Component {
@@ -50,6 +88,8 @@ class ProfilePage extends Component {
 			passwordValid : true,
 			passMsg       : '',
 			status        : 0x00,
+			sources       : [],
+			integrations  : [],
 			changed       : false,
 			percent       : 0,
 			fileDialog    : false,
@@ -59,24 +99,42 @@ class ProfilePage extends Component {
 
 	componentDidMount() {
 // 		console.log('ProfilePage.componentDidMount()', this.props, this.state);
+
 		if (this.props.profile) {
-			const { avatar, username, email, type } = this.props.profile;
-			this.setState({ avatar, username, email, type });
+			const { profile } = this.props;
+			const { avatar, username, email, type } = profile;
+
+			const sources = sourceItems.filter((source)=> (profile.sources.includes(source.id)));
+			const integrations = integrationItems.filter((integration)=> (profile.sources.includes(integration.id)));
+
+			this.setState({ avatar, username, email, type, sources, integrations });
 		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('ProfilePage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
+		if (!prevProps.profile && this.props.profile) {
+			const { profile } = this.props;
+			const sources = sourceItems.filter((source)=> (profile.sources.includes(source.id)));
+			const integrations = integrationItems.filter((integration)=> (profile.integrations.includes(integration.id)));
+
+			this.setState({ sources, integrations });
+		}
+
 		if (prevProps.profile !== this.props.profile) {
-			const { avatar, username, email, type, status } = this.props.profile;
+			const { profile } = this.props;
+			const { avatar, username, email, type, status } = profile;
+
 			this.setState({
 				avatar        : avatar,
 				username      : username,
 				email         : email,
 				type          : type,
 				usernameValid : !Bits.contains(status, 0x01),
-				emailValid    : !Bits.contains(status, 0x10)
+				emailValid    : !Bits.contains(status, 0x10),
+				sources       : sourceItems.filter((source)=> (profile.sources.includes(source.id))),
+				integrations  : integrationItems.filter((integration)=> (profile.integrations.includes(integration.id)))
 			});
 		}
 
@@ -313,7 +371,7 @@ class ProfilePage extends Component {
 
 // 		const { avatar, username, email } = (this.props.profile) ? this.props.profile : this.state;
 		const { profile } = this.props;
-		const { avatar, username, email } = this.state;
+		const { avatar, username, email, sources, integrations } = this.state;
 		const { passMsg, usernameValid, emailValid, passwordValid, changed, confirmDialog } = this.state;
 
 		return (
@@ -389,6 +447,12 @@ class ProfilePage extends Component {
 					<button type="submit" disabled={!changed} className="long-button adjacent-button" onClick={()=> this.handleSubmit()}>Save</button>
 					{(changed) && (<div className="page-link" onClick={()=> this.handleCancel()}>Cancel</div>)}
 				</Row>
+
+				{(profile) && (<ProfilePageGrid
+					title="Design Tools & Frameworks Integrations"
+					items={[...sources, ...integrations]}
+					onClick={this.props.onSetup}
+				/>)}
 
 				{(confirmDialog) && (<ConfirmDialog
 					title="Change Account"

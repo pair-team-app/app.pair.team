@@ -150,7 +150,7 @@ class SetupModal extends Component {
 		return (
 			<BaseOverlay
 				tracking={`setup/${URLs.firstComponent()}`}
-				delay={1750}
+				delay={0}
 				outro={outro}
 				unblurred={true}
 				closeable={true}
