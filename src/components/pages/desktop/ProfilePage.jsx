@@ -103,9 +103,8 @@ class ProfilePage extends Component {
 		if (this.props.profile) {
 			const { profile } = this.props;
 			const { avatar, username, email, type } = profile;
-
 			const sources = sourceItems.filter((source)=> (profile.sources.includes(source.id)));
-			const integrations = integrationItems.filter((integration)=> (profile.sources.includes(integration.id)));
+			const integrations = integrationItems.filter((integration)=> (profile.integrations.includes(integration.id)));
 
 			this.setState({ avatar, username, email, type, sources, integrations });
 		}
@@ -126,11 +125,7 @@ class ProfilePage extends Component {
 			const { profile } = this.props;
 			const { avatar, username, email, type, status } = profile;
 
-			this.setState({
-				avatar        : avatar,
-				username      : username,
-				email         : email,
-				type          : type,
+			this.setState({ avatar, username, email, type,
 				usernameValid : !Bits.contains(status, 0x01),
 				emailValid    : !Bits.contains(status, 0x10),
 				sources       : sourceItems.filter((source)=> (profile.sources.includes(source.id))),
@@ -174,10 +169,7 @@ class ProfilePage extends Component {
 		trackEvent('button', 'cancel-changes');
 		const { avatar, username, email } = this.props.profile;
 
-		this.setState({
-			avatar        : avatar,
-			username      : username,
-			email         : email,
+		this.setState({ avatar, username, email,
 			password      : '',
 			passMsg       : '',
 			usernameValid : true,
@@ -350,13 +342,10 @@ class ProfilePage extends Component {
 
 // 		console.log(' -=- ProfilePage.onValidateFields()', emailValid, state);
 
-		this.setState({
-			username      : (usernameValid) ? username : (username.includes('@')) ? 'Usernames Cannot Contain \'@\'' : 'Username Invalid',
-			email         : (emailValid) ? email : 'Email Address Invalid',
-			passMsg       : (passwordValid) ? password : 'Password Invalid',
-			usernameValid : usernameValid,
-			emailValid    : emailValid,
-			passwordValid : passwordValid
+		this.setState({ usernameValid, emailValid, passwordValid,
+			username : (usernameValid) ? username : (username.includes('@')) ? 'Usernames Cannot Contain \'@\'' : 'Username Invalid',
+			email    : (emailValid) ? email : 'Email Address Invalid',
+			passMsg  : (passwordValid) ? password : 'Password Invalid'
 		});
 
 		if (usernameValid && emailValid && passwordValid) {
@@ -451,6 +440,7 @@ class ProfilePage extends Component {
 				{(profile) && (<ProfilePageGrid
 					title="Design Tools & Frameworks Integrations"
 					items={[...sources, ...integrations]}
+					profile={profile}
 					onClick={this.props.onSetup}
 				/>)}
 

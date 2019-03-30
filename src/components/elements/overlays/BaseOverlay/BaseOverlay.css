@@ -14,17 +14,15 @@
 	position: fixed;
 	width: fit-content;
 	height: auto;
-	max-width: 90%;
+	max-width: 85%;
 	max-height: 85%;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	-webkit-transform: translate(-50%, -50%);
 	z-index: 2002;
-	overflow-x: hidden;
-	overflow-y: auto;
+	overflow: hidden;
 	border-radius: 2px;
-	padding: 15px;
 	background-color: #ffffff;
 	text-align: center;
 	color: #9b9b9b;
@@ -36,7 +34,8 @@
 	box-shadow: none;
 }
 
-.base-overlay-content-wrapper-auto {
+.base-overlay-content-wrapper-auto-scroll {
+	overflow-y: auto;
 }
 
 .base-overlay-content-wrapper-fixed {
@@ -49,45 +48,59 @@
 
 .base-overlay-header-wrapper {
 	display: table;
-	width: 100%;
-	margin: -10px 0 10px -5px;
-	padding-bottom: 5px;
+	width: calc(100% - 20px);
+	margin: 10px;
+	padding-bottom: 10px;
 	border-bottom: 1px solid #eaecef;
 	font-family: "San Francisco Text SemiBold", sans-serif;
 	font-size: 16px;
 	letter-spacing: -0.24px;
+	line-height: normal;
 	color: #1c1c1c;
 }
 
 .base-overlay-title {
 	display: table-cell;
 	text-align: left;
-	padding-right: 20px;
 }
 
 .base-overlay-close-button {
 	display: table-cell;
 	min-width: 0;
 	min-height: 0;
-	margin-right: -10px;
 	padding: 3px 8px;
 	font-size: 11px;
+	text-align: right;
 }
 
 .base-overlay-content {
-	height: 100%;
 	line-height: 24px;
 }
 
+.base-overlay-content-padded {
+	padding: 10px 20px;
+}
+
 .base-overlay-button-wrapper {
-	margin-top: 20px;
+	margin: 15px 0;
 }
 
 .base-overlay-button {
 	padding: 6px 4px;
 	max-width: 80px;
 	height: auto;
+	border: 1px solid #055cc5;
 	font-family: "San Francisco Text SemiBold", sans-serif;
 	font-size: 14px;
 	letter-spacing: -0.3px;
+	line-height: normal;
+
+	/*backface-visibility: visible;*/
+	/*backface-visibility: hidden;*/
+	/*transform-style: flat;*/
+	/*transform-style: preserve-3d;*/
+}
+
+.base-overlay-button:hover {
+	border: 1px solid #00449c;
 }

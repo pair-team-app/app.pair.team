@@ -8,7 +8,7 @@ import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 const logFormat = (action, meta='')=> {
 	if (typeof action !== 'function') {
 		const { type, payload } = action;
-		console.log(LOG_MIDDLEWARE_PREFIX, `“${type}”`, payload, meta);
+		console.log(LOG_MIDDLEWARE_PREFIX, `MW >> “${type}”`, payload, meta);
 	}
 };
 

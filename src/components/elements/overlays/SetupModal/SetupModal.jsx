@@ -65,10 +65,11 @@ class SetupModal extends Component {
 	componentDidMount() {
 // 		console.log('SetupModal.componentDidMount()', this.props, this.state);
 
+		const { profile } = this.props;
 		const gridItems = this.state.gridItems.map((_, i)=> {
 			const items = (i === 0) ? sourceItems : integrationItems;
 			return (items.map((item)=> (Object.assign({}, item, {
-				selected : false
+				selected : ((i === 0) ? profile.sources.includes(item.id) : profile.integrations.includes(item.id))
 			}))));
 		});
 
@@ -118,25 +119,38 @@ class SetupModal extends Component {
 		this.setState({ step : 0 });
 	};
 
+	handleSkipStep = ()=> {
+		console.log('SetupModal.handlePrevStep()');
+
+		trackEvent('button', 'skip');
+		this.setState({
+			step      : 1,
+			gridItems : this.state.gridItems.map((items, i)=> ((i === 0) ? items.map((item)=> (Object.assign({}, item, {
+				selected : false
+			}))) : items))
+		});
+	};
+
 	handleSubmit = ()=> {
 // 		console.log('SetupModal.handleSubmit()');
 
 		const { profile } = this.props;
 		const { gridItems } = this.state;
 
-		this.setState({ submitting : true });
-		axios.post(API_ENDPT_URL, qs.stringify({
-			action       : 'USER_SETUP',
-			user_id      : profile.id,
-			sources      : [...gridItems].shift().filter((item)=> (item.selected)).map((item)=> (item.id)).join(','),
-			integrations : [...gridItems].pop().filter((item)=> (item.selected)).map((item)=> (item.id)).join(',')
-		})).then((response) => {
-			console.log('USER_SETUP', response.data);
+		this.setState({ submitting : true }, ()=> {
+			axios.post(API_ENDPT_URL, qs.stringify({
+				action       : 'UPDATE_INTEGRATIONS',
+				user_id      : profile.id,
+				sources      : [...gridItems].shift().filter((item)=> (item.selected)).map((item)=> (item.id)).join(','),
+				integrations : [...gridItems].pop().filter((item)=> (item.selected)).map((item)=> (item.id)).join(',')
+			})).then((response) => {
+				console.log('UPDATE_INTEGRATIONS', response.data);
 
-			trackEvent('setup', 'success');
-			this.setState({ submitting : false });
-			this.handleComplete(true);
-		}).catch((error)=> {
+				trackEvent('setup', 'success');
+				this.setState({ submitting : false });
+				this.handleComplete(true);
+			}).catch((error)=> {
+			});
 		});
 	};
 
@@ -145,7 +159,7 @@ class SetupModal extends Component {
 
 		const { step, gridItems, outro } = this.state;
 		const title = (step === 0) ? 'What design tools is your team using?' : 'What development frameworks is your team using?';
-		const selectedItems = gridItems[step].filter((item)=> (item.selected));
+// 		const selectedItems = gridItems[step].filter((item)=> (item.selected));
 
 		return (
 			<BaseOverlay
@@ -171,11 +185,11 @@ class SetupModal extends Component {
 						{(step === 0)
 							? (<div className="setup-modal-button-wrapper">
 									<button className="adjacent-button" onClick={()=> { trackEvent('button', 'cancel'); this.setState({ outro : true }); }}>Cancel</button>
-									<button disabled={(selectedItems.length === 0)} onClick={()=> this.handleNextStep()}>Next</button>
+									<button onClick={()=> this.handleNextStep()}>Next</button>
 								</div>)
 							: (<div className="setup-modal-button-wrapper">
 									<button className="adjacent-button" onClick={()=> this.handlePrevStep()}>Back</button>
-									<button disabled={(selectedItems.length === 0)} onClick={()=> this.handleSubmit()}>Submit</button>
+									<button onClick={()=> this.handleSubmit()}>Save</button>
 								</div>)
 						}
 					</div>

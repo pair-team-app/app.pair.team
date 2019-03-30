@@ -3,6 +3,7 @@ export const Arrays = {
 // 	containsElement  : (arr, element)=> (arr.indexOf(element) > -1),
 	containsElement  : (arr, element)=> (Arrays.containsElements(arr, [element])),
 	containsElements : (arr, elements, all=true)=> ((all) ? elements.every((element)=> (arr.indexOf(element) > -1)) : elements.some((element)=> (arr.indexOf(element) > -1))),
+	dropElement      : (arr, element)=> (arr.filter((item)=> (item !== element))),
 	indexFill        : (len, offset=0)=> (Arrays.indexMap((new Array(len).fill(null))).map((i)=> (i + offset))),
 	indexMap         : (arr)=> (arr.map((element, i)=> (i))),
 	isEmpty          : (arr)=> (arr.length === 0),

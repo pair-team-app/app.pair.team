@@ -43,6 +43,11 @@
 	opacity: 0.25;
 }
 
+.integrations-page-grid-item-selected .integrations-page-grid-item-overlay, .integrations-page-grid-item-selected:hover .integrations-page-grid-item-overlay {
+	opacity: 0.33;
+	border: 1px solid #24282e;
+}
+
 .integrations-page-grid-item-image {
 	position: absolute;
 	top: 40%;
@@ -70,4 +75,20 @@
 	font-size: 16px;
 	letter-spacing: -0.3px;
 	color: #c8e1fd;
+}
+
+.integrations-page-grid-item-selected-icon {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 10px;
+	opacity: 0;
+	color: #7ed321;
+	transition: opacity 0.125s ease-out;
+	backface-visibility: hidden;
+	transform-style: preserve-3d;
+}
+
+.integrations-page-grid-item-selected-icon-visible {
+	opacity: 1;
 }

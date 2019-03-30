@@ -171,8 +171,10 @@ class UploadPage extends Component {
 		cookie.save('user_id', profile.id, { path : '/' });
 
 		this.props.updateUserProfile(profile);
-		this.props.onRegistered();
-		this.onUploadSubmit(profile);
+		setTimeout(()=> {
+			this.props.onRegistered();
+			this.onUploadSubmit(profile);
+		}, 1250);
 	};
 
 	onUploadSubmit = (userProfile)=> {

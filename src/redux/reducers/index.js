@@ -29,7 +29,7 @@ const initialState = {
 
 const logFormat = (state, action, meta='')=> {
 	const { type, payload } = action;
-	console.log(LOG_REDUCER_PREFIX, state, `“${type}”`, payload, meta);
+	console.log(LOG_REDUCER_PREFIX, `REDUCER >> “${type}”`, state, payload, meta);
 };
 
 
@@ -81,8 +81,8 @@ function rootReducer(state=initialState, action) {
 
 		case USER_PROFILE_UPDATED:
 			return (Object.assign({}, state, {
-// 				userProfile : action.payload
-				userProfile : Object.assign({}, state.userProfile, action.payload)
+				userProfile : action.payload
+// 				userProfile : Object.assign({}, state.userProfile, action.payload)
 			}));
 
 		case CONVERTED_DEEPLINK:

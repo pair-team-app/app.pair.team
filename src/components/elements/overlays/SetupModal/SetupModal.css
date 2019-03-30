@@ -1,25 +1,26 @@
 
 .setup-modal-wrapper {
-	height: 80%;
+	/*height: 80%;*/
 	padding: 20px;
 	background-color: #1a1e23;
 }
 
 .setup-modal-header {
 	width: 100%;
-	margin-bottom: 20px;
+	margin: 20px 0;
+	padding-bottom: 25px;
 	border-bottom: 1px solid #24282e;
+}
+
+.setup-modal-header h1 {
+	line-height: 0;
 }
 
 .setup-modal-content-wrapper {
 }
 
-.setup-modal-content {
-}
-
 .setup-modal-button-wrapper {
 	width: 100%;
-	/*margin-top: 20px;*/
 	text-align: left;
 }
 

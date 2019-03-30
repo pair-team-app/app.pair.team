@@ -19,7 +19,6 @@
 }
 
 .radio-button-button:disabled, .radio-button-button:disabled:hover {
-	cursor: default;
 	background: #fafbfc none;
 	border: 1px solid #eaecef;
 }

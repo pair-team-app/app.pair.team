@@ -1,13 +1,6 @@
 
-.confirm-dialog-wrapper {
-	position: fixed;
-	right: 26px;
-	bottom: 26px;
-	width: 260px;
-	height: 200px;
-	z-index: 1001;
-	background-color: #24282e;
-	box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+.confirm-dialog-content {
+	padding: 0 15px;
 }
 
 .confirm-dialog-button-wrapper {

@@ -68,7 +68,6 @@ h1.page-header-title {
 
 .aux-button:hover, .aux-button:active {
 	background-color: #fafbfc;
-	border: 1px solid #005cc5;
 }
 
 .aux-button:disabled, .aux-button:disabled:hover {

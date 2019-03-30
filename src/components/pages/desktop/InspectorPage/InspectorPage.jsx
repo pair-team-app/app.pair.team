@@ -1053,7 +1053,7 @@ class InspectorPage extends Component {
 						});
 
 						upload.pages = upload.pages.map((page)=> (Object.assign({}, page, {
-							artboards : page.artboards.map((item) => ((item.id === artboard.id) ? artboard : item))
+							artboards : page.artboards.map((item)=> ((item.id === artboard.id) ? artboard : item))
 						})));
 
 						const slices = [...intersectSlices(artboard.slices, artboard.meta.frame)];
@@ -1409,7 +1409,7 @@ class InspectorPage extends Component {
 						});
 
 						upload.pages = upload.pages.map((page)=> (Object.assign({}, page, {
-							artboards : page.artboards.map((item) => ((item.id === artboardID) ? artboard : item))
+							artboards : page.artboards.map((item)=> ((item.id === artboardID) ? artboard : item))
 						})));
 
 						this.setState({ upload, artboard });
@@ -2154,7 +2154,7 @@ class InspectorPage extends Component {
 						Object.assign({}, page, {
 							id        : page.id << 0,
 							uploadID  : page.upload_id << 0,
-							artboards : page.artboards.map((artboard) => (
+							artboards : page.artboards.map((artboard)=> (
 								Object.assign({}, artboard, {
 									id       : artboard.id << 0,
 									pageID   : artboard.page_id << 0,
@@ -2585,7 +2585,7 @@ class InspectorPage extends Component {
 			{(restricted) && (<BaseOverlay
 				tracking="private/inspector"
 				closeable={false}
-				defaultButton="Register / Login"
+				defaultButton="Register"
 				onComplete={()=> this.props.onPage('register')}>
 				This project is private, you must be logged in as one of its team members to view!
 			</BaseOverlay>)}

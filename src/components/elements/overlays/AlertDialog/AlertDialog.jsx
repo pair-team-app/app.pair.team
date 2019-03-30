@@ -12,8 +12,6 @@ class AlertDialog extends Component {
 		this.state = {
 			outro : false
 		};
-
-		this.wrapper = null;
 	}
 
 	componentDidMount() {
@@ -28,19 +26,15 @@ class AlertDialog extends Component {
 // 		console.log('AlertDialog.render()', this.props, this.state);
 
 		const { tracking, title, message } = this.props;
-		return (
-			<div className="alert-dialog-wrapper" ref={(element)=> { this.wrapper = element; }}>
-				<BaseOverlay
-					tracking={`${tracking}/${URLs.firstComponent()}`}
-					outro={false}
-					closeable={true}
-					defaultButton="OK"
-					title={title}
-					onComplete={this.props.onComplete}>
-					{message}
-				</BaseOverlay>
-			</div>
-		);
+		return (<BaseOverlay
+			tracking={`${tracking}/${URLs.firstComponent()}`}
+			outro={false}
+			closeable={true}
+			defaultButton="OK"
+			title={title}
+			onComplete={this.props.onComplete}>
+			<div className="alert-dialog-content">{message}</div>
+		</BaseOverlay>);
 	}
 }
 

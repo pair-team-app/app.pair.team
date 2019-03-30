@@ -61,7 +61,7 @@ export function fetchUserProfile() {
 				const { id, type } = response.data.user;
 				dispatch({
 					type    : USER_PROFILE_LOADED,
-					payload : { ...response.data.user,
+					payload : {...response.data.user,
 						id   : id << 0,
 						paid : type.includes('paid')
 					}
@@ -141,18 +141,15 @@ export function updateUserProfile(payload) {
 					console.log('UPDATE_PROFILE', response.data);
 
 					const status = parseInt(response.data.status, 16);
-					const { id, avatar, username, email, type } = response.data.user;
+					const { id, username, email, type } = response.data.user;
 
 					dispatch({
 						type    : (status === 0x00) ? USER_PROFILE_UPDATED : USER_PROFILE_ERROR,
-						payload : {
+						payload : {...response.data.user,
 							status   : status,
 							id       : id << 0,
-							avatar   : avatar,
 							username : (Bits.contains(status, 0x01)) ? 'Username Already in Use' : username,
 							email    : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email,
-							password : '',
-							type     : type,
 							paid     : type.includes('paid')
 						}
 					});

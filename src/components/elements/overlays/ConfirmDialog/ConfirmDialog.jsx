@@ -13,8 +13,6 @@ class ConfirmDialog extends Component {
 			ok    : false,
 			outro : false
 		};
-
-		this.wrapper = null;
 	}
 
 	componentDidMount() {
@@ -48,22 +46,20 @@ class ConfirmDialog extends Component {
 		const { tracking, title, message } = this.props;
 		const { outro } = this.state;
 
-		return (
-			<div className="confirm-dialog-wrapper" ref={(element)=> { this.wrapper = element; }}>
-				<BaseOverlay
-					tracking={`${tracking}/${URLs.firstComponent()}`}
-					outro={outro}
-					closeable={true}
-					title={title}
-					onComplete={this.handleComplete}>
-					{message}
-					<div className="base-overlay-button-wrapper confirm-dialog-button-wrapper">
-						<button className="base-overlay-button aux-button adjacent-button" onClick={()=> this.handleClick(false)}>Cancel</button>
-						<button className="base-overlay-button" onClick={()=> this.handleClick(true)}>OK</button>
-					</div>
-				</BaseOverlay>
+		return (<BaseOverlay
+			tracking={`${tracking}/${URLs.firstComponent()}`}
+			outro={outro}
+			closeable={true}
+			title={title}
+			onComplete={this.handleComplete}>
+			<div className="confirm-dialog-content">
+				{message}
+				<div className="base-overlay-button-wrapper confirm-dialog-button-wrapper">
+					<button className="base-overlay-button aux-button adjacent-button" onClick={()=> this.handleClick(false)}>Cancel</button>
+					<button className="base-overlay-button" onClick={()=> this.handleClick(true)}>OK</button>
+				</div>
 			</div>
-		);
+		</BaseOverlay>);
 	}
 }
 

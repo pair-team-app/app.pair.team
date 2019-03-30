@@ -7,6 +7,11 @@
   outline: none;
 }
 
+*:disabled, *:disabled:hover {
+  cursor: default;
+}
+
+
 html, body {
   margin: 0;
   padding: 0;
@@ -42,6 +47,7 @@ button {
   font-size: 16px;
   letter-spacing: -0.3px;
   color : #ffffff;
+  line-height: normal;
 }
 
 button:hover, button:active {
@@ -50,7 +56,6 @@ button:hover, button:active {
 }
 
 button:disabled, button:disabled:hover {
-  cursor: default;
   background-color: #005cc5;
   color: #abdafd;
   opacity : 0.875;
@@ -144,7 +149,6 @@ input[type="text"], input[type="password"], input[type="tel"], select, textarea,
 
 input[type="text"]:disabled, input[type="password"]:disabled, input[type="tel"]:disabled, select:disabled, textarea:disabled {
   cursor: not-allowed;
-  /*color: #abdafd;*/
   color: #727d8d;
 }
 

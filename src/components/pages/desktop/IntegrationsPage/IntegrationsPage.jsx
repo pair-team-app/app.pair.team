@@ -2,12 +2,32 @@
 import React, { Component } from 'react';
 import './IntegrationsPage.css';
 
+import axios from 'axios';
+import qs from 'qs';
+import FontAwesome from 'react-fontawesome';
+import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from '../BaseDesktopPage';
-import { Arrays, Strings } from '../../../../utils/lang';
+import { API_ENDPT_URL } from '../../../../consts/uris';
+import { updateUserProfile } from '../../../../redux/actions';
+import { Strings } from '../../../../utils/lang';
 import { trackEvent } from '../../../../utils/tracking';
 import integrationItems from '../../../../assets/json/integration-items';
+import sourceItems from '../../../../assets/json/design-source-items';
+
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		profile : state.userProfile
+	});
+};
+
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+	});
+};
 
 
 const IntegrationsPageGrid = (props)=> {
@@ -21,6 +41,7 @@ const IntegrationsPageGrid = (props)=> {
 					<IntegrationsPageGridItem
 						title={integration.title}
 						image={integration.filename}
+						selected={integration.selected}
 						onClick={()=> props.onClick(integration)} />
 				</Column>);
 			})}
@@ -32,13 +53,14 @@ const IntegrationsPageGrid = (props)=> {
 const IntegrationsPageGridItem = (props)=> {
 // 	console.log('IntegrationsPage.IntegrationsPageGridItem()', props);
 
-	const { title, image } = props;
-	return (<div className="integrations-page-grid-item" onClick={()=> props.onClick()}>
-		<div className="integrations-page-grid-item-overlay" />
+	const { title, image, selected } = props;
+	return (<div className={`integrations-page-grid-item${(selected) ? ' integrations-page-grid-item-selected' : ''}`} onClick={()=> props.onClick()}>
 		<img className="integrations-page-grid-item-image" src={image} alt={title} />
+		<div className="integrations-page-grid-item-overlay" />
 		<div className="integrations-page-grid-item-title-wrapper">
 			<div className="integrations-page-grid-item-title">{title}</div>
 		</div>
+		<div className={`integrations-page-grid-item-selected-icon${(selected) ? ' integrations-page-grid-item-selected-icon-visible' : ''}`}><FontAwesome name="check-circle" size="2x" /></div>
 	</div>);
 };
 
@@ -48,24 +70,89 @@ class IntegrationsPage extends Component {
 		super(props);
 
 		this.state = {
+			submitting   : false,
+			sources      : [],
+			integrations : []
 		};
+	}
+
+	componentDidMount() {
+		console.log('IntegrationsPage.componentDidMount()', this.props, this.state);
+
+		const { profile } = this.props;
+
+		const sources = sourceItems.map((item)=> (Object.assign({}, item, {
+			selected : (profile && profile.sources.includes(item.id))
+		})));
+
+		const integrations = integrationItems.map((item)=> (Object.assign({}, item, {
+			selected : (profile && profile.integrations.includes(item.id))
+		})));
+
+		this.setState({ sources, integrations });
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('IntegrationsPage.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
+
+		if (!prevProps.profile && this.props.profile) {
+			const { profile } = this.props;
+
+			const sources = sourceItems.map((source)=> (Object.assign({}, source, {
+				selected : (profile && profile.sources.includes(source.id))
+			})));
+
+			const integrations = integrationItems.map((integration)=> (Object.assign({}, integration, {
+				selected : (profile && profile.integrations.includes(integration.id))
+			})));
+
+			this.setState({ sources, integrations });
+		}
 	}
 
 	handleIntegrationItemClick = (integration)=> {
 // 		console.log('IntegrationsPage.handleIntegrationItemClick()', integration);
 
 		trackEvent('integration', 'click', Strings.slugifyURI(integration.title));
-		window.open(integration.url);
+
+		if (this.props.profile) {
+			const { profile } = this.props;
+			integration.selected = !integration.selected;
+
+			const sources = this.state.sources;
+			const integrations = this.state.integrations.map((item)=> ((item.id === integration.id) ? integration : item));
+			this.setState({ sources, integrations,
+				submitting : true
+			}, ()=> {
+				axios.post(API_ENDPT_URL, qs.stringify({
+					action       : 'UPDATE_INTEGRATIONS',
+					user_id      : profile.id,
+					sources      : this.state.sources.filter((source)=> (source.selected)).map((source)=> (source.id)).join(','),
+					integrations : this.state.integrations.filter((integration)=> (integration.selected)).map((integration)=> (integration.id)).join(',')
+				})).then((response) => {
+					console.log('UPDATE_INTEGRATIONS', response.data);
+
+					this.setState({ submitting : false });
+					this.props.updateUserProfile(response.data.user);
+				}).catch((error)=> {
+				});
+			});
+
+		} else {
+			window.open(integration.url);
+		}
 	};
 
 	render() {
 // 		console.log('IntegrationsPage.render()', this.props, this.state);
 
+		const { integrations } = this.state;
+
 		return (
 			<BaseDesktopPage className="integrations-page-wrapper">
 				{/*<h4>CD / CI Integrations</h4>*/}
 				<IntegrationsPageGrid
-					integrations={Arrays.shuffle(integrationItems)}
+					integrations={integrations}
 					onClick={this.handleIntegrationItemClick}
 				/>
 			</BaseDesktopPage>
@@ -73,4 +160,4 @@ class IntegrationsPage extends Component {
 	}
 }
 
-export default IntegrationsPage;
+export default connect(mapStateToProps, mapDispatchToProps)(IntegrationsPage);

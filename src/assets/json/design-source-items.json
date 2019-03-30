@@ -2,25 +2,25 @@
   "id": 1,
   "title": "Sketch",
   "description": "",
-  "url": "https://www.sketchapp.com/",
+  "url": "https://www.sketch.com/",
   "filename": "/images/design-sources/sketch.png"
 }, {
   "id": 2,
   "title": "Figma",
   "description": "",
-  "url": "https://figma.com",
+  "url": "https://www.figma.com/",
   "filename": "/images/design-sources/figma.png"
 }, {
   "id": 3,
   "title": "Adobe XD",
   "description": "",
-  "url": "https://www.adobe.com/",
+  "url": "https://www.adobe.com/products/xd.html",
   "filename": "/images/design-sources/adobe-xd.png"
 }, {
   "id": 4,
   "title": "Photoshop",
   "description": "",
-  "url": "https://www.adobe.com/",
+  "url": "https://www.adobe.com/products/photoshop.html",
   "filename": "/images/design-sources/photoshop.png"
 }, {
   "id": 5,
@@ -32,6 +32,6 @@
   "id": 6,
   "title": "InVision Studio",
   "description": "",
-  "url": "https://www.invision.com/",
+  "url": "https://www.invisionapp.com/studio",
   "filename": "/images/design-sources/invision-studio.png"
 }]
