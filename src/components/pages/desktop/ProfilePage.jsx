@@ -17,9 +17,7 @@ import { DEFAULT_AVATAR, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { Bits, Files, Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
-import integrationItems from '../../../assets/json/integration-items';
-import sourceItems from '../../../assets/json/design-source-items';
-
+import integrationItems from '../../../assets/json/integrations';
 
 const dropZone = React.createRef();
 
@@ -88,7 +86,6 @@ class ProfilePage extends Component {
 			passwordValid : true,
 			passMsg       : '',
 			status        : 0x00,
-			sources       : [],
 			integrations  : [],
 			changed       : false,
 			percent       : 0,
@@ -103,10 +100,9 @@ class ProfilePage extends Component {
 		if (this.props.profile) {
 			const { profile } = this.props;
 			const { avatar, username, email, type } = profile;
-			const sources = sourceItems.filter((source)=> (profile.sources.includes(source.id)));
-			const integrations = integrationItems.filter((integration)=> (profile.integrations.includes(integration.id)));
+			const integrations = integrationItems.filter((integration)=> (profile.sources.includes(integration.id) || profile.integrations.includes(integration.id)));
 
-			this.setState({ avatar, username, email, type, sources, integrations });
+			this.setState({ avatar, username, email, type, integrations });
 		}
 	}
 
@@ -115,10 +111,8 @@ class ProfilePage extends Component {
 
 		if (!prevProps.profile && this.props.profile) {
 			const { profile } = this.props;
-			const sources = sourceItems.filter((source)=> (profile.sources.includes(source.id)));
-			const integrations = integrationItems.filter((integration)=> (profile.integrations.includes(integration.id)));
-
-			this.setState({ sources, integrations });
+			const integrations = integrationItems.filter((integration)=> (profile.sources.includes(integration.id) || profile.integrations.includes(integration.id)));
+			this.setState({ integrations });
 		}
 
 		if (prevProps.profile !== this.props.profile) {
@@ -128,8 +122,7 @@ class ProfilePage extends Component {
 			this.setState({ avatar, username, email, type,
 				usernameValid : !Bits.contains(status, 0x01),
 				emailValid    : !Bits.contains(status, 0x10),
-				sources       : sourceItems.filter((source)=> (profile.sources.includes(source.id))),
-				integrations  : integrationItems.filter((integration)=> (profile.integrations.includes(integration.id)))
+				integrations  : integrationItems.filter((integration)=> (profile.sources.includes(integration.id) || profile.integrations.includes(integration.id)))
 			});
 		}
 
@@ -360,7 +353,7 @@ class ProfilePage extends Component {
 
 // 		const { avatar, username, email } = (this.props.profile) ? this.props.profile : this.state;
 		const { profile } = this.props;
-		const { avatar, username, email, sources, integrations } = this.state;
+		const { avatar, username, email, integrations } = this.state;
 		const { passMsg, usernameValid, emailValid, passwordValid, changed, confirmDialog } = this.state;
 
 		return (
@@ -439,7 +432,7 @@ class ProfilePage extends Component {
 
 				{(profile) && (<ProfilePageIntegrationsGrid
 					title="Design Tools & Frameworks Integrations"
-					items={[...sources, ...integrations]}
+					items={integrations}
 					profile={profile}
 					onClick={this.props.onIntegrations}
 				/>)}

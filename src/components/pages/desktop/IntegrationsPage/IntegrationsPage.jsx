@@ -13,8 +13,7 @@ import { API_ENDPT_URL } from '../../../../consts/uris';
 import { updateUserProfile } from '../../../../redux/actions';
 import { Strings } from '../../../../utils/lang';
 import { trackEvent } from '../../../../utils/tracking';
-import integrationItems from '../../../../assets/json/integration-items';
-import sourceItems from '../../../../assets/json/design-source-items';
+import integrationItems from '../../../../assets/json/integrations';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -71,7 +70,6 @@ class IntegrationsPage extends Component {
 
 		this.state = {
 			submitting   : false,
-			sources      : [],
 			integrations : []
 		};
 	}
@@ -80,16 +78,11 @@ class IntegrationsPage extends Component {
 		console.log('IntegrationsPage.componentDidMount()', this.props, this.state);
 
 		const { profile } = this.props;
-
-		const sources = sourceItems.map((item)=> (Object.assign({}, item, {
-			selected : (profile && profile.sources.includes(item.id))
+		const integrations = integrationItems.filter((integration)=> (integration.type === 'dev')).map((integration)=> (Object.assign({}, integration, {
+			selected : (profile && profile.integrations.includes(integration.id))
 		})));
 
-		const integrations = integrationItems.map((item)=> (Object.assign({}, item, {
-			selected : (profile && profile.integrations.includes(item.id))
-		})));
-
-		this.setState({ sources, integrations });
+		this.setState({ integrations });
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -97,16 +90,11 @@ class IntegrationsPage extends Component {
 
 		if (!prevProps.profile && this.props.profile) {
 			const { profile } = this.props;
-
-			const sources = sourceItems.map((source)=> (Object.assign({}, source, {
-				selected : (profile && profile.sources.includes(source.id))
-			})));
-
-			const integrations = integrationItems.map((integration)=> (Object.assign({}, integration, {
+			const integrations = integrationItems.filter((integration)=> (integration.type === 'dev')).map((integration)=> (Object.assign({}, integration, {
 				selected : (profile && profile.integrations.includes(integration.id))
 			})));
 
-			this.setState({ sources, integrations });
+			this.setState({ integrations });
 		}
 	}
 
@@ -127,7 +115,7 @@ class IntegrationsPage extends Component {
 				axios.post(API_ENDPT_URL, qs.stringify({
 					action       : 'UPDATE_INTEGRATIONS',
 					user_id      : profile.id,
-					sources      : this.state.sources.filter((source)=> (source.selected)).map((source)=> (source.id)).join(','),
+					sources      : profile.sources.join(','),
 					integrations : this.state.integrations.filter((integration)=> (integration.selected)).map((integration)=> (integration.id)).join(',')
 				})).then((response) => {
 					console.log('UPDATE_INTEGRATIONS', response.data);

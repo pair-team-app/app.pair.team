@@ -1,125 +1,188 @@
 [{
   "id": 1,
+  "type": "design",
+  "title": "Sketch",
+  "description": "",
+  "url": "https://www.sketch.com/",
+  "filename": "/images/integrations/sketch.png"
+}, {
+  "id": 2,
+  "type": "design",
+  "title": "Figma",
+  "description": "",
+  "url": "https://www.figma.com/",
+  "filename": "/images/integrations/figma.png"
+}, {
+  "id": 3,
+  "type": "design",
+  "title": "Adobe XD",
+  "description": "",
+  "url": "https://www.adobe.com/products/xd.html",
+  "filename": "/images/integrations/adobe-xd.png"
+}, {
+  "id": 4,
+  "type": "design",
+  "title": "Photoshop",
+  "description": "",
+  "url": "https://www.adobe.com/products/photoshop.html",
+  "filename": "/images/integrations/photoshop.png"
+}, {
+  "id": 5,
+  "type": "design",
+  "title": "Framer",
+  "description": "",
+  "url": "https://www.framer.com/",
+  "filename": "/images/integrations/framer.png"
+}, {
+  "id": 6,
+  "type": "design",
+  "title": "InVision Studio",
+  "description": "",
+  "url": "https://www.invisionapp.com/studio",
+  "filename": "/images/integrations/invision-studio.png"
+}, {
+  "id": 11,
+  "type": "dev",
   "title": "Atom",
   "description": "",
   "url": "https://atom.io/",
   "filename": "/images/integrations/atom.png"
 }, {
-  "id": 2,
+  "id": 12,
+  "type": "dev",
   "title": "AWS Lambda",
   "description": "",
   "url": "https://aws.amazon.com/lambda/",
   "filename": "/images/integrations/aws-lambda.png"
 }, {
-  "id": 3,
+  "id": 13,
+  "type": "dev",
   "title": "Bitbucket",
   "description": "",
   "url": "https://bitbucket.org/",
   "filename": "/images/integrations/bitbucket.png"
 }, {
-  "id": 4,
+  "id": 14,
+  "type": "dev",
   "title": "Bootstrap",
   "description": "",
   "url": "https://getbootstrap.com/",
   "filename": "/images/integrations/bootstrap.png"
 }, {
-  "id": 5,
+  "id": 15,
+  "type": "dev",
   "title": "Box",
   "description": "",
   "url": "https://www.box.com/home",
   "filename": "/images/integrations/box.png"
 }, {
-  "id": 6,
+  "id": 16,
+  "type": "dev",
   "title": "CircleCI",
   "description": "",
   "url": "https://circleci.com/",
   "filename": "/images/integrations/circleci.png"
 }, {
-  "id": 7,
+  "id": 17,
+  "type": "dev",
   "title": "CSS Lint",
   "description": "",
   "url": "http://csslint.net/",
   "filename": "/images/integrations/css-lint.png"
 }, {
-  "id": 8,
+  "id": 18,
+  "type": "dev",
   "title": "Dropbox",
   "description": "",
   "url": "https://www.dropbox.com/",
   "filename": "/images/integrations/dropbox.png"
 }, {
-  "id": 9,
+  "id": 19,
+  "type": "dev",
   "title": "ESLint",
   "description": "",
   "url": "https://eslint.org/",
   "filename": "/images/integrations/eslint.png"
 }, {
-  "id": 10,
+  "id": 20,
+  "type": "dev",
   "title": "GitHub",
   "description": "",
   "url": "https://github.com/",
   "filename": "/images/integrations/github.png"
 }, {
-  "id": 11,
+  "id": 21,
+  "type": "dev",
   "title": "GitLab",
   "description": "",
   "url": "https://about.gitlab.com/",
   "filename": "/images/integrations/gitlab.png"
 }, {
-  "id": 12,
+  "id": 22,
+  "type": "dev",
   "title": "Jenkins",
   "description": "",
   "url": "https://jenkins.io/",
   "filename": "/images/integrations/jenkins.png"
 }, {
-  "id": 13,
+  "id": 23,
+  "type": "dev",
   "title": "JetBrains",
   "description": "",
   "url": "https://www.jetbrains.com/",
   "filename": "/images/integrations/jetbrains.png"
 }, {
-  "id": 14,
+  "id": 24,
+  "type": "dev",
   "title": "JFrog",
   "description": "",
   "url": "https://jfrog.com/",
   "filename": "/images/integrations/jfrog.png"
 }, {
-  "id": 15,
+  "id": 25,
+  "type": "dev",
   "title": "PractiTest",
   "description": "",
   "url": "https://www.practitest.com/",
   "filename": "/images/integrations/practitest.png"
 }, {
-  "id": 16,
+  "id": 26,
+  "type": "dev",
   "title": "Prettier",
   "description": "",
   "url": "https://prettier.io/",
   "filename": "/images/integrations/prettier.png"
 }, {
-  "id": 17,
+  "id": 27,
+  "type": "dev",
   "title": "Saas CSS",
   "description": "",
   "url": "https://saascss.com/",
   "filename": "/images/integrations/saas-css.png"
 }, {
-  "id": 18,
+  "id": 28,
+  "type": "dev",
   "title": "stylelint",
   "description": "",
   "url": "https://stylelint.io/",
   "filename": "/images/integrations/stylelint.png"
 }, {
-  "id": 19,
+  "id": 29,
+  "type": "dev",
   "title": "T3 JS",
   "description": "",
   "url": "http://t3js.org/",
   "filename": "/images/integrations/t3-js.png"
 }, {
-  "id": 20,
+  "id": 30,
+  "type": "dev",
   "title": "Trello",
   "description": "",
   "url": "https://trello.com/en",
   "filename": "/images/integrations/trello.png"
 }, {
-  "id": 21,
+  "id": 31,
+  "type": "dev",
   "title": "Zapier",
   "description": "",
   "url": "https://zapier.com/",

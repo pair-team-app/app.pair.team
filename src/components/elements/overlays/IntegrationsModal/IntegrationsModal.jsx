@@ -11,8 +11,7 @@ import BaseOverlay from '../BaseOverlay';
 import { API_ENDPT_URL } from '../../../../consts/uris';
 import { URLs } from '../../../../utils/lang';
 import { trackEvent } from '../../../../utils/tracking';
-import integrationItems from '../../../../assets/json/integration-items';
-import sourceItems from '../../../../assets/json/design-source-items';
+import integrations from '../../../../assets/json/integrations';
 
 
 const IntegrationsModalGrid = (props)=> {
@@ -56,7 +55,8 @@ class IntegrationsModal extends Component {
 
 		this.state = {
 			step       : 0,
-			gridItems  :[[], []],
+			sources    : [],
+			devs       : [],
 			outro      : false,
 			submitting : false
 		};
@@ -66,30 +66,30 @@ class IntegrationsModal extends Component {
 // 		console.log('IntegrationsModal.componentDidMount()', this.props, this.state);
 
 		const { profile } = this.props;
-		const gridItems = this.state.gridItems.map((_, i)=> {
-			const items = (i === 0) ? sourceItems : integrationItems;
-			return (items.map((item)=> (Object.assign({}, item, {
-				selected : ((i === 0) ? profile.sources.includes(item.id) : profile.integrations.includes(item.id))
-			}))));
-		});
 
-		this.setState({ gridItems });
+		const sources = integrations.filter((integration)=> (integration.type === 'design')).map((integration)=> (Object.assign({}, integration, {
+			selected : profile.sources.includes(integration.id)
+		})));
+
+		const devs = integrations.filter((integration)=> (integration.type === 'dev')).map((integration)=> (Object.assign({}, integration, {
+			selected : profile.integrations.includes(integration.id)
+		})));
+
+		this.setState({ sources, devs });
 	}
 
 	handleIntegrationItemClick = (integration)=> {
 // 		console.log('IntegrationsModal.handleIntegrationItemClick()', integration);
 
 		integration.selected = !integration.selected;
-		const gridItems = this.state.gridItems.map((items, i)=> ((i === 1) ? items.map((item)=> ((item.id === integration.id) ? integration : item)) : items));
-		this.setState({ gridItems });
-	};
+		if (integration.type === 'design') {
+			const sources = this.state.sources.filter((item)=> (item.type === 'design')).map((item)=> ((item.id === integration.id) ? integration : item));
+			this.setState({ sources });
 
-	handleSourceItemClick = (source)=> {
-// 		console.log('IntegrationsModal.handleSourceItemClick()', source);
-
-		source.selected = !source.selected;
-		const gridItems = this.state.gridItems.map((items, i)=> ((i === 0) ? items.map((item)=> ((item.id === source.id) ? source : item)) : items));
-		this.setState({ gridItems });
+		} else {
+			const devs = this.state.devs.filter((item)=> (item.type === 'dev')).map((item)=> ((item.id === integration.id) ? integration : item));
+			this.setState({ devs });
+		}
 	};
 
 	handleComplete = (submitted)=> {
@@ -123,14 +123,14 @@ class IntegrationsModal extends Component {
 // 		console.log('IntegrationsModal.handleSubmit()');
 
 		const { profile } = this.props;
-		const { gridItems } = this.state;
+		const { sources, devs } = this.state;
 
 		this.setState({ submitting : true }, ()=> {
 			axios.post(API_ENDPT_URL, qs.stringify({
 				action       : 'UPDATE_INTEGRATIONS',
 				user_id      : profile.id,
-				sources      : [...gridItems].shift().filter((item)=> (item.selected)).map((item)=> (item.id)).join(','),
-				integrations : [...gridItems].pop().filter((item)=> (item.selected)).map((item)=> (item.id)).join(',')
+				sources      : [...sources].filter((item)=> (item.selected)).map((item)=> (item.id)).join(','),
+				integrations : [...devs].filter((item)=> (item.selected)).map((item)=> (item.id)).join(',')
 			})).then((response) => {
 				console.log('UPDATE_INTEGRATIONS', response.data);
 
@@ -145,7 +145,7 @@ class IntegrationsModal extends Component {
 	render() {
 // 		console.log('IntegrationsModal.render()', this.props, this.state);
 
-		const { step, gridItems, outro } = this.state;
+		const { step, sources, devs, outro } = this.state;
 		const title = (step === 0) ? 'What design tools is your team using?' : 'What development frameworks is your team using?';
 // 		const selectedItems = gridItems[step].filter((item)=> (item.selected));
 
@@ -166,8 +166,8 @@ class IntegrationsModal extends Component {
 					</div>
 					<div className="integrations-modal-content-wrapper">
 						<IntegrationsModalGrid
-							integrations={gridItems[step]}
-							onClick={(item)=> (step === 0) ? this.handleSourceItemClick(item) : this.handleIntegrationItemClick(item)}
+							integrations={(step === 0) ? sources : devs}
+							onClick={(integration)=> this.handleIntegrationItemClick(integration)}
 						/>
 
 						{(step === 0)
