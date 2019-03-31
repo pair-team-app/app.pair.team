@@ -135,10 +135,11 @@ class IntegrationsPage extends Component {
 // 		console.log('IntegrationsPage.render()', this.props, this.state);
 
 		const { integrations } = this.state;
+		const selectedItems = integrations.filter((integration)=> (integration.selected));
 
 		return (
 			<BaseDesktopPage className="integrations-page-wrapper">
-				{/*<h4>CD / CI Integrations</h4>*/}
+				<h4>{`Framework ${Strings.pluralize('Integration', integrations.length)} (${selectedItems.length} / ${integrations.length})`}</h4>
 				<IntegrationsPageGrid
 					integrations={integrations}
 					onClick={this.handleIntegrationItemClick}

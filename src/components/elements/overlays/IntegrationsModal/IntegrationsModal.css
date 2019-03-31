@@ -40,13 +40,16 @@
 	background-color: #24282e;
 	margin: 0 10px 20px 10px;
 	overflow: hidden;
+	backface-visibility: hidden;
+	transform-style: preserve-3d;
 }
 
 .integrations-modal-grid-item:hover {
 	cursor: pointer;
 }
 
-.integrations-modal-grid-item-selected {
+.integrations-modal-grid-item-selected, .integrations-modal-grid-item-selected:hover {
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.75);
 }
 
 .integrations-modal-grid-item-overlay {
@@ -63,6 +66,7 @@
 
 .integrations-modal-grid-item:hover .integrations-modal-grid-item-overlay {
 	opacity: 0.25;
+	border: 1px solid #24282e;
 }
 
 .integrations-modal-grid-item-selected .integrations-modal-grid-item-overlay, .integrations-modal-grid-item-selected:hover .integrations-modal-grid-item-overlay {
@@ -86,8 +90,6 @@
 	bottom: 0;
 	width: 100%;
 	padding: 10px;
-	backface-visibility: hidden;
-	transform-style: preserve-3d;
 }
 
 .integrations-modal-grid-item-title {
@@ -106,8 +108,6 @@
 	opacity: 0;
 	color: #7ed321;
 	transition: opacity 0.125s ease-out;
-	backface-visibility: hidden;
-	transform-style: preserve-3d;
 }
 
 .integrations-modal-grid-item-selected-icon-visible {

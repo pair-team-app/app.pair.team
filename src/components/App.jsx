@@ -46,7 +46,8 @@ import {
 	isHomePage,
 	isInspectorPage,
 	isProfilePage,
-	isUploadPage, isUserLoggedIn
+	isUploadPage,
+	isUserLoggedIn
 } from '../utils/funcs';
 import { Browsers, URLs } from '../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../utils/tracking';

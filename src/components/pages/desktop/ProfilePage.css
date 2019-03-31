@@ -73,9 +73,11 @@
 	position: relative;
 	width: 160px;
 	height: 200px;
-	background-color: #24282e;
 	margin: 0 20px 20px 0;
 	overflow: hidden;
+	background-color: #24282e;
+	border: 1px solid #383838;
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.33);
 }
 
 .profile-page-integrations-grid-item-image {
