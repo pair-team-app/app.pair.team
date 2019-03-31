@@ -28,7 +28,7 @@ html, body {
   color: #727d8d;
 }
 
-a, a:link, a:active, a:visited {
+a, a:any-link, a:active {
   color: #0267d8;
   text-decoration: underline;
 }

@@ -1616,8 +1616,11 @@ class InspectorPage extends Component {
 						trackEvent('upload', 'file');
 
 						const config = {
-							headers            : { 'content-type' : 'multipart/form-data' },
-							onDownloadProgress : (progressEvent)=> {},
+							headers : {
+								'Content-Type' : 'multipart/form-data',
+								'Accept'       : 'application/json'
+							},
+							onDownloadProgress : (progressEvent)=> {/* …\(^_^)/… */},
 							onUploadProgress   : (progressEvent)=> {
 								const { loaded, total } = progressEvent;
 
@@ -1877,7 +1880,10 @@ class InspectorPage extends Component {
 				config : '',
 				syntax : tab.syntax
 			}, {
-				headers : { 'Content-Type' : 'multipart/form-data' }
+				headers : {
+					'Content-Type' : 'multipart/form-data',
+					'Accept'       : 'application/json'
+				}
 			}).then((response) => {
 				console.log("LINT", response.data);
 

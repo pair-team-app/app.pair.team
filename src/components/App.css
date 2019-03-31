@@ -89,7 +89,7 @@ h1.page-header-title {
 	margin-bottom: 14px;
 }
 
-.page-link, .page-link a, .page-link a:active, .page-link a:link, .page-link a:visited, .page-link-small, .page-link-small a, .page-link-small a:active, .page-link-small a:link, .page-link-small a:visited {
+.page-link, .page-link a:any-link {
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 14px;
 	letter-spacing: -0.26px;
@@ -97,13 +97,16 @@ h1.page-header-title {
 	text-decoration: none;
 }
 
-.page-link:hover, .page-link a:hover, .page-link-small:hover, .page-link-small a:hover {
+.page-link:hover, .page-link a:hover {
 	cursor: pointer;
 	text-decoration: underline;
 }
 
-.page-link-disabled, .page-link-disabled:hover {
-	cursor: not-allowed;
+.page-link-form {
+}
+
+.page-link-form-disabled, .page-link-form-disabled:hover {
+	cursor: default;
 	color: #8facbf;
 	opacity : 0.5;
 	text-decoration: none;

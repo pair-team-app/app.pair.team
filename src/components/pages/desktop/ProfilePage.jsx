@@ -10,10 +10,10 @@ import { connect } from 'react-redux';
 import {Column, Row} from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
+import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../forms/InputField/InputField';
 import IntegrationGridItem from '../../iterables/IntegrationGridItem';
 import ConfirmDialog from '../../overlays/ConfirmDialog';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../overlays/PopupNotification';
-import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../forms/InputField/InputField';
 import { DEFAULT_AVATAR, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { Bits, Files, Strings } from '../../../utils/lang';
@@ -33,6 +33,90 @@ const mapDispatchToProps = (dispatch)=> {
 	return ({
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
+};
+
+
+const ProfilePageAvatar = (props)=> {
+// 	console.log('ProfilePage.ProfilePageAvatar()', props);
+
+	const { avatar } = props;
+	const defaultAvatar = (avatar.includes('avatar-default.png'));
+	return (<div className="profile-page-avatar">
+		<Row vertical="center">
+			<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={props.onFileDrop} onFileDialogCancel={props.onFileDialogCancel} ref={dropZone}>
+				<div className="profile-page-avatar-image-wrapper">
+					<ImageLoader
+						src={avatar}
+						image={(props)=> (<img className="profile-page-avatar-image" {...props} src={avatar} alt="" />)}
+						loading={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+						error={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
+					/>
+				</div>
+			</Dropzone>
+			<button className="adjacent-button" onClick={()=> props.onClick()}>{(defaultAvatar) ? 'Upload' : 'Replace'}</button>
+			<div className={`page-link page-link-form${(defaultAvatar) ? ' page-link-form-disabled' : ''}`} onClick={()=> (defaultAvatar) ? null : props.onDropAvatar()}>Remove</div>
+		</Row>
+	</div>);
+};
+
+
+const ProfilePageForm = (props)=> {
+// 	console.log('ProfilePage.ProfilePageForm()', props);
+
+	const { profile, username, email, usernameValid, emailValid, passwordValid, passMsg, changed } = props;
+	return (<div className="profile-page-form">
+		<InputField
+			type="text"
+			name="username"
+			placeholder="Enter New Username"
+			value={username}
+			button="Change"
+			status={(usernameValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
+			onChange={(val)=> props.onInputFieldChange('username', val)}
+			onErrorClick={()=> props.onInputFieldClick('username')}
+			onSubmit={(val)=> props.onInputFieldSubmit('username', val)}
+		/>
+
+		<InputField
+			type="text"
+			name="email"
+			placeholder="Enter New Email Address"
+			value={email}
+			button="Change"
+			status={(emailValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
+			onChange={(val)=> props.onInputFieldChange('email', val)}
+			onErrorClick={()=> props.onInputFieldClick('email')}
+			onSubmit={(val)=> props.onInputFieldSubmit('email', val)}
+		/>
+
+		<InputField
+			type="password"
+			name="password"
+			placeholder="Enter New Password"
+			value={passMsg}
+			button="Change"
+			status={(passwordValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
+			onChange={(val)=> props.onInputFieldChange('password', val)}
+			onErrorClick={()=> props.onInputFieldClick('password')}
+			onSubmit={(val)=> props.onInputFieldSubmit('password', val)}
+		/>
+
+		<InputField
+			type="lbl"
+			name="paid"
+			placeholder="Free Account"
+			value={(profile && profile.paid) ? 'Unlimited Account' : 'Free Account'}
+			button={(profile && profile.paid) ? 'Downgrade' : 'Upgrade'}
+			status={INPUTFIELD_STATUS_IDLE}
+			onFieldClick={()=> null}
+			onSubmit={props.onAccountType}
+		/>
+
+		<Row vertical="center">
+			<button type="submit" disabled={!changed} className="long-button adjacent-button" onClick={()=> props.onSubmit()}>Save</button>
+			{(changed) && (<div className="page-link page-link-form" onClick={()=> props.onCancel()}>Cancel</div>)}
+		</Row>
+	</div>);
 };
 
 
@@ -197,7 +281,10 @@ class ProfilePage extends Component {
 			const { profile } = this.props;
 
 			const config = {
-				headers             : { 'content-type' : 'multipart/form-data' },
+				headers : {
+					'Content-Type' : 'multipart/form-data',
+					'Accept'       : 'application/json'
+				},
 				onDownloadProgress  : (progressEvent)=> {/* …\(^_^)/… */},
 				onUploadProgress    : (progressEvent)=> {
 					const { loaded, total } = progressEvent;
@@ -338,9 +425,6 @@ class ProfilePage extends Component {
 	render() {
 // 		console.log('ProfilePage.render()', this.props, this.state);
 
-		// disable save --  !profile || (profile.avatar === avatar && profile.username === username && profile.email === email && password.length === 0)
-
-// 		const { avatar, username, email } = (this.props.profile) ? this.props.profile : this.state;
 		const { profile } = this.props;
 		const { avatar, username, email, integrations } = this.state;
 		const { passMsg, usernameValid, emailValid, passwordValid, changed, confirmDialog } = this.state;
@@ -348,76 +432,30 @@ class ProfilePage extends Component {
 		return (
 			<BaseDesktopPage className="profile-page-wrapper">
 				<h4>Profile</h4>
-				<div className="profile-page-avatar-wrapper">
-					<Row vertical="center">
-						<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={this.handleFileDrop} onFileDialogCancel={this.handleFileDialogCancel} ref={dropZone}>
-							<div className="profile-page-avatar-image-wrapper">
-								<ImageLoader
-									src={avatar}
-									image={(props)=> (<img className="profile-page-avatar-image" {...props} src={avatar} alt="" />)}
-									loading={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
-									error={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
-								/>
-							</div>
-						</Dropzone>
-						<button className="adjacent-button" onClick={()=> this.handleAvatarClick()}>{(avatar.includes('avatar-default.png')) ? 'Upload' : 'Replace'}</button>
-						<div className={`page-link${(avatar.includes('avatar-default.png')) ? ' page-link-disabled' : ''}`} onClick={()=> this.handleDropAvatar()}>Remove</div>
-					</Row>
-				</div>
+				<ProfilePageAvatar
+					avatar={avatar}
+					onClick={this.handleAvatarClick}
+					onFileDrop={this.handleFileDrop}
+					onFileDialogCancel={this.handleFileDialogCancel}
+					onDropAvatar={this.handleDropAvatar}
+				/>
 
-				<div className="profile-page-form-wrapper">
-					<InputField
-						type="text"
-						name="username"
-						placeholder="Enter New Username"
-						value={username}
-						button="Change"
-						status={(usernameValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
-						onChange={(val)=> this.handleInputFieldChange('username', val)}
-						onErrorClick={()=> this.handleInputFieldClick('username')}
-						onSubmit={(val)=> this.handleInputFieldSubmit('username', val)}
-					/>
-
-					<InputField
-						type="text"
-						name="email"
-						placeholder="Enter New Email Address"
-						value={email}
-						button="Change"
-						status={(emailValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
-						onChange={(val)=> this.handleInputFieldChange('email', val)}
-						onErrorClick={()=> this.handleInputFieldClick('email')}
-						onSubmit={(val)=> this.handleInputFieldSubmit('email', val)}
-					/>
-
-					<InputField
-						type="password"
-						name="password"
-						placeholder="Enter New Password"
-						value={passMsg}
-						button="Change"
-						status={(passwordValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
-						onChange={(val)=> this.handleInputFieldChange('password', val)}
-						onErrorClick={()=> this.handleInputFieldClick('password')}
-						onSubmit={(val)=> this.handleInputFieldSubmit('password', val)}
-					/>
-
-					<InputField
-						type="lbl"
-						name="paid"
-						placeholder="Free Account"
-						value={(profile && profile.paid) ? 'Unlimited Account' : 'Free Account'}
-						button={(profile && profile.paid) ? 'Downgrade' : 'Upgrade'}
-						status={INPUTFIELD_STATUS_IDLE}
-						onFieldClick={()=> null}
-						onSubmit={this.handleAccountType}
-					/>
-				</div>
-
-				<Row vertical="center">
-					<button type="submit" disabled={!changed} className="long-button adjacent-button" onClick={()=> this.handleSubmit()}>Save</button>
-					{(changed) && (<div className="page-link" onClick={()=> this.handleCancel()}>Cancel</div>)}
-				</Row>
+				<ProfilePageForm
+					profile={profile}
+					username={username}
+					email={email}
+					usernameValid={usernameValid}
+					emailValid={emailValid}
+					passwordValid={passwordValid}
+					passMsg={passMsg}
+					changed={changed}
+					onInputFieldChange={this.handleInputFieldChange}
+					onInputFieldClick={this.handleInputFieldClick}
+					onInputFieldSubmit={this.handleInputFieldSubmit}
+					onAccountType={this.handleAccountType}
+					onCancel={this.handleCancel}
+					onSubmit={this.handleSubmit}
+				/>
 
 				{(profile) && (<ProfilePageIntegrationsGrid
 					title="Design Tools & Frameworks Integrations"

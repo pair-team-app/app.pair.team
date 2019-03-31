@@ -113,8 +113,11 @@ class UploadPage extends Component {
 		});
 
 		const config = {
-			headers            : { 'content-type' : 'multipart/form-data' },
-			onDownloadProgress : (progressEvent)=> {},
+			headers : {
+				'Content-Type' : 'multipart/form-data',
+				'Accept'       : 'application/json'
+			},
+			onDownloadProgress : (progressEvent)=> {/* …\(^_^)/… */},
 			onUploadProgress   : (progressEvent)=> {
 				const { formState } = this.state;
 				const { loaded, total } = progressEvent;

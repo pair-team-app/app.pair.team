@@ -49,7 +49,7 @@
 	cursor: pointer;
 }
 
-.bottom-nav-link a, .bottom-nav-link a:active, .bottom-nav-link a:link, .bottom-nav-link a:visited {
+.bottom-nav-link a, .bottom-nav-link a:any-link, a:active {
 	text-decoration: underline;
 	color: #c8e1fd;
 }
