@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import BaseDesktopPage from '../BaseDesktopPage';
 import ArtboardGrid from './ArtboardGrid';
-import UploadHeader from '../../../elements/navs/UploadHeader';
+import UploadHeader from '../../../navs/UploadHeader';
 
 import { INSPECT } from '../../../../consts/uris';
 import { addFileUpload } from '../../../../redux/actions';

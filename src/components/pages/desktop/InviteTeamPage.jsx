@@ -9,8 +9,8 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 // import BaseDesktopPage from './BaseDesktopPage';
-import { POPUP_TYPE_OK } from '../../elements/overlays/PopupNotification';
-import Dropdown from '../../elements/forms/Dropdown';
+import { POPUP_TYPE_OK } from '../../overlays/PopupNotification';
+import DropdownSelector from '../../forms/DropdownSelector';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { buildInspectorURL, isUserLoggedIn } from '../../../utils/funcs';
 import { Strings } from '../../../utils/lang';
@@ -191,7 +191,7 @@ class InviteTeamPage extends Component {
 				</div>
 				{(!this.state.sentInvites)
 					? (<div className="full-width">
-						<Dropdown
+						<DropdownSelector
 							title={uploadTitle}
 							list={this.state.uploads}
 							resetThenSet={this.resetThenSet}

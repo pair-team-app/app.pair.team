@@ -1,0 +1,40 @@
+
+.integrations-modal-wrapper {
+	padding: 20px;
+	background-color: #1a1e23;
+}
+
+.integrations-modal-header {
+	width: 100%;
+	margin: 20px 0;
+	padding-bottom: 25px;
+	border-bottom: 1px solid #24282e;
+}
+
+.integrations-modal-header h1 {
+	line-height: 0;
+}
+
+.integrations-modal-content-wrapper {
+}
+
+.integrations-modal-button-wrapper {
+	width: 100%;
+	text-align: left;
+}
+
+
+.integrations-modal-grid {
+	width: 100%;
+}
+
+.integrations-modal-grid-item-wrapper {
+	margin: 8px -10px 0 -10px;
+}
+
+
+.integrations-modal-grid-item {
+	width: 160px;
+	height: 200px;
+	margin: 0 10px 20px 10px;
+}

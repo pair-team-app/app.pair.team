@@ -7,7 +7,7 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
 import BaseDesktopPage from './BaseDesktopPage';
-import UploadHeader from '../../elements/navs/UploadHeader';
+import UploadHeader from '../../navs/UploadHeader';
 import LoginForm from '../../forms/LoginForm';
 import RegisterForm from '../../forms/RegisterForm';
 

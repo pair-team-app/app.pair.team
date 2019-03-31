@@ -4,11 +4,12 @@ import './IntegrationsPage.css';
 
 import axios from 'axios';
 import qs from 'qs';
-import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from '../BaseDesktopPage';
+import IntegrationGridItem from '../../../iterables/IntegrationGridItem';
+import { POPUP_TYPE_OK } from '../../../overlays/PopupNotification';
 import { API_ENDPT_URL } from '../../../../consts/uris';
 import { updateUserProfile } from '../../../../redux/actions';
 import { Strings } from '../../../../utils/lang';
@@ -37,29 +38,15 @@ const IntegrationsPageGrid = (props)=> {
 		<Row horizontal="space-around" className="integrations-page-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
 			{integrations.map((integration, i) => {
 				return (<Column key={i}>
-					<IntegrationsPageGridItem
+					<IntegrationGridItem
 						title={integration.title}
 						image={integration.filename}
 						selected={integration.selected}
+						inheritedClass="integrations-page-grid-item"
 						onClick={()=> props.onClick(integration)} />
 				</Column>);
 			})}
 		</Row>
-	</div>);
-};
-
-
-const IntegrationsPageGridItem = (props)=> {
-// 	console.log('IntegrationsPage.IntegrationsPageGridItem()', props);
-
-	const { title, image, selected } = props;
-	return (<div className={`integrations-page-grid-item${(selected) ? ' integrations-page-grid-item-selected' : ''}`} onClick={()=> props.onClick()}>
-		<img className="integrations-page-grid-item-image" src={image} alt={title} />
-		<div className="integrations-page-grid-item-overlay" />
-		<div className="integrations-page-grid-item-title-wrapper">
-			<div className="integrations-page-grid-item-title">{title}</div>
-		</div>
-		<div className={`integrations-page-grid-item-selected-icon${(selected) ? ' integrations-page-grid-item-selected-icon-visible' : ''}`}><FontAwesome name="check-circle" size="2x" /></div>
 	</div>);
 };
 
@@ -75,7 +62,7 @@ class IntegrationsPage extends Component {
 	}
 
 	componentDidMount() {
-		console.log('IntegrationsPage.componentDidMount()', this.props, this.state);
+// 		console.log('IntegrationsPage.componentDidMount()', this.props, this.state);
 
 		const { profile } = this.props;
 		const integrations = integrationItems.filter((integration)=> (integration.type === 'dev')).map((integration)=> (Object.assign({}, integration, {
@@ -122,6 +109,11 @@ class IntegrationsPage extends Component {
 
 					this.setState({ submitting : false });
 					this.props.updateUserProfile(response.data.user);
+					this.props.onPopup({
+						type     : POPUP_TYPE_OK,
+						content  : 'Integration profile updated.',
+						duration : 1750
+					});
 				}).catch((error)=> {
 				});
 			});

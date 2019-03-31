@@ -18,11 +18,11 @@ import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from '../BaseDesktopPage';
-import ConfirmDialog from '../../../elements/overlays/ConfirmDialog';
-import BaseOverlay from '../../../elements/overlays/BaseOverlay/BaseOverlay';
-import InputField, { INPUTFIELD_STATUS_IDLE } from '../../../elements/forms/InputField';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../../elements/overlays/PopupNotification';
-import TutorialBubble from '../../../elements/overlays/TutorialBubble';
+import ConfirmDialog from '../../../overlays/ConfirmDialog';
+import BaseOverlay from '../../../overlays/BaseOverlay/BaseOverlay';
+import InputField, { INPUTFIELD_STATUS_IDLE } from '../../../forms/InputField/InputField';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../../overlays/PopupNotification';
+import TutorialBubble from '../../../overlays/TutorialBubble';
 
 import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL } from './consts';
 import { drawCanvasSliceBorder, drawCanvasSliceMarchingAnts, drawCanvasSliceGuides } from './utils/canvas';

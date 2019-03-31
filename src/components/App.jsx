@@ -8,14 +8,14 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import BottomNav from './elements/navs/BottomNav';
-import TopNav from './elements/navs/TopNav';
-import AdvertPanel from './elements/overlays/AdvertPanel';
-import AlertDialog from './elements/overlays/AlertDialog/AlertDialog';
-import BaseOverlay from './elements/overlays/BaseOverlay/BaseOverlay';
-import PopupNotification from './elements/overlays/PopupNotification';
-import IntegrationsModal from './elements/overlays/IntegrationsModal';
-import StripeModal from './elements/overlays/StripeModal';
+import BottomNav from './navs/BottomNav';
+import TopNav from './navs/TopNav';
+import AdvertPanel from './overlays/AdvertPanel';
+import AlertDialog from './overlays/AlertDialog/AlertDialog';
+import BaseOverlay from './overlays/BaseOverlay/BaseOverlay';
+import PopupNotification, {POPUP_TYPE_OK} from './overlays/PopupNotification';
+import IntegrationsModal from './overlays/IntegrationsModal';
+import StripeModal from './overlays/StripeModal';
 import HomePage from './pages/desktop/HomePage';
 import InspectorPage from './pages/desktop/InspectorPage';
 import IntegrationsPage from './pages/desktop/IntegrationsPage';
@@ -226,6 +226,20 @@ class App extends Component {
 		window.open(url);
 	};
 
+	handleIntegrationsSubmitted = ()=> {
+		console.log('App.handleIntegrationsSubmitted()');
+
+		this.onHideSetupModal();
+		this.props.fetchUserProfile();
+
+		if (isProfilePage()) {
+			this.handlePopup({
+				type    : POPUP_TYPE_OK,
+				content : 'Profile updated.',
+				delay   : 333
+			});
+		}
+	};
 
 	handleLogout = ()=> {
 		cookie.save('user_id', '0', { path : '/' });
@@ -326,13 +340,6 @@ class App extends Component {
 		this.handlePage('rate-this');
 	};
 
-	handleSetupSubmitted = ()=> {
-		console.log('App.handleSetupSubmitted()');
-
-		this.onHideSetupModal();
-		this.props.fetchUserProfile();
-	};
-
 	onAddUploadView = (uploadID)=> {
 		axios.post(API_ENDPT_URL, qs.stringify({
 			action    : 'ADD_VIEW',
@@ -431,7 +438,7 @@ class App extends Component {
 					  profile={profile}
 					  onPopup={this.handlePopup}
 					  onComplete={this.onHideSetupModal}
-					  onSubmitted={this.handleSetupSubmitted}
+					  onSubmitted={this.handleIntegrationsSubmitted}
 				  />)}
 
 				  {(payDialog) && (<AlertDialog

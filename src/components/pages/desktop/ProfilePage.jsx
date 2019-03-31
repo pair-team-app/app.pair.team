@@ -10,9 +10,10 @@ import { connect } from 'react-redux';
 import {Column, Row} from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
-import ConfirmDialog from '../../elements/overlays/ConfirmDialog';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../elements/overlays/PopupNotification';
-import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../elements/forms/InputField';
+import IntegrationGridItem from '../../iterables/IntegrationGridItem';
+import ConfirmDialog from '../../overlays/ConfirmDialog';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../overlays/PopupNotification';
+import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../forms/InputField/InputField';
 import { DEFAULT_AVATAR, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { Bits, Files, Strings } from '../../../utils/lang';
@@ -44,30 +45,18 @@ const ProfilePageIntegrationsGrid = (props)=> {
 		<Row horizontal="start" className="profile-page-integrations-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
 			{items.map((item, i) => {
 				return (<Column key={i}>
-					<ProfilePageIntegrationsGridItem
+					<IntegrationGridItem
 						title={item.title}
-						image={item.filename} />
+						image={item.filename}
+						selected={true}
+						inheritedClass="profile-page-integrations-grid-item"
+					/>
 				</Column>);
 			})}
 		</Row>
 		<button className="long-button" onClick={()=> {trackEvent('button', 'integrations'); props.onClick()}}>{(items.length === 0) ? 'Setup' : 'Change'}</button>
 	</div>);
 };
-
-
-const ProfilePageIntegrationsGridItem = (props)=> {
-// 	console.log('ProfilePage.ProfilePageIntegrationsGridItem()', props);
-
-	const { title, image } = props;
-	return (<div className="profile-page-integrations-grid-item">
-		<img className="profile-page-integrations-grid-item-image" src={image} alt={title} />
-		<div className="profile-page-integrations-grid-item-title-wrapper">
-			<div className="profile-page-integrations-grid-item-title">{title}</div>
-		</div>
-		<div className="profile-page-integrations-grid-item-selected-icon"><FontAwesome name="check-circle" size="2x" /></div>
-	</div>);
-};
-
 
 
 class ProfilePage extends Component {

@@ -104,7 +104,7 @@ export const DateTimes = {
 	ellipsis       : ()=> (Array((DateTimes.epoch() % 4) + 1).join('.')),
 	epoch          : (millisecs=false)=> ((millisecs) ? (new Date()).getTime() : ((new Date()).getTime() * 0.001) << 0),
 	isLeapYear     : (date=new Date())=> ((date.getFullYear() % 4 === 0) && ((date.getFullYear() % 100 !== 0) || (date.getFullYear() % 400 === 0))),
-	iso8601        : (date=new Date())=> (`${date.getFullYear()}-${Strings.lPad(date.getMonth(), 2, '0')}-${Strings.lPad(date.getDate(), 2, '0')}T${Strings.lPad(date.getHours(), 2, '0')}:${Strings.lPad(date.getMinutes(), 2, '0')}:${Strings.lPad(date.getSeconds(), 2, '0')}${(date.getTimezoneOffset() === 0) ? 'Z' : date.toTimeString().split(' ')[1].replace(/^.+(.\d{4})/, '$1')}`),
+	iso8601        : (date=new Date())=> (`${date.getFullYear()}-${Strings.lPad(date.getMonth(), '0', 2)}-${Strings.lPad(date.getDate(), '0', 2)}T${Strings.lPad(date.getHours(), '0', 2)}:${Strings.lPad(date.getMinutes(), '0', 2)}:${Strings.lPad(date.getSeconds(), '0', 2)}${(date.getTimezoneOffset() === 0) ? 'Z' : date.toTimeString().split(' ')[1].replace(/^.+(.\d{4})/, '$1')}`),
 	secsDiff       : (date1, date2=new Date())=> (Math.abs(date1.getTime() - date2.getTime()))
 };
 
@@ -217,7 +217,7 @@ export const Strings = {
 	firstChar    : (str)=> (str.charAt(0)),
 	isEmail      : (str)=> (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i.test(String(str))),
 	lastChar     : (str)=> (str.slice(-1)),
-	lPad         : (str, amt, char)=> ((String(str).length < amt) ? `${(new Array(amt - String(str).length + 1)).join(char)}${str}` : str),
+	lPad         : (str, char, amt)=> ((amt < 0 || String(str).length < amt) ? `${(new Array((amt > 0) ? amt - String(str).length + 1 : -amt + 1)).join(char)}${str}` : str),
 	indexedVal   : (val, arr, divider='_')=> {
 		if (arr[val].length === 0) {
 			arr[val] = 0;

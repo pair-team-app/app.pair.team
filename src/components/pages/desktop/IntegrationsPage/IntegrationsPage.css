@@ -14,85 +14,8 @@
 
 
 .integrations-page-grid-item {
-	position: relative;
 	width: 260px;
 	height: 320px;
-	background-color: #24282e;
 	margin-bottom: 20px;
 	border-radius: 4px;
-	overflow: hidden;
-	backface-visibility: hidden;
-	transform-style: preserve-3d;
-}
-
-.integrations-page-grid-item:hover {
-	cursor: pointer;
-}
-
-.integrations-page-grid-item-selected, .integrations-page-grid-item-selected:hover {
-	box-shadow: 0 0 3px rgba(0, 0, 0, 0.75);
-}
-
-.integrations-page-grid-item-overlay {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: #000000;
-	opacity: 0;
-	border: 1px solid rgba(36, 40, 46, 0.0);
-	border-radius: 4px;
-	transition: opacity 0.125s ease-out;
-}
-
-.integrations-page-grid-item:hover .integrations-page-grid-item-overlay {
-	opacity: 0.25;
-	border: 1px solid #24282e;
-}
-
-.integrations-page-grid-item-selected .integrations-page-grid-item-overlay, .integrations-page-grid-item-selected:hover .integrations-page-grid-item-overlay {
-	opacity: 0.33;
-	border: 1px solid #24282e;
-}
-
-.integrations-page-grid-item-image {
-	position: absolute;
-	top: 40%;
-	left: 50%;
-	transform: translate(-50%, -40%);
-	object-fit: scale-down;
-	width: 55%;
-	height: 55%;
-}
-
-.integrations-page-grid-item-title-wrapper {
-	position: absolute;
-	left: 0;
-	bottom: 0;
-	width: 100%;
-	padding: 20px;
-	text-align: center;
-}
-
-.integrations-page-grid-item-title {
-	width: 100%;
-	font-family: "San Francisco Text Medium", sans-serif;
-	font-size: 16px;
-	letter-spacing: -0.3px;
-	color: #c8e1fd;
-}
-
-.integrations-page-grid-item-selected-icon {
-	position: absolute;
-	top: 0;
-	right: 0;
-	margin: 10px;
-	opacity: 0;
-	color: #7ed321;
-	transition: opacity 0.125s ease-out;
-}
-
-.integrations-page-grid-item-selected-icon-visible {
-	opacity: 1;
 }
