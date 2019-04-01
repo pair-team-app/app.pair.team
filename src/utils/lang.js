@@ -1,4 +1,6 @@
 
+
+
 export const Arrays = {
 // 	containsElement  : (arr, element)=> (arr.indexOf(element) > -1),
 	containsElement  : (arr, element)=> (Arrays.containsElements(arr, [element])),
@@ -208,6 +210,13 @@ export const Objects = {
 };
 
 
+export const RegExps = {
+	concat : (needle, prefix='', postfix='', flags='gi')=> (new RegExp(`${prefix}${Strings.quote(needle)}${postfix}`, flags))
+};
+
+
+const EMAIL_NEEDLE_REGEX = new RegExp('^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$', 'i');
+const URI_SANITIZED_REGEX = new RegExp('[\u2000-\u206F\u2E00-\u2E7F\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]', 'g');
 export const Strings = {
 	asciiEncode  : (str, enc='utf8')=> ((new Buffer(str, enc)).toString('ascii')),
 	base64Decode : (str, enc='utf8')=> ((new Buffer(str, 'base64')).toString(enc)),
@@ -217,7 +226,7 @@ export const Strings = {
 	countOf      : (str, substr)=> ((str.match(new RegExp(substr.toString(), 'g')) || []).length),
 	dropChar     : (str, char)=> (Strings.replAll(str, char)),
 	firstChar    : (str)=> (str.charAt(0)),
-	isEmail      : (str)=> (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i.test(String(str))),
+	isEmail      : (str)=> (EMAIL_NEEDLE_REGEX.test(String(str))),
 	lastChar     : (str)=> (str.slice(-1)),
 	lPad         : (str, char, amt)=> ((amt < 0 || String(str).length < amt) ? `${(new Array((amt > 0) ? amt - String(str).length + 1 : -amt + 1)).join(char)}${str}` : str),
 	indexedVal   : (val, arr, divider='_')=> {
@@ -231,6 +240,7 @@ export const Strings = {
 		});
 	},
 	pluralize   : (str, val)=> ((val === 1) ? str : (Strings.lastChar(str) === 'y') ? `${str.slice(0, -1)}ies` : (Strings.lastChar(str) === 's') ? 'es' : `${str}s`),
+	quoted      : (str)=> (str.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1')),
 	remove      : (str, needle)=> (Strings.replAll(str, needle)),
 	repeat      : (str='', amt=1)=> ((new Array(amt)).fill(str).join('')),
 	replAll     : (str, needle, replacement='')=> (str.split(needle).join(replacement)),
@@ -238,15 +248,17 @@ export const Strings = {
 	randAlpha   : (len=1, cases=true)=> (Arrays.indexFill(len).map((i)=> ((cases && Maths.coinFlip()) ? String.fromCharCode(Maths.randomInt(65, 91)).toLowerCase() : String.fromCharCode(Maths.randomInt(65, 91)))).join('')),
 	rPad        : (str, amt, char)=> ((str.length < amt) ? `${str}${(new Array(amt - String(str).length + 1)).join(char)}` : str),
 	shuffle     : (str)=> (Arrays.shuffle([...str.split('')]).join('')),
-	slugifyURI  : (str)=> (str.trim().replace(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g, '').replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase()),
+	slugifyURI  : (str)=> (str.trim().replace(URI_SANITIZED_REGEX, '').replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase()),
+// 	trimBounds  : (str, char)=> (str.replace(new RegExp(RegExps.quote(char), 'g')), ''),
+// 	trimBounds  : (str, char)=> (str.match(RegExps.concat(char, '^', '$'), '')),
+	trimBounds  : (str, char)=> (str.split(char).filter((segment, i)=> (segment.length > 0)).join(char)),
 	trimSlashes : (str, leading=true, trailing=true)=> (str.replace(((leading && trailing) ? /^\/?(.+)\// : (leading && !trailing) ? /^\/(.+)$/ : (!leading && trailing) ? /^(.+)\/$/ : /^(.+)$/), '$1')),
 	truncate    : (str, len, ellipsis='…')=> ((str.length > len) ? `${str.substring(0, len - 1).trim()}${ellipsis}` : str),
 	utf8Encode  : (str, enc='ascii')=> ((new Buffer(str, enc)).toString('utf8'))
 };
 
-
 export const URLs = {
-	firstComponent : (url=window.location.pathname)=> (url.trimLeft('/').split('/').shift()),
+	firstComponent : (url=window.location.pathname)=> (Strings.trimBounds(url, '/').split('/').shift()),
 	hostname       : (url=window.location.hostname)=> (url.replace(/^https?:\/\//g, '').split('/').shift()),
 	lastComponent  : (url=window.location.pathname)=> (Files.filename(url.trimRight('/'), '')),
 	protocol       : (url=window.location.protocol)=> ((/^https?/.test(url.toLowerCase())) ? url.split(':').shift() : null),

@@ -19,7 +19,7 @@ import { Strings, URLs } from './lang';
 
 
 export function getRouteParams(pathname) {
-	console.log('_-_-_-_-_', 'getRouteParams()', pathname, '_-_-_-_-_');
+	console.log('_-_-_-_-_', 'getRouteParams()', pathname, '_-_-_-_-_', URLs.firstComponent(pathname));
 
 	const loginPage = matchPath(pathname, {
 		path : '/login'
@@ -37,15 +37,15 @@ export function getRouteParams(pathname) {
 		path : '/register/:inviteID?'
 	});
 
+	const inspectorPage = matchPath(pathname, {
+		path : `/${URLs.firstComponent(pathname)}/:uploadID/:titleSlug`
+	});
+
 	const homePage = matchPath(pathname, {
 		path : '/:section'
 	});
 
-	const inspectorPage = matchPath(pathname, {
-		path : `/${URLs.firstComponent(pathname.url)}/:uploadID/:titleSlug`
-	});
-
-// 	console.log(':::::::::::::', loginPage, homePage, profilePage, uploadPage, registerPage, inspectorPage);
+	console.log(':::::::::::::', loginPage, profilePage, uploadPage, registerPage, inspectorPage, homePage);
 
 	if (loginPage && loginPage.isExact) {
 		return ({ ...loginPage.params,
@@ -73,16 +73,16 @@ export function getRouteParams(pathname) {
 		});
 	}
 
-	if (homePage && homePage.isExact) {
-		return ({ ...homePage.params,
-			page : 'HOME'
-		});
-	}
-
 	if (inspectorPage && inspectorPage.isExact) {
 		return ({ ...inspectorPage.params,
 			page     : 'INSPECTOR',
 			uploadID : inspectorPage.params.uploadID << 0
+		});
+	}
+
+	if (homePage && homePage.isExact) {
+		return ({ ...homePage.params,
+			page : 'HOME'
 		});
 	}
 }
