@@ -1,6 +1,8 @@
 
-import cookie from 'react-cookies';
+
 import axios from 'axios';
+import cookie from 'react-cookies';
+import { matchPath } from 'react-router-dom';
 
 import {
 	HOME,
@@ -13,7 +15,77 @@ import {
 	REGISTER,
 	UPLOAD,
 	API_ENDPT_URL } from '../consts/uris';
-import { Strings } from './lang';
+import { Strings, URLs } from './lang';
+
+
+export function getRouteParams(pathname) {
+	console.log('_-_-_-_-_', 'getRouteParams()', pathname, '_-_-_-_-_');
+
+	const loginPage = matchPath(pathname, {
+		path : '/login'
+	});
+
+	const profilePage = matchPath(pathname, {
+		path : '/profile/:userID?'
+	});
+
+	const uploadPage = matchPath(pathname, {
+		path : '/new/:section?'
+	});
+
+	const registerPage = matchPath(pathname, {
+		path : '/register/:inviteID?'
+	});
+
+	const homePage = matchPath(pathname, {
+		path : '/:section'
+	});
+
+	const inspectorPage = matchPath(pathname, {
+		path : `/${URLs.firstComponent(pathname.url)}/:uploadID/:titleSlug`
+	});
+
+// 	console.log(':::::::::::::', loginPage, homePage, profilePage, uploadPage, registerPage, inspectorPage);
+
+	if (loginPage && loginPage.isExact) {
+		return ({ ...loginPage.params,
+			page : 'LOGIN'
+		});
+	}
+
+	if (profilePage && profilePage.isExact) {
+		return ({ ...profilePage.params,
+			page   : 'PROFILE',
+			userID : profilePage.params.userID << 0
+		});
+	}
+
+	if (uploadPage && uploadPage.isExact) {
+		return ({ ...uploadPage.params,
+			page : 'UPLOAD'
+		});
+	}
+
+	if (registerPage && registerPage.isExact) {
+		return ({ ...registerPage.params,
+			page     : 'REGISTER',
+			inviteID : registerPage.params.inviteID << 0
+		});
+	}
+
+	if (homePage && homePage.isExact) {
+		return ({ ...homePage.params,
+			page : 'HOME'
+		});
+	}
+
+	if (inspectorPage && inspectorPage.isExact) {
+		return ({ ...inspectorPage.params,
+			page     : 'INSPECTOR',
+			uploadID : inspectorPage.params.uploadID << 0
+		});
+	}
+}
 
 
 export function buildInspectorPath(upload, prefix='/inspect', suffix='') {

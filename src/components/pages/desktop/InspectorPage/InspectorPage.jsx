@@ -135,7 +135,7 @@ const ArtboardListItem = (props)=> {
 			<ImageLoader
 				style={thumbStyle}
 				src={filename}
-				image={(props)=> <PartListItemThumb {...props} width={size.width} height={size.height} />}
+				image={(props)=> <PartListItemThumb { ...props } width={size.width} height={size.height} />}
 				loading={()=> (<div className="artboard-list-item-image artboard-list-item-image-loading" style={thumbStyle}><FontAwesome className="artboard-list-item-fa-status" name="clock-o" size="2x" /></div>)}
 				error={()=> (<div className="artboard-list-item-image artboard-list-item-image-loading"><FontAwesome className="artboard-list-item-fa-status" name="clock-o" size="2x" /></div>)}
 				onError={(event)=> (errored = true)}
@@ -313,7 +313,7 @@ const PartListItem = (props)=> {
 			<ImageLoader
 				style={thumbStyle}
 				src={`${filename}@2x.png`}
-				image={(props)=> <PartListItemThumb {...props} width={size.width} height={size.height} />}
+				image={(props)=> <PartListItemThumb { ...props } width={size.width} height={size.height} />}
 				loading={()=> (<div className="part-list-item-image part-list-item-image-loading" style={thumbStyle}><FontAwesome className="part-list-item-fa-status" name="clock-o" size="2x" /></div>)}
 				error={()=> (<div className="part-list-item-image part-list-item-image-loading"><FontAwesome className="part-list-item-fa-status" name="clock-o" size="2x" /></div>)}
 				onError={(event)=> (errored = true)}
@@ -2391,8 +2391,8 @@ class InspectorPage extends Component {
 
 			slices.push(
 				<div key={artboard.id} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut} onDoubleClick={(event)=> this.handleZoom(1)}>
-					<div data-artboard-id={artboard.id} className={`inspector-page-${(section === SECTIONS.PRESENTER) ? 'artboard' : 'group'}-slices-wrapper`}>{(section === SECTIONS.PRESENTER) ? artboardSlices : (section === SECTIONS.PARTS) ? [...artboardSlices, ...groupSlices] : groupSlices }</div>
-					{(section !== SECTIONS.PRESENTER) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{(section === SECTIONS.INSPECT) ? [...artboardSlices, ...backgroundSlices] : backgroundSlices}</div>)}
+					<div data-artboard-id={artboard.id} className={`inspector-page-${(section === SECTIONS.PRESENTER) ? 'artboard' : 'group'}-slices-wrapper`}>{(section === SECTIONS.PRESENTER) ? artboardSlices : (section === SECTIONS.PARTS) ? [ ...artboardSlices, ...groupSlices ] : groupSlices }</div>
+					{(section !== SECTIONS.PRESENTER) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{(section === SECTIONS.INSPECT) ? [ ...artboardSlices, ...backgroundSlices ] : backgroundSlices}</div>)}
 					{/*<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>*/}
 					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{symbolSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{textfieldSlices}</div>

@@ -6,32 +6,33 @@ import axios from 'axios';
 import qs from 'qs';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 
-import BottomNav from './navs/BottomNav';
-import TopNav from './navs/TopNav';
-import AdvertPanel from './overlays/AdvertPanel';
-import AlertDialog from './overlays/AlertDialog/AlertDialog';
-import BaseOverlay from './overlays/BaseOverlay/BaseOverlay';
-import PopupNotification, {POPUP_TYPE_OK} from './overlays/PopupNotification';
-import IntegrationsModal from './overlays/IntegrationsModal';
-import StripeModal from './overlays/StripeModal';
-import HomePage from './pages/desktop/HomePage';
-import InspectorPage from './pages/desktop/InspectorPage';
-import IntegrationsPage from './pages/desktop/IntegrationsPage';
-import InviteTeamPage from './pages/desktop/InviteTeamPage';
-import LoginPage from './pages/desktop/LoginPage';
-import ProfilePage from './pages/desktop/ProfilePage';
-import PrivacyPage from './pages/desktop/PrivacyPage';
-import RateThisPage from './pages/desktop/RateThisPage';
-import RecoverPage from './pages/desktop/RecoverPage';
-import RegisterPage from './pages/desktop/RegisterPage';
-import Status404Page from './pages/desktop/Status404Page';
-import TermsPage from './pages/desktop/TermsPage';
-import UploadPage from './pages/desktop/UploadPage';
-import BaseMobilePage from './pages/mobile/BaseMobilePage';
+import BottomNav from '../navs/BottomNav';
+import TopNav from '../navs/TopNav';
+import AdvertPanel from '../overlays/AdvertPanel';
+import AlertDialog from '../overlays/AlertDialog/AlertDialog';
+import BaseOverlay from '../overlays/BaseOverlay/BaseOverlay';
+import PopupNotification, {POPUP_TYPE_OK} from '../overlays/PopupNotification';
+import GitHubModal from '../overlays/GitHubModal';
+import IntegrationsModal from '../overlays/IntegrationsModal';
+import StripeModal from '../overlays/StripeModal';
+import HomePage from '../pages/desktop/HomePage';
+import InspectorPage from '../pages/desktop/InspectorPage';
+import IntegrationsPage from '../pages/desktop/IntegrationsPage';
+import InviteTeamPage from '../pages/desktop/InviteTeamPage';
+import LoginPage from '../pages/desktop/LoginPage';
+import ProfilePage from '../pages/desktop/ProfilePage';
+import PrivacyPage from '../pages/desktop/PrivacyPage';
+import RateThisPage from '../pages/desktop/RateThisPage';
+import RecoverPage from '../pages/desktop/RecoverPage';
+import RegisterPage from '../pages/desktop/RegisterPage';
+import Status404Page from '../pages/desktop/Status404Page';
+import TermsPage from '../pages/desktop/TermsPage';
+import UploadPage from '../pages/desktop/UploadPage';
+import BaseMobilePage from '../pages/mobile/BaseMobilePage';
 
-import { EXTENSION_PUBLIC_HOST, API_ENDPT_URL } from '../consts/uris';
+import { EXTENSION_PUBLIC_HOST, API_ENDPT_URL } from '../../consts/uris';
 import {
 	appendHomeArtboards,
 	fetchUserHistory,
@@ -39,19 +40,20 @@ import {
 	setAtomExtension,
 	updateDeeplink,
 	updateUserProfile
-} from '../redux/actions';
+} from '../../redux/actions';
 import {
 	buildInspectorPath,
+	getRouteParams,
 	idsFromPath,
 	isHomePage,
 	isInspectorPage,
 	isProfilePage,
-	isUploadPage,
 	isUserLoggedIn
-} from '../utils/funcs';
-import { Browsers, URLs } from '../utils/lang';
-import { initTracker, trackEvent, trackPageview } from '../utils/tracking';
-import adBannerPanel from '../assets/json/ad-banner-panel';
+} from '../../utils/funcs';
+import { Browsers, URLs } from '../../utils/lang';
+import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
+import adBannerPanel from '../../assets/json/ad-banner-panel';
+
 
 const wrapper = React.createRef();
 
@@ -89,14 +91,17 @@ class App extends Component {
 			allowMobile       : true,
 			processing        : false,
 			popup             : null,
+			githubModal       : false,
 			integrationsModal : false,
 			payDialog         : false,
 			stripeModal       : false
 		};
 
-		if (typeof cookie.load('user_id') === 'undefined') {
-			cookie.save('user_id', '0', { path : '/' });
-		}
+
+		this.cookieSetup('tutorial');
+// 		this.cookieSetup('user_id');
+
+
 
 		initTracker(cookie.load('user_id'));
 	}
@@ -112,27 +117,9 @@ class App extends Component {
 		this.extensionCheck();
 		this.props.updateDeeplink(idsFromPath());
 
-
-		if (isHomePage()) {
-			this.handlePage('inspect');
-
-		} else if (isUploadPage(true)) {
-			this.handlePage('new/inspect');
-
-		} else if (isInspectorPage()) {
-// 			if (typeof cookie.load('tutorial') === 'undefined') {
-// 				cookie.save('tutorial', '0', { path : '/' });
-// 			}
-
-		} else if (isProfilePage(true) && !isUserLoggedIn()) {
-			this.handlePage('login');
-		}
-
-		cookie.save('tutorial', '1', { path : '/' });
-
 		window.addEventListener('resize', this.handleResize);
 		window.onpopstate = (event)=> {
-// 			console.log('-/\\/\\/\\/\\/\\/\\-', 'window.onpopstate()', '-/\\/\\/\\/\\/\\/\\-', event);
+			console.log('-/\\/\\/\\/\\/\\/\\-', 'window.onpopstate()', '-/\\/\\/\\/\\/\\/\\-', event);
 // 			this.handlePage('<<');
 		};
 	}
@@ -141,7 +128,13 @@ class App extends Component {
 // 		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		const { profile, artboards, deeplink } = this.props;
+		const { pathname } = this.props.location;
 		const { payDialog, stripeModal } = this.state;
+
+
+		if (prevProps.pathname !== pathname) {
+			console.log('|:|:|:|:|:|:|:|:|:|:|:|', getRouteParams(pathname));
+		}
 
 		if (profile) {
 			if (!prevProps.profile) {
@@ -180,6 +173,17 @@ class App extends Component {
 	}
 
 
+	cookieSetup = (key)=> {
+		console.log('App.cookieSetup()', key);
+
+		if (key === 'tutorial') {
+			if (typeof cookie.load('tutorial') === 'undefined') {
+				cookie.save('tutorial', '0', { path : '/' });
+			}
+			cookie.save('tutorial', '1', { path : '/' });
+		}
+	};
+
 	extensionCheck = ()=> {
 // 		console.log('App.extensionCheck()');
 
@@ -199,10 +203,6 @@ class App extends Component {
 
 		} else {
 			this.onAddUploadView(artboard.uploadID);
-			if (typeof cookie.load('tutorial') === 'undefined') {
-				cookie.save('tutorial', '0', { path : '/' });
-			}
-
 			this.handlePage(buildInspectorPath({
 				id    : artboard.uploadID,
 				title : artboard.title
@@ -212,11 +212,15 @@ class App extends Component {
 			Browsers.scrollOrigin(wrapper.current);
 		}
 
-		this.props.updateDeeplink({
-			uploadID   : artboard.uploadID,
-			pageID     : artboard.pageID,
-			artboardID : artboard.id
-		});
+		const { uploadID, pageID } = artboard;
+		const artboardID = artboard.id;
+		this.props.updateDeeplink({ uploadID, pageID, artboardID });
+
+// 		this.props.updateDeeplink({
+// 			uploadID   : artboard.uploadID,
+// 			pageID     : artboard.pageID,
+// 			artboardID : artboard.id
+// 		});
 	};
 
 	handleAdBanner = (url)=> {
@@ -226,10 +230,15 @@ class App extends Component {
 		window.open(url);
 	};
 
-	handleIntegrationsSubmitted = ()=> {
-		console.log('App.handleIntegrationsSubmitted()');
+	handleGitHubSubmitted = ()=> {
+		console.log('App.handleGitHubSubmitted()');
+		this.onHideGitHubModal();
+	};
 
-		this.onHideSetupModal();
+	handleIntegrationsSubmitted = ()=> {
+// 		console.log('App.handleIntegrationsSubmitted()');
+
+		this.onHideIntegrationsModal();
 		this.props.fetchUserProfile();
 
 		if (isProfilePage()) {
@@ -369,7 +378,13 @@ class App extends Component {
 		});
 	};
 
-	onHideSetupModal = ()=> {
+	onHideGitHubModal = ()=> {
+		console.log('App.onHideGitHubModal()');
+		this.setState({ githubModal : false });
+	};
+
+	onHideIntegrationsModal = ()=> {
+		console.log('App.onHideIntegrationsModal()');
 		this.setState({ integrationsModal : false });
 	};
 
@@ -389,7 +404,8 @@ class App extends Component {
 		const { profile } = this.props;
   	const { uploadID } = this.props.deeplink;
 		const { pathname } = this.props.location;
-  	const { rating, allowMobile, processing, popup, integrationsModal, stripeModal, payDialog } = this.state;
+  	const { rating, allowMobile, processing, popup } = this.state;
+  	const { integrationsModal, githubModal, stripeModal, payDialog } = this.state;
 //   	const processing = true;
 
   	return ((!Browsers.isMobile.ANY() || !allowMobile)
@@ -404,25 +420,35 @@ class App extends Component {
 
 			    <div className="content-wrapper" ref={wrapper}>
 				    <Switch>
-					    <Route exact path="/" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+					    {/*<Route exact path="/" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />*/}
+					    <Route exact path="/"><Redirect to="/inspect" /></Route>
+					    <Route exact path="/new"><Redirect to="/new/inspect" /></Route>
+					    <Route exact path="/profile">{(!isUserLoggedIn()) && (<Redirect to="/register" />)}</Route>
+
 					    <Route exact path="/inspect" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
-					    <Route path="/inspect/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route path="/login/:inviteID?" render={(props)=> <LoginPage {...props} onPage={this.handlePage} />} onPopup={this.handlePopup} />
-					    <Route path="/new/:type?" render={(props)=> <UploadPage {...props} onPage={this.handlePage} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onStripeModal={()=> this.setState({ stripeModal : true })} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
 					    <Route exact path="/parts" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
-					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route path="/parts/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
 					    <Route exact path="/present" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
-					    <Route path="/present/:uploadID/:uploadSlug" render={(props)=> <InspectorPage {...props} processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+
+					    <Route path="/inspect/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route path="/parts/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route path="/present/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+
+					    <Route path="/new/:type?" render={(props)=> <UploadPage { ...props } onPage={this.handlePage} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onStripeModal={()=> this.setState({ stripeModal : true })} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
+					    <Route path="/login/:inviteID?" render={(props)=> <LoginPage { ...props } onPage={this.handlePage} />} onPopup={this.handlePopup} />
+					    <Route path="/register/:inviteID?" render={(props)=> <RegisterPage { ...props } onPage={this.handlePage} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
+					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+
 					    <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} onStripeModal={()=> this.setState({ stripeModal : true })} onIntegrations={()=> this.setState({ integrationsModal : true })} onPopup={this.handlePopup} />} />
-					    <Route path="/profile/:username?" render={(props)=> <ProfilePage {...props} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onPage={this.handlePage} onPopup={this.handlePopup} />} />
+
+					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />
-					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage {...props} onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route path="/register/:inviteID?" render={(props)=> <RegisterPage {...props} onPage={this.handlePage} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
+
+					    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
 					    <Route exact path="/terms" render={()=> <TermsPage />} />
-				      <Route render={()=> <Status404Page onPage={this.handlePage} />} />
+					    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+
+					    <Route render={()=> <Status404Page onPage={this.handlePage} />} />
 				    </Switch>
 
 				    {(!isInspectorPage()) && (<AdvertPanel title={adBannerPanel.title} image={adBannerPanel.image} onClick={()=> this.handleAdBanner(adBannerPanel.url)} />)}
@@ -434,10 +460,17 @@ class App extends Component {
 				    {popup.content}
 		      </PopupNotification>)}
 
+				  {(githubModal) && (<GitHubModal
+					  profile={profile}
+					  onPopup={this.handlePopup}
+					  onComplete={this.onHideGitHubModal}
+					  onSubmitted={this.handleGitHubSubmitted}
+				  />)}
+
 				  {(integrationsModal) && (<IntegrationsModal
 					  profile={profile}
 					  onPopup={this.handlePopup}
-					  onComplete={this.onHideSetupModal}
+					  onComplete={this.onHideIntegrationsModal}
 					  onSubmitted={this.handleIntegrationsSubmitted}
 				  />)}
 

@@ -30,7 +30,7 @@
 	width: calc(100% + 40px);
 	height: 306px;
 	margin: -20px -20px 20px -20px;
-	background: #1a1b1d url(../assets/images/backgrounds/bg-checkerboard.png) repeat;
+	background: #1a1b1d url(../../assets/images/backgrounds/bg-checkerboard.png) repeat;
 }
 
 h1.page-header-title {

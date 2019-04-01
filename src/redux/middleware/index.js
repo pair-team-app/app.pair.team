@@ -23,7 +23,20 @@ export function onMiddleware({ dispatch }) {
 				cookie.save('user_id', (payload) ? payload.id : '0', { path : '/' });
 
 			} else if (type === UPDATE_DEEPLINK) {
-				if (!payload) {
+				const deeplink = Object.assign({}, payload, {
+					uploadID   : (payload && payload.uploadID) ? (payload.uploadID << 0) : 0,
+					pageID     : (payload && payload.pageID) ? (payload.pageID << 0) : 0,
+					artboardID : (payload && payload.artboardID) ? (payload.artboardID << 0) : 0,
+					sliceID    : (payload && payload.sliceID) ? (payload.sliceID << 0) : 0
+				});
+
+				dispatch({
+					type    : CONVERTED_DEEPLINK,
+					payload : deeplink
+				});
+
+
+				/*if (!payload) {
 					dispatch({
 						type    : CONVERTED_DEEPLINK,
 						payload : {
@@ -35,16 +48,16 @@ export function onMiddleware({ dispatch }) {
 					});
 
 				} else {
-					let payloadCopy = Object.assign({}, payload);
+					let deeplink = Object.assign({}, payload);
 					Object.keys(payload).filter((key)=> (typeof payload[key] !== 'number')).forEach((key)=> {
-						payloadCopy[key] = (payload[key] << 0);
+						deeplink[key] = (payload[key] << 0);
 					});
 
 					dispatch({
 						type    : CONVERTED_DEEPLINK,
-						payload : payloadCopy
+						payload : deeplink
 					});
-				}
+				}*/
 			}
 
 			return (next(action));

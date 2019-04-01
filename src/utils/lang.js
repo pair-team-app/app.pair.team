@@ -3,7 +3,9 @@ export const Arrays = {
 // 	containsElement  : (arr, element)=> (arr.indexOf(element) > -1),
 	containsElement  : (arr, element)=> (Arrays.containsElements(arr, [element])),
 	containsElements : (arr, elements, all=true)=> ((all) ? elements.every((element)=> (arr.indexOf(element) > -1)) : elements.some((element)=> (arr.indexOf(element) > -1))),
-	dropElement      : (arr, element)=> (arr.filter((item)=> (item !== element))),
+// 	dropElement      : (arr, element)=> (arr.filter((item)=> (item !== element))),
+	dropElement      : (arr, element)=> (Arrays.dropElements(arr, [element])),
+	dropElements     : (arr, elements)=> (arr.filter((element)=> (!Arrays.containsElement(elements, element)))),
 	indexFill        : (len, offset=0)=> (Arrays.indexMap((new Array(len).fill(null))).map((i)=> (i + offset))),
 	indexMap         : (arr)=> (arr.map((element, i)=> (i))),
 	isEmpty          : (arr)=> (arr.length === 0),
@@ -193,7 +195,7 @@ export const Numbers = {
 export const Objects = {
 	defineVal  : (obj, key, val)=> (Object.assign({}, obj, { [key] : val })),
 	dropKey    : (obj, key)=> (Objects.dropKeys(obj, [key])),
-	dropKeys   : (obj, keys)=> ({...Object.keys(obj).filter((k)=> (!Arrays.containsElement(keys, k))).reduce((newObj, k)=> ({...newObj, [k]: obj[k]}), {})}),
+	dropKeys   : (obj, keys)=> ({ ...Object.keys(obj).filter((k)=> (!Arrays.containsElement(keys, k))).reduce((newObj, k)=> ({...newObj, [k]: obj[k]}), {})}),
 	isEmpty    : (obj)=> (Object.keys(obj).length === 0),
 	hasKey     : (obj, key)=> (Object.keys(obj).some((k)=> (k === key))),
 	length     : (obj)=> (Object.keys(obj).length),
@@ -244,9 +246,9 @@ export const Strings = {
 
 
 export const URLs = {
-	firstComponent : (url=window.location.pathname)=> (url.substr(1).split('/').shift()),
+	firstComponent : (url=window.location.pathname)=> (url.trimLeft('/').split('/').shift()),
 	hostname       : (url=window.location.hostname)=> (url.replace(/^https?:\/\//g, '').split('/').shift()),
-	lastComponent  : (url=window.location.pathname)=> (Files.filename(url, '')),
+	lastComponent  : (url=window.location.pathname)=> (Files.filename(url.trimRight('/'), '')),
 	protocol       : (url=window.location.protocol)=> ((/^https?/.test(url.toLowerCase())) ? url.split(':').shift() : null),
 	subdomain      : (url=window.location.hostname)=> ((URLs.hostname(url).split('.').length === 3) ? URLs.hostname(url).split('.').shift() : null),
 	tdl            : (url=window.location.hostname)=> (URLs.hostname(url).split('.').pop())

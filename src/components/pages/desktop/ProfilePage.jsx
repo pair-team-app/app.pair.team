@@ -47,7 +47,7 @@ const ProfilePageAvatar = (props)=> {
 				<div className="profile-page-avatar-image-wrapper">
 					<ImageLoader
 						src={avatar}
-						image={(props)=> (<img className="profile-page-avatar-image" {...props} src={avatar} alt="" />)}
+						image={(props)=> (<img className="profile-page-avatar-image" { ...props } src={avatar} alt="" />)}
 						loading={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
 						error={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
 					/>

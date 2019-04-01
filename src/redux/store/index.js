@@ -12,9 +12,11 @@ import { onMiddleware } from '../middleware'
 const store = createStore(rootReducer, applyMiddleware(onMiddleware, thunk));
 
 
-if (typeof cookie.load('user_id') !== 'undefined') {
+if (typeof cookie.load('user_id') === 'undefined') {
+	cookie.save('user_id', '0', { path : '/' });
+
+} else {
 	store.dispatch(fetchUserProfile());
 }
-
 
 export default store;

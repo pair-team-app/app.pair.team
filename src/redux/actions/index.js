@@ -13,7 +13,8 @@ import {
 	UPDATE_DEEPLINK,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED,
-	SET_ATOM_EXTENSION } from '../../consts/action-types';
+	SET_ATOM_EXTENSION, CONVERTED_DEEPLINK
+} from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
 
@@ -42,9 +43,14 @@ export function appendHomeArtboards(payload) {
 }
 
 export function updateDeeplink(payload) {
+	const cnt = (payload) ? Object.keys(payload).filter((key, i)=> (payload && typeof payload[key] === 'number')).length : 0;
 	return ({ payload,
-		type : UPDATE_DEEPLINK
+		type : (!payload || Object.keys(payload).length !== cnt) ? UPDATE_DEEPLINK : CONVERTED_DEEPLINK
 	});
+
+// 	return ({ payload,
+// 		type : UPDATE_DEEPLINK
+// 	});
 }
 
 export function fetchUserProfile() {
@@ -61,7 +67,7 @@ export function fetchUserProfile() {
 				const { id, type } = response.data.user;
 				dispatch({
 					type    : USER_PROFILE_LOADED,
-					payload : {...response.data.user,
+					payload : { ...response.data.user,
 						id   : id << 0,
 						paid : type.includes('paid')
 					}
@@ -127,33 +133,30 @@ export function updateUserProfile(payload) {
 
 	return ((dispatch)=> {
 		if (payload) {
-			const { id, username, email, avatar, password, type } = payload;
-			let formData = new FormData();
-			formData.append('action', 'UPDATE_PROFILE');
-			formData.append('user_id', id);
-			formData.append('username', username);
-			formData.append('email', email);
-			formData.append('filename', avatar);
-			formData.append('password', password);
-			formData.append('type', type);
-			axios.post(API_ENDPT_URL, formData)
-				.then((response) => {
-					console.log('UPDATE_PROFILE', response.data);
+			const { id, avatar, sources, integrations } = payload;
+			axios.post(API_ENDPT_URL, qs.stringify(Object.assign({}, payload, {
+				action       : 'UPDATE_PROFILE',
+				user_id      : id,
+				filename     : avatar,
+				sources      : sources.join(','),
+				integrations : integrations.join(',')
+			}))).then((response)=> {
+				console.log('UPDATE_PROFILE', response.data);
 
-					const status = parseInt(response.data.status, 16);
-					const { id, username, email, type } = response.data.user;
+				const status = parseInt(response.data.status, 16);
+				const { id, username, email, type } = response.data.user;
 
-					dispatch({
-						type    : (status === 0x00) ? USER_PROFILE_UPDATED : USER_PROFILE_ERROR,
-						payload : {...response.data.user,
-							status   : status,
-							id       : id << 0,
-							username : (Bits.contains(status, 0x01)) ? 'Username Already in Use' : username,
-							email    : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email,
-							paid     : type.includes('paid')
-						}
-					});
-				}).catch((error) => {
+				dispatch({
+					type    : (status === 0x00) ? USER_PROFILE_UPDATED : USER_PROFILE_ERROR,
+					payload : { ...response.data.user,
+						status   : status,
+						id       : id << 0,
+						username : (Bits.contains(status, 0x01)) ? 'Username Already in Use' : username,
+						email    : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email,
+						paid     : type.includes('paid')
+					}
+				});
+			}).catch((error) => {
 			});
 
 		} else {

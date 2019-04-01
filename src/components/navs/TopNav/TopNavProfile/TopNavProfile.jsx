@@ -60,7 +60,7 @@ class TopNavProfile extends Component {
 				<div className="top-nav-profile-avatar-wrapper" onClick={()=> this.setState({ bubble : !bubble })}>
 					<ImageLoader
 						src={avatar}
-						image={(props)=> (<img className="top-nav-profile-avatar-image" {...props} src={avatar} alt="" />)}
+						image={(props)=> (<img className="top-nav-profile-avatar-image" { ...props } src={avatar} alt="" />)}
 						loading={()=> (<div className="top-nav-profile-avatar-image top-nav-profile-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
 						error={()=> (<div className="top-nav-profile-avatar-image top-nav-profile-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
 					/>
