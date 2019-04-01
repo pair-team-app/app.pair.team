@@ -1,0 +1,40 @@
+
+.github-modal-wrapper {
+	padding: 20px;
+	background-color: #1a1e23;
+}
+
+.github-modal-header {
+	width: 100%;
+	margin: 20px 0;
+	padding-bottom: 25px;
+	border-bottom: 1px solid #24282e;
+}
+
+.github-modal-header h1 {
+	line-height: 0;
+}
+
+.github-modal-content-wrapper {
+}
+
+.github-modal-button-wrapper {
+	width: 100%;
+	text-align: left;
+}
+
+
+.github-modal-grid {
+	width: 100%;
+}
+
+.github-modal-grid-item-wrapper {
+	margin: 8px -10px 0 -10px;
+}
+
+
+.github-modal-grid-item {
+	width: 160px;
+	height: 200px;
+	margin: 0 10px 20px 10px;
+}
