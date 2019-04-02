@@ -44,8 +44,8 @@ const TopNavDesktop = (props)=> {
 			{(!isUserLoggedIn())
 				? (<>
 					<button className="aux-button adjacent-button" onClick={()=> props.onGitHub()}>GitHub</button>
-					<button className="adjacent-button" onClick={()=> props.onLink('register')}>Sign Up</button>
-					<button onClick={()=> props.onLink('login')}>Login</button>
+					<button className="adjacent-button" onClick={()=> props.onLink('/register')}>Sign Up</button>
+					<button onClick={()=> props.onLink('/login')}>Login</button>
 				</>)
 				: (<Row vertical="center" horizontal="end">
 					<TopNavProfile
@@ -72,8 +72,8 @@ const TopNavMobile = (props)=> {
 		<div className="top-nav-column top-nav-column-right top-nav-column-right-mobile">
 			{(!isUserLoggedIn())
 				? (<>
-					<button className="adjacent-button adjacent-button-mobile" onClick={()=> props.onPage('register')}>Sign Up</button>
-					<button onClick={()=> props.onPage('login')}>Login</button>
+					<button className="adjacent-button adjacent-button-mobile" onClick={()=> props.onPage('/register')}>Sign Up</button>
+					<button onClick={()=> props.onPage('/login')}>Login</button>
 				</>)
 				: (<Row vertical="center" horizontal="end">
 					<TopNavProfile
