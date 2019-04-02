@@ -43,6 +43,7 @@ const TopNavDesktop = (props)=> {
 		<div className="top-nav-column top-nav-column-right">
 			{(!isUserLoggedIn())
 				? (<>
+					<button className="aux-button adjacent-button" onClick={()=> props.onGitHub()}>GitHub</button>
 					<button className="adjacent-button" onClick={()=> props.onLink('register')}>Sign Up</button>
 					<button onClick={()=> props.onLink('login')}>Login</button>
 				</>)
@@ -93,26 +94,39 @@ class TopNav extends Component {
 		};
 	}
 
+	handleGitHubClick = ()=> {
+// 		console.log('TopNav.handleGitHubClick()');
+
+		trackEvent('button', 'github');
+		this.props.updateDeeplink(null);
+		this.props.onGitHub();
+	};
+
 	handleLink = (url)=> {
 // 		console.log('TopNav.handleLink()', url);
-
-		trackEvent('link', url);
-		this.props.updateDeeplink(null);
-		this.props.onPage(url);
+		this.onPage(url);
 	};
 
 	handleMenuClick = (url)=> {
 // 		console.log('TopNav.handleMenuClick()', url);
-
-		trackEvent('menu', url);
-		this.props.updateDeeplink(null);
-		this.props.onPage(url);
+		this.onPage(url, 'menu', this.props.onPage);
 	};
 
 	handleScore = (score)=> {
 // 		console.log('TopNav.handleScore()', score);
 		trackEvent('rate', 'score');
 		this.props.onScore(score);
+	};
+
+	onPage = (url, onProp, trackCat='link')=> {
+		console.log('TopNav.onPage()', url, onProp, trackCat);
+
+		trackEvent(trackCat, url);
+		this.props.updateDeeplink(null);
+
+		if (onProp) {
+			this.props.onPage(url);
+		}
 	};
 
 	render() {
@@ -125,6 +139,7 @@ class TopNav extends Component {
 			? (<TopNavDesktop
 					pathname={pathname}
 					sections={sections.top.desktop}
+					onGitHub={this.handleGitHubClick}
 					onLink={this.handleLink}
 					onLogout={this.props.onLogout}
 					onScore={this.handleScore}

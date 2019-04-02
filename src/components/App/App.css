@@ -60,21 +60,32 @@ h1.page-header-title {
 	padding: 10px;
 }
 
-.aux-button, .aux-button:hover, .aux-button:active {
-	background-color: #ffffff;
-	border: 1px solid #005cc5;
-	color : #005cc5;
+
+.aux-button, .aux-button:disabled, .aux-button:disabled:hover {
+	padding: 9px 20px;
+	/*background: #57aa48 linear-gradient(-180deg, #69cd58, #57aa48 90%) -0.5em;*/
+	background-color: #34d058;
+	font-family: "San Francisco Text Bold", sans-serif;
+	font-weight: 700;
+	font-size: 16px;
+	letter-spacing: -0.6px;
+	color : #ffffff;
 }
 
 .aux-button:hover, .aux-button:active {
-	background-color: #fafbfc;
+	cursor: pointer;
+	/*background: #28a745 linear-gradient(-180deg, #34d058, #28a745 90%);*/
+	background-color: #28a745;
 }
 
 .aux-button:disabled, .aux-button:disabled:hover {
-	background-color: #eaecef;
-	border: 1px solid #84a3c4;
-	color: #6191c2;
+	cursor: default;
+	/*background: #57aa48 linear-gradient(-180deg, #69cd58, #57aa48 90%) -0.5em;*/
+	/*background-color: #62a854;*/
+	color: #eef0f2;
+	opacity : 0.5;
 }
+
 
 .adjacent-button {
 	margin-right: 20px;

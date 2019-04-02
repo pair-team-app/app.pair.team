@@ -41,8 +41,7 @@ button {
   width: 100px;
   height: 38px;
   background-color: #005cc5;
-  border: none;
-  border-radius: 1px;
+  border: 1px solid rgba(0, 92, 197, 0.0);
   font-family: "San Francisco Text SemiBold", sans-serif;
   font-size: 16px;
   letter-spacing: -0.3px;
@@ -57,8 +56,8 @@ button:hover, button:active {
 
 button:disabled, button:disabled:hover {
   background-color: #005cc5;
-  color: #abdafd;
-  opacity : 0.875;
+  color: #bec0c2;
+  opacity : 0.5;
 }
 
 form {

@@ -94,13 +94,26 @@
 	font-size: 14px;
 	letter-spacing: -0.3px;
 	line-height: normal;
-
-	/*backface-visibility: visible;*/
-	/*backface-visibility: hidden;*/
-	/*transform-style: flat;*/
-	/*transform-style: preserve-3d;*/
 }
 
 .base-overlay-button:hover {
 	border: 1px solid #00449c;
 }
+
+
+.base-overlay-aux-button, .base-overlay-aux-button:hover, .base-overlay-aux-button:active {
+	background-color: #ffffff;
+	border: 1px solid #005cc5;
+	color : #005cc5;
+}
+
+.base-overlay-aux-button:hover, .base-overlay-aux-button:active {
+	background-color: #fafbfc;
+}
+
+.base-overlay-aux-button:disabled, .base-overlay-aux-button:disabled:hover {
+	background-color: #eaecef;
+	border: 1px solid #84a3c4;
+	color: #6191c2;
+}
+

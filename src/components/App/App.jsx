@@ -408,6 +408,7 @@ class App extends Component {
 			    <TopNav
 				    mobileLayout={false}
 				    pathname={pathname}
+				    onGitHub={()=> this.setState({ githubModal : true })}
 				    onPage={this.handlePage}
 				    onLogout={this.handleLogout}
 				    onScore={this.handleScore}
