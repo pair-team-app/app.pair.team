@@ -92,6 +92,7 @@ class App extends Component {
 			processing        : false,
 			popup             : null,
 			githubModal       : false,
+// 			githubModal       : true,
 			integrationsModal : false,
 			payDialog         : false,
 			stripeModal       : false
@@ -215,12 +216,6 @@ class App extends Component {
 		const { uploadID, pageID } = artboard;
 		const artboardID = artboard.id;
 		this.props.updateDeeplink({ uploadID, pageID, artboardID });
-
-// 		this.props.updateDeeplink({
-// 			uploadID   : artboard.uploadID,
-// 			pageID     : artboard.pageID,
-// 			artboardID : artboard.id
-// 		});
 	};
 
 	handleAdBanner = (url)=> {

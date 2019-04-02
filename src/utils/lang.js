@@ -268,3 +268,32 @@ export const URLs = {
 
 
 /* …\(^_^)/… */
+
+
+
+
+/*
+const removeItem = (object, key, value)=> {
+  if (value == undefined)
+    return;
+
+  for (var i in object) {
+    if (object[i][key] == value) {
+        object.splice(i, 1);
+    }
+  }
+};
+
+let collection = [{
+ id : '5f299a5d-7793-47be-a827-bca227dbef95',
+ title : 'one'
+ }, {
+ id : '87353080-8f49-46b9-9281-162a41ddb8df',
+ title : 'two'
+ }, {
+ id : 'a1af832c-9028-4690-9793-d623ecc75a95',
+ title : 'three'
+}];
+
+removeItem(collection, 'id', '87353080-8f49-46b9-9281-162a41ddb8df');
+*/

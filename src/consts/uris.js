@@ -27,7 +27,9 @@ export const LINTER_ENDPT_URL = 'https://terminal.designengine.ai/services/linte
 export const EXTENSION_CONFIG_URL = 'chrome://?id=kkgccakiccjnlmponcggpmagkgelpbhg';
 export const EXTENSION_PUBLIC_HOST = 'chrome-extension://kkgccakiccjnlmponcggpmagkgelpbhg';
 
+export const GITHUB_APP_AUTH = 'https://github.com/settings/connections/applications/e6f08e86acdc4e4cca38';
 export const GITHUB_REPO = 'https://www.github.com/de-ai';
 export const GITHUB_ROADMAP = 'https://github.com/de-ai/designengine.ai/projects/1';
+
 export const SLACK_INVITE = 'https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA';
 export const SPECTRUM_DOCS = 'https://spectrum.chat/designengine';

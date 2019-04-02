@@ -12,6 +12,17 @@ import { URLs } from './../../../utils/lang';
 import { trackEvent } from './../../../utils/tracking';
 
 
+
+const GitHubAuthForm = (props)=> {
+	console.log('GitHubModal.GitHubAuthForm()', props);
+
+	return (<div className="github-form">
+
+	</div>);
+};
+
+
+
 class GitHubModal extends Component {
 	constructor(props) {
 		super(props);
@@ -94,9 +105,11 @@ class GitHubModal extends Component {
 
 				<div className="github-modal-wrapper">
 					<div className="github-modal-header">
-						<h1 className="full-width">{title}</h1>
+						<h4 className="full-width">{title}</h4>
 					</div>
 					<div className="github-modal-content-wrapper">
+
+
 					</div>
 				</div>
 			</BaseOverlay>);
