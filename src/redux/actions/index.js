@@ -13,7 +13,9 @@ import {
 	UPDATE_DEEPLINK,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED,
-	SET_ATOM_EXTENSION, CONVERTED_DEEPLINK
+	SET_ATOM_EXTENSION,
+	CONVERTED_DEEPLINK,
+	SET_INVITE
 } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
@@ -119,6 +121,14 @@ export function setAtomExtension(payload) {
 	logFormat('setAtomExtension()', payload);
 	return ({ payload,
 		type : SET_ATOM_EXTENSION
+	});
+}
+
+
+export function setInvite(payload) {
+	logFormat('setInvite()', payload);
+	return ({ payload,
+		type : SET_INVITE
 	});
 }
 

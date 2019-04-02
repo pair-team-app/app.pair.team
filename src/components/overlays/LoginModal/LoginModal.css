@@ -1,0 +1,19 @@
+
+
+.login-modal-wrapper {
+	min-width: 480px;
+	height: 80%;
+	padding: 20px;
+	background-color: #1a1e23;
+}
+
+.login-modal-header {
+	width: 100%;
+	margin-bottom: 20px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #24282e;
+}
+
+.login-modal-logo {
+	opacity: 0.875;
+}

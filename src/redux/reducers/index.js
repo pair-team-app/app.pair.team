@@ -8,7 +8,8 @@ import {
 	USER_PROFILE_ERROR,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED,
-	SET_ATOM_EXTENSION } from '../../consts/action-types';
+	SET_ATOM_EXTENSION,
+	SET_INVITE } from '../../consts/action-types';
 import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 
@@ -24,7 +25,8 @@ const initialState = {
 	},
 	redirectURI   : null,
 	uploadSlices  : [],
-	userProfile   : null
+	userProfile   : null,
+	invite        : null
 };
 
 const logFormat = (state, action, meta='')=> {
@@ -67,6 +69,11 @@ function rootReducer(state=initialState, action) {
 		case SET_REDIRECT_URI:
 			return (Object.assign({}, state, {
 				redirectURI : action.payload
+			}));
+
+		case SET_INVITE:
+			return (Object.assign({}, state, {
+				invite : action.payload
 			}));
 
 		case USER_PROFILE_ERROR:

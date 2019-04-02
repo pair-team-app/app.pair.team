@@ -62,7 +62,7 @@ class LoginForm extends Component {
 	};
 
 	handleSubmit = (event)=> {
-// 		console.log('LoginForm.handleSubmit()', event.target);
+		console.log('LoginForm.handleSubmit()', event.target, this.state);
 		event.preventDefault();
 
 		trackEvent('button', 'login');

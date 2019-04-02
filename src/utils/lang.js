@@ -215,7 +215,7 @@ export const RegExps = {
 };
 
 
-const EMAIL_NEEDLE_REGEX = new RegExp('^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$', 'i');
+//const EMAIL_NEEDLE_REGEX = new RegExp('^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$', 'i');
 const URI_SANITIZED_REGEX = new RegExp('[\u2000-\u206F\u2E00-\u2E7F\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]', 'g');
 export const Strings = {
 	asciiEncode  : (str, enc='utf8')=> ((new Buffer(str, enc)).toString('ascii')),
@@ -226,7 +226,8 @@ export const Strings = {
 	countOf      : (str, substr)=> ((str.match(new RegExp(substr.toString(), 'g')) || []).length),
 	dropChar     : (str, char)=> (Strings.replAll(str, char)),
 	firstChar    : (str)=> (str.charAt(0)),
-	isEmail      : (str)=> (EMAIL_NEEDLE_REGEX.test(String(str))),
+// 	isEmail      : (str)=> (EMAIL_NEEDLE_REGEX.test(String(str))),
+	isEmail      : (str)=> (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i.test(String(str))),
 	lastChar     : (str)=> (str.slice(-1)),
 	lPad         : (str, char, amt)=> ((amt < 0 || String(str).length < amt) ? `${(new Array((amt > 0) ? amt - String(str).length + 1 : -amt + 1)).join(char)}${str}` : str),
 	indexedVal   : (val, arr, divider='_')=> {

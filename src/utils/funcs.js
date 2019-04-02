@@ -145,8 +145,9 @@ export function isUploadPage(exact=false) {
 	return ((exact) ? pathname === UPLOAD : pathname.includes(UPLOAD));
 }
 
-export function isUserLoggedIn() {
-	return (cookie.load('user_id') !== '0');
+export function isUserLoggedIn(confirmed=true) {
+// 	return ((confirmed) ? cookie.load('user_id') !== '0' : typeof cookie.load('user_id') !== 'undefined');
+	return ((confirmed) ? ((cookie.load('user_id') << 0) !== 0) : (typeof cookie.load('user_id') !== 'undefined') << 0 !== 0);
 }
 
 export function sendToSlack(message, callback=null) {
