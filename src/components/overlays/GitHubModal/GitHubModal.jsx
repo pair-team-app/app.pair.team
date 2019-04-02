@@ -90,7 +90,7 @@ class GitHubModal extends Component {
 // 		console.log('GitHubModal.render()', this.props, this.state);
 
 		const { step, outro } = this.state;
-		const title = (step === 0) ? 'Login To GitHub' : 'Choose Yer Repo';
+		const title = (step === 0) ? 'Connect to GitHub' : 'Choose Yer Repo';
 
 		return (
 			<BaseOverlay

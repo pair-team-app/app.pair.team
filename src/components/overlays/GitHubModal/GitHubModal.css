@@ -1,13 +1,15 @@
 
 .github-modal-wrapper {
+	min-width: 480px;
+	min-height: 480px;
 	padding: 20px;
 	background-color: #1a1e23;
 }
 
 .github-modal-header {
 	width: 100%;
-	margin: 20px 0;
-	padding-bottom: 25px;
+	margin-bottom: 20px;
+	padding-bottom: 10px;
 	border-bottom: 1px solid #24282e;
 }
 
