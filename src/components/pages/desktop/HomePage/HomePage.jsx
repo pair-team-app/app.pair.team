@@ -74,6 +74,13 @@ class HomePage extends Component {
 		this.props.onPage(`new/${(section || INSPECT.substr(1))}`);
 	};
 
+	handleGitHub = ()=> {
+		console.log('HomePage.handleGitHub()');
+
+		trackEvent('button', 'github');
+		this.props.onGitHub();
+	};
+
 	handleLogin = ()=> {
 // 		console.log('HomePage.handleLogin()');
 
@@ -123,7 +130,10 @@ class HomePage extends Component {
 					{(isUserLoggedIn())
 						? (<button className="long-button" onClick={()=> this.handleUploadClick()}>Upload</button>)
 						: (<>
-								<button className="long-button stack-button" onClick={()=> this.handleRegister()}>Sign Up</button>
+								<div className="home-page-button-wrapper">
+									<button className="long-button adjacent-button" onClick={()=> this.handleRegister()}>Sign Up</button>
+									<button className="long-button aux-button" onClick={()=> this.handleGitHub()}>Connect on GitHub</button>
+								</div>
 								<button className="long-button" onClick={()=> this.handleLogin()}>Login</button>
 						</>)
 					}
@@ -134,7 +144,8 @@ class HomePage extends Component {
 					artboards={artboards}
 					onClick={this.handleArtboardClicked}
 					onPage={this.props.onPage}
-					onPopup={this.props.onPopup} />)}
+					onPopup={this.props.onPopup}
+				/>)}
 			</BaseDesktopPage>
 		);
 	}

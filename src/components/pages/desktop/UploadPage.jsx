@@ -147,6 +147,13 @@ class UploadPage extends Component {
 		});
 	};
 
+	handleGitHub = ()=> {
+		console.log('UploadPage.handleGitHub()');
+
+		trackEvent('button', 'github');
+		this.props.onGitHub();
+	};
+
 	handleLogin = ()=> {
 // 		console.log('UploadPage.handleLogin()');
 
@@ -246,6 +253,8 @@ class UploadPage extends Component {
 					onFile={this.handleFile}
 					onPage={this.props.onPage}
 					onPopup={this.props.onPopup} />)}
+
+				{(formState === 0 && !isUserLoggedIn()) && (<button className="long-button aux-button" onClick={this.handleGitHub}>Connect on GitHub</button>)}
 
 				{(!isUserLoggedIn() && showRegister && !showLogin) && (<div className="upload-page-register-wrapper">
 					<RegisterForm

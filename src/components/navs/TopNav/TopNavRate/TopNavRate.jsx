@@ -58,7 +58,7 @@ class TopNavRate extends Component {
 		const titleClass = (selected) ? 'top-nav-link top-nav-link-selected' : 'top-nav-link';
 
 		return (<div className="top-nav-rate-wrapper"><Row vertical="center">
-			<div className={titleClass} onClick={()=> this.props.onLink('rate-this')}>Rate This</div>
+			<div className={titleClass} onClick={()=> this.props.onLink('/rate-this')}>Rate This</div>
 			<div className="top-nav-rate-star-wrapper">
 				{stars.map((star, i)=> {
 					return (<RateStarItem

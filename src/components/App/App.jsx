@@ -421,15 +421,15 @@ class App extends Component {
 					    <Route exact path="/new"><Redirect to="/new/inspect" /></Route>
 					    <Route exact path="/profile">{(!isUserLoggedIn()) && (<Redirect to="/register" />)}</Route>
 
-					    <Route exact path="/inspect" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
-					    <Route exact path="/parts" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
-					    <Route exact path="/present" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />
+					    <Route exact path="/inspect" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onGitHub={()=> this.setState({ githubModal : true })} onPopup={this.handlePopup} />} />
+					    <Route exact path="/parts" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onGitHub={()=> this.setState({ githubModal : true })} onPopup={this.handlePopup} />} />
+					    <Route exact path="/present" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onGitHub={()=> this.setState({ githubModal : true })} onPopup={this.handlePopup} />} />
 
 					    <Route path="/inspect/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route path="/parts/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route path="/present/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
-					    <Route path="/new/:type?" render={(props)=> <UploadPage { ...props } onPage={this.handlePage} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onStripeModal={()=> this.setState({ stripeModal : true })} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
+					    <Route path="/new/:type?" render={(props)=> <UploadPage { ...props } onPage={this.handlePage} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onGitHub={()=> this.setState({ githubModal : true })} onStripeModal={()=> this.setState({ stripeModal : true })} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
 					    <Route path="/login/:inviteID?" render={(props)=> <LoginPage { ...props } onPage={this.handlePage} />} onPopup={this.handlePopup} />
 					    <Route path="/register/:inviteID?" render={(props)=> <RegisterPage { ...props } onPage={this.handlePage} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
 					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />

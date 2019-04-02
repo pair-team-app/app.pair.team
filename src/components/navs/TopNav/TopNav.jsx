@@ -98,34 +98,40 @@ class TopNav extends Component {
 // 		console.log('TopNav.handleGitHubClick()');
 
 		trackEvent('button', 'github');
+
 		this.props.updateDeeplink(null);
 		this.props.onGitHub();
 	};
 
 	handleLink = (url)=> {
 // 		console.log('TopNav.handleLink()', url);
-		this.onPage(url);
+		this.onNavigate(url);
 	};
 
 	handleMenuClick = (url)=> {
 // 		console.log('TopNav.handleMenuClick()', url);
-		this.onPage(url, 'menu', this.props.onPage);
+		this.onNavigate(url, 'menu');
 	};
 
 	handleScore = (score)=> {
 // 		console.log('TopNav.handleScore()', score);
 		trackEvent('rate', 'score');
+
+		this.props.updateDeeplink(null);
 		this.props.onScore(score);
 	};
 
-	onPage = (url, onProp, trackCat='link')=> {
-		console.log('TopNav.onPage()', url, onProp, trackCat);
+	onNavigate = (url, trackCat='link', onProp=this.props.onPage)=> {
+		console.log('TopNav.onNavigate()', url, onProp, trackCat);
 
 		trackEvent(trackCat, url);
 		this.props.updateDeeplink(null);
 
-		if (onProp) {
+		if (url && url.startsWith('/')) {
 			this.props.onPage(url);
+
+		} else {
+			onProp();
 		}
 	};
 
