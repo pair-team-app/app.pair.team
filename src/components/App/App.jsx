@@ -15,13 +15,15 @@ import AlertDialog from '../overlays/AlertDialog/AlertDialog';
 import BaseOverlay from '../overlays/BaseOverlay/BaseOverlay';
 import PopupNotification, {POPUP_TYPE_OK} from '../overlays/PopupNotification';
 import GitHubModal from '../overlays/GitHubModal';
+import LoginModal from '../overlays/LoginModal';
+import RegisterModal from '../overlays/RegisterModal';
 import IntegrationsModal from '../overlays/IntegrationsModal';
 import StripeModal from '../overlays/StripeModal';
 import HomePage from '../pages/desktop/HomePage';
 import InspectorPage from '../pages/desktop/InspectorPage';
 import IntegrationsPage from '../pages/desktop/IntegrationsPage';
 import InviteTeamPage from '../pages/desktop/InviteTeamPage';
-import LoginPage from '../pages/desktop/LoginPage';
+// import LoginPage from '../pages/desktop/LoginPage';
 import ProfilePage from '../pages/desktop/ProfilePage';
 import PrivacyPage from '../pages/desktop/PrivacyPage';
 import RateThisPage from '../pages/desktop/RateThisPage';
@@ -91,8 +93,9 @@ class App extends Component {
 			allowMobile       : true,
 			processing        : false,
 			popup             : null,
+			loginModal        : false,
+			registerModal     : false,
 			githubModal       : false,
-// 			githubModal       : true,
 			integrationsModal : false,
 			payDialog         : false,
 			stripeModal       : false
@@ -383,6 +386,16 @@ class App extends Component {
 		this.setState({ integrationsModal : false });
 	};
 
+	onHideLoginModal = ()=> {
+		console.log('App.onHideLoginModal()');
+		this.setState({ loginModal : false });
+	};
+
+	onHideRegisterModal = ()=> {
+		console.log('App.onHideRegisterModal()');
+		this.setState({ registerModal : false });
+	};
+
 	onHideStripeModal = ()=> {
 		console.log('App.onHideStripeModal()');
 
@@ -390,6 +403,20 @@ class App extends Component {
 			payDialog   : false,
 			stripeModal : false
 		});
+	};
+
+	onShowModal = (url)=> {
+		console.log('App.onShowModal()', url);
+
+		if (url === '/github-connect') {
+			this.setState({ githubModal : true })
+
+		} else if (url === '/login') {
+			this.setState({ loginModal : true })
+
+		} else if (url === '/register') {
+			this.setState({ registerModal : true })
+		}
 	};
 
 
@@ -400,7 +427,7 @@ class App extends Component {
   	const { uploadID } = this.props.deeplink;
 		const { pathname } = this.props.location;
   	const { rating, allowMobile, processing, popup } = this.state;
-  	const { integrationsModal, githubModal, stripeModal, payDialog } = this.state;
+  	const { integrationsModal, loginModal, registerModal, githubModal, stripeModal, payDialog } = this.state;
 //   	const processing = true;
 
   	return ((!Browsers.isMobile.ANY() || !allowMobile)
@@ -408,7 +435,7 @@ class App extends Component {
 			    <TopNav
 				    mobileLayout={false}
 				    pathname={pathname}
-				    onGitHub={()=> this.setState({ githubModal : true })}
+				    onModal={this.onShowModal}
 				    onPage={this.handlePage}
 				    onLogout={this.handleLogout}
 				    onScore={this.handleScore}
@@ -430,7 +457,7 @@ class App extends Component {
 					    <Route path="/present/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
 					    <Route path="/new/:type?" render={(props)=> <UploadPage { ...props } onPage={this.handlePage} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onGitHub={()=> this.setState({ githubModal : true })} onStripeModal={()=> this.setState({ stripeModal : true })} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
-					    <Route path="/login/:inviteID?" render={(props)=> <LoginPage { ...props } onPage={this.handlePage} />} onPopup={this.handlePopup} />
+					    {/*<Route path="/login/:inviteID?" render={(props)=> <LoginPage { ...props } onPage={this.handlePage} />} onPopup={this.handlePopup} />*/}
 					    <Route path="/register/:inviteID?" render={(props)=> <RegisterPage { ...props } onPage={this.handlePage} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
 					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
@@ -443,6 +470,9 @@ class App extends Component {
 					    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
 					    <Route exact path="/terms" render={()=> <TermsPage />} />
 					    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+
+					    <Route path="/github-connect/:token?" render={(props)=> (!githubModal) ? this.onShowModal('/github-connect') : null} />
+					    <Route path="/login/:inviteID?" render={(props)=> (!loginModal) ? this.onShowModal('/login') : null} />
 
 					    <Route render={()=> <Status404Page onPage={this.handlePage} />} />
 				    </Switch>
@@ -458,9 +488,24 @@ class App extends Component {
 
 				  {(githubModal) && (<GitHubModal
 					  profile={profile}
+					  onPage={this.handlePage}
 					  onPopup={this.handlePopup}
 					  onComplete={this.onHideGitHubModal}
 					  onSubmitted={this.handleGitHubSubmitted}
+				  />)}
+
+				  {(loginModal) && (<LoginModal
+					  inviteID={null}
+					  onPage={this.handlePage}
+					  onPopup={this.handlePopup}
+					  onComplete={this.onHideLoginModal}
+				  />)}
+
+				  {(registerModal) && (<RegisterModal
+					  profile={profile}
+					  onPage={this.handlePage}
+					  onPopup={this.handlePopup}
+					  onComplete={this.onHideRegisterModal}
 				  />)}
 
 				  {(integrationsModal) && (<IntegrationsModal

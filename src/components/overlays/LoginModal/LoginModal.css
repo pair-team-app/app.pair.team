@@ -17,3 +17,9 @@
 .login-modal-logo {
 	opacity: 0.875;
 }
+
+
+.login-modal-content-wrapper .login-form-wrapper, .login-modal-content-wrapper .login-form-wrapper form {
+	width: 100%;
+	min-width: 100%;
+}

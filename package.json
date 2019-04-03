@@ -36,6 +36,8 @@
     "simple-flexbox": "^1.2.0"
   },
   "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "backup": "tar -cf ./tmp/tar/node_modules.tar node_modules/",
     "test": "react-scripts test --env=jsdom",
     "audit": "npm audit fix",

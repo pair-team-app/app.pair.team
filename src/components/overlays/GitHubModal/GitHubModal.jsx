@@ -4,7 +4,7 @@ import './GitHubModal.css';
 
 import axios from 'axios';
 import qs from 'qs';
-import { Column, Row } from 'simple-flexbox';
+// import { Column, Row } from 'simple-flexbox';
 
 import BaseOverlay from '../BaseOverlay';
 import { API_ENDPT_URL } from './../../../consts/uris';
@@ -16,7 +16,7 @@ import { trackEvent } from './../../../utils/tracking';
 const GitHubAuthForm = (props)=> {
 	console.log('GitHubModal.GitHubAuthForm()', props);
 
-	return (<div className="github-form">
+	return (<div className="github-form github-auth-form">
 
 	</div>);
 };
@@ -48,19 +48,25 @@ class GitHubModal extends Component {
 // 		console.log('GitHubModal.handleComplete()', submitted);
 
 		this.setState({ outro : false }, ()=> {
-			if (submitted) {
-				this.props.onSubmitted();
+			this.props.onPage('');
 
-			} else {
-				this.props.onComplete();
-			}
+			setTimeout(()=> {
+				if (submitted) {
+					this.props.onSubmitted();
+
+				} else {
+					this.props.onComplete();
+				}
+			}, 333);
 		});
 	};
 
-	handleAuth = ()=> {
-		console.log('GitHubModal.handleAuth()');
-
-		this.setState({ authed : true });
+	handleAuthSubmitted = ()=> {
+		console.log('GitHubModal.handleAuthSubmitted()');
+		this.setState({
+			step   : 1,
+			authed : true
+		});
 	};
 
 	handleSubmit = ()=> {
@@ -108,7 +114,9 @@ class GitHubModal extends Component {
 						<h4 className="full-width">{title}</h4>
 					</div>
 					<div className="github-modal-content-wrapper">
-
+						{(step === 0) && (<GitHubAuthForm
+							onSubmit={this.handleAuthSubmitted}
+						/>)}
 
 					</div>
 				</div>

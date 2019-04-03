@@ -2,16 +2,14 @@
 import React, { Component } from 'react';
 import './LoginModal.css';
 
-import axios from 'axios';
-import qs from 'qs';
+import { connect } from 'react-redux';
 
 import BaseOverlay from '../BaseOverlay';
 import LoginForm from '../../forms/LoginForm';
-import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
-import { API_ENDPT_URL } from './../../../consts/uris';
-import { sendToSlack } from './../../../utils/funcs';
+import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
+import { updateUserProfile } from '../../../redux/actions';
 import { URLs } from './../../../utils/lang';
-import { trackEvent } from './../../../utils/tracking';
+import { trackEvent } from '../../../utils/tracking';
 
 
 class LoginModal extends Component {
@@ -19,27 +17,28 @@ class LoginModal extends Component {
 		super(props);
 
 		this.state = {
-			inviteID : props.match.params.inviteID,
+			redirectURI : (props.redirectURI || ''),
+// 			inviteID : props.match.params.inviteID,
 			email    : null,
 			upload   : null
 		};
 	}
 
+	componentDidMount() {
+		console.log('LoginModal.componentDidMount()');
+// 		this.setState({ redirectURI : this.props.redirectURI})
+	}
+
 	handleComplete = ()=> {
-// 		console.log('LoginModal.handleComplete()');
+		console.log('LoginModal.handleComplete()');
 
 		this.setState({ outro : false }, ()=> {
-			const { approved, purchase, redirect } = this.state;
-			if (approved) {
-				this.props.onSubmitted(purchase);
+			const { redirectURI } = this.state;
+			this.props.onPage(redirectURI);
 
-			} else {
+			setTimeout(()=> {
 				this.props.onComplete();
-			}
-
-			if (redirect) {
-				this.props.onPage(redirect);
-			}
+			}, 333);
 		});
 	};
 
@@ -53,64 +52,32 @@ class LoginModal extends Component {
 		});
 	};
 
+	handleLoggedIn = (profile)=> {
+		console.log('LoginModal.handleLoggedIn()', profile, this.props);
+
+		trackEvent('user', 'login');
+		this.props.updateUserProfile(profile);
+
+		this.setState({ outro : true });
+	};
+
 	handlePage = (url)=> {
-// 		console.log('LoginModal.handlePage()', url);
+		console.log('LoginModal.handlePage()', url);
 
 		this.setState({
-			outro    : true,
-			redirect : url
+			outro       : true,
+			redirectURI : url
 		});
 	};
 
-	handleSubmit = (cardHolder, token)=> {
-// 		console.log('LoginModal.handleSubmit()', cardHolder, token, this.state);
-
-		const { profile } = this.props;
-		this.setState({ submitting : true });
-
-		axios.post(API_ENDPT_URL, qs.stringify({
-			action      : 'MAKE_PURCHASE',
-			user_id     : profile.id,
-			token_id    : token.id,
-			product_ids : PRODUCT_IDS.join(',')
-		})).then((response)=> {
-			console.log('MAKE_PURCHASE', response.data);
-			const { purchase, error } = response.data;
-			trackEvent('purchase', (error) ? 'error' : 'success');
-
-			if ((purchase.id << 0) > 0) {
-				sendToSlack(`*[\`${profile.id}\`]* *${profile.email}* purchased "_${'Unlimited Site Access'}_" for \`$${4.99}\``);
-
-				this.props.onPopup({
-					type    : POPUP_TYPE_OK,
-					content : 'Payment Processed!!'
-				});
-
-			} else {
-				this.props.onPopup({
-					position : POPUP_POSITION_TOPMOST,
-					type     : POPUP_TYPE_ERROR,
-					content  : error.code
-				});
-			}
-
-			this.setState({
-				submitting : false,
-				approved   : ((purchase.id << 0) > 0),
-				outro      : ((purchase.id << 0) > 0),
-				purchase   : purchase
-			});
-		}).catch((error)=> {
-		});
-	};
 
 	render() {
-// 		console.log('LoginModal.render()', this.props, this.state);
+		console.log('LoginModal.render()', this.props, this.state);
 
 		const { outro } = this.state;
 		return (
 			<BaseOverlay
-				tracking={`stripe/${URLs.firstComponent()}`}
+				tracking={`login/${URLs.firstComponent()}`}
 				outro={outro}
 				unblurred={true}
 				closeable={true}
@@ -120,24 +87,35 @@ class LoginModal extends Component {
 
 				<div className="login-modal-wrapper">
 					<div className="login-modal-header">
-						<img className="login-modal-logo" src={stripeLogo} alt="Stripe logo" />
+						<h4 className="full-width">Login</h4>
 					</div>
 
 					<div className="login-modal-content-wrapper">
-						<StripeProvider apiKey={STRIPE_TEST_TOKEN}>
-							<Elements>
-								<StripeForm
-									onCancel={()=> this.setState({ outro : true })}
-									onError={this.handleError}
-									onSubmit={this.handleSubmit}
-									onPage={this.handlePage}
-								/>
-							</Elements>
-						</StripeProvider>
+						<LoginForm
+							title={null}
+							inviteID={null}
+							email={null}
+							onLoggedIn={this.handleLoggedIn}
+							onPage={this.handlePage} />
 					</div>
 				</div>
 			</BaseOverlay>);
 	}
 }
 
-export default LoginModal;
+
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+	});
+
+};
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		invite      : state.invite,
+		redirectURI : state.redirectURI
+	});
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginModal);

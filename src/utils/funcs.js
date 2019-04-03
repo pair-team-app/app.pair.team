@@ -48,40 +48,40 @@ export function getRouteParams(pathname) {
 	console.log(':::::::::::::', loginPage, profilePage, uploadPage, registerPage, inspectorPage, homePage);
 
 	if (loginPage && loginPage.isExact) {
-		return ({ ...loginPage.params,
+		return ({ ...loginPage,
 			page : 'LOGIN'
 		});
 	}
 
 	if (profilePage && profilePage.isExact) {
-		return ({ ...profilePage.params,
+		return ({ ...profilePage,
 			page   : 'PROFILE',
 			userID : profilePage.params.userID << 0
 		});
 	}
 
 	if (uploadPage && uploadPage.isExact) {
-		return ({ ...uploadPage.params,
+		return ({ ...uploadPage,
 			page : 'UPLOAD'
 		});
 	}
 
 	if (registerPage && registerPage.isExact) {
-		return ({ ...registerPage.params,
+		return ({ ...registerPage,
 			page     : 'REGISTER',
 			inviteID : registerPage.params.inviteID << 0
 		});
 	}
 
 	if (inspectorPage && inspectorPage.isExact) {
-		return ({ ...inspectorPage.params,
+		return ({ ...inspectorPage,
 			page     : 'INSPECTOR',
 			uploadID : inspectorPage.params.uploadID << 0
 		});
 	}
 
 	if (homePage && homePage.isExact) {
-		return ({ ...homePage.params,
+		return ({ ...homePage,
 			page : 'HOME'
 		});
 	}

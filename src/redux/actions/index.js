@@ -144,6 +144,11 @@ export function updateUserProfile(payload) {
 	return ((dispatch)=> {
 		if (payload) {
 			const { id, avatar, sources, integrations } = payload;
+
+			if (typeof cookie.load('user_id') === 'undefined') {
+				cookie.save('user_id', id << 0, { path : '/' });
+			}
+
 			axios.post(API_ENDPT_URL, qs.stringify(Object.assign({}, payload, {
 				action       : 'UPDATE_PROFILE',
 				user_id      : id,

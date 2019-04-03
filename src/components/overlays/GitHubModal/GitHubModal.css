@@ -26,6 +26,16 @@
 }
 
 
+.github-modal-form {
+	min-width: 50%;
+	text-align: center;
+}
+
+.github-auth-form {
+	width: 100%;
+}
+
+
 .github-modal-grid {
 	width: 100%;
 }

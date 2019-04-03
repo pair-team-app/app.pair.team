@@ -43,9 +43,9 @@ const TopNavDesktop = (props)=> {
 		<div className="top-nav-column top-nav-column-right">
 			{(!isUserLoggedIn())
 				? (<>
-					<button className="aux-button adjacent-button" onClick={()=> props.onGitHub()}>GitHub</button>
-					<button className="adjacent-button" onClick={()=> props.onLink('/register')}>Sign Up</button>
-					<button onClick={()=> props.onLink('/login')}>Login</button>
+					<button className="aux-button adjacent-button" onClick={()=> props.onModal('/github-connect')}>GitHub</button>
+					<button className="adjacent-button" onClick={()=> props.onModal('/register')}>Sign Up</button>
+					<button onClick={()=> props.onModal('/login')}>Login</button>
 				</>)
 				: (<Row vertical="center" horizontal="end">
 					<TopNavProfile
@@ -94,17 +94,13 @@ class TopNav extends Component {
 		};
 	}
 
-	handleGitHubClick = ()=> {
-// 		console.log('TopNav.handleGitHubClick()');
-
-		trackEvent('button', 'github');
-
-		this.props.updateDeeplink(null);
-		this.props.onGitHub();
+	onModal = (url)=> {
+		console.log('TopNav.onModal()', url);
+		this.onNavigate(url, 'button');
 	};
 
 	handleLink = (url)=> {
-// 		console.log('TopNav.handleLink()', url);
+		console.log('TopNav.handleLink()', url);
 		this.onNavigate(url);
 	};
 
@@ -121,18 +117,11 @@ class TopNav extends Component {
 		this.props.onScore(score);
 	};
 
-	onNavigate = (url, trackCat='link', onProp=this.props.onPage)=> {
-		console.log('TopNav.onNavigate()', url, onProp, trackCat);
+	onNavigate = (url, trackCat='link')=> {
+		console.log('TopNav.onNavigate()', url, trackCat);
 
 		trackEvent(trackCat, url);
-		this.props.updateDeeplink(null);
-
-		if (url && url.startsWith('/')) {
-			this.props.onPage(url);
-
-		} else {
-			onProp();
-		}
+		this.props.onPage(url);
 	};
 
 	render() {
@@ -145,7 +134,7 @@ class TopNav extends Component {
 			? (<TopNavDesktop
 					pathname={pathname}
 					sections={sections.top.desktop}
-					onGitHub={this.handleGitHubClick}
+					onModal={this.onModal}
 					onLink={this.handleLink}
 					onLogout={this.props.onLogout}
 					onScore={this.handleScore}
