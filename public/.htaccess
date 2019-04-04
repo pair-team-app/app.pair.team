@@ -10,7 +10,6 @@ RewriteEngine on
 
 		#-- pseudo *.dev subdomains --#
 		RewriteCond %{HTTP_HOST} ^(.*)\.dev\.designengine\.ai
-# 		RewriteRule ^(.*)$ http://dev.designengine.ai/subdomains/router.php?subdomain=%1 [P,NC,QSA]
     RewriteRule ^(.*)$ http://dev.designengine.ai/subdomains/%1/$1 [P,NC,QSA]
 
 
@@ -26,7 +25,7 @@ RewriteEngine on
 
 #-- don't cache these --#
 <IfModule mod_expires.c>
-    <FilesMatch "\.(css|gif|html?|ico|jpe?g|js|json|map|pdf|php|svg|xml)$">
+    <FilesMatch "\.(css|gifv?|html?|ico|jpe?g|js|json|map|pdf|php|png|svg|txt|xml)$">
         ExpiresActive On
         ExpiresDefault A1
         Header unset Cache-Control

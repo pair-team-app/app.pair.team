@@ -5,6 +5,16 @@ export const Arrays = {
 // 	containsElement  : (arr, element)=> (arr.indexOf(element) > -1),
 	containsElement  : (arr, element)=> (Arrays.containsElements(arr, [element])),
 	containsElements : (arr, elements, all=true)=> ((all) ? elements.every((element)=> (arr.indexOf(element) > -1)) : elements.some((element)=> (arr.indexOf(element) > -1))),
+	convertToObject  : (arr)=> {
+		let obj = {};
+		arr.forEach((element)=> {
+			if (Objects.hasKey(element, 'key') && Objects.hasKey(element, 'val')) {
+				obj[element.key] = element.val;
+			}
+		});
+
+		return (obj);
+	},
 // 	dropElement      : (arr, element)=> (arr.filter((item)=> (item !== element))),
 	dropElement      : (arr, element)=> (Arrays.dropElements(arr, [element])),
 	dropElements     : (arr, elements)=> (arr.filter((element)=> (!Arrays.containsElement(elements, element)))),
@@ -259,10 +269,11 @@ export const Strings = {
 };
 
 export const URLs = {
-	firstComponent : (url=window.location.pathname)=> (Strings.trimBounds(url, '/').split('/').shift()),
+	firstComponent : (url=window.location.pathname, trim=true)=> ((trim) ? Strings.trimBounds(url, '/').split('/').shift() : url.substr(1).split('/').shift()),
 	hostname       : (url=window.location.hostname)=> (url.replace(/^https?:\/\//g, '').split('/').shift()),
 	lastComponent  : (url=window.location.pathname)=> (Files.filename(url.trimRight('/'), '')),
 	protocol       : (url=window.location.protocol)=> ((/^https?/.test(url.toLowerCase())) ? url.split(':').shift() : null),
+	queryString    : (url=window.location.search)=> (Arrays.convertToObject((url.includes('?')) ? url.split('?').pop().split('&').map((qs)=> ({ key : qs.split('=').shift(), val : qs.split('=').pop() })) : [])),
 	subdomain      : (url=window.location.hostname)=> ((URLs.hostname(url).split('.').length === 3) ? URLs.hostname(url).split('.').shift() : null),
 	tdl            : (url=window.location.hostname)=> (URLs.hostname(url).split('.').pop())
 };

@@ -13,12 +13,12 @@ import { API_ENDPT_URL } from './../../../consts/uris';
 import { sendToSlack } from './../../../utils/funcs';
 import { URLs } from './../../../utils/lang';
 import { trackEvent } from './../../../utils/tracking';
-import stripe from './../../../assets/json/stripe';
+import stripeCreds from '../../../assets/json/stripe-creds';
 import stripeLogo from './../../../assets/images/logos/logo-stripe.png';
 
 
-const STRIPE_TEST_TOKEN = stripe.test.publish;
-// const STRIPE_LIVE_TOKEN = stripe.live.publish;
+const STRIPE_TEST_TOKEN = stripeCreds.test.publish;
+// const STRIPE_LIVE_TOKEN = stripeCreds.live.publish;
 
 
 const PRODUCT_IDS = [1];

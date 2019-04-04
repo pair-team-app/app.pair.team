@@ -45,7 +45,7 @@ import {
 } from '../../redux/actions';
 import {
 	buildInspectorPath,
-	getRouteParams,
+// 	getRouteParams,
 	idsFromPath,
 	isHomePage,
 	isInspectorPage,
@@ -102,11 +102,7 @@ class App extends Component {
 		};
 
 
-		this.cookieSetup('tutorial');
-// 		this.cookieSetup('user_id');
-
-
-
+		this.onCookieSetup('tutorial');
 		initTracker(cookie.load('user_id'));
 	}
 
@@ -117,8 +113,10 @@ class App extends Component {
 		trackPageview();
 
 // 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', Maths.factorial(5), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
+		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (URLs.queryString()), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
 
-		this.extensionCheck();
+
+		this.onExtensionCheck();
 		this.props.updateDeeplink(idsFromPath());
 
 		window.addEventListener('resize', this.handleResize);
@@ -137,7 +135,7 @@ class App extends Component {
 
 
 		if (prevProps.pathname !== pathname) {
-			console.log('|:|:|:|:|:|:|:|:|:|:|:|', getRouteParams(pathname));
+// 			console.log('|:|:|:|:|:|:|:|:|:|:|:|', getRouteParams(pathname));
 		}
 
 		if (profile) {
@@ -176,26 +174,6 @@ class App extends Component {
 		window.removeEventListener('resize', this.handleResize);
 	}
 
-
-	cookieSetup = (key)=> {
-		console.log('App.cookieSetup()', key);
-
-		if (key === 'tutorial') {
-			if (typeof cookie.load('tutorial') === 'undefined') {
-				cookie.save('tutorial', '0', { path : '/' });
-			}
-			cookie.save('tutorial', '1', { path : '/' });
-		}
-	};
-
-	extensionCheck = ()=> {
-// 		console.log('App.extensionCheck()');
-
-		let img = new Image();
-		img.src = `${EXTENSION_PUBLIC_HOST}/images/pixel.png`;
-		img.onload = ()=> { this.props.setAtomExtension(true); };
-		img.onerror = ()=> { this.props.setAtomExtension(false); };
-	};
 
 	handleArtboardClicked = (artboard)=> {
 // 		console.log('App.handleArtboardClicked()', artboard);
@@ -376,9 +354,29 @@ class App extends Component {
 		});
 	};
 
+	onCookieSetup = (key)=> {
+// 		console.log('App.onCookieSetup()', key);
+
+		if (key === 'tutorial') {
+			if (typeof cookie.load('tutorial') === 'undefined') {
+				cookie.save('tutorial', '0', { path : '/' });
+			}
+			cookie.save('tutorial', '1', { path : '/' });
+		}
+	};
+
+	onExtensionCheck = ()=> {
+// 		console.log('App.onExtensionCheck()');
+
+		let img = new Image();
+		img.src = `${EXTENSION_PUBLIC_HOST}/images/pixel.png`;
+		img.onload = ()=> { this.props.setAtomExtension(true); };
+		img.onerror = ()=> { this.props.setAtomExtension(false); };
+	};
+
 	onHideGitHubModal = ()=> {
 		console.log('App.onHideGitHubModal()');
-		this.setState({ githubModal : false });
+		this.setState({ githubModal : null });
 	};
 
 	onHideIntegrationsModal = ()=> {
@@ -405,17 +403,20 @@ class App extends Component {
 		});
 	};
 
+
+
 	onShowModal = (url)=> {
 		console.log('App.onShowModal()', url);
 
-		if (url === '/github-connect') {
-			this.setState({ githubModal : true })
-
-		} else if (url === '/login') {
-			this.setState({ loginModal : true })
+// 		if (url === '/github-connect') {
+// 			this.setState({ githubModal : true });
+//
+// 		} else if (url === '/login') {
+		if (url === '/login') {
+			this.setState({ loginModal : true });
 
 		} else if (url === '/register') {
-			this.setState({ registerModal : true })
+			this.setState({ registerModal : true });
 		}
 	};
 
@@ -427,7 +428,7 @@ class App extends Component {
   	const { uploadID } = this.props.deeplink;
 		const { pathname } = this.props.location;
   	const { rating, allowMobile, processing, popup } = this.state;
-  	const { integrationsModal, loginModal, registerModal, githubModal, stripeModal, payDialog } = this.state;
+  	const { integrationsModal, loginModal, registerModal, stripeModal, payDialog } = this.state;
 //   	const processing = true;
 
   	return ((!Browsers.isMobile.ANY() || !allowMobile)
@@ -443,26 +444,19 @@ class App extends Component {
 
 			    <div className="content-wrapper" ref={wrapper}>
 				    <Switch>
-					    {/*<Route exact path="/" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onPopup={this.handlePopup} />} />*/}
 					    <Route exact path="/"><Redirect to="/inspect" /></Route>
 					    <Route exact path="/new"><Redirect to="/new/inspect" /></Route>
-					    <Route exact path="/profile">{(!isUserLoggedIn()) && (<Redirect to="/register" />)}</Route>
+					    {(!isUserLoggedIn()) && (<Route exact path="/profile"><Redirect to="/register" /></Route>)}
 
-					    <Route exact path="/inspect" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onGitHub={()=> this.setState({ githubModal : true })} onPopup={this.handlePopup} />} />
-					    <Route exact path="/parts" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onGitHub={()=> this.setState({ githubModal : true })} onPopup={this.handlePopup} />} />
-					    <Route exact path="/present" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onGitHub={()=> this.setState({ githubModal : true })} onPopup={this.handlePopup} />} />
+					    <Route exact path="/:section(inspect|parts|present)" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onGitHub={()=> this.setState({ githubModal : true })} onPopup={this.handlePopup} />} />
+					    <Route exact path="/new/:type(inspect|parts|present)" render={(props)=> <UploadPage { ...props } onPage={this.handlePage} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onGitHub={()=> this.setState({ githubModal : true })} onStripeModal={()=> this.setState({ stripeModal : true })} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
 
-					    <Route path="/inspect/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route path="/parts/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route path="/present/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-
-					    <Route path="/new/:type?" render={(props)=> <UploadPage { ...props } onPage={this.handlePage} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onGitHub={()=> this.setState({ githubModal : true })} onStripeModal={()=> this.setState({ stripeModal : true })} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
 					    {/*<Route path="/login/:inviteID?" render={(props)=> <LoginPage { ...props } onPage={this.handlePage} />} onPopup={this.handlePopup} />*/}
 					    <Route path="/register/:inviteID?" render={(props)=> <RegisterPage { ...props } onPage={this.handlePage} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
 					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
-					    <Route exact path="/profile" render={()=> <ProfilePage onPage={this.handlePage} onStripeModal={()=> this.setState({ stripeModal : true })} onIntegrations={()=> this.setState({ integrationsModal : true })} onPopup={this.handlePopup} />} />
-					    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/:section(inspect|parts|present)/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onPage={this.handlePage} onStripeModal={()=> this.setState({ stripeModal : true })} onIntegrations={()=> this.setState({ integrationsModal : true })} onPopup={this.handlePopup} />} />
 
 					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />
@@ -471,8 +465,13 @@ class App extends Component {
 					    <Route exact path="/terms" render={()=> <TermsPage />} />
 					    <Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
-					    <Route path="/github-connect/:token?" render={(props)=> (!githubModal) ? this.onShowModal('/github-connect') : null} />
+
+					    <Route path="/github-connect/:action?" render={(props)=> <GitHubModal { ...props } profile={profile} onPage={this.handlePage} onPopup={this.handlePopup} onComplete={this.onHideGitHubModal} onSubmitted={this.handleGitHubSubmitted} />} />
+
+
+
 					    <Route path="/login/:inviteID?" render={(props)=> (!loginModal) ? this.onShowModal('/login') : null} />
+					    {/*<Route path="/register/:inviteID?" render={(props)=> (!registerModal) ? this.onShowModal('/register') : null} />*/}
 
 					    <Route render={()=> <Status404Page onPage={this.handlePage} />} />
 				    </Switch>
@@ -481,60 +480,63 @@ class App extends Component {
 				    {(!isInspectorPage()) && (<BottomNav mobileLayout={false} onLogout={()=> this.handleLogout()} onPage={this.handlePage} />)}
 			    </div>
 
+				  {!(/chrom(e|ium)/i.test(navigator.userAgent.toLowerCase()))
+				    ? (<BaseOverlay
+							  tracking="modal/site"
+							  closeable={false}
+							  onComplete={()=> null}>
+							  This site best viewed in Chrome.
+						  </BaseOverlay>)
+					  : (<>
+							  {(popup) && (<PopupNotification payload={popup} onComplete={()=> this.setState({ popup : null })}>
+								  {popup.content}
+							  </PopupNotification>)}
 
-		      {(popup) && (<PopupNotification payload={popup} onComplete={()=> this.setState({ popup : null })}>
-				    {popup.content}
-		      </PopupNotification>)}
+							  {/*{(githubModal) && (<GitHubModal*/}
+								{/*  profile={profile}*/}
+								{/*  params={githubModal.params}*/}
+								{/*  onPage={this.handlePage}*/}
+								{/*  onPopup={this.handlePopup}*/}
+								{/*  onComplete={this.onHideGitHubModal}*/}
+								{/*  onSubmitted={this.handleGitHubSubmitted}*/}
+							  {/*/>)}*/}
 
-				  {(githubModal) && (<GitHubModal
-					  profile={profile}
-					  onPage={this.handlePage}
-					  onPopup={this.handlePopup}
-					  onComplete={this.onHideGitHubModal}
-					  onSubmitted={this.handleGitHubSubmitted}
-				  />)}
+							  {(loginModal) && (<LoginModal
+								  inviteID={null}
+								  onPage={this.handlePage}
+								  onPopup={this.handlePopup}
+								  onComplete={this.onHideLoginModal}
+							  />)}
 
-				  {(loginModal) && (<LoginModal
-					  inviteID={null}
-					  onPage={this.handlePage}
-					  onPopup={this.handlePopup}
-					  onComplete={this.onHideLoginModal}
-				  />)}
+							  {(registerModal) && (<RegisterModal
+								  profile={profile}
+								  onPage={this.handlePage}
+								  onPopup={this.handlePopup}
+								  onComplete={this.onHideRegisterModal}
+							  />)}
 
-				  {(registerModal) && (<RegisterModal
-					  profile={profile}
-					  onPage={this.handlePage}
-					  onPopup={this.handlePopup}
-					  onComplete={this.onHideRegisterModal}
-				  />)}
+							  {(integrationsModal) && (<IntegrationsModal
+								  profile={profile}
+								  onPopup={this.handlePopup}
+								  onComplete={this.onHideIntegrationsModal}
+								  onSubmitted={this.handleIntegrationsSubmitted}
+							  />)}
 
-				  {(integrationsModal) && (<IntegrationsModal
-					  profile={profile}
-					  onPopup={this.handlePopup}
-					  onComplete={this.onHideIntegrationsModal}
-					  onSubmitted={this.handleIntegrationsSubmitted}
-				  />)}
+							  {(payDialog) && (<AlertDialog
+								  title="Limited Account"
+								  message="You must upgrade to an unlimited account to view more than 3 projects."
+								  onComplete={this.handlePaidAlert}
+							  />)}
 
-				  {(payDialog) && (<AlertDialog
-					  title="Limited Account"
-					  message="You must upgrade to an unlimited account to view more than 3 projects."
-					  onComplete={this.handlePaidAlert}
-				  />)}
-
-				  {(stripeModal) && (<StripeModal
-					  profile={profile}
-					  onPage={this.handlePage}
-					  onPopup={this.handlePopup}
-					  onSubmitted={this.handlePurchaseSubmitted}
-					  onComplete={this.handlePurchaseCancel}
-					  />)}
-
-				  {!(/chrom(e|ium)/i.test(navigator.userAgent.toLowerCase())) && (<BaseOverlay
-					  tracking="modal/site"
-					  closeable={false}
-					  onComplete={()=> null}>
-					  This site best viewed in Chrome.
-				  </BaseOverlay>)}
+							  {(stripeModal) && (<StripeModal
+								  profile={profile}
+								  onPage={this.handlePage}
+								  onPopup={this.handlePopup}
+								  onSubmitted={this.handlePurchaseSubmitted}
+								  onComplete={this.handlePurchaseCancel}
+							  />)}
+					  </>)
+				  }
 		    </div>)
 
 		  : (<div className="mobile-site-wrapper">

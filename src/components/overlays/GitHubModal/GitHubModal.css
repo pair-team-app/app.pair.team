@@ -9,7 +9,6 @@
 .github-modal-header {
 	width: 100%;
 	margin-bottom: 20px;
-	padding-bottom: 10px;
 	border-bottom: 1px solid #24282e;
 }
 
@@ -31,7 +30,7 @@
 	text-align: center;
 }
 
-.github-auth-form {
+.github-repo-form {
 	width: 100%;
 }
 

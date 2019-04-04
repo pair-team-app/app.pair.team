@@ -19,7 +19,7 @@ import { Strings, URLs } from './lang';
 
 
 export function getRouteParams(pathname) {
-	console.log('_-_-_-_-_', 'getRouteParams()', pathname, '_-_-_-_-_', URLs.firstComponent(pathname));
+// 	console.log('_-_-_-_-_', 'getRouteParams()', pathname, '_-_-_-_-_', URLs.firstComponent(pathname));
 
 	const loginPage = matchPath(pathname, {
 		path : '/login'
@@ -45,7 +45,7 @@ export function getRouteParams(pathname) {
 		path : '/:section'
 	});
 
-	console.log(':::::::::::::', loginPage, profilePage, uploadPage, registerPage, inspectorPage, homePage);
+// 	console.log(':::::::::::::', loginPage, profilePage, uploadPage, registerPage, inspectorPage, homePage);
 
 	if (loginPage && loginPage.isExact) {
 		return ({ ...loginPage,
