@@ -12,6 +12,7 @@
 	border-bottom: 1px solid #24282e;
 }
 
-.register-modal-logo {
-	opacity: 0.875;
+.register-modal-content-wrapper .register-form-wrapper {
+	width: 100%;
+	min-width: 100%;
 }

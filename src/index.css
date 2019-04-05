@@ -55,13 +55,21 @@ button:hover, button:active {
 }
 
 button:disabled, button:disabled:hover {
-  background-color: #005cc5;
-  color: #bec0c2;
+  /*background-color: #005cc5;*/
+  background-color: #2d6db3;
+  color: #1a1b1d;
   opacity : 0.5;
 }
 
+code {
+  padding: 0 2px 1px 2px;
+  background-color: rgba(0, 0, 0, 0.5);
+  line-height: 0;
+  color: #c8e1fd;
+}
+
 form {
-  width: 48%;
+  width: 100%;
 }
 
 h1, h2, h3, h4, h5 {

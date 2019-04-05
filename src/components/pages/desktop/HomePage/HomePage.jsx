@@ -132,7 +132,7 @@ class HomePage extends Component {
 						: (<>
 								<div className="home-page-button-wrapper">
 									<button className="long-button adjacent-button" onClick={()=> this.handleRegister()}>Sign Up</button>
-									<button className="long-button aux-button" onClick={()=> this.handleGitHub()}>Connect on GitHub</button>
+									<button className="long-button aux-button" onClick={()=> this.handleGitHub()}>Connect to GitHub</button>
 								</div>
 								<button className="long-button" onClick={()=> this.handleLogin()}>Login</button>
 						</>)

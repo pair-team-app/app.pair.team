@@ -4,6 +4,7 @@ import './BottomNav.css';
 
 import { trackEvent } from './../../../utils/tracking';
 import { isUserLoggedIn } from './../../../utils/funcs';
+import { URLs } from './../../../utils/lang';
 import deLogo from './../../../assets/images/logos/logo-designengine.svg';
 import sections from './../../../assets/json/nav-sections';
 
@@ -15,14 +16,14 @@ const BottomNavDesktop = (props)=> {
 		<img className="bottom-nav-desktop-logo" src={deLogo} onClick={()=> props.onLink('')} alt="Design Engine" />
 		<div className="bottom-nav-link-wrapper">
 			{(sections.bottom.desktop.map((section, i)=> (
-				<div key={i} className="bottom-nav-link" onClick={()=> props.onLink(section.url.substr(1))}>{section.title}</div>
+				<div key={i} className="bottom-nav-link" onClick={()=> props.onLink(section.url)}>{section.title}</div>
 			)))}
 
 			{(isUserLoggedIn())
 				? (<div className="bottom-nav-link" onClick={() => props.onLogout()}>Logout</div>)
 				: (<span style={{ display : 'inline' }}>
-						<div className="bottom-nav-link" onClick={()=> props.onLink('register')}>Sign Up</div>
-						<div className="bottom-nav-link" onClick={()=> props.onLink('login')}>Login</div>
+						<div className="bottom-nav-link" onClick={()=> props.onLink('/modal/register')}>Sign Up</div>
+						<div className="bottom-nav-link" onClick={()=> props.onLink('/modal/login')}>Login</div>
 					</span>)
 			}
 		</div>
@@ -49,8 +50,14 @@ function BottomNav(props) {
 	const handleLink = (url)=> {
 // 		console.log('BottomNav.handleLink()', url);
 
-		trackEvent('link', url);
-		props.onPage(url);
+		if (URLs.firstComponent(url) === 'modal') {
+			trackEvent('link', URLs.lastComponent(url));
+			props.onModal(`/${URLs.lastComponent(url)}`);
+
+		} else {
+			trackEvent('link', url);
+			props.onPage(url);
+		}
 	};
 
 	const { mobileLayout } = props;

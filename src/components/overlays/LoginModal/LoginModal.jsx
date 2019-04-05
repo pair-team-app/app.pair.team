@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import BaseOverlay from '../BaseOverlay';
 import LoginForm from '../../forms/LoginForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
-import { updateUserProfile } from '../../../redux/actions';
+import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { URLs } from './../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -17,24 +17,19 @@ class LoginModal extends Component {
 		super(props);
 
 		this.state = {
-			redirectURI : (props.redirectURI || ''),
-// 			inviteID : props.match.params.inviteID,
-			email    : null,
-			upload   : null
+			email  : null,
+			upload : null
 		};
 	}
 
-	componentDidMount() {
-		console.log('LoginModal.componentDidMount()');
-// 		this.setState({ redirectURI : this.props.redirectURI})
-	}
-
 	handleComplete = ()=> {
-		console.log('LoginModal.handleComplete()');
+// 		console.log('LoginModal.handleComplete()');
 
 		this.setState({ outro : false }, ()=> {
-			const { redirectURI } = this.state;
-			this.props.onPage(redirectURI);
+			const { redirectURI } = this.props;
+			if (redirectURI) {
+				this.props.onPage(redirectURI);
+			}
 
 			setTimeout(()=> {
 				this.props.onComplete();
@@ -43,7 +38,7 @@ class LoginModal extends Component {
 	};
 
 	handleError = (error)=> {
-		console.log('LoginModal.handleError()', error);
+// 		console.log('LoginModal.handleError()', error);
 
 		this.props.onPopup({
 			position : POPUP_POSITION_TOPMOST,
@@ -53,26 +48,23 @@ class LoginModal extends Component {
 	};
 
 	handleLoggedIn = (profile)=> {
-		console.log('LoginModal.handleLoggedIn()', profile, this.props);
+// 		console.log('LoginModal.handleLoggedIn()', profile, this.props);
 
 		trackEvent('user', 'login');
 		this.props.updateUserProfile(profile);
-
 		this.setState({ outro : true });
 	};
 
 	handlePage = (url)=> {
 		console.log('LoginModal.handlePage()', url);
-
-		this.setState({
-			outro       : true,
-			redirectURI : url
+		this.setState({ outro : true }, ()=> {
+			this.props.setRedirectURI(url);
 		});
 	};
 
 
 	render() {
-		console.log('LoginModal.render()', this.props, this.state);
+// 		console.log('LoginModal.render()', this.props, this.state);
 
 		const { outro } = this.state;
 		return (
@@ -95,6 +87,7 @@ class LoginModal extends Component {
 							title={null}
 							inviteID={null}
 							email={null}
+							onCancel={(event)=> { event.preventDefault(); this.handleComplete(); }}
 							onLoggedIn={this.handleLoggedIn}
 							onPage={this.handlePage} />
 					</div>
@@ -106,6 +99,7 @@ class LoginModal extends Component {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
+		setRedirectURI    : (url)=> dispatch(setRedirectURI(url)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 

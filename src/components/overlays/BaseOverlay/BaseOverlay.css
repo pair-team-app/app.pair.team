@@ -30,8 +30,8 @@
 }
 
 .base-overlay-content-wrapper-unblurred {
-	background-color: rgba(0, 0, 0, 0.0);;
-	box-shadow: none;
+	background-color: rgba(0, 0, 0, 0.0);
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.33);
 }
 
 .base-overlay-content-wrapper-auto-scroll {

@@ -11,6 +11,7 @@ import TopNavRate from './TopNavRate/TopNavRate';
 
 import { updateDeeplink } from '../../../redux/actions';
 import { isUserLoggedIn } from '../../../utils/funcs';
+import { URLs } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 import sections from '../../../assets/json/nav-sections';
 
@@ -96,7 +97,8 @@ class TopNav extends Component {
 
 	onModal = (url)=> {
 		console.log('TopNav.onModal()', url);
-		this.onNavigate(url, 'button');
+		trackEvent('button', URLs.firstComponent(url));
+		this.props.onModal(url);
 	};
 
 	handleLink = (url)=> {

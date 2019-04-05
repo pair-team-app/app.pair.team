@@ -5,13 +5,14 @@ import './GitHubModal.css';
 import axios from 'axios';
 import Octokit from '@octokit/rest';
 import qs from 'qs';
-import { Row } from 'simple-flexbox';
+import { connect } from 'react-redux';
 
 import BaseOverlay from '../BaseOverlay';
-import { API_ENDPT_URL } from './../../../consts/uris';
+import { API_ENDPT_URL, DEFAULT_AVATAR } from './../../../consts/uris';
 import { Strings, URLs } from './../../../utils/lang';
 import { trackEvent } from './../../../utils/tracking';
-// import githubCreds from '../../../assets/json/github-creds';
+import {setRedirectURI, updateUserProfile} from "../../../redux/actions";
+import cookie from "react-cookies";
 
 
 const GitHubAuthForm = (props)=> {
@@ -19,12 +20,12 @@ const GitHubAuthForm = (props)=> {
 
 	const { accessToken } = props;
 	return (<div className="github-modal-form github-auth-form">
+		<div className="github-modal-form-instructions">
+			Create a new GitHub access token with the <code>repo</code> and <code>user:email</code> OAuth scopes <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer">here</a>. Then paste the token below to authorize.
+		</div>
 		<form onSubmit={props.onSubmit}>
-			<div className="input-wrapper"><input type="text" autoComplete="off" name="accessToken" placeholder="Enter Personal Access Token" value={accessToken} onChange={props.onChange} /></div>
-			<Row vertical="center">
-				<button className="adjacent-button" onClick={props.onCancel}>Cancel</button>
-				<button disabled={(accessToken.length === 0)} type="submit" className="long-button" onClick={props.onSubmit}>Authorize</button>
-			</Row>
+			<div className="input-wrapper"><input type="text" autoComplete="off" name="accessToken" placeholder="Enter Personal Access Token" value={(accessToken || '')} onChange={props.onChange} /></div>
+			<button disabled={(!accessToken || accessToken.length === 0)} type="submit" className="long-button" onClick={props.onSubmit}>Authorize</button>
 		</form>
 	</div>);
 };
@@ -32,28 +33,35 @@ const GitHubAuthForm = (props)=> {
 const GitHubRepoList = (props)=> {
 // 	console.log('GitHubModal.GitHubRepoList()', props);
 
-	const { repos } = props;
+	const { repos, selectedRepo } = props;
 	return (<div className="github-modal-form github-repo-list">
-		{repos.map((repo, i)=> (
-			<GitHubRepoListItem
-				key={i}
-				repo={repo}
-				title={repo.fullName}
-				onClick={()=> props.onClick(repo)}
-			/>
-		))}
+		<div className="github-modal-form-instructions">
+			Choose a repository you want to integrate for pull requests.
+		</div>
+
+		<div className="github-repo-list-items-wrapper">
+			{repos.map((repo, i)=> (
+				<GitHubRepoListItem
+					key={i}
+					repo={repo}
+					title={repo.fullName}
+					selected={(selectedRepo && repo.id === selectedRepo.id)}
+					onClick={()=> props.onRepoClick(repo)}
+				/>
+			))}
+		</div>
+		<button disabled={!selectedRepo} className="long-button" onClick={()=> props.onSubmit()}>Integrate</button>
 	</div>);
 };
 
 const GitHubRepoListItem = (props)=> {
 // 	console.log('GitHubModal.GitHubRepoListItem()', props);
 
-	const { title } = props;
-	return (<div className="github-repo-list-item" onClick={props.onClick}>
+	const { title, selected } = props;
+	return (<div className={`github-repo-list-item${(selected) ? ' github-repo-list-item-selected' : ''}`} onClick={props.onClick}>
 		<div className="github-repo-list-item-title">{`${Strings.truncate(`${title}`, 80)}`}</div>
 	</div>);
 };
-
 
 
 class GitHubModal extends Component {
@@ -61,74 +69,58 @@ class GitHubModal extends Component {
 		super(props);
 
 		this.state = {
-			step             : 0,
-			action           : (typeof props.match.params.action !== 'undefined') ? props.match.params.action : null,
-			qsParams         : URLs.queryString(props.location.search),
-			accessToken      : '',
-			repos            : [],
-			selectedRepo     : null,
-			oauthToken       : null,
-			authed           : false,
-			error            : null,
-			outro            : false,
-			submitting       : false
+			step         : 0,
+			username     : null,
+			avatar       : DEFAULT_AVATAR,
+			email        : null,
+			accessToken  : null,
+			repos        : [],
+			selectedRepo : null,
+			error        : null,
+			outro        : false,
+			submitting   : false
 		};
 	}
 
 	componentDidMount() {
 // 		console.log('GitHubModal.componentDidMount()', this.props, this.state);
-
-// 		const { action, qsParams, error } = this.state;
-// 		if (Objects.hasKey(qsParams, 'error') && !error) {
-// 			this.setState({ error : `${qsParams.error}\n${qsParams.error_description}` });
-//
-// 		} else {
-// 			if (action === 'callback' && Objects.hasKey(qsParams, 'code')) {
-// 				this.setState({ step : 1 });
-// 				this.onFetchToken(qsParams.code, qsParams.state);
-// 			}
-// 		}
 	}
 
 	handleAuthRequest = (event)=> {
 		console.log('GitHubModal.handleAuthRequest()', event);
-// 		window.location.href = `https://github.com/login/oauth/authorize?client_id=${githubCreds.clientID}&redirect_uri=${window.location.origin}/github-connect/callback&scope=repo&state=${DateTimes.epoch()}`;
-
 		event.preventDefault();
 
+		trackEvent('button', 'authorize');
 
 		const { accessToken } = this.state;
 		const octokit = new Octokit({
 			auth : `token ${accessToken}`
 		});
 
-		octokit.repos.list().then((response) => {
-// 			console.log(':::::::::::::::::', data, status, headers);
+		octokit.users.getAuthenticated().then((response)=> {
+// 			console.log(':::::::::::::::::', response);
+			const { login, avatar_url, email } = response.data;
 
-			const repos = response.data.filter((repo)=> (repo.permissions.push)).map((repo)=> ({
-				id       : repo.id,
-				fullName : repo.full_name,
-				gitURL   : repo.git_url,
-				name     : repo.name,
-				nodeID   : repo.node_id,
-				owner    : repo.owner,
-				url      : repo.url
-			}));
+			octokit.repos.list({ per_page : 10 }).then((response)=> {
+				//console.log(':::::::::::::::::', response);
+				const repos = response.data.filter((repo)=> (repo.permissions.push)).map((repo)=> ({
+					id       : repo.id,
+					fullName : repo.full_name,
+					gitURL   : repo.git_url,
+					name     : repo.name,
+					nodeID   : repo.node_id,
+					owner    : repo.owner,
+					url      : repo.url
+				}));
 
-			this.setState({ repos,
-				step : 1
+				this.setState({ email, repos,
+					step     : 1,
+					username : login,
+					avatar   : avatar_url
+				});
 			});
 		});
 	};
-
-// 	handleAuthSubmitted = ()=> {
-// 		console.log('GitHubModal.handleAuthSubmitted()');
-// 		this.setState({
-// 			step   : 1,
-// 			authed : true
-// 		});
-// 	};
-
 
 	handleCancel = (event)=> {
 		event.preventDefault();
@@ -139,77 +131,77 @@ class GitHubModal extends Component {
 // 		console.log('GitHubModal.handleComplete()', submitted);
 
 		this.setState({ outro : false }, ()=> {
-			this.props.onPage('');
+			if (submitted) {
+				this.props.onSubmitted();
 
-			setTimeout(()=> {
-				if (submitted) {
-					this.props.onSubmitted();
-
-				} else {
-					this.props.onComplete();
-				}
-			}, 333);
+			} else {
+				this.props.onComplete();
+			}
 		});
 	};
 
 	handleRepoSelected = (repo)=> {
-		console.log('GitHubModal.handleRepoSelected()', repo);
-		this.setState({ selectedRepo : repo });
+// 		console.log('GitHubModal.handleRepoSelected()', repo);
+
+		const { selectedRepo } = this.state;
+		this.setState({ selectedRepo : (!selectedRepo || selectedRepo.id !== repo.id) ? repo : null });
 	};
 
 	handleSubmit = ()=> {
 // 		console.log('GitHubModal.handleSubmit()');
 
-		const { profile, deeplink } = this.props;
-		const { repo, accessToken } = this.state;
-		this.setState({ submitting : true }, ()=> {
-			axios.post(API_ENDPT_URL, qs.stringify({
-				action     : 'INTEGRATE_UPLOAD',
-				user_id    : profile.id,
-				upload_id  : deeplink.uploadID,
-				repo_url   : repo.url,
-				token      : accessToken
+		const { username, email, avatar, selectedRepo, accessToken } = this.state;
+		this.setState({
+			step       : 2,
+			submitting : true
+		}, ()=> {
+			axios.post(API_ENDPT_URL, qs.stringify({ username, email,
+				action       : 'GITHUB_REGISTER',
+				access_token : accessToken,
+				password     : '',
+				filename     : avatar,
+				repo_name    : selectedRepo.fullName,
+				repo_url     : selectedRepo.url,
+				invite_id    : (this.props.invite) ? this.props.invite.id : '0'
 			})).then((response) => {
-				console.log('INTEGRATE_UPLOAD', response.data);
+				console.log('GITHUB_REGISTER', response.data);
+				const status = parseInt(response.data.status, 16);
 
-				trackEvent('github', 'success');
-				this.setState({ submitting : false });
-				this.handleComplete(true);
+				if (status === 0x11) {
+					const { user } = response.data;
+					trackEvent('github', 'success');
+					this.setState({ submitting : false }, ()=> {
+						this.onRegistered(user);
+					});
+				}
 			}).catch((error)=> {
 			});
 		});
 	};
 
-// 	onFetchToken = (code, state)=> {
-// 		console.log('GitHubModal.onFetchToken()', code, state);
-//
-// 		const config = {
-// 			headers : {
-// 				'Content-Type' : 'multipart/form-data',
-// 				'Accept'       : 'application/json'
-// 			}
-// 		};
-//
-// 		axios.post('https://github.com/login/oauth/access_token', qs.stringify({
-// 			client_id     : githubCreds.clientID,
-// 			client_secret : githubCreds.clientSecret,
-// 			code          : code,
-// 			redirect_uri  : `${window.location.origin}/github-connect/auth`,
-// 			state         : state
-// 		}), config).then((response) => {
-// 			console.log('ACCESS_TOKEN', response.data);
-//
-//
-// 		}).catch((error)=> {
-// 		});
-// 	};
+	onRegistered = (user)=> {
+		console.log('GitHubModal.onRegistered()', user);
+		cookie.save('user_id', user.id, { path : '/' });
+		this.props.updateUserProfile(user);
+
+		const { redirectURI } = this.props;
+		const { upload } = this.state;
+
+		this.handleComplete(true);
+		this.props.onSubmitted(true);
+
+		if (redirectURI && upload) {
+			this.props.updateDeeplink({ uploadID : upload.id });
+			this.props.onPage(redirectURI);
+		}
+	};
 
 
 	render() {
 		console.log('GitHubModal.render()', this.props, this.state);
 
-		const { step, accessToken, repos, outro } = this.state;
-		const title = (step === 0) ? 'Connect to GitHub' : 'Choose A Repository';
+		const { step, accessToken, repos, selectedRepo, outro } = this.state;
+		const title = (step === 0) ? 'Connect with GitHub' : (step === 1) ? 'Available Repositories' : 'Registering Account';
 
 		return (
 			<BaseOverlay
@@ -227,9 +219,6 @@ class GitHubModal extends Component {
 						<h4 className="full-width">{title}</h4>
 					</div>
 					<div className="github-modal-content-wrapper">
-						<div>{(this.state.action)}</div>
-						<div>{(this.state.error)}</div>
-
 						{(step === 0) && (<GitHubAuthForm
 							accessToken={accessToken}
 							onCancel={this.handleCancel}
@@ -240,9 +229,10 @@ class GitHubModal extends Component {
 						{(step === 1) && (<>
 							<GitHubRepoList
 								repos={repos}
-								onClick={this.handleRepoSelected}
+								selectedRepo={selectedRepo}
+								onRepoClick={this.handleRepoSelected}
+								onSubmit={this.handleSubmit}
 							/>
-							<button className="adjacent-button" onClick={this.handleCancel}>Cancel</button>
 						</>)}
 					</div>
 				</div>
@@ -250,4 +240,20 @@ class GitHubModal extends Component {
 	}
 }
 
-export default GitHubModal;
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		setRedirectURI    : (url)=> dispatch(setRedirectURI(url)),
+		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+	});
+
+};
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		invite      : state.invite,
+		redirectURI : state.redirectURI
+	});
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(GitHubModal);
