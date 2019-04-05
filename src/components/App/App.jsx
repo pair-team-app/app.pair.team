@@ -15,6 +15,7 @@ import AlertDialog from '../overlays/AlertDialog/AlertDialog';
 import BaseOverlay from '../overlays/BaseOverlay/BaseOverlay';
 import PopupNotification, {POPUP_TYPE_OK} from '../overlays/PopupNotification';
 import GitHubModal from '../overlays/GitHubModal';
+import ConfigUploadModal from '../overlays/ConfigUploadModal';
 import LoginModal from '../overlays/LoginModal';
 import RegisterModal from '../overlays/RegisterModal';
 import IntegrationsModal from '../overlays/IntegrationsModal';
@@ -97,6 +98,8 @@ class App extends Component {
 			registerModal     : false,
 			githubModal       : false,
 			integrationsModal : false,
+			configUploadModal : false,
+// 			configUploadModal : true,
 			payDialog         : false,
 			stripeModal       : false
 		};
@@ -378,7 +381,10 @@ class App extends Component {
 	onHideModal = (url)=> {
 		console.log('App.onHideModal()', url);
 
-		if (url === '/github-connect') {
+		if (url === '/config-upload') {
+			this.setState({ configUploadModal : false });
+
+		} else if (url === '/github-connect') {
 			this.setState({ githubModal : false });
 
 		} else if (url === '/integrations') {
@@ -402,6 +408,7 @@ class App extends Component {
 		console.log('App.onShowModal()', url);
 
 		this.setState({
+			configUploadModal : false,
 			githubModal       : false,
 			integrationsModal : false,
 			loginModal        : false,
@@ -409,7 +416,10 @@ class App extends Component {
 			stripeModal       : false
 		});
 
-		if (url === '/github-connect') {
+		if (url === '/config-upload') {
+			this.setState({ configUploadModal : true });
+
+		} else if (url === '/github-connect') {
 			this.setState({ githubModal : true });
 
 		} else if (url === '/integrations') {
@@ -436,7 +446,7 @@ class App extends Component {
 		const { profile } = this.props;
 		const { pathname } = this.props.location;
   	const { rating, allowMobile, processing, popup } = this.state;
-  	const { integrationsModal, loginModal, registerModal, githubModal, stripeModal, payDialog } = this.state;
+  	const { integrationsModal, loginModal, registerModal, githubModal, configUploadModal, stripeModal, payDialog } = this.state;
 //   	const processing = true;
 
   	return ((!Browsers.isMobile.ANY() || !allowMobile)
@@ -509,6 +519,14 @@ class App extends Component {
 								  onPopup={this.handlePopup}
 								  onComplete={()=> this.onHideModal('/github-connect')}
 								  onSubmitted={this.handleGitHubSubmitted}
+							  />)}
+
+							  {(configUploadModal) && (<ConfigUploadModal
+								  profile={profile}
+								  onPage={this.handlePage}
+								  onPopup={this.handlePopup}
+								  onComplete={()=> this.onHideModal('/config-upload')}
+								  onSubmitted={()=> this.onHideModal('/config-upload')}
 							  />)}
 
 							  {(loginModal) && (<LoginModal

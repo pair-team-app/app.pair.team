@@ -5,14 +5,14 @@ import './GitHubModal.css';
 import axios from 'axios';
 import Octokit from '@octokit/rest';
 import qs from 'qs';
+import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
 import BaseOverlay from '../BaseOverlay';
 import { API_ENDPT_URL, DEFAULT_AVATAR } from './../../../consts/uris';
+import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { Strings, URLs } from './../../../utils/lang';
 import { trackEvent } from './../../../utils/tracking';
-import {setRedirectURI, updateUserProfile} from "../../../redux/actions";
-import cookie from "react-cookies";
 
 
 const GitHubAuthForm = (props)=> {
