@@ -1,7 +1,6 @@
 
 .github-modal-wrapper {
 	min-width: 480px;
-	min-height: 480px;
 	padding: 20px;
 	background-color: #1a1e23;
 }
@@ -26,26 +25,36 @@
 
 
 .github-modal-form {
-	min-width: 50%;
+	min-width: 100%;
 	text-align: center;
 }
 
-.github-repo-form {
+.github-modal-form form {
 	width: 100%;
 }
 
 
-.github-modal-grid {
+.github-auth-form {
+}
+
+
+.github-repo-list {
+	width: 100%;
+	text-align: left;
+}
+
+
+.github-repo-list-item {
 	width: 100%;
 }
 
-.github-modal-grid-item-wrapper {
-	margin: 8px -10px 0 -10px;
+.github-repo-list-item-title {
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-size: 16px;
+	letter-spacing: -0.5px;
+	color: #abdafd;
 }
 
-
-.github-modal-grid-item {
-	width: 160px;
-	height: 200px;
-	margin: 0 10px 20px 10px;
+.github-repo-list-item-title:hover {
+	cursor: pointer;
 }

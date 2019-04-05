@@ -3,6 +3,7 @@
   "version": "1.0.0-next.0",
   "private": true,
   "dependencies": {
+    "@octokit/rest": "^16.23.2",
     "acorn": "^6.1.1",
     "ajv": "^6.10.0",
     "axios": "^0.18.0",

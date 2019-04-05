@@ -113,7 +113,7 @@ class App extends Component {
 		trackPageview();
 
 // 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', Maths.factorial(5), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
-		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (URLs.queryString()), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
+// 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (URLs.queryString()), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
 
 
 		this.onExtensionCheck();
