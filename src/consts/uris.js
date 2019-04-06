@@ -22,6 +22,7 @@ export const CDN_DOWNLOAD_PROJECT_URL = 'http://cdn.designengine.ai/download-pro
 // export const CDN_UPLOAD_URL = 'http://cdn.designengine.ai/upload.php';
 // export const CDN_UPLOAD_URL = `${window.location.href.replace(window.location.pathname, '')}/php/upload.php`;
 export const CDN_UPLOAD_URL = (window.location.hostname.includes('localhost')) ? 'http://cdn.designengine.ai/upload.php' : `${window.location.href.replace(window.location.pathname, '')}/php/upload.php`;
+export const LINTER_UPLOAD_URL = 'https://terminal.designengine.ai/upload.php';
 export const LINTER_ENDPT_URL = 'https://terminal.designengine.ai/services/linter.php';
 
 export const EXTENSION_CONFIG_URL = 'chrome://?id=kkgccakiccjnlmponcggpmagkgelpbhg';

@@ -99,7 +99,6 @@ class App extends Component {
 			githubModal       : false,
 			integrationsModal : false,
 			configUploadModal : false,
-// 			configUploadModal : true,
 			payDialog         : false,
 			stripeModal       : false
 		};
@@ -143,6 +142,9 @@ class App extends Component {
 
 		if (profile) {
 			if (!prevProps.profile) {
+				this.onShowModal('/config-upload');
+
+
 				this.props.fetchUserHistory({profile});
 
 				if (this.state.ranking !== 0) {
@@ -216,6 +218,8 @@ class App extends Component {
 		if (signup) {
 			this.handleRegistered();
 		}
+
+		this.onShowModal('/config-upload');
 	};
 
 	handleIntegrationsSubmitted = ()=> {
@@ -522,7 +526,6 @@ class App extends Component {
 							  />)}
 
 							  {(configUploadModal) && (<ConfigUploadModal
-								  profile={profile}
 								  onPage={this.handlePage}
 								  onPopup={this.handlePopup}
 								  onComplete={()=> this.onHideModal('/config-upload')}
