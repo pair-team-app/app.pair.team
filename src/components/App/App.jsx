@@ -142,9 +142,6 @@ class App extends Component {
 
 		if (profile) {
 			if (!prevProps.profile) {
-				this.onShowModal('/config-upload');
-
-
 				this.props.fetchUserHistory({profile});
 
 				if (this.state.ranking !== 0) {
@@ -169,6 +166,11 @@ class App extends Component {
 			if (payDialog && profile.paid) {
 				this.setState({ payDialog : false });
 			}
+
+		} else {
+// 			if (isUserLoggedIn()) {
+// 				this.handleLogout();
+// 			}
 		}
 	}
 
@@ -424,7 +426,10 @@ class App extends Component {
 			this.setState({ configUploadModal : true });
 
 		} else if (url === '/github-connect') {
-			this.setState({ githubModal : true });
+			this.setState({
+				registerModal : true,
+				githubModal   : true
+			});
 
 		} else if (url === '/integrations') {
 			this.setState({ integrationsModal : true });
@@ -517,14 +522,6 @@ class App extends Component {
 								  {popup.content}
 							  </PopupNotification>)}
 
-							  {(githubModal) && (<GitHubModal
-								  profile={profile}
-								  onPage={this.handlePage}
-								  onPopup={this.handlePopup}
-								  onComplete={()=> this.onHideModal('/github-connect')}
-								  onSubmitted={this.handleGitHubSubmitted}
-							  />)}
-
 							  {(configUploadModal) && (<ConfigUploadModal
 								  onPage={this.handlePage}
 								  onPopup={this.handlePopup}
@@ -540,7 +537,7 @@ class App extends Component {
 							  />)}
 
 							  {(registerModal) && (<RegisterModal
-								  profile={profile}
+								  openAuth={githubModal}
 								  onModal={this.onShowModal}
 								  onPage={this.handlePage}
 								  onPopup={this.handlePopup}

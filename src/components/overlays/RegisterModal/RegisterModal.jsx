@@ -2,19 +2,19 @@
 import React, { Component } from 'react';
 import './RegisterModal.css';
 
+import axios from 'axios';
+import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
 import BaseOverlay from '../BaseOverlay';
 import RegisterForm from '../../forms/RegisterForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
+import { API_ENDPT_URL, GITHUB_APP_AUTH } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
-import { URLs } from './../../../utils/lang';
+import { buildInspectorPath } from '../../../utils/funcs';
+import { DateTimes, URLs } from './../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
-import cookie from "react-cookies";
-import axios from "axios";
-import {API_ENDPT_URL} from "../../../consts/uris";
-import {buildInspectorPath} from "../../../utils/funcs";
-
+import qs from "qs";
 
 class RegisterModal extends Component {
 	constructor(props) {
@@ -22,8 +22,12 @@ class RegisterModal extends Component {
 
 		this.state = {
 			email  : null,
-			upload : null
+			upload : null,
+			authID : 0
 		};
+
+		this.githubWindow = null;
+		this.authInterval = null;
 	}
 
 	componentDidMount() {
@@ -46,6 +50,53 @@ class RegisterModal extends Component {
 				}).catch((error)=> {
 			});
 		}
+
+		if (this.props.openAuth) {
+			const code = DateTimes.epoch(true);
+			axios.post(API_ENDPT_URL, qs.stringify({ code,
+				action : 'GITHUB_AUTH'
+			})).then((response) => {
+				console.log('GITHUB_AUTH', response.data);
+				const authID = response.data.auth_id << 0;
+				this.setState({ authID }, ()=> {
+					if (!this.githubWindow || this.githubWindow.closed || this.githubWindow.closed === undefined) {
+						clearInterval(this.authInterval);
+						this.authInterval = null;
+						this.githubWindow = null;
+					}
+
+					this.githubWindow = window.open(GITHUB_APP_AUTH.replace('__{EPOCH}__', code), '', `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=600, height=600, top=${((window.innerHeight - 600) * 0.5) << 0}, left=${((window.innerWidth - 600) * 0.5) << 0}`);
+					this.authInterval = setInterval(()=> {
+						this.onAuthInterval();
+					}, 1000);
+				});
+			}).catch((error)=> {
+			});
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('RegisterModal.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+
+		if (!prevProps.profile && this.props.profile) {
+			this.props.onRegistered();
+			this.setState({ outro : true });
+		}
+	}
+
+	componentWillUnmount() {
+		console.log('RegisterModal.componentWillUnmount()');
+
+		if (this.authInterval) {
+			clearInterval(this.authInterval);
+		}
+
+		if (this.githubWindow) {
+			this.githubWindow.close();
+		}
+
+		this.authInterval = null;
+		this.githubWindow = null;
 	}
 
 	handleComplete = ()=> {
@@ -99,16 +150,69 @@ class RegisterModal extends Component {
 		if (redirectURI && upload) {
 			this.props.updateDeeplink({ uploadID : upload.id });
 		}
-
-		this.props.onRegistered();
-		this.setState({ outro : true });
 	};
 
 	handlePage = (url)=> {
 		console.log('RegisterModal.handlePage()', url);
-		this.setState({ outro : true }, ()=> {
-			this.props.setRedirectURI(url);
-		});
+
+		if (url.includes('/github-connect')) {
+			const code = DateTimes.epoch(true);
+
+			axios.post(API_ENDPT_URL, qs.stringify({ code,
+				action : 'GITHUB_AUTH'
+			})).then((response) => {
+				console.log('GITHUB_AUTH', response.data);
+				const authID = response.data.auth_id << 0;
+				this.setState({ authID }, ()=> {
+					if (!this.githubWindow || this.githubWindow.closed || this.githubWindow.closed === undefined) {
+						clearInterval(this.authInterval);
+						this.authInterval = null;
+						this.githubWindow = null;
+					}
+
+					this.githubWindow = window.open(GITHUB_APP_AUTH.replace('__{EPOCH}__', code), '', `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=600, height=600, top=${((window.innerHeight - 600) * 0.5) << 0}, left=${((window.innerWidth - 600) * 0.5) << 0}`);
+					this.authInterval = setInterval(()=> {
+						this.onAuthInterval();
+					}, 1000);
+				});
+			}).catch((error)=> {
+			});
+
+		} else {
+			this.setState({ outro : true }, ()=> {
+				this.props.setRedirectURI(url);
+			});
+		}
+	};
+
+	onAuthInterval = ()=> {
+		console.log('RegisterModal.onAuthInterval()');
+
+		if (!this.githubWindow || this.githubWindow.closed || this.githubWindow.closed === undefined) {
+			clearInterval(this.authInterval);
+			this.authInterval = null;
+			this.githubWindow = null;
+
+		} else {
+			const { authID } = this.state;
+			axios.post(API_ENDPT_URL, qs.stringify({
+				action  : 'GITHUB_AUTH_CHECK',
+				auth_id : authID
+			})).then((response) => {
+				console.log('GITHUB_AUTH_CHECK', response.data);
+				const { user } = response.data;
+				if (user) {
+					trackEvent('github', 'success');
+					clearInterval(this.authInterval);
+					this.authInterval = null;
+					this.githubWindow.close();
+					this.githubWindow = null;
+
+					this.handleRegistered(user);
+				}
+			}).catch((error)=> {
+			});
+		}
 	};
 
 
@@ -157,6 +261,7 @@ const mapDispatchToProps = (dispatch)=> {
 const mapStateToProps = (state, ownProps)=> {
 	return ({
 		invite      : state.invite,
+		profile     : state.userProfile,
 		redirectURI : state.redirectURI
 	});
 };

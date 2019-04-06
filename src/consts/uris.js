@@ -28,7 +28,7 @@ export const LINTER_ENDPT_URL = 'https://terminal.designengine.ai/services/linte
 export const EXTENSION_CONFIG_URL = 'chrome://?id=kkgccakiccjnlmponcggpmagkgelpbhg';
 export const EXTENSION_PUBLIC_HOST = 'chrome-extension://kkgccakiccjnlmponcggpmagkgelpbhg';
 
-export const GITHUB_APP_AUTH = 'https://github.com/settings/connections/applications/e6f08e86acdc4e4cca38';
+export const GITHUB_APP_AUTH = 'https://github.com/login/oauth/authorize?client_id=e6f08e86acdc4e4cca38&redirect_uri=https://api.designengine.ai/system.php&scope=gist,user:email&state=__{EPOCH}__';
 export const GITHUB_REPO = 'https://www.github.com/de-ai';
 export const GITHUB_ROADMAP = 'https://github.com/de-ai/designengine.ai/projects/1';
 
