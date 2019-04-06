@@ -1,6 +1,7 @@
 
 
 import axios from 'axios';
+import Octokit from '@octokit/rest';
 import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
 
@@ -94,6 +95,21 @@ export function buildInspectorPath(upload, prefix='/inspect', suffix='') {
 
 export function buildInspectorURL(upload, prefix='/inspect', suffix='') {
 	return (`${window.location.origin}${buildInspectorPath(upload, prefix, suffix)}`);
+}
+
+export function createGist(token, filename, contents, description, visible=true) {
+	const payload = { description,
+		public : visible,
+		files  : {
+			[filename] : {
+				content : contents
+			}
+		}
+	};
+
+	new Octokit({ auth : token }).gists.create(payload).then((result)=> {
+		console.log('CREATE_GIST ->', result);
+	});
 }
 
 export function idsFromPath() {

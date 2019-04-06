@@ -186,6 +186,7 @@ export const Maths = {
 	half        : (val)=> (val * 0.5),
 	quarter     : (val)=> (val * 0.25),
 	randomFloat : (lower, upper, precision=15)=> ((Math.random() * (upper - lower)) + lower).toFixed(precision),
+	randomHex   : (lower=0x0, upper=0xf)=> (`0x${Maths.randomInt(lower, upper).toString(16)}`),
 	randomInt   : (lower, upper)=> (Math.round(Maths.randomFloat(lower, upper))),
 	reciprocal  : (val)=> (1 / val),
 	root        : (val, root)=> (Math.pow(val, Maths.reciprocal(root))),
@@ -212,6 +213,11 @@ export const Objects = {
 	hasKey     : (obj, key)=> (Object.keys(obj).some((k)=> (k === key))),
 	length     : (obj)=> (Object.keys(obj).length),
 	reduceVals : (obj, init=0)=> (Object.values(obj).reduce((acc, val)=> ((acc << 0) + (val << 0)), init)),
+	renameKey  : (obj, oldKey, newKey, overwrite=false)=> {
+		if (Objects.hasKey(obj, oldKey) || (overwrite && !Objects.hasKey(obj, newKey))) {
+			delete Object.assign(obj, { [newKey] : obj[oldKey] })[oldKey];
+		}
+	},
 	swapAtKeys : (obj, key1, key2)=> {
 		const swap = obj[key1];
 		obj[key1] = obj[key2];
@@ -257,6 +263,7 @@ export const Strings = {
 	replAll     : (str, needle, replacement='')=> (str.split(needle).join(replacement)),
 	reverse     : (str)=> ([...str].reverse().join('')),
 	randAlpha   : (len=1, cases=true)=> (Arrays.indexFill(len).map((i)=> ((cases && Maths.coinFlip()) ? String.fromCharCode(Maths.randomInt(65, 91)).toLowerCase() : String.fromCharCode(Maths.randomInt(65, 91)))).join('')),
+	randHex     : (len=1, upperCase=true)=> (Arrays.indexFill(len).map((i)=> ((upperCase) ? Strings.lastChar(Maths.randomHex()).toUpperCase() : Strings.lastChar(Maths.randomHex()))).join('')),
 	rPad        : (str, amt, char)=> ((str.length < amt) ? `${str}${(new Array(amt - String(str).length + 1)).join(char)}` : str),
 	shuffle     : (str)=> (Arrays.shuffle([...str.split('')]).join('')),
 	slugifyURI  : (str)=> (str.trim().replace(URI_SANITIZED_REGEX, '').replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase()),

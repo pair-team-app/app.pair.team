@@ -3,7 +3,7 @@ import axios from 'axios/index';
 import qs from 'qs';
 import cookie from 'react-cookies';
 
-import { Bits } from '../../utils/lang';
+import { Bits, Objects } from '../../utils/lang';
 import {
 	ADD_FILE_UPLOAD,
 	APPEND_ARTBOARD_SLICES,
@@ -66,12 +66,20 @@ export function fetchUserProfile() {
 			.then((response)=> {
 				console.log('PROFILE', response.data);
 
-				const { id, type } = response.data.user;
+				Objects.renameKey(response.data.user, 'github_auth', 'github');
+				if (response.data.user.github) {
+					Objects.renameKey(response.data.user.github, 'access_token', 'accessToken');
+				}
+
+				const { id, type, github } = response.data.user;
 				dispatch({
 					type    : USER_PROFILE_LOADED,
 					payload : { ...response.data.user,
-						id   : id << 0,
-						paid : type.includes('paid')
+						id     : id << 0,
+						github : { ...github,
+							id : github.id << 0
+						},
+						paid   : type.includes('paid')
 					}
 				});
 			}).catch((error) => {

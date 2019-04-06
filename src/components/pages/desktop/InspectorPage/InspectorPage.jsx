@@ -31,14 +31,11 @@ import { MOMENT_TIMESTAMP } from '../../../../consts/formats';
 import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../../consts/key-codes';
 import { DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PARTS_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL, LINTER_ENDPT_URL } from '../../../../consts/uris';
 import { setRedirectURI } from '../../../../redux/actions';
-import { buildInspectorPath, buildInspectorURL, sendToSlack } from '../../../../utils/funcs.js';
+import { buildInspectorPath, buildInspectorURL, createGist, sendToSlack } from '../../../../utils/funcs.js';
 import { Arrays, Browsers, DateTimes, Files, Maths, Strings, URLs } from '../../../../utils/lang.js';
 import { trackEvent } from '../../../../utils/tracking';
 
 import downloadButton from '../../../../assets/images/buttons/btn-download.svg';
-// import androidIcon from '../../../../assets/images/icons/ico-android.png';
-// import iosIcon from '../../../../assets/images/icons/ico-ios.png';
-// import html5Icon from '../../../../assets/images/icons/ico-html5.png';
 import adBannerPanel from '../../../../assets/json/ad-banner-panel';
 import inspectorTabSets from '../../../../assets/json/inspector-tab-sets';
 import deLogo from '../../../../assets/images/logos/logo-designengine.svg';
@@ -1801,6 +1798,27 @@ class InspectorPage extends Component {
 
 			this.setState({ panMultPt, scrollPt, scrolling : true });
 		}
+	};
+
+	handleSendGist = (tab)=> {
+		console.log('InspectorPage.handleSendGist()', tab);
+
+		const { profile, processing } = this.props;
+		const { section, urlBanner, slice } = this.state;
+
+		const lang = (tab.title === 'CSS') ? 'css' : (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Swift') ? 'swift' : (tab.title === 'Android') ? 'xml' : 'txt';
+		trackEvent('button', `send-gist-${lang}`);
+
+		this.props.onPopup({
+			type     : POPUP_TYPE_OK,
+			offset   : {
+				top   : (urlBanner << 0 && !processing) * 38,
+				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
+			},
+			content  : `Creating ${lang} gist on GitHub…`
+		});
+
+		createGist(profile.github.accessToken, `${Strings.slugifyURI(slice.title)}.${lang}`, tab.syntax, 'Design Engine auto generated syntax v1');
 	};
 
 	handleSendSyntaxAtom = (tab)=> {

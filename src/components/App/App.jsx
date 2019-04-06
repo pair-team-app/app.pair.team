@@ -14,7 +14,7 @@ import AdvertPanel from '../overlays/AdvertPanel';
 import AlertDialog from '../overlays/AlertDialog/AlertDialog';
 import BaseOverlay from '../overlays/BaseOverlay/BaseOverlay';
 import PopupNotification, {POPUP_TYPE_OK} from '../overlays/PopupNotification';
-import GitHubModal from '../overlays/GitHubModal';
+// import GitHubModal from '../overlays/GitHubModal';
 import ConfigUploadModal from '../overlays/ConfigUploadModal';
 import LoginModal from '../overlays/LoginModal';
 import RegisterModal from '../overlays/RegisterModal';
@@ -34,6 +34,7 @@ import RecoverPage from '../pages/desktop/RecoverPage';
 import TermsPage from '../pages/desktop/TermsPage';
 import UploadPage from '../pages/desktop/UploadPage';
 import BaseMobilePage from '../pages/mobile/BaseMobilePage';
+
 
 import { EXTENSION_PUBLIC_HOST, API_ENDPT_URL } from '../../consts/uris';
 import {
@@ -114,7 +115,8 @@ class App extends Component {
 		trackEvent('site', 'load');
 		trackPageview();
 
-// 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', Maths.factorial(5), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
+// 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (new Array(20)).fill(null).map((i)=> (Strings.randHex())), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
+// 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (new Array(20)).fill(null).map((i)=> (parseInt(Maths.randomHex(), 16))), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
 // 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (URLs.queryString()), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
 
 
