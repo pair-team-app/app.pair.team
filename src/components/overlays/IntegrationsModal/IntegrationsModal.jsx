@@ -54,11 +54,11 @@ class IntegrationsModal extends Component {
 
 		const { profile } = this.props;
 
-		const sources = integrations.filter((integration)=> (integration.type === 'design')).map((integration)=> (Object.assign({}, integration, {
+		const sources = integrations.filter((integration)=> (integration.type === 'design')).sort((integration1, integration2)=> ((integration1.enabled && !integration2.enabled) ? -1 : (!integration1.enabled && integration2.enabled) ? 1 : 0)).map((integration)=> (Object.assign({}, integration, {
 			selected : profile.sources.includes(integration.id)
 		})));
 
-		const devs = integrations.filter((integration)=> (integration.type === 'dev')).map((integration)=> (Object.assign({}, integration, {
+		const devs = integrations.filter((integration)=> (integration.type === 'dev')).sort((integration1, integration2)=> ((integration1.enabled && !integration2.enabled) ? -1 : (!integration1.enabled && integration2.enabled) ? 1 : 0)).map((integration)=> (Object.assign({}, integration, {
 			selected : profile.integrations.includes(integration.id)
 		})));
 

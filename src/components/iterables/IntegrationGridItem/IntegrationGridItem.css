@@ -20,7 +20,13 @@ fieldset:disabled .integration-grid-item {
 	box-shadow: 0 0 3px rgba(0, 0, 0, 0.75);
 }
 
-.integration-grid-item-overlay {
+fieldset:disabled .integration-grid-item-overlay {
+	/*background-color: #1c1c1c;*/
+	opacity: 0.875;
+	transition: none;
+}
+
+fieldset:not(:disabled) .integration-grid-item-overlay {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -30,12 +36,6 @@ fieldset:disabled .integration-grid-item {
 	background-color: #000000;
 	border: 1px solid rgba(36, 40, 46, 0.0);
 	transition: opacity 0.125s ease-out;
-}
-
-fieldset:disabled .integration-grid-item-overlay {
-	background-color: #1c1c1c;
-	opacity: 0.875;
-	transition: none;
 }
 
 fieldset:not(:disabled) .integration-grid-item:hover .integration-grid-item-overlay {

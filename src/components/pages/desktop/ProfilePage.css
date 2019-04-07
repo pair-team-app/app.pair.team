@@ -81,5 +81,6 @@
 }
 
 .profile-page-integrations-grid-item .integration-grid-item-selected-icon {
-	margin : 5px;
+	margin : 8px;
+	opacity: 0.875;
 }

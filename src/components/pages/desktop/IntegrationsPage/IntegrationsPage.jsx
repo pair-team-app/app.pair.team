@@ -66,7 +66,7 @@ class IntegrationsPage extends Component {
 // 		console.log('IntegrationsPage.componentDidMount()', this.props, this.state);
 
 		const { profile } = this.props;
-		const integrations = integrationItems.filter((integration)=> (integration.type === 'dev')).map((integration)=> (Object.assign({}, integration, {
+		const integrations = integrationItems.filter((integration)=> (integration.type === 'dev')).sort((integration1, integration2)=> ((integration1.enabled && !integration2.enabled) ? -1 : (!integration1.enabled && integration2.enabled) ? 1 : 0)).map((integration)=> (Object.assign({}, integration, {
 			selected : (profile && profile.integrations.includes(integration.id))
 		})));
 
@@ -78,7 +78,7 @@ class IntegrationsPage extends Component {
 
 		if (!prevProps.profile && this.props.profile) {
 			const { profile } = this.props;
-			const integrations = integrationItems.filter((integration)=> (integration.type === 'dev')).map((integration)=> (Object.assign({}, integration, {
+			const integrations = integrationItems.filter((integration)=> (integration.type === 'dev')).sort((integration1, integration2)=> ((integration1.enabled && !integration2.enabled) ? -1 : (!integration1.enabled && integration2.enabled) ? 1 : 0)).map((integration)=> (Object.assign({}, integration, {
 				selected : (profile && profile.integrations.includes(integration.id))
 			})));
 
@@ -129,10 +129,11 @@ class IntegrationsPage extends Component {
 
 		const { integrations } = this.state;
 		const selectedItems = integrations.filter((integration)=> (integration.selected));
+		const enabledItems = integrations.filter((integration)=> (integration.enabled));
 
 		return (
 			<BaseDesktopPage className="integrations-page-wrapper">
-				<h4>{`Framework ${Strings.pluralize('Integration', integrations.length)} (${selectedItems.length} / ${integrations.length})`}</h4>
+				<h4>{`Framework ${Strings.pluralize('Integration', enabledItems.length)} (${selectedItems.length} / ${enabledItems.length})`}</h4>
 				<IntegrationsPageGrid
 					integrations={integrations}
 					onClick={this.handleIntegrationItemClick}

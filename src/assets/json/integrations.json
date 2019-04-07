@@ -189,7 +189,7 @@
   "description": "",
   "url": "https://stylelint.io/",
   "filename": "/images/integrations/stylelint.png",
-  "enabled": true
+  "enabled": false
 }, {
   "id": 29,
   "type": "dev",
