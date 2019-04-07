@@ -9,6 +9,7 @@
 
 *:disabled, *:disabled:hover {
   cursor: default;
+  pointer-events: none;
 }
 
 
@@ -50,8 +51,8 @@ button {
 }
 
 button:hover, button:active {
-  cursor: pointer;
   background-color: #00449c;
+  cursor: pointer;
 }
 
 button:disabled, button:disabled:hover {
