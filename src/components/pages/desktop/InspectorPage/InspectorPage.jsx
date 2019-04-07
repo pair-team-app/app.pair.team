@@ -26,7 +26,7 @@ import TutorialBubble from '../../../overlays/TutorialBubble';
 
 import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL } from './consts';
 import { drawCanvasSliceBorder, drawCanvasSliceMarchingAnts, drawCanvasSliceGuides } from './utils/canvas';
-import { fontSpecs, toAndroid, toCSS, toReactJS, toSpecs, toSwift } from './utils/code-generator.js';
+import { fontSpecs, toAndroid, toBootstrap, toCSS, toGridHTML, toReactJS, toSpecs, toSwift } from './utils/code-generator.js';
 import { MOMENT_TIMESTAMP } from '../../../../consts/formats';
 import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../../consts/key-codes';
 import { DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PARTS_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL, LINTER_ENDPT_URL } from '../../../../consts/uris';
@@ -630,7 +630,8 @@ class InspectorPage extends Component {
 			},
 			percent     : 100,
 			tooltip     : 'Loading…',
-			linter      : null
+			linter      : null,
+			gist        : null
 		};
 
 		this.busyInterval = null;
@@ -998,7 +999,8 @@ class InspectorPage extends Component {
 				hoverSlice  : null,
 				hoverOffset : null,
 				tooltip     : null,
-				linter      : null
+				linter      : null,
+				gist        : null
 			});
 
 		} else if (section === SECTIONS.PARTS) {
@@ -1022,7 +1024,8 @@ class InspectorPage extends Component {
 				artboard : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
 				slice    : null,
 				tooltip  : null,
-				linter   : null
+				linter   : null,
+				gist     : null
 			});
 
 		} else if (section === SECTIONS.PRESENTER) {
@@ -1058,8 +1061,10 @@ class InspectorPage extends Component {
 						const langs = [
 							toCSS(slices),
 							toReactJS(slices),
-							toSwift(slices, artboard),
-							toAndroid(slices, artboard)
+// 							toSwift(slices, artboard),
+							toGridHTML(slices),
+// 							toAndroid(slices, artboard)
+							toBootstrap(slices)
 						];
 
 						tabSets = [...tabSets].map((tabSet, i) => {
@@ -1092,7 +1097,8 @@ class InspectorPage extends Component {
 							slice     : [...slices].shift(),
 							offset    : artboard.meta.frame.origin,
 							tooltip   : null,
-							linter    : null
+							linter    : null,
+							gist      : null
 						});
 
 						if (!this.canvasInterval) {
@@ -1116,8 +1122,10 @@ class InspectorPage extends Component {
 		const langs = [
 			toCSS(slices),
 			toReactJS(slices),
-			toSwift(slices, artboard),
-			toAndroid(slices, artboard)
+// 			toSwift(slices, artboard),
+			toGridHTML(slices),
+// 			toAndroid(slices, artboard)
+			toBootstrap(slices)
 		];
 
 		if (section === SECTIONS.INSPECT) {
@@ -1218,7 +1226,8 @@ class InspectorPage extends Component {
 		});
 
 		this.setState({ upload, artboard, tabSets, activeTabs,
-			linter : null
+			linter : null,
+			gist   : null
 		});
 	};
 
@@ -1234,8 +1243,10 @@ class InspectorPage extends Component {
 		const langs = [
 			toCSS(slices),
 			toReactJS(slices),
-			toSwift(slices, artboard),
-			toAndroid(slices, artboard)
+// 			toSwift(slices, artboard),
+			toGridHTML(slices),
+// 			toAndroid(slices, artboard)
+			toBootstrap(slices)
 		];
 
 		if (section === SECTIONS.INSPECT) {
@@ -1336,7 +1347,8 @@ class InspectorPage extends Component {
 		this.setState({ artboard, tabSets, activeTabs,
 			hoverSlice  : null,
 			hoverOffset : null,
-			linter      : null
+			linter      : null,
+			gist        : null
 		});
 	};
 
@@ -1800,31 +1812,10 @@ class InspectorPage extends Component {
 		}
 	};
 
-	handleSendGist = (tab)=> {
-		console.log('InspectorPage.handleSendGist()', tab);
-
-		const { profile, processing } = this.props;
-		const { section, urlBanner, slice } = this.state;
-
-		const lang = (tab.title === 'CSS') ? 'css' : (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Swift') ? 'swift' : (tab.title === 'Android') ? 'xml' : 'txt';
-		trackEvent('button', `send-gist-${lang}`);
-
-		this.props.onPopup({
-			type     : POPUP_TYPE_OK,
-			offset   : {
-				top   : (urlBanner << 0 && !processing) * 38,
-				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
-			},
-			content  : `Creating ${lang} gist on GitHub…`
-		});
-
-		createGist(profile.github.accessToken, `${Strings.slugifyURI(slice.title)}.${lang}`, tab.syntax, 'Design Engine auto generated syntax v1');
-	};
-
 	handleSendSyntaxAtom = (tab)=> {
 // 		console.log('InspectorPage.handleSendSyntaxAtom()', tab);
 
-		const lang = (tab.title === 'CSS') ? 'css' : (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Swift') ? 'swift' : (tab.title === 'Android') ? 'xml' : 'txt';
+		const lang = (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Android') ? 'xml' : (tab.title === 'Bootstrap') ? 'html' : tab.title.toLowerCase();
 		trackEvent('button', `send-atom-${lang}`);
 
 		const { processing } = this.props;
@@ -1848,11 +1839,39 @@ class InspectorPage extends Component {
 		}, '*');
 	};
 
+	handleSendSyntaxGist = (tab)=> {
+		console.log('InspectorPage.handleSendSyntaxGist()', tab);
+
+		const { profile, processing } = this.props;
+		const { section, urlBanner, slice, linter } = this.state;
+
+		const lang = (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Android') ? 'xml' : (tab.title === 'Bootstrap') ? 'html' : tab.title.toLowerCase();
+		trackEvent('button', `send-gist-${lang}`);
+
+		this.props.onPopup({
+			type     : POPUP_TYPE_OK,
+			offset   : {
+				top   : (urlBanner << 0 && !processing) * 38,
+				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
+			},
+			content  : `Creating “${Strings.slugifyURI(slice.title)}.${lang}” gist on GitHub…`
+		});
+
+		this.setState({ gist : { busy : true }}, ()=> {
+			createGist(profile.github.accessToken, `${Strings.slugifyURI(slice.title)}.${lang}`, tab.syntax, `Design Engine auto generated ${(linter) ? 'linted ' : ''}syntax v1`, true, (data)=> {
+				this.setState({ gist : {
+						busy : false,
+						url  : data.html_url
+					}});
+			});
+		});
+	};
+
 	handleSendSyntaxLinter = (tab)=> {
 		console.log('InspectorPage.handleSendSyntaxLinter()', tab);
 
 		const tabID = tab.id;
-		const lang = (tab.title === 'CSS') ? 'css' : (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Swift') ? 'swift' : (tab.title === 'Android') ? 'xml' : 'txt';
+		const lang = (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Android') ? 'xml' : (tab.title === 'Bootstrap') ? 'html' : tab.title.toLowerCase();
 		const linter = (lang === 'css') ? 'StyleLint' : (lang === 'html') ? 'HTMLHint' : (lang === 'js' || lang === 'jsx') ? 'Prettier + ESLint' : 'Linter';
 
 		trackEvent('button', `send-linter-${lang}`);
@@ -1938,6 +1957,9 @@ class InspectorPage extends Component {
 				});
 			}).catch((error) => {
 				console.log("LINT ERROR", error);
+				this.setState({ tabSets, activeTabs,
+					linter : null
+				});
 			});
 		});
 	};
@@ -2324,7 +2346,7 @@ class InspectorPage extends Component {
 		const { processing, profile, atomExtension } = this.props;
 
 		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, activeTabs, scrolling, viewSize, panMultPt } = this.state;
-		const { valid, restricted, urlBanner, tutorial, percent, tooltip, fontState, linter } = this.state;
+		const { valid, restricted, urlBanner, tutorial, percent, tooltip, fontState, linter, gist } = this.state;
 
 		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, 'page_child');
 // 		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : (section === SECTIONS.PARTS) ? flattenUploadArtboards(upload, 'page_child').slice(0, 3) : flattenUploadArtboards(upload, 'page_child');
@@ -2497,7 +2519,6 @@ class InspectorPage extends Component {
 						maxScale={Math.max(...PAN_ZOOM.zoomNotches)}
 						ignorePanOutside={false}
 						renderOnChange={false}
-// 						style={{ width : '100%', height : '100%' }}
 						onPanAndZoom={this.handlePanAndZoom}
 						onPanEnd={()=> (this.setState({ scrolling : false }))}
 						onPanMove={this.handlePanMove}>
@@ -2531,7 +2552,7 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.INSPECT) && (<>
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
-								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 106 : 58)}px)` }}>
+								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 202 : 58)}px)` }}>
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}
@@ -2539,19 +2560,21 @@ class InspectorPage extends Component {
 										onTabClick={(tab)=> this.handleTab(tab)}
 										onContentClick={(payload)=> console.log('onContentClick', payload)}
 									/>
-									<div className="inspector-page-panel-button-wrapper">
-										{(i === 0)
-											? (<button disabled={!slice || (linter && linter.busy)} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Send to Linter' : 'View Linter Changes'}</button>)
-											: (<CopyToClipboard onCopy={()=> this.handleClipboardCopy('specs', toSpecs(activeSlice))} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
-													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>
-												</CopyToClipboard>)
-										}
-
-										{/*<CopyToClipboard onCopy={()=> this.handleClipboardCopy((i === 0) ? 'code' : 'specs', (i === 0) ? activeTabs[i].syntax : toSpecs(activeSlice))} text={(i === 0) ? (activeTabs && activeTabs[i]) ? activeTabs[i].syntax : '' : (activeSlice) ? toSpecs(activeSlice) : ''}>*/}
-										{/*	<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>*/}
-										{/*</CopyToClipboard>*/}
-										{(i === 0) && (<button disabled={!atomExtension || !slice || (linter && linter.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Send to Atom'}</button>)}
-									</div>
+									{(i === 0)
+										? (<div className="inspector-page-panel-button-wrapper">
+												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
+													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
+												</CopyToClipboard>
+												<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>
+												<button disabled={!atomExtension || !slice || (linter && linter.busy) || (gist && gist.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Atom'}</button>
+												<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className="inspector-page-panel-button" onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>
+											</div>)
+										: (<div className="inspector-page-panel-button-wrapper">
+												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('specs', toSpecs(activeSlice))} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
+													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
+												</CopyToClipboard>
+											</div>)
+									}
 								</div>
 							</div>)
 						))}
@@ -2579,7 +2602,7 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.PRESENTER) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-presenter-wrapper">
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-split-width-content-wrapper inspector-page-panel-full-height-content-wrapper" style={{width:`${(i === 0) ? 520 : 360}px`}}>
-								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 106 : 58)}px)` }}>
+								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 202 : 58)}px)` }}>
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}
@@ -2587,17 +2610,20 @@ class InspectorPage extends Component {
 										onTabClick={(tab)=> this.handleTab(tab)}
 										onContentClick={(payload)=> console.log('onContentClick', payload)}
 									/>
-										<div className="inspector-page-panel-button-wrapper">
-											{(i === 0)
-												? (<>
-														{/*<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>*/}
-														{/*	<button disabled={!activeTabs[i].contents} style={{opacity:(!processing << 0)}} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>*/}
-														{/*</CopyToClipboard>*/}
-														<button disabled={!slice || (linter && linter.busy)} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Send to Linter' : 'View Linter Changes'}</button>
-														<button disabled={!atomExtension || !slice || (linter && linter.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Send to Atom'}</button>
-													</>)
-												: (<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download PDF'}</button>)}
-										</div>
+
+									{(i === 0)
+										? (<div className="inspector-page-panel-button-wrapper">
+												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
+													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
+												</CopyToClipboard>
+												<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>
+												<button disabled={!atomExtension || !slice || (linter && linter.busy) || (gist && gist.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Atom'}</button>
+												<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className="inspector-page-panel-button" onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>
+											</div>)
+										: (<div className="inspector-page-panel-button-wrapper">
+												<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download PDF'}</button>
+											</div>)
+									}
 								</div>
 							</div>
 						)))}

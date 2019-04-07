@@ -97,7 +97,7 @@ export function buildInspectorURL(upload, prefix='/inspect', suffix='') {
 	return (`${window.location.origin}${buildInspectorPath(upload, prefix, suffix)}`);
 }
 
-export function createGist(token, filename, contents, description, visible=true) {
+export function createGist(token, filename, contents, description, visible, callback=null) {
 	const payload = { description,
 		public : visible,
 		files  : {
@@ -109,6 +109,10 @@ export function createGist(token, filename, contents, description, visible=true)
 
 	new Octokit({ auth : token }).gists.create(payload).then((result)=> {
 		console.log('CREATE_GIST ->', result);
+
+		if (callback) {
+			callback(result.data);
+		}
 	});
 }
 

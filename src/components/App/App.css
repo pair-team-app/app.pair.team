@@ -73,19 +73,29 @@ h1.page-header-title {
 }
 
 .aux-button:hover, .aux-button:active {
-	cursor: pointer;
 	/*background: #28a745 linear-gradient(-180deg, #34d058, #28a745 90%);*/
 	background-color: #28a745;
 }
 
 .aux-button:disabled, .aux-button:disabled:hover {
-	cursor: default;
 	/*background: #57aa48 linear-gradient(-180deg, #69cd58, #57aa48 90%) -0.5em;*/
 	/*background-color: #62a854;*/
 	color: #eef0f2;
 	opacity : 0.5;
 }
 
+.destruct-button {
+	background-color: #ff4646;
+}
+
+.destruct-button:hover {
+	background-color: #d93d3d;
+}
+
+.destruct-button:disabled, .destruct-button:disabled:hover {
+	opacity : 0.5;
+	color: #eef0f2;
+}
 
 .adjacent-button {
 	margin-right: 20px;
