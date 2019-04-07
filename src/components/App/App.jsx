@@ -232,7 +232,9 @@ class App extends Component {
 			});
 
 		} else {
-			this.onShowModal('/config-upload');
+			setTimeout(()=> {
+				this.onShowModal('/config-upload');
+			}, 1250);
 		}
 	};
 

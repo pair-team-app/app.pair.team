@@ -76,9 +76,9 @@ export function fetchUserProfile() {
 					type    : USER_PROFILE_LOADED,
 					payload : { ...response.data.user,
 						id     : id << 0,
-						github : { ...github,
+						github : (github) ? { ...github,
 							id : github.id << 0
-						},
+						} : github,
 						paid   : type.includes('paid')
 					}
 				});
