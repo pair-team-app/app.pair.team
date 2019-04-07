@@ -40,8 +40,22 @@ import { MOMENT_TIMESTAMP } from '../../../../consts/formats';
 import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../../consts/key-codes';
 import { DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PARTS_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL, LINTER_ENDPT_URL } from '../../../../consts/uris';
 import { setRedirectURI } from '../../../../redux/actions';
-import { buildInspectorPath, buildInspectorURL, createGist, sendToSlack } from '../../../../utils/funcs.js';
-import { Arrays, Browsers, DateTimes, Files, Maths, Strings, URLs } from '../../../../utils/lang.js';
+import {
+	buildInspectorPath,
+	buildInspectorURL,
+	createGist,
+	isUserLoggedIn,
+	sendToSlack
+} from '../../../../utils/funcs.js';
+import {
+	Arrays,
+	Browsers,
+	DateTimes,
+	Files,
+	Maths,
+	Strings,
+	URLs
+} from '../../../../utils/lang.js';
 import { trackEvent } from '../../../../utils/tracking';
 
 import downloadButton from '../../../../assets/images/buttons/btn-download.svg';
@@ -672,11 +686,6 @@ class InspectorPage extends Component {
 			});
 		}
 
-		const { deeplink } = this.props;
-		if (deeplink.uploadID !== 0) {
-			this.onFetchUpload();
-		}
-
 		document.addEventListener('keydown', this.handleKeyDown);
 	}
 
@@ -708,6 +717,10 @@ class InspectorPage extends Component {
 
 		if (deeplink && deeplink !== prevProps.deeplink && deeplink.uploadID !== 0) {
 			this.onFetchUpload();
+
+			if (!isUserLoggedIn()) {
+				this.props.onModal('/register');
+			}
 		}
 
 

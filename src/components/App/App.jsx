@@ -126,7 +126,10 @@ class App extends Component {
 		window.addEventListener('resize', this.handleResize);
 		window.onpopstate = (event)=> {
 			console.log('-/\\/\\/\\/\\/\\/\\-', 'window.onpopstate()', '-/\\/\\/\\/\\/\\/\\-', event);
+
+			this.props.updateDeeplink(idsFromPath());
 // 			this.handlePage('<<');
+// 			this.handlePage(event.target.location.pathname, false);
 		};
 	}
 
@@ -189,7 +192,7 @@ class App extends Component {
 
 		const { profile, artboards } = this.props;
 		if (!profile.paid && artboards.length > 3) {
-			this.props.updateDeeplink(null);
+// 			this.props.updateDeeplink(null);
 // 			this.setState({ payDialog : true });
 
 		} else {
@@ -215,17 +218,6 @@ class App extends Component {
 		window.open(url);
 	};
 
-	handleGitHubSubmitted = (signup)=> {
-		console.log('App.handleGitHubSubmitted()', signup);
-		this.onHideModal('/github-connect');
-
-		if (signup) {
-			this.handleRegistered();
-		}
-
-		this.onShowModal('/config-upload');
-	};
-
 	handleIntegrationsSubmitted = ()=> {
 // 		console.log('App.handleIntegrationsSubmitted()');
 
@@ -238,6 +230,9 @@ class App extends Component {
 				content : 'Profile updated.',
 				delay   : 333
 			});
+
+		} else {
+			this.onShowModal('/config-upload');
 		}
 	};
 
@@ -250,7 +245,7 @@ class App extends Component {
 		this.handlePage('');
 	};
 
-	handlePage = (url)=> {
+	handlePage = (url, clearDeeplink=true)=> {
 		console.log('App.handlePage()', url);
 		url = ((!url) ? '' : url).replace(/^\/(.+)$/, '$1');
 
@@ -264,13 +259,15 @@ class App extends Component {
 
 		} else if (url === '') {
 			trackPageview('/');
-
-			this.props.updateDeeplink(null);
 			this.props.history.push(`/`);
 
 		} else {
 			trackPageview(`/${url}`);
 			this.props.history.push(`/${url}`);
+		}
+
+		if (clearDeeplink) {
+			this.props.updateDeeplink(null);
 		}
 	};
 
@@ -485,7 +482,7 @@ class App extends Component {
 					    {/*<Route path="/register/:inviteID?" render={(props)=> <RegisterPage { ...props } onPage={this.handlePage} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />*/}
 					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
-					    <Route exact path="/:section(inspect|parts|present)/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/:section(inspect|parts|present)/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onModal={this.onShowModal} onPopup={this.handlePopup} />} />
 					    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onPage={this.handlePage} onStripeModal={()=> this.onShowModal('/stripe')} onIntegrations={()=> this.onShowModal('/integrations')} onPopup={this.handlePopup} />} />
 
 					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />

@@ -66,13 +66,15 @@ class LoginModal extends Component {
 	render() {
 // 		console.log('LoginModal.render()', this.props, this.state);
 
+		const { deeplink } = this.props;
 		const { outro } = this.state;
+
 		return (
 			<BaseOverlay
 				tracking={`login/${URLs.firstComponent()}`}
 				outro={outro}
 				unblurred={true}
-				closeable={true}
+				closeable={(deeplink && deeplink.uploadID === 0)}
 				defaultButton={null}
 				title={null}
 				onComplete={this.handleComplete}>
@@ -107,6 +109,7 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
+		deeplink    : state.deeplink,
 		invite      : state.invite,
 		redirectURI : state.redirectURI
 	});

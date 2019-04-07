@@ -151,6 +151,7 @@ class ConfigUploadModal extends Component {
 	render() {
 // 		console.log('ConfigUploadModal.render()', this.props, this.state);
 
+		const { deeplink } = this.props;
 		const { step, outro, integrations } = this.state;
 		const title = (step === 0) ? 'Upload a JSON Configuration File' : 'Step 2';
 
@@ -160,7 +161,7 @@ class ConfigUploadModal extends Component {
 				delay={0}
 				outro={outro}
 				unblurred={true}
-				closeable={true}
+				closeable={(deeplink && deeplink.uploadID === 0)}
 				defaultButton={null}
 				title={null}
 				onComplete={this.handleComplete}>
@@ -175,7 +176,7 @@ class ConfigUploadModal extends Component {
 							onFileDrop={this.handleFileDrop}
 						/>
 						<button className="adjacent-button" onClick={this.handleSkip}>Skip</button>
-						<button disabled={(integrations.reduce((acc, val)=> (acc += (val.uploaded << 0)), 0) === 0)} onClick={this.handleSubmit}>Submit</button>
+						<button disabled={(integrations.reduce((acc, val)=> (acc += (val.uploaded << 0)), 0) === 0)} onClick={this.handleSubmit}>Finalize</button>
 					</div>
 				</div>
 			</BaseOverlay>);
@@ -192,6 +193,7 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
+		deeplink    : state.deeplink,
 		profile     : state.userProfile,
 		redirectURI : state.redirectURI
 	});

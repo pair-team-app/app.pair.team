@@ -4,6 +4,7 @@ import './IntegrationsModal.css';
 
 import axios from 'axios';
 import qs from 'qs';
+import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import BaseOverlay from '../BaseOverlay';
@@ -132,6 +133,7 @@ class IntegrationsModal extends Component {
 	render() {
 // 		console.log('IntegrationsModal.render()', this.props, this.state);
 
+		const { deeplink } = this.props;
 		const { step, sources, devs, outro } = this.state;
 		const title = (step === 0) ? 'What design tools is your team using?' : 'What development frameworks is your team using?';
 // 		const selectedItems = gridItems[step].filter((item)=> (item.selected));
@@ -142,7 +144,7 @@ class IntegrationsModal extends Component {
 				delay={0}
 				outro={outro}
 				unblurred={true}
-				closeable={true}
+				closeable={(deeplink && deeplink.uploadID === 0)}
 				defaultButton={null}
 				title={null}
 				onComplete={this.handleComplete}>
@@ -173,4 +175,12 @@ class IntegrationsModal extends Component {
 	}
 }
 
-export default IntegrationsModal;
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		deeplink : state.deeplink
+	});
+};
+
+
+export default connect(mapStateToProps)(IntegrationsModal);

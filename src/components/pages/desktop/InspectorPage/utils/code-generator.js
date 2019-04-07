@@ -99,7 +99,7 @@ export function toAndroid(slices, artboard) {
 }
 
 export function toBootstrap(slices) {
-	console.log('code-generator.toBootstrapJS()', slices);
+// 	console.log('code-generator.toBootstrapJS()', slices);
 
 	if (slices.length === 0) {
 		return ({
