@@ -4,187 +4,214 @@
   "title": "Sketch",
   "description": "",
   "url": "https://www.sketch.com/",
-  "filename": "/images/integrations/sketch.png"
+  "filename": "/images/integrations/sketch.png",
+  "enabled": true
 }, {
   "id": 2,
   "type": "design",
   "title": "Figma",
   "description": "",
   "url": "https://www.figma.com/",
-  "filename": "/images/integrations/figma.png"
+  "filename": "/images/integrations/figma.png",
+  "enabled": false
 }, {
   "id": 3,
   "type": "design",
   "title": "Adobe XD",
   "description": "",
   "url": "https://www.adobe.com/products/xd.html",
-  "filename": "/images/integrations/adobe-xd.png"
+  "filename": "/images/integrations/adobe-xd.png",
+  "enabled": false
 }, {
   "id": 4,
   "type": "design",
   "title": "Photoshop",
   "description": "",
   "url": "https://www.adobe.com/products/photoshop.html",
-  "filename": "/images/integrations/photoshop.png"
+  "filename": "/images/integrations/photoshop.png",
+  "enabled": false
 }, {
   "id": 5,
   "type": "design",
   "title": "Framer",
   "description": "",
   "url": "https://www.framer.com/",
-  "filename": "/images/integrations/framer.png"
+  "filename": "/images/integrations/framer.png",
+  "enabled": false
 }, {
   "id": 6,
   "type": "design",
   "title": "InVision Studio",
   "description": "",
   "url": "https://www.invisionapp.com/studio",
-  "filename": "/images/integrations/invision-studio.png"
+  "filename": "/images/integrations/invision-studio.png",
+  "enabled": false
 }, {
   "id": 11,
   "type": "dev",
   "title": "Atom",
   "description": "",
   "url": "https://atom.io/",
-  "filename": "/images/integrations/atom.png"
+  "filename": "/images/integrations/atom.png",
+  "enabled": false
 }, {
   "id": 12,
   "type": "dev",
   "title": "AWS Lambda",
   "description": "",
   "url": "https://aws.amazon.com/lambda/",
-  "filename": "/images/integrations/aws-lambda.png"
+  "filename": "/images/integrations/aws-lambda.png",
+  "enabled": false
 }, {
   "id": 13,
   "type": "dev",
   "title": "Bitbucket",
   "description": "",
   "url": "https://bitbucket.org/",
-  "filename": "/images/integrations/bitbucket.png"
+  "filename": "/images/integrations/bitbucket.png",
+  "enabled": false
 }, {
   "id": 14,
   "type": "dev",
   "title": "Bootstrap",
   "description": "",
   "url": "https://getbootstrap.com/",
-  "filename": "/images/integrations/bootstrap.png"
+  "filename": "/images/integrations/bootstrap.png",
+  "enabled": true
 }, {
   "id": 15,
   "type": "dev",
   "title": "Box",
   "description": "",
   "url": "https://www.box.com/home",
-  "filename": "/images/integrations/box.png"
+  "filename": "/images/integrations/box.png",
+  "enabled": false
 }, {
   "id": 16,
   "type": "dev",
   "title": "CircleCI",
   "description": "",
   "url": "https://circleci.com/",
-  "filename": "/images/integrations/circleci.png"
+  "filename": "/images/integrations/circleci.png",
+  "enabled": false
 }, {
   "id": 17,
   "type": "dev",
   "title": "CSS Lint",
   "description": "",
   "url": "http://csslint.net/",
-  "filename": "/images/integrations/css-lint.png"
+  "filename": "/images/integrations/css-lint.png",
+  "enabled": true
 }, {
   "id": 18,
   "type": "dev",
   "title": "Dropbox",
   "description": "",
   "url": "https://www.dropbox.com/",
-  "filename": "/images/integrations/dropbox.png"
+  "filename": "/images/integrations/dropbox.png",
+  "enabled": false
 }, {
   "id": 19,
   "type": "dev",
   "title": "ESLint",
   "description": "",
   "url": "https://eslint.org/",
-  "filename": "/images/integrations/eslint.png"
+  "filename": "/images/integrations/eslint.png",
+  "enabled": true
 }, {
   "id": 20,
   "type": "dev",
   "title": "GitHub",
   "description": "",
   "url": "https://github.com/",
-  "filename": "/images/integrations/github.png"
+  "filename": "/images/integrations/github.png",
+  "enabled": true
 }, {
   "id": 21,
   "type": "dev",
   "title": "GitLab",
   "description": "",
   "url": "https://about.gitlab.com/",
-  "filename": "/images/integrations/gitlab.png"
+  "filename": "/images/integrations/gitlab.png",
+  "enabled": false
 }, {
   "id": 22,
   "type": "dev",
   "title": "Jenkins",
   "description": "",
   "url": "https://jenkins.io/",
-  "filename": "/images/integrations/jenkins.png"
+  "filename": "/images/integrations/jenkins.png",
+  "enabled": false
 }, {
   "id": 23,
   "type": "dev",
   "title": "JetBrains",
   "description": "",
   "url": "https://www.jetbrains.com/",
-  "filename": "/images/integrations/jetbrains.png"
+  "filename": "/images/integrations/jetbrains.png",
+  "enabled": false
 }, {
   "id": 24,
   "type": "dev",
   "title": "JFrog",
   "description": "",
   "url": "https://jfrog.com/",
-  "filename": "/images/integrations/jfrog.png"
+  "filename": "/images/integrations/jfrog.png",
+  "enabled": false
 }, {
   "id": 25,
   "type": "dev",
   "title": "PractiTest",
   "description": "",
   "url": "https://www.practitest.com/",
-  "filename": "/images/integrations/practitest.png"
+  "filename": "/images/integrations/practitest.png",
+  "enabled": false
 }, {
   "id": 26,
   "type": "dev",
   "title": "Prettier",
   "description": "",
   "url": "https://prettier.io/",
-  "filename": "/images/integrations/prettier.png"
+  "filename": "/images/integrations/prettier.png",
+  "enabled": true
 }, {
   "id": 27,
   "type": "dev",
   "title": "Saas CSS",
   "description": "",
   "url": "https://saascss.com/",
-  "filename": "/images/integrations/saas-css.png"
+  "filename": "/images/integrations/saas-css.png",
+  "enabled": false
 }, {
   "id": 28,
   "type": "dev",
   "title": "stylelint",
   "description": "",
   "url": "https://stylelint.io/",
-  "filename": "/images/integrations/stylelint.png"
+  "filename": "/images/integrations/stylelint.png",
+  "enabled": true
 }, {
   "id": 29,
   "type": "dev",
   "title": "T3 JS",
   "description": "",
   "url": "http://t3js.org/",
-  "filename": "/images/integrations/t3-js.png"
+  "filename": "/images/integrations/t3-js.png",
+  "enabled": false
 }, {
   "id": 30,
   "type": "dev",
   "title": "Trello",
   "description": "",
   "url": "https://trello.com/en",
-  "filename": "/images/integrations/trello.png"
+  "filename": "/images/integrations/trello.png",
+  "enabled": false
 }, {
   "id": 31,
   "type": "dev",
   "title": "Zapier",
   "description": "",
   "url": "https://zapier.com/",
-  "filename": "/images/integrations/zapier.png"
+  "filename": "/images/integrations/zapier.png",
+  "enabled": false
 }]
