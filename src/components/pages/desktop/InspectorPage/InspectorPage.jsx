@@ -691,9 +691,9 @@ class InspectorPage extends Component {
 		if (!upload && deeplink && deeplink.uploadID !== 0) {
 			this.onFetchUpload();
 
-			if (!isUserLoggedIn()) {
-				this.props.onModal('/register');
-			}
+// 			if (!isUserLoggedIn()) {
+// 				this.props.onModal('/register');
+// 			}
 		}
 
 		document.addEventListener('keydown', this.handleKeyDown);
@@ -702,7 +702,15 @@ class InspectorPage extends Component {
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
 // 		console.log('InspectorPage.shouldComponentUpdate()', this.props, nextProps, this.state, nextState, nextContext);
 
+
 		const { upload, restricted } = nextState;
+
+
+		if (!this.state.upload && upload && !isUserLoggedIn()) {
+			this.props.onModal('/register');
+			return (false);
+		}
+
 		if (upload && (upload.private << 0) === 1) {
 			const isOwner = (nextProps.profile && upload.creator.user_id === nextProps.profile.id);
 			const isContributor = (nextProps.profile && !isOwner && (upload.contributors.filter((contributor)=> (contributor.id === nextProps.profile.id)).length > 0));

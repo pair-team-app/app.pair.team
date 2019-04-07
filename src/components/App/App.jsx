@@ -134,7 +134,7 @@ class App extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		const { profile, artboards, deeplink } = this.props;
 		const { pathname } = this.props.location;
@@ -152,6 +152,11 @@ class App extends Component {
 				if (this.state.ranking !== 0) {
 					this.setState({ rating : 0 });
 				}
+			}
+
+
+			if (deeplink !== prevProps.deeplink && deeplink.uploadID !== 0) {
+				this.onAddUploadView(deeplink.uploadID);
 			}
 
 // 			console.log('[:::::::::::|:|:::::::::::] PAY CHECK [:::::::::::|:|:::::::::::]');
@@ -191,14 +196,17 @@ class App extends Component {
 // 		console.log('App.handleArtboardClicked()', artboard);
 
 		const { profile, artboards } = this.props;
+
+		const { uploadID, pageID } = artboard;
+		const artboardID = artboard.id;
+
 		if (!profile.paid && artboards.length > 3) {
 // 			this.props.updateDeeplink(null);
 // 			this.setState({ payDialog : true });
 
 		} else {
-			this.onAddUploadView(artboard.uploadID);
 			this.handlePage(buildInspectorPath({
-				id    : artboard.uploadID,
+				id    : uploadID,
 				title : artboard.title
 				}, URLs.firstComponent()
 			));
@@ -206,8 +214,6 @@ class App extends Component {
 			Browsers.scrollOrigin(wrapper.current);
 		}
 
-		const { uploadID, pageID } = artboard;
-		const artboardID = artboard.id;
 		this.props.updateDeeplink({ uploadID, pageID, artboardID });
 	};
 
@@ -337,6 +343,8 @@ class App extends Component {
 	};
 
 	onAddUploadView = (uploadID)=> {
+		console.log('App.onAddUploadView()', uploadID);
+
 		axios.post(API_ENDPT_URL, qs.stringify({
 			action    : 'ADD_VIEW',
 			upload_id : uploadID

@@ -18,6 +18,7 @@ function IntegrationGridItem(props) {
 			<div className="integration-grid-item-title">{title}</div>
 		</div>
 		<div className={`integration-grid-item-selected-icon${(selected) ? ' integration-grid-item-selected-icon-visible' : ''}`}><FontAwesome name="check-circle" size="2x" /></div>
+		<div className={`integration-grid-item-alpha-badge${(enabled) ? ' is-hidden' : ''}`} >alpha</div>
 	</div></fieldset>);
 }
 
