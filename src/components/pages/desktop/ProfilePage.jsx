@@ -132,6 +132,7 @@ const ProfilePageIntegrationsGrid = (props)=> {
 					<IntegrationGridItem
 						title={item.title}
 						image={item.filename}
+						enabled={true}
 						selected={true}
 						inheritedClass="profile-page-integrations-grid-item"
 					/>

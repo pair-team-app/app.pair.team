@@ -25,6 +25,7 @@ const IntegrationsModalGrid = (props)=> {
 					<IntegrationGridItem
 						title={integration.title}
 						image={integration.filename}
+						enabled={integration.enabled}
 						selected={integration.selected}
 						inheritedClass="integrations-modal-grid-item"
 						onClick={()=> props.onClick(integration)} />

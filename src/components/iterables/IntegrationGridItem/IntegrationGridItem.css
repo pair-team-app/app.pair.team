@@ -11,6 +11,12 @@
 	cursor: pointer;
 }
 
+fieldset:disabled .integration-grid-item {
+	cursor: default;
+	opacity: 0.33;
+	pointer-events: none;
+}
+
 .integration-grid-item-selected, .integration-grid-item-selected:hover {
 	box-shadow: 0 0 3px rgba(0, 0, 0, 0.75);
 }
@@ -27,12 +33,18 @@
 	transition: opacity 0.125s ease-out;
 }
 
-.integration-grid-item:hover .integration-grid-item-overlay {
+fieldset:disabled .integration-grid-item-overlay {
+	background-color: #1c1c1c;
+	opacity: 0.875;
+	transition: none;
+}
+
+fieldset:not(:disabled) .integration-grid-item:hover .integration-grid-item-overlay {
 	opacity: 0.25;
 	border: 1px solid #24282e;
 }
 
-.integration-grid-item-selected .integration-grid-item-overlay, .integration-grid-item-selected:hover .integration-grid-item-overlay {
+fieldset:not(:disabled) .integration-grid-item-selected .integration-grid-item-overlay, .integration-grid-item-selected:hover .integration-grid-item-overlay {
 	opacity: 0.33;
 	border: 1px solid #24282e;
 }
@@ -49,7 +61,7 @@
 	transition: opacity 0.125s ease-out;
 }
 
-.integration-grid-item:hover .integration-grid-item-image, .integration-grid-item-selected .integration-grid-item-image, .integration-grid-item-selected:hover .integration-grid-item-image {
+fieldset:not(:disabled) .integration-grid-item:hover .integration-grid-item-image, .integration-grid-item-selected .integration-grid-item-image, .integration-grid-item-selected:hover .integration-grid-item-image {
 	opacity: 1;
 }
 
@@ -68,6 +80,10 @@
 	font-size: 16px;
 	letter-spacing: -0.3px;
 	color: #c8e1fd;
+}
+
+fieldset:disabled .integration-grid-item-title {
+	color: #4b4b4b;
 }
 
 .integration-grid-item-selected-icon {

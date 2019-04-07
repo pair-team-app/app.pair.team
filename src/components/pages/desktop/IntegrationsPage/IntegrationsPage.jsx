@@ -41,6 +41,7 @@ const IntegrationsPageGrid = (props)=> {
 					<IntegrationGridItem
 						title={integration.title}
 						image={integration.filename}
+						enabled={integration.enabled}
 						selected={integration.selected}
 						inheritedClass="integrations-page-grid-item"
 						onClick={()=> props.onClick(integration)} />

@@ -26,7 +26,16 @@ import TutorialBubble from '../../../overlays/TutorialBubble';
 
 import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL } from './consts';
 import { drawCanvasSliceBorder, drawCanvasSliceMarchingAnts, drawCanvasSliceGuides } from './utils/canvas';
-import { fontSpecs, toAndroid, toBootstrap, toCSS, toGridHTML, toReactJS, toSpecs, toSwift } from './utils/code-generator.js';
+import { 
+	fontSpecs, 
+// 	toAndroid, 
+	toBootstrap, 
+	toCSS, 
+	toGridHTML, 
+	toReactJS, 
+	toSpecs, 
+// 	toSwift 
+} from './utils/code-generator.js';
 import { MOMENT_TIMESTAMP } from '../../../../consts/formats';
 import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../../consts/key-codes';
 import { DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PARTS_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL, LINTER_ENDPT_URL } from '../../../../consts/uris';

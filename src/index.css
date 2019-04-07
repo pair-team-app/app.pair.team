@@ -69,6 +69,12 @@ code {
   color: #c8e1fd;
 }
 
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
 form {
   width: 100%;
 }

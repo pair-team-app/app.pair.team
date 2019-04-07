@@ -67,16 +67,19 @@
 	margin: 8px -10px 0 -10px;
 }
 
-
-.profile-page-integrations-grid-item, .profile-page-integrations-grid-item:hover {
+.profile-page-integrations-grid-item {
 	width: 160px;
 	height: 200px;
 	margin: 0 20px 20px 0;
 	box-shadow: none;
+	pointer-events: none;
 	cursor: default;
 }
 
-
 .profile-page-integrations-grid-item .integration-grid-item-overlay {
 	background-color: #151619;
+}
+
+.profile-page-integrations-grid-item .integration-grid-item-selected-icon {
+	margin : 5px;
 }
