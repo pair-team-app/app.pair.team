@@ -145,18 +145,21 @@ class App extends Component {
 // 			console.log('|:|:|:|:|:|:|:|:|:|:|:|', getRouteParams(pathname));
 		}
 
+		if (deeplink !== prevProps.deeplink && deeplink && deeplink.uploadID !== 0) {
+			this.onAddUploadView(deeplink.uploadID);
+		}
+
 		if (profile) {
 			if (!prevProps.profile) {
 				this.props.fetchUserHistory({profile});
 
+				if (deeplink && deeplink.uploadID !== 0) {
+					this.onAddUploadView(deeplink.uploadID);
+				}
+
 				if (this.state.ranking !== 0) {
 					this.setState({ rating : 0 });
 				}
-			}
-
-
-			if (deeplink !== prevProps.deeplink && deeplink.uploadID !== 0) {
-				this.onAddUploadView(deeplink.uploadID);
 			}
 
 // 			console.log('[:::::::::::|:|:::::::::::] PAY CHECK [:::::::::::|:|:::::::::::]');
@@ -351,25 +354,20 @@ class App extends Component {
 		})).then((response)=> {
 			console.log('ADD_VIEW', response.data);
 
+			const { profile } = this.props;
+			if (profile) {
+				axios.post(API_ENDPT_URL, qs.stringify({
+					action    : 'ADD_HISTORY',
+					upload_id : uploadID,
+					user_id   : profile.id
+				})).then((response)=> {
+					console.log('ADD_HISTORY', response.data);
+					this.props.fetchUserHistory({profile});
+
+				}).catch((error)=> {
+				});
+			}
 		}).catch((error)=> {
-			console.log(error);
-
-			if (axios.isCancel(error)) {
-				console.log('Request canceled');
-			}
-
-			// request was made, server responded with a status code != 2xx
-			if (error.response) {
-				console.log(error.response.data, error.response.status, error.response.headers);
-
-			// request was made, but no response was received
-			} else if (error.request) {
-				console.log(error.request);
-
-			// something else happened that triggered an error
-			} else {
-				console.log('Error', error.message);
-			}
 		});
 	};
 

@@ -125,7 +125,7 @@
   "description": "",
   "url": "https://github.com/",
   "filename": "/images/integrations/github.png",
-  "enabled": true
+  "enabled": false
 }, {
   "id": 21,
   "type": "dev",
