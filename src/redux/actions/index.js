@@ -189,8 +189,8 @@ export function updateUserProfile(payload, force=true) {
 				action       : 'UPDATE_PROFILE',
 				user_id      : id,
 				filename     : avatar,
-				sources      : sources.join(','),
-				integrations : integrations.join(',')
+				sources      : (sources || []).join(','),
+				integrations : (integrations || []).join(',')
 			}))).then((response)=> {
 				console.log('UPDATE_PROFILE', response.data);
 
