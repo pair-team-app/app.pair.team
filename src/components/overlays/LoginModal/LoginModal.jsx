@@ -17,23 +17,45 @@ class LoginModal extends Component {
 		super(props);
 
 		this.state = {
-			email  : null,
-			upload : null
+			email    : null,
+			upload   : null,
+			outroURI : null
 		};
 	}
 
-	handleComplete = ()=> {
-// 		console.log('LoginModal.handleComplete()');
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('LoginModal.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
+		const { profile } = this.props;
+		if (!prevProps.profile && profile) {
+			this.setState({
+				outro    : true,
+				outroURI : (profile.sources.length === 0 || profile.integrations.length === 0) ? '/modal/integrations' : null
+			});
+		}
+	}
+
+	handleComplete = ()=> {
+		console.log('LoginModal.handleComplete()');
+
+		const { outroURI } = this.state;
 		this.setState({ outro : false }, ()=> {
+
+			this.props.onLoggedIn(this.props.profile);
 			const { redirectURI } = this.props;
 			if (redirectURI) {
 				this.props.onPage(redirectURI);
+
+			} else {
+				if (outroURI) {
+					if (outroURI.startsWith('/modal')) {
+						this.props.setRedirectURI(null);
+						this.props.onModal(`/${URLs.lastComponent(outroURI)}`);
+					}
+				}
 			}
 
-			setTimeout(()=> {
-				this.props.onComplete();
-			}, 333);
+			this.props.onComplete();
 		});
 	};
 
@@ -48,23 +70,32 @@ class LoginModal extends Component {
 	};
 
 	handleLoggedIn = (profile)=> {
-// 		console.log('LoginModal.handleLoggedIn()', profile, this.props);
+		console.log('LoginModal.handleLoggedIn()', profile, this.props);
 
 		trackEvent('user', 'login');
-		this.props.updateUserProfile(profile);
-		this.setState({ outro : true });
+		const { redirectURI } = this.props;
+		const { upload } = this.state;
+		if (redirectURI && upload) {
+			this.props.updateDeeplink({ uploadID : upload.id });
+		}
 	};
 
 	handlePage = (url)=> {
 		console.log('LoginModal.handlePage()', url);
-		this.setState({ outro : true }, ()=> {
-			this.props.setRedirectURI(url);
-		});
+		if (url.includes('/github-connect')) {
+			this.props.onModal(`/${URLs.lastComponent(url)}`);
+
+		} else {
+			this.setState({
+				outro    : true,
+				outroURI : url
+			});
+		}
 	};
 
 
 	render() {
-// 		console.log('LoginModal.render()', this.props, this.state);
+		console.log('LoginModal.render()', this.props, this.state);
 
 		const { deeplink } = this.props;
 		const { outro } = this.state;
@@ -111,6 +142,7 @@ const mapStateToProps = (state, ownProps)=> {
 	return ({
 		deeplink    : state.deeplink,
 		invite      : state.invite,
+		profile     : state.userProfile,
 		redirectURI : state.redirectURI
 	});
 };

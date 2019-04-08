@@ -50,7 +50,6 @@ class RegisterModal extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('RegisterModal.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
-
 		const { profile } = this.props;
 		if (!prevProps.profile && profile) {
 			this.setState({

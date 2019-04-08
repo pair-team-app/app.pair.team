@@ -130,6 +130,7 @@ class LoginForm extends Component {
 					<Row vertical="center">
 						{/*{(!window.location.href.includes('/login')) && (<button className="adjacent-button" onClick={this.props.onCancel}>Cancel</button>)}*/}
 						<button disabled={(email.length === 0 || !emailValid || !passwordValid)} type="submit" className="adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Login</button>
+						<button className="long-button aux-button adjacent-button" onClick={(event)=> { event.preventDefault(); trackEvent('button', 'github'); this.props.onPage('/modal/github-connect'); }}>Sync w/ GitHub</button>
 						<div className="page-link page-link-form" onClick={()=> {trackEvent('button', 'forgot-password'); this.props.onPage('/recover')}}>Forgot Password?</div>
 					</Row>
 				</form>

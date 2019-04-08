@@ -291,6 +291,20 @@ class App extends Component {
 		}
 	};
 
+	handleLoggedIn = (profile)=> {
+		console.log('App.handleLoggedIn()', profile);
+		this.props.updateUserProfile(profile, false);
+		this.props.updateUserProfile(profile);
+		if (profile.sources.length === 0 || profile.integrations.length === 0) {
+			trackEvent('user', 'sign-up');
+			setTimeout(()=> {
+				this.onShowModal('/integrations');
+			}, 1250);
+
+		} else {
+		}
+	};
+
 	handleLogout = ()=> {
 		cookie.save('user_id', '0', { path : '/' });
 		trackEvent('user', 'sign-out');
@@ -359,6 +373,22 @@ class App extends Component {
 
 		this.onHideModal('/stripe');
 		this.props.fetchUserProfile();
+	};
+
+	handleGitHubAuthSynced = (profile, register=true)=> {
+		console.log('App.handleGitHubAuthSynced()', profile, register);
+
+		this.props.updateUserProfile(profile, false);
+		this.props.updateUserProfile(profile);
+		if (profile.sources.length === 0 || profile.integrations.length === 0) {
+			trackEvent('user', 'sign-up');
+			setTimeout(()=> {
+				this.onShowModal('/integrations');
+			}, 750);
+
+		} else {
+
+		}
 	};
 
 	handleRegistered = (profile, github=false)=> {
@@ -451,7 +481,7 @@ class App extends Component {
 					this.authInterval = null;
 					this.githubWindow.close();
 					this.githubWindow = null;
-					this.handleRegistered(user, true);
+					this.handleGitHubAuthSynced(user);
 				}
 			}).catch((error)=> {
 			});
@@ -571,6 +601,7 @@ class App extends Component {
 					    <Route exact path="/invite-team"><Redirect to="/" /></Route>
 					    <Route exact path="/new"><Redirect to="/new/inspect" /></Route>
 					    {(!isUserLoggedIn()) && (<Route exact path="/profile"><Redirect to="/register" /></Route>)}
+					    <Route exact path="/logout" render={(props)=> (profile) ? this.handleLogout() : null}><Redirect to="/" /></Route>
 
 					    <Route exact path="/:section(inspect|parts|present)" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onGitHub={()=> this.onShowModal('/github-connect')} onPopup={this.handlePopup} />} />
 					    <Route exact path="/new/:type(inspect|parts|present)" render={(props)=> <UploadPage { ...props } onPage={this.handlePage} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onGitHub={()=> this.onShowModal('/github-connect')} onStripeModal={()=> this.onShowModal('/stripe')} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
@@ -628,9 +659,11 @@ class App extends Component {
 							  {(loginModal) && (<LoginModal
 								  inviteID={null}
 								  outro={(profile !== null)}
+								  onModal={this.onShowModal}
 								  onPage={this.handlePage}
 								  onPopup={this.handlePopup}
 								  onComplete={()=> this.onHideModal('/login')}
+								  onLoggedIn={this.handleLoggedIn}
 							  />)}
 
 							  {(registerModal) && (<RegisterModal
