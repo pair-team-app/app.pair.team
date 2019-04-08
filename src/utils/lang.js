@@ -214,7 +214,7 @@ export const Objects = {
 	length     : (obj)=> (Object.keys(obj).length),
 	reduceVals : (obj, init=0)=> (Object.values(obj).reduce((acc, val)=> ((acc << 0) + (val << 0)), init)),
 	renameKey  : (obj, oldKey, newKey, overwrite=false)=> {
-		if (Objects.hasKey(obj, oldKey) || (overwrite && !Objects.hasKey(obj, newKey))) {
+		if (obj && (Objects.hasKey(obj, oldKey) || (overwrite && !Objects.hasKey(obj, newKey)))) {
 			delete Object.assign(obj, { [newKey] : obj[oldKey] })[oldKey];
 		}
 	},

@@ -11,6 +11,7 @@ import {
 	SET_REDIRECT_URI,
 	USER_PROFILE_ERROR,
 	UPDATE_DEEPLINK,
+// 	USER_PROFILE_CACHED,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED,
 	SET_ATOM_EXTENSION,
@@ -146,16 +147,43 @@ export function setRedirectURI(payload) {
 	});
 }
 
-export function updateUserProfile(payload) {
-	logFormat('updateUserProfile()', payload);
+export function updateUserProfile(payload, force=true) {
+	logFormat('updateUserProfile()', payload, force);
+
+	if (payload) {
+		Objects.renameKey(payload, 'github_auth', 'github');
+		if (payload.github) {
+			Objects.renameKey(payload.github, 'access_token', 'accessToken');
+		}
+
+		const { id, type, github } = payload;
+		payload = {
+			...payload,
+			id     : id << 0,
+			github : (github) ? {
+				...github,
+				id : github.id << 0
+			} : github,
+			paid   : type.includes('paid')
+		};
+	}
+
+
+	if (!force) {
+		return((dispatch)=> {
+			dispatch({ payload,
+				type : USER_PROFILE_UPDATED
+			});
+		});
+	}
 
 	return ((dispatch)=> {
 		if (payload) {
 			const { id, avatar, sources, integrations } = payload;
 
-			if (typeof cookie.load('user_id') === 'undefined') {
-				cookie.save('user_id', id << 0, { path : '/' });
-			}
+// 			if (typeof cookie.load('user_id') === 'undefined' || ((cookie.load('user_id') << 0) !== id)) {
+// 				cookie.save('user_id', id << 0, { path : '/' });
+// 			}
 
 			axios.post(API_ENDPT_URL, qs.stringify(Object.assign({}, payload, {
 				action       : 'UPDATE_PROFILE',
@@ -167,8 +195,13 @@ export function updateUserProfile(payload) {
 				console.log('UPDATE_PROFILE', response.data);
 
 				const status = parseInt(response.data.status, 16);
-				const { id, username, email, type } = response.data.user;
 
+				Objects.renameKey(response.data.user, 'github_auth', 'github');
+				if (response.data.user.github) {
+					Objects.renameKey(response.data.user.github, 'access_token', 'accessToken');
+				}
+
+				const { id, username, email, type, github } = response.data.user;
 				dispatch({
 					type    : (status === 0x00) ? USER_PROFILE_UPDATED : USER_PROFILE_ERROR,
 					payload : { ...response.data.user,
@@ -176,6 +209,9 @@ export function updateUserProfile(payload) {
 						id       : id << 0,
 						username : (Bits.contains(status, 0x01)) ? 'Username Already in Use' : username,
 						email    : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email,
+						github : (github) ? { ...github,
+							id : github.id << 0
+						} : github,
 						paid     : type.includes('paid')
 					}
 				});
@@ -183,6 +219,8 @@ export function updateUserProfile(payload) {
 			});
 
 		} else {
+			cookie.save('user_id', '0', { path : '/' });
+
 			dispatch({
 				type    : USER_PROFILE_UPDATED,
 				payload : null

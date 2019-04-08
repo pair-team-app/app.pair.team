@@ -11,6 +11,7 @@ import {
 	SET_ATOM_EXTENSION,
 	SET_INVITE } from '../../consts/action-types';
 import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
+import {Objects} from "../../utils/lang";
 
 
 const initialState = {
@@ -87,10 +88,28 @@ function rootReducer(state=initialState, action) {
 			}));
 
 		case USER_PROFILE_UPDATED:
-			return (Object.assign({}, state, {
-				userProfile : action.payload
-// 				userProfile : Object.assign({}, state.userProfile, action.payload)
-			}));
+			if (action.payload) {
+				Objects.renameKey(action.payload, 'github_auth', 'github');
+				if (action.payload.github) {
+					Objects.renameKey(action.payload.github, 'access_token', 'accessToken');
+				}
+
+				const { id, type, github } = action.payload;
+				return (Object.assign({}, state, {
+					userProfile : { ...action.payload,
+						id     : id << 0,
+						github : (github) ? { ...github,
+							id : github.id << 0
+						} : github,
+						paid   : type.includes('paid')
+					}
+				}));
+
+			} else {
+				return (Object.assign({}, state, {
+					userProfile : action.payload
+				}));
+			}
 
 		case CONVERTED_DEEPLINK:
 			return (Object.assign({}, state, {
@@ -103,6 +122,21 @@ function rootReducer(state=initialState, action) {
 			}));
 	}
 }
+
+/*
+
+const { id, type, github } = payload;
+		payload = {
+			...payload,
+			id     : id << 0,
+			github : (github) ? {
+				...github,
+				id : github.id << 0
+			} : github,
+			paid   : type.includes('paid')
+		};
+
+		*/
 
 
 export default rootReducer;

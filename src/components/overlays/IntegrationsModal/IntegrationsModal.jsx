@@ -46,7 +46,8 @@ class IntegrationsModal extends Component {
 			sources    : [],
 			devs       : [],
 			outro      : false,
-			submitting : false
+			submitted  : false,
+			profile    : null
 		};
 	}
 
@@ -80,12 +81,13 @@ class IntegrationsModal extends Component {
 		}
 	};
 
-	handleComplete = (submitted)=> {
-// 		console.log('IntegrationsModal.handleComplete()', submitted);
+	handleComplete = ()=> {
+// 		console.log('IntegrationsModal.handleComplete()');
 
+		const { submitted, profile } = this.state;
 		this.setState({ outro : false }, ()=> {
 			if (submitted) {
-				this.props.onSubmitted();
+				this.props.onSubmitted(profile);
 
 			} else {
 				this.props.onComplete();
@@ -113,7 +115,7 @@ class IntegrationsModal extends Component {
 		const { profile } = this.props;
 		const { sources, devs } = this.state;
 
-		this.setState({ submitting : true }, ()=> {
+		this.setState({ submitted : true }, ()=> {
 			axios.post(API_ENDPT_URL, qs.stringify({
 				action       : 'UPDATE_INTEGRATIONS',
 				user_id      : profile.id,
@@ -123,8 +125,10 @@ class IntegrationsModal extends Component {
 				console.log('UPDATE_INTEGRATIONS', response.data);
 
 				trackEvent('integrations', 'success');
-				this.setState({ submitting : false });
-				this.handleComplete(true);
+				this.setState({
+					profile : response.data.user,
+					outro   : true
+				});
 			}).catch((error)=> {
 			});
 		});

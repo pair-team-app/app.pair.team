@@ -36,7 +36,7 @@ import UploadPage from '../pages/desktop/UploadPage';
 import BaseMobilePage from '../pages/mobile/BaseMobilePage';
 
 
-import { EXTENSION_PUBLIC_HOST, API_ENDPT_URL } from '../../consts/uris';
+import { EXTENSION_PUBLIC_HOST, API_ENDPT_URL, GITHUB_APP_AUTH } from '../../consts/uris';
 import {
 	appendHomeArtboards,
 	fetchUserHistory,
@@ -54,7 +54,7 @@ import {
 	isProfilePage,
 	isUserLoggedIn
 } from '../../utils/funcs';
-import { Browsers, URLs } from '../../utils/lang';
+import { Browsers, DateTimes, URLs } from '../../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 import adBannerPanel from '../../assets/json/ad-banner-panel';
 
@@ -76,7 +76,7 @@ const mapDispatchToProps = (dispatch)=> {
 		fetchUserHistory   : (payload)=> dispatch(fetchUserHistory(payload)),
 		fetchUserProfile   : ()=> dispatch(fetchUserProfile()),
 		updateDeeplink     : (navIDs)=> dispatch(updateDeeplink(navIDs)),
-		updateUserProfile  : (profile)=> dispatch(updateUserProfile(profile)),
+		updateUserProfile  : (profile, force=true)=> dispatch(updateUserProfile(profile, force)),
 		setAtomExtension   : (installed)=> dispatch(setAtomExtension(installed))
 	});
 };
@@ -101,8 +101,12 @@ class App extends Component {
 			integrationsModal : false,
 			configUploadModal : false,
 			payDialog         : false,
-			stripeModal       : false
+			stripeModal       : false,
+			authID            : 0
 		};
+
+		this.githubWindow = null;
+		this.authInterval = null;
 
 
 		this.onCookieSetup('tutorial');
@@ -190,6 +194,18 @@ class App extends Component {
 	componentWillUnmount() {
 		console.log('App.componentWillUnmount()');
 
+		if (this.authInterval) {
+			clearInterval(this.authInterval);
+		}
+
+		if (this.githubWindow) {
+			this.githubWindow.close();
+		}
+
+		this.authInterval = null;
+		this.githubWindow = null;
+
+
 		window.onpopstate = null;
 		window.removeEventListener('resize', this.handleResize);
 	}
@@ -227,12 +243,42 @@ class App extends Component {
 		window.open(url);
 	};
 
-	handleIntegrationsSubmitted = ()=> {
-// 		console.log('App.handleIntegrationsSubmitted()');
+	handleGithubAuth = ()=> {
+		console.log('App.handleGithubAuth()');
+
+		const code = DateTimes.epoch(true);
+		axios.post(API_ENDPT_URL, qs.stringify({ code,
+			action : 'GITHUB_AUTH'
+		})).then((response) => {
+			console.log('GITHUB_AUTH', response.data);
+			const authID = response.data.auth_id << 0;
+			this.setState({ authID }, ()=> {
+				if (!this.githubWindow || this.githubWindow.closed || this.githubWindow.closed === undefined) {
+					clearInterval(this.authInterval);
+					this.authInterval = null;
+					this.githubWindow = null;
+				}
+
+				const size = {
+					width  : Math.min(460, window.screen.width - 20),
+					height : Math.min(820, window.screen.height - 25)
+				};
+
+				this.githubWindow = window.open(GITHUB_APP_AUTH.replace('__{EPOCH}__', code), '', `titlebar=no, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${size.width}, height=${size.height}, top=${((((window.screen.height) - size.height) * 0.5) << 0)}, left=${((((window.screen.width) - size.width) * 0.5) << 0)}`);
+				this.authInterval = setInterval(()=> {
+					this.onAuthInterval();
+				}, 1000);
+			});
+		}).catch((error)=> {
+		});
+	};
+
+	handleIntegrationsSubmitted = (profile)=> {
+		console.log('App.handleIntegrationsSubmitted()', profile);
 
 		this.onHideModal('/integrations');
-		this.props.fetchUserProfile();
-
+		this.props.updateUserProfile(profile, false);
+		this.props.updateUserProfile(profile);
 		if (isProfilePage()) {
 			this.handlePopup({
 				type    : POPUP_TYPE_OK,
@@ -241,9 +287,7 @@ class App extends Component {
 			});
 
 		} else {
-			setTimeout(()=> {
-				this.onShowModal('/config-upload');
-			}, 1250);
+			this.onShowModal('/config-upload');
 		}
 	};
 
@@ -317,12 +361,19 @@ class App extends Component {
 		this.props.fetchUserProfile();
 	};
 
-	handleRegistered = ()=> {
-		console.log('App.handleRegistered()');
+	handleRegistered = (profile, github=false)=> {
+		console.log('App.handleRegistered()', profile, github);
+		this.props.updateUserProfile(profile, false);
+		this.props.updateUserProfile(profile);
+		if (profile.sources.length === 0 || profile.integrations.length === 0) {
+			trackEvent('user', 'sign-up');
+			setTimeout(()=> {
+				this.onShowModal('/integrations');
+			}, 1250);
 
-		setTimeout(()=> {
-			this.onShowModal('/integrations');
-		}, 1250);
+		} else {
+
+		}
 	};
 
 	handleResize = (event)=> {
@@ -369,6 +420,42 @@ class App extends Component {
 			}
 		}).catch((error)=> {
 		});
+	};
+
+	onAuthInterval = ()=> {
+// 		console.log('App.onAuthInterval()');
+
+		if (!this.githubWindow || this.githubWindow.closed || this.githubWindow.closed === undefined) {
+
+			if (this.authInterval) {
+				clearInterval(this.authInterval);
+			}
+			if (this.githubWindow) {
+				this.githubWindow.close();
+			}
+
+			this.authInterval = null;
+			this.githubWindow = null;
+
+		} else {
+			const { authID } = this.state;
+			axios.post(API_ENDPT_URL, qs.stringify({
+				action  : 'GITHUB_AUTH_CHECK',
+				auth_id : authID
+			})).then((response) => {
+				console.log('GITHUB_AUTH_CHECK', response.data);
+				const { user } = response.data;
+				if (user) {
+					trackEvent('github', 'success');
+					clearInterval(this.authInterval);
+					this.authInterval = null;
+					this.githubWindow.close();
+					this.githubWindow = null;
+					this.handleRegistered(user, true);
+				}
+			}).catch((error)=> {
+			});
+		}
 	};
 
 	onCookieSetup = (key)=> {
@@ -424,8 +511,8 @@ class App extends Component {
 			configUploadModal : false,
 			githubModal       : false,
 			integrationsModal : false,
-			loginModal        : false,
-			registerModal     : false,
+			loginModal        : (this.state.loginModal && url === '/github-connect'),
+			registerModal     : (this.state.registerModal && url === '/github-connect'),
 			stripeModal       : false
 		});
 
@@ -433,10 +520,12 @@ class App extends Component {
 			this.setState({ configUploadModal : true });
 
 		} else if (url === '/github-connect') {
-			this.setState({
-				registerModal : true,
-				githubModal   : true
-			});
+			this.handleGithubAuth();
+
+// 			this.setState({
+// 				registerModal : true,
+// 				githubModal   : true
+// 			});
 
 		} else if (url === '/integrations') {
 			this.setState({ integrationsModal : true });
@@ -462,7 +551,7 @@ class App extends Component {
 		const { profile } = this.props;
 		const { pathname } = this.props.location;
   	const { rating, allowMobile, processing, popup } = this.state;
-  	const { integrationsModal, loginModal, registerModal, githubModal, configUploadModal, stripeModal, payDialog } = this.state;
+  	const { integrationsModal, loginModal, registerModal, configUploadModal, stripeModal, payDialog } = this.state;
 //   	const processing = true;
 
   	return ((!Browsers.isMobile.ANY() || !allowMobile)
@@ -538,13 +627,15 @@ class App extends Component {
 
 							  {(loginModal) && (<LoginModal
 								  inviteID={null}
+								  outro={(profile !== null)}
 								  onPage={this.handlePage}
 								  onPopup={this.handlePopup}
 								  onComplete={()=> this.onHideModal('/login')}
 							  />)}
 
 							  {(registerModal) && (<RegisterModal
-								  openAuth={githubModal}
+								  inviteID={null}
+								  outro={(profile !== null)}
 								  onModal={this.onShowModal}
 								  onPage={this.handlePage}
 								  onPopup={this.handlePopup}

@@ -1,7 +1,14 @@
 
 import cookie from 'react-cookies';
 
-import { CONVERTED_DEEPLINK, UPDATE_DEEPLINK, USER_PROFILE_UPDATED } from '../../consts/action-types';
+import {
+	CONVERTED_DEEPLINK,
+	UPDATE_DEEPLINK,
+
+	USER_PROFILE_CACHED,
+	USER_PROFILE_UPDATED
+} from '../../consts/action-types';
+
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 
 
@@ -19,7 +26,8 @@ export function onMiddleware({ dispatch }) {
 			logFormat(action);
 
 			const { type, payload } = action;
-			if (type === USER_PROFILE_UPDATED) {
+			if (type === USER_PROFILE_CACHED) {
+			} else if (type === USER_PROFILE_UPDATED) {
 				cookie.save('user_id', (payload) ? payload.id : '0', { path : '/' });
 
 			} else if (type === UPDATE_DEEPLINK) {
