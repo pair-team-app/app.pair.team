@@ -476,3 +476,6 @@ class ProfilePage extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
+
+
+// TODO: Add github toggle to profile

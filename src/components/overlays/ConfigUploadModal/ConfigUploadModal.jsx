@@ -14,6 +14,8 @@ import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { Files, URLs } from './../../../utils/lang';
 import { trackEvent } from './../../../utils/tracking';
 import allIntegrations from './../../../assets/json/integrations';
+import {sendToSlack} from "../../../utils/funcs";
+import {POPUP_TYPE_ERROR} from "../PopupNotification";
 
 
 const ConfigIntegrationsList = (props)=> {
@@ -100,12 +102,13 @@ class ConfigUploadModal extends Component {
 	};
 
 	handleFileDrop = (integration, files)=> {
-// 		console.log('ConfigUploadModal.handleFileDrop()', integration, files);
+		console.log('ConfigUploadModal.handleFileDrop()', integration, files);
 
 		trackEvent('button', 'config');
 		if (files.length > 0) {
 			const file = files.pop();
-			if (Files.extension(file.name) === 'json') {
+
+			if (file.name.match(new RegExp('^.*[a-z]+int.*(rc|json).*$', 'i'))) {
 				const config = {
 					headers : {
 						'Content-Type' : 'multipart/form-data',
@@ -127,6 +130,14 @@ class ConfigUploadModal extends Component {
 					.then((response)=> {
 						console.log('LINTER upload.php', response.data);
 					}).catch((error)=> {
+				});
+
+			} else {
+// 				sendToSlack(`*[\`${id}\`]* *${email}* uploaded incompatible file "_${file.name}_"`);
+				this.props.onPopup({
+					type     : POPUP_TYPE_ERROR,
+					content  : 'Not a valid linter ruleset file, must be json or rc type.',
+					duration : 2500
 				});
 			}
 		}
@@ -201,3 +212,6 @@ const mapStateToProps = (state, ownProps)=> {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConfigUploadModal);
+
+
+// TODO: Match linter config upload filenames to /^.*eslint.*(rc)?.*(json)?$/ //

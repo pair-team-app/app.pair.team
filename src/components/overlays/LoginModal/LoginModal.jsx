@@ -77,7 +77,9 @@ class LoginModal extends Component {
 		const { upload } = this.state;
 		if (redirectURI && upload) {
 			this.props.updateDeeplink({ uploadID : upload.id });
+		} else {
 		}
+		this.props.onLoggedIn(profile);
 	};
 
 	handlePage = (url)=> {
