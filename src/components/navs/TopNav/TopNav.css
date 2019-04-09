@@ -13,7 +13,7 @@
 
 .top-nav-column {
 	display: table-cell;
-	width: 50%;
+	width: fit-content;
 	height: 64px;
 	vertical-align: middle;
 }

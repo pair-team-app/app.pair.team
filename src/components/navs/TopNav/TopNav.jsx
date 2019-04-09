@@ -29,6 +29,7 @@ const mapDispatchToProps = (dispatch)=> {
 };
 
 
+//--# window.width >= 700px #--//
 const TopNavDesktop = (props)=> {
 // 	console.log('TopNav.TopNavDesktop()', props);
 
@@ -87,6 +88,7 @@ const TopNavMobile = (props)=> {
 };
 
 
+// TODO: fix flexbox column sizes (should be (1:5)
 class TopNav extends Component {
 	constructor(props) {
 		super(props);
