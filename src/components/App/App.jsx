@@ -728,5 +728,8 @@ class App extends Component {
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
 
-
-// TODO: Make recovery modal from existing page+form //
+/**
+ * TODO: *\\_
+ *  * Make recovery modal from existing page+form *
+ *  * ≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈/ *  *
+ */

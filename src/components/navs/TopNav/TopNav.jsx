@@ -88,7 +88,6 @@ const TopNavMobile = (props)=> {
 };
 
 
-// TODO: fix flexbox column sizes (should be (1:5)
 class TopNav extends Component {
 	constructor(props) {
 		super(props);

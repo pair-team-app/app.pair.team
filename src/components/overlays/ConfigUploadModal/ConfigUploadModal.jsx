@@ -212,6 +212,3 @@ const mapStateToProps = (state, ownProps)=> {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConfigUploadModal);
-
-
-// TODO: Match linter config upload filenames to /^.*eslint.*(rc)?.*(json)?$/ //
