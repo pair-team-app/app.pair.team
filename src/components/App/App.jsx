@@ -54,8 +54,9 @@ import {
 	isProfilePage,
 	isUserLoggedIn
 } from '../../utils/funcs';
-import { Browsers, DateTimes, URLs } from '../../utils/lang';
+import {Browsers, DateTimes, Strings, URLs} from '../../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
+import freeAccount from '../../assets/json/free-account';
 import adBannerPanel from '../../assets/json/ad-banner-panel';
 
 
@@ -176,7 +177,7 @@ class App extends Component {
 // 			console.log('[:::::::::::|:|:::::::::::] =-=-=-=-= [:::::::::::|:|:::::::::::]');
 
 			//console.log('||||||||||||||||', payDialog, stripeModal, profile.paid, artboards.length, isHomePage(false), prevProps.deeplink.uploadID, deeplink.uploadID, isInspectorPage());
-			if ((!payDialog && !stripeModal) && (!profile.paid && artboards.length > 3) && ((isHomePage(false) && prevProps.deeplink.uploadID !== deeplink.uploadID) || (isInspectorPage() && prevProps.uploadID !== deeplink.uploadID))) {
+			if ((!payDialog && !stripeModal) && (!profile.paid && artboards.length > freeAccount.upload_views) && ((isHomePage(false) && prevProps.deeplink.uploadID !== deeplink.uploadID) || (isInspectorPage() && prevProps.uploadID !== deeplink.uploadID))) {
 // 			if ((!payDialog && !stripeModal) && (!profile.paid && artboards.length > 3) && ((isInspectorPage() && prevProps.uploadID !== deeplink.uploadID))) {
 				this.setState({ payDialog : true });
 			}
@@ -215,25 +216,16 @@ class App extends Component {
 	handleArtboardClicked = (artboard)=> {
 // 		console.log('App.handleArtboardClicked()', artboard);
 
-		const { profile, artboards } = this.props;
-
 		const { uploadID, pageID } = artboard;
 		const artboardID = artboard.id;
 
-		if (!profile.paid && artboards.length > 3) {
-// 			this.props.updateDeeplink(null);
-// 			this.setState({ payDialog : true });
+		this.handlePage(buildInspectorPath({
+			id    : uploadID,
+			title : artboard.title
+			}, URLs.firstComponent()
+		));
 
-		} else {
-			this.handlePage(buildInspectorPath({
-				id    : uploadID,
-				title : artboard.title
-				}, URLs.firstComponent()
-			));
-
-			Browsers.scrollOrigin(wrapper.current);
-		}
-
+		Browsers.scrollOrigin(wrapper.current);
 		this.props.updateDeeplink({ uploadID, pageID, artboardID });
 	};
 
@@ -681,7 +673,7 @@ class App extends Component {
 
 							  {(payDialog) && (<AlertDialog
 								  title="Limited Account"
-								  message="You must upgrade to an unlimited account to view more than 3 projects."
+								  message={`You must upgrade to an unlimited account to view more than ${freeAccount.upload_views} ${Strings.pluralize('project', freeAccount.upload_views)}.`}
 								  onComplete={this.handlePaidAlert}
 							  />)}
 
