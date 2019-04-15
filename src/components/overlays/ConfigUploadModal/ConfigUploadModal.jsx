@@ -108,7 +108,7 @@ class ConfigUploadModal extends Component {
 		if (files.length > 0) {
 			const file = files.pop();
 
-			if (file.name.match(new RegExp('^.*[a-z]+int.*(rc|json).*$', 'i'))) {
+			if (file.name.match(new RegExp('^.*[a-z]+int.*(rc|json|ya?ml).*$', 'i'))) {
 				const config = {
 					headers : {
 						'Content-Type' : 'multipart/form-data',
@@ -154,7 +154,6 @@ class ConfigUploadModal extends Component {
 	handleSubmit = ()=> {
 // 		console.log('ConfigUploadModal.handleSubmit()');
 		trackEvent('button', 'submit');
-
 		this.setState({ outro : true });
 	};
 

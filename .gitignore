@@ -39,3 +39,4 @@ npm-debug.log*
 **/vendor/**/examples
 **/vendor/**/LICENSE
 
+/.eslintrc.json
