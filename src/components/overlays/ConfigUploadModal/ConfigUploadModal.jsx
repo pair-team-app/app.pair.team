@@ -11,11 +11,10 @@ import { Column, Row } from 'simple-flexbox';
 import BaseOverlay from '../BaseOverlay';
 import { LINTER_UPLOAD_URL } from './../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
-import { Files, URLs } from './../../../utils/lang';
+import { URLs } from './../../../utils/lang';
 import { trackEvent } from './../../../utils/tracking';
 import allIntegrations from './../../../assets/json/integrations';
-import {sendToSlack} from "../../../utils/funcs";
-import {POPUP_TYPE_ERROR} from "../PopupNotification";
+import { POPUP_TYPE_ERROR } from '../PopupNotification';
 
 
 const ConfigIntegrationsList = (props)=> {

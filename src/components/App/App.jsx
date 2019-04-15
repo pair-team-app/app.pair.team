@@ -177,6 +177,7 @@ class App extends Component {
 
 			//console.log('||||||||||||||||', payDialog, stripeModal, profile.paid, artboards.length, isHomePage(false), prevProps.deeplink.uploadID, deeplink.uploadID, isInspectorPage());
 			if ((!payDialog && !stripeModal) && (!profile.paid && artboards.length > 3) && ((isHomePage(false) && prevProps.deeplink.uploadID !== deeplink.uploadID) || (isInspectorPage() && prevProps.uploadID !== deeplink.uploadID))) {
+// 			if ((!payDialog && !stripeModal) && (!profile.paid && artboards.length > 3) && ((isInspectorPage() && prevProps.uploadID !== deeplink.uploadID))) {
 				this.setState({ payDialog : true });
 			}
 
@@ -356,18 +357,6 @@ class App extends Component {
 		this.setState({ processing });
 	};
 
-	handlePurchaseCancel = ()=> {
-// 		console.log('App.handlePurchaseCancel()');
-
-		if (isInspectorPage()) {
-			this.handlePage('');
-		}
-
-		setTimeout(()=> {
-			this.onHideModal('/stripe');
-		}, (isInspectorPage()) ? 666 : 0);
-	};
-
 	handlePurchaseSubmitted = (purchase)=> {
 // 		console.log('App.handlePurchaseSubmitted()', purchase);
 
@@ -527,10 +516,22 @@ class App extends Component {
 			this.setState({ registerModal : false });
 
 		} else if (url === '/stripe') {
-			this.setState({
-				payDialog   : false,
-				stripeModal : false
-			});
+			if (isInspectorPage()) {
+				this.handlePage('');
+
+				setTimeout(()=> {
+					this.setState({
+						payDialog   : false,
+						stripeModal : false
+					});
+				}, 1250);
+
+			} else {
+				this.setState({
+					payDialog   : false,
+					stripeModal : false
+				});
+			}
 		}
 	};
 
@@ -551,11 +552,6 @@ class App extends Component {
 
 		} else if (url === '/github-connect') {
 			this.handleGithubAuth();
-
-// 			this.setState({
-// 				registerModal : true,
-// 				githubModal   : true
-// 			});
 
 		} else if (url === '/integrations') {
 			this.setState({ integrationsModal : true });
