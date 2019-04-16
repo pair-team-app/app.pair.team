@@ -30,7 +30,7 @@ import PrivacyPage from '../pages/desktop/PrivacyPage';
 import RateThisPage from '../pages/desktop/RateThisPage';
 import RecoverPage from '../pages/desktop/RecoverPage';
 // import RegisterPage from '../pages/desktop/RegisterPage';
-// import Status404Page from '../pages/desktop/Status404Page';
+import Status404Page from '../pages/desktop/Status404Page';
 import TermsPage from '../pages/desktop/TermsPage';
 import UploadPage from '../pages/desktop/UploadPage';
 import BaseMobilePage from '../pages/mobile/BaseMobilePage';
@@ -54,7 +54,7 @@ import {
 	isProfilePage,
 	isUserLoggedIn
 } from '../../utils/funcs';
-import {Browsers, DateTimes, Strings, URLs} from '../../utils/lang';
+import { Browsers, DateTimes, Strings, URLs } from '../../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 import freeAccount from '../../assets/json/free-account';
 import adBannerPanel from '../../assets/json/ad-banner-panel';
@@ -585,31 +585,29 @@ class App extends Component {
 
 			    <div className="content-wrapper" ref={wrapper}>
 				    <Switch>
-					    <Route exact path="/"><Redirect to="/inspect" /></Route>
 					    <Route exact path="/invite-team"><Redirect to="/" /></Route>
+					    <Route exact path="/"><Redirect to="/inspect" /></Route>
+					    {(!isUserLoggedIn()) && (<Route exact path="/profile"><Redirect to="/" /></Route>)}
+					    <Route exact path="/logout" render={()=> (profile) ? this.handleLogout() : null} />
+
+					    <Route exact path="/:section(inspect|parts|present)" render={()=> <HomePage onArtboardClicked={this.handleArtboardClicked} onModal={this.onShowModal} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/new"><Redirect to="/new/inspect" /></Route>
-					    {(!isUserLoggedIn()) && (<Route exact path="/profile"><Redirect to="/register" /></Route>)}
-					    <Route exact path="/logout" render={(props)=> (profile) ? this.handleLogout() : null}><Redirect to="/" /></Route>
+					    <Route exact path="/new/:type(inspect|parts|present)" render={(props)=> <UploadPage { ...props } onProcessing={this.handleProcessing} onRegistered={this.handleRegistered} onScrollOrigin={this.handleScrollOrigin} onModal={this.onShowModal} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
-					    <Route exact path="/:section(inspect|parts|present)" render={()=> <HomePage onPage={this.handlePage} onArtboardClicked={this.handleArtboardClicked} onGitHub={()=> this.onShowModal('/github-connect')} onPopup={this.handlePopup} />} />
-					    <Route exact path="/new/:type(inspect|parts|present)" render={(props)=> <UploadPage { ...props } onPage={this.handlePage} onProcessing={this.handleProcessing} onScrollOrigin={this.handleScrollOrigin} onGitHub={()=> this.onShowModal('/github-connect')} onStripeModal={()=> this.onShowModal('/stripe')} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />
+					    <Route exact path="/:section(inspect|parts|present)/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onModal={this.onShowModal} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
-					    {/*<Route path="/login/:inviteID?" render={(props)=> <LoginPage { ...props } onPage={this.handlePage} />} onPopup={this.handlePopup} />*/}
-					    {/*<Route path="/register/:inviteID?" render={(props)=> <RegisterPage { ...props } onPage={this.handlePage} onRegistered={this.handleRegistered} onPopup={this.handlePopup} />} />*/}
-					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-
-					    <Route exact path="/:section(inspect|parts|present)/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onPage={this.handlePage} onModal={this.onShowModal} onPopup={this.handlePopup} />} />
-					    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onPage={this.handlePage} onStripeModal={()=> this.onShowModal('/stripe')} onIntegrations={()=> this.onShowModal('/integrations')} onPopup={this.handlePopup} />} />
-
+					    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onModal={this.onShowModal} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />
+					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
 					    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
 					    <Route exact path="/terms" render={()=> <TermsPage />} />
 					    {/*<Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />*/}
 
 					    {/*<Route render={()=> <Status404Page onPage={this.handlePage} />} />*/}
-					    <Route><Redirect to="/" /></Route>
+					    <Route><Status404Page onPage={this.handlePage} /></Route>
+					    {/*<Route><Redirect to="/" /></Route>*/}
 				    </Switch>
 
 				    {(!isInspectorPage()) && (<AdvertPanel

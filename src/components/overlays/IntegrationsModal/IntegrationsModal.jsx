@@ -20,7 +20,7 @@ const IntegrationsModalGrid = (props)=> {
 
 	const { integrations } = props;
 	return (<div className="integrations-modal-grid">
-		<Row horizontal="center" className="integrations-modal-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
+		<Row wrap={true} horizontal="center" className="integrations-modal-grid-item-wrapper">
 			{integrations.map((integration, i) => {
 				return (<Column key={i}>
 					<IntegrationGridItem

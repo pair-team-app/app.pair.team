@@ -7,7 +7,7 @@ import Dropzone from 'react-dropzone';
 import FontAwesome from 'react-fontawesome';
 import ImageLoader from 'react-loading-image';
 import { connect } from 'react-redux';
-import {Column, Row} from 'simple-flexbox';
+import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../forms/InputField/InputField';
@@ -126,7 +126,7 @@ const ProfilePageIntegrationsGrid = (props)=> {
 	const { title, items } = props;
 	return (<div className="profile-page-integrations-grid">
 		<h4>{title}</h4>
-		<Row horizontal="start" className="profile-page-integrations-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
+		<Row wrap={true} horizontal="start" className="profile-page-integrations-grid-item-wrapper">
 			{items.map((item, i) => {
 				return (<Column key={i}>
 					<IntegrationGridItem
@@ -218,7 +218,7 @@ class ProfilePage extends Component {
 			this.setState({ confirmDialog : true });
 
 		} else {
-			this.props.onStripeModal();
+			this.props.onModal('/stripe');
 		}
 	};
 
@@ -462,7 +462,7 @@ class ProfilePage extends Component {
 					title="Design Tools & Frameworks Integrations"
 					items={integrations}
 					profile={profile}
-					onClick={this.props.onIntegrations}
+					onClick={()=> this.props.onModal('/integrations')}
 				/>)}
 
 				{(confirmDialog) && (<ConfirmDialog

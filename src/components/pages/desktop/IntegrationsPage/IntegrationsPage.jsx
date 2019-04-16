@@ -35,7 +35,7 @@ const IntegrationsPageGrid = (props)=> {
 
 	const { integrations } = props;
 	return (<div className="integrations-page-grid">
-		<Row horizontal="space-around" className="integrations-page-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
+		<Row wrap={true} horizontal="space-around" className="integrations-page-grid-item-wrapper">
 			{integrations.map((integration, i) => {
 				return (<Column key={i}>
 					<IntegrationGridItem

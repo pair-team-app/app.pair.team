@@ -151,7 +151,7 @@ class UploadPage extends Component {
 		console.log('UploadPage.handleGitHub()');
 
 		trackEvent('button', 'github');
-		this.props.onGitHub();
+		this.props.onModal('/github-connect');
 	};
 
 	handleLogin = ()=> {

@@ -16,7 +16,7 @@ function HomePageArtboardGrid(props) {
 		<h4 style={{opacity:(title !== 'N/A') << 0}}>{title}</h4>
 		{/*<h4>{title}</h4>*/}
 		{(isUserLoggedIn()) && (
-			<Row horizontal="start" className="home-page-artboard-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
+			<Row wrap={true} horizontal="start" className="home-page-artboard-grid-item-wrapper">
 				{(artboards) && artboards.map((artboard, i) => {
 					return (
 						<Column key={i}>

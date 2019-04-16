@@ -78,7 +78,7 @@ class HomePage extends Component {
 		console.log('HomePage.handleGitHub()');
 
 		trackEvent('button', 'github');
-		this.props.onGitHub();
+		this.props.onModal('/github-connect');
 	};
 
 	handleLogin = ()=> {
