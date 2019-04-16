@@ -37,6 +37,7 @@ import BaseMobilePage from '../pages/mobile/BaseMobilePage';
 import { EXTENSION_PUBLIC_HOST, API_ENDPT_URL, GITHUB_APP_AUTH } from '../../consts/uris';
 import {
 	appendHomeArtboards,
+	fetchTeamLookup,
 	fetchUserHistory,
 	fetchUserProfile,
 	setAtomExtension,
@@ -72,6 +73,7 @@ const mapStateToProps = (state, ownProps)=> {
 const mapDispatchToProps = (dispatch)=> {
 	return ({
 		purgeHomeArtboards : ()=> dispatch(appendHomeArtboards(null)),
+		fetchTeamLookup    : (payload)=> dispatch(fetchTeamLookup(payload)),
 		fetchUserHistory   : (payload)=> dispatch(fetchUserHistory(payload)),
 		fetchUserProfile   : ()=> dispatch(fetchUserProfile()),
 		updateDeeplink     : (navIDs)=> dispatch(updateDeeplink(navIDs)),
@@ -126,6 +128,12 @@ class App extends Component {
 		this.onExtensionCheck();
 		this.props.updateDeeplink(idsFromPath());
 
+		if (URLs.subdomain()) {
+			this.props.fetchTeamLookup();
+		}
+
+		this.props.fetchTeamLookup({ subdomain : 'matty' });
+
 		window.addEventListener('resize', this.handleResize);
 		window.onpopstate = (event)=> {
 			console.log('-/\\/\\/\\/\\/\\/\\-', 'window.onpopstate()', '-/\\/\\/\\/\\/\\/\\-', event);
@@ -154,7 +162,7 @@ class App extends Component {
 
 		if (profile) {
 			if (!prevProps.profile) {
-				this.props.fetchUserHistory({profile});
+// 				this.props.fetchUserHistory({profile});
 
 				if (deeplink && deeplink.uploadID !== 0) {
 					this.onAddUploadView(deeplink.uploadID);

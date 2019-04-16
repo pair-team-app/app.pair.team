@@ -713,7 +713,7 @@ class InspectorPage extends Component {
 
 		if (upload && (upload.private << 0) === 1) {
 			const isOwner = (nextProps.profile && upload.creator.user_id === nextProps.profile.id);
-			const isContributor = (nextProps.profile && !isOwner && (upload.contributors.filter((contributor)=> (contributor.id === nextProps.profile.id)).length > 0));
+			const isContributor = (nextProps.profile && !isOwner && (upload.contributors.filter((contributor)=> ((contributor.id << 0) === nextProps.profile.id)).length > 0));
 
 			if (!restricted && (!isOwner && !isContributor)) {
 				this.setState({

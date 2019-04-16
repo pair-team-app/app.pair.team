@@ -3,7 +3,7 @@ import axios from 'axios/index';
 import qs from 'qs';
 import cookie from 'react-cookies';
 
-import { Bits, Objects } from '../../utils/lang';
+import { Bits, Objects, URLs } from '../../utils/lang';
 import {
 	ADD_FILE_UPLOAD,
 	APPEND_ARTBOARD_SLICES,
@@ -123,6 +123,42 @@ export function fetchUserHistory(payload) {
 			}).catch((error)=> {
 			});
 		}
+	});
+}
+
+export function fetchTeamLookup(payload) {
+	logFormat('fetchTeamLookup()', payload);
+
+	return ((dispatch)=> {
+		const { subdomain } = (payload) ? payload : { subdomain : URLs.subdomain() };
+		axios.post(API_ENDPT_URL, qs.stringify({ subdomain,
+			action    : 'TEAM_LOOKUP'
+		})).then((response)=> {
+			console.log('TEAM_LOOKUP', response.data);
+
+			const { team } = response.data;
+			if (team) {
+				const artboards = response.data.team.uploads.map((upload)=> (upload.pages.flatMap((page)=> (page.artboards.filter((artboard)=> (artboard.type === 'page_child'))))).pop()).filter((artboard)=> (artboard)).map((artboard) => ({
+					id        : artboard.id << 0,
+					pageID    : artboard.page_id << 0,
+					uploadID  : artboard.upload_id << 0,
+					title     : artboard.upload_title,
+					pageTitle : artboard.title,
+					filename  : artboard.filename,
+					creator   : artboard.creator,
+					meta      : JSON.parse(artboard.meta),
+					added     : artboard.added
+				}));
+
+				if (artboards.length > 0) {
+					dispatch({
+						type    : APPEND_HOME_ARTBOARDS,
+						payload : artboards
+					});
+				}
+			}
+		}).catch((error)=> {
+		});
 	});
 }
 
