@@ -16,7 +16,8 @@ import {
 	USER_PROFILE_UPDATED,
 	SET_ATOM_EXTENSION,
 	CONVERTED_DEEPLINK,
-	SET_INVITE
+	SET_INVITE,
+	SET_TEAM,
 } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
@@ -138,24 +139,18 @@ export function fetchTeamLookup(payload) {
 
 			const { team } = response.data;
 			if (team) {
-				const artboards = response.data.team.uploads.map((upload)=> (upload.pages.flatMap((page)=> (page.artboards.filter((artboard)=> (artboard.type === 'page_child'))))).pop()).filter((artboard)=> (artboard)).map((artboard) => ({
-					id        : artboard.id << 0,
-					pageID    : artboard.page_id << 0,
-					uploadID  : artboard.upload_id << 0,
-					title     : artboard.upload_title,
-					pageTitle : artboard.title,
-					filename  : artboard.filename,
-					creator   : artboard.creator,
-					meta      : JSON.parse(artboard.meta),
-					added     : artboard.added
-				}));
-
-				if (artboards.length > 0) {
-					dispatch({
-						type    : APPEND_HOME_ARTBOARDS,
-						payload : artboards
-					});
-				}
+				dispatch({
+					type    : SET_TEAM,
+					payload : { ...team,
+						members : team.members.map((member)=> ({
+							id       : member.id << 0,
+							type     : member.type,
+							userID   : member.user_id << 0,
+							username : member.username,
+							avatar   : member.avatar
+						}))
+					}
+				});
 			}
 		}).catch((error)=> {
 		});

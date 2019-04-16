@@ -9,9 +9,11 @@ import {
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED,
 	SET_ATOM_EXTENSION,
-	SET_INVITE } from '../../consts/action-types';
+	SET_INVITE,
+	SET_TEAM
+} from '../../consts/action-types';
 import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
-import {Objects} from "../../utils/lang";
+import { Objects } from '../../utils/lang';
 
 
 const initialState = {
@@ -27,7 +29,8 @@ const initialState = {
 	redirectURI   : null,
 	uploadSlices  : [],
 	userProfile   : null,
-	invite        : null
+	invite        : null,
+	team          : null
 };
 
 const logFormat = (state, action, meta='')=> {
@@ -119,6 +122,11 @@ function rootReducer(state=initialState, action) {
 		case SET_ATOM_EXTENSION:
 			return (Object.assign({}, state, {
 				atomExtension : action.payload
+			}));
+
+		case SET_TEAM:
+			return (Object.assign({}, state, {
+				team : action.payload
 			}));
 	}
 }

@@ -702,10 +702,7 @@ class InspectorPage extends Component {
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
 // 		console.log('InspectorPage.shouldComponentUpdate()', this.props, nextProps, this.state, nextState, nextContext);
 
-
 		const { upload, restricted } = nextState;
-
-
 		if (!this.state.upload && upload && !isUserLoggedIn()) {
 			this.props.onModal('/register');
 			return (false);

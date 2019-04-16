@@ -16,3 +16,4 @@ export const USER_PROFILE_UPDATED = 'USER_PROFILE_UPDATED';
 export const SET_ATOM_EXTENSION = 'SET_ATOM_EXTENSION';
 
 export const SET_INVITE = 'SET_INVITE';
+export const SET_TEAM = 'SET_TEAM';

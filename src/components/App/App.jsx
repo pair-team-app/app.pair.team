@@ -66,7 +66,8 @@ const mapStateToProps = (state, ownProps)=> {
 	return ({
 		deeplink  : state.deeplink,
 		profile   : state.userProfile,
-		artboards : state.homeArtboards
+		artboards : state.homeArtboards,
+		team      : state.team
 	});
 };
 
@@ -147,7 +148,7 @@ class App extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
-		const { profile, artboards, deeplink } = this.props;
+		const { profile, artboards, deeplink, team } = this.props;
 		const { pathname } = this.props.location;
 		const { payDialog, stripeModal } = this.state;
 
@@ -196,6 +197,13 @@ class App extends Component {
 // 			if (isUserLoggedIn()) {
 // 				this.handleLogout();
 // 			}
+		}
+
+
+		if (team && !prevProps.team) {
+			if (!profile || team.members.findIndex((member)=> (member.userID === profile.id)) === -1) {
+				this.onShowModal('/register');
+			}
 		}
 	}
 

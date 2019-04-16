@@ -2,6 +2,8 @@
 import cookie from 'react-cookies';
 
 import {
+	APPEND_HOME_ARTBOARDS,
+	SET_TEAM,
 	CONVERTED_DEEPLINK,
 	UPDATE_DEEPLINK,
 
@@ -43,29 +45,25 @@ export function onMiddleware({ dispatch }) {
 					payload : deeplink
 				});
 
+			} else if (type === SET_TEAM) {
+				const artboards = payload.uploads.map((upload)=> (upload.pages.flatMap((page)=> (page.artboards.filter((artboard)=> (artboard.type === 'page_child'))))).pop()).filter((artboard)=> (artboard)).map((artboard) => ({
+					id        : artboard.id << 0,
+					pageID    : artboard.page_id << 0,
+					uploadID  : artboard.upload_id << 0,
+					title     : artboard.upload_title,
+					pageTitle : artboard.title,
+					filename  : artboard.filename,
+					creator   : artboard.creator,
+					meta      : JSON.parse(artboard.meta),
+					added     : artboard.added
+				}));
 
-				/*if (!payload) {
+				if (artboards.length > 0) {
 					dispatch({
-						type    : CONVERTED_DEEPLINK,
-						payload : {
-							uploadID   : 0,
-							pageID     : 0,
-							artboardID : 0,
-							sliceID    : 0
-						}
+						type    : APPEND_HOME_ARTBOARDS,
+						payload : artboards
 					});
-
-				} else {
-					let deeplink = Object.assign({}, payload);
-					Object.keys(payload).filter((key)=> (typeof payload[key] !== 'number')).forEach((key)=> {
-						deeplink[key] = (payload[key] << 0);
-					});
-
-					dispatch({
-						type    : CONVERTED_DEEPLINK,
-						payload : deeplink
-					});
-				}*/
+				}
 			}
 
 			return (next(action));

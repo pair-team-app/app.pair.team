@@ -112,7 +112,7 @@ class HomePage extends Component {
 
 		const { profile, artboards } = this.props;
 		const { section, fetching, fileDialog } = this.state;
-		const gridTitle = (profile) ? (fetching) ? `Loading${'…'}` : (artboards.length > 0) ? 'Previous' : 'N/A' : 'N/A';
+		const gridTitle = (profile) ? (fetching) ? `Loading${'…'}` : (artboards.length > 0) ? (URLs.subdomain()) ? `Team ${URLs.subdomain()}` : 'Previous' : 'N/A' : 'N/A';
 
 		return (
 			<BaseDesktopPage className="home-page-wrapper">
@@ -139,13 +139,13 @@ class HomePage extends Component {
 					}
 				</div>
 
-				{(isUserLoggedIn()) && (<ArtboardGrid
+				<ArtboardGrid
 					title={gridTitle}
 					artboards={artboards}
 					onClick={this.handleArtboardClicked}
 					onPage={this.props.onPage}
 					onPopup={this.props.onPopup}
-				/>)}
+				/>
 			</BaseDesktopPage>
 		);
 	}
