@@ -138,8 +138,6 @@ class App extends Component {
 			this.props.fetchTeamLookup();
 		}
 
-		this.props.fetchTeamLookup({ subdomain : 'matty' });
-
 		window.addEventListener('resize', this.handleResize);
 		window.onpopstate = (event)=> {
 			console.log('-/\\/\\/\\/\\/\\/\\-', 'window.onpopstate()', '-/\\/\\/\\/\\/\\/\\-', event);
@@ -206,6 +204,7 @@ class App extends Component {
 
 
 		if (team && !prevProps.team) {
+			console.log('|:|:|:|:|:|:|:|:|:|:|:|', team, prevProps.team);
 			if (!profile || team.members.findIndex((member)=> (member.userID === profile.id)) === -1) {
 				this.onToggleModal(Modals.REGISTER, true);
 			}

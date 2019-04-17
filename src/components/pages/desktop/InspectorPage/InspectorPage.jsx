@@ -38,13 +38,12 @@ import {
 } from './utils/code-generator.js';
 import { MOMENT_TIMESTAMP } from '../../../../consts/formats';
 import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../../consts/key-codes';
-import { Modals, DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PARTS_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL, LINTER_ENDPT_URL } from '../../../../consts/uris';
+import { DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PARTS_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL, LINTER_ENDPT_URL } from '../../../../consts/uris';
 import { setRedirectURI } from '../../../../redux/actions';
 import {
 	buildInspectorPath,
 	buildInspectorURL,
 	createGist,
-	isUserLoggedIn,
 	sendToSlack
 } from '../../../../utils/funcs.js';
 import {
@@ -698,11 +697,6 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.shouldComponentUpdate()', this.props, nextProps, this.state, nextState, nextContext);
 
 		const { upload, restricted } = nextState;
-		if (!this.state.upload && upload && !isUserLoggedIn()) {
-			this.props.onModal(Modals.REGISTER);
-			return (false);
-		}
-
 		if (upload && (upload.private << 0) === 1) {
 			const isOwner = (nextProps.profile && upload.creator.user_id === nextProps.profile.id);
 			const isTeamMember = (nextProps.profile && !isOwner && (upload.team.members.filter((member)=> ((member.userID << 0) === nextProps.profile.id)).length > 0));
@@ -727,10 +721,6 @@ class InspectorPage extends Component {
 
 		if (!upload && deeplink && deeplink !== prevProps.deeplink && deeplink.uploadID !== 0) {
 			this.onFetchUpload();
-
-			if (!isUserLoggedIn()) {
-				this.props.onModal(Modals.REGISTER);
-			}
 		}
 
 
