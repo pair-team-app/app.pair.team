@@ -11,13 +11,14 @@ import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import BottomNav from '../navs/BottomNav';
 import TopNav from '../navs/TopNav';
 import AdvertPanel from '../overlays/AdvertPanel';
-import AlertDialog from '../overlays/AlertDialog/AlertDialog';
-import BaseOverlay from '../overlays/BaseOverlay/BaseOverlay';
-import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification';
+import AlertDialog from '../overlays/AlertDialog';
+import ConfirmDialog from '../overlays/ConfirmDialog';
+import BaseOverlay from '../overlays/BaseOverlay';
 import ConfigUploadModal from '../overlays/ConfigUploadModal';
-import LoginModal from '../overlays/LoginModal';
-import RegisterModal from '../overlays/RegisterModal';
 import IntegrationsModal from '../overlays/IntegrationsModal';
+import LoginModal from '../overlays/LoginModal';
+import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification';
+import RegisterModal from '../overlays/RegisterModal';
 import StripeModal from '../overlays/StripeModal';
 import HomePage from '../pages/desktop/HomePage';
 import InspectorPage from '../pages/desktop/InspectorPage';
@@ -107,6 +108,7 @@ class App extends Component {
 			configUploadModal : false,
 			payDialog         : false,
 			stripeModal       : false,
+			teamDialog        : false,
 			authID            : 0
 		};
 
@@ -230,6 +232,13 @@ class App extends Component {
 	}
 
 
+	handleAdBanner = (url)=> {
+// 		console.log('App.handleAdBanner()', url);
+
+		trackEvent('ad-banner', 'click');
+		window.open(url);
+	};
+
 	handleArtboardClicked = (artboard)=> {
 // 		console.log('App.handleArtboardClicked()', artboard);
 
@@ -244,13 +253,6 @@ class App extends Component {
 
 		Browsers.scrollOrigin(wrapper.current);
 		this.props.updateDeeplink({ uploadID, pageID, artboardID });
-	};
-
-	handleAdBanner = (url)=> {
-// 		console.log('App.handleAdBanner()', url);
-
-		trackEvent('ad-banner', 'click');
-		window.open(url);
 	};
 
 	handleGithubAuth = ()=> {
@@ -283,6 +285,27 @@ class App extends Component {
 		});
 	};
 
+	handleGitHubAuthSynced = (profile, register=true)=> {
+		console.log('App.handleGitHubAuthSynced()', profile, register);
+
+		this.props.updateUserProfile(profile, false);
+		this.props.updateUserProfile(profile);
+
+		if (this.props.team) {
+			this.setState({ teamDialog : true });
+
+		} else {
+			if (profile.sources.length === 0 || profile.integrations.length === 0) {
+				trackEvent('user', 'sign-up');
+				setTimeout(()=> {
+					this.onToggleModal(Modals.INTEGRATIONS, true);
+				}, 750);
+
+			} else {
+			}
+		}
+	};
+
 	handleIntegrationsSubmitted = (profile)=> {
 		console.log('App.handleIntegrationsSubmitted()', profile);
 
@@ -305,13 +328,19 @@ class App extends Component {
 		console.log('App.handleLoggedIn()', profile);
 		this.props.updateUserProfile(profile, false);
 		this.props.updateUserProfile(profile);
-		if (profile.sources.length === 0 || profile.integrations.length === 0) {
-			trackEvent('user', 'sign-up');
-			setTimeout(()=> {
-				this.onToggleModal(Modals.INTEGRATIONS, true);
-			}, 1250);
+
+		if (this.props.team) {
+			this.setState({ teamDialog : true });
 
 		} else {
+			if (profile.sources.length === 0 || profile.integrations.length === 0) {
+				trackEvent('user', 'sign-up');
+				setTimeout(()=> {
+					this.onToggleModal(Modals.INTEGRATIONS, true);
+				}, 1250);
+
+			} else {
+			}
 		}
 	};
 
@@ -373,34 +402,22 @@ class App extends Component {
 		this.props.fetchUserProfile();
 	};
 
-	handleGitHubAuthSynced = (profile, register=true)=> {
-		console.log('App.handleGitHubAuthSynced()', profile, register);
-
-		this.props.updateUserProfile(profile, false);
-		this.props.updateUserProfile(profile);
-		if (profile.sources.length === 0 || profile.integrations.length === 0) {
-			trackEvent('user', 'sign-up');
-			setTimeout(()=> {
-				this.onToggleModal(Modals.INTEGRATIONS, true);
-			}, 750);
-
-		} else {
-
-		}
-	};
-
 	handleRegistered = (profile, github=false)=> {
 		console.log('App.handleRegistered()', profile, github);
 		this.props.updateUserProfile(profile, false);
 		this.props.updateUserProfile(profile);
-		if (profile.sources.length === 0 || profile.integrations.length === 0) {
-			trackEvent('user', 'sign-up');
-			setTimeout(()=> {
-				this.onToggleModal(Modals.INTEGRATIONS, true);
-			}, 1250);
+
+		if (this.props.team) {
+			this.setState({ teamDialog : true });
 
 		} else {
+			if (profile.sources.length === 0 || profile.integrations.length === 0) {
+				setTimeout(()=> {
+					this.onToggleModal(Modals.INTEGRATIONS, true);
+				}, 1250);
 
+			} else {
+			}
 		}
 	};
 
@@ -422,6 +439,23 @@ class App extends Component {
 // 		console.log('App.handleScore()', score);
 		this.setState({ rating : score });
 		this.handlePage('rate-this');
+	};
+
+	handleTeamDialogComplete = (ok)=> {
+		console.log('App.handleTeamDialogComplete()', ok);
+
+		const { profile } = this.props;
+		this.setState({ teamDialog : false }, ()=> {
+			if (ok) {
+				if (profile.sources.length === 0 || profile.integrations.length === 0) {
+					setTimeout(()=> {
+						this.onToggleModal(Modals.INTEGRATIONS, true);
+					}, 750);
+
+				} else {
+				}
+			}
+		});
 	};
 
 	onAddUploadView = (uploadID)=> {
@@ -585,7 +619,7 @@ class App extends Component {
 		const { profile } = this.props;
 		const { pathname } = this.props.location;
   	const { rating, allowMobile, processing, popup } = this.state;
-  	const { integrationsModal, loginModal, registerModal, configUploadModal, stripeModal, payDialog } = this.state;
+  	const { integrationsModal, loginModal, registerModal, configUploadModal, stripeModal, payDialog, teamDialog } = this.state;
 //   	const processing = true;
 
   	return ((!Browsers.isMobile.ANY() || !allowMobile)
@@ -690,6 +724,12 @@ class App extends Component {
 								  message={`You must upgrade to an unlimited account to view more than ${freeAccount.upload_views} ${Strings.pluralize('project', freeAccount.upload_views)}.`}
 								  onComplete={this.handlePaidAlert}
 							  />)}
+
+						  {(teamDialog) && (<ConfirmDialog
+							  title="Confirm Team"
+							  message="Are you a member of this team?"
+							  onComplete={this.handleTeamDialogComplete}
+						  />)}
 
 							  {(stripeModal) && (<StripeModal
 								  profile={profile}

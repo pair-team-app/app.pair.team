@@ -115,6 +115,7 @@ class RegisterModal extends Component {
 			this.props.updateDeeplink({ uploadID : upload.id });
 		}
 
+		trackEvent('user', 'sign-up');
 		this.props.onRegistered(profile);
 	};
 

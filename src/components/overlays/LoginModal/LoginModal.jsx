@@ -25,7 +25,7 @@ class LoginModal extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('LoginModal.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+// 		console.log('LoginModal.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		const { profile } = this.props;
 		if (!prevProps.profile && profile) {
@@ -37,7 +37,7 @@ class LoginModal extends Component {
 	}
 
 	handleComplete = ()=> {
-		console.log('LoginModal.handleComplete()');
+// 		console.log('LoginModal.handleComplete()');
 
 		const { outroURI } = this.state;
 		this.setState({ outro : false }, ()=> {
@@ -82,7 +82,8 @@ class LoginModal extends Component {
 	};
 
 	handlePage = (url)=> {
-		console.log('LoginModal.handlePage()', url);
+// 		console.log('LoginModal.handlePage()', url);
+
 		if (url.startsWith('/modal')) {
 			this.props.onModal(`/${URIs.lastComponent(url)}`);
 
@@ -96,7 +97,7 @@ class LoginModal extends Component {
 
 
 	render() {
-		console.log('LoginModal.render()', this.props, this.state);
+// 		console.log('LoginModal.render()', this.props, this.state);
 
 		const { deeplink } = this.props;
 		const { outro } = this.state;
