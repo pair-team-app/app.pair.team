@@ -3,7 +3,7 @@ import axios from 'axios/index';
 import qs from 'qs';
 import cookie from 'react-cookies';
 
-import { Bits, Objects, URLs } from '../../utils/lang';
+import { Bits, Objects, URIs } from '../../utils/lang';
 import {
 	ADD_FILE_UPLOAD,
 	APPEND_ARTBOARD_SLICES,
@@ -131,7 +131,7 @@ export function fetchTeamLookup(payload) {
 	logFormat('fetchTeamLookup()', payload);
 
 	return ((dispatch)=> {
-		const { subdomain } = (payload) ? payload : { subdomain : URLs.subdomain() };
+		const { subdomain } = (payload) ? payload : { subdomain : URIs.subdomain() };
 		axios.post(API_ENDPT_URL, qs.stringify({ subdomain,
 			action    : 'TEAM_LOOKUP'
 		})).then((response)=> {

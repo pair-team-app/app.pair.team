@@ -11,7 +11,7 @@ import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath } from '../../../utils/funcs';
-import { URLs } from './../../../utils/lang';
+import { URIs } from './../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 
 class RegisterModal extends Component {
@@ -73,7 +73,7 @@ class RegisterModal extends Component {
 				if (outroURI) {
 					if (outroURI.startsWith('/modal')) {
 						this.props.setRedirectURI(null);
-						this.props.onModal(`/${URLs.lastComponent(outroURI)}`);
+						this.props.onModal(`/${URIs.lastComponent(outroURI)}`);
 					}
 				}
 			}
@@ -96,7 +96,7 @@ class RegisterModal extends Component {
 		console.log('RegisterModal.handlePage()', url);
 
 		if (url.includes('/github-connect')) {
-			this.props.onModal(`/${URLs.lastComponent(url)}`);
+			this.props.onModal(`/${URIs.lastComponent(url)}`);
 
 		} else {
 			this.setState({
@@ -130,7 +130,7 @@ class RegisterModal extends Component {
 		const { outro } = this.state;
 		return (
 			<BaseOverlay
-				tracking={`register/${URLs.firstComponent()}`}
+				tracking={`register/${URIs.firstComponent()}`}
 				outro={outro}
 				unblurred={true}
 				closeable={(deeplink && deeplink.uploadID === 0)}

@@ -54,7 +54,7 @@ import {
 	Files,
 	Maths,
 	Strings,
-	URLs
+	URIs
 } from '../../../../utils/lang.js';
 import { trackEvent } from '../../../../utils/tracking';
 
@@ -616,7 +616,7 @@ class InspectorPage extends Component {
 		super(props);
 
 		this.state = {
-			section     : URLs.firstComponent(),
+			section     : URIs.firstComponent(),
 			upload      : null,
 			artboard    : null,
 			slice       : null,

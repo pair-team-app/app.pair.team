@@ -11,7 +11,7 @@ import StripeForm from '../../forms/StripeForm/StripeForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
 import { API_ENDPT_URL } from './../../../consts/uris';
 import { sendToSlack } from './../../../utils/funcs';
-import { URLs } from './../../../utils/lang';
+import { URIs } from './../../../utils/lang';
 import { trackEvent } from './../../../utils/tracking';
 import stripeCreds from '../../../assets/json/stripe-creds';
 import stripeLogo from './../../../assets/images/logos/logo-stripe.png';
@@ -122,7 +122,7 @@ class StripeModal extends Component {
 		const { outro } = this.state;
 		return (
 			<BaseOverlay
-				tracking={`stripe/${URLs.firstComponent()}`}
+				tracking={`stripe/${URIs.firstComponent()}`}
 				outro={outro}
 				unblurred={true}
 				closeable={true}

@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import BaseOverlay from '../BaseOverlay';
 import { API_ENDPT_URL, DEFAULT_AVATAR } from './../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
-import { Strings, URLs } from './../../../utils/lang';
+import { Strings, URIs } from './../../../utils/lang';
 import { trackEvent } from './../../../utils/tracking';
 
 
@@ -205,7 +205,7 @@ class GitHubModal extends Component {
 
 		return (
 			<BaseOverlay
-				tracking={`github/${URLs.firstComponent()}`}
+				tracking={`github/${URIs.firstComponent()}`}
 				delay={0}
 				outro={outro}
 				unblurred={true}

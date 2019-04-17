@@ -53,7 +53,7 @@ import {
 	isProfilePage,
 	isUserLoggedIn
 } from '../../utils/funcs';
-import { Browsers, DateTimes, Strings, URLs } from '../../utils/lang';
+import { Browsers, DateTimes, Strings, URIs } from '../../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 import freeAccount from '../../assets/json/free-account';
 import adBannerPanel from '../../assets/json/ad-banner-panel';
@@ -123,13 +123,13 @@ class App extends Component {
 
 // 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (new Array(20)).fill(null).map((i)=> (Strings.randHex())), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
 // 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (new Array(20)).fill(null).map((i)=> (parseInt(Maths.randomHex(), 16))), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
-// 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (URLs.queryString()), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
+// 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (URIs.queryString()), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
 
 
 		this.onExtensionCheck();
 		this.props.updateDeeplink(idsFromPath());
 
-		if (URLs.subdomain()) {
+		if (URIs.subdomain()) {
 			this.props.fetchTeamLookup();
 		}
 
@@ -236,7 +236,7 @@ class App extends Component {
 		this.handlePage(buildInspectorPath({
 			id    : uploadID,
 			title : artboard.title
-			}, URLs.firstComponent()
+			}, URIs.firstComponent()
 		));
 
 		Browsers.scrollOrigin(wrapper.current);

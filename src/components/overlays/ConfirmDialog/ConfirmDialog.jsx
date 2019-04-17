@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './ConfirmDialog.css'
 
 import BaseOverlay from '../BaseOverlay';
-import { URLs } from './../../../utils/lang';
+import { URIs } from './../../../utils/lang';
 
 
 class ConfirmDialog extends Component {
@@ -47,7 +47,7 @@ class ConfirmDialog extends Component {
 		const { outro } = this.state;
 
 		return (<BaseOverlay
-			tracking={`${tracking}/${URLs.firstComponent()}`}
+			tracking={`${tracking}/${URIs.firstComponent()}`}
 			outro={outro}
 			closeable={true}
 			title={title}

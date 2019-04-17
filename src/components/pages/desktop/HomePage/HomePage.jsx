@@ -10,7 +10,7 @@ import UploadHeader from '../../../navs/UploadHeader';
 
 import { INSPECT } from '../../../../consts/uris';
 import { addFileUpload } from '../../../../redux/actions';
-import {  URLs } from '../../../../utils/lang';
+import {  URIs } from '../../../../utils/lang';
 import { isUserLoggedIn } from '../../../../utils/funcs';
 import { trackEvent } from '../../../../utils/tracking';
 import homeContent from '../../../../assets/json/home-content';
@@ -53,8 +53,8 @@ class HomePage extends Component {
 // 		console.log('HomePage.componentDidUpdate()', prevProps, this.props);
 
 		const { section } = this.state;
-		if (section !== URLs.firstComponent()) {
-			this.setState({ section : URLs.firstComponent() });
+		if (section !== URIs.firstComponent()) {
+			this.setState({ section : URIs.firstComponent() });
 		}
 	}
 
@@ -112,7 +112,7 @@ class HomePage extends Component {
 
 		const { profile, artboards } = this.props;
 		const { section, fetching, fileDialog } = this.state;
-		const gridTitle = (profile) ? (fetching) ? `Loading${'…'}` : (artboards.length > 0) ? (URLs.subdomain()) ? `Team ${URLs.subdomain()}` : 'Previous' : 'N/A' : 'N/A';
+		const gridTitle = (profile) ? (fetching) ? `Loading${'…'}` : (artboards.length > 0) ? (URIs.subdomain()) ? `Team ${URIs.subdomain()}` : 'Previous' : 'N/A' : 'N/A';
 
 		return (
 			<BaseDesktopPage className="home-page-wrapper">

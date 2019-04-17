@@ -11,7 +11,7 @@ import { Column, Row } from 'simple-flexbox';
 import BaseOverlay from '../BaseOverlay';
 import { LINTER_UPLOAD_URL } from './../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
-import { URLs } from './../../../utils/lang';
+import { URIs } from './../../../utils/lang';
 import { trackEvent } from './../../../utils/tracking';
 import allIntegrations from './../../../assets/json/integrations';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
@@ -166,7 +166,7 @@ class ConfigUploadModal extends Component {
 
 		return (
 			<BaseOverlay
-				tracking={`config-upload/${URLs.firstComponent()}`}
+				tracking={`config-upload/${URIs.firstComponent()}`}
 				delay={0}
 				outro={outro}
 				unblurred={true}

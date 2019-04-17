@@ -8,7 +8,7 @@ import BaseOverlay from '../BaseOverlay';
 import LoginForm from '../../forms/LoginForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
-import { URLs } from './../../../utils/lang';
+import { URIs } from './../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 
 
@@ -50,7 +50,7 @@ class LoginModal extends Component {
 				if (outroURI) {
 					if (outroURI.startsWith('/modal')) {
 						this.props.setRedirectURI(null);
-						this.props.onModal(`/${URLs.lastComponent(outroURI)}`);
+						this.props.onModal(`/${URIs.lastComponent(outroURI)}`);
 					}
 				}
 			}
@@ -85,7 +85,7 @@ class LoginModal extends Component {
 	handlePage = (url)=> {
 		console.log('LoginModal.handlePage()', url);
 		if (url.includes('/github-connect')) {
-			this.props.onModal(`/${URLs.lastComponent(url)}`);
+			this.props.onModal(`/${URIs.lastComponent(url)}`);
 
 		} else {
 			this.setState({
@@ -104,7 +104,7 @@ class LoginModal extends Component {
 
 		return (
 			<BaseOverlay
-				tracking={`login/${URLs.firstComponent()}`}
+				tracking={`login/${URIs.firstComponent()}`}
 				outro={outro}
 				unblurred={true}
 				closeable={(deeplink && deeplink.uploadID === 0)}

@@ -16,11 +16,11 @@ import {
 	REGISTER,
 	UPLOAD,
 	API_ENDPT_URL } from '../consts/uris';
-import { Strings, URLs } from './lang';
+import { Strings, URIs } from './lang';
 
 
 export function getRouteParams(pathname) {
-// 	console.log('_-_-_-_-_', 'getRouteParams()', pathname, '_-_-_-_-_', URLs.firstComponent(pathname));
+// 	console.log('_-_-_-_-_', 'getRouteParams()', pathname, '_-_-_-_-_', URIs.firstComponent(pathname));
 
 	const loginPage = matchPath(pathname, {
 		path : '/login'
@@ -39,7 +39,7 @@ export function getRouteParams(pathname) {
 	});
 
 	const inspectorPage = matchPath(pathname, {
-		path : `/${URLs.firstComponent(pathname)}/:uploadID/:titleSlug`
+		path : `/${URIs.firstComponent(pathname)}/:uploadID/:titleSlug`
 	});
 
 	const homePage = matchPath(pathname, {

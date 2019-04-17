@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './AlertDialog.css'
 
 import BaseOverlay from '../BaseOverlay';
-import { URLs } from './../../../utils/lang';
+import { URIs } from './../../../utils/lang';
 
 
 class AlertDialog extends Component {
@@ -27,7 +27,7 @@ class AlertDialog extends Component {
 
 		const { tracking, title, message } = this.props;
 		return (<BaseOverlay
-			tracking={`${tracking}/${URLs.firstComponent()}`}
+			tracking={`${tracking}/${URIs.firstComponent()}`}
 			outro={false}
 			closeable={true}
 			defaultButton="OK"

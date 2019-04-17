@@ -1,5 +1,5 @@
 
-import { Maths, Objects, Strings, URLs } from '../../../../../utils/lang';
+import { Maths, Objects, Strings, URIs } from '../../../../../utils/lang';
 
 const TAB = '  ';
 const badChars = /[\\.,_+=[\](){}:]/g;
@@ -118,7 +118,7 @@ export function toBootstrap(slices) {
 	slices.forEach((slice)=> {
 		html += `${TAB}<div class="card-body">\n`;
 		html += `${TAB}${TAB}<h5 class="card-title">${slice.title}</h5>\n`;
-		html += (slice.type === 'textfield') ? `${TAB}${TAB}<p class="card-text">${slice.meta.txtVal}</p>\n` : `${TAB}${TAB}<img class="card-img" src="./images/${URLs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}">\n`;
+		html += (slice.type === 'textfield') ? `${TAB}${TAB}<p class="card-text">${slice.meta.txtVal}</p>\n` : `${TAB}${TAB}<img class="card-img" src="./images/${URIs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}">\n`;
 		html += `${TAB}</div>\n`;
 	});
 	html += `</div>\n`;
@@ -152,7 +152,7 @@ export function toCSS(slices) {
 			html += `${TAB}text-align: ${font.alignment.toLowerCase()};\n`;
 
 		} else if (slice.type === 'slice') {
-			html += `${TAB}background: url("${URLs.lastComponent(slice.filename)}@3x.png");\n`;
+			html += `${TAB}background: url("${URIs.lastComponent(slice.filename)}@3x.png");\n`;
 
 		} else if (slice.type === 'background' || slice.type === 'group') {
 			html += `${TAB}background-color: ${slice.meta.fillColor.toUpperCase()};\n`;
@@ -212,7 +212,7 @@ export function toGridHTML(slices) {
 	html += `<div class="grid-container">\n`;
 	slices.forEach((slice)=> {
 		html += `${TAB}<div class="grid-cell ${Strings.slugifyURI(slice.title)}">`;
-		html += (slice.type === 'textfield') ? `${slice.meta.txtVal}` : `<img src="./images/${URLs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}">`;
+		html += (slice.type === 'textfield') ? `${slice.meta.txtVal}` : `<img src="./images/${URIs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}">`;
 		html += `</div>\n`;
 	});
 	html += `</div>\n`;
@@ -269,7 +269,7 @@ export function toReactJS(slices) {
 		const title = slice.title.replace(badChars, '');
 		html += `const ${Strings.camelize(title, null, true)} = (props)=> {\n`;
 		html += `${TAB}return (<div className="${Strings.slugifyURI(title)}-wrapper">\n`;
-		html += (slice.type === 'textfield') ? `${TAB}${TAB}<div className="${Strings.slugifyURI(title)}-text">${slice.meta.txtVal}</div>\n` : `${TAB}${TAB}<img className="${Strings.slugifyURI(title)}-image" src="./images/${URLs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}" />\n`;
+		html += (slice.type === 'textfield') ? `${TAB}${TAB}<div className="${Strings.slugifyURI(title)}-text">${slice.meta.txtVal}</div>\n` : `${TAB}${TAB}<img className="${Strings.slugifyURI(title)}-image" src="./images/${URIs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}" />\n`;
 		html += `${TAB}</div>);\n`;
 		html += `};\n\n`;
 	});

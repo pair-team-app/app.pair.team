@@ -10,7 +10,7 @@ import { Column, Row } from 'simple-flexbox';
 import BaseOverlay from '../BaseOverlay';
 import IntegrationGridItem from '../../iterables/IntegrationGridItem';
 import { API_ENDPT_URL } from './../../../consts/uris';
-import { URLs } from './../../../utils/lang';
+import { URIs } from './../../../utils/lang';
 import { trackEvent } from './../../../utils/tracking';
 import integrations from './../../../assets/json/integrations';
 
@@ -144,7 +144,7 @@ class IntegrationsModal extends Component {
 
 		return (
 			<BaseOverlay
-				tracking={`integrations/${URLs.firstComponent()}`}
+				tracking={`integrations/${URIs.firstComponent()}`}
 				delay={0}
 				outro={outro}
 				unblurred={true}

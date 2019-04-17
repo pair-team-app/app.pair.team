@@ -4,7 +4,7 @@ import './BottomNav.css';
 
 import { trackEvent } from './../../../utils/tracking';
 import { isUserLoggedIn } from './../../../utils/funcs';
-import { URLs } from './../../../utils/lang';
+import { URIs } from './../../../utils/lang';
 import deLogo from './../../../assets/images/logos/logo-designengine.svg';
 import sections from './../../../assets/json/nav-sections';
 
@@ -50,9 +50,9 @@ function BottomNav(props) {
 	const handleLink = (url)=> {
 // 		console.log('BottomNav.handleLink()', url);
 
-		if (URLs.firstComponent(url) === 'modal') {
-			trackEvent('link', URLs.lastComponent(url));
-			props.onModal(`/${URLs.lastComponent(url)}`);
+		if (URIs.firstComponent(url) === 'modal') {
+			trackEvent('link', URIs.lastComponent(url));
+			props.onModal(`/${URIs.lastComponent(url)}`);
 
 		} else {
 			trackEvent('link', url);
