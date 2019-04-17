@@ -31,7 +31,7 @@
 
 .base-overlay-content-wrapper-unblurred {
 	background-color: rgba(0, 0, 0, 0.0);
-	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.33);
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.33);
 }
 
 .base-overlay-content-wrapper-auto-scroll {
@@ -79,6 +79,10 @@
 
 .base-overlay-content-padded {
 	padding: 10px 20px;
+}
+
+.base-overlay-content-wrapper-unblurred .base-overlay-content-padded {
+	padding: 0;
 }
 
 .base-overlay-button-wrapper {
