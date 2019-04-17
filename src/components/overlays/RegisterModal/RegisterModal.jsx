@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import BaseOverlay from '../BaseOverlay';
 import RegisterForm from '../../forms/RegisterForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
-import { API_ENDPT_URL } from '../../../consts/uris';
+import { Modals, API_ENDPT_URL } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath } from '../../../utils/funcs';
 import { URIs } from './../../../utils/lang';
@@ -26,7 +26,7 @@ class RegisterModal extends Component {
 	}
 
 	componentDidMount() {
-		console.log('RegisterModal.componentDidMount()', this.props, this.state);
+// 		console.log('RegisterModal.componentDidMount()', this.props, this.state);
 
 		if (this.props.invite) {
 			let formData = new FormData();
@@ -54,7 +54,7 @@ class RegisterModal extends Component {
 		if (!prevProps.profile && profile) {
 			this.setState({
 				outro    : true,
-				outroURI : (profile.sources.length === 0 || profile.integrations.length === 0) ? '/modal/integrations' : null
+				outroURI : (profile.sources.length === 0 || profile.integrations.length === 0) ? `/modal${Modals.INTEGRATIONS}` : null
 			});
 		}
 	}
@@ -95,7 +95,7 @@ class RegisterModal extends Component {
 	handlePage = (url)=> {
 		console.log('RegisterModal.handlePage()', url);
 
-		if (url.includes('/github-connect')) {
+		if (url.startsWith('/modal')) {
 			this.props.onModal(`/${URIs.lastComponent(url)}`);
 
 		} else {
@@ -115,16 +115,11 @@ class RegisterModal extends Component {
 			this.props.updateDeeplink({ uploadID : upload.id });
 		}
 
-// 		this.setState({
-// 			outro    : true,
-// 			outroURI : (profile.sources.length === 0 || profile.integrations.length === 0) ? '/modal/integrations' : null
-// 		});
-
 		this.props.onRegistered(profile);
 	};
 
 	render() {
-		console.log('RegisterModal.render()', this.props, this.state);
+// 		console.log('RegisterModal.render()', this.props, this.state);
 
 		const { deeplink } = this.props;
 		const { outro } = this.state;

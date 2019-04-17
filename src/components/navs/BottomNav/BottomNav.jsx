@@ -2,6 +2,7 @@
 import React from 'react';
 import './BottomNav.css';
 
+import { Modals } from './../../../consts/uris';
 import { trackEvent } from './../../../utils/tracking';
 import { isUserLoggedIn } from './../../../utils/funcs';
 import { URIs } from './../../../utils/lang';
@@ -22,8 +23,8 @@ const BottomNavDesktop = (props)=> {
 			{(isUserLoggedIn())
 				? (<div className="bottom-nav-link" onClick={() => props.onLogout()}>Logout</div>)
 				: (<span style={{ display : 'inline' }}>
-						<div className="bottom-nav-link" onClick={()=> props.onLink('/modal/register')}>Sign Up</div>
-						<div className="bottom-nav-link" onClick={()=> props.onLink('/modal/login')}>Login</div>
+						<div className="bottom-nav-link" onClick={()=> props.onLink(`/modal${Modals.REGISTER}`)}>Sign Up</div>
+						<div className="bottom-nav-link" onClick={()=> props.onLink(`/modal${Modals.LOGIN}`)}>Login</div>
 					</span>)
 			}
 		</div>

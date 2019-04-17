@@ -8,7 +8,7 @@ import BaseDesktopPage from '../BaseDesktopPage';
 import ArtboardGrid from './ArtboardGrid';
 import UploadHeader from '../../../navs/UploadHeader';
 
-import { INSPECT } from '../../../../consts/uris';
+import { Modals, INSPECT } from '../../../../consts/uris';
 import { addFileUpload } from '../../../../redux/actions';
 import {  URIs } from '../../../../utils/lang';
 import { isUserLoggedIn } from '../../../../utils/funcs';
@@ -78,21 +78,21 @@ class HomePage extends Component {
 		console.log('HomePage.handleGitHub()');
 
 		trackEvent('button', 'github');
-		this.props.onModal('/github-connect');
+		this.props.onModal(Modals.GITHUB_CONNECT);
 	};
 
 	handleLogin = ()=> {
 // 		console.log('HomePage.handleLogin()');
 
 		trackEvent('button', 'login');
-		this.props.onPage('login');
+		this.props.onModal(Modals.LOGIN);
 	};
 
 	handleRegister = ()=> {
 // 		console.log('HomePage.handleRegister()');
 
 		trackEvent('button', 'register');
-		this.props.onPage('register');
+		this.props.onModal(Modals.REGISTER);
 	};
 
 	handleUploadClick = ()=> {

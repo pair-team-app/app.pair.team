@@ -9,6 +9,7 @@ import TopNavMenu from './TopNavMenu/TopNavMenu';
 import TopNavProfile from './TopNavProfile/TopNavProfile';
 import TopNavRate from './TopNavRate/TopNavRate';
 
+import { Modals } from '../../../consts/uris';
 import { updateDeeplink } from '../../../redux/actions';
 import { isUserLoggedIn } from '../../../utils/funcs';
 import { URIs } from '../../../utils/lang';
@@ -45,9 +46,9 @@ const TopNavDesktop = (props)=> {
 		<div className="top-nav-column top-nav-column-right">
 			{(!isUserLoggedIn())
 				? (<>
-					<button className="aux-button adjacent-button" onClick={()=> props.onModal('/github-connect')}>GitHub</button>
-					<button className="adjacent-button" onClick={()=> props.onModal('/register')}>Sign Up</button>
-					<button onClick={()=> props.onModal('/login')}>Login</button>
+					<button className="aux-button adjacent-button" onClick={()=> props.onModal(Modals.GITHUB_CONNECT)}>GitHub</button>
+					<button className="adjacent-button" onClick={()=> props.onModal(Modals.REGISTER)}>Sign Up</button>
+					<button onClick={()=> props.onModal(Modals.LOGIN)}>Login</button>
 				</>)
 				: (<Row vertical="center" horizontal="end">
 					<TopNavProfile

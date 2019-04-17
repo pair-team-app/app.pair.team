@@ -38,7 +38,7 @@ import {
 } from './utils/code-generator.js';
 import { MOMENT_TIMESTAMP } from '../../../../consts/formats';
 import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../../consts/key-codes';
-import { DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PARTS_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL, LINTER_ENDPT_URL } from '../../../../consts/uris';
+import { Modals, DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PARTS_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL, LINTER_ENDPT_URL } from '../../../../consts/uris';
 import { setRedirectURI } from '../../../../redux/actions';
 import {
 	buildInspectorPath,
@@ -248,7 +248,6 @@ const InspectorFooter = (props)=> {
 	return (<div className="inspector-page-footer-wrapper"><Row vertical="center">
 		<img src={deLogo} className="inspector-page-footer-logo" onClick={()=> props.onPage('')} alt="Design Engine" />
 		{(!processing) && (<div className="inspector-page-footer-button-wrapper">
-			{/*{(profile && ((upload.id << 0) === 1 || upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true });}}>Share</button>)}*/}
 			{(creator) && (<Dropzone
 				className="inspector-page-footer-dz"
 				multiple={false}
@@ -690,10 +689,6 @@ class InspectorPage extends Component {
 
 		if (!upload && deeplink && deeplink.uploadID !== 0) {
 			this.onFetchUpload();
-
-// 			if (!isUserLoggedIn()) {
-// 				this.props.onModal('/register');
-// 			}
 		}
 
 		document.addEventListener('keydown', this.handleKeyDown);
@@ -704,15 +699,15 @@ class InspectorPage extends Component {
 
 		const { upload, restricted } = nextState;
 		if (!this.state.upload && upload && !isUserLoggedIn()) {
-			this.props.onModal('/register');
+			this.props.onModal(Modals.REGISTER);
 			return (false);
 		}
 
 		if (upload && (upload.private << 0) === 1) {
 			const isOwner = (nextProps.profile && upload.creator.user_id === nextProps.profile.id);
-			const isContributor = (nextProps.profile && !isOwner && (upload.contributors.filter((contributor)=> ((contributor.id << 0) === nextProps.profile.id)).length > 0));
+			const isTeamMember = (nextProps.profile && !isOwner && (upload.team.members.filter((member)=> ((member.userID << 0) === nextProps.profile.id)).length > 0));
 
-			if (!restricted && (!isOwner && !isContributor)) {
+			if (!restricted && (!isOwner && !isTeamMember)) {
 				this.setState({
 					restricted : true,
 					tooltip    : null
@@ -734,7 +729,7 @@ class InspectorPage extends Component {
 			this.onFetchUpload();
 
 			if (!isUserLoggedIn()) {
-				this.props.onModal('/register');
+				this.props.onModal(Modals.REGISTER);
 			}
 		}
 
@@ -2678,7 +2673,6 @@ class InspectorPage extends Component {
 				This project is private, you must be logged in as one of its team members to view!
 			</BaseOverlay>)}
 
-			{/*{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing*/}
 			{(!restricted && upload && (percent === 99 || processing)) && (<UploadProcessing
 				upload={upload}
 				processing={this.state.processing}

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import BaseOverlay from '../BaseOverlay';
 import LoginForm from '../../forms/LoginForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
+import { Modals } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { URIs } from './../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
@@ -30,7 +31,7 @@ class LoginModal extends Component {
 		if (!prevProps.profile && profile) {
 			this.setState({
 				outro    : true,
-				outroURI : (profile.sources.length === 0 || profile.integrations.length === 0) ? '/modal/integrations' : null
+				outroURI : (profile.sources.length === 0 || profile.integrations.length === 0) ? `/modal${Modals.INTEGRATIONS}` : null
 			});
 		}
 	}
@@ -40,8 +41,6 @@ class LoginModal extends Component {
 
 		const { outroURI } = this.state;
 		this.setState({ outro : false }, ()=> {
-
-			this.props.onLoggedIn(this.props.profile);
 			const { redirectURI } = this.props;
 			if (redirectURI) {
 				this.props.onPage(redirectURI);
@@ -84,7 +83,7 @@ class LoginModal extends Component {
 
 	handlePage = (url)=> {
 		console.log('LoginModal.handlePage()', url);
-		if (url.includes('/github-connect')) {
+		if (url.startsWith('/modal')) {
 			this.props.onModal(`/${URIs.lastComponent(url)}`);
 
 		} else {

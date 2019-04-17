@@ -1,5 +1,4 @@
 
-
 import { URIs } from '../utils/lang';
 
 export const HOME = '/';
@@ -13,6 +12,27 @@ export const RECOVER = '/recover';
 export const REGISTER = '/register';
 export const TERMS = '/terms';
 export const UPLOAD = '/new';
+
+export const Modals = {
+	CONFIG_UPLOAD  : '/config-upload',
+	GITHUB_CONNECT : '/github-connect',
+	INTEGRATIONS   : '/integrations',
+	LOGIN          : '/login',
+	RECOVER        : '/recover',
+	REGISTER       : '/register',
+	STRIPE         : '/stripe'
+};
+
+export const Pages = {
+	HOME    : '/',
+	INSPECT : '/inspect',
+	PARTS   : '/parts',
+	PRESENT : '/present',
+	PRIVACY : '/privacy',
+	PROFILE : '/profile',
+	TERMS   : '/terms',
+	UPLOAD  : '/new'
+};
 
 export const CDN_HOSTNAME = 'http://cdn.designengine.ai';
 export const API_HOSTNAME = 'https://api.designengine.ai';

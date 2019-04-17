@@ -33,8 +33,11 @@ import TermsPage from '../pages/desktop/TermsPage';
 import UploadPage from '../pages/desktop/UploadPage';
 import BaseMobilePage from '../pages/mobile/BaseMobilePage';
 
-
-import { EXTENSION_PUBLIC_HOST, API_ENDPT_URL, GITHUB_APP_AUTH } from '../../consts/uris';
+import {
+	API_ENDPT_URL,
+	EXTENSION_PUBLIC_HOST,
+	GITHUB_APP_AUTH,
+	Modals } from '../../consts/uris';
 import {
 	appendHomeArtboards,
 	fetchTeamLookup,
@@ -202,7 +205,7 @@ class App extends Component {
 
 		if (team && !prevProps.team) {
 			if (!profile || team.members.findIndex((member)=> (member.userID === profile.id)) === -1) {
-				this.onShowModal('/register');
+				this.onToggleModal(Modals.REGISTER, true);
 			}
 		}
 	}
@@ -283,7 +286,7 @@ class App extends Component {
 	handleIntegrationsSubmitted = (profile)=> {
 		console.log('App.handleIntegrationsSubmitted()', profile);
 
-		this.onHideModal('/integrations');
+		this.onToggleModal(Modals.INTEGRATIONS, false);
 		this.props.updateUserProfile(profile, false);
 		this.props.updateUserProfile(profile);
 		if (isProfilePage()) {
@@ -294,7 +297,7 @@ class App extends Component {
 			});
 
 		} else {
-			this.onShowModal('/config-upload');
+			this.onToggleModal(Modals.CONFIG_UPLOAD, true);
 		}
 	};
 
@@ -305,7 +308,7 @@ class App extends Component {
 		if (profile.sources.length === 0 || profile.integrations.length === 0) {
 			trackEvent('user', 'sign-up');
 			setTimeout(()=> {
-				this.onShowModal('/integrations');
+				this.onToggleModal(Modals.INTEGRATIONS, true);
 			}, 1250);
 
 		} else {
@@ -350,7 +353,7 @@ class App extends Component {
 	handlePaidAlert = ()=> {
 // 		console.log('App.handlePaidAlert()');
 
-		this.onShowModal('/stripe');
+		this.onToggleModal(Modals.STRIPE, true);
 	};
 
 	handlePopup = (payload)=> {
@@ -366,7 +369,7 @@ class App extends Component {
 	handlePurchaseSubmitted = (purchase)=> {
 // 		console.log('App.handlePurchaseSubmitted()', purchase);
 
-		this.onHideModal('/stripe');
+		this.onToggleModal(Modals.STRIPE, false);
 		this.props.fetchUserProfile();
 	};
 
@@ -378,7 +381,7 @@ class App extends Component {
 		if (profile.sources.length === 0 || profile.integrations.length === 0) {
 			trackEvent('user', 'sign-up');
 			setTimeout(()=> {
-				this.onShowModal('/integrations');
+				this.onToggleModal(Modals.INTEGRATIONS, true);
 			}, 750);
 
 		} else {
@@ -393,7 +396,7 @@ class App extends Component {
 		if (profile.sources.length === 0 || profile.integrations.length === 0) {
 			trackEvent('user', 'sign-up');
 			setTimeout(()=> {
-				this.onShowModal('/integrations');
+				this.onToggleModal(Modals.INTEGRATIONS, true);
 			}, 1250);
 
 		} else {
@@ -503,76 +506,75 @@ class App extends Component {
 		img.onerror = ()=> { this.props.setAtomExtension(false); };
 	};
 
-	onHideModal = (url)=> {
-		console.log('App.onHideModal()', url);
+	onToggleModal = (url, show)=> {
+		console.log('App.onToggleModal()', url, show);
 
-		if (url === '/config-upload') {
-			this.setState({ configUploadModal : false });
+		if (show) {
+			this.setState({
+				configUploadModal : false,
+				githubModal       : false,
+				integrationsModal : false,
+				loginModal        : (this.state.loginModal && url === Modals.GITHUB_CONNECT),
+				registerModal     : (this.state.registerModal && url === Modals.GITHUB_CONNECT),
+				stripeModal       : false
+			});
 
-		} else if (url === '/github-connect') {
-			this.setState({ githubModal : false });
+			if (url === Modals.CONFIG_UPLOAD) {
+				this.setState({ configUploadModal : true });
 
-		} else if (url === '/integrations') {
-			this.setState({ integrationsModal : false });
+			} else if (url === Modals.GITHUB_CONNECT) {
+				this.handleGithubAuth();
 
-		} else if (url === '/login') {
-			this.setState({ loginModal : false });
+			} else if (url === Modals.INTEGRATIONS) {
+				this.setState({ integrationsModal : true });
 
-		} else if (url === '/register') {
-			this.setState({ registerModal : false });
+			} else if (url === Modals.LOGIN) {
+				this.setState({ loginModal : true });
 
-		} else if (url === '/stripe') {
-			if (isInspectorPage()) {
-				this.handlePage('');
+			} else if (url === Modals.REGISTER) {
+				this.setState({ registerModal : true });
 
-				setTimeout(()=> {
+			} else if (url === Modals.STRIPE) {
+				this.setState({
+					payDialog   : false,
+					stripeModal : true
+				});
+			}
+
+		} else {
+			if (url === Modals.CONFIG_UPLOAD) {
+				this.setState({ configUploadModal : false });
+
+			} else if (url === Modals.GITHUB_CONNECT) {
+				this.setState({ githubModal : false });
+
+			} else if (url === Modals.INTEGRATIONS) {
+				this.setState({ integrationsModal : false });
+
+			} else if (url === Modals.LOGIN) {
+				this.setState({ loginModal : false });
+
+			} else if (url === Modals.REGISTER) {
+				this.setState({ registerModal : false });
+
+			} else if (url === Modals.STRIPE) {
+				if (isInspectorPage()) {
+					this.handlePage('');
+
+					setTimeout(()=> {
+						this.setState({
+							payDialog   : false,
+							stripeModal : false
+						});
+					}, 1250);
+
+				} else {
 					this.setState({
 						payDialog   : false,
 						stripeModal : false
 					});
-				}, 1250);
-
-			} else {
-				this.setState({
-					payDialog   : false,
-					stripeModal : false
-				});
+				}
 			}
-		}
-	};
-
-	onShowModal = (url)=> {
-		console.log('App.onShowModal()', url);
-
-		this.setState({
-			configUploadModal : false,
-			githubModal       : false,
-			integrationsModal : false,
-			loginModal        : (this.state.loginModal && url === '/github-connect'),
-			registerModal     : (this.state.registerModal && url === '/github-connect'),
-			stripeModal       : false
-		});
-
-		if (url === '/config-upload') {
-			this.setState({ configUploadModal : true });
-
-		} else if (url === '/github-connect') {
-			this.handleGithubAuth();
-
-		} else if (url === '/integrations') {
-			this.setState({ integrationsModal : true });
-
-		} else if (url === '/login') {
-			this.setState({ loginModal : true });
-
-		} else if (url === '/register') {
-			this.setState({ registerModal : true });
-
-		} else if (url === '/stripe') {
-			this.setState({
-				payDialog   : false,
-				stripeModal : true
-			});
 		}
 	};
 
@@ -591,7 +593,7 @@ class App extends Component {
 			    <TopNav
 				    mobileLayout={false}
 				    pathname={pathname}
-				    onModal={this.onShowModal}
+				    onModal={(url)=> this.onToggleModal(url, true)}
 				    onPage={this.handlePage}
 				    onLogout={this.handleLogout}
 				    onScore={this.handleScore}
@@ -604,13 +606,13 @@ class App extends Component {
 					    {(!isUserLoggedIn()) && (<Route exact path="/profile"><Redirect to="/" /></Route>)}
 					    <Route exact path="/logout" render={()=> (profile) ? this.handleLogout() : null} />
 
-					    <Route exact path="/:section(inspect|parts|present)" render={()=> <HomePage onArtboardClicked={this.handleArtboardClicked} onModal={this.onShowModal} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/:section(inspect|parts|present)" render={()=> <HomePage onArtboardClicked={this.handleArtboardClicked} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/new"><Redirect to="/new/inspect" /></Route>
-					    <Route exact path="/new/:type(inspect|parts|present)" render={(props)=> <UploadPage { ...props } onProcessing={this.handleProcessing} onRegistered={this.handleRegistered} onScrollOrigin={this.handleScrollOrigin} onModal={this.onShowModal} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/new/:type(inspect|parts|present)" render={(props)=> <UploadPage { ...props } onProcessing={this.handleProcessing} onRegistered={this.handleRegistered} onScrollOrigin={this.handleScrollOrigin} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
-					    <Route exact path="/:section(inspect|parts|present)/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onModal={this.onShowModal} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/:section(inspect|parts|present)/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
-					    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onModal={this.onShowModal} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />
 					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
@@ -632,7 +634,7 @@ class App extends Component {
 				    {(!isInspectorPage()) && (<BottomNav
 					    mobileLayout={false}
 					    onLogout={()=> this.handleLogout()}
-					    onModal={this.onShowModal}
+					    onModal={(url)=> this.onToggleModal(url, true)}
 					    onPage={this.handlePage}
 				    />)}
 			    </div>
@@ -652,34 +654,34 @@ class App extends Component {
 							  {(configUploadModal) && (<ConfigUploadModal
 								  onPage={this.handlePage}
 								  onPopup={this.handlePopup}
-								  onComplete={()=> this.onHideModal('/config-upload')}
-								  onSubmitted={()=> this.onHideModal('/config-upload')}
+								  onComplete={()=> this.onToggleModal(Modals.CONFIG_UPLOAD, false)}
+								  onSubmitted={()=> this.onToggleModal(Modals.CONFIG_UPLOAD, false)}
 							  />)}
 
 							  {(loginModal) && (<LoginModal
 								  inviteID={null}
 								  outro={(profile !== null)}
-								  onModal={this.onShowModal}
+								  onModal={(url)=> this.onToggleModal(url, true)}
 								  onPage={this.handlePage}
 								  onPopup={this.handlePopup}
-								  onComplete={()=> this.onHideModal('/login')}
+								  onComplete={()=> this.onToggleModal(Modals.LOGIN, false)}
 								  onLoggedIn={this.handleLoggedIn}
 							  />)}
 
 							  {(registerModal) && (<RegisterModal
 								  inviteID={null}
 								  outro={(profile !== null)}
-								  onModal={this.onShowModal}
+								  onModal={(url)=> this.onToggleModal(url, true)}
 								  onPage={this.handlePage}
 								  onPopup={this.handlePopup}
-								  onComplete={()=> this.onHideModal('/register')}
+								  onComplete={()=> this.onToggleModal(Modals.REGISTER, false)}
 								  onRegistered={this.handleRegistered}
 							  />)}
 
 							  {(integrationsModal) && (<IntegrationsModal
 								  profile={profile}
 								  onPopup={this.handlePopup}
-								  onComplete={()=> this.onHideModal('/integrations')}
+								  onComplete={()=> this.onToggleModal(Modals.INTEGRATIONS, false)}
 								  onSubmitted={this.handleIntegrationsSubmitted}
 							  />)}
 
@@ -694,7 +696,7 @@ class App extends Component {
 								  onPage={this.handlePage}
 								  onPopup={this.handlePopup}
 								  onSubmitted={this.handlePurchaseSubmitted}
-								  onComplete={()=> this.onHideModal('/stripe')}
+								  onComplete={()=> this.onToggleModal(Modals.STRIPE, false)}
 							  />)}
 					  </>)
 				  }
@@ -717,7 +719,7 @@ class App extends Component {
 				    <BottomNav
 					    mobileLayout={true}
 					    onLogout={this.handleLogout}
-					    onModal={this.onShowModal}
+					    onModal={(url)=> this.onToggleModal(url, true)}
 					    onPage={this.handlePage}
 				    />
 			    </div>

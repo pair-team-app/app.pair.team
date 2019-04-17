@@ -11,7 +11,7 @@ import UploadHeader from '../../navs/UploadHeader';
 import LoginForm from '../../forms/LoginForm';
 import RegisterForm from '../../forms/RegisterForm';
 
-import { API_ENDPT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
+import { Modals, API_ENDPT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { addFileUpload, updateDeeplink, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
@@ -151,7 +151,7 @@ class UploadPage extends Component {
 		console.log('UploadPage.handleGitHub()');
 
 		trackEvent('button', 'github');
-		this.props.onModal('/github-connect');
+		this.props.onModal(Modals.GITHUB_CONNECT);
 	};
 
 	handleLogin = ()=> {
