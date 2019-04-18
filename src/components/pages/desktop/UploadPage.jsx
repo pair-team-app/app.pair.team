@@ -100,7 +100,7 @@ class UploadPage extends Component {
 	};
 
 	handleFile = (file)=> {
-// 		console.log('UploadPage.handleFile()', file, this.props, this.state);
+// 		console.log('UploadPage.handleFile()', file);
 
 		const { id, email } = (this.props.profile) ? this.props.profile : this.state.profile;
 		sendToSlack(`*[\`${id}\`]* *${email}* started uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
