@@ -160,7 +160,7 @@ class ConfigUploadModal extends Component {
 	render() {
 // 		console.log('ConfigUploadModal.render()', this.props, this.state);
 
-		const { deeplink } = this.props;
+		const { team } = this.props;
 		const { step, outro, integrations } = this.state;
 		const title = (step === 0) ? 'Upload a JSON Configuration File' : 'Step 2';
 
@@ -170,7 +170,7 @@ class ConfigUploadModal extends Component {
 				delay={0}
 				outro={outro}
 				unblurred={true}
-				closeable={(deeplink && deeplink.uploadID === 0)}
+				closeable={(!team)}
 				defaultButton={null}
 				title={null}
 				onComplete={this.handleComplete}>
@@ -202,7 +202,7 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		deeplink    : state.deeplink,
+		team        : state.team,
 		profile     : state.userProfile,
 		redirectURI : state.redirectURI
 	});

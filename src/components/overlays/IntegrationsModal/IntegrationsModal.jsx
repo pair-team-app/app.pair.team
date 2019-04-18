@@ -137,7 +137,7 @@ class IntegrationsModal extends Component {
 	render() {
 // 		console.log('IntegrationsModal.render()', this.props, this.state);
 
-		const { deeplink } = this.props;
+		const { team } = this.props;
 		const { step, sources, devs, outro } = this.state;
 		const title = (step === 0) ? 'What design tools is your team using?' : 'What development frameworks is your team using?';
 // 		const selectedItems = gridItems[step].filter((item)=> (item.selected));
@@ -148,7 +148,7 @@ class IntegrationsModal extends Component {
 				delay={0}
 				outro={outro}
 				unblurred={true}
-				closeable={(deeplink && deeplink.uploadID === 0)}
+				closeable={(!team)}
 				defaultButton={null}
 				title={null}
 				onComplete={this.handleComplete}>
@@ -182,7 +182,7 @@ class IntegrationsModal extends Component {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		deeplink : state.deeplink
+		team : state.team
 	});
 };
 

@@ -95,7 +95,7 @@ class LoginModal extends Component {
 	render() {
 // 		console.log('LoginModal.render()', this.props, this.state);
 
-		const { deeplink } = this.props;
+		const { team } = this.props;
 		const { outro } = this.state;
 
 		return (
@@ -103,7 +103,7 @@ class LoginModal extends Component {
 				tracking={`login/${URIs.firstComponent()}`}
 				outro={outro}
 				unblurred={true}
-				closeable={(deeplink && deeplink.uploadID === 0)}
+				closeable={(!team)}
 				defaultButton={null}
 				title={null}
 				onComplete={this.handleComplete}>
@@ -138,7 +138,7 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		deeplink    : state.deeplink,
+		team        : state.team,
 		invite      : state.invite,
 		profile     : state.userProfile,
 		redirectURI : state.redirectURI

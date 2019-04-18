@@ -119,14 +119,14 @@ class RegisterModal extends Component {
 	render() {
 // 		console.log('RegisterModal.render()', this.props, this.state);
 
-		const { deeplink } = this.props;
+		const { team } = this.props;
 		const { outro } = this.state;
 		return (
 			<BaseOverlay
 				tracking={`register/${URIs.firstComponent()}`}
 				outro={outro}
 				unblurred={true}
-				closeable={(deeplink && deeplink.uploadID === 0)}
+				closeable={(!team)}
 				defaultButton={null}
 				title={null}
 				onComplete={this.handleComplete}>
@@ -161,10 +161,10 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		deeplink    : state.deeplink,
 		invite      : state.invite,
 		profile     : state.userProfile,
-		redirectURI : state.redirectURI
+		redirectURI : state.redirectURI,
+		team        : state.team
 	});
 };
 

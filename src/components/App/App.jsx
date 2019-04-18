@@ -203,7 +203,6 @@ class App extends Component {
 			}
 		}
 
-
 		if (team && !prevProps.team) {
 			if (!profile) {
 				this.onToggleModal(Modals.REGISTER, true);
@@ -248,17 +247,30 @@ class App extends Component {
 	handleArtboardClicked = (artboard)=> {
 // 		console.log('App.handleArtboardClicked()', artboard);
 
-		const { uploadID, pageID } = artboard;
-		const artboardID = artboard.id;
+		const { profile, team } = this.props;
+		if (profile && team && team.members.findIndex((member)=> (member.userID === profile.id)) > -1) {
+			const { uploadID, pageID } = artboard;
+			const artboardID = artboard.id;
 
-		this.handlePage(buildInspectorPath({
-			id    : uploadID,
-			title : artboard.title
-			}, URIs.firstComponent()
-		));
+			this.handlePage(buildInspectorPath({
+					id    : uploadID,
+					title : artboard.title
+				}, URIs.firstComponent()
+			));
 
-		Browsers.scrollOrigin(wrapper.current);
-		this.props.updateDeeplink({ uploadID, pageID, artboardID });
+			Browsers.scrollOrigin(wrapper.current);
+			this.props.updateDeeplink({ uploadID, pageID, artboardID });
+
+		} else {
+			if (!profile) {
+				this.onToggleModal(Modals.REGISTER, true);
+
+			} else {
+				this.onToggleModal(Modals.REGISTER, false);
+				this.onToggleModal(Modals.LOGIN, false);
+				this.setState({ teamDialog : true });
+			}
+		}
 	};
 
 	handleGithubAuth = ()=> {
