@@ -638,7 +638,7 @@ class App extends Component {
 	render() {
 //   	console.log('App.render()', this.props, this.state);
 
-		const { profile } = this.props;
+		const { profile, team } = this.props;
 		const { pathname } = this.props.location;
   	const { rating, allowMobile, processing, popup } = this.state;
   	const { integrationsModal, loginModal, registerModal, configUploadModal, stripeModal, payDialog, teamDialog } = this.state;
@@ -749,7 +749,7 @@ class App extends Component {
 
 							  {(teamDialog) && (<ConfirmDialog
 								  title="Confirm Team Membership"
-								  message="Are you sure you want to join this team?"
+								  message={`Are you sure you want to join the "${team.title} team?`}
 								  onComplete={this.handleTeamDialogComplete}
 							  />)}
 
