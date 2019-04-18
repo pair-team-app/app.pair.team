@@ -749,7 +749,7 @@ class App extends Component {
 
 							  {(teamDialog) && (<ConfirmDialog
 								  title="Confirm Team Membership"
-								  message={`Are you sure you want to join the "${team.title} team?`}
+								  message={`Are you sure you want to join the "${team.title}" team?`}
 								  onComplete={this.handleTeamDialogComplete}
 							  />)}
 
