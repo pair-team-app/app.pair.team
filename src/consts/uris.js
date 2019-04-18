@@ -1,5 +1,5 @@
 
-import { URIs } from '../utils/lang';
+// import { URIs } from '../utils/lang';
 
 export const HOME = '/';
 export const INSPECT = '/inspect';

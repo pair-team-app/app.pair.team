@@ -2363,7 +2363,6 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage.render()', this.props);
 // 		console.log('InspectorPage.render()', this.state);
-// 		console.log('InspectorPage.render()', (new Array(100)).fill(null).map((i)=> (Maths.randomInt(1, 10))).join(','), this.state);
 
 
 		const { processing, profile, atomExtension } = this.props;
@@ -2393,6 +2392,8 @@ class InspectorPage extends Component {
 
 		let artboardImages = [];
 		let slices = [];
+
+// 		console.log('InspectorPage.render()', artboards, this.state);
 
 		artboards.forEach((artboard, i)=> {
 			if ((i % GRID.colsMax) << 0 === 0 && i > 0) {
@@ -2467,8 +2468,8 @@ class InspectorPage extends Component {
 			this.contentSize.width = Math.max(this.contentSize.width, offset.x);
 		});
 
-		artboardImages = (!restricted) ? artboardImages : [];
-		slices = (!restricted) ? slices : [];
+// 		artboardImages = (!restricted) ? artboardImages : [];
+// 		slices = (!restricted) ? slices : [];
 
 
 
