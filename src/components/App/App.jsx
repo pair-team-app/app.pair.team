@@ -175,6 +175,12 @@ class App extends Component {
 				if (this.state.ranking !== 0) {
 					this.setState({ rating : 0 });
 				}
+
+				if (team && team.members.findIndex((member)=> (member.userID === profile.id)) === -1) {
+					this.onToggleModal(Modals.REGISTER, false);
+					this.onToggleModal(Modals.LOGIN, false);
+					this.setState({ teamDialog : true });
+				}
 			}
 
 // 			console.log('[:::::::::::|:|:::::::::::] PAY CHECK [:::::::::::|:|:::::::::::]');
@@ -195,18 +201,19 @@ class App extends Component {
 			if (payDialog && profile.paid) {
 				this.setState({ payDialog : false });
 			}
-
-		} else {
-// 			if (isUserLoggedIn()) {
-// 				this.handleLogout();
-// 			}
 		}
 
 
 		if (team && !prevProps.team) {
-			console.log('|:|:|:|:|:|:|:|:|:|:|:|', team, prevProps.team);
-			if (!profile || team.members.findIndex((member)=> (member.userID === profile.id)) === -1) {
+			if (!profile) {
 				this.onToggleModal(Modals.REGISTER, true);
+
+			} else {
+				if (team.members.findIndex((member)=> (member.userID === profile.id)) === -1) {
+					this.onToggleModal(Modals.REGISTER, false);
+					this.onToggleModal(Modals.LOGIN, false);
+					this.setState({ teamDialog : true });
+				}
 			}
 		}
 	}
@@ -290,7 +297,8 @@ class App extends Component {
 		this.props.updateUserProfile(profile, false);
 		this.props.updateUserProfile(profile);
 
-		if (this.props.team) {
+		const { team } = this.props;
+		if (team && team.members.findIndex((member)=> (member.userID === profile.id)) === -1) {
 			this.setState({ teamDialog : true });
 
 		} else {
@@ -328,7 +336,8 @@ class App extends Component {
 		this.props.updateUserProfile(profile, false);
 		this.props.updateUserProfile(profile);
 
-		if (this.props.team) {
+		const { team } = this.props;
+		if (team && team.members.findIndex((member)=> (member.userID === profile.id)) === -1) {
 			this.setState({ teamDialog : true });
 
 		} else {
@@ -426,7 +435,7 @@ class App extends Component {
 		this.setState({ contentSize : {
 			width  : wrapper.current.innerWidth,
 			height : wrapper.current.innerHeight
-		} })
+		} });
 	};
 
 	handleScrollOrigin = ()=> {
@@ -443,9 +452,20 @@ class App extends Component {
 	handleTeamDialogComplete = (ok)=> {
 		console.log('App.handleTeamDialogComplete()', ok);
 
-		const { profile } = this.props;
+		const { profile, team } = this.props;
 		this.setState({ teamDialog : false }, ()=> {
 			if (ok) {
+				axios.post(API_ENDPT_URL, qs.stringify({
+					action  : 'JOIN_TEAM',
+					team_id : team.id,
+					user_id : profile.id,
+					type    : 'member'
+				})).then((response)=> {
+					console.log('JOIN_TEAM', response.data);
+					this.props.fetchTeamLookup();
+				}).catch((error)=> {
+				});
+
 				if (profile.sources.length === 0 || profile.integrations.length === 0) {
 					setTimeout(()=> {
 						this.onToggleModal(Modals.INTEGRATIONS, true);
@@ -453,6 +473,9 @@ class App extends Component {
 
 				} else {
 				}
+
+			} else {
+				this.handlePage('');
 			}
 		});
 	};
@@ -724,11 +747,11 @@ class App extends Component {
 								  onComplete={this.handlePaidAlert}
 							  />)}
 
-						  {(teamDialog) && (<ConfirmDialog
-							  title="Confirm Team"
-							  message="Are you a member of this team?"
-							  onComplete={this.handleTeamDialogComplete}
-						  />)}
+							  {(teamDialog) && (<ConfirmDialog
+								  title="Confirm Team Membership"
+								  message="Are you sure you want to join this team?"
+								  onComplete={this.handleTeamDialogComplete}
+							  />)}
 
 							  {(stripeModal) && (<StripeModal
 								  profile={profile}
@@ -768,9 +791,3 @@ class App extends Component {
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
-
-/**
- * TODO: *\\_
- *  * Make recovery modal from existing page+form *
- *  * ≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈~≈/ *  *
- */

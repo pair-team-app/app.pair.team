@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import BaseOverlay from '../BaseOverlay';
 import LoginForm from '../../forms/LoginForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
-import { Modals } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { URIs } from './../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
@@ -29,10 +28,7 @@ class LoginModal extends Component {
 
 		const { profile } = this.props;
 		if (!prevProps.profile && profile) {
-			this.setState({
-				outro    : true,
-				outroURI : (profile.sources.length === 0 || profile.integrations.length === 0) ? `/modal${Modals.INTEGRATIONS}` : null
-			});
+			this.setState({ outro : true });
 		}
 	}
 

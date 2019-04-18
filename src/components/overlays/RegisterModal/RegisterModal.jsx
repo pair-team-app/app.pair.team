@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import BaseOverlay from '../BaseOverlay';
 import RegisterForm from '../../forms/RegisterForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
-import { Modals, API_ENDPT_URL } from '../../../consts/uris';
+import { API_ENDPT_URL } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath } from '../../../utils/funcs';
 import { URIs } from './../../../utils/lang';
@@ -52,10 +52,7 @@ class RegisterModal extends Component {
 
 		const { profile } = this.props;
 		if (!prevProps.profile && profile) {
-			this.setState({
-				outro    : true,
-				outroURI : (profile.sources.length === 0 || profile.integrations.length === 0) ? `/modal${Modals.INTEGRATIONS}` : null
-			});
+			this.setState({ outro : true });
 		}
 	}
 
@@ -93,7 +90,7 @@ class RegisterModal extends Component {
 	};
 
 	handlePage = (url)=> {
-		console.log('RegisterModal.handlePage()', url);
+// 		console.log('RegisterModal.handlePage()', url);
 
 		if (url.startsWith('/modal')) {
 			this.props.onModal(`/${URIs.lastComponent(url)}`);
