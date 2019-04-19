@@ -111,62 +111,6 @@ const intersectSlices = (slices, frame)=> {
 	return (slices.filter((slice)=> (Maths.geom.frameContainsFrame(frame, slice.meta.frame))));
 };
 
-
-
-const ArtboardsList = (props)=> {
-// 	console.log('InspectorPage.ArtboardsList()', props);
-
-	const { enabled, contents } = props;
-	return ((contents.length > 0) ? <div className="artboards-list-wrapper">
-		{contents.map((artboard, i)=> {
-			const { meta } = artboard;
-
-			return (
-				<ArtboardListItem
-					key={i}
-					enabled={enabled}
-					id={artboard.id}
-					filename={`${artboard.filename}@1x.png`}
-					title={artboard.title}
-					size={meta.frame.size}
-					onClick={()=> {trackEvent('button', 'change-artboard'); props.onArtboardListItem(artboard);}}
-				/>
-			);
-		})}
-	</div> : <div className="artboards-list-wrapper artboards-list-wrapper-empty">{(enabled) ? '' : ''}</div>);
-};
-
-const ArtboardListItem = (props)=> {
-// 	console.log('InspectorPage.ArtboardListItem()', props);
-
-	const { enabled, id, filename, title, size } = props;
-
-	const className = `artboard-list-item${(!enabled) ? ' artboard-list-item-disabled' : ''}`;
-	const thumbStyle = {
-		width  : `${size.width}px`,
-		height : `${size.height}px`
-	};
-
-	let errored = false;
-
-	return (<div data-slice-id={id} className={className} onClick={()=> (enabled) ? props.onClick() : null}><Row vertical="center">
-		<div className="artboard-list-item-content-wrapper">
-			<ImageLoader
-				style={thumbStyle}
-				src={filename}
-				image={(props)=> <PartListItemThumb { ...props } width={size.width} height={size.height} />}
-				loading={()=> (<div className="artboard-list-item-image artboard-list-item-image-loading" style={thumbStyle}><FontAwesome className="artboard-list-item-fa-status" name="clock-o" size="2x" /></div>)}
-				error={()=> (<div className="artboard-list-item-image artboard-list-item-image-loading"><FontAwesome className="artboard-list-item-fa-status" name="clock-o" size="2x" /></div>)}
-				onError={(event)=> (errored = true)}
-			/>
-
-			{/*<img className="artboard-list-item-image" src={filename} width={size.width} height={size.height} style={thumbStyle} alt={title} />*/}
-			<div className="artboard-list-item-title">{Strings.truncate(title, 18)}</div>
-		</div>
-		{(!errored) && (<button className="tiny-button artboard-list-item-button" onClick={()=> (enabled) ? props.onClick() : null}><img src={downloadButton} width="20" height="14" alt="Download" /></button>)}
-	</Row></div>);
-};
-
 const ColorSwatch = (props)=> {
 // 	console.log('InspectorPage.ColorSwatch()', props);
 
@@ -269,6 +213,15 @@ const InspectorFooter = (props)=> {
 			{(section !== SECTIONS.PRESENTER) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('present')}>Presenter</button>)}
 		</div>)}
 	</Row></div>);
+};
+
+const InspectorPagePreview = (props)=> {
+	console.log('InspectorPage.InspectorPagePreview()', props);
+
+	const { syntax } = props;
+	return (<div className="inspector-page-preview">
+		Coming Soon!
+	</div>);
 };
 
 const MarqueeBanner = (props)=> {
@@ -1102,10 +1055,7 @@ class InspectorPage extends Component {
 									return (Object.assign({}, tab, {
 										type     : 'component',
 										enabled  : ((upload.state << 0) === 3),
-										contents : <ArtboardsList
-											enabled={((upload.state << 0) === 3)}
-											contents={flattenUploadArtboards(upload, 'page_child')}
-											onArtboardListItem={(artboard) => this.handleChangeArtboard(artboard)} />
+										contents : <InspectorPagePreview />
 									}));
 								}
 							}));
@@ -1232,10 +1182,7 @@ class InspectorPage extends Component {
 						return (Object.assign({}, tab, {
 							type     : 'component',
 							enabled  : true,
-							contents : <ArtboardsList
-								enabled={true}
-								contents={flattenUploadArtboards(upload, 'page_child')}
-								onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />
+							contents : <InspectorPagePreview />
 						}));
 					}
 				}));
@@ -1351,10 +1298,7 @@ class InspectorPage extends Component {
 						return (Object.assign({}, tab, {
 							enabled  : true,
 							type     : 'component',
-							contents : <ArtboardsList
-								enabled={true}
-								contents={flattenUploadArtboards(upload, 'page_child')}
-								onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />
+							contents : <InspectorPagePreview />
 						}));
 					}
 				}));
@@ -2645,7 +2589,8 @@ class InspectorPage extends Component {
 												<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>
 											</div>)
 										: (<div className="inspector-page-panel-button-wrapper">
-												<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download PDF'}</button>
+												{/*<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download PDF'}</button>*/}
+												<button disabled={true} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Export'}</button>
 											</div>)
 									}
 								</div>

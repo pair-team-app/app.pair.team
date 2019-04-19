@@ -80,7 +80,7 @@
       "syntax": null
     }], [{
       "id": 5,
-      "title": "Views",
+      "title": "Preview",
       "type": "component",
       "enabled": false,
       "contents": null,
