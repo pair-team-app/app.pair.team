@@ -4,9 +4,6 @@
       "title": "Free Inspect",
       "url": "/inspect"
     }, {
-      "title": "Free Parts",
-      "url": "/parts"
-    }, {
       "title": "Presenter",
       "url": "/present"
     }, {
@@ -26,9 +23,6 @@
       "title": "Free Inspect",
       "url": "/inspect"
     }, {
-      "title": "Free Parts",
-      "url": "/parts"
-    }, {
       "title": "Presenter",
       "url": "/present"
     }, {
@@ -38,9 +32,6 @@
     "mobile": [{
       "title": "Free Inspect",
       "url": "/inspect"
-    }, {
-      "title": "Free Parts",
-      "url": "/parts"
     }, {
       "title": "Presenter",
       "url": "/present"

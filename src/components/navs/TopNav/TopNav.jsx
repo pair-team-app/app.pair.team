@@ -7,7 +7,7 @@ import { Row } from 'simple-flexbox';
 
 import TopNavMenu from './TopNavMenu/TopNavMenu';
 import TopNavProfile from './TopNavProfile/TopNavProfile';
-import TopNavRate from './TopNavRate/TopNavRate';
+// import TopNavRate from './TopNavRate/TopNavRate';
 
 import { Modals } from '../../../consts/uris';
 import { updateDeeplink } from '../../../redux/actions';
@@ -40,7 +40,7 @@ const TopNavDesktop = (props)=> {
 			{(sections.map((section, i)=> (
 				<div key={i} className={`top-nav-link${(pathname.includes(section.url)) ? ' top-nav-link-selected' : ''}`} onClick={()=> props.onLink(section.url)}>{section.title}</div>
 			)))}
-			<TopNavRate selected={(pathname.includes('/rate-this'))} onLink={props.onLink} onScore={props.onScore} />
+			{/*<TopNavRate selected={(pathname.includes('/rate-this'))} onLink={props.onLink} onScore={props.onScore} />*/}
 		</Row></div>
 
 		<div className="top-nav-column top-nav-column-right">

@@ -26,7 +26,7 @@ import IntegrationsPage from '../pages/desktop/IntegrationsPage';
 // import InviteTeamPage from '../pages/desktop/InviteTeamPage';
 import ProfilePage from '../pages/desktop/ProfilePage';
 import PrivacyPage from '../pages/desktop/PrivacyPage';
-import RateThisPage from '../pages/desktop/RateThisPage';
+// import RateThisPage from '../pages/desktop/RateThisPage';
 import RecoverPage from '../pages/desktop/RecoverPage';
 // import RegisterPage from '../pages/desktop/RegisterPage';
 import Status404Page from '../pages/desktop/Status404Page';
@@ -652,7 +652,7 @@ class App extends Component {
 
 		const { profile, team } = this.props;
 		const { pathname } = this.props.location;
-  	const { rating, allowMobile, processing, popup } = this.state;
+  	const { allowMobile, processing, popup } = this.state;
   	const { integrationsModal, loginModal, registerModal, configUploadModal, stripeModal, payDialog, teamDialog } = this.state;
 //   	const processing = true;
 
@@ -682,7 +682,7 @@ class App extends Component {
 
 					    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />
+					    {/*<Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />*/}
 					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
 					    <Route exact path="/privacy" render={()=> <PrivacyPage />} />

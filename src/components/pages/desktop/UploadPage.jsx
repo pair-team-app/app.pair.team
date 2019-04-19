@@ -107,9 +107,10 @@ class UploadPage extends Component {
 		trackEvent('upload', 'file');
 
 		this.setState({
-			formState : 1,
-			file      : file,
-			title     : file.name.split('.').slice(0, -1).join('.')
+			formState      : 1,
+			file           : file,
+			title          : file.name.split('.').slice(0, -1).join('.'),
+			uploadComplete : false
 		});
 
 		const config = {
