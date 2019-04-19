@@ -80,7 +80,7 @@
       "syntax": null
     }], [{
       "id": 5,
-      "title": "Preview",
+      "title": "Live Preview",
       "type": "component",
       "enabled": false,
       "contents": null,

@@ -215,12 +215,12 @@ const InspectorFooter = (props)=> {
 	</Row></div>);
 };
 
-const InspectorPagePreview = (props)=> {
-	console.log('InspectorPage.InspectorPagePreview()', props);
+const LivePreview = (props)=> {
+	console.log('InspectorPage.LivePreview()', props);
 
 	const { syntax } = props;
-	return (<div className="inspector-page-preview">
-		Coming Soon!
+	return (<div className="live-preview">
+		{(syntax)}
 	</div>);
 };
 
@@ -228,7 +228,7 @@ const MarqueeBanner = (props)=> {
 // 	console.log('InspectorPage.MarqueeBanner()', props);
 
 	const { background, copyText, outro, removable, track, children } = props;
-	const className = `marquee-banner${(outro) ? (removable) ? '  marquee-banner-outro-remove' : ' marquee-banner-outro' : ''}`;
+	const className = `marquee-banner${(outro) ? (removable) ? ' marquee-banner-outro-remove' : ' marquee-banner-outro' : ''}`;
 	const style = {
 		width      : '100%',
 		background : background
@@ -306,7 +306,6 @@ const SliceRolloverItem = (props)=> {
 // 	console.log('InspectorPage.SliceRolloverItem()', props);
 
 	const { id, artboardID, type, offset, top, left, width, height, scale, visible, filled } = props;
-
 	const className = `slice-rollover-item slice-rollover-item-${type}`;
 	const style = (visible) ? {
 		top     : `${top}px`,
@@ -1055,7 +1054,7 @@ class InspectorPage extends Component {
 									return (Object.assign({}, tab, {
 										type     : 'component',
 										enabled  : ((upload.state << 0) === 3),
-										contents : <InspectorPagePreview />
+										contents : <LivePreview syntax="Coming Soon!" />
 									}));
 								}
 							}));
@@ -1182,7 +1181,7 @@ class InspectorPage extends Component {
 						return (Object.assign({}, tab, {
 							type     : 'component',
 							enabled  : true,
-							contents : <InspectorPagePreview />
+							contents : <LivePreview syntax="Coming Soon!" />
 						}));
 					}
 				}));
@@ -1298,7 +1297,7 @@ class InspectorPage extends Component {
 						return (Object.assign({}, tab, {
 							enabled  : true,
 							type     : 'component',
-							contents : <InspectorPagePreview />
+							contents : <LivePreview syntax="Coming Soon!" />
 						}));
 					}
 				}));
