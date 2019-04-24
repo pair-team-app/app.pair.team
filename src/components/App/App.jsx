@@ -247,10 +247,10 @@ class App extends Component {
 	};
 
 	handleArtboardClicked = (artboard)=> {
-// 		console.log('App.handleArtboardClicked()', artboard);
+		console.log('App.handleArtboardClicked()', artboard);
 
 		const { profile, team } = this.props;
-		if (profile && team && team.members.findIndex((member)=> (member.userID === profile.id)) > -1) {
+		if (profile && (!team || (team && team.members.findIndex((member)=> (member.userID === profile.id)) > -1))) {
 			const { uploadID, pageID } = artboard;
 			const artboardID = artboard.id;
 
@@ -264,13 +264,15 @@ class App extends Component {
 			this.props.updateDeeplink({ uploadID, pageID, artboardID });
 
 		} else {
-			if (!profile) {
-				this.onToggleModal(Modals.REGISTER, true);
+			if (team) {
+				if (!profile) {
+					this.onToggleModal(Modals.REGISTER, true);
 
-			} else {
-				this.onToggleModal(Modals.REGISTER, false);
-				this.onToggleModal(Modals.LOGIN, false);
-				this.setState({ teamDialog : true });
+				} else {
+					this.onToggleModal(Modals.REGISTER, false);
+					this.onToggleModal(Modals.LOGIN, false);
+					this.setState({ teamDialog : true });
+				}
 			}
 		}
 	};
