@@ -43,16 +43,25 @@ const ProfilePageAvatar = (props)=> {
 	const defaultAvatar = (avatar.includes('avatar-default.png'));
 	return (<div className="profile-page-avatar">
 		<Row vertical="center">
-			<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={props.onFileDrop} onFileDialogCancel={props.onFileDialogCancel} ref={dropZone}>
-				<div className="profile-page-avatar-image-wrapper">
-					<ImageLoader
-						src={avatar}
-						image={(props)=> (<img className="profile-page-avatar-image" { ...props } src={avatar} alt="" />)}
-						loading={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
-						error={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
-					/>
+			<Dropzone
+				multiple={false}
+				disablePreview={true}
+				onDrop={props.onFileDrop}
+				onFileDialogCancel={props.onFileDialogCancel}
+				ref={dropZone}
+			>{({ getRootProps, getInputProps })=> (
+				<div { ...getRootProps() } className="profile-page-dz-wrapper">
+					<div className="profile-page-avatar-image-wrapper">
+						<ImageLoader
+							src={avatar}
+							image={(props)=> (<img className="profile-page-avatar-image" { ...props } src={avatar} alt="" />)}
+							loading={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+							error={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
+						/>
+					</div>
+					<input { ...getInputProps() } />
 				</div>
-			</Dropzone>
+			)}</Dropzone>
 			<button className="adjacent-button" onClick={()=> props.onClick()}>{(defaultAvatar) ? 'Upload' : 'Replace'}</button>
 			<div className={`page-link page-link-form${(defaultAvatar) ? ' page-link-form-disabled' : ''}`} onClick={()=> (defaultAvatar) ? null : props.onDropAvatar()}>Remove</div>
 		</Row>
@@ -181,7 +190,7 @@ class ProfilePage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('ProfilePage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+		console.log('ProfilePage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		if (!prevProps.profile && this.props.profile) {
 			const { profile } = this.props;
@@ -200,10 +209,8 @@ class ProfilePage extends Component {
 			});
 		}
 
-		if (this.state.fileDialog) {
-			if (dropZone.current && dropZone.current.fileInputEl) {
-				dropZone.current.fileInputEl.click();
-			}
+		if (this.state.fileDialog && dropZone.current) {
+			dropZone.current.open();
 		}
 	}
 

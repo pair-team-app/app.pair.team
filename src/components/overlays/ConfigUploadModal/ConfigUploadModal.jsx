@@ -47,12 +47,15 @@ const ConfigIntegrationsListItem = (props)=> {
 		</Column>
 		<Column horizontal="end" vertical="center" flexGrow={1}>
 			<Dropzone
-				className="config-integrations-list-item-dz"
 				multiple={false}
 				disablePreview={true}
-				onDrop={props.onDrop}>
-				<button className="config-integrations-list-item-button">{title}</button>
-			</Dropzone>
+				onDrop={props.onDrop}
+			>{({ getRootProps, getInputProps })=> (
+				<div { ...getRootProps() } className="config-integrations-list-item-dz">
+					<button className="config-integrations-list-item-button">{title}</button>
+					<input { ...getInputProps() } />
+				</div>
+			)}</Dropzone>
 		</Column>
 	</Row></div>);
 };

@@ -49,10 +49,8 @@ class UploadHeader extends Component {
 			this.setState({ fileDialog });
 		}
 
-		if (this.state.fileDialog) {
-			if (dropZone.current && dropZone.current.fileInputEl) {
-				dropZone.current.fileInputEl.click();
-			}
+		if (this.state.fileDialog && dropZone.current) {
+			dropZone.current.open();
 		}
 	}
 
@@ -81,8 +79,8 @@ class UploadHeader extends Component {
 		this.setState({ fileDialog : false });
 	};
 
-	handleFileDrop = (files)=> {
-// 		console.log('UploadHeader.handleFileDrop()', files);
+	handleFileDrop = (files, rejected)=> {
+// 		console.log('UploadHeader.handleFileDrop()', files, rejected);
 
 		const { id, email } = (this.props.profile) ? this.props.profile : this.state.profile;
 		if (files.length > 0) {
@@ -118,25 +116,27 @@ class UploadHeader extends Component {
 		const { title, subtitle, uploading } = this.props;
 		return (<div className="upload-header-wrapper">
 			<Dropzone
-				className="upload-header-dz"
 				multiple={false}
 				disablePreview={true}
 				onDrop={this.handleFileDrop}
 				onFileDialogCancel={this.handleFileDialogCancel}
 				ref={dropZone}
-			>
-				<h1 className="page-header-title upload-header-title">{title}</h1>
-				<div className="page-header-subtitle upload-header-subtitle">{subtitle}</div>
-				{(uploading)
-					? (<div className="upload-header-button-wrapper">
-							<button onClick={(event)=> this.handleCancel(event)}>Cancel</button>
-						</div>)
-					: (<div className="upload-header-button-wrapper">
-							<button className="adjacent-button" onClick={()=> trackEvent('button', 'upload')}>Upload</button>
-							<button onClick={(event)=> this.handleDemo(event)}>Try Demo</button>
-					</div>)
-				}
-			</Dropzone>
+			>{({ getRootProps, getInputProps })=> (
+				<div { ...getRootProps() } className="upload-header-dz">
+					<h1 className="page-header-title upload-header-title">{title}</h1>
+					<div className="page-header-subtitle upload-header-subtitle">{subtitle}</div>
+					{(uploading)
+						? (<div className="upload-header-button-wrapper">
+								<button onClick={(event)=> this.handleCancel(event)}>Cancel</button>
+							</div>)
+						: (<div className="upload-header-button-wrapper">
+								<button className="adjacent-button" onClick={()=> trackEvent('button', 'upload')}>Upload</button>
+								<button onClick={(event)=> this.handleDemo(event)}>Try Demo</button>
+							</div>)
+					}
+					<input { ...getInputProps() } />
+				</div>
+			)}</Dropzone>
 		</div>);
 	}
 }

@@ -62,19 +62,5 @@
         }).catch(function(err) { throw (err) });
       };*/
     </script>
-
-    <!-- monaco editor workers --><!--
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.13.1/min/vs/loader.js"></script>
-    <script>
-      require.config({
-        paths : { 'vs' : 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.13.1/min/vs' }
-      });
-      window.MonacoEnvironment = {
-        getWorkerUrl : function (workerId, label) {
-          return ('%PUBLIC_URL%/js/monaco-editor-worker-loader-proxy.js');
-        }
-      };
-      require(['vs/editor/editor.main'], function () {})
-    </script>-->
   </body>
 </html>

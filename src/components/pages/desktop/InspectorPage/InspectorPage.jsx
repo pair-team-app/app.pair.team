@@ -98,7 +98,7 @@ const canvas = React.createRef();
 
 
 const CodeEditor = (props)=> {
-	console.log('InspectorPage.CodeEditor()', props);
+// 	console.log('InspectorPage.CodeEditor()', props);
 
 	const { lang, syntax } = props;
 	return (<div className="code-editor">
@@ -196,12 +196,15 @@ const InspectorFooter = (props)=> {
 		<img src={deLogo} className="inspector-page-footer-logo" onClick={()=> props.onPage('')} alt="Design Engine" />
 		{(!processing) && (<div className="inspector-page-footer-button-wrapper">
 			{(creator) && (<Dropzone
-				className="inspector-page-footer-dz"
 				multiple={false}
 				disablePreview={true}
-				onDrop={props.onDrop}>
-				{/*<button className="inspector-page-footer-button" onClick={()=> trackEvent('button', 'version')}>Version</button>*/}
-			</Dropzone>)}
+				onDrop={props.onDrop}
+			>{({ getRootProps, getInputProps })=> (
+				<div { ...getRootProps() } className="inspector-page-footer-dz">
+					{/*<button className="inspector-page-footer-button" onClick={()=> trackEvent('button', 'version')}>Version</button>*/}
+					<input { ...getInputProps() } />
+				</div>
+			)}</Dropzone>)}
 
 			<button disabled={(scale >= Math.max(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-in'); props.onZoom(1);}}><FontAwesome name="search-plus" /></button>
 			<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-out'); props.onZoom(-1);}}><FontAwesome name="search-minus" /></button>
@@ -1495,11 +1498,11 @@ class InspectorPage extends Component {
 	};
 
 	handleEditorChange = (val, event)=> {
-		console.log('InspectorPage.handleEditorChange()', val, event);
+// 		console.log('InspectorPage.handleEditorChange()', val, event);
 	};
 
 	handleEditorMounted = (editor, monaco)=> {
-		console.log('InspectorPage.handleEditorMounted()', editor, monaco);
+// 		console.log('InspectorPage.handleEditorMounted()', editor, monaco);
 		editor.focus();
 	};
 
