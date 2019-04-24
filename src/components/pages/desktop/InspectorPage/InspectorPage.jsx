@@ -48,7 +48,9 @@ import {
 import {
 	calcArtboardBaseSize,
 	calcArtboardScaledCoords,
-	calcFitScale
+	calcFitScale,
+	calcScrollPoint,
+	calcTransformPoint
 } from './utils/layout';
 import {
 	artboardForID,
@@ -592,7 +594,7 @@ class InspectorPage extends Component {
 			scrolling   : false,
 			tutorial    : null,
 			code        : {
-				html   : '',
+				lang   : '',
 				syntax : ''
 			},
 			processing  : {
@@ -713,7 +715,11 @@ class InspectorPage extends Component {
 				const fitScale = calcFitScale(baseSize, viewSize);
 				console.log('_-]FIT SCALE[-_', fitScale);
 
-				const scrollPt = this.calcScrollPoint(PAN_ZOOM.panMultPt, viewSize, baseSize, fitScale);
+// 				const scrollPt = this.calcScrollPoint(PAN_ZOOM.panMultPt, viewSize, baseSize, fitScale);
+				const scrollPt = calcScrollPoint({
+					panMultPt : this.state.panMultPt,
+					scale     : this.state.scale
+					}, PAN_ZOOM.panMultPt, viewSize, baseSize, fitScale);
 
 				const scaledCoords = calcArtboardScaledCoords((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, fitScale);
 				console.log('_-]SCALED COORDS[-_', scaledCoords);
@@ -732,7 +738,10 @@ class InspectorPage extends Component {
 
 // 			if (Maths.geom.isSizeDimensioned(this.contentSize)) {
 // 				const fitScale = Math.max(Math.min(viewSize.height / this.contentSize.height, viewSize.width / this.contentSize.width, PAN_ZOOM.zoomNotches.slice(-1)[0]), PAN_ZOOM.zoomNotches[0]);
-// 				const scrollPt = this.calcScrollPoint(PAN_ZOOM.panMultPt, viewSize, this.contentSize, fitScale);
+// 				const scrollPt = calcScrollPoint({
+// 		  		  panMultPt : this.state.panMultPt,
+// 		  		  scale     : this.state.scale
+// 		  		}, PAN_ZOOM.panMultPt, viewSize, this.contentSize, fitScale);
 //
 // 				console.log('-=-=-=-=-=-', viewSize, this.contentSize, fitScale, scrollPt);
 // 				this.setState({ fitScale, viewSize,
@@ -842,26 +851,6 @@ class InspectorPage extends Component {
 		return (scaledFrame);
 	};
 
-	calcScrollPoint = (panPt, vpSize, baseSize, scale)=> {
-// 		console.log('InspectorPage.calcScrollPoint()', panPt, vpSize, baseSize, scale);
-
-		const pt = this.calcTransformPoint();
-		return ({
-			x : -Math.round((pt.x * vpSize.width) + ((baseSize.width * scale) * -0.5)),
-			y : -Math.round((pt.y * vpSize.height) + ((baseSize.height * scale) * -0.5))
-		});
-	};
-
-	calcTransformPoint = ()=> {
-// 		console.log('InspectorPage.calcTransformPoint()');
-
-		const { panMultPt, scale } = this.state;
-		return {
-			x : 0.5 + scale * (PAN_ZOOM.panMultPt.x - panMultPt.x),
-			y : 0.5 + scale * (PAN_ZOOM.panMultPt.y - panMultPt.y)
-		};
-	};
-
 	resetTabSets = (upload, artboards)=> {
 // 		console.log('InspectorPage.resetTabSets()', upload, artboards);
 
@@ -959,20 +948,20 @@ class InspectorPage extends Component {
 						const slices = [...intersectSlices(artboard.slices, artboard.meta.frame)];
 
 						const langs = [
-							toCSS(slices),
+							toGridHTML(slices),
 							toReactJS(slices),
 // 							toSwift(slices, artboard),
-							toGridHTML(slices),
-// 							toAndroid(slices, artboard)
+							toCSS(slices),
+// 							toAndroid(slices, artboard),
 							toBootstrap(slices)
 						];
+
 						tabSets = [...tabSets].map((tabSet, i) => {
 							return (tabSet.map((tab, ii) => {
 								if (i === 0) {
 									return (Object.assign({}, tab, {
 										type     : 'component',
 										enabled  : ((upload.state << 0) === 3),
-// 										contents : langs[ii].html,
 										contents : <CodeEditor lang={tab.lang} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
 										syntax   : langs[ii].syntax
 									}));
@@ -980,7 +969,7 @@ class InspectorPage extends Component {
 								} else {
 									return (Object.assign({}, tab, {
 										enabled  : ((upload.state << 0) === 3),
-										contents : <div>Coming Soon!</div>
+										contents : <div>Nothing to compile</div>
 									}));
 								}
 							}));
@@ -1017,11 +1006,11 @@ class InspectorPage extends Component {
 
 		const slices = [...intersectSlices(artboard.slices, slice.meta.frame)];
 		const langs = [
-			toCSS(slices),
+			toGridHTML(slices),
 			toReactJS(slices),
 // 			toSwift(slices, artboard),
-			toGridHTML(slices),
-// 			toAndroid(slices, artboard)
+			toCSS(slices),
+// 			toAndroid(slices, artboard),
 			toBootstrap(slices)
 		];
 
@@ -1044,7 +1033,6 @@ class InspectorPage extends Component {
 					return (tabSet.map((tab, ii)=> {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-// 							contents : langs[ii].html,
 							contents : <CodeEditor lang={tab.lang} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
 							syntax   : langs[ii].syntax
 						}));
@@ -1098,7 +1086,6 @@ class InspectorPage extends Component {
 					if (i === 0) {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-// 							contents : langs[ii].html,
 							contents : <CodeEditor lang={tab.lang} syntax={ langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
 							syntax   : langs[ii].syntax
 						}));
@@ -1106,7 +1093,7 @@ class InspectorPage extends Component {
 					} else {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : <div>Coming Soon!</div>
+							contents : <div>Nothing to compile</div>
 						}));
 					}
 				}));
@@ -1130,15 +1117,15 @@ class InspectorPage extends Component {
 		const { profile } = this.props;
 		const { section } = this.state;
 		let tabSets = [...this.state.tabSets];
-		let activeTabs = [...this.state.activeTabs];
+// 		let activeTabs = [...this.state.activeTabs];
 
 		const slices = [...intersectSlices(artboard.slices, slice.meta.frame)];
 		const langs = [
-			toCSS(slices),
+			toGridHTML(slices),
 			toReactJS(slices),
 // 			toSwift(slices, artboard),
-			toGridHTML(slices),
-// 			toAndroid(slices, artboard)
+			toCSS(slices),
+// 			toAndroid(slices, artboard),
 			toBootstrap(slices)
 		];
 
@@ -1161,7 +1148,6 @@ class InspectorPage extends Component {
 					return (tabSet.map((tab, ii)=> {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-// 							contents : langs[ii].html,
 							contents : <CodeEditor lang={tab.lang} syntax={ langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
 							syntax   : langs[ii].syntax
 						}));
@@ -1212,7 +1198,6 @@ class InspectorPage extends Component {
 					if (i === 0) {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-// 							contents : langs[ii].html,
 							contents : <CodeEditor lang={tab.lang} syntax={ langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
 							syntax   : langs[ii].syntax
 						}));
@@ -1220,14 +1205,14 @@ class InspectorPage extends Component {
 					} else {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : <div>Coming Soon!</div>
+							contents : <div>Nothing to compile</div>
 						}));
 					}
 				}));
 			});
 		}
 
-		activeTabs = activeTabs.map((activeTab, i)=> {
+		const activeTabs = [...this.state.activeTabs].map((activeTab, i)=> {
 			const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
 			return ((tab) ? tab : activeTab);
 		});
@@ -1506,8 +1491,29 @@ class InspectorPage extends Component {
 		editor.focus();
 	};
 
-	handleFileDrop = (files)=> {
-// 		console.log('InspectorPage.handleFileDrop()', files);
+	handleEditorRun = (lang, syntax)=> {
+// 		console.log('InspectorPage.handleEditorRun()', lang, syntax);
+
+		const tabSets = [...this.state.tabSets].map((tabSet, i)=> {
+			return (tabSet.map((tab, ii)=> {
+				return ((i === 0) ? tab : Object.assign({}, tab, {
+					enabled  : true,
+					lang     : lang,
+					contents : <span dangerouslySetInnerHTML={{ __html : syntax }} />
+				}));
+			}));
+		});
+
+		const activeTabs = [...this.state.activeTabs].map((activeTab, i)=> {
+			const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
+			return ((tab) ? tab : activeTab);
+		});
+
+		this.setState({ tabSets, activeTabs });
+	};
+
+	handleFileDrop = (files, rejected)=> {
+// 		console.log('InspectorPage.handleFileDrop()', files, rejected);
 
 		const { id, email } = this.props.profile;
 		const { upload, viewSize, urlBanner } = this.state;
@@ -1697,8 +1703,10 @@ class InspectorPage extends Component {
 
 		if (Maths.geom.isSizeDimensioned(this.contentSize)) {
 			const panMultPt = { x, y };
-			const { viewSize } = this.state;
-			const pt = this.calcTransformPoint();
+			const { viewSize, scale } = this.state;
+			const pt = calcTransformPoint({ scale,
+				panMultPt : this.state.panMultPt
+			});
 
 			const scrollPt = {
 				x : -Math.round((pt.x * viewSize.width) + (this.contentSize.width * -0.5)),
@@ -1966,7 +1974,7 @@ class InspectorPage extends Component {
 
 
 	handleWheelStart = (event)=> {
-// 		console.log('InspectorPage.handleWheelStart()', event, event.type, event.deltaX, event.deltaY, event.target);
+		console.log('InspectorPage.handleWheelStart()', event, event.type, event.deltaX, event.deltaY, event.target);
 		//console.log('wheel', artboardsWrapper.current.clientWidth, artboardsWrapper.current.clientHeight, artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft);
 
 		clearTimeout(this.scrollTimeout);
@@ -2242,7 +2250,7 @@ class InspectorPage extends Component {
 
 		const { processing, profile, atomExtension } = this.props;
 
-		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, activeTabs, scrolling, viewSize, panMultPt } = this.state;
+		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, activeTabs, scrolling, viewSize, panMultPt, code } = this.state;
 		const { valid, restricted, urlBanner, tutorial, percent, tooltip, fontState, linter, gist } = this.state;
 
 		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, 'page_child');
@@ -2252,7 +2260,7 @@ class InspectorPage extends Component {
 		const listTotal = (upload && activeSlice) ? (section === SECTIONS.PRESENTER) ? flattenUploadArtboards(upload, 'page_child').length : (activeSlice) ? (activeSlice.type === 'group') ? fillGroupPartItemSlices(upload, activeSlice).length : activeSlice.children.length : 0 : 0;
 		const missingFonts = (upload) ? upload.fonts.filter((font)=> (!font.installed)) : [];
 
-		const pt = this.calcTransformPoint();
+		const pt = calcTransformPoint({ panMultPt, scale });
 
 		this.contentSize = {
 			width  : 0,
@@ -2512,9 +2520,7 @@ class InspectorPage extends Component {
 
 									{(i === 0)
 										? (<div className="inspector-page-panel-button-wrapper">
-												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
-													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
-												</CopyToClipboard>
+												<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleEditorRun(activeTabs[i].lang, activeTabs[i].syntax)}>{(processing) ? 'Processing' : 'Run'}</button>
 												<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>
 												<button disabled={!atomExtension || !slice || (linter && linter.busy) || (gist && gist.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Atom'}</button>
 												<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>

@@ -28,7 +28,7 @@ const ConfigIntegrationsList = (props)=> {
 				title={integration.title}
 				image={integration.filename}
 				uploaded={integration.uploaded}
-				onDrop={(files)=> props.onFileDrop(integration, files)}
+				onDrop={(files, rejected)=> props.onFileDrop(integration, files, rejected)}
 			/>
 		))}
 	</div>);
@@ -103,8 +103,8 @@ class ConfigUploadModal extends Component {
 		});
 	};
 
-	handleFileDrop = (integration, files)=> {
-		console.log('ConfigUploadModal.handleFileDrop()', integration, files);
+	handleFileDrop = (integration, files, rejected)=> {
+// 		console.log('ConfigUploadModal.handleFileDrop()', integration, files, rejected);
 
 		trackEvent('button', 'config');
 		if (files.length > 0) {

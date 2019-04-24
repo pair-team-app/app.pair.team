@@ -2,9 +2,9 @@
   "inspect": [
     [{
       "id": 1,
-      "title": "CSS",
+      "title": "HTML",
       "type": "component",
-      "lang": "css",
+      "lang": "html",
       "enabled": false,
       "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
@@ -18,9 +18,9 @@
       "syntax": null
     }, {
       "id": 3,
-      "title": "HTML",
+      "title": "CSS",
       "type": "component",
-      "lang": "html",
+      "lang": "css",
       "enabled": false,
       "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
@@ -58,9 +58,9 @@
   "present": [
     [{
       "id": 1,
-      "title": "CSS",
+      "title": "HTML",
       "type": "component",
-      "lang": "css",
+      "lang": "html",
       "enabled": false,
       "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
@@ -74,9 +74,9 @@
       "syntax": null
     }, {
       "id": 3,
-      "title": "HTML",
+      "title": "CSS",
       "type": "component",
-      "lang": "html",
+      "lang": "css",
       "enabled": false,
       "contents": "\"/* Rollover to display code. */\"",
       "syntax": null

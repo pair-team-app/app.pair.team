@@ -281,8 +281,8 @@ class ProfilePage extends Component {
 		this.setState({ fileDialog : false });
 	};
 
-	handleFileDrop = (files)=> {
-// 		console.log('ProfilePage.handleFileDrop()', files, CDN_UPLOAD_URL);
+	handleFileDrop = (files, rejected)=> {
+// 		console.log('ProfilePage.handleFileDrop()', files, rejected, CDN_UPLOAD_URL);
 
 		if (files.length > 0) {
 			const file = files.pop();

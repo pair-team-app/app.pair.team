@@ -1,5 +1,5 @@
 
-import { GRID } from '../consts';
+import { GRID, PAN_ZOOM } from '../consts';
 
 
 export const calcArtboardBaseSize = (artboards, vpSize)=> {
@@ -73,4 +73,29 @@ export const calcFitScale = (baseSize, vpSize)=> {
 	//const fitScale = Math.max(Math.min(this.state.viewSize.height / this.contentSize.height, this.state.viewSize.width / this.contentSize.width, PAN_ZOOM.zoomNotches.slice(-1)[0]), PAN_ZOOM.zoomNotches[0]);
 	//return (Math.max(Math.min(vpSize.height / baseSize.height, vpSize.width / baseSize.width, Math.max(...PAN_ZOOM.zoomNotches)), Math.min(...PAN_ZOOM.zoomNotches)));
 	return (Math.max(Math.min(vpSize.height / baseSize.height, vpSize.width / baseSize.width, 3), 0.001));
+};
+
+
+export const calcScrollPoint = (prev, panPt, vpSize, baseSize, scale)=> {
+// 		console.log('InspectorPage.calcScrollPoint()', prev, panPt, vpSize, baseSize, scale);
+
+	const pt = calcTransformPoint({
+		panMultPt : prev.panMultPt,
+		scale     : prev.scale
+	});
+
+	return ({
+		x : -Math.round((pt.x * vpSize.width) + ((baseSize.width * scale) * -0.5)),
+		y : -Math.round((pt.y * vpSize.height) + ((baseSize.height * scale) * -0.5))
+	});
+};
+
+
+export const calcTransformPoint = ({ panMultPt, scale })=> {
+// 		console.log('InspectorPage.calcTransformPoint()', { panMultPt, scale });
+
+	return {
+		x : 0.5 + scale * (PAN_ZOOM.panMultPt.x - panMultPt.x),
+		y : 0.5 + scale * (PAN_ZOOM.panMultPt.y - panMultPt.y)
+	};
 };
