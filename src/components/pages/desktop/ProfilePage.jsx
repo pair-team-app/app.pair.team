@@ -275,7 +275,7 @@ class ProfilePage extends Component {
 	};
 
 	handleFileDrop = (files)=> {
-// 		console.log('ProfilePage.handleFileDrop()', files);
+// 		console.log('ProfilePage.handleFileDrop()', files, CDN_UPLOAD_URL);
 
 		if (files.length > 0) {
 			const file = files.pop();
