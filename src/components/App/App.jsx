@@ -166,7 +166,9 @@ class App extends Component {
 
 		if (profile) {
 			if (!prevProps.profile) {
-// 				this.props.fetchUserHistory({profile});
+				if (!team) {
+					this.props.fetchUserHistory({ profile });
+				}
 
 				if (deeplink && deeplink.uploadID !== 0) {
 					this.onAddUploadView(deeplink.uploadID);
