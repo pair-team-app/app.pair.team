@@ -8,6 +8,9 @@
 #-- production
 /build
 
+#-- node caches
+/.cache
+
 #-- ide meta
 /.idea
 

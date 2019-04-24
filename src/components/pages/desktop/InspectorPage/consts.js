@@ -39,6 +39,29 @@ export const CANVAS = {
 	}
 };
 
+export const EDITOR = {
+	opts : {
+		automaticLayout     : true,
+		cursorStyle         : 'line',
+		fontSize            : '12px',
+		glyphMargin         : false,
+		lineHeight          : '14px',
+		minimap             : { enabled : false },
+		selectOnLineNumbers : true
+		//readOnly            : false,
+		//renderLineHighlight : 'none',
+		//roundedSelection    : false,
+	}
+};
+
+export const GRID = {
+	padding : {
+		col : 50,
+		row : 50
+	},
+	colsMax : 5
+};
+
 export const PAN_ZOOM = {
 	insetSize   : {
 		width  : 25,
@@ -60,14 +83,6 @@ export const PAN_ZOOM = {
 		1.75,
 		3.00
 	]
-};
-
-export const GRID = {
-	padding : {
-		col : 50,
-		row : 50
-	},
-	colsMax : 5
 };
 
 export const SECTIONS = {

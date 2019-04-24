@@ -25,28 +25,56 @@ import InputField, { INPUTFIELD_STATUS_IDLE } from '../../../forms/InputField/In
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../../overlays/PopupNotification';
 import TutorialBubble from '../../../overlays/TutorialBubble';
 
-import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL } from './consts';
-import { drawCanvasSliceBorder, drawCanvasSliceMarchingAnts, drawCanvasSliceGuides } from './utils/canvas';
+import {
+	CANVAS,
+	EDITOR,
+	GRID,
+	PAN_ZOOM,
+	SECTIONS,
+	STATUS_INTERVAL } from './consts';
+import {
+	drawCanvasSliceBorder,
+	drawCanvasSliceMarchingAnts,
+	drawCanvasSliceGuides } from './utils/canvas';
 import { 
 	fontSpecs, 
 // 	toAndroid, 
 	toBootstrap, 
 	toCSS, 
 	toGridHTML, 
-	toReactJS, 
-	toSpecs, 
-// 	toSwift 
-} from './utils/code-generator.js';
+	toReactJS,
+	// 	toSwift
+	toSpecs } from './utils/code-generator.js';
+import {
+	calcArtboardBaseSize,
+	calcArtboardScaledCoords,
+	calcFitScale
+} from './utils/layout';
+import {
+	artboardForID,
+	fillGroupPartItemSlices,
+	flattenUploadArtboards,
+	intersectSlices} from './utils/model';
 import { MOMENT_TIMESTAMP } from '../../../../consts/formats';
-import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../../consts/key-codes';
-import { DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PARTS_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL, LINTER_ENDPT_URL } from '../../../../consts/uris';
+import {
+	ARROW_LT_KEY,
+	ARROW_RT_KEY,
+	MINUS_KEY,
+	PLUS_KEY } from '../../../../consts/key-codes';
+import {
+	DE_LOGO_SMALL,
+	API_ENDPT_URL,
+	CDN_DOWNLOAD_PARTS_URL,
+	CDN_DOWNLOAD_PDF_URL,
+	CDN_DOWNLOAD_PROJECT_URL,
+	CDN_UPLOAD_URL,
+	LINTER_ENDPT_URL } from '../../../../consts/uris';
 import { setRedirectURI } from '../../../../redux/actions';
 import {
 	buildInspectorPath,
 	buildInspectorURL,
 	createGist,
-	sendToSlack
-} from '../../../../utils/funcs.js';
+	sendToSlack } from '../../../../utils/funcs.js';
 import {
 	Arrays,
 	Browsers,
@@ -54,8 +82,7 @@ import {
 	Files,
 	Maths,
 	Strings,
-	URIs
-} from '../../../../utils/lang.js';
+	URIs } from '../../../../utils/lang.js';
 import { trackEvent } from '../../../../utils/tracking';
 
 import downloadButton from '../../../../assets/images/buttons/btn-download.svg';
@@ -70,46 +97,22 @@ const canvasWrapper = React.createRef();
 const canvas = React.createRef();
 
 
-const mapStateToProps = (state, ownProps)=> {
-	return ({
-		deeplink      : state.deeplink,
-		profile       : state.userProfile,
-		redirectURI   : state.redirectURI,
-		atomExtension : state.atomExtension
-	});
-};
+const CodeEditor = (props)=> {
+	console.log('InspectorPage.CodeEditor()', props);
 
-const mapDispatchToProps = (dispatch)=> {
-	return ({
-		setRedirectURI : (url)=> dispatch(setRedirectURI(url))
-	});
-};
-
-
-const artboardForID = (upload, artboardID)=> {
-	return (flattenUploadArtboards(upload).find((artboard)=> (artboard.id === artboardID)));
-};
-
-const fillGroupPartItemSlices = (upload, slice)=> {
-// 	console.log('fillGroupPartItemSlices()', upload, slice);
-	return ([slice, ...artboardForID(upload, slice.artboardID).slices.filter((item)=> (item.type !== 'artboard' && item.id !== slice.id && Maths.geom.frameContainsFrame(slice.meta.frame, item.meta.frame)))]);
-};
-
-const flattenUploadArtboards = (upload, type=null)=> {
-// 	console.log('flattenUploadArtboards()', upload, type);
-	return ((upload) ? upload.pages.flatMap((page)=> (page.artboards)).filter((artboard)=> ((type) ? (artboard.type === type || artboard.type.includes(type)) : true)).reverse() : []);
-};
-
-/*
-const slicesByArea = (slices)=> {
-// 	console.log('slicesByArea()', slices);
-	return(slices.sort((s1, s2)=> ((Maths.geom.sizeArea(s1.meta.frame.size) < Maths.geom.sizeArea(s2.meta.frame.size)) ? -1 : (Maths.geom.sizeArea(s1.meta.frame.size) > Maths.geom.sizeArea(s2.meta.frame.size)) ? 1 : 0)));
-};
-*/
-
-const intersectSlices = (slices, frame)=> {
-// 	console.log('interectSlices()', slices, frame);
-	return (slices.filter((slice)=> (Maths.geom.frameContainsFrame(frame, slice.meta.frame))));
+	const { lang, syntax } = props;
+	return (<div className="code-editor">
+		<MonacoEditor
+			width="100%"
+			height="100%"
+			language={lang}
+			theme="vs-dark"
+			value={syntax}
+			options={EDITOR.opts}
+			onChange={props.onEditorChange}
+			editorDidMount={props.onEditorMounted}
+		/>
+	</div>);
 };
 
 const ColorSwatch = (props)=> {
@@ -214,26 +217,6 @@ const InspectorFooter = (props)=> {
 			{(section !== SECTIONS.PRESENTER) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('present')}>Presenter</button>)}
 		</div>)}
 	</Row></div>);
-};
-
-const LivePreview = (props)=> {
-	console.log('InspectorPage.LivePreview()', props);
-
-	const { syntax } = props;
-	const options = { selectOnLineNumbers : true };
-
-	return (<div className="live-preview">
-		<MonacoEditor
-			width="100%"
-			height="100%"
-			language="typescript"
-			theme="vs-dark"
-			value={syntax}
-			options={options}
-			onChange={props.onEditorChange}
-			editorDidMount={props.onEditorMounted}
-		/>
-	</div>);
 };
 
 const MarqueeBanner = (props)=> {
@@ -721,15 +704,15 @@ class InspectorPage extends Component {
 // 			const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'container' : 'page_child');
 			const artboards = flattenUploadArtboards(upload, 'page_child');
 			if (artboards.length > 0) {
-				const baseSize = this.calcArtboardBaseSize((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
+				const baseSize = calcArtboardBaseSize((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
 				console.log('_-]BASE SIZE[-_', baseSize);
 
-				const fitScale = this.calcFitScale(baseSize, viewSize);
+				const fitScale = calcFitScale(baseSize, viewSize);
 				console.log('_-]FIT SCALE[-_', fitScale);
 
 				const scrollPt = this.calcScrollPoint(PAN_ZOOM.panMultPt, viewSize, baseSize, fitScale);
 
-				const scaledCoords = this.calcArtboardScaledCoords((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, fitScale);
+				const scaledCoords = calcArtboardScaledCoords((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, fitScale);
 				console.log('_-]SCALED COORDS[-_', scaledCoords);
 
 				console.log('-=-=-=-=-=-', insetHeight, viewSize, baseSize, fitScale, scrollPt);
@@ -823,71 +806,6 @@ class InspectorPage extends Component {
 		return(slices);
 	};
 
-	calcArtboardBaseSize = (artboards, vpSize)=> {
-// 		console.log('InspectorPage.calcArtboardBaseSize()', artboards, vpSize);
-
-		let maxH = 0;
-		let offset = {
-			x : 0,
-			y : 0
-		};
-
-		let baseSize = {
-			width  : 0,
-			height : 0
-		};
-
-
-		artboards.forEach((artboard, i)=> {
-			if ((i % GRID.colsMax) << 0 === 0 && i > 0) {
-				offset.x = 0;
-				offset.y += maxH + GRID.padding.row;
-				maxH = 0;
-			}
-
-			maxH = Math.round(Math.max(maxH, artboard.meta.frame.size.height));
-			baseSize.height = Math.max(baseSize.height, offset.y + maxH);
-
-			offset.x += Math.round(((i % GRID.colsMax < (GRID.colsMax - 1) && i < artboards.length - 1) ? GRID.padding.col : 0) + (artboard.meta.frame.size.width));
-			baseSize.width = Math.max(baseSize.width, offset.x);
-		});
-
-		return (baseSize);
-	};
-
-	calcArtboardScaledCoords = (artboards, scale)=> {
-// 		console.log('InspectorPage.calcArtboardScaledCoords()', artboards, scale);
-
-// 		const grid = {
-// 			cols : (Math.min(artboards.length, GRID.colsMax) - 1) * 50,
-// 			rows : ((artboards.length > 0) ? ((artboards.length / GRID.colsMax) << 0) : 0) * 50
-// 		};
-
-		let maxH = 0;
-		let offset = {
-			x : 0,
-			y : 0
-		};
-
-		let scaledCoords = [];
-		artboards.forEach((artboard, i)=> {
-			if (((i % GRID.colsMax) << 0) === 0 && i > 0) {
-				offset.x = 0;
-				offset.y += maxH + GRID.padding.row;
-				maxH = 0;
-			}
-
-			scaledCoords.push({ artboard,
-				coords : Object.assign({}, offset)
-			});
-
-			maxH = Math.round(Math.max(maxH, artboard.meta.frame.size.height * scale));
-			offset.x += Math.round(((i % GRID.colsMax < (GRID.colsMax - 1)) ? GRID.padding.col : 0) + (artboard.meta.frame.size.width * scale));
-		});
-
-		return (scaledCoords);
-	};
-
 	calcCanvasSliceFrame = (slice, artboard, offset, scrollPt)=> {
 // 		console.log('InspectorPage.calcCanvasSliceFrame()', slice, artboard, offset, scrollPt);
 
@@ -919,13 +837,6 @@ class InspectorPage extends Component {
 
 // 		console.log('-- InspectorPage.calcCanvasSliceFrame()', baseOffset, srcFrame, srcOffset, scaledFrame);
 		return (scaledFrame);
-	};
-
-	calcFitScale = (baseSize, vpSize)=> {
-// 		console.log('InspectorPage.calcFitScale()', baseSize, vpSize);
-    //const fitScale = Math.max(Math.min(this.state.viewSize.height / this.contentSize.height, this.state.viewSize.width / this.contentSize.width, PAN_ZOOM.zoomNotches.slice(-1)[0]), PAN_ZOOM.zoomNotches[0]);
-		//return (Math.max(Math.min(vpSize.height / baseSize.height, vpSize.width / baseSize.width, Math.max(...PAN_ZOOM.zoomNotches)), Math.min(...PAN_ZOOM.zoomNotches)));
-		return (Math.max(Math.min(vpSize.height / baseSize.height, vpSize.width / baseSize.width, 3), 0.001));
 	};
 
 	calcScrollPoint = (panPt, vpSize, baseSize, scale)=> {
@@ -1052,21 +963,21 @@ class InspectorPage extends Component {
 // 							toAndroid(slices, artboard)
 							toBootstrap(slices)
 						];
-
 						tabSets = [...tabSets].map((tabSet, i) => {
 							return (tabSet.map((tab, ii) => {
 								if (i === 0) {
 									return (Object.assign({}, tab, {
+										type     : 'component',
 										enabled  : ((upload.state << 0) === 3),
-										contents : langs[ii].html,
+// 										contents : langs[ii].html,
+										contents : <CodeEditor lang={tab.lang} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
 										syntax   : langs[ii].syntax
 									}));
 
 								} else {
 									return (Object.assign({}, tab, {
-										type     : 'component',
 										enabled  : ((upload.state << 0) === 3),
-										contents : <LivePreview syntax={langs[1].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />
+										contents : <div>Coming Soon!</div>
 									}));
 								}
 							}));
@@ -1116,7 +1027,6 @@ class InspectorPage extends Component {
 				if (i === 1) {
 					return (tabSet.map((tab, ii)=> {
 						return ((ii === 0) ? Object.assign({}, tab, {
-							type     : 'component',
 							enabled  : true,
 							contents : <SpecsList
 								upload={upload}
@@ -1128,18 +1038,18 @@ class InspectorPage extends Component {
 					}));
 
 				} else {
-					return (tabSet.map((tab, i)=> {
+					return (tabSet.map((tab, ii)=> {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : langs[i].html,
-							syntax   : langs[i].syntax
+// 							contents : langs[ii].html,
+							contents : <CodeEditor lang={tab.lang} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+							syntax   : langs[ii].syntax
 						}));
 					}));
 				}
 			});
 
 		} else if (section === SECTIONS.PARTS) {
-			tabSets[0][0].type = 'component';
 			tabSets[0][0].enabled = true;
 
 			if (slice.type === 'symbol') {
@@ -1185,15 +1095,15 @@ class InspectorPage extends Component {
 					if (i === 0) {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : langs[ii].html,
+// 							contents : langs[ii].html,
+							contents : <CodeEditor lang={tab.lang} syntax={ langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
 							syntax   : langs[ii].syntax
 						}));
 
 					} else {
 						return (Object.assign({}, tab, {
-							type     : 'component',
 							enabled  : true,
-							contents : <LivePreview syntax={langs[1].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />
+							contents : <div>Coming Soon!</div>
 						}));
 					}
 				}));
@@ -1234,7 +1144,6 @@ class InspectorPage extends Component {
 				if (i === 1) {
 					return (tabSet.map((tab, ii)=> {
 						return ((ii === 0) ? Object.assign({}, tab, {
-							type     : 'component',
 							enabled  : true,
 							contents : <SpecsList
 								upload={upload}
@@ -1246,19 +1155,18 @@ class InspectorPage extends Component {
 					}));
 
 				} else {
-					return (tabSet.map((tab, i)=> {
+					return (tabSet.map((tab, ii)=> {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : langs[i].html,
-							syntax   : langs[i].syntax
+// 							contents : langs[ii].html,
+							contents : <CodeEditor lang={tab.lang} syntax={ langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+							syntax   : langs[ii].syntax
 						}));
 					}));
 				}
 			});
 
 		} else if (section === SECTIONS.PARTS) {
-			tabSets[0][0].type = 'component';
-
 			if (slice.type === 'symbol') {
 				let formData = new FormData();
 				formData.append('action', 'SYMBOL_SLICES');
@@ -1301,15 +1209,15 @@ class InspectorPage extends Component {
 					if (i === 0) {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : langs[ii].html,
+// 							contents : langs[ii].html,
+							contents : <CodeEditor lang={tab.lang} syntax={ langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
 							syntax   : langs[ii].syntax
 						}));
 
 					} else {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							type     : 'component',
-							contents : <LivePreview syntax={langs[1].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />
+							contents : <div>Coming Soon!</div>
 						}));
 					}
 				}));
@@ -2663,5 +2571,22 @@ class InspectorPage extends Component {
 		</>);
 	}
 }
+
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		deeplink      : state.deeplink,
+		profile       : state.userProfile,
+		redirectURI   : state.redirectURI,
+		atomExtension : state.atomExtension
+	});
+};
+
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		setRedirectURI : (url)=> dispatch(setRedirectURI(url))
+	});
+};
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(InspectorPage);
