@@ -13,6 +13,7 @@ import FontAwesome from 'react-fontawesome';
 // import { Helmet } from 'react-helmet';
 import ImageLoader from 'react-loading-image';
 import Moment from 'react-moment';
+import MonacoEditor from 'react-monaco-editor';
 import panAndZoomHoc from 'react-pan-and-zoom-hoc';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
@@ -219,8 +220,19 @@ const LivePreview = (props)=> {
 	console.log('InspectorPage.LivePreview()', props);
 
 	const { syntax } = props;
+	const options = { selectOnLineNumbers : true };
+
 	return (<div className="live-preview">
-		{(syntax)}
+		<MonacoEditor
+			width="100%"
+			height="100%"
+			language="typescript"
+			theme="vs-dark"
+			value={syntax}
+			options={options}
+			onChange={props.onEditorChange}
+			editorDidMount={props.onEditorMounted}
+		/>
 	</div>);
 };
 
@@ -1054,7 +1066,7 @@ class InspectorPage extends Component {
 									return (Object.assign({}, tab, {
 										type     : 'component',
 										enabled  : ((upload.state << 0) === 3),
-										contents : <LivePreview syntax="Coming Soon!" />
+										contents : <LivePreview syntax={langs[1].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />
 									}));
 								}
 							}));
@@ -1181,7 +1193,7 @@ class InspectorPage extends Component {
 						return (Object.assign({}, tab, {
 							type     : 'component',
 							enabled  : true,
-							contents : <LivePreview syntax="Coming Soon!" />
+							contents : <LivePreview syntax={langs[1].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />
 						}));
 					}
 				}));
@@ -1297,7 +1309,7 @@ class InspectorPage extends Component {
 						return (Object.assign({}, tab, {
 							enabled  : true,
 							type     : 'component',
-							contents : <LivePreview syntax="Coming Soon!" />
+							contents : <LivePreview syntax={langs[1].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />
 						}));
 					}
 				}));
@@ -1572,6 +1584,15 @@ class InspectorPage extends Component {
 		const sliceIDs = (slice.type === 'group') ? fillGroupPartItemSlices(upload, slice).map((slice)=> (slice.id)).join(',') : slice.children.map((slice)=> (slice.id)).join(',');
 
 		Browsers.makeDownload(`${CDN_DOWNLOAD_PARTS_URL}?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
+	};
+
+	handleEditorChange = (val, event)=> {
+		console.log('InspectorPage.handleEditorChange()', val, event);
+	};
+
+	handleEditorMounted = (editor, monaco)=> {
+		console.log('InspectorPage.handleEditorMounted()', editor, monaco);
+		editor.focus();
 	};
 
 	handleFileDrop = (files)=> {
