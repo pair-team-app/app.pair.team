@@ -46,7 +46,6 @@ export const API_ENDPT_URL = `${API_HOSTNAME}/system.php`;
 export const CDN_DOWNLOAD_PARTS_URL = `${CDN_HOSTNAME}/download-slices.php'`;
 export const CDN_DOWNLOAD_PDF_URL = `${CDN_HOSTNAME}/download-pdf.php'`;
 export const CDN_DOWNLOAD_PROJECT_URL = `${CDN_HOSTNAME}/download-project.php'`;
-// export const CDN_UPLOAD_URL = `${CDN_HOSTNAME}/upload.php'`;
 export const CDN_UPLOAD_URL = (window.location.hostname.match(/192|local/ig)) ? `${CDN_HOSTNAME}/upload.php` : `${window.location.href.replace(window.location.pathname, '')}/php/upload.php`;
 export const LINTER_UPLOAD_URL = `${TERMINAL_HOSTNAME}/upload.php`;
 export const LINTER_ENDPT_URL = `${TERMINAL_HOSTNAME}/services/linter.php`;
