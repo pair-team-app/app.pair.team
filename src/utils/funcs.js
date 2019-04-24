@@ -1,6 +1,9 @@
 
-import cookie from 'react-cookies';
+
 import axios from 'axios';
+import Octokit from '@octokit/rest';
+import cookie from 'react-cookies';
+import { matchPath } from 'react-router-dom';
 
 import {
 	HOME,
@@ -13,7 +16,77 @@ import {
 	REGISTER,
 	UPLOAD,
 	API_ENDPT_URL } from '../consts/uris';
-import { Strings } from './lang';
+import { Strings, URIs } from './lang';
+
+
+export function getRouteParams(pathname) {
+// 	console.log('_-_-_-_-_', 'getRouteParams()', pathname, '_-_-_-_-_', URIs.firstComponent(pathname));
+
+	const loginPage = matchPath(pathname, {
+		path : '/login'
+	});
+
+	const profilePage = matchPath(pathname, {
+		path : '/profile/:userID?'
+	});
+
+	const uploadPage = matchPath(pathname, {
+		path : '/new/:section?'
+	});
+
+	const registerPage = matchPath(pathname, {
+		path : '/register/:inviteID?'
+	});
+
+	const inspectorPage = matchPath(pathname, {
+		path : `/${URIs.firstComponent(pathname)}/:uploadID/:titleSlug`
+	});
+
+	const homePage = matchPath(pathname, {
+		path : '/:section'
+	});
+
+// 	console.log(':::::::::::::', loginPage, profilePage, uploadPage, registerPage, inspectorPage, homePage);
+
+	if (loginPage && loginPage.isExact) {
+		return ({ ...loginPage,
+			page : 'LOGIN'
+		});
+	}
+
+	if (profilePage && profilePage.isExact) {
+		return ({ ...profilePage,
+			page   : 'PROFILE',
+			userID : profilePage.params.userID << 0
+		});
+	}
+
+	if (uploadPage && uploadPage.isExact) {
+		return ({ ...uploadPage,
+			page : 'UPLOAD'
+		});
+	}
+
+	if (registerPage && registerPage.isExact) {
+		return ({ ...registerPage,
+			page     : 'REGISTER',
+			inviteID : registerPage.params.inviteID << 0
+		});
+	}
+
+	if (inspectorPage && inspectorPage.isExact) {
+		return ({ ...inspectorPage,
+			page     : 'INSPECTOR',
+			uploadID : inspectorPage.params.uploadID << 0
+		});
+	}
+
+	if (homePage && homePage.isExact) {
+		return ({ ...homePage,
+			page : 'HOME'
+		});
+	}
+}
 
 
 export function buildInspectorPath(upload, prefix='/inspect', suffix='') {
@@ -22,6 +95,25 @@ export function buildInspectorPath(upload, prefix='/inspect', suffix='') {
 
 export function buildInspectorURL(upload, prefix='/inspect', suffix='') {
 	return (`${window.location.origin}${buildInspectorPath(upload, prefix, suffix)}`);
+}
+
+export function createGist(token, filename, contents, description, visible, callback=null) {
+	const payload = { description,
+		public : visible,
+		files  : {
+			[filename] : {
+				content : contents
+			}
+		}
+	};
+
+	new Octokit({ auth : token }).gists.create(payload).then((result)=> {
+		console.log('CREATE_GIST ->', result);
+
+		if (callback) {
+			callback(result.data);
+		}
+	});
 }
 
 export function idsFromPath() {
@@ -73,8 +165,9 @@ export function isUploadPage(exact=false) {
 	return ((exact) ? pathname === UPLOAD : pathname.includes(UPLOAD));
 }
 
-export function isUserLoggedIn() {
-	return (cookie.load('user_id') !== '0');
+export function isUserLoggedIn(confirmed=true) {
+// 	return ((confirmed) ? cookie.load('user_id') !== '0' : typeof cookie.load('user_id') !== 'undefined');
+	return ((confirmed) ? ((cookie.load('user_id') << 0) !== 0) : (typeof cookie.load('user_id') !== 'undefined') << 0 !== 0);
 }
 
 export function sendToSlack(message, callback=null) {

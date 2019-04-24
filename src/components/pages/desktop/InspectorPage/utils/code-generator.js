@@ -1,8 +1,8 @@
 
-import { Maths, Objects, Strings, URLs } from '../../../../../utils/lang';
+import { Maths, Objects, Strings, URIs } from '../../../../../utils/lang';
 
 const TAB = '  ';
-const badChars = /[\\.,_+=[\](){}]/g;
+const badChars = /[\\.,_+=[\](){}:]/g;
 const DISCLAIMER = '__LANG__ Generator v1.0,\nCode snippets by Design Engine.,\nMade in Mountain View, CA.\n__';
 
 const fontWeight = (style)=> {
@@ -64,12 +64,12 @@ export function toAndroid(slices, artboard) {
 	const artboardName = Strings.camelize(Strings.slugifyURI(artboard.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 
 	let html = `<!-- ${DISCLAIMER.replace('__LANG__', 'XML').replace(/\n__/g, ' -->\n<!-- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -->').replace(/,\n/g, ' -->\n<!-- ')}\n\n\n`;
-	html += '<?xml version="1.0" encoding="utf-8"?>\n';
+	html += `<?xml version="1.0" encoding="utf-8"?>\n`;
 	slices.forEach((slice)=> {
 		const sliceName = Strings.camelize(Strings.slugifyURI(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 		const viewType = (slice.type === 'textfield') ? 'Text View' : 'Image View';
 		const caption = viewType;
-		html += '<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"\n';
+		html += `<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"\n`;
 		html += `${TAB}xmlns:app="http://schemas.android.com/apk/res-auto" \n`;
 		html += `${TAB}xmlns:tools="http://schemas.android.com/tools" \n`;
 		html += `${TAB}android:id="@+id/activity_${artboardName}" \n`;
@@ -98,6 +98,37 @@ export function toAndroid(slices, artboard) {
 	})
 }
 
+export function toBootstrap(slices) {
+// 	console.log('code-generator.toBootstrapJS()', slices);
+
+	if (slices.length === 0) {
+		return ({
+			html   : null,
+			syntax : null
+		});
+	}
+
+	const parentSlice = slices.shift();
+	let html = `/**\n * ${DISCLAIMER.replace('__LANG__', 'Bootstrap').replace(/\n__/g, '\n **//* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, '\n * ')}\n\n\n`;
+	if (parentSlice.type === 'background' || parentSlice.type === 'group') {
+		html += `$body-bg: ${parentSlice.meta.fillColor.toUpperCase()};\n\n`;
+	}
+	html += `@import "../node_modules/bootstrap/scss/bootstrap";\n\n`;
+	html += `<div class="card" style="width: ${parentSlice.meta.frame.size.width}px">\n`;
+	slices.forEach((slice)=> {
+		html += `${TAB}<div class="card-body">\n`;
+		html += `${TAB}${TAB}<h5 class="card-title">${slice.title}</h5>\n`;
+		html += (slice.type === 'textfield') ? `${TAB}${TAB}<p class="card-text">${slice.meta.txtVal}</p>\n` : `${TAB}${TAB}<img class="card-img" src="./images/${URIs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}">\n`;
+		html += `${TAB}</div>\n`;
+	});
+	html += `</div>\n`;
+
+	return ({
+		html   : JSON.stringify(html),
+		syntax : `${html.replace(/(&nbsp)+;/g, '\t')}`
+	});
+}
+
 export function toCSS(slices) {
 // 	console.log('code-generator.toCSS()', slices);
 
@@ -121,12 +152,12 @@ export function toCSS(slices) {
 			html += `${TAB}text-align: ${font.alignment.toLowerCase()};\n`;
 
 		} else if (slice.type === 'slice') {
-			html += `${TAB}background: url("${URLs.lastComponent(slice.filename)}@3x.png");\n`;
+			html += `${TAB}background: url("${URIs.lastComponent(slice.filename)}@3x.png");\n`;
 
 		} else if (slice.type === 'background' || slice.type === 'group') {
 			html += `${TAB}background-color: ${slice.meta.fillColor.toUpperCase()};\n`;
 		}
-		html += '}\n';
+		html += `}\n`;
 	});
 
 	return ({
@@ -149,7 +180,7 @@ export function toGridHTML(slices) {
 	slices = [...slices].slice(1, Math.min(slices.length, 4));
 
 	let html = `<!-- ${DISCLAIMER.replace('__LANG__', 'HTML').replace(/\n__/g, ' -->\n<!-- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -->').replace(/,\n/g, ' -->\n<!-- ')}\n\n\n`;
-	html += '<style>\n';
+	html += `<style>\n`;
 	html += `${TAB}.grid-container {\n`;
 	html += `${TAB}${TAB}display: grid;\n`;
 	html += `${TAB}${TAB}grid-template-columns:${Strings.repeat(' auto', slices.length)};\n`;
@@ -176,15 +207,15 @@ export function toGridHTML(slices) {
 			html += `${TAB}}\n`;
 		}
 	});
-	html += '</style>\n\n';
+	html += `</style>\n\n`;
 
-	html += '<div className="grid-container">\n';
+	html += `<div class="grid-container">\n`;
 	slices.forEach((slice)=> {
-		html += `${TAB}<div className="grid-cell ${Strings.slugifyURI(slice.title)}">`;
-		html += (slice.type === 'textfield') ? `${slice.meta.txtVal}` : `<img src="./images/${URLs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}">`;
-		html += '</div>\n'
+		html += `${TAB}<div class="grid-cell ${Strings.slugifyURI(slice.title)}">`;
+		html += (slice.type === 'textfield') ? `${slice.meta.txtVal}` : `<img src="./images/${URIs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}">`;
+		html += `</div>\n`;
 	});
-	html += '</div>\n';
+	html += `</div>\n`;
 
 	return ({
 		html   : JSON.stringify(html),
@@ -225,8 +256,6 @@ export function toReactJS(slices) {
 	slices = [...slices].slice(1, Math.min(slices.length, 4));
 
 	const componentName = Strings.camelize(parentSlice.title.replace(badChars, ''), null, true);
-
-
 	let html = `/**\n * ${DISCLAIMER.replace('__LANG__', 'JSX').replace(/\n__/g, '\n **//* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, '\n * ')}\n\n\n`;
 	html += 'import React, { Component } from \'react\';\n';
 	html += `import './${componentName}.css';\n\n`;
@@ -240,7 +269,7 @@ export function toReactJS(slices) {
 		const title = slice.title.replace(badChars, '');
 		html += `const ${Strings.camelize(title, null, true)} = (props)=> {\n`;
 		html += `${TAB}return (<div className="${Strings.slugifyURI(title)}-wrapper">\n`;
-		html += (slice.type === 'textfield') ? `${TAB}${TAB}<div className="${Strings.slugifyURI(title)}-text">${slice.meta.txtVal}</div>\n` : `${TAB}${TAB}<img className="${Strings.slugifyURI(title)}-image" src="./images/${URLs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}" />\n`;
+		html += (slice.type === 'textfield') ? `${TAB}${TAB}<div className="${Strings.slugifyURI(title)}-text">${slice.meta.txtVal}</div>\n` : `${TAB}${TAB}<img className="${Strings.slugifyURI(title)}-image" src="./images/${URIs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}" />\n`;
 		html += `${TAB}</div>);\n`;
 		html += `};\n\n`;
 	});
@@ -303,18 +332,18 @@ export function toSwift(slices, artboard) {
 		if (slice.type === 'background' || slice.type === 'group' || slice.type === 'slice' || slice.type === 'symbol' || slice.type === 'textfield') {
 			const sliceName = Strings.camelize(Strings.slugifyURI(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''));
 
-			html += '// Asset\n';
-			html += 'enum Asset {\n';
+			html += `// Asset\n`;
+			html += `enum Asset {\n`;
 			html += `${TAB}enum ${artboardName} {\n`;
 			html += `${TAB}${TAB}static let ${sliceName}: AssetType = "${artboardName}/${Strings.capitalize(sliceName)}"\n`;
 			html += `${TAB}}\n`;
-			html += '}\n\n';
+			html += `}\n\n`;
 			html += `let ${sliceName}Image = UIImage(asset: Asset.${artboardName}.${sliceName})\n`;
 			html += `let alt${sliceName}Image = Asset.${artboardName}.${sliceName}.image\n`;
 
 			if (slice.meta.fillColor.length > 0) {
-				html += '\n\n// Color \n';
-				html += 'struct ColorName {\n';
+				html += `\n\n// Color \n`;
+				html += `struct ColorName {\n`;
 				html += `${TAB}let rgbaValue: UInt32\n`;
 				html += `${TAB}var color: Color { return Color(named: self) }\n`;
 				html += `${TAB}static let ${Strings.camelize(slice.title)} = ColorName(rgbaValue: 0x${slice.meta.fillColor.replace('#', '')}ff)\n`;
@@ -326,21 +355,21 @@ export function toSwift(slices, artboard) {
 		} else if (slice.type === 'textfield') {
 			const { family, name, psName } = fontSpecs(slice.meta.font);
 
-			html += '// Font\n';
-			html += 'enum FontFamily {\n';
+			html += `// Font\n`;
+			html += `enum FontFamily {\n`;
 			html += `${TAB}enum ${family}: String, FontConvertible {\n`;
 			html += `${TAB}${TAB}static let ${name.toLowerCase()} = FontConvertible(name: "${family}-${name}", family: "${slice.meta.font.family}", path: "${psName}.otf")\n`;
 			html += `${TAB}}\n`;
-			html += '}\n\n';
+			html += `}\n\n`;
 			html += `let ${Strings.camelize([family, name].join(' '))} = UIFont(font: FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
 			html += `let ${Strings.camelize(['alt', family, name].join(' '))} = FontFamily.${family}.${name.toLowerCase()}, size: ${slice.meta.font.size.toFixed(1)})\n`;
-			html += '\n\n';
-			html += '// Color\n';
-			html += 'struct ColorName {\n';
+			html += `\n\n`;
+			html += `// Color\n`;
+			html += `struct ColorName {\n`;
 			html += `${TAB}let rgbaValue: UInt32\n`;
 			html += `${TAB}var color: Color { return Color(named: self) }\n`;
 			html += `${TAB}static let ${Strings.camelize(slice.title)} = ColorName(rgbaValue: 0x${slice.meta.font.color.replace('#', '')}ff)\n`;
-			html += '\n';
+			html += `\n`;
 			html += `let ${Strings.camelize(slice.title)}Color = UIColor(named: .${Strings.camelize(slice.title)})\n`;
 			html += `let ${Strings.camelize('alt' + slice.title)}Color = ColorName.${Strings.camelize(slice.title)}.color\n`;
 		}

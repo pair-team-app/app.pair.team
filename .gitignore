@@ -29,7 +29,8 @@ npm-debug.log*
 /public/php/*.php
 
 #-- stripe tokens
-/src/assets/json/stripe.json
+/src/assets/json/github-creds.json
+/src/assets/json/stripe-creds.json
 
 #-- vendor paths
 **/vendor/**/node_modules
@@ -37,3 +38,5 @@ npm-debug.log*
 **/vendor/**/*.md
 **/vendor/**/examples
 **/vendor/**/LICENSE
+
+/.eslintrc.json

@@ -1,0 +1,26 @@
+
+.confirm-dialog-content {
+	min-width: 320px;
+	padding: 0 15px;
+}
+
+.confirm-dialog-button-wrapper {
+	width: 100%;
+	text-align: right;
+}
+
+.confirm-dialog-aux-button, .confirm-dialog-aux-button:hover, .confirm-dialog-aux-button:active {
+	background-color: #ffffff;
+	border: 1px solid #005cc5;
+	color : #005cc5;
+}
+
+.confirm-dialog-aux-button:hover, .confirm-dialog-aux-button:active {
+	background-color: #fafbfc;
+}
+
+.confirm-dialog-aux-button:disabled, .confirm-dialog-aux-button:disabled:hover {
+	background-color: #eaecef;
+	border: 1px solid #84a3c4;
+	color: #6191c2;
+}

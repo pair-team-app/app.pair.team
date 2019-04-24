@@ -2,12 +2,32 @@
 import React, { Component } from 'react';
 import './IntegrationsPage.css';
 
+import axios from 'axios';
+import qs from 'qs';
+import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from '../BaseDesktopPage';
-import { Arrays, Strings } from '../../../../utils/lang';
+import IntegrationGridItem from '../../../iterables/IntegrationGridItem';
+import { POPUP_TYPE_OK } from '../../../overlays/PopupNotification';
+import { API_ENDPT_URL } from '../../../../consts/uris';
+import { updateUserProfile } from '../../../../redux/actions';
+import { Strings } from '../../../../utils/lang';
 import { trackEvent } from '../../../../utils/tracking';
-import integrationItems from '../../../../assets/json/integration-items';
+import integrationItems from '../../../../assets/json/integrations';
+
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		profile : state.userProfile
+	});
+};
+
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+	});
+};
 
 
 const IntegrationsPageGrid = (props)=> {
@@ -15,30 +35,19 @@ const IntegrationsPageGrid = (props)=> {
 
 	const { integrations } = props;
 	return (<div className="integrations-page-grid">
-		<Row horizontal="space-around" className="integrations-page-grid-item-wrapper" style={{ flexWrap : 'wrap' }}>
+		<Row wrap={true} horizontal="space-around" className="integrations-page-grid-item-wrapper">
 			{integrations.map((integration, i) => {
 				return (<Column key={i}>
-					<IntegrationsPageGridItem
+					<IntegrationGridItem
 						title={integration.title}
 						image={integration.filename}
+						enabled={integration.enabled}
+						selected={integration.selected}
+						inheritedClass="integrations-page-grid-item"
 						onClick={()=> props.onClick(integration)} />
 				</Column>);
 			})}
 		</Row>
-	</div>);
-};
-
-
-const IntegrationsPageGridItem = (props)=> {
-// 	console.log('IntegrationsPage.IntegrationsPageGridItem()', props);
-
-	const { title, image } = props;
-	return (<div className="integrations-page-grid-item" onClick={()=> props.onClick()}>
-		<div className="integrations-page-grid-item-overlay" />
-		<img className="integrations-page-grid-item-image" src={image} alt={title} />
-		<div className="integrations-page-grid-item-title-wrapper">
-			<div className="integrations-page-grid-item-title">{title}</div>
-		</div>
 	</div>);
 };
 
@@ -48,24 +57,85 @@ class IntegrationsPage extends Component {
 		super(props);
 
 		this.state = {
+			submitting   : false,
+			integrations : []
 		};
+	}
+
+	componentDidMount() {
+// 		console.log('IntegrationsPage.componentDidMount()', this.props, this.state);
+
+		const { profile } = this.props;
+		const integrations = integrationItems.filter((integration)=> (integration.type === 'dev')).sort((integration1, integration2)=> ((integration1.enabled && !integration2.enabled) ? -1 : (!integration1.enabled && integration2.enabled) ? 1 : 0)).map((integration)=> (Object.assign({}, integration, {
+			selected : (profile && profile.integrations.includes(integration.id))
+		})));
+
+		this.setState({ integrations });
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('IntegrationsPage.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
+
+		if (!prevProps.profile && this.props.profile) {
+			const { profile } = this.props;
+			const integrations = integrationItems.filter((integration)=> (integration.type === 'dev')).sort((integration1, integration2)=> ((integration1.enabled && !integration2.enabled) ? -1 : (!integration1.enabled && integration2.enabled) ? 1 : 0)).map((integration)=> (Object.assign({}, integration, {
+				selected : (profile && profile.integrations.includes(integration.id))
+			})));
+
+			this.setState({ integrations });
+		}
 	}
 
 	handleIntegrationItemClick = (integration)=> {
 // 		console.log('IntegrationsPage.handleIntegrationItemClick()', integration);
 
 		trackEvent('integration', 'click', Strings.slugifyURI(integration.title));
-		window.open(integration.url);
+
+		if (this.props.profile) {
+			const { profile } = this.props;
+			integration.selected = !integration.selected;
+
+			const sources = this.state.sources;
+			const integrations = this.state.integrations.map((item)=> ((item.id === integration.id) ? integration : item));
+			this.setState({ sources, integrations,
+				submitting : true
+			}, ()=> {
+				axios.post(API_ENDPT_URL, qs.stringify({
+					action       : 'UPDATE_INTEGRATIONS',
+					user_id      : profile.id,
+					sources      : profile.sources.join(','),
+					integrations : this.state.integrations.filter((integration)=> (integration.selected)).map((integration)=> (integration.id)).join(',')
+				})).then((response) => {
+					console.log('UPDATE_INTEGRATIONS', response.data);
+
+					this.setState({ submitting : false });
+					this.props.updateUserProfile(response.data.user);
+					this.props.onPopup({
+						type     : POPUP_TYPE_OK,
+						content  : 'Integration profile updated.',
+						duration : 1750
+					});
+				}).catch((error)=> {
+				});
+			});
+
+		} else {
+			window.open(integration.url);
+		}
 	};
 
 	render() {
 // 		console.log('IntegrationsPage.render()', this.props, this.state);
 
+		const { integrations } = this.state;
+		const selectedItems = integrations.filter((integration)=> (integration.selected));
+		const enabledItems = integrations.filter((integration)=> (integration.enabled));
+
 		return (
 			<BaseDesktopPage className="integrations-page-wrapper">
-				{/*<h4>CD / CI Integrations</h4>*/}
+				<h4>{`Framework ${Strings.pluralize('Integration', enabledItems.length)} (${selectedItems.length} / ${enabledItems.length})`}</h4>
 				<IntegrationsPageGrid
-					integrations={Arrays.shuffle(integrationItems)}
+					integrations={integrations}
 					onClick={this.handleIntegrationItemClick}
 				/>
 			</BaseDesktopPage>
@@ -73,4 +143,4 @@ class IntegrationsPage extends Component {
 	}
 }
 
-export default IntegrationsPage;
+export default connect(mapStateToProps, mapDispatchToProps)(IntegrationsPage);

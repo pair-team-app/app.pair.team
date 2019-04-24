@@ -7,11 +7,11 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
 import BaseDesktopPage from './BaseDesktopPage';
-import UploadHeader from '../../elements/navs/UploadHeader';
+import UploadHeader from '../../navs/UploadHeader';
 import LoginForm from '../../forms/LoginForm';
 import RegisterForm from '../../forms/RegisterForm';
 
-import { API_ENDPT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
+import { Modals, API_ENDPT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { addFileUpload, updateDeeplink, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
@@ -100,21 +100,25 @@ class UploadPage extends Component {
 	};
 
 	handleFile = (file)=> {
-// 		console.log('UploadPage.handleFile()', file, this.props, this.state);
+// 		console.log('UploadPage.handleFile()', file);
 
 		const { id, email } = (this.props.profile) ? this.props.profile : this.state.profile;
 		sendToSlack(`*[\`${id}\`]* *${email}* started uploading file "_${file.name}_" (\`${(file.size / (1024 * 1024)).toFixed(2)}MB\`)`);
 		trackEvent('upload', 'file');
 
 		this.setState({
-			formState : 1,
-			file      : file,
-			title     : file.name.split('.').slice(0, -1).join('.')
+			formState      : 1,
+			file           : file,
+			title          : file.name.split('.').slice(0, -1).join('.'),
+			uploadComplete : false
 		});
 
 		const config = {
-			headers            : { 'content-type' : 'multipart/form-data' },
-			onDownloadProgress : (progressEvent)=> {},
+			headers : {
+				'Content-Type' : 'multipart/form-data',
+				'Accept'       : 'application/json'
+			},
+			onDownloadProgress : (progressEvent)=> {/* …\(^_^)/… */},
 			onUploadProgress   : (progressEvent)=> {
 				const { formState } = this.state;
 				const { loaded, total } = progressEvent;
@@ -144,6 +148,13 @@ class UploadPage extends Component {
 		});
 	};
 
+	handleGitHub = ()=> {
+		console.log('UploadPage.handleGitHub()');
+
+		trackEvent('button', 'github');
+		this.props.onModal(Modals.GITHUB_CONNECT);
+	};
+
 	handleLogin = ()=> {
 // 		console.log('UploadPage.handleLogin()');
 
@@ -171,6 +182,7 @@ class UploadPage extends Component {
 		cookie.save('user_id', profile.id, { path : '/' });
 
 		this.props.updateUserProfile(profile);
+		this.props.onRegistered();
 		this.onUploadSubmit(profile);
 	};
 
@@ -242,6 +254,8 @@ class UploadPage extends Component {
 					onFile={this.handleFile}
 					onPage={this.props.onPage}
 					onPopup={this.props.onPopup} />)}
+
+				{(formState === 0 && !isUserLoggedIn()) && (<button className="long-button aux-button" onClick={this.handleGitHub}>Connect on GitHub</button>)}
 
 				{(!isUserLoggedIn() && showRegister && !showLogin) && (<div className="upload-page-register-wrapper">
 					<RegisterForm

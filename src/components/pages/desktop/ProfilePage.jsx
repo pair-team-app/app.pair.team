@@ -7,16 +7,18 @@ import Dropzone from 'react-dropzone';
 import FontAwesome from 'react-fontawesome';
 import ImageLoader from 'react-loading-image';
 import { connect } from 'react-redux';
-import { Row } from 'simple-flexbox';
+import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
-import ConfirmDialog from '../../elements/overlays/ConfirmDialog';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../elements/overlays/PopupNotification';
-import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../elements/forms/InputField';
-import { DEFAULT_AVATAR, CDN_UPLOAD_URL } from '../../../consts/uris';
+import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../forms/InputField/InputField';
+import IntegrationGridItem from '../../iterables/IntegrationGridItem';
+import ConfirmDialog from '../../overlays/ConfirmDialog';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../overlays/PopupNotification';
+import { Modals, DEFAULT_AVATAR, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { Bits, Files, Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
+import integrationItems from '../../../assets/json/integrations';
 
 const dropZone = React.createRef();
 
@@ -31,6 +33,114 @@ const mapDispatchToProps = (dispatch)=> {
 	return ({
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
+};
+
+
+const ProfilePageAvatar = (props)=> {
+// 	console.log('ProfilePage.ProfilePageAvatar()', props);
+
+	const { avatar } = props;
+	const defaultAvatar = (avatar.includes('avatar-default.png'));
+	return (<div className="profile-page-avatar">
+		<Row vertical="center">
+			<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={props.onFileDrop} onFileDialogCancel={props.onFileDialogCancel} ref={dropZone}>
+				<div className="profile-page-avatar-image-wrapper">
+					<ImageLoader
+						src={avatar}
+						image={(props)=> (<img className="profile-page-avatar-image" { ...props } src={avatar} alt="" />)}
+						loading={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+						error={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
+					/>
+				</div>
+			</Dropzone>
+			<button className="adjacent-button" onClick={()=> props.onClick()}>{(defaultAvatar) ? 'Upload' : 'Replace'}</button>
+			<div className={`page-link page-link-form${(defaultAvatar) ? ' page-link-form-disabled' : ''}`} onClick={()=> (defaultAvatar) ? null : props.onDropAvatar()}>Remove</div>
+		</Row>
+	</div>);
+};
+
+
+const ProfilePageForm = (props)=> {
+// 	console.log('ProfilePage.ProfilePageForm()', props);
+
+	const { profile, username, email, usernameValid, emailValid, passwordValid, passMsg, changed } = props;
+	return (<div className="profile-page-form">
+		<InputField
+			type="text"
+			name="username"
+			placeholder="Enter New Username"
+			value={username}
+			button="Change"
+			status={(usernameValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
+			onChange={(val)=> props.onInputFieldChange('username', val)}
+			onErrorClick={()=> props.onInputFieldClick('username')}
+			onSubmit={(val)=> props.onInputFieldSubmit('username', val)}
+		/>
+
+		<InputField
+			type="text"
+			name="email"
+			placeholder="Enter New Email Address"
+			value={email}
+			button="Change"
+			status={(emailValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
+			onChange={(val)=> props.onInputFieldChange('email', val)}
+			onErrorClick={()=> props.onInputFieldClick('email')}
+			onSubmit={(val)=> props.onInputFieldSubmit('email', val)}
+		/>
+
+		<InputField
+			type="password"
+			name="password"
+			placeholder="Enter New Password"
+			value={passMsg}
+			button="Change"
+			status={(passwordValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
+			onChange={(val)=> props.onInputFieldChange('password', val)}
+			onErrorClick={()=> props.onInputFieldClick('password')}
+			onSubmit={(val)=> props.onInputFieldSubmit('password', val)}
+		/>
+
+		<InputField
+			type="lbl"
+			name="paid"
+			placeholder="Free Account"
+			value={(profile && profile.paid) ? 'Unlimited Account' : 'Free Account'}
+			button={(profile && profile.paid) ? 'Downgrade' : 'Upgrade'}
+			status={INPUTFIELD_STATUS_IDLE}
+			onFieldClick={()=> null}
+			onSubmit={props.onAccountType}
+		/>
+
+		<Row vertical="center">
+			<button type="submit" disabled={!changed} className="long-button adjacent-button" onClick={()=> props.onSubmit()}>Save</button>
+			{(changed) && (<div className="page-link page-link-form" onClick={()=> props.onCancel()}>Cancel</div>)}
+		</Row>
+	</div>);
+};
+
+
+const ProfilePageIntegrationsGrid = (props)=> {
+// 	console.log('ProfilePage.ProfilePageIntegrationsGrid()', props);
+
+	const { title, items } = props;
+	return (<div className="profile-page-integrations-grid">
+		<h4>{title}</h4>
+		<Row wrap={true} horizontal="start" className="profile-page-integrations-grid-item-wrapper">
+			{items.map((item, i) => {
+				return (<Column key={i}>
+					<IntegrationGridItem
+						title={item.title}
+						image={item.filename}
+						enabled={true}
+						selected={true}
+						inheritedClass="profile-page-integrations-grid-item"
+					/>
+				</Column>);
+			})}
+		</Row>
+		<button className="long-button" onClick={()=> {trackEvent('button', 'integrations'); props.onClick()}}>{(items.length === 0) ? 'Setup' : 'Change'}</button>
+	</div>);
 };
 
 
@@ -50,6 +160,7 @@ class ProfilePage extends Component {
 			passwordValid : true,
 			passMsg       : '',
 			status        : 0x00,
+			integrations  : [],
 			changed       : false,
 			percent       : 0,
 			fileDialog    : false,
@@ -59,24 +170,33 @@ class ProfilePage extends Component {
 
 	componentDidMount() {
 // 		console.log('ProfilePage.componentDidMount()', this.props, this.state);
+
 		if (this.props.profile) {
-			const { avatar, username, email, type } = this.props.profile;
-			this.setState({ avatar, username, email, type });
+			const { profile } = this.props;
+			const { avatar, username, email, type } = profile;
+			const integrations = integrationItems.filter((integration)=> (profile.sources.includes(integration.id) || profile.integrations.includes(integration.id)));
+
+			this.setState({ avatar, username, email, type, integrations });
 		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('ProfilePage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
+		if (!prevProps.profile && this.props.profile) {
+			const { profile } = this.props;
+			const integrations = integrationItems.filter((integration)=> (profile.sources.includes(integration.id) || profile.integrations.includes(integration.id)));
+			this.setState({ integrations });
+		}
+
 		if (prevProps.profile !== this.props.profile) {
-			const { avatar, username, email, type, status } = this.props.profile;
-			this.setState({
-				avatar        : avatar,
-				username      : username,
-				email         : email,
-				type          : type,
+			const { profile } = this.props;
+			const { avatar, username, email, type, status } = profile;
+
+			this.setState({ avatar, username, email, type,
 				usernameValid : !Bits.contains(status, 0x01),
-				emailValid    : !Bits.contains(status, 0x10)
+				emailValid    : !Bits.contains(status, 0x10),
+				integrations  : integrationItems.filter((integration)=> (profile.sources.includes(integration.id) || profile.integrations.includes(integration.id)))
 			});
 		}
 
@@ -98,7 +218,7 @@ class ProfilePage extends Component {
 			this.setState({ confirmDialog : true });
 
 		} else {
-			this.props.onStripeOverlay();
+			this.props.onModal(Modals.STRIPE);
 		}
 	};
 
@@ -116,10 +236,7 @@ class ProfilePage extends Component {
 		trackEvent('button', 'cancel-changes');
 		const { avatar, username, email } = this.props.profile;
 
-		this.setState({
-			avatar        : avatar,
-			username      : username,
-			email         : email,
+		this.setState({ avatar, username, email,
 			password      : '',
 			passMsg       : '',
 			usernameValid : true,
@@ -158,15 +275,18 @@ class ProfilePage extends Component {
 	};
 
 	handleFileDrop = (files)=> {
-// 		console.log('ProfilePage.handleFileDrop()', files);
+// 		console.log('ProfilePage.handleFileDrop()', files, CDN_UPLOAD_URL);
 
 		if (files.length > 0) {
 			const file = files.pop();
 			const { profile } = this.props;
 
 			const config = {
-				headers             : { 'content-type' : 'multipart/form-data' },
-				onDownloadProgress  : (progressEvent)=> {},
+				headers : {
+					'Content-Type' : 'multipart/form-data',
+					'Accept'       : 'application/json'
+				},
+				onDownloadProgress  : (progressEvent)=> {/* …\(^_^)/… */},
 				onUploadProgress    : (progressEvent)=> {
 					const { loaded, total } = progressEvent;
 					const percent = Math.round((loaded * 100) / total);
@@ -292,13 +412,10 @@ class ProfilePage extends Component {
 
 // 		console.log(' -=- ProfilePage.onValidateFields()', emailValid, state);
 
-		this.setState({
-			username      : (usernameValid) ? username : (username.includes('@')) ? 'Usernames Cannot Contain \'@\'' : 'Username Invalid',
-			email         : (emailValid) ? email : 'Email Address Invalid',
-			passMsg       : (passwordValid) ? password : 'Password Invalid',
-			usernameValid : usernameValid,
-			emailValid    : emailValid,
-			passwordValid : passwordValid
+		this.setState({ usernameValid, emailValid, passwordValid,
+			username : (usernameValid) ? username : (username.includes('@')) ? 'Usernames Cannot Contain \'@\'' : 'Username Invalid',
+			email    : (emailValid) ? email : 'Email Address Invalid',
+			passMsg  : (passwordValid) ? password : 'Password Invalid'
 		});
 
 		if (usernameValid && emailValid && passwordValid) {
@@ -309,86 +426,44 @@ class ProfilePage extends Component {
 	render() {
 // 		console.log('ProfilePage.render()', this.props, this.state);
 
-		// disable save --  !profile || (profile.avatar === avatar && profile.username === username && profile.email === email && password.length === 0)
-
-// 		const { avatar, username, email } = (this.props.profile) ? this.props.profile : this.state;
 		const { profile } = this.props;
-		const { avatar, username, email } = this.state;
+		const { avatar, username, email, integrations } = this.state;
 		const { passMsg, usernameValid, emailValid, passwordValid, changed, confirmDialog } = this.state;
 
 		return (
 			<BaseDesktopPage className="profile-page-wrapper">
 				<h4>Profile</h4>
-				<div className="profile-page-avatar-wrapper">
-					<Row vertical="center">
-						<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={this.handleFileDrop} onFileDialogCancel={this.handleFileDialogCancel} ref={dropZone}>
-							<div className="profile-page-avatar-image-wrapper">
-								<ImageLoader
-									src={avatar}
-									image={(props)=> (<img className="profile-page-avatar-image" {...props} src={avatar} alt="" />)}
-									loading={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
-									error={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
-								/>
-							</div>
-						</Dropzone>
-						<button className="adjacent-button" onClick={()=> this.handleAvatarClick()}>{(avatar.includes('avatar-default.png')) ? 'Upload' : 'Replace'}</button>
-						<div className={`page-link${(avatar.includes('avatar-default.png')) ? ' page-link-disabled' : ''}`} onClick={()=> this.handleDropAvatar()}>Remove</div>
-					</Row>
-				</div>
+				<ProfilePageAvatar
+					avatar={avatar}
+					onClick={this.handleAvatarClick}
+					onFileDrop={this.handleFileDrop}
+					onFileDialogCancel={this.handleFileDialogCancel}
+					onDropAvatar={this.handleDropAvatar}
+				/>
 
-				<div className="profile-page-form-wrapper">
-					<InputField
-						type="text"
-						name="username"
-						placeholder="Enter New Username"
-						value={username}
-						button="Change"
-						status={(usernameValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
-						onChange={(val)=> this.handleInputFieldChange('username', val)}
-						onErrorClick={()=> this.handleInputFieldClick('username')}
-						onSubmit={(val)=> this.handleInputFieldSubmit('username', val)}
-					/>
+				<ProfilePageForm
+					profile={profile}
+					username={username}
+					email={email}
+					usernameValid={usernameValid}
+					emailValid={emailValid}
+					passwordValid={passwordValid}
+					passMsg={passMsg}
+					changed={changed}
+					onInputFieldChange={this.handleInputFieldChange}
+					onInputFieldClick={this.handleInputFieldClick}
+					onInputFieldSubmit={this.handleInputFieldSubmit}
+					onAccountType={this.handleAccountType}
+					onCancel={this.handleCancel}
+					onSubmit={this.handleSubmit}
+				/>
 
-					<InputField
-						type="text"
-						name="email"
-						placeholder="Enter New Email Address"
-						value={email}
-						button="Change"
-						status={(emailValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
-						onChange={(val)=> this.handleInputFieldChange('email', val)}
-						onErrorClick={()=> this.handleInputFieldClick('email')}
-						onSubmit={(val)=> this.handleInputFieldSubmit('email', val)}
-					/>
-
-					<InputField
-						type="password"
-						name="password"
-						placeholder="Enter New Password"
-						value={passMsg}
-						button="Change"
-						status={(passwordValid) ? INPUTFIELD_STATUS_IDLE : INPUTFIELD_STATUS_ERROR}
-						onChange={(val)=> this.handleInputFieldChange('password', val)}
-						onErrorClick={()=> this.handleInputFieldClick('password')}
-						onSubmit={(val)=> this.handleInputFieldSubmit('password', val)}
-					/>
-
-					<InputField
-						type="lbl"
-						name="paid"
-						placeholder="Free Account"
-						value={(profile && profile.paid) ? 'Unlimited Account' : 'Free Account'}
-						button={(profile && profile.paid) ? 'Downgrade' : 'Upgrade'}
-						status={INPUTFIELD_STATUS_IDLE}
-						onFieldClick={()=> null}
-						onSubmit={this.handleAccountType}
-					/>
-				</div>
-
-				<Row vertical="center">
-					<button type="submit" disabled={!changed} className="long-button adjacent-button" onClick={()=> this.handleSubmit()}>Save</button>
-					{(changed) && (<div className="page-link" onClick={()=> this.handleCancel()}>Cancel</div>)}
-				</Row>
+				{(profile) && (<ProfilePageIntegrationsGrid
+					title="Design Tools & Frameworks Integrations"
+					items={integrations}
+					profile={profile}
+					onClick={()=> this.props.onModal(Modals.INTEGRATIONS)}
+				/>)}
 
 				{(confirmDialog) && (<ConfirmDialog
 					title="Change Account"
@@ -401,3 +476,6 @@ class ProfilePage extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
+
+
+// TODO: Add github toggle to profile

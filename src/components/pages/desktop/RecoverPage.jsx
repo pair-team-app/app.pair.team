@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
-import { POPUP_TYPE_OK } from '../../elements/overlays/PopupNotification';
+import { POPUP_TYPE_OK } from '../../overlays/PopupNotification';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
@@ -135,7 +135,7 @@ class RecoverPage extends Component {
 							<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.handleTextfieldChange(event)} /></div>
 							<Row vertical="center">
 								<button disabled={!emailValid || email.length === 0} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleEmailSubmit(event)}>Submit</button>
-								<div className="page-link" onClick={()=> this.props.onPage('login')}>Want to Login?</div>
+								<div className="page-link page-link-form" onClick={()=> this.props.onPage('login')}>Want to Login?</div>
 							</Row>
 						</form>
 					</div>)
@@ -149,7 +149,7 @@ class RecoverPage extends Component {
 							</div>
 							<Row vertical="center">
 								<button disabled={!passwordValid || password.length === 0} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handlePasswordSubmit(event)}>Submit</button>
-								<div className="page-link" onClick={()=> this.props.onPage('login')}>Want to Login?</div>
+								<div className="page-link page-link-form" onClick={()=> this.props.onPage('login')}>Want to Login?</div>
 							</Row>
 						</form>
 					</div>)}

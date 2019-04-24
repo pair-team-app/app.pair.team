@@ -1,21 +1,12 @@
 
+#-- drop www prefix --#
 RewriteEngine on
-		#-- drop www subdomain --#
-		RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-    RewriteRule ^(.*)$ http://%1/$1 [L,R=301]
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
 
-    #-- https redirect --#
-    #RewriteCond %{SERVER_PORT} 80
-    #RewriteRule ^(.*)$ https://earlyaccess.designengine.ai/$1 [R,L]
 
-		#-- php redirects --#
-		RewriteRule ^invite/(\d+)$ /php/invite.php?invite_id=$1 [R=301,P]
-		RewriteRule ^verify/(\d+)$ /php/verify.php?user_id=$1 [R=301,P]
-
-		#-- file downloads --#
-    #RewriteRule ^tryfree/?$ /app/DesignEngine.dmg [L,R=301,NC]
-
-		#-- react router fix --#
+#-- react routing --#
+RewriteEngine on
     Options -MultiViews
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
@@ -24,7 +15,7 @@ RewriteEngine on
 
 #-- don't cache these --#
 <IfModule mod_expires.c>
-    <FilesMatch "\.(css|gif|html?|ico|jpe?g|js|json|map|pdf|php|svg|xml)$">
+    <FilesMatch "\.(css|gifv?|html?|ico|jpe?g|js|json|map|mp4|mov|mpe?g|otf|pdf|php|svg|ttf|txt|xml)$">
         ExpiresActive On
         ExpiresDefault A1
         Header unset Cache-Control

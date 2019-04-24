@@ -18,27 +18,46 @@ import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import BaseDesktopPage from '../BaseDesktopPage';
-import ConfirmDialog from '../../../elements/overlays/ConfirmDialog';
-import BaseOverlay from '../../../elements/overlays/BaseOverlay/BaseOverlay';
-import InputField, { INPUTFIELD_STATUS_IDLE } from '../../../elements/forms/InputField';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../../elements/overlays/PopupNotification';
-import TutorialBubble from '../../../elements/overlays/TutorialBubble';
+import ConfirmDialog from '../../../overlays/ConfirmDialog';
+import BaseOverlay from '../../../overlays/BaseOverlay/BaseOverlay';
+import InputField, { INPUTFIELD_STATUS_IDLE } from '../../../forms/InputField/InputField';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../../overlays/PopupNotification';
+import TutorialBubble from '../../../overlays/TutorialBubble';
 
 import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL } from './consts';
 import { drawCanvasSliceBorder, drawCanvasSliceMarchingAnts, drawCanvasSliceGuides } from './utils/canvas';
-import { fontSpecs, toAndroid, toCSS, toReactJS, toSpecs, toSwift } from './utils/code-generator.js';
+import { 
+	fontSpecs, 
+// 	toAndroid, 
+	toBootstrap, 
+	toCSS, 
+	toGridHTML, 
+	toReactJS, 
+	toSpecs, 
+// 	toSwift 
+} from './utils/code-generator.js';
 import { MOMENT_TIMESTAMP } from '../../../../consts/formats';
 import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../../consts/key-codes';
 import { DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PARTS_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL, LINTER_ENDPT_URL } from '../../../../consts/uris';
 import { setRedirectURI } from '../../../../redux/actions';
-import { buildInspectorPath, buildInspectorURL, sendToSlack } from '../../../../utils/funcs.js';
-import { Browsers, DateTimes, Files, Maths, Strings, URLs } from '../../../../utils/lang.js';
+import {
+	buildInspectorPath,
+	buildInspectorURL,
+	createGist,
+	sendToSlack
+} from '../../../../utils/funcs.js';
+import {
+	Arrays,
+	Browsers,
+	DateTimes,
+	Files,
+	Maths,
+	Strings,
+	URIs
+} from '../../../../utils/lang.js';
 import { trackEvent } from '../../../../utils/tracking';
 
 import downloadButton from '../../../../assets/images/buttons/btn-download.svg';
-// import androidIcon from '../../../../assets/images/icons/ico-android.png';
-// import iosIcon from '../../../../assets/images/icons/ico-ios.png';
-// import html5Icon from '../../../../assets/images/icons/ico-html5.png';
 import adBannerPanel from '../../../../assets/json/ad-banner-panel';
 import inspectorTabSets from '../../../../assets/json/inspector-tab-sets';
 import deLogo from '../../../../assets/images/logos/logo-designengine.svg';
@@ -90,62 +109,6 @@ const slicesByArea = (slices)=> {
 const intersectSlices = (slices, frame)=> {
 // 	console.log('interectSlices()', slices, frame);
 	return (slices.filter((slice)=> (Maths.geom.frameContainsFrame(frame, slice.meta.frame))));
-};
-
-
-
-const ArtboardsList = (props)=> {
-// 	console.log('InspectorPage.ArtboardsList()', props);
-
-	const { enabled, contents } = props;
-	return ((contents.length > 0) ? <div className="artboards-list-wrapper">
-		{contents.map((artboard, i)=> {
-			const { meta } = artboard;
-
-			return (
-				<ArtboardListItem
-					key={i}
-					enabled={enabled}
-					id={artboard.id}
-					filename={`${artboard.filename}@1x.png`}
-					title={artboard.title}
-					size={meta.frame.size}
-					onClick={()=> {trackEvent('button', 'change-artboard', null, artboard.id); props.onArtboardListItem(artboard);}}
-				/>
-			);
-		})}
-	</div> : <div className="artboards-list-wrapper artboards-list-wrapper-empty">{(enabled) ? '' : ''}</div>);
-};
-
-const ArtboardListItem = (props)=> {
-// 	console.log('InspectorPage.ArtboardListItem()', props);
-
-	const { enabled, id, filename, title, size } = props;
-
-	const className = `artboard-list-item${(!enabled) ? ' artboard-list-item-disabled' : ''}`;
-	const thumbStyle = {
-		width  : `${size.width}px`,
-		height : `${size.height}px`
-	};
-
-	let errored = false;
-
-	return (<div data-slice-id={id} className={className} onClick={()=> (enabled) ? props.onClick() : null}><Row vertical="center">
-		<div className="artboard-list-item-content-wrapper">
-			<ImageLoader
-				style={thumbStyle}
-				src={filename}
-				image={(props)=> <PartListItemThumb {...props} width={size.width} height={size.height} />}
-				loading={()=> (<div className="artboard-list-item-image artboard-list-item-image-loading" style={thumbStyle}><FontAwesome className="artboard-list-item-fa-status" name="clock-o" size="2x" /></div>)}
-				error={()=> (<div className="artboard-list-item-image artboard-list-item-image-loading"><FontAwesome className="artboard-list-item-fa-status" name="clock-o" size="2x" /></div>)}
-				onError={(event)=> (errored = true)}
-			/>
-
-			{/*<img className="artboard-list-item-image" src={filename} width={size.width} height={size.height} style={thumbStyle} alt={title} />*/}
-			<div className="artboard-list-item-title">{Strings.truncate(title, 18)}</div>
-		</div>
-		{(!errored) && (<button className="tiny-button artboard-list-item-button" onClick={()=> (enabled) ? props.onClick() : null}><img src={downloadButton} width="20" height="14" alt="Download" /></button>)}
-	</Row></div>);
 };
 
 const ColorSwatch = (props)=> {
@@ -228,18 +191,17 @@ const InspectorFooter = (props)=> {
 	return (<div className="inspector-page-footer-wrapper"><Row vertical="center">
 		<img src={deLogo} className="inspector-page-footer-logo" onClick={()=> props.onPage('')} alt="Design Engine" />
 		{(!processing) && (<div className="inspector-page-footer-button-wrapper">
-			{/*{(profile && ((upload.id << 0) === 1 || upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<button className="adjacent-button" onClick={()=> {trackEvent('button', 'share'); this.setState({ shareModal : true });}}>Share</button>)}*/}
 			{(creator) && (<Dropzone
 				className="inspector-page-footer-dz"
 				multiple={false}
 				disablePreview={true}
 				onDrop={props.onDrop}>
-				<button className="inspector-page-footer-button" onClick={()=> trackEvent('button', 'version')}>Version</button>
+				{/*<button className="inspector-page-footer-button" onClick={()=> trackEvent('button', 'version')}>Version</button>*/}
 			</Dropzone>)}
 
 			<button disabled={(scale >= Math.max(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-in'); props.onZoom(1);}}><FontAwesome name="search-plus" /></button>
 			<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-out'); props.onZoom(-1);}}><FontAwesome name="search-minus" /></button>
-			<button disabled={false} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-reset'); props.onZoom(0);}}>Reset ({(fitScale * 100) << 0}%)</button>
+			<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-reset'); props.onZoom(0);}}>Reset ({(fitScale * 100) << 0}%)</button>
 
 			{(section === SECTIONS.PRESENTER && artboards.length < 1) && (<>
 				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'prev-artboard'); props.onChangeArtboard(prevArtboard);}}><FontAwesome name="arrow-left" /></button>
@@ -253,11 +215,20 @@ const InspectorFooter = (props)=> {
 	</Row></div>);
 };
 
+const LivePreview = (props)=> {
+	console.log('InspectorPage.LivePreview()', props);
+
+	const { syntax } = props;
+	return (<div className="live-preview">
+		{(syntax)}
+	</div>);
+};
+
 const MarqueeBanner = (props)=> {
 // 	console.log('InspectorPage.MarqueeBanner()', props);
 
 	const { background, copyText, outro, removable, track, children } = props;
-	const className = `marquee-banner${(outro) ? (removable) ? '  marquee-banner-outro-remove' : ' marquee-banner-outro' : ''}`;
+	const className = `marquee-banner${(outro) ? (removable) ? ' marquee-banner-outro-remove' : ' marquee-banner-outro' : ''}`;
 	const style = {
 		width      : '100%',
 		background : background
@@ -313,7 +284,7 @@ const PartListItem = (props)=> {
 			<ImageLoader
 				style={thumbStyle}
 				src={`${filename}@2x.png`}
-				image={(props)=> <PartListItemThumb {...props} width={size.width} height={size.height} />}
+				image={(props)=> <PartListItemThumb { ...props } width={size.width} height={size.height} />}
 				loading={()=> (<div className="part-list-item-image part-list-item-image-loading" style={thumbStyle}><FontAwesome className="part-list-item-fa-status" name="clock-o" size="2x" /></div>)}
 				error={()=> (<div className="part-list-item-image part-list-item-image-loading"><FontAwesome className="part-list-item-fa-status" name="clock-o" size="2x" /></div>)}
 				onError={(event)=> (errored = true)}
@@ -335,7 +306,6 @@ const SliceRolloverItem = (props)=> {
 // 	console.log('InspectorPage.SliceRolloverItem()', props);
 
 	const { id, artboardID, type, offset, top, left, width, height, scale, visible, filled } = props;
-
 	const className = `slice-rollover-item slice-rollover-item-${type}`;
 	const style = (visible) ? {
 		top     : `${top}px`,
@@ -596,7 +566,7 @@ class InspectorPage extends Component {
 		super(props);
 
 		this.state = {
-			section     : URLs.firstComponent(),
+			section     : URIs.firstComponent(),
 			upload      : null,
 			artboard    : null,
 			slice       : null,
@@ -633,7 +603,8 @@ class InspectorPage extends Component {
 			},
 			percent     : 100,
 			tooltip     : 'Loading…',
-			linter      : null
+			linter      : null,
+			gist        : null
 		};
 
 		this.busyInterval = null;
@@ -655,7 +626,9 @@ class InspectorPage extends Component {
 			this.props.setRedirectURI(null);
 		}
 
-		const { section } = this.state;
+		const { deeplink } = this.props;
+		const { section, upload } = this.state;
+
 		if (section !== '') {
 			this.setState({
 				tabSets    : inspectorTabSets[section],
@@ -665,8 +638,7 @@ class InspectorPage extends Component {
 			});
 		}
 
-		const { deeplink } = this.props;
-		if (deeplink.uploadID !== 0) {
+		if (!upload && deeplink && deeplink.uploadID !== 0) {
 			this.onFetchUpload();
 		}
 
@@ -679,9 +651,9 @@ class InspectorPage extends Component {
 		const { upload, restricted } = nextState;
 		if (upload && (upload.private << 0) === 1) {
 			const isOwner = (nextProps.profile && upload.creator.user_id === nextProps.profile.id);
-			const isContributor = (nextProps.profile && !isOwner && (upload.contributors.filter((contributor)=> (contributor.id === nextProps.profile.id)).length > 0));
+			const isTeamMember = (nextProps.profile && !isOwner && (upload.team.members.filter((member)=> ((member.userID << 0) === nextProps.profile.id)).length > 0));
 
-			if (!restricted && (!isOwner && !isContributor)) {
+			if (!restricted && (!isOwner && !isTeamMember)) {
 				this.setState({
 					restricted : true,
 					tooltip    : null
@@ -699,7 +671,7 @@ class InspectorPage extends Component {
 // 		const { upload, panMultPt } = this.state;
 		const { section, upload } = this.state;
 
-		if (deeplink && deeplink !== prevProps.deeplink && deeplink.uploadID !== 0) {
+		if (!upload && deeplink && deeplink !== prevProps.deeplink && deeplink.uploadID !== 0) {
 			this.onFetchUpload();
 		}
 
@@ -1001,7 +973,8 @@ class InspectorPage extends Component {
 				hoverSlice  : null,
 				hoverOffset : null,
 				tooltip     : null,
-				linter      : null
+				linter      : null,
+				gist        : null
 			});
 
 		} else if (section === SECTIONS.PARTS) {
@@ -1025,7 +998,8 @@ class InspectorPage extends Component {
 				artboard : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
 				slice    : null,
 				tooltip  : null,
-				linter   : null
+				linter   : null,
+				gist     : null
 			});
 
 		} else if (section === SECTIONS.PRESENTER) {
@@ -1053,7 +1027,7 @@ class InspectorPage extends Component {
 						});
 
 						upload.pages = upload.pages.map((page)=> (Object.assign({}, page, {
-							artboards : page.artboards.map((item) => ((item.id === artboard.id) ? artboard : item))
+							artboards : page.artboards.map((item)=> ((item.id === artboard.id) ? artboard : item))
 						})));
 
 						const slices = [...intersectSlices(artboard.slices, artboard.meta.frame)];
@@ -1061,8 +1035,10 @@ class InspectorPage extends Component {
 						const langs = [
 							toCSS(slices),
 							toReactJS(slices),
-							toSwift(slices, artboard),
-							toAndroid(slices, artboard)
+// 							toSwift(slices, artboard),
+							toGridHTML(slices),
+// 							toAndroid(slices, artboard)
+							toBootstrap(slices)
 						];
 
 						tabSets = [...tabSets].map((tabSet, i) => {
@@ -1078,10 +1054,7 @@ class InspectorPage extends Component {
 									return (Object.assign({}, tab, {
 										type     : 'component',
 										enabled  : ((upload.state << 0) === 3),
-										contents : <ArtboardsList
-											enabled={((upload.state << 0) === 3)}
-											contents={flattenUploadArtboards(upload, 'page_child')}
-											onArtboardListItem={(artboard) => this.handleChangeArtboard(artboard)} />
+										contents : <LivePreview syntax="Coming Soon!" />
 									}));
 								}
 							}));
@@ -1095,7 +1068,8 @@ class InspectorPage extends Component {
 							slice     : [...slices].shift(),
 							offset    : artboard.meta.frame.origin,
 							tooltip   : null,
-							linter    : null
+							linter    : null,
+							gist      : null
 						});
 
 						if (!this.canvasInterval) {
@@ -1119,8 +1093,10 @@ class InspectorPage extends Component {
 		const langs = [
 			toCSS(slices),
 			toReactJS(slices),
-			toSwift(slices, artboard),
-			toAndroid(slices, artboard)
+// 			toSwift(slices, artboard),
+			toGridHTML(slices),
+// 			toAndroid(slices, artboard)
+			toBootstrap(slices)
 		];
 
 		if (section === SECTIONS.INSPECT) {
@@ -1205,10 +1181,7 @@ class InspectorPage extends Component {
 						return (Object.assign({}, tab, {
 							type     : 'component',
 							enabled  : true,
-							contents : <ArtboardsList
-								enabled={true}
-								contents={flattenUploadArtboards(upload, 'page_child')}
-								onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />
+							contents : <LivePreview syntax="Coming Soon!" />
 						}));
 					}
 				}));
@@ -1221,7 +1194,8 @@ class InspectorPage extends Component {
 		});
 
 		this.setState({ upload, artboard, tabSets, activeTabs,
-			linter : null
+			linter : null,
+			gist   : null
 		});
 	};
 
@@ -1237,8 +1211,10 @@ class InspectorPage extends Component {
 		const langs = [
 			toCSS(slices),
 			toReactJS(slices),
-			toSwift(slices, artboard),
-			toAndroid(slices, artboard)
+// 			toSwift(slices, artboard),
+			toGridHTML(slices),
+// 			toAndroid(slices, artboard)
+			toBootstrap(slices)
 		];
 
 		if (section === SECTIONS.INSPECT) {
@@ -1321,10 +1297,7 @@ class InspectorPage extends Component {
 						return (Object.assign({}, tab, {
 							enabled  : true,
 							type     : 'component',
-							contents : <ArtboardsList
-								enabled={true}
-								contents={flattenUploadArtboards(upload, 'page_child')}
-								onArtboardListItem={(artboard)=> this.handleChangeArtboard(artboard)} />
+							contents : <LivePreview syntax="Coming Soon!" />
 						}));
 					}
 				}));
@@ -1339,7 +1312,8 @@ class InspectorPage extends Component {
 		this.setState({ artboard, tabSets, activeTabs,
 			hoverSlice  : null,
 			hoverOffset : null,
-			linter      : null
+			linter      : null,
+			gist        : null
 		});
 	};
 
@@ -1409,7 +1383,7 @@ class InspectorPage extends Component {
 						});
 
 						upload.pages = upload.pages.map((page)=> (Object.assign({}, page, {
-							artboards : page.artboards.map((item) => ((item.id === artboardID) ? artboard : item))
+							artboards : page.artboards.map((item)=> ((item.id === artboardID) ? artboard : item))
 						})));
 
 						this.setState({ upload, artboard });
@@ -1505,11 +1479,10 @@ class InspectorPage extends Component {
 			const dir = artboard.id;
 
 			const artboards = flattenUploadArtboards(upload, 'page_child');
-			const ind = (artboards.findIndex((item)=> (item.id === this.state.artboard.id)) + dir) % artboards.length;
+			artboard = Arrays.wrapElement(artboards, artboards.findIndex((item)=> (item.id === this.state.artboard.id)) + dir);
 
-			if (this.state.artboard.id !== artboards[((ind < 0) ? artboards.length + ind : ind)].id) {
-				this.setState({
-					artboard    : artboards[((ind < 0) ? artboards.length + ind : ind)],
+			if (this.state.artboard.id !== artboard.id) {
+				this.setState({ artboard,
 					slice       : null,
 					offset      : null,
 					hoverSlice  : null,
@@ -1617,8 +1590,11 @@ class InspectorPage extends Component {
 						trackEvent('upload', 'file');
 
 						const config = {
-							headers            : { 'content-type' : 'multipart/form-data' },
-							onDownloadProgress : (progressEvent)=> {},
+							headers : {
+								'Content-Type' : 'multipart/form-data',
+								'Accept'       : 'application/json'
+							},
+							onDownloadProgress : (progressEvent)=> {/* …\(^_^)/… */},
 							onUploadProgress   : (progressEvent)=> {
 								const { loaded, total } = progressEvent;
 
@@ -1804,7 +1780,7 @@ class InspectorPage extends Component {
 	handleSendSyntaxAtom = (tab)=> {
 // 		console.log('InspectorPage.handleSendSyntaxAtom()', tab);
 
-		const lang = (tab.title === 'CSS') ? 'css' : (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Swift') ? 'swift' : (tab.title === 'Android') ? 'xml' : 'txt';
+		const lang = (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Android') ? 'xml' : (tab.title === 'Bootstrap') ? 'html' : tab.title.toLowerCase();
 		trackEvent('button', `send-atom-${lang}`);
 
 		const { processing } = this.props;
@@ -1828,11 +1804,39 @@ class InspectorPage extends Component {
 		}, '*');
 	};
 
+	handleSendSyntaxGist = (tab)=> {
+		console.log('InspectorPage.handleSendSyntaxGist()', tab);
+
+		const { profile, processing } = this.props;
+		const { section, urlBanner, slice, linter } = this.state;
+
+		const lang = (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Android') ? 'xml' : (tab.title === 'Bootstrap') ? 'html' : tab.title.toLowerCase();
+		trackEvent('button', `send-gist-${lang}`);
+
+		this.props.onPopup({
+			type     : POPUP_TYPE_OK,
+			offset   : {
+				top   : (urlBanner << 0 && !processing) * 38,
+				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
+			},
+			content  : `Creating “${Strings.slugifyURI(slice.title)}.${lang}” gist on GitHub…`
+		});
+
+		this.setState({ gist : { busy : true }}, ()=> {
+			createGist(profile.github.accessToken, `${Strings.slugifyURI(slice.title)}.${lang}`, tab.syntax, `Design Engine auto generated ${(linter) ? 'linted ' : ''}syntax v1`, true, (data)=> {
+				this.setState({ gist : {
+						busy : false,
+						url  : data.html_url
+					}});
+			});
+		});
+	};
+
 	handleSendSyntaxLinter = (tab)=> {
 		console.log('InspectorPage.handleSendSyntaxLinter()', tab);
 
 		const tabID = tab.id;
-		const lang = (tab.title === 'CSS') ? 'css' : (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Swift') ? 'swift' : (tab.title === 'Android') ? 'xml' : 'txt';
+		const lang = (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Android') ? 'xml' : (tab.title === 'Bootstrap') ? 'html' : tab.title.toLowerCase();
 		const linter = (lang === 'css') ? 'StyleLint' : (lang === 'html') ? 'HTMLHint' : (lang === 'js' || lang === 'jsx') ? 'Prettier + ESLint' : 'Linter';
 
 		trackEvent('button', `send-linter-${lang}`);
@@ -1871,14 +1875,18 @@ class InspectorPage extends Component {
 			linter : {
 				busy   : true,
 				logURL : null
-			}
+			},
+			gist   : null
 		}, ()=> {
 			axios.post(LINTER_ENDPT_URL, {
 				lang   : lang,
 				config : '',
 				syntax : tab.syntax
 			}, {
-				headers : { 'Content-Type' : 'multipart/form-data' }
+				headers : {
+					'Content-Type' : 'multipart/form-data',
+					'Accept'       : 'application/json'
+				}
 			}).then((response) => {
 				console.log("LINT", response.data);
 
@@ -1915,6 +1923,9 @@ class InspectorPage extends Component {
 				});
 			}).catch((error) => {
 				console.log("LINT ERROR", error);
+				this.setState({ tabSets, activeTabs,
+					linter : null
+				});
 			});
 		});
 	};
@@ -2086,7 +2097,7 @@ class InspectorPage extends Component {
 			y : this.state.panMultPt.y
 		};
 
-		console.log(':::::::::::::', scale);
+// 		console.log(':::::::::::::', scale);
 
 		this.setState({ scale, panMultPt,
 			slice : null
@@ -2155,7 +2166,7 @@ class InspectorPage extends Component {
 						Object.assign({}, page, {
 							id        : page.id << 0,
 							uploadID  : page.upload_id << 0,
-							artboards : page.artboards.map((artboard) => (
+							artboards : page.artboards.map((artboard)=> (
 								Object.assign({}, artboard, {
 									id       : artboard.id << 0,
 									pageID   : artboard.page_id << 0,
@@ -2295,13 +2306,12 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.render()', this.props, this.state);
 // 		console.log('InspectorPage.render()', this.props);
 // 		console.log('InspectorPage.render()', this.state);
-// 		console.log('InspectorPage.render()', (new Array(100)).fill(null).map((i)=> (Maths.randomInt(1, 10))).join(','), this.state);
 
 
 		const { processing, profile, atomExtension } = this.props;
 
 		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, activeTabs, scrolling, viewSize, panMultPt } = this.state;
-		const { valid, restricted, urlBanner, tutorial, percent, tooltip, fontState, linter } = this.state;
+		const { valid, restricted, urlBanner, tutorial, percent, tooltip, fontState, linter, gist } = this.state;
 
 		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, 'page_child');
 // 		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : (section === SECTIONS.PARTS) ? flattenUploadArtboards(upload, 'page_child').slice(0, 3) : flattenUploadArtboards(upload, 'page_child');
@@ -2325,6 +2335,8 @@ class InspectorPage extends Component {
 
 		let artboardImages = [];
 		let slices = [];
+
+// 		console.log('InspectorPage.render()', artboards, this.state);
 
 		artboards.forEach((artboard, i)=> {
 			if ((i % GRID.colsMax) << 0 === 0 && i > 0) {
@@ -2386,8 +2398,8 @@ class InspectorPage extends Component {
 
 			slices.push(
 				<div key={artboard.id} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut} onDoubleClick={(event)=> this.handleZoom(1)}>
-					<div data-artboard-id={artboard.id} className={`inspector-page-${(section === SECTIONS.PRESENTER) ? 'artboard' : 'group'}-slices-wrapper`}>{(section === SECTIONS.PRESENTER) ? artboardSlices : (section === SECTIONS.PARTS) ? [...artboardSlices, ...groupSlices] : groupSlices }</div>
-					{(section !== SECTIONS.PRESENTER) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{(section === SECTIONS.INSPECT) ? [...artboardSlices, ...backgroundSlices] : backgroundSlices}</div>)}
+					<div data-artboard-id={artboard.id} className={`inspector-page-${(section === SECTIONS.PRESENTER) ? 'artboard' : 'group'}-slices-wrapper`}>{(section === SECTIONS.PRESENTER) ? artboardSlices : (section === SECTIONS.PARTS) ? [ ...artboardSlices, ...groupSlices ] : groupSlices }</div>
+					{(section !== SECTIONS.PRESENTER) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{(section === SECTIONS.INSPECT) ? [ ...artboardSlices, ...backgroundSlices ] : backgroundSlices}</div>)}
 					{/*<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>*/}
 					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{symbolSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{textfieldSlices}</div>
@@ -2399,8 +2411,8 @@ class InspectorPage extends Component {
 			this.contentSize.width = Math.max(this.contentSize.width, offset.x);
 		});
 
-		artboardImages = (!restricted) ? artboardImages : [];
-		slices = (!restricted) ? slices : [];
+// 		artboardImages = (!restricted) ? artboardImages : [];
+// 		slices = (!restricted) ? slices : [];
 
 
 
@@ -2474,7 +2486,6 @@ class InspectorPage extends Component {
 						maxScale={Math.max(...PAN_ZOOM.zoomNotches)}
 						ignorePanOutside={false}
 						renderOnChange={false}
-// 						style={{ width : '100%', height : '100%' }}
 						onPanAndZoom={this.handlePanAndZoom}
 						onPanEnd={()=> (this.setState({ scrolling : false }))}
 						onPanMove={this.handlePanMove}>
@@ -2508,7 +2519,7 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.INSPECT) && (<>
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
-								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 106 : 58)}px)` }}>
+								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 202 : 58)}px)` }}>
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}
@@ -2516,19 +2527,21 @@ class InspectorPage extends Component {
 										onTabClick={(tab)=> this.handleTab(tab)}
 										onContentClick={(payload)=> console.log('onContentClick', payload)}
 									/>
-									<div className="inspector-page-panel-button-wrapper">
-										{(i === 0)
-											? (<button disabled={!slice || (linter && linter.busy)} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Send to Linter' : 'View Linter Changes'}</button>)
-											: (<CopyToClipboard onCopy={()=> this.handleClipboardCopy('specs', toSpecs(activeSlice))} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
-													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>
-												</CopyToClipboard>)
-										}
-
-										{/*<CopyToClipboard onCopy={()=> this.handleClipboardCopy((i === 0) ? 'code' : 'specs', (i === 0) ? activeTabs[i].syntax : toSpecs(activeSlice))} text={(i === 0) ? (activeTabs && activeTabs[i]) ? activeTabs[i].syntax : '' : (activeSlice) ? toSpecs(activeSlice) : ''}>*/}
-										{/*	<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>*/}
-										{/*</CopyToClipboard>*/}
-										{(i === 0) && (<button disabled={!atomExtension || !slice || (linter && linter.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Send to Atom'}</button>)}
-									</div>
+									{(i === 0)
+										? (<div className="inspector-page-panel-button-wrapper">
+												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
+													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
+												</CopyToClipboard>
+												<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>
+												<button disabled={!atomExtension || !slice || (linter && linter.busy) || (gist && gist.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Atom'}</button>
+												<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>
+											</div>)
+										: (<div className="inspector-page-panel-button-wrapper">
+												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('specs', toSpecs(activeSlice))} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
+													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
+												</CopyToClipboard>
+											</div>)
+									}
 								</div>
 							</div>)
 						))}
@@ -2556,7 +2569,7 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.PRESENTER) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-presenter-wrapper">
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-split-width-content-wrapper inspector-page-panel-full-height-content-wrapper" style={{width:`${(i === 0) ? 520 : 360}px`}}>
-								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 106 : 58)}px)` }}>
+								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 202 : 58)}px)` }}>
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}
@@ -2564,17 +2577,21 @@ class InspectorPage extends Component {
 										onTabClick={(tab)=> this.handleTab(tab)}
 										onContentClick={(payload)=> console.log('onContentClick', payload)}
 									/>
-										<div className="inspector-page-panel-button-wrapper">
-											{(i === 0)
-												? (<>
-														{/*<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>*/}
-														{/*	<button disabled={!activeTabs[i].contents} style={{opacity:(!processing << 0)}} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy to Clipboard'}</button>*/}
-														{/*</CopyToClipboard>*/}
-														<button disabled={!slice || (linter && linter.busy)} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Send to Linter' : 'View Linter Changes'}</button>
-														<button disabled={!atomExtension || !slice || (linter && linter.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Send to Atom'}</button>
-													</>)
-												: (<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download PDF'}</button>)}
-										</div>
+
+									{(i === 0)
+										? (<div className="inspector-page-panel-button-wrapper">
+												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
+													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
+												</CopyToClipboard>
+												<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>
+												<button disabled={!atomExtension || !slice || (linter && linter.busy) || (gist && gist.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Atom'}</button>
+												<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>
+											</div>)
+										: (<div className="inspector-page-panel-button-wrapper">
+												{/*<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download PDF'}</button>*/}
+												<button disabled={true} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Export'}</button>
+											</div>)
+									}
 								</div>
 							</div>
 						)))}
@@ -2583,15 +2600,6 @@ class InspectorPage extends Component {
 			</BaseDesktopPage>
 
 
-			{(restricted) && (<BaseOverlay
-				tracking="private/inspector"
-				closeable={false}
-				defaultButton="Register / Login"
-				onComplete={()=> this.props.onPage('register')}>
-				This project is private, you must be logged in as one of its team members to view!
-			</BaseOverlay>)}
-
-			{/*{(upload && profile && (upload.contributors.filter((contributor)=> (contributor.id === profile.id)).length > 0)) && (<UploadProcessing*/}
 			{(!restricted && upload && (percent === 99 || processing)) && (<UploadProcessing
 				upload={upload}
 				processing={this.state.processing}

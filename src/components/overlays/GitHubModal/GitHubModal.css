@@ -1,0 +1,65 @@
+
+.github-modal-wrapper {
+	max-width: 460px;
+	width: 460px;
+	padding: 20px;
+	background-color: #1a1e23;
+}
+
+.github-modal-header {
+	width: 100%;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #24282e;
+}
+
+.github-modal-content-wrapper {
+	text-align: left;
+}
+
+.github-modal-button-wrapper {
+	width: 100%;
+}
+
+
+.github-modal-form {
+	min-width: 100%;
+}
+
+.github-modal-form-instructions {
+	margin-bottom: 20px;
+}
+
+
+.github-auth-form {
+}
+
+
+.github-repo-list {
+	width: 100%;
+}
+
+.github-repo-list-items-wrapper {
+	margin-bottom: 20px;
+}
+
+
+.github-repo-list-item {
+	width: 100%;
+	color: #c8e1fd;
+}
+
+.github-repo-list-item:hover {
+	cursor: pointer;
+	color: #abdafd;
+}
+
+.github-repo-list-item-selected {
+	background-color: #24282e;
+	color: #abdafd;
+}
+
+.github-repo-list-item-title {
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-size: 16px;
+	letter-spacing: -0.5px;
+}

@@ -3,7 +3,7 @@ import axios from 'axios/index';
 import qs from 'qs';
 import cookie from 'react-cookies';
 
-import { Bits } from '../../utils/lang';
+import { Bits, Objects, URIs } from '../../utils/lang';
 import {
 	ADD_FILE_UPLOAD,
 	APPEND_ARTBOARD_SLICES,
@@ -11,9 +11,14 @@ import {
 	SET_REDIRECT_URI,
 	USER_PROFILE_ERROR,
 	UPDATE_DEEPLINK,
+// 	USER_PROFILE_CACHED,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED,
-	SET_ATOM_EXTENSION } from '../../consts/action-types';
+	SET_ATOM_EXTENSION,
+	CONVERTED_DEEPLINK,
+	SET_INVITE,
+	SET_TEAM,
+} from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
 
@@ -42,9 +47,14 @@ export function appendHomeArtboards(payload) {
 }
 
 export function updateDeeplink(payload) {
+	const cnt = (payload) ? Object.keys(payload).filter((key, i)=> (payload && typeof payload[key] === 'number')).length : 0;
 	return ({ payload,
-		type : UPDATE_DEEPLINK
+		type : (!payload || Object.keys(payload).length !== cnt) ? UPDATE_DEEPLINK : CONVERTED_DEEPLINK
 	});
+
+// 	return ({ payload,
+// 		type : UPDATE_DEEPLINK
+// 	});
 }
 
 export function fetchUserProfile() {
@@ -58,12 +68,20 @@ export function fetchUserProfile() {
 			.then((response)=> {
 				console.log('PROFILE', response.data);
 
-				const { id, type } = response.data.user;
+				Objects.renameKey(response.data.user, 'github_auth', 'github');
+				if (response.data.user.github) {
+					Objects.renameKey(response.data.user.github, 'access_token', 'accessToken');
+				}
+
+				const { id, type, github } = response.data.user;
 				dispatch({
 					type    : USER_PROFILE_LOADED,
 					payload : { ...response.data.user,
-						id   : id << 0,
-						paid : type.includes('paid')
+						id     : id << 0,
+						github : (github) ? { ...github,
+							id : github.id << 0
+						} : github,
+						paid   : type.includes('paid')
 					}
 				});
 			}).catch((error) => {
@@ -109,10 +127,48 @@ export function fetchUserHistory(payload) {
 	});
 }
 
+export function fetchTeamLookup(payload) {
+	logFormat('fetchTeamLookup()', payload);
+
+	return ((dispatch)=> {
+		const { subdomain } = (payload) ? payload : { subdomain : URIs.subdomain() };
+		axios.post(API_ENDPT_URL, qs.stringify({ subdomain,
+			action    : 'TEAM_LOOKUP'
+		})).then((response)=> {
+			console.log('TEAM_LOOKUP', response.data);
+
+			const { team } = response.data;
+			if (team) {
+				dispatch({
+					type    : SET_TEAM,
+					payload : { ...team,
+						members : team.members.map((member)=> ({
+							id       : member.id << 0,
+							type     : member.type,
+							userID   : member.user_id << 0,
+							username : member.username,
+							avatar   : member.avatar
+						}))
+					}
+				});
+			}
+		}).catch((error)=> {
+		});
+	});
+}
+
 export function setAtomExtension(payload) {
 	logFormat('setAtomExtension()', payload);
 	return ({ payload,
 		type : SET_ATOM_EXTENSION
+	});
+}
+
+
+export function setInvite(payload) {
+	logFormat('setInvite()', payload);
+	return ({ payload,
+		type : SET_INVITE
 	});
 }
 
@@ -122,44 +178,80 @@ export function setRedirectURI(payload) {
 	});
 }
 
-export function updateUserProfile(payload) {
-	logFormat('updateUserProfile()', payload);
+export function updateUserProfile(payload, force=true) {
+	logFormat('updateUserProfile()', payload, force);
+
+	if (payload) {
+		Objects.renameKey(payload, 'github_auth', 'github');
+		if (payload.github) {
+			Objects.renameKey(payload.github, 'access_token', 'accessToken');
+		}
+
+		const { id, type, github } = payload;
+		payload = {
+			...payload,
+			id     : id << 0,
+			github : (github) ? {
+				...github,
+				id : github.id << 0
+			} : github,
+			paid   : type.includes('paid')
+		};
+	}
+
+
+	if (!force) {
+		return((dispatch)=> {
+			dispatch({ payload,
+				type : USER_PROFILE_UPDATED
+			});
+		});
+	}
 
 	return ((dispatch)=> {
 		if (payload) {
-			const { id, username, email, avatar, password, type } = payload;
-			let formData = new FormData();
-			formData.append('action', 'UPDATE_PROFILE');
-			formData.append('user_id', id);
-			formData.append('username', username);
-			formData.append('email', email);
-			formData.append('filename', avatar);
-			formData.append('password', password);
-			formData.append('type', type);
-			axios.post(API_ENDPT_URL, formData)
-				.then((response) => {
-					console.log('UPDATE_PROFILE', response.data);
+			const { id, avatar, sources, integrations } = payload;
 
-					const status = parseInt(response.data.status, 16);
-					const { id, avatar, username, email, type } = response.data.user;
+// 			if (typeof cookie.load('user_id') === 'undefined' || ((cookie.load('user_id') << 0) !== id)) {
+// 				cookie.save('user_id', id << 0, { path : '/' });
+// 			}
 
-					dispatch({
-						type    : (status === 0x00) ? USER_PROFILE_UPDATED : USER_PROFILE_ERROR,
-						payload : {
-							status   : status,
-							id       : id << 0,
-							avatar   : avatar,
-							username : (Bits.contains(status, 0x01)) ? 'Username Already in Use' : username,
-							email    : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email,
-							password : '',
-							type     : type,
-							paid     : type.includes('paid')
-						}
-					});
-				}).catch((error) => {
+			axios.post(API_ENDPT_URL, qs.stringify(Object.assign({}, payload, {
+				action       : 'UPDATE_PROFILE',
+				user_id      : id,
+				filename     : avatar,
+				sources      : (sources || []).join(','),
+				integrations : (integrations || []).join(',')
+			}))).then((response)=> {
+				console.log('UPDATE_PROFILE', response.data);
+
+				const status = parseInt(response.data.status, 16);
+
+				Objects.renameKey(response.data.user, 'github_auth', 'github');
+				if (response.data.user.github) {
+					Objects.renameKey(response.data.user.github, 'access_token', 'accessToken');
+				}
+
+				const { id, username, email, type, github } = response.data.user;
+				dispatch({
+					type    : (status === 0x00) ? USER_PROFILE_UPDATED : USER_PROFILE_ERROR,
+					payload : { ...response.data.user,
+						status   : status,
+						id       : id << 0,
+						username : (Bits.contains(status, 0x01)) ? 'Username Already in Use' : username,
+						email    : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email,
+						github : (github) ? { ...github,
+							id : github.id << 0
+						} : github,
+						paid     : type.includes('paid')
+					}
+				});
+			}).catch((error) => {
 			});
 
 		} else {
+			cookie.save('user_id', '0', { path : '/' });
+
 			dispatch({
 				type    : USER_PROFILE_UPDATED,
 				payload : null

@@ -90,6 +90,7 @@ class RegisterPage extends Component {
 			this.props.updateDeeplink({ uploadID : upload.id });
 		}
 
+		this.props.onRegistered();
 		this.props.onPage((redirectURI) ? redirectURI.substr(1) : '');
 	};
 

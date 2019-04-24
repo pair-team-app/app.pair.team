@@ -7,6 +7,12 @@
   outline: none;
 }
 
+*:disabled, *:disabled:hover {
+  cursor: default;
+  pointer-events: none;
+}
+
+
 html, body {
   margin: 0;
   padding: 0;
@@ -23,7 +29,7 @@ html, body {
   color: #727d8d;
 }
 
-a, a:link, a:active, a:visited {
+a, a:any-link, a:active {
   color: #0267d8;
   text-decoration: underline;
 }
@@ -36,28 +42,42 @@ button {
   width: 100px;
   height: 38px;
   background-color: #005cc5;
-  border: none;
-  border-radius: 1px;
+  border: 1px solid rgba(0, 92, 197, 0.0);
   font-family: "San Francisco Text SemiBold", sans-serif;
   font-size: 16px;
   letter-spacing: -0.3px;
   color : #ffffff;
+  line-height: normal;
 }
 
 button:hover, button:active {
-  cursor: pointer;
   background-color: #00449c;
+  cursor: pointer;
 }
 
 button:disabled, button:disabled:hover {
-  cursor: default;
-  background-color: #005cc5;
-  color: #abdafd;
+  /*background-color: #005cc5;*/
+  background-color: #2d6db3;
+  color: #1a1b1d;
   opacity : 0.875;
+  cursor: default;
+}
+
+code {
+  padding: 0 2px 1px 2px;
+  background-color: rgba(0, 0, 0, 0.5);
+  line-height: 0;
+  color: #c8e1fd;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 
 form {
-  width: 48%;
+  width: 100%;
 }
 
 h1, h2, h3, h4, h5 {
@@ -144,7 +164,6 @@ input[type="text"], input[type="password"], input[type="tel"], select, textarea,
 
 input[type="text"]:disabled, input[type="password"]:disabled, input[type="tel"]:disabled, select:disabled, textarea:disabled {
   cursor: not-allowed;
-  /*color: #abdafd;*/
   color: #727d8d;
 }
 

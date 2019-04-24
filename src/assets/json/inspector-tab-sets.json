@@ -16,14 +16,14 @@
       "syntax": null
     }, {
       "id": 3,
-      "title": "Swift",
+      "title": "HTML",
       "type": "json_html",
       "enabled": false,
       "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
     }, {
       "id": 4,
-      "title": "Android",
+      "title": "Bootstrap",
       "type": "json_html",
       "enabled": false,
       "contents": "\"/* Rollover to display code. */\"",
@@ -66,21 +66,21 @@
       "syntax": null
     }, {
       "id": 3,
-      "title": "Swift",
+      "title": "HTML",
       "type": "json_html",
       "enabled": false,
       "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
     }, {
       "id": 4,
-      "title": "Android",
+      "title": "Bootstrap",
       "type": "json_html",
       "enabled": false,
       "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
     }], [{
       "id": 5,
-      "title": "Views",
+      "title": "Live Preview",
       "type": "component",
       "enabled": false,
       "contents": null,

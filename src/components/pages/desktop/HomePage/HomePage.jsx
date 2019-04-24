@@ -6,11 +6,11 @@ import { connect } from 'react-redux';
 
 import BaseDesktopPage from '../BaseDesktopPage';
 import ArtboardGrid from './ArtboardGrid';
-import UploadHeader from '../../../elements/navs/UploadHeader';
+import UploadHeader from '../../../navs/UploadHeader';
 
-import { INSPECT } from '../../../../consts/uris';
+import { Modals, INSPECT } from '../../../../consts/uris';
 import { addFileUpload } from '../../../../redux/actions';
-import {  URLs } from '../../../../utils/lang';
+import {  URIs } from '../../../../utils/lang';
 import { isUserLoggedIn } from '../../../../utils/funcs';
 import { trackEvent } from '../../../../utils/tracking';
 import homeContent from '../../../../assets/json/home-content';
@@ -53,8 +53,8 @@ class HomePage extends Component {
 // 		console.log('HomePage.componentDidUpdate()', prevProps, this.props);
 
 		const { section } = this.state;
-		if (section !== URLs.firstComponent()) {
-			this.setState({ section : URLs.firstComponent() });
+		if (section !== URIs.firstComponent()) {
+			this.setState({ section : URIs.firstComponent() });
 		}
 	}
 
@@ -74,18 +74,25 @@ class HomePage extends Component {
 		this.props.onPage(`new/${(section || INSPECT.substr(1))}`);
 	};
 
+	handleGitHub = ()=> {
+		console.log('HomePage.handleGitHub()');
+
+		trackEvent('button', 'github');
+		this.props.onModal(Modals.GITHUB_CONNECT);
+	};
+
 	handleLogin = ()=> {
 // 		console.log('HomePage.handleLogin()');
 
 		trackEvent('button', 'login');
-		this.props.onPage('login');
+		this.props.onModal(Modals.LOGIN);
 	};
 
 	handleRegister = ()=> {
 // 		console.log('HomePage.handleRegister()');
 
 		trackEvent('button', 'register');
-		this.props.onPage('register');
+		this.props.onModal(Modals.REGISTER);
 	};
 
 	handleUploadClick = ()=> {
@@ -105,7 +112,7 @@ class HomePage extends Component {
 
 		const { profile, artboards } = this.props;
 		const { section, fetching, fileDialog } = this.state;
-		const gridTitle = (profile) ? (fetching) ? `Loading${'…'}` : (artboards.length > 0) ? 'Previous' : 'N/A' : 'N/A';
+		const gridTitle = (profile) ? (fetching) ? `Loading${'…'}` : (artboards.length > 0) ? (URIs.subdomain()) ? `Team ${URIs.subdomain()}` : 'Previous' : 'N/A' : 'N/A';
 
 		return (
 			<BaseDesktopPage className="home-page-wrapper">
@@ -123,18 +130,22 @@ class HomePage extends Component {
 					{(isUserLoggedIn())
 						? (<button className="long-button" onClick={()=> this.handleUploadClick()}>Upload</button>)
 						: (<>
-								<button className="long-button stack-button" onClick={()=> this.handleRegister()}>Sign Up</button>
-								<button className="long-button" onClick={()=> this.handleLogin()}>Login</button>
+								<div className="home-page-button-wrapper is-hidden">
+									<button className="long-button adjacent-button" onClick={()=> this.handleRegister()}>Sign Up</button>
+									<button className="long-button aux-button" onClick={()=> this.handleGitHub()}>Connect to GitHub</button>
+								</div>
+								{/*<button className="long-button" onClick={()=> this.handleLogin()}>Login</button>*/}
 						</>)
 					}
 				</div>
 
-				{(isUserLoggedIn()) && (<ArtboardGrid
+				<ArtboardGrid
 					title={gridTitle}
 					artboards={artboards}
 					onClick={this.handleArtboardClicked}
 					onPage={this.props.onPage}
-					onPopup={this.props.onPopup} />)}
+					onPopup={this.props.onPopup}
+				/>
 			</BaseDesktopPage>
 		);
 	}

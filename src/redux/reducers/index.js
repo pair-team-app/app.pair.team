@@ -8,8 +8,12 @@ import {
 	USER_PROFILE_ERROR,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED,
-	SET_ATOM_EXTENSION } from '../../consts/action-types';
+	SET_ATOM_EXTENSION,
+	SET_INVITE,
+	SET_TEAM
+} from '../../consts/action-types';
 import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
+import { Objects } from '../../utils/lang';
 
 
 const initialState = {
@@ -24,12 +28,14 @@ const initialState = {
 	},
 	redirectURI   : null,
 	uploadSlices  : [],
-	userProfile   : null
+	userProfile   : null,
+	invite        : null,
+	team          : null
 };
 
 const logFormat = (state, action, meta='')=> {
 	const { type, payload } = action;
-	console.log(LOG_REDUCER_PREFIX, state, `“${type}”`, payload, meta);
+	console.log(LOG_REDUCER_PREFIX, `REDUCER >> “${type}”`, state, payload, meta);
 };
 
 
@@ -69,6 +75,11 @@ function rootReducer(state=initialState, action) {
 				redirectURI : action.payload
 			}));
 
+		case SET_INVITE:
+			return (Object.assign({}, state, {
+				invite : action.payload
+			}));
+
 		case USER_PROFILE_ERROR:
 			return (Object.assign({}, state, {
 				userProfile : action.payload
@@ -80,10 +91,28 @@ function rootReducer(state=initialState, action) {
 			}));
 
 		case USER_PROFILE_UPDATED:
-			return (Object.assign({}, state, {
-// 				userProfile : action.payload
-				userProfile : Object.assign({}, state.userProfile, action.payload)
-			}));
+			if (action.payload) {
+				Objects.renameKey(action.payload, 'github_auth', 'github');
+				if (action.payload.github) {
+					Objects.renameKey(action.payload.github, 'access_token', 'accessToken');
+				}
+
+				const { id, type, github } = action.payload;
+				return (Object.assign({}, state, {
+					userProfile : { ...action.payload,
+						id     : id << 0,
+						github : (github) ? { ...github,
+							id : github.id << 0
+						} : github,
+						paid   : type.includes('paid')
+					}
+				}));
+
+			} else {
+				return (Object.assign({}, state, {
+					userProfile : action.payload
+				}));
+			}
 
 		case CONVERTED_DEEPLINK:
 			return (Object.assign({}, state, {
@@ -94,8 +123,28 @@ function rootReducer(state=initialState, action) {
 			return (Object.assign({}, state, {
 				atomExtension : action.payload
 			}));
+
+		case SET_TEAM:
+			return (Object.assign({}, state, {
+				team : action.payload
+			}));
 	}
 }
+
+/*
+
+const { id, type, github } = payload;
+		payload = {
+			...payload,
+			id     : id << 0,
+			github : (github) ? {
+				...github,
+				id : github.id << 0
+			} : github,
+			paid   : type.includes('paid')
+		};
+
+		*/
 
 
 export default rootReducer;
