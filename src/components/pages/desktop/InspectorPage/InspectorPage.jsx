@@ -931,7 +931,8 @@ class InspectorPage extends Component {
 										type     : 'component',
 										enabled  : ((upload.state << 0) === 3),
 										contents : <CodeEditor lang={tab.lang} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
-										syntax   : langs[ii].syntax
+										syntax   : langs[ii].syntax,
+										html     : langs[ii].html
 									}));
 
 								} else {
@@ -946,6 +947,8 @@ class InspectorPage extends Component {
 						const activeTabs = tabSets.map((tabSet)=> {
 							return ([...tabSet].shift());
 						});
+
+// 						console.log(':::::::::::: reset', tabSets, activeTabs);
 
 						this.setState({ upload, tabSets, activeTabs, artboard,
 							slice     : [...slices].shift(),
@@ -1002,7 +1005,8 @@ class InspectorPage extends Component {
 						return (Object.assign({}, tab, {
 							enabled  : true,
 							contents : <CodeEditor lang={tab.lang} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
-							syntax   : langs[ii].syntax
+							syntax   : langs[ii].syntax,
+							html     : langs[ii].html
 						}));
 					}));
 				}
@@ -1054,8 +1058,9 @@ class InspectorPage extends Component {
 					if (i === 0) {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : <CodeEditor lang={tab.lang} syntax={ langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
-							syntax   : langs[ii].syntax
+							contents : <CodeEditor lang={tab.lang} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+							syntax   : langs[ii].syntax,
+							html     : langs[ii].html
 						}));
 
 					} else {
@@ -1072,6 +1077,8 @@ class InspectorPage extends Component {
 			const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
 			return ((tab) ? tab : activeTab);
 		});
+
+// 		console.log(':::::::::::: replace', tabSets, activeTabs);
 
 		this.setState({ upload, artboard, tabSets, activeTabs,
 			linter : null,
@@ -1116,8 +1123,9 @@ class InspectorPage extends Component {
 					return (tabSet.map((tab, ii)=> {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : <CodeEditor lang={tab.lang} syntax={ langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
-							syntax   : langs[ii].syntax
+							contents : <CodeEditor lang={tab.lang} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+							syntax   : langs[ii].syntax,
+							html     : langs[ii].html
 						}));
 					}));
 				}
@@ -1166,8 +1174,9 @@ class InspectorPage extends Component {
 					if (i === 0) {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : <CodeEditor lang={tab.lang} syntax={ langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
-							syntax   : langs[ii].syntax
+							contents : <CodeEditor lang={tab.lang} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+							syntax   : langs[ii].syntax,
+							html     : langs[ii].html
 						}));
 
 					} else {
@@ -1184,6 +1193,8 @@ class InspectorPage extends Component {
 			const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
 			return ((tab) ? tab : activeTab);
 		});
+
+// 		console.log(':::::::::::: restore', tabSets, activeTabs);
 
 		this.setState({ artboard, tabSets, activeTabs,
 			hoverSlice  : null,
@@ -1463,15 +1474,15 @@ class InspectorPage extends Component {
 		editor.focus();
 	};
 
-	handleEditorRun = (lang, syntax)=> {
-// 		console.log('InspectorPage.handleEditorRun()', lang, syntax);
+	handleEditorRun = (lang, html)=> {
+// 		console.log('InspectorPage.handleEditorRun()', lang, html);
 
 		const tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 			return (tabSet.map((tab, ii)=> {
 				return ((i === 0) ? tab : Object.assign({}, tab, {
 					enabled  : true,
 					lang     : lang,
-					contents : <span dangerouslySetInnerHTML={{ __html : syntax }} />
+					contents : <span style={{position:'relative'}} dangerouslySetInnerHTML={{ __html : html }} />
 				}));
 			}));
 		});
@@ -2492,7 +2503,7 @@ class InspectorPage extends Component {
 
 									{(i === 0)
 										? (<div className="inspector-page-panel-button-wrapper">
-												<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleEditorRun(activeTabs[i].lang, activeTabs[i].syntax)}>{(processing) ? 'Processing' : 'Run'}</button>
+												<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleEditorRun(activeTabs[i].lang, activeTabs[i].html)}>{(processing) ? 'Processing' : 'Run'}</button>
 												<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>
 												<button disabled={!atomExtension || !slice || (linter && linter.busy) || (gist && gist.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Atom'}</button>
 												<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>

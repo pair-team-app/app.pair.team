@@ -24,7 +24,7 @@ import { API_ENDPT_URL } from '../../consts/uris';
 
 
 const logFormat = (action, payload=null, meta='')=> {
-	console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, payload, meta);
+// 	console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, payload, meta);
 };
 
 

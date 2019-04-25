@@ -167,8 +167,9 @@ export function toCSS(slices) {
 }
 
 export function toGridHTML(slices) {
-// 	console.log('code-generator.toFlexBoxHTML()', slices);
+// 	console.log('code-generator.toGridHTML()', slices);
 
+	let inlineHTML = ``;
 	if (slices.length === 0) {
 		return ({
 			html   : null,
@@ -177,15 +178,24 @@ export function toGridHTML(slices) {
 	}
 
 	const parentSlice = [...slices].shift();
-// 	slices = [...slices].slice(1, slices.length - 1);
-	slices = [...slices].filter((slice, i)=> (i > 0));
+	slices = [...slices].slice(1, slices.length);
+
+	let parentStyles = {
+		'display'               : `grid`,
+		'width'                 : `100%`,
+		'height'                : `100%`,
+		'grid-template-columns' : `${Strings.repeat(' auto', slices.length).trim()}`,
+		'background'            : `${parentSlice.meta.fillColor.toUpperCase()} url('${parentSlice.filename}@1x.png') no-repeat`,
+		'background-size'       : `${(parentSlice.meta.frame.size.width * 0.5) << 0}px ${(parentSlice.meta.frame.size.height * 0.5) << 0}px`
+	};
+
+	inlineHTML += `<div data-title="${parentSlice.title}" style="${toInlineCSS(parentStyles)}">\n`;
 
 	let html = `<!-- ${DISCLAIMER.replace('__LANG__', 'HTML').replace(/\n__/g, ' -->\n<!-- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -->').replace(/,\n/g, ' -->\n<!-- ')}\n\n\n`;
 	html += `<style>\n`;
 	html += `${TAB}.grid-container {\n`;
 	html += `${TAB}${TAB}display: grid;\n`;
-	html += `${TAB}${TAB}grid-template-columns:${Strings.repeat(' auto', slices.length)};\n`;
-	html += `${TAB}${TAB}grid-gap: ${Maths.randomInt(5, 15)}px;\n`;
+	html += `${TAB}${TAB}grid-template-columns: ${Strings.repeat(' auto', slices.length).trim()};\n`;
 	html += `${TAB}${TAB}background-color: ${parentSlice.meta.fillColor.toUpperCase()};\n`;
 	html += `${TAB}}\n`;
 	html += `${TAB}.grid-container > div {\n`;
@@ -194,42 +204,78 @@ export function toGridHTML(slices) {
 	html += `${TAB}${TAB}vertical-align: middle;\n`;
 	html += `${TAB}}\n`;
 	slices.forEach((slice)=> {
-		html += `${TAB}.${Strings.slugifyURI(slice.title)} {\n`;
-		html += `${TAB}${TAB}position: absolute;\n`;
-		html += `${TAB}${TAB}top: ${slice.meta.frame.origin.y}px;\n`;
-		html += `${TAB}${TAB}left: ${slice.meta.frame.origin.x}px;\n`;
-		if (slice.type === 'textfield') {
-			const font = fontSpecs(slice.meta.font);
-			html += `${TAB}${TAB}font-family: "${`${font.family} ${font.name}`.trim()}", sans-serif;\n`;
-			html += `${TAB}${TAB}font-weight: ${font.weight};\n`;
-			html += `${TAB}${TAB}font-size: ${font.size}px;\n`;
-			html += `${TAB}${TAB}color: ${font.color.toUpperCase()};\n`;
-			html += `${TAB}${TAB}letter-spacing: ${font.kerning.toFixed(2)}px;\n`;
-			html += `${TAB}${TAB}line-height: ${font.lineHeight}px;\n`;
-			html += `${TAB}${TAB}text-align: ${font.alignment.toLowerCase()};\n`;
-
-		} else {
+		if (!slice.title.includes('mask')) {
+			html += `${TAB}.${Strings.slugifyURI(slice.title)} {\n`;
+			html += `${TAB}${TAB}position: absolute;\n`;
+			html += `${TAB}${TAB}top: ${slice.meta.frame.origin.y}px;\n`;
+			html += `${TAB}${TAB}left: ${slice.meta.frame.origin.x}px;\n`;
 			html += `${TAB}${TAB}width: ${slice.meta.frame.size.width}px;\n`;
 			html += `${TAB}${TAB}height: ${slice.meta.frame.size.height}px;\n`;
+
+			let styles = {
+				'position'       : `absolute`,
+				'top'            : `${(slice.meta.frame.origin.y * 0.5) << 0}px`,
+				'left'           : `${(slice.meta.frame.origin.x * 0.5) << 0}px`,
+				'width'          : `${Math.ceil(slice.meta.frame.size.width * 0.5) + 1}px`,
+				'height'         : `${Math.ceil(slice.meta.frame.size.height * 0.5)}px`,
+				'text-align'     : `center`,
+				'vertical-align' : `middle`
+			};
+
+			if (slice.type === 'textfield') {
+				const font = fontSpecs(slice.meta.font);
+				html += `${TAB}${TAB}font-family: "${`${font.family} ${font.name}`.trim()}", sans-serif;\n`;
+				html += `${TAB}${TAB}font-weight: ${font.weight};\n`;
+				html += `${TAB}${TAB}font-size: ${font.size}px;\n`;
+				html += `${TAB}${TAB}color: ${font.color.toUpperCase()};\n`;
+				html += `${TAB}${TAB}letter-spacing: ${font.kerning.toFixed(2)}px;\n`;
+				html += `${TAB}${TAB}line-height: ${font.lineHeight}px;\n`;
+				html += `${TAB}${TAB}text-align: ${font.alignment.toLowerCase()};\n`;
+
+				styles = { ...styles,
+					'font-family'    : `'${`${font.family} ${font.name}`.trim()}', sans-serif`,
+					'font-weight'    : `${font.weight}`,
+					'font-size'      : `${(font.size * 0.5) << 0}px`,
+					'color'          : `${font.color.toUpperCase()}`,
+					'letter-spacing' : `${(font.kerning * 0.5).toFixed(2)}px`,
+					'line-height'    : `${(font.lineHeight * 0.5) << 0}px`,
+					'text-align'     : `${font.alignment.toLowerCase()}`
+				};
+			}
+
+// 		inlineHTML += `<div data-title="${slice.title}" style="${toInlineCSS(styles)}">${(slice.type === 'textfield') ? `<input type="text" value="${slice.meta.txtVal}" style="width:100%; height:100%;" />` : `<img src="${slice.filename}@1x.png" width="${(slice.meta.frame.size.width * 0.5) << 0}" height="${(slice.meta.frame.size.height * 0.5) << 0}" alt="${slice.title}">`}</div>\n`;
+			inlineHTML += `<div data-title="${slice.title}" style="${toInlineCSS(styles)}">${(slice.type === 'textfield') ? `${slice.meta.txtVal}` : `<img src="${slice.filename}@1x.png" width="${(slice.meta.frame.size.width * 0.5) << 0}" height="${(slice.meta.frame.size.height * 0.5) << 0}" alt="${slice.title}">`}</div>\n`;
+			html += `${TAB}}\n`;
 		}
-		html += `${TAB}}\n`;
 	});
 	html += `</style>\n\n`;
 
-	html += `<div class="grid-container">\n`;
+	html += `<div data-title="${parentSlice.title}" class="grid-container">\n`;
 	slices.forEach((slice)=> {
 		html += `${TAB}<div class="grid-cell ${Strings.slugifyURI(slice.title)}">`;
-		html += (slice.type === 'textfield') ? `<input type="text" value="${slice.meta.txtVal}" />` : `<img src="./images/${URIs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}">`;
+		html += (slice.type === 'textfield') ? `<input type="text" value="${slice.meta.txtVal}" />` : `<img src="./images/${URIs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}" />`;
 		html += `</div>\n`;
 	});
 	html += `</div>\n`;
+	inlineHTML += `</div>\n`;
 
 	return ({
-		html   : JSON.stringify(html),
-		syntax : `${html.replace(/(&nbsp)+;/g, '\t')}`
+		html   : inlineHTML,
+		syntax : `${html.replace(/(&nbsp)+;/g, '\t')}`,
 	});
 
 // 	html += `${TAB}${TAB}: ;\n`;
+}
+
+export function toInlineCSS(styles) {
+// 	console.log('code-generator.toInlineCSS()', styles);
+
+	let css = ``;
+	Object.keys(styles).forEach((key)=> {
+		css += `${key}:${styles[key]}; `;
+	});
+
+	return (css.trim());
 }
 
 export function toReactCSS(slices) {

@@ -40,7 +40,7 @@ const logFormat = (state, action, meta='')=> {
 
 
 function rootReducer(state=initialState, action) {
-	logFormat(state, action);
+// 	logFormat(state, action);
 
 	switch (action.type) {
 		default:

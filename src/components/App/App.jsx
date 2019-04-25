@@ -149,7 +149,7 @@ class App extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+// 		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		const { profile, artboards, deeplink, team } = this.props;
 		const { pathname } = this.props.location;

@@ -210,6 +210,7 @@ export const Objects = {
 	dropKey    : (obj, key)=> (Objects.dropKeys(obj, [key])),
 	dropKeys   : (obj, keys)=> ({ ...Object.keys(obj).filter((k)=> (!Arrays.containsElement(keys, k))).reduce((newObj, k)=> ({...newObj, [k]: obj[k]}), {})}),
 	isEmpty    : (obj)=> (Object.keys(obj).length === 0),
+	iterate    : (obj)=> (Object.keys(obj).map((key)=> ({ key : key, val : obj[key] }))),
 	hasKey     : (obj, key)=> (Object.keys(obj).some((k)=> (k === key))),
 	length     : (obj)=> (Object.keys(obj).length),
 	reduceVals : (obj, init=0)=> (Object.values(obj).reduce((acc, val)=> ((acc << 0) + (val << 0)), init)),
