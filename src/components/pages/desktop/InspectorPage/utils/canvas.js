@@ -1,6 +1,41 @@
 
-import { CANVAS } from '../consts';
+import { CANVAS, GRID, PAN_ZOOM, SECTIONS } from '../consts';
+import { flattenUploadArtboards } from './model';
+import { Maths } from '../../../../../utils/lang';
 
+
+export const calcCanvasSliceFrame = (state, slice, artboard, offset, scrollPt)=> {
+// 	console.log('InspectorPage.calcCanvasSliceFrame()', state, slice, artboard, offset, scrollPt);
+
+	const { section, upload, scale, urlBanner } = state;
+	const artboards = flattenUploadArtboards(upload, 'page_child');
+
+	const baseOffset = {
+		x : (artboards.length < GRID.colsMax || section === SECTIONS.PRESENTER) ? GRID.padding.col * 0.5 : 0,
+		y : 24 + (38 * (urlBanner << 0)) + PAN_ZOOM.insetSize.height
+	};
+
+	const srcFrame = Maths.geom.cropFrame(slice.meta.frame, artboard.meta.frame);
+	const srcOffset = {
+		x : baseOffset.x + ((offset.x - scrollPt.x) << 0),
+		y : baseOffset.y + ((offset.y - scrollPt.y) << 0)
+	};
+
+	const scaledFrame = {
+		origin : {
+			x : (srcOffset.x + (srcFrame.origin.x * scale)) << 0,
+			y : (srcOffset.y + (srcFrame.origin.y * scale)) << 0
+
+		},
+		size   : {
+			width  : (srcFrame.size.width * scale) << 0,
+			height : (srcFrame.size.height * scale) << 0
+		}
+	};
+
+// 		console.log('-- InspectorPage.calcCanvasSliceFrame()', baseOffset, srcFrame, srcOffset, scaledFrame);
+	return (scaledFrame);
+};
 
 export function drawCanvasSliceBorder(context, frame) {
 	context.strokeStyle = CANVAS.slices.borderColor;

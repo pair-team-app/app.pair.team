@@ -33,6 +33,7 @@ import {
 	SECTIONS,
 	STATUS_INTERVAL } from './consts';
 import {
+	calcCanvasSliceFrame,
 	drawCanvasSliceBorder,
 	drawCanvasSliceMarchingAnts,
 	drawCanvasSliceGuides } from './utils/canvas';
@@ -818,39 +819,6 @@ class InspectorPage extends Component {
 		return(slices);
 	};
 
-	calcCanvasSliceFrame = (slice, artboard, offset, scrollPt)=> {
-// 		console.log('InspectorPage.calcCanvasSliceFrame()', slice, artboard, offset, scrollPt);
-
-		const { section, upload, scale, urlBanner } = this.state;
-		const artboards = flattenUploadArtboards(upload, 'page_child');
-
-		const baseOffset = {
-			x : (artboards.length < GRID.colsMax || section === SECTIONS.PRESENTER) ? GRID.padding.col * 0.5 : 0,
-			y : 24 + (38 * (urlBanner << 0)) + PAN_ZOOM.insetSize.height
-		};
-
-		const srcFrame = Maths.geom.cropFrame(slice.meta.frame, artboard.meta.frame);
-		const srcOffset = {
-			x : baseOffset.x + ((offset.x - scrollPt.x) << 0),
-			y : baseOffset.y + ((offset.y - scrollPt.y) << 0)
-		};
-
-		const scaledFrame = {
-			origin : {
-				x : (srcOffset.x + (srcFrame.origin.x * scale)) << 0,
-				y : (srcOffset.y + (srcFrame.origin.y * scale)) << 0
-
-			},
-			size   : {
-				width  : (srcFrame.size.width * scale) << 0,
-				height : (srcFrame.size.height * scale) << 0
-			}
-		};
-
-// 		console.log('-- InspectorPage.calcCanvasSliceFrame()', baseOffset, srcFrame, srcOffset, scaledFrame);
-		return (scaledFrame);
-	};
-
 	resetTabSets = (upload, artboards)=> {
 // 		console.log('InspectorPage.resetTabSets()', upload, artboards);
 
@@ -1324,6 +1292,7 @@ class InspectorPage extends Component {
 
 		const { scrollPt, offset, hoverOffset } = this.state;
 		const { artboard, slice, hoverSlice } = this.state;
+		const { section, upload, scale, urlBanner } = this.state;
 
 		const context = canvas.current.getContext('2d');
 		context.clearRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
@@ -1350,9 +1319,11 @@ class InspectorPage extends Component {
 // 		context.stroke();
 
 
+
 		if (artboard) {
 			if (slice) {
-				const frame = this.calcCanvasSliceFrame(slice, artboard, offset, scrollPt);
+// 				const frame = this.calcCanvasSliceFrame(slice, artboard, offset, scrollPt);
+				const frame = calcCanvasSliceFrame({ section, upload, scale, urlBanner }, slice, artboard, offset, scrollPt);
 // 				drawCanvasSliceFill(context, frame, CANVAS.slices.fillColor);
 // 				drawCanvasSliceTooltip(context, slice.type, frame.origin, frame.size.width);
 				drawCanvasSliceBorder(context, frame);
@@ -1362,7 +1333,8 @@ class InspectorPage extends Component {
 
 			if (hoverSlice) {
 				if (!slice || (slice && slice.id !== hoverSlice.id)) {
-					const frame = this.calcCanvasSliceFrame(hoverSlice, artboard, hoverOffset, scrollPt);
+// 					const frame = this.calcCanvasSliceFrame(hoverSlice, artboard, hoverOffset, scrollPt);
+					const frame = calcCanvasSliceFrame({ section, upload, scale, urlBanner }, hoverSlice, artboard, hoverOffset, scrollPt);
 // 					drawCanvasSliceFill(context, frame, CANVAS.slices.fillColor);
 // 					drawCanvasSliceTooltip(context, `W:${frame.size.width}px H:${frame.size.height}px`, frame.origin, frame.size.width * 7);
 					drawCanvasSliceBorder(context, frame);

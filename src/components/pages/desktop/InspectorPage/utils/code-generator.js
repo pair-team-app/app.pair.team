@@ -177,7 +177,8 @@ export function toGridHTML(slices) {
 	}
 
 	const parentSlice = [...slices].shift();
-	slices = [...slices].slice(1, Math.min(slices.length, 4));
+// 	slices = [...slices].slice(1, slices.length - 1);
+	slices = [...slices].filter((slice, i)=> (i > 0));
 
 	let html = `<!-- ${DISCLAIMER.replace('__LANG__', 'HTML').replace(/\n__/g, ' -->\n<!-- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -->').replace(/,\n/g, ' -->\n<!-- ')}\n\n\n`;
 	html += `<style>\n`;
@@ -193,10 +194,12 @@ export function toGridHTML(slices) {
 	html += `${TAB}${TAB}vertical-align: middle;\n`;
 	html += `${TAB}}\n`;
 	slices.forEach((slice)=> {
+		html += `${TAB}.${Strings.slugifyURI(slice.title)} {\n`;
+		html += `${TAB}${TAB}position: absolute;\n`;
+		html += `${TAB}${TAB}top: ${slice.meta.frame.origin.y}px;\n`;
+		html += `${TAB}${TAB}left: ${slice.meta.frame.origin.x}px;\n`;
 		if (slice.type === 'textfield') {
 			const font = fontSpecs(slice.meta.font);
-
-			html += `${TAB}.${Strings.slugifyURI(slice.title)} {\n`;
 			html += `${TAB}${TAB}font-family: "${`${font.family} ${font.name}`.trim()}", sans-serif;\n`;
 			html += `${TAB}${TAB}font-weight: ${font.weight};\n`;
 			html += `${TAB}${TAB}font-size: ${font.size}px;\n`;
@@ -204,15 +207,19 @@ export function toGridHTML(slices) {
 			html += `${TAB}${TAB}letter-spacing: ${font.kerning.toFixed(2)}px;\n`;
 			html += `${TAB}${TAB}line-height: ${font.lineHeight}px;\n`;
 			html += `${TAB}${TAB}text-align: ${font.alignment.toLowerCase()};\n`;
-			html += `${TAB}}\n`;
+
+		} else {
+			html += `${TAB}${TAB}width: ${slice.meta.frame.size.width}px;\n`;
+			html += `${TAB}${TAB}height: ${slice.meta.frame.size.height}px;\n`;
 		}
+		html += `${TAB}}\n`;
 	});
 	html += `</style>\n\n`;
 
 	html += `<div class="grid-container">\n`;
 	slices.forEach((slice)=> {
 		html += `${TAB}<div class="grid-cell ${Strings.slugifyURI(slice.title)}">`;
-		html += (slice.type === 'textfield') ? `${slice.meta.txtVal}` : `<img src="./images/${URIs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}">`;
+		html += (slice.type === 'textfield') ? `<input type="text" value="${slice.meta.txtVal}" />` : `<img src="./images/${URIs.lastComponent(slice.filename)}@1x.png" alt="${slice.title}">`;
 		html += `</div>\n`;
 	});
 	html += `</div>\n`;
