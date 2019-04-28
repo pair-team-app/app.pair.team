@@ -10,6 +10,7 @@ import cookie from 'react-cookies';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Dropzone from 'react-dropzone';
 import FontAwesome from 'react-fontawesome';
+import fs from 'fs';
 // import { Helmet } from 'react-helmet';
 import ImageLoader from 'react-loading-image';
 import Moment from 'react-moment';
@@ -549,7 +550,9 @@ class InspectorPage extends Component {
 			percent     : 100,
 			tooltip     : 'Loading…',
 			linter      : null,
-			gist        : null
+			gist        : null,
+
+			rendered    : []
 		};
 
 		this.busyInterval = null;
@@ -614,10 +617,350 @@ class InspectorPage extends Component {
 
 		const { deeplink, processing } = this.props;
 // 		const { upload, panMultPt } = this.state;
-		const { section, upload } = this.state;
+		const { section, upload, rendered } = this.state;
 
 		if (!upload && deeplink && deeplink !== prevProps.deeplink && deeplink.uploadID !== 0) {
 			this.onFetchUpload();
+		}
+
+		if (upload && rendered.length === 0) {
+// 			fs.readFile("test.txt", (err, data)=> {
+// 				if (err) {
+// 					throw (err);
+// 				}
+// 				console.log(data.toString());
+// 			});
+
+			const rendered = [{
+				lang    : 'html',
+				content : `<html>
+    <head>
+        <link href="./img/favicon.png" rel="shortcut icon"/>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0" name="viewport"/>
+        <link href="./css/mapTutoiral1.css" rel="stylesheet" type="text/css"/>
+        <meta content="Launchpad by Anima" name="author">
+        </meta>
+    </head>
+    <body style="margin: 0;
+ background: rgba(255, 255, 255, 1.0);">
+        <input id="anPageName" name="page" type="hidden" value="maptutoiral1"/>
+        <div class="maptutoiral1">
+            <div style="width: 414px; height: 100%; position:relative; margin:auto;">
+                <div class="background">
+                    <div class="mask">
+                    </div>
+                    <div class="group8">
+                        <div class="group9">
+                            <img anima-src="./img/not-available-combined-shape-19.png" class="combinedshape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                            <img anima-src="./img/not-available-combined-shape-19.png" class="combinedshape1" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                            <img anima-src="./img/not-available-combined-shape-19.png" class="combinedshape2" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                        </div>
+                    </div>
+                    <div class="group">
+                        <div class="group10">
+                            <div class="group3">
+                                <img anima-src="./img/map-tutoiral-1-combined-shape-3.png" class="combinedshape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                <div class="group7">
+                                    <div class="group71">
+                                        <img anima-src="./img/map-tutoiral-1-line-2.png" class="line2" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line1" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="linecopy" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="linecopy2" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="linecopy3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="linecopy4" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-2-1@2x.png" class="line21" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-2-2@2x.png" class="line22" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-2-5@2x.png" class="line23" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-2-4@2x.png" class="line24" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-2-5@2x.png" class="line25" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-2-6@2x.png" class="line26" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line4" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line5" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line6" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line7" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-31.png" class="line8" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-9@2x.png" class="line9" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-9@2x.png" class="line10" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-9@2x.png" class="line11" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-12@2x.png" class="line12" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-13@2x.png" class="line13" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-14@2x.png" class="line14" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-31.png" class="line15" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-31.png" class="line16" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line17" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line18" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-21@2x.png" class="line19" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-21@2x.png" class="line20" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-21@2x.png" class="line27" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-21@2x.png" class="line28" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-21@2x.png" class="line29" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line30" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-25.png" class="line31" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-25.png" class="line32" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-25.png" class="line33" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-25.png" class="line34" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-34.png" class="line35" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-30.png" class="line36" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-31.png" class="line37" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-31.png" class="line38" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-31.png" class="line39" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-34.png" class="line40" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line41" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-37@2x.png" class="line42" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-37@2x.png" class="line43" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-43@2x.png" class="line44" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-40@2x.png" class="line45" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-40@2x.png" class="line46" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-40@2x.png" class="line47" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-42@2x.png" class="line48" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-43@2x.png" class="line49" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line50" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line51" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line52" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line53" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line54" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line55" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line56" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-51.png" class="line57" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-52.png" class="line58" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-2-7@2x.png" class="line210" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-3-2@2x.png" class="line310" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-3-2@2x.png" class="line311" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-3-2@2x.png" class="line312" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-53@2x.png" class="line59" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-54@2x.png" class="line60" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-55@2x.png" class="line61" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-56@2x.png" class="line62" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-57@2x.png" class="line63" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-58@2x.png" class="line64" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-59@2x.png" class="line65" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line-60@2x.png" class="line66" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line67" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line68" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line69" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line70" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line71" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line72" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line73" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                                    </div>
+                                </div>
+                                <img anima-src="./img/map-tutoiral-1-combined-shape-copy.png" class="combinedshapecopy" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="forsale">
+                    <img anima-src="./img/map-tutoiral-1-path-2@2x.png" class="path2" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    <img anima-src="./img/map-tutoiral-1-path-2-1@2x.png" class="path21" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    <img anima-src="./img/map-tutoiral-1-path-2-2@2x.png" class="path22" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    <img anima-src="./img/map-tutoiral-1-path-2-3@2x.png" class="path23" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    <img anima-src="./img/map-tutoiral-1-path-2-4@2x.png" class="path24" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    <div class="available anima-valign-text-middle">
+                        Available
+                    </div>
+                    <div class="available1 anima-valign-text-middle">
+                        Available
+                    </div>
+                    <div class="myproperty anima-valign-text-middle">
+                        My<br />Property
+                    </div>
+                    <div class="forsale1 anima-valign-text-middle">
+                        For <br />Sale
+                    </div>
+                    <div class="available2 anima-valign-text-middle">
+                        Available
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="background1">
+                        <div class="rectangle2">
+                        </div>
+                    </div>
+                    <div class="signup anima-valign-text-middle">
+                        Sign Up
+                    </div>
+                    <div class="login anima-valign-text-middle">
+                        Login
+                    </div>
+                </div>
+                <div class="footer1">
+                    <div class="background1">
+                        <div class="rectangle2">
+                        </div>
+                    </div>
+                    <div class="user">
+                        <img anima-src="./img/not-available-combined-shape-4@2x.png" class="combinedshape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                        <div class="idanzuck anima-valign-text-middle">
+                            IdanZuck
+                        </div>
+                    </div>
+                    <div class="portfolio">
+                        <div class="a13698 anima-valign-text-middle">
+                            $136.98
+                        </div>
+                        <img anima-src="./img/signed-out-shape@2x.png" class="shape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    </div>
+                    <div class="myportfolio anima-valign-text-middle">
+                        My Portfolio
+                    </div>
+                </div>
+                <div class="header">
+                    <div class="background1">
+                        <div class="rectangle">
+                        </div>
+                    </div>
+                    <div class="tab">
+                        <div class="right">
+                            <img anima-src="./img/not-available-rectangle-3-11@2x.png" class="rectangle3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                            <div class="listview anima-valign-text-middle">
+                                List View
+                            </div>
+                        </div>
+                        <div class="left">
+                            <img anima-src="./img/not-available-rectangle-3-21@2x.png" class="rectangle3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                            <div class="mapview anima-valign-text-middle">
+                                Map View
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search">
+                        <img anima-src="./img/not-available-shape-22@2x.png" class="shape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    </div>
+                    <div class="home">
+                        <img anima-src="./img/signed-out-logo-1@2x.png" class="logo" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    </div>
+                </div>
+                <div class="header1">
+                    <div class="background1">
+                        <div class="rectangle">
+                        </div>
+                    </div>
+                    <div class="tab">
+                        <div class="right">
+                            <img anima-src="./img/not-available-rectangle-3-11@2x.png" class="rectangle3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                            <div class="group21">
+                                <div class="rectangle4">
+                                </div>
+                                <div class="rectangle41">
+                                </div>
+                                <div class="rectangle42">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="left">
+                            <img anima-src="./img/not-available-rectangle-3-21@2x.png" class="rectangle3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                            <img anima-src="./img/not-available-shape-18@2x.png" class="shape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                        </div>
+                    </div>
+                    <div class="search">
+                        <img anima-src="./img/not-available-shape-22@2x.png" class="shape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    </div>
+                    <div class="home">
+                        <img anima-src="./img/signed-out-logo-1@2x.png" class="logo" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    </div>
+                </div>
+                <div class="group2">
+                    <img anima-src="./img/map-tutoiral-1-rectangle-3-4.png" class="rectangle3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    <div class="a25propertiesavaila anima-valign-text-middle">
+                        25 properties available in San Francisco, CA
+                    </div>
+                    <div class="group4">
+                        <img anima-src="./img/map-tutoiral-1-line-4-1@2x.png" class="line4" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                        <img anima-src="./img/map-tutoiral-1-line-4-2@2x.png" class="line41" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    </div>
+                    <div class="group21">
+                        <img anima-src="./img/map-tutoiral-1-combined-shape-5@2x.png" class="combinedshape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                        <div class="path7">
+                            <img anima-src="./img/signed-out-path-7@2x.png" class="path71" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Scripts -->
+        <script>
+            anima_isHidden = function(e) {
+                if (!(e instanceof HTMLElement)) return !1;
+                if (getComputedStyle(e).display == "none") return !0; else if (e.parentNode && anima_isHidden(e.parentNode)) return !0;
+                return !1;
+            };
+            anima_loadAsyncSrcForTag = function(tag) {
+                var elements = document.getElementsByTagName(tag);
+                var toLoad = [];
+                for (var i = 0; i < elements.length; i++) {
+                    var e = elements[i];
+                    var src = e.getAttribute("src");
+                    var loaded = (src != undefined && src.length > 0 && src != 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==');
+                    if (loaded) continue;
+                    var asyncSrc = e.getAttribute("anima-src");
+                    if (asyncSrc == undefined || asyncSrc.length == 0) continue;
+                    if (anima_isHidden(e)) continue;
+                    toLoad.push(e);
+                }
+                toLoad.sort(function(a, b) {
+                    return anima_getTop(a) - anima_getTop(b);
+                });
+                for (var i = 0; i < toLoad.length; i++) {
+                    var e = toLoad[i];
+                    var asyncSrc = e.getAttribute("anima-src");
+                    e.setAttribute("src", asyncSrc);
+                }
+            };
+            anima_pauseHiddenVideos = function(tag) {
+                var elements = document.getElementsByTagName("video");
+                for (var i = 0; i < elements.length; i++) {
+                    var e = elements[i];
+                    var isPlaying = !!(e.currentTime > 0 && !e.paused && !e.ended && e.readyState > 2);
+                    var isHidden = anima_isHidden(e);
+                    if (!isPlaying && !isHidden && e.getAttribute("autoplay") == "autoplay") {
+                        e.play();
+                    } else if (isPlaying && isHidden) {
+                        e.pause();
+                    }
+                }
+            };
+            anima_loadAsyncSrc = function(tag) {
+                anima_loadAsyncSrcForTag("img");
+                anima_loadAsyncSrcForTag("iframe");
+                anima_loadAsyncSrcForTag("video");
+                anima_pauseHiddenVideos();
+            };
+            var anima_getTop = function(e) {
+                var top = 0;
+                do {
+                    top += e.offsetTop || 0;
+                    e = e.offsetParent;
+                } while (e);
+                return top;
+            };
+            anima_loadAsyncSrc();
+            anima_old_onResize = window.onresize;
+            anima_new_onResize = undefined;
+            anima_updateOnResize = function() {
+                if (anima_new_onResize == undefined || window.onresize != anima_new_onResize) {
+                    anima_new_onResize = function(x) {
+                        if (anima_old_onResize != undefined) anima_old_onResize(x);
+                        anima_loadAsyncSrc();
+                    };
+                    window.onresize = anima_new_onResize;
+                    setTimeout(function() {
+                        anima_updateOnResize();
+                    }, 3000);
+                }
+            };
+            anima_updateOnResize();
+            setTimeout(function() {
+                anima_loadAsyncSrc();
+            }, 200);
+        </script>
+        <!-- End of Scripts -->
+    </body>
+</html>`
+			}];
+			this.setState({ rendered });
 		}
 
 
