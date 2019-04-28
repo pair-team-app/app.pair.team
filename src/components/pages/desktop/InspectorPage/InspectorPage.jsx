@@ -88,7 +88,7 @@ import {
 	URIs } from '../../../../utils/lang.js';
 import { trackEvent } from '../../../../utils/tracking';
 
-import downloadButton from '../../../../assets/images/buttons/btn-download.svg';
+// import downloadButton from '../../../../assets/images/buttons/btn-download.svg';
 import adBannerPanel from '../../../../assets/json/ad-banner-panel';
 import inspectorTabSets from '../../../../assets/json/inspector-tab-sets';
 import deLogo from '../../../../assets/images/logos/logo-designengine.svg';
@@ -104,18 +104,16 @@ const CodeEditor = (props)=> {
 // 	console.log('InspectorPage.CodeEditor()', props);
 
 	const { lang, syntax } = props;
-	return (<div className="code-editor">
-		<MonacoEditor
-			width="100%"
-			height="100%"
-			language={lang}
-			theme="vs-dark"
-			value={syntax}
-			options={EDITOR.opts}
-			onChange={props.onEditorChange}
-			editorDidMount={props.onEditorMounted}
-		/>
-	</div>);
+	return (<div className="code-editor-wrapper"><MonacoEditor
+		width="100%"
+		height="100%"
+		language={lang}
+		theme="vs-dark"
+		value={syntax}
+		options={EDITOR.opts}
+		onChange={props.onEditorChange}
+		editorDidMount={props.onEditorMounted}
+	/></div>);
 };
 
 const ColorSwatch = (props)=> {
@@ -133,9 +131,9 @@ const FilingTabContent = (props)=> {
 	const className = `filing-tab-content${(!enabled) ? ' filing-tab-content-disabled' : ''}`;
 
 	return (<div key={tab.id} className={className}>
-		{((!type || type === 'json_html') && contents) && (<span dangerouslySetInnerHTML={{ __html : String(((enabled) ? JSON.parse(contents) : '').replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) }} />)}
-		{/*{((!type || type === 'json_html') && contents) && (<span dangerouslySetInnerHTML={{ __html : String(((enabled) ? JSON.parse(contents) : '').replace(/ {2}/g, '&nbsp;&nbsp;').replace(/\n/g, '<br />')) }} />)}*/}
-		{(type === 'component') && (contents)}
+		{contents}
+		{/*{((!type || type === 'json_html') && contents) && (<span dangerouslySetInnerHTML={{ __html : String(((enabled) ? JSON.parse(contents) : '').replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) }} />)}*/}
+		{/*{(type === 'component') && (contents)}*/}
 	</div>);
 };
 
@@ -247,61 +245,7 @@ const MarqueeBanner = (props)=> {
 	</div>);
 };
 
-const PartsList = (props)=> {
-// 	console.log('InspectorPage.PartsList()', props);
 
-	const { enabled, contents } = props;
-	return ((contents && contents.length > 0) ? <div className="parts-list-wrapper">
-		{contents.map((slice, i)=> {
-			return (
-				<PartListItem
-					key={i}
-					id={slice.id}
-					filename={slice.filename}
-					title={slice.title}
-					type={slice.type}
-					size={slice.meta.frame.size}
-					onClick={()=> props.onPartListItem(slice)}
-				/>
-			);
-		})}
-	</div> : <div className="parts-list-wrapper parts-list-wrapper-empty">{(enabled) ? '/* Rollover to display parts. */' : ''}</div>);
-};
-
-const PartListItem = (props)=> {
-// 	console.log('InspectorPage.PartListItem()', props);
-
-// 	const { id, filename, title, type, size } = props;
-	const { id, filename, title, size } = props;
-	const thumbStyle = {
-		width  : `${size.width}px`,
-		height : `${size.height}px`
-	};
-
-	let errored = false;
-
-	return (<div data-slice-id={id} className="part-list-item"><Row vertical="center" horizontal="center">
-		<div className="part-list-item-content-wrapper">
-			<ImageLoader
-				style={thumbStyle}
-				src={`${filename}@2x.png`}
-				image={(props)=> <PartListItemThumb { ...props } width={size.width} height={size.height} />}
-				loading={()=> (<div className="part-list-item-image part-list-item-image-loading" style={thumbStyle}><FontAwesome className="part-list-item-fa-status" name="clock-o" size="2x" /></div>)}
-				error={()=> (<div className="part-list-item-image part-list-item-image-loading"><FontAwesome className="part-list-item-fa-status" name="clock-o" size="2x" /></div>)}
-				onError={(event)=> (errored = true)}
-			/>
-			<div className="part-list-item-title">{`${Strings.truncate(`${title}`, 18)}`}</div>
-		</div>
-		{(!errored) && (<button className="tiny-button part-list-item-button" onClick={()=> props.onClick()}><img src={downloadButton} width="20" height="14" alt="Download" /></button>)}
-	</Row></div>);
-};
-
-const PartListItemThumb = (props)=> {
-// 	console.log('InspectorPage.PartListItemThumb()', props);
-
-	const { src, title, width, height } = props;
-	return (<img src={src} className="part-list-item-image" width={width} height={height} alt={title} />);
-};
 
 const SliceRolloverItem = (props)=> {
 // 	console.log('InspectorPage.SliceRolloverItem()', props);
@@ -643,7 +587,7 @@ class InspectorPage extends Component {
 			this.onFetchUpload();
 		}
 
-		document.addEventListener('keydown', this.handleKeyDown);
+// 		document.addEventListener('keydown', this.handleKeyDown);
 	}
 
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
@@ -930,7 +874,7 @@ class InspectorPage extends Component {
 									return (Object.assign({}, tab, {
 										type     : 'component',
 										enabled  : ((upload.state << 0) === 3),
-										contents : <CodeEditor lang={tab.lang} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+										contents : <CodeEditor lang={tab.meta.lang.split(',').pop()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
 										syntax   : langs[ii].syntax,
 										html     : langs[ii].html
 									}));
@@ -1004,7 +948,7 @@ class InspectorPage extends Component {
 					return (tabSet.map((tab, ii)=> {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : <CodeEditor lang={tab.lang} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+							contents : <CodeEditor lang={tab.meta.lang.split(',').pop()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
 							syntax   : langs[ii].syntax,
 							html     : langs[ii].html
 						}));
@@ -1058,7 +1002,7 @@ class InspectorPage extends Component {
 					if (i === 0) {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : <CodeEditor lang={tab.lang} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+							contents : <CodeEditor lang={tab.meta.lang.split(',').pop()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
 							syntax   : langs[ii].syntax,
 							html     : langs[ii].html
 						}));
@@ -1123,7 +1067,7 @@ class InspectorPage extends Component {
 					return (tabSet.map((tab, ii)=> {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : <CodeEditor lang={tab.lang} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+							contents : <CodeEditor lang={tab.meta.lang.split(',').pop()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
 							syntax   : langs[ii].syntax,
 							html     : langs[ii].html
 						}));
@@ -1174,7 +1118,7 @@ class InspectorPage extends Component {
 					if (i === 0) {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : <CodeEditor lang={tab.lang} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+							contents : <CodeEditor lang={tab.meta.lang.split(',').pop()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
 							syntax   : langs[ii].syntax,
 							html     : langs[ii].html
 						}));
@@ -1475,7 +1419,7 @@ class InspectorPage extends Component {
 	};
 
 	handleEditorRun = (lang, html)=> {
-// 		console.log('InspectorPage.handleEditorRun()', lang, html);
+		console.log('InspectorPage.handleEditorRun()', lang, html);
 
 		const tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 			return (tabSet.map((tab, ii)=> {
@@ -1957,7 +1901,7 @@ class InspectorPage extends Component {
 
 
 	handleWheelStart = (event)=> {
-		console.log('InspectorPage.handleWheelStart()', event, event.type, event.deltaX, event.deltaY, event.target);
+// 		console.log('InspectorPage.handleWheelStart()', event, event.type, event.deltaX, event.deltaY, event.target);
 		//console.log('wheel', artboardsWrapper.current.clientWidth, artboardsWrapper.current.clientHeight, artboardsWrapper.current.scrollTop, artboardsWrapper.current.scrollLeft);
 
 		clearTimeout(this.scrollTimeout);
@@ -2503,7 +2447,7 @@ class InspectorPage extends Component {
 
 									{(i === 0)
 										? (<div className="inspector-page-panel-button-wrapper">
-												<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleEditorRun(activeTabs[i].lang, activeTabs[i].html)}>{(processing) ? 'Processing' : 'Run'}</button>
+												<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleEditorRun(activeTabs[i].meta.lang.split(',').pop(), activeTabs[i].html)}>{(processing) ? 'Processing' : 'Run'}</button>
 												<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>
 												<button disabled={!atomExtension || !slice || (linter && linter.busy) || (gist && gist.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Atom'}</button>
 												<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>

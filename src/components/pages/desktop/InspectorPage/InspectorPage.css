@@ -15,115 +15,13 @@
 }
 
 
-.artboards-list-wrapper, .parts-list-wrapper {
+.code-editor-wrapper {
 	width: 100%;
 	height: 100%;
-	overflow-y: auto;
-	padding: 40px 32px 50px 32px;
 }
 
-.artboards-list-wrapper-empty, .parts-list-wrapper-empty {
-	/*margin-top: -6px;*/
-	padding: 0;
-	color: #00ff0f;
-}
-
-.artboard-list-item, .part-list-item {
-	width: 100%;
-	padding-bottom: 60px;
-}
-
-.artboard-list-item:hover {
-	cursor: pointer;
-}
-
-.artboard-list-item-disabled {
-	opacity: 0.75;
-}
-
-.artboard-list-item-disabled:hover {
-	cursor: default;
-}
-
-.artboard-list-item:nth-child(even), .part-list-item:nth-child(even) {
-	/*background-color: #24282e;*/
-}
-
-.artboard-list-item:last-child, .part-list-item:last-child {
-	margin-bottom: -10px;
-	padding-bottom: 0;
-}
-
-
-.artboard-list-item-content-wrapper, .part-list-item-content-wrapper {
-	position: relative;
-	width: 188px;
-	height: 172px;
-	background: #1a1b1d url(../../../../assets/images/backgrounds/bg-checkerboard.png) repeat;
-	border: 1px solid #00ff0f;
-	text-align: center;
-	vertical-align: middle;
-	overflow: hidden;
-}
-
-.artboard-list-item-content-wrapper {
-	height: 192px;
-}
-
-.artboard-list-item-image, .part-list-item-image {
-	position: absolute;
-	max-width: 95%;
-	max-height: 55%;
-	top: 25px;
-	left: 50%;
-	transform: translate(-50%, 0%);
-	object-fit: scale-down;
-	text-align: center;
-}
-
-.artboard-list-item-image-loading, .artboard-list-item-image-error, .part-list-item-image-loading, .part-list-item-image-error {
-	width: 100px;
-	height: 100px;
-}
-
-.artboard-list-item-fa-status, .part-list-item-fa-status {
-	width: 50px;
-	height: 50px;
-}
-
-.artboard-list-item-title, .part-list-item-title {
-	position: absolute;
-	bottom: 22px;
-	left: 0;
-	width: 100%;
-	font-family: "San Francisco Text Medium", sans-serif;
-	font-size: 16px;
-	letter-spacing: -0.5px;
-	text-align: center;
-	color: #abdafd;
-}
-
-.artboard-list-item-button, .part-list-item-button {
-	min-width: 20px;
-	min-height: 14px;
-	max-width: 20px;
-	max-height: 14px;
-	margin-left: 48px;
-	padding: 0;
-	background-color: rgba(0, 0, 0, 0.0);
-	font-size: 16px;
-	color: #addafd;
-}
-
-.artboard-list-item-button:hover, .part-list-item-button:hover {
-	cursor: pointer;
-	background-color: rgba(0, 0, 0, 0.0);
-	color: #ffffff;
-}
-
-.code-editor {
-	width: 100%;
-	height: 100%;
+.code-editor-content {
+	background-color: rgba(255, 0, 255, 0.33);
 }
 
 .filing-tab-set {
@@ -148,7 +46,7 @@
 
 .filing-tab-title {
 	flex: 1 1 0;
-	padding: 14px 14px;
+	padding: 14px;
 	background-color: #24282e;
 	border-bottom: 2px solid rgba(0, 92, 197, 0.0);
 	font-family: "San Francisco Text", sans-serif;
@@ -205,6 +103,10 @@
 	width: 100%;
 	height: 100%;
 	padding: 20px 20px 0 20px;
+	overflow-y: scroll;
+}
+
+.filing-tab-content-placeholder {
 	font-family: "San Francisco Text", sans-serif;
 	font-size: 14px;
 	line-height: normal;
@@ -214,7 +116,6 @@
 	/*white-space: pre-wrap;*/
 	/*word-break: break-word;*/
 	tab-size: 3;
-	overflow-y: scroll;
 }
 
 .filing-tab-content-disabled, .filing-tab-content-disabled:hover {
