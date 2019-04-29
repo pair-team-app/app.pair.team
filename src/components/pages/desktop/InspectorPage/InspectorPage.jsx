@@ -2632,8 +2632,8 @@ class InspectorPage extends Component {
 
 
 
-		const contentClass = `inspector-page-content${(section === SECTIONS.EDIT) ? ' inspector-page-content-editor' : ''}`;
-		const panelClass = `inspector-page-panel${(section === SECTIONS.EDIT) ? ' inspector-page-panel-editor' : ''}`;
+		const contentClass = `inspector-page-canvas-content ${(section === SECTIONS.EDIT) ? 'inspector-page-canvas-content-edit' : 'inspector-page-canvas-content-inspect'}`;
+		const panelClass = `inspector-page-panel ${(section === SECTIONS.EDIT) ? 'inspector-page-panel-edit' : 'inspector-page-panel-inspect'}`;
 
 		const baseOffset = {
 			x : (artboards.length < GRID.colsMax) ? GRID.padding.col * 0.5 : 0,
@@ -2666,7 +2666,8 @@ class InspectorPage extends Component {
 						<div className="upload-progress-bar" style={{ width : `${percent}%` }} />
 					</div>)}
 
-					<div className="inspector-page-marquee-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.EDIT && !processing) ? 880 : 360}px)`}}>
+					{/*<div className="inspector-page-marquee-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.EDIT && !processing) ? 880 : 360}px)`}}>*/}
+					<div className="inspector-page-marquee-wrapper" style={{width:`${(section === SECTIONS.EDIT && !processing) ? 33 : 66}%`}}>
 						{(upload && urlBanner && percent === 100) && (<MarqueeBanner
 							copyText={buildInspectorURL(upload)}
 							removable={true}
@@ -2777,7 +2778,7 @@ class InspectorPage extends Component {
 
 					{(section === SECTIONS.EDIT) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-editor-wrapper">
 						{(tabSets.map((tabSet, i)=> (
-							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-split-width-content-wrapper inspector-page-panel-full-height-content-wrapper" style={{width:`${(i === 0) ? 520 : 360}px`}}>
+							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-split-width-content-wrapper inspector-page-panel-full-height-content-wrapper">
 								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 202 : 58)}px)` }}>
 									<FilingTabSet
 										tabs={tabSet}
