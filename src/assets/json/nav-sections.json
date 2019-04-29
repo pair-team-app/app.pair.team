@@ -4,8 +4,8 @@
       "title": "Free Inspect",
       "url": "/inspect"
     }, {
-      "title": "Presenter",
-      "url": "/present"
+      "title": "Editor",
+      "url": "/edit"
     }, {
       "title": "Integrations",
       "url": "/integrations"
@@ -23,8 +23,8 @@
       "title": "Free Inspect",
       "url": "/inspect"
     }, {
-      "title": "Presenter",
-      "url": "/present"
+      "title": "Editor",
+      "url": "/edit"
     }, {
       "title": "Integrations",
       "url": "/integrations"
@@ -33,8 +33,8 @@
       "title": "Free Inspect",
       "url": "/inspect"
     }, {
-      "title": "Presenter",
-      "url": "/present"
+      "title": "Editor",
+      "url": "/edit"
     }, {
       "title": "Integrations",
       "url": "/integrations"

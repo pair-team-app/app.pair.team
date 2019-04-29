@@ -17,9 +17,9 @@
       "title": "Free code, specs, & parts to implement pixel-perfect design."
     }
   },
-  "present": {
+  "edit": {
     "header" : {
-      "title": "Upload a design file to present",
+      "title": "Upload a design file to edit",
       "subtitle": "Drag, drop, or click to upload."
     },
     "body": {

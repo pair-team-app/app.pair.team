@@ -5,7 +5,7 @@ export const HOME = '/';
 export const INSPECT = '/inspect';
 export const LOGIN = '/login';
 export const PARTS = '/parts';
-export const PRESENT = '/present';
+export const EDIT = '/edit';
 export const PRIVACY = '/privacy';
 export const PROFILE = '/profile';
 export const RECOVER = '/recover';
@@ -27,7 +27,7 @@ export const Pages = {
 	HOME    : '/',
 	INSPECT : '/inspect',
 	PARTS   : '/parts',
-	PRESENT : '/present',
+	EDITOR  : '/editor',
 	PRIVACY : '/privacy',
 	PROFILE : '/profile',
 	TERMS   : '/terms',

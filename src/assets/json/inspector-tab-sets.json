@@ -61,7 +61,7 @@
     }]
   ],
 
-  "present": [
+  "edit": [
     [{
       "id": 1,
       "title": "HTML",

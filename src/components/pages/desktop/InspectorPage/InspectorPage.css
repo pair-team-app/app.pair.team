@@ -138,7 +138,7 @@
 	vertical-align: top;
 }
 
-.inspector-page-content-presenter {
+.inspector-page-content-editor {
 	width: calc(100% - 880px);
 }
 
@@ -299,7 +299,7 @@
 	background-color: #1a1e23;
 }
 
-.inspector-page-panel-presenter {
+.inspector-page-panel-editor {
 	width: 880px;
 	max-width: 880px;
 	height: 100%;
@@ -312,7 +312,7 @@
 	/*border: 1px solid #ff00ff;*/
 }
 
-.inspector-page-panel-presenter-wrapper {
+.inspector-page-panel-editor-wrapper {
 	/*display: table;*/
 	display: flex;
 	width: 100%;

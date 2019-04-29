@@ -10,7 +10,7 @@ import {
 	INSPECT,
 	LOGIN,
 	PARTS,
-	PRESENT,
+	EDIT,
 	PROFILE,
 	RECOVER,
 	REGISTER,
@@ -118,7 +118,7 @@ export function createGist(token, filename, contents, description, visible, call
 
 export function idsFromPath() {
 	const { pathname } = window.location;
-	const inspectorPath = /\/(?:inspect|parts|present)\/(\d+)\/.+$/i;
+	const inspectorPath = /\/(?:inspect|parts|edit)\/(\d+)\/.+$/i;
 
 	const navIDs = {
 		uploadID   : ((inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[1] : 0) << 0,
@@ -132,12 +132,12 @@ export function idsFromPath() {
 
 export function isHomePage(root=true) {
 	const { pathname } = window.location;
-	return ((root) ? (pathname === '' || pathname === HOME) : (pathname === '' || pathname === HOME || pathname === INSPECT || pathname === PARTS || pathname === PRESENT));
+	return ((root) ? (pathname === '' || pathname === HOME) : (pathname === '' || pathname === HOME || pathname === INSPECT || pathname === PARTS || pathname === EDIT));
 }
 
 export function isInspectorPage() {
 	const { pathname } = window.location;
-	return ((pathname.includes(`${INSPECT}/`) || pathname.includes(`${PARTS}/`) || pathname.includes(`${PRESENT}/`)) && /^.+\/\d+\/.+$/.test(pathname));
+	return ((pathname.includes(`${INSPECT}/`) || pathname.includes(`${PARTS}/`) || pathname.includes(`${EDIT}/`)) && /^.+\/\d+\/.+$/.test(pathname));
 }
 
 export function isLoginPage(exact=false) {

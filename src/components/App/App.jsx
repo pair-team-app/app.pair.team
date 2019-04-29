@@ -673,29 +673,25 @@ class App extends Component {
 
 			    <div className="content-wrapper" ref={wrapper}>
 				    <Switch>
-					    <Route exact path="/invite-team"><Redirect to="/" /></Route>
 					    <Route exact path="/"><Redirect to="/inspect" /></Route>
-					    {(!isUserLoggedIn()) && (<Route exact path="/profile"><Redirect to="/" /></Route>)}
+					    <Route exact path="/invite-team"><Redirect to="/" /></Route>
 					    <Route exact path="/logout" render={()=> (profile) ? this.handleLogout() : null} />
-
-					    <Route exact path="/:section(inspect|parts|present)" render={()=> <HomePage onArtboardClicked={this.handleArtboardClicked} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/new"><Redirect to="/new/inspect" /></Route>
-					    <Route exact path="/new/:type(inspect|parts|present)" render={(props)=> <UploadPage { ...props } onProcessing={this.handleProcessing} onRegistered={this.handleRegistered} onScrollOrigin={this.handleScrollOrigin} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/new/present"><Redirect to="/new/edit" /></Route>
+					    <Route exact path="/present"><Redirect to="/edit" /></Route>
+					    <Route exact path="/present/:uploadID/:titleSlug" render={(props)=> this.handlePage(`edit/${props.match.params.uploadID}/${props.match.params.titleSlug}`)} />
+					    {(!isUserLoggedIn()) && (<Route exact path="/profile"><Redirect to="/" /></Route>)}
 
-					    <Route exact path="/:section(inspect|parts|present)/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-
-					    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/:section(inspect|parts|edit)" render={()=> <HomePage onArtboardClicked={this.handleArtboardClicked} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/:section(inspect|parts|edit)/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    {/*<Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />*/}
+					    <Route exact path="/new/:type(inspect|parts|edit)" render={(props)=> <UploadPage { ...props } onProcessing={this.handleProcessing} onRegistered={this.handleRegistered} onScrollOrigin={this.handleScrollOrigin} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/privacy"><PrivacyPage /></Route>
+					    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/terms"><TermsPage /></Route>
 
-					    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
-					    <Route exact path="/terms" render={()=> <TermsPage />} />
-					    {/*<Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />*/}
-
-					    {/*<Route render={()=> <Status404Page onPage={this.handlePage} />} />*/}
 					    <Route><Status404Page onPage={this.handlePage} /></Route>
-					    {/*<Route><Redirect to="/" /></Route>*/}
 				    </Switch>
 
 				    {(!isInspectorPage()) && (<AdvertPanel

@@ -86,9 +86,9 @@ export const PAN_ZOOM = {
 };
 
 export const SECTIONS = {
-	INSPECT   : 'inspect',
-	PARTS     : 'parts',
-	PRESENTER : 'present'
+	INSPECT : 'inspect',
+	PARTS   : 'parts',
+	EDIT    : 'edit'
 };
 
 export const STATUS_INTERVAL = 1000;

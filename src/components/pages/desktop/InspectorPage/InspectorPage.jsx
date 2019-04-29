@@ -212,14 +212,13 @@ const InspectorFooter = (props)=> {
 			<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-out'); props.onZoom(-1);}}><FontAwesome name="search-minus" /></button>
 			<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-reset'); props.onZoom(0);}}>Reset ({(fitScale * 100) << 0}%)</button>
 
-			{(section === SECTIONS.PRESENTER && artboards.length < 1) && (<>
+			{(section === SECTIONS.EDIT && artboards.length < 1) && (<>
 				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'prev-artboard'); props.onChangeArtboard(prevArtboard);}}><FontAwesome name="arrow-left" /></button>
 				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'next-artboard'); props.onChangeArtboard(nextArtboard);}}><FontAwesome name="arrow-right" /></button>
 			</>)}
 
-			{(section !== SECTIONS.INSPECT) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('inspect')}>Inspect</button>)}
-			{(section !== SECTIONS.PARTS) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('parts')}>Parts</button>)}
-			{(section !== SECTIONS.PRESENTER) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('present')}>Presenter</button>)}
+			{(section !== SECTIONS.INSPECT) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection(SECTIONS.INSPECT)}>Free Inspect</button>)}
+			{(section !== SECTIONS.EDIT) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection(SECTIONS.EDIT)}>Edit</button>)}
 		</div>)}
 	</Row></div>);
 };
@@ -437,7 +436,7 @@ const UploadProcessing = (props)=> {
 	const artboards = flattenUploadArtboards(upload, 'page_child');
 	const urlInspect = buildInspectorURL(upload, '/inspect');
 	const urlParts = buildInspectorURL(upload, '/parts');
-	const urlPresent = buildInspectorURL(upload, '/present');
+	const urlEditor = buildInspectorURL(upload, '/editor');
 
 	const secs = String((DateTimes.epoch() * 0.01).toFixed(2)).substr(-2, 1) << 0;
 	const ind = (secs) % artboards.length;
@@ -477,15 +476,15 @@ const UploadProcessing = (props)=> {
 			/>
 			<InputField
 				type="lbl"
-				name="urlPresent"
-				placeholder={urlPresent}
-				value={urlPresent}
+				name="urlEditor"
+				placeholder={urlEditor}
+				value={urlEditor}
 				button="Copy"
 				status={INPUTFIELD_STATUS_IDLE}
 				onChange={null}
 				onErrorClick={()=> null}
-				onFieldClick={()=> {copy(urlPresent); props.onCopyURL(urlPresent)}}
-				onSubmit={()=> {copy(urlPresent); props.onCopyURL(urlPresent)}}
+				onFieldClick={()=> {copy(urlEditor); props.onCopyURL(urlEditor)}}
+				onSubmit={()=> {copy(urlEditor); props.onCopyURL(urlEditor)}}
 			/>
 		</div></Row>
 
@@ -997,7 +996,7 @@ class InspectorPage extends Component {
 // 			const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'container' : 'page_child');
 			const artboards = flattenUploadArtboards(upload, 'page_child');
 			if (artboards.length > 0) {
-				const baseSize = calcArtboardBaseSize((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
+				const baseSize = calcArtboardBaseSize((section === SECTIONS.EDIT) ? artboards.slice(0, 1) : artboards, viewSize);
 				console.log('_-]BASE SIZE[-_', baseSize);
 
 				const fitScale = calcFitScale(baseSize, viewSize);
@@ -1009,7 +1008,7 @@ class InspectorPage extends Component {
 					scale     : this.state.scale
 					}, PAN_ZOOM.panMultPt, viewSize, baseSize, fitScale);
 
-				const scaledCoords = calcArtboardScaledCoords((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, fitScale);
+				const scaledCoords = calcArtboardScaledCoords((section === SECTIONS.EDIT) ? artboards.slice(0, 1) : artboards, fitScale);
 				console.log('_-]SCALED COORDS[-_', scaledCoords);
 
 				console.log('-=-=-=-=-=-', insetHeight, viewSize, baseSize, fitScale, scrollPt);
@@ -1137,7 +1136,7 @@ class InspectorPage extends Component {
 			}) : this.state.activeTabs;
 
 			this.setState({ tabSets, activeTabs,
-				artboard    : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
+				artboard    : (section === SECTIONS.EDIT && artboards.length > 0) ? artboards[0] : null,
 				slice       : null,
 				offset      : null,
 				hoverSlice  : null,
@@ -1165,14 +1164,14 @@ class InspectorPage extends Component {
 			}) : this.state.activeTabs;
 
 			this.setState({ upload, tabSets, activeTabs,
-				artboard : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
+				artboard : (section === SECTIONS.EDIT && artboards.length > 0) ? artboards[0] : null,
 				slice    : null,
 				tooltip  : null,
 				linter   : null,
 				gist     : null
 			});
 
-		} else if (section === SECTIONS.PRESENTER) {
+		} else if (section === SECTIONS.EDIT) {
 			if (artboards.length > 0) {
 				const artboard = (this.state.artboard) ? this.state.artboard : artboards[0];
 
@@ -1339,7 +1338,7 @@ class InspectorPage extends Component {
 				this.setState({ tabSets });
 			}
 
-		} else if (section === SECTIONS.PRESENTER) {
+		} else if (section === SECTIONS.EDIT) {
 			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 				return (tabSet.map((tab, ii)=> {
 					if (i === 0) {
@@ -1455,7 +1454,7 @@ class InspectorPage extends Component {
 					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 			}
 
-		} else if (section === SECTIONS.PRESENTER) {
+		} else if (section === SECTIONS.EDIT) {
 			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 				return (tabSet.map((tab, ii)=> {
 					if (i === 0) {
@@ -1711,7 +1710,7 @@ class InspectorPage extends Component {
 			type     : POPUP_TYPE_OK,
 			offset   : {
 				top   : (urlBanner << 0 && !processing) * 38,
-				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
+				right : (section === SECTIONS.EDIT && !processing) ? 880 : 360
 			},
 			content  : (type === 'url' || msg.length >= 100) ? `Copied ${type} to clipboard` : msg,
 			duration : 1750
@@ -1934,7 +1933,7 @@ class InspectorPage extends Component {
 			this.handleZoom(-1);
 		}
 
-		if (section === SECTIONS.PRESENTER) {
+		if (section === SECTIONS.EDIT) {
 			if (event.keyCode === ARROW_LT_KEY) {
 				this.handleChangeArtboard({
 					id     : -1,
@@ -2000,7 +1999,7 @@ class InspectorPage extends Component {
 			type     : POPUP_TYPE_OK,
 			offset   : {
 				top   : (urlBanner << 0 && !processing) * 38,
-				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
+				right : (section === SECTIONS.EDIT && !processing) ? 880 : 360
 			},
 			content  : `Sending ${lang} snippet to Atom…`
 		});
@@ -2027,7 +2026,7 @@ class InspectorPage extends Component {
 			type     : POPUP_TYPE_OK,
 			offset   : {
 				top   : (urlBanner << 0 && !processing) * 38,
-				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
+				right : (section === SECTIONS.EDIT && !processing) ? 880 : 360
 			},
 			content  : `Creating “${Strings.slugifyURI(slice.title)}.${lang}” gist on GitHub…`
 		});
@@ -2058,7 +2057,7 @@ class InspectorPage extends Component {
 			type     : POPUP_TYPE_OK,
 			offset   : {
 				top   : (urlBanner << 0 && !processing) * 38,
-				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
+				right : (section === SECTIONS.EDIT && !processing) ? 880 : 360
 			},
 			content  : `Sending ${lang} snippet to ${linter}…`
 		});
@@ -2523,11 +2522,11 @@ class InspectorPage extends Component {
 		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, activeTabs, scrolling, viewSize, panMultPt, code } = this.state;
 		const { valid, restricted, urlBanner, tutorial, percent, tooltip, fontState, linter, gist } = this.state;
 
-		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, 'page_child');
-// 		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : (section === SECTIONS.PARTS) ? flattenUploadArtboards(upload, 'page_child').slice(0, 3) : flattenUploadArtboards(upload, 'page_child');
+		const artboards = (section === SECTIONS.EDIT) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, 'page_child');
+// 		const artboards = (section === SECTIONS.EDIT) ? (artboard) ? [artboard] : [] : (section === SECTIONS.PARTS) ? flattenUploadArtboards(upload, 'page_child').slice(0, 3) : flattenUploadArtboards(upload, 'page_child');
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 
-		const listTotal = (upload && activeSlice) ? (section === SECTIONS.PRESENTER) ? flattenUploadArtboards(upload, 'page_child').length : (activeSlice) ? (activeSlice.type === 'group') ? fillGroupPartItemSlices(upload, activeSlice).length : activeSlice.children.length : 0 : 0;
+		const listTotal = (upload && activeSlice) ? (section === SECTIONS.EDIT) ? flattenUploadArtboards(upload, 'page_child').length : (activeSlice) ? (activeSlice.type === 'group') ? fillGroupPartItemSlices(upload, activeSlice).length : activeSlice.children.length : 0 : 0;
 		const missingFonts = (upload) ? upload.fonts.filter((font)=> (!font.installed)) : [];
 
 		const pt = calcTransformPoint({ panMultPt, scale });
@@ -2608,8 +2607,8 @@ class InspectorPage extends Component {
 
 			slices.push(
 				<div key={artboard.id} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut} onDoubleClick={(event)=> this.handleZoom(1)}>
-					<div data-artboard-id={artboard.id} className={`inspector-page-${(section === SECTIONS.PRESENTER) ? 'artboard' : 'group'}-slices-wrapper`}>{(section === SECTIONS.PRESENTER) ? artboardSlices : (section === SECTIONS.PARTS) ? [ ...artboardSlices, ...groupSlices ] : groupSlices }</div>
-					{(section !== SECTIONS.PRESENTER) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{(section === SECTIONS.INSPECT) ? [ ...artboardSlices, ...backgroundSlices ] : backgroundSlices}</div>)}
+					<div data-artboard-id={artboard.id} className={`inspector-page-${(section === SECTIONS.EDIT) ? 'artboard' : 'group'}-slices-wrapper`}>{(section === SECTIONS.EDIT) ? artboardSlices : (section === SECTIONS.PARTS) ? [...artboardSlices, ...groupSlices ] : groupSlices }</div>
+					{(section !== SECTIONS.EDIT) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{(section === SECTIONS.INSPECT) ? [...artboardSlices, ...backgroundSlices ] : backgroundSlices}</div>)}
 					{/*<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>*/}
 					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{symbolSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{textfieldSlices}</div>
@@ -2633,8 +2632,8 @@ class InspectorPage extends Component {
 
 
 
-		const contentClass = `inspector-page-content${(section === SECTIONS.PRESENTER) ? ' inspector-page-content-presenter' : ''}`;
-		const panelClass = `inspector-page-panel${(section === SECTIONS.PRESENTER) ? ' inspector-page-panel-presenter' : ''}`;
+		const contentClass = `inspector-page-content${(section === SECTIONS.EDIT) ? ' inspector-page-content-editor' : ''}`;
+		const panelClass = `inspector-page-panel${(section === SECTIONS.EDIT) ? ' inspector-page-panel-editor' : ''}`;
 
 		const baseOffset = {
 			x : (artboards.length < GRID.colsMax) ? GRID.padding.col * 0.5 : 0,
@@ -2663,11 +2662,11 @@ class InspectorPage extends Component {
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
 				<div className={contentClass} onWheel={this.handleWheelStart}>
-					{(percent < 100) && (<div className="upload-progress-bar-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.PRESENTER && !processing) ? 880 : 360}px)`}}>
+					{(percent < 100) && (<div className="upload-progress-bar-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.EDIT && !processing) ? 880 : 360}px)`}}>
 						<div className="upload-progress-bar" style={{ width : `${percent}%` }} />
 					</div>)}
 
-					<div className="inspector-page-marquee-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.PRESENTER && !processing) ? 880 : 360}px)`}}>
+					<div className="inspector-page-marquee-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.EDIT && !processing) ? 880 : 360}px)`}}>
 						{(upload && urlBanner && percent === 100) && (<MarqueeBanner
 							copyText={buildInspectorURL(upload)}
 							removable={true}
@@ -2776,7 +2775,7 @@ class InspectorPage extends Component {
 						))}
 					</div>)}
 
-					{(section === SECTIONS.PRESENTER) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-presenter-wrapper">
+					{(section === SECTIONS.EDIT) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-editor-wrapper">
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-split-width-content-wrapper inspector-page-panel-full-height-content-wrapper" style={{width:`${(i === 0) ? 520 : 360}px`}}>
 								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 202 : 58)}px)` }}>

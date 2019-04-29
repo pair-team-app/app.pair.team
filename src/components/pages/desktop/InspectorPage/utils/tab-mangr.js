@@ -42,7 +42,7 @@ export function resetTabSets(upload, artboards) {
 		}) : this.state.activeTabs;
 
 		this.setState({ tabSets, activeTabs,
-			artboard    : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
+			artboard    : (section === SECTIONS.EDIT && artboards.length > 0) ? artboards[0] : null,
 			slice       : null,
 			offset      : null,
 			hoverSlice  : null,
@@ -70,14 +70,14 @@ export function resetTabSets(upload, artboards) {
 		}) : this.state.activeTabs;
 
 		this.setState({ upload, tabSets, activeTabs,
-			artboard : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
+			artboard : (section === SECTIONS.EDIT && artboards.length > 0) ? artboards[0] : null,
 			slice    : null,
 			tooltip  : null,
 			linter   : null,
 			gist     : null
 		});
 
-	} else if (section === SECTIONS.PRESENTER) {
+	} else if (section === SECTIONS.EDIT) {
 		if (artboards.length > 0) {
 			const artboard = (this.state.artboard) ? this.state.artboard : artboards[0];
 
@@ -244,7 +244,7 @@ export function replaceTabSets(artboard, slice, offset) {
 			this.setState({ tabSets });
 		}
 
-	} else if (section === SECTIONS.PRESENTER) {
+	} else if (section === SECTIONS.EDIT) {
 		tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 			return (tabSet.map((tab, ii)=> {
 				if (i === 0) {
@@ -360,7 +360,7 @@ export function restoreTabSets(upload, artboard, slice) {
 				onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
 		}
 
-	} else if (section === SECTIONS.PRESENTER) {
+	} else if (section === SECTIONS.EDIT) {
 		tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 			return (tabSet.map((tab, ii)=> {
 				if (i === 0) {
