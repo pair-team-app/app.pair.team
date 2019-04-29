@@ -217,7 +217,7 @@ const InspectorFooter = (props)=> {
 				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'next-artboard'); props.onChangeArtboard(nextArtboard);}}><FontAwesome name="arrow-right" /></button>
 			</>)}
 
-			{(section !== SECTIONS.INSPECT) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection(SECTIONS.INSPECT)}>Free Inspect</button>)}
+			{(section !== SECTIONS.INSPECT) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection(SECTIONS.INSPECT)}>Inspect</button>)}
 			{(section !== SECTIONS.EDIT) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection(SECTIONS.EDIT)}>Edit</button>)}
 		</div>)}
 	</Row></div>);
@@ -2796,7 +2796,7 @@ class InspectorPage extends Component {
 											</div>)
 										: (<div className="inspector-page-panel-button-wrapper">
 												{/*<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download PDF'}</button>*/}
-												<button disabled={true} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Export'}</button>
+												<button disabled={true} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Compile'}</button>
 											</div>)
 									}
 								</div>
