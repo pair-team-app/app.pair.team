@@ -1704,13 +1704,13 @@ class InspectorPage extends Component {
 
 		trackEvent('button', `copy-${type}`);
 		const { processing } = this.props;
-		const { section, urlBanner } = this.state;
+		const { viewSize, urlBanner } = this.state;
 
 		this.props.onPopup({
 			type     : POPUP_TYPE_OK,
 			offset   : {
 				top   : (urlBanner << 0 && !processing) * 38,
-				right : (section === SECTIONS.EDIT && !processing) ? 880 : 360
+				right : window.innerWidth - viewSize.width
 			},
 			content  : (type === 'url' || msg.length >= 100) ? `Copied ${type} to clipboard` : msg,
 			duration : 1750
@@ -1993,13 +1993,13 @@ class InspectorPage extends Component {
 		trackEvent('button', `send-atom-${lang}`);
 
 		const { processing } = this.props;
-		const { section, urlBanner } = this.state;
+		const { viewSize, urlBanner } = this.state;
 
 		this.props.onPopup({
 			type     : POPUP_TYPE_OK,
 			offset   : {
 				top   : (urlBanner << 0 && !processing) * 38,
-				right : (section === SECTIONS.EDIT && !processing) ? 880 : 360
+				right : window.innerWidth - viewSize.width
 			},
 			content  : `Sending ${lang} snippet to Atom…`
 		});
@@ -2017,7 +2017,7 @@ class InspectorPage extends Component {
 		console.log('InspectorPage.handleSendSyntaxGist()', tab);
 
 		const { profile, processing } = this.props;
-		const { section, urlBanner, slice, linter } = this.state;
+		const { viewSize, urlBanner, slice, linter } = this.state;
 
 		const lang = (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Android') ? 'xml' : (tab.title === 'Bootstrap') ? 'html' : tab.title.toLowerCase();
 		trackEvent('button', `send-gist-${lang}`);
@@ -2026,7 +2026,7 @@ class InspectorPage extends Component {
 			type     : POPUP_TYPE_OK,
 			offset   : {
 				top   : (urlBanner << 0 && !processing) * 38,
-				right : (section === SECTIONS.EDIT && !processing) ? 880 : 360
+				right : window.innerWidth - viewSize.width
 			},
 			content  : `Creating “${Strings.slugifyURI(slice.title)}.${lang}” gist on GitHub…`
 		});
@@ -2051,13 +2051,13 @@ class InspectorPage extends Component {
 		trackEvent('button', `send-linter-${lang}`);
 
 		const { processing } = this.props;
-		const { section, urlBanner } = this.state;
+		const { viewSize, urlBanner } = this.state;
 
 		this.props.onPopup({
 			type     : POPUP_TYPE_OK,
 			offset   : {
 				top   : (urlBanner << 0 && !processing) * 38,
-				right : (section === SECTIONS.EDIT && !processing) ? 880 : 360
+				right : window.innerWidth - viewSize.width
 			},
 			content  : `Sending ${lang} snippet to ${linter}…`
 		});
@@ -2662,19 +2662,18 @@ class InspectorPage extends Component {
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
 				<div className={contentClass} onWheel={this.handleWheelStart}>
-					{(percent < 100) && (<div className="upload-progress-bar-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.EDIT && !processing) ? 880 : 360}px)`}}>
+					{(percent < 100) && (<div className="upload-progress-bar-wrapper" style={{width:`${(section === SECTIONS.EDIT && !processing) ? 33 : 67}%`}}>
 						<div className="upload-progress-bar" style={{ width : `${percent}%` }} />
 					</div>)}
 
-					{/*<div className="inspector-page-marquee-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.EDIT && !processing) ? 880 : 360}px)`}}>*/}
-					<div className="inspector-page-marquee-wrapper" style={{width:`${(section === SECTIONS.EDIT && !processing) ? 33 : 66}%`}}>
+					<div className="inspector-page-marquee-wrapper" style={{width:`${(section === SECTIONS.EDIT && !processing) ? 33 : 67}%`}}>
 						{(upload && urlBanner && percent === 100) && (<MarqueeBanner
 							copyText={buildInspectorURL(upload)}
 							removable={true}
 							outro={!urlBanner}
 							onCopy={()=> this.handleClipboardCopy('url', buildInspectorURL(upload))}
 							onClose={()=> {trackEvent('button', 'close-url-banner'); this.setState({ urlBanner : false });}}>
-							<div className="marquee-banner-content marquee-banner-content-url"><span className="txt-bold" style={{paddingRight:'5px'}}>Share on Slack:</span> {buildInspectorURL(upload)}</div>
+							<div className="marquee-banner-content marquee-banner-content-url"><span className="txt-bold" style={{paddingRight:'5px'}}>Share on Slack:</span> {buildInspectorPath(upload)}</div>
 						</MarqueeBanner>)}
 
 						{(!processing && tooltip) && (<MarqueeBanner
