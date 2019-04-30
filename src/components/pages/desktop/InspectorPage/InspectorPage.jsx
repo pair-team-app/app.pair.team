@@ -10,7 +10,6 @@ import cookie from 'react-cookies';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Dropzone from 'react-dropzone';
 import FontAwesome from 'react-fontawesome';
-import fs from 'fs';
 // import { Helmet } from 'react-helmet';
 import ImageLoader from 'react-loading-image';
 import Moment from 'react-moment';
