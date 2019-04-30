@@ -261,7 +261,90 @@ export function toGridHTML(slices) {
 
 	return ({
 		html   : inlineHTML,
-		syntax : `${html.replace(/(&nbsp)+;/g, '\t')}`,
+// 		syntax : `${html.replace(/(&nbsp)+;/g, '\t')}`
+		syntax : `<!DOCTYPE html>
+<html>
+    <head>
+        <link href="./img/favicon.png" rel="shortcut icon"/>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0" name="viewport"/>
+        <link href="./css/step0.css" rel="stylesheet" type="text/css"/>
+        <meta content="Launchpad by Anima" name="author">
+        </meta>
+    </head>
+    <body style="margin: 0;
+ background: rgba(67, 175, 251, 1.0);">
+        <input id="anPageName" name="page" type="hidden" value="step0"/>
+        <div class="step0">
+            <div style="width: 375px; height: 100%; position:relative; margin:auto;">
+                <div class="map">
+                    <img anima-src="./img/step-1-background.png" class="background" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    <img anima-src="./img/step-0-bitmap.png" class="bitmap" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                </div>
+                <div class="header">
+                    <div class="background">
+                        <div class="background1">
+                        </div>
+                        <div class="line">
+                        </div>
+                    </div>
+                    <img anima-src="./img/step-1-shape.svg" class="shape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    <img anima-src="./img/step-3-search.svg" class="search" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    <div class="tableft">
+                        <div class="left">
+                            <img anima-src="./img/step-2-background-1@2x.png" class="background1" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                            <img anima-src="./img/step-1-map-icon-active.svg" class="mapiconactive" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                        </div>
+                        <div class="right">
+                            <img anima-src="./img/step-3-background-2@2x.png" class="background1" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                            <img anima-src="./img/step-1-list-icon-tab-nonactive.svg" class="listicontabnonactive" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="background">
+                        <img anima-src="./img/step-1-rectangle-2.png" class="rectangle2" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    </div>
+                    <div class="signup anima-valign-text-middle">
+                        Sign Up
+                    </div>
+                    <div class="login anima-valign-text-middle">
+                        Login
+                    </div>
+                </div>
+                <div class="tint">
+                    <img anima-src="./img/step-3-svg-tint-background.svg" class="svgtintbackground" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                </div>
+                <div class="button">
+                    <div class="background">
+                        <div class="rectangle3">
+                        </div>
+                        <img anima-src="./img/step-1-rectangle-3@2x.png" class="rectangle31" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    </div>
+                    <div class="next anima-valign-text-middle">
+                        <span><span class="span1">Nex</span><span class="span2">t</span>
+    </span>
+                    </div>
+                </div>
+                <div class="copy">
+                    <div class="upland anima-valign-text-middle">
+                        UPLAND
+                    </div>
+                    <div class="apropertytradingg anima-valign-text-middle">
+                        <span><span class="span1">a property trading gam</span><span class="span2">e</span>
+    </span>
+                    </div>
+                    <div class="welcometo anima-valign-text-middle">
+                        WELCOME TO
+                    </div>
+                    <div class="welcometouplanda anima-valign-text-middle">
+                        Welcome to Upland, a very unique property trading game where you buy &amp; sell real-world locations.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>`
 	});
 
 // 	html += `${TAB}${TAB}: ;\n`;

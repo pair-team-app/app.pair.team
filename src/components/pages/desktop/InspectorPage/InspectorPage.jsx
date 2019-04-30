@@ -632,333 +632,172 @@ class InspectorPage extends Component {
 
 			const rendered = [{
 				lang    : 'html',
-				content : `<html>
-    <head>
-        <link href="./img/favicon.png" rel="shortcut icon"/>
-        <meta charset="utf-8"/>
-        <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0" name="viewport"/>
-        <link href="./css/mapTutoiral1.css" rel="stylesheet" type="text/css"/>
-        <meta content="Launchpad by Anima" name="author">
-        </meta>
-    </head>
-    <body style="margin: 0;
- background: rgba(255, 255, 255, 1.0);">
-        <input id="anPageName" name="page" type="hidden" value="maptutoiral1"/>
-        <div class="maptutoiral1">
-            <div style="width: 414px; height: 100%; position:relative; margin:auto;">
-                <div class="background">
-                    <div class="mask">
-                    </div>
-                    <div class="group8">
-                        <div class="group9">
-                            <img anima-src="./img/not-available-combined-shape-19.png" class="combinedshape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                            <img anima-src="./img/not-available-combined-shape-19.png" class="combinedshape1" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                            <img anima-src="./img/not-available-combined-shape-19.png" class="combinedshape2" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+				content : `<input id="anPageName" name="page" type="hidden" value="step0"><div class="step0" style="-webkit-text-size-adjust:none;width:100%;min-width:375px;height:100vh;min-height:812px;position:relative;overflow:hidden;margin:0px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background-color:rgba(67, 175, 251, 1.0);">
+            <div style="width:375px;height:100%;position:relative;margin:auto;-webkit-text-size-adjust:none;">
+                <div class="map" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:812px;width:375px;position:absolute;margin:0;left:0px;overflow:hidden;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
+                    <img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-1-background.png" class="background" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
+  top                 : 0px;
+  height              : 812px;
+  width               : 375px;
+  position            : absolute;
+  margin              : 0;
+  left                : 0px;
+  -ms-transform       : rotate(0deg); 
+  -webkit-transform   : rotate(0deg); 
+  transform           : rotate(0deg);"><img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-0-bitmap.png" class="bitmap" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
+  top                 : -78px;
+  height              : 877px;
+  width               : 1451px;
+  position            : absolute;
+  margin              : 0;
+  left                : -518px;
+  -ms-transform       : rotate(0deg); 
+  -webkit-transform   : rotate(0deg); 
+  transform           : rotate(0deg);">
+</div>
+                <div class="header" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:68px;width:375px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
+                    <div class="background" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:68px;width:375px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
+                        <div class="background1" style="-webkit-text-size-adjust:none;background-color:rgba(255, 255, 255, 1.0);top:0px;height:68px;width:375px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
+                        </div>
+                        <div class="line" style="-webkit-text-size-adjust:none;background-color:rgba(216, 216, 216, 1.0);top:67px;height:1px;width:375px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
                         </div>
                     </div>
-                    <div class="group">
-                        <div class="group10">
-                            <div class="group3">
-                                <img anima-src="./img/map-tutoiral-1-combined-shape-3.png" class="combinedshape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                <div class="group7">
-                                    <div class="group71">
-                                        <img anima-src="./img/map-tutoiral-1-line-2.png" class="line2" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line1" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="linecopy" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="linecopy2" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="linecopy3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="linecopy4" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-2-1@2x.png" class="line21" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-2-2@2x.png" class="line22" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-2-5@2x.png" class="line23" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-2-4@2x.png" class="line24" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-2-5@2x.png" class="line25" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-2-6@2x.png" class="line26" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line4" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line5" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line6" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line7" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-31.png" class="line8" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-9@2x.png" class="line9" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-9@2x.png" class="line10" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-9@2x.png" class="line11" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-12@2x.png" class="line12" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-13@2x.png" class="line13" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-14@2x.png" class="line14" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-31.png" class="line15" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-31.png" class="line16" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line17" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line18" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-21@2x.png" class="line19" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-21@2x.png" class="line20" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-21@2x.png" class="line27" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-21@2x.png" class="line28" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-21@2x.png" class="line29" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-5.png" class="line30" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-25.png" class="line31" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-25.png" class="line32" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-25.png" class="line33" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-25.png" class="line34" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-34.png" class="line35" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-30.png" class="line36" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-31.png" class="line37" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-31.png" class="line38" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-31.png" class="line39" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-34.png" class="line40" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line41" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-37@2x.png" class="line42" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-37@2x.png" class="line43" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-43@2x.png" class="line44" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-40@2x.png" class="line45" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-40@2x.png" class="line46" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-40@2x.png" class="line47" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-42@2x.png" class="line48" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-43@2x.png" class="line49" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line50" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line51" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line52" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line53" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line54" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line55" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-50@2x.png" class="line56" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-51.png" class="line57" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-52.png" class="line58" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-2-7@2x.png" class="line210" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-3-2@2x.png" class="line310" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-3-2@2x.png" class="line311" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-3-2@2x.png" class="line312" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-53@2x.png" class="line59" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-54@2x.png" class="line60" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-55@2x.png" class="line61" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-56@2x.png" class="line62" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-57@2x.png" class="line63" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-58@2x.png" class="line64" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-59@2x.png" class="line65" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line-60@2x.png" class="line66" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line67" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line68" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line69" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line70" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line71" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line72" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                        <img anima-src="./img/map-tutoiral-1-line@2x.png" class="line73" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                                    </div>
-                                </div>
-                                <img anima-src="./img/map-tutoiral-1-combined-shape-copy.png" class="combinedshapecopy" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                            </div>
-                        </div>
+                    <img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-1-shape.svg" class="shape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
+  top                 : 19px;
+  height              : 30px;
+  width               : 30px;
+  position            : absolute;
+  margin              : 0;
+  left                : 20px;
+  -ms-transform       : rotate(0deg); 
+  -webkit-transform   : rotate(0deg); 
+  transform           : rotate(0deg);"><img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-3-search.svg" class="search" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
+  top                 : 18px;
+  height              : 32px;
+  width               : 30px;
+  position            : absolute;
+  margin              : 0;
+  left                : 325px;
+  -ms-transform       : rotate(0deg); 
+  -webkit-transform   : rotate(0deg); 
+  transform           : rotate(0deg);"><div class="tableft" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:13px;height:42px;width:196px;position:absolute;margin:0;left:90px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
+                        <div class="left" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:42px;width:99px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
+                            <img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-2-background-1@2x.png" class="background1" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
+  top                 : 0px;
+  height              : 42px;
+  width               : 99px;
+  position            : absolute;
+  margin              : 0;
+  left                : 0px;
+  -ms-transform       : rotate(0deg); 
+  -webkit-transform   : rotate(0deg); 
+  transform           : rotate(0deg);"><img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-1-map-icon-active.svg" class="mapiconactive" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
+  top                 : 7px;
+  height              : 28px;
+  width               : 28px;
+  position            : absolute;
+  margin              : 0;
+  left                : 36px;
+  -ms-transform       : rotate(0deg); 
+  -webkit-transform   : rotate(0deg); 
+  transform           : rotate(0deg);">
+</div>
+                        <div class="right" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:42px;width:99px;position:absolute;margin:0;left:97px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
+                            <img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-3-background-2@2x.png" class="background1" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
+  top                 : 0px;
+  height              : 42px;
+  width               : 99px;
+  position            : absolute;
+  margin              : 0;
+  left                : 0px;
+  -ms-transform       : rotate(0deg); 
+  -webkit-transform   : rotate(0deg); 
+  transform           : rotate(0deg);"><img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-1-list-icon-tab-nonactive.svg" class="listicontabnonactive" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
+  top                 : 7px;
+  height              : 28px;
+  width               : 22px;
+  position            : absolute;
+  margin              : 0;
+  left                : 39px;
+  -ms-transform       : rotate(0deg); 
+  -webkit-transform   : rotate(0deg); 
+  transform           : rotate(0deg);">
+</div>
                     </div>
                 </div>
-                <div class="forsale">
-                    <img anima-src="./img/map-tutoiral-1-path-2@2x.png" class="path2" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                    <img anima-src="./img/map-tutoiral-1-path-2-1@2x.png" class="path21" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                    <img anima-src="./img/map-tutoiral-1-path-2-2@2x.png" class="path22" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                    <img anima-src="./img/map-tutoiral-1-path-2-3@2x.png" class="path23" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                    <img anima-src="./img/map-tutoiral-1-path-2-4@2x.png" class="path24" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                    <div class="available anima-valign-text-middle">
-                        Available
-                    </div>
-                    <div class="available1 anima-valign-text-middle">
-                        Available
-                    </div>
-                    <div class="myproperty anima-valign-text-middle">
-                        My<br />Property
-                    </div>
-                    <div class="forsale1 anima-valign-text-middle">
-                        For <br />Sale
-                    </div>
-                    <div class="available2 anima-valign-text-middle">
-                        Available
-                    </div>
-                </div>
-                <div class="footer">
-                    <div class="background1">
-                        <div class="rectangle2">
-                        </div>
-                    </div>
-                    <div class="signup anima-valign-text-middle">
+                <div class="footer" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:763px;height:48px;width:375px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
+                    <div class="background" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:48px;width:375px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
+                        <img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-1-rectangle-2.png" class="rectangle2" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
+  top                 : 0px;
+  height              : 48px;
+  width               : 375px;
+  position            : absolute;
+  margin              : 0;
+  left                : 0px;
+  -ms-transform       : rotate(0deg); 
+  -webkit-transform   : rotate(0deg); 
+  transform           : rotate(0deg);">
+</div>
+                    <div class="signup anima-valign-text-middle" style='-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:7px;height:36px;width:66px;position:absolute;margin:0;left:20px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);font-family:"AvenirNext-DemiBold", Helvetica, Arial, serif;font-size:15.0px;color:rgba(62, 62, 62, 1.0);text-align:left;line-height:20.0px;'>
                         Sign Up
                     </div>
-                    <div class="login anima-valign-text-middle">
+                    <div class="login anima-valign-text-middle" style='-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:7px;height:36px;width:66px;position:absolute;margin:0;left:289px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);font-family:"AvenirNext-DemiBold", Helvetica, Arial, serif;font-size:15.0px;color:rgba(62, 62, 62, 1.0);text-align:right;line-height:20.0px;'>
                         Login
                     </div>
                 </div>
-                <div class="footer1">
-                    <div class="background1">
-                        <div class="rectangle2">
+                <div class="tint" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:812px;width:375px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
+                    <img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-3-svg-tint-background.svg" class="svgtintbackground" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
+  top                 : 0px;
+  height              : 812px;
+  width               : 375px;
+  position            : absolute;
+  margin              : 0;
+  left                : 0px;
+  -ms-transform       : rotate(0deg); 
+  -webkit-transform   : rotate(0deg); 
+  transform           : rotate(0deg);">
+</div>
+                <div class="button" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:669px;height:70px;width:286px;position:absolute;margin:0;left:45px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
+                    <div class="background" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:70px;width:286px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
+                        <div class="rectangle3" style="-webkit-text-size-adjust:none;background-color:rgba(2, 160, 0, 1.0);top:0px;height:70px;box-sizing:border-box;width:286px;position:absolute;margin:0;left:0px;border-style:solid;border-width:5px;border-color:rgba(255, 255, 255, 1.0);-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
                         </div>
-                    </div>
-                    <div class="user">
-                        <img anima-src="./img/not-available-combined-shape-4@2x.png" class="combinedshape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                        <div class="idanzuck anima-valign-text-middle">
-                            IdanZuck
-                        </div>
-                    </div>
-                    <div class="portfolio">
-                        <div class="a13698 anima-valign-text-middle">
-                            $136.98
-                        </div>
-                        <img anima-src="./img/signed-out-shape@2x.png" class="shape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                    </div>
-                    <div class="myportfolio anima-valign-text-middle">
-                        My Portfolio
+                        <img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-1-rectangle-3@2x.png" class="rectangle31" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
+  top                 : 58px;
+  height              : 7px;
+  width               : 276px;
+  position            : absolute;
+  margin              : 0;
+  left                : 5px;
+  -ms-transform       : rotate(0deg); 
+  -webkit-transform   : rotate(0deg); 
+  transform           : rotate(0deg);">
+</div>
+                    <div class="next anima-valign-text-middle" style='-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:6px;height:53px;width:278px;position:absolute;margin:0;left:4px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);font-family:"AvenirNext-Bold", Helvetica, Arial, serif;font-size:25.0px;color:rgba(255, 255, 255, 1.0);text-align:center;letter-spacing:2.0px;line-height:34.0px;'>
+                        <span><span class="span1">Nex</span><span class="span2">t</span>
+    </span>
                     </div>
                 </div>
-                <div class="header">
-                    <div class="background1">
-                        <div class="rectangle">
-                        </div>
+                <div class="copy" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:225px;height:269px;width:310px;position:absolute;margin:0;left:33px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
+                    <div class="upland anima-valign-text-middle" style='-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:30px;height:95px;width:312px;position:absolute;margin:0;left:-1px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);font-family:"Helvetica", Helvetica, Arial, serif;font-size:70.0px;color:rgba(240, 255, 0, 1.0);text-align:center;letter-spacing:10.0px;line-height:84.0px;'>
+                        UPLAND
                     </div>
-                    <div class="tab">
-                        <div class="right">
-                            <img anima-src="./img/not-available-rectangle-3-11@2x.png" class="rectangle3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                            <div class="listview anima-valign-text-middle">
-                                List View
-                            </div>
-                        </div>
-                        <div class="left">
-                            <img anima-src="./img/not-available-rectangle-3-21@2x.png" class="rectangle3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                            <div class="mapview anima-valign-text-middle">
-                                Map View
-                            </div>
-                        </div>
+                    <div class="apropertytradingg anima-valign-text-middle" style='-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:118px;height:36px;width:312px;position:absolute;margin:0;left:-1px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);font-family:"Helvetica", Helvetica, Arial, serif;font-size:13.0px;color:rgba(255, 255, 255, 1.0);text-align:center;letter-spacing:3.5px;line-height:128.0px;'>
+                        <span><span class="span1">a property trading gam</span><span class="span2">e</span>
+    </span>
                     </div>
-                    <div class="search">
-                        <img anima-src="./img/not-available-shape-22@2x.png" class="shape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
+                    <div class="welcometo anima-valign-text-middle" style='-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:36px;width:312px;position:absolute;margin:0;left:-1px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);font-family:"Helvetica", Helvetica, Arial, serif;font-size:13.0px;color:rgba(255, 255, 255, 1.0);text-align:center;letter-spacing:3.5px;line-height:128.0px;'>
+                        WELCOME TO
                     </div>
-                    <div class="home">
-                        <img anima-src="./img/signed-out-logo-1@2x.png" class="logo" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                    </div>
-                </div>
-                <div class="header1">
-                    <div class="background1">
-                        <div class="rectangle">
-                        </div>
-                    </div>
-                    <div class="tab">
-                        <div class="right">
-                            <img anima-src="./img/not-available-rectangle-3-11@2x.png" class="rectangle3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                            <div class="group21">
-                                <div class="rectangle4">
-                                </div>
-                                <div class="rectangle41">
-                                </div>
-                                <div class="rectangle42">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="left">
-                            <img anima-src="./img/not-available-rectangle-3-21@2x.png" class="rectangle3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                            <img anima-src="./img/not-available-shape-18@2x.png" class="shape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                        </div>
-                    </div>
-                    <div class="search">
-                        <img anima-src="./img/not-available-shape-22@2x.png" class="shape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                    </div>
-                    <div class="home">
-                        <img anima-src="./img/signed-out-logo-1@2x.png" class="logo" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                    </div>
-                </div>
-                <div class="group2">
-                    <img anima-src="./img/map-tutoiral-1-rectangle-3-4.png" class="rectangle3" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                    <div class="a25propertiesavaila anima-valign-text-middle">
-                        25 properties available in San Francisco, CA
-                    </div>
-                    <div class="group4">
-                        <img anima-src="./img/map-tutoiral-1-line-4-1@2x.png" class="line4" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                        <img anima-src="./img/map-tutoiral-1-line-4-2@2x.png" class="line41" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                    </div>
-                    <div class="group21">
-                        <img anima-src="./img/map-tutoiral-1-combined-shape-5@2x.png" class="combinedshape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                        <div class="path7">
-                            <img anima-src="./img/signed-out-path-7@2x.png" class="path71" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="/>
-                        </div>
+                    <div class="welcometouplanda anima-valign-text-middle" style='-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:158px;height:111px;width:312px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);font-family:"AvenirNext-DemiBold", Helvetica, Arial, serif;font-size:15.0px;color:rgba(255, 255, 255, 1.0);text-align:justify;line-height:24.0px;'>
+                        Welcome to Upland, a very unique property trading game where you buy &amp; sell real-world locations.
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Scripts -->
-        <script>
-            anima_isHidden = function(e) {
-                if (!(e instanceof HTMLElement)) return !1;
-                if (getComputedStyle(e).display == "none") return !0; else if (e.parentNode && anima_isHidden(e.parentNode)) return !0;
-                return !1;
-            };
-            anima_loadAsyncSrcForTag = function(tag) {
-                var elements = document.getElementsByTagName(tag);
-                var toLoad = [];
-                for (var i = 0; i < elements.length; i++) {
-                    var e = elements[i];
-                    var src = e.getAttribute("src");
-                    var loaded = (src != undefined && src.length > 0 && src != 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==');
-                    if (loaded) continue;
-                    var asyncSrc = e.getAttribute("anima-src");
-                    if (asyncSrc == undefined || asyncSrc.length == 0) continue;
-                    if (anima_isHidden(e)) continue;
-                    toLoad.push(e);
-                }
-                toLoad.sort(function(a, b) {
-                    return anima_getTop(a) - anima_getTop(b);
-                });
-                for (var i = 0; i < toLoad.length; i++) {
-                    var e = toLoad[i];
-                    var asyncSrc = e.getAttribute("anima-src");
-                    e.setAttribute("src", asyncSrc);
-                }
-            };
-            anima_pauseHiddenVideos = function(tag) {
-                var elements = document.getElementsByTagName("video");
-                for (var i = 0; i < elements.length; i++) {
-                    var e = elements[i];
-                    var isPlaying = !!(e.currentTime > 0 && !e.paused && !e.ended && e.readyState > 2);
-                    var isHidden = anima_isHidden(e);
-                    if (!isPlaying && !isHidden && e.getAttribute("autoplay") == "autoplay") {
-                        e.play();
-                    } else if (isPlaying && isHidden) {
-                        e.pause();
-                    }
-                }
-            };
-            anima_loadAsyncSrc = function(tag) {
-                anima_loadAsyncSrcForTag("img");
-                anima_loadAsyncSrcForTag("iframe");
-                anima_loadAsyncSrcForTag("video");
-                anima_pauseHiddenVideos();
-            };
-            var anima_getTop = function(e) {
-                var top = 0;
-                do {
-                    top += e.offsetTop || 0;
-                    e = e.offsetParent;
-                } while (e);
-                return top;
-            };
-            anima_loadAsyncSrc();
-            anima_old_onResize = window.onresize;
-            anima_new_onResize = undefined;
-            anima_updateOnResize = function() {
-                if (anima_new_onResize == undefined || window.onresize != anima_new_onResize) {
-                    anima_new_onResize = function(x) {
-                        if (anima_old_onResize != undefined) anima_old_onResize(x);
-                        anima_loadAsyncSrc();
-                    };
-                    window.onresize = anima_new_onResize;
-                    setTimeout(function() {
-                        anima_updateOnResize();
-                    }, 3000);
-                }
-            };
-            anima_updateOnResize();
-            setTimeout(function() {
-                anima_loadAsyncSrc();
-            }, 200);
-        </script>
-        <!-- End of Scripts -->
     </body>
 </html>`
 			}];
+
 			this.setState({ rendered });
 		}
 
@@ -1216,9 +1055,10 @@ class InspectorPage extends Component {
 									return (Object.assign({}, tab, {
 										type     : 'component',
 										enabled  : ((upload.state << 0) === 3),
-										contents : <CodeEditor lang={tab.meta.lang.split(',').pop()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
-										syntax   : langs[ii].syntax,
-										html     : langs[ii].html
+										contents : <CodeEditor lang={tab.meta.lang.split(',').shift()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+										meta     : { ...tab.meta,
+											syntax : langs[ii].syntax
+										}
 									}));
 
 								} else {
@@ -1290,9 +1130,10 @@ class InspectorPage extends Component {
 					return (tabSet.map((tab, ii)=> {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : <CodeEditor lang={tab.meta.lang.split(',').pop()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
-							syntax   : langs[ii].syntax,
-							html     : langs[ii].html
+							contents : <CodeEditor lang={tab.meta.lang.split(',').shift()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+							meta     : { ...tab.meta,
+								syntax : langs[ii].syntax
+							}
 						}));
 					}));
 				}
@@ -1344,9 +1185,10 @@ class InspectorPage extends Component {
 					if (i === 0) {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : <CodeEditor lang={tab.meta.lang.split(',').pop()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
-							syntax   : langs[ii].syntax,
-							html     : langs[ii].html
+							contents : <CodeEditor lang={tab.meta.lang.split(',').shift()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+							meta     : { ...tab.meta,
+								syntax : langs[ii].syntax
+							}
 						}));
 
 					} else {
@@ -1409,9 +1251,10 @@ class InspectorPage extends Component {
 					return (tabSet.map((tab, ii)=> {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : <CodeEditor lang={tab.meta.lang.split(',').pop()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
-							syntax   : langs[ii].syntax,
-							html     : langs[ii].html
+							contents : <CodeEditor lang={tab.meta.lang.split(',').shift()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+							meta     : { ...tab.meta,
+								syntax : langs[ii].syntax
+							}
 						}));
 					}));
 				}
@@ -1460,9 +1303,10 @@ class InspectorPage extends Component {
 					if (i === 0) {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : <CodeEditor lang={tab.meta.lang.split(',').pop()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
-							syntax   : langs[ii].syntax,
-							html     : langs[ii].html
+							contents : <CodeEditor lang={tab.meta.lang.split(',').shift()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+							meta     : { ...tab.meta,
+								syntax : langs[ii].syntax
+							}
 						}));
 
 					} else {
@@ -1752,7 +1596,13 @@ class InspectorPage extends Component {
 	};
 
 	handleEditorChange = (val, event)=> {
-// 		console.log('InspectorPage.handleEditorChange()', val, event);
+		console.log('InspectorPage.handleEditorChange()', val, event);
+
+		const rendered = Object.assign({}, { ...this.state.rendered[0],
+			content : val
+		});
+
+		this.setState({ rendered : [rendered] });
 	};
 
 	handleEditorMounted = (editor, monaco)=> {
@@ -1768,7 +1618,9 @@ class InspectorPage extends Component {
 				return ((i === 0) ? tab : Object.assign({}, tab, {
 					enabled  : true,
 					lang     : lang,
-					contents : <span style={{position:'relative'}} dangerouslySetInnerHTML={{ __html : html }} />
+// 					contents : <span style={{position:'relative'}} dangerouslySetInnerHTML={{ __html : html }} />
+// 					contents : <span style={{position:'relative'}} dangerouslySetInnerHTML={{ __html : this.state.rendered[0].content }} />
+					contents : <iframe src={"http://cdn.designengine.ai/renders/249/html/step0.html"} width={"100%"} height={"100%"} frameborder={"0"} sandbox={"allow-modals allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"} style={{border:'none'}} />
 				}));
 			}));
 		});
@@ -2008,7 +1860,7 @@ class InspectorPage extends Component {
 			action  : 'SYNTAX_SEND',
 			payload : {
 				lang   : lang,
-				syntax : tab.syntax
+				syntax : tab.meta.syntax
 			}
 		}, '*');
 	};
@@ -2032,7 +1884,7 @@ class InspectorPage extends Component {
 		});
 
 		this.setState({ gist : { busy : true }}, ()=> {
-			createGist(profile.github.accessToken, `${Strings.slugifyURI(slice.title)}.${lang}`, tab.syntax, `Design Engine auto generated ${(linter) ? 'linted ' : ''}syntax v1`, true, (data)=> {
+			createGist(profile.github.accessToken, `${Strings.slugifyURI(slice.title)}.${lang}`, tab.meta.syntax, `Design Engine auto generated ${(linter) ? 'linted ' : ''}syntax v1`, true, (data)=> {
 				this.setState({ gist : {
 						busy : false,
 						url  : data.html_url
@@ -2090,7 +1942,7 @@ class InspectorPage extends Component {
 			axios.post(LINTER_ENDPT_URL, {
 				lang   : lang,
 				config : '',
-				syntax : tab.syntax
+				syntax : Strings.sliceLines(tab.meta.syntax, 5)
 			}, {
 				headers : {
 					'Content-Type' : 'multipart/form-data',
@@ -2738,7 +2590,7 @@ class InspectorPage extends Component {
 									/>
 									{(i === 0)
 										? (<div className="inspector-page-panel-button-wrapper">
-												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
+												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].meta.syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].meta.syntax : ''}>
 													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
 												</CopyToClipboard>
 												<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>
@@ -2789,7 +2641,7 @@ class InspectorPage extends Component {
 
 									{(i === 0)
 										? (<div className="inspector-page-panel-button-wrapper">
-												<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleEditorRun(activeTabs[i].meta.lang.split(',').pop(), activeTabs[i].html)}>{(processing) ? 'Processing' : 'Run'}</button>
+												<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleEditorRun(activeTabs[i].meta.lang.split(',').pop(), activeTabs[i].meta.syntax)}>{(processing) ? 'Processing' : 'Run'}</button>
 												<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>
 												<button disabled={!atomExtension || !slice || (linter && linter.busy) || (gist && gist.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Atom'}</button>
 												<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>
