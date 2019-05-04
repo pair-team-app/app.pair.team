@@ -111,7 +111,7 @@ export function toBootstrap(slices) {
 	const parentSlice = slices.shift();
 	let html = `/**\n * ${DISCLAIMER.replace('__LANG__', 'Bootstrap').replace(/\n__/g, '\n **//* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, '\n * ')}\n\n\n`;
 	if (parentSlice.type === 'background' || parentSlice.type === 'group') {
-		html += `$body-bg: ${parentSlice.meta.fillColor.toUpperCase()};\n\n`;
+		html += `$body-bg: ${(typeof parentSlice.meta.fillColor === 'string') ? parentSlice.meta.fillColor.toUpperCase() : `rgba(${parentSlice.meta.fillColor.r}, ${parentSlice.meta.fillColor.g}, ${parentSlice.meta.fillColor.b}, ${parentSlice.meta.fillColor.a})`};\n\n`;
 	}
 	html += `@import "../node_modules/bootstrap/scss/bootstrap";\n\n`;
 	html += `<div class="card" style="width: ${parentSlice.meta.frame.size.width}px">\n`;
@@ -146,7 +146,7 @@ export function toCSS(slices) {
 			html += `${TAB}font-family: "${`${font.family} ${font.name}`.trim()}", sans-serif;\n`;
 			html += `${TAB}font-weight: ${font.weight};\n`;
 			html += `${TAB}font-size: ${font.size}px;\n`;
-			html += `${TAB}color: ${font.color.toUpperCase()};\n`;
+			html += `${TAB}color: ${(typeof font.color === 'string') ? font.color.toUpperCase() : `rgba(${font.color.r}, ${font.color.g}, ${font.color.b}, ${font.color.a})`};\n`;
 			html += `${TAB}letter-spacing: ${font.kerning.toFixed(2)}px;\n`;
 			html += `${TAB}line-height: ${font.lineHeight}px;\n`;
 			html += `${TAB}text-align: ${font.alignment.toLowerCase()};\n`;
@@ -155,7 +155,7 @@ export function toCSS(slices) {
 			html += `${TAB}background: url("${URIs.lastComponent(slice.filename)}@3x.png");\n`;
 
 		} else if (slice.type === 'background' || slice.type === 'group') {
-			html += `${TAB}background-color: ${slice.meta.fillColor.toUpperCase()};\n`;
+			html += `${TAB}background-color: ${(typeof slice.meta.fillColor === 'string') ? slice.meta.fillColor.toUpperCase() : `rgba(${slice.meta.fillColor.r}, ${slice.meta.fillColor.g}, ${slice.meta.fillColor.b}, ${slice.meta.fillColor.a})`};\n`;
 		}
 		html += `}\n`;
 	});
@@ -185,7 +185,7 @@ export function toGridHTML(slices) {
 		'width'                 : `100%`,
 		'height'                : `100%`,
 		'grid-template-columns' : `${Strings.repeat(' auto', slices.length).trim()}`,
-		'background'            : `${parentSlice.meta.fillColor.toUpperCase()} url('${parentSlice.filename}@1x.png') no-repeat`,
+		'background'            : `${(typeof parentSlice.meta.fillColor === 'string') ? parentSlice.meta.fillColor.toUpperCase() : `rgba(${parentSlice.meta.fillColor.r}, ${parentSlice.meta.fillColor.g}, ${parentSlice.meta.fillColor.b}, ${parentSlice.meta.fillColor.a})`} url('${parentSlice.filename}@1x.png') no-repeat`,
 		'background-size'       : `${(parentSlice.meta.frame.size.width * 0.5) << 0}px ${(parentSlice.meta.frame.size.height * 0.5) << 0}px`
 	};
 
@@ -196,7 +196,7 @@ export function toGridHTML(slices) {
 	html += `${TAB}.grid-container {\n`;
 	html += `${TAB}${TAB}display: grid;\n`;
 	html += `${TAB}${TAB}grid-template-columns: ${Strings.repeat(' auto', slices.length).trim()};\n`;
-	html += `${TAB}${TAB}background-color: ${parentSlice.meta.fillColor.toUpperCase()};\n`;
+	html += `${TAB}${TAB}background-color: ${(typeof parentSlice.meta.fillColor === 'string') ? parentSlice.meta.fillColor.toUpperCase() : `rgba(${parentSlice.meta.fillColor.r}, ${parentSlice.meta.fillColor.g}, ${parentSlice.meta.fillColor.b}, ${parentSlice.meta.fillColor.a})`};\n`;
 	html += `${TAB}}\n`;
 	html += `${TAB}.grid-container > div {\n`;
 	html += `${TAB}${TAB}padding: ${Maths.randomInt(5, 15)}px;\n`;
@@ -227,7 +227,7 @@ export function toGridHTML(slices) {
 				html += `${TAB}${TAB}font-family: "${`${font.family} ${font.name}`.trim()}", sans-serif;\n`;
 				html += `${TAB}${TAB}font-weight: ${font.weight};\n`;
 				html += `${TAB}${TAB}font-size: ${font.size}px;\n`;
-				html += `${TAB}${TAB}color: ${font.color.toUpperCase()};\n`;
+				html += `${TAB}${TAB}color: ${(typeof font.color === 'string') ? font.color.toUpperCase() : `rgba(${font.color.r}, ${font.color.g}, ${font.color.b}, ${font.color.a})`};\n`;
 				html += `${TAB}${TAB}letter-spacing: ${font.kerning.toFixed(2)}px;\n`;
 				html += `${TAB}${TAB}line-height: ${font.lineHeight}px;\n`;
 				html += `${TAB}${TAB}text-align: ${font.alignment.toLowerCase()};\n`;
@@ -236,7 +236,7 @@ export function toGridHTML(slices) {
 					'font-family'    : `'${`${font.family} ${font.name}`.trim()}', sans-serif`,
 					'font-weight'    : `${font.weight}`,
 					'font-size'      : `${(font.size * 0.5) << 0}px`,
-					'color'          : `${font.color.toUpperCase()}`,
+					'color'          : `${(typeof font.color === 'string') ? font.color.toUpperCase() : `rgba(${font.color.r}, ${font.color.g}, ${font.color.b}, ${font.color.a})`}`,
 					'letter-spacing' : `${(font.kerning * 0.5).toFixed(2)}px`,
 					'line-height'    : `${(font.lineHeight * 0.5) << 0}px`,
 					'text-align'     : `${font.alignment.toLowerCase()}`
@@ -261,8 +261,8 @@ export function toGridHTML(slices) {
 
 	return ({
 		html   : inlineHTML,
-// 		syntax : `${html.replace(/(&nbsp)+;/g, '\t')}`
-		syntax : `<!DOCTYPE html>
+		syntax : `${html.replace(/(&nbsp)+;/g, '\t')}`
+		/*syntax : `<!DOCTYPE html>
 <html>
     <head>
         <link href="./img/favicon.png" rel="shortcut icon"/>
@@ -344,7 +344,7 @@ export function toGridHTML(slices) {
             </div>
         </div>
     </body>
-</html>`
+</html>`*/
 	});
 
 // 	html += `${TAB}${TAB}: ;\n`;
@@ -440,7 +440,7 @@ export function toSpecs(slice) {
 	content += `Position\t\t\tX: ${slice.meta.frame.origin.x}px Y: ${slice.meta.frame.origin.y}px\n`;
 	content += `Rotation\t\t\t${slice.meta.rotation}°\n`;
 	content += `Opacity\t\t\t\t${slice.meta.opacity}%\n`;
-	content += `Fills\t\t\t\t\t${((slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color.toUpperCase() : slice.meta.fillColor.toUpperCase())}\n`;
+	content += `Fills\t\t\t\t\t${(typeof slice.meta.fillColor === 'string') ? slice.meta.fillColor.toUpperCase() : `rgba(${slice.meta.fillColor.r}, ${slice.meta.fillColor.g}, ${slice.meta.fillColor.b}, ${slice.meta.fillColor.a})`}\n`;
 
 	if (slice.type === 'textfield') {
 		const font = fontSpecs(slice.meta.font);
@@ -448,7 +448,7 @@ export function toSpecs(slice) {
 		content += `Font\t\t\t\t\t${font.family} ${font.name}\n`;
 		content += `Font Weight\t\t${font.weight}\n`;
 		content += `Font Size\t\t\t${font.size}px\n`;
-		content += `Font Color\t\t${font.color.toUpperCase()}\n`;
+		content += `Font Color\t\t${(typeof font.color === 'string') ? font.color.toUpperCase() : `rgba(${font.color.r}, ${font.color.g}, ${font.color.b}, ${font.color.a})`}\n`;
 		content += `Line Spacing\t${font.lineHeight}px\n`;
 		content += `Char Spacing\t${font.kerning.toFixed(2)}px\n`;
 	}
@@ -477,7 +477,7 @@ export function toSwift(slices, artboard) {
 			html += `let ${sliceName}Image = UIImage(asset: Asset.${artboardName}.${sliceName})\n`;
 			html += `let alt${sliceName}Image = Asset.${artboardName}.${sliceName}.image\n`;
 
-			if (slice.meta.fillColor.length > 0) {
+			if (typeof slice.meta.fillColor === 'string' && slice.meta.fillColor.length > 0) {
 				html += `\n\n// Color \n`;
 				html += `struct ColorName {\n`;
 				html += `${TAB}let rgbaValue: UInt32\n`;

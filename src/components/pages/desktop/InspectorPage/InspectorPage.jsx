@@ -117,7 +117,7 @@ const CodeEditor = (props)=> {
 };
 
 const ColorSwatch = (props)=> {
-// 	console.log('InspectorPage.ColorSwatch()', props);
+	console.log('InspectorPage.ColorSwatch()', props);
 
 	const { fill } = props;
 	return (<div className="inspector-page-color-swatch" style={{ backgroundColor : fill }} />);
@@ -287,7 +287,7 @@ const SpecsList = (props)=> {
 	}
 
 	const { frame } = slice.meta;
-	const fillColor = ((slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color : slice.meta.fillColor).toUpperCase();
+	const fillColor = ((typeof slice.meta.fillColor === 'string') ? slice.meta.fillColor.toUpperCase() : `rgba(${slice.meta.fillColor.r}, ${slice.meta.fillColor.g}, ${slice.meta.fillColor.g}, ${slice.meta.fillColor.a})`);
 	const padding = `${slice.meta.padding.top}px ${slice.meta.padding.left}px ${slice.meta.padding.bottom}px ${slice.meta.padding.right}px`;
 	const added = `${slice.added.replace(' ', 'T')}Z`;
 	const font = (slice.meta.font) ? fontSpecs(slice.meta.font) : null;
@@ -298,12 +298,12 @@ const SpecsList = (props)=> {
 
 	const styles = (sliceStyles) ? {
 		border : (border) ? {
-			color     : border.color.toUpperCase(),
+			color     : (typeof border.color === 'string') ? border.color.toUpperCase() : `rgba(${border.color.r}, ${border.color.g}, ${border.color.b}, ${border.color.a})`,
 			position  : Strings.capitalize(border.position, true),
 			thickness : `${border.thickness}px`
 		} : null,
 		shadow : (shadow) ? {
-			color  : shadow.color.toUpperCase(),
+			color  : (typeof shadow.color === 'string') ? shadow.color.toUpperCase() : `rgba(${shadow.color.r}, ${shadow.color.g}, ${shadow.color.b}, ${shadow.color.a})`,
 			offset : {
 				x : shadow.offset.x,
 				y : shadow.offset.y
@@ -312,7 +312,7 @@ const SpecsList = (props)=> {
 			blur   : `${shadow.blur}px`
 		} : null,
 		innerShadow : (innerShadow) ? {
-			color  : innerShadow.color.toUpperCase(),
+			color  : (typeof innerShadow.color === 'string') ? innerShadow.color.toUpperCase() : `rgba(${innerShadow.color.r}, ${innerShadow.color.g}, ${innerShadow.color.b}, ${innerShadow.color.a})`,
 			offset : {
 				x : innerShadow.offset.x,
 				y : innerShadow.offset.y
@@ -382,8 +382,8 @@ const SpecsList = (props)=> {
 				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`${font.size}px`}>
 					<Row><div className="inspector-page-specs-list-item-attribute">Font Size</div><div className="inspector-page-specs-list-item-val">{`${font.size}px`}</div></Row>
 				</CopyToClipboard>
-				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.color) ? font.color.toUpperCase() : ''}>
-					<Row><div className="inspector-page-specs-list-item-attribute">Font Color</div><div className="inspector-page-specs-list-item-val"><Row vertical="center">{(font.color) ? font.color.toUpperCase() : ''}<ColorSwatch fill={font.color} /></Row></div></Row>
+				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(typeof font.color === 'string') ? font.color.toUpperCase() : `rgba(${font.color.r}, ${font.color.g}, ${font.color.b}, ${font.color.a})`}>
+					<Row><div className="inspector-page-specs-list-item-attribute">Font Color</div><div className="inspector-page-specs-list-item-val"><Row vertical="center">{(typeof font.color === 'string') ? font.color.toUpperCase() : `rgba(${font.color.r}, ${font.color.g}, ${font.color.b}, ${font.color.a})`}<ColorSwatch fill={(typeof font.color === 'string') ? font.color : `rgba(${font.color.r}, ${font.color.g}, ${font.color.b}, ${font.color.a})`} /></Row></div></Row>
 				</CopyToClipboard>
 				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.alignment) ? Strings.capitalize(font.alignment) : 'Left'}>
 					<Row><div className="inspector-page-specs-list-item-attribute">Alignment</div><div className="inspector-page-specs-list-item-val">{(font.alignment) ? Strings.capitalize(font.alignment) : 'Left'}</div></Row>
