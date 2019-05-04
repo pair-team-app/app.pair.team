@@ -42,14 +42,13 @@
 .rate-this-item {
 	width: 100%;
 	height: 63px;
-	font-family: "San Francisco Text Medium", sans-serif;
+	font-family: "SF Pro Display Medium", sans-serif;
 	font-size: 16px;
 	letter-spacing: -0.3px;
 	color: #abdafd;
 }
 
 .rate-this-item:nth-child(even) {
-	/*background-color: #24282e;*/
 }
 
 .rate-this-item:not(:last-child) {
@@ -104,7 +103,6 @@
 
 .rate-this-item-column {
 	height: 60px;
-	/*border : 1px solid #ff00ff;*/
 }
 
 .rate-this-item-column-index {

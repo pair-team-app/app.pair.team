@@ -694,10 +694,10 @@ class App extends Component {
 					    <Route><Status404Page onPage={this.handlePage} /></Route>
 				    </Switch>
 
-				    {(!isInspectorPage()) && (<AdvertPanel
-					    title={adBannerPanel.title} image={adBannerPanel.image}
-					    onClick={()=> this.handleAdBanner(adBannerPanel.url)}
-				    />)}
+				    {/*{(!isInspectorPage()) && (<AdvertPanel*/}
+					    {/*title={adBannerPanel.title} image={adBannerPanel.image}*/}
+					    {/*onClick={()=> this.handleAdBanner(adBannerPanel.url)}*/}
+				    {/*/>)}*/}
 
 				    {(!isInspectorPage()) && (<BottomNav
 					    mobileLayout={false}

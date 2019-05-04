@@ -248,16 +248,6 @@ export const Strings = {
 	isEmail      : (str)=> (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i.test(String(str))),
 	lastChar     : (str)=> (str.slice(-1)),
 	lPad         : (str, char, amt)=> ((amt < 0 || String(str).length < amt) ? `${(new Array((amt > 0) ? amt - String(str).length + 1 : -amt + 1)).join(char)}${str}` : str),
-	indexedVal   : (val, arr, divider='_')=> {
-		if (arr[val].length === 0) {
-			arr[val] = 0;
-		}
-
-		return ({
-			name : `${val}${divider}${++arr[val]}`,
-			arr : [...arr]
-		});
-	},
 	pluralize   : (str, val)=> ((val === 1) ? str : (Strings.lastChar(str) === 'y') ? `${str.slice(0, -1)}ies` : (Strings.lastChar(str) === 's') ? 'es' : `${str}s`),
 	quoted      : (str)=> (str.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1')),
 	remove      : (str, needle)=> (Strings.replAll(str, needle)),

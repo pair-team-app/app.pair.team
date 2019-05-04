@@ -21,7 +21,7 @@ html, body {
   background-color: #1a1e23;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: "San Francisco Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: "SF Pro Display Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-weight: 400;
   font-size: 14px;
   line-height: 26px;
@@ -43,9 +43,10 @@ button {
   height: 38px;
   background-color: #005cc5;
   border: 1px solid rgba(0, 92, 197, 0.0);
-  font-family: "San Francisco Text SemiBold", sans-serif;
+  border-radius: 1px;
+  font-family: "SF Pro Display SemiBold", sans-serif;
   font-size: 16px;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.5px;
   color : #ffffff;
   line-height: normal;
 }
@@ -56,8 +57,7 @@ button:hover, button:active {
 }
 
 button:disabled, button:disabled:hover {
-  /*background-color: #005cc5;*/
-  background-color: #2d6db3;
+  background-color: #005cc5;
   color: #1a1b1d;
   opacity : 0.875;
   cursor: default;
@@ -68,6 +68,10 @@ code {
   background-color: rgba(0, 0, 0, 0.5);
   line-height: 0;
   color: #c8e1fd;
+}
+
+div {
+	-webkit-text-size-adjust: none;
 }
 
 fieldset {
@@ -84,46 +88,51 @@ h1, h2, h3, h4, h5 {
   margin-top: 0;
 }
 
-/** Homepage CTA */
+/** Upload Header Title */
 h1 {
-  width: 50%;
   margin-bottom: 20px;
-  font-family: "San Francisco Text", sans-serif;
-  font-size: 52px;
-  line-height: 64px;
-  letter-spacing: -2px;
-  color: #c8e1fd;
+  font-family: "SF Pro Display Regular", sans-serif;
+  font-size: 48px;
+  line-height: normal;
+  letter-spacing: -0.5px;
+  color: #ffffff;
 }
 
 h1.mobile {
   width: 100%;
 }
 
-/** Mobile / Page Header */
+/** Page Header */
 h2 {
-  font-family: "San Francisco Text Medium", sans-serif;
+  font-family: "SF Pro Display Medium", sans-serif;
   font-size: 44px;
   letter-spacing: -2.32px;
   line-height: normal;
   color: #c8e1fd;
 }
 
-/** Mobile Title **/
+/** Upload Header Subtitle **/
 h3 {
-  font-family: "San Francisco Text Medium", sans-serif;
+  font-family: "SF Pro Display Medium", sans-serif;
   font-size: 28px;
+  color: #545454;
+  letter-spacing: -0.5px;
+  line-height: normal;
+}
+
+h3.mobile {
   letter-spacing: -1px;
   line-height: normal;
-	color: #005cc5;
+  color: #005cc5;
 }
 
 /** Section / Form Title **/
 h4 {
   margin-top: -5px;
   margin-bottom: 17px;
-  font-family: "San Francisco Text Medium", sans-serif;
+  font-family: "SF Pro Display Medium", sans-serif;
   font-size: 22px;
-  letter-spacing: -1px;
+  letter-spacing: -0.5px;
   color: #c8e1fd;
 }
 
@@ -135,7 +144,7 @@ h4.table-header {
 h5 {
   height: fit-content;
   margin-bottom: 14px;
-  font-family: "San Francisco Text Medium", sans-serif;
+  font-family: "SF Pro Display Medium", sans-serif;
   font-size: 16px;
   letter-spacing: -0.3px;
   color: #c8e1fd;
@@ -145,7 +154,7 @@ h5 {
 h6 {
   margin-bottom: 0;
   text-transform: uppercase;
-  font-family: "San Francisco Text", sans-serif;
+  font-family: "SF Pro Display Regular", sans-serif;
   font-size: 14px;
   line-height: 0;
 }
@@ -156,7 +165,7 @@ input[type="text"], input[type="password"], input[type="tel"], select, textarea,
   padding: 14px 11px;
   width: 100%;
   border: 1px solid #24282e;
-  font-family: "San Francisco Text Medium", sans-serif;
+  font-family: "SF Pro Display Medium", sans-serif;
   font-size: 16px;
   letter-spacing: -0.3px;
   cursor: text;
@@ -174,7 +183,7 @@ input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hov
 
 
 p {
-  font-family: "San Francisco Text", sans-serif;
+  font-family: "SF Pro Display Regular", sans-serif;
   line-height: 26px;
   margin: 14px 0 28px 0;
 }
@@ -188,7 +197,7 @@ p:last-child {
 }
 
 sup {
-  font-family: "San Francisco Text", sans-serif;
+  font-family: "SF Pro Display Regular", sans-serif;
   font-size: 10px;
   color: #7ed321;
   text-transform: uppercase;
@@ -231,28 +240,28 @@ textarea {
 
 /** Regular */
 @font-face {
-  font-family: "San Francisco Text";
+  font-family: "SF Pro Display Regular";
   font-weight: 400;
-  src: url(./assets/fonts/SanFranciscoText-Regular.otf);
+  src: url(./assets/fonts/SFProDisplay-Regular.otf);
 }
 
 /** Medium */
 @font-face {
-  font-family: "San Francisco Text Medium";
+  font-family: "SF Pro Display Medium";
   font-weight: 500;
-  src: url(./assets/fonts/SanFranciscoText-Medium.otf);
+  src: url(./assets/fonts/SFProDisplay-Medium.otf);
 }
 
 /** Semi-Bold */
 @font-face {
-  font-family: "San Francisco Text SemiBold";
+  font-family: "SF Pro Display SemiBold";
   font-weight: 600;
-  src: url(./assets/fonts/SanFranciscoText-Semibold.otf);
+  src: url(./assets/fonts/SFProDisplay-Semibold.otf);
 }
 
 /** Bold */
 @font-face {
-  font-family: "San Francisco Text Bold";
+  font-family: "SF Pro Display Bold";
   font-weight: 700;
-  src: url(./assets/fonts/SanFranciscoText-Bold.otf);
+  src: url(./assets/fonts/SFProDisplay-Bold.otf);
 }

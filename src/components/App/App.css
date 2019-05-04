@@ -22,34 +22,25 @@
 
 .page-wrapper {
 	width: 100%;
-	/*min-height: calc(100% - 84px);*/
-	/*margin-bottom: 30px; !* footer spacing *!*/
 }
 
 .page-header {
 	width: calc(100% + 40px);
 	height: 306px;
 	margin: -20px -20px 20px -20px;
-	background: #1a1b1d url(../../assets/images/backgrounds/bg-checkerboard.png) repeat;
+	background: #1a1b1d url(../../assets/images/backgrounds/bg-checkerboard.gif) repeat;
 }
 
 h1.page-header-title {
-	width: 100%;
 	text-align: center;
-	margin-bottom: 30px;
 	vertical-align: middle;
 }
 
-.page-header-subtitle {
-	font-family: "San Francisco Text Medium", sans-serif;
-	font-size: 28px;
-	letter-spacing: -1.47px;
-	text-align: center;
-	color: #005cc5;
-}
-
 .long-button {
-	width: 188px;
+	min-width: 100px;
+	width: auto;
+	padding-left: 25px;
+	padding-right: 25px;
 }
 
 .tiny-button {
@@ -62,24 +53,15 @@ h1.page-header-title {
 
 
 .aux-button, .aux-button:disabled, .aux-button:disabled:hover {
-	padding: 9px 20px;
-	/*background: #57aa48 linear-gradient(-180deg, #69cd58, #57aa48 90%) -0.5em;*/
-	background-color: #34d058;
-	font-family: "San Francisco Text Bold", sans-serif;
-	font-weight: 700;
-	font-size: 16px;
-	letter-spacing: -0.6px;
+	background-color: #24c14d;
 	color : #ffffff;
 }
 
 .aux-button:hover, .aux-button:active {
-	/*background: #28a745 linear-gradient(-180deg, #34d058, #28a745 90%);*/
-	background-color: #28a745;
+	background-color: #1d993c;
 }
 
 .aux-button:disabled, .aux-button:disabled:hover {
-	/*background: #57aa48 linear-gradient(-180deg, #69cd58, #57aa48 90%) -0.5em;*/
-	/*background-color: #62a854;*/
 	color: #eef0f2;
 	opacity : 0.5;
 }
@@ -98,7 +80,7 @@ h1.page-header-title {
 }
 
 .adjacent-button {
-	margin-right: 20px;
+	margin-right: 15px;
 }
 
 .adjacent-button-mobile {
@@ -111,7 +93,7 @@ h1.page-header-title {
 }
 
 .page-link, .page-link a:any-link {
-	font-family: "San Francisco Text Medium", sans-serif;
+	font-family: "SF Pro Display Medium", sans-serif;
 	font-size: 14px;
 	letter-spacing: -0.26px;
 	color: #abdafd;
@@ -153,7 +135,7 @@ h1.page-header-title {
 .input-wrapper-error .field-error {
 	height: 53px;
 	padding-top: 11px;
-	font-family: "San Francisco Text Medium", sans-serif;
+	font-family: "SF Pro Display Medium", sans-serif;
 	font-size: 16px;
 	letter-spacing: -0.3px;
 }

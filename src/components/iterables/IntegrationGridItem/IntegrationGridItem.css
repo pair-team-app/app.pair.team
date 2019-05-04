@@ -12,7 +12,6 @@
 }
 
 fieldset:disabled .integration-grid-item {
-	/*cursor: default;*/
 	background-color: rgba(36, 40, 46, 0.50);
 }
 
@@ -21,7 +20,6 @@ fieldset:disabled .integration-grid-item {
 }
 
 fieldset:disabled .integration-grid-item-overlay {
-	/*background-color: #1c1c1c;*/
 	opacity: 0.875;
 	transition: none;
 }
@@ -81,7 +79,7 @@ fieldset:not(:disabled) .integration-grid-item:hover .integration-grid-item-imag
 
 .integration-grid-item-title {
 	width: 100%;
-	font-family: "San Francisco Text Medium", sans-serif;
+	font-family: "SF Pro Display Medium", sans-serif;
 	font-size: 16px;
 	letter-spacing: -0.3px;
 	color: #c8e1fd;
@@ -115,7 +113,7 @@ fieldset:disabled .integration-grid-item-title {
 	filter: brightness(85%);
 	background-color: rgba(75, 75, 75, 0.5);
 	border-bottom: 1px solid rgba(27, 27, 27, 0.75);
-	font-family: "San Francisco Text Medium", sans-serif;
+	font-family: "SF Pro Display Medium", sans-serif;
 	font-size: 12px;
 	letter-spacing: -0.25px;
 	line-height: normal;

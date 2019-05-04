@@ -148,11 +148,13 @@ class UploadPage extends Component {
 		});
 	};
 
-	handleGitHub = ()=> {
-		console.log('UploadPage.handleGitHub()');
+	handlePage = (url)=> {
+		console.log('UploadPage.handlePage()');
+		//this.props.onModal(Modals.GITHUB_CONNECT);
 
-		trackEvent('button', 'github');
-		this.props.onModal(Modals.GITHUB_CONNECT);
+		if (url.startsWith('/modal')) {
+			this.handleLogin();
+		}
 	};
 
 	handleLogin = ()=> {
@@ -236,16 +238,15 @@ class UploadPage extends Component {
 		const uploadTitle = (formState === 1) ? `Uploading ${file.name}…` : (section) ? homeContent[section].header.title : '';
 		const uploadSubtitle = (formState === 1) ? `${((file.size / (1024 * 1024)) * (percent * 0.01)).toFixed(2)} of ${(file.size / (1024 * 1024)).toFixed(2)}MB has been uploaded.` : 'Drag, drop, or click to upload.';
 
-		const pageStyle = { marginBottom : (formState >= 1 && uploadComplete) ? '30px' : '30px' };
 		const progressStyle = { width : `${percent}%` };
 
 		return (
-			<BaseDesktopPage className="upload-page-wrapper" style={pageStyle}>
+			<BaseDesktopPage className="upload-page-wrapper">
 				{(formState === 1 && !uploadComplete) && (<div className="upload-progress-bar-wrapper">
 					<div className="upload-progress-bar" style={progressStyle} />
 				</div>)}
 
-				{(formState <= 1) && (<UploadHeader
+				{(formState <= 1 && !uploadComplete) && (<UploadHeader
 					fileDialog={false}
 					uploading={(formState === 1)}
 					title={uploadTitle}
@@ -255,12 +256,10 @@ class UploadPage extends Component {
 					onPage={this.props.onPage}
 					onPopup={this.props.onPopup} />)}
 
-				{(formState === 0 && !isUserLoggedIn()) && (<button className="long-button aux-button" onClick={this.handleGitHub}>Connect on GitHub</button>)}
-
 				{(!isUserLoggedIn() && showRegister && !showLogin) && (<div className="upload-page-register-wrapper">
 					<RegisterForm
 						title="To finish uploading, please sign up."
-						onLogin={this.handleLogin}
+						onPage={this.handlePage}
 						onRegistered={this.handleRegistered} />
 				</div>)}
 

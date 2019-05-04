@@ -151,7 +151,7 @@ class RegisterForm extends Component {
 					<div className={password2Class}><input type="password" name="password2" autoComplete="new-password" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
 					<Row vertical="center">
 						<button disabled={(username.length === 0 || email.length === 0 || password.length === 0 || password2.length === 0 || !usernameValid || !emailValid || !passwordValid)} type="submit" className="adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Sign Up</button>
-						<button className="long-button aux-button adjacent-button" onClick={(event)=> { event.preventDefault(); trackEvent('button', 'github'); this.props.onPage(`/modal${Modals.GITHUB_CONNECT}`); }}>Sign Up via GitHub</button>
+						<button className="long-button aux-button adjacent-button" onClick={(event)=> { event.preventDefault(); trackEvent('button', 'github'); this.props.onPage(`/modal${Modals.GITHUB_CONNECT}`); }}>Sign in with GitHub</button>
 						<div className="page-link page-link-form" onClick={()=> { trackEvent('link', 'login'); this.props.onPage(`/modal${Modals.LOGIN}`); }}>Want to Login?</div>
 					</Row>
 				</form>

@@ -26,7 +26,6 @@
 .top-nav-profile-arrow {
 	width: 10px;
 	padding-bottom: 3px;
-	/*font-size: 18px;*/
 	color: #abdafd;
 }
 
@@ -70,7 +69,7 @@
 
 .top-nav-profile-link {
 	text-decoration: none;
-	font-family: "San Francisco Text Medium", sans-serif;
+	font-family: "SF Pro Display Medium", sans-serif;
 	font-size: 12px;
 	line-height: 17px;
 	letter-spacing: -0.2px;

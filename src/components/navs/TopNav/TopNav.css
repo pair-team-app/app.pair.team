@@ -5,7 +5,7 @@
 	display: table;
 	z-index: 3;
 	background-color: #24282e;
-	font-family: "San Francisco Text Medium", sans-serif;
+	font-family: "SF Pro Display Medium", sans-serif;
 	font-size: 16px;
 	line-height: 0;
 	letter-spacing: -0.3px;
@@ -42,7 +42,7 @@
 	margin-right: 20px;
 	letter-spacing: -0.3px;
 	text-decoration: none;
-	color: #abdafd;
+	color: #ffffff;
 }
 
 .top-nav-link:last-child, a.top-nav-link:last-child {
@@ -52,6 +52,7 @@
 .top-nav-link:hover, .top-nav-link a:hover {
 	cursor: pointer;
 	text-decoration: underline;
+	color: #abdafd;
 }
 
 .top-nav-link:active, .top-nav-link a:active {
@@ -60,5 +61,5 @@
 
 .top-nav-link-selected, a.top-nav-link-selected {
 	color: #2288fb;
-	text-decoration: underline;
+	text-decoration: none;
 }

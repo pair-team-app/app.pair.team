@@ -46,7 +46,7 @@ const TopNavDesktop = (props)=> {
 		<div className="top-nav-column top-nav-column-right">
 			{(!isUserLoggedIn())
 				? (<>
-					<button className="aux-button adjacent-button" onClick={()=> props.onModal(Modals.GITHUB_CONNECT)}>GitHub</button>
+					<button className="long-button aux-button adjacent-button" onClick={()=> props.onModal(Modals.GITHUB_CONNECT)}>Sign in with GitHub</button>
 					<button className="adjacent-button" onClick={()=> props.onModal(Modals.REGISTER)}>Sign Up</button>
 					<button onClick={()=> props.onModal(Modals.LOGIN)}>Login</button>
 				</>)

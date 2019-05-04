@@ -1,12 +1,14 @@
 
 .bottom-nav-wrapper {
-	font-family: "San Francisco Text Medium", sans-serif;
-	font-size: 12px;
-	letter-spacing: -0.3px;
-	line-height: normal;
+	height: 16px;
+	z-index: 2;
+	position: fixed;
+	left: 20px;
+	bottom: 20px;
 }
 
 .bottom-nav-desktop-wrapper {
+	height: 100%;
 }
 
 .bottom-nav-mobile-wrapper {
@@ -17,7 +19,6 @@
 .bottom-nav-desktop-logo {
 	width: 35px;
 	height: 16px;
-	margin-bottom: 20px;
 }
 
 .bottom-nav-mobile-logo {

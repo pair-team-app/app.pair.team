@@ -155,7 +155,7 @@ class IntegrationsModal extends Component {
 
 				<div className="integrations-modal-wrapper">
 					<div className="integrations-modal-header">
-						<h1 className="full-width">{title}</h1>
+						<h4 className="full-width">{title}</h4>
 					</div>
 					<div className="integrations-modal-content-wrapper">
 						<IntegrationsModalGrid
