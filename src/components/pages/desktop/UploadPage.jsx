@@ -76,6 +76,15 @@ class UploadPage extends Component {
 		this.setState({ radioButtons });
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('UploadPage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+
+		const { profile } = this.props;
+		if (!prevProps.profile && profile) {
+			this.onUploadSubmit(profile);
+		}
+	}
+
 	componentWillUnmount() {
 // 		console.log('UploadPage.componentWillUnmount()', this.state);
 
@@ -152,8 +161,14 @@ class UploadPage extends Component {
 		console.log('UploadPage.handlePage()');
 		//this.props.onModal(Modals.GITHUB_CONNECT);
 
-		if (url.startsWith('/modal')) {
+		if (url.includes(Modals.LOGIN)) {
 			this.handleLogin();
+
+		} else if (url.includes(Modals.REGISTER)) {
+			this.handleRegister();
+
+		} else if (url.includes(Modals.GITHUB_CONNECT)) {
+			this.props.onModal(Modals.GITHUB_CONNECT);
 		}
 	};
 
@@ -174,7 +189,18 @@ class UploadPage extends Component {
 		trackEvent('user', 'login');
 		cookie.save('user_id', profile.id, { path : '/' });
 		this.props.updateUserProfile(profile);
-		this.onUploadSubmit(profile);
+// 		this.onUploadSubmit(profile);
+	};
+
+	handleRegister = ()=> {
+// 		console.log('UploadPage.handleRegister()');
+
+		trackEvent('button', 'register');
+		this.props.onScrollOrigin();
+		this.setState({
+			showRegister : true,
+			showLogin    : false
+		});
 	};
 
 	handleRegistered = (profile)=> {
@@ -184,8 +210,8 @@ class UploadPage extends Component {
 		cookie.save('user_id', profile.id, { path : '/' });
 
 		this.props.updateUserProfile(profile);
-		this.props.onRegistered();
-		this.onUploadSubmit(profile);
+// 		this.props.onRegistered();
+// 		this.onUploadSubmit(profile);
 	};
 
 	onUploadSubmit = (userProfile)=> {

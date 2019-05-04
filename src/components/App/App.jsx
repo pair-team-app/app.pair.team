@@ -55,6 +55,7 @@ import {
 	isHomePage,
 	isInspectorPage,
 	isProfilePage,
+	isUploadPage,
 	isUserLoggedIn
 } from '../../utils/funcs';
 import { Browsers, DateTimes, Strings, URIs } from '../../utils/lang';
@@ -318,13 +319,17 @@ class App extends Component {
 			this.setState({ teamDialog : true });
 
 		} else {
-			if (profile.sources.length === 0 || profile.integrations.length === 0) {
-				trackEvent('user', 'sign-up');
-				setTimeout(()=> {
-					this.onToggleModal(Modals.INTEGRATIONS, true);
-				}, 750);
+			if (isUploadPage()) {
 
 			} else {
+				if (profile.sources.length === 0 || profile.integrations.length === 0) {
+					trackEvent('user', 'sign-up');
+					setTimeout(()=> {
+						this.onToggleModal(Modals.INTEGRATIONS, true);
+					}, 750);
+
+				} else {
+				}
 			}
 		}
 	};
