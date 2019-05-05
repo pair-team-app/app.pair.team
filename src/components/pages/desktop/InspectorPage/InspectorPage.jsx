@@ -127,13 +127,11 @@ const FilingTabContent = (props)=> {
 // 	console.log('InspectorPage.FilingTabContent()', props);
 
 	const { tab, enabled } = props;
-	const { type, contents } = tab;
+	const { contents } = tab;
 	const className = `filing-tab-content${(!enabled) ? ' filing-tab-content-disabled' : ''}`;
 
 	return (<div key={tab.id} className={className}>
 		{contents}
-		{/*{((!type || type === 'json_html') && contents) && (<span dangerouslySetInnerHTML={{ __html : String(((enabled) ? JSON.parse(contents) : '').replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) }} />)}*/}
-		{/*{(type === 'component') && (contents)}*/}
 	</div>);
 };
 
@@ -323,13 +321,11 @@ const SpecsList = (props)=> {
 	} : null;
 	
 	/*
-	
 			<SpecsListItem
 				attribute=""
 				value={}
 				copyText={}
 				onCopy={props.onCopySpec} />
-				
 	*/
 
 	return (
@@ -830,8 +826,6 @@ class InspectorPage extends Component {
 				height : artboardsWrapper.current.clientHeight - insetHeight
 			};
 
-
-// 			const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'container' : 'page_child');
 			const artboards = flattenUploadArtboards(upload, 'page_child');
 			if (artboards.length > 0) {
 				const baseSize = calcArtboardBaseSize((section === SECTIONS.EDIT) ? artboards.slice(0, 1) : artboards, viewSize);
@@ -984,31 +978,6 @@ class InspectorPage extends Component {
 				gist        : null
 			});
 
-		} else if (section === SECTIONS.PARTS) {
-			tabSets = [...tabSets].map((tabSet, i) => {
-				return (tabSet.map((tab, ii) => {
-					return (Object.assign({}, tab, {
-						enabled  : ((upload.state << 0) === 3),
-						contents : <PartsList
-							enabled={((upload.state << 0) === 3)}
-							contents={null}
-							onPartListItem={(slice) => this.handleDownloadPartListItem(slice)} />
-					}));
-				}));
-			});
-
-			const activeTabs = (this.state.activeTabs.length === 0) ? tabSets.map((tabSet)=> {
-				return ([...tabSet].shift());
-			}) : this.state.activeTabs;
-
-			this.setState({ upload, tabSets, activeTabs,
-				artboard : (section === SECTIONS.EDIT && artboards.length > 0) ? artboards[0] : null,
-				slice    : null,
-				tooltip  : null,
-				linter   : null,
-				gist     : null
-			});
-
 		} else if (section === SECTIONS.EDIT) {
 			if (artboards.length > 0) {
 				const artboard = (this.state.artboard) ? this.state.artboard : artboards[0];
@@ -1138,46 +1107,6 @@ class InspectorPage extends Component {
 				}
 			});
 
-		} else if (section === SECTIONS.PARTS) {
-			tabSets[0][0].enabled = true;
-
-			if (slice.type === 'symbol') {
-				let formData = new FormData();
-				formData.append('action', 'SYMBOL_SLICES');
-				formData.append('slice_id', slice.id);
-				axios.post(API_ENDPT_URL, formData)
-					.then((response)=> {
-						console.log('SYMBOL_SLICES', response.data);
-						slice.children = [...fillGroupPartItemSlices(upload, slice), ...response.data.slices.map((item)=> {
-							const meta = JSON.parse(item.meta.replace(/\n/g, '\\\\n'));
-							return (Object.assign({}, item, {
-								id         : item.id << 0,
-								artboardID : item.artboard_id << 0,
-								meta       : Object.assign({}, meta, {
-									orgFrame : meta.frame,
-									frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
-								}),
-								filled     : false
-							}))
-						})];
-						tabSets[0][0].enabled = true;
-						tabSets[0][0].contents = <PartsList
-							enabled={true}
-							contents={slice.children}
-							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-						this.setState({ tabSets });
-					}).catch((error)=> {
-				});
-
-			} else if (slice.type === 'artboard' || slice.type === 'group' || slice.type === 'background') {
-				tabSets[0][0].enabled = true;
-				tabSets[0][0].contents = <PartsList
-					enabled={true}
-					contents={fillGroupPartItemSlices(upload, slice)}
-					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-				this.setState({ tabSets });
-			}
-
 		} else if (section === SECTIONS.EDIT) {
 			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 				return (tabSet.map((tab, ii)=> {
@@ -1258,43 +1187,6 @@ class InspectorPage extends Component {
 					}));
 				}
 			});
-
-		} else if (section === SECTIONS.PARTS) {
-			if (slice.type === 'symbol') {
-				let formData = new FormData();
-				formData.append('action', 'SYMBOL_SLICES');
-				formData.append('slice_id', slice.id);
-				axios.post(API_ENDPT_URL, formData)
-					.then((response)=> {
-						console.log('SYMBOL_SLICES', response.data);
-						slice.children = [...fillGroupPartItemSlices(upload, slice), ...response.data.slices.map((item)=> {
-							const meta = JSON.parse(item.meta.replace(/\n/g, '\\\\n'));
-							return (Object.assign({}, item, {
-								id         : item.id << 0,
-								artboardID : item.artboard_id << 0,
-								meta       : Object.assign({}, meta, {
-									orgFrame : meta.frame,
-									frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
-								}),
-								filled     : false
-							}));
-						})];
-						tabSets[0][0].enabled = true;
-						tabSets[0][0].contents = <PartsList
-							enabled={true}
-							contents={slice.children}
-							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-						this.setState({ tabSets });
-					}).catch((error)=> {
-				});
-
-			} else if (slice.type === 'group' || slice.type === 'background') {
-				tabSets[0][0].enabled = true;
-				tabSets[0][0].contents = <PartsList
-					enabled={true}
-					contents={fillGroupPartItemSlices(upload, slice)}
-					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-			}
 
 		} else if (section === SECTIONS.EDIT) {
 			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
@@ -2374,7 +2266,6 @@ class InspectorPage extends Component {
 		const { valid, restricted, urlBanner, tutorial, percent, tooltip, fontState, linter, gist } = this.state;
 
 		const artboards = (section === SECTIONS.EDIT) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, 'page_child');
-// 		const artboards = (section === SECTIONS.EDIT) ? (artboard) ? [artboard] : [] : (section === SECTIONS.PARTS) ? flattenUploadArtboards(upload, 'page_child').slice(0, 3) : flattenUploadArtboards(upload, 'page_child');
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 
 		const listTotal = (upload && activeSlice) ? (section === SECTIONS.EDIT) ? flattenUploadArtboards(upload, 'page_child').length : (activeSlice) ? (activeSlice.type === 'group') ? fillGroupPartItemSlices(upload, activeSlice).length : activeSlice.children.length : 0 : 0;
@@ -2425,7 +2316,6 @@ class InspectorPage extends Component {
 				left            : `${offset.x << 0}px`,
 				width           : `${(scale * artboard.meta.frame.size.width) << 0}px`,
 				height          : `${(scale * artboard.meta.frame.size.height) << 0}px`
-				//backgroundColor : (section === SECTIONS.PARTS) ? 'rgba(0, 0, 0, 0.5)' : 'rgba(0, 0, 0, 0.0)'
 			};
 
 
@@ -2446,8 +2336,6 @@ class InspectorPage extends Component {
 			const textfieldSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'textfield', sliceOffset, scale, scrolling) : [];
 			const symbolSlices =(artboard.slices.length > 0) ?  this.buildSliceRollOverItemTypes(artboard, 'symbol', sliceOffset, scale, scrolling) : [];
 			const sliceSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'slice', sliceOffset, scale, scrolling) : [];
-// 			const sliceSlices = (section !== SECTIONS.PARTS) ? [] : [<img key={i} data-artboard-id={artboard.id} src={icon} width="100%" height="100%" style={iconStyle} alt="ICON" />];
-// 			const sliceSlices = (section !== SECTIONS.PARTS) ? [] : [<img key={i} data-artboard-id={artboard.id} src={icon} style={iconStyle} alt="ICON" />];
 
 			artboardImages.push(
 				<div key={i} data-artboard-id={artboard.id} className="inspector-page-artboard" style={artboardStyle}>
@@ -2458,7 +2346,7 @@ class InspectorPage extends Component {
 
 			slices.push(
 				<div key={artboard.id} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut} onDoubleClick={(event)=> this.handleZoom(1)}>
-					<div data-artboard-id={artboard.id} className={`inspector-page-${(section === SECTIONS.EDIT) ? 'artboard' : 'group'}-slices-wrapper`}>{(section === SECTIONS.EDIT) ? artboardSlices : (section === SECTIONS.PARTS) ? [...artboardSlices, ...groupSlices ] : groupSlices }</div>
+					<div data-artboard-id={artboard.id} className={`inspector-page-${(section === SECTIONS.EDIT) ? 'artboard' : 'group'}-slices-wrapper`}>{(section === SECTIONS.EDIT) ? artboardSlices : groupSlices }</div>
 					{(section !== SECTIONS.EDIT) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{(section === SECTIONS.INSPECT) ? [...artboardSlices, ...backgroundSlices ] : backgroundSlices}</div>)}
 					{/*<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>*/}
 					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{symbolSlices}</div>
@@ -2606,25 +2494,6 @@ class InspectorPage extends Component {
 							</div>)
 						))}
 					</>)}
-
-					{(section === SECTIONS.PARTS) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper">
-						{(tabSets.map((tabSet, i)=> (
-							<div className="inspector-page-panel-filing-tab-set-wrapper" key={i} style={{ height : `calc(100% - 154px)` }}>
-								<FilingTabSet
-									tabs={tabSet}
-									activeTab={activeTabs[i]}
-									enabled={!processing}
-									onTabClick={(tab)=> this.handleTab(tab)}
-									onContentClick={(payload)=> console.log('onContentClick', payload)}
-								/>
-								<div className="inspector-page-panel-button-wrapper">
-									<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> this.handleDownloadPartsList()}>{(processing) ? 'Processing' : `Download iOS ${Strings.pluralize('Part', listTotal)}`}</button>
-									<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> this.handleDownloadPartsList()}>{(processing) ? 'Processing' : `Download Android ${Strings.pluralize('Part', listTotal)}`}</button>
-									<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> this.handleDownloadPartsList()}>{(processing) ? 'Processing' : `Download HTML/CSS ${Strings.pluralize('Part', listTotal)}`}</button>
-								</div>
-							</div>)
-						))}
-					</div>)}
 
 					{(section === SECTIONS.EDIT) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-editor-wrapper">
 						{(tabSets.map((tabSet, i)=> (

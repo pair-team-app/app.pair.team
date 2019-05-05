@@ -87,7 +87,6 @@ export const PAN_ZOOM = {
 
 export const SECTIONS = {
 	INSPECT : 'inspect',
-	PARTS   : 'parts',
 	EDIT    : 'edit'
 };
 
