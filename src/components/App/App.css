@@ -54,7 +54,6 @@ h1.page-header-title {
 
 .aux-button, .aux-button:disabled, .aux-button:disabled:hover {
 	background-color: #24c14d;
-	color : #ffffff;
 }
 
 .aux-button:hover, .aux-button:active {
@@ -62,8 +61,6 @@ h1.page-header-title {
 }
 
 .aux-button:disabled, .aux-button:disabled:hover {
-	color: #eef0f2;
-	opacity : 0.5;
 }
 
 .destruct-button {
@@ -75,8 +72,6 @@ h1.page-header-title {
 }
 
 .destruct-button:disabled, .destruct-button:disabled:hover {
-	opacity : 0.5;
-	color: #eef0f2;
 }
 
 .adjacent-button {

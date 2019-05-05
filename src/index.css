@@ -57,10 +57,9 @@ button:hover, button:active {
 }
 
 button:disabled, button:disabled:hover {
-  background-color: #005cc5;
-  color: #1a1b1d;
-  opacity : 0.875;
+  opacity : 0.75;
   cursor: default;
+  color : #f0f0f0;
 }
 
 code {

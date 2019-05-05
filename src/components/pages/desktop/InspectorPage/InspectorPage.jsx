@@ -65,6 +65,7 @@ import {
 	MINUS_KEY,
 	PLUS_KEY } from '../../../../consts/key-codes';
 import {
+	Modals,
 	DE_LOGO_SMALL,
 	API_ENDPT_URL,
 	CDN_DOWNLOAD_PARTS_URL,
@@ -77,6 +78,7 @@ import {
 	buildInspectorPath,
 	buildInspectorURL,
 	createGist,
+	isUserLoggedIn,
 	sendToSlack } from '../../../../utils/funcs.js';
 import {
 	Arrays,
@@ -104,20 +106,22 @@ const CodeEditor = (props)=> {
 // 	console.log('InspectorPage.CodeEditor()', props);
 
 	const { lang, syntax } = props;
-	return (<div className="code-editor-wrapper"><MonacoEditor
-		width="100%"
-		height="100%"
-		language={lang}
-		theme="vs-dark"
-		value={syntax}
-		options={EDITOR.opts}
-		onChange={props.onEditorChange}
-		editorDidMount={props.onEditorMounted}
-	/></div>);
+	return (<div className="code-editor-wrapper">
+		<MonacoEditor
+			width="100%"
+			height="100%"
+			language={lang}
+			theme="vs-dark"
+			value={syntax}
+			options={EDITOR.opts}
+			onChange={props.onEditorChange}
+			editorDidMount={props.onEditorMounted}
+		/>
+	</div>);
 };
 
 const ColorSwatch = (props)=> {
-	console.log('InspectorPage.ColorSwatch()', props);
+// 	console.log('InspectorPage.ColorSwatch()', props);
 
 	const { fill } = props;
 	return (<div className="inspector-page-color-swatch" style={{ backgroundColor : fill }} />);
@@ -2467,7 +2471,8 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.INSPECT) && (<>
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
-								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 202 : 58)}px)` }}>
+								{/*<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 202 : 58)}px)` }}>*/}
+								<div className="inspector-page-panel-filing-tab-set-wrapper">
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}
@@ -2477,17 +2482,23 @@ class InspectorPage extends Component {
 									/>
 									{(i === 0)
 										? (<div className="inspector-page-panel-button-wrapper">
+												{(profile) && (<button disabled={!slice || (linter && linter.busy)} className="inspector-page-panel-button destruct-button" onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : 'Show Errors'}</button>)}
 												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].meta.syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].meta.syntax : ''}>
 													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
 												</CopyToClipboard>
-												<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>
-												<button disabled={!atomExtension || !slice || (linter && linter.busy) || (gist && gist.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Atom'}</button>
-												<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>
+											{(profile && profile.github)
+												? (<button disabled={!slice || (gist && gist.busy) || (linter && linter.busy)} className="inspector-page-panel-button aux-button" onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>)
+												: (<button className="inspector-page-panel-button aux-button" onClick={()=> this.props.onModal(Modals.GITHUB_CONNECT)}>{(processing) ? 'Processing' : 'Sign in with GitHub'}</button>)
+											}
 											</div>)
 										: (<div className="inspector-page-panel-button-wrapper">
 												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('specs', toSpecs(activeSlice))} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
 													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
 												</CopyToClipboard>
+												{(profile && profile.github)
+													? (<button disabled={!slice || (gist && gist.busy) || (linter && linter.busy)} className="inspector-page-panel-button aux-button" onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>)
+													: (<button className="inspector-page-panel-button aux-button" onClick={()=> this.props.onModal(Modals.GITHUB_CONNECT)}>{(processing) ? 'Processing' : 'Sign in with GitHub'}</button>)
+												}
 											</div>)
 									}
 								</div>
@@ -2498,7 +2509,8 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.EDIT) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-editor-wrapper">
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-split-width-content-wrapper inspector-page-panel-full-height-content-wrapper">
-								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 202 : 58)}px)` }}>
+								{/*<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 202 : 58)}px)` }}>*/}
+								<div className="inspector-page-panel-filing-tab-set-wrapper">
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}
@@ -2510,13 +2522,18 @@ class InspectorPage extends Component {
 									{(i === 0)
 										? (<div className="inspector-page-panel-button-wrapper">
 												<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleEditorRun(activeTabs[i].meta.lang.split(',').pop(), activeTabs[i].meta.syntax)}>{(processing) ? 'Processing' : 'Run'}</button>
-												<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>
-												<button disabled={!atomExtension || !slice || (linter && linter.busy) || (gist && gist.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Atom'}</button>
-												<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>
+												{(profile && profile.github)
+													? (<button disabled={!slice} className="inspector-page-panel-button aux-button" onClick={()=> this.handleEditorRun(activeTabs[i].meta.lang.split(',').pop(), activeTabs[i].meta.syntax)}>{(processing) ? 'Processing' : 'Compile'}</button>)
+													: (<button className="inspector-page-panel-button aux-button" onClick={()=> this.props.onModal(Modals.GITHUB_CONNECT)}>{(processing) ? 'Processing' : 'Sign in with GitHub'}</button>)
+												}
+												{/*<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>*/}
 											</div>)
 										: (<div className="inspector-page-panel-button-wrapper">
-												{/*<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download PDF'}</button>*/}
-												<button disabled={true} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Compile'}</button>
+												<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download'}</button>
+												{(profile && profile.github)
+													? (<button disabled={!slice || (gist && gist.busy) || (linter && linter.busy)} className="inspector-page-panel-button aux-button" onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>)
+													: (<button className="inspector-page-panel-button aux-button" onClick={()=> this.props.onModal(Modals.GITHUB_CONNECT)}>{(processing) ? 'Processing' : 'Sign in with GitHub'}</button>)
+												}
 											</div>)
 									}
 								</div>

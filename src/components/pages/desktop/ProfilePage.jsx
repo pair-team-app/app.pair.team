@@ -15,7 +15,7 @@ import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../
 import IntegrationGridItem from '../../iterables/IntegrationGridItem';
 import ConfirmDialog from '../../overlays/ConfirmDialog';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../overlays/PopupNotification';
-import {Modals, DEFAULT_AVATAR, CDN_UPLOAD_URL, API_ENDPT_URL} from '../../../consts/uris';
+import { Modals, DEFAULT_AVATAR, CDN_UPLOAD_URL, API_ENDPT_URL } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { Bits, Files, Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';

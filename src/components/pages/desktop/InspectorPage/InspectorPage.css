@@ -16,17 +16,18 @@
 
 
 .code-editor-wrapper {
-	width: 100%;
 	height: 100%;
+	margin: -15px -20px -20px -20px;
+	/*background-color: rgba(255, 0, 255, 0.33);*/
 }
 
 .code-editor-content {
-	background-color: rgba(255, 0, 255, 0.33);
+
 }
 
 .filing-tab-set {
 	width: 100%;
-	height: 100%;
+	flex: 1 0 auto;
 }
 
 .filing-tab-set-title-wrapper {
@@ -42,6 +43,7 @@
 .filing-tab-set-content-wrapper {
 	width: 100%;
 	height: calc(100% - 46px);
+	max-height: calc(100% - 46px);
 }
 
 .filing-tab-title {
@@ -66,6 +68,7 @@
 }
 
 .filing-tab-title-selected {
+	background-color: #000000;
 	border-bottom: 2px solid rgba(0, 92, 197, 1.0);
 	color: #2288fb;
 	text-decoration: underline;
@@ -75,6 +78,10 @@
 	cursor: default;
 }
 
+.filing-tab-title-selected:nth-child(even) {
+	background-color: #000000;
+}
+
 .filing-tab-title-blank, .filing-tab-title-blank:hover {
 	cursor: default;
 	background-color: #171b21;
@@ -82,9 +89,10 @@
 }
 
 .filing-tab-title-selected:only-child {
+	background-color: #171b21;
 	border-bottom: 2px solid rgba(0, 92, 197, 0.0);
 	text-decoration: none;
-	color: #abdafd;
+	color: #2288fb;
 }
 
 .filing-tab-title-disabled, .filing-tab-title-disabled:hover {
@@ -293,8 +301,6 @@
 }
 
 .inspector-page-panel {
-	width: 33%;
-	max-width: 33%;
 	height: calc(100vh - 64px);
 	max-height: calc(100vh - 64px);
 	display: table-cell;
@@ -305,17 +311,20 @@
 .inspector-page-panel-edit {
 	width: 67%;
 	max-width: 67%;
-	height: 100%;
-	max-height: calc(100vh - 64px);
+}
+
+.inspector-page-panel-inspect {
+	width: 33%;
+	max-width: 33%;
 }
 
 .inspector-page-panel-content-wrapper {
 	max-height: 100%;
-	overflow: auto;
+	/*overflow: auto;*/
+	overflow: hidden;
 }
 
 .inspector-page-panel-editor-wrapper {
-	/*display: table;*/
 	display: flex;
 	width: 100%;
 }
@@ -333,16 +342,21 @@
 }
 
 .inspector-page-panel-split-width-content-wrapper {
-	/*display: table-cell;*/
 	display: flex;
 	width: 50%;
 }
 
 .inspector-page-panel-filing-tab-set-wrapper {
 	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	align-items: stretch;
 }
 
 .inspector-page-panel-button-wrapper {
+	flex: 0 1 auto;
 	padding: 10px;
 }
 
