@@ -203,7 +203,7 @@ class ProfilePage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('ProfilePage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+// 		console.log('ProfilePage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		if (!prevProps.profile && this.props.profile) {
 			const { profile } = this.props;

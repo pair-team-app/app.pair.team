@@ -104,11 +104,11 @@ h1.mobile {
 
 /** Page Header */
 h2 {
-  font-family: "SF Pro Display Medium", sans-serif;
-  font-size: 44px;
-  letter-spacing: -2.32px;
+  font-family: "SF Pro Display Regular", sans-serif;
+  font-size: 48px;
+  letter-spacing: -1px;
   line-height: normal;
-  color: #c8e1fd;
+  color: #ffffff;
 }
 
 /** Upload Header Subtitle **/

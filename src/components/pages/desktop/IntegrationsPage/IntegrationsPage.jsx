@@ -14,6 +14,7 @@ import { API_ENDPT_URL } from '../../../../consts/uris';
 import { updateUserProfile } from '../../../../redux/actions';
 import { Strings } from '../../../../utils/lang';
 import { trackEvent } from '../../../../utils/tracking';
+import deLogo from '../../../../assets/images/logos/logo-designengine.svg';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -62,7 +63,7 @@ class IntegrationsPage extends Component {
 	}
 
 	componentDidMount() {
-		console.log('IntegrationsPage.componentDidMount()', this.props, this.state);
+// 		console.log('IntegrationsPage.componentDidMount()', this.props, this.state);
 
 		const { profile } = this.props;
 		axios.post(API_ENDPT_URL, qs.stringify({
@@ -82,7 +83,7 @@ class IntegrationsPage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('IntegrationsPage.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
+// 		console.log('IntegrationsPage.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
 
 		if (!prevProps.profile && this.props.profile || prevState.integrations.length !== this.state.integrations.length) {
 			const { profile } = this.props;
@@ -136,6 +137,10 @@ class IntegrationsPage extends Component {
 		const { integrations } = this.state;
 		return (
 			<BaseDesktopPage className="integrations-page-wrapper">
+				<div className="integrations-page-header">
+					<img className="integrations-page-header-logo" src={deLogo} alt="Logo" />
+					<h2>Design Engine Integrations</h2>
+				</div>
 				<IntegrationsPageGrid
 					integrations={integrations}
 					onClick={this.handleIntegrationItemClick}

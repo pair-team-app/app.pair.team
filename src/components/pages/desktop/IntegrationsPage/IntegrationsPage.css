@@ -2,6 +2,17 @@
 .integrations-page-wrapper {
 }
 
+.integrations-page-header {
+	width: 100%;
+	text-align: center;
+	margin: 26px 0 20px 0;
+}
+
+.integrations-page-header-logo {
+	width: 138px;
+	height: 63px;
+	margin-bottom: 15px;
+}
 
 .integrations-page-grid {
 	width: 100%;
@@ -9,13 +20,12 @@
 
 .integrations-page-grid-item-wrapper {
 	width: 100%;
-	margin: 8px -10px 0 -10px;
+	padding: 0 20px;
 }
 
 
 .integrations-page-grid-item {
-	width: 260px;
-	height: 320px;
-	margin-bottom: 20px;
-	border-radius: 4px;
+	width: 198px;
+	height: 198px;
+	margin: 0 20px 40px 20px;
 }
