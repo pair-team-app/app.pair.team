@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './ProfilePage.css';
 
 import axios from 'axios/index';
+import qs from 'qs';
 import Dropzone from 'react-dropzone';
 import FontAwesome from 'react-fontawesome';
 import ImageLoader from 'react-loading-image';
@@ -14,11 +15,10 @@ import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../
 import IntegrationGridItem from '../../iterables/IntegrationGridItem';
 import ConfirmDialog from '../../overlays/ConfirmDialog';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../overlays/PopupNotification';
-import { Modals, DEFAULT_AVATAR, CDN_UPLOAD_URL } from '../../../consts/uris';
+import {Modals, DEFAULT_AVATAR, CDN_UPLOAD_URL, API_ENDPT_URL} from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { Bits, Files, Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
-import integrationItems from '../../../assets/json/integrations';
 
 const dropZone = React.createRef();
 
@@ -140,7 +140,7 @@ const ProfilePageIntegrationsGrid = (props)=> {
 				return (<Column key={i}>
 					<IntegrationGridItem
 						title={item.title}
-						image={item.filename}
+						image={item.img_url}
 						enabled={true}
 						selected={true}
 						inheritedClass="profile-page-integrations-grid-item"
@@ -180,13 +180,26 @@ class ProfilePage extends Component {
 	componentDidMount() {
 // 		console.log('ProfilePage.componentDidMount()', this.props, this.state);
 
-		if (this.props.profile) {
-			const { profile } = this.props;
-			const { avatar, username, email, type } = profile;
-			const integrations = integrationItems.filter((integration)=> (profile.sources.includes(integration.id) || profile.integrations.includes(integration.id)));
+		const { profile } = this.props;
+		axios.post(API_ENDPT_URL, qs.stringify({
+			action : 'INTEGRATIONS'
+		})).then((response) => {
+			console.log('INTEGRATIONS', response.data);
+			const integrations = response.data.integrations.map((integration)=> (Object.assign({}, integration, {
+				id       : integration.id << 0,
+				enabled  : ((integration.enabled << 0) === 1),
+				selected : (profile && profile.integrations.includes(integration.id << 0))
+			})));
 
-			this.setState({ avatar, username, email, type, integrations });
-		}
+			this.setState({ integrations }, ()=> {
+				if (this.props.profile) {
+					const { profile } = this.props;
+					const { avatar, username, email, type } = profile;
+					this.setState({ avatar, username, email, type });
+				}
+			});
+		}).catch((error)=> {
+		});
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -194,7 +207,9 @@ class ProfilePage extends Component {
 
 		if (!prevProps.profile && this.props.profile) {
 			const { profile } = this.props;
-			const integrations = integrationItems.filter((integration)=> (profile.sources.includes(integration.id) || profile.integrations.includes(integration.id)));
+			const integrations = this.state.integrations.map((integration)=> (Object.assign({}, integration, {
+				selected : (profile && profile.integrations.includes(integration.id << 0))
+			})));
 			this.setState({ integrations });
 		}
 
@@ -204,8 +219,7 @@ class ProfilePage extends Component {
 
 			this.setState({ avatar, username, email, type,
 				usernameValid : !Bits.contains(status, 0x01),
-				emailValid    : !Bits.contains(status, 0x10),
-				integrations  : integrationItems.filter((integration)=> (profile.sources.includes(integration.id) || profile.integrations.includes(integration.id)))
+				emailValid    : !Bits.contains(status, 0x10)
 			});
 		}
 
@@ -466,8 +480,8 @@ class ProfilePage extends Component {
 				/>
 
 				{(profile) && (<ProfilePageIntegrationsGrid
-					title="Design Tools & Frameworks Integrations"
-					items={integrations}
+					title="Tool & Framework Integrations"
+					items={integrations.filter((integration)=> (profile.integrations.includes(integration.id)))}
 					profile={profile}
 					onClick={()=> this.props.onModal(Modals.INTEGRATIONS)}
 				/>)}

@@ -12,7 +12,6 @@ import IntegrationGridItem from '../../iterables/IntegrationGridItem';
 import { API_ENDPT_URL } from './../../../consts/uris';
 import { URIs } from './../../../utils/lang';
 import { trackEvent } from './../../../utils/tracking';
-import integrations from './../../../assets/json/integrations';
 
 
 const IntegrationsModalGrid = (props)=> {
@@ -25,7 +24,7 @@ const IntegrationsModalGrid = (props)=> {
 				return (<Column key={i}>
 					<IntegrationGridItem
 						title={integration.title}
-						image={integration.filename}
+						image={integration.img_url}
 						enabled={integration.enabled}
 						selected={integration.selected}
 						inheritedClass="integrations-modal-grid-item"
@@ -42,12 +41,11 @@ class IntegrationsModal extends Component {
 		super(props);
 
 		this.state = {
-			step       : 0,
-			sources    : [],
-			devs       : [],
-			outro      : false,
-			submitted  : false,
-			profile    : null
+			step         : 0,
+			integrations : [],
+			outro        : false,
+			submitted    : false,
+			profile      : null
 		};
 	}
 
@@ -55,30 +53,27 @@ class IntegrationsModal extends Component {
 // 		console.log('IntegrationsModal.componentDidMount()', this.props, this.state);
 
 		const { profile } = this.props;
+		axios.post(API_ENDPT_URL, qs.stringify({
+			action : 'INTEGRATIONS'
+		})).then((response) => {
+			console.log('INTEGRATIONS', response.data);
+			const integrations = response.data.integrations.map((integration)=> (Object.assign({}, integration, {
+				id       : integration.id << 0,
+				enabled  : ((integration.enabled << 0) === 1),
+				selected : (profile && profile.integrations.includes(integration.id << 0))
+			})));
 
-		const sources = integrations.filter((integration)=> (integration.type === 'design')).sort((integration1, integration2)=> ((integration1.enabled && !integration2.enabled) ? -1 : (!integration1.enabled && integration2.enabled) ? 1 : 0)).map((integration)=> (Object.assign({}, integration, {
-			selected : profile.sources.includes(integration.id)
-		})));
-
-		const devs = integrations.filter((integration)=> (integration.type === 'dev')).sort((integration1, integration2)=> ((integration1.enabled && !integration2.enabled) ? -1 : (!integration1.enabled && integration2.enabled) ? 1 : 0)).map((integration)=> (Object.assign({}, integration, {
-			selected : profile.integrations.includes(integration.id)
-		})));
-
-		this.setState({ sources, devs });
+			this.setState({ integrations });
+		}).catch((error)=> {
+		});
 	}
 
 	handleIntegrationItemClick = (integration)=> {
 // 		console.log('IntegrationsModal.handleIntegrationItemClick()', integration);
 
 		integration.selected = !integration.selected;
-		if (integration.type === 'design') {
-			const sources = this.state.sources.filter((item)=> (item.type === 'design')).map((item)=> ((item.id === integration.id) ? integration : item));
-			this.setState({ sources });
-
-		} else {
-			const devs = this.state.devs.filter((item)=> (item.type === 'dev')).map((item)=> ((item.id === integration.id) ? integration : item));
-			this.setState({ devs });
-		}
+		const integrations = this.state.integrations.map((item)=> (item.id === integration.id) ? integration : item);
+		this.setState({ integrations });
 	};
 
 	handleComplete = ()=> {
@@ -95,32 +90,17 @@ class IntegrationsModal extends Component {
 		});
 	};
 
-	handleNextStep = ()=> {
-// 		console.log('IntegrationsModal.handleNextStep()');
-
-		trackEvent('button', 'next');
-		this.setState({ step : 1 });
-	};
-
-	handlePrevStep = ()=> {
-// 		console.log('IntegrationsModal.handlePrevStep()');
-
-		trackEvent('button', 'prev');
-		this.setState({ step : 0 });
-	};
-
 	handleSubmit = ()=> {
 // 		console.log('IntegrationsModal.handleSubmit()');
 
 		const { profile } = this.props;
-		const { sources, devs } = this.state;
+		const { integrations } = this.state;
 
 		this.setState({ submitted : true }, ()=> {
 			axios.post(API_ENDPT_URL, qs.stringify({
 				action       : 'UPDATE_INTEGRATIONS',
 				user_id      : profile.id,
-				sources      : [...sources].filter((item)=> (item.selected)).map((item)=> (item.id)).join(','),
-				integrations : [...devs].filter((item)=> (item.selected)).map((item)=> (item.id)).join(',')
+				integrations : integrations.filter((integration)=> (integration.selected)).map((integration)=> (integration.id)).join(',')
 			})).then((response) => {
 				console.log('UPDATE_INTEGRATIONS', response.data);
 
@@ -138,9 +118,8 @@ class IntegrationsModal extends Component {
 // 		console.log('IntegrationsModal.render()', this.props, this.state);
 
 		const { team } = this.props;
-		const { step, sources, devs, outro } = this.state;
-		const title = (step === 0) ? 'What design tools is your team using?' : 'What development frameworks is your team using?';
-// 		const selectedItems = gridItems[step].filter((item)=> (item.selected));
+		const { integrations, outro } = this.state;
+		const title = 'What integrations are your team using?';
 
 		return (
 			<BaseOverlay
@@ -159,20 +138,14 @@ class IntegrationsModal extends Component {
 					</div>
 					<div className="integrations-modal-content-wrapper">
 						<IntegrationsModalGrid
-							integrations={(step === 0) ? sources : devs}
+							integrations={integrations}
 							onClick={(integration)=> this.handleIntegrationItemClick(integration)}
 						/>
 
-						{(step === 0)
-							? (<div className="integrations-modal-button-wrapper">
-									<button className="adjacent-button" onClick={()=> { trackEvent('button', 'cancel'); this.setState({ outro : true }); }}>Cancel</button>
-									<button onClick={()=> this.handleNextStep()}>Next</button>
-								</div>)
-							: (<div className="integrations-modal-button-wrapper">
-									<button className="adjacent-button" onClick={()=> this.handlePrevStep()}>Back</button>
-									<button onClick={()=> this.handleSubmit()}>Save</button>
-								</div>)
-						}
+						<div className="integrations-modal-button-wrapper">
+							<button className="adjacent-button" onClick={()=> { trackEvent('button', 'cancel'); this.setState({ outro : true }); }}>Cancel</button>
+							<button onClick={()=> this.handleSubmit()}>Save</button>
+						</div>
 					</div>
 				</div>
 			</BaseOverlay>);

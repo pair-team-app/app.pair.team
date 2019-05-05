@@ -210,7 +210,7 @@ export function updateUserProfile(payload, force=true) {
 
 	return ((dispatch)=> {
 		if (payload) {
-			const { id, avatar, sources, integrations } = payload;
+			const { id, avatar, integrations } = payload;
 
 // 			if (typeof cookie.load('user_id') === 'undefined' || ((cookie.load('user_id') << 0) !== id)) {
 // 				cookie.save('user_id', id << 0, { path : '/' });
@@ -220,7 +220,6 @@ export function updateUserProfile(payload, force=true) {
 				action       : 'UPDATE_PROFILE',
 				user_id      : id,
 				filename     : avatar,
-				sources      : (sources || []).join(','),
 				integrations : (integrations || []).join(',')
 			}))).then((response)=> {
 				console.log('UPDATE_PROFILE', response.data);

@@ -322,7 +322,7 @@ class App extends Component {
 			if (isUploadPage()) {
 
 			} else {
-				if (profile.sources.length === 0 || profile.integrations.length === 0) {
+				if (profile.integrations.length === 0) {
 					trackEvent('user', 'sign-up');
 					setTimeout(()=> {
 						this.onToggleModal(Modals.INTEGRATIONS, true);
@@ -362,7 +362,7 @@ class App extends Component {
 			this.setState({ teamDialog : true });
 
 		} else {
-			if (profile.sources.length === 0 || profile.integrations.length === 0) {
+			if (profile.integrations.length === 0) {
 				trackEvent('user', 'sign-up');
 				setTimeout(()=> {
 					this.onToggleModal(Modals.INTEGRATIONS, true);
@@ -440,7 +440,7 @@ class App extends Component {
 			this.setState({ teamDialog : true });
 
 		} else {
-			if (profile.sources.length === 0 || profile.integrations.length === 0) {
+			if (profile.integrations.length === 0) {
 				setTimeout(()=> {
 					this.onToggleModal(Modals.INTEGRATIONS, true);
 				}, 1250);
@@ -487,7 +487,7 @@ class App extends Component {
 				}).catch((error)=> {
 				});
 
-				if (profile.sources.length === 0 || profile.integrations.length === 0) {
+				if (profile.integrations.length === 0) {
 					setTimeout(()=> {
 						this.onToggleModal(Modals.INTEGRATIONS, true);
 					}, 750);

@@ -3,17 +3,17 @@ import React, { Component } from 'react';
 import './ConfigUploadModal.css';
 
 import axios from 'axios';
+import qs from 'qs';
 import Dropzone from 'react-dropzone';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import BaseOverlay from '../BaseOverlay';
-import { LINTER_UPLOAD_URL } from './../../../consts/uris';
+import { API_ENDPT_URL, LINTER_UPLOAD_URL } from './../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { URIs } from './../../../utils/lang';
 import { trackEvent } from './../../../utils/tracking';
-import allIntegrations from './../../../assets/json/integrations';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
 
 
@@ -77,12 +77,21 @@ class ConfigUploadModal extends Component {
 // 		console.log('ConfigUploadModal.componentDidMount()', this.props, this.state);
 
 		const { profile } = this.props;
-		const integrations = allIntegrations.filter((integration)=> (integration.type === 'dev' && profile.integrations.includes(integration.id))).map((integration)=> (Object.assign({}, integration, {
-			selected : true,
-			uploaded : false
-		})));
+		axios.post(API_ENDPT_URL, qs.stringify({
+			action : 'INTEGRATIONS'
+		})).then((response) => {
+			console.log('INTEGRATIONS', response.data);
+			const integrations = response.data.integrations.map((integration)=> (Object.assign({}, integration, {
+				id       : integration.id << 0,
+				enabled  : ((integration.enabled << 0) === 1)
+			}))).filter((integration)=> (profile.integrations.includes(integration.id))).map((integration)=> (Object.assign({}, integration, {
+				selected : true,
+				uploaded : false
+			})));
 
-		this.setState({ integrations });
+			this.setState({ integrations });
+		}).catch((error)=> {
+		});
 	}
 
 	handleCancel = (event)=> {
