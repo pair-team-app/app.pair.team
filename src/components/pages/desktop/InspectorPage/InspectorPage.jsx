@@ -741,7 +741,7 @@ class InspectorPage extends Component {
 	};
 
 	resetTabSets = (upload, artboards)=> {
-		console.log('InspectorPage.resetTabSets()', upload, artboards);
+// 		console.log('InspectorPage.resetTabSets()', upload, artboards);
 
 		const { section } = this.state;
 		let tabSets = inspectorTabSets[section];
@@ -753,7 +753,6 @@ class InspectorPage extends Component {
 				} else {
 					return (tabSet.map((tab, ii) => {
 						return ((ii === 0) ? Object.assign({}, tab, {
-							type     : 'component',
 							enabled  : ((upload.state << 0) === 3),
 							contents : <SpecsList
 								upload={upload}
@@ -1796,6 +1795,11 @@ class InspectorPage extends Component {
 
 		event.stopPropagation();
 
+		const { section } = this.state;
+		if (section === SECTIONS.EDIT) {
+			return;
+		}
+
 		if (!event.ctrlKey) {
 			const panMultPt = {
 				x : this.state.panMultPt.x + (event.deltaX * PAN_ZOOM.panFactor),
@@ -2120,17 +2124,6 @@ class InspectorPage extends Component {
 				height          : `${(scale * artboard.meta.frame.size.height) << 0}px`
 			};
 
-
-// 			const icon = (i % 3 === 0) ? iosIcon : (i % 3 === 1) ? androidIcon : html5Icon;
-// 			const iconStyle = {
-// 				position  : 'absolute',
-// 				top       : '50%',
-// 				left      : '50%',
-// 				transform : 'translate(-50%, -50%)',
-// 				objectFit : 'scale-down',
-// 				border    : '1px dotted rgba(255, 0, 0, 1.0)'
-// 			};
-
 			const sliceOffset = Object.assign({}, offset);
 			const artboardSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'artboard', sliceOffset, scale, scrolling) : [];
 			const groupSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'group', sliceOffset, scale, scrolling) : [];
@@ -2228,17 +2221,17 @@ class InspectorPage extends Component {
 
 					<InteractiveDiv
 						className="full-width full-height"
-						x={panMultPt.x}
-						y={panMultPt.y}
+						x={(section === SECTIONS.INSPECT) ? panMultPt.x : 0}
+						y={(section === SECTIONS.INSPECT) ? panMultPt.y : 0}
 						scale={scale}
 						scaleFactor={PAN_ZOOM.zoomFactor}
 						minScale={Math.min(...PAN_ZOOM.zoomNotches)}
 						maxScale={Math.max(...PAN_ZOOM.zoomNotches)}
 						ignorePanOutside={false}
 						renderOnChange={false}
-						onPanAndZoom={this.handlePanAndZoom}
-						onPanEnd={()=> (this.setState({ scrolling : false }))}
-						onPanMove={this.handlePanMove}>
+						onPanAndZoom={(x, y, scale) => (section === SECTIONS.INSPECT) ? this.handlePanAndZoom(x, y, scale) : null}
+						onPanEnd={()=> this.setState({ scrolling : false })}
+						onPanMove={(x, y)=> (section === SECTIONS.INSPECT) ? this.handlePanMove(x, y) : null}>
 							<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
 								{(artboards.length > 0) && (<div style={artboardsStyle}>
 									{artboardImages}
@@ -2283,10 +2276,10 @@ class InspectorPage extends Component {
 												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].meta.syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].meta.syntax : ''}>
 													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
 												</CopyToClipboard>
-											{(profile && profile.github)
-												? (<button disabled={!slice || (gist && gist.busy) || (linter && linter.busy)} className="inspector-page-panel-button aux-button" onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>)
-												: (<button className="inspector-page-panel-button aux-button" onClick={()=> this.props.onModal(Modals.GITHUB_CONNECT)}>{(processing) ? 'Processing' : 'Sign in with GitHub'}</button>)
-											}
+												{(profile && profile.github)
+													? (<button disabled={!slice || (gist && gist.busy) || (linter && linter.busy)} className="inspector-page-panel-button aux-button" onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>)
+													: (<button className="inspector-page-panel-button aux-button" onClick={()=> this.props.onModal(Modals.GITHUB_CONNECT)}>{(processing) ? 'Processing' : 'Sign in with GitHub'}</button>)
+												}
 											</div>)
 										: (<div className="inspector-page-panel-button-wrapper">
 												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('specs', toSpecs(activeSlice))} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
@@ -2306,7 +2299,7 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.EDIT) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-editor-wrapper">
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-split-width-content-wrapper inspector-page-panel-full-height-content-wrapper">
-								<div className="inspector-page-panel-filing-tab-set-wrapper">
+								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - 106px)` }}>
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}

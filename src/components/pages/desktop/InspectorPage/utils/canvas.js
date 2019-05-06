@@ -13,7 +13,7 @@ export const calcCanvasSliceFrame = (state, slice, artboard, offset, scrollPt)=>
 // 	console.log(':::::::::', artboards.length, { offset, scrollPt });
 
 	const baseOffset = {
-		x : (artboards.length < GRID.colsMax || section === SECTIONS.EDIT) ? GRID.padding.col * 0.5 : 0,
+		x : (artboards.length < GRID.colsMax && section !== SECTIONS.EDIT) ? GRID.padding.col * 0.5 : 0,
 // 		x : 0,
 		y : 24 + (38 * (urlBanner << 0)) + PAN_ZOOM.insetSize.height
 	};
