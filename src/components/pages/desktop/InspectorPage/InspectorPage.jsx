@@ -209,8 +209,7 @@ const InspectorFooter = (props)=> {
 			</>)}
 
 			{(section !== SECTIONS.INSPECT) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('inspect')}>Inspect</button>)}
-			{(section !== SECTIONS.PARTS) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('parts')}>Parts</button>)}
-			{(section !== SECTIONS.PRESENTER) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('present')}>Presenter</button>)}
+			{/*{(section !== SECTIONS.PRESENTER) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('present')}>Presenter</button>)}*/}
 		</div>)}
 	</Row></div>);
 };
@@ -2519,7 +2518,7 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.INSPECT) && (<>
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
-								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 202 : 58)}px)` }}>
+								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 154 : 58)}px)` }}>
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}
@@ -2533,7 +2532,6 @@ class InspectorPage extends Component {
 													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
 												</CopyToClipboard>
 												<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>
-												<button disabled={!atomExtension || !slice || (linter && linter.busy) || (gist && gist.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Atom'}</button>
 												<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>
 											</div>)
 										: (<div className="inspector-page-panel-button-wrapper">

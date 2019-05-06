@@ -63,7 +63,7 @@ export function toAndroid(slices, artboard) {
 
 	const artboardName = Strings.camelize(Strings.slugifyURI(artboard.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
 
-	let html = `<!-- ${DISCLAIMER.replace('__LANG__', 'XML').replace(/\n__/g, ' -->\n<!-- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -->').replace(/,\n/g, ' -->\n<!-- ')}\n\n\n`;
+	let html = '';//`<!-- ${DISCLAIMER.replace('__LANG__', 'XML').replace(/\n__/g, ' -->\n<!-- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -->').replace(/,\n/g, ' -->\n<!-- ')}\n\n\n`;
 	html += `<?xml version="1.0" encoding="utf-8"?>\n`;
 	slices.forEach((slice)=> {
 		const sliceName = Strings.camelize(Strings.slugifyURI(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
@@ -109,7 +109,7 @@ export function toBootstrap(slices) {
 	}
 
 	const parentSlice = slices.shift();
-	let html = `/**\n * ${DISCLAIMER.replace('__LANG__', 'Bootstrap').replace(/\n__/g, '\n **//* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, '\n * ')}\n\n\n`;
+	let html = '';//`/**\n * ${DISCLAIMER.replace('__LANG__', 'Bootstrap').replace(/\n__/g, '\n **//* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, '\n * ')}\n\n\n`;
 	if (parentSlice.type === 'background' || parentSlice.type === 'group') {
 		html += `$body-bg: ${parentSlice.meta.fillColor.toUpperCase()};\n\n`;
 	}
@@ -132,7 +132,7 @@ export function toBootstrap(slices) {
 export function toCSS(slices) {
 // 	console.log('code-generator.toCSS()', slices);
 
-	let html = `/* ${DISCLAIMER.replace('__LANG__', 'CSS').replace(/\n__/g, ' */\n/* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, ' */\n/* ')}\n\n\n`;
+	let html = '';//`/* ${DISCLAIMER.replace('__LANG__', 'CSS').replace(/\n__/g, ' */\n/* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, ' */\n/* ')}\n\n\n`;
 	slices.forEach((slice)=> {
 		html += `.${Strings.slugifyURI(slice.title)} {\n`;
 		html += `${TAB}position: absolute;\n`;
@@ -179,7 +179,7 @@ export function toGridHTML(slices) {
 	const parentSlice = [...slices].shift();
 	slices = [...slices].slice(1, Math.min(slices.length, 4));
 
-	let html = `<!-- ${DISCLAIMER.replace('__LANG__', 'HTML').replace(/\n__/g, ' -->\n<!-- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -->').replace(/,\n/g, ' -->\n<!-- ')}\n\n\n`;
+	let html = '';//`<!-- ${DISCLAIMER.replace('__LANG__', 'HTML').replace(/\n__/g, ' -->\n<!-- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -!- -->').replace(/,\n/g, ' -->\n<!-- ')}\n\n\n`;
 	html += `<style>\n`;
 	html += `${TAB}.grid-container {\n`;
 	html += `${TAB}${TAB}display: grid;\n`;
@@ -256,7 +256,7 @@ export function toReactJS(slices) {
 	slices = [...slices].slice(1, Math.min(slices.length, 4));
 
 	const componentName = Strings.camelize(parentSlice.title.replace(badChars, ''), null, true);
-	let html = `/**\n * ${DISCLAIMER.replace('__LANG__', 'JSX').replace(/\n__/g, '\n **//* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, '\n * ')}\n\n\n`;
+	let html = '';//`/**\n * ${DISCLAIMER.replace('__LANG__', 'JSX').replace(/\n__/g, '\n **//* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, '\n * ')}\n\n\n`;
 	html += 'import React, { Component } from \'react\';\n';
 	html += `import './${componentName}.css';\n\n`;
 	html += `import axios from 'axios';\n`;
@@ -327,7 +327,7 @@ export function toSwift(slices, artboard) {
 // 	console.log('code-generator.toSwift()', slices, artboard);
 
 	const artboardName = Strings.camelize(artboard.title.replace(/[-/—]+/g, ' ').replace(badChars, ''), null, true);
-	let html = `/**\n * ${DISCLAIMER.replace('__LANG__', 'Swift').replace(/\n__/g, '\n **//* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, '\n * ')}\n\n\n`;
+	let html = '';//`/**\n * ${DISCLAIMER.replace('__LANG__', 'Swift').replace(/\n__/g, '\n **//* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */').replace(/,\n/g, '\n * ')}\n\n\n`;
 	slices.forEach((slice)=> {
 		if (slice.type === 'background' || slice.type === 'group' || slice.type === 'slice' || slice.type === 'symbol' || slice.type === 'textfield') {
 			const sliceName = Strings.camelize(Strings.slugifyURI(slice.title).replace(/[-/—]+/g, ' ').replace(badChars, ''));
