@@ -2269,8 +2269,7 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.INSPECT) && (<>
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
-								{/*<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 202 : 58)}px)` }}>*/}
-								<div className="inspector-page-panel-filing-tab-set-wrapper">
+								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 154 : 106)}px)` }}>
 									<FilingTabSet
 										tabs={tabSet}
 										activeTab={activeTabs[i]}
@@ -2280,7 +2279,7 @@ class InspectorPage extends Component {
 									/>
 									{(i === 0)
 										? (<div className="inspector-page-panel-button-wrapper">
-												{(profile) && (<button disabled={!slice || (linter && linter.busy)} className="inspector-page-panel-button destruct-button" onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : 'Show Errors'}</button>)}
+											<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Linter' : 'Show Errors'}</button>
 												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].meta.syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].meta.syntax : ''}>
 													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
 												</CopyToClipboard>
@@ -2307,7 +2306,6 @@ class InspectorPage extends Component {
 					{(section === SECTIONS.EDIT) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-editor-wrapper">
 						{(tabSets.map((tabSet, i)=> (
 							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-split-width-content-wrapper inspector-page-panel-full-height-content-wrapper">
-								{/*<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 202 : 58)}px)` }}>*/}
 								<div className="inspector-page-panel-filing-tab-set-wrapper">
 									<FilingTabSet
 										tabs={tabSet}
@@ -2324,7 +2322,6 @@ class InspectorPage extends Component {
 													? (<button disabled={!slice} className="inspector-page-panel-button aux-button" onClick={()=> this.handleEditorRun(activeTabs[i].meta.lang.split(',').pop(), activeTabs[i].meta.syntax)}>{(processing) ? 'Processing' : 'Compile'}</button>)
 													: (<button className="inspector-page-panel-button aux-button" onClick={()=> this.props.onModal(Modals.GITHUB_CONNECT)}>{(processing) ? 'Processing' : 'Sign in with GitHub'}</button>)
 												}
-												{/*<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>*/}
 											</div>)
 										: (<div className="inspector-page-panel-button-wrapper">
 												<button disabled={!slice} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download'}</button>
