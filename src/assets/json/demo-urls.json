@@ -1,5 +1,4 @@
 {
-  "inspect": "http://demo.designengine.ai/inspect/317/demo",
-  "parts": "http://demo.designengine.ai/parts/317/demo",
-  "present": "http://demo.designengine.ai/present/317/demo"
+  "inspect": "/inspect/317/demo",
+  "edit": "/edit/317/demo"
 }

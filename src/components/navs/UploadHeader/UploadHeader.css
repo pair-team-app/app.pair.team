@@ -2,8 +2,8 @@
 .upload-header-wrapper {
 	display: table;
 	width: calc(100% + 40px);
-	height: 306px;
-	margin: -20px -20px 20px -20px;
+	height: calc(100vh - 64px);
+	margin: -20px;
 	background: #1a1b1d url(../../../assets/images/backgrounds/bg-checkerboard.png) repeat;
 }
 
@@ -16,12 +16,20 @@
 	vertical-align: middle;
 }
 
+.upload-header-logo {
+	width: 138px;
+	height: 63px;
+	margin-bottom: 15px;
+}
+
 .upload-header-title {
 }
 
 .upload-header-subtitle {
 	margin-bottom: 50px;
+	color: #545454;
 }
 
-.upload-header-button-wrapper {
+.upload-header-button-wrapper .adjacent-button {
+	margin-right: 10px;
 }

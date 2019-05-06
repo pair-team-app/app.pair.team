@@ -36,7 +36,6 @@
 h1.page-header-title {
 	width: 100%;
 	text-align: center;
-	margin-bottom: 30px;
 	vertical-align: middle;
 }
 
@@ -49,7 +48,10 @@ h1.page-header-title {
 }
 
 .long-button {
-	width: 188px;
+	min-width: 100px;
+	width: auto;
+	padding-left: 25px;
+	padding-right: 25px;
 }
 
 .tiny-button {
@@ -62,19 +64,11 @@ h1.page-header-title {
 
 
 .aux-button, .aux-button:disabled, .aux-button:disabled:hover {
-	padding: 9px 20px;
-	/*background: #57aa48 linear-gradient(-180deg, #69cd58, #57aa48 90%) -0.5em;*/
-	background-color: #34d058;
-	font-family: "San Francisco Text Bold", sans-serif;
-	font-weight: 700;
-	font-size: 16px;
-	letter-spacing: -0.6px;
-	color : #ffffff;
+	background-color: #24c14d;
 }
 
 .aux-button:hover, .aux-button:active {
-	/*background: #28a745 linear-gradient(-180deg, #34d058, #28a745 90%);*/
-	background-color: #28a745;
+	background-color: #1d993c;
 }
 
 .aux-button:disabled, .aux-button:disabled:hover {
@@ -93,8 +87,6 @@ h1.page-header-title {
 }
 
 .destruct-button:disabled, .destruct-button:disabled:hover {
-	opacity : 0.5;
-	color: #eef0f2;
 }
 
 .adjacent-button {

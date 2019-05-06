@@ -10,6 +10,7 @@ import { updateDeeplink } from '../../../redux/actions';
 import { sendToSlack } from '../../../utils/funcs';
 import { Files } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
+import deLogo from './../../../assets/images/logos/logo-designengine.svg';
 import demoURLs from '../../../assets/json/demo-urls';
 
 
@@ -125,6 +126,7 @@ class UploadHeader extends Component {
 				onFileDialogCancel={this.handleFileDialogCancel}
 				ref={dropZone}
 			>
+				<img className="upload-header-logo" src={deLogo} alt="Logo" />
 				<h1 className="page-header-title upload-header-title">{title}</h1>
 				<div className="page-header-subtitle upload-header-subtitle">{subtitle}</div>
 				{(uploading)

@@ -43,9 +43,10 @@ button {
   height: 38px;
   background-color: #005cc5;
   border: 1px solid rgba(0, 92, 197, 0.0);
+  border-radius: 1px;
   font-family: "San Francisco Text SemiBold", sans-serif;
   font-size: 16px;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.5px;
   color : #ffffff;
   line-height: normal;
 }
@@ -56,10 +57,8 @@ button:hover, button:active {
 }
 
 button:disabled, button:disabled:hover {
-  /*background-color: #005cc5;*/
-  background-color: #2d6db3;
-  color: #1a1b1d;
-  opacity : 0.875;
+  color: #f0f0f0;
+  opacity : 0.75;
   cursor: default;
 }
 
@@ -92,7 +91,7 @@ h1 {
   font-size: 52px;
   line-height: 64px;
   letter-spacing: -2px;
-  color: #c8e1fd;
+  color: #ffffff;
 }
 
 h1.mobile {

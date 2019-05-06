@@ -110,42 +110,17 @@ class HomePage extends Component {
 	render() {
 // 		console.log('HomePage.render()', this.props, this.state);
 
-		const { profile, artboards } = this.props;
-		const { section, fetching, fileDialog } = this.state;
-		const gridTitle = (profile) ? (fetching) ? `Loading${'…'}` : (artboards.length > 0) ? (URIs.subdomain()) ? `Team ${URIs.subdomain()}` : 'Previous' : 'N/A' : 'N/A';
-
+		const { fileDialog } = this.state;
 		return (
 			<BaseDesktopPage className="home-page-wrapper">
 				<UploadHeader
-					title={(section) ? homeContent[section].header.title : 'Upload a design file'}
-					subtitle={(section) ? homeContent[section].header.subtitle : 'Drag, drop, or click to upload.'}
+					title="Upload any design for Free Specs"
+					subtitle="Drag & drop any design file here"
 					uploading={false}
 					fileDialog={fileDialog}
 					onFile={this.handleFile}
 					onPage={this.props.onPage}
 					onPopup={this.props.onPopup} />
-
-				<div className="home-page-section-header-wrapper">
-					<h1>{(section) ? homeContent[section].body.title : 'Free code, specs, & parts to implement pixel-perfect design.'}</h1>
-					{(isUserLoggedIn())
-						? (<button className="long-button" onClick={()=> this.handleUploadClick()}>Upload</button>)
-						: (<>
-								<div className="home-page-button-wrapper is-hidden">
-									<button className="long-button adjacent-button" onClick={()=> this.handleRegister()}>Sign Up</button>
-									<button className="long-button aux-button" onClick={()=> this.handleGitHub()}>Connect to GitHub</button>
-								</div>
-								{/*<button className="long-button" onClick={()=> this.handleLogin()}>Login</button>*/}
-						</>)
-					}
-				</div>
-
-				<ArtboardGrid
-					title={gridTitle}
-					artboards={artboards}
-					onClick={this.handleArtboardClicked}
-					onPage={this.props.onPage}
-					onPopup={this.props.onPopup}
-				/>
 			</BaseDesktopPage>
 		);
 	}

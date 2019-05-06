@@ -1,5 +1,8 @@
 
 .bottom-nav-wrapper {
+	position: fixed;
+	bottom: 20px;
+	left: 20px;
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 12px;
 	letter-spacing: -0.3px;
@@ -17,7 +20,6 @@
 .bottom-nav-desktop-logo {
 	width: 35px;
 	height: 16px;
-	margin-bottom: 20px;
 }
 
 .bottom-nav-mobile-logo {

@@ -696,11 +696,6 @@ class App extends Component {
 					    {/*<Route><Redirect to="/" /></Route>*/}
 				    </Switch>
 
-				    {(!isInspectorPage()) && (<AdvertPanel
-					    title={adBannerPanel.title} image={adBannerPanel.image}
-					    onClick={()=> this.handleAdBanner(adBannerPanel.url)}
-				    />)}
-
 				    {(!isInspectorPage()) && (<BottomNav
 					    mobileLayout={false}
 					    onLogout={()=> this.handleLogout()}
