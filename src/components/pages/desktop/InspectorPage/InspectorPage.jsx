@@ -78,7 +78,6 @@ import {
 	buildInspectorPath,
 	buildInspectorURL,
 	createGist,
-	isUserLoggedIn,
 	sendToSlack } from '../../../../utils/funcs.js';
 import {
 	Arrays,
@@ -549,8 +548,7 @@ class InspectorPage extends Component {
 			tooltip     : 'Loading…',
 			linter      : null,
 			gist        : null,
-
-			rendered    : []
+			langs       : []
 		};
 
 		this.busyInterval = null;
@@ -615,189 +613,10 @@ class InspectorPage extends Component {
 
 		const { deeplink, processing } = this.props;
 // 		const { upload, panMultPt } = this.state;
-		const { section, upload, rendered } = this.state;
+		const { section, upload } = this.state;
 
 		if (!upload && deeplink && deeplink !== prevProps.deeplink && deeplink.uploadID !== 0) {
 			this.onFetchUpload();
-		}
-
-		if (upload && rendered.length === 0) {
-// 			fs.readFile("test.txt", (err, data)=> {
-// 				if (err) {
-// 					throw (err);
-// 				}
-// 				console.log(data.toString());
-// 			});
-
-			const rendered = [{
-				lang    : 'html',
-				content : `<input id="anPageName" name="page" type="hidden" value="step0"><div class="step0" style="-webkit-text-size-adjust:none;width:100%;min-width:375px;height:100vh;min-height:812px;position:relative;overflow:hidden;margin:0px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background-color:rgba(67, 175, 251, 1.0);">
-            <div style="width:375px;height:100%;position:relative;margin:auto;-webkit-text-size-adjust:none;">
-                <div class="map" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:812px;width:375px;position:absolute;margin:0;left:0px;overflow:hidden;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
-                    <img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-1-background.png" class="background" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
-  top                 : 0px;
-  height              : 812px;
-  width               : 375px;
-  position            : absolute;
-  margin              : 0;
-  left                : 0px;
-  -ms-transform       : rotate(0deg); 
-  -webkit-transform   : rotate(0deg); 
-  transform           : rotate(0deg);"><img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-0-bitmap.png" class="bitmap" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
-  top                 : -78px;
-  height              : 877px;
-  width               : 1451px;
-  position            : absolute;
-  margin              : 0;
-  left                : -518px;
-  -ms-transform       : rotate(0deg); 
-  -webkit-transform   : rotate(0deg); 
-  transform           : rotate(0deg);">
-</div>
-                <div class="header" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:68px;width:375px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
-                    <div class="background" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:68px;width:375px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
-                        <div class="background1" style="-webkit-text-size-adjust:none;background-color:rgba(255, 255, 255, 1.0);top:0px;height:68px;width:375px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
-                        </div>
-                        <div class="line" style="-webkit-text-size-adjust:none;background-color:rgba(216, 216, 216, 1.0);top:67px;height:1px;width:375px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
-                        </div>
-                    </div>
-                    <img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-1-shape.svg" class="shape" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
-  top                 : 19px;
-  height              : 30px;
-  width               : 30px;
-  position            : absolute;
-  margin              : 0;
-  left                : 20px;
-  -ms-transform       : rotate(0deg); 
-  -webkit-transform   : rotate(0deg); 
-  transform           : rotate(0deg);"><img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-3-search.svg" class="search" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
-  top                 : 18px;
-  height              : 32px;
-  width               : 30px;
-  position            : absolute;
-  margin              : 0;
-  left                : 325px;
-  -ms-transform       : rotate(0deg); 
-  -webkit-transform   : rotate(0deg); 
-  transform           : rotate(0deg);"><div class="tableft" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:13px;height:42px;width:196px;position:absolute;margin:0;left:90px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
-                        <div class="left" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:42px;width:99px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
-                            <img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-2-background-1@2x.png" class="background1" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
-  top                 : 0px;
-  height              : 42px;
-  width               : 99px;
-  position            : absolute;
-  margin              : 0;
-  left                : 0px;
-  -ms-transform       : rotate(0deg); 
-  -webkit-transform   : rotate(0deg); 
-  transform           : rotate(0deg);"><img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-1-map-icon-active.svg" class="mapiconactive" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
-  top                 : 7px;
-  height              : 28px;
-  width               : 28px;
-  position            : absolute;
-  margin              : 0;
-  left                : 36px;
-  -ms-transform       : rotate(0deg); 
-  -webkit-transform   : rotate(0deg); 
-  transform           : rotate(0deg);">
-</div>
-                        <div class="right" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:42px;width:99px;position:absolute;margin:0;left:97px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
-                            <img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-3-background-2@2x.png" class="background1" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
-  top                 : 0px;
-  height              : 42px;
-  width               : 99px;
-  position            : absolute;
-  margin              : 0;
-  left                : 0px;
-  -ms-transform       : rotate(0deg); 
-  -webkit-transform   : rotate(0deg); 
-  transform           : rotate(0deg);"><img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-1-list-icon-tab-nonactive.svg" class="listicontabnonactive" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
-  top                 : 7px;
-  height              : 28px;
-  width               : 22px;
-  position            : absolute;
-  margin              : 0;
-  left                : 39px;
-  -ms-transform       : rotate(0deg); 
-  -webkit-transform   : rotate(0deg); 
-  transform           : rotate(0deg);">
-</div>
-                    </div>
-                </div>
-                <div class="footer" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:763px;height:48px;width:375px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
-                    <div class="background" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:48px;width:375px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
-                        <img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-1-rectangle-2.png" class="rectangle2" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
-  top                 : 0px;
-  height              : 48px;
-  width               : 375px;
-  position            : absolute;
-  margin              : 0;
-  left                : 0px;
-  -ms-transform       : rotate(0deg); 
-  -webkit-transform   : rotate(0deg); 
-  transform           : rotate(0deg);">
-</div>
-                    <div class="signup anima-valign-text-middle" style='-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:7px;height:36px;width:66px;position:absolute;margin:0;left:20px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);font-family:"AvenirNext-DemiBold", Helvetica, Arial, serif;font-size:15.0px;color:rgba(62, 62, 62, 1.0);text-align:left;line-height:20.0px;'>
-                        Sign Up
-                    </div>
-                    <div class="login anima-valign-text-middle" style='-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:7px;height:36px;width:66px;position:absolute;margin:0;left:289px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);font-family:"AvenirNext-DemiBold", Helvetica, Arial, serif;font-size:15.0px;color:rgba(62, 62, 62, 1.0);text-align:right;line-height:20.0px;'>
-                        Login
-                    </div>
-                </div>
-                <div class="tint" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:812px;width:375px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
-                    <img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-3-svg-tint-background.svg" class="svgtintbackground" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
-  top                 : 0px;
-  height              : 812px;
-  width               : 375px;
-  position            : absolute;
-  margin              : 0;
-  left                : 0px;
-  -ms-transform       : rotate(0deg); 
-  -webkit-transform   : rotate(0deg); 
-  transform           : rotate(0deg);">
-</div>
-                <div class="button" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:669px;height:70px;width:286px;position:absolute;margin:0;left:45px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
-                    <div class="background" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:70px;width:286px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
-                        <div class="rectangle3" style="-webkit-text-size-adjust:none;background-color:rgba(2, 160, 0, 1.0);top:0px;height:70px;box-sizing:border-box;width:286px;position:absolute;margin:0;left:0px;border-style:solid;border-width:5px;border-color:rgba(255, 255, 255, 1.0);-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
-                        </div>
-                        <img anima-src="http://cdn.designengine.ai/renders/249/html/img/step-1-rectangle-3@2x.png" class="rectangle31" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" style="background-color    : rgba(255,255,255,0.0);
-  top                 : 58px;
-  height              : 7px;
-  width               : 276px;
-  position            : absolute;
-  margin              : 0;
-  left                : 5px;
-  -ms-transform       : rotate(0deg); 
-  -webkit-transform   : rotate(0deg); 
-  transform           : rotate(0deg);">
-</div>
-                    <div class="next anima-valign-text-middle" style='-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:6px;height:53px;width:278px;position:absolute;margin:0;left:4px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);font-family:"AvenirNext-Bold", Helvetica, Arial, serif;font-size:25.0px;color:rgba(255, 255, 255, 1.0);text-align:center;letter-spacing:2.0px;line-height:34.0px;'>
-                        <span><span class="span1">Nex</span><span class="span2">t</span>
-    </span>
-                    </div>
-                </div>
-                <div class="copy" style="-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:225px;height:269px;width:310px;position:absolute;margin:0;left:33px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);">
-                    <div class="upland anima-valign-text-middle" style='-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:30px;height:95px;width:312px;position:absolute;margin:0;left:-1px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);font-family:"Helvetica", Helvetica, Arial, serif;font-size:70.0px;color:rgba(240, 255, 0, 1.0);text-align:center;letter-spacing:10.0px;line-height:84.0px;'>
-                        UPLAND
-                    </div>
-                    <div class="apropertytradingg anima-valign-text-middle" style='-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:118px;height:36px;width:312px;position:absolute;margin:0;left:-1px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);font-family:"Helvetica", Helvetica, Arial, serif;font-size:13.0px;color:rgba(255, 255, 255, 1.0);text-align:center;letter-spacing:3.5px;line-height:128.0px;'>
-                        <span><span class="span1">a property trading gam</span><span class="span2">e</span>
-    </span>
-                    </div>
-                    <div class="welcometo anima-valign-text-middle" style='-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:0px;height:36px;width:312px;position:absolute;margin:0;left:-1px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);font-family:"Helvetica", Helvetica, Arial, serif;font-size:13.0px;color:rgba(255, 255, 255, 1.0);text-align:center;letter-spacing:3.5px;line-height:128.0px;'>
-                        WELCOME TO
-                    </div>
-                    <div class="welcometouplanda anima-valign-text-middle" style='-webkit-text-size-adjust:none;background-color:rgba(255,255,255,0.0);top:158px;height:111px;width:312px;position:absolute;margin:0;left:0px;-ms-transform:rotate(0deg);-webkit-transform:rotate(0deg);transform:rotate(0deg);font-family:"AvenirNext-DemiBold", Helvetica, Arial, serif;font-size:15.0px;color:rgba(255, 255, 255, 1.0);text-align:justify;line-height:24.0px;'>
-                        Welcome to Upland, a very unique property trading game where you buy &amp; sell real-world locations.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
-</html>`
-			}];
-
-			this.setState({ rendered });
 		}
 
 
@@ -838,7 +657,6 @@ class InspectorPage extends Component {
 				const fitScale = calcFitScale(baseSize, viewSize);
 				console.log('_-]FIT SCALE[-_', fitScale);
 
-// 				const scrollPt = this.calcScrollPoint(PAN_ZOOM.panMultPt, viewSize, baseSize, fitScale);
 				const scrollPt = calcScrollPoint({
 					panMultPt : this.state.panMultPt,
 					scale     : this.state.scale
@@ -851,28 +669,9 @@ class InspectorPage extends Component {
 				this.setState({ fitScale, viewSize, scrollPt,
 					scale : fitScale
 				}, ()=> {
-// 					this.contentSize = {
-// 						width  : baseSize.width * fitScale,
-// 						height : baseSize.height * fitScale,
-// 					};
 					this.handlePanMove(PAN_ZOOM.panMultPt.x, PAN_ZOOM.panMultPt.y); this.setState({ scrolling : false });
 				});
 			}
-
-// 			if (Maths.geom.isSizeDimensioned(this.contentSize)) {
-// 				const fitScale = Math.max(Math.min(viewSize.height / this.contentSize.height, viewSize.width / this.contentSize.width, PAN_ZOOM.zoomNotches.slice(-1)[0]), PAN_ZOOM.zoomNotches[0]);
-// 				const scrollPt = calcScrollPoint({
-// 		  		  panMultPt : this.state.panMultPt,
-// 		  		  scale     : this.state.scale
-// 		  		}, PAN_ZOOM.panMultPt, viewSize, this.contentSize, fitScale);
-//
-// 				console.log('-=-=-=-=-=-', viewSize, this.contentSize, fitScale, scrollPt);
-// 				this.setState({ fitScale, viewSize,
-// 					scale : fitScale
-// 				}, ()=> {
-// 					this.handlePanMove(PAN_ZOOM.panMultPt.x, PAN_ZOOM.panMultPt.y); this.setState({ scrolling : false });
-// 				});
-// 			}
 		}
 
 		if (upload && canvasWrapper.current) {
@@ -942,9 +741,9 @@ class InspectorPage extends Component {
 	};
 
 	resetTabSets = (upload, artboards)=> {
-// 		console.log('InspectorPage.resetTabSets()', upload, artboards);
+		console.log('InspectorPage.resetTabSets()', upload, artboards);
 
-		const { section  } = this.state;
+		const { section } = this.state;
 		let tabSets = inspectorTabSets[section];
 		if (section === SECTIONS.INSPECT) {
 			tabSets = [...tabSets].map((tabSet, i) => {
@@ -1012,54 +811,62 @@ class InspectorPage extends Component {
 
 						const slices = [...intersectSlices(artboard.slices, artboard.meta.frame)];
 
-						const langs = [
-							toGridHTML(slices),
-							toReactJS(slices),
-// 							toSwift(slices, artboard),
-							toCSS(slices),
-// 							toAndroid(slices, artboard),
-							toBootstrap(slices)
-						];
+						let langs = [];
+						axios.get(`http://cdn.designengine.ai/renders/${upload.id}/html/${Strings.slugifyURI(artboard.title)}.html`).then((response)=> {
+							langs.push({
+								html   : response.data,
+								syntax : response.data
+							});
+							axios.get(`http://cdn.designengine.ai/renders/${upload.id}/html/css/${Strings.slugifyURI(artboard.title)}.css`).then((response)=> {
+								langs.push({
+									html   : response.data,
+									syntax : response.data
+								});
+								langs.push(toReactJS(slices));
 
-						tabSets = [...tabSets].map((tabSet, i) => {
-							return (tabSet.map((tab, ii) => {
-								if (i === 0) {
-									return (Object.assign({}, tab, {
-										type     : 'component',
-										enabled  : ((upload.state << 0) === 3),
-										contents : <CodeEditor lang={tab.meta.lang.split(',').shift()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
-										meta     : { ...tab.meta,
-											syntax : langs[ii].syntax
+								tabSets = [...tabSets].map((tabSet, i) => {
+									return (tabSet.map((tab, ii) => {
+										if (i === 0) {
+											return (Object.assign({}, tab, {
+												enabled  : ((upload.state << 0) === 3),
+												contents : <CodeEditor lang={tab.meta.lang.split(',').shift()} syntax={langs[ii].syntax} onEditorChange={this.handleEditorChange} onEditorMounted={this.handleEditorMounted} />,
+												meta     : { ...tab.meta,
+													syntax : langs[ii].syntax
+												}
+											}));
+
+										} else {
+											return (Object.assign({}, tab, {
+												enabled  : ((upload.state << 0) === 3),
+// 												contents : <div>Nothing to compile</div>
+												contents :
+													<iframe src={`http://cdn.designengine.ai/renders/${upload.id}/html/${Strings.slugifyURI(artboard.title)}.html`} width="100%" height="100%" frameBorder="0" sandbox="allow-modals allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation" style={{ border : 'none' }} />
+											}));
 										}
 									}));
+								});
 
-								} else {
-									return (Object.assign({}, tab, {
-										enabled  : ((upload.state << 0) === 3),
-										contents : <div>Nothing to compile</div>
-									}));
-								}
-							}));
-						});
-
-						const activeTabs = tabSets.map((tabSet)=> {
-							return ([...tabSet].shift());
-						});
+								const activeTabs = tabSets.map((tabSet)=> {
+									return ([...tabSet].shift());
+								});
 
 // 						console.log(':::::::::::: reset', tabSets, activeTabs);
 
-						this.setState({ upload, tabSets, activeTabs, artboard,
-							slice     : [...slices].shift(),
-							offset    : artboard.meta.frame.origin,
-							tooltip   : null,
-							linter    : null,
-							gist      : null
+								this.setState({ upload, tabSets, activeTabs, artboard,
+									slice     : [...slices].shift(),
+									offset    : artboard.meta.frame.origin,
+									tooltip   : null,
+									linter    : null,
+									gist      : null
+								});
+
+								if (!this.canvasInterval) {
+									this.canvasInterval = setInterval(()=> this.onCanvasInterval(), CANVAS.marchingAnts.interval);
+								}
+							}).catch((error)=> {
+							});
+						}).catch((error)=> {
 						});
-
-						if (!this.canvasInterval) {
-							this.canvasInterval = setInterval(()=> this.onCanvasInterval(), CANVAS.marchingAnts.interval);
-						}
-
 					}).catch((error)=> {
 				});
 			}
@@ -1076,11 +883,11 @@ class InspectorPage extends Component {
 		const slices = [...intersectSlices(artboard.slices, slice.meta.frame)];
 		const langs = [
 			toGridHTML(slices),
-			toReactJS(slices),
-// 			toSwift(slices, artboard),
 			toCSS(slices),
+// 			toSwift(slices, artboard),
+			toReactJS(slices),
 // 			toAndroid(slices, artboard),
-			toBootstrap(slices)
+// 			toBootstrap(slices)
 		];
 
 		if (section === SECTIONS.INSPECT) {
@@ -1157,11 +964,11 @@ class InspectorPage extends Component {
 		const slices = [...intersectSlices(artboard.slices, slice.meta.frame)];
 		const langs = [
 			toGridHTML(slices),
-			toReactJS(slices),
-// 			toSwift(slices, artboard),
 			toCSS(slices),
+// 			toSwift(slices, artboard),
+			toReactJS(slices),
 // 			toAndroid(slices, artboard),
-			toBootstrap(slices)
+// 			toBootstrap(slices)
 		];
 
 		if (section === SECTIONS.INSPECT) {
@@ -1358,7 +1165,6 @@ class InspectorPage extends Component {
 
 		if (artboard) {
 			if (slice) {
-// 				const frame = this.calcCanvasSliceFrame(slice, artboard, offset, scrollPt);
 				const frame = calcCanvasSliceFrame({ section, upload, scale, urlBanner }, slice, artboard, offset, scrollPt);
 // 				drawCanvasSliceFill(context, frame, CANVAS.slices.fillColor);
 // 				drawCanvasSliceTooltip(context, slice.type, frame.origin, frame.size.width);
@@ -1369,7 +1175,6 @@ class InspectorPage extends Component {
 
 			if (hoverSlice) {
 				if (!slice || (slice && slice.id !== hoverSlice.id)) {
-// 					const frame = this.calcCanvasSliceFrame(hoverSlice, artboard, hoverOffset, scrollPt);
 					const frame = calcCanvasSliceFrame({ section, upload, scale, urlBanner }, hoverSlice, artboard, hoverOffset, scrollPt);
 // 					drawCanvasSliceFill(context, frame, CANVAS.slices.fillColor);
 // 					drawCanvasSliceTooltip(context, `W:${frame.size.width}px H:${frame.size.height}px`, frame.origin, frame.size.width * 7);
@@ -1492,12 +1297,6 @@ class InspectorPage extends Component {
 
 	handleEditorChange = (val, event)=> {
 		console.log('InspectorPage.handleEditorChange()', val, event);
-
-		const rendered = Object.assign({}, { ...this.state.rendered[0],
-			content : val
-		});
-
-		this.setState({ rendered : [rendered] });
 	};
 
 	handleEditorMounted = (editor, monaco)=> {
@@ -1514,7 +1313,6 @@ class InspectorPage extends Component {
 					enabled  : true,
 					lang     : lang,
 // 					contents : <span style={{position:'relative'}} dangerouslySetInnerHTML={{ __html : html }} />
-// 					contents : <span style={{position:'relative'}} dangerouslySetInnerHTML={{ __html : this.state.rendered[0].content }} />
 					contents : <iframe src={"http://cdn.designengine.ai/renders/249/html/step0.html"} width={"100%"} height={"100%"} frameborder={"0"} sandbox={"allow-modals allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"} style={{border:'none'}} />
 				}));
 			}));
@@ -2092,7 +1890,7 @@ class InspectorPage extends Component {
 	};
 
 	onFetchUpload = ()=> {
-		console.log('InspectorPage.onFetchUpload()', this.props);
+		console.log('InspectorPage.onFetchUpload()', this.state);
 
 		const { processing } = this.props;
 		const { uploadID } = this.props.deeplink;
@@ -2148,7 +1946,7 @@ class InspectorPage extends Component {
 
 			} else {
 				this.setState({
-					valid   : false,
+// 					valid   : false,
 					tooltip : null
 				});
 			}
