@@ -1033,11 +1033,11 @@ class InspectorPage extends Component {
 
 						const langs = [
 							toCSS(slices),
-							toReactJS(slices),
-// 							toSwift(slices, artboard),
 							toGridHTML(slices),
+// 							toSwift(slices, artboard),
+							toReactJS(slices),
 // 							toAndroid(slices, artboard)
-							toBootstrap(slices)
+// 							toBootstrap(slices)
 						];
 
 						tabSets = [...tabSets].map((tabSet, i) => {
@@ -1091,11 +1091,11 @@ class InspectorPage extends Component {
 		const slices = [...intersectSlices(artboard.slices, slice.meta.frame)];
 		const langs = [
 			toCSS(slices),
-			toReactJS(slices),
-// 			toSwift(slices, artboard),
 			toGridHTML(slices),
+// 			toSwift(slices, artboard),
+			toReactJS(slices),
 // 			toAndroid(slices, artboard)
-			toBootstrap(slices)
+// 			toBootstrap(slices)
 		];
 
 		if (section === SECTIONS.INSPECT) {
@@ -1209,11 +1209,11 @@ class InspectorPage extends Component {
 		const slices = [...intersectSlices(artboard.slices, slice.meta.frame)];
 		const langs = [
 			toCSS(slices),
-			toReactJS(slices),
-// 			toSwift(slices, artboard),
 			toGridHTML(slices),
+// 			toSwift(slices, artboard),
+			toReactJS(slices),
 // 			toAndroid(slices, artboard)
-			toBootstrap(slices)
+// 			toBootstrap(slices)
 		];
 
 		if (section === SECTIONS.INSPECT) {
@@ -1893,7 +1893,19 @@ class InspectorPage extends Component {
 				const logURL = response.data.log_url;
 				const output = response.data.log_lines.filter((line)=> (line !== '\n')).slice(1);
 
-				const html = `Loading ${linter}…\n${output.length} ${Strings.pluralize('change', output.length)} made.\n\n\n${syntax}`;
+				let errors = 0;
+				if (lang === 'jsx') {
+					const err = output.find((line)=> (line.includes('problem')));
+					if (err) {
+						errors = (err.split(' ').slice(1, 2).join('') << 0);
+					}
+
+				} else {
+					errors = output.length + ((lang === 'css') ? -1 : 0);
+				}
+
+
+				const html = `Loading ${linter}…\n${errors} ${Strings.pluralize('change', errors)} made.\n\n\n${syntax}`;
 
 				const tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 					return (tabSet.map((tab)=> {

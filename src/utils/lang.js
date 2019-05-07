@@ -256,7 +256,7 @@ export const Strings = {
 			arr : [...arr]
 		});
 	},
-	pluralize   : (str, val)=> ((val === 1) ? str : (Strings.lastChar(str) === 'y') ? `${str.slice(0, -1)}ies` : (Strings.lastChar(str) === 's') ? 'es' : `${str}s`),
+	pluralize   : (str, val)=> (((val << 0) === 1) ? str : (Strings.lastChar(str) === 'y') ? `${str.slice(0, -1)}ies` : (Strings.lastChar(str) === 's') ? 'es' : `${str}s`),
 	quoted      : (str)=> (str.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1')),
 	remove      : (str, needle)=> (Strings.replAll(str, needle)),
 	repeat      : (str='', amt=1)=> ((new Array(amt)).fill(str).join('')),
@@ -286,9 +286,8 @@ export const URIs = {
 };
 
 
+
 /* …\(^_^)/… */
-
-
 
 
 /*

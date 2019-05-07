@@ -9,21 +9,14 @@
       "syntax": null
     }, {
       "id": 2,
-      "title": "ReactJSX",
-      "type": "json_html",
-      "enabled": false,
-      "contents": "\"/* Rollover to display code. */\"",
-      "syntax": null
-    }, {
-      "id": 3,
       "title": "HTML",
       "type": "json_html",
       "enabled": false,
       "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
     }, {
-      "id": 4,
-      "title": "Bootstrap",
+      "id": 3,
+      "title": "ReactJSX",
       "type": "json_html",
       "enabled": false,
       "contents": "\"/* Rollover to display code. */\"",
@@ -59,21 +52,14 @@
       "syntax": null
     }, {
       "id": 2,
-      "title": "ReactJSX",
-      "type": "json_html",
-      "enabled": false,
-      "contents": "\"/* Rollover to display code. */\"",
-      "syntax": null
-    }, {
-      "id": 3,
       "title": "HTML",
       "type": "json_html",
       "enabled": false,
       "contents": "\"/* Rollover to display code. */\"",
       "syntax": null
     }, {
-      "id": 4,
-      "title": "Bootstrap",
+      "id": 3,
+      "title": "ReactJSX",
       "type": "json_html",
       "enabled": false,
       "contents": "\"/* Rollover to display code. */\"",
