@@ -2633,11 +2633,11 @@ class InspectorPage extends Component {
 				Design file not found.
 			</BaseOverlay>)}
 
-			{(fontState === 1) && (<ConfirmDialog
-				title="Missing Font(s)"
-				message={`Some fonts (${missingFonts.map((font)=> (font.postscript_name)).join(', ')}) need to be installed to complete processing, upload now?`}
-				onComplete={this.handleFontDialogComplete}
-			/>)}
+			{/*{(fontState === 1) && (<ConfirmDialog*/}
+				{/*title="Missing Font(s)"*/}
+				{/*message={`Some fonts (${missingFonts.map((font)=> (font.postscript_name)).join(', ')}) need to be installed to complete processing, upload now?`}*/}
+				{/*onComplete={this.handleFontDialogComplete}*/}
+			{/*/>)}*/}
 
 
 			{(upload) && (<ReactNotifications
