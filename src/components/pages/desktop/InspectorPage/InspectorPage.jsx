@@ -1836,7 +1836,7 @@ class InspectorPage extends Component {
 
 		const tabID = tab.id;
 		const lang = (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Android') ? 'xml' : (tab.title === 'Bootstrap') ? 'html' : tab.title.toLowerCase();
-		const linter = (lang === 'css') ? 'StyleLint' : (lang === 'html') ? 'HTMLHint' : (lang === 'js' || lang === 'jsx') ? 'Prettier + ESLint' : 'Linter';
+		const linter = (lang === 'css') ? 'StyleLint' : (lang === 'html') ? 'HTML Tidy' : (lang === 'js' || lang === 'jsx') ? 'Prettier + ESLint' : 'Linter';
 
 		trackEvent('button', `send-linter-${lang}`);
 
