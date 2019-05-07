@@ -2376,19 +2376,8 @@ class InspectorPage extends Component {
 				left            : `${offset.x << 0}px`,
 				width           : `${(scale * artboard.meta.frame.size.width) << 0}px`,
 				height          : `${(scale * artboard.meta.frame.size.height) << 0}px`
-				//backgroundColor : (section === SECTIONS.PARTS) ? 'rgba(0, 0, 0, 0.5)' : 'rgba(0, 0, 0, 0.0)'
 			};
 
-
-// 			const icon = (i % 3 === 0) ? iosIcon : (i % 3 === 1) ? androidIcon : html5Icon;
-// 			const iconStyle = {
-// 				position  : 'absolute',
-// 				top       : '50%',
-// 				left      : '50%',
-// 				transform : 'translate(-50%, -50%)',
-// 				objectFit : 'scale-down',
-// 				border    : '1px dotted rgba(255, 0, 0, 1.0)'
-// 			};
 
 			const sliceOffset = Object.assign({}, offset);
 			const artboardSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'artboard', sliceOffset, scale, scrolling) : [];
@@ -2397,8 +2386,6 @@ class InspectorPage extends Component {
 			const textfieldSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'textfield', sliceOffset, scale, scrolling) : [];
 			const symbolSlices =(artboard.slices.length > 0) ?  this.buildSliceRollOverItemTypes(artboard, 'symbol', sliceOffset, scale, scrolling) : [];
 			const sliceSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'slice', sliceOffset, scale, scrolling) : [];
-// 			const sliceSlices = (section !== SECTIONS.PARTS) ? [] : [<img key={i} data-artboard-id={artboard.id} src={icon} width="100%" height="100%" style={iconStyle} alt="ICON" />];
-// 			const sliceSlices = (section !== SECTIONS.PARTS) ? [] : [<img key={i} data-artboard-id={artboard.id} src={icon} style={iconStyle} alt="ICON" />];
 
 			artboardImages.push(
 				<div key={i} data-artboard-id={artboard.id} className="inspector-page-artboard" style={artboardStyle}>
@@ -2422,16 +2409,11 @@ class InspectorPage extends Component {
 			this.contentSize.width = Math.max(this.contentSize.width, offset.x);
 		});
 
-// 		artboardImages = (!restricted) ? artboardImages : [];
-// 		slices = (!restricted) ? slices : [];
-
-
 
 // 		console.log('InspectorPage.render()', this.state, this.contentSize);
 // 		console.log('InspectorPage.render()', slices);
 // 		console.log('InspectorPage.render()', upload, activeSlice);
 // 		console.log('InspectorPage:', window.performance.memory);
-
 
 
 		const contentClass = `inspector-page-content${(section === SECTIONS.PRESENTER) ? ' inspector-page-content-presenter' : ''}`;
