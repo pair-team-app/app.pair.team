@@ -11,7 +11,8 @@
 #-- ide meta
 /.idea
 
-#-- temp dir
+#-- temp dirs
+/.cache
 /tmp
 
 #-- os misc
