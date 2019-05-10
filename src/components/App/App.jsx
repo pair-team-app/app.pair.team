@@ -407,6 +407,7 @@ class App extends Component {
 			this.props.updateDeeplink(null);
 		}
 	};
+	
 
 	handlePaidAlert = ()=> {
 // 		console.log('App.handlePaidAlert()');
