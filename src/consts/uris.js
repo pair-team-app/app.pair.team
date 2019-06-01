@@ -8,6 +8,7 @@ export const EDIT = '/edit';
 export const SPECS = '/specs';
 export const STYLES = '/styles';
 export const PRIVACY = '/privacy';
+export const PARTS = '/parts';
 export const PROFILE = '/profile';
 export const RECOVER = '/recover';
 export const REGISTER = '/register';
@@ -26,7 +27,7 @@ export const Modals = {
 
 export const Pages = {
 	HOME    : '/',
-	INSPECT : '/inspect',
+	SPECS   : '/specs',
 	STYLES  : '/styles',
 	PARTS   : '/parts',
 	EDIT    : '/edit',

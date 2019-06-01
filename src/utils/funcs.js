@@ -9,6 +9,7 @@ import {
 	HOME,
 	SPECS,
 	STYLES,
+	PARTS,
 	INSPECT,
 	LOGIN,
 	EDIT,
@@ -140,7 +141,7 @@ export function editGist(token, gistID, filename, contents, description, visible
 
 export function idsFromPath() {
 	const { pathname } = window.location;
-	const inspectorPath = /\/(?:specs|styles|edit)\/(\d+)\/.+$/i;
+	const inspectorPath = /\/(?:specs|styles|parts|edit)\/(\d+)\/.+$/i;
 
 	const navIDs = {
 		uploadID   : ((inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[1] : 0) << 0,
@@ -159,7 +160,7 @@ export function isHomePage(root=true) {
 
 export function isInspectorPage() {
 	const { pathname } = window.location;
-	return ((pathname.includes(`${SPECS}/`) || pathname.includes(`${STYLES}/`) || pathname.includes(`${EDIT}`)) && /^.+\/\d+\/.+$/.test(pathname));
+	return ((pathname.includes(`${SPECS}/`) || pathname.includes(`${STYLES}/`) || pathname.includes(`${PARTS}`) || pathname.includes(`${EDIT}`)) && /^.+\/\d+\/.+$/.test(pathname));
 }
 
 export function isLoginPage(exact=false) {

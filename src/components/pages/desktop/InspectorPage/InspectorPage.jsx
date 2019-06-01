@@ -51,7 +51,14 @@ import {
 import { MOMENT_TIMESTAMP } from '../../../../consts/formats';
 import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY, TAB_KEY } from '../../../../consts/key-codes';
 import {
-	DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL, LINTER_ENDPT_URL, Modals
+	DE_LOGO_SMALL,
+	API_ENDPT_URL,
+	CDN_DOWNLOAD_PARTS_URL,
+	CDN_DOWNLOAD_PDF_URL,
+	CDN_DOWNLOAD_PROJECT_URL,
+	CDN_UPLOAD_URL,
+	LINTER_ENDPT_URL,
+	Modals
 } from '../../../../consts/uris';
 import { setArtboardComponent, setArtboardGroups, setRedirectURI } from '../../../../redux/actions';
 import {
@@ -74,6 +81,7 @@ import {
 } from '../../../../utils/lang.js';
 import { trackEvent } from '../../../../utils/tracking';
 
+import downloadButton from '../../../../assets/images/buttons/btn-download.svg';
 import adBannerPanel from '../../../../assets/json/ad-banner-panel';
 import inspectorTabSets from '../../../../assets/json/inspector-tab-sets';
 import deLogo from '../../../../assets/images/logos/logo-designengine.svg';
@@ -87,6 +95,11 @@ const canvas = React.createRef();
 
 const artboardForID = (upload, artboardID)=> {
 	return (flattenUploadArtboards(upload).find((artboard)=> (artboard.id === artboardID)));
+};
+
+const fillGroupPartItemSlices = (upload, slice)=> {
+// 	console.log('fillGroupPartItemSlices()', upload, slice);
+	return ([slice, ...artboardForID(upload, slice.artboardID).slices.filter((item) => ((item.type === 'bitmap' || item.type === 'svg') && item.id !== slice.id && Maths.geom.frameContainsFrame(slice.meta.frame, item.meta.frame)))]);
 };
 
 const flattenUploadArtboards = (upload, type=null)=> {
@@ -154,6 +167,56 @@ const FilingTabTitle = (props)=> {
 		<li className={className} onClick={()=> (enabled) ? props.onClick() : null}>{title}</li>
 	</React.Fragment>);
 };
+
+
+const PartsList = (props)=> {
+// 	console.log('InspectorPage.PartsList()', props);
+
+	const { enabled, contents } = props;
+	return ((contents && contents.length > 0) ? <div className="parts-list-wrapper">
+		{contents.map((slice, i)=> {
+			return (
+				<PartListItem
+					key={i}
+					id={slice.id}
+					filename={slice.filename}
+					title={slice.title}
+					type={slice.type}
+					size={slice.meta.frame.size}
+					onClick={()=> props.onPartListItem(slice)}
+				/>
+			);
+		})}
+	</div> : <div className="parts-list-wrapper parts-list-wrapper-empty">{(enabled) ? '/* Rollover to display parts. */' : ''}</div>);
+};
+
+
+const PartListItem = (props)=> {
+// 	console.log('InspectorPage.PartListItem()', props);
+
+	const { id, filename, title, type, size } = props;
+
+	return (<div data-slice-id={id} className="part-list-item"><Row vertical="center" horizontal="center">
+		<div className="part-list-item-content-wrapper">
+			<PartListItemThumb
+				src={`${filename}${(type === 'svg') ? '@1x.svg' : '@2x.png'}`}
+				title={title}
+				width={size.width}
+				height={size.height} />
+			<div className="part-list-item-title">{`${Strings.truncate(`${title}`, 18)}`}</div>
+		</div>
+		<button className="tiny-button part-list-item-button" onClick={()=> props.onClick()}><img src={downloadButton} width="20" height="14" alt="Download" /></button>
+	</Row></div>);
+};
+
+
+const PartListItemThumb = (props)=> {
+// 	console.log('InspectorPage.PartListItemThumb()', props);
+
+	const { src, title, width, height } = props;
+	return (<img src={src} className="part-list-item-image" width={width} height={height} alt={title} />);
+};
+
 
 const InspectorFooter = (props)=> {
 // 	console.log('InspectorPage.InspectorFooter()', props);
@@ -1059,6 +1122,24 @@ class InspectorPage extends Component {
 				clickTotal  : 0
 			});
 
+		} else if (section === SECTIONS.PARTS) {
+			const activeTabs = (this.state.activeTabs.length === 0) ? tabSets.map((tabSet) => {
+				return ([...tabSet].shift());
+			}) : this.state.activeTabs;
+
+			this.setState({ tabSets, activeTabs,
+				tabID       : 1,
+				artboard    : null,
+				slice       : null,
+				offset      : null,
+				hoverSlice  : null,
+				hoverOffset : null,
+				tooltip     : null,
+				linter      : null,
+				gist        : null,
+				clickTotal  : 0
+			});
+
 		} else if (section === SECTIONS.EDIT) {
 			if (artboards.length > 0) {
 				const artboard = (this.state.artboard) ? this.state.artboard : artboards[0];
@@ -1208,6 +1289,45 @@ class InspectorPage extends Component {
 				linter : null,
 				gist   : null
 			});
+
+		} else if (section === SECTIONS.PARTS) {
+			if (slice.type === 'symbol') {
+				let formData = new FormData();
+				formData.append('action', 'SYMBOL_SLICES');
+				formData.append('slice_id', slice.id);
+				axios.post(API_ENDPT_URL, formData)
+					.then((response) => {
+						console.log('SYMBOL_SLICES', response.data);
+						slice.children = [
+							...fillGroupPartItemSlices(upload, slice), ...response.data.slices.map((item) => {
+								const meta = JSON.parse(item.meta.replace(/\n/g, '\\\\n'));
+								return (Object.assign({}, item, {
+									id         : item.id << 0,
+									artboardID : item.artboard_id << 0,
+									meta       : Object.assign({}, meta, {
+										orgFrame : meta.frame,
+										frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
+									}),
+									filled     : false
+								}));
+							})
+						];
+						tabSets[0][0].enabled = true;
+						tabSets[0][0].contents = <PartsList
+							enabled={true}
+							contents={slice.children}
+							onPartListItem={(slice) => this.handleDownloadPartListItem(slice)} />;
+						this.setState({ tabSets });
+					}).catch((error) => {
+				});
+			}
+// 			} else if (slice.type === 'group' || slice.type === 'background') {
+				tabSets[0][0].enabled = true;
+				tabSets[0][0].contents = <PartsList
+					enabled={true}
+					contents={fillGroupPartItemSlices(upload, slice)}
+					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+// 			}
 
 		} else if (section === SECTIONS.EDIT) {
 			const { syntax } = (Objects.hasKey(this.props.artboardComponents, slice.uuid)) ? this.props.artboardComponents[slice.uuid] : toReactJS(artboard, slices, this.props.artboardComponents);
@@ -1460,6 +1580,24 @@ class InspectorPage extends Component {
 		trackEvent('button', 'download-pdf');
 		const { upload } = this.state;
 		Browsers.makeDownload(`${CDN_DOWNLOAD_PDF_URL}?upload_id=${upload.id}`);
+	};
+
+	handleDownloadPartListItem = (slice)=> {
+// 		console.log('InspectorPage.handleDownloadPartListItem()', slice);
+
+		trackEvent('button', 'download-part');
+		const { upload } = this.state;
+		Browsers.makeDownload(`${CDN_DOWNLOAD_PARTS_URL}?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${[slice.id]}`);
+	};
+
+	handleDownloadPartsList = ()=> {
+// 		console.log('InspectorPage.handleDownloadPartsList()');
+
+		trackEvent('button', 'download-parts');
+		const { upload, slice } = this.state;
+		const sliceIDs = (slice.type === 'group') ? fillGroupPartItemSlices(upload, slice).map((slice)=> (slice.id)).join(',') : slice.children.map((slice)=> (slice.id)).join(',');
+
+		Browsers.makeDownload(`${CDN_DOWNLOAD_PARTS_URL}?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
 	};
 
 	handleEditorChange = (val)=> {
@@ -2471,22 +2609,29 @@ class InspectorPage extends Component {
 										onContentClick={(payload)=> console.log('onContentClick', payload)}
 									/>
 
-									{(section === SECTIONS.SPECS)
-										? (<div className="inspector-page-panel-button-wrapper">
-											<CopyToClipboard onCopy={()=> this.handleClipboardCopy('specs', toSpecs(upload, activeSlice))} text={(activeSlice) ? toSpecs(upload, activeSlice) : ''}>
-												<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy Specs'}</button>
-											</CopyToClipboard>
-											<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(toSpecs(upload, activeSlice), 'txt') : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist Specs' : 'View Gist'}</button>
-										</div>)
+									{(section === SECTIONS.SPECS) && (<div className="inspector-page-panel-button-wrapper">
+										<CopyToClipboard onCopy={()=> this.handleClipboardCopy('specs', toSpecs(upload, activeSlice))} text={(activeSlice) ? toSpecs(upload, activeSlice) : ''}>
+											<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy Specs'}</button>
+										</CopyToClipboard>
+										<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(toSpecs(upload, activeSlice), 'txt') : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist Specs' : 'View Gist'}</button>
+									</div>)}
 
-										: (<div className="inspector-page-panel-button-wrapper">
-											<button disabled={!slice || (linter && linter.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxLinter(activeTabs[i].syntax)}>{(processing) ? 'Processing' : 'Lint'}</button>
-											<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
-												<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy Code'}</button>
-											</CopyToClipboard>
-											<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i].contents.props.code, activeTabs[i].contents.props.language) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist Code' : 'View Gist'}</button>
-										</div>)
-									}
+
+									{(section === SECTIONS.STYLES) && (<div className="inspector-page-panel-button-wrapper">
+										<button disabled={!slice || (linter && linter.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxLinter(activeTabs[i].syntax)}>{(processing) ? 'Processing' : 'Lint'}</button>
+										<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
+											<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy Code'}</button>
+										</CopyToClipboard>
+										<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i].contents.props.code, activeTabs[i].contents.props.language) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist Code' : 'View Gist'}</button>
+									</div>)}
+
+									{(section === SECTIONS.PARTS) && (<div className="inspector-page-panel-button-wrapper">
+										<button disabled={!slice || (linter && linter.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxLinter(activeTabs[i].syntax)}>{(processing) ? 'Processing' : 'Lint'}</button>
+										<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
+											<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy Code'}</button>
+										</CopyToClipboard>
+										<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i].contents.props.code, activeTabs[i].contents.props.language) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist Code' : 'View Gist'}</button>
+									</div>)}
 								</div>
 							)))
 
