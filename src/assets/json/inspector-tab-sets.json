@@ -1,105 +1,48 @@
 {
-  "inspect": [
+  "specs": [
     [{
-      "id": 1,
-      "title": "HTML",
-      "enabled": false,
-      "component": null,
-      "meta": {
-        "lang": "html,css",
-        "placeholder": "<!-- Rollover to display code. -->",
-        "syntax": null,
-        "linted": false,
-        "compiled": false
-      }
-    }, {
-      "id": 2,
-      "title": "CSS",
-      "enabled": false,
-      "component": null,
-      "meta": {
-        "lang": "css",
-        "placeholder": "/* Rollover to display code. */",
-        "syntax": null,
-        "linted": false,
-        "compiled": false
-      }
-    }, {
-      "id": 3,
-      "title": "ReactJSX",
-      "enabled": false,
-      "component": null,
-      "meta": {
-        "lang": "typescript,javascript",
-        "placeholder": "/** Rollover to display code. **/",
-        "syntax": null,
-        "linted": false,
-        "compiled": false
-      }
-    }], [{
-      "id": 5,
+      "id": 20,
       "title": "Specs",
       "enabled": false,
       "component": null,
-      "meta": {
-        "lang": "",
-        "placeholder": " #-- Rollover to display specs. --#",
-        "syntax": null,
-        "linted": false,
-        "compiled": false
-      }
+      "contents": null,
+      "syntax": null
+    }]
+  ],
+
+  "styles": [
+    [{
+      "id": 1,
+      "title": "ReactCSS",
+      "enabled": false,
+      "component": null,
+      "contents": "/* Rollover any design object for code */",
+      "syntax": null
+    }, {
+      "id": 2,
+      "title": "SCSS",
+      "enabled": false,
+      "component": null,
+      "contents": "/* Rollover any design object for code */",
+      "syntax": null
+    }, {
+      "id": 3,
+      "title": "CSS",
+      "enabled": false,
+      "component": null,
+      "contents": "/* Rollover any design object for code */",
+      "syntax": null
     }]
   ],
 
   "edit": [
     [{
-      "id": 1,
-      "title": "HTML",
-      "enabled": false,
-      "component": null,
-      "meta": {
-        "lang": "html,css",
-        "placeholder": "<!-- Rollover to display code. -->",
-        "syntax": null,
-        "linted": false,
-        "compiled": false
-      }
-    }, {
-      "id": 2,
-      "title": "CSS",
-      "enabled": false,
-      "component": null,
-      "meta": {
-        "lang": "css",
-        "placeholder": "/* Rollover to display code. */",
-        "syntax": null,
-        "linted": false,
-        "compiled": false
-      }
-    }, {
-      "id": 3,
+      "id": 30,
       "title": "ReactJSX",
       "enabled": false,
       "component": null,
-      "meta": {
-        "lang": "typescript,javascript",
-        "placeholder": "/** Rollover to display code. **/",
-        "syntax": null,
-        "linted": false,
-        "compiled": false
-      }
-    }], [{
-      "id": 5,
-      "title": "Live Preview",
-      "enabled": false,
-      "component": null,
-      "meta": {
-        "lang": "",
-        "placeholder": "#=- Nothing to render… -=# ",
-        "syntax": null,
-        "linted": false,
-        "compiled": false
-      }
+      "contents": "/* Rollover any design object for code */",
+      "syntax": null
     }]
   ]
 }

@@ -1,14 +1,14 @@
 {
   "bottom": {
     "desktop": [{
-      "title": "Free Inspect",
-      "url": "/inspect"
+      "title": "Free Specs",
+      "url": "/specs"
     }, {
-      "title": "Editor",
+      "title": "Free Styles",
+      "url": "/styles"
+    }, {
+      "title": "Design Editor",
       "url": "/edit"
-    }, {
-      "title": "Integrations",
-      "url": "/integrations"
     }, {
       "title": "Terms",
       "url": "/terms"
@@ -20,24 +20,21 @@
   },
   "top": {
     "desktop": [{
-      "title": "Free Inspect",
-      "url": "/inspect"
+      "title": "Free Specs",
+      "url": "/specs"
     }, {
-      "title": "Editor",
+      "title": "Free Styles",
+      "url": "/styles"
+    }, {
+      "title": "Design Editor",
       "url": "/edit"
-    }, {
-      "title": "Integrations",
-      "url": "/integrations"
     }],
     "mobile": [{
       "title": "Free Inspect",
       "url": "/inspect"
     }, {
-      "title": "Editor",
-      "url": "/edit"
-    }, {
-      "title": "Integrations",
-      "url": "/integrations"
+      "title": "Presenter",
+      "url": "/present"
     }]
   }
 }

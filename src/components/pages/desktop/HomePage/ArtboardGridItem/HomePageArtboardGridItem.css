@@ -3,7 +3,7 @@
 	position: relative;
 	width: 260px;
 	height: 350px;
-	background: #111111 url(../../../../../assets/images/backgrounds/bg-checkerboard.gif) repeat;
+	background: #111111 url(../../../../../assets/images/backgrounds/bg-checkerboard.png) repeat;
 	margin: 0 10px 20px 10px;
 	border-radius: 4px;
 	color: #0267d8;
@@ -46,15 +46,22 @@
 	height: 18px;
 }
 
-.home-page-artboard-grid-item-image {
+.home-page-artboard-grid-item-image, .home-page-artboard-grid-item-upload {
 	position: absolute;
-	top: 50%;
+	top: 47%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	-webkit-transform: translate(-50%, -50%);
 	object-fit: scale-down;
 	width: 85%;
 	height: 85%;
+}
+
+.home-page-artboard-grid-item-upload {
+	width: fit-content;
+	height: fit-content;
+	font-size: 32px;
+	color: #4b4b4b;
 }
 
 .home-page-artboard-grid-item-details-wrapper {

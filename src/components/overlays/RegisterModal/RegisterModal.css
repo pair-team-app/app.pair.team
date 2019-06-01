@@ -8,8 +8,11 @@
 
 .register-modal-header {
 	width: 100%;
-	margin-bottom: 20px;
-	border-bottom: 1px solid #24282e;
+	margin: 40px 0;
+}
+
+.register-modal-header-logo {
+	width: 100px;
 }
 
 .register-modal-content-wrapper .register-form-wrapper {

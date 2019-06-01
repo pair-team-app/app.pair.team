@@ -25,7 +25,7 @@ const logFormat = (action, meta='')=> {
 export function onMiddleware({ dispatch }) {
 	return (function(next) {
 		return (function(action) {
-// 			logFormat(action);
+			logFormat(action);
 
 			const { type, payload } = action;
 			if (type === USER_PROFILE_CACHED) {

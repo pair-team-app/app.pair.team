@@ -1,7 +1,0 @@
-
-#-- ejected --#
-config/
-scripts/
-
-#-- all .js* --#
-**/*.js*

@@ -85,7 +85,7 @@ class IntegrationsPage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('IntegrationsPage.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
 
-		if (!prevProps.profile && this.props.profile || prevState.integrations.length !== this.state.integrations.length) {
+		if ((!prevProps.profile && this.props.profile) || (prevState.integrations.length !== this.state.integrations.length)) {
 			const { profile } = this.props;
 			const integrations = this.state.integrations.map((integration)=> (Object.assign({}, integration, {
 				selected : (profile && profile.integrations.includes(integration.id))

@@ -18,7 +18,7 @@ export const CANVAS = {
 	},
 
 	guides       : {
-		color     : '#00ff0f',
+		color     : '#005cc5',
 		lineDash  : CANVAS_LINE_DASH,
 		lineWidth : 2,
 	},
@@ -27,39 +27,18 @@ export const CANVAS = {
 		lineDash  : CANVAS_LINE_DASH,
 		lineWidth : 2,
 		stroke    : 'rgba(0, 92, 197, 0.5)',
-		interval  : 50,
+		interval  : 33,
 		increment : 0.5,
 		modOffset : CANVAS_LINE_DASH.reduce((acc, val)=> (acc * val)) << 0
 	},
 
 	slices       : {
-		borderColor : '#00ff0f',
-		fillColor   : 'rgba(9, 248, 16, 0.6)',
-		lineWidth   : 1
+		borderColor         : '#005cc5',
+		fillColor           : 'rgba(9, 248, 16, 0.6)',
+		lineWidth           : 2,
+		rolloverBorderColor : '#005cc5',
+		rolloverLineWidth   : 2
 	}
-};
-
-export const EDITOR = {
-	opts : {
-		automaticLayout     : true,
-		cursorStyle         : 'line',
-		fontSize            : '12px',
-		glyphMargin         : false,
-		lineHeight          : '14px',
-		minimap             : { enabled : false },
-		selectOnLineNumbers : true
-		//readOnly            : false,
-		//renderLineHighlight : 'none',
-		//roundedSelection    : false,
-	}
-};
-
-export const GRID = {
-	padding : {
-		col : 50,
-		row : 50
-	},
-	colsMax : 5
 };
 
 export const PAN_ZOOM = {
@@ -85,9 +64,18 @@ export const PAN_ZOOM = {
 	]
 };
 
+export const GRID = {
+	padding : {
+		col : 50,
+		row : 50
+	},
+	colsMax : 5
+};
+
 export const SECTIONS = {
-	INSPECT : 'inspect',
-	EDIT    : 'edit'
+	SPECS  : 'specs',
+	STYLES : 'styles',
+	EDIT   : 'edit'
 };
 
 export const STATUS_INTERVAL = 1000;

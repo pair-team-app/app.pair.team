@@ -38,7 +38,7 @@ const TopNavDesktop = (props)=> {
 	return (<div className="top-nav-wrapper">
 		<div className="top-nav-column top-nav-column-left"><Row vertical="center">
 			{(sections.map((section, i)=> (
-				<div key={i} className={`top-nav-link${(pathname.includes(section.url)) ? ' top-nav-link-selected' : ''}`} onClick={()=> props.onLink(section.url)}>{section.title}</div>
+				<div key={i} className={`top-nav-link${(pathname.startsWith(section.url)) ? ' top-nav-link-selected' : ''}`} onClick={()=> props.onLink(section.url)}>{section.title}</div>
 			)))}
 			{/*<TopNavRate selected={(pathname.includes('/rate-this'))} onLink={props.onLink} onScore={props.onScore} />*/}
 		</Row></div>
@@ -46,7 +46,7 @@ const TopNavDesktop = (props)=> {
 		<div className="top-nav-column top-nav-column-right">
 			{(!isUserLoggedIn())
 				? (<>
-					<button className="long-button aux-button adjacent-button" onClick={()=> props.onModal(Modals.GITHUB_CONNECT)}>Sign in with GitHub</button>
+					<button className="aux-button long-button adjacent-button" onClick={()=> props.onModal(Modals.GITHUB_CONNECT)}>Sign in with GitHub</button>
 					<button className="adjacent-button" onClick={()=> props.onModal(Modals.REGISTER)}>Sign Up</button>
 					<button onClick={()=> props.onModal(Modals.LOGIN)}>Login</button>
 				</>)
@@ -123,7 +123,6 @@ class TopNav extends Component {
 
 	onNavigate = (url, trackCat='link')=> {
 		console.log('TopNav.onNavigate()', url, trackCat);
-
 		trackEvent(trackCat, url);
 		this.props.onPage(url);
 	};

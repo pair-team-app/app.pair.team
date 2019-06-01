@@ -2,3 +2,9 @@
 .register-form-wrapper {
 	width: 50%;
 }
+
+.register-form-submit-button {
+	width: 187px;
+	padding-left: 25px;
+	padding-right: 25px;
+}

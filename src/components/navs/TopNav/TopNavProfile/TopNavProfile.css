@@ -26,6 +26,7 @@
 .top-nav-profile-arrow {
 	width: 10px;
 	padding-bottom: 3px;
+	/*font-size: 18px;*/
 	color: #abdafd;
 }
 
@@ -61,22 +62,28 @@
 	top: 30px;
 	right: 0;
 	width: 92px;
-	background-color: #1a1e23;
-	padding: 6px 6px;
+	background-color: #24282e;
 	box-shadow: 0 0 2px rgba(14, 14, 14, 0.125), 0 1px 1px rgba(14, 14, 14, 0.125);
 	text-align: left;
 }
 
 .top-nav-profile-link {
+	padding: 6px;
+	border-bottom: 1px solid #1a1e23;
 	text-decoration: none;
-	font-family: "SF Pro Display Medium", sans-serif;
+	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 12px;
 	line-height: 17px;
 	letter-spacing: -0.2px;
-	color: #abdafd;
+	color: #ffffff;
+}
+
+.top-nav-profile-link:last-child {
+	border-bottom: none;
 }
 
 .top-nav-profile-link:hover {
+	color: #abdafd;
 	text-decoration: underline;
 	cursor: pointer;
 }

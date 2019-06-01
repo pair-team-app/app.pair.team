@@ -8,6 +8,8 @@ import {
 	ADD_FILE_UPLOAD,
 	APPEND_ARTBOARD_SLICES,
 	APPEND_HOME_ARTBOARDS,
+	SET_ARTBOARD_GROUPS,
+	SET_ARTBOARD_COMPONENT,
 	SET_REDIRECT_URI,
 	USER_PROFILE_ERROR,
 	UPDATE_DEEPLINK,
@@ -24,7 +26,7 @@ import { API_ENDPT_URL } from '../../consts/uris';
 
 
 const logFormat = (action, payload=null, meta='')=> {
-// 	console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, payload, meta);
+	console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, payload, meta);
 };
 
 
@@ -157,6 +159,19 @@ export function fetchTeamLookup(payload) {
 	});
 }
 
+export function setArtboardComponent(payload) {
+	logFormat('setArtboardComponent()', payload);
+	return ({ payload,
+		type : SET_ARTBOARD_COMPONENT
+	});
+}
+export function setArtboardGroups(payload) {
+	logFormat('setArtboardGroups()', payload);
+	return ({ payload,
+		type : SET_ARTBOARD_GROUPS
+	});
+}
+
 export function setAtomExtension(payload) {
 	logFormat('setAtomExtension()', payload);
 	return ({ payload,
@@ -210,7 +225,7 @@ export function updateUserProfile(payload, force=true) {
 
 	return ((dispatch)=> {
 		if (payload) {
-			const { id, avatar, integrations } = payload;
+			const { id, avatar, sources, integrations } = payload;
 
 // 			if (typeof cookie.load('user_id') === 'undefined' || ((cookie.load('user_id') << 0) !== id)) {
 // 				cookie.save('user_id', id << 0, { path : '/' });
@@ -220,6 +235,7 @@ export function updateUserProfile(payload, force=true) {
 				action       : 'UPDATE_PROFILE',
 				user_id      : id,
 				filename     : avatar,
+				sources      : (sources || []).join(','),
 				integrations : (integrations || []).join(',')
 			}))).then((response)=> {
 				console.log('UPDATE_PROFILE', response.data);

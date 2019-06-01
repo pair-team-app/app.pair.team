@@ -4,8 +4,9 @@
 export const HOME = '/';
 export const INSPECT = '/inspect';
 export const LOGIN = '/login';
-export const PARTS = '/parts';
 export const EDIT = '/edit';
+export const SPECS = '/specs';
+export const STYLES = '/styles';
 export const PRIVACY = '/privacy';
 export const PROFILE = '/profile';
 export const RECOVER = '/recover';
@@ -26,8 +27,9 @@ export const Modals = {
 export const Pages = {
 	HOME    : '/',
 	INSPECT : '/inspect',
+	STYLES  : '/styles',
 	PARTS   : '/parts',
-	EDITOR  : '/editor',
+	EDIT    : '/edit',
 	PRIVACY : '/privacy',
 	PROFILE : '/profile',
 	TERMS   : '/terms',
@@ -38,15 +40,15 @@ export const CDN_HOSTNAME = 'http://cdn.designengine.ai';
 export const API_HOSTNAME = 'https://api.designengine.ai';
 export const TERMINAL_HOSTNAME = 'https://terminal.designengine.ai';
 
-export const DE_LOGO_SMALL = `${CDN_HOSTNAME}/assets/logo-email.png`;
+export const DE_LOGO_SMALL = `${CDN_HOSTNAME}/assets/logo-email.png'`;
 export const DEFAULT_AVATAR = `${CDN_HOSTNAME}/profiles/avatar-default.png`;
 
 export const API_ENDPT_URL = `${API_HOSTNAME}/system.php`;
 // export const API_ENDPT_URL = `${API_HOSTNAME}/dev.php`;
-export const CDN_DOWNLOAD_PARTS_URL = `${CDN_HOSTNAME}/download-slices.php`;
-export const CDN_DOWNLOAD_PDF_URL = `${CDN_HOSTNAME}/download-pdf.php`;
-export const CDN_DOWNLOAD_PROJECT_URL = `${CDN_HOSTNAME}/download-project.php`;
-export const CDN_UPLOAD_URL = (window.location.hostname.match(/192|local|develop/ig)) ? `${CDN_HOSTNAME}/upload.php` : `${window.location.href.replace(window.location.pathname, '')}/php/upload.php`;
+export const CDN_DOWNLOAD_PARTS_URL = `${CDN_HOSTNAME}/download-slices.php'`;
+export const CDN_DOWNLOAD_PDF_URL = `${CDN_HOSTNAME}/download-pdf.php'`;
+export const CDN_DOWNLOAD_PROJECT_URL = `${CDN_HOSTNAME}/download-project.php'`;
+export const CDN_UPLOAD_URL = (window.location.hostname.match(/192|local/ig)) ? `${CDN_HOSTNAME}/upload.php` : `${window.location.href.replace(window.location.pathname, '')}/php/upload.php`;
 export const LINTER_UPLOAD_URL = `${TERMINAL_HOSTNAME}/upload.php`;
 export const LINTER_ENDPT_URL = `${TERMINAL_HOSTNAME}/services/linter.php`;
 

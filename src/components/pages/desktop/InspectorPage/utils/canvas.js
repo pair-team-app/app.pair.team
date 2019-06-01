@@ -1,47 +1,39 @@
 
-import { CANVAS, GRID, PAN_ZOOM, SECTIONS } from '../consts';
-import { flattenUploadArtboards } from './model';
-import { Maths } from '../../../../../utils/lang';
+import { CANVAS } from '../consts';
 
 
-export const calcCanvasSliceFrame = (state, slice, artboard, offset, scrollPt)=> {
-// 	console.log('InspectorPage.calcCanvasSliceFrame()', state, slice, artboard, offset, scrollPt);
+export function drawCanvasDebug(context) {
+	// debug fill
+// 		context.fillStyle = 'rgba(0, 0, 0, 0.25)';
+// 		context.fillRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
 
-	const { section, upload, scale, urlBanner } = state;
-	const artboards = flattenUploadArtboards(upload, 'page_child');
+	// debug lines
+// 		context.lineWidth = 1.0;
+// 		context.setLineDash([]);
+// 		context.lineDashOffset = 0;
+// 		context.beginPath();
+// 		context.strokeStyle = 'rgba(0, 255, 255, 0.5)';
+// 		context.strokeRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
+// 		context.moveTo(canvas.current.clientWidth * 0.5, 0); // top-center
+// 		context.lineTo(canvas.current.clientWidth * 0.5, canvas.current.clientHeight);
+// 		context.moveTo(0, canvas.current.clientHeight * 0.5); // left-center
+// 		context.lineTo(canvas.current.clientWidth, canvas.current.clientHeight * 0.5);
+// 		context.stroke();
 
-// 	console.log(':::::::::', artboards.length, { offset, scrollPt });
-
-	const baseOffset = {
-		x : (artboards.length < GRID.colsMax && section !== SECTIONS.EDIT) ? GRID.padding.col * 0.5 : 0,
-// 		x : 0,
-		y : 24 + (38 * (urlBanner << 0)) + PAN_ZOOM.insetSize.height
-	};
-
-	const srcFrame = Maths.geom.cropFrame(slice.meta.frame, artboard.meta.frame);
-	const srcOffset = {
-		x : baseOffset.x + ((offset.x - scrollPt.x) << 0),
-		y : baseOffset.y + ((offset.y - scrollPt.y) << 0)
-	};
-
-	const scaledFrame = {
-		origin : {
-			x : (srcOffset.x + (srcFrame.origin.x * scale)) << 0,
-			y : (srcOffset.y + (srcFrame.origin.y * scale)) << 0
-
-		},
-		size   : {
-			width  : (srcFrame.size.width * scale) << 0,
-			height : (srcFrame.size.height * scale) << 0
-		}
-	};
-
-// 		console.log('-- InspectorPage.calcCanvasSliceFrame()', baseOffset, srcFrame, srcOffset, scaledFrame);
-	return (scaledFrame);
-};
+}
 
 export function drawCanvasSliceBorder(context, frame) {
 	context.strokeStyle = CANVAS.slices.borderColor;
+	context.lineWidth = CANVAS.slices.lineWidth;
+	context.setLineDash([]);
+	context.lineDashOffset = 0;
+	context.beginPath();
+	context.strokeRect(frame.origin.x + 1, frame.origin.y + 1, frame.size.width - 2, frame.size.height - 2);
+	context.stroke();
+}
+
+export function drawCanvasSliceRollOverBorder(context, frame) {
+	context.strokeStyle = CANVAS.slices.rolloverBorderColor;
 	context.lineWidth = CANVAS.slices.lineWidth;
 	context.setLineDash([]);
 	context.lineDashOffset = 0;

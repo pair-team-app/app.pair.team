@@ -5,28 +5,12 @@ import './HomePage.css';
 import { connect } from 'react-redux';
 
 import BaseDesktopPage from '../BaseDesktopPage';
-import ArtboardGrid from './ArtboardGrid';
 import UploadHeader from '../../../navs/UploadHeader';
 
-import { Modals, INSPECT } from '../../../../consts/uris';
+import { Modals } from '../../../../consts/uris';
 import { addFileUpload } from '../../../../redux/actions';
-import {  URIs } from '../../../../utils/lang';
-import { isUserLoggedIn } from '../../../../utils/funcs';
+import { Strings, URIs } from '../../../../utils/lang';
 import { trackEvent } from '../../../../utils/tracking';
-import homeContent from '../../../../assets/json/home-content';
-
-const mapStateToProps = (state, ownProps)=> {
-	return ({
-		artboards : state.homeArtboards,
-		profile   : state.userProfile
-	});
-};
-
-const mapDispatchToProps = (dispatch)=> {
-	return ({
-		addFileUpload : (file)=> dispatch(addFileUpload(file))
-	});
-};
 
 
 class HomePage extends Component {
@@ -53,13 +37,13 @@ class HomePage extends Component {
 // 		console.log('HomePage.componentDidUpdate()', prevProps, this.props);
 
 		const { section } = this.state;
-		if (section !== URIs.firstComponent()) {
-			this.setState({ section : URIs.firstComponent() });
+		if (section !== URIs.lastComponent()) {
+			this.setState({ section : URIs.lastComponent() });
 		}
 	}
 
 	handleArtboardClicked = (artboard)=> {
-// 		console.log('HomePage.handleArtboardClicked()', artboard);
+		console.log('HomePage.handleArtboardClicked()', artboard);
 
 		trackEvent('artboard', 'click');
 		this.props.onArtboardClicked(artboard)
@@ -68,14 +52,12 @@ class HomePage extends Component {
 	handleFile = (file)=> {
 // 		console.log('HomePage.handleFile()', file);
 
-		const { section } = this.state;
-
 		this.props.addFileUpload(file);
-		this.props.onPage(`new/${(section || INSPECT.substr(1))}`);
+		this.props.onPage(`new/${URIs.lastComponent()}`);
 	};
 
 	handleGitHub = ()=> {
-		console.log('HomePage.handleGitHub()');
+//		console.log('HomePage.handleGitHub()');
 
 		trackEvent('button', 'github');
 		this.props.onModal(Modals.GITHUB_CONNECT);
@@ -99,25 +81,28 @@ class HomePage extends Component {
 // 		console.log('HomePage.handleUploadClick()');
 
 		trackEvent('button', 'upload');
-		setTimeout(()=> {
-			this.setState({ fileDialog : false });
-		}, 3333);
+		this.props.onPage('/new');
 
-		this.setState({ fileDialog : true });
+// 		setTimeout(()=> {
+// 			this.setState({ fileDialog : false });
+// 		}, 3333);
+//
+// 		this.setState({ fileDialog : true });
 	};
 
 
 	render() {
 // 		console.log('HomePage.render()', this.props, this.state);
 
-// 		const { profile, artboards } = this.props;
-		const { section, fileDialog } = this.state;
-// 		const gridTitle = (profile) ? (fetching) ? `Loading${'…'}` : (artboards.length > 0) ? (URIs.subdomain()) ? `Team ${URIs.subdomain()}` : 'Previous' : 'N/A' : 'N/A';
+		//const { profile, artboards } = this.props;
+		const { fileDialog } = this.state;
+		//const gridTitle = (profile) ? `${(URIs.subdomain()) ? `Team ${Strings.capitalize(URIs.subdomain())}` : `History`} (${artboards.length})` : 'N/A';
 
 		return (
 			<BaseDesktopPage className="home-page-wrapper">
 				<UploadHeader
-					title="Upload any design for Free Specs"
+					section={URIs.lastComponent()}
+					title={`${(URIs.lastComponent().includes('edit')) ? 'Upload a design file to Edit' : `Upload any design for Free ${Strings.capitalize(window.location.pathname.split('/').slice(-1).pop())}`}`}
 					subtitle="Drag & drop any design file here"
 					uploading={false}
 					fileDialog={fileDialog}
@@ -125,24 +110,11 @@ class HomePage extends Component {
 					onPage={this.props.onPage}
 					onPopup={this.props.onPopup} />
 
-				{/*<div className="home-page-section-header-wrapper">*/}
-					{/*<h1>{(section) ? homeContent[section].body.title : 'Free code, specs, & parts to implement pixel-perfect design.'}</h1>*/}
-					{/*{(isUserLoggedIn())*/}
-						{/*? (<button className="long-button" onClick={()=> this.handleUploadClick()}>Upload</button>)*/}
-						{/*: (<>*/}
-								{/*<div className="home-page-button-wrapper is-hidden">*/}
-									{/*<button className="long-button adjacent-button" onClick={()=> this.handleRegister()}>Sign Up</button>*/}
-									{/*<button className="long-button aux-button" onClick={()=> this.handleGitHub()}>Connect to GitHub</button>*/}
-								{/*</div>*/}
-								{/*/!*<button className="long-button" onClick={()=> this.handleLogin()}>Login</button>*!/*/}
-						{/*</>)*/}
-					{/*}*/}
-				{/*</div>*/}
-				{/**/}
 				{/*<ArtboardGrid*/}
 					{/*title={gridTitle}*/}
 					{/*artboards={artboards}*/}
 					{/*onClick={this.handleArtboardClicked}*/}
+					{/*onUpload={this.handleUploadClick}*/}
 					{/*onPage={this.props.onPage}*/}
 					{/*onPopup={this.props.onPopup}*/}
 				{/*/>*/}
@@ -150,5 +122,20 @@ class HomePage extends Component {
 		);
 	}
 }
+
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		artboards : state.homeArtboards,
+		profile   : state.userProfile
+	});
+};
+
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		addFileUpload : (file)=> dispatch(addFileUpload(file))
+	});
+};
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

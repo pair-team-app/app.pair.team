@@ -14,25 +14,10 @@ import RegisterForm from '../../forms/RegisterForm';
 import { Modals, API_ENDPT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { addFileUpload, updateDeeplink, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../../utils/funcs';
+import { URIs } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 import homeContent from '../../../assets/json/home-content';
 import radioButtons from '../../../assets/json/radio-buttons_upload';
-
-const mapStateToProps = (state, ownProps)=> {
-	return ({
-		file     : state.file,
-		deeplink : state.deeplink,
-		profile  : state.userProfile
-	});
-};
-
-const mapDispatchToProps = (dispatch)=> {
-	return ({
-		addFileUpload     : (file)=> dispatch(addFileUpload(file)),
-		updateDeeplink    : (navIDs)=> dispatch(updateDeeplink(navIDs)),
-		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
-	});
-};
 
 
 class UploadPage extends Component {
@@ -74,15 +59,6 @@ class UploadPage extends Component {
 		});
 
 		this.setState({ radioButtons });
-	}
-
-	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('UploadPage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
-
-		const { profile } = this.props;
-		if (!prevProps.profile && profile) {
-			this.onUploadSubmit(profile);
-		}
 	}
 
 	componentWillUnmount() {
@@ -157,19 +133,11 @@ class UploadPage extends Component {
 		});
 	};
 
-	handlePage = (url)=> {
-		console.log('UploadPage.handlePage()');
-		//this.props.onModal(Modals.GITHUB_CONNECT);
+	handleGitHub = ()=> {
+		console.log('UploadPage.handleGitHub()');
 
-		if (url.includes(Modals.LOGIN)) {
-			this.handleLogin();
-
-		} else if (url.includes(Modals.REGISTER)) {
-			this.handleRegister();
-
-		} else if (url.includes(Modals.GITHUB_CONNECT)) {
-			this.props.onModal(Modals.GITHUB_CONNECT);
-		}
+		trackEvent('button', 'github');
+		this.props.onModal(Modals.GITHUB_CONNECT);
 	};
 
 	handleLogin = ()=> {
@@ -189,18 +157,7 @@ class UploadPage extends Component {
 		trackEvent('user', 'login');
 		cookie.save('user_id', profile.id, { path : '/' });
 		this.props.updateUserProfile(profile);
-// 		this.onUploadSubmit(profile);
-	};
-
-	handleRegister = ()=> {
-// 		console.log('UploadPage.handleRegister()');
-
-		trackEvent('button', 'register');
-		this.props.onScrollOrigin();
-		this.setState({
-			showRegister : true,
-			showLogin    : false
-		});
+		this.onUploadSubmit(profile);
 	};
 
 	handleRegistered = (profile)=> {
@@ -210,8 +167,8 @@ class UploadPage extends Component {
 		cookie.save('user_id', profile.id, { path : '/' });
 
 		this.props.updateUserProfile(profile);
-// 		this.props.onRegistered();
-// 		this.onUploadSubmit(profile);
+		this.props.onRegistered();
+		this.onUploadSubmit(profile);
 	};
 
 	onUploadSubmit = (userProfile)=> {
@@ -264,17 +221,19 @@ class UploadPage extends Component {
 		const uploadTitle = (formState === 1) ? `Uploading ${file.name}…` : (section) ? homeContent[section].header.title : '';
 		const uploadSubtitle = (formState === 1) ? `${((file.size / (1024 * 1024)) * (percent * 0.01)).toFixed(2)} of ${(file.size / (1024 * 1024)).toFixed(2)}MB has been uploaded.` : 'Drag, drop, or click to upload.';
 
+		const pageStyle = { marginBottom : (formState >= 1 && uploadComplete) ? '30px' : '30px' };
 		const progressStyle = { width : `${percent}%` };
 
 		return (
-			<BaseDesktopPage className="upload-page-wrapper">
+			<BaseDesktopPage className="upload-page-wrapper" style={pageStyle}>
 				{(formState === 1 && !uploadComplete) && (<div className="upload-progress-bar-wrapper">
 					<div className="upload-progress-bar" style={progressStyle} />
 				</div>)}
 
-				{(formState <= 1 && !uploadComplete) && (<UploadHeader
+				{(formState <= 1) && (<UploadHeader
 					fileDialog={false}
 					uploading={(formState === 1)}
+					section={URIs.lastComponent()}
 					title={uploadTitle}
 					subtitle={uploadSubtitle}
 					onCancel={this.handleCancel}
@@ -282,10 +241,12 @@ class UploadPage extends Component {
 					onPage={this.props.onPage}
 					onPopup={this.props.onPopup} />)}
 
+				{(formState === 0 && !isUserLoggedIn()) && (<button className="long-button aux-button" onClick={this.handleGitHub}>Connect on GitHub</button>)}
+
 				{(!isUserLoggedIn() && showRegister && !showLogin) && (<div className="upload-page-register-wrapper">
 					<RegisterForm
 						title="To finish uploading, please sign up."
-						onPage={this.handlePage}
+						onLogin={this.handleLogin}
 						onRegistered={this.handleRegistered} />
 				</div>)}
 
@@ -299,5 +260,23 @@ class UploadPage extends Component {
 		);
 	}
 }
+
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		file     : state.file,
+		deeplink : state.deeplink,
+		profile  : state.userProfile
+	});
+};
+
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		addFileUpload     : (file)=> dispatch(addFileUpload(file)),
+		updateDeeplink    : (navIDs)=> dispatch(updateDeeplink(navIDs)),
+		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+	});
+};
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(UploadPage);

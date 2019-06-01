@@ -10,7 +10,6 @@ import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 
 import BottomNav from '../navs/BottomNav';
 import TopNav from '../navs/TopNav';
-import AdvertPanel from '../overlays/AdvertPanel';
 import AlertDialog from '../overlays/AlertDialog';
 import ConfirmDialog from '../overlays/ConfirmDialog';
 import BaseOverlay from '../overlays/BaseOverlay';
@@ -23,12 +22,10 @@ import StripeModal from '../overlays/StripeModal';
 import HomePage from '../pages/desktop/HomePage';
 import InspectorPage from '../pages/desktop/InspectorPage';
 import IntegrationsPage from '../pages/desktop/IntegrationsPage';
-// import InviteTeamPage from '../pages/desktop/InviteTeamPage';
 import ProfilePage from '../pages/desktop/ProfilePage';
 import PrivacyPage from '../pages/desktop/PrivacyPage';
-// import RateThisPage from '../pages/desktop/RateThisPage';
 import RecoverPage from '../pages/desktop/RecoverPage';
-// import RegisterPage from '../pages/desktop/RegisterPage';
+import SignupPage from '../pages/desktop/SignupPage';
 import Status404Page from '../pages/desktop/Status404Page';
 import TermsPage from '../pages/desktop/TermsPage';
 import UploadPage from '../pages/desktop/UploadPage';
@@ -55,13 +52,11 @@ import {
 	isHomePage,
 	isInspectorPage,
 	isProfilePage,
-	isUploadPage,
 	isUserLoggedIn
 } from '../../utils/funcs';
 import { Browsers, DateTimes, Strings, URIs } from '../../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 import freeAccount from '../../assets/json/free-account';
-import adBannerPanel from '../../assets/json/ad-banner-panel';
 
 
 const wrapper = React.createRef();
@@ -132,7 +127,7 @@ class App extends Component {
 // 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (URIs.queryString()), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
 
 
-		this.onExtensionCheck();
+		//this.onExtensionCheck();
 		this.props.updateDeeplink(idsFromPath());
 
 		if (URIs.subdomain()) {
@@ -150,7 +145,7 @@ class App extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		const { profile, artboards, deeplink, team } = this.props;
 		const { pathname } = this.props.location;
@@ -167,9 +162,11 @@ class App extends Component {
 
 		if (profile) {
 			if (!prevProps.profile) {
-				if (!team) {
-					this.props.fetchUserHistory({ profile });
-				}
+				this.props.fetchUserHistory({ profile });
+
+// 				if (!team) {
+// 					this.props.fetchUserHistory({ profile });
+// 				}
 
 				if (deeplink && deeplink.uploadID !== 0) {
 					this.onAddUploadView(deeplink.uploadID);
@@ -250,32 +247,42 @@ class App extends Component {
 	handleArtboardClicked = (artboard)=> {
 		console.log('App.handleArtboardClicked()', artboard);
 
-		const { profile, team } = this.props;
-		if (profile && (!team || (team && team.members.findIndex((member)=> (member.userID === profile.id)) > -1))) {
-			const { uploadID, pageID } = artboard;
-			const artboardID = artboard.id;
+		const { uploadID, pageID } = artboard;
+		const artboardID = artboard.id;
 
-			this.handlePage(buildInspectorPath({
-					id    : uploadID,
-					title : artboard.title
-				}, URIs.firstComponent()
-			));
+		this.handlePage(buildInspectorPath({
+				id    : uploadID,
+				title : artboard.title
+			}, URIs.firstComponent()
+		));
 
-			Browsers.scrollOrigin(wrapper.current);
-			this.props.updateDeeplink({ uploadID, pageID, artboardID });
+		Browsers.scrollOrigin(wrapper.current);
+		this.props.updateDeeplink({ uploadID, pageID, artboardID });
 
-		} else {
-			if (team) {
-				if (!profile) {
-					this.onToggleModal(Modals.REGISTER, true);
-
-				} else {
-					this.onToggleModal(Modals.REGISTER, false);
-					this.onToggleModal(Modals.LOGIN, false);
-					this.setState({ teamDialog : true });
-				}
-			}
-		}
+// 		const { profile, team } = this.props;
+// 		if (profile && team && team.members.findIndex((member)=> (member.userID === profile.id)) > -1) {
+// 			const { uploadID, pageID } = artboard;
+// 			const artboardID = artboard.id;
+//
+// 			this.handlePage(buildInspectorPath({
+// 					id    : uploadID,
+// 					title : artboard.title
+// 				}, URIs.firstComponent()
+// 			));
+//
+// 			Browsers.scrollOrigin(wrapper.current);
+// 			this.props.updateDeeplink({ uploadID, pageID, artboardID });
+//
+// 		} else {
+// 			if (!profile) {
+// 				this.onToggleModal(Modals.REGISTER, true);
+//
+// 			} else {
+// 				this.onToggleModal(Modals.REGISTER, false);
+// 				this.onToggleModal(Modals.LOGIN, false);
+// 				this.setState({ teamDialog : true });
+// 			}
+// 		}
 	};
 
 	handleGithubAuth = ()=> {
@@ -319,18 +326,14 @@ class App extends Component {
 			this.setState({ teamDialog : true });
 
 		} else {
-			if (isUploadPage()) {
-
-			} else {
-				if (profile.integrations.length === 0) {
-					trackEvent('user', 'sign-up');
-					setTimeout(()=> {
-						this.onToggleModal(Modals.INTEGRATIONS, true);
-					}, 750);
-
-				} else {
-				}
-			}
+// 			if (profile.integrations.length === 0) {
+// 				trackEvent('user', 'sign-up');
+// 				setTimeout(()=> {
+// 					this.onToggleModal(Modals.INTEGRATIONS, true);
+// 				}, 750);
+//
+// 			} else {
+// 			}
 		}
 	};
 
@@ -356,20 +359,21 @@ class App extends Component {
 		console.log('App.handleLoggedIn()', profile);
 		this.props.updateUserProfile(profile, false);
 		this.props.updateUserProfile(profile);
+		this.props.fetchUserHistory({profile});
 
 		const { team } = this.props;
 		if (team && team.members.findIndex((member)=> (member.userID === profile.id)) === -1) {
 			this.setState({ teamDialog : true });
 
 		} else {
-			if (profile.integrations.length === 0) {
-				trackEvent('user', 'sign-up');
-				setTimeout(()=> {
-					this.onToggleModal(Modals.INTEGRATIONS, true);
-				}, 1250);
-
-			} else {
-			}
+// 			if (profile.sources.length === 0 || profile.integrations.length === 0) {
+// 				trackEvent('user', 'sign-up');
+// 				setTimeout(()=> {
+// 					this.onToggleModal(Modals.INTEGRATIONS, true);
+// 				}, 1250);
+//
+// 			} else {
+// 			}
 		}
 	};
 
@@ -407,7 +411,6 @@ class App extends Component {
 			this.props.updateDeeplink(null);
 		}
 	};
-	
 
 	handlePaidAlert = ()=> {
 // 		console.log('App.handlePaidAlert()');
@@ -441,13 +444,12 @@ class App extends Component {
 			this.setState({ teamDialog : true });
 
 		} else {
-			if (profile.integrations.length === 0) {
-				setTimeout(()=> {
-					this.onToggleModal(Modals.INTEGRATIONS, true);
-				}, 1250);
-
-			} else {
-			}
+// 			if (profile.integrations.length === 0) {
+// 				setTimeout(()=> {
+// 					this.onToggleModal(Modals.INTEGRATIONS, true);
+// 				}, 1250);
+// 			} else {
+// 			}
 		}
 	};
 
@@ -488,7 +490,7 @@ class App extends Component {
 				}).catch((error)=> {
 				});
 
-				if (profile.integrations.length === 0) {
+				if (profile.sources.length === 0 || profile.integrations.length === 0) {
 					setTimeout(()=> {
 						this.onToggleModal(Modals.INTEGRATIONS, true);
 					}, 750);
@@ -679,31 +681,31 @@ class App extends Component {
 
 			    <div className="content-wrapper" ref={wrapper}>
 				    <Switch>
-					    <Route exact path="/"><Redirect to="/inspect" /></Route>
 					    <Route exact path="/invite-team"><Redirect to="/" /></Route>
-					    <Route exact path="/logout" render={()=> (profile) ? this.handleLogout() : null} />
-					    <Route exact path="/new"><Redirect to="/new/inspect" /></Route>
-					    <Route exact path="/new/present"><Redirect to="/new/edit" /></Route>
-					    <Route exact path="/present"><Redirect to="/edit" /></Route>
-					    <Route exact path="/present/:uploadID/:titleSlug" render={(props)=> this.handlePage(`edit/${props.match.params.uploadID}/${props.match.params.titleSlug}`)} />
+					    <Route exact path="/"><Redirect to="/specs" /></Route>
 					    {(!isUserLoggedIn()) && (<Route exact path="/profile"><Redirect to="/" /></Route>)}
+					    <Route exact path="/logout" render={()=> (profile) ? this.handleLogout() : null} />
 
-					    <Route exact path="/:section(inspect|edit)" render={()=> <HomePage onArtboardClicked={this.handleArtboardClicked} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route exact path="/:section(inspect|edit)/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route exact path="/new/:type(inspect|edit)" render={(props)=> <UploadPage { ...props } onProcessing={this.handleProcessing} onRegistered={this.handleRegistered} onScrollOrigin={this.handleScrollOrigin} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route exact path="/privacy"><PrivacyPage /></Route>
+					    <Route exact path="/:section(specs|styles|edit)" render={()=> <HomePage onArtboardClicked={this.handleArtboardClicked} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/signup" render={()=> <SignupPage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/new"><Redirect to="/new/specs" /></Route>
+					    <Route exact path="/new/:type(specs|styles|edit)" render={(props)=> <UploadPage { ...props } onProcessing={this.handleProcessing} onRegistered={this.handleRegistered} onScrollOrigin={this.handleScrollOrigin} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+
+					    <Route exact path="/:section(specs|styles|edit)/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+
 					    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    {/*<Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />*/}
 					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route exact path="/terms"><TermsPage /></Route>
 
+					    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
+					    <Route exact path="/terms" render={()=> <TermsPage />} />
+					    {/*<Route exact path="/invite-team" render={()=> <InviteTeamPage uploadID={uploadID} onPage={this.handlePage} onPopup={this.handlePopup} />} />*/}
+
+					    {/*<Route render={()=> <Status404Page onPage={this.handlePage} />} />*/}
 					    <Route><Status404Page onPage={this.handlePage} /></Route>
+					    {/*<Route><Redirect to="/" /></Route>*/}
 				    </Switch>
-
-				    {/*{(!isInspectorPage()) && (<AdvertPanel*/}
-					    {/*title={adBannerPanel.title} image={adBannerPanel.image}*/}
-					    {/*onClick={()=> this.handleAdBanner(adBannerPanel.url)}*/}
-				    {/*/>)}*/}
 
 				    {(!isInspectorPage()) && (<BottomNav
 					    mobileLayout={false}

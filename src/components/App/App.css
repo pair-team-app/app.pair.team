@@ -22,18 +22,29 @@
 
 .page-wrapper {
 	width: 100%;
+	/*min-height: calc(100% - 84px);*/
+	/*margin-bottom: 30px; !* footer spacing *!*/
 }
 
 .page-header {
 	width: calc(100% + 40px);
 	height: 306px;
 	margin: -20px -20px 20px -20px;
-	background: #1a1b1d url(../../assets/images/backgrounds/bg-checkerboard.gif) repeat;
+	background: #1a1b1d url(../../assets/images/backgrounds/bg-checkerboard.png) repeat;
 }
 
 h1.page-header-title {
+	width: 100%;
 	text-align: center;
 	vertical-align: middle;
+}
+
+.page-header-subtitle {
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-size: 28px;
+	letter-spacing: -1.47px;
+	text-align: center;
+	color: #005cc5;
 }
 
 .long-button {
@@ -44,23 +55,36 @@ h1.page-header-title {
 }
 
 .tiny-button {
-	min-width: 38px;
-	min-height: 38px;
+	min-width: 0;
+	min-height: 0;
 	width: auto;
 	height: auto;
-	padding: 10px;
+	padding: 3px 10px;
+	/*font-size: 10px;*/
+}
+
+.min-button, .min-button:hover, .min-button:active {
+	width: auto;
+	height: auto;
+	padding: 0;
+	background: none;
+	color: inherit;
 }
 
 
 .aux-button, .aux-button:disabled, .aux-button:disabled:hover {
-	background-color: #24c14d;
+	background-color: #515151;
 }
 
 .aux-button:hover, .aux-button:active {
-	background-color: #1d993c;
+	background-color: #404040;
 }
 
 .aux-button:disabled, .aux-button:disabled:hover {
+	/*background: #57aa48 linear-gradient(-180deg, #69cd58, #57aa48 90%) -0.5em;*/
+	/*background-color: #62a854;*/
+	color: #eef0f2;
+	opacity : 0.5;
 }
 
 .destruct-button {
@@ -75,7 +99,7 @@ h1.page-header-title {
 }
 
 .adjacent-button {
-	margin-right: 15px;
+	margin-right: 20px;
 }
 
 .adjacent-button-mobile {
@@ -88,7 +112,7 @@ h1.page-header-title {
 }
 
 .page-link, .page-link a:any-link {
-	font-family: "SF Pro Display Medium", sans-serif;
+	font-family: "San Francisco Text Text", sans-serif;
 	font-size: 14px;
 	letter-spacing: -0.26px;
 	color: #abdafd;
@@ -130,7 +154,7 @@ h1.page-header-title {
 .input-wrapper-error .field-error {
 	height: 53px;
 	padding-top: 11px;
-	font-family: "SF Pro Display Medium", sans-serif;
+	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 16px;
 	letter-spacing: -0.3px;
 }

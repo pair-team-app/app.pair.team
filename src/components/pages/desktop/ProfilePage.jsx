@@ -8,14 +8,14 @@ import Dropzone from 'react-dropzone';
 import FontAwesome from 'react-fontawesome';
 import ImageLoader from 'react-loading-image';
 import { connect } from 'react-redux';
-import { Column, Row } from 'simple-flexbox';
+import { Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../forms/InputField/InputField';
-import IntegrationGridItem from '../../iterables/IntegrationGridItem';
-import ConfirmDialog from '../../overlays/ConfirmDialog';
+// import IntegrationGridItem from '../../iterables/IntegrationGridItem';
+// import ConfirmDialog from '../../overlays/ConfirmDialog';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../overlays/PopupNotification';
-import { Modals, DEFAULT_AVATAR, CDN_UPLOAD_URL, API_ENDPT_URL } from '../../../consts/uris';
+import { Modals, API_ENDPT_URL, DEFAULT_AVATAR, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { Bits, Files, Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
@@ -43,25 +43,16 @@ const ProfilePageAvatar = (props)=> {
 	const defaultAvatar = (avatar.includes('avatar-default.png'));
 	return (<div className="profile-page-avatar">
 		<Row vertical="center">
-			<Dropzone
-				multiple={false}
-				disablePreview={true}
-				onDrop={props.onFileDrop}
-				onFileDialogCancel={props.onFileDialogCancel}
-				ref={dropZone}
-			>{({ getRootProps, getInputProps })=> (
-				<div { ...getRootProps() } className="profile-page-dz-wrapper">
-					<div className="profile-page-avatar-image-wrapper">
-						<ImageLoader
-							src={avatar}
-							image={(props)=> (<img className="profile-page-avatar-image" { ...props } src={avatar} alt="" />)}
-							loading={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
-							error={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
-						/>
-					</div>
-					<input { ...getInputProps() } />
+			<Dropzone className="profile-page-dz-wrapper" multiple={false} disablePreview={true} onDrop={props.onFileDrop} onFileDialogCancel={props.onFileDialogCancel} ref={dropZone}>
+				<div className="profile-page-avatar-image-wrapper">
+					<ImageLoader
+						src={avatar}
+						image={(props)=> (<img className="profile-page-avatar-image" { ...props } src={avatar} alt="" />)}
+						loading={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+						error={()=> (<div className="profile-page-avatar-image profile-page-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
+					/>
 				</div>
-			)}</Dropzone>
+			</Dropzone>
 			<button className="adjacent-button" onClick={()=> props.onClick()}>{(defaultAvatar) ? 'Upload' : 'Replace'}</button>
 			<div className={`page-link page-link-form${(defaultAvatar) ? ' page-link-form-disabled' : ''}`} onClick={()=> (defaultAvatar) ? null : props.onDropAvatar()}>Remove</div>
 		</Row>
@@ -122,13 +113,14 @@ const ProfilePageForm = (props)=> {
 		/>
 
 		<Row vertical="center">
-			<button type="submit" disabled={!changed} className="long-button adjacent-button" onClick={()=> props.onSubmit()}>Save</button>
+			<button type="submit" disabled={!changed} className="profile-page-save-button adjacent-button" onClick={()=> props.onSubmit()}>Save</button>
 			{(changed) && (<div className="page-link page-link-form" onClick={()=> props.onCancel()}>Cancel</div>)}
 		</Row>
 	</div>);
 };
 
 
+/*
 const ProfilePageIntegrationsGrid = (props)=> {
 // 	console.log('ProfilePage.ProfilePageIntegrationsGrid()', props);
 
@@ -151,6 +143,7 @@ const ProfilePageIntegrationsGrid = (props)=> {
 		<button className="long-button" onClick={()=> {trackEvent('button', 'integrations'); props.onClick()}}>{(items.length === 0) ? 'Setup' : 'Change'}</button>
 	</div>);
 };
+*/
 
 
 class ProfilePage extends Component {
@@ -448,8 +441,8 @@ class ProfilePage extends Component {
 // 		console.log('ProfilePage.render()', this.props, this.state);
 
 		const { profile } = this.props;
-		const { avatar, username, email, integrations } = this.state;
-		const { passMsg, usernameValid, emailValid, passwordValid, changed, confirmDialog } = this.state;
+		const { avatar, username, email } = this.state;
+		const { passMsg, usernameValid, emailValid, passwordValid, changed } = this.state;
 
 		return (
 			<BaseDesktopPage className="profile-page-wrapper">
@@ -479,24 +472,23 @@ class ProfilePage extends Component {
 					onSubmit={this.handleSubmit}
 				/>
 
-				{(profile) && (<ProfilePageIntegrationsGrid
-					title="Tool & Framework Integrations"
-					items={integrations.filter((integration)=> (profile.integrations.includes(integration.id)))}
-					profile={profile}
-					onClick={()=> this.props.onModal(Modals.INTEGRATIONS)}
-				/>)}
+				{/*{(profile) && (<ProfilePageIntegrationsGrid*/}
+					{/*title="Tool & Framework Integrations"*/}
+					{/*items={integrations.filter((integration)=> (profile.integrations.includes(integration.id)))}*/}
+					{/*profile={profile}*/}
+					{/*onClick={()=> this.props.onModal(Modals.INTEGRATIONS)}*/}
+				{/*/>)}*/}
 
-				{(confirmDialog) && (<ConfirmDialog
-					title="Change Account"
-					message="Are you sure you want to downgrade to a Free Account?"
-					onComplete={this.handleDialogComplete}
-				/>)}
+				{/*{(confirmDialog) && (<ConfirmDialog*/}
+					{/*title="Change Account"*/}
+					{/*message="Are you sure you want to downgrade to a Free Account?"*/}
+					{/*onComplete={this.handleDialogComplete}*/}
+				{/*/>)}*/}
 			</BaseDesktopPage>
 		);
 	}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
-
 
 // TODO: Add github toggle to profile

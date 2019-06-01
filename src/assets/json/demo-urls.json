@@ -1,5 +1,5 @@
 {
-  "inspect": "http://demo.designengine.ai/inspect/317/demo",
-  "parts": "http://demo.designengine.ai/parts/317/demo",
-  "editor": "http://demo.designengine.ai/editor/317/demo"
+  "specs": "/specs/436/specs",
+  "styles": "/styles/440/styles",
+  "edit": "/edit/441/editor"
 }

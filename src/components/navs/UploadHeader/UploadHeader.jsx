@@ -4,12 +4,17 @@ import './UploadHeader.css';
 
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
+import { Row } from 'simple-flexbox';
 
 import { POPUP_TYPE_ERROR } from '../../overlays/PopupNotification';
 import { updateDeeplink } from '../../../redux/actions';
 import { sendToSlack } from '../../../utils/funcs';
 import { Files } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
+
+import specs from './../../../assets/images/elements/element-specs.gif';
+import styles from './../../../assets/images/elements/element-styles.gif';
+import editor from './../../../assets/images/elements/element-editor.gif';
 import deLogo from './../../../assets/images/logos/logo-designengine.svg';
 import demoURLs from '../../../assets/json/demo-urls';
 
@@ -50,8 +55,10 @@ class UploadHeader extends Component {
 			this.setState({ fileDialog });
 		}
 
-		if (this.state.fileDialog && dropZone.current) {
-			dropZone.current.open();
+		if (this.state.fileDialog) {
+			if (dropZone.current && dropZone.current.fileInputEl) {
+				dropZone.current.fileInputEl.click();
+			}
 		}
 	}
 
@@ -80,8 +87,8 @@ class UploadHeader extends Component {
 		this.setState({ fileDialog : false });
 	};
 
-	handleFileDrop = (files, rejected)=> {
-// 		console.log('UploadHeader.handleFileDrop()', files, rejected);
+	handleFileDrop = (files)=> {
+// 		console.log('UploadHeader.handleFileDrop()', files);
 
 		const { id, email } = (this.props.profile) ? this.props.profile : this.state.profile;
 		if (files.length > 0) {
@@ -114,31 +121,36 @@ class UploadHeader extends Component {
 	render() {
 // 		console.log('UploadHeader.render()', this.props, this.state);
 
-		const { title, subtitle, uploading } = this.props;
+		const { section, title, subtitle, uploading } = this.props;
+		const img = (section.includes('specs')) ? specs : (section.includes('styles')) ? styles : editor
+
 		return (<div className="upload-header-wrapper">
 			<Dropzone
+				className="upload-header-dz"
 				multiple={false}
 				disablePreview={true}
 				onDrop={this.handleFileDrop}
 				onFileDialogCancel={this.handleFileDialogCancel}
 				ref={dropZone}
-			>{({ getRootProps, getInputProps })=> (
-				<div { ...getRootProps() } className="upload-header-dz">
-					<img className="upload-header-logo" src={deLogo} alt="Logo" />
-					<h1 className="page-header-title upload-header-title">{title}</h1>
-					<h3 className="page-header-subtitle upload-header-subtitle">{subtitle}</h3>
-					{(uploading)
-						? (<div className="upload-header-button-wrapper">
-								<button onClick={(event)=> this.handleCancel(event)}>Cancel</button>
-							</div>)
-						: (<div className="upload-header-button-wrapper">
-								<button className="adjacent-button" onClick={()=> trackEvent('button', 'upload')}>Upload</button>
-								<button onClick={(event)=> this.handleDemo(event)}>Try Demo</button>
-							</div>)
-					}
-					<input { ...getInputProps() } />
-				</div>
-			)}</Dropzone>
+			><Row horizontal="center" vertical="center" style={{height:'100%'}}><div>
+				<img className="upload-header-logo" src={deLogo} alt="Logo" />
+				<h1 className="page-header-title upload-header-title">{title}</h1>
+				<div className="page-header-subtitle upload-header-subtitle">{subtitle}</div>
+				{(uploading)
+					? (<div className="upload-header-button-wrapper">
+							<button onClick={(event)=> this.handleCancel(event)}>Cancel</button>
+						</div>)
+					: (<div className="upload-header-button-wrapper">
+							<button className="adjacent-button" onClick={()=> trackEvent('button', 'upload')}>Upload</button>
+							<button onClick={(event)=> this.handleDemo(event)}>Try Demo</button>
+					</div>)
+				}
+			</div></Row></Dropzone>
+
+			<div className="upload-header-image-wrapper">
+				<img className="upload-header-image" src={img} alt="Screenshot" />
+			</div>
+
 		</div>);
 	}
 }

@@ -48,7 +48,7 @@ class PopupNotification extends Component {
 			y          : `${top + 7}px`,
 			height     : '22px',
 			ease       : Power1.easeIn,
-			delay      : (delay * 0.001),
+			delay      : (delay * 0.001)
 
 		}).to(this.wrapper, (OUTRO_DURATION * 0.001), {
 			opacity    : 0.0,
@@ -85,7 +85,7 @@ class PopupNotification extends Component {
 		const wrapperClass = `popup-notification-wrapper${(position === POPUP_POSITION_TOPMOST) ? ' popup-notification-wrapper-topmost' : ''}`;
 		const className = `popup-notification-content${(type === POPUP_TYPE_OK) ? ' popup-notification-content-ok' : (type === POPUP_TYPE_ERROR) ? ' popup-notification-content-error' : ' popup-notification-content-status'}`;
 		const wrapperStyle = {
-			width     : (offset.right !== 0) ? `calc(100% - ${offset.right - offset.left}px)` : '100%',
+			width     : (offset.right !== 0) ? `calc(100% - ${offset.right}px)` : '100%',
 			transform : `translate(${offset.left}px, ${offset.top}px)`
 		};
 

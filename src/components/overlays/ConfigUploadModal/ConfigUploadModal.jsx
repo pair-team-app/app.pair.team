@@ -3,17 +3,17 @@ import React, { Component } from 'react';
 import './ConfigUploadModal.css';
 
 import axios from 'axios';
-import qs from 'qs';
 import Dropzone from 'react-dropzone';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
 
 import BaseOverlay from '../BaseOverlay';
-import { API_ENDPT_URL, LINTER_UPLOAD_URL } from './../../../consts/uris';
+import { LINTER_UPLOAD_URL } from './../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { URIs } from './../../../utils/lang';
 import { trackEvent } from './../../../utils/tracking';
+import allIntegrations from './../../../assets/json/integrations';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
 
 
@@ -28,7 +28,7 @@ const ConfigIntegrationsList = (props)=> {
 				title={integration.title}
 				image={integration.filename}
 				uploaded={integration.uploaded}
-				onDrop={(files, rejected)=> props.onFileDrop(integration, files, rejected)}
+				onDrop={(files)=> props.onFileDrop(integration, files)}
 			/>
 		))}
 	</div>);
@@ -47,15 +47,12 @@ const ConfigIntegrationsListItem = (props)=> {
 		</Column>
 		<Column horizontal="end" vertical="center" flexGrow={1}>
 			<Dropzone
+				className="config-integrations-list-item-dz"
 				multiple={false}
 				disablePreview={true}
-				onDrop={props.onDrop}
-			>{({ getRootProps, getInputProps })=> (
-				<div { ...getRootProps() } className="config-integrations-list-item-dz">
-					<button className="config-integrations-list-item-button">{title}</button>
-					<input { ...getInputProps() } />
-				</div>
-			)}</Dropzone>
+				onDrop={props.onDrop}>
+				<button className="config-integrations-list-item-button">{title}</button>
+			</Dropzone>
 		</Column>
 	</Row></div>);
 };
@@ -77,21 +74,12 @@ class ConfigUploadModal extends Component {
 // 		console.log('ConfigUploadModal.componentDidMount()', this.props, this.state);
 
 		const { profile } = this.props;
-		axios.post(API_ENDPT_URL, qs.stringify({
-			action : 'INTEGRATIONS'
-		})).then((response) => {
-			console.log('INTEGRATIONS', response.data);
-			const integrations = response.data.integrations.map((integration)=> (Object.assign({}, integration, {
-				id       : integration.id << 0,
-				enabled  : ((integration.enabled << 0) === 1)
-			}))).filter((integration)=> (profile.integrations.includes(integration.id))).map((integration)=> (Object.assign({}, integration, {
-				selected : true,
-				uploaded : false
-			})));
+		const integrations = allIntegrations.filter((integration)=> (integration.type === 'dev' && profile.integrations.includes(integration.id))).map((integration)=> (Object.assign({}, integration, {
+			selected : true,
+			uploaded : false
+		})));
 
-			this.setState({ integrations });
-		}).catch((error)=> {
-		});
+		this.setState({ integrations });
 	}
 
 	handleCancel = (event)=> {
@@ -112,8 +100,8 @@ class ConfigUploadModal extends Component {
 		});
 	};
 
-	handleFileDrop = (integration, files, rejected)=> {
-// 		console.log('ConfigUploadModal.handleFileDrop()', integration, files, rejected);
+	handleFileDrop = (integration, files)=> {
+		console.log('ConfigUploadModal.handleFileDrop()', integration, files);
 
 		trackEvent('button', 'config');
 		if (files.length > 0) {

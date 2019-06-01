@@ -90,6 +90,35 @@ export const Browsers = {
 };
 
 
+export const Colors = {
+	componentHex : (hex, comp)=> {
+		const comps = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i.exec(hex);
+		return ((comps) ? comps[(comp === 'r') ? 1 : (comp === 'g') ? 2 : (comp === 'b') ? 3 : (comp === 'a' && comps.length === 5) ? 4 : 0] : null);
+	},
+// 	rgbToHex : (rgb)=> (`#${rgb.r.toString(16)}${rgb.g.toString(16)}${rgb.b.toString(16)}`),
+	rgbToHex  : (rgb)=> (`#${((1 << 24) + (rgb.r << 16) + (rgb.g << 8) + rgb.b).toString(16).slice(1)}`),
+// 	rgbaToHex : (rgb)=> (`#${rgb.r.toString(16)}${rgb.g.toString(16)}${rgb.b.toString(16)}${((rgb.a * 255) << 0).toString(16)}`),
+	rgbaToHex : (rgba)=> {
+		const hex = {
+			r : rgba.r.toString(16),
+			g : rgba.g.toString(16),
+			b : rgba.b.toString(16),
+			a : ((rgba.a * 255) << 0).toString(16),
+		};
+
+		return (`#${(hex.r.length > 1) ? hex.r : `0${hex.r}`}${(hex.g.length > 1) ? hex.g : `0${hex.g}`}${(hex.b.length > 1) ? hex.b : `0${hex.b}`}${(hex.a.length > 1) ? hex.a : `0${hex.a}`}`);
+	},
+	hexToRGB : (hex)=> {
+		const comps = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return ((comps) ? {
+			r : parseInt(comps[1], 16),
+			g : parseInt(comps[2], 16),
+			b : parseInt(comps[3], 16)
+		} : null);
+	}
+};
+
+
 export const Components = {
 	componentName     : (component)=> (component.constructor.name),
 	txtFieldClassName : (valid)=> (`input-wrapper${(valid) ? '' : ' input-wrapper-error'}`)
@@ -210,8 +239,7 @@ export const Objects = {
 	dropKey    : (obj, key)=> (Objects.dropKeys(obj, [key])),
 	dropKeys   : (obj, keys)=> ({ ...Object.keys(obj).filter((k)=> (!Arrays.containsElement(keys, k))).reduce((newObj, k)=> ({...newObj, [k]: obj[k]}), {})}),
 	isEmpty    : (obj)=> (Object.keys(obj).length === 0),
-	iterate    : (obj)=> (Object.keys(obj).map((key)=> ({ key : key, val : obj[key] }))),
-	hasKey     : (obj, key)=> (Object.keys(obj).some((k)=> (k === key))),
+	hasKey     : (obj, key)=> ((obj && typeof obj !== 'undefined') ? Object.keys(obj).some((k)=> (k === key)) : false),
 	length     : (obj)=> (Object.keys(obj).length),
 	reduceVals : (obj, init=0)=> (Object.values(obj).reduce((acc, val)=> ((acc << 0) + (val << 0)), init)),
 	renameKey  : (obj, oldKey, newKey, overwrite=false)=> {
@@ -243,12 +271,21 @@ export const Strings = {
 	countOf      : (str, substr)=> ((str.match(new RegExp(substr.toString(), 'g')) || []).length),
 	dropChar     : (str, char)=> (Strings.replAll(str, char)),
 	firstChar    : (str)=> (str.charAt(0)),
-	head         : (str, lines=1, delim='\n')=> (str.split(delim).slice(0, Math.min(lines, lines)).join(delim)),
 // 	isEmail      : (str)=> (EMAIL_NEEDLE_REGEX.test(String(str))),
 	isEmail      : (str)=> (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i.test(String(str))),
 	lastChar     : (str)=> (str.slice(-1)),
 	lPad         : (str, char, amt)=> ((amt < 0 || String(str).length < amt) ? `${(new Array((amt > 0) ? amt - String(str).length + 1 : -amt + 1)).join(char)}${str}` : str),
-	pluralize   : (str, val)=> ((val === 1) ? str : (Strings.lastChar(str) === 'y') ? `${str.slice(0, -1)}ies` : (Strings.lastChar(str) === 's') ? 'es' : `${str}s`),
+	indexedVal   : (val, arr, divider='_')=> {
+		if (arr[val].length === 0) {
+			arr[val] = 0;
+		}
+
+		return ({
+			name : `${val}${divider}${++arr[val]}`,
+			arr : [...arr]
+		});
+	},
+	pluralize   : (str, val)=> (((val << 0) === 1) ? str : (Strings.lastChar(str) === 'y') ? `${str.slice(0, -1)}ies` : (Strings.lastChar(str) === 's') ? 'es' : `${str}s`),
 	quoted      : (str)=> (str.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1')),
 	remove      : (str, needle)=> (Strings.replAll(str, needle)),
 	repeat      : (str='', amt=1)=> ((new Array(amt)).fill(str).join('')),
@@ -258,9 +295,7 @@ export const Strings = {
 	randHex     : (len=1, upperCase=true)=> (Arrays.indexFill(len).map((i)=> ((upperCase) ? Strings.lastChar(Maths.randomHex()).toUpperCase() : Strings.lastChar(Maths.randomHex()))).join('')),
 	rPad        : (str, amt, char)=> ((str.length < amt) ? `${str}${(new Array(amt - String(str).length + 1)).join(char)}` : str),
 	shuffle     : (str)=> (Arrays.shuffle([...str.split('')]).join('')),
-	sliceLines  : (str, start=0, end=-1, delim='\n')=> ((end=-1) ? str.split(delim).slice(start).join(delim) : str.split(delim).slice(start, end + 1).join(delim)),
 	slugifyURI  : (str)=> (str.trim().replace(URI_SANITIZED_REGEX, '').replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '').toLowerCase()),
-	tail        : (str, lines=1, delim='\n')=> (str.split(delim).reverse().slice(Math.min(lines, lines)).reverse().join(delim)),
 // 	trimBounds  : (str, char)=> (str.replace(new RegExp(RegExps.quote(char), 'g')), ''),
 // 	trimBounds  : (str, char)=> (str.match(RegExps.concat(char, '^', '$'), '')),
 	trimBounds  : (str, char)=> (str.split(char).filter((segment, i)=> (segment.length > 0)).join(char)),
@@ -280,9 +315,8 @@ export const URIs = {
 };
 
 
+
 /* …\(^_^)/… */
-
-
 
 
 /*

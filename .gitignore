@@ -8,13 +8,11 @@
 #-- production
 /build
 
-#-- node caches
-/.cache
-
 #-- ide meta
 /.idea
 
-#-- temp dir
+#-- temp dirs
+/.cache
 /tmp
 
 #-- os misc
@@ -43,4 +41,3 @@ npm-debug.log*
 **/vendor/**/LICENSE
 
 /.eslintrc.json
-/.eslintignore

@@ -14,6 +14,14 @@ function HomePageArtboardGrid(props) {
 	return (<div className="home-page-artboard-grid">
 		<h4 style={{opacity:(title !== 'N/A') << 0}}>{title}</h4>
 		<Row wrap={true} horizontal="start" className="home-page-artboard-grid-item-wrapper">
+			<Column key={0}>
+				<ArtboardItem
+					title={null}
+					image={null}
+					avatar={null}
+					onClick={()=> props.onUpload()} />
+			</Column>
+
 			{(artboards) && artboards.map((artboard, i) => {
 				return (
 					<Column key={i}>

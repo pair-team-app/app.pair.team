@@ -1,4 +1,6 @@
 
+export const TAB_KEY = 9;
+
 export const ARROW_LT_KEY = 37;
 export const ARROW_UP_KEY = 38;
 export const ARROW_RT_KEY = 39;

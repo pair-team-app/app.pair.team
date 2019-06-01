@@ -59,6 +59,12 @@
 }
 
 
+.profile-page-save-button {
+	width: 187px;
+	padding-left: 25px;
+	padding-right: 25px;
+}
+
 .profile-page-integrations-grid {
 	margin-top: 40px;
 }
