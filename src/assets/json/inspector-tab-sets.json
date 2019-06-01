@@ -35,6 +35,17 @@
     }]
   ],
 
+  "parts": [
+    [{
+      "id": 30,
+      "title": "Parts",
+      "enabled": false,
+      "component": null,
+      "contents": "/* Rollover any design object for parts */",
+      "syntax": null
+    }]
+  ],
+
   "edit": [
     [{
       "id": 30,

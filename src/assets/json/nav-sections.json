@@ -1,13 +1,16 @@
 {
   "bottom": {
     "desktop": [{
-      "title": "Free Specs",
+      "title": "Specs",
       "url": "/specs"
     }, {
-      "title": "Free Styles",
+      "title": "Styles",
       "url": "/styles"
     }, {
-      "title": "Design Editor",
+      "title": "Parts",
+      "url": "/Parts"
+    }, {
+      "title": "Editor",
       "url": "/edit"
     }, {
       "title": "Terms",
@@ -20,21 +23,24 @@
   },
   "top": {
     "desktop": [{
-      "title": "Free Specs",
+      "title": "Specs",
       "url": "/specs"
     }, {
-      "title": "Free Styles",
+      "title": "Styles",
       "url": "/styles"
     }, {
-      "title": "Design Editor",
+      "title": "Parts",
+      "url": "/Parts"
+    }, {
+      "title": "Editor",
       "url": "/edit"
     }],
     "mobile": [{
-      "title": "Free Inspect",
-      "url": "/inspect"
+      "title": "Specs",
+      "url": "/specs"
     }, {
-      "title": "Presenter",
-      "url": "/present"
+      "title": "Styles",
+      "url": "/styles"
     }]
   }
 }

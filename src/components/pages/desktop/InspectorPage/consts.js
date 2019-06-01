@@ -75,6 +75,7 @@ export const GRID = {
 export const SECTIONS = {
 	SPECS  : 'specs',
 	STYLES : 'styles',
+	PARTS  : 'parts',
 	EDIT   : 'edit'
 };
 

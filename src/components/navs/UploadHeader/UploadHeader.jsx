@@ -9,7 +9,7 @@ import { Row } from 'simple-flexbox';
 import { POPUP_TYPE_ERROR } from '../../overlays/PopupNotification';
 import { updateDeeplink } from '../../../redux/actions';
 import { sendToSlack } from '../../../utils/funcs';
-import { Files } from '../../../utils/lang';
+import { Files, URIs } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 
 import specs from './../../../assets/images/elements/element-specs.gif';
@@ -77,7 +77,7 @@ class UploadHeader extends Component {
 		event.preventDefault();
 		trackEvent('button', 'demo');
 
-		window.location.replace(demoURLs[window.location.pathname.split('/').pop()]);
+		window.location.replace(demoURLs[URIs.firstComponent()]);
 	};
 
 	handleFileDialogCancel = ()=> {

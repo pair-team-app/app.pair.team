@@ -5,6 +5,7 @@ import './HomePage.css';
 import { connect } from 'react-redux';
 
 import BaseDesktopPage from '../BaseDesktopPage';
+import ArtboardGrid from './ArtboardGrid';
 import UploadHeader from '../../../navs/UploadHeader';
 
 import { Modals } from '../../../../consts/uris';
@@ -94,9 +95,9 @@ class HomePage extends Component {
 	render() {
 // 		console.log('HomePage.render()', this.props, this.state);
 
-		//const { profile, artboards } = this.props;
+		const { profile, artboards } = this.props;
 		const { fileDialog } = this.state;
-		//const gridTitle = (profile) ? `${(URIs.subdomain()) ? `Team ${Strings.capitalize(URIs.subdomain())}` : `History`} (${artboards.length})` : 'N/A';
+		const gridTitle = (profile) ? `${(URIs.subdomain()) ? `Team ${Strings.capitalize(URIs.subdomain())}` : `History`} (${artboards.length})` : 'N/A';
 
 		return (
 			<BaseDesktopPage className="home-page-wrapper">
@@ -110,14 +111,14 @@ class HomePage extends Component {
 					onPage={this.props.onPage}
 					onPopup={this.props.onPopup} />
 
-				{/*<ArtboardGrid*/}
-					{/*title={gridTitle}*/}
-					{/*artboards={artboards}*/}
-					{/*onClick={this.handleArtboardClicked}*/}
-					{/*onUpload={this.handleUploadClick}*/}
-					{/*onPage={this.props.onPage}*/}
-					{/*onPopup={this.props.onPopup}*/}
-				{/*/>*/}
+				<ArtboardGrid
+					title={gridTitle}
+					artboards={artboards}
+					onClick={this.handleArtboardClicked}
+					onUpload={this.handleUploadClick}
+					onPage={this.props.onPage}
+					onPopup={this.props.onPopup}
+				/>
 			</BaseDesktopPage>
 		);
 	}
