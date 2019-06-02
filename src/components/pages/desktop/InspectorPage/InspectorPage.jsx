@@ -198,23 +198,11 @@ const PartListItem = (props)=> {
 
 	return (<div data-slice-id={id} className="part-list-item"><Row vertical="center" horizontal="center">
 		<div className="part-list-item-content-wrapper">
-			<PartListItemThumb
-				src={`${filename}${(type === 'svg') ? '@1x.svg' : '@2x.png'}`}
-				title={title}
-				width={size.width}
-				height={size.height} />
+			<img src={`${filename}${(type === 'svg') ? '@1x.svg' : '@2x.png'}`} className="part-list-item-image" width={size.width} height={size.height} alt={title} />
 			<div className="part-list-item-title">{`${Strings.truncate(`${title}`, 18)}`}</div>
 		</div>
 		<button className="tiny-button part-list-item-button" onClick={()=> props.onClick()}><img src={downloadButton} width="20" height="14" alt="Download" /></button>
 	</Row></div>);
-};
-
-
-const PartListItemThumb = (props)=> {
-// 	console.log('InspectorPage.PartListItemThumb()', props);
-
-	const { src, title, width, height } = props;
-	return (<img src={src} className="part-list-item-image" width={width} height={height} alt={title} />);
 };
 
 
@@ -1595,8 +1583,9 @@ class InspectorPage extends Component {
 
 		trackEvent('button', 'download-parts');
 		const { upload, slice } = this.state;
-		const sliceIDs = (slice.type === 'group') ? fillGroupPartItemSlices(upload, slice).map((slice)=> (slice.id)).join(',') : slice.children.map((slice)=> (slice.id)).join(',');
+		const sliceIDs = (slice.type === 'symbol') ? slice.children.map((slice)=> (slice.id)).join(',') : fillGroupPartItemSlices(upload, slice).map((slice)=> (slice.id)).join(',');
 
+		console.log('::::::::::', `${CDN_DOWNLOAD_PARTS_URL}?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
 		Browsers.makeDownload(`${CDN_DOWNLOAD_PARTS_URL}?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
 	};
 
@@ -2626,11 +2615,8 @@ class InspectorPage extends Component {
 									</div>)}
 
 									{(section === SECTIONS.PARTS) && (<div className="inspector-page-panel-button-wrapper">
-										<button disabled={!slice || (linter && linter.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxLinter(activeTabs[i].syntax)}>{(processing) ? 'Processing' : 'Lint'}</button>
-										<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
-											<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy Code'}</button>
-										</CopyToClipboard>
-										<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i].contents.props.code, activeTabs[i].contents.props.language) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist Code' : 'View Gist'}</button>
+										<button disabled={!slice} className="inspector-page-panel-button" onClick={this.handleDownloadPartsList}>{(processing) ? 'Processing' : 'Download Parts'}</button>
+										<button disabled={!upload} className="inspector-page-panel-button" onClick={this.handleDownloadAll}>{(processing) ? 'Processing' : 'Download Project'}</button>
 									</div>)}
 								</div>
 							)))
@@ -2698,6 +2684,24 @@ class InspectorPage extends Component {
 			</ContextMenu>)}
 
 			{(section === SECTIONS.STYLES) && (<ContextMenu id="RIGHT_CLICK" className="inspector-page-context-menu">
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Copy ReactCSS
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Copy CSS
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Gist ReactCSS
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Gist CSS
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Export All
+				</MenuItem>
+			</ContextMenu>)}
+
+			{(section === SECTIONS.PARTS) && (<ContextMenu id="RIGHT_CLICK" className="inspector-page-context-menu">
 				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
 					Copy ReactCSS
 				</MenuItem>
