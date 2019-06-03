@@ -103,7 +103,7 @@ class SignupPage extends Component {
 
 
 	render() {
-// 		console.log('IntegrationsPage.render()', this.props, this.state);
+// 		console.log('SignupPage.render()', this.props, this.state);
 
 		const { email, emailValid, submitted } = this.state;
 		return (

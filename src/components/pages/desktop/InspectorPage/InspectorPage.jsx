@@ -2605,7 +2605,6 @@ class InspectorPage extends Component {
 										<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(toSpecs(upload, activeSlice), 'txt') : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist Specs' : 'View Gist'}</button>
 									</div>)}
 
-
 									{(section === SECTIONS.STYLES) && (<div className="inspector-page-panel-button-wrapper">
 										<button disabled={!slice || (linter && linter.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxLinter(activeTabs[i].syntax)}>{(processing) ? 'Processing' : 'Lint'}</button>
 										<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>

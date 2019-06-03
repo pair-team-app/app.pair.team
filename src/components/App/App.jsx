@@ -27,6 +27,7 @@ import PrivacyPage from '../pages/desktop/PrivacyPage';
 import RecoverPage from '../pages/desktop/RecoverPage';
 import SignupPage from '../pages/desktop/SignupPage';
 import Status404Page from '../pages/desktop/Status404Page';
+import TeamPage from '../pages/desktop/TeamPage';
 import TermsPage from '../pages/desktop/TermsPage';
 import UploadPage from '../pages/desktop/UploadPage';
 import BaseMobilePage from '../pages/mobile/BaseMobilePage';
@@ -695,6 +696,7 @@ class App extends Component {
 
 					    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/team/:teamID?" render={()=> <TeamPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    {/*<Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />*/}
 					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
