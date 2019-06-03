@@ -99,7 +99,9 @@ const artboardForID = (upload, artboardID)=> {
 
 const fillGroupPartItemSlices = (upload, slice)=> {
 // 	console.log('fillGroupPartItemSlices()', upload, slice);
-	return ([slice, ...artboardForID(upload, slice.artboardID).slices.filter((item) => ((item.type === 'bitmap' || item.type === 'svg') && item.id !== slice.id && Maths.geom.frameContainsFrame(slice.meta.frame, item.meta.frame)))]);
+
+	const slices = [slice, ...artboardForID(upload, slice.artboardID).slices.filter((item) => (item.id !== slice.id && Maths.geom.frameContainsFrame(slice.meta.frame, item.meta.frame)))];
+	return (slices.filter((item)=> (item.type === 'bitmap' || item.type === 'svg')));
 };
 
 const flattenUploadArtboards = (upload, type=null)=> {
@@ -187,7 +189,7 @@ const PartsList = (props)=> {
 				/>
 			);
 		})}
-	</div> : <div className="parts-list-wrapper parts-list-wrapper-empty">{(enabled) ? '/* Rollover to display parts. */' : ''}</div>);
+	</div> : <div className="parts-list-wrapper parts-list-wrapper-empty">{(enabled) ? '/* Rollover a graphic object to display parts. */' : ''}</div>);
 };
 
 
@@ -195,7 +197,6 @@ const PartListItem = (props)=> {
 // 	console.log('InspectorPage.PartListItem()', props);
 
 	const { id, filename, title, type, size } = props;
-
 	return (<div data-slice-id={id} className="part-list-item"><Row vertical="center" horizontal="center">
 		<div className="part-list-item-content-wrapper">
 			<img src={`${filename}${(type === 'svg') ? '@1x.svg' : '@2x.png'}`} className="part-list-item-image" width={size.width} height={size.height} alt={title} />
@@ -1386,7 +1387,7 @@ class InspectorPage extends Component {
 // 		event.stopPropagation();
 		const artboardID = event.target.getAttribute('data-artboard-id') << 0;
 		if (artboardID) {
-			let { upload, artboard } = this.state;
+			let { upload, artboard, section } = this.state;
 			if (!artboard || artboard.id !== artboardID) {
 				artboard = artboardForID(upload, artboardID);
 				if (artboard) {
@@ -2483,9 +2484,9 @@ class InspectorPage extends Component {
 			const artboardSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'artboard', sliceOffset, scale, scrolling) : [];
 			const backgroundSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'background', sliceOffset, scale, scrolling) : [];
 			const groupSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'group', sliceOffset, scale, scrolling) : [];
-			const symbolSlices =(artboard.slices.length > 0) ?  [...this.buildSliceRollOverItemTypes(artboard, 'bitmap', sliceOffset, scale, scrolling), ...this.buildSliceRollOverItemTypes(artboard, 'symbol', sliceOffset, scale, scrolling), this.buildSliceRollOverItemTypes(artboard, 'svg', sliceOffset, scale, scrolling)] : [];
+			const symbolSlices = (artboard.slices.length > 0) ?  [...this.buildSliceRollOverItemTypes(artboard, 'bitmap', sliceOffset, scale, scrolling), ...this.buildSliceRollOverItemTypes(artboard, 'symbol', sliceOffset, scale, scrolling), this.buildSliceRollOverItemTypes(artboard, 'svg', sliceOffset, scale, scrolling)] : [];
 			const sliceSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'slice', sliceOffset, scale, scrolling) : [];
-			const textfieldSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'textfield', sliceOffset, scale, scrolling) : [];
+			const textfieldSlices = (artboard.slices.length > 0 && section !== SECTIONS.PARTS) ? this.buildSliceRollOverItemTypes(artboard, 'textfield', sliceOffset, scale, scrolling) : [];
 
 			artboardImages.push(
 				<div key={i} data-artboard-id={artboard.id} className="inspector-page-artboard" style={artboardStyle}>
