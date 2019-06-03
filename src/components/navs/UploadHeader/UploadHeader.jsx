@@ -147,9 +147,9 @@ class UploadHeader extends Component {
 				}
 			</div></Row></Dropzone>
 
-			<div className="upload-header-image-wrapper">
+			{(!window.location.pathname.includes('new')) && (<div className="upload-header-image-wrapper">
 				<img className="upload-header-image" src={img} alt="Screenshot" />
-			</div>
+			</div>)}
 
 		</div>);
 	}
