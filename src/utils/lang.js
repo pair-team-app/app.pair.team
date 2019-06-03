@@ -310,7 +310,7 @@ export const URIs = {
 	lastComponent  : (url=window.location.pathname)=> (Files.basename(url)),
 	protocol       : (url=window.location.protocol)=> ((/^https?/.test(url.toLowerCase())) ? url.split(':').shift() : null),
 	queryString    : (url=window.location.search)=> (Arrays.convertToObject((url.includes('?')) ? url.split('?').pop().split('&').map((qs)=> ({ key : qs.split('=').shift(), val : qs.split('=').pop() })) : [])),
-	subdomain      : (url=window.location.hostname)=> ((URIs.hostname(url).split('.').length === 3) ? URIs.hostname(url).split('.').shift() : null),
+	subdomain      : (url=window.location.hostname)=> ((URIs.hostname(url).split('.').length >= 3) ? URIs.hostname(url).split('.').shift() : null),
 	tdl            : (url=window.location.hostname)=> (URIs.hostname(url).split('.').pop())
 };
 

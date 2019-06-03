@@ -696,7 +696,7 @@ class App extends Component {
 
 					    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
-					    <Route exact path="/team/:teamID?" render={()=> <TeamPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/(history|team)" render={()=> <TeamPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    {/*<Route exact path="/rate-this" render={()=> <RateThisPage score={rating} onPage={this.handlePage} />} />*/}
 					    <Route path="/recover/:userID?" render={(props)=> <RecoverPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
