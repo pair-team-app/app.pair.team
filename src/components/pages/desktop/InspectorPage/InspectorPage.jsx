@@ -1387,7 +1387,7 @@ class InspectorPage extends Component {
 // 		event.stopPropagation();
 		const artboardID = event.target.getAttribute('data-artboard-id') << 0;
 		if (artboardID) {
-			let { upload, artboard, section } = this.state;
+			let { upload, artboard } = this.state;
 			if (!artboard || artboard.id !== artboardID) {
 				artboard = artboardForID(upload, artboardID);
 				if (artboard) {

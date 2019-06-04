@@ -41,7 +41,7 @@ class TopNavProfile extends Component {
 			this.props.onLink('profile');
 
 		} else if (type === TEAM) {
-			this.props.onLink((URIs.subdomain()) ? 'team' : 'history');
+			this.props.onLink((URIs.subdomain() && URIs.subdomain() !== 'earlyaccess') ? 'team' : 'history');
 
 		} else if (type === LOGOUT) {
 			this.props.onLogout()
@@ -76,7 +76,7 @@ class TopNavProfile extends Component {
 
 			{(bubble) && (<div className={bubbleClass}>
 				<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(PROFILE)}>Profile</div>
-				<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(TEAM)}>{(URIs.subdomain()) ? `Team ${Strings.capitalize(URIs.subdomain())}` : `History`}</div>
+				<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(TEAM)}>{(URIs.subdomain()) ? `Team ${Strings.capitalize(URIs.subdomain() && URIs.subdomain() !== 'earlyaccess')}` : `History`}</div>
 				<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(LOGOUT)}>Logout</div>
 			</div>)}
 			</div>);
