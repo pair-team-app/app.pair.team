@@ -152,27 +152,27 @@ class UploadPage extends Component {
 	};
 
 	handleLoggedIn = (profile)=> {
-// 		console.log('UploadPage.handleLoggedIn()', profile);
+		console.log('UploadPage.handleLoggedIn()', profile);
 
 		trackEvent('user', 'login');
 		cookie.save('user_id', profile.id, { path : '/' });
+
 		this.props.updateUserProfile(profile);
 		this.onUploadSubmit(profile);
 	};
 
 	handleRegistered = (profile)=> {
-// 		console.log('UploadPage.handleRegistered()', profile);
+		console.log('UploadPage.handleRegistered()', profile);
 
 		trackEvent('user', 'sign-up');
 		cookie.save('user_id', profile.id, { path : '/' });
 
 		this.props.updateUserProfile(profile);
-		this.props.onRegistered();
 		this.onUploadSubmit(profile);
 	};
 
 	onUploadSubmit = (userProfile)=> {
-// 		console.log('UploadPage.onUploadSubmit()', userProfile, this.state);
+		console.log('UploadPage.onUploadSubmit()', userProfile, this.state);
 
 		const { pathname } = window.location;
 		const profile = (userProfile && typeof userProfile !== 'undefined') ? userProfile : this.props.profile;
@@ -230,7 +230,7 @@ class UploadPage extends Component {
 					<div className="upload-progress-bar" style={progressStyle} />
 				</div>)}
 
-				{(formState <= 1) && (<UploadHeader
+				{(formState <= 1 && !uploadComplete) && (<UploadHeader
 					fileDialog={false}
 					uploading={(formState === 1)}
 					section={URIs.lastComponent()}
@@ -240,8 +240,6 @@ class UploadPage extends Component {
 					onFile={this.handleFile}
 					onPage={this.props.onPage}
 					onPopup={this.props.onPopup} />)}
-
-				{(formState === 0 && !isUserLoggedIn()) && (<button className="long-button aux-button" onClick={this.handleGitHub}>Connect on GitHub</button>)}
 
 				{(!isUserLoggedIn() && showRegister && !showLogin) && (<div className="upload-page-register-wrapper">
 					<RegisterForm
