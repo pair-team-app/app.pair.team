@@ -14,25 +14,10 @@ import RegisterForm from '../../forms/RegisterForm';
 import { Modals, API_ENDPT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { addFileUpload, updateDeeplink, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath, isUserLoggedIn, sendToSlack } from '../../../utils/funcs';
+import { URIs } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 import homeContent from '../../../assets/json/home-content';
 import radioButtons from '../../../assets/json/radio-buttons_upload';
-
-const mapStateToProps = (state, ownProps)=> {
-	return ({
-		file     : state.file,
-		deeplink : state.deeplink,
-		profile  : state.userProfile
-	});
-};
-
-const mapDispatchToProps = (dispatch)=> {
-	return ({
-		addFileUpload     : (file)=> dispatch(addFileUpload(file)),
-		updateDeeplink    : (navIDs)=> dispatch(updateDeeplink(navIDs)),
-		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
-	});
-};
 
 
 class UploadPage extends Component {
@@ -248,6 +233,7 @@ class UploadPage extends Component {
 				{(formState <= 1) && (<UploadHeader
 					fileDialog={false}
 					uploading={(formState === 1)}
+					section={URIs.lastComponent()}
 					title={uploadTitle}
 					subtitle={uploadSubtitle}
 					onCancel={this.handleCancel}
@@ -274,5 +260,23 @@ class UploadPage extends Component {
 		);
 	}
 }
+
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		file     : state.file,
+		deeplink : state.deeplink,
+		profile  : state.userProfile
+	});
+};
+
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		addFileUpload     : (file)=> dispatch(addFileUpload(file)),
+		updateDeeplink    : (navIDs)=> dispatch(updateDeeplink(navIDs)),
+		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+	});
+};
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(UploadPage);

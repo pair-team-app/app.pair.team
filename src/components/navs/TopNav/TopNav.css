@@ -42,7 +42,7 @@
 	margin-right: 20px;
 	letter-spacing: -0.3px;
 	text-decoration: none;
-	color: #abdafd;
+	color: #ffffff;
 }
 
 .top-nav-link:last-child, a.top-nav-link:last-child {
@@ -52,6 +52,7 @@
 .top-nav-link:hover, .top-nav-link a:hover {
 	cursor: pointer;
 	text-decoration: underline;
+	color: #abdafd;
 }
 
 .top-nav-link:active, .top-nav-link a:active {
@@ -60,5 +61,4 @@
 
 .top-nav-link-selected, a.top-nav-link-selected {
 	color: #2288fb;
-	text-decoration: underline;
 }

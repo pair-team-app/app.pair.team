@@ -48,7 +48,7 @@ class PopupNotification extends Component {
 			y          : `${top + 7}px`,
 			height     : '22px',
 			ease       : Power1.easeIn,
-			delay      : (delay * 0.001),
+			delay      : (delay * 0.001)
 
 		}).to(this.wrapper, (OUTRO_DURATION * 0.001), {
 			opacity    : 0.0,

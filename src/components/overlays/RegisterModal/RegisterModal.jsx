@@ -13,6 +13,7 @@ import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath } from '../../../utils/funcs';
 import { URIs } from './../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
+import deLogo from '../../../assets/images/logos/logo-designengine.svg';
 
 class RegisterModal extends Component {
 	constructor(props) {
@@ -133,7 +134,7 @@ class RegisterModal extends Component {
 
 				<div className="register-modal-wrapper">
 					<div className="register-modal-header">
-						<h4 className="full-width">Sign Up</h4>
+						<img className="register-modal-header-logo" src={deLogo} alt="Logo" />
 					</div>
 
 					<div className="register-modal-content-wrapper">

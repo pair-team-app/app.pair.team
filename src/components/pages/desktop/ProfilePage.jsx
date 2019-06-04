@@ -3,22 +3,22 @@ import React, { Component } from 'react';
 import './ProfilePage.css';
 
 import axios from 'axios/index';
+import qs from 'qs';
 import Dropzone from 'react-dropzone';
 import FontAwesome from 'react-fontawesome';
 import ImageLoader from 'react-loading-image';
 import { connect } from 'react-redux';
-import { Column, Row } from 'simple-flexbox';
+import { Row } from 'simple-flexbox';
 
 import BaseDesktopPage from './BaseDesktopPage';
 import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../forms/InputField/InputField';
-import IntegrationGridItem from '../../iterables/IntegrationGridItem';
-import ConfirmDialog from '../../overlays/ConfirmDialog';
+// import IntegrationGridItem from '../../iterables/IntegrationGridItem';
+// import ConfirmDialog from '../../overlays/ConfirmDialog';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../overlays/PopupNotification';
-import { Modals, DEFAULT_AVATAR, CDN_UPLOAD_URL } from '../../../consts/uris';
+import { Modals, API_ENDPT_URL, DEFAULT_AVATAR, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { Bits, Files, Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
-import integrationItems from '../../../assets/json/integrations';
 
 const dropZone = React.createRef();
 
@@ -113,13 +113,14 @@ const ProfilePageForm = (props)=> {
 		/>
 
 		<Row vertical="center">
-			<button type="submit" disabled={!changed} className="long-button adjacent-button" onClick={()=> props.onSubmit()}>Save</button>
+			<button type="submit" disabled={!changed} className="profile-page-save-button adjacent-button" onClick={()=> props.onSubmit()}>Save</button>
 			{(changed) && (<div className="page-link page-link-form" onClick={()=> props.onCancel()}>Cancel</div>)}
 		</Row>
 	</div>);
 };
 
 
+/*
 const ProfilePageIntegrationsGrid = (props)=> {
 // 	console.log('ProfilePage.ProfilePageIntegrationsGrid()', props);
 
@@ -131,7 +132,7 @@ const ProfilePageIntegrationsGrid = (props)=> {
 				return (<Column key={i}>
 					<IntegrationGridItem
 						title={item.title}
-						image={item.filename}
+						image={item.img_url}
 						enabled={true}
 						selected={true}
 						inheritedClass="profile-page-integrations-grid-item"
@@ -142,6 +143,7 @@ const ProfilePageIntegrationsGrid = (props)=> {
 		<button className="long-button" onClick={()=> {trackEvent('button', 'integrations'); props.onClick()}}>{(items.length === 0) ? 'Setup' : 'Change'}</button>
 	</div>);
 };
+*/
 
 
 class ProfilePage extends Component {
@@ -171,13 +173,26 @@ class ProfilePage extends Component {
 	componentDidMount() {
 // 		console.log('ProfilePage.componentDidMount()', this.props, this.state);
 
-		if (this.props.profile) {
-			const { profile } = this.props;
-			const { avatar, username, email, type } = profile;
-			const integrations = integrationItems.filter((integration)=> (profile.sources.includes(integration.id) || profile.integrations.includes(integration.id)));
+		const { profile } = this.props;
+		axios.post(API_ENDPT_URL, qs.stringify({
+			action : 'INTEGRATIONS'
+		})).then((response) => {
+			console.log('INTEGRATIONS', response.data);
+			const integrations = response.data.integrations.map((integration)=> (Object.assign({}, integration, {
+				id       : integration.id << 0,
+				enabled  : ((integration.enabled << 0) === 1),
+				selected : (profile && profile.integrations.includes(integration.id << 0))
+			})));
 
-			this.setState({ avatar, username, email, type, integrations });
-		}
+			this.setState({ integrations }, ()=> {
+				if (this.props.profile) {
+					const { profile } = this.props;
+					const { avatar, username, email, type } = profile;
+					this.setState({ avatar, username, email, type });
+				}
+			});
+		}).catch((error)=> {
+		});
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -185,7 +200,9 @@ class ProfilePage extends Component {
 
 		if (!prevProps.profile && this.props.profile) {
 			const { profile } = this.props;
-			const integrations = integrationItems.filter((integration)=> (profile.sources.includes(integration.id) || profile.integrations.includes(integration.id)));
+			const integrations = this.state.integrations.map((integration)=> (Object.assign({}, integration, {
+				selected : (profile && profile.integrations.includes(integration.id << 0))
+			})));
 			this.setState({ integrations });
 		}
 
@@ -195,15 +212,12 @@ class ProfilePage extends Component {
 
 			this.setState({ avatar, username, email, type,
 				usernameValid : !Bits.contains(status, 0x01),
-				emailValid    : !Bits.contains(status, 0x10),
-				integrations  : integrationItems.filter((integration)=> (profile.sources.includes(integration.id) || profile.integrations.includes(integration.id)))
+				emailValid    : !Bits.contains(status, 0x10)
 			});
 		}
 
-		if (this.state.fileDialog) {
-			if (dropZone.current && dropZone.current.fileInputEl) {
-				dropZone.current.fileInputEl.click();
-			}
+		if (this.state.fileDialog && dropZone.current) {
+			dropZone.current.open();
 		}
 	}
 
@@ -274,8 +288,8 @@ class ProfilePage extends Component {
 		this.setState({ fileDialog : false });
 	};
 
-	handleFileDrop = (files)=> {
-// 		console.log('ProfilePage.handleFileDrop()', files, CDN_UPLOAD_URL);
+	handleFileDrop = (files, rejected)=> {
+// 		console.log('ProfilePage.handleFileDrop()', files, rejected, CDN_UPLOAD_URL);
 
 		if (files.length > 0) {
 			const file = files.pop();
@@ -427,8 +441,8 @@ class ProfilePage extends Component {
 // 		console.log('ProfilePage.render()', this.props, this.state);
 
 		const { profile } = this.props;
-		const { avatar, username, email, integrations } = this.state;
-		const { passMsg, usernameValid, emailValid, passwordValid, changed, confirmDialog } = this.state;
+		const { avatar, username, email } = this.state;
+		const { passMsg, usernameValid, emailValid, passwordValid, changed } = this.state;
 
 		return (
 			<BaseDesktopPage className="profile-page-wrapper">
@@ -458,24 +472,23 @@ class ProfilePage extends Component {
 					onSubmit={this.handleSubmit}
 				/>
 
-				{(profile) && (<ProfilePageIntegrationsGrid
-					title="Design Tools & Frameworks Integrations"
-					items={integrations}
-					profile={profile}
-					onClick={()=> this.props.onModal(Modals.INTEGRATIONS)}
-				/>)}
+				{/*{(profile) && (<ProfilePageIntegrationsGrid*/}
+					{/*title="Tool & Framework Integrations"*/}
+					{/*items={integrations.filter((integration)=> (profile.integrations.includes(integration.id)))}*/}
+					{/*profile={profile}*/}
+					{/*onClick={()=> this.props.onModal(Modals.INTEGRATIONS)}*/}
+				{/*/>)}*/}
 
-				{(confirmDialog) && (<ConfirmDialog
-					title="Change Account"
-					message="Are you sure you want to downgrade to a Free Account?"
-					onComplete={this.handleDialogComplete}
-				/>)}
+				{/*{(confirmDialog) && (<ConfirmDialog*/}
+					{/*title="Change Account"*/}
+					{/*message="Are you sure you want to downgrade to a Free Account?"*/}
+					{/*onComplete={this.handleDialogComplete}*/}
+				{/*/>)}*/}
 			</BaseDesktopPage>
 		);
 	}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
-
 
 // TODO: Add github toggle to profile

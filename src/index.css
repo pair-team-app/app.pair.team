@@ -151,8 +151,8 @@ h6 {
 
 input[type="text"], input[type="password"], input[type="tel"], select, textarea, .input-txt, .field-error {
   background-color: #24282e;
-  color: #abdafb;
-  padding: 14px 11px;
+  color: #ffffff;
+  padding: 12px 11px;
   width: 100%;
   border: 1px solid #24282e;
   font-family: "San Francisco Text Medium", sans-serif;

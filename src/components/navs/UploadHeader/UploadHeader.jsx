@@ -4,12 +4,17 @@ import './UploadHeader.css';
 
 import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
+import { Row } from 'simple-flexbox';
 
 import { POPUP_TYPE_ERROR } from '../../overlays/PopupNotification';
 import { updateDeeplink } from '../../../redux/actions';
 import { sendToSlack } from '../../../utils/funcs';
-import { Files } from '../../../utils/lang';
+import { Files, URIs } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
+
+import specs from './../../../assets/images/elements/element-specs.gif';
+import styles from './../../../assets/images/elements/element-styles.gif';
+import editor from './../../../assets/images/elements/element-editor.gif';
 import deLogo from './../../../assets/images/logos/logo-designengine.svg';
 import demoURLs from '../../../assets/json/demo-urls';
 
@@ -72,7 +77,7 @@ class UploadHeader extends Component {
 		event.preventDefault();
 		trackEvent('button', 'demo');
 
-		window.location.replace(demoURLs[window.location.pathname.split('/').pop()]);
+		window.location.replace(demoURLs[URIs.firstComponent()]);
 	};
 
 	handleFileDialogCancel = ()=> {
@@ -116,7 +121,9 @@ class UploadHeader extends Component {
 	render() {
 // 		console.log('UploadHeader.render()', this.props, this.state);
 
-		const { title, subtitle, uploading } = this.props;
+		const { section, title, subtitle, uploading } = this.props;
+		const img = (section.includes('specs')) ? specs : (section.includes('styles')) ? styles : editor
+
 		return (<div className="upload-header-wrapper">
 			<Dropzone
 				className="upload-header-dz"
@@ -125,7 +132,7 @@ class UploadHeader extends Component {
 				onDrop={this.handleFileDrop}
 				onFileDialogCancel={this.handleFileDialogCancel}
 				ref={dropZone}
-			>
+			><Row horizontal="center" vertical="center" style={{height:'100%'}}><div>
 				<img className="upload-header-logo" src={deLogo} alt="Logo" />
 				<h1 className="page-header-title upload-header-title">{title}</h1>
 				<div className="page-header-subtitle upload-header-subtitle">{subtitle}</div>
@@ -138,7 +145,12 @@ class UploadHeader extends Component {
 							<button onClick={(event)=> this.handleDemo(event)}>Try Demo</button>
 					</div>)
 				}
-			</Dropzone>
+			</div></Row></Dropzone>
+
+			{(!window.location.pathname.includes('new')) && (<div className="upload-header-image-wrapper">
+				<img className="upload-header-image" src={img} alt="Screenshot" />
+			</div>)}
+
 		</div>);
 	}
 }

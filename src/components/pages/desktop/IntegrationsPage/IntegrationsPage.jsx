@@ -14,7 +14,7 @@ import { API_ENDPT_URL } from '../../../../consts/uris';
 import { updateUserProfile } from '../../../../redux/actions';
 import { Strings } from '../../../../utils/lang';
 import { trackEvent } from '../../../../utils/tracking';
-import integrationItems from '../../../../assets/json/integrations';
+import deLogo from '../../../../assets/images/logos/logo-designengine.svg';
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -40,7 +40,7 @@ const IntegrationsPageGrid = (props)=> {
 				return (<Column key={i}>
 					<IntegrationGridItem
 						title={integration.title}
-						image={integration.filename}
+						image={integration.img_url}
 						enabled={integration.enabled}
 						selected={integration.selected}
 						inheritedClass="integrations-page-grid-item"
@@ -66,19 +66,28 @@ class IntegrationsPage extends Component {
 // 		console.log('IntegrationsPage.componentDidMount()', this.props, this.state);
 
 		const { profile } = this.props;
-		const integrations = integrationItems.filter((integration)=> (integration.type === 'dev')).sort((integration1, integration2)=> ((integration1.enabled && !integration2.enabled) ? -1 : (!integration1.enabled && integration2.enabled) ? 1 : 0)).map((integration)=> (Object.assign({}, integration, {
-			selected : (profile && profile.integrations.includes(integration.id))
-		})));
+		axios.post(API_ENDPT_URL, qs.stringify({
+			action : 'INTEGRATIONS'
+		})).then((response) => {
+			console.log('INTEGRATIONS', response.data);
 
-		this.setState({ integrations });
+			const integrations = response.data.integrations.map((integration)=> (Object.assign({}, integration, {
+				id       : integration.id << 0,
+				enabled  : ((integration.enabled << 0) === 1),
+				selected : (profile && profile.integrations.includes(integration.id << 0))
+			})));
+
+			this.setState({ integrations });
+		}).catch((error)=> {
+		});
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('IntegrationsPage.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
 
-		if (!prevProps.profile && this.props.profile) {
+		if ((!prevProps.profile && this.props.profile) || (prevState.integrations.length !== this.state.integrations.length)) {
 			const { profile } = this.props;
-			const integrations = integrationItems.filter((integration)=> (integration.type === 'dev')).sort((integration1, integration2)=> ((integration1.enabled && !integration2.enabled) ? -1 : (!integration1.enabled && integration2.enabled) ? 1 : 0)).map((integration)=> (Object.assign({}, integration, {
+			const integrations = this.state.integrations.map((integration)=> (Object.assign({}, integration, {
 				selected : (profile && profile.integrations.includes(integration.id))
 			})));
 
@@ -91,20 +100,18 @@ class IntegrationsPage extends Component {
 
 		trackEvent('integration', 'click', Strings.slugifyURI(integration.title));
 
-		if (this.props.profile) {
-			const { profile } = this.props;
+		const { profile } = this.props;
+		if (profile) {
 			integration.selected = !integration.selected;
 
-			const sources = this.state.sources;
 			const integrations = this.state.integrations.map((item)=> ((item.id === integration.id) ? integration : item));
-			this.setState({ sources, integrations,
+			this.setState({ integrations,
 				submitting : true
 			}, ()=> {
 				axios.post(API_ENDPT_URL, qs.stringify({
 					action       : 'UPDATE_INTEGRATIONS',
 					user_id      : profile.id,
-					sources      : profile.sources.join(','),
-					integrations : this.state.integrations.filter((integration)=> (integration.selected)).map((integration)=> (integration.id)).join(',')
+					integrations : integrations.filter((integration)=> (integration.selected)).map((integration)=> (integration.id)).join(',')
 				})).then((response) => {
 					console.log('UPDATE_INTEGRATIONS', response.data);
 
@@ -128,12 +135,12 @@ class IntegrationsPage extends Component {
 // 		console.log('IntegrationsPage.render()', this.props, this.state);
 
 		const { integrations } = this.state;
-		const selectedItems = integrations.filter((integration)=> (integration.selected));
-		const enabledItems = integrations.filter((integration)=> (integration.enabled));
-
 		return (
 			<BaseDesktopPage className="integrations-page-wrapper">
-				<h4>{`Framework ${Strings.pluralize('Integration', enabledItems.length)} (${selectedItems.length} / ${enabledItems.length})`}</h4>
+				<div className="integrations-page-header">
+					<img className="integrations-page-header-logo" src={deLogo} alt="Logo" />
+					<h2>Design Engine Integrations</h2>
+				</div>
 				<IntegrationsPageGrid
 					integrations={integrations}
 					onClick={this.handleIntegrationItemClick}

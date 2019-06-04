@@ -3,6 +3,8 @@ import {
 	ADD_FILE_UPLOAD,
 	APPEND_ARTBOARD_SLICES,
 	APPEND_HOME_ARTBOARDS,
+	SET_ARTBOARD_COMPONENT,
+	SET_ARTBOARD_GROUPS,
 	SET_REDIRECT_URI,
 	CONVERTED_DEEPLINK,
 	USER_PROFILE_ERROR,
@@ -10,27 +12,29 @@ import {
 	USER_PROFILE_UPDATED,
 	SET_ATOM_EXTENSION,
 	SET_INVITE,
-	SET_TEAM
+	SET_TEAM,
 } from '../../consts/action-types';
 import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 import { Objects } from '../../utils/lang';
 
 
 const initialState = {
-	atomExtension : false,
-	file          : null,
-	homeArtboards : [],
-	deeplink      : {
+	atomExtension      : false,
+	file               : null,
+	homeArtboards      : [],
+	artboardComponents : null,
+	artboardGroups     : [],
+	deeplink           : {
 		uploadID   : 0,
 		pageID     : 0,
 		artboardID : 0,
 		sliceID    : 0
 	},
-	redirectURI   : null,
-	uploadSlices  : [],
-	userProfile   : null,
-	invite        : null,
-	team          : null
+	redirectURI        : null,
+	uploadSlices       : [],
+	userProfile        : null,
+	invite             : null,
+	team               : null
 };
 
 const logFormat = (state, action, meta='')=> {
@@ -68,6 +72,24 @@ function rootReducer(state=initialState, action) {
 				homeArtboards : (action.payload) ? state.homeArtboards.concat(action.payload).reduce((acc, inc)=>
 					[...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], []
 				) : []
+			}));
+
+		case SET_ARTBOARD_COMPONENT:
+			const { uuid, syntax, timestamp } = action.payload;
+
+			return (Object.assign({}, state, {
+				artboardComponents : {
+					...state.artboardComponents,
+					[uuid] : {
+						syntax    : syntax,
+						timestamp : timestamp
+					}
+				}
+			}));
+
+		case SET_ARTBOARD_GROUPS:
+			return (Object.assign({}, state, {
+				artboardGroups : action.payload
 			}));
 
 		case SET_REDIRECT_URI:

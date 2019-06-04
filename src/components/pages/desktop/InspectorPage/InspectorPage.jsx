@@ -7,51 +7,75 @@ import copy from 'copy-to-clipboard';
 import qs from 'qs';
 import ReactNotifications from 'react-browser-notifications';
 import cookie from 'react-cookies';
+import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Dropzone from 'react-dropzone';
 import FontAwesome from 'react-fontawesome';
-// import { Helmet } from 'react-helmet';
+import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
 import ImageLoader from 'react-loading-image';
 import Moment from 'react-moment';
 import panAndZoomHoc from 'react-pan-and-zoom-hoc';
 import { connect } from 'react-redux';
 import { Column, Row } from 'simple-flexbox';
+import styled from 'styled-components';
 
 import BaseDesktopPage from '../BaseDesktopPage';
-import ConfirmDialog from '../../../overlays/ConfirmDialog';
 import BaseOverlay from '../../../overlays/BaseOverlay/BaseOverlay';
 import InputField, { INPUTFIELD_STATUS_IDLE } from '../../../forms/InputField/InputField';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from '../../../overlays/PopupNotification';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../../../overlays/PopupNotification';
 import TutorialBubble from '../../../overlays/TutorialBubble';
 
 import { CANVAS, PAN_ZOOM, GRID, SECTIONS, STATUS_INTERVAL } from './consts';
-import { drawCanvasSliceBorder, drawCanvasSliceMarchingAnts, drawCanvasSliceGuides } from './utils/canvas';
+import {
+	drawCanvasSliceBorder,
+	drawCanvasSliceRollOverBorder,
+// 	drawCanvasSliceMarchingAnts,
+	drawCanvasSliceGuides
+} from './utils/canvas';
 import { 
-	fontSpecs, 
-// 	toAndroid, 
-	toBootstrap, 
-	toCSS, 
-	toGridHTML, 
-	toReactJS, 
-	toSpecs, 
-// 	toSwift 
+	fontSpecs,
+	toCSS,
+	toReactCSS,
+	toReactJS,
+	toSCSS,
+	toSpecs
 } from './utils/code-generator.js';
+import {
+	calcArtboardBaseSize,
+	calcArtboardScaledCoords,
+	calcFitScale,
+	calcIntersectSlices,
+	calcScrollPoint,
+	calcTransformPoint
+} from './utils/calcs';
 import { MOMENT_TIMESTAMP } from '../../../../consts/formats';
-import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY } from '../../../../consts/key-codes';
-import { DE_LOGO_SMALL, API_ENDPT_URL, CDN_DOWNLOAD_PARTS_URL, CDN_DOWNLOAD_PDF_URL, CDN_DOWNLOAD_PROJECT_URL, CDN_UPLOAD_URL, LINTER_ENDPT_URL } from '../../../../consts/uris';
-import { setRedirectURI } from '../../../../redux/actions';
+import { ARROW_LT_KEY, ARROW_RT_KEY, MINUS_KEY, PLUS_KEY, TAB_KEY } from '../../../../consts/key-codes';
+import {
+	DE_LOGO_SMALL,
+	API_ENDPT_URL,
+	CDN_DOWNLOAD_PARTS_URL,
+	CDN_DOWNLOAD_PDF_URL,
+	CDN_DOWNLOAD_PROJECT_URL,
+	CDN_UPLOAD_URL,
+	LINTER_ENDPT_URL,
+	Modals
+} from '../../../../consts/uris';
+import { setArtboardComponent, setArtboardGroups, setRedirectURI } from '../../../../redux/actions';
 import {
 	buildInspectorPath,
 	buildInspectorURL,
 	createGist,
+	editGist,
 	sendToSlack
 } from '../../../../utils/funcs.js';
 import {
 	Arrays,
 	Browsers,
+	Colors,
 	DateTimes,
 	Files,
 	Maths,
+	Objects,
 	Strings,
 	URIs
 } from '../../../../utils/lang.js';
@@ -69,29 +93,15 @@ const canvasWrapper = React.createRef();
 const canvas = React.createRef();
 
 
-const mapStateToProps = (state, ownProps)=> {
-	return ({
-		deeplink      : state.deeplink,
-		profile       : state.userProfile,
-		redirectURI   : state.redirectURI,
-		atomExtension : state.atomExtension
-	});
-};
-
-const mapDispatchToProps = (dispatch)=> {
-	return ({
-		setRedirectURI : (url)=> dispatch(setRedirectURI(url))
-	});
-};
-
-
 const artboardForID = (upload, artboardID)=> {
 	return (flattenUploadArtboards(upload).find((artboard)=> (artboard.id === artboardID)));
 };
 
 const fillGroupPartItemSlices = (upload, slice)=> {
 // 	console.log('fillGroupPartItemSlices()', upload, slice);
-	return ([slice, ...artboardForID(upload, slice.artboardID).slices.filter((item)=> (item.type !== 'artboard' && item.id !== slice.id && Maths.geom.frameContainsFrame(slice.meta.frame, item.meta.frame)))]);
+
+	const slices = [slice, ...artboardForID(upload, slice.artboardID).slices.filter((item) => (item.id !== slice.id && Maths.geom.frameContainsFrame(slice.meta.frame, item.meta.frame)))];
+	return (slices.filter((item)=> (item.type === 'bitmap' || item.type === 'svg')));
 };
 
 const flattenUploadArtboards = (upload, type=null)=> {
@@ -99,36 +109,22 @@ const flattenUploadArtboards = (upload, type=null)=> {
 	return ((upload) ? upload.pages.flatMap((page)=> (page.artboards)).filter((artboard)=> ((type) ? (artboard.type === type || artboard.type.includes(type)) : true)).reverse() : []);
 };
 
-/*
-const slicesByArea = (slices)=> {
-// 	console.log('slicesByArea()', slices);
-	return(slices.sort((s1, s2)=> ((Maths.geom.sizeArea(s1.meta.frame.size) < Maths.geom.sizeArea(s2.meta.frame.size)) ? -1 : (Maths.geom.sizeArea(s1.meta.frame.size) > Maths.geom.sizeArea(s2.meta.frame.size)) ? 1 : 0)));
-};
-*/
-
-const intersectSlices = (slices, frame)=> {
-// 	console.log('interectSlices()', slices, frame);
-	return (slices.filter((slice)=> (Maths.geom.frameContainsFrame(frame, slice.meta.frame))));
-};
-
 const ColorSwatch = (props)=> {
 // 	console.log('InspectorPage.ColorSwatch()', props);
 
 	const { fill } = props;
-	return (<div className="inspector-page-color-swatch" style={{ backgroundColor : fill }} />);
+	return (<div className="inspector-page-color-swatch" style={{ background : fill }} />);
 };
 
 const FilingTabContent = (props)=> {
 // 	console.log('InspectorPage.FilingTabContent()', props);
 
 	const { tab, enabled } = props;
-	const { type, contents } = tab;
+	const { contents } = tab;
 	const className = `filing-tab-content${(!enabled) ? ' filing-tab-content-disabled' : ''}`;
 
 	return (<div key={tab.id} className={className}>
-		{((!type || type === 'json_html') && contents) && (<span dangerouslySetInnerHTML={{ __html : String(((enabled) ? JSON.parse(contents) : '').replace(/ /g, '&nbsp;').replace(/</g, '&lt;').replace(/>/g, '&gt').replace(/\n/g, '<br />')) }} />)}
-		{/*{((!type || type === 'json_html') && contents) && (<span dangerouslySetInnerHTML={{ __html : String(((enabled) ? JSON.parse(contents) : '').replace(/ {2}/g, '&nbsp;&nbsp;').replace(/\n/g, '<br />')) }} />)}*/}
-		{(type === 'component') && (contents)}
+		{contents}
 	</div>);
 };
 
@@ -168,16 +164,53 @@ const FilingTabTitle = (props)=> {
 	const { tab, enabled, selected } = props;
 	const { title } = tab;
 
-	const className = `filing-tab-title${(!title || title.length === 0) ? ' filing-tab-title-blank' : ''}${(selected) ? ' filing-tab-title-selected' : ''}${(!enabled) ? ' filing-tab-title-disabled' : ''}`;
+	const className = `filing-tab-title${(! title || title.length === 0) ? ' filing-tab-title-blank' : ''}${(selected) ? ' filing-tab-title-selected' : ''}${(!enabled) ? ' filing-tab-title-disabled' : ''}`;
 	return (<React.Fragment key={tab.id}>
 		<li className={className} onClick={()=> (enabled) ? props.onClick() : null}>{title}</li>
 	</React.Fragment>);
 };
 
+
+const PartsList = (props)=> {
+// 	console.log('InspectorPage.PartsList()', props);
+
+	const { enabled, contents } = props;
+	return ((contents && contents.length > 0) ? <div className="parts-list-wrapper">
+		{contents.map((slice, i)=> {
+			return (
+				<PartListItem
+					key={i}
+					id={slice.id}
+					filename={slice.filename}
+					title={slice.title}
+					type={slice.type}
+					size={slice.meta.frame.size}
+					onClick={()=> props.onPartListItem(slice)}
+				/>
+			);
+		})}
+	</div> : <div className="parts-list-wrapper parts-list-wrapper-empty">{(enabled) ? '/* Rollover a graphic object to display parts. */' : ''}</div>);
+};
+
+
+const PartListItem = (props)=> {
+// 	console.log('InspectorPage.PartListItem()', props);
+
+	const { id, filename, title, type, size } = props;
+	return (<div data-slice-id={id} className="part-list-item"><Row vertical="center" horizontal="center">
+		<div className="part-list-item-content-wrapper">
+			<img src={`${filename}${(type === 'svg') ? '@1x.svg' : '@2x.png'}`} className="part-list-item-image" width={size.width} height={size.height} alt={title} />
+			<div className="part-list-item-title">{`${Strings.truncate(`${title}`, 18)}`}</div>
+		</div>
+		<button className="tiny-button part-list-item-button" onClick={()=> props.onClick()}><img src={downloadButton} width="20" height="14" alt="Download" /></button>
+	</Row></div>);
+};
+
+
 const InspectorFooter = (props)=> {
 // 	console.log('InspectorPage.InspectorFooter()', props);
 
-	const { section, scale, fitScale, artboards, processing, creator } = props;
+	const { section, artboards, processing, creator, scale, fitScale } = props;
 	const prevArtboard = {
 		id     : -1,
 		pageID : -1
@@ -203,103 +236,41 @@ const InspectorFooter = (props)=> {
 			<button disabled={(scale <= Math.min(...PAN_ZOOM.zoomNotches))} className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-out'); props.onZoom(-1);}}><FontAwesome name="search-minus" /></button>
 			<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'zoom-reset'); props.onZoom(0);}}>Reset ({(fitScale * 100) << 0}%)</button>
 
-			{(section === SECTIONS.PRESENTER && artboards.length < 1) && (<>
+			{(section === SECTIONS.EDIT && artboards.length < 1) && (<>
 				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'prev-artboard'); props.onChangeArtboard(prevArtboard);}}><FontAwesome name="arrow-left" /></button>
 				<button className="inspector-page-footer-button" onClick={()=> {trackEvent('button', 'next-artboard'); props.onChangeArtboard(nextArtboard);}}><FontAwesome name="arrow-right" /></button>
 			</>)}
 
-			{(section !== SECTIONS.INSPECT) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('inspect')}>Inspect</button>)}
-			{/*{(section !== SECTIONS.PRESENTER) && (<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('present')}>Presenter</button>)}*/}
+			{(section === SECTIONS.SPECS) && (<>
+				<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('styles')}>Styles</button>
+				<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('edit')}>Edit</button>
+			</>)}
+
+			{(section === SECTIONS.STYLES) && (<>
+				<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('specs')}>Specs</button>
+				<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('edit')}>Edit</button>
+			</>)}
+
+			{(section === SECTIONS.EDIT) && (<>
+				<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('specs')}>Specs</button>
+				<button className="inspector-page-footer-button" onClick={()=> props.onChangeSection('styles')}>Styles</button>
+			</>)}
 		</div>)}
 	</Row></div>);
 };
 
-const LivePreview = (props)=> {
-	console.log('InspectorPage.LivePreview()', props);
 
-	const { syntax } = props;
-	return (<div className="live-preview">
-		{(syntax)}
+/*
+const InspectorPageEditorStatus = (props)=> {
+// 	console.log('InspectorPage.InspectorPageEditorStatus()', props);
+
+	const { message } = props;
+	return (<div className="inspector-page-editor-status">
+		{message}
 	</div>);
 };
+*/
 
-const MarqueeBanner = (props)=> {
-// 	console.log('InspectorPage.MarqueeBanner()', props);
-
-	const { background, copyText, outro, removable, track, children } = props;
-	const className = `marquee-banner${(outro) ? (removable) ? ' marquee-banner-outro-remove' : ' marquee-banner-outro' : ''}`;
-	const style = {
-		width      : '100%',
-		background : background
-	};
-
-	return (<div className={className} style={style}>
-		<div className="marquee-banner-content-wrapper">
-			{(copyText)
-				? (<CopyToClipboard onCopy={()=> props.onCopy(track)} text={copyText}>
-						{children}
-					</CopyToClipboard>)
-				: (children)}
-		</div>
-		{(copyText) && (<button className="tiny-button marquee-banner-close-button" onClick={props.onClose}><FontAwesome name="times" /></button>)}
-	</div>);
-};
-
-const PartsList = (props)=> {
-// 	console.log('InspectorPage.PartsList()', props);
-
-	const { enabled, contents } = props;
-	return ((contents && contents.length > 0) ? <div className="parts-list-wrapper">
-		{contents.map((slice, i)=> {
-			return (
-				<PartListItem
-					key={i}
-					id={slice.id}
-					filename={slice.filename}
-					title={slice.title}
-					type={slice.type}
-					size={slice.meta.frame.size}
-					onClick={()=> props.onPartListItem(slice)}
-				/>
-			);
-		})}
-	</div> : <div className="parts-list-wrapper parts-list-wrapper-empty">{(enabled) ? '/* Rollover to display parts. */' : ''}</div>);
-};
-
-const PartListItem = (props)=> {
-// 	console.log('InspectorPage.PartListItem()', props);
-
-// 	const { id, filename, title, type, size } = props;
-	const { id, filename, title, size } = props;
-	const thumbStyle = {
-		width  : `${size.width}px`,
-		height : `${size.height}px`
-	};
-
-	let errored = false;
-
-	return (<div data-slice-id={id} className="part-list-item"><Row vertical="center" horizontal="center">
-		<div className="part-list-item-content-wrapper">
-			<ImageLoader
-				style={thumbStyle}
-				src={`${filename}@2x.png`}
-				image={(props)=> <PartListItemThumb { ...props } width={size.width} height={size.height} />}
-				loading={()=> (<div className="part-list-item-image part-list-item-image-loading" style={thumbStyle}><FontAwesome className="part-list-item-fa-status" name="clock-o" size="2x" /></div>)}
-				error={()=> (<div className="part-list-item-image part-list-item-image-loading"><FontAwesome className="part-list-item-fa-status" name="clock-o" size="2x" /></div>)}
-				onError={(event)=> (errored = true)}
-			/>
-			<div className="part-list-item-title">{`${Strings.truncate(`${title}`, 18)}`}</div>
-		</div>
-		{(!errored) && (<button className="tiny-button part-list-item-button" onClick={()=> props.onClick()}><img src={downloadButton} width="20" height="14" alt="Download" /></button>)}
-	</Row></div>);
-};
-
-const PartListItemThumb = (props)=> {
-// 	console.log('InspectorPage.PartListItemThumb()', props);
-
-	const { src, title, width, height } = props;
-	return (<img src={src} className="part-list-item-image" width={width} height={height} alt={title} />);
-};
 
 const SliceRolloverItem = (props)=> {
 // 	console.log('InspectorPage.SliceRolloverItem()', props);
@@ -338,11 +309,193 @@ const SpecsList = (props)=> {
 	const { upload, slice, creatorID } = props;
 
 	if (!upload || !slice || (upload && (upload.state << 0) < 3)) {
-		return (<div className="inspector-page-specs-list-wrapper inspector-page-specs-list-wrapper-empty">{((upload.state << 0) < 3) ? '' : '/* Rollover to display specs. */'}</div>);
+		return (
+			<div className="inspector-page-specs-list-wrapper">
+				<SpecsListItem
+					disabled={true}
+					attribute="Owner"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Date"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Version"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Name"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Type"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Export Size"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Position"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Rotation"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Opacity"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Blend Mode"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Radius"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Fill Type"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Fill Color"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Gradient Color"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Fill Opacity"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Padding"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Borders Color"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Borders Type"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Borders Width"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Borders Opacity"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Shadows"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Inner Shadows"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Blurs"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Text"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Text Size"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Text Color"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Text Character"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Text Line"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Text Paragraph"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Text Horizontal"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Text Vertical"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Text Decoration"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Text Transform"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					disabled={true}
+					attribute="Text Padding"
+					value={null}
+					onCopy={props.onCopySpec} />
+			</div>
+		);
 	}
 
 	const { frame } = slice.meta;
-	const fillColor = ((slice.type === 'textfield' && slice.meta.font.color) ? slice.meta.font.color : slice.meta.fillColor).toUpperCase();
+	const fillColor = (typeof slice.meta.fillColor === 'object') ? Colors.rgbaToHex(slice.meta.fillColor).toUpperCase() : (slice.meta.fillColor.length > 0) ? `${slice.meta.fillColor.toUpperCase()}FF` : null;
+	const gradient = (slice.meta.fillType === 'gradient' && slice.meta.gradient) ? {
+		type   : slice.meta.gradient.type,
+		colors : slice.meta.gradient.colors.map((color)=> {
+			return ({
+				position : (color.position * 100) << 0,
+				hex      : Colors.rgbaToHex(color.color).toUpperCase()
+			});
+		})
+	} : null;
 	const padding = `${slice.meta.padding.top}px ${slice.meta.padding.left}px ${slice.meta.padding.bottom}px ${slice.meta.padding.right}px`;
 	const added = `${slice.added.replace(' ', 'T')}Z`;
 	const font = (slice.meta.font) ? fontSpecs(slice.meta.font) : null;
@@ -353,12 +506,12 @@ const SpecsList = (props)=> {
 
 	const styles = (sliceStyles) ? {
 		border : (border) ? {
-			color     : border.color.toUpperCase(),
+			color     : (typeof border.color === 'object') ? Colors.rgbaToHex(border.color).toUpperCase() : (border.color.length > 0) ? `${border.color.toUpperCase()}FF` : null,
 			position  : Strings.capitalize(border.position, true),
 			thickness : `${border.thickness}px`
 		} : null,
 		shadow : (shadow) ? {
-			color  : shadow.color.toUpperCase(),
+			color  : (typeof shadow.color === 'object') ? Colors.rgbaToHex(shadow.color).toUpperCase() : (shadow.color.length > 0) ? `${shadow.color.toUpperCase()}FF` : null,
 			offset : {
 				x : shadow.offset.x,
 				y : shadow.offset.y
@@ -367,7 +520,7 @@ const SpecsList = (props)=> {
 			blur   : `${shadow.blur}px`
 		} : null,
 		innerShadow : (innerShadow) ? {
-			color  : innerShadow.color.toUpperCase(),
+			color  : (typeof innerShadow.color === 'object') ? Colors.rgbaToHex(innerShadow.color) : (innerShadow.color.length > 0) ? `${innerShadow.color.toUpperCase()}FF` : null,
 			offset : {
 				x : innerShadow.offset.x,
 				y : innerShadow.offset.y
@@ -377,91 +530,147 @@ const SpecsList = (props)=> {
 		} : null
 	} : null;
 	
-	/*
-	
-			<SpecsListItem
-				attribute=""
-				value={}
-				copyText={}
-				onCopy={props.onCopySpec} />
-				
-	*/
-
 	return (
 		<div className="inspector-page-specs-list-wrapper">
 			<SpecsListItem
+				attribute="Owner"
+				value={`${upload.creator.username}${((creatorID === upload.creator.user_id) ? ' (You)' : '')}`}
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Date"
+				value={<Moment format={MOMENT_TIMESTAMP}>{added}</Moment>}
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Version"
+				value="Version 1"
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
 				attribute="Name"
-				value={slice.title}
+				value={Files.basename(upload.filename)}
 				onCopy={props.onCopySpec} />
 			<SpecsListItem
 				attribute="Type"
-				value={Strings.capitalize(slice.type, true)}
+				value="Sketch File"
 				onCopy={props.onCopySpec} />
 			<SpecsListItem
 				attribute="Export Size"
 				value={`W: ${frame.size.width}px H: ${frame.size.height}px`}
 				onCopy={props.onCopySpec} />
-
-
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`X: ${frame.origin.x}px Y: ${frame.origin.y}px`}>
-				<Row><div className="inspector-page-specs-list-item-attribute">Position</div><div className="inspector-page-specs-list-item-val">{`X: ${frame.origin.x}px Y: ${frame.origin.y}px`}</div></Row>
-			</CopyToClipboard>
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`${slice.meta.rotation}°`}>
-				<Row><div className="inspector-page-specs-list-item-attribute">Rotation</div><div className="inspector-page-specs-list-item-val">{slice.meta.rotation}&deg;</div></Row>
-			</CopyToClipboard>
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`${slice.meta.opacity * 100}%`}>
-				<Row><div className="inspector-page-specs-list-item-attribute">Opacity</div><div className="inspector-page-specs-list-item-val">{slice.meta.opacity * 100}%</div></Row>
-			</CopyToClipboard>
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(fillColor.length > 0) ? fillColor : ''}>
-				<Row><div className="inspector-page-specs-list-item-attribute">Fill</div>{(fillColor.length > 0) && (<div className="inspector-page-specs-list-item-val"><Row vertical="center">{fillColor}<ColorSwatch fill={fillColor} /></Row></div>)}</Row>
-			</CopyToClipboard>
 			<SpecsListItem
-				attribute="Border"
-				value={(border) ? `${styles.border.position} S: ${styles.border.thickness} ${styles.border.color}` : null}
+				attribute="Position"
+				value={`X: ${frame.origin.x}px Y: ${frame.origin.y}px`}
 				onCopy={props.onCopySpec} />
 			<SpecsListItem
-				attribute="Shadow"
+				attribute="Rotation"
+				value={`${slice.meta.rotation}°`}
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Opacity"
+				value={`${slice.meta.opacity * 100}%`}
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Blend Mode"
+				value={Strings.capitalize(slice.meta.blendMode, true)}
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Radius"
+				value={`${slice.meta.radius << 0}px`}
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Fill Type"
+				value={(slice.meta.fillType) ? Strings.capitalize(slice.meta.fillType) : 'Solid'}
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Fill Color"
+				value={fillColor}
+				onCopy={props.onCopySpec}>{(fillColor) && (<ColorSwatch fill={fillColor} />)}</SpecsListItem>
+			<SpecsListItem
+				attribute="Gradient Color"
+				value={(gradient) ? gradient.colors.map((color)=> (`${color.hex} (${color.position}%)`)).join(' ') : null}
+				onCopy={props.onCopySpec}>{(gradient) && (gradient.colors.map((color, i)=> (<ColorSwatch key={i} fill={color.hex} />)))}
+			</SpecsListItem>
+			<SpecsListItem
+				attribute="Fill Opacity"
+				value={`${((parseInt(Colors.componentHex(fillColor, 'a'), 16) / 255) * 100) << 0}%`}
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Padding"
+				value={padding}
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Borders Color"
+				value={(border) ? styles.border.color : null}
+				onCopy={props.onCopySpec}>{(border) && (<ColorSwatch fill={styles.border.color} />)}</SpecsListItem>
+			<SpecsListItem
+				attribute="Borders Type"
+				value={(border) ? styles.border.position : null}
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Borders Width"
+				value={(border) ? styles.border.thickness : null}
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Borders Opacity"
+				value={null}
+				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Shadows"
 				value={(shadow) ? `X: ${styles.shadow.offset.x} Y: ${styles.shadow.offset.y} B: ${styles.shadow.blur} S: ${styles.shadow.spread}` : null}
-				onCopy={props.onCopySpec} />
+				onCopy={props.onCopySpec}>{(shadow) && (<ColorSwatch fill={styles.shadow.color} />)}</SpecsListItem>
 			<SpecsListItem
-				attribute="Inner Shadow"
+				attribute="Inner Shadows"
 				value={(innerShadow) ? `X: ${styles.innerShadow.offset.x} Y: ${styles.innerShadow.offset.y} B: ${styles.innerShadow.blur} S: ${styles.innerShadow.spread}` : null}
 				onCopy={props.onCopySpec} />
+			<SpecsListItem
+				attribute="Blurs"
+				value={null}
+				onCopy={props.onCopySpec} />
 			{(slice.type === 'textfield') && (<>
-				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`${font.family} ${font.name}`}>
-					<Row><div className="inspector-page-specs-list-item-attribute">Font</div><div className="inspector-page-specs-list-item-val">{`${font.family} ${font.name}`}</div></Row>
-				</CopyToClipboard>
-				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={font.weight}>
-					<Row><div className="inspector-page-specs-list-item-attribute">Font Weight</div><div className="inspector-page-specs-list-item-val">{font.weight}</div></Row>
-				</CopyToClipboard>
-				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={`${font.size}px`}>
-					<Row><div className="inspector-page-specs-list-item-attribute">Font Size</div><div className="inspector-page-specs-list-item-val">{`${font.size}px`}</div></Row>
-				</CopyToClipboard>
-				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.color) ? font.color.toUpperCase() : ''}>
-					<Row><div className="inspector-page-specs-list-item-attribute">Font Color</div><div className="inspector-page-specs-list-item-val"><Row vertical="center">{(font.color) ? font.color.toUpperCase() : ''}<ColorSwatch fill={font.color} /></Row></div></Row>
-				</CopyToClipboard>
-				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.alignment) ? Strings.capitalize(font.alignment) : 'Left'}>
-					<Row><div className="inspector-page-specs-list-item-attribute">Alignment</div><div className="inspector-page-specs-list-item-val">{(font.alignment) ? Strings.capitalize(font.alignment) : 'Left'}</div></Row>
-				</CopyToClipboard>
-				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.lineHeight) ? `${font.lineHeight}px` : ''}>
-					<Row><div className="inspector-page-specs-list-item-attribute">Line Spacing</div>{(font.lineHeight) && (<div className="inspector-page-specs-list-item-val">{`${font.lineHeight}px`}</div>)}</Row>
-				</CopyToClipboard>
-				<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(font.kerning) ? `${font.kerning.toFixed(2)}px` : ''}>
-					<Row><div className="inspector-page-specs-list-item-attribute">Char Spacing</div>{(font.kerning) && (<div className="inspector-page-specs-list-item-val">{`${font.kerning.toFixed(2)}px`}</div>)}</Row>
-				</CopyToClipboard>
+				<SpecsListItem
+					attribute="Text"
+					value={`${font.family} ${font.name}`}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					attribute="Text Size"
+					value={`${font.size}px`}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					attribute="Text Color"
+					value={(typeof font.color === 'object') ? Colors.rgbaToHex(font.color).toUpperCase() : (font.color.length > 0) ? `${font.color.toUpperCase()}FF` : null}
+					onCopy={props.onCopySpec}><ColorSwatch fill={(typeof font.color === 'object') ? Colors.rgbaToHex(font.color) : (font.color.length > 0) ? `${font.color.toUpperCase()}FF` : null} /></SpecsListItem>
+				<SpecsListItem
+					attribute="Text Character"
+					value={`${font.kerning.toFixed(2)}px`}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					attribute="Text Line"
+					value={`${font.lineHeight}px`}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					attribute="Text Paragraph"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					attribute="Text Horizontal"
+					value={(font.alignment) ? Strings.capitalize(font.alignment, true) : 'Left'}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					attribute="Text Vertical"
+					value="Top"
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					attribute="Text Decoration"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					attribute="Text Transform"
+					value={null}
+					onCopy={props.onCopySpec} />
+				<SpecsListItem
+					attribute="Text Padding"
+					value={null}
+					onCopy={props.onCopySpec} />
 			</>)}
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={(padding) ? padding : ''}>
-				<Row><div className="inspector-page-specs-list-item-attribute">Padding</div>{(padding) && (<div className="inspector-page-specs-list-item-val">{padding}</div>)}</Row>
-			</CopyToClipboard>
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={Strings.capitalize(slice.meta.blendMode, true)}>
-				<Row><div className="inspector-page-specs-list-item-attribute">Blend Mode</div><div className="inspector-page-specs-list-item-val">{Strings.capitalize(slice.meta.blendMode, true)}</div></Row>
-			</CopyToClipboard>
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={added}>
-				<Row><div className="inspector-page-specs-list-item-attribute">Date</div>{(added) && (<div className="inspector-page-specs-list-item-val"><Moment format={MOMENT_TIMESTAMP}>{added}</Moment></div>)}</Row>
-			</CopyToClipboard>
-			<CopyToClipboard onCopy={()=> props.onCopySpec()} text={upload.creator.username}>
-				<Row><div className="inspector-page-specs-list-item-attribute">Uploader</div><div className="inspector-page-specs-list-item-val">{upload.creator.username + ((creatorID === upload.creator.user_id) ? ' (You)' : '')}</div></Row>
-			</CopyToClipboard>
 		</div>
 	);
 };
@@ -471,16 +680,25 @@ const SpecsListItem = (props)=> {
 
 	const VAL_PLACEHOLDER = '—';
 
-	const { attribute, value, copyText } = props;
+	const { attribute, value, copyText, children, disabled } = props;
 	const attrClass = `inspector-page-specs-list-item-attribute${(!value) ? ' inspector-page-specs-list-item-attribute-empty' : ''}`;
-	const valClass = `inspector-page-specs-list-item-val${(!value) ? ' inspector-page-specs-list-item-val-empty' : ''}`;
+	const valClass = (disabled) ? 'inspector-page-specs-list-item-attribute' :  `inspector-page-specs-list-item-val${(!value) ? ' inspector-page-specs-list-item-val-empty' : ''}`;
 
-	return (<CopyToClipboard onCopy={()=> (copyText || value) ? props.onCopy((copyText) ? copyText : (value) ? value : '') : null} text={(copyText) ? copyText : (value) ? value : ''}>
+	return ((!disabled) ? <CopyToClipboard onCopy={()=> (copyText || value) ? props.onCopy((copyText) ? copyText : (value) ? value : '') : null} text={(copyText) ? copyText : (value) ? value : ''}>
 		<Row>
 			<div className={attrClass}>{attribute}</div>
-			<div className={valClass}>{(value) ? value : VAL_PLACEHOLDER}</div>
+			<div className={valClass}><Row vertical="center">
+				{(value) ? value : VAL_PLACEHOLDER}
+				{children}
+			</Row></div>
 		</Row>
-	</CopyToClipboard>);
+	</CopyToClipboard> : <Row>
+		<div className={attrClass}>{attribute}</div>
+		<div className={valClass}><Row vertical="center">
+			{(value) ? value : VAL_PLACEHOLDER}
+			{children}
+		</Row></div>
+	</Row>);
 };
 
 const UploadProcessing = (props)=> {
@@ -489,8 +707,7 @@ const UploadProcessing = (props)=> {
 	const { upload, processing, vpHeight } = props;
 	const artboards = flattenUploadArtboards(upload, 'page_child');
 	const urlInspect = buildInspectorURL(upload, '/inspect');
-	const urlParts = buildInspectorURL(upload, '/parts');
-	const urlPresent = buildInspectorURL(upload, '/present');
+	const urlEdit = buildInspectorURL(upload, '/edit');
 
 	const secs = String((DateTimes.epoch() * 0.01).toFixed(2)).substr(-2, 1) << 0;
 	const ind = (secs) % artboards.length;
@@ -518,27 +735,15 @@ const UploadProcessing = (props)=> {
 			/>
 			<InputField
 				type="lbl"
-				name="urlParts"
-				placeholder={urlParts}
-				value={urlParts}
+				name="urlEdit"
+				placeholder={urlEdit}
+				value={urlEdit}
 				button="Copy"
 				status={INPUTFIELD_STATUS_IDLE}
 				onChange={null}
 				onErrorClick={()=> null}
-				onFieldClick={()=> {copy(urlParts); props.onCopyURL(urlParts)}}
-				onSubmit={()=> {copy(urlParts); props.onCopyURL(urlParts)}}
-			/>
-			<InputField
-				type="lbl"
-				name="urlPresent"
-				placeholder={urlPresent}
-				value={urlPresent}
-				button="Copy"
-				status={INPUTFIELD_STATUS_IDLE}
-				onChange={null}
-				onErrorClick={()=> null}
-				onFieldClick={()=> {copy(urlPresent); props.onCopyURL(urlPresent)}}
-				onSubmit={()=> {copy(urlPresent); props.onCopyURL(urlPresent)}}
+				onFieldClick={()=> {copy(urlEdit); props.onCopyURL(urlEdit)}}
+				onSubmit={()=> {copy(urlEdit); props.onCopyURL(urlEdit)}}
 			/>
 		</div></Row>
 
@@ -572,6 +777,7 @@ class InspectorPage extends Component {
 			hoverSlice  : null,
 			offset      : null,
 			hoverOffset : null,
+			tabID       : 1,
 			tabSets     : [],
 			activeTabs  : [],
 			scale       : 1.0,
@@ -589,7 +795,7 @@ class InspectorPage extends Component {
 			valid       : true,
 			restricted  : false,
 			shareModal  : false,
-			urlBanner   : true,
+			urlBanner   : false,
 			scrolling   : false,
 			tutorial    : null,
 			code        : {
@@ -603,7 +809,11 @@ class InspectorPage extends Component {
 			percent     : 100,
 			tooltip     : 'Loading…',
 			linter      : null,
-			gist        : null
+			gist        : null,
+			syntax      : 'render(<div />);',
+			editChange  : true,
+			clickTotal  : 0,
+			loginCheck  : false
 		};
 
 		this.busyInterval = null;
@@ -667,13 +877,17 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.componentDidUpdate()', prevProps, this.props, this.state);
 
 		const { deeplink, processing } = this.props;
-// 		const { upload, panMultPt } = this.state;
-		const { section, upload } = this.state;
+		const { upload, panMultPt } = this.state;
+
+		if (upload && !this.props.profile && !this.state.loginCheck) {
+			this.setState({ loginCheck : true }, ()=> {
+				this.props.onModal(Modals.REGISTER);
+			});
+		}
 
 		if (!upload && deeplink && deeplink !== prevProps.deeplink && deeplink.uploadID !== 0) {
 			this.onFetchUpload();
 		}
-
 
 		if (upload && processing && this.processingInterval === null) {
 			this.setState({
@@ -695,7 +909,7 @@ class InspectorPage extends Component {
 		}
 
 
-		const insetHeight = 120 + (((flattenUploadArtboards(upload, 'page_child').length > GRID.colsMax) << 0) * GRID.padding.row);
+		const insetHeight = 80 + (((flattenUploadArtboards(upload, 'page_child').length > GRID.colsMax) << 0) * GRID.padding.row);
 
 // 		if (artboardsWrapper.current && Maths.geom.isSizeDimensioned({ width : artboardsWrapper.current.clientWidth, height : artboardsWrapper.current.clientHeight}) && !isSizeDimensioned(this.state.viewSize)) {
 		if (artboardsWrapper.current && artboardsWrapper.current.clientWidth !== this.state.viewSize.width && artboardsWrapper.current.clientHeight - insetHeight !== this.state.viewSize.height) {
@@ -704,19 +918,17 @@ class InspectorPage extends Component {
 				height : artboardsWrapper.current.clientHeight - insetHeight
 			};
 
-
-// 			const artboards = flattenUploadArtboards(upload, (section === SECTIONS.PARTS) ? 'container' : 'page_child');
 			const artboards = flattenUploadArtboards(upload, 'page_child');
 			if (artboards.length > 0) {
-				const baseSize = this.calcArtboardBaseSize((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, viewSize);
+				const baseSize = calcArtboardBaseSize(artboards, viewSize);
 				console.log('_-]BASE SIZE[-_', baseSize);
 
-				const fitScale = this.calcFitScale(baseSize, viewSize);
+				const fitScale = calcFitScale(baseSize, viewSize);
 				console.log('_-]FIT SCALE[-_', fitScale);
 
-				const scrollPt = this.calcScrollPoint(PAN_ZOOM.panMultPt, viewSize, baseSize, fitScale);
+				const scrollPt = calcScrollPoint(PAN_ZOOM.panMultPt, viewSize, baseSize, fitScale, panMultPt);
 
-				const scaledCoords = this.calcArtboardScaledCoords((section === SECTIONS.PRESENTER) ? artboards.slice(0, 1) : artboards, fitScale);
+				const scaledCoords = calcArtboardScaledCoords(artboards, fitScale);
 				console.log('_-]SCALED COORDS[-_', scaledCoords);
 
 				console.log('-=-=-=-=-=-', insetHeight, viewSize, baseSize, fitScale, scrollPt);
@@ -733,7 +945,7 @@ class InspectorPage extends Component {
 
 // 			if (Maths.geom.isSizeDimensioned(this.contentSize)) {
 // 				const fitScale = Math.max(Math.min(viewSize.height / this.contentSize.height, viewSize.width / this.contentSize.width, PAN_ZOOM.zoomNotches.slice(-1)[0]), PAN_ZOOM.zoomNotches[0]);
-// 				const scrollPt = this.calcScrollPoint(PAN_ZOOM.panMultPt, viewSize, this.contentSize, fitScale);
+// 				const scrollPt = calcScrollPoint(PAN_ZOOM.panMultPt, viewSize, this.contentSize, fitScale, panMultPt);
 //
 // 				console.log('-=-=-=-=-=-', viewSize, this.contentSize, fitScale, scrollPt);
 // 				this.setState({ fitScale, viewSize,
@@ -745,7 +957,7 @@ class InspectorPage extends Component {
 		}
 
 		if (upload && canvasWrapper.current) {
-			if (!this.state.tutorial && cookie.load('tutorial') === '0' && this.state.section === SECTIONS.INSPECT) {
+			if (!this.state.tutorial && cookie.load('tutorial') === '0' && this.state.section === SECTIONS.SPECS) {
 				cookie.save('tutorial', '1', { path : '/' });
 
 				const { scrollPt } = this.state;
@@ -810,80 +1022,16 @@ class InspectorPage extends Component {
 		return(slices);
 	};
 
-	calcArtboardBaseSize = (artboards, vpSize)=> {
-// 		console.log('InspectorPage.calcArtboardBaseSize()', artboards, vpSize);
-
-		let maxH = 0;
-		let offset = {
-			x : 0,
-			y : 0
-		};
-
-		let baseSize = {
-			width  : 0,
-			height : 0
-		};
-
-
-		artboards.forEach((artboard, i)=> {
-			if ((i % GRID.colsMax) << 0 === 0 && i > 0) {
-				offset.x = 0;
-				offset.y += maxH + GRID.padding.row;
-				maxH = 0;
-			}
-
-			maxH = Math.round(Math.max(maxH, artboard.meta.frame.size.height));
-			baseSize.height = Math.max(baseSize.height, offset.y + maxH);
-
-			offset.x += Math.round(((i % GRID.colsMax < (GRID.colsMax - 1) && i < artboards.length - 1) ? GRID.padding.col : 0) + (artboard.meta.frame.size.width));
-			baseSize.width = Math.max(baseSize.width, offset.x);
-		});
-
-		return (baseSize);
-	};
-
-	calcArtboardScaledCoords = (artboards, scale)=> {
-// 		console.log('InspectorPage.calcArtboardScaledCoords()', artboards, scale);
-
-// 		const grid = {
-// 			cols : (Math.min(artboards.length, GRID.colsMax) - 1) * 50,
-// 			rows : ((artboards.length > 0) ? ((artboards.length / GRID.colsMax) << 0) : 0) * 50
-// 		};
-
-		let maxH = 0;
-		let offset = {
-			x : 0,
-			y : 0
-		};
-
-		let scaledCoords = [];
-		artboards.forEach((artboard, i)=> {
-			if (((i % GRID.colsMax) << 0) === 0 && i > 0) {
-				offset.x = 0;
-				offset.y += maxH + GRID.padding.row;
-				maxH = 0;
-			}
-
-			scaledCoords.push({ artboard,
-				coords : Object.assign({}, offset)
-			});
-
-			maxH = Math.round(Math.max(maxH, artboard.meta.frame.size.height * scale));
-			offset.x += Math.round(((i % GRID.colsMax < (GRID.colsMax - 1)) ? GRID.padding.col : 0) + (artboard.meta.frame.size.width * scale));
-		});
-
-		return (scaledCoords);
-	};
 
 	calcCanvasSliceFrame = (slice, artboard, offset, scrollPt)=> {
 // 		console.log('InspectorPage.calcCanvasSliceFrame()', slice, artboard, offset, scrollPt);
 
-		const { section, upload, scale, urlBanner } = this.state;
+		const { upload, scale } = this.state;
 		const artboards = flattenUploadArtboards(upload, 'page_child');
 
 		const baseOffset = {
-			x : (artboards.length < GRID.colsMax || section === SECTIONS.PRESENTER) ? GRID.padding.col * 0.5 : 0,
-			y : 24 + (38 * (urlBanner << 0)) + PAN_ZOOM.insetSize.height
+			x : (artboards.length < GRID.colsMax) ? GRID.padding.col * 0.5 : 0,
+			y : (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 26 + PAN_ZOOM.insetSize.height
 		};
 
 		const srcFrame = Maths.geom.cropFrame(slice.meta.frame, artboard.meta.frame);
@@ -908,100 +1056,80 @@ class InspectorPage extends Component {
 		return (scaledFrame);
 	};
 
-	calcFitScale = (baseSize, vpSize)=> {
-// 		console.log('InspectorPage.calcFitScale()', baseSize, vpSize);
-    //const fitScale = Math.max(Math.min(this.state.viewSize.height / this.contentSize.height, this.state.viewSize.width / this.contentSize.width, PAN_ZOOM.zoomNotches.slice(-1)[0]), PAN_ZOOM.zoomNotches[0]);
-		//return (Math.max(Math.min(vpSize.height / baseSize.height, vpSize.width / baseSize.width, Math.max(...PAN_ZOOM.zoomNotches)), Math.min(...PAN_ZOOM.zoomNotches)));
-		return (Math.max(Math.min(vpSize.height / baseSize.height, vpSize.width / baseSize.width, 3), 0.001));
-	};
-
-	calcScrollPoint = (panPt, vpSize, baseSize, scale)=> {
-// 		console.log('InspectorPage.calcScrollPoint()', panPt, vpSize, baseSize, scale);
-
-		const pt = this.calcTransformPoint();
-		return ({
-			x : -Math.round((pt.x * vpSize.width) + ((baseSize.width * scale) * -0.5)),
-			y : -Math.round((pt.y * vpSize.height) + ((baseSize.height * scale) * -0.5))
-		});
-	};
-
-	calcTransformPoint = ()=> {
-// 		console.log('InspectorPage.calcTransformPoint()');
-
-		const { panMultPt, scale } = this.state;
-		return {
-			x : 0.5 + scale * (PAN_ZOOM.panMultPt.x - panMultPt.x),
-			y : 0.5 + scale * (PAN_ZOOM.panMultPt.y - panMultPt.y)
-		};
-	};
-
 	resetTabSets = (upload, artboards)=> {
 // 		console.log('InspectorPage.resetTabSets()', upload, artboards);
 
 		const { section  } = this.state;
 		let tabSets = inspectorTabSets[section];
-		if (section === SECTIONS.INSPECT) {
+		if (section === SECTIONS.SPECS) {
 			tabSets = [...tabSets].map((tabSet, i) => {
-				if (i === 0) {
-					return (tabSet);
-
-				} else {
-					return (tabSet.map((tab, ii) => {
-						return ((ii === 0) ? Object.assign({}, tab, {
-							type     : 'component',
-							enabled  : ((upload.state << 0) === 3),
-							contents : <SpecsList
-								upload={upload}
-								slice={null}
-								creatorID={0}
-								onCopySpec={(msg) => this.handleClipboardCopy('spec', msg)}
-							/>
-						}) : tab);
-					}));
-				}
+				return (tabSet.map((tab, ii) => {
+					return ((ii === 0) ? Object.assign({}, tab, {
+						enabled  : ((upload.state << 0) === 3),
+						contents : <SpecsList
+							upload={upload}
+							slice={null}
+							creatorID={0}
+							onCopySpec={(msg) => this.handleClipboardCopy('spec', msg)}
+						/>
+					}) : tab);
+				}));
 			});
 
-			const activeTabs = (this.state.activeTabs.length === 0) ? tabSets.map((tabSet)=> {
+			const activeTabs = (this.state.activeTabs.length === 0) ? tabSets.map((tabSet) => {
 				return ([...tabSet].shift());
 			}) : this.state.activeTabs;
 
-			this.setState({ tabSets, activeTabs,
-				artboard    : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
+			this.setState({
+				tabSets, activeTabs,
+				artboard    : null,
 				slice       : null,
 				offset      : null,
 				hoverSlice  : null,
 				hoverOffset : null,
 				tooltip     : null,
 				linter      : null,
-				gist        : null
+				gist        : null,
+				clickTotal  : 0
 			});
 
-		} else if (section === SECTIONS.PARTS) {
-			tabSets = [...tabSets].map((tabSet, i) => {
-				return (tabSet.map((tab, ii) => {
-					return (Object.assign({}, tab, {
-						enabled  : ((upload.state << 0) === 3),
-						contents : <PartsList
-							enabled={((upload.state << 0) === 3)}
-							contents={null}
-							onPartListItem={(slice) => this.handleDownloadPartListItem(slice)} />
-					}));
-				}));
-			});
-
-			const activeTabs = (this.state.activeTabs.length === 0) ? tabSets.map((tabSet)=> {
+		} else if (section === SECTIONS.STYLES) {
+			const activeTabs = (this.state.activeTabs.length === 0) ? tabSets.map((tabSet) => {
 				return ([...tabSet].shift());
 			}) : this.state.activeTabs;
 
-			this.setState({ upload, tabSets, activeTabs,
-				artboard : (section === SECTIONS.PRESENTER && artboards.length > 0) ? artboards[0] : null,
-				slice    : null,
-				tooltip  : null,
-				linter   : null,
-				gist     : null
+			this.setState({ tabSets, activeTabs,
+				tabID       : 1,
+				artboard    : null,
+				slice       : null,
+				offset      : null,
+				hoverSlice  : null,
+				hoverOffset : null,
+				tooltip     : null,
+				linter      : null,
+				gist        : null,
+				clickTotal  : 0
 			});
 
-		} else if (section === SECTIONS.PRESENTER) {
+		} else if (section === SECTIONS.PARTS) {
+			const activeTabs = (this.state.activeTabs.length === 0) ? tabSets.map((tabSet) => {
+				return ([...tabSet].shift());
+			}) : this.state.activeTabs;
+
+			this.setState({ tabSets, activeTabs,
+				tabID       : 1,
+				artboard    : null,
+				slice       : null,
+				offset      : null,
+				hoverSlice  : null,
+				hoverOffset : null,
+				tooltip     : null,
+				linter      : null,
+				gist        : null,
+				clickTotal  : 0
+			});
+
+		} else if (section === SECTIONS.EDIT) {
 			if (artboards.length > 0) {
 				const artboard = (this.state.artboard) ? this.state.artboard : artboards[0];
 
@@ -1029,33 +1157,21 @@ class InspectorPage extends Component {
 							artboards : page.artboards.map((item)=> ((item.id === artboard.id) ? artboard : item))
 						})));
 
-						const slices = [...intersectSlices(artboard.slices, artboard.meta.frame)];
+						const slices = [artboard.slices[0], ...calcIntersectSlices(artboard.slices, artboard.meta.frame)];
 
-						const langs = [
-							toCSS(slices),
-							toGridHTML(slices),
-// 							toSwift(slices, artboard),
-							toReactJS(slices),
-// 							toAndroid(slices, artboard)
-// 							toBootstrap(slices)
-						];
+						const jsx = toReactJS(artboard, slices);
+// 						this.props.setArtboardGroups(jsx.groups);
 
 						tabSets = [...tabSets].map((tabSet, i) => {
 							return (tabSet.map((tab, ii) => {
-								if (i === 0) {
-									return (Object.assign({}, tab, {
-										enabled  : ((upload.state << 0) === 3),
-										contents : langs[ii].html,
-										syntax   : langs[ii].syntax
-									}));
-
-								} else {
-									return (Object.assign({}, tab, {
-										type     : 'component',
-										enabled  : ((upload.state << 0) === 3),
-										contents : <LivePreview syntax="Coming Soon!" />
-									}));
-								}
+								return (Object.assign({}, tab, {
+									enabled  : ((upload.state << 0) === 3),
+									contents : <LiveProvider code="render(<div />);">
+										<LiveEditor />
+										<LiveError />
+										<LivePreview />
+									</LiveProvider>
+								}));
 							}));
 						});
 
@@ -1064,46 +1180,38 @@ class InspectorPage extends Component {
 						});
 
 						this.setState({ upload, tabSets, activeTabs, artboard,
-							slice     : [...slices].shift(),
-							offset    : artboard.meta.frame.origin,
-							tooltip   : null,
-							linter    : null,
-							gist      : null
+							slice      : [...slices].shift(),
+							offset     : artboard.meta.frame.origin,
+							tooltip    : null,
+							linter     : null,
+							gist       : null,
+							syntax     : jsx.syntax,
+							clickTotal : 0
 						});
 
 						if (!this.canvasInterval) {
 							this.canvasInterval = setInterval(()=> this.onCanvasInterval(), CANVAS.marchingAnts.interval);
 						}
-
 					}).catch((error)=> {
 				});
 			}
 		}
 	};
 
-	replaceTabSets = (artboard, slice, offset)=> {
+	replaceTabSets = (artboard, slice, offset=null)=> {
 // 		console.log('InspectorPage.replaceTabSets()', artboard, slice, offset);
 
 		const { profile } = this.props;
 		const { section, upload } = this.state;
 		let tabSets = [...this.state.tabSets];
 
-		const slices = [...intersectSlices(artboard.slices, slice.meta.frame)];
-		const langs = [
-			toCSS(slices),
-			toGridHTML(slices),
-// 			toSwift(slices, artboard),
-			toReactJS(slices),
-// 			toAndroid(slices, artboard)
-// 			toBootstrap(slices)
-		];
+		const slices = [slice, ...calcIntersectSlices(artboard.slices, slice.meta.frame)];
 
-		if (section === SECTIONS.INSPECT) {
+		if (section === SECTIONS.SPECS) {
 			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
-				if (i === 1) {
+				if (i === 0) {
 					return (tabSet.map((tab, ii)=> {
 						return ((ii === 0) ? Object.assign({}, tab, {
-							type     : 'component',
 							enabled  : true,
 							contents : <SpecsList
 								upload={upload}
@@ -1118,203 +1226,127 @@ class InspectorPage extends Component {
 					return (tabSet.map((tab, i)=> {
 						return (Object.assign({}, tab, {
 							enabled  : true,
-							contents : langs[i].html,
-							syntax   : langs[i].syntax
+							contents : <LiveProvider scope={{styled}} code={toReactJS(artboard, slices).syntax} noInline={true} disabled={true}>
+								<LiveEditor />
+							</LiveProvider>,
+							syntax   : toReactJS(artboard, slices).syntax
 						}));
 					}));
 				}
 			});
 
-		} else if (section === SECTIONS.PARTS) {
-			tabSets[0][0].type = 'component';
-			tabSets[0][0].enabled = true;
+			const activeTabs = [...this.state.activeTabs].map((activeTab, i) => {
+				const tab = tabSets[i].find((item) => (item.id === activeTab.id));
+				return ((tab) ? tab : activeTab);
+			});
 
+			this.setState({
+				upload, artboard, tabSets, activeTabs,
+				linter : null,
+				gist   : null,
+				syntax : 'render(<div />);'
+			});
+
+		} else if (section === SECTIONS.STYLES) {
+			const langs = [
+				toReactCSS(slices),
+				toSCSS(upload, slices),
+				toCSS(slices)
+			];
+
+// 			const { syntax } = (Objects.hasKey(this.props.artboardComponents, slice.uuid)) ? this.props.artboardComponents[slice.uuid] : toReactJS(artboard, slices);
+
+			tabSets = [...this.state.tabSets].map((tabSet, i) => {
+				return (tabSet.map((tab, ii) => {
+					return (Object.assign({}, tab, {
+						enabled  : true,
+						contents : <LiveProvider code={langs[ii].syntax} disabled={true}>
+							<LiveEditor />
+						</LiveProvider>,
+						syntax   : langs[ii].syntax
+					}));
+				}));
+			});
+
+			const activeTabs = [...this.state.activeTabs].map((activeTab, i) => {
+				const tab = tabSets[i].find((item) => (item.id === activeTab.id));
+				return ((tab) ? tab : activeTab);
+			});
+
+			this.setState({
+				upload, artboard, tabSets, activeTabs,
+				linter : null,
+				gist   : null
+			});
+
+		} else if (section === SECTIONS.PARTS) {
 			if (slice.type === 'symbol') {
 				let formData = new FormData();
 				formData.append('action', 'SYMBOL_SLICES');
 				formData.append('slice_id', slice.id);
 				axios.post(API_ENDPT_URL, formData)
-					.then((response)=> {
+					.then((response) => {
 						console.log('SYMBOL_SLICES', response.data);
-						slice.children = [...fillGroupPartItemSlices(upload, slice), ...response.data.slices.map((item)=> {
-							const meta = JSON.parse(item.meta.replace(/\n/g, '\\\\n'));
-							return (Object.assign({}, item, {
-								id         : item.id << 0,
-								artboardID : item.artboard_id << 0,
-								meta       : Object.assign({}, meta, {
-									orgFrame : meta.frame,
-									frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
-								}),
-								filled     : false
-							}))
-						})];
+						slice.children = [
+							...fillGroupPartItemSlices(upload, slice), ...response.data.slices.map((item) => {
+								const meta = JSON.parse(item.meta.replace(/\n/g, '\\\\n'));
+								return (Object.assign({}, item, {
+									id         : item.id << 0,
+									artboardID : item.artboard_id << 0,
+									meta       : Object.assign({}, meta, {
+										orgFrame : meta.frame,
+										frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
+									}),
+									filled     : false
+								}));
+							})
+						];
 						tabSets[0][0].enabled = true;
 						tabSets[0][0].contents = <PartsList
 							enabled={true}
 							contents={slice.children}
-							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
+							onPartListItem={(slice) => this.handleDownloadPartListItem(slice)} />;
 						this.setState({ tabSets });
-					}).catch((error)=> {
+					}).catch((error) => {
 				});
-
-			} else if (slice.type === 'artboard' || slice.type === 'group' || slice.type === 'background') {
+			}
+// 			} else if (slice.type === 'group' || slice.type === 'background') {
 				tabSets[0][0].enabled = true;
 				tabSets[0][0].contents = <PartsList
 					enabled={true}
 					contents={fillGroupPartItemSlices(upload, slice)}
 					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-				this.setState({ tabSets });
-			}
+// 			}
 
-		} else if (section === SECTIONS.PRESENTER) {
-			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
-				return (tabSet.map((tab, ii)=> {
-					if (i === 0) {
-						return (Object.assign({}, tab, {
-							enabled  : true,
-							contents : langs[ii].html,
-							syntax   : langs[ii].syntax
-						}));
+		} else if (section === SECTIONS.EDIT) {
+			const { syntax } = (Objects.hasKey(this.props.artboardComponents, slice.uuid)) ? this.props.artboardComponents[slice.uuid] : toReactJS(artboard, slices, this.props.artboardComponents);
 
-					} else {
-						return (Object.assign({}, tab, {
-							type     : 'component',
-							enabled  : true,
-							contents : <LivePreview syntax="Coming Soon!" />
-						}));
-					}
+			tabSets = [...this.state.tabSets].map((tabSet, i) => {
+				return (tabSet.map((tab, ii) => {
+					return (Object.assign({}, tab, {
+						enabled  : true,
+						contents : <LiveProvider code="render(<div />)">
+							<LiveEditor />
+							<LiveError />
+							<LivePreview />
+						</LiveProvider>
+					}));
 				}));
 			});
-		}
 
-		const activeTabs = [...this.state.activeTabs].map((activeTab, i)=> {
-			const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
-			return ((tab) ? tab : activeTab);
-		});
-
-		this.setState({ upload, artboard, tabSets, activeTabs,
-			linter : null,
-			gist   : null
-		});
-	};
-
-	restoreTabSets = (upload, artboard, slice)=> {
-// 		console.log('InspectorPage.restoreTabSets()', upload, artboard, slice);
-
-		const { profile } = this.props;
-		const { section } = this.state;
-		let tabSets = [...this.state.tabSets];
-		let activeTabs = [...this.state.activeTabs];
-
-		const slices = [...intersectSlices(artboard.slices, slice.meta.frame)];
-		const langs = [
-			toCSS(slices),
-			toGridHTML(slices),
-// 			toSwift(slices, artboard),
-			toReactJS(slices),
-// 			toAndroid(slices, artboard)
-// 			toBootstrap(slices)
-		];
-
-		if (section === SECTIONS.INSPECT) {
-			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
-				if (i === 1) {
-					return (tabSet.map((tab, ii)=> {
-						return ((ii === 0) ? Object.assign({}, tab, {
-							type     : 'component',
-							enabled  : true,
-							contents : <SpecsList
-								upload={upload}
-								slice={slice}
-								creatorID={(profile) ? profile.id : 0}
-								onCopySpec={(msg)=> this.handleClipboardCopy('spec', msg)}
-							/>
-						}) : tab);
-					}));
-
-				} else {
-					return (tabSet.map((tab, i)=> {
-						return (Object.assign({}, tab, {
-							enabled  : true,
-							contents : langs[i].html,
-							syntax   : langs[i].syntax
-						}));
-					}));
-				}
+			const activeTabs = [...this.state.activeTabs].map((activeTab, i) => {
+				const tab = tabSets[i].find((item) => (item.id === activeTab.id));
+				return ((tab) ? tab : activeTab);
 			});
 
-		} else if (section === SECTIONS.PARTS) {
-			tabSets[0][0].type = 'component';
-
-			if (slice.type === 'symbol') {
-				let formData = new FormData();
-				formData.append('action', 'SYMBOL_SLICES');
-				formData.append('slice_id', slice.id);
-				axios.post(API_ENDPT_URL, formData)
-					.then((response)=> {
-						console.log('SYMBOL_SLICES', response.data);
-						slice.children = [...fillGroupPartItemSlices(upload, slice), ...response.data.slices.map((item)=> {
-							const meta = JSON.parse(item.meta.replace(/\n/g, '\\\\n'));
-							return (Object.assign({}, item, {
-								id         : item.id << 0,
-								artboardID : item.artboard_id << 0,
-								meta       : Object.assign({}, meta, {
-									orgFrame : meta.frame,
-									frame    : (slice.type === 'textfield') ? meta.vecFrame : meta.frame
-								}),
-								filled     : false
-							}));
-						})];
-						tabSets[0][0].enabled = true;
-						tabSets[0][0].contents = <PartsList
-							enabled={true}
-							contents={slice.children}
-							onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-						this.setState({ tabSets });
-					}).catch((error)=> {
-				});
-
-			} else if (slice.type === 'group' || slice.type === 'background') {
-				tabSets[0][0].enabled = true;
-				tabSets[0][0].contents = <PartsList
-					enabled={true}
-					contents={fillGroupPartItemSlices(upload, slice)}
-					onPartListItem={(slice)=> this.handleDownloadPartListItem(slice)} />;
-			}
-
-		} else if (section === SECTIONS.PRESENTER) {
-			tabSets = [...this.state.tabSets].map((tabSet, i)=> {
-				return (tabSet.map((tab, ii)=> {
-					if (i === 0) {
-						return (Object.assign({}, tab, {
-							enabled  : true,
-							contents : langs[ii].html,
-							syntax   : langs[ii].syntax
-						}));
-
-					} else {
-						return (Object.assign({}, tab, {
-							enabled  : true,
-							type     : 'component',
-							contents : <LivePreview syntax="Coming Soon!" />
-						}));
-					}
-				}));
+			this.setState({
+				upload, artboard, tabSets, activeTabs, syntax,
+				linter : null,
+				gist   : null
 			});
 		}
-
-		activeTabs = activeTabs.map((activeTab, i)=> {
-			const tab = tabSets[i].find((item)=> (item.id === activeTab.id));
-			return ((tab) ? tab : activeTab);
-		});
-
-		this.setState({ artboard, tabSets, activeTabs,
-			hoverSlice  : null,
-			hoverOffset : null,
-			linter      : null,
-			gist        : null
-		});
 	};
+
 
 	handleArtboardClick = (event)=> {
 // 		console.log('InspectorPage.handleArtboardClick()', event.target);
@@ -1324,7 +1356,11 @@ class InspectorPage extends Component {
 
 		if (artboardID) {
 			const artboard = artboardForID(upload, artboardID);
-			this.setState({ artboard });
+			this.setState({ artboard,
+				clickTotal : 0
+			}, ()=> {
+				this.resetTabSets(upload, [artboard]);
+			});
 		}
 	};
 
@@ -1351,8 +1387,7 @@ class InspectorPage extends Component {
 // 		event.stopPropagation();
 		const artboardID = event.target.getAttribute('data-artboard-id') << 0;
 		if (artboardID) {
-// 			let { upload, artboard, section } = this.state;
-			let { upload, artboard } = this.state;
+			let { upload, artboard, section } = this.state;
 			if (!artboard || artboard.id !== artboardID) {
 				artboard = artboardForID(upload, artboardID);
 				if (artboard) {
@@ -1405,7 +1440,6 @@ class InspectorPage extends Component {
 
 		const { upload, artboard, scrolling } = this.state;
 		if (!scrolling) {
-// 			this.resetTabSets(upload, [artboard]);
 			this.resetTabSets(upload, (artboard) ? [artboard] : []);
 		}
 	};
@@ -1414,7 +1448,7 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.handleCanvasUpdate()', this.antsOffset);
 
 		const { scrollPt, offset, hoverOffset } = this.state;
-		const { artboard, slice, hoverSlice } = this.state;
+		const { artboard, slice, hoverSlice, clickTotal } = this.state;
 
 		const context = canvas.current.getContext('2d');
 		context.clearRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
@@ -1423,32 +1457,14 @@ class InspectorPage extends Component {
 		context.textAlign = CANVAS.caption.align;
 		context.textBaseline = CANVAS.caption.baseline;
 
-		// debug fill
-// 		context.fillStyle = 'rgba(0, 0, 0, 0.25)';
-// 		context.fillRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
-
-		// debug lines
-// 		context.lineWidth = 1.0;
-// 		context.setLineDash([]);
-// 		context.lineDashOffset = 0;
-// 		context.beginPath();
-// 		context.strokeStyle = 'rgba(0, 255, 255, 0.5)';
-// 		context.strokeRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
-// 		context.moveTo(canvas.current.clientWidth * 0.5, 0); // top-center
-// 		context.lineTo(canvas.current.clientWidth * 0.5, canvas.current.clientHeight);
-// 		context.moveTo(0, canvas.current.clientHeight * 0.5); // left-center
-// 		context.lineTo(canvas.current.clientWidth, canvas.current.clientHeight * 0.5);
-// 		context.stroke();
-
-
 		if (artboard) {
-			if (slice) {
+			if (slice && clickTotal > 0) {
 				const frame = this.calcCanvasSliceFrame(slice, artboard, offset, scrollPt);
 // 				drawCanvasSliceFill(context, frame, CANVAS.slices.fillColor);
 // 				drawCanvasSliceTooltip(context, slice.type, frame.origin, frame.size.width);
 				drawCanvasSliceBorder(context, frame);
 				drawCanvasSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.guides.color);
-				drawCanvasSliceMarchingAnts(context, frame, this.antsOffset);
+// 				drawCanvasSliceMarchingAnts(context, frame, this.antsOffset);
 			}
 
 			if (hoverSlice) {
@@ -1456,8 +1472,8 @@ class InspectorPage extends Component {
 					const frame = this.calcCanvasSliceFrame(hoverSlice, artboard, hoverOffset, scrollPt);
 // 					drawCanvasSliceFill(context, frame, CANVAS.slices.fillColor);
 // 					drawCanvasSliceTooltip(context, `W:${frame.size.width}px H:${frame.size.height}px`, frame.origin, frame.size.width * 7);
-					drawCanvasSliceBorder(context, frame);
-					drawCanvasSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.guides.color);
+					drawCanvasSliceRollOverBorder(context, frame);
+// 					drawCanvasSliceGuides(context, frame, { width : canvas.current.clientWidth, height : canvas.current.clientHeight }, CANVAS.guides.color);
 				}
 			}
 		}
@@ -1485,7 +1501,7 @@ class InspectorPage extends Component {
 					slice       : null,
 					offset      : null,
 					hoverSlice  : null,
-					hoverOffset : null,
+					hoverOffset : null
 				}, ()=> {
 					this.resetTabSets(upload, artboards);
 					this.handleZoom(666);
@@ -1532,7 +1548,7 @@ class InspectorPage extends Component {
 			type     : POPUP_TYPE_OK,
 			offset   : {
 				top   : (urlBanner << 0 && !processing) * 38,
-				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
+				right : (section === SECTIONS.EDIT) ? (window.innerWidth - artboardsWrapper.current.clientWidth) : 360
 			},
 			content  : (type === 'url' || msg.length >= 100) ? `Copied ${type} to clipboard` : msg,
 			duration : 1750
@@ -1568,9 +1584,44 @@ class InspectorPage extends Component {
 
 		trackEvent('button', 'download-parts');
 		const { upload, slice } = this.state;
-		const sliceIDs = (slice.type === 'group') ? fillGroupPartItemSlices(upload, slice).map((slice)=> (slice.id)).join(',') : slice.children.map((slice)=> (slice.id)).join(',');
+		const sliceIDs = (slice.type === 'symbol') ? slice.children.map((slice)=> (slice.id)).join(',') : fillGroupPartItemSlices(upload, slice).map((slice)=> (slice.id)).join(',');
 
+		console.log('::::::::::', `${CDN_DOWNLOAD_PARTS_URL}?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
 		Browsers.makeDownload(`${CDN_DOWNLOAD_PARTS_URL}?upload_id=${upload.id}&slice_title=${slice.title}&slice_ids=${sliceIDs}`);
+	};
+
+	handleEditorChange = (val)=> {
+// 		console.log('InspectorPage.handleEditorChange()', val);
+
+		this.setState({
+			syntax     : val,
+			editChange : true,
+			gist       : { ...this.state.gist,
+				edited : true
+			}
+		});
+	};
+
+	handleEditorSave = ()=> {
+		console.log('InspectorPage.handleEditorSave()');
+
+		const { artboard, slice, syntax } = this.state;
+		this.setState({ editChange : false }, ()=> {
+			const payload = {
+				uuid      : slice.uuid,
+				syntax    : syntax,
+				timestamp : DateTimes.epoch()
+			};
+
+// 			Object.keys(this.props.artboardComponents).forEach((key, i)=> {
+// 				if (this.props.artboardComponents[key].syntax.includes('')) {
+//
+// 				}
+// 			});
+
+			this.props.setArtboardComponent(payload);
+			this.handleSliceClick(0, artboard.slices[0], { x : 0, y : 0 });
+		});
 	};
 
 	handleFileDrop = (files)=> {
@@ -1717,15 +1768,26 @@ class InspectorPage extends Component {
 		const { section } = this.state;
 		const { keyCode } = event;
 
-		trackEvent('keypress', (keyCode === PLUS_KEY) ? 'plus' : (keyCode === MINUS_KEY) ? 'minus' : (keyCode === ARROW_LT_KEY) ? 'left-arrow' : (keyCode === ARROW_RT_KEY) ? 'right-arrow' : `${keyCode}`);
+		trackEvent('keypress', (keyCode === PLUS_KEY) ? 'plus' : (keyCode === MINUS_KEY) ? 'minus' : (keyCode === ARROW_LT_KEY) ? 'left-arrow' : (keyCode === ARROW_RT_KEY) ? 'right-arrow' : (keyCode === TAB_KEY) ? 'tab' : `${keyCode}`);
 		if (event.keyCode === PLUS_KEY) {
 			this.handleZoom(1);
 
 		} else if (event.keyCode === MINUS_KEY) {
 			this.handleZoom(-1);
+
+		} else if (event.keyCode === TAB_KEY) {
+			if (section === SECTIONS.SPECS) {
+				this.handleChangeSection(SECTIONS.STYLES);
+
+			} else if (section === SECTIONS.STYLES) {
+				this.handleChangeSection(SECTIONS.EDIT);
+
+			} else if (section === SECTIONS.EDIT) {
+				this.handleChangeSection(SECTIONS.SPECS);
+			}
 		}
 
-		if (section === SECTIONS.PRESENTER) {
+		if (section === SECTIONS.EDIT) {
 			if (event.keyCode === ARROW_LT_KEY) {
 				this.handleChangeArtboard({
 					id     : -1,
@@ -1765,7 +1827,7 @@ class InspectorPage extends Component {
 		if (Maths.geom.isSizeDimensioned(this.contentSize)) {
 			const panMultPt = { x, y };
 			const { viewSize } = this.state;
-			const pt = this.calcTransformPoint();
+			const pt = calcTransformPoint(this.state);
 
 			const scrollPt = {
 				x : -Math.round((pt.x * viewSize.width) + (this.contentSize.width * -0.5)),
@@ -1789,7 +1851,7 @@ class InspectorPage extends Component {
 			type     : POPUP_TYPE_OK,
 			offset   : {
 				top   : (urlBanner << 0 && !processing) * 38,
-				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
+				right : (section === SECTIONS.EDIT) ? (window.innerWidth - artboardsWrapper.current.clientWidth) : 360
 			},
 			content  : `Sending ${lang} snippet to Atom…`
 		});
@@ -1803,61 +1865,83 @@ class InspectorPage extends Component {
 		}, '*');
 	};
 
-	handleSendSyntaxGist = (tab)=> {
-		console.log('InspectorPage.handleSendSyntaxGist()', tab);
+	handleSendSyntaxGist = (syntax, lang='jsx')=> {
+		console.log('InspectorPage.handleSendSyntaxGist()', syntax, lang);
 
 		const { profile, processing } = this.props;
-		const { section, urlBanner, slice, linter } = this.state;
+		const { section, urlBanner, slice, linter, gist } = this.state;
 
-		const lang = (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Android') ? 'xml' : (tab.title === 'Bootstrap') ? 'html' : tab.title.toLowerCase();
 		trackEvent('button', `send-gist-${lang}`);
+
+		const filename = `${Strings.slugifyURI(slice.title)}.${lang}`;
 
 		this.props.onPopup({
 			type     : POPUP_TYPE_OK,
 			offset   : {
 				top   : (urlBanner << 0 && !processing) * 38,
-				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
+				right : (section === SECTIONS.EDIT) ? (window.innerWidth - artboardsWrapper.current.clientWidth) : 360
 			},
-			content  : `Creating “${Strings.slugifyURI(slice.title)}.${lang}” gist on GitHub…`
+			content  : `${(gist) ? 'Editing' : 'Creating'} “${Strings.slugifyURI(slice.title)}.${lang}” gist on GitHub…`
 		});
 
-		this.setState({ gist : { busy : true }}, ()=> {
-			createGist(profile.github.accessToken, `${Strings.slugifyURI(slice.title)}.${lang}`, tab.syntax, `Design Engine auto generated ${(linter) ? 'linted ' : ''}syntax v1`, true, (data)=> {
-				this.setState({ gist : {
-						busy : false,
-						url  : data.html_url
+
+		if (gist && gist.id) {
+			this.setState({ gist : { ...gist,
+				busy : true }}, ()=> {
+					editGist(profile.github.accessToken, gist.id, filename, syntax, `Design Engine auto generated ${(linter) ? 'linted ' : ''}syntax v1`, true, (data)=> {
+						this.setState({ gist : { ...this.state.gist,
+							busy   : false,
+							edited : false
+						}});
+					});
+				}
+			);
+
+		} else {
+			this.setState({ gist : { busy : true }}, ()=> {
+				createGist(profile.github.accessToken, filename, syntax, `Design Engine auto generated ${(linter) ? 'linted ' : ''}syntax v1`, true, (data)=> {
+					this.setState({ gist : {
+						busy     : false,
+						id       : data.id,
+						filename : filename,
+						url      : data.html_url,
+						edited   : false
 					}});
+				});
 			});
-		});
+		}
 	};
 
-	handleSendSyntaxLinter = (tab)=> {
-		console.log('InspectorPage.handleSendSyntaxLinter()', tab);
+	handleSendSyntaxLinter = (syntax, lang='jsx')=> {
+		console.log('InspectorPage.handleSendSyntaxLinter()', syntax, lang);
 
-		const tabID = tab.id;
-		const lang = (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Android') ? 'xml' : (tab.title === 'Bootstrap') ? 'html' : tab.title.toLowerCase();
+// 		const tabID = tab.id;
+// 		const lang = (tab.title === 'ReactJSX') ? 'jsx' : (tab.title === 'Android') ? 'xml' : (tab.title === 'Bootstrap') ? 'html' : tab.title.toLowerCase();
 		const linter = (lang === 'css') ? 'StyleLint' : (lang === 'html') ? 'HTML Tidy' : (lang === 'js' || lang === 'jsx') ? 'Prettier + ESLint' : 'Linter';
 
 		trackEvent('button', `send-linter-${lang}`);
 
 		const { processing } = this.props;
-		const { section, urlBanner } = this.state;
+		const { section, tabID, urlBanner } = this.state;
 
 		this.props.onPopup({
 			type     : POPUP_TYPE_OK,
 			offset   : {
 				top   : (urlBanner << 0 && !processing) * 38,
-				right : (section === SECTIONS.PRESENTER && !processing) ? 880 : 360
+				right : (section === SECTIONS.EDIT) ? (window.innerWidth - artboardsWrapper.current.clientWidth) : 360
 			},
 			content  : `Sending ${lang} snippet to ${linter}…`
 		});
 
 
-		const html = `Loading ${linter}…\n`;
 		const tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 			return (tabSet.map((tab)=> {
 				if (i === 0) {
-					return ((tab.id === tabID) ? Object.assign({}, tab, { contents : JSON.stringify(html) }) : tab);
+					return ((tab.id === tabID) ? { ...tab,
+						contents : <LiveProvider code={`// Loading ${linter}…`} disabled={true}>
+							<LiveEditor />
+						</LiveProvider>
+					} : tab);
 
 				} else {
 					return (tab);
@@ -1877,10 +1961,8 @@ class InspectorPage extends Component {
 			},
 			gist   : null
 		}, ()=> {
-			axios.post(LINTER_ENDPT_URL, {
-				lang   : lang,
-				config : '',
-				syntax : tab.syntax
+			axios.post(LINTER_ENDPT_URL, { lang, syntax,
+				config : ''
 			}, {
 				headers : {
 					'Content-Type' : 'multipart/form-data',
@@ -1905,13 +1987,13 @@ class InspectorPage extends Component {
 				}
 
 
-				const html = `Loading ${linter}…\n${errors} ${Strings.pluralize('change', errors)} made.\n\n\n${syntax}`;
-
 				const tabSets = [...this.state.tabSets].map((tabSet, i)=> {
 					return (tabSet.map((tab)=> {
 						if (i === 0) {
 							return ((tab.id === tabID) ? Object.assign({}, tab, {
-								contents : JSON.stringify(html),
+								contents : <LiveProvider code={`// Loading ${linter}…\n//${errors} ${Strings.pluralize('change', errors)} made.\n\n\n${syntax}`} disabled={true}>
+									<LiveEditor />
+								</LiveProvider>,
 								syntax   : syntax
 							}) : tab);
 
@@ -1954,7 +2036,8 @@ class InspectorPage extends Component {
 
 		this.setState({ slice, offset,
 			hoverSlice  : null,
-			hoverOffset : null
+			hoverOffset : null,
+			clickTotal  : this.state.clickTotal + 1
 
 		}, ()=> (this.replaceTabSets(artboard, slice, offset)));
 	};
@@ -1964,7 +2047,7 @@ class InspectorPage extends Component {
 
 		const { upload, artboard } = this.state;
 		if (this.state.slice) {
-			this.restoreTabSets(upload, artboard, this.state.slice);
+			this.replaceTabSets(artboard, this.state.slice);
 
 		} else {
 			this.resetTabSets(upload, (artboard) ? [artboard] : []);
@@ -1974,17 +2057,31 @@ class InspectorPage extends Component {
 	handleSliceRollOver = (ind, slice, offset)=> {
 // 		console.log('InspectorPage.handleSliceRollOver()', ind, slice, offset);
 
-		const { artboard } = this.state;
+		const { section, artboard } = this.state;
 		if (artboard) {
 			slice.filled = true;
 			artboard.slices.filter((item)=> (this.state.slice && this.state.slice.id !== item.id)).forEach((item)=> {
 				item.filled = false;
 			});
 
-			this.setState({
-				hoverSlice : slice,
-				hoverOffset : offset
-			}, ()=> (this.replaceTabSets(artboard, slice, offset)));
+			if (section !== SECTIONS.STYLES) {
+				this.setState({
+					hoverSlice  : slice,
+					hoverOffset : offset
+				}, () => {
+					this.replaceTabSets(artboard, slice, offset);
+				});
+
+			} else {
+				this.setState({
+					hoverSlice  : slice,
+					hoverOffset : offset
+				}, () => {
+					if (!this.state.slice) {
+						this.replaceTabSets(artboard, slice, offset);
+					}
+				});
+			}
 		}
 	};
 
@@ -1998,6 +2095,7 @@ class InspectorPage extends Component {
 		});
 
 		this.setState({ activeTabs,
+			tabID  : tab.id,
 			linter : null
 		});
 	};
@@ -2071,6 +2169,9 @@ class InspectorPage extends Component {
 	handleZoom = (direction)=> {
 // 		console.log('InspectorPage.handleZoom()', direction);
 
+		return;
+
+		/*
 		const { fitScale, viewSize, urlBanner } = this.state;
 		let scale = fitScale;
 
@@ -2121,7 +2222,8 @@ class InspectorPage extends Component {
 				right : window.innerWidth - viewSize.width
 			},
 			content : `${(scale * 100) << 0}%`
-		})
+		});
+		*/
 	};
 
 	onBusyInterval = ()=> {
@@ -2182,7 +2284,8 @@ class InspectorPage extends Component {
 									id       : artboard.id << 0,
 									pageID   : artboard.page_id << 0,
 									uploadID : artboard.upload_id << 0,
-									meta     : JSON.parse(artboard.meta.replace(/\n/g, '\\\\n'))
+									meta     : JSON.parse(artboard.meta.replace(/\n/g, '\\\\n')),
+									layers   : JSON.parse(artboard.layers)
 								})
 							))
 						})
@@ -2319,19 +2422,17 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage.render()', this.state);
 
 
-		const { processing, profile, atomExtension } = this.props;
+		const { processing, profile } = this.props;
 
-		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, activeTabs, scrolling, viewSize, panMultPt } = this.state;
-		const { valid, restricted, urlBanner, tutorial, percent, tooltip, fontState, linter, gist } = this.state;
+		const { section, upload, artboard, slice, hoverSlice, tabSets, scale, fitScale, activeTabs, syntax, scrolling, viewSize, panMultPt } = this.state;
+		const { valid, restricted, tutorial, percent, linter, gist, editChange } = this.state;
 
-		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : flattenUploadArtboards(upload, 'page_child');
-// 		const artboards = (section === SECTIONS.PRESENTER) ? (artboard) ? [artboard] : [] : (section === SECTIONS.PARTS) ? flattenUploadArtboards(upload, 'page_child').slice(0, 3) : flattenUploadArtboards(upload, 'page_child');
+		const artboards = flattenUploadArtboards(upload, 'page_child');
 		const activeSlice = (hoverSlice) ? hoverSlice : slice;
 
-		const listTotal = (upload && activeSlice) ? (section === SECTIONS.PRESENTER) ? flattenUploadArtboards(upload, 'page_child').length : (activeSlice) ? (activeSlice.type === 'group') ? fillGroupPartItemSlices(upload, activeSlice).length : activeSlice.children.length : 0 : 0;
-		const missingFonts = (upload) ? upload.fonts.filter((font)=> (!font.installed)) : [];
+// 		const missingFonts = (upload) ? upload.fonts.filter((font)=> (!font.installed)) : [];
 
-		const pt = this.calcTransformPoint();
+		const pt = calcTransformPoint(this.state);
 
 		this.contentSize = {
 			width  : 0,
@@ -2358,7 +2459,8 @@ class InspectorPage extends Component {
 
 			maxH = Math.round(Math.max(maxH, artboard.meta.frame.size.height * scale));
 			this.contentSize.height = Math.max(this.contentSize.height, offset.y + maxH);
-			const filename = `${artboard.filename}@${(scale <= 0.25) ? '0.25' : (scale < 1) ? 1 : 3}x.png`;// (scale <= 0.25) ? artboard.filename.replace('@3x', '@0.25x') : (scale < 1) ? artboard.filename.replace('@3x', '@1x') : artboard.filename;
+			//const filename = `${artboard.filename}@${(scale <= 0.25) ? '0.25' : (scale < 1) ? 1 : 3}x.png`;// (scale <= 0.25) ? artboard.filename.replace('@3x', '@0.25x') : (scale < 1) ? artboard.filename.replace('@3x', '@1x') : artboard.filename;
+			const filename = `${artboard.filename}@3x.png`;// (scale <= 0.25) ? artboard.filename.replace('@3x', '@0.25x') : (scale < 1) ? artboard.filename.replace('@3x', '@1x') : artboard.filename;
 
 			const artboardStyle = {
 				position       : 'absolute',
@@ -2368,37 +2470,35 @@ class InspectorPage extends Component {
 				height         : `${(scale * artboard.meta.frame.size.height) << 0}px`,
 				background     : `#24282e url("${filename}") no-repeat center`,
 				backgroundSize : `${(scale * artboard.meta.frame.size.width) << 0}px ${(scale * artboard.meta.frame.size.height) << 0}px`,
-				border         : '1px solid #005cc5'
 			};
 
 			const slicesWrapperStyle = {
-				top             : `${offset.y << 0}px`,
-				left            : `${offset.x << 0}px`,
-				width           : `${(scale * artboard.meta.frame.size.width) << 0}px`,
-				height          : `${(scale * artboard.meta.frame.size.height) << 0}px`
+				top    : `${offset.y << 0}px`,
+				left   : `${offset.x << 0}px`,
+				width  : `${(scale * artboard.meta.frame.size.width) << 0}px`,
+				height : `${(scale * artboard.meta.frame.size.height) << 0}px`
 			};
 
 
 			const sliceOffset = Object.assign({}, offset);
 			const artboardSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'artboard', sliceOffset, scale, scrolling) : [];
-			const groupSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'group', sliceOffset, scale, scrolling) : [];
 			const backgroundSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'background', sliceOffset, scale, scrolling) : [];
-			const textfieldSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'textfield', sliceOffset, scale, scrolling) : [];
-			const symbolSlices =(artboard.slices.length > 0) ?  this.buildSliceRollOverItemTypes(artboard, 'symbol', sliceOffset, scale, scrolling) : [];
+			const groupSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'group', sliceOffset, scale, scrolling) : [];
+			const symbolSlices = (artboard.slices.length > 0) ?  [...this.buildSliceRollOverItemTypes(artboard, 'bitmap', sliceOffset, scale, scrolling), ...this.buildSliceRollOverItemTypes(artboard, 'symbol', sliceOffset, scale, scrolling), this.buildSliceRollOverItemTypes(artboard, 'svg', sliceOffset, scale, scrolling)] : [];
 			const sliceSlices = (artboard.slices.length > 0) ? this.buildSliceRollOverItemTypes(artboard, 'slice', sliceOffset, scale, scrolling) : [];
+			const textfieldSlices = (artboard.slices.length > 0 && section !== SECTIONS.PARTS) ? this.buildSliceRollOverItemTypes(artboard, 'textfield', sliceOffset, scale, scrolling) : [];
 
 			artboardImages.push(
 				<div key={i} data-artboard-id={artboard.id} className="inspector-page-artboard" style={artboardStyle}>
 					<div className="inspector-page-artboard-caption">{Strings.truncate((artboard.type === 'page_child') ? artboard.title : artboard.title.split('[').shift(), 8)}</div>
-					{/*<div className="inspector-page-artboard-icon-wrapper" style={{width:`${(scale * artboard.meta.frame.size.width) << 0}px`,height:`${(scale * artboard.meta.frame.size.height) << 0}px`}}><img src={icon} width="100%" height="100%" style={iconStyle} alt="ICON" /></div>*/}
 				</div>
 			);
 
 			slices.push(
 				<div key={artboard.id} data-artboard-id={artboard.id} className="inspector-page-slices-wrapper" style={slicesWrapperStyle} onMouseOver={this.handleArtboardRollOver} onMouseOut={this.handleArtboardRollOut} onDoubleClick={(event)=> this.handleZoom(1)}>
-					<div data-artboard-id={artboard.id} className={`inspector-page-${(section === SECTIONS.PRESENTER) ? 'artboard' : 'group'}-slices-wrapper`}>{(section === SECTIONS.PRESENTER) ? artboardSlices : (section === SECTIONS.PARTS) ? [ ...artboardSlices, ...groupSlices ] : groupSlices }</div>
-					{(section !== SECTIONS.PRESENTER) && (<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{(section === SECTIONS.INSPECT) ? [ ...artboardSlices, ...backgroundSlices ] : backgroundSlices}</div>)}
-					{/*<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>*/}
+					<div data-artboard-id={artboard.id} className="inspector-page-artboard-slices-wrapper">{artboardSlices}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-background-slices-wrapper">{backgroundSlices}</div>
+					<div data-artboard-id={artboard.id} className="inspector-page-group-slices-wrapper">{groupSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-symbol-slices-wrapper">{symbolSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-textfield-slices-wrapper">{textfieldSlices}</div>
 					<div data-artboard-id={artboard.id} className="inspector-page-slice-slices-wrapper">{sliceSlices}</div>
@@ -2416,12 +2516,9 @@ class InspectorPage extends Component {
 // 		console.log('InspectorPage:', window.performance.memory);
 
 
-		const contentClass = `inspector-page-content${(section === SECTIONS.PRESENTER) ? ' inspector-page-content-presenter' : ''}`;
-		const panelClass = `inspector-page-panel${(section === SECTIONS.PRESENTER) ? ' inspector-page-panel-presenter' : ''}`;
-
 		const baseOffset = {
 			x : (artboards.length < GRID.colsMax) ? GRID.padding.col * 0.5 : 0,
-			y :24 + (38 * (urlBanner << 0)) + PAN_ZOOM.insetSize.height,
+			y : (artboards.length < GRID.colsMax) ? PAN_ZOOM.insetSize.height : 26 + PAN_ZOOM.insetSize.height
 		};
 
 		const artboardsStyle = {
@@ -2443,153 +2540,210 @@ class InspectorPage extends Component {
 			display : 'none'
 		};
 
+		const previewStyle = {
+			backgroundColor : (artboard) ? `rgba(${artboard.meta.fillColor.r}, ${artboard.meta.fillColor.g}, ${artboard.meta.fillColor.b}, ${artboard.meta.fillColor.a})` : 'rgba(0, 0, 0, 0.0)'
+		};
+
 		return (<>
 			<BaseDesktopPage className="inspector-page-wrapper">
-				<div className={contentClass} onWheel={this.handleWheelStart}>
-					{(percent < 100) && (<div className="upload-progress-bar-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.PRESENTER && !processing) ? 880 : 360}px)`}}>
-						<div className="upload-progress-bar" style={{ width : `${percent}%` }} />
-					</div>)}
+				<Row style={{height:'100%'}}>
+					<Column flex={`${(section !== SECTIONS.EDIT) ? '3 1 0' : '1 1 0'}`}>
+						<ContextMenuTrigger id="RIGHT_CLICK"><InteractiveDiv
+							className="inspector-page-interactive-div"
+							x={panMultPt.x}
+							y={panMultPt.y}
+							scale={scale}
+							scaleFactor={PAN_ZOOM.zoomFactor}
+							minScale={Math.min(...PAN_ZOOM.zoomNotches)}
+							maxScale={Math.max(...PAN_ZOOM.zoomNotches)}
+							ignorePanOutside={false}
+							renderOnChange={false}
+							onPanAndZoom={this.handlePanAndZoom}
+							onPanEnd={()=> (this.setState({ scrolling : false }))}
+							onPanMove={this.handlePanMove}>
 
-					<div className="inspector-page-marquee-wrapper" style={{width:`calc(100% - ${(section === SECTIONS.PRESENTER && !processing) ? 880 : 360}px)`}}>
-						{(upload && urlBanner && percent === 100) && (<MarqueeBanner
-							copyText={buildInspectorURL(upload)}
-							removable={true}
-							outro={!urlBanner}
-							onCopy={()=> this.handleClipboardCopy('url', buildInspectorURL(upload))}
-							onClose={()=> {trackEvent('button', 'close-url-banner'); this.setState({ urlBanner : false });}}>
-							<div className="marquee-banner-content marquee-banner-content-url"><span className="txt-bold" style={{paddingRight:'5px'}}>Share on Slack:</span> {buildInspectorURL(upload)}</div>
-						</MarqueeBanner>)}
+								<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
+									{(artboards.length > 0) && (<div style={artboardsStyle}>
+										{artboardImages}
+										<div className="inspector-page-canvas-wrapper" onClick={(event)=> this.handleCanvasClick(event)} onDoubleClick={()=> this.handleZoom(1)} style={canvasStyle} ref={canvasWrapper}>
+											<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
+										</div>
+										{slices}
+									</div>)}
+								</div>
+						</InteractiveDiv></ContextMenuTrigger>
 
-						{(!processing && tooltip) && (<MarqueeBanner
-							copyText={null}
-							outro={!tooltip}
-							onCopy={null}
-							onClose={()=> this.setState({ tooltip : null })}>
-							<div className="marquee-banner-content marquee-banner-content-tooltip">{tooltip}</div>
-						</MarqueeBanner>)}
-					</div>
+						{(upload) && (<InspectorFooter
+							creator={(profile && profile.id << 0 === upload.creator.user_id << 0)}
+							scale={scale}
+							fitScale={fitScale}
+							section={section}
+							processing={processing}
+							artboards={flattenUploadArtboards(upload, 'page_child')}
+							onDrop={this.handleFileDrop}
+							onChangeArtboard={this.handleChangeArtboard}
+							onChangeSection={(section)=> this.handleChangeSection(section)}
+							onPage={this.props.onPage}
+							onZoom={this.handleZoom}
+						/>)}
+					</Column>
+					<Column flex={`${(section !== SECTIONS.EDIT) ? '1 0 0' : '2 0 0'}`} className="inspector-page-panel">
+						{(section !== SECTIONS.EDIT) ?
+							(tabSets.map((tabSet, i)=> (
+								<div key={i} className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(section === SECTIONS.STYLES ? 156 : 106)}px)` }}>
+									<FilingTabSet
+										tabs={tabSet}
+										activeTab={activeTabs[i]}
+										enabled={!processing}
+										onTabClick={(tab)=> this.handleTab(tab)}
+										onContentClick={(payload)=> console.log('onContentClick', payload)}
+									/>
 
-					<InteractiveDiv
-						className="full-width full-height"
-						x={panMultPt.x}
-						y={panMultPt.y}
-						scale={scale}
-						scaleFactor={PAN_ZOOM.zoomFactor}
-						minScale={Math.min(...PAN_ZOOM.zoomNotches)}
-						maxScale={Math.max(...PAN_ZOOM.zoomNotches)}
-						ignorePanOutside={false}
-						renderOnChange={false}
-						onPanAndZoom={this.handlePanAndZoom}
-						onPanEnd={()=> (this.setState({ scrolling : false }))}
-						onPanMove={this.handlePanMove}>
-							<div className="inspector-page-artboards-wrapper" ref={artboardsWrapper}>
-								{(artboards.length > 0) && (<div style={artboardsStyle}>
-									{artboardImages}
-									<div className="inspector-page-canvas-wrapper" onClick={(event)=> this.handleCanvasClick(event)} onDoubleClick={()=> this.handleZoom(1)} style={canvasStyle} ref={canvasWrapper}>
-										<canvas width={(artboardsWrapper.current) ? artboardsWrapper.current.clientWidth : 0} height={(artboardsWrapper.current) ? artboardsWrapper.current.clientHeight : 0} ref={canvas}>Your browser does not support the HTML5 canvas tag.</canvas>
+									{(section === SECTIONS.SPECS) && (<div className="inspector-page-panel-button-wrapper">
+										<CopyToClipboard onCopy={()=> this.handleClipboardCopy('specs', toSpecs(upload, activeSlice))} text={(activeSlice) ? toSpecs(upload, activeSlice) : ''}>
+											<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy Specs'}</button>
+										</CopyToClipboard>
+										<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(toSpecs(upload, activeSlice), 'txt') : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist Specs' : 'View Gist'}</button>
+									</div>)}
+
+									{(section === SECTIONS.STYLES) && (<div className="inspector-page-panel-button-wrapper">
+										<button disabled={!slice || (linter && linter.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxLinter(activeTabs[i].syntax)}>{(processing) ? 'Processing' : 'Lint'}</button>
+										<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
+											<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy Code'}</button>
+										</CopyToClipboard>
+										<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i].contents.props.code, activeTabs[i].contents.props.language) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist Code' : 'View Gist'}</button>
+									</div>)}
+
+									{(section === SECTIONS.PARTS) && (<div className="inspector-page-panel-button-wrapper">
+										<button disabled={!slice} className="inspector-page-panel-button" onClick={this.handleDownloadPartsList}>{(processing) ? 'Processing' : 'Download Parts'}</button>
+										<button disabled={!upload} className="inspector-page-panel-button" onClick={this.handleDownloadAll}>{(processing) ? 'Processing' : 'Download Project'}</button>
+									</div>)}
+								</div>
+							)))
+
+						: (<LiveProvider scope={{styled}} code={syntax} noInline={true}><Row>
+								<div style={{width:'100%', maxWidth:'585px'}}>
+									<div className="inspector-page-panel-header"><Row>
+										<Column horizontal="start" vertical="center" flex="1 1 0">
+											{(upload) ? (<a href={buildInspectorURL(upload, '/edit')} target="_blank" rel="noopener noreferrer">{buildInspectorURL(upload, '/edit').replace(/^https?:\/\//, '')}</a>) : ('…')}
+										</Column>
+										<Column horizontal="end" vertical="center">
+											{(upload) ? (<CopyToClipboard onCopy={()=> this.handleClipboardCopy('url', buildInspectorURL(upload, '/edit'))} text={buildInspectorURL(upload, '/edit')}><button className="tiny-button">Copy</button></CopyToClipboard>) : ('')}
+										</Column>
+									</Row></div>
+									<div className="inspector-page-live-editor-wrapper">
+										<LiveEditor className="inspector-page-live-editor" onChange={(val)=> this.handleEditorChange(val)} style={{opacity:`${(this.state.clickTotal > -1 || hoverSlice !== null) << 0}`}} />
+										{/*{(upload) && (<InspectorPageEditorStatus message={`${Files.basename(upload.filename)} file loaded.`} />)}*/}
+										<LiveError className="inspector-page-live-error" />
+										<div className="inspector-page-panel-button-wrapper inspector-page-panel-editor-button-wrapper"><Column horizontal="end">
+											<button disabled={!slice || (linter && linter.busy)} className="inspector-page-panel-button inspector-page-panel-editor-button" onClick={()=> this.handleSendSyntaxLinter(syntax)}>{(processing) ? 'Processing' : 'Lint'}</button>
+											<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', syntax)} text={syntax}>
+												<button disabled={!slice} className="inspector-page-panel-button inspector-page-panel-editor-button">{(processing) ? 'Processing' : 'Copy'}</button>
+											</CopyToClipboard>
+										</Column></div>
 									</div>
-									{slices}
-								</div>)}
-							</div>
-					</InteractiveDiv>
-
-					{(upload) && (<InspectorFooter
-						creator={(profile && profile.id << 0 === upload.creator.user_id << 0)}
-						scale={scale}
-						fitScale={fitScale}
-						section={section}
-						processing={processing}
-						artboards={flattenUploadArtboards(upload, 'page_child')}
-						onDrop={this.handleFileDrop}
-						onChangeArtboard={this.handleChangeArtboard}
-						onChangeSection={(section)=> this.handleChangeSection(section)}
-						onPage={this.props.onPage}
-						onZoom={this.handleZoom}
-					/>)}
-				</div>
-
-				{(valid) && (<div className={panelClass}>
-					{(section === SECTIONS.INSPECT) && (<>
-						{(tabSets.map((tabSet, i)=> (
-							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-split-height-content-wrapper">
-								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 154 : 58)}px)` }}>
-									<FilingTabSet
-										tabs={tabSet}
-										activeTab={activeTabs[i]}
-										enabled={!processing}
-										onTabClick={(tab)=> this.handleTab(tab)}
-										onContentClick={(payload)=> console.log('onContentClick', payload)}
-									/>
-									{(i === 0)
-										? (<div className="inspector-page-panel-button-wrapper">
-												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
-													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
-												</CopyToClipboard>
-												<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>
-												<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>
-											</div>)
-										: (<div className="inspector-page-panel-button-wrapper">
-												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('specs', toSpecs(activeSlice))} text={(activeSlice) ? toSpecs(activeSlice) : ''}>
-													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
-												</CopyToClipboard>
-											</div>)
-									}
 								</div>
-							</div>)
-						))}
-					</>)}
-
-					{(section === SECTIONS.PARTS) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper">
-						{(tabSets.map((tabSet, i)=> (
-							<div className="inspector-page-panel-filing-tab-set-wrapper" key={i} style={{ height : `calc(100% - 154px)` }}>
-								<FilingTabSet
-									tabs={tabSet}
-									activeTab={activeTabs[i]}
-									enabled={!processing}
-									onTabClick={(tab)=> this.handleTab(tab)}
-									onContentClick={(payload)=> console.log('onContentClick', payload)}
-								/>
-								<div className="inspector-page-panel-button-wrapper">
-									<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> this.handleDownloadPartsList()}>{(processing) ? 'Processing' : `Download iOS ${Strings.pluralize('Part', listTotal)}`}</button>
-									<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> this.handleDownloadPartsList()}>{(processing) ? 'Processing' : `Download Android ${Strings.pluralize('Part', listTotal)}`}</button>
-									<button disabled={!slice} className="inspector-page-panel-button" style={{opacity:(!processing << 0)}} onClick={()=> this.handleDownloadPartsList()}>{(processing) ? 'Processing' : `Download HTML/CSS ${Strings.pluralize('Part', listTotal)}`}</button>
+								<div>
+									<div className="inspector-page-panel-header inspector-page-panel-header-alt"><Row>
+										<Column horizontal="start" vertical="center" flex="1 1 0">
+											{(upload && artboard) ? (<a href={`http://cdn.designengine.ai/renders/${upload.id}/${Strings.slugifyURI(artboard.title)}.html`}>{`cdn.designengine.ai/renders/${upload.id}/${Strings.slugifyURI(artboard.title)}.html`}</a>) : ('…')}
+										</Column>
+										<Column horizontal="end" vertical="center">
+											{(upload && artboard) ? (<CopyToClipboard onCopy={()=> this.handleClipboardCopy('url', `http://cdn.designengine.ai/renders/${upload.id}/${Strings.slugifyURI(artboard.title)}.html`)} text={`http://cdn.designengine.ai/renders/${upload.id}/${Strings.slugifyURI(artboard.title)}.html`}><button className="tiny-button">Copy</button></CopyToClipboard>) : ('')}
+										</Column>
+									</Row></div>
+									<div className="inspector-page-live-preview-wrapper">
+										<LivePreview className="inspector-page-live-preview" style={previewStyle} />
+										<div className="inspector-page-panel-button-wrapper inspector-page-panel-editor-button-wrapper">
+											<button disabled={!slice || !editChange} className="inspector-page-panel-button inspector-page-panel-editor-button" onClick={()=> this.handleEditorSave()}>{(processing) ? 'Processing' : 'Save'}</button>
+											<button disabled={!profile || !profile.github || !slice || (gist && gist.busy)} className={`inspector-page-panel-button${(gist && !gist.edited) ? ' aux-button' : ''}`} onClick={()=> (!gist || (gist && gist.edited)) ? this.handleSendSyntaxGist(syntax) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.edited)) ? 'Gist' : 'View'}</button>
+											{/*<button disabled={!slice || !editChange} className="inspector-page-panel-button inspector-page-panel-editor-button" onClick={()=> this.handleEditorSave()}>{(processing) ? 'Processing' : 'Gist'}</button>*/}
+										</div>
+									</div>
 								</div>
-							</div>)
-						))}
-					</div>)}
-
-					{(section === SECTIONS.PRESENTER) && (<div className="inspector-page-panel-content-wrapper inspector-page-panel-full-width-content-wrapper inspector-page-panel-full-height-content-wrapper inspector-page-panel-presenter-wrapper">
-						{(tabSets.map((tabSet, i)=> (
-							<div key={i} className="inspector-page-panel-content-wrapper inspector-page-panel-split-width-content-wrapper inspector-page-panel-full-height-content-wrapper" style={{width:`${(i === 0) ? 520 : 360}px`}}>
-								<div className="inspector-page-panel-filing-tab-set-wrapper" style={{ height : `calc(100% - ${(i === 0 ? 202 : 58)}px)` }}>
-									<FilingTabSet
-										tabs={tabSet}
-										activeTab={activeTabs[i]}
-										enabled={!processing}
-										onTabClick={(tab)=> this.handleTab(tab)}
-										onContentClick={(payload)=> console.log('onContentClick', payload)}
-									/>
-
-									{(i === 0)
-										? (<div className="inspector-page-panel-button-wrapper">
-												<CopyToClipboard onCopy={()=> this.handleClipboardCopy('code', activeTabs[i].syntax)} text={(activeTabs && activeTabs[i]) ? activeTabs[i].syntax : ''}>
-													<button disabled={!slice} className="inspector-page-panel-button">{(processing) ? 'Processing' : 'Copy'}</button>
-												</CopyToClipboard>
-												<button disabled={!slice || (linter && linter.busy)} className={`inspector-page-panel-button${(linter && !linter.busy) ? ' destruct-button' : ''}`} onClick={()=> (!linter) ? this.handleSendSyntaxLinter(activeTabs[i]) : this.handleLinterLog(activeTabs[i])}>{(processing) ? 'Processing' : (!linter || (linter && linter.busy)) ? 'Lint' : 'Show Errors'}</button>
-												<button disabled={!atomExtension || !slice || (linter && linter.busy) || (gist && gist.busy)} className="inspector-page-panel-button" onClick={()=> this.handleSendSyntaxAtom(activeTabs[i])}>{(processing) ? 'Processing' : 'Atom'}</button>
-												<button disabled={!profile || !profile.github || !slice || (gist && gist.busy) || (linter && linter.busy)} className={`inspector-page-panel-button${(gist && !gist.busy) ? ' aux-button' : ''}`} onClick={()=> (!gist) ? this.handleSendSyntaxGist(activeTabs[i]) : window.open(gist.url)}>{(processing) ? 'Processing' : (!gist || (gist && gist.busy)) ? 'Gist' : 'View Gist'}</button>
-											</div>)
-										: (<div className="inspector-page-panel-button-wrapper">
-												{/*<button disabled={(processing || artboards.length === 0)} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Download PDF'}</button>*/}
-												<button disabled={true} className="inspector-page-panel-button" onClick={()=> this.handleDownloadArtboardPDF()}>{(processing) ? 'Processing' : 'Export'}</button>
-											</div>)
-									}
-								</div>
-							</div>
-						)))}
-					</div>)}
-				</div>)}
+							</Row></LiveProvider>)
+						}
+					</Column>
+				</Row>
 			</BaseDesktopPage>
+
+			{(section === SECTIONS.SPECS) && (<ContextMenu id="RIGHT_CLICK" className="inspector-page-context-menu">
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Copy Spec
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Gist Spec
+				</MenuItem>
+				{/*<MenuItem divider />*/}
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Share Spec
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Export All
+				</MenuItem>
+			</ContextMenu>)}
+
+			{(section === SECTIONS.STYLES) && (<ContextMenu id="RIGHT_CLICK" className="inspector-page-context-menu">
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Copy ReactCSS
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Copy CSS
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Gist ReactCSS
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Gist CSS
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Export All
+				</MenuItem>
+			</ContextMenu>)}
+
+			{(section === SECTIONS.PARTS) && (<ContextMenu id="RIGHT_CLICK" className="inspector-page-context-menu">
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Copy ReactCSS
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Copy CSS
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Gist ReactCSS
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Gist CSS
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Export All
+				</MenuItem>
+			</ContextMenu>)}
+
+			{(section === SECTIONS.EDIT) && (<ContextMenu id="RIGHT_CLICK" className="inspector-page-context-menu">
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Copy ReactCSS
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Copy CSS
+				</MenuItem>
+				<MenuItem divider />
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Gist ReactCSS
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Gist CSS
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Copy React Component
+				</MenuItem>
+				<MenuItem divider />
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Gist React Component
+				</MenuItem>
+				<MenuItem data={{ foo : 'bar' }} onClick={()=> null} className="inspector-page-context-menu-item">
+					Export All
+				</MenuItem>
+			</ContextMenu>)}
 
 
 			{(!restricted && upload && (percent === 99 || processing)) && (<UploadProcessing
@@ -2615,13 +2769,6 @@ class InspectorPage extends Component {
 				Design file not found.
 			</BaseOverlay>)}
 
-			{/*{(fontState === 1) && (<ConfirmDialog*/}
-				{/*title="Missing Font(s)"*/}
-				{/*message={`Some fonts (${missingFonts.map((font)=> (font.postscript_name)).join(', ')}) need to be installed to complete processing, upload now?`}*/}
-				{/*onComplete={this.handleFontDialogComplete}*/}
-			{/*/>)}*/}
-
-
 			{(upload) && (<ReactNotifications
 				onRef={(ref)=> (this.notification = ref)}
 				title={(this.state.processing.state === 3) ? 'Completed Processing' : 'Error Processing'}
@@ -2635,4 +2782,55 @@ class InspectorPage extends Component {
 	}
 }
 
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		deeplink           : state.deeplink,
+		profile            : state.userProfile,
+		redirectURI        : state.redirectURI,
+		atomExtension      : state.atomExtension,
+		artboardComponents : state.artboardComponents,
+		artboardGroups     : state.artboardGroups
+	});
+};
+
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		setArtboardComponent : (components)=> dispatch(setArtboardComponent(components)),
+		setArtboardGroups    : (groups)=> dispatch(setArtboardGroups(groups)),
+		setRedirectURI       : (url)=> dispatch(setRedirectURI(url))
+	});
+};
+
+
 export default connect(mapStateToProps, mapDispatchToProps)(InspectorPage);
+
+
+/*
+`class Counter extends React.Component {
+  constructor() {
+    super()
+    this.state = { count: 0 };
+  }
+
+  componentDidMount() {
+    this.interval = setInterval(() => {
+      this.setState(state => ({ count: state.count + 1 }));
+    }, 3333);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  render() {
+    return (
+      <center>
+        <h3>
+          {this.state.count}
+        </h3>
+      </center>
+    )
+  }
+}`
+*/

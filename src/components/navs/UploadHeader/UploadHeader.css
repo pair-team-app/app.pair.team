@@ -1,6 +1,5 @@
 
 .upload-header-wrapper {
-	display: table;
 	width: calc(100% + 40px);
 	height: calc(100vh - 64px);
 	margin: -20px;
@@ -8,12 +7,9 @@
 }
 
 .upload-header-dz {
-	display: table-cell;
 	width: 100%;
-	height: 100%;
-	padding: 20px 10px;
+	height: calc(100% - 216px);
 	text-align: center;
-	vertical-align: middle;
 }
 
 .upload-header-logo {
@@ -32,4 +28,17 @@
 
 .upload-header-button-wrapper .adjacent-button {
 	margin-right: 10px;
+}
+
+.upload-header-image-wrapper {
+	position: fixed;
+	left: 0;
+	bottom: -50px;
+	width: 100%;
+	text-align: center;
+}
+
+.upload-header-image {
+	width: 860px;
+	height: 266px;
 }

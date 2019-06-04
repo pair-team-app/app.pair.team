@@ -2,8 +2,38 @@
 import { CANVAS } from '../consts';
 
 
+export function drawCanvasDebug(context) {
+	// debug fill
+// 		context.fillStyle = 'rgba(0, 0, 0, 0.25)';
+// 		context.fillRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
+
+	// debug lines
+// 		context.lineWidth = 1.0;
+// 		context.setLineDash([]);
+// 		context.lineDashOffset = 0;
+// 		context.beginPath();
+// 		context.strokeStyle = 'rgba(0, 255, 255, 0.5)';
+// 		context.strokeRect(0, 0, canvas.current.clientWidth, canvas.current.clientHeight);
+// 		context.moveTo(canvas.current.clientWidth * 0.5, 0); // top-center
+// 		context.lineTo(canvas.current.clientWidth * 0.5, canvas.current.clientHeight);
+// 		context.moveTo(0, canvas.current.clientHeight * 0.5); // left-center
+// 		context.lineTo(canvas.current.clientWidth, canvas.current.clientHeight * 0.5);
+// 		context.stroke();
+
+}
+
 export function drawCanvasSliceBorder(context, frame) {
 	context.strokeStyle = CANVAS.slices.borderColor;
+	context.lineWidth = CANVAS.slices.lineWidth;
+	context.setLineDash([]);
+	context.lineDashOffset = 0;
+	context.beginPath();
+	context.strokeRect(frame.origin.x + 1, frame.origin.y + 1, frame.size.width - 2, frame.size.height - 2);
+	context.stroke();
+}
+
+export function drawCanvasSliceRollOverBorder(context, frame) {
+	context.strokeStyle = CANVAS.slices.rolloverBorderColor;
 	context.lineWidth = CANVAS.slices.lineWidth;
 	context.setLineDash([]);
 	context.lineDashOffset = 0;

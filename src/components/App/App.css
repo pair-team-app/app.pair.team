@@ -55,20 +55,29 @@ h1.page-header-title {
 }
 
 .tiny-button {
-	min-width: 38px;
-	min-height: 38px;
+	min-width: 0;
+	min-height: 0;
 	width: auto;
 	height: auto;
-	padding: 10px;
+	padding: 3px 10px;
+	/*font-size: 10px;*/
+}
+
+.min-button, .min-button:hover, .min-button:active {
+	width: auto;
+	height: auto;
+	padding: 0;
+	background: none;
+	color: inherit;
 }
 
 
 .aux-button, .aux-button:disabled, .aux-button:disabled:hover {
-	background-color: #24c14d;
+	background-color: #515151;
 }
 
 .aux-button:hover, .aux-button:active {
-	background-color: #1d993c;
+	background-color: #404040;
 }
 
 .aux-button:disabled, .aux-button:disabled:hover {
@@ -103,7 +112,7 @@ h1.page-header-title {
 }
 
 .page-link, .page-link a:any-link {
-	font-family: "San Francisco Text Medium", sans-serif;
+	font-family: "San Francisco Text Text", sans-serif;
 	font-size: 14px;
 	letter-spacing: -0.26px;
 	color: #abdafd;

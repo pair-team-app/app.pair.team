@@ -2,9 +2,7 @@
 import React from 'react';
 import './BottomNav.css';
 
-import { Modals } from './../../../consts/uris';
 import { trackEvent } from './../../../utils/tracking';
-import { isUserLoggedIn } from './../../../utils/funcs';
 import { URIs } from './../../../utils/lang';
 import deLogo from './../../../assets/images/logos/logo-designengine.svg';
 import sections from './../../../assets/json/nav-sections';

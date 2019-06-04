@@ -1,7 +1,7 @@
 
 .integration-grid-item {
 	position: relative;
-	background-color: #24282e;
+	background-color: #111111;
 	overflow: hidden;
 	backface-visibility: hidden;
 	transform-style: preserve-3d;
@@ -12,16 +12,13 @@
 }
 
 fieldset:disabled .integration-grid-item {
-	/*cursor: default;*/
 	background-color: rgba(36, 40, 46, 0.50);
 }
 
 .integration-grid-item-selected, .integration-grid-item-selected:hover {
-	box-shadow: 0 0 3px rgba(0, 0, 0, 0.75);
 }
 
 fieldset:disabled .integration-grid-item-overlay {
-	/*background-color: #1c1c1c;*/
 	opacity: 0.875;
 	transition: none;
 }
@@ -34,18 +31,15 @@ fieldset:not(:disabled) .integration-grid-item-overlay {
 	height: 100%;
 	opacity: 0;
 	background-color: #000000;
-	border: 1px solid rgba(36, 40, 46, 0.0);
 	transition: opacity 0.125s ease-out;
 }
 
 fieldset:not(:disabled) .integration-grid-item:hover .integration-grid-item-overlay {
 	opacity: 0.25;
-	border: 1px solid #24282e;
 }
 
 fieldset:not(:disabled) .integration-grid-item-selected .integration-grid-item-overlay, .integration-grid-item-selected:hover .integration-grid-item-overlay {
 	opacity: 0.33;
-	border: 1px solid #24282e;
 }
 
 .integration-grid-item-image {
@@ -55,8 +49,8 @@ fieldset:not(:disabled) .integration-grid-item-selected .integration-grid-item-o
 	transform: translate(-50%, -40%);
 	object-fit: scale-down;
 	opacity: 0.875;
-	width: 50%;
-	height: 50%;
+	width: 45%;
+	height: 45%;
 	transition: opacity 0.125s ease-out;
 }
 
@@ -81,10 +75,10 @@ fieldset:not(:disabled) .integration-grid-item:hover .integration-grid-item-imag
 
 .integration-grid-item-title {
 	width: 100%;
-	font-family: "San Francisco Text Medium", sans-serif;
+	font-family: "SF Pro Display Medium", sans-serif;
 	font-size: 16px;
-	letter-spacing: -0.3px;
-	color: #c8e1fd;
+	letter-spacing: -0.5px;
+	color: #ffffff;
 }
 
 fieldset:disabled .integration-grid-item-title {
@@ -95,14 +89,14 @@ fieldset:disabled .integration-grid-item-title {
 	position: absolute;
 	top: 0;
 	right: 0;
-	margin: 10px;
+	margin: 8px;
 	opacity: 0;
 	color: #7ed321;
 	transition: opacity 0.125s ease-out;
 }
 
 .integration-grid-item-selected-icon-visible {
-	opacity: 0.875;
+	opacity: 1;
 }
 
 .integration-grid-item-alpha-badge {
@@ -115,7 +109,7 @@ fieldset:disabled .integration-grid-item-title {
 	filter: brightness(85%);
 	background-color: rgba(75, 75, 75, 0.5);
 	border-bottom: 1px solid rgba(27, 27, 27, 0.75);
-	font-family: "San Francisco Text Medium", sans-serif;
+	font-family: "SF Pro Display Medium", sans-serif;
 	font-size: 12px;
 	letter-spacing: -0.25px;
 	line-height: normal;

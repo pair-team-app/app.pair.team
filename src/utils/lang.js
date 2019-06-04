@@ -90,6 +90,35 @@ export const Browsers = {
 };
 
 
+export const Colors = {
+	componentHex : (hex, comp)=> {
+		const comps = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i.exec(hex);
+		return ((comps) ? comps[(comp === 'r') ? 1 : (comp === 'g') ? 2 : (comp === 'b') ? 3 : (comp === 'a' && comps.length === 5) ? 4 : 0] : null);
+	},
+// 	rgbToHex : (rgb)=> (`#${rgb.r.toString(16)}${rgb.g.toString(16)}${rgb.b.toString(16)}`),
+	rgbToHex  : (rgb)=> (`#${((1 << 24) + (rgb.r << 16) + (rgb.g << 8) + rgb.b).toString(16).slice(1)}`),
+// 	rgbaToHex : (rgb)=> (`#${rgb.r.toString(16)}${rgb.g.toString(16)}${rgb.b.toString(16)}${((rgb.a * 255) << 0).toString(16)}`),
+	rgbaToHex : (rgba)=> {
+		const hex = {
+			r : rgba.r.toString(16),
+			g : rgba.g.toString(16),
+			b : rgba.b.toString(16),
+			a : ((rgba.a * 255) << 0).toString(16),
+		};
+
+		return (`#${(hex.r.length > 1) ? hex.r : `0${hex.r}`}${(hex.g.length > 1) ? hex.g : `0${hex.g}`}${(hex.b.length > 1) ? hex.b : `0${hex.b}`}${(hex.a.length > 1) ? hex.a : `0${hex.a}`}`);
+	},
+	hexToRGB : (hex)=> {
+		const comps = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return ((comps) ? {
+			r : parseInt(comps[1], 16),
+			g : parseInt(comps[2], 16),
+			b : parseInt(comps[3], 16)
+		} : null);
+	}
+};
+
+
 export const Components = {
 	componentName     : (component)=> (component.constructor.name),
 	txtFieldClassName : (valid)=> (`input-wrapper${(valid) ? '' : ' input-wrapper-error'}`)
@@ -210,7 +239,7 @@ export const Objects = {
 	dropKey    : (obj, key)=> (Objects.dropKeys(obj, [key])),
 	dropKeys   : (obj, keys)=> ({ ...Object.keys(obj).filter((k)=> (!Arrays.containsElement(keys, k))).reduce((newObj, k)=> ({...newObj, [k]: obj[k]}), {})}),
 	isEmpty    : (obj)=> (Object.keys(obj).length === 0),
-	hasKey     : (obj, key)=> (Object.keys(obj).some((k)=> (k === key))),
+	hasKey     : (obj, key)=> ((obj && typeof obj !== 'undefined') ? Object.keys(obj).some((k)=> (k === key)) : false),
 	length     : (obj)=> (Object.keys(obj).length),
 	reduceVals : (obj, init=0)=> (Object.values(obj).reduce((acc, val)=> ((acc << 0) + (val << 0)), init)),
 	renameKey  : (obj, oldKey, newKey, overwrite=false)=> {
@@ -281,7 +310,7 @@ export const URIs = {
 	lastComponent  : (url=window.location.pathname)=> (Files.basename(url)),
 	protocol       : (url=window.location.protocol)=> ((/^https?/.test(url.toLowerCase())) ? url.split(':').shift() : null),
 	queryString    : (url=window.location.search)=> (Arrays.convertToObject((url.includes('?')) ? url.split('?').pop().split('&').map((qs)=> ({ key : qs.split('=').shift(), val : qs.split('=').pop() })) : [])),
-	subdomain      : (url=window.location.hostname)=> ((URIs.hostname(url).split('.').length === 3) ? URIs.hostname(url).split('.').shift() : null),
+	subdomain      : (url=window.location.hostname)=> ((URIs.hostname(url).split('.').length >= 3) ? URIs.hostname(url).split('.').shift() : null),
 	tdl            : (url=window.location.hostname)=> (URIs.hostname(url).split('.').pop())
 };
 

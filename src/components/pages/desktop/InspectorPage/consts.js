@@ -18,7 +18,7 @@ export const CANVAS = {
 	},
 
 	guides       : {
-		color     : '#00ff0f',
+		color     : '#005cc5',
 		lineDash  : CANVAS_LINE_DASH,
 		lineWidth : 2,
 	},
@@ -27,15 +27,17 @@ export const CANVAS = {
 		lineDash  : CANVAS_LINE_DASH,
 		lineWidth : 2,
 		stroke    : 'rgba(0, 92, 197, 0.5)',
-		interval  : 50,
+		interval  : 33,
 		increment : 0.5,
 		modOffset : CANVAS_LINE_DASH.reduce((acc, val)=> (acc * val)) << 0
 	},
 
 	slices       : {
-		borderColor : '#00ff0f',
-		fillColor   : 'rgba(9, 248, 16, 0.6)',
-		lineWidth   : 1
+		borderColor         : '#005cc5',
+		fillColor           : 'rgba(9, 248, 16, 0.6)',
+		lineWidth           : 2,
+		rolloverBorderColor : '#005cc5',
+		rolloverLineWidth   : 2
 	}
 };
 
@@ -71,9 +73,10 @@ export const GRID = {
 };
 
 export const SECTIONS = {
-	INSPECT   : 'inspect',
-	PARTS     : 'parts',
-	PRESENTER : 'present'
+	SPECS  : 'specs',
+	STYLES : 'styles',
+	PARTS  : 'parts',
+	EDIT   : 'edit'
 };
 
 export const STATUS_INTERVAL = 1000;

@@ -1,75 +1,58 @@
 {
-  "inspect": [
+  "specs": [
+    [{
+      "id": 20,
+      "title": "Specs",
+      "enabled": false,
+      "component": null,
+      "contents": null,
+      "syntax": null
+    }]
+  ],
+
+  "styles": [
     [{
       "id": 1,
-      "title": "CSS",
-      "type": "json_html",
+      "title": "ReactCSS",
       "enabled": false,
-      "contents": "\"/* Rollover to display code. */\"",
+      "component": null,
+      "contents": "/* Rollover any design object for code */",
       "syntax": null
     }, {
       "id": 2,
-      "title": "HTML",
-      "type": "json_html",
+      "title": "SCSS",
       "enabled": false,
-      "contents": "\"/* Rollover to display code. */\"",
+      "component": null,
+      "contents": "/* Rollover any design object for code */",
       "syntax": null
     }, {
       "id": 3,
-      "title": "ReactJSX",
-      "type": "json_html",
+      "title": "CSS",
       "enabled": false,
-      "contents": "\"/* Rollover to display code. */\"",
-      "syntax": null
-    }], [{
-      "id": 5,
-      "title": "Specs",
-      "type": "component",
-      "enabled": false,
-      "contents": null,
+      "component": null,
+      "contents": "/* Rollover any design object for code */",
       "syntax": null
     }]
   ],
 
   "parts": [
     [{
-      "id": 1,
+      "id": 30,
       "title": "Parts",
-      "type": "component",
       "enabled": false,
-      "contents": "\/* Rollover to display parts. *\/",
+      "component": null,
+      "contents": "/* Rollover a graphic object to display parts. */",
       "syntax": null
     }]
   ],
 
-  "present": [
+  "edit": [
     [{
-      "id": 1,
-      "title": "CSS",
-      "type": "json_html",
-      "enabled": false,
-      "contents": "\"/* Rollover to display code. */\"",
-      "syntax": null
-    }, {
-      "id": 2,
-      "title": "HTML",
-      "type": "json_html",
-      "enabled": false,
-      "contents": "\"/* Rollover to display code. */\"",
-      "syntax": null
-    }, {
-      "id": 3,
+      "id": 30,
       "title": "ReactJSX",
-      "type": "json_html",
       "enabled": false,
-      "contents": "\"/* Rollover to display code. */\"",
-      "syntax": null
-    }], [{
-      "id": 5,
-      "title": "Live Preview",
-      "type": "component",
-      "enabled": false,
-      "contents": null,
+      "component": null,
+      "contents": "/* Rollover any design object for code */",
       "syntax": null
     }]
   ]

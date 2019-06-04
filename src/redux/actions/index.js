@@ -8,6 +8,8 @@ import {
 	ADD_FILE_UPLOAD,
 	APPEND_ARTBOARD_SLICES,
 	APPEND_HOME_ARTBOARDS,
+	SET_ARTBOARD_GROUPS,
+	SET_ARTBOARD_COMPONENT,
 	SET_REDIRECT_URI,
 	USER_PROFILE_ERROR,
 	UPDATE_DEEPLINK,
@@ -154,6 +156,19 @@ export function fetchTeamLookup(payload) {
 			}
 		}).catch((error)=> {
 		});
+	});
+}
+
+export function setArtboardComponent(payload) {
+	logFormat('setArtboardComponent()', payload);
+	return ({ payload,
+		type : SET_ARTBOARD_COMPONENT
+	});
+}
+export function setArtboardGroups(payload) {
+	logFormat('setArtboardGroups()', payload);
+	return ({ payload,
+		type : SET_ARTBOARD_GROUPS
 	});
 }
 

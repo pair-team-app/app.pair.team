@@ -1,14 +1,17 @@
 {
   "bottom": {
     "desktop": [{
-      "title": "Free Inspect",
-      "url": "/inspect"
+      "title": "Specs",
+      "url": "/specs"
+    }, {
+      "title": "Styles",
+      "url": "/styles"
+    }, {
+      "title": "Parts",
+      "url": "/parts"
     }, {
       "title": "Editor",
       "url": "/edit"
-    }, {
-      "title": "Integrations",
-      "url": "/integrations"
     }, {
       "title": "Terms",
       "url": "/terms"
@@ -20,24 +23,24 @@
   },
   "top": {
     "desktop": [{
-      "title": "Free Inspect",
-      "url": "/inspect"
+      "title": "Specs",
+      "url": "/specs"
+    }, {
+      "title": "Styles",
+      "url": "/styles"
+    }, {
+      "title": "Parts",
+      "url": "/parts"
     }, {
       "title": "Editor",
       "url": "/edit"
-    }, {
-      "title": "Integrations",
-      "url": "/integrations"
     }],
     "mobile": [{
-      "title": "Free Inspect",
-      "url": "/inspect"
+      "title": "Specs",
+      "url": "/specs"
     }, {
-      "title": "Presenter",
-      "url": "/present"
-    }, {
-      "title": "Integrations",
-      "url": "/integrations"
+      "title": "Styles",
+      "url": "/styles"
     }]
   }
 }

@@ -7,15 +7,18 @@ import { matchPath } from 'react-router-dom';
 
 import {
 	HOME,
+	SPECS,
+	STYLES,
+	PARTS,
 	INSPECT,
 	LOGIN,
-	PARTS,
-	PRESENT,
+	EDIT,
 	PROFILE,
 	RECOVER,
 	REGISTER,
 	UPLOAD,
-	API_ENDPT_URL } from '../consts/uris';
+	API_ENDPT_URL
+} from '../consts/uris';
 import { Strings, URIs } from './lang';
 
 
@@ -89,11 +92,11 @@ export function getRouteParams(pathname) {
 }
 
 
-export function buildInspectorPath(upload, prefix='/inspect', suffix='') {
+export function buildInspectorPath(upload, prefix='/specs', suffix='') {
 	return (`${Strings.trimSlashes(prefix)}/${upload.id}/${Strings.slugifyURI(upload.title)}${Strings.trimSlashes(suffix)}`);
 }
 
-export function buildInspectorURL(upload, prefix='/inspect', suffix='') {
+export function buildInspectorURL(upload, prefix='/specs', suffix='') {
 	return (`${window.location.origin}${buildInspectorPath(upload, prefix, suffix)}`);
 }
 
@@ -116,9 +119,29 @@ export function createGist(token, filename, contents, description, visible, call
 	});
 }
 
+export function editGist(token, gistID, filename, contents, description, visible, callback=null) {
+	const payload = { gistID, description,
+		gist_id : gistID,
+		public  : visible,
+		files   : {
+			[filename] : {
+				content : contents
+			}
+		}
+	};
+
+	new Octokit({ auth : token }).gists.update(payload).then((result)=> {
+		console.log('EDIT_GIST ->', result);
+
+		if (callback) {
+			callback(result.data);
+		}
+	});
+}
+
 export function idsFromPath() {
 	const { pathname } = window.location;
-	const inspectorPath = /\/(?:inspect|parts|present)\/(\d+)\/.+$/i;
+	const inspectorPath = /\/(?:specs|styles|parts|edit)\/(\d+)\/.+$/i;
 
 	const navIDs = {
 		uploadID   : ((inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[1] : 0) << 0,
@@ -132,12 +155,12 @@ export function idsFromPath() {
 
 export function isHomePage(root=true) {
 	const { pathname } = window.location;
-	return ((root) ? (pathname === '' || pathname === HOME) : (pathname === '' || pathname === HOME || pathname === INSPECT || pathname === PARTS || pathname === PRESENT));
+	return ((root) ? (pathname === '' || pathname === HOME) : (pathname === '' || pathname === HOME || pathname === INSPECT ||pathname === EDIT));
 }
 
 export function isInspectorPage() {
 	const { pathname } = window.location;
-	return ((pathname.includes(`${INSPECT}/`) || pathname.includes(`${PARTS}/`) || pathname.includes(`${PRESENT}/`)) && /^.+\/\d+\/.+$/.test(pathname));
+	return ((pathname.includes(`${SPECS}/`) || pathname.includes(`${STYLES}/`) || pathname.includes(`${PARTS}`) || pathname.includes(`${EDIT}`)) && /^.+\/\d+\/.+$/.test(pathname));
 }
 
 export function isLoginPage(exact=false) {

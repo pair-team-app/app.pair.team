@@ -8,9 +8,11 @@ import onClickOutside from 'react-onclickoutside';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
+import {Strings, URIs} from '../../../../utils/lang';
 import { DEFAULT_AVATAR } from '../../../../consts/uris';
 
 const PROFILE = 'PROFILE';
+const TEAM = 'TEAM';
 const LOGOUT = 'LOGOUT';
 
 
@@ -37,6 +39,9 @@ class TopNavProfile extends Component {
 
 		if (type === PROFILE) {
 			this.props.onLink('profile');
+
+		} else if (type === TEAM) {
+			this.props.onLink((URIs.subdomain()) ? 'team' : 'history');
 
 		} else if (type === LOGOUT) {
 			this.props.onLogout()
@@ -71,6 +76,7 @@ class TopNavProfile extends Component {
 
 			{(bubble) && (<div className={bubbleClass}>
 				<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(PROFILE)}>Profile</div>
+				<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(TEAM)}>{(URIs.subdomain()) ? `Team ${Strings.capitalize(URIs.subdomain())}` : `History`}</div>
 				<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(LOGOUT)}>Logout</div>
 			</div>)}
 			</div>);
