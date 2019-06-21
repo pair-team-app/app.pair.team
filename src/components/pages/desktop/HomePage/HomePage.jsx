@@ -2,13 +2,26 @@
 import React, { Component } from 'react';
 import './HomePage.css';
 
-import { connect } from 'react-redux';
+import { Column } from 'simple-flexbox';
 
 import BaseDesktopPage from '../BaseDesktopPage';
-import UploadHeader from '../../../navs/UploadHeader';
+import { trackEvent } from '../../../../utils/tracking';
+import deLogo from '../../../../assets/images/logos/logo-designengine.svg';
 
-import { addFileUpload } from '../../../../redux/actions';
-import { Strings, URIs } from '../../../../utils/lang';
+const HomePageHeader = (props)=> {
+	console.log('HomePage.HomePageHeader()', props);
+
+	const { title } = props;
+
+	return (<div className="home-page-header"><Column horizontal="center">
+		<img className="home-page-header-logo" src={deLogo} alt="Logo" />
+		<h1 className="page-header-title home-page-header-title">{title}</h1>
+		<div className="home-page-header-button-wrapper">
+			<button className="adjacent-button" onClick={props.onGetStartedClick}>Get Started</button>
+			<button onClick={props.onVideoClick}>Video</button>
+		</div>
+	</Column></div>);
+};
 
 
 class HomePage extends Component {
@@ -20,39 +33,33 @@ class HomePage extends Component {
 		};
 	}
 
-	handleFile = (file)=> {
-// 		console.log('HomePage.handleFile()', file);
 
-		this.props.addFileUpload(file);
-		this.props.onPage(`new/${URIs.lastComponent()}`);
+	handleGetStarted = ()=> {
+// 		console.log('HomePage.handleGetStarted()');
+
+		trackEvent('button', 'get-started');
+	};
+
+	handleVideo = ()=> {
+// 		console.log('HomePage.handleVideo()');
+
+		trackEvent('button', 'video');
 	};
 
 	render() {
 // 		console.log('HomePage.render()', this.props, this.state);
 
-		const { fileDialog } = this.state;
 		return (
 			<BaseDesktopPage className="home-page-wrapper">
-				<UploadHeader
-					section={URIs.lastComponent()}
-					title={`${(URIs.lastComponent().includes('edit')) ? 'Upload a design file to Edit' : `Upload any design for ${Strings.capitalize(URIs.lastComponent())}`}`}
-					subtitle="Drag & drop any design file here"
-					uploading={false}
-					fileDialog={fileDialog}
-					onFile={this.handleFile}
-					onPage={this.props.onPage}
-					onPopup={this.props.onPopup} />
+				<HomePageHeader
+					title="Maximize your design team or agency investment"
+					onGetStartedClick={this.handleGetStarted}
+					onVideoClick={this.handleVideo}
+				/>
 			</BaseDesktopPage>
 		);
 	}
 }
 
 
-const mapDispatchToProps = (dispatch)=> {
-	return ({
-		addFileUpload : (file)=> dispatch(addFileUpload(file))
-	});
-};
-
-
-export default connect(null, mapDispatchToProps)(HomePage);
+export default HomePage;
