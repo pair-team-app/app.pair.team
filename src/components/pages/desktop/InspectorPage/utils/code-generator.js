@@ -233,8 +233,8 @@ const makeSliceJSX = (slice, names, depth=0)=> {
 	syntax.styled += `\`
 `;
 
-	syntax.comp = (slice.type !== 'textfield') ? `<${componentName} />
-` : `<${componentName}>${slice.meta.txtVal.replace('\\n', '<br />')}</${componentName}>
+	syntax.comp = (slice.type !== 'textfield') ? `<${componentName} data-id="${slice.id}" />
+` : `<${componentName} data-id="${slice.id}">${slice.meta.txtVal.replace('\\n', '<br />')}</${componentName}>
 `;
 
 	return (syntax);

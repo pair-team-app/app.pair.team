@@ -1812,6 +1812,13 @@ class InspectorPage extends Component {
 		window.open(linter.logURL);
 	};
 
+	handleLivePreview = (event)=> {
+// 		console.log('InspectorPage.handleLivePreview()', event);
+		console.log('::::::::::', event.target.getAttribute('data-id') << 0);
+		event.persist();
+
+	};
+
 	handlePanAndZoom = (x, y, scale)=> {
 // 		console.log('InspectorPage.handlePanAndZoom()', x, y, scale);
 
@@ -2448,8 +2455,6 @@ class InspectorPage extends Component {
 		let artboardImages = [];
 		let slices = [];
 
-// 		console.log('InspectorPage.render()', artboards, this.state);
-
 		artboards.forEach((artboard, i)=> {
 			if ((i % GRID.colsMax) << 0 === 0 && i > 0) {
 				offset.x = 0;
@@ -2652,7 +2657,7 @@ class InspectorPage extends Component {
 											{(upload && artboard) ? (<CopyToClipboard onCopy={()=> this.handleClipboardCopy('url', `http://cdn.designengine.ai/renders/${upload.id}/${Strings.slugifyURI(artboard.title)}.html`)} text={`http://cdn.designengine.ai/renders/${upload.id}/${Strings.slugifyURI(artboard.title)}.html`}><button className="tiny-button">Copy</button></CopyToClipboard>) : ('')}
 										</Column>
 									</Row></div>
-									<div className="inspector-page-live-preview-wrapper">
+									<div className="inspector-page-live-preview-wrapper" onClick={this.handleLivePreview}>
 										<LivePreview className="inspector-page-live-preview" style={previewStyle} />
 										<div className="inspector-page-panel-button-wrapper inspector-page-panel-editor-button-wrapper">
 											<button disabled={!slice || !editChange} className="inspector-page-panel-button inspector-page-panel-editor-button" onClick={()=> this.handleEditorSave()}>{(processing) ? 'Processing' : 'Save'}</button>

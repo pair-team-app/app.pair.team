@@ -36,7 +36,8 @@ import {
 	API_ENDPT_URL,
 	EXTENSION_PUBLIC_HOST,
 	GITHUB_APP_AUTH,
-	Modals } from '../../consts/uris';
+	Modals }
+from '../../consts/uris';
 import {
 	appendHomeArtboards,
 	fetchTeamLookup,
@@ -692,7 +693,7 @@ class App extends Component {
 					    <Route exact path="/new"><Redirect to="/new/specs" /></Route>
 					    <Route exact path="/new/:type(specs|styles|parts|edit)" render={(props)=> <UploadPage { ...props } onProcessing={this.handleProcessing} onRegistered={this.handleRegistered} onScrollOrigin={this.handleScrollOrigin} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
-					    <Route exact path="/:section(specs|styles|parts|`edit)/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+					    <Route exact path="/:section(specs|styles|parts|edit)/:uploadID/:titleSlug" render={(props)=> <InspectorPage { ...props } processing={processing} onProcessing={this.handleProcessing} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 
 					    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 					    <Route exact path="/integrations" render={()=> <IntegrationsPage onPage={this.handlePage} onPopup={this.handlePopup} />} />
