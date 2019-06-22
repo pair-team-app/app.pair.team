@@ -1,49 +1,33 @@
 
-.bottom-nav-wrapper {
-	position: fixed;
-	bottom: 20px;
-	left: 20px;
+.bottom-nav {
+	margin-left: 40px;
 	font-family: "San Francisco Text Medium", sans-serif;
-	font-size: 12px;
+	font-size: 14px;
 	letter-spacing: -0.3px;
 	line-height: normal;
 }
 
-.bottom-nav-desktop-wrapper {
-}
-
-.bottom-nav-mobile-wrapper {
-	width: 100%;
-	text-align: center;
-}
-
-.bottom-nav-desktop-logo {
-	width: 35px;
-	height: 16px;
-}
-
-.bottom-nav-mobile-logo {
+.bottom-nav-logo {
 	width: 48px;
 	height: 25px;
 }
 
-.bottom-nav-desktop-logo:hover, .bottom-nav-mobile-logo:hover {
+.bottom-nav-logo:hover {
 	cursor: pointer;
 }
 
 .bottom-nav-link-wrapper {
-	width: 100%;
+	margin-bottom: 50px;
 }
 
 .bottom-nav-link, a.bottom-nav-link {
-	padding-right: 20px;
-	display: inline;
+	margin-bottom: 20px;
 	text-decoration: none;
 	color: #c8E1fd;
 }
 
 .bottom-nav-link:last-child, a.bottom-nav-link:last-child {
-	padding-right: 0;
+	margin-bottom: 0;
 }
 
 .bottom-nav-link:hover, .bottom-nav-link a:hover {

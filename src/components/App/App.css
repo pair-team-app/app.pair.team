@@ -22,8 +22,6 @@
 
 .page-wrapper {
 	width: 100%;
-	/*min-height: calc(100% - 84px);*/
-	/*margin-bottom: 30px; !* footer spacing *!*/
 }
 
 .page-header {

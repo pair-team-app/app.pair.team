@@ -1,46 +1,46 @@
 {
-  "bottom": {
-    "desktop": [{
-      "title": "Specs",
-      "url": "/specs"
-    }, {
-      "title": "Styles",
-      "url": "/styles"
-    }, {
-      "title": "Parts",
-      "url": "/parts"
-    }, {
-      "title": "Editor",
-      "url": "/edit"
-    }, {
-      "title": "Terms",
-      "url": "/terms"
-    }, {
-      "title": "Privacy",
-      "url": "/privacy"
-    }],
-    "mobile": []
-  },
-  "top": {
-    "desktop": [{
-      "title": "Specs",
-      "url": "/specs"
-    }, {
-      "title": "Styles",
-      "url": "/styles"
-    }, {
-      "title": "Parts",
-      "url": "/parts"
-    }, {
-      "title": "Editor",
-      "url": "/edit"
-    }],
-    "mobile": [{
-      "title": "Specs",
-      "url": "/specs"
-    }, {
-      "title": "Styles",
-      "url": "/styles"
-    }]
-  }
+  "bottom": [{
+    "title": "Get Started",
+    "url": "/get-started"
+  }, {
+    "title": "Explainer Video",
+    "url": "/explainer-video"
+  }, {
+    "title": "Sign In",
+    "url": "/sign-in"
+  }, {
+    "title": "Sign In with GitHub",
+    "url": "/edit"
+  }, {
+    "title": "Specs",
+    "url": "/sign-in"
+  }, {
+    "title": "Styles",
+    "url": "/sign-in"
+  }, {
+    "title": "Parts",
+    "url": "/sign-in"
+  }, {
+    "title": "Editor",
+    "url": "/sign-in"
+  }, {
+    "title": "Terms of Service",
+    "url": "/terms"
+  }, {
+    "title": "Privacy",
+    "url": "/privacy"
+  }],
+  "top": [{
+    "title": "Specs",
+    "url": "/specs"
+  }, {
+    "title": "Styles",
+    "url": "/styles"
+  }, {
+    "title": "Parts",
+    "url": "/parts"
+  }, {
+    "title": "Editor",
+    "url": "/edit"
+  }]
 }
