@@ -4,11 +4,12 @@ import './HomePage.css';
 
 import axios from 'axios';
 import qs from 'qs';
+import { Element, scroller } from 'react-scroll';
 
 import BasePage from '../BasePage';
 import BaseSection from '../../sections/BaseSection';
 import PageHeader from '../../sections/PageHeader';
-import { Modals, API_ENDPT_URL } from '../../../consts/uris';
+import { API_ENDPT_URL } from '../../../consts/uris';
 import { Bits, Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 import homePage from '../../../assets/images/elements/element-home.png';
@@ -59,6 +60,12 @@ class HomePage extends Component {
 // 		console.log('HomePage.handleFreeTrial()');
 
 		trackEvent('button', 'free-trial');
+
+		scroller.scrollTo('register', {
+			duration : 800,
+			delay    : 0,
+			smooth   : 'easeInOutQuart'
+		});
 	};
 
 	handleSignupChange = (event)=> {
@@ -127,13 +134,13 @@ class HomePage extends Component {
 					<button className="long-button" onClick={this.handleFreeTrial}>Start Free Trial</button>
 				</PageHeader>
 
-				<HomePageRegister
+				<Element name="register"><HomePageRegister
 					email={email}
 					emailValid={emailValid}
 					onFocus={this.handleSignupFocus}
 					onChange={this.handleSignupChange}
 					onSubmit={this.handleSignupSubmit}
-				/>
+				/></Element>
 
 				<HomePageContent
 					onFreeTrial={this.handleFreeTrial}
