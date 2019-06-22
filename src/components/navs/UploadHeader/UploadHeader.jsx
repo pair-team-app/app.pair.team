@@ -122,7 +122,7 @@ class UploadHeader extends Component {
 // 		console.log('UploadHeader.render()', this.props, this.state);
 
 		const { section, title, subtitle, uploading } = this.props;
-		const img = (section.includes('specs')) ? specs : (section.includes('styles')) ? styles : editor
+		const img = (section.includes('specs')) ? specs : (section.includes('styles')) ? styles : editor;
 
 		return (<div className="upload-header-wrapper">
 			<Dropzone

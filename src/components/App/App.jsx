@@ -672,14 +672,14 @@ class App extends Component {
 
   	return ((!Browsers.isMobile.ANY() || !allowMobile)
 		  ? (<div className="desktop-site-wrapper">
-			    <TopNav
-				    mobileLayout={false}
-				    pathname={pathname}
-				    onModal={(url)=> this.onToggleModal(url, true)}
-				    onPage={this.handlePage}
-				    onLogout={this.handleLogout}
-				    onScore={this.handleScore}
-			    />
+			    {/*<TopNav*/}
+				    {/*mobileLayout={false}*/}
+				    {/*pathname={pathname}*/}
+				    {/*onModal={(url)=> this.onToggleModal(url, true)}*/}
+				    {/*onPage={this.handlePage}*/}
+				    {/*onLogout={this.handleLogout}*/}
+				    {/*onScore={this.handleScore}*/}
+			    {/*/>*/}
 
 			    <div className="content-wrapper" ref={wrapper}>
 				    <Switch>
