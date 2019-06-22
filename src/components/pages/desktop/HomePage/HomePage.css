@@ -25,5 +25,11 @@
 }
 
 .home-page-header-button-wrapper {
+	margin-top: 40px;
+}
 
+.home-page-content {
+	margin-bottom: 40px;
+	background-color: #24282e;
+	text-align: center;
 }

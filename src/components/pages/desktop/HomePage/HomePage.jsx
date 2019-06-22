@@ -8,6 +8,7 @@ import BaseDesktopPage from '../BaseDesktopPage';
 import { trackEvent } from '../../../../utils/tracking';
 import deLogo from '../../../../assets/images/logos/logo-designengine.svg';
 
+
 const HomePageHeader = (props)=> {
 	console.log('HomePage.HomePageHeader()', props);
 
@@ -21,6 +22,15 @@ const HomePageHeader = (props)=> {
 			<button onClick={props.onVideoClick}>Video</button>
 		</div>
 	</Column></div>);
+};
+
+
+const HomePageContent = (props)=> {
+	console.log('HomePage.HomePageContent()', props);
+
+	return (<div className="home-page-content">
+		HOME PAGE CONTENT
+	</div>);
 };
 
 
@@ -56,6 +66,7 @@ class HomePage extends Component {
 					onGetStartedClick={this.handleGetStarted}
 					onVideoClick={this.handleVideo}
 				/>
+				<HomePageContent />
 			</BaseDesktopPage>
 		);
 	}
