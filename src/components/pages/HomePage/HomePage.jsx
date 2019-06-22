@@ -5,6 +5,7 @@ import './HomePage.css';
 import { Column } from 'simple-flexbox';
 
 import BaseDesktopPage from '../BaseDesktopPage';
+import PageHeader from '../../sections/PageHeader';
 import { trackEvent } from '../../../utils/tracking';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
 
@@ -61,11 +62,7 @@ class HomePage extends Component {
 
 		return (
 			<BaseDesktopPage className="home-page-wrapper">
-				<HomePageHeader
-					title="Maximize your design team or agency investment"
-					onGetStartedClick={this.handleGetStarted}
-					onVideoClick={this.handleVideo}
-				/>
+				<PageHeader title="Move screen design forward with Design Engine" />
 				<HomePageContent />
 			</BaseDesktopPage>
 		);

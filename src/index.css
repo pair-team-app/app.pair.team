@@ -87,15 +87,11 @@ h1, h2, h3, h4, h5 {
 h1 {
   width: 50%;
   margin-bottom: 20px;
-  font-family: "San Francisco Text", sans-serif;
-  font-size: 52px;
-  line-height: 64px;
-  letter-spacing: -2px;
+  font-family: "San Francisco Text Medium", sans-serif;
+  font-size: 40px;
+  line-height: 51px;
+  letter-spacing: -0.17px;
   color: #ffffff;
-}
-
-h1.mobile {
-  width: 100%;
 }
 
 /** Mobile / Page Header */

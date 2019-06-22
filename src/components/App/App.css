@@ -1,5 +1,5 @@
 
-.desktop-site-wrapper, .mobile-site-wrapper {
+.site-wrapper {
   width: 100%;
 	height: 100%;
 }
@@ -13,40 +13,20 @@
 	position: relative;
 	top: 0;
 	left: 0;
-	width: 100%;
+	width: 50%;
 	overflow-x: hidden;
 	overflow-y: scroll;
 	padding: 20px;
 }
 
+@media screen and (max-width: 800px) {
+	.content-wrapper {
+		width: 100%;
+	}
+}
+
 .page-wrapper {
 	width: 100%;
-}
-
-.page-header {
-	width: calc(100% + 40px);
-	height: 306px;
-	margin: -20px -20px 20px -20px;
-	background: #1a1b1d url(../../assets/images/backgrounds/bg-checkerboard.png) repeat;
-}
-
-.page-header-wrapper {
-	text-align: center;
-	vertical-align: middle;
-}
-
-h1.page-header-title {
-	min-width: 50%;
-	text-align: center;
-	vertical-align: middle;
-}
-
-.page-header-subtitle {
-	font-family: "San Francisco Text Medium", sans-serif;
-	font-size: 28px;
-	letter-spacing: -1.47px;
-	text-align: center;
-	color: #005cc5;
 }
 
 .long-button {

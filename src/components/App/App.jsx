@@ -7,8 +7,9 @@ import qs from 'qs';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import { Column } from 'simple-flexbox';
 
-import BottomNav from '../navs/BottomNav';
+import BottomNav from '../sections/BottomNav';
 import AlertDialog from '../overlays/AlertDialog';
 import BaseOverlay from '../overlays/BaseOverlay';
 import LoginModal from '../overlays/LoginModal';
@@ -384,11 +385,11 @@ class App extends Component {
 	render() {
 //   	console.log('App.render()', this.props, this.state);
 
-		const { profile, team } = this.props;
+		const { profile } = this.props;
   	const { popup } = this.state;
   	const { loginModal, registerModal, stripeModal, payDialog } = this.state;
 
-  	return (<div className="desktop-site-wrapper">
+  	return (<div className="site-wrapper"><Column horizontal="center">
 	    <div className="content-wrapper" ref={wrapper}>
 		    <Switch>
 			    {(!isUserLoggedIn()) && (<Route exact path="/profile"><Redirect to="/" /></Route>)}
@@ -458,7 +459,7 @@ class App extends Component {
 					  />)}
 			  </>)
 		  }
-    </div>);
+	  </Column></div>);
   }
 }
 
