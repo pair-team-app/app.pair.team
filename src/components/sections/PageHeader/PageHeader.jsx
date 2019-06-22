@@ -3,10 +3,9 @@ import React, { Component } from 'react';
 import './PageHeader.css';
 
 import { connect } from 'react-redux';
-import { Column } from 'simple-flexbox';
 
+import BaseSection from '../BaseSection';
 import PageHeaderProfile from './PageHeaderProfile';
-import { trackEvent } from '../../../utils/tracking';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
 
 
@@ -17,33 +16,23 @@ class PageHeader extends Component {
 		this.state = {};
 	}
 
-	componentDidMount() {
-// 		console.log('PageHeader.componentDidMount()', this.props, this.state);
-
-		const { profile } = this.props;
-		if (profile) {
-
-		}
-	}
-
-	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('PageHeader.componentDidUpdate()', prevProps, this.props, prevState, this.state);
-
-		if (!prevProps.profile && this.props.profile) {
-			const { profile } = this.props;
-		}
-	}
-
 	render() {
 		const { profile } = this.props;
-		const { title } = this.props;
+		const { title, bgColor, children } = this.props;
 
-		return (<div className="page-header">
+		const style = (bgColor) ? {
+			backgroundColor : bgColor
+		} : null;
+
+		return (<div className="page-header" style={style}>
 			{(profile) && (<PageHeaderProfile />)}
-			<Column horizontal="center">
+			<BaseSection>
 				<img className="page-header-logo" src={deLogo} alt="Logo" />
 				<h1 className="page-header-title">{title}</h1>
-			</Column>
+				{(children) && (<div className="page-header-children-wrapper">
+					{children}
+				</div>)}
+			</BaseSection>
 		</div>);
 	}
 }

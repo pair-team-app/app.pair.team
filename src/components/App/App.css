@@ -13,15 +13,14 @@
 	position: relative;
 	top: 0;
 	left: 0;
-	width: 50%;
+	width: 100%;
 	overflow-x: hidden;
 	overflow-y: scroll;
-	padding: 20px;
 }
 
 @media screen and (max-width: 800px) {
 	.content-wrapper {
-		width: 100%;
+		padding-bottom: 340px;
 	}
 }
 
@@ -30,7 +29,7 @@
 }
 
 .long-button {
-	min-width: 100px;
+	min-width: 280px;
 	width: auto;
 	padding-left: 25px;
 	padding-right: 25px;
@@ -129,7 +128,7 @@
 }
 
 .input-wrapper-error input[type="text"], .input-wrapper-error input[type="password"], .input-wrapper-error input[type="tel"], .input-wrapper-error .input-txt, .input-wrapper-error .field-error {
-	background-color: #1a1e23;
+	background-color: #2d3239;
 	color: #ff4646;
 }
 
@@ -148,7 +147,7 @@
 
 .input-error {
 	border: 1px solid #ff4646;
-	background-color: #1a1e23;
+	background-color: #2d3239;
 	color: #ff4646;
 }
 

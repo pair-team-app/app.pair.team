@@ -8,7 +8,7 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import BaseDesktopPage from '../BaseDesktopPage';
+import BasePage from '../BasePage';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { Strings } from '../../../utils/lang';
@@ -107,7 +107,7 @@ class SignupPage extends Component {
 
 		const { email, emailValid, submitted } = this.state;
 		return (
-			<BaseDesktopPage className="signup-page-wrapper">
+			<BasePage className="signup-page-wrapper">
 				<Row className="signup-page-header-wrapper" horizontal="center" vertical="center"><div>
 					<SignupPageHeader />
 					<SignupPageForm
@@ -125,7 +125,7 @@ class SignupPage extends Component {
 				<div className="signup-page-image-wrapper">
 					<img className="signup-page-image" src={editor} alt="Screenshot" />
 				</div>
-			</BaseDesktopPage>
+			</BasePage>
 		);
 	}
 }

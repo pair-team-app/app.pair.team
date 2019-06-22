@@ -6,7 +6,7 @@ import axios from 'axios/index';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import BaseDesktopPage from '../BaseDesktopPage';
+import BasePage from '../BasePage';
 import { POPUP_TYPE_OK } from '../../overlays/PopupNotification';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { Strings } from '../../../utils/lang';
@@ -127,7 +127,7 @@ class RecoverPage extends Component {
 		const passwordClass = (passwordValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
 
 		return (
-			<BaseDesktopPage className="recover-page-wrapper">
+			<BasePage className="recover-page-wrapper">
 				{(typeof this.props.match.params.userID === 'undefined')
 					? (<div className="recover-page-form-wrapper">
 						<h4>Forgot Password</h4>
@@ -153,7 +153,7 @@ class RecoverPage extends Component {
 							</Row>
 						</form>
 					</div>)}
-			</BaseDesktopPage>
+			</BasePage>
 		);
 	}
 }

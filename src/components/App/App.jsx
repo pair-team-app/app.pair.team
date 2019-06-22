@@ -395,7 +395,7 @@ class App extends Component {
 			    {(!isUserLoggedIn()) && (<Route exact path="/profile"><Redirect to="/" /></Route>)}
 			    <Route exact path="/logout" render={()=> (profile) ? this.handleLogout() : null} />
 
-			    <Route exact path="/" render={()=> <HomePage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+			    <Route exact path="/" render={()=> <HomePage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} onRegistered={this.handleRegistered} />} />
 			    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 			    <Route path="/:section(confirm|recover)/:userID" render={(props)=> <AccountPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 			    <Route exact path="/privacy" render={()=> <PrivacyPage />} />

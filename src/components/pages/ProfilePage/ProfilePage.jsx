@@ -10,7 +10,7 @@ import ImageLoader from 'react-loading-image';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import BaseDesktopPage from '../BaseDesktopPage';
+import BasePage from '../BasePage';
 import InputField, { INPUTFIELD_STATUS_ERROR, INPUTFIELD_STATUS_IDLE } from '../../forms/InputField/InputField';
 // import IntegrationGridItem from '../../iterables/IntegrationGridItem';
 // import ConfirmDialog from '../../overlays/ConfirmDialog';
@@ -445,7 +445,7 @@ class ProfilePage extends Component {
 		const { passMsg, usernameValid, emailValid, passwordValid, changed } = this.state;
 
 		return (
-			<BaseDesktopPage className="profile-page-wrapper">
+			<BasePage className="profile-page-wrapper">
 				<h4>Profile</h4>
 				<ProfilePageAvatar
 					avatar={avatar}
@@ -484,7 +484,7 @@ class ProfilePage extends Component {
 					{/*message="Are you sure you want to downgrade to a Free Account?"*/}
 					{/*onComplete={this.handleDialogComplete}*/}
 				{/*/>)}*/}
-			</BaseDesktopPage>
+			</BasePage>
 		);
 	}
 }

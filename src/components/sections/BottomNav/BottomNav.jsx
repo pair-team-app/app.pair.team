@@ -25,7 +25,7 @@ function BottomNav(props) {
 	};
 
 	return (
-		<div className="bottom-nav-wrapper">
+		<div className="bottom-nav">
 			<div className="bottom-nav-link-wrapper">
 				{(sections.bottom.map((section, i)=> (
 					<div key={i} className="bottom-nav-link" onClick={()=> this.handleLink(section.url.substr(1))}>{section.title}</div>

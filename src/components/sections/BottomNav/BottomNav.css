@@ -1,6 +1,6 @@
 
 .bottom-nav {
-	margin-left: 40px;
+	padding: 48px;
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 14px;
 	letter-spacing: -0.3px;
@@ -24,7 +24,7 @@
 	width: fit-content;
 	margin-bottom: 20px;
 	text-decoration: none;
-	color: #c8E1fd;
+	color: #999999;
 }
 
 .bottom-nav-link:last-child, a.bottom-nav-link:last-child {
@@ -38,5 +38,5 @@
 
 .bottom-nav-link a, .bottom-nav-link a:any-link, a:active {
 	text-decoration: underline;
-	color: #c8e1fd;
+	color: #b0b0b0;
 }
