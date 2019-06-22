@@ -21,6 +21,7 @@
 }
 
 .bottom-nav-link, a.bottom-nav-link {
+	width: fit-content;
 	margin-bottom: 20px;
 	text-decoration: none;
 	color: #c8E1fd;

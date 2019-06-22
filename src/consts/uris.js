@@ -16,9 +16,7 @@ export const TERMS = '/terms';
 export const UPLOAD = '/new';
 
 export const Modals = {
-	CONFIG_UPLOAD  : '/config-upload',
 	GITHUB_CONNECT : '/github-connect',
-	INTEGRATIONS   : '/integrations',
 	LOGIN          : '/login',
 	RECOVER        : '/recover',
 	REGISTER       : '/register',

@@ -6,7 +6,7 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
-import BaseDesktopPage from './BaseDesktopPage';
+import BaseDesktopPage from '../BaseDesktopPage';
 import LoginForm from '../../forms/LoginForm';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { setRedirectURI, updateDeeplink, updateUserProfile } from '../../../redux/actions';
