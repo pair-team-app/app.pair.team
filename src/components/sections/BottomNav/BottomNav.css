@@ -9,7 +9,7 @@
 
 .bottom-nav-logo {
 	width: 48px;
-	height: 25px;
+	height: 22px;
 }
 
 .bottom-nav-logo:hover {
@@ -17,7 +17,7 @@
 }
 
 .bottom-nav-link-wrapper {
-	margin-bottom: 50px;
+	margin-bottom: 150px;
 }
 
 .bottom-nav-link, a.bottom-nav-link {
@@ -34,6 +34,7 @@
 .bottom-nav-link:hover, .bottom-nav-link a:hover {
 	text-decoration: underline;
 	cursor: pointer;
+	color: #a8a8a8;
 }
 
 .bottom-nav-link a, .bottom-nav-link a:any-link, a:active {

@@ -18,9 +18,12 @@ function BottomNav(props) {
 			trackEvent('link', URIs.lastComponent(url));
 			props.onModal(`/${URIs.lastComponent(url)}`);
 
-		} else {
+		} else if (URIs.firstComponent(url) === 'page') {
 			trackEvent('link', url);
-			props.onPage(url);
+			props.onPage(`/${URIs.lastComponent(url)}`);
+
+		} else {
+			window.location.href = url;
 		}
 	};
 
@@ -28,10 +31,10 @@ function BottomNav(props) {
 		<div className="bottom-nav">
 			<div className="bottom-nav-link-wrapper">
 				{(sections.bottom.map((section, i)=> (
-					<div key={i} className="bottom-nav-link" onClick={()=> this.handleLink(section.url.substr(1))}>{section.title}</div>
+					<div key={i} className="bottom-nav-link" onClick={()=> handleLink(section.url)}>{section.title}</div>
 				)))}
 			</div>
-			<img className="bottom-nav-logo" src={deLogo} onClick={()=> this.handleLink('')} alt="Design Engine" />
+			<img className="bottom-nav-logo" src={deLogo} onClick={()=> handleLink('')} alt="Design Engine" />
 		</div>
 	);
 }

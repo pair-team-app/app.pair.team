@@ -1,46 +1,30 @@
 {
   "bottom": [{
-    "title": "Get Started",
-    "url": "/get-started"
-  }, {
-    "title": "Explainer Video",
-    "url": "/explainer-video"
+    "title": "Start Free Trial",
+    "url": "/page/free-trial"
   }, {
     "title": "Sign In",
-    "url": "/sign-in"
+    "url": "/page/register"
   }, {
-    "title": "Sign In with GitHub",
-    "url": "/edit"
+    "title": "Plugins",
+    "url": "/page/plugins"
   }, {
     "title": "Specs",
-    "url": "/sign-in"
+    "url": "http://tools.designengine.ai/specs"
   }, {
     "title": "Styles",
-    "url": "/sign-in"
+    "url": "http://tools.designengine.ai/styles"
   }, {
     "title": "Parts",
-    "url": "/sign-in"
+    "url": "http://tools.designengine.ai/parts"
   }, {
     "title": "Editor",
-    "url": "/sign-in"
+    "url": "http://tools.designengine.ai/editor"
   }, {
     "title": "Terms of Service",
-    "url": "/terms"
+    "url": "/page/terms"
   }, {
     "title": "Privacy",
-    "url": "/privacy"
-  }],
-  "top": [{
-    "title": "Specs",
-    "url": "/specs"
-  }, {
-    "title": "Styles",
-    "url": "/styles"
-  }, {
-    "title": "Parts",
-    "url": "/parts"
-  }, {
-    "title": "Editor",
-    "url": "/edit"
+    "url": "/page/privacy"
   }]
 }

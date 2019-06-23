@@ -13,7 +13,8 @@ import BottomNav from '../sections/BottomNav';
 import AlertDialog from '../overlays/AlertDialog';
 import BaseOverlay from '../overlays/BaseOverlay';
 import LoginModal from '../overlays/LoginModal';
-import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification';
+// import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification';
+import PopupNotification from '../overlays/PopupNotification';
 import RegisterModal from '../overlays/RegisterModal';
 import StripeModal from '../overlays/StripeModal';
 import HomePage from '../pages/HomePage';
@@ -25,7 +26,6 @@ import TermsPage from '../pages/TermsPage';
 
 import {
 	API_ENDPT_URL,
-	EXTENSION_PUBLIC_HOST,
 	GITHUB_APP_AUTH,
 	Modals }
 from '../../consts/uris';
@@ -39,15 +39,12 @@ import {
 	updateUserProfile
 } from '../../redux/actions';
 import {
-	buildInspectorPath,
 // 	getRouteParams,
 	idsFromPath,
-	isHomePage,
 	isInspectorPage,
-	isProfilePage,
 	isUserLoggedIn
 } from '../../utils/funcs';
-import { Browsers, DateTimes, Strings, URIs } from '../../utils/lang';
+import { DateTimes, Strings, URIs } from '../../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 import freeAccount from '../../assets/json/free-account';
 
@@ -82,7 +79,8 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			contentSize       : {
+			scrolling     : false,
+			contentSize   : {
 				width  : 0,
 				height : 0
 			},
@@ -114,6 +112,7 @@ class App extends Component {
 
 
 		window.addEventListener('resize', this.handleResize);
+// 		window.addEventListener('scroll', this.handleScroll);
 		window.onpopstate = (event)=> {
 			console.log('-/\\/\\/\\/\\/\\/\\-', 'window.onpopstate()', '-/\\/\\/\\/\\/\\/\\-', event);
 
@@ -124,7 +123,7 @@ class App extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+// 		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		const { profile } = this.props;
 		const { pathname } = this.props.location;
@@ -232,9 +231,8 @@ class App extends Component {
 		console.log('App.handlePage()', url);
 		url = ((!url) ? '' : url).replace(/^\/(.+)$/, '$1');
 
-		const { pathname } = window.location;
-		if (pathname.split('/')[1] !== url.split('/')[0]) {
-			Browsers.scrollOrigin(wrapper.current);
+		if (URIs.firstComponent() !== URIs.firstComponent(url)) {
+			window.scrollTo(0, 0);
 		}
 
 		if (url === '<<') {
@@ -285,6 +283,15 @@ class App extends Component {
 			width  : wrapper.current.innerWidth,
 			height : wrapper.current.innerHeight
 		} });
+	};
+
+	handleScroll = (event)=> {
+		console.log('App.handleScroll()', event);
+		this.setState({ scrolling : true }, ()=> {
+			setTimeout(()=> {
+				this.setState({ scrolling : false });
+			}, 1000);
+		});
 	};
 
 	onAuthInterval = ()=> {
@@ -386,7 +393,7 @@ class App extends Component {
 //   	console.log('App.render()', this.props, this.state);
 
 		const { profile } = this.props;
-  	const { popup } = this.state;
+  	const { scrolling, popup } = this.state;
   	const { loginModal, registerModal, stripeModal, payDialog } = this.state;
 
   	return (<div className="site-wrapper"><Column horizontal="center">
@@ -396,6 +403,7 @@ class App extends Component {
 			    <Route exact path="/logout" render={()=> (profile) ? this.handleLogout() : null} />
 
 			    <Route exact path="/" render={()=> <HomePage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} onRegistered={this.handleRegistered} />} />
+			    <Route exact path="/free-trial" render={()=> <HomePage scrolling={scrolling} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} onRegistered={this.handleRegistered} />} />
 			    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 			    <Route path="/:section(confirm|recover)/:userID" render={(props)=> <AccountPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 			    <Route exact path="/privacy" render={()=> <PrivacyPage />} />

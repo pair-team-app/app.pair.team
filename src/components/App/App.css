@@ -18,12 +18,6 @@
 	overflow-y: scroll;
 }
 
-@media screen and (max-width: 800px) {
-	.content-wrapper {
-		padding-bottom: 340px;
-	}
-}
-
 .page-wrapper {
 	width: 100%;
 }
@@ -92,17 +86,24 @@
 	margin-bottom: 14px;
 }
 
+
 .page-link, .page-link a:any-link {
-	font-family: "San Francisco Text Text", sans-serif;
-	font-size: 14px;
-	letter-spacing: -0.26px;
-	color: #abdafd;
+	margin: 10px 0 5px 0;
+	font-family: "San Francisco Text SemiBold", sans-serif;
+	font-size: 16px;
+	color: #999999;
 	text-decoration: none;
 }
 
 .page-link:hover, .page-link a:hover {
 	cursor: pointer;
 	text-decoration: underline;
+	color: #a8a8a8;
+}
+
+.page-link:active, .page-link a:active {
+	text-decoration: underline;
+	color: #b0b0b0;
 }
 
 .page-link-form {

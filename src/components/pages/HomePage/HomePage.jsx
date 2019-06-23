@@ -10,13 +10,13 @@ import BasePage from '../BasePage';
 import BaseSection from '../../sections/BaseSection';
 import PageHeader from '../../sections/PageHeader';
 import { API_ENDPT_URL } from '../../../consts/uris';
-import { Bits, Strings } from '../../../utils/lang';
+import { Bits, Strings, URIs } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 import homePage from '../../../assets/images/elements/element-home.png';
 
 
 const HomePageContent = (props)=> {
-	console.log('HomePage.HomePageContent()', props);
+// 	console.log('HomePage.HomePageContent()', props);
 
 	return (<div className="home-page-content">
 		<div className="home-page-content-animation-wrapper">
@@ -30,7 +30,7 @@ const HomePageContent = (props)=> {
 
 
 const HomePageRegister = (props)=> {
-	console.log('HomePage.HomePageRegister()', props);
+// 	console.log('HomePage.HomePageRegister()', props);
 
 	const { email, emailValid } = props;
 	return (<div className="home-page-register">
@@ -40,6 +40,8 @@ const HomePageRegister = (props)=> {
 				<div className={`input-wrapper${(!emailValid) ? ' input-wrapper-error' : ''}`}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={props.onFocus} onChange={props.onChange} /></div>
 				<button disabled={(email.length === 0 || !emailValid)} type="submit" className="long-button" onClick={(event)=> props.onSubmit(event)}>Start Free Trial</button>
 			</form>
+			<div className="page-link" onClick={()=> props.onPage('/login')}>Login</div>
+			<h5>By tapping “Sign Up” or “Login” you accept our Terms of Service.</h5>
 		</BaseSection>
 	</div>);
 };
@@ -51,8 +53,39 @@ class HomePage extends Component {
 
 		this.state = {
 			email      : '',
-			emailValid : true
+			emailValid : true,
+			scrolled   : false
 		};
+	}
+
+	componentDidMount() {
+// 		console.log('HomePage.componentDidMount()', this.props, this.state);
+
+		if (URIs.firstComponent() === 'free-trial') {
+			scroller.scrollTo('register', {
+				duration : 666,
+				delay    : 125,
+				smooth   : 'easeInOutQuart'
+			});
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('HomePage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+
+// 		if (URIs.firstComponent() === 'free-trial' && prevProps.scrolling && !this.props.scrolling && this.state.scrolled && !prevState.scrolled) {
+// 			this.setState({ scrolled : false });
+// 		}
+
+		if (URIs.firstComponent() === 'free-trial' && !this.state.scrolled) {
+			this.setState({ scrolled : true }, ()=> {
+				scroller.scrollTo('register', {
+					duration : 666,
+					delay    : 0,
+					smooth   : 'easeInOutQuart'
+				});
+			});
+		}
 	}
 
 
@@ -60,12 +93,7 @@ class HomePage extends Component {
 // 		console.log('HomePage.handleFreeTrial()');
 
 		trackEvent('button', 'free-trial');
-
-		scroller.scrollTo('register', {
-			duration : 800,
-			delay    : 0,
-			smooth   : 'easeInOutQuart'
-		});
+		this.props.onPage('/free-trial');
 	};
 
 	handleSignupChange = (event)=> {
@@ -140,6 +168,7 @@ class HomePage extends Component {
 					onFocus={this.handleSignupFocus}
 					onChange={this.handleSignupChange}
 					onSubmit={this.handleSignupSubmit}
+					onPage={(url)=> this.props.onPage(url)}
 				/></Element>
 
 				<HomePageContent
