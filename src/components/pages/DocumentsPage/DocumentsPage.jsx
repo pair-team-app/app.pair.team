@@ -14,7 +14,7 @@ import { trackEvent } from '../../../utils/tracking';
 
 
 const DocumentsList = (props)=> {
-	console.log('DocumentsPage.DocumentsList()', props);
+	//console.log('DocumentsPage.DocumentsList()', props);
 
 	const { documents } = props;
 	return (<div className="documents-list">
@@ -34,7 +34,7 @@ const DocumentsList = (props)=> {
 
 
 const DocumentListItem = (props)=> {
-	console.log('DocumentsPage.DocumentListItem()', props);
+	//console.log('DocumentsPage.DocumentListItem()', props);
 
 	const { document } = props;
 	return (<div className="document-list-item">
@@ -50,7 +50,7 @@ const DocumentListItem = (props)=> {
 
 
 const DocumentContent = (props)=> {
-	console.log('DocumentsPage.DocumentContent()', props);
+	//console.log('DocumentsPage.DocumentContent()', props);
 
 	const { document } = props;
 	return (<div className="document-content">
@@ -66,7 +66,7 @@ const DocumentContent = (props)=> {
 
 
 const DocumentContributorItem = (props)=> {
-	console.log('DocumentsPage.DocumentContributorItem()', props);
+	//console.log('DocumentsPage.DocumentContributorItem()', props);
 
 	const { contributor } = props;
 	return (<div className="document-contributor-item">
@@ -90,50 +90,63 @@ class DocumentsPage extends Component {
 
 	componentDidMount() {
 		console.log('DocumentsPage.componentDidMount()', this.props, this.state);
-		//this.props.match.params.userID
+
+		const { documentID } = this.props.match.params;
+		if (documentID) {
+			this.onFetchDocument(documentID);
+		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('DocumentsPage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+		console.log('DocumentsPage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		const { documentID } = this.props.match.params;
 		if (!prevProps.match.params.documentID && documentID) {
-			axios.post(API_ENDPT_URL, qs.stringify({
-				action      : 'DOCUMENT',
-				document_id : documentID
-
-			})).then((response) => {
-				console.log('DOCUMENT', response.data);
-				this.setState({ documentID,
-					document : response.data.document
-				});
-
-			}).catch((error)=> {
-			});
+			this.onFetchDocument(documentID);
 		}
 	}
 
 	handleDocumentClick = (document)=> {
 		console.log('DocumentsPage.handleDocumentClick()', document);
-
 		this.props.onPage(`/documents/${document.id}`);
+	};
+
+	onFetchDocument = (documentID)=> {
+		console.log('DocumentsPage.onFetchDocument()', documentID);
+		axios.post(API_ENDPT_URL, qs.stringify({
+			action      : 'DOCUMENT',
+			document_id : documentID
+
+		})).then((response) => {
+			console.log('DOCUMENT', response.data);
+
+			const { document } = response.data;
+			if (document) {
+				this.setState({ documentID, document });
+
+			} else {
+				this.props.onPage('/documents');
+			}
+
+		}).catch((error)=> {
+		});
 	};
 
 	render() {
 // 		console.log('DocumentsPage.render()', this.props, this.state);
 
-		const { documentID, document, documents } = this.state;
+		const { document, documents } = this.state;
 
 		return (
 			<BasePage className="documents-page-wrapper">
-				{(!documentID)
-					? (<DocumentsList
-							documents={documents}
-							onDocumentClick={(document)=> this.handleDocumentClick(document)}
+				{(document)
+					? (<DocumentContent
+							document={document}
 						/>)
 
-					: (<DocumentContent
-							document={document}
+					: (<DocumentsList
+							documents={documents}
+							onDocumentClick={(document)=> this.handleDocumentClick(document)}
 						/>
 				)}
 			</BasePage>
