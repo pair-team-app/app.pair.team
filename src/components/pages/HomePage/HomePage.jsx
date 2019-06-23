@@ -4,7 +4,7 @@ import './HomePage.css';
 
 import axios from 'axios';
 import qs from 'qs';
-import { Element, scroller } from 'react-scroll';
+import { Element, Events, scroller, scrollSpy } from 'react-scroll';
 
 import BasePage from '../BasePage';
 import BaseSection from '../../sections/BaseSection';
@@ -54,18 +54,31 @@ class HomePage extends Component {
 		this.state = {
 			email      : '',
 			emailValid : true,
-			scrolled   : false
+			scrolled   : false,
+			scrollY    : -1
 		};
 	}
 
 	componentDidMount() {
 // 		console.log('HomePage.componentDidMount()', this.props, this.state);
 
+		let self = this;
+		Events.scrollEvent.register('end', function(to, element) {
+			self.setState({
+				scrolled  : false,
+				scrollY   : window.scrollY
+			});
+		});
+
+		scrollSpy.update();
+
 		if (URIs.firstComponent() === 'free-trial') {
-			scroller.scrollTo('register', {
-				duration : 666,
-				delay    : 125,
-				smooth   : 'easeInOutQuart'
+			this.setState({ scrolled : true }, ()=> {
+				scroller.scrollTo('register', {
+					duration : 666,
+					delay    : 125,
+					smooth   : 'easeInOutQuart'
+				});
 			});
 		}
 	}
@@ -77,7 +90,7 @@ class HomePage extends Component {
 // 			this.setState({ scrolled : false });
 // 		}
 
-		if (URIs.firstComponent() === 'free-trial' && !this.state.scrolled) {
+		if (URIs.firstComponent() === 'free-trial' && !this.state.scrolled && this.state.scrollY !== window.scrollY) {
 			this.setState({ scrolled : true }, ()=> {
 				scroller.scrollTo('register', {
 					duration : 666,

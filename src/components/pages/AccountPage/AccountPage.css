@@ -2,6 +2,10 @@
 .account-page-wrapper {
 }
 
-.account-page-form-wrapper {
-	width: 50%;
+.confirm-email {
+	background-color: #1f2329;
+}
+
+.register-user {
+	background-color: #1f2329;
 }

@@ -4,19 +4,39 @@ import './AccountPage.css';
 
 import axios from 'axios/index';
 import { connect } from 'react-redux';
-import { Row } from 'simple-flexbox';
 
 import BasePage from '../BasePage';
-import { POPUP_TYPE_OK } from '../../overlays/PopupNotification';
+import PageHeader from '../../sections/PageHeader';
 import { API_ENDPT_URL } from '../../../consts/uris';
-import { Strings } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 
 
-const mapStateToProps = (state, ownProps)=> {
-	return ({
-		profile : state.userProfile
-	});
+const ConfirmEmail = (props)=> {
+	console.log('AccountPage.ConfirmEmail()', props);
+
+	return (<div className="confirm-email">
+		<PageHeader title="Check your email to complete your sign up">
+			<button className="long-button" onClick={props.onTwitter}>Mention on Twitter</button>
+		</PageHeader>
+	</div>);
+};
+
+const RegisterUser = (props)=> {
+	console.log('AccountPage.RegisterUser()', props);
+
+	const { username, usernameValid, company, password, passwordValid } = props;
+
+	return (<div className="register-user">
+		<PageHeader title="Complete your sign up">
+			<form onSubmit={props.onSubmit}>
+				<div className={`input-wrapper${(!usernameValid) ? ' input-wrapper-error' : ''}`}><input type="text" name="username" placeholder="Name" value={username} onFocus={props.onUsernameFocus} onChange={props.onUsernameChange} /></div>
+				<div className="input-wrapper"><input type="text" name="company" placeholder="Company" value={company} onFocus={props.onCompanyFocus} onChange={props.onCompanyChange} /></div>
+				<div className={`input-wrapper${(!passwordValid) ? ' input-wrapper-error' : ''}`}><input type="password" name="password" placeholder="Password" value={password} onFocus={props.onPasswordFocus} onChange={props.onPasswordChange} /></div>
+				<button disabled={(username.length === 0 || password.length === 0)} type="submit" className="long-button" onClick={(event)=> props.onSubmit(event)}>Sign Up</button>
+			</form>
+			<h5>By tapping “Sign Up” or “Login” you accept our Terms of Service.</h5>
+		</PageHeader>
+	</div>);
 };
 
 
@@ -25,137 +45,66 @@ class AccountPage extends Component {
 		super(props);
 
 		this.state = {
-			email         : '',
-			emailValid    : true,
+			username      : '',
+			usernameValid : true,
+			company       : '',
 			password      : '',
-			passMsg       : '',
 			passwordValid : true
+
 		};
+
+		this.twitterWindow = null;
 	}
 
+	componentDidMount() {
+		console.log('AccountPage.componentDidMount()', this.props, this.state);
+		//this.props.match.params.userID
+	}
 
-	handleTextfieldChange = (event)=> {
-// 		console.log('RecoverPage.handleTextfieldChange()', event.target.name);
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('AccountPage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+	}
 
-		if (event.target.name === 'email') {
-			const email = event.target.value;
-			const emailValid = (email.includes('@')) ? Strings.isEmail(email) : (email > 0);
+	handleTwitter = ()=> {
+		console.log('AccountPage.render()', this.props, this.state);
+		const size = {
+			width  : Math.min(320, window.screen.width - 20),
+			height : Math.min(280, window.screen.height - 25)
+		};
 
-			this.setState({ email, emailValid });
-
-		} else {
-			const password = event.target.value;
-			const passwordValid = (password > 0);
-
-			this.setState({ password, passwordValid });
-		}
-	};
-
-	handleEmailSubmit = (event)=> {
-// 		console.log('RecoverPage.handleEmailSubmit()', event);
-		event.preventDefault();
-
-		const { email } = this.state;
-		const emailValid = (email.includes('@')) ? Strings.isEmail(email) : (email.length > 0);
-
-		this.setState({
-			email      : (emailValid) ? email : 'Invalid Email or Username',
-			emailValid : emailValid
-		});
-
-		if (emailValid) {
-			trackEvent('button', 'submit-email');
-
-			let formData = new FormData();
-			formData.append('action', 'RESET_PASSWORD');
-			formData.append('email', email);
-			axios.post(API_ENDPT_URL, formData)
-				.then((response)=> {
-					console.log('RESET_PASSWORD', response.data);
-				}).catch((error)=> {
-			});
-
-			this.props.onPopup({
-				type     : POPUP_TYPE_OK,
-				content  : 'Check email for reset link.',
-				duration : 2000
-			});
-
-			this.props.onPage('');
-		}
-	};
-
-	handlePasswordSubmit = (event)=> {
-// 		console.log('RecoverPage.handlePasswordSubmit()', event);
-		event.preventDefault();
-
-		const { password } = this.state;
-		const passwordValid = (password.length > 0);
-
-		this.setState({
-			password      : (passwordValid) ? password : 'Invalid Password',
-			passwordValid : passwordValid
-		});
-
-		if (passwordValid) {
-			trackEvent('button', 'submit-password');
-
-			let formData = new FormData();
-			formData.append('action', 'CHANGE_PASSWORD');
-			formData.append('user_id', window.atob(this.props.match.params.userID));
-			formData.append('password', password);
-			axios.post(API_ENDPT_URL, formData)
-				.then((response)=> {
-					console.log('CHANGE_PASSWORD', response.data);
-					this.props.onPopup({
-						type    : POPUP_TYPE_OK,
-						content : 'Password changed.'
-					});
-
-					this.props.onLogout();
-					this.props.onPage('login');
-				}).catch((error)=> {
-			});
-		}
+		this.twitterWindow = window.open('https://twitter.com/intent/tweet?via=DesignEngine', '', `titlebar=no, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${size.width}, height=${size.height}, top=${((((window.screen.height) - size.height) * 0.5) << 0)}, left=${((((window.screen.width) - size.width) * 0.5) << 0)}`);
 	};
 
 	render() {
-// 		console.log('RecoverPage.render()', this.props, this.state);
+// 		console.log('AccountPage.render()', this.props, this.state);
 
-		const { email, password, passMsg, emailValid, passwordValid } = this.state;
-		const emailClass = (emailValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
-		const passwordClass = (passwordValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error';
+		const { section } = this.props.match.params;
+		const { username, usernameValid, company, passMsg, passwordValid } = this.state;
 
 		return (
 			<BasePage className="account-page-wrapper">
-				{(typeof this.props.match.params.userID === 'undefined')
-					? (<div className="account-page-form-wrapper">
-						<h4>Forgot Password</h4>
-						<form onSubmit={this.handleEmailSubmit}>
-							<div className={emailClass}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.handleTextfieldChange(event)} /></div>
-							<Row vertical="center">
-								<button disabled={!emailValid || email.length === 0} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handleEmailSubmit(event)}>Submit</button>
-								<div className="page-link page-link-form" onClick={()=> this.props.onPage('login')}>Want to Login?</div>
-							</Row>
-						</form>
-					</div>)
+				{(section === 'confirm') && (<ConfirmEmail
+					onTwitter={this.handleTwitter}
+				/>)}
 
-					: (<div className="account-page-form-wrapper">
-						<h4>Reset Password</h4>
-						<form onSubmit={this.handlePasswordSubmit}>
-							<div className={passwordClass}>
-								<input type="password" name="password" placeholder="Enter New Password" value={password} onFocus={()=> this.setState({ password : '', passwordValid : true })} onChange={(event)=> this.handleTextfieldChange(event)} />
-								<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
-							</div>
-							<Row vertical="center">
-								<button disabled={!passwordValid || password.length === 0} type="submit" className="long-button adjacent-button" onClick={(event)=> this.handlePasswordSubmit(event)}>Submit</button>
-								<div className="page-link page-link-form" onClick={()=> this.props.onPage('login')}>Want to Login?</div>
-							</Row>
-						</form>
-					</div>)}
+				{(section === 'register') && (<RegisterUser
+					username={username}
+					usernameValid={usernameValid}
+					comapany={company}
+					password={passMsg}
+					passwordValid={passwordValid}
+				/>)}
 			</BasePage>
 		);
 	}
 }
+
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		profile : state.userProfile
+	});
+};
+
 
 export default connect(mapStateToProps)(AccountPage);

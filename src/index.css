@@ -127,7 +127,7 @@ h4.table-header {
 /** Section Subtitle **/
 h5 {
   height: fit-content;
-  margin-bottom: 14px;
+  margin-top: 14px;
   font-family: "San Francisco Text Medium", sans-serif;
   font-size: 16px;
   line-height: 28px;
