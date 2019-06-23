@@ -24,14 +24,14 @@ const ConfirmEmail = (props)=> {
 const RegisterUser = (props)=> {
 	console.log('AccountPage.RegisterUser()', props);
 
-	const { username, usernameValid, company, password, passwordValid } = props;
+	const { username, usernameValid, company, password, passMsg, passwordValid } = props;
 
 	return (<div className="register-user">
 		<PageHeader title="Complete your sign up">
 			<form onSubmit={props.onSubmit}>
-				<div className={`input-wrapper${(!usernameValid) ? ' input-wrapper-error' : ''}`}><input type="text" name="username" placeholder="Name" value={username} onFocus={props.onUsernameFocus} onChange={props.onUsernameChange} /></div>
-				<div className="input-wrapper"><input type="text" name="company" placeholder="Company" value={company} onFocus={props.onCompanyFocus} onChange={props.onCompanyChange} /></div>
-				<div className={`input-wrapper${(!passwordValid) ? ' input-wrapper-error' : ''}`}><input type="password" name="password" placeholder="Password" value={password} onFocus={props.onPasswordFocus} onChange={props.onPasswordChange} /></div>
+				<div className={`input-wrapper${(!usernameValid) ? ' input-wrapper-error' : ''}`}><input type="text" name="username" placeholder="Name" value={username} onFocus={(event)=> props.onFocus(event)} onChange={(event)=> props.onChange(event)} /></div>
+				<div className="input-wrapper"><input type="text" name="company" placeholder="Company" value={company} onFocus={(event)=> props.onFocus(event)} onChange={(event)=> props.onChange(event)} /></div>
+				<div className={`input-wrapper${(!passwordValid) ? ' input-wrapper-error' : ''}`}><input type="password" name="password" placeholder="Password" value={password} onFocus={(event)=> props.onFocus(event)} onChange={(event)=> props.onChange(event)} /></div>
 				<button disabled={(username.length === 0 || password.length === 0)} type="submit" className="long-button" onClick={(event)=> props.onSubmit(event)}>Sign Up</button>
 			</form>
 			<h5>By tapping “Sign Up” or “Login” you accept our Terms of Service.</h5>
@@ -49,6 +49,7 @@ class AccountPage extends Component {
 			usernameValid : true,
 			company       : '',
 			password      : '',
+			passMsg       : '',
 			passwordValid : true
 
 		};
@@ -65,6 +66,16 @@ class AccountPage extends Component {
 // 		console.log('AccountPage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 	}
 
+	handleTextfieldChange = (event)=> {
+		console.log('AccountPage.handleTextfieldChange()', event);
+		this.setState({ [event.target.name] : event.target.value });
+	};
+
+	handleTextfieldFocus = (event)=> {
+		console.log('AccountPage.handleTextfieldFocus()', event);
+		this.setState({ [event.target.name] : '' });
+	};
+
 	handleTwitter = ()=> {
 		console.log('AccountPage.render()', this.props, this.state);
 		const size = {
@@ -79,7 +90,7 @@ class AccountPage extends Component {
 // 		console.log('AccountPage.render()', this.props, this.state);
 
 		const { section } = this.props.match.params;
-		const { username, usernameValid, company, passMsg, passwordValid } = this.state;
+		const { username, usernameValid, company, password, passMsg, passwordValid } = this.state;
 
 		return (
 			<BasePage className="account-page-wrapper">
@@ -91,8 +102,11 @@ class AccountPage extends Component {
 					username={username}
 					usernameValid={usernameValid}
 					comapany={company}
-					password={passMsg}
+					password={password}
+					passMsg={passMsg}
 					passwordValid={passwordValid}
+					onFocus={this.handleTextfieldFocus}
+					onChange={this.handleTextfieldChange}
 				/>)}
 			</BasePage>
 		);
