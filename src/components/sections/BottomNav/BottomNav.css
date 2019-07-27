@@ -1,0 +1,43 @@
+
+.bottom-nav {
+	padding: 48px;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-size: 14px;
+	letter-spacing: -0.3px;
+	line-height: normal;
+}
+
+.bottom-nav-logo {
+	width: 48px;
+	height: 22px;
+}
+
+.bottom-nav-logo:hover {
+	cursor: pointer;
+}
+
+.bottom-nav-link-wrapper {
+	margin-bottom: 150px;
+}
+
+.bottom-nav-link, a.bottom-nav-link {
+	width: fit-content;
+	margin-bottom: 20px;
+	text-decoration: none;
+	color: #999999;
+}
+
+.bottom-nav-link:last-child, a.bottom-nav-link:last-child {
+	margin-bottom: 0;
+}
+
+.bottom-nav-link:hover, .bottom-nav-link a:hover {
+	text-decoration: underline;
+	cursor: pointer;
+	color: #a8a8a8;
+}
+
+.bottom-nav-link a, .bottom-nav-link a:any-link, a:active {
+	text-decoration: underline;
+	color: #b0b0b0;
+}

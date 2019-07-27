@@ -6,7 +6,7 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
-import BaseDesktopPage from './BaseDesktopPage';
+import BasePage from '../BasePage';
 import LoginForm from '../../forms/LoginForm';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { setRedirectURI, updateDeeplink, updateUserProfile } from '../../../redux/actions';
@@ -99,14 +99,14 @@ class LoginPage extends Component {
 
 		const { inviteID, email } = this.state;
 		return (
-			<BaseDesktopPage className="login-page-wrapper">
+			<BasePage className="login-page-wrapper">
 				<LoginForm
 					title="Login"
 					inviteID={inviteID}
 					email={email}
 					onLoggedIn={this.handleLoggedIn}
 					onPage={this.props.onPage} />
-			</BaseDesktopPage>
+			</BasePage>
 		);
 	}
 }

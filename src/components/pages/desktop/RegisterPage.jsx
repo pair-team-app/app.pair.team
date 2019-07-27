@@ -6,7 +6,7 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
-import BaseDesktopPage from './BaseDesktopPage';
+import BasePage from '../BasePage';
 import RegisterForm from '../../forms/RegisterForm';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { setRedirectURI, updateDeeplink, updateUserProfile } from '../../../redux/actions';
@@ -99,14 +99,14 @@ class RegisterPage extends Component {
 
 		const { email, inviteID } = this.state;
 		return (
-			<BaseDesktopPage className="register-page-wrapper">
+			<BasePage className="register-page-wrapper">
 				<RegisterForm
 					title="Sign up"
 					inviteID={inviteID}
 					email={email}
 					onRegistered={this.handleRegistered}
 					onLogin={()=> this.props.onPage((inviteID) ? `login/${inviteID}` : 'login')} />
-			</BaseDesktopPage>
+			</BasePage>
 		);
 	}
 }

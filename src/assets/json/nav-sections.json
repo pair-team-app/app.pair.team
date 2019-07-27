@@ -1,46 +1,30 @@
 {
-  "bottom": {
-    "desktop": [{
-      "title": "Specs",
-      "url": "/specs"
-    }, {
-      "title": "Styles",
-      "url": "/styles"
-    }, {
-      "title": "Parts",
-      "url": "/parts"
-    }, {
-      "title": "Editor",
-      "url": "/edit"
-    }, {
-      "title": "Terms",
-      "url": "/terms"
-    }, {
-      "title": "Privacy",
-      "url": "/privacy"
-    }],
-    "mobile": []
-  },
-  "top": {
-    "desktop": [{
-      "title": "Specs",
-      "url": "/specs"
-    }, {
-      "title": "Styles",
-      "url": "/styles"
-    }, {
-      "title": "Parts",
-      "url": "/parts"
-    }, {
-      "title": "Editor",
-      "url": "/edit"
-    }],
-    "mobile": [{
-      "title": "Specs",
-      "url": "/specs"
-    }, {
-      "title": "Styles",
-      "url": "/styles"
-    }]
-  }
+  "bottom": [{
+    "title": "Start Free Trial",
+    "url": "/page/free-trial"
+  }, {
+    "title": "Sign In",
+    "url": "/page/register"
+  }, {
+    "title": "Plugins",
+    "url": "/page/plugins"
+  }, {
+    "title": "Specs",
+    "url": "http://tools.designengine.ai/specs"
+  }, {
+    "title": "Styles",
+    "url": "http://tools.designengine.ai/styles"
+  }, {
+    "title": "Parts",
+    "url": "http://tools.designengine.ai/parts"
+  }, {
+    "title": "Editor",
+    "url": "http://tools.designengine.ai/editor"
+  }, {
+    "title": "Terms of Service",
+    "url": "/page/terms"
+  }, {
+    "title": "Privacy",
+    "url": "/page/privacy"
+  }]
 }

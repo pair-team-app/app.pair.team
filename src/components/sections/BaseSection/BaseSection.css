@@ -1,0 +1,15 @@
+
+.base-section {
+	width: 100%;
+}
+
+.base-section-content-wrapper {
+	width: 50%;
+	padding: 0 48px;
+}
+
+@media screen and (max-width: 800px) {
+	.base-section-content-wrapper {
+		width: 100%;
+	}
+}

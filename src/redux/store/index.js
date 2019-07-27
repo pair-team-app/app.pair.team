@@ -4,7 +4,6 @@ import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
 import { fetchUserProfile } from '../actions';
-
 import rootReducer from '../reducers/index';
 import { onMiddleware } from '../middleware'
 
