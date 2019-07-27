@@ -1,6 +1,6 @@
 <div align="center">
 
-[![Design Engine](https://res-4.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_120,w_120,f_auto,b_white,q_auto:eco/cws7pwk5usxwc5rwqyvl)](http://earlyaccess.designengine.ai/)
+[![Design Engine](https://avatars1.githubusercontent.com/u/36387012?s=200&v=4)]
 
 ### Design Engine
 
