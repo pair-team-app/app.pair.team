@@ -4,12 +4,13 @@
 }
 
 .base-section-content-wrapper {
-	width: 50%;
-	padding: 0 48px;
+	width: 100%;
+	max-width: 900px;
+	border: 1px solid rgba(255, 255, 0, 0);
 }
 
 @media screen and (max-width: 800px) {
 	.base-section-content-wrapper {
-		width: 100%;
+		max-width: 90%;
 	}
 }

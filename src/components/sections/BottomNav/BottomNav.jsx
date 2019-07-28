@@ -4,7 +4,6 @@ import './BottomNav.css';
 
 import { trackEvent } from './../../../utils/tracking';
 import { URIs } from './../../../utils/lang';
-import deLogo from './../../../assets/images/logos/logo-designengine.svg';
 import sections from './../../../assets/json/nav-sections';
 
 
@@ -23,7 +22,7 @@ function BottomNav(props) {
 			props.onPage(`/${URIs.lastComponent(url)}`);
 
 		} else {
-			window.location.href = url;
+			window.open(url);
 		}
 	};
 
@@ -34,7 +33,9 @@ function BottomNav(props) {
 					<div key={i} className="bottom-nav-link" onClick={()=> handleLink(section.url)}>{section.title}</div>
 				)))}
 			</div>
-			<img className="bottom-nav-logo" src={deLogo} onClick={()=> handleLink('')} alt="Design Engine" />
+			<div className="bottom-nav-disclaimer">
+				By tapping “Sign in with Github” or “Sign Up”<br />you accept our <span className="bottom-nav-link" onClick={()=> handleLink('/page/terms')}>Terms of Service.</span>
+			</div>
 		</div>
 	);
 }

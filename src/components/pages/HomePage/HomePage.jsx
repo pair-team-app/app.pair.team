@@ -9,40 +9,57 @@ import { Element, Events, scroller, scrollSpy } from 'react-scroll';
 import BasePage from '../BasePage';
 import BaseSection from '../../sections/BaseSection';
 import PageHeader from '../../sections/PageHeader';
-import { API_ENDPT_URL } from '../../../consts/uris';
+import BottomNav from '../../sections/BottomNav';
+
+import {
+	API_ENDPT_URL,
+	TWITTER_SOCIAL,
+	INSTAGRAM_SOCIAL,
+	SLACK_INVITE,
+	Modals,
+	Pages
+} from '../../../consts/uris';
 import { Bits, Strings, URIs } from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
-import homePage from '../../../assets/images/elements/element-home.png';
 
+import deLogoLeft from '../../../assets/images/logos/logo-designengine_left.svg';
+import deLogoRight from '../../../assets/images/logos/logo-designengine_right.svg';
 
-const HomePageContent = (props)=> {
-// 	console.log('HomePage.HomePageContent()', props);
+const HomePageButtonSection = (props)=> {
+	console.log('HomePage.HomePageButtonSection()', props);
 
-	return (<div className="home-page-content">
-		<div className="home-page-content-animation-wrapper">
-			<img src={homePage} className="home-page-content-animation" alt="Animation" />
-		</div>
-		<h1 className="section-title">Share screen design anywhere</h1>
-		<h5>Executive, stakeholder, & product owners design team access.</h5>
-		<button className="long-button" onClick={props.onFreeTrial}>Start Free Trial</button>
+	return (<div className="home-page-button-section">
+		<button className="aux-button long-button stack-button" onClick={props.onGitHub}>Sign Up for Early Access with Github</button><br />
+		<button className="long-button stack-button" onClick={props.onSignup}>Sign Up for Early Access with Email</button><br />
+		<button className="long-button" onClick={props.onLogin}>Login</button>
 	</div>);
 };
 
+const HomePageFormSection = (props)=> {
+// 	console.log('HomePage.HomePageFormSection()', props);
 
-const HomePageRegister = (props)=> {
-// 	console.log('HomePage.HomePageRegister()', props);
+	const { section, email, emailValid, password, passwordValid, passMsg } = props;
+	return (<div className="home-page-form-section">
+		<form onSubmit={props.onSubmit}>
+			<div className={`input-wrapper${(!emailValid) ? ' input-wrapper-error' : ''}`}><input type="text" name="email" placeholder="Enter Work Email Address" value={email} onFocus={props.onFocus} onChange={props.onChange} /></div>
 
-	const { email, emailValid } = props;
-	return (<div className="home-page-register">
-		<BaseSection>
-			<h1 className="section-title">Share screen design docs with ease for devs & stakeholders</h1>
-			<form onSubmit={props.onSubmit}>
-				<div className={`input-wrapper${(!emailValid) ? ' input-wrapper-error' : ''}`}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={props.onFocus} onChange={props.onChange} /></div>
-				<button disabled={(email.length === 0 || !emailValid)} type="submit" className="long-button" onClick={(event)=> props.onSubmit(event)}>Start Free Trial</button>
-			</form>
-			<div className="page-link" onClick={()=> props.onPage('/login')}>Login</div>
-			<h5>By tapping “Sign Up” or “Login” you accept our Terms of Service.</h5>
-		</BaseSection>
+			<div className={`input-wrapper${(!passwordValid) ? ' input-wrapper-error' : ''}`} onClick={props.onPassword}>
+				<input type="password" name="password" placeholder="Enter Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={props.onChange} />
+				<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
+			</div>
+
+			<button disabled={(email.length === 0 || !emailValid || password.length === 0 || !passwordValid)} type="submit" className="long-button" onClick={(event)=> props.onSubmit(event)}>{(section === 'register') ? 'Sign Up' : 'Login'}</button>
+		</form>
+	</div>);
+};
+
+const HomePageThankYouSection = (props)=> {
+	console.log('HomePage.HomePageThankYouSection()', props);
+
+	return (<div className="home-page-thak-you-section">
+		<button className="long-button stack-button" onClick={()=> props.onSocial(TWITTER_SOCIAL)}>Twitter</button><br />
+		<button className="long-button stack-button" onClick={()=> props.onSocial(INSTAGRAM_SOCIAL)}>Instagram</button><br />
+		<button className="long-button" onClick={()=> props.onSocial(SLACK_INVITE)}>Slack</button>
 	</div>);
 };
 
@@ -52,10 +69,13 @@ class HomePage extends Component {
 		super(props);
 
 		this.state = {
-			email      : '',
-			emailValid : true,
-			scrolled   : false,
-			scrollY    : -1
+			email         : '',
+			emailValid    : true,
+			password      : '',
+			passwordValid : true,
+			passMsg       : '',
+			scrolled      : false,
+			scrollY       : -1
 		};
 	}
 
@@ -72,9 +92,9 @@ class HomePage extends Component {
 
 		scrollSpy.update();
 
-		if (URIs.firstComponent() === 'free-trial') {
+		if (URIs.firstComponent() === 'register' || URIs.firstComponent() === 'login') {
 			this.setState({ scrolled : true }, ()=> {
-				scroller.scrollTo('register', {
+				scroller.scrollTo('top', {
 					duration : 666,
 					delay    : 125,
 					smooth   : 'easeInOutQuart'
@@ -86,13 +106,9 @@ class HomePage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('HomePage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
-// 		if (URIs.firstComponent() === 'free-trial' && prevProps.scrolling && !this.props.scrolling && this.state.scrolled && !prevState.scrolled) {
-// 			this.setState({ scrolled : false });
-// 		}
-
-		if (URIs.firstComponent() === 'free-trial' && !this.state.scrolled && this.state.scrollY !== window.scrollY) {
+		if ((URIs.firstComponent() === 'register' || URIs.firstComponent() === 'login') && !this.state.scrolled && this.state.scrollY !== window.scrollY) {
 			this.setState({ scrolled : true }, ()=> {
-				scroller.scrollTo('register', {
+				scroller.scrollTo('top', {
 					duration : 666,
 					delay    : 0,
 					smooth   : 'easeInOutQuart'
@@ -102,45 +118,139 @@ class HomePage extends Component {
 	}
 
 
-	handleFreeTrial = ()=> {
-// 		console.log('HomePage.handleFreeTrial()');
+	handleGitHub = ()=> {
+		console.log('HomePage.handleGitHub()');
+		trackEvent('button', 'github');
 
-		trackEvent('button', 'free-trial');
-		this.props.onPage('/free-trial');
+		this.props.onModal(Modals.GITHUB_CONNECT);
 	};
 
-	handleSignupChange = (event)=> {
-		console.log('HomePage.handleSignupChange()', event);
+	handleLogin = ()=> {
+// 		console.log('HomePage.handleLogin()');
+		trackEvent('button', 'login');
+
+		this.props.onPage(Pages.LOGIN);
+	};
+
+	handleSignup = ()=> {
+// 		console.log('HomePage.handleSignup()');
+
+		trackEvent('button', 'sign-up');
+		this.props.onPage(Pages.REGISTER);
+	};
+
+	handleSocial = (url)=> {
+		console.log('HomePage.handleSocial()');
+
+		trackEvent('social', url);
+		window.open(url);
+	};
+
+	handleTextfieldChange = (event)=> {
+// 		console.log('HomePage.handleTextfieldChange()', event);
 		this.setState({
-			email      : event.target.value,
-// 			emailValid : Strings.isEmail(event.target.value)
+			[event.target.name] : event.target.value,
 		});
 	};
 
-	handleSignupFocus = (event)=> {
-		console.log('HomePage.handleSignupFocus()', event);
+	handleTextfieldFocus = (event)=> {
+// 		console.log('HomePage.handleTextfieldFocus()', event);
+
 		this.setState({
-			email      : '',
-			emailValid : true
+			[event.target.name]           : '',
+			[`${event.target.name}Valid`] : true
 		});
 	};
 
-	handleSignupSubmit = (event)=> {
-// 		console.log('HomePage.handleVideo()', event);
+	handlePassword = ()=> {
+// 		console.log('HomePage.handlePassword()');
+
+		this.setState({
+			password      : '',
+			passwordValid : true,
+			passMsg       : ''
+		});
+	};
+
+	handleSubmit = (event)=> {
+		console.log('HomePage.handleSubmit()');
+
+		if (URIs.firstComponent() === 'register') {
+			this.handleRegisterSubmit(event);
+
+		} else if (URIs.firstComponent() === 'login') {
+			this.handleLoginSubmit(event);
+		}
+	};
+
+	handleLoginSubmit = (event)=> {
+// 		console.log('LoginForm.handleLoginSubmit()', event.target, this.state);
 		event.preventDefault();
 
-		trackEvent('button', 'signup');
+		trackEvent('button', 'login');
 
-		const { email } = this.state;
+		const { email, password } = this.state;
+		const emailValid = (email.includes('@')) ? Strings.isEmail(email) : (email.length > 0);
+		const passwordValid = (password.length > 0);
+
+		this.setState({
+			email         : (emailValid) ? email : 'Email Address or Username Invalid',
+			passMsg       : (passwordValid) ? '' : 'Password Invalid',
+			emailValid    : emailValid,
+			passwordValid : passwordValid
+		});
+
+		if (emailValid && passwordValid) {
+			let formData = new FormData();
+			formData.append('action', 'LOGIN');
+			formData.append('email', email);
+			formData.append('password', password);
+			axios.post(API_ENDPT_URL, formData)
+				.then((response)=> {
+					console.log('LOGIN', response.data);
+					const status = parseInt(response.data.status, 16);
+
+					if (Bits.contains(status, 0x11)) {
+						const { user } = response.data;
+						this.props.onLoggedIn(user);
+						this.props.onPage(Pages.THANK_YOU);
+
+						this.setState({
+							email    : '',
+							password : '',
+							passMsg  : ''
+						});
+
+					} else {
+						this.setState({
+							email         : Bits.contains(status, 0x01) ? email : 'Email Address or Username In Use',
+							password      : '',
+							emailValid    : Bits.contains(status, 0x01),
+							passwordValid : Bits.contains(status, 0x10),
+							passMsg       : Bits.contains(status, 0x10) ? '' : 'Password Invalid'
+						});
+					}
+				}).catch((error)=> {
+			});
+		}
+	};
+
+	handleRegisterSubmit = (event)=> {
+// 		console.log('HomePage.handleRegisterSubmit()', event, this.state);
+		event.preventDefault();
+
+		trackEvent('button', 'register');
+
+		const { email, password } = this.state;
 		const emailValid = Strings.isEmail(email);
 
 		this.setState({ emailValid }, ()=> {
 			if (emailValid) {
 				axios.post(API_ENDPT_URL, qs.stringify({ email,
 					action    : 'REGISTER',
-					username  : '',
-					password  : '',
-					invite_id : '0'
+					username  : email,
+					password  : password,
+					type      : 'early_access'
 				})).then((response) => {
 					console.log('REGISTER', response.data);
 					const status = parseInt(response.data.status, 16);
@@ -148,11 +258,19 @@ class HomePage extends Component {
 
 					if (status === 0x11) {
 						this.props.onRegistered(response.data.user);
+						this.props.onPage(Pages.THANK_YOU);
+
+						this.setState({
+							email    : '',
+							password : '',
+							passMsg  : ''
+						});
 
 					} else {
 						this.setState({
-							email      : Bits.contains(status, 0x10) ? email : 'Email Address Already in Use',
-							emailValid : Bits.contains(status, 0x10)
+							email         : Bits.contains(status, 0x10) ? email : 'Email Address Already in Use',
+							password      : '',
+							emailValid    : Bits.contains(status, 0x10)
 						});
 					}
 				}).catch((error)=> {
@@ -167,26 +285,110 @@ class HomePage extends Component {
 	render() {
 // 		console.log('HomePage.render()', this.props, this.state);
 
-		const { email, emailValid } = this.state;
+		const { email, emailValid, password, passwordValid, passMsg } = this.state;
 
 		return (
 			<BasePage className="home-page-wrapper">
-				<PageHeader title="Move screen design forward with Design Engine">
-					<button className="long-button" onClick={this.handleFreeTrial}>Start Free Trial</button>
-				</PageHeader>
+				<Element name="top">
+					<PageHeader title="Design Engine manages Interface Design Systems by treating Code as the source of truth">
+						{(URIs.firstComponent() === '') && (<HomePageButtonSection
+							onGitHub={this.handleGitHub}
+							onSignup={this.handleSignup}
+							onLogin={this.handleLogin}
+						/>)}
 
-				<Element name="register"><HomePageRegister
-					email={email}
-					emailValid={emailValid}
-					onFocus={this.handleSignupFocus}
-					onChange={this.handleSignupChange}
-					onSubmit={this.handleSignupSubmit}
-					onPage={(url)=> this.props.onPage(url)}
-				/></Element>
+						{(URIs.firstComponent() === 'register' || URIs.firstComponent() === 'login') && (<HomePageFormSection
+							section={URIs.firstComponent()}
+							email={email}
+							emailValid={emailValid}
+							password={password}
+							passwordValid={passwordValid}
+							passMsg={passMsg}
+							onPassword={this.handlePassword}
+							onChange={this.handleTextfieldChange}
+							onFocus={this.handleTextfieldFocus}
+							onSubmit={this.handleSubmit}
+						/>)}
 
-				<HomePageContent
-					onFreeTrial={this.handleFreeTrial}
-				/>
+						{(URIs.firstComponent() === 'thank-you') && (<HomePageThankYouSection
+							onSocial={this.handleSocial}
+						/>)}
+
+						<BottomNav
+							mobileLayout={false}
+							onModal={this.handleGitHub}
+							onPage={this.props.onPage}
+						/>
+					</PageHeader>
+				</Element>
+
+				<div className="home-page-content">
+					<BaseSection>
+						<h1 className="section-title section-title-red">Why did we build this?</h1>
+						<h1 className="section-list-wrapper">
+							Code reusability<br />
+					    Increased efficiency in Design<br />
+					    Increased efficiency in Development<br />
+					    UX/UI consistency<br />
+					    Maintaining brand standards<br />
+					    Accessibility compliance<br />
+					    No more redlines<br />
+						</h1>
+						<BottomNav
+							mobileLayout={false}
+							onModal={this.handleGitHub}
+							onPage={this.props.onPage}
+						/>
+					</BaseSection>
+				</div>
+
+				<div className="home-page-content">
+					<BaseSection>
+						<h1 className="section-title section-title-blue">How does it work?</h1>
+						<h1>Developers can distribute coded interface elements to their design team to maintain a single source of design truth across the design and development team</h1>
+						<BottomNav
+							mobileLayout={false}
+							onModal={this.handleGitHub}
+							onPage={this.props.onPage}
+						/>
+					</BaseSection>
+				</div>
+
+				<div className="home-page-content">
+					<BaseSection>
+						<h1 className="section-title section-title-red">Who built Design Engine?</h1>
+						<div className="home-page-creator-wrapper">
+							<img className="home-page-creator-logo" src={deLogoLeft} alt="Logo" />
+							<img className="home-page-creator-logo home-page-creator-logo-adjacent" src={deLogoRight} alt="Logo" />
+							<h1 className="home-page-creator">
+								Designed & Developed by Jason Festa & Matt Holcombe
+							</h1>
+						</div>
+						<BottomNav
+							mobileLayout={false}
+							onModal={this.handleGitHub}
+							onPage={this.props.onPage}
+						/>
+					</BaseSection>
+				</div>
+
+				<div className="home-page-content">
+					<BaseSection>
+						<div className="section-quote-wrapper">
+							<span className="section-quote">“asjhdhas n akshdkhaks h kaskjdhkhk ahsdh akshd hashd ajsdjkasah hasjd hak hkhh”</span>
+							<span className="section-quote-attrib"> - John Smith Adobe XD</span>
+						</div>
+
+						<button className="aux-button long-button stack-button" onClick={this.handleGitHub}>Sign Up for Early Access with Github</button><br />
+						<button className="long-button stack-button" onClick={this.handleSignup}>Sign Up for Early Access with Email</button><br />
+						<button className="long-button" onClick={this.handleLogin}>Login</button>
+						<BottomNav
+							mobileLayout={false}
+							onModal={this.handleGitHub}
+							onPage={this.props.onPage}
+						/>
+					</BaseSection>
+				</div>
 			</BasePage>
 		);
 	}

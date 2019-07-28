@@ -1,34 +1,29 @@
 
 .bottom-nav {
-	padding: 48px;
-	font-family: "San Francisco Text Medium", sans-serif;
-	font-size: 14px;
-	letter-spacing: -0.3px;
+	margin-top: 40px;
+	font-family: "San Francisco Text SemiBold", sans-serif;
+	font-size: 16px;
 	line-height: normal;
 }
 
-.bottom-nav-logo {
-	width: 48px;
-	height: 22px;
-}
-
-.bottom-nav-logo:hover {
-	cursor: pointer;
-}
-
 .bottom-nav-link-wrapper {
-	margin-bottom: 150px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	margin: 0 100px 20px 100px;
+}
+
+@media screen and (max-width: 800px) {
+	.bottom-nav-link-wrapper {
+		margin: 0 10px 20px 10px;
+	}
 }
 
 .bottom-nav-link, a.bottom-nav-link {
-	width: fit-content;
-	margin-bottom: 20px;
 	text-decoration: none;
 	color: #999999;
-}
-
-.bottom-nav-link:last-child, a.bottom-nav-link:last-child {
-	margin-bottom: 0;
+	flex: 1 0 auto;
+	margin-right: 20px;
 }
 
 .bottom-nav-link:hover, .bottom-nav-link a:hover {
@@ -40,4 +35,11 @@
 .bottom-nav-link a, .bottom-nav-link a:any-link, a:active {
 	text-decoration: underline;
 	color: #b0b0b0;
+}
+
+.bottom-nav-disclaimer {
+	text-align: center;
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-size: 14px;
+	line-height: 21px;
 }

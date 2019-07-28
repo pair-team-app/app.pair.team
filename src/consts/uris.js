@@ -24,39 +24,28 @@ export const Modals = {
 };
 
 export const Pages = {
-	HOME    : '/',
-	SPECS   : '/specs',
-	STYLES  : '/styles',
-	PARTS   : '/parts',
-	EDIT    : '/edit',
-	PRIVACY : '/privacy',
-	PROFILE : '/profile',
-	TERMS   : '/terms',
-	UPLOAD  : '/new'
+	HOME      : '/',
+	REGISTER  : '/register',
+	LOGIN     : '/login',
+	THANK_YOU : '/thank-you',
+	GITHUB    : '/github',
+	PRIVACY   : '/privacy',
+	TERMS     : '/terms'
 };
 
 export const CDN_HOSTNAME = 'http://cdn.designengine.ai';
 export const API_HOSTNAME = 'https://api.designengine.ai';
-export const TERMINAL_HOSTNAME = 'https://terminal.designengine.ai';
 
-export const DE_LOGO_SMALL = `${CDN_HOSTNAME}/assets/logo-email.png'`;
 export const DEFAULT_AVATAR = `${CDN_HOSTNAME}/profiles/avatar-default.png`;
 
 export const API_ENDPT_URL = `${API_HOSTNAME}/system.php`;
 // export const API_ENDPT_URL = `${API_HOSTNAME}/dev.php`;
-export const CDN_DOWNLOAD_PARTS_URL = `${CDN_HOSTNAME}/download-slices.php`;
-export const CDN_DOWNLOAD_PDF_URL = `${CDN_HOSTNAME}/download-pdf.php`;
-export const CDN_DOWNLOAD_PROJECT_URL = `${CDN_HOSTNAME}/download-project.php`;
-export const CDN_UPLOAD_URL = (window.location.hostname.match(/192|local/ig)) ? `${CDN_HOSTNAME}/upload.php` : `${window.location.href.replace(window.location.pathname, '')}/php/upload.php`;
-export const LINTER_UPLOAD_URL = `${TERMINAL_HOSTNAME}/upload.php`;
-export const LINTER_ENDPT_URL = `${TERMINAL_HOSTNAME}/services/linter.php`;
-
-export const EXTENSION_CONFIG_URL = 'chrome://?id=kkgccakiccjnlmponcggpmagkgelpbhg';
-export const EXTENSION_PUBLIC_HOST = 'chrome-extension://kkgccakiccjnlmponcggpmagkgelpbhg';
 
 export const GITHUB_APP_AUTH = 'https://github.com/login/oauth/authorize?client_id=e6f08e86acdc4e4cca38&redirect_uri=https://api.designengine.ai/system.php&scope=gist,user:email&state=__{EPOCH}__';
 export const GITHUB_REPO = 'https://www.github.com/de-ai';
 export const GITHUB_ROADMAP = 'https://github.com/de-ai/designengine.ai/projects/1';
+export const CHANGE_LOG = 'https://github.com/de-ai/designengine.ai/projects/1';
 
 export const SLACK_INVITE = 'https://join.slack.com/t/designengineai/shared_invite/enQtMzE5ODE0MTA0MzA5LWM2NzcwNTRiNjQzMTAyYTEyNjQ1MjE5NmExNDM1MzAyNWZjMTA0ZWIwNTdmZjYyMjc2M2ExNjAyYWFhZDliMzA';
-export const SPECTRUM_DOCS = 'https://spectrum.chat/designengine';
+export const TWITTER_SOCIAL = 'https://www.twitter.com';
+export const INSTAGRAM_SOCIAL = 'https://www.instagram.com';
