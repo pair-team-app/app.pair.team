@@ -10,20 +10,14 @@
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
-	margin: 0 100px 20px 100px;
-}
-
-@media screen and (max-width: 800px) {
-	.bottom-nav-link-wrapper {
-		margin: 0 10px 20px 10px;
-	}
+	margin: 0 100px 30px 100px;
 }
 
 .bottom-nav-link, a.bottom-nav-link {
-	text-decoration: none;
-	color: #999999;
 	flex: 1 0 auto;
 	margin-right: 20px;
+	text-decoration: none;
+	color: #999999;
 }
 
 .bottom-nav-link:hover, .bottom-nav-link a:hover {
@@ -42,4 +36,14 @@
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 14px;
 	line-height: 21px;
+}
+
+@media screen and (max-width: 800px) {
+	.bottom-nav-link-wrapper {
+		margin: 0 10px 20px 10px;
+	}
+
+	.bottom-nav-link, a.bottom-nav-link {
+		line-height: 30px;
+	}
 }

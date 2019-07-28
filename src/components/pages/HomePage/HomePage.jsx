@@ -345,7 +345,7 @@ class HomePage extends Component {
 				<div className="home-page-content">
 					<BaseSection>
 						<h1 className="section-title section-title-blue">How does it work?</h1>
-						<h1>Developers can distribute coded interface elements to their design team to maintain a single source of design truth across the design and development team</h1>
+						<h1 className="section-text">Developers can distribute coded interface elements to their design team to maintain a single source of design truth across the design and development team</h1>
 						<BottomNav
 							mobileLayout={false}
 							onModal={this.handleGitHub}
@@ -378,10 +378,11 @@ class HomePage extends Component {
 							<span className="section-quote">“asjhdhas n akshdkhaks h kaskjdhkhk ahsdh akshd hashd ajsdjkasah hasjd hak hkhh”</span>
 							<span className="section-quote-attrib"> - John Smith Adobe XD</span>
 						</div>
-
-						<button className="aux-button long-button stack-button" onClick={this.handleGitHub}>Sign Up for Early Access with Github</button><br />
-						<button className="long-button stack-button" onClick={this.handleSignup}>Sign Up for Early Access with Email</button><br />
-						<button className="long-button" onClick={this.handleLogin}>Login</button>
+						<div className="home-page-button-wrapper">
+							<button className="aux-button long-button stack-button" onClick={this.handleGitHub}>Sign Up for Early Access with Github</button><br />
+							<button className="long-button stack-button" onClick={this.handleSignup}>Sign Up for Early Access with Email</button><br />
+							<button className="long-button" onClick={this.handleLogin}>Login</button>
+						</div>
 						<BottomNav
 							mobileLayout={false}
 							onModal={this.handleGitHub}

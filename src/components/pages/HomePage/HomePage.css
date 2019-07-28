@@ -3,7 +3,7 @@
 }
 
 .home-page-content {
-	padding: 50px 0;
+	padding: 70px 0;
 }
 
 .home-page-content:nth-child(even) {
@@ -12,10 +12,11 @@
 
 .home-page-creator-wrapper {
 	position: relative;
+	padding: 20px 0;
 }
 
 .home-page-creator-logo {
-	width: 40%;
+	width: 35%;
 }
 
 .home-page-creator-logo-adjacent {
@@ -32,11 +33,12 @@
 
 @media screen and (max-width: 800px) {
 	.home-page-creator-wrapper {
+		margin-top: -20px;
 		padding: 0 20px;
 	}
 
 	.home-page-creator-logo, .home-page-creator-logo-adjacent {
-		width: 100%;
+		width: 75%;
 		margin-top: 20px;
 		margin-left: 0
 	}
@@ -46,3 +48,6 @@
 	}
 }
 
+.home-page-button-wrapper {
+	margin-bottom: 80px;
+}
