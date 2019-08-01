@@ -118,9 +118,3 @@ First release
 ### Changed
 - [8bc46cf9b04c2a8e0c7a1b8988343c5590031ac2](https://github.com/de-ai/playground.designengine.ai/commit/8bc46cf9b04c2a8e0c7a1b8988343c5590031ac2)
 	MAJOR Removing old site assets
-	
-	
-	
-	- []()
-	- [](https://github.com/de-ai/playground.designengine.ai/commit/)
-	- [](https://github.com/de-ai/designengine.ai/commit/)
