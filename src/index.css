@@ -18,7 +18,7 @@ html, body {
   padding: 0;
   height: 100%;
   min-height: 100%;
-  background-color: #171b21;
+  background-color: #1a1e23;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: "San Francisco Text Medium", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -74,7 +74,7 @@ fieldset {
 }
 
 form {
-  width: 100%;
+	margin: 0 274px;
 }
 
 h1, h2, h3, h4, h5 {
@@ -86,10 +86,16 @@ h1 {
   width: 100%;
   margin-bottom: 20px;
   font-family: "San Francisco Text Medium", sans-serif;
-  font-size: 40px;
-  line-height: 51px;
-  letter-spacing: -0.17px;
+  font-size: 48px;
+  line-height: 64px;
   color: #ffffff;
+}
+
+@media screen and (max-width: 800px) {
+  h1 {
+    font-size: 38px;
+    line-height: 44px;
+  }
 }
 
 /** Mobile / Page Header */
@@ -211,14 +217,6 @@ textarea {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #333333;
-}
-
-
-/** Regular */
-@font-face {
-  font-family: "AndaleMono";
-  font-weight: 400;
-  src: url(./assets/fonts/AndaleMono.otf);
 }
 
 

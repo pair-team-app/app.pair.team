@@ -4,6 +4,14 @@
 	height: 100%;
 }
 
+.changelog-wrapper {
+	position : absolute;
+	top: 0;
+	right: 0;
+	margin: 10px;
+	z-index: 10;
+}
+
 .unsupported-browser {
 	padding: 20px;
 	text-align: center;
@@ -22,20 +30,54 @@
 	width: 100%;
 }
 
+.section-title {
+	margin-bottom: 60px;
+}
+
+.section-title-red {
+	color: #e01d5a;
+}
+
+.section-title-blue {
+	color: #36c6f2;
+}
+
+.section-text {
+	margin-bottom: 80px;
+}
+
+.section-list-wrapper {
+	font-size: 44px;
+	line-height: 50px;
+	margin-bottom: 60px;
+}
+
+.section-quote-wrapper {
+	margin: 20px 0 100px 0;
+	font-style: italic;
+	color: #ffffff;
+}
+
+.section-quote {
+	font-family: "San Francisco Text Medium", sans-serif;
+	font-size: 48px;
+	line-height: 64px
+}
+
+.section-quote-attrib {
+	font-size: 38px;
+}
+
 .long-button {
-	min-width: 280px;
+	min-width: 348px;
 	width: auto;
 	padding-left: 25px;
 	padding-right: 25px;
 }
 
 .tiny-button {
-	min-width: 0;
-	min-height: 0;
-	width: auto;
-	height: auto;
-	padding: 3px 10px;
-	/*font-size: 10px;*/
+	/*padding: 3px 10px;*/
+	font-size: 14px;
 }
 
 .min-button, .min-button:hover, .min-button:active {
@@ -82,7 +124,6 @@
 }
 
 .stack-button {
-	display: block;
 	margin-bottom: 14px;
 }
 
@@ -201,6 +242,32 @@
 	visibility: hidden;
 }
 
+
+@media screen and (max-width: 800px) {
+	.section-list-wrapper {
+		font-size: 23px;
+		line-height: 44px;
+		margin-bottom: 130px;
+	}
+
+	.long-button {
+		min-width: 330px;
+		width: 330px;
+	}
+
+	.section-text {
+		margin: 75px 0;
+	}
+
+	.section-quote {
+		font-size: 38px;
+		line-height: 44px;
+	}
+
+	.changelog-wrapper {
+		display: none;
+	}
+}
 
 
 .debug-border {

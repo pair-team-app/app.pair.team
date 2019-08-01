@@ -5,7 +5,6 @@ import './PageHeader.css';
 import { connect } from 'react-redux';
 
 import BaseSection from '../BaseSection';
-import PageHeaderProfile from './PageHeaderProfile';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
 
 
@@ -25,7 +24,6 @@ class PageHeader extends Component {
 		} : null;
 
 		return (<div className="page-header" style={style}>
-			{(profile) && (<PageHeaderProfile />)}
 			<BaseSection>
 				<img className="page-header-logo" src={deLogo} alt="Logo" />
 				<h1 className="page-header-title">{title}</h1>

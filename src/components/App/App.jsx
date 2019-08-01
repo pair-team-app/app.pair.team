@@ -9,27 +9,23 @@ import { connect } from 'react-redux';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { Column } from 'simple-flexbox';
 
-import BottomNav from '../sections/BottomNav';
 import AlertDialog from '../overlays/AlertDialog';
 import LoginModal from '../overlays/LoginModal';
-// import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification';
 import PopupNotification from '../overlays/PopupNotification';
 import RegisterModal from '../overlays/RegisterModal';
 import StripeModal from '../overlays/StripeModal';
 import HomePage from '../pages/HomePage';
-import PluginsPage from '../pages/PluginsPage';
-import ProfilePage from '../pages/ProfilePage';
 import PrivacyPage from '../pages/PrivacyPage';
-import AccountPage from '../pages/AccountPage';
-import DocumentsPage from '../pages/DocumentsPage';
 import Status404Page from '../pages/Status404Page';
 import TermsPage from '../pages/TermsPage';
 
 import {
 	API_ENDPT_URL,
 	GITHUB_APP_AUTH,
-	Modals }
-from '../../consts/uris';
+	CHANGE_LOG,
+	Modals,
+	Pages
+} from '../../consts/uris';
 import {
 	appendHomeArtboards,
 	fetchTeamLookup,
@@ -47,7 +43,6 @@ import {
 } from '../../utils/funcs';
 import { DateTimes, Strings, URIs } from '../../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
-import freeAccount from '../../assets/json/free-account';
 
 
 const wrapper = React.createRef();
@@ -175,6 +170,11 @@ class App extends Component {
 	}
 
 
+	handleChangelog = ()=> {
+		console.log('App.handleChangelog()');
+		window.open(CHANGE_LOG);
+	};
+
 	handleGithubAuth = ()=> {
 		console.log('App.handleGithubAuth()');
 
@@ -210,6 +210,7 @@ class App extends Component {
 
 		this.props.updateUserProfile(profile, false);
 		this.props.updateUserProfile(profile);
+		this.handlePage(Pages.THANK_YOU);
 	};
 
 	handleLoggedIn = (profile)=> {
@@ -397,72 +398,66 @@ class App extends Component {
   	const { scrolling, popup } = this.state;
   	const { loginModal, registerModal, stripeModal, payDialog } = this.state;
 
-  	return (<div className="site-wrapper"><Column horizontal="center">
-	    <div className="content-wrapper" ref={wrapper}>
-		    <Switch>
-			    {(!isUserLoggedIn()) && (<Route exact path="/profile"><Redirect to="/" /></Route>)}
-			    <Route exact path="/logout" render={()=> (profile) ? this.handleLogout() : null} />
-
-			    <Route exact path="/" render={()=> <HomePage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} onRegistered={this.handleRegistered} />} />
-			    <Route path="/documents/:documentID?" render={(props)=> <DocumentsPage { ...props } onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-			    <Route exact path="/free-trial" render={()=> <HomePage scrolling={scrolling} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} onRegistered={this.handleRegistered} />} />
-			    <Route path="/profile/:username?" render={(props)=> <ProfilePage { ...props } onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-			    <Route path="/:section(confirm|recover|register)/:userID?" render={(props)=> <AccountPage { ...props } onLogout={this.handleLogout} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-			    <Route exact path="/plugins" render={()=> <PluginsPage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-			    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
-			    <Route exact path="/terms" render={()=> <TermsPage />} />
-
-			    <Route><Status404Page onPage={this.handlePage} /></Route>
-		    </Switch>
-
-		    <BottomNav
-			    mobileLayout={false}
-			    onLogout={()=> this.handleLogout()}
-			    onModal={(url)=> this.onToggleModal(url, true)}
-			    onPage={this.handlePage}
-		    />
-	    </div>
-
-		  <div className="modal-wrapper">
-			  {(popup) && (<PopupNotification payload={popup} onComplete={()=> this.setState({ popup : null })}>
-				  {popup.content}
-			  </PopupNotification>)}
-
-			  {(loginModal) && (<LoginModal
-				  inviteID={null}
-				  outro={(profile !== null)}
-				  onModal={(url)=> this.onToggleModal(url, true)}
-				  onPage={this.handlePage}
-				  onPopup={this.handlePopup}
-				  onComplete={()=> this.onToggleModal(Modals.LOGIN, false)}
-				  onLoggedIn={this.handleLoggedIn}
-			  />)}
-
-			  {(registerModal) && (<RegisterModal
-				  inviteID={null}
-				  outro={(profile !== null)}
-				  onModal={(url)=> this.onToggleModal(url, true)}
-				  onPage={this.handlePage}
-				  onPopup={this.handlePopup}
-				  onComplete={()=> this.onToggleModal(Modals.REGISTER, false)}
-				  onRegistered={this.handleRegistered}
-			  />)}
-
-			  {(payDialog) && (<AlertDialog
-				  title="Limited Account"
-				  message={`You must upgrade to an unlimited account to view more than ${freeAccount.upload_views} ${Strings.pluralize('project', freeAccount.upload_views)}.`}
-				  onComplete={this.handlePaidAlert}
-			  />)}
-
-			  {(stripeModal) && (<StripeModal
-				  profile={profile}
-				  onPage={this.handlePage}
-				  onPopup={this.handlePopup}
-				  onSubmitted={this.handlePurchaseSubmitted}
-				  onComplete={()=> this.onToggleModal(Modals.STRIPE, false)}
-			  />)}
+  	return (<div className="site-wrapper">
+		  <div className="changelog-wrapper">
+			  <button className="tiny-button" onClick={this.handleChangelog}>Changelog</button>
 		  </div>
-	  </Column></div>);
+		  <Column horizontal="center">
+		    <div className="content-wrapper" ref={wrapper}>
+			    <Switch>
+				    {(!isUserLoggedIn()) && (<Route exact path="/profile"><Redirect to="/" /></Route>)}
+				    <Route exact path="/logout" render={()=> (profile) ? this.handleLogout() : null} />
+
+				    <Route exact path="/" render={()=> <HomePage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} onRegistered={this.handleRegistered} />} />
+				    <Route exact path="/:section(login|register|thank-you)" render={()=> <HomePage scrolling={scrolling} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} onLoggedIn={this.handleLoggedIn} onRegistered={this.handleRegistered} />} />
+				    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
+				    <Route exact path="/terms" render={()=> <TermsPage />} />
+
+				    <Route><Status404Page onPage={this.handlePage} /></Route>
+			    </Switch>
+		    </div>
+
+			  <div className="modal-wrapper">
+				  {(popup) && (<PopupNotification payload={popup} onComplete={()=> this.setState({ popup : null })}>
+					  {popup.content}
+				  </PopupNotification>)}
+
+				  {(loginModal) && (<LoginModal
+					  inviteID={null}
+					  outro={(profile !== null)}
+					  onModal={(url)=> this.onToggleModal(url, true)}
+					  onPage={this.handlePage}
+					  onPopup={this.handlePopup}
+					  onComplete={()=> this.onToggleModal(Modals.LOGIN, false)}
+					  onLoggedIn={this.handleLoggedIn}
+				  />)}
+
+				  {(registerModal) && (<RegisterModal
+					  inviteID={null}
+					  outro={(profile !== null)}
+					  onModal={(url)=> this.onToggleModal(url, true)}
+					  onPage={this.handlePage}
+					  onPopup={this.handlePopup}
+					  onComplete={()=> this.onToggleModal(Modals.REGISTER, false)}
+					  onRegistered={this.handleRegistered}
+				  />)}
+
+				  {(payDialog) && (<AlertDialog
+					  title="Limited Account"
+					  message="You must upgrade to an unlimited account to view more"
+					  onComplete={this.handlePaidAlert}
+				  />)}
+
+				  {(stripeModal) && (<StripeModal
+					  profile={profile}
+					  onPage={this.handlePage}
+					  onPopup={this.handlePopup}
+					  onSubmitted={this.handlePurchaseSubmitted}
+					  onComplete={()=> this.onToggleModal(Modals.STRIPE, false)}
+				  />)}
+			  </div>
+		  </Column>
+	  </div>);
   }
 }
 

@@ -1,30 +1,21 @@
 {
   "bottom": [{
-    "title": "Start Free Trial",
-    "url": "/page/free-trial"
+    "title": "Changelog",
+    "url": "https://github.com/de-ai/designengine.ai/projects/1"
   }, {
-    "title": "Sign In",
-    "url": "/page/register"
+    "title": "GitHub",
+    "url": "https://www.github.com/de-ai"
   }, {
     "title": "Plugins",
-    "url": "/page/plugins"
+    "url": "https://github.com/de-ai/xd-plugin"
   }, {
-    "title": "Specs",
-    "url": "http://tools.designengine.ai/specs"
+    "title": "Sign in with GitHub",
+    "url": "/modal/github-connect"
   }, {
-    "title": "Styles",
-    "url": "http://tools.designengine.ai/styles"
+    "title": "Sign Up",
+    "url": "/page/register"
   }, {
-    "title": "Parts",
-    "url": "http://tools.designengine.ai/parts"
-  }, {
-    "title": "Editor",
-    "url": "http://tools.designengine.ai/editor"
-  }, {
-    "title": "Terms of Service",
-    "url": "/page/terms"
-  }, {
-    "title": "Privacy",
-    "url": "/page/privacy"
+    "title": "Login",
+    "url": "/page/login"
   }]
 }
