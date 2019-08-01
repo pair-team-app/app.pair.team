@@ -43,7 +43,6 @@ import {
 } from '../../utils/funcs';
 import { DateTimes, Strings, URIs } from '../../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
-import freeAccount from '../../assets/json/free-account';
 
 
 const wrapper = React.createRef();
@@ -418,7 +417,6 @@ class App extends Component {
 			    </Switch>
 		    </div>
 
-
 			  <div className="modal-wrapper">
 				  {(popup) && (<PopupNotification payload={popup} onComplete={()=> this.setState({ popup : null })}>
 					  {popup.content}
@@ -446,7 +444,7 @@ class App extends Component {
 
 				  {(payDialog) && (<AlertDialog
 					  title="Limited Account"
-					  message={`You must upgrade to an unlimited account to view more than ${freeAccount.upload_views} ${Strings.pluralize('project', freeAccount.upload_views)}.`}
+					  message="You must upgrade to an unlimited account to view more"
 					  onComplete={this.handlePaidAlert}
 				  />)}
 

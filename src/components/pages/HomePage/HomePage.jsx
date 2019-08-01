@@ -58,8 +58,8 @@ const HomePageThankYouSection = (props)=> {
 
 	return (<div className="home-page-thak-you-section">
 		<button className="long-button stack-button" onClick={()=> props.onSocial(TWITTER_SOCIAL)}>Twitter</button><br />
-		<button className="long-button stack-button" onClick={()=> props.onSocial(INSTAGRAM_SOCIAL)}>Instagram</button><br />
-		<button className="long-button" onClick={()=> props.onSocial(SLACK_INVITE)}>Slack</button>
+		<button className="long-button" onClick={()=> props.onSocial(INSTAGRAM_SOCIAL)}>Instagram</button><br />
+		{/*<button className="long-button" onClick={()=> props.onSocial(SLACK_INVITE)}>Slack</button>*/}
 	</div>);
 };
 
@@ -290,7 +290,7 @@ class HomePage extends Component {
 		return (
 			<BasePage className="home-page-wrapper">
 				<Element name="top">
-					<PageHeader title="Design Engine manages Interface Design Systems by treating Code as the source of truth">
+					<PageHeader title="Design Engine helps developers maintain their products design source">
 						{(URIs.firstComponent() === '') && (<HomePageButtonSection
 							onGitHub={this.handleGitHub}
 							onSignup={this.handleSignup}
@@ -345,7 +345,7 @@ class HomePage extends Component {
 				<div className="home-page-content">
 					<BaseSection>
 						<h1 className="section-title section-title-blue">How does it work?</h1>
-						<h1 className="section-text">Developers can distribute coded interface elements to their design team to maintain a single source of design truth across the design and development team</h1>
+						<h1 className="section-text">Developers can distribute coded components to their design team to maintain a single source of design truth</h1>
 						<BottomNav
 							mobileLayout={false}
 							onModal={this.handleGitHub}
@@ -375,8 +375,8 @@ class HomePage extends Component {
 				<div className="home-page-content">
 					<BaseSection>
 						<div className="section-quote-wrapper">
-							<span className="section-quote">“asjhdhas n akshdkhaks h kaskjdhkhk ahsdh akshd hashd ajsdjkasah hasjd hak hkhh”</span>
-							<span className="section-quote-attrib"> - John Smith Adobe XD</span>
+							<span className="section-quote">“Instead of giving developers code, why don't developers give designers their UI?”</span>
+							<span className="section-quote-attrib"> - Jason Festa</span>
 						</div>
 						<div className="home-page-button-wrapper">
 							<button className="aux-button long-button stack-button" onClick={this.handleGitHub}>Sign Up for Early Access with Github</button><br />
