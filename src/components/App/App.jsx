@@ -210,6 +210,18 @@ class App extends Component {
 
 		this.props.updateUserProfile(profile, false);
 		this.props.updateUserProfile(profile);
+
+		axios.post(API_ENDPT_URL, qs.stringify({
+			action    : 'REGISTER',
+			username  : profile.email,
+			email     : profile.email,
+			password  : '',
+			type      : 'early_access'
+		})).then((response) => {
+			console.log('REGISTER', response.data);
+		});
+
+
 		this.handlePage(Pages.THANK_YOU);
 	};
 

@@ -290,7 +290,7 @@ class HomePage extends Component {
 		return (
 			<BasePage className="home-page-wrapper">
 				<Element name="top">
-					<PageHeader title="Design Engine helps developers maintain their products design source">
+					<PageHeader title={`${(URIs.firstComponent() === 'thank-you') ? 'Thank you, you have been added to our wait list. We will be in touch shortly.' : 'Design Engine helps developers maintain their products design source'}`}>
 						{(URIs.firstComponent() === '') && (<HomePageButtonSection
 							onGitHub={this.handleGitHub}
 							onSignup={this.handleSignup}
