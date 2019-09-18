@@ -37,7 +37,7 @@ const HomePageFormSection = (props)=> {
 		</form>
 
 		<div className="home-page-logo-wrapper">
-			<img className="home-page-logo-npm" src={npmLogo} alt="npm" />
+			<a href="https://www.npmjs.com/package/design-engine-playground" target="_blank"><img className="home-page-logo-npm" src={npmLogo} alt="npm" /></a>
 			<img className="home-page-logo-xd" src={xdLogo} alt="Adobe XD" />
 		</div>
 	</div>);
@@ -48,7 +48,7 @@ const HomePageThankYouSection = (props)=> {
 
 	return (<div className="home-page-thank-you-section">
 		<div className="home-page-logo-wrapper home-page-thank-you-logo-wrapper">
-			<img className="home-page-logo-npm" src={npmLogo} alt="npm" />
+			<a href="https://www.npmjs.com/package/design-engine-playground" target="_blank"><img className="home-page-logo-npm" src={npmLogo} alt="npm" /></a>
 			<img className="home-page-logo-xd" src={xdLogo} alt="Adobe XD" />
 		</div>
 	</div>);
@@ -241,7 +241,7 @@ class HomePage extends Component {
 							<img className="home-page-creator-logo" src={deLogoLeft} alt="Logo" />
 							<img className="home-page-creator-logo home-page-creator-logo-adjacent" src={deLogoRight} alt="Logo" />
 							<h1 className="home-page-creator">
-								Design Engine was built by Jason Festa & Matt Holcombe during their time at Adobe's Plugin Accelerator (Cohort 1).
+								Design Engine was built by <a href="https://www.linkedin.com/in/jasonfesta/" target="_blank">Jason Festa</a> & <a href="https://www.linkedin.com/in/gullinbursti/" target="_blank">Matt Holcombe</a> during their time at <a href="https://medium.com/adobetech/the-xd-plugin-accelerator-meet-the-teams-f9a07a866ae0" target="_blank">Adobe's Plugin Accelerator</a> (Cohort 1).
 								{/*Designed & Developed by <span className="txt-underline">Jason Festa</span> & <span className="txt-underline">Matt Holcombe</span> at <span className="txt-underline">Adobe XD</span>*/}
 							</h1>
 						</div>
