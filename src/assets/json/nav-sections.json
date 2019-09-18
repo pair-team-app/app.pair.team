@@ -6,16 +6,13 @@
     "title": "GitHub",
     "url": "https://www.github.com/de-ai"
   }, {
-    "title": "Plugins",
-    "url": "https://github.com/de-ai/xd-plugin"
+    "title": "NPM Module",
+    "url": "https://www.npmjs.com/package/design-engine-playground"
   }, {
     "title": "Sign in with GitHub",
     "url": "/modal/github-connect"
   }, {
     "title": "Sign Up",
     "url": "/page/register"
-  }, {
-    "title": "Login",
-    "url": "/page/login"
   }]
 }
