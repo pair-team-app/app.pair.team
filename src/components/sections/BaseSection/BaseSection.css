@@ -6,7 +6,7 @@
 .base-section-content-wrapper {
 	width: 100%;
 	max-width: 840px;
-	border: 1px dotted rgba(255, 255, 0, 0.5);
+	border: 1px dotted rgba(255, 255, 0, 0.0);
 }
 
 @media screen and (max-width: 800px) {
