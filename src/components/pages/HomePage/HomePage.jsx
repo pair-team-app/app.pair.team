@@ -181,7 +181,7 @@ class HomePage extends Component {
 	render() {
 // 		console.log('HomePage.render()', this.props, this.state);
 
-		const { email, emailValid, password, passwordValid, passMsg } = this.state;
+		const { email, emailValid } = this.state;
 
 		return (
 			<BasePage className="home-page-wrapper">

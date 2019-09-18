@@ -41,7 +41,7 @@ import {
 	isInspectorPage,
 	isUserLoggedIn
 } from '../../utils/funcs';
-import { DateTimes, Strings, URIs } from '../../utils/lang';
+import { DateTimes, URIs } from '../../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 

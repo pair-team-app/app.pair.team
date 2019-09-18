@@ -16,7 +16,7 @@ class PageHeader extends Component {
 	}
 
 	render() {
-		const { profile } = this.props;
+// 		const { profile } = this.props;
 		const { title, bgColor, children } = this.props;
 
 		const style = (bgColor) ? {
