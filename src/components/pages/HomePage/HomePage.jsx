@@ -33,7 +33,7 @@ const HomePageFormSection = (props)=> {
 	return (<div className="home-page-form-section">
 		<form onSubmit={props.onSubmit}>
 			<div className={`input-wrapper${(!emailValid && email.length > 0) ? ' input-wrapper-error' : ''}`}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={props.onFocus} onChange={props.onChange} /></div>
-			<button disabled={!emailValid} type="submit" className="long-button" onClick={(event)=> props.onSubmit(event)}>{'Sign Up for Early Access'}</button>
+			<button disabled={!emailValid} type="submit" className="long-button" onClick={(event)=> props.onSubmit(event)}>Sign Up for Early Access</button>
 		</form>
 
 		<div className="home-page-logo-wrapper">
@@ -112,13 +112,6 @@ class HomePage extends Component {
 		this.props.onModal(Modals.GITHUB_CONNECT);
 	};
 
-	handleSignup = ()=> {
-// 		console.log('HomePage.handleSignup()');
-
-		trackEvent('button', 'sign-up');
-		this.props.onPage(Pages.REGISTER);
-	};
-
 	handleTextfieldChange = (event)=> {
 // 		console.log('HomePage.handleTextfieldChange()', event);
 		this.setState({
@@ -137,6 +130,8 @@ class HomePage extends Component {
 
 	handleSubmit = (event)=> {
 		console.log('HomePage.handleSubmit()');
+		event.preventDefault();
+
 		trackEvent('button', 'register');
 
 		const { email } = this.state;
