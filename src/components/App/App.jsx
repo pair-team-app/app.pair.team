@@ -41,7 +41,7 @@ import {
 	isInspectorPage,
 	isUserLoggedIn
 } from '../../utils/funcs';
-import { DateTimes, Strings, URIs } from '../../utils/lang';
+import { DateTimes, URIs } from '../../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 
@@ -412,7 +412,7 @@ class App extends Component {
 
   	return (<div className="site-wrapper">
 		  <div className="changelog-wrapper">
-			  <button className="tiny-button" onClick={this.handleChangelog}>Changelog</button>
+			  <button className="short-button tiny-button" onClick={this.handleChangelog}>Changelog</button>
 		  </div>
 		  <Column horizontal="center">
 		    <div className="content-wrapper" ref={wrapper}>

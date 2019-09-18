@@ -31,7 +31,7 @@
 }
 
 .section-title {
-	margin-bottom: 60px;
+	margin-bottom: 100px;
 }
 
 .section-title-red {
@@ -46,10 +46,14 @@
 	margin-bottom: 80px;
 }
 
+.section-text-long {
+	margin-bottom: 200px;
+}
+
 .section-list-wrapper {
 	font-size: 44px;
 	line-height: 50px;
-	margin-bottom: 60px;
+	margin-bottom: 120px;
 }
 
 .section-quote-wrapper {
@@ -73,6 +77,10 @@
 	width: auto;
 	padding-left: 25px;
 	padding-right: 25px;
+}
+
+.short-button {
+	height: 38px;
 }
 
 .tiny-button {
@@ -251,8 +259,8 @@
 	}
 
 	.long-button {
-		min-width: 330px;
-		width: 330px;
+		min-width: 300px;
+		width: 300px;
 	}
 
 	.section-text {
@@ -262,10 +270,6 @@
 	.section-quote {
 		font-size: 38px;
 		line-height: 44px;
-	}
-
-	.changelog-wrapper {
-		display: none;
 	}
 }
 

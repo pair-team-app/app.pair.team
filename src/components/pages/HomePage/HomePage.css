@@ -3,7 +3,28 @@
 }
 
 .home-page-content {
-	padding: 70px 0;
+	padding: 70px 0 20px 0;
+	border: 1px dotted rgba(255, 0, 255, 0.5);
+}
+
+.home-page-logo-wrapper {
+	margin-top: 40px;
+}
+
+.home-page-thank-you-logo-wrapper {
+	margin-bottom: 180px;
+}
+
+.home-page-logo-npm {
+	width: 117px;
+	height: 48px;
+	margin-right: 20px;
+	margin-bottom: 10px;
+}
+
+.home-page-logo-xd {
+	width: 68px;
+	height: 68px;
 }
 
 .home-page-content:nth-child(even) {
@@ -12,7 +33,7 @@
 
 .home-page-creator-wrapper {
 	position: relative;
-	padding: 20px 0;
+	margin: 20px 0 130px 0;
 }
 
 .home-page-creator-logo {
