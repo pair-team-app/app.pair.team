@@ -31,7 +31,7 @@ class PageHeader extends Component {
 
 		return (<div className="page-header" style={style}>
 			<BaseSection>
-				<img className="page-header-logo" src={deLogo} alt="Logo" />
+				<img className="page-header-logo" src={deLogo} onClick={()=> window.location = '/'} alt="Logo" />
 				<h1 className="page-header-title" style={headerStyle}>{title}</h1>
 				{(children) && (<div className="page-header-children-wrapper">
 					{children}
