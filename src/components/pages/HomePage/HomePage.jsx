@@ -185,7 +185,7 @@ class HomePage extends Component {
 
 		const headerStyle = (Browsers.isMobile.iOS()) ? {
 			fontFamily    : '"San Francisco Text Medium", sans-serif',
-			letterSpacing : 'normal'
+			letterSpacing : '-0.25px'
 		} : null;
 
 		return (

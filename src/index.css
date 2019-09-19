@@ -90,25 +90,7 @@ h1 {
   font-size: 48px;
   line-height: 65px;
   color: #ffffff;
-  letter-spacing: -0.35px;
-}
-
-/** Mobile / Page Header */
-h2 {
-  font-family: "San Francisco Text Medium", sans-serif;
-  font-size: 44px;
-  letter-spacing: -2.32px;
-  line-height: normal;
-  color: #c8e1fd;
-}
-
-/** Mobile Title **/
-h3 {
-  font-family: "San Francisco Text Medium", sans-serif;
-  font-size: 28px;
-  letter-spacing: -1px;
-  line-height: normal;
-	color: #005cc5;
+  letter-spacing: -0.5px;
 }
 
 /** Section / Form Title **/
@@ -123,16 +105,6 @@ h4 {
 
 h4.table-header {
   margin-bottom: 26px;
-}
-
-/** Section Subtitle **/
-h5 {
-  height: fit-content;
-  margin-top: 14px;
-  font-family: "San Francisco Text Medium", sans-serif;
-  font-size: 16px;
-  line-height: 28px;
-  color: #999999;
 }
 
 /** Legal Section Title **/

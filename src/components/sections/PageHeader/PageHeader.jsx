@@ -26,7 +26,7 @@ class PageHeader extends Component {
 
 		const headerStyle = (Browsers.isMobile.iOS()) ? {
 			fontFamily    : '"San Francisco Text Medium", sans-serif',
-			letterSpacing : 'normal'
+			letterSpacing : '-0.25px'
 		} : null;
 
 		return (<div className="page-header" style={style}>
