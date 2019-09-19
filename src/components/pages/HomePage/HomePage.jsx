@@ -43,7 +43,7 @@ const HomePageFormSection = (props)=> {
 
 		<div className="home-page-logo-wrapper">
 			<a href="https://www.npmjs.com/package/design-engine-playground" target="_blank" rel="noopener noreferrer"><img className="home-page-logo-npm" src={npmLogo} alt="npm" /></a>
-			<img className="home-page-logo-xd" src={xdLogo} alt="Adobe XD" />
+			<a href = "https://github.com/AdobeXD" target="_blank" rel="noopener noreferrer"><img className="home-page-logo-xd" src={xdLogo} alt="Adobe XD" /></a>
 		</div>
 	</div>);
 };
