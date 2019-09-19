@@ -1,5 +1,8 @@
 {
   "bottom": [{
+    "title": "Blog",
+    "url": "https://medium.com/designengineai"
+  }, {
     "title": "Changelog",
     "url": "https://github.com/de-ai/designengine.ai/blob/master/changelog.md"
   }, {
