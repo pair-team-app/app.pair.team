@@ -33,28 +33,17 @@ const HomePageFormSection = (props)=> {
 // 	console.log('HomePage.HomePageFormSection()', props);
 
 	const { email } = props;
-	const emailValid = Strings.isEmail(email);
+	const emailValid = Strings.isEmail(email) || email.includes('!');
 
 	return (<div className="home-page-form-section">
 		<form onSubmit={props.onSubmit}>
 			<div className={`input-wrapper${(!emailValid && email.length > 0) ? ' input-wrapper-error' : ''}`}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={props.onFocus} onChange={props.onChange} /></div>
-			<button disabled={!emailValid} type="submit" className="long-button" onClick={(event)=> props.onSubmit(event)}>Sign Up for Early Access</button>
+			<button disabled={!emailValid || email.includes('!')} type="submit" className="long-button" onClick={(event)=> props.onSubmit(event)}>Sign Up for Early Access</button>
 		</form>
 
 		<div className="home-page-logo-wrapper">
 			<a href="https://www.npmjs.com/package/design-engine-playground" target="_blank" rel="noopener noreferrer"><img className="home-page-logo-npm" src={npmLogo} alt="npm" /></a>
 			<a href = "https://github.com/AdobeXD" target="_blank" rel="noopener noreferrer"><img className="home-page-logo-xd" src={xdLogo} alt="Adobe XD" /></a>
-		</div>
-	</div>);
-};
-
-const HomePageThankYouSection = (props)=> {
-	console.log('HomePage.HomePageThankYouSection()', props);
-
-	return (<div className="home-page-thank-you-section">
-		<div className="home-page-logo-wrapper home-page-thank-you-logo-wrapper">
-			<a href="https://www.npmjs.com/package/design-engine-playground" target="_blank" rel="noopener noreferrer"><img className="home-page-logo-npm" src={npmLogo} alt="npm" /></a>
-			<img className="home-page-logo-xd" src={xdLogo} alt="Adobe XD" />
 		</div>
 	</div>);
 };
@@ -191,7 +180,7 @@ class HomePage extends Component {
 		return (
 			<BasePage className="home-page-wrapper">
 				<Element name="top">
-					<PageHeader title={`${(URIs.firstComponent() === 'thank-you') ? 'Thank you for signing up. You are now on our beta list. Please download our NPM Module.' : 'Design Engine turns code components into design components.'}`}>
+					<PageHeader title="Design Engine turns code components into design components.">
 						{(URIs.firstComponent() === '' || URIs.firstComponent() === 'register') && (<HomePageFormSection
 							email={email}
 							emailValid={emailValid}
@@ -200,7 +189,13 @@ class HomePage extends Component {
 							onSubmit={this.handleSubmit}
 						/>)}
 
-						{(URIs.firstComponent() === 'thank-you') && (<HomePageThankYouSection />)}
+						{(URIs.firstComponent() === 'thank-you') && (<HomePageFormSection
+							email="Thank you for signing up!"
+							emailValid={true}
+							onChange={null}
+							onFocus={null}
+							onSubmit={null}
+						/>)}
 
 						<BottomNav
 							mobileLayout={false}
