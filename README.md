@@ -1,18 +1,22 @@
 <div align="center">
 
-[![Design Engine](https://avatars1.githubusercontent.com/u/36387012?s=200&v=4)]
+![Design Engine](https://avatars1.githubusercontent.com/u/36387012?s=200&v=4)
 
 ### Design Engine
+https://designengine.ai
 
 </div>
 
 ## What is Design Engine?
 
-Design Engine is a design platform built for engineers. From open source projects to enterprise apps, you can inspect design files, download parts, copy code, and build interfaces faster.
+Design Engine allows for product teams to capture, distribute, and collaborate on Design Systems.
 
-## Design Engine Survey
-Please fill out the following form to help our team understand more about how you & your team inspect design, download assets, copy code, and build interfaces together. https://goo.gl/forms/hJc6BHGiHEMxUOgC3
+## Design Engine Survey
+Please fill out the following form to help our team understand more about how you & your team inspect design, download assets, copy code, and build interfaces together. 
 
+https://goo.gl/forms/hJc6BHGiHEMxUOgC3
+
+<!-- 
 ## Getting Started
 
 - [Contributing](http://earlyaccess.designengine.ai/)
@@ -32,7 +36,7 @@ Please fill out the following form to help our team understand more about how yo
     - [Slices](docs/bhttp://earlyaccess.designengine.ai/api)
     - [Text Fields](http://earlyaccess.designengine.ai/api)
     - [Buttons](http://earlyaccess.designengine.ai/api)
-
+-->
 ## Need Support
 
 - [Issues](https://github.com/de-ai/designengine.ai/issues)

@@ -213,8 +213,8 @@ class HomePage extends Component {
 				<div className="home-page-content">
 					<BaseSection>
 						<h1 className="section-title section-title-red" style={headerStyle}>What is Design Engine?</h1>
-						<h1 className="section-text">
-							Design Engine solves the root problems of maintaining a system by mirroring code and design. Once used, our approach becomes the connective tissue between design & development teams.
+						<h1 className="section-text section-text-long">
+							Design Engine allows for product teams to capture, distribute, and collaborate on Design Systems.
 						</h1>
 
 						<BottomNav
@@ -228,7 +228,7 @@ class HomePage extends Component {
 				<div className="home-page-content">
 					<BaseSection>
 						<h1 className="section-title section-title-blue" style={headerStyle}>How does it work?</h1>
-						<h1 className="section-text section-text-long">
+						<h1 className="section-text">
 							Design Engine works by using a virtual browser (chromium) to crawl and deliver interface design assets directly to your design team.
 						</h1>
 						<BottomNav
