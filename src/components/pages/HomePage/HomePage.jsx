@@ -16,7 +16,12 @@ import {
 	Modals,
 	Pages
 } from '../../../consts/uris';
-import { Bits, Strings, URIs } from '../../../utils/lang';
+import {
+	Bits,
+	Browsers,
+	Strings,
+	URIs
+} from '../../../utils/lang';
 import { trackEvent } from '../../../utils/tracking';
 
 import npmLogo from '../../../assets/images/logos/logo-npm.png';
@@ -178,6 +183,11 @@ class HomePage extends Component {
 
 		const { email, emailValid } = this.state;
 
+		const headerStyle = (Browsers.isMobile.iOS()) ? {
+			fontFamily    : '"San Francisco Text Medium", sans-serif',
+			letterSpacing : 'normal'
+		} : null;
+
 		return (
 			<BasePage className="home-page-wrapper">
 				<Element name="top">
@@ -202,7 +212,7 @@ class HomePage extends Component {
 
 				<div className="home-page-content">
 					<BaseSection>
-						<h1 className="section-title section-title-red">What is Design Engine?</h1>
+						<h1 className="section-title section-title-red" style={headerStyle}>What is Design Engine?</h1>
 						<h1 className="section-text">
 							Design Engine solves the root problems of maintaining a system by mirroring code and design. Once used, our approach becomes the connective tissue between design & development teams.
 						</h1>
@@ -217,7 +227,7 @@ class HomePage extends Component {
 
 				<div className="home-page-content">
 					<BaseSection>
-						<h1 className="section-title section-title-blue">How does it work?</h1>
+						<h1 className="section-title section-title-blue" style={headerStyle}>How does it work?</h1>
 						<h1 className="section-text section-text-long">
 							Design Engine works by using a virtual browser (chromium) to crawl and deliver interface design assets directly to your design team.
 						</h1>
@@ -231,7 +241,7 @@ class HomePage extends Component {
 
 				<div className="home-page-content">
 					<BaseSection>
-						<h1 className="section-title section-title-red">Who built Design Engine?</h1>
+						<h1 className="section-title section-title-red" style={headerStyle}>Who built Design Engine?</h1>
 						<div className="home-page-creator-wrapper">
 							<img className="home-page-creator-logo" src={deLogoLeft} alt="Logo" />
 							<img className="home-page-creator-logo home-page-creator-logo-adjacent" src={deLogoRight} alt="Logo" />

@@ -5,6 +5,7 @@ import './PageHeader.css';
 import { connect } from 'react-redux';
 
 import BaseSection from '../BaseSection';
+import { Browsers } from '../../../utils/lang';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
 
 
@@ -23,10 +24,15 @@ class PageHeader extends Component {
 			backgroundColor : bgColor
 		} : null;
 
+		const headerStyle = (Browsers.isMobile.iOS()) ? {
+			fontFamily    : '"San Francisco Text Medium", sans-serif',
+			letterSpacing : 'normal'
+		} : null;
+
 		return (<div className="page-header" style={style}>
 			<BaseSection>
 				<img className="page-header-logo" src={deLogo} alt="Logo" />
-				<h1 className="page-header-title">{title}</h1>
+				<h1 className="page-header-title" style={headerStyle}>{title}</h1>
 				{(children) && (<div className="page-header-children-wrapper">
 					{children}
 				</div>)}
