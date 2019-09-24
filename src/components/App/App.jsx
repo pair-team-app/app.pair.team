@@ -22,7 +22,7 @@ import TermsPage from '../pages/TermsPage';
 import {
 	API_ENDPT_URL,
 	GITHUB_APP_AUTH,
-	CHANGE_LOG,
+	GITHUB_CHANGELOG,
 	Modals,
 	Pages
 } from '../../consts/uris';
@@ -172,7 +172,7 @@ class App extends Component {
 
 	handleChangelog = ()=> {
 		console.log('App.handleChangelog()');
-		window.open(CHANGE_LOG);
+		window.open(GITHUB_CHANGELOG);
 	};
 
 	handleGithubAuth = ()=> {

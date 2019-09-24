@@ -13,6 +13,8 @@ import BottomNav from '../../sections/BottomNav';
 
 import {
 	API_ENDPT_URL,
+	GITHUB_REPO_XD,
+	NPM_PACKAGE,
 	Modals,
 	Pages
 } from '../../../consts/uris';
@@ -29,8 +31,8 @@ import xdLogo from '../../../assets/images/logos/logo-xd.png';
 import deLogoLeft from '../../../assets/images/logos/logo-designengine_left.svg';
 import deLogoRight from '../../../assets/images/logos/logo-designengine_right.svg';
 
-const HomePageFormSection = (props)=> {
-// 	console.log('HomePage.HomePageFormSection()', props);
+const HomePageHeader = (props)=> {
+// 	console.log('HomePage.HomePageHeader()', props);
 
 	const { email } = props;
 	const emailValid = Strings.isEmail(email) || email.includes('!');
@@ -42,8 +44,8 @@ const HomePageFormSection = (props)=> {
 		</form>
 
 		<div className="home-page-logo-wrapper">
-			<a href="https://www.npmjs.com/package/design-engine-playground" target="_blank" rel="noopener noreferrer"><img className="home-page-logo-npm" src={npmLogo} alt="npm" /></a>
-			<a href = "https://github.com/AdobeXD" target="_blank" rel="noopener noreferrer"><img className="home-page-logo-xd" src={xdLogo} alt="Adobe XD" /></a>
+			<a href={NPM_PACKAGE} target="_blank" rel="noopener noreferrer"><img className="home-page-logo-npm" src={npmLogo} alt="npm" /></a>
+			<a href={GITHUB_REPO_XD} target="_blank" rel="noopener noreferrer"><img className="home-page-logo-xd" src={xdLogo} alt="Adobe XD" /></a>
 		</div>
 	</div>);
 };
@@ -181,7 +183,7 @@ class HomePage extends Component {
 			<BasePage className="home-page-wrapper">
 				<Element name="top">
 					<PageHeader title="Design Engine turns code components into design components.">
-						{(URIs.firstComponent() === '' || URIs.firstComponent() === 'register') && (<HomePageFormSection
+						{(URIs.firstComponent() === '' || URIs.firstComponent() === 'register') && (<HomePageHeader
 							email={email}
 							emailValid={emailValid}
 							onChange={this.handleTextfieldChange}
@@ -189,7 +191,7 @@ class HomePage extends Component {
 							onSubmit={this.handleSubmit}
 						/>)}
 
-						{(URIs.firstComponent() === 'thank-you') && (<HomePageFormSection
+						{(URIs.firstComponent() === 'thank-you') && (<HomePageHeader
 							email="Thank you for signing up!"
 							emailValid={true}
 							onChange={null}
