@@ -119,7 +119,7 @@ h6 {
 input[type="text"], input[type="password"], input[type="tel"], select, textarea, .input-txt, .field-error {
   background-color: #f0f0f0;
   padding: 12px 11px;
-  width: 100%;
+  width: 348px;
   border: 1px solid #f0f0f0;
   font-family: "San Francisco Text Medium", sans-serif;
   font-size: 16px;
@@ -187,7 +187,6 @@ textarea {
 
 @media screen and (max-width: 800px) {
 	form {
-		margin: 0;
 		padding: 0 16px;
 	}
 
@@ -195,6 +194,10 @@ textarea {
 		font-size: 38px;
 		line-height: 44px;
 	}
+
+  input[type="text"], input[type="password"], input[type="tel"], select, textarea, .input-txt, .field-error {
+    width: 300px;
+  }
 }
 
 

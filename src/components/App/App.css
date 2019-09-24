@@ -129,8 +129,7 @@
 .input-wrapper {
 	cursor: pointer;
 	margin-bottom: 20px;
-	border: 1px solid rgba(0, 0, 0, 0);
-	border-radius: 2px;
+	border: 1px solid rgba(240, 240, 240, 0.0);
 	width: 100%;
 }
 
