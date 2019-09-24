@@ -72,6 +72,7 @@ export const Browsers = {
 		Windows    : ()=> (navigator.userAgent.match(/IEMobile|WPDesktop/i)),
 		ANY        : ()=> (Browsers.isMobile.Android() || Browsers.isMobile.iOS() || Browsers.isMobile.Windows() || Browsers.isMobile.Opera() || Browsers.isMobile.BlackBerry())
 	},
+	isSafari     : ()=> (navigator.userAgent.match(/Mac OS X.+Safari/i) && !navigator.userAgent.match(/Mac OS X.+Chrome/i)),
 	makeDownload : (url, blank=false)=> {
 		let link = document.createElement('a');
 		link.target = (blank) ? '_blank' : '_self';

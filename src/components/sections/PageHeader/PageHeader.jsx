@@ -24,9 +24,9 @@ class PageHeader extends Component {
 			backgroundColor : bgColor
 		} : null;
 
-		const headerStyle = (Browsers.isMobile.iOS()) ? {
+		const headerStyle = (Browsers.isMobile.iOS() || Browsers.isSafari()) ? {
 			fontFamily    : '"San Francisco Text Medium", sans-serif',
-			letterSpacing : '-0.25px'
+			letterSpacing : '-1.75px'
 		} : null;
 
 		return (<div className="page-header" style={style}>

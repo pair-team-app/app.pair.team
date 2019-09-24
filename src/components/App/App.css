@@ -33,6 +33,10 @@
 	flex: 1 0 auto;
 }
 
+.section-title-fit {
+	flex: 1 0 0;
+}
+
 .section-title-red {
 	color: #e01d5a;
 }

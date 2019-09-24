@@ -176,9 +176,14 @@ class HomePage extends Component {
 
 		const { email, emailValid } = this.state;
 
-		const headerStyle = (Browsers.isMobile.iOS()) ? {
+		const headerStyle = (Browsers.isMobile.iOS() || Browsers.isSafari()) ? {
 			fontFamily    : '"San Francisco Text Medium", sans-serif',
-			letterSpacing : '-0.25px'
+			letterSpacing : '-1.75px'
+		} : null;
+
+		const contentStyle = (Browsers.isSafari()) ? {
+			fontFamily    : '"San Francisco Text Medium", sans-serif',
+			letterSpacing : '-1 .75px'
 		} : null;
 
 		return (
@@ -212,7 +217,7 @@ class HomePage extends Component {
 				<div className="home-page-content">
 					<BaseSection>
 						<h1 className="section-title section-title-red" style={headerStyle}>What is Design Engine?</h1>
-						<h2 className="section-text">Design Engine allows for product teams to capture, distribute, and collaborate on Design Systems.</h2>
+						<h2 className="section-text" style={contentStyle}>Design Engine allows for product teams to capture, distribute, and collaborate on Design Systems.</h2>
 						<BottomNav
 							mobileLayout={false}
 							onModal={this.handleGitHub}
@@ -224,7 +229,7 @@ class HomePage extends Component {
 				<div className="home-page-content">
 					<BaseSection>
 						<h1 className="section-title section-title-blue" style={headerStyle}>How does it work?</h1>
-						<h2 className="section-text">Design Engine works by using a virtual browser (chromium) to crawl and deliver interface design assets directly to your design team.</h2>
+						<h2 className="section-text" style={contentStyle}>Design Engine works by using a virtual browser (chromium) to crawl and deliver interface design assets directly to your design team.</h2>
 						<BottomNav
 							mobileLayout={false}
 							onModal={this.handleGitHub}
@@ -235,11 +240,13 @@ class HomePage extends Component {
 
 				<div className="home-page-content">
 					<BaseSection>
-						<h1 className="section-title section-title-red" style={headerStyle}>Who built Design Engine?</h1>
+						<h1 className="section-title section-title-fit section-title-red" style={headerStyle}>Who built Design Engine?</h1>
 						<div className="home-page-creator-wrapper">
-							<img className="home-page-creator-logo" src={deLogoLeft} alt="Logo" />
-							<img className="home-page-creator-logo home-page-creator-logo-adjacent" src={deLogoRight} alt="Logo" />
-							<h2 className="home-page-creator">Design Engine was built by <a href="https://www.linkedin.com/in/jasonfesta/" target="_blank" rel="noopener noreferrer">Jason Festa</a> & <a href="https://www.linkedin.com/in/gullinbursti/" target="_blank" rel="noopener noreferrer">Matt Holcombe</a> during their time at <a href="https://medium.com/adobetech/the-xd-plugin-accelerator-meet-the-teams-f9a07a866ae0" target="_blank" rel="noopener noreferrer">Adobe's Plugin Accelerator</a>.</h2>
+							<div className="home-page-creator-logo-wrapper">
+								<img className="home-page-creator-logo" src={deLogoLeft} alt="Logo" />
+								<img className="home-page-creator-logo home-page-creator-logo-adjacent" src={deLogoRight} alt="Logo" />
+							</div>
+							<h2 className="home-page-creator" style={contentStyle}>Design Engine was built by <a href="https://www.linkedin.com/in/jasonfesta/" target="_blank" rel="noopener noreferrer">Jason Festa</a> & <a href="https://www.linkedin.com/in/gullinbursti/" target="_blank" rel="noopener noreferrer">Matt Holcombe</a> during their time at <a href="https://medium.com/adobetech/the-xd-plugin-accelerator-meet-the-teams-f9a07a866ae0" target="_blank" rel="noopener noreferrer">Adobe's Plugin Accelerator</a>.</h2>
 						</div>
 						<BottomNav
 							mobileLayout={false}
