@@ -31,15 +31,17 @@ import xdLogo from '../../../assets/images/logos/logo-xd.png';
 import deLogoLeft from '../../../assets/images/logos/logo-designengine_left.svg';
 import deLogoRight from '../../../assets/images/logos/logo-designengine_right.svg';
 
-const HomePageHeader = (props)=> {
-// 	console.log('HomePage.HomePageHeader()', props);
+const HomePageHeaderForm = (props)=> {
+// 	console.log('HomePage.HomePageHeaderForm()', props);
 
 	const { email } = props;
 	const emailValid = Strings.isEmail(email) || email.includes('!');
 
-	return (<div className="home-page-form-section">
+	return (<div className="home-page-header-form">
 		<form onSubmit={props.onSubmit}>
-			<div className={`input-wrapper${(!emailValid && email.length > 0) ? ' input-wrapper-error' : ''}`}><input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={props.onFocus} onChange={props.onChange} /></div>
+			<div className={`input-wrapper${(!emailValid && email.length > 0) ? ' input-wrapper-error' : ''}`}>
+				<input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={props.onFocus} onChange={props.onChange} />
+			</div>
 			<button disabled={!emailValid || email.includes('!')} type="submit" className="long-button" onClick={(event)=> props.onSubmit(event)}>Sign Up for Early Access</button>
 		</form>
 
@@ -181,9 +183,9 @@ class HomePage extends Component {
 
 		return (
 			<BasePage className="home-page-wrapper">
-				<Element name="top">
+				<Element name="top" className="scroll-element">
 					<PageHeader title="Design Engine turns code components into design components.">
-						{(URIs.firstComponent() === '' || URIs.firstComponent() === 'register') && (<HomePageHeader
+						{(URIs.firstComponent() === '' || URIs.firstComponent() === 'register') && (<HomePageHeaderForm
 							email={email}
 							emailValid={emailValid}
 							onChange={this.handleTextfieldChange}
@@ -191,12 +193,12 @@ class HomePage extends Component {
 							onSubmit={this.handleSubmit}
 						/>)}
 
-						{(URIs.firstComponent() === 'thank-you') && (<HomePageHeader
+						{(URIs.firstComponent() === 'thank-you') && (<HomePageHeaderForm
 							email="Thank you for signing up!"
 							emailValid={true}
-							onChange={null}
-							onFocus={null}
-							onSubmit={null}
+							onChange={(e)=> null}
+							onFocus={(e)=> null}
+							onSubmit={(e)=> null}
 						/>)}
 
 						<BottomNav
@@ -210,10 +212,7 @@ class HomePage extends Component {
 				<div className="home-page-content">
 					<BaseSection>
 						<h1 className="section-title section-title-red" style={headerStyle}>What is Design Engine?</h1>
-						<h1 className="section-text section-text-long">
-							Design Engine allows for product teams to capture, distribute, and collaborate on Design Systems.
-						</h1>
-
+						<h2 className="section-text">Design Engine allows for product teams to capture, distribute, and collaborate on Design Systems.</h2>
 						<BottomNav
 							mobileLayout={false}
 							onModal={this.handleGitHub}
@@ -225,9 +224,7 @@ class HomePage extends Component {
 				<div className="home-page-content">
 					<BaseSection>
 						<h1 className="section-title section-title-blue" style={headerStyle}>How does it work?</h1>
-						<h1 className="section-text">
-							Design Engine works by using a virtual browser (chromium) to crawl and deliver interface design assets directly to your design team.
-						</h1>
+						<h2 className="section-text">Design Engine works by using a virtual browser (chromium) to crawl and deliver interface design assets directly to your design team.</h2>
 						<BottomNav
 							mobileLayout={false}
 							onModal={this.handleGitHub}
@@ -242,9 +239,7 @@ class HomePage extends Component {
 						<div className="home-page-creator-wrapper">
 							<img className="home-page-creator-logo" src={deLogoLeft} alt="Logo" />
 							<img className="home-page-creator-logo home-page-creator-logo-adjacent" src={deLogoRight} alt="Logo" />
-							<h1 className="home-page-creator">
-								Design Engine was built by <a href="https://www.linkedin.com/in/jasonfesta/" target="_blank" rel="noopener noreferrer">Jason Festa</a> & <a href="https://www.linkedin.com/in/gullinbursti/" target="_blank" rel="noopener noreferrer">Matt Holcombe</a> during their time at <a href="https://medium.com/adobetech/the-xd-plugin-accelerator-meet-the-teams-f9a07a866ae0" target="_blank" rel="noopener noreferrer">Adobe's Plugin Accelerator</a>.
-							</h1>
+							<h2 className="home-page-creator">Design Engine was built by <a href="https://www.linkedin.com/in/jasonfesta/" target="_blank" rel="noopener noreferrer">Jason Festa</a> & <a href="https://www.linkedin.com/in/gullinbursti/" target="_blank" rel="noopener noreferrer">Matt Holcombe</a> during their time at <a href="https://medium.com/adobetech/the-xd-plugin-accelerator-meet-the-teams-f9a07a866ae0" target="_blank" rel="noopener noreferrer">Adobe's Plugin Accelerator</a>.</h2>
 						</div>
 						<BottomNav
 							mobileLayout={false}

@@ -80,20 +80,29 @@ form {
 }
 
 h1, h2, h3, h4, h5 {
-  margin-top: 0;
+  margin: 0;
 }
 
-/** Homepage CTA */
+/** Section Title **/
 h1 {
   width: 100%;
-  margin-bottom: 20px;
+  margin-top: -10px;
   font-family: "San Francisco Text", sans-serif;
   font-size: 48px;
-  line-height: 65px;
+  line-height: normal;
   letter-spacing: -0.5px;
 }
 
-/** Section / Form Title **/
+/** Section Text **/
+h2 {
+  width: 100%;
+  font-family: "San Francisco Text", sans-serif;
+  font-size: 48px;
+  line-height: normal;
+  letter-spacing: -0.5px;
+}
+
+/** Form Title **/
 h4 {
   margin-top: -5px;
   margin-bottom: 17px;

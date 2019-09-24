@@ -25,8 +25,12 @@
 	width: 100%;
 }
 
+.scroll-element {
+	height: 100vh;
+}
+
 .section-title {
-	margin-bottom: 100px;
+	flex: 1 0 auto;
 }
 
 .section-title-red {
@@ -38,11 +42,8 @@
 }
 
 .section-text {
-	margin-bottom: 160px;
-}
-
-.section-text-long {
-	margin-bottom: 240px;
+	flex: 1 0 auto;
+	align-self: stretch;
 }
 
 .section-list-wrapper {
@@ -197,6 +198,10 @@
 
 
 @media screen and (max-width: 800px) {
+	.scroll-element {
+		height: auto;
+	}
+
 	.section-list-wrapper {
 		font-size: 23px;
 		line-height: 44px;
@@ -210,11 +215,6 @@
 
 	.section-text {
 		margin: 75px 0;
-	}
-
-	.section-quote {
-		font-size: 38px;
-		line-height: 44px;
 	}
 }
 

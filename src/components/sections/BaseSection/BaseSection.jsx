@@ -8,12 +8,12 @@ import { Column } from 'simple-flexbox';
 function BaseSection(props) {
 // 	console.log('BaseSection()', props);
 
-	const { className, children, style } = props;
+	const { children, style } = props;
 	return (
 		<div
-			className={`base-section ${className}`}
-			style={(style) ? style : null}>
-			<Column horizontal="center"><div className="base-section-content-wrapper">
+			className="base-section"
+			style={(style || null)}>
+			<Column horizontal="center" style={{ height : '100%' }}><div className="base-section-content-wrapper">
 				{children}
 			</div></Column>
 		</div>
