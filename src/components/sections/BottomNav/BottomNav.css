@@ -13,26 +13,23 @@
 	margin: 0 100px 25px 100px;
 }
 
-.bottom-nav-link, a.bottom-nav-link {
+.bottom-nav-link {
 	flex: 1 0 auto;
 	margin-right: 20px;
 	text-decoration: none;
 	color: #999999;
 }
 
-.bottom-nav-link:hover, .bottom-nav-link a:hover {
+.bottom-nav-link:hover {
 	text-decoration: underline;
 	cursor: pointer;
-	color: #a8a8a8;
-}
-
-.bottom-nav-link a, .bottom-nav-link a:any-link, a:active {
-	text-decoration: underline;
-	color: #b0b0b0;
+	color: #666666;
+	transition: color 0.125s ease-out;
 }
 
 .bottom-nav-disclaimer {
 	text-align: center;
+	color: #999999;
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 14px;
 	line-height: 21px;
@@ -43,7 +40,7 @@
 		margin: 0 10px 20px 10px;
 	}
 
-	.bottom-nav-link, a.bottom-nav-link {
+	.bottom-nav-link {
 		line-height: 30px;
 	}
 }

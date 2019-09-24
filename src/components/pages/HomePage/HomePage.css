@@ -16,6 +16,11 @@
 	margin-bottom: 140px;
 }
 
+.home-page-logo:hover {
+	filter: brightness(90%);
+	transition: filter 0.125s ease-out;
+}
+
 .home-page-logo-npm {
 	width: 117px;
 	height: 48px;
@@ -29,7 +34,7 @@
 }
 
 .home-page-content:nth-child(even) {
-	background-color: #24282e;
+	background-color: #f6f6f6;
 }
 
 .home-page-creator-wrapper {
@@ -50,7 +55,6 @@
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	color: #ffffff;
 }
 
 @media screen and (max-width: 800px) {

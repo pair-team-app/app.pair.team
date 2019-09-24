@@ -18,18 +18,18 @@ html, body {
   padding: 0;
   height: 100%;
   min-height: 100%;
-  background-color: #1a1e23;
+  background-color: #ffffff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: "San Francisco Text Medium", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-weight: 400;
   font-size: 16px;
   line-height: 28px;
-  color: #999999;
+  color: #232323;
 }
 
 a, a:any-link, a:active, a:visited {
-  color: #ffffff;
+  color: #232323;
   text-decoration: underline;
 }
 
@@ -51,11 +51,12 @@ button {
 
 button:hover, button:active {
   background-color: #00449c;
+  transition: background-color 0.25s ease-out;
   cursor: pointer;
 }
 
 button:disabled, button:disabled:hover {
-  color: #f0f0f0;
+  color: #e0e0e0;
   opacity : 0.75;
   cursor: default;
 }
@@ -89,7 +90,6 @@ h1 {
   font-family: "San Francisco Text", sans-serif;
   font-size: 48px;
   line-height: 65px;
-  color: #ffffff;
   letter-spacing: -0.5px;
 }
 
@@ -117,11 +117,10 @@ h6 {
 }
 
 input[type="text"], input[type="password"], input[type="tel"], select, textarea, .input-txt, .field-error {
-  background-color: #2d3239;
-  color: #ffffff;
+  background-color: #f0f0f0;
   padding: 12px 11px;
   width: 100%;
-  border: 1px solid #2d3239;
+  border: 1px solid #f0f0f0;
   font-family: "San Francisco Text Medium", sans-serif;
   font-size: 16px;
   letter-spacing: -0.3px;
@@ -130,12 +129,12 @@ input[type="text"], input[type="password"], input[type="tel"], select, textarea,
 
 input[type="text"]:disabled, input[type="password"]:disabled, input[type="tel"]:disabled, select:disabled, textarea:disabled {
   cursor: not-allowed;
-  color: #727d8d;
+  color: #999999;
 }
 
 input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hover, input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 1px 50px #2d3239 inset;
-  -webkit-text-fill-color: #abdafb;
+  -webkit-box-shadow: 0 0 1px 50px #f0f0f0 inset;
+  -webkit-text-fill-color: #232323;
 }
 
 
@@ -156,7 +155,6 @@ p:last-child {
 sup {
   font-family: "San Francisco Text", sans-serif;
   font-size: 10px;
-  color: #7ed321;
   text-transform: uppercase;
   margin: -8px 0 8px 2px;
 }

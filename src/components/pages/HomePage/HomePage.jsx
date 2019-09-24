@@ -44,8 +44,8 @@ const HomePageHeader = (props)=> {
 		</form>
 
 		<div className="home-page-logo-wrapper">
-			<a href={NPM_PACKAGE} target="_blank" rel="noopener noreferrer"><img className="home-page-logo-npm" src={npmLogo} alt="npm" /></a>
-			<a href={GITHUB_REPO_XD} target="_blank" rel="noopener noreferrer"><img className="home-page-logo-xd" src={xdLogo} alt="Adobe XD" /></a>
+			<a href={NPM_PACKAGE} target="_blank" rel="noopener noreferrer"><img className="home-page-logo home-page-logo-npm" src={npmLogo} alt="npm" /></a>
+			<a href={GITHUB_REPO_XD} target="_blank" rel="noopener noreferrer"><img className="home-page-logo home-page-logo-xd" src={xdLogo} alt="Adobe XD" /></a>
 		</div>
 	</div>);
 };

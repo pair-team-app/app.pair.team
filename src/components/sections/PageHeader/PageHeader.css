@@ -12,6 +12,8 @@
 }
 
 .page-header-logo:hover {
+	filter: brightness(90%);
+	transition: filter 0.125s ease-out;
 	cursor: pointer;
 }
 
