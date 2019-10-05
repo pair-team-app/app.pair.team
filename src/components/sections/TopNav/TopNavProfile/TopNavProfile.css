@@ -1,35 +1,35 @@
 
-@keyframes page-header-profile-intro {
+@keyframes top-nav-profile-intro {
 	0% { opacity: 0; }
 	100% { opacity: 1; }
 }
 
-@keyframes page-header-profile-outro {
+@keyframes top-nav-profile-outro {
 	0% { opacity: 1; }
 	100% { opacity: 0; }
 }
 
 
-.page-header-profile-intro {
-	animation: 0.125s ease-out 0s 1 forwards page-header-profile-intro;
+.top-nav-profile-intro {
+	animation: 0.125s ease-out 0s 1 forwards top-nav-profile-intro;
 }
 
-.page-header-profile-outro {
-	animation: 0.25s ease-out 0s 1 forwards page-header-profile-outro;
+.top-nav-profile-outro {
+	animation: 0.25s ease-out 0s 1 forwards top-nav-profile-outro;
 }
 
 
-.page-header-profile {
+.top-nav-profile {
 	position: relative;
 }
 
-.page-header-profile-arrow {
+.top-nav-profile-arrow {
 	width: 10px;
 	padding-bottom: 3px;
 	color: #abdafd;
 }
 
-.page-header-profile-avatar-wrapper {
+.top-nav-profile-avatar-wrapper {
 	position: relative;
 	width: 38px;
 	height: 38px;
@@ -39,7 +39,7 @@
 	background-color: #1a1e23;
 }
 
-.page-header-profile-avatar-image {
+.top-nav-profile-avatar-image {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -50,13 +50,13 @@
 	opacity: 0.875;
 }
 
-.page-header-profile-avatar-image:hover, .page-header-profile-arrow:hover {
+.top-nav-profile-avatar-image:hover, .top-nav-profile-arrow:hover {
 	cursor: pointer;
 	opacity: 1;
 	color: #f7fafc;
 }
 
-.page-header-profile-bubble-wrapper {
+.top-nav-profile-bubble-wrapper {
 	position: absolute;
 	top: 30px;
 	right: 0;
@@ -66,7 +66,7 @@
 	text-align: left;
 }
 
-.page-header-profile-link {
+.top-nav-profile-link {
 	padding: 6px;
 	border-bottom: 1px solid #1a1e23;
 	text-decoration: none;
@@ -77,11 +77,11 @@
 	color: #ffffff;
 }
 
-.page-header-profile-link:last-child {
+.top-nav-profile-link:last-child {
 	border-bottom: none;
 }
 
-.page-header-profile-link:hover {
+.top-nav-profile-link:hover {
 	color: #abdafd;
 	text-decoration: underline;
 	cursor: pointer;

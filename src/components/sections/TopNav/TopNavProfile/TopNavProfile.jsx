@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import './PageHeaderProfile.css';
+import './TopNavProfile.css';
 
 import FontAwesome from 'react-fontawesome';
 import ImageLoader from 'react-loading-image';
@@ -21,7 +21,7 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
-class PageHeaderProfile extends Component {
+class TopNavProfile extends Component {
 	constructor(props) {
 		super(props);
 
@@ -49,38 +49,38 @@ class PageHeaderProfile extends Component {
 	};
 
 	render() {
-// 		console.log('PageHeaderProfile.render()', this.props, this.state);
+// 		console.log('TopNavProfile.render()', this.props, this.state);
 
 		const { avatar } = (this.props.profile) ? this.props.profile : { avatar : DEFAULT_AVATAR };
 		const { bubble } = this.state;
 
 		const faName = (bubble) ? 'caret-up' : 'caret-down';
-		const bubbleClass = `page-header-profile-bubble-wrapper ${(bubble) ? 'page-header-profile-intro' : 'page-header-profile-outro'}`;
+		const bubbleClass = `top-nav-profile-bubble-wrapper ${(bubble) ? 'top-nav-profile-intro' : 'top-nav-profile-outro'}`;
 
-		return (<div className="page-header-profile">
+		return (<div className="top-nav-profile">
 			<Row vertical="center">
-				<FontAwesome name={faName} className="page-header-profile-arrow" onClick={()=> this.setState({ bubble : !bubble })} />
+				<FontAwesome name={faName} className="top-nav-profile-arrow" onClick={()=> this.setState({ bubble : !bubble })} />
 
 
-				<div className="page-header-profile-avatar-wrapper" onClick={()=> this.setState({ bubble : !bubble })}>
+				<div className="top-nav-profile-avatar-wrapper" onClick={()=> this.setState({ bubble : !bubble })}>
 					<ImageLoader
 						src={avatar}
-						image={(props)=> (<img className="page-header-profile-avatar-image" { ...props } src={avatar} alt="" />)}
-						loading={()=> (<div className="page-header-profile-avatar-image page-header-profile-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
-						error={()=> (<div className="page-header-profile-avatar-image page-header-profile-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
+						image={(props)=> (<img className="top-nav-profile-avatar-image" { ...props } src={avatar} alt="" />)}
+						loading={()=> (<div className="top-nav-profile-avatar-image top-nav-profile-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
+						error={()=> (<div className="top-nav-profile-avatar-image top-nav-profile-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
 					/>
 				</div>
 
-				{/*<img src={avatar} className="page-header-profile-avatar" alt="" onClick={()=> this.setState({ bubble : !bubble })} />*/}
+				{/*<img src={avatar} className="top-nav-profile-avatar" alt="" onClick={()=> this.setState({ bubble : !bubble })} />*/}
 			</Row>
 
 			{(bubble) && (<div className={bubbleClass}>
-				<div className="page-header-profile-link" onClick={()=> this.handleLinkClick(PROFILE)}>Profile</div>
-				<div className="page-header-profile-link" onClick={()=> this.handleLinkClick(TEAM)}>{(URIs.subdomain()) ? `Team ${Strings.capitalize(URIs.subdomain() && URIs.subdomain() !== 'earlyaccess')}` : `History`}</div>
-				<div className="page-header-profile-link" onClick={()=> this.handleLinkClick(LOGOUT)}>Logout</div>
+				<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(PROFILE)}>Profile</div>
+				<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(TEAM)}>{(URIs.subdomain()) ? `Team ${Strings.capitalize(URIs.subdomain() && URIs.subdomain() !== 'earlyaccess')}` : `History`}</div>
+				<div className="top-nav-profile-link" onClick={()=> this.handleLinkClick(LOGOUT)}>Logout</div>
 			</div>)}
 		</div>);
 	}
 }
 
-export default connect(mapStateToProps)(onClickOutside(PageHeaderProfile));
+export default connect(mapStateToProps)(onClickOutside(TopNavProfile));
