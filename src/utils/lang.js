@@ -211,6 +211,12 @@ export const Maths = {
 		sizeArea             : (size)=> (size.width * size.height),
 		sizeOutboundsSize    : (size1, size2)=> (size1.width > size2.width || size1.height > size2.height),
 		slope                : (pt1, pt2)=> ({ x : pt2.x - pt1.x, y : pt2.y - pt1.y }),
+		unionRect            : (rect1, rect2)=> ({
+			top    : Math.min(rect1.top, rect2.top),
+			left   : Math.min(rect1.left, rect2.left),
+			bottom : Math.max(rect1.bottom, rect2.bottom),
+			right  : Math.max(rect1.right, rect2.right)
+		})
 	},
 	factorial   : (val)=> (Arrays.indexFill(val, 1).reverse().reduce((acc, val)=> (acc * val))),
 	half        : (val)=> (val * 0.5),
@@ -301,7 +307,7 @@ export const Strings = {
 // 	trimBounds  : (str, char)=> (str.match(RegExps.concat(char, '^', '$'), '')),
 	trimBounds  : (str, char)=> (str.split(char).filter((segment, i)=> (segment.length > 0)).join(char)),
 	trimSlashes : (str, leading=true, trailing=true)=> (str.replace(((leading && trailing) ? /^\/?(.+)\// : (leading && !trailing) ? /^\/(.+)$/ : (!leading && trailing) ? /^(.+)\/$/ : /^(.+)$/), '$1')),
-	truncate    : (str, len, ellipsis='…')=> ((str.length > len) ? `${str.substring(0, len - 1).trim()}${ellipsis}` : str),
+	truncate    : (str, len, ellipsis='…')=> ((str.trimEnd().length > len) ? `${str.trimEnd().slice(0, len)}${ellipsis}` : str),
 	utf8Encode  : (str, enc='ascii')=> ((new Buffer(str, enc)).toString('utf8'))
 };
 
