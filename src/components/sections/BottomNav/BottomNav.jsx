@@ -37,4 +37,4 @@ function BottomNav(props) {
 	);
 }
 
-export default BottomNav;
+export default (BottomNav);
