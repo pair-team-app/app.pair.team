@@ -41,7 +41,7 @@ function TopNav(props) {
 			<div className="top-nav-title">Design Engine</div>
 		</Row></div>
 		<div className="top-nav-link-wrapper">
-			{(navLinks.top.map((navLink)=> (<TopNavLink title={navLink.title} onClick={handleLink} />)))}
+			{(navLinks.top.map((navLink, i)=> (<TopNavLink key={i} title={navLink.title} onClick={handleLink} />)))}
 		</div>
 	</div>);
 }
