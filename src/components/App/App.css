@@ -4,138 +4,44 @@
 	height: 100%;
 }
 
-.changelog-wrapper {
-	position : absolute;
-	top: 0;
-	right: 0;
-	margin: 10px;
-	z-index: 10;
-}
-
 .content-wrapper {
 	position: relative;
-	top: 0;
+	top: 58px;
 	left: 0;
 	width: 100%;
-	overflow-x: hidden;
-	overflow-y: scroll;
+	overflow: hidden;
 }
 
 .page-wrapper {
 	width: 100%;
 }
 
-.scroll-element {
-	height: 100vh;
-}
-
-.section-title {
-	flex: 1 0 auto;
-}
-
-.section-title-fit {
-	flex: 1 0 0;
-}
-
-.section-title-red {
-	color: #e01d5a;
-}
-
-.section-title-blue {
-	color: #36c6f2;
-}
-
-.section-text {
-	flex: 1 0 auto;
-	align-self: stretch;
-}
-
-.section-list-wrapper {
-	font-size: 44px;
-	line-height: 50px;
-	margin-bottom: 120px;
-}
-
-.long-button {
-	min-width: 348px;
-	width: auto;
-	padding-left: 25px;
-	padding-right: 25px;
-}
-
-.short-button {
-	height: 38px;
-}
-
-.tiny-button {
-	font-size: 14px;
-}
-
-.min-button, .min-button:hover, .min-button:active {
-	width: auto;
-	height: auto;
-	padding: 0;
-	background: none;
-	color: inherit;
-}
-
-
-.aux-button, .aux-button:disabled, .aux-button:disabled:hover {
-	background-color: #515151;
-}
-
-.aux-button:hover, .aux-button:active {
-	background-color: #404040;
-}
-
-.aux-button:disabled, .aux-button:disabled:hover {
-	color: #eef0f2;
-	opacity : 0.5;
-}
-
 .adjacent-button {
 	margin-right: 20px;
 }
 
-.adjacent-button-mobile {
-	margin-right: 15px;
+.quiet-button {
+	width: fit-content;
+	height: fit-content;
+	border: 1px solid #cecece;
+	background-color: #f7f7f7;
+	color: #232323;
 }
 
+.quiet-button:hover {
+	background-color: #cce1ff;
+}
 
-.page-link, .page-link a:any-link {
-	margin: 10px 0 5px 0;
-	font-family: "San Francisco Text SemiBold", sans-serif;
-	font-size: 16px;
+.quiet-button:disabled {
+	background-color: #e0e0e0;
 	color: #999999;
-	text-decoration: none;
-}
-
-.page-link:hover, .page-link a:hover {
-	cursor: pointer;
-	text-decoration: underline;
-	color: #a8a8a8;
-}
-
-.page-link:active, .page-link a:active {
-	text-decoration: underline;
-	color: #b0b0b0;
-}
-
-.page-link-form {
-}
-
-.page-link-form-disabled, .page-link-form-disabled:hover {
-	cursor: default;
-	color: #8facbf;
-	opacity : 0.5;
-	text-decoration: none;
 }
 
 .input-wrapper {
-	cursor: pointer;
+	width: 316px;
 	margin-bottom: 20px;
-	border: 1px solid rgba(240, 240, 240, 0.0);
-	width: 100%;
+	border: 1px solid #cecece;
+	border-radius: 23px;
 }
 
 .input-wrapper-error {
@@ -143,14 +49,13 @@
 }
 
 .input-wrapper-error input[type="text"], .input-wrapper-error input[type="password"], .input-wrapper-error input[type="tel"], .input-wrapper-error .input-txt, .input-wrapper-error .field-error {
-	background-color: #2d3239;
+	background-color: #fff0f0;
 	color: #ff4646;
 }
 
 .input-wrapper-error .field-error {
 	height: 53px;
 	padding-top: 11px;
-	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 16px;
 	letter-spacing: -0.3px;
 }
@@ -202,24 +107,6 @@
 
 
 @media screen and (max-width: 800px) {
-	.scroll-element {
-		height: auto;
-	}
-
-	.section-list-wrapper {
-		font-size: 23px;
-		line-height: 44px;
-		margin-bottom: 130px;
-	}
-
-	.long-button {
-		min-width: 300px;
-		width: 300px;
-	}
-
-	.section-text {
-		margin: 75px 0;
-	}
 }
 
 

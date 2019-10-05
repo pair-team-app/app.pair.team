@@ -18,13 +18,12 @@ html, body {
   padding: 0;
   height: 100%;
   min-height: 100%;
-  background-color: #ffffff;
-  /*-webkit-font-smoothing: antialiased;*/
-  -moz-osx-font-smoothing: auto;
-  font-family: "San Francisco Text Medium", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  background-color: #fcfcfc;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: "Helvetica Neue", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-weight: 400;
   font-size: 16px;
-  line-height: 28px;
   color: #232323;
 }
 
@@ -38,26 +37,25 @@ a:hover {
 }
 
 button {
-  width: 100px;
+  width: 316px;
   height: 46px;
-  background-color: #005cc5;
+  background-color: #0067ff;
   border: 1px solid rgba(0, 92, 197, 0.0);
-  border-radius: 1px;
-  font-family: -apple-system, system-ui, sans-serif;
+  border-radius: 23px;
   font-size: 16px;
   color : #ffffff;
-  line-height: normal;
 }
 
 button:hover, button:active {
-  background-color: #00449c;
+  background-color: #005ad9;
   transition: background-color 0.25s ease-out;
   cursor: pointer;
 }
 
 button:disabled, button:disabled:hover {
+	opacity : 0.875;
+	background-color: #296dcc;
   color: #e0e0e0;
-  opacity : 0.75;
   cursor: default;
 }
 
@@ -75,64 +73,71 @@ fieldset {
 }
 
 form {
-	width: 100%;
-	padding: 0 245px;
 }
 
 h1, h2, h3, h4, h5 {
   margin: 0;
+  font-weight: normal;
+}
+
+h1:before, h2:before, h3:before, h4:before, h5:before {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+}
+
+/** Page Title **/
+h1 {
+  margin-bottom: 60px;
+  font-size: 48px;
+  letter-spacing: 1px;
+  line-height: 68px;
+}
+
+h1:before {
+  margin-top: calc((1 - 1.4) * 0.5em);
 }
 
 /** Section Title **/
-h1 {
-  width: 100%;
-  margin-top: -10px;
-  font-family: "San Francisco Text", sans-serif;
-  font-size: 48px;
-  line-height: normal;
-  letter-spacing: -0.5px;
-}
-
-/** Section Text **/
 h2 {
-  width: 100%;
-  font-family: "San Francisco Text", sans-serif;
-  font-size: 48px;
-  line-height: normal;
-  letter-spacing: -0.5px;
+	color: #0067ff;
+	font-size: 48px;
+	letter-spacing: 1px;
+	line-height: 68px;
 }
 
-/** Form Title **/
-h4 {
-  margin-top: -5px;
-  margin-bottom: 17px;
-  font-family: "San Francisco Text Medium", sans-serif;
-  font-size: 22px;
-  letter-spacing: -1px;
-  color: #c8e1fd;
+h1:before {
+	margin-top: calc((1 - 1.4) * 0.5em);
 }
 
-h4.table-header {
-  margin-bottom: 26px;
+/** Form Disclaimer **/
+h5 {
+  margin-top: 30px;
+	font-size: 12px;
+	line-height: 18px;
+	text-decoration: underline;
+}
+
+h5:before {
+	margin-top: calc((1 - 1.4) * 0.5em);
 }
 
 /** Legal Section Title **/
 h6 {
   margin-bottom: 0;
   text-transform: uppercase;
-  font-family: "San Francisco Text", sans-serif;
   font-size: 14px;
   line-height: 0;
 }
 
 input[type="text"], input[type="password"], input[type="tel"], select, textarea, .input-txt, .field-error {
-  background-color: #f0f0f0;
-  padding: 12px 11px;
-  width: 348px;
-  border: 1px solid #f0f0f0;
-  font-family: "San Francisco Text Medium", sans-serif;
+  background-color: #f7f7f7;
+  padding: 15px 20px;
+  width: 100%;
+  border: none;
+  border-radius: 23px;
   font-size: 16px;
-  letter-spacing: -0.3px;
   cursor: text;
 }
 
@@ -142,13 +147,12 @@ input[type="text"]:disabled, input[type="password"]:disabled, input[type="tel"]:
 }
 
 input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hover, input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 1px 50px #f0f0f0 inset;
+  -webkit-box-shadow: 0 0 1px 50px #f7f7f7 inset;
   -webkit-text-fill-color: #232323;
 }
 
 
 p {
-  font-family: "San Francisco Text", sans-serif;
   line-height: 26px;
   margin: 14px 0 28px 0;
 }
@@ -161,21 +165,10 @@ p:last-child {
   margin-bottom: 10px;
 }
 
-sup {
-  font-family: "San Francisco Text", sans-serif;
-  font-size: 10px;
-  text-transform: uppercase;
-  margin: -8px 0 8px 2px;
-}
-
 textarea {
   resize: none;
 }
 
-#root {
-  width: 100%;
-  height: 100%;
-}
 
 ::-webkit-scrollbar {
   display: none;
@@ -207,34 +200,4 @@ textarea {
   input[type="text"], input[type="password"], input[type="tel"], select, textarea, .input-txt, .field-error {
     width: 300px;
   }
-}
-
-
-
-/** Regular */
-@font-face {
-  font-family: "San Francisco Text";
-  font-weight: 400;
-  src: url(./assets/fonts/SanFranciscoText-Regular.otf);
-}
-
-/** Medium */
-@font-face {
-  font-family: "San Francisco Text Medium";
-  font-weight: 500;
-  src: url(./assets/fonts/SanFranciscoText-Medium.otf);
-}
-
-/** Semi-Bold */
-@font-face {
-  font-family: "San Francisco Text SemiBold";
-  font-weight: 600;
-  src: url(./assets/fonts/SanFranciscoText-Semibold.otf);
-}
-
-/** Bold */
-@font-face {
-  font-family: "San Francisco Text Bold";
-  font-weight: 700;
-  src: url(./assets/fonts/SanFranciscoText-Bold.otf);
 }

@@ -14,6 +14,8 @@ import LoginModal from '../overlays/LoginModal';
 import PopupNotification from '../overlays/PopupNotification';
 import RegisterModal from '../overlays/RegisterModal';
 import StripeModal from '../overlays/StripeModal';
+import TopNav from '../sections/TopNav';
+import BottomNav from '../sections/BottomNav';
 import HomePage from '../pages/HomePage';
 import PrivacyPage from '../pages/PrivacyPage';
 import Status404Page from '../pages/Status404Page';
@@ -411,9 +413,8 @@ class App extends Component {
   	const { loginModal, registerModal, stripeModal, payDialog } = this.state;
 
   	return (<div className="site-wrapper">
-		  <div className="changelog-wrapper">
-			  <button className="short-button tiny-button" onClick={this.handleChangelog}>Changelog</button>
-		  </div>
+		  <TopNav onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} />
+
 		  <Column horizontal="center">
 		    <div className="content-wrapper" ref={wrapper}>
 			    <Switch>
@@ -427,6 +428,8 @@ class App extends Component {
 
 				    <Route><Status404Page onPage={this.handlePage} /></Route>
 			    </Switch>
+
+			    <BottomNav onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} />
 		    </div>
 
 			  <div className="modal-wrapper">

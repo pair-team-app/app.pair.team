@@ -1,39 +1,28 @@
 
 .bottom-nav {
+	position: fixed;
+	bottom: 0;
 	width: 100%;
-	margin-bottom: 10px;
-	font-family: "San Francisco Text SemiBold", sans-serif;
-	font-size: 16px;
-	line-height: normal;
+	padding: 10px;
+	z-index: 2;
 }
 
 .bottom-nav-link-wrapper {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-	margin: 0 100px 25px 100px;
+	width: 100%;
+	text-align: right;
 }
 
 .bottom-nav-link {
-	flex: 1 0 auto;
-	margin-right: 20px;
+	/*width: fit-content;*/
+	color: #232323;
 	text-decoration: none;
-	color: #999999;
 }
 
 .bottom-nav-link:hover {
-	text-decoration: underline;
 	cursor: pointer;
 	color: #666666;
+	text-decoration: underline;
 	transition: color 0.125s ease-out;
-}
-
-.bottom-nav-disclaimer {
-	text-align: center;
-	color: #999999;
-	font-family: "San Francisco Text Medium", sans-serif;
-	font-size: 14px;
-	line-height: 21px;
 }
 
 

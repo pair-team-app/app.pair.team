@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="138px" height="64px" viewBox="0 0 138 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
     <title>Logo</title>
     <desc>Created with Sketch.</desc>
-    <g id="Free-Inspect" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="01" transform="translate(-632.000000, -299.000000)">
-            <g id="Group" transform="translate(250.000000, 299.000000)">
-                <g id="Logo" transform="translate(382.000000, 0.000000)">
-                    <polygon id="Rectangle" fill="#36C6F2" points="79.1438961 1.75238095 137.641558 1.75238095 137.641558 61.3333333 79.1438961 61.3333333"></polygon>
-                    <ellipse id="Oval" fill="#E01D5A" cx="30.9693506" cy="31.5428571" rx="30.9693506" ry="31.5428571"></ellipse>
+    <g id="WEBSITE" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="PRICING" transform="translate(-19.000000, -19.000000)">
+            <g id="Group-7" transform="translate(20.000000, 19.000000)">
+                <g id="Group-4">
+                    <g id="Logo" transform="translate(0.000000, 1.000000)">
+                        <rect id="Rectangle" stroke="#CECECE" fill="#F7F7F7" stroke-linecap="round" stroke-linejoin="round" x="-0.5" y="-0.5" width="19" height="19" rx="2"></rect>
+                        <circle id="Oval" fill="#232323" cx="9" cy="9" r="8"></circle>
+                    </g>
                 </g>
             </g>
         </g>

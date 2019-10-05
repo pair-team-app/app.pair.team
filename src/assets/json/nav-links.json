@@ -1,0 +1,19 @@
+{
+  "top": [{
+    "title": "Features",
+    "url": "/page/features"
+  }, {
+    "title": "Pricing",
+    "url": "/page/pricing"
+  }, {
+    "title": "Blog",
+    "url": "https://www.github.com/de-ai"
+  }, {
+    "title": "Docs",
+    "url": "https://www.npmjs.com/package/design-engine-playground"
+  }],
+  "bottom": [{
+    "title": "Legal",
+    "url": "/page/terms"
+  }]
+}
