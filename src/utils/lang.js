@@ -1,6 +1,4 @@
 
-
-
 export const Arrays = {
 // 	containsElement  : (arr, element)=> (arr.indexOf(element) > -1),
 	containsElement  : (arr, element)=> (Arrays.containsElements(arr, [element])),
@@ -245,6 +243,7 @@ export const Objects = {
 	defineVal  : (obj, key, val)=> (Object.assign({}, obj, { [key] : val })),
 	dropKey    : (obj, key)=> (Objects.dropKeys(obj, [key])),
 	dropKeys   : (obj, keys)=> ({ ...Object.keys(obj).filter((k)=> (!Arrays.containsElement(keys, k))).reduce((newObj, k)=> ({...newObj, [k]: obj[k]}), {})}),
+	dropMatch  : (obj, regex)=> (Objects.dropKeys(obj, Object.keys(obj).filter((key)=> (obj.hasOwnProperty(key) && regex.test(key))))),
 	isEmpty    : (obj)=> (Object.keys(obj).length === 0),
 	hasKey     : (obj, key)=> ((obj && typeof obj !== 'undefined') ? Object.keys(obj).some((k)=> (k === key)) : false),
 	length     : (obj)=> (Object.keys(obj).length),
