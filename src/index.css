@@ -43,7 +43,7 @@ button {
   background-color: #005cc5;
   border: 1px solid rgba(0, 92, 197, 0.0);
   border-radius: 1px;
-  font-family: "San Francisco Text SemiBold", sans-serif;
+  font-family: -apple-system, system-ui, sans-serif;
   font-size: 16px;
   color : #ffffff;
   line-height: normal;
