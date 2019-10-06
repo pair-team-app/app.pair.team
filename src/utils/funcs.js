@@ -5,17 +5,6 @@ import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
 
 import {
-	HOME,
-	SPECS,
-	STYLES,
-	PARTS,
-	INSPECT,
-	LOGIN,
-	EDIT,
-	PROFILE,
-	RECOVER,
-	REGISTER,
-	UPLOAD,
 	API_ENDPT_URL
 } from '../consts/uris';
 import { Strings, URIs } from './lang';
@@ -152,6 +141,7 @@ export function idsFromPath() {
 	return (navIDs);
 }
 
+/*
 export function isHomePage(root=true) {
 	const { pathname } = window.location;
 	return ((root) ? (pathname === '' || pathname === HOME) : (pathname === '' || pathname === HOME || pathname === INSPECT ||pathname === EDIT));
@@ -186,6 +176,7 @@ export function isUploadPage(exact=false) {
 	const { pathname } = window.location;
 	return ((exact) ? pathname === UPLOAD : pathname.includes(UPLOAD));
 }
+*/
 
 export function isUserLoggedIn(confirmed=true) {
 // 	return ((confirmed) ? cookie.load('user_id') !== '0' : typeof cookie.load('user_id') !== 'undefined');

@@ -29,11 +29,13 @@ html, body {
 
 a, a:any-link, a:active, a:visited {
   color: #232323;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 a:hover {
-  text-decoration: none;
+	color: #666666;
+	text-decoration: underline;
+	transition: color 0.125s ease-out;
 }
 
 button {

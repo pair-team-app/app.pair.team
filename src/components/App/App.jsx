@@ -6,7 +6,7 @@ import axios from 'axios';
 import qs from 'qs';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import { Column } from 'simple-flexbox';
 
 import AlertDialog from '../overlays/AlertDialog';
@@ -17,6 +17,8 @@ import StripeModal from '../overlays/StripeModal';
 import TopNav from '../sections/TopNav';
 import BottomNav from '../sections/BottomNav';
 import HomePage from '../pages/HomePage';
+import FeaturesPage from '../pages/FeaturesPage';
+import PricingPage from '../pages/PricingPage';
 import PrivacyPage from '../pages/PrivacyPage';
 import Status404Page from '../pages/Status404Page';
 import TermsPage from '../pages/TermsPage';
@@ -39,9 +41,7 @@ import {
 } from '../../redux/actions';
 import {
 // 	getRouteParams,
-	idsFromPath,
-	isInspectorPage,
-	isUserLoggedIn
+	idsFromPath
 } from '../../utils/funcs';
 import { DateTimes, URIs } from '../../utils/lang';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
@@ -121,7 +121,7 @@ class App extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+		console.log('App.componentDidUpdate()', prevProps, this.props, prevState, this.state);
 
 		const { profile } = this.props;
 		const { pathname } = this.props.location;
@@ -245,7 +245,7 @@ class App extends Component {
 
 	handlePage = (url, clearDeeplink=true)=> {
 		console.log('App.handlePage()', url);
-		url = ((!url) ? '' : url).replace(/^\/(.+)$/, '$1');
+		url = ((!url) ? '' : url).replace(/^\/(.*)$/, '$1');
 
 		if (URIs.firstComponent() !== URIs.firstComponent(url)) {
 			window.scrollTo(0, 0);
@@ -384,22 +384,6 @@ class App extends Component {
 				this.setState({ registerModal : false });
 
 			} else if (url === Modals.STRIPE) {
-				if (isInspectorPage()) {
-					this.handlePage('');
-
-					setTimeout(()=> {
-						this.setState({
-							payDialog   : false,
-							stripeModal : false
-						});
-					}, 1250);
-
-				} else {
-					this.setState({
-						payDialog   : false,
-						stripeModal : false
-					});
-				}
 			}
 		}
 	};
@@ -409,7 +393,7 @@ class App extends Component {
 //   	console.log('App.render()', this.props, this.state);
 
 		const { profile } = this.props;
-  	const { scrolling, popup } = this.state;
+  	const { popup } = this.state;
   	const { loginModal, registerModal, stripeModal, payDialog } = this.state;
 
   	return (<div className="site-wrapper">
@@ -418,15 +402,14 @@ class App extends Component {
 		  <Column horizontal="center">
 		    <div className="content-wrapper" ref={wrapper}>
 			    <Switch>
-				    {(!isUserLoggedIn()) && (<Route exact path="/profile"><Redirect to="/" /></Route>)}
-				    <Route exact path="/logout" render={()=> (profile) ? this.handleLogout() : null} />
-
 				    <Route exact path="/" render={()=> <HomePage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} onRegistered={this.handleRegistered} />} />
-				    <Route exact path="/:section(login|register|thank-you)" render={()=> <HomePage scrolling={scrolling} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} onLoggedIn={this.handleLoggedIn} onRegistered={this.handleRegistered} />} />
+				    <Route exact path="/features" render={()=> <FeaturesPage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
+				    <Route exact path="/pricing" render={()=> <PricingPage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 				    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
 				    <Route exact path="/terms" render={()=> <TermsPage />} />
 
 				    <Route><Status404Page onPage={this.handlePage} /></Route>
+				    {/*<Route exact path="/:section(login|register|thank-you)" render={()=> <HomePage scrolling={scrolling} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} onLoggedIn={this.handleLoggedIn} onRegistered={this.handleRegistered} />} />*/}
 			    </Switch>
 
 			    <BottomNav onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} />

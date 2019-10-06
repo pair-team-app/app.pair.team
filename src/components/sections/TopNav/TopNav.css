@@ -45,24 +45,3 @@
 	display: inline;
 	margin-left: 10px;
 }
-
-.top-nav-link {
-	display: inline;
-	margin-right: 40px;
-	letter-spacing: 0.2px;
-}
-
-.top-nav-link:last-child {
-	margin-right: 0;
-}
-
-.top-nav-link:hover {
-	cursor: pointer;
-	color: #666666;
-	text-decoration: underline;
-	transition: color 0.125s ease-out;
-}
-
-.top-nav-link-selected {
-	color: #999999;
-}

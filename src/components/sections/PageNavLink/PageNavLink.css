@@ -1,0 +1,14 @@
+
+.page-nav-link {
+	margin-right: 40px;
+	letter-spacing: 0.2px;
+}
+
+.page-nav-link:last-child {
+	margin-right: 0;
+}
+
+.page-nav-link-selected, a:any-link.page-nav-link-selected {
+	color: #999999;
+	text-decoration: none;
+}

@@ -1,20 +1,4 @@
 
-// import { URIs } from '../utils/lang';
-
-export const HOME = '/';
-export const INSPECT = '/inspect';
-export const LOGIN = '/login';
-export const EDIT = '/edit';
-export const SPECS = '/specs';
-export const STYLES = '/styles';
-export const PRIVACY = '/privacy';
-export const PARTS = '/parts';
-export const PROFILE = '/profile';
-export const RECOVER = '/recover';
-export const REGISTER = '/register';
-export const TERMS = '/terms';
-export const UPLOAD = '/new';
-
 export const Modals = {
 	GITHUB_CONNECT : '/github-connect',
 	LOGIN          : '/login',
@@ -25,10 +9,8 @@ export const Modals = {
 
 export const Pages = {
 	HOME      : '/',
-	REGISTER  : '/register',
-	LOGIN     : '/login',
-	THANK_YOU : '/thank-you',
-	GITHUB    : '/github',
+	FEATURES  : '/features',
+	PRICING   : '/pricing',
 	PRIVACY   : '/privacy',
 	TERMS     : '/terms'
 };
