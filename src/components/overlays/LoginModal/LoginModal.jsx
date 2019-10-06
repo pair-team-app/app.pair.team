@@ -8,7 +8,7 @@ import BaseOverlay from '../BaseOverlay';
 import LoginForm from '../../forms/LoginForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
-import { URIs } from './../../../utils/lang';
+import { URIs } from 'lang-js-utils';
 import { trackEvent } from '../../../utils/tracking';
 
 

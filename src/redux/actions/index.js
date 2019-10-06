@@ -3,7 +3,7 @@ import axios from 'axios/index';
 import qs from 'qs';
 import cookie from 'react-cookies';
 
-import { Bits, Objects, URIs } from '../../utils/lang';
+import { Bits, Objects, URIs } from 'lang-js-utils';
 import {
 	ADD_FILE_UPLOAD,
 	APPEND_ARTBOARD_SLICES,

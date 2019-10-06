@@ -42,7 +42,7 @@ import {
 // 	getRouteParams,
 	idsFromPath
 } from '../../utils/funcs';
-import { DateTimes, URIs } from '../../utils/lang';
+import { DateTimes } from 'lang-js-utils';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 

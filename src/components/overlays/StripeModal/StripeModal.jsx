@@ -9,12 +9,12 @@ import { Elements, StripeProvider } from 'react-stripe-elements';
 import BaseOverlay from '../BaseOverlay';
 import StripeForm from '../../forms/StripeForm/StripeForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
-import { API_ENDPT_URL } from './../../../consts/uris';
-import { sendToSlack } from './../../../utils/funcs';
-import { URIs } from './../../../utils/lang';
-import { trackEvent } from './../../../utils/tracking';
+import { API_ENDPT_URL } from '../../../consts/uris';
+import { sendToSlack } from '../../../utils/funcs';
+import { URIs } from 'lang-js-utils';
+import { trackEvent } from '../../../utils/tracking';
 import stripeCreds from '../../../assets/json/stripe-creds';
-import stripeLogo from './../../../assets/images/logos/logo-stripe.png';
+import stripeLogo from '../../../assets/images/logos/logo-stripe.png';
 
 
 const STRIPE_TEST_TOKEN = stripeCreds.test.publish;

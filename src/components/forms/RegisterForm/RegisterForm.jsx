@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Row } from 'simple-flexbox';
 
 import { Modals, API_ENDPT_URL } from '../../../consts/uris';
-import { Bits, Strings } from '../../../utils/lang';
+import { Bits, Strings } from 'lang-js-utils';
 import { trackEvent } from '../../../utils/tracking';
 
 

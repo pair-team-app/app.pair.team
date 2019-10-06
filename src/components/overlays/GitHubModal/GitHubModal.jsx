@@ -9,10 +9,10 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
 import BaseOverlay from '../BaseOverlay';
-import { API_ENDPT_URL, DEFAULT_AVATAR } from './../../../consts/uris';
+import { API_ENDPT_URL, DEFAULT_AVATAR } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
-import { Strings, URIs } from './../../../utils/lang';
-import { trackEvent } from './../../../utils/tracking';
+import { Strings, URIs } from 'lang-js-utils';
+import { trackEvent } from '../../../utils/tracking';
 
 
 const GitHubAuthForm = (props)=> {

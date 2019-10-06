@@ -5,7 +5,7 @@ import './StripeForm.css'
 import { CardCVCElement, CardExpiryElement, CardNumberElement, injectStripe } from 'react-stripe-elements';
 import { Column, Row } from 'simple-flexbox';
 
-import { Components } from '../../../utils/lang';
+import { Components } from 'lang-js-utils';
 import { trackEvent } from '../../../utils/tracking';
 
 

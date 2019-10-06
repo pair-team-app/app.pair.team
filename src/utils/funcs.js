@@ -7,7 +7,7 @@ import { matchPath } from 'react-router-dom';
 import {
 	API_ENDPT_URL
 } from '../consts/uris';
-import { Strings, URIs } from './lang';
+import { Strings, URIs } from 'lang-js-utils';
 
 
 export function getRouteParams(pathname) {

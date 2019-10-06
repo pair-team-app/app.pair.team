@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './ConfirmDialog.css'
 
 import BaseOverlay from '../BaseOverlay';
-import { URIs } from './../../../utils/lang';
+import { URIs } from 'lang-js-utils';
 
 
 class ConfirmDialog extends Component {

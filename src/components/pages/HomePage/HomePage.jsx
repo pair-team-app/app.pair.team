@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom';
 
 import BasePage from '../BasePage';
 import { API_ENDPT_URL, Modals, Pages } from '../../../consts/uris';
-import { Bits, Strings } from '../../../utils/lang';
+import { Bits, Strings } from 'lang-js-utils';
 import { trackEvent } from '../../../utils/tracking';
 
 import homePageElement from '../../../assets/images/elements/element-home-page.png';

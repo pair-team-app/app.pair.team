@@ -3,7 +3,7 @@ import React from 'react';
 import './PageNavLink.css';
 
 import { NavLink } from 'react-router-dom';
-import { URIs } from '../../../utils/lang';
+import { URIs } from 'lang-js-utils';
 
 
 function PageNavLink(props) {

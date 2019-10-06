@@ -15,7 +15,7 @@ import {
 	SET_TEAM,
 } from '../../consts/action-types';
 import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
-import { Objects } from '../../utils/lang';
+import { Objects } from 'lang-js-utils';
 
 
 const initialState = {

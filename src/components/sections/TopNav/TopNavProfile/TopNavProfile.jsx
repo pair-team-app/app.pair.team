@@ -8,7 +8,7 @@ import onClickOutside from 'react-onclickoutside';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import {Strings, URIs} from '../../../../utils/lang';
+import {Strings, URIs} from 'lang-js-utils';
 import { DEFAULT_AVATAR } from '../../../../consts/uris';
 
 const PROFILE = 'PROFILE';
