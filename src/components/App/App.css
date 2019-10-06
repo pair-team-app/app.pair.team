@@ -71,6 +71,24 @@
 	color: #ff4646;
 }
 
+.form-disclaimer {
+	margin-top: 30px;
+	font-size: 12px;
+	line-height: 18px;
+	text-decoration: underline;
+}
+
+.form-disclaimer:before {
+	content: '';
+	display: block;
+	width: 0;
+	height: 0;
+	margin-top: calc((1 - 1.4) * 0.5em);
+}
+
+.paragraph-title {
+	text-decoration: underline;
+}
 
 .flex-wrapper {
 	width: 100%;

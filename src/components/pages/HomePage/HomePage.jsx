@@ -25,7 +25,7 @@ const HomePageHeaderForm = (props)=> {
 			</div>
 			<button disabled={!emailValid || email.includes('!')} type="submit" onClick={(event)=> props.onSubmit(event)}>Join Wait List</button>
 		</form>
-		<h5>By tapping “Join Wait List” you accept our<br />Terms of Service.</h5>
+		<div className="form-disclaimer">By tapping “Join Wait List” you accept our<br />Terms of Service.</div>
 	</div>);
 };
 
@@ -38,15 +38,6 @@ class HomePage extends Component {
 			email : ''
 		};
 	}
-
-	componentDidMount() {
-// 		console.log('HomePage.componentDidMount()', this.props, this.state);
-	}
-
-	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('HomePage.componentDidUpdate()', prevProps, this.props, prevState, this.state);
-	}
-
 
 	handleGitHub = ()=> {
 		console.log('HomePage.handleGitHub()');
@@ -121,87 +112,16 @@ class HomePage extends Component {
 
 		return (
 			<BasePage className="home-page-wrapper">
+				<HomePageHeaderForm
+					email={email}
+					onChange={this.handleTextfieldChange}
+					onFocus={this.handleTextfieldFocus}
+					onSubmit={this.handleSubmit}
+				/>
 
-					<HomePageHeaderForm
-						email={email}
-						onChange={this.handleTextfieldChange}
-						onFocus={this.handleTextfieldFocus}
-						onSubmit={this.handleSubmit}
-					/>
-
-					<div className="home-page-content">
-						<img src={homePageElement} className="home-page-element" alt="Screen shot" />
-					</div>
-
-
-
-
-					{/*<PageHeader title="Design Engine turns code components into design components.">*/}
-						{/*{(URIs.firstComponent() === '' || URIs.firstComponent() === 'register') && (<HomePageHeaderForm*/}
-							{/*email={email}*/}
-							{/*emailValid={emailValid}*/}
-							{/*onChange={this.handleTextfieldChange}*/}
-							{/*onFocus={this.handleTextfieldFocus}*/}
-							{/*onSubmit={this.handleSubmit}*/}
-						{/*/>)}*/}
-
-						{/*{(URIs.firstComponent() === 'thank-you') && (<HomePageHeaderForm*/}
-							{/*email="Thank you for signing up!"*/}
-							{/*emailValid={true}*/}
-							{/*onChange={(e)=> null}*/}
-							{/*onFocus={(e)=> null}*/}
-							{/*onSubmit={(e)=> null}*/}
-						{/*/>)}*/}
-
-						{/*<BottomNav*/}
-							{/*mobileLayout={false}*/}
-							{/*onModal={this.handleGitHub}*/}
-							{/*onPage={this.props.onPage}*/}
-						{/*/>*/}
-					{/*</PageHeader>*/}
-
-
-				{/*<div className="home-page-content">*/}
-					{/*<BaseSection>*/}
-						{/*<h1 className="section-title section-title-red" style={headerStyle}>What is Design Engine?</h1>*/}
-						{/*<h2 className="section-text" style={contentStyle}>Design Engine allows for product teams to capture, distribute, and collaborate on Design Systems.</h2>*/}
-						{/*<BottomNav*/}
-							{/*mobileLayout={false}*/}
-							{/*onModal={this.handleGitHub}*/}
-							{/*onPage={this.props.onPage}*/}
-						{/*/>*/}
-					{/*</BaseSection>*/}
-				{/*</div>*/}
-
-				{/*<div className="home-page-content">*/}
-					{/*<BaseSection>*/}
-						{/*<h1 className="section-title section-title-blue" style={headerStyle}>How does it work?</h1>*/}
-						{/*<h2 className="section-text" style={contentStyle}>Design Engine works by using a virtual browser (chromium) to crawl and deliver interface design assets directly to your design team.</h2>*/}
-						{/*<BottomNav*/}
-							{/*mobileLayout={false}*/}
-							{/*onModal={this.handleGitHub}*/}
-							{/*onPage={this.props.onPage}*/}
-						{/*/>*/}
-					{/*</BaseSection>*/}
-				{/*</div>*/}
-
-				{/*<div className="home-page-content">*/}
-					{/*<BaseSection>*/}
-						{/*<h1 className="section-title section-title-fit section-title-red" style={headerStyle}>Who built Design Engine?</h1>*/}
-						{/*<div className="home-page-creator-wrapper">*/}
-							{/*<div className="home-page-creator-logo-wrapper">*/}
-								{/*<img className="home-page-creator-logo" src={deLogoLeft} alt="Logo" />*/}
-								{/*<img className="home-page-creator-logo home-page-creator-logo-adjacent" src={deLogoRight} alt="Logo" />*/}
-							{/*</div>*/}
-							{/*<h2 className="home-page-creator" style={contentStyle}>Design Engine was built by <a href="https://www.linkedin.com/in/jasonfesta/" target="_blank" rel="noopener noreferrer">Jason Festa</a> & <a href="https://www.linkedin.com/in/gullinbursti/" target="_blank" rel="noopener noreferrer">Matt Holcombe</a> during their time at <a href="https://medium.com/adobetech/the-xd-plugin-accelerator-meet-the-teams-f9a07a866ae0" target="_blank" rel="noopener noreferrer">Adobe's Plugin Accelerator</a>.</h2>*/}
-						{/*</div>*/}
-						{/*<BottomNav*/}
-							{/*mobileLayout={false}*/}
-							{/*onModal={this.handleGitHub}*/}
-							{/*onPage={this.props.onPage}*/}
-						{/*/>*/}
-					{/*</BaseSection>*/}
-				{/*</div>*/}
+				<div className="home-page-content">
+					<img src={homePageElement} className="home-page-element" alt="Screen shot" />
+				</div>
 			</BasePage>
 		);
 	}

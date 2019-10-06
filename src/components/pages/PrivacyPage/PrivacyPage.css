@@ -3,4 +3,9 @@
 }
 
 .privacy-page-text {
+	text-align: justify;
+}
+
+.privacy-page-text div:last-child p:last-child {
+	margin-bottom: 0;
 }

@@ -8,11 +8,20 @@ import { URIs } from '../../../utils/lang';
 
 function PageNavLink(props) {
 	const { title, url } = props.navLink;
+	const extURL = (/^\/url/i.test(url));
+
+	const handleOpenURL = (event, url)=> {
+		event.preventDefault();
+		window.open(url.split('/').slice(2).join('/'));
+	};
 
 	return (<NavLink
-		to={`/${URIs.lastComponent(url)}`}
+		to={(extURL) ? url : `/${URIs.lastComponent(url)}`}
+		target={(extURL) ? '_blank' : '_self'}
 		className="page-nav-link"
-		activeClassName="page-nav-link page-nav-link-selected">{title}
+		activeClassName="page-nav-link-selected"
+		onClick={(event)=> (extURL) ? handleOpenURL(event, url) : null }
+		>{title}
 	</NavLink>);
 }
 
