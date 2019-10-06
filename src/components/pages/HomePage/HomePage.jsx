@@ -15,16 +15,19 @@ import homePageElement from '../../../assets/images/elements/element-home-page.p
 
 
 const HomePageHeaderForm = (props)=> {
-	const { email } = props;
-	const emailValid = Strings.isEmail(email) || email.includes('!');
+	const { email, emailValid, emailReset } = props;
+// 	const { email } = props;
+// 	const emailValid = Strings.isEmail(email) || (email.length > 0 || email.includes('!'));
 
 	return (<div className="home-page-header-form">
 		<h1>A new tool for product teams to<br />organize design</h1>
 		<form onSubmit={props.onSubmit}>
-			<div className={`input-wrapper${(!emailValid && email.length > 0) ? ' input-wrapper-error' : ''}`}>
-				<input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={props.onFocus} onChange={props.onChange} />
+			{/*<div className={`input-wrapper${(!emailValid && email.length > 0) ? ' input-wrapper-error' : (emailValid && email.length > 0) ? ' input-wrapper-pass' : ''}`}>*/}
+			{/*<div className={`input-wrapper${(emailReset) ? ((emailValid) ? ' input-wrapper-pass' : ' input-wrapper-error') : ''}`}>*/}
+			<div className={`input-wrapper${(emailValid || email.length === 0) ? '' : ' input-wrapper-error'}`}>
+				<input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={props.onFocus} onChange={props.onChange} onMouseLeave={props.onMouseLeave} onBlur={props.onBlur} />
 			</div>
-			<button disabled={!emailValid || email.includes('!')} type="submit" onClick={(event)=> props.onSubmit(event)}>Join Wait List</button>
+			<button disabled={!emailValid || email.length === 0} type="submit" onClick={(event)=> props.onSubmit(event)}>Join Wait List</button>
 		</form>
 		<div className="form-disclaimer">By tapping “Join Wait List” you accept our<br /><NavLink to="/terms">Terms of Service.</NavLink></div>
 	</div>);
@@ -36,7 +39,9 @@ class HomePage extends Component {
 		super(props);
 
 		this.state = {
-			email : ''
+			email      : '',
+			emailValid : false,
+			emailReset : false
 		};
 	}
 
@@ -48,19 +53,37 @@ class HomePage extends Component {
 	};
 
 	handleTextfieldChange = (event)=> {
-// 		console.log('HomePage.handleTextfieldChange()', event);
-		this.setState({
-			[event.target.name] : event.target.value,
+// 		console.log(this.constructor.name, '.handleTextfieldChange()', event.target.value, this.state.email, this.state.emailValid, this.state.emailReset);
+		const email = event.target.value;
+		const emailValid = Strings.isEmail(email);
+
+		this.setState({ email,
+			emailValid : emailValid || !email.includes('!') || email.length === 0
 		});
 	};
 
 	handleTextfieldFocus = (event)=> {
-// 		console.log('HomePage.handleTextfieldFocus()', event);
+// 		console.log(this.constructor.name, '.handleTextfieldFocus()', event.target.value, this.state.email, this.state.emailValid, this.state.emailReset);
 
+		const email = event.target.value;
 		this.setState({
-			[event.target.name]           : '',
-			[`${event.target.name}Valid`] : true
+			email      : (Strings.isEmail(email)) ? email : '',
+			emailValid : true
 		});
+	};
+
+	handleMouseLeave = (event)=> {
+// 		console.log(this.constructor.name, '.handleMouseLeave()', event.target.value, this.state.email, this.state.emailValid, this.state.emailReset);
+
+		const emailValid = Strings.isEmail(event.target.value);
+		this.setState({ emailValid })
+	};
+
+	handleTextfieldBlur = (event)=> {
+// 		console.log(this.constructor.name, '.handleTextfieldBlur()', event.target.value, this.state.email, this.state.emailValid, this.state.emailReset);
+
+		const emailValid = Strings.isEmail(event.target.value);
+		this.setState({ emailValid })
 	};
 
 	handleSubmit = (event)=> {
@@ -75,7 +98,7 @@ class HomePage extends Component {
 				action    : 'REGISTER',
 				username  : email,
 				password  : '',
-				type      : 'early_access'
+				type      : 'wait_list'
 			})).then((response) => {
 				console.log('REGISTER', response.data);
 				const status = parseInt(response.data.status, 16);
@@ -86,37 +109,38 @@ class HomePage extends Component {
 					this.props.onPage(Pages.THANK_YOU);
 
 					this.setState({
-						email    : '',
-						password : '',
-						passMsg  : ''
+						email      : 'Thank you for signing up!',
+						emailValid : true
 					});
 
 				} else {
 					this.setState({
-						email         : Bits.contains(status, 0x10) ? email : 'Email Address Already in Use',
-						password      : '',
-						emailValid    : Bits.contains(status, 0x10)
+						email      : Bits.contains(status, 0x10) ? email : 'Email Address Already in Use',
+						emailValid : Bits.contains(status, 0x10)
 					});
 				}
 			}).catch((error)=> {
 			});
 
 		} else {
-			this.setState({ email : 'Invalid Email Address' });
+			this.setState({ emailValid : false });
 		}
 	};
 
 	render() {
 // 		console.log('HomePage.render()', this.props, this.state);
 
-		const { email } = this.state;
-
+		const { email, emailValid, emailReset } = this.state;
 		return (
 			<BasePage className="home-page-wrapper">
 				<HomePageHeaderForm
 					email={email}
+					emailValid={emailValid}
+					emailReset={emailReset}
 					onChange={this.handleTextfieldChange}
 					onFocus={this.handleTextfieldFocus}
+					onMouseLeave={this.handleMouseLeave}
+					onBlur={this.handleTextfieldBlur}
 					onSubmit={this.handleSubmit}
 				/>
 

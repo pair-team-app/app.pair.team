@@ -16,7 +16,7 @@ class Status404Page extends Component {
 	render() {
 		return (
 			<BasePage className="status-404-page-wrapper">
-				<h1 className="page-header-title">Nothing Here, 404</h1>
+				<h1>Nothing Here, 404</h1>
 			</BasePage>
 		);
 	}

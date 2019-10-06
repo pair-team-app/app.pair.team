@@ -21,7 +21,7 @@ html, body {
   background-color: #fcfcfc;
   -webkit-font-smoothing: subpixel-antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: "Helvetica Neue", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-weight: 400;
   font-size: 16px;
   color: #232323;
@@ -33,7 +33,7 @@ a, a:any-link, a:active, a:visited {
 }
 
 a:hover {
-	color: #666666;
+	color: #343434;
 	text-decoration: underline;
 	transition: color 0.125s ease-out;
 }
@@ -49,15 +49,15 @@ button {
 }
 
 button:hover, button:active {
-  background-color: #005ad9;
-  transition: background-color 0.25s ease-out;
+  background-color: #0060e6;
+  transition: background-color 0.1s ease-out;
   cursor: pointer;
 }
 
 button:disabled, button:disabled:hover {
 	opacity : 0.875;
 	background-color: #296dcc;
-  color: #e0e0e0;
+  color: #f7f7f7;
   cursor: default;
 }
 
@@ -103,18 +103,35 @@ h1:before {
 
 /** Section Title **/
 h2 {
+	margin-bottom: 48px;
+	width: fit-content;
 	color: #0067ff;
 	font-size: 48px;
 	letter-spacing: 1px;
-	line-height: 68px;
+	line-height: 43px;
+	/*border: 1px dashed #ff00ff;*/
+	/*background-color: rgba(0, 0, 255, 0.25);*/
 }
 
 h2:before {
-	margin-top: calc((1 - 1.4) * 0.5em);
+	margin-top: calc((1 - 1.1) * 0.5em);
 }
+
+h2:hover {
+	opacity: 0.75;
+	/*filter: brightness(110%);*/
+	transition: opacity 0.25s ease-out;
+	/*transition: filter 0.25s ease-out;*/
+	cursor: default;
+}
+
+/*h2:before {*/
+	/*margin-top: calc((1 - 1.0) * 0.5em);*/
+/*}*/
 
 /** Legal Section Title **/
 h5 {
+	padding-bottom: 10px;
 	font-size: 15px;
 	font-weight: 600;
 	line-height: 20px;
@@ -123,7 +140,6 @@ h5 {
 
 /** Legal Paragraph **/
 h6 {
-	margin-top: 10px;
 	font-size: 16px;
 	font-weight: 400;
 	text-decoration: underline;
@@ -139,18 +155,30 @@ input[type="text"], input[type="password"], input[type="tel"], select, textarea,
   cursor: text;
 }
 
+input[type="text"], input[type="password"], input[type="tel"], textarea {
+	text-align: center;
+}
+
 input[type="text"]:disabled, input[type="password"]:disabled, input[type="tel"]:disabled, select:disabled, textarea:disabled {
   cursor: not-allowed;
   color: #999999;
 }
 
 input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hover, input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 1px 50px #f7f7f7 inset;
-  -webkit-text-fill-color: #232323;
+  -webkit-box-shadow: 0 0 1px 50px #ebebeb inset;
+  -webkit-text-fill-color: #000000;
+	font-size: 16px;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, input[type="tel"]:focus, textarea:focus {
+	background-color: #ebebeb;
+	transition: background-color 0.125s ease-out;
 }
 
 
 p {
+	margin-top: 0;
+	text-align: justify;
   line-height: 25px;
 }
 
@@ -185,16 +213,4 @@ textarea {
 
 
 @media screen and (max-width: 800px) {
-	form {
-		padding: 0 16px;
-	}
-
-	h1 {
-		font-size: 38px;
-		line-height: 44px;
-	}
-
-  input[type="text"], input[type="password"], input[type="tel"], select, textarea, .input-txt, .field-error {
-    width: 300px;
-  }
 }

@@ -44,6 +44,10 @@
 	border-radius: 23px;
 }
 
+.input-wrapper-pass {
+	border: 1px solid #47ff57;
+}
+
 .input-wrapper-error {
 	border: 1px solid #ff4646;
 }
@@ -95,8 +99,10 @@
 	transition: color 0.125s ease-out;
 }
 
-.paragraph-title {
-	text-decoration: underline;
+.expand-section {
+	margin-bottom: 40px;
+	text-align: left;
+	/*background-color: rgba(0, 255, 0, 0.33);*/
 }
 
 .flex-wrapper {

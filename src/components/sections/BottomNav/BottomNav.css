@@ -27,11 +27,4 @@
 
 
 @media screen and (max-width: 800px) {
-	.bottom-nav-link-wrapper {
-		margin: 0 10px 20px 10px;
-	}
-
-	.bottom-nav-link {
-		line-height: 30px;
-	}
 }
