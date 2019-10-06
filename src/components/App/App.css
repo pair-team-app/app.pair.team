@@ -75,7 +75,7 @@
 	margin-top: 30px;
 	font-size: 12px;
 	line-height: 18px;
-	text-decoration: underline;
+	/*text-decoration: underline;*/
 }
 
 .form-disclaimer:before {
@@ -84,6 +84,15 @@
 	width: 0;
 	height: 0;
 	margin-top: calc((1 - 1.4) * 0.5em);
+}
+
+.form-disclaimer a {
+	text-decoration: underline;
+}
+
+.form-disclaimer a:hover {
+	color: #666666;
+	transition: color 0.125s ease-out;
 }
 
 .paragraph-title {

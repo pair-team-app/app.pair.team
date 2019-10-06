@@ -4,6 +4,7 @@ import './HomePage.css';
 
 import axios from 'axios';
 import qs from 'qs';
+import { NavLink } from 'react-router-dom';
 
 import BasePage from '../BasePage';
 import { API_ENDPT_URL, Modals, Pages } from '../../../consts/uris';
@@ -25,7 +26,7 @@ const HomePageHeaderForm = (props)=> {
 			</div>
 			<button disabled={!emailValid || email.includes('!')} type="submit" onClick={(event)=> props.onSubmit(event)}>Join Wait List</button>
 		</form>
-		<div className="form-disclaimer">By tapping “Join Wait List” you accept our<br />Terms of Service.</div>
+		<div className="form-disclaimer">By tapping “Join Wait List” you accept our<br /><NavLink to="/terms">Terms of Service.</NavLink></div>
 	</div>);
 };
 
