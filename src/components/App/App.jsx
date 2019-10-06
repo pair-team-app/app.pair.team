@@ -77,7 +77,6 @@ class App extends Component {
 
 		this.state = {
 			authID      : 0,
-			scrolling   : false,
 			contentSize : {
 				width  : 0,
 				height : 0
@@ -242,9 +241,9 @@ class App extends Component {
 		console.log('App.handlePage()', url);
 		url = ((!url) ? '' : url).replace(/^\/(.*)$/, '$1');
 
-		if (URIs.firstComponent() !== URIs.firstComponent(url)) {
-			window.scrollTo(0, 0);
-		}
+// 		if (URIs.firstComponent() !== URIs.firstComponent(url)) {
+// 			window.scrollTo(0, 0);
+// 		}
 
 		if (url === '<<') {
 			this.props.history.goBack();

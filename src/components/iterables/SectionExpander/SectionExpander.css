@@ -4,6 +4,10 @@
 	/*border: 1px dashed #ff00ff;*/
 }
 
+.section-expander:last-child {
+	margin-bottom: 0;
+}
+
 .section-expander-title {
 }
 

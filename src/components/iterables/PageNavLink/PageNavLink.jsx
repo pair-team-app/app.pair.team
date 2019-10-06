@@ -13,6 +13,7 @@ function PageNavLink(props) {
 	const handleOpenURL = (event, url)=> {
 		event.preventDefault();
 		window.open(url.split('/').slice(2).join('/'));
+		props.onClick(event);
 	};
 
 	return (<NavLink
@@ -20,7 +21,7 @@ function PageNavLink(props) {
 		target={(extURL) ? '_blank' : '_self'}
 		className="page-nav-link"
 		activeClassName="page-nav-link-selected"
-		onClick={(event)=> (extURL) ? handleOpenURL(event, url) : null }
+		onClick={(event)=> (extURL) ? handleOpenURL(event, url) : props.onClick(event) }
 		>{title}
 	</NavLink>);
 }

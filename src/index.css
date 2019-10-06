@@ -76,6 +76,7 @@ fieldset {
 }
 
 form {
+	width: 316px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -206,4 +207,15 @@ textarea {
 
 
 @media screen and (max-width: 800px) {
+	button {
+		width: 100%;
+	}
+
+	form {
+		width: 100%;
+	}
+
+	h1 {
+		margin-bottom: 50px;
+	}
 }

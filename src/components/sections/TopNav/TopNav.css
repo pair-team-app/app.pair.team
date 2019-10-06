@@ -74,3 +74,7 @@ a.top-nav-branding-wrapper:hover .top-nav-title {
 	flex: 5 0 auto;
 	text-align: right;
 }
+
+.top-nav-menu-wrapper {
+	flex: 1 0 0;
+}

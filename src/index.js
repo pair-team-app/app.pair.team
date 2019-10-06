@@ -14,7 +14,7 @@ window.store = store;
 
 ReactDOM.render(
 	<Provider store={store}>
-		<BrowserRouter>
+		<BrowserRouter onUpdate={()=> window.documentElement.scrollTo(0, 0)}>
 			<App />
 		</BrowserRouter>
 	</Provider>,

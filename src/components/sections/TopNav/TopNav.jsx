@@ -2,8 +2,10 @@
 import React from 'react';
 import './TopNav.css';
 
+import { Browsers } from 'lang-js-utils';
 import { NavLink } from 'react-router-dom';
 
+import MobileMenu from '../../sections/MobileMenu';
 import PageNavLink from '../../iterables/PageNavLink';
 import navLinks from '../../../assets/json/nav-links';
 import { Pages } from '../../../consts/uris';
@@ -37,9 +39,10 @@ function TopNav(props) {
 			<Logo />
 			<div className="top-nav-title">Obit</div>
 		</div></NavLink>
-		<div className="top-nav-link-wrapper">
-			{(navLinks.top.map((navLink, i)=> (<PageNavLink key={i} navLink={navLink} />)))}
-		</div>
+		{(Browsers.isMobile.ANY())
+			? (<div className="top-nav-menu-wrapper"><MobileMenu /></div>)
+			: (<div className="top-nav-link-wrapper">{(navLinks.top.map((navLink, i)=> (<PageNavLink key={i} navLink={navLink} onClick={(event)=> null} />)))}</div>)
+		}
 	</div>);
 }
 

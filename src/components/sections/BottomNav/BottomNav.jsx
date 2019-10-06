@@ -11,7 +11,7 @@ function BottomNav(props) {
 		<div className="bottom-nav">
 			<div className="bottom-nav-link-wrapper">
 				{(navLinks.bottom.map((navLink, i)=> (
-					<PageNavLink key={i} navLink={navLink} />
+					<PageNavLink key={i} navLink={navLink} onClick={(event)=> null} />
 				)))}
 			</div>
 		</div>

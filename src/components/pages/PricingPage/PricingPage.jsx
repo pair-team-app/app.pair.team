@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import './PricingPage.css';
 
+import { Browsers } from 'lang-js-utils';
+
 import BasePage from '../BasePage';
 import SectionExpander from '../../iterables/SectionExpander';
 import { Modals } from '../../../consts/uris';
@@ -45,6 +47,7 @@ class PricingPage extends Component {
 
 	render() {
 // 		console.log(this.constructor.name, '.render()', this.props, this.state);
+// $7 // Designers $17 // Developer $29
 
 		const { sectionOpened } = this.state;
 		return (
@@ -57,21 +60,21 @@ class PricingPage extends Component {
 				<div className="pricing-page-section-wrapper">
 					<SectionExpander
 						open={sectionOpened[0]}
-						title={<PricingPageSectionTitle title="Team $7" section={{ ind : 0 }} onToggle={this.handleToggleSection} onSelect={this.handleSelectSection} />}
+						title={<PricingPageSectionTitle title={`Team${(Browsers.isMobile.ANY()) ? '' : ' $7'}`} section={{ ind : 0 }} onToggle={this.handleToggleSection} onSelect={this.handleSelectSection} />}
 						onToggle={()=> this.handleToggleSection({ ind : 0 })}>
 						Cras eu fringilla felis, at ullamcorper dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis pharetra porta neque, ac pellentesque mauris sodales quis. Nam nec vehicula odio. Phasellus a augue enim. Ut tincidunt quam in erat accumsan elementum. Nullam maximus varius fermentum.
 					</SectionExpander>
 
 					<SectionExpander
 						open={sectionOpened[1]}
-						title={<PricingPageSectionTitle title="Designers $17" section={{ ind : 1 }} onToggle={this.handleToggleSection} onSelect={this.handleSelectSection} />}
+						title={<PricingPageSectionTitle title={`Designers${(Browsers.isMobile.ANY()) ? '' : ' $17'}`} section={{ ind : 1 }} onToggle={this.handleToggleSection} onSelect={this.handleSelectSection} />}
 						onToggle={()=> this.handleToggleSection({ ind : 1 })}>
 						Etiam rhoncus quam eros, efficitur viverra est molestie nec. Donec facilisis accumsan turpis, ac iaculis mi aliquet id. Morbi viverra sagittis porttitor. Vivamus erat sem, imperdiet eu erat at, pharetra condimentum nibh. Proin lobortis dolor et erat consequat pellentesque. Fusce ultricies mi in risus porta, ac mattis eros luctus. Aliquam augue purus, ultricies et nisi sit amet, volutpat rhoncus purus. Praesent eu sollicitudin nisl.
 					</SectionExpander>
 
 					<SectionExpander
 						open={sectionOpened[2]}
-						title={<PricingPageSectionTitle title="Developer $29" section={{ ind : 2 }} onToggle={this.handleToggleSection} onSelect={this.handleSelectSection} />}
+						title={<PricingPageSectionTitle title={`Developer${(Browsers.isMobile.ANY()) ? '' : ' $29'}`} section={{ ind : 2 }} onToggle={this.handleToggleSection} onSelect={this.handleSelectSection} />}
 						onToggle={()=> this.handleToggleSection({ ind : 2 })}>
 						Sed tempus tortor arcu, a auctor justo finibus sit amet. Integer ac lorem diam. Praesent varius convallis enim. Sed accumsan pharetra quam ac accumsan. Vivamus sit amet massa metus. Sed laoreet consequat tincidunt. Aliquam nec egestas augue. Etiam ac ultrices mauris. Fusce est lectus, egestas vel volutpat mattis, faucibus quis nibh.
 					</SectionExpander>
@@ -87,7 +90,7 @@ const PricingPageSectionTitle = (props)=> {
 
 	return (<div className="pricing-page-section-title">
 		<h2 onClick={(event)=> props.onToggle(section)}>{title}</h2>
-		<button className="quiet-button" onClick={(event)=> props.onSelect(section)}>Select</button>
+		{(!Browsers.isMobile.ANY()) && (<button className="quiet-button" onClick={(event)=> props.onSelect(section)}>Select</button>)}
 	</div>);
 };
 
