@@ -5,3 +5,23 @@
 .pricing-page-text {
 	padding-bottom: 50px;
 }
+
+.pricing-page-section-wrapper {
+	line-height: 25px;
+	text-align: justify;
+}
+
+
+.pricing-page-section-title {
+	display: flex;
+	align-items: center;
+	width: 100%;
+}
+
+.pricing-page-section-title h2 {
+	flex: 1 0 auto;
+}
+
+.pricing-page-section-title button {
+	flex: 1 0 0;
+}

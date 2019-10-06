@@ -5,31 +5,10 @@
 }
 
 @keyframes top-nav-logo-fg-hover {
-	0%   { width: 100%; height: 100%; }
-	50%  { width: 110%; height: 110%; }
-	100% { width: 100%; height: 100%; }
+	0%   { opacity: 1; transform: scale(1); filter: brightness(100%);}
+	50%  { opacity: 0.9; transform: scale(1.125); filter: brightness(90%); }
+	100% { opacity: 1; transform: scale(1); filter: brightness(100%); }
 }
-
-@keyframes top-nav-logo-wrapper-hover {
-	0% {
-		opacity: 1;
-		transform: scale(1);
-		filter: brightness(100%);
-	}
-
-	50% {
-		opacity: 0.9;
-		transform: scale(1.125);
-		filter: brightness(90%);
-	}
-
-	100% {
-		opacity: 1;
-		transform: scale(1);
-		filter: brightness(100%);
-	}
-}
-
 
 .top-nav {
 	position: fixed;
@@ -46,32 +25,18 @@
 }
 
 .top-nav-branding-wrapper {
-	flex: 1 0 auto;
+	flex: 1 0 0;
 }
 
-.top-nav-branding-wrapper:hover {
-	cursor: pointer;
+a.top-nav-branding-wrapper:hover {
+	color: #232323;
+	text-decoration: none;
 }
 
-.top-nav-branding-wrapper:hover .top-nav-logo-wrapper {
-	animation: 0.5s ease-out 0s infinite alternate top-nav-logo-wrapper-hover;
-}
-/*.top-nav-branding-wrapper:hover .top-nav-logo-wrapper .top-nav-logo-bg {*/
-	/*animation: 0.25s ease-out 0s 1 forwards top-nav-logo-bg-hover;*/
-/*}*/
-
-/*.top-nav-branding-wrapper:hover .top-nav-logo-wrapper .top-nav-logo-fg {*/
-	/*animation: 0.33s ease-out 0.25s infinite forwards top-nav-logo-fg-hover;*/
-/*}*/
-
-.top-nav-branding-wrapper:hover .top-nav-title {
-	opacity: 0.75;
-	transition: opacity 0.25s ease-out;
-}
-
-.top-nav-link-wrapper {
-	flex: 5 0 auto;
-	text-align: right;
+.top-nav-branding-wrapper > div {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
 }
 
 .top-nav-logo {
@@ -79,31 +44,33 @@
 	height: 18px;
 }
 
-.top-nav-logo-wrapper {
-	position: relative;
-	width: 18px;
-	height: 18px;
+a.top-nav-branding-wrapper:any-link rect, a.top-nav-branding-wrapper:any-link circle {
+	opacity: 1;
+	transform: scale(1);
+	transition: transform 0.125s ease-in;
 }
 
-.top-nav-logo-bg {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 18px;
-	height: 18px;
-	transform: translate(-50%, -50%);
+a.top-nav-branding-wrapper:hover rect {
+	animation: 0.125s ease-out 0s 1 forwards top-nav-logo-bg-hover;
 }
 
-.top-nav-logo-fg {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 14px;
-	height: 14px;
-	transform: translate(-50%, -50%);
+a.top-nav-branding-wrapper:hover circle {
+	transform-origin: center;
+	animation: 0.33s ease-out 0.125s infinite alternate top-nav-logo-fg-hover;
 }
 
 .top-nav-title {
 	display: inline;
 	margin-left: 10px;
+}
+
+a.top-nav-branding-wrapper:hover .top-nav-title {
+	opacity: 0.5;
+	transition: opacity 0.25s ease-out;
+}
+
+
+.top-nav-link-wrapper {
+	flex: 5 0 auto;
+	text-align: right;
 }

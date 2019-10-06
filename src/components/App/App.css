@@ -22,14 +22,16 @@
 
 .quiet-button {
 	width: fit-content;
-	height: fit-content;
+	min-width: fit-content;
+	max-width: fit-content;
 	border: 1px solid #cecece;
 	background-color: #f7f7f7;
 	color: #232323;
 }
 
 .quiet-button:hover {
-	background-color: #cce1ff;
+	background-color: #efefef;
+	color: #333333;
 }
 
 .quiet-button:disabled {
@@ -97,12 +99,6 @@
 .form-disclaimer a:hover {
 	color: #666666;
 	transition: color 0.125s ease-out;
-}
-
-.expand-section {
-	margin-bottom: 40px;
-	text-align: left;
-	/*background-color: rgba(0, 255, 0, 0.33);*/
 }
 
 .flex-wrapper {

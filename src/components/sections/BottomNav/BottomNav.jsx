@@ -2,7 +2,7 @@
 import React from 'react';
 import './BottomNav.css';
 
-import PageNavLink from '../PageNavLink';
+import PageNavLink from '../../iterables/PageNavLink';
 import navLinks from '../../../assets/json/nav-links';
 
 

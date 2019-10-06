@@ -15,18 +15,13 @@ import homePageElement from '../../../assets/images/elements/element-home-page.p
 
 
 const HomePageHeaderForm = (props)=> {
-	const { email, emailValid, emailReset } = props;
-// 	const { email } = props;
-// 	const emailValid = Strings.isEmail(email) || (email.length > 0 || email.includes('!'));
+	const { email, emailValid } = props;
 
 	return (<div className="home-page-header-form">
-		{/*<h1>A new tool for product teams to<br />organize design</h1>*/}
 		<h1>A safe space for product teams to<br />create the best & most accessible design</h1>
 		<form onSubmit={props.onSubmit}>
-			{/*<div className={`input-wrapper${(!emailValid && email.length > 0) ? ' input-wrapper-error' : (emailValid && email.length > 0) ? ' input-wrapper-pass' : ''}`}>*/}
-			{/*<div className={`input-wrapper${(emailReset) ? ((emailValid) ? ' input-wrapper-pass' : ' input-wrapper-error') : ''}`}>*/}
 			<div className={`input-wrapper${(emailValid || email.length === 0) ? '' : ' input-wrapper-error'}`}>
-				<input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={props.onFocus} onChange={props.onChange} onMouseLeave={props.onMouseLeave} onBlur={props.onBlur} />
+				<input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={props.onFocus} onChange={props.onChange} onMouseLeave={props.onMouseLeave} onBlur={props.onBlur} required />
 			</div>
 			<button disabled={!emailValid || email.length === 0} type="submit" onClick={(event)=> props.onSubmit(event)}>Join Wait List</button>
 		</form>
@@ -47,7 +42,7 @@ class HomePage extends Component {
 	}
 
 	handleGitHub = ()=> {
-		console.log('HomePage.handleGitHub()');
+		console.log(this.constructor.name, '.handleGitHub()');
 		trackEvent('button', 'github');
 
 		this.props.onModal(Modals.GITHUB_CONNECT);
@@ -88,7 +83,7 @@ class HomePage extends Component {
 	};
 
 	handleSubmit = (event)=> {
-		console.log('HomePage.handleSubmit()');
+		console.log(this.constructor.name, '.handleSubmit()');
 		event.preventDefault();
 
 		trackEvent('button', 'register');
@@ -129,7 +124,7 @@ class HomePage extends Component {
 	};
 
 	render() {
-// 		console.log('HomePage.render()', this.props, this.state);
+// 		console.log(this.constructor.name, '.render()', this.props, this.state);
 
 		const { email, emailValid, emailReset } = this.state;
 		return (

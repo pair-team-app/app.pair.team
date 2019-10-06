@@ -8,7 +8,7 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import AlertDialog from '../overlays/AlertDialog';
+// import AlertDialog from '../overlays/AlertDialog';
 import LoginModal from '../overlays/LoginModal';
 import PopupNotification from '../overlays/PopupNotification';
 import RegisterModal from '../overlays/RegisterModal';
@@ -76,19 +76,19 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			scrolling     : false,
-			contentSize   : {
+			authID      : 0,
+			scrolling   : false,
+			contentSize : {
 				width  : 0,
 				height : 0
 			},
-			rating        : 0,
-			popup         : null,
-			loginModal    : false,
-			registerModal : false,
-			githubModal   : false,
-			payDialog     : false,
-			stripeModal   : false,
-			authID        : 0
+			popup       : null,
+			modals      : {
+				login    : false,
+				register : false,
+				github   : false,
+				stripe   : false,
+			}
 		};
 
 		this.githubWindow = null;
@@ -132,10 +132,6 @@ class App extends Component {
 		if (profile) {
 			if (!prevProps.profile) {
 				this.props.fetchUserHistory({ profile });
-
-				if (this.state.ranking !== 0) {
-					this.setState({ rating : 0 });
-				}
 			}
 
 // 			console.log('[:::::::::::|:|:::::::::::] PAY CHECK [:::::::::::|:|:::::::::::]');
@@ -349,41 +345,20 @@ class App extends Component {
 		console.log('App.onToggleModal()', url, show);
 
 		if (show) {
-			this.setState({
-				githubModal   : false,
-				loginModal    : (this.state.loginModal && url === Modals.GITHUB_CONNECT),
-				registerModal : (this.state.registerModal && url === Modals.GITHUB_CONNECT),
-				stripeModal   : false
+			this.setState({ modals : { ...this.state.modals,
+				github   : false,
+				login    : (url === Modals.LOGIN),
+				register : (url === Modals.REGISTER),
+				stripe   : (url === Modals.STRIPE) }
 			});
 
-			if (url === Modals.GITHUB_CONNECT) {
-				this.handleGithubAuth();
-
-			} else if (url === Modals.LOGIN) {
-				this.setState({ loginModal : true });
-
-			} else if (url === Modals.REGISTER) {
-				this.setState({ registerModal : true });
-
-			} else if (url === Modals.STRIPE) {
-				this.setState({
-					payDialog   : false,
-					stripeModal : true
-				});
-			}
-
 		} else {
-			if (url === Modals.GITHUB_CONNECT) {
-				this.setState({ githubModal : false });
-
-			} else if (url === Modals.LOGIN) {
-				this.setState({ loginModal : false });
-
-			} else if (url === Modals.REGISTER) {
-				this.setState({ registerModal : false });
-
-			} else if (url === Modals.STRIPE) {
-			}
+			this.setState({ modals : { ...this.state.modals,
+				github   : (url === Modals.GITHUB_CONNECT) ? false : this.state.modals.github,
+				login    : (url === Modals.LOGIN) ? false : this.state.modals.login,
+				register : (url === Modals.REGISTER) ? false : this.state.modals.register,
+				stripe   : (url === Modals.STRIPE) ? false : this.state.modals.stripe }
+			});
 		}
 	};
 
@@ -393,7 +368,8 @@ class App extends Component {
 
 		const { profile } = this.props;
   	const { popup } = this.state;
-  	const { loginModal, registerModal, stripeModal, payDialog } = this.state;
+//   	const { loginModal, registerModal, stripeModal, payDialog } = this.state;
+  	const { modals } = this.state;
 
   	return (<div className="site-wrapper">
 		  <TopNav onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} />
@@ -415,7 +391,7 @@ class App extends Component {
 				  {popup.content}
 			  </PopupNotification>)}
 
-			  {(loginModal) && (<LoginModal
+			  {(modals.login) && (<LoginModal
 				  inviteID={null}
 				  outro={(profile !== null)}
 				  onModal={(url)=> this.onToggleModal(url, true)}
@@ -425,7 +401,7 @@ class App extends Component {
 				  onLoggedIn={this.handleLoggedIn}
 			  />)}
 
-			  {(registerModal) && (<RegisterModal
+			  {(modals.register) && (<RegisterModal
 				  inviteID={null}
 				  outro={(profile !== null)}
 				  onModal={(url)=> this.onToggleModal(url, true)}
@@ -435,13 +411,13 @@ class App extends Component {
 				  onRegistered={this.handleRegistered}
 			  />)}
 
-			  {(payDialog) && (<AlertDialog
-				  title="Limited Account"
-				  message="You must upgrade to an unlimited account to view more"
-				  onComplete={this.handlePaidAlert}
-			  />)}
+			  {/*{(payDialog) && (<AlertDialog*/}
+				  {/*title="Limited Account"*/}
+				  {/*message="You must upgrade to an unlimited account to view more"*/}
+				  {/*onComplete={this.handlePaidAlert}*/}
+			  {/*/>)}*/}
 
-			  {(stripeModal) && (<StripeModal
+			  {(modals.stripe) && (<StripeModal
 				  profile={profile}
 				  onPage={this.handlePage}
 				  onPopup={this.handlePopup}

@@ -1,3 +1,12 @@
 
 .features-page-wrapper {
 }
+
+.features-page-text p {
+	margin-bottom: 70px;
+}
+
+.features-page-section-wrapper {
+	line-height: 25px;
+	text-align: justify;
+}

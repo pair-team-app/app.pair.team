@@ -25,5 +25,4 @@ function PageNavLink(props) {
 	</NavLink>);
 }
 
-
 export default (PageNavLink);

@@ -41,11 +41,12 @@ a:hover {
 button {
   width: 316px;
   height: 46px;
+	padding: 8px 30px 10px 30px;
   background-color: #0067ff;
   border: 1px solid rgba(0, 92, 197, 0.0);
   border-radius: 23px;
   font-size: 16px;
-  color : #ffffff;
+  color: #ffffff;
 }
 
 button:hover, button:active {
@@ -103,14 +104,12 @@ h1:before {
 
 /** Section Title **/
 h2 {
-	margin-bottom: 48px;
+	margin-bottom: 0;
 	width: fit-content;
 	color: #0067ff;
 	font-size: 48px;
 	letter-spacing: 1px;
 	line-height: 43px;
-	/*border: 1px dashed #ff00ff;*/
-	/*background-color: rgba(0, 0, 255, 0.25);*/
 }
 
 h2:before {
@@ -118,16 +117,10 @@ h2:before {
 }
 
 h2:hover {
-	opacity: 0.75;
-	/*filter: brightness(110%);*/
-	transition: opacity 0.25s ease-out;
-	/*transition: filter 0.25s ease-out;*/
-	cursor: default;
+	filter: brightness(75%);
+	transition: filter 0.25s ease-out;
+	cursor: s-resize;
 }
-
-/*h2:before {*/
-	/*margin-top: calc((1 - 1.0) * 0.5em);*/
-/*}*/
 
 /** Legal Section Title **/
 h5 {
