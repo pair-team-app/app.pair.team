@@ -20,7 +20,8 @@ const HomePageHeaderForm = (props)=> {
 // 	const emailValid = Strings.isEmail(email) || (email.length > 0 || email.includes('!'));
 
 	return (<div className="home-page-header-form">
-		<h1>A new tool for product teams to<br />organize design</h1>
+		{/*<h1>A new tool for product teams to<br />organize design</h1>*/}
+		<h1>A safe space for product teams to<br />create the best & most accessible design</h1>
 		<form onSubmit={props.onSubmit}>
 			{/*<div className={`input-wrapper${(!emailValid && email.length > 0) ? ' input-wrapper-error' : (emailValid && email.length > 0) ? ' input-wrapper-pass' : ''}`}>*/}
 			{/*<div className={`input-wrapper${(emailReset) ? ((emailValid) ? ' input-wrapper-pass' : ' input-wrapper-error') : ''}`}>*/}
