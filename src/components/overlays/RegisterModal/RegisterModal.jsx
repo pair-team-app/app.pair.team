@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './RegisterModal.css';
 
 import axios from 'axios';
+import { URIs } from 'lang-js-utils';
 import { connect } from 'react-redux';
 
 import BaseOverlay from '../BaseOverlay';
@@ -11,7 +12,6 @@ import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath } from '../../../utils/funcs';
-import {Bits, URIs} from 'lang-js-utils';
 import { trackEvent } from '../../../utils/tracking';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
 

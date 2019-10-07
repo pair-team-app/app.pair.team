@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 import './LoginForm.css'
 
 import axios from 'axios';
+import { Bits, Strings } from 'lang-js-utils';
 import { Row } from 'simple-flexbox';
 
 import { Modals, API_ENDPT_URL } from '../../../consts/uris';
-import { Bits, Strings } from 'lang-js-utils';
 import { trackEvent } from '../../../utils/tracking';
 
 

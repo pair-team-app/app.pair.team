@@ -1,13 +1,11 @@
 
 import axios from 'axios';
+import { Strings, URIs } from 'lang-js-utils';
 import Octokit from '@octokit/rest';
 import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
 
-import {
-	API_ENDPT_URL
-} from '../consts/uris';
-import { Strings, URIs } from 'lang-js-utils';
+import { API_ENDPT_URL } from '../consts/uris';
 
 
 export function getRouteParams(pathname) {
@@ -186,10 +184,10 @@ export function isUserLoggedIn(confirmed=true) {
 export function sendToSlack(message, callback=null) {
 
 	axios.post(API_ENDPT_URL, {
-		action  : 'SLACK',
+		action  : 'SLACK_MSG',
 		payload : { message }
 	}).then((response) => {
-		console.log("SLACK", response.data);
+		console.log("SLACK_MSG", response.data);
 		if (callback) {
 			callback();
 		}

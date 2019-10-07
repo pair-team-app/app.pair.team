@@ -1,8 +1,8 @@
 
 import axios from 'axios/index';
+import { Bits, Objects, URIs } from 'lang-js-utils';
 import cookie from 'react-cookies';
 
-import { Bits, Objects, URIs } from 'lang-js-utils';
 import {
 	ADD_FILE_UPLOAD,
 	APPEND_ARTBOARD_SLICES,
@@ -228,20 +228,20 @@ export function updateUserProfile(payload, force=true) {
 
 	return ((dispatch)=> {
 		if (payload) {
-			const { id, avatar, sources, integrations } = payload;
+			const { id, avatar } = payload;
 
 // 			if (typeof cookie.load('user_id') === 'undefined' || ((cookie.load('user_id') << 0) !== id)) {
 // 				cookie.save('user_id', id << 0, { path : '/' });
 // 			}
 
 			axios.post(API_ENDPT_URL, {
-				action  : 'UPDATE_PROFILE',
-				payload : {
+				action  : 'UPDATE_USER_PROFILE',
+				payload : { ...payload,
 					user_id  : id,
 					filename : avatar
 				}
 			}).then((response) => {
-				console.log('UPDATE_PROFILE', response.data);
+				console.log('UPDATE_USER_PROFILE', response.data);
 
 				const status = parseInt(response.data.status, 16);
 

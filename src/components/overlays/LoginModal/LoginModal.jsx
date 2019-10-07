@@ -2,13 +2,13 @@
 import React, { Component } from 'react';
 import './LoginModal.css';
 
+import { URIs } from 'lang-js-utils';
 import { connect } from 'react-redux';
 
 import BaseOverlay from '../BaseOverlay';
 import LoginForm from '../../forms/LoginForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
-import { URIs } from 'lang-js-utils';
 import { trackEvent } from '../../../utils/tracking';
 
 

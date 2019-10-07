@@ -2,8 +2,9 @@
 import React, { Component } from 'react';
 import './AlertDialog.css'
 
-import BaseOverlay from '../BaseOverlay';
 import { URIs } from 'lang-js-utils';
+
+import BaseOverlay from '../BaseOverlay';
 
 
 class AlertDialog extends Component {

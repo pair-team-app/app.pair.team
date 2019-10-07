@@ -3,14 +3,14 @@ import React, { Component } from 'react';
 import './StripeModal.css';
 
 import axios from 'axios';
+import { URIs } from 'lang-js-utils';
 import { Elements, StripeProvider } from 'react-stripe-elements';
 
 import BaseOverlay from '../BaseOverlay';
 import StripeForm from '../../forms/StripeForm/StripeForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
 import { API_ENDPT_URL } from '../../../consts/uris';
-import {buildInspectorPath, sendToSlack} from '../../../utils/funcs';
-import { URIs } from 'lang-js-utils';
+import { sendToSlack } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
 import stripeCreds from '../../../assets/json/stripe-creds';
 import stripeLogo from '../../../assets/images/logos/logo-stripe.png';

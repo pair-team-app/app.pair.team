@@ -1,4 +1,6 @@
 
+import { Objects } from 'lang-js-utils';
+
 import {
 	ADD_FILE_UPLOAD,
 	APPEND_ARTBOARD_SLICES,
@@ -15,7 +17,6 @@ import {
 	SET_TEAM,
 } from '../../consts/action-types';
 import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
-import { Objects } from 'lang-js-utils';
 
 
 const initialState = {

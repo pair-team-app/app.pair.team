@@ -2,10 +2,10 @@
 import React, { Component } from 'react';
 import './StripeForm.css'
 
+import { Components } from 'lang-js-utils';
 import { CardCVCElement, CardExpiryElement, CardNumberElement, injectStripe } from 'react-stripe-elements';
 import { Column, Row } from 'simple-flexbox';
 
-import { Components } from 'lang-js-utils';
 import { trackEvent } from '../../../utils/tracking';
 
 

@@ -2,13 +2,13 @@
 import React, { Component } from 'react';
 import './TopNavProfile.css';
 
+import { Strings, URIs } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 import ImageLoader from 'react-loading-image';
 import onClickOutside from 'react-onclickoutside';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
 
-import {Strings, URIs} from 'lang-js-utils';
 import { DEFAULT_AVATAR } from '../../../../consts/uris';
 
 const PROFILE = 'PROFILE';

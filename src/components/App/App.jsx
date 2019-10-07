@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import axios from 'axios';
+import { DateTimes } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
@@ -25,9 +26,7 @@ import {
 	API_ENDPT_URL,
 	GITHUB_APP_AUTH,
 	GITHUB_CHANGELOG,
-	Modals,
-	Pages
-} from '../../consts/uris';
+	Modals } from '../../consts/uris';
 import {
 	appendHomeArtboards,
 	fetchTeamLookup,
@@ -41,7 +40,6 @@ import {
 // 	getRouteParams,
 	idsFromPath
 } from '../../utils/funcs';
-import {Bits, DateTimes} from 'lang-js-utils';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 

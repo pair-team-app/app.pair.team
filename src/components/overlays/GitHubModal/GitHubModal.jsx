@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './GitHubModal.css';
 
 import axios from 'axios';
+import { Strings, URIs } from 'lang-js-utils';
 import Octokit from '@octokit/rest';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
@@ -10,7 +11,6 @@ import { connect } from 'react-redux';
 import BaseOverlay from '../BaseOverlay';
 import { API_ENDPT_URL, DEFAULT_AVATAR } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
-import { Strings, URIs } from 'lang-js-utils';
 import { trackEvent } from '../../../utils/tracking';
 import { buildInspectorPath } from '../../../utils/funcs';
 

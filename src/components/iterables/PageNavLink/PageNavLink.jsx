@@ -2,8 +2,8 @@
 import React from 'react';
 import './PageNavLink.css';
 
-import { NavLink } from 'react-router-dom';
 import { URIs } from 'lang-js-utils';
+import { NavLink } from 'react-router-dom';
 
 
 function PageNavLink(props) {
