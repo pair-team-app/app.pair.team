@@ -3,14 +3,13 @@ import React, { Component } from 'react';
 import './StripeModal.css';
 
 import axios from 'axios';
-import qs from 'qs';
 import { Elements, StripeProvider } from 'react-stripe-elements';
 
 import BaseOverlay from '../BaseOverlay';
 import StripeForm from '../../forms/StripeForm/StripeForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
 import { API_ENDPT_URL } from '../../../consts/uris';
-import { sendToSlack } from '../../../utils/funcs';
+import {buildInspectorPath, sendToSlack} from '../../../utils/funcs';
 import { URIs } from 'lang-js-utils';
 import { trackEvent } from '../../../utils/tracking';
 import stripeCreds from '../../../assets/json/stripe-creds';
@@ -80,12 +79,14 @@ class StripeModal extends Component {
 		const { profile } = this.props;
 		this.setState({ submitting : true });
 
-		axios.post(API_ENDPT_URL, qs.stringify({
-			action      : 'MAKE_PURCHASE',
-			user_id     : profile.id,
-			token_id    : token.id,
-			product_ids : PRODUCT_IDS.join(',')
-		})).then((response)=> {
+		axios.post(API_ENDPT_URL, {
+			action  : 'MAKE_PURCHASE',
+			payload : {
+				user_id     : profile.id,
+				token_id    : token.id,
+				product_ids : PRODUCT_IDS.join(',')
+			}
+		}).then((response) => {
 			console.log('MAKE_PURCHASE', response.data);
 			const { purchase, error } = response.data;
 			trackEvent('purchase', (error) ? 'error' : 'success');
@@ -112,6 +113,7 @@ class StripeModal extends Component {
 				outro      : ((purchase.id << 0) > 0),
 				purchase   : purchase
 			});
+
 		}).catch((error)=> {
 		});
 	};

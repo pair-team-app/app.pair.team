@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './HomePage.css';
 
 import axios from 'axios';
-import qs from 'qs';
 import { NavLink } from 'react-router-dom';
 
 import BasePage from '../BasePage';
@@ -75,12 +74,13 @@ class HomePage extends Component {
 
 		const { email } = this.state;
 		if (Strings.isEmail(email)) {
-			axios.post(API_ENDPT_URL, qs.stringify({ email,
-				action    : 'REGISTER',
-				username  : email,
-				password  : '',
-				type      : 'wait_list'
-			})).then((response) => {
+			axios.post(API_ENDPT_URL, {
+				action  : 'REGISTER',
+				payload : { email,
+					username : email,
+					type     : 'wait_list'
+				}
+			}).then((response) => {
 				console.log('REGISTER', response.data);
 				const status = parseInt(response.data.status, 16);
 // 					console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));

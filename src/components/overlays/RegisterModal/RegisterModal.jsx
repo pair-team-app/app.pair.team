@@ -11,7 +11,7 @@ import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath } from '../../../utils/funcs';
-import { URIs } from 'lang-js-utils';
+import {Bits, URIs} from 'lang-js-utils';
 import { trackEvent } from '../../../utils/tracking';
 import deLogo from '../../../assets/images/logos/logo-designengine.svg';
 
@@ -30,20 +30,20 @@ class RegisterModal extends Component {
 // 		console.log('RegisterModal.componentDidMount()', this.props, this.state);
 
 		if (this.props.invite) {
-			let formData = new FormData();
-			formData.append('action', 'INVITE_LOOKUP');
-			formData.append('invite_id', this.props.invite.id);
-			axios.post(API_ENDPT_URL, formData)
-				.then((response)=> {
-					console.log('INVITE_LOOKUP', response.data);
-					const { invite, upload } = response.data;
-					if (invite.id === this.props.invite.id) {
-						const { email } = invite;
-						trackEvent('user', 'invite');
-						this.setState({ email, upload });
-						this.props.setRedirectURI(buildInspectorPath(upload));
-					}
-				}).catch((error)=> {
+			axios.post(API_ENDPT_URL, {
+				action  : 'INVITE_LOOKUP',
+				payload : { invite_id : this.props.invite.id }
+			}).then((response) => {
+				console.log('INVITE_LOOKUP', response.data);
+				const { invite, upload } = response.data;
+				if (invite.id === this.props.invite.id) {
+					const { email } = invite;
+					trackEvent('user', 'invite');
+					this.setState({ email, upload });
+					this.props.setRedirectURI(buildInspectorPath(upload));
+				}
+
+			}).catch((error)=> {
 			});
 		}
 	}

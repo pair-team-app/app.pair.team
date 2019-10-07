@@ -4,7 +4,6 @@ import './GitHubModal.css';
 
 import axios from 'axios';
 import Octokit from '@octokit/rest';
-import qs from 'qs';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 
@@ -13,6 +12,7 @@ import { API_ENDPT_URL, DEFAULT_AVATAR } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { Strings, URIs } from 'lang-js-utils';
 import { trackEvent } from '../../../utils/tracking';
+import { buildInspectorPath } from '../../../utils/funcs';
 
 
 const GitHubAuthForm = (props)=> {
@@ -155,15 +155,16 @@ class GitHubModal extends Component {
 			step       : 2,
 			submitting : true
 		}, ()=> {
-			axios.post(API_ENDPT_URL, qs.stringify({ username, email,
-				action       : 'GITHUB_REGISTER',
-				access_token : accessToken,
-				password     : '',
-				filename     : avatar,
-				repo_name    : selectedRepo.fullName,
-				repo_url     : selectedRepo.url,
-				invite_id    : (this.props.invite) ? this.props.invite.id : '0'
-			})).then((response) => {
+			axios.post(API_ENDPT_URL, {
+				action  : 'GITHUB_REGISTER',
+				payload : { username, email,
+					access_token : accessToken,
+					filename     : avatar,
+					repo_name    : selectedRepo.fullName,
+					repo_url     : selectedRepo.url,
+					invite_id    : (this.props.invite) ? this.props.invite.id : 0
+				}
+			}).then((response) => {
 				console.log('GITHUB_REGISTER', response.data);
 				const status = parseInt(response.data.status, 16);
 
@@ -174,6 +175,7 @@ class GitHubModal extends Component {
 						this.onRegistered(user);
 					});
 				}
+
 			}).catch((error)=> {
 			});
 		});

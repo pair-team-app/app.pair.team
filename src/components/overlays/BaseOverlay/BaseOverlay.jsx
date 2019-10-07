@@ -7,7 +7,7 @@ import FontAwesome from 'react-fontawesome';
 import onClickOutside from 'react-onclickoutside';
 import { Column, Row } from 'simple-flexbox';
 
-import { trackOverlay } from './../../../utils/tracking';
+import { trackOverlay } from '../../../utils/tracking';
 
 export const OVERLAY_TYPE_AUTO_SCROLL = 'OVERLAY_TYPE_AUTO_SCROLL';
 export const OVERLAY_TYPE_FIXED_SIZE = 'OVERLAY_TYPE_FIXED_SIZE';

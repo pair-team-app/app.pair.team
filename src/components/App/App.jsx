@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './App.css';
 
 import axios from 'axios';
-import qs from 'qs';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
@@ -42,7 +41,7 @@ import {
 // 	getRouteParams,
 	idsFromPath
 } from '../../utils/funcs';
-import { DateTimes } from 'lang-js-utils';
+import {Bits, DateTimes} from 'lang-js-utils';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 
@@ -153,9 +152,10 @@ class App extends Component {
 		console.log('App.handleGithubAuth()');
 
 		const code = DateTimes.epoch(true);
-		axios.post(API_ENDPT_URL, qs.stringify({ code,
-			action : 'GITHUB_AUTH'
-		})).then((response) => {
+		axios.post(API_ENDPT_URL, {
+			action  : 'GITHUB_AUTH',
+			payload : { code }
+		}).then((response) => {
 			console.log('GITHUB_AUTH', response.data);
 			const authID = response.data.auth_id << 0;
 			this.setState({ authID }, ()=> {
@@ -175,6 +175,7 @@ class App extends Component {
 					this.onAuthInterval();
 				}, 1000);
 			});
+
 		}).catch((error)=> {
 		});
 	};
@@ -185,18 +186,20 @@ class App extends Component {
 		this.props.updateUserProfile(profile, false);
 		this.props.updateUserProfile(profile);
 
-		axios.post(API_ENDPT_URL, qs.stringify({
-			action    : 'REGISTER',
-			username  : profile.email,
-			email     : profile.email,
-			password  : '',
-			type      : 'early_access'
-		})).then((response) => {
+		axios.post(API_ENDPT_URL, {
+			action  : 'REGISTER',
+			payload : {
+				username : profile.email,
+				email    : profile.email,
+				type     : 'wait_list'
+			}
+		}).then((response) => {
 			console.log('REGISTER', response.data);
+
+		}).catch((error)=> {
 		});
 
-
-		this.handlePage(Pages.THANK_YOU);
+// 		this.handlePage(Pages.THANK_YOU);
 	};
 
 	handleLoggedIn = (profile)=> {
@@ -299,10 +302,11 @@ class App extends Component {
 
 		} else {
 			const { authID } = this.state;
-			axios.post(API_ENDPT_URL, qs.stringify({
+
+			axios.post(API_ENDPT_URL, {
 				action  : 'GITHUB_AUTH_CHECK',
-				auth_id : authID
-			})).then((response) => {
+				payload : { authID }
+			}).then((response) => {
 				console.log('GITHUB_AUTH_CHECK', response.data);
 				const { user } = response.data;
 				if (user) {
@@ -313,6 +317,7 @@ class App extends Component {
 					this.githubWindow = null;
 					this.handleGitHubAuthSynced(user);
 				}
+
 			}).catch((error)=> {
 			});
 		}

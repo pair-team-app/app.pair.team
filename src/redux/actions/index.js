@@ -1,6 +1,5 @@
 
 import axios from 'axios/index';
-import qs from 'qs';
 import cookie from 'react-cookies';
 
 import { Bits, Objects, URIs } from 'lang-js-utils';
@@ -63,30 +62,29 @@ export function fetchUserProfile() {
 	logFormat('fetchUserProfile()');
 
 	return ((dispatch)=> {
-		let formData = new FormData();
-		formData.append('action', 'PROFILE');
-		formData.append('user_id', cookie.load('user_id'));
-		axios.post(API_ENDPT_URL, formData)
-			.then((response)=> {
-				console.log('PROFILE', response.data);
+		axios.post(API_ENDPT_URL, {
+			action  : 'USER_PROFILE',
+			payload : { user_id : cookie.load('user_id') << 0 }
+		}).then((response) => {
+			console.log('USER_PROFILE', response.data);
 
-				Objects.renameKey(response.data.user, 'github_auth', 'github');
-				if (response.data.user.github) {
-					Objects.renameKey(response.data.user.github, 'access_token', 'accessToken');
+			Objects.renameKey(response.data.user, 'github_auth', 'github');
+			if (response.data.user.github) {
+				Objects.renameKey(response.data.user.github, 'access_token', 'accessToken');
+			}
+
+			const { id, type, github } = response.data.user;
+			dispatch({
+				type    : USER_PROFILE_LOADED,
+				payload : { ...response.data.user,
+					id     : id << 0,
+					github : (github) ? { ...github,
+						id : github.id << 0
+					} : github,
+					paid   : type.includes('paid')
 				}
-
-				const { id, type, github } = response.data.user;
-				dispatch({
-					type    : USER_PROFILE_LOADED,
-					payload : { ...response.data.user,
-						id     : id << 0,
-						github : (github) ? { ...github,
-							id : github.id << 0
-						} : github,
-						paid   : type.includes('paid')
-					}
-				});
-			}).catch((error) => {
+			});
+		}).catch((error)=> {
 		});
 	});
 }
@@ -97,13 +95,16 @@ export function fetchUserHistory(payload) {
 	return ((dispatch)=> {
 		if (payload.profile) {
 			const { profile, loadOffset, loadAmt } = payload;
-			axios.post(API_ENDPT_URL, qs.stringify({
-				action  : 'USER_HISTORY',
-				user_id : profile.id,
-				offset  : (loadOffset || 0),
-				length  : (loadAmt || -1)
-			})).then((response)=> {
-				console.log('USER_HISTORY', response.data);
+
+			axios.post(API_ENDPT_URL, {
+				action  : 'PLAYGROUND_HISTORY',
+				payload : {
+					user_id : profile.id,
+					offset  : (loadOffset || 0),
+					length  : (loadAmt || -1)
+				}
+			}).then((response) => {
+				console.log('PLAYGROUND_HISTORY', response.data);
 
 				const artboards = response.data.artboards.filter((artboard)=> (artboard)).map((artboard)=> ({
 					id        : artboard.id << 0,
@@ -134,9 +135,11 @@ export function fetchTeamLookup(payload) {
 
 	return ((dispatch)=> {
 		const { subdomain } = (payload) ? payload : { subdomain : URIs.subdomain() };
-		axios.post(API_ENDPT_URL, qs.stringify({ subdomain,
-			action    : 'TEAM_LOOKUP'
-		})).then((response)=> {
+
+		axios.post(API_ENDPT_URL, {
+			action  : 'TEAM_LOOKUP',
+			payload : { subdomain }
+		}).then((response) => {
 			console.log('TEAM_LOOKUP', response.data);
 
 			const { team } = response.data;
@@ -231,13 +234,13 @@ export function updateUserProfile(payload, force=true) {
 // 				cookie.save('user_id', id << 0, { path : '/' });
 // 			}
 
-			axios.post(API_ENDPT_URL, qs.stringify(Object.assign({}, payload, {
-				action       : 'UPDATE_PROFILE',
-				user_id      : id,
-				filename     : avatar,
-				sources      : (sources || []).join(','),
-				integrations : (integrations || []).join(',')
-			}))).then((response)=> {
+			axios.post(API_ENDPT_URL, {
+				action  : 'UPDATE_PROFILE',
+				payload : {
+					user_id  : id,
+					filename : avatar
+				}
+			}).then((response) => {
 				console.log('UPDATE_PROFILE', response.data);
 
 				const status = parseInt(response.data.status, 16);
@@ -261,7 +264,7 @@ export function updateUserProfile(payload, force=true) {
 						paid     : type.includes('paid')
 					}
 				});
-			}).catch((error) => {
+			}).catch((error)=> {
 			});
 
 		} else {

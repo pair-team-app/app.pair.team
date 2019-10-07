@@ -79,30 +79,28 @@ class LoginForm extends Component {
 		});
 
 		if (emailValid && passwordValid) {
-			let formData = new FormData();
-			formData.append('action', 'LOGIN');
-			formData.append('email', email);
-			formData.append('password', password);
-			formData.append('invite_id', (inviteID) ? inviteID : '0');
-			axios.post(API_ENDPT_URL, formData)
-				.then((response)=> {
-					console.log('LOGIN', response.data);
-					const status = parseInt(response.data.status, 16);
+			axios.post(API_ENDPT_URL, {
+				action  : 'LOGIN',
+				payload : { email, password, inviteID }
+			}).then((response) => {
+				console.log('LOGIN', response.data);
+				const status = parseInt(response.data.status, 16);
 
-					if (Bits.contains(status, 0x11)) {
-						const { user } = response.data;
-						this.props.onLoggedIn(user);
+				if (Bits.contains(status, 0x11)) {
+					const { user } = response.data;
+					this.props.onLoggedIn(user);
 
-					} else {
-						this.setState({
-							email         : Bits.contains(status, 0x01) ? email : 'Email Address or Username In Use',
-							password      : '',
-							emailValid    : Bits.contains(status, 0x01),
-							passwordValid : Bits.contains(status, 0x10),
-							passMsg       : Bits.contains(status, 0x10) ? '' : 'Password Invalid'
-						});
-					}
-				}).catch((error)=> {
+				} else {
+					this.setState({
+						email         : Bits.contains(status, 0x01) ? email : 'Email Address or Username In Use',
+						password      : '',
+						emailValid    : Bits.contains(status, 0x01),
+						passwordValid : Bits.contains(status, 0x10),
+						passMsg       : Bits.contains(status, 0x10) ? '' : 'Password Invalid'
+					});
+				}
+
+			}).catch((error)=> {
 			});
 		}
 	};

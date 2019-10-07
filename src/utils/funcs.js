@@ -184,15 +184,15 @@ export function isUserLoggedIn(confirmed=true) {
 }
 
 export function sendToSlack(message, callback=null) {
-	let formData = new FormData();
-	formData.append('action', 'SLACK');
-	formData.append('message', message);
-	axios.post(API_ENDPT_URL, formData)
-		.then((response) => {
-			console.log("SLACK", response.data);
-			if (callback) {
-				callback();
-			}
-		}).catch((error) => {
+
+	axios.post(API_ENDPT_URL, {
+		action  : 'SLACK',
+		payload : { message }
+	}).then((response) => {
+		console.log("SLACK", response.data);
+		if (callback) {
+			callback();
+		}
+	}).catch((error)=> {
 	});
 }

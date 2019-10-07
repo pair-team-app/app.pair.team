@@ -95,32 +95,29 @@ class RegisterForm extends Component {
 
 
 		if (usernameValid && emailValid && passwordValid) {
-			let formData = new FormData();
-			formData.append('action', 'REGISTER');
-			formData.append('username', username);
-			formData.append('email', email);
-			formData.append('password', password);
-			formData.append('invite_id', (inviteID) ? inviteID : '0');
-			axios.post(API_ENDPT_URL, formData)
-				.then((response)=> {
-					console.log('REGISTER', response.data);
-					const status = parseInt(response.data.status, 16);
-// 					console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));
+			axios.post(API_ENDPT_URL, {
+				action  : 'REGISTER',
+				payload : { username, email, password, inviteID }
+			}).then((response) => {
+				console.log('REGISTER', response.data);
+				const status = parseInt(response.data.status, 16);
+// 				console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));
 
-					if (status === 0x11) {
-						this.props.onRegistered(response.data.user);
+				if (status === 0x11) {
+					this.props.onRegistered(response.data.user);
 
-					} else {
-						this.setState({
-							username      : Bits.contains(status, 0x01) ? username : 'Username Already in Use',
-							email         : Bits.contains(status, 0x10) ? email : 'Email Address Already in Use',
-							password      : '',
-							password2     : '',
-							usernameValid : Bits.contains(status, 0x01),
-							emailValid    : Bits.contains(status, 0x10)
-						});
-					}
-				}).catch((error)=> {
+				} else {
+					this.setState({
+						username      : Bits.contains(status, 0x01) ? username : 'Username Already in Use',
+						email         : Bits.contains(status, 0x10) ? email : 'Email Address Already in Use',
+						password      : '',
+						password2     : '',
+						usernameValid : Bits.contains(status, 0x01),
+						emailValid    : Bits.contains(status, 0x10)
+					});
+				}
+
+			}).catch((error)=> {
 			});
 		}
 	};
