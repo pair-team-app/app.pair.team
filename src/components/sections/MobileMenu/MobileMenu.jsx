@@ -8,15 +8,6 @@ import PageNavLink from '../../iterables/PageNavLink';
 import navLinks from '../../../assets/json/nav-links';
 
 
-const MobileMenuItem = (props)=> {
-	const { navLink } = props;
-
-	return (<div className="mobile-menu-item">
-		<PageNavLink navLink={navLink} onClick={props.onClick} />
-	</div>);
-};
-
-
 class MobileMenu extends Component {
 	constructor(props) {
 		super(props);
@@ -48,5 +39,15 @@ class MobileMenu extends Component {
 		</div>);
 	}
 }
+
+
+const MobileMenuItem = (props)=> {
+	const { navLink } = props;
+
+	return (<div className="mobile-menu-item">
+		<PageNavLink navLink={navLink} onClick={props.onClick} />
+	</div>);
+};
+
 
 export default onClickOutside(MobileMenu);

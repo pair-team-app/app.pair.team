@@ -49,28 +49,6 @@ import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 const wrapper = React.createRef();
 
 
-const mapStateToProps = (state, ownProps)=> {
-	return ({
-		deeplink  : state.deeplink,
-		profile   : state.userProfile,
-		artboards : state.homeArtboards,
-		team      : state.team
-	});
-};
-
-const mapDispatchToProps = (dispatch)=> {
-	return ({
-		purgeHomeArtboards : ()=> dispatch(appendHomeArtboards(null)),
-		fetchTeamLookup    : (payload)=> dispatch(fetchTeamLookup(payload)),
-		fetchUserHistory   : (payload)=> dispatch(fetchUserHistory(payload)),
-		fetchUserProfile   : ()=> dispatch(fetchUserProfile()),
-		updateDeeplink     : (navIDs)=> dispatch(updateDeeplink(navIDs)),
-		updateUserProfile  : (profile, force=true)=> dispatch(updateUserProfile(profile, force)),
-		setAtomExtension   : (installed)=> dispatch(setAtomExtension(installed))
-	});
-};
-
-
 class App extends Component {
 	constructor(props) {
 		super(props);
@@ -342,9 +320,10 @@ class App extends Component {
 
 	onToggleModal = (url, show)=> {
 		console.log('App.onToggleModal()', url, show);
+		const { modals } = this.state;
 
 		if (show) {
-			this.setState({ modals : { ...this.state.modals,
+			this.setState({ modals : { ...modals,
 				github   : false,
 				login    : (url === Modals.LOGIN),
 				register : (url === Modals.REGISTER),
@@ -352,11 +331,11 @@ class App extends Component {
 			});
 
 		} else {
-			this.setState({ modals : { ...this.state.modals,
-				github   : (url === Modals.GITHUB_CONNECT) ? false : this.state.modals.github,
-				login    : (url === Modals.LOGIN) ? false : this.state.modals.login,
-				register : (url === Modals.REGISTER) ? false : this.state.modals.register,
-				stripe   : (url === Modals.STRIPE) ? false : this.state.modals.stripe }
+			this.setState({ modals : { ...modals,
+				github   : (url === Modals.GITHUB_CONNECT) ? false : modals.github,
+				login    : (url === Modals.LOGIN) ? false : modals.login,
+				register : (url === Modals.REGISTER) ? false : modals.register,
+				stripe   : (url === Modals.STRIPE) ? false : modals.stripe }
 			});
 		}
 	};
@@ -366,9 +345,7 @@ class App extends Component {
 //   	console.log('App.render()', this.props, this.state);
 
 		const { profile } = this.props;
-  	const { popup } = this.state;
-//   	const { loginModal, registerModal, stripeModal, payDialog } = this.state;
-  	const { modals } = this.state;
+  	const { popup, modals } = this.state;
 
   	return (<div className="site-wrapper">
 		  <TopNav onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} />
@@ -427,5 +404,28 @@ class App extends Component {
 	  </div>);
   }
 }
+
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		deeplink  : state.deeplink,
+		profile   : state.userProfile,
+		artboards : state.homeArtboards,
+		team      : state.team
+	});
+};
+
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		purgeHomeArtboards : ()=> dispatch(appendHomeArtboards(null)),
+		fetchTeamLookup    : (payload)=> dispatch(fetchTeamLookup(payload)),
+		fetchUserHistory   : (payload)=> dispatch(fetchUserHistory(payload)),
+		fetchUserProfile   : ()=> dispatch(fetchUserProfile()),
+		updateDeeplink     : (navIDs)=> dispatch(updateDeeplink(navIDs)),
+		updateUserProfile  : (profile, force=true)=> dispatch(updateUserProfile(profile, force)),
+		setAtomExtension   : (installed)=> dispatch(setAtomExtension(installed))
+	});
+};
+
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

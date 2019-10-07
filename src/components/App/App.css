@@ -46,10 +46,6 @@
 	border-radius: 23px;
 }
 
-.input-wrapper-pass {
-	border: 1px solid #47ff57;
-}
-
 .input-wrapper-error {
 	border: 1px solid #ff4646;
 }
@@ -57,6 +53,10 @@
 .input-wrapper-error input[type="text"], .input-wrapper-error input[type="password"], .input-wrapper-error input[type="tel"], .input-wrapper-error .input-txt, .input-wrapper-error .field-error {
 	background-color: #fff0f0;
 	color: #ff4646;
+}
+
+.input-wrapper-submitted input[type="text"]:disabled, .input-wrapper-submitted input[type="text"]:disabled, .input-wrapper-submitted input[type="text"]:disabled, textarea:disabled {
+	color: #232323;
 }
 
 .input-wrapper-error .field-error {

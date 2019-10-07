@@ -22,14 +22,6 @@ class PricingPage extends Component {
 		};
 	}
 
-	componentDidMount() {
-// 		console.log(this.constructor.name, '.componentDidMount()', this.props, this.state);
-	}
-
-	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log(this.constructor.name, '.componentDidUpdate()', prevProps, this.props, prevState, this.state);
-	}
-
 	handleSelectSection = (section)=> {
 // 		console.log(this.constructor.name, '.handleSelectSection()', section);
 		this.props.onModal(Modals.STRIPE, true);
@@ -47,7 +39,6 @@ class PricingPage extends Component {
 
 	render() {
 // 		console.log(this.constructor.name, '.render()', this.props, this.state);
-// $7 // Designers $17 // Developer $29
 
 		const { sectionOpened } = this.state;
 		return (

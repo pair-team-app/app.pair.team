@@ -10,6 +10,7 @@
 	100% { opacity: 1; transform: scale(1); filter: brightness(100%); }
 }
 
+
 .top-nav {
 	position: fixed;
 	display: flex;

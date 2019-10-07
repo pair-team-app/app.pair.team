@@ -16,11 +16,6 @@ const TEAM = 'TEAM';
 const LOGOUT = 'LOGOUT';
 
 
-const mapStateToProps = (state, ownProps)=> {
-	return ({ profile : state.userProfile });
-};
-
-
 class TopNavProfile extends Component {
 	constructor(props) {
 		super(props);
@@ -82,5 +77,11 @@ class TopNavProfile extends Component {
 		</div>);
 	}
 }
+
+
+const mapStateToProps = (state, ownProps)=> {
+	return ({ profile : state.userProfile });
+};
+
 
 export default connect(mapStateToProps)(onClickOutside(TopNavProfile));

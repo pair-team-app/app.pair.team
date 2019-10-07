@@ -11,6 +11,19 @@ import navLinks from '../../../assets/json/nav-links';
 import { Pages } from '../../../consts/uris';
 
 
+function TopNav(props) {
+	return (<div className="top-nav">
+		<NavLink to={Pages.HOME} className="top-nav-branding-wrapper" activeClassName=""><div>
+			<Logo />
+			<div className="top-nav-title">Obit</div>
+		</div></NavLink>
+		{(Browsers.isMobile.ANY())
+			? (<div className="top-nav-menu-wrapper"><MobileMenu /></div>)
+			: (<div className="top-nav-link-wrapper">{(navLinks.top.map((navLink, i)=> (<PageNavLink key={i} navLink={navLink} onClick={(event)=> null} />)))}</div>)
+		}
+	</div>);
+}
+
 const Logo = ()=> {
 	return (<svg
 		version="1.1"
@@ -33,17 +46,5 @@ const Logo = ()=> {
 	</svg>);
 };
 
-function TopNav(props) {
-	return (<div className="top-nav">
-		<NavLink to={Pages.HOME} className="top-nav-branding-wrapper" activeClassName=""><div>
-			<Logo />
-			<div className="top-nav-title">Obit</div>
-		</div></NavLink>
-		{(Browsers.isMobile.ANY())
-			? (<div className="top-nav-menu-wrapper"><MobileMenu /></div>)
-			: (<div className="top-nav-link-wrapper">{(navLinks.top.map((navLink, i)=> (<PageNavLink key={i} navLink={navLink} onClick={(event)=> null} />)))}</div>)
-		}
-	</div>);
-}
 
 export default (TopNav);

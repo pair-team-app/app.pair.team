@@ -19,14 +19,6 @@ class FeaturesPage extends Component {
 		};
 	}
 
-	componentDidMount() {
-// 		console.log(this.constructor.name, '.componentDidMount()', this.props, this.state);
-	}
-
-	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log(this.constructor.name, '.componentDidUpdate()', prevProps, this.props, prevState, this.state);
-	}
-
 	handleToggleSection = (section)=> {
 		console.log(this.constructor.name, '.handleToggleSection()', section, this.state.sectionOpened, this.state.sectionOpened[section.ind]);
 

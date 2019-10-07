@@ -18,4 +18,5 @@ function BottomNav(props) {
 	);
 }
 
+
 export default (BottomNav);

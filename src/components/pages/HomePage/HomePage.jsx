@@ -7,27 +7,11 @@ import qs from 'qs';
 import { NavLink } from 'react-router-dom';
 
 import BasePage from '../BasePage';
-import { API_ENDPT_URL, Modals, Pages } from '../../../consts/uris';
+import { API_ENDPT_URL, Modals } from '../../../consts/uris';
 import { Bits, Strings } from 'lang-js-utils';
 import { trackEvent } from '../../../utils/tracking';
 
 import homePageElement from '../../../assets/images/elements/element-home-page.png';
-
-
-const HomePageHeaderForm = (props)=> {
-	const { email, emailValid } = props;
-
-	return (<div className="home-page-header-form">
-		<h1>A safe space for product teams to<br />create the best & most accessible design</h1>
-		<form onSubmit={props.onSubmit}>
-			<div className={`input-wrapper${(emailValid || email.length === 0) ? '' : ' input-wrapper-error'}`}>
-				<input type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={props.onFocus} onChange={props.onChange} onMouseLeave={props.onMouseLeave} onBlur={props.onBlur} required />
-			</div>
-			<button disabled={!emailValid || email.length === 0} type="submit" onClick={(event)=> props.onSubmit(event)}>Join Wait List</button>
-		</form>
-		<div className="form-disclaimer">By tapping “Join Wait List” you accept our<br /><NavLink to="/terms">Terms of Service.</NavLink></div>
-	</div>);
-};
 
 
 class HomePage extends Component {
@@ -37,7 +21,8 @@ class HomePage extends Component {
 		this.state = {
 			email      : '',
 			emailValid : false,
-			emailReset : false
+			emailReset : false,
+			submitted  : false
 		};
 	}
 
@@ -102,11 +87,11 @@ class HomePage extends Component {
 
 				if (status === 0x11) {
 					this.props.onRegistered(response.data.user);
-					this.props.onPage(Pages.THANK_YOU);
 
 					this.setState({
 						email      : 'Thank you for signing up!',
-						emailValid : true
+						emailValid : true,
+						submitted  : true
 					});
 
 				} else {
@@ -126,13 +111,14 @@ class HomePage extends Component {
 	render() {
 // 		console.log(this.constructor.name, '.render()', this.props, this.state);
 
-		const { email, emailValid, emailReset } = this.state;
+		const { email, emailValid, emailReset, submitted } = this.state;
 		return (
 			<BasePage className="home-page-wrapper">
 				<HomePageHeaderForm
 					email={email}
 					emailValid={emailValid}
 					emailReset={emailReset}
+					submitted={submitted}
 					onChange={this.handleTextfieldChange}
 					onFocus={this.handleTextfieldFocus}
 					onMouseLeave={this.handleMouseLeave}
@@ -147,6 +133,22 @@ class HomePage extends Component {
 		);
 	}
 }
+
+
+const HomePageHeaderForm = (props)=> {
+	const { email, emailValid, submitted } = props;
+
+	return (<div className="home-page-header-form">
+		<h1>A safe space for product teams to<br />create the best & most accessible design</h1>
+		<form onSubmit={props.onSubmit}>
+			<div className={`input-wrapper${(submitted) ? ' input-wrapper-submitted' : (emailValid || email.length === 0) ? '' : ' input-wrapper-error'}`}>
+				<input disabled={submitted} type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={props.onFocus} onChange={props.onChange} onMouseLeave={props.onMouseLeave} onBlur={props.onBlur} required />
+			</div>
+			<button disabled={(!emailValid || email.length === 0) || submitted} type="submit" onClick={(event)=> props.onSubmit(event)} style={{opacity : (submitted) ? 0.5 : 1.0}}>Join Wait List</button>
+		</form>
+		<div className="form-disclaimer">By tapping “Join Wait List” you accept our<br /><NavLink to="/terms">Terms of Service.</NavLink></div>
+	</div>);
+};
 
 
 export default (HomePage);

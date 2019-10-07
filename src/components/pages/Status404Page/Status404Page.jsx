@@ -11,4 +11,5 @@ function Status404Page(props) {
 	</BasePage>);
 }
 
+
 export default (Status404Page);
