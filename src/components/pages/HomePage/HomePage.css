@@ -4,9 +4,7 @@
 
 .home-page-content {
 	width: 100%;
-	/*border: 1px solid #cecece;*/
 	border-radius: 20px;
-	/*background-color: #e0e0e0;*/
 }
 
 .home-page-element {
@@ -14,7 +12,7 @@
 }
 
 
-.home-page-header-form {
+.home-page-form {
 	display: flex;
 	flex-direction: column;
 	align-content: stretch;
