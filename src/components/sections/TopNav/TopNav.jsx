@@ -25,25 +25,18 @@ function TopNav(props) {
 }
 
 const Logo = ()=> {
-	return (<svg
-		version="1.1"
-		width="20px"
-		height="20px"
-		viewBox="0 0 20 20"
-		className="top-nav-logo">
-		<g id="WEBSITE" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-			<g id="PRICING" transform="translate(-19.000000, -19.000000)">
-				<g id="Group-7" transform="translate(20.000000, 19.000000)">
-					<g id="Group-4">
-						<g id="logo" transform="translate(0.000000, 1.000000)">
-							<rect id="logo-bg" stroke="#CECECE" fill="#F7F7F7" strokeLinecap="round" strokeLinejoin="round" x="-0.5" y="-0.5" width="19" height="19" rx="2" />
-							<circle id="logo-fg" fill="#232323" cx="9" cy="9" r="8" />
-						</g>
+	return (<div className="top-nav-logo">
+		<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1">
+			<g id="WEBSITE" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+				<g id="MOBILE-HOME" transform="translate(-20.000000, -44.000000)" fillRule="nonzero">
+					<g id="obit-logo" transform="translate(20.000000, 44.000000)">
+						<rect id="logo-bg" fill="#232323" x="0" y="0" width="18" height="18" />
+						<rect id="logo-fg" fill="#F4F4F4" x="1.21621622" y="1.21621622" width="15.5675676" height="15.5675676" rx="7.78378378" />
 					</g>
 				</g>
 			</g>
-		</g>
-	</svg>);
+		</svg>
+	</div>);
 };
 
 

@@ -1,9 +1,10 @@
 
 .pricing-page-wrapper {
+	padding: 60px 20%;
 }
 
-.pricing-page-text {
-	padding-bottom: 50px;
+.pricing-page-text p {
+	padding-bottom: 70px;
 }
 
 .pricing-page-section-wrapper {

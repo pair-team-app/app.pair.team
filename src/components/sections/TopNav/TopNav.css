@@ -1,15 +1,26 @@
 
 @keyframes top-nav-logo-bg-hover {
-	0%   { opacity: 1; }
-	100% { opacity: 0; }
+	0%   { transform: scale(1.000) }
+	100% { transform: scale(1.50) }
 }
 
 @keyframes top-nav-logo-fg-hover {
-	0%   { opacity: 1; transform: scale(1); filter: brightness(100%);}
-	50%  { opacity: 0.9; transform: scale(1.125); filter: brightness(90%); }
-	100% { opacity: 1; transform: scale(1); filter: brightness(100%); }
+	0%   { transform: scale(1.000); }
+	50%  { transform: scale(0.750); }
+	100% { transform: scale(1.000); }
 }
 
+@keyframes top-nav-logo-out {
+	0% {
+		opacity: 1;
+		transform: scale(1.25);
+	}
+
+	95% {
+		opacity: 0.875;
+		transform: scale(0.75);
+	}
+}
 
 .top-nav {
 	position: fixed;
@@ -45,17 +56,19 @@ a.top-nav-branding-wrapper:hover {
 	height: 18px;
 }
 
-a.top-nav-branding-wrapper:any-link rect, a.top-nav-branding-wrapper:any-link circle {
-	opacity: 1;
-	transform: scale(1);
-	transition: transform 0.125s ease-in;
+a.top-nav-branding-wrapper rect {
+	/*opacity: 1;*/
+	/*transform: scale(1.000);*/
+	/*transform-origin: center;*/
+	/*animation: 0.125s ease-in 0s 1 forwards top-nav-logo-out;*/
 }
 
-a.top-nav-branding-wrapper:hover rect {
-	animation: 0.125s ease-out 0s 1 forwards top-nav-logo-bg-hover;
+a.top-nav-branding-wrapper:hover rect#logo-bg {
+	transform-origin: center;
+	animation: 0.25s ease-out 0.0s 1 forwards top-nav-logo-bg-hover;
 }
 
-a.top-nav-branding-wrapper:hover circle {
+a.top-nav-branding-wrapper:hover rect#logo-fg {
 	transform-origin: center;
 	animation: 0.33s ease-out 0.125s infinite alternate top-nav-logo-fg-hover;
 }

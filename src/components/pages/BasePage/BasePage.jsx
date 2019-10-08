@@ -11,8 +11,9 @@ function BasePage(props) {
 		<div
 			className={`base-page ${className}`}
 			style={(style) ? style : null}>
+			<div className="full-width full-height debug-border">
 				{(children)}
-		</div>
+			</div></div>
 	);
 }
 

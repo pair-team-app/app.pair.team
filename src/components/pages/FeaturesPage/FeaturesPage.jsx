@@ -52,6 +52,7 @@ class FeaturesPage extends Component {
 						Etiam rhoncus quam eros, efficitur viverra est molestie nec. Donec facilisis accumsan turpis, ac iaculis mi aliquet id. Morbi viverra sagittis porttitor. Vivamus erat sem, imperdiet eu erat at, pharetra condimentum nibh. Proin lobortis dolor et erat consequat pellentesque. Fusce ultricies mi in risus porta, ac mattis eros luctus. Aliquam augue purus, ultricies et nisi sit amet, volutpat rhoncus purus. Praesent eu sollicitudin nisl.
 					</SectionExpander>
 
+
 					<SectionExpander
 						open={sectionOpened[2]}
 						title={<FeaturesPageSectionTitle title="Tool" section={{ ind : 2 }} onToggle={this.handleToggleSection} />}
