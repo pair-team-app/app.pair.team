@@ -6883,10 +6883,8 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-lang-js-utils@^0.1.0:
+"lang-js-utils@file:///labor/projects/npm_modules/lang-js-utils":
   version "0.1.1"
-  resolved "https://registry.yarnpkg.com/lang-js-utils/-/lang-js-utils-0.1.1.tgz#83c36c1353638d8d0b8ec33602c3cac8b98da2fa"
-  integrity sha512-OjwAe8/8bGn1EMzPhkbN3xVoJGO1B1w9XY3TWjy7R/ADqIDCsoUroxWVy69/ZXdWyUDQJB4DgfkfuOsGjfAc1Q==
 
 last-call-webpack-plugin@^3.0.0:
   version "3.0.0"
