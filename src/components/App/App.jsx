@@ -52,6 +52,7 @@ class App extends Component {
 
 		this.state = {
 			authID      : 0,
+			darkTheme   : false,
 			contentSize : {
 				width  : 0,
 				height : 0
@@ -343,15 +344,20 @@ class App extends Component {
 		}
 	};
 
+	handleToggleTheme = (event)=> {
+		console.log('App.handleToggleTheme()', event);
+		this.setState({ darkTheme : !this.state.darkTheme });
+	};
+
 
 	render() {
 //   	console.log('App.render()', this.props, this.state);
 
 		const { profile } = this.props;
-  	const { popup, modals } = this.state;
+  	const { darkTheme, popup, modals } = this.state;
 
-  	return (<div className="site-wrapper">
-		  <TopNav onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} />
+  	return (<div className={`site-wrapper${(darkTheme) ? ' site-wrapper-dark' : ''}`}>
+		  <TopNav darkTheme={darkTheme} onToggleTheme={this.handleToggleTheme} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} />
 	    <div className="content-wrapper" ref={wrapper}>
 		    <Switch>
 			    <Route exact path="/" render={()=> <HomePage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} onRegistered={this.handleRegistered} />} />

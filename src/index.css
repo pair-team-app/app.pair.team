@@ -29,7 +29,8 @@ html, body {
   color: #232323;
 }
 
-a, a:any-link, a:active, a:visited {
+/*a, a:any-link, a:active, a:visited {*/
+a:not(:hover) {
   color: #232323;
   text-decoration: none;
 }

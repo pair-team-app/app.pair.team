@@ -1,25 +1,19 @@
 
 @keyframes top-nav-logo-bg-hover {
-	0%   { transform: scale(1.000) }
-	100% { transform: scale(1.50) }
+	0%   { transform: scale(1.00) }
+	100% { transform: scale(0.875) }
 }
 
 @keyframes top-nav-logo-fg-hover {
-	0%   { transform: scale(1.000); }
-	50%  { transform: scale(0.750); }
-	100% { transform: scale(1.000); }
+	0%   { transform: scale(1.00); }
+	50%  { transform: scale(0.75); }
+	100% { transform: scale(1.00); }
 }
 
 @keyframes top-nav-logo-out {
-	0% {
-		opacity: 1;
-		transform: scale(1.25);
-	}
-
-	95% {
-		opacity: 0.875;
-		transform: scale(0.75);
-	}
+	0%   { transform: scale(0.75); }
+	95%  { transform: scale(1.125); }
+	100% { transform: scale(1.00); }
 }
 
 .top-nav {
@@ -36,8 +30,8 @@
 	margin: auto;
 }
 
-.top-nav-branding-wrapper {
-	flex: 1 0 0;
+.top-nav-branding-wrapper, .top-nav-mobile-menu-wrapper {
+	flex: 1 1 0;
 }
 
 a.top-nav-branding-wrapper:hover {
@@ -56,21 +50,20 @@ a.top-nav-branding-wrapper:hover {
 	height: 18px;
 }
 
-a.top-nav-branding-wrapper rect {
-	/*opacity: 1;*/
-	/*transform: scale(1.000);*/
-	/*transform-origin: center;*/
-	/*animation: 0.125s ease-in 0s 1 forwards top-nav-logo-out;*/
+a:not(:hover):not(:active).top-nav-branding-wrapper rect#logo-fg {
+	/*transform: scale(1.00);*/
+	transform-origin: center;
+	animation: 0.125s ease-in 0s 1 forwards top-nav-logo-out;
 }
 
-a.top-nav-branding-wrapper:hover rect#logo-bg {
-	transform-origin: center;
-	animation: 0.25s ease-out 0.0s 1 forwards top-nav-logo-bg-hover;
-}
+/*a.top-nav-branding-wrapper:hover rect#logo-bg {*/
+	/*transform-origin: center;*/
+	/*animation: 0.25s ease-out 0.0s 1 forwards top-nav-logo-bg-hover;*/
+/*}*/
 
 a.top-nav-branding-wrapper:hover rect#logo-fg {
 	transform-origin: center;
-	animation: 0.33s ease-out 0.125s infinite alternate top-nav-logo-fg-hover;
+	animation: 0.33s ease-out 0s infinite alternate top-nav-logo-fg-hover;
 }
 
 .top-nav-title {
@@ -83,12 +76,12 @@ a.top-nav-branding-wrapper:hover .top-nav-title {
 	transition: opacity 0.25s ease-out;
 }
 
-
-.top-nav-link-wrapper {
-	flex: 5 0 auto;
+.top-nav-theme-toggle-wrapper {
+	flex: 16 1 0;
 	text-align: right;
 }
 
-.top-nav-menu-wrapper {
-	flex: 1 0 0;
+.top-nav-link-wrapper {
+	flex: 3 1 0;
+	text-align: right;
 }

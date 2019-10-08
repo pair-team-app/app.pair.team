@@ -4,6 +4,11 @@
 	height: 100%;
 }
 
+.site-wrapper-dark {
+	background-color: #1a1e23;
+	color: #9b9b9b;
+}
+
 .content-wrapper {
 	position: relative;
 	top: 58px;
@@ -92,7 +97,7 @@
 	margin-top: calc((1 - 1.4) * 0.5em);
 }
 
-.form-disclaimer a {
+.form-disclaimer a:not(:hover) {
 	text-decoration: underline;
 }
 

@@ -16,7 +16,7 @@ export const Arrays = {
 // 	dropElement      : (arr, element)=> (arr.filter((item)=> (item !== element))),
 	dropElement      : (arr, element)=> (Arrays.dropElements(arr, [element])),
 	dropElements     : (arr, elements)=> (arr.filter((element)=> (!Arrays.containsElement(elements, element)))),
-	indexFill        : (len, offset=0)=> (Arrays.indexMap((new Array(len).fill(null))).map((i)=> (i + offset))),
+	indexFill        : (len, ind)=> (Arrays.indexMap((new Array(len).fill(null))).map((i)=> (i + ind))),
 	indexMap         : (arr)=> (arr.map((element, i)=> (i))),
 	isEmpty          : (arr)=> (arr.length === 0),
 	randomElement    : (arr)=> (arr[arr.randomIndex()]),

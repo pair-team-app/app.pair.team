@@ -12,13 +12,18 @@ import { Pages } from '../../../consts/uris';
 
 
 function TopNav(props) {
+	const { darkTheme } = props;
+
 	return (<div className="top-nav">
 		<NavLink to={Pages.HOME} className="top-nav-branding-wrapper" activeClassName=""><div>
 			<Logo />
 			<div className="top-nav-title">Obit</div>
 		</div></NavLink>
+		<div className="top-nav-theme-toggle-wrapper">
+			{/*<input type="checkbox" checked={darkTheme} value={darkTheme} onChange={props.onToggleTheme} />*/}
+		</div>
 		{(Browsers.isMobile.ANY())
-			? (<div className="top-nav-menu-wrapper"><MobileMenu /></div>)
+			? (<div className="top-nav-mobile-menu-wrapper"><MobileMenu /></div>)
 			: (<div className="top-nav-link-wrapper">{(navLinks.top.map((navLink, i)=> (<PageNavLink key={i} navLink={navLink} onClick={(event)=> null} />)))}</div>)
 		}
 	</div>);
