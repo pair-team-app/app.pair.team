@@ -37,12 +37,12 @@
 .mobile-menu-item-wrapper {
 	display: none;
 	position: absolute;
-	top: 40px;
+	top: 44px;
 	right: 0;
 	padding: 4px 8px;
 	text-align: center;
 	background-color: rgba(252, 252, 252, 0.875);
-	border-top: 1px solid #cccccc;
+	/*border-top: 1px solid #cccccc;*/
 }
 
 .mobile-menu-item-wrapper-open {
@@ -51,7 +51,7 @@
 
 
 .mobile-menu-item {
-	margin-bottom: 4px;
+	margin-bottom: 10px;
 }
 
 .mobile-menu-item:last-child {

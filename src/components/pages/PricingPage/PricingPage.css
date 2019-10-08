@@ -26,3 +26,10 @@
 .pricing-page-section-title button {
 	flex: 1 0 0;
 }
+
+
+@media screen and (max-width: 800px) {
+	.pricing-page-wrapper {
+		padding: 60px 30px;
+	}
+}

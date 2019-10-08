@@ -3,14 +3,15 @@ import React, { Component } from 'react';
 import './HomePage.css';
 
 import axios from 'axios';
-import { Bits, Strings } from 'lang-js-utils';
+import { Bits, Browsers, Strings } from 'lang-js-utils';
 import { NavLink } from 'react-router-dom';
 
 import BasePage from '../BasePage';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
 import { trackEvent } from '../../../utils/tracking';
 
-import homePageElement from '../../../assets/images/elements/element-home-page.png';
+import homePageElementLandscape from '../../../assets/images/elements/element-home-page-landscape.png';
+import homePageElementPortrait from '../../../assets/images/elements/element-home-page-portrait.png';
 
 
 class HomePage extends Component {
@@ -18,6 +19,7 @@ class HomePage extends Component {
 		super(props);
 
 		this.state = {
+			title      : (Browsers.isMobile.ANY()) ? 'A safe space for product teams' : 'A safe space for product teams to<br />create the best & most accessible design',
 			email      : '',
 			emailValid : false,
 			emailReset : false,
@@ -38,7 +40,8 @@ class HomePage extends Component {
 		const emailValid = Strings.isEmail(email);
 
 		this.setState({ email,
-			emailValid : emailValid || email.length === 0
+// 			emailValid : emailValid || email.length === 0
+			emailValid : emailValid || !email.includes('!') || email.length === 0
 		});
 	};
 
@@ -111,11 +114,11 @@ class HomePage extends Component {
 	render() {
 // 		console.log(this.constructor.name, '.render()', this.props, this.state);
 
-		const { email, emailValid, submitted } = this.state;
+		const { title, email, emailValid, submitted } = this.state;
 		return (
 			<BasePage className="home-page-wrapper">
 				<div className="home-page-form">
-					<h1>A safe space for product teams to<br />create the best & most accessible design</h1>
+					<h1 dangerouslySetInnerHTML={{ __html : title }} />
 					<form onSubmit={this.handleSubmit}>
 						<div className={`input-wrapper${(submitted) ? ' input-wrapper-submitted' : (emailValid || email.length === 0) ? '' : ' input-wrapper-error'}`}>
 							<input disabled={submitted} type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} required />
@@ -126,7 +129,10 @@ class HomePage extends Component {
 				</div>
 
 				<div className="home-page-content">
-					<img src={homePageElement} className="home-page-element" alt="Screen shot" />
+					{(Browsers.isMobile.ANY())
+						? (<img src={homePageElementPortrait} className="home-page-element home-page-element-portrait" alt="Screen shot" />)
+						: (<img src={homePageElementLandscape} className="home-page-element home-page-element-landscape" alt="Screen shot" />)
+					}
 				</div>
 			</BasePage>
 		);

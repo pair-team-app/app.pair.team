@@ -19,8 +19,10 @@ html, body {
   height: 100%;
   min-height: 100%;
   background-color: #fcfcfc;
-  -webkit-font-smoothing: subpixel-antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /*-webkit-font-smoothing: subpixel-antialiased;*/
+  /*-moz-osx-font-smoothing: grayscale;*/
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
   font-family: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-weight: 400;
   font-size: 16px;
@@ -42,7 +44,7 @@ button {
   width: 316px;
   height: 46px;
 	padding: 8px 30px 10px 30px;
-  background-color: #0067ff;
+  background-color: #0000ee;
   border: 1px solid rgba(0, 92, 197, 0.0);
   border-radius: 23px;
   font-size: 16px;
@@ -50,14 +52,14 @@ button {
 }
 
 button:hover, button:active {
-  background-color: #0060e6;
+  background-color: #0000e0;
+	color: #f7f7f7;
   transition: background-color 0.1s ease-out;
   cursor: pointer;
 }
 
 button:disabled, button:disabled:hover {
-	opacity : 0.875;
-	background-color: #296dcc;
+	background-color: #0000ee;
   color: #f7f7f7;
   cursor: default;
 }
@@ -107,7 +109,7 @@ h1:before {
 h2 {
 	margin-bottom: 0;
 	width: fit-content;
-	color: #0067ff;
+	color: #0000ee;
 	font-size: 48px;
 	letter-spacing: 1px;
 	line-height: 43px;
@@ -118,7 +120,7 @@ h2:before {
 }
 
 h2:hover {
-	filter: brightness(75%);
+	color: #0000e0;
 	transition: filter 0.25s ease-out;
 	cursor: s-resize;
 }

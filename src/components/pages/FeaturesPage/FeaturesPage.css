@@ -11,3 +11,10 @@
 	line-height: 25px;
 	text-align: justify;
 }
+
+
+@media screen and (max-width: 800px) {
+	.features-page-wrapper {
+		padding: 60px 30px;
+	}
+}
