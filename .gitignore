@@ -1,43 +1,58 @@
 
-#-- dependencies
-/node_modules
-
-#-- testing
-/coverage
-
-#-- production
-/build
-
-#-- ide meta
-/.idea
-
-#-- temp dirs
-/.cache
-/tmp
-
-#-- os misc
-.DS_Store
+#-- os misc --#
+.*DS_Store
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-#-- npm
-npm-debug.log*
 
-#-- php files
+#-- ide meta --#
+*.iml
+*.ipr
+
+.idea/**/markdown-navigator.xml
+.idea/**/markdown-navigator/
+.idea/**/sonarIssues.xml
+.idea/**/sonarlint/
+
+.idea/misc.xml
+modules.xml
+
+
+#-- npm --#
+/node_modules
+npm-debug.log*
+yarn-error.log
+
+
+#-- lint / test --#
+/coverage
+/.eslintrc.json
+
+
+#-- production --#
+/build
+
+
+#-- temp --#
+/.cache
+/tmp
+
+
+#-- php files --#
 /public/index.php
 /public/php/*.php
 
-#-- stripe tokens
+
+#-- stripe tokens --#
 /src/assets/json/github-creds.json
 /src/assets/json/stripe-creds.json
 
-#-- vendor paths
+
+#-- vendor paths --#
 **/vendor/**/node_modules
 **/vendor/**/.*
 **/vendor/**/*.md
 **/vendor/**/examples
 **/vendor/**/LICENSE
-
-/.eslintrc.json
