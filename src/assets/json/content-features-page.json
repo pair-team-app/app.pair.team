@@ -1,0 +1,36 @@
+{
+  "desktop": {
+    "title": "Features",
+    "intro": "Obit is a new tool for product teams to review and approve front-end interface design. We solve the painful & disheartening back and forth design related issues that constantly arrive when creating web & native software applications.",
+    "sections": [{
+      "open" : false,
+      "header": "Components",
+      "content": "Obit offers the ability to visualize all of your projects components against ANY build for peer review. Developers can pass Obit URLs in Slack, Email, SMS, and more for instant review collaboration from their product team."
+    }, {
+      "open" : false,
+      "header": "Accessibility",
+      "content": "Obit uses A11y standards & methods to allow designers and developers to interact with various accessibility modes such as voice, contrast, and more. This gives designers and developers a better understanding of how their products will perform for every type of user."
+    }, {
+      "open" : false,
+      "header": "1 to 1 Collaboration",
+      "content": "Obit helps scale 1 to 1 designer to developer knowledge effortlessly across large software enterprise companies such as HP, Google, IBM, Faceebok, and more."
+    }]
+  },
+  "mobile": {
+    "title": "Features",
+    "intro": "Obit is a new tool for product teams to review and approve front-end interface design. We solve the painful & disheartening back and forth design related issues that constantly arrive when creating web & native software applications.",
+    "sections": [{
+      "open" : false,
+      "header": "Components",
+      "content": "Obit offers the ability to visualize all of your projects components against ANY build for peer review. Developers can pass Obit URLs in Slack, Email, SMS, and more for instant review collaboration from their product team."
+    }, {
+      "open" : false,
+      "header": "Accessibility",
+      "content": "Obit uses A11y standards & methods to allow designers and developers to interact with various accessibility modes such as voice, contrast, and more. This gives designers and developers a better understanding of how their products will perform for every type of user."
+    }, {
+      "open" : false,
+      "header": "1 to 1 Collaboration",
+      "content": "Obit helps scale 1 to 1 designer to developer knowledge effortlessly across large software enterprise companies such as HP, Google, IBM, Faceebok, and more."
+    }]
+  }
+}

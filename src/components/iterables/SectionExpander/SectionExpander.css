@@ -45,5 +45,5 @@
 }
 
 .section-expander-title-open h2 {
-	cursor: n-resize;
+	font-weight: 500;
 }

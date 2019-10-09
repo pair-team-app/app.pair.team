@@ -21,6 +21,19 @@
 	width: 100%;
 }
 
+.page-intro-text p {
+	margin-bottom: 70px;
+	text-align: justify;
+}
+
+.page-content-wrapper {
+}
+
+.page-section-wrapper {
+	line-height: 25px;
+	text-align: justify;
+}
+
 .adjacent-button {
 	margin-right: 20px;
 }

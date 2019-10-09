@@ -6,7 +6,8 @@ import Collapse from '@kunukn/react-collapse';
 
 
 function SectionExpander(props) {
-	const { open, title, children } = props;
+	const { section, title, children } = props;
+	const { open } = section;
 
 	return (<div className="section-expander">
 		<div className={`section-expander-title${(open) ? ' section-expander-title-open' : ''}`}>{title}</div>

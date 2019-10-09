@@ -12,6 +12,7 @@ import { trackEvent } from '../../../utils/tracking';
 
 import homePageElementLandscape from '../../../assets/images/elements/element-home-page-landscape.png';
 import homePageElementPortrait from '../../../assets/images/elements/element-home-page-portrait.png';
+import pageContent from '../../../assets/json/content-home-page';
 
 
 class HomePage extends Component {
@@ -19,7 +20,7 @@ class HomePage extends Component {
 		super(props);
 
 		this.state = {
-			title      : (Browsers.isMobile.ANY()) ? 'A safe space for product teams' : 'A safe space for product teams to<br />create the best & most accessible design',
+			title      : (Browsers.isMobile.ANY()) ? pageContent.mobile.title: pageContent.desktop.title,
 			email      : '',
 			emailValid : false,
 			emailReset : false,
@@ -128,11 +129,13 @@ class HomePage extends Component {
 					<div className="form-disclaimer">By tapping “Join Wait List” you accept our<br /><NavLink to="/terms">Terms of Service.</NavLink></div>
 				</div>
 
-				<div className="home-page-content">
-					{(Browsers.isMobile.ANY())
-						? (<img src={homePageElementPortrait} className="home-page-element home-page-element-portrait" alt="Screen shot" />)
-						: (<img src={homePageElementLandscape} className="home-page-element home-page-element-landscape" alt="Screen shot" />)
-					}
+				<div className="page-content-wrapper home-page-content-wrapper">
+					<div className="home-page-element-wrapper">
+						{(Browsers.isMobile.ANY())
+							? (<img src={homePageElementPortrait} className="home-page-element home-page-element-portrait" alt="Screen shot" />)
+							: (<img src={homePageElementLandscape} className="home-page-element home-page-element-landscape" alt="Screen shot" />)
+						}
+					</div>
 				</div>
 			</BasePage>
 		);

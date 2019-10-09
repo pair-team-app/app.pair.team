@@ -114,7 +114,7 @@ h1:before {
   margin-top: calc((1 - 1.4) * 0.5em);
 }
 
-/** Section Title **/
+/** Expand Section Title **/
 h2 {
 	margin-bottom: 0;
 	width: fit-content;
@@ -130,9 +130,20 @@ h2:before {
 
 h2:hover {
 	color: #005ad9;
-	border-bottom: 2px solid #005ad9;
 	transition: filter 0.125s ease-out;
-	cursor: s-resize;
+	cursor: pointer;
+}
+
+h3 {
+	margin-bottom: 0;
+	width: fit-content;
+	color: #0067ff;
+	font-size: 32px;
+	letter-spacing: 1px;
+}
+
+h3:before {
+	margin-top: calc((1 - 1.1) * 0.5em);
 }
 
 /** Legal Section Title **/

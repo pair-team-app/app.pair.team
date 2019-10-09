@@ -2,8 +2,18 @@
 .home-page-wrapper {
 }
 
-.home-page-content {
+.home-page-form {
+	display: flex;
+	flex-direction: column;
+	align-content: stretch;
+	align-items: center; /* text-align: center */
+	/* justify-content: center; /* vertical-align: middle */
+	margin-bottom: 75px;
+}
+
+.home-page-element-wrapper {
 	width: 100%;
+	margin-bottom: 30px;
 	border-radius: 20px;
 }
 
@@ -18,14 +28,6 @@
 	height: 100%;
 }
 
-.home-page-form {
-	display: flex;
-	flex-direction: column;
-	align-content: stretch;
-	align-items: center; /* text-align: center */
-	/* justify-content: center; /* vertical-align: middle */
-	margin-bottom: 75px;
-}
 
 @media screen and (max-width: 800px) {
 	.home-page-form {

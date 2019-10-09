@@ -21,10 +21,12 @@
 
 .pricing-page-section-title h2 {
 	flex: 1 0 auto;
+	/*border: 1px solid #ff00ff;*/
 }
 
 .pricing-page-section-title button {
 	flex: 1 0 0;
+	/*border: 1px solid #00ff00;*/
 }
 
 

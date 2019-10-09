@@ -1,0 +1,36 @@
+{
+  "desktop": {
+    "title": "Pricing",
+    "intro": "Obit offers three simple pricing tiers for Free, Team, and Enterprise customers. For custom solutions of 100,000 Obit builds or more, please contact <a href=\"mailto:customer@obit.com\">customer@obit.com</a>.",
+    "sections": [{
+      "open" : false,
+      "header": "Free - $0",
+      "content": "10 Obit Public URLs per month for $0."
+    }, {
+      "open" : false,
+      "header": "Team - $29",
+      "content": "1000 Obit Private URLs per month for $29 per user."
+    }, {
+      "open" : false,
+      "header": "Enterprise - $49",
+      "content": "10,000 Obit Private URLs per month for $49 per user."
+    }]
+  },
+  "mobile": {
+    "title": "Pricing",
+    "intro": "Obit offers three simple pricing tiers for Free, Team, and Enterprise customers. For custom solutions of 100,000 Obit builds or more, please contact <a href=\"mailto:customer@obit.com\">customer@obit.com</a>.",
+    "sections": [{
+      "open" : false,
+      "header": "Free - $0",
+      "content": "10 Obit Public URLs per month for $0."
+    }, {
+      "open" : false,
+      "header": "Team - $29",
+      "content": "1000 Obit Private URLs per month for $29 per user."
+    }, {
+      "open" : false,
+      "header": "Enterprise - $49",
+      "content": "10,000 Obit Private URLs per month for $49 per user."
+    }]
+  }
+}

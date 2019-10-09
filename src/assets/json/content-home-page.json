@@ -1,0 +1,12 @@
+{
+  "desktop": {
+    "title": "A product tool to review & approve front-end design",
+    "intro": null,
+    "sections": null
+  },
+  "mobile": {
+    "title": "Review & approve front-end design",
+    "intro": null,
+    "sections": []
+  }
+}
