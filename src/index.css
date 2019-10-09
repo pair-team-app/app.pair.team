@@ -54,7 +54,7 @@ button {
   width: 316px;
   height: 46px;
 	padding: 8px 30px 10px 30px;
-  background-color: #0000ee;
+  background-color: #0067ff;
   border: 1px solid rgba(0, 92, 197, 0.0);
   border-radius: 23px;
   font-size: 16px;
@@ -62,15 +62,14 @@ button {
 }
 
 button:hover, button:active {
-  background-color: #0000e0;
-	color: #f7f7f7;
+  background-color: #0062eb;
   transition: background-color 0.1s ease-out;
   cursor: pointer;
 }
 
 button:disabled, button:disabled:hover {
-	background-color: #0000ee;
-  color: #f7f7f7;
+	background-color: #cccccc;
+  color: #7f7f7f;
   cursor: default;
 }
 
@@ -119,7 +118,7 @@ h1:before {
 h2 {
 	margin-bottom: 0;
 	width: fit-content;
-	color: #0000ee;
+	color: #0067ff;
 	font-size: 48px;
 	letter-spacing: 1px;
 	line-height: 43px;
@@ -130,8 +129,9 @@ h2:before {
 }
 
 h2:hover {
-	color: #0000e0;
-	transition: filter 0.25s ease-out;
+	color: #005ad9;
+	border-bottom: 2px solid #005ad9;
+	transition: filter 0.125s ease-out;
 	cursor: s-resize;
 }
 
