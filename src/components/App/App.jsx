@@ -363,7 +363,7 @@ class App extends Component {
 			    <Route exact path="/" render={()=> <HomePage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} onRegistered={this.handleRegistered} />} />
 			    <Route exact path="/features" render={()=> <FeaturesPage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
 			    <Route exact path="/pricing" render={()=> <PricingPage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-			    <Route exact path="/privacy" render={()=> <PrivacyPage />} />
+			    <Route exact path="/:page(legal|privacy)" render={()=> <PrivacyPage />} />
 			    <Route exact path="/terms" render={()=> <TermsPage />} />
 
 			    <Route path="*"><Status404Page onPage={this.handlePage} /></Route>

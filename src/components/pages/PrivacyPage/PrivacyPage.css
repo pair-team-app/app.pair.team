@@ -1,5 +1,6 @@
 
 .privacy-page-wrapper {
+	padding: 60px 20%;
 }
 
 .privacy-page-text {
@@ -8,4 +9,11 @@
 
 .privacy-page-text div:last-child p:last-child {
 	margin-bottom: 0;
+}
+
+
+@media screen and (max-width: 800px) {
+	.privacy-page-wrapper {
+		padding: 60px 30px;
+	}
 }
