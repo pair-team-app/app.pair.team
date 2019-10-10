@@ -12,7 +12,7 @@ import { Pages } from '../../../consts/uris';
 
 
 function TopNav(props) {
-	const { darkTheme } = props;
+// 	const { darkTheme } = props;
 
 	return (<div className="top-nav">
 		<NavLink to={Pages.HOME} className="top-nav-branding-wrapper" activeClassName=""><div>

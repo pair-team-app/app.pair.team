@@ -48,7 +48,7 @@ class PricingPage extends Component {
 			<BasePage className="pricing-page-wrapper">
 				<h1 dangerouslySetInnerHTML={{ __html : title }} />
 				<div className="page-intro-text features-page-into-text">
-					<p>{intro}</p>
+					<p dangerouslySetInnerHTML={{ __html : intro }} />
 				</div>
 
 				<div className="page-content-wrapper pricing-page-content-wrapper">
