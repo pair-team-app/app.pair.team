@@ -14,13 +14,13 @@
 
 .bottom-nav-link {
 	/*width: fit-content;*/
-	color: #232323;
+	color: var(--site-fg-color);
 	text-decoration: none;
 }
 
 .bottom-nav-link:hover {
 	cursor: pointer;
-	color: #666666;
+	color: var(--link-hover-color);
 	text-decoration: underline;
 	transition: color 0.125s ease-out;
 }

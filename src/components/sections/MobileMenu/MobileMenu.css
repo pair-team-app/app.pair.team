@@ -19,12 +19,12 @@
 }
 
 .mobile-menu-header:hover {
-	color: #000000;
+	color: var(--link-hover-color);
 	cursor: pointer;
 }
 
 .mobile-menu-header-open .mobile-menu-header-title {
-	color: #000000;
+	color: var(--site-fg-color);
 	font-weight: 400;
 }
 
