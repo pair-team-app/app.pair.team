@@ -22,20 +22,21 @@
 	align-items: center;
 	width: 100%;
 	padding: 20px;
-	background-color: rgba(247, 247, 247, 0.975);
+	background-color: var(--site-bg-color);
 	z-index: 2;
 }
 
 .top-nav > * {
-	margin: auto;
+	/*margin: auto;*/
+	/*border: 1px solid #ff00ff;*/
 }
 
 .top-nav-branding-wrapper, .top-nav-mobile-menu-wrapper {
-	flex: 1 1 0;
+	flex: 2 1 0;
 }
 
 a.top-nav-branding-wrapper:hover {
-	color: #232323;
+	color: var(--link-hover-color);
 	text-decoration: none;
 }
 
@@ -77,11 +78,11 @@ a.top-nav-branding-wrapper:hover .top-nav-title {
 }
 
 .top-nav-theme-toggle-wrapper {
-	flex: 16 1 0;
-	text-align: right;
+	flex: 1 1 0;
+	text-align: center;
 }
 
 .top-nav-link-wrapper {
-	flex: 3 1 0;
+	flex: 2 1 0;
 	text-align: right;
 }

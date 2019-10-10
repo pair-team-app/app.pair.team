@@ -1,12 +1,37 @@
 
 .site-wrapper {
   width: 100%;
-	height: 100%;
+	height: 100vh;
+
+	--site-bg-color: #f7f7f7;
+	--site-fg-color: #232323;
+	--btn-bg-color: #0067ff;
+	--btn-fg-color: #ffffff;
+	--btn-hover-bg-color: #0062eb;
+	--btn-disabled-bg-color: #cccccc;
+	--btn-disabled-fg-color: #7f7f7;
+	--link-hover-color: #343434;
+	--link-selected-color: #999999;
+	--txtfield-bg-color: #f7f7f7;
 }
 
 .site-wrapper-dark {
-	background-color: #1a1e23;
-	color: #9b9b9b;
+	/*background-color: #1a1e23;*/
+	/*color: #9b9b9b;*/
+
+	--site-bg-color: #1a1e23;
+	--site-fg-color: #f7f7f7;
+	--btn-bg-color: #0067ff;
+	--btn-fg-color: #ffffff;
+	--btn-hover-bg-color: #0062eb;
+	--btn-disabled-bg-color: #cccccc;
+	--btn-disabled-fg-color: #7f7f7;
+	--link-hover-color: #cccccc;
+	--link-selected-color: #999999;
+	--txtfield-bg-color: #f7f7f7;
+
+	background-color: var(--site-bg-color);
+	color: var(--site-fg-color);
 }
 
 .content-wrapper {
@@ -15,6 +40,7 @@
 	left: 0;
 	width: 100%;
 	overflow: hidden;
+	background-color: var(--site-bg-color);
 }
 
 .page-wrapper {

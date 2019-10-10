@@ -8,7 +8,7 @@
 	margin-right: 0;
 }
 
-.page-nav-link-selected, a:any-link.page-nav-link-selected {
-	color: #999999;
+.page-nav-link-selected, a.page-nav-link-selected {
+	color: var(--link-selected-color);
 	text-decoration: none;
 }

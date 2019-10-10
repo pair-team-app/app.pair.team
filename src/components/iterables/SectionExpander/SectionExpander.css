@@ -28,7 +28,7 @@
 	height: 100%;
 	opacity: 1;
 	content: "";
-	background: linear-gradient(transparent 75%, #f7f7f7);
+	background: linear-gradient(transparent 75%, var(--site-bg-color));
 	pointer-events: none;
 	will-change: opacity;
 	transition: opacity 250ms;
