@@ -45,7 +45,7 @@
 
 
 @media screen and (max-width: 800px) {
-	.bottom-nav {
-		padding: 20px;
+	.bottom-nav-button-wrapper {
+		display: none;
 	}
 }

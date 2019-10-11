@@ -6,14 +6,21 @@ import onClickOutside from 'react-onclickoutside';
 
 import PageNavLink from '../../iterables/PageNavLink';
 import navLinks from '../../../assets/json/nav-links';
-
+import { GITHUB_XD_PLUGIN, NPM_DE_PLAYGROUND } from '../../../consts/uris';
 
 class MobileMenu extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			opened : false
+			opened : false,
+			btnLinks : [{
+				title : "NPM Module",
+				url   : `/url/${NPM_DE_PLAYGROUND}`
+			}, {
+				title : "Open in Adobe XD",
+				url   : `/url/${GITHUB_XD_PLUGIN}`
+			}]
 		};
 	}
 
@@ -26,7 +33,7 @@ class MobileMenu extends Component {
 	};
 
 	render() {
-		const { opened } = this.state;
+		const { opened, btnLinks } = this.state;
 
 		return (<div className="mobile-menu">
 			<div className={`mobile-menu-header${(opened) ? ' mobile-menu-header-open' : ''}`} onClick={this.handleHeaderClick}>
@@ -34,7 +41,7 @@ class MobileMenu extends Component {
 				<div className="mobile-menu-header-title">Menu</div>
 			</div>
 			<div className={`mobile-menu-item-wrapper${(opened) ? ' mobile-menu-item-wrapper-open' : ''}`}>
-				{([ ...navLinks.top, ...navLinks.bottom].map((navLink, i)=> (<MobileMenuItem key={i} navLink={navLink} onClick={(event)=> this.setState({ opened : false })} />)))}
+				{([ ...navLinks.top, ...btnLinks, ...navLinks.bottom].map((navLink, i)=> (<MobileMenuItem key={i} navLink={navLink} onClick={(event)=> this.setState({ opened : false })} />)))}
 			</div>
 		</div>);
 	}
@@ -43,6 +50,11 @@ class MobileMenu extends Component {
 
 const MobileMenuItem = (props)=> {
 	const { navLink } = props;
+
+	const handleClick = (event, url)=> {
+		event.preventDefault();
+		window.open(url);
+	};
 
 	return (<div className="mobile-menu-item">
 		<PageNavLink navLink={navLink} onClick={props.onClick} />

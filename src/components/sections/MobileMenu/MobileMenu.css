@@ -39,9 +39,9 @@
 	position: absolute;
 	top: 44px;
 	right: 0;
-	padding: 4px 8px;
-	text-align: center;
-	background-color: rgba(252, 252, 252, 0.875);
+	padding: 4px 20px;
+	text-align: right;
+	background-color: rgba(var(--site-bg-alpha-color), 0.975);
 	/*border-top: 1px solid #cccccc;*/
 }
 
