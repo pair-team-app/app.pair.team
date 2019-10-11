@@ -1,24 +1,25 @@
 
 .site-wrapper {
-  --site-bg-color: #f7f7f7;
+  --site-bg-color: #fcfcfc;
+	--site-bg-alpha-color: 252, 252, 252;
 	--site-fg-color: #232323;
 	--btn-bg-color: #0067ff;
 	--btn-fg-color: #ffffff;
 	--btn-hover-bg-color: #0062eb;
 	--btn-disabled-bg-color: #cccccc;
-	--btn-disabled-fg-color: #7f7f7;
+	--btn-disabled-fg-color: #666666;
 	--link-hover-color: #343434;
 	--link-selected-color: #999999;
 	--txtfield-bg-color: #f7f7f7;
 
 	width: 100%;
 	height: 100vh;
-	background-color: var(--site-bg-color);
 	color: var(--site-fg-color);
 }
 
 .site-wrapper-dark {
 	--site-bg-color: #1a1e23;
+	--site-bg-alpha-color: 26, 30, 35;
 	--site-fg-color: #f7f7f7;
 	--btn-bg-color: #0067ff;
 	--btn-fg-color: #ffffff;
@@ -27,9 +28,8 @@
 	--btn-disabled-fg-color: #7f7f7;
 	--link-hover-color: #cccccc;
 	--link-selected-color: #999999;
-	--txtfield-bg-color: #f7f7f7;
+	--txtfield-bg-color: #cccccc;
 
-	background-color: var(--site-bg-color);
 	color: var(--site-fg-color);
 }
 
@@ -81,44 +81,6 @@
 .quiet-button:disabled {
 	background-color: #e0e0e0;
 	color: #999999;
-}
-
-.input-wrapper {
-	width: 100%;
-	margin-bottom: 20px;
-	border: 1px solid #cecece;
-	border-radius: 23px;
-}
-
-.input-wrapper-error {
-	border: 1px solid #ff4646;
-}
-
-.input-wrapper-error input[type="text"], .input-wrapper-error input[type="password"], .input-wrapper-error input[type="tel"], .input-wrapper-error .input-txt, .input-wrapper-error .field-error {
-	background-color: #fff0f0;
-	color: #ff4646;
-}
-
-.input-wrapper-submitted input[type="text"]:disabled, .input-wrapper-submitted input[type="text"]:disabled, .input-wrapper-submitted input[type="text"]:disabled, textarea:disabled {
-	color: #232323;
-}
-
-.input-wrapper-error .field-error {
-	height: 53px;
-	padding-top: 11px;
-	font-size: 16px;
-	letter-spacing: -0.3px;
-}
-
-.input-wrapper-disabled, .input-wrapper-disabled:hover {
-	cursor: not-allowed;
-	opacity: 0.5;
-}
-
-.input-error {
-	border: 1px solid #ff4646;
-	background-color: #2d3239;
-	color: #ff4646;
 }
 
 .form-disclaimer {

@@ -52,7 +52,8 @@ class HomePage extends Component {
 		const email = event.target.value;
 		this.setState({
 			email      : (Strings.isEmail(email)) ? email : '',
-			emailValid : true
+			emailValid : true,
+			emailReset : false
 		});
 	};
 
@@ -95,36 +96,45 @@ class HomePage extends Component {
 					this.setState({
 						email      : 'Thank you for signing up!',
 						emailValid : true,
+						emailReset : false,
 						submitted  : true
 					});
 
 				} else {
 					this.setState({
 						email      : Bits.contains(status, 0x10) ? email : 'Email Address Already in Use',
-						emailValid : Bits.contains(status, 0x10)
+						emailValid : Bits.contains(status, 0x10),
+						emailReset : true
 					});
 				}
 			}).catch((error)=> {
 			});
 
 		} else {
-			this.setState({ emailValid : false });
+			this.setState({
+// 				email      : '',
+				emailValid : false,
+				emailReset : true
+			});
 		}
 	};
 
 	render() {
 // 		console.log(this.constructor.name, '.render()', this.props, this.state);
 
-		const { title, email, emailValid, submitted } = this.state;
+		const { title, email, emailReset, submitted } = this.state;
 		return (
 			<BasePage className="home-page-wrapper">
 				<div className="home-page-form">
 					<h1 dangerouslySetInnerHTML={{ __html : title }} />
 					<form onSubmit={this.handleSubmit}>
-						<div className={`input-wrapper${(submitted) ? ' input-wrapper-submitted' : (emailValid || email.length === 0) ? '' : ' input-wrapper-error'}`}>
-							<input disabled={submitted} type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} required />
-						</div>
-						<button disabled={(!emailValid && !email.length === 0) || submitted} type="submit" onClick={(event)=> this.handleSubmit(event)} style={{opacity : (submitted) ? 0.5 : 1.0}}>Join Wait List</button>
+						{/*<input disabled={submitted} type="email" name="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} required pattern=".*\S.*" />*/}
+						{(emailReset)
+							? (<input disabled={submitted} type="email" name="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} required />)
+							: (<input disabled={submitted} type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} />)
+						}
+						{/*<button disabled={(!emailValid && !email.length === 0) || submitted} type="submit" onClick={(event)=> this.handleSubmit(event)} style={{opacity : (submitted) ? 0.5 : 1.0}}>Join Wait List</button>*/}
+						<button disabled={submitted} type="submit" onClick={(event)=> this.handleSubmit(event)} style={{opacity : (submitted) ? 0.5 : 1.0}}>Join Wait List</button>
 					</form>
 					<div className="form-disclaimer">By tapping “Join Wait List” you accept our<br /><NavLink to="/terms">Terms of Service.</NavLink></div>
 				</div>

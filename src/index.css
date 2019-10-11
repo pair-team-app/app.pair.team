@@ -12,6 +12,21 @@
   pointer-events: none;
 }
 
+:root {
+	--site-bg-color: #fcfcfc;
+	--site-bg-alpha-color: 252, 252, 252;
+	--site-fg-color: #232323;
+	--btn-bg-color: #0067ff;
+	--btn-fg-color: #ffffff;
+	--btn-hover-bg-color: #0062eb;
+	--btn-disabled-bg-color: #cccccc;
+	--btn-disabled-fg-color: #666666;
+	--link-hover-color: #343434;
+	--link-selected-color: #999999;
+	--txtfield-bg-color: #f7f7f7;
+}
+
+
 html, body {
   margin: 0;
   padding: 0;
@@ -133,22 +148,33 @@ h6 {
 	text-align: left;
 }
 
-input[type="text"], input[type="password"], input[type="tel"], select, textarea, .input-txt, .field-error {
-  padding: 15px 20px;
-  width: 100%;
-	background-color: var(--txtfield-bg-color);
-  border: none;
-  border-radius: 23px;
-  font-size: 16px;
-  cursor: text;
-}
-
-input[type="text"], input[type="password"], input[type="tel"], textarea {
+input[type="email"], input[type="text"], textarea {
+	width: 100%;
+	margin-bottom: 20px;
+	padding: 15px 20px;
+	border: 1px solid #cecece;
+	border-radius: 23px;
+	color: var(--site-fg-color);
 	text-align: center;
+	font-size: 16px;
+	cursor: text;
 }
 
-input[type="text"]:disabled, input[type="password"]:disabled, input[type="tel"]:disabled, select:disabled, textarea:disabled {
+input[type="email"]:invalid, input[type="text"]:invalid {
+	border: 1px solid #ff4646;
+	background-color: #fff0f0;
+	color: #ff4646;
+}
+
+input[type="email"]:valid, input[type="text"]:valid, select, textarea {
+	border: 1px solid #cecece;
+	background-color: var(--txtfield-bg-color);
+	color: var(--site-fg-color);
+}
+
+input[type="email"]:disabled, input[type="text"]:disabled, select:disabled, textarea:disabled {
   cursor: not-allowed;
+	background-color: var(--txtfield-bg-color);
   color: var(--btn-disabled-fg-color);
 }
 
@@ -158,11 +184,12 @@ input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hov
 	font-size: 16px;
 }
 
-input[type="text"]:focus, input[type="password"]:focus, input[type="tel"]:focus, textarea:focus {
+input[type="email"]:focus, input[type="text"]:focus, textarea:focus {
 	background-color: var(--txtfield-bg-color);
+	color: var(--site-fg-color);
+	border: 1px solid #cecece;
 	transition: background-color 0.125s ease-out;
 }
-
 
 p {
 	margin-top: 0;
