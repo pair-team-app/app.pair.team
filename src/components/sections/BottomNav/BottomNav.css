@@ -4,11 +4,32 @@
 	bottom: 0;
 	width: 100%;
 	padding: 10px;
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
 	z-index: 2;
 }
 
+.bottom-nav > * {
+	/*margin: auto;*/
+	/*border: 1px dashed #ff00ff;*/
+}
+
+.bottom-nav-spacer {
+	flex: 1 1 auto;
+}
+
+.bottom-nav-button-wrapper {
+	flex: 3 1 auto;
+	text-align: center;
+}
+
+.bottom-nav-button-wrapper button {
+	/*min-width: 196px;*/
+}
+
 .bottom-nav-link-wrapper {
-	width: 100%;
+	flex: 1 1 auto;
 	text-align: right;
 }
 
