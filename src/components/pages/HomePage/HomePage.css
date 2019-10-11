@@ -14,10 +14,11 @@
 .home-page-element-wrapper {
 	width: 100%;
 	margin-bottom: 30px;
-	border-radius: 20px;
 }
 
 .home-page-element {
+	border-radius: 20px;
+	border: 1px solid #c3c3c3;
 }
 
 .home-page-element-landscape {

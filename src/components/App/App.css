@@ -1,20 +1,7 @@
 
 .site-wrapper {
-  --site-bg-color: #fcfcfc;
-	--site-bg-alpha-color: 252, 252, 252;
-	--site-fg-color: #232323;
-	--btn-bg-color: #0067ff;
-	--btn-fg-color: #ffffff;
-	--btn-hover-bg-color: #0062eb;
-	--btn-disabled-bg-color: #cccccc;
-	--btn-disabled-fg-color: #666666;
-	--link-hover-color: #343434;
-	--link-selected-color: #999999;
-	--txtfield-bg-color: #f7f7f7;
-
 	width: 100%;
 	height: 100vh;
-	color: var(--site-fg-color);
 }
 
 .site-wrapper-dark {
@@ -31,6 +18,7 @@
 	--txtfield-bg-color: #cccccc;
 
 	color: var(--site-fg-color);
+	background-color: var(--site-bg-color);
 }
 
 .content-wrapper {
@@ -39,7 +27,6 @@
 	left: 0;
 	width: 100%;
 	overflow: hidden;
-	background-color: var(--site-bg-color);
 }
 
 .page-wrapper {
