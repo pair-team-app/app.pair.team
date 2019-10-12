@@ -13,7 +13,7 @@ import { API_ENDPT_URL } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
-import deLogo from '../../../assets/images/logos/logo-designengine.svg';
+import pairLogo from '../../../assets/images/logos/logo-obit-310.png';
 
 class RegisterModal extends Component {
 	constructor(props) {
