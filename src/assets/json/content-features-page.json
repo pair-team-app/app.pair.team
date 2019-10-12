@@ -1,36 +1,36 @@
 {
   "desktop": {
     "title": "Features",
-    "intro": "Obit is a new tool for product teams to review and approve front-end interface design. We solve the painful & disheartening back and forth design related issues that constantly arrive when creating web & native software applications.",
+    "intro": "Pair is an NPM Module for product teams to approve every build your front-end team developers. Our features help scale 1-to-1 designer to developer collaboration for large software enterprise companies such as <i>Twitter</i>, <i>Google, <i>IBM</i>, <i>Facebook</i>, & more.",
     "sections": [{
       "open" : false,
-      "header": "Components",
-      "content": "Obit offers the ability to visualize all of your projects components against ANY build for peer review. Developers can pass Obit URLs in Slack, Email, SMS, and more for instant review collaboration from their product team."
+      "header": "Approve Components",
+      "content": "Pair offers the ability to visualize all of your projects components against any build for peer design approve. Engineers can then share <i>Pair URLs</i> in Slack, Email, SMS, and more for instant collaboration from their product teams."
     }, {
       "open" : false,
-      "header": "Accessibility",
-      "content": "Obit uses A11y standards & methods to allow designers and developers to interact with various accessibility modes such as voice, contrast, and more. This gives designers and developers a better understanding of how their products will perform for every type of user."
+      "header": "Approve Accessibility",
+      "content": "Pair uses <i>A11y</i> methods to allow designers and developers to interact with various interface modes such as voice, contrast, and more. This gives designers and developers a better understanding of how their products are viewed in the final products presentation."
     }, {
       "open" : false,
-      "header": "1 to 1 Collaboration",
-      "content": "Obit helps scale 1 to 1 designer to developer knowledge effortlessly across large software enterprise companies such as HP, Google, IBM, Faceebok, and more."
+      "header": "Approve Design Systems",
+      "content": "Pair helps distribute and manage design system efforts for companies large and small. Pair delivers real component assets directly from our <i>NPM Module</i> to your design tool to maintain a source of truth."
     }]
   },
   "mobile": {
     "title": "Features",
-    "intro": "Obit is a new tool for product teams to review and approve front-end interface design. We solve the painful & disheartening back and forth design related issues that constantly arrive when creating web & native software applications.",
+    "intro": "Pair is an NPM Module for product teams to approve every build your front-end team developers. Our features help scale 1-to-1 designer to developer collaboration for large software enterprise companies such as <i>Twitter</i>, <i>Google, <i>IBM</i>, <i>Facebook</i>, & more.",
     "sections": [{
       "open" : false,
-      "header": "Components",
-      "content": "Obit offers the ability to visualize all of your projects components against ANY build for peer review. Developers can pass Obit URLs in Slack, Email, SMS, and more for instant review collaboration from their product team."
+      "header": "Approve Components",
+      "content": "Pair offers the ability to visualize all of your projects components against any build for peer design approve. Engineers can then share <i>Pair URLs</i> in Slack, Email, SMS, and more for instant collaboration from their product teams."
     }, {
       "open" : false,
-      "header": "Accessibility",
-      "content": "Obit uses A11y standards & methods to allow designers and developers to interact with various accessibility modes such as voice, contrast, and more. This gives designers and developers a better understanding of how their products will perform for every type of user."
+      "header": "Approve Accessibility",
+      "content": "Pair uses <i>A11y</i> methods to allow designers and developers to interact with various interface modes such as voice, contrast, and more. This gives designers and developers a better understanding of how their products are viewed in the final products presentation."
     }, {
       "open" : false,
-      "header": "1 to 1 Collaboration",
-      "content": "Obit helps scale 1 to 1 designer to developer knowledge effortlessly across large software enterprise companies such as HP, Google, IBM, Faceebok, and more."
+      "header": "Approve Design Systems",
+      "content": "Pair helps distribute and manage design system efforts for companies large and small. Pair delivers real component assets directly from our <i>NPM Module</i> to your design tool to maintain a source of truth."
     }]
   }
 }

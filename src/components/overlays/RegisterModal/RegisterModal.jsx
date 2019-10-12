@@ -134,7 +134,7 @@ class RegisterModal extends Component {
 
 				<div className="register-modal-wrapper">
 					<div className="register-modal-header">
-						<img className="register-modal-header-logo" src={deLogo} alt="Logo" />
+						<img className="register-modal-header-logo" src={pairLogo} alt="Logo" />
 					</div>
 
 					<div className="register-modal-content-wrapper">

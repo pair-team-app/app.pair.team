@@ -39,7 +39,7 @@ class FeaturesPage extends Component {
 			<BasePage className="features-page-wrapper">
 				<h1 dangerouslySetInnerHTML={{ __html : title }} />
 				<div className="page-intro-text features-page-into-text">
-					<p>{intro}</p>
+					<p dangerouslySetInnerHTML={{ __html : intro }} />
 				</div>
 
 				<div className="page-content-wrapper features-page-content-wrapper">
@@ -49,7 +49,7 @@ class FeaturesPage extends Component {
 								key={i}
 								section={section}
 								title={<FeaturesPageSectionHeader section={section} onToggle={this.handleToggleSection} />}>
-									{section.content}
+									<span dangerouslySetInnerHTML={{ __html : section.content }} />
 							</SectionExpander>);
 						}))}
 					</div>

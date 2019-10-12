@@ -58,7 +58,7 @@ class PricingPage extends Component {
 								key={i}
 								section={section}
 								title={<PricingPageSectionHeader section={section} onToggle={this.handleToggleSection} onSelect={this.handleSelectSection} />}>
-								{section.content}
+								<span dangerouslySetInnerHTML={{ __html : section.content }} />
 							</SectionExpander>);
 						}))}
 					</div>

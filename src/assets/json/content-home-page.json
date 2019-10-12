@@ -1,11 +1,11 @@
 {
   "desktop": {
-    "title": "A product tool to review & approve front-end design",
+    "title": "An NPM module for teams to<br />approve front-end design",
     "intro": null,
     "sections": null
   },
   "mobile": {
-    "title": "Review & approve front-end design",
+    "title": "An NPM module to<br />approve front-end design",
     "intro": null,
     "sections": []
   }

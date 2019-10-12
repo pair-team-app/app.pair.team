@@ -17,7 +17,7 @@ function TopNav(props) {
 	return (<div className="top-nav">
 		<NavLink to={Pages.HOME} className="top-nav-branding-wrapper" activeClassName=""><div>
 			<Logo />
-			<div className="top-nav-title">Obit</div>
+			<div className="top-nav-title">Pair</div>
 		</div></NavLink>
 		<div className="top-nav-theme-toggle-wrapper">
 			{/*<input type="checkbox" checked={darkTheme} value={darkTheme} onChange={props.onToggleTheme} />*/}

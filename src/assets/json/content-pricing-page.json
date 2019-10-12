@@ -1,36 +1,36 @@
 {
   "desktop": {
     "title": "Pricing",
-    "intro": "Obit offers three simple pricing tiers for Free, Team, and Enterprise customers. For custom solutions of 100,000 Obit builds or more, please contact <a href=\"mailto:customer@obit.com\">customer@obit.com</a>.",
+    "intro": "Pair offers three simple pricing tiers for Free, Team, and Enterprise customers. For custom solutions of <i>100,000 Pair URLs</i> or more, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
     "sections": [{
       "open" : false,
       "header": "Free - $0",
-      "content": "10 Obit Public URLs per month for $0."
+      "content": "<i>10 Pair Public URLs</i> per month for $0."
     }, {
       "open" : false,
       "header": "Team - $29",
-      "content": "1000 Obit Private URLs per month for $29 per user."
+      "content": "<i>1000 Pair Private URLs</i> per month for $29 per user."
     }, {
       "open" : false,
       "header": "Enterprise - $49",
-      "content": "10,000 Obit Private URLs per month for $49 per user."
+      "content": "<i>10,000 Pair Private URLs</i> per month for $49 per user."
     }]
   },
   "mobile": {
     "title": "Pricing",
-    "intro": "Obit offers three simple pricing tiers for Free, Team, and Enterprise customers. For custom solutions of 100,000 Obit builds or more, please contact <a href=\"mailto:customer@obit.com\">customer@obit.com</a>.",
+    "intro": "Pair offers three simple pricing tiers for Free, Team, and Enterprise customers. For custom solutions of <i>100,000 Pair URLs</i> or more, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
     "sections": [{
       "open" : false,
-      "header": "Free",
-      "content": "10 Obit Public URLs per month for $0."
+      "header": "Free - $0",
+      "content": "<i>10 Pair Public URLs</i> per month for $0."
     }, {
       "open" : false,
-      "header": "Team",
-      "content": "1000 Obit Private URLs per month for $29 per user."
+      "header": "Team - $29",
+      "content": "<i>1000 Pair Private URLs</i> per month for $29 per user."
     }, {
       "open" : false,
-      "header": "Enterprise",
-      "content": "10,000 Obit Private URLs per month for $49 per user."
+      "header": "Enterprise - $49",
+      "content": "<i>10,000 Pair Private URLs</i> per month for $49 per user."
     }]
   }
 }
