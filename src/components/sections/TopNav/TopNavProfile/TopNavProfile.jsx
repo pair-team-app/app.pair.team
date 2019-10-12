@@ -4,7 +4,6 @@ import './TopNavProfile.css';
 
 import { Strings, URIs } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
-import ImageLoader from 'react-loading-image';
 import onClickOutside from 'react-onclickoutside';
 import { connect } from 'react-redux';
 import { Row } from 'simple-flexbox';
@@ -58,12 +57,7 @@ class TopNavProfile extends Component {
 
 
 				<div className="top-nav-profile-avatar-wrapper" onClick={()=> this.setState({ bubble : !bubble })}>
-					<ImageLoader
-						src={avatar}
-						image={(props)=> (<img className="top-nav-profile-avatar-image" { ...props } src={avatar} alt="" />)}
-						loading={()=> (<div className="top-nav-profile-avatar-image top-nav-profile-avatar-image-loading"><FontAwesome name="circle-o-notch" size="2x" pulse fixedWidth /></div>)}
-						error={()=> (<div className="top-nav-profile-avatar-image top-nav-profile-avatar-image-error"><FontAwesome name="exclamation-circle" size="2x" /></div>)}
-					/>
+					<img className="top-nav-profile-avatar-image" src={avatar} alt="Avatar" />
 				</div>
 
 				{/*<img src={avatar} className="top-nav-profile-avatar" alt="" onClick={()=> this.setState({ bubble : !bubble })} />*/}

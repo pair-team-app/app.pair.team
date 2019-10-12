@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e269f8a2-2876-4072-a430-e3b7377ea758" name="Default" comment="" />
+    <list default="true" id="e269f8a2-2876-4072-a430-e3b7377ea758" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/auth-landing.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/auth-landing.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/sitemap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/public/sitemap.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/sections/TopNav/TopNavProfile/TopNavProfile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/sections/TopNav/TopNavProfile/TopNavProfile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -17,83 +26,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="30" column="55" selection-start-line="30" selection-start-column="55" selection-end-line="30" selection-end-column="55" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="nav-links.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/assets/json/nav-links.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="1" selection-start-line="21" selection-start-column="1" selection-end-line="21" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="content-features-page.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/assets/json/content-features-page.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="525">
-              <caret line="35" column="1" selection-start-line="35" selection-start-column="1" selection-end-line="35" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="content-pricing-page.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/assets/json/content-pricing-page.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="18" selection-start-line="21" selection-start-column="18" selection-end-line="21" selection-end-column="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="content-home-page.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/assets/json/content-home-page.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" column="1" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BottomNav.jsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="34" selection-start-line="34" selection-end-line="34" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SectionExpander.jsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/iterables/SectionExpander/SectionExpander.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" column="66" selection-start-line="20" selection-start-column="66" selection-end-line="20" selection-end-column="66" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="FeaturesPage.jsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="628">
-              <caret line="49" column="33" selection-start-line="49" selection-start-column="33" selection-end-line="49" selection-end-column="33" />
+            <state relative-caret-position="313">
+              <caret line="21" column="3" selection-start-line="21" selection-start-column="3" selection-end-line="21" selection-end-column="3" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PricingPage.jsx" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/pages/PricingPage/PricingPage.jsx">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/public/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="675">
-              <caret line="45" column="43" selection-start-line="45" selection-start-column="43" selection-end-line="45" selection-end-column="43" />
+            <state relative-caret-position="330">
+              <caret line="22" column="64" selection-start-line="22" selection-start-column="64" selection-end-line="22" selection-end-column="64" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/package.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="405">
+              <caret line="27" column="32" lean-forward="true" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -102,17 +57,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>from &quot;</find>
-      <find>home-page-header-form</find>
-      <find>REGISTER'</find>
-      <find>history'</find>
-      <find>'PLAYGROUND</find>
-      <find>history</find>
-      <find>'SLACK</find>
-      <find>import\ \{</find>
-      <find>axios</find>
-      <find>'UPDATE</find>
-      <find>circle</find>
       <find>(\w+)?(\s*&gt;\s*)?(#\w+)?\s*(\.\w+)?</find>
       <find>\ ([a-z0-9]+(\-\w[a-z0-9]+)+)</find>
       <find>:hover</find>
@@ -132,6 +76,17 @@
       <find>\ \#</find>
       <find>^[^--].*\ \#</find>
       <find>:not[type=&quot;radio&quot;]</find>
+      <find>engine</find>
+      <find>react-responsive</find>
+      <find>react-moment</find>
+      <find>react-loading-image</find>
+      <find>react-live</find>
+      <find>react-currency-format</find>
+      <find>qs</find>
+      <find>moment-timezone</find>
+      <find>moment</find>
+      <find>ajv</find>
+      <find>acorn</find>
     </findStrings>
     <replaceStrings>
       <replace>designengine-xd</replace>
@@ -160,9 +115,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/components/sections/TopNav/TopNav.css" />
-        <option value="$PROJECT_DIR$/src/index.css" />
-        <option value="$PROJECT_DIR$/src/consts/uris.js" />
         <option value="$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx" />
         <option value="$PROJECT_DIR$/src/components/pages/HomePage/HomePage.css" />
         <option value="$PROJECT_DIR$/src/components/App/App.css" />
@@ -172,7 +124,6 @@
         <option value="$PROJECT_DIR$/src/components/pages/BasePage/BasePage.css" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/components/sections/TopNav/TopNav.jsx" />
-        <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/src/assets/json/nav-links.json" />
         <option value="$PROJECT_DIR$/src/assets/json/content-features-page.json" />
         <option value="$PROJECT_DIR$/src/assets/json/content-pricing-page.json" />
@@ -181,6 +132,10 @@
         <option value="$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.jsx" />
         <option value="$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx" />
         <option value="$PROJECT_DIR$/src/components/pages/PricingPage/PricingPage.jsx" />
+        <option value="$PROJECT_DIR$/public/auth-landing.html" />
+        <option value="$PROJECT_DIR$/public/sitemap.xml" />
+        <option value="$PROJECT_DIR$/public/manifest.json" />
+        <option value="$PROJECT_DIR$/public/index.html" />
       </list>
     </option>
   </component>
@@ -230,6 +185,12 @@
             <path>
               <item name="new-site" type="b2602c69:ProjectViewProjectNode" />
               <item name="new-site" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+              <item name="images" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="new-site" type="b2602c69:ProjectViewProjectNode" />
+              <item name="new-site" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -237,13 +198,6 @@
               <item name="new-site" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="assets" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="new-site" type="b2602c69:ProjectViewProjectNode" />
-              <item name="new-site" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="assets" type="462c0819:PsiDirectoryNode" />
-              <item name="json" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="new-site" type="b2602c69:ProjectViewProjectNode" />
@@ -280,29 +234,6 @@
               <item name="components" type="462c0819:PsiDirectoryNode" />
               <item name="iterables" type="462c0819:PsiDirectoryNode" />
               <item name="SectionExpander" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="new-site" type="b2602c69:ProjectViewProjectNode" />
-              <item name="new-site" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="overlays" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="new-site" type="b2602c69:ProjectViewProjectNode" />
-              <item name="new-site" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="overlays" type="462c0819:PsiDirectoryNode" />
-              <item name="RegisterModal" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="new-site" type="b2602c69:ProjectViewProjectNode" />
-              <item name="new-site" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="overlays" type="462c0819:PsiDirectoryNode" />
-              <item name="StripeModal" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="new-site" type="b2602c69:ProjectViewProjectNode" />
@@ -357,12 +288,6 @@
               <item name="components" type="462c0819:PsiDirectoryNode" />
               <item name="sections" type="462c0819:PsiDirectoryNode" />
               <item name="TopNav" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="new-site" type="b2602c69:ProjectViewProjectNode" />
-              <item name="new-site" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="consts" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -449,12 +374,12 @@
       <workItem from="1570725788584" duration="15853000" />
       <workItem from="1570760054960" duration="3600000" />
       <workItem from="1570807747666" duration="1790000" />
-      <workItem from="1570911992592" duration="1904000" />
+      <workItem from="1570911992592" duration="3826000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="264124000" />
+    <option name="totallyTimeSpent" value="266046000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -470,13 +395,14 @@
     <editor active="true" />
     <layout>
       <window_info anchor="top" id="TODO" internal_type="SLIDING" order="1" side_tool="true" type="SLIDING" weight="0.15206812" />
+      <window_info anchor="bottom" id="Messages" order="6" />
       <window_info anchor="bottom" id="Event Log" order="0" sideWeight="0.2451923" side_tool="true" weight="0.1326034" />
       <window_info anchor="right" id="npm" order="5" sideWeight="0.24472961" side_tool="true" weight="0.15961538" />
       <window_info anchor="top" id="Version Control" internal_type="SLIDING" order="0" type="SLIDING" />
       <window_info anchor="bottom" id="Run" order="3" />
-      <window_info active="true" anchor="bottom" x="-1060" y="-214" width="1040" height="218" id="Terminal" internal_type="SLIDING" order="8" sideWeight="0.7548077" visible="true" weight="0.21848138" />
+      <window_info anchor="bottom" x="-1060" y="-214" width="1040" height="218" id="Terminal" internal_type="SLIDING" order="8" sideWeight="0.7548077" visible="true" weight="0.21848138" />
       <window_info anchor="right" id="Remote Host" order="0" show_stripe_button="false" />
-      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.87712896" visible="true" weight="0.22788462" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" sideWeight="0.87712896" visible="true" weight="0.22788462" />
       <window_info anchor="bottom" id="Docker" order="5" show_stripe_button="false" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.3295129" />
       <window_info anchor="right" id="Structure" order="4" sideWeight="0.7552704" side_tool="true" weight="0.15961538" />
@@ -486,7 +412,6 @@
       <window_info anchor="bottom" id="Inspection" order="7" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Messages" order="6" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Cvs" order="6" weight="0.25" />
     </layout>
@@ -545,34 +470,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/components/sections/MobileMenu/MobileMenu.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="32" column="4" lean-forward="true" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/iterables/PageNavLink/PageNavLink.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/consts/uris.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="35" selection-start-line="35" selection-end-line="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="43" selection-start-column="43" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/images/favicon/android-icon-144x144.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -611,31 +508,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="55" selection-start-line="30" selection-start-column="55" selection-end-line="30" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/assets/json/nav-links.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="1" selection-start-line="21" selection-start-column="1" selection-end-line="21" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/assets/json/content-features-page.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="35" column="1" selection-start-line="35" selection-start-column="1" selection-end-line="35" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/overlays/RegisterModal/RegisterModal.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="754">
           <caret line="136" column="69" selection-start-line="136" selection-start-column="69" selection-end-line="136" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/json/content-home-page.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="1" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -646,10 +529,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/assets/json/content-home-page.json">
+    <entry file="file://$PROJECT_DIR$/src/assets/json/content-features-page.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="1" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+        <state relative-caret-position="525">
+          <caret line="35" column="1" selection-start-line="35" selection-start-column="1" selection-end-line="35" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/json/nav-links.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="1" selection-start-line="21" selection-start-column="1" selection-end-line="21" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -667,24 +557,59 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/pages/PricingPage/PricingPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="600">
+          <caret line="40" column="4" lean-forward="true" selection-start-line="40" selection-start-column="4" selection-end-line="40" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="628">
-          <caret line="49" column="33" selection-start-line="49" selection-start-column="33" selection-end-line="49" selection-end-column="33" />
+        <state relative-caret-position="313">
+          <caret line="21" column="3" selection-start-line="21" selection-start-column="3" selection-end-line="21" selection-end-column="3" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="34" column="37" lean-forward="true" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
+        <state relative-caret-position="405">
+          <caret line="27" column="32" lean-forward="true" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/pages/PricingPage/PricingPage.jsx">
+    <entry file="file://$PROJECT_DIR$/public/auth-landing.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="45" column="43" selection-start-line="45" selection-start-column="43" selection-end-line="45" selection-end-column="43" />
+        <state relative-caret-position="405">
+          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/manifest.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="14" selection-start-line="1" selection-start-column="14" selection-end-line="1" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/sitemap.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/browserconfig.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="64" selection-start-line="22" selection-start-column="64" selection-end-line="22" selection-end-column="64" />
         </state>
       </provider>
     </entry>
