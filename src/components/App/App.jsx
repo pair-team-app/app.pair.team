@@ -35,7 +35,7 @@ import {
 	updateDeeplink,
 	updateUserProfile
 } from '../../redux/actions';
-import { idsFromPath } from '../../utils/funcs';
+// import { idsFromPath } from '../../utils/funcs';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 

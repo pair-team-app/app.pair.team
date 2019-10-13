@@ -77,7 +77,7 @@ class HomePage extends Component {
 		console.log(this.constructor.name, '.handleSubmit()');
 		event.preventDefault();
 
-		trackEvent('button', 'register');
+		trackEvent('button', 'join-wait-list');
 
 		const { email } = this.state;
 		if (Strings.isEmail(email)) {
@@ -93,6 +93,7 @@ class HomePage extends Component {
 // 					console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));
 
 				if (status === 0x11) {
+					trackEvent('signup', 'success', email);
 					this.props.onRegistered(response.data.user);
 
 					this.setState({
@@ -144,7 +145,7 @@ class HomePage extends Component {
 				<div className="page-content-wrapper home-page-content-wrapper">
 					<div className="home-page-element-wrapper">
 						{/*<video width="320" height="240" controls>*/}
-						<video className={`home-page-element ${(Browsers.isMobile.ANY()) ? 'home-page-element-portrait' : 'home-page-element-landscape'}`} autoPlay={true} controls muted loop>
+						<video className={`home-page-element ${(Browsers.isMobile.ANY()) ? 'home-page-element-portrait' : 'home-page-element-landscape'}`} onLoad={()=> trackEvent('video', 'load')} onPause={()=> trackEvent('video', 'pause')} onPlay={()=> trackEvent('video', 'play')} autoPlay={true} controls muted loop>
 							<source src={(Browsers.isMobile.ANY()) ? homePageElementPortrait : homePageElementLandscape} type="video/mp4" />
 						</video>
 

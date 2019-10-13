@@ -9,13 +9,14 @@ import MobileMenu from '../../sections/MobileMenu';
 import PageNavLink from '../../iterables/PageNavLink';
 import navLinks from '../../../assets/json/nav-links';
 import { Pages } from '../../../consts/uris';
+import { trackEvent } from '../../../utils/tracking';
 
 
 function TopNav(props) {
 // 	const { darkTheme } = props;
 
 	return (<div className="top-nav">
-		<NavLink to={Pages.HOME} className="top-nav-branding-wrapper" activeClassName=""><div>
+		<NavLink to={Pages.HOME} className="top-nav-branding-wrapper" activeClassName="" onClick={(event)=> trackEvent('logo', 'home')}><div>
 			<Logo />
 			<div className="top-nav-title">Pair</div>
 		</div></NavLink>

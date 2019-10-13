@@ -14,7 +14,7 @@ import { API_ENDPT_URL } from '../../../consts/uris';
 import { sendToSlack } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
 import stripeCreds from '../../../assets/json/stripe-creds';
-import stripeLogo from '../../../assets/images/logos/logo-stripe-dark.png';
+// import stripeLogo from '../../../assets/images/logos/logo-stripe-dark.png';
 
 
 const STRIPE_TEST_TOKEN = stripeCreds.test.publish;

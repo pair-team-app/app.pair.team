@@ -5,7 +5,6 @@ import './StripeForm.css'
 import { NavLink } from 'react-router-dom';
 import { CardCVCElement, CardExpiryElement, CardNumberElement, injectStripe } from 'react-stripe-elements';
 
-import PageNavLink from '../../iterables/PageNavLink';
 import { Pages } from '../../../consts/uris';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -50,6 +49,8 @@ class StripeForm extends Component {
 
 	handlePage = (event)=> {
 		console.log('StripeForm.handlePage()', event);
+
+		trackEvent('link', Pages.TERMS);
 		this.props.onCancel();
 	};
 
@@ -62,6 +63,8 @@ class StripeForm extends Component {
 		const { cardHolder } = this.state;
 		if (cardHolder.length > 0) {
 			this.props.stripe.createToken({ name : cardHolder }).then((result)=> {
+
+				trackEvent('purchase', (result.error) ? `error-${result.error}` : 'success');
 				if (result.error) {
 					this.props.onError(result.error);
 
@@ -79,7 +82,7 @@ class StripeForm extends Component {
 	render() {
 // 		console.log('StripeForm.render()', this.props, this.state);
 
-		const { cardHolder, cardHolderValid } = this.state;
+		const { cardHolder } = this.state;
 
 		return (
 			<div className="stripe-form-wrapper">

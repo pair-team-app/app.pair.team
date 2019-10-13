@@ -5,7 +5,7 @@ import './PageNavLink.css';
 import { URIs } from 'lang-js-utils';
 import { NavLink } from 'react-router-dom';
 
-import { trackEvent } from '../../../utils/tracking';
+import { trackEvent, trackOutbound } from '../../../utils/tracking';
 
 
 function PageNavLink(props) {
@@ -17,8 +17,11 @@ function PageNavLink(props) {
 
 		const url = uri.split('/').slice(2).join('/');
 		trackEvent('link', url);
-		window.open(url);
-		props.onClick(event);
+
+		trackOutbound(url, ()=> {
+			window.open(url);
+			props.onClick(event);
+		});
 	};
 
 	return (<NavLink
