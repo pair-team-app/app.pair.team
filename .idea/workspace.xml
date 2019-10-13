@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e269f8a2-2876-4072-a430-e3b7377ea758" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/public/sitemap.xml" beforeDir="false" afterPath="$PROJECT_DIR$/public/sitemap.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assets/json/nav-links.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/json/nav-links.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/sections/MobileMenu/MobileMenu.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/sections/MobileMenu/MobileMenu.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/sections/TopNav/TopNav.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/sections/TopNav/TopNav.css" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -25,11 +19,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="FeaturesPage.jsx" pinned="false" current-in-tab="true">
+      <file leaf-file-name="FeaturesPage.jsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="328">
-              <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+            <state relative-caret-position="600">
+              <caret line="40" column="56" selection-start-line="40" selection-start-column="56" selection-end-line="40" selection-end-column="56" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HomePage.jsx" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="731">
+              <caret line="146" column="159" selection-start-line="146" selection-start-column="159" selection-end-line="146" selection-end-column="159" />
             </state>
           </provider>
         </entry>
@@ -110,13 +113,13 @@
         <option value="$PROJECT_DIR$/public/auth-landing.html" />
         <option value="$PROJECT_DIR$/public/manifest.json" />
         <option value="$PROJECT_DIR$/public/index.html" />
-        <option value="$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx" />
         <option value="$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.css" />
         <option value="$PROJECT_DIR$/src/components/sections/TopNav/TopNav.css" />
         <option value="$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.jsx" />
         <option value="$PROJECT_DIR$/src/assets/json/nav-links.json" />
         <option value="$PROJECT_DIR$/src/components/sections/MobileMenu/MobileMenu.jsx" />
         <option value="$PROJECT_DIR$/public/sitemap.xml" />
+        <option value="$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx" />
       </list>
     </option>
   </component>
@@ -376,12 +379,12 @@
       <workItem from="1570725788584" duration="15853000" />
       <workItem from="1570760054960" duration="3600000" />
       <workItem from="1570807747666" duration="1790000" />
-      <workItem from="1570911992592" duration="7894000" />
+      <workItem from="1570911992592" duration="8122000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="270114000" />
+    <option name="totallyTimeSpent" value="270342000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -394,6 +397,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1080" y="-719" width="1080" height="1536" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info anchor="top" id="TODO" internal_type="SLIDING" order="1" side_tool="true" type="SLIDING" weight="0.15206812" />
       <window_info anchor="bottom" id="Messages" order="6" />
@@ -401,9 +405,9 @@
       <window_info anchor="right" id="npm" order="5" sideWeight="0.24472961" side_tool="true" weight="0.15961538" />
       <window_info anchor="top" id="Version Control" internal_type="SLIDING" order="0" type="SLIDING" />
       <window_info anchor="bottom" id="Run" order="3" />
-      <window_info active="true" anchor="bottom" x="-1060" y="-214" width="1040" height="218" id="Terminal" internal_type="SLIDING" order="8" sideWeight="0.7548077" visible="true" weight="0.21848138" />
+      <window_info anchor="bottom" x="-1060" y="-214" width="1040" height="218" id="Terminal" internal_type="SLIDING" order="8" sideWeight="0.7548077" visible="true" weight="0.21848138" />
       <window_info anchor="right" id="Remote Host" order="0" show_stripe_button="false" />
-      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.87712896" visible="true" weight="0.22788462" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" sideWeight="0.87712896" visible="true" weight="0.22788462" />
       <window_info anchor="bottom" id="Docker" order="5" show_stripe_button="false" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.3295129" />
       <window_info anchor="right" id="Structure" order="4" sideWeight="0.7552704" side_tool="true" weight="0.15961538" />
@@ -590,13 +594,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
-          <caret line="97" column="25" lean-forward="true" selection-start-line="97" selection-start-column="25" selection-end-line="97" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/.htaccess">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
@@ -613,8 +610,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="328">
-          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+        <state relative-caret-position="600">
+          <caret line="40" column="56" selection-start-line="40" selection-start-column="56" selection-end-line="40" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="731">
+          <caret line="146" column="159" selection-start-line="146" selection-start-column="159" selection-end-line="146" selection-end-column="159" />
         </state>
       </provider>
     </entry>
