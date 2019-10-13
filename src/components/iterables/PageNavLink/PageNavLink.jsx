@@ -5,14 +5,19 @@ import './PageNavLink.css';
 import { URIs } from 'lang-js-utils';
 import { NavLink } from 'react-router-dom';
 
+import { trackEvent } from '../../../utils/tracking';
+
 
 function PageNavLink(props) {
 	const { title, url } = props.navLink;
 	const extURL = (/^\/url/i.test(url));
 
-	const handleOpenURL = (event, url)=> {
+	const handleOpenURI = (event, uri)=> {
 		event.preventDefault();
-		window.open(url.split('/').slice(2).join('/'));
+
+		const url = uri.split('/').slice(2).join('/');
+		trackEvent('link', url);
+		window.open(url);
 		props.onClick(event);
 	};
 
@@ -21,7 +26,7 @@ function PageNavLink(props) {
 		target={(extURL) ? '_blank' : '_self'}
 		className="page-nav-link"
 		activeClassName="page-nav-link-selected"
-		onClick={(event)=> (extURL) ? handleOpenURL(event, url) : props.onClick(event) }>
+		onClick={(event)=> (extURL) ? handleOpenURI(event, url) : props.onClick(event) }>
 		{title}
 	</NavLink>);
 }

@@ -7,7 +7,7 @@ import { Browsers } from 'lang-js-utils';
 import BasePage from '../BasePage';
 import pageContent from '../../../assets/json/content-features-page';
 import SectionExpander from '../../iterables/SectionExpander';
-
+import { trackEvent } from '../../../utils/tracking';
 
 class FeaturesPage extends Component {
 	constructor(props) {
@@ -24,6 +24,7 @@ class FeaturesPage extends Component {
 
 	handleToggleSection = (section)=> {
 // 		console.log(this.constructor.name, '.handleToggleSection()', section, this.state.sections);
+		trackEvent((section.open) ? 'collapse' : 'expand', section.event);
 
 		const sections = this.state.sections.map((item, i)=> ({ ...item,
 			open : (i === section.ind) ? !section.open : false

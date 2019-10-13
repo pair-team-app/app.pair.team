@@ -6,7 +6,7 @@ import axios from 'axios';
 import { DateTimes } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 
 // import AlertDialog from '../overlays/AlertDialog';
 import LoginModal from '../overlays/LoginModal';
@@ -59,6 +59,7 @@ class App extends Component {
 				register : false,
 				github   : false,
 				stripe   : false,
+				payload  : null
 			}
 		};
 
@@ -83,7 +84,7 @@ class App extends Component {
 		window.addEventListener('scroll', this.handleScroll);
 		window.onpopstate = (event)=> {
 			console.log('-/\\/\\/\\/\\/\\/\\-', 'window.onpopstate()', '-/\\/\\/\\/\\/\\/\\-', event);
-			this.props.updateDeeplink(idsFromPath());
+			//this.props.updateDeeplink(idsFromPath());
 		};
 	}
 
@@ -93,8 +94,10 @@ class App extends Component {
 		const { profile } = this.props;
 		const { pathname } = this.props.location;
 
-		if (prevProps.pathname !== pathname) {
-// 			console.log('|:|:|:|:|:|:|:|:|:|:|:|', getRouteParams(pathname));
+		console.log('|:|:|:|:|:|:|:|:|:|:|:|', prevProps.location.pathname, pathname);
+		if (prevProps.location.pathname !== pathname) {
+			console.log('|:|:|:|:|:|:|:|:|:|:|:|', pathname);
+			trackPageview();
 		}
 
 		if (profile) {
@@ -271,8 +274,8 @@ class App extends Component {
 		}
 	};
 
-	onToggleModal = (url, show)=> {
-		console.log('App.onToggleModal()', url, show);
+	onToggleModal = (url, show=true, payload=null)=> {
+		console.log('App.onToggleModal()', url, show, payload);
 		const { modals } = this.state;
 
 		if (show) {
@@ -306,12 +309,12 @@ class App extends Component {
   	const { darkTheme, popup, modals } = this.state;
 
   	return (<div className={`site-wrapper${(darkTheme) ? ' site-wrapper-dark' : ''}`}>
-		  <TopNav darkTheme={darkTheme} onToggleTheme={this.handleToggleTheme} onModal={(url)=> this.onToggleModal(url, true)} />
+		  <TopNav darkTheme={darkTheme} onToggleTheme={this.handleToggleTheme} onModal={(url, payload)=> this.onToggleModal(url, true, payload)} />
 	    <div className="content-wrapper" ref={wrapper}>
 		    <Switch>
-			    <Route exact path={Pages.HOME} render={()=> <HomePage onModal={(url)=> this.onToggleModal(url, true)} onPopup={this.handlePopup} onRegistered={this.handleRegistered} />} />
-			    <Route exact path={Pages.FEATURES} render={()=> <FeaturesPage onModal={(url)=> this.onToggleModal(url, true)} onPopup={this.handlePopup} />} />
-			    <Route exact path={Pages.PRICING} render={()=> <PricingPage onModal={(url)=> this.onToggleModal(url, true)} onPopup={this.handlePopup} />} />
+			    <Route exact path={Pages.HOME} render={()=> <HomePage onModal={(url, payload)=> this.onToggleModal(url, true, payload)} onPopup={this.handlePopup} onRegistered={this.handleRegistered} />} />
+			    <Route exact path={Pages.FEATURES} render={()=> <FeaturesPage onModal={(url, payload)=> this.onToggleModal(url, true, payload)} onPopup={this.handlePopup} />} />
+			    <Route exact path={Pages.PRICING} render={()=> <PricingPage onModal={(url, payload)=> this.onToggleModal(url, true, payload)} onPopup={this.handlePopup} />} />
 			    <Route exact path={`/:page(${Pages.LEGAL.slice(1)}|${Pages.PRIVACY.slice(1)})`} render={()=> <PrivacyPage />} />
 			    <Route exact path={Pages.TERMS} render={()=> <TermsPage />} />
 
@@ -353,6 +356,7 @@ class App extends Component {
 
 			  {(modals.stripe) && (<StripeModal
 				  profile={profile}
+				  payload={modals.payload}
 				  onPopup={this.handlePopup}
 				  onSubmitted={this.handlePurchaseSubmitted}
 				  onComplete={()=> this.onToggleModal(Modals.STRIPE, false)}
@@ -384,4 +388,4 @@ const mapDispatchToProps = (dispatch)=> {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

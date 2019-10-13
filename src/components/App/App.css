@@ -16,6 +16,7 @@
 	--link-hover-color: #cccccc;
 	--link-selected-color: #999999;
 	--txtfield-bg-color: #cccccc;
+	--border-color: #cecece;
 
 	color: var(--site-fg-color);
 	background-color: var(--site-bg-color);
@@ -77,7 +78,7 @@
 	/*text-decoration: underline;*/
 }
 
-.form-disclaimer:before {
+.form-disclaimer::before {
 	content: '';
 	display: block;
 	width: 0;

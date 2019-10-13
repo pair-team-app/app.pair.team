@@ -7,7 +7,7 @@
 	text-align: left;
 	width: 100%;
 	height: 100%;
-	background-color: rgba(0, 0, 0, 0.75);
+	background-color: rgba(0, 0, 0, 0.05);
 }
 
 .base-overlay-content-wrapper {
@@ -20,18 +20,19 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	-webkit-transform: translate(-50%, -50%);
+	padding: 10px;
 	z-index: 2002;
 	overflow: hidden;
-	border-radius: 2px;
-	background-color: #ffffff;
+	border: 1px solid var(--border-color);
+	border-radius: 5px;
+	background-color: var(--site-bg-color);
 	text-align: center;
-	color: #9b9b9b;
-	box-shadow: 3px 3px 10px #1a1b1d;
+	/*box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.33);*/
 }
 
 .base-overlay-content-wrapper-unblurred {
 	background-color: rgba(0, 0, 0, 0.0);
-	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.33);
+	/*box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.33);*/
 }
 
 .base-overlay-content-wrapper-auto-scroll {
@@ -51,12 +52,7 @@
 	width: calc(100% - 20px);
 	margin: 10px;
 	padding-bottom: 10px;
-	border-bottom: 1px solid #eaecef;
-	font-family: "San Francisco Text SemiBold", sans-serif;
-	font-size: 16px;
-	letter-spacing: -0.24px;
-	line-height: normal;
-	color: #1c1c1c;
+	border-bottom: 1px solid var(--border-color);
 }
 
 .base-overlay-title {
@@ -74,7 +70,6 @@
 }
 
 .base-overlay-content {
-	line-height: 24px;
 }
 
 .base-overlay-content-padded {
@@ -90,16 +85,7 @@
 }
 
 .base-overlay-button {
-	padding: 6px 4px;
-	max-width: 80px;
-	height: auto;
-	border: 1px solid #055cc5;
-	font-family: "San Francisco Text SemiBold", sans-serif;
-	font-size: 14px;
-	letter-spacing: -0.3px;
-	line-height: normal;
 }
 
 .base-overlay-button:hover {
-	border: 1px solid #00449c;
 }

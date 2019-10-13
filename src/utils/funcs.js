@@ -11,29 +11,12 @@ import { API_ENDPT_URL } from '../consts/uris';
 export function getRouteParams(pathname) {
 // 	console.log('_-_-_-_-_', 'getRouteParams()', pathname, '_-_-_-_-_', URIs.firstComponent(pathname));
 
-	const loginPage = matchPath(pathname, {
-		path : '/login'
-	});
-
-	const profilePage = matchPath(pathname, {
-		path : '/profile/:userID?'
-	});
-
-	const uploadPage = matchPath(pathname, {
-		path : '/new/:section?'
-	});
-
-	const registerPage = matchPath(pathname, {
-		path : '/register/:inviteID?'
-	});
-
-	const inspectorPage = matchPath(pathname, {
-		path : `/${URIs.firstComponent(pathname)}/:uploadID/:titleSlug`
-	});
-
-	const homePage = matchPath(pathname, {
-		path : '/:section'
-	});
+	const loginPage = matchPath(pathname, { path : '/login' });
+	const profilePage = matchPath(pathname, { path : '/profile/:userID?' });
+	const uploadPage = matchPath(pathname, { path : '/new/:section?' });
+	const registerPage = matchPath(pathname, { path : '/register/:inviteID?' });
+	const inspectorPage = matchPath(pathname, { path : `/${URIs.firstComponent(pathname)}/:uploadID/:titleSlug` });
+	const homePage = matchPath(pathname, { path : '/:section' });
 
 // 	console.log(':::::::::::::', loginPage, profilePage, uploadPage, registerPage, inspectorPage, homePage);
 
@@ -138,43 +121,6 @@ export function idsFromPath() {
 
 	return (navIDs);
 }
-
-/*
-export function isHomePage(root=true) {
-	const { pathname } = window.location;
-	return ((root) ? (pathname === '' || pathname === HOME) : (pathname === '' || pathname === HOME || pathname === INSPECT ||pathname === EDIT));
-}
-
-export function isInspectorPage() {
-	const { pathname } = window.location;
-	return ((pathname.includes(`${SPECS}/`) || pathname.includes(`${STYLES}/`) || pathname.includes(`${PARTS}`) || pathname.includes(`${EDIT}`)) && /^.+\/\d+\/.+$/.test(pathname));
-}
-
-export function isLoginPage(exact=false) {
-	const { pathname } = window.location;
-	return ((exact) ? pathname === LOGIN : pathname.includes(LOGIN));
-}
-
-export function isProfilePage(exact=false) {
-	const { pathname } = window.location;
-	return ((exact) ? pathname === PROFILE : pathname.includes(PROFILE));
-}
-
-export function isRecoverPage(exact=false) {
-	const { pathname } = window.location;
-	return ((exact) ? pathname === RECOVER : pathname.includes(RECOVER));
-}
-
-export function isRegisterPage(exact=false) {
-	const { pathname } = window.location;
-	return ((exact) ? pathname === REGISTER : pathname.includes(REGISTER));
-}
-
-export function isUploadPage(exact=false) {
-	const { pathname } = window.location;
-	return ((exact) ? pathname === UPLOAD : pathname.includes(UPLOAD));
-}
-*/
 
 export function isUserLoggedIn(confirmed=true) {
 // 	return ((confirmed) ? cookie.load('user_id') !== '0' : typeof cookie.load('user_id') !== 'undefined');

@@ -14,7 +14,7 @@ import { API_ENDPT_URL } from '../../../consts/uris';
 import { sendToSlack } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
 import stripeCreds from '../../../assets/json/stripe-creds';
-import stripeLogo from '../../../assets/images/logos/logo-stripe.png';
+import stripeLogo from '../../../assets/images/logos/logo-stripe-dark.png';
 
 
 const STRIPE_TEST_TOKEN = stripeCreds.test.publish;
@@ -140,7 +140,7 @@ class StripeModal extends Component {
 
 				<div className="stripe-modal-wrapper">
 					<div className="stripe-modal-header">
-						<img className="stripe-modal-logo" src={stripeLogo} alt="Stripe logo" />
+						<h3>Team - $0</h3>
 					</div>
 
 					<div className="stripe-modal-content-wrapper">
@@ -159,5 +159,6 @@ class StripeModal extends Component {
 			</BaseOverlay>);
 	}
 }
+
 
 export default withRouter(StripeModal);

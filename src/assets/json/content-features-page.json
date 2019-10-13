@@ -5,15 +5,21 @@
     "sections": [{
       "open" : false,
       "header": "Approve Components",
-      "content": "Pair offers the ability to visualize all of your projects components against any build for peer design approve. Engineers can then share <i>Pair URLs</i> in Slack, Email, SMS, and more for instant collaboration from their product teams."
+      "content": "Pair offers the ability to visualize all of your projects components against any build for peer design approve. Engineers can then share <i>Pair URLs</i> in Slack, Email, SMS, and more for instant collaboration from their product teams.",
+      "price": null,
+      "event": "approve-components"
     }, {
       "open" : false,
       "header": "Approve Accessibility",
-      "content": "Pair uses <i>A11y</i> methods to allow designers and developers to interact with various interface modes such as voice, contrast, and more. This gives designers and developers a better understanding of how their products are viewed in the final products presentation."
+      "content": "Pair uses <i>A11y</i> methods to allow designers and developers to interact with various interface modes such as voice, contrast, and more. This gives designers and developers a better understanding of how their products are viewed in the final products presentation.",
+      "price": null,
+      "event": "approve-accessibility"
     }, {
       "open" : false,
       "header": "Approve Design Systems",
-      "content": "Pair helps distribute and manage design system efforts for companies large and small. Pair delivers real component assets directly from our <i>NPM Module</i> to your design tool to maintain a source of truth."
+      "content": "Pair helps distribute and manage design system efforts for companies large and small. Pair delivers real component assets directly from our <i>NPM Module</i> to your design tool to maintain a source of truth.",
+      "price": null,
+      "event": "approve-design-systems"
     }]
   },
   "mobile": {
@@ -22,15 +28,21 @@
     "sections": [{
       "open" : false,
       "header": "Approve Components",
-      "content": "Pair offers the ability to visualize all of your projects components against any build for peer design approve. Engineers can then share <i>Pair URLs</i> in Slack, Email, SMS, and more for instant collaboration from their product teams."
+      "content": "Pair offers the ability to visualize all of your projects components against any build for peer design approve. Engineers can then share <i>Pair URLs</i> in Slack, Email, SMS, and more for instant collaboration from their product teams.",
+      "price": null,
+      "event": "approve-components"
     }, {
       "open" : false,
       "header": "Approve Accessibility",
-      "content": "Pair uses <i>A11y</i> methods to allow designers and developers to interact with various interface modes such as voice, contrast, and more. This gives designers and developers a better understanding of how their products are viewed in the final products presentation."
+      "content": "Pair uses <i>A11y</i> methods to allow designers and developers to interact with various interface modes such as voice, contrast, and more. This gives designers and developers a better understanding of how their products are viewed in the final products presentation.",
+      "price": null,
+      "event": "approve-accessibility"
     }, {
       "open" : false,
       "header": "Approve Design Systems",
-      "content": "Pair helps distribute and manage design system efforts for companies large and small. Pair delivers real component assets directly from our <i>NPM Module</i> to your design tool to maintain a source of truth."
+      "content": "Pair helps distribute and manage design system efforts for companies large and small. Pair delivers real component assets directly from our <i>NPM Module</i> to your design tool to maintain a source of truth.",
+      "price": null,
+      "event": "approve-design-systems"
     }]
   }
 }

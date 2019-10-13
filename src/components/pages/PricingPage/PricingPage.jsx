@@ -8,6 +8,7 @@ import BasePage from '../BasePage';
 import SectionExpander from '../../iterables/SectionExpander';
 import pageContent from '../../../assets/json/content-pricing-page';
 import { Modals } from '../../../consts/uris';
+import { trackEvent } from '../../../utils/tracking';
 
 class PricingPage extends Component {
 	constructor(props) {
@@ -23,16 +24,18 @@ class PricingPage extends Component {
 
 	handleSelectSection = (section)=> {
 // 		console.log(this.constructor.name, '.handleSelectSection()', section);
-		this.props.onModal(Modals.STRIPE, true);
+		trackEvent('button', section.event);
+		this.props.onModal(Modals.STRIPE);
 // 		const sectionOpened = this.state.sectionOpened.map((toggle, i)=> (i === section.ind));
 // 		this.setState({ sectionOpened }, ()=> {
-// 			this.props.onModal(Modals.STRIPE, true);
+// 			this.props.onModal(Modals.STRIPE);
 // 		});
 	};
 
 	handleToggleSection = (section)=> {
 // 		console.log(this.constructor.name, '.handleToggleSection()', section, this.state.sectionOpened, this.state.sectionOpened[section.ind]);
 		console.log(this.constructor.name, '.handleToggleSection()', section, this.state.sections);
+		trackEvent((section.open) ? 'collapse' : 'expand', section.event);
 
 		const sections = this.state.sections.map((item, i)=> ({ ...item,
 			open : (i === section.ind) ? !section.open : false

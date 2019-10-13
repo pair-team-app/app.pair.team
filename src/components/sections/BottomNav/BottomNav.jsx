@@ -6,11 +6,14 @@ import PageNavLink from '../../iterables/PageNavLink';
 import navLinks from '../../../assets/json/nav-links';
 
 import { GITHUB_XD_PLUGIN, NPM_DE_PLAYGROUND } from '../../../consts/uris';
+import { trackEvent } from '../../../utils/tracking';
 
 
 function BottomNav(props) {
 	const handleClick = (event, url)=> {
 		event.preventDefault();
+
+		trackEvent('button', url);
 		window.open(url);
 	};
 

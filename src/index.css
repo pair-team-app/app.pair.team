@@ -1,5 +1,5 @@
 
-*, *:before, *:after {
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
@@ -24,6 +24,7 @@
 	--link-hover-color: #343434;
 	--link-selected-color: #999999;
 	--txtfield-bg-color: #f7f7f7;
+	--border-color: #cecece;
 }
 
 ::placeholder {
@@ -95,7 +96,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
 }
 
-h1:before, h2:before, h3:before, h4:before, h5:before, h6:before {
+h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
   content: '';
   display: block;
   width: 0;
@@ -110,7 +111,7 @@ h1 {
   line-height: 68px;
 }
 
-h1:before {
+h1::before {
   margin-top: calc((1 - 1.4) * 0.5em);
 }
 
@@ -124,7 +125,7 @@ h2 {
 	line-height: 43px;
 }
 
-h2:before {
+h2::before {
 	margin-top: calc((1 - 1.1) * 0.5em);
 }
 
@@ -133,6 +134,19 @@ h2:hover {
 	transition: filter 0.125s ease-out;
 	cursor: pointer;
 }
+
+/** Modal Title **/
+h3 {
+	color: var(--btn-bg-color);
+	font-size: 36px;
+	font-weight: 500;
+	letter-spacing: 0.75px;
+}
+
+h3::before {
+	margin-top: calc((1 - 2.3) * 0.5em);
+}
+
 
 /** Legal Section Title **/
 h5 {
@@ -154,10 +168,9 @@ h6 {
 
 input[type="email"], input[type="text"], textarea {
 	width: 100%;
-	height: 50px;
 	margin-bottom: 20px;
 	padding: 15px 20px;
-	border: 1px solid #cecece;
+	border: 1px solid var(--border-color);
 	border-radius: 23px;
 	color: var(--site-fg-color);
 	text-align: center;
@@ -173,7 +186,7 @@ input[type="email"]:invalid, input[type="text"]:invalid {
 }
 
 input[type="email"]:valid, input[type="text"]:valid, select, textarea {
-	border: 1px solid #cecece;
+	border: 1px solid var(--border-color);
 	background-color: var(--txtfield-bg-color);
 	color: var(--site-fg-color);
 }
@@ -244,12 +257,4 @@ textarea {
 	h1 {
 		margin-bottom: 50px;
 	}
-}
-
-
-
-.pac-item {
-	font: 400 16px -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-	color: var(--site-fg-color);
-	font-family: -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
