@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e269f8a2-2876-4072-a430-e3b7377ea758" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -20,11 +20,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.css" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.css" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/index.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="160" column="23" selection-start-line="160" selection-start-column="23" selection-end-line="160" selection-end-column="23" />
+            <state relative-caret-position="276">
+              <caret line="198" column="43" selection-start-line="198" selection-start-column="43" selection-end-line="198" selection-end-column="43" />
             </state>
           </provider>
         </entry>
@@ -42,16 +42,7 @@
         <entry file="file://$PROJECT_DIR$/src/components/App/App.jsx">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="420">
-              <caret line="339" column="32" lean-forward="true" selection-start-line="339" selection-start-column="32" selection-end-line="339" selection-end-column="32" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" column="19" lean-forward="true" selection-start-line="19" selection-end-line="19" selection-end-column="19" />
+              <caret line="339" column="32" selection-start-line="339" selection-start-column="32" selection-end-line="339" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -119,7 +110,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/index.css" />
         <option value="$PROJECT_DIR$/src/components/overlays/StripeModal/StripeModal.css" />
         <option value="$PROJECT_DIR$/src/components/overlays/StripeModal/StripeModal.jsx" />
         <option value="$PROJECT_DIR$/src/components/sections/MobileMenu/MobileMenu.jsx" />
@@ -140,6 +130,7 @@
         <option value="$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.css" />
         <option value="$PROJECT_DIR$/src/components/App/App.jsx" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/src/index.css" />
       </list>
     </option>
   </component>
@@ -505,12 +496,13 @@
       <workItem from="1570760054960" duration="3600000" />
       <workItem from="1570807747666" duration="1790000" />
       <workItem from="1570911992592" duration="11653000" />
-      <workItem from="1570932453924" duration="23351000" />
+      <workItem from="1570932453924" duration="23889000" />
+      <workItem from="1571006595751" duration="314000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="297224000" />
+    <option name="totallyTimeSpent" value="298076000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -525,27 +517,27 @@
     <frame x="-1080" y="-719" width="1080" height="833" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info anchor="top" id="TODO" internal_type="SLIDING" order="1" side_tool="true" type="SLIDING" weight="0.15206812" />
-      <window_info anchor="bottom" id="Event Log" order="0" sideWeight="0.2451923" side_tool="true" weight="0.1326034" />
-      <window_info anchor="bottom" id="Run" order="3" />
-      <window_info anchor="right" id="npm" order="5" sideWeight="0.24472961" side_tool="true" weight="0.15961538" />
-      <window_info anchor="top" id="Version Control" internal_type="SLIDING" order="0" type="SLIDING" />
-      <window_info anchor="bottom" x="-1060" y="-214" width="1040" height="218" id="Terminal" internal_type="SLIDING" order="8" sideWeight="0.7548077" visible="true" weight="0.21789321" />
       <window_info anchor="right" id="Remote Host" order="0" show_stripe_button="false" />
-      <window_info anchor="bottom" id="TypeScript" show_stripe_button="false" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" sideWeight="0.87712896" visible="true" weight="0.22788462" />
+      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.87712896" weight="0.22788462" />
+      <window_info anchor="top" id="TODO" internal_type="SLIDING" order="1" side_tool="true" type="SLIDING" weight="0.15206812" />
       <window_info anchor="bottom" id="Docker" order="5" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Find" order="2" weight="0.3295129" />
+      <window_info anchor="bottom" id="Event Log" order="0" sideWeight="0.2451923" side_tool="true" weight="0.1326034" />
+      <window_info anchor="top" id="Version Control" internal_type="SLIDING" order="0" type="SLIDING" />
+      <window_info anchor="right" id="npm" order="5" sideWeight="0.24472961" side_tool="true" weight="0.15961538" />
+      <window_info anchor="bottom" id="Run" order="3" />
       <window_info anchor="right" id="Structure" order="4" sideWeight="0.7552704" side_tool="true" weight="0.15961538" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
+      <window_info active="true" anchor="bottom" x="-1060" y="-214" width="1040" height="218" id="Terminal" internal_type="SLIDING" order="8" sideWeight="0.7548077" visible="true" weight="0.21789321" />
       <window_info id="Favorites" order="0" show_stripe_button="false" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
+      <window_info anchor="bottom" id="TypeScript" order="9" show_stripe_button="false" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="7" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Messages" order="6" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Cvs" order="6" weight="0.25" />
-      <window_info anchor="bottom" id="Messages" order="6" />
+      <window_info anchor="bottom" id="Find" order="2" weight="0.3295129" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
@@ -558,14 +550,14 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
       <window_info anchor="top" id="TODO" internal_type="SLIDING" order="1" side_tool="true" type="SLIDING" weight="0.15206812" />
-      <window_info anchor="bottom" id="Message" order="1" />
+      <window_info anchor="top" id="Version Control" internal_type="SLIDING" order="0" type="SLIDING" />
+      <window_info anchor="bottom" id="Find" order="2" weight="0.3295129" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="6" weight="0.25" />
       <window_info anchor="bottom" x="-1060" y="-214" width="1040" height="218" id="Terminal" internal_type="SLIDING" order="8" sideWeight="0.7548077" visible="true" weight="0.21848138" />
       <window_info anchor="bottom" id="Event Log" order="0" sideWeight="0.2451923" side_tool="true" weight="0.1326034" />
       <window_info anchor="bottom" id="Inspection" order="7" weight="0.4" />
-      <window_info anchor="top" id="Version Control" internal_type="SLIDING" order="0" type="SLIDING" />
-      <window_info anchor="bottom" id="Find" order="2" weight="0.3295129" />
+      <window_info anchor="bottom" id="Cvs" order="6" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="1" />
       <window_info id="Favorites" order="0" show_stripe_button="false" side_tool="true" />
     </layout-to-restore>
   </component>
@@ -672,13 +664,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="160" column="23" selection-start-line="160" selection-start-column="23" selection-end-line="160" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/iterables/PageNavLink/PageNavLink.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -735,17 +720,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App/App.jsx">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="339" column="32" lean-forward="true" selection-start-line="339" selection-start-column="32" selection-end-line="339" selection-end-column="32" />
+        <state relative-caret-position="330">
+          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/src/components/App/App.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="19" lean-forward="true" selection-start-line="19" selection-end-line="19" selection-end-column="19" />
+        <state relative-caret-position="420">
+          <caret line="339" column="32" selection-start-line="339" selection-start-column="32" selection-end-line="339" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="198" column="43" selection-start-line="198" selection-start-column="43" selection-end-line="198" selection-end-column="43" />
         </state>
       </provider>
     </entry>
