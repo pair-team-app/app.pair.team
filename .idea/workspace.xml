@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e269f8a2-2876-4072-a430-e3b7377ea758" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -19,6 +21,15 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="index.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/index.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="690">
+              <caret line="46" lean-forward="true" selection-start-line="46" selection-end-line="46" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="FeaturesPage.jsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx">
           <provider selected="true" editor-type-id="text-editor">
@@ -31,8 +42,8 @@
       <file leaf-file-name="HomePage.jsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="731">
-              <caret line="146" column="163" selection-start-line="146" selection-start-column="163" selection-end-line="146" selection-end-column="163" />
+            <state relative-caret-position="633">
+              <caret line="135" column="280" selection-start-line="135" selection-start-column="280" selection-end-line="135" selection-end-column="280" />
             </state>
           </provider>
         </entry>
@@ -99,7 +110,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/components/App/App.css" />
         <option value="$PROJECT_DIR$/src/components/sections/MobileMenu/MobileMenu.css" />
         <option value="$PROJECT_DIR$/src/components/pages/BasePage/BasePage.css" />
         <option value="$PROJECT_DIR$/package.json" />
@@ -119,6 +129,7 @@
         <option value="$PROJECT_DIR$/src/assets/json/nav-links.json" />
         <option value="$PROJECT_DIR$/src/components/sections/MobileMenu/MobileMenu.jsx" />
         <option value="$PROJECT_DIR$/public/sitemap.xml" />
+        <option value="$PROJECT_DIR$/src/index.css" />
         <option value="$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx" />
       </list>
     </option>
@@ -379,12 +390,12 @@
       <workItem from="1570725788584" duration="15853000" />
       <workItem from="1570760054960" duration="3600000" />
       <workItem from="1570807747666" duration="1790000" />
-      <workItem from="1570911992592" duration="8354000" />
+      <workItem from="1570911992592" duration="10845000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="270574000" />
+    <option name="totallyTimeSpent" value="273065000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -405,9 +416,9 @@
       <window_info anchor="right" id="npm" order="5" sideWeight="0.24472961" side_tool="true" weight="0.15961538" />
       <window_info anchor="top" id="Version Control" internal_type="SLIDING" order="0" type="SLIDING" />
       <window_info anchor="bottom" id="Run" order="3" />
-      <window_info active="true" anchor="bottom" x="-1060" y="-214" width="1040" height="218" id="Terminal" internal_type="SLIDING" order="8" sideWeight="0.7548077" visible="true" weight="0.21848138" />
+      <window_info anchor="bottom" x="-1060" y="-214" width="1040" height="218" id="Terminal" internal_type="SLIDING" order="8" sideWeight="0.7548077" visible="true" weight="0.21848138" />
       <window_info anchor="right" id="Remote Host" order="0" show_stripe_button="false" />
-      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.87712896" visible="true" weight="0.22788462" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" sideWeight="0.87712896" visible="true" weight="0.22788462" />
       <window_info anchor="bottom" id="Docker" order="5" show_stripe_button="false" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.3295129" />
       <window_info anchor="right" id="Structure" order="4" sideWeight="0.7552704" side_tool="true" weight="0.15961538" />
@@ -475,20 +486,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/components/overlays/RegisterModal/RegisterModal.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="754">
-          <caret line="136" column="69" selection-start-line="136" selection-start-column="69" selection-end-line="136" selection-end-column="69" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/assets/json/content-home-page.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="1" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/assets/json/content-pricing-page.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
@@ -615,10 +612,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/pages/HomePage/HomePage.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="35" column="3" lean-forward="true" selection-start-line="35" selection-start-column="3" selection-end-line="35" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="690">
+          <caret line="46" lean-forward="true" selection-start-line="46" selection-end-line="46" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="731">
-          <caret line="146" column="163" selection-start-line="146" selection-start-column="163" selection-end-line="146" selection-end-column="163" />
+        <state relative-caret-position="633">
+          <caret line="135" column="280" selection-start-line="135" selection-start-column="280" selection-end-line="135" selection-end-column="280" />
         </state>
       </provider>
     </entry>
