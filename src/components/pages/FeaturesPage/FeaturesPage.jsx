@@ -33,7 +33,7 @@ class FeaturesPage extends Component {
 	};
 
 	render() {
-		console.log(this.constructor.name, '.render()', this.props, this.state);
+// 		console.log(this.constructor.name, '.render()', this.props, this.state);
 
 		const { title, intro, sections } = this.state;
 		return (

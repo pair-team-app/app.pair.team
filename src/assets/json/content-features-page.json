@@ -1,46 +1,46 @@
 {
   "desktop": {
     "title": "Features",
-    "intro": "Pair is an NPM Module for product teams to approve every build your front-end team developers. Our features help scale 1-to-1 designer to developer collaboration for large software enterprise companies such as <i>Twitter</i>, <i>Google, <i>IBM</i>, <i>Facebook</i>, & more.",
+    "intro": "Pair is an NPM Module for product teams to review & approve every build your front-end developers make. Our features help scale 1-to-1 designer-to-developer knowledge & collaboration for large software enterprise companies such as <i>Twitter, <i>Google</i>,<i> IBM</i>, <i>Facebook</i>, & <i>more</i>.",
     "sections": [{
       "open" : false,
       "header": "Approve Components",
-      "content": "Pair offers the ability to visualize all of your projects components against any build for peer design approve. Engineers can then share <i>Pair URLs</i> in Slack, Email, SMS, and more for instant collaboration from their product teams.",
+      "content": "Pair offers the ability to approve all of your application components against any build. Engineers can share <i>Pair URLs in Slack</i>, Email, SMS, and more for instant collaboration from their product design teams.",
       "price": null,
       "event": "approve-components"
     }, {
       "open" : false,
       "header": "Approve Accessibility",
-      "content": "Pair uses <i>A11y</i> methods to allow designers and developers to interact with various interface modes such as voice, contrast, and more. This gives designers and developers a better understanding of how their products are viewed in the final products presentation.",
+      "content": "Pair helps designers & developers experience their front-end design in various <i>A11y</i> user modes such as voice, contrast, & more. This helps product teams a better understand how their products are consumed & experienced for all user types.",
       "price": null,
       "event": "approve-accessibility"
     }, {
       "open" : false,
       "header": "Approve Design Systems",
-      "content": "Pair helps distribute and manage design system efforts for companies large and small. Pair delivers real component assets directly from our <i>NPM Module</i> to your design tool to maintain a source of truth.",
+      "content": "Pair helps distribute and manage design systems for large scale component driven software development teams. Pair gives developers the ability to create instant ad hoc <i>Pair URLs</i> for design system theming and third party reviews.",
       "price": null,
       "event": "approve-design-systems"
     }]
   },
   "mobile": {
     "title": "Features",
-    "intro": "Pair is an NPM Module for product teams to approve every build your front-end team developers. Our features help scale 1-to-1 designer to developer collaboration for large software enterprise companies such as <i>Twitter</i>, <i>Google, <i>IBM</i>, <i>Facebook</i>, & more.",
+    "intro": "Pair is an NPM Module for product teams to review & approve every build your front-end developers make. Our features help scale 1-to-1 designer-to-developer knowledge & collaboration for large software enterprise companies such as <i>Twitter, <i>Google</i>,<i> IBM</i>, <i>Facebook</i>, & <i>more</i>.",
     "sections": [{
       "open" : false,
       "header": "Approve Components",
-      "content": "Pair offers the ability to visualize all of your projects components against any build for peer design approve. Engineers can then share <i>Pair URLs</i> in Slack, Email, SMS, and more for instant collaboration from their product teams.",
+      "content": "Pair offers the ability to approve all of your application components against any build. Engineers can share <i>Pair URLs in Slack</i>, Email, SMS, and more for instant collaboration from their product design teams.",
       "price": null,
       "event": "approve-components"
     }, {
       "open" : false,
       "header": "Approve Accessibility",
-      "content": "Pair uses <i>A11y</i> methods to allow designers and developers to interact with various interface modes such as voice, contrast, and more. This gives designers and developers a better understanding of how their products are viewed in the final products presentation.",
+      "content": "Pair helps designers & developers experience their front-end design in various <i>A11y</i> user modes such as voice, contrast, & more. This helps product teams a better understand how their products are consumed & experienced for all user types.",
       "price": null,
       "event": "approve-accessibility"
     }, {
       "open" : false,
       "header": "Approve Design Systems",
-      "content": "Pair helps distribute and manage design system efforts for companies large and small. Pair delivers real component assets directly from our <i>NPM Module</i> to your design tool to maintain a source of truth.",
+      "content": "Pair helps distribute and manage design systems for large scale component driven software development teams. Pair gives developers the ability to create instant ad hoc <i>Pair URLs</i> for design system theming and third party reviews.",
       "price": null,
       "event": "approve-design-systems"
     }]

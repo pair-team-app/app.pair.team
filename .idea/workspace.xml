@@ -2,15 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e269f8a2-2876-4072-a430-e3b7377ea758" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/components/App/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/forms/StripeForm/StripeForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/forms/StripeForm/StripeForm.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/iterables/PageNavLink/PageNavLink.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/iterables/PageNavLink/PageNavLink.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/overlays/StripeModal/StripeModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlays/StripeModal/StripeModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/json/content-features-page.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/json/content-features-page.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/json/content-home-page.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/json/content-home-page.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/json/content-pricing-page.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/json/content-pricing-page.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/overlays/BaseOverlay/BaseOverlay.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlays/BaseOverlay/BaseOverlay.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/sections/MobileMenu/MobileMenu.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/sections/MobileMenu/MobileMenu.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/sections/TopNav/TopNav.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/sections/TopNav/TopNav.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/tracking.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/tracking.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -30,44 +29,71 @@
       <file leaf-file-name="index.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/index.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-161">
-              <caret line="147" column="1" lean-forward="true" selection-start-line="147" selection-start-column="1" selection-end-line="147" selection-end-column="1" />
+            <state relative-caret-position="829">
+              <caret line="213" column="22" selection-start-line="213" selection-start-column="22" selection-end-line="213" selection-end-column="22" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SectionExpander.jsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/iterables/SectionExpander/SectionExpander.jsx">
+      <file leaf-file-name="FeaturesPage.jsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+            <state relative-caret-position="741">
+              <caret line="57" column="17" lean-forward="true" selection-start-line="57" selection-start-column="17" selection-end-line="57" selection-end-column="17" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HomePage.jsx" pinned="false" current-in-tab="true">
+      <file leaf-file-name="BottomNav.jsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="17" column="23" lean-forward="true" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PricingPage.jsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/pages/PricingPage/PricingPage.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="640">
+              <caret line="63" column="79" lean-forward="true" selection-start-line="63" selection-start-column="79" selection-end-line="63" selection-end-column="79" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BaseOverlay.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/overlays/BaseOverlay/BaseOverlay.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="630">
+              <caret line="42" column="21" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="content-pricing-page.json" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/assets/json/content-pricing-page.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="675">
+              <caret line="45" column="6" selection-start-line="45" selection-start-column="6" selection-end-line="45" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FeaturesPage.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HomePage.jsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="701">
-              <caret line="145" column="53" lean-forward="true" selection-start-line="145" selection-start-column="53" selection-end-line="145" selection-end-column="53" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="App.jsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/App/App.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="530">
-              <caret line="99" column="15" selection-start-line="99" selection-start-column="15" selection-end-line="99" selection-end-column="15" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="660">
-              <caret line="44" lean-forward="true" selection-start-line="44" selection-end-line="44" />
+            <state relative-caret-position="36">
+              <caret line="89" column="29" selection-start-line="89" selection-start-column="29" selection-end-line="89" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -76,7 +102,7 @@
         <entry file="file://$PROJECT_DIR$/src/components/forms/StripeForm/StripeForm.jsx">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="474">
-              <caret line="76" column="28" lean-forward="true" selection-start-line="76" selection-start-column="28" selection-end-line="76" selection-end-column="28" />
+              <caret line="76" column="28" selection-start-line="76" selection-start-column="28" selection-end-line="76" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -85,7 +111,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>moment-timezone</find>
       <find>moment</find>
       <find>ajv</find>
       <find>acorn</find>
@@ -115,6 +140,7 @@
       <find>after</find>
       <find>trackEvent</find>
       <find>event.target.</find>
+      <find>url</find>
     </findStrings>
     <replaceStrings>
       <replace>designengine-xd</replace>
@@ -144,27 +170,27 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/redux/reducers/index.js" />
-        <option value="$PROJECT_DIR$/src/assets/json/content-home-page.json" />
         <option value="$PROJECT_DIR$/src/utils/funcs.js" />
         <option value="$PROJECT_DIR$/src/components/App/App.css" />
         <option value="$PROJECT_DIR$/src/components/forms/StripeForm/StripeForm.css" />
         <option value="$PROJECT_DIR$/src/index.css" />
         <option value="$PROJECT_DIR$/src/components/overlays/StripeModal/StripeModal.css" />
-        <option value="$PROJECT_DIR$/src/components/overlays/BaseOverlay/BaseOverlay.css" />
-        <option value="$PROJECT_DIR$/src/assets/json/content-pricing-page.json" />
-        <option value="$PROJECT_DIR$/src/components/pages/PricingPage/PricingPage.jsx" />
-        <option value="$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx" />
-        <option value="$PROJECT_DIR$/src/assets/json/content-features-page.json" />
         <option value="$PROJECT_DIR$/src/components/overlays/StripeModal/StripeModal.jsx" />
         <option value="$PROJECT_DIR$/src/components/App/App.jsx" />
         <option value="$PROJECT_DIR$/src/components/sections/MobileMenu/MobileMenu.jsx" />
-        <option value="$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.jsx" />
         <option value="$PROJECT_DIR$/src/components/iterables/PageNavLink/PageNavLink.jsx" />
         <option value="$PROJECT_DIR$/src/components/sections/TopNav/TopNav.jsx" />
         <option value="$PROJECT_DIR$/src/utils/tracking.js" />
         <option value="$PROJECT_DIR$/src/components/forms/StripeForm/StripeForm.jsx" />
         <option value="$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx" />
+        <option value="$PROJECT_DIR$/src/components/overlays/BaseOverlay/BaseOverlay.css" />
+        <option value="$PROJECT_DIR$/src/assets/json/content-home-page.json" />
+        <option value="$PROJECT_DIR$/src/assets/json/content-features-page.json" />
+        <option value="$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.css" />
+        <option value="$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx" />
+        <option value="$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.jsx" />
+        <option value="$PROJECT_DIR$/src/components/pages/PricingPage/PricingPage.jsx" />
+        <option value="$PROJECT_DIR$/src/assets/json/content-pricing-page.json" />
       </list>
     </option>
   </component>
@@ -216,6 +242,19 @@
               <item name="new-site" type="b2602c69:ProjectViewProjectNode" />
               <item name="new-site" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="new-site" type="b2602c69:ProjectViewProjectNode" />
+              <item name="new-site" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="new-site" type="b2602c69:ProjectViewProjectNode" />
+              <item name="new-site" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="json" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="new-site" type="b2602c69:ProjectViewProjectNode" />
@@ -406,7 +445,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="a&#9;null&#9;null&#10;app&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/new-site/src/components/App/App.jsx&#10;base&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/new-site/src/components/overlays/BaseOverlay/BaseOverlay.css&#10;pric&#9;null&#9;null&#10;page&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/new-site/src/components/iterables/PageNavLink/PageNavLink.jsx&#10;index.c&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/new-site/src/index.css&#10;home&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/pages/HomePage/HomePage.jsx&#10;nav&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/assets/json/nav-links.json&#10;pack&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/package.json&#10;m obile&#9;null&#9;null&#10;top&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/sections/TopNav/TopNav.css&#10;pr&#9;null&#9;null&#10;regis&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/overlays/RegisterModal/RegisterModal.jsx&#10;str&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/overlays/StripeModal/StripeModal.jsx&#10;funcs&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/utils/funcs.js&#10;index&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/public/index.html&#10;ind&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/index.js&#10;bott&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/sections/BottomNav/BottomNav.jsx&#10;lan&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/utils/lang.js&#10;inde&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/public/index.html&#10;bottom&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/sections/BottomNav/BottomNav.css&#10;section&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/sections/BaseSection/BaseSection.css&#10;uri&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/consts/uris.js&#10;read&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/README.md&#10;rea&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/README.md&#10;pa&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/package.json&#10;app.css&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/App/App.css" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/new-site/src/assets/json/content-features-page.json&#10;c&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/new-site/src/assets/json/content-pricing-page.json&#10;nav&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/new-site/src/assets/json/nav-links.json&#10;a&#9;null&#9;null&#10;app&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/new-site/src/components/App/App.jsx&#10;base&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/new-site/src/components/overlays/BaseOverlay/BaseOverlay.css&#10;pric&#9;null&#9;null&#10;page&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/new-site/src/components/iterables/PageNavLink/PageNavLink.jsx&#10;index.c&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/new-site/src/index.css&#10;home&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/pages/HomePage/HomePage.jsx&#10;pack&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/package.json&#10;m obile&#9;null&#9;null&#10;top&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/sections/TopNav/TopNav.css&#10;pr&#9;null&#9;null&#10;regis&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/overlays/RegisterModal/RegisterModal.jsx&#10;str&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/overlays/StripeModal/StripeModal.jsx&#10;funcs&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/utils/funcs.js&#10;index&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/public/index.html&#10;ind&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/index.js&#10;bott&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/sections/BottomNav/BottomNav.jsx&#10;lan&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/utils/lang.js&#10;inde&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/public/index.html&#10;bottom&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/sections/BottomNav/BottomNav.css&#10;section&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/sections/BaseSection/BaseSection.css&#10;uri&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/consts/uris.js&#10;read&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/README.md&#10;rea&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/README.md&#10;pa&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/package.json&#10;app.css&#9;FILE&#9;file:///labor/projects/sites/designengine.ai/src/components/App/App.css" />
     <property name="WebServerToolWindowFactoryState" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
@@ -484,12 +523,12 @@
       <workItem from="1570760054960" duration="3600000" />
       <workItem from="1570807747666" duration="1790000" />
       <workItem from="1570911992592" duration="11653000" />
-      <workItem from="1570932453924" duration="17666000" />
+      <workItem from="1570932453924" duration="19832000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="291539000" />
+    <option name="totallyTimeSpent" value="293705000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -581,65 +620,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/index.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-161">
-          <caret line="147" column="1" lean-forward="true" selection-start-line="147" selection-start-column="1" selection-end-line="147" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/pages/PrivacyPage/PrivacyPage.jsx">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/pages/PrivacyPage/PrivacyPage.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/pages/PricingPage/PricingPage.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="341">
-          <caret line="37" column="70" lean-forward="true" selection-start-line="37" selection-start-column="4" selection-end-line="37" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/overlays/StripeModal/StripeModal.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="14" lean-forward="true" selection-start-line="3" selection-start-column="14" selection-end-line="3" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/overlays/BaseOverlay/BaseOverlay.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="36" lean-forward="true" selection-start-line="36" selection-end-line="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/assets/json/content-features-page.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="44" column="38" selection-start-line="44" selection-start-column="38" selection-end-line="44" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/assets/json/content-pricing-page.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="34" column="18" lean-forward="true" selection-start-line="34" selection-start-column="18" selection-end-line="34" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/overlays/StripeModal/StripeModal.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="33" column="25" lean-forward="true" selection-start-line="33" selection-start-column="25" selection-end-line="33" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/forms/StripeForm/StripeForm.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="420">
@@ -647,17 +627,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="21" column="3" lean-forward="true" selection-start-line="21" selection-start-column="3" selection-end-line="21" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/iterables/SectionExpander/SectionExpander.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
-          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
         </state>
       </provider>
     </entry>
@@ -696,31 +669,101 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="7" lean-forward="true" selection-start-line="16" selection-start-column="4" selection-end-line="18" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="660">
-          <caret line="44" lean-forward="true" selection-start-line="44" selection-end-line="44" />
+          <caret line="44" selection-start-line="44" selection-end-line="44" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/forms/StripeForm/StripeForm.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="474">
-          <caret line="76" column="28" lean-forward="true" selection-start-line="76" selection-start-column="28" selection-end-line="76" selection-end-column="28" />
+          <caret line="76" column="28" selection-start-line="76" selection-start-column="28" selection-end-line="76" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/sitemap.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="9" lean-forward="true" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/pages/HomePage/HomePage.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="701">
-          <caret line="145" column="53" lean-forward="true" selection-start-line="145" selection-start-column="53" selection-end-line="145" selection-end-column="53" />
+        <state relative-caret-position="36">
+          <caret line="89" column="29" selection-start-line="89" selection-start-column="29" selection-end-line="89" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="829">
+          <caret line="213" column="22" selection-start-line="213" selection-start-column="22" selection-end-line="213" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/overlays/BaseOverlay/BaseOverlay.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="630">
+          <caret line="42" column="21" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/json/nav-links.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="28" column="1" lean-forward="true" selection-start-line="28" selection-start-column="1" selection-end-line="28" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/json/content-features-page.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="37" column="20" lean-forward="true" selection-start-line="37" selection-start-column="20" selection-end-line="37" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="741">
+          <caret line="57" column="17" lean-forward="true" selection-start-line="57" selection-start-column="17" selection-end-line="57" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="23" lean-forward="true" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/json/content-home-page.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="55" selection-start-line="7" selection-start-column="55" selection-end-line="7" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/pages/PricingPage/PricingPage.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="640">
+          <caret line="63" column="79" lean-forward="true" selection-start-line="63" selection-start-column="79" selection-end-line="63" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/json/content-pricing-page.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="675">
+          <caret line="45" column="6" selection-start-line="45" selection-start-column="6" selection-end-line="45" selection-end-column="6" />
         </state>
       </provider>
     </entry>
