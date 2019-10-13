@@ -1,4 +1,10 @@
 
+#-- auth --#
+#AuthType Basic
+#AuthName "Password Protected Area"
+#AuthUserFile /var/www/designengine.ai/.htpasswd
+#Require valid-user
+
 #-- drop www prefix --#
 RewriteEngine on
     RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]

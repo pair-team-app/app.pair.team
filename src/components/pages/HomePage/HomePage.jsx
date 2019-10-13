@@ -144,7 +144,7 @@ class HomePage extends Component {
 				<div className="page-content-wrapper home-page-content-wrapper">
 					<div className="home-page-element-wrapper">
 						{/*<video width="320" height="240" controls>*/}
-						<video className={`home-page-element ${(Browsers.isMobile.ANY()) ? 'home-page-element-portrait' : 'home-page-element-landscape'}`} autoPlay={true} loop>
+						<video className={`home-page-element ${(Browsers.isMobile.ANY()) ? 'home-page-element-portrait' : 'home-page-element-landscape'}`} autoPlay={true} controls muted loop>
 							<source src={(Browsers.isMobile.ANY()) ? homePageElementPortrait : homePageElementLandscape} type="video/mp4" />
 						</video>
 
