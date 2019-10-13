@@ -7,7 +7,7 @@
     "url": "/page/pricing"
   }, {
     "title": "Blog",
-    "url": "/url/https://medium.com/pairurl/stories/submissions"
+    "url": "/url/https://medium.com/pairurl"
   }, {
     "title": "1to1",
     "url": "/url/https://1to1show.com"
@@ -18,5 +18,12 @@
   "bottom": [{
     "title": "Legal",
     "url": "/page/privacy"
+  }],
+  "aux": [{
+    "title": "Download NPM",
+    "url": "/url/https://www.npmjs.com/package/design-engine-playground"
+  }, {
+    "title": "Adobe XD Plugin",
+    "url": "/url/https://github.com/de-ai/designengine-xd"
   }]
 }

@@ -7,7 +7,7 @@
 	display: flex;
 	flex-wrap: nowrap;
 	align-items: center;
-	background-color: rgba(var(--site-bg-alpha-color), 0.975);
+	/*background-color: rgba(var(--site-bg-alpha-color), 0.975);*/
 	z-index: 2;
 }
 
