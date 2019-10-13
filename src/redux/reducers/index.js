@@ -12,7 +12,6 @@ import {
 	USER_PROFILE_ERROR,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED,
-	SET_ATOM_EXTENSION,
 	SET_INVITE,
 	SET_TEAM,
 } from '../../consts/action-types';
@@ -20,7 +19,6 @@ import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 
 const initialState = {
-	atomExtension      : false,
 	file               : null,
 	homeArtboards      : [],
 	artboardComponents : null,
@@ -140,11 +138,6 @@ function rootReducer(state=initialState, action) {
 		case CONVERTED_DEEPLINK:
 			return (Object.assign({}, state, {
 				deeplink : Object.assign({}, state.deeplink, action.payload)
-			}));
-
-		case SET_ATOM_EXTENSION:
-			return (Object.assign({}, state, {
-				atomExtension : action.payload
 			}));
 
 		case SET_TEAM:

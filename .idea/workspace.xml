@@ -2,16 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e269f8a2-2876-4072-a430-e3b7377ea758" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/assets/json/nav-links.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/json/nav-links.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/App/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/overlays/GitHubModal/GitHubModal.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/overlays/GitHubModal/GitHubModal.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/overlays/GitHubModal/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/overlays/LoginModal/LoginModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlays/LoginModal/LoginModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/overlays/RegisterModal/RegisterModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlays/RegisterModal/RegisterModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/overlays/StripeModal/StripeModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlays/StripeModal/StripeModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/consts/uris.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/consts/uris.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/actions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/reducers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducers/index.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -37,20 +30,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="App.jsx" pinned="false" current-in-tab="false">
+      <file leaf-file-name="App.jsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/App/App.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="14" column="48" selection-start-line="14" selection-start-column="48" selection-end-line="14" selection-end-column="48" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BaseOverlay.jsx" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/overlays/BaseOverlay/BaseOverlay.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="723">
-              <caret line="99" column="43" selection-start-line="99" selection-start-column="43" selection-end-line="99" selection-end-column="43" />
+            <state relative-caret-position="577">
+              <caret line="51" column="21" selection-start-line="51" selection-start-column="21" selection-end-line="51" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -68,14 +52,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>cursor</find>
-      <find>onToggle</find>
-      <find>FeaturesPageSectionTitle</find>
-      <find>&lt;h3</find>
-      <find>\&lt;h\d</find>
-      <find>\ \#</find>
-      <find>^[^--].*\ \#</find>
-      <find>:not[type=&quot;radio&quot;]</find>
       <find>engine</find>
       <find>react-responsive</find>
       <find>react-moment</find>
@@ -98,6 +74,14 @@
       <find>redirectURI</find>
       <find>SET_REDIRECT_URI</find>
       <find>handlePage</find>
+      <find>SET_ATOM_EXTENSION</find>
+      <find>setAtomExtension</find>
+      <find>appendHomeArtboards</find>
+      <find>fetchTeamLookup</find>
+      <find>fetchUserHistory</find>
+      <find>fetchUserProfile</find>
+      <find>updateDeeplink</find>
+      <find>updateUserProfile</find>
     </findStrings>
     <replaceStrings>
       <replace>designengine-xd</replace>
@@ -127,8 +111,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/components/pages/PricingPage/PricingPage.jsx" />
-        <option value="$PROJECT_DIR$/public/auth-landing.html" />
         <option value="$PROJECT_DIR$/public/manifest.json" />
         <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/src/components/sections/BottomNav/BottomNav.css" />
@@ -144,10 +126,12 @@
         <option value="$PROJECT_DIR$/src/components/pages/FeaturesPage/FeaturesPage.jsx" />
         <option value="$PROJECT_DIR$/src/consts/uris.js" />
         <option value="$PROJECT_DIR$/src/assets/json/nav-links.json" />
-        <option value="$PROJECT_DIR$/src/components/App/App.jsx" />
         <option value="$PROJECT_DIR$/src/components/overlays/RegisterModal/RegisterModal.jsx" />
         <option value="$PROJECT_DIR$/src/components/overlays/GitHubModal/GitHubModal.jsx" />
         <option value="$PROJECT_DIR$/src/components/overlays/StripeModal/StripeModal.jsx" />
+        <option value="$PROJECT_DIR$/src/redux/actions/index.js" />
+        <option value="$PROJECT_DIR$/src/redux/reducers/index.js" />
+        <option value="$PROJECT_DIR$/src/components/App/App.jsx" />
       </list>
     </option>
   </component>
@@ -475,12 +459,12 @@
       <workItem from="1570760054960" duration="3600000" />
       <workItem from="1570807747666" duration="1790000" />
       <workItem from="1570911992592" duration="11653000" />
-      <workItem from="1570932453924" duration="4548000" />
+      <workItem from="1570932453924" duration="4859000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="278421000" />
+    <option name="totallyTimeSpent" value="278732000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -662,13 +646,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/redux/middleware/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="36" column="50" selection-start-line="36" selection-start-column="50" selection-end-line="36" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/overlays/GitHubModal/GitHubModal.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1027">
@@ -690,31 +667,38 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/overlays/BaseOverlay/BaseOverlay.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="723">
+          <caret line="99" column="43" selection-start-line="99" selection-start-column="43" selection-end-line="99" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/redux/reducers/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="95" column="25" selection-start-line="95" selection-start-column="9" selection-end-line="95" selection-end-column="25" />
+        <state relative-caret-position="165">
+          <caret line="11" column="21" lean-forward="true" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/redux/middleware/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="37" lean-forward="true" selection-start-line="18" selection-start-column="37" selection-end-line="18" selection-end-column="37" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/redux/actions/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="192" column="30" selection-start-line="192" selection-start-column="16" selection-end-line="192" selection-end-column="30" />
+        <state relative-caret-position="394">
+          <caret line="213" column="25" lean-forward="true" selection-start-line="213" selection-start-column="25" selection-end-line="213" selection-end-column="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/App/App.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="48" selection-start-line="14" selection-start-column="48" selection-end-line="14" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/overlays/BaseOverlay/BaseOverlay.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="723">
-          <caret line="99" column="43" selection-start-line="99" selection-start-column="43" selection-end-line="99" selection-end-column="43" />
+        <state relative-caret-position="577">
+          <caret line="51" column="21" selection-start-line="51" selection-start-column="21" selection-end-line="51" selection-end-column="21" />
         </state>
       </provider>
     </entry>

@@ -23,16 +23,15 @@ import Status404Page from '../pages/Status404Page';
 import TermsPage from '../pages/TermsPage';
 
 import {
-	API_ENDPT_URL,
-	GITHUB_APP_AUTH,
 	Modals,
-	Pages } from '../../consts/uris';
+	Pages,
+	API_ENDPT_URL,
+	GITHUB_APP_AUTH } from '../../consts/uris';
 import {
 	appendHomeArtboards,
 	fetchTeamLookup,
 	fetchUserHistory,
 	fetchUserProfile,
-	setAtomExtension,
 	updateDeeplink,
 	updateUserProfile
 } from '../../redux/actions';
@@ -171,7 +170,6 @@ class App extends Component {
 	handleGitHubAuthSynced = (profile, register=true)=> {
 		console.log('App.handleGitHubAuthSynced()', profile, register);
 
-		this.props.updateUserProfile(profile, false);
 		this.props.updateUserProfile(profile);
 
 		axios.post(API_ENDPT_URL, {
@@ -190,7 +188,6 @@ class App extends Component {
 
 	handleLoggedIn = (profile)=> {
 		console.log('App.handleLoggedIn()', profile);
-		this.props.updateUserProfile(profile, false);
 		this.props.updateUserProfile(profile);
 		this.props.fetchUserHistory({profile});
 	};
@@ -224,7 +221,6 @@ class App extends Component {
 
 	handleRegistered = (profile, github=false)=> {
 		console.log('App.handleRegistered()', profile, github);
-		this.props.updateUserProfile(profile, false);
 		this.props.updateUserProfile(profile);
 	};
 
@@ -383,8 +379,7 @@ const mapDispatchToProps = (dispatch)=> {
 		fetchUserHistory   : (payload)=> dispatch(fetchUserHistory(payload)),
 		fetchUserProfile   : ()=> dispatch(fetchUserProfile()),
 		updateDeeplink     : (navIDs)=> dispatch(updateDeeplink(navIDs)),
-		updateUserProfile  : (profile, force=true)=> dispatch(updateUserProfile(profile, force)),
-		setAtomExtension   : (installed)=> dispatch(setAtomExtension(installed))
+		updateUserProfile  : (profile)=> dispatch(updateUserProfile(profile))
 	});
 };
 

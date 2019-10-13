@@ -15,7 +15,6 @@ import {
 // 	USER_PROFILE_CACHED,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED,
-	SET_ATOM_EXTENSION,
 	CONVERTED_DEEPLINK,
 	SET_INVITE,
 	SET_TEAM,
@@ -174,14 +173,6 @@ export function setArtboardGroups(payload) {
 		type : SET_ARTBOARD_GROUPS
 	});
 }
-
-export function setAtomExtension(payload) {
-	logFormat('setAtomExtension()', payload);
-	return ({ payload,
-		type : SET_ATOM_EXTENSION
-	});
-}
-
 
 export function setInvite(payload) {
 	logFormat('setInvite()', payload);
