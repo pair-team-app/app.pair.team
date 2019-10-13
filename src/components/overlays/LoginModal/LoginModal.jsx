@@ -4,6 +4,7 @@ import './LoginModal.css';
 
 import { URIs } from 'lang-js-utils';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 import LoginForm from '../../forms/LoginForm';
@@ -39,7 +40,7 @@ class LoginModal extends Component {
 		this.setState({ outro : false }, ()=> {
 			const { redirectURI } = this.props;
 			if (redirectURI) {
-				this.props.onPage(redirectURI);
+				this.props.history.push(redirectURI);
 
 			} else {
 				if (outroURI) {
@@ -145,4 +146,4 @@ const mapStateToProps = (state, ownProps)=> {
 	});
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginModal);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LoginModal));

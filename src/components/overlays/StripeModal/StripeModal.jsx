@@ -4,6 +4,7 @@ import './StripeModal.css';
 
 import axios from 'axios';
 import { URIs } from 'lang-js-utils';
+import { withRouter } from 'react-router-dom';
 import { Elements, StripeProvider } from 'react-stripe-elements';
 
 import BaseOverlay from '../BaseOverlay';
@@ -32,7 +33,7 @@ class StripeModal extends Component {
 			approved   : false,
 			outro      : false,
 			purchase   : null,
-			redirect   : null
+			outroURI   : null
 		};
 	}
 
@@ -40,7 +41,7 @@ class StripeModal extends Component {
 // 		console.log('StripeModal.handleComplete()');
 
 		this.setState({ outro : false }, ()=> {
-			const { approved, purchase, redirect } = this.state;
+			const { approved, purchase, outroURI } = this.state;
 			if (approved) {
 				this.props.onSubmitted(purchase);
 
@@ -48,8 +49,8 @@ class StripeModal extends Component {
 				this.props.onComplete();
 			}
 
-			if (redirect) {
-				this.props.onPage(redirect);
+			if (outroURI) {
+				this.props.history.push(outroURI);
 			}
 		});
 	};
@@ -67,10 +68,15 @@ class StripeModal extends Component {
 	handlePage = (url)=> {
 // 		console.log('StripeModal.handlePage()', url);
 
-		this.setState({
-			outro    : true,
-			redirect : url
-		});
+		if (url.startsWith('/modal')) {
+			this.props.onModal(`/${URIs.lastComponent(url)}`);
+
+		} else {
+			this.setState({
+				outro    : true,
+				outroURI : url
+			});
+		}
 	};
 
 	handleSubmit = (cardHolder, token)=> {
@@ -154,4 +160,4 @@ class StripeModal extends Component {
 	}
 }
 
-export default StripeModal;
+export default withRouter(StripeModal);

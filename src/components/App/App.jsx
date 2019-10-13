@@ -6,7 +6,7 @@ import axios from 'axios';
 import { DateTimes } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 // import AlertDialog from '../overlays/AlertDialog';
 import LoginModal from '../overlays/LoginModal';
@@ -25,8 +25,8 @@ import TermsPage from '../pages/TermsPage';
 import {
 	API_ENDPT_URL,
 	GITHUB_APP_AUTH,
-	GITHUB_CHANGELOG,
-	Modals } from '../../consts/uris';
+	Modals,
+	Pages } from '../../consts/uris';
 import {
 	appendHomeArtboards,
 	fetchTeamLookup,
@@ -36,10 +36,7 @@ import {
 	updateDeeplink,
 	updateUserProfile
 } from '../../redux/actions';
-import {
-// 	getRouteParams,
-	idsFromPath
-} from '../../utils/funcs';
+import { idsFromPath } from '../../utils/funcs';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 
@@ -87,10 +84,7 @@ class App extends Component {
 		window.addEventListener('scroll', this.handleScroll);
 		window.onpopstate = (event)=> {
 			console.log('-/\\/\\/\\/\\/\\/\\-', 'window.onpopstate()', '-/\\/\\/\\/\\/\\/\\-', event);
-
 			this.props.updateDeeplink(idsFromPath());
-// 			this.handlePage('<<');
-// 			this.handlePage(event.target.location.pathname, false);
 		};
 	}
 
@@ -142,11 +136,6 @@ class App extends Component {
 	}
 
 
-	handleChangelog = ()=> {
-		console.log('App.handleChangelog()');
-		window.open(GITHUB_CHANGELOG);
-	};
-
 	handleGithubAuth = ()=> {
 		console.log('App.handleGithubAuth()');
 
@@ -197,8 +186,6 @@ class App extends Component {
 
 		}).catch((error)=> {
 		});
-
-// 		this.handlePage(Pages.THANK_YOU);
 	};
 
 	handleLoggedIn = (profile)=> {
@@ -214,32 +201,7 @@ class App extends Component {
 
 		this.props.updateUserProfile(null);
 		this.props.purgeHomeArtboards();
-		this.handlePage('');
-	};
-
-	handlePage = (url, clearDeeplink=true)=> {
-		console.log('App.handlePage()', url);
-		url = ((!url) ? '' : url).replace(/^\/(.*)$/, '$1');
-
-// 		if (URIs.firstComponent() !== URIs.firstComponent(url)) {
-// 			window.scrollTo(0, 0);
-// 		}
-
-		if (url === '<<') {
-			this.props.history.goBack();
-
-		} else if (url === '') {
-			trackPageview('/');
-			this.props.history.push(`/`);
-
-		} else {
-			trackPageview(`/${url}`);
-			this.props.history.push(`/${url}`);
-		}
-
-		if (clearDeeplink) {
-			this.props.updateDeeplink(null);
-		}
+		this.props.history.push(Pages.HOME);
 	};
 
 	handlePaidAlert = ()=> {
@@ -264,15 +226,6 @@ class App extends Component {
 		console.log('App.handleRegistered()', profile, github);
 		this.props.updateUserProfile(profile, false);
 		this.props.updateUserProfile(profile);
-	};
-
-	handleResize = (event)=> {
-// 		console.log('App.handleResize()', event);
-
-		this.setState({ contentSize : {
-			width  : wrapper.current.innerWidth,
-			height : wrapper.current.innerHeight
-		} });
 	};
 
 	handleScroll = (event)=> {
@@ -357,30 +310,31 @@ class App extends Component {
   	const { darkTheme, popup, modals } = this.state;
 
   	return (<div className={`site-wrapper${(darkTheme) ? ' site-wrapper-dark' : ''}`}>
-		  <TopNav darkTheme={darkTheme} onToggleTheme={this.handleToggleTheme} onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} />
+		  <TopNav darkTheme={darkTheme} onToggleTheme={this.handleToggleTheme} onModal={(url)=> this.onToggleModal(url, true)} />
 	    <div className="content-wrapper" ref={wrapper}>
 		    <Switch>
-			    <Route exact path="/" render={()=> <HomePage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} onRegistered={this.handleRegistered} />} />
-			    <Route exact path="/features" render={()=> <FeaturesPage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-			    <Route exact path="/pricing" render={()=> <PricingPage onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} onPopup={this.handlePopup} />} />
-			    <Route exact path="/:page(legal|privacy)" render={()=> <PrivacyPage />} />
-			    <Route exact path="/terms" render={()=> <TermsPage />} />
+			    <Route exact path={Pages.HOME} render={()=> <HomePage onModal={(url)=> this.onToggleModal(url, true)} onPopup={this.handlePopup} onRegistered={this.handleRegistered} />} />
+			    <Route exact path={Pages.FEATURES} render={()=> <FeaturesPage onModal={(url)=> this.onToggleModal(url, true)} onPopup={this.handlePopup} />} />
+			    <Route exact path={Pages.PRICING} render={()=> <PricingPage onModal={(url)=> this.onToggleModal(url, true)} onPopup={this.handlePopup} />} />
+			    <Route exact path={`/:page(${Pages.LEGAL.slice(1)}|${Pages.PRIVACY.slice(1)})`} render={()=> <PrivacyPage />} />
+			    <Route exact path={Pages.TERMS} render={()=> <TermsPage />} />
 
-			    <Route path="*"><Status404Page onPage={this.handlePage} /></Route>
+			    <Route path={Pages.WILDCARD}><Status404Page /></Route>
 		    </Switch>
 	    </div>
-		  <BottomNav onModal={(url)=> this.onToggleModal(url, true)} onPage={this.handlePage} />
+		  <BottomNav onModal={(url)=> this.onToggleModal(url, true)} />
 
 		  <div className="modal-wrapper">
-			  {(popup) && (<PopupNotification payload={popup} onComplete={()=> this.setState({ popup : null })}>
-				  {popup.content}
+			  {(popup) && (<PopupNotification
+				  payload={popup}
+				  onComplete={()=> this.setState({ popup : null })}>
+				    {popup.content}
 			  </PopupNotification>)}
 
 			  {(modals.login) && (<LoginModal
 				  inviteID={null}
 				  outro={(profile !== null)}
 				  onModal={(url)=> this.onToggleModal(url, true)}
-				  onPage={this.handlePage}
 				  onPopup={this.handlePopup}
 				  onComplete={()=> this.onToggleModal(Modals.LOGIN, false)}
 				  onLoggedIn={this.handleLoggedIn}
@@ -390,7 +344,6 @@ class App extends Component {
 				  inviteID={null}
 				  outro={(profile !== null)}
 				  onModal={(url)=> this.onToggleModal(url, true)}
-				  onPage={this.handlePage}
 				  onPopup={this.handlePopup}
 				  onComplete={()=> this.onToggleModal(Modals.REGISTER, false)}
 				  onRegistered={this.handleRegistered}
@@ -404,7 +357,6 @@ class App extends Component {
 
 			  {(modals.stripe) && (<StripeModal
 				  profile={profile}
-				  onPage={this.handlePage}
 				  onPopup={this.handlePopup}
 				  onSubmitted={this.handlePurchaseSubmitted}
 				  onComplete={()=> this.onToggleModal(Modals.STRIPE, false)}
@@ -437,4 +389,4 @@ const mapDispatchToProps = (dispatch)=> {
 };
 
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default connect(mapStateToProps, mapDispatchToProps)(App);

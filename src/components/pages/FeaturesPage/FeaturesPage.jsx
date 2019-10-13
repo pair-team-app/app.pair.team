@@ -23,7 +23,7 @@ class FeaturesPage extends Component {
 
 
 	handleToggleSection = (section)=> {
-		console.log(this.constructor.name, '.handleToggleSection()', section, this.state.sections);
+// 		console.log(this.constructor.name, '.handleToggleSection()', section, this.state.sections);
 
 		const sections = this.state.sections.map((item, i)=> ({ ...item,
 			open : (i === section.ind) ? !section.open : false

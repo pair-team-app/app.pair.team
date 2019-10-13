@@ -5,6 +5,7 @@ import './RegisterModal.css';
 import axios from 'axios';
 import { URIs } from 'lang-js-utils';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 import RegisterForm from '../../forms/RegisterForm';
@@ -65,7 +66,7 @@ class RegisterModal extends Component {
 
 			const { redirectURI } = this.props;
 			if (redirectURI) {
-				this.props.onPage(redirectURI);
+				this.props.history.push(redirectURI);
 
 			} else {
 				if (outroURI) {
@@ -169,4 +170,4 @@ const mapStateToProps = (state, ownProps)=> {
 	});
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterModal);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(RegisterModal));
