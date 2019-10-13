@@ -227,6 +227,17 @@ class App extends Component {
 		this.props.updateUserProfile(profile);
 	};
 
+	handleResize = (event)=> {
+// 		console.log('App.handleResize()', { width : document.documentElement.clientWidth, height : document.documentElement.clientHeight });
+
+		this.setState({
+			contentSize : {
+				width  : document.documentElement.clientWidth,
+				height : document.documentElement.clientHeight
+			}
+		})
+	};
+
 	handleScroll = (event)=> {
 // 		console.log('App.handleScroll()', event);
 // 		this.setState({ scrolling : true }, ()=> {

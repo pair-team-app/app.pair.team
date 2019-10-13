@@ -56,14 +56,14 @@
 	min-width: fit-content;
 	max-width: fit-content;
 	padding: 8px 18px 10px 18px;
-	border: 1px solid #cecece;
+	border: 1px solid #666666;
 	background-color: #f7f7f7;
 	color: #232323;
 }
 
 .quiet-button:hover {
-	background-color: #efefef;
-	color: #333333;
+	background-color: #f0f0f0;
+	color: #666666;
 }
 
 .quiet-button:disabled {
