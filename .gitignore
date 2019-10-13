@@ -17,6 +17,7 @@
 .idea/**/sonarlint/
 
 .idea/misc.xml
+.idea/workplace.xml
 modules.xml
 
 
