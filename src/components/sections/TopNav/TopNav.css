@@ -22,7 +22,7 @@
 	align-items: center;
 	width: 100%;
 	padding: 20px;
-	/*background-color: rgba(var(--site-bg-alpha-color), 0.975);*/
+	/*background-color: rgba(var(--site-bg-rgb-color), 0.975);*/
 	z-index: 2;
 }
 

@@ -1,46 +1,46 @@
 {
   "desktop": {
     "title": "Pricing",
-    "intro": "Pair offers simple pricing for Free, Team, and Enterprise customers. For custom solutions of <i>10,000 Pair URLs</i> per month, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
+    "intro": "Pair offers simple pricing for Free, Team, and Enterprise customers. For custom solutions of <b>10,000 Pair URLs</b> per month, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
     "sections": [{
       "open" : false,
-      "header": "Free - $0",
-      "content": "<i>10 Pair Public URLs</i> per month for $0.<br /><div style=\"margin-left:10px;\">• Public Pair URLS<br />• 100 Builds Per Month Limit<br />• Email Support</div>",
+      "header": "Free",
+      "content": "<b>10 Pair Public URLs</b> per month for $0.<div>&bull; Public Pair URLS<br />&bull; 100 Builds Per Month Limit<br />&bull; Email Support</div>",
       "price": null,
       "event": "free-plan"
     }, {
       "open" : false,
-      "header": "Team - $29",
-      "content": "<i>1,000 Pair Private URLs</i> per month for $29 per user.<br /><div style=\"margin-left:10px;\">• Private Pair URLS<br />• 200 Builds Per Month Per User Limit<br />• Slack Support</div>",
+      "header": "Team",
+      "content": "<b>1,000 Pair Private URLs</b> per month for $29 per user.<div>&bull; Private Pair URLS<br />&bull; 200 Builds Per Month Per User Limit<br />&bull; Slack Support</div>",
       "price": 29,
       "event": "team-plan"
     }, {
       "open" : false,
-      "header": "Enterprise - $49",
-      "content": "<i>10,000 Pair Private URLs</i> per month for $49 per user.<br /><div style=\"margin-left:10px;\">• Private Pair URLS<br />• 1,000 Builds Per Month Per User Limit<br />• Slack & Phone Support</div>",
+      "header": "Enterprise",
+      "content": "<b>10,000 Pair Private URLs</b> per month for $49 per user.<div>&bull; Private Pair URLS<br />&bull; 1,000 Builds Per Month Per User Limit<br />&bull; Slack & Phone Support</div>",
       "price": 49,
       "event": "enterprise-plan"
     }]
   },
   "mobile": {
     "title": "Pricing",
-    "intro": "Pair offers simple pricing for Free, Team, and Enterprise customers. For custom solutions of <i>10,000 Pair URLs</i> per month, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
+    "intro": "Pair offers simple pricing for Free, Team, and Enterprise customers. For custom solutions of <b>10,000 Pair URLs</b> per month, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
     "sections": [{
       "open" : false,
-      "header": "Free - $0",
-      "content": "<i>10 Pair Public URLs</i> per month for $0.<br /><div style=\"margin-left:10px;\">• Public Pair URLS<br />• 100 Builds Per Month Limit<br />• Email Support</div>",
+      "header": "Free",
+      "content": "<b>10 Pair Public URLs</b> per month for $0.<div>&bull; Public Pair URLS<br />&bull; 100 Builds Per Month Limit<br />&bull; Email Support</div>",
       "price": null,
       "event": "free-plan"
     }, {
       "open" : false,
-      "header": "Team - $29",
-      "content": "<i>1,000 Pair Private URLs</i> per month for $29 per user.<br /><div style=\"margin-left:10px;\">• Private Pair URLS<br />• 200 Builds Per Month Per User Limit<br />• Slack Support</div>",
+      "header": "Team",
+      "content": "<b>1,000 Pair Private URLs</b> per month for $29 per user.<div>&bull; Private Pair URLS<br />&bull; 200 Builds Per Month Per User Limit<br />&bull; Slack Support</div>",
       "price": 29,
       "event": "team-plan"
     }, {
       "open" : false,
-      "header": "Enterprise - $49",
-      "content": "<i>10,000 Pair Private URLs</i> per month for $49 per user.<br /><div style=\"margin-left:10px;\">• Private Pair URLS<br />• 1,000 Builds Per Month Per User Limit<br />• Slack & Phone Support</div>",
+      "header": "Enterprise",
+      "content": "<b>10,000 Pair Private URLs</b> per month for $49 per user.<div>&bull; Private Pair URLS<br />&bull; 1,000 Builds Per Month Per User Limit<br />&bull; Slack & Phone Support</div>",
       "price": 49,
       "event": "enterprise-plan"
     }]

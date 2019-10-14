@@ -26,7 +26,13 @@
 
 .pricing-page-section-title button {
 	flex: 1 0 0;
-	/*border: 1px solid #00ff00;*/
+}
+
+.pricing-page-section-title button:disabled, .pricing-page-section-title button:disabled:hover {
+	border: 1px solid rgb(var(--quiet-btn-fg-rgb-color), 0.33);
+	background-color: rgb(var(--quiet-btn-bg-rgb-color), 0.875);
+	color: rgb(var(--quiet-btn-fg-rgb-color), 0.75);
+	cursor: default;
 }
 
 

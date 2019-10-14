@@ -1,11 +1,11 @@
 {
   "desktop": {
-    "title": "An NPM module for product teams to approve front-end design",
+    "title": "Introducing Pair, an NPM module for<br />product teams to approve front-end design.",
     "intro": null,
     "sections": null
   },
   "mobile": {
-    "title": "An NPM module to approve front-end design",
+    "title": "A module for product teams to approve front-end design.",
     "intro": null,
     "sections": []
   }

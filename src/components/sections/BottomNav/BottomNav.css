@@ -3,11 +3,11 @@
 	position: fixed;
 	bottom: 0;
 	width: 100%;
-	padding: 10px 20px;
+	padding: 10px 30px;
 	display: flex;
 	flex-wrap: nowrap;
 	align-items: center;
-	/*background-color: rgba(var(--site-bg-alpha-color), 0.975);*/
+	/*background-color: rgba(var(--site-bg-rgb-color), 0.975);*/
 	z-index: 2;
 }
 
@@ -45,6 +45,11 @@
 
 
 @media screen and (max-width: 800px) {
+	.bottom-nav {
+		padding-bottom: 18px;
+		padding-right: 20px;
+	}
+
 	.bottom-nav-button-wrapper {
 		display: none;
 	}

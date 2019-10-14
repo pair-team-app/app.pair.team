@@ -6,7 +6,7 @@
 
 .site-wrapper-dark {
 	--site-bg-color: #1a1e23;
-	--site-bg-alpha-color: 26, 30, 35;
+	--site-bg-rgb-color: 26, 30, 35;
 	--site-fg-color: #f7f7f7;
 	--btn-bg-color: #0067ff;
 	--btn-fg-color: #ffffff;
@@ -56,19 +56,22 @@
 	min-width: fit-content;
 	max-width: fit-content;
 	padding: 8px 18px 10px 18px;
-	border: 1px solid #666666;
-	background-color: #f7f7f7;
-	color: #232323;
+	border: 1px solid rgb(var(--quiet-btn-fg-rgb-color), 1.0);
+	background-color: rgb(var(--quiet-btn-bg-rgb-color), 1.0);
+	color: rgb(var(--quiet-btn-fg-rgb-color), 1.0);
+	transition: background-color 0.125s ease-in;
 }
 
 .quiet-button:hover {
-	background-color: #f0f0f0;
-	color: #666666;
+	border-color: var(--site-fg-color);
+	background-color: var(--quiet-btn-hover-bg-color);
+	color: var(--site-fg-color);
 }
 
 .quiet-button:disabled {
-	background-color: #e0e0e0;
-	color: #999999;
+	border-color: rgb(var(--quiet-btn-fg-rgb-color), 0.5);
+	background-color: rgb(var(--quiet-btn-hover-bg-color), 0.875);
+	color: rgb(var(--quiet-btn-fg-rgb-color), 0.75);
 }
 
 .form-disclaimer {

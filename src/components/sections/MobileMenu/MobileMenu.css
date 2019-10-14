@@ -41,7 +41,7 @@
 	right: 0;
 	padding: 4px 20px;
 	text-align: right;
-	background-color: rgba(var(--site-bg-alpha-color), 0.975);
+	background-color: rgba(var(--site-bg-rgb-color), 0.975);
 	/*border-top: 1px solid #cccccc;*/
 }
 

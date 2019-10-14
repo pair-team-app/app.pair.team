@@ -14,18 +14,21 @@
 
 :root {
 	--site-bg-color: #fcfcfc;
-	--site-bg-alpha-color: 252, 252, 252;
+	--site-bg-rgb-color: 252, 252, 252; /* fcfcfc */
 	--site-fg-color: #232323;
 	--btn-bg-color: #0067ff;
 	--btn-fg-color: #ffffff;
 	--btn-hover-bg-color: #0062eb;
 	--btn-disabled-bg-color: #cecece;
 	--btn-disabled-fg-color: #f7f7f7;
+	--quiet-btn-bg-rgb-color: 247, 247, 247; /* f7f7f7 */
+	--quiet-btn-fg-rgb-color: 102, 102, 102; /* 666666 */
+	--quiet-btn-hover-bg-color: #f0f0f0;
 	--link-hover-color: #343434;
 	--link-selected-color: #999999;
 	--txtfield-bg-color: #f7f7f7;
 	--txtfield-disabled-bg-color: #f7f7f7;
-	--txtfield-disabled-fg-color: #f0f0f0;
+	--txtfield-disabled-fg-color: #666666;
 	--border-color: #cecece;
 }
 

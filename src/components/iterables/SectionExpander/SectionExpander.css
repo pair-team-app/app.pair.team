@@ -45,5 +45,8 @@
 }
 
 .section-expander-title-open h2 {
-	/*font-weight: 500;*/
+}
+
+.section-expander-content div {
+	margin: 10px 0 0 20px;
 }
