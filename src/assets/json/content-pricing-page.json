@@ -1,7 +1,7 @@
 {
   "desktop": {
     "title": "Pricing",
-    "intro": "Pair offers simple pricing for Free, Team, and Enterprise customers. For custom solutions of <b>10,000 Pair URLs</b> per month, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
+    "intro": "Pair offers simple pricing for Free, Team, and Enterprise customers. For custom solutions of <b>&asymp;100,000 Pair URLs</b> per month, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
     "sections": [{
       "open" : false,
       "header": "Free",
@@ -24,7 +24,7 @@
   },
   "mobile": {
     "title": "Pricing",
-    "intro": "Pair offers simple pricing for Free, Team, and Enterprise customers. For custom solutions of <b>10,000 Pair URLs</b> per month, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
+    "intro": "Pair offers simple pricing for Free, Team, and Enterprise customers. For custom solutions of <b>&asymp;100,000 Pair URLs</b> per month, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
     "sections": [{
       "open" : false,
       "header": "Free",

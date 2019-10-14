@@ -94,9 +94,9 @@ class App extends Component {
 		const { profile } = this.props;
 		const { pathname } = this.props.location;
 
-		console.log('|:|:|:|:|:|:|:|:|:|:|:|', prevProps.location.pathname, pathname);
+// 		console.log('|:|:|:|:|:|:|:|:|:|:|:|', prevProps.location.pathname, pathname);
 		if (prevProps.location.pathname !== pathname) {
-			console.log('|:|:|:|:|:|:|:|:|:|:|:|', pathname);
+// 			console.log('|:|:|:|:|:|:|:|:|:|:|:|', pathname);
 			trackPageview();
 		}
 

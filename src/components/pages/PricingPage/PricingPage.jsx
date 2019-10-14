@@ -34,7 +34,7 @@ class PricingPage extends Component {
 
 	handleToggleSection = (section)=> {
 // 		console.log(this.constructor.name, '.handleToggleSection()', section, this.state.sectionOpened, this.state.sectionOpened[section.ind]);
-		console.log(this.constructor.name, '.handleToggleSection()', section, this.state.sections);
+// 		console.log(this.constructor.name, '.handleToggleSection()', section, this.state.sections);
 		trackEvent((section.open) ? 'collapse' : 'expand', section.event);
 
 		const sections = this.state.sections.map((item, i)=> ({ ...item,
