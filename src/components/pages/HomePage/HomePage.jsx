@@ -137,7 +137,7 @@ class HomePage extends Component {
 							: (<input disabled={submitted} type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} autoComplete="off" />)
 						}
 						{/*<button disabled={(!emailValid && !email.length === 0) || submitted} type="submit" onClick={(event)=> this.handleSubmit(event)} style={{opacity : (submitted) ? 0.5 : 1.0}}>Join Wait List</button>*/}
-						<button disabled={submitted} type="submit" onClick={(event)=> this.handleSubmit(event)} style={{ opacity : (submitted) ? 0.5 : 1.0 }}>Join Wait List</button>
+						<button disabled={submitted} type="submit" onClick={(event)=> this.handleSubmit(event)}>Join Wait List</button>
 					</form>
 					<div className="form-disclaimer">By tapping “Join Wait List” you accept our<br /><NavLink to="/terms">Terms of Service.</NavLink></div>
 				</div>

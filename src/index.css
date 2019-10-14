@@ -19,8 +19,8 @@
 	--btn-bg-color: #0067ff;
 	--btn-fg-color: #ffffff;
 	--btn-hover-bg-color: #0062eb;
-	--btn-disabled-bg-color: #cecece;
-	--btn-disabled-fg-color: #f7f7f7;
+	--btn-disabled-bg-color: #cccccc;
+	--btn-disabled-fg-color: #666666;
 	--quiet-btn-bg-rgb-color: 247, 247, 247; /* f7f7f7 */
 	--quiet-btn-fg-rgb-color: 102, 102, 102; /* 666666 */
 	--quiet-btn-hover-bg-color: #f0f0f0;
