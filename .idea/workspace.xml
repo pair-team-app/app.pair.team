@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e269f8a2-2876-4072-a430-e3b7377ea758" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/components/pages/PrivacyPage/PrivacyPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/pages/PrivacyPage/PrivacyPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/TermsPage/TermsPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/pages/TermsPage/TermsPage.jsx" afterDir="false" />
-    </list>
+    <list default="true" id="e269f8a2-2876-4072-a430-e3b7377ea758" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -33,7 +30,7 @@
         <entry file="file://$PROJECT_DIR$/src/index.css">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="405">
-              <caret line="27" column="33" lean-forward="true" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
+              <caret line="27" column="33" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -41,8 +38,8 @@
       <file leaf-file-name="TermsPage.jsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/pages/TermsPage/TermsPage.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="834">
-              <caret line="92" column="12" lean-forward="true" selection-start-line="11" selection-start-column="6" selection-end-line="92" selection-end-column="12" />
+            <state relative-caret-position="789">
+              <caret line="89" column="78" selection-start-line="89" selection-start-column="78" selection-end-line="89" selection-end-column="78" />
             </state>
           </provider>
         </entry>
@@ -51,7 +48,7 @@
         <entry file="file://$PROJECT_DIR$/src/components/pages/PrivacyPage/PrivacyPage.jsx">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="150">
-              <caret line="10" column="20" lean-forward="true" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
+              <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -546,12 +543,12 @@
       <workItem from="1570932453924" duration="23889000" />
       <workItem from="1571006595751" duration="593000" />
       <workItem from="1571068150264" duration="6048000" />
-      <workItem from="1571092351398" duration="2305000" />
+      <workItem from="1571092351398" duration="2855000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="306708000" />
+    <option name="totallyTimeSpent" value="307258000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -766,21 +763,21 @@
     <entry file="file://$PROJECT_DIR$/src/index.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
-          <caret line="27" column="33" lean-forward="true" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
+          <caret line="27" column="33" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/pages/PrivacyPage/PrivacyPage.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
-          <caret line="10" column="20" lean-forward="true" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
+          <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/pages/TermsPage/TermsPage.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="834">
-          <caret line="92" column="12" lean-forward="true" selection-start-line="11" selection-start-column="6" selection-end-line="92" selection-end-column="12" />
+        <state relative-caret-position="789">
+          <caret line="89" column="78" selection-start-line="89" selection-start-column="78" selection-end-line="89" selection-end-column="78" />
         </state>
       </provider>
     </entry>
