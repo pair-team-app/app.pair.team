@@ -8,17 +8,18 @@
 
 
 #-- ide meta --#
+.idea
 *.iml
 *.ipr
 
-.idea/**/markdown-navigator.xml
-.idea/**/markdown-navigator/
-.idea/**/sonarIssues.xml
-.idea/**/sonarlint/
+#.idea/**/markdown-navigator.xml
+#.idea/**/markdown-navigator/
+#.idea/**/sonarIssues.xml
+#.idea/**/sonarlint/
 
-.idea/misc.xml
-.idea/workplace.xml
-modules.xml
+#.idea/misc.xml
+#.idea/workplace.xml
+#modules.xml
 
 
 #-- npm --#
