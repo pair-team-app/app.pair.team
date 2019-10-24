@@ -29,7 +29,7 @@ class PlaygroundPageNav extends Component {
 
 const PlaygroundPageNavHeader = (props)=> {
 	return (<div className="playground-page-nav-header">
-		<img className="playground-page-nav-header-logo" src="" />
+		<img className="playground-page-nav-header-logo" src="" alt="" />
 		<div className="playground-page-nav-header-title">Team</div>
 	</div>);
 };

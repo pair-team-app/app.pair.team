@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './HeaderProfile.css';
 
 import { Strings, URIs } from 'lang-js-utils';
-import FontAwesome from 'react-fontawesome';
+// import FontAwesome from 'react-fontawesome';
 import onClickOutside from 'react-onclickoutside';
 import { connect } from 'react-redux';
 
@@ -47,7 +47,7 @@ class HeaderProfile extends Component {
 		const { avatar } = (this.props.profile) ? this.props.profile : { avatar : DEFAULT_AVATAR };
 		const { bubble } = this.state;
 
-		const faName = (bubble) ? 'caret-up' : 'caret-down';
+// 		const faName = (bubble) ? 'caret-up' : 'caret-down';
 		const bubbleClass = `header-profile-bubble-wrapper ${(bubble) ? 'header-profile-intro' : 'header-profile-outro'}`;
 
 		return (<div className="header-profile">
