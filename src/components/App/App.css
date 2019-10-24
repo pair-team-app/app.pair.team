@@ -17,6 +17,7 @@
 	--link-selected-color: #999999;
 	--txtfield-bg-color: #cccccc;
 	--border-color: #cecece;
+	--playground-nav-bg-color: #f7f7f7;
 
 	color: var(--site-fg-color);
 	background-color: var(--site-bg-color);
@@ -27,6 +28,12 @@
 	top: 58px;
 	left: 0;
 	width: 100%;
+	overflow: hidden;
+}
+
+.playground-wrapper {
+	width: 100%;
+	height: 100vh;
 	overflow: hidden;
 }
 

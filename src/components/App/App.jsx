@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import axios from 'axios';
-import { DateTimes } from 'lang-js-utils';
+import { DateTimes, URIs } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
@@ -17,6 +17,7 @@ import TopNav from '../sections/TopNav';
 import BottomNav from '../sections/BottomNav';
 import HomePage from '../pages/HomePage';
 import FeaturesPage from '../pages/FeaturesPage';
+import PlaygroundPage from '../pages/PlaygroundPage';
 import PricingPage from '../pages/PricingPage';
 import PrivacyPage from '../pages/PrivacyPage';
 import Status404Page from '../pages/Status404Page';
@@ -319,12 +320,15 @@ class App extends Component {
 		const { profile } = this.props;
   	const { darkTheme, popup, modals } = this.state;
 
+  	const wrapperClass = (URIs.firstComponent() !== 'app') ? 'content-wrapper' : 'playground-wrapper';
+
   	return (<div className={`site-wrapper${(darkTheme) ? ' site-wrapper-dark' : ''}`}>
-		  <TopNav darkTheme={darkTheme} onToggleTheme={this.handleToggleTheme} onModal={(url, payload)=> this.onToggleModal(url, true, payload)} />
-	    <div className="content-wrapper" ref={wrapper}>
+		  {(URIs.firstComponent() !== 'app') && (<TopNav darkTheme={darkTheme} onToggleTheme={this.handleToggleTheme} onModal={(url, payload)=> this.onToggleModal(url, true, payload)} />)}
+	    <div className={wrapperClass} ref={wrapper}>
 		    <Switch>
 			    <Route exact path={Pages.HOME} render={()=> <HomePage onModal={(url, payload)=> this.onToggleModal(url, true, payload)} onPopup={this.handlePopup} onRegistered={this.handleRegistered} />} />
 			    <Route exact path={Pages.FEATURES} render={()=> <FeaturesPage onModal={(url, payload)=> this.onToggleModal(url, true, payload)} onPopup={this.handlePopup} />} />
+			    <Route path={`/app/`} render={(props)=> <PlaygroundPage { ...props } onModal={(url, payload)=> this.onToggleModal(url, true, payload)} onPopup={this.handlePopup} />} />
 			    <Route exact path={Pages.PRICING} render={()=> <PricingPage onModal={(url, payload)=> this.onToggleModal(url, true, payload)} onPopup={this.handlePopup} />} />
 			    <Route exact path={`/:page(${Pages.LEGAL.slice(1)}|${Pages.PRIVACY.slice(1)})`} render={()=> <PrivacyPage />} />
 			    <Route exact path={Pages.TERMS} render={()=> <TermsPage />} />
@@ -332,7 +336,7 @@ class App extends Component {
 			    <Route path={Pages.WILDCARD}><Status404Page /></Route>
 		    </Switch>
 	    </div>
-		  <BottomNav onModal={(url)=> this.onToggleModal(url, true)} />
+		  {(URIs.firstComponent() !== 'app') && (<BottomNav onModal={(url)=> this.onToggleModal(url, true)} />)}
 
 		  <div className="modal-wrapper">
 			  {(popup) && (<PopupNotification

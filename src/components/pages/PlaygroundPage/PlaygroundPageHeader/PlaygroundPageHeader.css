@@ -1,0 +1,33 @@
+
+.playground-page-header {
+	position: absolute;
+	top: 0;
+	left: 208px;
+	width: calc(100% - 208px);
+	height: 58px;
+	display: flex;
+	align-items: center;
+	padding: 20px;
+	background-color: rgba(var(--site-bg-rgb-color), 0.875);
+	z-index: 2;
+}
+
+.playground-page-header > * {
+	/*margin: auto;*/
+	/*border: 1px solid #ff00ff;*/
+}
+
+.playground-page-header-col {
+	flex: 1 1 auto;
+}
+
+.playground-page-header-col-right {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.playground-page-header-col-right > * {
+
+}

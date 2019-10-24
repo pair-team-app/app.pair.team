@@ -1,0 +1,9 @@
+
+.playground-page-content {
+	position: absolute;
+	top: 0;
+	left: 208px;
+	width: calc(100% - 208px);
+	height: 100%;
+	/*background: #111111 url(../../../../assets/images/backgrounds/bg-checkerboard.png) repeat;*/
+}

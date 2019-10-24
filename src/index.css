@@ -30,6 +30,7 @@
 	--txtfield-disabled-bg-color: #f7f7f7;
 	--txtfield-disabled-fg-color: #666666;
 	--border-color: #cecece;
+	--playground-nav-bg-color: #f7f7f7;
 }
 
 ::placeholder {
