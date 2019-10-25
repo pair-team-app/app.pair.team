@@ -15,7 +15,7 @@ export function getRouteParams(pathname) {
 	const profilePage = matchPath(pathname, { path : '/profile/:userID?' });
 	const uploadPage = matchPath(pathname, { path : '/new/:section?' });
 	const registerPage = matchPath(pathname, { path : '/register/:inviteID?' });
-	const inspectorPage = matchPath(pathname, { path : `/${URIs.firstComponent(pathname)}/:uploadID/:titleSlug` });
+	const playgroundPage = matchPath(pathname, { path : `/${URIs.firstComponent(pathname)}/:uploadID/:titleSlug` });
 	const homePage = matchPath(pathname, { path : '/:section' });
 
 // 	console.log(':::::::::::::', loginPage, profilePage, uploadPage, registerPage, inspectorPage, homePage);
@@ -46,10 +46,10 @@ export function getRouteParams(pathname) {
 		});
 	}
 
-	if (inspectorPage && inspectorPage.isExact) {
-		return ({ ...inspectorPage,
+	if (playgroundPage && playgroundPage.isExact) {
+		return ({ ...playgroundPage,
 			page     : 'INSPECTOR',
-			uploadID : inspectorPage.params.uploadID << 0
+			uploadID : playgroundPage.params.uploadID << 0
 		});
 	}
 
