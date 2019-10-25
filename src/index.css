@@ -20,10 +20,14 @@
 	--btn-fg-color: #ffffff;
 	--btn-hover-bg-color: #0062eb;
 	--btn-disabled-bg-color: #cccccc;
-	--btn-disabled-fg-color: #666666;
+	--btn-disabled-fg-color: #999999;
+	--cancel-btn-bg-color: #cccccc;
+	--cancel-btn-fg-color: #999999;
 	--quiet-btn-bg-rgb-color: 247, 247, 247; /* f7f7f7 */
-	--quiet-btn-fg-rgb-color: 102, 102, 102; /* 666666 */
-	--quiet-btn-hover-bg-color: #f0f0f0;
+	--quiet-btn-fg-rgb-color: 35, 35, 35; /* 232323 */
+	--quiet-btn-hover-bg-color: #ededed;
+	--quiet-btn-selected-bg-color: #232323;
+	--quiet-btn-selected-fg-color: #ffffff;
 	--link-hover-color: #343434;
 	--link-selected-color: #999999;
 	--txtfield-bg-color: #f7f7f7;
@@ -31,6 +35,8 @@
 	--txtfield-disabled-fg-color: #666666;
 	--border-color: #cecece;
 	--playground-nav-bg-color: #f7f7f7;
+	--playground-nav-width: 208px;
+	--playground-comments-width: 228px;
 }
 
 ::placeholder {
@@ -41,8 +47,8 @@
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%;
-  min-height: 100%;
+  max-height: 100vh;
+  min-height: 100vh;
   background-color: var(--site-bg-color);
   -webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -239,19 +245,24 @@ textarea {
 }
 
 ::-webkit-scrollbar-track {
-  background: #151619;
+  background: var(--quiet-btn-bg-rgb-color);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4b4b4b;
+  background: var(--border-color);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #333333;
+  background: var(--site-fg-color);
 }
 
 
 @media screen and (max-width: 800px) {
+	:root {
+		--playground-nav-width: 208px;
+		--playground-comments-width: 228px;
+	}
+
 	button {
 		width: 100%;
 	}

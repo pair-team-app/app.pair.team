@@ -3,19 +3,30 @@ import React, { Component } from 'react';
 import './PlaygroundPage.css';
 
 import BasePage from '../BasePage';
-import PlaygroundPageContent from './PlaygroundPageContent';
-import PlaygroundPageHeader from './PlaygroundPageHeader';
-import PlaygroundPageNav from './PlaygroundPageNav';
+import PlaygroundCommentsPanel from './PlaygroundCommentsPanel';
+import PlaygroundContent from './PlaygroundContent';
+import PlaygroundHeader from './PlaygroundHeader';
+import PlaygroundFooter from './PlaygroundFooter';
+import PlaygroundNavPanel from './PlaygroundNavPanel';
 import { DEFAULT_AVATAR } from '../../../consts/uris';
 // import { trackEvent } from '../../../utils/tracking';
+
 
 class PlaygroundPage extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
+			comments : false
 		};
 	}
+
+	handleToggleComments = (event)=> {
+// 		console.log(this.constructor.name, '.handleToggleComments()', event, this.state.comments);
+		const { comments } = this.state;
+
+		this.setState({ comments : !comments });
+	};
 
 
 	render() {
@@ -38,17 +49,29 @@ class PlaygroundPage extends Component {
 		}];
 
 		const { params } = this.props.match;
+		const { comments } = this.state;
 
 		return (
-			<BasePage className="playground-page-wrapper">
-				<PlaygroundPageNav
+			<BasePage className={`page-wrapper playground-page-wrapper${(comments) ? ' playground-page-wrapper-comments' : ''}`}>
+				<PlaygroundNavPanel
 					team={team}
 					items={items} />
 
-				<PlaygroundPageHeader
-					params={params} />
+				<div className="playground-page-content-wrapper">
+					<PlaygroundContent />
 
-				<PlaygroundPageContent />
+					<PlaygroundHeader
+						params={params} />
+
+					<PlaygroundFooter
+						comments={comments}
+						onToggleComments={this.handleToggleComments}
+					/>
+				</div>
+
+				<PlaygroundCommentsPanel
+					collapsed={{comments}}
+				/>
 			</BasePage>
 		);
 	}

@@ -1,39 +1,39 @@
 
-.playground-page-nav {
-	position: absolute;
+.playground-nav-panel {
+	position: fixed;
 	top: 0;
 	left: 0;
-	width: 208px;
+	width: var(--playground-nav-width);
 	height: 100%;
 	padding: 20px;
 	background-color: var(--playground-nav-bg-color);
 	border-right: 1px solid var(--border-color);
 }
 
-.playground-page-nav-header {
+.playground-nav-panel-header {
 	display: flex;
 	flex-flow: row nowrap;
 	align-items: center;
 	margin-bottom: 20px;
 }
 
-.playground-page-nav-header-logo {
+.playground-nav-panel-header-logo {
 	width: 18px;
 	height: 18px;
 	margin-right: 10px;
 }
 
-.playground-page-nav-header-title {
+.playground-nav-panel-header-title {
 
 }
 
-.playground-page-nav-link-wrapper {
+.playground-nav-panel-link-wrapper {
 	width: 100%;
 	font-size: 15px;
 	letter-spacing: 0.2px;
 	color: var(--link-selected-color);
 }
 
-.playground-page-nav-link {
+.playground-nav-panel-link {
 	margin-bottom: 18px;
 }
