@@ -6,6 +6,7 @@ import BasePage from '../BasePage';
 import PlaygroundPageContent from './PlaygroundPageContent';
 import PlaygroundPageHeader from './PlaygroundPageHeader';
 import PlaygroundPageNav from './PlaygroundPageNav';
+import { DEFAULT_AVATAR } from '../../../consts/uris';
 // import { trackEvent } from '../../../utils/tracking';
 
 class PlaygroundPage extends Component {
@@ -18,14 +19,36 @@ class PlaygroundPage extends Component {
 
 
 	render() {
-		console.log(this.constructor.name, '.render()', this.props, this.state);
+		console.log(this.constructor.name, '.render()', this.props.match.params, this.state);
+
+		const team = {
+			title : this.props.match.params.teamSlug,
+			logo  : DEFAULT_AVATAR
+		};
+
+		const items = [{
+			title : 'Pages',
+			items : []
+		}, {
+			title : 'Links',
+			items : []
+		}, {
+			title : 'Images',
+			items : []
+		}];
+
+		const { params } = this.props.match;
 
 		return (
 			<BasePage className="playground-page-wrapper">
-				<PlaygroundPageNav />
-				<PlaygroundPageHeader />
-				<PlaygroundPageContent>
-				</PlaygroundPageContent>
+				<PlaygroundPageNav
+					team={team}
+					items={items} />
+
+				<PlaygroundPageHeader
+					params={params} />
+
+				<PlaygroundPageContent />
 			</BasePage>
 		);
 	}

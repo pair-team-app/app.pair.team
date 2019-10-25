@@ -8,13 +8,14 @@ export const Modals = {
 };
 
 export const Pages = {
-	HOME      : '/',
-	FEATURES  : '/features',
-	LEGAL     : '/legal',
-	PRICING   : '/pricing',
-	PRIVACY   : '/privacy',
-	TERMS     : '/terms',
-	WILDCARD  : '*'
+	HOME       : '/',
+	FEATURES   : '/features',
+	LEGAL      : '/legal',
+	PLAYGROUND : '/app',
+	PRICING    : '/pricing',
+	PRIVACY    : '/privacy',
+	TERMS      : '/terms',
+	WILDCARD   : '*'
 };
 
 export const CDN_HOSTNAME = 'http://cdn.designengine.ai';

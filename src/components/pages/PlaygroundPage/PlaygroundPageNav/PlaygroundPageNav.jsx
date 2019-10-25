@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import './PlaygroundPageNav.css';
 
 
+
+
 class PlaygroundPageNav extends Component {
 	constructor(props) {
 		super(props);
@@ -15,12 +17,12 @@ class PlaygroundPageNav extends Component {
 	render() {
 		console.log(this.constructor.name, '.render()', this.props, this.state);
 
+		const { team, items } = this.props;
+
 		return (<div className="playground-page-nav">
-			<PlaygroundPageNavHeader />
+			<PlaygroundPageNavHeader team={team} />
 			<div className="playground-page-nav-link-wrapper">
-				<div className="playground-page-nav-link">Pages</div>
-				<div className="playground-page-nav-link">Links</div>
-				<div className="playground-page-nav-link">Images</div>
+				{(items.map((item, i)=> (<div key={i} className="playground-page-nav-link">{item.title}</div>)))}
 			</div>
 		</div>);
 	}
@@ -28,9 +30,11 @@ class PlaygroundPageNav extends Component {
 
 
 const PlaygroundPageNavHeader = (props)=> {
+	const { team } = props;
+
 	return (<div className="playground-page-nav-header">
-		<img className="playground-page-nav-header-logo" src="" alt="" />
-		<div className="playground-page-nav-header-title">Team</div>
+		<img className="playground-page-nav-header-logo" src={team.logo} alt="Logo" />
+		<div className="playground-page-nav-header-title">{team.title}</div>
 	</div>);
 };
 
