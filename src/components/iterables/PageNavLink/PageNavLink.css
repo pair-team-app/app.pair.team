@@ -1,5 +1,6 @@
 
 .page-nav-link {
+	width: fit-content;
 	margin-right: 40px;
 	letter-spacing: 0.2px;
 }
@@ -10,5 +11,5 @@
 
 .page-nav-link-selected, a.page-nav-link-selected {
 	color: var(--link-selected-color);
-	text-decoration: none;
+	text-decoration: underline;
 }

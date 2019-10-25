@@ -27,23 +27,19 @@
 }
 
 .top-nav > * {
-	/*margin: auto;*/
+	margin: auto;
 	/*border: 1px solid #ff00ff;*/
 }
 
 .top-nav-branding-wrapper, .top-nav-mobile-menu-wrapper {
-	flex: 2 1 0;
+	flex: 2 2 0;
 }
 
-a.top-nav-branding-wrapper:hover {
-	color: var(--link-hover-color);
-	text-decoration: none;
-}
-
-.top-nav-branding-wrapper > div {
+.top-nav-branding-wrapper a > div {
 	display: flex;
 	flex-wrap: nowrap;
 	align-items: center;
+	width: fit-content;
 }
 
 .top-nav-logo {
@@ -51,7 +47,7 @@ a.top-nav-branding-wrapper:hover {
 	height: 18px;
 }
 
-a:not(:hover):not(:active).top-nav-branding-wrapper rect#logo-fg {
+.top-nav-branding-wrapper a:not(:hover):not(:active) rect#logo-fg {
 	/*transform: scale(1.00);*/
 	transform-origin: center;
 	animation: 0.125s ease-in 0s 1 forwards top-nav-logo-out;
@@ -62,7 +58,7 @@ a:not(:hover):not(:active).top-nav-branding-wrapper rect#logo-fg {
 	/*animation: 0.25s ease-out 0.0s 1 forwards top-nav-logo-bg-hover;*/
 /*}*/
 
-a.top-nav-branding-wrapper:hover rect#logo-fg {
+.top-nav-branding-wrapper a:hover rect#logo-fg {
 	transform-origin: center;
 	animation: 0.33s ease-out 0s infinite alternate top-nav-logo-fg-hover;
 }
@@ -72,17 +68,12 @@ a.top-nav-branding-wrapper:hover rect#logo-fg {
 	margin-left: 10px;
 }
 
-a.top-nav-branding-wrapper:hover .top-nav-title {
-	opacity: 0.5;
-	transition: opacity 0.25s ease-out;
-}
-
 .top-nav-theme-toggle-wrapper {
 	flex: 1 1 0;
 	text-align: center;
 }
 
 .top-nav-link-wrapper {
-	flex: 2 1 0;
+	flex: 2 2 0;
 	text-align: right;
 }

@@ -16,11 +16,14 @@
 	--site-bg-color: #fcfcfc;
 	--site-bg-rgb-color: 252, 252, 252; /* fcfcfc */
 	--site-fg-color: #232323;
+	--site-disabled-fg-color: #cccccc;
 	--btn-bg-color: #0067ff;
-	--btn-fg-color: #ffffff;
-	--btn-hover-bg-color: #0062eb;
+	--btn-fg-color: #232323;
+	--btn-hover-bg-color: #2259e0;
+	--btn-hover-fg-color: #94a9f4;
 	--btn-disabled-bg-color: #cccccc;
 	--btn-disabled-fg-color: #999999;
+	--btn-selected-fg-color: #ffffff;
 	--cancel-btn-bg-color: #cccccc;
 	--cancel-btn-fg-color: #999999;
 	--quiet-btn-bg-rgb-color: 247, 247, 247; /* f7f7f7 */
@@ -28,7 +31,8 @@
 	--quiet-btn-hover-bg-color: #ededed;
 	--quiet-btn-selected-bg-color: #232323;
 	--quiet-btn-selected-fg-color: #ffffff;
-	--link-hover-color: #343434;
+	--link-color: #232323;
+	--link-hover-color: #999999;
 	--link-selected-color: #999999;
 	--txtfield-bg-color: #f7f7f7;
 	--txtfield-disabled-bg-color: #f7f7f7;
@@ -60,14 +64,18 @@ html, body {
 
 
 a {
-  color: var(--site-fg-color);
+  color: var(--link-color);
   text-decoration: none;
 }
 
 a:hover {
 	color: var(--link-hover-color);
-	text-decoration: underline;
+	text-decoration: none;
 	transition: color 0.125s ease-out;
+}
+
+a:active {
+	text-decoration: underline;
 }
 
 button {
@@ -75,7 +83,7 @@ button {
   height: 46px;
 	padding: 8px 30px 10px 30px;
   background-color: var(--btn-bg-color);
-  border: 1px solid rgba(0, 92, 197, 0.0);
+  border: 1px solid var(--border-color);
   border-radius: 23px;
   font-size: 16px;
   color: var(--btn-fg-color);
@@ -83,6 +91,7 @@ button {
 
 button:hover, button:active {
   background-color: var(--btn-hover-bg-color);
+	color: var(--btn-hover-fg-color);
   transition: background-color 0.1s ease-out;
   cursor: pointer;
 }
@@ -91,6 +100,10 @@ button:disabled, button:disabled:hover {
 	background-color: var(--btn-disabled-bg-color);
   color: var(--btn-disabled-fg-color);
   cursor: default;
+}
+
+button[data-selected="true"], button[data-selected="true"]:hover {
+	color: var(--btn-selected-fg-color);
 }
 
 fieldset {

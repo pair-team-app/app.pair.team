@@ -72,6 +72,16 @@
 	color: var(--cancel-btn-fg-color);
 }
 
+.glyph-button {
+	min-width: 60px;
+	max-width: 60px;
+	min-height: 60px;
+	max-height: 60px;
+	padding: 0;
+	border-radius: 50%;
+	font-size: 26px
+}
+
 .quiet-button {
 	width: fit-content;
 	min-width: fit-content;
@@ -85,26 +95,26 @@
 
 .quiet-button:hover {
 	background-color: var(--quiet-btn-hover-bg-color);
+	color: rgb(var(--quiet-btn-fg-rgb-color), 1.0);
 }
 
-.glyph-button {
-	min-width: 60px;
-	max-width: 60px;
-	min-height: 60px;
-	max-height: 60px;
-	padding: 0;
-	border-radius: 50%;
-	font-size: 26px
-}
-
-.quiet-button-selected, .quiet-button-selected:hover {
+.quiet-button[data-selected="true"], .quiet-button[data-selected="true"]:hover {
 	background-color: var(--quiet-btn-selected-bg-color);
 	color: var(--quiet-btn-selected-fg-color);
 }
 
-.quiet-button-selected:hover {
+.quiet-button[data-selected="true"]:hover {
 	color: var(--quiet-btn-hover-bg-color);
 }
+
+/*.quiet-button-selected, .quiet-button-selected:hover {*/
+	/*background-color: var(--quiet-btn-selected-bg-color);*/
+	/*color: var(--quiet-btn-selected-fg-color);*/
+/*}*/
+
+/*.quiet-button-selected:hover {*/
+	/*color: var(--quiet-btn-hover-bg-color);*/
+/*}*/
 
 .form-disclaimer {
 	margin-top: 30px;

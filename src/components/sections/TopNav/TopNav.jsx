@@ -16,10 +16,12 @@ function TopNav(props) {
 // 	const { darkTheme } = props;
 
 	return (<div className="top-nav">
-		<NavLink to={Pages.HOME} className="top-nav-branding-wrapper" activeClassName="" onClick={(event)=> trackEvent('logo', 'home')}><div>
-			<Logo />
-			<div className="top-nav-title">Pair</div>
-		</div></NavLink>
+		<div className="top-nav-branding-wrapper">
+			<NavLink to={Pages.HOME} className="page-nav-link" onClick={(event)=> trackEvent('logo', 'home')}><div>
+				<Logo />
+				<div className="top-nav-title">Pair</div>
+			</div></NavLink>
+		</div>
 		<div className="top-nav-theme-toggle-wrapper">
 			{/*<input type="checkbox" checked={darkTheme} value={darkTheme} onChange={props.onToggleTheme} />*/}
 		</div>
