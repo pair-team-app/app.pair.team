@@ -4,7 +4,7 @@
 	top: 0;
 	left: 208px;
 	width: calc(100% - 208px);
-	height: 100%;
+	height: calc(100% - 58px);
 	margin-top: 58px;
 	/*background: #111111 url(../../../../assets/images/backgrounds/bg-checkerboard.png) repeat;*/
 }
@@ -13,16 +13,19 @@
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	align-items: center; /* h-align */
-	justify-content: center; /* v-align */
+	align-items: center; /* v-align */
+	justify-content: center; /* h-align */
 	width: 100%;
+	height: 100%;
 	/*border: 1px solid #ff00ff;*/
 }
 
 
 .playground-page-content-component {
-	/*all: initial;*/
-	flex: auto;
+	all: initial;
+	flex: 1 1 0;
+	text-align: center;
+	/*border: 1px solid #ff00ff;*/
 }
 
 .playground-page-content-component * {
@@ -31,6 +34,6 @@
 
 
 .playground-page-content-component-wrapper > * {
-	/*margin: auto;*/
+	margin: auto;
 	/*border: 1px dashed #00ff00;*/
 }
