@@ -21,12 +21,12 @@
 
 
 .playground-page-content-component {
-	all: initial;
+	/*all: initial;*/
 	flex: auto;
 }
 
 .playground-page-content-component * {
-	all: unset;
+	/*all: unset;*/
 }
 
 
