@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import axios from 'axios';
+import crypto from 'crypto';
 import { DateTimes, URIs } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
@@ -72,6 +73,23 @@ class App extends Component {
 
 	componentDidMount() {
 		console.log('App.componentDidMount()', this.props, this.state);
+
+		const obj = {
+			id  : 1,
+			msg : "Pellentesque eleifend, dui ut consectetur ultrices, justo urna tristique dolor, a ornare nulla enim non felis."
+		};
+
+		const encKey = crypto.createCipher('des3', '208b49ab07ed3228bdc23c08463077f1');
+		let encStr = encKey.update(JSON.stringify(obj), 'utf8', 'hex');
+		encStr += encKey.final('hex');
+
+		const decKey = crypto.createDecipher('des3', '208b49ab07ed3228bdc23c08463077f1');
+		let decStr = decKey.update(encStr, 'hex', 'utf8');
+		decStr += decKey.final('utf8');
+
+		console.log(encStr, JSON.parse(decStr, null));
+
+
 
 		trackEvent('site', 'load');
 		trackPageview();

@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import './PlaygroundPage.css';
 
+import moment from 'moment';
+
 import BasePage from '../BasePage';
 import PlaygroundCommentsPanel from './PlaygroundCommentsPanel';
 import PlaygroundContent from './PlaygroundContent';
@@ -22,7 +24,7 @@ class PlaygroundPage extends Component {
 				visible : false,
 				entries : phComments.map((comment, i)=> ({ ...comment,
 					ind       : i,
-					timestamp : comment.added
+					timestamp : moment(comment.added).add((moment().utcOffset() << 0), 'minute')
 				})).sort((i, j)=> ((i.ind > j.ind) ? -1 : (i.ind < j.ind) ? 1 : 0))
 			}
 		};

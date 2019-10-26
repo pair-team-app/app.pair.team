@@ -1,7 +1,7 @@
 
 .comments-panel-item {
 	width: 100%;
-	padding: 20px;
+	padding: 25px 20px 20px 20px;
 	border-bottom: 1px solid var(--border-color);
 	opacity: 1;
 	transition: opacity 125ms 175ms ease-in;

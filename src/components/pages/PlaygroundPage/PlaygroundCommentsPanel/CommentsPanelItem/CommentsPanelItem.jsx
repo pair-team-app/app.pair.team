@@ -2,6 +2,7 @@
 import React from 'react';
 import './CommentsPanelItem.css';
 
+import { MOMENT_TIMESTAMP } from '../../../../../consts/formats';
 import { DEFAULT_AVATAR } from '../../../../../consts/uris';
 
 
@@ -28,7 +29,7 @@ function CommentsPanelItem(props) {
 			</div>
 		</div>
 
-		<div className="comments-panel-item-timestamp">{timestamp}</div>
+		<div className="comments-panel-item-timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(MOMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
 		<div className="comments-panel-item-content">{content}</div>
 	</div>);
 }
