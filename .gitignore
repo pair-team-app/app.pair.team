@@ -47,7 +47,8 @@ yarn-error.log
 /public/php/*.php
 
 
-#-- stripe tokens --#
+#-- creds --#
+/src/assets/json/crypto-creds.json
 /src/assets/json/github-creds.json
 /src/assets/json/stripe-creds.json
 
