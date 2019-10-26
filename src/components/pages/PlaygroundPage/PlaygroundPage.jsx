@@ -8,6 +8,7 @@ import PlaygroundContent from './PlaygroundContent';
 import PlaygroundHeader from './PlaygroundHeader';
 import PlaygroundFooter from './PlaygroundFooter';
 import PlaygroundNavPanel from './PlaygroundNavPanel';
+import phComments from '../../../assets/json/placeholder-comments';
 import { DEFAULT_AVATAR } from '../../../consts/uris';
 // import { trackEvent } from '../../../utils/tracking';
 
@@ -17,20 +18,41 @@ class PlaygroundPage extends Component {
 		super(props);
 
 		this.state = {
-			comments : false
+			comments : {
+				visible : false,
+				entries : phComments.map((comment, i)=> ({ ...comment,
+					ind       : i,
+					timestamp : comment.added
+				})).sort((i, j)=> ((i.ind > j.ind) ? -1 : (i.ind < j.ind) ? 1 : 0))
+			}
 		};
 	}
+
+	handleDeleteComment = (comment)=> {
+		console.log(this.constructor.name, '.handleDeleteComment()', this.state.comments, comment);
+
+		const { comments } = this.state;
+		this.setState({
+			comments : { ...comments,
+				entries : comments.entries.filter((item) => (item.id !== comment.id)).sort((i, j) => ((i.ind > j.ind) ? -1 : (i.ind < j.ind) ? 1 : 0))
+			}
+		});
+	};
 
 	handleToggleComments = (event)=> {
 // 		console.log(this.constructor.name, '.handleToggleComments()', event, this.state.comments);
 		const { comments } = this.state;
 
-		this.setState({ comments : !comments });
+		this.setState({
+			comments : { ...comments,
+				visible : !comments.visible
+			}
+		});
 	};
 
 
 	render() {
-		console.log(this.constructor.name, '.render()', this.props.match.params, this.state);
+		console.log(this.constructor.name, '.render()', this.props.match.params, this.state.comments);
 
 		const team = {
 			title : this.props.match.params.teamSlug,
@@ -52,7 +74,7 @@ class PlaygroundPage extends Component {
 		const { comments } = this.state;
 
 		return (
-			<BasePage className={`page-wrapper playground-page-wrapper${(comments) ? ' playground-page-wrapper-comments' : ''}`}>
+			<BasePage className={`page-wrapper playground-page-wrapper${(comments.visible) ? ' playground-page-wrapper-comments' : ''}`}>
 				<PlaygroundNavPanel
 					team={team}
 					items={items} />
@@ -70,7 +92,8 @@ class PlaygroundPage extends Component {
 				</div>
 
 				<PlaygroundCommentsPanel
-					collapsed={{comments}}
+					comments={comments}
+					onDelete={this.handleDeleteComment}
 				/>
 			</BasePage>
 		);

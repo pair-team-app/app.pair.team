@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './PlaygroundCommentsPanel.css';
 
+import CommentsPanelItem from './CommentsPanelItem';
 
 class PlaygroundCommentsPanel extends Component {
 	constructor(props) {
@@ -14,8 +15,11 @@ class PlaygroundCommentsPanel extends Component {
 	render() {
 // 		console.log(this.constructor.name, '.render()', this.props, this.state);
 
-		const { collapsed } = this.props;
-		return (<div className={`playground-comments-panel${(collapsed) ? ' playground-comments-panel-collapsed' :''}`}>
+		const { comments } = this.props;
+		return (<div className={`playground-comments-panel${(!comments.visible) ? ' playground-comments-panel-collapsed' :''}`}>
+			{(comments.entries.map((comment, i)=> {
+				return (<CommentsPanelItem key={i} comment={comment} onDelete={this.props.onDelete} />);
+			}))}
 		</div>);
 	}
 }

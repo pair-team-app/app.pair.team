@@ -1,0 +1,46 @@
+[{
+  "id": 1,
+  "author": {
+    "username": "dev-dude",
+    "email": "dev@pairurl.com",
+    "avatar": null
+  },
+  "added": "2019-10-02 12:23:45",
+  "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut mattis rhoncus lectus, ac rutrum diam dictum ac."
+}, {
+  "id": 2,
+  "author": {
+    "username": "derp-guy",
+    "email": "derp-guy@pairurl.com",
+    "avatar": null
+  },
+  "added": "2019-10-02 12:43:05",
+  "content": "Pellentesque porta maximus semper. Nullam vitae tortor posuere, volutpat justo id, accumsan dolor."
+}, {
+  "id": 3,
+  "author": {
+    "username": "designer",
+    "email": "designer@pairurl.com",
+    "avatar": null
+  },
+  "added": "2019-10-03 01:33:21",
+  "content": "Curabitur tortor justo, placerat ac porttitor a, faucibus a arcu."
+}, {
+  "id": 4,
+  "author": {
+    "username": "acct-mngr",
+    "email": "acct-mngr@pairurl.com",
+    "avatar": null
+  },
+  "added": "2019-10-22 22:11:33",
+  "content": "Nam vitae luctus ex. Phasellus lacinia, nisl sed varius luctus, magna felis gravida ante, in blandit augue felis a augue."
+}, {
+  "id": 5,
+  "author": {
+    "username": "dev-dude",
+    "email": "dev@pairurl.com",
+    "avatar": null
+  },
+  "added": "2019-10-25 16:32:46",
+  "content": "Praesent at augue dictum tellus tempor dignissim vel nec enim."
+}]

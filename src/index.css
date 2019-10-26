@@ -34,13 +34,16 @@
 	--link-color: #232323;
 	--link-hover-color: #999999;
 	--link-selected-color: #999999;
+	--link-alt-color: #999999;
+	--link-alt-hover-color: #666666;
 	--txtfield-bg-color: #f7f7f7;
 	--txtfield-disabled-bg-color: #f7f7f7;
 	--txtfield-disabled-fg-color: #666666;
 	--border-color: #cecece;
-	--playground-nav-bg-color: #f7f7f7;
+	--playground-panel-bg-color: #f7f7f7;
 	--playground-nav-width: 208px;
 	--playground-comments-width: 228px;
+	--playground-comments-timestamp-color: #999999;
 }
 
 ::placeholder {

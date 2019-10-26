@@ -23,7 +23,7 @@ function PlaygroundFooter(props) {
 	const { comments, desktop, mobile } = props;
 	return (<div className="playground-footer">
 		<div className="playground-footer-comments-wrapper">
-			<button className="quiet-button glyph-button" data-selected={comments} onClick={props.onToggleComments}><FontAwesome name="comment" /></button>
+			<button className="quiet-button glyph-button" data-selected={comments.visible} onClick={props.onToggleComments}><FontAwesome name="comment" /></button>
 		</div>
 		<div className="playground-footer-button-wrapper">
 			<button className="quiet-button adjacent-button" onClick={(event)=> handleClick(event, NPM_DE_PLAYGROUND)} name="download-npm">NPM Module</button>
