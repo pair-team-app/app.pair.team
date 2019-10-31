@@ -35,7 +35,7 @@ class PlaygroundPage extends Component {
 
 	componentDidMount() {
 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
-		this.fetchPlayground(327)
+		this.fetchPlayground(327);
 	}
 
 	fetchPlayground = (playgroundID)=> {
@@ -152,6 +152,7 @@ class PlaygroundPage extends Component {
 					/>
 
 					<PlaygroundHeader
+						playground={playground}
 						params={params} />
 
 					<PlaygroundFooter

@@ -128,7 +128,7 @@ class HomePage extends Component {
 		const { title, email, emailReset, submitted } = this.state;
 		return (
 			<BasePage className="home-page-wrapper">
-				<div className="home-page-form">
+				<div className="home-page-form-wrapper">
 					<h1 dangerouslySetInnerHTML={{ __html : title }} />
 					<form onSubmit={this.handleSubmit}>
 						{/*<input disabled={submitted} type="email" name="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} required pattern=".*\S.*" />*/}

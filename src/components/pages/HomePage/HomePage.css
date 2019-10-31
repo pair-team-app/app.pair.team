@@ -2,13 +2,21 @@
 .home-page-wrapper {
 }
 
-.home-page-form {
+.home-page-form-wrapper {
 	display: flex;
 	flex-direction: column;
 	align-content: stretch;
 	align-items: center; /* text-align: center */
 	/* justify-content: center; /* vertical-align: middle */
 	margin-bottom: 75px;
+}
+
+.home-page-form-wrapper form {
+	width: 316px;
+}
+
+.home-page-form-wrapper input {
+	margin-bottom: 20px;
 }
 
 .home-page-element-wrapper {
@@ -31,7 +39,7 @@
 
 
 @media screen and (max-width: 800px) {
-	.home-page-form {
+	.home-page-form-wrapper {
 		margin-bottom: 45px;
 	}
 }
