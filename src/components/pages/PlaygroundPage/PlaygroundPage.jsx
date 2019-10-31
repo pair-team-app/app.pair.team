@@ -35,34 +35,45 @@ class PlaygroundPage extends Component {
 
 	componentDidMount() {
 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+		this.fetchPlayground(327)
+	}
+
+	fetchPlayground = (playgroundID)=> {
+		console.log('%s.fetchPlayground()', this.constructor.name, playgroundID);
 
 		axios.post(API_ENDPT_URL, {
 			action  : 'PLAYGROUND',
 			payload : {
-				playground_id : 326,
+				playground_id : playgroundID,
 			}
 		}).then((response) => {
-// 			console.log('PLAYGROUND', response.data);
+			console.log('PLAYGROUND', response.data);
 
 			const { playground } = response.data;
 			this.setState({ playground : { ...playground,
-				html   : decryptText(playground.html).replace(/"/g, '"'),
-				styles : decryptObject(playground.styles),
-				components : playground.components.map((component, i)=> ({ ...component,
-					html     : decryptText(component.html).replace(/"/g, '"'),
-					styles   : decryptObject(component.styles),
-					path     : component.path.split(' ').filter((i)=> (i.length > 0)),
-					children : component.children.map((child, i)=> ({ ...child,
-						html   : decryptText(child.html).replace(/"/g, '"'),
-						styles : decryptObject(child.styles),
-						path   : child.path.split(' ').filter((i)=> (i.length > 0))
+					html       : decryptText(playground.html).replace(/"/g, '"'),
+					styles     : decryptObject(playground.styles),
+					deviceID   : playground.device_id,
+					components : playground.components.map((component, i)=> ({ ...component,
+						html     : decryptText(component.html).replace(/"/g, '"'),
+						styles   : decryptObject(component.styles),
+						path     : component.path.split(' ').filter((i)=> (i.length > 0)),
+						children : component.children.map((child, i)=> ({ ...child,
+							html   : decryptText(child.html).replace(/"/g, '"'),
+							styles : decryptObject(child.styles),
+							path   : child.path.split(' ').filter((i)=> (i.length > 0))
+						})),
+						comments : component.comments.map((comment, i)=> ({ ...comment,
+							ind       : i,
+							visible   : true,
+							timestamp : moment(comment.added).add((moment().utcOffset() << 0), 'minute')
+						})).sort((i, j)=> ((i.ind > j.ind) ? -1 : (i.ind < j.ind) ? 1 : 0))
 					}))
-				}))
-			}});
+				}});
 
 		}).catch((error)=> {
 		});
-	}
+	};
 
 	handleDeleteComment = (comment)=> {
 // 		console.log('%s.handleDeleteComment()', this.constructor.name, this.state.comments, comment);
@@ -84,6 +95,26 @@ class PlaygroundPage extends Component {
 				visible : !comments.visible
 			}
 		});
+	};
+
+	handleToggleDesktop = ()=> {
+		console.log('%s.handleToggleDesktop()', this.constructor.name, this.state.playground.deviceID);
+		//trackEvent('button', 'desktop-toggle');
+
+		const { playground } = this.state;
+		if (playground.device_id === 2) {
+			this.fetchPlayground(327);
+		}
+	};
+
+	handleToggleMobile = ()=> {
+		console.log('%s.handleToggleMobile()', this.constructor.name, this.state.playground.deviceID);
+// 		trackEvent('button', 'mobile-toggle');
+
+		const { playground } = this.state;
+		if (playground.device_id === 1) {
+			this.fetchPlayground(328);
+		}
 	};
 
 
@@ -125,7 +156,11 @@ class PlaygroundPage extends Component {
 
 					<PlaygroundFooter
 						comments={comments}
+						desktop={(playground.deviceID === 1)}
+						mobile={(playground.deviceID === 2)}
 						onToggleComments={this.handleToggleComments}
+						onToggleDesktop={this.handleToggleDesktop}
+						onToggleMobile={this.handleToggleMobile}
 					/>
 				</div>)}
 

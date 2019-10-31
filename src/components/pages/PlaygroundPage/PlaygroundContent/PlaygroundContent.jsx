@@ -22,6 +22,14 @@ class PlaygroundContent extends Component {
 				{(playground.components.map((comp, i)=> {
 					//const html = comp.html.replace(/\\"/g, '"').replace(/ class=.+?"/, ` style="${Object.keys(comp.styles).map((key)=> (`${key}:${comp.styles[key]}`)).join('; ').replace(/"/g, '\'')}"`);
 
+					/*
+					const obj = {a: 1, b: 2, c: 3}
+					const result = Object.fromEntries(
+          Object.entries(obj).map(
+            ([key, value]) => [key, value * 2]
+          ))
+					// {a: 2, b: 4, c: 6}
+					*/
 
 					let grp = {};
 					comp.children.forEach((child, i)=> {
@@ -34,7 +42,7 @@ class PlaygroundContent extends Component {
 
 							if (Object.keys(grp).length === 0) {
 								grp = sub;
-								console.log('=0', grp, sub, child.path);
+// 								console.log('=0', grp, sub, child.path);
 
 							} else {
 // 								grp = { ...grp,
@@ -43,15 +51,14 @@ class PlaygroundContent extends Component {
 
 
 // 								const sub = Object.keys(grp).find((key, i)=> (key === child.path[0].split(':')[0]));
-								console.log('>0', grp, sub, child.path);
+// 								console.log('>0', grp, sub, child.path);
 							}
 
 						// find object w/ ind 0 & append array
 						} else {
-							console.log('>0', grp, sub, child.path);
+// 							console.log('>0', grp, sub, child.path);
 						}
 					});
-
 
 					let html = ['', ''];
 					comp.children.forEach((child, i)=> {
