@@ -22,16 +22,54 @@ class PlaygroundContent extends Component {
 				{(playground.components.map((comp, i)=> {
 					//const html = comp.html.replace(/\\"/g, '"').replace(/ class=.+?"/, ` style="${Object.keys(comp.styles).map((key)=> (`${key}:${comp.styles[key]}`)).join('; ').replace(/"/g, '\'')}"`);
 
-					let children = '';
-					let path = '';
-					comp.children.forEach((child, i)=> {
-						path = [ ...child.path].pop();
 
-// 						console.log(path, inlineStyles(child.html, child.styles));
-						children = (path.substr(-1) === '0' && children.length > 0) ? `${children.replace(/<\//, `${inlineStyles(child.html, child.styles)}</`)}` : `${children}${inlineStyles(child.html, child.styles)}`;
+					let grp = {};
+					comp.children.forEach((child, i)=> {
+						const path = [ ...child.path].pop();
+						const inline = inlineStyles(child.html, child.styles);
+
+						let sub = Object.fromEntries([[[...path.split(':')].shift(), [inline]]]);
+						// find parent & make new sub obj as array
+						if ((path.substr(-1) << 0) === 0) {
+
+							if (Object.keys(grp).length === 0) {
+								grp = sub;
+								console.log('=0', grp, sub, child.path);
+
+							} else {
+// 								grp = { ...grp,
+// 									[child.path[0].split(':')[0]] :
+// 								};
+
+
+// 								const sub = Object.keys(grp).find((key, i)=> (key === child.path[0].split(':')[0]));
+								console.log('>0', grp, sub, child.path);
+							}
+
+						// find object w/ ind 0 & append array
+						} else {
+							console.log('>0', grp, sub, child.path);
+						}
 					});
 
-					const content = inlineStyles(comp.html, comp.styles).replace(/<\//, `${children}</`);
+
+					let html = ['', ''];
+					comp.children.forEach((child, i)=> {
+						const path = [ ...child.path].pop();
+						const inline = inlineStyles(child.html, child.styles);
+
+						if ((path.substr(-1) << 0) === 0) {
+							html = [`${html[0]}${inline.split('[:]')[0]}`, `${inline.split('[:]')[1]}${html[1]}`];
+
+						} else {
+							html = [`${html[0]}`, `${html[1].replace(/><?/, `>${inline.split('[:]').join('').replace('[:]', '')}<`)}`];
+						}
+
+// 						console.log(i, path, html);
+					});
+
+					let children = '';
+					const content = inlineStyles(comp.html, comp.styles).replace(/\[:]/, html.join(''));
 					return (<div key={i} className="playground-content-component" data-id={comp.id} dangerouslySetInnerHTML={{ __html : content }} />);
 				}))}
 			</div>

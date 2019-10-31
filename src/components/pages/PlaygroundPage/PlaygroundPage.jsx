@@ -24,7 +24,7 @@ class PlaygroundPage extends Component {
 		this.state = {
 			playground : null,
 			comments   : {
-				visible : false,
+				visible : true,
 				entries : phComments.map((comment, i)=> ({ ...comment,
 					ind       : i,
 					timestamp : moment(comment.added).add((moment().utcOffset() << 0), 'minute')
@@ -39,7 +39,7 @@ class PlaygroundPage extends Component {
 		axios.post(API_ENDPT_URL, {
 			action  : 'PLAYGROUND',
 			payload : {
-				playground_id : 317,
+				playground_id : 326,
 			}
 		}).then((response) => {
 // 			console.log('PLAYGROUND', response.data);
@@ -51,11 +51,11 @@ class PlaygroundPage extends Component {
 				components : playground.components.map((component, i)=> ({ ...component,
 					html     : decryptText(component.html).replace(/"/g, '"'),
 					styles   : decryptObject(component.styles),
-					path     : component.path.split(' '),
+					path     : component.path.split(' ').filter((i)=> (i.length > 0)),
 					children : component.children.map((child, i)=> ({ ...child,
 						html   : decryptText(child.html).replace(/"/g, '"'),
 						styles : decryptObject(child.styles),
-						path   : child.path.split(' ')
+						path   : child.path.split(' ').filter((i)=> (i.length > 0))
 					}))
 				}))
 			}});
