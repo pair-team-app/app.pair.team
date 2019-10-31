@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './PlaygroundPage.css';
 
+import axios from 'axios';
 import moment from 'moment';
 
 import BasePage from '../BasePage';
@@ -11,7 +12,8 @@ import PlaygroundHeader from './PlaygroundHeader';
 import PlaygroundFooter from './PlaygroundFooter';
 import PlaygroundNavPanel from './PlaygroundNavPanel';
 import phComments from '../../../assets/json/placeholder-comments';
-import { DEFAULT_AVATAR } from '../../../consts/uris';
+import {API_ENDPT_URL, DEFAULT_AVATAR} from '../../../consts/uris';
+import { decryptObject, decryptText } from './utils/crypto';
 // import { trackEvent } from '../../../utils/tracking';
 
 
@@ -20,7 +22,8 @@ class PlaygroundPage extends Component {
 		super(props);
 
 		this.state = {
-			comments : {
+			playground : null,
+			comments   : {
 				visible : false,
 				entries : phComments.map((comment, i)=> ({ ...comment,
 					ind       : i,
@@ -30,8 +33,39 @@ class PlaygroundPage extends Component {
 		};
 	}
 
+	componentDidMount() {
+		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+
+		axios.post(API_ENDPT_URL, {
+			action  : 'PLAYGROUND',
+			payload : {
+				playground_id : 317,
+			}
+		}).then((response) => {
+// 			console.log('PLAYGROUND', response.data);
+
+			const { playground } = response.data;
+			this.setState({ playground : { ...playground,
+				html   : decryptText(playground.html).replace(/"/g, '"'),
+				styles : decryptObject(playground.styles),
+				components : playground.components.map((component, i)=> ({ ...component,
+					html     : decryptText(component.html).replace(/"/g, '"'),
+					styles   : decryptObject(component.styles),
+					path     : component.path.split(' '),
+					children : component.children.map((child, i)=> ({ ...child,
+						html   : decryptText(child.html).replace(/"/g, '"'),
+						styles : decryptObject(child.styles),
+						path   : child.path.split(' ')
+					}))
+				}))
+			}});
+
+		}).catch((error)=> {
+		});
+	}
+
 	handleDeleteComment = (comment)=> {
-		console.log(this.constructor.name, '.handleDeleteComment()', this.state.comments, comment);
+// 		console.log('%s.handleDeleteComment()', this.constructor.name, this.state.comments, comment);
 
 		const { comments } = this.state;
 		this.setState({
@@ -42,7 +76,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleToggleComments = (event)=> {
-// 		console.log(this.constructor.name, '.handleToggleComments()', event, this.state.comments);
+// 		console.log('%s.handleToggleComments()', this.constructor.name, event, this.state.comments);
 		const { comments } = this.state;
 
 		this.setState({
@@ -54,7 +88,7 @@ class PlaygroundPage extends Component {
 
 
 	render() {
-		console.log(this.constructor.name, '.render()', this.props.match.params, this.state.comments);
+// 		console.log('%s.render()', this.constructor.name, this.props.match.params, this.state);
 
 		const team = {
 			title : this.props.match.params.teamSlug,
@@ -73,7 +107,7 @@ class PlaygroundPage extends Component {
 		}];
 
 		const { params } = this.props.match;
-		const { comments } = this.state;
+		const { comments, playground } = this.state;
 
 		return (
 			<BasePage className={`page-wrapper playground-page-wrapper${(comments.visible) ? ' playground-page-wrapper-comments' : ''}`}>
@@ -81,8 +115,10 @@ class PlaygroundPage extends Component {
 					team={team}
 					items={items} />
 
-				<div className="playground-page-content-wrapper">
-					<PlaygroundContent />
+				{(playground) && (<div className="playground-page-content-wrapper">
+					<PlaygroundContent
+						playground={playground}
+					/>
 
 					<PlaygroundHeader
 						params={params} />
@@ -91,7 +127,7 @@ class PlaygroundPage extends Component {
 						comments={comments}
 						onToggleComments={this.handleToggleComments}
 					/>
-				</div>
+				</div>)}
 
 				<PlaygroundCommentsPanel
 					comments={comments}
