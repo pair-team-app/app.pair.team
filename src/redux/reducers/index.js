@@ -9,6 +9,7 @@ import {
 	SET_ARTBOARD_GROUPS,
 	SET_REDIRECT_URI,
 	CONVERTED_DEEPLINK,
+	UPDATE_MOUSE_COORDS,
 	USER_PROFILE_ERROR,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED,
@@ -33,7 +34,11 @@ const initialState = {
 	uploadSlices       : [],
 	userProfile        : null,
 	invite             : null,
-	team               : null
+	team               : null,
+	mouseCoords        : {
+		x : 0,
+		y : 0
+	}
 };
 
 const logFormat = (state, action, meta='')=> {
@@ -43,7 +48,7 @@ const logFormat = (state, action, meta='')=> {
 
 
 function rootReducer(state=initialState, action) {
-	logFormat(state, action);
+// 	logFormat(state, action);
 
 	switch (action.type) {
 		default:
@@ -99,6 +104,11 @@ function rootReducer(state=initialState, action) {
 		case SET_INVITE:
 			return (Object.assign({}, state, {
 				invite : action.payload
+			}));
+
+		case UPDATE_MOUSE_COORDS:
+			return (Object.assign({}, state, {
+				mouseCoords : action.payload
 			}));
 
 		case USER_PROFILE_ERROR:

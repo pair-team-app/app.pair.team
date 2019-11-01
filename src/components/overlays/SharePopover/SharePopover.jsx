@@ -3,13 +3,13 @@ import React, { Component } from 'react';
 import './SharePopover.css';
 
 import axios from 'axios';
+import { Strings } from 'lang-js-utils';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { connect } from 'react-redux';
 
 import BasePopover from '../BasePopover';
-import {decryptObject, decryptText} from "../../pages/PlaygroundPage/utils/crypto";
-import moment from "moment/moment";
 import {API_ENDPT_URL} from "../../../consts/uris";
-//import { trackEvent } from '../../../utils/tracking';
+import { trackEvent } from '../../../utils/tracking';
 
 
 class SharePopover extends Component {
@@ -17,64 +17,76 @@ class SharePopover extends Component {
 		super(props);
 
 		this.state = {
-			email : ''
+			email      : '',
+			emailValid : false
 		};
 	}
 
 	handleClipboardCopy = ()=> {
-		console.log('SharePopover.handleClipboardCopy()');
+		console.log('%s.handleClipboardCopy()', this.constructor.name);
 
-// 		trackEvent('button', `copy-share-url`);
+		trackEvent('button', `copy-share-url`);
 		this.props.onClose();
 	};
 
-	handleCopyURL = (event)=> {
-		console.log('SharePopover.handleSendInvite()');
-		event.preventDefault();
-	};
-
 	handleEmailChange = (event)=> {
-		console.log('SharePopover.handleEmailChange()');
-		this.setState({ email : event.target.value });
-	};
+// 		console.log('%s.handleEmailChange()', this.constructor.name);
 
-	handleSendInvite = (event)=> {
-		console.log('SharePopover.handleSendInvite()');
+		const email = event.target.value;
+		const emailValid = Strings.isEmail(email);
+		this.setState({ email, emailValid });
 	};
 
 	handleSubmit = (event)=> {
-		console.log('SharePopover.handleSubmit()');
+		console.log('%s.handleSubmit()', this.constructor.name);
 		event.preventDefault();
 
-		const { playground } = this.props;
+		const { email, emailValid } = this.state;
 
-		axios.post(API_ENDPT_URL, {
-			action  : 'INVITE',
-			payload : {
-				playground_id : playground.id,
-			}
-		}).then((response) => {
-			console.log('INVITE', response.data);
-			const { invite } = response.data;
-			this.props.onClose();
-		}).catch((error)=> {
-		});
+		if (email.length > 0 && emailValid) {
+			trackEvent('button', `send-invite`);
+			const { playground } = this.props;
+
+			axios.post(API_ENDPT_URL, {
+				action  : 'INVITE',
+				payload : {
+					playground_id : playground.id,
+					email         : email,
+					user_id       : this.props.profile.id
+				}
+			}).then((response)=> {
+				console.log('INVITE', response.data);
+				const { invite } = response.data;
+				this.props.onClose();
+			}).catch((error)=> {
+			});
+
+		} else {
+			this.setState({ emailValid : false });
+		}
 	};
 
 
 	render() {
-		const { pos } = this.props;
-		const { email } = this.state;
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		return (<BasePopover pos={pos} onClose={this.props.onClose}>
+		const { position } = this.props;
+		const { email, emailValid } = this.state;
+
+		const payload = {
+			position : { ...position,
+				x : position.x - 30
+			}
+		};
+		return (<BasePopover payload={payload} onOutroComplete={this.props.onClose}>
 			<div className="share-popover">
 				<div className="share-popover-url">{window.location.href}</div>
 				<div className="share-popover-form-wrapper">
 					<form onSubmit={this.handleSubmit}>
 						<input type="text" value={email} placeholder="Enter Email Address" onChange={(event)=> this.handleEmailChange(event)} />
-						<button disabled={false} type="submit" onClick={this.handleSendInvite}>Send Email</button>
+						<button disabled={!emailValid} type="submit" onClick={this.handleSubmit}>Send Email</button>
 						<CopyToClipboard text={window.location.href} onCopy={()=> this.handleClipboardCopy()}>
-							<button disabled={false} onClick={this.handleCopyURL}>Copy URL</button>
+							<button disabled={false} onClick={(event) => event.preventDefault()}>Copy URL</button>
 						</CopyToClipboard>
 					</form>
 				</div>
@@ -84,4 +96,11 @@ class SharePopover extends Component {
 }
 
 
-export default (SharePopover);
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		profile : state.userProfile,
+	});
+};
+
+
+export default connect(mapStateToProps)(SharePopover);

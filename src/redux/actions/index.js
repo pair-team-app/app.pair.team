@@ -12,6 +12,7 @@ import {
 	SET_REDIRECT_URI,
 	USER_PROFILE_ERROR,
 	UPDATE_DEEPLINK,
+	UPDATE_MOUSE_COORDS,
 // 	USER_PROFILE_CACHED,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED,
@@ -44,17 +45,6 @@ export function appendHomeArtboards(payload) {
 	return ({ payload,
 		type : APPEND_HOME_ARTBOARDS
 	});
-}
-
-export function updateDeeplink(payload) {
-	const cnt = (payload) ? Object.keys(payload).filter((key, i)=> (payload && typeof payload[key] === 'number')).length : 0;
-	return ({ payload,
-		type : (!payload || Object.keys(payload).length !== cnt) ? UPDATE_DEEPLINK : CONVERTED_DEEPLINK
-	});
-
-// 	return ({ payload,
-// 		type : UPDATE_DEEPLINK
-// 	});
 }
 
 export function fetchUserProfile() {
@@ -184,6 +174,21 @@ export function setInvite(payload) {
 export function setRedirectURI(payload) {
 	return ({ payload,
 		type : SET_REDIRECT_URI
+	});
+}
+
+export function updateDeeplink(payload) {
+	const cnt = (payload) ? Object.keys(payload).filter((key, i)=> (payload && typeof payload[key] === 'number')).length : 0;
+	return ({ payload,
+		type : (!payload || Object.keys(payload).length !== cnt) ? UPDATE_DEEPLINK : CONVERTED_DEEPLINK
+	});
+}
+
+
+export function updateMouseCoords(payload) {
+// 	logFormat('updateMouseCoords()', payload);
+	return ({ payload,
+		type : UPDATE_MOUSE_COORDS
 	});
 }
 

@@ -35,6 +35,7 @@ import {
 	fetchUserHistory,
 	fetchUserProfile,
 	updateDeeplink,
+	updateMouseCoords,
 	updateUserProfile
 } from '../../redux/actions';
 // import { idsFromPath } from '../../utils/funcs';
@@ -104,6 +105,7 @@ class App extends Component {
 // 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (URIs.queryString()), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
 
 
+		document.addEventListener('mousemove', this.handleMouseMove);
 		window.addEventListener('resize', this.handleResize);
 		window.addEventListener('scroll', this.handleScroll);
 		window.onpopstate = (event)=> {
@@ -210,6 +212,14 @@ class App extends Component {
 			console.log('REGISTER', response.data);
 
 		}).catch((error)=> {
+		});
+	};
+
+	handleMouseMove = (event)=> {
+// 		console.log('%s.handleMouseMove()', this.constructor.name, { x : event.pageX, y : event.pageY });
+		this.props.updateMouseCoords({
+			x : event.pageX,
+			y : event.pageY
 		});
 	};
 
@@ -420,6 +430,7 @@ const mapDispatchToProps = (dispatch)=> {
 		fetchTeamLookup    : (payload)=> dispatch(fetchTeamLookup(payload)),
 		fetchUserHistory   : (payload)=> dispatch(fetchUserHistory(payload)),
 		fetchUserProfile   : ()=> dispatch(fetchUserProfile()),
+		updateMouseCoords  : (payload)=> dispatch(updateMouseCoords(payload)),
 		updateDeeplink     : (navIDs)=> dispatch(updateDeeplink(navIDs)),
 		updateUserProfile  : (profile)=> dispatch(updateUserProfile(profile))
 	});

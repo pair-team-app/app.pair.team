@@ -5,6 +5,7 @@ import './PlaygroundHeader.css';
 import SharePopover from '../../../overlays/SharePopover';
 import HeaderProfile from './HeaderProfile';
 
+const shareWrapper = React.createRef();
 
 class PlaygroundHeader extends Component {
 	constructor(props) {
@@ -13,10 +14,12 @@ class PlaygroundHeader extends Component {
 		this.state = {
 			share : false,
 		};
+
+		this.wrapper = null;
 	}
 
 	render() {
-// 		console.log(this.constructor.name, '.render()', this.props, this.state);
+		console.log('%s.render()', this.constructor.name, this.props, this.state, (shareWrapper.current) ? { left : shareWrapper.current.offsetLeft, top : shareWrapper.current.offsetTop } : null);
 
 // 		const { projectSlug, componentsSlug, componentID, commentID } = this.props;
 		const { playground, params } = this.props;
@@ -26,13 +29,13 @@ class PlaygroundHeader extends Component {
 		return (<div className="playground-header">
 			<div className="playground-header-col">{projectSlug} > {componentsSlug}</div>
 			<div className="playground-header-col playground-header-col-right">
-				<span onClick={()=> this.setState({ share : !this.state.share })}>Share</span>
+				<div className="playground-header-link" onClick={()=> this.setState({ share : !this.state.share })} ref={shareWrapper}>Share</div>
 				<HeaderProfile />
 			</div>
 
 			{(share) && (<SharePopover
 				playground={playground}
-				pos={{x:820, y:27}}
+				position={{ x : shareWrapper.current.offsetLeft, y : shareWrapper.current.offsetTop + 7 }}
 				onClose={()=> this.setState({ share : false })} />)}
 		</div>);
 	}

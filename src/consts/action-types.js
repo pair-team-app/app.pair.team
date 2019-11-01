@@ -19,3 +19,5 @@ export const SET_ATOM_EXTENSION = 'SET_ATOM_EXTENSION';
 
 export const SET_INVITE = 'SET_INVITE';
 export const SET_TEAM = 'SET_TEAM';
+
+export const UPDATE_MOUSE_COORDS = 'UPDATE_MOUSE_COORDS';
