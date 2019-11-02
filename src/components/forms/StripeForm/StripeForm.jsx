@@ -35,12 +35,12 @@ class StripeForm extends Component {
 	}
 
 	handleChange = (target)=> {
-// 		console.log('StripeForm.handleChange()', target);
+// 		console.log('%s.handleChange()', this.constructor.name, target);
 		this.setState({ [target.name] : target.value });
 	};
 
 	handleFocus = (event)=> {
-// 		console.log('StripeForm.handleFocus()', event);
+// 		console.log('%s.handleFocus()', this.constructor.name, event);
 		this.setState({
 			cardHolder      : '',
 			cardHolderValid : true
@@ -48,14 +48,14 @@ class StripeForm extends Component {
 	};
 
 	handlePage = (event)=> {
-		console.log('StripeForm.handlePage()', event);
+		console.log('%s.handlePage()', this.constructor.name, event);
 
 		trackEvent('link', Pages.TERMS);
 		this.props.onCancel();
 	};
 
 	handleSubmit = (event)=> {
-		console.log('StripeForm.handleSubmit()', event.target);
+		console.log('%s.handleSubmit()', this.constructor.name, event.target);
 
 		event.preventDefault();
 		trackEvent('button', 'purchase-submit');
@@ -80,7 +80,7 @@ class StripeForm extends Component {
 
 
 	render() {
-// 		console.log('StripeForm.render()', this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { cardHolder } = this.state;
 

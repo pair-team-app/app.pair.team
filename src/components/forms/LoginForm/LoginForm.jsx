@@ -38,11 +38,11 @@ class LoginForm extends Component {
 	}
 
 	componentWillUnmount() {
-// 		console.log('LoginForm.componentWillUnmount()');
+// 		console.log('%s.componentWillUnmount()', this.constructor.name);
 	}
 
 	handlePassword = (event)=> {
-// 		console.log('LoginForm.handlePassword()');
+// 		console.log('%s.handlePassword()', this.constructor.name);
 		event.preventDefault();
 
 		this.setState({

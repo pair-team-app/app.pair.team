@@ -38,7 +38,7 @@ class StripeModal extends Component {
 	}
 
 	handleComplete = ()=> {
-// 		console.log('StripeModal.handleComplete()');
+// 		console.log('%s.handleComplete()', this.constructor.name);
 
 		this.setState({ outro : false }, ()=> {
 			const { approved, purchase, outroURI } = this.state;
@@ -56,7 +56,7 @@ class StripeModal extends Component {
 	};
 
 	handleError = (error)=> {
-		console.log('StripeModal.handleError()', error);
+		console.log('%s.handleError()', this.constructor.name, error);
 
 		this.props.onPopup({
 			position : POPUP_POSITION_TOPMOST,
@@ -66,7 +66,7 @@ class StripeModal extends Component {
 	};
 
 	handlePage = (url)=> {
-// 		console.log('StripeModal.handlePage()', url);
+// 		console.log('%s.handlePage()', this.constructor.name, url);
 
 		if (url.startsWith('/modal')) {
 			this.props.onModal(`/${URIs.lastComponent(url)}`);
@@ -80,7 +80,7 @@ class StripeModal extends Component {
 	};
 
 	handleSubmit = (cardHolder, token)=> {
-// 		console.log('StripeModal.handleSubmit()', cardHolder, token, this.state);
+// 		console.log('%s.handleSubmit()', this.constructor.name, cardHolder, token, this.state);
 
 		const { profile } = this.props;
 		this.setState({ submitting : true });
@@ -125,7 +125,7 @@ class StripeModal extends Component {
 	};
 
 	render() {
-// 		console.log('StripeModal.render()', this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { outro } = this.state;
 		return (

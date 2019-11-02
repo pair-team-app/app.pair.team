@@ -76,7 +76,7 @@ class App extends Component {
 	}
 
 	componentDidMount() {
-		console.log('App.componentDidMount()', this.props, this.state);
+		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
 // 		const encChunks = [
 // 		];
@@ -96,13 +96,13 @@ class App extends Component {
 		window.addEventListener('resize', this.handleResize);
 		window.addEventListener('scroll', this.handleScroll);
 		window.onpopstate = (event)=> {
-			console.log('-/\\/\\/\\/\\/\\/\\-', 'window.onpopstate()', '-/\\/\\/\\/\\/\\/\\-', event);
+			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', event);
 			//this.props.updateDeeplink(idsFromPath());
 		};
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, Browsers.isOnline());
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, this.constructor.name, prevProps, this.props, prevState, this.state, Browsers.isOnline());
 
 		const { profile } = this.props;
 		const { pathname } = this.props.location;
@@ -138,7 +138,7 @@ class App extends Component {
 	}
 
 	componentWillUnmount() {
-		console.log('App.componentWillUnmount()');
+		console.log('%s.componentWillUnmount()', this.constructor.name);
 
 		if (this.authInterval) {
 			clearInterval(this.authInterval);
@@ -158,7 +158,7 @@ class App extends Component {
 
 
 	handleGithubAuth = ()=> {
-		console.log('App.handleGithubAuth()');
+		console.log('%s.handleGithubAuth()', this.constructor.name);
 
 		const code = DateTimes.epoch(true);
 		axios.post(API_ENDPT_URL, {
@@ -190,7 +190,7 @@ class App extends Component {
 	};
 
 	handleGitHubAuthSynced = (profile, register=true)=> {
-		console.log('App.handleGitHubAuthSynced()', profile, register);
+		console.log('%s.handleGitHubAuthSynced()', this.constructor.name, profile, register);
 
 		this.props.updateUserProfile(profile);
 
@@ -209,13 +209,13 @@ class App extends Component {
 	};
 
 	handleLoggedIn = (profile)=> {
-// 		console.log('App.handleLoggedIn()', profile);
+// 		console.log('%s.handleLoggedIn()', this.constructor.name, profile);
 		this.props.updateUserProfile(profile);
 		this.props.fetchUserHistory({profile});
 	};
 
 	handleLogout = ()=> {
-		console.log('%s.handleLogout()', this.constructor.name);
+		console.log('%s.handleLogout()', this.constructor.name, this.constructor.name);
 
 		cookie.save('user_id', '0', { path : '/' });
 		trackEvent('user', 'sign-out');
@@ -226,7 +226,7 @@ class App extends Component {
 	};
 
 	handleMouseMove = (event)=> {
-// 		console.log('%s.handleMouseMove()', this.constructor.name, { x : event.pageX, y : event.pageY });
+// 		console.log('%s.handleMouseMove()', this.constructor.name, this.constructor.name, { x : event.pageX, y : event.pageY });
 		this.props.updateMouseCoords({
 			x : event.pageX,
 			y : event.pageY
@@ -234,24 +234,24 @@ class App extends Component {
 	};
 
 	handlePopup = (payload)=> {
-// 		console.log('App.handlePopup()', payload);
+// 		console.log('%s.handlePopup()', this.constructor.name, payload);
 		this.setState({ popup : payload });
 	};
 
 	handlePurchaseSubmitted = (purchase)=> {
-// 		console.log('App.handlePurchaseSubmitted()', purchase);
+// 		console.log('%s.handlePurchaseSubmitted()', this.constructor.name, purchase);
 
 		this.onToggleModal(Modals.STRIPE, false);
 		this.props.fetchUserProfile();
 	};
 
 	handleRegistered = (profile, github=false)=> {
-// 		console.log('App.handleRegistered()', profile, github);
+// 		console.log('%s.handleRegistered()', this.constructor.name, profile, github);
 		this.props.updateUserProfile(profile);
 	};
 
 	handleResize = (event)=> {
-// 		console.log('App.handleResize()', { width : document.documentElement.clientWidth, height : document.documentElement.clientHeight });
+// 		console.log('%s.handleResize()', this.constructor.name, { width : document.documentElement.clientWidth, height : document.documentElement.clientHeight });
 
 		this.setState({
 			contentSize : {
@@ -262,7 +262,7 @@ class App extends Component {
 	};
 
 	handleScroll = (event)=> {
-// 		console.log('App.handleScroll()', event);
+// 		console.log('%s.handleScroll()', this.constructor.name, event);
 // 		this.setState({ scrolling : true }, ()=> {
 // 			setTimeout(()=> {
 // 				this.setState({ scrolling : false });
@@ -271,7 +271,7 @@ class App extends Component {
 	};
 
 	onAuthInterval = ()=> {
-// 		console.log('App.onAuthInterval()');
+// 		console.log('%s.onAuthInterval()', this.constructor.name);
 
 		if (!this.githubWindow || this.githubWindow.closed || this.githubWindow.closed === undefined) {
 
@@ -309,7 +309,7 @@ class App extends Component {
 	};
 
 	onToggleModal = (uri, show=true, payload=null)=> {
-// 		console.log('App.onToggleModal()', uri, show, payload, this.state.modals);
+// 		console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
 		const { modals } = this.state;
 
 		if (show) {
@@ -333,13 +333,13 @@ class App extends Component {
 	};
 
 	handleToggleTheme = (event)=> {
-		console.log('App.handleToggleTheme()', event);
+		console.log('%s.handleToggleTheme()', this.constructor.name, event);
 		this.setState({ darkTheme : !this.state.darkTheme });
 	};
 
 
 	render() {
-//   	console.log('App.render()', this.props, this.state);
+//   	console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { profile } = this.props;
   	const { darkTheme, popup, modals } = this.state;

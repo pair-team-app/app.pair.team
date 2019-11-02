@@ -29,7 +29,7 @@ class BaseOverlay extends Component {
 	}
 
 	componentDidMount() {
-// 		console.log('BaseOverlay.componentDidMount()', this.props, this.state);
+// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
 		const { tracking } = this.props;
 		trackOverlay(tracking);
@@ -43,7 +43,7 @@ class BaseOverlay extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('BaseOverlay.componentDidUpdate()', prevProps, this.props, this.state);
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state);
 
 		if (prevProps.outro !== this.props.outro && this.props.outro) {
 			this.setState({ outro : true });
@@ -63,7 +63,7 @@ class BaseOverlay extends Component {
 	}
 
 	componentWillUnmount() {
-// 		console.log('BaseOverlay.componentWillUnmount()');
+// 		console.log('%s.componentWillUnmount()', this.constructor.name);
 		this.timeline = null;
 	}
 
@@ -75,12 +75,12 @@ class BaseOverlay extends Component {
 	}
 
 	handleClose = ()=> {
-// 		console.log('BaseOverlay.handleClose()', this.props);
+// 		console.log('%s.handleClose()', this.constructor.name, this.props);
 		this.setState({ outro : true });
 	};
 
 	render() {
-// 		console.log('BaseOverlay.render()', this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		if (this.wrapper && this.timeline && this.timeline.time === 0) {
 			this.timeline.seek(0);

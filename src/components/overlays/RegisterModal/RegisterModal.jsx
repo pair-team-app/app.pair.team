@@ -28,7 +28,7 @@ class RegisterModal extends Component {
 	}
 
 	componentDidMount() {
-		console.log('RegisterModal.componentDidMount()', this.props, this.state);
+		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
 		if (this.props.invite) {
 			axios.post(API_ENDPT_URL, {
@@ -50,7 +50,7 @@ class RegisterModal extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('RegisterModal.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { profile } = this.props;
 		if (!prevProps.profile && profile) {
@@ -59,7 +59,7 @@ class RegisterModal extends Component {
 	}
 
 	handleComplete = ()=> {
-// 		console.log('RegisterModal.handleComplete()');
+// 		console.log('%s.handleComplete()', this.constructor.name);
 
 		const { outroURI } = this.state;
 		this.setState({ outro : false }, ()=> {
@@ -81,7 +81,7 @@ class RegisterModal extends Component {
 	};
 
 	handleError = (error)=> {
-		console.log('RegisterModal.handleError()', error);
+		console.log('%s.handleError()', this.constructor.name, error);
 
 		this.props.onPopup({
 			position : POPUP_POSITION_TOPMOST,
@@ -100,7 +100,7 @@ class RegisterModal extends Component {
 	};
 
 	handleRegistered = (profile)=> {
-// 		console.log('RegisterModal.handleRegistered()', profile);
+// 		console.log('%s.handleRegistered()', this.constructor.name, profile);
 
 		const { redirectURI } = this.props;
 		const { upload } = this.state;
@@ -113,7 +113,7 @@ class RegisterModal extends Component {
 	};
 
 	render() {
-// 		console.log('RegisterModal.render()', this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 // 		const { team } = this.props;
 		const { outro } = this.state;

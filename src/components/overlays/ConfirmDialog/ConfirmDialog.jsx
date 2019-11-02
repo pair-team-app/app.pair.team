@@ -16,7 +16,7 @@ class ConfirmDialog extends Component {
 	}
 
 	handleClick = (ok)=> {
-// 		console.log('ConfirmDialog.handleClick()', ok);
+// 		console.log('%s.handleClick()', this.constructor.name, ok);
 
 		this.setState({ ok,
 			outro : true
@@ -24,7 +24,7 @@ class ConfirmDialog extends Component {
 	};
 
 	handleComplete = ()=> {
-// 		console.log('ConfirmDialog.handleComplete()');
+// 		console.log('%s.handleComplete()', this.constructor.name);
 
 		const { ok } = this.state;
 		this.props.onComplete(ok);
@@ -32,7 +32,7 @@ class ConfirmDialog extends Component {
 
 
 	render() {
-// 		console.log('ConfirmDialog.render()', this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { tracking, title, children } = this.props;
 		const { outro } = this.state;

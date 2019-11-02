@@ -26,7 +26,7 @@ class LoginModal extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('LoginModal.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { profile } = this.props;
 		if (!prevProps.profile && profile) {
@@ -35,7 +35,7 @@ class LoginModal extends Component {
 	}
 
 	handleComplete = ()=> {
-// 		console.log('LoginModal.handleComplete()');
+// 		console.log('%s.handleComplete()', this.constructor.name);
 
 		const { outroURI } = this.state;
 		this.setState({ outro : false }, ()=> {
@@ -57,7 +57,7 @@ class LoginModal extends Component {
 	};
 
 	handleError = (error)=> {
-// 		console.log('LoginModal.handleError()', error);
+// 		console.log('%s.handleError()', this.constructor.name, error);
 
 		this.props.onPopup({
 			position : POPUP_POSITION_TOPMOST,
@@ -67,7 +67,7 @@ class LoginModal extends Component {
 	};
 
 	handleLoggedIn = (profile)=> {
-// 		console.log('LoginModal.handleLoggedIn()', profile, this.props);
+// 		console.log('%s.handleLoggedIn()', this.constructor.name, profile, this.props);
 
 		trackEvent('user', 'login');
 		const { redirectURI } = this.props;
@@ -89,7 +89,7 @@ class LoginModal extends Component {
 
 
 	render() {
-// 		console.log('LoginModal.render()', this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 // 		const { team } = this.props;
 		const { outro } = this.state;

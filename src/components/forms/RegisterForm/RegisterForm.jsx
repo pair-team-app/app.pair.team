@@ -5,7 +5,7 @@ import './RegisterForm.css'
 import axios from 'axios';
 import { Bits, Strings } from 'lang-js-utils';
 
-import { Modals, API_ENDPT_URL } from '../../../consts/uris';
+import { API_ENDPT_URL } from '../../../consts/uris';
 
 const passwordTextfield = React.createRef();
 
@@ -26,11 +26,11 @@ class RegisterForm extends Component {
 	}
 
 	componentDidMount() {
-// 		console.log('RegisterForm.componentDidMount()', this.props, this.state);
+// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('RegisterForm.componentDidUpdate()', prevProps, this.props, prevState, this.state);
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		if (prevProps.email !== this.props.email) {
 			const { email } = this.props;
@@ -39,11 +39,11 @@ class RegisterForm extends Component {
 	}
 
 	componentWillUnmount() {
-// 		console.log('RegisterForm.componentWillUnmount()');
+// 		console.log('%s.componentWillUnmount()', this.constructor.name);
 	}
 
 	handlePassword = ()=> {
-// 		console.log('RegisterForm.handlePassword()');
+// 		console.log('%s.handlePassword()', this.constructor.name);
 
 		this.setState({
 			password      : '',
@@ -58,7 +58,7 @@ class RegisterForm extends Component {
 	};
 
 	handleSubmit = (event)=> {
-// 		console.log('RegisterForm.handleSubmit()', event.target);
+// 		console.log('%s.handleSubmit()', this.constructor.name, event.target);
 		event.preventDefault();
 
 		const { inviteID, username, email, password, password2 } = this.state;
@@ -117,7 +117,7 @@ class RegisterForm extends Component {
 
 
 	render() {
-// 		console.log('RegisterForm.render()', this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { title } = this.props;
 		const { username, email, password, password2 } = this.state;
