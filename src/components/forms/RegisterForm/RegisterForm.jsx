@@ -7,8 +7,6 @@ import { Bits, Strings } from 'lang-js-utils';
 
 import { API_ENDPT_URL } from '../../../consts/uris';
 
-const passwordTextfield = React.createRef();
-
 
 class RegisterForm extends Component {
 	constructor(props) {
@@ -23,6 +21,8 @@ class RegisterForm extends Component {
 			emailValid    : true,
 			passwordValid : true
 		};
+
+		this.passwordTextfield = React.createRef();
 	}
 
 	componentDidMount() {
@@ -40,6 +40,7 @@ class RegisterForm extends Component {
 
 	componentWillUnmount() {
 // 		console.log('%s.componentWillUnmount()', this.constructor.name);
+		this.passwordTextfield = null;
 	}
 
 	handlePassword = ()=> {
@@ -53,7 +54,7 @@ class RegisterForm extends Component {
 		});
 
 		setTimeout(() => {
-			passwordTextfield.current.focus();
+			this.passwordTextfield.current.focus();
 		}, 69);
 	};
 
@@ -109,7 +110,6 @@ class RegisterForm extends Component {
 						emailValid    : Bits.contains(status, 0x10)
 					});
 				}
-
 			}).catch((error)=> {
 			});
 		}
@@ -129,7 +129,7 @@ class RegisterForm extends Component {
 				<form onSubmit={this.handleSubmit}>
 					<input type="text" placeholder="Enter Username" value={username} onFocus={()=> this.setState({ username : '', usernameValid : true })} onChange={(event)=> this.setState({ username : event.target.value })} autoComplete="new-password" name="username" />
 					<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" name="email" />
-					<input type="password" placeholder="Enter Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} onClick={this.handlePassword} autoComplete="new-password" name="password" ref={passwordTextfield} />
+					<input type="password" placeholder="Enter Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} onClick={this.handlePassword} autoComplete="new-password" name="password" ref={(element)=> this.passwordTextfield = element} />
 					<input type="password" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} autoComplete="new-password" name="password2" />
 					<button disabled={(username.length === 0 || email.length === 0 || password.length === 0 || password2.length === 0 || !usernameValid || !emailValid || !passwordValid)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Sign Up</button>
 				</form>

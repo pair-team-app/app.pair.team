@@ -25,16 +25,10 @@
 }
 
 .playground-nav-panel-header-title {
-
 }
 
-.playground-nav-panel-link-wrapper {
+.playground-nav-panel-component-type-wrapper {
 	width: 100%;
 	font-size: 15px;
 	letter-spacing: 0.2px;
-	color: var(--link-selected-color);
-}
-
-.playground-nav-panel-link {
-	margin-bottom: 18px;
 }

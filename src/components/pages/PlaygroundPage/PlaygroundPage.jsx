@@ -23,6 +23,7 @@ class PlaygroundPage extends Component {
 		super(props);
 
 		this.state = {
+			typeGroups : null,
 			playground : null,
 			comments   : {
 				visible : true,
@@ -40,6 +41,17 @@ class PlaygroundPage extends Component {
 		if (!this.props.profile) {
 			this.props.onModal(Modals.LOGIN);
 		}
+
+		axios.post(API_ENDPT_URL, {
+			action  : 'COMPONENT_TYPES',
+			payload : null
+		}).then((response) => {
+			console.log('COMPONENT_TYPES', response.data);
+			const { components } = response.data;
+			this.setState({ typeGroups : components });
+
+		}).catch((error)=> {
+		});
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -70,6 +82,10 @@ class PlaygroundPage extends Component {
 					styles     : decryptObject(playground.styles),
 					deviceID   : playground.device_id,
 					components : playground.components.map((component, i)=> ({ ...component,
+						typeID   : component.type_id,
+						stateID  : component.state_id,
+						title    : (component.title.length === 0) ? component.tag_name : component.title,
+						tagName  : component.tagName,
 						html     : decryptText(component.html).replace(/"/g, '"'),
 						styles   : decryptObject(component.styles),
 						path     : component.path.split(' ').filter((i)=> (i.length > 0)),
@@ -142,26 +158,16 @@ class PlaygroundPage extends Component {
 			logo  : DEFAULT_AVATAR
 		};
 
-		const items = [{
-			title : 'Pages',
-			items : []
-		}, {
-			title : 'Links',
-			items : []
-		}, {
-			title : 'Images',
-			items : []
-		}];
-
 		const { profile } = this.props;
 		const { params } = this.props.match;
-		const { comments, playground } = this.state;
+		const { typeGroups, playground, comments } = this.state;
 
 		return (
 			<BasePage className={`page-wrapper playground-page-wrapper${(comments.visible) ? ' playground-page-wrapper-comments' : ''}`}>
-				{(profile) && (<PlaygroundNavPanel
+				{(profile && playground) && (<PlaygroundNavPanel
 					team={team}
-					items={items}
+					typeGroups={typeGroups}
+					items={playground.components}
 				/>)}
 
 				{(profile && playground) && (<div className="playground-page-content-wrapper">

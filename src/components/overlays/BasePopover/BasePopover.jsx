@@ -68,18 +68,19 @@ class BasePopover extends Component {
 	}
 
 	componentWillUnmount() {
-		console.log('%s.componentWillUnmount()', this.constructor.name);
+// 		console.log('%s.componentWillUnmount()', this.constructor.name);
 		this.timeline = null;
+		this.wrapper = null;
 	}
 
 	handleClickOutside(event) {
-		console.log('%s.handleClickOutside()', this.constructor.name);
+// 		console.log('%s.handleClickOutside()', this.constructor.name);
 		this.setState({ outro : true });
 	}
 
 
 	onOutroComplete = ()=> {
-		console.log('%s.onOutroComplete()', this.constructor.name);
+// 		console.log('%s.onOutroComplete()', this.constructor.name);
 		if (this.props.onOutroComplete) {
 			this.props.onOutroComplete();
 		}

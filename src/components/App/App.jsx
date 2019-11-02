@@ -40,11 +40,6 @@ import {
 // import { idsFromPath } from '../../utils/funcs';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
-// import { decryptObject, decryptText } from '../pages/PlaygroundPage/utils/crypto';
-
-
-const wrapper = React.createRef();
-
 
 class App extends Component {
 	constructor(props) {
@@ -78,12 +73,6 @@ class App extends Component {
 	componentDidMount() {
 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
-// 		const encChunks = [
-// 		];
-
-// 		const decStr = decryptText(encChunks.join(''));
-// 		console.log(encChunks.join(''), (decStr.charAt(0) === '{' || decStr.charAt(0) === '[') ? JSON.parse(decStr, null) : decStr);
-
 		trackEvent('site', 'load');
 		trackPageview();
 
@@ -92,7 +81,7 @@ class App extends Component {
 // 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (URIs.queryString()), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
 
 
-		document.addEventListener('mousemove', this.handleMouseMove);
+		window.addEventListener('mousemove', this.handleMouseMove);
 		window.addEventListener('resize', this.handleResize);
 		window.addEventListener('scroll', this.handleScroll);
 		window.onpopstate = (event)=> {
@@ -211,7 +200,7 @@ class App extends Component {
 	handleLoggedIn = (profile)=> {
 // 		console.log('%s.handleLoggedIn()', this.constructor.name, profile);
 		this.props.updateUserProfile(profile);
-		this.props.fetchUserHistory({profile});
+// 		this.props.fetchUserHistory({profile});
 	};
 
 	handleLogout = ()=> {
@@ -243,11 +232,6 @@ class App extends Component {
 
 		this.onToggleModal(Modals.STRIPE, false);
 		this.props.fetchUserProfile();
-	};
-
-	handleRegistered = (profile, github=false)=> {
-// 		console.log('%s.handleRegistered()', this.constructor.name, profile, github);
-		this.props.updateUserProfile(profile);
 	};
 
 	handleResize = (event)=> {
@@ -348,9 +332,9 @@ class App extends Component {
 
   	return (<div className={`site-wrapper${(darkTheme) ? ' site-wrapper-dark' : ''}`}>
 		  {(URIs.firstComponent() !== 'app') && (<TopNav darkTheme={darkTheme} onToggleTheme={this.handleToggleTheme} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
-	    <div className={wrapperClass} ref={wrapper}>
+	    <div className={wrapperClass}>
 		    <Switch>
-			    <Route exact path={Pages.HOME} render={()=> <HomePage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} onRegistered={this.handleRegistered} />} />
+			    <Route exact path={Pages.HOME} render={()=> <HomePage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} onSignup={()=> null} />} />
 			    <Route exact path={Pages.FEATURES} render={()=> <FeaturesPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
 			    <Route exact path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/:commentID([0-9]+)?`} render={(props)=> <PlaygroundPage { ...props } onLogout={this.handleLogout} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
 			    <Route exact path={Pages.PRICING} render={()=> <PricingPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
@@ -390,7 +374,7 @@ class App extends Component {
 				  onModal={(uri)=> this.onToggleModal(uri, true)}
 				  onPopup={this.handlePopup}
 				  onComplete={()=> this.onToggleModal(Modals.REGISTER, false)}
-				  onRegistered={this.handleRegistered}
+				  onRegistered={this.handleLoggedIn}
 			  />)}
 
 			  {(modals.stripe) && (<StripeModal

@@ -68,7 +68,7 @@ class SharePopover extends Component {
 
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { position } = this.props;
 		const { email, emailValid } = this.state;

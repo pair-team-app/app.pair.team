@@ -94,7 +94,7 @@ class HomePage extends Component {
 
 				if (status === 0x11) {
 					trackEvent('signup', 'success', email);
-					this.props.onRegistered(response.data.user);
+					this.props.onSignup(response.data.user);
 
 					this.setState({
 						email      : 'Thank you for signing up!',

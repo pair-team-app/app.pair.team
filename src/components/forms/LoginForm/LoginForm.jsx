@@ -8,8 +8,6 @@ import { Bits, Strings } from 'lang-js-utils';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { trackEvent } from '../../../utils/tracking';
 
-const passwordTextfield = React.createRef();
-
 
 class LoginForm extends Component {
 	constructor(props) {
@@ -22,6 +20,8 @@ class LoginForm extends Component {
 			passwordValid : true,
 			passMsg       : ''
 		};
+
+		this.passwordTextfield = React.createRef();
 	}
 
 	componentDidMount() {
@@ -39,6 +39,7 @@ class LoginForm extends Component {
 
 	componentWillUnmount() {
 // 		console.log('%s.componentWillUnmount()', this.constructor.name);
+		this.passwordTextfield = null;
 	}
 
 	handlePassword = (event)=> {
@@ -52,7 +53,7 @@ class LoginForm extends Component {
 		});
 
 		setTimeout(()=> {
-			passwordTextfield.current.focus();
+			this.passwordTextfield.current.focus();
 		}, 69);
 	};
 
@@ -113,7 +114,7 @@ class LoginForm extends Component {
 				{(title && title.length > 0) && (<h4>{title}</h4>)}
 				<form onSubmit={this.handleSubmit}>
 					<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} name="email" autoComplete="off" />
-					<input type="password" placeholder="Enter Password" value={password} onChange={(event)=> this.setState({ password : event.target.value })} onClick={this.handlePassword} ref={passwordTextfield} name="password" />
+					<input type="password" placeholder="Enter Password" value={password} onChange={(event)=> this.setState({ password : event.target.value })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} name="password" />
 					<button disabled={(email.length === 0 || !emailValid || !passwordValid)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Login</button>
 				</form>
 			</div>
