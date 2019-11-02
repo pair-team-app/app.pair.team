@@ -4,7 +4,8 @@ export const Modals = {
 	LOGIN          : '/login',
 	RECOVER        : '/recover',
 	REGISTER       : '/register',
-	STRIPE         : '/stripe'
+	STRIPE         : '/stripe',
+	NETWORK        : '/network'
 };
 
 export const Pages = {

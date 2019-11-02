@@ -35,11 +35,18 @@ const initialState = {
 	userProfile        : null,
 	invite             : null,
 	team               : null,
-	mouseCoords        : {
-		x : 0,
-		y : 0
+	mouse              : {
+		position : {
+			x : 0,
+			y : 0
+		},
+		speed    : {
+			x : 0,
+			y : 0
+		}
 	}
 };
+
 
 const logFormat = (state, action, meta='')=> {
 	const { type, payload } = action;
@@ -108,7 +115,13 @@ function rootReducer(state=initialState, action) {
 
 		case UPDATE_MOUSE_COORDS:
 			return (Object.assign({}, state, {
-				mouseCoords : action.payload
+				mouse : Object.assign({}, state.mouse, {
+					position : Object.assign({}, state.mouse.position, action.payload),
+					speed    : {
+						x : (state.mouse.position.x - action.payload.x),
+						y : (state.mouse.position.y - action.payload.y),
+					}
+				})
 			}));
 
 		case USER_PROFILE_ERROR:

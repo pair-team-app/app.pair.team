@@ -21,7 +21,7 @@ class BasePopover extends Component {
 				intro : INTRO_DURATION,
 				outro : OUTRO_DURATION
 			},
-			position : { ...this.props.mouseCoords },
+			position : { ...this.props.mouse.position },
 			size     : {
 				width  : 0,
 				height : 0
@@ -110,7 +110,7 @@ class BasePopover extends Component {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		mouseCoords : state.mouseCoords
+		mouse : state.mouse
 	});
 };
 

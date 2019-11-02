@@ -35,7 +35,7 @@ class PlaygroundHeader extends Component {
 
 			{(share) && (<SharePopover
 				playground={playground}
-				position={{ x : shareWrapper.current.offsetLeft, y : shareWrapper.current.offsetTop + 7 }}
+				position={{ x : shareWrapper.current.offsetLeft, y : shareWrapper.current.offsetTop }}
 				onClose={()=> this.setState({ share : false })} />)}
 		</div>);
 	}

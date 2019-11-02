@@ -7,7 +7,7 @@
 	width: fit-content;
 	background-color: var(--site-bg-color);
 	border: 1px solid var(--border-color);
-	border-radius: 8px;
+	border-radius: 10px;
 }
 
 .base-popover-content-wrapper {

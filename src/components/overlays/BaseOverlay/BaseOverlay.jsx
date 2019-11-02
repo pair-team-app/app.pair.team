@@ -95,15 +95,15 @@ class BaseOverlay extends Component {
 
 		const contentClass = `base-overlay-content${(!closeable && !title) ? ' base-overlay-content-padded' : ''}`;
 
-		return (<div className="base-overlay-wrapper" onClick={(closeable) ? this.handleClose : null} ref={(element)=> { this.wrapper = element; }}>
+		return (<div className="base-overlay" onClick={(closeable) ? this.handleClose : null} ref={(element)=> { this.wrapper = element; }}>
 			<div className={wrapperClass} style={wrapperStyle} onClick={(event)=> event.stopPropagation()}>
 				{(title) && (<div className="base-overlay-header-wrapper"><Row>
 					<Column flexGrow={1}><div className="base-overlay-title">{title}</div></Column>
-					{(closeable && !defaultButton) && (<Column horizontal="end"><button className="tiny-button base-overlay-close-button" onClick={this.handleClose}><FontAwesome name="times"/></button></Column>)}
+					{(closeable && !defaultButton) && (<Column horizontal="end"><button className="quiet-button base-overlay-close-button" onClick={this.handleClose}><FontAwesome name="times"/></button></Column>)}
 				</Row></div>)}
 				<div className={contentClass}>{children}</div>
 				{(defaultButton) && (<div className="base-overlay-button-wrapper">
-					<button className="base-overlay-button" onClick={this.handleClose}>{defaultButton}</button>
+					<button onClick={this.handleClose}>{defaultButton}</button>
 				</div>)}
 			</div>
 		</div>);

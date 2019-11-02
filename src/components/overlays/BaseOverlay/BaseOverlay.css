@@ -1,5 +1,5 @@
 
-.base-overlay-wrapper {
+.base-overlay {
 	z-index: 2000;
 	position: fixed;
 	top: 0;
@@ -20,13 +20,15 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	-webkit-transform: translate(-50%, -50%);
-	/*padding: 10px;*/
+	padding: 20px;
 	z-index: 2002;
 	overflow: hidden;
 	border: 1px solid var(--border-color);
-	border-radius: 5px;
+	border-radius: 10px;
 	background-color: var(--site-bg-color);
 	text-align: center;
+	/*backface-visibility: hidden;*/
+	/*transform-style: flat;*/
 	/*box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.33);*/
 }
 
@@ -49,43 +51,47 @@
 
 .base-overlay-header-wrapper {
 	display: table;
-	width: calc(100% - 20px);
-	margin: 10px;
-	padding-bottom: 10px;
-	border-bottom: 1px solid var(--border-color);
+	width: 100%;
+	padding-bottom: 20px;
+	/*border-bottom: 1px solid var(--border-color);*/
 }
 
 .base-overlay-title {
 	display: table-cell;
 	text-align: left;
+	color: var(--dialog-title-color);
 }
 
 .base-overlay-close-button {
-	display: table-cell;
-	min-width: 0;
-	min-height: 0;
-	padding: 3px 8px;
-	font-size: 11px;
-	text-align: right;
+	width: fit-content;
+	height: fit-content;
+	padding: 2px 4px;
+	font-size: 10px;
+}
+
+.base-overlay-close-button:hover {
+	background-color: var(--quiet-btn-hover-bg-color);
 }
 
 .base-overlay-content {
+	padding-bottom: 20px;
 }
 
 .base-overlay-content-padded {
-	padding: 10px 20px;
+	/*padding: 10px 20px;*/
 }
 
 .base-overlay-content-wrapper-unblurred .base-overlay-content-padded {
-	padding: 0;
+	/*padding: 0;*/
 }
 
 .base-overlay-button-wrapper {
-	margin: 15px 0;
+	margin: 20px 0;
 }
 
-.base-overlay-button {
+.base-overlay-button-wrapper button {
+	width: 50%
 }
 
-.base-overlay-button:hover {
+.base-overlay-button-wrapper button:hover {
 }

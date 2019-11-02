@@ -75,7 +75,8 @@ class SharePopover extends Component {
 
 		const payload = {
 			position : { ...position,
-				x : position.x - 30
+				x : position.x - 30,
+				y : position.y + 7
 			}
 		};
 		return (<BasePopover payload={payload} onOutroComplete={this.props.onClose}>
