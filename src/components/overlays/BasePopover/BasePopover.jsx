@@ -50,7 +50,7 @@ class BasePopover extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state);
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state);
 
 		if (this.props.outro && prevProps.outro !== this.props.outro) {
 			this.setState({ outro : true });

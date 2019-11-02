@@ -23,7 +23,7 @@ class PricingPage extends Component {
 	}
 
 	handleSelectSection = (section)=> {
-// 		console.log(this.constructor.name, '.handleSelectSection()', section);
+// 		console.log('%s.handleSelectSection()', this.constructor.name, section);
 		trackEvent('button', section.event);
 		this.props.onModal(Modals.STRIPE);
 // 		const sectionOpened = this.state.sectionOpened.map((toggle, i)=> (i === section.ind));
@@ -33,8 +33,8 @@ class PricingPage extends Component {
 	};
 
 	handleToggleSection = (section)=> {
-// 		console.log(this.constructor.name, '.handleToggleSection()', section, this.state.sectionOpened, this.state.sectionOpened[section.ind]);
-// 		console.log(this.constructor.name, '.handleToggleSection()', section, this.state.sections);
+// 		console.log('%s.handleToggleSection()', this.constructor.name, section, this.state.sectionOpened, this.state.sectionOpened[section.ind]);
+// 		console.log('%s.handleToggleSection()', this.constructor.name, section, this.state.sections);
 		trackEvent((section.open) ? 'collapse' : 'expand', section.event);
 
 		const sections = this.state.sections.map((item, i)=> ({ ...item,
@@ -44,7 +44,7 @@ class PricingPage extends Component {
 	};
 
 	render() {
-// 		console.log(this.constructor.name, '.render()', this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { title, intro, sections } = this.state;
 		return (

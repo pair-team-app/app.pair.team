@@ -15,7 +15,7 @@ import PlaygroundNavPanel from './PlaygroundNavPanel';
 import phComments from '../../../assets/json/placeholder-comments';
 import { Modals, API_ENDPT_URL, DEFAULT_AVATAR } from '../../../consts/uris';
 import { decryptObject, decryptText } from './utils/crypto';
-// import { trackEvent } from '../../../utils/tracking';
+import { trackEvent } from '../../../utils/tracking';
 
 
 class PlaygroundPage extends Component {
@@ -23,7 +23,6 @@ class PlaygroundPage extends Component {
 		super(props);
 
 		this.state = {
-			locked     : false,
 			playground : null,
 			comments   : {
 				visible : true,
@@ -46,23 +45,8 @@ class PlaygroundPage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
-		const { locked, playground } = this.state;
-		if (!prevProps.profile && !this.props.profile && !locked) {
-// 			this.setState({ locked : true }, ()=> {
-// 				this.props.onModal(Modals.LOGIN);
-// 			});
-		}
-
-		if (this.props.profile) {
-
-		}
-
+		const { playground } = this.state;
 		if (prevProps.profile && this.props.profile) {
-// 			if (locked) {
-// 				this.setState({ locked : false }, ()=> {
-// 				});
-// 			}
-
 			if (!playground) {
 				this.onFetchPlayground(329);
 			}
@@ -109,6 +93,7 @@ class PlaygroundPage extends Component {
 	handleDeleteComment = (comment)=> {
 // 		console.log('%s.handleDeleteComment()', this.constructor.name, this.state.comments, comment);
 
+		trackEvent('button', 'delete-comment');
 		const { comments } = this.state;
 		this.setState({
 			comments : { ...comments,
@@ -130,7 +115,7 @@ class PlaygroundPage extends Component {
 
 	handleToggleDesktop = ()=> {
 		console.log('%s.handleToggleDesktop()', this.constructor.name, this.state.playground.deviceID);
-		//trackEvent('button', 'desktop-toggle');
+		trackEvent('button', 'desktop-toggle');
 
 		const { playground } = this.state;
 		if (playground.device_id === 2) {
@@ -140,7 +125,7 @@ class PlaygroundPage extends Component {
 
 	handleToggleMobile = ()=> {
 		console.log('%s.handleToggleMobile()', this.constructor.name, this.state.playground.deviceID);
-// 		trackEvent('button', 'mobile-toggle');
+		trackEvent('button', 'mobile-toggle');
 
 		const { playground } = this.state;
 		if (playground.device_id === 1) {

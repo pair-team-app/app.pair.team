@@ -13,7 +13,7 @@ class PlaygroundCommentsPanel extends Component {
 	}
 
 	render() {
-// 		console.log(this.constructor.name, '.render()', this.props, this.state);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { comments } = this.props;
 		return (<div className={`playground-comments-panel${(!comments.visible) ? ' playground-comments-panel-collapsed' :''}`}>

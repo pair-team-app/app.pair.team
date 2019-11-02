@@ -23,7 +23,7 @@ class FeaturesPage extends Component {
 
 
 	handleToggleSection = (section)=> {
-// 		console.log(this.constructor.name, '.handleToggleSection()', section, this.state.sections);
+// 		console.log('%s.handleToggleSection()', this.constructor.name, section, this.state.sections);
 		trackEvent((section.open) ? 'collapse' : 'expand', section.event);
 
 		const sections = this.state.sections.map((item, i)=> ({ ...item,
@@ -33,7 +33,7 @@ class FeaturesPage extends Component {
 	};
 
 	render() {
-// 		console.log(this.constructor.name, '.render()', this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { title, intro, sections } = this.state;
 		return (

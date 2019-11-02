@@ -31,14 +31,14 @@ class HomePage extends Component {
 	}
 
 	handleGitHub = ()=> {
-		console.log(this.constructor.name, '.handleGitHub()');
+		console.log('%s.handleGitHub()', this.constructor.name);
 		trackEvent('button', 'github');
 
 		this.props.onModal(Modals.GITHUB);
 	};
 
 	handleTextfieldChange = (event)=> {
-// 		console.log(this.constructor.name, '.handleTextfieldChange()', event.target.value, this.state.email, this.state.emailValid, this.state.emailReset);
+// 		console.log('%s.handleTextfieldChange()', this.constructor.name, event.target.value, this.state.email, this.state.emailValid, this.state.emailReset);
 		const email = event.target.value;
 		const emailValid = Strings.isEmail(email);
 
@@ -49,7 +49,7 @@ class HomePage extends Component {
 	};
 
 	handleTextfieldFocus = (event)=> {
-// 		console.log(this.constructor.name, '.handleTextfieldFocus()', event.target.value, this.state.email, this.state.emailValid, this.state.emailReset);
+// 		console.log('%s.handleTextfieldFocus()', this.constructor.name, event.target.value, this.state.email, this.state.emailValid, this.state.emailReset);
 
 		const email = event.target.value;
 		this.setState({
@@ -60,21 +60,21 @@ class HomePage extends Component {
 	};
 
 	handleMouseLeave = (event)=> {
-// 		console.log(this.constructor.name, '.handleMouseLeave()', event.target.value, this.state.email, this.state.emailValid, this.state.emailReset);
+// 		console.log('%s.handleMouseLeave()', this.constructor.name, event.target.value, this.state.email, this.state.emailValid, this.state.emailReset);
 
 		const emailValid = Strings.isEmail(event.target.value);
 		this.setState({ emailValid })
 	};
 
 	handleTextfieldBlur = (event)=> {
-// 		console.log(this.constructor.name, '.handleTextfieldBlur()', event.target.value, this.state.email, this.state.emailValid, this.state.emailReset);
+// 		console.log('%s.handleTextfieldBlur()', this.constructor.name, event.target.value, this.state.email, this.state.emailValid, this.state.emailReset);
 
 		const emailValid = Strings.isEmail(event.target.value);
 		this.setState({ emailValid })
 	};
 
 	handleSubmit = (event)=> {
-		console.log(this.constructor.name, '.handleSubmit()');
+		console.log('%s.handleSubmit()', this.constructor.name);
 		event.preventDefault();
 
 		trackEvent('button', 'join-wait-list');
@@ -123,7 +123,7 @@ class HomePage extends Component {
 	};
 
 	render() {
-// 		console.log(this.constructor.name, '.render()', this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { title, email, emailReset, submitted } = this.state;
 		return (

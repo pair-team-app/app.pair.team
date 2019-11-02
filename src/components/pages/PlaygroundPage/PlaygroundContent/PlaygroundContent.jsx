@@ -13,7 +13,7 @@ class PlaygroundContent extends Component {
 	}
 
 	render() {
-// 		console.log(this.constructor.name, '.render()', this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { playground } = this.props;
 

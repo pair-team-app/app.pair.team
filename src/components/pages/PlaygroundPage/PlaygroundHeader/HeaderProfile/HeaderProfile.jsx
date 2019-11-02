@@ -42,7 +42,7 @@ class HeaderProfile extends Component {
 	};
 
 	render() {
-// 		console.log(this.constructor.name, '.render()', this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { avatar } = (this.props.profile) ? this.props.profile : { avatar : DEFAULT_AVATAR };
 		const { bubble } = this.state;

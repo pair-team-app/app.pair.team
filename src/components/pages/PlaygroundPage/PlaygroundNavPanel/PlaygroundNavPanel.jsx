@@ -12,10 +12,9 @@ class PlaygroundNavPanel extends Component {
 	}
 
 	render() {
-// 		console.log(this.constructor.name, '.render()', this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { team, items } = this.props;
-
 		return (<div className="playground-nav-panel">
 			<PlaygroundPageNavHeader team={team} />
 			<div className="playground-nav-panel-link-wrapper">
