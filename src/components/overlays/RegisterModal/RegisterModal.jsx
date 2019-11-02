@@ -10,7 +10,7 @@ import { withRouter } from 'react-router-dom';
 import BaseOverlay from '../BaseOverlay';
 import RegisterForm from '../../forms/RegisterForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
-import { API_ENDPT_URL } from '../../../consts/uris';
+import { API_ENDPT_URL, Modals } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
@@ -28,7 +28,7 @@ class RegisterModal extends Component {
 	}
 
 	componentDidMount() {
-// 		console.log('RegisterModal.componentDidMount()', this.props, this.state);
+		console.log('RegisterModal.componentDidMount()', this.props, this.state);
 
 		if (this.props.invite) {
 			axios.post(API_ENDPT_URL, {
@@ -59,10 +59,11 @@ class RegisterModal extends Component {
 	}
 
 	handleComplete = ()=> {
-		console.log('RegisterModal.handleComplete()');
+// 		console.log('RegisterModal.handleComplete()');
 
 		const { outroURI } = this.state;
 		this.setState({ outro : false }, ()=> {
+			this.props.onComplete();
 
 			const { redirectURI } = this.props;
 			if (redirectURI) {
@@ -76,8 +77,6 @@ class RegisterModal extends Component {
 					}
 				}
 			}
-
-			this.props.onComplete();
 		});
 	};
 
@@ -91,22 +90,17 @@ class RegisterModal extends Component {
 		});
 	};
 
-	handlePage = (url)=> {
-// 		console.log('RegisterModal.handlePage()', url);
+	handleLogin = ()=> {
+		console.log('%s.handleLogin()', this.constructor.name);
 
-		if (url.startsWith('/modal')) {
-			this.props.onModal(`/${URIs.lastComponent(url)}`);
-
-		} else {
-			this.setState({
-				outro    : true,
-				outroURI : url
-			});
-		}
+		this.setState({
+			outro    : true,
+			outroURI : `/modal${Modals.LOGIN}`
+		});
 	};
 
 	handleRegistered = (profile)=> {
-		console.log('RegisterModal.handleRegistered()', profile);
+// 		console.log('RegisterModal.handleRegistered()', profile);
 
 		const { redirectURI } = this.props;
 		const { upload } = this.state;
@@ -121,20 +115,18 @@ class RegisterModal extends Component {
 	render() {
 // 		console.log('RegisterModal.render()', this.props, this.state);
 
-		const { team } = this.props;
+// 		const { team } = this.props;
 		const { outro } = this.state;
 		return (
 			<BaseOverlay
 				tracking={`register/${URIs.firstComponent()}`}
 				outro={outro}
 				unblurred={true}
-				closeable={(!team)}
-				defaultButton={null}
-				title={null}
+				closeable={false}
 				onComplete={this.handleComplete}>
 
-				<div className="register-modal-wrapper">
-					<div className="register-modal-header">
+				<div className="register-modal">
+					<div className="register-modal-header-wrapper">
 						<img className="register-modal-header-logo" src={pairLogo} alt="Logo" />
 					</div>
 
@@ -144,8 +136,12 @@ class RegisterModal extends Component {
 							inviteID={null}
 							email={null}
 							onCancel={(event)=> { event.preventDefault(); this.handleComplete(); }}
-							onRegistered={this.handleRegistered}
-							onPage={this.handlePage} />
+							onRegistered={this.handleRegistered} />
+					</div>
+
+					<div className="register-modal-footer-wrapper">
+						{/*<div className="register-modal-footer-link">Not a member of this Pair yet?</div>*/}
+						<div className="register-modal-footer-link" onClick={this.handleLogin}>Login</div>
 					</div>
 				</div>
 			</BaseOverlay>);

@@ -11,13 +11,13 @@ import {
 	USER_PROFILE_UPDATED
 } from '../../consts/action-types';
 
-import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
+// import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 
 
 const logFormat = (action, meta='')=> {
 	if (typeof action !== 'function') {
-		const { type, payload } = action;
-		console.log(LOG_MIDDLEWARE_PREFIX, `MW >> “${type}”`, payload, meta);
+// 		const { type, payload } = action;
+// 		console.log(LOG_MIDDLEWARE_PREFIX, `MW >> “${type}”`, payload, meta);
 	}
 };
 
@@ -25,7 +25,7 @@ const logFormat = (action, meta='')=> {
 export function onMiddleware({ dispatch }) {
 	return (function(next) {
 		return (function(action) {
-// 			logFormat(action);
+			logFormat(action);
 
 			const { type, payload } = action;
 			if (type === USER_PROFILE_CACHED) {

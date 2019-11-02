@@ -75,7 +75,7 @@ class PlaygroundContent extends Component {
 // 						console.log(i, path, html);
 					});
 
-					let children = '';
+// 					let children = '';
 					const content = inlineStyles(comp.html, comp.styles).replace(/\[:]/, html.join(''));
 					return (<div key={i} className="playground-content-component" data-id={comp.id} dangerouslySetInnerHTML={{ __html : content }} />);
 				}))}

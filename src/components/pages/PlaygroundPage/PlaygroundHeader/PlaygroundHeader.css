@@ -32,5 +32,9 @@
 }
 
 .playground-header-col-right > * {
+}
 
+.playground-header-link:hover {
+	color: var(--link-hover-color);
+	cursor: pointer;
 }

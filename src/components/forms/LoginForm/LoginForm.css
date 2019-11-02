@@ -1,4 +1,7 @@
 
-.login-form-wrapper {
-	width: 50%;
+.login-form {
+}
+
+.login-form form > *:not(:last-child) {
+	margin-bottom: 20px;
 }

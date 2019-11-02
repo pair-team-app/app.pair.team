@@ -16,7 +16,7 @@ import {
 	SET_INVITE,
 	SET_TEAM,
 } from '../../consts/action-types';
-import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
+// import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 
 const initialState = {
@@ -49,13 +49,13 @@ const initialState = {
 
 
 const logFormat = (state, action, meta='')=> {
-	const { type, payload } = action;
-	console.log(LOG_REDUCER_PREFIX, `REDUCER >> “${type}”`, state, payload, meta);
+// 	const { type, payload } = action;
+// 	console.log(LOG_REDUCER_PREFIX, `REDUCER >> “${type}”`, state, payload, meta);
 };
 
 
 function rootReducer(state=initialState, action) {
-// 	logFormat(state, action);
+	logFormat(state, action);
 
 	switch (action.type) {
 		default:

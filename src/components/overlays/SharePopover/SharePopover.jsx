@@ -42,7 +42,6 @@ class SharePopover extends Component {
 		event.preventDefault();
 
 		const { email, emailValid } = this.state;
-
 		if (email.length > 0 && emailValid) {
 			trackEvent('button', `send-invite`);
 			const { playground } = this.props;
@@ -56,8 +55,9 @@ class SharePopover extends Component {
 				}
 			}).then((response)=> {
 				console.log('INVITE', response.data);
-				const { invite } = response.data;
+// 				const { invite } = response.data;
 				this.props.onClose();
+
 			}).catch((error)=> {
 			});
 

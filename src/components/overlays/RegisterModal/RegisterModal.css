@@ -1,12 +1,11 @@
 
-.register-modal-wrapper {
-	min-width: 480px;
-	height: 80%;
-	padding: 20px;
-	background-color: #1a1e23;
+.register-modal {
+	max-width: 360px;
+	margin-top: 20px;
+	padding: 0 20px;
 }
 
-.register-modal-header {
+.register-modal-header-wrapper {
 	width: 100%;
 	margin: 40px 0;
 }
@@ -15,7 +14,34 @@
 	width: 100px;
 }
 
-.register-modal-content-wrapper .register-form-wrapper {
+.register-modal-content-wrapper {
 	width: 100%;
 	min-width: 100%;
+}
+
+.register-modal-footer-wrapper {
+	width: 100%;
+	margin-top: 20px;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+}
+
+.register-modal-footer-wrapper > * {
+	margin: auto;
+	flex: 1 0 0;
+}
+
+.register-modal-footer-link {
+	width: fit-content;
+	font-size: 12px;
+	color: var(--link-color);
+	text-decoration: underline;
+	transition: color 0.125s ease-out;
+}
+
+.register-modal-footer-link:hover {
+	text-decoration: none;
+	color: var(--link-hover-color);
+	cursor: pointer;
 }

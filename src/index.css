@@ -173,6 +173,14 @@ h3::before {
 	margin-top: calc((1 - 2.3) * 0.5em);
 }
 
+/** Modal Title **/
+h4 {
+	font-size: 16px;
+}
+
+h4::before {
+	margin-top: calc((1 - 1.2) * 0.5em);
+}
 
 /** Legal Section Title **/
 h5 {
@@ -192,7 +200,7 @@ h6 {
 	text-align: left;
 }
 
-input[type="email"], input[type="text"], textarea {
+input[type="email"], input[type="password"], input[type="text"], textarea {
 	width: 100%;
 	padding: 15px 20px;
 	border: 1px solid var(--border-color);
@@ -204,19 +212,19 @@ input[type="email"], input[type="text"], textarea {
 	-webkit-appearance: none;
 }
 
-input[type="email"]:invalid, input[type="text"]:invalid {
+input[type="email"]:invalid, input[type="password"]:invalid, input[type="text"]:invalid {
 	border: 1px solid #ff4646;
 	background-color: #fff0f0;
 	color: #ff4646;
 }
 
-input[type="email"]:valid, input[type="text"]:valid, select, textarea {
+input[type="email"]:valid, input[type="password"]:valid, input[type="text"]:valid, select, textarea {
 	border: 1px solid var(--border-color);
 	background-color: var(--txtfield-bg-color);
 	color: var(--site-fg-color);
 }
 
-input[type="email"]:disabled, input[type="text"]:disabled, select:disabled, textarea:disabled {
+input[type="email"]:disabled, input[type="password"]:disabled, input[type="text"]:disabled, select:disabled, textarea:disabled {
   cursor: not-allowed;
 	background-color: var(--txtfield-disabled-bg-color);
 	color: var(--txtfield-disabled-fg-color);
@@ -228,7 +236,7 @@ input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hov
   /*-webkit-text-fill-color: #ff00ff;*/
 }
 
-input[type="email"]:focus, input[type="text"]:focus, textarea:focus, input[type="email"]:hover, input[type="text"]:hover, textarea:hover {
+input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, textarea:focus, input[type="email"]:hover, input[type="password"]:hover, input[type="text"]:hover, textarea:hover {
 	background-color: var(--txtfield-bg-color);
 	color: var(--site-fg-color);
 	transition: background-color 0.125s ease-out;

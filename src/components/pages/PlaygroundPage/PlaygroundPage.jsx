@@ -4,6 +4,7 @@ import './PlaygroundPage.css';
 
 import axios from 'axios';
 import moment from 'moment';
+import { connect } from 'react-redux';
 
 import BasePage from '../BasePage';
 import PlaygroundCommentsPanel from './PlaygroundCommentsPanel';
@@ -12,7 +13,7 @@ import PlaygroundHeader from './PlaygroundHeader';
 import PlaygroundFooter from './PlaygroundFooter';
 import PlaygroundNavPanel from './PlaygroundNavPanel';
 import phComments from '../../../assets/json/placeholder-comments';
-import {API_ENDPT_URL, DEFAULT_AVATAR} from '../../../consts/uris';
+import { Modals, API_ENDPT_URL, DEFAULT_AVATAR } from '../../../consts/uris';
 import { decryptObject, decryptText } from './utils/crypto';
 // import { trackEvent } from '../../../utils/tracking';
 
@@ -22,6 +23,7 @@ class PlaygroundPage extends Component {
 		super(props);
 
 		this.state = {
+			locked     : false,
 			playground : null,
 			comments   : {
 				visible : true,
@@ -34,12 +36,41 @@ class PlaygroundPage extends Component {
 	}
 
 	componentDidMount() {
-		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
-		this.fetchPlayground(329);
+// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+
+		if (!this.props.profile) {
+			this.props.onModal(Modals.LOGIN);
+		}
 	}
 
-	fetchPlayground = (playgroundID)=> {
-		console.log('%s.fetchPlayground()', this.constructor.name, playgroundID);
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+
+		const { locked, playground } = this.state;
+		if (!prevProps.profile && !this.props.profile && !locked) {
+// 			this.setState({ locked : true }, ()=> {
+// 				this.props.onModal(Modals.LOGIN);
+// 			});
+		}
+
+		if (this.props.profile) {
+
+		}
+
+		if (prevProps.profile && this.props.profile) {
+// 			if (locked) {
+// 				this.setState({ locked : false }, ()=> {
+// 				});
+// 			}
+
+			if (!playground) {
+				this.onFetchPlayground(329);
+			}
+		}
+	}
+
+	onFetchPlayground = (playgroundID)=> {
+		console.log('%s.onFetchPlayground()', this.constructor.name, playgroundID);
 
 		axios.post(API_ENDPT_URL, {
 			action  : 'PLAYGROUND',
@@ -103,7 +134,7 @@ class PlaygroundPage extends Component {
 
 		const { playground } = this.state;
 		if (playground.device_id === 2) {
-			this.fetchPlayground(329);
+			this.onFetchPlayground(329);
 		}
 	};
 
@@ -113,7 +144,7 @@ class PlaygroundPage extends Component {
 
 		const { playground } = this.state;
 		if (playground.device_id === 1) {
-			this.fetchPlayground(330);
+			this.onFetchPlayground(330);
 		}
 	};
 
@@ -137,23 +168,27 @@ class PlaygroundPage extends Component {
 			items : []
 		}];
 
+		const { profile } = this.props;
 		const { params } = this.props.match;
 		const { comments, playground } = this.state;
 
 		return (
 			<BasePage className={`page-wrapper playground-page-wrapper${(comments.visible) ? ' playground-page-wrapper-comments' : ''}`}>
-				<PlaygroundNavPanel
+				{(profile) && (<PlaygroundNavPanel
 					team={team}
-					items={items} />
+					items={items}
+				/>)}
 
-				{(playground) && (<div className="playground-page-content-wrapper">
+				{(profile && playground) && (<div className="playground-page-content-wrapper">
 					<PlaygroundContent
 						playground={playground}
 					/>
 
 					<PlaygroundHeader
 						playground={playground}
-						params={params} />
+						params={params}
+						onLogout={this.props.onLogout}
+					/>
 
 					<PlaygroundFooter
 						comments={comments}
@@ -165,14 +200,21 @@ class PlaygroundPage extends Component {
 					/>
 				</div>)}
 
-				<PlaygroundCommentsPanel
+				{(profile) && (<PlaygroundCommentsPanel
 					comments={comments}
 					onDelete={this.handleDeleteComment}
-				/>
+				/>)}
 			</BasePage>
 		);
 	}
 }
 
 
-export default (PlaygroundPage);
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		profile : state.userProfile,
+	});
+};
+
+
+export default connect(mapStateToProps)(PlaygroundPage);

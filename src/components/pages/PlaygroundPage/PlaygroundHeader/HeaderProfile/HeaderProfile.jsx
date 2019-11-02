@@ -37,7 +37,7 @@ class HeaderProfile extends Component {
 			this.props.onLink((URIs.subdomain() && URIs.subdomain() !== 'earlyaccess') ? 'team' : 'history');
 
 		} else if (type === LOGOUT) {
-			this.props.onLogout()
+			this.props.onLogout();
 		}
 	};
 

@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './ConfirmDialog.css'
 
 import { URIs } from 'lang-js-utils';
-
 import BaseOverlay from '../BaseOverlay';
 
 
@@ -15,15 +14,6 @@ class ConfirmDialog extends Component {
 			outro : false
 		};
 	}
-
-	componentDidMount() {
-// 		console.log('ConfirmDialog.componentDidMount()', this.props, this.state);
-	}
-
-	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('ConfirmDialog.componentDidUpdate()', prevProps, this.props, prevState, this.state, snapshot);
-	}
-
 
 	handleClick = (ok)=> {
 // 		console.log('ConfirmDialog.handleClick()', ok);
@@ -44,7 +34,7 @@ class ConfirmDialog extends Component {
 	render() {
 // 		console.log('ConfirmDialog.render()', this.props, this.state);
 
-		const { tracking, title, message } = this.props;
+		const { tracking, title, children } = this.props;
 		const { outro } = this.state;
 
 		return (<BaseOverlay
@@ -54,7 +44,7 @@ class ConfirmDialog extends Component {
 			title={title}
 			onComplete={this.handleComplete}>
 			<div className="confirm-dialog-content">
-				{message}
+				{children}
 				<div className="base-overlay-button-wrapper confirm-dialog-button-wrapper">
 					<button className="base-overlay-button confirm-dialog-aux-button adjacent-button" onClick={()=> this.handleClick(false)}>Cancel</button>
 					<button className="base-overlay-button" onClick={()=> this.handleClick(true)}>OK</button>

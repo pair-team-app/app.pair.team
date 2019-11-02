@@ -4,17 +4,10 @@ import './RegisterForm.css'
 
 import axios from 'axios';
 import { Bits, Strings } from 'lang-js-utils';
-import { Row } from 'simple-flexbox';
 
 import { Modals, API_ENDPT_URL } from '../../../consts/uris';
-import { trackEvent } from '../../../utils/tracking';
-
 
 const passwordTextfield = React.createRef();
-
-const txtfieldClass = (isValid)=> {
-	return ((isValid) ? 'input-wrapper' : 'input-wrapper input-wrapper-error');
-};
 
 
 class RegisterForm extends Component {
@@ -128,29 +121,17 @@ class RegisterForm extends Component {
 
 		const { title } = this.props;
 		const { username, email, password, password2 } = this.state;
-		const { usernameValid, emailValid, passwordValid, passMsg } = this.state;
-
-		const usernameClass = txtfieldClass(usernameValid);
-		const emailClass = txtfieldClass(emailValid);
-		const passwordClass = txtfieldClass(passwordValid);
-		const password2Class = txtfieldClass(passwordValid);
+		const { usernameValid, emailValid, passwordValid } = this.state;
 
 		return (
-			<div className="register-form-wrapper">
+			<div className="register-form">
 				{(title && title.length > 0) && (<h4>{title}</h4>)}
 				<form onSubmit={this.handleSubmit}>
-					<div className={usernameClass}><input type="text" name="username" autoComplete="new-password" placeholder="Enter Username" value={username} onFocus={()=> this.setState({ username : '', usernameValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-					<div className={emailClass}><input type="text" name="email" autoComplete="new-password" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-					<div className={passwordClass} onClick={()=> this.handlePassword()}>
-						<input type="password" name="password" autoComplete="new-password" placeholder="Enter Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} ref={passwordTextfield} />
-						<div className="field-error" style={{ display : (!passwordValid) ? 'block' : 'none' }}>{passMsg}</div>
-					</div>
-					<div className={password2Class}><input type="password" name="password2" autoComplete="new-password" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} /></div>
-					<Row vertical="center">
-						<button disabled={(username.length === 0 || email.length === 0 || password.length === 0 || password2.length === 0 || !usernameValid || !emailValid || !passwordValid)} type="submit" className="register-form-submit-button adjacent-button" onClick={(event)=> this.handleSubmit(event)}>Sign Up</button>
-						{/*<button className="long-button aux-button adjacent-button" onClick={(event)=> { event.preventDefault(); trackEvent('button', 'github'); this.props.onPage(`/modal${Modals.GITHUB_CONNECT}`); }}>Sign Up via GitHub</button>*/}
-						<div className="page-link page-link-form" onClick={()=> { trackEvent('link', 'login'); this.props.onPage(`/modal${Modals.LOGIN}`); }}>Need to Login?</div>
-					</Row>
+					<input type="text" placeholder="Enter Username" value={username} onFocus={()=> this.setState({ username : '', usernameValid : true })} onChange={(event)=> this.setState({ username : event.target.value })} autoComplete="new-password" name="username" />
+					<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" name="email" />
+					<input type="password" placeholder="Enter Password" value={password} style={{ display : (passwordValid) ? 'block' : 'none' }} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} onClick={this.handlePassword} autoComplete="new-password" name="password" ref={passwordTextfield} />
+					<input type="password" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} autoComplete="new-password" name="password2" />
+					<button disabled={(username.length === 0 || email.length === 0 || password.length === 0 || password2.length === 0 || !usernameValid || !emailValid || !passwordValid)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Sign Up</button>
 				</form>
 			</div>
 		);

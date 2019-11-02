@@ -30,7 +30,7 @@ class PlaygroundHeader extends Component {
 			<div className="playground-header-col">{projectSlug} > {componentsSlug}</div>
 			<div className="playground-header-col playground-header-col-right">
 				<div className="playground-header-link" onClick={()=> this.setState({ share : !this.state.share })} ref={shareWrapper}>Share</div>
-				<HeaderProfile />
+				<HeaderProfile onLogout={this.props.onLogout} />
 			</div>
 
 			{(share) && (<SharePopover

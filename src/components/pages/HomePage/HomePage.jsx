@@ -34,7 +34,7 @@ class HomePage extends Component {
 		console.log(this.constructor.name, '.handleGitHub()');
 		trackEvent('button', 'github');
 
-		this.props.onModal(Modals.GITHUB_CONNECT);
+		this.props.onModal(Modals.GITHUB);
 	};
 
 	handleTextfieldChange = (event)=> {
