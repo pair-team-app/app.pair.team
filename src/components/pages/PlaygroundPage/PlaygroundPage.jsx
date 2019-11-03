@@ -89,6 +89,7 @@ class PlaygroundPage extends Component {
 						html     : decryptText(component.html).replace(/"/g, '"'),
 						styles   : decryptObject(component.styles),
 						path     : component.path.split(' ').filter((i)=> (i.length > 0)),
+						selected : false,
 						children : component.children.map((child, i)=> ({ ...child,
 							html   : decryptText(child.html).replace(/"/g, '"'),
 							styles : decryptObject(child.styles),
