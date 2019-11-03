@@ -7,9 +7,9 @@ import { Strings } from 'lang-js-utils';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { connect } from 'react-redux';
 
-import BasePopover from '../BasePopover';
-import {API_ENDPT_URL} from "../../../consts/uris";
-import { trackEvent } from '../../../utils/tracking';
+import BasePopover from '../../../overlays/BasePopover';
+import { API_ENDPT_URL } from '../../../../consts/uris';
+import { trackEvent } from '../../../../utils/tracking';
 
 
 class SharePopover extends Component {
@@ -68,17 +68,18 @@ class SharePopover extends Component {
 
 
 	render() {
-		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { position } = this.props;
 		const { email, emailValid } = this.state;
 
 		const payload = {
-			position : { ...position,
-				x : position.x - 30,
+			position : {
+				x : position.x - 20,
 				y : position.y + 7
 			}
 		};
+
 		return (<BasePopover payload={payload} onOutroComplete={this.props.onClose}>
 			<div className="share-popover">
 				<div className="share-popover-url">{window.location.href}</div>

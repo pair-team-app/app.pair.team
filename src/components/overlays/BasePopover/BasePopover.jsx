@@ -7,7 +7,7 @@ import onClickOutside from 'react-onclickoutside';
 import { connect } from 'react-redux';
 
 const INTRO_DURATION = (1/8);
-const OUTRO_DURATION = (1/4);
+const OUTRO_DURATION = (1/8);
 const START_LBL = 'START_LBL';
 // const END_LBL = 'END_LBL';
 
