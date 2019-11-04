@@ -10,6 +10,7 @@
         "axios": "^0.18.1",
         "babel-plugin-syntax-decorators": "^6.13.0",
         "copy-to-clipboard": "^3.2.0",
+        "design-engine-playground": "file:///labor/projects/npm_modules/design-engine-playground/develop",
         "gsap": "^2.1.2",
         "lang-js-utils": "file:///labor/projects/npm_modules/lang-js-utils",
         "moment": "^2.24.0",
@@ -40,15 +41,29 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
+        "build:wp": "node scripts/webpack",
+        "build:embed": "node scripts/webpack.embed",
+        "build:inline": "node scripts/webpack.inline",
         "backup": "tar -cf ./tmp/tar/node_modules.tar node_modules/",
         "test": "react-scripts test --env=jsdom",
         "audit": "npm audit fix",
         "reinstall": "rm -rf node_modules && npm install",
-        "rebuild": "npm run reinstall && npm run build"
+        "rebuild": "npm run reinstall && npm run build",
+        "postbuild": "npx design-engine --parse"
     },
     "devDependencies": {
         "babel-plugin-transform-decorators-legacy": "^1.3.5",
-        "install-peers": "^1.0.3"
+        "clean-webpack-plugin": "^3.0.0",
+        "css-loader": "^3.2.0",
+        "ejs-loader": "^0.3.5",
+        "html-webpack-inline-source-plugin": "^0.0.10",
+        "html-webpack-inline-style-plugin": "^0.2.0",
+        "html-webpack-plugin": "^3.2.0",
+        "install-peers": "^1.0.3",
+        "mini-css-extract-plugin": "^0.8.0",
+        "style-loader": "^1.0.0",
+        "webpack": "^4.41.2",
+        "webpack-cli": "^3.3.10"
     },
     "browserslist": [
         ">0.2%",
