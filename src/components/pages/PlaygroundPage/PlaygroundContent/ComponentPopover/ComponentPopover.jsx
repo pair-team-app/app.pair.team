@@ -37,6 +37,7 @@ class ComponentPopover extends Component {
 			<div className="component-popover-content-wrapper">
 				<div className="component-popover-menu-item-wrapper">
 					<ComponentPopoverMenuItem type="inspect" title="Inspect" acc={null} onClick={this.handleMenuItemClick} />
+					<ComponentPopoverMenuItem type="share" title="Share" acc={null} onClick={this.handleMenuItemClick} />
 					<ComponentPopoverMenuItem type="comments" title="View Comments" acc={<ComponentPopoverMenuAcc amt={2} />} onClick={this.handleMenuItemClick} />
 				</div>
 				<form>
