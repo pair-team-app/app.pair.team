@@ -62,3 +62,7 @@ yarn-error.log
 **/vendor/**/*.md
 **/vendor/**/examples
 **/vendor/**/LICENSE
+
+
+#-- caches --#
+/.node-persist
