@@ -9,11 +9,11 @@
     "title": "Blog",
     "url": "/url/https://medium.com/pairurl"
   }, {
-    "title": "1to1",
-    "url": "/url/https://1to1show.com"
-  }, {
     "title": "Docs",
     "url": "/url/https://github.com/de-ai/designengine.ai/blob/master/README.md"
+  }, {
+    "title": "GitHub",
+    "url": "/url/https://github.com/de-ai"
   }],
   "bottom": [{
     "title": "Legal",
