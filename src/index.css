@@ -1,6 +1,8 @@
 
 *, *::before, *::after {
   box-sizing: border-box;
+  /*box-sizing: content-box;*/
+  /*box-sizing: padding-box;*/
 }
 
 *:focus {

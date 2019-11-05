@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 const INTRO_DURATION = (1/8);
 const OUTRO_DURATION = (1/8);
 const START_LBL = 'START_LBL';
-// const END_LBL = 'END_LBL';
+const END_LBL = 'END_LBL';
 
 
 class BasePopover extends Component {
@@ -63,7 +63,7 @@ class BasePopover extends Component {
 				opacity    : 0,
 				ease       : Power1.easeOut,
 				onComplete : this.onOutroComplete
-			});
+			}).addLabel(END_LBL);
 		}
 	}
 

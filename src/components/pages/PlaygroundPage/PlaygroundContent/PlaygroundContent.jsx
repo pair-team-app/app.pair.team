@@ -2,7 +2,10 @@
 import React, { Component } from 'react';
 import './PlaygroundContent.css';
 
-//import phComps from '../../../../assets/json/placdeholder-components';
+import { ContextMenuTrigger } from 'react-contextmenu';
+
+import ComponentPopover from './ComponentPopover';
+
 
 class PlaygroundContent extends Component {
 	constructor(props) {
@@ -12,12 +15,17 @@ class PlaygroundContent extends Component {
 		};
 	}
 
+	handleComponentPopover = (event, data, type)=> {
+		console.log('%s.handleComponentPopover()', this.constructor.name, event, data, type);
+	};
+
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { playground } = this.props;
 
 		return (<div className="playground-content">
+			<ContextMenuTrigger id="component" disableIfShiftIsPressed={true}>
 			<div className="playground-content-component-wrapper">
 				{(playground.components.map((comp, i)=> {
 					//const html = comp.html.replace(/\\"/g, '"').replace(/ class=.+?"/, ` style="${Object.keys(comp.styles).map((key)=> (`${key}:${comp.styles[key]}`)).join('; ').replace(/"/g, '\'')}"`);
@@ -80,6 +88,9 @@ class PlaygroundContent extends Component {
 					return (<div key={i} className="playground-content-component" data-id={comp.id} dangerouslySetInnerHTML={{ __html : content }} />);
 				}))}
 			</div>
+			</ContextMenuTrigger>
+
+			<ComponentPopover menuID="component" onClick={this.handleComponentPopover} />
 		</div>);
 	}
 }
