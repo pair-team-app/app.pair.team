@@ -15,8 +15,12 @@ class PlaygroundContent extends Component {
 		};
 	}
 
-	handleComponentPopover = (event, data, type)=> {
-		console.log('%s.handleComponentPopover()', this.constructor.name, event, data, type);
+	handleAddComment = (comment)=> {
+		console.log('%s.handleAddComment()', this.constructor.name, comment);
+	};
+
+	handleComponentPopover = (data=null)=> {
+		console.log('%s.handleComponentPopover()', this.constructor.name, data);
 	};
 
 	render() {
@@ -90,7 +94,7 @@ class PlaygroundContent extends Component {
 			</div>
 			</ContextMenuTrigger>
 
-			<ComponentPopover menuID="component" onClick={this.handleComponentPopover} />
+			<ComponentPopover menuID="component" onClick={this.handleComponentPopover} onAddComment={this.handleAddComment}/>
 		</div>);
 	}
 }
