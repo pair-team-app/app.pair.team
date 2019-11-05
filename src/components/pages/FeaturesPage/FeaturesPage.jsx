@@ -23,11 +23,11 @@ class FeaturesPage extends Component {
 
 
 	handleToggleSection = (section)=> {
-// 		console.log('%s.handleToggleSection()', this.constructor.name, section, this.state.sections);
+// 		console.log('%s.handleToggleSection()', this.constructor.name, section, this.state.sections.map((section)=> (section.open)));
 		trackEvent((section.open) ? 'collapse' : 'expand', section.event);
 
 		const sections = this.state.sections.map((item, i)=> ({ ...item,
-			open : (i === section.ind) ? !section.open : false
+			open : (i === section.ind) ? !item.open : item.open
 		}));
 		this.setState({ sections });
 	};
@@ -64,7 +64,7 @@ class FeaturesPage extends Component {
 const FeaturesPageSectionHeader = (props)=> {
 	const { section } = props;
 	return (<div className="features-page-section-title">
-		<h2 onClick={(event)=> props.onToggle(section)}>{section.header}</h2>
+		<h2 onClick={()=> props.onToggle(section)}>{section.header}</h2>
 	</div>);
 };
 

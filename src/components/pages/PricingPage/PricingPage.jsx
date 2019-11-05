@@ -26,19 +26,14 @@ class PricingPage extends Component {
 // 		console.log('%s.handleSelectSection()', this.constructor.name, section);
 		trackEvent('button', section.event);
 		this.props.onModal(Modals.STRIPE);
-// 		const sectionOpened = this.state.sectionOpened.map((toggle, i)=> (i === section.ind));
-// 		this.setState({ sectionOpened }, ()=> {
-// 			this.props.onModal(Modals.STRIPE);
-// 		});
 	};
 
 	handleToggleSection = (section)=> {
-// 		console.log('%s.handleToggleSection()', this.constructor.name, section, this.state.sectionOpened, this.state.sectionOpened[section.ind]);
 // 		console.log('%s.handleToggleSection()', this.constructor.name, section, this.state.sections);
 		trackEvent((section.open) ? 'collapse' : 'expand', section.event);
 
 		const sections = this.state.sections.map((item, i)=> ({ ...item,
-			open : (i === section.ind) ? !section.open : false
+			open : (i === section.ind) ? !section.open : item.open
 		}));
 		this.setState({ sections });
 	};
