@@ -10,6 +10,6 @@
 }
 
 .page-nav-link-selected, a.page-nav-link-selected {
-	color: var(--link-selected-color);
+	color: rgba(var(--link-selected-color), 1.0);
 	text-decoration: underline;
 }

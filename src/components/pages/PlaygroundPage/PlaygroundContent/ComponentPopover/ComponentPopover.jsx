@@ -10,6 +10,8 @@ class ComponentPopover extends Component {
 		super(props);
 
 		this.state = {
+			intro   : false,
+			outro   : false,
 			comment : ''
 		};
 
@@ -30,9 +32,21 @@ class ComponentPopover extends Component {
 		this.props.onClick(data);
 	};
 
-	onShowMenu = (event)=> {
-		console.log('%s.onShowMenu()', this.constructor.name, event);
-		this.setState({ comment : '' }, ()=> {
+	handleHideMenu = (event)=> {
+// 		console.log('%s.handleHideMenu()', this.constructor.name, event);
+		this.setState({
+			intro : false,
+			outro : true
+		});
+	};
+
+	handleShowMenu = (event)=> {
+// 		console.log('%s.handleShowMenu()', this.constructor.name, event);
+		this.setState({
+			intro : true,
+			outro : false,
+			comment : ''
+		}, ()=> {
 			if (this.textAreaRef) {
 				this.textAreaRef.value = this.state.comment;
 			}
@@ -44,27 +58,26 @@ class ComponentPopover extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { menuID } = this.props;
-		const { comment } = this.state;
-
-		return (<ContextMenu id={menuID} className="component-popover" onShow={this.onShowMenu}>
-			<div className="component-popover-content-wrapper">
-				<div className="component-popover-menu-item-wrapper">
-					<ComponentPopoverMenuItem type="inspect" title="Inspect" acc={null} onClick={this.handleMenuItemClick} />
-					<ComponentPopoverMenuItem type="share" title="Share" acc={null} onClick={this.handleMenuItemClick} />
-					<ComponentPopoverMenuItem type="comments" title="View Comments" acc={<ComponentPopoverMenuAcc amt={2} />} onClick={this.handleMenuItemClick} />
+		const { intro, outro, comment } = this.state;
+		return (<ContextMenu id={menuID} className="component-popover-menu-wrapper" onShow={this.handleShowMenu} onHide={this.handleHideMenu}>
+			<div className={`component-popover${(intro) ? ' component-popover-intro' : (outro) ? ' component-popover-outro' : ''}`}>
+				<div className="component-popover-content-wrapper">
+					<div className="component-popover-menu-item-wrapper">
+						<ComponentPopoverMenuItem type="inspect" title="Inspect" acc={null} onClick={this.handleMenuItemClick} />
+						<ComponentPopoverMenuItem type="share" title="Share" acc={null} onClick={this.handleMenuItemClick} />
+						<ComponentPopoverMenuItem type="comments" title="View Comments" acc={<ComponentPopoverMenuAcc amt={2} />} onClick={this.handleMenuItemClick} />
+					</div>
+					<form>
+						<textarea placeholder="Add Comment" onChange={(event)=> this.setState({ comment : event.target.value })} ref={(element)=> this.textAreaRef = element}>
+						</textarea>
+						<MenuItem data={{ type : 'type:submit' }} onClick={(event)=> this.handleAddComment(event)}>
+							<button disabled={comment.length === 0}>Add Comment</button>
+						</MenuItem>
+					</form>
 				</div>
-				<form>
-					<textarea placeholder="Add Comment" onChange={(event)=> this.setState({ comment : event.target.value })} ref={(element)=> this.textAreaRef = element}>
-					</textarea>
-					<MenuItem data={{ type : 'type:submit' }} onClick={(event)=> this.handleAddComment(event)}>
-						<button disabled={comment.length === 0}>Add Comment</button>
-					</MenuItem>
-				</form>
 			</div>
 		</ContextMenu>);
 	}
-
-
 }
 
 

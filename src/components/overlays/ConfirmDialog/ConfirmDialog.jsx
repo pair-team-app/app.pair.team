@@ -46,8 +46,8 @@ class ConfirmDialog extends Component {
 			<div className="confirm-dialog-content">
 				{children}
 				<div className="base-overlay-button-wrapper confirm-dialog-button-wrapper">
-					<button className="base-overlay-button confirm-dialog-aux-button adjacent-button" onClick={()=> this.handleClick(false)}>Cancel</button>
-					<button className="base-overlay-button" onClick={()=> this.handleClick(true)}>OK</button>
+					<button className="cancel-button adjacent-button" onClick={()=> this.handleClick(false)}>Cancel</button>
+					<button onClick={()=> this.handleClick(true)}>OK</button>
 				</div>
 			</div>
 		</BaseOverlay>);

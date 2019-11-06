@@ -3,12 +3,12 @@
 	min-width: 480px;
 	height: 80%;
 	padding: 20px;
-	background-color: var(--site-bg-color);
+	background-color: rgba(var(--site-bg-color), 1.0);
 }
 
 .stripe-modal-header {
 	width: calc(100% - 40px);
 	margin: 10px 20px 20px 20px;
 	padding-bottom: 3px;
-	border-bottom: 1px solid var(--border-color);
+	border-bottom: 1px solid rgba(var(--border-color), 1.0);
 }

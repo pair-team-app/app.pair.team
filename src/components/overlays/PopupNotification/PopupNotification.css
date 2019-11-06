@@ -26,26 +26,26 @@
 	letter-spacing: -0.5px;
 	text-align: center;
 	vertical-align: middle;
-	color: #abdafb;
+	color: rgba(var(--site-fg-color), 1.0);
 }
 
 .popup-notification-content-error {
 	/*background-color : rgba(255, 70, 70, 0.5);*/
 	/*color : #ff4646;*/
 
-	background-color: rgba(42, 174, 57, 0.95);
-	color: #ffffff;
+	background-color: rgba(var(--invalid-bg-color), 0.95);
+	color: rgba(var(--invalid-fg-color), 1.0);
 }
 
 .popup-notification-content-ok {
-	background-color: rgba(42, 174, 57, 0.95);
-	color: #ffffff;
+	background-color: rgba(var(--site-bg-color), 1.0);
+	color: rgba(var(--site-fg-color), 1.0);
 }
 
 .popup-notification-content-status {
-	background-color: rgba(0, 0, 0, 0.0);
+	background-color: rgba(var(--site-bg-color), 1.0);
 	font-weight: bold;
-	color: #ffffff;
+	color: rgba(var(--site-fg-color), 1.0);
 	text-shadow:
 			-1px -1px 0 rgba(26, 27, 29, 0.5),
 			 1px -1px 0 rgba(26, 27, 29, 0.5),

@@ -19,7 +19,7 @@
 }
 
 .mobile-menu-header:hover {
-	color: var(--link-hover-color);
+	color: rgba(var(--link-hover-color), 1.0);
 	cursor: pointer;
 }
 
@@ -41,8 +41,8 @@
 	right: 0;
 	padding: 4px 20px;
 	text-align: right;
-	background-color: rgba(var(--site-bg-rgb-color), 0.975);
-	/*border-top: 1px solid #cccccc;*/
+	background-color: rgba(var(--site-bg-color), 0.975);
+	/*border-top: 1px solid rgba(var(--border-color), 0.975);*/
 }
 
 .mobile-menu-item-wrapper-open {

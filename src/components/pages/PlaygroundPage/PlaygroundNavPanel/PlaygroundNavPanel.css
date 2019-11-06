@@ -6,8 +6,8 @@
 	width: var(--playground-nav-width);
 	height: 100%;
 	padding: 20px;
-	background-color: var(--playground-panel-bg-color);
-	border-right: 1px solid var(--border-color);
+	background-color: rgba(var(--playground-panel-bg-color), 1.0);
+	border-right: 1px solid rgba(var(--border-color), 1.0);
 	z-index: 2;
 }
 

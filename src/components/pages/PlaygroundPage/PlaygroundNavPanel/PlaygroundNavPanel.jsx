@@ -19,6 +19,7 @@ class PlaygroundNavPanel extends Component {
 		const typeIDs = this.props.items.map((item)=> (item.typeID));
 		const typeGroups = this.props.typeGroups.filter((typeGroup)=> (typeIDs.includes(typeGroup.id))).map((typeGroup)=> {
 			return ({ ...typeGroup,
+				expanded : false,
 				selected : false, // check url for type + id
 				items    : this.props.items.filter((item)=> (item.typeID === typeGroup.id)).map((item)=> ({ ...item,
 					selected : false // check url for id
@@ -34,7 +35,7 @@ class PlaygroundNavPanel extends Component {
 		const { typeGroups } = this.state;
 		this.setState({
 			typeGroups : typeGroups.map((grp)=> ({ ...grp,
-				selected : (grp.id === typeGroup.id) ? !grp.selected : grp.selected
+				expanded : (grp.id === typeGroup.id) ? !grp.expanded : grp.expanded
 			}))
 		});
 	};
@@ -45,6 +46,7 @@ class PlaygroundNavPanel extends Component {
 		const { typeGroups } = this.state;
 		this.setState({
 			typeGroups : typeGroups.map((grp) => ({ ...grp,
+				expanded : (grp.id === typeGroup.id),
 				selected : (grp.id === typeGroup.id),
 				items    : grp.items.map((i) => ({ ...i,
 					selected : (i.id === typeItem.id)

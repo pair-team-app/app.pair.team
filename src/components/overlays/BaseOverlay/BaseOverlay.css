@@ -23,9 +23,9 @@
 	padding: 20px;
 	z-index: 2002;
 	overflow: hidden;
-	border: 1px solid var(--border-color);
+	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: 10px;
-	background-color: var(--site-bg-color);
+	background-color: rgba(var(--site-bg-color), 1.0);
 	text-align: center;
 	/*backface-visibility: hidden;*/
 	/*transform-style: flat;*/
@@ -53,7 +53,7 @@
 	display: table;
 	width: 100%;
 	padding-bottom: 20px;
-	/*border-bottom: 1px solid var(--border-color);*/
+	/*border-bottom: 1px solid rgba(var(--border-color), 1.0);*/
 }
 
 .base-overlay-title {
@@ -70,7 +70,7 @@
 }
 
 .base-overlay-close-button:hover {
-	background-color: var(--quiet-btn-hover-bg-color);
+	background-color: rgba(var(--quiet-btn-hover-bg-color), 1.0);
 }
 
 .base-overlay-content {

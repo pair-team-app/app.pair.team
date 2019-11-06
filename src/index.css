@@ -14,44 +14,43 @@
   pointer-events: none;
 }
 
-:root {
-	--site-bg-color: #fcfcfc;
-	--site-bg-rgb-color: 252, 252, 252; /* fcfcfc */
-	--site-fg-color: #232323;
-	--site-disabled-fg-color: #cccccc;
-	--site-alt-fg: #999999;
-	--btn-bg-color: #0067ff;
-	--btn-fg-color: #232323;
-	--btn-hover-bg-color: #2259e0;
-	--btn-hover-fg-color: #94a9f4;
-	--btn-disabled-bg-color: #cccccc;
-	--btn-disabled-fg-color: var(--site-alt-fg);
-	--btn-selected-fg-color: #ffffff;
-	--cancel-btn-bg-color: #cccccc;
-	--cancel-btn-fg-color: var(--site-alt-fg);
-	--quiet-btn-bg-rgb-color: 247, 247, 247; /* f7f7f7 */
-	--quiet-btn-fg-rgb-color: 35, 35, 35; /* 232323 */
-	--quiet-btn-hover-bg-color: #ededed;
-	--quiet-btn-selected-bg-color: #232323;
-	--quiet-btn-selected-fg-color: #ffffff;
-	--link-color: #232323;
-	--link-hover-color: var(--site-alt-fg);
-	--link-selected-color: var(--site-alt-fg);
-	--link-alt-color: var(--site-alt-fg);
-	--link-alt-hover-color: #666666;
-	--txtfield-bg-color: #f7f7f7;
-	--txtfield-disabled-bg-color: #f7f7f7;
-	--txtfield-disabled-fg-color: #666666;
-	--border-color: #cecece;
-	--playground-panel-bg-color: #f7f7f7;
-	--playground-nav-width: 208px;
-	--playground-comments-width: 228px;
-	--playground-comments-timestamp-color: var(--site-alt-fg);
-	--dialog-title-color: var(--site-alt-fg);
+*::placeholder {
+	font-size: 16px;
 }
 
-::placeholder {
-	font-size: 16px;
+:root {
+	--site-bg-color: 252, 252, 252; /* fcfcfc */
+	--site-fg-color: 35, 35, 35; /* #232323 */
+	--disabled-fg-color: 204, 204, 204; /* #cccccc */
+	--invalid-bg-color: 255, 240, 240; /* fff0f0 */
+	--invalid-fg-color: 255, 70, 70; /* #ff4646 */
+	--btn-bg-color: 0, 103, 255; /* #0067ff */
+	--btn-fg-color: 255, 255, 255; /* ffffff */
+	--btn-hover-bg-color: 0, 92, 229; /* #005ce5 */
+	--btn-disabled-bg-color: var(--disabled-fg-color); /* cccccc */
+	--btn-disabled-fg-color: 247, 247, 247; /* #f7f7f7 */
+	--quiet-btn-bg-color: 255, 255, 255; /* ffffff */
+	--quiet-btn-fg-color: var(--site-fg-color); /* #232323 */
+	--quiet-btn-hover-bg-color: 237, 237, 237; /* #ededed */
+	--quiet-btn-selected-bg-color: var(--site-fg-color); /* #232323 */
+	--quiet-btn-selected-fg-color: 255, 255, 255; /* #ffffff */
+	--link-color: var(--site-fg-color); /* #232323 */
+	--link-hover-color: 153, 153, 153; /* 999999 */
+	--link-selected-color: var(--site-fg-color); /* #232323 */
+	--txtfield-bg-color: 247, 247, 247; /* #f7f7f7 */
+	--txtfield-fg-color: var(--site-fg-color); /* 232323 */
+	--txtfield-disabled-bg-color: var(--disabled-fg-color); /* cccccc */
+	--txtfield-disabled-fg-color: 153, 153, 153; /* 999999 */
+	--border-color: 206, 206, 206; /* #cecece */
+	--playground-panel-bg-color: 247, 247, 247; /* #f7f7f7 */
+	--playground-panel-link-color: 153, 153, 153; /* 999999 */
+	--playground-panel-link-hover-color: var(--site-fg-color); /* #232323 */
+
+	--timestamp-color:  153, 153, 153; /* 999999 */
+	--dialog-title-color: 153, 153, 153; /* 999999 */
+
+	--playground-nav-width: 208px;
+	--playground-comments-width: 228px;
 }
 
 
@@ -60,7 +59,7 @@ html, body {
   padding: 0;
   max-height: 100vh;
   min-height: 100vh;
-  background-color: var(--site-bg-color);
+  background-color: rgba(var(--site-bg-color), 1.0);
   -webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, Arial, sans-serif;
@@ -71,17 +70,18 @@ html, body {
 
 
 a {
-  color: var(--link-color);
+  color: rgba(var(--link-color), 1.0);
   text-decoration: none;
-}
-
-a:hover {
-	color: var(--link-hover-color);
-	text-decoration: none;
 	transition: color 0.125s ease-out;
 }
 
+a:hover {
+	color: rgba(var(--link-hover-color), 1.0);
+	text-decoration: none;
+}
+
 a:active {
+	color: rgba(var(--link-selected-color), 1.0);
 	text-decoration: underline;
 }
 
@@ -89,28 +89,28 @@ button {
   width: 316px;
   height: 46px;
 	padding: 8px 30px 10px 30px;
-  background-color: var(--btn-bg-color);
-  border: 1px solid var(--border-color);
+  background-color: rgba(var(--btn-bg-color), 1.0);
+  border: 1px solid rgba(var(--btn-bg-color), 1.0);
   border-radius: 23px;
   font-size: 16px;
-  color: var(--btn-fg-color);
+  color: rgba(var(--btn-fg-color), 1.0);
+	transition: background-color 0.1s ease-out;
 }
 
 button:hover, button:active {
-  background-color: var(--btn-hover-bg-color);
-	color: var(--btn-hover-fg-color);
-  transition: background-color 0.1s ease-out;
+  background-color: rgba(var(--btn-hover-bg-color), 1.0);
+	border: 1px solid rgba(var(--btn-hover-bg-color), 1.0);
   cursor: pointer;
 }
 
 button:disabled, button:disabled:hover {
-	background-color: var(--btn-disabled-bg-color);
-  color: var(--btn-disabled-fg-color);
+	background-color: rgba(var(--btn-disabled-bg-color), 1.0);
+	border: 1px solid rgba(var(--btn-disabled-bg-color), 1.0);
+  color: rgba(var(--btn-disabled-fg-color), 1.0);
   cursor: default;
 }
 
 button[data-selected="true"], button[data-selected="true"]:hover {
-	color: var(--btn-selected-fg-color);
 }
 
 fieldset {
@@ -147,10 +147,11 @@ h1::before {
 h2 {
 	margin-bottom: 0;
 	width: fit-content;
-	color: var(--btn-bg-color);
+	color: rgba(var(--btn-bg-color), 1.0);
 	font-size: 48px;
 	letter-spacing: 1px;
 	line-height: 43px;
+	transition: color 0.125s ease-out;
 }
 
 h2::before {
@@ -158,14 +159,13 @@ h2::before {
 }
 
 h2:hover {
-	color: var(--btn-hover-bg-color);
-	transition: filter 0.125s ease-out;
+	color: rgba(var(--btn-hover-bg-color), 1.0);
 	cursor: pointer;
 }
 
 /** Modal Title **/
 h3 {
-	color: var(--btn-bg-color);
+	color: rgba(var(--btn-bg-color), 1.0);
 	font-size: 36px;
 	font-weight: 500;
 	letter-spacing: 0.75px;
@@ -202,46 +202,45 @@ h6 {
 	text-align: left;
 }
 
-input[type="email"], input[type="password"], input[type="text"], textarea {
+input[type="email"], input[type="password"], input[type="password"]:hover, input[type="text"], textarea, textarea:hover {
 	width: 100%;
 	padding: 15px 20px;
-	border: 1px solid var(--border-color);
+	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: 23px;
-	color: var(--site-fg-color);
+	color: rgba(var(--txtfield-fg-color), 1.0);
 	text-align: center;
 	font-size: 16px;
 	cursor: text;
 	-webkit-appearance: none;
+	transition: background-color 0.125s ease-out;
 }
 
-input[type="email"]:invalid, input[type="password"]:invalid, input[type="text"]:invalid {
-	border: 1px solid #ff4646;
-	background-color: #fff0f0;
-	color: #ff4646;
+input[type="email"]:invalid, input[type="email"]:invalid:hover, input[type="password"]:invalid, input[type="password"]:invalid:hover, input[type="text"]:invalid, input[type="text"]:invalid:hover {
+	border: 1px solid rgba(var(--invalid-fg-color), 1.0);
+	background-color: rgba(var(--invalid-bg-color), 1.0);
+	color: rgba(var(--invalid-fg-color), 1.0);
 }
 
 input[type="email"]:valid, input[type="password"]:valid, input[type="text"]:valid, select, textarea {
-	border: 1px solid var(--border-color);
-	background-color: var(--txtfield-bg-color);
-	color: var(--site-fg-color);
+	border: 1px solid rgba(var(--border-color), 1.0);
+	background-color: rgba(var(--txtfield-bg-color), 1.0);
+	color: rgba(var(--txtfield-fg-color), 1.0);
 }
 
 input[type="email"]:disabled, input[type="password"]:disabled, input[type="text"]:disabled, select:disabled, textarea:disabled {
   cursor: not-allowed;
-	background-color: var(--txtfield-disabled-bg-color);
-	color: var(--txtfield-disabled-fg-color);
+	background-color: rgba(var(--txtfield-disabled-bg-color), 1.0);
+	color: rgba(var(--txtfield-disabled-fg-color), 1.0);
 }
 
 input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hover, input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 1px 50px var(--site-bg-color) inset;
-  -webkit-text-fill-color: var(--site-fg-color);
-  /*-webkit-text-fill-color: #ff00ff;*/
+  -webkit-box-shadow: 0 0 1px 50px rgba(var(--txtfield-bg-color), 1.0) inset;
+  -webkit-text-fill-color: rgba(var(--txtfield-fg-color), 1.0);
 }
 
-input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, textarea:focus, input[type="email"]:hover, input[type="password"]:hover, input[type="text"]:hover, textarea:hover {
-	background-color: var(--txtfield-bg-color);
-	color: var(--site-fg-color);
-	transition: background-color 0.125s ease-out;
+input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, textarea:focus {
+	background-color: rgba(var(--txtfield-bg-color), 1.0);
+	color: rgba(var(--txtfield-fg-color), 1.0);
 }
 
 p {
@@ -273,11 +272,11 @@ textarea {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--quiet-btn-bg-rgb-color);
+  background: rgba(var(--quiet-btn-bg-color), 1.0);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-color);
+  background: rgba(var(--border-color), 1.0);
 }
 
 ::-webkit-scrollbar-thumb:hover {
