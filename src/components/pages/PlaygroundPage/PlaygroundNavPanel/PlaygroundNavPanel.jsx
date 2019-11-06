@@ -14,16 +14,17 @@ class PlaygroundNavPanel extends Component {
 	}
 
 	componentDidMount() {
-// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
-		const typeIDs = this.props.items.map((item)=> (item.typeID));
-		const typeGroups = this.props.typeGroups.filter((typeGroup)=> (typeIDs.includes(typeGroup.id))).map((typeGroup)=> {
-			return ({ ...typeGroup,
-				expanded : false,
-				selected : false, // check url for type + id
-				items    : this.props.items.filter((item)=> (item.typeID === typeGroup.id)).map((item)=> ({ ...item,
-					selected : false // check url for id
-				}))
+		const { typeItems } = this.props;
+
+		const typeIDs = typeItems.map(({ typeID })=> (typeID));
+		const typeGroups = this.props.typeGroups.filter(({ id })=> (typeIDs.includes(id))).map((typeGroup)=> {
+			const items = this.props.typeItems.filter(({ typeID })=> (typeID === typeGroup.id));
+
+			return ({ ...typeGroup, items,
+				expanded : items.map(({ selected })=> (selected)).includes(true),
+				selected : items.map(({ selected })=> (selected)).includes(true)
 			});
 		});
 		this.setState({ typeGroups });
@@ -53,6 +54,8 @@ class PlaygroundNavPanel extends Component {
 				}))
 			}))
 		});
+
+		this.props.onNavTypeItemClick(typeGroup, typeItem);
 	};
 
 

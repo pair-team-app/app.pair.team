@@ -16,8 +16,8 @@ class PlaygroundCommentsPanel extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { comments } = this.props;
-		return (<div className={`playground-comments-panel${(!comments.visible) ? ' playground-comments-panel-collapsed' :''}`}>
-			{(comments.entries.map((comment, i)=> {
+		return (<div className={`playground-comments-panel${(comments.length === 0) ? ' playground-comments-panel-collapsed' :''}`}>
+			{(comments.map((comment, i)=> {
 				return (<CommentsPanelItem key={i} comment={comment} onDelete={this.props.onDelete} />);
 			}))}
 		</div>);

@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import './PlaygroundHeader.css';
 
+import { Strings } from 'lang-js-utils';
+
 import SharePopover from '../SharePopover';
 import HeaderProfile from './HeaderProfile';
 
@@ -18,19 +20,26 @@ class PlaygroundHeader extends Component {
 
 	componentWillUnmount() {
 // 		console.log('%s.componentWillUnmount()', this.constructor.name);
-		this.wrapper = null;
+		this.shareLink = null;
 	}
 
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state, (this.shareLink) ? { left : this.shareLink.offsetLeft, top : this.shareLink.offsetTop } : null);
 
-// 		const { projectSlug, componentsSlug, componentID, commentID } = this.props;
-		const { playground, params } = this.props;
-		const { projectSlug, componentsSlug } = params;
+		const { playground, projectSlug, componentsSlug, component } = this.props;
 		const { popover } = this.state;
 
+		let breadcrumbs = `${projectSlug}`;
+		if (componentsSlug) {
+			breadcrumbs = `${breadcrumbs} > ${componentsSlug}`;
+		}
+
+		if (component) {
+			breadcrumbs = `${breadcrumbs} > ${Strings.truncate(component.title, 50)}`;
+		}
+
 		return (<div className="playground-header">
-			<div className="playground-header-col">{projectSlug} > {componentsSlug}</div>
+			<div className="playground-header-col">{breadcrumbs}</div>
 			<div className="playground-header-col playground-header-col-right">
 				<div className="playground-header-link" onClick={()=> this.setState({ popover : !this.state.popover })} ref={(element)=> { this.shareLink = element; }}>Share</div>
 				<HeaderProfile onLogout={this.props.onLogout} />

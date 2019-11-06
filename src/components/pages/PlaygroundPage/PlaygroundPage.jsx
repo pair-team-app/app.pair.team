@@ -12,7 +12,6 @@ import PlaygroundContent from './PlaygroundContent';
 import PlaygroundHeader from './PlaygroundHeader';
 import PlaygroundFooter from './PlaygroundFooter';
 import PlaygroundNavPanel from './PlaygroundNavPanel';
-import phComments from '../../../assets/json/placeholder-comments';
 import { Modals, API_ENDPT_URL, DEFAULT_AVATAR } from '../../../consts/uris';
 import { decryptObject, decryptText } from './utils/crypto';
 import { trackEvent } from '../../../utils/tracking';
@@ -23,15 +22,11 @@ class PlaygroundPage extends Component {
 		super(props);
 
 		this.state = {
-			typeGroups : null,
-			playground : null,
-			comments   : {
-				visible : true,
-				entries : phComments.map((comment, i)=> ({ ...comment,
-					ind       : i,
-					timestamp : moment(comment.added).add((moment().utcOffset() << 0), 'minute')
-				})).sort((i, j)=> ((i.ind > j.ind) ? -1 : (i.ind < j.ind) ? 1 : 0))
-			}
+			typeGroups  : null,
+			playgrounds : null,
+			playground  : null,
+			component   : null,
+			fetching    : false
 		};
 	}
 
@@ -41,134 +36,185 @@ class PlaygroundPage extends Component {
 		if (!this.props.profile) {
 			this.props.onModal(Modals.LOGIN);
 		}
-
-		axios.post(API_ENDPT_URL, {
-			action  : 'COMPONENT_TYPES',
-			payload : null
-		}).then((response) => {
-			console.log('COMPONENT_TYPES', response.data);
-			const { components } = response.data;
-			this.setState({ typeGroups : components });
-
-		}).catch((error)=> {
-		});
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
-		const { playground } = this.state;
-		if (prevProps.profile && this.props.profile) {
-			if (!playground) {
-				this.onFetchPlayground(329);
+		const { componentTypes, match } = this.props;
+		const { playground, fetching } = this.state;
+
+		if (!prevProps.componentTypes && componentTypes) {
+			this.setState({ typeGroups : componentTypes });
+		}
+
+		if (!prevProps.profile && this.props.profile) {
+			if (!playground && !fetching) {
+				const { buildID, playgroundID } = match.params;
+
+				if (buildID) {
+					this.onFetchBuildPlaygrounds(buildID, playgroundID << 0);
+				}
+			}
+		}
+
+		if (!prevState.playground && playground && !this.state.component) {
+			const { componentID } = match.params;
+			if (componentID) {
+				const component = playground.components.find(({ id })=> (id === componentID << 0));
+				if (component) {
+					this.setState({ component });
+				}
 			}
 		}
 	}
-
-	onFetchPlayground = (playgroundID)=> {
-		console.log('%s.onFetchPlayground()', this.constructor.name, playgroundID);
-
-		axios.post(API_ENDPT_URL, {
-			action  : 'PLAYGROUND',
-			payload : {
-				playground_id : playgroundID,
-			}
-		}).then((response) => {
-			console.log('PLAYGROUND', response.data);
-
-			const { playground } = response.data;
-			this.setState({ playground : { ...playground,
-					html       : decryptText(playground.html).replace(/"/g, '"'),
-					styles     : decryptObject(playground.styles),
-					deviceID   : playground.device_id,
-					components : playground.components.map((component, i)=> ({ ...component,
-						typeID   : component.type_id,
-						stateID  : component.state_id,
-						title    : (component.title.length === 0) ? component.tag_name : component.title,
-						tagName  : component.tagName,
-						html     : decryptText(component.html).replace(/"/g, '"'),
-						styles   : decryptObject(component.styles),
-						path     : component.path.split(' ').filter((i)=> (i.length > 0)),
-						selected : false,
-						children : component.children.map((child, i)=> ({ ...child,
-							html   : decryptText(child.html).replace(/"/g, '"'),
-							styles : decryptObject(child.styles),
-							path   : child.path.split(' ').filter((i)=> (i.length > 0))
-						})),
-						comments : component.comments.map((comment, i)=> ({ ...comment,
-							ind       : i,
-							visible   : true,
-							timestamp : moment(comment.added).add((moment().utcOffset() << 0), 'minute')
-						})).sort((i, j)=> ((i.ind > j.ind) ? -1 : (i.ind < j.ind) ? 1 : 0))
-					}))
-				}});
-
-		}).catch((error)=> {
-		});
-	};
 
 	handleDeleteComment = (comment)=> {
 // 		console.log('%s.handleDeleteComment()', this.constructor.name, this.state.comments, comment);
 
 		trackEvent('button', 'delete-comment');
-		const { comments } = this.state;
+
+		const { component } = this.state;
 		this.setState({
-			comments : { ...comments,
-				entries : comments.entries.filter((item) => (item.id !== comment.id)).sort((i, j) => ((i.ind > j.ind) ? -1 : (i.ind < j.ind) ? 1 : 0))
+			component : { ...component,
+				comments : component.comments.filter(({ id }) => (id !== comment.id)).sort((i, j) => ((i.ind > j.ind) ? -1 : (i.ind < j.ind) ? 1 : 0))
 			}
 		});
+	};
+
+	handleNavTypeItemClick = (typeGroup, typeItem)=> {
+		console.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
+
+		const { teamSlug, projectSlug, buildID } = this.props.match.params;
+		const { playground } = this.state;
+
+		this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${typeItem.id}`);
+		this.setState({ component : typeItem });
 	};
 
 	handleToggleComments = (event)=> {
 // 		console.log('%s.handleToggleComments()', this.constructor.name, event, this.state.comments);
-		const { comments } = this.state;
 
-		this.setState({
-			comments : { ...comments,
-				visible : !comments.visible
-			}
+// 		this.setState({
+// 			comments : { ...comments,
+// 				visible : !comments.visible
+// 			}
+// 		});
+	};
+
+	handleTogglePlayground = ()=> {
+		console.log('%s.handleTogglePlayground()', this.constructor.name, this.state.playground.deviceID);
+		const { playgrounds, playground } = this.state;
+		this.setState({ playground : playgrounds.find(({ deviceID })=> (deviceID !== playground.deviceID))}, ()=> {
+			const { teamSlug, projectSlug, buildID } = this.props.match.params;
+			const { playground } = this.state;
+
+			this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}`);
+			trackEvent('button', (playground.deviceID === 1) ? 'desktop-toggle' : 'mobile-toggle');
 		});
 	};
 
-	handleToggleDesktop = ()=> {
-		console.log('%s.handleToggleDesktop()', this.constructor.name, this.state.playground.deviceID);
-		trackEvent('button', 'desktop-toggle');
+	onFetchBuildPlaygrounds = (buildID, playgroundID=null)=> {
+		console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
 
-		const { playground } = this.state;
-		if (playground.device_id === 2) {
-			this.onFetchPlayground(329);
-		}
-	};
+		this.setState({ fetching : true }, ()=> {
+			axios.post(API_ENDPT_URL, {
+				action  : 'BUILD_PLAYGROUNDS',
+				payload : {
+					build_id : buildID,
+				}
+			}).then((response) => {
+				console.log('BUILD_PLAYGROUNDS', response.data);
+				const { componentID } = this.props.match.params;
 
-	handleToggleMobile = ()=> {
-		console.log('%s.handleToggleMobile()', this.constructor.name, this.state.playground.deviceID);
-		trackEvent('button', 'mobile-toggle');
 
-		const { playground } = this.state;
-		if (playground.device_id === 1) {
-			this.onFetchPlayground(330);
-		}
+				const playgrounds = response.data.playgrounds.map((playground)=> {
+					const { device_id } = playground;
+					delete (playground['device_id']);
+
+					return ({ ...playground,
+						html       : decryptText(playground.html).replace(/"/g, '"'),
+						styles     : decryptObject(playground.styles),
+						deviceID   : device_id,
+						components : playground.components.map((component)=> {
+							const { type_id, event_type_id, tag_name } = component;
+							delete (component['type_id']);
+							delete (component['event_type_id']);
+							delete (component['tag_name']);
+
+							return ({ ...component,
+								typeID      : type_id,
+								eventTypeID : event_type_id,
+								title       : (component.title.length === 0) ? tag_name : component.title,
+								tagName     : tag_name,
+								html        : decryptText(component.html).replace(/"/g, '"'),
+								styles      : decryptObject(component.styles),
+								path        : component.path.split(' ').filter((i)=> (i.length > 0)),
+								selected    : (component.id === componentID << 0),
+								children    : component.children.map((child)=> {
+									const { tag_name } = child;
+
+									return ({ ...child,
+										title   : (child.title.length === 0) ? tag_name : child.title,
+										tagName : tag_name,
+										html    : decryptText(child.html).replace(/"/g, '"'),
+										styles  : decryptObject(child.styles),
+										path    : child.path.split(' ').filter((i)=> (i.length > 0))
+									});
+								}),
+								comments    : component.comments.map((comment, i)=> ({ ...comment,
+									ind       : i,
+									author    : {
+										id       : comment.author.id,
+										username : comment.author.username,
+										email    : comment.author.email,
+										avatar   : comment.author.avatar
+									},
+									timestamp : moment(comment.added).add((moment().utcOffset() << 0), 'minute')
+								})).sort((i, j)=> ((i.ind > j.ind) ? -1 : (i.ind < j.ind) ? 1 : 0))
+							});
+						})
+					});
+				});
+
+				const playground = (playgroundID) ? playgrounds.find(({ id })=> (id === playgroundID)) : playgrounds.find(({ deviceID })=> (deviceID === 1));
+				this.setState({ playgrounds, playground,
+					fetching   : false
+
+				}, ()=> {
+					if (!this.props.match.params.playgroundID) {
+						const { playground } = this.state;
+						this.props.history.push(`${this.props.location.pathname}/${playground.id}`);
+					}
+				});
+
+			}).catch((error)=> {
+			});
+		});
 	};
 
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props.match.params, this.state);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
+
+		const { profile } = this.props;
+		const { teamSlug, projectSlug, componentsSlug, componentID } = this.props.match.params;
+		const { typeGroups, playground, component } = this.state;
 
 		const team = {
-			title : this.props.match.params.teamSlug,
+			title : teamSlug,
 			logo  : DEFAULT_AVATAR
 		};
 
-		const { profile } = this.props;
-		const { params } = this.props.match;
-		const { typeGroups, playground, comments } = this.state;
 
 		return (
-			<BasePage className={`page-wrapper playground-page-wrapper${(comments.visible) ? ' playground-page-wrapper-comments' : ''}`}>
+			<BasePage className={`page-wrapper playground-page-wrapper${(component && component.comments.length > 0) ? ' playground-page-wrapper-comments' : ''}`}>
 				{(profile && playground) && (<PlaygroundNavPanel
 					team={team}
 					typeGroups={typeGroups}
-					items={playground.components}
+					typeItems={playground.components}
+					componentID={componentID}
+					onNavTypeItemClick={this.handleNavTypeItemClick}
 				/>)}
 
 				{(profile && playground) && (<div className="playground-page-content-wrapper">
@@ -178,22 +224,24 @@ class PlaygroundPage extends Component {
 
 					<PlaygroundHeader
 						playground={playground}
-						params={params}
+						projectSlug={projectSlug}
+						componentsSlug={componentsSlug}
+						component={component}
 						onLogout={this.props.onLogout}
 					/>
 
 					<PlaygroundFooter
-						comments={comments}
+						comments={(component) ? component.comments : []}
 						desktop={(playground.deviceID === 1)}
 						mobile={(playground.deviceID === 2)}
 						onToggleComments={this.handleToggleComments}
-						onToggleDesktop={this.handleToggleDesktop}
-						onToggleMobile={this.handleToggleMobile}
+						onToggleDesktop={this.handleTogglePlayground}
+						onToggleMobile={this.handleTogglePlayground}
 					/>
 				</div>)}
 
 				{(profile) && (<PlaygroundCommentsPanel
-					comments={comments}
+					comments={(component) ? component.comments : []}
 					onDelete={this.handleDeleteComment}
 				/>)}
 			</BasePage>
@@ -204,7 +252,9 @@ class PlaygroundPage extends Component {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		profile : state.userProfile,
+		profile        : state.userProfile,
+		componentTypes : state.componentTypes,
+		eventGroups    : state.eventGroups
 	});
 };
 

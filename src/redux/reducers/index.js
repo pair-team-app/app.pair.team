@@ -7,6 +7,8 @@ import {
 	APPEND_HOME_ARTBOARDS,
 	SET_ARTBOARD_COMPONENT,
 	SET_ARTBOARD_GROUPS,
+	COMPONENT_TYPES_LOADED,
+	EVENT_GROUPS_LOADED,
 	SET_REDIRECT_URI,
 	CONVERTED_DEEPLINK,
 	UPDATE_MOUSE_COORDS,
@@ -24,6 +26,8 @@ const initialState = {
 	homeArtboards      : [],
 	artboardComponents : null,
 	artboardGroups     : [],
+	componentTypes     : null,
+	eventGroups        : [],
 	deeplink           : {
 		uploadID   : 0,
 		pageID     : 0,
@@ -103,6 +107,16 @@ function rootReducer(state=initialState, action) {
 				artboardGroups : action.payload
 			}));
 
+		case COMPONENT_TYPES_LOADED:
+			return (Object.assign({}, state, {
+				componentTypes : action.payload
+			}));
+
+		case EVENT_GROUPS_LOADED:
+			return (Object.assign({}, state, {
+				eventGroups : action.payload
+			}));
+
 		case SET_REDIRECT_URI:
 			return (Object.assign({}, state, {
 				redirectURI : action.payload
@@ -169,21 +183,6 @@ function rootReducer(state=initialState, action) {
 			}));
 	}
 }
-
-/*
-
-const { id, type, github } = payload;
-		payload = {
-			...payload,
-			id     : id << 0,
-			github : (github) ? {
-				...github,
-				id : github.id << 0
-			} : github,
-			paid   : type.includes('paid')
-		};
-
-		*/
 
 
 export default rootReducer;

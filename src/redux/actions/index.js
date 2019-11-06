@@ -9,6 +9,8 @@ import {
 	APPEND_HOME_ARTBOARDS,
 	SET_ARTBOARD_GROUPS,
 	SET_ARTBOARD_COMPONENT,
+	COMPONENT_TYPES_LOADED,
+	EVENT_GROUPS_LOADED,
 	SET_REDIRECT_URI,
 	USER_PROFILE_ERROR,
 	UPDATE_DEEPLINK,
@@ -25,7 +27,7 @@ import { API_ENDPT_URL } from '../../consts/uris';
 
 
 const logFormat = (action, payload=null, meta='')=> {
-	console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, payload, meta);
+	console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, (payload || ''), meta);
 };
 
 
@@ -44,6 +46,50 @@ export function appendArtboardSlices(payload) {
 export function appendHomeArtboards(payload) {
 	return ({ payload,
 		type : APPEND_HOME_ARTBOARDS
+	});
+}
+
+export function fetchComponentTypes() {
+	logFormat('fetchComponentTypes()');
+
+	return ((dispatch)=> {
+		axios.post(API_ENDPT_URL, {
+			action  : 'COMPONENT_TYPES',
+			payload : null
+		}).then((response) => {
+			console.log('COMPONENT_TYPES', response.data);
+			dispatch({
+				type    : COMPONENT_TYPES_LOADED,
+				payload : response.data.component_types
+			});
+
+		}).catch((error)=> {
+		});
+	});
+}
+
+export function fetchEventGroups() {
+	logFormat('fetchEventGroups()');
+
+	return ((dispatch)=> {
+		axios.post(API_ENDPT_URL, {
+			action  : 'EVENT_GROUPS',
+			payload : null
+		}).then((response) => {
+			console.log('EVENT_GROUPS', response.data);
+
+			dispatch({
+				type    : EVENT_GROUPS_LOADED,
+				payload : response.data.event_groups.map((eventGroup)=> {
+					const events = eventGroup.event_types;
+					delete (eventGroup['event_types']);
+
+					return ({ ...eventGroup, events });
+				})
+			});
+
+		}).catch((error)=> {
+		});
 	});
 }
 
