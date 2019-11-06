@@ -1,7 +1,7 @@
 
 .header-profile {
 	position: relative;
-	margin-left: 20px;
+	margin-left: 10px;
 	display: flex;
 	flex-flow: row nowrap;
 	align-items: center;
@@ -20,13 +20,14 @@
 
 .header-profile-avatar-wrapper {
 	position: relative;
-	width: 18px;
-	height: 18px;
+	width: 24px;
+	height: 24px;
 	margin-left: 10px;
 	background-size: cover;
 	overflow: hidden;
 	background-color: rgba(var(--quiet-btn-bg-color), 1.0);
-	/*border: 1px solid #ff00ff;*/
+	border: 1px solid rgba(var(--site-fg-color), 1.0);
+	border-radius: 50%;
 }
 
 .header-profile-avatar-image {
@@ -35,13 +36,14 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	-webkit-transform: translate(-50%, -50%);
-	object-fit: scale-down;
-	max-width: 100%;
+	max-width: 95%;
 	opacity: 0.875;
+	text-align: center;
+	clip-path: circle(9px at center);
 	transition: opacity 0.125s ease-out;
 }
 
-.header-profile-avatar-image:hover, .header-profile-arrow:hover {
+.header-profile-avatar-image:hover {
 	cursor: pointer;
 	opacity: 1;
 }

@@ -24,7 +24,8 @@
 	margin-right: 10px;
 }
 
-.playground-nav-panel-header-title {
+.playground-nav-panel-header-title:hover {
+	cursor: pointer;
 }
 
 .playground-nav-panel-component-type-wrapper {

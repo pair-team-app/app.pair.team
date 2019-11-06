@@ -1,13 +1,14 @@
 
 @keyframes component-popover-intro {
-	from {
-		top : 10px;
-	}
-
-	to {
-		top : 0;
-	}
+	from { top: 10px; }
+	to { top: 0; }
 }
+
+@keyframes component-popover-outro {
+	from { transform: scale(1.0); }
+	to { transform: scale(0.875); }
+}
+
 
 .component-popover-menu-wrapper {
 	transition: opacity 125ms ease-out;
@@ -25,10 +26,11 @@
 }
 
 .component-popover-intro {
-	animation: 0.125s cubic-bezier(0.4, 0, 0.2, 1) 0s 1 forwards component-popover-intro;
+	animation: 0.125s cubic-bezier(0.4, 0, 0.2, 1.0) 0s 1 forwards component-popover-intro;
 }
 
 .component-popover-outro {
+	animation: 0.125s cubic-bezier(0.4, 0, 0.2, 1.0) 0s 1 forwards component-popover-outro;
 }
 
 .component-popover-content-wrapper {
@@ -53,7 +55,6 @@
 	text-align: left;
 }
 
-
 .component-popover-menu-item-wrapper > * {
 	padding: 15px 20px;
 	border-bottom: 1px solid rgba(var(--border-color), 1.0);
@@ -62,6 +63,7 @@
 .component-popover-menu-item-wrapper > *:first-child {
 	padding-top: 15px;
 }
+
 
 .component-popover-menu-item {
 	display: flex;

@@ -17,7 +17,7 @@ class PlaygroundHeader extends Component {
 	}
 
 	componentWillUnmount() {
-		console.log('%s.componentWillUnmount()', this.constructor.name);
+// 		console.log('%s.componentWillUnmount()', this.constructor.name);
 		this.wrapper = null;
 	}
 

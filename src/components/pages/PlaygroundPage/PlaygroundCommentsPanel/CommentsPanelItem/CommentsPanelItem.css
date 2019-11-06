@@ -69,6 +69,7 @@
 .comments-panel-item-header-link {
 	font-size: 10px;
 	color: rgba(var(--link-color), 1.0);
+	transition: color 0.125s ease-out;
 }
 
 .comments-panel-item-header-link:hover {
