@@ -82,7 +82,7 @@ a:hover {
 
 a:active {
 	color: rgba(var(--link-selected-color), 1.0);
-	text-decoration: underline;
+	text-decoration: none;
 }
 
 button {
@@ -255,6 +255,15 @@ p:first-child {
 
 p:last-child {
   margin-bottom: 35px;
+}
+
+p > a {
+	text-decoration: underline;
+}
+
+p > a:hover {
+	color: rbga(var(--link-color), 1.0);
+	text-decoration: none;
 }
 
 sup {
