@@ -4,7 +4,7 @@ import './PlaygroundContent.css';
 
 import { ContextMenuTrigger } from 'react-contextmenu';
 
-import ComponentPopover from './ComponentPopover';
+import ComponentMenu from './ComponentMenu';
 
 
 const inlineStyles = (html, styles)=> {
@@ -99,7 +99,7 @@ class PlaygroundContent extends Component {
 			</div>
 			</ContextMenuTrigger>
 
-			<ComponentPopover menuID="component" onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment}/>
+			<ComponentMenu menuID="component" onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment}/>
 		</div>);
 	}
 }

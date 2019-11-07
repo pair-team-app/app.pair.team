@@ -1,16 +1,16 @@
 
-@keyframes component-popover-intro {
+@keyframes component-menu-intro {
 	from { top: 5px; }
 	to { top: 0; }
 }
 
-@keyframes component-popover-outro {
+@keyframes component-menu-outro {
 	from { transform: scale(1.0); }
 	to { transform: scale(0.875); }
 }
 
 
-.component-popover-menu-wrapper {
+.component-menu-wrapper {
 	z-index: 1001;
 	transition: opacity 125ms ease-out;
 }
@@ -27,27 +27,27 @@
 	box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.125);
 }
 
-.component-popover-intro {
-	animation: 0.125s cubic-bezier(0.0, 0.2, 0.4, 1.0) 0s 1 forwards component-popover-intro;
+.component-menu-intro {
+	animation: 0.125s cubic-bezier(0.0, 0.2, 0.4, 1.0) 0s 1 forwards component-menu-intro;
 }
 
-.component-popover-outro {
-	animation: 0.125s cubic-bezier(0.2, 0.6, 0.9, 1.0) 0s 1 forwards component-popover-outro;
+.component-menu-outro {
+	animation: 0.125s cubic-bezier(0.2, 0.6, 0.9, 1.0) 0s 1 forwards component-menu-outro;
 }
 
-.component-popover-content-wrapper {
+.component-menu-content-wrapper {
 }
 
-.component-popover-content-wrapper form {
+.component-menu-content-wrapper form {
 	width: 100%;
 	padding: 20px;
 }
 
-.component-popover-content-wrapper button {
+.component-menu-content-wrapper button {
 	width: 100%;
 }
 
-.component-popover-content-wrapper textarea {
+.component-menu-content-wrapper textarea {
 	width: 228px;
 	height: 128px;
 	margin: 5px 5px 25px 5px;
@@ -57,17 +57,17 @@
 	text-align: left;
 }
 
-.component-popover-menu-item-wrapper > * {
+.component-menu-item-wrapper > * {
 	padding: 15px 20px;
 	border-bottom: 1px solid rgba(var(--border-color), 1.0);
 }
 
-.component-popover-menu-item-wrapper > *:first-child {
+.component-menu-item-wrapper > *:first-child {
 	padding-top: 15px;
 }
 
 
-.component-popover-menu-item {
+.component-menu-item {
 	display: flex;
 	flex-wrap: nowrap;
 	justify-content: flex-start; /* h-align */
@@ -77,27 +77,27 @@
 	transition: color 0.125s ease-out;
 }
 
-.component-popover-menu-item:hover {
+.component-menu-item:hover {
 	color: rgba(var(--link-hover-color), 1.0);
 	cursor: pointer;
 }
 
-.component-popover-menu-item > * {
+.component-menu-item > * {
 	margin: auto;
 	/*border: 1px solid #ff00ff;*/
 	flex: 1 1 auto;
 }
 
-.component-popover-menu-item > *:last-child {
+.component-menu-item > *:last-child {
 	flex: 1 0 0;
 }
 
-.component-popover-menu-item-spacer {
+.component-menu-item-spacer {
 	flex: 5 0 0;
 }
 
 
-.component-popover-menu-acc {
+.component-menu-item-acc {
 	width: 18px;
 	height: 18px;
 	padding: 1px;

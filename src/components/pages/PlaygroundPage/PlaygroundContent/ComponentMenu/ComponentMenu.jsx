@@ -1,12 +1,10 @@
 
 import React, { Component } from 'react';
-import './ComponentPopover.css';
+import './ComponentMenu.css';
 
 import { ContextMenu, MenuItem } from 'react-contextmenu';
 
-import BasePopover from '../../../../overlays/BasePopover';
-
-class ComponentPopover extends Component {
+class ComponentMenu extends Component {
 	constructor(props) {
 		super(props);
 
@@ -80,18 +78,17 @@ class ComponentPopover extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { menuID } = this.props;
-		const { intro, outro, position, comment } = this.state;
-// 		const payload = { position };
+		const { intro, outro, comment } = this.state;
 
-		return (<ContextMenu id={menuID} className="component-popover-menu-wrapper" onShow={this.handleShowMenu} onHide={this.handleHideMenu} preventHideOnResize={true} preventHideOnScroll={true}>
+		return (<ContextMenu id={menuID} className="component-menu-wrapper" onShow={this.handleShowMenu} onHide={this.handleHideMenu} preventHideOnResize={true} preventHideOnScroll={true}>
 			{/*<BasePopover intro={intro} outro={outro} payload={payload} onOutroComplete={this.props.onClose}>*/}
-			<div className={`component-popover${(intro) ? ' component-popover-intro' : (outro) ? ' component-popover-outro' : ''}`}>
+			<div className={`component-popover${(intro) ? ' component-menu-intro' : (outro) ? ' component-menu-outro' : ''}`}>
 			{/*<div className={`component-popover`}>*/}
-				<div className="component-popover-content-wrapper">
-					<div className="component-popover-menu-item-wrapper">
-						<ComponentPopoverMenuItem type="inspect" title="Inspect" acc={null} onClick={this.handleMenuItemClick} />
-						<ComponentPopoverMenuItem type="share" title="Share" acc={null} onClick={this.handleMenuItemClick} />
-						<ComponentPopoverMenuItem type="comments" title="View Comments" acc={<ComponentPopoverMenuAcc amt={2} />} onClick={this.handleMenuItemClick} />
+				<div className="component-menu-content-wrapper">
+					<div className="component-menu-item-wrapper">
+						<ComponentMenuItem type="inspect" title="Inspect" acc={null} onClick={this.handleMenuItemClick} />
+						<ComponentMenuItem type="share" title="Share" acc={null} onClick={this.handleMenuItemClick} />
+						<ComponentMenuItem type="comments" title="View Comments" acc={<ComponentMenuItemAcc amt={2} />} onClick={this.handleMenuItemClick} />
 					</div>
 					<form>
 						<textarea placeholder="Add Comment" onChange={(event)=> this.setState({ comment : event.target.value })} ref={(element)=> this.textAreaRef = element}>
@@ -108,23 +105,23 @@ class ComponentPopover extends Component {
 }
 
 
-const ComponentPopoverMenuItem = (props)=> {
-// 	console.log('ComponentPopoverMenuItem()', props);
+const ComponentMenuItem = (props)=> {
+// 	console.log('ComponentMenuItem()', props);
 
 	const { type, title, acc } = props;
-	return (<MenuItem data={{ type }} onClick={props.onClick} attributes={{ className : 'component-popover-menu-item' }}>
+	return (<MenuItem data={{ type }} onClick={props.onClick} attributes={{ className : 'component-menu-item' }}>
 		<div>{title}</div>
-		<div className="component-popover-menu-item-spacer" />
+		<div className="component-menu-item-spacer" />
 		<div>{acc}</div>
 	</MenuItem>);
 };
 
-const ComponentPopoverMenuAcc = (props)=> {
-// 	console.log('ComponentPopoverMenuAcc()', props);
+const ComponentMenuItemAcc = (props)=> {
+// 	console.log('ComponentMenuItemAcc()', props);
 
 	const { amt } = props;
-	return (<div className="component-popover-menu-acc">{amt}</div>);
+	return (<div className="component-menu-item-acc">{amt}</div>);
 };
 
 
-export default (ComponentPopover);
+export default (ComponentMenu);
