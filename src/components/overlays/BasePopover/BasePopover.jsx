@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './BasePopover.css';
 
-import { TimelineMax, Back, Circ, Power1 } from 'gsap/TweenMax';
+import { TimelineMax, Back, Circ } from 'gsap/TweenMax';
 import onClickOutside from 'react-onclickoutside';
 import { connect } from 'react-redux';
 
@@ -26,6 +26,7 @@ class BasePopover extends Component {
 				width  : 0,
 				height : 0
 			},
+			intro : true,
 			outro : false
 		};
 
@@ -33,39 +34,50 @@ class BasePopover extends Component {
 	}
 
 	componentDidMount() {
-// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
+		const { intro, outro } = { ...this.state, ...this.props};
 		const { duration, position, size } = { ...this.state, ...this.props.payload};
-		this.setState({ duration, position, size }, ()=> {
-			console.log(duration, position, size);
 
-			this.timeline = new TimelineMax();
-			this.timeline.addLabel(START_LBL, '0').from(this.wrapper, duration.intro, {
-				opacity : 0.0,
-				y       : 5,
-				ease    : Back.easeOut,
-				delay   : 0.0
-			});
+		this.timeline = new TimelineMax();
+		this.setState({ duration, position, size, intro, outro }, ()=> {
+			console.log(duration, position, size, intro, outro);
+			if (intro) {
+				this.onIntro();
+			}
 		});
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state);
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, { intro : prevProps.intro, outro : prevProps.outro }, { intro : this.props.intro, outro : this.props.outro }, { intro : prevState.intro, outro : prevState.outro }, { intro : this.state.intro, outro : this.state.outro });
 
-		if (this.props.outro && prevProps.outro !== this.props.outro) {
-			this.setState({ outro : true });
+		const { position } = this.props.payload;
+		const { intro, outro } = this.state;
+
+		if (position !== prevProps.payload.position) {
+			this.setState({ position });
 		}
 
-		if (this.state.outro) {
-			this.setState({ outro : false });
-			this.timeline = new TimelineMax();
-			this.timeline.to(this.wrapper, this.state.duration.outro, {
-				opacity    : 0,
-				scale      : 0.875,
-				ease       : Circ.easeOut,
-				onComplete : this.onOutroComplete
-			}).addLabel(END_LBL);
+		if (this.props.intro && this.props.intro !== prevProps.intro) {
+			console.log('%s.componentDidUpdate() - intro > true', this.constructor.name, this.props.intro, intro);
+				this.onIntro();
+// 			this.setState({ intro : true });
 		}
+
+		if (this.props.outro && this.props.outro !== prevProps.outro) {
+			console.log('%s.componentDidUpdate() - outro true', this.constructor.name, this.props.outro, outro);
+			this.onOutro();
+// 			this.setState({ outro : true });
+		}
+
+
+// 		if (intro && prevState.intro !== intro) {
+// 			this.onIntro();
+// 		}
+//
+// 		if (outro && prevState.outro !== outro) {
+// 			this.onOutro();
+// 		}
 	}
 
 	componentWillUnmount() {
@@ -76,22 +88,60 @@ class BasePopover extends Component {
 
 	handleClickOutside(event) {
 // 		console.log('%s.handleClickOutside()', this.constructor.name);
-		this.setState({ outro : true });
+// 		this.setState({ outro : true });
+		this.onOutro();
 	}
 
 
+	onIntro = ()=> {
+		console.log('%s.onIntro()', this.constructor.name, this.props, this.state.intro);
+
+		const { duration } = this.state;
+// 		this.timeline = new TimelineMax();
+		this.timeline.addLabel(START_LBL, '0').from(this.wrapper, duration.intro, {
+			opacity : 0.0,
+			y       : 5,
+			ease    : Back.easeOut,
+			delay   : 0.0,
+			onComplete : ()=> {
+// 				this.setState({ intro : false });
+			}
+		});
+	};
+
+	onOutro = ()=> {
+		console.log('%s.onOutro()', this.constructor.name, this.props, this.state.outro);
+
+		const { duration } = this.state;
+// 		this.timeline = new TimelineMax();
+		this.timeline.to(this.wrapper, duration.outro, {
+			opacity    : 0,
+// 			scale      : 0.875,
+			ease       : Circ.easeOut,
+			onComplete : this.onOutroComplete
+		}).addLabel(END_LBL);
+	};
+
+
 	onOutroComplete = ()=> {
-// 		console.log('%s.onOutroComplete()', this.constructor.name);
+		console.log('%s.onOutroComplete()', this.constructor.name);
+
 		if (this.props.onOutroComplete) {
 			this.props.onOutroComplete();
 		}
+
+// 		this.setState({ outro : false }, ()=> {
+// 			if (this.props.onOutroComplete) {
+// 				this.props.onOutroComplete();
+// 			}
+// 		});
 	};
 
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
-		if (this.wrapper && this.timeline && this.timeline.time === 0) {
-			this.timeline.seek(0);
-		}
+// 		if (this.wrapper && this.timeline && this.timeline.time === 0) {
+// 			this.timeline.seek(0);
+// 		}
 
 		const { children } = this.props;
 		const { position, size } = this.state;
@@ -118,6 +168,7 @@ const mapStateToProps = (state, ownProps)=> {
 
 
 export default connect(mapStateToProps)(onClickOutside(BasePopover));
+// export default (onClickOutside(BasePopover));
 
 
 

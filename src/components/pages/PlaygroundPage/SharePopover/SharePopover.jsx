@@ -18,7 +18,9 @@ class SharePopover extends Component {
 
 		this.state = {
 			email      : '',
-			emailValid : false
+			emailValid : false,
+			intro      : true,
+			outro      : false
 		};
 	}
 
@@ -26,7 +28,7 @@ class SharePopover extends Component {
 		console.log('%s.handleClipboardCopy()', this.constructor.name);
 
 		trackEvent('button', `copy-share-url`);
-		this.props.onClose();
+		this.setState({ outro : true });
 	};
 
 	handleEmailChange = (event)=> {
@@ -56,7 +58,7 @@ class SharePopover extends Component {
 			}).then((response)=> {
 				console.log('INVITE', response.data);
 // 				const { invite } = response.data;
-				this.props.onClose();
+				this.setState({ outro : true });
 
 			}).catch((error)=> {
 			});
@@ -71,7 +73,7 @@ class SharePopover extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { position } = this.props;
-		const { email, emailValid } = this.state;
+		const { email, emailValid, intro, outro } = this.state;
 
 		const payload = {
 			position : {
@@ -80,7 +82,7 @@ class SharePopover extends Component {
 			}
 		};
 
-		return (<BasePopover payload={payload} onOutroComplete={this.props.onClose}>
+		return (<BasePopover outro={outro} payload={payload} onOutroComplete={this.props.onClose}>
 			<div className="share-popover">
 				<div className="share-popover-url">{window.location.href}</div>
 				<div className="share-popover-form-wrapper">

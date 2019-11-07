@@ -4,6 +4,7 @@ import './ComponentPopover.css';
 
 import { ContextMenu, MenuItem } from 'react-contextmenu';
 
+import BasePopover from '../../../../overlays/BasePopover';
 
 class ComponentPopover extends Component {
 	constructor(props) {
@@ -12,7 +13,10 @@ class ComponentPopover extends Component {
 		this.state = {
 			intro    : false,
 			outro    : false,
-			position : null,
+			position : {
+				x : 0,
+				y : 0
+			},
 			comment  : ''
 		};
 
@@ -48,7 +52,7 @@ class ComponentPopover extends Component {
 	};
 
 	handleHideMenu = (event)=> {
-// 		console.log('%s.handleHideMenu()', this.constructor.name, event);
+		console.log('%s.handleHideMenu()', this.constructor.name, event);
 
 		this.setState({
 			intro : false,
@@ -57,7 +61,7 @@ class ComponentPopover extends Component {
 	};
 
 	handleShowMenu = (event)=> {
-// 		console.log('%s.handleShowMenu()', this.constructor.name, event.detail.position);
+		console.log('%s.handleShowMenu()', this.constructor.name, event.detail.position);
 
 		this.setState({
 			intro    : true,
@@ -76,9 +80,13 @@ class ComponentPopover extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { menuID } = this.props;
-		const { intro, outro, comment } = this.state;
+		const { intro, outro, position, comment } = this.state;
+// 		const payload = { position };
+
 		return (<ContextMenu id={menuID} className="component-popover-menu-wrapper" onShow={this.handleShowMenu} onHide={this.handleHideMenu} preventHideOnResize={true} preventHideOnScroll={true}>
+			{/*<BasePopover intro={intro} outro={outro} payload={payload} onOutroComplete={this.props.onClose}>*/}
 			<div className={`component-popover${(intro) ? ' component-popover-intro' : (outro) ? ' component-popover-outro' : ''}`}>
+			{/*<div className={`component-popover`}>*/}
 				<div className="component-popover-content-wrapper">
 					<div className="component-popover-menu-item-wrapper">
 						<ComponentPopoverMenuItem type="inspect" title="Inspect" acc={null} onClick={this.handleMenuItemClick} />
@@ -94,6 +102,7 @@ class ComponentPopover extends Component {
 					</form>
 				</div>
 			</div>
+			{/*</BasePopover>*/}
 		</ContextMenu>);
 	}
 }

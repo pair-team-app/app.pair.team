@@ -28,7 +28,7 @@
 }
 
 .component-popover-intro {
-	animation: 0.125s cubic-bezier(0.0, 0.4, 0.5, 1.0) 0s 1 forwards component-popover-intro;
+	animation: 0.125s cubic-bezier(0.0, 0.2, 0.4, 1.0) 0s 1 forwards component-popover-intro;
 }
 
 .component-popover-outro {
