@@ -7,6 +7,12 @@ import { ContextMenuTrigger } from 'react-contextmenu';
 import ComponentPopover from './ComponentPopover';
 
 
+const inlineStyles = (html, styles)=> {
+	const style = Object.keys(styles).map((key)=> (`${key}:${styles[key]}`)).join('; ').replace(/"/g, '\'');
+	return ((/style="(.+?)"/i.test(html)) ? `${html.replace(/style="/, `style="${style} `)}` : html.replace(/>/, ` style="${style}">`).replace(/ class=.+?"/, ''));
+};
+
+
 class PlaygroundContent extends Component {
 	constructor(props) {
 		super(props);
@@ -15,14 +21,6 @@ class PlaygroundContent extends Component {
 		};
 	}
 
-	handleAddComment = (comment)=> {
-		console.log('%s.handleAddComment()', this.constructor.name, comment);
-	};
-
-	handleComponentPopover = (data=null)=> {
-		console.log('%s.handleComponentPopover()', this.constructor.name, data);
-	};
-
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
@@ -30,7 +28,7 @@ class PlaygroundContent extends Component {
 
 		return (<div className="playground-content">
 			<ContextMenuTrigger id="component" disableIfShiftIsPressed={true}>
-			<div className="playground-content-component-wrapper">
+			<div className="playground-content-components-wrapper">
 				{(playground.components.map((comp, i)=> {
 					//const html = comp.html.replace(/\\"/g, '"').replace(/ class=.+?"/, ` style="${Object.keys(comp.styles).map((key)=> (`${key}:${comp.styles[key]}`)).join('; ').replace(/"/g, '\'')}"`);
 
@@ -89,20 +87,36 @@ class PlaygroundContent extends Component {
 
 // 					let children = '';
 					const content = inlineStyles(comp.html, comp.styles).replace(/\[:]/, html.join(''));
-					return (<div key={i} className="playground-content-component" data-id={comp.id} dangerouslySetInnerHTML={{ __html : content }} />);
+					return (<div key={i} className="playground-content-component-wrapper">
+						<div className="playground-content-component" data-id={comp.id} dangerouslySetInnerHTML={{ __html : content }} />
+						<div className="playground-content-component-comment-wrapper">
+							{(comp.comments.map((comment, i)=> {
+								return (<ComponentComment key={i} comment={comment} />);
+							}))}
+						</div>
+					</div>);
 				}))}
 			</div>
 			</ContextMenuTrigger>
 
-			<ComponentPopover menuID="component" onClick={this.handleComponentPopover} onAddComment={this.handleAddComment}/>
+			<ComponentPopover menuID="component" onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment}/>
 		</div>);
 	}
 }
 
 
-const inlineStyles = (html, styles)=> {
-	const style = Object.keys(styles).map((key)=> (`${key}:${styles[key]}`)).join('; ').replace(/"/g, '\'');
-	return ((/style="(.+?)"/i.test(html)) ? `${html.replace(/style="/, `style="${style} `)}` : html.replace(/>/, ` style="${style}">`).replace(/ class=.+?"/, ''));
+const ComponentComment = (props)=> {
+// 	console.log('ComponentComment()', props);
+
+	const { comment } = props;
+	const style = {
+		top  : `${comment.position.y}px`,
+		left : `${comment.position.x}px`
+	};
+
+	return (<div className="playground-content-component-comment" data-id={comment.id} style={style}>
+		+
+	</div>);
 };
 
 

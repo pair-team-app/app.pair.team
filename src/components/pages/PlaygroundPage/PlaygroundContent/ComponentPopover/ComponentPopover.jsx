@@ -10,30 +10,46 @@ class ComponentPopover extends Component {
 		super(props);
 
 		this.state = {
-			intro   : false,
-			outro   : false,
-			comment : ''
+			intro    : false,
+			outro    : false,
+			position : null,
+			comment  : ''
 		};
 
 		this.textAreaRef = React.createRef();
 	}
 
 
-	handleAddComment = (event)=> {
-		console.log('%s.handleAddComment()', this.constructor.name, event, this.state.comment);
+	handleAddComment = (event, data)=> {
+		console.log('%s.handleAddComment()', this.constructor.name, event, data.target.parentNode, this.state.position, this.state.comment);
 		event.preventDefault();
-		this.props.onAddComment(null);
+
+		const { left, top } = data.target.parentNode.getBoundingClientRect();
+		const { position, comment } = this.state;
+
+		this.props.onAddComment({
+			content  : comment,
+			itemID   : data.target.parentNode.getAttribute('data-id') << 0,
+			position : {
+				x : (position.x - left) << 0,
+				y : (position.y - top) << 0,
+			}
+		});
 	};
 
 	handleMenuItemClick = (event, data)=> {
-		console.log('%s.handleMenuItemClick()', this.constructor.name, event, data);
+// 		console.log('%s.handleMenuItemClick()', this.constructor.name, event, data);
 
 		event.preventDefault();
-		this.props.onClick(data);
+		this.props.onClick({
+			type   : data.type,
+			itemID : data.target.parentNode.getAttribute('data-id') << 0
+		});
 	};
 
 	handleHideMenu = (event)=> {
 // 		console.log('%s.handleHideMenu()', this.constructor.name, event);
+
 		this.setState({
 			intro : false,
 			outro : true
@@ -41,11 +57,13 @@ class ComponentPopover extends Component {
 	};
 
 	handleShowMenu = (event)=> {
-// 		console.log('%s.handleShowMenu()', this.constructor.name, event);
+// 		console.log('%s.handleShowMenu()', this.constructor.name, event.detail.position);
+
 		this.setState({
-			intro : true,
-			outro : false,
-			comment : ''
+			intro    : true,
+			outro    : false,
+			position : event.detail.position,
+			comment  : ''
 		}, ()=> {
 			if (this.textAreaRef) {
 				this.textAreaRef.value = this.state.comment;
@@ -59,7 +77,7 @@ class ComponentPopover extends Component {
 
 		const { menuID } = this.props;
 		const { intro, outro, comment } = this.state;
-		return (<ContextMenu id={menuID} className="component-popover-menu-wrapper" onShow={this.handleShowMenu} onHide={this.handleHideMenu}>
+		return (<ContextMenu id={menuID} className="component-popover-menu-wrapper" onShow={this.handleShowMenu} onHide={this.handleHideMenu} preventHideOnResize={true} preventHideOnScroll={true}>
 			<div className={`component-popover${(intro) ? ' component-popover-intro' : (outro) ? ' component-popover-outro' : ''}`}>
 				<div className="component-popover-content-wrapper">
 					<div className="component-popover-menu-item-wrapper">
@@ -70,7 +88,7 @@ class ComponentPopover extends Component {
 					<form>
 						<textarea placeholder="Add Comment" onChange={(event)=> this.setState({ comment : event.target.value })} ref={(element)=> this.textAreaRef = element}>
 						</textarea>
-						<MenuItem data={{ type : 'type:submit' }} onClick={(event)=> this.handleAddComment(event)}>
+						<MenuItem data={{ type : 'submit' }} onClick={this.handleAddComment}>
 							<button disabled={comment.length === 0}>Add Comment</button>
 						</MenuItem>
 					</form>

@@ -1,27 +1,19 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 import './PlaygroundCommentsPanel.css';
 
 import CommentsPanelItem from './CommentsPanelItem';
 
-class PlaygroundCommentsPanel extends Component {
-	constructor(props) {
-		super(props);
 
-		this.state = {
-		};
-	}
+function PlaygroundCommentsPanel(props) {
+// 	console.log('PlaygroundCommentsPanel()', props);
 
-	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
-
-		const { comments } = this.props;
-		return (<div className={`playground-comments-panel${(comments.length === 0) ? ' playground-comments-panel-collapsed' :''}`}>
-			{(comments.map((comment, i)=> {
-				return (<CommentsPanelItem key={i} comment={comment} onDelete={this.props.onDelete} />);
-			}))}
-		</div>);
-	}
+	const { comments } = props;
+	return (<div className={`playground-comments-panel${(comments.length === 0) ? ' playground-comments-panel-collapsed' :''}`}>
+		{(comments.map((comment, i)=> {
+			return (<CommentsPanelItem key={i} ind={(comments.length - 1) - i} comment={comment} onDelete={props.onDelete} />);
+		}))}
+	</div>);
 }
 
 

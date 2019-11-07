@@ -3,6 +3,7 @@ import React from 'react';
 import './NavPanelTypeGroup.css';
 
 import Collapse from '@kunukn/react-collapse';
+import { Strings } from 'lang-js-utils';
 
 
 function NavPanelTypeGroup(props) {
@@ -27,7 +28,7 @@ function NavPanelTypeGroup(props) {
 const NavPanelTypeItem = (props)=> {
 // 	console.log('NavPanelTypeItem()', props);
 	const { item } = props;
-	return (<div className="nav-panel-type-item" onClick={props.onClick} data-selected={item.selected}>{item.title}</div>);
+	return (<div className="nav-panel-type-item" onClick={props.onClick} data-selected={item.selected}>{Strings.truncate(item.title, 20)}</div>);
 };
 
 

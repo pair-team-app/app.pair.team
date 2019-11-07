@@ -33,7 +33,7 @@ class MobileMenu extends Component {
 				<div className="mobile-menu-header-title">Menu</div>
 			</div>
 			<div className={`mobile-menu-item-wrapper${(opened) ? ' mobile-menu-item-wrapper-open' : ''}`}>
-				{([ ...navLinks.top, ...navLinks.aux, ...navLinks.bottom].map((navLink, i)=> (<MobileMenuItem key={i} navLink={navLink} onClick={(event)=> this.setState({ opened : false })} />)))}
+				{([ ...navLinks.top, ...navLinks.aux, ...navLinks.bottom].map((navLink, i)=> (<MobileMenuItem key={i} navLink={navLink} onClick={()=> this.setState({ opened : false })} />)))}
 			</div>
 		</div>);
 	}

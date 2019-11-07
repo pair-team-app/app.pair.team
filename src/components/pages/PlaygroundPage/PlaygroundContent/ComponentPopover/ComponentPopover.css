@@ -11,6 +11,7 @@
 
 
 .component-popover-menu-wrapper {
+	z-index: 1001;
 	transition: opacity 125ms ease-out;
 }
 

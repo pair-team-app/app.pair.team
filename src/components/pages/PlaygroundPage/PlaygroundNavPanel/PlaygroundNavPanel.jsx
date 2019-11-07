@@ -14,7 +14,7 @@ class PlaygroundNavPanel extends Component {
 	}
 
 	componentDidMount() {
-		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
 		const { typeItems } = this.props;
 
@@ -49,8 +49,8 @@ class PlaygroundNavPanel extends Component {
 			typeGroups : typeGroups.map((grp) => ({ ...grp,
 				expanded : (grp.id === typeGroup.id),
 				selected : (grp.id === typeGroup.id),
-				items    : grp.items.map((i) => ({ ...i,
-					selected : (i.id === typeItem.id)
+				items    : grp.items.map((item) => ({ ...item,
+					selected : (item.id === typeItem.id)
 				}))
 			}))
 		});

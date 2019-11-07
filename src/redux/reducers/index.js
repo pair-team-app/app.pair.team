@@ -85,7 +85,7 @@ function rootReducer(state=initialState, action) {
 		case APPEND_HOME_ARTBOARDS:
 			return (Object.assign({}, state, {
 				homeArtboards : (action.payload) ? state.homeArtboards.concat(action.payload).reduce((acc, inc)=>
-					[...acc.filter((artboard)=> (artboard.id !== inc.id)), inc], []
+					[...acc.filter(({ id })=> (id !== inc.id)), inc], []
 				) : []
 			}));
 

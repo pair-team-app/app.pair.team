@@ -224,7 +224,7 @@ export function setRedirectURI(payload) {
 }
 
 export function updateDeeplink(payload) {
-	const cnt = (payload) ? Object.keys(payload).filter((key, i)=> (payload && typeof payload[key] === 'number')).length : 0;
+	const cnt = (payload) ? Object.keys(payload).filter((key)=> (payload && typeof payload[key] === 'number')).length : 0;
 	return ({ payload,
 		type : (!payload || Object.keys(payload).length !== cnt) ? UPDATE_DEEPLINK : CONVERTED_DEEPLINK
 	});
