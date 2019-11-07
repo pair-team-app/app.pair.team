@@ -86,14 +86,13 @@ class BaseOverlay extends Component {
 			this.timeline.seek(0);
 		}
 
-		const { type, size, unblurred, title, closeable, defaultButton, children } = this.props;
-		const wrapperClass = `base-overlay-content-wrapper base-overlay-content-wrapper${(type === OVERLAY_TYPE_FIXED_SIZE) ? '-fixed' : (type === OVERLAY_TYPE_PERCENT_SIZE) ? '-percent' : '-auto-scroll'}${(unblurred) ? ' base-overlay-content-wrapper-unblurred' : ''}`;
+		const { type, size, title, closeable, defaultButton, children } = this.props;
+		const wrapperClass = `base-overlay-content-wrapper base-overlay-content-wrapper${(type === OVERLAY_TYPE_FIXED_SIZE) ? '-fixed' : (type === OVERLAY_TYPE_PERCENT_SIZE) ? '-percent' : '-auto-scroll'}`;
 		const wrapperStyle = (type === OVERLAY_TYPE_FIXED_SIZE) ? {
 			width  : size.width,
 			height : size.height
 		} : null;
 
-		const contentClass = `base-overlay-content${(!closeable && !title) ? ' base-overlay-content-padded' : ''}`;
 
 		return (<div className="base-overlay" onClick={(closeable) ? this.handleClose : null} ref={(element)=> { this.wrapper = element; }}>
 			<div className={wrapperClass} style={wrapperStyle} onClick={(event)=> event.stopPropagation()}>
@@ -101,7 +100,7 @@ class BaseOverlay extends Component {
 					<Column flexGrow={1}><div className="base-overlay-title">{title}</div></Column>
 					{(closeable && !defaultButton) && (<Column horizontal="end"><button className="quiet-button base-overlay-close-button" onClick={this.handleClose}><FontAwesome name="times"/></button></Column>)}
 				</Row></div>)}
-				<div className={contentClass}>{children}</div>
+				<div className="base-overlay-content">{children}</div>
 				{(defaultButton) && (<div className="base-overlay-button-wrapper">
 					<button onClick={this.handleClose}>{defaultButton}</button>
 				</div>)}

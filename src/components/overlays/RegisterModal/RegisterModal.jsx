@@ -121,7 +121,6 @@ class RegisterModal extends Component {
 			<BaseOverlay
 				tracking={`register/${URIs.firstComponent()}`}
 				outro={outro}
-				unblurred={true}
 				closeable={false}
 				onComplete={this.handleComplete}>
 

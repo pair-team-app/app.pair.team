@@ -98,7 +98,6 @@ class LoginModal extends Component {
 			<BaseOverlay
 				tracking={`login/${URIs.firstComponent()}`}
 				outro={outro}
-				unblurred={true}
 				closeable={false}
 				onComplete={this.handleComplete}>
 

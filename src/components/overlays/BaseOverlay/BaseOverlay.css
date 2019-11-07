@@ -29,7 +29,7 @@
 	text-align: center;
 	/*backface-visibility: hidden;*/
 	/*transform-style: flat;*/
-	/*box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.33);*/
+	box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.125);
 }
 
 .base-overlay-content-wrapper-unblurred {
@@ -75,14 +75,6 @@
 
 .base-overlay-content {
 	padding-bottom: 20px;
-}
-
-.base-overlay-content-padded {
-	/*padding: 10px 20px;*/
-}
-
-.base-overlay-content-wrapper-unblurred .base-overlay-content-padded {
-	/*padding: 0;*/
 }
 
 .base-overlay-button-wrapper {

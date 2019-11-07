@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './BasePopover.css';
 
-import { TimelineMax, Circ, Power1 } from 'gsap/TweenMax';
+import { TimelineMax, Back, Circ, Power1 } from 'gsap/TweenMax';
 import onClickOutside from 'react-onclickoutside';
 import { connect } from 'react-redux';
 
@@ -43,7 +43,7 @@ class BasePopover extends Component {
 			this.timeline.addLabel(START_LBL, '0').from(this.wrapper, duration.intro, {
 				opacity : 0.0,
 				y       : 5,
-				ease    : Circ.easeOut,
+				ease    : Back.easeOut,
 				delay   : 0.0
 			});
 		});
@@ -62,7 +62,7 @@ class BasePopover extends Component {
 			this.timeline.to(this.wrapper, this.state.duration.outro, {
 				opacity    : 0,
 				scale      : 0.875,
-				ease       : Power1.easeOut,
+				ease       : Circ.easeOut,
 				onComplete : this.onOutroComplete
 			}).addLabel(END_LBL);
 		}

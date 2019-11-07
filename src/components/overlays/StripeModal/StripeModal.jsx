@@ -132,7 +132,6 @@ class StripeModal extends Component {
 			<BaseOverlay
 				tracking={`stripe/${URIs.firstComponent()}`}
 				outro={outro}
-				unblurred={true}
 				closeable={true}
 				defaultButton={null}
 				title={null}
