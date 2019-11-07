@@ -19,7 +19,6 @@ class SharePopover extends Component {
 		this.state = {
 			email      : '',
 			emailValid : false,
-			intro      : true,
 			outro      : false
 		};
 	}
@@ -73,7 +72,7 @@ class SharePopover extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { position } = this.props;
-		const { email, emailValid, intro, outro } = this.state;
+		const { email, emailValid, outro } = this.state;
 
 		const payload = {
 			position : {

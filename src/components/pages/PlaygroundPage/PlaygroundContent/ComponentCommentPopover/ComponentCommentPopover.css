@@ -1,0 +1,26 @@
+
+.component-comment-popover {
+	width: 250px;
+	padding: 20px;
+}
+
+.component-comment-popover-url {
+	margin: 10px 20px 20px 20px;
+	padding-bottom: 10px;
+	font-size: 12px;
+	text-align: center;
+	text-decoration: underline;
+	word-break: break-all;
+}
+
+.component-comment-popover-form-wrapper {
+}
+
+.component-comment-popover-form-wrapper form > * {
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.component-comment-popover-form-wrapper form > *:last-child {
+	margin-bottom: 0;
+}

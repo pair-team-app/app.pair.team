@@ -4,6 +4,7 @@ import './PlaygroundContent.css';
 
 import { ContextMenuTrigger } from 'react-contextmenu';
 
+import ComponentCommentPopover from './ComponentCommentPopover';
 import ComponentMenu from './ComponentMenu';
 
 
@@ -18,13 +19,23 @@ class PlaygroundContent extends Component {
 		super(props);
 
 		this.state = {
+			comment : null,
+			popover : false
 		};
 	}
+
+	handleCommentClick = (comment)=> {
+		console.log('%s.handleCommentClick()', this.constructor.name, comment);
+		this.setState({ comment,
+			popover : true
+		});
+	};
 
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { playground } = this.props;
+		const { comment, popover } = this.state;
 
 		return (<div className="playground-content">
 			<ContextMenuTrigger id="component" disableIfShiftIsPressed={true}>
@@ -91,13 +102,18 @@ class PlaygroundContent extends Component {
 						<div className="playground-content-component" data-id={comp.id} dangerouslySetInnerHTML={{ __html : content }} />
 						<div className="playground-content-component-comment-wrapper">
 							{(comp.comments.map((comment, i)=> {
-								return (<ComponentComment key={i} comment={comment} />);
+								return (<ComponentComment key={i} comment={comment} onClick={this.handleCommentClick} />);
 							}))}
 						</div>
 					</div>);
 				}))}
 			</div>
 			</ContextMenuTrigger>
+
+			{(popover) && (<ComponentCommentPopover
+				comment={comment}
+				position={comment.position}
+				onClose={()=> this.setState({ comment : null, popover : false })} />)}
 
 			<ComponentMenu menuID="component" onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment}/>
 		</div>);
@@ -114,7 +130,7 @@ const ComponentComment = (props)=> {
 		left : `${comment.position.x}px`
 	};
 
-	return (<div className="playground-content-component-comment" data-id={comment.id} style={style}>
+	return (<div className="playground-content-component-comment" onClick={()=> props.onClick(comment)} data-id={comment.id} style={style}>
 		+
 	</div>);
 };
