@@ -3,14 +3,17 @@ import React, { Component } from 'react';
 import './HeaderProfile.css';
 
 import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 
 import BasePopover from '../../../../overlays/BasePopover';
-import { DEFAULT_AVATAR } from '../../../../../consts/uris';
+import { DEFAULT_AVATAR, GITHUB_DOCS } from '../../../../../consts/uris';
+import { trackOutbound } from '../../../../../utils/tracking';
 
 const PROFILE_EMAIL = 'PROFILE_EMAIL';
 const PROFILE_NAME = 'PROFILE_NAME';
 const PROFILE_ACCOUNT = 'PROFILE_ACCOUNT';
 const PROFILE_DELETE = 'PROFILE_DELETE';
+const PROFILE_DOCS = 'PROFILE_DOCS';
 const PROFILE_LOGOUT = 'PROFILE_LOGOUT';
 
 
@@ -26,14 +29,26 @@ class HeaderProfile extends Component {
 		this.wrapper = React.createRef();
 	}
 
-	handleItemClick = (type)=> {
-// 		console.log('%s.handleItemClick()', this.constructor.name, type);
+	handleItemClick = (type, event=null)=> {
+		console.log('%s.handleItemClick()', this.constructor.name, type, event);
+
+		if (event) {
+			event.preventDefault();
+		}
+
 		this.setState({ outro : true });
 
 		if (type === PROFILE_EMAIL) {
 		} else if (type === PROFILE_NAME) {
 		} else if (type === PROFILE_ACCOUNT) {
 		} else if (type === PROFILE_DELETE) {
+		} else if (type === PROFILE_DOCS) {
+			trackOutbound(GITHUB_DOCS, ()=> {
+// 			window.open(GITHUB_DOCS);
+			});
+
+			window.open(GITHUB_DOCS);
+
 		} else if (type === PROFILE_LOGOUT) {
 			this.props.onLogout();
 		}
@@ -88,6 +103,8 @@ const ProfilePopover = (props)=> {
 			<div className="profile-popover-item" onClick={()=> props.onItemClick(PROFILE_NAME)}>Change Name</div>
 			<div className="profile-popover-item" onClick={()=> props.onItemClick(PROFILE_ACCOUNT)}>Account Plan</div>
 			<div className="profile-popover-item" onClick={()=> props.onItemClick(PROFILE_DELETE)}>Delete Account</div>
+			<div className="profile-popover-item"><NavLink to={GITHUB_DOCS} target="_blank" onClick={(event)=> props.onItemClick(PROFILE_DOCS, event)}>Docs</NavLink></div>
+			{/*<div className="profile-popover-item" onClick={()=> props.onItemClick(PROFILE_DOCS)}>Docs</div>*/}
 			<div className="profile-popover-item" onClick={()=> props.onItemClick(PROFILE_LOGOUT)}>Logout</div>
 		</div>
 	</BasePopover>);

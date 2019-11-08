@@ -29,3 +29,5 @@ export const GITHUB_APP_AUTH = 'https://github.com/login/oauth/authorize?client_
 
 export const GITHUB_XD_PLUGIN = 'https://github.com/de-ai/designengine-xd';
 export const NPM_DE_PLAYGROUND = 'https://www.npmjs.com/package/design-engine-playground';
+
+export const GITHUB_DOCS = 'https://github.com/de-ai/designengine.ai/blob/master/README.md';
