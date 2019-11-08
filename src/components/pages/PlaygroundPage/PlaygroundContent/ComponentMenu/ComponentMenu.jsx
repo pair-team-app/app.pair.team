@@ -23,7 +23,7 @@ class ComponentMenu extends Component {
 
 
 	handleAddComment = (event, data)=> {
-		console.log('%s.handleAddComment()', this.constructor.name, event, data.target.parentNode, this.state.position, this.state.comment);
+		console.log('%s.handleAddComment()', this.constructor.name, event, data.target, this.state.position, this.state.comment);
 		event.preventDefault();
 
 		const { left, top } = data.target.parentNode.getBoundingClientRect();
@@ -31,7 +31,7 @@ class ComponentMenu extends Component {
 
 		this.props.onAddComment({
 			content  : comment,
-			itemID   : data.target.parentNode.getAttribute('data-id') << 0,
+			itemID   : data.target.getAttribute('data-id') << 0,
 			position : {
 				x : (position.x - left) << 0,
 				y : (position.y - top) << 0,
@@ -59,7 +59,7 @@ class ComponentMenu extends Component {
 	};
 
 	handleShowMenu = (event)=> {
-		console.log('%s.handleShowMenu()', this.constructor.name, event.detail.position);
+		console.log('%s.handleShowMenu()', this.constructor.name, event.detail.data.target.getAttribute('data-id'));
 
 		this.setState({
 			intro    : true,
@@ -70,6 +70,9 @@ class ComponentMenu extends Component {
 			if (this.textAreaRef) {
 				this.textAreaRef.value = this.state.comment;
 			}
+
+			const componentID = event.detail.data.target.getAttribute('data-id') << 0;
+			this.props.onShow({ componentID });
 		});
 	};
 
@@ -77,7 +80,7 @@ class ComponentMenu extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { menuID } = this.props;
+		const { menuID, component } = this.props;
 		const { intro, outro, comment } = this.state;
 
 		return (<ContextMenu id={menuID} className="component-menu-wrapper" onShow={this.handleShowMenu} onHide={this.handleHideMenu} preventHideOnResize={true} preventHideOnScroll={true}>
@@ -88,7 +91,7 @@ class ComponentMenu extends Component {
 					<div className="component-menu-item-wrapper">
 						<ComponentMenuItem type="inspect" title="Inspect" acc={null} onClick={this.handleMenuItemClick} />
 						<ComponentMenuItem type="share" title="Share" acc={null} onClick={this.handleMenuItemClick} />
-						<ComponentMenuItem type="comments" title="View Comments" acc={<ComponentMenuItemAcc amt={2} />} onClick={this.handleMenuItemClick} />
+						<ComponentMenuItem type="comments" title="View Comments" acc={<ComponentMenuItemAcc amt={(component) ? Math.min(0, component.comments.length - 1) : 0} />} onClick={this.handleMenuItemClick} />
 					</div>
 					<form>
 						<textarea placeholder="Add Comment" onChange={(event)=> this.setState({ comment : event.target.value })} ref={(element)=> this.textAreaRef = element}>

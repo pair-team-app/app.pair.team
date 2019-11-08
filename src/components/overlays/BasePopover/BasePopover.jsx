@@ -52,20 +52,20 @@ class BasePopover extends Component {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, { intro : prevProps.intro, outro : prevProps.outro }, { intro : this.props.intro, outro : this.props.outro }, { intro : prevState.intro, outro : prevState.outro }, { intro : this.state.intro, outro : this.state.outro });
 
 		const { position } = this.props.payload;
-		const { intro, outro } = this.state;
+// 		const { intro, outro } = this.state;
 
 		if (position !== prevProps.payload.position) {
 			this.setState({ position });
 		}
 
 		if (this.props.intro && this.props.intro !== prevProps.intro) {
-			console.log('%s.componentDidUpdate() - intro > true', this.constructor.name, this.props.intro, intro);
+// 			console.log('%s.componentDidUpdate() - intro > true', this.constructor.name, this.props.intro, intro);
 				this.onIntro();
 // 			this.setState({ intro : true });
 		}
 
 		if (this.props.outro && this.props.outro !== prevProps.outro) {
-			console.log('%s.componentDidUpdate() - outro true', this.constructor.name, this.props.outro, outro);
+// 			console.log('%s.componentDidUpdate() - outro true', this.constructor.name, this.props.outro, outro);
 			this.onOutro();
 // 			this.setState({ outro : true });
 		}
@@ -94,7 +94,7 @@ class BasePopover extends Component {
 
 
 	onIntro = ()=> {
-		console.log('%s.onIntro()', this.constructor.name, this.props, this.state.intro);
+// 		console.log('%s.onIntro()', this.constructor.name, this.props, this.state.intro);
 
 		const { duration } = this.state;
 // 		this.timeline = new TimelineMax();
@@ -110,7 +110,7 @@ class BasePopover extends Component {
 	};
 
 	onOutro = ()=> {
-		console.log('%s.onOutro()', this.constructor.name, this.props, this.state.outro);
+// 		console.log('%s.onOutro()', this.constructor.name, this.props, this.state.outro);
 
 		const { duration } = this.state;
 // 		this.timeline = new TimelineMax();
@@ -124,7 +124,7 @@ class BasePopover extends Component {
 
 
 	onOutroComplete = ()=> {
-		console.log('%s.onOutroComplete()', this.constructor.name);
+// 		console.log('%s.onOutroComplete()', this.constructor.name);
 
 		if (this.props.onOutroComplete) {
 			this.props.onOutroComplete();

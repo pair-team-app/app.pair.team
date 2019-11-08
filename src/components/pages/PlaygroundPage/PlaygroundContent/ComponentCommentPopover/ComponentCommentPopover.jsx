@@ -5,7 +5,6 @@ import './ComponentCommentPopover.css';
 // import axios from 'axios';
 // import { Strings } from 'lang-js-utils';
 // import CopyToClipboard from 'react-copy-to-clipboard';
-import { connect } from 'react-redux';
 
 import BasePopover from '../../../../overlays/BasePopover';
 // import { API_ENDPT_URL } from '../../../../../consts/uris';
@@ -24,30 +23,17 @@ class ComponentCommentPopover extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { position } = this.props;
+		const { component, position } = this.props;
 		const { outro } = this.state;
 
-		const payload = {
-			position : {
-				x : position.x - 20,
-				y : position.y + 7
-			}
-		};
-
+		const payload = { position };
 		return (<BasePopover outro={outro} payload={payload} onOutroComplete={this.props.onClose}>
 			<div className="component-comment-popover">
-				component-comment
+				{component.title}
 			</div>
 		</BasePopover>);
 	}
 }
 
 
-const mapStateToProps = (state, ownProps)=> {
-	return ({
-		profile : state.userProfile,
-	});
-};
-
-
-export default connect(mapStateToProps)(ComponentCommentPopover);
+export default (ComponentCommentPopover);

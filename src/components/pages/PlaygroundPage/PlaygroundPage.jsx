@@ -26,6 +26,8 @@ class PlaygroundPage extends Component {
 			playgrounds : null,
 			playground  : null,
 			component   : null,
+			comment     : null,
+			cursor      : false,
 			fetching    : false
 		};
 	}
@@ -39,7 +41,7 @@ class PlaygroundPage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { componentTypes, match } = this.props;
 		const { playground, fetching } = this.state;
@@ -74,7 +76,6 @@ class PlaygroundPage extends Component {
 		trackEvent('button', 'add-comment');
 
 		const { profile } = this.props;
-
 		axios.post(API_ENDPT_URL, {
 			action  : 'ADD_COMMENT',
 			payload : { content, position,
@@ -112,6 +113,40 @@ class PlaygroundPage extends Component {
 
 		}).catch((error)=> {
 		});
+	};
+
+	handleComponentClick = ({ component })=> {
+		console.log('%s.handleComponentClick()', this.constructor.name, { component });
+
+// 		const { components } = this.state.playground;
+// 		const component = components.find(({ id })=> (id === componentID));
+
+		component.selected = true;
+
+		const { cursor } = this.state;
+		if (cursor) {
+			this.setState ({ component,
+				cursor : false
+			});
+
+		} else {
+			const { teamSlug, projectSlug, buildID } = this.props.match.params;
+			const { typeGroups, playground } = this.state;
+
+			const typeGroup = typeGroups.find(({ id })=> (id === component.typeID));
+			this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}`);
+
+			this.setState({ component });
+		}
+	};
+
+	handleComponentMenuShow = ({ componentID })=> {
+		console.log('%s.handleComponentMenuShow()', this.constructor.name, { componentID });
+
+		const { components } = this.state.playground;
+		const component = components.find(({ id })=> (id === componentID));
+		this.setState ({ component });
+
 	};
 
 	handleCompomentMenuItem = ({ type, itemID })=> {
@@ -163,14 +198,11 @@ class PlaygroundPage extends Component {
 		this.setState({ component : typeItem });
 	};
 
-	handleToggleComments = (event)=> {
-// 		console.log('%s.handleToggleComments()', this.constructor.name, event, this.state.comments);
+	handleToggleCommentCursor = (event)=> {
+		console.log('%s.handleToggleCommentCursor()', this.constructor.name, event, this.state.cursor, !this.state.cursor);
 
-// 		this.setState({
-// 			comments : { ...comments,
-// 				visible : !comments.visible
-// 			}
-// 		});
+		const { cursor } = this.state;
+		this.setState({ cursor : !cursor });
 	};
 
 	handleTogglePlayground = ()=> {
@@ -240,7 +272,7 @@ class PlaygroundPage extends Component {
 									delete (comment['added']);
 
 									return ({ ...comment,
-										position  : JSON.parse(comment.position),
+										position  : (JSON.parse(comment.position) || { x : 0, y : 0 }),
 										author    : {
 											id       : comment.author.id,
 											username : comment.author.username,
@@ -274,11 +306,11 @@ class PlaygroundPage extends Component {
 
 
 	render() {
-		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { profile } = this.props;
-		const { teamSlug, projectSlug, componentsSlug, componentID } = this.props.match.params;
-		const { typeGroups, playground, component } = this.state;
+		const { teamSlug, projectSlug, componentsSlug } = this.props.match.params;
+		const { typeGroups, playground, component, comment, cursor } = this.state;
 
 		const team = {
 			title : teamSlug,
@@ -287,35 +319,40 @@ class PlaygroundPage extends Component {
 
 
 		return (
-			<BasePage className={`page-wrapper playground-page-wrapper${(component && component.comments.length > 0) ? ' playground-page-wrapper-comments' : ''}`}>
+			<BasePage className={`page-wrapper playground-page-wrapper${(component && component.comments.length > 1) ? ' playground-page-wrapper-comments' : ''}`}>
 				{(profile && playground) && (<PlaygroundNavPanel
 					team={team}
 					typeGroups={typeGroups}
 					typeItems={playground.components}
-					componentID={componentID}
+					component={component}
 					onNavTypeItemClick={this.handleNavTypeItemClick}
 				/>)}
 
 				{(profile && playground) && (<div className="playground-page-content-wrapper">
 					<PlaygroundContent
 						playground={playground}
+						component={component}
+						comment={comment}
+						cursor={cursor}
+						onComponentClick={this.handleComponentClick}
+						onMenuShow={this.handleComponentMenuShow}
 						onMenuItem={this.handleCompomentMenuItem}
 						onAddComment={this.handleAddComment}
 					/>
 
 					<PlaygroundHeader
 						playground={playground}
+						component={component}
 						projectSlug={projectSlug}
 						componentsSlug={componentsSlug}
-						component={component}
 						onLogout={this.props.onLogout}
 					/>
 
 					<PlaygroundFooter
-						comments={(component) ? component.comments : []}
+						cursor={cursor}
 						desktop={(playground.deviceID === 1)}
 						mobile={(playground.deviceID === 2)}
-						onToggleComments={this.handleToggleComments}
+						onToggleCursor={this.handleToggleCommentCursor}
 						onToggleDesktop={this.handleTogglePlayground}
 						onToggleMobile={this.handleTogglePlayground}
 					/>
