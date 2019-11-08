@@ -25,6 +25,7 @@ class PlaygroundPage extends Component {
 
 		this.state = {
 			typeGroups  : null,
+			typeGroup   : null,
 			playgrounds : null,
 			playground  : null,
 			component   : null,
@@ -46,9 +47,9 @@ class PlaygroundPage extends Component {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { componentTypes, match } = this.props;
-		const { playground, fetching } = this.state;
+		const { typeGroups, playground, fetching } = this.state;
 
-		const { componentID, commentID } = match.params;
+		const { componentsSlug, componentID, commentID } = match.params;
 // 		console.log('params', match.params);
 
 		if (!prevProps.componentTypes && componentTypes) {
@@ -65,8 +66,15 @@ class PlaygroundPage extends Component {
 			}
 		}
 
-		if (!prevState.playground && playground && !this.state.component) {
-			if (componentID) {
+		if (!prevState.playground && playground) {
+			if (typeGroups && !this.state.typeGroup && componentsSlug) {
+				const typeGroup =typeGroups.find(({ key })=> (key === componentsSlug));
+				if (typeGroup) {
+					this.setState({ typeGroup });
+				}
+			}
+
+			if (!this.state.component && componentID) {
 				const component = componentByID(playground.components, componentID);
 
 				if (component) {
@@ -210,6 +218,22 @@ class PlaygroundPage extends Component {
 		});
 	};
 
+	handleNavGroupItemClick = (typeGroup)=> {
+// 		console.log('%s.handleNavGroupItemClick()', this.constructor.name, typeGroup);
+
+		const { teamSlug, projectSlug, buildID } = this.props.match.params;
+		const { playground } = this.state;
+
+		typeGroup.expanded = !typeGroup.expanded;
+		typeGroup.selected = !typeGroup.selected;
+
+		this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`);
+		this.setState({ typeGroup,
+			comment   : null,
+			component : null
+		});
+	};
+
 	handleNavTypeItemClick = (typeGroup, typeItem)=> {
 // 		console.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
 
@@ -285,8 +309,9 @@ class PlaygroundPage extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { profile } = this.props;
-		const { teamSlug, projectSlug, componentsSlug } = this.props.match.params;
-		const { typeGroups, playgrounds, playground, component, comment, cursor } = this.state;
+		const { params } = this.props.match;
+		const { teamSlug, projectSlug, componentsSlug } = params;
+		const { typeGroups, typeGroup, playgrounds, playground, component, comment, cursor } = this.state;
 
 		const team = {
 			title : teamSlug,
@@ -296,15 +321,18 @@ class PlaygroundPage extends Component {
 		return (
 			<BasePage className={`page-wrapper playground-page-wrapper${(component && (window.location.href.includes('/comments'))) ? ' playground-page-wrapper-comments' : ''}`}>
 				{(profile && playground) && (<PlaygroundNavPanel
+					params={params}
 					team={team}
 					typeGroups={typeGroups}
 					typeItems={playground.components}
 					component={component}
-					onNavTypeItemClick={this.handleNavTypeItemClick}
+					onTypeGroupClick={this.handleNavGroupItemClick}
+					onTypeItemClick={this.handleNavTypeItemClick}
 				/>)}
 
 				{(profile && playground) && (<div className="playground-page-content-wrapper">
 					<PlaygroundContent
+						typeGroup={typeGroup}
 						playground={playground}
 						component={component}
 						comment={comment}

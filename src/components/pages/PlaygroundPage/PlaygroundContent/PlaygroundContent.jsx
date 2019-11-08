@@ -21,9 +21,10 @@ class PlaygroundContent extends Component {
 		super(props);
 
 		this.state = {
-			position : null,
-			offset   : null,
-			popover  : false
+			components : [],
+			position   : null,
+			offset     : null,
+			popover    : false
 		};
 	}
 
@@ -83,12 +84,14 @@ class PlaygroundContent extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { playground, component, comment, cursor, mouse } = this.props;
+		const { typeGroup, playground, component, comment, cursor, mouse } = this.props;
 		const { offset, popover } = this.state;
+
+		const components = (component) ? [component] : (typeGroup) ? playground.components.filter(({ typeID })=> (typeID === typeGroup.id)) : playground.components;
 
 		return (<div className="playground-content" data-cursor={cursor}>
 			<div className="playground-content-components-wrapper">
-				{(playground.components.map((comp, i)=> {
+				{(components.map((comp, i)=> {
 					//const html = comp.html.replace(/\\"/g, '"').replace(/ class=.+?"/, ` style="${Object.keys(comp.styles).map((key)=> (`${key}:${comp.styles[key]}`)).join('; ').replace(/"/g, '\'')}"`);
 
 					/*
