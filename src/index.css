@@ -113,6 +113,11 @@ button:disabled, button:disabled:hover {
 button[data-selected="true"], button[data-selected="true"]:hover {
 }
 
+button[data-hidden="true"] {
+	display: none;
+	visibility: hidden;
+}
+
 fieldset {
   margin: 0;
   padding: 0;

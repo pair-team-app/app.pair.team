@@ -21,7 +21,7 @@ function PlaygroundFooter(props) {
 		window.open(url);
 	};
 
-	const { cursor, desktop, mobile } = props;
+	const { cursor, playground, builds } = props;
 	return (<div className="playground-footer">
 		<div className="playground-footer-comments-wrapper">
 			<button className="quiet-button glyph-button" onClick={props.onToggleCursor} data-selected={cursor}><FontAwesome name="comment" /></button>
@@ -31,8 +31,8 @@ function PlaygroundFooter(props) {
 			<button className="quiet-button" onClick={(event)=> handleClick(event, GITHUB_XD_PLUGIN)} name="adobe-xd-plugin">Adobe XD Plugin</button>
 		</div>
 		<div className="playground-footer-device-wrapper">
-			<button className="quiet-button glyph-button adjacent-button" onClick={props.onToggleMobile} data-selected={mobile}><FontAwesome name="mobile" /></button>
-			<button className="quiet-button glyph-button" onClick={props.onToggleDesktop} data-selected={desktop}><FontAwesome name="desktop" /></button>
+			<button className="quiet-button glyph-button adjacent-button" onClick={props.onToggleMobile} data-selected={(playground.deviceID === 2)} data-hidden={(builds === 1)}><FontAwesome name="mobile" /></button>
+			<button className="quiet-button glyph-button" onClick={props.onToggleDesktop} data-selected={(playground.deviceID === 1)} data-hidden={(builds === 1)}><FontAwesome name="desktop" /></button>
 		</div>
 	</div>);
 }

@@ -11,5 +11,10 @@
 	box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.125);
 }
 
+.base-popover-relative {
+	z-index: 1000;
+	position: relative;
+}
+
 .base-popover-content-wrapper {
 }

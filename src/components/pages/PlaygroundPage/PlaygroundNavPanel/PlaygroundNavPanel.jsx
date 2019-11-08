@@ -65,6 +65,10 @@ class PlaygroundNavPanel extends Component {
 	handleTypeItemClick = (typeGroup, typeItem)=> {
 // 		console.log('%s.handleTypeItemClick()', this.constructor.name, typeGroup, typeItem);
 
+		typeGroup.expanded = true;
+		typeGroup.selected = true;
+		typeItem.selected = true;
+
 		const { typeGroups } = this.state;
 		this.setState({
 			typeGroups : typeGroups.map((grp) => ({ ...grp,
@@ -74,14 +78,14 @@ class PlaygroundNavPanel extends Component {
 					selected : (item.id === typeItem.id)
 				}))
 			}))
+		}, ()=> {
+			this.props.onNavTypeItemClick(typeGroup, typeItem);
 		});
-
-		this.props.onNavTypeItemClick(typeGroup, typeItem);
 	};
 
 
 	render() {
-		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { team } = this.props;
 		const { typeGroups } = this.state;

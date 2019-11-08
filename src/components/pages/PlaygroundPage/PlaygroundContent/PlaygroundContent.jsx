@@ -6,7 +6,7 @@ import { ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
-import ComponentCommentPopover from './ComponentCommentPopover';
+import ComponentComment from './ComponentComment';
 import ComponentMenu from './ComponentMenu';
 
 
@@ -27,12 +27,40 @@ class PlaygroundContent extends Component {
 		};
 	}
 
-	handleCommentClick = (comment)=> {
-		console.log('%s.handleCommentClick()', this.constructor.name, comment);
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+
+		if (this.props.comment && !prevProps.comment) {
+			this.setState({ popover : true });
+		}
+	}
+
+	handleComponentPopoverClose = ()=> {
+// 		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
+		this.setState({ popover : false }, ()=> {
+			this.props.onPopoverClose();
+		});
+	};
+
+	handleCommentClick = (event, comment)=> {
+// 		console.log('%s.handleCommentClick()', this.constructor.name, event.target.parentNode.parentNode, event.target.parentNode.parentNode.parentNode, comment);
+		event.preventDefault();
+		event.stopPropagation();
+
+		this.setState({
+			offset  : {
+				x : event.target.getBoundingClientRect().left,
+				y : event.target.getBoundingClientRect().top
+			},
+			popover : true
+		});
+
+		const componentID = (event.target.parentNode.parentNode.parentNode.hasAttribute('data-id')) ? event.target.parentNode.parentNode.parentNode.getAttribute('data-id') : event.target.parentNode.parentNode.getAttribute('data-id');
+		this.props.onCommentClick({ comment, componentID });
 	};
 
 	handleContentClick = (event, component)=> {
-		console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target.getBoundingClientRect() }, this.props.mouse.position, component);
+// 		console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target }, this.props.mouse.position, component);
 
 		const { cursor } = this.props;
 		if (cursor) {
@@ -55,7 +83,7 @@ class PlaygroundContent extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { playground, component, cursor, mouse } = this.props;
+		const { playground, component, comment, cursor, mouse } = this.props;
 		const { offset, popover } = this.state;
 
 		return (<div className="playground-content" data-cursor={cursor}>
@@ -124,7 +152,7 @@ class PlaygroundContent extends Component {
 
 							<div className="playground-content-component-comment-wrapper" data-id={comp.id} >
 								{(comp.comments.filter(({ type })=> (type !== 'init')).map((comment, i)=> {
-									return (<ComponentComment key={i} ind={(comp.comments.length - 1) - i} comment={comment} onClick={this.handleCommentClick} />);
+									return (<ComponentComment key={i} ind={(comp.comments.length - 1) - i} popover={popover}component={comp} comment={comment} onClose={this.handleComponentPopoverClose} onMarkerClick={this.handleCommentClick} />);
 								}))}
 							</div>
 						</ContextMenuTrigger>
@@ -132,20 +160,11 @@ class PlaygroundContent extends Component {
 				}))}
 			</div>
 
-
 			{(cursor) && (<CommentPinCursor position={mouse.position} />)}
-
-			{(popover) && (<ComponentCommentPopover
-				component={component}
-				position={offset}
-				onClose={()=> this.setState({ popover : false })} />)}
-
 			<ComponentMenu menuID="component" component={component} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment}/>
 		</div>);
 	}
 }
-
-// onClick={(event)=> this.handleContentClick(event, comp)}
 
 
 const CommentPinCursor = (props)=> {
@@ -159,24 +178,6 @@ const CommentPinCursor = (props)=> {
 
 	return (<div className="comment-pin-cursor" style={style}>
 		<FontAwesome name="map-marker-alt" />
-	</div>);
-};
-
-
-
-const ComponentComment = (props)=> {
-// 	console.log('ComponentComment()', props);
-
-	const { ind, comment } = props;
-	const style = {
-		top  : `${comment.position.y}px`,
-		left : `${comment.position.x}px`
-	};
-
-	return (<div className="component-comment-marker" data-id={comment.id} style={style}>
-		<div className="component-comment-marker-content-wrapper">
-			<div className="component-comment-content">{ind}</div>
-		</div>
 	</div>);
 };
 

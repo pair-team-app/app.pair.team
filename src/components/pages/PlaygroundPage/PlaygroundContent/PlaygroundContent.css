@@ -59,37 +59,6 @@
 	z-index: 2;
 }
 
-.component-comment-marker {
-	position: absolute;
-}
-
-.component-comment-marker:hover {
-	cursor: pointer;
-	font-weight: 500;
-}
-
-.component-comment-marker-content-wrapper {
-	position: relative;
-	width: 18px;
-	height: 18px;
-	padding: 1px 3px 3px 3px;
-	border: 1px solid rgba(var(--site-fg-color), 1.0);
-	border-radius: 50%;
-	font-size: 10px;
-	text-align: center;
-}
-
-.component-comment-marker-content {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 100%;
-	height: 100%;
-	clip-path: circle(8px at center);
-}
-
-
 .comment-pin-cursor {
 	position: fixed;
 	top: 0;

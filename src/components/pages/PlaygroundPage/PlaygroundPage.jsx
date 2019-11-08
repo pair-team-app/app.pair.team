@@ -17,6 +17,70 @@ import { decryptObject, decryptText } from './utils/crypto';
 import { trackEvent } from '../../../utils/tracking';
 
 
+const commentByID = (comments, commentID)=> {
+	return (comments.find(({ id })=> (id === (commentID << 0))));
+};
+
+const componentByID = (components, componentID)=> {
+	return (components.find(({ id })=> (id === (componentID << 0))));
+};
+
+const formatChildElement = (element, overwrite={})=> {
+	const { tag_name } = element;
+	delete (element['tag_name']);
+
+	return ({ ...element,
+		title   : (element.title.length === 0) ? tag_name : element.title,
+		tagName : tag_name,
+		html    : decryptText(element.html),
+		styles  : decryptObject(element.styles),
+		path    : element.path.split(' ').filter((i)=> (i.length > 0)),
+		...overwrite
+	});
+};
+
+const formatComment = (comment, overwrite={})=> ({ ...comment,
+	position  : (JSON.parse(comment.position) || { x : 0, y : 0 }),
+	author    : {
+		id       : comment.author.id,
+		username : comment.author.username,
+		email    : comment.author.email,
+		avatar   : comment.author.avatar
+	},
+	epoch     : (moment.utc(comment.added).valueOf() * 0.001) << 0,
+	timestamp : moment(comment.added).add((moment().utcOffset() << 0), 'minute'),
+	...overwrite
+});
+
+const formatComponent = (component, overwrite={})=> {
+	const { type_id, event_type_id, tag_name } = component;
+	delete (component['type_id']);
+	delete (component['event_type_id']);
+	delete (component['tag_name']);
+
+	return ({ ...component,
+		typeID      : type_id,
+		eventTypeID : event_type_id,
+		title       : (component.title.length === 0) ? tag_name : component.title,
+		tagName     : tag_name,
+		html        : decryptText(component.html),
+		styles      : decryptObject(component.styles),
+		path        : component.path.split(' ').filter((i)=> (i.length > 0)),
+// 		meta        : JSON.parse(component.meta.replace(/"/g, '\'')),
+		selected    : false,
+		children    : component.children.map((child)=> (formatChildElement(child))),
+		comments    : component.comments.map((comment)=> (formatComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
+		...overwrite
+	})
+};
+
+const replaceComponent = (playground, component)=> ({ ...playground,
+	components : playground.components.map((item)=> ((item.id === component.id) ? component : item))
+});
+
+const replacePlayground = (playgrounds, playground)=> (playgrounds.map((item)=> (item.id === playground.id) ? playground : item));
+
+
 class PlaygroundPage extends Component {
 	constructor(props) {
 		super(props);
@@ -46,6 +110,9 @@ class PlaygroundPage extends Component {
 		const { componentTypes, match } = this.props;
 		const { playground, fetching } = this.state;
 
+		const { componentID, commentID } = match.params;
+// 		console.log('params', match.params);
+
 		if (!prevProps.componentTypes && componentTypes) {
 			this.setState({ typeGroups : componentTypes });
 		}
@@ -61,13 +128,25 @@ class PlaygroundPage extends Component {
 		}
 
 		if (!prevState.playground && playground && !this.state.component) {
-			const { componentID } = match.params;
 			if (componentID) {
-				const component = playground.components.find(({ id })=> (id === componentID << 0));
+				const component = componentByID(playground.components, componentID);
+
 				if (component) {
-					this.setState({ component });
+					this.setState({ component }, ()=> {
+						if (commentID) {
+							const comment = commentByID(component.comments, commentID);
+
+							if (comment) {
+								this.setState({ comment });
+							}
+						}
+					});
 				}
 			}
+		}
+
+		if (!commentID && this.state.comment) {
+			this.setState({ comment : null });
 		}
 	}
 
@@ -90,24 +169,14 @@ class PlaygroundPage extends Component {
 			this.setState({
 				playground : { ...playground,
 					components : playground.components.map((component)=> ({ ...component,
-						comments : ((component.id === itemID) ? [ ...component.comments, { ...comment,
-							position  : JSON.parse(comment.position),
-							author    : {
-								id       : comment.author.id,
-								username : comment.author.username,
-								email    : comment.author.email,
-								avatar   : comment.author.avatar
-							},
-							epoch     : (moment.utc(comment.added).valueOf() * 0.001) << 0,
-							timestamp : moment(comment.added).add((moment().utcOffset() << 0), 'minute')
-						}] : component.comments).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0))
+						comments : ((component.id === itemID) ? [ ...component.comments, formatComment(comment)] : component.comments).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0))
 					}))
 				}
 			}, ()=> {
 				const { playgrounds, playground } = this.state;
 				this.setState({
-					playgrounds : playgrounds.map((item)=> (item.id === playground.id) ? playground : item),
-					component   : playground.components.find(({ id })=> (id === itemID))
+					playgrounds : replacePlayground(playgrounds, playground),//playgrounds.map((item)=> (item.id === playground.id) ? playground : item),
+					component   : componentByID(playground.components, itemID)
 				});
 			});
 
@@ -115,46 +184,64 @@ class PlaygroundPage extends Component {
 		});
 	};
 
-	handleComponentClick = ({ component })=> {
-		console.log('%s.handleComponentClick()', this.constructor.name, { component });
+	handleCommentMarkerClick = ({ comment, componentID })=> {
+// 		console.log('%s.handleCommentMarkerClick()', this.constructor.name, { comment, componentID });
+		const { teamSlug, projectSlug, buildID } = this.props.match.params;
+		const { typeGroups, playground } = this.state;
 
-// 		const { components } = this.state.playground;
-// 		const component = components.find(({ id })=> (id === componentID));
+		const component = componentByID(playground.components, componentID);
+		const typeGroup = typeGroups.find(({ id })=> (id === component.typeID));
+		this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}/comments/${comment.id}`);
+		this.setState({ component, comment });
+	};
+
+	handleComponentClick = ({ component })=> {
+// 		console.log('%s.handleComponentClick()', this.constructor.name, { component });
+
+		const { teamSlug, projectSlug, buildID } = this.props.match.params;
+		const { typeGroups, playground } = this.state;
+
+		const typeGroup = typeGroups.find(({ id })=> (id === component.typeID));
+		this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}`);
 
 		component.selected = true;
-
-		const { cursor } = this.state;
-		if (cursor) {
-			this.setState ({ component,
-				cursor : false
-			});
-
-		} else {
-			const { teamSlug, projectSlug, buildID } = this.props.match.params;
-			const { typeGroups, playground } = this.state;
-
-			const typeGroup = typeGroups.find(({ id })=> (id === component.typeID));
-			this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}`);
-
-			this.setState({ component });
-		}
+		this.setState ({ component,
+			cursor : false
+		});
 	};
 
 	handleComponentMenuShow = ({ componentID })=> {
-		console.log('%s.handleComponentMenuShow()', this.constructor.name, { componentID });
+// 		console.log('%s.handleComponentMenuShow()', this.constructor.name, { componentID });
 
 		const { components } = this.state.playground;
 		const component = components.find(({ id })=> (id === componentID));
 		this.setState ({ component });
-
 	};
 
 	handleCompomentMenuItem = ({ type, itemID })=> {
-		console.log('%s.handleCompomentMenuItem()', this.constructor.name, { type, itemID });
+// 		console.log('%s.handleCompomentMenuItem()', this.constructor.name, { type, itemID });
+
+		if (type === 'comments') {
+			const { teamSlug, projectSlug, buildID } = this.props.match.params;
+			const { typeGroups, playground } = this.state;
+
+			const component = componentByID(playground.components, itemID);
+			const typeGroup = typeGroups.find(({ id }) => (id === component.typeID));
+			this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${!window.location.href.includes('/comments') ? '/comments' : ''}`);
+		}
+	};
+
+	handleComponentPopoverClose = ()=> {
+// 		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
+
+		const { teamSlug, projectSlug, buildID } = this.props.match.params;
+		const { typeGroups, playground, component } = this.state;
+		const typeGroup = typeGroups.find(({ id })=> (id === component.typeID));
+		this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${window.location.href.includes('/comments') ? '/comments' : ''}`);
 	};
 
 	handleDeleteComment = (commentID)=> {
-		console.log('%s.handleDeleteComment()', this.constructor.name, commentID);
+// 		console.log('%s.handleDeleteComment()', this.constructor.name, commentID);
 		trackEvent('button', 'delete-comment');
 
 		axios.post(API_ENDPT_URL, {
@@ -173,14 +260,11 @@ class PlaygroundPage extends Component {
 						comments : component.comments.filter(({ id }) => (id !== commentID)).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0))
 					}))
 				},
-// 				component  : { ...component,
-// 					comments : component.comments.filter(({ id }) => (id !== comment.id)).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0))
-// 				}
 			}, ()=> {
 				const { playgrounds, playground } = this.state;
 				this.setState({
-					playgrounds : playgrounds.map((item)=> (item.id === playground.id) ? playground : item),
-					component   : playground.components.find(({ id })=> (id === component.id))
+					playgrounds : replacePlayground(playgrounds, playground),
+					component   : componentByID(playground.components, component.id)//playground.components.find(({ id })=> (id === component.id))
 				});
 			});
 
@@ -189,7 +273,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleNavTypeItemClick = (typeGroup, typeItem)=> {
-		console.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
+// 		console.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
 
 		const { teamSlug, projectSlug, buildID } = this.props.match.params;
 		const { playground } = this.state;
@@ -199,14 +283,14 @@ class PlaygroundPage extends Component {
 	};
 
 	handleToggleCommentCursor = (event)=> {
-		console.log('%s.handleToggleCommentCursor()', this.constructor.name, event, this.state.cursor, !this.state.cursor);
+// 		console.log('%s.handleToggleCommentCursor()', this.constructor.name, event, this.state.cursor, !this.state.cursor);
 
 		const { cursor } = this.state;
 		this.setState({ cursor : !cursor });
 	};
 
 	handleTogglePlayground = ()=> {
-		console.log('%s.handleTogglePlayground()', this.constructor.name, this.state.playground.deviceID);
+// 		console.log('%s.handleTogglePlayground()', this.constructor.name, this.state.playground.deviceID);
 		const { playgrounds, playground } = this.state;
 		this.setState({ playground : playgrounds.find(({ deviceID })=> (deviceID !== playground.deviceID))}, ()=> {
 			const { teamSlug, projectSlug, buildID } = this.props.match.params;
@@ -218,7 +302,7 @@ class PlaygroundPage extends Component {
 	};
 
 	onFetchBuildPlaygrounds = (buildID, playgroundID=null)=> {
-		console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
+// 		console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
 
 		this.setState({ fetching : true }, ()=> {
 			axios.post(API_ENDPT_URL, {
@@ -230,7 +314,6 @@ class PlaygroundPage extends Component {
 				console.log('BUILD_PLAYGROUNDS', response.data);
 				const { componentID } = this.props.match.params;
 
-
 				const playgrounds = response.data.playgrounds.map((playground)=> {
 					const { device_id } = playground;
 					delete (playground['device_id']);
@@ -239,58 +322,13 @@ class PlaygroundPage extends Component {
 						html       : decryptText(playground.html),
 						styles     : decryptObject(playground.styles),
 						deviceID   : device_id,
-						components : playground.components.map((component)=> {
-							const { type_id, event_type_id, tag_name } = component;
-							delete (component['type_id']);
-							delete (component['event_type_id']);
-							delete (component['tag_name']);
-
-							return ({ ...component,
-								typeID      : type_id,
-								eventTypeID : event_type_id,
-								title       : (component.title.length === 0) ? tag_name : component.title,
-								tagName     : tag_name,
-								html        : decryptText(component.html),
-								styles      : decryptObject(component.styles),
-								path        : component.path.split(' ').filter((i)=> (i.length > 0)),
-// 								meta        : JSON.parse(component.meta.replace(/"/g, '\'')),
-								selected    : (component.id === componentID << 0),
-								children    : component.children.map((child)=> {
-									const { tag_name } = child;
-									delete (child['tag_name']);
-
-									return ({ ...child,
-										title   : (child.title.length === 0) ? tag_name : child.title,
-										tagName : tag_name,
-										html    : decryptText(child.html),
-										styles  : decryptObject(child.styles),
-										path    : child.path.split(' ').filter((i)=> (i.length > 0))
-									});
-								}),
-								comments    : component.comments.map((comment)=> {
-									const { added } = comment;
-									delete (comment['added']);
-
-									return ({ ...comment,
-										position  : (JSON.parse(comment.position) || { x : 0, y : 0 }),
-										author    : {
-											id       : comment.author.id,
-											username : comment.author.username,
-											email    : comment.author.email,
-											avatar   : comment.author.avatar
-										},
-										epoch     : (moment.utc(added).valueOf() * 0.001) << 0,
-										timestamp : moment(added).add((moment().utcOffset() << 0), 'minute')
-									});
-								}).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0))
-							});
-						})
+						components : playground.components.map((component)=> (formatComponent(component, { selected : (component.id === (componentID << 0)) })))
 					});
 				});
 
 				const playground = (playgroundID) ? playgrounds.find(({ id })=> (id === playgroundID)) : playgrounds.find(({ deviceID })=> (deviceID === 1));
 				this.setState({ playgrounds, playground,
-					fetching   : false
+					fetching : false
 
 				}, ()=> {
 					if (!this.props.match.params.playgroundID) {
@@ -310,16 +348,15 @@ class PlaygroundPage extends Component {
 
 		const { profile } = this.props;
 		const { teamSlug, projectSlug, componentsSlug } = this.props.match.params;
-		const { typeGroups, playground, component, comment, cursor } = this.state;
+		const { typeGroups, playgrounds, playground, component, comment, cursor } = this.state;
 
 		const team = {
 			title : teamSlug,
 			logo  : DEFAULT_AVATAR
 		};
 
-
 		return (
-			<BasePage className={`page-wrapper playground-page-wrapper${(component && component.comments.length > 1) ? ' playground-page-wrapper-comments' : ''}`}>
+			<BasePage className={`page-wrapper playground-page-wrapper${(component && (window.location.href.includes('/comments'))) ? ' playground-page-wrapper-comments' : ''}`}>
 				{(profile && playground) && (<PlaygroundNavPanel
 					team={team}
 					typeGroups={typeGroups}
@@ -335,9 +372,11 @@ class PlaygroundPage extends Component {
 						comment={comment}
 						cursor={cursor}
 						onComponentClick={this.handleComponentClick}
+						onCommentClick={this.handleCommentMarkerClick}
 						onMenuShow={this.handleComponentMenuShow}
 						onMenuItem={this.handleCompomentMenuItem}
 						onAddComment={this.handleAddComment}
+						onPopoverClose={this.handleComponentPopoverClose}
 					/>
 
 					<PlaygroundHeader
@@ -350,8 +389,8 @@ class PlaygroundPage extends Component {
 
 					<PlaygroundFooter
 						cursor={cursor}
-						desktop={(playground.deviceID === 1)}
-						mobile={(playground.deviceID === 2)}
+						playground={playground}
+						builds={playgrounds.length}
 						onToggleCursor={this.handleToggleCommentCursor}
 						onToggleDesktop={this.handleTogglePlayground}
 						onToggleMobile={this.handleTogglePlayground}
