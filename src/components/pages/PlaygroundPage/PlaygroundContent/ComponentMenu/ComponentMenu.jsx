@@ -26,12 +26,12 @@ class ComponentMenu extends Component {
 		console.log('%s.handleAddComment()', this.constructor.name, event, data.target, this.state.position, this.state.comment);
 		event.preventDefault();
 
-		const { left, top } = data.target.parentNode.getBoundingClientRect();
+		const { left, top } = data.target.getBoundingClientRect();
 		const { position, comment } = this.state;
 
 		this.props.onAddComment({
 			content  : comment,
-			itemID   : event.detail.data.target.getAttribute('data-id') << 0,
+			itemID   : ((data.target.hasAttribute('data-id')) ? data.target.getAttribute('data-id') : data.target.parentNode.getAttribute('data-id')) << 0,
 			position : {
 				x : (position.x - left) << 0,
 				y : (position.y - top) << 0,

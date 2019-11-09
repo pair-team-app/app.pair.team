@@ -4,7 +4,6 @@ import './BasePopover.css';
 
 import { TimelineMax, Back, Circ } from 'gsap/TweenMax';
 import onClickOutside from 'react-onclickoutside';
-import { connect } from 'react-redux';
 
 const INTRO_DURATION = (1/8);
 const OUTRO_DURATION = (1/8);
@@ -22,7 +21,10 @@ class BasePopover extends Component {
 				intro : INTRO_DURATION,
 				outro : OUTRO_DURATION
 			},
-			position : { ...this.props.mouse.position },
+			position : {
+				x : 0,
+				y : 0
+			},
 			size     : {
 				width  : 0,
 				height : 0
@@ -53,20 +55,20 @@ class BasePopover extends Component {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, { intro : prevProps.intro, outro : prevProps.outro }, { intro : this.props.intro, outro : this.props.outro }, { intro : prevState.intro, outro : prevState.outro }, { intro : this.state.intro, outro : this.state.outro });
 
 		const { position } = this.props.payload;
-// 		const { intro, outro } = this.state;
+		const { intro, outro } = this.state;
 
 		if (position !== prevProps.payload.position) {
 			this.setState({ position });
 		}
 
-		if (this.props.intro && this.props.intro !== prevProps.intro) {
-// 			console.log('%s.componentDidUpdate() - intro > true', this.constructor.name, this.props.intro, intro);
+		if (this.props.intro && this.props.intro !== prevProps.intro && !this.props.outro) {
+			console.log('%s.componentDidUpdate() - intro > true', this.constructor.name, this.props.intro, intro);
 				this.onIntro();
 // 			this.setState({ intro : true });
 		}
 
-		if (this.props.outro && this.props.outro !== prevProps.outro) {
-// 			console.log('%s.componentDidUpdate() - outro true', this.constructor.name, this.props.outro, outro);
+		if (this.props.outro && this.props.outro !== prevProps.outro && !this.props.intro) {
+			console.log('%s.componentDidUpdate() - outro true', this.constructor.name, this.props.outro, outro);
 			this.onOutro();
 // 			this.setState({ outro : true });
 		}
@@ -95,10 +97,10 @@ class BasePopover extends Component {
 
 
 	onIntro = ()=> {
-// 		console.log('%s.onIntro()', this.constructor.name, this.props, this.state.intro);
+		console.log('%s.onIntro()', this.constructor.name, this.props, this.state.intro);
 
 		const { duration } = this.state;
-// 		this.timeline = new TimelineMax();
+		this.timeline = new TimelineMax();
 		this.timeline.addLabel(START_LBL, '0').from(this.wrapper, duration.intro, {
 			opacity : 0.0,
 			y       : 5,
@@ -111,13 +113,13 @@ class BasePopover extends Component {
 	};
 
 	onOutro = ()=> {
-// 		console.log('%s.onOutro()', this.constructor.name, this.props, this.state.outro);
+		console.log('%s.onOutro()', this.constructor.name, this.props, this.state.outro);
 
 		const { duration } = this.state;
-// 		this.timeline = new TimelineMax();
+		this.timeline = new TimelineMax();
 		this.timeline.to(this.wrapper, duration.outro, {
 			opacity    : 0,
-// 			scale      : 0.875,
+			scale      : 0.875,
 			ease       : Circ.easeOut,
 			onComplete : this.onOutroComplete
 		}).addLabel(END_LBL);
@@ -140,9 +142,9 @@ class BasePopover extends Component {
 
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
-// 		if (this.wrapper && this.timeline && this.timeline.time === 0) {
-// 			this.timeline.seek(0);
-// 		}
+		if (this.wrapper && this.timeline && this.timeline.time === 0) {
+			this.timeline.seek(0);
+		}
 
 		const { children } = this.props;
 		const { fixed, position, size } = this.state;
@@ -161,15 +163,7 @@ class BasePopover extends Component {
 }
 
 
-const mapStateToProps = (state, ownProps)=> {
-	return ({
-		mouse : state.mouse
-	});
-};
-
-
-export default connect(mapStateToProps)(onClickOutside(BasePopover));
-// export default (onClickOutside(BasePopover));
+export default (onClickOutside(BasePopover));
 
 
 

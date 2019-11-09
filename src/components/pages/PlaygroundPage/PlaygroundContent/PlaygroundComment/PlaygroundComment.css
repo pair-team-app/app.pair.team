@@ -1,0 +1,68 @@
+
+.playground-comment {
+	position: absolute;
+}
+
+
+.playground-comment-marker {
+}
+
+.playground-comment-marker:hover {
+	cursor: pointer;
+	font-weight: 500;
+}
+
+.playground-comment-marker-content-wrapper {
+	position: relative;
+	width: 18px;
+	height: 18px;
+	border: 1px solid rgba(var(--site-fg-color), 1.0);
+	border-radius: 50%;
+	font-size: 11px;
+	font-weight: 400;
+	text-align: center;
+	background-color: rgba(var(--comment-marker-bg-color), 1.0);
+}
+
+.playground-comment-marker-content {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 90%;
+	height: 90%;
+	clip-path: circle(8px at center);
+}
+
+.playground-comment-marker-pin {
+	color: rgba(var(--site-hilite-color), 1.0);
+	font-size: 20px;
+}
+
+
+.playground-comment-popover {
+	width: 240px;
+}
+
+.playground-comment-add-popover {
+	width: 260px;
+	padding: 20px;
+}
+
+.playground-comment-add-popover form {
+	width: 100%;
+}
+
+.playground-comment-add-popover button {
+	width: 100%;
+}
+
+.playground-comment-add-popover textarea {
+	width: 100%;
+	height: 128px;
+	margin-bottom: 10px;
+	padding: 10px;
+	border: 1px solid rgba(var(--border-color), 1.0);
+	border-radius: 10px;
+	text-align: left;
+}

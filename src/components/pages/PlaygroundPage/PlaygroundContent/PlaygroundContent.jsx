@@ -6,8 +6,9 @@ import { ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
-import ComponentComment from './ComponentComment';
+import PlaygroundComment from './PlaygroundComment';
 import ComponentMenu from './ComponentMenu';
+import { reformComment } from '../utils/reform';
 
 
 const inlineStyles = (html, styles)=> {
@@ -21,77 +22,58 @@ class PlaygroundContent extends Component {
 		super(props);
 
 		this.state = {
-			components : [],
 			position   : null,
-			offset     : null,
-			popover    : false
+			addPopover : false
 		};
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
-		if (this.props.comment && !prevProps.comment) {
-			this.setState({ popover : true });
-		}
+// 		if (this.props.comment && !prevProps.comment) {
+// 			this.setState({ popover : true });
+// 		}
 	}
 
 	handleComponentPopoverClose = ()=> {
 // 		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
-		this.setState({ popover : false }, ()=> {
+		this.setState({ addPopover : false }, ()=> {
 			this.props.onPopoverClose();
 		});
 	};
 
-	handleCommentClick = (event, comment)=> {
-// 		console.log('%s.handleCommentClick()', this.constructor.name, event.target.parentNode.parentNode, event.target.parentNode.parentNode.parentNode, comment);
-		event.preventDefault();
-		event.stopPropagation();
-
-		this.setState({
-			offset  : {
-				x : event.target.getBoundingClientRect().left,
-				y : event.target.getBoundingClientRect().top
-			},
-			popover : true
-		});
-
-		const componentID = (event.target.parentNode.parentNode.parentNode.hasAttribute('data-id')) ? event.target.parentNode.parentNode.parentNode.getAttribute('data-id') : event.target.parentNode.parentNode.getAttribute('data-id');
-		this.props.onCommentClick({ comment, componentID });
-	};
-
 	handleContentClick = (event, component)=> {
-// 		console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target }, this.props.mouse.position, component);
+		console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target }, { clientX : event.clientX, clientY : event.clientY }, component);
 
 		const { cursor } = this.props;
 		if (cursor) {
-			const offset = this.props.mouse.position;
 			const position = {
-				x : offset.x - event.target.getBoundingClientRect().left,
-				y : offset.y - event.target.getBoundingClientRect().top,
+				x : event.clientX - event.target.getBoundingClientRect().left,
+				y : event.clientY - event.target.getBoundingClientRect().top,
 			};
 
-			this.props.onComponentClick({ component });
-			this.setState({ position, offset,
-				popover : true
+			this.setState({ position,
+				addPopover : true
 			});
-
-		} else {
-			this.props.onComponentClick({ component });
 		}
+
+		this.props.onComponentClick({ component });
 	};
 
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { typeGroup, playground, component, comment, cursor, mouse } = this.props;
-		const { offset, popover } = this.state;
+		const { typeGroup, playground, component, comment, cursor, mouse, profile } = this.props;
+		const { position, addPopover } = this.state;
 
+// 		const components = playground.components;
 		const components = (component) ? [component] : (typeGroup) ? playground.components.filter(({ typeID })=> (typeID === typeGroup.id)) : playground.components;
 
 		return (<div className="playground-content" data-cursor={cursor}>
 			<div className="playground-content-components-wrapper">
 				{(components.map((comp, i)=> {
+// 					console.log('%s.render()', this.constructor.name, i, comp);
+
 					//const html = comp.html.replace(/\\"/g, '"').replace(/ class=.+?"/, ` style="${Object.keys(comp.styles).map((key)=> (`${key}:${comp.styles[key]}`)).join('; ').replace(/"/g, '\'')}"`);
 
 					/*
@@ -104,7 +86,7 @@ class PlaygroundContent extends Component {
 					*/
 
 					let grp = {};
-					comp.children.forEach((child, i)=> {
+					comp.children.forEach((child, j)=> {
 						const path = [ ...child.path].pop();
 						const inline = inlineStyles(child.html, child.styles);
 
@@ -122,7 +104,7 @@ class PlaygroundContent extends Component {
 // 								};
 
 
-// 								const sub = Object.keys(grp).find((key, i)=> (key === child.path[0].split(':')[0]));
+// 								const sub = Object.keys(grp).find((key, j)=> (key === child.path[0].split(':')[0]));
 // 								console.log('>0', grp, sub, child.path);
 							}
 
@@ -133,7 +115,7 @@ class PlaygroundContent extends Component {
 					});
 
 					let html = ['', ''];
-					comp.children.forEach((child, i)=> {
+					comp.children.forEach((child, j)=> {
 						const path = [ ...child.path].pop();
 						const inline = inlineStyles(child.html, child.styles);
 
@@ -144,18 +126,29 @@ class PlaygroundContent extends Component {
 							html = [`${html[0]}`, `${html[1].replace(/><?/, `>${inline.split('[:]').join('').replace('[:]', '')}<`)}`];
 						}
 
-// 						console.log(i, path, html);
+// 						console.log(j, path, html);
 					});
 
 // 					let children = '';
 					const content = inlineStyles(comp.html, comp.styles).replace(/\[:]/, html.join(''));
+
+
+					const comments = (addPopover && component.id === comp.id) ? [ ...comp.comments, reformComment({ position,
+						id      : 0,
+						type    : 'add',
+						content : '',
+						author  : profile
+					})] : comp.comments;
+
+
 					return (<div key={i} className="playground-content-component-wrapper" onClick={(event)=> this.handleContentClick(event, comp)}>
 						<ContextMenuTrigger id="component" disableIfShiftIsPressed={true}>
 							<div className="playground-content-component" data-id={comp.id} dangerouslySetInnerHTML={{ __html : content }} />
 
 							<div className="playground-content-component-comment-wrapper" data-id={comp.id} >
-								{(comp.comments.filter(({ type })=> (type !== 'init')).map((comment, i)=> {
-									return (<ComponentComment key={i} ind={(comp.comments.length - 1) - i} popover={popover}component={comp} comment={comment} onClose={this.handleComponentPopoverClose} onMarkerClick={this.handleCommentClick} />);
+								{(comments.filter(({ type })=> (type !== 'init')).map((comm, j)=> {
+// 									console.log('%s.render()', this.constructor.name, i, j, comp, comm);
+									return (<PlaygroundComment key={`${i}_${j}`} ind={(comp.comments.length - 1) - j} component={comp} comment={comm} position={position} onMarkerClick={this.props.onMarkerClick} onAddComment={this.props.onAddComment} onDelete={this.props.onDeleteComment} onClose={this.handleComponentPopoverClose} />);
 								}))}
 							</div>
 						</ContextMenuTrigger>
@@ -187,7 +180,8 @@ const CommentPinCursor = (props)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		mouse : state.mouse
+		mouse   : state.mouse,
+		profile : state.userProfile
 	});
 };
 

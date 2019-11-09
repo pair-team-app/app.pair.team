@@ -21,6 +21,7 @@
 :root {
 	--site-bg-color: 252, 252, 252; /* fcfcfc */
 	--site-fg-color: 35, 35, 35; /* #232323 */
+	--site-hilite-color: 0, 90, 217; /* #0067ff */
 	--disabled-fg-color: 204, 204, 204; /* #cccccc */
 	--invalid-bg-color: 255, 240, 240; /* fff0f0 */
 	--invalid-fg-color: 255, 70, 70; /* #ff4646 */
@@ -45,6 +46,7 @@
 	--playground-panel-bg-color: 247, 247, 247; /* #f7f7f7 */
 	--playground-panel-link-color: 153, 153, 153; /* 999999 */
 	--playground-panel-link-hover-color: var(--site-fg-color); /* #232323 */
+	--comment-marker-bg-color: 207, 247, 207;
 
 	--timestamp-color:  153, 153, 153; /* 999999 */
 	--dialog-title-color: 153, 153, 153; /* 999999 */

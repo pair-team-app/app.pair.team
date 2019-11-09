@@ -19,15 +19,15 @@ export const reformChildElement = (element, overwrite={})=> {
 };
 
 export const reformComment = (comment, overwrite={})=> ({ ...comment,
-	position  : (JSON.parse(comment.position) || { x : 0, y : 0 }),
+	position  : (comment.position) ? (typeof comment.position === 'string') ? (JSON.parse(comment.position) || { x : 0, y : 0 }) : comment.position : { x : 0, y : 0 },
 	author    : {
 		id       : comment.author.id,
 		username : comment.author.username,
 		email    : comment.author.email,
 		avatar   : comment.author.avatar
 	},
-	epoch     : (moment.utc(comment.added).valueOf() * 0.001) << 0,
-	timestamp : moment(comment.added).add((moment().utcOffset() << 0), 'minute'),
+	epoch     : (comment.added) ? (moment.utc(comment.added).valueOf() * 0.001) << 0 : 0,
+	timestamp : (comment.added) ? moment(comment.added).add((moment().utcOffset() << 0), 'minute') : moment.utc(),
 	...overwrite
 });
 

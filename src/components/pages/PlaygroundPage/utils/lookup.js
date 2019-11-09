@@ -18,3 +18,15 @@ export const componentTypeGroup = (typeGroups, component)=> {
 export const playgroundByID = (playgrounds, playgroundID)=> {
 	return (playgrounds.find(({ id })=> (id === (playgroundID << 0))));
 };
+
+export const typeGroupByComponent = (typeGroups, component)=> {
+	return (typeGroups.find(({ typeID })=> (typeID === component.typeID)));
+};
+
+export const typeGroupByID = (typeGroups, typeGroupID)=> {
+	return (typeGroups.find(({ id })=> (id === (typeGroupID << 0))));
+};
+
+export const typeGroupByKey = (typeGroups, typeGroupKey)=> {
+	return (typeGroups.find(({ key })=> (key === typeGroupKey)));
+};
