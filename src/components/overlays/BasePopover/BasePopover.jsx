@@ -97,7 +97,7 @@ class BasePopover extends Component {
 
 
 	onIntro = ()=> {
-		console.log('%s.onIntro()', this.constructor.name, this.props, this.state.intro);
+// 		console.log('%s.onIntro()', this.constructor.name, this.props, this.state.intro);
 
 		const { duration } = this.state;
 		this.timeline = new TimelineMax();
@@ -113,7 +113,7 @@ class BasePopover extends Component {
 	};
 
 	onOutro = ()=> {
-		console.log('%s.onOutro()', this.constructor.name, this.props, this.state.outro);
+// 		console.log('%s.onOutro()', this.constructor.name, this.props, this.state.outro);
 
 		const { duration } = this.state;
 		this.timeline = new TimelineMax();

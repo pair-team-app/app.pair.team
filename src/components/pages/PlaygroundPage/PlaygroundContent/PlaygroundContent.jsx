@@ -22,8 +22,8 @@ class PlaygroundContent extends Component {
 		super(props);
 
 		this.state = {
-			position   : null,
-			addPopover : false
+			position : null,
+			popover  : false
 		};
 	}
 
@@ -37,13 +37,13 @@ class PlaygroundContent extends Component {
 
 	handleComponentPopoverClose = ()=> {
 // 		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
-		this.setState({ addPopover : false }, ()=> {
+		this.setState({ popover : false }, ()=> {
 			this.props.onPopoverClose();
 		});
 	};
 
 	handleContentClick = (event, component)=> {
-		console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target }, { clientX : event.clientX, clientY : event.clientY }, component);
+// 		console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target }, { clientX : event.clientX, clientY : event.clientY }, component);
 
 		const { cursor } = this.props;
 		if (cursor) {
@@ -53,7 +53,7 @@ class PlaygroundContent extends Component {
 			};
 
 			this.setState({ position,
-				addPopover : true
+				popover : true
 			});
 		}
 
@@ -64,7 +64,7 @@ class PlaygroundContent extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { typeGroup, playground, component, comment, cursor, mouse, profile } = this.props;
-		const { position, addPopover } = this.state;
+		const { position, popover } = this.state;
 
 // 		const components = playground.components;
 		const components = (component) ? [component] : (typeGroup) ? playground.components.filter(({ typeID })=> (typeID === typeGroup.id)) : playground.components;
@@ -133,7 +133,7 @@ class PlaygroundContent extends Component {
 					const content = inlineStyles(comp.html, comp.styles).replace(/\[:]/, html.join(''));
 
 
-					const comments = (addPopover && component.id === comp.id) ? [ ...comp.comments, reformComment({ position,
+					const comments = (popover && component.id === comp.id) ? [ ...comp.comments, reformComment({ position,
 						id      : 0,
 						type    : 'add',
 						content : '',
@@ -147,7 +147,6 @@ class PlaygroundContent extends Component {
 
 							<div className="playground-content-component-comment-wrapper" data-id={comp.id} >
 								{(comments.filter(({ type })=> (type !== 'init')).map((comm, j)=> {
-// 									console.log('%s.render()', this.constructor.name, i, j, comp, comm);
 									return (<PlaygroundComment key={`${i}_${j}`} ind={(comp.comments.length - 1) - j} component={comp} comment={comm} position={position} onMarkerClick={this.props.onMarkerClick} onAddComment={this.props.onAddComment} onDelete={this.props.onDeleteComment} onClose={this.handleComponentPopoverClose} />);
 								}))}
 							</div>

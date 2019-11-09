@@ -2,13 +2,11 @@
 import React, { Component } from 'react';
 import './PlaygroundComment.css';
 
-// import axios from 'axios';
 import { URIs } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 
 import ComponentComment from '../../ComponentComment';
 import BasePopover from '../../../../overlays/BasePopover';
-// import { API_ENDPT_URL } from '../../../../../consts/uris';
 
 
 class PlaygroundComment extends Component {
@@ -23,8 +21,6 @@ class PlaygroundComment extends Component {
 				y : 0
 			}
 		};
-
-		this.textAreaRef = React.createRef();
 	}
 
 	componentDidMount() {
@@ -34,10 +30,6 @@ class PlaygroundComment extends Component {
 		this.setState({ position });
 	}
 
-	componentWillUnmount() {
-// 		console.log('%s.componentWillUnmount()', this.constructor.name, this.props, this.state);
-		this.textAreaRef = null;
-	}
 
 	handleAddSubmit = (event)=> {
 // 		console.log('%s.handleAddSubmit()', this.constructor.name, event, this.state.comment);
@@ -68,8 +60,10 @@ class PlaygroundComment extends Component {
 		event.preventDefault();
 		event.stopPropagation();
 
-		const { comment } = this.props;
-		this.props.onDelete(comment.id);
+		this.setState({ outro : true }, ()=> {
+			const { comment } = this.props;
+			this.props.onDelete(comment.id);
+		});
 	};
 
 	handleMarkerClick = (event, comment)=> {
@@ -107,7 +101,7 @@ class PlaygroundComment extends Component {
 		return (<div className="playground-comment" style={style} data-id={component.id}>
 			<PlaygroundCommentMarker ind={ind} comment={comment} onClick={this.handleMarkerClick} />
 			{(comment.id === 0)
-				? (<PlaygroundCommentAddPopover comment={this.state.comment} outro={outro} ref={this.ref} onTextChange={this.handleTextChange} onSubmit={this.handleAddSubmit} onClose={this.handleClose} />)
+				? (<PlaygroundCommentAddPopover comment={this.state.comment} outro={outro} onTextChange={this.handleTextChange} onSubmit={this.handleAddSubmit} onClose={this.handleClose} />)
 				: ((comment.id === (URIs.lastComponent() << 0)) && (<PlaygroundCommentPopover ind={ind} comment={comment} outro={outro} onDelete={this.handleDelete} onClose={this.handleClose} />))
 			}
 		</div>);
@@ -118,7 +112,7 @@ class PlaygroundComment extends Component {
 const PlaygroundCommentAddPopover = (props)=> {
 // 	console.log('PlaygroundCommentAddPopover()', props);
 
-	const { comment, outro, ref } = props;
+	const { comment, outro } = props;
 	const payload = {
 		fixed : false
 	};
@@ -126,7 +120,7 @@ const PlaygroundCommentAddPopover = (props)=> {
 	return (<BasePopover outro={outro} payload={payload} onOutroComplete={()=> props.onClose(comment)}>
 		<div className="playground-comment-add-popover">
 			<form>
-				<textarea placeholder="Add Comment" onChange={props.onTextChange} ref={ref}>
+				<textarea placeholder="Add Comment" onChange={props.onTextChange}>
 				</textarea>
 				<button type="submit" disabled={comment.content.length === 0} onClick={props.onSubmit}>Add Comment</button>
 			</form>
