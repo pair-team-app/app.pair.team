@@ -1,6 +1,6 @@
 
 .nav-panel-type-group {
-	margin-bottom: 18px;
+	margin-bottom: 15px;
 }
 
 .nav-panel-type-group-title, .nav-panel-type-item {
@@ -36,7 +36,7 @@
 	height: 100%;
 	opacity: 1;
 	content: "";
-	background: linear-gradient(transparent 25%, var(--playground-nav-bg-color));
+	background: linear-gradient(transparent 25%, var(--playground-panel-bg-color));
 	/*background: linear-gradient(transparent -25%, #ff00ff);*/
 	pointer-events: none;
 	will-change: opacity;
