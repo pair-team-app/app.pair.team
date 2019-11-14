@@ -44,7 +44,7 @@ class PlaygroundPage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { componentTypes, match } = this.props;
 		const { typeGroups, playground, fetching } = this.state;
@@ -284,7 +284,7 @@ class PlaygroundPage extends Component {
 	};
 
 	onFetchBuildPlaygrounds = (buildID, playgroundID=null)=> {
-// 		console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
+		console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
 
 		this.setState({ fetching : true }, ()=> {
 			axios.post(API_ENDPT_URL, {
