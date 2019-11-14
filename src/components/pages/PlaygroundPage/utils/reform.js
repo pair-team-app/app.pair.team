@@ -37,15 +37,23 @@ export const reformComponent = (component, overwrite={})=> {
 	delete (component['event_type_id']);
 	delete (component['tag_name']);
 
-	return ({ ...component,
+	const meta = JSON.parse(component.meta);
+	return ({ ...component, meta,
 		typeID      : type_id,
 		eventTypeID : event_type_id,
 		title       : (component.title.length === 0) ? tag_name : component.title,
 		tagName     : tag_name,
 		html        : decryptText(component.html),
 		styles      : decryptObject(component.styles),
+		rootStyles  : { ...JSON.parse(component.path),
+			'height'     : (meta.bounds.height > 0) ? `${meta.bounds.height}px` : 'fit-content',
+			'max-height' : (meta.bounds.height > 0) ? `${meta.bounds.height}px` : 'fit-content',
+			'max-width'  : (meta.bounds.width > 0) ? `${meta.bounds.width}px` : 'fit-content',
+			'min-height' : (meta.bounds.height > 0) ? `${meta.bounds.height}px` : 'fit-content',
+			'min-width'  : (meta.bounds.width > 0) ? `${meta.bounds.width}px` : 'fit-content',
+			'width'      : (meta.bounds.width > 0) ? `${meta.bounds.width}px` : 'fit-content'
+		},
 		path        : component.path.split(' ').filter((i)=> (i.length > 0)),
-// 		meta        : JSON.parse(component.meta.replace(/"/g, '\'')),
 		selected    : false,
 		children    : component.children.map((child)=> (reformChildElement(child))),
 		comments    : component.comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),

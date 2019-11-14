@@ -11,16 +11,12 @@ export const componentByID = (components, componentID)=> {
 	return (components.find(({ id })=> (id === (componentID << 0))));
 };
 
-export const componentTypeGroup = (typeGroups, component)=> {
-	return (typeGroups.find(({ id })=> (component.typeID)));
-};
-
 export const playgroundByID = (playgrounds, playgroundID)=> {
 	return (playgrounds.find(({ id })=> (id === (playgroundID << 0))));
 };
 
 export const typeGroupByComponent = (typeGroups, component)=> {
-	return (typeGroups.find(({ typeID })=> (typeID === component.typeID)));
+	return (typeGroups.find(({ id })=> (id === component.typeID)));
 };
 
 export const typeGroupByID = (typeGroups, typeGroupID)=> {

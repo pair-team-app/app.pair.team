@@ -13,7 +13,7 @@ import PlaygroundFooter from './PlaygroundFooter';
 import PlaygroundNavPanel from './PlaygroundNavPanel';
 import { commentByID, componentByID, componentFromComment, typeGroupByComponent } from './utils/lookup';
 import { reformComment, reformComponent } from './utils/reform';
-import { replaceComment, replaceComponent, replacePlayground } from './utils/replace';
+import { replacePlayground } from './utils/replace';
 import { Modals, API_ENDPT_URL, DEFAULT_AVATAR } from '../../../consts/uris';
 import { decryptObject, decryptText } from './utils/crypto';
 import { trackEvent } from '../../../utils/tracking';
@@ -153,13 +153,15 @@ class PlaygroundPage extends Component {
 	};
 
 	handleComponentClick = ({ component })=> {
-// 		console.log('%s.handleComponentClick()', this.constructor.name, { component });
+		console.log('%s.handleComponentClick()', this.constructor.name, { component });
 
 		const { teamSlug, projectSlug, buildID } = this.props.match.params;
 		const { typeGroups, playground } = this.state;
 
 		const typeGroup = (this.state.typeGroup || typeGroupByComponent(typeGroups, component));
-		this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(component.id === this.state.component.id && window.location.href.includes('/comments')) ? '/comments' : ''}`);
+
+// 		console.log('%s.handleComponentClick()', this.constructor.name, playground, typeGroup, component);
+		this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(this.state.component && component.id === this.state.component.id && window.location.href.includes('/comments')) ? '/comments' : ''}`);
 
 		component.selected = true;
 		this.setState ({ component,
