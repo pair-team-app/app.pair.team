@@ -36,7 +36,13 @@ class PlaygroundComment extends Component {
 		event.preventDefault();
 		event.stopPropagation();
 
-		this.setState({ outro : true }, ()=> {
+		this.setState({
+			outro    : true,
+			position : {
+				x : this.state.position.x - 1,
+				y : this.state.position.y + 12
+			}
+		}, ()=> {
 			const { component } = this.props;
 			const { position, comment } = this.state;
 

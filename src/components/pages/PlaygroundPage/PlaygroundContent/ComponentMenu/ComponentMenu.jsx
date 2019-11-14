@@ -64,7 +64,10 @@ class ComponentMenu extends Component {
 		this.setState({
 			intro    : true,
 			outro    : false,
-			position : event.detail.position,
+			position : {
+				x : event.detail.position.x - 9,
+				y : event.detail.position.y - 12,
+			},
 			comment  : ''
 		}, ()=> {
 			if (this.textAreaRef) {

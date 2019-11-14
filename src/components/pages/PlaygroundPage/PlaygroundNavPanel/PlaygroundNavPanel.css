@@ -8,7 +8,7 @@
 	padding: 20px;
 	background-color: rgba(var(--playground-panel-bg-color), 1.0);
 	border-right: 1px solid rgba(var(--border-color), 1.0);
-	z-index: 2;
+	z-index: 8;
 }
 
 .playground-nav-panel-header {
