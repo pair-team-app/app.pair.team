@@ -11,6 +11,10 @@
 	margin-bottom: 75px;
 }
 
+.home-page-form-wrapper h1 {
+	max-width: 75%;
+}
+
 .home-page-form-wrapper form {
 	width: 316px;
 }

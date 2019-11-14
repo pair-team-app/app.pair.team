@@ -35,6 +35,7 @@ yarn-error.log
 
 #-- production --#
 /build
+/build\ copy
 /em-build
 /in-build
 /pf-build*

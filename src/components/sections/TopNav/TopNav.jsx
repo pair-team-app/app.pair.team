@@ -17,7 +17,7 @@ function TopNav(props) {
 
 	return (<div className="top-nav">
 		<div className="top-nav-branding-wrapper">
-			<NavLink to={Pages.HOME} className="page-nav-link" onClick={(event)=> trackEvent('logo', 'home')}><div>
+			<NavLink to={Pages.HOME} className="page-nav-link top-nav-branding" onClick={(event)=> trackEvent('logo', 'home')}><div>
 				<Logo />
 				<div className="top-nav-title">Pair</div>
 			</div></NavLink>

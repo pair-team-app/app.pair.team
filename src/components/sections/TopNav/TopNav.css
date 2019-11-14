@@ -35,7 +35,8 @@
 	flex: 2 2 0;
 }
 
-.top-nav-branding-wrapper a > div {
+/*.top-nav-branding-wrapper a > div {*/
+a.top-nav-branding > div {
 	display: flex;
 	flex-wrap: nowrap;
 	align-items: center;
@@ -47,7 +48,7 @@
 	height: 18px;
 }
 
-.top-nav-branding-wrapper a:not(:hover):not(:active) rect#logo-fg {
+a.top-nav-branding:not(:hover):not(:active) rect#logo-fg {
 	/*transform: scale(1.00);*/
 	transform-origin: center;
 	animation: 0.125s ease-in 0s 1 forwards top-nav-logo-out;
@@ -58,7 +59,7 @@
 	/*animation: 0.25s ease-out 0.0s 1 forwards top-nav-logo-bg-hover;*/
 /*}*/
 
-.top-nav-branding-wrapper a:hover rect#logo-fg {
+a.top-nav-branding:hover rect#logo-fg {
 	transform-origin: center;
 	animation: 0.33s ease-out 0s infinite alternate top-nav-logo-fg-hover;
 }
