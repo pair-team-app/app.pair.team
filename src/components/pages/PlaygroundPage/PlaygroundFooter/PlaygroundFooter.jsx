@@ -13,6 +13,7 @@ function PlaygroundFooter(props) {
 
 	const handleClick = (event, url)=> {
 		event.preventDefault();
+		event.stopPropagation();
 
 // 		trackEvent('button', event.target.name);
 // 		trackOutbound(url, ()=> {

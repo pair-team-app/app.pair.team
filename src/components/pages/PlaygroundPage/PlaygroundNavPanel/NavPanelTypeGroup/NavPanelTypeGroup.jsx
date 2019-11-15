@@ -28,7 +28,7 @@ function NavPanelTypeGroup(props) {
 const NavPanelTypeItem = (props)=> {
 // 	console.log('NavPanelTypeItem()', props);
 	const { item } = props;
-	return (<div className="nav-panel-type-item" onClick={props.onClick} data-selected={item.selected}>{Strings.truncate(item.title, 20)}</div>);
+	return (<div className="nav-panel-type-item" onClick={props.onClick} data-selected={item.selected}>{Strings.truncate(item.title, 19)}</div>);
 };
 
 

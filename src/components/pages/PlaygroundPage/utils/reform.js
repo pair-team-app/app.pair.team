@@ -32,29 +32,30 @@ export const reformComment = (comment, overwrite={})=> ({ ...comment,
 });
 
 export const reformComponent = (component, overwrite={})=> {
-	console.log('reformComponent()', component.id);
+// 	console.log('reformComponent()', component.id);
 
-	const { type_id, event_type_id, tag_name, meta, path } = component;
+	const { title, html, styles, type_id, event_type_id, tag_name, root_styles, children, comments, meta } = component;
 	delete (component['type_id']);
 	delete (component['event_type_id']);
 	delete (component['tag_name']);
+	delete (component['root_styles']);
 
-// 	console.log(component.id, 'STYLES:', decryptText(component.styles));
-// 	console.log(component.id, 'STYLES:', decryptObject(component.styles));
+// 	console.log(component.id, 'STYLES:', decryptText(styles));
+// 	console.log(component.id, 'STYLES:', decryptObject(styles));
 // 	console.log('META: [%s]', JSON.stringify(meta, null, 2));
 // 	console.log('META:', meta);
-// 	console.log('PATH:', path);
+// 	console.log('ROOT STYLES:', decryptObject(root_styles));
 // 	console.log('META:', meta.bounds.height, meta.bounds.width);
 // 	console.log('PATH: [%s]', JSON.stringify(path, null, 2));
 
 	return ({ ...component,
 		typeID      : type_id,
 		eventTypeID : event_type_id,
-		title       : (component.title.length === 0) ? tag_name : component.title,
+		title       : (title.length === 0) ? tag_name : title,
 		tagName     : tag_name,
-		html        : (component.html.length < 65535) ? decryptText(component.html) : '',
-		styles      : decryptObject(component.styles),
-		rootStyles  : { ...path,
+		html        : (html.length < 65535) ? decryptText(html) : '',
+		styles      : decryptObject(styles),
+		rootStyles  : { ...decryptObject(root_styles),
 			'height'     : (meta.bounds.height > 0) ? `${meta.bounds.height}px` : 'fit-content',
 			'max-height' : (meta.bounds.height > 0) ? `${meta.bounds.height}px` : 'fit-content',
 			'max-width'  : (meta.bounds.width > 0) ? `${meta.bounds.width}px` : 'fit-content',
@@ -62,10 +63,9 @@ export const reformComponent = (component, overwrite={})=> {
 			'min-width'  : (meta.bounds.width > 0) ? `${meta.bounds.width}px` : 'fit-content',
 			'width'      : (meta.bounds.width > 0) ? `${meta.bounds.width}px` : 'fit-content'
 		},
-// 		path        : component.path.split(' ').filter((i)=> (i.length > 0)),
 		selected    : false,
-		children    : component.children.map((child)=> (reformChildElement(child))),
-		comments    : component.comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
+		children    : children.map((child)=> (reformChildElement(child))),
+		comments    : comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
 		...overwrite
 	})
 };

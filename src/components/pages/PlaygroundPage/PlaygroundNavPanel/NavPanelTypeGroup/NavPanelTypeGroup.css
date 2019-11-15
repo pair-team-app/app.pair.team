@@ -1,5 +1,5 @@
 
-.nav-panel-type-group {
+.nav-panel-type-group:not(:last-child) {
 	margin-bottom: 15px;
 }
 
