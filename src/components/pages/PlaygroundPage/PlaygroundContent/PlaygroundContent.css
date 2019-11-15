@@ -27,7 +27,7 @@
 
 .playground-content-components-wrapper > * {
 	margin: auto;
-	/*border: 1px dashed #00ff00;*/
+	border: 1px dotted rgba(var(--border-color), 1.0);
 }
 
 .playground-content-component-wrapper {

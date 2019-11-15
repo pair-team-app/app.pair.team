@@ -52,10 +52,12 @@ class PlaygroundPage extends Component {
 		const { componentsSlug, componentID, commentID } = match.params;
 // 		console.log('params', match.params);
 
+		// init typeGroups
 		if (!prevProps.componentTypes && componentTypes) {
 			this.setState({ typeGroups : componentTypes });
 		}
 
+		// logged in
 		if (!prevProps.profile && this.props.profile) {
 			if (!playground && !fetching) {
 				const { buildID, playgroundID } = match.params;
