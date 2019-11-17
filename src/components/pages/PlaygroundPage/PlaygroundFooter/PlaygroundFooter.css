@@ -20,7 +20,7 @@
 	/*border: 1px dotted #00ff00;*/
 }
 
-.playground-footer-comments-wrapper, .playground-footer-device-wrapper {
+.playground-footer-comments-wrapper, .playground-footer-content-toggle-wrapper {
 	flex: 1 1 auto;
 }
 
@@ -33,6 +33,6 @@
 	text-align: left;
 }
 
-.playground-footer-device-wrapper {
+.playground-footer-content-toggle-wrapper {
 	text-align: right;
 }

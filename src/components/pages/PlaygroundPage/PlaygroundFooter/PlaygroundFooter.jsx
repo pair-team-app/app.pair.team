@@ -22,7 +22,7 @@ function PlaygroundFooter(props) {
 		window.open(url);
 	};
 
-	const { cursor, playground, builds } = props;
+	const { accessibility, cursor, playground, builds } = props;
 	return (<div className="playground-footer">
 		<div className="playground-footer-comments-wrapper">
 			<button className="quiet-button glyph-button" onClick={props.onToggleCursor} data-selected={cursor}><FontAwesome name="comment" /></button>
@@ -31,7 +31,8 @@ function PlaygroundFooter(props) {
 			<button className="quiet-button adjacent-button" onClick={(event)=> handleClick(event, NPM_DE_PLAYGROUND)} name="download-npm">NPM Module</button>
 			<button className="quiet-button" onClick={(event)=> handleClick(event, GITHUB_XD_PLUGIN)} name="adobe-xd-plugin">Adobe XD Plugin</button>
 		</div>
-		<div className="playground-footer-device-wrapper">
+		<div className="playground-footer-content-toggle-wrapper">
+			<button className="quiet-button glyph-button adjacent-button" onClick={props.onToggleAccessibility} data-selected={(accessibility)}><FontAwesome name="universal-access" /></button>
 			<button className="quiet-button glyph-button adjacent-button" onClick={props.onToggleMobile} data-selected={(playground.deviceID === 2)} data-hidden={(builds === 1)}><FontAwesome name="mobile" /></button>
 			<button className="quiet-button glyph-button" onClick={props.onToggleDesktop} data-selected={(playground.deviceID === 1)} data-hidden={(builds === 1)}><FontAwesome name="desktop" /></button>
 		</div>

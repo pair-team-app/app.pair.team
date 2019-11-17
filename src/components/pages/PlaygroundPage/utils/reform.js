@@ -1,6 +1,11 @@
+'use strict';
+
+
+import { Images } from 'lang-js-utils';
+import moment from 'moment';
 
 import { decryptObject, decryptText } from './crypto';
-import moment from "moment/moment";
+
 
 
 export const reformChildElement = (element, overwrite={})=> {
@@ -34,7 +39,8 @@ export const reformComment = (comment, overwrite={})=> ({ ...comment,
 export const reformComponent = (component, overwrite={})=> {
 // 	console.log('reformComponent()', component.id);
 
-	const { title, html, styles, type_id, event_type_id, tag_name, root_styles, children, comments, meta } = component;
+	const { title, html, styles, type_id, event_type_id, tag_name, root_styles, image, children, comments, meta } = component;
+	const { width, height } = meta.bounds;
 	delete (component['type_id']);
 	delete (component['event_type_id']);
 	delete (component['tag_name']);
@@ -49,23 +55,30 @@ export const reformComponent = (component, overwrite={})=> {
 // 	console.log('PATH: [%s]', JSON.stringify(path, null, 2));
 
 	return ({ ...component,
-		typeID      : type_id,
-		eventTypeID : event_type_id,
-		title       : (title.length === 0) ? tag_name : title,
-		tagName     : tag_name,
-		html        : (html.length < 65535) ? decryptText(html) : '',
-		styles      : decryptObject(styles),
-		rootStyles  : { ...decryptObject(root_styles),
-// 			'height'     : (meta.bounds.height > 0) ? `${meta.bounds.height}px` : 'fit-content',
-// 			'max-height' : (meta.bounds.height > 0) ? `${meta.bounds.height}px` : 'fit-content',
-			'max-width'  : (meta.bounds.width > 0) ? `${meta.bounds.width}px` : 'fit-content',
-			'min-height' : (meta.bounds.height > 0) ? `${meta.bounds.height}px` : 'fit-content',
-			'min-width'  : (meta.bounds.width > 0) ? `${meta.bounds.width}px` : 'fit-content',
-			'width'      : (meta.bounds.width > 0) ? `${meta.bounds.width}px` : 'fit-content'
+		typeID        : type_id,
+		eventTypeID   : event_type_id,
+		title         : (title.length === 0) ? tag_name : title,
+		tagName       : tag_name,
+		html          : (html.length < 65535) ? decryptText(html) : '',
+		styles        : decryptObject(styles),
+		rootStyles    : { ...decryptObject(root_styles),
+// 			'height'     : (height > 0) ? `${height}px` : 'fit-content',
+// 			'max-height' : (height > 0) ? `${height}px` : 'fit-content',
+			'max-width'  : (width > 0) ? `${width}px` : 'fit-content',
+			'min-height' : (height > 0) ? `$height}px` : 'fit-content',
+			'min-width'  : (width > 0) ? `${width}px` : 'fit-content',
+			'width'      : (width > 0) ? `${width}px` : 'fit-content'
 		},
-		selected    : false,
-		children    : children.map((child)=> (reformChildElement(child))),
-		comments    : comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
+// 		image         : (image.length > 0) ? image : Images.genPlaceholder({ width, height }),// genImageData({ width, height }),
+		image         : Images.genPlaceholder({ width, height }),// genImageData({ width, height }),
+		accessibility : {
+			passed  : [],
+			failed  : [],
+			aborted : []
+		},
+		selected      : false,
+		children      : children.map((child)=> (reformChildElement(child))),
+		comments      : comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
 		...overwrite
 	})
 };

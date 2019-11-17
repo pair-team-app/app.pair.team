@@ -1,5 +1,5 @@
+'use strict';
 
-// import React from 'react';
 
 export const convertStyles = (styles)=> {
 	let style = {};

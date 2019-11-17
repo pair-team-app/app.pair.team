@@ -1,0 +1,59 @@
+
+.playground-accessibility {
+	padding: 58px 20px 68px 20px;
+}
+
+.playground-accessibility-tree-wrapper {
+
+}
+
+.playground-accessibility-tree-global-wrapper {
+
+}
+
+.playground-accessibility-tree-item-wrapper {
+
+}
+
+
+.accessibility-tree-item:not(:last-child) {
+	margin-bottom: 20px;
+}
+
+.accessibility-tree-item-rules-wrapper {
+
+}
+
+.accessibility-tree-item-rules {
+
+}
+
+.accessibility-tree-item-rules-failed {
+
+}
+
+.accessibility-tree-item-rules-passed {
+
+}
+
+.accessibility-tree-item-rules-aborted {
+
+}
+
+.accessibility-tree-item-component-wrapper {
+
+}
+
+.accessibility-tree-item-component {
+
+}
+
+.accessibility-tree-item-component > img {
+	max-width: 400px;
+	max-height: 200px;
+}
+
+
+.accessibility-tree-item-rule {
+
+}

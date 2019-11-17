@@ -1,3 +1,5 @@
+'use strict';
+
 
 export const commentByID = (comments, commentID)=> {
 	return (comments.find(({ id })=> (id === (commentID << 0))));

@@ -6,6 +6,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 
 import BasePage from '../BasePage';
+import PlaygroundAccessibilty from './PlaygroundAccessibility';
 import PlaygroundCommentsPanel from './PlaygroundCommentsPanel';
 import PlaygroundContent from './PlaygroundContent';
 import PlaygroundHeader from './PlaygroundHeader';
@@ -24,14 +25,15 @@ class PlaygroundPage extends Component {
 		super(props);
 
 		this.state = {
-			typeGroups  : null,
-			typeGroup   : null,
-			playgrounds : null,
-			playground  : null,
-			component   : null,
-			comment     : null,
-			cursor      : false,
-			fetching    : false
+			typeGroups    : null,
+			typeGroup     : null,
+			playgrounds   : null,
+			playground    : null,
+			component     : null,
+			comment       : null,
+			cursor        : false,
+			accessibility : false,
+			fetching      : false
 		};
 	}
 
@@ -266,6 +268,13 @@ class PlaygroundPage extends Component {
 		this.setState({ component : typeItem });
 	};
 
+	handleToggleAccessibility = ()=> {
+		console.log('%s.handleToggleAccessibility()', this.constructor.name, this.state.accessibility);
+
+		const { accessibility } = this.state;
+		this.setState({ accessibility : !accessibility });
+	};
+
 	handleToggleCommentCursor = (event)=> {
 // 		console.log('%s.handleToggleCommentCursor()', this.constructor.name, event, this.state.cursor, !this.state.cursor);
 
@@ -303,10 +312,15 @@ class PlaygroundPage extends Component {
 					delete (playground['device_id']);
 
 					return ({ ...playground,
-						html       : decryptText(playground.html),
-						styles     : decryptObject(playground.styles),
-						deviceID   : device_id,
-						components : playground.components.map((component)=> (reformComponent(component, { selected : (component.id === (componentID << 0)) })))
+						html          : decryptText(playground.html),
+						styles        : decryptObject(playground.styles),
+						deviceID      : device_id,
+						accessibility : {
+							passed  : [],
+							failed  : [],
+							aborted : []
+						},
+						components    : playground.components.map((component)=> (reformComponent(component, { selected : (component.id === (componentID << 0)) })))
 					});
 				});
 
@@ -333,7 +347,7 @@ class PlaygroundPage extends Component {
 		const { profile } = this.props;
 		const { params } = this.props.match;
 		const { teamSlug, projectSlug, componentsSlug } = params;
-		const { typeGroups, typeGroup, playgrounds, playground, component, comment, cursor } = this.state;
+		const { typeGroups, typeGroup, playgrounds, playground, component, comment, cursor, accessibility } = this.state;
 
 		const team = {
 			title : teamSlug,
@@ -353,20 +367,28 @@ class PlaygroundPage extends Component {
 				/>)}
 
 				{(profile && playground) && (<div className="playground-page-content-wrapper">
-					<PlaygroundContent
-						typeGroup={typeGroup}
-						playground={playground}
-						component={component}
-						comment={comment}
-						cursor={cursor}
-						onComponentClick={this.handleComponentClick}
-						onMarkerClick={this.handleCommentMarkerClick}
-						onMenuShow={this.handleComponentMenuShow}
-						onMenuItem={this.handleCompomentMenuItem}
-						onAddComment={this.handleAddComment}
-						onDeleteComment={this.handleDeleteComment}
-						onPopoverClose={this.handleComponentPopoverClose}
-					/>
+					{(!accessibility) ?
+						(<PlaygroundContent
+							typeGroup={typeGroup}
+							playground={playground}
+							component={component}
+							comment={comment}
+							cursor={cursor}
+							onComponentClick={this.handleComponentClick}
+							onMarkerClick={this.handleCommentMarkerClick}
+							onMenuShow={this.handleComponentMenuShow}
+							onMenuItem={this.handleCompomentMenuItem}
+							onAddComment={this.handleAddComment}
+							onDeleteComment={this.handleDeleteComment}
+							onPopoverClose={this.handleComponentPopoverClose}
+						/>) :
+						(<PlaygroundAccessibilty
+							typeGroups={typeGroups}
+							playground={playground}
+							component={component}
+							comment={comment}
+						/>)
+					}
 
 					<PlaygroundHeader
 						playground={playground}
@@ -377,9 +399,11 @@ class PlaygroundPage extends Component {
 					/>
 
 					<PlaygroundFooter
+						accessibility={accessibility}
 						cursor={cursor}
 						playground={playground}
 						builds={playgrounds.length}
+						onToggleAccessibility={this.handleToggleAccessibility}
 						onToggleCursor={this.handleToggleCommentCursor}
 						onToggleDesktop={this.handleTogglePlayground}
 						onToggleMobile={this.handleTogglePlayground}
