@@ -105,13 +105,11 @@ class LoginForm extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { title } = this.props;
 		const { email, password } = this.state;
 		const { emailValid, passwordValid } = this.state;
 
 		return (
 			<div className="login-form">
-				{(title && title.length > 0) && (<h4>{title}</h4>)}
 				<form onSubmit={this.handleSubmit}>
 					<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} name="email" autoComplete="off" />
 					<input type="password" placeholder="Enter Password" value={password} onChange={(event)=> this.setState({ password : event.target.value })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} name="password" />

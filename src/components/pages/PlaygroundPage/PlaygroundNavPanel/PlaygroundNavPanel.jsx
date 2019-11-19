@@ -70,14 +70,15 @@ class PlaygroundNavPanel extends Component {
 	handleTypeGroupClick = (typeGroup)=> {
 // 		console.log('%s.handleTypeGroupClick()', this.constructor.name, typeGroup);
 
-// 		typeGroup.expanded = !typeGroup.expanded;
-// 		typeGroup.selected = !typeGroup.selected;
-
 		const { typeGroups } = this.state;
 		this.setState({
 			typeGroups : typeGroups.map((grp)=> ({ ...grp,
-				expanded : (grp.id === typeGroup.id) ? !grp.expanded : grp.expanded,
-				selected : (grp.id === typeGroup.id) ? !grp.selected : grp.selected
+				expanded : (grp.id === typeGroup.id),
+				selected : (grp.id === typeGroup.id),
+				items    : grp.items.map((item) => ({
+					...item,
+					selected : false
+				}))
 			}))
 		}, ()=> {
 			this.props.onTypeGroupClick(typeGroup);

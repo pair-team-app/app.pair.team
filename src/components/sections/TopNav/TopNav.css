@@ -28,7 +28,7 @@
 
 .top-nav > * {
 	margin: auto;
-	/*border: 1px solid #ff00ff;*/
+	/*border: 1px dotted #ff00ff;*/
 }
 
 .top-nav-branding-wrapper, .top-nav-mobile-menu-wrapper {

@@ -23,6 +23,10 @@
 	margin-bottom: 20px;
 }
 
+.home-page-form-wrapper > *:last-child {
+	margin-top: 30px;
+}
+
 .home-page-element-wrapper {
 	width: 100%;
 	margin-bottom: 30px;

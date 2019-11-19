@@ -69,6 +69,14 @@
 	text-align: justify;
 }
 
+.button-wrapper-col > *:not(:last-child) {
+	margin-right: 20px;
+}
+
+.button-wrapper-row > *:not(:last-child) {
+	margin-bottom: 20px;
+}
+
 .adjacent-button {
 	margin-right: 20px;
 }
@@ -110,7 +118,7 @@
 }
 
 .form-disclaimer {
-	margin-top: 30px;
+	margin-top: 20px;
 	font-size: 12px;
 	line-height: 18px;
 }
@@ -169,5 +177,5 @@
 
 
 .debug-border {
-	border: 1px dashed #ff00ff;
+	border: 1px dotted #ff00ff;
 }

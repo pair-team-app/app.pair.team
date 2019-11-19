@@ -119,13 +119,11 @@ class RegisterForm extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { title } = this.props;
 		const { username, email, password, password2 } = this.state;
 		const { usernameValid, emailValid, passwordValid } = this.state;
 
 		return (
 			<div className="register-form">
-				{(title && title.length > 0) && (<h4>{title}</h4>)}
 				<form onSubmit={this.handleSubmit}>
 					<input type="text" placeholder="Enter Username" value={username} onFocus={()=> this.setState({ username : '', usernameValid : true })} onChange={(event)=> this.setState({ username : event.target.value })} autoComplete="new-password" name="username" />
 					<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" name="email" />

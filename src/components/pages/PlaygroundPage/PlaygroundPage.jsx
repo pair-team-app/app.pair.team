@@ -336,6 +336,16 @@ class PlaygroundPage extends Component {
 	};
 
 
+
+	handleStripeModal = ()=> {
+		console.log('%s.handleStripeModal()', this.constructor.name);
+// 		trackEvent('button', section.event);
+		this.props.onModal(Modals.STRIPE);
+	};
+
+
+
+
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
@@ -398,7 +408,7 @@ class PlaygroundPage extends Component {
 						cursor={cursor}
 						playground={playground}
 						builds={playgrounds.length}
-						onToggleAccessibility={this.handleToggleAccessibility}
+						onToggleAccessibility={this.handleStripeModal}
 						onToggleCursor={this.handleToggleCommentCursor}
 						onToggleDesktop={this.handleTogglePlayground}
 						onToggleMobile={this.handleTogglePlayground}

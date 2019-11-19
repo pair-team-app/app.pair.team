@@ -1,14 +1,20 @@
 
-.stripe-modal-wrapper {
-	min-width: 480px;
-	height: 80%;
-	padding: 20px;
+.stripe-modal {
+	min-width: 360px;
+	width: 360px;
+	max-width: 360px;
 	background-color: rgba(var(--site-bg-color), 1.0);
 }
 
-.stripe-modal-header {
-	width: calc(100% - 40px);
-	margin: 10px 20px 20px 20px;
-	padding-bottom: 3px;
-	border-bottom: 1px solid rgba(var(--border-color), 1.0);
+.stripe-modal-header-wrapper {
+	padding: 0 20px;
+	letter-spacing: 0.2px;
+	/*line-height: 20px;*/
+}
+
+.stripe-form-price {
+	font-weight: 600;
+}
+
+.stripe-modal-content-wrapper {
 }

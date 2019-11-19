@@ -108,7 +108,6 @@ class LoginModal extends Component {
 
 					<div className="login-modal-content-wrapper">
 						<LoginForm
-							title={null}
 							inviteID={null}
 							email={null}
 							onCancel={(event)=> { event.preventDefault(); this.handleComplete(); }}
