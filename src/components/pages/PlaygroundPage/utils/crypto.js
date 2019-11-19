@@ -1,5 +1,3 @@
-'use strict';
-
 
 import crypto from 'crypto';
 import cryptoCreds from '../../../../assets/json/crypto-creds';

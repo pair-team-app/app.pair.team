@@ -315,11 +315,6 @@ class PlaygroundPage extends Component {
 						html          : decryptText(playground.html),
 						styles        : decryptObject(playground.styles),
 						deviceID      : device_id,
-						accessibility : {
-							passed  : [],
-							failed  : [],
-							aborted : []
-						},
 						components    : playground.components.map((component)=> (reformComponent(component, { selected : (component.id === (componentID << 0)) })))
 					});
 				});

@@ -1,5 +1,3 @@
-'use strict';
-
 
 import axios from 'axios';
 import { Strings, URIs } from 'lang-js-utils';

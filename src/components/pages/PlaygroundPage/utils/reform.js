@@ -1,11 +1,8 @@
-'use strict';
-
 
 import { Images } from 'lang-js-utils';
 import moment from 'moment';
 
 import { decryptObject, decryptText } from './crypto';
-
 
 
 export const reformChildElement = (element, overwrite={})=> {
@@ -39,10 +36,11 @@ export const reformComment = (comment, overwrite={})=> ({ ...comment,
 export const reformComponent = (component, overwrite={})=> {
 // 	console.log('reformComponent()', component.id);
 
-	const { title, html, styles, type_id, event_type_id, tag_name, root_styles, image, children, comments, meta } = component;
+	const { type_id, event_type_id, node_id, title, tag_name, image, html, styles, accessibility, root_styles, meta, children, comments } = component;
 	const { width, height } = meta.bounds;
 	delete (component['type_id']);
 	delete (component['event_type_id']);
+	delete (component['node_id']);
 	delete (component['tag_name']);
 	delete (component['root_styles']);
 
@@ -57,6 +55,7 @@ export const reformComponent = (component, overwrite={})=> {
 	return ({ ...component,
 		typeID        : type_id,
 		eventTypeID   : event_type_id,
+		nodeID        : node_id,
 		title         : (title.length === 0) ? tag_name : title,
 		tagName       : tag_name,
 		html          : (html.length < 65535) ? decryptText(html) : '',
@@ -69,13 +68,9 @@ export const reformComponent = (component, overwrite={})=> {
 			'min-width'  : (width > 0) ? `${width}px` : 'fit-content',
 			'width'      : (width > 0) ? `${width}px` : 'fit-content'
 		},
-// 		image         : (image.length > 0) ? image : Images.genPlaceholder({ width, height }),// genImageData({ width, height }),
-		image         : Images.genPlaceholder({ width, height }),// genImageData({ width, height }),
-		accessibility : {
-			passed  : [],
-			failed  : [],
-			aborted : []
-		},
+		image         : (image.length > 0) ? image : Images.genPlaceholder({ width, height }),
+// 		image         : Images.genPlaceholder({ width, height }),
+		accessibility : decryptObject(accessibility),
 		selected      : false,
 		children      : children.map((child)=> (reformChildElement(child))),
 		comments      : comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),

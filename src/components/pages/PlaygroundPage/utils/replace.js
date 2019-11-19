@@ -1,5 +1,3 @@
-'use strict';
-
 
 export const replaceComment = (component, comment)=> ({ ...component,
 	comments : component.comments.map((item)=> ((item.id === comment.id) ? comment : item))

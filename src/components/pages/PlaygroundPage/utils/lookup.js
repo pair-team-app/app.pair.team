@@ -1,5 +1,3 @@
-'use strict';
-
 
 export const commentByID = (comments, commentID)=> {
 	return (comments.find(({ id })=> (id === (commentID << 0))));
@@ -11,6 +9,10 @@ export const componentFromComment = (components, comment)=> {
 
 export const componentByID = (components, componentID)=> {
 	return (components.find(({ id })=> (id === (componentID << 0))));
+};
+
+export const componentByNodeID = (components, nodeID)=> {
+	return (components.find((component)=> (component.nodeID === nodeID)));
 };
 
 export const playgroundByID = (playgrounds, playgroundID)=> {

@@ -1,5 +1,3 @@
-'use strict';
-
 
 import cookie from 'react-cookies';
 import ReactGA from 'react-ga';

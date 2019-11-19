@@ -1,59 +1,107 @@
 
 .playground-accessibility {
 	padding: 58px 20px 68px 20px;
+	max-width: calc(100vw - var(--playground-nav-width));
+	overflow: hidden;
 }
 
-.playground-accessibility-tree-wrapper {
-
-}
-
-.playground-accessibility-tree-global-wrapper {
-
-}
-
-.playground-accessibility-tree-item-wrapper {
-
+.playground-accessibility-tree-item-wrapper, .playground-accessibility-tree-item-wrapper .accessibility-tree-item-child-wrapper {
+	position: relative;
 }
 
 
-.accessibility-tree-item:not(:last-child) {
-	margin-bottom: 20px;
+.playground-accessibility-tree-item-wrapper .accessibility-tree-item  {
+	margin: 0;
+	padding: 0 12px;
+	position: relative;
+}
+
+.accessibility-tree-item::before, .accessibility-tree-item::after {
+	content: '';
+	position: absolute;
+	left: 0;
+}
+
+.accessibility-tree-item::before {
+	top: 10px;
+	width: 10px;
+	height: 0;
+	border-top: 1px solid rgb(var(--border-color), 1.0);
+}
+
+.playground-accessibility-tree-item-wrapper > .accessibility-tree-item:first-child::before {
+	border: none;
+}
+
+.accessibility-tree-item::after {
+	top: -10px;
+	height: 100%;
+	width: 0;
+	border-left: 1px solid rgb(var(--border-color), 1.0);
+}
+
+.playground-accessibility-tree-item-wrapper > .accessibility-tree-item::after {
+	top: 10px;
+}
+
+.playground-accessibility-tree-item-wrapper > .accessibility-tree-item:last-child::after {
+	display: none;
+}
+
+.playground-accessibility-tree-item-wrapper .accessibility-tree-item-child-wrapper:last-child .accessibility-tree-item:last-child::after {
+	height: 20px;
+}
+
+
+.accessibility-tree-item > div:not(:first-child) {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+}
+
+.accessibility-tree-item-title {
 }
 
 .accessibility-tree-item-rules-wrapper {
-
+	flex: 4 4 auto;
 }
 
 .accessibility-tree-item-rules {
-
 }
 
 .accessibility-tree-item-rules-failed {
-
+	background-color: rgba(var(--invalid-bg-color), 1.0);
+	color: rgba(var(--invalid-fg-color), 1.0);
+	border: 1px solid rgba(var(--invalid-border-color), 0.5);
 }
 
 .accessibility-tree-item-rules-passed {
-
 }
 
 .accessibility-tree-item-rules-aborted {
-
 }
 
 .accessibility-tree-item-component-wrapper {
-
+	flex: 1 1 auto;
 }
 
 .accessibility-tree-item-component {
-
 }
 
 .accessibility-tree-item-component > img {
-	max-width: 400px;
-	max-height: 200px;
+	max-width: 50px;
+	max-height: 50px;
 }
 
 
 .accessibility-tree-item-rule {
-
+	font-size: 12px;
 }
+
+.accessibility-tree-item-child-wrapper {
+	padding: 10px;
+}
+
+
+

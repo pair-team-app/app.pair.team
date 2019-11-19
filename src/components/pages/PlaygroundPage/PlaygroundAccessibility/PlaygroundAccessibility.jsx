@@ -2,8 +2,22 @@
 import React, { Component } from 'react';
 import './PlaygroundAccessibility.css';
 
-import { typeGroupByComponent } from '../utils/lookup';
-import accessibiltyTree from '../../../../assets/json/placeholder-accessibility-tree';
+import { componentByNodeID, typeGroupByComponent } from '../utils/lookup';
+
+
+const makeTreeItem = (treeItem, components)=> {
+// 	const nodeID = (treeItem.nodeID === 1) ? 32 : treeItem.nodeID;
+	const nodeID = treeItem.nodeID;
+	let component = componentByNodeID(components, nodeID);
+// 	console.log('makeTreeItem()', treeItem, nodeID, component);
+
+	return (<AccessibilityTreeItem
+		key={treeItem.axNodeID}
+		treeNode={treeItem}
+		component={component}
+		childNodes={treeItem.childNodes.map((childNode)=> (makeTreeItem(childNode, components)))}
+	/>);
+};
 
 
 class PlaygroundAccessibility extends Component {
@@ -25,57 +39,17 @@ class PlaygroundAccessibility extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state, (this.shareLink) ? { left : this.shareLink.offsetLeft, top : this.shareLink.offsetTop } : null);
 
-		const { playground, component, comment } = this.props;
+		const { playground, component } = this.props;
 		const { typeGroups } = this.state;
 
-		const accessibility = {
-			passed  : [],
-			failed  : [],
-			aborted : []
-		};
-		const { passed, failed, aborted } = accessibility;
+		const { tree } = component.accessibility;
+
+		console.log('tree', tree);
+
 		return (<div className="playground-accessibility">
-			<div className="playground-accessibility-tree-wrapper">
-				<div className="playground-accessibility-tree-global-wrapper">
-					<div className="accessibility-tree-item-rules accessibility-tree-rules-passed">
-						{(passed.map((rule, i)=> {
-							return (<AccessibilityTreeItemRule
-								key={i}
-								rule={rule}
-							/>);
-						}))}
-					</div>
-
-					<div className="accessibility-tree-item-rules accessibility-tree-rules-failed">
-						{(failed.map((rule, i)=> {
-							return (<AccessibilityTreeItemRule
-								key={i}
-								rule={rule}
-							/>);
-						}))}
-					</div>
-
-					<div className="accessibility-tree-item-rules accessibility-tree-rules-aborted">
-						{(aborted.map((rule, i)=> {
-							return (<AccessibilityTreeItemRule
-								key={i}
-								rule={rule}
-							/>);
-						}))}
-					</div>
-				</div>
-
-				{(typeGroups) && (<div className="playground-accessibility-tree-item-wrapper">
-					{(playground.components.map((component, i)=> {
-						const typeGroup = typeGroupByComponent(typeGroups, component);
-						return (<AccessibilityTreeItem
-							key={i}
-							typeGroup={typeGroup.title}
-							component={component}
-						/>);
-					}))}
-				</div>)}
-			</div>
+			{(typeGroups && tree) && (<div className="playground-accessibility-tree-item-wrapper">
+				{makeTreeItem(tree, playground.components)}
+			</div>)}
 		</div>);
 	}
 }
@@ -84,57 +58,59 @@ class PlaygroundAccessibility extends Component {
 const AccessibilityTreeItem = (props)=> {
 // 	console.log('AccessibilityTreeItem()', props);
 
-	const { component, typeGroup } = props;
-	const { passed, failed, aborted } = component.accessibility;
+	const { component, childNodes, treeNode } = props;
+	const { passed, failed, aborted } = (component) ? component.accessibility.report : {};
 	return (<div className="accessibility-tree-item">
-		<div className="accessibility-tree-item-title">{component.title} ({typeGroup})</div>
-		<div className="accessibility-tree-item-rules-wrapper">
-			<div className="accessibility-tree-item-rules accessibility-tree-item-rules-passed">
-				{(passed.map((rule, i)=> {
-					return (<AccessibilityTreeItemRule
-						key={i}
-						rule={rule}
-					/>);
-				}))}
-			</div>
+		<div className="accessibility-tree-item-title">{treeNode.role} {(treeNode.name.length > 0) ? `"${treeNode.name}"` : ''}</div><div>
+		{(component) && (<div className="accessibility-tree-item-rules-wrapper">
+			{/*{(passed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-passed">Passed*/}
+				{/*{(passed.map((rule, i)=> {*/}
+					{/*return (<AccessibilityTreeItemRule*/}
+						{/*key={i}*/}
+						{/*rule={rule}*/}
+					{/*/>);*/}
+				{/*}))}*/}
+			{/*</div>)}*/}
 
-			<div className="accessibility-tree-item-rules accessibility-tree-item-rules-failed">
+			{(failed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-failed">Failed
 				{(failed.map((rule, i)=> {
 					return (<AccessibilityTreeItemRule
 						key={i}
 						rule={rule}
 					/>);
 				}))}
-			</div>
+			</div>)}
 
-			<div className="accessibility-tree-item-rules accessibility-tree-item-rules-aborted">
+			{(aborted.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-aborted">Aborted
 				{(aborted.map((rule, i)=> {
 					return (<AccessibilityTreeItemRule
 						key={i}
 						rule={rule}
 					/>);
 				}))}
-			</div>
+			</div>)}
+		</div>)}
 
-		</div>
-		<div className="accessibility-tree-item-component-wrapper">
+		{(component) && (<div className="accessibility-tree-item-component-wrapper">
 			<div className="accessibility-tree-item-component">
 				<img src={component.image} width={component.meta.bounds.width} height={component.meta.bounds.height} alt={component.title} />
 			</div>
-		</div>
+		</div>)}
+
+		<div className="accessibility-tree-item-child-wrapper">
+			{(childNodes.map((childNode)=> (childNode)))}
+		</div></div>
 	</div>);
 };
 
 
 const AccessibilityTreeItemRule = (props)=> {
-	console.log('AccessibilityTreeItemRule()', props);
+// 	console.log('AccessibilityTreeItemRule()', props);
 
 	const { rule } = props;
-	const { title, impact, solution } = rule;
+	const { description, help, impact, failureSummary } = rule;
 	return (<div className="accessibility-tree-item-rule">
-		<div className="accessibility-tree-item-rule-title">{title}</div>
-		<div className="accessibility-tree-item-rule-title">{impact}</div>
-		<div className="accessibility-tree-item-rule-title">{solution}</div>
+		<div className="accessibility-tree-item-rule-title">{(impact || '').toUpperCase()} {help} ({(failureSummary || description)})</div>
 	</div>);
 
 };

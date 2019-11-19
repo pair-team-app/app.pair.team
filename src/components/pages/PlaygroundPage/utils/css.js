@@ -1,5 +1,3 @@
-'use strict';
-
 
 export const convertStyles = (styles)=> {
 	let style = {};
