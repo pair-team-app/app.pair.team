@@ -91,7 +91,7 @@ class LoginModal extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-// 		const { team } = this.props;
+// 		const { teams } = this.props;
 		const { outro } = this.state;
 
 		return (
@@ -134,7 +134,7 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		team        : state.team,
+		teams       : state.teams,
 		invite      : state.invite,
 		profile     : state.userProfile,
 		redirectURI : state.redirectURI

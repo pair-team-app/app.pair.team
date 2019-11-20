@@ -127,11 +127,10 @@ export function isUserLoggedIn(confirmed=true) {
 	return ((confirmed) ? ((cookie.load('user_id') << 0) !== 0) : (typeof cookie.load('user_id') !== 'undefined') << 0 !== 0);
 }
 
-export function sendToSlack(message, callback=null) {
-
+export function sendToSlack(channel, message, callback=null) {
 	axios.post(API_ENDPT_URL, {
 		action  : 'SLACK_MSG',
-		payload : { message }
+		payload : { channel, message }
 	}).then((response) => {
 		console.log("SLACK_MSG", response.data);
 		if (callback) {

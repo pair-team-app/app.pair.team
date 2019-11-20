@@ -15,7 +15,7 @@ import PlaygroundNavPanel from './PlaygroundNavPanel';
 import { commentByID, componentByID, componentFromComment, typeGroupByComponent } from './utils/lookup';
 import { reformComment, reformComponent } from './utils/reform';
 import { replacePlayground } from './utils/replace';
-import { Modals, API_ENDPT_URL, DEFAULT_AVATAR } from '../../../consts/uris';
+import { Modals, API_ENDPT_URL } from '../../../consts/uris';
 import { decryptObject, decryptText } from './utils/crypto';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -48,11 +48,11 @@ class PlaygroundPage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
-		const { componentTypes, match } = this.props;
+		const { profile, team, componentTypes, match } = this.props;
 		const { typeGroups, playground, fetching } = this.state;
 
-		const { componentsSlug, componentID, commentID } = match.params;
-// 		console.log('params', match.params);
+		const { teamSlug, projectSlug, buildID, playgroundID, componentsSlug, componentID, commentID } = match.params;
+		console.log('params', match.params);
 
 		// init typeGroups
 		if (!prevProps.componentTypes && componentTypes) {
@@ -60,43 +60,56 @@ class PlaygroundPage extends Component {
 		}
 
 		// logged in
-		if (!prevProps.profile && this.props.profile) {
+		if (!prevProps.profile && profile) {
 			if (!playground && !fetching) {
-				const { buildID, playgroundID } = match.params;
-
 				if (buildID) {
 					this.onFetchBuildPlaygrounds(buildID, playgroundID << 0);
 				}
 			}
 		}
 
+		// team
+		if (!prevProps.team && team) {
+			if (teamSlug !== team.title) {
+				console.log('***** REDIRECT *******', team.title);
+			}
+		}
+
+		// refresh typegroups
 		if (!prevState.playground && playground) {
 			if (typeGroups && !this.state.typeGroup && componentsSlug) {
-				const typeGroup =typeGroups.find(({ key })=> (key === componentsSlug));
+				const typeGroup = typeGroups.find(({ key })=> (key === componentsSlug));
 				if (typeGroup) {
 					this.setState({ typeGroup });
 				}
 			}
 
-			if (!this.state.component && componentID) {
-				const component = componentByID(playground.components, componentID);
 
-				if (component) {
-					this.setState({ component }, ()=> {
-						if (!this.state.comment && commentID) {
-							const comment = commentByID(component.comments, commentID);
+			if (componentID) {
+				if (prevProps.componentID !== componentID) {
+					const component = componentByID(playground.components, componentID);
 
-							if (comment) {
-								this.setState({ comment });
+					if (component) {
+						this.setState({ component }, () => {
+							if (commentID) {
+								if (prevProps.commentID !== commentID) {
+									const comment = commentByID(component.comments, commentID);
+
+									if (comment) {
+										this.setState({ comment });
+									}
+								}
+
+							} else {
+								this.setState({ comment : null });
 							}
-						}
-					});
+						});
+					}
 				}
-			}
-		}
 
-		if (!commentID && this.state.comment) {
-			this.setState({ comment : null });
+			} else {
+				this.setState({ component : null });
+			}
 		}
 	}
 
@@ -340,7 +353,10 @@ class PlaygroundPage extends Component {
 	handleStripeModal = ()=> {
 		console.log('%s.handleStripeModal()', this.constructor.name);
 // 		trackEvent('button', section.event);
-		this.props.onModal(Modals.STRIPE);
+		this.props.onModal(Modals.STRIPE, {
+			price : 14.99,
+			total : 10
+		});
 	};
 
 
@@ -349,15 +365,10 @@ class PlaygroundPage extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { profile } = this.props;
+		const { profile, team } = this.props;
 		const { params } = this.props.match;
 		const { teamSlug, projectSlug, componentsSlug } = params;
 		const { typeGroups, typeGroup, playgrounds, playground, component, comment, cursor, accessibility } = this.state;
-
-		const team = {
-			title : teamSlug,
-			logo  : DEFAULT_AVATAR
-		};
 
 		return (
 			<BasePage className={`page-wrapper playground-page-wrapper${(component && (window.location.href.includes('/comments'))) ? ' playground-page-wrapper-comments' : ''}`}>
@@ -429,7 +440,8 @@ const mapStateToProps = (state, ownProps)=> {
 	return ({
 		profile        : state.userProfile,
 		componentTypes : state.componentTypes,
-		eventGroups    : state.eventGroups
+		eventGroups    : state.eventGroups,
+		team           : state.teams[0]
 	});
 };
 

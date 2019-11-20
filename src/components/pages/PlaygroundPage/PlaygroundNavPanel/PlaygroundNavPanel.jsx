@@ -128,7 +128,7 @@ const PlaygroundNavPanelHeader = (props)=> {
 
 	const { team } = props;
 	return (<div className="playground-nav-panel-header">
-		<img className="playground-nav-panel-header-logo" src={team.logo} alt="Logo" />
+		<img className="playground-nav-panel-header-logo" src={team.image} alt="Team Logo" />
 		<div className="playground-nav-panel-header-title">{team.title}</div>
 	</div>);
 };

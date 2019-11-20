@@ -10,7 +10,7 @@ import {
 	COMPONENT_TYPES_LOADED,
 	EVENT_GROUPS_LOADED,
 	SET_REDIRECT_URI,
-	CONVERTED_DEEPLINK,
+	UPDATE_DEEPLINK,
 	UPDATE_MOUSE_COORDS,
 	USER_PROFILE_ERROR,
 	USER_PROFILE_LOADED,
@@ -29,16 +29,18 @@ const initialState = {
 	componentTypes     : null,
 	eventGroups        : [],
 	deeplink           : {
-		uploadID   : 0,
-		pageID     : 0,
-		artboardID : 0,
-		sliceID    : 0
+		teamID       : 0,
+		buildID      : 0,
+		playgroundID : 0,
+		typeGroupID  : 0,
+		componentID  : 0,
+		commentID    : 0
 	},
 	redirectURI        : null,
 	uploadSlices       : [],
 	userProfile        : null,
 	invite             : null,
-	teams              : null,
+	teams              : [],
 	mouse              : {
 		position : {
 			x : 0,
@@ -172,14 +174,14 @@ function rootReducer(state=initialState, action) {
 				}));
 			}
 
-		case CONVERTED_DEEPLINK:
+		case UPDATE_DEEPLINK:
 			return (Object.assign({}, state, {
 				deeplink : Object.assign({}, state.deeplink, action.payload)
 			}));
 
 		case SET_TEAMS:
 			return (Object.assign({}, state, {
-				teams : action.payload
+				teams : action.payload.slice(-1)
 			}));
 	}
 }

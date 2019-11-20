@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import './StripeModal.css';
 
 import axios from 'axios';
-import { URIs } from 'lang-js-utils';
+import { Strings, URIs } from 'lang-js-utils';
+import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
 import { Elements, StripeProvider } from 'react-stripe-elements';
 
@@ -14,13 +15,19 @@ import { API_ENDPT_URL, Pages } from '../../../consts/uris';
 import { sendToSlack } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
 import stripeCreds from '../../../assets/json/stripe-creds';
+import {
+	appendHomeArtboards,
+	fetchTeamLookup,
+	fetchUserHistory, fetchUserProfile,
+	updateDeeplink,
+	updateMouseCoords,
+	updateUserProfile
+} from "../../../redux/actions";
 
 
 const STRIPE_TEST_TOKEN = stripeCreds.test.publish;
 // const STRIPE_LIVE_TOKEN = stripeCreds.live.publish;
 
-
-const PRODUCT_IDS = [3];
 
 
 class StripeModal extends Component {
@@ -33,8 +40,7 @@ class StripeModal extends Component {
 			outro      : false,
 			outroURI   : null,
 			purchase   : null,
-			total      : 10,
-			price      : 14.99
+			productIDs : Strings.repeat((this.props.payload.price === 14.99) ? 3 : 4, this.props.payload.total, ',')
 		};
 	}
 
@@ -83,15 +89,18 @@ class StripeModal extends Component {
 	handleSubmit = (cardHolder, token)=> {
 // 		console.log('%s.handleSubmit()', this.constructor.name, cardHolder, token, this.state);
 
-		const { profile } = this.props;
+		const { profile, payload } = this.props;
+		const { productIDs } = this.state;
+
 		this.setState({ submitting : true });
 
 		axios.post(API_ENDPT_URL, {
 			action  : 'MAKE_PURCHASE',
 			payload : {
 				user_id     : profile.id,
+				team_id     : payload.teamID,
 				token_id    : token.id,
-				product_ids : PRODUCT_IDS.join(',')
+				product_ids : productIDs
 			}
 		}).then((response) => {
 			console.log('MAKE_PURCHASE', response.data);
@@ -99,12 +108,14 @@ class StripeModal extends Component {
 			trackEvent('purchase', (error) ? 'error' : 'success');
 
 			if ((purchase.id << 0) > 0) {
-				sendToSlack(`*[\`${profile.id}\`]* *${profile.email}* purchased "_${'Standard User'}_" for \`$${14.99}\``);
+				sendToSlack('#purchases', `*[\`${profile.id}\`]* *${profile.email}* purchased [\`${productIDs.length}\`]x "_${(productIDs[0] === 3) ? 'Standard User' : 'Enterprise User'}_" for \`$${((productIDs[0] === 3) ? 14.99 : 27.99) * productIDs.length}\``);
 
 				this.props.onPopup({
 					type    : POPUP_TYPE_OK,
 					content : 'Payment Processed!!'
 				});
+
+				this.props.fetchTeamLookup({ userID : profile.id });
 
 			} else {
 				this.props.onPopup({
@@ -128,7 +139,8 @@ class StripeModal extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { outro, userTotal, price } = this.state;
+		const { price, total } = this.props.payload;
+		const { outro } = this.state;
 		return (
 			<BaseOverlay
 				tracking={`stripe/${URIs.firstComponent()}`}
@@ -140,7 +152,7 @@ class StripeModal extends Component {
 
 				<div className="stripe-modal">
 					<div className="stripe-modal-header-wrapper"><h4>
-						Your domain has reached {userTotal} users.<br />
+						Your domain has reached {total} users.<br />
 						To continue using Pair, please sign up<br />
 						for <span className="stripe-form-price">${price}</span> per month per user.
 					</h4></div>
@@ -166,4 +178,11 @@ class StripeModal extends Component {
 }
 
 
-export default withRouter(StripeModal);
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		fetchTeamLookup : (payload)=> dispatch(fetchTeamLookup(payload))
+	});
+};
+
+
+export default withRouter(connect(null, mapDispatchToProps)(StripeModal));

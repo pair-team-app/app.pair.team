@@ -91,10 +91,12 @@ class App extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, this.constructor.name, prevProps, this.props, prevState, this.state, Browsers.isOnline());
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot);
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props);
 
-		const { profile } = this.props;
+		const { profile, team } = this.props;
 		const { pathname } = this.props.location;
+		const { modals } = this.state;
 
 // 		console.log('|:|:|:|:|:|:|:|:|:|:|:|', prevProps.location.pathname, pathname);
 		if (prevProps.location.pathname !== pathname) {
@@ -102,27 +104,36 @@ class App extends Component {
 			trackPageview();
 		}
 
-		const { modals } = this.state;
-		if (!prevState.modals.network && !modals.network && !Browsers.isOnline()) {
-			this.onToggleModal(Modals.NETWORK, true);
-		}
-
 		if (profile) {
 			if (!prevProps.profile) {
 				this.onToggleModal(Modals.LOGIN, false);
 				this.props.fetchTeamLookup({ userID : profile.id });
 			}
+		}
 
-// 			console.log('[:::::::::::|:|:::::::::::] PAY CHECK [:::::::::::|:|:::::::::::]');
-// 			console.log('[::] (!payDialog && !stripeModal)', (!payDialog && !stripeModal));
-// 			console.log('[::] (!profile.paid && artboards.length > 3)', (!profile.paid && artboards.length > 3));
-// 			console.log('[::] (isHomePage(false)', isHomePage(false));
-// 			console.log('[::] (isInspectorPage())', isInspectorPage());
-// 			console.log('[::] (prevProps.deeplink.uploadID)', prevProps.deeplink.uploadID);
-// 			console.log('[::] (this.props.deeplink.uploadID)', deeplink.uploadID);
-// 			console.log('[:::::::::::|:|:::::::::::] =-=-=-=-= [:::::::::::|:|:::::::::::]');
 
-			//console.log('||||||||||||||||', payDialog, stripeModal, profile.paid, artboards.length, isHomePage(false), prevProps.deeplink.uploadID, deeplink.uploadID, isInspectorPage());
+		if (team) {
+			if (!prevState.modals.stripe && !modals.stripe) {
+				if (team.members.length > 10 && team.type === 'free') {
+					this.onToggleModal(Modals.STRIPE, true, {
+						teamID : team.id,
+						total  : team.members.length,
+						price  : 14.99
+					});
+
+				} else if (team.members.length > 50 && team.type !== 'enterprise') {
+					this.onToggleModal(Modals.STRIPE, true, {
+						teamID : team.id,
+						total  : team.members.length,
+						price  : 27.99
+					});
+				}
+			}
+		}
+
+
+		if (!prevState.modals.network && !modals.network && !Browsers.isOnline()) {
+			this.onToggleModal(Modals.NETWORK, true);
 		}
 	}
 
@@ -396,7 +407,7 @@ const mapStateToProps = (state, ownProps)=> {
 		deeplink  : state.deeplink,
 		profile   : state.userProfile,
 		artboards : state.homeArtboards,
-		team      : state.team
+		team      : state.teams[0]
 	});
 };
 
