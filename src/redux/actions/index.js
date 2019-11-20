@@ -20,7 +20,7 @@ import {
 	USER_PROFILE_UPDATED,
 	CONVERTED_DEEPLINK,
 	SET_INVITE,
-	SET_TEAM,
+	SET_TEAMS,
 } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
@@ -169,27 +169,26 @@ export function fetchTeamLookup(payload) {
 	logFormat('fetchTeamLookup()', payload);
 
 	return ((dispatch)=> {
-		const { subdomain } = (payload) ? payload : { subdomain : URIs.subdomain() };
+		const { userID } = payload;
 
 		axios.post(API_ENDPT_URL, {
 			action  : 'TEAM_LOOKUP',
-			payload : { subdomain }
+			payload : {
+				user_id : userID
+			}
 		}).then((response) => {
 			console.log('TEAM_LOOKUP', response.data);
+			const { teams } = response.data;
 
-			const { team } = response.data;
-			if (team) {
+			if (teams.length > 0) {
 				dispatch({
-					type    : SET_TEAM,
-					payload : { ...team,
-						members : team.members.map((member)=> ({
+					type    : SET_TEAMS,
+					payload : teams.map((team)=> ({ ...team,
+						members : team.members.map((member)=> ({ ...member,
 							id       : member.id << 0,
-							type     : member.type,
-							userID   : member.user_id << 0,
-							username : member.username,
-							avatar   : member.avatar
+							userID   : member.user_id << 0
 						}))
-					}
+					}))
 				});
 			}
 		}).catch((error)=> {

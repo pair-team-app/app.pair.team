@@ -16,7 +16,7 @@ import {
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED,
 	SET_INVITE,
-	SET_TEAM,
+	SET_TEAMS,
 } from '../../consts/action-types';
 // import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
@@ -38,7 +38,7 @@ const initialState = {
 	uploadSlices       : [],
 	userProfile        : null,
 	invite             : null,
-	team               : null,
+	teams              : null,
 	mouse              : {
 		position : {
 			x : 0,
@@ -162,7 +162,7 @@ function rootReducer(state=initialState, action) {
 						github : (github) ? { ...github,
 							id : github.id << 0
 						} : github,
-						paid   : type.includes('paid')
+						paid   : /admin|paid/i.test(type)
 					}
 				}));
 
@@ -177,9 +177,9 @@ function rootReducer(state=initialState, action) {
 				deeplink : Object.assign({}, state.deeplink, action.payload)
 			}));
 
-		case SET_TEAM:
+		case SET_TEAMS:
 			return (Object.assign({}, state, {
-				team : action.payload
+				teams : action.payload
 			}));
 	}
 }

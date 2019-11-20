@@ -3,7 +3,7 @@ import cookie from 'react-cookies';
 
 import {
 	APPEND_HOME_ARTBOARDS,
-	SET_TEAM,
+	SET_TEAMS,
 	CONVERTED_DEEPLINK,
 	UPDATE_DEEPLINK,
 
@@ -45,7 +45,7 @@ export function onMiddleware({ dispatch }) {
 					payload : deeplink
 				});
 
-			} else if (type === SET_TEAM) {
+			} else if (type === SET_TEAMS) {
 				const artboards = payload.uploads.map((upload)=> (upload.pages.flatMap((page)=> (page.artboards.filter((artboard)=> (artboard.type === 'page_child'))))).pop()).filter((artboard)=> (artboard)).map((artboard) => ({
 					id        : artboard.id << 0,
 					pageID    : artboard.page_id << 0,

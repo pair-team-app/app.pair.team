@@ -110,7 +110,7 @@ class App extends Component {
 		if (profile) {
 			if (!prevProps.profile) {
 				this.onToggleModal(Modals.LOGIN, false);
-// 				this.props.fetchUserHistory({ profile });
+				this.props.fetchTeamLookup({ userID : profile.id });
 			}
 
 // 			console.log('[:::::::::::|:|:::::::::::] PAY CHECK [:::::::::::|:|:::::::::::]');
@@ -297,7 +297,7 @@ class App extends Component {
 		const { modals } = this.state;
 
 		if (show) {
-			this.setState({ modals : { ...modals,
+			this.setState({ modals : { ...modals, payload,
 				github   : false,
 				login    : (uri === Modals.LOGIN),
 				network  : (uri === Modals.NETWORK),
@@ -311,7 +311,8 @@ class App extends Component {
 				login    : (uri === Modals.LOGIN) ? false : modals.login,
 				network  : (uri === Modals.NETWORK) ? false : modals.network,
 				register : (uri === Modals.REGISTER) ? false : modals.register,
-				stripe   : (uri === Modals.STRIPE) ? false : modals.stripe }
+				stripe   : (uri === Modals.STRIPE) ? false : modals.stripe,
+				payload  : null }
 			});
 		}
 	};
