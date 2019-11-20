@@ -52,7 +52,7 @@ class PlaygroundPage extends Component {
 		const { typeGroups, playground, fetching } = this.state;
 
 		const { teamSlug, projectSlug, buildID, playgroundID, componentsSlug, componentID, commentID } = match.params;
-		console.log('params', match.params);
+// 		console.log('params', match.params);
 
 		// init typeGroups
 		if (!prevProps.componentTypes && componentTypes) {
@@ -71,7 +71,7 @@ class PlaygroundPage extends Component {
 		// team
 		if (!prevProps.team && team) {
 			if (teamSlug !== team.title) {
-				console.log('***** REDIRECT *******', team.title);
+// 				console.log('***** REDIRECT *******', team.title);
 			}
 		}
 

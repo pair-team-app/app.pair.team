@@ -1,6 +1,6 @@
 
 import axios from 'axios/index';
-import { Bits, Objects, URIs } from 'lang-js-utils';
+import { Bits, Objects } from 'lang-js-utils';
 import cookie from 'react-cookies';
 
 import {
@@ -18,7 +18,7 @@ import {
 // 	USER_PROFILE_CACHED,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED,
-	CONVERTED_DEEPLINK,
+// 	CONVERTED_DEEPLINK,
 	SET_INVITE,
 	SET_TEAMS,
 } from '../../consts/action-types';

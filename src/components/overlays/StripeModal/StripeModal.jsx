@@ -15,14 +15,7 @@ import { API_ENDPT_URL, Pages } from '../../../consts/uris';
 import { sendToSlack } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
 import stripeCreds from '../../../assets/json/stripe-creds';
-import {
-	appendHomeArtboards,
-	fetchTeamLookup,
-	fetchUserHistory, fetchUserProfile,
-	updateDeeplink,
-	updateMouseCoords,
-	updateUserProfile
-} from "../../../redux/actions";
+import { fetchTeamLookup } from '../../../redux/actions';
 
 
 const STRIPE_TEST_TOKEN = stripeCreds.test.publish;
@@ -108,7 +101,7 @@ class StripeModal extends Component {
 			trackEvent('purchase', (error) ? 'error' : 'success');
 
 			if ((purchase.id << 0) > 0) {
-				sendToSlack('#purchases', `*[\`${profile.id}\`]* *${profile.email}* purchased [\`${productIDs.length}\`]x "_${(productIDs[0] === 3) ? 'Standard User' : 'Enterprise User'}_" for \`$${((productIDs[0] === 3) ? 14.99 : 27.99) * productIDs.length}\``);
+				sendToSlack('#purchases', `*[\`${profile.id}\`]* *${profile.email}* purchased [\`${productIDs.split(',').length}\`]x "_${(productIDs[0] === 3) ? 'Standard User' : 'Enterprise User'}_" for \`$${((productIDs[0] === 3) ? 14.99 : 27.99) * productIDs.split(',').length}\``);
 
 				this.props.onPopup({
 					type    : POPUP_TYPE_OK,
