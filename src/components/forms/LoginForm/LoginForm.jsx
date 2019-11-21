@@ -18,7 +18,7 @@ class LoginForm extends Component {
 			password      : '',
 			emailValid    : true,
 			passwordValid : true,
-			passMsg       : ''
+			passMsg       : null
 		};
 
 		this.passwordTextfield = React.createRef();
@@ -49,7 +49,7 @@ class LoginForm extends Component {
 		});
 
 		setTimeout(()=> {
-			this.passwordTextfield.current.focus();
+			this.passwordTextfield.focus();
 		}, 69);
 	};
 
@@ -75,20 +75,21 @@ class LoginForm extends Component {
 				action  : 'LOGIN',
 				payload : { email, password, inviteID }
 			}).then((response) => {
-				console.log('LOGIN', response.data);
+				const { user } = response.data;
 				const status = parseInt(response.data.status, 16);
+				console.log('LOGIN', response.data, parseInt(response.data.status, 16), Bits.contains(status, 0x11), (status & 0x11));
 
-				if (Bits.contains(status, 0x11)) {
-					const { user } = response.data;
+
+				if (user) {
 					this.props.onLoggedIn(user);
 
 				} else {
 					this.setState({
-						email         : Bits.contains(status, 0x01) ? email : 'Email Address or Username In Use',
+						email         : Bits.contains(status, 0x01) ? email : 'Email Address Incorrect',
 						password      : '',
 						emailValid    : Bits.contains(status, 0x01),
 						passwordValid : Bits.contains(status, 0x10),
-						passMsg       : Bits.contains(status, 0x10) ? '' : 'Password Invalid'
+						passMsg       : Bits.contains(status, 0x10) ? '' : 'Password Incorrect'
 					});
 				}
 
@@ -101,14 +102,14 @@ class LoginForm extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { email, password } = this.state;
+		const { email, password, passMsg } = this.state;
 		const { emailValid, passwordValid } = this.state;
 
 		return (
 			<div className="login-form">
 				<form onSubmit={this.handleSubmit}>
-					<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} name="email" autoComplete="off" />
-					<input type="password" placeholder="Enter Password" value={password} onChange={(event)=> this.setState({ password : event.target.value })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} name="password" />
+					<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true, passMsg : null })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} name="email" autoComplete="rutjfkde-password" />
+					<input type={(passMsg) ? 'text' : 'password'} placeholder="Enter Password" value={(passMsg || password)} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} name="password" autoComplete="new-rutjfkde" />
 					<button disabled={(email.length === 0 || !emailValid || !passwordValid)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Login</button>
 				</form>
 			</div>

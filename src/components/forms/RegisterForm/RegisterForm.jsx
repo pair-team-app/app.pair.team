@@ -96,10 +96,10 @@ class RegisterForm extends Component {
 
 				} else {
 					this.setState({
-						email      : Bits.contains(status, 0x10) ? email : 'Email Address Already in Use',
+						email      : Bits.contains(status, 0x01) ? email : 'Email Address Already in Use',
 						password   : '',
 						password2  : '',
-						emailValid : Bits.contains(status, 0x10)
+						emailValid : Bits.contains(status, 0x01)
 					});
 				}
 			}).catch((error)=> {

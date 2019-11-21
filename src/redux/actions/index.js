@@ -260,6 +260,10 @@ export function updateUserProfile(payload, force=true) {
 				id : github.id << 0
 			} : github
 		};
+
+		if (payload.hasOwnProperty('password') && payload.password === '') {
+			delete (payload.password);
+		}
 	}
 
 
