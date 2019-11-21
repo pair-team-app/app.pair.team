@@ -1,5 +1,5 @@
 
-.header-profile {
+.user-settings {
 	position: relative;
 	margin-left: 10px;
 	display: flex;
@@ -7,18 +7,18 @@
 	align-items: center;
 }
 
-.header-profile-title {
+.user-settings-title {
 	color: rgba(var(--link-color), 1.0);
 	transition: color 125ms;
 }
 
-.header-profile-title:hover {
+.user-settings-title:hover {
 	color: rgba(var(--link-hover-color), 1.0);
 	cursor: pointer;
 }
 
 
-.header-profile-avatar-wrapper {
+.user-settings-avatar-wrapper {
 	position: relative;
 	width: 24px;
 	height: 24px;
@@ -30,7 +30,7 @@
 	font-weight: 500;
 }
 
-.header-profile-avatar-image {
+.user-settings-avatar-image {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -42,29 +42,29 @@
 	transition: opacity 0.125s ease-out;
 }
 
-.header-profile-avatar-image:hover {
+.user-settings-avatar-image:hover {
 	cursor: pointer;
 	opacity: 1;
 }
 
 
-.profile-popover {
+.user-settings-popover {
 	width: 228px;
 }
 
-.profile-popover-item {
+.user-settings-popover-item {
 	padding: 14px 20px;
 	border-bottom: 1px solid rgba(var(--border-color), 1.0);
 	color: rgba(var(--link-color), 1.0);
 	transition: color 125ms;
 }
 
-.profile-popover-item:hover {
+.user-settings-popover-item:hover {
 	cursor: pointer;
 	color: rgba(var(--link-hover-color), 1.0);
 }
 
 
-.profile-popover-item:last-child {
+.user-settings-popover-item:last-child {
 	border-bottom: none;
 }

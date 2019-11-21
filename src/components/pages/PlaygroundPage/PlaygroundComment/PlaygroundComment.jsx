@@ -5,8 +5,8 @@ import './PlaygroundComment.css';
 import { URIs } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 
-import ComponentComment from '../../ComponentComment';
-import BasePopover from '../../../../overlays/BasePopover';
+import BasePlaygroundComment from '../BasePlaygroundComment';
+import BasePopover from '../../../overlays/BasePopover';
 
 
 class PlaygroundComment extends Component {
@@ -161,7 +161,7 @@ const PlaygroundCommentPopover = (props)=> {
 
 	return (<BasePopover outro={outro} payload={payload} onOutroComplete={()=> props.onClose(comment)}>
 		<div className="playground-comment-popover">
-			<ComponentComment ind={ind} comment={comment} onDelete={props.onDelete} />
+			<BasePlaygroundComment ind={ind} comment={comment} onDelete={props.onDelete} />
 		</div>
 	</BasePopover>);
 };

@@ -6,7 +6,7 @@ import { ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
-import PlaygroundComment from './PlaygroundComment';
+import PlaygroundComment from '../PlaygroundComment';
 import ComponentMenu from './ComponentMenu';
 import { convertStyles, inlineStyles } from '../utils/css';
 import { reformComment } from '../utils/reform';

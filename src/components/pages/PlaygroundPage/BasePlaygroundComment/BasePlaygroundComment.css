@@ -1,11 +1,11 @@
 
-.component-comment {
+.base-playground-comment {
 	width: 100%;
 	height: fit-content;
 	padding: 25px 20px 20px 20px;
 }
 
-.component-comment-header-wrapper {
+.base-playground-comment-header-wrapper {
 	display: flex;
 	flex-wrap: nowrap;
 	justify-content: center; /* h-align */
@@ -14,27 +14,27 @@
 	margin-bottom: 20px;
 }
 
-.component-comment-header-wrapper > * {
+.base-playground-comment-header-wrapper > * {
 	/*margin: auto;*/
 	/*border: 1px dotted #ff00ff;*/
 }
 
-.component-comment-header-icon-wrapper {
+.base-playground-comment-header-icon-wrapper {
 	flex: 1 1 auto;
 	display: flex;
 }
 
-.component-comment-header-spacer {
+.base-playground-comment-header-spacer {
 	flex: 10 0 0;
 	margin: auto;
 }
 
-.component-comment-header-link-wrapper {
+.base-playground-comment-header-link-wrapper {
 	flex: 1 1 auto;
 	text-align: right;
 }
 
-.component-comment-header-icon {
+.base-playground-comment-header-icon {
 	position: relative;
 	width: 24px;
 	height: 24px;
@@ -46,11 +46,11 @@
 	text-align: center;
 }
 
-.component-comment-header-icon:not(:last-child) {
+.base-playground-comment-header-icon:not(:last-child) {
 	margin-right: 5px;
 }
 
-.component-comment-header-icon > * {
+.base-playground-comment-header-icon > * {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -60,24 +60,24 @@
 	clip-path: circle(8px at center);
 }
 
-.component-comment-header-link {
+.base-playground-comment-header-link {
 	font-size: 10px;
 	color: rgba(var(--link-color), 1.0);
 	transition: color 0.125s ease-out;
 }
 
-.component-comment-header-link:hover {
+.base-playground-comment-header-link:hover {
 	color: rgba(var(--link-hover-color), 1.0);
 	cursor: pointer;
 }
 
-.component-comment-timestamp {
+.base-playground-comment-timestamp {
 	margin-bottom: 5px;
 	font-size: 12px;
 	color: rgba(var(--timestamp-color), 1.0);
 }
 
-.component-comment-content {
+.base-playground-comment-content {
 	font-size: 14px;
 	line-height: 20px;
 	text-align: justify;

@@ -5,7 +5,7 @@ import './PlaygroundHeader.css';
 import { Strings } from 'lang-js-utils';
 
 import SharePopover from '../SharePopover';
-import HeaderProfile from './HeaderProfile';
+import UserSettings from './UserSettings';
 
 class PlaygroundHeader extends Component {
 	constructor(props) {
@@ -42,7 +42,7 @@ class PlaygroundHeader extends Component {
 			<div className="playground-header-col">{breadcrumbs}</div>
 			<div className="playground-header-col playground-header-col-right">
 				<div className="playground-header-link" onClick={()=> this.setState({ popover : !this.state.popover })} ref={(element)=> { this.shareLink = element; }}>Share</div>
-				<HeaderProfile onItemClick={this.props.onProfileItem} onLogout={this.props.onLogout} />
+				<UserSettings onMenuItem={this.props.onSettingsItem} onLogout={this.props.onLogout} />
 			</div>
 
 			{(popover) && (<SharePopover
