@@ -78,9 +78,12 @@ class ProfileForm extends Component {
 		return (
 			<div className="profile-form">
 				<form onSubmit={this.handleSubmit}>
-					<input type="text" placeholder="Enter Email Address" value={email} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} name="email" autoComplete="new-password" />
-					<input type="text" className="profile-form-team-txt" value={Strings.capitalize(team.type)} name="team" readOnly={true} />
-					<input type="password" placeholder="Enter Password" value={password} onChange={(event)=> this.setState({ password : event.target.value })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} name="password" autoComplete="new-password" />
+					<input name="email" style={{ display : 'none' }} />
+					<input type="password" name="password" style={{ display : 'none' }} />
+
+					<input type="text" placeholder="Enter Email Address" value={email} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />
+					<input type="text" className="profile-form-team-txt" value={Strings.capitalize(team.type)} name="team-plan" readOnly={true} />
+					<input type="password" placeholder="Enter Password" value={password} onChange={(event)=> this.setState({ password : event.target.value })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} autoComplete="new-password" />
 
 					<div className="button-wrapper-col stripe-form-button-wrapper">
 						<button onClick={this.handleCancel}>Cancel</button>

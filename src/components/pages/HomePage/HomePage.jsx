@@ -7,6 +7,7 @@ import { Bits, Browsers, Strings } from 'lang-js-utils';
 import { NavLink } from 'react-router-dom';
 
 import BasePage from '../BasePage';
+import DummyForm from '../../forms/DummyForm';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -131,10 +132,12 @@ class HomePage extends Component {
 				<div className="home-page-form-wrapper">
 					<h1 dangerouslySetInnerHTML={{ __html : title }} />
 					<form onSubmit={this.handleSubmit}>
+						<DummyForm />
+
 						{/*<input disabled={submitted} type="email" name="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} required pattern=".*\S.*" />*/}
 						{(emailReset)
-							? (<input disabled={submitted} type="email" name="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} required autoComplete="off" />)
-							: (<input disabled={submitted} type="text" name="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} autoComplete="off" />)
+							? (<input disabled={submitted} type="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} required autoComplete="new-password" />)
+							: (<input disabled={submitted} type="text" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} autoComplete="new-password" />)
 						}
 						{/*<button disabled={(!emailValid && !email.length === 0) || submitted} type="submit" onClick={(event)=> this.handleSubmit(event)} style={{opacity : (submitted) ? 0.5 : 1.0}}>Join Wait List</button>*/}
 						<button disabled={submitted} type="submit" onClick={(event)=> this.handleSubmit(event)}>Join Wait List</button>

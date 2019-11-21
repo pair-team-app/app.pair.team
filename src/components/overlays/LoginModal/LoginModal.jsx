@@ -12,6 +12,7 @@ import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
 import { Modals } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
+import pairLogo from '../../../assets/images/logos/logo-obit-310.png';
 
 
 class LoginModal extends Component {
@@ -79,11 +80,11 @@ class LoginModal extends Component {
 		this.props.onLoggedIn(profile);
 	};
 
-	handleRegister = ()=> {
-// 		console.log('%s.handleRegister()', this.constructor.name);
+	handleModal = (uri)=> {
+// 		console.log('%s.handleModal()', this.constructor.name, uri);
 		this.setState({
 			outro    : true,
-			outroURI : `/modal${Modals.REGISTER}`
+			outroURI : `/modal${uri}`
 		});
 	};
 
@@ -103,7 +104,9 @@ class LoginModal extends Component {
 
 				<div className="login-modal">
 					<div className="login-modal-header-wrapper">
-						<h4>You must be signed in to view this Pair.</h4>
+						<img className="login-modal-header-logo" src={pairLogo} alt="Logo" />
+						{/*<h4>You must be signed in to view this Pair.</h4>*/}
+						<h4>Login to view Pair URLs</h4>
 					</div>
 
 					<div className="login-modal-content-wrapper">
@@ -114,9 +117,10 @@ class LoginModal extends Component {
 							onLoggedIn={this.handleLoggedIn} />
 					</div>
 
-					<div className="login-modal-footer-wrapper">
-						<div className="login-modal-footer-link">Not a member of this Pair yet?</div>
-						<div className="login-modal-footer-link" onClick={this.handleRegister}>Sign Up</div>
+					<div className="login-modal-footer-wrapper form-disclaimer">
+						{/*<div>Not a member of this Pair yet?</div>*/}
+						<div onClick={()=> this.handleModal(Modals.RECOVER)}>Forgot Password</div>
+						<div onClick={()=> this.handleModal(Modals.REGISTER)}>Sign Up</div>
 					</div>
 				</div>
 			</BaseOverlay>);

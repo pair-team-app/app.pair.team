@@ -1,0 +1,9 @@
+
+.dummy-form {
+	/*width: 0;*/
+	/*height: 0;*/
+}
+
+.dummy-form > input {
+	display: none;
+}

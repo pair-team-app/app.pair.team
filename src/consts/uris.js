@@ -28,6 +28,7 @@ export const API_ENDPT_URL = `${API_HOSTNAME}/playgrounds.php`;
 
 export const GITHUB_APP_AUTH = 'https://github.com/login/oauth/authorize?client_id=e6f08e86acdc4e4cca38&redirect_uri=https://api.designengine.ai/system.php&scope=gist,user:email&state=__{EPOCH}__';
 
+export const GITHUB_FIGMA_PLUGIN = 'https://github.com/de-ai/designengine-figma';
 export const GITHUB_XD_PLUGIN = 'https://github.com/de-ai/designengine-xd';
 export const NPM_DE_PLAYGROUND = 'https://www.npmjs.com/package/design-engine-playground';
 

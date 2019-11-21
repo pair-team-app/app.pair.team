@@ -90,12 +90,12 @@ class RegisterModal extends Component {
 		});
 	};
 
-	handleLogin = ()=> {
-		console.log('%s.handleLogin()', this.constructor.name);
+	handleModal = (uri)=> {
+		console.log('%s.handleModal()', this.constructor.name, uri);
 
 		this.setState({
 			outro    : true,
-			outroURI : `/modal${Modals.LOGIN}`
+			outroURI : `/modal${uri}`
 		});
 	};
 
@@ -126,6 +126,7 @@ class RegisterModal extends Component {
 			<div className="register-modal">
 				<div className="register-modal-header-wrapper">
 					<img className="register-modal-header-logo" src={pairLogo} alt="Logo" />
+					<h4>Create an account to view Pair URLs</h4>
 				</div>
 
 				<div className="register-modal-content-wrapper">
@@ -137,9 +138,9 @@ class RegisterModal extends Component {
 						onRegistered={this.handleRegistered} />
 				</div>
 
-				<div className="register-modal-footer-wrapper">
-					{/*<div className="register-modal-footer-link">Not a member of this Pair yet?</div>*/}
-					<div className="register-modal-footer-link" onClick={this.handleLogin}>Login</div>
+				<div className="register-modal-footer-wrapper form-disclaimer">
+					{/*<div>Not a member of this Pair yet?</div>*/}
+					<div onClick={()=> this.handleModal(Modals.LOGIN)}>Already have an account?</div>
 				</div>
 			</div>
 		</BaseOverlay>);

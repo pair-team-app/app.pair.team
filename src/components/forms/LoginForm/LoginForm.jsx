@@ -5,6 +5,7 @@ import './LoginForm.css'
 import axios from 'axios';
 import { Bits, Strings } from 'lang-js-utils';
 
+import DummyForm from '../../forms/DummyForm';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -18,7 +19,8 @@ class LoginForm extends Component {
 			password      : '',
 			emailValid    : true,
 			passwordValid : true,
-			passMsg       : null
+			passMsg       : null,
+			validated     : false
 		};
 
 		this.passwordTextfield = React.createRef();
@@ -43,6 +45,7 @@ class LoginForm extends Component {
 		event.preventDefault();
 
 		this.setState({
+			validated     : false,
 			password      : '',
 			passwordValid : true,
 			passMsg       : ''
@@ -64,7 +67,7 @@ class LoginForm extends Component {
 		const passwordValid = (password.length > 0);
 
 		this.setState({
-			email         : (emailValid) ? email : 'Email Address or Username Invalid',
+			email         : (emailValid) ? email : 'Email Address Invalid',
 			passMsg       : (passwordValid) ? '' : 'Password Invalid',
 			emailValid    : emailValid,
 			passwordValid : passwordValid
@@ -85,16 +88,20 @@ class LoginForm extends Component {
 
 				} else {
 					this.setState({
-						email         : Bits.contains(status, 0x01) ? email : 'Email Address Incorrect',
+						validated     : true,
+						email         : (Bits.contains(status, 0x01)) ? email : 'Email Address Incorrect',
 						password      : '',
 						emailValid    : Bits.contains(status, 0x01),
 						passwordValid : Bits.contains(status, 0x10),
-						passMsg       : Bits.contains(status, 0x10) ? '' : 'Password Incorrect'
+						passMsg       : (Bits.contains(status, 0x10) || !Bits.contains(status, 0x01)) ? '' : 'Password Incorrect'
 					});
 				}
 
 			}).catch((error)=> {
 			});
+
+		} else {
+			this.setState({ validated : true });
 		}
 	};
 
@@ -103,17 +110,24 @@ class LoginForm extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { email, password, passMsg } = this.state;
-		const { emailValid, passwordValid } = this.state;
+		const { emailValid, passwordValid, validated } = this.state;
 
-		return (
-			<div className="login-form">
-				<form onSubmit={this.handleSubmit}>
-					<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true, passMsg : null })} onChange={(event)=> this.setState({ [event.target.name] : event.target.value })} name="email" autoComplete="rutjfkde-password" />
-					<input type={(passMsg) ? 'text' : 'password'} placeholder="Enter Password" value={(passMsg || password)} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} name="password" autoComplete="new-rutjfkde" />
-					<button disabled={(email.length === 0 || !emailValid || !passwordValid)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Login</button>
-				</form>
-			</div>
-		);
+		return (<div className="login-form">
+			<form onSubmit={this.handleSubmit}>
+				<DummyForm />
+				{(validated)
+					? (<input type="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, passMsg : null, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" required />)
+					: (<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, passMsg : null, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />)
+				}
+
+				{(passMsg)
+					? (<input type="email" placeholder="Enter Password" value={(passMsg || password)} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} autoComplete="off" required />)
+					: (<input type="password" placeholder="Enter Password" value={(passMsg || password)} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} autoComplete="off" />)
+				}
+
+				<button disabled={(email.length === 0 || !emailValid || !passwordValid)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Login</button>
+			</form>
+		</div>);
 	}
 }
 
