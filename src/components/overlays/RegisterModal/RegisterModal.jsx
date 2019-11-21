@@ -117,33 +117,32 @@ class RegisterModal extends Component {
 
 // 		const { teams } = this.props;
 		const { outro } = this.state;
-		return (
-			<BaseOverlay
-				tracking={`register/${URIs.firstComponent()}`}
-				outro={outro}
-				closeable={false}
-				onComplete={this.handleComplete}>
+		return (<BaseOverlay
+			tracking={`register/${URIs.firstComponent()}`}
+			outro={outro}
+			closeable={false}
+			onComplete={this.handleComplete}>
 
-				<div className="register-modal">
-					<div className="register-modal-header-wrapper">
-						<img className="register-modal-header-logo" src={pairLogo} alt="Logo" />
-					</div>
-
-					<div className="register-modal-content-wrapper">
-						<RegisterForm
-							title={null}
-							inviteID={null}
-							email={null}
-							onCancel={(event)=> { event.preventDefault(); this.handleComplete(); }}
-							onRegistered={this.handleRegistered} />
-					</div>
-
-					<div className="register-modal-footer-wrapper">
-						{/*<div className="register-modal-footer-link">Not a member of this Pair yet?</div>*/}
-						<div className="register-modal-footer-link" onClick={this.handleLogin}>Login</div>
-					</div>
+			<div className="register-modal">
+				<div className="register-modal-header-wrapper">
+					<img className="register-modal-header-logo" src={pairLogo} alt="Logo" />
 				</div>
-			</BaseOverlay>);
+
+				<div className="register-modal-content-wrapper">
+					<RegisterForm
+						title={null}
+						inviteID={null}
+						email={null}
+						onCancel={(event)=> { event.preventDefault(); this.handleComplete(); }}
+						onRegistered={this.handleRegistered} />
+				</div>
+
+				<div className="register-modal-footer-wrapper">
+					{/*<div className="register-modal-footer-link">Not a member of this Pair yet?</div>*/}
+					<div className="register-modal-footer-link" onClick={this.handleLogin}>Login</div>
+				</div>
+			</div>
+		</BaseOverlay>);
 	}
 }
 

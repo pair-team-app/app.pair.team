@@ -20,5 +20,6 @@ export const USER_PROFILE_UPDATED = 'USER_PROFILE_UPDATED';
 
 export const SET_INVITE = 'SET_INVITE';
 export const SET_TEAMS = 'SET_TEAMS';
+export const SET_PRODUCTS = 'SET_PRODUCTS';
 
 export const UPDATE_MOUSE_COORDS = 'UPDATE_MOUSE_COORDS';

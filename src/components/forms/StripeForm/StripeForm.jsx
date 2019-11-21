@@ -31,6 +31,12 @@ class StripeForm extends Component {
 		};
 	}
 
+	handleCancel = (event)=> {
+// 		console.log('%s.handleCancel()', this.constructor.name, event);
+		trackEvent('button', 'purchase-cancel');
+		this.props.onCancel();
+	};
+
 	handleChange = (target)=> {
 // 		console.log('%s.handleChange()', this.constructor.name, target);
 		this.setState({ [target.name] : target.value });
@@ -44,15 +50,8 @@ class StripeForm extends Component {
 		});
 	};
 
-// 	handlePage = (event)=> {
-// 		console.log('%s.handlePage()', this.constructor.name, event);
-//
-// 		trackEvent('link', Pages.TERMS);
-// 		this.props.onCancel();
-// 	};
-
 	handleSubmit = (event)=> {
-		console.log('%s.handleSubmit()', this.constructor.name, event.target);
+		console.log('%s.handleSubmit()', this.constructor.name, event);
 
 		event.preventDefault();
 		trackEvent('button', 'purchase-submit');
@@ -60,18 +59,16 @@ class StripeForm extends Component {
 		const { cardHolder } = this.state;
 		if (cardHolder.length > 0) {
 			this.props.stripe.createToken({ name : cardHolder }).then((result)=> {
+				const { error, token } = result;
+				trackEvent('purchase', (error) ? `error-${error}` : 'success');
 
-				trackEvent('purchase', (result.error) ? `error-${result.error}` : 'success');
-				if (result.error) {
-					this.props.onError(result.error);
+				if (error) {
+					this.props.onError(error);
 
 				} else {
-					this.props.onSubmit(cardHolder, result.token);
+					this.props.onSubmit({ cardHolder, token });
 				}
 			});
-
-		} else {
-			this.props.onCancel();
 		}
 	};
 
@@ -80,31 +77,21 @@ class StripeForm extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { cardHolder } = this.state;
-		return (
-			<div className="stripe-form">
-				<form onSubmit={this.handleSubmit} method="post" className="full-width">
-					<div className="stripe-form-element-wrapper">
-						{/*<div className={Components.txtFieldClassName(cardHolder.length > 0 || cardHolderValid)}><input type="text" className="input-field-textfield" name="cardHolder" placeholder="Card Holder" value={cardHolder} onFocus={this.handleFocus} onChange={(event)=> this.handleChange(event.target)} /></div>*/}
-						<input type="text" name="cardHolder" placeholder="Card Holder" value={cardHolder} onFocus={this.handleFocus} onChange={(event)=> this.handleChange(event.target)} style={{ textAlign : 'left' }} autoComplete="off" />
+		return (<div className="stripe-form">
+			<form onSubmit={this.handleSubmit} method="post" className="full-width">
+				<div className="stripe-form-element-wrapper">
+					<input type="text" name="cardHolder" placeholder="Card Holder" value={cardHolder} onFocus={this.handleFocus} onChange={(event)=> this.handleChange(event.target)} style={{ textAlign : 'left' }} autoComplete="off" />
+					<CardNumberElement className="input-txt" {...createElementOptions()} />
+					<CardExpiryElement className="input-txt" {...createElementOptions()} />
+					<CardCVCElement className="input-txt"  {...createElementOptions()} />
+				</div>
 
-						{/*<CardElement {...createElementOptions()} />*/}
-						<CardNumberElement className="input-txt" {...createElementOptions()} />
-						<CardExpiryElement className="input-txt" {...createElementOptions()} />
-						<CardCVCElement className="input-txt"  {...createElementOptions()} />
-					</div>
-
-					{/*<div className="stripe-form-link-wrapper">*/}
-						{/*<div><StripeLogo /></div>*/}
-						{/*<div><NavLink to={Pages.TERMS} onClick={(event)=> this.handlePage(event)}>Pay Terms</NavLink></div>*/}
-					{/*</div>*/}
-
-					<div className="button-wrapper-col stripe-form-button-wrapper">
-						<button disabled={(cardHolder.length === 0)} type="submit">Submit</button>
-						<button onClick={()=> {trackEvent('button', 'purchase-cancel'); this.props.onCancel()}}>Cancel</button>
-					</div>
-				</form>
-			</div>
-		);
+				<div className="button-wrapper-col stripe-form-button-wrapper">
+					<button disabled={(cardHolder.length === 0)} type="submit">Submit</button>
+					<button onClick={this.handleCancel}>Cancel</button>
+				</div>
+			</form>
+		</div>);
 	}
 }
 

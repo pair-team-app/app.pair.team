@@ -131,7 +131,6 @@ class App extends Component {
 			}
 		}
 
-
 		if (!prevState.modals.network && !modals.network && !Browsers.isOnline()) {
 			this.onToggleModal(Modals.NETWORK, true);
 		}

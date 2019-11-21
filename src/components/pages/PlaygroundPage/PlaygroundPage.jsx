@@ -352,10 +352,10 @@ class PlaygroundPage extends Component {
 
 	handleStripeModal = ()=> {
 		console.log('%s.handleStripeModal()', this.constructor.name);
-// 		trackEvent('button', section.event);
 		this.props.onModal(Modals.STRIPE, {
-			price : 14.99,
-			total : 10
+			price  : 27.99,
+			total  : 50,
+			teamID : this.props.team.id
 		});
 	};
 
@@ -370,68 +370,66 @@ class PlaygroundPage extends Component {
 		const { teamSlug, projectSlug, componentsSlug } = params;
 		const { typeGroups, typeGroup, playgrounds, playground, component, comment, cursor, accessibility } = this.state;
 
-		return (
-			<BasePage className={`page-wrapper playground-page-wrapper${(component && (window.location.href.includes('/comments'))) ? ' playground-page-wrapper-comments' : ''}`}>
-				{(profile && playground) && (<PlaygroundNavPanel
-					params={params}
-					team={team}
-					typeGroups={typeGroups}
-					typeItems={playground.components}
-					component={component}
-					onTypeGroupClick={this.handleNavGroupItemClick}
-					onTypeItemClick={this.handleNavTypeItemClick}
-				/>)}
+		return (<BasePage className={`page-wrapper playground-page-wrapper${(component && (window.location.href.includes('/comments'))) ? ' playground-page-wrapper-comments' : ''}`}>
+			{(profile && playground) && (<PlaygroundNavPanel
+				params={params}
+				team={team}
+				typeGroups={typeGroups}
+				typeItems={playground.components}
+				component={component}
+				onTypeGroupClick={this.handleNavGroupItemClick}
+				onTypeItemClick={this.handleNavTypeItemClick}
+			/>)}
 
-				{(profile && playground) && (<div className="playground-page-content-wrapper">
-					{(!accessibility) ?
-						(<PlaygroundContent
-							typeGroup={typeGroup}
-							playground={playground}
-							component={component}
-							comment={comment}
-							cursor={cursor}
-							onComponentClick={this.handleComponentClick}
-							onMarkerClick={this.handleCommentMarkerClick}
-							onMenuShow={this.handleComponentMenuShow}
-							onMenuItem={this.handleCompomentMenuItem}
-							onAddComment={this.handleAddComment}
-							onDeleteComment={this.handleDeleteComment}
-							onPopoverClose={this.handleComponentPopoverClose}
-						/>) :
-						(<PlaygroundAccessibilty
-							typeGroups={typeGroups}
-							playground={playground}
-							component={component}
-							comment={comment}
-						/>)
-					}
-
-					<PlaygroundHeader
+			{(profile && playground) && (<div className="playground-page-content-wrapper">
+				{(!accessibility) ?
+					(<PlaygroundContent
+						typeGroup={typeGroup}
 						playground={playground}
 						component={component}
-						projectSlug={projectSlug}
-						componentsSlug={componentsSlug}
-						onLogout={this.props.onLogout}
-					/>
-
-					<PlaygroundFooter
-						accessibility={accessibility}
+						comment={comment}
 						cursor={cursor}
+						onComponentClick={this.handleComponentClick}
+						onMarkerClick={this.handleCommentMarkerClick}
+						onMenuShow={this.handleComponentMenuShow}
+						onMenuItem={this.handleCompomentMenuItem}
+						onAddComment={this.handleAddComment}
+						onDeleteComment={this.handleDeleteComment}
+						onPopoverClose={this.handleComponentPopoverClose}
+					/>) :
+					(<PlaygroundAccessibilty
+						typeGroups={typeGroups}
 						playground={playground}
-						builds={playgrounds.length}
-						onToggleAccessibility={this.handleStripeModal}
-						onToggleCursor={this.handleToggleCommentCursor}
-						onToggleDesktop={this.handleTogglePlayground}
-						onToggleMobile={this.handleTogglePlayground}
-					/>
-				</div>)}
+						component={component}
+						comment={comment}
+					/>)
+				}
 
-				{(profile) && (<PlaygroundCommentsPanel
-					comments={(component) ? component.comments : []}
-					onDelete={this.handleDeleteComment}
-				/>)}
-			</BasePage>
-		);
+				<PlaygroundHeader
+					playground={playground}
+					component={component}
+					projectSlug={projectSlug}
+					componentsSlug={componentsSlug}
+					onLogout={this.props.onLogout}
+				/>
+
+				<PlaygroundFooter
+					accessibility={accessibility}
+					cursor={cursor}
+					playground={playground}
+					builds={playgrounds.length}
+					onToggleAccessibility={this.handleStripeModal}
+					onToggleCursor={this.handleToggleCommentCursor}
+					onToggleDesktop={this.handleTogglePlayground}
+					onToggleMobile={this.handleTogglePlayground}
+				/>
+			</div>)}
+
+			{(profile) && (<PlaygroundCommentsPanel
+				comments={(component) ? component.comments : []}
+				onDelete={this.handleDeleteComment}
+			/>)}
+		</BasePage>);
 	}
 }
 

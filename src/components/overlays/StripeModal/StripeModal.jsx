@@ -12,7 +12,6 @@ import BaseOverlay from '../BaseOverlay';
 import StripeForm from '../../forms/StripeForm/StripeForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
 import { API_ENDPT_URL, Pages } from '../../../consts/uris';
-import { sendToSlack } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
 import stripeCreds from '../../../assets/json/stripe-creds';
 import { fetchTeamLookup } from '../../../redux/actions';
@@ -79,7 +78,7 @@ class StripeModal extends Component {
 		}
 	};
 
-	handleSubmit = (cardHolder, token)=> {
+	handleSubmit = ({ cardHolder, token })=> {
 // 		console.log('%s.handleSubmit()', this.constructor.name, cardHolder, token, this.state);
 
 		const { profile, payload } = this.props;
@@ -100,17 +99,7 @@ class StripeModal extends Component {
 			const { purchase, error } = response.data;
 			trackEvent('purchase', (error) ? 'error' : 'success');
 
-			if ((purchase.id << 0) > 0) {
-				sendToSlack('#purchases', `*[\`${profile.id}\`]* *${profile.email}* purchased [\`${productIDs.split(',').length}\`]x "_${(productIDs[0] === 3) ? 'Standard User' : 'Enterprise User'}_" for \`$${((productIDs[0] === 3) ? 14.99 : 27.99) * productIDs.split(',').length}\``);
-
-				this.props.onPopup({
-					type    : POPUP_TYPE_OK,
-					content : 'Payment Processed!!'
-				});
-
-				this.props.fetchTeamLookup({ userID : profile.id });
-
-			} else {
+			if ((purchase.id << 0) === 0) {
 				this.props.onPopup({
 					position : POPUP_POSITION_TOPMOST,
 					type     : POPUP_TYPE_ERROR,
@@ -134,39 +123,37 @@ class StripeModal extends Component {
 
 		const { price, total } = this.props.payload;
 		const { outro } = this.state;
-		return (
-			<BaseOverlay
-				tracking={`stripe/${URIs.firstComponent()}`}
-				outro={outro}
-				closeable={true}
-				defaultButton={null}
-				title={null}
-				onComplete={this.handleComplete}>
+		return (<BaseOverlay
+			tracking={`stripe/${URIs.firstComponent()}`}
+			outro={outro}
+			closeable={true}
+			defaultButton={null}
+			title={null}
+			onComplete={this.handleComplete}>
 
-				<div className="stripe-modal">
-					<div className="stripe-modal-header-wrapper"><h4>
-						Your domain has reached {total} users.<br />
-						To continue using Pair, please sign up<br />
-						for <span className="stripe-form-price">${price}</span> per month per user.
-					</h4></div>
-					<div className="stripe-modal-content-wrapper">
-						<StripeProvider apiKey={STRIPE_TEST_TOKEN}>
-							<Elements>
-								<StripeForm
-									onCancel={()=> this.setState({ outro : true })}
-									onError={this.handleError}
-									onSubmit={this.handleSubmit}
-									onPage={this.handlePage}
-								/>
-							</Elements>
-						</StripeProvider>
+			<div className="stripe-modal">
+				<div className="stripe-modal-header-wrapper"><h4>
+					Your domain has reached {total} users.<br />
+					To continue using Pair, please sign up<br />
+					for <span className="stripe-form-price">${price}</span> per month per user.
+				</h4></div>
+				<div className="stripe-modal-content-wrapper">
+					<StripeProvider apiKey={STRIPE_TEST_TOKEN}>
+						<Elements>
+							<StripeForm
+								onCancel={()=> this.setState({ outro : true })}
+								onError={this.handleError}
+								onSubmit={this.handleSubmit}
+							/>
+						</Elements>
+					</StripeProvider>
 
-						<div className="form-disclaimer">
-							<NavLink to={Pages.TERMS} onClick={this.handlePage}>Need More details about our <br />Plans?</NavLink>
-						</div>
+					<div className="form-disclaimer">
+						<NavLink to={Pages.TERMS} onClick={this.handlePage}>Need More details about our Plans?</NavLink>
 					</div>
 				</div>
-			</BaseOverlay>);
+			</div>
+		</BaseOverlay>);
 	}
 }
 
