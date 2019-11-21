@@ -131,14 +131,15 @@
 	margin-top: calc((1 - 1.4) * 0.5em);
 }
 
-.form-disclaimer a:not(:hover) {
+.form-disclaimer, .form-disclaimer a:not(:hover) {
 	text-decoration: underline;
 	/*transition: color 0.125s ease-out;*/
 }
 
-.form-disclaimer a:hover {
+.form-disclaimer:hover, .form-disclaimer a:hover {
 	color: rgba(var(--site-fg-color), 1.0);
 	text-decoration: none;
+	cursor: pointer;
 }
 
 .flex-wrapper {

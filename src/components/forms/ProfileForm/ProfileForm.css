@@ -1,0 +1,15 @@
+
+.profile-form {
+}
+
+.profile-form form > input, .profile-form form > input:hover {
+	text-align: left;
+}
+
+.profile-form form > *:not(:last-child) {
+	margin-bottom: 20px;
+}
+
+.profile-form-team-txt:hover {
+	cursor: default;
+}

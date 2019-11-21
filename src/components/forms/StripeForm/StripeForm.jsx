@@ -87,8 +87,8 @@ class StripeForm extends Component {
 				</div>
 
 				<div className="button-wrapper-col stripe-form-button-wrapper">
-					<button disabled={(cardHolder.length === 0)} type="submit">Submit</button>
 					<button onClick={this.handleCancel}>Cancel</button>
+					<button disabled={(cardHolder.length === 0)} type="submit">Submit</button>
 				</div>
 			</form>
 		</div>);

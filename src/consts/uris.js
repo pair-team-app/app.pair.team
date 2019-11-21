@@ -2,10 +2,11 @@
 export const Modals = {
 	GITHUB   : '/github',
 	LOGIN    : '/login',
+	NETWORK  : '/network',
+	PROFILE  : '/profile',
 	RECOVER  : '/recover',
 	REGISTER : '/register',
-	STRIPE   : '/stripe',
-	NETWORK  : '/network',
+	STRIPE   : '/stripe'
 };
 
 export const Pages = {

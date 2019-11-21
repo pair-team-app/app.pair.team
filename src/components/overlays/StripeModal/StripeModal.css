@@ -7,9 +7,8 @@
 }
 
 .stripe-modal-header-wrapper {
-	padding: 0 20px;
+	padding: 0 0 10px 0;
 	letter-spacing: 0.2px;
-	/*line-height: 20px;*/
 }
 
 .stripe-form-price {

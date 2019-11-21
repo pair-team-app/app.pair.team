@@ -10,6 +10,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 
 import AlertDialog from '../overlays/AlertDialog';
 import LoginModal from '../overlays/LoginModal';
+import ProfileModal from '../overlays/ProfileModal';
 import PopupNotification from '../overlays/PopupNotification';
 import RegisterModal from '../overlays/RegisterModal';
 import StripeModal from '../overlays/StripeModal';
@@ -54,10 +55,12 @@ class App extends Component {
 			},
 			popup       : null,
 			modals      : {
-				network  : (!Browsers.isOnline()),
-				login    : false,
-				register : false,
+				delete   : false,
 				github   : false,
+				login    : false,
+				network  : (!Browsers.isOnline()),
+				profile  : false,
+				register : false,
 				stripe   : false,
 				payload  : null,
 
@@ -207,8 +210,8 @@ class App extends Component {
 		});
 	};
 
-	handleLoggedIn = (profile)=> {
-// 		console.log('%s.handleLoggedIn()', this.constructor.name, profile);
+	handleUpdateUser = (profile)=> {
+// 		console.log('%s.handleUpdateUser()', this.constructor.name, profile);
 		this.props.updateUserProfile(profile);
 // 		this.props.fetchUserHistory({profile});
 	};
@@ -311,6 +314,7 @@ class App extends Component {
 				github   : false,
 				login    : (uri === Modals.LOGIN),
 				network  : (uri === Modals.NETWORK),
+				profile  : (uri === Modals.PROFILE),
 				register : (uri === Modals.REGISTER),
 				stripe   : (uri === Modals.STRIPE) }
 			});
@@ -320,6 +324,7 @@ class App extends Component {
 				github   : (uri === Modals.GITHUB) ? false : modals.github,
 				login    : (uri === Modals.LOGIN) ? false : modals.login,
 				network  : (uri === Modals.NETWORK) ? false : modals.network,
+				profile  : (uri === Modals.PROFILE) ? false : modals.profile,
 				register : (uri === Modals.REGISTER) ? false : modals.register,
 				stripe   : (uri === Modals.STRIPE) ? false : modals.stripe,
 				payload  : null }
@@ -358,26 +363,22 @@ class App extends Component {
 		  {(URIs.firstComponent() !== 'app') && (<BottomNav onModal={(uri)=> this.onToggleModal(uri, true)} />)}
 
 		  <div className="modal-wrapper">
-			  {(popup) && (<PopupNotification
-				  payload={popup}
-				  onComplete={()=> this.setState({ popup : null })}>
-				    {popup.content}
-			  </PopupNotification>)}
-
 			  {(modals.login) && (<LoginModal
 				  inviteID={null}
 				  outro={(profile !== null)}
 				  onModal={(uri)=> this.onToggleModal(uri, true)}
 				  onPopup={this.handlePopup}
 				  onComplete={()=> this.onToggleModal(Modals.LOGIN, false)}
-				  onLoggedIn={this.handleLoggedIn}
+				  onLoggedIn={this.handleUpdateUser}
 			  />)}
 
-			  {(modals.network) && (<AlertDialog
-				  title="No Internet Connection"
-				  onComplete={()=> this.onToggleModal(Modals.NETWORK, false)}>
-				  Check your network connection to continue.
-			  </AlertDialog>)}
+			  {(modals.profile) && (<ProfileModal
+				  outro={(profile !== null)}
+				  onModal={(uri)=> this.onToggleModal(uri, true)}
+				  onPopup={this.handlePopup}
+				  onComplete={()=> this.onToggleModal(Modals.PROFILE, false)}
+				  onUpdated={this.handleUpdateUser}
+			  />)}
 
 			  {(modals.register) && (<RegisterModal
 				  inviteID={null}
@@ -385,7 +386,7 @@ class App extends Component {
 				  onModal={(uri)=> this.onToggleModal(uri, true)}
 				  onPopup={this.handlePopup}
 				  onComplete={()=> this.onToggleModal(Modals.REGISTER, false)}
-				  onRegistered={this.handleLoggedIn}
+				  onRegistered={this.handleUpdateUser}
 			  />)}
 
 			  {(modals.stripe) && (<StripeModal
@@ -395,6 +396,18 @@ class App extends Component {
 				  onSubmitted={this.handlePurchaseSubmitted}
 				  onComplete={()=> this.onToggleModal(Modals.STRIPE, false)}
 			  />)}
+
+			  {(modals.network) && (<AlertDialog
+				  title="No Internet Connection"
+				  onComplete={()=> this.onToggleModal(Modals.NETWORK, false)}>
+				  Check your network connection to continue.
+			  </AlertDialog>)}
+
+			  {(popup) && (<PopupNotification
+				  payload={popup}
+				  onComplete={()=> this.setState({ popup : null })}>
+				  {popup.content}
+			  </PopupNotification>)}
 		  </div>
 	  </div>);
   }

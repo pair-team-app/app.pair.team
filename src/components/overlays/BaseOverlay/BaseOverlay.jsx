@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './BaseOverlay.css';
 
-import { TimelineMax, Power1, Power2 } from 'gsap/TweenMax';
+import { TimelineMax, Power1, Circ } from 'gsap/TweenMax';
 import FontAwesome from 'react-fontawesome';
 import onClickOutside from 'react-onclickoutside';
 import { Column, Row } from 'simple-flexbox';
@@ -37,7 +37,7 @@ class BaseOverlay extends Component {
 		this.timeline = new TimelineMax();
 		this.timeline.from(this.wrapper, INTRO_DURATION, {
 			opacity : 0,
-			ease    : Power1.easeIn,
+			ease    : Power1.easeOut,
 			delay   : (this.props.delay || 0) * 0.001
 		});
 	}
@@ -55,8 +55,9 @@ class BaseOverlay extends Component {
 
 			this.timeline = new TimelineMax();
 			this.timeline.to(this.wrapper, OUTRO_DURATION, {
+				scale      : 0.875,
 				opacity    : 0,
-				ease       : Power2.easeOut,
+				ease       : Circ.easeOut,
 				onComplete : onComplete
 			});
 		}
@@ -80,7 +81,7 @@ class BaseOverlay extends Component {
 	};
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, this.props, this.state, this.timeline);
 
 		if (this.wrapper && this.timeline && this.timeline.time === 0) {
 			this.timeline.seek(0);

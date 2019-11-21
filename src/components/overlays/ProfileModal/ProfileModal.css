@@ -1,0 +1,11 @@
+
+.profile-modal {
+	min-width: 360px;
+	width: 360px;
+	max-width: 360px;
+	background-color: rgba(var(--site-bg-color), 1.0);
+}
+
+.profile-modal-header-wrapper {
+	letter-spacing: 0.2px;
+}

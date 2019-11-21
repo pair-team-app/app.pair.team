@@ -187,7 +187,7 @@ h3::before {
 h4 {
 	font-size: 16px;
 	line-height: 24px;
-	margin-bottom: 30px;
+	margin-bottom: 20px;
 }
 
 h4::before {
@@ -215,6 +215,7 @@ h6 {
 input[type="email"], input[type="password"], input[type="password"]:hover, input[type="text"], textarea, textarea:hover {
 	width: 100%;
 	padding: 15px 20px;
+	background-color: rgba(var(--txtfield-bg-color), 1.0);
 	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: 23px;
 	color: rgba(var(--txtfield-fg-color), 1.0);

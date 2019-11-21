@@ -246,19 +246,19 @@ export function updateUserProfile(payload, force=true) {
 
 	if (payload) {
 		Objects.renameKey(payload, 'github_auth', 'github');
+
 		if (payload.github) {
 			Objects.renameKey(payload.github, 'access_token', 'accessToken');
 		}
 
-		const { id, type, github } = payload;
+		const { id, github } = payload;
 		payload = {
 			...payload,
 			id     : id << 0,
 			github : (github) ? {
 				...github,
 				id : github.id << 0
-			} : github,
-			paid   : type.includes('paid')
+			} : github
 		};
 	}
 
@@ -283,7 +283,7 @@ export function updateUserProfile(payload, force=true) {
 				action  : 'UPDATE_USER_PROFILE',
 				payload : { ...payload,
 					user_id  : id,
-					filename : avatar
+// 					filename : avatar
 				}
 			}).then((response) => {
 				console.log('UPDATE_USER_PROFILE', response.data);

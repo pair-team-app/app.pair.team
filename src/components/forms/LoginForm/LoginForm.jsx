@@ -24,10 +24,6 @@ class LoginForm extends Component {
 		this.passwordTextfield = React.createRef();
 	}
 
-	componentDidMount() {
-// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
-	}
-
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 

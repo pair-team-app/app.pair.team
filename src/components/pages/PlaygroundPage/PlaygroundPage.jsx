@@ -10,6 +10,7 @@ import PlaygroundAccessibilty from './PlaygroundAccessibility';
 import PlaygroundCommentsPanel from './PlaygroundCommentsPanel';
 import PlaygroundContent from './PlaygroundContent';
 import PlaygroundHeader from './PlaygroundHeader';
+import { ProfileItemTypes } from './PlaygroundHeader/HeaderProfile';
 import PlaygroundFooter from './PlaygroundFooter';
 import PlaygroundNavPanel from './PlaygroundNavPanel';
 import { commentByID, componentByID, componentFromComment, typeGroupByComponent } from './utils/lookup';
@@ -281,6 +282,17 @@ class PlaygroundPage extends Component {
 		this.setState({ component : typeItem });
 	};
 
+	handleProfileItem = (itemType)=> {
+		console.log('%s.handleProfileItem()', this.constructor.name, itemType);
+
+		if (itemType === ProfileItemTypes.DELETE) {
+			this.props.onModal(Modals.PROFILE);
+
+		} else {
+			this.props.onModal(Modals.PROFILE);
+		}
+	};
+
 	handleToggleAccessibility = ()=> {
 		console.log('%s.handleToggleAccessibility()', this.constructor.name, this.state.accessibility);
 
@@ -410,6 +422,7 @@ class PlaygroundPage extends Component {
 					component={component}
 					projectSlug={projectSlug}
 					componentsSlug={componentsSlug}
+					onProfileItem={this.handleProfileItem}
 					onLogout={this.props.onLogout}
 				/>
 
