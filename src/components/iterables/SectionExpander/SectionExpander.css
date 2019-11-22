@@ -1,7 +1,7 @@
 
 .section-expander {
 	margin-bottom: 50px;
-	border: 1px dotted #ff00ff;
+	/*border: 1px dotted #ff00ff;*/
 }
 
 .section-expander:last-child {
