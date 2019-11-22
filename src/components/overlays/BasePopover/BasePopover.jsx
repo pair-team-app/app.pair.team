@@ -119,7 +119,7 @@ class BasePopover extends Component {
 		this.timeline = new TimelineMax();
 		this.timeline.to(this.wrapper, duration.outro, {
 			opacity    : 0,
-			scale      : 0.875,
+			scale      : 0.95,
 			ease       : Circ.easeOut,
 			onComplete : this.onOutroComplete
 		}).addLabel(END_LBL);

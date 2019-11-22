@@ -1,47 +1,47 @@
 {
   "desktop": {
     "title": "Pricing",
-    "intro": "Pair offers simple pricing for Free, Team, and Enterprise customers. For custom solutions of <b>&asymp;100,000 Pair URLs</b> per month, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
+    "intro": "Pair offers simple pricing for Free, Team, and Enterprise customers. For custom solutions of ≈100,000 Pair URLs or more per month, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
     "sections": [{
       "open" : true,
       "header": "Free",
-      "content": "<b>10 Pair Public URLs</b> per month for $0.<div>&bull; Public Pair URLS<br />&bull; 100 Builds Per Month Limit<br />&bull; Email Support</div>",
-      "price": null,
+      "content": "<strong>10 Pair Public URLs</strong> per month.<div>&bull; Public Pair URLs<br />&bull; 100 Builds Per Month<br />&bull; Email Support</div>",
+      "price": 0.00,
       "event": "free-plan"
     }, {
       "open" : true,
       "header": "Team",
-      "content": "<b>1,000 Pair Private URLs</b> per month for $29 per user.<div>&bull; Private Pair URLS<br />&bull; 200 Builds Per Month Per User Limit<br />&bull; Slack Support</div>",
-      "price": 29,
+      "content": "<strong>1,000 Pair URLs</strong> per month.<div>&bull; Private Pair URLs<br />&bull; 1,000 Builds Per Month<br />&bull; Slack Support</div>",
+      "price": 14.99,
       "event": "team-plan"
     }, {
       "open" : true,
       "header": "Enterprise",
-      "content": "<b>10,000 Pair Private URLs</b> per month for $49 per user.<div>&bull; Private Pair URLS<br />&bull; 1,000 Builds Per Month Per User Limit<br />&bull; Slack & Phone Support</div>",
-      "price": 49,
+      "content": "<strong>10,000 Pair URLs</strong> per month.<div>&bull; Private Pair URLs<br />&bull; 1,0000 Builds Per Month<br />&bull; PM Support</div>",
+      "price": 27.99,
       "event": "enterprise-plan"
     }]
   },
   "mobile": {
     "title": "Pricing",
-    "intro": "Pair offers simple pricing for Free, Team, and Enterprise customers. For custom solutions of <b>&asymp;100,000 Pair URLs</b> per month, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
+    "intro": "Pair offers simple pricing for Free, Team, and Enterprise customers. For custom solutions of ≈100,000 Pair URLs or more per month, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
     "sections": [{
       "open" : false,
       "header": "Free",
-      "content": "<b>10 Pair Public URLs</b> per month for $0.<div>&bull; Public Pair URLS<br />&bull; 100 Builds Per Month Limit<br />&bull; Email Support</div>",
-      "price": null,
+      "content": "<strong>10 Pair Public URLs</strong> per month.<div>&bull; Public Pair URLs<br />&bull; 100 Builds Per Month<br />&bull; Email Support</div>",
+      "price": 0.00,
       "event": "free-plan"
     }, {
       "open" : false,
       "header": "Team",
-      "content": "<b>1,000 Pair Private URLs</b> per month for $29 per user.<div>&bull; Private Pair URLS<br />&bull; 200 Builds Per Month Per User Limit<br />&bull; Slack Support</div>",
-      "price": 29,
+      "content": "<strong>1,000 Pair URLs</strong> per month.<div>&bull; Private Pair URLs<br />&bull; 1,000 Builds Per Month<br />&bull; Slack Support</div>",
+      "price": 14.99,
       "event": "team-plan"
     }, {
       "open" : false,
       "header": "Enterprise",
-      "content": "<b>10,000 Pair Private URLs</b> per month for $49 per user.<div>&bull; Private Pair URLS<br />&bull; 1,000 Builds Per Month Per User Limit<br />&bull; Slack & Phone Support</div>",
-      "price": 49,
+      "content": "<strong>10,000 Pair URLs</strong> per month.<div>&bull; Private Pair URLs<br />&bull; 1,0000 Builds Per Month<br />&bull; PM Support</div>",
+      "price": 27.99,
       "event": "enterprise-plan"
     }]
   }

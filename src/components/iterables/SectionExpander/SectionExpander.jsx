@@ -15,8 +15,9 @@ function SectionExpander(props) {
 		<Collapse
 			isOpen={open}
 			className={`section-expander-content-wrapper${(open) ? ' section-expander-content-wrapper-open' : ''}`}
-// 				transition={`height ${(open) ? '250ms cubic-bezier(0.2, 0.5, 0.9, 1.0)' : '250ms cubic-bezier(0.5, 0.9, 0.1, 1.0)'}`}
-			transition={`height ${(open) ? '333ms cubic-bezier(0.2, 0.9, 0.1, 1.0)' : '333ms cubic-bezier(0.0, 1.0, 0.0, 1.0)'}`}
+// 			transition={`height ${(open) ? '250ms cubic-bezier(0.2, 0.5, 0.9, 1.0)' : '250ms cubic-bezier(0.5, 0.9, 0.1, 1.0)'}`}
+//  		transition={`height ${(open) ? '333ms cubic-bezier(0.2, 0.9, 0.1, 1.0)' : '333ms cubic-bezier(0.0, 1.0, 0.0, 1.0)'}`}
+				transition={`height ${(open) ? '250ms cubic-bezier(0.2, 0.9, 0.3, 1.0)' : '250ms cubic-bezier(0.5, 0.9, 0.1, 1.0)'}`}
 			aria-hidden={!open}
 			render={(state)=> (<div className="section-expander-content">{children}</div>)}>
 		</Collapse>

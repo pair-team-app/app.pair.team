@@ -94,7 +94,7 @@ class PlaygroundComment extends Component {
 
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props.component, this.props.comment);
-// 		console.log('%s.render()', this.constructor.name, this.props.comment);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { component, comment, ind } = this.props;
 		const { outro } = this.state;

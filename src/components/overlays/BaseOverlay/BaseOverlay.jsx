@@ -37,6 +37,7 @@ class BaseOverlay extends Component {
 		this.timeline = new TimelineMax();
 		this.timeline.from(this.wrapper, INTRO_DURATION, {
 			opacity : 0,
+			scale   : 0.98,
 			ease    : Power1.easeOut,
 			delay   : (this.props.delay || 0) * 0.001
 		});
@@ -55,7 +56,7 @@ class BaseOverlay extends Component {
 
 			this.timeline = new TimelineMax();
 			this.timeline.to(this.wrapper, OUTRO_DURATION, {
-				scale      : 0.875,
+				scale      : 0.95,
 				opacity    : 0,
 				ease       : Circ.easeOut,
 				onComplete : onComplete
