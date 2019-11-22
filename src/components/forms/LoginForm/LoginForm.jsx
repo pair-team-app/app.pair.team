@@ -121,7 +121,7 @@ class LoginForm extends Component {
 				}
 
 				{(passMsg)
-					? (<input type="email" placeholder="Enter Password" value={(passMsg || password)} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} autoComplete="off" required />)
+					? (<input type="email" placeholder="Enter Password" value={(passMsg || password)} onFocus={()=> this.setState({ passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} autoComplete="off" required />)
 					: (<input type="password" placeholder="Enter Password" value={(passMsg || password)} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} autoComplete="off" />)
 				}
 

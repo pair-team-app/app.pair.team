@@ -44,6 +44,7 @@
 	--txtfield-disabled-bg-color: var(--disabled-fg-color); /* cccccc */
 	--txtfield-disabled-fg-color: 153, 153, 153; /* 999999 */
 	--border-color: 206, 206, 206; /* #cecece */
+	--overlay-shadow: 1px 1px 3px rgba(var(--border-color), 0.5);
 	--playground-panel-bg-color: 247, 247, 247; /* #f7f7f7 */
 	--playground-panel-link-color: 153, 153, 153; /* 999999 */
 	--playground-panel-link-hover-color: var(--site-fg-color); /* #232323 */

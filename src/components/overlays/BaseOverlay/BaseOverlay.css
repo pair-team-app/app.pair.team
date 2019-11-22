@@ -27,9 +27,8 @@
 	border-radius: 10px;
 	background-color: rgba(var(--site-bg-color), 1.0);
 	text-align: center;
-	/*backface-visibility: hidden;*/
-	/*transform-style: flat;*/
-	/*box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.125);*/
+	transform-style: preserve-3d;
+	box-shadow: var(--overlay-shadow);
 }
 
 .base-overlay-content-wrapper-unblurred {

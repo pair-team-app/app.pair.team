@@ -58,7 +58,7 @@ class BaseOverlay extends Component {
 			this.timeline.to(this.wrapper, OUTRO_DURATION, {
 				scale      : 0.9,
 				opacity    : 0,
-				ease       : Circ.easeIn,
+				ease       : Back.easeIn,
 				onComplete : onComplete
 			});
 		}

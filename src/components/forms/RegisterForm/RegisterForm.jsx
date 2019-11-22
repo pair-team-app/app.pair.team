@@ -17,6 +17,7 @@ class RegisterForm extends Component {
 			email         : (props.email || ''),
 			password      : '',
 			password2     : '',
+			passMsg       : null,
 			emailValid    : true,
 			passwordValid : true,
 			validated     : false
@@ -46,7 +47,7 @@ class RegisterForm extends Component {
 			password      : '',
 			password2     : '',
 			passwordValid : true,
-			passMsg       : ''
+			passMsg       : null
 		});
 
 		setTimeout(() => {
@@ -61,17 +62,6 @@ class RegisterForm extends Component {
 		const { inviteID, email, password, password2 } = this.state;
 		const emailValid = Strings.isEmail(email);
 		const passwordValid = (password.length > 0 && password === password2);
-
-// 		if (password !== password2) {
-// 			this.setState({
-// 				password      : '',
-// 				password2     : '',
-// 				passwordValid : false,
-// 				passMsg       : 'Passwords don\'t match'
-// 			});
-//
-// 			return;
-// 		}
 
 		this.setState({
 			email         : (emailValid) ? email : 'Email Address Invalid',
@@ -130,10 +120,8 @@ class RegisterForm extends Component {
 						: (<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />)
 					}
 
-					{/*<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : '', emailValid : true, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />*/}
-
 					{(passMsg)
-						? (<input type="email" placeholder="Enter Password" value={passMsg} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} ref={(element)=> this.passwordTextfield = element} autoComplete="off" required />)
+						? (<input type="email" placeholder="Enter Password" value={passMsg} onFocus={()=> this.setState({ passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} ref={(element)=> this.passwordTextfield = element} autoComplete="off" required />)
 						: (<input type="password" placeholder="Enter Password" value={password} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} autoComplete="off" />)
 					}
 
@@ -142,9 +130,7 @@ class RegisterForm extends Component {
 						: (<input type="password" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ password2 : event.target.value })} autoComplete="off" />)
 					}
 
-					{/*<input type="password" placeholder="Enter Password" value={(passMsg || password)} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} ref={(element)=> this.passwordTextfield = element} autoComplete="off" />*/}
-					{/*<input type="password" placeholder="Confirm Password" value={password2} onChange={(event)=> this.setState({ password2 : event.target.value })} autoComplete="off" />*/}
-					<button disabled={(email.length === 0 || password.length === 0 || password2.length === 0 || !emailValid || !passwordValid)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Sign Up</button>
+					<button disabled={(email.length === 0 || password.length === 0 || password2.length === 0 || !emailValid || !passwordValid || password !== password2)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Sign Up</button>
 				</form>
 			</div>
 		);
