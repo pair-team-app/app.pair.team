@@ -69,7 +69,7 @@ html, body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, Arial, sans-serif;
   font-weight: 400;
   font-size: 16px;
-  color: var(--site-fg-color);
+  color: rgba(var(--site-fg-color), 1.0);
 }
 
 
@@ -268,13 +268,8 @@ input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focu
 }
 
 p {
-	margin-top: 0;
-	text-align: justify;
+	margin: 0;
   line-height: 25px;
-}
-
-p:first-child {
-	margin-top: 0;
 }
 
 p:last-child {
@@ -283,10 +278,14 @@ p:last-child {
 
 p > a {
 	text-decoration: underline;
+	text-decoration-style: dotted;
+	text-decoration-color: #ff00ff;
+
+	/*text-decoration: underline dotted #ff00ff 2px;*/
 }
 
 p > a:hover {
-	color: rbga(var(--link-color), 1.0);
+	color: rgba(var(--link-color), 1.0);
 	text-decoration: none;
 }
 
@@ -300,12 +299,25 @@ textarea {
 }
 
 ul {
-	margin-top: 10px;
-	padding-left: 20px;
+	margin: 10px 20px;
+	padding-left: 10px;
 	list-style-type: circle;
 }
 
+ul:last-child {
+	margin-bottom: 35px;
+}
+
 ul > li {
+	line-height: 25px;
+}
+
+ul > li:first-child {
+	margin-top: 0;
+}
+
+ul > li:last-child {
+	margin-bottom: 20px;
 }
 
 ul > li:not(:last-child) {

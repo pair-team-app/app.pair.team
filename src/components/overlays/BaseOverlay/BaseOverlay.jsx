@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './BaseOverlay.css';
 
-import { TimelineMax, Back, Power1, Circ } from 'gsap/TweenMax';
+import { TimelineMax, Back } from 'gsap/TweenMax';
 import FontAwesome from 'react-fontawesome';
 import onClickOutside from 'react-onclickoutside';
 import { Column, Row } from 'simple-flexbox';
