@@ -196,7 +196,7 @@ h4::before {
 
 /** Legal Section Title **/
 h5 {
-	padding-bottom: 10px;
+	padding-bottom: 5px;
 	font-size: 15px;
 	font-weight: 600;
 	line-height: 20px;
@@ -204,12 +204,24 @@ h5 {
 	text-align: left;
 }
 
-/** Legal Paragraph **/
+/** Legal Definition **/
 h6 {
+	display: inline;
+	padding-right: 1px;
+	margin-bottom: 4px;
 	font-size: 16px;
-	font-weight: 400;
-	text-decoration: underline;
+	font-weight: 500;
+	/*text-decoration: underline;*/
 	text-align: left;
+	/*border: 1px dotted #ff00ff;*/
+}
+
+h6::before {
+	/*margin-top: calc((1 - 1.3) * 0.5em);*/
+}
+
+h6::after {
+	content: " – ";
 }
 
 input[type="email"], input[type="password"], input[type="password"]:hover, input[type="text"], textarea, textarea:hover {
@@ -285,6 +297,20 @@ sup {
 textarea {
   resize: none;
 }
+
+ul {
+	margin-top: 10px;
+	padding-left: 20px;
+	list-style-type: circle;
+}
+
+ul > li {
+}
+
+ul > li:not(:last-child) {
+	margin-bottom: 10px;
+}
+
 
 
 ::-webkit-scrollbar {

@@ -23,6 +23,10 @@
 	margin-bottom: 20px;
 }
 
+.home-page-form-wrapper input:disabled {
+	color: rgba(var(--txtfield-fg-color), 1.0);
+}
+
 .home-page-form-wrapper > *:last-child {
 	margin-top: 30px;
 }

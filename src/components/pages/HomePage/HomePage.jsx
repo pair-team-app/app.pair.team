@@ -11,8 +11,6 @@ import DummyForm from '../../forms/DummyForm';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
 import { trackEvent } from '../../../utils/tracking';
 
-// import homePageElementLandscape from '../../../assets/images/elements/element-home-page-landscape.png';
-// import homePageElementPortrait from '../../../assets/images/elements/element-home-page-portrait.png';
 import homePageElementLandscape from '../../../assets/videos/element-home-page-landscape.mp4';
 import homePageElementPortrait from '../../../assets/videos/element-home-page-portrait.mp4';
 import pageContent from '../../../assets/json/content-home-page';
@@ -147,15 +145,9 @@ class HomePage extends Component {
 
 				<div className="page-content-wrapper home-page-content-wrapper">
 					<div className="home-page-element-wrapper">
-						{/*<video width="320" height="240" controls>*/}
 						<video className={`home-page-element ${(Browsers.isMobile.ANY()) ? 'home-page-element-portrait' : 'home-page-element-landscape'}`} onLoad={()=> trackEvent('video', 'load')} onPause={()=> trackEvent('video', 'pause')} onPlay={()=> trackEvent('video', 'play')} autoPlay={true} controls muted loop>
 							<source src={(Browsers.isMobile.ANY()) ? homePageElementPortrait : homePageElementLandscape} type="video/mp4" />
 						</video>
-
-						{/*{(Browsers.isMobile.ANY())*/}
-							{/*? (<img src={homePageElementPortrait} className="home-page-element home-page-element-portrait" alt="Screen shot" />)*/}
-							{/*: (<img src={homePageElementLandscape} className="home-page-element home-page-element-landscape" alt="Screen shot" />)*/}
-						{/*}*/}
 					</div>
 				</div>
 			</BasePage>

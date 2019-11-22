@@ -23,7 +23,7 @@ function TopNav(props) {
 			</div></NavLink>
 		</div>
 		<div className="top-nav-theme-toggle-wrapper">
-			<input type="checkbox" checked={darkTheme} value={darkTheme} onChange={props.onToggleTheme} />
+			<input style={{ display : 'none' }} type="checkbox" checked={darkTheme} value={darkTheme} onChange={props.onToggleTheme} />
 		</div>
 		{(Browsers.isMobile.ANY())
 			? (<div className="top-nav-mobile-menu-wrapper"><MobileMenu /></div>)
