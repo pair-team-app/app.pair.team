@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './PlaygroundAccessibility.css';
 
-import { componentByNodeID, typeGroupByComponent } from '../utils/lookup';
+import { componentByNodeID } from '../utils/lookup';
 
 
 const makeTreeItem = (treeItem, components)=> {

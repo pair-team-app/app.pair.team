@@ -432,7 +432,8 @@ class PlaygroundPage extends Component {
 					cursor={cursor}
 					playground={playground}
 					builds={playgrounds.length}
-					onToggleAccessibility={this.handleStripeModal}
+// 					onToggleAccessibility={this.handleStripeModal}
+					onToggleAccessibility={this.handleToggleAccessibility}
 					onToggleCursor={this.handleToggleCommentCursor}
 					onToggleDesktop={this.handleTogglePlayground}
 					onToggleMobile={this.handleTogglePlayground}

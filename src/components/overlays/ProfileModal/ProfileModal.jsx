@@ -2,13 +2,13 @@
 import React, { Component } from 'react';
 import './ProfileModal.css';
 
-import { Strings, URIs } from 'lang-js-utils';
+import { URIs } from 'lang-js-utils';
 import { connect } from 'react-redux';
-import { NavLink, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 // import ConfirmDialog from '../ConfirmDialog';
-import { API_ENDPT_URL, Modals } from '../../../consts/uris';
+import { Modals } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import ProfileForm from "../../forms/ProfileForm/ProfileForm";
@@ -49,6 +49,7 @@ class ProfileModal extends Component {
 	handleSubmit = ({ id, username, email, password })=> {
 		console.log('%s.handleSubmit()', this.constructor.name, { id, username, email, password });
 
+		trackEvent('button', 'update-profile');
 		this.props.updateUserProfile({ id, username, email, password });
 		this.setState({ outro : true, });
 	};

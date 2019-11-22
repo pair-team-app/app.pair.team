@@ -277,7 +277,8 @@ export function updateUserProfile(payload, force=true) {
 
 	return ((dispatch)=> {
 		if (payload) {
-			const { id, avatar } = payload;
+// 			const { id, avatar } = payload;
+			const { id } = payload;
 
 // 			if (typeof cookie.load('user_id') === 'undefined' || ((cookie.load('user_id') << 0) !== id)) {
 // 				cookie.save('user_id', id << 0, { path : '/' });
