@@ -7,6 +7,14 @@
 	text-align: justify;
 }
 
+.privacy-page-text h6::before {
+	margin-top: 0;
+}
+
+.privacy-page-text h6::after {
+	content: " – ";
+}
+
 .privacy-page-text div:last-child p:last-child {
 	margin-bottom: 0;
 }

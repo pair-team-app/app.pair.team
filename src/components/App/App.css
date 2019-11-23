@@ -141,6 +141,43 @@
 	cursor: pointer;
 }
 
+.inline-question {
+	font-style: italic;
+	padding-right: 4px;
+}
+
+.sub-section {
+	list-style-type: circle;
+}
+
+.sub-section h6 {
+	display: block;
+	text-decoration: underline;
+}
+
+.sub-section h6::before {
+	margin-top: calc((1 - 1.3) * 0.5em);
+}
+
+.notice-msg {
+	font-weight: 500;
+}
+
+.roman-index {
+	font-size: 12px;
+}
+
+.roman-index::before {
+	content: "(";
+}
+
+.roman-index::after {
+	content: ")";
+}
+
+
+
+
 .flex-wrapper {
 	width: 100%;
 	flex-wrap: wrap;
