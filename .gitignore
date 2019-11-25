@@ -48,6 +48,7 @@ yarn-error.log
 
 
 #-- stripe tokens --#
+/src/assets/json/crypto-creds.json
 /src/assets/json/github-creds.json
 /src/assets/json/stripe-creds.json
 
