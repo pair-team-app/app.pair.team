@@ -115,16 +115,17 @@ class App extends Component {
 		}
 
 
-		if (team) {
-			if (!prevState.modals.stripe && !modals.stripe) {
-				if (team.members.length > 10 && team.type === 'free') {
+		if (team && team !== prevProps.team) {
+			const modal = (team.members.length > 10 && team.type === 'free' || team.members.length > 50 && team.type !== 'enterprise');
+			if (modal && !prevState.modals.stripe && !modals.stripe) {
+				if (team.type === 'free') {
 					this.onToggleModal(Modals.STRIPE, true, {
 						teamID : team.id,
 						total  : team.members.length,
 						price  : 14.99
 					});
 
-				} else if (team.members.length > 50 && team.type !== 'enterprise') {
+				} else if (team.type !== 'enterprise') {
 					this.onToggleModal(Modals.STRIPE, true, {
 						teamID : team.id,
 						total  : team.members.length,
@@ -244,7 +245,10 @@ class App extends Component {
 // 		console.log('%s.handlePurchaseSubmitted()', this.constructor.name, purchase);
 
 		this.onToggleModal(Modals.STRIPE, false);
+
+		const { profile } = this.props;
 		this.props.fetchUserProfile();
+		this.props.fetchTeamLookup({ userID : profile.id });
 	};
 
 	handleResize = (event)=> {
