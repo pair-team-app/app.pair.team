@@ -12,9 +12,6 @@
 	z-index: 8;
 }
 
-.playground-comments-panel-collapsed {
-}
-
 .playground-comments-panel-collapsed > * {
 	visibility: hidden;
 }
