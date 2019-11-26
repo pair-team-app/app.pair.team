@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './ProfileModal.css';
 
+import axios from 'axios/index';
 import { URIs } from 'lang-js-utils';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -9,9 +10,9 @@ import { withRouter } from 'react-router-dom';
 import BaseOverlay from '../BaseOverlay';
 // import ConfirmDialog from '../ConfirmDialog';
 import ProfileForm from '../../forms/ProfileForm/ProfileForm';
-import { POPUP_POSITION_TOPMOST, POPUP_TYPE_OK } from '../PopupNotification';
-import { Modals } from '../../../consts/uris';
-import { updateUserProfile } from '../../../redux/actions';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
+import { API_ENDPT_URL, Modals } from '../../../consts/uris';
+import { fetchTeamLookup, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 
@@ -39,6 +40,46 @@ class ProfileModal extends Component {
 		});
 	};
 
+	handleDowngradePlan = (event)=> {
+		console.log('%s.handleDowngradePlan()', this.constructor.name, event);
+
+		const { profile, team } = this.props;
+		axios.post(API_ENDPT_URL, {
+			action  : 'CANCEL_SUBSCRIPTION',
+			payload : {
+				user_id : profile.id,
+				email   : profile.email,
+				team_id : team.id
+			}
+		}).then((response) => {
+			console.log('CANCEL_SUBSCRIPTION', response.data);
+			const { error } = response.data;
+
+			if (error) {
+				this.props.onPopup({
+					type    : POPUP_TYPE_ERROR,
+					content : error.message,
+					delay   : 125
+				});
+
+			} else {
+				this.props.onPopup({
+					type     : POPUP_TYPE_OK,
+					content  : 'Successfully canceled your team plan.',
+					duration : 2.5
+				});
+
+				this.props.fetchTeamLookup({ userID : profile.id });
+
+// 				this.setState({ outro : true }, ()=> {
+// 					this.props.fetchTeamLookup({ userID : profile.id });
+// 				});
+			}
+
+		}).catch((error)=> {
+		});
+	};
+
 	handleResetPassword = ()=> {
 // 		console.log('%s.handleResetPassword()', this.constructor.name);
 		this.setState({
@@ -52,12 +93,11 @@ class ProfileModal extends Component {
 
 		trackEvent('button', 'update-profile');
 		this.props.updateUserProfile({ id, username, email, password });
-		this.setState({ outro : true, }, ()=> {
+		this.setState({ outro : true }, ()=> {
 			this.props.onPopup({
-				type     : POPUP_TYPE_OK,
-				position : POPUP_POSITION_TOPMOST,
-				content  : 'Profile updated.',
-				delay    : 333
+				type    : POPUP_TYPE_OK,
+				content : 'Profile updated.',
+				delay   : 333
 			});
 		});
 	};
@@ -81,6 +121,7 @@ class ProfileModal extends Component {
 					<ProfileForm
 						profile={profile}
 						team={team}
+						onDowngradePlan={this.handleDowngradePlan}
 						onSubmit={this.handleSubmit}
 					/>
 					<div className="form-disclaimer">
@@ -102,6 +143,7 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
+		fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 };

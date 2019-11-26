@@ -10,7 +10,7 @@ import { Elements, StripeProvider } from 'react-stripe-elements';
 
 import BaseOverlay from '../BaseOverlay';
 import StripeForm from '../../forms/StripeForm/StripeForm';
-import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
+import {POPUP_TYPE_ERROR, POPUP_TYPE_OK} from '../PopupNotification';
 import { API_ENDPT_URL, Pages } from '../../../consts/uris';
 import { trackEvent } from '../../../utils/tracking';
 import stripeCreds from '../../../assets/json/stripe-creds';
@@ -24,6 +24,8 @@ const STRIPE_TEST_TOKEN = stripeCreds.test.publish;
 
 class StripeModal extends Component {
 	constructor(props) {
+		console.log('%s.CONSTRUCTOR()', 'StripeModal', props);
+
 		super(props);
 
 		this.state = {
@@ -32,7 +34,8 @@ class StripeModal extends Component {
 			outro      : false,
 			outroURI   : null,
 			purchase   : null,
-			productIDs : Strings.repeat((this.props.payload.price === 14.99) ? 3 : 4, this.props.payload.total, ',')
+// 			productIDs : Strings.repeat((this.props.payload.price === 14.99) ? 3 : 4, this.props.payload.total, ',')
+			productIDs : Strings.repeat(this.props.payload.product.id, this.props.payload.team.members.length, ',')
 		};
 	}
 
@@ -58,9 +61,8 @@ class StripeModal extends Component {
 		console.log('%s.handleError()', this.constructor.name, error);
 
 		this.props.onPopup({
-			position : POPUP_POSITION_TOPMOST,
-			type     : POPUP_TYPE_ERROR,
-			content  : error.code
+			type    : POPUP_TYPE_ERROR,
+			content : error.code
 		});
 	};
 
@@ -90,7 +92,7 @@ class StripeModal extends Component {
 			action  : 'MAKE_PURCHASE',
 			payload : {
 				user_id     : profile.id,
-				team_id     : payload.teamID,
+				team_id     : payload.team.id,
 				token_id    : token.id,
 				product_ids : productIDs
 			}
@@ -101,9 +103,15 @@ class StripeModal extends Component {
 
 			if ((purchase.id << 0) === 0) {
 				this.props.onPopup({
-					position : POPUP_POSITION_TOPMOST,
-					type     : POPUP_TYPE_ERROR,
-					content  : error.code
+					type    : POPUP_TYPE_ERROR,
+					content : error.code
+				});
+
+			} else {
+				this.props.onPopup({
+					type     : POPUP_TYPE_OK,
+					content  : `Successfully purchased the monthly subscription "${payload.product.title}" for \$${payload.product.price * payload.team.members.length}. (${payload.team.members.length} users x \$${payload.product.price}) `,
+					duration : 3 + (1/3)
 				});
 			}
 
@@ -121,8 +129,8 @@ class StripeModal extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { price, total } = this.props.payload;
-		const { outro } = this.state;
+		const { product, team } = this.props.payload;
+		const { outro, submitting } = this.state;
 		return (<BaseOverlay
 			tracking={`stripe/${URIs.firstComponent()}`}
 			outro={outro}
@@ -133,14 +141,15 @@ class StripeModal extends Component {
 
 			<div className="stripe-modal">
 				<div className="stripe-modal-header-wrapper"><h4>
-					Your domain has reached {total} users.<br />
+					Your domain has reached {team.members.length} users.<br />
 					To continue using Pair, please sign up<br />
-					for <span className="stripe-form-price">${price}</span> per month per user.
+					for <span className="stripe-form-price">${product.price}</span> per month per user.
 				</h4></div>
 				<div className="stripe-modal-content-wrapper">
 					<StripeProvider apiKey={STRIPE_TEST_TOKEN}>
 						<Elements>
 							<StripeForm
+								submitting={submitting}
 								onCancel={()=> this.setState({ outro : true })}
 								onError={this.handleError}
 								onSubmit={this.handleSubmit}

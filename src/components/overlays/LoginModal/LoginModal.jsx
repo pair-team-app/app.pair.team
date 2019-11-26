@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 import LoginForm from '../../forms/LoginForm';
-import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
+import { POPUP_TYPE_ERROR } from '../PopupNotification';
 import { Modals } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
@@ -61,9 +61,8 @@ class LoginModal extends Component {
 // 		console.log('%s.handleError()', this.constructor.name, error);
 
 		this.props.onPopup({
-			position : POPUP_POSITION_TOPMOST,
-			type     : POPUP_TYPE_ERROR,
-			content  : error.code
+			type    : POPUP_TYPE_ERROR,
+			content : error.code
 		});
 	};
 

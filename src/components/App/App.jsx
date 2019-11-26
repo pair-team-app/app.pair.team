@@ -200,20 +200,8 @@ class App extends Component {
 		if (team && team !== prevProps.team) {
 			const modal = (team.members.length > 10 && team.type === 'free' || team.members.length > 50 && team.type !== 'enterprise');
 			if (modal && !prevState.modals.stripe && !modals.stripe) {
-				if (team.type === 'free') {
-					this.onToggleModal(Modals.STRIPE, true, {
-						teamID : team.id,
-						total  : team.members.length,
-						price  : 14.99
-					});
-
-				} else if (team.type !== 'enterprise') {
-					this.onToggleModal(Modals.STRIPE, true, {
-						teamID : team.id,
-						total  : team.members.length,
-						price  : 27.99
-					});
-				}
+				const product = this.props.products.find(({ threshold })=> (team.members.length >= threshold));
+				this.onToggleModal(Modals.STRIPE, true, { team, product });
 			}
 		}
 
@@ -293,12 +281,6 @@ class App extends Component {
 		});
 	};
 
-	handleUpdateUser = (profile)=> {
-// 		console.log('%s.handleUpdateUser()', this.constructor.name, profile);
-		this.props.updateUserProfile(profile);
-// 		this.props.fetchUserHistory({profile});
-	};
-
 	handleLogout = ()=> {
 		console.log('%s.handleLogout()', this.constructor.name, this.constructor.name);
 
@@ -351,6 +333,12 @@ class App extends Component {
 // 				this.setState({ scrolling : false });
 // 			}, 1000);
 // 		});
+	};
+
+	handleUpdateUser = (profile)=> {
+// 		console.log('%s.handleUpdateUser()', this.constructor.name, profile);
+		this.props.updateUserProfile(profile);
+// 		this.props.fetchUserHistory({profile});
 	};
 
 	onAuthInterval = ()=> {
@@ -496,9 +484,9 @@ class App extends Component {
 			  </AlertDialog>)}
 
 			  {(modals.noAccess) && (<BlockingDialog
-				  title="Access Denied"
+				  title="Access Denied!"
 				  onComplete={()=> this.onToggleModal(Modals.NO_ACCESS, false)}>
-				  Your team {team.title} does not have permission to view this playground!
+				  Your team {team.title} does not have permission to view this playground
 			  </BlockingDialog>)}
 
 			  {(popup) && (<PopupNotification
@@ -516,6 +504,7 @@ const mapStateToProps = (state, ownProps)=> {
 	return ({
 		deeplink  : state.deeplink,
 		profile   : state.userProfile,
+		products  : state.products,
 		artboards : state.homeArtboards,
 		team      : state.teams[0]
 	});

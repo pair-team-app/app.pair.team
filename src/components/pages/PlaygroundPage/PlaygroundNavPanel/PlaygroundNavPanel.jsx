@@ -32,7 +32,7 @@ class PlaygroundNavPanel extends Component {
 		});
 		this.setState({ typeGroups }, ()=> {
 // 			grabFavicon(`https://${playground.team.domain}`).then((response)=> {
-			grabFavicon(window.location.href).then((response)=> {
+			grabFavicon(window.location.origin).then((response)=> {
 				console.log('favicon', response);
 
 				const teamLogo = (response.icons) ? response.icons.pop() : null;
@@ -50,7 +50,7 @@ class PlaygroundNavPanel extends Component {
 
 		if (playground !== prevProps.playground) {
 // 			grabFavicon(`https://${playground.team.domain}`).then((response)=> {
-			grabFavicon(window.location.href).then((response)=> {
+			grabFavicon(window.location.origin).then((response)=> {
 				console.log('favicon', response);
 				this.setState({ teamLogo : response.icons.pop()})
 			});
@@ -128,13 +128,13 @@ class PlaygroundNavPanel extends Component {
 
 
 	render() {
-		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { team } = this.props;
+		const { playground } = this.props;
 		const { typeGroups } = this.state;
 
 		return (<div className="playground-nav-panel">
-			<PlaygroundNavPanelHeader team={team} />
+			<PlaygroundNavPanelHeader team={playground.team} />
 			<div className="playground-nav-panel-component-type-wrapper">
 				{(typeGroups.map((typeGroup, i)=> (<NavPanelTypeGroup key={i} typeGroup={typeGroup} onTypeGroupClick={this.handleTypeGroupClick} onTypeItemClick={this.handleTypeItemClick} />)))}
 			</div>

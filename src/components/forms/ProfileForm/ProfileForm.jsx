@@ -13,7 +13,6 @@ class ProfileForm extends Component {
 		this.state = {
 			email         : (props.profile.email),
 			password      : '',
-			team          : props.team,
 			emailValid    : true,
 			passwordValid : true,
 			passMsg       : '',
@@ -27,6 +26,7 @@ class ProfileForm extends Component {
 // 		console.log('%s.componentWillUnmount()', this.constructor.name);
 		this.passwordTextfield = null;
 	}
+
 
 	handlePassword = (event)=> {
 // 		console.log('%s.handlePassword()', this.constructor.name);
@@ -63,7 +63,6 @@ class ProfileForm extends Component {
 			if (emailValid && passwordValid) {
 				const { id, username } = this.props.profile;
 				this.props.onSubmit({ id, username, email, password });
-
 			}
 		});
 	};
@@ -72,7 +71,8 @@ class ProfileForm extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { email, password, team } = this.state;
+		const { team } = this.props;
+		const { email, password } = this.state;
 		const { emailValid, passwordValid } = this.state;
 
 		return (
@@ -82,7 +82,13 @@ class ProfileForm extends Component {
 					<input type="password" name="password" style={{ display : 'none' }} />
 
 					<input type="text" placeholder="Enter Email Address" value={email} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />
-					<input type="text" className="profile-form-team-txt" value={Strings.capitalize(team.type)} name="team-plan" readOnly={true} />
+					{(team.type === 'free')
+						? (<input type="text" className="profile-form-team-txt" value={Strings.capitalize(team.type)} name="team-plan" readOnly={true} />)
+						: (<div className="profile-form-team-wrapper">
+							<input type="text" className="profile-form-team-txt" value={Strings.capitalize(team.type)} name="team-plan" readOnly={true} />
+							<div className="form-accessory-txt" onClick={this.props.onDowngradePlan}>Downgrade</div>
+						</div>)
+					}
 					<input type="password" placeholder="Enter Password" value={password} onChange={(event)=> this.setState({ password : event.target.value })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} autoComplete="new-password" />
 
 					<div className="button-wrapper-col stripe-form-button-wrapper">

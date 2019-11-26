@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './PopupNotification.css'
 
-import { TimelineMax, Power1, Power2 } from 'gsap/TweenMax';
+import { TimelineMax, Back, Circ, Expo } from 'gsap/TweenMax';
 import { Row } from 'simple-flexbox';
 
 export const POPUP_TYPE_ERROR = 'POPUP_TYPE_ERROR';
@@ -35,24 +35,26 @@ class PopupNotification extends Component {
 // 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state, this.timeline, this.wrapper);
 
 		const { payload, onComplete } = this.props;
-		const { position } = Object.assign({}, { position : POPUP_POSITION_EMBEDDED }, payload);
+		const { position } = Object.assign({}, { position : POPUP_POSITION_TOPMOST }, payload);
 		const { top } = Object.assign({}, { top : (((position === POPUP_POSITION_TOPMOST) << 0) * -64) }, payload.offset);
 		const { delay, duration } = Object.assign({}, {
 			delay    : ORTHODOX_DELAY,
 			duration : ORTHODOX_DURATION
 		}, payload);
 
+		console.log('%s.componentDidMount()', this.constructor.name, { position, top, delay, duration });
+
 		this.timeline = new TimelineMax();
 		this.timeline.addLabel(START_LBL, '0').from(this.wrapper, (INTRO_DURATION * 0.001), {
-			opacity    : 0.0,
-			y          : `${top + 7}px`,
-			height     : '22px',
-			ease       : Power1.easeIn,
+			opacity    : ((position === POPUP_POSITION_TOPMOST) << 0) * 0.75,
+			y          : (position === POPUP_POSITION_TOPMOST) ? `${top - 20}px` : `${top + 7}px`,
+			height     : (position === POPUP_POSITION_TOPMOST) ? `38px` : '22px',
+			ease       : (position === POPUP_POSITION_TOPMOST) ? Back.easeOut : Circ.easeOut,
 			delay      : (delay * 0.001)
 
 		}).to(this.wrapper, (OUTRO_DURATION * 0.001), {
 			opacity    : 0.0,
-			ease       : Power2.easeOut,
+			ease       : Expo.easeInOut,
 			delay      : (duration * 0.001),
 			onComplete : onComplete
 		}).addLabel(END_LBL);
@@ -72,7 +74,7 @@ class PopupNotification extends Component {
 
 		const { payload, children } = this.props;
 		const { position, type } = Object.assign({}, {
-			position : POPUP_POSITION_EMBEDDED,
+			position : POPUP_POSITION_TOPMOST,
 			type     : POPUP_TYPE_OK
 		}, payload);
 
@@ -82,7 +84,7 @@ class PopupNotification extends Component {
 			right : 0
 		}, payload.offset);
 
-		const wrapperClass = `popup-notification-wrapper${(position === POPUP_POSITION_TOPMOST) ? ' popup-notification-wrapper-topmost' : ''}`;
+		const wrapperClass = `popup-notification-wrapper${(position === POPUP_POSITION_EMBEDDED) ? ' popup-notification-wrapper-embedded' : ''}`;
 		const className = `popup-notification-content${(type === POPUP_TYPE_OK) ? ' popup-notification-content-ok' : (type === POPUP_TYPE_ERROR) ? ' popup-notification-content-error' : ' popup-notification-content-status'}`;
 		const wrapperStyle = {
 			width     : (offset.right !== 0) ? `calc(100% - ${offset.right}px)` : '100%',

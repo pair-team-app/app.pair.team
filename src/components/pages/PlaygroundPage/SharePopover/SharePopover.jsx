@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import BasePopover from '../../../overlays/BasePopover';
 import { API_ENDPT_URL } from '../../../../consts/uris';
 import { trackEvent } from '../../../../utils/tracking';
-import { POPUP_POSITION_TOPMOST, POPUP_TYPE_OK } from '../../../overlays/PopupNotification';
+import { POPUP_TYPE_OK } from '../../../overlays/PopupNotification';
 
 
 class SharePopover extends Component {
@@ -31,9 +31,8 @@ class SharePopover extends Component {
 // 		this.setState({ outro : true });
 
 		this.props.onPopup({
-			position : POPUP_POSITION_TOPMOST,
-			type     : POPUP_TYPE_OK,
-			content  : `${window.location.href} has been copied to the clipboard!`
+			type    : POPUP_TYPE_OK,
+			content : `${window.location.href} has been copied to the clipboard!`
 		});
 	};
 

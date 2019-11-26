@@ -9,7 +9,7 @@ import { withRouter } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 import RegisterForm from '../../forms/RegisterForm';
-import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
+import { POPUP_TYPE_ERROR } from '../PopupNotification';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath } from '../../../utils/funcs';
@@ -84,9 +84,8 @@ class RegisterModal extends Component {
 		console.log('%s.handleError()', this.constructor.name, error);
 
 		this.props.onPopup({
-			position : POPUP_POSITION_TOPMOST,
-			type     : POPUP_TYPE_ERROR,
-			content  : error.code
+			type    : POPUP_TYPE_ERROR,
+			content : error.code
 		});
 	};
 

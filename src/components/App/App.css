@@ -140,6 +140,24 @@
 	cursor: pointer;
 }
 
+.form-accessory-txt {
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	transform: translateY(-50%);
+	color: rgba(var(--link-color), 1.0);
+	font-size: 12px;
+	line-height: 0;
+	text-decoration: underline;
+	text-decoration-color: rgba(var(--link-color), 1.0);
+	transition: text-decoration-color 0.125s ease-out;
+}
+
+.form-accessory-txt:hover {
+	text-decoration-color: rgba(var(--link-color), 0.0);
+	cursor: pointer;
+}
+
 .sub-section {
 	list-style-type: circle;
 }

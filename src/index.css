@@ -283,7 +283,7 @@ p:last-child {
 
 p > a {
 	text-decoration: underline;
-	text-decoration-style: dashed;
+	/*text-decoration-style: dashed;*/
 	text-decoration-skip: objects spaces edges box-decoration;
 	text-decoration-color: rgba(var(--link-color), 1.0);
 	transition: text-decoration-color 0.125s ease-in;

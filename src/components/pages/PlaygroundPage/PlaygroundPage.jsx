@@ -72,14 +72,16 @@ class PlaygroundPage extends Component {
 
 		// team
 		if (!prevProps.team && team) {
-			if (teamSlug !== team.title) {
-				const url = window.location.pathname.replace(teamSlug, team.title);
-				this.props.history.push(url);
-			}
+
 		}
 
 		// refresh typegroups
 		if (!prevState.playground && playground) {
+			if (teamSlug !== playground.team.title) {
+				const url = window.location.pathname.replace(teamSlug, playground.team.title);
+				this.props.history.push(url);
+			}
+
 			if (typeGroups && !this.state.typeGroup && componentsSlug) {
 				const typeGroup = typeGroups.find(({ key })=> (key === componentsSlug));
 				if (typeGroup) {

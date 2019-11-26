@@ -109,7 +109,7 @@ export function fetchProducts() {
 				type    : SET_PRODUCTS,
 				payload : response.data.products.map((product)=> {
 					return ({ ...product });
-				})
+				}).sort((i, j)=> ((i.price < j.price) ? -1 : (i.price > j.price) ? 1 : 0))
 			});
 
 		}).catch((error)=> {

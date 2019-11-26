@@ -76,6 +76,7 @@ class StripeForm extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
+		const { submitting } = this.props;
 		const { cardHolder } = this.state;
 		return (<div className="stripe-form">
 			<form onSubmit={this.handleSubmit} method="post" className="full-width">
@@ -88,7 +89,7 @@ class StripeForm extends Component {
 
 				<div className="button-wrapper-col stripe-form-button-wrapper">
 					<button onClick={this.handleCancel}>Cancel</button>
-					<button disabled={(cardHolder.length === 0)} type="submit">Submit</button>
+					<button disabled={(cardHolder.length === 0 || submitting)} type="submit">Submit</button>
 				</div>
 			</form>
 		</div>);
