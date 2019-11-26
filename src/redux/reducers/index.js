@@ -7,6 +7,8 @@ import {
 	APPEND_HOME_ARTBOARDS,
 	SET_ARTBOARD_COMPONENT,
 	SET_ARTBOARD_GROUPS,
+	SET_PLAYGROUND,
+	SET_PRODUCTS,
 	COMPONENT_TYPES_LOADED,
 	EVENT_GROUPS_LOADED,
 	SET_REDIRECT_URI,
@@ -28,6 +30,8 @@ const initialState = {
 	artboardGroups     : [],
 	componentTypes     : null,
 	eventGroups        : [],
+	playground         : null,
+	products           : null,
 	deeplink           : {
 		teamID       : 0,
 		buildID      : 0,
@@ -182,6 +186,16 @@ function rootReducer(state=initialState, action) {
 		case SET_TEAMS:
 			return (Object.assign({}, state, {
 				teams : action.payload.slice(-1)
+			}));
+
+		case SET_PLAYGROUND:
+			return (Object.assign({}, state, {
+				playground : action.payload
+			}));
+
+		case SET_PRODUCTS:
+			return (Object.assign({}, state, {
+				products : action.payload
 			}));
 	}
 }

@@ -96,7 +96,7 @@ class BaseOverlay extends Component {
 		} : null;
 
 
-		return (<div className="base-overlay" onClick={(closeable) ? this.handleClose : null} ref={(element)=> { this.wrapper = element; }}>
+		return (<div className={`base-overlay${(!closeable) ? ' base-overlay-blocking' : ''}`} onClick={(closeable) ? this.handleClose : null} ref={(element)=> { this.wrapper = element; }}>
 			<div className={wrapperClass} style={wrapperStyle} onClick={(event)=> event.stopPropagation()}>
 				{(title) && (<div className="base-overlay-header-wrapper"><Row>
 					<Column flexGrow={1}><div className="base-overlay-title">{title}</div></Column>

@@ -18,6 +18,7 @@ import { reformComment, reformComponent } from './utils/reform';
 import { replacePlayground } from './utils/replace';
 import { Modals, API_ENDPT_URL } from '../../../consts/uris';
 import { decryptObject, decryptText } from './utils/crypto';
+import { setPlayground } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 
@@ -72,7 +73,8 @@ class PlaygroundPage extends Component {
 		// team
 		if (!prevProps.team && team) {
 			if (teamSlug !== team.title) {
-// 				console.log('***** REDIRECT *******', team.title);
+				const url = window.location.pathname.replace(teamSlug, team.title);
+				this.props.history.push(url);
 			}
 		}
 
@@ -81,7 +83,13 @@ class PlaygroundPage extends Component {
 			if (typeGroups && !this.state.typeGroup && componentsSlug) {
 				const typeGroup = typeGroups.find(({ key })=> (key === componentsSlug));
 				if (typeGroup) {
-					this.setState({ typeGroup });
+					this.setState({ typeGroup }, ()=> {
+						const isMember = playground.team.members.some(({ userID })=> (userID === profile.id));
+
+						if (!isMember) {
+							this.props.onModal(Modals.NO_ACCESS);
+						}
+					});
 				}
 			}
 
@@ -314,6 +322,7 @@ class PlaygroundPage extends Component {
 			const { teamSlug, projectSlug, buildID } = this.props.match.params;
 			const { playground } = this.state;
 
+			this.props.setPlayground(playground);
 			this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}`);
 			trackEvent('button', (playground.deviceID === 1) ? 'desktop-toggle' : 'mobile-toggle');
 		});
@@ -333,18 +342,29 @@ class PlaygroundPage extends Component {
 				const { componentID } = this.props.match.params;
 
 				const playgrounds = response.data.playgrounds.map((playground)=> {
-					const { device_id } = playground;
+					const { device_id, team } = playground;
 					delete (playground['device_id']);
 
+
 					return ({ ...playground,
-						html          : decryptText(playground.html),
-						styles        : decryptObject(playground.styles),
-						deviceID      : device_id,
-						components    : playground.components.map((component)=> (reformComponent(component, { selected : (component.id === (componentID << 0)) })))
+						html       : decryptText(playground.html),
+						styles     : decryptObject(playground.styles),
+						deviceID   : device_id,
+						team       : { ...team,
+							members : team.members.map((member)=> {
+								const userID = member.user_id << 0;
+								delete (member.user_id);
+
+								return ({ ...member, userID });
+							})
+						},
+						components : playground.components.map((component)=> (reformComponent(component, { selected : (component.id === (componentID << 0)) })))
 					});
 				});
 
 				const playground = (playgroundID) ? playgrounds.find(({ id })=> (id === playgroundID)) : playgrounds.find(({ deviceID })=> (deviceID === 1));
+				this.props.setPlayground(playground);
+
 				this.setState({ playgrounds, playground,
 					fetching : false
 
@@ -449,8 +469,15 @@ class PlaygroundPage extends Component {
 }
 
 
+const mapDispatchToProps = (dispatch)=> {
+	return ({
+		setPlayground : (payload) => dispatch(setPlayground(payload))
+	});
+};
+
 const mapStateToProps = (state, ownProps)=> {
 	return ({
+		playground     : state.playground,
 		profile        : state.userProfile,
 		componentTypes : state.componentTypes,
 		eventGroups    : state.eventGroups,
@@ -459,4 +486,4 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
-export default connect(mapStateToProps)(PlaygroundPage);
+export default connect(mapStateToProps, mapDispatchToProps)(PlaygroundPage);

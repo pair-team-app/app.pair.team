@@ -21,6 +21,8 @@ import {
 // 	CONVERTED_DEEPLINK,
 	SET_INVITE,
 	SET_TEAMS,
+	SET_PRODUCTS,
+	SET_PLAYGROUND
 } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
@@ -85,6 +87,28 @@ export function fetchEventGroups() {
 					delete (eventGroup['event_types']);
 
 					return ({ ...eventGroup, events });
+				})
+			});
+
+		}).catch((error)=> {
+		});
+	});
+}
+
+export function fetchProducts() {
+	logFormat('fetchProducts()');
+
+	return ((dispatch)=> {
+		axios.post(API_ENDPT_URL, {
+			action  : 'PRODUCTS',
+			payload : null
+		}).then((response) => {
+			console.log('PRODUCTS', response.data);
+
+			dispatch({
+				type    : SET_PRODUCTS,
+				payload : response.data.products.map((product)=> {
+					return ({ ...product });
 				})
 			});
 
@@ -184,10 +208,13 @@ export function fetchTeamLookup(payload) {
 				dispatch({
 					type    : SET_TEAMS,
 					payload : teams.map((team)=> ({ ...team,
-						members : team.members.map((member)=> ({ ...member,
-							id       : member.id << 0,
-							userID   : member.user_id << 0
-						}))
+						members : team.members.map((member)=> {
+							const userID = member.user_id << 0;
+							delete (member['user_id']);
+
+							return ({ ...member, userID,
+								id : member.id << 0
+						});})
 					}))
 				});
 			}
@@ -213,6 +240,20 @@ export function setInvite(payload) {
 	logFormat('setInvite()', payload);
 	return ({ payload,
 		type : SET_INVITE
+	});
+}
+
+export function setProducts(payload) {
+	logFormat('setProducts()', payload);
+	return ({ payload,
+		type : SET_PRODUCTS
+	});
+}
+
+export function setPlayground(payload) {
+	logFormat('setPlayground()', payload);
+	return ({ payload,
+		type : SET_PLAYGROUND
 	});
 }
 

@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import './PlaygroundNavPanel.css';
 
+import { grabFavicon } from 'favicongrab';
+import { connect } from 'react-redux';
 import NavPanelTypeGroup from './NavPanelTypeGroup';
 
 class PlaygroundNavPanel extends Component {
@@ -9,14 +11,15 @@ class PlaygroundNavPanel extends Component {
 		super(props);
 
 		this.state = {
-			typeGroups : []
+			typeGroups : [],
+			teamLogo   : null
 		};
 	}
 
 	componentDidMount() {
 // 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
-		const { params, typeItems } = this.props;
+		const { params, playground, typeItems } = this.props;
 
 		const typeIDs = typeItems.map(({ typeID })=> (typeID));
 		const typeGroups = this.props.typeGroups.filter(({ id })=> (typeIDs.includes(id))).map((typeGroup)=> {
@@ -27,14 +30,31 @@ class PlaygroundNavPanel extends Component {
 				selected : (items.map(({ selected })=> (selected)).includes(true) || typeGroup.key === params.componentsSlug)
 			});
 		});
-		this.setState({ typeGroups });
+		this.setState({ typeGroups }, ()=> {
+// 			grabFavicon(`https://${playground.team.domain}`).then((response)=> {
+			grabFavicon(window.location.href).then((response)=> {
+				console.log('favicon', response);
+
+				const teamLogo = (response.icons) ? response.icons.pop() : null;
+				this.setState({ teamLogo });
+			});
+		});
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
+		const { playground } = this.props;
 		const { componentsSlug } = this.props.params;
 		const { typeGroups } = this.state;
+
+		if (playground !== prevProps.playground) {
+// 			grabFavicon(`https://${playground.team.domain}`).then((response)=> {
+			grabFavicon(window.location.href).then((response)=> {
+				console.log('favicon', response);
+				this.setState({ teamLogo : response.icons.pop()})
+			});
+		}
 
 		if (componentsSlug !== prevProps.params.componentsSlug) {
 			if (typeGroups.map(({ key })=> (key)).includes(componentsSlug)) {
@@ -108,7 +128,7 @@ class PlaygroundNavPanel extends Component {
 
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { team } = this.props;
 		const { typeGroups } = this.state;
@@ -134,4 +154,11 @@ const PlaygroundNavPanelHeader = (props)=> {
 };
 
 
-export default (PlaygroundNavPanel);
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		playground     : state.playground,
+		componentTypes : state.componentTypes
+	});
+};
+
+export default connect(mapStateToProps)(PlaygroundNavPanel);

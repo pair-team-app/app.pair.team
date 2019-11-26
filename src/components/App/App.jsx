@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 import AlertDialog from '../overlays/AlertDialog';
+import BlockingDialog from '../overlays/BlockingDialog';
 import LoginModal from '../overlays/LoginModal';
 import ProfileModal from '../overlays/ProfileModal';
 import PopupNotification from '../overlays/PopupNotification';
@@ -51,8 +52,6 @@ import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 // import websiteLogo from 'website-logo';
 // import getFavicons from 'get-favicons';
 // import hyperquest from 'hyperquest';
-import { grabFavicon } from 'favicongrab';
-
 
 
 
@@ -79,10 +78,11 @@ class App extends Component {
 				github   : false,
 				login    : false,
 				network  : (!Browsers.isOnline()),
+				noAccess : false,
 				profile  : false,
 				register : false,
 				stripe   : false,
-				payload  : null,
+				payload  : null
 
 			}
 		};
@@ -134,9 +134,6 @@ class App extends Component {
 // 		grabFavicon('https://about.theanubhav.com').then((response)=>{console.log('[:][:][:][:][:][:][:][:][:][:]', response)});
 // 		grabFavicon('https://about.theanubhav.com').then((response)=>{console.log('[:][:][:][:][:][:][:][:][:][:]', response)});
 
-
-
-		grabFavicon('https://dev.pairurl.com').then((response)=>{console.log('[:][:][:][:][:][:][:][:][:][:]---', response)});
 
 // 		scrapFavicon('https://akansh.com', {
 // 			urlsOnly: true
@@ -399,24 +396,30 @@ class App extends Component {
 		const { modals } = this.state;
 
 		if (show) {
-			this.setState({ modals : { ...modals, payload,
-				github   : false,
-				login    : (uri === Modals.LOGIN),
-				network  : (uri === Modals.NETWORK),
-				profile  : (uri === Modals.PROFILE),
-				register : (uri === Modals.REGISTER),
-				stripe   : (uri === Modals.STRIPE) }
+			this.setState({ modals :
+				{ ...modals, payload,
+					github   : false,
+					login    : (uri === Modals.LOGIN),
+					network  : (uri === Modals.NETWORK),
+					noAccess : (uri === Modals.NO_ACCESS),
+					profile  : (uri === Modals.PROFILE),
+					register : (uri === Modals.REGISTER),
+					stripe   : (uri === Modals.STRIPE)
+				}
 			});
 
 		} else {
-			this.setState({ modals : { ...modals,
-				github   : (uri === Modals.GITHUB) ? false : modals.github,
-				login    : (uri === Modals.LOGIN) ? false : modals.login,
-				network  : (uri === Modals.NETWORK) ? false : modals.network,
-				profile  : (uri === Modals.PROFILE) ? false : modals.profile,
-				register : (uri === Modals.REGISTER) ? false : modals.register,
-				stripe   : (uri === Modals.STRIPE) ? false : modals.stripe,
-				payload  : null }
+			this.setState({ modals :
+				{ ...modals,
+					github    : (uri === Modals.GITHUB) ? false : modals.github,
+					login     : (uri === Modals.LOGIN) ? false : modals.login,
+					network   : (uri === Modals.NETWORK) ? false : modals.network,
+					noAccess  : (uri === Modals.noAccess) ? false : modals.noAccess,
+					profile   : (uri === Modals.PROFILE) ? false : modals.profile,
+					register  : (uri === Modals.REGISTER) ? false : modals.register,
+					stripe    : (uri === Modals.STRIPE) ? false : modals.stripe,
+					payload   : null
+				}
 			});
 		}
 	};
@@ -430,7 +433,7 @@ class App extends Component {
 	render() {
 //   	console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { profile } = this.props;
+		const { profile, team } = this.props;
   	const { darkTheme, popup, modals } = this.state;
 
   	const wrapperClass = (URIs.firstComponent() !== 'app') ? 'content-wrapper' : 'playground-wrapper';
@@ -491,6 +494,12 @@ class App extends Component {
 				  onComplete={()=> this.onToggleModal(Modals.NETWORK, false)}>
 				  Check your network connection to continue.
 			  </AlertDialog>)}
+
+			  {(modals.noAccess) && (<BlockingDialog
+				  title="Access Denied"
+				  onComplete={()=> this.onToggleModal(Modals.NO_ACCESS, false)}>
+				  Your team {team.title} does not have permission to view this playground!
+			  </BlockingDialog>)}
 
 			  {(popup) && (<PopupNotification
 				  payload={popup}

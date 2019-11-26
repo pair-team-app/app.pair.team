@@ -10,6 +10,10 @@
 	background-color: rgba(0, 0, 0, 0.0);
 }
 
+.base-overlay-blocking {
+	background-color: rgba(0, 0, 0, 0.25);
+}
+
 .base-overlay-content-wrapper {
 	position: fixed;
 	width: fit-content;
