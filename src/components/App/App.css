@@ -10,6 +10,8 @@
 	--disabled-fg-color: 204, 204, 204; /* #cccccc */
 	--invalid-bg-color: 255, 240, 240; /* fff0f0 */
 	--invalid-fg-color: 255, 70, 70; /* #ff4646 */
+	--valid-bg-color: rgb(255, 240, 240); /* fffff0 */
+	--valid-fg-color: rgb(128, 255, 70); /* 80ff78 */
 	--btn-bg-color: 0, 103, 255; /* #0067ff */
 	--btn-fg-color: 255, 255, 255; /* ffffff */
 	--btn-hover-bg-color: 0, 92, 229; /* #005ce5 */

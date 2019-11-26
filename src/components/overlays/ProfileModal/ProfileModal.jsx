@@ -8,10 +8,11 @@ import { withRouter } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 // import ConfirmDialog from '../ConfirmDialog';
+import ProfileForm from '../../forms/ProfileForm/ProfileForm';
+import { POPUP_POSITION_TOPMOST, POPUP_TYPE_OK } from '../PopupNotification';
 import { Modals } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
-import ProfileForm from "../../forms/ProfileForm/ProfileForm";
 
 
 class ProfileModal extends Component {
@@ -51,7 +52,14 @@ class ProfileModal extends Component {
 
 		trackEvent('button', 'update-profile');
 		this.props.updateUserProfile({ id, username, email, password });
-		this.setState({ outro : true, });
+		this.setState({ outro : true, }, ()=> {
+			this.props.onPopup({
+				type     : POPUP_TYPE_OK,
+				position : POPUP_POSITION_TOPMOST,
+				content  : 'Profile updated.',
+				delay    : 333
+			});
+		});
 	};
 
 	render() {

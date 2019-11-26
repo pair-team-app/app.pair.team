@@ -48,6 +48,7 @@ class PlaygroundHeader extends Component {
 			{(popover) && (<SharePopover
 				playground={playground}
 				position={{ x : this.shareLink.offsetLeft, y : this.shareLink.offsetTop }}
+				onPopup={this.props.onPopup}
 				onClose={()=> this.setState({ popover : false })} />)}
 		</div>);
 	}

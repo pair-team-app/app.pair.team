@@ -21,25 +21,24 @@
 .popup-notification-content {
 	width: 100%;
 	height: 100%;
+	border: 1px solid rgba(var(--border-color), 1.0);
 	font-family: "San Francisco Text Medium", sans-serif;
 	font-size: 15px;
 	letter-spacing: -0.5px;
 	text-align: center;
 	vertical-align: middle;
-	color: rgba(var(--site-fg-color), 1.0);
 }
 
 .popup-notification-content-error {
-	/*background-color : rgba(255, 70, 70, 0.5);*/
-	/*color : #ff4646;*/
-
 	background-color: rgba(var(--invalid-bg-color), 0.95);
 	color: rgba(var(--invalid-fg-color), 1.0);
 }
 
 .popup-notification-content-ok {
-	background-color: rgba(var(--site-bg-color), 1.0);
-	color: rgba(var(--site-fg-color), 1.0);
+	background-color: rgba(var(--popup-ok-bg-color), 1.0);
+	/*color: rgba(128, 255, 70, 1.00);*/
+	color: rgba(var(--popup-ok-fg-color), 1.0);
+	/*color: #ff00ff;*/
 }
 
 .popup-notification-content-status {

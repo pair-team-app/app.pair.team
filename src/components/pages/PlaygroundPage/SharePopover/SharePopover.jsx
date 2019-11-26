@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import BasePopover from '../../../overlays/BasePopover';
 import { API_ENDPT_URL } from '../../../../consts/uris';
 import { trackEvent } from '../../../../utils/tracking';
+import { POPUP_POSITION_TOPMOST, POPUP_TYPE_OK } from '../../../overlays/PopupNotification';
 
 
 class SharePopover extends Component {
@@ -24,10 +25,16 @@ class SharePopover extends Component {
 	}
 
 	handleClipboardCopy = ()=> {
-		console.log('%s.handleClipboardCopy()', this.constructor.name);
+		console.log('%s.handleClipboardCopy()', this.constructor.name, this.props);
 
 		trackEvent('button', `copy-share-url`);
-		this.setState({ outro : true });
+// 		this.setState({ outro : true });
+
+		this.props.onPopup({
+			position : POPUP_POSITION_TOPMOST,
+			type     : POPUP_TYPE_OK,
+			content  : `${window.location.href} has been copied to the clipboard!`
+		});
 	};
 
 	handleEmailChange = (event)=> {

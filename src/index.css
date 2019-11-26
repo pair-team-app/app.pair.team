@@ -53,6 +53,9 @@
 	--timestamp-color:  153, 153, 153; /* 999999 */
 	--dialog-title-color: 153, 153, 153; /* 999999 */
 
+	--popup-ok-bg-color: 240, 255, 242; /* f8fff2 */
+	--popup-ok-fg-color: 64, 128, 35; /* 80ff46 */
+
 	--playground-nav-width: 208px;
 	--playground-comments-width: 228px;
 }
