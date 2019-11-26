@@ -42,6 +42,26 @@ import {
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 
+
+// import getFavicons from 'get-website-favicon';
+// import metaScraper from 'meta-scraper';
+// import { downloadIcons } from 'favicon-downloader';
+// import scrapFavicon from 'scrap-favicon';
+// import faviconExists from 'favicon-exist';
+// import websiteLogo from 'website-logo';
+// import getFavicons from 'get-favicons';
+// import hyperquest from 'hyperquest';
+import { grabFavicon } from 'favicongrab';
+
+
+
+
+// const favicos = async(url)=> {
+// 	await downloadIcons(url);
+// };
+
+
+
 class App extends Component {
 	constructor(props) {
 		super(props);
@@ -79,10 +99,75 @@ class App extends Component {
 		trackEvent('site', 'load');
 		trackPageview();
 
+
+// 		console.log('[:][:][:][:][:][:][:][:][:][:]', );
+
+// 		getFavicons('https://www.github.com').then((data)=> {
+// 			console.log('[:][:][:][:][:][:][:][:][:][:]', data);
+// 		});
+
+
+// 		metaScraper('https://github.com')
+// 			.then((data)=> {
+// 				console.log('[:][:][:][:][:][:][:][:][:][:]', data);
+// 				/*
+// 					{
+// 						error: false,
+// 						allTags: [
+// 							{ charset: 'utf-8' },
+// 							{ name: 'referrer', content: 'default', id: 'meta_referrer'},
+// 							{ property: 'og:site_name', content: 'Facebook' }
+// 							...more tags
+// 						],
+// 						pageTitle: 'Facebook - Log In or Sign Up',
+// 						pubDate: false,
+// 						title: 'Facebook - Log In or Sign Up',
+// 						description: 'Create an account or log into Facebook. Connect with friends, family and other people you know. Share photos and videos, send messages and get updates.',
+// 						image: 'https://www.facebook.com/images/fb_icon_325x325.png'
+// 					}
+// 				*/
+// 			});
+
+
+
+// 		grabFavicon('https://about.theanubhav.com').then((response)=>{console.log('[:][:][:][:][:][:][:][:][:][:]', response)});
+// 		grabFavicon('https://about.theanubhav.com').then((response)=>{console.log('[:][:][:][:][:][:][:][:][:][:]', response)});
+// 		grabFavicon('https://about.theanubhav.com').then((response)=>{console.log('[:][:][:][:][:][:][:][:][:][:]', response)});
+
+
+
+		grabFavicon('https://dev.pairurl.com').then((response)=>{console.log('[:][:][:][:][:][:][:][:][:][:]---', response)});
+
+// 		scrapFavicon('https://akansh.com', {
+// 			urlsOnly: true
+// 		}).then(resp => console.log('[:][:][:][:][:][:][:][:][:][:]', resp), err => console.error(err));
+
 // 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (new Array(20)).fill(null).map((i)=> (Strings.randHex())), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
 // 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (new Array(20)).fill(null).map((i)=> (parseInt(Maths.randomHex(), 16))), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
 // 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (URIs.queryString()), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
+// 		faviconExists('https://www.github.com', function (error, icon) {
+// 			console.log('[:][:][:][:][:][:][:][:][:][:]', error, icon);
+// 		});
 
+
+// 		websiteLogo('https://github.com', (error, info)=> {
+// 			console.log('[:][:][:][:][:][:][:][:][:][:]', error || info )
+// 		});
+
+
+// 		const stream = hyperquest('http://www.bbc.com');
+// 		getFavicons(stream).then(icons => {
+// 			// ...
+// 			console.log('[:][:][:][:][:][:][:][:][:][:]', icons);
+// 		});
+
+
+
+
+
+
+
+// 		await favicos('https://theanubhav.com');
 
 		window.addEventListener('mousemove', this.handleMouseMove);
 		window.addEventListener('resize', this.handleResize);
