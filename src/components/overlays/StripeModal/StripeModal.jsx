@@ -110,7 +110,7 @@ class StripeModal extends Component {
 			} else {
 				this.props.onPopup({
 					type     : POPUP_TYPE_OK,
-					content  : `Successfully purchased the monthly subscription "${payload.product.title}" for \$${payload.product.price * payload.team.members.length}. (${payload.team.members.length} users x \$${payload.product.price}) `,
+					content  : `Successfully purchased the monthly subscription "${payload.product.title}" for $${payload.product.price * payload.team.members.length}. (${payload.team.members.length} users x $${payload.product.price}) `,
 					duration : 3 + (1/3)
 				});
 			}

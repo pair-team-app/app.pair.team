@@ -185,7 +185,6 @@ class App extends Component {
 
 // 		console.log('|:|:|:|:|:|:|:|:|:|:|:|', prevProps.location.pathname, pathname);
 		if (prevProps.location.pathname !== pathname) {
-// 			console.log('|:|:|:|:|:|:|:|:|:|:|:|', pathname);
 			trackPageview();
 		}
 
@@ -198,7 +197,7 @@ class App extends Component {
 
 
 		if (team && team !== prevProps.team) {
-			const modal = (team.members.length > 10 && team.type === 'free' || team.members.length > 50 && team.type !== 'enterprise');
+			const modal = ((team.members.length > 10 && team.type === 'free') || (team.members.length > 50 && team.type !== 'enterprise'));
 			if (modal && !prevState.modals.stripe && !modals.stripe) {
 				const product = this.props.products.find(({ threshold })=> (team.members.length >= threshold));
 				this.onToggleModal(Modals.STRIPE, true, { team, product });

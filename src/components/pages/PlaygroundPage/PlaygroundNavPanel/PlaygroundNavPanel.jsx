@@ -32,10 +32,12 @@ class PlaygroundNavPanel extends Component {
 		});
 		this.setState({ typeGroups }, ()=> {
 // 			grabFavicon(`https://${playground.team.domain}`).then((response)=> {
-			grabFavicon(window.location.origin).then((response)=> {
-				console.log('favicon', response);
+			grabFavicon('https://dev.pairurl.com').then((response)=> {
+				const icons = response.icons.filter(({ sizes })=> (sizes)).map((icon)=> ({ ...icon,
+					size : icon.sizes.split('x').pop() << 0
+				})).sort((i, j)=> ((i.size < j.size) ? -1 : (i.size > j.size) ? 1 : 0));
 
-				const teamLogo = (response.icons) ? response.icons.pop() : null;
+				const teamLogo = (icons.length > 0) ? icons.pop().src : null;
 				this.setState({ teamLogo });
 			});
 		});
@@ -49,10 +51,13 @@ class PlaygroundNavPanel extends Component {
 		const { typeGroups } = this.state;
 
 		if (playground !== prevProps.playground) {
-// 			grabFavicon(`https://${playground.team.domain}`).then((response)=> {
-			grabFavicon(window.location.origin).then((response)=> {
-				console.log('favicon', response);
-				this.setState({ teamLogo : response.icons.pop()})
+			grabFavicon('https://dev.pairurl.com').then((response)=> {
+				const icons = response.icons.filter(({ sizes })=> (sizes)).map((icon)=> ({ ...icon,
+					size : icon.sizes.split('x').pop() << 0
+				})).sort((i, j)=> ((i.size < j.size) ? -1 : (i.size > j.size) ? 1 : 0));
+
+				const teamLogo = (icons.length > 0) ? icons.pop().src : null;
+				this.setState({ teamLogo });
 			});
 		}
 
@@ -131,10 +136,14 @@ class PlaygroundNavPanel extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { playground } = this.props;
-		const { typeGroups } = this.state;
+		const { typeGroups, teamLogo } = this.state;
+
+		const team = { ...playground.team,
+			image : (teamLogo || playground.team.image)
+		};
 
 		return (<div className="playground-nav-panel">
-			<PlaygroundNavPanelHeader team={playground.team} />
+			<PlaygroundNavPanelHeader team={team} />
 			<div className="playground-nav-panel-component-type-wrapper">
 				{(typeGroups.map((typeGroup, i)=> (<NavPanelTypeGroup key={i} typeGroup={typeGroup} onTypeGroupClick={this.handleTypeGroupClick} onTypeItemClick={this.handleTypeItemClick} />)))}
 			</div>
