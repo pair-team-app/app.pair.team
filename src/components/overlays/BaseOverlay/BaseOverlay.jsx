@@ -9,9 +9,8 @@ import { Column, Row } from 'simple-flexbox';
 
 import { trackOverlay } from '../../../utils/tracking';
 
-export const OVERLAY_TYPE_AUTO_SCROLL = 'OVERLAY_TYPE_AUTO_SCROLL';
-export const OVERLAY_TYPE_FIXED_SIZE = 'OVERLAY_TYPE_FIXED_SIZE';
-export const OVERLAY_TYPE_PERCENT_SIZE = 'OVERLAY_TYPE_PERCENT_SIZE';
+import { OVERLAY_TYPE_FIXED_SIZE, OVERLAY_TYPE_PERCENT_SIZE } from './';
+
 
 const INTRO_DURATION = (1/8);
 const OUTRO_DURATION = (1/4);
