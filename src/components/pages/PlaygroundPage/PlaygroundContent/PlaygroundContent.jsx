@@ -4,12 +4,14 @@ import './PlaygroundContent.css';
 
 import { ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
+import MasonryLayout from 'react-masonry-layout'
 import { connect } from 'react-redux';
 
 import PlaygroundComment from '../PlaygroundComment';
 import ComponentMenu from './ComponentMenu';
 import { convertStyles, inlineStyles } from '../utils/css';
 import { reformComment } from '../utils/reform';
+
 
 
 class PlaygroundContent extends Component {
@@ -65,14 +67,47 @@ class PlaygroundContent extends Component {
 		const components = (component) ? [component] : (typeGroup) ? playground.components.filter(({ typeID })=> (typeID === typeGroup.id)) : playground.components;
 
 		return (<div className="playground-content" data-cursor={cursor}>
-			<div className="playground-content-components-wrapper">
+			{/*<Packery*/}
+				{/*className={'my-gallery-class'}*/}
+				{/*elementType={'div'}*/}
+				{/*options={{transitionDuration: 0}}*/}
+				{/*disableImagesLoaded={true}*/}
+			{/*>*/}
+				{/*{(components.map((comp, i)=> {*/}
+					{/*const content = inlineStyles(comp.html, comp.styles);*/}
+					{/*const comments = (popover && component.id === comp.id) ? [ ...comp.comments, reformComment({ position,*/}
+						{/*id      : 0,*/}
+						{/*type    : 'add',*/}
+						{/*content : '',*/}
+						{/*author  : profile*/}
+					{/*})] : comp.comments;*/}
+
+					{/*return (<div key={i} className="playground-content-component-wrapper" onClick={(event)=> this.handleContentClick(event, comp)}>*/}
+						{/*<ContextMenuTrigger id="component" disableIfShiftIsPressed={true}>*/}
+							{/*<div className="playground-content-component" data-id={comp.id} style={convertStyles(comp.rootStyles)} dangerouslySetInnerHTML={{ __html : content }} />*/}
+
+							{/*<div className="playground-content-component-comment-wrapper" data-id={comp.id} >*/}
+								{/*{(comments.filter(({ type })=> (type !== 'init')).map((comm, j)=> {*/}
+									{/*return (<PlaygroundComment key={`${i}_${j}`} ind={(comp.comments.length - 1) - j} component={comp} comment={comm} position={position} onMarkerClick={this.props.onMarkerClick} onAddComment={this.props.onAddComment} onDelete={this.props.onDeleteComment} onClose={this.handleComponentPopoverClose} />);*/}
+								{/*}))}*/}
+							{/*</div>*/}
+						{/*</ContextMenuTrigger>*/}
+					{/*</div>);*/}
+				{/*}))}*/}
+			{/*</Packery>*/}
+
+
+			<MasonryLayout
+				id="masonry-layout"
+				infiniteScrollDisabled={true}
+				sizes={[
+					{ columns : 2, gutter : 10 }
+				]}
+				position={false}
+				className="playground-content-masonry-wrapper">
+
 				{(components.map((comp, i)=> {
-// 					console.log('%s.render()', this.constructor.name, i, comp.meta);
-
-// 					const content = '<div></div>';
-// 					const content = comp.html;
 					const content = inlineStyles(comp.html, comp.styles);
-
 					const comments = (popover && component.id === comp.id) ? [ ...comp.comments, reformComment({ position,
 						id      : 0,
 						type    : 'add',
@@ -80,7 +115,21 @@ class PlaygroundContent extends Component {
 						author  : profile
 					})] : comp.comments;
 
+					let height = 100 + ((i % 3) * 100);
+					return (<div key={i}>
+						<div
+							style={{
+								width      : '100px',
+								height     : `${height}px`,
+								lineHeight : `${height}px`,
+								color      : 'white',
+								fontSize   : '32px',
+								display    : 'block',
+								background : 'rgba(0,0,0,0.7)'
+							}}>{i}</div>
+					</div>);
 
+					/*
 					return (<div key={i} className="playground-content-component-wrapper" onClick={(event)=> this.handleContentClick(event, comp)}>
 						<ContextMenuTrigger id="component" disableIfShiftIsPressed={true}>
 							<div className="playground-content-component" data-id={comp.id} style={convertStyles(comp.rootStyles)} dangerouslySetInnerHTML={{ __html : content }} />
@@ -92,8 +141,35 @@ class PlaygroundContent extends Component {
 							</div>
 						</ContextMenuTrigger>
 					</div>);
+					*/
+
 				}))}
-			</div>
+			</MasonryLayout>
+
+
+			{/*<div className="playground-content-components-wrapper">*/}
+				{/*{(components.map((comp, i)=> {*/}
+					{/*const content = inlineStyles(comp.html, comp.styles);*/}
+					{/*const comments = (popover && component.id === comp.id) ? [ ...comp.comments, reformComment({ position,*/}
+						{/*id      : 0,*/}
+						{/*type    : 'add',*/}
+						{/*content : '',*/}
+						{/*author  : profile*/}
+					{/*})] : comp.comments;*/}
+
+					{/*return (<div key={i} className="playground-content-component-wrapper" onClick={(event)=> this.handleContentClick(event, comp)}>*/}
+						{/*<ContextMenuTrigger id="component" disableIfShiftIsPressed={true}>*/}
+							{/*<div className="playground-content-component" data-id={comp.id} style={convertStyles(comp.rootStyles)} dangerouslySetInnerHTML={{ __html : content }} />*/}
+
+							{/*<div className="playground-content-component-comment-wrapper" data-id={comp.id} >*/}
+								{/*{(comments.filter(({ type })=> (type !== 'init')).map((comm, j)=> {*/}
+									{/*return (<PlaygroundComment key={`${i}_${j}`} ind={(comp.comments.length - 1) - j} component={comp} comment={comm} position={position} onMarkerClick={this.props.onMarkerClick} onAddComment={this.props.onAddComment} onDelete={this.props.onDeleteComment} onClose={this.handleComponentPopoverClose} />);*/}
+								{/*}))}*/}
+							{/*</div>*/}
+						{/*</ContextMenuTrigger>*/}
+					{/*</div>);*/}
+				{/*}))}*/}
+			{/*</div>*/}
 
 			{(cursor) && (<CommentPinCursor position={mouse.position} />)}
 			<ComponentMenu menuID="component" component={component} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment}/>

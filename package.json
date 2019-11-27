@@ -34,6 +34,7 @@
         "react-fontawesome": "^1.6.1",
         "react-ga": "^2.5.7",
         "react-live": "^2.1.1",
+        "react-masonry-layout": "^0.4.0",
         "react-onclickoutside": "^6.8.0",
         "react-redux": "^6.0.1",
         "react-router-dom": "^5.0.0",
