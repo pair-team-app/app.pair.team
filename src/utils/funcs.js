@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { Strings, URIs } from 'lang-js-utils';
+import { Strings } from 'lang-js-utils';
 import Octokit from '@octokit/rest';
 import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
