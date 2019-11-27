@@ -52,6 +52,38 @@
 	width: 50%;
 }
 
+
+.base-overlay-loader-wrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: -20px;
+	width: calc(100% + 40px);
+	height: calc(100% + 40px);
+	background-color: rgba(var(--site-bg-color), 0.33);
+}
+
+.base-overlay-loader {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+.base-overlay-loader-spinner {
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin-top: -25px;
+	margin-left: -25px;
+	color: rgba(var(--border-color), 1.0);
+	text-align: center;
+	object-fit: scale-down;
+}
+
+
+
 .base-overlay-header-wrapper {
 	display: table;
 	width: 100%;

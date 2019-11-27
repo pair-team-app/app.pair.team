@@ -33,7 +33,10 @@ class StripeForm extends Component {
 
 	handleCancel = (event)=> {
 // 		console.log('%s.handleCancel()', this.constructor.name, event);
+
+		event.preventDefault();
 		trackEvent('button', 'purchase-cancel');
+
 		this.props.onCancel();
 	};
 

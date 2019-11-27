@@ -386,11 +386,10 @@ class PlaygroundPage extends Component {
 
 	handleStripeModal = ()=> {
 		console.log('%s.handleStripeModal()', this.constructor.name);
-		this.props.onModal(Modals.STRIPE, {
-			price  : 27.99,
-			total  : 50,
-			teamID : this.props.team.id
-		});
+
+		const { team, products } = this.props;
+		const product = [...products].pop();
+		this.props.onModal(Modals.STRIPE, { team, product });
 	};
 
 
@@ -483,7 +482,8 @@ const mapStateToProps = (state, ownProps)=> {
 		profile        : state.userProfile,
 		componentTypes : state.componentTypes,
 		eventGroups    : state.eventGroups,
-		team           : state.teams[0]
+		team           : state.teams[0],
+		products       : state.products
 	});
 };
 

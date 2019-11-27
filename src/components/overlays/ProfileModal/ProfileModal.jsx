@@ -4,6 +4,7 @@ import './ProfileModal.css';
 
 import axios from 'axios/index';
 import { URIs } from 'lang-js-utils';
+import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
@@ -21,9 +22,10 @@ class ProfileModal extends Component {
 		super(props);
 
 		this.state = {
-			outro    : false,
-			outroURI : null,
-			updated  : false
+			outro      : false,
+			outroURI   : null,
+			updated    : false,
+			submitting : false
 		};
 	}
 
@@ -70,36 +72,41 @@ class ProfileModal extends Component {
 	handleDowngradePlan = (event)=> {
 // 		console.log('%s.handleDowngradePlan()', this.constructor.name, event);
 
-		const { profile, team } = this.props;
-		axios.post(API_ENDPT_URL, {
-			action  : 'CANCEL_SUBSCRIPTION',
-			payload : {
-				user_id : profile.id,
-				email   : profile.email,
-				team_id : team.id
-			}
-		}).then((response) => {
-			console.log('CANCEL_SUBSCRIPTION', response.data);
-			const { error } = response.data;
+		this.setState({ submitting : true }, ()=> {
+			const { profile, team } = this.props;
+			axios.post(API_ENDPT_URL, {
+				action  : 'CANCEL_SUBSCRIPTION',
+				payload : {
+					user_id : profile.id,
+					email   : profile.email,
+					team_id : team.id
+				}
+			}).then((response) => {
+				console.log('CANCEL_SUBSCRIPTION', response.data);
+				const { error } = response.data;
 
-			if (error) {
-				this.props.onPopup({
-					type    : POPUP_TYPE_ERROR,
-					content : error.message,
-					delay   : 125
+				this.setState({ submitting : false }, ()=> {
+					if (error) {
+						this.props.onPopup({
+							type    : POPUP_TYPE_ERROR,
+							content : error.message,
+							delay   : 125
+						});
+
+					} else {
+						this.props.onPopup({
+							type     : POPUP_TYPE_OK,
+							content  : 'Successfully canceled your team plan.',
+							duration : 2000
+						});
+
+						this.setState({ updated : true }, ()=> {
+							this.props.fetchTeamLookup({ userID : profile.id });
+						});
+					}
 				});
-
-			} else {
-				this.props.onPopup({
-					type     : POPUP_TYPE_OK,
-					content  : 'Successfully canceled your team plan.',
-					duration : 2.5
-				});
-
-				this.props.fetchTeamLookup({ userID : profile.id });
-			}
-
-		}).catch((error)=> {
+			}).catch((error)=> {
+			});
 		});
 	};
 
@@ -127,7 +134,7 @@ class ProfileModal extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { profile, team } = this.props;
-		const { outro } = this.state;
+		const { outro, submitting } = this.state;
 		return (<BaseOverlay
 			tracking={`profile/${URIs.firstComponent()}`}
 			outro={outro}
@@ -150,6 +157,11 @@ class ProfileModal extends Component {
 						<div onClick={this.handleResetPassword}>Need to reset your password?</div>
 					</div>
 				</div>
+				{(submitting) && (<div className="base-overlay-loader-wrapper">
+					<div className="base-overlay-loader">
+						<FontAwesome name="circle-notch" className="base-overlay-loader-spinner" size="3x" spin />
+					</div>
+				</div>)}
 			</div>
 		</BaseOverlay>);
 	}

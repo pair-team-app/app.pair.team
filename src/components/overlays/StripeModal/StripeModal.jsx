@@ -4,6 +4,7 @@ import './StripeModal.css';
 
 import axios from 'axios';
 import { Strings, URIs } from 'lang-js-utils';
+import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
 import { Elements, StripeProvider } from 'react-stripe-elements';
@@ -24,13 +25,12 @@ const STRIPE_TEST_TOKEN = stripeCreds.test.publish;
 
 class StripeModal extends Component {
 	constructor(props) {
-		console.log('%s.CONSTRUCTOR()', 'StripeModal', props);
+// 		console.log('%s.CONSTRUCTOR()', 'StripeModal', props);
 
 		super(props);
 
 		this.state = {
 			submitting : false,
-			approved   : false,
 			outro      : false,
 			outroURI   : null,
 			purchase   : null,
@@ -43,8 +43,8 @@ class StripeModal extends Component {
 // 		console.log('%s.handleComplete()', this.constructor.name);
 
 		this.setState({ outro : false }, ()=> {
-			const { approved, purchase, outroURI } = this.state;
-			if (approved) {
+			const { purchase, outroURI } = this.state;
+			if (purchase) {
 				this.props.onSubmitted(purchase);
 
 			} else {
@@ -83,46 +83,44 @@ class StripeModal extends Component {
 	handleSubmit = ({ cardHolder, token })=> {
 // 		console.log('%s.handleSubmit()', this.constructor.name, cardHolder, token, this.state);
 
-		const { profile, payload } = this.props;
-		const { productIDs } = this.state;
+		this.setState({ submitting : true }, ()=> {
+			const { profile, payload } = this.props;
+			const { productIDs } = this.state;
 
-		this.setState({ submitting : true });
+			axios.post(API_ENDPT_URL, {
+				action  : 'MAKE_PURCHASE',
+				payload : {
+					user_id     : profile.id,
+					team_id     : payload.team.id,
+					token_id    : token.id,
+					product_ids : productIDs
+				}
+			}).then((response) => {
+				console.log('MAKE_PURCHASE', response.data);
+				const { purchase, error } = response.data;
+				trackEvent('purchase', (error) ? 'error' : 'success');
 
-		axios.post(API_ENDPT_URL, {
-			action  : 'MAKE_PURCHASE',
-			payload : {
-				user_id     : profile.id,
-				team_id     : payload.team.id,
-				token_id    : token.id,
-				product_ids : productIDs
-			}
-		}).then((response) => {
-			console.log('MAKE_PURCHASE', response.data);
-			const { purchase, error } = response.data;
-			trackEvent('purchase', (error) ? 'error' : 'success');
+				if ((purchase.id << 0) === 0) {
+					this.props.onPopup({
+						type    : POPUP_TYPE_ERROR,
+						content : error.code
+					});
 
-			if ((purchase.id << 0) === 0) {
-				this.props.onPopup({
-					type    : POPUP_TYPE_ERROR,
-					content : error.code
+				} else {
+					this.props.onPopup({
+						type     : POPUP_TYPE_OK,
+						content  : `Successfully purchased monthly subscription "${payload.product.title}" for $${payload.product.price * payload.team.members.length}. (${payload.team.members.length} users x $${payload.product.price})`,
+						duration : 3333
+					});
+				}
+
+				this.setState({
+					outro      : true,
+					submitting : false,
+					purchase   : purchase
 				});
-
-			} else {
-				this.props.onPopup({
-					type     : POPUP_TYPE_OK,
-					content  : `Successfully purchased the monthly subscription "${payload.product.title}" for $${payload.product.price * payload.team.members.length}. (${payload.team.members.length} users x $${payload.product.price}) `,
-					duration : 3 + (1/3)
-				});
-			}
-
-			this.setState({
-				submitting : false,
-				approved   : ((purchase.id << 0) > 0),
-				outro      : ((purchase.id << 0) > 0),
-				purchase   : purchase
+			}).catch((error)=> {
 			});
-
-		}).catch((error)=> {
 		});
 	};
 
@@ -161,6 +159,11 @@ class StripeModal extends Component {
 						<NavLink to={Pages.TERMS} onClick={this.handlePage}>Need More details about our Plans?</NavLink>
 					</div>
 				</div>
+				{(submitting) && (<div className="base-overlay-loader-wrapper">
+					<div className="base-overlay-loader">
+						<FontAwesome name="circle-notch" className="base-overlay-loader-spinner" size="3x" spin />
+					</div>
+				</div>)}
 			</div>
 		</BaseOverlay>);
 	}

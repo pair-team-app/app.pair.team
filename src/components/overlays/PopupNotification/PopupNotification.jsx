@@ -39,7 +39,7 @@ class PopupNotification extends Component {
 			duration : ORTHODOX_DURATION
 		}, payload);
 
-		console.log('%s.componentDidMount()', this.constructor.name, { position, top, delay, duration });
+// 		console.log('%s.componentDidMount()', this.constructor.name, { position, top, delay, duration });
 
 		this.timeline = new TimelineMax();
 		this.timeline.addLabel(START_LBL, '0').from(this.wrapper, (INTRO_DURATION * 0.001), {
@@ -64,10 +64,11 @@ class PopupNotification extends Component {
 
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state, this.timeline, this.wrapper);
+// 		console.log('%s.render()', this.constructor.name, this.timeline);
 
-		if (this.wrapper && this.timeline) {
-			this.timeline.seek(0);
-		}
+// 		if (this.wrapper && this.timeline) {
+// 			this.timeline.seek(0);
+// 		}
 
 		const { payload, children } = this.props;
 		const { position, type } = Object.assign({}, {
