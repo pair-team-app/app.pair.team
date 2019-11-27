@@ -384,8 +384,8 @@ class App extends Component {
 		const { modals } = this.state;
 
 		if (show) {
-			this.setState({ modals :
-				{ ...modals, payload,
+			this.setState({
+				modals : { ...modals, payload,
 					github   : false,
 					login    : (uri === Modals.LOGIN),
 					network  : (uri === Modals.NETWORK),
@@ -397,8 +397,8 @@ class App extends Component {
 			});
 
 		} else {
-			this.setState({ modals :
-				{ ...modals,
+			this.setState({
+				modals : { ...modals,
 					github    : (uri === Modals.GITHUB) ? false : modals.github,
 					login     : (uri === Modals.LOGIN) ? false : modals.login,
 					network   : (uri === Modals.NETWORK) ? false : modals.network,
