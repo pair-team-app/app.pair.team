@@ -39,7 +39,7 @@ import {
 	updateMouseCoords,
 	updateUserProfile
 } from '../../redux/actions';
-// import { idsFromPath } from '../../utils/funcs';
+import { getRoutePaths } from '../../utils/funcs';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 
@@ -186,6 +186,7 @@ class App extends Component {
 // 		console.log('|:|:|:|:|:|:|:|:|:|:|:|', prevProps.location.pathname, pathname);
 		if (prevProps.location.pathname !== pathname) {
 			trackPageview();
+			console.log('|:|:|:|:|:|:|:|:|:|:|:|', getRoutePaths(pathname));
 		}
 
 		if (profile) {
@@ -433,8 +434,8 @@ class App extends Component {
 			    <Route exact path={Pages.FEATURES} render={()=> <FeaturesPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
 			    <Route exact path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(comments)?/:commentID([0-9]+)?`} render={(props)=> <PlaygroundPage { ...props } onLogout={this.handleLogout} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
 			    <Route exact path={Pages.PRICING} render={()=> <PricingPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
-			    <Route exact path={`/:page(${Pages.LEGAL.slice(1)}|${Pages.PRIVACY.slice(1)})`} render={()=> <PrivacyPage />} />
-			    <Route exact path={Pages.TERMS} render={()=> <TermsPage />} />
+			    <Route exact path={`/:page(${Pages.LEGAL.slice(1)}|${Pages.PRIVACY.slice(1)})`} component={PrivacyPage} />
+			    <Route exact path={Pages.TERMS} component={TermsPage} />
 
 			    <Route path={Pages.WILDCARD}><Status404Page /></Route>
 		    </Switch>

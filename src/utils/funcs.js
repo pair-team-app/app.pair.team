@@ -5,59 +5,59 @@ import Octokit from '@octokit/rest';
 import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
 
-import { API_ENDPT_URL } from '../consts/uris';
+import { API_ENDPT_URL, Pages } from '../consts/uris';
 
 
-export function getRouteParams(pathname) {
-// 	console.log('_-_-_-_-_', 'getRouteParams()', pathname, '_-_-_-_-_', URIs.firstComponent(pathname));
+export function getRoutePaths(pathname) {
+	console.log('_-_-_-_-_', 'getRoutePaths()', pathname);
 
-	const loginPage = matchPath(pathname, { path : '/login' });
-	const profilePage = matchPath(pathname, { path : '/profile/:userID?' });
-	const uploadPage = matchPath(pathname, { path : '/new/:section?' });
-	const registerPage = matchPath(pathname, { path : '/register/:inviteID?' });
-	const playgroundPage = matchPath(pathname, { path : `/${URIs.firstComponent(pathname)}/:uploadID/:titleSlug` });
-	const homePage = matchPath(pathname, { path : '/:section' });
+	const homePage = matchPath(pathname, { path : Pages.HOME });
+	const featuresPage = matchPath(pathname, { path : Pages.FEATURES });
+	const pricingPage = matchPath(pathname, { path : Pages.PRICING });
+	const privacyPage = matchPath(pathname, { path : Pages.PRIVACY });
+	const termsPage = matchPath(pathname, { path : Pages.TERMS });
+	const playgroundPage = matchPath(pathname, { path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(comments)?/:commentID([0-9]+)?` });
 
-// 	console.log(':::::::::::::', loginPage, profilePage, uploadPage, registerPage, inspectorPage, homePage);
+	console.log(':::::::::::::', { homePage, featuresPage, pricingPage, privacyPage, termsPage, playgroundPage });
 
-	if (loginPage && loginPage.isExact) {
-		return ({ ...loginPage,
-			page : 'LOGIN'
-		});
-	}
-
-	if (profilePage && profilePage.isExact) {
-		return ({ ...profilePage,
-			page   : 'PROFILE',
-			userID : profilePage.params.userID << 0
-		});
-	}
-
-	if (uploadPage && uploadPage.isExact) {
-		return ({ ...uploadPage,
-			page : 'UPLOAD'
-		});
-	}
-
-	if (registerPage && registerPage.isExact) {
-		return ({ ...registerPage,
-			page     : 'REGISTER',
-			inviteID : registerPage.params.inviteID << 0
-		});
-	}
-
-	if (playgroundPage && playgroundPage.isExact) {
-		return ({ ...playgroundPage,
-			page     : 'INSPECTOR',
-			uploadID : playgroundPage.params.uploadID << 0
-		});
-	}
-
-	if (homePage && homePage.isExact) {
-		return ({ ...homePage,
-			page : 'HOME'
-		});
-	}
+// 	if (loginPage && loginPage.isExact) {
+// 		return ({ ...loginPage,
+// 			page : 'LOGIN'
+// 		});
+// 	}
+//
+// 	if (profilePage && profilePage.isExact) {
+// 		return ({ ...profilePage,
+// 			page   : 'PROFILE',
+// 			userID : profilePage.params.userID << 0
+// 		});
+// 	}
+//
+// 	if (uploadPage && uploadPage.isExact) {
+// 		return ({ ...uploadPage,
+// 			page : 'UPLOAD'
+// 		});
+// 	}
+//
+// 	if (registerPage && registerPage.isExact) {
+// 		return ({ ...registerPage,
+// 			page     : 'REGISTER',
+// 			inviteID : registerPage.params.inviteID << 0
+// 		});
+// 	}
+//
+// 	if (playgroundPage && playgroundPage.isExact) {
+// 		return ({ ...playgroundPage,
+// 			page     : 'INSPECTOR',
+// 			uploadID : playgroundPage.params.uploadID << 0
+// 		});
+// 	}
+//
+// 	if (homePage && homePage.isExact) {
+// 		return ({ ...homePage,
+// 			page : 'HOME'
+// 		});
+// 	}
 }
 
 
