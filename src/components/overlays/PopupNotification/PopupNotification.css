@@ -22,9 +22,6 @@
 	width: 100%;
 	height: 100%;
 	border: 1px solid rgba(var(--border-color), 1.0);
-	font-family: "San Francisco Text Medium", sans-serif;
-	font-size: 15px;
-	letter-spacing: -0.5px;
 	text-align: center;
 	vertical-align: middle;
 }
@@ -43,7 +40,6 @@
 
 .popup-notification-content-status {
 	background-color: rgba(var(--site-bg-color), 1.0);
-	font-weight: bold;
 	color: rgba(var(--site-fg-color), 1.0);
 	/*text-shadow:*/
 			/*-1px -1px 0 rgba(26, 27, 29, 0.5),*/

@@ -22,12 +22,39 @@ class ProfileModal extends Component {
 
 		this.state = {
 			outro    : false,
-			outroURI : null
+			outroURI : null,
+			updated  : false
 		};
 	}
 
+	handleCancel = ()=> {
+// 		console.log('%s.handleCancel()', this.constructor.name);
+		trackEvent('button', 'profile-cancel');
+
+		this.setState({
+			outro   : true,
+			updated : false
+		});
+	};
+
 	handleComplete = ()=> {
-		console.log('%s.handleComplete()', this.constructor.name, this.state);
+// 		console.log('%s.handleComplete()', this.constructor.name, this.state);
+
+		const { updated } = this.state;
+		if (updated) {
+			this.props.onPopup({
+				type    : POPUP_TYPE_OK,
+				content : 'Profile updated.',
+				delay   : 333
+			});
+
+		} else {
+			this.props.onPopup({
+				content  : 'No profile changes made.',
+				delay    : 125,
+				duration : 500
+			});
+		}
 
 		this.setState({ outro : false }, ()=> {
 			const { outroURI } = this.state;
@@ -41,7 +68,7 @@ class ProfileModal extends Component {
 	};
 
 	handleDowngradePlan = (event)=> {
-		console.log('%s.handleDowngradePlan()', this.constructor.name, event);
+// 		console.log('%s.handleDowngradePlan()', this.constructor.name, event);
 
 		const { profile, team } = this.props;
 		axios.post(API_ENDPT_URL, {
@@ -70,10 +97,6 @@ class ProfileModal extends Component {
 				});
 
 				this.props.fetchTeamLookup({ userID : profile.id });
-
-// 				this.setState({ outro : true }, ()=> {
-// 					this.props.fetchTeamLookup({ userID : profile.id });
-// 				});
 			}
 
 		}).catch((error)=> {
@@ -89,16 +112,14 @@ class ProfileModal extends Component {
 	};
 
 	handleSubmit = ({ id, username, email, password })=> {
-		console.log('%s.handleSubmit()', this.constructor.name, { id, username, email, password });
+// 		console.log('%s.handleSubmit()', this.constructor.name, { id, username, email, password });
 
 		trackEvent('button', 'update-profile');
 		this.props.updateUserProfile({ id, username, email, password });
-		this.setState({ outro : true }, ()=> {
-			this.props.onPopup({
-				type    : POPUP_TYPE_OK,
-				content : 'Profile updated.',
-				delay   : 333
-			});
+
+		this.setState({
+			outro   : true,
+			updated : true
 		});
 	};
 
@@ -121,6 +142,7 @@ class ProfileModal extends Component {
 					<ProfileForm
 						profile={profile}
 						team={team}
+						onCancel={this.handleCancel}
 						onDowngradePlan={this.handleDowngradePlan}
 						onSubmit={this.handleSubmit}
 					/>

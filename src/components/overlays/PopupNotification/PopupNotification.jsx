@@ -5,12 +5,9 @@ import './PopupNotification.css'
 import { TimelineMax, Back, Circ, Expo } from 'gsap/TweenMax';
 import { Row } from 'simple-flexbox';
 
-export const POPUP_TYPE_ERROR = 'POPUP_TYPE_ERROR';
-export const POPUP_TYPE_OK = 'POPUP_TYPE_OK';
-export const POPUP_TYPE_STATUS = 'POPUP_TYPE_STATUS';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from './';
+import { POPUP_POSITION_EMBEDDED, POPUP_POSITION_TOPMOST } from './';
 
-export const POPUP_POSITION_EMBEDDED = 'POPUP_POSITION_EMBEDDED';
-export const POPUP_POSITION_TOPMOST = 'POPUP_POSITION_TOPMOST';
 
 const START_LBL = 'START';
 const END_LBL = 'END';
@@ -75,7 +72,7 @@ class PopupNotification extends Component {
 		const { payload, children } = this.props;
 		const { position, type } = Object.assign({}, {
 			position : POPUP_POSITION_TOPMOST,
-			type     : POPUP_TYPE_OK
+			type     : POPUP_TYPE_STATUS
 		}, payload);
 
 		const offset = Object.assign({}, {
