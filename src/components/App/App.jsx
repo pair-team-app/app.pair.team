@@ -107,11 +107,9 @@ class App extends Component {
 			console.log('|:|:|:|:|:|:|:|:|:|:|:|', getRoutePaths(pathname));
 		}
 
-		if (profile) {
-			if (!prevProps.profile) {
-				this.onToggleModal(Modals.LOGIN, false);
-				this.props.fetchTeamLookup({ userID : profile.id });
-			}
+		if (profile && !prevProps.profile) {
+			this.onToggleModal(Modals.LOGIN, false);
+			this.props.fetchTeamLookup({ userID : profile.id });
 		}
 
 
@@ -263,10 +261,10 @@ class App extends Component {
 // 		console.log('%s.onAuthInterval()', this.constructor.name);
 
 		if (!this.githubWindow || this.githubWindow.closed || this.githubWindow.closed === undefined) {
-
 			if (this.authInterval) {
 				clearInterval(this.authInterval);
 			}
+
 			if (this.githubWindow) {
 				this.githubWindow.close();
 			}

@@ -9,7 +9,7 @@ import { API_ENDPT_URL, Pages } from '../consts/uris';
 
 
 export function getRoutePaths(pathname) {
-	console.log('_-_-_-_-_', 'getRoutePaths()', pathname);
+// 	console.log('_-_-_-_-_', 'getRoutePaths()', pathname);
 
 	const homePage = matchPath(pathname, { path : Pages.HOME });
 	const featuresPage = matchPath(pathname, { path : Pages.FEATURES });
@@ -18,46 +18,31 @@ export function getRoutePaths(pathname) {
 	const termsPage = matchPath(pathname, { path : Pages.TERMS });
 	const playgroundPage = matchPath(pathname, { path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(comments)?/:commentID([0-9]+)?` });
 
-	console.log(':::::::::::::', { homePage, featuresPage, pricingPage, privacyPage, termsPage, playgroundPage });
+	console.log(':::::::::::::', 'getRoutePaths', pathname, { homePage, featuresPage, pricingPage, privacyPage, termsPage, playgroundPage });
 
-// 	if (loginPage && loginPage.isExact) {
-// 		return ({ ...loginPage,
-// 			page : 'LOGIN'
-// 		});
-// 	}
-//
-// 	if (profilePage && profilePage.isExact) {
-// 		return ({ ...profilePage,
-// 			page   : 'PROFILE',
-// 			userID : profilePage.params.userID << 0
-// 		});
-// 	}
-//
-// 	if (uploadPage && uploadPage.isExact) {
-// 		return ({ ...uploadPage,
-// 			page : 'UPLOAD'
-// 		});
-// 	}
-//
-// 	if (registerPage && registerPage.isExact) {
-// 		return ({ ...registerPage,
-// 			page     : 'REGISTER',
-// 			inviteID : registerPage.params.inviteID << 0
-// 		});
-// 	}
-//
-// 	if (playgroundPage && playgroundPage.isExact) {
-// 		return ({ ...playgroundPage,
-// 			page     : 'INSPECTOR',
-// 			uploadID : playgroundPage.params.uploadID << 0
-// 		});
-// 	}
-//
-// 	if (homePage && homePage.isExact) {
-// 		return ({ ...homePage,
-// 			page : 'HOME'
-// 		});
-// 	}
+	if (homePage && homePage.isExact) {
+		return (homePage);
+	}
+
+	if (featuresPage && featuresPage.isExact) {
+		return (featuresPage);
+	}
+
+	if (pricingPage && pricingPage.isExact) {
+		return (pricingPage);
+	}
+
+	if (privacyPage && privacyPage.isExact) {
+		return (privacyPage);
+	}
+
+	if (termsPage && termsPage.isExact) {
+		return (termsPage);
+	}
+
+	if (playgroundPage && playgroundPage.isExact) {
+		return (playgroundPage);
+	}
 }
 
 
@@ -106,20 +91,6 @@ export function editGist(token, gistID, filename, contents, description, visible
 			callback(result.data);
 		}
 	});
-}
-
-export function idsFromPath() {
-	const { pathname } = window.location;
-	const inspectorPath = /\/(?:specs|styles|parts|edit)\/(\d+)\/.+$/i;
-
-	const navIDs = {
-		uploadID   : ((inspectorPath.test(pathname)) ? pathname.match(inspectorPath)[1] : 0) << 0,
-		pageID     : 0 << 0,
-		artboardID : 0 << 0,
-		sliceID    : 0 << 0
-	};
-
-	return (navIDs);
 }
 
 export function isUserLoggedIn(confirmed=true) {
