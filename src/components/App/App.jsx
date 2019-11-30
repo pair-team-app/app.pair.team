@@ -65,7 +65,6 @@ class App extends Component {
 				register : false,
 				stripe   : false,
 				payload  : null
-
 			}
 		};
 

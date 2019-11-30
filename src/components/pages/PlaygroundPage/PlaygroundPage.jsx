@@ -77,6 +77,11 @@ class PlaygroundPage extends Component {
 
 		// refresh typegroups
 		if (!prevState.playground && playground) {
+			const isMember = playground.team.members.some(({ userID })=> (userID === profile.id));
+			if (!isMember) {
+				this.props.onModal(Modals.NO_ACCESS);
+			}
+
 			if (teamSlug !== playground.team.title) {
 				const url = window.location.pathname.replace(teamSlug, playground.team.title);
 				this.props.history.push(url);
@@ -86,11 +91,6 @@ class PlaygroundPage extends Component {
 				const typeGroup = typeGroups.find(({ key })=> (key === componentsSlug));
 				if (typeGroup) {
 					this.setState({ typeGroup }, ()=> {
-						const isMember = playground.team.members.some(({ userID })=> (userID === profile.id));
-
-						if (!isMember) {
-							this.props.onModal(Modals.NO_ACCESS);
-						}
 					});
 				}
 			}
