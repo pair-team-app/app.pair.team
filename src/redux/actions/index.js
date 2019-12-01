@@ -22,7 +22,10 @@ import {
 	SET_INVITE,
 	SET_TEAMS,
 	SET_PRODUCTS,
-	SET_PLAYGROUND
+	SET_PLAYGROUND,
+	SET_TYPE_GROUP,
+	SET_COMPONENT,
+	SET_COMMENT
 } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
@@ -254,6 +257,27 @@ export function setPlayground(payload) {
 	logFormat('setPlayground()', payload);
 	return ({ payload,
 		type : SET_PLAYGROUND
+	});
+}
+
+export function setTypeGroup(payload) {
+	logFormat('setTypeGroup()', payload);
+	return ({ payload,
+		type : SET_TYPE_GROUP
+	});
+}
+
+export function setComponent(payload) {
+	logFormat('setComponent()', payload);
+	return ({ payload,
+		type : SET_COMPONENT
+	});
+}
+
+export function setComment(payload) {
+	logFormat('setComment()', payload);
+	return ({ payload,
+		type : SET_COMMENT
 	});
 }
 

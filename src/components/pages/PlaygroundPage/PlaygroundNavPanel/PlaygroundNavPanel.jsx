@@ -17,19 +17,23 @@ class PlaygroundNavPanel extends Component {
 	}
 
 	componentDidMount() {
-// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
-		const { params, playground, typeItems } = this.props;
 
-		const typeIDs = typeItems.map(({ typeID })=> (typeID));
-		const typeGroups = this.props.typeGroups.filter(({ id })=> (typeIDs.includes(id))).map((typeGroup)=> {
-			const items = this.props.typeItems.filter(({ typeID })=> (typeID === typeGroup.id));
+		const { componentTypes, playground, component } = this.props;
+		const typeIDs = playground.components.map(({ typeID })=> (typeID));
+
+		const typeGroups = componentTypes.filter(({ id })=> (typeIDs.includes(id))).map((typeGroup)=> {
+			const items = playground.components.filter(({ typeID })=> (typeID === typeGroup.id)).map((item)=> ({ ...item,
+				selected : (component && item.id === component.id)
+			}));
 
 			return ({ ...typeGroup, items,
-				expanded : (items.map(({ selected })=> (selected)).includes(true) || typeGroup.key === params.componentsSlug),
-				selected : (items.map(({ selected })=> (selected)).includes(true) || typeGroup.key === params.componentsSlug)
+				expanded : (this.props.typeGroup && (typeGroup.id === this.props.typeGroup.id || items.map(({ selected })=> (selected)).includes(true))),
+				selected : (this.props.typeGroup && (typeGroup.id === this.props.typeGroup.id || items.map(({ selected })=> (selected)).includes(true)))
 			});
 		});
+
 		this.setState({ typeGroups }, ()=> {
 // 			grabFavicon(`https://${playground.team.domain}`).then((response)=> {
 			grabFavicon('https://dev.pairurl.com').then((response)=> {
@@ -41,94 +45,155 @@ class PlaygroundNavPanel extends Component {
 				this.setState({ teamLogo });
 			});
 		});
+
+
+
+
+/*
+		const { params, playground } = this.props;
+
+		const typeIDs = playground.components.map(({ typeID })=> (typeID));
+		const typeGroups = this.props.typeGroups.filter(({ id })=> (typeIDs.includes(id))).map((typeGroup)=> {
+			const items = playground.components.filter(({ typeID })=> (typeID === typeGroup.id));
+
+			return ({ ...typeGroup, items,
+				expanded : (items.map(({ selected })=> (selected)).includes(true) || typeGroup.key === params.componentsSlug),
+				selected : (items.map(({ selected })=> (selected)).includes(true) || typeGroup.key === params.componentsSlug)
+			});
+		});
+
+		this.setState({ typeGroups }, ()=> {
+// 			grabFavicon(`https://${playground.team.domain}`).then((response)=> {
+			grabFavicon('https://dev.pairurl.com').then((response)=> {
+				const icons = (response.icons) ? response.icons.filter(({ sizes })=> (sizes)).map((icon)=> ({ ...icon,
+					size : icon.sizes.split('x').pop() << 0
+				})).sort((i, j)=> ((i.size < j.size) ? -1 : (i.size > j.size) ? 1 : 0)) : [];
+
+				const teamLogo = (icons.length > 0) ? icons.pop().src : null;
+				this.setState({ teamLogo });
+			});
+		});
+		*/
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
-		const { playground } = this.props;
-		const { componentsSlug } = this.props.params;
-		const { typeGroups } = this.state;
-
-		if (playground !== prevProps.playground) {
-			grabFavicon('https://dev.pairurl.com').then((response)=> {
-				const icons = response.icons.filter(({ sizes })=> (sizes)).map((icon)=> ({ ...icon,
-					size : icon.sizes.split('x').pop() << 0
-				})).sort((i, j)=> ((i.size < j.size) ? -1 : (i.size > j.size) ? 1 : 0));
-
-				const teamLogo = (icons.length > 0) ? icons.pop().src : null;
-				this.setState({ teamLogo });
-			});
-		}
-
-		if (componentsSlug !== prevProps.params.componentsSlug) {
-			if (typeGroups.map(({ key })=> (key)).includes(componentsSlug)) {
-				const typeGroups = this.state.typeGroups.map((typeGroup)=> {
-					typeGroup.expanded = (typeGroup.key === componentsSlug);
-					typeGroup.selected = (typeGroup.key === componentsSlug);
-
-					return (typeGroup);
-				});
-
-				this.setState({ typeGroups });
-			}
-		}
-
 		const { component } = this.props;
-		if (component && component !== prevProps.component) {
+		if (this.props.typeGroup && this.props.typeGroup !== prevProps.typeGroup) {
 			const typeGroups = this.state.typeGroups.map((typeGroup)=> {
-				const items = typeGroup.items.map((typeItem)=> ((typeItem.id !== component.id) ? { ...typeItem,
-					selected : false
-				} : component));
+				const items = typeGroup.items.map((item)=> ({ ...item,
+					selected : (component && item.id === component.id)
+				}));
 
-// 				console.log('items', typeGroup, items);
 				return ({ ...typeGroup, items,
-					expanded : items.map(({ selected })=> (selected)).includes(true),
-					selected : items.map(({ selected })=> (selected)).includes(true)
+					expanded : (typeGroup.id === this.props.typeGroup.id),
+					selected : (typeGroup.id === this.props.typeGroup.id)
 				});
 			});
 
 			this.setState({ typeGroups });
 		}
+
+		if (component && component !== prevProps.component) {
+			const typeGroups = this.state.typeGroups.map((typeGroup)=> {
+				const items = typeGroup.items.map((item)=> ({ ...item,
+					selected : (component && item.id === component.id)
+				}));
+
+				return ({ ...typeGroup, items,
+					expanded : (typeGroup.id === this.props.typeGroup.id),
+					selected : (typeGroup.id === this.props.typeGroup.id)
+				});
+			});
+
+			this.setState({ typeGroups });
+		}
+
+
+// 		const { playground } = this.props;
+// 		const { componentsSlug } = this.props.params;
+// 		const { typeGroups } = this.state;
+//
+// 		if (playground !== prevProps.playground) {
+// 			grabFavicon('https://dev.pairurl.com').then((response)=> {
+// 				const icons = response.icons.filter(({ sizes })=> (sizes)).map((icon)=> ({ ...icon,
+// 					size : icon.sizes.split('x').pop() << 0
+// 				})).sort((i, j)=> ((i.size < j.size) ? -1 : (i.size > j.size) ? 1 : 0));
+//
+// 				const teamLogo = (icons.length > 0) ? icons.pop().src : null;
+// 				this.setState({ teamLogo });
+// 			});
+// 		}
+//
+// 		if (componentsSlug !== prevProps.params.componentsSlug) {
+// 			if (typeGroups.map(({ key })=> (key)).includes(componentsSlug)) {
+// 				const typeGroups = this.state.typeGroups.map((typeGroup)=> {
+// 					typeGroup.expanded = (typeGroup.key === componentsSlug);
+// 					typeGroup.selected = (typeGroup.key === componentsSlug);
+//
+// 					return (typeGroup);
+// 				});
+//
+// 				this.setState({ typeGroups });
+// 			}
+// 		}
+//
+// 		const { component } = this.props;
+// 		if (component && component !== prevProps.component) {
+// 			const typeGroups = this.state.typeGroups.map((typeGroup)=> {
+// 				const items = typeGroup.items.map((typeItem)=> ((typeItem.id !== component.id) ? { ...typeItem,
+// 					selected : false
+// 				} : component));
+//
+// // 				console.log('items', typeGroup, items);
+// 				return ({ ...typeGroup, items,
+// 					expanded : items.map(({ selected })=> (selected)).includes(true),
+// 					selected : items.map(({ selected })=> (selected)).includes(true)
+// 				});
+// 			});
+//
+// 			this.setState({ typeGroups });
+// 		}
 	};
 
 	handleTypeGroupClick = (typeGroup)=> {
 // 		console.log('%s.handleTypeGroupClick()', this.constructor.name, typeGroup);
 
-		const { typeGroups } = this.state;
-		this.setState({
-			typeGroups : typeGroups.map((grp)=> ({ ...grp,
-				expanded : (grp.id === typeGroup.id),
-				selected : (grp.id === typeGroup.id),
-				items    : grp.items.map((item) => ({
-					...item,
-					selected : false
-				}))
-			}))
-		}, ()=> {
+// 		const { typeGroups } = this.state;
+// 		this.setState({
+// 			typeGroups : typeGroups.map((grp)=> ({ ...grp,
+// 				expanded : (grp.id === typeGroup.id),
+// 				selected : (grp.id === typeGroup.id),
+// 				items    : grp.items.map((item) => ({
+// 					...item,
+// 					selected : false
+// 				}))
+// 			}))
+// 		}, ()=> {
 			this.props.onTypeGroupClick(typeGroup);
-		});
+// 		});
 	};
 
 	handleTypeItemClick = (typeGroup, typeItem)=> {
 // 		console.log('%s.handleTypeItemClick()', this.constructor.name, typeGroup, typeItem);
 
-		typeGroup.expanded = true;
-		typeGroup.selected = true;
-		typeItem.selected = true;
-
-		const { typeGroups } = this.state;
-		this.setState({
-			typeGroups : typeGroups.map((grp) => ({ ...grp,
-				expanded : (grp.id === typeGroup.id),
-				selected : (grp.id === typeGroup.id),
-				items    : grp.items.map((item) => ({ ...item,
-					selected : (item.id === typeItem.id)
-				}))
-			}))
-		}, ()=> {
+// 		typeGroup.expanded = true;
+// 		typeGroup.selected = true;
+// 		typeItem.selected = true;
+//
+// 		const { typeGroups } = this.state;
+// 		this.setState({
+// 			typeGroups : typeGroups.map((grp) => ({ ...grp,
+// 				expanded : (grp.id === typeGroup.id),
+// 				selected : (grp.id === typeGroup.id),
+// 				items    : grp.items.map((item) => ({ ...item,
+// 					selected : (item.id === typeItem.id)
+// 				}))
+// 			}))
+// 		}, ()=> {
 			this.props.onTypeItemClick(typeGroup, typeItem);
-		});
+// 		});
 	};
 
 
@@ -165,9 +230,13 @@ const PlaygroundNavPanelHeader = (props)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
+		componentTypes : state.componentTypes,
+		team           : state.teams[0],
 		playground     : state.playground,
-		componentTypes : state.componentTypes
+		typeGroup      : state.typeGroup,
+		component      : state.component
 	});
 };
+
 
 export default connect(mapStateToProps)(PlaygroundNavPanel);

@@ -39,7 +39,7 @@ import {
 	updateMouseCoords,
 	updateUserProfile
 } from '../../redux/actions';
-import { getRoutePaths } from '../../utils/funcs';
+// import { getRoutePaths } from '../../utils/funcs';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 
@@ -103,7 +103,7 @@ class App extends Component {
 // 		console.log('|:|:|:|:|:|:|:|:|:|:|:|', prevProps.location.pathname, pathname);
 		if (prevProps.location.pathname !== pathname) {
 			trackPageview();
-			console.log('|:|:|:|:|:|:|:|:|:|:|:|', getRoutePaths(pathname));
+// 			console.log('|:|:|:|:|:|:|:|:|:|:|:|', getRoutePaths(pathname));
 		}
 
 		if (profile && !prevProps.profile) {

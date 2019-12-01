@@ -3,22 +3,24 @@ import React, { Component } from 'react';
 import './PlaygroundPage.css';
 
 import axios from 'axios';
+import { Strings } from 'lang-js-utils';
 import { connect } from 'react-redux';
 
 import BasePage from '../BasePage';
-import PlaygroundAccessibilty from './PlaygroundAccessibility';
+import PlaygroundAccessibility from './PlaygroundAccessibility';
 import PlaygroundCommentsPanel from './PlaygroundCommentsPanel';
 import PlaygroundContent from './PlaygroundContent';
 import PlaygroundHeader from './PlaygroundHeader';
 import { SettingsMenuItemTypes } from './PlaygroundHeader/UserSettings';
 import PlaygroundFooter from './PlaygroundFooter';
 import PlaygroundNavPanel from './PlaygroundNavPanel';
-import { commentByID, componentByID, componentFromComment, typeGroupByComponent } from './utils/lookup';
+// import { commentByID, componentByID, componentFromComment, typeGroupByComponent } from './utils/lookup';
+import { commentByID, componentByID, componentFromComment } from './utils/lookup';
 import { reformComment, reformComponent } from './utils/reform';
-import { replacePlayground } from './utils/replace';
+// import { replacePlayground } from './utils/replace';
 import { Modals, API_ENDPT_URL } from '../../../consts/uris';
 import { decryptObject, decryptText } from './utils/crypto';
-import { setPlayground } from '../../../redux/actions';
+import { setPlayground, setTypeGroup, setComponent, setComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 
@@ -28,8 +30,8 @@ class PlaygroundPage extends Component {
 
 		this.state = {
 			typeGroups    : null,
-			typeGroup     : null,
-			playgrounds   : null,
+// 			typeGroup     : null,
+			playgrounds   : [],
 			playground    : null,
 			component     : null,
 			comment       : null,
@@ -50,7 +52,7 @@ class PlaygroundPage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
-		const { profile, team, componentTypes, match } = this.props;
+		const { profile, componentTypes, match } = this.props;
 		const { typeGroups, playground, fetching } = this.state;
 
 		const { teamSlug, projectSlug, buildID, playgroundID, componentsSlug, componentID, commentID } = match.params;
@@ -70,56 +72,110 @@ class PlaygroundPage extends Component {
 			}
 		}
 
-		// team
-		if (!prevProps.team && team) {
 
-		}
 
-		// refresh typegroups
+
+		// playground first load
 		if (!prevState.playground && playground) {
+			let typeGroup = null;
+			let component = null;
+			let comment = null;
+
 			const isMember = playground.team.members.some(({ userID })=> (userID === profile.id));
 			if (!isMember) {
 				this.props.onModal(Modals.NO_ACCESS);
 			}
 
+			let url = window.location.pathname;
 			if (teamSlug !== playground.team.title) {
-				const url = window.location.pathname.replace(teamSlug, playground.team.title);
-				this.props.history.push(url);
+				url = window.location.pathname.replace(teamSlug, playground.team.title);
+
 			}
 
-			if (typeGroups && !this.state.typeGroup && componentsSlug) {
-				const typeGroup = typeGroups.find(({ key })=> (key === componentsSlug));
+			if (projectSlug !== Strings.slugifyURI(playground.title)) {
+				url = url.replace(projectSlug, Strings.slugifyURI(playground.title));
+			}
+
+			if (playgroundID << 0 !== playground.id) {
+				url = url.replace(playgroundID, playground.id);
+			}
+
+			if (componentsSlug && typeGroups) {
+				typeGroup = typeGroups.find(({ key })=> (key === componentsSlug));
+
 				if (typeGroup) {
-					this.setState({ typeGroup }, ()=> {
-					});
+					typeGroup.expanded = true;
+					typeGroup.selected = true;
+
+					if (componentsSlug !== typeGroup.key) {
+						url = url.replace(componentsSlug, typeGroup.key);
+					}
+
+					if (componentID) {
+						component = componentByID(playground.components, componentID);
+
+						if (component) {
+							component.selected = true;
+							if (componentID << 0 !== component.id) {
+								url = url.replace(componentID, component.id);
+							}
+
+							if (commentID) {
+								comment = commentByID(component.comments, commentID);
+
+								if (comment) {
+									comment.selected = true;
+									if (commentID << 0 !== comment.id) {
+										url = url.replace(commentID, comment.id);
+									}
+
+								} else {
+									url = url.replace(new RegExp(`/comments.*$`), '/comments');
+								}
+							}
+
+						} else {
+							url = url.replace(new RegExp(`/${componentID}.*$`), '');
+						}
+					}
+
+				} else {
+					typeGroup = typeGroups.find(({ key })=> (key === 'views'));
+					url = url.replace(new RegExp(`/${componentsSlug}.*$`, 'g'), '/views');
+				}
+
+				this.props.setTypeGroup(typeGroup);
+				this.props.setComponent(component);
+				this.props.setComment(comment);
+
+				console.log(':::::::::', window.location.pathname, url);
+				if (window.location.pathname !== url) {
+					this.props.history.push(url);
 				}
 			}
 
+		}
 
-			if (componentID) {
-				if (prevProps.componentID !== componentID) {
-					const component = componentByID(playground.components, componentID);
 
-					if (component) {
-						this.setState({ component }, () => {
-							if (commentID) {
-								if (prevProps.commentID !== commentID) {
-									const comment = commentByID(component.comments, commentID);
+		// switching out
+		if (playground && prevState.playground) {
+			const { typeGroup, component, comment } = this.props;
 
-									if (comment) {
-										this.setState({ comment });
-									}
-								}
 
-							} else {
-								this.setState({ comment : null });
-							}
-						});
-					}
-				}
+			if (typeGroup && typeGroup !== prevProps.typeGroup) {
+				this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`);
+			}
 
-			} else {
-				this.setState({ component : null });
+			if (component && component !== prevProps.component) {
+				this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}`);
+			}
+
+			if (comment && comment !== prevProps.comment) {
+				this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}/comments/${comment.id}`);
+			}
+
+			if (component && !comment && prevProps.comment) {
+				this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}`);
 			}
 		}
 	}
@@ -137,96 +193,136 @@ class PlaygroundPage extends Component {
 			}
 		}).then((response) => {
 			console.log('ADD_COMMENT', response.data);
-			const { comment } = response.data;
 
-			const { playground } = this.state;
-			this.setState({
-				playground : { ...playground,
-					components : playground.components.map((component)=> ({ ...component,
-						comments : ((component.id === itemID) ? [ ...component.comments, reformComment(comment)] : component.comments).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0))
-					}))
-				}
-			}, ()=> {
-				const { playgrounds, playground } = this.state;
-				const component = componentByID(playground.components, itemID);
+			const comment = reformComment(response.data.comment);
+			const component = { ...this.props.component,
+				comments : ((this.props.component.id === itemID) ? [ ...this.props.component.comments, comment] : this.props.component.comments).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0))
+			};
+			const playground = { ...this.props.playground,
+				components : this.props.playground.components.map((item)=> ((item.id === itemID) ? component : item))
+			};
 
-				this.setState({ component,
-					playgrounds : replacePlayground(playgrounds, playground),
-					comment     : reformComment(comment)
-				}, ()=> {
-					const { teamSlug, projectSlug, buildID } = this.props.match.params;
-					const { typeGroup, component } = this.state;
+			this.props.setPlayground(playground);
+			this.props.setComponent(component);
+			this.props.setComment(comment);
 
-					this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}/comments/${comment.id}`);
-				});
-			});
+
+// 			const { playground } = this.state;
+// 			this.setState({
+// 				playground : { ...playground,
+// 					components : playground.components.map((component)=> ({ ...component,
+// 						comments : ((component.id === itemID) ? [ ...component.comments, reformComment(comment)] : component.comments).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0))
+// 					}))
+// 				}
+// 			}, ()=> {
+// 				const { playgrounds, playground } = this.state;
+// 				const component = componentByID(playground.components, itemID);
+//
+// 				this.setState({ component,
+// 					playgrounds : replacePlayground(playgrounds, playground),
+// 					comment     : reformComment(comment)
+// 				}, ()=> {
+// 					const { teamSlug, projectSlug, buildID } = this.props.match.params;
+// 					const { typeGroup, component } = this.props;
+//
+// 					this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}/comments/${comment.id}`);
+// 				});
+// 			});
 
 		}).catch((error)=> {
 		});
 	};
 
 	handleCommentMarkerClick = ({ comment })=> {
-// 		console.log('%s.handleCommentMarkerClick()', this.constructor.name, { comment });
+		console.log('%s.handleCommentMarkerClick()', this.constructor.name, { comment });
 
-		if (!this.state.component || !this.state.comment) {
-			const { typeGroups, playground } = this.state;
-			const component = componentFromComment(playground.components, comment);
+		const { playground } = this.props;
+		const component = componentFromComment(playground.components, comment);
 
-			this.setState({ component, comment }, ()=> {
-				const { teamSlug, projectSlug, buildID } = this.props.match.params;
-				const typeGroup = (this.state.typeGroup || typeGroupByComponent(typeGroups, component));
-				this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}/comments/${comment.id}`);
-			});
+		if (component) {
+			this.props.setComponent(component);
+			this.props.setComment(comment);
 		}
+
+// 		if (!this.state.component || !this.state.comment) {
+// 			const { typeGroups, playground } = this.state;
+// 			const component = componentFromComment(playground.components, comment);
+//
+// 			this.setState({ component, comment }, ()=> {
+// 				const { teamSlug, projectSlug, buildID } = this.props.match.params;
+// 				const typeGroup = (this.state.typeGroup || typeGroupByComponent(typeGroups, component));
+// 				this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}/comments/${comment.id}`);
+// 			});
+// 		}
 	};
 
 	handleComponentClick = ({ component })=> {
 		console.log('%s.handleComponentClick()', this.constructor.name, { component });
 
-		const { teamSlug, projectSlug, buildID } = this.props.match.params;
-		const { typeGroups, playground } = this.state;
-
-		const typeGroup = (this.state.typeGroup || typeGroupByComponent(typeGroups, component));
-
-// 		console.log('%s.handleComponentClick()', this.constructor.name, playground, typeGroup, component);
-		this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(this.state.component && component.id === this.state.component.id && window.location.href.includes('/comments')) ? '/comments' : ''}`);
+// 		const { teamSlug, projectSlug, buildID } = this.props.match.params;
+// 		const { typeGroups, playground } = this.state;
 
 		component.selected = true;
-		this.setState ({ component,
-			cursor : false
-		});
+		this.props.setComponent(component);
+		this.setState({ cursor : false });
+
+// 		const typeGroup = (this.state.typeGroup || typeGroupByComponent(typeGroups, component));
+// 		this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(this.state.component && component.id === this.state.component.id && window.location.href.includes('/comments')) ? '/comments' : ''}`);
+//
+// 		component.selected = true;
+// 		this.setState ({ component,
+// 			cursor : false
+// 		});
 	};
 
 	handleComponentMenuShow = ({ componentID })=> {
 // 		console.log('%s.handleComponentMenuShow()', this.constructor.name, { componentID });
 
-		const { components } = this.state.playground;
-		const component = components.find(({ id })=> (id === componentID));
-		this.setState ({ component });
+		const { playground } = this.props;
+		const component = playground.components.find(({ id })=> (id === componentID));
+
+		if (component) {
+			this.props.setComponent(component);
+			this.props.setComment(null);
+		}
+
+// 		const { components } = this.state.playground;
+// 		const component = components.find(({ id })=> (id === componentID));
+// 		this.setState ({ component });
 	};
 
-	handleCompomentMenuItem = ({ type, itemID })=> {
-// 		console.log('%s.handleCompomentMenuItem()', this.constructor.name, { type, itemID });
+	handleComponentMenuItem = ({ type, itemID })=> {
+		console.log('%s.handleComponentMenuItem()', this.constructor.name, { type, itemID });
 
 		if (type === 'comments') {
-			const { teamSlug, projectSlug, buildID } = this.props.match.params;
-			const { typeGroups, playground } = this.state;
+			if (/\/comments.*$/.test(window.location.pathname)) {
+				this.props.setComment(null);
+				this.props.history.push(window.location.pathname.replace(/\/comments/, ''));
 
-			const component = componentByID(playground.components, itemID);
-			const typeGroup = (this.state.typeGroup || typeGroupByComponent(typeGroups, component));
-			this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(!window.location.href.includes('/comments')) ? '/comments' : ''}`);
+			} else {
+				this.props.history.push(`${window.location.pathname}/comments`);
+			}
+
+// 			const { teamSlug, projectSlug, buildID } = this.props.match.params;
+// 			const { typeGroups, playground } = this.state;
+//
+// 			const component = componentByID(playground.components, itemID);
+// 			const typeGroup = (this.state.typeGroup || typeGroupByComponent(typeGroups, component));
+// 			this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(!window.location.href.includes('/comments')) ? '/comments' : ''}`);
 		}
 	};
 
 	handleComponentPopoverClose = ()=> {
 // 		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
 
-		this.setState({ comment : null }, ()=> {
-			const { teamSlug, projectSlug, buildID } = this.props.match.params;
-			const { typeGroups, playground, component } = this.state;
-			const typeGroup = (this.state.typeGroup || typeGroupByComponent(typeGroups, component));
-			this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(window.location.href.includes('/comments')) ? '/comments' : ''}`);
-		});
+		this.props.setComment(null);
+
+// 		this.setState({ comment : null }, ()=> {
+// 			const { teamSlug, projectSlug, buildID } = this.props.match.params;
+// 			const { typeGroups, playground, component } = this.state;
+// 			const typeGroup = (this.state.typeGroup || typeGroupByComponent(typeGroups, component));
+// 			this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(window.location.href.includes('/comments')) ? '/comments' : ''}`);
+// 		});
 	};
 
 	handleDeleteComment = (commentID)=> {
@@ -242,25 +338,37 @@ class PlaygroundPage extends Component {
 		}).then((response) => {
 			console.log('UPDATE_COMMENT', response.data);
 
-			const { playground, component } = this.state;
-			this.setState({
-				playground : { ...playground,
-					components : playground.components.map((component)=> ({ ...component,
-						comments : component.comments.filter(({ id }) => (id !== commentID)).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0))
-					}))
-				},
-			}, ()=> {
-				const { playgrounds, playground, typeGroup } = this.state;
+			const component = { ...this.props.component,
+				comments : this.props.component.comments.filter(({ id }) => (id !== commentID)).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0))
+			};
+			const playground = { ...this.props.playground,
+				components : this.props.playground.components.map((item)=> ((item.id === component.id) ? component : item))
+			};
 
-				this.setState({
-					playgrounds : replacePlayground(playgrounds, playground),
-					component   : componentByID(playground.components, component.id),
-					comment     : null
-				}, ()=> {
-					const { teamSlug, projectSlug, buildID } = this.props.match.params;
-					this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}/comments`);
-				});
-			});
+			this.props.setPlayground(playground);
+			this.props.setComponent(component);
+			this.props.setComment(null);
+
+
+// 			const { playground, component } = this.state;
+// 			this.setState({
+// 				playground : { ...playground,
+// 					components : playground.components.map((component)=> ({ ...component,
+// 						comments : component.comments.filter(({ id }) => (id !== commentID)).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0))
+// 					}))
+// 				},
+// 			}, ()=> {
+// 				const { playgrounds, playground, typeGroup } = this.state;
+//
+// 				this.setState({
+// 					playgrounds : replacePlayground(playgrounds, playground),
+// 					component   : componentByID(playground.components, component.id),
+// 					comment     : null
+// 				}, ()=> {
+// 					const { teamSlug, projectSlug, buildID } = this.props.match.params;
+// 					this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}/comments`);
+// 				});
+// 			});
 
 		}).catch((error)=> {
 		});
@@ -269,27 +377,34 @@ class PlaygroundPage extends Component {
 	handleNavGroupItemClick = (typeGroup)=> {
 // 		console.log('%s.handleNavGroupItemClick()', this.constructor.name, typeGroup);
 
-		const { teamSlug, projectSlug, buildID } = this.props.match.params;
-		const { playground } = this.state;
+// 		const { teamSlug, projectSlug, buildID } = this.props.match.params;
+// 		const { playground } = this.state;
 
 		typeGroup.expanded = !typeGroup.expanded;
 		typeGroup.selected = !typeGroup.selected;
 
-		this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`);
-		this.setState({ typeGroup,
-			comment   : null,
-			component : null
-		});
+		this.props.setTypeGroup(typeGroup);
+		this.props.setComponent(null);
+		this.props.setComment(null);
+
+// 		this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`);
+// 		this.setState({ typeGroup,
+// 			comment   : null,
+// 			component : null
+// 		});
 	};
 
 	handleNavTypeItemClick = (typeGroup, typeItem)=> {
 // 		console.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
 
-		const { teamSlug, projectSlug, buildID } = this.props.match.params;
-		const { playground } = this.state;
+// 		const { teamSlug, projectSlug, buildID } = this.props.match.params;
+// 		const { playground } = this.state;
 
-		this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${typeItem.id}`);
-		this.setState({ component : typeItem });
+		this.props.setComponent(typeItem);
+		this.props.setComment(null);
+
+// 		this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${typeItem.id}`);
+// 		this.setState({ component : typeItem });
 	};
 
 	handleSettingsItem = (itemType)=> {
@@ -319,15 +434,25 @@ class PlaygroundPage extends Component {
 
 	handleTogglePlayground = ()=> {
 // 		console.log('%s.handleTogglePlayground()', this.constructor.name, this.state.playground.deviceID);
-		const { playgrounds, playground } = this.state;
-		this.setState({ playground : playgrounds.find(({ deviceID })=> (deviceID !== playground.deviceID))}, ()=> {
-			const { teamSlug, projectSlug, buildID } = this.props.match.params;
-			const { playground } = this.state;
 
+		trackEvent('button', (this.props.playground.deviceID === 1) ? 'mobile-toggle' : 'desktop-toggle');
+		const { playgrounds } = this.state;
+
+		const playground = playgrounds.find(({ deviceID })=> (deviceID !== playground.deviceID));
+		if (playground) {
 			this.props.setPlayground(playground);
-			this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}`);
-			trackEvent('button', (playground.deviceID === 1) ? 'desktop-toggle' : 'mobile-toggle');
-		});
+			this.props.setComponent(null);
+			this.props.setComment(null);
+		}
+
+// 		const { playgrounds, playground } = this.state;
+// 		this.setState({ playground : playgrounds.find(({ deviceID })=> (deviceID !== playground.deviceID)) }, ()=> {
+// 			const { teamSlug, projectSlug, buildID } = this.props.match.params;
+// 			const { playground } = this.state;
+//
+// 			this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}`);
+// 			trackEvent('button', (playground.deviceID === 1) ? 'desktop-toggle' : 'mobile-toggle');
+// 		});
 	};
 
 	onFetchBuildPlaygrounds = (buildID, playgroundID=null)=> {
@@ -341,7 +466,6 @@ class PlaygroundPage extends Component {
 				}
 			}).then((response) => {
 				console.log('BUILD_PLAYGROUNDS', response.data);
-				const { componentID } = this.props.match.params;
 
 				const playgrounds = response.data.playgrounds.map((playground)=> {
 					const { device_id, team } = playground;
@@ -360,7 +484,7 @@ class PlaygroundPage extends Component {
 								return ({ ...member, userID });
 							})
 						},
-						components : playground.components.map((component)=> (reformComponent(component, { selected : (component.id === (componentID << 0)) })))
+						components : playground.components.map((component)=> (reformComponent(component)))
 					});
 				});
 
@@ -398,18 +522,15 @@ class PlaygroundPage extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { profile, team } = this.props;
+		const { profile, componentTypes, playground, typeGroup, component, comment } = this.props;
 		const { params } = this.props.match;
-		const { teamSlug, projectSlug, componentsSlug } = params;
-		const { typeGroups, typeGroup, playgrounds, playground, component, comment, cursor, accessibility } = this.state;
+// 		const { projectSlug, componentsSlug } = params;
+// 		const { typeGroups, typeGroup, playgrounds, playground, component, comment, cursor, accessibility } = this.state;
+		const { playgrounds, cursor, accessibility } = this.state;
 
 		return (<BasePage className={`page-wrapper playground-page-wrapper${(component && (window.location.href.includes('/comments'))) ? ' playground-page-wrapper-comments' : ''}`}>
-			{(profile && playground) && (<PlaygroundNavPanel
+			{(profile && playground && typeGroup) && (<PlaygroundNavPanel
 				params={params}
-				team={team}
-				typeGroups={typeGroups}
-				typeItems={playground.components}
-				component={component}
 				onTypeGroupClick={this.handleNavGroupItemClick}
 				onTypeItemClick={this.handleNavTypeItemClick}
 			/>)}
@@ -417,21 +538,17 @@ class PlaygroundPage extends Component {
 			{(profile && playground) && (<div className="playground-page-content-wrapper">
 				{(!accessibility) ?
 					(<PlaygroundContent
-						typeGroup={typeGroup}
-						playground={playground}
-						component={component}
-						comment={comment}
 						cursor={cursor}
 						onComponentClick={this.handleComponentClick}
 						onMarkerClick={this.handleCommentMarkerClick}
 						onMenuShow={this.handleComponentMenuShow}
-						onMenuItem={this.handleCompomentMenuItem}
+						onMenuItem={this.handleComponentMenuItem}
 						onAddComment={this.handleAddComment}
 						onDeleteComment={this.handleDeleteComment}
 						onPopoverClose={this.handleComponentPopoverClose}
 					/>) :
-					(<PlaygroundAccessibilty
-						typeGroups={typeGroups}
+					(<PlaygroundAccessibility
+						typeGroups={componentTypes}
 						playground={playground}
 						component={component}
 						comment={comment}
@@ -439,10 +556,6 @@ class PlaygroundPage extends Component {
 				}
 
 				<PlaygroundHeader
-					playground={playground}
-					component={component}
-					projectSlug={projectSlug}
-					componentsSlug={componentsSlug}
 					onPopup={this.props.onPopup}
 					onSettingsItem={this.handleSettingsItem}
 					onLogout={this.props.onLogout}
@@ -472,13 +585,19 @@ class PlaygroundPage extends Component {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		setPlayground : (payload) => dispatch(setPlayground(payload))
+		setPlayground : (payload)=> dispatch(setPlayground(payload)),
+		setTypeGroup  : (payload)=> dispatch(setTypeGroup(payload)),
+		setComponent  : (payload)=> dispatch(setComponent(payload)),
+		setComment    : (payload)=> dispatch(setComment(payload))
 	});
 };
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
 		playground     : state.playground,
+		typeGroup      : state.typeGroup,
+		component      : state.component,
+		comment        : state.comment,
 		profile        : state.userProfile,
 		componentTypes : state.componentTypes,
 		eventGroups    : state.eventGroups,

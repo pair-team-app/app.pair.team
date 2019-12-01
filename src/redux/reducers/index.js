@@ -19,6 +19,9 @@ import {
 	USER_PROFILE_UPDATED,
 	SET_INVITE,
 	SET_TEAMS,
+	SET_TYPE_GROUP,
+	SET_COMPONENT,
+	SET_COMMENT
 } from '../../consts/action-types';
 // import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
@@ -31,6 +34,9 @@ const initialState = {
 	componentTypes     : null,
 	eventGroups        : [],
 	playground         : null,
+	typeGroup          : null,
+	component          : null,
+	comment            : null,
 	products           : null,
 	deeplink           : {
 		teamID       : 0,
@@ -191,6 +197,21 @@ function rootReducer(state=initialState, action) {
 		case SET_PLAYGROUND:
 			return (Object.assign({}, state, {
 				playground : action.payload
+			}));
+
+		case SET_TYPE_GROUP:
+			return (Object.assign({}, state, {
+				typeGroup : action.payload
+			}));
+
+		case SET_COMPONENT:
+			return (Object.assign({}, state, {
+				component : action.payload
+			}));
+
+		case SET_COMMENT:
+			return (Object.assign({}, state, {
+				comment : action.payload
 			}));
 
 		case SET_PRODUCTS:

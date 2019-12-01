@@ -18,7 +18,7 @@ export function getRoutePaths(pathname) {
 	const termsPage = matchPath(pathname, { path : Pages.TERMS });
 	const playgroundPage = matchPath(pathname, { path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(comments)?/:commentID([0-9]+)?` });
 
-	console.log(':::::::::::::', 'getRoutePaths', pathname, { homePage, featuresPage, pricingPage, privacyPage, termsPage, playgroundPage });
+// 	console.log(':::::::::::::', 'getRoutePaths', pathname, { homePage, featuresPage, pricingPage, privacyPage, termsPage, playgroundPage });
 
 	if (homePage && homePage.isExact) {
 		return (homePage);

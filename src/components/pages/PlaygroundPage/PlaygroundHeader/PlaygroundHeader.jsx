@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './PlaygroundHeader.css';
 
 import { Strings } from 'lang-js-utils';
+import { connect } from 'react-redux';
 
 import SharePopover from '../SharePopover';
 import UserSettings from './UserSettings';
@@ -26,16 +27,16 @@ class PlaygroundHeader extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state, (this.shareLink) ? { left : this.shareLink.offsetLeft, top : this.shareLink.offsetTop } : null);
 
-		const { playground, projectSlug, componentsSlug, component } = this.props;
+		const { playground, typeGroup, component } = this.props;
 		const { popover } = this.state;
 
-		let breadcrumbs = `${projectSlug}`;
-		if (componentsSlug) {
-			breadcrumbs = `${breadcrumbs} > ${componentsSlug}`;
+		let breadcrumbs = `${Strings.slugifyURI(playground.title)}`;
+		if (typeGroup) {
+			breadcrumbs = `${breadcrumbs} > ${typeGroup.key}`;
 		}
 
 		if (component) {
-			breadcrumbs = `${breadcrumbs} > ${Strings.truncate(component.title, 50)}`;
+			breadcrumbs = `${breadcrumbs} > ${Strings.truncate(component.title, 100)}`;
 		}
 
 		return (<div className="playground-header">
@@ -55,4 +56,13 @@ class PlaygroundHeader extends Component {
 }
 
 
-export default (PlaygroundHeader);
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		playground     : state.playground,
+		typeGroup      : state.typeGroup,
+		component      : state.component
+	});
+};
+
+
+export default connect(mapStateToProps)(PlaygroundHeader);

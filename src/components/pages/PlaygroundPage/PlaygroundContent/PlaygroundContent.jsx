@@ -128,8 +128,12 @@ const CommentPinCursor = (props)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		mouse   : state.mouse,
-		profile : state.userProfile
+		mouse      : state.mouse,
+		profile    : state.userProfile,
+		playground : state.playground,
+		typeGroup  : state.typeGroup,
+		component  : state.component,
+		comment    : state.comment
 	});
 };
 
