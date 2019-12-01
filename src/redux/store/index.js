@@ -12,7 +12,7 @@ const store = createStore(rootReducer, applyMiddleware(onMiddleware, thunk));
 
 
 if (typeof cookie.load('user_id') === 'undefined') {
-	cookie.save('user_id', '0', { path : '/' });
+	cookie.save('user_id', '0', { path : '/', sameSite : false });
 
 } else {
 	store.dispatch(fetchUserProfile());

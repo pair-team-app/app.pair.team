@@ -346,7 +346,7 @@ export function updateUserProfile(payload, force=true) {
 			const { id } = payload;
 
 // 			if (typeof cookie.load('user_id') === 'undefined' || ((cookie.load('user_id') << 0) !== id)) {
-// 				cookie.save('user_id', id << 0, { path : '/' });
+// 				cookie.save('user_id', id << 0, { path : '/', sameSite : false });
 // 			}
 
 			axios.post(API_ENDPT_URL, {
@@ -383,7 +383,7 @@ export function updateUserProfile(payload, force=true) {
 			});
 
 		} else {
-			cookie.save('user_id', '0', { path : '/' });
+			cookie.save('user_id', '0', { path : '/', sameSite : false });
 
 			dispatch({
 				type    : USER_PROFILE_UPDATED,

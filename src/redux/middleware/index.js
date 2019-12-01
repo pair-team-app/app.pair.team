@@ -30,7 +30,7 @@ export function onMiddleware({ dispatch }) {
 			const { type, payload } = action;
 			if (type === USER_PROFILE_CACHED) {
 			} else if (type === USER_PROFILE_UPDATED) {
-				cookie.save('user_id', (payload) ? payload.id : '0', { path : '/' });
+				cookie.save('user_id', (payload) ? payload.id : '0', { path : '/', sameSite : false });
 
 // 			} else if (type === UPDATE_DEEPLINK) {
 // 				const deeplink = Object.assign({}, payload, {

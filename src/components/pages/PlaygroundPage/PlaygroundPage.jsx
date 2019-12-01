@@ -148,12 +148,11 @@ class PlaygroundPage extends Component {
 				this.props.setComponent(component);
 				this.props.setComment(comment);
 
-				console.log(':::::::::', window.location.pathname, url);
+// 				console.log(':::::::::', window.location.pathname, url);
 				if (window.location.pathname !== url) {
 					this.props.history.push(url);
 				}
 			}
-
 		}
 
 
@@ -257,7 +256,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleComponentClick = ({ component })=> {
-// 		console.log('%s.handleComponentClick()', this.constructor.name, { component });
+		console.log('%s.handleComponentClick()', this.constructor.name, { component });
 
 		component.selected = true;
 		this.props.setComponent(component);
