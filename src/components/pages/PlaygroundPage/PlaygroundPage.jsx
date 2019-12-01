@@ -234,7 +234,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleCommentMarkerClick = ({ comment })=> {
-		console.log('%s.handleCommentMarkerClick()', this.constructor.name, { comment });
+// 		console.log('%s.handleCommentMarkerClick()', this.constructor.name, { comment });
 
 		const { playground } = this.props;
 		const component = componentFromComment(playground.components, comment);
@@ -257,15 +257,14 @@ class PlaygroundPage extends Component {
 	};
 
 	handleComponentClick = ({ component })=> {
-		console.log('%s.handleComponentClick()', this.constructor.name, { component });
-
-// 		const { teamSlug, projectSlug, buildID } = this.props.match.params;
-// 		const { typeGroups, playground } = this.state;
+// 		console.log('%s.handleComponentClick()', this.constructor.name, { component });
 
 		component.selected = true;
 		this.props.setComponent(component);
 		this.setState({ cursor : false });
 
+// 		const { teamSlug, projectSlug, buildID } = this.props.match.params;
+// 		const { typeGroups, playground } = this.state;
 // 		const typeGroup = (this.state.typeGroup || typeGroupByComponent(typeGroups, component));
 // 		this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(this.state.component && component.id === this.state.component.id && window.location.href.includes('/comments')) ? '/comments' : ''}`);
 //
@@ -292,7 +291,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleComponentMenuItem = ({ type, itemID })=> {
-		console.log('%s.handleComponentMenuItem()', this.constructor.name, { type, itemID });
+// 		console.log('%s.handleComponentMenuItem()', this.constructor.name, { type, itemID });
 
 		if (type === 'comments') {
 			if (/\/comments.*$/.test(window.location.pathname)) {
@@ -522,7 +521,7 @@ class PlaygroundPage extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { profile, componentTypes, playground, typeGroup, component, comment } = this.props;
+		const { profile, playground, typeGroup, component } = this.props;
 		const { params } = this.props.match;
 // 		const { projectSlug, componentsSlug } = params;
 // 		const { typeGroups, typeGroup, playgrounds, playground, component, comment, cursor, accessibility } = this.state;
@@ -547,12 +546,7 @@ class PlaygroundPage extends Component {
 						onDeleteComment={this.handleDeleteComment}
 						onPopoverClose={this.handleComponentPopoverClose}
 					/>) :
-					(<PlaygroundAccessibility
-						typeGroups={componentTypes}
-						playground={playground}
-						component={component}
-						comment={comment}
-					/>)
+					(<PlaygroundAccessibility />)
 				}
 
 				<PlaygroundHeader

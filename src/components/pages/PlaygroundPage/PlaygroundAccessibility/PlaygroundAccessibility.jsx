@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './PlaygroundAccessibility.css';
 
+import { connect } from 'react-redux';
 import { componentByNodeID } from '../utils/lookup';
 
 
@@ -32,8 +33,8 @@ class PlaygroundAccessibility extends Component {
 	componentDidMount() {
 // 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
-		const { typeGroups } = this.props;
-		this.setState({ typeGroups : typeGroups.map(({ id, title })=> ({ id, title }))});
+		const { componentTypes } = this.props;
+		this.setState({ typeGroups : componentTypes.map(({ id, title })=> ({ id, title }))});
 	}
 
 	render() {
@@ -116,7 +117,16 @@ const AccessibilityTreeItemRule = (props)=> {
 };
 
 
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		componentTypes : state.componentTypes,
+		playground     : state.playground,
+		typeGroup      : state.typeGroup,
+		component      : state.component,
+		comment        : state.comment
+	});
+};
 
 
+export default connect(mapStateToProps)(PlaygroundAccessibility);
 
-export default (PlaygroundAccessibility);
