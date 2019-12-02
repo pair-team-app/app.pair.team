@@ -35,10 +35,10 @@ export function trackEvent(category, action, label=window.location.pathname, val
 export function trackOverlay(params) {
 // 	console.log('::::]]', 'trackOverlay', params);
 
-	const type = params.split('/').slice().shift();
-	const source = params.split('/').slice().pop();
+	const action = params.split('/').slice().shift();
+	const type = params.split('/').slice().pop();
 
-	trackEvent('modal', type, source);
+	trackEvent('modal', action, type);
 }
 
 export function trackPageview(uri=`${window.location.pathname}${window.location.search}`) {

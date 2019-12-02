@@ -11,7 +11,6 @@ import ComponentMenu from './ComponentMenu';
 import { convertStyles, inlineStyles } from '../utils/css';
 import packComponents, { calcSize } from '../utils/packing';
 import { reformComment } from '../utils/reform';
-import {Images} from "lang-js-utils";
 
 
 class PlaygroundContent extends Component {

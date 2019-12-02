@@ -137,19 +137,31 @@ class PlaygroundPage extends Component {
 					}
 
 				} else {
-					typeGroup = typeGroups.find(({ key })=> (key === 'views'));
-					url = url.replace(new RegExp(`/${componentsSlug}.*$`, 'g'), '/views');
+// 					typeGroup = typeGroups.find(({ key })=> (key === 'views'));
+// 					url = url.replace(new RegExp(`/${componentsSlug}.*$`, 'g'), '/views');
 				}
 
-				this.props.setTypeGroup(typeGroup);
-				this.props.setComponent(component);
-				this.props.setComment(comment);
+// 				this.props.setTypeGroup(typeGroup);
+// 				this.props.setComponent(component);
+// 				this.props.setComment(comment);
+//
+// 				if (window.location.pathname !== url) {
+// 					this.props.history.push(url);
+// 				}
 
-// 				console.log(':::::::::', window.location.pathname, url);
-				if (window.location.pathname !== url) {
-					this.props.history.push(url);
-				}
+			} else {
+				typeGroup = typeGroups.find(({ key })=> (key === 'views'));
+				url = url.replace(new RegExp(`/${componentsSlug}.*$`, 'g'), '/views');
 			}
+
+			this.props.setTypeGroup(typeGroup);
+			this.props.setComponent(component);
+			this.props.setComment(comment);
+
+			if (window.location.pathname !== url) {
+				this.props.history.push(url);
+			}
+
 		}
 
 
@@ -306,10 +318,10 @@ class PlaygroundPage extends Component {
 	handleSettingsItem = (itemType)=> {
 		console.log('%s.handleSettingsItem()', this.constructor.name, itemType);
 
-		if (itemType === SettingsMenuItemTypes.DELETE) {
-			this.props.onModal(Modals.PROFILE);
+		if (itemType === SettingsMenuItemTypes.DELETE_ACCT) {
+			this.props.onModal(Modals.DISABLE);
 
-		} else {
+		} else if (itemType === SettingsMenuItemTypes.PROFILE) {
 			this.props.onModal(Modals.PROFILE);
 		}
 	};

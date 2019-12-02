@@ -2,8 +2,6 @@
 import React from 'react';
 import './RadioButton.css';
 
-import { Column, Row } from 'simple-flexbox';
-
 import radButtonSelected from '../../../assets/images/buttons/btn-radio-button_selected.png'
 
 
@@ -14,11 +12,11 @@ function RadioButton(props) {
 	const subtextClass = (enabled) ? 'radio-button-subtext' : 'radio-button-subtext radio-button-subtext-disabled';
 
 	return (
-		<div className="radio-button"><Row vertical="center">
-			<Column vertical="center"><button disabled={(!enabled)} className="radio-button-button" onClick={()=> props.onClick()}>
+		<div className="radio-button">
+			<button disabled={(!enabled)} className="radio-button-button" onClick={()=> props.onClick()}>
 				{(selected) && (<img className="radio-button-image" src={radButtonSelected} alt={title} />)}
-			</button></Column>
-			<Column vertical="center"><div className={titleClass}>{title}</div></Column></Row>
+			</button>
+			<div className={titleClass}>{title}</div>
 			<div className={subtextClass}>{subtext}</div>
 		</div>
 	);

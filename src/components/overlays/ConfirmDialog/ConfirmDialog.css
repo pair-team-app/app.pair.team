@@ -1,10 +1,17 @@
 
 .confirm-dialog-content {
 	min-width: 320px;
+	max-width: 520px;
 	padding: 0 15px;
+	text-align: left;
+	line-height: 20px;
 }
 
 .confirm-dialog-button-wrapper {
-	width: 100%;
+	margin-top: 20px;
 	text-align: right;
+}
+
+.confirm-dialog-button-wrapper > button {
+	width: 33%;
 }

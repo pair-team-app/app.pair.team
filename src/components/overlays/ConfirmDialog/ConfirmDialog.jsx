@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './ConfirmDialog.css'
 
-import { URIs } from 'lang-js-utils';
 import BaseOverlay from '../BaseOverlay';
 
 
@@ -27,6 +26,10 @@ class ConfirmDialog extends Component {
 // 		console.log('%s.handleComplete()', this.constructor.name);
 
 		const { ok } = this.state;
+		if (ok) {
+			this.props.onConfirmed();
+		}
+
 		this.props.onComplete(ok);
 	};
 
@@ -38,16 +41,18 @@ class ConfirmDialog extends Component {
 		const { outro } = this.state;
 
 		return (<BaseOverlay
-			tracking={`${tracking}/${URIs.firstComponent()}`}
+			tracking={tracking}
 			outro={outro}
 			closeable={true}
 			title={title}
 			onComplete={this.handleComplete}>
-			<div className="confirm-dialog-content">
-				{children}
-				<div className="button-wrapper-col base-overlay-button-wrapper confirm-dialog-button-wrapper">
-					<button className="cancel-button" onClick={()=> this.handleClick(false)}>Cancel</button>
-					<button onClick={()=> this.handleClick(true)}>OK</button>
+			<div className="confirm-dialog">
+				<div className="confirm-dialog-content">
+					{children}
+					<div className="button-wrapper-col confirm-dialog-button-wrapper">
+						<button className="quiet-button" onClick={()=> this.handleClick(false)}>Cancel</button>
+						<button onClick={()=> this.handleClick(true)}>OK</button>
+					</div>
 				</div>
 			</div>
 		</BaseOverlay>);

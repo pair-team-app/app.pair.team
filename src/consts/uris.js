@@ -1,9 +1,10 @@
 
 export const Modals = {
-	NO_ACCESS : '/no-access',
+	DISABLE   : '/disable',
 	GITHUB    : '/github',
 	LOGIN     : '/login',
 	NETWORK   : '/network',
+	NO_ACCESS : '/no-access',
 	PROFILE   : '/profile',
 	RECOVER   : '/recover',
 	REGISTER  : '/register',

@@ -10,6 +10,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 
 import AlertDialog from '../overlays/AlertDialog';
 import BlockingDialog from '../overlays/BlockingDialog';
+import ConfirmDialog from '../overlays/ConfirmDialog';
 import LoginModal from '../overlays/LoginModal';
 import ProfileModal from '../overlays/ProfileModal';
 import PopupNotification from '../overlays/PopupNotification';
@@ -31,9 +32,7 @@ import {
 	API_ENDPT_URL,
 	GITHUB_APP_AUTH } from '../../consts/uris';
 import {
-	appendHomeArtboards,
 	fetchTeamLookup,
-	fetchUserHistory,
 	fetchUserProfile,
 	updateDeeplink,
 	updateMouseCoords,
@@ -56,7 +55,7 @@ class App extends Component {
 			},
 			popup       : null,
 			modals      : {
-				delete   : false,
+				disable  : false,
 				github   : false,
 				login    : false,
 				network  : (!Browsers.isOnline()),
@@ -144,6 +143,24 @@ class App extends Component {
 		window.removeEventListener('resize', this.handleResize);
 	}
 
+	handleDisableAccount = ()=> {
+		console.log('%s.handleDisableAccount()', this.constructor.name);
+
+		const { profile } = this.props;
+
+		axios.post(API_ENDPT_URL, {
+			action  : 'DISABLE_ACCOUNT',
+			payload : { user_id : profile.id }
+		}).then((response) => {
+			console.log('DISABLE_ACCOUNT', response.data);
+
+			trackEvent('user', 'delete-account');
+			this.props.updateUserProfile(null);
+			this.props.history.push(Pages.HOME);
+
+		}).catch((error)=> {
+		});
+	};
 
 	handleGithubAuth = ()=> {
 		console.log('%s.handleGithubAuth()', this.constructor.name);
@@ -187,7 +204,7 @@ class App extends Component {
 			payload : {
 				username : profile.email,
 				email    : profile.email,
-				type     : 'wait_list'
+				type     : 'free_user'
 			}
 		}).then((response) => {
 			console.log('REGISTER', response.data);
@@ -199,11 +216,10 @@ class App extends Component {
 	handleLogout = ()=> {
 		console.log('%s.handleLogout()', this.constructor.name, this.constructor.name);
 
-		cookie.save('user_id', '0', { path : '/' });
+// 		cookie.save('user_id', '0', { path : '/' });
 		trackEvent('user', 'sign-out');
 
 		this.props.updateUserProfile(null);
-		this.props.purgeHomeArtboards();
 		this.props.history.push(Pages.HOME);
 	};
 
@@ -253,7 +269,6 @@ class App extends Component {
 	handleUpdateUser = (profile)=> {
 // 		console.log('%s.handleUpdateUser()', this.constructor.name, profile);
 		this.props.updateUserProfile(profile);
-// 		this.props.fetchUserHistory({profile});
 	};
 
 	onAuthInterval = ()=> {
@@ -295,13 +310,14 @@ class App extends Component {
 	};
 
 	onToggleModal = (uri, show=true, payload=null)=> {
-// 		console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
+		console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
 		const { modals } = this.state;
 
 		if (show) {
 			this.setState({
 				modals : { ...modals, payload,
 					github   : false,
+					disable  : (uri === Modals.DISABLE),
 					login    : (uri === Modals.LOGIN),
 					network  : (uri === Modals.NETWORK),
 					noAccess : (uri === Modals.NO_ACCESS),
@@ -314,13 +330,14 @@ class App extends Component {
 		} else {
 			this.setState({
 				modals : { ...modals,
-					github    : (uri === Modals.GITHUB) ? false : modals.github,
-					login     : (uri === Modals.LOGIN) ? false : modals.login,
-					network   : (uri === Modals.NETWORK) ? false : modals.network,
-					noAccess  : (uri === Modals.noAccess) ? false : modals.noAccess,
-					profile   : (uri === Modals.PROFILE) ? false : modals.profile,
-					register  : (uri === Modals.REGISTER) ? false : modals.register,
-					stripe    : (uri === Modals.STRIPE) ? false : modals.stripe,
+					disable  : (uri === Modals.DISABLE) ? false : modals.disable,
+					github   : (uri === Modals.GITHUB) ? false : modals.github,
+					login    : (uri === Modals.LOGIN) ? false : modals.login,
+					network  : (uri === Modals.NETWORK) ? false : modals.network,
+					noAccess : (uri === Modals.noAccess) ? false : modals.noAccess,
+					profile  : (uri === Modals.PROFILE) ? false : modals.profile,
+					register : (uri === Modals.REGISTER) ? false : modals.register,
+					stripe   : (uri === Modals.STRIPE) ? false : modals.stripe,
 					payload   : null
 				}
 			});
@@ -335,6 +352,7 @@ class App extends Component {
 
 	render() {
 //   	console.log('%s.render()', this.constructor.name, this.props, this.state);
+//   	console.log('%s.render()', this.constructor.name, this.state.modals);
 
 		const { profile, team } = this.props;
   	const { darkTheme, popup, modals } = this.state;
@@ -394,12 +412,22 @@ class App extends Component {
 
 			  {(modals.network) && (<AlertDialog
 				  title="No Internet Connection"
+				  tracking={Modals.NETWORK}
 				  onComplete={()=> this.onToggleModal(Modals.NETWORK, false)}>
 				  Check your network connection to continue.
 			  </AlertDialog>)}
 
+			  {(modals.disable) && (<ConfirmDialog
+				  title="Delete your account"
+				  tracking={Modals.DISABLE}
+				  onConfirmed={this.handleDisableAccount}
+				  onComplete={()=> this.onToggleModal(Modals.DISABLE, false)}>
+				  Are you sure you wish to delete your account? You won't be able to log back in, plus your playgrounds & comments will be removed. Additionally, you will be dropped from your team.
+			  </ConfirmDialog>)}
+
 			  {(modals.noAccess) && (<BlockingDialog
 				  title="Access Denied!"
+				  tracking={Modals.NO_ACCESS}
 				  onComplete={()=> this.onToggleModal(Modals.NO_ACCESS, false)}>
 				  Your team {team.title} does not have permission to view this playground
 			  </BlockingDialog>)}
@@ -417,23 +445,19 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		deeplink  : state.deeplink,
-		profile   : state.userProfile,
-		products  : state.products,
-		artboards : state.homeArtboards,
-		team      : state.teams[0]
+		profile  : state.userProfile,
+		products : state.products,
+		team     : state.teams[0]
 	});
 };
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		purgeHomeArtboards : ()=> dispatch(appendHomeArtboards(null)),
-		fetchTeamLookup    : (payload)=> dispatch(fetchTeamLookup(payload)),
-		fetchUserHistory   : (payload)=> dispatch(fetchUserHistory(payload)),
-		fetchUserProfile   : ()=> dispatch(fetchUserProfile()),
-		updateMouseCoords  : (payload)=> dispatch(updateMouseCoords(payload)),
-		updateDeeplink     : (navIDs)=> dispatch(updateDeeplink(navIDs)),
-		updateUserProfile  : (profile)=> dispatch(updateUserProfile(profile))
+		fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
+		fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
+		updateMouseCoords : (payload)=> dispatch(updateMouseCoords(payload)),
+		updateDeeplink    : (navIDs)=> dispatch(updateDeeplink(navIDs)),
+		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 };
 

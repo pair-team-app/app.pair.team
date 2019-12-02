@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './PopupNotification.css'
 
 import { TimelineMax, Back, Circ, Expo } from 'gsap/TweenMax';
-import { Row } from 'simple-flexbox';
 
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK, POPUP_TYPE_STATUS } from './';
 import { POPUP_POSITION_EMBEDDED, POPUP_POSITION_TOPMOST } from './';
@@ -91,9 +90,9 @@ class PopupNotification extends Component {
 
 		return (
 			<div className={wrapperClass} style={wrapperStyle} ref={(element)=> { this.wrapper = element; }}>
-				<Row vertical="center" horizontal="center" className={className}>
+				<div className={className}>
 					{children}
-				</Row>
+				</div>
 			</div>
 		);
 	}
