@@ -21,7 +21,7 @@ export const reformChildElement = (element, overwrite={})=> {
 };
 
 export const reformComment = (comment, overwrite={})=> ({ ...comment,
-	position  : (comment.position || { x : 0, y : 0 }),
+	position  : (((typeof comment.position === 'string' && comment.position.charAt(0) === '{') ? JSON.parse(comment.position) : comment.position) || { x : 0, y : 0 }),
 	author    : {
 		id       : comment.author.id,
 		username : comment.author.username,

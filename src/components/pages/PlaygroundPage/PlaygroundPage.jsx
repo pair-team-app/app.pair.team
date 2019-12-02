@@ -188,9 +188,9 @@ class PlaygroundPage extends Component {
 				component_id : itemID
 			}
 		}).then((response) => {
-			console.log('ADD_COMMENT', response.data);
-
 			const comment = reformComment(response.data.comment);
+			console.log('ADD_COMMENT', response.data, comment);
+
 			const component = { ...this.props.component,
 				comments : ((this.props.component.id === itemID) ? [ ...this.props.component.comments, comment] : this.props.component.comments).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0))
 			};

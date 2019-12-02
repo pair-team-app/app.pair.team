@@ -5,18 +5,13 @@ import './PlaygroundContent.css';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
-// import rbp from 'rectangle-bin-pack';
 
 import PlaygroundComment from '../PlaygroundComment';
 import ComponentMenu from './ComponentMenu';
 import { convertStyles, inlineStyles } from '../utils/css';
+import packComponents, { calcSize } from '../utils/packing';
 import { reformComment } from '../utils/reform';
-
-
-// const packContent = (size, rects)=> {
-// 	rbp.solveSync({ w : size.width, h : size.height }, rects);
-// 	return (rects);
-// };
+import {Images} from "lang-js-utils";
 
 
 class PlaygroundContent extends Component {
@@ -66,22 +61,31 @@ class PlaygroundContent extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { typeGroup, playground, component, comment, cursor, mouse, profile } = this.props;
+		const { typeGroup, playground, component, cursor, mouse, profile } = this.props;
 		const { position, popover } = this.state;
 
 		const components = (component) ? [component] : (typeGroup) ? playground.components.filter(({ typeID })=> (typeID === typeGroup.id)) : playground.components;
+		const packedRects = (playground) ? packComponents(components) : [];
 
-// 		const rects = components.map((comp)=> ({
-// 			id : comp.id,
-// 			w  : comp.meta.bounds.width,
-// 			h  : comp.meta.bounds.height
-// 		}));
-// 		const packed = packContent({ width : 1000, height : 3000 }, rects);
-// 		console.log(':::::::::::::::', rects, packed);
+		const maxSize = calcSize(packedRects);
+		const wrapperStyle = {
+			width  : `${maxSize.width}px`,
+			height : `${maxSize.height}px`
+		};
 
 		return (<div className="playground-content" data-cursor={cursor}>
-			<div className="playground-content-components-wrapper">
+			<div className="playground-content-components-wrapper" style={wrapperStyle}>
 				{(components.map((comp, i)=> {
+					const pos = {
+						x : packedRects.find(({ id })=> (id === comp.id)).x,
+						y : packedRects.find(({ id })=> (id === comp.id)).y,
+					};
+
+					const style = {
+						top  : `${pos.y}px`,
+						left : `${pos.x}px`
+					};
+
 					const content = inlineStyles(comp.html, comp.styles);
 					const comments = (popover && component.id === comp.id) ? [ ...comp.comments, reformComment({ position,
 						id      : 0,
@@ -90,13 +94,13 @@ class PlaygroundContent extends Component {
 						author  : profile
 					})] : comp.comments;
 
-					return (<div key={i} className="playground-content-component-wrapper" onClick={(event)=> this.handleContentClick(event, comp)}>
+					return (<div key={i} className="playground-content-component-wrapper" onClick={(event)=> this.handleContentClick(event, comp)} style={style}>
 						<ContextMenuTrigger id="component" disableIfShiftIsPressed={true}>
 							<div className="playground-content-component" data-id={comp.id} style={convertStyles(comp.rootStyles)} dangerouslySetInnerHTML={{ __html : content }} />
 
 							<div className="playground-content-component-comment-wrapper" data-id={comp.id} >
-								{(comments.filter(({ type })=> (type !== 'init')).map((comm, j)=> {
-									return (<PlaygroundComment key={`${i}_${j}`} ind={(comp.comments.length - 1) - j} component={comp} comment={comm} position={position} onMarkerClick={this.props.onMarkerClick} onAddComment={this.props.onAddComment} onDelete={this.props.onDeleteComment} onClose={this.handleComponentPopoverClose} />);
+								{(comments.filter(({ type })=> (type !== 'init')).map((comm, ii)=> {
+									return (<PlaygroundComment key={`${i}_${ii}`} ind={(comp.comments.length - 1) - ii} component={comp} comment={comm} position={position} onMarkerClick={this.props.onMarkerClick} onAddComment={this.props.onAddComment} onDelete={this.props.onDeleteComment} onClose={this.handleComponentPopoverClose} />);
 								}))}
 							</div>
 						</ContextMenuTrigger>
