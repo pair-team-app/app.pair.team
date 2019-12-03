@@ -40,10 +40,6 @@ class PlaygroundPage extends Component {
 
 	componentDidMount() {
 // 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
-
-		if (!this.props.profile) {
-			this.props.onModal(Modals.LOGIN);
-		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {

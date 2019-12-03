@@ -56,7 +56,7 @@ class App extends Component {
 			},
 			popup       : null,
 			modals      : {
-				cookies  : false,
+				cookies  : ((cookie.load('cookies') << 0) === 0),
 				disable  : false,
 				github   : false,
 				login    : false,
@@ -81,15 +81,12 @@ class App extends Component {
 		trackEvent('site', 'load');
 		trackPageview();
 
-		if ((cookie.load('cookies') << 0) === 0) {
-			this.setState({
-				modals : { ...this.state.modals,
-					cookies : true
-				}
-			});
-		}
-
 // 		console.log('[:][:][:][:][:][:][:][:][:][:]');
+
+		const { profile } = this.props;
+		if (!profile && window.location.pathname.startsWith(Pages.PLAYGROUND)) {
+			this.onToggleModal(Modals.LOGIN);
+		}
 
 		window.addEventListener('mousemove', this.handleMouseMove);
 		window.addEventListener('resize', this.handleResize);
@@ -102,7 +99,7 @@ class App extends Component {
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot);
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props);
+		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
 		const { profile, team } = this.props;
 		const { pathname } = this.props.location;
@@ -114,13 +111,10 @@ class App extends Component {
 // 			console.log('|:|:|:|:|:|:|:|:|:|:|:|', getRoutePaths(pathname));
 		}
 
-		if (profile && !prevProps.profile) {
-			this.onToggleModal(Modals.LOGIN);
-			this.props.fetchTeamLookup({ userID : profile.id });
-		}
 
-		if (profile && prevProps.profile && this.state.modals.login) {
+		if (profile && !prevProps.profile) {
 			this.onToggleModal(Modals.LOGIN, false);
+			this.props.fetchTeamLookup({ userID : profile.id });
 		}
 
 
@@ -158,6 +152,7 @@ class App extends Component {
 
 	handleCookies = ()=> {
 // 		console.log('%s.handleCookies()', this.constructor.name);
+		this.onToggleModal(Modals.COOKIES, false);
 		cookie.save('cookies', '1', { path : '/', sameSite : false });
 	};
 
@@ -331,7 +326,7 @@ class App extends Component {
 	};
 
 	onToggleModal = (uri, show=true, payload=null)=> {
-// 		console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
+		console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
 		const { modals } = this.state;
 
 		if (show) {
@@ -369,7 +364,7 @@ class App extends Component {
 
 	render() {
 //   	console.log('%s.render()', this.constructor.name, this.props, this.state);
-//   	console.log('%s.render()', this.constructor.name, this.state.modals);
+  	console.log('%s.render()', this.constructor.name, this.state.modals);
 
 		const { profile, team } = this.props;
   	const { darkTheme, popup, modals } = this.state;

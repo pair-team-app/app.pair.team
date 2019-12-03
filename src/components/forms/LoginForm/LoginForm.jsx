@@ -44,16 +44,16 @@ class LoginForm extends Component {
 // 		console.log('%s.handlePassword()', this.constructor.name);
 		event.preventDefault();
 
-		this.setState({
-			validated     : false,
-			password      : '',
-			passwordValid : true,
-			passMsg       : ''
-		});
-
-		setTimeout(()=> {
-			this.passwordTextfield.focus();
-		}, 69);
+// 		this.setState({
+// 			validated     : false,
+// 			password      : '',
+// 			passwordValid : true,
+// 			passMsg       : ''
+// 		});
+//
+// 		setTimeout(()=> {
+// 			this.passwordTextfield.focus();
+// 		}, 69);
 	};
 
 	handleSubmit = (event)=> {
@@ -122,7 +122,7 @@ class LoginForm extends Component {
 
 				{(passMsg)
 					? (<input type="email" placeholder="Enter Password" value={(passMsg || password)} onFocus={()=> this.setState({ passwordValid : true, passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} autoComplete="off" required />)
-					: (<input type="password" placeholder="Enter Password" value={(passMsg || password)} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} autoComplete="off" />)
+					: (<input type="password" placeholder="Enter Password" value={(passMsg || password)} onFocus={()=> this.setState({ passwordValid : true, passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} autoComplete="off" />)
 				}
 
 				<button disabled={(email.length === 0 || password.length === 0 || !emailValid || !passwordValid || passMsg)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Login</button>

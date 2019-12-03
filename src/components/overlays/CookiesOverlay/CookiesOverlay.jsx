@@ -39,12 +39,7 @@ class CookiesOverlay extends Component {
 
 	render() {
 		const { outro } = this.state;
-		const navLink = {
-			title : 'Privacy Policy',
-			url   : '/page/legal'
-		};
-
-		return (<div className={`cookies-overlay${(outro) ? ' cookies-overlay-hide' : ''}`}>
+		return (<div className={`cookies-overlay${(outro) ? ' cookies-overlay-hide' : ' cookies-overlay-intro'}`}>
 			<div className="cookies-overlay-title">Accept Cookies</div>
 
 			<div className="cookies-overlay-content">
