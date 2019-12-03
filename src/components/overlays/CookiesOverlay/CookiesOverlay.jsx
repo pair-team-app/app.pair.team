@@ -3,7 +3,9 @@ import React, { Component } from 'react';
 import './CookiesOverlay.css';
 
 import onClickOutside from 'react-onclickoutside';
+import { NavLink } from 'react-router-dom';
 
+import { Pages } from '../../../consts/uris';
 
 
 class CookiesOverlay extends Component {
@@ -37,12 +39,16 @@ class CookiesOverlay extends Component {
 
 	render() {
 		const { outro } = this.state;
+		const navLink = {
+			title : 'Privacy Policy',
+			url   : '/page/legal'
+		};
 
 		return (<div className={`cookies-overlay${(outro) ? ' cookies-overlay-hide' : ''}`}>
 			<div className="cookies-overlay-title">Accept Cookies</div>
 
 			<div className="cookies-overlay-content">
-				Cras non felis a tortor placerat posuere. Nulla maximus dolor at augue sodales, in venenatis urna luctus. Sed id nibh gravida, rutrum metus id, ultricies justo.
+				This site uses cookies to ensure you get the best experience. By using our website, you agree to our <NavLink to={Pages.LEGAL}>Privacy Policy</NavLink>.
 			</div>
 
 			<div className="button-wrapper-col cookies-overlay-button-wrapper">
