@@ -20,7 +20,7 @@ export default function packComponents(components) {
 	rects.forEach((rect, i)=> {
 		let fit = null;
 
-		if (node = findNode(rootNode, rect.width, rect.height)) {
+		if (node === findNode(rootNode, rect.width, rect.height)) {
 			fit = splitNode(node, rect.width, rect.height);
 
 		} else {
@@ -111,8 +111,8 @@ const growDown = (width, height)=> {
 		right  : rootNode
 	};
 
-	let node = null;
-	if (node = findNode(rootNode, width, height)) {
+	const node = findNode(rootNode, width, height);
+	if (node) {
 		return (splitNode(node, width, height));
 
 	} else {
@@ -138,8 +138,8 @@ const growRight = (width, height)=> {
 		}
 	};
 
-	let node = null;
-	if (node = findNode(rootNode, width, height)) {
+	const node = findNode(rootNode, width, height);
+	if (node) {
 		return (splitNode(node, width, height));
 
 	} else {

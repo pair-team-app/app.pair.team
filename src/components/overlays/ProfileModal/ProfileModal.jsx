@@ -136,7 +136,7 @@ class ProfileModal extends Component {
 		const { profile, team } = this.props;
 		const { outro, submitting } = this.state;
 		return (<BaseOverlay
-			tracking={`profile/${URIs.firstComponent()}`}
+			tracking={Modals.PROFILE}
 			outro={outro}
 			closeable={true}
 			defaultButton={null}

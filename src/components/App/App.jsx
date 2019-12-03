@@ -11,6 +11,7 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import AlertDialog from '../overlays/AlertDialog';
 import BlockingDialog from '../overlays/BlockingDialog';
 import ConfirmDialog from '../overlays/ConfirmDialog';
+import CookiesOverlay from '../overlays/CookiesOverlay';
 import LoginModal from '../overlays/LoginModal';
 import ProfileModal from '../overlays/ProfileModal';
 import PopupNotification from '../overlays/PopupNotification';
@@ -55,6 +56,7 @@ class App extends Component {
 			},
 			popup       : null,
 			modals      : {
+				cookies  : false,
 				disable  : false,
 				github   : false,
 				login    : false,
@@ -79,8 +81,15 @@ class App extends Component {
 		trackEvent('site', 'load');
 		trackPageview();
 
+		if ((cookie.load('cookies') << 0) === 0) {
+			this.setState({
+				modals : { ...this.state.modals,
+					cookies : true
+				}
+			});
+		}
 
-// 		console.log('[:][:][:][:][:][:][:][:][:][:]', );
+// 		console.log('[:][:][:][:][:][:][:][:][:][:]');
 
 		window.addEventListener('mousemove', this.handleMouseMove);
 		window.addEventListener('resize', this.handleResize);
@@ -106,8 +115,12 @@ class App extends Component {
 		}
 
 		if (profile && !prevProps.profile) {
-			this.onToggleModal(Modals.LOGIN, false);
+			this.onToggleModal(Modals.LOGIN);
 			this.props.fetchTeamLookup({ userID : profile.id });
+		}
+
+		if (profile && prevProps.profile && this.state.modals.login) {
+			this.onToggleModal(Modals.LOGIN, false);
 		}
 
 
@@ -120,7 +133,7 @@ class App extends Component {
 		}
 
 		if (!prevState.modals.network && !modals.network && !Browsers.isOnline()) {
-			this.onToggleModal(Modals.NETWORK, true);
+			this.onToggleModal(Modals.NETWORK);
 		}
 	}
 
@@ -143,8 +156,13 @@ class App extends Component {
 		window.removeEventListener('resize', this.handleResize);
 	}
 
+	handleCookies = ()=> {
+// 		console.log('%s.handleCookies()', this.constructor.name);
+		cookie.save('cookies', '1', { path : '/', sameSite : false });
+	};
+
 	handleDisableAccount = ()=> {
-		console.log('%s.handleDisableAccount()', this.constructor.name);
+// 		console.log('%s.handleDisableAccount()', this.constructor.name);
 
 		const { profile } = this.props;
 
@@ -214,9 +232,7 @@ class App extends Component {
 	};
 
 	handleLogout = ()=> {
-		console.log('%s.handleLogout()', this.constructor.name, this.constructor.name);
-
-// 		cookie.save('user_id', '0', { path : '/' });
+// 		console.log('%s.handleLogout()', this.constructor.name, this.constructor.name);
 		trackEvent('user', 'sign-out');
 
 		this.props.updateUserProfile(null);
@@ -317,6 +333,7 @@ class App extends Component {
 			this.setState({
 				modals : { ...modals, payload,
 					github   : false,
+// 					cookies  : (uri === Modals.COOKIES),
 					disable  : (uri === Modals.DISABLE),
 					login    : (uri === Modals.LOGIN),
 					network  : (uri === Modals.NETWORK),
@@ -330,6 +347,7 @@ class App extends Component {
 		} else {
 			this.setState({
 				modals : { ...modals,
+					cookies  : (uri === Modals.COOKIES) ? false : modals.cookies,
 					disable  : (uri === Modals.DISABLE) ? false : modals.disable,
 					github   : (uri === Modals.GITHUB) ? false : modals.github,
 					login    : (uri === Modals.LOGIN) ? false : modals.login,
@@ -373,29 +391,31 @@ class App extends Component {
 			    <Route path={Pages.WILDCARD}><Status404Page /></Route>
 		    </Switch>
 	    </div>
-		  {(URIs.firstComponent() !== 'app') && (<BottomNav onModal={(uri)=> this.onToggleModal(uri, true)} />)}
+		  {(URIs.firstComponent() !== 'app') && (<BottomNav />)}
 
 		  <div className="modal-wrapper">
-			  {(modals.login) && (<LoginModal
-				  inviteID={null}
-				  outro={(profile !== null)}
-				  onModal={(uri)=> this.onToggleModal(uri, true)}
-				  onPopup={this.handlePopup}
-				  onComplete={()=> this.onToggleModal(Modals.LOGIN, false)}
-				  onLoggedIn={this.handleUpdateUser}
+			  {(modals.cookies) && (<CookiesOverlay
+				  onConfirmed={this.handleCookies}
+				  onComplete={()=> this.onToggleModal(Modals.COOKIES, false)}
 			  />)}
 
 			  {(modals.profile) && (<ProfileModal
-				  outro={(profile !== null)}
 				  onModal={(uri)=> this.onToggleModal(uri, true)}
 				  onPopup={this.handlePopup}
 				  onComplete={()=> this.onToggleModal(Modals.PROFILE, false)}
 				  onUpdated={this.handleUpdateUser}
 			  />)}
 
+			  {(modals.login) && (<LoginModal
+				  inviteID={null}
+				  onModal={(uri)=> this.onToggleModal(uri, true)}
+				  onPopup={this.handlePopup}
+				  onComplete={()=> this.onToggleModal(Modals.LOGIN, false)}
+				  onLoggedIn={this.handleUpdateUser}
+			  />)}
+
 			  {(modals.register) && (<RegisterModal
 				  inviteID={null}
-				  outro={(profile !== null)}
 				  onModal={(uri)=> this.onToggleModal(uri, true)}
 				  onPopup={this.handlePopup}
 				  onComplete={()=> this.onToggleModal(Modals.REGISTER, false)}

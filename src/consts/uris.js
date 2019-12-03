@@ -1,5 +1,6 @@
 
 export const Modals = {
+	COOKIES   : '/cookies',
 	DISABLE   : '/disable',
 	GITHUB    : '/github',
 	LOGIN     : '/login',

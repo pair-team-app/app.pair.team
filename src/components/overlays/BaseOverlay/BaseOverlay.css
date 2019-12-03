@@ -25,7 +25,7 @@
 	transform: translate(-50%, -50%);
 	-webkit-transform: translate(-50%, -50%);
 	padding: 20px;
-	z-index: 2002;
+	/*z-index: 2001;*/
 	overflow: hidden;
 	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: 10px;

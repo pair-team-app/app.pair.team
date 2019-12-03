@@ -10,7 +10,7 @@ function SectionExpander(props) {
 	const { open } = section;
 
 	return (<div className="section-expander">
-		<div className={`section-expander-title${(open) ? ' section-expander-title-open' : ''}`}>{title}</div>
+		<div className="section-expander-title">{title}</div>
 
 		<Collapse
 			isOpen={open}

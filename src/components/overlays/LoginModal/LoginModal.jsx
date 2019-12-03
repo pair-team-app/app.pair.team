@@ -20,6 +20,7 @@ class LoginModal extends Component {
 		super(props);
 
 		this.state = {
+			outro    : false,
 			email    : null,
 			upload   : null,
 			outroURI : null
@@ -27,7 +28,7 @@ class LoginModal extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { profile } = this.props;
 		if (!prevProps.profile && profile) {
@@ -96,7 +97,7 @@ class LoginModal extends Component {
 
 		return (
 			<BaseOverlay
-				tracking={`login/${URIs.firstComponent()}`}
+				tracking={Modals.LOGIN}
 				outro={outro}
 				closeable={false}
 				onComplete={this.handleComplete}>

@@ -21,6 +21,7 @@ class RegisterModal extends Component {
 		super(props);
 
 		this.state = {
+			outro    : false,
 			email    : null,
 			upload   : null,
 			outroURI : null
@@ -117,7 +118,7 @@ class RegisterModal extends Component {
 // 		const { teams } = this.props;
 		const { outro } = this.state;
 		return (<BaseOverlay
-			tracking={`register/${URIs.firstComponent()}`}
+			tracking={Modals.REGISTER}
 			outro={outro}
 			closeable={false}
 			onComplete={this.handleComplete}>

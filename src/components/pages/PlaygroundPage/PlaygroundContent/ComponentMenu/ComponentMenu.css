@@ -14,7 +14,7 @@
 
 
 .component-menu-wrapper {
-	z-index: 1001;
+	z-index: 10;
 	transition: opacity 125ms ease-out;
 }
 

@@ -8,9 +8,6 @@
 	margin-bottom: 0;
 }
 
-.section-expander-title {
-}
-
 .section-expander-content-wrapper {
 	display: block;
 	position: relative;
@@ -45,9 +42,6 @@
 	position: relative;
 	margin: 10px 0 0 3px;
 	transition: 333ms;
-}
-
-.section-expander-title-open h2 {
 }
 
 .section-expander-content div {

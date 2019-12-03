@@ -1,0 +1,33 @@
+
+.cookies-overlay {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	/*height: 200px;*/
+	padding: 20px;
+	background-color: rgba(var(--site-bg-color), 1.0);
+	border: 1px solid rgba(var(--border-color), 1.0);
+	transition: bottom 125ms ease-out;
+	z-index: 3000;
+}
+
+.cookies-overlay-hide {
+	bottom: -200px;
+	transition: bottom 125ms ease-out;
+}
+
+.cookies-overlay-title {
+	margin-bottom: 20px;
+}
+
+.cookies-overlay-content {
+}
+
+.cookies-overlay-button-wrapper {
+	margin-top: 20px;
+}
+
+.cookies-overlay-button-wrapper button {
+	width: fit-content;
+}

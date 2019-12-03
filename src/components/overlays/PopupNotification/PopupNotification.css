@@ -5,12 +5,12 @@
 	left: 0;
 	width: 100%;
 	height: 38px;
-	z-index: 3000;
+	z-index: 5000;
 	overflow: hidden;
 }
 
 .popup-notification-wrapper-embedded {
-	z-index: 1001;
+	z-index: 5000;
 }
 
 .popup-notification-content-wrapper {
