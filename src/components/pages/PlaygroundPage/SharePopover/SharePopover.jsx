@@ -30,9 +30,11 @@ class SharePopover extends Component {
 		trackEvent('button', `copy-share-url`);
 // 		this.setState({ outro : true });
 
+		this.setState({ outro : true });
 		this.props.onPopup({
 			type    : POPUP_TYPE_OK,
-			content : `${window.location.href} has been copied to the clipboard!`
+			content : `${window.location.href} has been copied to the clipboard!`,
+			delay   : 333
 		});
 	};
 

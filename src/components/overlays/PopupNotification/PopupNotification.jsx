@@ -10,7 +10,7 @@ import { POPUP_POSITION_EMBEDDED, POPUP_POSITION_TOPMOST } from './';
 
 const START_LBL = 'START';
 const END_LBL = 'END';
-const ORTHODOX_DELAY = 1000 * (1/3);
+const ORTHODOX_DELAY = 0;
 const ORTHODOX_DURATION = 1000 * (1 + (1/8));
 const INTRO_DURATION = 1000 * (1/10);
 const OUTRO_DURATION = 1000 * (2/3);
@@ -43,7 +43,7 @@ class PopupNotification extends Component {
 		this.timeline = new TimelineMax();
 		this.timeline.addLabel(START_LBL, '0').from(this.wrapper, (INTRO_DURATION * 0.001), {
 			opacity    : ((position === POPUP_POSITION_TOPMOST) << 0) * 0.75,
-			y          : (position === POPUP_POSITION_TOPMOST) ? `${top - 20}px` : `${top + 7}px`,
+			y          : (position === POPUP_POSITION_TOPMOST) ? `${top - 38}px` : `${top + 7}px`,
 			height     : (position === POPUP_POSITION_TOPMOST) ? `38px` : '22px',
 			ease       : (position === POPUP_POSITION_TOPMOST) ? Back.easeOut : Circ.easeOut,
 			delay      : (delay * 0.001)

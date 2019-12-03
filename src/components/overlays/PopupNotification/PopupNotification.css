@@ -28,6 +28,11 @@
 	border: 1px solid rgba(var(--border-color), 1.0);
 	text-align: center;
 	vertical-align: middle;
+	/*box-shadow:*/
+		/*-1px -1px 0 rgba(26, 27, 29, 0.5),*/
+		/*1px -1px 0 rgba(26, 27, 29, 0.5),*/
+		/*-1px  1px 0 rgba(26, 27, 29, 0.5),*/
+		/*1px  1px 0 rgba(26, 27, 29, 0.5);*/
 }
 
 .popup-notification-content-error {
@@ -36,18 +41,11 @@
 }
 
 .popup-notification-content-ok {
-	background-color: rgba(var(--popup-ok-bg-color), 1.0);
-	/*color: rgba(128, 255, 70, 1.00);*/
+	background-color: rgba(var(--popup-ok-bg-color), 0.95);
 	color: rgba(var(--popup-ok-fg-color), 1.0);
-	/*color: #ff00ff;*/
 }
 
 .popup-notification-content-status {
-	background-color: rgba(var(--site-bg-color), 1.0);
+	background-color: rgba(var(--site-bg-color), 0.95);
 	color: rgba(var(--site-fg-color), 1.0);
-	/*text-shadow:*/
-			/*-1px -1px 0 rgba(26, 27, 29, 0.5),*/
-			 /*1px -1px 0 rgba(26, 27, 29, 0.5),*/
-			/*-1px  1px 0 rgba(26, 27, 29, 0.5),*/
-			 /*1px  1px 0 rgba(26, 27, 29, 0.5);*/
 }
