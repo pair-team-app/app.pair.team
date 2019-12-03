@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
-// import ConfirmDialog from '../ConfirmDialog';
 import ProfileForm from '../../forms/ProfileForm/ProfileForm';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';

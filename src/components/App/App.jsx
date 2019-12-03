@@ -326,7 +326,7 @@ class App extends Component {
 	};
 
 	onToggleModal = (uri, show=true, payload=null)=> {
-		console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
+// 		console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
 		const { modals } = this.state;
 
 		if (show) {
