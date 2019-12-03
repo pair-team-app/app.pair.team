@@ -4024,7 +4024,7 @@ des.js@^1.0.0:
     minimalistic-assert "^1.0.0"
 
 "design-engine-extract@file:../../../npm_modules/design-engine-extract/develop":
-  version "0.5.0"
+  version "1.0.0"
   dependencies:
     chalk "^2.4.2"
     inline-css "^2.5.1"
@@ -4037,7 +4037,7 @@ des.js@^1.0.0:
     web-resource-inliner "^4.3.3"
 
 "design-engine-playground@file:../../../npm_modules/design-engine-playground/develop":
-  version "0.4.5"
+  version "0.6.0"
   dependencies:
     arg "^4.1.1"
     bluebird "^3.5.5"

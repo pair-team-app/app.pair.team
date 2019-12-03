@@ -1,6 +1,6 @@
 {
   "name": "pairurl.com",
-  "version": "3.0.0",
+  "version": "1.9.48",
   "private": true,
   "dependencies": {
     "@kunukn/react-collapse": "^2.2.7",
