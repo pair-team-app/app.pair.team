@@ -282,6 +282,11 @@ class App extends Component {
 // 		});
 	};
 
+	handleThemeToggle = (event)=> {
+		console.log('%s.handleThemeToggle()', this.constructor.name, event);
+		this.setState({ darkTheme : !this.state.darkTheme });
+	};
+
 	handleUpdateUser = (profile)=> {
 // 		console.log('%s.handleUpdateUser()', this.constructor.name, profile);
 		this.props.updateUserProfile(profile);
@@ -326,14 +331,13 @@ class App extends Component {
 	};
 
 	onToggleModal = (uri, show=true, payload=null)=> {
-		console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
+// 		console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
 		const { modals } = this.state;
 
 		if (show) {
 			this.setState({
 				modals : { ...modals, payload,
 					github   : false,
-// 					cookies  : (uri === Modals.COOKIES),
 					disable  : (uri === Modals.DISABLE),
 					login    : (uri === Modals.LOGIN),
 					network  : (uri === Modals.NETWORK),
@@ -362,11 +366,6 @@ class App extends Component {
 		}
 	};
 
-	handleToggleTheme = (event)=> {
-		console.log('%s.handleToggleTheme()', this.constructor.name, event);
-		this.setState({ darkTheme : !this.state.darkTheme });
-	};
-
 
 	render() {
 //   	console.log('%s.render()', this.constructor.name, this.props, this.state);
@@ -378,7 +377,7 @@ class App extends Component {
   	const wrapperClass = (URIs.firstComponent() !== 'app') ? 'content-wrapper' : 'playground-wrapper';
 
   	return (<div className={`site-wrapper${(darkTheme) ? ' site-wrapper-dark' : ''}`}>
-		  {(URIs.firstComponent() !== 'app') && (<TopNav darkTheme={darkTheme} onToggleTheme={this.handleToggleTheme} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
+		  {(URIs.firstComponent() !== 'app') && (<TopNav darkTheme={darkTheme} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
 	    <div className={wrapperClass}>
 		    <Switch>
 			    <Route exact path={Pages.HOME} render={()=> <HomePage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} onSignup={()=> null} />} />
