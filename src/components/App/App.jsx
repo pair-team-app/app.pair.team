@@ -76,7 +76,7 @@ class App extends Component {
 	}
 
 	componentDidMount() {
-		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
 		trackEvent('site', 'load');
 		trackPageview();
@@ -99,7 +99,7 @@ class App extends Component {
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot);
-		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
 		const { profile, team } = this.props;
 		const { pathname } = this.props.location;
@@ -364,7 +364,7 @@ class App extends Component {
 
 	render() {
 //   	console.log('%s.render()', this.constructor.name, this.props, this.state);
-  	console.log('%s.render()', this.constructor.name, this.state.modals);
+//   	console.log('%s.render()', this.constructor.name, this.state.modals);
 
 		const { profile, team } = this.props;
   	const { darkTheme, popup, modals } = this.state;
