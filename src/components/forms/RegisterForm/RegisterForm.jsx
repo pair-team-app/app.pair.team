@@ -22,8 +22,6 @@ class RegisterForm extends Component {
 			passwordValid : true,
 			validated     : false
 		};
-
-		this.passwordTextfield = React.createRef();
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -35,11 +33,6 @@ class RegisterForm extends Component {
 		}
 	}
 
-	componentWillUnmount() {
-// 		console.log('%s.componentWillUnmount()', this.constructor.name);
-		this.passwordTextfield = null;
-	}
-
 	handlePassword = ()=> {
 // 		console.log('%s.handlePassword()', this.constructor.name);
 
@@ -49,10 +42,6 @@ class RegisterForm extends Component {
 			passwordValid : true,
 			passMsg       : null
 		});
-
-		setTimeout(() => {
-			this.passwordTextfield.focus();
-		}, 69);
 	};
 
 	handleSubmit = (event)=> {
@@ -121,8 +110,8 @@ class RegisterForm extends Component {
 					}
 
 					{(passMsg)
-						? (<input type="email" placeholder="Enter Password" value={passMsg} onFocus={()=> this.setState({ passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} ref={(element)=> this.passwordTextfield = element} autoComplete="off" required />)
-						: (<input type="password" placeholder="Enter Password" value={password} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} ref={(element)=> { this.passwordTextfield = element }} autoComplete="off" />)
+						? (<input type="email" placeholder="Enter Password" value={passMsg} onFocus={()=> this.setState({ passMsg : null })} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} autoComplete="off" required />)
+						: (<input type="password" placeholder="Enter Password" value={password} onChange={(event)=> this.setState({ password : event.target.value, passMsg : null })} onClick={this.handlePassword} autoComplete="off" />)
 					}
 
 					{(passMsg)

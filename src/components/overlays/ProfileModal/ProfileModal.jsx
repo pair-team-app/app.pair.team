@@ -12,7 +12,7 @@ import BaseOverlay from '../BaseOverlay';
 import ProfileForm from '../../forms/ProfileForm/ProfileForm';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
-import { fetchTeamLookup, updateUserProfile } from '../../../redux/actions';
+import { fetchTeamLookup, fetchUserProfile, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 
@@ -26,6 +26,18 @@ class ProfileModal extends Component {
 			updated    : false,
 			submitting : false
 		};
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props.profile, prevState, this.state, snapshot);
+
+		const { profile } = this.props;
+		if (profile !== prevProps.profile && profile.status === 0x00) {
+			this.setState({
+				outro   : true,
+				updated : true
+			});
+		}
 	}
 
 	handleCancel = ()=> {
@@ -50,6 +62,7 @@ class ProfileModal extends Component {
 			});
 
 		} else {
+			this.props.fetchUserProfile();
 			this.props.onPopup({
 				content  : 'No profile changes made.',
 				delay    : 125,
@@ -122,11 +135,6 @@ class ProfileModal extends Component {
 
 		trackEvent('button', 'update-profile');
 		this.props.updateUserProfile({ id, username, email, password });
-
-		this.setState({
-			outro   : true,
-			updated : true
-		});
 	};
 
 	render() {
@@ -138,7 +146,6 @@ class ProfileModal extends Component {
 			tracking={Modals.PROFILE}
 			outro={outro}
 			closeable={true}
-			defaultButton={null}
 			title={null}
 			onComplete={this.handleComplete}>
 
@@ -177,6 +184,7 @@ const mapStateToProps = (state, ownProps)=> {
 const mapDispatchToProps = (dispatch)=> {
 	return ({
 		fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
+		fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 };

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './ProfileForm.css';
 
 
-import { Strings } from 'lang-js-utils';
+import { Bits, Strings } from 'lang-js-utils';
 import { trackEvent } from '../../../utils/tracking';
 
 
@@ -16,26 +16,29 @@ class ProfileForm extends Component {
 			emailValid    : true,
 			passwordValid : true,
 			passMsg       : '',
-			changed       : false
+			changed       : false,
+			validated     : false
 		};
-
-		this.passwordTextfield = React.createRef();
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot);
 
-		const { email, password } = this.props.profile;
-		const changed = (this.state.email !== email || this.state.password !== password);
+		const { profile } = this.props;
+		const { email, password, status } = profile;
+		const { validated } = this.state;
 
+		const changed = (this.state.email !== email || this.state.password !== password);
 		if (changed !== this.state.changed) {
 			this.setState({ changed });
 		}
-	}
 
-	componentWillUnmount() {
-// 		console.log('%s.componentWillUnmount()', this.constructor.name);
-		this.passwordTextfield = null;
+		if (profile !== prevProps.profile && status !== 0x00 && validated) {
+			this.setState({ email, password,
+				emailValid : !Bits.contains(status, 0x10),
+				changed    : false
+			});
+		}
 	}
 
 	handleEmailChange = (event)=> {
@@ -66,10 +69,6 @@ class ProfileForm extends Component {
 			passMsg       : '',
 			changed       : false
 		});
-
-		setTimeout(()=> {
-			this.passwordTextfield.focus();
-		}, 69);
 	};
 
 	handleSubmit = (event)=> {
@@ -88,7 +87,8 @@ class ProfileForm extends Component {
 				email         : (emailValid) ? email : 'Email Address or Username Invalid',
 				passMsg       : (passwordValid) ? '' : 'Password Invalid',
 				emailValid    : emailValid,
-				passwordValid : passwordValid
+				passwordValid : passwordValid,
+				validated     : true
 			}, () => {
 				if (emailValid && passwordValid) {
 					const { id, username } = this.props.profile;
@@ -105,7 +105,7 @@ class ProfileForm extends Component {
 		const { team } = this.props;
 		const { email, password } = this.state;
 // 		const { emailValid, passwordValid } = this.state;
-		const { emailValid, changed } = this.state;
+		const { emailValid, changed, validated } = this.state;
 
 		return (
 			<div className="profile-form">
@@ -113,15 +113,18 @@ class ProfileForm extends Component {
 					<input name="email" style={{ display : 'none' }} />
 					<input type="password" name="password" style={{ display : 'none' }} />
 
-					<input type="text" placeholder="Enter Email Address" value={email} onChange={this.handleEmailChange} autoComplete="new-password" />
+					{(validated)
+						? (<input type="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" required />)
+						: (<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" />)
+					}
 					{(team.type === 'free')
-						? (<input type="text" className="profile-form-team-txt" value={Strings.capitalize(team.type)} name="team-plan" readOnly={true} />)
+						? (<input type="text" className="profile-form-team-txt" value={Strings.capitalize(team.type)} readOnly={true} />)
 						: (<div className="profile-form-team-wrapper">
-							<input type="text" className="profile-form-team-txt" value={Strings.capitalize(team.type)} name="team-plan" readOnly={true} />
+							<input type="text" className="profile-form-team-txt" value={Strings.capitalize(team.type)} readOnly={true} />
 							<div className="form-accessory-txt" onClick={this.props.onDowngradePlan}>Downgrade</div>
 						</div>)
 					}
-					<input type="password" placeholder="Enter Password" value={password} onChange={this.handlePasswordChange} onClick={this.handlePasswordClick} ref={(element)=> { this.passwordTextfield = element }} autoComplete="new-password" />
+					<input type="password" placeholder="Enter Password" value={password} onChange={this.handlePasswordChange} onClick={this.handlePasswordClick} autoComplete="new-password" />
 
 					<div className="button-wrapper-col stripe-form-button-wrapper">
 						<button onClick={this.props.onCancel}>Cancel</button>

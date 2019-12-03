@@ -92,9 +92,7 @@ class LoginModal extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-// 		const { teams } = this.props;
 		const { outro } = this.state;
-
 		return (
 			<BaseOverlay
 				tracking={Modals.LOGIN}
@@ -138,7 +136,6 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		teams       : state.teams,
 		invite      : state.invite,
 		profile     : state.userProfile,
 		redirectURI : state.redirectURI

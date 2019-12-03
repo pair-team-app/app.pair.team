@@ -140,6 +140,7 @@ export function fetchUserProfile() {
 				type    : USER_PROFILE_LOADED,
 				payload : { ...response.data.user,
 					id     : id << 0,
+					status : 0x00,
 					github : (github) ? { ...github,
 						id : github.id << 0
 					} : github,

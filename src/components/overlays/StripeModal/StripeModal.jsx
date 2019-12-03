@@ -34,7 +34,6 @@ class StripeModal extends Component {
 			outro      : false,
 			outroURI   : null,
 			purchase   : null,
-// 			productIDs : Strings.repeat((this.props.payload.price === 14.99) ? 3 : 4, this.props.payload.total, ',')
 			productIDs : Strings.repeat(this.props.payload.product.id, this.props.payload.team.members.length, ',')
 		};
 	}
@@ -133,7 +132,6 @@ class StripeModal extends Component {
 			tracking={Modals.STRIPE}
 			outro={outro}
 			closeable={true}
-			defaultButton={null}
 			title={null}
 			onComplete={this.handleComplete}>
 

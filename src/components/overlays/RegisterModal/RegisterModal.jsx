@@ -115,7 +115,6 @@ class RegisterModal extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-// 		const { teams } = this.props;
 		const { outro } = this.state;
 		return (<BaseOverlay
 			tracking={Modals.REGISTER}
@@ -161,7 +160,6 @@ const mapStateToProps = (state, ownProps)=> {
 		invite      : state.invite,
 		profile     : state.userProfile,
 		redirectURI : state.redirectURI,
-		teams       : state.teams
 	});
 };
 
