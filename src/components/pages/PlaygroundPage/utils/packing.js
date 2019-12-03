@@ -17,19 +17,23 @@ export default function packComponents(components) {
 		right : null
 	};
 
-	rects.forEach((rect, i)=> {
-		let fit = null;
+	if (rects.length > 1) {
+		rects.forEach((rect, i) => {
+			let fit = null;
 
-		if (node === findNode(rootNode, rect.width, rect.height)) {
-			fit = splitNode(node, rect.width, rect.height);
+			if (node === findNode(rootNode, rect.width, rect.height)) {
+				fit = splitNode(node, rect.width, rect.height);
 
-		} else {
-			fit = growNode(rect.width, rect.height);
-		}
+			} else {
+				fit = growNode(rect.width, rect.height);
+			}
 
-		rect.x = fit.x;
-		rect.y = fit.y;
-	});
+// 			console.log('fit', i, { fit });
+
+			rect.x = fit.x;
+			rect.y = fit.y;
+		});
+	}
 
 	return (rects);
 }

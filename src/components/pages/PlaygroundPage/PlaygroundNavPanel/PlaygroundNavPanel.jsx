@@ -35,8 +35,7 @@ class PlaygroundNavPanel extends Component {
 		});
 
 		this.setState({ typeGroups }, ()=> {
-// 			grabFavicon(`https://${playground.team.domain}`).then((response)=> {
-			grabFavicon('https://dev.pairurl.com').then((response)=> {
+			grabFavicon(`https://${playground.team.domain}`).then((response)=> {
 				const icons = (response.icons) ? response.icons.filter(({ sizes })=> (sizes)).map((icon)=> ({ ...icon,
 					size : icon.sizes.split('x').pop() << 0
 				})).sort((i, j)=> ((i.size < j.size) ? -1 : (i.size > j.size) ? 1 : 0)) : [];
