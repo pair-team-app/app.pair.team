@@ -30,8 +30,10 @@ export default function packComponents(components) {
 
 // 			console.log('fit', i, { fit });
 
-			rect.x = fit.x;
-			rect.y = fit.y;
+			if (fit) {
+				rect.x = fit.x;
+				rect.y = fit.y;
+			}
 		});
 	}
 
@@ -153,6 +155,10 @@ const growRight = (width, height)=> {
 
 const splitNode = (node, width, height)=> {
 // 	console.log('splitNode()', {  node, width, height });
+
+	if (!node) {
+		return (null);
+	}
 
 	node.used = true;
 	node.down = {

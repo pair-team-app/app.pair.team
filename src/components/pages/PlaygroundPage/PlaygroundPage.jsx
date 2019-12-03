@@ -45,8 +45,8 @@ class PlaygroundPage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
-		const { profile, componentTypes, match } = this.props;
-		const { typeGroups, playground, fetching } = this.state;
+		const { profile, componentTypes, playground, match } = this.props;
+		const { typeGroups, fetching } = this.state;
 
 		const { teamSlug, projectSlug, buildID, playgroundID, componentsSlug, componentID, commentID } = match.params;
 // 		console.log('params', match.params);
@@ -66,10 +66,8 @@ class PlaygroundPage extends Component {
 		}
 
 
-
-
 		// playground first load
-		if (!prevState.playground && playground) {
+		if (!prevProps.playground && playground) {
 			let typeGroup = null;
 			let component = null;
 			let comment = null;
@@ -93,8 +91,8 @@ class PlaygroundPage extends Component {
 				url = url.replace(playgroundID, playground.id);
 			}
 
-			if (componentsSlug && typeGroups) {
-				typeGroup = typeGroups.find(({ key })=> (key === componentsSlug));
+			if (componentsSlug && componentTypes) {
+				typeGroup = componentTypes.find(({ key })=> (key === componentsSlug));
 
 				if (typeGroup) {
 					typeGroup.expanded = true;
@@ -133,7 +131,7 @@ class PlaygroundPage extends Component {
 					}
 
 				} else {
-// 					typeGroup = typeGroups.find(({ key })=> (key === 'views'));
+// 					typeGroup = componentTypes.find(({ key })=> (key === 'views'));
 // 					url = url.replace(new RegExp(`/${componentsSlug}.*$`, 'g'), '/views');
 				}
 
@@ -146,7 +144,7 @@ class PlaygroundPage extends Component {
 // 				}
 
 			} else {
-				typeGroup = typeGroups.find(({ key })=> (key === 'views'));
+				typeGroup = componentTypes.find(({ key })=> (key === 'views'));
 				url = url.replace(new RegExp(`/${componentsSlug}.*$`, 'g'), '/views');
 			}
 
@@ -162,9 +160,14 @@ class PlaygroundPage extends Component {
 
 
 		// switching out
-		if (playground && prevState.playground) {
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, playgroundID, playground, prevProps.playground);
+
+		if (playground && prevProps.playground) {
 			const { typeGroup, component, comment } = this.props;
 
+			if (playgroundID << 0 !== playground.id) {
+				this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`);
+			}
 
 			if (typeGroup && typeGroup !== prevProps.typeGroup) {
 				this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`);
@@ -342,7 +345,7 @@ class PlaygroundPage extends Component {
 		trackEvent('button', (this.props.playground.deviceID === 1) ? 'mobile-toggle' : 'desktop-toggle');
 		const { playgrounds } = this.state;
 
-		const playground = playgrounds.find(({ deviceID })=> (deviceID !== playground.deviceID));
+		const playground = playgrounds.find(({ deviceID })=> (deviceID !== this.props.playground.deviceID));
 		if (playground) {
 			this.props.setPlayground(playground);
 			this.props.setComponent(null);

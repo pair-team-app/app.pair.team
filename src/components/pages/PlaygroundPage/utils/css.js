@@ -14,6 +14,7 @@ export const convertStyles = (styles)=> {
 	return (style);
 };
 
+
 export const inlineStyles = (html, styles)=> {
 	const style = Object.keys(styles).map((key)=> (`${key}:${styles[key]}`)).join('; ').replace(/"/g, '\'');
 	return ((/style="(.+?)"/i.test(html)) ? `${html.replace(/fixed/g, 'absolute').replace(/style="/, `style="${style} `)}` : html.replace(/fixed/g, 'absolute').replace(/>/, ` style="${style}">`).replace(/ class=.+?"/, ''));

@@ -19,35 +19,16 @@ class PlaygroundNavPanel extends Component {
 	componentDidMount() {
 // 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
-
-		const { componentTypes, playground, component } = this.props;
-		const typeIDs = playground.components.map(({ typeID })=> (typeID));
-
-		const typeGroups = componentTypes.filter(({ id })=> (typeIDs.includes(id))).map((typeGroup)=> {
-			const items = playground.components.filter(({ typeID })=> (typeID === typeGroup.id)).map((item)=> ({ ...item,
-				selected : (component && item.id === component.id)
-			}));
-
-			return ({ ...typeGroup, items,
-				expanded : (this.props.typeGroup && (typeGroup.id === this.props.typeGroup.id || items.map(({ selected })=> (selected)).includes(true))),
-				selected : (this.props.typeGroup && (typeGroup.id === this.props.typeGroup.id || items.map(({ selected })=> (selected)).includes(true)))
-			});
-		});
-
-		this.setState({ typeGroups }, ()=> {
-			grabFavicon(`https://${playground.team.domain}`).then((response)=> {
-				const icons = (response.icons) ? response.icons.filter(({ sizes })=> (sizes)).map((icon)=> ({ ...icon,
-					size : icon.sizes.split('x').pop() << 0
-				})).sort((i, j)=> ((i.size < j.size) ? -1 : (i.size > j.size) ? 1 : 0)) : [];
-
-				const teamLogo = (icons.length > 0) ? icons.pop().src : null;
-				this.setState({ teamLogo });
-			});
-		});
+		this.onPopulateTree();
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+
+		const { playground } = this.props;
+		if (playground !== prevProps.playground) {
+			this.onPopulateTree();
+		}
 
 		const { component } = this.props;
 		if (this.props.typeGroup && this.props.typeGroup !== prevProps.typeGroup) {
@@ -91,6 +72,35 @@ class PlaygroundNavPanel extends Component {
 // 		console.log('%s.handleTypeItemClick()', this.constructor.name, typeGroup, typeItem);
 
 		this.props.onTypeItemClick(typeGroup, typeItem);
+	};
+
+	onPopulateTree = ()=> {
+// 		console.log('%s.onPopulateTree()', this.constructor.name);
+
+		const { componentTypes, playground, component } = this.props;
+		const typeIDs = playground.components.map(({ typeID })=> (typeID));
+
+		const typeGroups = componentTypes.filter(({ id })=> (typeIDs.includes(id))).map((typeGroup)=> {
+			const items = playground.components.filter(({ typeID })=> (typeID === typeGroup.id)).map((item)=> ({ ...item,
+				selected : (component && item.id === component.id)
+			}));
+
+			return ({ ...typeGroup, items,
+				expanded : (this.props.typeGroup && (typeGroup.id === this.props.typeGroup.id || items.map(({ selected })=> (selected)).includes(true))),
+				selected : (this.props.typeGroup && (typeGroup.id === this.props.typeGroup.id || items.map(({ selected })=> (selected)).includes(true)))
+			});
+		});
+
+		this.setState({ typeGroups }, ()=> {
+			grabFavicon(`https://${playground.team.domain}`).then((response)=> {
+				const icons = (response.icons) ? response.icons.filter(({ sizes })=> (sizes)).map((icon)=> ({ ...icon,
+					size : icon.sizes.split('x').pop() << 0
+				})).sort((i, j)=> ((i.size < j.size) ? -1 : (i.size > j.size) ? 1 : 0)) : [];
+
+				const teamLogo = (icons.length > 0) ? icons.pop().src : null;
+				this.setState({ teamLogo });
+			});
+		});
 	};
 
 
