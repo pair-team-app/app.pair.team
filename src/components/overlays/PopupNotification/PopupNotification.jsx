@@ -120,4 +120,5 @@ class PopupNotification extends Component {
 
 }
 
-export default PopupNotification;
+
+export default (PopupNotification);
