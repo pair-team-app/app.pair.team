@@ -1,18 +1,18 @@
 
-.features-page {
+.docs-page {
 	padding: 60px 20%;
 }
 
-.features-page-content-wrapper {
+.docs-page-content-wrapper {
 	margin-bottom: 20px;
 }
 
-.features-page-section-wrapper {
+.docs-page-section-wrapper {
 }
 
 
 @media screen and (max-width: 800px) {
-	.features-page {
+	.docs-page {
 		padding: 60px 30px;
 	}
 }

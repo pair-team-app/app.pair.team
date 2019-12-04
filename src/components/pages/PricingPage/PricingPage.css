@@ -1,5 +1,5 @@
 
-.pricing-page-wrapper {
+.pricing-page {
 	padding: 60px 20%;
 }
 
@@ -30,7 +30,7 @@
 
 
 @media screen and (max-width: 800px) {
-	.pricing-page-wrapper {
+	.pricing-page {
 		padding: 60px 30px;
 	}
 }

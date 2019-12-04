@@ -26,7 +26,7 @@ function PrivacyPage(props) {
 
 
 	return (
-		<BasePage className="privacy-page-wrapper">
+		<BasePage className="privacy-page">
 			<h1>Privacy Policy</h1>
 			<div className="privacy-page-text">
 				<div>

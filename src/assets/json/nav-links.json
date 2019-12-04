@@ -10,7 +10,7 @@
     "url": "/url/https://medium.com/pairurl"
   }, {
     "title": "Docs",
-    "url": "/url/https://github.com/de-ai/designengine.ai/blob/master/README.md"
+    "url": "/page/docs"
   }, {
     "title": "GitHub",
     "url": "/url/https://github.com/de-ai"
@@ -19,7 +19,7 @@
     "title": "Legal",
     "url": "/page/legal"
   }],
-  "aux": [{
+  "menu": [{
     "title": "Download NPM",
     "url": "/url/https://www.npmjs.com/package/design-engine-playground"
   }, {

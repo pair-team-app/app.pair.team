@@ -20,6 +20,7 @@ import StripeModal from '../overlays/StripeModal';
 import TopNav from '../sections/TopNav';
 import BottomNav from '../sections/BottomNav';
 import HomePage from '../pages/HomePage';
+import DocsPage from '../pages/DocsPage';
 import FeaturesPage from '../pages/FeaturesPage';
 import PlaygroundPage from '../pages/PlaygroundPage';
 import PricingPage from '../pages/PricingPage';
@@ -376,6 +377,7 @@ class App extends Component {
 	    <div className={wrapperClass}>
 		    <Switch>
 			    <Route exact path={Pages.HOME} render={()=> <HomePage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} onSignup={()=> null} />} />
+			    <Route exact path={Pages.DOCS} render={()=> <DocsPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
 			    <Route exact path={Pages.FEATURES} render={()=> <FeaturesPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
 			    <Route exact path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(comments)?/:commentID([0-9]+)?`} render={(props)=> <PlaygroundPage { ...props } onLogout={this.handleLogout} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
 			    <Route exact path={Pages.PRICING} render={()=> <PricingPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />

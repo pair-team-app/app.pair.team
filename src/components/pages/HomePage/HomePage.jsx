@@ -126,7 +126,7 @@ class HomePage extends Component {
 
 		const { title, video, email, emailReset, submitted } = this.state;
 		return (
-			<BasePage className="home-page-wrapper">
+			<BasePage className="home-page">
 				<div className="home-page-form-wrapper">
 					<h1 dangerouslySetInnerHTML={{ __html : title }} />
 					<form onSubmit={this.handleSubmit}>

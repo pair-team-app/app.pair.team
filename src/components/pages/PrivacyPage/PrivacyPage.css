@@ -1,5 +1,5 @@
 
-.privacy-page-wrapper {
+.privacy-page {
 	padding: 60px 20% 80px 20%;
 }
 
@@ -21,7 +21,7 @@
 
 
 @media screen and (max-width: 800px) {
-	.privacy-page-wrapper {
+	.privacy-page {
 		padding: 60px 30px;
 	}
 }

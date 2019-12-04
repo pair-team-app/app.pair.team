@@ -13,6 +13,7 @@ export const Modals = {
 };
 
 export const Pages = {
+	DOCS       : '/docs',
 	HOME       : '/',
 	FEATURES   : '/features',
 	LEGAL      : '/legal',

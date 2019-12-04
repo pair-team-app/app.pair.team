@@ -421,7 +421,7 @@ class PlaygroundPage extends Component {
 		const { params } = this.props.match;
 		const { playgrounds, cursor, accessibility } = this.state;
 
-		return (<BasePage className={`page-wrapper playground-page-wrapper${(component && (window.location.href.includes('/comments'))) ? ' playground-page-wrapper-comments' : ''}`}>
+		return (<BasePage className={`page-wrapper playground-page${(component && (window.location.href.includes('/comments'))) ? ' playground-page-comments' : ''}`}>
 			{(profile && playground && typeGroup) && (<PlaygroundNavPanel
 				params={params}
 				onTypeGroupClick={this.handleNavGroupItemClick}

@@ -1,0 +1,62 @@
+{
+  "desktop": {
+    "title": "Documentation",
+    "intro": "Fusce vitae enim tempus, vulputate arcu sed, posuere est. In accumsan quam ac malesuada fermentum. Vivamus posuere mi sit amet posuere convallis.",
+    "sections": [{
+      "open" : true,
+      "header": "Quick Start",
+      "content": "Start off by installing module from npm:<br /><code>yarn add design-engine-playground</code>Now setup your account &amp; integrate postbuild script:<br /><code>npx pair-url --init</code>Lastly generate new playground(s) from last build:<br /><code>npx pair-url --parse</code>",
+      "price": null,
+      "event": "quick-start"
+    }, {
+      "open" : true,
+      "header": "Installation",
+      "content": "Add npm module to project:<br /><code>yarn add design-engine-playground</code>Setup postbuild script &amp; account:<br /><code>npx pair-url --init</code>",
+      "price": null,
+      "event": "installation"
+    }, {
+      "open" : true,
+      "header": "Removal",
+      "content": "Drop the postbuild script &amp; delete your account:<br /><code>npx pair-url --remove</code>",
+      "price": null,
+      "event": "removal"
+    }, {
+      "open" : true,
+      "header": "Commands",
+      "content": "Displays available commands:<br /><code>npx pair-url --help</code>Sets up project &amp; account:<br /><code>npx pair-url --init</code>Generates new playground(s) from last build:<br /><code>npx pair-url --parse</code>Remove the postbuild script from project &amp; delete Pair user account:<br /><code>npx pair-url --remove</code>",
+      "price": null,
+      "event": "commands"
+    }],
+    "assets": null
+  },
+  "mobile": {
+    "title": "Documentation",
+    "intro": "Fusce vitae enim tempus, vulputate arcu sed, posuere est. In accumsan quam ac malesuada fermentum. Vivamus posuere mi sit amet posuere convallis.",
+    "sections": [{
+      "open" : true,
+      "header": "Quick Start",
+      "content": "Start off by installing module from npm:<br /><code>yarn add design-engine-playground</code>Now setup your account &amp; integrate postbuild script:<br /><code>npx pair-url --init</code>Lastly generate new playground(s) from last build:<br /><code>npx pair-url --parse</code>",
+      "price": null,
+      "event": "quick-start"
+    }, {
+      "open" : true,
+      "header": "Installation",
+      "content": "Add npm module to project:<br /><code>yarn add design-engine-playground</code>Setup postbuild script &amp; account:<br /><code>npx pair-url --init</code>",
+      "price": null,
+      "event": "installation"
+    }, {
+      "open" : true,
+      "header": "Removal",
+      "content": "Drop the postbuild script &amp; delete your account:<br /><code>npx pair-url --remove</code>",
+      "price": null,
+      "event": "removal"
+    }, {
+      "open" : true,
+      "header": "Commands",
+      "content": "Displays available commands:<br /><code>npx pair-url --help</code>Sets up project &amp; account:<br /><code>npx pair-url --init</code>Generates new playground(s) from last build:<br /><code>npx pair-url --parse</code>Remove the postbuild script from project &amp; delete Pair user account:<br /><code>npx pair-url --remove</code>",
+      "price": null,
+      "event": "commands"
+    }],
+    "assets": null
+  }
+}
