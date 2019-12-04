@@ -8,12 +8,11 @@ import { NavLink } from 'react-router-dom';
 
 import BasePage from '../BasePage';
 import DummyForm from '../../forms/DummyForm';
-import { API_ENDPT_URL, Modals } from '../../../consts/uris';
+import { API_ENDPT_URL, CDN_HOSTNAME, Modals } from '../../../consts/uris';
 import { trackEvent } from '../../../utils/tracking';
 
-import homePageElementLandscape from '../../../assets/videos/element-home-page-landscape.mp4';
-import homePageElementPortrait from '../../../assets/videos/element-home-page-portrait.mp4';
 import pageContent from '../../../assets/json/content-home-page';
+
 
 
 class HomePage extends Component {
@@ -22,6 +21,7 @@ class HomePage extends Component {
 
 		this.state = {
 			title      : (Browsers.isMobile.ANY()) ? pageContent.mobile.title: pageContent.desktop.title,
+			video      : ((Browsers.isMobile.ANY()) ? pageContent.mobile.assets.videos[0].url: pageContent.desktop.assets.videos[0].url).replace('_{CDN_HOSTNAME}_', CDN_HOSTNAME),
 			email      : '',
 			emailValid : false,
 			emailReset : false,
@@ -124,7 +124,7 @@ class HomePage extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { title, email, emailReset, submitted } = this.state;
+		const { title, video, email, emailReset, submitted } = this.state;
 		return (
 			<BasePage className="home-page-wrapper">
 				<div className="home-page-form-wrapper">
@@ -137,7 +137,6 @@ class HomePage extends Component {
 							? (<input disabled={submitted} type="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} required autoComplete="new-password" />)
 							: (<input disabled={submitted} type="text" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} autoComplete="new-password" />)
 						}
-						{/*<button disabled={(!emailValid && !email.length === 0) || submitted} type="submit" onClick={(event)=> this.handleSubmit(event)} style={{opacity : (submitted) ? 0.5 : 1.0}}>Join Wait List</button>*/}
 						<button disabled={submitted} type="submit" onClick={(event)=> this.handleSubmit(event)}>Join Wait List</button>
 					</form>
 					<div className="form-disclaimer">By tapping “Join Wait List” you accept our<br /><NavLink to="/terms">Terms of Service.</NavLink></div>
@@ -146,7 +145,7 @@ class HomePage extends Component {
 				<div className="page-content-wrapper home-page-content-wrapper">
 					<div className="home-page-element-wrapper">
 						<video className={`home-page-element ${(Browsers.isMobile.ANY()) ? 'home-page-element-portrait' : 'home-page-element-landscape'}`} onLoad={()=> trackEvent('video', 'load')} onPause={()=> trackEvent('video', 'pause')} onPlay={()=> trackEvent('video', 'play')} autoPlay={true} controls muted loop>
-							<source src={(Browsers.isMobile.ANY()) ? homePageElementPortrait : homePageElementLandscape} type="video/mp4" />
+							<source src={video} type="video/mp4" />
 						</video>
 					</div>
 				</div>

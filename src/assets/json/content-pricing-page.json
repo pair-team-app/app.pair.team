@@ -20,7 +20,8 @@
       "content": "<strong>10,000 Pair URLs</strong> per month.<div>&bull; Private Pair URLs<br />&bull; 1,0000 Builds Per Month<br />&bull; PM Support</div>",
       "price": 27.99,
       "event": "enterprise-plan"
-    }]
+    }],
+    "assets": null
   },
   "mobile": {
     "title": "Pricing",
@@ -43,6 +44,7 @@
       "content": "<strong>10,000 Pair URLs</strong> per month.<div>&bull; Private Pair URLs<br />&bull; 1,0000 Builds Per Month<br />&bull; PM Support</div>",
       "price": 27.99,
       "event": "enterprise-plan"
-    }]
+    }],
+    "assets": null
   }
 }

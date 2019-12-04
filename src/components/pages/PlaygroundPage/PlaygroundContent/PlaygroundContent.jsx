@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './PlaygroundContent.css';
 
-import { Images} from 'lang-js-utils';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';

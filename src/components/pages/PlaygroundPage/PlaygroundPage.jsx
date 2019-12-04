@@ -46,7 +46,7 @@ class PlaygroundPage extends Component {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { profile, componentTypes, playground, match } = this.props;
-		const { typeGroups, fetching } = this.state;
+		const { fetching } = this.state;
 
 		const { teamSlug, projectSlug, buildID, playgroundID, componentsSlug, componentID, commentID } = match.params;
 // 		console.log('params', match.params);

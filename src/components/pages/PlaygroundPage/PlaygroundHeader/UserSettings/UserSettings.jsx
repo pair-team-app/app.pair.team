@@ -7,7 +7,7 @@ import { NavLink } from 'react-router-dom';
 
 import { SettingsMenuItemTypes } from '.';
 import BasePopover from '../../../../overlays/BasePopover';
-import { DEFAULT_AVATAR, GITHUB_DOCS } from '../../../../../consts/uris';
+import { USER_DEFAULT_AVATAR, GITHUB_DOCS } from '../../../../../consts/uris';
 import { trackOutbound } from '../../../../../utils/tracking';
 
 
@@ -59,7 +59,7 @@ class UserSettings extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { profile } = this.props;
-		const { avatar } = (profile || { avatar : DEFAULT_AVATAR });
+		const { avatar } = (profile || { avatar : USER_DEFAULT_AVATAR });
 		const { popover, outro } = this.state;
 
 		return (<div className="user-settings" ref={(element)=> { this.wrapper = element; }}>

@@ -12,7 +12,7 @@ import { POPUP_TYPE_ERROR } from '../PopupNotification';
 import { Modals } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
-import pairLogo from '../../../assets/images/logos/logo-obit-310.png';
+import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
 
 class LoginModal extends Component {

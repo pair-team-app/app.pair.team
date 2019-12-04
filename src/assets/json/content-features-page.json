@@ -20,7 +20,8 @@
       "content": "Pair was designed to help you reach every audience effectively by helping your team visualize your products Accessibility Tree. Pair provides the ability to view & make comments directly against every aspect of your mission critical application.",
       "price": null,
       "event": "accessibility"
-    }]
+    }],
+    "assets": null
   },
   "mobile": {
     "title": "Features",
@@ -43,6 +44,7 @@
       "content": "Pair was designed to help you reach every audience effectively by helping your team visualize your products Accessibility Tree. Pair provides the ability to view & make comments directly against every aspect of your mission critical application.",
       "price": null,
       "event": "accessibility"
-    }]
+    }],
+    "assets": null
   }
 }

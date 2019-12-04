@@ -5,7 +5,7 @@ import './BasePlaygroundComment.css';
 import { connect } from 'react-redux';
 
 import { MOMENT_TIMESTAMP } from '../../../../consts/formats';
-import { DEFAULT_AVATAR } from '../../../../consts/uris';
+import { USER_DEFAULT_AVATAR } from '../../../../consts/uris';
 
 
 function BasePlaygroundComment(props) {
@@ -18,7 +18,7 @@ function BasePlaygroundComment(props) {
 		<div className="base-playground-comment-header-wrapper">
 			<div className="base-playground-comment-header-icon-wrapper">
 				{(type !== 'init') && (<div className="base-playground-comment-header-icon">{ind}</div>)}
-				<div className="base-playground-comment-header-icon"><img src={(!author.avatar) ? DEFAULT_AVATAR : author.avatar} alt={author.username} /></div>
+				<div className="base-playground-comment-header-icon"><img src={(!author.avatar) ? USER_DEFAULT_AVATAR : author.avatar} alt={author.username} /></div>
 			</div>
 			<div className="base-playground-comment-header-spacer" />
 			<div className="base-playground-comment-header-link-wrapper">

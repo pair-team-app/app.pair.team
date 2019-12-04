@@ -14,7 +14,7 @@ import { API_ENDPT_URL, Modals } from '../../../consts/uris';
 import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
-import pairLogo from '../../../assets/images/logos/logo-obit-310.png';
+import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
 class RegisterModal extends Component {
 	constructor(props) {
