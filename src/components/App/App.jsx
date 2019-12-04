@@ -351,7 +351,7 @@ class App extends Component {
 					github   : (uri === Modals.GITHUB) ? false : modals.github,
 					login    : (uri === Modals.LOGIN) ? false : modals.login,
 					network  : (uri === Modals.NETWORK) ? false : modals.network,
-					noAccess : (uri === Modals.noAccess) ? false : modals.noAccess,
+					noAccess : (uri === Modals.NO_ACCESS) ? false : modals.noAccess,
 					profile  : (uri === Modals.PROFILE) ? false : modals.profile,
 					register : (uri === Modals.REGISTER) ? false : modals.register,
 					stripe   : (uri === Modals.STRIPE) ? false : modals.stripe,

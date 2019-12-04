@@ -212,13 +212,9 @@ export function fetchTeamLookup(payload) {
 				dispatch({
 					type    : SET_TEAMS,
 					payload : teams.map((team)=> ({ ...team,
-						members : team.members.map((member)=> {
-							const userID = member.user_id << 0;
-							delete (member['user_id']);
-
-							return ({ ...member, userID,
-								id : member.id << 0
-						});})
+						members : team.members.map((member)=> ({ ...member,
+							id : member.id << 0
+						}))
 					}))
 				});
 			}

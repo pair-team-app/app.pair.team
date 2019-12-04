@@ -64,14 +64,14 @@ const initialState = {
 };
 
 
-const logFormat = (state, action, meta='')=> {
+// const logFormat = (state, action, meta='')=> {
 // 	const { type, payload } = action;
 // 	console.log(LOG_REDUCER_PREFIX, `REDUCER >> “${type}”`, state, payload, meta);
-};
+// };
 
 
 function rootReducer(state=initialState, action) {
-	logFormat(state, action);
+// 	logFormat(state, action);
 
 	switch (action.type) {
 		default:
@@ -191,7 +191,7 @@ function rootReducer(state=initialState, action) {
 
 		case SET_TEAMS:
 			return (Object.assign({}, state, {
-				teams : action.payload.slice(-1)
+				teams : action.payload.slice(0, 1)
 			}));
 
 		case SET_PLAYGROUND:

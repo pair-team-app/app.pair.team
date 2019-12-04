@@ -72,7 +72,7 @@ class PlaygroundPage extends Component {
 			let component = null;
 			let comment = null;
 
-			const isMember = playground.team.members.some(({ userID })=> (userID === profile.id));
+			const isMember = playground.team.members.some(({ id })=> (id === profile.id));
 			if (!isMember) {
 				this.props.onModal(Modals.NO_ACCESS);
 			}
@@ -375,12 +375,9 @@ class PlaygroundPage extends Component {
 						styles     : decryptObject(playground.styles),
 						deviceID   : device_id,
 						team       : { ...team,
-							members : team.members.map((member)=> {
-								const userID = member.user_id << 0;
-								delete (member.user_id);
-
-								return ({ ...member, userID });
-							})
+							members : team.members.map((member)=> ({ ...member,
+								id : member.id << 0
+							}))
 						},
 						components : playground.components.map((component)=> (reformComponent(component)))
 					});
