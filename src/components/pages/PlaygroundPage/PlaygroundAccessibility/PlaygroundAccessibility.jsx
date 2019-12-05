@@ -60,7 +60,7 @@ const AccessibilityTreeItem = (props)=> {
 // 	console.log('AccessibilityTreeItem()', props);
 
 	const { component, childNodes, treeNode } = props;
-	const { passed, failed, aborted } = (component) ? component.accessibility.report : {};
+	const { failed, aborted } = (component) ? component.accessibility.report : {};
 	return (<div className="accessibility-tree-item">
 		<div className="accessibility-tree-item-title">{treeNode.role} {(treeNode.name.length > 0) ? `"${treeNode.name}"` : ''}</div><div>
 		{(component) && (<div className="accessibility-tree-item-rules-wrapper">

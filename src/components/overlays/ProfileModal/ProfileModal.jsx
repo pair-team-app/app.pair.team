@@ -58,15 +58,14 @@ class ProfileModal extends Component {
 			this.props.onPopup({
 				type    : POPUP_TYPE_OK,
 				content : 'Profile updated.',
-				delay   : 333
+				delay   : 125
 			});
 
 		} else {
 			this.props.fetchUserProfile();
 			this.props.onPopup({
-				content  : 'No profile changes made.',
-				delay    : 125,
-				duration : 500
+				content : 'No profile changes made.',
+				delay   : 125
 			});
 		}
 

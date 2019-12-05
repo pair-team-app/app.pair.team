@@ -12,7 +12,6 @@ import RegisterForm from '../../forms/RegisterForm';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
 import { updateUserProfile } from '../../../redux/actions';
-import { buildInspectorPath } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
 import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
