@@ -6,6 +6,7 @@ import './index.css';
 import cookie from 'react-cookies';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import ScrollToTop from 'react-router-scroll-top';
 
 import App from './components/App';
 import store from './redux/store/index';
@@ -20,8 +21,10 @@ if (typeof cookie.load('cookies') === 'undefined') {
 
 ReactDOM.render(
 	<Provider store={store}>
-		<BrowserRouter onUpdate={()=> { console.log('::::::::::', window.document.documentElement); window.document.documentElement.scrollTo(0, 0)}}>
-			<App />
+		<BrowserRouter>
+			<ScrollToTop>
+				<App />
+			</ScrollToTop>
 		</BrowserRouter>
 	</Provider>,
 	document.getElementById('root')
