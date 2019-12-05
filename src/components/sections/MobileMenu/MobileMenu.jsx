@@ -29,11 +29,10 @@ class MobileMenu extends Component {
 
 		return (<div className="mobile-menu">
 			<div className={`mobile-menu-header${(opened) ? ' mobile-menu-header-open' : ''}`} onClick={this.handleHeaderClick}>
-				{/*<div className="derp-derp">DERP</div>*/}
 				<div className="mobile-menu-header-title">Menu</div>
 			</div>
 			<div className={`mobile-menu-item-wrapper${(opened) ? ' mobile-menu-item-wrapper-open' : ''}`}>
-				{([ ...navLinks.top, ...navLinks.menu, ...navLinks.bottom].map((navLink, i)=> (<MobileMenuItem key={i} navLink={navLink} onClick={()=> this.setState({ opened : false })} />)))}
+				{([ ...navLinks.bottom, ...navLinks.menu].map((navLink, i)=> (<MobileMenuItem key={i} navLink={navLink} onClick={()=> this.setState({ opened : false })} />)))}
 			</div>
 		</div>);
 	}
