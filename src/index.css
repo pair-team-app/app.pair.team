@@ -64,8 +64,8 @@
 html, body {
   margin: 0;
   padding: 0;
-  max-height: 100vh;
-  min-height: 100vh;
+  /*max-height: 100vh;*/
+  /*min-height: 100vh;*/
   background-color: rgba(var(--site-bg-color), 1.0);
   -webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -123,6 +123,45 @@ button[data-selected="true"], button[data-selected="true"]:hover {
 button[data-hidden="true"] {
 	display: none;
 	visibility: hidden;
+}
+
+button.quiet-button {
+	width: fit-content;
+	min-width: fit-content;
+	max-width: fit-content;
+	padding: 8px 18px 10px 18px;
+	border: 1px solid rgba(var(--border-color), 1.0);
+	background-color: rgba(var(--quiet-btn-bg-color), 1.0);
+	color: rgba(var(--quiet-btn-fg-color), 1.0);
+}
+
+button.quiet-button:hover {
+	border: 1px solid rgba(var(--border-color), 1.0);
+	background-color: rgba(var(--quiet-btn-hover-bg-color), 1.0);
+	color: rgba(var(--quiet-btn-fg-color), 1.0);
+}
+
+button.quiet-button[data-selected="true"], button.quiet-button[data-selected="true"]:hover {
+	background-color: rgba(var(--quiet-btn-selected-bg-color), 1.0);
+	color: rgba(var(--quiet-btn-selected-fg-color), 1.0);
+}
+
+button.quiet-button[data-selected="true"]:hover {
+	color: rgba(var(--quiet-btn-hover-bg-color), 1.0);
+}
+
+button.glyph-button {
+	min-width: 48px;
+	min-height: 48px;
+	padding: 8px 9px 10px 10px;
+	font-size: 26px;
+}
+
+button.cancel-button {
+	width: 316px;
+	min-width: unset;
+	max-width: unset;
+	padding: 8px 30px 10px 30px;
 }
 
 code {
@@ -228,7 +267,6 @@ h6 {
 	font-size: 16px;
 	font-weight: 500;
 	text-align: left;
-	/* border: 1px dotted #ff00ff; */
 }
 
 h6::before {
@@ -307,6 +345,10 @@ p > a:hover {
 	text-decoration-color: rgba(var(--link-color), 0.33);
 }
 
+p.list-title {
+	margin-bottom: 5px;
+}
+
 sup {
 	font-size: 8px;
 	line-height: 0;
@@ -327,7 +369,7 @@ ul:last-child {
 }
 
 ul:first-of-type, ul:only-child {
-	margin-top: 10px;
+	margin-top: 0;
 }
 
 ul > li {
@@ -344,9 +386,6 @@ ul > li:last-child {
 
 ul > li:not(:last-child) {
 	margin-bottom: 10px;
-}
-ul > div > p:first-child:last-of-type {
-	border: 10x dotted #ff00ff;
 }
 
 

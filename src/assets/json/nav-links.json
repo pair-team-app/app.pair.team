@@ -11,13 +11,25 @@
   }, {
     "title": "Docs",
     "url": "/page/docs"
+  }],
+  "bottom": [{
+    "title": "Features",
+    "url": "/page/features"
+  }, {
+    "title": "Pricing",
+    "url": "/page/pricing"
+  }, {
+    "title": "Blog",
+    "url": "/url/https://medium.com/pairurl"
+  }, {
+    "title": "Docs",
+    "url": "/page/docs"
+  }, {
+    "title": "Legal",
+    "url": "/page/legal"
   }, {
     "title": "GitHub",
     "url": "/url/https://github.com/de-ai"
-  }],
-  "bottom": [{
-    "title": "Legal",
-    "url": "/page/legal"
   }],
   "menu": [{
     "title": "Download NPM",

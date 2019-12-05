@@ -20,7 +20,7 @@ if (typeof cookie.load('cookies') === 'undefined') {
 
 ReactDOM.render(
 	<Provider store={store}>
-		<BrowserRouter onUpdate={()=> window.documentElement.scrollTo(0, 0)}>
+		<BrowserRouter onUpdate={()=> { console.log('::::::::::', window.document.documentElement); window.document.documentElement.scrollTo(0, 0)}}>
 			<App />
 		</BrowserRouter>
 	</Provider>,

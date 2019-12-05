@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import axios from 'axios';
-import { Browsers, DateTimes, URIs } from 'lang-js-utils';
+import { Browsers, DateTimes } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
@@ -36,7 +36,6 @@ import {
 import {
 	fetchTeamLookup,
 	fetchUserProfile,
-	updateDeeplink,
 	updateMouseCoords,
 	updateUserProfile
 } from '../../redux/actions';
@@ -370,11 +369,9 @@ class App extends Component {
 		const { profile, team } = this.props;
   	const { darkTheme, popup, modals } = this.state;
 
-  	const wrapperClass = (URIs.firstComponent() !== 'app') ? 'content-wrapper' : 'playground-wrapper';
-
   	return (<div className={`site-wrapper${(darkTheme) ? ' site-wrapper-dark' : ''}`}>
-		  {(URIs.firstComponent() !== 'app') && (<TopNav darkTheme={darkTheme} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
-	    <div className={wrapperClass}>
+		  {(!window.location.pathname.startsWith(Pages.PLAYGROUND)) && (<TopNav darkTheme={darkTheme} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
+	    <div className={`page-wrapper${(window.location.pathname.startsWith(Pages.PLAYGROUND)) ? ' playground-page-wrapper' : ''}`}>
 		    <Switch>
 			    <Route exact path={Pages.HOME} render={()=> <HomePage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} onSignup={()=> null} />} />
 			    <Route exact path={Pages.DOCS} render={()=> <DocsPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
@@ -387,7 +384,7 @@ class App extends Component {
 			    <Route path={Pages.WILDCARD}><Status404Page /></Route>
 		    </Switch>
 	    </div>
-		  {(URIs.firstComponent() !== 'app') && (<BottomNav />)}
+		  {(!window.location.pathname.startsWith(Pages.PLAYGROUND)) && (<BottomNav />)}
 
 		  <div className="modal-wrapper">
 			  {(modals.cookies) && (<CookiesOverlay
@@ -472,7 +469,6 @@ const mapDispatchToProps = (dispatch)=> {
 		fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
 		fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
 		updateMouseCoords : (payload)=> dispatch(updateMouseCoords(payload)),
-		updateDeeplink    : (navIDs)=> dispatch(updateDeeplink(navIDs)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 };

@@ -11,7 +11,7 @@ import BaseOverlay from '../BaseOverlay';
 import RegisterForm from '../../forms/RegisterForm';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
-import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
+import { updateUserProfile } from '../../../redux/actions';
 import { buildInspectorPath } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
 import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
@@ -37,12 +37,11 @@ class RegisterModal extends Component {
 				payload : { invite_id : this.props.invite.id }
 			}).then((response) => {
 				console.log('INVITE_LOOKUP', response.data);
-				const { invite, upload } = response.data;
+				const { invite } = response.data;
 				if (invite.id === this.props.invite.id) {
 					const { email } = invite;
 					trackEvent('user', 'invite');
-					this.setState({ email, upload });
-					this.props.setRedirectURI(buildInspectorPath(upload));
+					this.setState({ email });
 				}
 
 			}).catch((error)=> {
@@ -66,16 +65,9 @@ class RegisterModal extends Component {
 		this.setState({ outro : false }, ()=> {
 			this.props.onComplete();
 
-			const { redirectURI } = this.props;
-			if (redirectURI) {
-				this.props.history.push(redirectURI);
-
-			} else {
-				if (outroURI) {
-					if (outroURI.startsWith('/modal')) {
-						this.props.setRedirectURI(null);
-						this.props.onModal(`/${URIs.lastComponent(outroURI)}`);
-					}
+			if (outroURI) {
+				if (outroURI.startsWith('/modal')) {
+					this.props.onModal(`/${URIs.lastComponent(outroURI)}`);
 				}
 			}
 		});
@@ -101,12 +93,6 @@ class RegisterModal extends Component {
 
 	handleRegistered = (profile)=> {
 // 		console.log('%s.handleRegistered()', this.constructor.name, profile);
-
-		const { redirectURI } = this.props;
-		const { upload } = this.state;
-		if (redirectURI && upload) {
-			this.props.updateDeeplink({ uploadID : upload.id });
-		}
 
 		trackEvent('user', 'sign-up');
 		this.props.onRegistered(profile);
@@ -149,7 +135,6 @@ class RegisterModal extends Component {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		setRedirectURI    : (url)=> dispatch(setRedirectURI(url)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 
@@ -157,9 +142,8 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		invite      : state.invite,
-		profile     : state.userProfile,
-		redirectURI : state.redirectURI,
+		invite  : state.invite,
+		profile : state.userProfile,
 	});
 };
 

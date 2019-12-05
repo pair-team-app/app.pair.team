@@ -5,6 +5,49 @@
 	text-align: center;
 }
 
+.base-page-intro-text {
+}
+
+.base-page-intro-text p {
+	margin-bottom: 70px;
+	text-align: justify;
+}
+
+.base-page-content-wrapper {
+	margin-bottom: 40px;
+}
+
+.base-page-section-wrapper {
+	line-height: 25px;
+	text-align: justify;
+}
+
+
+.base-page-bottom-nav {
+	text-align: left;
+}
+
+.base-page-bottom-nav > ul {
+	margin: 0;
+	padding: 0;
+	width: fit-content;
+	column-count: 2;
+	column-gap: 20px;
+	column-rule: 0;
+}
+
+.base-page-bottom-nav > ul > li {
+	margin-bottom: 15px;
+	padding: 0;
+	width: fit-content;
+	list-style: none;
+	line-height: normal;
+}
+
+.base-page-bottom-nav > ul > li:nth-child(3n) {
+	margin-bottom: 0;
+}
+
 
 @media screen and (max-width: 800px) {
 	.base-page {

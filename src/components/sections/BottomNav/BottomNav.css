@@ -4,43 +4,11 @@
 	bottom: 0;
 	width: 100%;
 	padding: 10px 30px;
-	display: flex;
-	flex-wrap: nowrap;
-	align-items: center;
-	/*background-color: rgba(var(--site-bg-color), 0.975);*/
 	z-index: 2;
 }
 
-.bottom-nav > * {
-	/*margin: auto;*/
-	/*border: 1px dotted #ff00ff;*/
-}
-
-.bottom-nav-spacer {
-	flex: 1 0 0;
-}
-
 .bottom-nav-button-wrapper {
-	flex: 3 1 0;
 	text-align: center;
-}
-
-.bottom-nav-link-wrapper {
-	flex: 1 0 0;
-	text-align: right;
-}
-
-.bottom-nav-link {
-	/*width: fit-content;*/
-	color: var(--site-fg-color);
-	text-decoration: none;
-	transition: color 0.125s ease-out;
-}
-
-.bottom-nav-link:hover {
-	cursor: pointer;
-	color: rgba(var(--link-hover-color), 1.0);
-	text-decoration: underline;
 }
 
 

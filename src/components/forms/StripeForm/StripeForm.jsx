@@ -82,7 +82,7 @@ class StripeForm extends Component {
 		const { submitting } = this.props;
 		const { cardHolder } = this.state;
 		return (<div className="stripe-form">
-			<form onSubmit={this.handleSubmit} method="post" className="full-width">
+			<form onSubmit={this.handleSubmit} method="post">
 				<div className="stripe-form-element-wrapper">
 					<input type="text" name="cardHolder" placeholder="Card Holder" value={cardHolder} onFocus={this.handleFocus} onChange={(event)=> this.handleChange(event.target)} style={{ textAlign : 'left' }} autoComplete="off" />
 					<CardNumberElement className="input-txt" {...createElementOptions()} />

@@ -31,8 +31,10 @@
 	margin-top: 30px;
 }
 
-.home-page-element-wrapper {
-	width: 100%;
+.home-page-content-wrapper {
+}
+
+.home-page-element-wrapper:not(:last-child) {
 	margin-bottom: 30px;
 }
 

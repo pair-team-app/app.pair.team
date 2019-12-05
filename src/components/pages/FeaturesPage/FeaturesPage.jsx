@@ -39,12 +39,12 @@ class FeaturesPage extends Component {
 		return (
 			<BasePage className="features-page">
 				<h1 dangerouslySetInnerHTML={{ __html : title }} />
-				<div className="page-intro-text features-page-into-text">
+				<div className="base-page-intro-text">
 					<p dangerouslySetInnerHTML={{ __html : intro }} />
 				</div>
 
-				<div className="page-content-wrapper features-page-content-wrapper">
-					<div className="page-section-wrapper features-page-section-wrapper">
+				<div className="base-page-content-wrapper features-page-content-wrapper">
+					<div className="base-page-section-wrapper features-page-section-wrapper">
 						{(sections.map((section, i)=> {
 							return (<SectionExpander
 								key={i}

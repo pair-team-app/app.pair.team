@@ -45,12 +45,12 @@ class PricingPage extends Component {
 		return (
 			<BasePage className="pricing-page">
 				<h1 dangerouslySetInnerHTML={{ __html : title }} />
-				<div className="page-intro-text features-page-into-text">
+				<div className="base-page-intro-text">
 					<p dangerouslySetInnerHTML={{ __html : intro }} />
 				</div>
 
-				<div className="page-content-wrapper pricing-page-content-wrapper">
-					<div className="page-section-wrapper pricing-page-section-wrapper">
+				<div className="base-page-content-wrapper pricing-page-content-wrapper">
+					<div className="base-page-section-wrapper pricing-page-section-wrapper">
 						{(sections.map((section, i)=> {
 							return (<SectionExpander
 								key={i}

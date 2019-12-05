@@ -10,7 +10,7 @@ import BaseOverlay from '../BaseOverlay';
 import LoginForm from '../../forms/LoginForm';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
 import { Modals } from '../../../consts/uris';
-import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
+import { updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
@@ -43,16 +43,9 @@ class LoginModal extends Component {
 		this.setState({ outro : false }, ()=> {
 			this.props.onComplete();
 
-			const { redirectURI } = this.props;
-			if (redirectURI) {
-				this.props.history.push(redirectURI);
-
-			} else {
-				if (outroURI) {
-					if (outroURI.startsWith('/modal')) {
-						this.props.setRedirectURI(null);
-						this.props.onModal(`/${URIs.lastComponent(outroURI)}`);
-					}
+			if (outroURI) {
+				if (outroURI.startsWith('/modal')) {
+					this.props.onModal(`/${URIs.lastComponent(outroURI)}`);
 				}
 			}
 		});
@@ -71,12 +64,6 @@ class LoginModal extends Component {
 // 		console.log('%s.handleLoggedIn()', this.constructor.name, profile, this.props);
 
 		trackEvent('user', 'login');
-		const { redirectURI } = this.props;
-		const { upload } = this.state;
-		if (redirectURI && upload) {
-			this.props.updateDeeplink({ uploadID : upload.id });
-		}
-
 		this.props.onLoggedIn(profile);
 	};
 
@@ -128,7 +115,6 @@ class LoginModal extends Component {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		setRedirectURI    : (url)=> dispatch(setRedirectURI(url)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 
@@ -136,9 +122,8 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		invite      : state.invite,
-		profile     : state.userProfile,
-		redirectURI : state.redirectURI
+		invite  : state.invite,
+		profile : state.userProfile,
 	});
 };
 

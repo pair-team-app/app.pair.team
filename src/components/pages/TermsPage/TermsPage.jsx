@@ -27,7 +27,7 @@ function TermsPage(props) {
 	return (
 		<BasePage className="terms-page">
 			<h1>Terms of Service</h1>
-			<div className="terms-page-text">
+			<div className="base-page-content-wrapper terms-page-content-wrapper">
 				<div>
 					<p>Welcome to the Pair (&ldquo;Pair&rdquo;) website (www.pairurl.com) (the &ldquo;Site&rdquo;). Please read these Terms of Service (the &ldquo;Terms&rdquo;) carefully because they govern your use of our websites including Pair.com, designsystems.com and any other websites that we may later own or operate (&ldquo;Site&rdquo; or &ldquo;Sites&rdquo;); mobile applications (&ldquo;App(s)&rdquo;), application program interface(s) (&ldquo;API(s)&rdquo;) and our design tool services and other products and services we may later own or operate (collectively called the &ldquo;Services&rdquo;).</p>
 				</div>
@@ -51,7 +51,7 @@ function TermsPage(props) {
 
 				<h5>4. Using the Services</h5>
 				<div>
-					<ul className="sub-section">
+					<ul className="terms-page-subsection">
 						<li>
 							<h6>4.1 General</h6>
 							<p>The Services offer a browser based tool for user interface design and editing work, through which users can collaborate with one another in the online design of user interfaces. Each design that you work on through the Services is called a &ldquo;Design&rdquo;. If you are a User, Pair provides you (subject to your compliance with the Terms), access to its proprietary tools and design templates (collectively, the &ldquo;Tools&rdquo;) to help build your Design through the Services. You can create a Design on your own, or base a Design using the Tools made available by Pair through the Services. You may also search for and install certain Applications that are made available via the Services and which can be used in conjunction with the Services.</p>
@@ -73,7 +73,7 @@ function TermsPage(props) {
 
 				<h5>5. Developing Applications for Use on the Services</h5>
 				<div>
-					<ul className="sub-section">
+					<ul className="terms-page-subsection">
 						<li>
 							<h6>5.1 Applications, General</h6>
 							<p>As a User, you may develop certain types of applications, such as plugins, component libraries, and code components, that can be submitted to and made available via and published to the Services, for use by yourself in your Personal Space, your Team Members in your Team Space, or all other Users of the Services (the &ldquo;Application(s)&rdquo;). Pair provides access to APIs that you may use to develop the Applications, subject to the API terms set forth in Section 4.4 above and any other terms provided by Pair governing use of the API.</p>
@@ -87,7 +87,7 @@ function TermsPage(props) {
 
 				<h5>6. Subscriptions and Payment</h5>
 				<div>
-					<ul className="sub-section">
+					<ul className="terms-page-subsection">
 						<li>
 							<h6>6.1 Pricing</h6>
 							<p>Subject to these Terms, the Services are provided to you for free up to certain limits and with limited features. In addition, if you are currently enrolled in a school or university and are accessing the Services solely for educational and non-commercial purposes, then you can use our Services for free, without limitation, provided all the Team Members in your Project Team are also students (&ldquo;Educational Use&rdquo;).</p>
@@ -115,7 +115,7 @@ function TermsPage(props) {
 				<h5>7. Content and Content Rights</h5>
 				<div>
 					<p>For purposes of these Terms: <span className="roman-index">i</span> &ldquo;Content&rdquo; means text, graphics, designs, images, music, software, audio, video, works of authorship of any kind, and information or other materials that are posted, generated, provided or otherwise made available through the Services (including without limitation, the Tools); and <span className="roman-index">ii</span> &ldquo;User Content&rdquo; means any Content that Users (including you) provide to be made available through the Services, including without limitation any Designs and Project Content created by a User (other than the Tools and any other Content that we provide to you) as well as modifications a User makes to another User&rsquo;s Designs, digital typefonts or font files (&ldquo;Fonts&ldquo;), and Applications.</p>
-					<ul className="sub-section">
+					<ul className="terms-page-subsection">
 						<li>
 							<h6>7.1 Ownership and Responsibility of User Content</h6>
 							<p>As between you and Pair, you own your User Content. Pair does not claim any ownership rights in any User Content that you make available through the Services and nothing in these Terms will be deemed to restrict any rights that you may have to use and exploit your User Content. Subject to the foregoing, Pair and its licensors exclusively own all right, title and interest in and to the Services and Content, including all associated intellectual property rights. You agree not to remove, alter or obscure any copyright, trademark, service mark or other proprietary rights notices incorporated in or accompanying the Services or Content.</p>
@@ -158,8 +158,8 @@ function TermsPage(props) {
 
 				<h5>10. General Prohibitions</h5>
 				<div>
-					<p>You agree not to do any of the following:</p>
-					<ul className="sub-section">
+					<p className="list-title">You agree not to do any of the following:</p>
+					<ul className="terms-page-subsection">
 						<li>Post, upload, publish, submit or transmit any User Content that: <span className="roman-index">i</span> infringes, misappropriates or violates a third party&rsquo;s patent, copyright, trademark, trade secret, moral rights or other intellectual property rights, or rights of publicity or privacy; <span className="roman-index">ii</span> violates, or encourages any conduct that would violate, any applicable law or regulation or would give rise to civil liability; <span className="roman-index">iii</span> is fraudulent, false, misleading or deceptive; <span className="roman-index">iv</span> is defamatory, obscene, pornographic, vulgar or offensive; <span className="roman-index">v</span> promotes discrimination, bigotry, racism, hatred, harassment or harm against any individual or group; <span className="roman-index">vi</span> is violent or threatening or promotes violence or actions that are threatening to any person or entity; or <span className="roman-index">vii</span> promotes illegal or harmful activities or substances.</li>
 						<li>Use, display, mirror or frame the Services, or any individual element within the Services, Pair&rsquo;s name, any Pair trademark, logo or other proprietary information, or the layout and design of any page or form contained on a page, without Pair&rsquo;s express written consent;</li>
 						<li>Access, tamper with, or use non-public areas of the Services, Pair&rsquo;s computer systems, or the technical delivery systems of Pair&rsquo;s providers;</li>
@@ -197,7 +197,7 @@ function TermsPage(props) {
 
 				<h5>14. Termination</h5>
 				<div>
-					<p>We may terminate your access to and use of the Services, at our sole discretion, at any time and without notice or liability to you, provided that, if you have paid for a Subscription and the termination is not due to your breach of this Agreement, Pair will refund you any prepaid fees for the period of your Subscription that extends beyond the effective date of such termination. You may cancel your Account at any time by sending an email to us at <NavLink to="mailto:support@pairurl.com" target="_blank" onClick={(event)=> handleURL(event, 'mailto:support@pairurl.com')}>support@pairurl.com</NavLink> . Upon any termination, discontinuation or cancellation of Services or your Account, the following provisions of these Terms will survive: Feedback; Privacy Policy; provisions related to permissions to access Content (to the extent applicable); Content and Content Rights; Content Ownership, Responsibility and Removal; General Prohibitions; Warranty Disclaimers; Indemnity; Limitation of Liability; Governing Law and Dispute Resolution; General Terms.</p>
+					<p>We may terminate your access to and use of the Services, at our sole discretion, at any time and without notice or liability to you, provided that, if you have paid for a Subscription and the termination is not due to your breach of this Agreement, Pair will refund you any prepaid fees for the period of your Subscription that extends beyond the effective date of such termination. You may cancel your Account at any time by sending an email to us at <NavLink to="mailto:support@pairurl.com" target="_blank" onClick={(event)=> handleURL(event, 'mailto:support@pairurl.com')}>support@pairurl.com</NavLink>. Upon any termination, discontinuation or cancellation of Services or your Account, the following provisions of these Terms will survive: Feedback; Privacy Policy; provisions related to permissions to access Content (to the extent applicable); Content and Content Rights; Content Ownership, Responsibility and Removal; General Prohibitions; Warranty Disclaimers; Indemnity; Limitation of Liability; Governing Law and Dispute Resolution; General Terms.</p>
 				</div>
 
 				<h5>15. Warranty Disclaimers</h5>
@@ -213,7 +213,7 @@ function TermsPage(props) {
 				<h5>17. Limitation of Liability</h5>
 				<div>
 					<p>NEITHER Pair NOR ANY OTHER PARTY INVOLVED IN CREATING, PRODUCING, OR DELIVERING THE SERVICES, TOOLS, OR CONTENT WILL BE LIABLE FOR ANY INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, LOSS OF DATA OR GOODWILL, SERVICE INTERRUPTION, COMPUTER DAMAGE OR SYSTEM FAILURE OR THE COST OF SUBSTITUTE SERVICES ARISING OUT OF OR IN CONNECTION WITH THESE TERMS OR FROM THE USE OF OR INABILITY TO USE THE SERVICES, TOOLS, OR CONTENT, WHETHER BASED ON WARRANTY, CONTRACT, TORT (INCLUDING NEGLIGENCE), PRODUCT LIABILITY OR ANY OTHER LEGAL THEORY, AND WHETHER OR NOT Pair HAS BEEN INFORMED OF THE POSSIBILITY OF SUCH DAMAGE, EVEN IF A LIMITED REMEDY SET FORTH HEREIN IS FOUND TO HAVE FAILED OF ITS ESSENTIAL PURPOSE. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR LIMITATION OF LIABILITY FOR CONSEQUENTIAL OR INCIDENTAL DAMAGES, SO THE ABOVE LIMITATION MAY NOT APPLY TO YOU.</p>
-					<p>IN NO EVENT WILL Pair&rsquo;S TOTAL LIABILITY ARISING OUT OF OR IN CONNECTION WITH THESE TERMS, ANY DISPUTE IN RELATION TO INTELLECTUAL PROPERTY RIGHTS IN A DESIGN OR FROM THE USE OF OR INABILITY TO USE THE SERVICES OR CONTENT EXCEED THE AMOUNTS YOU HAVE PAID OR ARE PAYABLE BY YOU TO Pair FOR USE OF THE SERVICES OR CONTENT, OR IF YOU HAVE NOT HAD ANY SUCH PAYMENT OBLIGATIONS, ONE HUNDRED UNITED STATES DOLLARS ($100).</p>
+					<p>IN NO EVENT WILL Pair&rsquo;s TOTAL LIABILITY ARISING OUT OF OR IN CONNECTION WITH THESE TERMS, ANY DISPUTE IN RELATION TO INTELLECTUAL PROPERTY RIGHTS IN A DESIGN OR FROM THE USE OF OR INABILITY TO USE THE SERVICES OR CONTENT EXCEED THE AMOUNTS YOU HAVE PAID OR ARE PAYABLE BY YOU TO Pair FOR USE OF THE SERVICES OR CONTENT, OR IF YOU HAVE NOT HAD ANY SUCH PAYMENT OBLIGATIONS, ONE HUNDRED UNITED STATES DOLLARS ($100).</p>
 					<p>THE LIMITATIONS OF DAMAGES SET FORTH ABOVE ARE FUNDAMENTAL ELEMENTS OF THE BASIS OF THE BARGAIN BETWEEN Pair AND YOU.</p>
 				</div>
 
@@ -227,13 +227,13 @@ function TermsPage(props) {
 				<div>
 					<p>Our goal is to provide you with great service, so we&rsquo;ll try our best to resolve any disagreements that you have with us. If we can&rsquo;t, then you and we both agree to resolve disputes related to your use of the Services or these Terms (each, a &ldquo;Claim&rdquo;) in binding arbitration instead of court, except that a Claim may be brought in small claims court if it qualifies for it. You and we also agree that either party may bring suit in court to enjoin the infringement or other misuse of intellectual property rights.</p>
 					<ul>
-						<li><h6 className="intro-question">What is arbitration?</h6> Arbitration does not involve a judge or jury. Instead, a neutral person (the &ldquo;arbitrator&rdquo;) hears each party&rsquo;s side of the dispute, and makes a decision that is finally binding on both parties. The arbitrator can award the same relief as a court could award, including monetary damages. While court review of an arbitration award is limited, if a party fails to comply with the arbitrator&rsquo;s decision, then the other party can have the arbitration decision enforced by a court. If for any reason a Claim proceeds in court rather than in arbitration, you and we each waive any right to a jury trial.</li>
-						<li><h6 className="intro-question">Can a Claim be part of a class action or similar proceeding?</h6> No. You agree to resolve your Claims with us solely on an individual basis, and not as part of a class, representative or consolidated action. We agree to do the same. </li>
-						<li><h6 className="intro-question">What rules apply in the arbitration?</h6> The arbitration will be conducted under the American Arbitration Association (&ldquo;AAA&rdquo;) Consumer Arbitration Rules (the &ldquo;AAA Rules&rdquo;). The AAA Rules are available at www.adr.org or by calling 1-800-778-7879. </li>
-						<li><h6 className="intro-question">How will the arbitration be conducted? & How much does it cost?</h6> The arbitration will be conducted by the AAA or a comparable arbitration body in the event the AAA is unable to conduct the arbitration. Payment of all filing, administration and arbitrator fees will be governed by the AAA Rules. Unless the arbitrator finds your Claim frivolous, we&rsquo;ll pay for all filing, administration and arbitrator fees if your Claim is for less than $10,000, and we won&rsquo;t seek our attorneys&rsquo; fees and costs if we prevail in the arbitration. The arbitration may be conducted in writing, remotely (e.g., by videoconference) or in-person in the county where you live (or at some other location that we both agree to). </li>
-						<li><h6 className="intro-question">How do I start an arbitration proceeding?</h6> To begin an arbitration proceeding against us, send a letter requesting arbitration and describing your Claim to <NavLink to="mailto:legal@pairurl.com" target="_blank" onClick={(event)=> handleURL(event, 'mailto:legal@pairurl.com')}>legal@pairurl.com</NavLink>.</li>
+						<li><h6 className="terms-page-intro-question">What is arbitration?</h6> Arbitration does not involve a judge or jury. Instead, a neutral person (the &ldquo;arbitrator&rdquo;) hears each party&rsquo;s side of the dispute, and makes a decision that is finally binding on both parties. The arbitrator can award the same relief as a court could award, including monetary damages. While court review of an arbitration award is limited, if a party fails to comply with the arbitrator&rsquo;s decision, then the other party can have the arbitration decision enforced by a court. If for any reason a Claim proceeds in court rather than in arbitration, you and we each waive any right to a jury trial.</li>
+						<li><h6 className="terms-page-intro-question">Can a Claim be part of a class action or similar proceeding?</h6> No. You agree to resolve your Claims with us solely on an individual basis, and not as part of a class, representative or consolidated action. We agree to do the same. </li>
+						<li><h6 className="terms-page-intro-question">What rules apply in the arbitration?</h6> The arbitration will be conducted under the American Arbitration Association (&ldquo;AAA&rdquo;) Consumer Arbitration Rules (the &ldquo;AAA Rules&rdquo;). The AAA Rules are available at www.adr.org or by calling 1-800-778-7879. </li>
+						<li><h6 className="terms-page-intro-question">How will the arbitration be conducted? & How much does it cost?</h6> The arbitration will be conducted by the AAA or a comparable arbitration body in the event the AAA is unable to conduct the arbitration. Payment of all filing, administration and arbitrator fees will be governed by the AAA Rules. Unless the arbitrator finds your Claim frivolous, we&rsquo;ll pay for all filing, administration and arbitrator fees if your Claim is for less than $10,000, and we won&rsquo;t seek our attorneys&rsquo; fees and costs if we prevail in the arbitration. The arbitration may be conducted in writing, remotely (e.g., by videoconference) or in-person in the county where you live (or at some other location that we both agree to). </li>
+						<li><h6 className="terms-page-intro-question">How do I start an arbitration proceeding?</h6> To begin an arbitration proceeding against us, send a letter requesting arbitration and describing your Claim to <NavLink to="mailto:legal@pairurl.com" target="_blank" onClick={(event)=> handleURL(event, 'mailto:legal@pairurl.com')}>legal@pairurl.com</NavLink>.</li>
 					</ul>
-					<p><span className="notice-msg">INSTRUCTIONS FOR OPTING-OUT OF ARBITRATION:</span> If you don&rsquo;t want to agree to arbitrate your Claims as explained above, then you can opt-out of this arbitration agreement by notifying us of your decision in writing at <NavLink to="mailto:legal@pairurl.com" target="_blank" onClick={(event)=> handleURL(event, 'mailto:legal@pairurl.com')}>legal@pairurl.com</NavLink>, 116 New Montgomery St, Suite 400, San Francisco, CA 94105. You must opt-out within 30 days of the date you first agree to these Terms or any updated Terms. </p>
+					<p><span className="terms-page-notice-msg">INSTRUCTIONS FOR OPTING-OUT OF ARBITRATION:</span> If you don&rsquo;t want to agree to arbitrate your Claims as explained above, then you can opt-out of this arbitration agreement by notifying us of your decision in writing at <NavLink to="mailto:legal@pairurl.com" target="_blank" onClick={(event)=> handleURL(event, 'mailto:legal@pairurl.com')}>legal@pairurl.com</NavLink>, 116 New Montgomery St, Suite 400, San Francisco, CA 94105. You must opt-out within 30 days of the date you first agree to these Terms or any updated Terms. </p>
 				</div>
 
 				<h5>20. Dispute Resolution for Companies</h5>
@@ -251,7 +251,7 @@ function TermsPage(props) {
 
 				<h5>22. Accessing Apps</h5>
 				<div>
-					<p>The following terms apply to any App accessed through or downloaded from any app store or distribution platform (like the Apple App Store or Google Play) where the App may now or in the future be made available (each an "App Provider"). You acknowledge and agree that:</p>
+					<p className="list-title">The following terms apply to any App accessed through or downloaded from any app store or distribution platform (like the Apple App Store or Google Play) where the App may now or in the future be made available (each an "App Provider"). You acknowledge and agree that:</p>
 					<ul>
 						<li>These Terms are concluded between you and Pair, and not with the App Provider, and Pair (not the App Provider), is solely responsible for the App.</li>
 						<li>The App Provider has no obligation to furnish any maintenance and support services with respect to the App.</li>

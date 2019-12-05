@@ -132,7 +132,6 @@ class HomePage extends Component {
 					<form onSubmit={this.handleSubmit}>
 						<DummyForm />
 
-						{/*<input disabled={submitted} type="email" name="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} required pattern=".*\S.*" />*/}
 						{(emailReset)
 							? (<input disabled={submitted} type="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} required autoComplete="new-password" />)
 							: (<input disabled={submitted} type="text" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} autoComplete="new-password" />)
@@ -142,7 +141,7 @@ class HomePage extends Component {
 					<div className="form-disclaimer">By tapping “Join Wait List” you accept our<br /><NavLink to="/terms">Terms of Service.</NavLink></div>
 				</div>
 
-				<div className="page-content-wrapper home-page-content-wrapper">
+				<div className="base-page-content-wrapper home-page-content-wrapper">
 					<div className="home-page-element-wrapper">
 						<video className={`home-page-element ${(Browsers.isMobile.ANY()) ? 'home-page-element-portrait' : 'home-page-element-landscape'}`} onLoad={()=> trackEvent('video', 'load')} onPause={()=> trackEvent('video', 'pause')} onPlay={()=> trackEvent('video', 'play')} autoPlay={true} controls muted loop>
 							<source src={video} type="video/mp4" />

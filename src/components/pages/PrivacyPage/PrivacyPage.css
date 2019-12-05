@@ -1,21 +1,21 @@
 
 .privacy-page {
-	padding: 60px 20% 80px 20%;
+	padding: 60px 20%;
 }
 
-.privacy-page-text {
+.privacy-page-content-wrapper {
 	text-align: justify;
 }
 
-.privacy-page-text h6::before {
+.privacy-page-content-wrapper h6::before {
 	margin-top: 0;
 }
 
-.privacy-page-text h6::after {
+.privacy-page-content-wrapper h6::after {
 	content: " – ";
 }
 
-.privacy-page-text div:last-child p:last-child {
+.privacy-page-content-wrapper div:last-child p:last-child {
 	margin-bottom: 0;
 }
 

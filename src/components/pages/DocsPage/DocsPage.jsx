@@ -39,12 +39,12 @@ class DocsPage extends Component {
 		return (
 			<BasePage className="docs-page">
 				<h1 dangerouslySetInnerHTML={{ __html : title }} />
-				<div className="page-intro-text docs-page-into-text">
+				<div className="base-page-intro-text">
 					<p dangerouslySetInnerHTML={{ __html : intro }} />
 				</div>
 
-				<div className="page-content-wrapper docs-page-content-wrapper">
-					<div className="page-section-wrapper docs-page-section-wrapper">
+				<div className="base-page-content-wrapper docs-page-content-wrapper">
+					<div className="base-page-section-wrapper docs-page-section-wrapper">
 						{(sections.map((section, i)=> {
 							return (<SectionExpander
 								key={i}
