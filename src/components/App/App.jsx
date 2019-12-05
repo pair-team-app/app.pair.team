@@ -448,7 +448,7 @@ class App extends Component {
 			  {(popup) && (<PopupNotification
 				  payload={popup}
 				  onComplete={()=> this.setState({ popup : null })}>
-				  {popup.content}
+				  <span dangerouslySetInnerHTML={{ __html : popup.content }} />
 			  </PopupNotification>)}
 		  </div>
 	  </div>);

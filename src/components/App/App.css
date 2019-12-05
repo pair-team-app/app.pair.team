@@ -50,7 +50,8 @@
 }
 
 .playground-page-wrapper {
-	border: 1px dotted #ff00ff;
+	top: 0;
+	/*border: 1px dotted #ff00ff;*/
 	overflow: auto;
 }
 
