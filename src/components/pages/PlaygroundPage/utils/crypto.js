@@ -9,8 +9,17 @@ export function decryptObject(cipherText) {
 }
 
 export function decryptText(cipherText) {
-	const decKey = crypto.createDecipheriv(cryptoCreds.method, cryptoCreds.key, cryptoCreds.iv);
-	const decStr = decKey.update(cipherText, 'hex', 'utf8');
+	const segs = cipherText.split(':');
+	const iv = Buffer.from(segs.shift(), 'hex');
+	const msg = Buffer.from(segs.join(':'), 'hex');
+	const decipher = crypto.createDecipheriv(cryptoCreds.method, Buffer.from(cryptoCreds.key), iv);
+	const prefix = decipher.update(msg);
 
-	return (`${decStr}${decKey.final('utf8')}`);
+	return (Buffer.concat([prefix, decipher.final()]).toString('utf8'));
+
+
+// 	const decKey = crypto.createDecipheriv(cryptoCreds.method, cryptoCreds.key, cryptoCreds.iv);
+// 	const decStr = decKey.update(cipherText, 'hex', 'utf8');
+//
+// 	return (`${decStr}${decKey.final('utf8')}`);
 }

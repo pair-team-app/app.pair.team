@@ -64,7 +64,7 @@ const AccessibilityTreeItem = (props)=> {
 	return (<div className="accessibility-tree-item">
 		<div className="accessibility-tree-item-title">{treeNode.role} {(treeNode.name.length > 0) ? `"${treeNode.name}"` : ''}</div><div>
 		{(component) && (<div className="accessibility-tree-item-rules-wrapper">
-			{/*{(passed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-passed">Passed*/}
+			{/*{(passed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-passed">*/}
 				{/*{(passed.map((rule, i)=> {*/}
 					{/*return (<AccessibilityTreeItemRule*/}
 						{/*key={i}*/}
@@ -73,7 +73,7 @@ const AccessibilityTreeItem = (props)=> {
 				{/*}))}*/}
 			{/*</div>)}*/}
 
-			{(failed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-failed">Failed
+			{(failed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-failed">
 				{(failed.map((rule, i)=> {
 					return (<AccessibilityTreeItemRule
 						key={i}
@@ -82,7 +82,7 @@ const AccessibilityTreeItem = (props)=> {
 				}))}
 			</div>)}
 
-			{(aborted.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-aborted">Aborted
+			{(aborted.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-aborted">
 				{(aborted.map((rule, i)=> {
 					return (<AccessibilityTreeItemRule
 						key={i}

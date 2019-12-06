@@ -34,7 +34,7 @@ export const reformComment = (comment, overwrite={})=> ({ ...comment,
 });
 
 export const reformComponent = (component, overwrite={})=> {
-// 	console.log('reformComponent()', component.id);
+	console.log('reformComponent()', component.id);
 
 	const { type_id, event_type_id, node_id, title, tag_name, image, html, styles, accessibility, root_styles, meta, children, comments } = component;
 	const { width, height } = meta.bounds;
@@ -44,11 +44,11 @@ export const reformComponent = (component, overwrite={})=> {
 	delete (component['tag_name']);
 	delete (component['root_styles']);
 
-// 	console.log(component.id, 'STYLES:', decryptText(styles));
+	console.log(component.id, 'STYLES:', decryptText(styles));
 // 	console.log(component.id, 'STYLES:', decryptObject(styles));
 // 	console.log('META: [%s]', JSON.stringify(meta, null, 2));
-// 	console.log('META:', meta);
-// 	console.log('ROOT STYLES:', decryptObject(root_styles));
+	console.log('META:', meta);
+	console.log('ROOT STYLES:', decryptObject(root_styles));
 // 	console.log('META:', meta.bounds.height, meta.bounds.width);
 // 	console.log('PATH: [%s]', JSON.stringify(path, null, 2));
 
@@ -58,7 +58,6 @@ export const reformComponent = (component, overwrite={})=> {
 		nodeID        : node_id,
 		title         : (title.length === 0) ? tag_name : title,
 		tagName       : tag_name,
-// 		html          : (html.length < 65535) ? decryptText(html) : '',
 		html          : decryptText(html),
 		styles        : decryptObject(styles),
 		rootStyles    : { ...decryptObject(root_styles),
@@ -70,11 +69,10 @@ export const reformComponent = (component, overwrite={})=> {
 			'width'      : (width > 0) ? `${width}px` : 'fit-content'
 		},
 		image         : (image.length > 0) ? image : Images.genPlaceholder({ width, height }),
-// 		image         : Images.genPlaceholder({ width, height }),
 		accessibility : decryptObject(accessibility),
-		selected      : false,
 		children      : children.map((child)=> (reformChildElement(child))),
 		comments      : comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
+		selected      : false,
 		...overwrite
 	})
 };

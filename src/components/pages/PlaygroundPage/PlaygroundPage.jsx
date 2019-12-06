@@ -366,20 +366,21 @@ class PlaygroundPage extends Component {
 				console.log('BUILD_PLAYGROUNDS', response.data);
 
 				const playgrounds = response.data.playgrounds.map((playground)=> {
-					const { device_id, team } = playground;
+					const { device_id, team, html, styles, components } = playground;
 					delete (playground['device_id']);
 
+					console.log('playground', { html : decryptText(html), styles : decryptObject(styles) });
 
 					return ({ ...playground,
-						html       : decryptText(playground.html),
-						styles     : decryptObject(playground.styles),
+						html       : decryptText(html),
+						styles     : decryptObject(styles),
 						deviceID   : device_id,
 						team       : { ...team,
 							members : team.members.map((member)=> ({ ...member,
 								id : member.id << 0
 							}))
 						},
-						components : playground.components.map((component)=> (reformComponent(component)))
+						components : components.map((component)=> (reformComponent(component)))
 					});
 				});
 
