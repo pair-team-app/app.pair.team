@@ -1,5 +1,6 @@
 
 import axios from 'axios';
+import JSZip from 'jszip';
 import { Strings } from 'lang-js-utils';
 import Octokit from '@octokit/rest';
 import cookie from 'react-cookies';
@@ -109,4 +110,18 @@ export function sendToSlack(channel, message, callback=null) {
 		}
 	}).catch((error)=> {
 	});
+}
+
+
+export function unzip(data) {
+	return (new Promise(((resolve, reject) => {
+		const zip = new JSZip();
+		zip.loadAsync(data, { checkCRC32 : true }).then(({ files })=> {
+			Object.keys(files).forEach((file)=> {
+				zip.file(file).async('binarystring').then((data)=> {
+					resolve (data);
+				});
+			});
+		}, (e)=> (reject(e)));
+	})));
 }

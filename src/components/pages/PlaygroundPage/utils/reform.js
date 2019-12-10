@@ -2,6 +2,7 @@
 import { Images } from 'lang-js-utils';
 import moment from 'moment';
 
+import { unzip } from '../../../../utils/funcs';
 import { decryptObject, decryptText } from './crypto';
 
 
@@ -33,10 +34,10 @@ export const reformComment = (comment, overwrite={})=> ({ ...comment,
 	...overwrite
 });
 
-export const reformComponent = (component, overwrite={})=> {
+export const reformComponent = async(component, overwrite={})=> {
 	console.log('reformComponent()', component.id);
 
-	const { type_id, event_type_id, node_id, title, tag_name, image, html, styles, accessibility, root_styles, meta, children, comments } = component;
+	let { type_id, event_type_id, node_id, title, tag_name, image, html, styles, accessibility, root_styles, meta, comments } = component;
 	const { width, height } = meta.bounds;
 	delete (component['type_id']);
 	delete (component['event_type_id']);
@@ -44,13 +45,22 @@ export const reformComponent = (component, overwrite={})=> {
 	delete (component['tag_name']);
 	delete (component['root_styles']);
 
-	console.log(component.id, 'STYLES:', decryptText(styles));
+
+	image = `data:image/png;base64,${btoa(await unzip(image))}`;
+	html = await unzip(html);
+	styles = await unzip(styles);
+	accessibility = await unzip(accessibility);
+	root_styles = await unzip(root_styles);
+
+//	console.log(component.id, 'STYLES:', decryptText(styles));
 // 	console.log(component.id, 'STYLES:', decryptObject(styles));
+//	console.log(component.id, 'ACCESSIBILITY:', decryptText(accessibility));
+// 	console.log(component.id, 'ACCESSIBILITY:', decryptObject(accessibility));
 // 	console.log('META: [%s]', JSON.stringify(meta, null, 2));
-	console.log('META:', meta);
-	console.log('ROOT STYLES:', decryptObject(root_styles));
-// 	console.log('META:', meta.bounds.height, meta.bounds.width);
-// 	console.log('PATH: [%s]', JSON.stringify(path, null, 2));
+//	console.log('ROOT STYLES:', decryptObject(root_styles));
+// 	console.log('META.BOUNDS:', meta.bounds.height, meta.bounds.width);
+
+// 	console.log(':', JSON.stringify(, null, 2));
 
 	return ({ ...component,
 		typeID        : type_id,
@@ -70,7 +80,6 @@ export const reformComponent = (component, overwrite={})=> {
 		},
 		image         : (image.length > 0) ? image : Images.genPlaceholder({ width, height }),
 		accessibility : decryptObject(accessibility),
-		children      : children.map((child)=> (reformChildElement(child))),
 		comments      : comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
 		selected      : false,
 		...overwrite

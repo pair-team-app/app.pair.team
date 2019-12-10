@@ -17,7 +17,6 @@ import PlaygroundNavPanel from './PlaygroundNavPanel';
 import { commentByID, componentByID, componentFromComment } from './utils/lookup';
 import { reformComment, reformComponent } from './utils/reform';
 import { Modals, API_ENDPT_URL } from '../../../consts/uris';
-import { decryptObject, decryptText } from './utils/crypto';
 import { setPlayground, setTypeGroup, setComponent, setComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -362,27 +361,25 @@ class PlaygroundPage extends Component {
 				payload : {
 					build_id : buildID,
 				}
-			}).then((response) => {
+			}).then(async(response) => {
 				console.log('BUILD_PLAYGROUNDS', response.data);
 
-				const playgrounds = response.data.playgrounds.map((playground)=> {
+				const playgrounds = await Promise.all(response.data.playgrounds.map(async(playground)=> {
 					const { device_id, team, components } = playground;
 					delete (playground['device_id']);
 
 					console.log('playground', { id : playground.id, device_id, team });
 
 					return ({ ...playground,
-//						html       : decryptText(html),
-//						styles     : decryptObject(styles),
 						deviceID   : device_id,
 						team       : { ...team,
 							members : team.members.map((member)=> ({ ...member,
 								id : member.id << 0
 							}))
 						},
-						components : components.map((component)=> (reformComponent(component)))
+						components : await Promise.all(components.map(async(component)=> (await reformComponent(component))))
 					});
-				});
+				}));
 
 				const playground = (playgroundID) ? playgrounds.find(({ id })=> (id === playgroundID)) : playgrounds.find(({ deviceID })=> (deviceID === 1));
 				this.props.setPlayground(playground);
@@ -392,7 +389,6 @@ class PlaygroundPage extends Component {
 
 				}, ()=> {
 					if (!this.props.match.params.playgroundID) {
-// 						const { playground } = this.state;
 						this.props.history.push(`${this.props.location.pathname}/${playground.id}`);
 					}
 				});
