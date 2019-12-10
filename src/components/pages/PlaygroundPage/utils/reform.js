@@ -46,7 +46,7 @@ export const reformComponent = async(component, overwrite={})=> {
 	delete (component['root_styles']);
 
 
-	image = `data:image/png;base64,${btoa(await unzipSync(image))}`;
+	image = (image.length > 0) ? `data:image/png;base64,${btoa(await unzipSync(image))}` : null;
 	html = await unzipSync(html);
 	styles = await unzipSync(styles);
 	accessibility = await unzipSync(accessibility);
@@ -78,7 +78,7 @@ export const reformComponent = async(component, overwrite={})=> {
 			'min-width'  : (width > 0) ? `${width}px` : 'fit-content',
 			'width'      : (width > 0) ? `${width}px` : 'fit-content'
 		},
-		image         : (image.length > 0) ? image : Images.genPlaceholder({ width, height }),
+		image         : (image || Images.genPlaceholder({ width, height })),
 		accessibility : decryptObject(accessibility),
 		comments      : comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
 		selected      : false,
