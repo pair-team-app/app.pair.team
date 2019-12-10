@@ -43,12 +43,12 @@ class CookiesOverlay extends Component {
 			<div className="cookies-overlay-title">Accept Cookies</div>
 
 			<div className="cookies-overlay-content">
-				This site uses cookies to ensure you get the best experience. By using our website, you agree to our <NavLink to={Pages.LEGAL}>Privacy Policy</NavLink>.
+				This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish. <NavLink to={Pages.LEGAL}>Read More</NavLink>.
 			</div>
 
 			<div className="button-wrapper-col cookies-overlay-button-wrapper">
-				<button className="quiet-button" onClick={()=> this.handleClick(false)}>Cancel</button>
-				<button onClick={()=> this.handleClick(true)}>OK</button>
+				<button onClick={()=> this.handleClick(true)}>Accept</button>
+				<button className="quiet-button" onClick={()=> this.handleClick(false)}>Reject</button>
 			</div>
 		</div>);
 	}
