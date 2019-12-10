@@ -16,10 +16,4 @@ export function decryptText(cipherText) {
 	const prefix = decipher.update(msg);
 
 	return (Buffer.concat([prefix, decipher.final()]).toString('utf8'));
-
-
-// 	const decKey = crypto.createDecipheriv(cryptoCreds.method, cryptoCreds.key, cryptoCreds.iv);
-// 	const decStr = decKey.update(cipherText, 'hex', 'utf8');
-//
-// 	return (`${decStr}${decKey.final('utf8')}`);
 }

@@ -113,7 +113,7 @@ export function sendToSlack(channel, message, callback=null) {
 }
 
 
-export function unzip(data) {
+export function unzipSync(data) {
 	return (new Promise(((resolve, reject) => {
 		const zip = new JSZip();
 		zip.loadAsync(data, { checkCRC32 : true }).then(({ files })=> {

@@ -2,7 +2,7 @@
 import { Images } from 'lang-js-utils';
 import moment from 'moment';
 
-import { unzip } from '../../../../utils/funcs';
+import { unzipSync } from '../../../../utils/funcs';
 import { decryptObject, decryptText } from './crypto';
 
 
@@ -35,7 +35,7 @@ export const reformComment = (comment, overwrite={})=> ({ ...comment,
 });
 
 export const reformComponent = async(component, overwrite={})=> {
-	console.log('reformComponent()', component.id);
+//	console.log('reformComponent()', component.id);
 
 	let { type_id, event_type_id, node_id, title, tag_name, image, html, styles, accessibility, root_styles, meta, comments } = component;
 	const { width, height } = meta.bounds;
@@ -46,11 +46,11 @@ export const reformComponent = async(component, overwrite={})=> {
 	delete (component['root_styles']);
 
 
-	image = `data:image/png;base64,${btoa(await unzip(image))}`;
-	html = await unzip(html);
-	styles = await unzip(styles);
-	accessibility = await unzip(accessibility);
-	root_styles = await unzip(root_styles);
+	image = `data:image/png;base64,${btoa(await unzipSync(image))}`;
+	html = await unzipSync(html);
+	styles = await unzipSync(styles);
+	accessibility = await unzipSync(accessibility);
+	root_styles = await unzipSync(root_styles);
 
 //	console.log(component.id, 'STYLES:', decryptText(styles));
 // 	console.log(component.id, 'STYLES:', decryptObject(styles));
