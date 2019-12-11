@@ -74,6 +74,7 @@ class PlaygroundContent extends Component {
 			height : `${maxSize.height}px`
 		} : null;
 
+		const scaleViews = (1/3);
 
 
 		return (<div className="playground-content" data-cursor={cursor}>
@@ -88,12 +89,12 @@ class PlaygroundContent extends Component {
 						top  : `${pos.y}px`,
 						left : `${pos.x}px`
 					} : {
-						width  : `${comp.meta.bounds.width * 0.5}px`,
-						height : `${comp.meta.bounds.height * 0.5}px`
+						width  : `${comp.meta.bounds.width * scaleViews}px`,
+						height : `${comp.meta.bounds.height * scaleViews}px`
 					};
 
 // 					const content = (!viewsContent) ? inlineStyles(comp.html, comp.styles) : `<img src="${Images.genPlaceholder(comp.meta.bounds, comp.title)}" class="playground-content-view-image" style="width:${comp.meta.bounds.width * 0.5}px; height:${comp.meta.bounds.height * 0.5}px;" alt="${comp.title}" />`;
-					const content = (!viewsContent) ? inlineStyles(comp.html, comp.styles) : `<img src="${comp.image}" class="playground-content-view-image" style="width:${comp.meta.bounds.width * 0.5}px; height:${comp.meta.bounds.height * 0.5}px;" alt="${comp.title}" />`;
+					const content = (!viewsContent) ? inlineStyles(comp.html, comp.styles) : `<img src="${comp.image}" class="playground-content-view-image" style="width:${comp.meta.bounds.width * scaleViews}px; height:${comp.meta.bounds.height * scaleViews}px;" alt="${comp.title}" />`;
 					const comments = (popover && component.id === comp.id) ? [ ...comp.comments, reformComment({ position,
 						id      : 0,
 						type    : 'add',
