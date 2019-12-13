@@ -10,7 +10,7 @@ import BaseOverlay from '../BaseOverlay';
 import LoginForm from '../../forms/LoginForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
 import { Modals } from '../../../consts/uris';
-import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
+import { setRedirectURI } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 
@@ -127,8 +127,7 @@ class LoginModal extends Component {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		setRedirectURI    : (url)=> dispatch(setRedirectURI(url)),
-		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+		setRedirectURI : (url)=> dispatch(setRedirectURI(url))
 	});
 
 };

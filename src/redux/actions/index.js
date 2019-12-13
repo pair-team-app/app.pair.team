@@ -1,26 +1,18 @@
 
 import axios from 'axios/index';
-import { Bits, Objects, URIs } from 'lang-js-utils';
+import { Bits, Objects } from 'lang-js-utils';
 import cookie from 'react-cookies';
 
 import {
-	ADD_FILE_UPLOAD,
-	APPEND_ARTBOARD_SLICES,
-	APPEND_HOME_ARTBOARDS,
-	SET_ARTBOARD_GROUPS,
-	SET_ARTBOARD_COMPONENT,
 	COMPONENT_TYPES_LOADED,
 	EVENT_GROUPS_LOADED,
 	SET_REDIRECT_URI,
 	USER_PROFILE_ERROR,
 	UPDATE_DEEPLINK,
 	UPDATE_MOUSE_COORDS,
-// 	USER_PROFILE_CACHED,
 	USER_PROFILE_LOADED,
 	USER_PROFILE_UPDATED,
-	CONVERTED_DEEPLINK,
-	SET_INVITE,
-	SET_TEAM,
+	CONVERTED_DEEPLINK
 } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
@@ -30,24 +22,6 @@ const logFormat = (action, payload=null, meta='')=> {
 	console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, (payload || ''), meta);
 };
 
-
-export function addFileUpload(payload) {
-	return ({ payload,
-		type : ADD_FILE_UPLOAD
-	});
-}
-
-export function appendArtboardSlices(payload) {
-	return ({ payload,
-		type : APPEND_ARTBOARD_SLICES
-	});
-}
-
-export function appendHomeArtboards(payload) {
-	return ({ payload,
-		type : APPEND_HOME_ARTBOARDS
-	});
-}
 
 export function fetchComponentTypes() {
 	logFormat('fetchComponentTypes()');
@@ -124,99 +98,6 @@ export function fetchUserProfile() {
 	});
 }
 
-export function fetchUserHistory(payload) {
-	logFormat('fetchUserHistory()', payload);
-
-	return ((dispatch)=> {
-		if (payload.profile) {
-			const { profile, loadOffset, loadAmt } = payload;
-
-			axios.post(API_ENDPT_URL, {
-				action  : 'PLAYGROUND_HISTORY',
-				payload : {
-					user_id : profile.id,
-					offset  : (loadOffset || 0),
-					length  : (loadAmt || -1)
-				}
-			}).then((response) => {
-				console.log('PLAYGROUND_HISTORY', response.data);
-
-				const artboards = response.data.artboards.filter((artboard)=> (artboard)).map((artboard)=> ({
-					id        : artboard.id << 0,
-					pageID    : artboard.page_id << 0,
-					uploadID  : artboard.upload_id << 0,
-					title     : artboard.page_title,
-					pageTitle : artboard.title,
-					filename  : artboard.filename,
-					creator   : artboard.creator,
-					meta      : JSON.parse(artboard.meta),
-					added     : artboard.added
-				}));
-
-				if (artboards.length > 0) {
-					dispatch({
-						type    : APPEND_HOME_ARTBOARDS,
-						payload : artboards
-					});
-				}
-			}).catch((error)=> {
-			});
-		}
-	});
-}
-
-export function fetchTeamLookup(payload) {
-	logFormat('fetchTeamLookup()', payload);
-
-	return ((dispatch)=> {
-		const { subdomain } = (payload) ? payload : { subdomain : URIs.subdomain() };
-
-		axios.post(API_ENDPT_URL, {
-			action  : 'TEAM_LOOKUP',
-			payload : { subdomain }
-		}).then((response) => {
-			console.log('TEAM_LOOKUP', response.data);
-
-			const { team } = response.data;
-			if (team) {
-				dispatch({
-					type    : SET_TEAM,
-					payload : { ...team,
-						members : team.members.map((member)=> ({
-							id       : member.id << 0,
-							type     : member.type,
-							userID   : member.user_id << 0,
-							username : member.username,
-							avatar   : member.avatar
-						}))
-					}
-				});
-			}
-		}).catch((error)=> {
-		});
-	});
-}
-
-export function setArtboardComponent(payload) {
-	logFormat('setArtboardComponent()', payload);
-	return ({ payload,
-		type : SET_ARTBOARD_COMPONENT
-	});
-}
-export function setArtboardGroups(payload) {
-	logFormat('setArtboardGroups()', payload);
-	return ({ payload,
-		type : SET_ARTBOARD_GROUPS
-	});
-}
-
-export function setInvite(payload) {
-	logFormat('setInvite()', payload);
-	return ({ payload,
-		type : SET_INVITE
-	});
-}
-
 export function setRedirectURI(payload) {
 	return ({ payload,
 		type : SET_REDIRECT_URI
@@ -229,7 +110,6 @@ export function updateDeeplink(payload) {
 		type : (!payload || Object.keys(payload).length !== cnt) ? UPDATE_DEEPLINK : CONVERTED_DEEPLINK
 	});
 }
-
 
 export function updateMouseCoords(payload) {
 // 	logFormat('updateMouseCoords()', payload);

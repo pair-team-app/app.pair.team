@@ -11,7 +11,7 @@ import BaseOverlay from '../BaseOverlay';
 import RegisterForm from '../../forms/RegisterForm';
 import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
-import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
+import { setRedirectURI } from '../../../redux/actions';
 import { buildInspectorPath } from '../../../utils/funcs';
 import { trackEvent } from '../../../utils/tracking';
 import pairLogo from '../../../assets/images/logos/logo-obit-310.png';
@@ -150,8 +150,7 @@ class RegisterModal extends Component {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		setRedirectURI    : (url)=> dispatch(setRedirectURI(url)),
-		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+		setRedirectURI : (url)=> dispatch(setRedirectURI(url))
 	});
 
 };

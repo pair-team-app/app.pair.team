@@ -29,9 +29,6 @@ import {
 	API_ENDPT_URL,
 	GITHUB_APP_AUTH } from '../../consts/uris';
 import {
-	appendHomeArtboards,
-	fetchTeamLookup,
-	fetchUserHistory,
 	fetchUserProfile,
 	updateDeeplink,
 	updateMouseCoords,
@@ -181,7 +178,7 @@ class App extends Component {
 	handleGitHubAuthSynced = (profile, register=true)=> {
 		console.log('%s.handleGitHubAuthSynced()', this.constructor.name, profile, register);
 
-		this.props.updateUserProfile(profile);
+// 		this.props.updateUserProfile(profile);
 
 		axios.post(API_ENDPT_URL, {
 			action  : 'REGISTER',
@@ -210,7 +207,7 @@ class App extends Component {
 		trackEvent('user', 'sign-out');
 
 		this.props.updateUserProfile(null);
-		this.props.purgeHomeArtboards();
+// 		this.props.purgeHomeArtboards();
 		this.props.history.push(Pages.HOME);
 	};
 
@@ -401,13 +398,10 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		purgeHomeArtboards : ()=> dispatch(appendHomeArtboards(null)),
-		fetchTeamLookup    : (payload)=> dispatch(fetchTeamLookup(payload)),
-		fetchUserHistory   : (payload)=> dispatch(fetchUserHistory(payload)),
-		fetchUserProfile   : ()=> dispatch(fetchUserProfile()),
-		updateMouseCoords  : (payload)=> dispatch(updateMouseCoords(payload)),
-		updateDeeplink     : (navIDs)=> dispatch(updateDeeplink(navIDs)),
-		updateUserProfile  : (profile)=> dispatch(updateUserProfile(profile))
+		fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
+		updateMouseCoords : (payload)=> dispatch(updateMouseCoords(payload)),
+		updateDeeplink    : (navIDs)=> dispatch(updateDeeplink(navIDs)),
+		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 };
 
