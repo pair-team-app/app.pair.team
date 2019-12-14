@@ -368,7 +368,7 @@ class PlaygroundPage extends Component {
 					const { device_id, team, components } = playground;
 					delete (playground['device_id']);
 
-					console.log('playground', { id : playground.id, device_id, team });
+					console.log('playground', { id : playground.id, device_id, components });
 
 					return ({ ...playground,
 						deviceID   : device_id,
@@ -381,6 +381,7 @@ class PlaygroundPage extends Component {
 					});
 				}));
 
+				console.log('||||||||||', playgrounds);
 				const playground = (playgroundID) ? playgrounds.find(({ id })=> (id === playgroundID)) : playgrounds.find(({ deviceID })=> (deviceID === 1));
 				this.props.setPlayground(playground);
 
