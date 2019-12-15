@@ -2,9 +2,9 @@
 import React, { Component } from 'react';
 import './PlaygroundAccessibility.css';
 
+import JSSoup from 'jssoup';
 import { connect } from 'react-redux';
 import { componentByNodeID } from '../utils/lookup';
-
 
 const makeTreeItem = (treeItem, components)=> {
 	const nodeID = treeItem.nodeID;
@@ -45,7 +45,6 @@ class PlaygroundAccessibility extends Component {
 		const { tree } = component.accessibility;
 
 		console.log('tree', tree);
-
 		return (<div className="playground-accessibility">
 			{(typeGroups && tree) && (<div className="playground-accessibility-tree-item-wrapper">
 				{makeTreeItem(tree, playground.components)}
@@ -61,8 +60,11 @@ const AccessibilityTreeItem = (props)=> {
 	const { component, childNodes, treeNode } = props;
 	const { failed, aborted } = (component) ? component.accessibility.report : {};
 
-	const ariaAttribs = component.html.split('>').shift().split('<').pop();
-
+	let ariaAttribs = [];
+	if (component) {
+		const tag = new JSSoup(component.html).nextElement;
+		ariaAttribs = Object.keys(tag.attrs).filter((key)=> (/^(aria-|role)/i.test(key))).sort().reverse().map((key)=> (`${key}="${(key !== tag.attrs[key]) ? tag.attrs[key] : ''}"`));
+	}
 
 	return (<div className="accessibility-tree-item">
 		<div className="accessibility-tree-item-header">
@@ -73,8 +75,11 @@ const AccessibilityTreeItem = (props)=> {
 			<div className="accessibility-tree-item-comment-wrapper">
 			</div>
 		</div>
-		<div className="accessibility-tree-item-aria-wrapper">
-		</div>
+		{(component) && (<div className="accessibility-tree-item-aria-wrapper">
+			{(ariaAttribs.length > 0) && (ariaAttribs.map((attrib, i)=> {
+				return (<div key={i} className="accessibility-tree-item-aria-attribute">{attrib}</div>)
+			}))}
+		</div>)}
 
 		{(component) && (<div className="accessibility-tree-item-report-wrapper">
 			{(failed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-failed">
@@ -107,12 +112,15 @@ const AccessibilityTreeItemRule = (props)=> {
 // 	console.log('AccessibilityTreeItemRule()', props);
 
 	const { rule } = props;
-	const { description, help, impact, nodes } = rule;
+	const { help, impact, nodes } = rule;
+	const listItems = nodes[0].any.map(({ message })=> (message.replace(/^(\b\w)/, (c)=> (c.toUpperCase()))));
+
 	return (<div className="accessibility-tree-item-rule">
 		<div className="accessibility-tree-item-rule-title">{(impact || '')}</div>
 		<div className="accessibility-tree-item-rule-info">
-			{help}. <ul>{nodes[0].any.map(({ id, message })=> (<li key={id}>{message}</li>))}</ul>
-			</div>
+			{help}{(listItems.length === 0) ? '.' : ':'}
+			{(listItems.length > 0) && (<ul>{listItems.map((listItem, i)=> (<li key={i}>{listItem}</li>))}</ul>)}
+		</div>
 	</div>);
 
 };

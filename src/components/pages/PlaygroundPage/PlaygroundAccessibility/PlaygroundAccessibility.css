@@ -90,12 +90,30 @@
 	display: flex;
 	flex-direction: row;
 	align-items: flex-start;
-	justify-content: space-around;
 }
 
 .accessibility-tree-item-aria-wrapper > * {
-	margin: auto;
-	border: 1px solid #ff00ff;
+	flex: 1 1 auto;
+	margin: 4px 0;
+	padding: 0 4px;
+	border-right: 1px solid rgba(var(--border-color), 1.0);
+	/*border: 1px solid #ff00ff;*/
+}
+
+.accessibility-tree-item-aria-attribute {
+	font-family: Monaco, Consolas, "Courier New", monospace;
+	font-size: 10px;
+	word-break: keep-all;
+	line-break: strict;
+}
+
+.accessibility-tree-item-aria-attribute:first-child {
+	padding-left: 0;
+}
+
+.accessibility-tree-item-aria-attribute:last-child {
+	padding-right: 0;
+	border-right: none;
 }
 
 .accessibility-tree-item-rules-wrapper {
@@ -103,12 +121,12 @@
 }
 
 .accessibility-tree-item-rules-wrapper > * {
-	margin: auto;
+	margin-top: 4px;
 	flex: 1 1 auto;
 }
 
 .accessibility-tree-item-rules {
-	padding: 2px;
+	padding: 4px;
 }
 
 .accessibility-tree-item-rules-failed {
@@ -131,8 +149,12 @@
 	flex-direction: row;
 	flex-wrap: nowrap;
 	align-items: flex-start;
+	margin-bottom: 5px;
 	font-size: 12px;
-	margin-bottom: 10px;
+}
+
+.accessibility-tree-item-rule:last-child {
+	margin-bottom: 0;
 }
 
 .accessibility-tree-item-rule > * {
@@ -152,6 +174,7 @@
 
 .accessibility-tree-item-rule-info > ul {
 	margin: 0 0 0 15px;
+	list-style-type: disc;
 }
 
 .accessibility-tree-item-rule-info > ul > li {
