@@ -60,47 +60,44 @@ const AccessibilityTreeItem = (props)=> {
 
 	const { component, childNodes, treeNode } = props;
 	const { failed, aborted } = (component) ? component.accessibility.report : {};
+
+	const ariaAttribs = component.html.split('>').shift().split('<').pop();
+
+
 	return (<div className="accessibility-tree-item">
-		<div className="accessibility-tree-item-title">{treeNode.role} {(treeNode.name.length > 0) ? `"${treeNode.name}"` : ''}</div>
-		<div className="accessibility-tree-item-content-wrapper">
-			{(component) && (<div className="accessibility-tree-item-rules-wrapper">
-				{/*{(passed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-passed">*/}
-					{/*{(passed.map((rule, i)=> {*/}
-						{/*return (<AccessibilityTreeItemRule*/}
-							{/*key={i}*/}
-							{/*rule={rule}*/}
-						{/*/>);*/}
-					{/*}))}*/}
-				{/*</div>)}*/}
-
-				{(failed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-failed">
-					{(failed.map((rule, i)=> {
-						return (<AccessibilityTreeItemRule
-							key={i}
-							rule={rule}
-						/>);
-					}))}
-				</div>)}
-
-				{(aborted.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-aborted">
-					{(aborted.map((rule, i)=> {
-						return (<AccessibilityTreeItemRule
-							key={i}
-							rule={rule}
-						/>);
-					}))}
-				</div>)}
+		<div className="accessibility-tree-item-header">
+			{(component) && (<div className="accessibility-tree-item-thumb-wrapper">
+				<img src={component.image} alt={component.title} />
 			</div>)}
-
-			{(component) && (<div className="accessibility-tree-item-component-wrapper">
-				<div className="accessibility-tree-item-component">
-					<img src={component.image} width={component.meta.bounds.width * 0.5} height={component.meta.bounds.height * 0.5} alt={component.title} />
-				</div>
-			</div>)}
-
-			<div className="accessibility-tree-item-child-wrapper">
-				{(childNodes.map((childNode)=> (childNode)))}
+			<div className="accessibility-tree-item-title">{treeNode.role} {(treeNode.name.length > 0) ? `"${treeNode.name}"` : ''}</div>
+			<div className="accessibility-tree-item-comment-wrapper">
 			</div>
+		</div>
+		<div className="accessibility-tree-item-aria-wrapper">
+		</div>
+
+		{(component) && (<div className="accessibility-tree-item-report-wrapper">
+			{(failed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-failed">
+				{(failed.map((rule, i)=> {
+					return (<AccessibilityTreeItemRule
+						key={i}
+						rule={rule}
+					/>);
+				}))}
+			</div>)}
+
+			{(aborted.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-aborted">
+				{(aborted.map((rule, i)=> {
+					return (<AccessibilityTreeItemRule
+						key={i}
+						rule={rule}
+					/>);
+				}))}
+			</div>)}
+		</div>)}
+
+		<div className="accessibility-tree-item-child-wrapper">
+			{(childNodes.map((childNode)=> (childNode)))}
 		</div>
 	</div>);
 };
@@ -110,9 +107,12 @@ const AccessibilityTreeItemRule = (props)=> {
 // 	console.log('AccessibilityTreeItemRule()', props);
 
 	const { rule } = props;
-	const { description, help, impact, failureSummary } = rule;
+	const { description, help, impact, nodes } = rule;
 	return (<div className="accessibility-tree-item-rule">
-		<div className="accessibility-tree-item-rule-title">{(impact || '').toUpperCase()} {help} ({(failureSummary || description)})</div>
+		<div className="accessibility-tree-item-rule-title">{(impact || '')}</div>
+		<div className="accessibility-tree-item-rule-info">
+			{help}. <ul>{nodes[0].any.map(({ id, message })=> (<li key={id}>{message}</li>))}</ul>
+			</div>
 	</div>);
 
 };

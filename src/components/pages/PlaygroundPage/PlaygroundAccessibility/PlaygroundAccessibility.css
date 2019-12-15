@@ -52,22 +52,54 @@
 	height: 20px;
 }
 
+.accessibility-tree-item {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
 
-.accessibility-tree-item > div:not(:first-child) {
+.accessibility-tree-item > div {
+	flex: 1 1 auto;
+	/*margin: auto;*/
+}
+
+.accessibility-tree-item-header {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
 	align-items: center;
+	margin-bottom: 1px;
 }
 
-.accessibility-tree-item-title {
+.accessibility-tree-item-thumb-wrapper {
+	margin-right: 10px;
+	max-width: 100px;
+	max-height: 100px;
+	background-color: rgba(var(--playground-panel-bg-color), 1.0);
 }
 
-.accessibility-tree-item-content-wrapper {
+.accessibility-tree-item-thumb-wrapper > img {
+	max-width: 100px;
+	width: 100%;
+	max-height: 100px;
+	object-fit: scale-down;
+	object-position: 50% 50%;
+}
+
+.accessibility-tree-item-aria-wrapper {
 	display: flex;
 	flex-direction: row;
-	flex-wrap: nowrap;
-	align-items: center;
+	align-items: flex-start;
+	justify-content: space-around;
+}
+
+.accessibility-tree-item-aria-wrapper > * {
+	margin: auto;
+	border: 1px solid #ff00ff;
+}
+
+.accessibility-tree-item-rules-wrapper {
+	flex: 4 4 auto;
 }
 
 .accessibility-tree-item-rules-wrapper > * {
@@ -75,11 +107,8 @@
 	flex: 1 1 auto;
 }
 
-.accessibility-tree-item-rules-wrapper {
-	flex: 4 4 auto;
-}
-
 .accessibility-tree-item-rules {
+	padding: 2px;
 }
 
 .accessibility-tree-item-rules-failed {
@@ -92,23 +121,42 @@
 }
 
 .accessibility-tree-item-rules-aborted {
+	background-color: rgba(var(--btn-disabled-fg-color), 1.0);
+	color: rgba(var(--txtfield-disabled-fg-color), 1.0);
+	border: 1px solid rgba(var(--border-color), 0.5);
 }
-
-.accessibility-tree-item-component-wrapper {
-	flex: 1 1 auto;
-}
-
-.accessibility-tree-item-component {
-}
-
-.accessibility-tree-item-component > img {
-	max-width: 50px;
-	max-height: 50px;
-}
-
 
 .accessibility-tree-item-rule {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: flex-start;
 	font-size: 12px;
+	margin-bottom: 10px;
+}
+
+.accessibility-tree-item-rule > * {
+	/*border: 1px dashed #ff00ff;*/
+}
+
+.accessibility-tree-item-rule-title {
+	flex: max-content;
+	min-width: 75px;
+	text-transform: uppercase;
+	font-weight: 600;
+}
+
+.accessibility-tree-item-rule-info {
+	flex: 1 0 0;
+}
+
+.accessibility-tree-item-rule-info > ul {
+	margin: 0 0 0 15px;
+}
+
+.accessibility-tree-item-rule-info > ul > li {
+	line-height: normal;
+	margin-bottom: 0;
 }
 
 .accessibility-tree-item-child-wrapper {
