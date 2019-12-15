@@ -7,7 +7,6 @@ import { componentByNodeID } from '../utils/lookup';
 
 
 const makeTreeItem = (treeItem, components)=> {
-// 	const nodeID = (treeItem.nodeID === 1) ? 32 : treeItem.nodeID;
 	const nodeID = treeItem.nodeID;
 	let component = componentByNodeID(components, nodeID);
 // 	console.log('makeTreeItem()', treeItem, nodeID, component);
@@ -62,45 +61,47 @@ const AccessibilityTreeItem = (props)=> {
 	const { component, childNodes, treeNode } = props;
 	const { failed, aborted } = (component) ? component.accessibility.report : {};
 	return (<div className="accessibility-tree-item">
-		<div className="accessibility-tree-item-title">{treeNode.role} {(treeNode.name.length > 0) ? `"${treeNode.name}"` : ''}</div><div>
-		{(component) && (<div className="accessibility-tree-item-rules-wrapper">
-			{/*{(passed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-passed">*/}
-				{/*{(passed.map((rule, i)=> {*/}
-					{/*return (<AccessibilityTreeItemRule*/}
-						{/*key={i}*/}
-						{/*rule={rule}*/}
-					{/*/>);*/}
-				{/*}))}*/}
-			{/*</div>)}*/}
+		<div className="accessibility-tree-item-title">{treeNode.role} {(treeNode.name.length > 0) ? `"${treeNode.name}"` : ''}</div>
+		<div className="accessibility-tree-item-content-wrapper">
+			{(component) && (<div className="accessibility-tree-item-rules-wrapper">
+				{/*{(passed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-passed">*/}
+					{/*{(passed.map((rule, i)=> {*/}
+						{/*return (<AccessibilityTreeItemRule*/}
+							{/*key={i}*/}
+							{/*rule={rule}*/}
+						{/*/>);*/}
+					{/*}))}*/}
+				{/*</div>)}*/}
 
-			{(failed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-failed">
-				{(failed.map((rule, i)=> {
-					return (<AccessibilityTreeItemRule
-						key={i}
-						rule={rule}
-					/>);
-				}))}
+				{(failed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-failed">
+					{(failed.map((rule, i)=> {
+						return (<AccessibilityTreeItemRule
+							key={i}
+							rule={rule}
+						/>);
+					}))}
+				</div>)}
+
+				{(aborted.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-aborted">
+					{(aborted.map((rule, i)=> {
+						return (<AccessibilityTreeItemRule
+							key={i}
+							rule={rule}
+						/>);
+					}))}
+				</div>)}
 			</div>)}
 
-			{(aborted.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-aborted">
-				{(aborted.map((rule, i)=> {
-					return (<AccessibilityTreeItemRule
-						key={i}
-						rule={rule}
-					/>);
-				}))}
+			{(component) && (<div className="accessibility-tree-item-component-wrapper">
+				<div className="accessibility-tree-item-component">
+					<img src={component.image} width={component.meta.bounds.width * 0.5} height={component.meta.bounds.height * 0.5} alt={component.title} />
+				</div>
 			</div>)}
-		</div>)}
 
-		{(component) && (<div className="accessibility-tree-item-component-wrapper">
-			<div className="accessibility-tree-item-component">
-				<img src={component.image} width={component.meta.bounds.width} height={component.meta.bounds.height} alt={component.title} />
+			<div className="accessibility-tree-item-child-wrapper">
+				{(childNodes.map((childNode)=> (childNode)))}
 			</div>
-		</div>)}
-
-		<div className="accessibility-tree-item-child-wrapper">
-			{(childNodes.map((childNode)=> (childNode)))}
-		</div></div>
+		</div>
 	</div>);
 };
 

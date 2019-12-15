@@ -35,7 +35,7 @@ export const reformComment = (comment, overwrite={})=> ({ ...comment,
 });
 
 export const reformComponent = async(component, overwrite={})=> {
-	console.log('reformComponent()', component.id);
+//	console.log('reformComponent()', component.id);
 
 	let { type_id, event_type_id, node_id, title, tag_name, image, html, styles, accessibility, root_styles, meta, comments } = component;
 	const { width, height } = meta.bounds;
@@ -60,7 +60,7 @@ export const reformComponent = async(component, overwrite={})=> {
 // 	console.log('META.BOUNDS:', meta.bounds.height, meta.bounds.width);
 
 
-	const reformed = {
+	/*const reformed = {
 		...component,
 		typeID        : type_id,
 		eventTypeID   : event_type_id,
@@ -70,8 +70,6 @@ export const reformComponent = async(component, overwrite={})=> {
 		html          : decryptText(html),
 		styles        : decryptObject(styles),
 		rootStyles    : { ...decryptObject(root_styles),
-// 			'height'     : (height > 0) ? `${height}px` : 'fit-content',
-// 			'max-height' : (height > 0) ? `${height}px` : 'fit-content',
 			'max-width'  : (width > 0) ? `${width}px` : 'fit-content',
 			'min-height' : (height > 0) ? `${height}px` : 'fit-content',
 			'min-width'  : (width > 0) ? `${width}px` : 'fit-content',
@@ -82,11 +80,27 @@ export const reformComponent = async(component, overwrite={})=> {
 		comments      : comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
 		selected      : false,
 		...overwrite
-	};
+	};*/
 
-// 	console.log(':', JSON.stringify(reformed, null, 2));
-
-	console.log('||:||', reformed.id);
-
-	return (reformed);
+	return ({
+		...component,
+		typeID        : type_id,
+		eventTypeID   : event_type_id,
+		nodeID        : node_id,
+		title         : (title.length === 0) ? tag_name : title,
+		tagName       : tag_name,
+		html          : decryptText(html),
+		styles        : decryptObject(styles),
+		rootStyles    : { ...decryptObject(root_styles),
+			'max-width'  : (width > 0) ? `${width}px` : 'fit-content',
+			'min-height' : (height > 0) ? `${height}px` : 'fit-content',
+			'min-width'  : (width > 0) ? `${width}px` : 'fit-content',
+			'width'      : (width > 0) ? `${width}px` : 'fit-content'
+		},
+		image         : (image || Images.genPlaceholder({ width, height })),
+		accessibility : decryptObject(accessibility),
+		comments      : comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
+		selected      : false,
+		...overwrite
+	});
 };

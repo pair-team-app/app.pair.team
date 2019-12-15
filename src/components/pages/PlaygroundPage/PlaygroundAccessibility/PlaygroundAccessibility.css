@@ -63,6 +63,18 @@
 .accessibility-tree-item-title {
 }
 
+.accessibility-tree-item-content-wrapper {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+}
+
+.accessibility-tree-item-rules-wrapper > * {
+	margin: auto;
+	flex: 1 1 auto;
+}
+
 .accessibility-tree-item-rules-wrapper {
 	flex: 4 4 auto;
 }

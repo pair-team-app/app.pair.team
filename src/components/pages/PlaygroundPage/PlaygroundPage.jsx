@@ -381,7 +381,6 @@ class PlaygroundPage extends Component {
 					});
 				}));
 
-				console.log('||||||||||', playgrounds);
 				const playground = (playgroundID) ? playgrounds.find(({ id })=> (id === playgroundID)) : playgrounds.find(({ deviceID })=> (deviceID === 1));
 				this.props.setPlayground(playground);
 
