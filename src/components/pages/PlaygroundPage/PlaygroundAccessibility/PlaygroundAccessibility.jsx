@@ -6,6 +6,8 @@ import Collapse from '@kunukn/react-collapse';
 import JSSoup from 'jssoup';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
+
+import BaseContentExpander from '../../../iterables/BaseContentExpander';
 import { componentByNodeID } from '../utils/lookup';
 
 
@@ -99,8 +101,10 @@ const AccessibilityTreeItem = (props)=> {
 	}
 
 	const expandable = ((((component) ? failed.length + aborted.length + ariaAttribs.length : 0) + childNodes.length) * 1 !== 0);
-	return (<div className={`accessibility-tree-item${(expanded) ? ' accessibility-tree-item-expanded' : ''}`}>
-		<div className={`accessibility-tree-item-header${(expandable) ? ' accessibility-tree-item-header-expandable' : ''}`} onClick={()=> (expandable) ? props.onTreeTitleClick(treeNode) : null}>
+	return (<BaseContentExpander
+		className={`accessibility-tree-item${(expanded) ? ' accessibility-tree-item-expanded' : ''}`}
+		open={expanded}
+		title={<div className={`accessibility-tree-item-header${(expandable) ? ' accessibility-tree-item-header-expandable' : ''}`} onClick={()=> (expandable) ? props.onTreeTitleClick(treeNode) : null}>
 			{(expandable) && (<div className={`accessibility-tree-item-header-arrow${(expanded) ? ' accessibility-tree-item-header-arrow-expanded' : ''}`}><FontAwesome name="caret-right" className="accessibility-tree-item-arrow" /></div>)}
 			{(component) && (<div className="accessibility-tree-item-thumb-wrapper">
 				<img src={component.image} alt={component.title} />
@@ -108,46 +112,39 @@ const AccessibilityTreeItem = (props)=> {
 			<div className="accessibility-tree-item-title">{treeNode.role} {(treeNode.name.length > 0) ? `"${treeNode.name}"` : ''}</div>
 			<div className="accessibility-tree-item-comment-wrapper">
 			</div>
-		</div>
+		</div>}
+		content={(expandable) && (<>
+			{(component) && (<div className="accessibility-tree-item-aria-wrapper">
+				{(ariaAttribs.length > 0) && (ariaAttribs.map((attrib, i)=> {
+					return (<div key={i} className="accessibility-tree-item-aria-attribute">{attrib}</div>)
+				}))}
+			</div>)}
 
-		{(expandable) && (<Collapse
-			isOpen={expanded}
-			className={`accessibility-tree-item-expander${(expanded) ? ' accessibility-tree-item-expander-open' : ''}`}
-			transition={`height ${(expanded) ? '250ms cubic-bezier(0.3, 0.9, 0.4, 1.0)' : '250ms cubic-bezier(0.5, 0.9, 0.1, 1.0)'}`}
-			aria-hidden={!expanded}
-			render={(state)=> (<>
-				{(component) && (<div className="accessibility-tree-item-aria-wrapper">
-					{(ariaAttribs.length > 0) && (ariaAttribs.map((attrib, i)=> {
-						return (<div key={i} className="accessibility-tree-item-aria-attribute">{attrib}</div>)
+			{(component) && (<div className="accessibility-tree-item-report-wrapper">
+				{(failed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-failed">
+					{(failed.map((rule, i)=> {
+						return (<AccessibilityTreeItemRule
+							key={i}
+							rule={rule}
+						/>);
 					}))}
 				</div>)}
 
-				{(component) && (<div className="accessibility-tree-item-report-wrapper">
-					{(failed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-failed">
-						{(failed.map((rule, i)=> {
-							return (<AccessibilityTreeItemRule
-								key={i}
-								rule={rule}
-							/>);
-						}))}
-					</div>)}
-
-					{(aborted.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-aborted">
-						{(aborted.map((rule, i)=> {
-							return (<AccessibilityTreeItemRule
-								key={i}
-								rule={rule}
-							/>);
-						}))}
-					</div>)}
+				{(aborted.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-aborted">
+					{(aborted.map((rule, i)=> {
+						return (<AccessibilityTreeItemRule
+							key={i}
+							rule={rule}
+						/>);
+					}))}
 				</div>)}
+			</div>)}
 
-				<div className="accessibility-tree-item-child-wrapper">
+			<div className="accessibility-tree-item-child-wrapper">
 				{(childNodes.map((childNode)=> (childNode)))}
 			</div>
-			</>)}
-		/>)}
-	</div>);
+		</>)}
+	/>);
 };
 
 
