@@ -43,11 +43,3 @@ yarn-error.log
 /src/assets/json/crypto-creds.json
 /src/assets/json/github-creds.json
 /src/assets/json/stripe-creds.json
-
-
-#-- vendor paths --#
-**/vendor/**/node_modules
-**/vendor/**/.*
-**/vendor/**/*.md
-**/vendor/**/examples
-**/vendor/**/LICENSE
