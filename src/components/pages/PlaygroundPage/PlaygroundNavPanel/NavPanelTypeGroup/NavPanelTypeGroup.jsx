@@ -19,8 +19,8 @@ function NavPanelTypeGroup(props) {
 			aria-hidden={!typeGroup.expanded}
 			render={(state)=> (<div className="nav-panel-type-group-item-wrapper">
 				{(typeGroup.items.map((item, i)=> (<NavPanelTypeItem key={i} item={item} onClick={()=> props.onTypeItemClick(typeGroup, item)} />)))}
-			</div>)}>
-		</Collapse>
+			</div>)}
+		/>
 	</div>);
 }
 
