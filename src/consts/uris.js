@@ -27,7 +27,8 @@ export const CDN_HOSTNAME = 'http://cdn.designengine.ai';
 export const API_HOSTNAME = 'https://api.designengine.ai';
 
 export const DEFAULT_AVATAR = `${CDN_HOSTNAME}/profiles/avatar-default.png`;
-export const API_ENDPT_URL = `${API_HOSTNAME}/playgrounds.php`;
+// export const API_ENDPT_URL = `${API_HOSTNAME}/playgrounds.php`;
+export const API_ENDPT_URL = `${API_HOSTNAME}/v2/pairurl.php`;
 
 export const GITHUB_APP_AUTH = 'https://github.com/login/oauth/authorize?client_id=e6f08e86acdc4e4cca38&redirect_uri=https://api.designengine.ai/system.php&scope=gist,user:email&state=__{EPOCH}__';
 

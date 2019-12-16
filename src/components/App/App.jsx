@@ -83,6 +83,7 @@ class App extends Component {
 
 // 		console.log('[:][:][:][:][:][:][:][:][:][:]');
 
+
 		const { profile } = this.props;
 		if (!profile && window.location.pathname.startsWith(Pages.PLAYGROUND)) {
 			this.onToggleModal(Modals.LOGIN);
@@ -388,10 +389,10 @@ class App extends Component {
 		  {(URIs.firstComponent() !== 'app') && (<BottomNav />)}
 
 		  <div className="modal-wrapper">
-			  {(modals.cookies) && (<CookiesOverlay
-				  onConfirmed={this.handleCookies}
-				  onComplete={()=> this.onToggleModal(Modals.COOKIES, false)}
-			  />)}
+			  {/*{(modals.cookies) && (<CookiesOverlay*/}
+				  {/*onConfirmed={this.handleCookies}*/}
+				  {/*onComplete={()=> this.onToggleModal(Modals.COOKIES, false)}*/}
+			  {/*/>)}*/}
 
 			  {(modals.profile) && (<ProfileModal
 				  onModal={(uri)=> this.onToggleModal(uri, true)}

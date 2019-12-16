@@ -129,18 +129,18 @@ class HomePage extends Component {
 			<BasePage className="home-page-wrapper">
 				<div className="home-page-form-wrapper">
 					<h1 dangerouslySetInnerHTML={{ __html : title }} />
-					<form onSubmit={this.handleSubmit}>
+					<form onSubmit={this.handleSubmit} role="form">
 						<DummyForm />
 
 						{/*<input disabled={submitted} type="email" name="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} required pattern=".*\S.*" />*/}
 						{(emailReset)
-							? (<input disabled={submitted} type="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} required autoComplete="new-password" />)
-							: (<input disabled={submitted} type="text" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} autoComplete="new-password" />)
+							? (<input disabled={submitted} aria-disabled={submitted} type="email" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} required autoComplete="new-password" role="textbox" aria-placeholder="Enter email address" aria-required={true} aria-valuetext={email} />)
+							: (<input disabled={submitted} aria-disabled={submitted} type="text" placeholder="Enter Email Address" value={email} onFocus={this.handleTextfieldFocus} onChange={this.handleTextfieldChange} onMouseLeave={this.handleMouseLeave} onBlur={this.handleTextfieldBlur} autoComplete="new-password" role="textbox" aria-placeholder="Enter email address" aria-required={true} aria-valuetext={email} />)
 						}
 						{/*<button disabled={(!emailValid && !email.length === 0) || submitted} type="submit" onClick={(event)=> this.handleSubmit(event)} style={{opacity : (submitted) ? 0.5 : 1.0}}>Join Wait List</button>*/}
-						<button disabled={submitted} type="submit" onClick={(event)=> this.handleSubmit(event)}>Join Wait List</button>
+						<button disabled={submitted} type="submit" onClick={(event)=> this.handleSubmit(event)} role="button" aria-disabled={submitted}>Join Wait List</button>
 					</form>
-					<div className="form-disclaimer">By tapping “Join Wait List” you accept our<br /><NavLink to="/terms">Terms of Service.</NavLink></div>
+					<div className="form-disclaimer">By tapping “Join Wait List” you accept our<br /><NavLink to="/terms" role="link">Terms of Service.</NavLink></div>
 				</div>
 
 				<div className="page-content-wrapper home-page-content-wrapper">

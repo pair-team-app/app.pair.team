@@ -1,6 +1,6 @@
 {
   "name": "pairurl.com",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "private": true,
   "dependencies": {
     "@kunukn/react-collapse": "^2.2.7",
@@ -13,6 +13,7 @@
     "design-engine-playground": "file:///labor/projects/npm_modules/design-engine-playground/develop",
     "favicongrab": "^1.0.0",
     "gsap": "^2.1.2",
+    "jszip": "^3.2.2",
     "lang-js-utils": "file:///labor/projects/npm_modules/lang-js-utils",
     "moment": "^2.24.0",
     "node-sass": "^4.12.0",
@@ -45,7 +46,7 @@
     "audit": "npm audit fix",
     "reinstall": "rm -rf node_modules && npm install",
     "rebuild": "npm run reinstall && npm run build",
-    "postbuild": "npm pair-url --parse"
+    "postbuild": "npx pair-url --parse"
   },
   "devDependencies": {
     "babel-plugin-transform-decorators-legacy": "^1.3.5"
