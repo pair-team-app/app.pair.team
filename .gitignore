@@ -12,15 +12,6 @@
 *.iml
 *.ipr
 
-#.idea/**/markdown-navigator.xml
-#.idea/**/markdown-navigator/
-#.idea/**/sonarIssues.xml
-#.idea/**/sonarlint/
-
-#.idea/misc.xml
-#.idea/workplace.xml
-#modules.xml
-
 
 #-- npm --#
 /node_modules
@@ -39,6 +30,7 @@ yarn-error.log
 
 #-- temp --#
 /.cache
+/.node-persist
 /tmp
 
 

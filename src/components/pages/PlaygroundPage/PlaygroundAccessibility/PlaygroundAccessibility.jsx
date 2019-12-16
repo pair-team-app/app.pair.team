@@ -26,7 +26,6 @@ class PlaygroundAccessibility extends Component {
 		super(props);
 
 		this.state = {
-//			typeGroups    : null,
 			expandedNodes : null
 		};
 	}
@@ -34,22 +33,20 @@ class PlaygroundAccessibility extends Component {
 	componentDidMount() {
 // 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
-//		const { componentTypes, component } = this.props;
 		const { component } = this.props;
-//		this.setState({ typeGroups : componentTypes.map(({ id, title })=> ({ id, title }))});
-
-		const expandedNodes = flattenTree(component.accessibility.tree);
-		this.setState({ expandedNodes });
+		if (component && component.accessibility.tree) {
+			const expandedNodes = flattenTree(component.accessibility.tree);
+			this.setState({ expandedNodes });
+		}
 	}
 
 	handleTreeTitleClick = (treeNode)=> {
 //		console.log('%s.handleTreeTitleClick()', this.constructor.name, treeNode);
 
 		const { expandedNodes } = this.state;
-		const node = expandedNodes.find(({ axNodeID })=> (axNodeID === treeNode.axNodeID));
-		node.expanded = !node.expanded;
-
-		this.setState({ expandedNodes : expandedNodes.map((expandedNode)=> ((expandedNode.axNodeID === node.axNodeID) ? node : expandedNode))});
+		this.setState({ expandedNodes : expandedNodes.map((node)=> ({ ...node,
+			expanded : (node.axNodeID === treeNode.axNodeID) ? !node.expanded : node.expanded
+		})) });
 	};
 
 
@@ -76,14 +73,17 @@ class PlaygroundAccessibility extends Component {
 
 		const { playground, component } = this.props;
 		const { expandedNodes } = this.state;
-		const { tree } = component.accessibility;
+		const { tree } = (component) ? component.accessibility : { tree : null };
 
-//		console.log('tree', tree);
-		return (<div className="playground-accessibility">
-			{(playground && tree && expandedNodes) && (<div className="playground-accessibility-tree-item-wrapper">
-				{this.makeTreeItem(tree, playground.components)}
-			</div>)}
-		</div>);
+		return ((playground) && (<div className="playground-accessibility">
+			{(expandedNodes && tree)
+				? (<div className="playground-accessibility-tree-item-wrapper">
+						{this.makeTreeItem(component.accessibility.tree, playground.components)}
+					</div>)
+				: (<div className="playground-accessibility-tree-item-wrapper">
+					</div>)
+			}
+		</div>));
 	}
 }
 
@@ -170,11 +170,10 @@ const AccessibilityTreeItemRule = (props)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-//		componentTypes : state.componentTypes,
-		playground     : state.playground,
-		typeGroup      : state.typeGroup,
-		component      : state.component,
-		comment        : state.comment
+		playground : state.playground,
+		typeGroup  : state.typeGroup,
+		component  : state.component,
+		comment    : state.comment
 	});
 };
 
