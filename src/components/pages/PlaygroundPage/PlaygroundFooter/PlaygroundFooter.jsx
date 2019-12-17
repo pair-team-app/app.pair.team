@@ -33,9 +33,9 @@ function PlaygroundFooter(props) {
 			<button className="quiet-button" onClick={(event)=> handleClick(event, GITHUB_XD_PLUGIN)}>Adobe XD Plugin</button>
 		</div>
 		<div className="button-wrapper-col playground-footer-content-toggle-wrapper">
-			<button className="quiet-button glyph-button" onClick={props.onToggleAccessibility} data-selected={(accessibility)}><FontAwesome name="universal-access" /></button>
 			<button className="quiet-button glyph-button" onClick={props.onToggleMobile} data-selected={(playground.deviceID === 2)} data-hidden={(builds === 1)}><FontAwesome name="mobile" /></button>
 			<button className="quiet-button glyph-button" onClick={props.onToggleDesktop} data-selected={(playground.deviceID === 1)} data-hidden={(builds === 1)}><FontAwesome name="desktop" /></button>
+			<button className="quiet-button glyph-button" onClick={props.onToggleAccessibility} data-selected={(accessibility)}><FontAwesome name="universal-access" /></button>
 		</div>
 	</div>);
 }
