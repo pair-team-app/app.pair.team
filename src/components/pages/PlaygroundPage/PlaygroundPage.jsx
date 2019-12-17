@@ -33,6 +33,7 @@ class PlaygroundPage extends Component {
 			comment       : null,
 			cursor        : false,
 			accessibility : false,
+			share         : false,
 			fetching      : false
 		};
 	}
@@ -45,7 +46,7 @@ class PlaygroundPage extends Component {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { profile, componentTypes, playground, match } = this.props;
-		const { fetching } = this.state;
+		const { fetching, accessibility } = this.state;
 
 		const { teamSlug, projectSlug, buildID, playgroundID, componentsSlug, componentID, commentID } = match.params;
 // 		console.log('params', match.params);
@@ -128,19 +129,7 @@ class PlaygroundPage extends Component {
 							url = url.replace(new RegExp(`/${componentID}.*$`), '');
 						}
 					}
-
-				} else {
-// 					typeGroup = componentTypes.find(({ key })=> (key === 'views'));
-// 					url = url.replace(new RegExp(`/${componentsSlug}.*$`, 'g'), '/views');
 				}
-
-// 				this.props.setTypeGroup(typeGroup);
-// 				this.props.setComponent(component);
-// 				this.props.setComment(comment);
-//
-// 				if (window.location.pathname !== url) {
-// 					this.props.history.push(url);
-// 				}
 
 			} else {
 				typeGroup = componentTypes.find(({ key })=> (key === 'views'));
@@ -148,13 +137,22 @@ class PlaygroundPage extends Component {
 			}
 
 			this.props.setTypeGroup(typeGroup);
-			this.props.setComponent(component);
-			this.props.setComment(comment);
+
+			if (component) {
+				this.props.setComponent(component);
+			}
+
+			if (comment) {
+				this.props.setComment(comment);
+			}
 
 			if (window.location.pathname !== url) {
 				this.props.history.push(url);
 			}
 
+			if (window.location.pathname.includes('/accessibility')) {
+				this.setState({ accessibility : true });
+			}
 		}
 
 
@@ -163,26 +161,41 @@ class PlaygroundPage extends Component {
 
 		if (playground && prevProps.playground) {
 			const { typeGroup, component, comment } = this.props;
+			let url = window.location.pathname;
 
 			if (playgroundID << 0 !== playground.id) {
-				this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`);
+				url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`;
 			}
 
 			if (typeGroup && typeGroup !== prevProps.typeGroup) {
-				this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`);
+				url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}${(url.includes('/accessibility')) ? '/accessibility' : ''}`;
 			}
 
 			if (component && component !== prevProps.component) {
-				this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}`);
+				url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(url.includes('/accessibility')) ? '/accessibility' : ''}`;
 			}
 
 			if (comment && comment !== prevProps.comment) {
-				this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}/comments/${comment.id}`);
+				url = (prevProps.comment) ? url.replace(prevProps.comment.id, comment.id) : `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(url.includes('/accessibility')) ? '/accessibility' : ''}/comments/${comment.id}`;
 			}
 
 			if (component && !comment && prevProps.comment) {
-				this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}`);
+				url = url.replace(/\/comments\/?.*$/, '');
 			}
+
+			if (accessibility && !prevState.accessibility && !window.location.pathname.includes('/accessibility')) {
+				url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}${(component) ? `/${component.id}` : ''}/accessibility`;
+			}
+
+			if (!accessibility && prevState.accessibility && window.location.pathname.includes('/accessibility')) {
+				url = url.replace(/\/accessibility.*$/, '');
+			}
+
+			if (window.location.pathname !== url) {
+				this.props.history.push(url);
+			}
+
+//			this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`)
 		}
 	}
 
@@ -217,7 +230,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleCommentMarkerClick = ({ comment })=> {
-// 		console.log('%s.handleCommentMarkerClick()', this.constructor.name, { comment });
+ 		console.log('%s.handleCommentMarkerClick()', this.constructor.name, { comment });
 
 		const { playground } = this.props;
 		const component = componentFromComment(playground.components, comment);
@@ -249,7 +262,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleComponentMenuItem = ({ type, itemID })=> {
-// 		console.log('%s.handleComponentMenuItem()', this.constructor.name, { type, itemID });
+ 		console.log('%s.handleComponentMenuItem()', this.constructor.name, { type, itemID });
 
 		if (type === 'comments') {
 			if (/\/comments.*$/.test(window.location.pathname)) {
@@ -258,6 +271,11 @@ class PlaygroundPage extends Component {
 
 			} else {
 				this.props.history.push(`${window.location.pathname}/comments`);
+			}
+
+		} else if (type === 'share') {
+			if (!this.state.share) {
+				this.setState({ share : true });
 			}
 		}
 	};
@@ -327,8 +345,11 @@ class PlaygroundPage extends Component {
 	handleToggleAccessibility = ()=> {
 		console.log('%s.handleToggleAccessibility()', this.constructor.name, this.state.accessibility);
 
-		const { accessibility } = this.state;
-		this.setState({ accessibility : !accessibility });
+		const { comment } = this.props;
+		setTimeout(()=> {
+			const { accessibility } = this.state;
+			this.setState({ accessibility : !accessibility });
+		}, (((comment !== null) << 0) * 150));
 	};
 
 	handleToggleCommentCursor = (event)=> {
@@ -343,7 +364,6 @@ class PlaygroundPage extends Component {
 
 		trackEvent('button', (this.props.playground.deviceID === 1) ? 'mobile-toggle' : 'desktop-toggle');
 		const { playgrounds } = this.state;
-
 		const playground = playgrounds.find(({ deviceID })=> (deviceID !== this.props.playground.deviceID));
 		if (playground) {
 			this.props.setPlayground(playground);
@@ -368,8 +388,7 @@ class PlaygroundPage extends Component {
 					const { device_id, team, components } = playground;
 					delete (playground['device_id']);
 
-					console.log('playground', { id : playground.id, device_id, components });
-
+//					console.log('playground', { id : playground.id, device_id, components });
 					return ({ ...playground,
 						deviceID   : device_id,
 						team       : { ...team,
@@ -416,7 +435,7 @@ class PlaygroundPage extends Component {
 
 		const { profile, playground, typeGroup, component } = this.props;
 		const { params } = this.props.match;
-		const { playgrounds, cursor, accessibility } = this.state;
+		const { playgrounds, cursor, accessibility, share } = this.state;
 
 		return (<BasePage className={`playground-page${(component && (window.location.href.includes('/comments'))) ? ' playground-page-comments' : ''}`}>
 			{(profile && playground && typeGroup) && (<PlaygroundNavPanel
@@ -426,22 +445,24 @@ class PlaygroundPage extends Component {
 			/>)}
 
 			{(profile && playground && typeGroup) && (<div className="playground-page-content-wrapper">
-				{(!accessibility) ?
-					(<PlaygroundContent
-						cursor={cursor}
-						onComponentClick={this.handleComponentClick}
-						onMarkerClick={this.handleCommentMarkerClick}
-						onMenuShow={this.handleComponentMenuShow}
-						onMenuItem={this.handleComponentMenuItem}
-						onAddComment={this.handleAddComment}
-						onDeleteComment={this.handleDeleteComment}
-						onPopoverClose={this.handleComponentPopoverClose}
-					/>) :
-					(<PlaygroundAccessibility />)
+				{(!accessibility)
+					? (<PlaygroundContent
+							cursor={cursor}
+							onComponentClick={this.handleComponentClick}
+							onMarkerClick={this.handleCommentMarkerClick}
+							onMenuShow={this.handleComponentMenuShow}
+							onMenuItem={this.handleComponentMenuItem}
+							onAddComment={this.handleAddComment}
+							onDeleteComment={this.handleDeleteComment}
+							onPopoverClose={this.handleComponentPopoverClose}
+						/>)
+					: (<PlaygroundAccessibility />)
 				}
 
 				<PlaygroundHeader
+					popover={share}
 					onPopup={this.props.onPopup}
+					onSharePopoverClose={()=> this.setState({ share : false })}
 					onSettingsItem={this.handleSettingsItem}
 					onLogout={this.props.onLogout}
 				/>

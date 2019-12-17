@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import './PlaygroundComment.css';
 
-import { URIs } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
+import { connect } from 'react-redux';
 
 import BasePlaygroundComment from '../BasePlaygroundComment';
 import BasePopover from '../../../overlays/BasePopover';
@@ -96,7 +96,7 @@ class PlaygroundComment extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 // 		console.log('%s.render()', this.constructor.name, this.props.component, this.props.comment);
 
-		const { component, comment, ind } = this.props;
+		const { component, comment, ind, activeComment } = this.props;
 		const { outro } = this.state;
 
 		const style = {
@@ -108,7 +108,7 @@ class PlaygroundComment extends Component {
 			<PlaygroundCommentMarker ind={ind} comment={comment} onClick={this.handleMarkerClick} />
 			{(comment.id === 0)
 				? (<PlaygroundCommentAddPopover comment={this.state.comment} outro={outro} onTextChange={this.handleTextChange} onSubmit={this.handleAddSubmit} onClose={this.handleClose} />)
-				: ((comment.id === (URIs.lastComponent() << 0)) && (<PlaygroundCommentPopover ind={ind} comment={comment} outro={outro} onDelete={this.handleDelete} onClose={this.handleClose} />))
+				: ((activeComment && activeComment.id === comment.id) && (<PlaygroundCommentPopover ind={ind} comment={comment} outro={outro} onDelete={this.handleDelete} onClose={this.handleClose} />))
 			}
 		</div>);
 	}
@@ -168,4 +168,11 @@ const PlaygroundCommentPopover = (props)=> {
 
 
 
-export default (PlaygroundComment);
+const mapStateToProps = (state, ownProps)=> {
+	return ({
+		activeComment : state.comment
+	});
+};
+
+
+export default connect(mapStateToProps)(PlaygroundComment);

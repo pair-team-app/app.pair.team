@@ -237,10 +237,13 @@ class App extends Component {
 
 	handleMouseMove = (event)=> {
 // 		console.log('%s.handleMouseMove()', this.constructor.name, this.constructor.name, { x : event.pageX, y : event.pageY });
-		this.props.updateMouseCoords({
-			x : event.pageX,
-			y : event.pageY
-		});
+
+		if (this.props.profile && window.location.pathname.startsWith(Pages.PLAYGROUND)) {
+			this.props.updateMouseCoords({
+				x : event.pageX,
+				y : event.pageY
+			});
+		}
 	};
 
 	handlePopup = (payload)=> {
@@ -377,7 +380,7 @@ class App extends Component {
 			    <Route exact path={Pages.HOME} render={()=> <HomePage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} onSignup={()=> null} />} />
 			    <Route exact path={Pages.DOCS} render={()=> <DocsPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
 			    <Route exact path={Pages.FEATURES} render={()=> <FeaturesPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
-			    <Route exact path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(comments)?/:commentID([0-9]+)?`} render={(props)=> <PlaygroundPage { ...props } onLogout={this.handleLogout} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
+			    <Route exact path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`} render={(props)=> <PlaygroundPage { ...props } onLogout={this.handleLogout} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
 			    <Route exact path={Pages.PRICING} render={()=> <PricingPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
 			    <Route exact path={`/:page(${Pages.LEGAL.slice(1)}|${Pages.PRIVACY.slice(1)})`} component={PrivacyPage} />
 			    <Route exact path={Pages.TERMS} component={TermsPage} />

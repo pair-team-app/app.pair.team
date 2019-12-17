@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './PlaygroundAccessibility.css';
 
-import Collapse from '@kunukn/react-collapse';
 import JSSoup from 'jssoup';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
@@ -34,11 +33,15 @@ class PlaygroundAccessibility extends Component {
 
 	componentDidMount() {
 // 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+ 		this.buildFlatTree();
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { component } = this.props;
-		if (component && component.accessibility.tree) {
-			const expandedNodes = flattenTree(component.accessibility.tree);
-			this.setState({ expandedNodes });
+		if (component && component !== prevProps.component) {
+			this.buildFlatTree();
 		}
 	}
 
@@ -51,6 +54,17 @@ class PlaygroundAccessibility extends Component {
 		})) });
 	};
 
+	buildFlatTree = ()=> {
+		console.log('%s.buildFlatTree()', this.constructor.name);
+
+		const { component } = this.props;
+		if (component && component.accessibility.tree) {
+			const expandedNodes = flattenTree(component.accessibility.tree);
+			if (expandedNodes !== this.state.expandedNodes) {
+				this.setState({ expandedNodes });
+			}
+		}
+	};
 
 	makeTreeItem = (treeItem, components)=> {
 		const { expandedNodes } = this.state;
@@ -78,19 +92,17 @@ class PlaygroundAccessibility extends Component {
 		const { tree } = (component) ? component.accessibility : { tree : null };
 
 		return ((playground) && (<div className="playground-accessibility">
-			{(expandedNodes && tree)
-				? (<div className="playground-accessibility-tree-item-wrapper">
-						{this.makeTreeItem(component.accessibility.tree, playground.components)}
-					</div>)
-				: (<div className="playground-accessibility-tree-item-wrapper">
-					</div>)
-			}
+			<div className="playground-accessibility-tree-item-wrapper">
+				{(expandedNodes && tree) && (this.makeTreeItem(component.accessibility.tree, playground.components))}
+			</div>
 		</div>));
 	}
 }
 
 
 const AccessibilityTreeItem = (props)=> {
+//	console.log('AccessibilityTreeItem()', props);
+
  	const { expanded, component, childNodes, treeNode } = props;
 	const { failed, aborted } = (component) ? component.accessibility.report : {};
 
@@ -104,15 +116,13 @@ const AccessibilityTreeItem = (props)=> {
 	return (<BaseContentExpander
 		className={`accessibility-tree-item${(expanded) ? ' accessibility-tree-item-expanded' : ''}`}
 		open={expanded}
-		title={<div className={`accessibility-tree-item-header${(expandable) ? ' accessibility-tree-item-header-expandable' : ''}`} onClick={()=> (expandable) ? props.onTreeTitleClick(treeNode) : null}>
-			{(expandable) && (<div className={`accessibility-tree-item-header-arrow${(expanded) ? ' accessibility-tree-item-header-arrow-expanded' : ''}`}><FontAwesome name="caret-right" className="accessibility-tree-item-arrow" /></div>)}
-			{(component) && (<div className="accessibility-tree-item-thumb-wrapper">
-				<img src={component.image} alt={component.title} />
-			</div>)}
-			<div className="accessibility-tree-item-title">{treeNode.role} {(treeNode.name.length > 0) ? `"${treeNode.name}"` : ''}</div>
-			<div className="accessibility-tree-item-comment-wrapper">
-			</div>
-		</div>}
+		title={<AccessibilityTreeItemHeader
+			expandable={expandable}
+			expanded={expanded}
+			component={component}
+			treeNode={treeNode}
+			onClick={props.onTreeTitleClick}
+		/>}
 		content={(expandable) && (<>
 			{(component) && (<div className="accessibility-tree-item-aria-wrapper">
 				{(ariaAttribs.length > 0) && (ariaAttribs.map((attrib, i)=> {
@@ -121,23 +131,15 @@ const AccessibilityTreeItem = (props)=> {
 			</div>)}
 
 			{(component) && (<div className="accessibility-tree-item-report-wrapper">
-				{(failed.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-failed">
-					{(failed.map((rule, i)=> {
-						return (<AccessibilityTreeItemRule
-							key={i}
-							rule={rule}
-						/>);
-					}))}
-				</div>)}
+				{(failed.length > 0) && (<AccessibilityTreeItemReport
+					type="failed"
+					rules={failed}
+				/>)}
 
-				{(aborted.length > 0) && (<div className="accessibility-tree-item-rules accessibility-tree-item-rules-aborted">
-					{(aborted.map((rule, i)=> {
-						return (<AccessibilityTreeItemRule
-							key={i}
-							rule={rule}
-						/>);
-					}))}
-				</div>)}
+				{(aborted.length > 0) && (<AccessibilityTreeItemReport
+					type="aborted"
+					rules={aborted}
+				/>)}
 			</div>)}
 
 			<div className="accessibility-tree-item-child-wrapper">
@@ -147,6 +149,34 @@ const AccessibilityTreeItem = (props)=> {
 	/>);
 };
 
+const AccessibilityTreeItemHeader = (props)=> {
+//	console.log('AccessibilityTreeItemHeader()', props);
+
+	const { expandable, expanded, component, treeNode } = props;
+	return (<div className={`accessibility-tree-item-header${(expandable) ? ' accessibility-tree-item-header-expandable' : ''}`} onClick={()=> (expandable) ? props.onClick(treeNode) : null}>
+		{(expandable) && (<div className={`accessibility-tree-item-header-arrow${(expanded) ? ' accessibility-tree-item-header-arrow-expanded' : ''}`}><FontAwesome name="caret-right" className="accessibility-tree-item-arrow" /></div>)}
+		{(component) && (<div className="accessibility-tree-item-thumb-wrapper">
+			<img src={component.image} alt={component.title} />
+		</div>)}
+		<div className="accessibility-tree-item-title">{treeNode.role} {(treeNode.name.length > 0) ? `"${treeNode.name}"` : ''}</div>
+		<div className="accessibility-tree-item-comment-wrapper">
+		</div>
+	</div>);
+};
+
+const AccessibilityTreeItemReport = (props)=> {
+//	console.log('AccessibilityTreeItemReport()', props);
+
+	const { type, rules } = props;
+	return (<div className={`accessibility-tree-item-rules accessibility-tree-item-rules-${type}`}>
+		{(rules.map((rule, i)=> {
+			return (<AccessibilityTreeItemRule
+				key={i}
+				rule={rule}
+			/>);
+		}))}
+	</div>);
+};
 
 const AccessibilityTreeItemRule = (props)=> {
 // 	console.log('AccessibilityTreeItemRule()', props);
