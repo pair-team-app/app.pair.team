@@ -38,7 +38,6 @@ class PlaygroundNavPanel extends Component {
 				}));
 
 				return ({ ...typeGroup, items,
-					expanded : (typeGroup.id === this.props.typeGroup.id),
 					selected : (typeGroup.id === this.props.typeGroup.id)
 				});
 			});
@@ -53,7 +52,6 @@ class PlaygroundNavPanel extends Component {
 				}));
 
 				return ({ ...typeGroup, items,
-					expanded : (typeGroup.id === this.props.typeGroup.id),
 					selected : (typeGroup.id === this.props.typeGroup.id)
 				});
 			});
@@ -64,13 +62,11 @@ class PlaygroundNavPanel extends Component {
 
 	handleTypeGroupClick = (typeGroup)=> {
 // 		console.log('%s.handleTypeGroupClick()', this.constructor.name, typeGroup);
-
 		this.props.onTypeGroupClick(typeGroup);
 	};
 
 	handleTypeItemClick = (typeGroup, typeItem)=> {
 // 		console.log('%s.handleTypeItemClick()', this.constructor.name, typeGroup, typeItem);
-
 		this.props.onTypeItemClick(typeGroup, typeItem);
 	};
 
@@ -86,7 +82,6 @@ class PlaygroundNavPanel extends Component {
 			}));
 
 			return ({ ...typeGroup, items,
-				expanded : (this.props.typeGroup && (typeGroup.id === this.props.typeGroup.id || items.map(({ selected })=> (selected)).includes(true))),
 				selected : (this.props.typeGroup && (typeGroup.id === this.props.typeGroup.id || items.map(({ selected })=> (selected)).includes(true)))
 			});
 		});

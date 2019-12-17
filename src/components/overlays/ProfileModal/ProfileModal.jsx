@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './ProfileModal.css';
 
-import axios from 'axios/index';
+import axios from 'axios';
 import { URIs } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';

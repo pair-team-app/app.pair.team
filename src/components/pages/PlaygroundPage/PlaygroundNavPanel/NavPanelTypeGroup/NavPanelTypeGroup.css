@@ -24,7 +24,8 @@
 	display: block;
 	position: relative;
 	overflow: hidden;
-	transition: height 250ms cubic-bezier(0.4, 0, 0.2, 1);
+	/*transition: height 250ms cubic-bezier(0.4, 0.0, 0.2, 1.0);*/
+	transition: var(--expander-content-close-transition);
 }
 
 .nav-panel-type-group-expander::after {
@@ -41,6 +42,10 @@
 	pointer-events: none;
 	will-change: opacity;
 	transition: opacity 250ms;
+}
+
+.nav-panel-type-group-expander-open {
+	transition: var(--expander-content-open-transition);
 }
 
 .nav-panel-type-group-expander-open::after {

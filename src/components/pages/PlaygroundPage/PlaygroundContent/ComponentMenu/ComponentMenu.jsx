@@ -40,7 +40,7 @@ class ComponentMenu extends Component {
 	};
 
 	handleMenuItemClick = (event, data)=> {
-// 		console.log('%s.handleMenuItemClick()', this.constructor.name, event, data.target);
+// 		console.log('%s.handleMenuItemClick()', this.constructor.name, event, data.target.getAttribute('data-id'));
 
 		event.preventDefault();
 		this.props.onClick({

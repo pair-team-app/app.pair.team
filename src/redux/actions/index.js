@@ -1,5 +1,5 @@
 
-import axios from 'axios/index';
+import axios from 'axios';
 import { Bits, Objects } from 'lang-js-utils';
 import cookie from 'react-cookies';
 
