@@ -9,7 +9,7 @@ import { BrowserRouter } from 'react-router-dom';
 import ScrollToTop from 'react-router-scroll-top';
 
 import App from './components/App';
-import store from './redux/store/index';
+import store from './redux/store';
 
 
 window.store = store;

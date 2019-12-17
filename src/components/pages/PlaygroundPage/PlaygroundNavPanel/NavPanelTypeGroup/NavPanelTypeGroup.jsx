@@ -12,7 +12,7 @@ function NavPanelTypeGroup(props) {
 	const { typeGroup } = props;
 	return (<BaseContentExpander
 		className="nav-panel-type-group"
-		open={typeGroup.expanded}
+		open={typeGroup.selected}
 		title={<div className="nav-panel-type-group-title" onClick={()=> props.onTypeGroupClick(typeGroup)} data-selected={typeGroup.selected}>{typeGroup.title} ({typeGroup.items.length})</div>}
 		content={<div className="nav-panel-type-group-item-wrapper">
 			{(typeGroup.items.map((item, i)=> (<NavPanelTypeItem key={i} item={item} onClick={()=> props.onTypeItemClick(typeGroup, item)} />)))}

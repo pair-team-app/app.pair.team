@@ -95,7 +95,6 @@ class PlaygroundPage extends Component {
 				typeGroup = componentTypes.find(({ key })=> (key === componentsSlug));
 
 				if (typeGroup) {
-					typeGroup.expanded = true;
 					typeGroup.selected = true;
 
 					if (componentsSlug !== typeGroup.key) {
@@ -316,7 +315,6 @@ class PlaygroundPage extends Component {
 	handleNavGroupItemClick = (typeGroup)=> {
 // 		console.log('%s.handleNavGroupItemClick()', this.constructor.name, typeGroup);
 
-		typeGroup.expanded = !typeGroup.expanded;
 		typeGroup.selected = !typeGroup.selected;
 
 		this.props.setTypeGroup(typeGroup);

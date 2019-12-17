@@ -23,13 +23,6 @@ class PlaygroundContent extends Component {
 		};
 	}
 
-	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
-
-// 		if (this.props.comment && !prevProps.comment) {
-// 			this.setState({ popover : true });
-// 		}
-	}
 
 	handleComponentPopoverClose = ()=> {
 // 		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
