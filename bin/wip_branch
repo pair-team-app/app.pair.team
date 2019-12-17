@@ -1,0 +1,13 @@
+#!/bin/bash
+
+#-- change to proj dir
+cd /labor/projects/sites/pairurl.com/
+
+#-- use 'develop' as base
+git checkout develop
+
+#-- make new wip branch
+git checkout -b "wip/mh-$(date +%Y%m%d)"
+
+#-- terminate w/o error
+exit 0;
