@@ -96,7 +96,7 @@ class PlaygroundContent extends Component {
 					})] : comp.comments;
 
 
-					return (<div key={i} className="playground-content-component-wrapper" onClick={(event)=> this.handleContentClick(event, comp)} style={style}>
+					return (<div key={i} className={`playground-content-component-wrapper${(!component) ? ' playground-content-component-wrapper-cursor' : ''}`} onClick={(event)=> this.handleContentClick(event, comp)} style={style}>
 						<ContextMenuTrigger id="component" component={comp} collect={(props)=> ({ component : props.component })} attributes={{ 'data-pos' : pos }} disableIfShiftIsPressed={true}>
 							{(!viewsContent)
 								? (<div className="playground-content-component" data-id={comp.id} style={convertStyles(comp.rootStyles)} dangerouslySetInnerHTML={{ __html : content }} />)
