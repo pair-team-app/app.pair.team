@@ -432,7 +432,7 @@ class PlaygroundPage extends Component {
 				onTypeItemClick={this.handleNavTypeItemClick}
 			/>)}
 
-			{(profile && playground && typeGroup) && (<div className="playground-page-content-wrapper">
+			{(profile && playground && typeGroup) && (<div className={`playground-page-content-wrapper ${(typeGroup.id === 187 && !component) ? ' playground-page-content-wrapper-views' : ''}`}>
 				{(!accessibility)
 					? (<PlaygroundContent
 							cursor={cursor}
