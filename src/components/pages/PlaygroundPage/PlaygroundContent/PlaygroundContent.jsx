@@ -38,8 +38,8 @@ class PlaygroundContent extends Component {
 		const { cursor } = this.props;
 		if (cursor) {
 			const position = {
-				x : event.clientX - event.target.getBoundingClientRect().left,
-				y : event.clientY - event.target.getBoundingClientRect().top,
+				x : (event.clientX - 8) - event.target.getBoundingClientRect().left,
+				y : (event.clientY - 24) - event.target.getBoundingClientRect().top,
 			};
 
 			this.setState({ position,
@@ -125,8 +125,8 @@ const CommentPinCursor = (props)=> {
 
 	const { position } = props;
 	const style = {
-		top  : `${position.y}px`,
-		left : `${position.x}px`
+		top  : `${position.y - 24}px`,
+		left : `${position.x - 8}px`
 	};
 
 	return (<div className="comment-pin-cursor" style={style}>

@@ -39,8 +39,8 @@ class PlaygroundComment extends Component {
 		this.setState({
 			outro    : true,
 			position : {
-				x : this.state.position.x - 1,
-				y : this.state.position.y + 12
+				x : this.state.position.x - 2,
+				y : this.state.position.y + 10
 			}
 		}, ()=> {
 			const { component } = this.props;

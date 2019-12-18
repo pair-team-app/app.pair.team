@@ -32,8 +32,8 @@ class ComponentMenu extends Component {
 		this.props.onAddComment({ component,
 			content  : comment,
 			position : {
-				x : (position.x - left) << 0,
-				y : (position.y - top) << 0,
+				x : ((position.x - left) - 1) << 0,
+				y : ((position.y - top) + 4) << 0,
 			}
 		});
 	};
