@@ -26,7 +26,7 @@
         "react-dom": "^16.8.6",
         "react-fontawesome": "^1.6.1",
         "react-ga": "^2.5.7",
-        "react-onclickoutside": "/labor/projects/sites/pairurl.com/vendor/react-onclickoutside",
+        "react-onclickoutside": "./vendor/react-onclickoutside",
         "react-redux": "^6.0.1",
         "react-router-dom": "^5.0.0",
         "react-router-scroll-top": "^0.2.1",
