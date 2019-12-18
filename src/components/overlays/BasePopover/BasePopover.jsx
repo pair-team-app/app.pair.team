@@ -6,7 +6,7 @@ import { TimelineMax, Back, Circ } from 'gsap/TweenMax';
 import onClickOutside from 'react-onclickoutside';
 
 const INTRO_DURATION = (1/8);
-const OUTRO_DURATION = (1/8);
+const OUTRO_DURATION = (1/4);
 const START_LBL = 'START_LBL';
 const END_LBL = 'END_LBL';
 

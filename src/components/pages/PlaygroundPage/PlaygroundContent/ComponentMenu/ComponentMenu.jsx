@@ -94,7 +94,7 @@ class ComponentMenu extends Component {
 			<div className={`component-popover${(intro) ? ' component-menu-intro' : (outro) ? ' component-menu-outro' : ''}`}>
 				<div className="component-menu-content-wrapper">
 					<div className="component-menu-item-wrapper">
-						<ComponentMenuItem type="inspect" title="Inspect" acc={null} onClick={this.handleMenuItemClick} />
+						{/*<ComponentMenuItem type="inspect" title="Inspect" acc={null} onClick={this.handleMenuItemClick} />*/}
 						<ComponentMenuItem type="share" title="Share" acc={null} onClick={this.handleMenuItemClick} />
 						<ComponentMenuItem type="comments" title={`${window.location.href.includes('/comments') ? 'Hide' : 'View'} Comments`} acc={<ComponentMenuItemAcc amt={(component) ? Math.max(0, component.comments.length - 1) : 0} />} onClick={this.handleMenuItemClick} />
 					</div>

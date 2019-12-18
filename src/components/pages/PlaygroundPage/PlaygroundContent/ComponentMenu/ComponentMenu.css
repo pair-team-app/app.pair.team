@@ -6,8 +6,8 @@
 
 @keyframes component-menu-outro {
 	0%   { transform: scale(1.00); }
-	30%  { transform: scale(1.00); }
-	100% { transform: scale(0.90); }
+	33%  { transform: scale(1.00); }
+	100% { transform: scale(0.85); }
 }
 
 
@@ -18,10 +18,10 @@
 
 .component-popover {
 	position: absolute;
-	top: -8px;
-	left: -3px;
+	top: 0;
+	left: 0;
 	width: 278px;
-	height: 394px;
+	height: 346px;
 	background-color: rgba(var(--site-bg-color), 1.0);
 	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: 10px;
