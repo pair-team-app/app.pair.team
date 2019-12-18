@@ -52,11 +52,12 @@
 
 .playground-content-views-wrapper .playground-content-component-wrapper {
 	position: relative;
+	background-color: rgba(255, 0, 255, 0.5);
 }
 
 .playground-content-component {
 	flex: 1 0 0;
-	max-width: calc(100% - (var(--playground-nav-width) + var(--playground-comments-width)));
+	/*max-width: calc(100% - (var(--playground-nav-width) + var(--playground-comments-width)));*/
 	text-align: center;
 	z-index: 1;
 	/*all: initial;*/
@@ -67,7 +68,7 @@
 }
 
 .playground-content-view-image {
-	/*opacity: 0.5;*/
+	opacity: 0.5;
 }
 
 .playground-content-component-comment-wrapper {
@@ -76,7 +77,7 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
-	/*background-color: rgba(255, 0, 255, 0.125);*/
+	background-color: rgba(0, 255, 255, 0.5);
 	z-index: 2;
 }
 

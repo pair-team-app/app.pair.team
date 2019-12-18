@@ -25,7 +25,7 @@ class PlaygroundContent extends Component {
 
 
 	handleComponentPopoverClose = ()=> {
-// 		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
+		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
 		this.setState({ popover : false }, ()=> {
 			this.props.onPopoverClose();
 		});
@@ -95,8 +95,9 @@ class PlaygroundContent extends Component {
 						author  : profile
 					})] : comp.comments;
 
+
 					return (<div key={i} className="playground-content-component-wrapper" onClick={(event)=> this.handleContentClick(event, comp)} style={style}>
-						<ContextMenuTrigger id="component" disableIfShiftIsPressed={true}>
+						<ContextMenuTrigger id="component" component={comp} collect={(props)=> ({ component : props.component })} attributes={{ 'data-pos' : pos }} disableIfShiftIsPressed={true}>
 							{(!viewsContent)
 								? (<div className="playground-content-component" data-id={comp.id} style={convertStyles(comp.rootStyles)} dangerouslySetInnerHTML={{ __html : content }} />)
 								: (<div className="playground-content-component" data-id={comp.id} dangerouslySetInnerHTML={{ __html : content }} />)
@@ -113,7 +114,7 @@ class PlaygroundContent extends Component {
 			</div>
 
 			{(cursor) && (<CommentPinCursor position={mouse.position} />)}
-			<ComponentMenu menuID="component" component={component} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment}/>
+			<ComponentMenu menuID="component" onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment}/>
 		</div>);
 	}
 }

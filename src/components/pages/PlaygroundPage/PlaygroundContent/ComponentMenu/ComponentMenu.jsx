@@ -15,7 +15,8 @@ class ComponentMenu extends Component {
 				x : 0,
 				y : 0
 			},
-			comment  : ''
+			component : null,
+			comment   : ''
 		};
 
 		this.textAreaRef = React.createRef();
@@ -27,11 +28,9 @@ class ComponentMenu extends Component {
 		event.preventDefault();
 
 		const { left, top } = data.target.getBoundingClientRect();
-		const { position, comment } = this.state;
-
-		this.props.onAddComment({
+		const { position, component, comment } = this.state;
+		this.props.onAddComment({ component,
 			content  : comment,
-			itemID   : ((data.target.hasAttribute('data-id')) ? data.target.getAttribute('data-id') : data.target.parentNode.getAttribute('data-id')) << 0,
 			position : {
 				x : (position.x - left) << 0,
 				y : (position.y - top) << 0,
@@ -39,13 +38,13 @@ class ComponentMenu extends Component {
 		});
 	};
 
-	handleMenuItemClick = (event, data)=> {
-// 		console.log('%s.handleMenuItemClick()', this.constructor.name, event, data.target.getAttribute('data-id'));
+	handleMenuItemClick = (event, data, target)=> {
+		console.log('%s.handleMenuItemClick()', this.constructor.name, { event, data, target });
 
 		event.preventDefault();
-		this.props.onClick({
-			type   : data.type,
-			itemID : data.target.getAttribute('data-id') << 0
+		const { component } = this.state;
+		this.props.onClick({ component,
+			type : data.type,
 		});
 	};
 
@@ -59,9 +58,13 @@ class ComponentMenu extends Component {
 	};
 
 	handleShowMenu = (event)=> {
-// 		console.log('%s.handleShowMenu()', this.constructor.name, event.detail);
+// 		console.log('%s.handleShowMenu()', this.constructor.name, this.props, event.detail);
 
-		this.setState({
+		event.preventDefault();
+		event.stopPropagation();
+
+		const { component } = event.detail.data;
+		this.setState({ component,
 			intro    : true,
 			outro    : false,
 			position : {
@@ -74,8 +77,7 @@ class ComponentMenu extends Component {
 				this.textAreaRef.value = this.state.comment;
 			}
 
-			const componentID = event.detail.data.target.getAttribute('data-id') << 0;
-			this.props.onShow({ componentID });
+			this.props.onShow({ component });
 		});
 	};
 
@@ -83,13 +85,13 @@ class ComponentMenu extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { menuID, component } = this.props;
+		const { menuID } = this.props;
+		const { component } = this.state;
 		const { intro, outro, comment } = this.state;
 
 		return (<ContextMenu id={menuID} className="component-menu-wrapper" onShow={this.handleShowMenu} onHide={this.handleHideMenu} preventHideOnResize={true} preventHideOnScroll={true}>
 			{/*<BasePopover intro={intro} outro={outro} payload={payload} onOutroComplete={this.props.onClose}>*/}
 			<div className={`component-popover${(intro) ? ' component-menu-intro' : (outro) ? ' component-menu-outro' : ''}`}>
-			{/*<div className={`component-popover`}>*/}
 				<div className="component-menu-content-wrapper">
 					<div className="component-menu-item-wrapper">
 						<ComponentMenuItem type="inspect" title="Inspect" acc={null} onClick={this.handleMenuItemClick} />

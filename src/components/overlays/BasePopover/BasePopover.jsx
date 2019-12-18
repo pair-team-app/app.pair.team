@@ -90,7 +90,7 @@ class BasePopover extends Component {
 	}
 
 	handleClickOutside(event) {
-// 		console.log('%s.handleClickOutside()', this.constructor.name);
+		console.log('%s.handleClickOutside()', this.constructor.name);
 // 		this.setState({ outro : true });
 		this.onOutro();
 	}

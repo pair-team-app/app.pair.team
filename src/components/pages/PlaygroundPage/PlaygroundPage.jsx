@@ -171,7 +171,7 @@ class PlaygroundPage extends Component {
 			}
 
 			if (component && component !== prevProps.component) {
-				url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(url.includes('/accessibility')) ? '/accessibility' : ''}`;
+				url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(url.includes('/accessibility')) ? '/accessibility' : ''}${(url.endsWith('/comments')) ? '/comments' : ''}`;
 			}
 
 			if (comment && comment !== prevProps.comment) {
@@ -193,13 +193,11 @@ class PlaygroundPage extends Component {
 			if (window.location.pathname !== url) {
 				this.props.history.push(url);
 			}
-
-//			this.props.history.push(`/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`)
 		}
 	}
 
-	handleAddComment = ({ content, itemID, position })=> {
-// 		console.log('%s.handleAddComment()', this.constructor.name, { content, itemID, position });
+	handleAddComment = ({ component, position, content })=> {
+// 		console.log('%s.handleAddComment()', this.constructor.name, { component, position, content });
 		trackEvent('button', 'add-comment');
 
 		const { profile } = this.props;
@@ -207,17 +205,15 @@ class PlaygroundPage extends Component {
 			action  : 'ADD_COMMENT',
 			payload : { content, position,
 				user_id      : profile.id,
-				component_id : itemID
+				component_id : component.id
 			}
 		}).then((response) => {
 			const comment = reformComment(response.data.comment);
 			console.log('ADD_COMMENT', response.data, comment);
 
-			const component = { ...this.props.component,
-				comments : ((this.props.component.id === itemID) ? [ ...this.props.component.comments, comment] : this.props.component.comments).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0))
-			};
+			component.comments = [ ...component.comments, comment].sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0));
 			const playground = { ...this.props.playground,
-				components : this.props.playground.components.map((item)=> ((item.id === itemID) ? component : item))
+				components : this.props.playground.components.map((item)=> ((item.id === component.id) ? component : item))
 			};
 
 			this.props.setPlayground(playground);
@@ -248,21 +244,15 @@ class PlaygroundPage extends Component {
 		this.setState({ cursor : false });
 	};
 
-	handleComponentMenuShow = ({ componentID })=> {
-// 		console.log('%s.handleComponentMenuShow()', this.constructor.name, { componentID });
-
-		const { playground } = this.props;
-		const component = playground.components.find(({ id })=> (id === componentID));
-
-		if (component) {
-			this.props.setComponent(component);
-			this.props.setComment(null);
-		}
+	handleComponentMenuShow = ({ component })=> {
+		console.log('%s.handleComponentMenuShow()', this.constructor.name, { component });
+    this.props.setComponent(component);
 	};
 
-	handleComponentMenuItem = ({ type, itemID })=> {
- 		console.log('%s.handleComponentMenuItem()', this.constructor.name, { type, itemID });
+	handleComponentMenuItem = ({ type, component })=> {
+ 		console.log('%s.handleComponentMenuItem()', this.constructor.name, { type, component });
 
+    this.props.setComponent(component);
 		if (type === 'comments') {
 			if (/\/comments.*$/.test(window.location.pathname)) {
 				this.props.setComment(null);
@@ -280,7 +270,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleComponentPopoverClose = ()=> {
-// 		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
+		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
 		this.props.setComment(null);
 	};
 
@@ -398,7 +388,7 @@ class PlaygroundPage extends Component {
 					});
 				}));
 
-				const playground = (playgroundID) ? playgrounds.find(({ id })=> (id === playgroundID)) : playgrounds.find(({ deviceID })=> (deviceID === 1));
+				const playground = ((playgroundID) ? playgrounds.find(({ id })=> (id === playgroundID)) : playgrounds.find(({ deviceID })=> (deviceID === 2)) || playgrounds[0]);
 				this.props.setPlayground(playground);
 
 				this.setState({ playgrounds, playground,

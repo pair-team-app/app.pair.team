@@ -46,15 +46,14 @@ class PlaygroundComment extends Component {
 			const { component } = this.props;
 			const { position, comment } = this.state;
 
-			this.props.onAddComment({ position,
-				content : comment.content,
-				itemID  : component.id
+			this.props.onAddComment({ position, component,
+				content : comment.content
 			});
 		});
 	};
 
 	handleClose = (comment)=> {
-// 		console.log('%s.handleClose()', this.constructor.name, comment);
+		console.log('%s.handleClose()', this.constructor.name, comment);
 
 		if (comment.id === this.props.comment.id) {
 			this.props.onClose();
