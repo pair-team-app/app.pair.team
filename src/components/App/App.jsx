@@ -370,11 +370,11 @@ class App extends Component {
 //   	console.log('%s.render()', this.constructor.name, this.props, this.state);
 //   	console.log('%s.render()', this.constructor.name, this.state.modals);
 
-		const { profile, team } = this.props;
-  	const { darkTheme, popup, modals } = this.state;
+		const { darkThemed, profile, team } = this.props;
+  	const { popup, modals } = this.state;
 
-  	return (<div className={`site-wrapper${(darkTheme) ? ' site-wrapper-dark' : ''}`}>
-		  {(!window.location.pathname.startsWith(Pages.PLAYGROUND)) && (<TopNav darkTheme={darkTheme} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
+  	return (<div className={`site-wrapper${(darkThemed) ? ' site-wrapper-dark' : ''}`}>
+		  {(!window.location.pathname.startsWith(Pages.PLAYGROUND)) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
 	    <div className={`page-wrapper${(window.location.pathname.startsWith(Pages.PLAYGROUND)) ? ' playground-page-wrapper' : ''}`}>
 		    <Switch>
 			    <Route exact path={Pages.HOME} render={()=> <HomePage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} onSignup={()=> null} />} />
@@ -462,9 +462,10 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		profile  : state.userProfile,
-		products : state.products,
-		team     : state.teams[0]
+    darkThemed : state.darkThemed,
+		profile    : state.userProfile,
+		products   : state.products,
+		team       : state.teams[0]
 	});
 };
 

@@ -376,10 +376,14 @@ class PlaygroundPage extends Component {
 					const { device_id, team, components } = playground;
 					delete (playground['device_id']);
 
+					const { logo_url } = team;
+					delete (team['logo_url']);
+
 //					console.log('playground', { id : playground.id, device_id, components });
 					return ({ ...playground,
 						deviceID   : device_id,
 						team       : { ...team,
+							logoURL : logo_url,
 							members : team.members.map((member)=> ({ ...member,
 								id : member.id << 0
 							}))

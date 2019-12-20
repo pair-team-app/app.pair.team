@@ -5,6 +5,7 @@ import './PlaygroundNavPanel.css';
 import { grabFavicon } from 'favicongrab';
 import { connect } from 'react-redux';
 import NavPanelTypeGroup from './NavPanelTypeGroup';
+import { TEAM_DEFAULT_AVATAR } from '../../../../consts/uris';
 
 class PlaygroundNavPanel extends Component {
 	constructor(props) {
@@ -85,6 +86,8 @@ class PlaygroundNavPanel extends Component {
 				selected : (this.props.typeGroup && (typeGroup.id === this.props.typeGroup.id || items.map(({ selected })=> (selected)).includes(true)))
 			});
 		});
+
+// 		const favicon = playground.team.
 
 		this.setState({ typeGroups }, ()=> {
 			grabFavicon(`https://${playground.team.domain}`).then((response)=> {

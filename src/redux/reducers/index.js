@@ -21,24 +21,23 @@ import {
 	SET_TEAMS,
 	SET_TYPE_GROUP,
 	SET_COMPONENT,
-	SET_COMMENT
+	SET_COMMENT,
+	TOGGLE_THEME
 } from '../../consts/action-types';
 // import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 
 const initialState = {
-	file               : null,
-	homeArtboards      : [],
-	artboardComponents : null,
-	artboardGroups     : [],
-	componentTypes     : null,
-	eventGroups        : [],
-	playground         : null,
-	typeGroup          : null,
-	component          : null,
-	comment            : null,
-	products           : null,
-	deeplink           : {
+	file           : null,
+	componentTypes : null,
+	eventGroups    : [],
+	playground     : null,
+	typeGroup      : null,
+	component      : null,
+	comment        : null,
+	products       : null,
+	darkThemed     : false,
+	deeplink       : {
 		teamID       : 0,
 		buildID      : 0,
 		playgroundID : 0,
@@ -46,12 +45,11 @@ const initialState = {
 		componentID  : 0,
 		commentID    : 0
 	},
-	redirectURI        : null,
-	uploadSlices       : [],
-	userProfile        : null,
-	invite             : null,
-	teams              : [],
-	mouse              : {
+	redirectURI    : null,
+	userProfile    : null,
+	invite         : null,
+	teams          : [],
+	mouse          : {
 		position : {
 			x : 0,
 			y : 0
@@ -218,6 +216,11 @@ function rootReducer(state=initialState, action) {
 			return (Object.assign({}, state, {
 				products : action.payload
 			}));
+
+		case TOGGLE_THEME:
+      return (Object.assign({}, state, {
+        darkThemed : (typeof action.payload === 'boolean') ? action.payload : !state.darkThemed
+      }));
 	}
 }
 

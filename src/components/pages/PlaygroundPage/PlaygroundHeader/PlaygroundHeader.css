@@ -15,12 +15,8 @@
 }
 
 .playground-header > * {
-	/*margin: auto;*/
-	/*border: 1px dotted #00ff00;*/
-}
-
-.playground-header-col {
-	flex: 1 1 auto;
+	flex: 4 4 0;
+	border: 1px dotted #00ff00;
 }
 
 .playground-header-col-right {
@@ -31,6 +27,14 @@
 }
 
 .playground-header-col-right > * {
+	/*border: 1px dotted #ff00ff;*/
+}
+
+.playground-header-col-middle {
+	display: none;
+	visibility: hidden;
+	flex: 1 0 auto;
+	text-align: center;
 }
 
 .playground-header-link {

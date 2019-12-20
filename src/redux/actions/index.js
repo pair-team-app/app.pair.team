@@ -4,11 +4,6 @@ import { Bits, Objects } from 'lang-js-utils';
 import cookie from 'react-cookies';
 
 import {
-	ADD_FILE_UPLOAD,
-	APPEND_ARTBOARD_SLICES,
-	APPEND_HOME_ARTBOARDS,
-	SET_ARTBOARD_GROUPS,
-	SET_ARTBOARD_COMPONENT,
 	COMPONENT_TYPES_LOADED,
 	EVENT_GROUPS_LOADED,
 	SET_REDIRECT_URI,
@@ -25,7 +20,8 @@ import {
 	SET_PLAYGROUND,
 	SET_TYPE_GROUP,
 	SET_COMPONENT,
-	SET_COMMENT
+	SET_COMMENT,
+	TOGGLE_THEME
 } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
@@ -34,25 +30,6 @@ import { API_ENDPT_URL } from '../../consts/uris';
 const logFormat = (action, payload=null, meta='')=> {
 	console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, (payload || ''), meta);
 };
-
-
-export function addFileUpload(payload) {
-	return ({ payload,
-		type : ADD_FILE_UPLOAD
-	});
-}
-
-export function appendArtboardSlices(payload) {
-	return ({ payload,
-		type : APPEND_ARTBOARD_SLICES
-	});
-}
-
-export function appendHomeArtboards(payload) {
-	return ({ payload,
-		type : APPEND_HOME_ARTBOARDS
-	});
-}
 
 export function fetchComponentTypes() {
 	logFormat('fetchComponentTypes()');
@@ -152,6 +129,7 @@ export function fetchUserProfile() {
 	});
 }
 
+/*
 export function fetchUserHistory(payload) {
 	logFormat('fetchUserHistory()', payload);
 
@@ -192,6 +170,7 @@ export function fetchUserHistory(payload) {
 		}
 	});
 }
+*/
 
 export function fetchTeamLookup(payload) {
 	logFormat('fetchTeamLookup()', payload);
@@ -223,30 +202,10 @@ export function fetchTeamLookup(payload) {
 	});
 }
 
-export function setArtboardComponent(payload) {
-	logFormat('setArtboardComponent()', payload);
-	return ({ payload,
-		type : SET_ARTBOARD_COMPONENT
-	});
-}
-export function setArtboardGroups(payload) {
-	logFormat('setArtboardGroups()', payload);
-	return ({ payload,
-		type : SET_ARTBOARD_GROUPS
-	});
-}
-
 export function setInvite(payload) {
 	logFormat('setInvite()', payload);
 	return ({ payload,
 		type : SET_INVITE
-	});
-}
-
-export function setProducts(payload) {
-	logFormat('setProducts()', payload);
-	return ({ payload,
-		type : SET_PRODUCTS
 	});
 }
 
@@ -282,6 +241,13 @@ export function setRedirectURI(payload) {
 	return ({ payload,
 		type : SET_REDIRECT_URI
 	});
+}
+
+export function toggleTheme(payload=null) {
+  logFormat('toggleTheme()', payload);
+  return ({ payload,
+    type : TOGGLE_THEME
+  });
 }
 
 export function updateDeeplink(payload) {
@@ -339,13 +305,7 @@ export function updateUserProfile(payload, force=true) {
 
 	return ((dispatch)=> {
 		if (payload) {
-// 			const { id, avatar } = payload;
 			const { id } = payload;
-
-// 			if (typeof cookie.load('user_id') === 'undefined' || ((cookie.load('user_id') << 0) !== id)) {
-// 				cookie.save('user_id', id << 0, { path : '/', sameSite : false });
-// 			}
-
 			axios.post(API_ENDPT_URL, {
 				action  : 'UPDATE_USER_PROFILE',
 				payload : { ...payload,
@@ -356,7 +316,6 @@ export function updateUserProfile(payload, force=true) {
 				console.log('UPDATE_USER_PROFILE', response.data);
 
 				const status = parseInt(response.data.status, 16);
-
 				Objects.renameKey(response.data.user, 'github_auth', 'github');
 				if (response.data.user.github) {
 					Objects.renameKey(response.data.user.github, 'access_token', 'accessToken');

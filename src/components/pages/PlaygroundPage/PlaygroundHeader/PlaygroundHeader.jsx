@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 
 import SharePopover from '../SharePopover';
 import UserSettings from './UserSettings';
+import { toggleTheme } from '../../../../redux/actions';
+
 
 class PlaygroundHeader extends Component {
 	constructor(props) {
@@ -45,7 +47,7 @@ class PlaygroundHeader extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state, (this.shareLink) ? { left : this.shareLink.offsetLeft, top : this.shareLink.offsetTop } : null);
 
-		const { playground, typeGroup, component } = this.props;
+		const { darkThemed, playground, typeGroup, component } = this.props;
 		const { popover } = this.state;
 
 		let breadcrumbs = `${Strings.slugifyURI(playground.title)}`;
@@ -59,6 +61,9 @@ class PlaygroundHeader extends Component {
 
 		return (<div className="playground-header">
 			<div className="playground-header-col">{breadcrumbs}</div>
+			<div className="playground-header-col playground-header-col-middle">
+        <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
+			</div>
 			<div className="playground-header-col playground-header-col-right">
 				<div className="playground-header-link" onClick={()=> this.setState({ popover : !this.state.popover })} ref={(element)=> { this.shareLink = element; }}>Share</div>
 				<UserSettings onMenuItem={this.props.onSettingsItem} onLogout={this.props.onLogout} />
@@ -74,13 +79,20 @@ class PlaygroundHeader extends Component {
 }
 
 
+const mapDispatchToProps = (dispatch)=> {
+  return ({
+    toggleTheme : ()=> dispatch(toggleTheme())
+  });
+};
+
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		playground     : state.playground,
-		typeGroup      : state.typeGroup,
-		component      : state.component
+    darkThemed : state.darkThemed,
+		playground : state.playground,
+		typeGroup  : state.typeGroup,
+		component  : state.component
 	});
 };
 
 
-export default connect(mapStateToProps)(PlaygroundHeader);
+export default connect(mapStateToProps, mapDispatchToProps)(PlaygroundHeader);
