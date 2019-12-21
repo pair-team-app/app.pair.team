@@ -16,7 +16,7 @@
 
 .playground-header > * {
 	flex: 4 4 0;
-	border: 1px dotted #00ff00;
+	/*border: 1px dotted #00ff00;*/
 }
 
 .playground-header-col-right {

@@ -78,9 +78,9 @@ class PlaygroundPage extends Component {
 			}
 
 			let url = window.location.pathname;
-			if (teamSlug !== playground.team.title) {
-				url = window.location.pathname.replace(teamSlug, playground.team.title);
 
+			if (teamSlug && teamSlug !== playground.team.title) {
+				url = window.location.pathname.replace(teamSlug, playground.team.title);
 			}
 
 			if (projectSlug !== Strings.slugifyURI(playground.title)) {
@@ -246,7 +246,7 @@ class PlaygroundPage extends Component {
 
 	handleComponentMenuShow = ({ component })=> {
 		console.log('%s.handleComponentMenuShow()', this.constructor.name, { component });
-    this.props.setComponent(component);
+//     this.props.setComponent(component);
 	};
 
 	handleComponentMenuItem = ({ type, component })=> {
