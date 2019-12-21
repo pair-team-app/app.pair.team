@@ -1,13 +1,20 @@
 #!/bin/bash
 
+
+
 #-- change to proj dir
-cd /labor/projects/sites/pairurl.com/
+if [[ ! -z "`pwd`/package.json" ]]; then cd `dirname $0`/../ ; fi
+
+printf "pwd: [%s]\n" `pwd`
+
+
+
 
 #-- use 'develop' as base
-git checkout develop
+#git checkout develop
 
 #-- make new wip branch
-git checkout -b "wip/mh-$(date +%Y%m%d)"
+#git checkout -b "wip/mh-$(date +%Y%m%d)"
 
 #-- terminate w/o error
 exit 0;
