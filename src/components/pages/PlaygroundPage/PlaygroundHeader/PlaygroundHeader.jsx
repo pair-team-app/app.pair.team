@@ -4,9 +4,12 @@ import './PlaygroundHeader.css';
 
 import { Strings } from 'lang-js-utils';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import SharePopover from '../SharePopover';
 import UserSettings from './UserSettings';
+import { BreadcrumbTypes } from './';
+import { Pages } from '../../../../consts/uris';
 import { toggleTheme } from '../../../../redux/actions';
 
 
@@ -36,6 +39,14 @@ class PlaygroundHeader extends Component {
 	}
 
 
+	handleBreadcrumbClick = (event, type, payload)=> {
+    console.log('%s.handleBreadcrumbClick()', this.constructor.name, event, type, payload);
+
+    event.preventDefault();
+    this.props.onBreadCrumbClick({ type, payload });
+	};
+
+
 	handlePopoverClose = ()=> {
 //		console.log('%s.handlePopoverClose()', this.constructor.name);
 
@@ -44,23 +55,46 @@ class PlaygroundHeader extends Component {
 	};
 
 
+	buildbreadcrumbs = ()=> {
+    console.log('%s.buildbreadcrumbs()', this.constructor.name, this.props);
+    const { match, playground, typeGroup, component, comment, accessibility } = this.props;
+    const { teamSlug, buildID, projectSlug, playgroundID, componentsSlug, componentID, commentID } = match.params;
+
+    let path = `${Pages.PLAYGROUND}/${teamSlug}/${projectSlug}/${buildID}/${playgroundID}`;
+    const segments = [
+			{ type : BreadcrumbTypes.PLAYGROUND, title : projectSlug, path : projectSlug, payload : playground },
+      (typeGroup && componentsSlug) ? { type : BreadcrumbTypes.TYPE_GROUP, title : Strings.capitalize(typeGroup.key), path : componentsSlug, payload : typeGroup } : null,
+      (component && componentID) ? { type : BreadcrumbTypes.COMPONENT, title : component.title, path : componentID, payload : component } : null,
+      (accessibility) ? { type : BreadcrumbTypes.ACCESSIBILITY, title : 'accessibility' , path : 'accessibility', payload : null } : null,
+      (window.location.pathname.includes('/comments')) ? { type : BreadcrumbTypes.COMMENTS, title : 'comments', path : 'comments', payload : null } : null,
+      (comment && commentID) ? { type : BreadcrumbTypes.COMMENT, title : commentID, path : commentID, payload : comment } : null
+    ].filter((segment)=> (segment !== null));
+
+    const breadcrumbs = [];
+    Object.keys(segments).forEach((key, i)=> {
+			breadcrumbs.push(<PlayGroundHeaderBreadcrumb
+				key={i}
+				ind={i}
+				tot={Object.keys(segments).length - 1}
+				path={`${path}/${segments[key].path}`}
+				segment={segments[key]}
+				onClick={this.handleBreadcrumbClick}
+			/>);
+		});
+
+    return (breadcrumbs);
+	};
+
+
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state, (this.shareLink) ? { left : this.shareLink.offsetLeft, top : this.shareLink.offsetTop } : null);
 
-		const { darkThemed, playground, typeGroup, component } = this.props;
+		const { darkThemed, playground } = this.props;
 		const { popover } = this.state;
 
-		let breadcrumbs = `${Strings.slugifyURI(playground.title)}`;
-		if (typeGroup) {
-			breadcrumbs = `${breadcrumbs} > ${typeGroup.key}`;
-		}
-
-		if (component) {
-			breadcrumbs = `${breadcrumbs} > ${Strings.truncate(component.title, 100)}`;
-		}
-
 		return (<div className="playground-header">
-			<div className="playground-header-col">{breadcrumbs}</div>
+			<div className="playground-header-col playground-header-breadcrumb-wrapper">{this.buildbreadcrumbs().map((breadcrumb)=> (breadcrumb))}</div>
+			{/*<div className="playground-header-col playground-header-breadcrumb-wrapper">BREADCRUMBS</div>*/}
 			<div className="playground-header-col playground-header-col-middle">
         <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
 			</div>
@@ -79,6 +113,21 @@ class PlaygroundHeader extends Component {
 }
 
 
+const PlayGroundHeaderBreadcrumb = (props)=> {
+//   console.log('PlayGroundHeaderBreadcrumb()', props);
+  
+  const { ind, tot, segment } = props;
+  const { type, title, payload } = segment;
+  
+  return ((ind < tot) 
+		? (<><div className="playground-header-breadcrumb" data-last="false" onClick={(event)=> props.onClick(event, type, payload)}>{title}</div>&nbsp;&gt;&nbsp;</>)
+		: (<div className="playground-header-breadcrumb" data-last="true">{title}</div>)
+	);
+};
+
+
+
+
 const mapDispatchToProps = (dispatch)=> {
   return ({
     toggleTheme : ()=> dispatch(toggleTheme())
@@ -90,9 +139,10 @@ const mapStateToProps = (state, ownProps)=> {
     darkThemed : state.darkThemed,
 		playground : state.playground,
 		typeGroup  : state.typeGroup,
-		component  : state.component
+		component  : state.component,
+		comment    : state.comment
 	});
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlaygroundHeader);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PlaygroundHeader));

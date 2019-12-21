@@ -10,11 +10,11 @@ import BasePage from '../BasePage';
 import PlaygroundAccessibility from './PlaygroundAccessibility';
 import PlaygroundCommentsPanel from './PlaygroundCommentsPanel';
 import PlaygroundContent from './PlaygroundContent';
-import PlaygroundHeader from './PlaygroundHeader';
+import PlaygroundHeader, { BreadcrumbTypes } from './PlaygroundHeader';
 import { SettingsMenuItemTypes } from './PlaygroundHeader/UserSettings';
 import PlaygroundFooter from './PlaygroundFooter';
 import PlaygroundNavPanel from './PlaygroundNavPanel';
-import { commentByID, componentByID, componentFromComment } from './utils/lookup';
+import { typeGroupByID, commentByID, componentByID, componentFromComment } from './utils/lookup';
 import { reformComment, reformComponent } from './utils/reform';
 import { Modals, API_ENDPT_URL } from '../../../consts/uris';
 import { setPlayground, setTypeGroup, setComponent, setComment } from '../../../redux/actions';
@@ -157,10 +157,12 @@ class PlaygroundPage extends Component {
 
 		// switching out
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, playgroundID, playground, prevProps.playground);
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : { ...this.props} });
 
 		if (playground && prevProps.playground) {
 			const { typeGroup, component, comment } = this.props;
 			let url = window.location.pathname;
+
 
 			if (playgroundID << 0 !== playground.id) {
 				url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`;
@@ -179,7 +181,8 @@ class PlaygroundPage extends Component {
 			}
 
 			if (component && !comment && prevProps.comment) {
-				url = url.replace(/\/comments\/?.*$/, '');
+        url = (prevProps.history.location.pathname.includes('/comments/')) ? url.replace(/\/comments\/?.*$/, '') : url.replace(/(\/comments)\/?(.*)$/, '$1');
+//         url = (!prevProps.history.location.pathname.includes('/comments/')) ? url.replace(/\/comments\/?.*$/, '') : url.replace(/(\/comments)\/?(.*)$/, '$1');
 			}
 
 			if (accessibility && !prevState.accessibility && !window.location.pathname.includes('/accessibility')) {
@@ -224,6 +227,36 @@ class PlaygroundPage extends Component {
 		});
 	};
 
+  handleBreadCrumbClick = ({ type, payload })=> {
+    console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
+
+    if (type === BreadcrumbTypes.PLAYGROUND) {
+      this.props.setTypeGroup(typeGroupByID(this.state.typeGroups, 187));
+      this.props.setComponent(null);
+      this.props.setComment(null);
+
+    } else if (type === BreadcrumbTypes.TYPE_GROUP) {
+    	const { componentsSlug } = this.props.match.params;
+      this.props.history.push(window.location.pathname.replace(new RegExp(`(/${componentsSlug}).*$`), '$1'));
+      this.props.setComponent(null);
+      this.props.setComment(null);
+
+    } else if (type === BreadcrumbTypes.COMPONENT) {
+      this.props.setComment(null);
+      this.props.history.push(window.location.pathname.replace(/\/comments.*$/, ''));
+
+    } else if (type === BreadcrumbTypes.ACCESSIBILITY) {
+    } else if (type === BreadcrumbTypes.COMMENTS) {
+      if (/\/comments\/.*$/.test(window.location.pathname)) {
+        this.props.history.push(window.location.pathname.replace(/(\/comments)\/?(.*)$/, '$1'));
+        this.props.setComment(null);
+      }
+
+		} else if (type === BreadcrumbTypes.COMMENT) {
+      this.props.setComment(payload);
+		}
+	};
+
 	handleCommentMarkerClick = ({ comment })=> {
  		console.log('%s.handleCommentMarkerClick()', this.constructor.name, { comment });
 
@@ -256,7 +289,7 @@ class PlaygroundPage extends Component {
 		if (type === 'comments') {
 			if (/\/comments.*$/.test(window.location.pathname)) {
 				this.props.setComment(null);
-				this.props.history.push(window.location.pathname.replace(/\/comments/, ''));
+				this.props.history.push(window.location.pathname.replace(/\/comments.*$/, ''));
 
 			} else {
 				this.props.history.push(`${window.location.pathname}/comments`);
@@ -452,7 +485,9 @@ class PlaygroundPage extends Component {
 				}
 
 				<PlaygroundHeader
+          accessibility={accessibility}
 					popover={share}
+          onBreadCrumbClick={this.handleBreadCrumbClick}
 					onPopup={this.props.onPopup}
 					onSharePopoverClose={()=> this.setState({ share : false })}
 					onSettingsItem={this.handleSettingsItem}

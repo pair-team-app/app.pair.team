@@ -24,7 +24,7 @@ class PlaygroundNavPanel extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { playground } = this.props;
 		if (playground !== prevProps.playground) {
@@ -32,7 +32,7 @@ class PlaygroundNavPanel extends Component {
 		}
 
 		const { component } = this.props;
-		if (this.props.typeGroup && this.props.typeGroup !== prevProps.typeGroup) {
+		if ((this.props.typeGroup && this.props.typeGroup !== prevProps.typeGroup) || (this.props.typeGroup === prevProps.typeGroup && component !== prevProps.component)) {
 			const typeGroups = this.state.typeGroups.map((typeGroup)=> {
 				const items = typeGroup.items.map((item)=> ({ ...item,
 					selected : (component && item.id === component.id)

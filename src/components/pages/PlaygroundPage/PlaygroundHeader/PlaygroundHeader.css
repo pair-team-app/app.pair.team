@@ -37,6 +37,38 @@
 	text-align: center;
 }
 
+.playground-header-breadcrumb-wrapper {
+	display: flex;
+	align-items: flex-start;
+	flex-wrap: nowrap;
+}
+
+
+.playground-header-breadcrumb-wrapper > * {
+	flex: 0 0 auto;
+}
+
+.playground-header-breadcrumb {
+	color: rgba(var(--link-color), 1.0);
+	text-decoration: none;
+	transition: color 0.125s ease-out;
+}
+
+.playground-header-breadcrumb {
+}
+
+.playground-header-breadcrumb[data-last="false"]:hover {
+	cursor: pointer;
+	color: rgba(var(--link-hover-color), 1.0);
+}
+
+.playground-header-breadcrumb[data-last="true"] {
+	color: rgba(var(--link-selected-color), 1.0);
+	font-weight: 500;
+	text-decoration: underline;
+}
+
+
 .playground-header-link {
 	color: rgba(var(--link-color), 1.0);
 	transition: color 0.125s ease-out;
