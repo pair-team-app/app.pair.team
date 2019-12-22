@@ -50,10 +50,6 @@ class App extends Component {
 		this.state = {
 			authID      : 0,
 			darkTheme   : false,
-			contentSize : {
-				width  : 0,
-				height : 0
-			},
 			popup       : null,
 			modals      : {
 // 				cookies  : ((cookie.load('cookies') << 0) === 0),
@@ -90,8 +86,6 @@ class App extends Component {
 		}
 
 		window.addEventListener('mousemove', this.handleMouseMove);
-		window.addEventListener('resize', this.handleResize);
-		window.addEventListener('scroll', this.handleScroll);
 		window.onpopstate = (event)=> {
 			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', event);
 			//this.props.updateDeeplink(idsFromPath());
@@ -148,7 +142,7 @@ class App extends Component {
 
 
 		window.onpopstate = null;
-		window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('mousemove', this.handleMouseMove);
 	}
 
 	handleCookies = ()=> {
@@ -259,26 +253,6 @@ class App extends Component {
 		const { profile } = this.props;
 		this.props.fetchUserProfile();
 		this.props.fetchTeamLookup({ userID : profile.id });
-	};
-
-	handleResize = (event)=> {
-// 		console.log('%s.handleResize()', this.constructor.name, { width : document.documentElement.clientWidth, height : document.documentElement.clientHeight });
-
-		this.setState({
-			contentSize : {
-				width  : document.documentElement.clientWidth,
-				height : document.documentElement.clientHeight
-			}
-		})
-	};
-
-	handleScroll = (event)=> {
-// 		console.log('%s.handleScroll()', this.constructor.name, event);
-// 		this.setState({ scrolling : true }, ()=> {
-// 			setTimeout(()=> {
-// 				this.setState({ scrolling : false });
-// 			}, 1000);
-// 		});
 	};
 
 	handleThemeToggle = (event)=> {
