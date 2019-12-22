@@ -33,7 +33,7 @@ class SharePopover extends Component {
 		this.setState({ outro : true });
 		this.props.onPopup({
 			type     : POPUP_TYPE_OK,
-			content  : `<strong>${window.location.href}</strong> has been copied to the clipboard!`,
+			content  : `<span class="txt-bold">${window.location.href}</span> has been copied to the clipboard!`,
 			delay    : 125,
 			duration : 3333
 		});
@@ -66,7 +66,14 @@ class SharePopover extends Component {
 			}).then((response)=> {
 				console.log('INVITE', response.data);
 // 				const { invite } = response.data;
+
 				this.setState({ outro : true });
+        this.props.onPopup({
+          type     : POPUP_TYPE_OK,
+          content  : `Sent <span class="txt-bold">${window.location.href}</span> to <span class="txt-bold">${email}</span>.`,
+          delay    : 125,
+          duration : 3333
+        });
 
 			}).catch((error)=> {
 			});

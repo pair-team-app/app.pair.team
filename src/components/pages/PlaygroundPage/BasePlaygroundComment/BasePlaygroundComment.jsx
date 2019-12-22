@@ -27,7 +27,7 @@ function BasePlaygroundComment(props) {
 		</div>
 
 		<div className="base-playground-comment-timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(MOMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
-		<div className="base-playground-comment-content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<strong>@${author.username}</strong>`) }} />
+		<div className="base-playground-comment-content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">@${author.username}</span>`) }} />
 	</div>);
 }
 
