@@ -38,8 +38,8 @@ class PlaygroundContent extends Component {
 		const { cursor } = this.props;
 		if (cursor) {
 			const position = {
-				x : (event.clientX - 8) - event.target.getBoundingClientRect().left,
-				y : (event.clientY - 24) - event.target.getBoundingClientRect().top,
+				x : (event.clientX - 8) - event.target.getBoundingClientRect().x,
+				y : (event.clientY - 24) - event.target.getBoundingClientRect().y,
 			};
 
 			this.setState({ position,

@@ -1,6 +1,9 @@
 
+export const BASKSPACE_KEY = 8;
 export const TAB_KEY = 9;
 
+export const ENTER_KEY = 13;
+export const ESCAPE_KEY = 27;
 export const ARROW_LT_KEY = 37;
 export const ARROW_UP_KEY = 38;
 export const ARROW_RT_KEY = 39;

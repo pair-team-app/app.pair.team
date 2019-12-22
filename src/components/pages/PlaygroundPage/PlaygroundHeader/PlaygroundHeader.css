@@ -57,10 +57,10 @@
 .playground-header-breadcrumb {
 }
 
-.playground-header-breadcrumb[data-last="false"]:hover {
-	cursor: pointer;
-	color: rgba(var(--link-hover-color), 1.0);
-}
+/*.playground-header-breadcrumb[data-last="false"]:hover {*/
+	/*cursor: pointer;*/
+	/*color: rgba(var(--link-hover-color), 1.0);*/
+/*}*/
 
 .playground-header-breadcrumb[data-last="true"] {
 	color: rgba(var(--link-selected-color), 1.0);

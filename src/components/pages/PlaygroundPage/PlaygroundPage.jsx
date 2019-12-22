@@ -157,7 +157,7 @@ class PlaygroundPage extends Component {
 
 		// switching out
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, playgroundID, playground, prevProps.playground);
-		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : { ...this.props} });
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : { ...this.props} });
 
 		if (playground && prevProps.playground) {
 			const { typeGroup, component, comment } = this.props;
@@ -279,7 +279,7 @@ class PlaygroundPage extends Component {
 
 	handleComponentMenuShow = ({ component })=> {
 		console.log('%s.handleComponentMenuShow()', this.constructor.name, { component });
-//     this.props.setComponent(component);
+    this.props.setComponent(component);
 	};
 
 	handleComponentMenuItem = ({ type, component })=> {
@@ -323,6 +323,7 @@ class PlaygroundPage extends Component {
 			const component = { ...this.props.component,
 				comments : this.props.component.comments.filter(({ id }) => (id !== commentID)).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0))
 			};
+
 			const playground = { ...this.props.playground,
 				components : this.props.playground.components.map((item)=> ((item.id === component.id) ? component : item))
 			};

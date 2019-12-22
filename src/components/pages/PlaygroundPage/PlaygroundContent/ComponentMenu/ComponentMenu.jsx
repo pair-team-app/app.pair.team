@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import './ComponentMenu.css';
 
 import { ContextMenu, MenuItem } from 'react-contextmenu';
+import { ENTER_KEY } from '../../../../../consts/key-codes';
+
 
 class ComponentMenu extends Component {
 	constructor(props) {
@@ -23,23 +25,30 @@ class ComponentMenu extends Component {
 	}
 
 
+  componentDidMount() {
+//     console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  componentWillUnmount() {
+//     console.log('%s.componentWillUnmount()', this.constructor.name);
+		document.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+
 	handleAddComment = (event, data)=> {
-		console.log('%s.handleAddComment()', this.constructor.name, event, data.target, this.state.position, this.state.comment);
+// 		console.log('%s.handleAddComment()', this.constructor.name, event, { bounds : (data || event).target.getBoundingClientRect() }, this.state.position, this.state.comment);
 		event.preventDefault();
 
-		const { left, top } = data.target.getBoundingClientRect();
 		const { position, component, comment } = this.state;
-		this.props.onAddComment({ component,
-			content  : comment,
-			position : {
-				x : ((position.x - left) - 1) << 0,
-				y : ((position.y - top) + 4) << 0,
-			}
-		});
+		this.props.onAddComment({
+      component, position,
+      content : comment
+    });
 	};
 
 	handleMenuItemClick = (event, data, target)=> {
-		console.log('%s.handleMenuItemClick()', this.constructor.name, { event, data, target });
+// 		console.log('%s.handleMenuItemClick()', this.constructor.name, { event, data, target });
 
 		event.preventDefault();
 		const { component } = this.state;
@@ -57,8 +66,17 @@ class ComponentMenu extends Component {
 		});
 	};
 
+  handleKeyDown = (event)=> {
+//     console.log('%s.handleKeyDown()', this.constructor.name, event, event.keyCode);
+
+    const { comment } = this.state;
+    if (event.keyCode === ENTER_KEY && comment.length > 0) {
+//       this.handleAddComment(event);
+    }
+  };
+
 	handleShowMenu = (event)=> {
-// 		console.log('%s.handleShowMenu()', this.constructor.name, this.props, event.detail);
+		console.log('%s.handleShowMenu()', this.constructor.name, this.props, event.detail, event.detail.target.getBoundingClientRect())
 
 		event.preventDefault();
 		event.stopPropagation();
@@ -68,8 +86,8 @@ class ComponentMenu extends Component {
 			intro    : true,
 			outro    : false,
 			position : {
-				x : event.detail.position.x - 9,
-				y : event.detail.position.y - 12,
+				x : ((event.detail.position.x - event.detail.target.getBoundingClientRect().x) - 10) << 0,
+				y : ((event.detail.position.y - event.detail.target.getBoundingClientRect().y) - 8) << 0,
 			},
 			comment  : ''
 		}, ()=> {
@@ -99,7 +117,7 @@ class ComponentMenu extends Component {
 						<ComponentMenuItem type="comments" title={`${window.location.href.includes('/comments') ? 'Hide' : 'View'} Comments`} acc={<ComponentMenuItemAcc amt={(component) ? Math.max(0, component.comments.length - 1) : 0} />} onClick={this.handleMenuItemClick} />
 					</div>
 					<form>
-						<textarea placeholder="Add Comment" onChange={(event)=> this.setState({ comment : event.target.value })} ref={(element)=> this.textAreaRef = element}>
+            <textarea placeholder="Add Comment" onChange={(event)=> this.setState({ comment : event.target.value })} ref={(element)=> this.textAreaRef = element}>
 						</textarea>
 						<MenuItem data={{ type : 'submit' }} onClick={this.handleAddComment}>
 							<button disabled={comment.length === 0}>Add Comment</button>

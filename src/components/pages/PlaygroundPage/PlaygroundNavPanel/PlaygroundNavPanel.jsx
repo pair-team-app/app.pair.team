@@ -24,7 +24,7 @@ class PlaygroundNavPanel extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { playground } = this.props;
 		if (playground !== prevProps.playground) {

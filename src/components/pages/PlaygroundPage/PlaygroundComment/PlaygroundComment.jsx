@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 
 import BasePlaygroundComment from '../BasePlaygroundComment';
 import BasePopover from '../../../overlays/BasePopover';
+import { ENTER_KEY, ESCAPE_KEY } from '../../../../consts/key-codes';
 
 
 class PlaygroundComment extends Component {
@@ -24,15 +25,33 @@ class PlaygroundComment extends Component {
 	}
 
 	componentDidMount() {
-// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
-		const { position } = this.props;
+    const { position, comment } = this.props;
+		if (comment.id === 0) {
+      document.addEventListener('keydown', this.handleKeyDown);
+    }
+
 		this.setState({ position });
+	}
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props , prevState, state : this.state });
+  }
+
+	componentWillUnmount() {
+    console.log('%s.componentWillUnmount()', this.constructor.name);
+
+    const { comment } = this.props;
+    if (comment.id === 0) {
+      document.removeEventListener('keydown', this.handleKeyDown);
+    }
 	}
 
 
 	handleAddSubmit = (event)=> {
 // 		console.log('%s.handleAddSubmit()', this.constructor.name, event, this.state.comment);
+		console.log('%s.handleAddSubmit()', this.constructor.name, event, this.state);
 		event.preventDefault();
 		event.stopPropagation();
 
@@ -69,6 +88,15 @@ class PlaygroundComment extends Component {
 			const { comment } = this.props;
 			this.props.onDelete(comment.id);
 		});
+	};
+
+	handleKeyDown = (event)=> {
+    console.log('%s.handleKeyDown()', this.constructor.name, event, event.keyCode);
+
+    const { comment } = this.state;
+    if (event.keyCode === ENTER_KEY && comment.content.length > 0) {
+//     	this.handleAddSubmit(event);
+		}
 	};
 
 	handleMarkerClick = (event, comment)=> {

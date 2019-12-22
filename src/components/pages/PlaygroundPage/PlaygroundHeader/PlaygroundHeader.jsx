@@ -43,7 +43,7 @@ class PlaygroundHeader extends Component {
     console.log('%s.handleBreadcrumbClick()', this.constructor.name, event, type, payload);
 
     event.preventDefault();
-    this.props.onBreadCrumbClick({ type, payload });
+//     this.props.onBreadCrumbClick({ type, payload });
 	};
 
 
@@ -56,7 +56,7 @@ class PlaygroundHeader extends Component {
 
 
 	buildbreadcrumbs = ()=> {
-    console.log('%s.buildbreadcrumbs()', this.constructor.name, this.props);
+//     console.log('%s.buildbreadcrumbs()', this.constructor.name, this.props);
     const { match, playground, typeGroup, component, comment, accessibility } = this.props;
     const { teamSlug, buildID, projectSlug, playgroundID, componentsSlug, componentID, commentID } = match.params;
 
