@@ -45,12 +45,13 @@ export const reformComponent = async(component, overwrite={})=> {
 	delete (component['tag_name']);
 	delete (component['root_styles']);
 
-	image = (image.length > 1) ? `data:image/png;base64,${btoa(await unzipSync(image))}` : null;
-	html = await unzipSync(html);
-	styles = await unzipSync(styles);
-	accessibility = await unzipSync(accessibility);
-	root_styles = await unzipSync(root_styles);
+	image = (image && image.length > 1) ? `data:image/png;base64,${btoa(await unzipSync(image))}` : Images.genPlaceholder({ width, height });
+	html = (html) ? decryptText(await unzipSync(html)) : null;
+	styles = (styles) ? decryptObject(await unzipSync(styles)) : null;
+	accessibility = (accessibility) ? decryptObject(await unzipSync(accessibility)) : null;
+	const rootStyles = (root_styles) ? decryptObject(await unzipSync(root_styles)): null;
 
+	console.log("::|::", { image, html, styles, accessibility, rootStyles });
 //	console.log(component.id, 'STYLES:', decryptText(styles));
 // 	console.log(component.id, 'STYLES:', decryptObject(styles));
 //	console.log(component.id, 'ACCESSIBILITY:', decryptText(accessibility));
@@ -60,45 +61,38 @@ export const reformComponent = async(component, overwrite={})=> {
 // 	console.log('META.BOUNDS:', meta.bounds.height, meta.bounds.width);
 
 
-	/*const reformed = {
-		...component,
-		typeID        : type_id,
-		eventTypeID   : event_type_id,
-		nodeID        : node_id,
-		title         : (title.length === 0) ? tag_name : title,
-		tagName       : tag_name,
-		html          : decryptText(html),
-		styles        : decryptObject(styles),
-		rootStyles    : { ...decryptObject(root_styles),
-			'max-width'  : (width > 0) ? `${width}px` : 'fit-content',
-			'min-height' : (height > 0) ? `${height}px` : 'fit-content',
-			'min-width'  : (width > 0) ? `${width}px` : 'fit-content',
-			'width'      : (width > 0) ? `${width}px` : 'fit-content'
-		},
-		image         : (image || Images.genPlaceholder({ width, height })),
-		accessibility : decryptObject(accessibility),
-		comments      : comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
-		selected      : false,
-		...overwrite
-	};*/
+	const reformed = { ...component, html, styles, image, accessibility,
+    typeID        : type_id,
+    eventTypeID   : event_type_id,
+    nodeID        : node_id,
+    title         : (title.length === 0) ? tag_name : title,
+    tagName       : tag_name,
+    rootStyles    : (rootStyles) ? { ...rootStyles,
+      'max-width'  : (width > 0) ? `${width}px` : 'fit-content',
+      'min-height' : (height > 0) ? `${height}px` : 'fit-content',
+      'min-width'  : (width > 0) ? `${width}px` : 'fit-content',
+      'width'      : (width > 0) ? `${width}px` : 'fit-content'
+    } : null,
+    comments      : comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
+    selected      : false,
+    ...overwrite
+  };
 
-	return ({
-		...component,
+
+  console.log('REFORMED: [%s]', component.id, reformed);
+
+	return ({ ...component, html, styles, image, accessibility,
 		typeID        : type_id,
 		eventTypeID   : event_type_id,
 		nodeID        : node_id,
 		title         : (title.length === 0) ? tag_name : title,
 		tagName       : tag_name,
-		html          : decryptText(html),
-		styles        : decryptObject(styles),
-		rootStyles    : { ...decryptObject(root_styles),
+		rootStyles    : (root_styles) ? { ...root_styles,
 			'max-width'  : (width > 0) ? `${width}px` : 'fit-content',
 			'min-height' : (height > 0) ? `${height}px` : 'fit-content',
 			'min-width'  : (width > 0) ? `${width}px` : 'fit-content',
 			'width'      : (width > 0) ? `${width}px` : 'fit-content'
-		},
-		image         : (image || Images.genPlaceholder({ width, height })),
-		accessibility : decryptObject(accessibility),
+		} : null,
 		comments      : comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
 		selected      : false,
 		...overwrite

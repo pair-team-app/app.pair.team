@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import BasePlaygroundComment from '../BasePlaygroundComment';
 import BasePopover from '../../../overlays/BasePopover';
-import { ENTER_KEY, ESCAPE_KEY } from '../../../../consts/key-codes';
+import { ENTER_KEY } from '../../../../consts/key-codes';
 
 
 class PlaygroundComment extends Component {
