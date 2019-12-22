@@ -1,20 +1,43 @@
 #!/bin/bash
 
 
+#-- wip branch name
+branch_name="wip/mh-$(date +%Y%m%d)"
 
 #-- change to proj dir
 if [[ ! -z "`pwd`/package.json" ]]; then cd `dirname $0`/../ ; fi
 
-printf "pwd: [%s]\n" `pwd`
 
+#-- check for 'develop' branch
+if [[ ! -z "`git branch | grep develop`" ]]; then
+	#-- not on 'develop'
+	if [[ -z "`git branch | grep '* develop'`" ]]; then
 
+		#-- no changes
+		if [[ -z "`git status | grep clean`" ]]; then git checkout develop
+		else
+			printf "Uncommitted changes, commit then try again.\n"
+			exit 0;
+		fi
+	fi
 
+else
+	printf "No develop branch here.\n"
+	exit 0;
+fi
 
-#-- use 'develop' as base
-#git checkout develop
 
 #-- make new wip branch
-#git checkout -b "wip/mh-$(date +%Y%m%d)"
+if [[ -z "`git branch | grep ${branch_name}`" ]]; then
+	git checkout -b "${branch_name}"
+
+else #-- suffix index
+	ind=$(( `git branch | grep ${branch_name} | wc -l | awk '{print $NF}'`+1 ))
+	git checkout -b "${branch_name}.${ind}"
+
+	if [[ ! -z "`git status | grep clean`" ]]; then git add . ; fi
+fi
+
 
 #-- terminate w/o error
 exit 0;
