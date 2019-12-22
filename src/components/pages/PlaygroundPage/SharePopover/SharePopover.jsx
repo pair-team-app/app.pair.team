@@ -92,12 +92,14 @@ class SharePopover extends Component {
 
 		return (<BasePopover outro={outro} payload={payload} onOutroComplete={this.props.onClose}>
 			<div className="share-popover">
-				<div className="share-popover-url">{window.location.href}</div>
+        <CopyToClipboard text={window.location.href} onCopy={this.handleClipboardCopy}>
+					<div className="share-popover-url">{window.location.href}</div>
+				</CopyToClipboard>
 				<div className="share-popover-form-wrapper">
 					<form onSubmit={this.handleSubmit}>
 						<input type="text" value={email} placeholder="Enter Email Address" onChange={(event)=> this.handleEmailChange(event)} />
 						<button disabled={!emailValid} type="submit" onClick={this.handleSubmit}>Send Email</button>
-						<CopyToClipboard text={window.location.href} onCopy={()=> this.handleClipboardCopy()}>
+						<CopyToClipboard text={window.location.href} onCopy={this.handleClipboardCopy}>
 							<button disabled={false} onClick={(event) => event.preventDefault()}>Copy URL</button>
 						</CopyToClipboard>
 					</form>
