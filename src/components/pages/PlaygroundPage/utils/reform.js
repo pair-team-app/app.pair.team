@@ -4,6 +4,7 @@ import moment from 'moment';
 
 import { unzipSync } from '../../../../utils/funcs';
 import { decryptObject, decryptText } from './crypto';
+import { convertStyles } from './css';
 
 
 export const reformChildElement = (element, overwrite={})=> {
@@ -49,9 +50,9 @@ export const reformComponent = async(component, overwrite={})=> {
 	html = (html) ? decryptText(await unzipSync(html)) : null;
 	styles = (styles) ? decryptObject(await unzipSync(styles)) : null;
 	accessibility = (accessibility) ? decryptObject(await unzipSync(accessibility)) : null;
-	const rootStyles = (root_styles) ? decryptObject(await unzipSync(root_styles)): null;
+	const rootStyles = (root_styles) ? convertStyles(decryptObject(await unzipSync(root_styles))) : null;
 
-	console.log("::|::", { image, html, styles, accessibility, rootStyles });
+// 	console.log("::|::", { image, html, styles, accessibility, rootStyles });
 //	console.log(component.id, 'STYLES:', decryptText(styles));
 // 	console.log(component.id, 'STYLES:', decryptObject(styles));
 //	console.log(component.id, 'ACCESSIBILITY:', decryptText(accessibility));
@@ -68,9 +69,9 @@ export const reformComponent = async(component, overwrite={})=> {
     title         : (title.length === 0) ? tag_name : title,
     tagName       : tag_name,
     rootStyles    : (rootStyles) ? { ...rootStyles,
-      'max-width'  : (width > 0) ? `${width}px` : 'fit-content',
-      'min-height' : (height > 0) ? `${height}px` : 'fit-content',
-      'min-width'  : (width > 0) ? `${width}px` : 'fit-content',
+      'maxWidth'  : (width > 0) ? `${width}px` : 'fit-content',
+      'minHeight' : (height > 0) ? `${height}px` : 'fit-content',
+      'minWidth'  : (width > 0) ? `${width}px` : 'fit-content',
       'width'      : (width > 0) ? `${width}px` : 'fit-content'
     } : null,
     comments      : comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
@@ -80,21 +81,5 @@ export const reformComponent = async(component, overwrite={})=> {
 
 
   console.log('REFORMED: [%s]', component.id, reformed);
-
-	return ({ ...component, html, styles, image, accessibility,
-		typeID        : type_id,
-		eventTypeID   : event_type_id,
-		nodeID        : node_id,
-		title         : (title.length === 0) ? tag_name : title,
-		tagName       : tag_name,
-		rootStyles    : (root_styles) ? { ...root_styles,
-			'max-width'  : (width > 0) ? `${width}px` : 'fit-content',
-			'min-height' : (height > 0) ? `${height}px` : 'fit-content',
-			'min-width'  : (width > 0) ? `${width}px` : 'fit-content',
-			'width'      : (width > 0) ? `${width}px` : 'fit-content'
-		} : null,
-		comments      : comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
-		selected      : false,
-		...overwrite
-	});
+	return (reformed);
 };

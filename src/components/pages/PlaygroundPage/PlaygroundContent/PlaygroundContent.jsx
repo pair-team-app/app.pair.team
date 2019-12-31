@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 
 import PlaygroundComment from '../PlaygroundComment';
 import ComponentMenu from './ComponentMenu';
-import { convertStyles, inlineStyles } from '../utils/css';
+import { inlineStyles } from '../utils/css';
 import packComponents, { calcSize } from '../utils/packing';
 import { reformComment } from '../utils/reform';
 
@@ -99,7 +99,7 @@ class PlaygroundContent extends Component {
 					return (<div key={i} className={`playground-content-component-wrapper${(!component) ? ' playground-content-component-wrapper-cursor' : ''}`} onClick={(event)=> this.handleContentClick(event, comp)} style={style}>
 						<ContextMenuTrigger id="component" component={comp} collect={(props)=> ({ component : props.component })} attributes={{ 'data-pos' : pos }} disableIfShiftIsPressed={true}>
 							{(!viewsContent)
-								? (<div className="playground-content-component" data-id={comp.id} style={convertStyles(comp.rootStyles)} dangerouslySetInnerHTML={{ __html : content }} />)
+								? (<div className="playground-content-component" data-id={comp.id} style={comp.rootStyles} dangerouslySetInnerHTML={{ __html : content }} />)
 								: (<div className="playground-content-component" data-id={comp.id} dangerouslySetInnerHTML={{ __html : content }} />)
 							}
 
