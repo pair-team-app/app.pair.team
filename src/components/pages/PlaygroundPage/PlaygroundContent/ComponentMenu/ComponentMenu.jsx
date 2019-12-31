@@ -71,7 +71,7 @@ class ComponentMenu extends Component {
 
     const { comment } = this.state;
     if (event.keyCode === ENTER_KEY && comment.length > 0) {
-//       this.handleAddComment(event);
+      this.handleAddComment(event);
     }
   };
 

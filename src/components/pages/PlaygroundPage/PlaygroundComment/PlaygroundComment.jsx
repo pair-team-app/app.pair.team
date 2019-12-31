@@ -95,7 +95,7 @@ class PlaygroundComment extends Component {
 
     const { comment } = this.state;
     if (event.keyCode === ENTER_KEY && comment.content.length > 0) {
-//     	this.handleAddSubmit(event);
+    	this.handleAddSubmit(event);
 		}
 	};
 
