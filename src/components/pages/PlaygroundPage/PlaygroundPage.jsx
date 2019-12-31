@@ -279,7 +279,7 @@ class PlaygroundPage extends Component {
 
 	handleComponentMenuShow = ({ component })=> {
 		console.log('%s.handleComponentMenuShow()', this.constructor.name, { component });
-    this.props.setComponent(component);
+//     this.props.setComponent(component);
 	};
 
 	handleComponentMenuItem = ({ type, component })=> {
