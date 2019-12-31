@@ -52,8 +52,8 @@ class App extends Component {
 			darkTheme   : false,
 			popup       : null,
 			modals      : {
-// 				cookies  : ((cookie.load('cookies') << 0) === 0),
-				cookies  : false,
+				cookies  : ((cookie.load('cookies') << 0) === 0),
+// 				cookies  : false, // disable
 				disable  : false,
 				github   : false,
 				login    : false,
