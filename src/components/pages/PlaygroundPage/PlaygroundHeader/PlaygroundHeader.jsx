@@ -43,7 +43,7 @@ class PlaygroundHeader extends Component {
     console.log('%s.handleBreadcrumbClick()', this.constructor.name, event, type, payload);
 
     event.preventDefault();
-//     this.props.onBreadCrumbClick({ type, payload });
+    this.props.onBreadCrumbClick({ type, payload });
 	};
 
 
