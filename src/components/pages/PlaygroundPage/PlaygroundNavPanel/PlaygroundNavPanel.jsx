@@ -4,8 +4,11 @@ import './PlaygroundNavPanel.css';
 
 import { grabFavicon } from 'favicongrab';
 import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+
 import NavPanelTypeGroup from './NavPanelTypeGroup';
 import { TEAM_DEFAULT_AVATAR } from '../../../../consts/uris';
+import { trackEvent, trackOutbound} from "../../../../utils/tracking";
 
 class PlaygroundNavPanel extends Component {
 	constructor(props) {
@@ -61,6 +64,7 @@ class PlaygroundNavPanel extends Component {
 		}
 	};
 
+
 	handleTypeGroupClick = (typeGroup)=> {
 // 		console.log('%s.handleTypeGroupClick()', this.constructor.name, typeGroup);
 		this.props.onTypeGroupClick(typeGroup);
@@ -113,7 +117,7 @@ class PlaygroundNavPanel extends Component {
 		};
 
 		return (<div className="playground-nav-panel">
-			<PlaygroundNavPanelHeader team={team} />
+			<PlaygroundNavPanelHeader team={team} onTeamClick={this.handleTeamClick} />
 			<div className="playground-nav-panel-component-type-wrapper">
 				{(typeGroups.map((typeGroup, i)=> (<NavPanelTypeGroup key={i} typeGroup={typeGroup} onTypeGroupClick={this.handleTypeGroupClick} onTypeItemClick={this.handleTypeItemClick} />)))}
 			</div>
@@ -125,10 +129,32 @@ class PlaygroundNavPanel extends Component {
 const PlaygroundNavPanelHeader = (props)=> {
 // 	console.log('PlaygroundNavPanelHeader()', props);
 
+	const handleClick = (event)=> {
+    console.log('%s.handleClick()', 'PlaygroundNavPanelHeader');
+    event.preventDefault();
+
+    const { domain } = props.team;
+    const url = `http://${domain}`;
+
+    trackEvent('team-name', domain);
+    trackOutbound(url, ()=> {
+// 			window.open(url);
+// 			props.onClick(event);
+    });
+
+    window.open(url);
+  };
+
 	const { team } = props;
 	return (<div className="playground-nav-panel-header">
 		<img className="playground-nav-panel-header-logo" src={team.image} alt="Team Logo" />
-		<div className="playground-nav-panel-header-title">{team.title}</div>
+		<NavLink
+      to={`http://${team.domain}`}
+      target="_blank"
+      className="playground-nav-panel-header-title"
+      onClick={(event)=> handleClick(event)}>
+      {team.title}
+    </NavLink>
 	</div>);
 };
 

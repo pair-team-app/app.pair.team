@@ -25,7 +25,7 @@ class PlaygroundComment extends Component {
 	}
 
 	componentDidMount() {
-		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
     const { position, comment } = this.props;
 		if (comment.id === 0) {
@@ -36,11 +36,11 @@ class PlaygroundComment extends Component {
 	}
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props , prevState, state : this.state });
+//     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props , prevState, state : this.state });
   }
 
 	componentWillUnmount() {
-    console.log('%s.componentWillUnmount()', this.constructor.name);
+//     console.log('%s.componentWillUnmount()', this.constructor.name);
 
     const { comment } = this.props;
     if (comment.id === 0) {
