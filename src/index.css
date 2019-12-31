@@ -41,6 +41,7 @@
 	--link-selected-color: var(--site-fg-color); /* #232323 */
 	--txtfield-bg-color: 247, 247, 247; /* #f7f7f7 */
 	--txtfield-fg-color: var(--site-fg-color); /* 232323 */
+	--txtfield-focused-fg-color: 204, 204, 204; /* #cccccc */
 	--txtfield-disabled-bg-color: var(--disabled-fg-color); /* cccccc */
 	--txtfield-disabled-fg-color: 153, 153, 153; /* 999999 */
 	--border-color: 206, 206, 206; /* #cecece */
@@ -327,7 +328,7 @@ input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hov
 
 input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, textarea:focus {
 	background-color: rgba(var(--txtfield-bg-color), 1.0);
-	color: rgba(var(--txtfield-fg-color), 1.0);
+	color: rgba(var(--txtfield-focused-fg-color), 1.0);
 }
 
 li > p:last-child {
