@@ -63,7 +63,6 @@ class UserSettings extends Component {
 		const { popover, outro } = this.state;
 
 		return (<div className="user-settings" ref={(element)=> { this.wrapper = element; }}>
-			<div className="user-settings-title" onClick={this.handleShowPopover}>Settings</div>
 			<div className="user-settings-avatar-wrapper" onClick={this.handleShowPopover}>
 				<img className="user-settings-avatar-image" src={avatar} alt="Avatar" />
 			</div>
@@ -85,8 +84,8 @@ const UserSettingsPopover = (props)=> {
 	const { position, outro } = props;
 	const payload = {
 		position : {
-			x : position.x + 50,
-			y : position.y + 7
+			x : position.x + 10,
+			y : position.y + 25
 		}
 	};
 

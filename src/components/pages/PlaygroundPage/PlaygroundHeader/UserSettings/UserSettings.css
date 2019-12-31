@@ -7,17 +7,6 @@
 	align-items: center;
 }
 
-.user-settings-title {
-	color: rgba(var(--link-color), 1.0);
-	transition: color 125ms;
-}
-
-.user-settings-title:hover {
-	color: rgba(var(--link-hover-color), 1.0);
-	cursor: pointer;
-}
-
-
 .user-settings-avatar-wrapper {
 	position: relative;
 	width: 24px;
