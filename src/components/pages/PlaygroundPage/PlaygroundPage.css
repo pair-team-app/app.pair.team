@@ -5,6 +5,7 @@
 
 	/*height: calc(100vh - 60px);*/
 	height: 100vh;
+	background-color: rgba(var(--site-bg-color), 1.0);
 	text-align: left;
 }
 

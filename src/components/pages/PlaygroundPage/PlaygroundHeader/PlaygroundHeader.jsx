@@ -39,8 +39,8 @@ class PlaygroundHeader extends Component {
 	}
 
 
-	handleBreadcrumbClick = (event, type, payload)=> {
-    console.log('%s.handleBreadcrumbClick()', this.constructor.name, event, type, payload);
+	handleBreadcrumbClick = ({ event, type, payload })=> {
+    console.log('%s.handleBreadcrumbClick()', this.constructor.name, { event, type, payload });
 
     event.preventDefault();
     this.props.onBreadCrumbClick({ type, payload });
@@ -55,8 +55,8 @@ class PlaygroundHeader extends Component {
 	};
 
 
-	buildbreadcrumbs = ()=> {
-//     console.log('%s.buildbreadcrumbs()', this.constructor.name, this.props);
+	buildBreadcrumbs = ()=> {
+//     console.log('%s.buildBreadcrumbs()', this.constructor.name, this.props);
     const { match, playground, typeGroup, component, comment, accessibility } = this.props;
     const { teamSlug, buildID, projectSlug, playgroundID, componentsSlug, componentID, commentID } = match.params;
 
@@ -93,8 +93,7 @@ class PlaygroundHeader extends Component {
 		const { popover } = this.state;
 
 		return (<div className="playground-header">
-			<div className="playground-header-col playground-header-breadcrumb-wrapper">{this.buildbreadcrumbs().map((breadcrumb)=> (breadcrumb))}</div>
-			{/*<div className="playground-header-col playground-header-breadcrumb-wrapper">BREADCRUMBS</div>*/}
+			<div className="playground-header-col playground-header-breadcrumb-wrapper">{this.buildBreadcrumbs().map((breadcrumb)=> (breadcrumb))}</div>
 			<div className="playground-header-col playground-header-col-middle">
         <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
 			</div>
@@ -120,7 +119,7 @@ const PlayGroundHeaderBreadcrumb = (props)=> {
   const { type, title, payload } = segment;
   
   return ((ind < tot) 
-		? (<><div className="playground-header-breadcrumb" data-last="false" onClick={(event)=> props.onClick(event, type, payload)}>{title}</div>&nbsp;&gt;&nbsp;</>)
+		? (<><div className="playground-header-breadcrumb" data-last="false" onClick={(event)=> props.onClick({ event, type, payload })}>{title}</div>&nbsp;&gt;&nbsp;</>)
 		: (<div className="playground-header-breadcrumb" data-last="true">{title}</div>)
 	);
 };

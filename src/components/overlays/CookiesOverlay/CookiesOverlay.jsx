@@ -43,7 +43,7 @@ class CookiesOverlay extends Component {
 			<div className="cookies-overlay-title">Accept Cookies</div>
 
 			<div className="cookies-overlay-content">
-        This website uses essential functional (session) cookies, which do not identify you in any way. Additionally, cookies may also be used to improve your experience. We do not use them for tracking, analytical or any unlawful purposes. We'll assume you're ok with this, but you can opt-out if you wish. <NavLink to={Pages.LEGAL}>Read More</NavLink>.
+        This website uses essential functional (session) cookies, which do not identify you in any way. Additionally, cookies may also be used to improve your experience, never used for tracking, analytical or any unlawful purposes. We'll assume you're ok with this, but you can opt-out if you wish. <NavLink to={Pages.LEGAL}>Read More</NavLink>.
 			</div>
 
 			<div className="button-wrapper-col cookies-overlay-button-wrapper">
