@@ -226,7 +226,7 @@ class App extends Component {
 		trackEvent('user', 'sign-out');
 
 		this.props.updateUserProfile(null);
-		this.props.history.push(Pages.HOME);
+    this.onToggleModal(Modals.LOGIN, true);
 	};
 
 	handleMouseMove = (event)=> {
