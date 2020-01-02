@@ -15,7 +15,7 @@
 }
 
 *::placeholder {
-	font-size: 16px;
+	font-size: var(--orthodox-font-size);
 }
 
 :root {
@@ -60,6 +60,34 @@
 	--playground-nav-width: 208px;
 	--playground-comments-width: 228px;
 
+	--orthodox-margin-base: 20px;
+	--orthodox-padding-base: 20px;
+
+	--orthodox-margin-half: calc(var(--orthodox-margin-base) * 0.5);
+	--orthodox-margin-less: calc(var(--orthodox-margin-base) * 0.75);
+	--orthodox-margin-mini: calc(var(--orthodox-margin-base) * 0.25);
+	--orthodox-margin-more: calc(var(--orthodox-margin-base) * 1.25);
+	--orthodox-margin-huge:  calc(var(--orthodox-margin-base) * 3.0);
+	--orthodox-margin-dbbl:  calc(var(--orthodox-margin-base) * 2.0);
+
+	--orthodox-padding-half: calc(var(--orthodox-padding-base) * 0.5);
+	--orthodox-padding-less: calc(var(--orthodox-padding-base) * 0.75);
+	--orthodox-padding-mini: calc(var(--orthodox-padding-base) * 0.25);
+	--orthodox-padding-more: calc(var(--orthodox-padding-base) * 1.25);
+	--orthodox-padding-dbbl:  calc(var(--orthodox-padding-base) * 2.0);
+	--orthodox-padding-huge:  calc(var(--orthodox-padding-base) * 3.0);
+	--orthodox-padding-page:  calc(var(--orthodox-padding-base) * 3.0);
+	--orthodox-padding-form:  calc(var(--orthodox-padding-base) * 1.5);
+
+	--orthodox-padding-page-mobile:  calc(var(--orthodox-padding-base) * 1.5);
+
+	--orthodox-acc-size: 18px;
+	--orthodox-ico-size: 24px;
+
+
+	--orthodox-font-size: 16px;
+	--orthodox-font-weight: 400;
+
 	--expander-arrow-transition: all 250ms cubic-bezier(0.4, 1, 0.2, 1);
 	--expander-content-mask-transition: height 250ms cubic-bezier(0.2, 0.9, 0.3, 1.0);
 	--expander-content-open-transition: height 250ms cubic-bezier(0.4, 0.0, 0.2, 1.0);
@@ -86,8 +114,8 @@ html, body {
   -webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, Arial, sans-serif;
-  font-weight: 400;
-  font-size: 16px;
+  font-weight: var(--orthodox-font-weight);
+  font-size: var(--orthodox-font-size);
   color: rgba(var(--site-fg-color), 1.0);
 }
 
@@ -111,11 +139,11 @@ a:active {
 button {
   width: 316px;
   height: 46px;
-	padding: 8px 30px 10px 30px;
+	padding: var(--orthodox-padding-half) var(--orthodox-padding-form);
   background-color: rgba(var(--btn-bg-color), 1.0);
   border: 1px solid rgba(var(--btn-bg-color), 1.0);
   border-radius: 23px;
-  font-size: 16px;
+  font-size: var(--orthodox-font-size);
   color: rgba(var(--btn-fg-color), 1.0);
 	transition: background-color 0.1s ease-out;
 }
@@ -145,7 +173,7 @@ button.quiet-button {
 	width: fit-content;
 	min-width: fit-content;
 	max-width: fit-content;
-	padding: 8px 18px 10px 18px;
+	padding: var(--orthodox-padding-half) var(--orthodox-padding-base);
 	border: 1px solid rgba(var(--border-color), 1.0);
 	background-color: rgba(var(--quiet-btn-bg-color), 1.0);
 	color: rgba(var(--quiet-btn-fg-color), 1.0);
@@ -169,7 +197,7 @@ button.quiet-button[data-selected="true"]:hover {
 button.glyph-button {
 	min-width: 48px;
 	min-height: 48px;
-	padding: 8px 9px 10px 10px;
+	padding: var(--orthodox-padding-half);
 	font-size: 26px;
 }
 
@@ -177,7 +205,7 @@ button.cancel-button {
 	width: 316px;
 	min-width: unset;
 	max-width: unset;
-	padding: 8px 30px 10px 30px;
+	padding: var(--orthodox-padding-half) var(--orthodox-padding-form);
 }
 
 code {
@@ -190,7 +218,7 @@ code {
 }
 
 code:not(:last-child) {
-	margin-bottom: 20px;
+	margin-bottom: var(--orthodox-margin-base);
 }
 
 fieldset {
@@ -213,7 +241,7 @@ h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
 
 /** Page Title **/
 h1 {
-  margin-bottom: 60px;
+  margin-bottom: var(--orthodox-margin-huge);
   font-size: 48px;
   letter-spacing: 1px;
   line-height: 68px;
@@ -257,9 +285,9 @@ h3::before {
 
 /** Modal Title **/
 h4 {
-	font-size: 16px;
+	font-size: var(--orthodox-font-size);
 	line-height: 24px;
-	margin-bottom: 20px;
+	margin-bottom: var(--orthodox-margin-base);
 }
 
 h4::before {
@@ -268,8 +296,8 @@ h4::before {
 
 /** Legal Section Title **/
 h5 {
-	padding-bottom: 5px;
-	font-size: 16px;
+	padding-bottom: var(--orthodox-margin-mini);
+	font-size: var(--orthodox-font-size);
 	font-weight: 600;
 	line-height: 20px;
 	text-transform: uppercase;
@@ -280,7 +308,7 @@ h5 {
 h6 {
 	display: inline;
 	padding-right: 1px;
-	font-size: 16px;
+	font-size: var(--orthodox-font-size);
 	font-weight: 500;
 	text-align: left;
 }
@@ -291,13 +319,13 @@ h6::before {
 
 input[type="email"], input[type="password"], input[type="password"]:hover, input[type="text"], textarea, textarea:hover {
 	width: 100%;
-	padding: 15px 20px;
+	padding: var(--orthodox-padding-less) var(--orthodox-padding-base);
 	background-color: rgba(var(--txtfield-bg-color), 1.0);
 	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: 23px;
 	color: rgba(var(--txtfield-fg-color), 1.0);
 	text-align: center;
-	font-size: 16px;
+	font-size: var(--orthodox-font-size);
 	cursor: text;
 	-webkit-appearance: none;
 	transition: background-color 0.125s ease-out;
@@ -332,16 +360,16 @@ input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focu
 }
 
 li > p:last-child {
-	margin-bottom: 20px;
+	margin-bottom: var(--orthodox-margin-base);
 }
 
 p {
 	margin: 0;
-  line-height: 25px;
+  line-height: var(--orthodox-padding-more);
 }
 
 p:not(:last-child) {
-	margin-bottom: 20px;
+	margin-bottom: var(--orthodox-margin-base);
 }
 
 p:last-child {
@@ -362,7 +390,7 @@ p > a:hover {
 }
 
 p.list-title {
-	margin-bottom: 5px;
+	margin-bottom: var(--orthodox-margin-mini);
 }
 
 sup {
@@ -375,8 +403,8 @@ textarea {
 }
 
 ul {
-	margin: 10px 20px;
-	padding-left: 10px;
+	margin: var(--orthodox-margin-half) var(--orthodox-margin-base);
+	padding-left: var(--orthodox-padding-half);
 	list-style-type: square;
 }
 
@@ -389,7 +417,7 @@ ul:first-of-type, ul:only-child {
 }
 
 ul > li {
-	line-height: 25px;
+	line-height: var(--orthodox-padding-more);
 }
 
 ul > li:first-child {
@@ -397,11 +425,11 @@ ul > li:first-child {
 }
 
 ul > li:last-child {
-	margin-bottom: 20px;
+	margin-bottom: var(--orthodox-margin-base);
 }
 
 ul > li:not(:last-child) {
-	margin-bottom: 10px;
+	margin-bottom: var(--orthodox-margin-half);
 }
 
 

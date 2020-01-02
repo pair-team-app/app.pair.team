@@ -1,7 +1,7 @@
 
 .base-page {
 	width: 100%;
-	padding: 60px;
+	padding: var(--orthodox-padding-page);
 	text-align: center;
 }
 
@@ -14,11 +14,11 @@
 }
 
 .base-page-content-wrapper {
-	margin-bottom: 40px;
+	margin-bottom: var(--orthodox-margin-dbbl);
 }
 
 .base-page-section-wrapper {
-	line-height: 25px;
+	line-height: var(--orthodox-padding-more);
 	text-align: justify;
 }
 
@@ -32,12 +32,12 @@
 	padding: 0;
 	width: fit-content;
 	column-count: 2;
-	column-gap: 20px;
+	column-gap: var(--orthodox-margin-base);
 	column-rule: 0;
 }
 
 .base-page-bottom-nav > ul > li {
-	margin-bottom: 15px;
+	margin-bottom: var(--orthodox-margin-less);
 	padding: 0;
 	width: fit-content;
 	list-style: none;
@@ -51,6 +51,6 @@
 
 @media screen and (max-width: 800px) {
 	.base-page {
-		padding: 40px 30px;
+		padding: var(--orthodox-padding-dbbl) var(--orthodox-padding-page-mobile);
 	}
 }

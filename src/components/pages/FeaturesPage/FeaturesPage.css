@@ -1,6 +1,6 @@
 
 .features-page {
-	padding: 60px 20%;
+	padding: var(--orthodox-padding-page) 20%;
 }
 
 .features-page-content-wrapper {
@@ -12,6 +12,6 @@
 
 @media screen and (max-width: 800px) {
 	.features-page {
-		padding: 60px 30px;
+		padding: var(--orthodox-padding-page) var(--orthodox-padding-page-mobile);
 	}
 }

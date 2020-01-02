@@ -5,7 +5,7 @@
 	flex-wrap: wrap;
 	align-items: center; /* v-align */
 	justify-content: center; /* h-align */
-	padding: 64px 20px 88px 20px;
+	padding: 64px var(--orthodox-padding-base) 88px var(--orthodox-padding-base);
 	height: 100%;
 	z-index: 1;
 	background-color: rgba(var(--site-bg-color), 1.0);
@@ -20,7 +20,7 @@
 .playground-content-components-wrapper {
 	position: relative;
 	margin: auto;
-	padding-bottom: 20px;
+	padding-bottom: var(--orthodox-padding-base);
 }
 
 .playground-content-views-wrapper {
@@ -35,7 +35,7 @@
 }
 
 .playground-content-views-wrapper > * {
-	margin-right: 30px;
+	margin-right: var(--orthodox-margin-huge);
 }
 
 .playground-content-views-wrapper > *:last-child {

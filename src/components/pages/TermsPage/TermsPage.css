@@ -1,6 +1,6 @@
 
 .terms-page {
-	padding: 60px 20%;
+	padding: var(--orthodox-padding-page) 20%;
 }
 
 .terms-page-content-wrapper {
@@ -18,7 +18,7 @@
 .terms-page-subsection h6 {
 	display: block;
 	margin-bottom: 4px;
-	font-weight: 400;
+	font-weight: var(--orthodox-font-weight);
 	text-decoration: underline;
 }
 
@@ -27,7 +27,7 @@
 }
 
 .terms-page-intro-question {
-	padding-right: 4px;
+	padding-right: var(--orthodox-margin-mini);
 	font-style: italic;
 }
 
@@ -38,6 +38,6 @@
 
 @media screen and (max-width: 800px) {
 	.terms-page {
-		padding: 60px 30px;
+		padding: var(--orthodox-padding-page) var(--orthodox-padding-page-mobile);
 	}
 }

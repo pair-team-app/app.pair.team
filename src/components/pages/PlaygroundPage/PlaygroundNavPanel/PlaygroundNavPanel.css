@@ -5,7 +5,7 @@
 	left: 0;
 	width: var(--playground-nav-width);
 	height: 100%;
-	padding: 20px;
+	padding: var(--orthodox-padding-base);
 	background-color: rgba(var(--playground-panel-bg-color), 1.0);
 	border-right: 1px solid rgba(var(--border-color), 1.0);
 	z-index: 8;
@@ -15,13 +15,13 @@
 	display: flex;
 	flex-flow: row nowrap;
 	align-items: center;
-	margin-bottom: 20px;
+	margin-bottom: var(--orthodox-margin-base);
 }
 
 .playground-nav-panel-header-logo {
-	width: 18px;
-	height: 18px;
-	margin-right: 10px;
+	width: var(--orthodox-acc-size);
+	height: var(--orthodox-acc-size);
+	margin-right: var(--orthodox-margin-half);
 }
 
 .playground-nav-panel-header-title:hover {
@@ -30,7 +30,7 @@
 
 .playground-nav-panel-component-type-wrapper {
 	width: 100%;
-	max-height: calc(100% - 40px);
+	max-height: calc(100% - calc(var(--orthodox-padding-base) * 2.0));
 	font-size: 15px;
 	overflow-y: auto;
 }

@@ -14,12 +14,12 @@
 
 .playground-comment-marker-content-wrapper {
 	position: relative;
-	width: 18px;
-	height: 18px;
+	width: var(--orthodox-acc-size);
+	height: var(--orthodox-acc-size);
 	border: 1px solid rgba(var(--site-fg-color), 1.0);
 	border-radius: 50%;
 	font-size: 11px;
-	font-weight: 400;
+	font-weight: var(--orthodox-font-weight);
 	text-align: center;
 	background-color: rgba(var(--comment-marker-bg-color), 0.33);
 }
@@ -46,7 +46,7 @@
 
 .playground-comment-add-popover {
 	width: 260px;
-	padding: 20px;
+	padding: var(--orthodox-padding-base);
 }
 
 .playground-comment-add-popover form {
@@ -60,8 +60,8 @@
 .playground-comment-add-popover textarea {
 	width: 100%;
 	height: 128px;
-	margin-bottom: 10px;
-	padding: 10px;
+	margin-bottom: var(--orthodox-margin-half);
+	padding: var(--orthodox-padding-half);
 	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: 10px;
 	text-align: left;

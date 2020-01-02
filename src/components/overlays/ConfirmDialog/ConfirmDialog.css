@@ -2,13 +2,13 @@
 .confirm-dialog-content {
 	min-width: 320px;
 	max-width: 520px;
-	padding: 0 15px;
+	padding: 0 var(--orthodox-padding-less);
 	text-align: left;
 	line-height: 20px;
 }
 
 .confirm-dialog-button-wrapper {
-	margin-top: 20px;
+	margin-top: var(--orthodox-margin-base);
 	text-align: right;
 }
 

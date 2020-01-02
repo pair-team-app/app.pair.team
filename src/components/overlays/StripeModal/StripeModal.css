@@ -8,7 +8,7 @@
 }
 
 .stripe-modal-header-wrapper {
-	padding: 0 0 10px 0;
+	padding: 0 0 var(--orthodox-padding-half) 0;
 	letter-spacing: 0.2px;
 }
 

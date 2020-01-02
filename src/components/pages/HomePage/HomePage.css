@@ -20,7 +20,7 @@
 }
 
 .home-page-form-wrapper input {
-	margin-bottom: 20px;
+	margin-bottom: var(--orthodox-margin-base);
 }
 
 .home-page-form-wrapper input:disabled {
@@ -28,14 +28,14 @@
 }
 
 .home-page-form-wrapper > *:last-child {
-	margin-top: 30px;
+	margin-top: var(--orthodox-margin-base);
 }
 
 .home-page-content-wrapper {
 }
 
 .home-page-element-wrapper:not(:last-child) {
-	margin-bottom: 30px;
+	margin-bottom: var(--orthodox-margin-more);
 }
 
 .home-page-element {

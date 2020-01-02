@@ -8,7 +8,7 @@
 	/*width: 100%;*/
 	display: flex;
 	align-items: center; /* v-align */
-	padding: 0 20px 20px 20px;
+	padding: 0 var(--orthodox-padding-base) var(--orthodox-padding-base) var(--orthodox-padding-base);
 	/*background-color: rgba(var(--site-bg-color), 0.875);*/
 	/*border-top: 1px dotted #ff00ff;*/
 	transition: width 250ms cubic-bezier(0.4, 0, 0.2, 1);

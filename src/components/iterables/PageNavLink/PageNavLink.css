@@ -5,7 +5,7 @@
 }
 
 .page-nav-link:not(:last-child) {
-	margin-right: 40px;
+	margin-right: var(--orthodox-margin-dbbl);
 }
 
 .page-nav-link-selected, a.page-nav-link-selected {

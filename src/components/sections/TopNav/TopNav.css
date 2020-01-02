@@ -21,7 +21,7 @@
 	display: flex;
 	align-items: center;
 	width: 100%;
-	padding: 20px;
+	padding: var(--orthodox-padding-base);
 	/*background-color: rgba(var(--site-bg-color), 0.975);*/
 	z-index: 2;
 }
@@ -43,8 +43,8 @@
 }
 
 .top-nav-logo {
-	width: 18px;
-	height: 18px;
+	width: var(--orthodox-acc-size);
+	height: var(--orthodox-acc-size);
 }
 
 .top-nav-branding-wrapper a:not(:hover):not(:active) rect#logo-fg {
@@ -65,7 +65,7 @@
 
 .top-nav-title {
 	display: inline;
-	margin-left: 10px;
+	margin-left: var(--orthodox-margin-half);
 }
 
 .top-nav-theme-toggle-wrapper {

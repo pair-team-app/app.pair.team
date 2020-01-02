@@ -41,7 +41,7 @@
 
 .component-menu-content-wrapper form {
 	width: 100%;
-	padding: 20px;
+	padding: var(--orthodox-padding-base);
 }
 
 .component-menu-content-wrapper button {
@@ -51,20 +51,24 @@
 .component-menu-content-wrapper textarea {
 	width: 228px;
 	height: 128px;
-	margin: 5px 5px 25px 5px;
-	padding: 10px;
+	margin: var(--orthodox-margin-mini) var(--orthodox-margin-mini) var(--orthodox-margin-base) var(--orthodox-margin-mini);
+	padding: var(--orthodox-padding-half);
 	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: 10px;
 	text-align: left;
 }
 
 .component-menu-item-wrapper > * {
-	padding: 15px 20px;
+	padding: var(--orthodox-padding-half) var(--orthodox-padding-base);
 	border-bottom: 1px solid rgba(var(--border-color), 1.0);
 }
 
 .component-menu-item-wrapper > *:first-child {
-	padding-top: 15px;
+	padding: var(--orthodox-padding-base);
+}
+
+.component-menu-item-wrapper > *:not(last-child) {
+	padding: var(--orthodox-padding-half) var(--orthodox-padding-base);
 }
 
 
@@ -99,8 +103,8 @@
 
 
 .component-menu-item-acc {
-	width: 18px;
-	height: 18px;
+	width: var(--orthodox-acc-size);
+	height: var(--orthodox-acc-size);
 	padding: 1px;
 	border: 1px solid rgba(var(--site-fg-color), 1.0);
 	border-radius: 50%;

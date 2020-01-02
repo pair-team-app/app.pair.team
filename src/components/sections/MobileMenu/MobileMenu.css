@@ -25,7 +25,7 @@
 
 .mobile-menu-header-open .mobile-menu-header-title {
 	color: var(--site-fg-color);
-	font-weight: 400;
+	font-weight: var(--orthodox-font-weight);
 }
 
 .mobile-menu-header-title {
@@ -39,7 +39,7 @@
 	position: absolute;
 	top: 44px;
 	right: 0;
-	padding: 4px 20px;
+	padding: 4px var(--orthodox-padding-base);
 	text-align: right;
 	background-color: rgba(var(--site-bg-color), 0.975);
 	/*border-top: 1px solid rgba(var(--border-color), 0.975);*/
@@ -51,7 +51,7 @@
 
 
 .mobile-menu-item {
-	margin-bottom: 10px;
+	margin-bottom: var(--orthodox-margin-half);
 }
 
 .mobile-menu-item:last-child {

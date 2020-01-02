@@ -1,7 +1,7 @@
 
 .login-modal {
 	max-width: 316px;
-	padding: 10px 0 5px 0;
+	padding: var(--orthodox-padding-half) 0 5px 0;
 }
 
 .login-modal-header-wrapper {
@@ -10,7 +10,7 @@
 
 .login-modal-header-logo {
 	width: 100px;
-	margin-bottom: 20px;
+	margin-bottom: var(--orthodox-margin-base);
 }
 
 .login-modal-content-wrapper {

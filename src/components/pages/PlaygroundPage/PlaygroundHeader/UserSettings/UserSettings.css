@@ -1,7 +1,8 @@
 
 .user-settings {
 	position: relative;
-	margin-left: 10px;
+	/*margin-left: 10px;*/
+	margin-left: var(--orthodox-margin-half);
 	display: flex;
 	flex-flow: row nowrap;
 	align-items: center;
@@ -9,9 +10,9 @@
 
 .user-settings-avatar-wrapper {
 	position: relative;
-	width: 24px;
-	height: 24px;
-	margin-left: 10px;
+	width: var(--orthodox-ico-size);
+	height: var(--orthodox-ico-size);
+	margin-left: var(--orthodox-margin-half);
 	padding: 3px;
 	border: 1px solid rgba(var(--site-fg-color), 1.0);
 	border-radius: 50%;
@@ -43,7 +44,7 @@
 
 .user-settings-popover > * {
 	width: 100%;
-	padding: 14px 20px;
+	padding: var(--orthodox-padding-less) var(--orthodox-padding-base);
 	border-bottom: 1px solid rgba(var(--border-color), 1.0);
 	color: rgba(var(--link-color), 1.0);
 	transition: color 125ms ease-in;

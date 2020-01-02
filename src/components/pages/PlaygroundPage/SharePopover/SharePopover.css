@@ -1,12 +1,12 @@
 
 .share-popover {
 	width: 250px;
-	padding: 20px;
+	padding: var(--orthodox-padding-base);
 }
 
 .share-popover-url {
-	margin: 10px 20px 20px 20px;
-	padding-bottom: 10px;
+	margin: var(--orthodox-margin-half) var(--orthodox-margin-base) var(--orthodox-margin-base) var(--orthodox-margin-base);
+	padding-bottom: var(--orthodox-padding-half);
 	font-size: 12px;
 	text-align: center;
 	text-decoration: underline;
@@ -24,7 +24,7 @@
 
 .share-popover-form-wrapper form > * {
 	width: 100%;
-	margin-bottom: 20px;
+	margin-bottom: var(--orthodox-margin-base);
 }
 
 .share-popover-form-wrapper form > *:last-child {

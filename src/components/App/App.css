@@ -56,16 +56,16 @@
 
 
 .button-wrapper-col > *:not(:last-child) {
-	margin-right: 20px;
+	margin-right: var(--orthodox-margin-base);
 }
 
 .button-wrapper-row > *:not(:last-child) {
-	margin-bottom: 20px;
+	margin-bottom: var(--orthodox-margin-base);
 }
 
 
 .form-disclaimer {
-	margin-top: 20px;
+	margin-top: var(--orthodox-margin-base);
 	font-size: 12px;
 	line-height: 18px;
 }
@@ -92,7 +92,7 @@
 .form-accessory-txt {
 	position: absolute;
 	top: 50%;
-	right: 10px;
+	right: var(--orthodox-margin-half);
 	transform: translateY(-50%);
 	color: rgba(var(--link-color), 1.0);
 	font-size: 12px;

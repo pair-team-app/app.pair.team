@@ -3,5 +3,5 @@
 }
 
 .register-form form > *:not(:last-child) {
-	margin-bottom: 20px;
+	margin-bottom: var(--orthodox-margin-base);
 }

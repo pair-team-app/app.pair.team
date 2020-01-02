@@ -4,7 +4,7 @@
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	padding: 20px;
+	padding: var(--orthodox-padding-base);
 	opacity: 1;
 	background-color: rgba(var(--site-bg-color), 1.0);
 	border: 1px solid rgba(var(--border-color), 1.0);
@@ -22,7 +22,7 @@
 }
 
 .cookies-overlay-title {
-	margin-bottom: 20px;
+	margin-bottom: var(--orthodox-margin-base);
 }
 
 .cookies-overlay-content a {
@@ -38,7 +38,7 @@
 }
 
 .cookies-overlay-button-wrapper {
-	margin-top: 20px;
+	margin-top: var(--orthodox-margin-base);
 	text-align: center;
 }
 

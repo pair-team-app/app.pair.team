@@ -1,6 +1,6 @@
 
 .pricing-page {
-	padding: 60px 20%;
+	padding: var(--orthodox-padding-page) 20%;
 }
 
 .pricing-page-text p {
@@ -8,7 +8,7 @@
 }
 
 .pricing-page-section-wrapper {
-	line-height: 25px;
+	line-height: var(--orthodox-padding-more);
 	text-align: justify;
 }
 
@@ -31,6 +31,6 @@
 
 @media screen and (max-width: 800px) {
 	.pricing-page {
-		padding: 60px 30px;
+		padding: var(--orthodox-padding-page) var(--orthodox-padding-page-mobile);
 	}
 }

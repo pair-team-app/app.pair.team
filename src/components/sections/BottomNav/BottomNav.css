@@ -3,7 +3,7 @@
 	position: fixed;
 	bottom: 0;
 	width: 100%;
-	padding: 10px 30px;
+	padding: var(--orthodox-padding-half) var(--orthodox-padding-base);
 	z-index: 2;
 }
 
@@ -14,8 +14,8 @@
 
 @media screen and (max-width: 800px) {
 	.bottom-nav {
-		padding-bottom: 18px;
-		padding-right: 20px;
+		padding-bottom: var(--orthodox-padding-base);
+		padding-right: var(--orthodox-padding-base);
 	}
 
 	.bottom-nav-button-wrapper {
