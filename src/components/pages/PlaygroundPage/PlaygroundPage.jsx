@@ -14,7 +14,14 @@ import PlaygroundHeader, { BreadcrumbTypes } from './PlaygroundHeader';
 import { SettingsMenuItemTypes } from './PlaygroundHeader/UserSettings';
 import PlaygroundFooter from './PlaygroundFooter';
 import PlaygroundNavPanel from './PlaygroundNavPanel';
-import { typeGroupByID, commentByID, componentByID, componentFromComment } from './utils/lookup';
+import {
+  typeGroupByID,
+  commentByID,
+  componentByID,
+  componentFromComment,
+  playgroundByID,
+  typeGroupByKey
+} from './utils/lookup';
 import { reformComment, reformComponent } from './utils/reform';
 import { Modals, API_ENDPT_URL } from '../../../consts/uris';
 import { setPlayground, setTypeGroup, setComponent, setComment } from '../../../redux/actions';
@@ -45,9 +52,10 @@ class PlaygroundPage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
-		const { profile, componentTypes, playground, match } = this.props;
+		const { profile, componentTypes, playground, match, location } = this.props;
 		const { fetching, accessibility } = this.state;
 
+		const { pathname } = location;
 		const { teamSlug, projectSlug, buildID, playgroundID, componentsSlug, componentID, commentID } = match.params;
 // 		console.log('params', match.params);
 
@@ -77,10 +85,10 @@ class PlaygroundPage extends Component {
 				this.props.onModal(Modals.NO_ACCESS);
 			}
 
-			let url = window.location.pathname;
+			let url = this.props.location.pathname;
 
 			if (teamSlug && teamSlug !== playground.team.title) {
-				url = window.location.pathname.replace(teamSlug, playground.team.title);
+				url = this.props.location.pathname.replace(teamSlug, playground.team.title);
 			}
 
 			if (projectSlug !== Strings.slugifyURI(playground.title)) {
@@ -145,56 +153,91 @@ class PlaygroundPage extends Component {
 				this.props.setComment(comment);
 			}
 
-			if (window.location.pathname !== url) {
-				this.props.history.push(url);
+			if (this.props.location.pathname !== url) {
+				this.props.history.push(url, 'PLAYGROUND_LINK');
 			}
 
-			if (window.location.pathname.includes('/accessibility')) {
+			if (this.props.location.pathname.includes('/accessibility')) {
 				this.setState({ accessibility : true });
 			}
-		}
 
-
-		// switching out
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, playgroundID, playground, prevProps.playground);
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : { ...this.props} });
-
-		if (playground && prevProps.playground) {
+			// swapped out url
+		} else if (playground && prevProps.playground) {
 			const { typeGroup, component, comment } = this.props;
-			let url = window.location.pathname;
+//       const { prev, curr } = pathname;
+
+			let url = this.props.location.pathname;
 
 
-			if (playgroundID << 0 !== playground.id) {
-				url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`;
-			}
+      console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, state : this.state, typeGroup, component, prevTypeGroup : prevProps.typeGroup, prevComponent : prevProps.component, curr : pathname, prev : prevProps.location.pathname });
+      if (pathname !== prevProps.location.pathname) {
+        if (this.state.playgrounds.length > 0 && playgroundID && playgroundID !== prevProps.match.params.playgroundID) {
+          this.props.setPlayground(playgroundByID(this.state.playgrounds, playgroundID << 0));
 
-			if (typeGroup && typeGroup !== prevProps.typeGroup) {
-				url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}${(url.includes('/accessibility')) ? '/accessibility' : ''}`;
-			}
+        } else if (!playgroundID) {
+          this.props.setPlayground(null);
+        }
 
-			if (component && component !== prevProps.component) {
-				url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(url.includes('/accessibility')) ? '/accessibility' : ''}${(url.endsWith('/comments')) ? '/comments' : ''}`;
-			}
+        if (this.state.typeGroups && playgroundID && componentsSlug && componentsSlug !== prevProps.match.params.componentsSlug) {
+          this.props.setTypeGroup(typeGroupByKey(this.state.typeGroups, componentsSlug));
 
-			if (comment && comment !== prevProps.comment) {
-				url = (prevProps.comment) ? url.replace(prevProps.comment.id, comment.id) : `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(url.includes('/accessibility')) ? '/accessibility' : ''}/comments/${comment.id}`;
-			}
+        } else if (!componentsSlug) {
+          this.props.setTypeGroup(null);
+        }
 
-			if (component && !comment && prevProps.comment) {
-        url = (prevProps.history.location.pathname.includes('/comments/')) ? url.replace(/\/comments\/?.*$/, '') : url.replace(/(\/comments)\/?(.*)$/, '$1');
-//         url = (!prevProps.history.location.pathname.includes('/comments/')) ? url.replace(/\/comments\/?.*$/, '') : url.replace(/(\/comments)\/?(.*)$/, '$1');
-			}
 
-			if (accessibility && !prevState.accessibility && !window.location.pathname.includes('/accessibility')) {
-				url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}${(component) ? `/${component.id}` : ''}/accessibility`;
-			}
+        if (this.state.playgrounds.length > 0 && playgroundID && componentsSlug && componentID !== prevProps.match.params.componentID) {
+          this.props.setComponent(componentByID(playgroundByID(this.state.playgrounds, playgroundID << 0).components, componentID << 0));
 
-			if (!accessibility && prevState.accessibility && window.location.pathname.includes('/accessibility')) {
-				url = url.replace(/\/accessibility.*$/, '');
-			}
+        } else if (!componentID) {
+          this.props.setComponent(null);
+        }
 
-			if (window.location.pathname !== url) {
-				this.props.history.push(url);
+        if (this.state.playgrounds.length > 0 && playgroundID && componentsSlug && componentID && pathname.includes('/comments') && commentID !== prevProps.match.params.commentID) {
+          this.props.setComment(commentByID(playgroundByID(this.state.playgrounds, playgroundID << 0).components, componentID << 0).comments, commentID << 0);
+
+        } else if (!pathname.includes('/comments') || !commentID) {
+          this.props.setComment(null);
+
+        } else if (pathname.includes('/comments')) {
+
+        }
+
+				this.setState({ accessibility : pathname.includes('/accessibility') });
+
+      } else {
+        if (playgroundID << 0 !== playground.id) {
+          url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`;
+        }
+
+        if (typeGroup && typeGroup !== prevProps.typeGroup) {
+          url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}${(url.includes('/accessibility')) ? '/accessibility' : ''}`;
+        }
+
+        if (component && component !== prevProps.component) {
+          url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(url.includes('/accessibility')) ? '/accessibility' : ''}${(url.endsWith('/comments')) ? '/comments' : ''}`;
+
+        }
+
+        if (comment && comment !== prevProps.comment) {
+          url = (prevProps.comment) ? url.replace(prevProps.comment.id, comment.id) : `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}/${component.id}${(url.includes('/accessibility')) ? '/accessibility' : ''}/comments/${comment.id}`;
+        }
+
+        if (component && !comment && prevProps.comment) {
+          url = (prevProps.history.location.pathname.includes('/comments/')) ? url.replace(/\/comments\/?.*$/, '') : url.replace(/(\/comments)\/?(.*)$/, '$1');
+        }
+
+        if (accessibility && !prevState.accessibility && !this.props.location.pathname.includes('/accessibility')) {
+          url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}${(component) ? `/${component.id}` : ''}/accessibility`;
+        }
+
+        if (!accessibility && prevState.accessibility && this.props.location.pathname.includes('/accessibility')) {
+          url = url.replace(/\/accessibility.*$/, '');
+        }
+
+        if (this.props.location.pathname !== url) {
+          this.props.history.push(url, 'PLAYGROUND_LINK');
+        }
 			}
 		}
 	}
@@ -237,18 +280,18 @@ class PlaygroundPage extends Component {
 
     } else if (type === BreadcrumbTypes.TYPE_GROUP) {
     	const { componentsSlug } = this.props.match.params;
-      this.props.history.push(window.location.pathname.replace(new RegExp(`(/${componentsSlug}).*$`), '$1'));
+      this.props.history.push(this.props.location.pathname.replace(new RegExp(`(/${componentsSlug}).*$`), '$1'), 'PLAYGROUND_LINK');
       this.props.setComponent(null);
       this.props.setComment(null);
 
     } else if (type === BreadcrumbTypes.COMPONENT) {
       this.props.setComment(null);
-      this.props.history.push(window.location.pathname.replace(/\/comments.*$/, ''));
+      this.props.history.push(this.props.location.pathname.replace(/\/comments.*$/, ''), 'PLAYGROUND_LINK');
 
     } else if (type === BreadcrumbTypes.ACCESSIBILITY) {
     } else if (type === BreadcrumbTypes.COMMENTS) {
-      if (/\/comments\/.*$/.test(window.location.pathname)) {
-        this.props.history.push(window.location.pathname.replace(/(\/comments)\/?(.*)$/, '$1'));
+      if (/\/comments\/.*$/.test(this.props.location.pathname)) {
+        this.props.history.push(this.props.location.pathname.replace(/(\/comments)\/?(.*)$/, '$1'), 'PLAYGROUND_LINK');
         this.props.setComment(null);
       }
 
@@ -287,12 +330,12 @@ class PlaygroundPage extends Component {
 
     this.props.setComponent(component);
 		if (type === 'comments') {
-			if (/\/comments.*$/.test(window.location.pathname)) {
+			if (/\/comments.*$/.test(this.props.location.pathname)) {
 				this.props.setComment(null);
-				this.props.history.push(window.location.pathname.replace(/\/comments.*$/, ''));
+				this.props.history.push(this.props.location.pathname.replace(/\/comments.*$/, ''), 'PLAYGROUND_LINK');
 
 			} else {
-				this.props.history.push(`${window.location.pathname}/comments`);
+				this.props.history.push(`${this.props.location.pathname}/comments`, 'PLAYGROUND_LINK');
 			}
 
 		} else if (type === 'share') {
@@ -434,7 +477,7 @@ class PlaygroundPage extends Component {
 
 				}, ()=> {
 					if (!this.props.match.params.playgroundID) {
-						this.props.history.push(`${this.props.location.pathname}/${playground.id}`);
+						this.props.history.push(`${this.props.location.pathname}/${playground.id}`, 'PLAYGROUND_LINK');
 					}
 				});
 
@@ -457,7 +500,7 @@ class PlaygroundPage extends Component {
 
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { profile, playground, typeGroup, component } = this.props;
 		const { params } = this.props.match;
@@ -536,7 +579,8 @@ const mapStateToProps = (state, ownProps)=> {
 		componentTypes : state.componentTypes,
 		eventGroups    : state.eventGroups,
 		team           : state.teams[0],
-		products       : state.products
+		products       : state.products,
+		pathname       : state.pathname
 	});
 };
 

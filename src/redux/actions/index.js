@@ -21,7 +21,8 @@ import {
 	SET_TYPE_GROUP,
 	SET_COMPONENT,
 	SET_COMMENT,
-	TOGGLE_THEME
+	TOGGLE_THEME,
+	UPD_PATHNAME
 } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
@@ -247,6 +248,13 @@ export function toggleTheme(payload=null) {
   logFormat('toggleTheme()', payload);
   return ({ payload,
     type : TOGGLE_THEME
+  });
+}
+
+export function updatePathname(payload=null) {
+  logFormat('updatePathname()', payload);
+  return ({ payload,
+    type : UPD_PATHNAME
   });
 }
 

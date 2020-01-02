@@ -8,6 +8,7 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
+import Routes from '../Routes';
 import AlertDialog from '../overlays/AlertDialog';
 import BlockingDialog from '../overlays/BlockingDialog';
 import ConfirmDialog from '../overlays/ConfirmDialog';
@@ -37,6 +38,7 @@ import {
 	fetchTeamLookup,
 	fetchUserProfile,
 	updateMouseCoords,
+	updatePathname,
 	updateUserProfile
 } from '../../redux/actions';
 // import { getRoutePaths } from '../../utils/funcs';
@@ -74,6 +76,7 @@ class App extends Component {
 
 	componentDidMount() {
 // 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+		console.log('%s.componentDidMount()', this.constructor.name, this.props.location);
 
 		trackEvent('site', 'load');
 		trackPageview();
@@ -87,14 +90,21 @@ class App extends Component {
 
 		window.addEventListener('mousemove', this.handleMouseMove);
 		window.onpopstate = (event)=> {
-			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', event);
+			event.preventDefault();
+			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
 			//this.props.updateDeeplink(idsFromPath());
+
+// 			this.props.updatePathname({
+// 				prev : this.prevProps.location.pathname,
+// 				curr : this.props.location.pathname
+// 			});
 		};
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot);
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
+		console.log('%s.componentDidUpdate()', this.constructor.name, { location : this.props.location });
 
 		const { profile, team } = this.props;
 		const { pathname } = this.props.location;
@@ -103,7 +113,19 @@ class App extends Component {
 // 		console.log('|:|:|:|:|:|:|:|:|:|:|:|', prevProps.location.pathname, pathname);
 		if (prevProps.location.pathname !== pathname) {
 			trackPageview();
+
+			if (pathname !== prevProps.location.pathname) {
+        this.props.updatePathname({
+          prev : prevProps.location.pathname,
+          curr : this.props.location.pathname
+        });
+			}
+
 // 			console.log('|:|:|:|:|:|:|:|:|:|:|:|', getRoutePaths(pathname));
+		}
+
+		if (prevProps.location.state !== this.props.location.state) {
+      console.log('|:|:|:|:|:|:|:|:|:|:|:|', { prevProps : prevProps.location, props : this.props.location });
 		}
 
 
@@ -164,7 +186,7 @@ class App extends Component {
 
 			trackEvent('user', 'delete-account');
 			this.props.updateUserProfile(null);
-			this.props.history.push(Pages.HOME);
+			this.props.history.push(Pages.HOME, 'DISABLE_ACCT');
 
 		}).catch((error)=> {
 		});
@@ -350,17 +372,18 @@ class App extends Component {
   	return (<div className={`site-wrapper${(darkThemed) ? ' site-wrapper-dark' : ''}`}>
 		  {(!window.location.pathname.startsWith(Pages.PLAYGROUND)) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
 	    <div className={`page-wrapper${(window.location.pathname.startsWith(Pages.PLAYGROUND)) ? ' playground-page-wrapper' : ''}`}>
-		    <Switch>
-			    <Route exact path={Pages.HOME} render={()=> <HomePage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} onSignup={()=> null} />} />
-			    <Route exact path={Pages.DOCS} render={()=> <DocsPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
-			    <Route exact path={Pages.FEATURES} render={()=> <FeaturesPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
-			    <Route exact path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`} render={(props)=> <PlaygroundPage { ...props } onLogout={this.handleLogout} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
-			    <Route exact path={Pages.PRICING} render={()=> <PricingPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
-			    <Route exact path={`/:page(${Pages.LEGAL.slice(1)}|${Pages.PRIVACY.slice(1)})`} component={PrivacyPage} />
-			    <Route exact path={Pages.TERMS} component={TermsPage} />
+		    {/*<Switch>*/}
+		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} />
+			    {/*<Route exact path={Pages.HOME} render={()=> <HomePage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} onSignup={()=> null} />} />*/}
+			    {/*<Route exact path={Pages.DOCS} render={()=> <DocsPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />*/}
+			    {/*<Route exact path={Pages.FEATURES} render={()=> <FeaturesPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />*/}
+			    {/*<Route exact path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`} render={(props)=> <PlaygroundPage { ...props } onLogout={this.handleLogout} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />*/}
+			    {/*<Route exact path={Pages.PRICING} render={()=> <PricingPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />*/}
+			    {/*<Route exact path={`/:page(${Pages.LEGAL.slice(1)}|${Pages.PRIVACY.slice(1)})`} component={PrivacyPage} />*/}
+			    {/*<Route exact path={Pages.TERMS} component={TermsPage} />*/}
 
-			    <Route path={Pages.WILDCARD}><Status404Page /></Route>
-		    </Switch>
+			    {/*<Route path={Pages.WILDCARD}><Status404Page /></Route>*/}
+		    {/*</Switch>*/}
 	    </div>
 		  {(!window.location.pathname.startsWith(Pages.PLAYGROUND)) && (<BottomNav />)}
 
@@ -439,7 +462,8 @@ const mapStateToProps = (state, ownProps)=> {
     darkThemed : state.darkThemed,
 		profile    : state.userProfile,
 		products   : state.products,
-		team       : state.teams[0]
+		team       : state.teams[0],
+    pathname   : state.pathname
 	});
 };
 
@@ -447,6 +471,7 @@ const mapDispatchToProps = (dispatch)=> {
 	return ({
 		fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
 		fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
+		updatePathname    : (payload)=> dispatch(updatePathname(payload)),
 		updateMouseCoords : (payload)=> dispatch(updateMouseCoords(payload)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});

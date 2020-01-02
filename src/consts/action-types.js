@@ -25,6 +25,7 @@ export const SET_TYPE_GROUP = 'SET_TYPE_GROUP';
 export const SET_COMPONENT = 'SET_COMPONENT';
 export const SET_COMMENT = 'SET_COMMENT';
 export const SET_PRODUCTS = 'SET_PRODUCTS';
+export const UPD_PATHNAME = 'UPD_PATHNAME';
 export const TOGGLE_THEME = 'TOGGLE_THEME';
 
 export const UPDATE_MOUSE_COORDS = 'UPDATE_MOUSE_COORDS';

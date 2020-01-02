@@ -22,6 +22,7 @@ import {
 	SET_TYPE_GROUP,
 	SET_COMPONENT,
 	SET_COMMENT,
+	UPD_PATHNAME,
 	TOGGLE_THEME
 } from '../../consts/action-types';
 // import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
@@ -37,6 +38,10 @@ const initialState = {
 	comment        : null,
 	products       : null,
 	darkThemed     : false,
+	pathname       : {
+		prev : null,
+		curr : null
+	},
 	deeplink       : {
 		teamID       : 0,
 		buildID      : 0,
@@ -220,6 +225,11 @@ function rootReducer(state=initialState, action) {
 		case TOGGLE_THEME:
       return (Object.assign({}, state, {
         darkThemed : (typeof action.payload === 'boolean') ? action.payload : !state.darkThemed
+      }));
+
+		case UPD_PATHNAME:
+      return (Object.assign({}, state, {
+        pathname : action.payload
       }));
 	}
 }
