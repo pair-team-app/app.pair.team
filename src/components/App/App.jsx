@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Browsers, DateTimes } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import Routes from '../Routes';
 import AlertDialog from '../overlays/AlertDialog';
@@ -20,14 +20,6 @@ import RegisterModal from '../overlays/RegisterModal';
 import StripeModal from '../overlays/StripeModal';
 import TopNav from '../sections/TopNav';
 import BottomNav from '../sections/BottomNav';
-import HomePage from '../pages/HomePage';
-import DocsPage from '../pages/DocsPage';
-import FeaturesPage from '../pages/FeaturesPage';
-import PlaygroundPage from '../pages/PlaygroundPage';
-import PricingPage from '../pages/PricingPage';
-import PrivacyPage from '../pages/PrivacyPage';
-import Status404Page from '../pages/Status404Page';
-import TermsPage from '../pages/TermsPage';
 
 import {
 	Modals,
@@ -41,7 +33,6 @@ import {
 	updatePathname,
 	updateUserProfile
 } from '../../redux/actions';
-// import { getRoutePaths } from '../../utils/funcs';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 
@@ -83,8 +74,8 @@ class App extends Component {
 
 // 		console.log('[:][:][:][:][:][:][:][:][:][:]');
 
-		const { profile } = this.props;
-		if (!profile && window.location.pathname.startsWith(Pages.PLAYGROUND)) {
+		const { profile, location } = this.props;
+		if (!profile && location.pathname.startsWith(Pages.PLAYGROUND)) {
 			this.onToggleModal(Modals.LOGIN);
 		}
 
@@ -92,48 +83,35 @@ class App extends Component {
 		window.onpopstate = (event)=> {
 			event.preventDefault();
 			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
-			//this.props.updateDeeplink(idsFromPath());
-
-// 			this.props.updatePathname({
-// 				prev : this.prevProps.location.pathname,
-// 				curr : this.props.location.pathname
-// 			});
 		};
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot);
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
-		console.log('%s.componentDidUpdate()', this.constructor.name, { location : this.props.location });
 
 		const { profile, team } = this.props;
 		const { pathname } = this.props.location;
 		const { modals } = this.state;
 
 // 		console.log('|:|:|:|:|:|:|:|:|:|:|:|', prevProps.location.pathname, pathname);
+//     console.log('|:|:|:|:|:|:|:|:|:|:|:|', { prevPathname : prevProps.location.pathname, currPathname : pathname });
 		if (prevProps.location.pathname !== pathname) {
 			trackPageview();
 
 			if (pathname !== prevProps.location.pathname) {
         this.props.updatePathname({
           prev : prevProps.location.pathname,
-          curr : this.props.location.pathname
+          curr : pathname
         });
 			}
 
-// 			console.log('|:|:|:|:|:|:|:|:|:|:|:|', getRoutePaths(pathname));
 		}
-
-		if (prevProps.location.state !== this.props.location.state) {
-      console.log('|:|:|:|:|:|:|:|:|:|:|:|', { prevProps : prevProps.location, props : this.props.location });
-		}
-
 
 		if (profile && !prevProps.profile) {
 			this.onToggleModal(Modals.LOGIN, false);
 			this.props.fetchTeamLookup({ userID : profile.id });
 		}
-
 
 		if (team && team !== prevProps.team) {
 			const modal = ((team.members.length > 10 && team.type === 'free') || (team.members.length > 50 && team.type !== 'enterprise'));
@@ -186,7 +164,7 @@ class App extends Component {
 
 			trackEvent('user', 'delete-account');
 			this.props.updateUserProfile(null);
-			this.props.history.push(Pages.HOME, 'DISABLE_ACCT');
+			this.props.history.push(Pages.HOME);
 
 		}).catch((error)=> {
 		});
@@ -254,7 +232,8 @@ class App extends Component {
 	handleMouseMove = (event)=> {
 // 		console.log('%s.handleMouseMove()', this.constructor.name, this.constructor.name, { x : event.pageX, y : event.pageY });
 
-		if (this.props.profile && window.location.pathname.startsWith(Pages.PLAYGROUND)) {
+		const { location } = this.props;
+		if (this.props.profile && location.pathname.startsWith(Pages.PLAYGROUND)) {
 			this.props.updateMouseCoords({
 				x : event.pageX,
 				y : event.pageY
@@ -366,12 +345,12 @@ class App extends Component {
 //   	console.log('%s.render()', this.constructor.name, this.props, this.state);
 //   	console.log('%s.render()', this.constructor.name, this.state.modals);
 
-		const { darkThemed, profile, team } = this.props;
+		const { darkThemed, profile, team, location } = this.props;
   	const { popup, modals } = this.state;
 
   	return (<div className={`site-wrapper${(darkThemed) ? ' site-wrapper-dark' : ''}`}>
-		  {(!window.location.pathname.startsWith(Pages.PLAYGROUND)) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
-	    <div className={`page-wrapper${(window.location.pathname.startsWith(Pages.PLAYGROUND)) ? ' playground-page-wrapper' : ''}`}>
+		  {(!location.pathname.startsWith(Pages.PLAYGROUND)) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
+	    <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND)) ? ' playground-page-wrapper' : ''}`}>
 		    {/*<Switch>*/}
 		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} />
 			    {/*<Route exact path={Pages.HOME} render={()=> <HomePage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} onSignup={()=> null} />} />*/}
@@ -385,7 +364,7 @@ class App extends Component {
 			    {/*<Route path={Pages.WILDCARD}><Status404Page /></Route>*/}
 		    {/*</Switch>*/}
 	    </div>
-		  {(!window.location.pathname.startsWith(Pages.PLAYGROUND)) && (<BottomNav />)}
+		  {(!location.pathname.startsWith(Pages.PLAYGROUND)) && (<BottomNav />)}
 
 		  <div className="modal-wrapper">
 			  {(modals.cookies) && (<CookiesOverlay

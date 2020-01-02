@@ -85,10 +85,10 @@ class PlaygroundPage extends Component {
 				this.props.onModal(Modals.NO_ACCESS);
 			}
 
-			let url = this.props.location.pathname;
+			let url = pathname;
 
 			if (teamSlug && teamSlug !== playground.team.title) {
-				url = this.props.location.pathname.replace(teamSlug, playground.team.title);
+				url = pathname.replace(teamSlug, playground.team.title);
 			}
 
 			if (projectSlug !== Strings.slugifyURI(playground.title)) {
@@ -153,24 +153,28 @@ class PlaygroundPage extends Component {
 				this.props.setComment(comment);
 			}
 
-			if (this.props.location.pathname !== url) {
-				this.props.history.push(url, 'PLAYGROUND_LINK');
+			if (pathname !== url) {
+				this.props.history.push(url);
 			}
 
-			if (this.props.location.pathname.includes('/accessibility')) {
+			if (pathname.includes('/accessibility')) {
 				this.setState({ accessibility : true });
 			}
 
 			// swapped out url
 		} else if (playground && prevProps.playground) {
 			const { typeGroup, component, comment } = this.props;
-//       const { prev, curr } = pathname;
-
-			let url = this.props.location.pathname;
+			let url = pathname;
 
 
-      console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, state : this.state, typeGroup, component, prevTypeGroup : prevProps.typeGroup, prevComponent : prevProps.component, curr : pathname, prev : prevProps.location.pathname });
-      if (pathname !== prevProps.location.pathname) {
+//       console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, state : this.state, typeGroup, component, prevTypeGroup : prevProps.typeGroup, prevComponent : prevProps.component, curr : pathname, prev : prevProps.location.pathname });
+      console.log('%s.componentDidUpdate()', this.constructor.name, { curr : pathname, prev : prevProps.location.pathname, storePathname : this.props.pathname });
+//       if (pathname !== prevProps.location.pathname) {
+
+			const prev = prevProps.location.pathname;
+			const curr = this.props.location.pathname;
+
+      if (curr !== prev) {
         if (this.state.playgrounds.length > 0 && playgroundID && playgroundID !== prevProps.match.params.playgroundID) {
           this.props.setPlayground(playgroundByID(this.state.playgrounds, playgroundID << 0));
 
@@ -193,17 +197,15 @@ class PlaygroundPage extends Component {
           this.props.setComponent(null);
         }
 
-        if (this.state.playgrounds.length > 0 && playgroundID && componentsSlug && componentID && pathname.includes('/comments') && commentID !== prevProps.match.params.commentID) {
-          this.props.setComment(commentByID(playgroundByID(this.state.playgrounds, playgroundID << 0).components, componentID << 0).comments, commentID << 0);
+//         if (this.state.playgrounds.length > 0 && playgroundID && componentsSlug && componentID && curr.includes('/comments') && commentID && commentID !== prevProps.match.params.commentID) {
+//         } else if (!curr.includes('/comments') || !commentID) {
+//           this.props.setComment(null);
+//
+//         } else if (curr.includes('/comments')) {
+//
+//         }
 
-        } else if (!pathname.includes('/comments') || !commentID) {
-          this.props.setComment(null);
-
-        } else if (pathname.includes('/comments')) {
-
-        }
-
-				this.setState({ accessibility : pathname.includes('/accessibility') });
+				this.setState({ accessibility : curr.includes('/accessibility') });
 
       } else {
         if (playgroundID << 0 !== playground.id) {
@@ -236,7 +238,7 @@ class PlaygroundPage extends Component {
         }
 
         if (this.props.location.pathname !== url) {
-          this.props.history.push(url, 'PLAYGROUND_LINK');
+          this.props.history.push(url);
         }
 			}
 		}
@@ -280,18 +282,18 @@ class PlaygroundPage extends Component {
 
     } else if (type === BreadcrumbTypes.TYPE_GROUP) {
     	const { componentsSlug } = this.props.match.params;
-      this.props.history.push(this.props.location.pathname.replace(new RegExp(`(/${componentsSlug}).*$`), '$1'), 'PLAYGROUND_LINK');
+      this.props.history.push(this.props.location.pathname.replace(new RegExp(`(/${componentsSlug}).*$`), '$1'));
       this.props.setComponent(null);
       this.props.setComment(null);
 
     } else if (type === BreadcrumbTypes.COMPONENT) {
       this.props.setComment(null);
-      this.props.history.push(this.props.location.pathname.replace(/\/comments.*$/, ''), 'PLAYGROUND_LINK');
+      this.props.history.push(this.props.location.pathname.replace(/\/comments.*$/, ''));
 
     } else if (type === BreadcrumbTypes.ACCESSIBILITY) {
     } else if (type === BreadcrumbTypes.COMMENTS) {
       if (/\/comments\/.*$/.test(this.props.location.pathname)) {
-        this.props.history.push(this.props.location.pathname.replace(/(\/comments)\/?(.*)$/, '$1'), 'PLAYGROUND_LINK');
+        this.props.history.push(this.props.location.pathname.replace(/(\/comments)\/?(.*)$/, '$1'));
         this.props.setComment(null);
       }
 
@@ -301,11 +303,11 @@ class PlaygroundPage extends Component {
 	};
 
 	handleCommentMarkerClick = ({ comment })=> {
- 		console.log('%s.handleCommentMarkerClick()', this.constructor.name, { comment });
 
 		const { playground } = this.props;
 		const component = componentFromComment(playground.components, comment);
 
+ 		console.log('%s.handleCommentMarkerClick()', this.constructor.name, { comment, components : playground.components, component });
 		if (component) {
 			this.props.setComponent(component);
 			this.props.setComment(comment);
@@ -332,10 +334,10 @@ class PlaygroundPage extends Component {
 		if (type === 'comments') {
 			if (/\/comments.*$/.test(this.props.location.pathname)) {
 				this.props.setComment(null);
-				this.props.history.push(this.props.location.pathname.replace(/\/comments.*$/, ''), 'PLAYGROUND_LINK');
+				this.props.history.push(this.props.location.pathname.replace(/\/comments.*$/, ''));
 
 			} else {
-				this.props.history.push(`${this.props.location.pathname}/comments`, 'PLAYGROUND_LINK');
+				this.props.history.push(`${this.props.location.pathname}/comments`);
 			}
 
 		} else if (type === 'share') {
@@ -351,7 +353,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleDeleteComment = (commentID)=> {
-// 		console.log('%s.handleDeleteComment()', this.constructor.name, commentID);
+		console.log('%s.handleDeleteComment()', this.constructor.name, commentID);
 		trackEvent('button', 'delete-comment');
 
 		axios.post(API_ENDPT_URL, {
@@ -380,7 +382,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleNavGroupItemClick = (typeGroup)=> {
-// 		console.log('%s.handleNavGroupItemClick()', this.constructor.name, typeGroup);
+		console.log('%s.handleNavGroupItemClick()', this.constructor.name, typeGroup);
 
 		typeGroup.selected = !typeGroup.selected;
 
@@ -390,7 +392,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleNavTypeItemClick = (typeGroup, typeItem)=> {
-// 		console.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
+		console.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
 
 		this.props.setComponent(typeItem);
 		this.props.setComment(null);
@@ -425,7 +427,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleTogglePlayground = ()=> {
-// 		console.log('%s.handleTogglePlayground()', this.constructor.name, this.state.playground.deviceID);
+		console.log('%s.handleTogglePlayground()', this.constructor.name, this.state.playground.deviceID);
 
 		trackEvent('button', (this.props.playground.deviceID === 1) ? 'mobile-toggle' : 'desktop-toggle');
 		const { playgrounds } = this.state;
@@ -477,7 +479,7 @@ class PlaygroundPage extends Component {
 
 				}, ()=> {
 					if (!this.props.match.params.playgroundID) {
-						this.props.history.push(`${this.props.location.pathname}/${playground.id}`, 'PLAYGROUND_LINK');
+						this.props.history.push(`${this.props.location.pathname}/${playground.id}`);
 					}
 				});
 
@@ -500,11 +502,11 @@ class PlaygroundPage extends Component {
 
 
 	render() {
-		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { profile, playground, typeGroup, component } = this.props;
-		const { params } = this.props.match;
 		const { playgrounds, cursor, accessibility, share } = this.state;
+		const { params } = this.props.match;
 
 		return (<BasePage className={`playground-page${(component && (window.location.href.includes('/comments'))) ? ' playground-page-comments' : ''}`}>
 			{(profile && playground && typeGroup) && (<PlaygroundNavPanel

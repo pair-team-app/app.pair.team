@@ -2,6 +2,7 @@
 import React from 'react';
 import './BasePage.css';
 
+import { withRouter } from 'react-router-dom';
 
 import PageNavLink from '../../iterables/PageNavLink';
 import navLinks from '../../../assets/json/nav-links';
@@ -31,4 +32,5 @@ const BottomNav = (props)=> {
 };
 
 
-export default (BasePage);
+export default BasePage;
+// export default withRouter(BasePage);

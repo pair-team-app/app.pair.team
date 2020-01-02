@@ -57,7 +57,7 @@ class PlaygroundHeader extends Component {
 
 	buildBreadcrumbs = ()=> {
 //     console.log('%s.buildBreadcrumbs()', this.constructor.name, this.props);
-    const { match, playground, typeGroup, component, comment, accessibility } = this.props;
+    const { match, playground, typeGroup, component, comment, accessibility, location } = this.props;
     const { teamSlug, buildID, projectSlug, playgroundID, componentsSlug, componentID, commentID } = match.params;
 
     let path = `${Pages.PLAYGROUND}/${teamSlug}/${projectSlug}/${buildID}/${playgroundID}`;
@@ -66,7 +66,7 @@ class PlaygroundHeader extends Component {
       (typeGroup && componentsSlug) ? { type : BreadcrumbTypes.TYPE_GROUP, title : Strings.capitalize(typeGroup.key), path : componentsSlug, payload : typeGroup } : null,
       (component && componentID) ? { type : BreadcrumbTypes.COMPONENT, title : component.title, path : componentID, payload : component } : null,
       (accessibility) ? { type : BreadcrumbTypes.ACCESSIBILITY, title : 'accessibility' , path : 'accessibility', payload : null } : null,
-      (window.location.pathname.includes('/comments')) ? { type : BreadcrumbTypes.COMMENTS, title : 'comments', path : 'comments', payload : null } : null,
+      (location.pathname.includes('/comments')) ? { type : BreadcrumbTypes.COMMENTS, title : 'comments', path : 'comments', payload : null } : null,
       (comment && commentID) ? { type : BreadcrumbTypes.COMMENT, title : commentID, path : commentID, payload : comment } : null
     ].filter((segment)=> (segment !== null));
 

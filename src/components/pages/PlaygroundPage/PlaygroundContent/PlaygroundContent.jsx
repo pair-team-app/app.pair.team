@@ -51,7 +51,7 @@ class PlaygroundContent extends Component {
 	};
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { typeGroup, playground, component, cursor, mouse, profile } = this.props;
 		const { position, popover } = this.state;
