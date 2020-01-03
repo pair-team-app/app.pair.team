@@ -20,9 +20,10 @@ import {
   componentByID,
   componentFromComment,
   playgroundByID,
-  typeGroupByKey
+  typeGroupByKey, firstComponentViewType
 } from './utils/lookup';
 import { reformComment, reformComponent } from './utils/reform';
+import { replaceComponent, replacePlayground } from './utils/replace';
 import { Modals, API_ENDPT_URL } from '../../../consts/uris';
 import { setPlayground, setTypeGroup, setComponent, setComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
@@ -68,7 +69,7 @@ class PlaygroundPage extends Component {
 		if (!prevProps.profile && profile) {
 			if (!playground && !fetching) {
 				if (buildID) {
-					this.onFetchBuildPlaygrounds(buildID, playgroundID << 0);
+					this.onFetchBuildPlaygrounds2(buildID, playgroundID << 0);
 				}
 			}
 		}
@@ -147,6 +148,10 @@ class PlaygroundPage extends Component {
 
 			if (component) {
 				this.props.setComponent(component);
+
+// 			} else {
+// 				component = firstComponentViewType(playground.components);
+//         this.props.setComponent(component)
 			}
 
 			if (comment) {
@@ -168,8 +173,7 @@ class PlaygroundPage extends Component {
 
 
 //       console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, state : this.state, typeGroup, component, prevTypeGroup : prevProps.typeGroup, prevComponent : prevProps.component, curr : pathname, prev : prevProps.location.pathname });
-      console.log('%s.componentDidUpdate()', this.constructor.name, { curr : pathname, prev : prevProps.location.pathname, storePathname : this.props.pathname });
-//       if (pathname !== prevProps.location.pathname) {
+//       console.log('%s.componentDidUpdate()', this.constructor.name, { curr : pathname, prev : prevProps.location.pathname, storePathname : this.props.pathname });
 
 			const prev = prevProps.location.pathname;
 			const curr = this.props.location.pathname;
@@ -259,7 +263,7 @@ class PlaygroundPage extends Component {
 			const comment = reformComment(response.data.comment);
 			console.log('ADD_COMMENT', response.data, comment);
 
-			component.comments = [ ...component.comments, comment].sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0));
+			component.comments = [ ...component.comments, comment].sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0));
 			const playground = { ...this.props.playground,
 				components : this.props.playground.components.map((item)=> ((item.id === component.id) ? component : item))
 			};
@@ -366,7 +370,7 @@ class PlaygroundPage extends Component {
 			console.log('UPDATE_COMMENT', response.data);
 
 			const component = { ...this.props.component,
-				comments : this.props.component.comments.filter(({ id }) => (id !== commentID)).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0))
+				comments : this.props.component.comments.filter(({ id }) => (id !== commentID)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0))
 			};
 
 			const playground = { ...this.props.playground,
@@ -385,6 +389,7 @@ class PlaygroundPage extends Component {
 		console.log('%s.handleNavGroupItemClick()', this.constructor.name, typeGroup);
 
 		typeGroup.selected = !typeGroup.selected;
+		this.onFetchTypeGroupComponents(typeGroup.id);
 
 		this.props.setTypeGroup(typeGroup);
 		this.props.setComponent(null);
@@ -439,57 +444,6 @@ class PlaygroundPage extends Component {
 		}
 	};
 
-	onFetchBuildPlaygrounds = (buildID, playgroundID=null)=> {
-		console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
-
-		this.setState({ fetching : true }, ()=> {
-			axios.post(API_ENDPT_URL, {
-				action  : 'BUILD_PLAYGROUNDS',
-				payload : {
-					build_id : buildID,
-				}
-			}).then(async(response) => {
-				console.log('BUILD_PLAYGROUNDS', response.data);
-
-				const playgrounds = await Promise.all(response.data.playgrounds.map(async(playground)=> {
-					const { device_id, team, components } = playground;
-					delete (playground['device_id']);
-
-					const { logo_url } = team;
-					delete (team['logo_url']);
-
-//					console.log('playground', { id : playground.id, device_id, components });
-					return ({ ...playground,
-						deviceID   : device_id,
-						team       : { ...team,
-							logoURL : logo_url,
-							members : team.members.map((member)=> ({ ...member,
-								id : member.id << 0
-							}))
-						},
-						components : await Promise.all(components.map(async(component)=> (await reformComponent(component))))
-					});
-				}));
-
-				const playground = ((playgroundID) ? playgrounds.find(({ id })=> (id === playgroundID)) : playgrounds.find(({ deviceID })=> (deviceID === 2)) || playgrounds[0]);
-				this.props.setPlayground(playground);
-
-				this.setState({ playgrounds, playground,
-					fetching : false
-
-				}, ()=> {
-					if (!this.props.match.params.playgroundID) {
-						this.props.history.push(`${this.props.location.pathname}/${playground.id}`);
-					}
-				});
-
-			}).catch((error)=> {
-			});
-		});
-	};
-
-
-
 	handleStripeModal = ()=> {
 		console.log('%s.handleStripeModal()', this.constructor.name);
 
@@ -499,9 +453,138 @@ class PlaygroundPage extends Component {
 	};
 
 
+  onFetchBuildPlaygrounds = (buildID, playgroundID=null)=> {
+    console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
+
+    this.setState({ fetching : true }, ()=> {
+      axios.post(API_ENDPT_URL, {
+        action  : 'BUILD_PLAYGROUNDS',
+        payload : {
+          build_id : buildID,
+        }
+      }).then(async(response) => {
+        console.log('BUILD_PLAYGROUNDS', response.data);
+
+        const playgrounds = await Promise.all(response.data.playgrounds.map(async(playground)=> {
+          const { device_id, team, components } = playground;
+          delete (playground['device_id']);
+
+          const { logo_url } = team;
+          delete (team['logo_url']);
+
+//					console.log('playground', { id : playground.id, device_id, components });
+          return ({ ...playground,
+            deviceID   : device_id,
+            team       : { ...team,
+              logoURL : logo_url,
+              members : team.members.map((member)=> ({ ...member,
+                id : member.id << 0
+              }))
+            },
+            components : await Promise.all(components.map(async(component)=> (await reformComponent(component))))
+          });
+        }));
+
+        const playground = ((playgroundID) ? playgrounds.find(({ id })=> (id === playgroundID)) : playgrounds.find(({ deviceID })=> (deviceID === 2)) || playgrounds[0]);
+        this.props.setPlayground(playground);
+
+        this.setState({ playgrounds, playground,
+          fetching : false
+
+        }, ()=> {
+          if (!this.props.match.params.playgroundID) {
+            this.props.history.push(`${this.props.location.pathname}/${playground.id}`);
+          }
+        });
+
+      }).catch((error)=> {
+      });
+    });
+  };
 
 
-	render() {
+  onFetchTypeGroupComponents = (typeGroupID)=> {
+    console.log('%s.onFetchTypeGroupComponents()', this.constructor.name, typeGroupID);
+
+    let { playground } = this.props;
+    axios.post('https://api.designengine.ai/v2/pairurl-2.php', {
+      action  : 'PLAYGROUND_TYPE_GROUP_COMPONENTS',
+      payload : {
+        playground_id : playground.id,
+				type_group_id : typeGroupID,
+				verbose       : true
+      }
+    }).then(async(response) => {
+      console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', response.data);
+
+      const components = (await Promise.all(Object.values(response.data.components).map(async(component)=> {
+        console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', 'component', { id : component.id, typeID : component.type_id, title : component.title });
+        return (await reformComponent(component));
+      })));
+
+      playground.components = playground.components.map((comp)=> ((components.find(({ id })=> ((id === comp.id))) || comp)));
+      console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', 'REFORM', playground.components);
+
+			this.props.setPlayground(replacePlayground(this.state.playgrounds, playground).shift());
+    }).catch((error)=> {
+    });
+	};
+
+
+
+  onFetchBuildPlaygrounds2 = (buildID, playgroundID=null)=> {
+    console.log('%s.onFetchBuildPlaygrounds2()', this.constructor.name, buildID, playgroundID);
+
+    this.setState({ fetching : true }, ()=> {
+      axios.post('https://api.designengine.ai/v2/pairurl-2.php', {
+        action  : 'BUILD_PLAYGROUNDS',
+        payload : {
+          build_id : buildID
+        }
+      }).then(async(response) => {
+        console.log('BUILD_PLAYGROUNDS', response.data);
+
+        const playgrounds = await Promise.all(response.data.playgrounds.map(async(playground)=> {
+          const { device_id, team, components } = playground;
+          delete (playground['device_id']);
+
+          const { logo_url } = team;
+          delete (team['logo_url']);
+
+//					console.log('playground', { id : playground.id, device_id, components });
+          return ({ ...playground,
+            deviceID   : device_id,
+            team       : { ...team,
+              logoURL : logo_url,
+              members : team.members.map((member)=> ({ ...member,
+                id : member.id << 0
+              }))
+            },
+            components : await Promise.all(components.map(async(component)=> (await reformComponent(component))))
+          });
+        }));
+
+        const playground = ((playgroundID) ? playgrounds.find(({ id })=> (id === playgroundID)) : playgrounds.find(({ deviceID })=> (deviceID === 2)) || playgrounds[0]);
+        this.props.setPlayground(playground);
+
+        this.setState({ playgrounds, playground,
+          fetching : false
+
+        }, ()=> {
+          if (!this.props.match.params.playgroundID) {
+            this.props.history.push(`${this.props.location.pathname}/${playground.id}`);
+          }
+        });
+
+      }).catch((error)=> {
+      });
+    });
+  };
+
+
+
+
+  render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { profile, playground, typeGroup, component } = this.props;

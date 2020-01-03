@@ -15,6 +15,10 @@ export const componentByNodeID = (components, nodeID)=> {
 	return (components.find((component)=> (component.nodeID === nodeID)));
 };
 
+export const firstComponentViewType = (components)=> {
+	return ([...components].filter(({ typeID })=> (typeID === 187)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i.id > ii.id) ? 1 : 0)).shift());
+};
+
 export const playgroundByID = (playgrounds, playgroundID)=> {
 	return (playgrounds.find(({ id })=> (id === (playgroundID << 0))));
 };

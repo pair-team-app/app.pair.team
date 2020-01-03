@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './PlaygroundContent.css';
 
+import { Images } from 'lang-js-utils';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
@@ -87,7 +88,7 @@ class PlaygroundContent extends Component {
 					};
 
 // 					const content = (!viewsContent) ? inlineStyles(comp.html, comp.styles) : `<img src="${Images.genPlaceholder(comp.meta.bounds, comp.title)}" class="playground-content-view-image" style="width:${comp.meta.bounds.width * 0.5}px; height:${comp.meta.bounds.height * 0.5}px;" alt="${comp.title}" />`;
-					const content = (!viewsContent) ? inlineStyles(comp.html, comp.styles) : `<img src="${comp.image}" class="playground-content-view-image" style="width:${comp.meta.bounds.width * scaleViews}px; height:${comp.meta.bounds.height * scaleViews}px;" alt="${comp.title}" />`;
+					const content = (comp.html && comp.styles) ? (!viewsContent) ? inlineStyles(comp.html, comp.styles) : `<img src="${comp.image}" class="playground-content-view-image" style="width:${comp.meta.bounds.width}px; height:${comp.meta.bounds.height}px;" alt="${comp.title}" />` : `<img src="${Images.genPlaceholder(comp.meta.bounds, comp.title)}" class="playground-content-view-image" style="width:${comp.meta.bounds.width}px; height:${comp.meta.bounds.height}px;" alt="${comp.title}" />`;
 					const comments = (popover && component.id === comp.id) ? [ ...comp.comments, reformComment({ position,
 						id      : 0,
 						type    : 'add',
