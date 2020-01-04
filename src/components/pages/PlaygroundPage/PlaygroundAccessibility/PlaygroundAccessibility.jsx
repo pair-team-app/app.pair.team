@@ -58,7 +58,7 @@ class PlaygroundAccessibility extends Component {
 		console.log('%s.buildFlatTree()', this.constructor.name);
 
 		const { component } = this.props;
-		if (component && component.accessibility.tree) {
+		if (component && component.accessibility && component.accessibility.tree) {
 			const expandedNodes = flattenTree(component.accessibility.tree);
 			if (expandedNodes !== this.state.expandedNodes) {
 				this.setState({ expandedNodes });
@@ -89,7 +89,7 @@ class PlaygroundAccessibility extends Component {
 
 		const { playground, component } = this.props;
 		const { expandedNodes } = this.state;
-		const { tree } = (component) ? component.accessibility : { tree : null };
+		const { tree } = (component && component.accessibility) ? component.accessibility : { tree : null };
 
 		return ((playground) && (<div className="playground-accessibility">
 			<div className="playground-accessibility-tree-item-wrapper">
@@ -104,7 +104,7 @@ const AccessibilityTreeItem = (props)=> {
 //	console.log('AccessibilityTreeItem()', props);
 
  	const { expanded, component, childNodes, treeNode } = props;
-	const { failed, aborted } = (component) ? component.accessibility.report : {};
+	const { failed, aborted } = (component && component.accessibility) ? component.accessibility.report : {};
 
 	let ariaAttribs = [];
 	if (component) {

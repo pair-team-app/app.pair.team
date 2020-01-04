@@ -146,8 +146,9 @@ function rootReducer(state=initialState, action) {
 		case SET_REFORMED_TYPE_GROUP:
       return (Object.assign({}, state, {
         playground : { ...state.playground,
-          components : [...state.playground.components, ...action.payload]
-        }
+          components : state.playground.components.concat(action.payload).reduce((acc, inc)=> ([...acc.filter(({ id })=> (id !== inc.id)), inc]), [])
+        },
+				component  : (action.payload.find(({ id })=> (state.component && id === state.component.id)) || state.component)
       }));
 
 		case UPDATE_MOUSE_COORDS:
