@@ -10,6 +10,7 @@ import {
 	SET_PLAYGROUND,
 	SET_PRODUCTS,
 	COMPONENT_TYPES_LOADED,
+	COMPONENT_GROUP_LOADED,
 	EVENT_GROUPS_LOADED,
 	SET_REDIRECT_URI,
 	UPDATE_DEEPLINK,
@@ -141,6 +142,15 @@ function rootReducer(state=initialState, action) {
 			return (Object.assign({}, state, {
 				invite : action.payload
 			}));
+
+		case COMPONENT_GROUP_LOADED:
+			return (Object.assign({}, state, {
+				playground : {
+          ...state.playground,
+          components : [...state.playground.components, ...action.payload]
+        }
+			}));
+
 
 		case UPDATE_MOUSE_COORDS:
 			return (Object.assign({}, state, {

@@ -163,6 +163,7 @@ class ProfileModal extends Component {
 					</div>
 				</div>
 				{(submitting) && (<div className="base-overlay-loader-wrapper">
+				{/*{(true) && (<div className="base-overlay-loader-wrapper">*/}
 					<div className="base-overlay-loader">
 						<FontAwesome name="circle-notch" className="base-overlay-loader-spinner" size="3x" spin />
 					</div>

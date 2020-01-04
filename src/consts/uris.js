@@ -6,6 +6,7 @@ export const Modals = {
 	DISABLE   : '/disable',
 	GITHUB    : '/github',
 	LOGIN     : '/login',
+	PROCESSING : '/processing',
 	NETWORK   : '/network',
 	NO_ACCESS : '/no-access',
 	PROFILE   : '/profile',
@@ -28,8 +29,8 @@ export const Pages = {
 
 export const CDN_HOSTNAME = 'http://cdn.pairurl.com';
 export const API_HOSTNAME = 'https://api.designengine.ai';
-export const API_ENDPT_URL = `${API_HOSTNAME}/${API_VER}/pairurl.php`;
-// export const API_ENDPT_URL = `${API_HOSTNAME}/${API_VER}/pairurl-2.php`;
+// export const API_ENDPT_URL = `${API_HOSTNAME}/${API_VER}/pairurl.php`;
+export const API_ENDPT_URL = `${API_HOSTNAME}/${API_VER}/pairurl-2.php`;
 
 export const TEAM_DEFAULT_AVATAR = `${CDN_HOSTNAME}/site-assets/avatars/team-default.png`;
 export const USER_DEFAULT_AVATAR = `${CDN_HOSTNAME}/site-assets/avatars/user-default.png`;

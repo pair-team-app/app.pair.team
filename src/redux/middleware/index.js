@@ -8,7 +8,8 @@ import {
 // 	UPDATE_DEEPLINK,
 
 	USER_PROFILE_CACHED,
-	USER_PROFILE_UPDATED
+	USER_PROFILE_UPDATED,
+	COMPONENT_GROUP_LOADED,
 } from '../../consts/action-types';
 
 // import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
@@ -28,7 +29,11 @@ export function onMiddleware({ dispatch }) {
 			logFormat(action);
 
 			const { type, payload } = action;
-			if (type === USER_PROFILE_CACHED) {
+			if (type === COMPONENT_GROUP_LOADED) {
+
+
+
+      } else if (type === USER_PROFILE_CACHED) {
 			} else if (type === USER_PROFILE_UPDATED) {
 				cookie.save('user_id', (payload) ? payload.id : '0', { path : '/', sameSite : false });
 

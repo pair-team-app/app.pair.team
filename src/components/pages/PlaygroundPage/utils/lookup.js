@@ -15,8 +15,12 @@ export const componentByNodeID = (components, nodeID)=> {
 	return (components.find((component)=> (component.nodeID === nodeID)));
 };
 
+export const componentsFromTypeGroup = (components, typeGroup)=> {
+  return ([...components].filter(({ typeID })=> (typeID === typeGroup.id)));
+};
+
 export const firstComponentViewType = (components)=> {
-	return ([...components].filter(({ typeID })=> (typeID === 187)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i.id > ii.id) ? 1 : 0)).shift());
+	return (componentsFromTypeGroup(components, { id : 187 }).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i.id > ii.id) ? 1 : 0)).shift());
 };
 
 export const playgroundByID = (playgrounds, playgroundID)=> {

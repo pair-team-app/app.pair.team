@@ -20,6 +20,7 @@
 }
 
 .share-popover-form-wrapper {
+	margin-bottom: var(--orthodox-margin-half);
 }
 
 .share-popover-form-wrapper form > * {
