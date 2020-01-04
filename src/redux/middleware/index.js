@@ -2,15 +2,12 @@
 import cookie from 'react-cookies';
 
 import {
-// 	APPEND_HOME_ARTBOARDS,
-// 	SET_TEAMS,
-// 	CONVERTED_DEEPLINK,
-// 	UPDATE_DEEPLINK,
-
+  SET_REFORMED_TYPE_GROUP,
 	USER_PROFILE_CACHED,
 	USER_PROFILE_UPDATED,
-	COMPONENT_GROUP_LOADED,
+	TYPE_GROUP_LOADED,
 } from '../../consts/action-types';
+import { reformComponent } from '../../components/pages/PlaygroundPage/utils/reform';
 
 // import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 
@@ -24,14 +21,26 @@ const logFormat = (action, meta='')=> {
 
 
 export function onMiddleware({ dispatch }) {
-	return (function(next) {
-		return (function(action) {
+	return ((next)=> {
+		return (async (action)=> {
 			logFormat(action);
 
 			const { type, payload } = action;
-			if (type === COMPONENT_GROUP_LOADED) {
+			if (type === TYPE_GROUP_LOADED) {
+				let { playground, components } = payload;
 
+        components = (await Promise.all(Object.values(components).map(async(component)=> {
+          console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', 'component', { id : component.id, typeID : component.type_id, title : component.title });
+          return (await reformComponent(component));
+        })));
 
+        playground.components = playground.components.map((comp)=> ((components.find(({ id })=> ((id === comp.id))) || comp)));
+        console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', 'REFORM', playground.components);
+
+        dispatch({
+          type    : SET_REFORMED_TYPE_GROUP,
+          payload : components
+        });
 
       } else if (type === USER_PROFILE_CACHED) {
 			} else if (type === USER_PROFILE_UPDATED) {

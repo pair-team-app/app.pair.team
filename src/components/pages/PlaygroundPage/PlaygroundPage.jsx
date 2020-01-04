@@ -11,7 +11,7 @@ import PlaygroundAccessibility from './PlaygroundAccessibility';
 import PlaygroundCommentsPanel from './PlaygroundCommentsPanel';
 import PlaygroundContent from './PlaygroundContent';
 import PlaygroundHeader, { BreadcrumbTypes } from './PlaygroundHeader';
-import PlaygroundProcessingOverlay from '../../overlays/PlaygroundProcessingOverlay';
+import PlaygroundProcessingOverlay from './PlaygroundProcessingOverlay';
 import { SettingsMenuItemTypes } from './PlaygroundHeader/UserSettings';
 import PlaygroundFooter from './PlaygroundFooter';
 import PlaygroundNavPanel from './PlaygroundNavPanel';
@@ -21,10 +21,9 @@ import {
   componentByID,
   componentFromComment,
   playgroundByID,
-  typeGroupByKey, firstComponentViewType, componentsFromTypeGroup
+  typeGroupByKey, componentsFromTypeGroup
 } from './utils/lookup';
 import { reformComment, reformComponent } from './utils/reform';
-import { replaceComponent, replacePlayground } from './utils/replace';
 import { Modals, API_ENDPT_URL } from '../../../consts/uris';
 import { fetchPlaygroundComponentGroup, setPlayground, setTypeGroup, setComponent, setComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';

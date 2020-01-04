@@ -18,18 +18,15 @@ import {
 	SET_TEAMS,
 	SET_PRODUCTS,
 	SET_PLAYGROUND,
-	SET_PLAYGROUND_TYPE_GROUPS,
 	SET_TYPE_GROUP,
 	SET_COMPONENT,
 	SET_COMMENT,
 	TOGGLE_THEME,
 	UPD_PATHNAME,
-	COMPONENT_GROUP_LOADED
+	TYPE_GROUP_LOADED
 } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
-import { reformComponent } from '../../components/pages/PlaygroundPage/utils/reform';
-import {replacePlayground} from "../../components/pages/PlaygroundPage/utils/replace";
 
 
 const logFormat = (action, payload=null, meta='')=> {
@@ -96,19 +93,10 @@ export function fetchPlaygroundComponentGroup(payload) {
     }).then(async 	(response) => {
       console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', response.data);
 
-
-      const components = (await Promise.all(Object.values(response.data.components).map(async(component)=> {
-        console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', 'component', { id : component.id, typeID : component.type_id, title : component.title });
-        return (await reformComponent(component));
-      })));
-
-      playground.components = playground.components.map((comp)=> ((components.find(({ id })=> ((id === comp.id))) || comp)));
-      console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', 'REFORM', playground.components);
-
-
+      const { components } = response.data;
       dispatch({
-        type    : COMPONENT_GROUP_LOADED,
-        payload : components
+        type    : TYPE_GROUP_LOADED,
+        payload : { playground, components }
       });
 
     }).catch((error)=> {
@@ -169,49 +157,6 @@ export function fetchUserProfile() {
 		});
 	});
 }
-
-/*
-export function fetchUserHistory(payload) {
-	logFormat('fetchUserHistory()', payload);
-
-	return ((dispatch)=> {
-		if (payload.profile) {
-			const { profile, loadOffset, loadAmt } = payload;
-
-			axios.post(API_ENDPT_URL, {
-				action  : 'PLAYGROUND_HISTORY',
-				payload : {
-					user_id : profile.id,
-					offset  : (loadOffset || 0),
-					length  : (loadAmt || -1)
-				}
-			}).then((response) => {
-				console.log('PLAYGROUND_HISTORY', response.data);
-
-				const artboards = response.data.artboards.filter((artboard)=> (artboard)).map((artboard)=> ({
-					id        : artboard.id << 0,
-					pageID    : artboard.page_id << 0,
-					uploadID  : artboard.upload_id << 0,
-					title     : artboard.page_title,
-					pageTitle : artboard.title,
-					filename  : artboard.filename,
-					creator   : artboard.creator,
-					meta      : JSON.parse(artboard.meta),
-					added     : artboard.added
-				}));
-
-				if (artboards.length > 0) {
-					dispatch({
-						type    : APPEND_HOME_ARTBOARDS,
-						payload : artboards
-					});
-				}
-			}).catch((error)=> {
-			});
-		}
-	});
-}
-*/
 
 export function fetchTeamLookup(payload) {
 	logFormat('fetchTeamLookup()', payload);

@@ -2,29 +2,29 @@
 import { Objects } from 'lang-js-utils';
 
 import {
-	ADD_FILE_UPLOAD,
-	APPEND_ARTBOARD_SLICES,
-	APPEND_HOME_ARTBOARDS,
-	SET_ARTBOARD_COMPONENT,
-	SET_ARTBOARD_GROUPS,
-	SET_PLAYGROUND,
-	SET_PRODUCTS,
-	COMPONENT_TYPES_LOADED,
-	COMPONENT_GROUP_LOADED,
-	EVENT_GROUPS_LOADED,
-	SET_REDIRECT_URI,
-	UPDATE_DEEPLINK,
-	UPDATE_MOUSE_COORDS,
-	USER_PROFILE_ERROR,
-	USER_PROFILE_LOADED,
-	USER_PROFILE_UPDATED,
-	SET_INVITE,
-	SET_TEAMS,
-	SET_TYPE_GROUP,
-	SET_COMPONENT,
-	SET_COMMENT,
-	UPD_PATHNAME,
-	TOGGLE_THEME
+  ADD_FILE_UPLOAD,
+  APPEND_ARTBOARD_SLICES,
+  APPEND_HOME_ARTBOARDS,
+  SET_ARTBOARD_COMPONENT,
+  SET_ARTBOARD_GROUPS,
+  SET_PLAYGROUND,
+  SET_PRODUCTS,
+  COMPONENT_TYPES_LOADED,
+  TYPE_GROUP_LOADED,
+  EVENT_GROUPS_LOADED,
+  SET_REDIRECT_URI,
+  UPDATE_DEEPLINK,
+  UPDATE_MOUSE_COORDS,
+  USER_PROFILE_ERROR,
+  USER_PROFILE_LOADED,
+  USER_PROFILE_UPDATED,
+  SET_INVITE,
+  SET_TEAMS,
+  SET_TYPE_GROUP,
+  SET_COMPONENT,
+  SET_COMMENT,
+  UPD_PATHNAME,
+  TOGGLE_THEME, SET_REFORMED_TYPE_GROUP
 } from '../../consts/action-types';
 // import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
@@ -143,14 +143,12 @@ function rootReducer(state=initialState, action) {
 				invite : action.payload
 			}));
 
-		case COMPONENT_GROUP_LOADED:
-			return (Object.assign({}, state, {
-				playground : {
-          ...state.playground,
+		case SET_REFORMED_TYPE_GROUP:
+      return (Object.assign({}, state, {
+        playground : { ...state.playground,
           components : [...state.playground.components, ...action.payload]
         }
-			}));
-
+      }));
 
 		case UPDATE_MOUSE_COORDS:
 			return (Object.assign({}, state, {

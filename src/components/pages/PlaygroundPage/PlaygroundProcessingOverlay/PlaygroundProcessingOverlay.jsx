@@ -2,14 +2,13 @@
 import React, { Component } from 'react';
 import './PlaygroundProcessingOverlay.css';
 
-import { Strings } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import BaseOverlay from '../BaseOverlay';
-import { componentsFromTypeGroup } from '../../pages/PlaygroundPage/utils/lookup';
-import { Modals } from '../../../consts/uris';
+import BaseOverlay from '../../../overlays/BaseOverlay';
+import { componentsFromTypeGroup } from '../utils/lookup';
+import { Modals } from '../../../../consts/uris';
 
 
 const UPD_PROPS = [
@@ -43,7 +42,7 @@ class PlaygroundProcessingOverlay extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props.profile, prevState, this.state, snapshot);
-		console.log('%s.componentDidUpdate()', this.constructor.name, JSON.stringify({ prevProps : Object.fromEntries(Object.entries(prevProps).filter(([key])=>UPD_PROPS.includes(key))), props : Object.fromEntries(Object.entries(this.props).filter(([key])=>UPD_PROPS.includes(key)))}, null, 2));
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : Object.fromEntries(Object.entries(prevProps).filter(([key])=>UPD_PROPS.includes(key))), props : Object.fromEntries(Object.entries(this.props).filter(([key])=>UPD_PROPS.includes(key))) });
 
     const { playground, typeGroup } = this.props;
     const { total } = this.state;
@@ -53,7 +52,7 @@ class PlaygroundProcessingOverlay extends Component {
 
       if (!prevProps.playground && !prevProps.typeGroup) {
         console.log(':::::::::: NO PREV :::::::::::::::');
-        if (this.state.total === -1) {
+        if (total === -1) {
           this.setState({ total : components.length });
         }
       }

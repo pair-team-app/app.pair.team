@@ -2,7 +2,7 @@
 import React from 'react';
 import './CommentsPanelItem.css';
 
-import BasePlaygroundComment from '../../BasePlaygroundComment';
+import BasePlaygroundComment from '../../PlaygroundBaseComment';
 
 
 function CommentsPanelItem(props) {

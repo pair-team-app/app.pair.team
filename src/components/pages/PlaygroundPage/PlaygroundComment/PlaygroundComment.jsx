@@ -5,7 +5,7 @@ import './PlaygroundComment.css';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
-import BasePlaygroundComment from '../BasePlaygroundComment';
+import BasePlaygroundComment from '../PlaygroundBaseComment';
 import BasePopover from '../../../overlays/BasePopover';
 import { ENTER_KEY } from '../../../../consts/key-codes';
 

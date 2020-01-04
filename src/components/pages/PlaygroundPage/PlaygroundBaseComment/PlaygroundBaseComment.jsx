@@ -1,6 +1,6 @@
 
 import React from 'react';
-import './BasePlaygroundComment.css';
+import './PlaygroundBaseComment.css';
 
 import { connect } from 'react-redux';
 
@@ -8,8 +8,8 @@ import { MOMENT_TIMESTAMP } from '../../../../consts/formats';
 import { USER_DEFAULT_AVATAR } from '../../../../consts/uris';
 
 
-function BasePlaygroundComment(props) {
-// 	console.log('BasePlaygroundComment()', props);
+function PlaygroundBaseComment(props) {
+// 	console.log('PlaygroundBaseComment()', props);
 
 	const { profile, ind, comment } = props;
 	const { id, type, author, content, timestamp } = comment;
@@ -39,4 +39,4 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
-export default connect(mapStateToProps)(BasePlaygroundComment);
+export default connect(mapStateToProps)(PlaygroundBaseComment);
