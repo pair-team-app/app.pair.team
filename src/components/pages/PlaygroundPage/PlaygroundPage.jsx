@@ -609,8 +609,8 @@ class PlaygroundPage extends Component {
 		const { params } = this.props.match;
 
 		return (<BasePage className={`playground-page${(component && (window.location.href.includes('/comments'))) ? ' playground-page-comments' : ''}`}>
-			{/*{(fetching) && (<PlaygroundProcessingOverlay outro={false} />)}*/}
-			<PlaygroundProcessingOverlay outro={false} />
+			{(fetching) && (<PlaygroundProcessingOverlay outro={false} />)}
+			{/*<PlaygroundProcessingOverlay outro={false} />*/}
 
 			{(profile && playground && typeGroup) && (<PlaygroundNavPanel
 				params={params}

@@ -32,7 +32,7 @@ class PopupNotification extends Component {
 
 		const { payload, onComplete } = this.props;
 		const { position } = Object.assign({}, { position : POPUP_POSITION_TOPMOST }, payload);
-		const { top } = Object.assign({}, { top : (((position === POPUP_POSITION_TOPMOST) << 0) * -64) }, payload.offset);
+// 		const { top } = Object.assign({}, { top : (((position === POPUP_POSITION_TOPMOST) << 0) * -64) }, payload.offset);
 		const { delay, duration } = Object.assign({}, {
 			delay    : ORTHODOX_DELAY,
 			duration : ORTHODOX_DURATION
@@ -42,11 +42,12 @@ class PopupNotification extends Component {
 
 		this.timeline = new TimelineMax();
 		this.timeline.addLabel(START_LBL, '0').from(this.wrapper, (INTRO_DURATION * 0.001), {
-			opacity    : ((position === POPUP_POSITION_TOPMOST) << 0) * 0.75,
-			y          : (position === POPUP_POSITION_TOPMOST) ? `${top - 38}px` : `${top + 7}px`,
-			height     : (position === POPUP_POSITION_TOPMOST) ? `38px` : '22px',
-			ease       : (position === POPUP_POSITION_TOPMOST) ? Back.easeOut : Circ.easeOut,
-			delay      : (delay * 0.001)
+      opacity : ((position === POPUP_POSITION_TOPMOST) << 0) * 0.75,
+// 			y          : (position === POPUP_POSITION_TOPMOST) ? `${top - 38}px` : `${top + 7}px`,
+      y       : '+=38px',
+			height  : (position === POPUP_POSITION_TOPMOST) ? `38px` : '22px',
+      ease    : (position === POPUP_POSITION_TOPMOST) ? Back.easeOut : Circ.easeOut,
+      delay   : (delay * 0.001)
 
 		}).to(this.wrapper, (OUTRO_DURATION * 0.001), {
 			opacity    : 0.0,
@@ -85,7 +86,8 @@ class PopupNotification extends Component {
 		const className = `popup-notification-content${(type === POPUP_TYPE_OK) ? ' popup-notification-content-ok' : (type === POPUP_TYPE_ERROR) ? ' popup-notification-content-error' : ' popup-notification-content-status'}`;
 		const wrapperStyle = {
 			width     : (offset.right !== 0) ? `calc(100% - ${offset.right}px)` : '100%',
-			transform : `translate(${offset.left}px, ${offset.top}px)`
+// 			transform : `translate(${offset.left}px, ${offset.top}px)`
+// 			transform : `translate(${offset.left}px, 38px)`
 		};
 
 		return (
