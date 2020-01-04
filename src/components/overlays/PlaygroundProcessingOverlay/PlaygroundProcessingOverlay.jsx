@@ -8,13 +8,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
 import { componentsFromTypeGroup } from '../../pages/PlaygroundPage/utils/lookup';
-import { API_ENDPT_URL, Modals } from '../../../consts/uris';
-import { trackEvent } from '../../../utils/tracking';
+import { Modals } from '../../../consts/uris';
 
 
-const PROPS = [
+const UPD_PROPS = [
   'playground',
   'typeGroup'
 ];
@@ -29,7 +27,7 @@ class PlaygroundProcessingOverlay extends Component {
       outro      : false,
       status     : null,
       processed  : 0,
-      total      : 0
+      total      : -1
     };
   }
 
@@ -45,65 +43,37 @@ class PlaygroundProcessingOverlay extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props.profile, prevState, this.state, snapshot);
-		console.log('%s.componentDidUpdate()//////////', this.constructor.name, JSON.stringify({ prevProps : Object.fromEntries(
-        Object.entries(prevProps).filter(
-          ([key, val])=>PROPS.includes(key)
-        )
-      ), props : Object.fromEntries(
-        Object.entries(this.props).filter(
-          ([key, val])=>PROPS.includes(key)
-        )
-      )}, null, 2));
-
-
-
-    const filtered = Object.fromEntries(
-      Object.entries(prevProps).filter(
-        ([key, val])=>PROPS.includes(key)
-      )
-    );
-
-
+		console.log('%s.componentDidUpdate()', this.constructor.name, JSON.stringify({ prevProps : Object.fromEntries(Object.entries(prevProps).filter(([key])=>UPD_PROPS.includes(key))), props : Object.fromEntries(Object.entries(this.props).filter(([key])=>UPD_PROPS.includes(key)))}, null, 2));
 
     const { playground, typeGroup } = this.props;
     const { total } = this.state;
 
     if (playground && typeGroup) {
+      const components = componentsFromTypeGroup(playground.components, typeGroup);
+
       if (!prevProps.playground && !prevProps.typeGroup) {
-        console.log(':::::::::: NO PREV :::::::::::::::')
+        console.log(':::::::::: NO PREV :::::::::::::::');
+        if (this.state.total === -1) {
+          this.setState({ total : components.length });
+        }
       }
 
-
-      const components = componentsFromTypeGroup(playground.components, typeGroup).filter(({ image, root_styles, styles, html, rootStyles }) => (html && styles && rootStyles));
+      const processed = components.filter(({ image, html, styles, rootStyles }) => (html && styles && rootStyles));
       console.log("REFORMED LIST", components, processed, this.state.total);
 
-      const { processed } = this.state;
-      if (processed !== prevState.processed) {
-        this.setState({ processed : components.length });
+      if (processed.length > prevState.processed) {
+        this.setState({ processed : processed.length });
       }
 
       if (components.length === 0 && this.props.outro && !prevProps.outro) {
         this.setState({ outro : false }, ()=> {
         });
       }
-
-
-//       if (total === components.length && !this.state.outro) {
-//         this.setState({ outro : true }, ()=> {
-//         });
-//       }
     }
   }
 
   handleComplete = ()=> {
-// 		console.log('%s.handleComplete()', this.constructor.name, this.state);
-
-//     this.props.onPopup({
-//       type    : POPUP_TYPE_OK,
-//       content : 'Profile updated.',
-//       delay   : 125
-//       });
-//
+		console.log('%s.handleComplete()', this.constructor.name, this.state);
 //     this.setState({ outro : false }, ()=> {
 //       this.props.onComplete();
 //     });
@@ -112,8 +82,7 @@ class PlaygroundProcessingOverlay extends Component {
 
   render() {
 		console.log('%s.render()', this.constructor.name, this.props, this.state);
-		const { typeGroup } = this.props;
-    const { outro, processed, total } = this.state;
+
     return (<BaseOverlay
       tracking={Modals.PROCESSING}
       outro={false}
@@ -122,11 +91,9 @@ class PlaygroundProcessingOverlay extends Component {
       onComplete={this.handleComplete}>
 
       <div className="playground-processing-overlay">
-        <div className="playground-processing-overlay-header-wrapper"><h4>Processing Pair URL Data</h4></div>
-        <div className="playground-processing-overlay-content-wrapper">
-          {`Processing ${total} ${Strings.pluralize((typeGroup) ? typeGroup.title : 'component', total)}…`}
-          <div className="playground-processing-overlay-loader-wrapper">
-            <div className="playground-processing-overlay-loader">
+        <div className="base-overlay-content-wrapper">
+          <div className="base-overlay-loader-wrapper">
+            <div className="base-overlay-loader">
               <FontAwesome name="circle-notch" className="base-overlay-loader-spinner" size="3x" spin />
             </div>
           </div>
@@ -139,10 +106,8 @@ class PlaygroundProcessingOverlay extends Component {
 
 const mapStateToProps = (state, ownProps)=> {
   return ({
-    playground     : state.playground,
-    typeGroup      : state.typeGroup,
-    componentTypes : state.componentTypes,
-    pathname       : state.pathname
+    playground : state.playground,
+    typeGroup  : state.typeGroup,
   });
 };
 
