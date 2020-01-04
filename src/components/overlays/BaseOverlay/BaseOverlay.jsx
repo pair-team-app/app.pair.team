@@ -7,7 +7,7 @@ import onClickOutside from 'react-onclickoutside';
 
 import { trackOverlay } from '../../../utils/tracking';
 
-import { OVERLAY_TYPE_FIXED_SIZE, OVERLAY_TYPE_PERCENT_SIZE } from './';
+import { OVERLAY_TYPE_POSITION_OFFSET, OVERLAY_TYPE_PERCENT_SIZE } from './';
 
 
 const INTRO_DURATION = (1/8);
@@ -88,11 +88,10 @@ class BaseOverlay extends Component {
 			this.timeline.seek(0);
 		}
 
-		const { type, size, title, closeable, children } = this.props;
-		const wrapperClass = `base-overlay-content-wrapper base-overlay-content-wrapper${(type === OVERLAY_TYPE_FIXED_SIZE) ? '-fixed' : (type === OVERLAY_TYPE_PERCENT_SIZE) ? '-percent' : '-auto-scroll'}`;
-		const wrapperStyle = (type === OVERLAY_TYPE_FIXED_SIZE) ? {
-			width  : size.width,
-			height : size.height
+		const { type, offset, title, closeable, children } = this.props;
+		const wrapperClass = `base-overlay-content-wrapper base-overlay-content-wrapper${(type === OVERLAY_TYPE_PERCENT_SIZE) ? '-percent' : '-auto-scroll'}`;
+		const wrapperStyle = (type === OVERLAY_TYPE_POSITION_OFFSET) ? {
+			transform  : `translate(${(offset.x || 0)}px, ${(offset.y || 0)}px)`
 		} : null;
 
 

@@ -1,23 +1,4 @@
 
 .playground-processing-overlay {
-	min-width: 360px;
-	width: 360px;
-	max-width: 360px;
-	background-color: rgba(var(--site-bg-color), 1.0);
-}
-
-.playground-processing-overlay-loader-wrapper {
-	position: absolute;
-	top: 0;
-	left: 0;
-	margin: calc(var(--orthodox-margin-base) * -1);
-	width: calc(100% + calc(var(--orthodox-padding-base) * 2.0));
-	height: calc(100% + calc(var(--orthodox-padding-base) * 2.0));
-	background-color: rgba(var(--site-bg-color), 0.33);
-}
-
-.playground-processing-overlay-loader {
-	position: relative;
-	width: 100%;
-	height: 100%;
+	padding: var(--orthodox-padding-base);
 }

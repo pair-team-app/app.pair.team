@@ -90,7 +90,7 @@
 	transform: translate(-50%, -50%);
 	margin-top: calc(var(--orthodox-padding-more) * -1);
 	margin-left: calc(var(--orthodox-padding-more) * -1);
-	color: rgba(var(--border-color), 1.0);
+	color: rgba(var(--site-fg-color), 1.0);
 	text-align: center;
 	object-fit: scale-down;
 }

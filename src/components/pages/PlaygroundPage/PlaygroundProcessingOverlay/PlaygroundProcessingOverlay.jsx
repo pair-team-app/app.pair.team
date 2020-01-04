@@ -6,7 +6,7 @@ import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import BaseOverlay from '../../../overlays/BaseOverlay';
+import BaseOverlay, { OVERLAY_TYPE_POSITION_OFFSET } from '../../../overlays/BaseOverlay';
 import { componentsFromTypeGroup } from '../utils/lookup';
 import { Modals } from '../../../../consts/uris';
 
@@ -87,17 +87,16 @@ class PlaygroundProcessingOverlay extends Component {
       outro={false}
       closeable={false}
       title={null}
+      type={OVERLAY_TYPE_POSITION_OFFSET}
+      offset={{ x : 63, y : -63 }}
       onComplete={this.handleComplete}>
-
-      <div className="playground-processing-overlay">
-        <div className="base-overlay-content-wrapper">
+        <div className="playground-processing-overlay">
           <div className="base-overlay-loader-wrapper">
             <div className="base-overlay-loader">
               <FontAwesome name="circle-notch" className="base-overlay-loader-spinner" size="3x" spin />
             </div>
           </div>
         </div>
-      </div>
     </BaseOverlay>);
   }
 }
