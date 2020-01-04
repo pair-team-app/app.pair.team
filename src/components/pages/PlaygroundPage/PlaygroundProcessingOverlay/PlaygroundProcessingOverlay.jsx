@@ -80,7 +80,7 @@ class PlaygroundProcessingOverlay extends Component {
 
 
   render() {
-		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
     return (<BaseOverlay
       tracking={Modals.PROCESSING}
