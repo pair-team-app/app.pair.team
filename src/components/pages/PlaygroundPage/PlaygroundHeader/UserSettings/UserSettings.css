@@ -1,8 +1,6 @@
 
 .user-settings {
 	position: relative;
-	/*margin-left: 10px;*/
-	margin-left: var(--orthodox-margin-half);
 	display: flex;
 	flex-flow: row nowrap;
 	align-items: center;
@@ -12,7 +10,6 @@
 	position: relative;
 	width: var(--orthodox-ico-size);
 	height: var(--orthodox-ico-size);
-	margin-left: var(--orthodox-margin-half);
 	padding: 3px;
 	border: 1px solid rgba(var(--site-fg-color), 1.0);
 	border-radius: 50%;

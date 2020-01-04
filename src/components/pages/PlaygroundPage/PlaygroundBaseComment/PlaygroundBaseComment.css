@@ -1,11 +1,11 @@
 
-.base-playground-comment {
+.playground-base-comment {
 	width: 100%;
 	height: fit-content;
 	padding: var(--orthodox-padding-more) var(--orthodox-padding-base) var(--orthodox-padding-base) var(--orthodox-padding-base);
 }
 
-.base-playground-comment-header-wrapper {
+.playground-base-comment-header-wrapper {
 	display: flex;
 	flex-wrap: nowrap;
 	justify-content: center; /* h-align */
@@ -14,27 +14,27 @@
 	margin-bottom: var(--orthodox-margin-base);
 }
 
-.base-playground-comment-header-wrapper > * {
+.playground-base-comment-header-wrapper > * {
 	/*margin: auto;*/
 	/*border: 1px dotted #ff00ff;*/
 }
 
-.base-playground-comment-header-icon-wrapper {
+.playground-base-comment-header-icon-wrapper {
 	flex: 1 1 auto;
 	display: flex;
 }
 
-.base-playground-comment-header-spacer {
+.playground-base-comment-header-spacer {
 	flex: 10 0 0;
 	margin: auto;
 }
 
-.base-playground-comment-header-link-wrapper {
+.playground-base-comment-header-link-wrapper {
 	flex: 1 1 auto;
 	text-align: right;
 }
 
-.base-playground-comment-header-icon {
+.playground-base-comment-header-icon {
 	position: relative;
 	width: var(--orthodox-ico-size);
 	height: var(--orthodox-ico-size);
@@ -46,11 +46,11 @@
 	text-align: center;
 }
 
-.base-playground-comment-header-icon:not(:last-child) {
+.playground-base-comment-header-icon:not(:last-child) {
 	margin-right: var(--orthodox-margin-mini);
 }
 
-.base-playground-comment-header-icon > * {
+.playground-base-comment-header-icon > * {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -60,24 +60,24 @@
 	clip-path: circle(8px at center);
 }
 
-.base-playground-comment-header-link {
+.playground-base-comment-header-link {
 	font-size: 10px;
 	color: rgba(var(--link-color), 1.0);
 	transition: color 0.125s ease-out;
 }
 
-.base-playground-comment-header-link:hover {
+.playground-base-comment-header-link:hover {
 	color: rgba(var(--link-hover-color), 1.0);
 	cursor: pointer;
 }
 
-.base-playground-comment-timestamp {
+.playground-base-comment-timestamp {
 	margin-bottom: var(--orthodox-margin-mini);
 	font-size: 12px;
 	color: rgba(var(--timestamp-color), 1.0);
 }
 
-.base-playground-comment-content {
+.playground-base-comment-content {
 	font-size: 14px;
 	line-height: 20px;
 	text-align: justify;

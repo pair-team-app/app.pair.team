@@ -14,20 +14,20 @@ function PlaygroundBaseComment(props) {
 	const { profile, ind, comment } = props;
 	const { id, type, author, content, timestamp } = comment;
 
-	return (<div className="base-playground-comment" data-id={id}>
-		<div className="base-playground-comment-header-wrapper">
-			<div className="base-playground-comment-header-icon-wrapper">
-				{(type !== 'init') && (<div className="base-playground-comment-header-icon">{ind}</div>)}
-				<div className="base-playground-comment-header-icon"><img src={(!author.avatar) ? USER_DEFAULT_AVATAR : author.avatar} alt={author.username} /></div>
+	return (<div className="playground-base-comment" data-id={id}>
+		<div className="playground-base-comment-header-wrapper">
+			<div className="playground-base-comment-header-icon-wrapper">
+				{(type !== 'init') && (<div className="playground-base-comment-header-icon">{ind}</div>)}
+				<div className="playground-base-comment-header-icon"><img src={(!author.avatar) ? USER_DEFAULT_AVATAR : author.avatar} alt={author.username} /></div>
 			</div>
-			<div className="base-playground-comment-header-spacer" />
-			<div className="base-playground-comment-header-link-wrapper">
-				{(profile && profile.id === author.id && type !== 'init') && (<div className="base-playground-comment-header-link" onClick={props.onDelete}>Delete</div>)}
+			<div className="playground-base-comment-header-spacer" />
+			<div className="playground-base-comment-header-link-wrapper">
+				{(profile && profile.id === author.id && type !== 'init') && (<div className="playground-base-comment-header-link" onClick={props.onDelete}>Delete</div>)}
 			</div>
 		</div>
 
-		<div className="base-playground-comment-timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(MOMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
-		<div className="base-playground-comment-content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">@${author.username}</span>`) }} />
+		<div className="playground-base-comment-timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(MOMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
+		<div className="playground-base-comment-content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">@${author.username}</span>`) }} />
 	</div>);
 }
 

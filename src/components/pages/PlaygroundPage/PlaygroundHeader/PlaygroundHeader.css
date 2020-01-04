@@ -16,7 +16,6 @@
 
 .playground-header > * {
 	flex: 4 4 0;
-	/*border: 1px dotted #00ff00;*/
 }
 
 .playground-header-col-right {
@@ -26,8 +25,8 @@
 	align-items: center;
 }
 
-.playground-header-col-right > * {
-	/*border: 1px dotted #ff00ff;*/
+.playground-header-col-right > *:not(:last-child) {
+	margin-right: var(--orthodox-margin-base);
 }
 
 .playground-header-col-middle {

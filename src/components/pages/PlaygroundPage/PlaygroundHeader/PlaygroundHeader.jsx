@@ -4,7 +4,7 @@ import './PlaygroundHeader.css';
 
 import { Strings } from 'lang-js-utils';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 
 import SharePopover from '../SharePopover';
 import UserSettings from './UserSettings';
@@ -98,6 +98,7 @@ class PlaygroundHeader extends Component {
         <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
 			</div>
 			<div className="playground-header-col playground-header-col-right">
+				<NavLink to={Pages.DOCS}>Docs</NavLink>
 				<div className="playground-header-link" onClick={()=> this.setState({ popover : !this.state.popover })} ref={(element)=> { this.shareLink = element; }}>Share</div>
 				<UserSettings onMenuItem={this.props.onSettingsItem} onLogout={this.props.onLogout} />
 			</div>
