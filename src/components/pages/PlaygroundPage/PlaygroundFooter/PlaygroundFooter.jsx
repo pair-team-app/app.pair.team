@@ -2,8 +2,6 @@
 import React from 'react';
 import './PlaygroundFooter.css';
 
-import FontAwesome from 'react-fontawesome';
-
 import { GITHUB_FIGMA_PLUGIN, GITHUB_XD_PLUGIN, NPM_DE_PLAYGROUND } from '../../../../consts/uris';
 import { trackEvent, trackOutbound } from '../../../../utils/tracking';
 

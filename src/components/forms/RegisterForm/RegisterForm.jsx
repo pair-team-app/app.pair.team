@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './RegisterForm.css'
 
 import axios from 'axios';
-import { Bits, Strings } from 'lang-js-utils';
+import { Bits, Images, Strings } from 'lang-js-utils';
 
 import DummyForm from '../../forms/DummyForm';
 import { API_ENDPT_URL } from '../../../consts/uris';
@@ -65,12 +65,13 @@ class RegisterForm extends Component {
 				action  : 'REGISTER',
 				payload : { email, password, inviteID,
 					username : email,
-					type     : 'free_user'
+					type     : 'free_user',
+					avatar   : Images.genLetterAvatar(email)
 				}
 			}).then((response) => {
 				console.log('REGISTER', response.data);
 				const status = parseInt(response.data.status, 16);
-// 				console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));
+				console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));
 
 				if (status === 0x11) {
 					this.props.onRegistered(response.data.user);

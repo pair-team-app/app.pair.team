@@ -6930,7 +6930,7 @@ kleur@^3.0.3:
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
 "lang-js-utils@file:../../npm_modules/lang-js-utils":
-  version "0.5.1"
+  version "0.6.0"
   dependencies:
     image-js "^0.21.8"
     window "^4.2.6"
