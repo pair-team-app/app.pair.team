@@ -42,7 +42,8 @@ class PlaygroundPage extends Component {
 			cursor        : false,
 			accessibility : false,
 			share         : false,
-			fetching      : false
+			fetching      : false,
+			processing    : false
 		};
 	}
 
@@ -54,7 +55,7 @@ class PlaygroundPage extends Component {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { profile, componentTypes, playground, match, location } = this.props;
-		const { fetching, accessibility } = this.state;
+		const { fetching, accessibility, processing } = this.state;
 
 		const { pathname } = location;
 		const { teamSlug, projectSlug, buildID, playgroundID, componentsSlug, componentID, commentID } = match.params;
@@ -77,7 +78,7 @@ class PlaygroundPage extends Component {
 		if (playground && this.props.typeGroup && fetching) {
       const components = componentsFromTypeGroup(playground.components, this.props.typeGroup).filter(({ image, root_styles, styles, html, rootStyles }) => (html && styles && rootStyles));
 
-      if (componentsFromTypeGroup(playground.components,  this.props.typeGroup).length === components.length && !this.state.outro) {
+      if (componentsFromTypeGroup(playground.components, this.props.typeGroup).length === components.length) {
         this.setState({ fetching : false }, ()=> {
         });
       }
@@ -153,7 +154,10 @@ class PlaygroundPage extends Component {
 				url = url.replace(new RegExp(`/${componentsSlug}.*$`, 'g'), '/views');
 			}
 
-			this.props.setTypeGroup(typeGroup);
+      const components = componentsFromTypeGroup(playground.components, typeGroup);
+      console.log('::COMP TEST::', { tgComponents  : components, processed : components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles )).length });
+
+      this.props.setTypeGroup(typeGroup);
 			this.onFetchTypeGroupComponents(typeGroup);
 
 
@@ -257,6 +261,10 @@ class PlaygroundPage extends Component {
         }
 			}
 		}
+
+// 		if (processing && playground && this.props.typeGroup && componentsFromTypeGroup(playground.components, this.props.typeGroup).every(({ html, styles, rootStyles })=> (html && styles && rootStyles))) {
+// 			this.setState({ processing : false });
+// 		}
 	}
 
 	handleAddComment = ({ component, position, content })=> {
@@ -400,8 +408,8 @@ class PlaygroundPage extends Component {
 		console.log('%s.handleNavGroupItemClick()', this.constructor.name, typeGroup);
 
 		typeGroup.selected = !typeGroup.selected;
-		this.onFetchTypeGroupComponents(typeGroup);
 
+		this.onFetchTypeGroupComponents(typeGroup);
 		this.props.setTypeGroup(typeGroup);
 		this.props.setComponent(null);
 		this.props.setComment(null);
@@ -516,44 +524,23 @@ class PlaygroundPage extends Component {
 
   onFetchTypeGroupComponents = (typeGroup)=> {
 
-  	const { playground } = this.props;
-    console.log('%s.onFetchTypeGroupComponents()', this.constructor.name, typeGroup);
-
-    this.setState({ fetching : true }, ()=> {
-      this.props.fetchPlaygroundComponentGroup({ playground, typeGroup });
-		});
-
-//     let { playground } = this.props;
-//     axios.post('https://api.designengine.ai/v2/pairurl-2.php', {
-//       action  : 'PLAYGROUND_TYPE_GROUP_COMPONENTS',
-//       payload : {
-//         playground_id : playground.id,
-// 				type_group_id : typeGroupID,
-// 				verbose       : true
-//       }
-//     }).then(async(response) => {
-//       console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', response.data);
-//
-//       const components = (await Promise.all(Object.values(response.data.components).map(async(component)=> {
-//         console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', 'component', { id : component.id, typeID : component.type_id, title : component.title });
-//         return (await reformComponent(component));
-//       })));
-//
-//       playground.components = playground.components.map((comp)=> ((components.find(({ id })=> ((id === comp.id))) || comp)));
-//       console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', 'REFORM', playground.components);
-//
-// 			this.props.setPlayground(replacePlayground(this.state.playgrounds, playground).shift());
-//     }).catch((error)=> {
-//     });
+    const { playground } = this.props;
+    console.log('%s.onFetchTypeGroupComponents()', this.constructor.name, { typeGroup, components : componentsFromTypeGroup(playground.components, typeGroup) });
+    if (!componentsFromTypeGroup(playground.components, typeGroup).every(({ html, styles, rootStyles })=> (html && styles && rootStyles))) {
+      this.setState({ processing : true }, ()=> {
+        this.props.fetchPlaygroundComponentGroup({ playground, typeGroup });
+			});
+		}
 	};
-
-
 
   onFetchBuildPlaygrounds2 = (buildID, playgroundID=null)=> {
     console.log('%s.onFetchBuildPlaygrounds2()', this.constructor.name, buildID, playgroundID);
 
-    this.setState({ fetching : true }, ()=> {
-      axios.post('https://api.designengine.ai/v2/pairurl-2.php', {
+    this.setState({
+			fetching   : true,
+			processing : true
+		}, ()=> {
+      axios.post(API_ENDPT_URL, {
         action  : 'BUILD_PLAYGROUNDS',
         payload : {
           build_id : buildID
@@ -605,11 +592,12 @@ class PlaygroundPage extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { profile, playground, typeGroup, component } = this.props;
-		const { playgrounds, cursor, accessibility, share, fetching } = this.state;
+		const { playgrounds, cursor, accessibility, share, processing } = this.state;
 		const { params } = this.props.match;
 
 		return (<BasePage className={`playground-page${(component && (window.location.href.includes('/comments'))) ? ' playground-page-comments' : ''}`}>
-			{(fetching) && (<PlaygroundProcessingOverlay outro={false} />)}
+			{(processing) && (<PlaygroundProcessingOverlay onComplete={()=> this.setState({ processing : false })} />)}
+			{/*<PlaygroundProcessingOverlay outro={!processing} />*/}
 			{/*<PlaygroundProcessingOverlay outro={false} />*/}
 
 			{(profile && playground && typeGroup) && (<PlaygroundNavPanel

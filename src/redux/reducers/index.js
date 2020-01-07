@@ -10,7 +10,6 @@ import {
   SET_PLAYGROUND,
   SET_PRODUCTS,
   COMPONENT_TYPES_LOADED,
-  TYPE_GROUP_LOADED,
   EVENT_GROUPS_LOADED,
   SET_REDIRECT_URI,
   UPDATE_DEEPLINK,
@@ -26,11 +25,10 @@ import {
   UPD_PATHNAME,
   TOGGLE_THEME, SET_REFORMED_TYPE_GROUP
 } from '../../consts/action-types';
-// import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
+import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 
 const initialState = {
-	file           : null,
 	componentTypes : null,
 	eventGroups    : [],
 	playground     : null,
@@ -68,14 +66,17 @@ const initialState = {
 };
 
 
-// const logFormat = (state, action, meta='')=> {
-// 	const { type, payload } = action;
-// 	console.log(LOG_REDUCER_PREFIX, `REDUCER >> “${type}”`, state, payload, meta);
-// };
+const logFormat = (state, action, meta='')=> {
+	const { type, payload } = action;
+
+	if (type !== UPDATE_MOUSE_COORDS) {
+    console.log(LOG_REDUCER_PREFIX, `REDUCER >> “${type}”`, state, payload, meta);
+  }
+};
 
 
 function rootReducer(state=initialState, action) {
-// 	logFormat(state, action);
+ 	logFormat(state, action);
 
 	switch (action.type) {
 		default:

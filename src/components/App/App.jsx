@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import axios from 'axios';
-import { Browsers, DateTimes, Images } from 'lang-js-utils';
+import { Browsers, DateTimes } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -75,7 +75,8 @@ class App extends Component {
 		console.log('[:][:][:][:][:][:][:][:][:][:]');
 
 		const { profile, location } = this.props;
-		if (!profile && location.pathname.startsWith(Pages.PLAYGROUND)) {
+// 		if (!profile && location.pathname.startsWith(Pages.PLAYGROUND)) {
+		if (!profile && location.pathname.startsWith(Pages.PLAYGROUND) && cookie.load('user_id') === '0') {
 			this.onToggleModal(Modals.LOGIN);
 		}
 
@@ -84,13 +85,6 @@ class App extends Component {
 			event.preventDefault();
 			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
 		};
-
-
-// 		const avatar = Images.genPlaceholder({ width : 128, height : 128 });
-		const avatar = Images.genLetterAvatar('matty');
-		console.log('AVATAR', avatar);
-
-
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {

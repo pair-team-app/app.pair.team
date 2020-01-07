@@ -11,11 +11,10 @@ import { componentsFromTypeGroup } from '../utils/lookup';
 import { Modals } from '../../../../consts/uris';
 
 
-const UPD_PROPS = [
-  'playground',
-  'typeGroup'
-];
-
+// const UPD_PROPS = [
+//   'playground',
+//   'typeGroup'
+// ];
 
 
 class PlaygroundProcessingOverlay extends Component {
@@ -24,7 +23,6 @@ class PlaygroundProcessingOverlay extends Component {
 
     this.state = {
       outro      : false,
-      status     : null,
       processed  : 0,
       total      : -1
     };
@@ -41,54 +39,55 @@ class PlaygroundProcessingOverlay extends Component {
 
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props.profile, prevState, this.state, snapshot);
-		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : Object.fromEntries(Object.entries(prevProps).filter(([key])=>UPD_PROPS.includes(key))), props : Object.fromEntries(Object.entries(this.props).filter(([key])=>UPD_PROPS.includes(key))) });
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state }, snapshot);
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : Object.fromEntries(Object.entries(prevProps).filter(([key])=>UPD_PROPS.includes(key))), props : Object.fromEntries(Object.entries(this.props).filter(([key])=>UPD_PROPS.includes(key))) });
 
     const { playground, typeGroup } = this.props;
-    const { total } = this.state;
+    const { outro, total } = this.state;
 
     if (playground && typeGroup) {
       const components = componentsFromTypeGroup(playground.components, typeGroup);
 
-      if (!prevProps.playground && !prevProps.typeGroup) {
-        console.log(':::::::::: NO PREV :::::::::::::::');
+      if (typeGroup !== !prevProps.typeGroup) {
         if (total === -1) {
+          console.log(':::::::::: NO PREV :::::::::::::::');
           this.setState({ total : components.length });
         }
       }
 
-      const processed = components.filter(({ image, html, styles, rootStyles }) => (html && styles && rootStyles));
-      console.log("REFORMED LIST", components, processed, this.state.total);
+      const processed = components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles));
+      console.log("REFORMED LIST", { components, prcMap : components.map(({ html, styles, rootStyles }) => ({ html, styles, rootStyles })), processed, total : this.state.total });
 
-      if (processed.length > prevState.processed) {
+      if (processed.length !== this.state.processed) {
         this.setState({ processed : processed.length });
       }
 
-      if (components.length === 0 && this.props.outro && !prevProps.outro) {
-        this.setState({ outro : false }, ()=> {
-        });
+      if (processed.length === total && !outro) {
+        this.setState({ outro : true });
       }
     }
   }
 
   handleComplete = ()=> {
 		console.log('%s.handleComplete()', this.constructor.name, this.state);
-//     this.setState({ outro : false }, ()=> {
-//       this.props.onComplete();
-//     });
+    this.props.onComplete();
   };
 
 
   render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
+    const { playground } = this.props;
+    const { outro } = this.state;
+
     return (<BaseOverlay
       tracking={Modals.PROCESSING}
-      outro={false}
+      outro={outro}
       closeable={false}
       title={null}
       type={OVERLAY_TYPE_POSITION_OFFSET}
       offset={{ x : 63, y : -63 }}
+      delay={75 + ((!playground << 0) * 250)}
       onComplete={this.handleComplete}>
         <div className="playground-processing-overlay">
           <div className="base-overlay-loader-wrapper">

@@ -83,7 +83,7 @@ export function fetchPlaygroundComponentGroup(payload) {
   return ((dispatch)=> {
   	const { playground, typeGroup } = payload;
 
-    axios.post(API_ENDPT_URL, {
+  	axios.post(API_ENDPT_URL, {
       action  : 'PLAYGROUND_TYPE_GROUP_COMPONENTS',
       payload : {
       	playground_id : playground.id,

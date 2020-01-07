@@ -85,6 +85,7 @@ class LoginModal extends Component {
 				tracking={Modals.LOGIN}
 				outro={outro}
 				closeable={false}
+				delay={125}
 				onComplete={this.handleComplete}>
 
 				<div className="login-modal">

@@ -15,13 +15,13 @@ function BasePage(props) {
 	const { className, children, style } = props;
 	return (<div className={`base-page ${className}`} style={style}>
 		{(children)}
-		{(!window.location.pathname.startsWith(Pages.PLAYGROUND)) && (<BottomNav navLinks={navLinks.bottom} />)}
+		{(!props.location.pathname.startsWith(Pages.PLAYGROUND)) && (<BottomNav navLinks={navLinks.bottom} />)}
 	</div>);
 }
 
 
 const BottomNav = (props)=> {
-	console.log('BasePage.BottomNav()', props);
+// 	console.log('BasePage.BottomNav()', props);
 
 	const { navLinks } = props;
 	return (<div className="base-page-bottom-nav"><ul>
@@ -32,5 +32,4 @@ const BottomNav = (props)=> {
 };
 
 
-export default BasePage;
-// export default withRouter(BasePage);
+export default withRouter(BasePage);

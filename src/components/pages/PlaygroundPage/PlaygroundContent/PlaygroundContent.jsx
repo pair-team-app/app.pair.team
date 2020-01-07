@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import PlaygroundComment from '../PlaygroundComment';
 import ComponentMenu from './ComponentMenu';
 import { inlineStyles } from '../utils/css';
+import { componentsFromTypeGroup } from '../utils/lookup';
 import packComponents, { calcSize } from '../utils/packing';
 import { reformComment } from '../utils/reform';
 
@@ -57,23 +58,21 @@ class PlaygroundContent extends Component {
 		const { typeGroup, playground, component, cursor, mouse, profile } = this.props;
 		const { position, popover } = this.state;
 
-		const components = (component) ? [component] : (typeGroup) ? playground.components.filter(({ typeID })=> (typeID === typeGroup.id)) : playground.components;
-		const packedRects = (playground) ? packComponents(components) : [];
+		const components = (component) ? [component] : (typeGroup) ? componentsFromTypeGroup(playground.components, typeGroup) : playground.components;
+		const packedRects = (playground && components.every(({ html, styles, rootStyles })=> (html && styles && rootStyles))) ? packComponents(components) : [];
 
 		const viewsContent = (typeGroup.id === 187 && !component);
 
 		const maxSize = calcSize(packedRects);
+// 		console.log(':::::::', 'maxSize', maxSize);
 		const wrapperStyle = (!viewsContent) ? {
 			width  : `${maxSize.width}px`,
 			height : `${maxSize.height}px`
 		} : null;
 
-		const scaleViews = (1/3);
-
-
 		return (<div className="playground-content" data-cursor={cursor}>
 			<div className={`${(!viewsContent) ? 'playground-content-components-wrapper' : 'playground-content-views-wrapper'}`} style={wrapperStyle}>
-				{(components.map((comp, i)=> {
+				{(packedRects.length > 0) && (components.map((comp, i)=> {
 					const pos = {
 						x : packedRects.find(({ id })=> (id === comp.id)).x,
 						y : packedRects.find(({ id })=> (id === comp.id)).y,
@@ -83,12 +82,13 @@ class PlaygroundContent extends Component {
 						top  : `${pos.y}px`,
 						left : `${pos.x}px`
 					} : {
-						width  : `${comp.meta.bounds.width * scaleViews}px`,
-						height : `${comp.meta.bounds.height * scaleViews}px`
+// 						width  : `${comp.meta.bounds.width * scaleViews}px`,
+// 						height : `${comp.meta.bounds.height * scaleViews}px`
 					};
 
 // 					const content = (!viewsContent) ? inlineStyles(comp.html, comp.styles) : `<img src="${Images.genPlaceholder(comp.meta.bounds, comp.title)}" class="playground-content-view-image" style="width:${comp.meta.bounds.width * 0.5}px; height:${comp.meta.bounds.height * 0.5}px;" alt="${comp.title}" />`;
-					const content = (comp.html && comp.styles) ? (!viewsContent) ? inlineStyles(comp.html, comp.styles) : `<img src="${comp.image}" class="playground-content-view-image" style="width:${comp.meta.bounds.width}px; height:${comp.meta.bounds.height}px;" alt="${comp.title}" />` : `<img src="${Images.genPlaceholder(comp.meta.bounds, comp.title)}" class="playground-content-view-image" style="width:${comp.meta.bounds.width}px; height:${comp.meta.bounds.height}px;" alt="${comp.title}" />`;
+// 					const content = (comp.html && comp.styles) ? (!viewsContent) ? inlineStyles(comp.html, comp.styles) : `<img src="${comp.image}" class="playground-content-view-image" style="width:${comp.meta.bounds.width}px; height:${comp.meta.bounds.height}px;" alt="${comp.title}" />` : `<!--<img src="${Images.genPlaceholder(comp.meta.bounds, comp.title)}" class="playground-content-view-image" style="width:${comp.meta.bounds.width}px; height:${comp.meta.bounds.height}px;" alt="${comp.title}" />-->`;
+					const content = (comp.html && comp.styles) ? (!viewsContent) ? inlineStyles(comp.html, comp.styles) : `<img src="${comp.image}" class="playground-content-view-image" style="width:${comp.meta.bounds.width}px; height:${comp.meta.bounds.height}px;" alt="${comp.title}" />` : `<img src="${Images.genPlaceholder(comp.meta.bounds, comp.title)}" class="playground-content-view-image" alt="${comp.title}" />`;
 					const comments = (popover && component.id === comp.id) ? [ ...comp.comments, reformComment({ position,
 						id      : 0,
 						type    : 'add',
@@ -99,6 +99,9 @@ class PlaygroundContent extends Component {
 
 					return (<div key={i} className={`playground-content-component-wrapper${(!component) ? ' playground-content-component-wrapper-cursor' : ''}`} onClick={(event)=> this.handleContentClick(event, comp)} style={style}>
 						<ContextMenuTrigger id="component" component={comp} collect={(props)=> ({ component : props.component })} attributes={{ 'data-pos' : pos }} disableIfShiftIsPressed={true}>
+							<div className="playground-content-component-header" style={{ display : 'none' }}>
+								{comp.title}
+							</div>
 							{(!viewsContent)
 								? (<div className="playground-content-component" data-id={comp.id} style={comp.rootStyles} dangerouslySetInnerHTML={{ __html : content }} />)
 								: (<div className="playground-content-component" data-id={comp.id} dangerouslySetInnerHTML={{ __html : content }} />)

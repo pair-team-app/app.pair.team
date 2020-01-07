@@ -26,6 +26,7 @@ class PlaygroundHeader extends Component {
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+		console.log('%s.componentDidUpdate()', this.constructor.name, { left : this.shareLink.offsetLeft, top : this.shareLink.offsetTop });
 
  		const { popover } = this.props;
  		if (popover && !prevProps.popover && !this.state.popover) {

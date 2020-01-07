@@ -3,19 +3,21 @@ import cookie from 'react-cookies';
 
 import {
   SET_REFORMED_TYPE_GROUP,
-	USER_PROFILE_CACHED,
-	USER_PROFILE_UPDATED,
-	TYPE_GROUP_LOADED,
+  USER_PROFILE_CACHED,
+  USER_PROFILE_UPDATED,
+  TYPE_GROUP_LOADED, UPDATE_MOUSE_COORDS,
 } from '../../consts/action-types';
 import { reformComponent } from '../../components/pages/PlaygroundPage/utils/reform';
 
-// import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
+import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 
 
 const logFormat = (action, meta='')=> {
 	if (typeof action !== 'function') {
-// 		const { type, payload } = action;
-// 		console.log(LOG_MIDDLEWARE_PREFIX, `MW >> “${type}”`, payload, meta);
+		const { type, payload } = action;
+		if (type !== UPDATE_MOUSE_COORDS) {
+      console.log(LOG_MIDDLEWARE_PREFIX, `MW >> “${type}”`, payload, meta);
+    }
 	}
 };
 

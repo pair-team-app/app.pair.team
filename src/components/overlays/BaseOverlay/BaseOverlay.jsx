@@ -33,8 +33,8 @@ class BaseOverlay extends Component {
 
 		this.timeline = new TimelineMax();
 		this.timeline.from(this.wrapper, INTRO_DURATION, {
-			opacity : 0.25,
-			scale   : 0.9,
+			opacity : 0.0,
+			scale   : 0.75,
 			ease    : Back.easeOut,
 			delay   : (this.props.delay || 0) * 0.001
 		});
@@ -95,8 +95,8 @@ class BaseOverlay extends Component {
 		} : null;
 
 
-		return (<div className={`base-overlay${(!closeable) ? ' base-overlay-blocking' : ''}`} onClick={(closeable) ? this.handleClose : null} ref={(element)=> { this.wrapper = element; }}>
-			<div className={wrapperClass} style={wrapperStyle} onClick={(event)=> event.stopPropagation()}>
+		return (<div className={`base-overlay${(!closeable) ? ' base-overlay-blocking' : ''}`} onClick={(closeable) ? this.handleClose : null}>
+			<div className={wrapperClass} style={wrapperStyle} onClick={(event)=> event.stopPropagation()} ref={(element)=> { this.wrapper = element; }}>
 				{(title) && (<div className="base-overlay-header-wrapper">
 					<div className="base-overlay-title">{title}</div>
 				</div>)}

@@ -46,12 +46,13 @@
 	--txtfield-disabled-fg-color: 153, 153, 153; /* 999999 */
 	--border-color: 206, 206, 206; /* #cecece */
 	--overlay-shadow: 2px 2px 6px rgba(var(--border-color), 0.33);
+	--playground-component-shadow: 2px 2px 3px rgba(var(--border-color), 0.75);
 	--playground-panel-bg-color: 247, 247, 247; /* #f7f7f7 */
 	--playground-panel-link-color: 153, 153, 153; /* 999999 */
 	--playground-panel-link-hover-color: var(--site-fg-color); /* #232323 */
 	--comment-marker-bg-color: 207, 247, 207;
 
-	--timestamp-color:  153, 153, 153; /* 999999 */
+	--timestamp-color: 153, 153, 153; /* 999999 */
 	--dialog-title-color: 153, 153, 153; /* 999999 */
 
 	--popup-ok-bg-color: 240, 255, 242; /* f8fff2 */
@@ -67,23 +68,22 @@
 	--orthodox-margin-less: calc(var(--orthodox-margin-base) * 0.75);
 	--orthodox-margin-mini: calc(var(--orthodox-margin-base) * 0.25);
 	--orthodox-margin-more: calc(var(--orthodox-margin-base) * 1.25);
-	--orthodox-margin-huge:  calc(var(--orthodox-margin-base) * 3.0);
-	--orthodox-margin-dbbl:  calc(var(--orthodox-margin-base) * 2.0);
+	--orthodox-margin-huge: calc(var(--orthodox-margin-base) * 3.0);
+	--orthodox-margin-dbbl: calc(var(--orthodox-margin-base) * 2.0);
 
 	--orthodox-padding-half: calc(var(--orthodox-padding-base) * 0.5);
 	--orthodox-padding-less: calc(var(--orthodox-padding-base) * 0.75);
 	--orthodox-padding-mini: calc(var(--orthodox-padding-base) * 0.25);
 	--orthodox-padding-more: calc(var(--orthodox-padding-base) * 1.25);
-	--orthodox-padding-dbbl:  calc(var(--orthodox-padding-base) * 2.0);
-	--orthodox-padding-huge:  calc(var(--orthodox-padding-base) * 3.0);
-	--orthodox-padding-page:  calc(var(--orthodox-padding-base) * 3.0);
-	--orthodox-padding-form:  calc(var(--orthodox-padding-base) * 1.5);
+	--orthodox-padding-dbbl: calc(var(--orthodox-padding-base) * 2.0);
+	--orthodox-padding-huge: calc(var(--orthodox-padding-base) * 3.0);
+	--orthodox-padding-page: calc(var(--orthodox-padding-base) * 3.0);
+	--orthodox-padding-form: calc(var(--orthodox-padding-base) * 1.5);
 
-	--orthodox-padding-page-mobile:  calc(var(--orthodox-padding-base) * 1.5);
+	--orthodox-padding-page-mobile: calc(var(--orthodox-padding-base) * 1.5);
 
 	--orthodox-acc-size: 18px;
 	--orthodox-ico-size: 24px;
-
 
 	--orthodox-font-size: 16px;
 	--orthodox-font-weight: 400;
