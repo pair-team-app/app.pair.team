@@ -10,19 +10,20 @@ if [[ ! -z "`pwd`/package.json" ]]; then cd `dirname $0`/../ ; fi
 
 #-- check for 'develop' branch
 if [[ ! -z "`git branch | grep develop`" ]]; then
+
 	#-- not on 'develop'
 	if [[ -z "`git branch | grep '* develop'`" ]]; then
 
 		#-- no changes
 		if [[ -z "`git status | grep clean`" ]]; then git checkout develop
 		else
-			printf "Uncommitted changes, commit then try again.\n"
+			printf "Uncommitted changes, commit 'em, then try again.\n"
 			exit 0;
 		fi
 	fi
 
 else
-	printf "No develop branch here.\n"
+	printf "No develop branch for this repo.\n"
 	exit 0;
 fi
 

@@ -52,7 +52,7 @@ class PlaygroundHeader extends Component {
 //		console.log('%s.handlePopoverClose()', this.constructor.name);
 
 		this.props.onSharePopoverClose();
-		this.setState({ popover : false })
+		this.setState({ popover : false });
 	};
 
 
