@@ -291,6 +291,8 @@ class PlaygroundPage extends Component {
 			this.props.setComponent(component);
 			this.props.setComment(comment);
 
+			this.setState({ cursor : false });
+
 		}).catch((error)=> {
 		});
 	};
@@ -342,7 +344,7 @@ class PlaygroundPage extends Component {
 
 		component.selected = true;
 		this.props.setComponent(component);
-		this.setState({ cursor : false });
+// 		this.setState({ cursor : false });
 	};
 
 	handleComponentMenuShow = ({ component })=> {

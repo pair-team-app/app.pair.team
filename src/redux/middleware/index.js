@@ -5,7 +5,7 @@ import {
   SET_REFORMED_TYPE_GROUP,
   USER_PROFILE_CACHED,
   USER_PROFILE_UPDATED,
-  TYPE_GROUP_LOADED, UPDATE_MOUSE_COORDS,
+  TYPE_GROUP_LOADED, UPDATE_MOUSE_COORDS, SET_PLAYGROUND,
 } from '../../consts/action-types';
 import { reformComponent } from '../../components/pages/PlaygroundPage/utils/reform';
 
@@ -16,7 +16,7 @@ const logFormat = (action, meta='')=> {
 	if (typeof action !== 'function') {
 		const { type, payload } = action;
 		if (type !== UPDATE_MOUSE_COORDS) {
-      console.log(LOG_MIDDLEWARE_PREFIX, `MW >> “${type}”`, payload, meta);
+      console.log(LOG_MIDDLEWARE_PREFIX, `MW >> “${type}”`, action, payload, meta);
     }
 	}
 };
@@ -80,7 +80,10 @@ export function onMiddleware({ dispatch }) {
 // 						payload : artboards
 // 					});
 // 				}
-			}
+
+			} else if (type === SET_PLAYGROUND) {
+
+      }
 
 			return (next(action));
 		})

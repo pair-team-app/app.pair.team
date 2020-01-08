@@ -197,6 +197,7 @@ export function setInvite(payload) {
 
 export function setPlayground(payload) {
 	logFormat('setPlayground()', payload);
+	console.trace('REDUX STORE _||_')
 	return ({ payload,
 		type : SET_PLAYGROUND
 	});

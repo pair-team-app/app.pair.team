@@ -1,6 +1,6 @@
 
 import cookie from 'react-cookies';
-import { applyMiddleware, createStore } from 'redux';
+import { applyMiddleware, createStore, compose } from 'redux';
 import thunk from 'redux-thunk';
 
 import { fetchComponentTypes, fetchEventGroups, fetchProducts, fetchUserProfile } from '../actions';
@@ -23,10 +23,25 @@ const attachDispatchLog = (store)=> {
 	})
 };
 
+const createLogActionStackTraceMiddleware = (actionTypes = []) => {
+  const logActionStackTraceMiddleware = (storeAPI)=> (next)=> (action)=> {
+    if(action.type && actionTypes.includes(action.type)) {
+      console.log(`[|] Action: ${action.type}`);
+    }
+
+    return (next(action));
+  };
+
+  return (logActionStackTraceMiddleware);
+};
 
 
-const store = createStore(rootReducer, applyMiddleware(onMiddleware, thunk));
-store.dispatch = attachDispatchLog(store);
+const stackTraceMiddleware = createLogActionStackTraceMiddleware(['SET_PLAYGROUND', 'SET_TYPE_GROUP', 'SET_COMPONENT']);
+
+
+// const store = createStore(rootReducer, applyMiddleware(onMiddleware, thunk));
+const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
+// store.dispatch = attachDispatchLog(store);
 
 
 if (typeof cookie.load('user_id') === 'undefined') {

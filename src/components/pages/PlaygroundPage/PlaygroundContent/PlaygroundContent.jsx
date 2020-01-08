@@ -51,13 +51,13 @@ class PlaygroundContent extends Component {
       });
     }
 
-    this.props.onComponentClick({ component });
+    this.props.onComponentClick(                   { component });
   };
 
   render() {
 // 		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { typeGroup, playground, component, cursor, mouse, profile } = this.props;
+    const { typeGroup, playground, component, comment, cursor, mouse, profile } = this.props;
     const { position, popover } = this.state;
 
     const components = (component) ? [component] : (typeGroup) ? componentsFromTypeGroup(playground.components, typeGroup) : playground.components;
@@ -110,7 +110,7 @@ class PlaygroundContent extends Component {
               }
 
               <div className="playground-content-component-comment-wrapper" data-id={comp.id} >
-                {(comments.filter(({ type })=> (type !== 'init')).map((comm, ii)=> {
+                {(comments.filter(({ id, type })=> (type !== 'init' && (!comment || comment.id === id))).map((comm, ii)=> {
                   return (<PlaygroundComment key={`${i}_${ii}`} ind={(comp.comments.length - 1) - ii} component={comp} comment={comm} position={position} onMarkerClick={this.props.onMarkerClick} onAddComment={this.props.onAddComment} onDelete={this.props.onDeleteComment} onClose={this.handleComponentPopoverClose} />);
                 }))}
               </div>
