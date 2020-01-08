@@ -1,7 +1,11 @@
 
+import dataUriToBuffer from 'data-uri-to-buffer';
+import ImageJS from 'imagejs';
 import { Images } from 'lang-js-utils';
+import Jimp from 'jimp';
 import moment from 'moment';
 
+import { COMOPONENT_THUMB_SCALE } from '../../../../consts/formats';
 import { unzipSync } from '../../../../utils/funcs';
 import { decryptObject, decryptText } from './crypto';
 import { convertStyles } from './css';
@@ -62,7 +66,19 @@ export const reformComponent = async(component, overwrite={})=> {
 // 	console.log('META.BOUNDS:', meta.bounds.height, meta.bounds.width);
 
 
-	const reformed = { ...component, html, styles, image, accessibility,
+//   console.log("::|::", { image 	});
+  console.log('::|::', { id : component.id, title, image }, '::|::');
+	const thumbImage = (component.image) ? await (new Promise((resolve, reject)=> {
+    Jimp.read(dataUriToBuffer(image)).then((image)=> {
+      resolve(image.scale(COMOPONENT_THUMB_SCALE).getBase64Async(Jimp.MIME_PNG));
+    }).catch((e)=> {
+      reject(e);
+    });
+  })) : Images.genPlaceholder({ width : width * COMOPONENT_THUMB_SCALE, height : height * COMOPONENT_THUMB_SCALE });
+
+//   console.log('::|::', { thumbImage }, '::|::');
+
+	const reformed = { ...component, html, styles, image, thumbImage, accessibility,
     typeID        : type_id,
     eventTypeID   : event_type_id,
     nodeID        : node_id,

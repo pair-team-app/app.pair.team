@@ -664,6 +664,7 @@ const mapDispatchToProps = (dispatch)=> {
 };
 
 const mapStateToProps = (state, ownProps)=> {
+	console.log('PlaygroundPage().mapDispatchToProps()',{ ownProps });
 	return ({
 		playground     : state.playground,
 		typeGroup      : state.typeGroup,
