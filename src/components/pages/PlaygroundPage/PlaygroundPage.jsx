@@ -399,6 +399,7 @@ class PlaygroundPage extends Component {
 			this.props.setPlayground(playground);
 			this.props.setComponent(component);
 			this.props.setComment(null);
+      this.props.history.push(`${this.props.location.pathname}/comments`);
 
 		}).catch((error)=> {
 		});
