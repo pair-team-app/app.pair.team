@@ -13,6 +13,8 @@ import { Pages } from '../../../../consts/uris';
 import { toggleTheme } from '../../../../redux/actions';
 
 
+let shareLink = React.createRef();
+
 class PlaygroundHeader extends Component {
 	constructor(props) {
 		super(props);
@@ -20,13 +22,11 @@ class PlaygroundHeader extends Component {
 		this.state = {
 			popover : false,
 		};
-
-		this.shareLink = React.createRef();
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
-		console.log('%s.componentDidUpdate()', this.constructor.name, { left : this.shareLink.offsetLeft, top : this.shareLink.offsetTop });
+		console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
 
  		const { popover } = this.props;
  		if (popover && !prevProps.popover && !this.state.popover) {
@@ -36,7 +36,7 @@ class PlaygroundHeader extends Component {
 
 	componentWillUnmount() {
 // 		console.log('%s.componentWillUnmount()', this.constructor.name);
-		this.shareLink = null;
+		shareLink = null;
 	}
 
 
@@ -88,7 +88,7 @@ class PlaygroundHeader extends Component {
 
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state, (this.shareLink) ? { left : this.shareLink.offsetLeft, top : this.shareLink.offsetTop } : null);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state, (shareLink) ? { left : shareLink.offsetLeft, top : shareLink.offsetTop } : null);
 
 		const { darkThemed, playground } = this.props;
 		const { popover } = this.state;
@@ -100,15 +100,10 @@ class PlaygroundHeader extends Component {
 			</div>
 			<div className="playground-header-col playground-header-col-right">
 				<NavLink to={Pages.DOCS}>Docs</NavLink>
-				<div className="playground-header-link" onClick={()=> this.setState({ popover : !this.state.popover })} ref={(element)=> { this.shareLink = element; }}>Share</div>
+				<PlaygroundShareLink popover={popover} playground={playground} onClick={()=> this.setState({ popover : !this.state.popover })} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
+				{/*<div className="playground-header-link" onClick={()=> this.setState({ popover : !this.state.popover })} ref={(element)=> { shareLink = element; }}>Share</div>*/}
 				<UserSettings onMenuItem={this.props.onSettingsItem} onLogout={this.props.onLogout} />
 			</div>
-
-			{(popover) && (<SharePopover
-				playground={playground}
-				position={{ x : this.shareLink.offsetLeft, y : this.shareLink.offsetTop }}
-				onPopup={this.props.onPopup}
-				onClose={this.handlePopoverClose} />)}
 		</div>);
 	}
 }
@@ -127,6 +122,20 @@ const PlayGroundHeaderBreadcrumb = (props)=> {
 };
 
 
+const PlaygroundShareLink = (props)=> {
+  console.log('PlaygroundShareLink()', props);
+
+  const { popover, playground } = props;
+	return (<div className="playground-share-link">
+    <div className="playground-header-link" onClick={props.onClick} ref={(element)=> { shareLink = element; }}>Share</div>
+
+    {(popover) && (<SharePopover
+      playground={playground}
+      position={{ x : shareLink.offsetLeft, y : shareLink.offsetTop }}
+      onPopup={props.onPopup}
+      onClose={props.onPopoverClose} />)}
+	</div>);
+};
 
 
 const mapDispatchToProps = (dispatch)=> {

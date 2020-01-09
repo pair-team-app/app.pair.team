@@ -40,11 +40,11 @@ class BasePopover extends Component {
 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
 		const { intro, outro } = { ...this.state, ...this.props};
-		const { fixed, duration, position, size } = { ...this.state, ...this.props.payload};
+		const { fixed, duration, position, size } = Object.assign({}, this.state, this.props.payload);
 
 		this.timeline = new TimelineMax();
 		this.setState({ fixed, duration, position, size, intro, outro }, ()=> {
-// 			console.log(fixed, duration, position, size, intro, outro);
+			console.log({ fixed, duration, position, size, intro, outro });
 			if (intro) {
 				this.onIntro();
 			}
@@ -58,7 +58,8 @@ class BasePopover extends Component {
 		const { position } = this.props.payload;
 		const { intro, outro } = this.state;
 
-		console.log('::POS::', { position : (position !== null), initStatePos :  (this.state.position.x !== 0 && this.state.position.y !== 0), prevPos : (position !== prevProps.payload.position), statePos : (position !== this.state.position) });
+// 		console.log('::POS::', { position : (position !== null), initStatePos :  (this.state.position.x !== 0 && this.state.position.y !== 0), prevPos : (position !== prevProps.payload.position), statePos : (position !== this.state.position) });
+		console.log('::POS::', { props : position, state : this.state.position });
 
 // 		if (position && (this.state.position.x !== 0 && this.state.position.y !== 0) && position !== prevProps.payload.position && position !== this.state.position) {
 // 			this.setState({ position }, ()=> {
@@ -155,7 +156,8 @@ class BasePopover extends Component {
 	};
 
 	render() {
-		console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, { props : this.props.payload, state : this.state.position });
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 // 		if (this.wrapper && this.timeline && this.timeline.time === 0) {
 // 			this.timeline.seek(0);
 // 		}
@@ -170,7 +172,9 @@ class BasePopover extends Component {
 			height : (size.width * size.height === 0) ? 'fit-content' : `${size.height}px`,
 		};
 
-		return (<div className={`base-popover${(!fixed) ? ' base-popover-relative' : ''}`} style={styles} ref={(element)=> { this.wrapper = element; }}>
+		console.log('styles', styles);
+
+		return (<div className={`base-popover${(fixed) ? ' base-popover-fixed' : ' base-popover-abs'}`} style={styles} ref={(element)=> { this.wrapper = element; }}>
 			<div className="base-popover-content-wrapper">{children}</div>
 		</div>);
 	}

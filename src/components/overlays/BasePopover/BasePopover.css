@@ -1,9 +1,8 @@
 
 .base-popover {
 	z-index: 1000;
-	position: fixed;
-	top: 0;
-	left: 0;
+	/*top: 0;*/
+	/*left: 0;*/
 	width: fit-content;
 	background-color: rgba(var(--site-bg-color), 1.0);
 	border: 1px solid rgba(var(--border-color), 1.0);
@@ -11,8 +10,12 @@
 	box-shadow: var(--overlay-shadow);
 }
 
-.base-popover-relative {
-	position: relative;
+.base-popover-fixed {
+	position: fixed;
+}
+
+.base-popover-abs {
+	position: absolute;
 }
 
 .base-popover-content-wrapper {

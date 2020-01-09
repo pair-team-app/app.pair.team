@@ -55,7 +55,7 @@ class PlaygroundPage extends Component {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { profile, componentTypes, playground, match, location } = this.props;
-		const { fetching, accessibility, processing } = this.state;
+		const { playgrounds, fetching, accessibility, processing } = this.state;
 
 		const { pathname } = location;
 		const { teamSlug, projectSlug, buildID, playgroundID, componentsSlug, componentID, commentID } = match.params;
@@ -193,9 +193,13 @@ class PlaygroundPage extends Component {
 			const prev = prevProps.location.pathname;
 			const curr = this.props.location.pathname;
 
-      if (curr !== prev) {
+
+			if (curr !== prev) {
         if (this.state.playgrounds.length > 0 && playgroundID && playgroundID !== prevProps.match.params.playgroundID) {
-          this.props.setPlayground(playgroundByID(this.state.playgrounds, playgroundID << 0));
+          const playgrounds = this.state.playgrounds.map((item)=> ((item.id === playground.id) ? playground : item));
+          this.setState({ playgrounds }, ()=> {
+            this.props.setPlayground(playgroundByID(this.state.playgrounds, playgroundID << 0));
+					});
 
         } else if (!playgroundID) {
           this.props.setPlayground(null);
@@ -667,7 +671,6 @@ const mapDispatchToProps = (dispatch)=> {
 };
 
 const mapStateToProps = (state, ownProps)=> {
-	console.log('PlaygroundPage().mapDispatchToProps()',{ ownProps });
 	return ({
 		playground     : state.playground,
 		typeGroup      : state.typeGroup,

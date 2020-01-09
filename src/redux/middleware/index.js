@@ -32,12 +32,12 @@ export function onMiddleware({ dispatch }) {
 				let { playground, components } = payload;
 
         components = (await Promise.all(Object.values(components).map(async(component)=> {
-          console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', 'component', { id : component.id, typeID : component.type_id, title : component.title });
+          console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', 'PRE', { id : component.id, typeID : component.type_id, title : component.title });
           return (await reformComponent(component));
         })));
 
         playground.components = playground.components.map((comp)=> ((components.find(({ id })=> ((id === comp.id))) || comp)));
-        console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', 'REFORM', playground.components);
+        console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', 'POST', playground.components);
 
         dispatch({
           type    : SET_REFORMED_TYPE_GROUP,
@@ -62,25 +62,6 @@ export function onMiddleware({ dispatch }) {
 // 				});
 
 // 			} else if (type === SET_TEAMS) {
-// 				const artboards = payload.uploads.map((upload)=> (upload.pages.flatMap((page)=> (page.artboards.filter((artboard)=> (artboard.type === 'page_child'))))).pop()).filter((artboard)=> (artboard)).map((artboard) => ({
-// 					id        : artboard.id << 0,
-// 					pageID    : artboard.page_id << 0,
-// 					uploadID  : artboard.upload_id << 0,
-// 					title     : artboard.upload_title,
-// 					pageTitle : artboard.title,
-// 					filename  : artboard.filename,
-// 					creator   : artboard.creator,
-// 					meta      : JSON.parse(artboard.meta),
-// 					added     : artboard.added
-// 				}));
-//
-// 				if (artboards.length > 0) {
-// 					dispatch({
-// 						type    : APPEND_HOME_ARTBOARDS,
-// 						payload : artboards
-// 					});
-// 				}
-
 			} else if (type === SET_PLAYGROUND) {
 
       }

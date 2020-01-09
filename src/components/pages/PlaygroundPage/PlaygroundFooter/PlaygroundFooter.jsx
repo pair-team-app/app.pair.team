@@ -69,29 +69,25 @@ const FooterDesktopButton = (props)=> {
 //   console.log('PlaygroundFooter().FooterDesktopButton()', props);
 
   const { hidden, selected } = props;
-  return (
-    <button className="quiet-button glyph-button" onClick={props.onClick} data-hidden={hidden} data-selected={selected}>
-      <svg xmlns="http://www.w3.org/2000/svg" width="37" height="30" viewBox="0 0 37 30">
-        <g id="Group_309" data-name="Group 309" transform="translate(-19.585 -16)">
-          <rect id="Rectangle_101" data-name="Rectangle 101" width="37" height="22" rx="2" transform="translate(19.585 16)"/>
-          <path id="Path_111" data-name="Path 111" d="M42.218,80a.78.78,0,0,1-.672-.389,6.834,6.834,0,0,0-2.106-1.08,16.351,16.351,0,0,0-10.881,0,6.834,6.834,0,0,0-2.106,1.08.773.773,0,0,1-1.048.29.809.809,0,0,1-.323-1.059c.413-.843,2.365-1.6,2.954-1.818a17.88,17.88,0,0,1,11.927,0c.589.213,2.541.975,2.954,1.818a.816.816,0,0,1-.034.778A.779.779,0,0,1,42.218,80Zm-15.736-.442h0Zm15.035,0h0Z" transform="translate(3.585 -34)"/>
-        </g>
-      </svg>
-		</button>
-  );
+  return (<button className="quiet-button glyph-button" onClick={props.onClick} data-hidden={hidden} data-selected={selected}>
+		<svg xmlns="http://www.w3.org/2000/svg" width="37" height="30" viewBox="0 0 37 30">
+			<g id="Group_309" data-name="Group 309" transform="translate(-19.585 -16)">
+				<rect id="Rectangle_101" data-name="Rectangle 101" width="37" height="22" rx="2" transform="translate(19.585 16)"/>
+				<path id="Path_111" data-name="Path 111" d="M42.218,80a.78.78,0,0,1-.672-.389,6.834,6.834,0,0,0-2.106-1.08,16.351,16.351,0,0,0-10.881,0,6.834,6.834,0,0,0-2.106,1.08.773.773,0,0,1-1.048.29.809.809,0,0,1-.323-1.059c.413-.843,2.365-1.6,2.954-1.818a17.88,17.88,0,0,1,11.927,0c.589.213,2.541.975,2.954,1.818a.816.816,0,0,1-.034.778A.779.779,0,0,1,42.218,80Zm-15.736-.442h0Zm15.035,0h0Z" transform="translate(3.585 -34)"/>
+			</g>
+		</svg>
+	</button>);
 };
 
 const FooterMobileButton = (props)=> {
 //   console.log('PlaygroundFooter().FooterMobileButton()', props);
 
   const { hidden, selected } = props;
-	return (
-    <button className="quiet-button glyph-button" onClick={props.onClick} data-hidden={hidden} data-selected={selected}>
-      <svg xmlns="http://www.w3.org/2000/svg" width="17.838" height="30" viewBox="0 0 17.838 30">
-        <rect id="Rectangle_102" data-name="Rectangle 102" width="30" height="17.838" rx="2" transform="translate(17.838) rotate(90)"/>
-      </svg>
-		</button>
-  );
+	return (<button className="quiet-button glyph-button" onClick={props.onClick} data-hidden={hidden} data-selected={selected}>
+		<svg xmlns="http://www.w3.org/2000/svg" width="17.838" height="30" viewBox="0 0 17.838 30">
+			<rect id="Rectangle_102" data-name="Rectangle 102" width="30" height="17.838" rx="2" transform="translate(17.838) rotate(90)"/>
+		</svg>
+	</button>);
 };
 
 

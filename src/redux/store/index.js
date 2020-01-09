@@ -8,25 +8,11 @@ import { onMiddleware } from '../middleware';
 import rootReducer from '../reducers';
 
 
-const attachDispatchLog = (store)=> {
-	const rawDispatch = store.dispatch;
-	return ((action)=> {
-		console.group(action.type);
-		console.log('[:]', 'ACTION [%s]--> STORE PREV STATE', action, store.getState(), '[:]');
-
-		const retVal = rawDispatch(action);
-    console.log('[:]', 'ACTION [%s]--> STORE NEXT STATE', store.getState(), '[:]');
-		console.groupEnd();
-
-		return (retVal);
-
-	})
-};
-
-const createLogActionStackTraceMiddleware = (actionTypes = []) => {
+const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
   const logActionStackTraceMiddleware = (storeAPI)=> (next)=> (action)=> {
     if(action.type && actionTypes.includes(action.type)) {
-      console.log(`[|] Action: ${action.type}`);
+    	console.log('[|:|] Store', storeAPI);
+      console.trace('[:|:] "%s"', action.type, action);
     }
 
     return (next(action));
@@ -41,9 +27,9 @@ const stackTraceMiddleware = createLogActionStackTraceMiddleware(['SET_PLAYGROUN
 
 // const store = createStore(rootReducer, applyMiddleware(onMiddleware, thunk));
 const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
-// store.dispatch = attachDispatchLog(store);
 
 
+// start filling store
 if (typeof cookie.load('user_id') === 'undefined') {
 	cookie.save('user_id', '0', { path : '/', sameSite : false });
 

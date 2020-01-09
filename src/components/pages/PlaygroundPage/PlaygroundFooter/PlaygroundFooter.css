@@ -36,3 +36,22 @@
 .playground-footer-content-toggle-wrapper {
 	text-align: right;
 }
+
+.playground-footer-content-toggle-wrapper > button {
+	/*min-width: 64px;*/
+	padding: 10px 20px;
+}
+
+.playground-footer-content-toggle-wrapper > button > svg {
+	width: 30px;
+	height: 30px;
+	color: rgba(var(--site-fg-color), 1.0);
+	fill: rgba(var(--site-fg-color), 1.0);
+	transition: all 250ms ease-out;
+}
+
+
+.playground-footer-content-toggle-wrapper > button[data-selected="true"] > svg {
+	color: rgba(255, 255, 255, 1.0);
+	fill: rgba(255, 255, 255, 1.0);
+}

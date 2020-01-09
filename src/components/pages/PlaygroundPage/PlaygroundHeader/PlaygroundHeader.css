@@ -68,6 +68,10 @@
 }
 
 
+.playground-share-link {
+	position: relative;
+}
+
 .playground-header-link {
 	color: rgba(var(--link-color), 1.0);
 	transition: color 0.125s ease-out;

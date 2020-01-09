@@ -3,7 +3,7 @@ import { Maths } from 'lang-js-utils';
 
 
 let rootNode = null;
-const PADDING = 30;
+const PADDING = 0;
 
 
 export default function packComponents(components) {
@@ -91,7 +91,7 @@ const genRects = (components, sort=true)=> {
 
 	const msort = (i, ii, types)=> {
 		for (const type of types) {
-//       console.log(':::msort:::', { type, diff : sorting.base[type](i, ii), i, ii });
+      console.log(':::msort:::', { type, diff : sorting.base[type](i, ii), i, ii });
 
       const diff = sorting.base[type](i, ii);
       if (diff !== 0) {
@@ -102,7 +102,7 @@ const genRects = (components, sort=true)=> {
 		return (0);
 	};
 
-	return ((sort) ? rects.sort(sorting.height) : rects);
+	return ((sort) ? rects.sort(sorting.base.width).reverse() : rects);
 };
 
 const findNode = (node, width, height)=> {
