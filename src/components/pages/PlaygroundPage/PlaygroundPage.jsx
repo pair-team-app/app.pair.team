@@ -21,7 +21,7 @@ import {
   componentByID,
   componentFromComment,
   playgroundByID,
-  typeGroupByKey, componentsFromTypeGroup
+  typeGroupByKey, componentsFromTypeGroup, typeGroupComponentsProcessed
 } from './utils/lookup';
 import { reformComment, reformComponent } from './utils/reform';
 import { Modals, API_ENDPT_URL } from '../../../consts/uris';
@@ -542,10 +542,9 @@ class PlaygroundPage extends Component {
 
 
   onFetchTypeGroupComponents = (typeGroup)=> {
-
     const { playground } = this.props;
     console.log('%s.onFetchTypeGroupComponents()', this.constructor.name, { typeGroup, components : componentsFromTypeGroup(playground.components, typeGroup) });
-    if (!componentsFromTypeGroup(playground.components, typeGroup).every(({ html, styles, rootStyles })=> (html && styles && rootStyles))) {
+    if (!typeGroupComponentsProcessed(typeGroup, playground.components)) {
       this.setState({ processing : true }, ()=> {
         this.props.fetchPlaygroundComponentGroup({ playground, typeGroup });
 			});

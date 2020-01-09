@@ -32,12 +32,13 @@ export function onMiddleware({ dispatch }) {
 				let { playground, components } = payload;
 
         components = (await Promise.all(Object.values(components).map(async(component)=> {
-          console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', 'PRE', { id : component.id, typeID : component.type_id, title : component.title });
+          const { id, type_id : typeID, title, html, styles, rootStyles, processed } = component;
+          console.log('TYPE_GROUP_LOADED', 'PRE', { id, typeID, title, html, styles, rootStyles, processed });
           return (await reformComponent(component));
         })));
 
         playground.components = playground.components.map((comp)=> ((components.find(({ id })=> ((id === comp.id))) || comp)));
-        console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', 'POST', playground.components);
+        console.log('TYPE_GROUP_LOADED', 'POST', playground.components.map(({ id, typeID, title, html, styles, rootStyles, processed })=> ({ id, typeID, title, html, styles, rootStyles, processed })));
 
         dispatch({
           type    : SET_REFORMED_TYPE_GROUP,

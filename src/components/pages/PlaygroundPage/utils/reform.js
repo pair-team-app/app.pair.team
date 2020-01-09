@@ -74,7 +74,7 @@ export const reformComponent = async(component, overwrite={})=> {
 
 
 //   console.log('::|::', { image 	});
-  console.log('::|::', { id : component.id, title, image }, '::|::');
+//   console.log('::|::', { id : component.id, title, image }, '::|::');
 	const thumbImage = (component.image) ? await (new Promise((resolve, reject)=> {
     Jimp.read(dataUriToBuffer(image)).then((image)=> {
       resolve(image.scale(COMOPONENT_THUMB_SCALE).getBase64Async(Jimp.MIME_PNG));
@@ -99,10 +99,11 @@ export const reformComponent = async(component, overwrite={})=> {
     } : null,
     comments      : comments.map((comment)=> (reformComment(comment))).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
     selected      : false,
+		processed     : ((html && styles && rootStyles) !== null),
     ...overwrite
   };
 
 
-  console.log('DECRYPTED: [%s]', component.id, reformed);
+  console.log('REFORMED + DECRYPTED: [%s]', component.id, reformed);
 	return (reformed);
 };

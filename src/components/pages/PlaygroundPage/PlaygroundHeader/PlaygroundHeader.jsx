@@ -26,7 +26,7 @@ class PlaygroundHeader extends Component {
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
-		console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
 
  		const { popover } = this.props;
  		if (popover && !prevProps.popover && !this.state.popover) {
@@ -123,7 +123,7 @@ const PlayGroundHeaderBreadcrumb = (props)=> {
 
 
 const PlaygroundShareLink = (props)=> {
-  console.log('PlaygroundShareLink()', props);
+//   console.log('PlaygroundShareLink()', props);
 
   const { popover, playground } = props;
 	return (<div className="playground-share-link">

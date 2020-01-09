@@ -39,7 +39,7 @@ class PlaygroundProcessingOverlay extends Component {
 
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state }, snapshot);
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state }, snapshot);
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : Object.fromEntries(Object.entries(prevProps).filter(([key])=>UPD_PROPS.includes(key))), props : Object.fromEntries(Object.entries(this.props).filter(([key])=>UPD_PROPS.includes(key))) });
 
     const { playground, typeGroup } = this.props;
@@ -69,7 +69,7 @@ class PlaygroundProcessingOverlay extends Component {
   }
 
   handleComplete = ()=> {
-		console.log('%s.handleComplete()', this.constructor.name, this.state);
+// 		console.log('%s.handleComplete()', this.constructor.name, this.state);
     this.props.onComplete();
   };
 

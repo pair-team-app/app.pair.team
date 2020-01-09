@@ -4,18 +4,13 @@
 import React, { Component } from 'react';
 import './PlaygroundContent.css';
 
-import { Images } from 'lang-js-utils';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
 import PlaygroundComment from '../PlaygroundComment';
 import ComponentMenu from './ComponentMenu';
-import { inlineStyles } from '../utils/css';
 import { componentsFromTypeGroup } from '../utils/lookup';
-import packComponents, { calcSize } from '../utils/packing';
-import { reformComment } from '../utils/reform';
-import {COMOPONENT_THUMB_SCALE} from "../../../../consts/formats";
 
 
 class PlaygroundContent extends Component {
@@ -62,13 +57,6 @@ class PlaygroundContent extends Component {
     const { position, popover } = this.state;
 
     const components = (typeGroup) ? (component) ? [component] : componentsFromTypeGroup(playground.components, typeGroup) : [];
-//     const packedRects = (playground && components.every(({ html, styles, rootStyles })=> (html && styles && rootStyles))) ? packComponents(components) : [];
-//
-//     console.log(':::::::::_', { typeGroup, component, components });
-//
-//     const maxSize = calcSize(packedRects);
-// 		console.log(':::::::', 'maxSize', maxSize);
-// 		console.log(':::::::', 'component test', { '! << 0' : (!(!component << 0)), 'itself' : (component) });
 
     return (<div className="playground-content" data-component={(!(!component << 0))} data-cursor={cursor}>
       {(typeGroup && components.length > 0) && (<div className="playground-content-components-wrapper" data-component={(!(!component << 0))}>
@@ -145,7 +133,9 @@ const PlaygroundComponentsGrid =(props)=> {
   return (<div className="playground-components-grid">
     {/*{(Array(5).fill(...components).map((component, i)=> {*/}
     {(components.map((component, i)=> {
-      const { id, title, thumbImage, html, styles, rootStyles } = component;
+      const { id, title, thumbImage, html, styles, rootStyles, processed } = component;
+
+      console.log('PlaygroundComponentsGrid()', { processed });
       return (<div key={i} className="playground-component-wrapper playground-components-list-item" onClick={(event)=> props.onItemClick(event, component)}>
         <h5 className="component-title">{(html && styles && rootStyles) ? title : ''}</h5>
         <img src={thumbImage} alt={title} />

@@ -43,3 +43,8 @@ export const typeGroupByID = (typeGroups, typeGroupID)=> {
 export const typeGroupByKey = (typeGroups, typeGroupKey)=> {
 	return (typeGroups.find(({ key })=> (key === typeGroupKey)));
 };
+
+
+export const typeGroupComponentsProcessed = (typeGroup, components)=> {
+  return (componentsFromTypeGroup(components, typeGroup).every(({ html, styles, rootStyles })=> (html && styles && rootStyles)));
+};

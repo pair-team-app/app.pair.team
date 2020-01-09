@@ -96,7 +96,7 @@ export function fetchPlaygroundComponentGroup(payload) {
       const { components } = response.data;
       dispatch({
         type    : TYPE_GROUP_LOADED,
-        payload : { playground, components }
+        payload : { playground, components : Object.values(components) }
       });
 
     }).catch((error)=> {
