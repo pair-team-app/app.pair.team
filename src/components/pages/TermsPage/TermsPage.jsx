@@ -32,24 +32,24 @@ function TermsPage(props) {
 					<p>Welcome to the Pair (&ldquo;Pair&rdquo;) website (www.pairurl.com) (the &ldquo;Site&rdquo;). Please read these Terms of Service (the &ldquo;Terms&rdquo;) carefully because they govern your use of our websites including Pair.com, designsystems.com and any other websites that we may later own or operate (&ldquo;Site&rdquo; or &ldquo;Sites&rdquo;); mobile applications (&ldquo;App(s)&rdquo;), application program interface(s) (&ldquo;API(s)&rdquo;) and our design tool services and other products and services we may later own or operate (collectively called the &ldquo;Services&rdquo;).</p>
 				</div>
 
-				<h5>1. Agreement to these Terms</h5>
+				<h5 className="terms">1. Agreement to these Terms</h5>
 				<div>
 					<p>By using our Services, you agree to be bound by these Terms. If you don&rsquo;t agree to these Terms, do not use the Services. If you are accessing and using the Services on behalf of a company (such as your employer) or other legal entity, you represent and warrant that you have the authority to bind that company or other legal entity to these Terms. In that case, &ldquo;you&rdquo; and &ldquo;your&rdquo; will refer to that company or other legal entity.</p>
 				</div>
 
-				<h5>2. Changes to the Terms or Services</h5>
+				<h5 className="terms">2. Changes to the Terms or Services</h5>
 				<div>
 					<p>We may modify the Terms at any time, in our sole discretion. If we do so, we&rsquo;ll let you know either by posting the modified Terms on the Site or through other communications. If you continue to use the Services, you are indicating that you agree to the modified Terms. We may change or discontinue all or any part of the Services, at any time and without notice, at our sole discretion.</p>
 					<p>ARBITRATION NOTICE: IF YOU ARE ACCESSING AND USING THE SERVICES AS AN INDIVIDUAL (NOT ON BEHALF OF A COMPANY OR OTHER LEGAL ENTITY), UNLESS YOU OPT OUT OF ARBITRATION WITHIN 30 DAYS OF THE DATE YOU FIRST AGREE TO THESE TERMS BY FOLLOWING THE OPT-OUT PROCEDURE SPECIFIED IN THE &ldquo;DISPUTE RESOLUTION FOR INDIVIDUAL CONSUMERS&rdquo; SECTION BELOW, AND YOU AGREE THAT DISPUTES BETWEEN YOU AND Pair WILL BE RESOLVED BY BINDING, INDIVIDUAL ARBITRATION, EXCEPT FOR CERTAIN TYPES OF DISPUTES DESCRIBED IN THAT SECTION, AND YOU ARE WAIVING YOUR RIGHT TO A TRIAL BY JURY OR TO PARTICIPATE AS A PLAINTIFF OR CLASS MEMBER IN ANY PURPORTED CLASS ACTION OR REPRESENTATIVE PROCEEDING.</p>
 				</div>
 
-				<h5>3. Who May Use the Services</h5>
+				<h5 className="terms">3. Who May Use the Services</h5>
 				<div>
 					<p>You may use the Services if you are 13 years or older and are not barred from using the Services under applicable law.</p>
 					<p>In order to use certain features of the Services, you must create an account (&ldquo;Account&rdquo;) via the Site and become a registered user (&ldquo;User&rdquo;). As a User, you may use certain features of the Services as described in Section 4 and you may also create and develop Applications that can be made available via and used with the Services, as described in Section 5. You have to provide us with accurate and complete information and keep it up-to-date. You&rsquo;ll notify us immediately of any unauthorized use of your Account and you&rsquo;re responsible for all activities that occur under your Account, whether or not you know about them.</p>
 				</div>
 
-				<h5>4. Using the Services</h5>
+				<h5 className="terms">4. Using the Services</h5>
 				<div>
 					<ul className="terms-page-subsection">
 						<li>
@@ -71,7 +71,7 @@ function TermsPage(props) {
 					</ul>
 				</div>
 
-				<h5>5. Developing Applications for Use on the Services</h5>
+				<h5 className="terms">5. Developing Applications for Use on the Services</h5>
 				<div>
 					<ul className="terms-page-subsection">
 						<li>
@@ -85,7 +85,7 @@ function TermsPage(props) {
 					</ul>
 				</div>
 
-				<h5>6. Subscriptions and Payment</h5>
+				<h5 className="terms">6. Subscriptions and Payment</h5>
 				<div>
 					<ul className="terms-page-subsection">
 						<li>
@@ -112,7 +112,7 @@ function TermsPage(props) {
 					</ul>
 				</div>
 
-				<h5>7. Content and Content Rights</h5>
+				<h5 className="terms">7. Content and Content Rights</h5>
 				<div>
 					<p>For purposes of these Terms: <span className="roman-index">i</span> &ldquo;Content&rdquo; means text, graphics, designs, images, music, software, audio, video, works of authorship of any kind, and information or other materials that are posted, generated, provided or otherwise made available through the Services (including without limitation, the Tools); and <span className="roman-index">ii</span> &ldquo;User Content&rdquo; means any Content that Users (including you) provide to be made available through the Services, including without limitation any Designs and Project Content created by a User (other than the Tools and any other Content that we provide to you) as well as modifications a User makes to another User&rsquo;s Designs, digital typefonts or font files (&ldquo;Fonts&ldquo;), and Applications.</p>
 					<ul className="terms-page-subsection">
@@ -146,17 +146,17 @@ function TermsPage(props) {
 					</ul>
 				</div>
 
-				<h5>8. Feedback</h5>
+				<h5 className="terms">8. Feedback</h5>
 				<div>
 					<p>We welcome feedback, comments and suggestions for improvements to the Services (&ldquo;Feedback&rdquo;) by emailing us at <NavLink to="mailto:support@pairurl.com" target="_blank" onClick={(event)=> handleURL(event, 'mailto:support@pairurl.com')}>support@pairurl.com</NavLink> . As we need to be able to freely work with your Feedback to improve the Services, you hereby irrevocably transfer and assign all right, title and interest (including all intellectual property rights, such as copyrights or trade secrets) in and to the Feedback, including any and all &ldquo;moral rights&rdquo; that you might have in such Feedback, and you hereby forever waive and agree never to assert any and all &ldquo;moral rights&rdquo; you may have in the Feedback.</p>
 				</div>
 
-				<h5>9. Privacy Policy</h5>
+				<h5 className="terms">9. Privacy Policy</h5>
 				<div>
 					<p>Please refer to our Privacy Policy (www.pairurl.com/privacy) for information on how we collect, use and disclose information from our users.</p>
 				</div>
 
-				<h5>10. General Prohibitions</h5>
+				<h5 className="terms">10. General Prohibitions</h5>
 				<div>
 					<p className="list-title">You agree not to do any of the following:</p>
 					<ul className="terms-page-subsection">
@@ -180,50 +180,50 @@ function TermsPage(props) {
 					<p>Although we&rsquo;re not obligated to monitor access to or use of the Services or Content or to review or edit any Content, we have the right to do so for the purpose of operating the Services, to ensure compliance with these Terms, or to comply with applicable law or other legal requirements. We reserve the right, but are not obligated, to remove or disable access to any Content, including User Content, at any time and without notice, including, but not limited to, if we, at our sole discretion, consider any Content or User Content to be objectionable, in violation of these Terms or the law. We may also consult and cooperate with law enforcement authorities to prosecute users who violate the law.</p>
 				</div>
 
-				<h5>11. Copyright Policy</h5>
+				<h5 className="terms">11. Copyright Policy</h5>
 				<div>
 					<p>Pair respects copyright law and expects its users to do the same. It is Pair&rsquo;s policy to terminate in appropriate circumstances Users who repeatedly infringe the rights of copyright holders.</p>
 				</div>
 
-				<h5>12. Links to and Integration with Third Party Websites or Resources</h5>
+				<h5 className="terms">12. Links to and Integration with Third Party Websites or Resources</h5>
 				<div>
 					<p>The Services may contain links to third-party websites or resources and may offer integration with such third-party websites or services (For example, we may offer integration with certain Google services). We provide these links and integration functions only as a convenience and are not responsible for the content, products or services on or available from those websites or resources or links displayed on such sites. You acknowledge sole responsibility for, and assume all risk arising from, your use of or integration with any third-party websites or resources.</p>
 				</div>
 
-				<h5>13. Publicity</h5>
+				<h5 className="terms">13. Publicity</h5>
 				<div>
 					<p>You agree that Pair may identify you or your company and use your company&rsquo;s logo and trademarks (collectively, the &ldquo;Marks&rdquo;) on the Site and in marketing materials to identify you or your company as a user of the Services, and you hereby grant us a non-exclusive, royalty-free license to do so on our Site or in any media now or later developed in connection with any marketing, promotion or advertising of Pair or the Services. If you do not want to allow us the right to use your Marks or identify you or your company you may opt out such marketing requests by emailing us at <NavLink to="mailto:press@pairurl.com" target="_blank" onClick={(event)=> handleURL(event, 'mailto:press@pairurl.com')}>press@pairurl.com</NavLink>.</p>
 				</div>
 
-				<h5>14. Termination</h5>
+				<h5 className="terms">14. Termination</h5>
 				<div>
 					<p>We may terminate your access to and use of the Services, at our sole discretion, at any time and without notice or liability to you, provided that, if you have paid for a Subscription and the termination is not due to your breach of this Agreement, Pair will refund you any prepaid fees for the period of your Subscription that extends beyond the effective date of such termination. You may cancel your Account at any time by sending an email to us at <NavLink to="mailto:support@pairurl.com" target="_blank" onClick={(event)=> handleURL(event, 'mailto:support@pairurl.com')}>support@pairurl.com</NavLink>. Upon any termination, discontinuation or cancellation of Services or your Account, the following provisions of these Terms will survive: Feedback; Privacy Policy; provisions related to permissions to access Content (to the extent applicable); Content and Content Rights; Content Ownership, Responsibility and Removal; General Prohibitions; Warranty Disclaimers; Indemnity; Limitation of Liability; Governing Law and Dispute Resolution; General Terms.</p>
 				</div>
 
-				<h5>15. Warranty Disclaimers</h5>
+				<h5 className="terms">15. Warranty Disclaimers</h5>
 				<div>
 					<p>AS BETWEEN YOU AND Pair, THE SERVICES, CONTENT, AND APPLICATIONS MADE AVAILABLE ON THE SERVICES ARE PROVIDED &ldquo;AS IS,&rdquo; WITHOUT WARRANTY OF ANY KIND. WITHOUT LIMITING THE FOREGOING, WE EXPLICITLY DISCLAIM ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT AND NON-INFRINGEMENT AND ANY WARRANTIES ARISING OUT OF COURSE OF DEALING OR USAGE OF TRADE. We make no warranty that the Services will meet your requirements or be available on an uninterrupted, secure, or error-free basis. We make no warranty regarding the quality, accuracy, timeliness, truthfulness, completeness or reliability of any Content. If you install and use an Application that is made available on the Services, we make no warranty that the Application will perform its intended function or deliver any expected results, and you acknowledge that you assume all risk arising from use of the Applications.</p>
 				</div>
 
-				<h5>16. Indemnity</h5>
+				<h5 className="terms">16. Indemnity</h5>
 				<div>
 					<p>You will indemnify and hold harmless Pair and its officers, directors, employees and agents, from and against any claims, disputes, demands, liabilities, damages, losses, and costs and expenses, including, without limitation, reasonable legal and accounting fees, arising out of or in any way connected with <span className="roman-index">i</span> your access to or use of the Services or Content; <span className="roman-index">ii</span> your User Content; or <span className="roman-index">iii</span> your violation of these Terms.</p>
 				</div>
 
-				<h5>17. Limitation of Liability</h5>
+				<h5 className="terms">17. Limitation of Liability</h5>
 				<div>
 					<p>NEITHER Pair NOR ANY OTHER PARTY INVOLVED IN CREATING, PRODUCING, OR DELIVERING THE SERVICES, TOOLS, OR CONTENT WILL BE LIABLE FOR ANY INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, LOSS OF DATA OR GOODWILL, SERVICE INTERRUPTION, COMPUTER DAMAGE OR SYSTEM FAILURE OR THE COST OF SUBSTITUTE SERVICES ARISING OUT OF OR IN CONNECTION WITH THESE TERMS OR FROM THE USE OF OR INABILITY TO USE THE SERVICES, TOOLS, OR CONTENT, WHETHER BASED ON WARRANTY, CONTRACT, TORT (INCLUDING NEGLIGENCE), PRODUCT LIABILITY OR ANY OTHER LEGAL THEORY, AND WHETHER OR NOT Pair HAS BEEN INFORMED OF THE POSSIBILITY OF SUCH DAMAGE, EVEN IF A LIMITED REMEDY SET FORTH HEREIN IS FOUND TO HAVE FAILED OF ITS ESSENTIAL PURPOSE. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR LIMITATION OF LIABILITY FOR CONSEQUENTIAL OR INCIDENTAL DAMAGES, SO THE ABOVE LIMITATION MAY NOT APPLY TO YOU.</p>
 					<p>IN NO EVENT WILL Pair&rsquo;s TOTAL LIABILITY ARISING OUT OF OR IN CONNECTION WITH THESE TERMS, ANY DISPUTE IN RELATION TO INTELLECTUAL PROPERTY RIGHTS IN A DESIGN OR FROM THE USE OF OR INABILITY TO USE THE SERVICES OR CONTENT EXCEED THE AMOUNTS YOU HAVE PAID OR ARE PAYABLE BY YOU TO Pair FOR USE OF THE SERVICES OR CONTENT, OR IF YOU HAVE NOT HAD ANY SUCH PAYMENT OBLIGATIONS, ONE HUNDRED UNITED STATES DOLLARS ($100).</p>
 					<p>THE LIMITATIONS OF DAMAGES SET FORTH ABOVE ARE FUNDAMENTAL ELEMENTS OF THE BASIS OF THE BARGAIN BETWEEN Pair AND YOU.</p>
 				</div>
 
-				<h5>18. Governing Law</h5>
+				<h5 className="terms">18. Governing Law</h5>
 				<div>
 					<p>These Terms and any action related thereto will be governed by the laws of the State of California without regard to its conflict of laws provisions.</p>
 					<p>This Section 18 only applies to Claims between us and individual consumers, and is governed by The Federal Arbitration Act.</p>
 				</div>
 
-				<h5>19. Dispute Resolution for Individual Consumers</h5>
+				<h5 className="terms">19. Dispute Resolution for Individual Consumers</h5>
 				<div>
 					<p>Our goal is to provide you with great service, so we&rsquo;ll try our best to resolve any disagreements that you have with us. If we can&rsquo;t, then you and we both agree to resolve disputes related to your use of the Services or these Terms (each, a &ldquo;Claim&rdquo;) in binding arbitration instead of court, except that a Claim may be brought in small claims court if it qualifies for it. You and we also agree that either party may bring suit in court to enjoin the infringement or other misuse of intellectual property rights.</p>
 					<ul>
@@ -236,12 +236,12 @@ function TermsPage(props) {
 					<p><span className="terms-page-notice-msg">INSTRUCTIONS FOR OPTING-OUT OF ARBITRATION:</span> If you don&rsquo;t want to agree to arbitrate your Claims as explained above, then you can opt-out of this arbitration agreement by notifying us of your decision in writing at <NavLink to="mailto:legal@pairurl.com" target="_blank" onClick={(event)=> handleURL(event, 'mailto:legal@pairurl.com')}>legal@pairurl.com</NavLink>, 116 New Montgomery St, Suite 400, San Francisco, CA 94105. You must opt-out within 30 days of the date you first agree to these Terms or any updated Terms. </p>
 				</div>
 
-				<h5>20. Dispute Resolution for Companies</h5>
+				<h5 className="terms">20. Dispute Resolution for Companies</h5>
 				<div>
 					<p>If you are accessing and using the Services on behalf of a company or other legal entity, any claim, cause of action or dispute between the company or other legal entity and Pair arising out of or relating to these Terms or the Services and Content will be resolved exclusively in the U.S. District Court for the Northern District of California or a state court located in Santa Clara County, and you agree to submit to the personal jurisdiction of such courts for the purpose of litigating all such claims.</p>
 				</div>
 
-				<h5>21. General Terms</h5>
+				<h5 className="terms">21. General Terms</h5>
 				<div>
 					<p>These Terms constitute the entire and exclusive understanding and agreement between Pair and you regarding the Services and Content, and these Terms supersede and replace any and all prior oral or written understandings or agreements between Pair and you regarding the Services and Content. If for any reason an arbitrator or court of competent jurisdiction finds any provision of these Terms invalid or unenforceable, that provision will be enforced to the maximum extent permissible and the other provisions of these Terms will remain in full force and effect.</p>
 					<p>You may not assign or transfer these Terms, by operation of law or otherwise, without Pair&rsquo;s prior written consent. Any attempt by you to assign or transfer these Terms, without such consent, will be null and of no effect. Pair may freely assign or transfer these Terms without restriction. Subject to the foregoing, these Terms will bind and inure to the benefit of the parties, their successors and permitted assigns.</p>
@@ -249,7 +249,7 @@ function TermsPage(props) {
 					<p>Pair&rsquo;s failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. Except as expressly set forth in these Terms, the exercise by either party of any of its remedies under these Terms will be without prejudice to its other remedies under these Terms or otherwise.</p>
 				</div>
 
-				<h5>22. Accessing Apps</h5>
+				<h5 className="terms">22. Accessing Apps</h5>
 				<div>
 					<p className="list-title">The following terms apply to any App accessed through or downloaded from any app store or distribution platform (like the Apple App Store or Google Play) where the App may now or in the future be made available (each an "App Provider"). You acknowledge and agree that:</p>
 					<ul>
@@ -264,7 +264,7 @@ function TermsPage(props) {
 					</ul>
 				</div>
 
-				<h5>23. Contact Information</h5>
+				<h5 className="terms">23. Contact Information</h5>
 				<div>
 					<p>If you have any questions about these Terms or the Services please contact Pair at: <NavLink to="mailto:support@pairurl.com" target="_blank" onClick={(event)=> handleURL(event, 'mailto:support@pairurl.com')}>support@pairurl.com</NavLink>.</p>
 				</div>

@@ -50,13 +50,13 @@ export const reformComponent = async(component, overwrite={})=> {
 	delete (component['tag_name']);
 	delete (component['root_styles']);
 
-	image = (image && image.length > 1) ? `data:image/png;base64,${btoa(await unzipSync(image))}` : Images.genPlaceholder({ width, height });
+	image = (image && image.length > 1) ? `data:image/png;base64,${btoa(await unzipSync(image))}` : Images.genColor({ r : 253, b : 253, g : 253, a : 0.0 }, { width, height });
 	html = (html) ? decryptText(await unzipSync(html)) : null;
 	styles = (styles) ? decryptObject(await unzipSync(styles)) : null;
 	accessibility = (accessibility) ? decryptObject(await unzipSync(accessibility)) : null;
 	const rootStyles = (root_styles) ? convertStyles(decryptObject(await unzipSync(root_styles))) : null;
 
-// 	console.log("::|::", { image, html, styles, accessibility, rootStyles });
+// 	console.log('::|::', { image, html, styles, accessibility, rootStyles });
 //	console.log(component.id, 'STYLES:', decryptText(styles));
 // 	console.log(component.id, 'STYLES:', decryptObject(styles));
 //	console.log(component.id, 'ACCESSIBILITY:', decryptText(accessibility));
@@ -66,7 +66,7 @@ export const reformComponent = async(component, overwrite={})=> {
 // 	console.log('META.BOUNDS:', meta.bounds.height, meta.bounds.width);
 
 
-//   console.log("::|::", { image 	});
+//   console.log('::|::', { image 	});
   console.log('::|::', { id : component.id, title, image }, '::|::');
 	const thumbImage = (component.image) ? await (new Promise((resolve, reject)=> {
     Jimp.read(dataUriToBuffer(image)).then((image)=> {

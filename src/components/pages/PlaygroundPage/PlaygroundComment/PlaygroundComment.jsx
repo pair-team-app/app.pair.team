@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import './PlaygroundComment.css';
 
+import { Maths } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
@@ -32,7 +33,10 @@ class PlaygroundComment extends Component {
       document.addEventListener('keydown', this.handleKeyDown);
     }
 
-		this.setState({ position });
+    console.log('%s.componentDidMount()', this.constructor.name, { position : comment });
+		if (position) {
+      this.setState({ position : Maths.geom.pointsAdd(position, { x : 0, y : 38 }) });
+    }
 	}
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -86,7 +90,7 @@ class PlaygroundComment extends Component {
 
 		this.setState({ outro : true }, ()=> {
 			const { comment } = this.props;
-			this.props.onDelete(comment.id);
+			this.props.onDelete(comment);
 		});
 	};
 
@@ -127,8 +131,8 @@ class PlaygroundComment extends Component {
 		const { outro } = this.state;
 
 		const style = {
-			top  : `${comment.position.y}px`,
-			left : `${comment.position.x}px`
+			top  : `${comment.position.y + 38}px`,
+			left : `${comment.position.x + 38}px`
 		};
 
 		return (<div className="playground-comment" style={style} data-id={component.id}>

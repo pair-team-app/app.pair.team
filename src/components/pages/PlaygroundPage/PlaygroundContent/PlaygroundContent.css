@@ -61,11 +61,24 @@
 	width: 100%;
 }
 
+.playground-component-wrapper h5 {
+	margin-bottom: var(--orthodox-margin-base);
+	font-size: var(--orthodox-font-size);
+	font-weight: var(--orthodox-font-weight);
+	line-height: normal;
+}
+
 .playground-component {
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+}
+
+.playground-component h5, .playground-component:hover h5 {
+	color: rgba(var(--site-fg-color), 1.0);
+	text-decoration: underline;
+	cursor: default;
 }
 
 .playground-component-comments-wrapper {
@@ -101,7 +114,6 @@
 	list-style: none;
 	line-height: unset;
 	margin-bottom: unset;
-	border: 1px dashed #ff00ff;
 }
 
 .playground-components-column > ul > li > img {
@@ -111,8 +123,6 @@
 }
 
 .playground-components-grid {
-	/*width: 100%;*/
-
 }
 
 .playground-components-grid {
@@ -125,12 +135,30 @@
 	grid-row-gap: var(--orthodox-margin-dbbl);
 }
 
-.playground-components-grid-item {
-	border: 1px dashed #ff00ff;
+.playground-components-list-item {
+	/*border: var(--debug-border);*/
 }
 
-.playground-components-grid-item img {
+.playground-components-list-item h5.component-title {
+	color: rgba(var(--playground-panel-link-color), 1.0);
+	transition: color 0.125s ease-out;
+}
+
+.playground-components-list-item:hover {
+	cursor: pointer;
+}
+
+.playground-components-list-item:hover h5.component-title {
+	color: rgba(var(--playground-panel-link-hover-color), 1.0);
+}
+
+.playground-components-list-item img {
 	width: 100%;
 	height: 100%;
 	object-fit: scale-down;
+	background-color: rgba(var(--disabled-fg-color), 0.875);
+}
+
+.playground-component h5:hover {
+	color: rgba(var(--playground-panel-link-color), 1.0);
 }

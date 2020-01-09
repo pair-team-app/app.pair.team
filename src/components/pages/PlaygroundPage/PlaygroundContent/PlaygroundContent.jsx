@@ -76,7 +76,7 @@ class PlaygroundContent extends Component {
           ? (typeGroup.id === 187)
             ? (<PlaygroundComponentsGrid components={components} onItemClick={this.handleContentClick} />)
             : (<PlaygroundComponentsColumn components={components.sort((i, ii)=> ((i.meta.bounds.width < ii.meta.bounds.width) ? -1 : (i.meta.bounds.width > ii.meta.bounds.width) ? 1 : 0))} onItemClick={this.handleContentClick} />)
-          : (<div className="playground-component-wrapper"><PlaygroundComponent position={position} component={component} onAdd={this.props.onAddComment} onClose={this.handleComponentPopoverClose} onDelete={this.props.onDeleteComment} onItemClick={this.handleContentClick} onMarkerClick={this.props.onMarkerClick} /></div>)
+          : (<div className="playground-component-wrapper"><PlaygroundComponent position={position} component={component} onAddComment={this.props.onAddComment} onCloseComment={this.handleComponentPopoverClose} onDeleteComment={this.props.onDeleteComment} onItemClick={this.handleContentClick} onMarkerClick={this.props.onMarkerClick} /></div>)
         }
       </div>)}
 
@@ -109,11 +109,12 @@ const PlaygroundComponent = (props)=> {
   const { id, title, image, comments } = component;
 
   return (<div className="playground-component" onClick={(event)=> props.onItemClick(event, component)}>
+    <h5 className="component-title">{title}</h5>
     <ContextMenuTrigger id="component" component={component} collect={(props)=> ({ component : props.component })} disableIfShiftIsPressed={true}>
       <div className="playground-content-component" data-id={id}><img src={image} className="playground-content-component-image" alt={title} /></div>
       <div className="playground-component-comments-wrapper" data-id={id}>
         {(comments.filter(({ type })=> (type !== 'init')).map((comm, i)=> {
-          return (<PlaygroundComment key={i} ind={(comments.length - 1) - i} component={component} comment={comm} position={position} onMarkerClick={props.onMarkerClick} onAdd={props.onAddComment} onDelete={props.onDeleteComment} onClose={props.onClose} />);
+          return (<PlaygroundComment key={i} ind={(comments.length - 1) - i} component={component} comment={comm} position={position} onMarkerClick={props.onMarkerClick} onAdd={props.onAddComment} onDelete={props.onDeleteComment} onClose={props.onCloseComment} />);
         }))}
       </div>
     </ContextMenuTrigger>
@@ -128,7 +129,8 @@ const PlaygroundComponentsColumn =(props)=> {
   return (<div className="playground-components-column"><ul>
     {(components.map((component, i)=> {
       const { id, title, image } = component;
-      return (<li key={i} className="playground-component-wrapper playground-components-column-item" data-id={id} onClick={(event)=> props.onItemClick(event, component)}>
+      return (<li key={i} className="playground-component-wrapper playground-components-list-item" data-id={id} onClick={(event)=> props.onItemClick(event, component)}>
+        <h5 className="component-title">{title}</h5>
         <img src={image} alt={title} />
       </li>)
     }))}
@@ -144,7 +146,8 @@ const PlaygroundComponentsGrid =(props)=> {
     {(Array(5).fill(...components).map((component, i)=> {
 //     {(components.map((component, i)=> {
       const { id, title, thumbImage } = component;
-      return (<div key={i} className="playground-component-wrapper playground-components-grid-item" onClick={(event)=> props.onItemClick(event, component)}>
+      return (<div key={i} className="playground-component-wrapper playground-components-list-item" onClick={(event)=> props.onItemClick(event, component)}>
+        <h5 className="component-title">{title}</h5>
         <img src={thumbImage} alt={title} />
       </div>)
     }))}

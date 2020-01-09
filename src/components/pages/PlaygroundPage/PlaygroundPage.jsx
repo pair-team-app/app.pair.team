@@ -220,6 +220,10 @@ class PlaygroundPage extends Component {
           this.props.setComponent(null);
         }
 
+        if (!commentID && comment) {
+          this.props.setComment(null);
+				}
+
 //         if (this.state.playgrounds.length > 0 && playgroundID && componentsSlug && componentID && curr.includes('/comments') && commentID && commentID !== prevProps.match.params.commentID) {
 //         } else if (!curr.includes('/comments') || !commentID) {
 //           this.props.setComment(null);
@@ -378,34 +382,36 @@ class PlaygroundPage extends Component {
 
 	handleComponentPopoverClose = ()=> {
 		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
-		this.props.setComment(null);
+// 		this.props.setComment(null);
 	};
 
-	handleDeleteComment = (commentID)=> {
-		console.log('%s.handleDeleteComment()', this.constructor.name, commentID);
+	handleDeleteComment = (comment)=> {
+		console.log('%s.handleDeleteComment()', this.constructor.name, comment.id);
 		trackEvent('button', 'delete-comment');
 
 		axios.post(API_ENDPT_URL, {
 			action  : 'UPDATE_COMMENT',
 			payload : {
-				comment_id : commentID,
+				comment_id : comment.id,
 				state      : 'deleted'
 			}
 		}).then((response) => {
 			console.log('UPDATE_COMMENT', response.data);
 
 			const component = { ...this.props.component,
-				comments : this.props.component.comments.filter(({ id }) => (id !== commentID)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0))
+				comments : this.props.component.comments.filter(({ id }) => (id !== comment.id)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0))
 			};
 
 			const playground = { ...this.props.playground,
 				components : this.props.playground.components.map((item)=> ((item.id === component.id) ? component : item))
 			};
 
-			this.props.setPlayground(playground);
+// 			this.props.setPlayground(playground);
 			this.props.setComponent(component);
-			this.props.setComment(null);
-      this.props.history.push(`${this.props.location.pathname}/comments`);
+
+			if (!this.props.location.pathname.includes('/comments')) {
+        this.props.history.push(`${this.props.location.pathname}/comments`);
+      }
 
 		}).catch((error)=> {
 		});
