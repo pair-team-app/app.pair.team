@@ -4,6 +4,7 @@ import { Bits, Objects } from 'lang-js-utils';
 import cookie from 'react-cookies';
 
 import {
+  BUILD_PLAYGROUNDS_LOADED,
 	COMPONENT_TYPES_LOADED,
 	EVENT_GROUPS_LOADED,
 	SET_REDIRECT_URI,
@@ -18,6 +19,7 @@ import {
 	SET_TEAMS,
 	SET_PRODUCTS,
 	SET_PLAYGROUND,
+	SET_PLAYGROUNDS,
 	SET_TYPE_GROUP,
 	SET_COMPONENT,
 	SET_COMMENT,
@@ -27,11 +29,39 @@ import {
 } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
+import { reformComponent } from '../../components/pages/PlaygroundPage/utils/reform';
 
 
 const logFormat = (action, payload=null, meta='')=> {
 	console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, (payload || ''), meta);
 };
+
+
+export function fetchBuildPlaygrounds(payload) {
+  logFormat('fetchBuildPlaygrounds()');
+
+  const { buildID, playgroundID } = payload;
+  return ((dispatch)=> {
+    axios.post(API_ENDPT_URL, {
+      action  : 'BUILD_PLAYGROUNDS',
+      payload : {
+        build_id : buildID
+      }
+    }).then(async(response) => {
+      console.log('BUILD_PLAYGROUNDS', response.data);
+
+      dispatch({
+        type    : BUILD_PLAYGROUNDS_LOADED,
+        payload : { playgroundID,
+					playgrounds : response.data.playgrounds }
+      });
+
+    }).catch((error)=> {
+    });
+	})
+}
+
+
 
 export function fetchComponentTypes() {
 	logFormat('fetchComponentTypes()');
@@ -197,10 +227,16 @@ export function setInvite(payload) {
 
 export function setPlayground(payload) {
 	logFormat('setPlayground()', payload);
-	console.trace('REDUX STORE _||_')
 	return ({ payload,
 		type : SET_PLAYGROUND
 	});
+}
+
+export function setPlaygrounds(payload) {
+  logFormat('setPlaygrounds()', payload);
+  return ({ payload,
+    type : SET_PLAYGROUNDS
+  });
 }
 
 export function setTypeGroup(payload) {

@@ -2,10 +2,13 @@
 import cookie from 'react-cookies';
 
 import {
+  SET_REFORMED_BUILD_PLAYGROUNDS,
   SET_REFORMED_TYPE_GROUP,
   USER_PROFILE_CACHED,
   USER_PROFILE_UPDATED,
-  TYPE_GROUP_LOADED, UPDATE_MOUSE_COORDS, SET_PLAYGROUND,
+  BUILD_PLAYGROUNDS_LOADED,
+  TYPE_GROUP_LOADED,
+  UPDATE_MOUSE_COORDS,
 } from '../../consts/action-types';
 import { reformComponent } from '../../components/pages/PlaygroundPage/utils/reform';
 
@@ -42,29 +45,41 @@ export function onMiddleware({ dispatch }) {
 
         dispatch({
           type    : SET_REFORMED_TYPE_GROUP,
-          payload : components
+          payload : { playground, components }
         });
 
-      } else if (type === USER_PROFILE_CACHED) {
 			} else if (type === USER_PROFILE_UPDATED) {
 				cookie.save('user_id', (payload) ? payload.id : '0', { path : '/', sameSite : false });
 
-// 			} else if (type === UPDATE_DEEPLINK) {
-// 				const deeplink = Object.assign({}, payload, {
-// 					uploadID   : (payload && payload.uploadID) ? (payload.uploadID << 0) : 0,
-// 					pageID     : (payload && payload.pageID) ? (payload.pageID << 0) : 0,
-// 					artboardID : (payload && payload.artboardID) ? (payload.artboardID << 0) : 0,
-// 					sliceID    : (payload && payload.sliceID) ? (payload.sliceID << 0) : 0
-// 				});
-//
-// 				dispatch({
-// 					type    : CONVERTED_DEEPLINK,
-// 					payload : deeplink
-// 				});
+			} else if (type === BUILD_PLAYGROUNDS_LOADED) {
+			  const { playgroundID } = payload;
 
-// 			} else if (type === SET_TEAMS) {
-			} else if (type === SET_PLAYGROUND) {
+        const playgrounds = await Promise.all(payload.playgrounds.map(async(playground)=> {
+          const { device_id, team, components } = playground;
+          delete (playground['device_id']);
 
+          const { logo_url } = team;
+          delete (team['logo_url']);
+
+//					console.log('playground', { id : playground.id, device_id, components });
+          return ({ ...playground,
+            deviceID   : device_id,
+            team       : { ...team,
+              logoURL : logo_url,
+              members : team.members.map((member)=> ({ ...member,
+                id : member.id << 0
+              }))
+            },
+            components : await Promise.all(components.map(async(component)=> (await reformComponent(component))))
+          });
+        }));
+
+        dispatch({
+          type    : SET_REFORMED_BUILD_PLAYGROUNDS,
+          payload : { playgrounds, playgroundID }
+        });
+
+      } else if (type === USER_PROFILE_CACHED) {
       }
 
 			return (next(action));

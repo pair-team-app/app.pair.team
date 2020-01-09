@@ -21,11 +21,16 @@ import {
   componentByID,
   componentFromComment,
   playgroundByID,
-  typeGroupByKey, componentsFromTypeGroup, typeGroupComponentsProcessed
-} from './utils/lookup';
-import { reformComment, reformComponent } from './utils/reform';
+  typeGroupByKey, componentsFromTypeGroup, typeGroupComponentsProcessed } from './utils/lookup';
+import { reformComment } from './utils/reform';
 import { Modals, API_ENDPT_URL } from '../../../consts/uris';
-import { fetchPlaygroundComponentGroup, setPlayground, setTypeGroup, setComponent, setComment } from '../../../redux/actions';
+import {
+	fetchBuildPlaygrounds,
+	fetchPlaygroundComponentGroup,
+  setComment,
+  setComponent,
+  setPlayground,
+	setTypeGroup } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 
@@ -35,10 +40,10 @@ class PlaygroundPage extends Component {
 
 		this.state = {
 			typeGroups    : null,
-			playgrounds   : [],
-			playground    : null,
-			component     : null,
-			comment       : null,
+// 			playgrounds   : [],
+// 			playground    : null,
+// 			component     : null,
+// 			comment       : null,
 			cursor        : false,
 			accessibility : false,
 			share         : false,
@@ -54,8 +59,8 @@ class PlaygroundPage extends Component {
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
-		const { profile, componentTypes, playground, match, location } = this.props;
-		const { playgrounds, fetching, accessibility, processing } = this.state;
+		const { profile, componentTypes, playgrounds, playground, match, location } = this.props;
+		const { fetching, accessibility, processing } = this.state;
 
 		const { pathname } = location;
 		const { teamSlug, projectSlug, buildID, playgroundID, componentsSlug, componentID, commentID } = match.params;
@@ -70,7 +75,7 @@ class PlaygroundPage extends Component {
 		if (!prevProps.profile && profile) {
 			if (!playground && !fetching) {
 				if (buildID) {
-					this.onFetchBuildPlaygrounds2(buildID, playgroundID << 0);
+					this.onFetchBuildPlaygrounds(buildID, playgroundID << 0);
 				}
 			}
 		}
@@ -90,6 +95,10 @@ class PlaygroundPage extends Component {
 			let typeGroup = null;
 			let component = null;
 			let comment = null;
+
+			if (this.state.fetching) {
+				this.setState({ fetching : false });
+			}
 
 			const isMember = playground.team.members.some(({ id })=> (id === profile.id));
 			if (!isMember) {
@@ -195,11 +204,8 @@ class PlaygroundPage extends Component {
 
 
 			if (curr !== prev) {
-        if (this.state.playgrounds.length > 0 && playgroundID && playgroundID !== prevProps.match.params.playgroundID) {
-          const playgrounds = this.state.playgrounds.map((item)=> ((item.id === playground.id) ? playground : item));
-          this.setState({ playgrounds }, ()=> {
-            this.props.setPlayground(playgroundByID(this.state.playgrounds, playgroundID << 0));
-					});
+        if (playgrounds.length > 0 && playgroundID && playgroundID !== prevProps.match.params.playgroundID) {
+					this.props.setPlayground(playgroundByID(playgrounds, playgroundID << 0));
 
         } else if (!playgroundID) {
           this.props.setPlayground(null);
@@ -213,8 +219,8 @@ class PlaygroundPage extends Component {
         }
 
 
-        if (this.state.playgrounds.length > 0 && playgroundID && componentsSlug && componentID !== prevProps.match.params.componentID) {
-          this.props.setComponent(componentByID(playgroundByID(this.state.playgrounds, playgroundID << 0).components, componentID << 0));
+        if (playgrounds.length > 0 && playgroundID && componentsSlug && componentID !== prevProps.match.params.componentID) {
+          this.props.setComponent(componentByID(playgroundByID(playgrounds, playgroundID << 0).components, componentID << 0));
 
         } else if (!componentID) {
           this.props.setComponent(null);
@@ -336,7 +342,6 @@ class PlaygroundPage extends Component {
 	};
 
 	handleCommentMarkerClick = ({ comment })=> {
-
 		const { playground } = this.props;
 		const component = componentFromComment(playground.components, comment);
 
@@ -350,11 +355,11 @@ class PlaygroundPage extends Component {
 	handleComponentClick = ({ component })=> {
 		console.log('%s.handleComponentClick()', this.constructor.name, { component });
 
-		if (!component.selected) {
+// 		if (!component.selected) {
       component.selected = true;
       this.props.setComponent(component);
 // 		this.setState({ cursor : false });
-    }
+//     }
 	};
 
 	handleComponentMenuShow = ({ component })=> {
@@ -473,7 +478,8 @@ class PlaygroundPage extends Component {
 		console.log('%s.handleTogglePlayground()', this.constructor.name, this.state.playground.deviceID);
 
 		trackEvent('button', (this.props.playground.deviceID === 1) ? 'mobile-toggle' : 'desktop-toggle');
-		const { playgrounds } = this.state;
+
+		const { playgrounds } = this.props;
 		const playground = playgrounds.find(({ deviceID })=> (deviceID !== this.props.playground.deviceID));
 		if (playground) {
 			this.props.setPlayground(playground);
@@ -491,56 +497,6 @@ class PlaygroundPage extends Component {
 	};
 
 
-  onFetchBuildPlaygrounds = (buildID, playgroundID=null)=> {
-    console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
-
-    this.setState({ fetching : true }, ()=> {
-      axios.post(API_ENDPT_URL, {
-        action  : 'BUILD_PLAYGROUNDS',
-        payload : {
-          build_id : buildID,
-        }
-      }).then(async(response) => {
-        console.log('BUILD_PLAYGROUNDS', response.data);
-
-        const playgrounds = await Promise.all(response.data.playgrounds.map(async(playground)=> {
-          const { device_id, team, components } = playground;
-          delete (playground['device_id']);
-
-          const { logo_url } = team;
-          delete (team['logo_url']);
-
-//					console.log('playground', { id : playground.id, device_id, components });
-          return ({ ...playground,
-            deviceID   : device_id,
-            team       : { ...team,
-              logoURL : logo_url,
-              members : team.members.map((member)=> ({ ...member,
-                id : member.id << 0
-              }))
-            },
-            components : await Promise.all(components.map(async(component)=> (await reformComponent(component))))
-          });
-        }));
-
-        const playground = ((playgroundID) ? playgrounds.find(({ id })=> (id === playgroundID)) : playgrounds.find(({ deviceID })=> (deviceID === 2)) || playgrounds[0]);
-        this.props.setPlayground(playground);
-
-        this.setState({ playgrounds, playground,
-          fetching : false
-
-        }, ()=> {
-          if (!this.props.match.params.playgroundID) {
-            this.props.history.push(`${this.props.location.pathname}/${playground.id}`);
-          }
-        });
-
-      }).catch((error)=> {
-      });
-    });
-  };
-
-
   onFetchTypeGroupComponents = (typeGroup)=> {
     const { playground } = this.props;
     console.log('%s.onFetchTypeGroupComponents()', this.constructor.name, { typeGroup, components : componentsFromTypeGroup(playground.components, typeGroup) });
@@ -551,55 +507,14 @@ class PlaygroundPage extends Component {
 		}
 	};
 
-  onFetchBuildPlaygrounds2 = (buildID, playgroundID=null)=> {
-    console.log('%s.onFetchBuildPlaygrounds2()', this.constructor.name, buildID, playgroundID);
+  onFetchBuildPlaygrounds = (buildID, playgroundID=null)=> {
+    console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
 
     this.setState({
 			fetching   : true,
 			processing : true
 		}, ()=> {
-      axios.post(API_ENDPT_URL, {
-        action  : 'BUILD_PLAYGROUNDS',
-        payload : {
-          build_id : buildID
-        }
-      }).then(async(response) => {
-        console.log('BUILD_PLAYGROUNDS', response.data);
-
-        const playgrounds = await Promise.all(response.data.playgrounds.map(async(playground)=> {
-          const { device_id, team, components } = playground;
-          delete (playground['device_id']);
-
-          const { logo_url } = team;
-          delete (team['logo_url']);
-
-//					console.log('playground', { id : playground.id, device_id, components });
-          return ({ ...playground,
-            deviceID   : device_id,
-            team       : { ...team,
-              logoURL : logo_url,
-              members : team.members.map((member)=> ({ ...member,
-                id : member.id << 0
-              }))
-            },
-            components : await Promise.all(components.map(async(component)=> (await reformComponent(component))))
-          });
-        }));
-
-        const playground = ((playgroundID) ? playgrounds.find(({ id })=> (id === playgroundID)) : playgrounds.find(({ deviceID })=> (deviceID === 2)) || playgrounds[0]);
-        this.props.setPlayground(playground);
-
-        this.setState({ playgrounds, playground,
-          fetching : false
-
-        }, ()=> {
-          if (!this.props.match.params.playgroundID) {
-            this.props.history.push(`${this.props.location.pathname}/${playground.id}`);
-          }
-        });
-
-      }).catch((error)=> {
-      });
+    	this.props.fetchBuildPlaygrounds({ buildID, playgroundID });
     });
   };
 
@@ -609,8 +524,8 @@ class PlaygroundPage extends Component {
   render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { profile, playground, typeGroup, component } = this.props;
-		const { playgrounds, cursor, accessibility, share, processing } = this.state;
+		const { profile, playgrounds, playground, typeGroup, component } = this.props;
+		const { cursor, accessibility, share, processing } = this.state;
 		const { params } = this.props.match;
 
 		return (<BasePage className={`playground-page${(component && (window.location.href.includes('/comments'))) ? ' playground-page-comments' : ''}`}>
@@ -618,13 +533,13 @@ class PlaygroundPage extends Component {
 			{/*<PlaygroundProcessingOverlay outro={!processing} />*/}
 			{/*<PlaygroundProcessingOverlay outro={false} />*/}
 
-			{(profile && playground && typeGroup) && (<PlaygroundNavPanel
+			{(true) && (<PlaygroundNavPanel
 				params={params}
 				onTypeGroupClick={this.handleNavGroupItemClick}
 				onTypeItemClick={this.handleNavTypeItemClick}
 			/>)}
 
-			{(profile && playground && typeGroup) && (<div className={`playground-page-content-wrapper ${(typeGroup.id === 187 && !component) ? ' playground-page-content-wrapper-views' : ''}`}>
+			{(profile && playground && typeGroup) && (<div className="playground-page-content-wrapper">
 				{(!accessibility)
 					? (<PlaygroundContent
 							cursor={cursor}
@@ -649,7 +564,7 @@ class PlaygroundPage extends Component {
 					onLogout={this.props.onLogout}
 				/>
 
-				<PlaygroundFooter
+				{(typeGroup) && (<PlaygroundFooter
 					accessibility={accessibility}
 					cursor={cursor}
 					playground={playground}
@@ -659,7 +574,7 @@ class PlaygroundPage extends Component {
 					onToggleCursor={this.handleToggleCommentCursor}
 					onToggleDesktop={this.handleTogglePlayground}
 					onToggleMobile={this.handleTogglePlayground}
-				/>
+				/>)}
 			</div>)}
 
 			{(profile) && (<PlaygroundCommentsPanel
@@ -673,6 +588,7 @@ class PlaygroundPage extends Component {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
+		fetchBuildPlaygrounds         : (payload)=> dispatch(fetchBuildPlaygrounds(payload)),
     fetchPlaygroundComponentGroup : (payload)=> dispatch(fetchPlaygroundComponentGroup(payload)),
 		setPlayground                 : (payload)=> dispatch(setPlayground(payload)),
 		setTypeGroup                  : (payload)=> dispatch(setTypeGroup(payload)),
@@ -683,6 +599,7 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
+		playgrounds    : state.playgrounds,
 		playground     : state.playground,
 		typeGroup      : state.typeGroup,
 		component      : state.component,

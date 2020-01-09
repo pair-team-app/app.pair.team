@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 
 import PlaygroundComment from '../PlaygroundComment';
 import ComponentMenu from './ComponentMenu';
+import { inlineStyles } from '../utils/css';
 import { componentsFromTypeGroup } from '../utils/lookup';
 
 
@@ -93,13 +94,18 @@ const CommentPinCursor = (props)=> {
 const PlaygroundComponent = (props)=> {
 //   console.log('PlaygroundComponent()', props);
 
-  const { position, component, comment } = props;
-  const { id, title, image, comments } = component;
+  const { position, component } = props;
+  const { id, title, image, html, styles, rootStyles, comments, processed } = component;
 
+  const content = (processed) ? inlineStyles(html, styles) : null;
   return (<div className="playground-component" onClick={(event)=> props.onItemClick(event, component)}>
     <h5 className="component-title">{title}</h5>
     <ContextMenuTrigger id="component" component={component} collect={(props)=> ({ component : props.component })} disableIfShiftIsPressed={true}>
-      <div className="playground-content-component" data-id={id}><img src={image} className="playground-content-component-image" alt={title} /></div>
+      {/*<div className="playground-content-component" data-id={id}>*/}
+        {/*<img src={image} className="playground-content-component-image" alt={title} />*/}
+      {/*</div>*/}
+
+      <div className="playground-content-component" data-id={id} style={rootStyles} dangerouslySetInnerHTML={{ __html : content}} />
       <div className="playground-component-comments-wrapper" data-id={id}>
         {(comments.filter(({ type })=> (type !== 'init')).map((comm, i)=> {
           return (<PlaygroundComment key={i} ind={(comments.length - 1) - i} component={component} comment={comm} position={position} onMarkerClick={props.onMarkerClick} onAdd={props.onAddComment} onDelete={props.onDeleteComment} onClose={props.onCloseComment} />);
@@ -131,12 +137,9 @@ const PlaygroundComponentsGrid =(props)=> {
 
   const { components } = props;
   return (<div className="playground-components-grid">
-    {/*{(Array(5).fill(...components).map((component, i)=> {*/}
     {(components.map((component, i)=> {
-      const { id, title, thumbImage, html, styles, rootStyles, processed } = component;
-
-      console.log('PlaygroundComponentsGrid()', { processed });
-      return (<div key={i} className="playground-component-wrapper playground-components-list-item" onClick={(event)=> props.onItemClick(event, component)}>
+      const { id, title, thumbImage, html, styles, rootStyles } = component;
+      return (<div key={i} className="playground-component-wrapper playground-components-list-item" data-id={id} onClick={(event)=> props.onItemClick(event, component)}>
         <h5 className="component-title">{(html && styles && rootStyles) ? title : ''}</h5>
         <img src={thumbImage} alt={title} />
       </div>)

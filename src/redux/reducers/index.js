@@ -23,7 +23,7 @@ import {
   SET_COMPONENT,
   SET_COMMENT,
   UPD_PATHNAME,
-  TOGGLE_THEME, SET_REFORMED_TYPE_GROUP
+  TOGGLE_THEME, SET_REFORMED_BUILD_PLAYGROUNDS, SET_REFORMED_TYPE_GROUP
 } from '../../consts/action-types';
 import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
@@ -31,6 +31,7 @@ import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 const initialState = {
 	componentTypes : null,
 	eventGroups    : [],
+	playgrounds    : [],
 	playground     : null,
 	typeGroup      : null,
 	component      : null,
@@ -78,7 +79,8 @@ const logFormat = (state, action, meta='')=> {
 function rootReducer(state=initialState, action) {
  	logFormat(state, action);
 
-	switch (action.type) {
+  const { type, payload } = action;
+	switch (type) {
 		default:
 			return (state);
 
@@ -89,7 +91,6 @@ function rootReducer(state=initialState, action) {
 			}));
 
 		case APPEND_ARTBOARD_SLICES:
-			const { payload } = action;
 			const { artboardID, slices } = payload;
 
 			return (Object.assign({}, state, {
@@ -146,10 +147,11 @@ function rootReducer(state=initialState, action) {
 
 		case SET_REFORMED_TYPE_GROUP:
       return (Object.assign({}, state, {
-        playground : { ...state.playground,
-          components : state.playground.components.concat(action.payload).reduce((acc, inc)=> ([...acc.filter(({ id })=> (id !== inc.id)), inc]), [])
+      	playgrounds : state.playgrounds.map((playground)=> ((playground.id === payload.playground.id) ? payload.playground : playground)),
+        playground  : { ...state.playground,
+          components : state.playground.components.concat(action.payload.components).reduce((acc, inc)=> ([...acc.filter(({ id })=> (id !== inc.id)), inc]), [])
         },
-				component  : (action.payload.find(({ id })=> (state.component && id === state.component.id)) || state.component)
+				component   : (payload.components.find(({ id })=> (state.component && id === state.component.id)) || state.component)
       }));
 
 		case UPDATE_MOUSE_COORDS:
@@ -206,6 +208,11 @@ function rootReducer(state=initialState, action) {
 			return (Object.assign({}, state, {
 				teams : action.payload.slice(0, 1)
 			}));
+
+    case SET_REFORMED_BUILD_PLAYGROUNDS:
+      const { playgrounds, playgroundID } = action.payload;
+      const playground = (playgroundID) ? playgrounds.find(({ id })=> (id === playgroundID)) : playgrounds.find(({ deviceID })=> (deviceID === 2)) || playgrounds[0];
+      return (Object.assign({}, state, { playgrounds, playground }));
 
 		case SET_PLAYGROUND:
 			return (Object.assign({}, state, {

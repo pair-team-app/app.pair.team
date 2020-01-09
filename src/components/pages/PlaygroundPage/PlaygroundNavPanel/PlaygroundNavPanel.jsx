@@ -23,14 +23,17 @@ class PlaygroundNavPanel extends Component {
 	componentDidMount() {
 // 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
-		this.onPopulateTree();
+    const { playground } = this.props;
+    if (playground) {
+      this.onPopulateTree();
+    }
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { playground } = this.props;
-		if (playground !== prevProps.playground) {
+		if (playground && playground !== prevProps.playground) {
 			this.onPopulateTree();
 		}
 
@@ -112,15 +115,15 @@ class PlaygroundNavPanel extends Component {
 		const { playground } = this.props;
 		const { typeGroups, teamLogo } = this.state;
 
-		const team = { ...playground.team,
+		const team = (playground) ? { ...playground.team,
 			image : (teamLogo || playground.team.image  || TEAM_DEFAULT_AVATAR)
-		};
+		} : null;
 
 		return (<div className="playground-nav-panel">
-			<PlaygroundNavPanelHeader team={team} />
-			<div className="playground-nav-panel-component-type-wrapper">
+			{(playground) && (<PlaygroundNavPanelHeader team={team} />)}
+      {(playground) && (<div className="playground-nav-panel-component-type-wrapper">
 				{(typeGroups.map((typeGroup, i)=> (<NavPanelTypeGroup key={i} typeGroup={typeGroup} onTypeGroupClick={this.handleTypeGroupClick} onTypeItemClick={this.handleTypeItemClick} />)))}
-			</div>
+			</div>)}
 		</div>);
 	}
 }
