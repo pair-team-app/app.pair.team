@@ -341,18 +341,20 @@ class PlaygroundPage extends Component {
 		const component = componentFromComment(playground.components, comment);
 
  		console.log('%s.handleCommentMarkerClick()', this.constructor.name, { comment, components : playground.components, component });
-		if (component) {
+		if (component && component !== this.props.component) {
 			this.props.setComponent(component);
-			this.props.setComment(comment);
 		}
+		this.props.setComment(comment);
 	};
 
 	handleComponentClick = ({ component })=> {
 		console.log('%s.handleComponentClick()', this.constructor.name, { component });
 
-		component.selected = true;
-		this.props.setComponent(component);
+		if (!component.selected) {
+      component.selected = true;
+      this.props.setComponent(component);
 // 		this.setState({ cursor : false });
+    }
 	};
 
 	handleComponentMenuShow = ({ component })=> {
@@ -382,7 +384,11 @@ class PlaygroundPage extends Component {
 
 	handleComponentPopoverClose = ()=> {
 		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
-// 		this.props.setComment(null);
+		this.props.setComment(null);
+
+    if (/\/comments.*$/.test(this.props.location.pathname)) {
+      this.props.history.push(this.props.location.pathname.replace(/\/comments.*$/, '/comments'));
+    }
 	};
 
 	handleDeleteComment = (comment)=> {

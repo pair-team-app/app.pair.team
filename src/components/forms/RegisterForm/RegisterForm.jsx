@@ -66,7 +66,7 @@ class RegisterForm extends Component {
 				payload : { email, password, inviteID,
 					username : email,
 					type     : 'free_user',
-					avatar   : Images.genLetterAvatar(email)
+					avatar   : Images.genLetterAvatar(email, 64)
 				}
 			}).then((response) => {
 				console.log('REGISTER', response.data);

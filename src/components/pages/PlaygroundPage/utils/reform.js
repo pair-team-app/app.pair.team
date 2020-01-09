@@ -42,6 +42,13 @@ export const reformComment = (comment, overwrite={})=> ({ ...comment,
 export const reformComponent = async(component, overwrite={})=> {
 //	console.log('reformComponent()', component.id);
 
+	const PLACEHOLDER_FILL = {
+		r : 128,
+		g : 128,
+		b : 128,
+		a : 0.0
+	};
+
 	let { type_id, event_type_id, node_id, title, tag_name, image, html, styles, accessibility, root_styles, meta, comments } = component;
 	const { width, height } = meta.bounds;
 	delete (component['type_id']);
@@ -50,7 +57,7 @@ export const reformComponent = async(component, overwrite={})=> {
 	delete (component['tag_name']);
 	delete (component['root_styles']);
 
-	image = (image && image.length > 1) ? `data:image/png;base64,${btoa(await unzipSync(image))}` : Images.genColor({ r : 253, b : 253, g : 253, a : 0.0 }, { width, height });
+	image = (image && image.length > 1) ? `data:image/png;base64,${btoa(await unzipSync(image))}` : Images.genColor(PLACEHOLDER_FILL, { width, height });
 	html = (html) ? decryptText(await unzipSync(html)) : null;
 	styles = (styles) ? decryptObject(await unzipSync(styles)) : null;
 	accessibility = (accessibility) ? decryptObject(await unzipSync(accessibility)) : null;
@@ -74,7 +81,7 @@ export const reformComponent = async(component, overwrite={})=> {
     }).catch((e)=> {
       reject(e);
     });
-  })) : Images.genPlaceholder({ width : width * COMOPONENT_THUMB_SCALE, height : height * COMOPONENT_THUMB_SCALE });
+  })) : Images.genColor(PLACEHOLDER_FILL, { width : width * COMOPONENT_THUMB_SCALE, height : height * COMOPONENT_THUMB_SCALE });
 
 //   console.log('::|::', { thumbImage }, '::|::');
 

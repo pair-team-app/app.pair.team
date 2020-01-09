@@ -132,7 +132,7 @@ class PlaygroundComment extends Component {
 
 		const style = {
 			top  : `${comment.position.y + 38}px`,
-			left : `${comment.position.x + 38}px`
+			left : `${comment.position.x}px`
 		};
 
 		return (<div className="playground-comment" style={style} data-id={component.id}>
@@ -187,7 +187,11 @@ const PlaygroundCommentPopover = (props)=> {
 
 	const { ind, comment, outro } = props;
 	const payload = {
-		fixed : false
+		fixed : false,
+		position : {
+			x : 0,
+			y : 20
+		}
 	};
 
 	return (<BasePopover outro={outro} payload={payload} onOutroComplete={()=> props.onClose(comment)}>
