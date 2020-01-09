@@ -94,7 +94,7 @@ class PlaygroundNavPanel extends Component {
 // 		const favicon = playground.team.
 
 		this.setState({ typeGroups }, ()=> {
-			grabFavicon(`https://${playground.team.domain}`).then((response)=> {
+			grabFavicon((playground.team.domain === 'pairurl.com') ? 'dev.pairurl.com' : `http://${playground.team.domain}`).then((response)=> {
 				const icons = (response.icons) ? response.icons.filter(({ sizes })=> (sizes)).map((icon)=> ({ ...icon,
 					size : icon.sizes.split('x').pop() << 0
 				})).sort((i, ii)=> ((i.size < ii.size) ? -1 : (i.size > ii.size) ? 1 : 0)) : [];
@@ -113,7 +113,7 @@ class PlaygroundNavPanel extends Component {
 		const { typeGroups, teamLogo } = this.state;
 
 		const team = { ...playground.team,
-			image : (teamLogo || playground.team.image || TEAM_DEFAULT_AVATAR)
+			image : (teamLogo || playground.team.image  || TEAM_DEFAULT_AVATAR)
 		};
 
 		return (<div className="playground-nav-panel">
