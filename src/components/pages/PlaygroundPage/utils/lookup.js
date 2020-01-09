@@ -15,6 +15,11 @@ export const componentByNodeID = (components, nodeID)=> {
 	return (components.find((component)=> (component.nodeID === nodeID)));
 };
 
+export const componentProcessed = (component)=> {
+	const { html, styles, rootStyles } = component;
+  return (html && styles && rootStyles);
+};
+
 export const componentsFromTypeGroup = (components, typeGroup)=> {
   return ([...components].filter(({ typeID })=> (typeID === typeGroup.id)));
 };

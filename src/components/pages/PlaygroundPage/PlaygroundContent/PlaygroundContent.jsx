@@ -128,9 +128,9 @@ const PlaygroundComponentsColumn =(props)=> {
   const { components } = props;
   return (<div className="playground-components-column"><ul>
     {(components.map((component, i)=> {
-      const { id, title, image } = component;
+      const { id, title, image, html, styles, rootStyles } = component;
       return (<li key={i} className="playground-component-wrapper playground-components-list-item" data-id={id} onClick={(event)=> props.onItemClick(event, component)}>
-        <h5 className="component-title">{title}</h5>
+        <h5 className="component-title">{(html && styles && rootStyles) ? title : ''}</h5>
         <img src={image} alt={title} />
       </li>)
     }))}
@@ -143,11 +143,11 @@ const PlaygroundComponentsGrid =(props)=> {
 
   const { components } = props;
   return (<div className="playground-components-grid">
-    {(Array(5).fill(...components).map((component, i)=> {
-//     {(components.map((component, i)=> {
-      const { id, title, thumbImage } = component;
+    {/*{(Array(5).fill(...components).map((component, i)=> {*/}
+    {(components.map((component, i)=> {
+      const { id, title, thumbImage, html, styles, rootStyles } = component;
       return (<div key={i} className="playground-component-wrapper playground-components-list-item" onClick={(event)=> props.onItemClick(event, component)}>
-        <h5 className="component-title">{title}</h5>
+        <h5 className="component-title">{(html && styles && rootStyles) ? title : ''}</h5>
         <img src={thumbImage} alt={title} />
       </div>)
     }))}
