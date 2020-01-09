@@ -141,7 +141,7 @@ const PlaygroundComponentsGrid =(props)=> {
 
   const { components } = props;
   return (<div className="playground-components-grid">
-    {(Array(20).fill(...components).map((component, i)=> {
+    {(Array(5).fill(...components).map((component, i)=> {
 //     {(components.map((component, i)=> {
       const { id, title, thumbImage } = component;
       return (<div key={i} className="playground-component-wrapper playground-components-grid-item" onClick={(event)=> props.onItemClick(event, component)}>

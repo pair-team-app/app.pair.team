@@ -40,5 +40,9 @@ else #-- suffix index
 fi
 
 
+#-- show remote
+git config --get remote.origin.url
+
+
 #-- terminate w/o error
 exit 0;
