@@ -8,7 +8,7 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import Routes from '../Routes';
+import Routes from '../helpers/Routes';
 import AlertDialog from '../overlays/AlertDialog';
 import BlockingDialog from '../overlays/BlockingDialog';
 import ConfirmDialog from '../overlays/ConfirmDialog';

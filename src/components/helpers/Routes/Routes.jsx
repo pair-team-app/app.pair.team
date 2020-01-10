@@ -2,17 +2,17 @@
 import React, { Component } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import DocsPage from '../pages/DocsPage';
-import FeaturesPage from '../pages/FeaturesPage';
-import HomePage from '../pages/HomePage';
-import PlaygroundPage from '../pages/PlaygroundPage';
-import PricingPage from '../pages/PricingPage';
-import PrivacyPage from '../pages/PrivacyPage';
-import Status404Page from '../pages/Status404Page';
-import TermsPage from '../pages/TermsPage';
+import DocsPage from '../../pages/DocsPage/index';
+import FeaturesPage from '../../pages/FeaturesPage/index';
+import HomePage from '../../pages/HomePage/index';
+import PlaygroundPage from '../../pages/PlaygroundPage/index';
+import PricingPage from '../../pages/PricingPage/index';
+import PrivacyPage from '../../pages/PrivacyPage/index';
+import Status404Page from '../../pages/Status404Page/index';
+import TermsPage from '../../pages/TermsPage/index';
 
 
-import { Pages } from '../../consts/uris';
+import { Pages } from '../../../consts/uris';
 
 
 class Routes extends Component {
