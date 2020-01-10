@@ -17,5 +17,5 @@
 }
 
 .confirm-dialog-button-wrapper > button {
-	width: 33%;
+	width: fit-content;
 }

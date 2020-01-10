@@ -25,19 +25,22 @@ class ConfirmDialog extends Component {
 	handleComplete = ()=> {
 // 		console.log('%s.handleComplete()', this.constructor.name);
 
+		const { onConfirmed, onComplete } = this.props;
 		const { ok } = this.state;
-		if (ok) {
-			this.props.onConfirmed();
+		if (ok && onConfirmed) {
+			onConfirmed();
 		}
 
-		this.props.onComplete(ok);
+		if (onComplete) {
+      onComplete(ok);
+    }
 	};
 
 
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { tracking, blocking, title, children } = this.props;
+		const { tracking, buttons, blocking, title, children } = this.props;
 		const { outro } = this.state;
 
 		return (<BaseOverlay
@@ -50,8 +53,8 @@ class ConfirmDialog extends Component {
 				<div className="confirm-dialog-content">
 					{children}
 					<div className="button-wrapper-col confirm-dialog-button-wrapper">
-						<button className="quiet-button" onClick={()=> this.handleClick(false)}>Cancel</button>
-						<button onClick={()=> this.handleClick(true)}>OK</button>
+						<button className="quiet-button" onClick={()=> this.handleClick(false)}>{(buttons) ? buttons[0] : 'Cancel'}</button>
+						<button onClick={()=> this.handleClick(true)}>{(buttons) ? buttons[1] : 'OK'}</button>
 					</div>
 				</div>
 			</div>

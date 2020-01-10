@@ -19,7 +19,8 @@ class BaseOverlay extends Component {
 		super(props);
 
 		this.state = {
-			outro : false
+			outro : false,
+			completed : false
 		};
 
     this.timeline = new TimelineMax();
@@ -80,6 +81,17 @@ class BaseOverlay extends Component {
 		});
 	};
 
+	handleComplete = ()=> {
+    console.log('%s.handleComplete()', this.constructor.name, this.props, this.state);
+
+    const { onComplete } = this.props;
+    this.setState({ complete : true }, ()=> {
+    	if (onComplete) {
+    		onComplete();
+			}
+    });
+	};
+
 	onIntro = ()=> {
     console.log('%s.onIntro()', this.constructor.name, this.props, this.state, this.timeline);
 
@@ -98,23 +110,21 @@ class BaseOverlay extends Component {
 	onOutro = ()=> {
     console.log('%s.onOutro()', this.constructor.name, this.props, this.state, this.timeline);
 
-    const { onComplete } = this.props;
-
-//     this.timeline = new TimelineMax();
+    this.timeline = new TimelineMax();
     this.timeline.to(this.wrapper, OUTRO_DURATION, {
+      opacity    : 0.0,
       scale      : 0.9,
-      opacity    : 0,
       ease       : Back.easeIn,
-      onComplete : onComplete
+      onComplete : this.handleComplete
     });
 	};
 
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state, this.timeline);
 
-		if (this.wrapper && this.timeline && this.timeline.time === 0) {
-			this.timeline.seek(0);
-		}
+// 		if (this.wrapper && this.timeline && this.timeline.time === 0) {
+// 			this.timeline.seek(0);
+// 		}
 
 		const { type, offset, title, closeable, children } = this.props;
 		const wrapperClass = `base-overlay-content-wrapper base-overlay-content-wrapper${(type === OVERLAY_TYPE_PERCENT_SIZE) ? '-percent' : '-auto-scroll'}`;

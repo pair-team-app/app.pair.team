@@ -118,10 +118,14 @@ class App extends Component {
 		if (pathname.startsWith(Pages.PLAYGROUND)) {
 			if (!prevProps.location.pathname.startsWith(Pages.PLAYGROUND)) {
         this.props.setPlayground(null);
+
+        if (!profile) {
+          this.onToggleModal(Modals.LOGIN);
+        }
       }
 		}
 
-		if (profile && team && !prevProps.playground && playground && !prevState.modals.noAccess && !modals.noAccess) {
+		if (profile && team && playground && !prevState.modals.noAccess && !modals.noAccess) {
       if (!playground.team.members.some(({ id })=> (id === profile.id))) {
         this.onToggleModal(Modals.NO_ACCESS);
       }
@@ -227,12 +231,19 @@ class App extends Component {
 		});
 	};
 
-	handleLogout = ()=> {
-// 		console.log('%s.handleLogout()', this.constructor.name, this.constructor.name);
+	handleLogout = (page=null, modal=null)=> {
+		console.log('%s.handleLogout()', this.constructor.name, this.constructor.name, page, modal);
 		trackEvent('user', 'sign-out');
 
 		this.props.updateUserProfile(null);
-    this.onToggleModal(Modals.LOGIN, true);
+
+		if (modal) {
+			this.onToggleModal(modal);
+		}
+
+		if (page) {
+			this.props.history.push(page);
+		}
 	};
 
 	handleMouseMove = (event)=> {
@@ -415,10 +426,11 @@ class App extends Component {
 
 			  {(modals.noAccess) && (<ConfirmDialog
 				  tracking={Modals.NO_ACCESS}
+					buttons={['Cancel', 'Logout']}
 					title="No Access"
 					blocking={true}
-          onConfirmed={()=> this.onToggleModal(Modals.LOGIN)}
-				  onComplete={()=> { this.onToggleModal(Modals.NO_ACCESS, false); this.props.history.push(Pages.HOME); }}>
+          onConfirmed={null}
+				  onComplete={(ok)=> { this.onToggleModal(Modals.NO_ACCESS, false); (ok) ? this.handleLogout(null, Modals.LOGIN) : this.handleLogout(Pages.HOME) }}>
 				  Your team {(team) ? team.title : ''} does not have permission to view this playground.
 			  </ConfirmDialog>)}
 

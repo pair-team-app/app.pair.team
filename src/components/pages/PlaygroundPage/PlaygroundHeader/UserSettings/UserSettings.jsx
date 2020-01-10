@@ -7,7 +7,7 @@ import { NavLink } from 'react-router-dom';
 
 import { SettingsMenuItemTypes } from '.';
 import BasePopover from '../../../../overlays/BasePopover';
-import { USER_DEFAULT_AVATAR, GITHUB_DOCS } from '../../../../../consts/uris';
+import { USER_DEFAULT_AVATAR, GITHUB_DOCS, Modals } from '../../../../../consts/uris';
 import { trackOutbound } from '../../../../../utils/tracking';
 
 
@@ -16,12 +16,28 @@ class UserSettings extends Component {
 		super(props);
 
 		this.state = {
-			popover : false,
-			outro   : false
+			popover  : false,
+			outro    : false,
+			itemType : null
 		};
 
 		this.wrapper = React.createRef();
 	}
+
+
+	handleComplete = ()=> {
+    console.log('%s.handleComplete()', this.constructor.name, );
+
+    this.setState({ popover : false }, ()=> {
+      const { itemType } = this.state;
+      if (itemType === SettingsMenuItemTypes.LOGOUT) {
+        this.props.onLogout(null, Modals.LOGIN);
+
+      } else if (itemType !== SettingsMenuItemTypes) {
+        this.props.onMenuItem(itemType);
+      }
+		});
+	};
 
 	handleItemClick = (itemType, event=null)=> {
 // 		console.log('%s.handleItemClick()', this.constructor.name, itemType, event);
@@ -30,19 +46,15 @@ class UserSettings extends Component {
 			event.preventDefault();
 		}
 
-		this.setState({ outro : true }, ()=> {
+		this.setState({ itemType,
+			outro : true
+		}, ()=> {
 			if (itemType === SettingsMenuItemTypes.DOCS) {
 				trackOutbound(GITHUB_DOCS, ()=> {
 					window.open(GITHUB_DOCS);
 				});
 
 				window.open(GITHUB_DOCS);
-
-			} else if (itemType === SettingsMenuItemTypes.LOGOUT) {
-				this.props.onLogout();
-
-			} else {
-				this.props.onMenuItem(itemType);
 			}
 		});
 	};
@@ -72,6 +84,7 @@ class UserSettings extends Component {
 				outro={outro}
 				onItemClick={this.handleItemClick}
 				onClose={()=> this.setState({ popover : false })}
+				onComplete={this.handleComplete}
 			/>)}
 		</div>);
 	}
@@ -89,7 +102,7 @@ const UserSettingsPopover = (props)=> {
 		}
 	};
 
-	return (<BasePopover outro={outro} payload={payload} onOutroComplete={props.onClose}>
+	return (<BasePopover outro={outro} payload={payload} onOutroComplete={props.onComplete}>
 		<div className="user-settings-popover">
 			<div className="user-settings-popover-item" onClick={()=> props.onItemClick(SettingsMenuItemTypes.PROFILE)}>Profile</div>
 			<div className="user-settings-popover-item" onClick={()=> props.onItemClick(SettingsMenuItemTypes.DELETE_ACCT)}>Delete Account</div>

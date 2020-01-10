@@ -32,12 +32,11 @@ class LoginModal extends Component {
 
 		const { profile } = this.props;
 		if (!prevProps.profile && profile) {
-			this.setState({ outro : true });
 		}
 	}
 
 	handleComplete = ()=> {
-// 		console.log('%s.handleComplete()', this.constructor.name);
+		console.log('%s.handleComplete()', this.constructor.name);
 
 		const { outroURI } = this.state;
 		this.setState({ outro : false }, ()=> {
@@ -61,10 +60,14 @@ class LoginModal extends Component {
 	};
 
 	handleLoggedIn = (profile)=> {
-// 		console.log('%s.handleLoggedIn()', this.constructor.name, profile, this.props);
+		console.log('%s.handleLoggedIn()', this.constructor.name, profile, this.props);
 
 		trackEvent('user', 'login');
-		this.props.onLoggedIn(profile);
+    this.setState({ outro : true }, ()=> {
+      setTimeout(()=> {
+        this.props.onLoggedIn(profile);
+      }, 333);
+    });
 	};
 
 	handleModal = (uri)=> {
