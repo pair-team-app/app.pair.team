@@ -50,8 +50,15 @@
 
 .playground-page-wrapper {
 	top: 0;
-	/*border: 1px dotted #ff00ff;*/
 	overflow: auto;
+}
+
+.modal-wrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	z-index: 5;
 }
 
 
@@ -148,9 +155,4 @@
 
 
 @media screen and (max-width: 800px) {
-}
-
-
-.debug-border {
-	border: 1px dotted #ff00ff;
 }

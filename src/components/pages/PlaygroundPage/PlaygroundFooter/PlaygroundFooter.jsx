@@ -41,8 +41,8 @@ function PlaygroundFooter(props) {
 
 
 const FooterAXButton = (props)=> {
-//   console.log('PlaygroundFooter().FooterAXButton()', props);
-
+  console.log('PlaygroundFooter().FooterAXButton()', props);
+//
 	const { selected } = props;
   return (<button className="quiet-button glyph-button" onClick={props.onClick} data-selected={selected}>
     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="32" viewBox="0 0 30 32">
@@ -68,7 +68,7 @@ const FooterCommentButton = (props)=> {
 const FooterDesktopButton = (props)=> {
 //   console.log('PlaygroundFooter().FooterDesktopButton()', props);
 
-  const { hidden, selected } = props;
+  const { selected } = props;
   return (<button className="quiet-button glyph-button" onClick={props.onClick} data-selected={selected}>
 		<svg xmlns="http://www.w3.org/2000/svg" width="37" height="30" viewBox="0 0 37 30">
 			<g id="Group_309" data-name="Group 309" transform="translate(-19.585 -16)">
@@ -82,7 +82,7 @@ const FooterDesktopButton = (props)=> {
 const FooterMobileButton = (props)=> {
 //   console.log('PlaygroundFooter().FooterMobileButton()', props);
 
-  const { hidden, selected } = props;
+  const { selected } = props;
 	return (<button className="quiet-button glyph-button" onClick={props.onClick} data-selected={selected}>
 		<svg xmlns="http://www.w3.org/2000/svg" width="17.838" height="30" viewBox="0 0 17.838 30">
 			<rect id="Rectangle_102" data-name="Rectangle 102" width="30" height="17.838" rx="2" transform="translate(17.838) rotate(90)"/>

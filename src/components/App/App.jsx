@@ -352,18 +352,7 @@ class App extends Component {
   	return (<div className={`site-wrapper${(darkThemed) ? ' site-wrapper-dark' : ''}`}>
 		  {(!location.pathname.startsWith(Pages.PLAYGROUND)) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
 	    <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND)) ? ' playground-page-wrapper' : ''}`}>
-		    {/*<Switch>*/}
 		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} />
-			    {/*<Route exact path={Pages.HOME} render={()=> <HomePage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} onSignup={()=> null} />} />*/}
-			    {/*<Route exact path={Pages.DOCS} render={()=> <DocsPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />*/}
-			    {/*<Route exact path={Pages.FEATURES} render={()=> <FeaturesPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />*/}
-			    {/*<Route exact path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`} render={(props)=> <PlaygroundPage { ...props } onLogout={this.handleLogout} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />*/}
-			    {/*<Route exact path={Pages.PRICING} render={()=> <PricingPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />*/}
-			    {/*<Route exact path={`/:page(${Pages.LEGAL.slice(1)}|${Pages.PRIVACY.slice(1)})`} component={PrivacyPage} />*/}
-			    {/*<Route exact path={Pages.TERMS} component={TermsPage} />*/}
-
-			    {/*<Route path={Pages.WILDCARD}><Status404Page /></Route>*/}
-		    {/*</Switch>*/}
 	    </div>
 		  {(!location.pathname.startsWith(Pages.PLAYGROUND)) && (<BottomNav />)}
 
@@ -423,7 +412,7 @@ class App extends Component {
 				  title="Access Denied!"
 				  tracking={Modals.NO_ACCESS}
 				  onComplete={()=> this.onToggleModal(Modals.NO_ACCESS, false)}>
-				  Your team {team.title} does not have permission to view this playground
+				  Your team {(team) ? team.title : ''} does not have permission to view this playground.
 			  </BlockingDialog>)}
 
 			  {(popup) && (<PopupNotification
