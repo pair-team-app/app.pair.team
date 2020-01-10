@@ -29,6 +29,7 @@ import {
 import {
 	fetchTeamLookup,
 	fetchUserProfile,
+	setPlayground,
 	updateMouseCoords,
 	updatePathname,
 	updateUserProfile
@@ -91,22 +92,14 @@ class App extends Component {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot);
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
-		const { profile, team } = this.props;
+		const { profile, team, playground } = this.props;
 		const { pathname } = this.props.location;
 		const { modals } = this.state;
 
 // 		console.log('|:|:|:|:|:|:|:|:|:|:|:|', prevProps.location.pathname, pathname);
-//     console.log('|:|:|:|:|:|:|:|:|:|:|:|', { prevPathname : prevProps.location.pathname, currPathname : pathname });
+    console.log('|:|:|:|:|:|:|:|:|:|:|:|', { prevPathname : prevProps.location.pathname, currPathname : pathname, state : this.state });
 		if (prevProps.location.pathname !== pathname) {
 			trackPageview();
-
-			if (pathname !== prevProps.location.pathname) {
-        this.props.updatePathname({
-          prev : prevProps.location.pathname,
-          curr : pathname
-        });
-			}
-
 		}
 
 		if (profile && !prevProps.profile) {
@@ -121,6 +114,18 @@ class App extends Component {
 				this.onToggleModal(Modals.STRIPE, true, { team, product });
 			}
 		}
+
+		if (pathname.startsWith(Pages.PLAYGROUND)) {
+			if (!prevProps.location.pathname.startsWith(Pages.PLAYGROUND)) {
+        this.props.setPlayground(null);
+      }
+		}
+
+		if (profile && team && !prevProps.playground && playground && !prevState.modals.noAccess && !modals.noAccess) {
+      if (!playground.team.members.some(({ id })=> (id === profile.id))) {
+        this.onToggleModal(Modals.NO_ACCESS);
+      }
+    }
 
 		if (!prevState.modals.network && !modals.network && !Browsers.isOnline()) {
 			this.onToggleModal(Modals.NETWORK);
@@ -408,12 +413,14 @@ class App extends Component {
 				  Are you sure you wish to delete your account? You won't be able to log back in, plus your playgrounds & comments will be removed. Additionally, you will be dropped from your team.
 			  </ConfirmDialog>)}
 
-			  {(modals.noAccess) && (<BlockingDialog
-				  title="Access Denied!"
+			  {(modals.noAccess) && (<ConfirmDialog
 				  tracking={Modals.NO_ACCESS}
-				  onComplete={()=> this.onToggleModal(Modals.NO_ACCESS, false)}>
+					title="No Access"
+					blocking={true}
+          onConfirmed={()=> this.onToggleModal(Modals.LOGIN)}
+				  onComplete={()=> { this.onToggleModal(Modals.NO_ACCESS, false); this.props.history.push(Pages.HOME); }}>
 				  Your team {(team) ? team.title : ''} does not have permission to view this playground.
-			  </BlockingDialog>)}
+			  </ConfirmDialog>)}
 
 			  {(popup) && (<PopupNotification
 				  payload={popup}
@@ -432,6 +439,7 @@ const mapStateToProps = (state, ownProps)=> {
 		profile    : state.userProfile,
 		products   : state.products,
 		team       : state.teams[0],
+		playground : state.playground,
     pathname   : state.pathname
 	});
 };
@@ -440,6 +448,7 @@ const mapDispatchToProps = (dispatch)=> {
 	return ({
 		fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
 		fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
+		setPlayground     : (payload)=> dispatch(setPlayground(payload)),
 		updatePathname    : (payload)=> dispatch(updatePathname(payload)),
 		updateMouseCoords : (payload)=> dispatch(updateMouseCoords(payload)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))

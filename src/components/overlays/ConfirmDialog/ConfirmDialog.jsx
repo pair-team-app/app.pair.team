@@ -37,13 +37,13 @@ class ConfirmDialog extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { tracking, title, children } = this.props;
+		const { tracking, blocking, title, children } = this.props;
 		const { outro } = this.state;
 
 		return (<BaseOverlay
 			tracking={tracking}
 			outro={outro}
-			closeable={true}
+			closeable={!blocking}
 			title={title}
 			onComplete={this.handleComplete}>
 			<div className="confirm-dialog">

@@ -1,4 +1,8 @@
 
+.confirm-dialog {
+	max-width: 316px;
+}
+
 .confirm-dialog-content {
 	min-width: 320px;
 	max-width: 520px;

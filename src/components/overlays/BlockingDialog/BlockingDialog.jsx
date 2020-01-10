@@ -14,7 +14,9 @@ function BlockingDialog(props) {
 		closeable={false}
 		title={title}
 		onComplete={()=> null}>
-		<div className="blocking-dialog">{children}</div>
+		<div className="blocking-dialog">
+			{children}
+		</div>
 	</BaseOverlay>);
 }
 

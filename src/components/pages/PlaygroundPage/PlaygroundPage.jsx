@@ -49,11 +49,23 @@ class PlaygroundPage extends Component {
 	}
 
 	componentDidMount() {
-// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+
+		const { profile, match, playground } = this.props;
+		const { fetching } = this.state;
+		const { buildID, playgroundID } = match.params;
+
+		if (profile) {
+      if (!playground && !fetching) {
+        if (buildID) {
+          this.onFetchBuildPlaygrounds(buildID << 0, playgroundID << 0);
+        }
+      }
+		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { profile, componentTypes, playgrounds, playground, match, location } = this.props;
 		const { fetching, processing, accessibility } = this.state;
@@ -68,10 +80,10 @@ class PlaygroundPage extends Component {
 		}
 
 		// logged in
-		if (!prevProps.profile && profile) {
+		if (profile && (!prevProps.profile || pathname !== prevProps.location.pathname)) {
 			if (!playground && !fetching) {
 				if (buildID) {
-					this.onFetchBuildPlaygrounds(buildID, playgroundID << 0);
+					this.onFetchBuildPlaygrounds(buildID << 0, playgroundID << 0);
 				}
 			}
 		}
@@ -92,13 +104,8 @@ class PlaygroundPage extends Component {
 			let component = null;
 			let comment = null;
 
-			if (this.state.fetching) {
+      if (this.state.fetching) {
 				this.setState({ fetching : false });
-			}
-
-			const isMember = playground.team.members.some(({ id })=> (id === profile.id));
-			if (!isMember) {
-				this.props.onModal(Modals.NO_ACCESS);
 			}
 
 			let url = pathname;
