@@ -200,7 +200,15 @@ button.glyph-button {
 	min-width: 48px;
 	min-height: 48px;
 	padding: var(--orthodox-padding-half);
-	font-size: 26px;
+}
+
+button.glyph-button > svg {
+	fill: rgba(var(--site-fg-color), 1.0);
+	transition: fill 125ms ease-out;
+}
+
+button.glyph-button[data-selected="true"] > svg {
+	fill: rgba(255, 255, 255, 1.0);
 }
 
 button.cancel-button {

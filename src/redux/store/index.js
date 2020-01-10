@@ -12,7 +12,7 @@ const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
   const logActionStackTraceMiddleware = (storeAPI)=> (next)=> (action)=> {
     if(action.type && actionTypes.includes(action.type)) {
     	console.log('[|:|] Store', storeAPI.getState());
-      console.trace('[:|:] "%s"', action.type, action);
+//       console.trace('[:|:] "%s"', action.type, action);
     }
 
     return (next(action));

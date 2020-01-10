@@ -40,10 +40,6 @@ class PlaygroundPage extends Component {
 
 		this.state = {
 			typeGroups    : null,
-// 			playgrounds   : [],
-// 			playground    : null,
-// 			component     : null,
-// 			comment       : null,
 			cursor        : false,
 			accessibility : false,
 			share         : false,
@@ -192,6 +188,14 @@ class PlaygroundPage extends Component {
 
 			// swapped out url
 		} else if (playground && prevProps.playground) {
+
+      console.log('%s.componentDidUpdate()', this.constructor.name, { playgroundID : this.props.playground.id, prev : prevProps.playground.id, fetching, test : (playground.id !== prevProps.playground.id && !fetching) });
+//       if (playground.id !== prevProps.playground.id && !fetching) {
+      if ((playgroundID << 0) !== prevProps.playground.id && !fetching) {
+				this.onFetchBuildPlaygrounds(buildID, playgroundID << 0);
+      }
+
+
 			const { typeGroup, component, comment } = this.props;
 			let url = pathname;
 
@@ -469,7 +473,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleTogglePlayground = ()=> {
-		console.log('%s.handleTogglePlayground()', this.constructor.name, this.state.playground.deviceID);
+		console.log('%s.handleTogglePlayground()', this.constructor.name, this.props.playground.deviceID);
 
 		trackEvent('button', (this.props.playground.deviceID === 1) ? 'mobile-toggle' : 'desktop-toggle');
 

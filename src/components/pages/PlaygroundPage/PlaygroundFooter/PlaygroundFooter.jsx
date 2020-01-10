@@ -32,7 +32,7 @@ function PlaygroundFooter(props) {
 			<button className="quiet-button" onClick={(event)=> handleClick(event, GITHUB_XD_PLUGIN)}>Adobe XD Plugin</button>
 		</div>
 		<div className="button-wrapper-col playground-footer-content-toggle-wrapper">
-			<FooterMobileButton hidden={(builds === 0)} selected={(playground.deviceID === 2)} onClick={props.onToggleMobile} />
+			<FooterMobileButton hidden={(builds === 0)} selected={(playground.deviceID !== 1)} onClick={props.onToggleMobile} />
 			<FooterDesktopButton hidden={(builds === 0)} selected={(playground.deviceID === 1)} onClick={props.onToggleDesktop} />
 			<FooterAXButton selected={accessibility} onClick={props.onToggleAccessibility} />
 		</div>
@@ -69,7 +69,7 @@ const FooterDesktopButton = (props)=> {
 //   console.log('PlaygroundFooter().FooterDesktopButton()', props);
 
   const { hidden, selected } = props;
-  return (<button className="quiet-button glyph-button" onClick={props.onClick} data-hidden={hidden} data-selected={selected}>
+  return (<button className="quiet-button glyph-button" onClick={props.onClick} data-selected={selected}>
 		<svg xmlns="http://www.w3.org/2000/svg" width="37" height="30" viewBox="0 0 37 30">
 			<g id="Group_309" data-name="Group 309" transform="translate(-19.585 -16)">
 				<rect id="Rectangle_101" data-name="Rectangle 101" width="37" height="22" rx="2" transform="translate(19.585 16)"/>
@@ -83,7 +83,7 @@ const FooterMobileButton = (props)=> {
 //   console.log('PlaygroundFooter().FooterMobileButton()', props);
 
   const { hidden, selected } = props;
-	return (<button className="quiet-button glyph-button" onClick={props.onClick} data-hidden={hidden} data-selected={selected}>
+	return (<button className="quiet-button glyph-button" onClick={props.onClick} data-selected={selected}>
 		<svg xmlns="http://www.w3.org/2000/svg" width="17.838" height="30" viewBox="0 0 17.838 30">
 			<rect id="Rectangle_102" data-name="Rectangle 102" width="30" height="17.838" rx="2" transform="translate(17.838) rotate(90)"/>
 		</svg>
