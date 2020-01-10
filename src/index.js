@@ -6,7 +6,6 @@ import './index.css';
 import cookie from 'react-cookies';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-// import ScrollToTop from 'react-router-scroll-top';
 
 import ScrollToTop from './components/helpers/ScrollToTop';
 

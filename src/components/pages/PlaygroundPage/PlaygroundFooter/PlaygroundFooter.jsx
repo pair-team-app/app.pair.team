@@ -41,7 +41,7 @@ function PlaygroundFooter(props) {
 
 
 const FooterAXButton = (props)=> {
-  console.log('PlaygroundFooter().FooterAXButton()', props);
+//   console.log('PlaygroundFooter().FooterAXButton()', props);
 //
 	const { selected } = props;
   return (<button className="quiet-button glyph-button" onClick={props.onClick} data-selected={selected}>

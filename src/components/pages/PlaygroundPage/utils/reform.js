@@ -101,6 +101,6 @@ export const reformComponent = async(component, overwrite={})=> {
   };
 
 
-  console.log('REFORMED + DECRYPTED: [%s]', component.id, reformed);
+//   console.log('REFORMED + DECRYPTED: [%s]', component.id, reformed);
 	return (reformed);
 };

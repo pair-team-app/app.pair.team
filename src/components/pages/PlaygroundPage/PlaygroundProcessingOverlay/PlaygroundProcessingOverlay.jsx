@@ -24,7 +24,8 @@ class PlaygroundProcessingOverlay extends Component {
     this.state = {
       outro      : false,
       processed  : 0,
-      total      : -1
+      total      : -1,
+      completed  : false
     };
   }
 
@@ -43,26 +44,35 @@ class PlaygroundProcessingOverlay extends Component {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : Object.fromEntries(Object.entries(prevProps).filter(([key])=>UPD_PROPS.includes(key))), props : Object.fromEntries(Object.entries(this.props).filter(([key])=>UPD_PROPS.includes(key))) });
 
     const { playground, typeGroup } = this.props;
-    const { outro, total } = this.state;
+    const { outro, total, completed } = this.state;
 
     if (playground && typeGroup) {
       const components = componentsFromTypeGroup(playground.components, typeGroup);
+      const processed = components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles)).length;
 
-      if (typeGroup !== !prevProps.typeGroup) {
-        if (total === -1) {
-          console.log(':::::::::: NO PREV :::::::::::::::');
-          this.setState({ total : components.length });
-        }
+      console.log('%s.componentDidUpdate()', this.constructor.name, { typeGroup, outro, total, prevTotal : prevState.total, completed });
+      console.log("REFORMED LIST", { components : components.map(({ html, styles, rootStyles }) => ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles)), total : this.state.total });
+
+//       if (typeGroup !== !prevProps.typeGroup && (total === -1 || total !== prevState.total)) {
+      if (total !== components.length) {
+        console.log(':::::::::: NO PREV :::::::::::::::');
+        this.setState({
+          outro     : false,
+          processed : 0,
+          total     : components.length,
+          completed : false
+        }, ()=> {
+          this.setState({ outro : false });
+        });
+      }
+//
+
+
+      if (processed > this.state.processed) {
+        this.setState({ processed });
       }
 
-      const processed = components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles));
-      console.log("REFORMED LIST", { components, prcMap : components.map(({ html, styles, rootStyles }) => ({ html, styles, rootStyles })), processed, total : this.state.total });
-
-      if (processed.length !== this.state.processed) {
-        this.setState({ processed : processed.length });
-      }
-
-      if (processed.length === total && !outro) {
+      if (processed === total && !outro) {
         this.setState({ outro : true });
       }
     }
@@ -70,12 +80,14 @@ class PlaygroundProcessingOverlay extends Component {
 
   handleComplete = ()=> {
 // 		console.log('%s.handleComplete()', this.constructor.name, this.state);
-    this.props.onComplete();
+    this.setState({ completed : true }, ()=> {
+      this.props.onComplete();
+    });
   };
 
 
   render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
     const { playground } = this.props;
     const { outro } = this.state;
@@ -83,7 +95,7 @@ class PlaygroundProcessingOverlay extends Component {
     return (<BaseOverlay
       tracking={Modals.PROCESSING}
       outro={outro}
-      closeable={false}
+      closeable={true}
       title={null}
       type={OVERLAY_TYPE_POSITION_OFFSET}
       offset={{ x : 63, y : -63 }}

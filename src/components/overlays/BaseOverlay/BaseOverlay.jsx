@@ -22,43 +22,38 @@ class BaseOverlay extends Component {
 			outro : false
 		};
 
+    this.timeline = new TimelineMax();
 		this.wrapper = null;
 	}
 
 	componentDidMount() {
 // 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
-		const { tracking } = this.props;
+		const { tracking, delay } = this.props;
 		trackOverlay(`open${tracking}`);
-
-		this.timeline = new TimelineMax();
-		this.timeline.from(this.wrapper, INTRO_DURATION, {
-			opacity : 0.0,
-			scale   : 0.75,
-			ease    : Back.easeOut,
-			delay   : (this.props.delay || 0) * 0.001
-		});
+		this.onIntro();
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state);
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : prevProps.outro, props : this.props.outro });
+
+    if (prevProps.outro !== this.props.outro && !this.props.outro) {
+// 			this.setState({ outro : false }, ()=> {
+				this.onIntro();
+// 			});
+    }
 
 		if (prevProps.outro !== this.props.outro && this.props.outro) {
-			this.setState({ outro : true });
+// 			this.setState({ outro : true }, ()=> {
+				this.onOutro();
+// 			});
 		}
 
-		if (this.state.outro) {
-			this.setState({ outro : false });
-			const { onComplete } = this.props;
-
-			this.timeline = new TimelineMax();
-			this.timeline.to(this.wrapper, OUTRO_DURATION, {
-				scale      : 0.9,
-				opacity    : 0,
-				ease       : Back.easeIn,
-				onComplete : onComplete
-			});
-		}
+// 		if (this.state.outro) {
+// 			this.setState({ outro : false });
+// 			this.onOutro();
+// 		}
 	}
 
 	componentWillUnmount() {
@@ -72,13 +67,46 @@ class BaseOverlay extends Component {
 	handleClickOutside(event) {
 		const { closeable } = this.props;
 		if (closeable) {
-			this.setState({ outro : true });
+			this.setState({ outro : true }, ()=> {
+				this.onOutro();
+			});
 		}
 	}
 
 	handleClose = ()=> {
 // 		console.log('%s.handleClose()', this.constructor.name, this.props);
-		this.setState({ outro : true });
+		this.setState({ outro : true }, ()=> {
+			this.onOutro();
+		});
+	};
+
+	onIntro = ()=> {
+    console.log('%s.onIntro()', this.constructor.name, this.props, this.state, this.timeline);
+
+    const { tracking, delay } = this.props;
+    trackOverlay(`open${tracking}`);
+
+    this.timeline = new TimelineMax();
+    this.timeline.from(this.wrapper, INTRO_DURATION, {
+      opacity : 0.5,
+      scale   : 0.75,
+      ease    : Back.easeOut,
+      delay   : (delay || 0) * 0.001
+    });
+	};
+
+	onOutro = ()=> {
+    console.log('%s.onOutro()', this.constructor.name, this.props, this.state, this.timeline);
+
+    const { onComplete } = this.props;
+
+//     this.timeline = new TimelineMax();
+    this.timeline.to(this.wrapper, OUTRO_DURATION, {
+      scale      : 0.9,
+      opacity    : 0,
+      ease       : Back.easeIn,
+      onComplete : onComplete
+    });
 	};
 
 	render() {

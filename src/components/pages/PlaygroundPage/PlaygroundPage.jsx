@@ -56,7 +56,7 @@ class PlaygroundPage extends Component {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { profile, componentTypes, playgrounds, playground, match, location } = this.props;
-		const { fetching, accessibility } = this.state;
+		const { fetching, processing, accessibility } = this.state;
 
 		const { pathname } = location;
 		const { teamSlug, projectSlug, buildID, playgroundID, componentsSlug, componentID, commentID } = match.params;
@@ -159,9 +159,6 @@ class PlaygroundPage extends Component {
 				url = url.replace(new RegExp(`/${componentsSlug}.*$`, 'g'), '/views');
 			}
 
-      const components = componentsFromTypeGroup(playground.components, typeGroup);
-      console.log('::COMP TEST::', { tgComponents  : components, processed : components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles )).length });
-
       this.props.setTypeGroup(typeGroup);
 			this.onFetchTypeGroupComponents(typeGroup);
 
@@ -189,15 +186,16 @@ class PlaygroundPage extends Component {
 			// swapped out url
 		} else if (playground && prevProps.playground) {
 
-      console.log('%s.componentDidUpdate()', this.constructor.name, { playgroundID : this.props.playground.id, prev : prevProps.playground.id, fetching, test : (playground.id !== prevProps.playground.id && !fetching) });
-//       if (playground.id !== prevProps.playground.id && !fetching) {
-      if ((playgroundID << 0) !== prevProps.playground.id && !fetching) {
-				this.onFetchBuildPlaygrounds(buildID, playgroundID << 0);
-      }
 
 
 			const { typeGroup, component, comment } = this.props;
 			let url = pathname;
+
+      console.log('%s.componentDidUpdate()', this.constructor.name, { playgroundID : this.props.playground.id, prev : prevProps.playground.id, fetching, processing });
+      if (playground.id !== prevProps.playground.id && !fetching) {
+//       if ((playgroundID << 0) !== prevProps.playground.id && !fetching) {
+				this.onFetchTypeGroupComponents(typeGroup);
+      }
 
 
 //       console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, state : this.state, typeGroup, component, prevTypeGroup : prevProps.typeGroup, prevComponent : prevProps.component, curr : pathname, prev : prevProps.location.pathname });
@@ -217,6 +215,7 @@ class PlaygroundPage extends Component {
 
         if (this.state.typeGroups && playgroundID && componentsSlug && componentsSlug !== prevProps.match.params.componentsSlug) {
           this.props.setTypeGroup(typeGroupByKey(this.state.typeGroups, componentsSlug));
+//           this.setState({ processing : true });
 
         } else if (!componentsSlug) {
           this.props.setTypeGroup(null);
@@ -523,11 +522,11 @@ class PlaygroundPage extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { profile, playgrounds, playground, typeGroup, component } = this.props;
-		const { cursor, accessibility, share, processing } = this.state;
+		const { cursor, accessibility, share, fetching, processing } = this.state;
 		const { params } = this.props.match;
 
 		return (<BasePage className={`playground-page${(component && (window.location.href.includes('/comments'))) ? ' playground-page-comments' : ''}`}>
-			{(processing) && (<PlaygroundProcessingOverlay onComplete={()=> this.setState({ processing : false })} />)}
+			{(fetching || processing) && (<PlaygroundProcessingOverlay show={(fetching || processing)} onComplete={()=> this.setState({ processing : false })} />)}
 			{/*<PlaygroundProcessingOverlay outro={!processing} />*/}
 			{/*<PlaygroundProcessingOverlay outro={false} />*/}
 
