@@ -12,9 +12,6 @@ import { BreadcrumbTypes } from './';
 import { Pages } from '../../../../consts/uris';
 import { toggleTheme } from '../../../../redux/actions';
 
-
-let shareLink = React.createRef();
-
 class PlaygroundHeader extends Component {
 	constructor(props) {
 		super(props);
@@ -36,7 +33,6 @@ class PlaygroundHeader extends Component {
 
 	componentWillUnmount() {
 // 		console.log('%s.componentWillUnmount()', this.constructor.name);
-		shareLink = null;
 	}
 
 
@@ -88,7 +84,7 @@ class PlaygroundHeader extends Component {
 
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state, (shareLink) ? { left : shareLink.offsetLeft, top : shareLink.offsetTop } : null);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { darkThemed, playground } = this.props;
 		const { popover } = this.state;
@@ -101,7 +97,6 @@ class PlaygroundHeader extends Component {
 			<div className="playground-header-col playground-header-col-right">
 				<NavLink to={Pages.DOCS}>Docs</NavLink>
 				<PlaygroundShareLink popover={popover} playground={playground} onClick={()=> this.setState({ popover : !this.state.popover })} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
-				{/*<div className="playground-header-link" onClick={()=> this.setState({ popover : !this.state.popover })} ref={(element)=> { shareLink = element; }}>Share</div>*/}
 				<UserSettings onMenuItem={this.props.onSettingsItem} onLogout={this.props.onLogout} />
 			</div>
 		</div>);
@@ -127,11 +122,10 @@ const PlaygroundShareLink = (props)=> {
 
   const { popover, playground } = props;
 	return (<div className="playground-share-link">
-    <div className="playground-header-link" onClick={props.onClick} ref={(element)=> { shareLink = element; }}>Share</div>
+    <div className="playground-header-link" onClick={props.onClick}>Share</div>
 
     {(popover) && (<SharePopover
       playground={playground}
-      position={{ x : shareLink.offsetLeft, y : shareLink.offsetTop }}
       onPopup={props.onPopup}
       onClose={props.onPopoverClose} />)}
 	</div>);

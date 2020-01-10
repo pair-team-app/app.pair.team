@@ -12,6 +12,7 @@ import PlaygroundComment from '../PlaygroundComment';
 import ComponentMenu from './ComponentMenu';
 import { inlineStyles } from '../utils/css';
 import { componentsFromTypeGroup } from '../utils/lookup';
+import {Strings} from "lang-js-utils";
 
 
 class PlaygroundContent extends Component {
@@ -54,8 +55,8 @@ class PlaygroundContent extends Component {
   render() {
 // 		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { typeGroup, playground, component, comment, cursor, mouse, profile } = this.props;
-    const { position, popover } = this.state;
+    const { typeGroup, playground, component, cursor, mouse } = this.props;
+    const { position } = this.state;
 
     const components = (typeGroup) ? (component) ? [component] : componentsFromTypeGroup(playground.components, typeGroup) : [];
 
@@ -64,8 +65,8 @@ class PlaygroundContent extends Component {
         {(!component)
           ? (typeGroup.id === 187)
             ? (<PlaygroundComponentsGrid components={components} onItemClick={this.handleContentClick} />)
-            : (<PlaygroundComponentsColumn components={components.sort((i, ii)=> ((i.meta.bounds.width < ii.meta.bounds.width) ? -1 : (i.meta.bounds.width > ii.meta.bounds.width) ? 1 : 0))} onItemClick={this.handleContentClick} />)
-          : (<div className="playground-component-wrapper"><PlaygroundComponent position={position} component={component} onAddComment={this.props.onAddComment} onCloseComment={this.handleComponentPopoverClose} onDeleteComment={this.props.onDeleteComment} onItemClick={this.handleContentClick} onMarkerClick={this.props.onMarkerClick} /></div>)
+            : (<PlaygroundComponentsColumn typeGroup={typeGroup} components={components.sort((i, ii)=> ((i.meta.bounds.width < ii.meta.bounds.width) ? -1 : (i.meta.bounds.width > ii.meta.bounds.width) ? 1 : 0))} onItemClick={this.handleContentClick} />)
+          : (<div className="playground-component-wrapper"><PlaygroundComponent position={position} typeGroup={typeGroup} component={component} onAddComment={this.props.onAddComment} onCloseComment={this.handleComponentPopoverClose} onDeleteComment={this.props.onDeleteComment} onItemClick={this.handleContentClick} onMarkerClick={this.props.onMarkerClick} /></div>)
         }
       </div>)}
 
@@ -94,8 +95,9 @@ const CommentPinCursor = (props)=> {
 const PlaygroundComponent = (props)=> {
 //   console.log('PlaygroundComponent()', props);
 
-  const { position, component } = props;
-  const { id, title, image, html, styles, rootStyles, comments, processed } = component;
+  const { position, typeGroup, component } = props;
+  const { id, tagName, html, styles, rootStyles, comments, processed } = component;
+  const title = (component.title === tagName) ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}` : component.title;
 
   const content = (processed) ? inlineStyles(html, styles) : null;
   return (<div className="playground-component" onClick={(event)=> props.onItemClick(event, component)}>
@@ -119,10 +121,11 @@ const PlaygroundComponent = (props)=> {
 const PlaygroundComponentsColumn =(props)=> {
 //   console.log('PlaygroundComponentsColumn()', props);
 
-  const { components } = props;
+  const { typeGroup, components } = props;
   return (<div className="playground-components-column"><ul>
     {(components.map((component, i)=> {
-      const { id, title, image, html, styles, rootStyles } = component;
+      const { id, tagName, image, html, styles, rootStyles } = component;
+      const title = (component.title === tagName) ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}` : component.title;
       return (<li key={i} className="playground-component-wrapper playground-components-list-item" data-id={id} onClick={(event)=> props.onItemClick(event, component)}>
         <h5 className="component-title">{(html && styles && rootStyles) ? title : ''}</h5>
         <img src={image} alt={title} />

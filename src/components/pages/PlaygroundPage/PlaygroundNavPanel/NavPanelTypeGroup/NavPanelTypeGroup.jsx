@@ -15,7 +15,7 @@ function NavPanelTypeGroup(props) {
 		open={typeGroup.selected}
 		title={<div className="nav-panel-type-group-title" onClick={()=> props.onTypeGroupClick(typeGroup)} data-selected={typeGroup.selected}>{Strings.capitalize(typeGroup.key)} ({typeGroup.items.length})</div>}
 		content={<div className="nav-panel-type-group-item-wrapper">
-			{(typeGroup.items.map((item, i)=> (<NavPanelTypeItem key={i} item={item} onClick={()=> props.onTypeItemClick(typeGroup, item)} />)))}
+			{(typeGroup.items.map((item, i)=> (<NavPanelTypeItem key={i} typeName={typeGroup.title} item={item} onClick={()=> props.onTypeItemClick(typeGroup, item)} />)))}
 		</div>}
 	/>);
 }
@@ -23,8 +23,10 @@ function NavPanelTypeGroup(props) {
 
 const NavPanelTypeItem = (props)=> {
 // 	console.log('NavPanelTypeItem()', props);
-	const { item } = props;
-	return (<div className="nav-panel-type-item" onClick={props.onClick} data-selected={item.selected}>{Strings.truncate(item.title, 19)}</div>);
+	const { item, typeName } = props;
+	const { tagName, selected } = item;
+	const title = (item.title === tagName) ? `${tagName.toUpperCase()} ${Strings.capitalize(typeName)}` : item.title;
+	return (<div className="nav-panel-type-item" onClick={props.onClick} data-selected={selected}>{Strings.truncate(title, 19)}</div>);
 };
 
 

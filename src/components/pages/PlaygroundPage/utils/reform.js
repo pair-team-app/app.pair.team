@@ -1,6 +1,5 @@
 
 import dataUriToBuffer from 'data-uri-to-buffer';
-import ImageJS from 'imagejs';
 import { Images } from 'lang-js-utils';
 import Jimp from 'jimp';
 import moment from 'moment';
@@ -77,7 +76,7 @@ export const reformComponent = async(component, overwrite={})=> {
 //   console.log('::|::', { id : component.id, title, image }, '::|::');
 	const thumbImage = (component.image) ? await (new Promise((resolve, reject)=> {
     Jimp.read(dataUriToBuffer(image)).then((image)=> {
-      resolve(image.scale(COMOPONENT_THUMB_SCALE).getBase64Async(Jimp.MIME_PNG));
+      resolve(image.scale(COMOPONENT_THUMB_SCALE).quality(100).getBase64Async(Jimp.MIME_PNG));
     }).catch((e)=> {
       reject(e);
     });

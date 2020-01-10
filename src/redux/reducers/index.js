@@ -209,10 +209,11 @@ function rootReducer(state=initialState, action) {
 				teams : action.payload.slice(0, 1)
 			}));
 
-    case SET_REFORMED_BUILD_PLAYGROUNDS:
+		case SET_REFORMED_BUILD_PLAYGROUNDS:
       const { playgrounds, playgroundID } = action.payload;
       const playground = (playgroundID) ? playgrounds.find(({ id })=> (id === playgroundID)) : playgrounds.find(({ deviceID })=> (deviceID === 2)) || playgrounds[0];
-      return (Object.assign({}, state, { playgrounds, playground }));
+      const component = (state.component) ? playground.components.find(({ id })=> (id === state.component.id)) : null;
+      return (Object.assign({}, state, { playgrounds, playground, component }));
 
 		case SET_PLAYGROUND:
 			return (Object.assign({}, state, {

@@ -20,14 +20,13 @@ class SharePopover extends Component {
 		this.state = {
 			email      : '',
 			emailValid : false,
-			position   : this.props.position,
 			outro      : false
 		};
 	}
 
   componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
-		console.log('%s.componentDidUpdate()', this.constructor.name, this.props.position);
+		console.log('%s.componentDidUpdate()', this.constructor.name, this.props);
 
 // 		const { position } = this.props;
 // 		if (position !== this.state.position) {
@@ -96,9 +95,9 @@ class SharePopover extends Component {
 
 
 	render() {
-		console.log('%s.render()', this.constructor.name, this.props, this.state.position);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { email, emailValid, position, outro } = this.state;
+		const { email, emailValid, outro } = this.state;
 		const payload = {
 			fixed    : false,
 			position : {

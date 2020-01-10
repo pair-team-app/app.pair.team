@@ -60,7 +60,7 @@ class PlaygroundPage extends Component {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { profile, componentTypes, playgrounds, playground, match, location } = this.props;
-		const { fetching, accessibility, processing } = this.state;
+		const { fetching, accessibility } = this.state;
 
 		const { pathname } = location;
 		const { teamSlug, projectSlug, buildID, playgroundID, componentsSlug, componentID, commentID } = match.params;
@@ -413,13 +413,7 @@ class PlaygroundPage extends Component {
 				comments : this.props.component.comments.filter(({ id }) => (id !== comment.id)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0))
 			};
 
-			const playground = { ...this.props.playground,
-				components : this.props.playground.components.map((item)=> ((item.id === component.id) ? component : item))
-			};
-
-// 			this.props.setPlayground(playground);
 			this.props.setComponent(component);
-
 			if (!this.props.location.pathname.includes('/comments')) {
         this.props.history.push(`${this.props.location.pathname}/comments`);
       }

@@ -29,7 +29,6 @@ import {
 } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
-import { reformComponent } from '../../components/pages/PlaygroundPage/utils/reform';
 
 
 const logFormat = (action, payload=null, meta='')=> {

@@ -3,7 +3,7 @@
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	align-items: start; /* v-align */
+	align-items: flex-start; /* v-align */
 	justify-content: center; /* h-align */
 	padding: 64px var(--orthodox-padding-base) 88px var(--orthodox-padding-base);
 	height: 100%;
@@ -106,7 +106,7 @@
 	grid-row-gap: var(--orthodox-margin-dbbl);
 	/*justify-items: center;*/ /* h-align */
 	/*align-items: start; !* v-align *!*/
-	justify-content: start;
+	justify-content: flex-start;
 }
 
 .playground-components-column > ul > li {
@@ -153,9 +153,11 @@
 }
 
 .playground-components-list-item img {
+	position: absolute;
 	width: 100%;
 	height: 100%;
 	object-fit: scale-down;
+	clip: rect(0px, 148px, 148px, 0px);
 }
 
 .playground-component h5:hover {
