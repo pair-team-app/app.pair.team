@@ -28,12 +28,12 @@ class ScrollToTop extends Component {
   onScroll = ()=> {
     console.log('%s.onScroll()', this.constructor.name, { offset : window.scrollY });
 
-//     if (window.scrollY > 0) {
-      setTimeout(()=> {
+    setTimeout(()=> {
+      if (window.scrollY > 0) {
         window.scrollTo(0, 0);
-//         window.document.documentElement.scrollTop = 0;
-      }, 5);
-//     }
+        window.document.documentElement.scrollTop = 0;
+      }
+    }, 5);
   };
 
 
