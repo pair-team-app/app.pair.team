@@ -146,10 +146,14 @@ function rootReducer(state=initialState, action) {
 			}));
 
 		case SET_REFORMED_TYPE_GROUP:
+      const storePlayground = state.playgrounds.find(({ id })=> (id === payload.playground.id));
+
       return (Object.assign({}, state, {
+//       	playgrounds : state.playgrounds.map((playground)=> ((playground.id === payload.playground.id) ? payload.playground : playground)),
       	playgrounds : state.playgrounds.map((playground)=> ((playground.id === payload.playground.id) ? payload.playground : playground)),
-        playground  : { ...state.playground,
-          components : state.playground.components.concat(action.payload.components).reduce((acc, inc)=> ([...acc.filter(({ id })=> (id !== inc.id)), inc]), [])
+//         playground  : { ...state.playground,
+        playground  : { ...storePlayground,
+          components : storePlayground.components.concat(payload.components).reduce((acc, inc)=> ([...acc.filter(({ id })=> (id !== inc.id)), inc]), [])
         },
 				component   : (payload.components.find(({ id })=> (state.component && id === state.component.id)) || state.component)
       }));
