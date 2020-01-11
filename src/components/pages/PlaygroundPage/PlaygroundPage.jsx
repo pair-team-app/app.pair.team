@@ -88,29 +88,16 @@ class PlaygroundPage extends Component {
 			}
 		}
 
-// 		if (playground && this.props.typeGroup && fetching) {
-//       const components = componentsFromTypeGroup(playground.components, this.props.typeGroup).filter(({ image, root_styles, styles, html, rootStyles }) => (html && styles && rootStyles));
-//
-//       if (componentsFromTypeGroup(playground.components, this.props.typeGroup).length === components.length) {
-//         this.setState({ fetching : false }, ()=> {
-//         });
-//       }
-// 		}
-
 
     console.log('DERP', { prevProps : prevProps.playground, playground });
 
 		// playground first load
 		if (!prevProps.playground && playground) {
+      let url = pathname;
+
 			let typeGroup = null;
 			let component = null;
 			let comment = null;
-
-//       if (this.state.fetching) {
-// 				this.setState({ fetching : false });
-// 			}
-
-			let url = pathname;
 
 			if (teamSlug && teamSlug !== playground.team.title) {
 				url = pathname.replace(teamSlug, playground.team.title);
@@ -174,10 +161,6 @@ class PlaygroundPage extends Component {
 
 			if (component) {
 				this.props.setComponent(component);
-
-// 			} else {
-// 				component = firstComponentViewType(playground.components);
-//         this.props.setComponent(component)
 			}
 
 			if (comment) {
@@ -192,20 +175,17 @@ class PlaygroundPage extends Component {
 				this.setState({ accessibility : true });
 			}
 
-			// swapped out url
+
+
+		// swapped out url
 		} else if (playground && prevProps.playground) {
-
-
-
 			const { typeGroup, component, comment } = this.props;
 			let url = pathname;
 
       console.log('%s.componentDidUpdate()', this.constructor.name, { playgroundID : this.props.playground.id, prev : prevProps.playground.id, fetching, processing });
-      if (playground.id !== prevProps.playground.id && !fetching && !processing) {
-//       if ((playgroundID << 0) !== prevProps.playground.id && !fetching) {
+      if (playground.id !== prevProps.playground.id && !fetching) {
 				this.onFetchTypeGroupComponents(typeGroup);
       }
-
 
 //       console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, state : this.state, typeGroup, component, prevTypeGroup : prevProps.typeGroup, prevComponent : prevProps.component, curr : pathname, prev : prevProps.location.pathname });
 //       console.log('%s.componentDidUpdate()', this.constructor.name, { curr : pathname, prev : prevProps.location.pathname, storePathname : this.props.pathname });
@@ -224,7 +204,6 @@ class PlaygroundPage extends Component {
 
         if (this.state.typeGroups && playgroundID && componentsSlug && componentsSlug !== prevProps.match.params.componentsSlug) {
           this.props.setTypeGroup(typeGroupByKey(this.state.typeGroups, componentsSlug));
-//           this.setState({ processing : true });
 
         } else if (!componentsSlug) {
           this.props.setTypeGroup(null);
@@ -241,14 +220,6 @@ class PlaygroundPage extends Component {
         if (!commentID && comment) {
           this.props.setComment(null);
 				}
-
-//         if (this.state.playgrounds.length > 0 && playgroundID && componentsSlug && componentID && curr.includes('/comments') && commentID && commentID !== prevProps.match.params.commentID) {
-//         } else if (!curr.includes('/comments') || !commentID) {
-//           this.props.setComment(null);
-//
-//         } else if (curr.includes('/comments')) {
-//
-//         }
 
 				this.setState({ accessibility : curr.includes('/accessibility') });
 
@@ -520,8 +491,6 @@ class PlaygroundPage extends Component {
   };
 
 
-
-
   render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
@@ -553,9 +522,9 @@ class PlaygroundPage extends Component {
 				}
 
 				<PlaygroundHeader
-          accessibility={accessibility}
+					accessibility={accessibility}
 					popover={share}
-          onBreadCrumbClick={this.handleBreadCrumbClick}
+					onBreadCrumbClick={this.handleBreadCrumbClick}
 					onPopup={this.props.onPopup}
 					onSharePopoverClose={()=> this.setState({ share : false })}
 					onSettingsItem={this.handleSettingsItem}
@@ -580,12 +549,10 @@ class PlaygroundPage extends Component {
 				onDelete={this.handleDeleteComment}
 			/>)}
 
-      {/*{(fetching || processing) && (<PlaygroundProcessingOverlay root={(fetching)} outro={(playground !== null)} onComplete={()=> this.setState({ fetching : false })} />)}*/}
+      {/*{(fetching || processing) && (<PlaygroundProcessingOverlay root={fetching} outro={(fetching) ? playground !== null : (typeGroupComponentsProcessed(typeGroup, playground.components))} onComplete={()=> (fetching) ? this.setState({ fetching : false }) : this.setState({ processing : false })} />)}*/}
       {(fetching) && (<PlaygroundProcessingOverlay root={true} outro={(playground !== null)} onComplete={()=> this.setState({ fetching : false })} />)}
-      {/*-----------------{(processing) && (<PlaygroundProcessingOverlay root={false} outro={componentsFromTypeGroup(playground.components, typeGroup).every(({ html, styles, rootStyles })=> (html && styles && rootStyles))} onComplete={()=> this.setState({ processing : false })} />)}*/}
-      {(processing) && (<PlaygroundProcessingOverlay root={false} outro={false} onComplete={()=> this.setState({ processing : false })} />)}
+      {(processing) && (<PlaygroundProcessingOverlay root={false} outro={(typeGroupComponentsProcessed(typeGroup, playground.components))} onComplete={()=> this.setState({ processing : false })} />)}
       {/*<PlaygroundProcessingOverlay outro={!processing} />*/}
-      {/*<PlaygroundProcessingOverlay outro={false} />*/}
 		</BasePage>);
 	}
 }

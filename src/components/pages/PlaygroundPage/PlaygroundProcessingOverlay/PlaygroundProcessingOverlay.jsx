@@ -79,12 +79,12 @@ class PlaygroundProcessingOverlay extends Component {
         const onOutro = ()=> {
           console.log('%s.componentDidUpdate().onOutro()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, root, outro, typeGroup : typeGroup.id, total, processed : this.state.processed, components : componentsFromTypeGroup(playground.components, typeGroup)});
           this.setState({
-            outro     : true,
-//             completed : (completed === false)
+            outro : true,
           });
         };
 
-        if (this.state.processed === total && !this.state.outro) {
+//         if (this.state.processed === total && !this.state.outro) {
+        if (((outro && !prevProps.outro) || (this.state.processed === total)) && !this.state.outro) {
           console.log("DONE LIST", { components : components.map(({ html, styles, rootStyles }) => ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles)), total : this.state.total });
           onOutro();
 
@@ -102,11 +102,6 @@ class PlaygroundProcessingOverlay extends Component {
             this.setState({ processed });
           }
         }
-
-//       console.log('%s.componentDidUpdate()', this.constructor.name, { root, outro, typeGroup, total, prevTotal : prevState.total, completed });
-//       if (typeGroup !== !prevProps.typeGroup && (total === -1 || total !== prevState.total)) {
-//         if (total !== components.length || prevProps.typeGroup !== typeGroup) {
-
       }
     }
   }
@@ -115,8 +110,6 @@ class PlaygroundProcessingOverlay extends Component {
 		console.log('%s.handleComplete()', this.constructor.name, this.state);
     this.setState({
       outro     : false,
-//       processed : 0,
-//       total     : -1,
       completed : true
     }, ()=> {
       this.props.onComplete();
