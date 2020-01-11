@@ -2,24 +2,24 @@
 import React from 'react';
 import './PlaygroundFooter.css';
 
-import { GITHUB_FIGMA_PLUGIN, GITHUB_XD_PLUGIN, NPM_DE_PLAYGROUND } from '../../../../consts/uris';
-import { trackEvent, trackOutbound } from '../../../../utils/tracking';
+// import { GITHUB_FIGMA_PLUGIN, GITHUB_XD_PLUGIN, NPM_DE_PLAYGROUND } from '../../../../consts/uris';
+// import { trackEvent, trackOutbound } from '../../../../utils/tracking';
 
 
 function PlaygroundFooter(props) {
 // 	console.log('PlaygroundFooter()', props);
 // 	console.log('PlaygroundFooter()', { playground : props.playground, builds : props.builds });
 
-	const handleClick = (event, url)=> {
-		event.preventDefault();
-		event.stopPropagation();
-
-		trackEvent('button', event.target.name);
-		trackOutbound(url, ()=> {
-			window.open(url);
-		});
-		window.open(url);
-	};
+// 	const handleClick = (event, url)=> {
+// 		event.preventDefault();
+// 		event.stopPropagation();
+//
+// 		trackEvent('button', event.target.name);
+// 		trackOutbound(url, ()=> {
+// 			window.open(url);
+// 		});
+// 		window.open(url);
+// 	};
 
 	const { accessibility, cursor, playground, builds } = props;
 	return (<div className="playground-footer">

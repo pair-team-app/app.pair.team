@@ -4,7 +4,6 @@ import './PlaygroundProcessingOverlay.css';
 
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
 import BaseOverlay, { OVERLAY_TYPE_POSITION_OFFSET } from '../../../overlays/BaseOverlay';
 import { componentsFromTypeGroup } from '../utils/lookup';
@@ -162,4 +161,4 @@ const mapStateToProps = (state, ownProps)=> {
 
 
 
-export default withRouter(connect(mapStateToProps)(PlaygroundProcessingOverlay));
+export default connect(mapStateToProps)(PlaygroundProcessingOverlay);
