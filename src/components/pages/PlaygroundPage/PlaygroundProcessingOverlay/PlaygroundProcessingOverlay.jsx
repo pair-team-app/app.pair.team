@@ -59,13 +59,14 @@ class PlaygroundProcessingOverlay extends Component {
       }
 
     } else {
-      if (playground && typeGroup) {
+      if (playground && typeGroup && !completed) {
         const components = componentsFromTypeGroup(playground.components, typeGroup);
         const processed = components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles)).length;
 
         console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, root, outro, typeGroup : typeGroup.id, total, processed : this.state.processed, components : componentsFromTypeGroup(playground.components, typeGroup)});
 
-        const resetState = ()=> {
+        const onReset = ()=> {
+          console.log('%s.componentDidUpdate().onReset()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, root, outro, typeGroup : typeGroup.id, total, processed : this.state.processed, components : componentsFromTypeGroup(playground.components, typeGroup)});
           this.setState({
             outro     : false,
             processed : 0,
@@ -76,37 +77,37 @@ class PlaygroundProcessingOverlay extends Component {
           });
         };
 
+        const onOutro = ()=> {
+          console.log('%s.componentDidUpdate().onOutro()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, root, outro, typeGroup : typeGroup.id, total, processed : this.state.processed, components : componentsFromTypeGroup(playground.components, typeGroup)});
+          this.setState({
+            outro     : true,
+//             completed : (completed === false)
+          });
+        };
+
+        if (this.state.processed === total && !this.state.outro) {
+          console.log("DONE LIST", { components : components.map(({ html, styles, rootStyles }) => ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles)), total : this.state.total });
+          onOutro();
+
+        } else {
+          if (total !== components.length) {
+            console.log(':::::::::: NO PREV :::::::::::::::');
+            onReset();
+
+          } else {
+            console.log("ACT LIST", { components : components.map(({ html, styles, rootStyles }) => ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles)), total : this.state.total });
+          }
+
+          if (processed > this.state.processed) {
+            console.log("INC LIST", { components : components.map(({ html, styles, rootStyles }) => ({ html, styles, rootStyles })), processed, stateProc : this.state.processed, total : this.state.total });
+            this.setState({ processed });
+          }
+        }
+
 //       console.log('%s.componentDidUpdate()', this.constructor.name, { root, outro, typeGroup, total, prevTotal : prevState.total, completed });
 //       if (typeGroup !== !prevProps.typeGroup && (total === -1 || total !== prevState.total)) {
 //         if (total !== components.length || prevProps.typeGroup !== typeGroup) {
 
-
-        if (total !== components.length) {
-          console.log(':::::::::: NO PREV :::::::::::::::');
-           resetState();
-
-
-        } else {
-          console.log("ACT LIST", { components : components.map(({ html, styles, rootStyles }) => ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles)), total : this.state.total });
-        }
-
-        if (processed > this.state.processed) {
-          console.log("INC LIST", { components : components.map(({ html, styles, rootStyles }) => ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles)), total : this.state.total });
-          this.setState({ processed });
-        }
-
-        if (processed === total && !this.state.outro) {
-          console.log("DONE LIST", { components : components.map(({ html, styles, rootStyles }) => ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles)), total : this.state.total });
-          this.setState({ outro : true });
-        }
-
-        if (processed === total && this.state.outro && !completed) {
-          this.handleComplete();
-          this.setState({
-            outro     : false,
-            completed : true
-          });
-        }
       }
     }
   }

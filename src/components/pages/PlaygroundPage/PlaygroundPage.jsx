@@ -201,7 +201,7 @@ class PlaygroundPage extends Component {
 			let url = pathname;
 
       console.log('%s.componentDidUpdate()', this.constructor.name, { playgroundID : this.props.playground.id, prev : prevProps.playground.id, fetching, processing });
-      if (playground.id !== prevProps.playground.id && !fetching) {
+      if (playground.id !== prevProps.playground.id && !fetching && !processing) {
 //       if ((playgroundID << 0) !== prevProps.playground.id && !fetching) {
 				this.onFetchTypeGroupComponents(typeGroup);
       }
@@ -224,7 +224,7 @@ class PlaygroundPage extends Component {
 
         if (this.state.typeGroups && playgroundID && componentsSlug && componentsSlug !== prevProps.match.params.componentsSlug) {
           this.props.setTypeGroup(typeGroupByKey(this.state.typeGroups, componentsSlug));
-          this.setState({ processing : true });
+//           this.setState({ processing : true });
 
         } else if (!componentsSlug) {
           this.props.setTypeGroup(null);

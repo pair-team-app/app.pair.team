@@ -6,9 +6,6 @@
 	text-align: left;
 	width: 0;
 	height: 0;
-	/*width: 100%;*/
-	/*height: 100%;*/
-	/*background-color: rgba(255, 0, 255, 0.33);*/
 	z-index: 2000;
 }
 
@@ -20,7 +17,6 @@
 	width: 100%;
 	height: 100%;
 	background-color: rgba(var(--site-bg-color), 0.95);
-	/*background-color: rgba(0, 255, 0, 0.5);*/
 }
 
 .base-overlay-content-wrapper {
@@ -59,7 +55,6 @@
 	display: table;
 	width: 100%;
 	padding-bottom: var(--orthodox-padding-base);
-	/*border-bottom: 1px solid rgba(var(--border-color), 1.0);*/
 }
 
 .base-overlay-title {

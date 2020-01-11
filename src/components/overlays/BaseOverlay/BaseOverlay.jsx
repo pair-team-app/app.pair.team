@@ -19,7 +19,7 @@ class BaseOverlay extends Component {
 		super(props);
 
 		this.state = {
-			outro : false,
+			outro     : false,
 			completed : false
 		};
 
@@ -39,7 +39,7 @@ class BaseOverlay extends Component {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state);
 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : prevProps.outro, props : this.props.outro });
 
-		const { completed } = this.state;
+// 		const { completed } = this.state;
     if (prevProps.outro !== this.props.outro && this.props.outro) {
 // 			this.setState({ completed : false }, ()=> {
 				this.onOutro();
@@ -61,8 +61,8 @@ class BaseOverlay extends Component {
 	}
 
 	handleClickOutside(event) {
-		const { closeable } = this.props;
-		if (closeable) {
+		const { closeable, blocking } = this.props;
+		if (!blocking && closeable) {
 			this.onOutro();
 		}
 	}
@@ -92,7 +92,7 @@ class BaseOverlay extends Component {
     this.timeline = new TimelineMax();
     this.timeline.from(this.wrapper, INTRO_DURATION, {
       opacity : 0.5,
-      scale   : 0.75,
+      scale   : 0.875,
       ease    : Back.easeOut,
       delay   : (delay || 0) * 0.001,
 			onComplete : ()=> {
@@ -107,7 +107,7 @@ class BaseOverlay extends Component {
     this.timeline = new TimelineMax();
     this.timeline.to(this.wrapper, OUTRO_DURATION, {
       opacity    : 0.25,
-      scale      : 0.9,
+      scale      : 0.5,
       ease       : Back.easeIn,
       onComplete : ()=> {
         console.log('%s.onOutro().onOutroComplete', this.constructor.name, this.props, this.state, this.timeline);
