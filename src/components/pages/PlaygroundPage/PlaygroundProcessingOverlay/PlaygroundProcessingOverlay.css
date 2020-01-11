@@ -1,4 +1,5 @@
 
 .playground-processing-overlay {
+	width: 63px;
 	padding: var(--orthodox-padding-base);
 }

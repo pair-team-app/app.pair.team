@@ -27,9 +27,9 @@ function PlaygroundFooter(props) {
 			<FooterCommentButton selected={cursor} onClick={props.onToggleCursor} />
 		</div>
 		<div className="button-wrapper-col playground-footer-button-wrapper">
-			<button className="quiet-button" onClick={(event)=> handleClick(event, NPM_DE_PLAYGROUND)}>NPM Module</button>
-			<button className="quiet-button" onClick={(event)=> handleClick(event, GITHUB_FIGMA_PLUGIN)}>Figma Plugin</button>
-			<button className="quiet-button" onClick={(event)=> handleClick(event, GITHUB_XD_PLUGIN)}>Adobe XD Plugin</button>
+			{/*<button className="quiet-button" onClick={(event)=> handleClick(event, NPM_DE_PLAYGROUND)}>NPM Module</button>*/}
+			{/*<button className="quiet-button" onClick={(event)=> handleClick(event, GITHUB_FIGMA_PLUGIN)}>Figma Plugin</button>*/}
+			{/*<button className="quiet-button" onClick={(event)=> handleClick(event, GITHUB_XD_PLUGIN)}>Adobe XD Plugin</button>*/}
 		</div>
 		<div className="button-wrapper-col playground-footer-content-toggle-wrapper">
 			<FooterMobileButton hidden={(builds === 0)} selected={(playground.deviceID !== 1)} onClick={props.onToggleMobile} />

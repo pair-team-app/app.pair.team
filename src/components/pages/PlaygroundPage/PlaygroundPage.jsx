@@ -88,15 +88,17 @@ class PlaygroundPage extends Component {
 			}
 		}
 
-		if (playground && this.props.typeGroup && fetching) {
-      const components = componentsFromTypeGroup(playground.components, this.props.typeGroup).filter(({ image, root_styles, styles, html, rootStyles }) => (html && styles && rootStyles));
+// 		if (playground && this.props.typeGroup && fetching) {
+//       const components = componentsFromTypeGroup(playground.components, this.props.typeGroup).filter(({ image, root_styles, styles, html, rootStyles }) => (html && styles && rootStyles));
+//
+//       if (componentsFromTypeGroup(playground.components, this.props.typeGroup).length === components.length) {
+//         this.setState({ fetching : false }, ()=> {
+//         });
+//       }
+// 		}
 
-      if (componentsFromTypeGroup(playground.components, this.props.typeGroup).length === components.length) {
-        this.setState({ fetching : false }, ()=> {
-        });
-      }
-		}
 
+    console.log('DERP', { prevProps : prevProps.playground, playground });
 
 		// playground first load
 		if (!prevProps.playground && playground) {
@@ -104,9 +106,9 @@ class PlaygroundPage extends Component {
 			let component = null;
 			let comment = null;
 
-      if (this.state.fetching) {
-				this.setState({ fetching : false });
-			}
+//       if (this.state.fetching) {
+// 				this.setState({ fetching : false });
+// 			}
 
 			let url = pathname;
 
@@ -222,7 +224,7 @@ class PlaygroundPage extends Component {
 
         if (this.state.typeGroups && playgroundID && componentsSlug && componentsSlug !== prevProps.match.params.componentsSlug) {
           this.props.setTypeGroup(typeGroupByKey(this.state.typeGroups, componentsSlug));
-//           this.setState({ processing : true });
+          this.setState({ processing : true });
 
         } else if (!componentsSlug) {
           this.props.setTypeGroup(null);
@@ -285,10 +287,6 @@ class PlaygroundPage extends Component {
         }
 			}
 		}
-
-// 		if (processing && playground && this.props.typeGroup && componentsFromTypeGroup(playground.components, this.props.typeGroup).every(({ html, styles, rootStyles })=> (html && styles && rootStyles))) {
-// 			this.setState({ processing : false });
-// 		}
 	}
 
 	handleAddComment = ({ component, position, content })=> {
@@ -515,8 +513,7 @@ class PlaygroundPage extends Component {
     console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
 
     this.setState({
-			fetching   : true,
-			processing : true
+			fetching : true,
 		}, ()=> {
     	this.props.fetchBuildPlaygrounds({ buildID, playgroundID });
     });
@@ -527,21 +524,18 @@ class PlaygroundPage extends Component {
 
   render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
 
 		const { profile, playgrounds, playground, typeGroup, component } = this.props;
 		const { cursor, accessibility, share, fetching, processing } = this.state;
 		const { params } = this.props.match;
 
 		return (<BasePage className={`playground-page${(component && (window.location.href.includes('/comments'))) ? ' playground-page-comments' : ''}`}>
-			{(fetching || processing) && (<PlaygroundProcessingOverlay show={(fetching || processing)} onComplete={()=> this.setState({ processing : false })} />)}
-			{/*<PlaygroundProcessingOverlay outro={!processing} />*/}
-			{/*<PlaygroundProcessingOverlay outro={false} />*/}
-
-			{(true) && (<PlaygroundNavPanel
+      <PlaygroundNavPanel
 				params={params}
 				onTypeGroupClick={this.handleNavGroupItemClick}
 				onTypeItemClick={this.handleNavTypeItemClick}
-			/>)}
+			/>
 
 			{(profile && playground && typeGroup) && (<div className="playground-page-content-wrapper">
 				{(!accessibility)
@@ -585,6 +579,13 @@ class PlaygroundPage extends Component {
 				comments={(component) ? component.comments : []}
 				onDelete={this.handleDeleteComment}
 			/>)}
+
+      {/*{(fetching || processing) && (<PlaygroundProcessingOverlay root={(fetching)} outro={(playground !== null)} onComplete={()=> this.setState({ fetching : false })} />)}*/}
+      {(fetching) && (<PlaygroundProcessingOverlay root={true} outro={(playground !== null)} onComplete={()=> this.setState({ fetching : false })} />)}
+      {/*-----------------{(processing) && (<PlaygroundProcessingOverlay root={false} outro={componentsFromTypeGroup(playground.components, typeGroup).every(({ html, styles, rootStyles })=> (html && styles && rootStyles))} onComplete={()=> this.setState({ processing : false })} />)}*/}
+      {(processing) && (<PlaygroundProcessingOverlay root={false} outro={false} onComplete={()=> this.setState({ processing : false })} />)}
+      {/*<PlaygroundProcessingOverlay outro={!processing} />*/}
+      {/*<PlaygroundProcessingOverlay outro={false} />*/}
 		</BasePage>);
 	}
 }

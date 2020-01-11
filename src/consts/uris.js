@@ -12,7 +12,8 @@ export const Modals = {
 	PROFILE   : '/profile',
 	RECOVER   : '/recover',
 	REGISTER  : '/register',
-	STRIPE    : '/stripe'
+	STRIPE    : '/stripe',
+	SITE      : '/SITE'
 };
 
 export const Pages = {
