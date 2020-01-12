@@ -7196,6 +7196,13 @@ json-schema@0.2.3:
   resolved "https://registry.yarnpkg.com/json-schema/-/json-schema-0.2.3.tgz#b480c892e59a2f05954ce727bd3f2a4e882f9e13"
   integrity sha1-tIDIkuWaLwWVTOcnvT8qTogvnhM=
 
+json-size@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/json-size/-/json-size-1.0.0.tgz#4636046df470d87ffbe6c137c764ed0efcd5b588"
+  integrity sha1-RjYEbfRw2H/75sE3x2TtDvzVtYg=
+  dependencies:
+    utf8-length "0.0.1"
+
 json-stable-stringify-without-jsonify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
@@ -12816,6 +12823,11 @@ use@^3.1.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/use/-/use-3.1.1.tgz#d50c8cac79a19fbc20f2911f56eb973f4e10070f"
   integrity sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==
+
+utf8-length@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/utf8-length/-/utf8-length-0.0.1.tgz#d315c4bed529c977f18dd35c73d72628327d9ada"
+  integrity sha1-0xXEvtUpyXfxjdNcc9cmKDJ9mto=
 
 utf8@^2.1.2:
   version "2.1.2"

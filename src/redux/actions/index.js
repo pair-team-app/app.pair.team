@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Bits, Objects } from 'lang-js-utils';
 import cookie from 'react-cookies';
 
+import jsonSize from 'json-size';
+
 import {
   BUILD_PLAYGROUNDS_LOADED,
 	COMPONENT_TYPES_LOADED,
@@ -27,6 +29,7 @@ import {
 	UPD_PATHNAME,
 	TYPE_GROUP_LOADED
 } from '../../consts/action-types';
+import { jsonFormatKB } from '../../consts/formats';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
 
@@ -49,6 +52,16 @@ export function fetchBuildPlaygrounds(payload) {
     }).then(async(response) => {
       console.log('BUILD_PLAYGROUNDS', response.data);
 
+      const playgrounds = response.data.playgrounds.map((playground)=> ({
+				size       : jsonFormatKB(playground, true),
+				components : playground.components.map((component)=> ({
+					id    : component.id,
+					title : component.title,
+					size  : jsonFormatKB(component, true)
+				}))
+      }));
+
+      console.log('BUILD_PLAYGROUNDS [SIZE]', { playgrounds });
       dispatch({
         type    : BUILD_PLAYGROUNDS_LOADED,
         payload : { playgroundID,
@@ -123,6 +136,12 @@ export function fetchPlaygroundComponentGroup(payload) {
       console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', response.data);
 
       const { components } = response.data;
+      console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS [SIZE]', Object.values(components).map((component)=> ({
+        id    : component.id,
+        title : component.title,
+        size  : jsonFormatKB(component, true)
+      })));
+
       dispatch({
         type    : TYPE_GROUP_LOADED,
         payload : { playground, components : Object.values(components) }

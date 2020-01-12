@@ -17,6 +17,7 @@
         "gsap": "^2.1.2",
         "imagejs": "^0.0.9",
         "jimp": "^0.9.3",
+        "json-size": "^1.0.0",
         "jssoup": "^0.0.10",
         "jszip": "^3.2.2",
         "lang-js-utils": "/labor/projects/npm_modules/lang-js-utils",

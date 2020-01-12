@@ -83,8 +83,8 @@ class PlaygroundProcessingOverlay extends Component {
           });
         };
 
-//         if (this.state.processed === total && !this.state.outro) {
-        if (((outro && !prevProps.outro) || (this.state.processed === total)) && !this.state.outro) {
+        if (this.state.processed === total && !this.state.outro) {
+//         if (((outro && !prevProps.outro) || (this.state.processed === total)) && !this.state.outro) {
           console.log("DONE LIST", { components : components.map(({ html, styles, rootStyles }) => ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles)), total : this.state.total });
           onOutro();
 

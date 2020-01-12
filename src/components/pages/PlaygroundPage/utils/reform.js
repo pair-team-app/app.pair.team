@@ -1,13 +1,15 @@
 
 import dataUriToBuffer from 'data-uri-to-buffer';
 import { Images } from 'lang-js-utils';
+import jsonSize from 'json-size';
 import Jimp from 'jimp';
 import moment from 'moment';
 
-import { COMOPONENT_THUMB_SCALE } from '../../../../consts/formats';
+import { COMPONENT_THUMB_QUALITY, COMPONENT_THUMB_SCALE, jsonFormatKB } from '../../../../consts/formats';
 import { unzipSync } from '../../../../utils/funcs';
 import { decryptObject, decryptText } from './crypto';
 import { convertStyles } from './css';
+import {COMPONENT_TYPES_LOADED} from "../../../../consts/action-types";
 
 
 export const reformChildElement = (element, overwrite={})=> {
@@ -56,13 +58,29 @@ export const reformComponent = async(component, overwrite={})=> {
 	delete (component['tag_name']);
 	delete (component['root_styles']);
 
-	image = (image && image.length > 1) ? `data:image/png;base64,${btoa(await unzipSync(image))}` : Images.genColor(PLACEHOLDER_FILL, { width, height });
-	html = (html) ? decryptText(await unzipSync(html)) : null;
-	styles = (styles) ? decryptObject(await unzipSync(styles)) : null;
-	accessibility = (accessibility) ? decryptObject(await unzipSync(accessibility)) : null;
-	const rootStyles = (root_styles) ? convertStyles(decryptObject(await unzipSync(root_styles))) : null;
+//   console.log('[%s]::(SIZE)::', component.id, {
+//   	image         : jsonSize(image) * 0.0009765625,
+// 		html          : jsonSize(html) * 0.0009765625,
+// 		styles        : jsonSize(styles) * 0.0009765625,
+// 		accessibility : jsonSize(accessibility) * 0.0009765625,
+// 		rootStyles    : jsonSize(root_styles) * 0.0009765625
+//   });
 
-// 	console.log('::|::', { image, html, styles, accessibility, rootStyles });
+
+	const sizes = {
+    image         : jsonFormatKB(image, true),
+    html          : jsonFormatKB(html, true),
+    styles        : jsonFormatKB(styles, true),
+    accessibility : jsonFormatKB(accessibility, true),
+    rootStyles    : jsonFormatKB(root_styles, true)
+  };
+
+	image = (image && image.length > 1) ? `data:image/png;base64,${btoa(await unzipSync(image))}` : Images.genColor(PLACEHOLDER_FILL, { width, height });
+  html = (html) ? decryptText(await unzipSync(html)) : null;
+  styles = (styles) ? decryptObject(await unzipSync(styles)) : null;
+  accessibility = (accessibility) ? decryptObject(await unzipSync(accessibility)) : null;
+  const rootStyles = (root_styles) ? convertStyles(decryptObject(await unzipSync(root_styles))) : null;
+
 //	console.log(component.id, 'STYLES:', decryptText(styles));
 // 	console.log(component.id, 'STYLES:', decryptObject(styles));
 //	console.log(component.id, 'ACCESSIBILITY:', decryptText(accessibility));
@@ -76,11 +94,11 @@ export const reformComponent = async(component, overwrite={})=> {
 //   console.log('::|::', { id : component.id, title, buffer : dataUriToBuffer(image).typeFull, image }, '::|::');
 	const thumbImage = (component.image) ? await (new Promise((resolve, reject)=> {
     Jimp.read(dataUriToBuffer(image)).then((image)=> {
-      resolve(image.scale(COMOPONENT_THUMB_SCALE).quality(5).getBase64Async(Jimp.MIME_PNG));
+      resolve(image.scale(COMPONENT_THUMB_SCALE).quality(COMPONENT_THUMB_QUALITY).getBase64Async(Jimp.MIME_PNG));
     }).catch((e)=> {
       reject(e);
     });
-  })) : Images.genColor(PLACEHOLDER_FILL, { width : width * COMOPONENT_THUMB_SCALE, height : height * COMOPONENT_THUMB_SCALE });
+  })) : Images.genColor(PLACEHOLDER_FILL, { width : width * COMPONENT_THUMB_SCALE, height : height * COMPONENT_THUMB_SCALE });
 
 	const reformed = { ...component, html, styles, image, thumbImage, accessibility,
     typeID        : type_id,
@@ -101,6 +119,13 @@ export const reformComponent = async(component, overwrite={})=> {
   };
 
 
-//   console.log('REFORMED + DECRYPTED: [%s]', component.id, reformed);
-	return (reformed);
+	if (image && html && styles && rootStyles) {
+    console.log('[%s] .::(REFORMED)::.', component.id, sizes, { data : { ...reformed, size : jsonFormatKB(reformed) } });
+
+	} else {
+//     console.log('[%s] .::(INITIAL)::.', component.id, { ...reformed, size : jsonFormatKB(reformed) });
+	}
+
+
+	return ({... reformed, size : jsonSize(reformed) });
 };
