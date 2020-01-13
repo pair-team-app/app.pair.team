@@ -7,7 +7,7 @@ import onClickOutside from 'react-onclickoutside';
 
 import { trackOverlay } from '../../../utils/tracking';
 
-import { OVERLAY_TYPE_POSITION_OFFSET, OVERLAY_TYPE_PERCENT_SIZE } from './';
+import { OVERLAY_TYPE_AUTO_SIZE, OVERLAY_TYPE_POSITION_OFFSET, OVERLAY_TYPE_PERCENT_SIZE } from './';
 
 
 const INTRO_DURATION = (1/8);
@@ -106,12 +106,20 @@ class BaseOverlay extends Component {
 
     this.timeline = new TimelineMax();
     this.timeline.to(this.wrapper, OUTRO_DURATION, {
-      opacity    : 0.25,
+      opacity    : 0.75,//0.25,
       scale      : 0.5,
       ease       : Back.easeIn,
       onComplete : ()=> {
+//         console.log('%s.onOutro().onOutroComplete', this.constructor.name, this.props, this.state, this.timeline);
+// 				this.handleComplete();
+      }
+    }).to(this.wrapper, OUTRO_DURATION * 0.5, {
+      opacity    : 1.0,
+      scale      : 1.0,
+      ease       : Back.easeOut,
+      onComplete : ()=> {
         console.log('%s.onOutro().onOutroComplete', this.constructor.name, this.props, this.state, this.timeline);
-				this.handleComplete();
+//         this.handleComplete();
       }
     });
 	};
@@ -124,7 +132,7 @@ class BaseOverlay extends Component {
 		}
 
 		const { type, blocking, offset, title, closeable, children } = this.props;
-		const wrapperClass = `base-overlay-content-wrapper base-overlay-content-wrapper${(type === OVERLAY_TYPE_PERCENT_SIZE) ? '-percent' : '-auto-scroll'}`;
+		const wrapperClass = `base-overlay-content-wrapper base-overlay-content-wrapper${(type === OVERLAY_TYPE_PERCENT_SIZE) ? '-percent' : (OVERLAY_TYPE_AUTO_SIZE) ? '-auto-size' : '-auto-scroll'}`;
 		const wrapperStyle = (type === OVERLAY_TYPE_POSITION_OFFSET) ? {
 			transform  : `translate(${(offset.x || 0)}px, ${(offset.y || 0)}px)`
 		} : null;

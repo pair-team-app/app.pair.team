@@ -2,10 +2,10 @@
 import React, { Component } from 'react';
 import './PlaygroundProcessingOverlay.css';
 
-import FontAwesome from 'react-fontawesome';
+import FontAwesome, { FontAwesomeIcon } from 'react-fontawesome';
 import { connect } from 'react-redux';
 
-import BaseOverlay, { OVERLAY_TYPE_POSITION_OFFSET } from '../../../overlays/BaseOverlay';
+import BaseOverlay, { OVERLAY_TYPE_AUTO_SCROLL, OVERLAY_TYPE_POSITION_OFFSET } from '../../../overlays/BaseOverlay';
 import { componentsFromTypeGroup } from '../utils/lookup';
 import { Modals } from '../../../../consts/uris';
 
@@ -21,6 +21,7 @@ class PlaygroundProcessingOverlay extends Component {
     super(props);
 
     this.state = {
+//       loaders    : [ true, false ],
       outro      : false,
       processed  : 0,
       total      : -1,
@@ -121,7 +122,7 @@ class PlaygroundProcessingOverlay extends Component {
 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
     const { playground, root } = this.props;
-    const { outro, completed } = this.state;
+    const { outro, completed,  } = this.state;
 
     return ((!completed) ? (<BaseOverlay
       tracking={(root) ? Modals.SITE : Modals.PROCESSING}
@@ -129,14 +130,16 @@ class PlaygroundProcessingOverlay extends Component {
       blocking={root}
       closeable={false}
       title={null}
-      type={OVERLAY_TYPE_POSITION_OFFSET}
-      offset={{ x : 63, y : -63 }}
+      type={(OVERLAY_TYPE_AUTO_SCROLL | OVERLAY_TYPE_POSITION_OFFSET)}
+//       offset={{ x : 43, y : -43 }}
       delay={75 + ((!playground << 0) * 250)}
       onComplete={this.handleComplete}>
         <div className="playground-processing-overlay" data-blocking={root}>
           <div className="base-overlay-loader-wrapper">
             <div className="base-overlay-loader">
-              <FontAwesome name="circle-notch" className="base-overlay-loader-spinner" size="3x" spin />
+              <FontAwesomeIcon name={['far', 'circle']} className="base-overlay-loader-spinner" spin />
+              <FontAwesomeIcon name={['fad', 'circle']} className="base-overlay-loader-spinner" spin />
+              {/*<FontAwesome name="spinner" className="base-overlay-loader-spinner" size="3x" spin pulse />*/}
             </div>
           </div>
         </div>
