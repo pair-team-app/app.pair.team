@@ -21,10 +21,8 @@
 
 .base-overlay-content-wrapper {
 	position: fixed;
-	width: fit-content;
-	height: auto;
-	max-width: 85%;
-	max-height: 85%;
+	min-width: 128px;
+	min-height: 128px;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
@@ -40,6 +38,7 @@
 }
 
 .base-overlay-content-wrapper-auto-size {
+	width: fit-content;
 	border-radius: 3px;
 	transform-style: flat;
 	box-shadow: none;
@@ -75,43 +74,26 @@
 }
 
 .base-overlay-loader-wrapper {
-	position: absolute;
-	top: 0;
-	left: 0;
-	margin: calc(var(--orthodox-margin-base) * -1);
-	width: calc(100% + calc(var(--orthodox-padding-base) * 2.0));
-	height: calc(100% + calc(var(--orthodox-padding-base) * 2.0));
-	background-color: rgba(var(--site-bg-color), 0.33);
+	margin: calc(var(--orthodox-margin-base) * 1);
+	min-width: 100%;
+	min-height: 100%;
+	background-color: #ff00ff; /*rgba(var(--site-bg-color), 0.33);*/
 }
 
 .base-overlay-loader {
-	position: relative;
-	/*min-width: 44px;*/
-	/*min-height: 44px;*/
-}
-
-
-.base-overlay-loadr-spinner::before {
-	/*min-width: 44px;*/
-	/*max-width: 88px;*/
-	/*width: 44px;*/
-	/*min-height: 44px;*/
-	/*max-height: 88px;*/
-	/*height: 44px;*/
-}
-
-.base-overlay-loader-spinner {
-	display: block;
 	position: absolute;
-	top: 33px;
-	/*top: 50%;*/
+	width: 88px;
+	top: 50%;
 	left: 50%;
 	transform-origin: center;
 	transform: translate(-50%, -50%);
-	margin-top: calc(var(--orthodox-padding-more) * -1);
-	margin-left: calc(var(--orthodox-padding-more) * -1);
+	font-size: 5em;
+}
+
+.base-overlay-loader-spinner {
 	color: rgba(var(--site-fg-color), 1.0);
-	font-size: 3.33em;
-	text-align: center;
-	object-fit: scale-down;
+}
+
+.fa-spin {
+	/*filter: blur(0);*/
 }

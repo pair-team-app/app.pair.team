@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './PlaygroundProcessingOverlay.css';
 
-import FontAwesome, { FontAwesomeIcon } from 'react-fontawesome';
+import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
 import BaseOverlay, { OVERLAY_TYPE_AUTO_SCROLL, OVERLAY_TYPE_POSITION_OFFSET } from '../../../overlays/BaseOverlay';
@@ -131,17 +131,14 @@ class PlaygroundProcessingOverlay extends Component {
       closeable={false}
       title={null}
       type={(OVERLAY_TYPE_AUTO_SCROLL | OVERLAY_TYPE_POSITION_OFFSET)}
-//       offset={{ x : 43, y : -43 }}
       delay={75 + ((!playground << 0) * 250)}
       onComplete={this.handleComplete}>
         <div className="playground-processing-overlay" data-blocking={root}>
-          <div className="base-overlay-loader-wrapper">
             <div className="base-overlay-loader">
-              <FontAwesomeIcon name={['far', 'circle']} className="base-overlay-loader-spinner" spin />
-              <FontAwesomeIcon name={['fad', 'circle']} className="base-overlay-loader-spinner" spin />
+              <FontAwesome name={'circle'} className="base-overlay-loader-spinner" spin />
+              {/*<FontAwesome name={'circle'} className="base-overlay-loader-spinner" spin />*/}
               {/*<FontAwesome name="spinner" className="base-overlay-loader-spinner" size="3x" spin pulse />*/}
             </div>
-          </div>
         </div>
     </BaseOverlay>) : (null));
   }
