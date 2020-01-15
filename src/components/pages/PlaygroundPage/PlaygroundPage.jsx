@@ -89,7 +89,7 @@ class PlaygroundPage extends Component {
 		}
 
 
-    console.log('DERP', { prevProps : prevProps.playground, playground });
+//     console.log('DERP', { prevProps : prevProps.playground, playground });
 
 		// playground first load
 		if (!prevProps.playground && playground) {
@@ -553,7 +553,7 @@ class PlaygroundPage extends Component {
       {(fetching) && (<PlaygroundProcessingOverlay root={true} outro={(playground !== null)} onComplete={()=> this.setState({ fetching : false })} />)}
       {/*{(fetching) && (<PlaygroundProcessingOverlay root={true} outro={false} onComplete={()=> null} />)}*/}
       {/*{(processing && typeGroup) && (<PlaygroundProcessingOverlay root={false} outro={false} onComplete={()=> this.setState({ processing : true })} />)}*/}
-      {(processing) && (<PlaygroundProcessingOverlay root={false} outro={(typeGroupComponentsProcessed(typeGroup, playground.components))} onComplete={()=> this.setState({ processing : false })} />)}
+      {(processing) && (<PlaygroundProcessingOverlay root={false} outro={(typeGroupComponentsProcessed(typeGroup, playground.components))} onComplete={()=> this.setState({ processing : true })} />)}
       {/*<PlaygroundProcessingOverlay outro={!processing} />*/}
 		</BasePage>);
 	}

@@ -16,7 +16,7 @@
 .base-overlay-blocking {
 	width: 100%;
 	height: 100%;
-	background-color: rgba(var(--site-bg-color), 0.95);
+	/*background-color: rgba(var(--site-bg-color), 0.95);*/
 }
 
 .base-overlay-content-wrapper {

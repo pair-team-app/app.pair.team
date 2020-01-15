@@ -91,8 +91,8 @@ class BaseOverlay extends Component {
 
     this.timeline = new TimelineMax();
     this.timeline.from(this.wrapper, INTRO_DURATION, {
-      opacity : 0.5,
-      scale   : 0.875,
+      opacity : 0.875,
+      scale   : 0.9,
       ease    : Back.easeOut,
       delay   : (delay || 0) * 0.001,
 			onComplete : ()=> {
@@ -106,20 +106,12 @@ class BaseOverlay extends Component {
 
     this.timeline = new TimelineMax();
     this.timeline.to(this.wrapper, OUTRO_DURATION, {
-      opacity    : 0.75,//0.25,
+      opacity    : 0.75,
       scale      : 0.5,
       ease       : Back.easeIn,
       onComplete : ()=> {
-//         console.log('%s.onOutro().onOutroComplete', this.constructor.name, this.props, this.state, this.timeline);
-// 				this.handleComplete();
-      }
-    }).to(this.wrapper, OUTRO_DURATION * 0.5, {
-      opacity    : 1.0,
-      scale      : 1.0,
-      ease       : Back.easeOut,
-      onComplete : ()=> {
         console.log('%s.onOutro().onOutroComplete', this.constructor.name, this.props, this.state, this.timeline);
-//         this.handleComplete();
+				this.handleComplete();
       }
     });
 	};

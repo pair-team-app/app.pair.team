@@ -64,8 +64,9 @@ class PlaygroundContent extends Component {
       {(typeGroup && components.length > 0) && (<div className="playground-content-components-wrapper" data-component={(!(!component << 0))}>
         {(!component)
           ? (typeGroup.id === 187)
-            ? (<PlaygroundComponentsGrid components={components} onItemClick={this.handleContentClick} />)
-            : (<PlaygroundComponentsColumn typeGroup={typeGroup} components={components.sort((i, ii)=> ((i.meta.bounds.width < ii.meta.bounds.width) ? -1 : (i.meta.bounds.width > ii.meta.bounds.width) ? 1 : 0))} onItemClick={this.handleContentClick} />)
+            ? (<PlaygroundComponentsGrid typeGroup={typeGroup} components={components} onItemClick={this.handleContentClick} />)
+//             : (<PlaygroundComponentsColumn typeGroup={typeGroup} components={components.sort((i, ii)=> ((i.meta.bounds.width < ii.meta.bounds.width) ? -1 : (i.meta.bounds.width > ii.meta.bounds.width) ? 1 : 0))} onItemClick={this.handleContentClick} />)
+            : (<PlaygroundComponentsGrid typeGroup={typeGroup} components={components.sort((i, ii)=> ((i.meta.bounds.width < ii.meta.bounds.width) ? -1 : (i.meta.bounds.width > ii.meta.bounds.width) ? 1 : 0))} onItemClick={this.handleContentClick} />)
           : (<div className="playground-component-wrapper"><PlaygroundComponent position={position} typeGroup={typeGroup} component={component} onAddComment={this.props.onAddComment} onCloseComment={this.handleComponentPopoverClose} onDeleteComment={this.props.onDeleteComment} onItemClick={this.handleContentClick} onMarkerClick={this.props.onMarkerClick} /></div>)
         }
       </div>)}
@@ -99,14 +100,14 @@ const PlaygroundComponent = (props)=> {
   const { id, tagName, html, styles, rootStyles, comments, processed } = component;
   const title = (component.title === tagName) ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}` : component.title;
 
-  const content = (processed) ? inlineStyles(html, styles) : null;
+//   const content = (processed) ? inlineStyles(html, styles) : null;
   return (<div className="playground-component" onClick={(event)=> props.onItemClick(event, component)}>
     <h5 className="component-title">{title}</h5>
     <ContextMenuTrigger id="component" component={component} collect={(props)=> ({ component : props.component })} disableIfShiftIsPressed={true}>
-      {/*<div className="playground-content-component" data-id={id}>*/}
-        {/*<img src={component.image} className="playground-content-component-image" alt={title} />*/}
-      {/*</div>*/}
-      <div className="playground-content-component" data-id={id} style={rootStyles} dangerouslySetInnerHTML={{ __html : content}} />
+      <div className="playground-content-component" data-id={id}>
+        <img src={component.image} alt={title} />
+      </div>
+      {/*<div className="playground-content-component" data-id={id} style={rootStyles} dangerouslySetInnerHTML={{ __html : content}} />*/}
       <div className="playground-component-comments-wrapper" data-id={id}>
         {(comments.filter(({ type })=> (type !== 'init')).map((comm, i)=> {
           return (<PlaygroundComment key={i} ind={(comments.length - 1) - i} component={component} comment={comm} position={position} onMarkerClick={props.onMarkerClick} onAdd={props.onAddComment} onDelete={props.onDeleteComment} onClose={props.onCloseComment} />);
@@ -126,7 +127,8 @@ const PlaygroundComponentsColumn =(props)=> {
       const { id, tagName, image, html, styles, rootStyles } = component;
       const title = (component.title === tagName) ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}` : component.title;
       return (<li key={i} className="playground-component-wrapper playground-components-list-item" data-id={id} onClick={(event)=> props.onItemClick(event, component)}>
-        <h5 className="component-title">{(html && styles && rootStyles) ? title : ''}</h5>
+        <h5 className="component-title">{title}</h5>
+        <div className="component-overlay" />
         <img src={image} alt={title} />
       </li>)
     }))}
@@ -137,13 +139,17 @@ const PlaygroundComponentsColumn =(props)=> {
 const PlaygroundComponentsGrid =(props)=> {
 //   console.log('PlaygroundComponentsGrid()', props);
 
-  const { components } = props;
+  const { typeGroup, components } = props;
   return (<div className="playground-components-grid">
     {(components.map((component, i)=> {
-      const { id, title, thumbImage, html, styles, rootStyles } = component;
+      const { id, thumbImage, tagName, html, styles, rootStyles } = component;
+      const title = (component.title === tagName) ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}` : component.title;
       return (<div key={i} className="playground-component-wrapper playground-components-list-item" data-id={id} onClick={(event)=> props.onItemClick(event, component)}>
-        <h5 className="component-title">{(html && styles && rootStyles) ? title : ''}</h5>
-        <img src={thumbImage} alt={title} />
+        <h5 className="component-title">{title}</h5>
+        <div className="components-list-item-image-wrapper">
+          <div className="image-overlay" />
+          <img src={thumbImage} className="component-grid-item-image" alt={title} />
+        </div>
       </div>)
     }))}
     </div>);
