@@ -552,8 +552,8 @@ class PlaygroundPage extends Component {
       {/*{(fetching || processing) && (<PlaygroundProcessingOverlay root={fetching} outro={(fetching) ? playground !== null : (typeGroupComponentsProcessed(typeGroup, playground.components))} onComplete={()=> (fetching) ? this.setState({ fetching : false }) : this.setState({ processing : false })} />)}*/}
       {(fetching) && (<PlaygroundProcessingOverlay root={true} outro={(playground !== null)} onComplete={()=> this.setState({ fetching : false })} />)}
       {/*{(fetching) && (<PlaygroundProcessingOverlay root={true} outro={false} onComplete={()=> null} />)}*/}
-      {/*{(processing && typeGroup) && (<PlaygroundProcessingOverlay root={false} outro={false} onComplete={()=> this.setState({ processing : true })} />)}*/}
-      {(processing) && (<PlaygroundProcessingOverlay root={false} outro={(typeGroupComponentsProcessed(typeGroup, playground.components))} onComplete={()=> this.setState({ processing : true })} />)}
+      {/*{(processing && typeGroup) && (<PlaygroundProcessingOverlay root={false} outro={false} onComplete={()=> null} />)}*/}
+      {(processing) && (<PlaygroundProcessingOverlay root={false} outro={(typeGroupComponentsProcessed(typeGroup, playground.components))} onComplete={()=> this.setState({ processing : false })} />)}
       {/*<PlaygroundProcessingOverlay outro={!processing} />*/}
 		</BasePage>);
 	}

@@ -21,8 +21,8 @@
 
 .base-overlay-content-wrapper {
 	position: fixed;
-	min-width: 128px;
-	min-height: 128px;
+	min-width: 88px;
+	min-height: 88px;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
@@ -39,7 +39,7 @@
 
 .base-overlay-content-wrapper-auto-size {
 	width: fit-content;
-	border-radius: 3px;
+	/*border-radius: 0px;*/
 	transform-style: flat;
 	box-shadow: none;
 }
@@ -71,6 +71,7 @@
 
 .base-overlay-content {
 	overflow: hidden;
+	width: fit-content;
 }
 
 .base-overlay-loader-wrapper {
@@ -82,16 +83,18 @@
 
 .base-overlay-loader {
 	position: absolute;
-	width: 88px;
+	width: 50px;
+	height: 40px;
 	top: 50%;
 	left: 50%;
 	transform-origin: center;
 	transform: translate(-50%, -50%);
-	font-size: 5em;
+	font-size: 3em;
 }
 
 .base-overlay-loader-spinner {
 	color: rgba(var(--site-fg-color), 1.0);
+	transform: translateY(-60px);
 }
 
 .fa-spin {

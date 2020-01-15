@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './PlaygroundProcessingOverlay.css';
 
-import FontAwesome from 'react-fontawesome';;
+import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
 import BaseOverlay, { OVERLAY_TYPE_AUTO_SCROLL, OVERLAY_TYPE_POSITION_OFFSET } from '../../../overlays/BaseOverlay';
@@ -135,7 +135,8 @@ class PlaygroundProcessingOverlay extends Component {
       onComplete={this.handleComplete}>
         <div className="playground-processing-overlay" data-blocking={root}>
             <div className="base-overlay-loader">
-              <FontAwesome name={'circle'} className="base-overlay-loader-spinner" spin />
+              <i className="far fa-circle fa-spin" />
+              {/*<FontAwesome name="circle" className="far base-overlay-loader-spinner" spin />*/}
               {/*<FontAwesome name={'circle'} className="base-overlay-loader-spinner" spin />*/}
               {/*<FontAwesome name="spinner" className="base-overlay-loader-spinner" size="3x" spin pulse />*/}
             </div>
