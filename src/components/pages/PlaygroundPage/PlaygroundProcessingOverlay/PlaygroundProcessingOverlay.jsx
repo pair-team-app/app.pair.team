@@ -79,9 +79,10 @@ class PlaygroundProcessingOverlay extends Component {
 
         const onOutro = ()=> {
           console.log('%s.componentDidUpdate().onOutro()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, root, outro, typeGroup : typeGroup.id, total, processed : this.state.processed, components : componentsFromTypeGroup(playground.components, typeGroup)});
-          this.setState({
-            outro : true,
-          });
+          //- outro fix here
+//           this.setState({
+//             outro : true,
+//           });
         };
 
         if (this.state.processed === total && !this.state.outro) {
