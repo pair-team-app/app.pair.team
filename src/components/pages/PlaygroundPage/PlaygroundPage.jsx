@@ -495,16 +495,21 @@ class PlaygroundPage extends Component {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
 
-		const { profile, playgrounds, playground, typeGroup, component } = this.props;
+		const { profile, team, playgrounds, playground, typeGroup, component } = this.props;
 		const { cursor, accessibility, share, fetching, processing } = this.state;
 		const { params } = this.props.match;
 
 		return (<BasePage className={`playground-page${(component && (window.location.href.includes('/comments'))) ? ' playground-page-comments' : ''}`}>
-      <PlaygroundNavPanel
+			{(!typeGroup) && (<span style={{ hidden : 'true '}}>// nav goes here /</span>)}
+			{(playground) && (<PlaygroundNavPanel
 				params={params}
 				onTypeGroupClick={this.handleNavGroupItemClick}
 				onTypeItemClick={this.handleNavTypeItemClick}
-			/>
+			/>)}
+
+			{(profile && team) && (
+				<span style={{ hidden : 'true '}}>/ header goes here //</span>
+			)}
 
 			{(profile && playground && typeGroup) && (<div className="playground-page-content-wrapper">
 				{(!accessibility)
@@ -521,15 +526,15 @@ class PlaygroundPage extends Component {
 					: (<PlaygroundAccessibility />)
 				}
 
-				<PlaygroundHeader
-					accessibility={accessibility}
-					popover={share}
-					onBreadCrumbClick={this.handleBreadCrumbClick}
-					onPopup={this.props.onPopup}
-					onSharePopoverClose={()=> this.setState({ share : false })}
-					onSettingsItem={this.handleSettingsItem}
-					onLogout={this.props.onLogout}
-				/>
+        <PlaygroundHeader
+          accessibility={accessibility}
+          popover={share}
+          onBreadCrumbClick={this.handleBreadCrumbClick}
+          onPopup={this.props.onPopup}
+          onSharePopoverClose={()=> this.setState({ share : false })}
+          onSettingsItem={this.handleSettingsItem}
+          onLogout={this.props.onLogout}
+        />
 
 				{(typeGroup) && (<PlaygroundFooter
 					accessibility={accessibility}
@@ -552,8 +557,8 @@ class PlaygroundPage extends Component {
       {/*{(fetching || processing) && (<PlaygroundProcessingOverlay root={fetching} outro={(fetching) ? playground !== null : (typeGroupComponentsProcessed(typeGroup, playground.components))} onComplete={()=> (fetching) ? this.setState({ fetching : false }) : this.setState({ processing : false })} />)}*/}
       {(fetching) && (<PlaygroundProcessingOverlay root={true} outro={(playground !== null)} onComplete={()=> this.setState({ fetching : false })} />)}
       {/*{(fetching) && (<PlaygroundProcessingOverlay root={true} outro={false} onComplete={()=> null} />)}*/}
-      {/*{(processing && typeGroup) && (<PlaygroundProcessingOverlay root={false} outro={false} onComplete={()=> null} />)}*/}
-      {(processing) && (<PlaygroundProcessingOverlay root={false} outro={(typeGroupComponentsProcessed(typeGroup, playground.components))} onComplete={()=> this.setState({ processing : false })} />)}
+      {(processing) && (<PlaygroundProcessingOverlay root={false} outro={false} onComplete={()=> null} />)}
+      {/*{(processing) && (<PlaygroundProcessingOverlay root={false} outro={(typeGroupComponentsProcessed(typeGroup, playground.components))} onComplete={()=> this.setState({ processing : false })} />)}*/}
       {/*<PlaygroundProcessingOverlay outro={!processing} />*/}
 		</BasePage>);
 	}
