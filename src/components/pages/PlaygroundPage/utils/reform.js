@@ -112,5 +112,5 @@ export const reformComponent = async(component, overwrite={})=> {
 	}
 
 
-	return ({... reformed, size : jsonSize(reformed) });
+	return ({ ...reformed, size : jsonSize(reformed) });
 };

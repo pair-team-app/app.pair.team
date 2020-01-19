@@ -500,7 +500,7 @@ class PlaygroundPage extends Component {
 		const { params } = this.props.match;
 
 		return (<BasePage className={`playground-page${(component && (window.location.href.includes('/comments'))) ? ' playground-page-comments' : ''}`}>
-			{(!typeGroup) && (<span style={{ hidden : 'true '}}>// nav goes here /</span>)}
+			{(!typeGroup) && (<span style={{ hidden : 'true '}}>/ nav goes here /</span>)}
 			{(playground) && (<PlaygroundNavPanel
 				params={params}
 				onTypeGroupClick={this.handleNavGroupItemClick}

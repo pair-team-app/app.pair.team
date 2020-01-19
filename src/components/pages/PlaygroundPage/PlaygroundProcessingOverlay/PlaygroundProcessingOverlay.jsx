@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './PlaygroundProcessingOverlay.css';
 
-import FontAwesome from 'react-fontawesome';
+// import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
 import BaseOverlay, { OVERLAY_TYPE_AUTO_SCROLL, OVERLAY_TYPE_POSITION_OFFSET } from '../../../overlays/BaseOverlay';

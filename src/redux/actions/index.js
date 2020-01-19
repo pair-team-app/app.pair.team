@@ -3,8 +3,6 @@ import axios from 'axios';
 import { Bits, Objects } from 'lang-js-utils';
 import cookie from 'react-cookies';
 
-import jsonSize from 'json-size';
-
 import {
   BUILD_PLAYGROUNDS_LOADED,
 	COMPONENT_TYPES_LOADED,
