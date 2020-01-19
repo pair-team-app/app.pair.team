@@ -105,7 +105,7 @@ const PlaygroundComponent = (props)=> {
     <h5 className="component-title">{title}</h5>
     <ContextMenuTrigger id="component" component={component} collect={(props)=> ({ component : props.component })} disableIfShiftIsPressed={true}>
       <div className="playground-content-component" data-id={id}>
-        <img src={component.image} alt={title} />
+        <img src={component.imageData} alt={title} />
       </div>
       {/*<div className="playground-content-component" data-id={id} style={rootStyles} dangerouslySetInnerHTML={{ __html : content}} />*/}
       <div className="playground-component-comments-wrapper" data-id={id}>

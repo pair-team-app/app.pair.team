@@ -35,9 +35,11 @@ export function onMiddleware({ dispatch }) {
 				let { playground, components } = payload;
 
         components = (await Promise.all(Object.values(components).map(async(component)=> {
-          const { id, type_id : typeID, title, html, styles, rootStyles, processed } = component;
-          console.log('TYPE_GROUP_LOADED', 'PRE', { id, typeID, title, html, styles, rootStyles, processed });
+          const { id, type_id : typeID, title, html, styles, root_styles : rootStyles, processed } = component;
+//           console.log('TYPE_GROUP_LOADED', 'PRE', component, { id, typeID, title, html, styles, rootStyles, processed });
+          console.log('TYPE_GROUP_LOADED', 'PRE', { ...component, root_styles : rootStyles });
           return (await reformComponent(component));
+//           return (await reformComponent({ ...component, root_styles : rootStyles }));
         })));
 
         playground.components = playground.components.map((comp)=> ((components.find(({ id })=> ((id === comp.id))) || comp)));

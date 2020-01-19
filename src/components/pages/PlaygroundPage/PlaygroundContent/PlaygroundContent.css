@@ -179,6 +179,10 @@
 }
 
 
+.component-grid-item-image {
+	border: 2px dotted #ff00ff;
+}
+
 /*-- width 100% / height ratio --*/
 /*display: block;*/
 /*max-width: 100%;*/

@@ -78,25 +78,25 @@
 	margin: calc(var(--orthodox-margin-base) * 1);
 	min-width: 100%;
 	min-height: 100%;
-	background-color: #ff00ff; /*rgba(var(--site-bg-color), 0.33);*/
 }
 
 .base-overlay-loader {
 	position: absolute;
-	width: 50px;
-	height: 40px;
+	width: 48px;
+	height: 56px;
 	top: 50%;
 	left: 50%;
 	transform-origin: center;
 	transform: translate(-50%, -50%);
 	font-size: 3em;
+	background-color: #ff00ff;
 }
 
 .base-overlay-loader-spinner {
 	color: rgba(var(--site-fg-color), 1.0);
-	transform: translateY(-60px);
 }
 
 .fa-spin {
-	/*filter: blur(0);*/
+	filter: blur(0);
+	border: 1px dotted #33ff33;
 }
