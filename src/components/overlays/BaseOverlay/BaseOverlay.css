@@ -89,7 +89,6 @@
 	transform-origin: center;
 	transform: translate(-50%, -50%);
 	font-size: 3em;
-	background-color: #ff00ff;
 }
 
 .base-overlay-loader-spinner {
@@ -98,5 +97,4 @@
 
 .fa-spin {
 	filter: blur(0);
-	border: 1px dotted #33ff33;
 }
