@@ -80,9 +80,11 @@ class PlaygroundProcessingOverlay extends Component {
         const onOutro = ()=> {
           console.log('%s.componentDidUpdate().onOutro()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, root, outro, typeGroup : typeGroup.id, total, processed : this.state.processed, components : componentsFromTypeGroup(playground.components, typeGroup)});
           //- outro fix here
-          this.setState({
-            outro : true,
-          });
+//           if (root) {
+            this.setState({
+              outro : true,
+            });
+//           }
         };
 
         if (this.state.processed === total && !this.state.outro) {
@@ -129,12 +131,14 @@ class PlaygroundProcessingOverlay extends Component {
       tracking={(root) ? Modals.SITE : Modals.PROCESSING}
       outro={outro}
       blocking={root}
+      offset={(!root) ? { x : 60, y : -44 } : null}
+      bare={!root}
       closeable={false}
       title={null}
-      type={(OVERLAY_TYPE_AUTO_SCROLL | OVERLAY_TYPE_POSITION_OFFSET)}
+      type={(root) ? OVERLAY_TYPE_AUTO_SCROLL : OVERLAY_TYPE_POSITION_OFFSET}
       delay={75 + ((!playground << 0) * 250)}
       onComplete={this.handleComplete}>
-        <div className="playground-processing-overlay" data-blocking={root}>
+        <div className="playground-processing-overlay" data-root={root}>
             <div className="base-overlay-loader">
               <i className="far fa-circle fa-spin" />
               {/*<FontAwesome name="circle" className="far base-overlay-loader-spinner" spin />*/}

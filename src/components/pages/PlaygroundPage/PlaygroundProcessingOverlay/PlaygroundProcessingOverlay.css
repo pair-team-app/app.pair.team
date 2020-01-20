@@ -3,3 +3,6 @@
 	/*width: 128px;*/
 	padding: var(--orthodox-padding-base);
 }
+
+.playground-processing-overlay[data-root="false"] {
+}

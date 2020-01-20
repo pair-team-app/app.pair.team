@@ -3,6 +3,7 @@
 	--playground-nav-width: 208px;
 	--playground-comments-width: 0px;
 
+	margin: 0;
 	/*height: calc(100vh - 60px);*/
 	height: 100vh;
 	background-color: rgba(var(--site-bg-color), 1.0);

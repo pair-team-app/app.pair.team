@@ -37,6 +37,11 @@
 	box-shadow: var(--overlay-shadow);
 }
 
+.base-overlay-content-wrapper[data-bare="true"] {
+	border-color: rgba(var(--border-color), 0.0);
+	background-color: rgba(var(--site-bg-color), 0.0);
+}
+
 .base-overlay-content-wrapper-auto-size {
 	width: fit-content;
 	/*border-radius: 0px;*/

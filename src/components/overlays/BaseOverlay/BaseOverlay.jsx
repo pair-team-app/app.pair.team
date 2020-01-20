@@ -123,7 +123,7 @@ class BaseOverlay extends Component {
 			this.timeline.seek(0);
 		}
 
-		const { type, blocking, offset, title, closeable, children } = this.props;
+		const { type, blocking, offset, title, closeable, bare, children } = this.props;
 		const wrapperClass = `base-overlay-content-wrapper base-overlay-content-wrapper${(type === OVERLAY_TYPE_PERCENT_SIZE) ? '-percent' : (OVERLAY_TYPE_AUTO_SIZE) ? '-auto-size' : '-auto-scroll'}`;
 		const wrapperStyle = (type === OVERLAY_TYPE_POSITION_OFFSET) ? {
 			transform  : `translate(${(offset.x || 0)}px, ${(offset.y || 0)}px)`
@@ -131,7 +131,7 @@ class BaseOverlay extends Component {
 
 
 		return (<div className={`base-overlay${(blocking) ? ' base-overlay-blocking' : ''}`} onClick={(closeable) ? this.handleClose : null}>
-			<div className={wrapperClass} style={wrapperStyle} onClick={(event)=> event.stopPropagation()} ref={(element)=> { this.wrapper = element; }}>
+			<div className={wrapperClass} style={wrapperStyle} onClick={(event)=> event.stopPropagation()} data-bare={bare} ref={(element)=> { this.wrapper = element; }}>
 				{(title) && (<div className="base-overlay-header-wrapper">
 					<div className="base-overlay-title">{title}</div>
 				</div>)}

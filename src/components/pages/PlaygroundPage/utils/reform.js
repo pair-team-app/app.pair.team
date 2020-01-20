@@ -39,7 +39,7 @@ export const reformComment = (comment, overwrite={})=> ({ ...comment,
 
 export const reformComponent = async(component, overwrite={})=> {
 // 	console.log('reformComponent()', component);
-	console.log('reformComponent()', component, Object.keys(component));
+// 	console.log('reformComponent()', component, Object.keys(component));
 
 	const PLACEHOLDER_FILL = {
 		r : 128,
@@ -77,9 +77,9 @@ export const reformComponent = async(component, overwrite={})=> {
 // 	console.log('META.BOUNDS:', meta.bounds.height, meta.bounds.width);
 
 //   console.log('::|::', { id : component.id, imageData }, '::|::');
-  console.log('::|::', { id : component.id, title, imageData }, '::|::');
+//   console.log('::|::', { id : component.id, title, imageData }, '::|::');
 	const thumbImage = (image_data) ? await Jimp.read(imageData).then((image)=> {
-		return (image.scaleToFit(148, 148, Jimp.RESIZE_BICUBIC).quality(COMPONENT_THUMB_QUALITY).getBase64Async(Jimp.MIME_PNG));
+		return (image.scaleToFit(Math.min(222, width), Math.min(142, height), Jimp.RESIZE_BICUBIC).quality(COMPONENT_THUMB_QUALITY).getBase64Async(Jimp.MIME_PNG));
 	}).catch((error)=> {
     console.log('//|\\\\', 'thumbImage()', { imageData, error });
 		return (null);
@@ -108,7 +108,7 @@ export const reformComponent = async(component, overwrite={})=> {
     console.log('[%s] .::(REFORMED)::.', component.id, { data : { ...reformed, size : jsonFormatKB(reformed) } });
 
 	} else {
-//     console.log('[%s] .::(INITIAL)::.', component.id, { ...reformed, size : jsonFormatKB(reformed) });
+    console.log('[%s] .::(INITIAL)::.', component.id, { ...reformed, size : jsonFormatKB(reformed) });
 	}
 
 
