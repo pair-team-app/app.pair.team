@@ -148,6 +148,12 @@
 	text-decoration: underline;
 }
 
+
+.fa-spin {
+	filter: blur(0);
+}
+
+
 .is-hidden {
 	display: none;
 	visibility: hidden;

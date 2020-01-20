@@ -94,7 +94,3 @@
 .base-overlay-loader-spinner {
 	color: rgba(var(--site-fg-color), 1.0);
 }
-
-.fa-spin {
-	filter: blur(0);
-}

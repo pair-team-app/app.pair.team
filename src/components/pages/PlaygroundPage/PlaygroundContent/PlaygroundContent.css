@@ -149,6 +149,18 @@
 	height: 100%;
 }
 
+.components-list-item-image-wrapper .image-loader {
+	position: absolute;
+	top: 50%;
+	left: 49%;
+	width: 30px;
+	height: 30px;
+	transform-origin: center;
+	transform: translate(-50%, -50%);
+	font-size: 2em;
+	color: rgba(var(--site-fg-color), 1.0);
+}
+
 .components-list-item-image-wrapper .image-overlay {
 	position: absolute;
 	top: 0;

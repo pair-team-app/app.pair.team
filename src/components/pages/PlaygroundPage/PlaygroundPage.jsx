@@ -558,7 +558,7 @@ class PlaygroundPage extends Component {
       {(fetching) && (<PlaygroundProcessingOverlay root={true} outro={(playground !== null)} onComplete={()=> this.setState({ fetching : false })} />)}
       {/*{(fetching) && (<PlaygroundProcessingOverlay root={true} outro={false} onComplete={()=> null} />)}*/}
       {/*{(processing) && (<PlaygroundProcessingOverlay root={false} outro={false} onComplete={()=> null} />)}*/}
-      {(processing) && (<PlaygroundProcessingOverlay root={false} outro={(typeGroupComponentsProcessed(typeGroup, playground.components))} onComplete={()=> this.setState({ processing : false })} />)}
+      {/*{(processing) && (<PlaygroundProcessingOverlay root={false} outro={(typeGroupComponentsProcessed(typeGroup, playground.components))} onComplete={()=> this.setState({ processing : false })} />)}*/}
       {/*<PlaygroundProcessingOverlay outro={!processing} />*/}
 		</BasePage>);
 	}
