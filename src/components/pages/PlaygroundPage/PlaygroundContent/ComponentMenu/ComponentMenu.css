@@ -24,7 +24,7 @@
 	height: 298px;
 	background-color: rgba(var(--site-bg-color), 1.0);
 	border: 1px solid rgba(var(--border-color), 1.0);
-	border-radius: 10px;
+	border-radius: var(--border-radius);
 	box-shadow: var(--overlay-shadow);
 }
 
@@ -54,7 +54,7 @@
 	margin: var(--orthodox-margin-mini) var(--orthodox-margin-mini) var(--orthodox-margin-base) var(--orthodox-margin-mini);
 	padding: var(--orthodox-padding-half);
 	border: 1px solid rgba(var(--border-color), 1.0);
-	border-radius: 10px;
+	border-radius: var(--border-radius);
 	text-align: left;
 }
 
