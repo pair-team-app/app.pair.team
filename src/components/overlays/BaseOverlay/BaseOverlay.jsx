@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './BaseOverlay.css';
 
-import { TimelineMax, Back } from 'gsap/TweenMax';
+import { TimelineMax, Back, Circ } from 'gsap/TweenMax';
 import onClickOutside from 'react-onclickoutside';
 
 import { trackOverlay } from '../../../utils/tracking';
@@ -93,7 +93,7 @@ class BaseOverlay extends Component {
     this.timeline.from(this.wrapper, INTRO_DURATION, {
       opacity : 0.875,
       scale   : 0.9,
-      ease    : Back.easeOut,
+      ease    : Circ.easeOut,
       delay   : (delay || 0) * 0.001,
 			onComplete : ()=> {
         console.log('%s.onIntro().onIntroComplete', this.constructor.name, this.props, this.state, this.timeline);
@@ -117,17 +117,24 @@ class BaseOverlay extends Component {
 	};
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state, this.timeline);
+// 		console.log('%s.render()', this.constructor.name, this.props, this.state, this.timeline, (this.wrapper) ? this.wrapper.currentTarget : null);
 
 		if (this.wrapper && this.timeline && this.timeline.time === 0) {
 			this.timeline.seek(0);
 		}
 
+		let hAdj = 88;
+// 		if (this.wrapper) {
+// 			hAdj = (this.wrapper.offsetHeight % 2 !== 0) ? Math.round(this.wrapper.offsetHeight * 0.5) * 2 : this.wrapper.offsetHeight;
+// 		}
+
+    console.log('%s.render()', this.constructor.name, { wrapper : (this.wrapper) ? this.wrapper.offsetHeight : null, hAdj });
+
 		const { type, blocking, offset, title, closeable, bare, children } = this.props;
 		const wrapperClass = `base-overlay-content-wrapper base-overlay-content-wrapper${(type === OVERLAY_TYPE_PERCENT_SIZE) ? '-percent' : (OVERLAY_TYPE_AUTO_SIZE) ? '-auto-size' : '-auto-scroll'}`;
-		const wrapperStyle = (type === OVERLAY_TYPE_POSITION_OFFSET) ? {
-			transform  : `translate(${(offset.x || 0)}px, ${(offset.y || 0)}px)`
-		} : null;
+		const wrapperStyle = {
+			transform : (type === OVERLAY_TYPE_POSITION_OFFSET) ? `translate(${(offset.x || 0)}px, ${(offset.y || 0)}px)` : null
+		};
 
 
 		return (<div className={`base-overlay${(blocking) ? ' base-overlay-blocking' : ''}`} onClick={(closeable) ? this.handleClose : null}>
@@ -135,7 +142,7 @@ class BaseOverlay extends Component {
 				{(title) && (<div className="base-overlay-header-wrapper">
 					<div className="base-overlay-title">{title}</div>
 				</div>)}
-				<div className="base-overlay-content">{children}</div>
+				<div className="base-overlay-content" style={{ height : (hAdj > 88) ? `${hAdj}px` : 'fit-content'}}>{children}</div>
 			</div>
 		</div>);
 	}

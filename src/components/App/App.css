@@ -72,18 +72,20 @@
 
 
 .form-disclaimer {
+	/*margin-top: calc(var(--orthodox-margin-base) + 1px);*/
 	margin-top: var(--orthodox-margin-base);
-	font-size: 12px;
-	line-height: 18px;
+	font-size: 14px;
+	line-height: 28px;
+	/*border: 1px dotted #ff00ff;*/
 }
 
-.form-disclaimer::before {
-	content: '';
-	display: block;
-	width: 0;
-	height: 0;
-	margin-top: calc((1 - 1.4) * 0.5em);
-}
+/*.form-disclaimer::before {*/
+	/*content: '';*/
+	/*display: block;*/
+	/*width: 0;*/
+	/*height: 0;*/
+	/*margin-top: calc((1 - 1.4) * 0.5em);*/
+/*}*/
 
 .form-disclaimer > div, .form-disclaimer a:not(:hover) {
 	text-decoration: underline;

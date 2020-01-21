@@ -6,10 +6,12 @@
 
 .login-modal-header-wrapper {
 	width: 100%;
+	margin-top: var(--orthodox-margin-mini);
 }
 
 .login-modal-header-logo {
-	width: 100px;
+	width: 88px;
+	height: 88px;
 	margin-bottom: var(--orthodox-margin-base);
 }
 

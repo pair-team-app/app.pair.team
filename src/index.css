@@ -143,11 +143,11 @@ a:active {
 
 button {
   width: 316px;
-  height: 46px;
-	padding: var(--orthodox-padding-half) var(--orthodox-padding-form);
+  /*height: 46px;*/
+	padding: var(--orthodox-padding-base) var(--orthodox-padding-form);
   background-color: rgba(var(--btn-bg-color), 1.0);
   border: 1px solid rgba(var(--btn-bg-color), 1.0);
-  border-radius: 23px;
+  border-radius: 30px;
   font-size: var(--orthodox-font-size);
   color: rgba(var(--btn-fg-color), 1.0);
 	transition: background-color 0.1s ease-out;
@@ -329,12 +329,12 @@ h6::before {
 
 input[type="email"], input[type="password"], input[type="password"]:hover, input[type="text"], textarea, textarea:hover {
 	width: 100%;
-	padding: var(--orthodox-padding-less) var(--orthodox-padding-base);
+	padding: var(--orthodox-padding-base);
 	background-color: rgba(var(--txtfield-bg-color), 1.0);
 	border: 1px solid rgba(var(--border-color), 1.0);
-	border-radius: 23px;
+	border-radius: 30px;
 	color: rgba(var(--txtfield-fg-color), 1.0);
-	text-align: center;
+	/*text-align: center;*/
 	font-size: var(--orthodox-font-size);
 	cursor: text;
 	-webkit-appearance: none;
