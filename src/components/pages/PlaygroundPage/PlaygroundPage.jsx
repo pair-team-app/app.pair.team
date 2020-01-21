@@ -505,16 +505,21 @@ class PlaygroundPage extends Component {
 		const { params } = this.props.match;
 
 		return (<BasePage className={`playground-page${(component && (window.location.href.includes('/comments'))) ? ' playground-page-comments' : ''}`}>
-			{(!typeGroup) && (<span style={{ hidden : 'true '}}>/ nav goes here /</span>)}
-			{(playground) && (<PlaygroundNavPanel
-				params={params}
-				onTypeGroupClick={this.handleNavGroupItemClick}
-				onTypeItemClick={this.handleNavTypeItemClick}
-			/>)}
+      <PlaygroundNavPanel
+        params={params}
+        onTypeGroupClick={this.handleNavGroupItemClick}
+        onTypeItemClick={this.handleNavTypeItemClick}
+      />
 
-			{(profile && team) && (
-				<span style={{ hidden : 'true '}}>/ header goes here //</span>
-			)}
+			{(profile && team) && (<PlaygroundHeader
+        accessibility={accessibility}
+        popover={share}
+        onBreadCrumbClick={this.handleBreadCrumbClick}
+        onPopup={this.props.onPopup}
+        onSharePopoverClose={()=> this.setState({ share : false })}
+        onSettingsItem={this.handleSettingsItem}
+        onLogout={this.props.onLogout}
+      />)}
 
 			{(profile && playground && typeGroup) && (<div className="playground-page-content-wrapper">
 				{(!accessibility)
@@ -530,16 +535,6 @@ class PlaygroundPage extends Component {
 						/>)
 					: (<PlaygroundAccessibility />)
 				}
-
-        <PlaygroundHeader
-          accessibility={accessibility}
-          popover={share}
-          onBreadCrumbClick={this.handleBreadCrumbClick}
-          onPopup={this.props.onPopup}
-          onSharePopoverClose={()=> this.setState({ share : false })}
-          onSettingsItem={this.handleSettingsItem}
-          onLogout={this.props.onLogout}
-        />
 
 				{(typeGroup) && (<PlaygroundFooter
 					accessibility={accessibility}

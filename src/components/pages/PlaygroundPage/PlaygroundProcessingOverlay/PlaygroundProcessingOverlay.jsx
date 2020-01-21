@@ -131,11 +131,11 @@ class PlaygroundProcessingOverlay extends Component {
       tracking={(root) ? Modals.SITE : Modals.PROCESSING}
       outro={outro}
       blocking={root}
-      offset={(!root) ? { x : 60, y : -44 } : null}
-      bare={!root}
+      offset={{ x : 60, y : -44 }}
+      bare={true}
       closeable={false}
       title={null}
-      type={(root) ? OVERLAY_TYPE_AUTO_SCROLL : OVERLAY_TYPE_POSITION_OFFSET}
+      type={OVERLAY_TYPE_POSITION_OFFSET}
       delay={75 + ((!playground << 0) * 250)}
       onComplete={this.handleComplete}>
         <div className="playground-processing-overlay" data-root={root}>
