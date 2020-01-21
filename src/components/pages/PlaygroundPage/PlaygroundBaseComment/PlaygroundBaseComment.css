@@ -39,7 +39,7 @@
 	width: var(--orthodox-ico-size);
 	height: var(--orthodox-ico-size);
 	padding: 3px;
-	border: 1px solid rgba(var(--site-fg-color), 1.0);
+	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: 50%;
 	font-size: 12px;
 	font-weight: 500;

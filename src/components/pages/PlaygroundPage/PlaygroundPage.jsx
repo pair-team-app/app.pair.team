@@ -337,7 +337,7 @@ class PlaygroundPage extends Component {
 // 		if (!component.selected) {
       component.selected = true;
       this.props.setComponent(component);
-// 		this.setState({ cursor : false });
+		this.setState({ cursor : false });
 //     }
 	};
 
@@ -436,7 +436,10 @@ class PlaygroundPage extends Component {
 		const { comment } = this.props;
 		setTimeout(()=> {
 			const { accessibility } = this.state;
-			this.setState({ accessibility : !accessibility });
+			this.setState({
+				accessibility : !accessibility,
+				cursor        : false
+			});
 		}, (((comment !== null) << 0) * 150));
 	};
 
@@ -458,6 +461,8 @@ class PlaygroundPage extends Component {
 			this.props.setPlayground(playground);
 			this.props.setComponent(null);
 			this.props.setComment(null);
+
+			this.setState({ cursor : false });
 		}
 	};
 
@@ -493,7 +498,7 @@ class PlaygroundPage extends Component {
 
   render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
-		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
+// 		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
 
 		const { profile, team, playgrounds, playground, typeGroup, component } = this.props;
 		const { cursor, accessibility, share, fetching, processing } = this.state;
@@ -557,7 +562,7 @@ class PlaygroundPage extends Component {
       {(fetching) && (<PlaygroundProcessingOverlay root={true} outro={(playground !== null)} onComplete={()=> this.setState({ fetching : false })} />)}
       {/*{(fetching) && (<PlaygroundProcessingOverlay root={true} outro={false} onComplete={()=> null} />)}*/}
       {/*{(processing) && (<PlaygroundProcessingOverlay root={false} outro={false} onComplete={()=> null} />)}*/}
-      {(component) && (<PlaygroundProcessingOverlay root={false} outro={(typeGroupComponentsProcessed(typeGroup, playground.components))} onComplete={()=> this.setState({ processing : false })} />)}
+      {(playground && component && (!typeGroupComponentsProcessed(typeGroup, playground.components))) && (<PlaygroundProcessingOverlay root={false} outro={(typeGroupComponentsProcessed(typeGroup, playground.components))} onComplete={()=> this.setState({ processing : false })} />)}
       {/*<PlaygroundProcessingOverlay outro={!processing} />*/}
 		</BasePage>);
 	}

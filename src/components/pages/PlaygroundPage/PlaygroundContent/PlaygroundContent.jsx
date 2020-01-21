@@ -13,6 +13,7 @@ import ComponentMenu from './ComponentMenu';
 // import { inlineStyles } from '../utils/css';
 import { componentsFromTypeGroup } from '../utils/lookup';
 import {Strings} from "lang-js-utils";
+import {reformComment, reformComponent} from "../utils/reform";
 
 
 class PlaygroundContent extends Component {
@@ -55,8 +56,8 @@ class PlaygroundContent extends Component {
   render() {
 // 		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { typeGroup, playground, component, cursor, mouse } = this.props;
-    const { position } = this.state;
+    const { profile, typeGroup, playground, component, cursor, mouse } = this.props;
+    const { position, popover } = this.state;
 
     const components = (typeGroup) ? (component) ? [component] : componentsFromTypeGroup(playground.components, typeGroup) : [];
 
@@ -65,7 +66,7 @@ class PlaygroundContent extends Component {
         {(!component)
           ? (<PlaygroundComponentsGrid typeGroup={typeGroup} components={components} onItemClick={this.handleContentClick} />)
           : (<div className="playground-component-wrapper" style={{ height : `${43 + component.meta.bounds.height}px` }}>
-              <PlaygroundComponent position={position} typeGroup={typeGroup} component={component} onAddComment={this.props.onAddComment} onCloseComment={this.handleComponentPopoverClose} onDeleteComment={this.props.onDeleteComment} onItemClick={this.handleContentClick} onMarkerClick={this.props.onMarkerClick} />
+              <PlaygroundComponent profile={profile} popover={popover} position={position} typeGroup={typeGroup} component={component} onAddComment={this.props.onAddComment} onCloseComment={this.handleComponentPopoverClose} onDeleteComment={this.props.onDeleteComment} onItemClick={this.handleContentClick} onMarkerClick={this.props.onMarkerClick} />
             </div>)
         }
       </div>)}
@@ -94,7 +95,7 @@ const CommentPinCursor = (props)=> {
 const PlaygroundComponent = (props)=> {
 //   console.log('PlaygroundComponent()', props);
 
-  const { position, typeGroup, component } = props;
+  const { profile, popover, position, typeGroup, component } = props;
 //   const { id, tagName, html, styles, rootStyles, comments, processed } = component;
   const { id, tagName, processed, comments } = component;
   const title = (component.title === tagName) ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}` : component.title;
@@ -107,14 +108,19 @@ const PlaygroundComponent = (props)=> {
         <img src={component.imageData} alt={title} />
       </div>
       {(processed) && (<div className="playground-component-comments-wrapper" data-id={id}>
-        {(comments.filter(({ type }) => (type !== 'init')).map((comm, i) => {
+        {((popover) ? [...comments, reformComment({ position,
+          id      : 0,
+          type    : 'add',
+          content : '',
+          author  : profile
+        })] : comments).filter(({ type }) => (type !== 'init')).map((comm, i) => {
           return (<PlaygroundComment key={i} ind={(comments.length - 1) - i} component={component} comment={comm} position={position} onMarkerClick={props.onMarkerClick} onAdd={props.onAddComment} onDelete={props.onDeleteComment} onClose={props.onCloseComment} />);
-        }))}
+        })}
       </div>)}
     </ContextMenuTrigger>
-    {(!true) && (<div className="image-loader">
-      <i className="far fa-circle fa-spin" />
-    </div>)}
+    {/*{(!processed) && (<div className="image-loader">*/}
+      {/*<i className="far fa-circle fa-spin" />*/}
+    {/*</div>)}*/}
   </div>)
 };
 

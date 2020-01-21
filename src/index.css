@@ -31,7 +31,7 @@
 	--btn-hover-bg-color: 0, 92, 229; /* #005ce5 */
 	--btn-disabled-bg-color: var(--disabled-fg-color); /* cccccc */
 	--btn-disabled-fg-color: 247, 247, 247; /* #f7f7f7 */
-	--quiet-btn-bg-color: 255, 255, 255; /* ffffff */
+	--quiet-btn-bg-color: 247, 247, 247; /* #f7f7f7 */
 	--quiet-btn-fg-color: var(--site-fg-color); /* #232323 */
 	--quiet-btn-hover-bg-color: 237, 237, 237; /* #ededed */
 	--quiet-btn-selected-bg-color: var(--site-fg-color); /* #232323 */

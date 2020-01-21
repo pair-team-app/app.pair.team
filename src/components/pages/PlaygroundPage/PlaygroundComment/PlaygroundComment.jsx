@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import BasePlaygroundComment from '../PlaygroundBaseComment';
 import BasePopover from '../../../overlays/BasePopover';
 import { ENTER_KEY } from '../../../../consts/key-codes';
+import {USER_DEFAULT_AVATAR} from "../../../../consts/uris";
 
 
 class PlaygroundComment extends Component {
@@ -63,13 +64,13 @@ class PlaygroundComment extends Component {
 			outro    : true,
 			position : {
 				x : this.state.position.x - 2,
-				y : this.state.position.y + 10
+				y : this.state.position.y - 70
 			}
 		}, ()=> {
 			const { component } = this.props;
 			const { position, comment } = this.state;
 
-			this.props.onAddComment({ position, component,
+			this.props.onAdd({ position, component,
 				content : comment.content
 			});
 		});
@@ -156,10 +157,18 @@ const PlaygroundCommentAddPopover = (props)=> {
 
 	return (<BasePopover outro={outro} payload={payload} onOutroComplete={()=> props.onClose(comment)}>
 		<div className="playground-comment-add-popover">
+			<div className="header-wrapper">
+        <div className="header-icon">
+					<img src={(!comment.author.avatar) ? USER_DEFAULT_AVATAR : comment.author.avatar} alt={comment.author.username} />
+				</div>
+			</div>
 			<form>
-				<textarea placeholder="Add Comment" onChange={props.onTextChange}>
+				<textarea placeholder="Enter Comment" onChange={props.onTextChange}>
 				</textarea>
-				<button type="submit" disabled={comment.content.length === 0} onClick={props.onSubmit}>Add Comment</button>
+				<div className="button-wrapper">
+        	<div><button className="quiet-button" onClick={props.onClose}>Cancel</button></div>
+          <div><button type="submit" disabled={comment.content.length === 0} onClick={props.onSubmit}>Submit</button></div>
+				</div>
 			</form>
 		</div>
 	</BasePopover>);

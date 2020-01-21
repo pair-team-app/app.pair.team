@@ -130,7 +130,7 @@
 	text-align: center;
 }
 
-.components-grid-item:hover {
+.playground-content[data-cursor="false"] .components-grid-item:hover {
 	cursor: pointer;
 }
 
