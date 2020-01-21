@@ -132,7 +132,7 @@ const PlaygroundComponentsGrid =(props)=> {
   return (<div className="playground-components-grid">
     {(components.map((component, i)=> {
 //       const { id, thumbImage, tagName, html, styles, rootStyles } = component;
-      const { id, thumbImage, tagName, processed } = component;
+      const { id, thumbData, tagName, processed } = component;
       const title = (component.title === tagName) ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}` : component.title;
       return (<div key={i} className="playground-component-wrapper components-grid-item" data-id={id} onClick={(event)=> props.onItemClick(event, component)}>
         <h5 className="component-title">{title}</h5>
@@ -140,7 +140,7 @@ const PlaygroundComponentsGrid =(props)=> {
           {(!processed) && (<div className="image-loader">
             <i className="far fa-circle fa-spin" />
           </div>)}
-          <img src={thumbImage} className="components-grid-item-image" alt={title} />
+          <img src={thumbData} className="components-grid-item-image" alt={title} />
           {(processed) && (<div className="image-overlay" />)}
         </div>
       </div>)

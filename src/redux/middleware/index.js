@@ -42,7 +42,7 @@ export function onMiddleware({ dispatch }) {
         })));
 
         playground.components = playground.components.map((comp)=> ((components.find(({ id })=> ((id === comp.id))) || comp)));
-        console.log('TYPE_GROUP_LOADED', 'POST', playground.components.map(({ id, typeID, title, html, styles, rootStyles, processed })=> ({ id, typeID, title, html, styles, rootStyles, processed })));
+        console.log('TYPE_GROUP_LOADED', 'POST', playground.components.map(({ id, typeID, title, html, styles, rootStyles, image_data, processed })=> ({ id, typeID, title, html, styles, rootStyles, image_data, processed })));
 
         dispatch({
           type    : SET_REFORMED_TYPE_GROUP,

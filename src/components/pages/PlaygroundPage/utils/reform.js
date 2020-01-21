@@ -48,7 +48,7 @@ export const reformComponent = async(component, overwrite={})=> {
 		a : 0.0
 	};
 
-	let { type_id, event_type_id, node_id, title, tag_name, image_data, html, styles, accessibility, root_styles, meta, comments } = component;
+	let { type_id, event_type_id, node_id, title, tag_name, thumb_data, image_data, html, styles, accessibility, root_styles, meta, comments } = component;
 	const { width, height } = meta.bounds;
 	delete (component['type_id']);
 	delete (component['event_type_id']);
@@ -56,6 +56,7 @@ export const reformComponent = async(component, overwrite={})=> {
 	delete (component['tag_name']);
 	delete (component['root_styles']);
 	delete (component['image_data']);
+	delete (component['thumb_data']);
 
 // 	const sizes = {
 //     image         : jsonFormatKB(image_data, true),
@@ -66,7 +67,7 @@ export const reformComponent = async(component, overwrite={})=> {
 //   };
 // 	console.log('ZIPPED:', { styles : await unzipData(styles), accessibility : await unzipData(accessibility), rootStyles : await unzipData(root_styles) });
 
-  const imageData = (image_data && image_data.length > 1) ? await unzipData(image_data) : Images.genColor(PLACEHOLDER_FILL, { width, height });
+  const imageData = (image_data && image_data.length > 1) ? await unzipData(image_data) : null;//Images.genColor(PLACEHOLDER_FILL, { width, height });
   html = (html) ? await unzipData(html) : null;
   styles = (styles) ? JSON.parse(await unzipData(styles)) : null;
   accessibility = (accessibility) ? JSON.parse(await unzipData(accessibility)) : null;
@@ -78,14 +79,25 @@ export const reformComponent = async(component, overwrite={})=> {
 
 //   console.log('::|::', { id : component.id, imageData }, '::|::');
 //   console.log('::|::', { id : component.id, title, imageData }, '::|::');
-	const thumbImage = (image_data) ? await Jimp.read(imageData).then((image)=> {
-		return (image.scaleToFit(Math.min(222, width), Math.min(142, height), Jimp.RESIZE_BICUBIC).quality(COMPONENT_THUMB_QUALITY).getBase64Async(Jimp.MIME_PNG));
-	}).catch((error)=> {
-    console.log('//|\\\\', 'thumbImage()', { imageData, error });
-		return (null);
-  }) : Images.genColor(PLACEHOLDER_FILL, { width : width * COMPONENT_THUMB_SCALE, height : height * COMPONENT_THUMB_SCALE });
 
-	const reformed = { ...component, html, styles, imageData, thumbImage, accessibility,
+  const thumbData = (thumb_data && thumb_data.length > 1) ? await unzipData(thumb_data) : Images.genColor(PLACEHOLDER_FILL, { width, height });
+
+
+// 	const thumbImage = (image_data) ? await Jimp.read(imageData).then((image)=> {
+// 		return (image.scaleToFit(Math.min(222, width), Math.min(142, height), Jimp.RESIZE_BICUBIC).quality(COMPONENT_THUMB_QUALITY).getBase64Async(Jimp.MIME_PNG));
+// 	}).catch((error)=> {
+//     console.log('//|\\\\', 'thumbImage()', { imageData, error });
+// 		return (null);
+//   }) : Images.genColor(PLACEHOLDER_FILL, { width : width * COMPONENT_THUMB_SCALE, height : height * COMPONENT_THUMB_SCALE });
+
+//   const thumbImage = (image_data) ? await Jimp.read(imageData).then((image)=> {
+//     return (image.scaleToFit(Math.min(222, width), Math.min(142, height), Jimp.RESIZE_BICUBIC).quality(COMPONENT_THUMB_QUALITY).getBase64Async(Jimp.MIME_PNG));
+//   }).catch((error)=> {
+//     console.log('//|\\\\', 'thumbImage()', { imageData, error });
+//     return (null);
+//   }) : Images.genColor(PLACEHOLDER_FILL, { width : width * COMPONENT_THUMB_SCALE, height : height * COMPONENT_THUMB_SCALE });
+
+	const reformed = { ...component, html, styles, imageData, thumbData, accessibility,
     typeID        : type_id,
     eventTypeID   : event_type_id,
     nodeID        : node_id,
