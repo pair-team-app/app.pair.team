@@ -1,21 +1,28 @@
 
 .confirm-dialog {
-	max-width: 316px;
+	min-width: 320px;
 }
 
 .confirm-dialog-content {
 	min-width: 320px;
 	max-width: 520px;
-	padding: 0 var(--orthodox-padding-less);
+	width: min-content;
 	text-align: left;
-	line-height: 20px;
+	line-height: 30px;
 }
 
-.confirm-dialog-button-wrapper {
-	margin-top: var(--orthodox-margin-base);
-	text-align: right;
+.confirm-dialog-footer-wrapper {
+	display: flex;
+	flex-flow: column;
+	margin-top: calc(var(--orthodox-margin-base) + 2px);
+	text-align: center;
 }
 
-.confirm-dialog-button-wrapper > button {
-	width: fit-content;
+.confirm-dialog-footer-wrapper > button {
 }
+
+.confirm-dialog-footer-wrapper > *:first-child {
+}
+
+
+

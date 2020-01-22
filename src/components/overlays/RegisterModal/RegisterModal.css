@@ -4,29 +4,7 @@
 	padding: var(--orthodox-padding-half) 0 5px 0;
 }
 
-.register-modal-header-wrapper {
-	width: 100%;
-}
-
-.register-modal-header-logo {
-	width: 100px;
-	margin-bottom: var(--orthodox-margin-base);
-}
-
 .register-modal-content-wrapper {
 	width: 100%;
 	min-width: 100%;
-}
-
-.register-modal-footer-wrapper {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	flex-wrap: nowrap;
-}
-
-.register-modal-footer-wrapper > * {
-	margin: auto;
-	flex: 1 0 0;
-	/*border: 1px dotted #ff00ff;*/
 }

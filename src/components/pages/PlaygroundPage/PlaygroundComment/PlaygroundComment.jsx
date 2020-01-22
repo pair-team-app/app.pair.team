@@ -6,10 +6,10 @@ import { Maths } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
-import BasePlaygroundComment from '../PlaygroundBaseComment';
+import PlaygroundBaseComment from '../PlaygroundBaseComment';
 import BasePopover from '../../../overlays/BasePopover';
 import { ENTER_KEY } from '../../../../consts/key-codes';
-import {USER_DEFAULT_AVATAR} from "../../../../consts/uris";
+import { USER_DEFAULT_AVATAR } from '../../../../consts/uris';
 
 
 class PlaygroundComment extends Component {
@@ -64,7 +64,7 @@ class PlaygroundComment extends Component {
 			outro    : true,
 			position : {
 				x : this.state.position.x - 2,
-				y : this.state.position.y - 70
+				y : this.state.position.y - 28
 			}
 		}, ()=> {
 			const { component } = this.props;
@@ -132,7 +132,7 @@ class PlaygroundComment extends Component {
 		const { outro } = this.state;
 
 		const style = {
-			top  : `${comment.position.y + 38}px`,
+			top  : `${comment.position.y - 1 }px`,
 			left : `${comment.position.x}px`
 		};
 
@@ -152,14 +152,18 @@ const PlaygroundCommentAddPopover = (props)=> {
 
 	const { comment, outro } = props;
 	const payload = {
-		fixed : false
+		fixed    : false,
+    position : {
+			x : 0,
+			y : 20
+		}
 	};
 
 	return (<BasePopover outro={outro} payload={payload} onOutroComplete={()=> props.onClose(comment)}>
 		<div className="playground-comment-add-popover">
 			<div className="header-wrapper">
-        <div className="header-icon">
-					<img src={(!comment.author.avatar) ? USER_DEFAULT_AVATAR : comment.author.avatar} alt={comment.author.username} />
+        <div className="avatar-wrapper">
+					<img className="avatar-wrapper-ico" src={(!comment.author.avatar) ? USER_DEFAULT_AVATAR : comment.author.avatar} alt={comment.author.username} />
 				</div>
 			</div>
 			<form>
@@ -172,7 +176,6 @@ const PlaygroundCommentAddPopover = (props)=> {
 			</form>
 		</div>
 	</BasePopover>);
-
 };
 
 const PlaygroundCommentMarker = (props)=> {
@@ -205,7 +208,7 @@ const PlaygroundCommentPopover = (props)=> {
 
 	return (<BasePopover outro={outro} payload={payload} onOutroComplete={()=> props.onClose(comment)}>
 		<div className="playground-comment-popover">
-			<BasePlaygroundComment ind={ind} comment={comment} onDelete={props.onDelete} />
+			<PlaygroundBaseComment ind={ind} comment={comment} onDelete={props.onDelete} />
 		</div>
 	</BasePopover>);
 };

@@ -35,14 +35,6 @@
 }
 
 .playground-base-comment-header-icon {
-	position: relative;
-	width: var(--orthodox-ico-size);
-	height: var(--orthodox-ico-size);
-	padding: 3px;
-	border: 1px solid rgba(var(--border-color), 1.0);
-	border-radius: 50%;
-	font-size: 12px;
-	font-weight: 500;
 	text-align: center;
 }
 
@@ -51,13 +43,12 @@
 }
 
 .playground-base-comment-header-icon > * {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 100%;
-	height: 100%;
-	clip-path: circle(8px at center);
+	opacity: 0.875;
+	transition: opacity 0.125s;
+}
+
+.playground-base-comment-header-icon > *:hover {
+	opacity: 1.0;
 }
 
 .playground-base-comment-header-link {

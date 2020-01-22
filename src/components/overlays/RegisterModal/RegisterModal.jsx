@@ -108,9 +108,8 @@ class RegisterModal extends Component {
 			onComplete={this.handleComplete}>
 
 			<div className="register-modal">
-				<div className="register-modal-header-wrapper">
-					<img className="register-modal-header-logo" src={pairLogo} alt="Logo" />
-					<h4>Create an account to view Pair URLs</h4>
+				<div className="base-overlay-header-wrapper">
+					<img className="base-overlay-header-logo" src={pairLogo} alt="Logo" />
 				</div>
 
 				<div className="register-modal-content-wrapper">
@@ -122,9 +121,8 @@ class RegisterModal extends Component {
 						onRegistered={this.handleRegistered} />
 				</div>
 
-				<div className="register-modal-footer-wrapper form-disclaimer">
-					{/*<div>Not a member of this Pair yet?</div>*/}
-					<div onClick={()=> this.handleModal(Modals.LOGIN)}>Already have an account?</div>
+				<div className="base-overlay-footer-wrapper form-disclaimer">
+					<div onClick={()=> this.handleModal(Modals.LOGIN)}>Han an account? Login</div>
 				</div>
 			</div>
 		</BaseOverlay>);

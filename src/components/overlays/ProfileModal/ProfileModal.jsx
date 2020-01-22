@@ -14,6 +14,7 @@ import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
 import { fetchTeamLookup, fetchUserProfile, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
+import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
 
 class ProfileModal extends Component {
@@ -58,14 +59,14 @@ class ProfileModal extends Component {
 			this.props.onPopup({
 				type    : POPUP_TYPE_OK,
 				content : 'Profile updated.',
-				delay   : 125
+				delay   : 333
 			});
 
 		} else {
 			this.props.fetchUserProfile();
 			this.props.onPopup({
 				content : 'No profile changes made.',
-				delay   : 125
+				delay   : 333
 			});
 		}
 
@@ -101,14 +102,14 @@ class ProfileModal extends Component {
 						this.props.onPopup({
 							type    : POPUP_TYPE_ERROR,
 							content : error.message,
-							delay   : 125
+							delay   : 333
 						});
 
 					} else {
 						this.props.onPopup({
 							type     : POPUP_TYPE_OK,
 							content  : 'Successfully canceled your team plan.',
-							duration : 2000
+							duration : 3333
 						});
 
 						this.setState({ updated : true }, ()=> {
@@ -149,7 +150,9 @@ class ProfileModal extends Component {
 			onComplete={this.handleComplete}>
 
 			<div className="profile-modal">
-				<div className="profile-modal-header-wrapper"><h4>Profile</h4></div>
+        <div className="base-overlay-header-wrapper">
+          <img className="base-overlay-header-logo" src={pairLogo} alt="Logo" />
+        </div>
 				<div className="profile-modal-content-wrapper">
 					<ProfileForm
 						profile={profile}
@@ -159,7 +162,7 @@ class ProfileModal extends Component {
 						onSubmit={this.handleSubmit}
 					/>
 					<div className="form-disclaimer">
-						<div onClick={this.handleResetPassword}>Need to reset your password?</div>
+						<div onClick={this.handleResetPassword}>Delete Account?</div>
 					</div>
 				</div>
 				{(submitting) && (<div className="base-overlay-loader-wrapper">

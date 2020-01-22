@@ -1,34 +1,9 @@
 
 .login-modal {
 	max-width: 316px;
-	padding: var(--orthodox-padding-half) 0 5px 0;
-}
-
-.login-modal-header-wrapper {
-	width: 100%;
-	margin-top: var(--orthodox-margin-mini);
-}
-
-.login-modal-header-logo {
-	width: 88px;
-	height: 88px;
-	margin-bottom: var(--orthodox-margin-base);
 }
 
 .login-modal-content-wrapper {
 	width: 100%;
 	min-width: 100%;
-}
-
-.login-modal-footer-wrapper {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	flex-wrap: nowrap;
-}
-
-.login-modal-footer-wrapper > * {
-	margin: auto;
-	flex: 1 0 0;
-	/*border: 1px dotted #ff00ff;*/
 }

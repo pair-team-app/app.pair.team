@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './ConfirmDialog.css'
 
 import BaseOverlay from '../BaseOverlay';
-
+import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
 class ConfirmDialog extends Component {
 	constructor(props) {
@@ -13,6 +13,11 @@ class ConfirmDialog extends Component {
 			outro : false
 		};
 	}
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state);
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : prevProps.outro, props : this.props.outro });
+  }
 
 	handleClick = (ok)=> {
 // 		console.log('%s.handleClick()', this.constructor.name, ok);
@@ -50,12 +55,17 @@ class ConfirmDialog extends Component {
 			title={title}
 			onComplete={this.handleComplete}>
 			<div className="confirm-dialog">
+				<div className="base-overlay-header-wrapper">
+          <img className="base-overlay-header-logo" src={pairLogo} alt="Logo" />
+        </div>
 				<div className="confirm-dialog-content">
 					{children}
-					<div className="button-wrapper-col confirm-dialog-button-wrapper">
-						<button className="quiet-button" onClick={()=> this.handleClick(false)}>{(buttons) ? buttons[0] : 'Cancel'}</button>
-						<button onClick={()=> this.handleClick(true)}>{(buttons) ? buttons[1] : 'OK'}</button>
-					</div>
+					{(buttons && buttons.length > 0) && (<div className="confirm-dialog-footer-wrapper">
+						<button onClick={()=> this.handleClick(true)}>{(buttons) ? buttons[0] : 'OK'}</button>
+						<div className="base-overlay-footer-wrapper form-disclaimer">
+							<div onClick={()=> this.handleClick(false)}>Logout</div>
+						</div>
+					</div>)}
 				</div>
 			</div>
 		</BaseOverlay>);

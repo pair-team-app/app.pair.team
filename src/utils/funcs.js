@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 import JSZip from 'jszip';
-import { Strings } from 'lang-js-utils';
+import { Arrays, Strings } from 'lang-js-utils';
 import Octokit from '@octokit/rest';
 import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
@@ -110,6 +110,57 @@ export function sendToSlack(channel, message, callback=null) {
 		}
 	}).catch((error)=> {
 	});
+}
+
+
+export function makeAvatar(name, size=32) {
+	const letter = (name.length > 0) ? name.charAt(0).toUpperCase() : '?';
+
+  const bgColor = Arrays.randomElement([
+    '#1abc9c',
+    '#2ecc71',
+    '#3498db',
+    '#9b59b6',
+    '#34495e',
+    '#16a085',
+    '#27ae60',
+    '#2980b9',
+    '#8e44ad',
+    '#2c3e50',
+    '#f1c40f',
+    '#e67e22',
+    '#e74c3c',
+    '#95a5a6',
+    '#f39c12',
+    '#d35400',
+    '#c0392b',
+    '#bdc3c7',
+    '#7f8c8d'
+  ]);
+
+  const canvas = window.document.createElement('canvas');
+  const context = canvas.getContext('2d');
+
+  document.body.appendChild(canvas);
+  canvas.width = size;
+  canvas.height = size;
+  canvas.style.width = `${size}px`;
+  canvas.style.height = `${size}px`;
+
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = bgColor;
+  context.fillRect(0, 0, size, size);
+
+  context.font = `${(size * 0.5) << 0}px Monaco, monospace`;
+  context.textAlign = 'center';
+  context.textBaseline = 'middle';
+  context.fillStyle = `#${(0xffffff ^ parseInt(bgColor.replace('#', ''), 16)).toString(16)}`;
+  context.fillText(letter, size * 0.5, size * 0.5);
+
+  const dataURL = canvas.toDataURL();
+  canvas.remove();
+
+  return (dataURL);
 }
 
 

@@ -37,7 +37,7 @@ class BaseOverlay extends Component {
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state);
-		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : prevProps.outro, props : this.props.outro });
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : prevProps.outro, props : this.props.outro });
 
 // 		const { completed } = this.state;
     if (prevProps.outro !== this.props.outro && this.props.outro) {
@@ -106,8 +106,8 @@ class BaseOverlay extends Component {
 
     this.timeline = new TimelineMax();
     this.timeline.to(this.wrapper, OUTRO_DURATION, {
-      opacity    : 0.75,
-      scale      : 0.5,
+      opacity    : 0.9,
+      scale      : 0.925,
       ease       : Back.easeIn,
       onComplete : ()=> {
         console.log('%s.onOutro().onOutroComplete', this.constructor.name, this.props, this.state, this.timeline);
@@ -128,7 +128,7 @@ class BaseOverlay extends Component {
 // 			hAdj = (this.wrapper.offsetHeight % 2 !== 0) ? Math.round(this.wrapper.offsetHeight * 0.5) * 2 : this.wrapper.offsetHeight;
 // 		}
 
-    console.log('%s.render()', this.constructor.name, { wrapper : (this.wrapper) ? this.wrapper.offsetHeight : null, hAdj });
+//     console.log('%s.render()', this.constructor.name, { wrapper : (this.wrapper) ? this.wrapper.offsetHeight : null, hAdj });
 
 		const { type, blocking, offset, title, closeable, bare, children } = this.props;
 		const wrapperClass = `base-overlay-content-wrapper base-overlay-content-wrapper${(type === OVERLAY_TYPE_PERCENT_SIZE) ? '-percent' : (OVERLAY_TYPE_AUTO_SIZE) ? '-auto-size' : '-auto-scroll'}`;

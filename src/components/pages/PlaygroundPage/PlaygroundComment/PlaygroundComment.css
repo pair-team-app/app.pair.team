@@ -54,28 +54,6 @@
 	margin-bottom: var(--orthodox-margin-half);
 }
 
-.playground-comment-add-popover .header-icon {
-	position: relative;
-	width: var(--orthodox-ico-size);
-	height: var(--orthodox-ico-size);
-	padding: 3px;
-	border: 1px solid rgba(var(--border-color), 1.0);
-	border-radius: 50%;
-	font-size: 12px;
-	font-weight: 500;
-	text-align: center;
-}
-
-.playground-comment-add-popover .header-icon > * {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform : translate(-50%, -50%);
-	width: 100%;
-	height: 100%;
-	clip-path: circle(8px at center);
-}
-
 .playground-comment-add-popover .button-wrapper {
 	display: flex;
 	flex-wrap: nowrap;
@@ -103,16 +81,13 @@
 .playground-comment-add-popover button {
 	width: 100%;
 	max-width: 100%;
-	padding: 0;
+	padding: calc(var(--orthodox-padding-half) + 4px) var(--orthodox-padding-base);
 }
 
 .playground-comment-add-popover textarea {
 	width: 100%;
 	height: 84px;
 	margin-bottom: var(--orthodox-margin-half);
-	padding: 4px 0 0 0;
-	border: none;
 	background-color: rgba(var(--site-bg-color), 1.0);
-	border-radius: var(--border-radius);
 	text-align: left;
 }

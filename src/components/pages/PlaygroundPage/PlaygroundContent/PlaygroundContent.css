@@ -5,7 +5,7 @@
 	flex-wrap: wrap;
 	align-items: flex-start; /* v-align */
 	justify-content: center; /* h-align */
-	padding: 64px var(--orthodox-padding-base) 88px var(--orthodox-padding-base);
+	/*padding: 64px var(--orthodox-padding-base) 88px var(--orthodox-padding-base);*/
 	height: 100%;
 	z-index: 1;
 	background-color: rgba(var(--playground-content-bg-color), 1.0);
@@ -23,7 +23,7 @@
 
 .playground-content-components-wrapper {
 	width: 100%;
-	padding-bottom: 84px;
+	padding: 40px 84px 40px;
 }
 
 .playground-content-components-wrapper[data-component="true"] {

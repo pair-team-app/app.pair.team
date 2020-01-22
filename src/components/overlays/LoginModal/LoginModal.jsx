@@ -92,8 +92,8 @@ class LoginModal extends Component {
 				onComplete={this.handleComplete}>
 
 				<div className="login-modal">
-					<div className="login-modal-header-wrapper">
-						<img className="login-modal-header-logo" src={pairLogo} alt="Logo" />
+					<div className="base-overlay-header-wrapper">
+						<img className="base-overlay-header-logo" src={pairLogo} alt="Logo" />
 					</div>
 
 					<div className="login-modal-content-wrapper">
@@ -104,7 +104,7 @@ class LoginModal extends Component {
 							onLoggedIn={this.handleLoggedIn} />
 					</div>
 
-					<div className="login-modal-footer-wrapper form-disclaimer">
+					<div className="base-overlay-footer-wrapper form-disclaimer">
 						{/*<div onClick={()=> this.handleModal(Modals.RECOVER)}>Forgot Password</div>*/}
 						<div onClick={()=> this.handleModal(Modals.REGISTER)}>Don't have an account? Sign Up</div>
 					</div>

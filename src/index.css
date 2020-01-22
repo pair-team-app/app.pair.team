@@ -39,14 +39,14 @@
 	--link-color: var(--site-fg-color); /* #232323 */
 	--link-hover-color: 153, 153, 153; /* 999999 */
 	--link-selected-color: var(--site-fg-color); /* #232323 */
-	--txtfield-bg-color: 247, 247, 247; /* #f7f7f7 */
+	--txtfield-bg-color: 255, 255, 255;
 	--txtfield-fg-color: var(--site-fg-color); /* 232323 */
 	--txtfield-focused-fg-color: 204, 204, 204; /* #cccccc */
 	--txtfield-disabled-bg-color: var(--disabled-fg-color); /* cccccc */
 	--txtfield-disabled-fg-color: 153, 153, 153; /* 999999 */
 	/*--border-color: 206, 206, 206; !* #cecece *!*/
 	--border-color: var(--site-fg-color);
-	--overlay-shadow: 2px 2px 6px rgba(var(--border-color), 0.33);
+	--overlay-shadow: 2px 2px 6px rgba(var(--border-color), 0.125);
 	--playground-component-shadow: 2px 2px 3px rgba(var(--border-color), 0.75);
 	--playground-panel-bg-color: 244, 244, 244; /* #f7f7f7 */
 	--playground-content-bg-color: 247, 247, 247; /* #f4f4f4 */
@@ -144,7 +144,7 @@ a:active {
 button {
   width: 316px;
   /*height: 46px;*/
-	padding: var(--orthodox-padding-base) var(--orthodox-padding-form);
+	padding: calc(var(--orthodox-padding-base) - 1px) var(--orthodox-padding-form);
   background-color: rgba(var(--btn-bg-color), 1.0);
   border: 1px solid rgba(var(--btn-bg-color), 1.0);
   border-radius: 30px;
@@ -175,7 +175,7 @@ button.quiet-button {
 	width: fit-content;
 	min-width: fit-content;
 	max-width: fit-content;
-	padding: var(--orthodox-padding-half) var(--orthodox-padding-base);
+	/*padding: var(--orthodox-padding-half) var(--orthodox-padding-base);*/
 	border: 1px solid rgba(var(--border-color), 1.0);
 	background-color: rgba(var(--quiet-btn-bg-color), 1.0);
 	color: rgba(var(--quiet-btn-fg-color), 1.0);
@@ -327,9 +327,9 @@ h6::before {
 	margin-top: 0;
 }
 
-input[type="email"], input[type="password"], input[type="password"]:hover, input[type="text"], textarea, textarea:hover {
+input[type="email"], input[type="password"], input[type="password"]:hover, input[type="text"], select, textarea, textarea:hover {
 	width: 100%;
-	padding: var(--orthodox-padding-base);
+	padding: calc(var(--orthodox-padding-base) - 1px) var(--orthodox-padding-base);
 	background-color: rgba(var(--txtfield-bg-color), 1.0);
 	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: 30px;
@@ -347,7 +347,7 @@ input[type="email"]:invalid, input[type="email"]:invalid:hover, input[type="pass
 	color: rgba(var(--invalid-fg-color), 1.0);
 }
 
-input[type="email"]:valid, input[type="password"]:valid, input[type="text"]:valid, select, textarea {
+input[type="email"]:valid, input[type="password"]:valid, input[type="text"]:valid, select:valid, textarea:valid {
 	border: 1px solid rgba(var(--border-color), 1.0);
 	background-color: rgba(var(--txtfield-bg-color), 1.0);
 	color: rgba(var(--txtfield-fg-color), 1.0);
@@ -408,8 +408,11 @@ sup {
 	line-height: 0;
 }
 
-textarea {
+textarea, textarea:hover, textarea:active, textarea:focus, textarea:disabled, textarea:valid {
   resize: none;
+	padding: var(--orthodox-padding-mini) 0;
+	border: 1px solid rgba(var(--border-color), 0.0);
+	border-radius: 4px;
 }
 
 ul {
@@ -445,8 +448,8 @@ ul > li:not(:last-child) {
 
 
 ::-webkit-scrollbar {
-	/*display: initial;*/
-	display: none;
+	display: initial;
+	/*display: none;*/
 }
 
 ::-webkit-scrollbar-track {

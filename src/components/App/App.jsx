@@ -425,12 +425,12 @@ class App extends Component {
 
 			  {(modals.noAccess) && (<ConfirmDialog
 				  tracking={Modals.NO_ACCESS}
-					buttons={['Cancel', 'Logout']}
-					title="No Access"
 					blocking={true}
+					buttons={['OK']}
           onConfirmed={null}
 				  onComplete={(ok)=> { this.onToggleModal(Modals.NO_ACCESS, false); (ok) ? this.handleLogout(null, Modals.LOGIN) : this.handleLogout(Pages.HOME) }}>
-				  Your team {(team) ? team.title : ''} does not have permission to view this playground.
+				  Project has been deleted or permissions have been denied.
+
 			  </ConfirmDialog>)}
 
 			  {(popup) && (<PopupNotification

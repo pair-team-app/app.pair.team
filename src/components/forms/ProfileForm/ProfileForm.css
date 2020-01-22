@@ -10,14 +10,8 @@
 	margin-bottom: var(--orthodox-margin-base);
 }
 
-.profile-form-team-wrapper {
-	position: relative;
-}
 
-.profile-form-team-wrapper .profile-form-team-txt {
-
-}
-
-.profile-form-team-txt:hover {
-	cursor: default;
+.profile-form input:disabled {
+	background-color: rgba(var(--txtfield-bg-color), 1.0);
+	color: rgba(var(--txtfield-fg-color), 1.0);
 }

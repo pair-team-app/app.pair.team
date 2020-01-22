@@ -260,7 +260,7 @@ class PlaygroundPage extends Component {
 		}
 	}
 
-	handleAddComment = ({ component, position, content })=> {
+	handleAddComment = ({ component=null, position={x:0,y:0}, content=null })=> {
 // 		console.log('%s.handleAddComment()', this.constructor.name, { component, position, content });
 		trackEvent('button', 'add-comment');
 
@@ -290,7 +290,7 @@ class PlaygroundPage extends Component {
 		});
 	};
 
-  handleBreadCrumbClick = ({ type, payload })=> {
+  handleBreadCrumbClick = ({ type=null, payload=null })=> {
     console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
 
     if (type === BreadcrumbTypes.PLAYGROUND) {
@@ -320,7 +320,7 @@ class PlaygroundPage extends Component {
 		}
 	};
 
-	handleCommentMarkerClick = ({ comment })=> {
+	handleCommentMarkerClick = ({ comment=null })=> {
 		const { playground } = this.props;
 		const component = componentFromComment(playground.components, comment);
 
@@ -331,7 +331,7 @@ class PlaygroundPage extends Component {
 		this.props.setComment(comment);
 	};
 
-	handleComponentClick = ({ component })=> {
+	handleComponentClick = ({ component=null })=> {
 		console.log('%s.handleComponentClick()', this.constructor.name, { component });
 
 // 		if (!component.selected) {
@@ -341,12 +341,12 @@ class PlaygroundPage extends Component {
 //     }
 	};
 
-	handleComponentMenuShow = ({ component })=> {
+	handleComponentMenuShow = ({ component=null })=> {
 		console.log('%s.handleComponentMenuShow()', this.constructor.name, { component });
 //     this.props.setComponent(component);
 	};
 
-	handleComponentMenuItem = ({ type, component })=> {
+	handleComponentMenuItem = ({ type=null, component=null })=> {
  		console.log('%s.handleComponentMenuItem()', this.constructor.name, { type, component });
 
     this.props.setComponent(component);
@@ -389,7 +389,7 @@ class PlaygroundPage extends Component {
 			console.log('UPDATE_COMMENT', response.data);
 
 			const component = { ...this.props.component,
-				comments : this.props.component.comments.filter(({ id }) => (id !== comment.id)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0))
+				comments : this.props.component.comments.filter(({ id })=> (id !== comment.id)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0))
 			};
 
 			this.props.setComponent(component);

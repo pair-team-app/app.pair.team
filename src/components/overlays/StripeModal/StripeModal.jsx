@@ -11,7 +11,7 @@ import { Elements, StripeProvider } from 'react-stripe-elements';
 
 import BaseOverlay from '../BaseOverlay';
 import StripeForm from '../../forms/StripeForm/StripeForm';
-import {POPUP_TYPE_ERROR, POPUP_TYPE_OK} from '../PopupNotification';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
 import { API_ENDPT_URL, Modals, Pages } from '../../../consts/uris';
 import { trackEvent } from '../../../utils/tracking';
 import stripeCreds from '../../../assets/json/stripe-creds';

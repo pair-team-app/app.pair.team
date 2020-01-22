@@ -114,22 +114,33 @@ class ProfileForm extends Component {
 					<input type="password" name="password" style={{ display : 'none' }} />
 
 					{(validated)
-						? (<input type="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" required />)
-						: (<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" />)
-					}
-					{(team.type === 'free')
-						? (<input type="text" className="profile-form-team-txt" value={Strings.capitalize(team.type)} readOnly={true} />)
-						: (<div className="profile-form-team-wrapper">
-							<input type="text" className="profile-form-team-txt" value={Strings.capitalize(team.type)} readOnly={true} />
-							<div className="form-accessory-txt" onClick={this.props.onDowngradePlan}>Downgrade</div>
+						? (<div className="form-acc-wrapper">
+								<input type="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" required />
+              	<div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div>
+						</div>)
+						: (<div className="form-acc-wrapper">
+								<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" />
+              	<div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div>
 						</div>)
 					}
-					<input type="password" placeholder="Enter Password" value={password} onChange={this.handlePasswordChange} onClick={this.handlePasswordClick} autoComplete="new-password" />
+					{(team.type === 'free')
+						? (<div className="form-acc-wrapper">
+								<input disabled={true} type="text" className="profile-form-team-txt" value={Strings.capitalize(team.type)} readOnly={true} />
+              	<div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div>
+						</div>)
+						: (<div className="form-acc-wrapper">
+								<input type="text" className="profile-form-team-txt" value={Strings.capitalize(team.type)} readOnly={true} />
+								<div className="form-accessory" onClick={this.props.onDowngradePlan}>Downgrade</div>
+							</div>)
+					}
+          <div className="form-acc-wrapper">
+						<input type="password" placeholder="Enter Password" value={password} onChange={this.handlePasswordChange} onClick={this.handlePasswordClick} autoComplete="new-password" />
+            <div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div>
+					</div>
 
 					<div className="button-wrapper-col stripe-form-button-wrapper">
-						<button onClick={this.props.onCancel}>Cancel</button>
+            <button disabled={!changed || email.length === 0 || !emailValid} type="submit" onClick={this.handleSubmit}>Submit</button>
 						{/*<button disabled={(email.length === 0 || !emailValid || !passwordValid)} type="submit" onClick={this.handleSubmit}>Update</button>*/}
-						<button disabled={!changed || email.length === 0 || !emailValid} type="submit" onClick={this.handleSubmit}>Update</button>
 					</div>
 				</form>
 			</div>

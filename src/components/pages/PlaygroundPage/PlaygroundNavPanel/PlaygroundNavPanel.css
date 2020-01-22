@@ -9,6 +9,7 @@
 	background-color: rgba(var(--playground-panel-bg-color), 1.0);
 	border-right: 1px solid rgba(var(--border-color), 1.0);
 	z-index: 8;
+	opacity : 0.5;
 }
 
 .playground-nav-panel-header {

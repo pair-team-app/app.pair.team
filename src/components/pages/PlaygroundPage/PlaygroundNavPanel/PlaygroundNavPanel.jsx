@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom';
 
 import NavPanelTypeGroup from './NavPanelTypeGroup';
 import { TEAM_DEFAULT_AVATAR } from '../../../../consts/uris';
-import { trackEvent, trackOutbound} from "../../../../utils/tracking";
+import { trackEvent, trackOutbound} from '../../../../utils/tracking';
 
 class PlaygroundNavPanel extends Component {
 	constructor(props) {
@@ -110,7 +110,7 @@ class PlaygroundNavPanel extends Component {
 			if (!teamLogo) {
 				if (playground) {
           grabFavicon((playground.team.domain === 'pairurl.com') ? 'dev.pairurl.com' : `http://${playground.team.domain}`).then((response) => {
-            const icons = (response.icons) ? response.icons.filter(({ sizes }) => (sizes)).map((icon) => ({
+            const icons = (response.icons) ? response.icons.filter(({ sizes })=> (sizes)).map((icon) => ({
               ...icon,
               size : icon.sizes.split('x').pop() << 0
             })).sort((i, ii) => ((i.size < ii.size) ? -1 : (i.size > ii.size) ? 1 : 0)) : [];

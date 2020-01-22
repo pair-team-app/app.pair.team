@@ -36,7 +36,7 @@ class PlaygroundProcessingOverlay extends Component {
     if (!root) {
       if (playground && typeGroup) {
         const components = componentsFromTypeGroup(playground.components, typeGroup);
-        const processed = components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles)).length;
+        const processed = components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles)).length;
 
         if (components.length === processed){
           this.setState({ outro : true });
@@ -61,7 +61,7 @@ class PlaygroundProcessingOverlay extends Component {
     } else {
       if (playground && typeGroup && !completed) {
         const components = componentsFromTypeGroup(playground.components, typeGroup);
-        const processed = components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles)).length;
+        const processed = components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles)).length;
 
         console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, root, outro, typeGroup : typeGroup.id, total, processed : this.state.processed, components : componentsFromTypeGroup(playground.components, typeGroup)});
 
@@ -73,7 +73,7 @@ class PlaygroundProcessingOverlay extends Component {
             total     : components.length,
             completed : false
           }, ()=> {
-            console.log("RESET LIST", { components : components.map(({ html, styles, rootStyles }) => ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles)), total : this.state.total });
+            console.log("RESET LIST", { components : components.map(({ html, styles, rootStyles })=> ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles)), total : this.state.total });
           });
         };
 
@@ -89,7 +89,7 @@ class PlaygroundProcessingOverlay extends Component {
 
         if (this.state.processed === total && !this.state.outro) {
 //         if (((outro && !prevProps.outro) || (this.state.processed === total)) && !this.state.outro) {
-          console.log("DONE LIST", { components : components.map(({ html, styles, rootStyles }) => ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles)), total : this.state.total });
+          console.log("DONE LIST", { components : components.map(({ html, styles, rootStyles })=> ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles)), total : this.state.total });
           onOutro();
 
         } else {
@@ -98,11 +98,11 @@ class PlaygroundProcessingOverlay extends Component {
             onReset();
 
           } else {
-            console.log("ACT LIST", { components : components.map(({ html, styles, rootStyles }) => ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles }) => (html && styles && rootStyles)), total : this.state.total });
+            console.log("ACT LIST", { components : components.map(({ html, styles, rootStyles })=> ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles)), total : this.state.total });
           }
 
           if (processed > this.state.processed) {
-            console.log("INC LIST", { components : components.map(({ html, styles, rootStyles }) => ({ html, styles, rootStyles })), processed, stateProc : this.state.processed, total : this.state.total });
+            console.log("INC LIST", { components : components.map(({ html, styles, rootStyles })=> ({ html, styles, rootStyles })), processed, stateProc : this.state.processed, total : this.state.total });
             this.setState({ processed });
           }
         }

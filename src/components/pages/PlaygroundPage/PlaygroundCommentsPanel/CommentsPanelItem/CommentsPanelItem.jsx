@@ -2,7 +2,7 @@
 import React from 'react';
 import './CommentsPanelItem.css';
 
-import BasePlaygroundComment from '../../PlaygroundBaseComment';
+import PlaygroundBaseComment from '../../PlaygroundBaseComment';
 
 
 function CommentsPanelItem(props) {
@@ -15,7 +15,7 @@ function CommentsPanelItem(props) {
 	};
 
 	return (<div className="comments-panel-item" data-id={comment.id}>
-		<BasePlaygroundComment ind={ind} comment={comment} onDelete={handleDelete} />
+		<PlaygroundBaseComment ind={ind} comment={comment} onDelete={handleDelete} />
  	</div>);
 }
 

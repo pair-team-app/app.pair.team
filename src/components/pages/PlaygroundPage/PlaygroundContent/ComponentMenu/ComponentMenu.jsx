@@ -3,7 +3,11 @@ import React, { Component } from 'react';
 import './ComponentMenu.css';
 
 import { ContextMenu, MenuItem } from 'react-contextmenu';
+// import { connect } from 'react-redux';
+
+import { COMPONENT_MENU_ITEM_COMMENTS, COMPONENT_MENU_ITEM_COPY, COMPONENT_MENU_ITEM_AUTHOR } from './index';
 import { ENTER_KEY } from '../../../../../consts/key-codes';
+import { USER_DEFAULT_AVATAR } from '../../../../../consts/uris';
 
 
 class ComponentMenu extends Component {
@@ -40,10 +44,12 @@ class ComponentMenu extends Component {
 // 		console.log('%s.handleAddComment()', this.constructor.name, event, { bounds : (data || event).target.getBoundingClientRect() }, this.state.position, this.state.comment);
 		event.preventDefault();
 
-		const { position, component, comment } = this.state;
-		this.props.onAddComment({
-      component, position,
-      content : comment
+		const { position, component, comment : content } = this.state;
+		const { x , y } = position;
+		this.props.onAddComment({ component, content,
+			position : { x,
+        y : y + 30,
+      }
     });
 	};
 
@@ -51,10 +57,9 @@ class ComponentMenu extends Component {
 // 		console.log('%s.handleMenuItemClick()', this.constructor.name, { event, data, target });
 
 		event.preventDefault();
+		const { type } = data;
 		const { component } = this.state;
-		this.props.onClick({ component,
-			type : data.type,
-		});
+		this.props.onClick({ component, type });
 	};
 
 	handleHideMenu = (event)=> {
@@ -103,26 +108,35 @@ class ComponentMenu extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
+// 		const { component } = this.state;
 		const { menuID } = this.props;
-		const { component } = this.state;
 		const { intro, outro, comment } = this.state;
+// 		const { avatar, username, email } = this.props.profile;
 
 		return (<ContextMenu id={menuID} className="component-menu-wrapper" onShow={this.handleShowMenu} onHide={this.handleHideMenu} preventHideOnResize={true} preventHideOnScroll={true}>
 			{/*<BasePopover intro={intro} outro={outro} payload={payload} onOutroComplete={this.props.onClose}>*/}
 			<div className={`component-popover${(intro) ? ' component-menu-intro' : (outro) ? ' component-menu-outro' : ''}`}>
 				<div className="component-menu-content-wrapper">
 					<div className="component-menu-item-wrapper">
-						{/*<ComponentMenuItem type="inspect" title="Inspect" acc={null} onClick={this.handleMenuItemClick} />*/}
-						{/*<ComponentMenuItem type="share" title="Share" acc={null} onClick={this.handleMenuItemClick} />*/}
-						<ComponentMenuItem type="comments" title={`${window.location.href.includes('/comments') ? 'Hide' : 'View'} Comments`} acc={<ComponentMenuItemAcc amt={(component) ? Math.max(0, component.comments.length - 1) : 0} />} onClick={this.handleMenuItemClick} />
+            {/*<ComponentMenuItem type={COMPONENT_MENU_ITEM_COMMENTS} title={`${window.location.href.includes('/comments') ? 'Hide' : 'View'} Comments`} acc={<ComponentMenuItemAcc amt={(component) ? Math.max(0, component.comments.length - 1) : 0} />} onClick={this.handleMenuItemClick} />*/}
+						<ComponentMenuItem type={COMPONENT_MENU_ITEM_COPY} title="Copy" acc={null} onClick={this.handleMenuItemClick} />
+						<ComponentMenuItem type={COMPONENT_MENU_ITEM_AUTHOR} title="Owner" acc={null} onClick={this.handleMenuItemClick} />
 					</div>
-					<form>
-            <textarea placeholder="Add Comment" onChange={(event)=> this.setState({ comment : event.target.value })} ref={(element)=> this.textAreaRef = element}>
+          <div className="playground-comment-add-popover">
+            <div className="header-wrapper">
+              <div className="avatar-wrapper">
+                <img className="avatar-wrapper-ico" src={USER_DEFAULT_AVATAR} alt={''} />
+              </div>
+            </div>
+						<textarea placeholder="Enter Comment" onChange={(event)=> this.setState({ comment : event.target.value })} ref={(element)=> this.textAreaRef = element}>
 						</textarea>
-						<MenuItem data={{ type : 'submit' }} onClick={this.handleAddComment}>
-							<button disabled={comment.length === 0}>Add Comment</button>
-						</MenuItem>
-					</form>
+						<div className="button-wrapper">
+							<div><button className="quiet-button" onClick={this.handleHideMenu}>Cancel</button></div>
+              <MenuItem data={{ type : 'submit' }} onClick={this.handleAddComment}>
+								<button disabled={comment.length === 0} onClick={this.handleAddSubmit}>Submit</button>
+							</MenuItem>
+						</div>
+          </div>
 				</div>
 			</div>
 			{/*</BasePopover>*/}
@@ -150,6 +164,17 @@ const ComponentMenuItemAcc = (props)=> {
 };
 
 
+// const mapStateToProps = (state, ownProps)=> {
+//   return ({
+//     profile : state.userProfile
+//   });
+// };
+
+{/*<img src={(avatar || USER_DEFAULT_AVATAR)} alt={(email || username)} />*/}
+
+
+
+// export default connect(mapStateToProps)(ComponentMenu);
 export default (ComponentMenu);
 
 
