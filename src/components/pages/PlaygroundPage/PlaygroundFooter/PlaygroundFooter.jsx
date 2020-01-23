@@ -23,7 +23,7 @@ function PlaygroundFooter(props) {
 
 	const { accessibility, cursor, playground, builds } = props;
 	return (<div className="playground-footer">
-		<div className="playground-footer-comments-wrapper">
+		<div className="playground-footer-button-wrapper playground-footer-comments-wrapper">
 			<FooterCommentButton selected={cursor} onClick={props.onToggleCursor} />
 		</div>
 		<div className="button-wrapper-col playground-footer-button-wrapper">
@@ -31,7 +31,7 @@ function PlaygroundFooter(props) {
 			{/*<button className="quiet-button" onClick={(event)=> handleClick(event, GITHUB_FIGMA_PLUGIN)}>Figma Plugin</button>*/}
 			{/*<button className="quiet-button" onClick={(event)=> handleClick(event, GITHUB_XD_PLUGIN)}>Adobe XD Plugin</button>*/}
 		</div>
-		<div className="button-wrapper-col playground-footer-content-toggle-wrapper">
+		<div className="button-wrapper-col playground-footer-button-wrapper playground-footer-content-toggle-wrapper">
 			<FooterMobileButton hidden={(builds === 0)} selected={(playground.deviceID !== 1)} onClick={props.onToggleMobile} />
 			<FooterDesktopButton hidden={(builds === 0)} selected={(playground.deviceID === 1)} onClick={props.onToggleDesktop} />
 			<FooterAXButton selected={accessibility} onClick={props.onToggleAccessibility} />
@@ -59,7 +59,7 @@ const FooterCommentButton = (props)=> {
   const { selected } = props;
   return (<button className="quiet-button glyph-button" onClick={props.onClick} data-selected={selected}>
     <svg xmlns="http://www.w3.org/2000/svg" width="29" height="28.352" viewBox="0 0 29 28.352">
-      <path id="Union_1" data-name="Union 1" d="M1618.834,562.178a10.59,10.59,0,0,1-4.334-8.331c0-6.267,6.044-11.347,13.5-11.347s13.5,5.08,13.5,11.347-6.044,11.347-13.5,11.347a15.939,15.939,0,0,1-3.526-.391l-5.64,4.049Z" transform="translate(-1613.5 -541.5)" fill="#232323" stroke="#232323" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+      <path id="Union_1" data-name="Union 1" d="M1618.834,562.178a10.59,10.59,0,0,1-4.334-8.331c0-6.267,6.044-11.347,13.5-11.347s13.5,5.08,13.5,11.347-6.044,11.347-13.5,11.347a15.939,15.939,0,0,1-3.526-.391l-5.64,4.049Z" transform="translate(-1613.5 -541.5)"/>
     </svg>
 
 	</button>);

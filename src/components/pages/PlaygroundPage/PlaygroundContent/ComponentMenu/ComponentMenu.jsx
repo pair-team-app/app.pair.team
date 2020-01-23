@@ -81,7 +81,7 @@ class ComponentMenu extends Component {
   };
 
 	handleShowMenu = (event)=> {
-		console.log('%s.handleShowMenu()', this.constructor.name, this.props, event.detail, event.detail.target.getBoundingClientRect())
+//-/> 		console.log('%s.handleShowMenu()', this.constructor.name, this.props, event.detail, event.detail.target.getBoundingClientRect())
 
 		event.preventDefault();
 		event.stopPropagation();

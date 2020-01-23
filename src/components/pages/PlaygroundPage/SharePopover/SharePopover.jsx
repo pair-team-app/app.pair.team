@@ -26,7 +26,7 @@ class SharePopover extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
-		console.log('%s.componentDidUpdate()', this.constructor.name, this.props);
+//-/> 		console.log('%s.componentDidUpdate()', this.constructor.name, this.props);
 
 // 		const { position } = this.props;
 // 		if (position !== this.state.position) {
@@ -35,17 +35,18 @@ class SharePopover extends Component {
   }
 
 	handleClipboardCopy = ()=> {
-		console.log('%s.handleClipboardCopy()', this.constructor.name, this.props);
+//-/> 		console.log('%s.handleClipboardCopy()', this.constructor.name, this.props);
 
 		trackEvent('button', `copy-share-url`);
 // 		this.setState({ outro : true });
 
-		this.setState({ outro : true });
-		this.props.onPopup({
-			type     : POPUP_TYPE_OK,
-			content  : `<span class="txt-bold">${window.location.href}</span> has been copied to the clipboard!`,
-			delay    : 125,
-			duration : 3333
+		this.setState({ outro : true }, ()=> {
+      this.props.onPopup({
+      type     : POPUP_TYPE_OK,
+      content  : `Pair URL has been copied to your clipboard!`,
+      delay    : 125,
+      duration : 3333
+    });
 		});
 	};
 
@@ -58,7 +59,7 @@ class SharePopover extends Component {
 	};
 
 	handleSubmit = (event)=> {
-		console.log('%s.handleSubmit()', this.constructor.name);
+//-/> 		console.log('%s.handleSubmit()', this.constructor.name);
 		event.preventDefault();
 
 		const { email, emailValid } = this.state;
@@ -74,7 +75,7 @@ class SharePopover extends Component {
 					user_id       : this.props.profile.id
 				}
 			}).then((response)=> {
-				console.log('INVITE', response.data);
+//-/> 				console.log('INVITE', response.data);
 // 				const { invite } = response.data;
 
 				this.setState({ outro : true });
@@ -95,7 +96,7 @@ class SharePopover extends Component {
 
 
 	render() {
-		console.log('%s.render()', this.constructor.name, this.props, this.state);
+//-/> 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { email, emailValid, outro } = this.state;
 		const payload = {

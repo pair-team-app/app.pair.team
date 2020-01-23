@@ -7,7 +7,7 @@ import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
 import BaseContentExpander from '../../../iterables/BaseContentExpander';
-import { componentByNodeID } from '../utils/lookup';
+import {componentByNodeID, typeGroupComponentsProcessed} from '../utils/lookup';
 
 
 const flattenTree = (node)=> {
@@ -27,21 +27,29 @@ class PlaygroundAccessibility extends Component {
 		super(props);
 
 		this.state = {
-			expandedNodes : null
+			expandedNodes : null,
+			building      : false
 		};
 	}
 
 	componentDidMount() {
-// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
  		this.buildFlatTree();
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
-		const { component } = this.props;
-		if (component && component !== prevProps.component) {
-			this.buildFlatTree();
+    const { expandedNodes, building } = this.state;
+		const { playground, typeGroup, component } = this.props;
+		if (typeGroupComponentsProcessed(typeGroup, playground.components) && !building && expandedNodes === null) {
+			this.setState({ building : true}, ()=> {
+        this.buildFlatTree();
+			})
+		}
+
+		if (!prevState.expandedNodes && expandedNodes) {
+			this.setState({ building : false });
 		}
 	}
 
@@ -55,10 +63,10 @@ class PlaygroundAccessibility extends Component {
 	};
 
 	buildFlatTree = ()=> {
-		console.log('%s.buildFlatTree()', this.constructor.name);
+		console.log('%s.buildFlatTree()', this.constructor.name, { component : this.props.component });
 
 		const { component } = this.props;
-		if (component && component.accessibility && component.accessibility.tree) {
+		if (component && component.processed && component.accessibility.tree) {
 			const expandedNodes = flattenTree(component.accessibility.tree);
 			if (expandedNodes !== this.state.expandedNodes) {
 				this.setState({ expandedNodes });
@@ -66,57 +74,55 @@ class PlaygroundAccessibility extends Component {
 		}
 	};
 
-	makeTreeItem = (treeItem, components)=> {
+	makeTreeBranch = (treeTrunk, components)=> {
 		const { expandedNodes } = this.state;
-		const { expanded } = expandedNodes.find(({ axNodeID })=> (axNodeID === treeItem.axNodeID));
+		const { expanded } = expandedNodes.find(({ axNodeID })=> (axNodeID === treeTrunk.axNodeID));
 
-		const nodeID = treeItem.nodeID;
+		const nodeID = treeTrunk.nodeID;
 		const component = componentByNodeID(components, nodeID);
-// 	console.log('makeTreeItem()', treeItem, nodeID, component);
+    console.log('%s.makeTreeBranch()', this.constructor.name, { components, treeTrunk : treeTrunk.childNodes, nodeID, ax : (component) ? component.accessibility : null });
 
-		return (<AccessibilityTreeItem
-			key={treeItem.axNodeID}
+		return ((component && component.processed) ? (<AccessibilityTreeBranch
+			key={treeTrunk.axNodeID}
 			expanded={expanded}
-			treeNode={treeItem}
+			treeNode={treeTrunk}
 			component={component}
-			childNodes={treeItem.childNodes.map((childNode)=> (this.makeTreeItem(childNode, components)))}
+			childNodes={treeTrunk.childNodes.map((childNode)=> (this.makeTreeBranch(childNode, components)))}
 			onTreeTitleClick={this.handleTreeTitleClick}
-		/>);
+		/>) : (<span className="dummy-tree-item" />));
 	};
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state, (this.shareLink) ? { left : this.shareLink.offsetLeft, top : this.shareLink.offsetTop } : null);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { playground, component } = this.props;
 		const { expandedNodes } = this.state;
-		const { tree } = (component && component.accessibility) ? component.accessibility : { tree : null };
 
-		return ((playground) && (<div className="playground-accessibility">
+		return ((playground && component) && (<div className="playground-accessibility">
 			<div className="playground-accessibility-tree-item-wrapper">
-				{(expandedNodes && tree) && (this.makeTreeItem(component.accessibility.tree, playground.components))}
+				{(component.processed && expandedNodes) && (this.makeTreeBranch(component.accessibility.tree, playground.components))}
 			</div>
 		</div>));
 	}
 }
 
 
-const AccessibilityTreeItem = (props)=> {
-//	console.log('AccessibilityTreeItem()', props);
+const AccessibilityTreeBranch = (props)=> {
+	console.log('AccessibilityTreeBranch()', props);
+
 
  	const { expanded, component, childNodes, treeNode } = props;
 	const { failed, aborted } = (component && component.accessibility) ? component.accessibility.report : {};
 
 	let ariaAttribs = [];
-	if (component) {
 		const tag = new JSSoup(component.html).nextElement;
 		ariaAttribs = Object.keys(tag.attrs).filter((key)=> (/^(aria-|role)/i.test(key))).sort().reverse().map((key)=> (`${key}="${(key !== tag.attrs[key]) ? tag.attrs[key] : ''}"`));
-	}
 
 	const expandable = ((((component) ? failed.length + aborted.length + ariaAttribs.length : 0) + childNodes.length) * 1 !== 0);
 	return (<BaseContentExpander
 		className={`accessibility-tree-item${(expanded) ? ' accessibility-tree-item-expanded' : ''}`}
 		open={expanded}
-		title={<AccessibilityTreeItemHeader
+		title={<AccessibilityTreeBranchHeader
 			expandable={expandable}
 			expanded={expanded}
 			component={component}
@@ -131,12 +137,12 @@ const AccessibilityTreeItem = (props)=> {
 			</div>)}
 
 			{(component) && (<div className="accessibility-tree-item-report-wrapper">
-				{(failed.length > 0) && (<AccessibilityTreeItemReport
+				{(failed.length > 0) && (<AccessibilityTreeBranchReport
 					type="failed"
 					rules={failed}
 				/>)}
 
-				{(aborted.length > 0) && (<AccessibilityTreeItemReport
+				{(aborted.length > 0) && (<AccessibilityTreeBranchReport
 					type="aborted"
 					rules={aborted}
 				/>)}
@@ -149,8 +155,8 @@ const AccessibilityTreeItem = (props)=> {
 	/>);
 };
 
-const AccessibilityTreeItemHeader = (props)=> {
-//	console.log('AccessibilityTreeItemHeader()', props);
+const AccessibilityTreeBranchHeader = (props)=> {
+	console.log('AccessibilityTreeBranchHeader()', props);
 
 	const { expandable, expanded, component, treeNode } = props;
 	return (<div className={`accessibility-tree-item-header${(expandable) ? ' accessibility-tree-item-header-expandable' : ''}`} onClick={()=> (expandable) ? props.onClick(treeNode) : null}>
@@ -164,13 +170,13 @@ const AccessibilityTreeItemHeader = (props)=> {
 	</div>);
 };
 
-const AccessibilityTreeItemReport = (props)=> {
-//	console.log('AccessibilityTreeItemReport()', props);
+const AccessibilityTreeBranchReport = (props)=> {
+	console.log('AccessibilityTreeBranchReport()', props);
 
 	const { type, rules } = props;
 	return (<div className={`accessibility-tree-item-rules accessibility-tree-item-rules-${type}`}>
 		{(rules.map((rule, i)=> {
-			return (<AccessibilityTreeItemRule
+			return (<AccessibilityTreeBranchRule
 				key={i}
 				rule={rule}
 			/>);
@@ -178,8 +184,8 @@ const AccessibilityTreeItemReport = (props)=> {
 	</div>);
 };
 
-const AccessibilityTreeItemRule = (props)=> {
-// 	console.log('AccessibilityTreeItemRule()', props);
+const AccessibilityTreeBranchRule = (props)=> {
+	console.log('AccessibilityTreeBranchRule()', props);
 
 	const { rule } = props;
 	const { help, impact, nodes } = rule;

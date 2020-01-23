@@ -161,7 +161,10 @@ export default function onClickOutsideHOC(WrappedComponent, config) {
       }
 
       handlersMap[this._uid] = event => {
-        console.log('|:|||:|', { props : this.props, event });
+        console.log('<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>');
+        console.log('|:|+|:|·|:|+|:|·|:|+|:|>>', { props : this.props, event }, '<<|:|+|:|·|:|+|:|·|:|+|:|');
+        console.log('<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>');
+
         if (this.props.onlyLeftClick && event.button !== 0) return;
         if (this.componentNode === null) return;
 

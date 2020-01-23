@@ -33,7 +33,7 @@ import { API_ENDPT_URL } from '../../consts/uris';
 
 
 const logFormat = (action, payload=null, meta='')=> {
-	console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, (payload || ''), meta);
+//-/> 	console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, (payload || ''), meta);
 };
 
 
@@ -48,7 +48,7 @@ export function fetchBuildPlaygrounds(payload) {
         build_id : buildID
       }
     }).then(async(response) => {
-      console.log('BUILD_PLAYGROUNDS', response.data);
+//-/>       console.log('BUILD_PLAYGROUNDS', response.data);
 
       const playgrounds = response.data.playgrounds.map((playground)=> ({
 				size       : jsonFormatKB(playground, true),
@@ -58,7 +58,7 @@ export function fetchBuildPlaygrounds(payload) {
 					size  : jsonFormatKB(component, true)
 				}))
       }));
-
+//-/>
       console.log('BUILD_PLAYGROUNDS [SIZE]', { playgrounds });
       dispatch({
         type    : BUILD_PLAYGROUNDS_LOADED,
@@ -81,7 +81,7 @@ export function fetchComponentTypes() {
 			action  : 'COMPONENT_TYPES',
 			payload : null
 		}).then((response) => {
-			console.log('COMPONENT_TYPES', response.data);
+//-/> 			console.log('COMPONENT_TYPES', response.data);
 			dispatch({
 				type    : COMPONENT_TYPES_LOADED,
 				payload : response.data.component_types
@@ -100,7 +100,7 @@ export function fetchEventGroups() {
 			action  : 'EVENT_GROUPS',
 			payload : null
 		}).then((response) => {
-			console.log('EVENT_GROUPS', response.data);
+//-/> 			console.log('EVENT_GROUPS', response.data);
 
 			dispatch({
 				type    : EVENT_GROUPS_LOADED,
@@ -131,7 +131,7 @@ export function fetchPlaygroundComponentGroup(payload) {
 				verbose       : true
 			}
     }).then(async 	(response) => {
-      console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', response.data);
+//-/>       console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', response.data);
 
       const { components } = response.data;
       console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS [SIZE]', Object.values(components).map((component)=> ({
@@ -158,7 +158,7 @@ export function fetchProducts() {
 			action  : 'PRODUCTS',
 			payload : null
 		}).then((response) => {
-			console.log('PRODUCTS', response.data);
+//-/> 			console.log('PRODUCTS', response.data);
 
 			dispatch({
 				type    : SET_PRODUCTS,
@@ -180,7 +180,7 @@ export function fetchUserProfile() {
 			action  : 'USER_PROFILE',
 			payload : { user_id : cookie.load('user_id') << 0 }
 		}).then((response) => {
-			console.log('USER_PROFILE', response.data);
+//-/> 			console.log('USER_PROFILE', response.data);
 
 			Objects.renameKey(response.data.user, 'github_auth', 'github');
 			if (response.data.user.github) {
@@ -216,7 +216,7 @@ export function fetchTeamLookup(payload) {
 				user_id : userID
 			}
 		}).then((response) => {
-			console.log('TEAM_LOOKUP', response.data);
+//-/> 			console.log('TEAM_LOOKUP', response.data);
 			const { teams } = response.data;
 
 			if (teams.length > 0) {
@@ -359,7 +359,7 @@ export function updateUserProfile(payload, force=true) {
 // 					filename : avatar
 				}
 			}).then((response) => {
-				console.log('UPDATE_USER_PROFILE', response.data);
+//-/> 				console.log('UPDATE_USER_PROFILE', response.data);
 
 				const status = parseInt(response.data.status, 16);
 				Objects.renameKey(response.data.user, 'github_auth', 'github');

@@ -141,7 +141,7 @@ const PlaygroundNavPanelHeader = (props)=> {
 // 	console.log('PlaygroundNavPanelHeader()', props);
 
 	const handleClick = (event)=> {
-    console.log('%s.handleClick()', 'PlaygroundNavPanelHeader');
+//-/>     console.log('%s.handleClick()', 'PlaygroundNavPanelHeader');
     event.preventDefault();
 
     const { domain } = props.team;

@@ -15,7 +15,7 @@ class ConfirmDialog extends Component {
 	}
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state);
+//-/>     console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state);
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : prevProps.outro, props : this.props.outro });
   }
 

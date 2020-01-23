@@ -57,7 +57,7 @@ class StripeModal extends Component {
 	};
 
 	handleError = (error)=> {
-		console.log('%s.handleError()', this.constructor.name, error);
+//-/> 		console.log('%s.handleError()', this.constructor.name, error);
 
 		this.props.onPopup({
 			type    : POPUP_TYPE_ERROR,
@@ -95,7 +95,7 @@ class StripeModal extends Component {
 					product_ids : productIDs
 				}
 			}).then((response) => {
-				console.log('MAKE_PURCHASE', response.data);
+//-/> 				console.log('MAKE_PURCHASE', response.data);
 				const { purchase, error } = response.data;
 				trackEvent('purchase', (error) ? 'error' : 'success');
 

@@ -94,7 +94,7 @@ class ProfileModal extends Component {
 					team_id : team.id
 				}
 			}).then((response) => {
-				console.log('CANCEL_SUBSCRIPTION', response.data);
+   			console.log('CANCEL_SUBSCRIPTION', response.data);
 				const { error } = response.data;
 
 				this.setState({ submitting : false }, ()=> {

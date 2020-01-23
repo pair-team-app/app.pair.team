@@ -49,7 +49,7 @@ class PlaygroundPage extends Component {
 	}
 
 	componentDidMount() {
-		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+//-/> 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
 		const { profile, match, playground } = this.props;
 		const { fetching } = this.state;
@@ -65,7 +65,7 @@ class PlaygroundPage extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { profile, componentTypes, playgrounds, playground, match, location } = this.props;
 		const { fetching, processing, accessibility } = this.state;
@@ -182,7 +182,7 @@ class PlaygroundPage extends Component {
 			const { typeGroup, component, comment } = this.props;
 			let url = pathname;
 
-      console.log('%s.componentDidUpdate()', this.constructor.name, { playgroundID : this.props.playground.id, prev : prevProps.playground.id, fetching, processing });
+//-/>       console.log('%s.componentDidUpdate()', this.constructor.name, { playgroundID : this.props.playground.id, prev : prevProps.playground.id, fetching, processing });
       if (playground.id !== prevProps.playground.id && !fetching) {
 				this.onFetchTypeGroupComponents(typeGroup);
       }
@@ -273,7 +273,7 @@ class PlaygroundPage extends Component {
 			}
 		}).then((response) => {
 			const comment = reformComment(response.data.comment);
-			console.log('ADD_COMMENT', response.data, comment);
+//-/> 			console.log('ADD_COMMENT', response.data, comment);
 
 			component.comments = [ ...component.comments, comment].sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0));
 			const playground = { ...this.props.playground,
@@ -291,7 +291,7 @@ class PlaygroundPage extends Component {
 	};
 
   handleBreadCrumbClick = ({ type=null, payload=null })=> {
-    console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
+//-/>     console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
 
     if (type === BreadcrumbTypes.PLAYGROUND) {
       this.props.setTypeGroup(typeGroupByID(this.state.typeGroups, 187));
@@ -323,7 +323,7 @@ class PlaygroundPage extends Component {
 	handleCommentMarkerClick = ({ comment=null })=> {
 		const { playground } = this.props;
 		const component = componentFromComment(playground.components, comment);
-
+//-/>
  		console.log('%s.handleCommentMarkerClick()', this.constructor.name, { comment, components : playground.components, component });
 		if (component && component !== this.props.component) {
 			this.props.setComponent(component);
@@ -332,7 +332,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleComponentClick = ({ component=null })=> {
-		console.log('%s.handleComponentClick()', this.constructor.name, { component });
+//-/> 		console.log('%s.handleComponentClick()', this.constructor.name, { component });
 
 // 		if (!component.selected) {
       component.selected = true;
@@ -342,12 +342,12 @@ class PlaygroundPage extends Component {
 	};
 
 	handleComponentMenuShow = ({ component=null })=> {
-		console.log('%s.handleComponentMenuShow()', this.constructor.name, { component });
+//-/> 		console.log('%s.handleComponentMenuShow()', this.constructor.name, { component });
 //     this.props.setComponent(component);
 	};
 
 	handleComponentMenuItem = ({ type=null, component=null })=> {
- 		console.log('%s.handleComponentMenuItem()', this.constructor.name, { type, component });
+//-/>  		console.log('%s.handleComponentMenuItem()', this.constructor.name, { type, component });
 
     this.props.setComponent(component);
 		if (type === 'comments') {
@@ -367,7 +367,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleComponentPopoverClose = ()=> {
-		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
+//-/> 		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
 		this.props.setComment(null);
 
     if (/\/comments.*$/.test(this.props.location.pathname)) {
@@ -376,7 +376,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleDeleteComment = (comment)=> {
-		console.log('%s.handleDeleteComment()', this.constructor.name, comment.id);
+//-/> 		console.log('%s.handleDeleteComment()', this.constructor.name, comment.id);
 		trackEvent('button', 'delete-comment');
 
 		axios.post(API_ENDPT_URL, {
@@ -386,7 +386,7 @@ class PlaygroundPage extends Component {
 				state      : 'deleted'
 			}
 		}).then((response) => {
-			console.log('UPDATE_COMMENT', response.data);
+//-/> 			console.log('UPDATE_COMMENT', response.data);
 
 			const component = { ...this.props.component,
 				comments : this.props.component.comments.filter(({ id })=> (id !== comment.id)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0))
@@ -402,7 +402,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleNavGroupItemClick = (typeGroup)=> {
-		console.log('%s.handleNavGroupItemClick()', this.constructor.name, typeGroup);
+//-/> 		console.log('%s.handleNavGroupItemClick()', this.constructor.name, typeGroup);
 
 		typeGroup.selected = !typeGroup.selected;
 
@@ -413,14 +413,14 @@ class PlaygroundPage extends Component {
 	};
 
 	handleNavTypeItemClick = (typeGroup, typeItem)=> {
-		console.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
+//-/> 		console.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
 
 		this.props.setComponent(typeItem);
 		this.props.setComment(null);
 	};
 
 	handleSettingsItem = (itemType)=> {
-		console.log('%s.handleSettingsItem()', this.constructor.name, itemType);
+//-/> 		console.log('%s.handleSettingsItem()', this.constructor.name, itemType);
 
 		if (itemType === SettingsMenuItemTypes.DELETE_ACCT) {
 			this.props.onModal(Modals.DISABLE);
@@ -431,7 +431,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleToggleAccessibility = ()=> {
-		console.log('%s.handleToggleAccessibility()', this.constructor.name, this.state.accessibility);
+//-/> 		console.log('%s.handleToggleAccessibility()', this.constructor.name, this.state.accessibility);
 
 		const { comment } = this.props;
 		setTimeout(()=> {
@@ -451,7 +451,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleTogglePlayground = ()=> {
-		console.log('%s.handleTogglePlayground()', this.constructor.name, this.props.playground.deviceID);
+//-/> 		console.log('%s.handleTogglePlayground()', this.constructor.name, this.props.playground.deviceID);
 
 		trackEvent('button', (this.props.playground.deviceID === 1) ? 'mobile-toggle' : 'desktop-toggle');
 
@@ -467,7 +467,7 @@ class PlaygroundPage extends Component {
 	};
 
 	handleStripeModal = ()=> {
-		console.log('%s.handleStripeModal()', this.constructor.name);
+//-/> 		console.log('%s.handleStripeModal()', this.constructor.name);
 
 		const { team, products } = this.props;
 		const product = [...products].pop();
@@ -477,7 +477,7 @@ class PlaygroundPage extends Component {
 
   onFetchTypeGroupComponents = (typeGroup)=> {
     const { playground } = this.props;
-    console.log('%s.onFetchTypeGroupComponents()', this.constructor.name, { typeGroup, components : componentsFromTypeGroup(playground.components, typeGroup) });
+//-/>     console.log('%s.onFetchTypeGroupComponents()', this.constructor.name, { typeGroup, components : componentsFromTypeGroup(playground.components, typeGroup) });
     if (!typeGroupComponentsProcessed(typeGroup, playground.components)) {
       this.setState({ processing : true }, ()=> {
         this.props.fetchPlaygroundComponentGroup({ playground, typeGroup });
@@ -486,7 +486,7 @@ class PlaygroundPage extends Component {
 	};
 
   onFetchBuildPlaygrounds = (buildID, playgroundID=null)=> {
-    console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
+//-/>     console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
 
     this.setState({
 			fetching : true,
@@ -497,7 +497,7 @@ class PlaygroundPage extends Component {
 
 
   render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+//        		console.log('%s.render()', this.constructor.name, this.props, this.state);
 // 		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
 
 		const { profile, team, playgrounds, playground, typeGroup, component } = this.props;

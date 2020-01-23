@@ -19,7 +19,7 @@ const logFormat = (action, meta='')=> {
 	if (typeof action !== 'function') {
 		const { type, payload } = action;
 		if (type !== UPDATE_MOUSE_COORDS) {
-      console.log(LOG_MIDDLEWARE_PREFIX, `MW >> “${type}”`, action, payload, meta);
+//-/>       console.log(LOG_MIDDLEWARE_PREFIX, `MW >> “${type}”`, action, payload, meta);
     }
 	}
 };
@@ -36,13 +36,13 @@ export function onMiddleware({ dispatch }) {
 
         components = (await Promise.all(Object.values(components).map(async(component)=> {
           const { id, type_id : typeID, title, html, styles, root_styles : rootStyles, processed } = component;
-          console.log('TYPE_GROUP_LOADED', 'PRE', component, { id, typeID, title, html, styles, rootStyles, processed });
+//-/>           console.log('TYPE_GROUP_LOADED', 'PRE', component, { id, typeID, title, html, styles, rootStyles, processed });
           return (await reformComponent(component));
 //           return (await reformComponent({ ...component, root_styles : rootStyles }));
         })));
 
         playground.components = playground.components.map((comp)=> ((components.find(({ id })=> ((id === comp.id))) || comp)));
-        console.log('TYPE_GROUP_LOADED', 'POST', playground.components.map(({ id, typeID, title, html, styles, rootStyles, image_data, processed })=> ({ id, typeID, title, html, styles, rootStyles, image_data, processed })));
+//-/>         console.log('TYPE_GROUP_LOADED', 'POST', playground.components.map(({ id, typeID, title, html, styles, rootStyles, image_data, processed })=> ({ id, typeID, title, html, styles, rootStyles, image_data, processed })));
 
         dispatch({
           type    : SET_REFORMED_TYPE_GROUP,

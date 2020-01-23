@@ -25,7 +25,7 @@
 	align-items: center;
 	width: 100%;
 	height: 100%;
-	border: 1px solid rgba(var(--border-color), 1.0);
+	border: 1px solid rgba(var(--border-color), 0.0);
 	text-align: center;
 	vertical-align: middle;
 	/*box-shadow:*/
@@ -36,16 +36,16 @@
 }
 
 .popup-notification-content-error {
-	background-color: rgba(var(--invalid-bg-color), 0.95);
-	color: rgba(var(--invalid-fg-color), 1.0);
+	background-color: rgba(var(--invalid-bg-color), 0.0);
+	color: rgba(var(--popup-ok-fg-color), 1.0);
 }
 
 .popup-notification-content-ok {
-	background-color: rgba(var(--popup-ok-bg-color), 0.95);
+	background-color: rgba(var(--popup-ok-bg-color), 0.0);
 	color: rgba(var(--popup-ok-fg-color), 1.0);
 }
 
 .popup-notification-content-status {
-	background-color: rgba(var(--site-bg-color), 0.95);
-	color: rgba(var(--site-fg-color), 1.0);
+	background-color: rgba(var(--site-bg-color), 0.0);
+	color: rgba(var(--popup-ok-fg-color), 1.0);
 }

@@ -73,7 +73,7 @@ class BaseOverlay extends Component {
 	};
 
 	handleComplete = ()=> {
-    console.log('%s.handleComplete()', this.constructor.name, this.props, this.state);
+//     console.log('%s.handleComplete()', this.constructor.name, this.props, this.state);
 
     const { onComplete } = this.props;
     this.setState({ completed : true }, ()=> {
@@ -84,7 +84,7 @@ class BaseOverlay extends Component {
 	};
 
 	onIntro = ()=> {
-    console.log('%s.onIntro()', this.constructor.name, this.props, this.state, this.timeline);
+//     console.log('%s.onIntro()', this.constructor.name, this.props, this.state, this.timeline);
 
     const { tracking, delay } = this.props;
     trackOverlay(`open${tracking}`);
@@ -96,13 +96,13 @@ class BaseOverlay extends Component {
       ease    : Circ.easeOut,
       delay   : (delay || 0) * 0.001,
 			onComplete : ()=> {
-        console.log('%s.onIntro().onIntroComplete', this.constructor.name, this.props, this.state, this.timeline);
+//         console.log('%s.onIntro().onIntroComplete', this.constructor.name, this.props, this.state, this.timeline);
 			}
     });
 	};
 
 	onOutro = ()=> {
-    console.log('%s.onOutro()', this.constructor.name, this.props, this.state, this.timeline);
+//-/>     console.log('%s.onOutro()', this.constructor.name, this.props, this.state, this.timeline);
 
     this.timeline = new TimelineMax();
     this.timeline.to(this.wrapper, OUTRO_DURATION, {
@@ -110,7 +110,7 @@ class BaseOverlay extends Component {
       scale      : 0.925,
       ease       : Back.easeIn,
       onComplete : ()=> {
-        console.log('%s.onOutro().onOutroComplete', this.constructor.name, this.props, this.state, this.timeline);
+//-/>         console.log('%s.onOutro().onOutroComplete', this.constructor.name, this.props, this.state, this.timeline);
 				this.handleComplete();
       }
     });

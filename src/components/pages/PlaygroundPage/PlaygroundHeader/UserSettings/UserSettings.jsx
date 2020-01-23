@@ -26,7 +26,7 @@ class UserSettings extends Component {
 
 
 	handleComplete = ()=> {
-    console.log('%s.handleComplete()', this.constructor.name, );
+//-/>     console.log('%s.handleComplete()', this.constructor.name, );
 
     this.setState({ popover : false }, ()=> {
       const { itemType } = this.state;

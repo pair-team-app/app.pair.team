@@ -6,7 +6,10 @@
 	padding: 0;
 	width: 100vw;
 	height: 100vh;
-	background-color: rgba(var(--site-bg-color), 1.0);
+	/*background-color: rgba(var(--site-bg-color), 1.0);*/
+	border-style: dashed;
+	border-width: 1px;
+	border-color: var(--matty-mana);
 	text-align: left;
 	overflow: hidden;
 }
@@ -16,11 +19,24 @@
 }
 
 .playground-page-content-wrapper {
-	position: absolute;
-	bottom: 0;
-	/*left: var(--playground-nav-width);*/
-	margin-left: var(--playground-nav-width);
-	padding-left: var(--playground-nav-width);
+	position: fixed;
+	top: 0;
+	left: var(--playground-nav-width);
+	width: calc(100vw - (var(--playground-nav-width) + var(--playground-comments-width)));
+	height: calc(100vh - 64px);
+	padding: 64px 0 44px
+	var(--orthodox-padding-base);
+	/*background-color: rgba(255, 0, 255, 0.25);*/
+
+	border-style: dashed;
+	border-color: var(--matty-earth);
+	border-width: 1px;
+
+
+
+
+	/*margin-left: var(--playground-nav-width);*/
+	/*padding-left: var(--playground-nav-width);*/
 	/*left: calc(var(--playground-nav-width) * -1);*/
 	/*width: calc(100% + (var(--playground-nav-width) * 2);*/
 	/*padding-left: var(--orthodox-padding-dbbl);*/
@@ -28,6 +44,6 @@
 	/*overflow: auto;*/
 
 
-	width: calc(100vw - (var(--playground-nav-width) + var(--playground-comments-width)));
-	height: auto;
+	/*width: calc(100vw - (var(--playground-nav-width) + var(--playground-comments-width)));*/
+	/*height: auto;*/
 }

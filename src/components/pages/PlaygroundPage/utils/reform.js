@@ -83,6 +83,19 @@ export const reformComponent = async(component, overwrite={})=> {
   const thumbData = (thumb_data && thumb_data.length > 1) ? await unzipData(thumb_data) : Images.genColor(PLACEHOLDER_FILL, { width, height });
 
 
+
+  const fullSize = (imageData) ? await Jimp.read(imageData).then(async(image)=> {
+    const { data, ...size } = image.bitmap;
+    return ({ ...size });
+  }) : null;
+
+
+  const thumbSize = (thumbData) ? await Jimp.read(thumbData).then(async(image)=> {
+    const { data, ...size } = image.bitmap;
+    return ({ ...size });
+  }) : null;
+
+
 // 	const thumbImage = (image_data) ? await Jimp.read(imageData).then((image)=> {
 // 		return (image.scaleToFit(Math.min(222, width), Math.min(142, height), Jimp.RESIZE_BICUBIC).quality(COMPONENT_THUMB_QUALITY).getBase64Async(Jimp.MIME_PNG));
 // 	}).catch((error)=> {
@@ -97,7 +110,7 @@ export const reformComponent = async(component, overwrite={})=> {
 //     return (null);
 //   }) : Images.genColor(PLACEHOLDER_FILL, { width : width * COMPONENT_THUMB_SCALE, height : height * COMPONENT_THUMB_SCALE });
 
-	const reformed = { ...component, html, styles, imageData, thumbData, accessibility,
+	const reformed = { ...component, html, styles, imageData, thumbData, thumbSize, fullSize, accessibility,
     typeID        : type_id,
     eventTypeID   : event_type_id,
     nodeID        : node_id,
@@ -117,10 +130,10 @@ export const reformComponent = async(component, overwrite={})=> {
 
 
 	if (imageData && html && styles && rootStyles) {
-    console.log('[%s] .::(REFORMED)::.', component.id, { data : { ...reformed, size : jsonFormatKB(reformed) } });
+//-/>     console.log('[%s] .::(REFORMED)::.', component.id, { data : { ...reformed, size : jsonFormatKB(reformed) } });
 
 	} else {
-    console.log('[%s] .::(INITIAL)::.', component.id, { ...reformed, size : jsonFormatKB(reformed) });
+//-/>     console.log('[%s] .::(INITIAL)::.', component.id, { ...reformed, size : jsonFormatKB(reformed) });
 	}
 
 

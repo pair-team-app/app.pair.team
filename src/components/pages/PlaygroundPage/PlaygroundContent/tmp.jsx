@@ -27,7 +27,7 @@ class PlaygroundContent extends Component {
 
 
   handleComponentPopoverClose = ()=> {
-    console.log('%s.handleComponentPopoverClose()', this.constructor.name);
+//-/>     console.log('%s.handleComponentPopoverClose()', this.constructor.name);
     this.setState({ popover : false }, ()=> {
       this.props.onPopoverClose();
     });
@@ -35,7 +35,7 @@ class PlaygroundContent extends Component {
 
   handleContentClick = (event, component)=> {
 // 		console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target }, { clientX : event.clientX, clientY : event.clientY }, component);
-    console.log('%s.handleContentClick()', this.constructor.name, component);
+//-/>     console.log('%s.handleContentClick()', this.constructor.name, component);
 
     const { cursor } = this.props;
     if (cursor) {

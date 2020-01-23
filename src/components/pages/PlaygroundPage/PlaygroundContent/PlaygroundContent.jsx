@@ -7,6 +7,8 @@ import './PlaygroundContent.css';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
+// import { Resizable, ResizableBox } from 'react-resizable';
+import ResizeObserver from 'react-resize-observer';
 
 import PlaygroundComment from '../PlaygroundComment';
 import ComponentMenu from './ComponentMenu';
@@ -22,13 +24,38 @@ class PlaygroundContent extends Component {
 
     this.state = {
       position : null,
-      popover  : false
+      popover  : false,
+      playgroundSize : null
     };
   }
 
 
+
+
+
+  handlePlaygroundResize = (rect)=> {
+    console.log('[::|::]=[ %s.handlePlaygroundResize()', this.constructor.name, { rect });
+
+    this.setState({ })
+  };
+
+
+  handlePlaygroundTranslate = (rect)=> {
+    console.log('[::|::]=[%s.handlePlaygroundTranslate()', this.constructor.name, { rect });
+  };
+
+
+  handlePlaygroundReflow = ({rect})=> {
+    console.log('[::|::]=[%s.handlePlaygroundReflow()', this.constructor.name, { rect });
+  };
+
+
+
+
+
+
   handleComponentPopoverClose = ()=> {
-    console.log('%s.handleComponentPopoverClose()', this.constructor.name);
+//-/>     console.log('%s.handleComponentPopoverClose()', this.constructor.name);
     this.setState({ popover : false }, ()=> {
       this.props.onPopoverClose();
     });
@@ -36,7 +63,7 @@ class PlaygroundContent extends Component {
 
   handleContentClick = (event, component)=> {
 // 		console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target }, { clientX : event.clientX, clientY : event.clientY }, component);
-    console.log('%s.handleContentClick()', this.constructor.name, component);
+//-/>     console.log('%s.handleContentClick()', this.constructor.name, component);
 
     const { cursor } = this.props;
     if (cursor) {
@@ -64,12 +91,16 @@ class PlaygroundContent extends Component {
 
 
     return (<div className="playground-content" data-component={(!(!component << 0))} data-cursor={cursor}>
+      <ResizeObserver
+        onResize={this.handlePlaygroundResize}
+        onPosition={this.handlePlaygroundTranslate}
+        onReflow={this.handlePlaygroundReflow}
+      />
       {(typeGroup && components.length > 0) && (<div className="playground-content-components-wrapper" data-component={(component !== null)}>
         {(!component)
           ? (<PlaygroundComponentsGrid typeGroup={typeGroup} components={components} onItemClick={this.handleContentClick} />)
-          : (<div className="playground-component-wrapper" style={{ height : `${43 + component.meta.bounds.height}px` }}>
-              <PlaygroundComponent profile={profile} popover={popover} position={position} typeGroup={typeGroup} component={component} onAddComment={this.props.onAddComment} onCloseComment={this.handleComponentPopoverClose} onDeleteComment={this.props.onDeleteComment} onItemClick={this.handleContentClick} onMarkerClick={this.props.onMarkerClick} />
-            </div>)
+//           : (<div className="playground-component-wrapper" style={{ height : `${43 + component.meta.bounds.height}px` }}>
+          : (<PlaygroundComponent profile={profile} popover={popover} position={position} typeGroup={typeGroup} component={component} onAddComment={this.props.onAddComment} onCloseComment={this.handleComponentPopoverClose} onDeleteComment={this.props.onDeleteComment} onItemClick={this.handleContentClick} onMarkerClick={this.props.onMarkerClick} />)
         }
       </div>)}
       {(cursor) && (<CommentPinCursor position={mouse.position} />)}
@@ -97,19 +128,25 @@ const CommentPinCursor = (props)=> {
 const PlaygroundComponent = (props)=> {
 //   console.log('PlaygroundComponent()', props);
 
-  const { profile, popover, position, typeGroup, component } = props;
+  const { scaling, profile, popover, position, size, typeGroup, component } = props;
 //   const { id, tagName, html, styles, rootStyles, comments, processed } = component;
-  const { id, tagName, imageData, thumbData, processed, comments } = component;
+  const { id, tagName, imageData, thumbData, fullSize, thumbSize, processed, comments } = component;
+  const { width, height } = (fullSize || thumbSize);
+
   const title = (component.title === tagName) ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}` : component.title;
 
-  return (<div className="playground-component" onClick={(event)=> props.onItemClick(event, component)}>
+  return (<div className="playground-component" onClick={(event)=> props.onItemClick(event, component)} style={{ width : `${width}px`, height : `${height}px`}}>
     <h5 className="component-title">{title}</h5>
 
-    <ContextMenuTrigger disable={!processed} id="component" component={component} collect={(props) => ({ component : props.component })} disableIfShiftIsPressed={true}>
+    {(scaling) && (<div className="scaling-wrapper">
+      <img src={(imageData || thumbData)} alt={title} />
+    </div>)}
+
+    {(!scaling) && (<ContextMenuTrigger disable={!processed} id="component" component={component} collect={(props) => ({ component : props.component })} disableIfShiftIsPressed={true}>
       <div className="playground-content-component" data-id={id}>
         <img src={(imageData || thumbData)} alt={title} />
       </div>
-      {(false && processed) && (<div className="playground-component-comments-wrapper" data-id={id}>
+      <div className="playground-component-comments-wrapper" data-id={id}>
         {((popover) ? [...comments, reformComment({ position,
           id      : 0,
           type    : 'add',
@@ -118,11 +155,8 @@ const PlaygroundComponent = (props)=> {
         })] : comments).filter(({ type })=> (type !== 'init')).map((comm, i) => {
           return (<PlaygroundComment key={i} ind={(comments.length - 1) - i} component={component} comment={comm} position={position} onMarkerClick={props.onMarkerClick} onAdd={props.onAddComment} onDelete={props.onDeleteComment} onClose={props.onCloseComment} />);
         })}
-      </div>)}
-    </ContextMenuTrigger>
-    {/*{(!processed) && (<div className="image-loader">*/}
-      {/*<i className="far fa-circle fa-spin" />*/}
-    {/*</div>)}*/}
+     </div>
+     </ContextMenuTrigger>)}
   </div>)
 };
 

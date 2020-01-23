@@ -34,7 +34,7 @@ class PlaygroundComment extends Component {
       document.addEventListener('keydown', this.handleKeyDown);
     }
 
-    console.log('%s.componentDidMount()', this.constructor.name, { position : comment });
+//-/>     console.log('%s.componentDidMount()', this.constructor.name, { position : comment });
 		if (position) {
       this.setState({ position : Maths.geom.pointsAdd(position, { x : 0, y : 38 }) });
     }
@@ -56,7 +56,7 @@ class PlaygroundComment extends Component {
 
 	handleAddSubmit = (event)=> {
 // 		console.log('%s.handleAddSubmit()', this.constructor.name, event, this.state.comment);
-		console.log('%s.handleAddSubmit()', this.constructor.name, event, this.state);
+//-/> 		console.log('%s.handleAddSubmit()', this.constructor.name, event, this.state);
 		event.preventDefault();
 		event.stopPropagation();
 
@@ -77,7 +77,7 @@ class PlaygroundComment extends Component {
 	};
 
 	handleClose = (comment)=> {
-		console.log('%s.handleClose()', this.constructor.name, comment);
+//-/> 		console.log('%s.handleClose()', this.constructor.name, comment);
 
 		if (comment.id === this.props.comment.id) {
 			this.props.onClose();
@@ -96,7 +96,7 @@ class PlaygroundComment extends Component {
 	};
 
 	handleKeyDown = (event)=> {
-    console.log('%s.handleKeyDown()', this.constructor.name, event, event.keyCode);
+//-/>     console.log('%s.handleKeyDown()', this.constructor.name, event, event.keyCode);
 
     const { comment } = this.state;
     if (event.keyCode === ENTER_KEY && comment.content.length > 0) {

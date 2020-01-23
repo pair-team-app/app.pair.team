@@ -54,7 +54,7 @@ class StripeForm extends Component {
 	};
 
 	handleSubmit = (event)=> {
-		console.log('%s.handleSubmit()', this.constructor.name, event);
+//-/> 		console.log('%s.handleSubmit()', this.constructor.name, event);
 
 		event.preventDefault();
 		trackEvent('button', 'purchase-submit');

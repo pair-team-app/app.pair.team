@@ -46,7 +46,7 @@ class LoginForm extends Component {
 	};
 
 	handleSubmit = (event)=> {
-		console.log('%s.handleSubmit()', this.constructor.name, event.target, this.state);
+//-/> 		console.log('%s.handleSubmit()', this.constructor.name, event.target, this.state);
 		event.preventDefault();
 
 		trackEvent('button', 'login');
@@ -69,7 +69,7 @@ class LoginForm extends Component {
 			}).then((response) => {
 				const { user } = response.data;
 				const status = parseInt(response.data.status, 16);
-				console.log('LOGIN', response.data, parseInt(response.data.status, 16), Bits.contains(status, 0x11), (status & 0x11));
+//-/> 				console.log('LOGIN', response.data, parseInt(response.data.status, 16), Bits.contains(status, 0x11), (status & 0x11));
 
 
 				if (user) {

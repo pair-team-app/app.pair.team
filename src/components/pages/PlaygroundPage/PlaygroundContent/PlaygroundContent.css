@@ -1,11 +1,11 @@
 
 .playground-content {
+	position: relative;
 	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
+	flex-flow: nowrap;
 	align-items: flex-start; /* v-align */
 	justify-content: center; /* h-align */
-	/*padding: 64px var(--orthodox-padding-base) 88px var(--orthodox-padding-base);*/
+	width:100%;
 	height: 100%;
 	z-index: 1;
 	background-color: rgba(var(--playground-content-bg-color), 1.0);
@@ -22,8 +22,8 @@
 }
 
 .playground-content-components-wrapper {
-	width: 100%;
-	padding: 40px 84px 40px;
+	/*width: 100%;*/
+	/*padding: 40px 84px 40px;*/
 }
 
 .playground-content-components-wrapper[data-component="true"] {
@@ -34,10 +34,6 @@
 	cursor: pointer;
 }
 
-.playground-content-component-comments-wrapper {
-}
-
-
 .comment-pin-cursor {
 	position: fixed;
 	top: 0;
@@ -46,10 +42,10 @@
 }
 
 
-.playground-component-wrapper {
-	position: relative;
-	width: 100%;
-}
+/*.playground-component-wrapper {*/
+	/*position: relative;*/
+	/*width: 100%;*/
+/*}*/
 
 
 .playground-content-components-wrapper .image-loader {
@@ -71,7 +67,26 @@
 	top: calc(56px + var(--orthodox-margin-base));
 }
 
-.playground-component-wrapper h5 {
+
+.playground-component {
+	position: relative;
+	top: 50%;
+	left: 50%;
+	height: fit-content;
+}
+
+.playground-component > .scaling-wrapper {
+	max-width: 100%;
+	max-height: 1000px;
+	transform: translate(-50%, -50%);
+	object-fit: scale-down;
+}
+
+.playground-component img {
+	border: 1px solid rgba(var(--border-color), 1.0);
+}
+
+.playground-component h5 {
 	margin-bottom: var(--orthodox-margin-base);
 	text-align: left;
 	font-size: var(--orthodox-font-size);
@@ -79,16 +94,6 @@
 	line-height: normal;
 }
 
-.playground-component {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-}
-
-.playground-component img {
-	border: 1px solid rgba(var(--border-color), 1.0);
-}
 
 .playground-component h5, .playground-component:hover h5 {
 	color: rgba(var(--playground-panel-link-color), 1.0);

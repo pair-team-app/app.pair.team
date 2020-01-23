@@ -67,11 +67,11 @@ class App extends Component {
 
 	componentDidMount() {
 // 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
-		console.log('%s.componentDidMount()', this.constructor.name, this.props.location);
+//-/> 		console.log('%s.componentDidMount()', this.constructor.name, this.props.location);
 
 		trackEvent('site', 'load');
 		trackPageview();
-
+//-/>
 		console.log('[:][:][:][:][:][:][:][:][:][:]');
 
 		const { profile, location } = this.props;
@@ -83,7 +83,7 @@ class App extends Component {
 		window.addEventListener('mousemove', this.handleMouseMove);
 		window.onpopstate = (event)=> {
 			event.preventDefault();
-			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
+//-/> 			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
 		};
 	}
 
@@ -96,7 +96,7 @@ class App extends Component {
 		const { modals } = this.state;
 
 // 		console.log('|:|:|:|:|:|:|:|:|:|:|:|', prevProps.location.pathname, pathname);
-    console.log('|:|:|:|:|:|:|:|:|:|:|:|', { prevPathname : prevProps.location.pathname, currPathname : pathname, state : this.state });
+//-/>     console.log('|:|:|:|:|:|:|:|:|:|:|:|', { prevPathname : prevProps.location.pathname, currPathname : pathname, state : this.state });
 		if (prevProps.location.pathname !== pathname) {
 			trackPageview();
 		}
@@ -136,7 +136,7 @@ class App extends Component {
 	}
 
 	componentWillUnmount() {
-		console.log('%s.componentWillUnmount()', this.constructor.name);
+//-/> 		console.log('%s.componentWillUnmount()', this.constructor.name);
 
 		if (this.authInterval) {
 			clearInterval(this.authInterval);
@@ -169,7 +169,7 @@ class App extends Component {
 			action  : 'DISABLE_ACCOUNT',
 			payload : { user_id : profile.id }
 		}).then((response) => {
-			console.log('DISABLE_ACCOUNT', response.data);
+//-/> 			console.log('DISABLE_ACCOUNT', response.data);
 
 			trackEvent('user', 'delete-account');
 			this.props.updateUserProfile(null);
@@ -180,14 +180,14 @@ class App extends Component {
 	};
 
 	handleGithubAuth = ()=> {
-		console.log('%s.handleGithubAuth()', this.constructor.name);
+//-/> 		console.log('%s.handleGithubAuth()', this.constructor.name);
 
 		const code = DateTimes.epoch(true);
 		axios.post(API_ENDPT_URL, {
 			action  : 'GITHUB_AUTH',
 			payload : { code }
 		}).then((response) => {
-			console.log('GITHUB_AUTH', response.data);
+//-/> 			console.log('GITHUB_AUTH', response.data);
 			const authID = response.data.auth_id << 0;
 			this.setState({ authID }, ()=> {
 				if (!this.githubWindow || this.githubWindow.closed || this.githubWindow.closed === undefined) {
@@ -212,7 +212,7 @@ class App extends Component {
 	};
 
 	handleGitHubAuthSynced = (profile, register=true)=> {
-		console.log('%s.handleGitHubAuthSynced()', this.constructor.name, profile, register);
+//-/> 		console.log('%s.handleGitHubAuthSynced()', this.constructor.name, profile, register);
 
 		this.props.updateUserProfile(profile);
 
@@ -224,14 +224,14 @@ class App extends Component {
 				type     : 'free_user'
 			}
 		}).then((response) => {
-			console.log('REGISTER', response.data);
+//-/> 			console.log('REGISTER', response.data);
 
 		}).catch((error)=> {
 		});
 	};
 
 	handleLogout = (page=null, modal=null)=> {
-		console.log('%s.handleLogout()', this.constructor.name, this.constructor.name, page, modal);
+//-/> 		console.log('%s.handleLogout()', this.constructor.name, this.constructor.name, page, modal);
 		trackEvent('user', 'sign-out');
 
 		this.props.updateUserProfile(null);
@@ -273,7 +273,7 @@ class App extends Component {
 	};
 
 	handleThemeToggle = (event)=> {
-		console.log('%s.handleThemeToggle()', this.constructor.name, event);
+//-/> 		console.log('%s.handleThemeToggle()', this.constructor.name, event);
 		this.setState({ darkTheme : !this.state.darkTheme });
 	};
 
@@ -304,7 +304,7 @@ class App extends Component {
 				action  : 'GITHUB_AUTH_CHECK',
 				payload : { authID }
 			}).then((response) => {
-				console.log('GITHUB_AUTH_CHECK', response.data);
+//-/> 				console.log('GITHUB_AUTH_CHECK', response.data);
 				const { user } = response.data;
 				if (user) {
 					trackEvent('github', 'success');
@@ -364,7 +364,7 @@ class App extends Component {
 		const { darkThemed, profile, team, location } = this.props;
   	const { popup, modals } = this.state;
 
-  	return (<div className={`site-wrapper${(darkThemed) ? ' site-wrapper-dark' : ''}`}>
+  	return (<div className={`site-wrapper${(darkThemed) ? ' site-wrapper-dark' : ''}`} data-devin-matty={true}>
 		  {(!location.pathname.startsWith(Pages.PLAYGROUND)) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
 	    <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND)) ? ' playground-page-wrapper' : ''}`}>
 		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} />
