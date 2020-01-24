@@ -53,7 +53,7 @@ class PlaygroundContent extends Component {
 
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
     const { playground, component } = this.props;
 
@@ -61,7 +61,7 @@ class PlaygroundContent extends Component {
   };
 
   handlePlaygroundResize = (rect)=> {
-    console.log('[:|:] %s.handlePlaygroundResize()', this.constructor.name, { rect }, '[:|:]');
+//     console.log('[:|:] %s.handlePlaygroundResize()', this.constructor.name, { rect }, '[:|:]');
 
     if (typeof rect !== 'undefined') {
       this.onUpdateReflow({ rect });
@@ -70,7 +70,7 @@ class PlaygroundContent extends Component {
 
 
   handlePlaygroundTranslate = (rect)=> {
-    console.log('<:]]:> %s.handlePlaygroundTranslate()', this.constructor.name, { rect }, '<:]]:>');
+//     console.log('<:]]:> %s.handlePlaygroundTranslate()', this.constructor.name, { rect }, '<:]]:>');
 
     if (typeof rect !== 'undefined') {
       this.onUpdateReflow({ rect });
@@ -79,7 +79,7 @@ class PlaygroundContent extends Component {
 
 
   handlePlaygroundReflow = ({rect})=> {
-    console.log('<:]]:> %s.handlePlaygroundReflow()', this.constructor.name, { rect }, '<:]]:>');
+//     console.log('<:]]:> %s.handlePlaygroundReflow()', this.constructor.name, { rect }, '<:]]:>');
 
     if (typeof rect !== 'undefined') {
       this.onUpdateReflow({ rect });
@@ -87,7 +87,7 @@ class PlaygroundContent extends Component {
   };
 
   handleComponentResize = (event, { element, size, handle }) => {
-    console.log('<:]]:> [%s.handleComponentResize()', this.constructor.name, event, { element, size, handle }, '<:]]:>');
+//     console.log('<:]]:> [%s.handleComponentResize()', this.constructor.name, event, { element, size, handle }, '<:]]:>');
 
     const { bounds } = { ...this.state,
       playground : { ...bounds.playground, size }
@@ -124,7 +124,7 @@ class PlaygroundContent extends Component {
 
 
   onUpdateReflow = ({ rect })=> {
-    console.log('|]:]]: %s.onUpdateReflow()', this.constructor.name, { rect, bounds : this.state.bounds, baseBounds : this.state.bounds });
+//     console.log('|]:]]: %s.onUpdateReflow()', this.constructor.name, { rect, bounds : this.state.bounds, baseBounds : this.state.bounds });
 
     const { x, y, width, height } = rect;
     const { component } = this.props;
@@ -189,7 +189,7 @@ class PlaygroundContent extends Component {
   };
 
   render() {
-		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+// 		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, typeGroup, playground, component, cursor, mouse } = this.props;
     const { position, popover, bounds } = this.state;
@@ -208,7 +208,7 @@ class PlaygroundContent extends Component {
       }
     };
 
-    console.log('%s.render()', this.constructor.name, { baseBounds : this.state.baseBounds, bounds : this.state.bounds, updBounds });
+//     console.log('%s.render()', this.constructor.name, { baseBounds : this.state.baseBounds, bounds : this.state.bounds, updBounds });
 
     return (<div className="playground-content" data-component={(!(!component << 0))} data-cursor={cursor}>
       <ResizeObserver

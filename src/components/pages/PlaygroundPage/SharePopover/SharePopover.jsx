@@ -65,23 +65,23 @@ class SharePopover extends Component {
 		const { email, emailValid } = this.state;
 		if (email.length > 0 && emailValid) {
 			trackEvent('button', `send-invite`);
-			const { playground } = this.props;
+			const { profile, playground, component } = this.props;
 
 			axios.post(API_ENDPT_URL, {
-				action  : 'INVITE',
-				payload : {
+				action  : 'SHARE_LINK',
+				payload : { email,
 					playground_id : playground.id,
-					email         : email,
-					user_id       : this.props.profile.id
+					component_id  : component.id,
+					user_id       : profile.id
 				}
 			}).then((response)=> {
-//-/> 				console.log('INVITE', response.data);
-// 				const { invite } = response.data;
+ 				console.log('SHARE_LINK', response.data);
+				const success = parseInt(response.data.success, 16);
 
 				this.setState({ outro : true });
         this.props.onPopup({
           type     : POPUP_TYPE_OK,
-          content  : `Sent <span class="txt-bold">${window.location.href}</span> to <span class="txt-bold">${email}</span>.`,
+          content  : (success) ? `Sent <span class="txt-bold">${window.location.href}</span> to <span class="txt-bold">${email}</span>.` : `Failed to send share link, try again.`,
           delay    : 125,
           duration : 3333
         });
@@ -129,7 +129,9 @@ class SharePopover extends Component {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		profile : state.userProfile,
+		profile    : state.userProfile,
+		playground : state.playground,
+		component  : state.component
 	});
 };
 
