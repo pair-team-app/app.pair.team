@@ -256,7 +256,7 @@ const PlaygroundComponent = (props)=> {
   const title = (component.title === tagName) ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}` : component.title;
 
   return (<ResizableBox className="playground-component-wrapper" width={width} height={height} lockAspectRatio={true}  minContraints={(thumbSize) ? [thumbSize.width, thumbSize.height] : [0, 0]} maxContraints={(fullSize) ? [fullSize.width, fullSize.height] : null} onResize={props.onResize} resizeHandles={['s', 'se']}>
-    <div className="playground-component" onClick={(event)=> props.onItemClick(event, component)} style={{ width : `${width}px`, height : `${height}px`}}>
+    <div className="playground-component" data-processed={processed} onClick={(event)=> props.onItemClick(event, component)} style={{ width : `${width}px`, height : `${height}px`}}>
       <h5 className="component-title">{title}</h5>
 
       {(scaling) && (<div className="scaling-wrapper">
@@ -265,7 +265,7 @@ const PlaygroundComponent = (props)=> {
 
       {(!scaling) && (<ContextMenuTrigger disable={!processed} id="component" component={component} collect={(props) => ({ component : props.component })} disableIfShiftIsPressed={true}>
         <div className="playground-content-component" data-id={id}>
-          <img src={(imageData || '')} alt={title} />
+          {(processed) && (<img src={(imageData || '')} alt={title} />)}
         </div>
         <div className="playground-component-comments-wrapper" data-id={id}>
           {((popover) ? [...comments, reformComment({ position,

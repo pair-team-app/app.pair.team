@@ -461,8 +461,8 @@ ul > li:not(:last-child) {
 
 
 ::-webkit-scrollbar {
-	display: initial;
-	/*display: none;*/
+	/*display: initial;*/
+	display: none;
 }
 
 ::-webkit-scrollbar-track {

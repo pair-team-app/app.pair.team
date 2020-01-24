@@ -7,9 +7,9 @@
 	width: 100vw;
 	height: 100vh;
 	/*background-color: rgba(var(--site-bg-color), 1.0);*/
-	border-style: dashed;
-	border-width: 1px;
-	border-color: var(--matty-mana);
+	/*border-style: dashed;*/
+	/*border-width: 1px;*/
+	/*border-color: var(--matty-mana);*/
 	text-align: left;
 	overflow: hidden;
 }
@@ -27,9 +27,9 @@
 	padding: 64px 0 44px 0;
 	/*background-color: rgba(255, 0, 255, 0.25);*/
 
-	border-style: dashed;
-	border-color: var(--matty-earth);
-	border-width: 1px;
+	/*border-style: dashed;*/
+	/*border-color: var(--matty-earth);*/
+	/*border-width: 1px;*/
 
 
 

@@ -82,7 +82,7 @@
 	object-fit: scale-down;
 }
 
-.playground-content-component {
+.playground-component[data-processed="true"]{
 	border: 1px solid rgba(var(--border-alt-color), 1.0);
 }
 
@@ -94,10 +94,13 @@
 	line-height: normal;
 }
 
-
 .playground-component h5, .playground-component:hover h5 {
 	color: rgba(var(--playground-panel-link-color), 1.0);
 	cursor: default;
+}
+
+.playground-component[data-processed="false"] h5.component-title {
+	opacity: 0;
 }
 
 .playground-component-comments-wrapper {
@@ -147,6 +150,7 @@
 .components-grid-item:hover h5.component-title {
 	color: rgba(var(--playground-panel-link-hover-color), 1.0);
 }
+
 
 .components-grid-item:hover .image-overlay {
 	opacity: 0.1;
