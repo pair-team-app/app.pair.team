@@ -7,7 +7,7 @@ import './PlaygroundContent.css';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
-// import { Resizable, ResizableBox } from 'react-resizable';
+import { Resizable, ResizableBox } from 'react-resizable';
 import ResizeObserver from 'react-resize-observer';
 
 import PlaygroundComment from '../PlaygroundComment';
@@ -23,36 +23,78 @@ class PlaygroundContent extends Component {
     super(props);
 
     this.state = {
-      position : null,
-      popover  : false,
-      playgroundSize : null
-    };
+      position   : null,
+      popover    : false,
+//       baseBounds : {
+//         playground : {
+//           position : null,
+//           size     : null
+//         },
+//         component  : {
+//           position : null,
+//           size     : null
+//         }
+//       },
+//       bounds       : {
+//         playground : {
+//           position : null,
+//           size     : null
+//         },
+//         component  : {
+//           position : null,
+//           size     : null
+//         }
+//       }
+
+      baseBounds : null,
+      bounds     : null
+    }
   }
 
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+
+    const { playground, component } = this.props;
 
 
+  };
 
   handlePlaygroundResize = (rect)=> {
-    console.log('[::|::]=[ %s.handlePlaygroundResize()', this.constructor.name, { rect });
+    console.log('[:|:] %s.handlePlaygroundResize()', this.constructor.name, { rect }, '[:|:]');
 
-    this.setState({ })
+    if (typeof rect !== 'undefined') {
+      this.onUpdateReflow({ rect });
+    }
   };
 
 
   handlePlaygroundTranslate = (rect)=> {
-    console.log('[::|::]=[%s.handlePlaygroundTranslate()', this.constructor.name, { rect });
+    console.log('<:]]:> %s.handlePlaygroundTranslate()', this.constructor.name, { rect }, '<:]]:>');
+
+    if (typeof rect !== 'undefined') {
+      this.onUpdateReflow({ rect });
+    }
   };
 
 
   handlePlaygroundReflow = ({rect})=> {
-    console.log('[::|::]=[%s.handlePlaygroundReflow()', this.constructor.name, { rect });
+    console.log('<:]]:> %s.handlePlaygroundReflow()', this.constructor.name, { rect }, '<:]]:>');
+
+    if (typeof rect !== 'undefined') {
+      this.onUpdateReflow({ rect });
+    }
   };
 
+  handleComponentResize = (event, { element, size, handle }) => {
+    console.log('<:]]:> [%s.handleComponentResize()', this.constructor.name, event, { element, size, handle }, '<:]]:>');
 
-
-
-
+    const { bounds } = { ...this.state,
+      playground : { ...bounds.playground, size }
+    };
+//
+    this.setState({ bounds });
+  };
 
   handleComponentPopoverClose = ()=> {
 //-/>     console.log('%s.handleComponentPopoverClose()', this.constructor.name);
@@ -80,15 +122,93 @@ class PlaygroundContent extends Component {
     this.props.onComponentClick({ component });
   };
 
+
+  onUpdateReflow = ({ rect })=> {
+    console.log('|]:]]: %s.onUpdateReflow()', this.constructor.name, { rect, bounds : this.state.bounds, baseBounds : this.state.bounds });
+
+    const { x, y, width, height } = rect;
+    const { component } = this.props;
+    const { baseBounds, bounds } = this.state;
+
+    const pgBounds = {
+      position : { x, y },
+      size     : { width, height }
+    };
+
+    if (!baseBounds || (baseBounds && component && !this.state.baseBounds.component)) {
+      const { fullSize, thumbSize } = component;
+      const size = { width, height };
+
+      console.log('', { rect, size });
+
+      const updBounds = {
+        playground : { size,
+          position : {
+            x : 0,
+            y : 0
+          }
+        },
+        component  : (component) ? {
+          component : {
+            position : {
+              x : 0,
+              y : 0
+            },
+            size : (fullSize || thumbSize)
+          }
+        } : null
+      };
+
+//       console.log('|]:]]: %s.onUpdateReflow()', this.constructor.name, { org : updBounds });
+
+      const allBounds = {
+        playground : pgBounds,
+        component  : updBounds
+      };
+
+      this.setState({
+        baseBounds : allBounds,
+        bounds     : allBounds
+      });
+
+    } else if (baseBounds && bounds !== pgBounds) {
+//       console.log('|]:]]: %s.onUpdateReflow()', this.constructor.name, { org : updBounds });
+
+      const calcBounds = {
+        position : baseBounds.component.position,
+        size     : baseBounds.component.size
+      };
+
+      this.setState({
+        bounds : {
+          playground : pgBounds,
+          component  : calcBounds
+        }
+      });
+    }
+  };
+
   render() {
-// 		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, typeGroup, playground, component, cursor, mouse } = this.props;
-    const { position, popover } = this.state;
+    const { position, popover, bounds } = this.state;
 
     const components = (typeGroup) ? (component) ? [component] : componentsFromTypeGroup(playground.components, typeGroup) : [];
 
+    const { thumbSize, fullSize } = (component || { thumbSize : { width : 140, height : 240 }, fullSize : { width : 1920, height : 1080 } });
+    const updBounds = (component && bounds && bounds.component) ? { ...bounds.component } : {
+      position : {
+        x : 0,
+        y : 0
+      },
+      size : {
+        width  : 0,
+        height : 0
+      }
+    };
 
+    console.log('%s.render()', this.constructor.name, { baseBounds : this.state.baseBounds, bounds : this.state.bounds, updBounds });
 
     return (<div className="playground-content" data-component={(!(!component << 0))} data-cursor={cursor}>
       <ResizeObserver
@@ -99,9 +219,7 @@ class PlaygroundContent extends Component {
       {(typeGroup && components.length > 0) && (<div className="playground-content-components-wrapper" data-component={(component !== null)}>
         {(!component)
           ? (<PlaygroundComponentsGrid typeGroup={typeGroup} components={components} onItemClick={this.handleContentClick} />)
-//           : (<div className="playground-component-wrapper" style={{ height : `${43 + component.meta.bounds.height}px` }}>
-          : (<PlaygroundComponent profile={profile} popover={popover} position={position} typeGroup={typeGroup} component={component} onAddComment={this.props.onAddComment} onCloseComment={this.handleComponentPopoverClose} onDeleteComment={this.props.onDeleteComment} onItemClick={this.handleContentClick} onMarkerClick={this.props.onMarkerClick} />)
-        }
+          : (<PlaygroundComponent profile={profile} popover={popover} position={position} bounds={updBounds} typeGroup={typeGroup} component={component} onResize={this.handleComponentResize} onAddComment={this.props.onAddComment} onCloseComment={this.handleComponentPopoverClose} onDeleteComment={this.props.onDeleteComment} onItemClick={this.handleContentClick} onMarkerClick={this.props.onMarkerClick} />)}
       </div>)}
       {(cursor) && (<CommentPinCursor position={mouse.position} />)}
       <ComponentMenu menuID="component" onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment}/>
@@ -128,36 +246,40 @@ const CommentPinCursor = (props)=> {
 const PlaygroundComponent = (props)=> {
 //   console.log('PlaygroundComponent()', props);
 
-  const { scaling, profile, popover, position, size, typeGroup, component } = props;
+  const { scaling, profile, popover, position, bounds, typeGroup, component } = props;
 //   const { id, tagName, html, styles, rootStyles, comments, processed } = component;
   const { id, tagName, imageData, thumbData, fullSize, thumbSize, processed, comments } = component;
-  const { width, height } = (fullSize || thumbSize);
+//   const { width, height } = (fullSize || thumbSize);
+  const { position : pos, size } = bounds;
+  const { width, height } = (bounds || thumbSize);
 
   const title = (component.title === tagName) ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}` : component.title;
 
-  return (<div className="playground-component" onClick={(event)=> props.onItemClick(event, component)} style={{ width : `${width}px`, height : `${height}px`}}>
-    <h5 className="component-title">{title}</h5>
+  return (<ResizableBox className="playground-component-wrapper" width={width} height={height} lockAspectRatio={true}  minContraints={(thumbSize) ? [thumbSize.width, thumbSize.height] : [0, 0]} maxContraints={(fullSize) ? [fullSize.width, fullSize.height] : null} onResize={props.onResize} resizeHandles={['s', 'se']}>
+    <div className="playground-component" onClick={(event)=> props.onItemClick(event, component)} style={{ width : `${width}px`, height : `${height}px`}}>
+      <h5 className="component-title">{title}</h5>
 
-    {(scaling) && (<div className="scaling-wrapper">
-      <img src={(imageData || thumbData)} alt={title} />
-    </div>)}
-
-    {(!scaling) && (<ContextMenuTrigger disable={!processed} id="component" component={component} collect={(props) => ({ component : props.component })} disableIfShiftIsPressed={true}>
-      <div className="playground-content-component" data-id={id}>
+      {(scaling) && (<div className="scaling-wrapper">
         <img src={(imageData || thumbData)} alt={title} />
-      </div>
-      <div className="playground-component-comments-wrapper" data-id={id}>
-        {((popover) ? [...comments, reformComment({ position,
-          id      : 0,
-          type    : 'add',
-          content : '',
-          author  : profile
-        })] : comments).filter(({ type })=> (type !== 'init')).map((comm, i) => {
-          return (<PlaygroundComment key={i} ind={(comments.length - 1) - i} component={component} comment={comm} position={position} onMarkerClick={props.onMarkerClick} onAdd={props.onAddComment} onDelete={props.onDeleteComment} onClose={props.onCloseComment} />);
-        })}
-     </div>
-     </ContextMenuTrigger>)}
-  </div>)
+      </div>)}
+
+      {(!scaling) && (<ContextMenuTrigger disable={!processed} id="component" component={component} collect={(props) => ({ component : props.component })} disableIfShiftIsPressed={true}>
+        <div className="playground-content-component" data-id={id}>
+          <img src={(imageData || '')} alt={title} />
+        </div>
+        <div className="playground-component-comments-wrapper" data-id={id}>
+          {((popover) ? [...comments, reformComment({ position,
+            id      : 0,
+            type    : 'add',
+            content : '',
+            author  : profile
+          })] : comments).filter(({ type })=> (type !== 'init')).map((comm, i) => {
+            return (<PlaygroundComment key={i} ind={(comments.length - 1) - i} component={component} comment={comm} position={position} onMarkerClick={props.onMarkerClick} onAdd={props.onAddComment} onDelete={props.onDeleteComment} onClose={props.onCloseComment} />);
+          })}
+       </div>
+       </ContextMenuTrigger>)}
+    </div>
+  </ResizableBox>);
 };
 
 
