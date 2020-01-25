@@ -130,10 +130,10 @@ export const reformComponent = async(component, overwrite={})=> {
 
 
 	if (imageData && html && styles && rootStyles) {
-//-/>     console.log('[%s] .::(REFORMED)::.', component.id, { data : { ...reformed, size : jsonFormatKB(reformed) } });
+//     console.log('[%s] .::(REFORMED)::.', component.id, { data : { ...reformed, size : jsonFormatKB(reformed) } });
 
 	} else {
-//-/>     console.log('[%s] .::(INITIAL)::.', component.id, { ...reformed, size : jsonFormatKB(reformed) });
+//     console.log('[%s] .::(INITIAL)::.', component.id, { ...reformed, size : jsonFormatKB(reformed) });
 	}
 
 

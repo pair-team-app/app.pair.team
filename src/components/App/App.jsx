@@ -425,7 +425,8 @@ class App extends Component {
 
 			  {(modals.noAccess) && (<ConfirmDialog
 				  tracking={Modals.NO_ACCESS}
-					blocking={true}
+					filled={true}
+					closeable={false}
 					buttons={['OK']}
           onConfirmed={null}
 				  onComplete={(ok)=> { this.onToggleModal(Modals.NO_ACCESS, false); (ok) ? this.handleLogout(null, Modals.LOGIN) : this.handleLogout(Pages.HOME) }}>

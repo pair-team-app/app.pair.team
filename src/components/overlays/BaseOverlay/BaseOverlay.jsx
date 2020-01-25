@@ -61,8 +61,8 @@ class BaseOverlay extends Component {
 	}
 
 	handleClickOutside(event) {
-		const { closeable, blocking } = this.props;
-		if (!blocking && closeable) {
+		const { closeable } = this.props;
+		if (closeable) {
 			this.onOutro();
 		}
 	}
@@ -130,14 +130,14 @@ class BaseOverlay extends Component {
 
 //     console.log('%s.render()', this.constructor.name, { wrapper : (this.wrapper) ? this.wrapper.offsetHeight : null, hAdj });
 
-		const { type, blocking, offset, title, closeable, bare, children } = this.props;
+		const { type, filled, offset, title, closeable, bare, children } = this.props;
 		const wrapperClass = `base-overlay-content-wrapper base-overlay-content-wrapper${(type === OVERLAY_TYPE_PERCENT_SIZE) ? '-percent' : (OVERLAY_TYPE_AUTO_SIZE) ? '-auto-size' : '-auto-scroll'}`;
 		const wrapperStyle = {
 			transform : (type === OVERLAY_TYPE_POSITION_OFFSET) ? `translate(${(offset.x || 0)}px, ${(offset.y || 0)}px)` : null
 		};
 
 
-		return (<div className={`base-overlay${(blocking) ? ' base-overlay-blocking' : ''}`} onClick={(closeable) ? this.handleClose : null}>
+		return (<div className={`base-overlay${(filled) ? ' base-overlay-filled' : ''}${(!closeable) ? ' base-overlay-noncloseable' : ''}`} onClick={(closeable) ? this.handleClose : null}>
 			<div className={wrapperClass} style={wrapperStyle} onClick={(event)=> event.stopPropagation()} data-bare={bare} ref={(element)=> { this.wrapper = element; }}>
 				{(title) && (<div className="base-overlay-header-wrapper">
 					<div className="base-overlay-title">{title}</div>

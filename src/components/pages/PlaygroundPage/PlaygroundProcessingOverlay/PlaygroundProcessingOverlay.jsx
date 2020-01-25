@@ -130,7 +130,7 @@ class PlaygroundProcessingOverlay extends Component {
     return ((!completed) ? (<BaseOverlay
       tracking={(root) ? Modals.SITE : Modals.PROCESSING}
       outro={outro}
-      blocking={root}
+      filled={false}
       offset={{ x : 60, y : -44 }}
       bare={true}
       closeable={false}

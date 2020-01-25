@@ -7,10 +7,11 @@ import BaseOverlay from '../BaseOverlay';
 
 function BlockingDialog(props) {
 //-/> 	console.log('AlertDialog()', props);
-	const { title, tracking, children } = props;
+	const { filled, title, tracking, children } = props;
 
 	return (<BaseOverlay
 		tracking={tracking}
+		filled={filled}
 		closeable={false}
 		title={title}
 		onComplete={()=> null}>

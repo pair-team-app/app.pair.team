@@ -66,7 +66,7 @@ export function createGist(token, filename, contents, description, visible, call
 	};
 
 	new Octokit({ auth : token }).gists.create(payload).then((result)=> {
-//-/> 		console.log('CREATE_GIST ->', result);
+		console.log('CREATE_GIST ->', result);
 
 		if (callback) {
 			callback(result.data);
@@ -86,7 +86,7 @@ export function editGist(token, gistID, filename, contents, description, visible
 	};
 
 	new Octokit({ auth : token }).gists.update(payload).then((result)=> {
-//-/> 		console.log('EDIT_GIST ->', result);
+		console.log('EDIT_GIST ->', result);
 
 		if (callback) {
 			callback(result.data);
@@ -104,7 +104,7 @@ export function sendToSlack(channel, message, callback=null) {
 		action  : 'SLACK_MSG',
 		payload : { channel, message }
 	}).then((response) => {
-//-/> 		console.log("SLACK_MSG", response.data);
+		console.log("SLACK_MSG", response.data);
 		if (callback) {
 			callback();
 		}

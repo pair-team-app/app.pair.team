@@ -7,7 +7,7 @@
 	width: calc(100% - (var(--playground-nav-width) + var(--playground-comments-width)));
 	/*width: 100%;*/
 	display: flex;
-	align-items: center; /* v-align */
+	align-items: flex-start; /* v-align */
 	padding: 0 var(--orthodox-padding-base) var(--orthodox-padding-base) var(--orthodox-padding-base);
 	/*background-color: rgba(var(--site-bg-color), 0.875);*/
 	/*border-top: 1px dotted #ff00ff;*/

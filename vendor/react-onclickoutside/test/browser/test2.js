@@ -34,11 +34,11 @@
       });
     }
     show() {
-//-/>       console.log('test2 - show');
+      console.log('test2 - show');
       this.setState({ hideToolbox: false });
     }
     hide() {
-//-/>       console.log('test2 - hide');
+      console.log('test2 - hide');
       this.setState({ hideToolbox: true });
     }
   }

@@ -537,7 +537,7 @@ class PlaygroundPage extends Component {
 					: (<PlaygroundAccessibility />)
 				}
 
-				{(typeGroup) && (<PlaygroundFooter
+				{(typeGroup && component) && (<PlaygroundFooter
 					accessibility={accessibility}
 					cursor={cursor}
 					playground={playground}

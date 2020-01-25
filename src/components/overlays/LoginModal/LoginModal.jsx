@@ -87,6 +87,7 @@ class LoginModal extends Component {
 			<BaseOverlay
 				tracking={Modals.LOGIN}
 				outro={outro}
+				filled={true}
 				closeable={false}
 				delay={125}
 				onComplete={this.handleComplete}>

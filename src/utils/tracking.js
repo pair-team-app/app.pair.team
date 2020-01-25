@@ -8,7 +8,7 @@ import ReactGA from 'react-ga';
 
 
 export function initTracker(userID) {
-//-/> 	console.log('::::]]', 'initTracker', userID);
+	console.log('::::]]', 'initTracker', userID);
 
 // 	ReactGA.initialize(UA_TRACKING_ID, {
 // 		debug     : DEBUG,
@@ -18,7 +18,7 @@ export function initTracker(userID) {
 }
 
 export function trackError(error, fatal=false) {
-//-/> 	console.log('::::]]', 'trackError()', error, fatal);
+	console.log('::::]]', 'trackError()', error, fatal);
 	ReactGA.exception({ fatal,
 		description : error,
 	});
@@ -27,7 +27,7 @@ export function trackError(error, fatal=false) {
 export function trackEvent(category, action, label=window.location.pathname, value=null, nonInteraction=false) {
 	label = (label || window.location.pathname);
 	value = (value || ((typeof cookie.load('user_id') !== 'undefined') ? cookie.load('user_id') : '0')) << 0;
-//-/> 	console.log('::::]]', 'trackEvent()', category, action, label, value, nonInteraction);
+// 	console.log('::::]]', 'trackEvent()', category, action, label, value, nonInteraction);
 
 // 	ReactGA.event({ category, action, label, value, nonInteraction });
 }
@@ -49,6 +49,6 @@ export function trackPageview(uri=`${window.location.pathname}${window.location.
 }
 
 export function trackOutbound(url, callback=null) {
-//-/> 	console.log('::::]]', 'trackOutbound()', url, callback);
+	console.log('::::]]', 'trackOutbound()', url, callback);
 // 	ReactGA.outboundLink({ label : url }, callback);
 }

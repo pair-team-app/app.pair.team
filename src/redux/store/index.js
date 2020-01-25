@@ -3,7 +3,7 @@ import cookie from 'react-cookies';
 import { applyMiddleware, createStore, compose } from 'redux';
 import thunk from 'redux-thunk';
 
-import { fetchComponentTypes, fetchEventGroups, fetchProducts, fetchUserProfile } from '../actions';
+import { fetchComponentTypes, fetchProducts, fetchUserProfile } from '../actions';
 import { onMiddleware } from '../middleware';
 import rootReducer from '../reducers';
 
@@ -11,7 +11,7 @@ import rootReducer from '../reducers';
 const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
   const logActionStackTraceMiddleware = (storeAPI)=> (next)=> (action)=> {
     if(action.type && actionTypes.includes(action.type)) {
-//-/>     	console.log('[|:|] Store', storeAPI.getState());
+    	console.log('[|:|] Store', storeAPI.getState());
 //       console.trace('[:|:] "%s"', action.type, action);
     }
 
@@ -38,7 +38,7 @@ if (typeof cookie.load('user_id') === 'undefined') {
 }
 
 store.dispatch(fetchComponentTypes());
-store.dispatch(fetchEventGroups());
+// store.dispatch(fetchEventGroups());
 store.dispatch(fetchProducts());
 
 

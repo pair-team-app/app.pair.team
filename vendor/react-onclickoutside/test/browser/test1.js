@@ -13,12 +13,12 @@
     }
 
     handleClickOutside() {
-//-/>       console.log('remove highlight', this.props.id);
+      console.log('remove highlight', this.props.id);
       this.setState({ highlight: false });
     }
 
     highlight() {
-//-/>       console.log('highlight', this.props.id);
+      console.log('highlight', this.props.id);
       this.setState({ highlight: true });
     }
 

@@ -71,7 +71,7 @@ const logFormat = (state, action, meta='')=> {
 	const { type, payload } = action;
 
 	if (type !== UPDATE_MOUSE_COORDS) {
-//-/>     console.log(LOG_REDUCER_PREFIX, `REDUCER >> “${type}”`, state, payload, meta);
+    console.log(LOG_REDUCER_PREFIX, `REDUCER >> “${type}”`, state, payload, meta);
   }
 };
 

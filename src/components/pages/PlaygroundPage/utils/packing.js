@@ -91,7 +91,7 @@ const genRects = (components, sort=true)=> {
 
 	const msort = (i, ii, types)=> {
 		for (const type of types) {
-//-/>       console.log(':::msort:::', { type, diff : sorting.base[type](i, ii), i, ii });
+      console.log(':::msort:::', { type, diff : sorting.base[type](i, ii), i, ii });
 
       const diff = sorting.base[type](i, ii);
       if (diff !== 0) {
