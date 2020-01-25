@@ -135,11 +135,11 @@ class PlaygroundContent extends Component {
       size     : { width, height }
     };
 
-    if (!baseBounds || (baseBounds && component && !this.state.baseBounds.component)) {
+    if (component && !baseBounds || (baseBounds && !this.state.baseBounds.component)) {
       const { fullSize, thumbSize } = component;
       const size = { width, height };
 
-      console.log('', { rect, size });
+      console.log('%s.onUpdateReflow()', { rect, size });
 
       const updBounds = {
         playground : { size,

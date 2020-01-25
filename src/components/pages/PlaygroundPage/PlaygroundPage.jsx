@@ -490,6 +490,7 @@ class PlaygroundPage extends Component {
 
     this.setState({
 			fetching : true,
+
 		}, ()=> {
     	this.props.fetchBuildPlaygrounds({ buildID, playgroundID });
     });

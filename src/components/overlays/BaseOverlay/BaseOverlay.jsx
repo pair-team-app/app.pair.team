@@ -41,14 +41,14 @@ class BaseOverlay extends Component {
 
 // 		const { completed } = this.state;
     if (prevProps.outro !== this.props.outro && this.props.outro) {
-// 			this.setState({ completed : false }, ()=> {
+ 			this.setState({ completed : false }, ()=> {
 				this.onOutro();
-// 			});
+			});
 
-    } else if (prevProps.outro !== this.props.outro && !this.props.outro) {
-      this.setState({ completed : false }, ()=> {
-        this.onIntro();
-      });
+//     } else if (prevProps.outro !== this.props.outro && !this.props.outro) {
+//       this.setState({ completed : false }, ()=> {
+//         this.onIntro();
+//       });
 		}
 	}
 
@@ -91,10 +91,10 @@ class BaseOverlay extends Component {
 
     this.timeline = new TimelineMax();
     this.timeline.from(this.wrapper, INTRO_DURATION, {
-      opacity : 0.875,
-      scale   : 0.9,
-      ease    : Circ.easeOut,
-      delay   : (delay || 0) * 0.001,
+      opacity    : 0.875,
+      scale      : 0.9,
+      ease       : Circ.easeOut,
+      delay      : (delay || 0) * 0.001,
 			onComplete : ()=> {
 //         console.log('%s.onIntro().onIntroComplete', this.constructor.name, this.props, this.state, this.timeline);
 			}
