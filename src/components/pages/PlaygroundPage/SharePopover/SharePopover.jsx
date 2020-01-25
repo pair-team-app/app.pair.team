@@ -42,11 +42,11 @@ class SharePopover extends Component {
 
 		this.setState({ outro : true }, ()=> {
       this.props.onPopup({
-      type     : POPUP_TYPE_OK,
-      content  : `Pair URL has been copied to your clipboard!`,
-      delay    : 125,
-      duration : 3333
-    });
+				type     : POPUP_TYPE_OK,
+				content  : `Pair URL has been copied to your clipboard!`,
+				delay    : 125,
+				duration : 3333
+    	});
 		});
 	};
 

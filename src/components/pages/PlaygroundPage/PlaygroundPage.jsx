@@ -10,6 +10,7 @@ import BasePage from '../BasePage';
 import PlaygroundAccessibility from './PlaygroundAccessibility';
 import PlaygroundCommentsPanel from './PlaygroundCommentsPanel';
 import PlaygroundContent from './PlaygroundContent';
+import { COMPONENT_MENU_ITEM_COMMENTS, COMPONENT_MENU_ITEM_COPY } from './PlaygroundContent/ComponentMenu';
 import PlaygroundHeader, { BreadcrumbTypes } from './PlaygroundHeader';
 import PlaygroundProcessingOverlay from './PlaygroundProcessingOverlay';
 import { SettingsMenuItemTypes } from './PlaygroundHeader/UserSettings';
@@ -21,7 +22,7 @@ import {
   componentByID,
   componentFromComment,
   playgroundByID,
-  typeGroupByKey, componentsFromTypeGroup, typeGroupComponentsProcessed } from './utils/lookup';
+  typeGroupByKey, typeGroupComponentsProcessed } from './utils/lookup';
 import { reformComment } from './utils/reform';
 import { Modals, API_ENDPT_URL } from '../../../consts/uris';
 import {
@@ -346,11 +347,11 @@ class PlaygroundPage extends Component {
 //     this.props.setComponent(component);
 	};
 
-	handleComponentMenuItem = ({ type=null, component=null })=> {
-//-/>  		console.log('%s.handleComponentMenuItem()', this.constructor.name, { type, component });
+	handleComponentMenuItem = ({ menuItem=null })=> {
+//-/>  		console.log('%s.handleComponentMenuItem()', this.constructor.name, { menuItem });
 
-    this.props.setComponent(component);
-		if (type === 'comments') {
+//     this.props.setComponent(component);
+		if (menuItem === COMPONENT_MENU_ITEM_COMMENTS) {
 			if (/\/comments.*$/.test(this.props.location.pathname)) {
 				this.props.setComment(null);
 				this.props.history.push(this.props.location.pathname.replace(/\/comments.*$/, ''));
@@ -359,7 +360,7 @@ class PlaygroundPage extends Component {
 				this.props.history.push(`${this.props.location.pathname}/comments`);
 			}
 
-		} else if (type === 'share') {
+		} else if (menuItem === COMPONENT_MENU_ITEM_COPY) {
 			if (!this.state.share) {
 				this.setState({ share : true });
 			}

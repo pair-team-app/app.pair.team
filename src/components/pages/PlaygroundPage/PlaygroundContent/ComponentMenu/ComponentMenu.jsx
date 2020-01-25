@@ -3,9 +3,10 @@ import React, { Component } from 'react';
 import './ComponentMenu.css';
 
 import { ContextMenu, MenuItem } from 'react-contextmenu';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 // import { connect } from 'react-redux';
 
-import { COMPONENT_MENU_ITEM_COMMENTS, COMPONENT_MENU_ITEM_COPY, COMPONENT_MENU_ITEM_AUTHOR } from './index';
+import { COMPONENT_MENU_ITEM_COMMENTS, COMPONENT_MENU_ITEM_COPY } from './index';
 import { ENTER_KEY } from '../../../../../consts/key-codes';
 import { USER_DEFAULT_AVATAR } from '../../../../../consts/uris';
 
@@ -53,13 +54,12 @@ class ComponentMenu extends Component {
     });
 	};
 
-	handleMenuItemClick = (event, data, target)=> {
+  handleMenuItemClick = (event, data, target)=> {
 // 		console.log('%s.handleMenuItemClick()', this.constructor.name, { event, data, target });
 
 		event.preventDefault();
-		const { type } = data;
-		const { component } = this.state;
-		this.props.onClick({ component, type });
+		const { type : menuItem } = data;
+		this.props.onClick({ menuItem });
 	};
 
 	handleHideMenu = (event)=> {
@@ -108,9 +108,8 @@ class ComponentMenu extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-// 		const { component } = this.state;
 		const { menuID } = this.props;
-		const { intro, outro, comment } = this.state;
+		const { intro, outro, component, comment } = this.state;
 // 		const { avatar, username, email } = this.props.profile;
 
 		return (<ContextMenu id={menuID} className="component-menu-wrapper" onShow={this.handleShowMenu} onHide={this.handleHideMenu} preventHideOnResize={true} preventHideOnScroll={true}>
@@ -118,9 +117,10 @@ class ComponentMenu extends Component {
 			<div className={`component-popover${(intro) ? ' component-menu-intro' : (outro) ? ' component-menu-outro' : ''}`}>
 				<div className="component-menu-content-wrapper">
 					<div className="component-menu-item-wrapper">
-            {/*<ComponentMenuItem type={COMPONENT_MENU_ITEM_COMMENTS} title={`${window.location.href.includes('/comments') ? 'Hide' : 'View'} Comments`} acc={<ComponentMenuItemAcc amt={(component) ? Math.max(0, component.comments.length - 1) : 0} />} onClick={this.handleMenuItemClick} />*/}
-						<ComponentMenuItem type={COMPONENT_MENU_ITEM_COPY} title="Copy" acc={null} onClick={this.handleMenuItemClick} />
-						<ComponentMenuItem type={COMPONENT_MENU_ITEM_AUTHOR} title="Owner" acc={null} onClick={this.handleMenuItemClick} />
+            <ComponentMenuItem type={COMPONENT_MENU_ITEM_COMMENTS} title={`${window.location.href.includes('/comments') ? 'Hide' : 'View'} Comments`} acc={<ComponentMenuItemAcc amt={(component) ? Math.max(0, component.comments.length - 1) : 0} />} onClick={this.handleMenuItemClick} />
+            {/*<CopyToClipboard text={window.location.href} onCopy={this.handleClipboardCopy}>*/}
+							<ComponentMenuItem type={COMPONENT_MENU_ITEM_COPY} title="Copy URL" acc={null} onClick={this.handleMenuItemClick} />
+						{/*</CopyToClipboard>*/}
 					</div>
           <div className="playground-comment-add-popover">
             <div className="header-wrapper">
