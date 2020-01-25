@@ -7,7 +7,7 @@ import './PlaygroundContent.css';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
-import { Resizable, ResizableBox } from 'react-resizable';
+import { ResizableBox } from 'react-resizable';
 import ResizeObserver from 'react-resize-observer';
 
 import PlaygroundComment from '../PlaygroundComment';
@@ -46,8 +46,17 @@ class PlaygroundContent extends Component {
 //         }
 //       }
 
-      baseBounds : null,
-      bounds     : null
+      baseBounds : {
+        content   : null,
+        component : null
+      },
+      bounds     : {
+        content   : null,
+        component : null
+      }
+
+//       baseBounds : null,
+//       bounds     : null
     }
   }
 
@@ -124,72 +133,59 @@ class PlaygroundContent extends Component {
 
 
   onUpdateReflow = ({ rect })=> {
-//     console.log('|]:]]: %s.onUpdateReflow()', this.constructor.name, { rect, bounds : this.state.bounds, baseBounds : this.state.bounds });
+    console.log('|]:]]: %s.onUpdateReflow()', this.constructor.name, { rect, baseBounds : this.state.baseBounds, bounds : this.state.bounds });
 
     const { x, y, width, height } = rect;
     const { component } = this.props;
-    const { baseBounds, bounds } = this.state;
 
-    const pgBounds = {
-      position : { x, y },
-      size     : { width, height }
+    let bounds = {
+      content   : {
+        position : { x, y },
+        size     : { width, height }
+      },
+      component : null
     };
 
-    if (component && !baseBounds || (baseBounds && !this.state.baseBounds.component)) {
+    if (!this.state.baseBounds.content) {
+      const baseBounds = { ...bounds};
+
+      console.log('%s.onUpdateReflow() --INIT CONTENT', this.constructor.name, { rect, baseBounds, bounds });
+      this.setState({ baseBounds, bounds });
+
+    } else if (this.state.baseBounds && component && this.state.baseBounds.component !== component.fullSize) {
       const { fullSize, thumbSize } = component;
-      const size = { width, height };
 
-      console.log('%s.onUpdateReflow()', { rect, size });
-
-      const updBounds = {
-        playground : { size,
+      const baseBounds = { ...this.state.baseBounds,
+        component : {
           position : {
             x : 0,
             y : 0
-          }
-        },
-        component  : (component) ? {
-          component : {
-            position : {
-              x : 0,
-              y : 0
-            },
-            size : (fullSize || thumbSize)
-          }
-        } : null
-      };
-
-//       console.log('|]:]]: %s.onUpdateReflow()', this.constructor.name, { org : updBounds });
-
-      const allBounds = {
-        playground : pgBounds,
-        component  : updBounds
-      };
-
-      this.setState({
-        baseBounds : allBounds,
-        bounds     : allBounds
-      });
-
-    } else if (baseBounds && bounds !== pgBounds) {
-//       console.log('|]:]]: %s.onUpdateReflow()', this.constructor.name, { org : updBounds });
-
-      const calcBounds = {
-        position : baseBounds.component.position,
-        size     : baseBounds.component.size
-      };
-
-      this.setState({
-        bounds : {
-          playground : pgBounds,
-          component  : calcBounds
+          },
+          size     : (fullSize || thumbSize)
         }
-      });
+      };
+
+      console.log('%s.onUpdateReflow() --INIT COMPONENT', this.constructor.name, { rect, baseBounds });
+      this.setState({ baseBounds });
+    }
+
+
+    if (this.state.bounds && this.state.bounds.content !== bounds.content) {
+      bounds = {
+        content : {
+          position : { x, y },
+          size     : { width, height }
+        },
+        component : this.state.baseBounds.component
+      };
+
+      console.log('%s.onUpdateReflow() --UPD', this.constructor.name, { rect, bounds });
+      this.setState({ bounds });
     }
   };
 
   render() {
-// 		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+// 		console.log('%s.render()', this.constructor.name, { baseBounds : this.state.baseBounds, bounds : this.state.bounds });
 
     const { profile, typeGroup, playground, component, cursor, mouse } = this.props;
     const { position, popover, bounds } = this.state;
