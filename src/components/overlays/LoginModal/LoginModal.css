@@ -1,6 +1,6 @@
 
 .login-modal {
-	max-width: 316px;
+	max-width: var(--modal-content-width);
 }
 
 .login-modal-content-wrapper {

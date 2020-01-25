@@ -16,7 +16,7 @@
 }
 
 .home-page-form-wrapper form {
-	width: 316px;
+	width: var(--modal-content-width);
 }
 
 .home-page-form-wrapper input {

@@ -1,6 +1,6 @@
 
 .register-modal {
-	max-width: 316px;
+	max-width: var(--modal-content-width);
 	padding: var(--orthodox-padding-half) 0 5px 0;
 }
 

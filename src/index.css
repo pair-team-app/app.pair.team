@@ -19,29 +19,36 @@
 }
 
 :root {
+	--full-white: 255, 255, 255; /* ffffff */
 	--site-bg-color: 252, 252, 252; /* fcfcfc */
 	--site-fg-color: 35, 35, 35; /* #232323 */
 	--site-hilite-color: 0, 90, 217; /* #0067ff */
 	--disabled-fg-color: 204, 204, 204; /* #cccccc */
 	--invalid-bg-color: 255, 240, 240; /* fff0f0 */
-	--invalid-fg-color: 255, 70, 70; /* #ff4646 */
+	--invalid-fg-color: 255, 101, 101; /* #ff6565 */
 	--invalid-border-color: var(--invalid-fg-color); /* #ff4646 */
 	--btn-bg-color: 0, 103, 255; /* #0067ff */
-	--btn-fg-color: 255, 255, 255; /* ffffff */
+	--btn-fg-color: var(--full-white); /* ffffff */
 	--btn-hover-bg-color: 0, 92, 229; /* #005ce5 */
 	--btn-disabled-bg-color: var(--disabled-fg-color); /* cccccc */
 	--btn-disabled-fg-color: 247, 247, 247; /* #f7f7f7 */
 	--quiet-btn-bg-color: 247, 247, 247; /* #f7f7f7 */
+	--modal-bg-color: var(--full-white); /* ffffff */
 	--quiet-btn-fg-color: var(--site-fg-color); /* #232323 */
 	--quiet-btn-hover-bg-color: 237, 237, 237; /* #ededed */
 	--quiet-btn-selected-bg-color: var(--site-fg-color); /* #232323 */
-	--quiet-btn-selected-fg-color: 255, 255, 255; /* #ffffff */
+	--quiet-btn-selected-fg-color: var(--full-white); /* ffffff */
 	--link-color: var(--site-fg-color); /* #232323 */
 	--link-hover-color: 153, 153, 153; /* 999999 */
 	--link-selected-color: var(--site-fg-color); /* #232323 */
-	--txtfield-bg-color: 255, 255, 255;
-	--txtfield-fg-color: var(--site-fg-color); /* 232323 */
-	--txtfield-focused-fg-color: 204, 204, 204; /* #cccccc */
+	--txtfield-bg-color: var(--full-white); /* ffffff */
+	--txtfield-fg-color: 153, 153, 153; /* 999999 */
+	--txtfield-focused-bg-color: 247, 247, 247; /* #f7f7f7 */
+	--txtfield-focused-fg-color: var(--site-fg-color); /* #232323 */
+	--txtfield-hover-bg-color: 247, 247, 247; /* #f7f7f7 */
+	--txtfield-hover-fg-color: 153, 153, 153; /* 999999 */
+	--txtfield-invalid-bg-color: 247, 247, 247; /* #f7f7f7 */
+	--txtfield-invalid-fg-color: var(--invalid-fg-color); /* #ff6565 */
 	--txtfield-disabled-bg-color: var(--disabled-fg-color); /* cccccc */
 	--txtfield-disabled-fg-color: 153, 153, 153; /* 999999 */
 	/*--border-color: 206, 206, 206; !* #cecece *!*/
@@ -91,6 +98,7 @@
 
 	--orthodox-font-size: 16px;
 	--orthodox-font-weight: 400;
+	--modal-content-width: 306px;
 
 	--border-radius: 20px;
 
@@ -154,7 +162,7 @@ a:active {
 }
 
 button {
-  width: 316px;
+  width: var(--modal-content-width);
   /*height: 46px;*/
 	padding: calc(var(--orthodox-padding-base) - 1px) var(--orthodox-padding-form);
   background-color: rgba(var(--btn-bg-color), 1.0);
@@ -225,7 +233,6 @@ button.glyph-button[data-selected="true"] > svg, button.glyph-button[data-select
 }
 
 button.cancel-button {
-	width: 316px;
 	min-width: unset;
 	max-width: unset;
 	padding: var(--orthodox-padding-half) var(--orthodox-padding-form);
@@ -340,7 +347,7 @@ h6::before {
 	margin-top: 0;
 }
 
-input[type="email"], input[type="password"], input[type="password"]:hover, input[type="text"], select, textarea, textarea:hover {
+input[type="email"], input[type="password"], input[type="text"], select, textarea {
 	width: 100%;
 	padding: calc(var(--orthodox-padding-base) - 1px) var(--orthodox-padding-base);
 	background-color: rgba(var(--txtfield-bg-color), 1.0);
@@ -354,10 +361,15 @@ input[type="email"], input[type="password"], input[type="password"]:hover, input
 	transition: background-color 0.125s ease-out;
 }
 
+input[type="email"]:hover, input[type="password"]:hover, input[type="text"]:hover, textarea:hover {
+	background-color: rgba(var(--txtfield-hover-bg-color), 1.0);
+	color: rgba(var(--txtfield-hover-fg-color), 1.0);
+}
+
 input[type="email"]:invalid, input[type="email"]:invalid:hover, input[type="password"]:invalid, input[type="password"]:invalid:hover, input[type="text"]:invalid, input[type="text"]:invalid:hover {
-	border: 1px solid rgba(var(--invalid-fg-color), 1.0);
-	background-color: rgba(var(--invalid-bg-color), 1.0);
-	color: rgba(var(--invalid-fg-color), 1.0);
+	border: 1px solid rgba(var(--txtfield-invalid-fg-color), 1.0);
+	background-color: rgba(var(--txtfield-invalid-bg-color), 1.0);
+	color: rgba(var(--txtfield-invalid-fg-color), 1.0);
 }
 
 input[type="email"]:valid, input[type="password"]:valid, input[type="text"]:valid, select:valid, textarea:valid {
@@ -366,19 +378,29 @@ input[type="email"]:valid, input[type="password"]:valid, input[type="text"]:vali
 	color: rgba(var(--txtfield-fg-color), 1.0);
 }
 
+input[type="email"]:valid:hover, input[type="password"]:valid:hover, input[type="text"]:valid:hover, textarea:valid:hover {
+	background-color: rgba(var(--txtfield-hover-bg-color), 1.0);
+	color: rgba(var(--txtfield-hover-fg-color), 1.0);
+}
+
 input[type="email"]:disabled, input[type="password"]:disabled, input[type="text"]:disabled, select:disabled, textarea:disabled {
   cursor: not-allowed;
 	background-color: rgba(var(--txtfield-disabled-bg-color), 1.0);
 	color: rgba(var(--txtfield-disabled-fg-color), 1.0);
 }
 
-input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hover, input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 1px 50px rgba(var(--txtfield-bg-color), 1.0) inset;
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 1px 50px rgba(var(--txtfield-bg-color), 1.0) inset;
+	-webkit-text-fill-color: rgba(var(--txtfield-fg-color), 1.0);
+}
+
+input:-webkit-autofill:focus, input:-webkit-autofill:hover:focus, input:-webkit-autofill:active:focus {
+  -webkit-box-shadow: 0 0 1px 50px rgba(var(--txtfield-focused-bg-color), 1.0) inset;
   -webkit-text-fill-color: rgba(var(--txtfield-fg-color), 1.0);
 }
 
 input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus, textarea:focus {
-	background-color: rgba(var(--txtfield-bg-color), 1.0);
+	background-color: rgba(var(--txtfield-focused-bg-color), 1.0);
 	color: rgba(var(--txtfield-focused-fg-color), 1.0);
 }
 

@@ -32,7 +32,7 @@
 	overflow: hidden;
 	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: var(--border-radius);
-	background-color: rgba(var(--site-bg-color), 1.0);
+	background-color: rgba(var(--modal-bg-color), 1.0);
 	text-align: center;
 	/*transform-style: preserve-3d;*/
 	transform-style: flat;
