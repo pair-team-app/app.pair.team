@@ -27,6 +27,7 @@
 .playground-page-content-wrapper {
 	position: fixed;
 	top: 0;
+	/*left: 0;*/
 	left: var(--playground-nav-width);
 	width: calc(100vw - (var(--playground-nav-width) + var(--playground-comments-width)));
 	/*height: calc(100vh - 64px);*/

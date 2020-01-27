@@ -274,7 +274,7 @@ const PlaygroundComponent = (props)=> {
           })}
        </div>
        </ContextMenuTrigger>)}
-      {(true) && (<div className="size-caption">{component.meta.bounds.width}px × {component.meta.bounds.height}px</div>)}
+      {(true) && (<div className="component-caption">{component.meta.bounds.width}px × {component.meta.bounds.height}px</div>)}
     </div>
   </ResizableBox>);
 };

@@ -122,7 +122,8 @@
 	--matty-mana: #00ad10;
 	--matty-earth: #6b4000;
 	--matty-elect: #103bdf;
-	--matty-border-style: 1px dashed
+	--matty-border-style: 1px dashed;
+	--matty-opacity: 0.33;
 
 }
 
