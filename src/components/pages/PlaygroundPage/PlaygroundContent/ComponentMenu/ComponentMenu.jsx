@@ -54,6 +54,17 @@ class ComponentMenu extends Component {
     });
 	};
 
+  handleHideMenu = (event)=> {
+    console.log('%s.handleHideMenu()', this.constructor.name, event);
+    event.preventDefault();
+    event.stopPropagation()
+
+    this.setState({
+      intro : false,
+      outro : true
+    });
+  };
+
   handleMenuItemClick = (event, data, target)=> {
 // 		console.log('%s.handleMenuItemClick()', this.constructor.name, { event, data, target });
 
@@ -61,16 +72,6 @@ class ComponentMenu extends Component {
 		const { type : menuItem } = data;
 		this.props.onClick({ menuItem });
 	};
-
-	handleHideMenu = (event)=> {
-// 		console.log('%s.handleHideMenu()', this.constructor.name, event);
-
-		this.setState({
-			intro : false,
-			outro : true
-		});
-	};
-
   handleKeyDown = (event)=> {
 //     console.log('%s.handleKeyDown()', this.constructor.name, event, event.keyCode);
 

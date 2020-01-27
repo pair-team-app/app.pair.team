@@ -128,9 +128,10 @@
 }
 
 .site-wrapper[data-devin-matty="true"] * {
-	/*--site-bg-color: #333333;*/
-	/*filter: brightness(85%);*/
+	filter: brightness(87%);
 }
+
+
 
 
 html, body {
@@ -522,4 +523,10 @@ ul > li:not(:last-child) {
 	h1 {
 		margin-bottom: 50px;
 	}
+}
+
+
+.site-wrapper[data-devin-matty="true"] body {
+	background-color: rgba(255, 0, 255, 0.33);
+	filter: none;
 }

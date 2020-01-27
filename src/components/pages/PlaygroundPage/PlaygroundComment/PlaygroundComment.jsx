@@ -34,7 +34,7 @@ class PlaygroundComment extends Component {
       document.addEventListener('keydown', this.handleKeyDown);
     }
 
-//-/>     console.log('%s.componentDidMount()', this.constructor.name, { position : comment });
+//  console.log('%s.componentDidMount()', this.constructor.name, { position : comment });
 		if (position) {
       this.setState({ position : Maths.geom.pointsAdd(position, { x : 0, y : 38 }) });
     }
@@ -96,7 +96,7 @@ class PlaygroundComment extends Component {
 	};
 
 	handleKeyDown = (event)=> {
-//-/>     console.log('%s.handleKeyDown()', this.constructor.name, event, event.keyCode);
+//  console.log('%s.handleKeyDown()', this.constructor.name, event, event.keyCode);
 
     const { comment } = this.state;
     if (event.keyCode === ENTER_KEY && comment.content.length > 0) {
@@ -124,6 +124,19 @@ class PlaygroundComment extends Component {
 	};
 
 
+	onOutro = (event=null)=> {
+    console.log('%s.onOutro()', this.constructor.name, { event, outro : this.state.outro });
+
+		if (event){
+			event.preventDefault();
+		}
+
+		if (!this.state.outro) {
+			this.setState({ outro : true });
+		}
+	};
+
+
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 // 		console.log('%s.render()', this.constructor.name, this.props.component, this.props.comment);
@@ -139,7 +152,7 @@ class PlaygroundComment extends Component {
 		return (<div className="playground-comment" style={style} data-id={component.id}>
 			<PlaygroundCommentMarker ind={ind} comment={comment} onClick={this.handleMarkerClick} />
 			{(comment.id === 0)
-				? (<PlaygroundCommentAddPopover comment={this.state.comment} outro={outro} onTextChange={this.handleTextChange} onSubmit={this.handleAddSubmit} onClose={this.handleClose} />)
+				? (<PlaygroundCommentAddPopover comment={this.state.comment} outro={outro} onTextChange={this.handleTextChange} onOutro={this.onOutro} onSubmit={this.handleAddSubmit} onClose={this.handleClose} />)
 				: ((activeComment && activeComment.id === comment.id) && (<PlaygroundCommentPopover ind={ind} comment={comment} outro={outro} onDelete={this.handleDelete} onClose={this.handleClose} />))
 			}
 		</div>);
@@ -170,7 +183,7 @@ const PlaygroundCommentAddPopover = (props)=> {
 				<textarea placeholder="Enter Comment" onChange={props.onTextChange}>
 				</textarea>
 				<div className="button-wrapper">
-        	<div><button className="quiet-button" onClick={props.onClose}>Cancel</button></div>
+        	<div><button className="quiet-button" onClick={(event)=> props.onOutro(event)}>Cancel</button></div>
           <div><button type="submit" disabled={comment.content.length === 0} onClick={props.onSubmit}>Submit</button></div>
 				</div>
 			</form>

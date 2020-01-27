@@ -183,7 +183,7 @@ class PlaygroundPage extends Component {
 			const { typeGroup, component, comment } = this.props;
 			let url = pathname;
 
-//-/>       console.log('%s.componentDidUpdate()', this.constructor.name, { playgroundID : this.props.playground.id, prev : prevProps.playground.id, fetching, processing });
+//    console.log('%s.componentDidUpdate()', this.constructor.name, { playgroundID : this.props.playground.id, prev : prevProps.playground.id, fetching, processing });
       if (playground.id !== prevProps.playground.id && !fetching) {
 				this.onFetchTypeGroupComponents(typeGroup);
       }
@@ -292,7 +292,7 @@ class PlaygroundPage extends Component {
 	};
 
   handleBreadCrumbClick = ({ type=null, payload=null })=> {
-//-/>     console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
+//  console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
 
     if (type === BreadcrumbTypes.PLAYGROUND) {
       this.props.setTypeGroup(typeGroupByID(this.state.typeGroups, 187));
@@ -357,7 +357,7 @@ class PlaygroundPage extends Component {
 				this.props.history.push(this.props.location.pathname.replace(/\/comments.*$/, ''));
 
 			} else {
-				this.props.history.push(`${this.props.location.pathname}/comments`);
+				this.props.history.push(`${this.props.location.pathname}/  `);
 			}
 
 		} else if (menuItem === COMPONENT_MENU_ITEM_COPY) {
@@ -368,16 +368,21 @@ class PlaygroundPage extends Component {
 	};
 
 	handleComponentPopoverClose = ()=> {
-//-/> 		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
-		this.props.setComment(null);
+// 		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
 
-    if (/\/comments.*$/.test(this.props.location.pathname)) {
-      this.props.history.push(this.props.location.pathname.replace(/\/comments.*$/, '/comments'));
-    }
+		const pushURL = (/\/comments.*$/.test(this.props.location.pathname)) ? this.props.location.pathname.replace(/\/comments.*$/, '/comments') : null;
+
+
+    console.log('%s.handleComponentPopoverClose()', this.constructor.name, { pathname : this.props.location.pathname, hasComments : (/\/comments.*$/.test(this.props.location.pathname)), pushURL });
+
+
+// 		if (pushURL) {
+//       this.props.history.push(pushURL);
+//     }
 	};
 
 	handleDeleteComment = (comment)=> {
-//-/> 		console.log('%s.handleDeleteComment()', this.constructor.name, comment.id);
+//  		console.log('%s.handleDeleteComment()', this.constructor.name, comment.id);
 		trackEvent('button', 'delete-comment');
 
 		axios.post(API_ENDPT_URL, {
@@ -478,7 +483,7 @@ class PlaygroundPage extends Component {
 
   onFetchTypeGroupComponents = (typeGroup)=> {
     const { playground } = this.props;
-//-/>     console.log('%s.onFetchTypeGroupComponents()', this.constructor.name, { typeGroup, components : componentsFromTypeGroup(playground.components, typeGroup) });
+//  console.log('%s.onFetchTypeGroupComponents()', this.constructor.name, { typeGroup, components : componentsFromTypeGroup(playground.components, typeGroup) });
     if (!typeGroupComponentsProcessed(typeGroup, playground.components)) {
       this.setState({ processing : true }, ()=> {
         this.props.fetchPlaygroundComponentGroup({ playground, typeGroup });
@@ -487,7 +492,7 @@ class PlaygroundPage extends Component {
 	};
 
   onFetchBuildPlaygrounds = (buildID, playgroundID=null)=> {
-//-/>     console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
+//  console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
 
     this.setState({
 			fetching : true,

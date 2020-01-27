@@ -96,7 +96,7 @@ class App extends Component {
 		const { modals } = this.state;
 
 // 		console.log('|:|:|:|:|:|:|:|:|:|:|:|', prevProps.location.pathname, pathname);
-//-/>     console.log('|:|:|:|:|:|:|:|:|:|:|:|', { prevPathname : prevProps.location.pathname, currPathname : pathname, state : this.state });
+//  console.log('|:|:|:|:|:|:|:|:|:|:|:|', { prevPathname : prevProps.location.pathname, currPathname : pathname, state : this.state });
 		if (prevProps.location.pathname !== pathname) {
 			trackPageview();
 		}

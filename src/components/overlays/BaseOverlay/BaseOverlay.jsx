@@ -102,7 +102,7 @@ class BaseOverlay extends Component {
 	};
 
 	onOutro = ()=> {
-//-/>     console.log('%s.onOutro()', this.constructor.name, this.props, this.state, this.timeline);
+//  console.log('%s.onOutro()', this.constructor.name, this.props, this.state, this.timeline);
 
     this.timeline = new TimelineMax();
     this.timeline.to(this.wrapper, OUTRO_DURATION, {
@@ -110,7 +110,7 @@ class BaseOverlay extends Component {
       scale      : 0.925,
       ease       : Back.easeIn,
       onComplete : ()=> {
-//-/>         console.log('%s.onOutro().onOutroComplete', this.constructor.name, this.props, this.state, this.timeline);
+//      console.log('%s.onOutro().onOutroComplete', this.constructor.name, this.props, this.state, this.timeline);
 				this.handleComplete();
       }
     });

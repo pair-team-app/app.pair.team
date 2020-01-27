@@ -132,7 +132,7 @@ class BasePopover extends Component {
 	};
 
 	onPosition = ()=> {
-//-/>     console.log('%s.onPosition()', this.constructor.name, this.state.position);
+//  console.log('%s.onPosition()', this.constructor.name, this.state.position);
 
     const { duration, position } = this.state;
     this.timeline = new TimelineMax();
@@ -172,7 +172,7 @@ class BasePopover extends Component {
 			height : (size.width * size.height === 0) ? 'fit-content' : `${size.height}px`,
 		};
 //-/>
-		console.log('styles', styles);
+// 		console.log('styles', styles);
 
 		return (<div className={`base-popover${(fixed) ? ' base-popover-fixed' : ' base-popover-abs'}`} style={styles} ref={(element)=> { this.wrapper = element; }}>
 			<div className="base-popover-content-wrapper">{children}</div>
