@@ -30,7 +30,7 @@ class ProfileModal extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props.profile, prevState, this.state, snapshot);
+ 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props.profile, prevState, this.state, snapshot);
 
 		const { profile } = this.props;
 		if (profile !== prevProps.profile && profile.status === 0x00) {
@@ -42,7 +42,7 @@ class ProfileModal extends Component {
 	}
 
 	handleCancel = ()=> {
-// 		console.log('%s.handleCancel()', this.constructor.name);
+ 		console.log('%s.handleCancel()', this.constructor.name);
 		trackEvent('button', 'profile-cancel');
 
 		this.setState({
@@ -52,7 +52,7 @@ class ProfileModal extends Component {
 	};
 
 	handleComplete = ()=> {
-// 		console.log('%s.handleComplete()', this.constructor.name, this.state);
+ 		console.log('%s.handleComplete()', this.constructor.name, this.state);
 
 		const { updated } = this.state;
 		if (updated) {
@@ -82,7 +82,7 @@ class ProfileModal extends Component {
 	};
 
 	handleDowngradePlan = (event)=> {
-// 		console.log('%s.handleDowngradePlan()', this.constructor.name, event);
+ 		console.log('%s.handleDowngradePlan()', this.constructor.name, event);
 
 		this.setState({ submitting : true }, ()=> {
 			const { profile, team } = this.props;
@@ -123,7 +123,7 @@ class ProfileModal extends Component {
 	};
 
 	handleResetPassword = ()=> {
-// 		console.log('%s.handleResetPassword()', this.constructor.name);
+ 		console.log('%s.handleResetPassword()', this.constructor.name);
 		this.setState({
 			outro    : true,
 			outroURI : `/modal${Modals.RECOVER}`
@@ -131,14 +131,14 @@ class ProfileModal extends Component {
 	};
 
 	handleSubmit = ({ id, username, email, password })=> {
-// 		console.log('%s.handleSubmit()', this.constructor.name, { id, username, email, password });
+ 		console.log('%s.handleSubmit()', this.constructor.name, { id, username, email, password });
 
 		trackEvent('button', 'update-profile');
 		this.props.updateUserProfile({ id, username, email, password });
 	};
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+ 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { profile, team } = this.props;
 		const { outro, submitting } = this.state;

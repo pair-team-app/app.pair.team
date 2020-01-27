@@ -97,7 +97,7 @@ const UserSettingsPopover = (props)=> {
 	const { position, outro } = props;
 	const payload = {
 		position : {
-			x : position.x + 10,
+			x : position.x - 612,
 			y : position.y + 25
 		}
 	};

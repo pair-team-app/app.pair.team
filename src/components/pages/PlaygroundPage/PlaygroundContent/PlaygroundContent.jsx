@@ -133,6 +133,8 @@ class PlaygroundContent extends Component {
 
 
   onUpdateReflow = ({ rect })=> {
+    return;
+
     console.log('|]:]]: %s.onUpdateReflow()', this.constructor.name, { rect, baseBounds : this.state.baseBounds, bounds : this.state.bounds });
 
     const { x, y, width, height } = rect;

@@ -512,13 +512,12 @@ class PlaygroundPage extends Component {
 		const { params } = this.props.match;
 
 		return (<BasePage className={`playground-page${(component && (window.location.href.includes('/comments'))) ? ' playground-page-comments' : ''}`}>
-      <PlaygroundNavPanel
+      {(team) && (<><PlaygroundNavPanel
         params={params}
         onTypeGroupClick={this.handleNavGroupItemClick}
         onTypeItemClick={this.handleNavTypeItemClick}
       />
-
-			{(profile && team) && (<PlaygroundHeader
+        {(profile) && (<PlaygroundHeader
         accessibility={accessibility}
         popover={share}
         onBreadCrumbClick={this.handleBreadCrumbClick}
@@ -526,7 +525,11 @@ class PlaygroundPage extends Component {
         onSharePopoverClose={()=> this.setState({ share : false })}
         onSettingsItem={this.handleSettingsItem}
         onLogout={this.props.onLogout}
-      />)}
+        />)}
+      </>)}
+
+
+
 
 			{(profile && playground && typeGroup) && (<div className="playground-page-content-wrapper">
 				{(!accessibility)
