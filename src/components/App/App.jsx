@@ -418,6 +418,8 @@ class App extends Component {
 			  {(modals.disable) && (<ConfirmDialog
 				  title="Delete your account"
 				  tracking={Modals.DISABLE}
+          filled={true}
+          closeable={true}
 				  onConfirmed={this.handleDisableAccount}
 				  onComplete={()=> this.onToggleModal(Modals.DISABLE, false)}>
 				  Are you sure you wish to delete your account? You won't be able to log back in, plus your playgrounds & comments will be removed. Additionally, you will be dropped from your team.
@@ -426,7 +428,7 @@ class App extends Component {
 			  {(modals.noAccess) && (<ConfirmDialog
 				  tracking={Modals.NO_ACCESS}
 					filled={true}
-					closeable={false}
+					closeable={true}
 					buttons={['OK']}
           onConfirmed={null}
 				  onComplete={(ok)=> { this.onToggleModal(Modals.NO_ACCESS, false); (ok) ? this.handleLogout(null, Modals.LOGIN) : this.handleLogout(Pages.HOME) }}>

@@ -21,13 +21,14 @@ class AlertDialog extends Component {
 	};
 
 	render() {
-		const { tracking, title, children } = this.props;
+		const { tracking, title, closeable, filled, children } = this.props;
 		const { outro } = this.state;
 
 		return (<BaseOverlay
 			tracking={tracking}
 			outro={outro}
 			closeable={true}
+			filled={true}
 			title={title}
 			onComplete={this.props.onComplete}>
 			<div className="alert-dialog">

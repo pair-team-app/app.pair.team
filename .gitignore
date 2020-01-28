@@ -31,8 +31,7 @@ yarn-error.log
 #-- temp --#
 /.cache
 /.node-persist
-/tmp
-
+/tmp/.tarred
 
 #-- php files --#
 /public/index.php

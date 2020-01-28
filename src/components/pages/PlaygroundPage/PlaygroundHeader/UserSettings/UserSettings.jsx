@@ -24,7 +24,6 @@ class UserSettings extends Component {
 		this.wrapper = React.createRef();
 	}
 
-
 	handleComplete = ()=> {
 //  console.log('%s.handleComplete()', this.constructor.name, );
 
@@ -97,7 +96,7 @@ const UserSettingsPopover = (props)=> {
 	const { position, outro } = props;
 	const payload = {
 		position : {
-			x : position.x - 612,
+			x : position.x + 10,
 			y : position.y + 25
 		}
 	};

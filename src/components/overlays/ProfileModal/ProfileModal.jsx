@@ -145,6 +145,7 @@ class ProfileModal extends Component {
 		return (<BaseOverlay
 			tracking={Modals.PROFILE}
 			outro={outro}
+			filled={true}
 			closeable={true}
 			title={null}
 			onComplete={this.handleComplete}>

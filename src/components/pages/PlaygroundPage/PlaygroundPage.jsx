@@ -531,7 +531,7 @@ class PlaygroundPage extends Component {
 
 
 
-			{(profile && playground && typeGroup) && (<div className="playground-page-content-wrapper">
+			{(profile && playground && typeGroup) && (<div className="playground-page-content-wrapper" data-component={component !== null} data-processed={component && component.processed}>
 				{(!accessibility)
 					? (<PlaygroundContent
 							cursor={cursor}

@@ -15,7 +15,7 @@ class ConfirmDialog extends Component {
 	}
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-//  console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state);
+ console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state);
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : prevProps.outro, props : this.props.outro });
   }
 
@@ -43,7 +43,7 @@ class ConfirmDialog extends Component {
 
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { tracking, buttons, closeable, filled, title, children } = this.props;
 		const { outro } = this.state;
