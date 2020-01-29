@@ -25,82 +25,70 @@ class PlaygroundContent extends Component {
     this.state = {
       position   : null,
       popover    : false,
-//       baseBounds : {
-//         playground : {
-//           position : null,
-//           size     : null
-//         },
-//         component  : {
-//           position : null,
-//           size     : null
-//         }
-//       },
-//       bounds       : {
-//         playground : {
-//           position : null,
-//           size     : null
-//         },
-//         component  : {
-//           position : null,
-//           size     : null
-//         }
-//       }
-
       bounds : {
         init : null,
         prev : null,
         curr : null,
         next : null
       }
-//       baseBounds : null,
-//       currBounds
-//
-//       baseBounds : {
-//         content   : null,
-//         component : null
-//       },
-//       bounds     : {
-//         content   : null,
-//         component : null
-//       }\
-//       baseBounds : null,
-//       bounds     : null
     }
   }
 
 
   calcBounds = (rect)=> {
-    console.log('%s.calcBounds()', this.constructor.name, { rect });
-
-    const { component } = this.props;
-    let { bounds } = this.state;
-    const { init, prev, curr, next } = bounds;
+    // console.log('%s.calcBounds()', this.constructor.name, { rect });
 
     const { x, y, width, height } = rect;
 
-    // nothing stored yet
-    if (!init) {
-      this.setState({
-        init : {
-          container : {
-            position : { x, y },
-            size     : { width, height }
-          },
-          component : {
-            position : {}, // sub container w comp.fullsize
-            size     : {} //
-          }
-        }}
-      );
-    }
+    // console.log('%s.calcBounds()', this.constructor.name, { rect : { x , y, width, height  }});
 
-    bounds = {
-      content   : {
+    const { component } = this.props;
+    let { bounds } = this.state;
+    let { init, prev, curr, next } = this.state.bounds;
+
+    // nothing stored yet
+    init = (init || {
+      container : {
         position : { x, y },
         size     : { width, height }
       },
-      component : null
+      component : (component) ? {
+        position : { 
+          x : 0, 
+          y : 0
+        },
+        size     : (component) ? { 
+          width  : component.meta.bounds.width,
+          height : component.meta.bounds.height
+        } : null
+      } : null
+    });
+
+    curr = {
+      container : {
+        position : { x, y },
+        size   : { width, height }
+      },
+      component : (component) ? {
+        position : { 
+          x : 0, 
+          y : 0
+        },
+        size : {
+          width  : (width - 40) * 0.85,
+          height : (height - 168) * 0.85
+        }
+      } : null
     };
+
+    // console.log('%s.calcBounds() --SET STATE', this.constructor.name, { bounds, init : { ...bounds.init, init}, prev : { ...bounds.prev, prev}, curr : { ...bounds.curr, curr}, next : { ...bounds.next, next} });
+
+    bounds = { ...bounds, init, curr,
+      prev : { ...bounds.prev, ...prev},
+      next : { ...bounds.next, ...next}
+    };
+
+    this.setState({ bounds });
   };
 
 
@@ -114,7 +102,7 @@ class PlaygroundContent extends Component {
 //     console.log('[:|:] %s.handlePlaygroundResize()', this.constructor.name, { rect }, '[:|:]');
 
     if (typeof rect !== 'undefined') {
-      this.onUpdateReflow({ rect });
+      this.calcBounds({ rect });
     }
   };
 
@@ -123,7 +111,7 @@ class PlaygroundContent extends Component {
 //     console.log('<:]]:> %s.handlePlaygroundTranslate()', this.constructor.name, { rect }, '<:]]:>');
 
     if (typeof rect !== 'undefined') {
-      this.onUpdateReflow({ rect });
+      this.calcBounds({ rect });
     }
   };
 
@@ -132,7 +120,7 @@ class PlaygroundContent extends Component {
 //     console.log('<:]]:> %s.handlePlaygroundReflow()', this.constructor.name, { rect }, '<:]]:>');
 
     if (typeof rect !== 'undefined') {
-      this.onUpdateReflow({ rect });
+      this.calcBounds({ rect });
     }
   };
 
@@ -172,94 +160,39 @@ class PlaygroundContent extends Component {
     this.props.onComponentClick({ component });
   };
 
-
-  onUpdateReflow = ({ rect })=> {
-    return;
-
-//     console.log('|]:]]: %s.onUpdateReflow()', this.constructor.name, { rect, baseBounds : this.state.baseBounds, bounds : this.state.bounds });
-
-    const { x, y, width, height } = rect;
-    const { component } = this.props;
-
-    let bounds = {
-      content   : {
-        position : { x, y },
-        size     : { width, height }
-      },
-      component : null
-    };
-
-    if (!this.state.baseBounds.content) {
-      const baseBounds = { ...bounds};
-
-      console.log('%s.onUpdateReflow() --INIT CONTENT', this.constructor.name, { rect, baseBounds, bounds });
-      this.setState({ baseBounds, bounds });
-
-
-    } else if (this.state.baseBounds && component && this.state.baseBounds.component !== component.fullSize) {
-      const { fullSize, thumbSize } = component;
-
-      const baseBounds = { ...this.state.baseBounds,
-        component : {
-          position : {
-            x : 0,
-            y : 0
-          },
-          size     : (fullSize || thumbSize)
-        }
-      };
-
-      console.log('%s.onUpdateReflow() --INIT COMPONENT', this.constructor.name, { rect, baseBounds });
-      this.setState({ baseBounds });
-    }
-
-
-    if (this.state.bounds && this.state.bounds.content !== bounds.content) {
-      bounds = {
-        content : {
-          position : { x, y },
-          size     : { width, height }
-        },
-        component : this.state.baseBounds.component
-      };
-
-      console.log('%s.onUpdateReflow() --UPD', this.constructor.name, { rect, bounds });
-      this.setState({ bounds });
-    }
-  };
-
   render() {
-// 		console.log('%s.render()', this.constructor.name, { baseBounds : this.state.baseBounds, bounds : this.state.bounds });
+		console.log('%s.render()', this.constructor.name, { state : this.state, initBounds : this.state.bounds.init, currBounds : this.state.bounds.curr });
 
     const { profile, typeGroup, playground, component, cursor, mouse } = this.props;
     const { position, popover, bounds } = this.state;
 
+
     const components = (typeGroup) ? (component) ? [component] : componentsFromTypeGroup(playground.components, typeGroup) : [];
 
-    const { thumbSize, fullSize } = (component || { thumbSize : { width : 140, height : 240 }, fullSize : { width : 1920, height : 1080 } });
-    const updBounds = (component && bounds && bounds.component) ? { ...bounds.component } : {
-      position : {
-        x : 0,
-        y : 0
-      },
-      size : {
-        width  : 0,
-        height : 0
-      }
-    };
+    // const { thumbSize, fullSize } = (component || { thumbSize : { width : 140, height : 240 }, fullSize : { width : 1920, height : 1080 } });
+    // const updBounds = (component && bounds && bounds.component) ? { ...bounds.component } : {
+    //   position : {
+    //     x : 0,
+    //     y : 0
+    //   },
+    //   size : {
+    //     width  : 0,
+    //     height : 0
+    //   }
+    // };
 
 //     console.log('%s.render()', this.constructor.name, { baseBounds : this.state.baseBounds, bounds : this.state.bounds, updBounds });
 
     return (<div className="playground-content" data-component={(!(!component << 0))} data-cursor={cursor}>
       <ResizeObserver
-        onResize={this.handlePlaygroundResize}
-        onPosition={this.handlePlaygroundTranslate}
-        onReflow={this.handlePlaygroundReflow}
+        onResize={this.calcBounds}
+        onPosition={this.calcBounds}
+        onReflow={this.calcBounds}
       />
       {(typeGroup && components.length > 0) && (<div className="playground-content-components-wrapper" data-component={(component !== null)}>
-        {(!component)
+        {(!component || bounds.curr === null)
           ? (<PlaygroundComponentsGrid typeGroup={typeGroup} components={components} onItemClick={this.handleContentClick} />)
-          : (<PlaygroundComponent profile={profile} popover={popover} position={position} bounds={updBounds} typeGroup={typeGroup} component={component} onResize={this.handleComponentResize} onAddComment={this.props.onAddComment} onCloseComment={this.handleComponentPopoverClose} onDeleteComment={this.props.onDeleteComment} onItemClick={this.handleContentClick} onMarkerClick={this.props.onMarkerClick} />)}
+          : (<PlaygroundComponent profile={profile} popover={popover} bounds={bounds.curr.component} maxBounds={bounds.curr.container} typeGroup={typeGroup} component={component} onResize={this.handleComponentResize} onAddComment={this.props.onAddComment} onCloseComment={this.handleComponentPopoverClose} onDeleteComment={this.props.onDeleteComment} onItemClick={this.handleContentClick} onMarkerClick={this.props.onMarkerClick} />)}
       </div>)}
       {(cursor) && (<CommentPinCursor position={mouse.position} />)}
       <ComponentMenu menuID="component" onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment}/>
@@ -284,34 +217,28 @@ const CommentPinCursor = (props)=> {
 
 
 const PlaygroundComponent = (props)=> {
-//   console.log('PlaygroundComponent()', props);
+  // console.log('PlaygroundComponent()', props);
 
-  const { scaling, profile, popover, position, bounds, typeGroup, component } = props;
+  const { scaling, profile, popover, bounds, maxBounds, typeGroup, component } = props;
 //   const { id, tagName, html, styles, rootStyles, comments, processed } = component;
   const { id, tagName, imageData, thumbData, fullSize, thumbSize, processed, comments } = component;
 //   const { width, height } = (fullSize || thumbSize);
-  const { position : pos, size } = bounds;
-  const { width, height } = (bounds || thumbSize);
+  const { position, size } = (bounds || { x: 0, y : 0 });
+  const { width, height } = (size || thumbSize);
 
   const title = (component.title === tagName) ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}` : component.title;
 
-  return <ResizableBox className="playground-component-wrapper" axis="both" width={width} height={height} lockAspectRatio={true} minContraints={(thumbSize) ? [thumbSize.width, thumbSize.height] : [0, 0]} maxContraints={(fullSize) ? [fullSize.width, fullSize.height] : [thumbSize.width, thumbSize.height]} onResize={props.onResize} resizeHandles={['s', 'se']}>
+  return <Resizable className="playground-component-wrapper" axis="both" width={width} height={height} lockAspectRatio={true} maxcontraints={[maxBounds.size.width, maxBounds.size.height - 168]} onResize={props.onResize} resizeHandles={['s', 'se']}>
   <div className="playground-component" data-processed={processed} onClick={(event) => props.onItemClick(event, component)} style={{ width : `${width}px`, height : `${height}px` }}>
     <h5 className="component-title">{title}</h5>
 
-    {(scaling) && (<div className="scaling-wrapper">
-      <img src={(imageData || thumbData)} alt={title} />
-    </div>)}
-
-    {(!scaling) && (
-      <ContextMenuTrigger disable={!processed} id="component" component={component} collect={(props) => ({ component : props.component })} disableIfShiftIsPressed={true}>
-        <div className="playground-content-component" data-id={id}>
+    <ContextMenuTrigger disable={!processed} id="component" component={component} collect={(props) => ({ component : props.component })} disableIfShiftIsPressed={true}>
+        <div className="playground-content-component" data-id={id} style={{ height : `${height}px`}}>
           {(processed) && (<img src={(imageData || '')} alt={title} />)}
         </div>
         <div className="playground-component-comments-wrapper" data-id={id}>
           {((popover) ? [
-            ...comments, reformComment({
-              position,
+            ...comments, reformComment({ position,
               id      : 0,
               type    : 'add',
               content : '',
@@ -322,11 +249,12 @@ const PlaygroundComponent = (props)=> {
               <PlaygroundComment key={i} ind={(comments.length - 1) - i} component={component} comment={comm} position={position} onMarkerClick={props.onMarkerClick} onAdd={props.onAddComment} onDelete={props.onDeleteComment} onClose={props.onCloseComment} />);
           })}
         </div>
-      </ContextMenuTrigger>)}
-    {(true) && (
+      </ContextMenuTrigger>
+
+    {(processed) && (
       <div className="component-caption">{component.meta.bounds.width}px × {component.meta.bounds.height}px</div>)}
     </div>
-  </ResizableBox>;
+  </Resizable>;
 };
 
 
