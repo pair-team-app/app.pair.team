@@ -236,7 +236,7 @@ const PlaygroundComponent = (props)=> {
         <div className="playground-content-component" data-id={id} style={{ height : `${height}px`}}>
           {(processed) && (<img src={(imageData || '')} alt={title} />)}
         </div>
-        <div className="playground-component-comments-wrapper" data-id={id}>
+        {(processed) && (<div className="playground-component-comments-wrapper" data-id={id}>
           {((popover) ? [
             ...comments, reformComment({ position,
               id      : 0,
@@ -248,7 +248,7 @@ const PlaygroundComponent = (props)=> {
             return (
               <PlaygroundComment key={i} ind={(comments.length - 1) - i} component={component} comment={comm} position={position} onMarkerClick={props.onMarkerClick} onAdd={props.onAddComment} onDelete={props.onDeleteComment} onClose={props.onCloseComment} />);
           })}
-        </div>
+        </div>)}
       </ContextMenuTrigger>
 
     {(processed) && (
