@@ -240,7 +240,6 @@ const PlaygroundComponent = props => {
       lockAspectRatio={true}
       maxcontraints={[maxBounds.size.width, maxBounds.size.height - 168]}
       onResize={props.onResize}
-      resizeHandles={["s", "se"]}
     >
       <div
         className="playground-component"
@@ -330,11 +329,6 @@ const PlaygroundComponentsGrid = props => {
           >
             <h5 className="component-title">{title}</h5>
             <div className="content-wrapper" data-loaded={processed}>
-              {!processed && (
-                <div className="image-loader">
-                  <i className="far fa-circle fa-spin" />
-                </div>
-              )}
               <img
                 src={thumbData}
                 className="components-grid-item-image"

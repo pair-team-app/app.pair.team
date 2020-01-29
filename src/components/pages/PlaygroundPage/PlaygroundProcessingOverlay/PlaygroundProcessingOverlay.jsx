@@ -133,7 +133,7 @@ class PlaygroundProcessingOverlay extends Component {
       filled={false}
       offset={{ x : 60, y : -44 }}
       bare={true}
-      closeable={false}
+      closeable={!root}
       title={null}
       type={OVERLAY_TYPE_POSITION_OFFSET}
       delay={75 + ((!playground << 0) * 250)}

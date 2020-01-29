@@ -528,41 +528,39 @@ class PlaygroundPage extends Component {
         />)}
       </>)}
 
+		{(profile && playground && typeGroup) && (<div className="playground-page-content-wrapper" data-component={component !== null} data-processed={component && component.processed}>
+			{(!accessibility)
+				? (<PlaygroundContent
+						cursor={cursor}
+						onComponentClick={this.handleComponentClick}
+						onMarkerClick={this.handleCommentMarkerClick}
+						onMenuShow={this.handleComponentMenuShow}
+						onMenuItem={this.handleComponentMenuItem}
+						onAddComment={this.handleAddComment}
+						onDeleteComment={this.handleDeleteComment}
+						onPopoverClose={this.handleComponentPopoverClose}
+					/>)
+				: (<PlaygroundAccessibility />)
+			}
 
-
-
-			{(profile && playground && typeGroup) && (<div className="playground-page-content-wrapper" data-component={component !== null} data-processed={component && component.processed}>
-				{(!accessibility)
-					? (<PlaygroundContent
-							cursor={cursor}
-							onComponentClick={this.handleComponentClick}
-							onMarkerClick={this.handleCommentMarkerClick}
-							onMenuShow={this.handleComponentMenuShow}
-							onMenuItem={this.handleComponentMenuItem}
-							onAddComment={this.handleAddComment}
-							onDeleteComment={this.handleDeleteComment}
-							onPopoverClose={this.handleComponentPopoverClose}
-						/>)
-					: (<PlaygroundAccessibility />)
-				}
-
-				{(typeGroup && component) && (<PlaygroundFooter
-					accessibility={accessibility}
-					cursor={cursor}
-					playground={playground}
-					builds={playgrounds.length}
+			{(typeGroup && component) && (<PlaygroundFooter
+				accessibility={accessibility}
+				cursor={cursor}
+				playground={playground}
+				component={component}
+				builds={playgrounds.length}
 // 					onToggleAccessibility={this.handleStripeModal}
-					onToggleAccessibility={this.handleToggleAccessibility}
-					onToggleCursor={this.handleToggleCommentCursor}
-					onToggleDesktop={this.handleTogglePlayground}
-					onToggleMobile={this.handleTogglePlayground}
-				/>)}
-			</div>)}
-
-			{(profile) && (<PlaygroundCommentsPanel
-				comments={(component) ? component.comments : []}
-				onDelete={this.handleDeleteComment}
+				onToggleAccessibility={this.handleToggleAccessibility}
+				onToggleCursor={this.handleToggleCommentCursor}
+				onToggleDesktop={this.handleTogglePlayground}
+				onToggleMobile={this.handleTogglePlayground}
 			/>)}
+		</div>)}
+
+		{(profile) && (<PlaygroundCommentsPanel
+			comments={(component) ? component.comments : []}
+			onDelete={this.handleDeleteComment}
+		/>)}
 
       {(fetching) && (<PlaygroundProcessingOverlay root={true} outro={(playground !== null)} onComplete={()=> this.setState({ fetching : false })} />)}
       {/*{(fetching) && (<PlaygroundProcessingOverlay root={true} outro={false} onComplete={()=> null} />)}*/}

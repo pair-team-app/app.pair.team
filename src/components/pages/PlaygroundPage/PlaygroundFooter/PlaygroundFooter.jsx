@@ -1,14 +1,13 @@
-
 import React from 'react';
 import './PlaygroundFooter.css';
 
 
 function PlaygroundFooter(props) {
 // 	console.log('PlaygroundFooter()', props);
-// 	console.log('PlaygroundFooter()', { playground : props.playground, builds : props.builds });
+	console.log('PlaygroundFooter()', { component : props.component, props });
 
 // 	const { accessibility, cursor, playground, builds } = props;
-	const { accessibility, cursor } = props;
+	const { accessibility, cursor, component } = props;
 	return (<div className="playground-footer">
 		<div className="playground-footer-button-wrapper playground-footer-comments-wrapper">
 			<FooterCommentButton selected={cursor} onClick={props.onToggleCursor} />
