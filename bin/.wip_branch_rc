@@ -1,0 +1,5 @@
+
+#!/bin.bash
+
+#-- make enviro var branch's name formatted (...YYYYMMDD)
+export branch_name="wip/mh-`date +%Y%m%d`"
