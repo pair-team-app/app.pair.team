@@ -132,7 +132,7 @@ class ComponentMenu extends Component {
 						<textarea placeholder="Enter Comment" onChange={(event)=> this.setState({ comment : event.target.value })} ref={(element)=> this.textAreaRef = element}>
 						</textarea>
 						<div className="button-wrapper">
-							<div><button className="quiet-button" onClxick={this.handleHideMenu}>Cancel</button></div>
+							<div><button className="quiet-button" onClick={this.handleHideMenu}>Cancel</button></div>
               <MenuItem data={{ type : 'submit' }} onClick={this.handleAddComment}>
 								<button disabled={comment.length === 0} onClick={this.handleAddSubmit}>Submit</button>
 							</MenuItem>
