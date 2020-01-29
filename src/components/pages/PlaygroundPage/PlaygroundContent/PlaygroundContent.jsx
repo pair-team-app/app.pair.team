@@ -7,7 +7,7 @@ import './PlaygroundContent.css';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
-import { ResizableBox } from 'react-resizable';
+import { Resizable, ResizableBox } from 'react-resizable';
 import ResizeObserver from 'react-resize-observer';
 
 import PlaygroundComment from '../PlaygroundComment';
@@ -46,27 +46,68 @@ class PlaygroundContent extends Component {
 //         }
 //       }
 
-      baseBounds : {
-        content   : null,
-        component : null
-      },
-      bounds     : {
-        content   : null,
-        component : null
+      bounds : {
+        init : null,
+        prev : null,
+        curr : null,
+        next : null
       }
-
+//       baseBounds : null,
+//       currBounds
+//
+//       baseBounds : {
+//         content   : null,
+//         component : null
+//       },
+//       bounds     : {
+//         content   : null,
+//         component : null
+//       }\
 //       baseBounds : null,
 //       bounds     : null
     }
   }
 
 
+  calcBounds = (rect)=> {
+    console.log('%s.calcBounds()', this.constructor.name, { rect });
+
+    const { component } = this.props;
+    let { bounds } = this.state;
+    const { init, prev, curr, next } = bounds;
+
+    const { x, y, width, height } = rect;
+
+    // nothing stored yet
+    if (!init) {
+      this.setState({
+        init : {
+          container : {
+            position : { x, y },
+            size     : { width, height }
+          },
+          component : {
+            position : {}, // sub container w comp.fullsize
+            size     : {} //
+          }
+        }}
+      );
+    }
+
+    bounds = {
+      content   : {
+        position : { x, y },
+        size     : { width, height }
+      },
+      component : null
+    };
+  };
+
+
   componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
     const { playground, component } = this.props;
-
-
   };
 
   handlePlaygroundResize = (rect)=> {
@@ -153,6 +194,7 @@ class PlaygroundContent extends Component {
 
       console.log('%s.onUpdateReflow() --INIT CONTENT', this.constructor.name, { rect, baseBounds, bounds });
       this.setState({ baseBounds, bounds });
+
 
     } else if (this.state.baseBounds && component && this.state.baseBounds.component !== component.fullSize) {
       const { fullSize, thumbSize } = component;
@@ -253,32 +295,38 @@ const PlaygroundComponent = (props)=> {
 
   const title = (component.title === tagName) ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}` : component.title;
 
-  return (<ResizableBox className="playground-component-wrapper" width={width} height={height} lockAspectRatio={true} minContraints={(thumbSize) ? [thumbSize.width, thumbSize.height] : [0, 0]} maxContraints={(fullSize) ? [fullSize.width, fullSize.height] : [thumbSize.width, thumbSize.height]} onResize={props.onResize} resizeHandles={['s', 'se']}>
-    <div className="playground-component" data-processed={processed} onClick={(event)=> props.onItemClick(event, component)} style={{ width : `${width}px`, height : `${height}px`}}>
-      <h5 className="component-title">{title}</h5>
+  return <ResizableBox className="playground-component-wrapper" axis="both" width={width} height={height} lockAspectRatio={true} minContraints={(thumbSize) ? [thumbSize.width, thumbSize.height] : [0, 0]} maxContraints={(fullSize) ? [fullSize.width, fullSize.height] : [thumbSize.width, thumbSize.height]} onResize={props.onResize} resizeHandles={['s', 'se']}>
+  <div className="playground-component" data-processed={processed} onClick={(event) => props.onItemClick(event, component)} style={{ width : `${width}px`, height : `${height}px` }}>
+    <h5 className="component-title">{title}</h5>
 
-      {(scaling) && (<div className="scaling-wrapper">
-        <img src={(imageData || thumbData)} alt={title} />
-      </div>)}
+    {(scaling) && (<div className="scaling-wrapper">
+      <img src={(imageData || thumbData)} alt={title} />
+    </div>)}
 
-      {(!scaling) && (<ContextMenuTrigger disable={!processed} id="component" component={component} collect={(props) => ({ component : props.component })} disableIfShiftIsPressed={true}>
+    {(!scaling) && (
+      <ContextMenuTrigger disable={!processed} id="component" component={component} collect={(props) => ({ component : props.component })} disableIfShiftIsPressed={true}>
         <div className="playground-content-component" data-id={id}>
           {(processed) && (<img src={(imageData || '')} alt={title} />)}
         </div>
         <div className="playground-component-comments-wrapper" data-id={id}>
-          {((popover) ? [...comments, reformComment({ position,
-            id      : 0,
-            type    : 'add',
-            content : '',
-            author  : profile
-          })] : comments).filter(({ type })=> (type !== 'init')).map((comm, i) => {
-            return (<PlaygroundComment key={i} ind={(comments.length - 1) - i} component={component} comment={comm} position={position} onMarkerClick={props.onMarkerClick} onAdd={props.onAddComment} onDelete={props.onDeleteComment} onClose={props.onCloseComment} />);
+          {((popover) ? [
+            ...comments, reformComment({
+              position,
+              id      : 0,
+              type    : 'add',
+              content : '',
+              author  : profile
+            })
+          ] : comments).filter(({ type }) => (type !== 'init')).map((comm, i) => {
+            return (
+              <PlaygroundComment key={i} ind={(comments.length - 1) - i} component={component} comment={comm} position={position} onMarkerClick={props.onMarkerClick} onAdd={props.onAddComment} onDelete={props.onDeleteComment} onClose={props.onCloseComment} />);
           })}
-       </div>
-       </ContextMenuTrigger>)}
-      {(true) && (<div className="component-caption">{component.meta.bounds.width}px × {component.meta.bounds.height}px</div>)}
+        </div>
+      </ContextMenuTrigger>)}
+    {(true) && (
+      <div className="component-caption">{component.meta.bounds.width}px × {component.meta.bounds.height}px</div>)}
     </div>
-  </ResizableBox>);
+  </ResizableBox>;
 };
 
 

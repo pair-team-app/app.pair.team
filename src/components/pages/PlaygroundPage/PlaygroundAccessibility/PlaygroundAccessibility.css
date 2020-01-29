@@ -106,7 +106,7 @@
 	margin-right: var(--orthodox-margin-half);
 	max-width: 100px;
 	max-height: 100px;
-	background-color: rgba(var(--playground-panel-bg-color), 1.0);
+	background-color: rgba(var(--playground-content-bg-color), 1.0);
 }
 
 .accessibility-tree-item-thumb-wrapper > img {
