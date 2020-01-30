@@ -7,7 +7,7 @@ import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
 import BaseContentExpander from '../../../iterables/BaseContentExpander';
-import {componentByNodeID, typeGroupComponentsProcessed} from '../utils/lookup';
+import { componentByNodeID, typeGroupComponentsProcessed } from '../utils/lookup';
 
 
 const flattenTree = (node)=> {
@@ -80,7 +80,7 @@ class PlaygroundAccessibility extends Component {
 
 		const nodeID = treeTrunk.nodeID;
 		const component = componentByNodeID(components, nodeID);
-    console.log('%s.makeTreeBranch()', this.constructor.name, { components, treeTrunk : treeTrunk.childNodes, nodeID, ax : (component) ? component.accessibility : null });
+    	console.log('%s.makeTreeBranch()', this.constructor.name, { components, treeTrunk : treeTrunk.childNodes, nodeID, ax : (component) ? component.accessibility : null });
 
 		return ((component && component.processed) ? (<AccessibilityTreeBranch
 			key={treeTrunk.axNodeID}
@@ -110,19 +110,18 @@ class PlaygroundAccessibility extends Component {
 const AccessibilityTreeBranch = (props)=> {
 	console.log('AccessibilityTreeBranch()', props);
 
-
  	const { expanded, component, childNodes, treeNode } = props;
 	const { failed, aborted } = (component && component.accessibility) ? component.accessibility.report : {};
 
 	let ariaAttribs = [];
-		const tag = new JSSoup(component.html).nextElement;
-		ariaAttribs = Object.keys(tag.attrs).filter((key)=> (/^(aria-|role)/i.test(key))).sort().reverse().map((key)=> (`${key}="${(key !== tag.attrs[key]) ? tag.attrs[key] : ''}"`));
+	const tag = new JSSoup(component.html).nextElement;
+	ariaAttribs = Object.keys(tag.attrs).filter((key)=> (/^(aria-|role)/i.test(key))).sort().reverse().map((key)=> (`${key}="${(key !== tag.attrs[key]) ? tag.attrs[key] : ''}"`));
 
 	const expandable = ((((component) ? failed.length + aborted.length + ariaAttribs.length : 0) + childNodes.length) * 1 !== 0);
 	return (<BaseContentExpander
 		className={`accessibility-tree-item${(expanded) ? ' accessibility-tree-item-expanded' : ''}`}
 		open={expanded}
-		title={<AccessibilityTreeBranchHeader
+		title={<AccessibilityTreeItemHeader
 			expandable={expandable}
 			expanded={expanded}
 			component={component}
@@ -137,12 +136,12 @@ const AccessibilityTreeBranch = (props)=> {
 			</div>)}
 
 			{(component) && (<div className="accessibility-tree-item-report-wrapper">
-				{(failed.length > 0) && (<AccessibilityTreeBranchReport
+				{(failed.length > 0) && (<AccessibilityTreeItemReport
 					type="failed"
 					rules={failed}
 				/>)}
 
-				{(aborted.length > 0) && (<AccessibilityTreeBranchReport
+				{(aborted.length > 0) && (<AccessibilityTreeItemReport
 					type="aborted"
 					rules={aborted}
 				/>)}

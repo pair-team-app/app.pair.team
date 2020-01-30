@@ -2,7 +2,6 @@
 .playground-content {
 	position: relative;
 	top: 0;
-	/*left: var(--playground-nav-width);*/
 	padding: var(--orthodox-padding-base) var(--orthodox-padding-base) calc(var(--orthodox-padding-base) + 28px) var(--orthodox-padding-base);
 	display: flex;
 	flex-flow: nowrap;
@@ -26,11 +25,6 @@
 	align-items: center; /* v-align */
 }
 
-.playground-content-components-wrapper {
-	/*width: 100%;*/
-	/*padding: 40px 84px 40px;*/
-}
-
 .playground-content[data-component="true"] .playground-content-components-wrapper {
 	margin: auto;
 }
@@ -45,12 +39,6 @@
 	left: 0;
 	font-size: 20px;
 }
-
-
-/*.playground-component-wrapper {*/
-	/*position: relative;*/
-	/*width: 100%;*/
-/*}*/
 
 
 .playground-content-components-wrapper .image-loader {
@@ -75,24 +63,26 @@
 
 .playground-component {
 	position: relative;
-	/*top: 50%;*/
-	/*left: 50%;*/
-	/*height: fit-content;*/
 }
 
-.playground-component > .scaling-wrapper {
-	max-width: 100%;
-	max-height: 1000px;
-	transform: translate(-50%, -50%);
+.playground-content-component > img {
+	width: 100%;
+	height: 100%;
+	/* object-position: center; */
+	/* object-position: 100% 0%; */
 	object-fit: scale-down;
+	/* object-fit: none; */
+	/* object-fit: contain; */
+	/* object-fit: none; */
+	/* object-fit: none; */
 }
 
-.playground-component[data-processed="true"]{
+.playground-component[data-processed="true"] img {
 	border: 1px solid rgba(var(--border-alt-color), 1.0);
 }
 
 .playground-component h5 {
-	margin-bottom: var(--orthodox-margin-base);
+	padding-bottom: var(--orthodox-margin-base);
 	text-align: left;
 	font-size: var(--orthodox-font-size);
 	font-weight: var(--orthodox-font-weight);
@@ -123,7 +113,6 @@
 	width: 100%;
 	height: 100%;
 	z-index: 2;
-
 }
 
 .playground-components-grid {
@@ -141,7 +130,6 @@
 .playground-components-grid > * {
 	display: flex;
 	flex-flow: column nowrap;
-	/*border: 1px dotted #ff00ff;*/
 }
 
 .components-grid-item {
@@ -177,14 +165,6 @@
 	border: 1px solid rgba(var(--border-alt-color), 1.0);
 	overflow: hidden;
 	transition: background-color 0.125s ease-out;
-}
-
-.components-grid-item .content-wrapper[data-loaded="false"] {
-	background-color: rgba(var(--playground-content-bg-color), 1.0);
-}
-
-.components-grid-item .content-wrapper[data-loaded="true"] {
-	border: 1px solid rgba(var(--border-alt-color), 1.0);
 }
 
 .components-grid-item .content-wrapper img {

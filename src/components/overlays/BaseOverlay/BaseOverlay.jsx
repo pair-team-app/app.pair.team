@@ -130,7 +130,7 @@ class BaseOverlay extends Component {
 
 //     console.log('%s.render()', this.constructor.name, { wrapper : (this.wrapper) ? this.wrapper.offsetHeight : null, hAdj });
 
-		console.log('%s.render()', this.constructor.name, { ...this.props });
+		// console.log('%s.render()', this.constructor.name, { ...this.props });
 
 		const { type, filled, offset, title, closeable, bare, children } = this.props;
 		const wrapperClass = `base-overlay-content-wrapper base-overlay-content-wrapper${(type === OVERLAY_TYPE_PERCENT_SIZE) ? '-percent' : (OVERLAY_TYPE_AUTO_SIZE) ? '-auto-size' : '-auto-scroll'}`;
