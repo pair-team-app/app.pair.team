@@ -29,7 +29,17 @@ class PlaygroundContent extends Component {
     };
   }
 
-  calcBounds = rect => {
+  componentDidMount() {
+    console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+    // this.calcBounds({ x : 0, y : 0, width : 0, height : 0 });
+  }
+
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+  }
+
+  calcBounds = (rect) => {
     // console.log('%s.calcBounds()', this.constructor.name, { rect });
 
     const { x, y, width, height } = rect;
@@ -71,8 +81,8 @@ class PlaygroundContent extends Component {
               y: 0
             },
             size: {
-              width: (width - 40) * 0.85,
-              height: (height - 168) * 0.85
+              width: (width - 40) * 0.985,
+              height: (height - 168) * 0.985
             }
           }
         : null
@@ -217,14 +227,11 @@ const PlaygroundComponent = props => {
     id,
     tagName,
     imageData,
-    thumbData,
-    fullSize,
-    thumbSize,
     processed,
     comments
   } = component;
-  const { position, size } = bounds || { x: 0, y: 0 };
-  const { width, height } = size || thumbSize;
+  const { position, size } = bounds || component.meta.bounds;
+  const { width, height } = size;
 
   const title =
     component.title === tagName

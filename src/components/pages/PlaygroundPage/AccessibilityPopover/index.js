@@ -1,2 +1,2 @@
 
-export { default } from './ComponentAccessibility';
+export { default } from './AccessibilityPopover';

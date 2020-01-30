@@ -25,6 +25,10 @@ class BasePopover extends Component {
 				x : 0,
 				y : 0
 			},
+			offset   : {
+				right  : null,
+				bottom : null
+			},
 			size     : {
 				width  : 0,
 				height : 0
@@ -37,14 +41,14 @@ class BasePopover extends Component {
 	}
 
 	componentDidMount() {
-//-/> 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+ 		// console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state, { ...this.state, ...this.props});
 
 		const { intro, outro } = { ...this.state, ...this.props};
-		const { fixed, duration, position, size } = Object.assign({}, this.state, this.props.payload);
+		const { fixed, duration, position, offset, size } = (this.props.payload) ? Object.assign({}, this.state, this.props.payload) : this.state;
 
 		this.timeline = new TimelineMax();
-		this.setState({ fixed, duration, position, size, intro, outro }, ()=> {
-//-/> 			console.log({ fixed, duration, position, size, intro, outro });
+		this.setState({ fixed, duration, position, offset, size, intro, outro }, ()=> {
+ 			// console.log({ fixed, duration, position, size, intro, outro });
 			if (intro) {
 				this.onIntro();
 			}
@@ -55,7 +59,7 @@ class BasePopover extends Component {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevPos : prevProps.payload.position,currPos : prevProps.outro }, { intro : this.props.intro, outro : this.props.outro }, { intro : prevState.intro, outro : prevState.outro }, { intro : this.state.intro, outro : this.state.outro });
 //-/> 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevPosition : prevProps.payload.position, currPosition : this.props.payload.position }, { statePosition : this.state.position });
 
-		const { position } = this.props.payload;
+		// const { position } = this.props.payload;
 		const { intro, outro } = this.state;
 
 // 		console.log('::POS::', { position : (position !== null), initStatePos :  (this.state.position.x !== 0 && this.state.position.y !== 0), prevPos : (position !== prevProps.payload.position), statePos : (position !== this.state.position) });
@@ -157,22 +161,24 @@ class BasePopover extends Component {
 
 	render() {
 //-/> 		console.log('%s.render()', this.constructor.name, { props : this.props.payload, state : this.state.position });
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
 // 		if (this.wrapper && this.timeline && this.timeline.time === 0) {
 // 			this.timeline.seek(0);
 // 		}
 
 		const { children } = this.props;
-		const { fixed, position, size } = this.state;
+		const { fixed, position, offset, size } = this.state;
 
 		const styles = {
-			left   : `${position.x}px`,
-			top    : `${position.y}px`,
+			left   : (!offset) ? `${position.x}px` : null,
+			top    : (!offset) ? `${position.y}px` : null,
+			right  : (offset) ? `${offset.right}px` : null,
+			bottom : (offset) ? `${offset.bottom}px` : null,
 			width  : (size.width * size.height === 0) ? 'fit-content' : `${size.width}px`,
 			height : (size.width * size.height === 0) ? 'fit-content' : `${size.height}px`,
 		};
 //-/>
-// 		console.log('styles', styles);
+		console.log({ styles });
 
 		return (<div className={`base-popover${(fixed) ? ' base-popover-fixed' : ' base-popover-abs'}`} style={styles} ref={(element)=> { this.wrapper = element; }}>
 			<div className="base-popover-content-wrapper">{children}</div>

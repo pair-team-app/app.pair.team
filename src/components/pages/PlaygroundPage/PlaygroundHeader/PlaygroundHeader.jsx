@@ -96,7 +96,6 @@ class PlaygroundHeader extends Component {
         <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
 			</div>
 			<div className="playground-header-col playground-header-col-right">
-				{/*<NavLink to={Pages.DOCS}>Docs</NavLink>*/}
 				<PlaygroundShareLink popover={popover} playground={playground} onClick={()=> this.setState({ popover : !this.state.popover })} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
 				<UserSettings onMenuItem={this.props.onSettingsItem} onLogout={this.props.onLogout} />
 			</div>

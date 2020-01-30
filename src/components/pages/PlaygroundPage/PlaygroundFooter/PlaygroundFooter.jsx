@@ -4,7 +4,7 @@ import './PlaygroundFooter.css';
 
 function PlaygroundFooter(props) {
 // 	console.log('PlaygroundFooter()', props);
-	console.log('PlaygroundFooter()', { component : props.component, props });
+	// console.log('PlaygroundFooter()', { component : props.component, props });
 
 // 	const { accessibility, cursor, playground, builds } = props;
 	const { accessibility, cursor, component } = props;
