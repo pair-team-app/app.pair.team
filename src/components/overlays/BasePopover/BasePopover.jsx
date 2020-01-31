@@ -25,10 +25,7 @@ class BasePopover extends Component {
 				x : 0,
 				y : 0
 			},
-			offset   : {
-				right  : null,
-				bottom : null
-			},
+			offset   : null,
 			size     : {
 				width  : 0,
 				height : 0
@@ -43,8 +40,8 @@ class BasePopover extends Component {
 	componentDidMount() {
  		// console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state, { ...this.state, ...this.props});
 
-		const { intro, outro } = { ...this.state, ...this.props};
-		const { fixed, duration, position, offset, size } = (this.props.payload) ? Object.assign({}, this.state, this.props.payload) : this.state;
+		const { intro, outro } = { ...this.state, ...this.props };
+		const { fixed = this.state.fixed, duration = this.state.duration, position = this.state.position, offset = this.state.offset, size = this.state.size } = (this.props.payload) ? Object.assign({}, this.state, this.props.payload) : this.state;
 
 		this.timeline = new TimelineMax();
 		this.setState({ fixed, duration, position, offset, size, intro, outro }, ()=> {
@@ -161,7 +158,7 @@ class BasePopover extends Component {
 
 	render() {
 //-/> 		console.log('%s.render()', this.constructor.name, { props : this.props.payload, state : this.state.position });
-		console.log('%s.render()', this.constructor.name, this.props, this.state);
+		// console.log('%s.render()', this.constructor.name, this.props, this.state);
 // 		if (this.wrapper && this.timeline && this.timeline.time === 0) {
 // 			this.timeline.seek(0);
 // 		}
@@ -169,16 +166,29 @@ class BasePopover extends Component {
 		const { children } = this.props;
 		const { fixed, position, offset, size } = this.state;
 
-		const styles = {
-			left   : (!offset) ? `${position.x}px` : null,
-			top    : (!offset) ? `${position.y}px` : null,
-			right  : (offset) ? `${offset.right}px` : null,
-			bottom : (offset) ? `${offset.bottom}px` : null,
+
+		const styles = { ...((!offset) ? {
+			left   : `${position.x}px`,
+			top    : `${position.y}px`
+		} : (offset.right !== undefined) ? {
+			right  : `${offset.right}px`,
+			top : `${offset.top}px`
+		} : null),  
 			width  : (size.width * size.height === 0) ? 'fit-content' : `${size.width}px`,
 			height : (size.width * size.height === 0) ? 'fit-content' : `${size.height}px`,
 		};
+
+
+		// const styles = {
+		// 	left   : (!offset) ? `${position.x}px` : `0px`,
+		// 	top    : (!offset) ? `${position.y}px` : `0px`,
+		// 	right  : (offset.right !== undefined) ? `${offset.right}px` : `0px`,
+		// 	bottom : (offset.bottomm !== undefined) ? `${offset.bottom}px` : `0px`,
+		// 	width  : (size.width * size.height === 0) ? 'fit-content' : `${size.width}px`,
+		// 	height : (size.width * size.height === 0) ? 'fit-content' : `${size.height}px`,
+		// };
 //-/>
-		console.log({ styles });
+		// console.log('::::::::__', { position, offset, styles });
 
 		return (<div className={`base-popover${(fixed) ? ' base-popover-fixed' : ' base-popover-abs'}`} style={styles} ref={(element)=> { this.wrapper = element; }}>
 			<div className="base-popover-content-wrapper">{children}</div>

@@ -446,8 +446,8 @@ class PlaygroundPage extends Component {
   handleComponentPopoverClose = () => {
     // 		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
 
-    const pushURL = /\/comments.*$/.test(this.props.location.pathname)
-      ? this.props.location.pathname.replace(/\/comments.*$/, "/comments")
+    const pushURL = /\/comments\/.*$/.test(this.props.location.pathname)
+      ? this.props.location.pathname.replace(/\/comments\/.*$/, "/comments")
       : null;
 
     console.log("%s.handleComponentPopoverClose()", this.constructor.name, {
@@ -456,9 +456,9 @@ class PlaygroundPage extends Component {
       pushURL
     });
 
-    // 		if (pushURL) {
-    //       this.props.history.push(pushURL);
-    //     }
+    if (pushURL) {
+      this.props.history.push(pushURL);
+    }
   };
 
   handleDeleteComment = comment => {
