@@ -1,12 +1,16 @@
 #!/bin/bash
 
 
+#-- switch this screipt's dir
+if [ `pwd` != `dirname $0` ]; then cd `dirname $0`; fi
+
+
 #-- declares branch name frmt using current date (default: wip/YYYMMDD
-cfg_path=.wip_branch_rc
+cfg_path=./wip_branch_rc
 
 
 #-- start off getting config from rc file
-if [ -f $source ]; then ./.wip_branch_rc ; fi
+if [ -f "$cfg_path" ]; then ./wip_branch_rc ; fi
 
 
 #-- wip branch name

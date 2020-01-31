@@ -4,7 +4,7 @@ import "./PlaygroundContent.css";
 import { ContextMenuTrigger } from "react-contextmenu";
 import FontAwesome from "react-fontawesome";
 import { connect } from "react-redux";
-import { Resizable, ResizableBox } from "react-resizable";
+import { Resizable } from "react-resizable";
 import ResizeObserver from "react-resize-observer";
 
 import PlaygroundComment from "../PlaygroundComment";
