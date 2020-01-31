@@ -54,7 +54,7 @@ class PlaygroundPage extends Component {
   }
 
   componentDidMount() {
-    //-/> 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+//    console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
     const { profile, match, playground } = this.props;
     const { fetching } = this.state;
@@ -70,7 +70,7 @@ class PlaygroundPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+//    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const {
       profile,
@@ -92,7 +92,7 @@ class PlaygroundPage extends Component {
       componentID,
       commentID
     } = match.params;
-    // 		console.log('params', match.params);
+//    		console.log('*************** params', match.params);
 
     // init typeGroups
     if (!prevProps.componentTypes && componentTypes) {
@@ -111,7 +111,7 @@ class PlaygroundPage extends Component {
       }
     }
 
-    //     console.log('DERP', { prevProps : prevProps.playground, playground });
+//    //     console.log('DERP', { prevProps : prevProps.playground, playground });
 
     // playground first load
     if (!prevProps.playground && playground) {
@@ -152,6 +152,7 @@ class PlaygroundPage extends Component {
                 url = url.replace(componentID, component.id);
               }
 
+//              console.log('=-=-=-=-=-=--=', { commentID, comment : commentByID(component.comments, commentID) });
               if (commentID) {
                 comment = commentByID(component.comments, commentID);
 
@@ -165,6 +166,8 @@ class PlaygroundPage extends Component {
                 }
               }
             } else {
+
+//              console.log('=-=-=-=-=-=--2=', { commentID, comment : commentByID(component.comments, commentID) });
               url = url.replace(new RegExp(`/${componentID}.*$`), "");
             }
           }
@@ -198,7 +201,7 @@ class PlaygroundPage extends Component {
       const { typeGroup, component, comment } = this.props;
       let url = pathname;
 
-      //    console.log('%s.componentDidUpdate()', this.constructor.name, { playgroundID : this.props.playground.id, prev : prevProps.playground.id, fetching, processing });
+//      //    console.log('%s.componentDidUpdate()', this.constructor.name, { playgroundID : this.props.playground.id, prev : prevProps.playground.id, fetching, processing });
       if (playground.id !== prevProps.playground.id && !fetching) {
         this.onFetchTypeGroupComponents(typeGroup);
       }
@@ -251,9 +254,10 @@ class PlaygroundPage extends Component {
           this.props.setComponent(null);
         }
 
-        if (!commentID && comment) {
-          this.props.setComment(null);
-        }
+        // console.log('_-_--------', { commentID, comment });
+        // if (!commentID && comment) {
+        //   this.props.setComment(null);
+        // }
 
         this.setState({ accessibility: curr.includes("/accessibility") });
       } else {
@@ -261,18 +265,22 @@ class PlaygroundPage extends Component {
           url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`;
         }
 
-        if (typeGroup && typeGroup !== prevProps.typeGroup) {
-          url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${
-            typeGroup.key
-          }${url.includes("/accessibility") ? "/accessibility" : ""}`;
+        if (typeGroup && typeGroup !== prevProps.typeGroup && !comment) {
+          if (!/\/accessibility\/.*$/.test(url)) {
+              this.props.location.pathname.replace(/(\/comments)$/, '')
+          }
+
+          url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}${url.includes("/accessibility") ? "/accessibility" : ""}`;
         }
 
-        if (component && component !== prevProps.component) {
+        if (component && component !== prevProps.component && !comment) {
           url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${
             typeGroup.key
           }/${component.id}${
             url.includes("/accessibility") ? "/accessibility" : ""
-          }${url.endsWith("/comments") ? "/comments" : ""}`;
+          }`;
+
+          url = url.replace(/\/comments.*$/, '');
         }
 
         if (comment && comment !== prevProps.comment) {
@@ -283,9 +291,10 @@ class PlaygroundPage extends Component {
               }/${component.id}${
                 url.includes("/accessibility") ? "/accessibility" : ""
               }/comments/${comment.id}`;
+
         }
 
-        if (component && !comment && prevProps.comment) {
+        if (component && !comment && prevProps.comment && !commentID && prevProps.commentID) {
           url = prevProps.history.location.pathname.includes("/comments/")
             ? url.replace(/\/comments\/?.*$/, "")
             : url.replace(/(\/comments)\/?(.*)$/, "$1");
@@ -359,7 +368,7 @@ class PlaygroundPage extends Component {
   };
 
   handleBreadCrumbClick = ({ type = null, payload = null }) => {
-    //  console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
+//     console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
 
     if (type === BreadcrumbTypes.PLAYGROUND) {
       this.props.setTypeGroup(typeGroupByID(this.state.typeGroups, 187));
@@ -382,6 +391,7 @@ class PlaygroundPage extends Component {
       );
     } else if (type === BreadcrumbTypes.ACCESSIBILITY) {
     } else if (type === BreadcrumbTypes.COMMENTS) {
+
       if (/\/comments\/.*$/.test(this.props.location.pathname)) {
         this.props.history.push(
           this.props.location.pathname.replace(/(\/comments)\/?(.*)$/, "$1")
@@ -409,7 +419,7 @@ class PlaygroundPage extends Component {
   };
 
   handleComponentClick = ({ component = null }) => {
-    //-/> 		console.log('%s.handleComponentClick()', this.constructor.name, { component });
+//.log('%s.handleComponentClick()', this.constructor.name, { component });
 
     // 		if (!component.selected) {
     component.selected = true;
@@ -419,14 +429,15 @@ class PlaygroundPage extends Component {
   };
 
   handleComponentMenuShow = ({ component = null }) => {
-    //-/> 		console.log('%s.handleComponentMenuShow()', this.constructor.name, { component });
+//.log('%s.handleComponentMenuShow()', this.constructor.name, { component });
     //     this.props.setComponent(component);
   };
 
   handleComponentMenuItem = ({ menuItem = null }) => {
-    //-/>  		console.log('%s.handleComponentMenuItem()', this.constructor.name, { menuItem });
+//.log('%s.handleComponentMenuItem()', this.constructor.name, { menuItem });
 
     //     this.props.setComponent(component);
+
     if (menuItem === COMPONENT_MENU_ITEM_COMMENTS) {
       if (/\/comments.*$/.test(this.props.location.pathname)) {
         this.props.setComment(null);
@@ -434,7 +445,7 @@ class PlaygroundPage extends Component {
           this.props.location.pathname.replace(/\/comments.*$/, "")
         );
       } else {
-        this.props.history.push(`${this.props.location.pathname}/  `);
+        this.props.history.push(`${this.props.location.pathname}/comments`);
       }
     } else if (menuItem === COMPONENT_MENU_ITEM_COPY) {
       if (!this.state.share) {
@@ -444,7 +455,7 @@ class PlaygroundPage extends Component {
   };
 
   handleComponentPopoverClose = () => {
-    // 		console.log('%s.handleComponentPopoverClose()', this.constructor.name);
+//.log('%s.handleComponentPopoverClose()', this.constructor.name);
 
     const pushURL = /\/comments\/.*$/.test(this.props.location.pathname)
       ? this.props.location.pathname.replace(/\/comments\/.*$/, "/comments")
@@ -462,7 +473,7 @@ class PlaygroundPage extends Component {
   };
 
   handleDeleteComment = comment => {
-    //  		console.log('%s.handleDeleteComment()', this.constructor.name, comment.id);
+//.log('%s.handleDeleteComment()', this.constructor.name, comment.id);
     trackEvent("button", "delete-comment");
 
     axios
@@ -494,7 +505,7 @@ class PlaygroundPage extends Component {
   };
 
   handleNavGroupItemClick = typeGroup => {
-    //-/> 		console.log('%s.handleNavGroupItemClick()', this.constructor.name, typeGroup);
+    //console.log('%s.handleNavGroupItemClick()', this.constructor.name, typeGroup);
 
     typeGroup.selected = !typeGroup.selected;
 
@@ -505,14 +516,14 @@ class PlaygroundPage extends Component {
   };
 
   handleNavTypeItemClick = (typeGroup, typeItem) => {
-    //-/> 		console.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
+//.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
 
     this.props.setComponent(typeItem);
     this.props.setComment(null);
   };
 
   handleSettingsItem = itemType => {
-    //-/> 		console.log('%s.handleSettingsItem()', this.constructor.name, itemType);
+//.log('%s.handleSettingsItem()', this.constructor.name, itemType);
 
     if (itemType === SettingsMenuItemTypes.DELETE_ACCT) {
       this.props.onModal(Modals.DISABLE);
@@ -522,7 +533,7 @@ class PlaygroundPage extends Component {
   };
 
   handleToggleAccessibility = () => {
-    //-/> 		console.log('%s.handleToggleAccessibility()', this.constructor.name, this.state.accessibility);
+//.log('%s.handleToggleAccessibility()', this.constructor.name, this.state.accessibility);
 
     const { comment } = this.props;
     setTimeout(() => {
@@ -535,14 +546,14 @@ class PlaygroundPage extends Component {
   };
 
   handleToggleCommentCursor = event => {
-    // 		console.log('%s.handleToggleCommentCursor()', this.constructor.name, event, this.state.cursor, !this.state.cursor);
+//.log('%s.handleToggleCommentCursor()', this.constructor.name, event, this.state.cursor, !this.state.cursor);
 
     const { cursor } = this.state;
     this.setState({ cursor: !cursor });
   };
 
   handleTogglePlayground = () => {
-    //-/> 		console.log('%s.handleTogglePlayground()', this.constructor.name, this.props.playground.deviceID);
+//.log('%s.handleTogglePlayground()', this.constructor.name, this.props.playground.deviceID);
 
     trackEvent(
       "button",
@@ -563,7 +574,7 @@ class PlaygroundPage extends Component {
   };
 
   handleStripeModal = () => {
-    //-/> 		console.log('%s.handleStripeModal()', this.constructor.name);
+//.log('%s.handleStripeModal()', this.constructor.name);
 
     const { team, products } = this.props;
     const product = [...products].pop();
@@ -594,7 +605,7 @@ class PlaygroundPage extends Component {
   };
 
   render() {
-    //        		console.log('%s.render()', this.constructor.name, this.props, this.state);
+           		console.log('%s.render()', this.constructor.name, this.props, this.state);
     // 		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
 
     const {
@@ -611,7 +622,7 @@ class PlaygroundPage extends Component {
     return (
       <BasePage
         className={`playground-page${
-          component && window.location.href.includes("/comments")
+          component && component.processed && window.location.href.includes("/comments")
             ? " playground-page-comments"
             : ""
         }`}
@@ -675,7 +686,7 @@ class PlaygroundPage extends Component {
           </div>
         )}
 
-        {profile && (
+        {profile && team && playground && component && component.processed && (
           <PlaygroundCommentsPanel
             comments={component ? component.comments : []}
             onDelete={this.handleDeleteComment}

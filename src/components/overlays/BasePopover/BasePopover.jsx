@@ -170,10 +170,10 @@ class BasePopover extends Component {
 		const styles = { ...((!offset) ? {
 			left   : `${position.x}px`,
 			top    : `${position.y}px`
-		} : (offset.right !== undefined) ? {
-			right  : `${offset.right}px`,
-			top : `${offset.top}px`
-		} : null),  
+		} : {
+			right  : `${(offset.right || 0)}px`,
+			bottom : `${(offset.bottom || 0)}px`,
+		}),  
 			width  : (size.width * size.height === 0) ? 'fit-content' : `${size.width}px`,
 			height : (size.width * size.height === 0) ? 'fit-content' : `${size.height}px`,
 		};

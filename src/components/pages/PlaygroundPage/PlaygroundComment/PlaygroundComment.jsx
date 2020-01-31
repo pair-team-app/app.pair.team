@@ -20,28 +20,25 @@ class PlaygroundComment extends Component {
       position: {
         x: 0,//-300,
         y: 0,//400
-	  },
-	  offset : {
-		  x : 0,
-		  y : 0
-	  }
-    };
+      }
+	  };
   }
 
   componentDidMount() {
     // console.log("%s.componentDidMount()", this.constructor.name, this.props, this.state);
 
-    const { position, offset, comment } = this.props;
+    const { position, comment } = this.props;
     if (comment.id === 0) {
       document.addEventListener("keydown", this.handleKeyDown);
     }
 
     //  console.log('%s.componentDidMount()', this.constructor.name, { position : comment });
-    // if (position) {
-      this.setState({ position, offset,
+    if (position) {
+      this.setState({ position });
+      // this.setState({ 
 		// position: Maths.geom.pointsAdd(position || { x : 0, y : 0 }, this.state.position),
-      });
-    // }
+      // });
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -63,13 +60,15 @@ class PlaygroundComment extends Component {
     event.preventDefault();
     event.stopPropagation();
 
+    const { offset } = this.props;
+    const position = {
+      x: (this.state.position.x - 2) + offset.x,
+      y: (this.state.position.y - 28) + offset.y
+    };
+
     this.setState(
-      {
+      { position,
         outro: true,
-        position: {
-          x: this.state.position.x - 2,
-          y: this.state.position.y - 28
-        }
       },
       () => {
         const { component } = this.props;
@@ -153,13 +152,18 @@ class PlaygroundComment extends Component {
     //   left: `${offset.left + ((comment.position.x) / scale.width)}px`
 	// };
 	
-	const style = {
-		top: `${0 + ((comment.position.y) / scale.height)}px`,
-		left: `${0 + ((comment.position.x) / scale.width)}px`
-	  };
+	// const style = {
+	// 	top: `${offset.y + ((comment.position.y) / scale.height)}px`,
+	// 	left: `${offset.x + ((comment.position.x) / scale.width)}px`
+  // };
+
+  const style = {
+		top: `${((comment.position.y) / scale.height)}px`,
+		left: `${((comment.position.x) / scale.width)}px`
+  };
 
     return (
-      <div className="playground-comment" style={style} data-id={component.id} data-pos={JSON.stringify(comment.position)} data-scale={JSON.stringify(scale)}>
+      <div className="playground-comment" style={style} data-id={component.id} data-pos={JSON.stringify(comment.position)} data-offset={JSON.stringify(offset)} data-scale={JSON.stringify(scale)}>
         <PlaygroundCommentMarker
           ind={ind}
           comment={comment}

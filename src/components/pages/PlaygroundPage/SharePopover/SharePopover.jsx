@@ -101,13 +101,14 @@ class SharePopover extends Component {
     const payload = {
       fixed: false,
       position: {
-        x: 0,
-        y: 0
+        x: -210,
+        y: 18
       },
-      offset: {
-        right: -50,
-        top: 22
-      }
+      offset : null
+      // offset: {
+      //   right: -50,
+      //   top: 22
+      // }
     };
 
     return (

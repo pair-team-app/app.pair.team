@@ -8,8 +8,9 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "http://localhost:3000/app/pairurl-com/pairurl-com/204/558/views/11410",
-            "webRoot": "${workspaceFolder}"
+            "url": "http://localhost:3000/app/pairurl-com/pairurl-com/204/558/views/11410/comments/9237",
+            "webRoot": "${workspaceFolder}",
+            "skipFiles": ["${workspaceRoot}/node_modules/**/*.js"]
         }
     ]
 }

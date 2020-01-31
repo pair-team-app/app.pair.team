@@ -251,6 +251,8 @@ const PlaygroundComponent = props => {
     id,
     tagName,
     imageData,
+    thumbSize,
+    fullSize,
     processed,
     comments
   } = component;
@@ -262,25 +264,26 @@ const PlaygroundComponent = props => {
       ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}`
       : component.title;
 
-  // const scaleStyle = {
-  //   // 'transform' : `scale(${(1 / scale.width)}, ${(1 / scale.height)})`
-  //   'transform' : `scale(${Math.min((1 / scale.width), (1 / scale.height))})`
-  // };
-
-  const fac = Math.max(scale.width, scale.height)
-  const offset2 = {
-    top    : (height - (component.meta.bounds.height / fac)) * 0.5,
-    left   : (width - (component.meta.bounds.width / fac)) * 0.5,
-    width  : (component.meta.bounds.width / fac),
-    height : (component.meta.bounds.height / fac)
-  };
-
-  const offset = {
-    top  : 0,
-    left : 0
+  const lgFactor = Math.max(scale.width, scale.height)
+  const updBounds = {
+    position : {
+      x : 0,//(width - (component.meta.bounds.width / lgFactor)) * 0.5,
+      y : 0//(height - (component.meta.bounds.height / lgFactor)) * 0.5,
+    },
+    size     : { width, height }
+      // width  : component.meta.bounds.width / lgFactor,
+      // height : component.meta.bounds.height / lgFactor
+    // }
   };
 
   // console.log('PlaygroundComponent()', offset);
+
+  const commentsStyle = {
+    top    : 20 + updBounds.position.y,
+    left   : updBounds.position.x,
+    width  : updBounds.size.width,
+    height : updBounds.size.height
+  };
 
   return (
     <Resizable
@@ -289,7 +292,9 @@ const PlaygroundComponent = props => {
       width={width}
       height={height}
       lockAspectRatio={true}
-      maxcontraints={[maxBounds.size.width, maxBounds.size.height - 168]}
+      minConstraints={[thumbSize.width, thumbSize.height]}
+      // maxcontraints={[maxBounds.size.width, maxBounds.size.height - 168]}
+      maxcontraints={[Math.min(width, fullSize.width), Math.min(height, fullSize.height) - 168]}
       onResize={props.onResize}
     >
       <div
@@ -310,12 +315,12 @@ const PlaygroundComponent = props => {
           <div
             className="playground-content-component"
             data-id={id}
-            style={{ height: `${height}px` }}
+            style={{ height: `${height}px`, minWidth: `${thumbSize.width}px`, minHeight: `${thumbSize.height}` }}
           >
             {processed && <img src={imageData || ""} alt={title} />}
           </div>
           {processed && (
-            <div className="playground-component-comments-wrapper" data-id={id}>
+            <div className="playground-component-comments-wrapper" style={commentsStyle} data-id={id}>
               {(popover
                 ? [
                     ...comments,
@@ -339,7 +344,7 @@ const PlaygroundComponent = props => {
                       comment={comm}
                       scale={scale}
                       position={position}
-                      offset={offset}
+                      offset={updBounds.position}
                       onMarkerClick={props.onMarkerClick}
                       onAdd={props.onAddComment}
                       onDelete={props.onDeleteComment}
@@ -353,7 +358,7 @@ const PlaygroundComponent = props => {
 
         {processed && (
           <div className="component-caption">
-            {component.meta.bounds.width}px × {component.meta.bounds.height}px
+            {component.meta.bounds.width << 0}px × {component.meta.bounds.height << 0}px
           </div>
         )}
       </div>

@@ -87,7 +87,7 @@ export const reformComponent = async(component, overwrite={})=> {
   const fullSize = (imageData) ? await Jimp.read(imageData).then(async(image)=> {
     const { data, ...size } = image.bitmap;
     return ({ ...size });
-  }) : null;
+  }) : { width, height };
 
 
   const thumbSize = (thumbData) ? await Jimp.read(thumbData).then(async(image)=> {

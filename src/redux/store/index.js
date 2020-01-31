@@ -7,12 +7,14 @@ import { fetchComponentTypes, fetchProducts, fetchUserProfile } from '../actions
 import { onMiddleware } from '../middleware';
 import rootReducer from '../reducers';
 
+import { SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT } from '../../consts/action-types';
+
 
 const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
   const logActionStackTraceMiddleware = (storeAPI)=> (next)=> (action)=> {
     if(action.type && actionTypes.includes(action.type)) {
     	console.log('[|:|] Store', storeAPI.getState());
-//       console.trace('[:|:] "%s"', action.type, action);
+      // console.trace('[:|:] "%s"', action.type, action);
     }
 
     return (next(action));
@@ -22,7 +24,7 @@ const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
 };
 
 
-const stackTraceMiddleware = createLogActionStackTraceMiddleware(['SET_PLAYGROUND', 'SET_TYPE_GROUP', 'SET_COMPONENT']);
+const stackTraceMiddleware = createLogActionStackTraceMiddleware([SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT]);
 
 
 // const store = createStore(rootReducer, applyMiddleware(onMiddleware, thunk));
