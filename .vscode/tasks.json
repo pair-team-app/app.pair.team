@@ -1,0 +1,23 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558 
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [{
+        "type": "shell",
+        "command": "yarn start --no-launch",
+        "label": "Run start",
+        "isBackground": true,
+        "problemMatcher": [{
+            "pattern": {
+                "regexp": ""
+            },
+            "background": {
+                "beginsPattern": ".*node .*",
+                "endsPattern": "Web UI available at .*"
+            }
+        }],
+        "presentation": {
+            "reveal": "never"
+        }
+    }]
+}

@@ -684,7 +684,7 @@ class PlaygroundPage extends Component {
               />
             )}
           </div>
-        )}
+        )} -
 
         {profile && team && playground && component && component.processed && (
           <PlaygroundCommentsPanel

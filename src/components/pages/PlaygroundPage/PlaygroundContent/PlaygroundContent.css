@@ -109,8 +109,7 @@
 	z-index: 2;
 }
 
-/* .playground-component[data-processed="true"] .playground-component-comments-wrapper { */
-.playground-component[data-processed="true"] .playground-content-component {
+.playground-component[data-processed="true"] .playground-component-comments-wrapper {
 	border: 1px solid rgba(var(--border-alt-color), 1.0);
 }
 

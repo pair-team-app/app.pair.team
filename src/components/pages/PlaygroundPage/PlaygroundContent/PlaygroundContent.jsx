@@ -267,13 +267,13 @@ const PlaygroundComponent = props => {
   const lgFactor = Math.max(scale.width, scale.height)
   const updBounds = {
     position : {
-      x : 0,//(width - (component.meta.bounds.width / lgFactor)) * 0.5,
-      y : 0//(height - (component.meta.bounds.height / lgFactor)) * 0.5,
+      x : (width - (component.meta.bounds.width / lgFactor)) * 0.5,
+      y : (height - (component.meta.bounds.height / lgFactor)) * 0.5,
     },
-    size     : { width, height }
-      // width  : component.meta.bounds.width / lgFactor,
-      // height : component.meta.bounds.height / lgFactor
-    // }
+    size     : { //width, height }
+      width  : component.meta.bounds.width / lgFactor,
+      height : component.meta.bounds.height / lgFactor
+    }
   };
 
   // console.log('PlaygroundComponent()', offset);
@@ -293,7 +293,7 @@ const PlaygroundComponent = props => {
       height={height}
       lockAspectRatio={true}
       minConstraints={[thumbSize.width, thumbSize.height]}
-      // maxcontraints={[maxBounds.size.width, maxBounds.size.height - 168]}
+      maxcontraints={[maxBounds.size.width - 60, maxBounds.size.height - 168]}
       maxcontraints={[Math.min(width, fullSize.width), Math.min(height, fullSize.height) - 168]}
       onResize={props.onResize}
     >
