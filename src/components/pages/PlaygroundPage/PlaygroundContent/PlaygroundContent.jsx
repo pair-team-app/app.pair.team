@@ -1,21 +1,17 @@
+import { Strings } from "lang-js-utils";
 import React, { Component } from "react";
-import "./PlaygroundContent.css";
-
 import { ContextMenuTrigger } from "react-contextmenu";
 import FontAwesome from "react-fontawesome";
 import { connect } from "react-redux";
 import { Resizable } from "react-resizable";
 import ResizeObserver from "react-resize-observer";
-
 import PlaygroundComment from "../PlaygroundComment";
-import ComponentMenu from "./ComponentMenu";
 import { componentsFromTypeGroup } from "../utils/lookup";
-import { Strings } from "lang-js-utils";
 import { reformComment } from "../utils/reform";
-
+import ComponentMenu from "./ComponentMenu";
+import "./PlaygroundContent.css";
 
 const CONSTRAIN = 0.875;
-
 
 class PlaygroundContent extends Component {
   constructor(props) {
@@ -34,16 +30,20 @@ class PlaygroundContent extends Component {
   }
 
   componentDidMount() {
-    console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+    console.log(
+      "%s.componentDidMount()",
+      this.constructor.name,
+      this.props,
+      this.state
+    );
     // this.calcBounds({ x : 0, y : 0, width : 0, height : 0 });
   }
-
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
   }
 
-  calcBounds = (rect) => {
+  calcBounds = rect => {
     // console.log('%s.calcBounds()', this.constructor.name, { rect });
 
     const { component } = this.props;
@@ -56,18 +56,20 @@ class PlaygroundContent extends Component {
     let { init, prev, curr, next } = this.state.bounds;
 
     const scale = {
-      width  : (component) ? (component.meta.bounds.width) / ((width - 48) * CONSTRAIN) : 1,
-      height : (component) ? (component.meta.bounds.height) / ((height - 168) * CONSTRAIN) : 1
+      width: component
+        ? component.meta.bounds.width / ((width - 48) * CONSTRAIN)
+        : 1,
+      height: component
+        ? component.meta.bounds.height / ((height - 168) * CONSTRAIN)
+        : 1
     };
 
     // nothing stored yet
     init = init || {
-      container: { scale,
-        position: { x, y },
-        size  : { width, height }
-      },
+      container: { scale, position: { x, y }, size: { width, height } },
       component: component
-        ? { scale,
+        ? {
+            scale,
             position: {
               x: 0,
               y: 0
@@ -83,12 +85,10 @@ class PlaygroundContent extends Component {
     };
 
     curr = {
-      container: { scale,
-        position: { x, y },
-        size: { width, height }
-      },
+      container: { scale, position: { x, y }, size: { width, height } },
       component: component
-        ? { scale,
+        ? {
+            scale,
             position: {
               x: 0,
               y: 0
@@ -117,8 +117,8 @@ class PlaygroundContent extends Component {
   };
 
   handleComponentPopoverClose = () => {
-     console.log('%s.handleComponentPopoverClose()', this.constructor.name);
-     
+    console.log("%s.handleComponentPopoverClose()", this.constructor.name);
+
     this.setState({ popover: false }, () => {
       this.props.onPopoverClose();
     });
@@ -160,10 +160,17 @@ class PlaygroundContent extends Component {
         : componentsFromTypeGroup(playground.components, typeGroup)
       : [];
 
-    const scale = (bounds && bounds.init) ? {
-      width  : (bounds.init.container.size.width + 0) / (bounds.curr.container.size.width + 0),
-      height : (bounds.init.container.size.height + 0) / (bounds.curr.container.size.height + 0)
-    } : null;
+    const scale =
+      bounds && bounds.init
+        ? {
+            width:
+              (bounds.init.container.size.width + 0) /
+              (bounds.curr.container.size.width + 0),
+            height:
+              (bounds.init.container.size.height + 0) /
+              (bounds.curr.container.size.height + 0)
+          }
+        : null;
 
     return (
       <div
@@ -264,25 +271,25 @@ const PlaygroundComponent = props => {
       ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}`
       : component.title;
 
-  const lgFactor = Math.max(scale.width, scale.height)
+  const lgFactor = Math.max(scale.width, scale.height);
   const updBounds = {
-    position : {
-      x : (width - (component.meta.bounds.width / lgFactor)) * 0.5,
-      y : (height - (component.meta.bounds.height / lgFactor)) * 0.5,
+    position: {
+      x: (width - component.meta.bounds.width / lgFactor) * 0.5,
+      y: (height - component.meta.bounds.height / lgFactor) * 0.5
     },
-    size     : { //width, height }
-      width  : component.meta.bounds.width / lgFactor,
-      height : component.meta.bounds.height / lgFactor
+    size: {
+      width: component.meta.bounds.width / lgFactor,
+      height: component.meta.bounds.height / lgFactor
     }
   };
 
   // console.log('PlaygroundComponent()', offset);
 
   const commentsStyle = {
-    top    : 20 + updBounds.position.y,
-    left   : updBounds.position.x,
-    width  : updBounds.size.width,
-    height : updBounds.size.height
+    top: 20 + updBounds.position.y,
+    left: updBounds.position.x,
+    width: updBounds.size.width,
+    height: updBounds.size.height
   };
 
   return (
@@ -290,11 +297,14 @@ const PlaygroundComponent = props => {
       className="playground-component-wrapper"
       axis="both"
       width={width}
-      height={height}
+      height={height + 28}
       lockAspectRatio={true}
       minConstraints={[thumbSize.width, thumbSize.height]}
       maxcontraints={[maxBounds.size.width - 60, maxBounds.size.height - 168]}
-      maxcontraints={[Math.min(width, fullSize.width), Math.min(height, fullSize.height) - 168]}
+      maxcontraints={[
+        Math.min(width, fullSize.width),
+        Math.min(height, fullSize.height) - 168
+      ]}
       onResize={props.onResize}
     >
       <div
@@ -315,12 +325,20 @@ const PlaygroundComponent = props => {
           <div
             className="playground-content-component"
             data-id={id}
-            style={{ height: `${height}px`, minWidth: `${thumbSize.width}px`, minHeight: `${thumbSize.height}` }}
+            style={{
+              height: `${height}px`,
+              minWidth: `${thumbSize.width}px`,
+              minHeight: `${thumbSize.height}`
+            }}
           >
             {processed && <img src={imageData || ""} alt={title} />}
           </div>
           {processed && (
-            <div className="playground-component-comments-wrapper" style={commentsStyle} data-id={id}>
+            <div
+              className="playground-component-comments-wrapper"
+              style={commentsStyle}
+              data-id={id}
+            >
               {(popover
                 ? [
                     ...comments,
@@ -339,7 +357,7 @@ const PlaygroundComponent = props => {
                   return (
                     <PlaygroundComment
                       key={i}
-                      ind={(comments.length - 1) - i}
+                      ind={comments.length - 1 - i}
                       component={component}
                       comment={comm}
                       scale={scale}
@@ -358,7 +376,8 @@ const PlaygroundComponent = props => {
 
         {processed && (
           <div className="component-caption">
-            {component.meta.bounds.width << 0}px × {component.meta.bounds.height << 0}px
+            {component.meta.bounds.width << 0}px ×{" "}
+            {component.meta.bounds.height << 0}px
           </div>
         )}
       </div>

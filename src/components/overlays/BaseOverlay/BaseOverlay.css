@@ -1,3 +1,12 @@
+@keyframes loader-rotate {
+	0% {
+		transform: rotate(0);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
 
 .base-overlay {
 	position: fixed;
@@ -10,7 +19,8 @@
 	background-color: rgba(var(--site-bg-color), 0.0);
 }
 
-.base-overlay-noncloseable, .base-overlay-filled {
+.base-overlay-noncloseable,
+.base-overlay-filled {
 	width: 100%;
 	height: 100%;
 }
@@ -102,41 +112,17 @@
 }
 
 
-.sbl-circ {
-  height: 48px;
-  width: 48px;
-  color: #5a5a5a;
-  position: relative;
-  display: inline-block;
-  border: 5px solid;
-  border-radius: 50%;
-  border-top-color: transparent;
-  animation: rotate 1s linear infinite; }
-
-@keyframes rotate {
-  0% {
-		transform: rotate(0);
-	}
-  100% {
-    transform: rotate(360deg); 
-	} 
-}
-
 .base-overlay-loader {
-	position: absolute;
+	height: 48px;
 	width: 48px;
-	height: 56px;
-	top: 50%;
-	left: 50%;
-	transform-origin: center;
-	transform: translate(-50%, -50%);
-	font-size: 3em;
+	color: #5a5a5a;
+	position: relative;
+	display: inline-block;
+	border: 5px solid;
+	border-radius: 50%;
+	border-top-color: transparent;
+	animation: loader-rotate 1s linear infinite;
 }
-
-.base-overlay-loader-spinner {
-	color: rgba(var(--site-fg-color), 1.0);
-}
-
 
 .base-overlay-footer-wrapper {
 	width: 100%;
@@ -146,7 +132,7 @@
 	margin-bottom: var(--orthodox-margin-mini);
 }
 
-.base-overlay-footer-wrapper > * {
+.base-overlay-footer-wrapper>* {
 	margin: auto;
 	flex: 1 0 0;
 	/*border: 1px dotted #ff00ff;*/

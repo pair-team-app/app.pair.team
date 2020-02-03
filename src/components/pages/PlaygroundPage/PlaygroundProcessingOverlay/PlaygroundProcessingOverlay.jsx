@@ -149,7 +149,7 @@ class PlaygroundProcessingOverlay extends Component {
         onComplete={this.handleComplete}
       >
         <div className="playground-processing-overlay" data-root={root}>
-          <div className="sbl-circ" />
+          <div className="base-overlay-loader" />
         </div>
       </BaseOverlay>
     ) : null;
