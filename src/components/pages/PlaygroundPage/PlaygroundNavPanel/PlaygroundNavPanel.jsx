@@ -18,7 +18,7 @@ class PlaygroundNavPanel extends Component {
   }
 
   componentDidMount() {
-    // 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+    		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
     const { playground } = this.props;
     if (playground) {
@@ -27,7 +27,7 @@ class PlaygroundNavPanel extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+    		// console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
     const { playground } = this.props;
     if (playground && playground !== prevProps.playground) {
@@ -85,7 +85,7 @@ class PlaygroundNavPanel extends Component {
   };
 
   onPopulateTree = () => {
-    // 		console.log('%s.onPopulateTree()', this.constructor.name);
+    		// console.log('%s.onPopulateTree()', this.constructor.name);
 
     const { componentTypes, playground, component } = this.props;
     const typeIDs = playground.components.map(({ typeID }) => typeID);
@@ -189,7 +189,7 @@ const PlaygroundNavPanelHeader = props => {
   };
 
   const { team } = props;
-  console.log("PlaygroundNavPanelHeader()", props);
+  // console.log("PlaygroundNavPanelHeader()", props);
 
   return (
     <div className="playground-nav-panel-header">

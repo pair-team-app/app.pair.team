@@ -1,16 +1,16 @@
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-
 import cookie from 'react-cookies';
+import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
-
-import ScrollToTop from './components/helpers/ScrollToTop';
-
+import { BrowserRouter, Route } from 'react-router-dom';
 import App from './components/App';
+import ScrollToTop from './components/helpers/ScrollToTop';
+import './index.css';
 import store from './redux/store';
+
+
+
 
 
 window.store = store;
@@ -24,7 +24,7 @@ ReactDOM.render(
 	<Provider store={store}>
 		<BrowserRouter>
 			<ScrollToTop>
-				<App />
+				<Route children={()=> <App />} />
 			</ScrollToTop>
 		</BrowserRouter>
 	</Provider>,

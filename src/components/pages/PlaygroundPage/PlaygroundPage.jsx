@@ -34,35 +34,38 @@ class PlaygroundPage extends Component {
   }
 
   componentDidMount() {
-       console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, match, playgrounds, playground } = this.props;
     const { fetching } = this.state;
-    const { buildID, playgroundID } = match.params;
+    const { params = null } = match || {};
+    const { buildID = null, playgroundID = null } = params || {};
 
-    if (profile) {
-      if (playgrounds && !playground && !fetching) {
-        if (buildID) {
-          this.onFetchBuildPlaygrounds(buildID << 0, playgroundID << 0);
-        }
-      }
-    }
+    // if (profile) {
+    //   if (playgrounds && !playground && !fetching) {
+    //     if (buildID) {
+    //       this.onFetchBuildPlaygrounds(buildID << 0, playgroundID << 0);
+    //     }
+    //   }
+    // }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-       console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
-// 
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+
+
     const {
       profile,
       componentTypes,
       playgrounds,
       playground,
-      match,
-      location
+      params,
+      location,
+      pathname
     } = this.props;
     const { fetching, processing, accessibility } = this.state;
 
-    const { pathname } = location;
+    // const { pathname } = location;
     const {
       teamSlug,
       projectSlug,
@@ -71,9 +74,8 @@ class PlaygroundPage extends Component {
       componentsSlug,
       componentID,
       commentID
-    } = match.params;
-    //    		console.log('*************** params', match.params);
-
+    } = params || {};
+       		
     // init typeGroups
     if (!prevProps.componentTypes && componentTypes) {
       this.setState({ typeGroups: componentTypes });
@@ -82,15 +84,33 @@ class PlaygroundPage extends Component {
     // logged in
     if (
       profile &&
-      (!prevProps.profile || pathname !== prevProps.location.pathname)
+      (!prevProps.profile || pathname !== prevProps.pathname)
     ) {
     }
 
     //    //     console.log('DERP', { prevProps : prevProps.playground, playground });
 
+
+
+    console.log('*************** TEST <|'+(!prevProps.playgrounds && playgrounds && !playground)+'|> TEAM_PLAYGROUNDS', { prevPlaygrounds : prevProps.playground, playgrounds, playground, params : (this.props.match || {}).params });
+
+    // set global playground now
+    if (!prevProps.playgrounds && playgrounds && !playground) {
+      console.log('*************** PLAYGROUND -=> STORE', { playground });
+      this.props.setPlayground(playground);
+
+    }
+
+
+
+
+
     // playground first load
     if (!prevProps.playground && playground) {
       let url = pathname;
+
+
+      
 
       let typeGroup = null;
       let component = null;
@@ -180,17 +200,17 @@ class PlaygroundPage extends Component {
         this.onFetchTypeGroupComponents(typeGroup);
       }
 
-      //       console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, state : this.state, typeGroup, component, prevTypeGroup : prevProps.typeGroup, prevComponent : prevProps.component, curr : pathname, prev : prevProps.location.pathname });
-      //       console.log('%s.componentDidUpdate()', this.constructor.name, { curr : pathname, prev : prevProps.location.pathname, storePathname : this.props.pathname });
+      //       console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, state : this.state, typeGroup, component, prevTypeGroup : prevProps.typeGroup, prevComponent : prevProps.component, curr : pathname, prev : prevProps.pathname });
+      //       console.log('%s.componentDidUpdate()', this.constructor.name, { curr : pathname, prev : prevProps.pathname, storePathname : this.props.pathname });
 
-      const prev = prevProps.location.pathname;
-      const curr = this.props.location.pathname;
+      const prev = prevProps.pathname;
+      const curr = this.props.pathname;
 
       if (curr !== prev) {
         if (
           playgrounds.length > 0 &&
           playgroundID &&
-          playgroundID !== prevProps.match.params.playgroundID
+          playgroundID !== prevProps.params.playgroundID
         ) {
           this.props.setPlayground(
             playgroundByID(playgrounds, playgroundID << 0)
@@ -203,7 +223,7 @@ class PlaygroundPage extends Component {
           this.state.typeGroups &&
           playgroundID &&
           componentsSlug &&
-          componentsSlug !== prevProps.match.params.componentsSlug
+          componentsSlug !== prevProps.params.componentsSlug
         ) {
           this.props.setTypeGroup(
             typeGroupByKey(this.state.typeGroups, componentsSlug)
@@ -216,7 +236,7 @@ class PlaygroundPage extends Component {
           playgrounds.length > 0 &&
           playgroundID &&
           componentsSlug &&
-          componentID !== prevProps.match.params.componentID
+          componentID !== prevProps.params.componentID
         ) {
           this.props.setComponent(
             componentByID(
@@ -241,7 +261,7 @@ class PlaygroundPage extends Component {
 
         if (typeGroup && typeGroup !== prevProps.typeGroup && !comment) {
           if (!/\/accessibility\/.*$/.test(url)) {
-            this.props.location.pathname.replace(/(\/comments)$/, "");
+            this.props.pathname.replace(/(\/comments)$/, "");
           }
 
           url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${
@@ -276,7 +296,7 @@ class PlaygroundPage extends Component {
           !commentID &&
           prevProps.commentID
         ) {
-          url = prevProps.history.location.pathname.includes("/comments/")
+          url = prevProps.history.pathname.includes("/comments/")
             ? url.replace(/\/comments\/?.*$/, "")
             : url.replace(/(\/comments)\/?(.*)$/, "$1");
         }
@@ -284,7 +304,7 @@ class PlaygroundPage extends Component {
         if (
           accessibility &&
           !prevState.accessibility &&
-          !this.props.location.pathname.includes("/accessibility")
+          !this.props.pathname.includes("/accessibility")
         ) {
           url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${
             typeGroup.key
@@ -294,12 +314,12 @@ class PlaygroundPage extends Component {
         if (
           !accessibility &&
           prevState.accessibility &&
-          this.props.location.pathname.includes("/accessibility")
+          this.props.pathname.includes("/accessibility")
         ) {
           url = url.replace(/\/accessibility.*$/, "");
         }
 
-        if (this.props.location.pathname !== url) {
+        if (this.props.pathname !== url) {
           this.props.history.push(url);
         }
       }
@@ -356,9 +376,9 @@ class PlaygroundPage extends Component {
       this.props.setComponent(null);
       this.props.setComment(null);
     } else if (type === BreadcrumbTypes.TYPE_GROUP) {
-      const { componentsSlug } = this.props.match.params;
+      const { componentsSlug } = this.props.params;
       this.props.history.push(
-        this.props.location.pathname.replace(
+        this.props.pathname.replace(
           new RegExp(`(/${componentsSlug}).*$`),
           "$1"
         )
@@ -368,13 +388,13 @@ class PlaygroundPage extends Component {
     } else if (type === BreadcrumbTypes.COMPONENT) {
       this.props.setComment(null);
       this.props.history.push(
-        this.props.location.pathname.replace(/\/comments.*$/, "")
+        this.props.pathname.replace(/\/comments.*$/, "")
       );
     } else if (type === BreadcrumbTypes.ACCESSIBILITY) {
     } else if (type === BreadcrumbTypes.COMMENTS) {
-      if (/\/comments\/.*$/.test(this.props.location.pathname)) {
+      if (/\/comments\/.*$/.test(this.props.pathname)) {
         this.props.history.push(
-          this.props.location.pathname.replace(/(\/comments)\/?(.*)$/, "$1")
+          this.props.pathname.replace(/(\/comments)\/?(.*)$/, "$1")
         );
         this.props.setComment(null);
       }
@@ -419,13 +439,13 @@ class PlaygroundPage extends Component {
     //     this.props.setComponent(component);
 
     if (menuItem === COMPONENT_MENU_ITEM_COMMENTS) {
-      if (/\/comments.*$/.test(this.props.location.pathname)) {
+      if (/\/comments.*$/.test(this.props.pathname)) {
         this.props.setComment(null);
         this.props.history.push(
-          this.props.location.pathname.replace(/\/comments.*$/, "")
+          this.props.pathname.replace(/\/comments.*$/, "")
         );
       } else {
-        this.props.history.push(`${this.props.location.pathname}/comments`);
+        this.props.history.push(`${this.props.pathname}/comments`);
       }
     } else if (menuItem === COMPONENT_MENU_ITEM_COPY) {
       if (!this.state.share) {
@@ -437,13 +457,13 @@ class PlaygroundPage extends Component {
   handleComponentPopoverClose = () => {
     //.log('%s.handleComponentPopoverClose()', this.constructor.name);
 
-    const pushURL = /\/comments\/.*$/.test(this.props.location.pathname)
-      ? this.props.location.pathname.replace(/\/comments\/.*$/, "/comments")
+    const pushURL = /\/comments\/.*$/.test(this.props.pathname)
+      ? this.props.pathname.replace(/\/comments\/.*$/, "/comments")
       : null;
 
     console.log("%s.handleComponentPopoverClose()", this.constructor.name, {
-      pathname: this.props.location.pathname,
-      hasComments: /\/comments.*$/.test(this.props.location.pathname),
+      pathname: this.props.pathname,
+      hasComments: /\/comments.*$/.test(this.props.pathname),
       pushURL
     });
 
@@ -477,8 +497,8 @@ class PlaygroundPage extends Component {
         };
 
         this.props.setComponent(component);
-        if (!this.props.location.pathname.includes("/comments")) {
-          this.props.history.push(`${this.props.location.pathname}/comments`);
+        if (!this.props.pathname.includes("/comments")) {
+          this.props.history.push(`${this.props.pathname}/comments`);
         }
       })
       .catch(error => {});
@@ -579,7 +599,7 @@ class PlaygroundPage extends Component {
         fetching: true
       },
       () => {
-        this.props.fetchBuildPlaygrounds({ buildID, playgroundID });
+        // this.props.fetchBuildPlaygrounds({ buildID, playgroundID });
       }
     );
   };
@@ -597,7 +617,7 @@ class PlaygroundPage extends Component {
       component
     } = this.props;
     const { cursor, accessibility, share, fetching, processing } = this.state;
-    const { params } = this.props.match;
+    const { params = null } = this.props || { params : null };
 
     return (
       <BasePage
@@ -609,6 +629,8 @@ class PlaygroundPage extends Component {
             : ""
         }`}
       >
+
+
         {profile && team && (
           <div>
             <PlaygroundNavPanel
@@ -666,7 +688,7 @@ class PlaygroundPage extends Component {
             )}
           </div>
         )}{" "}
-        -
+        
         {profile && team && playground && component && component.processed && (
           <PlaygroundCommentsPanel
             comments={component ? component.comments : []}

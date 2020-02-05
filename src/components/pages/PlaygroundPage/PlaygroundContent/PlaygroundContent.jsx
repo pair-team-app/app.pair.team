@@ -116,6 +116,10 @@ class PlaygroundContent extends Component {
     this.setState({ bounds });
   };
 
+
+
+  
+
   handleComponentPopoverClose = () => {
     console.log("%s.handleComponentPopoverClose()", this.constructor.name);
 
@@ -322,6 +326,7 @@ const PlaygroundComponent = props => {
           collect={props => ({ component: props.component })}
           disableIfShiftIsPressed={true}
         >
+
           <div
             className="playground-content-component"
             data-id={id}

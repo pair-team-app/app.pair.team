@@ -1,21 +1,18 @@
 
 import React from 'react';
+import PageNavLink from '../../iterables/PageNavLink';
 import './BasePage.css';
 
-import { withRouter } from 'react-router-dom';
 
-import PageNavLink from '../../iterables/PageNavLink';
-import navLinks from '../../../assets/json/nav-links';
-import { Pages } from '../../../consts/uris';
 
 
 function BasePage(props) {
-// 	console.log('BasePage()', props);
+	// console.log('BasePage()', props);
 
 	const { className, children, style } = props;
 	return (<div className={`base-page ${className}`} style={style}>
 		{(children)}
-		{(!props.location.pathname.startsWith(Pages.PLAYGROUND)) && (<BottomNav navLinks={navLinks.bottom} />)}
+		{/* {(!props.location.pathname.startsWith(Pages.PLAYGROUND)) && (<BottomNav navLinks={navLinks.bottom} />)} */}
 	</div>);
 }
 
@@ -32,4 +29,5 @@ const BottomNav = (props)=> {
 };
 
 
-export default withRouter(BasePage);
+// export default withRouter(BasePage);
+export default (BasePage);

@@ -120,9 +120,9 @@ class App extends Component {
 
     if (playgrounds !== null && prevProps.playgrounds === null) {
       console.log("|:|:|:|:|:|:|:|:|:|:|:|", "FETCH BUILD", { match });
-      if (buildID) {
-          this.props.fetchBuildPlaygrounds({ buildID : buildID << 0, playgroundID : playgroundID << 0 });
-      }
+      // if (buildID) {
+          // this.props.fetchBuildPlaygrounds({ buildID : buildID << 0, playgroundID : playgroundID << 0 });
+      // }
     }
 
     // if (pathname.startsWith(Pages.PLAYGROUND)) {
@@ -547,9 +547,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchTeamLookup: payload => dispatch(fetchTeamLookup(payload)),
-    fetchTeamPlaygroundSummary: payload =>
-      dispatch(fetchTeamPlaygroundSummary(payload)),
-      fetchBuildPlaygrounds: payload => dispatch(fetchBuildPlaygrounds(payload)),
+    fetchTeamPlaygroundSummary: payload => dispatch(fetchTeamPlaygroundSummary(payload)),
+    fetchBuildPlaygrounds: payload => dispatch(fetchBuildPlaygrounds(payload)),
     fetchUserProfile: () => dispatch(fetchUserProfile()),
     setPlayground: payload => dispatch(setPlayground(payload)),
     updatePathname: payload => dispatch(updatePathname(payload)),
@@ -558,4 +557,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(App));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

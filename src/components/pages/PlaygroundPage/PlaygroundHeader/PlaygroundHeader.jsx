@@ -54,7 +54,8 @@ class PlaygroundHeader extends Component {
 
 
 	buildBreadcrumbs = ()=> {
-//     console.log('%s.buildBreadcrumbs()', this.constructor.name, this.props);
+    console.log('%s.buildBreadcrumbs()', this.constructor.name, this.props, { match : this.props.match });
+
     const { match, playground, typeGroup, component, comment, accessibility, location } = this.props;
     const { teamSlug, buildID, projectSlug, playgroundID, componentsSlug, componentID, commentID } = match.params;
 
