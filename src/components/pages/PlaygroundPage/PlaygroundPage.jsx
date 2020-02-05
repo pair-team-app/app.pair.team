@@ -1,43 +1,23 @@
-import React, { Component } from "react";
-import "./PlaygroundPage.css";
-
 import axios from "axios";
 import { Strings } from "lang-js-utils";
+import React, { Component } from "react";
 import { connect } from "react-redux";
-
+import { API_ENDPT_URL, Modals } from "../../../consts/uris";
+import { fetchBuildPlaygrounds, fetchPlaygroundComponentGroup, setComment, setComponent, setPlayground, setTypeGroup } from "../../../redux/actions";
+import { trackEvent } from "../../../utils/tracking";
 import BasePage from "../BasePage";
 import AccessibilityPopover from "./AccessibilityPopover";
 import PlaygroundCommentsPanel from "./PlaygroundCommentsPanel";
 import PlaygroundContent from "./PlaygroundContent";
-import {
-  COMPONENT_MENU_ITEM_COMMENTS,
-  COMPONENT_MENU_ITEM_COPY
-} from "./PlaygroundContent/ComponentMenu";
-import PlaygroundHeader, { BreadcrumbTypes } from "./PlaygroundHeader";
-import PlaygroundProcessingOverlay from "./PlaygroundProcessingOverlay";
-import { SettingsMenuItemTypes } from "./PlaygroundHeader/UserSettings";
+import { COMPONENT_MENU_ITEM_COMMENTS, COMPONENT_MENU_ITEM_COPY } from "./PlaygroundContent/ComponentMenu";
 import PlaygroundFooter from "./PlaygroundFooter";
+import PlaygroundHeader, { BreadcrumbTypes } from "./PlaygroundHeader";
+import { SettingsMenuItemTypes } from "./PlaygroundHeader/UserSettings";
 import PlaygroundNavPanel from "./PlaygroundNavPanel";
-import {
-  typeGroupByID,
-  commentByID,
-  componentByID,
-  componentFromComment,
-  playgroundByID,
-  typeGroupByKey,
-  typeGroupComponentsProcessed
-} from "./utils/lookup";
+import "./PlaygroundPage.css";
+import PlaygroundProcessingOverlay from "./PlaygroundProcessingOverlay";
+import { commentByID, componentByID, componentFromComment, playgroundByID, typeGroupByID, typeGroupByKey } from "./utils/lookup";
 import { reformComment } from "./utils/reform";
-import { Modals, API_ENDPT_URL } from "../../../consts/uris";
-import {
-  fetchBuildPlaygrounds,
-  fetchPlaygroundComponentGroup,
-  setComment,
-  setComponent,
-  setPlayground,
-  setTypeGroup
-} from "../../../redux/actions";
-import { trackEvent } from "../../../utils/tracking";
 
 class PlaygroundPage extends Component {
   constructor(props) {
@@ -54,14 +34,14 @@ class PlaygroundPage extends Component {
   }
 
   componentDidMount() {
-//    console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+       console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { profile, match, playground } = this.props;
+    const { profile, match, playgrounds, playground } = this.props;
     const { fetching } = this.state;
     const { buildID, playgroundID } = match.params;
 
     if (profile) {
-      if (!playground && !fetching) {
+      if (playgrounds && !playground && !fetching) {
         if (buildID) {
           this.onFetchBuildPlaygrounds(buildID << 0, playgroundID << 0);
         }
@@ -70,8 +50,8 @@ class PlaygroundPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-//    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
-
+       console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+// 
     const {
       profile,
       componentTypes,
@@ -92,7 +72,7 @@ class PlaygroundPage extends Component {
       componentID,
       commentID
     } = match.params;
-//    		console.log('*************** params', match.params);
+    //    		console.log('*************** params', match.params);
 
     // init typeGroups
     if (!prevProps.componentTypes && componentTypes) {
@@ -104,14 +84,9 @@ class PlaygroundPage extends Component {
       profile &&
       (!prevProps.profile || pathname !== prevProps.location.pathname)
     ) {
-      if (!playground && !fetching) {
-        if (buildID) {
-          this.onFetchBuildPlaygrounds(buildID << 0, playgroundID << 0);
-        }
-      }
     }
 
-//    //     console.log('DERP', { prevProps : prevProps.playground, playground });
+    //    //     console.log('DERP', { prevProps : prevProps.playground, playground });
 
     // playground first load
     if (!prevProps.playground && playground) {
@@ -152,7 +127,7 @@ class PlaygroundPage extends Component {
                 url = url.replace(componentID, component.id);
               }
 
-//              console.log('=-=-=-=-=-=--=', { commentID, comment : commentByID(component.comments, commentID) });
+              //              console.log('=-=-=-=-=-=--=', { commentID, comment : commentByID(component.comments, commentID) });
               if (commentID) {
                 comment = commentByID(component.comments, commentID);
 
@@ -166,8 +141,7 @@ class PlaygroundPage extends Component {
                 }
               }
             } else {
-
-//              console.log('=-=-=-=-=-=--2=', { commentID, comment : commentByID(component.comments, commentID) });
+              //              console.log('=-=-=-=-=-=--2=', { commentID, comment : commentByID(component.comments, commentID) });
               url = url.replace(new RegExp(`/${componentID}.*$`), "");
             }
           }
@@ -201,7 +175,7 @@ class PlaygroundPage extends Component {
       const { typeGroup, component, comment } = this.props;
       let url = pathname;
 
-//      //    console.log('%s.componentDidUpdate()', this.constructor.name, { playgroundID : this.props.playground.id, prev : prevProps.playground.id, fetching, processing });
+      //      //    console.log('%s.componentDidUpdate()', this.constructor.name, { playgroundID : this.props.playground.id, prev : prevProps.playground.id, fetching, processing });
       if (playground.id !== prevProps.playground.id && !fetching) {
         this.onFetchTypeGroupComponents(typeGroup);
       }
@@ -267,10 +241,12 @@ class PlaygroundPage extends Component {
 
         if (typeGroup && typeGroup !== prevProps.typeGroup && !comment) {
           if (!/\/accessibility\/.*$/.test(url)) {
-              this.props.location.pathname.replace(/(\/comments)$/, '')
+            this.props.location.pathname.replace(/(\/comments)$/, "");
           }
 
-          url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}${url.includes("/accessibility") ? "/accessibility" : ""}`;
+          url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${
+            typeGroup.key
+          }${url.includes("/accessibility") ? "/accessibility" : ""}`;
         }
 
         if (component && component !== prevProps.component && !comment) {
@@ -280,7 +256,7 @@ class PlaygroundPage extends Component {
             url.includes("/accessibility") ? "/accessibility" : ""
           }`;
 
-          url = url.replace(/\/comments.*$/, '');
+          url = url.replace(/\/comments.*$/, "");
         }
 
         if (comment && comment !== prevProps.comment) {
@@ -291,10 +267,15 @@ class PlaygroundPage extends Component {
               }/${component.id}${
                 url.includes("/accessibility") ? "/accessibility" : ""
               }/comments/${comment.id}`;
-
         }
 
-        if (component && !comment && prevProps.comment && !commentID && prevProps.commentID) {
+        if (
+          component &&
+          !comment &&
+          prevProps.comment &&
+          !commentID &&
+          prevProps.commentID
+        ) {
           url = prevProps.history.location.pathname.includes("/comments/")
             ? url.replace(/\/comments\/?.*$/, "")
             : url.replace(/(\/comments)\/?(.*)$/, "$1");
@@ -368,7 +349,7 @@ class PlaygroundPage extends Component {
   };
 
   handleBreadCrumbClick = ({ type = null, payload = null }) => {
-//     console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
+    //     console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
 
     if (type === BreadcrumbTypes.PLAYGROUND) {
       this.props.setTypeGroup(typeGroupByID(this.state.typeGroups, 187));
@@ -391,7 +372,6 @@ class PlaygroundPage extends Component {
       );
     } else if (type === BreadcrumbTypes.ACCESSIBILITY) {
     } else if (type === BreadcrumbTypes.COMMENTS) {
-
       if (/\/comments\/.*$/.test(this.props.location.pathname)) {
         this.props.history.push(
           this.props.location.pathname.replace(/(\/comments)\/?(.*)$/, "$1")
@@ -419,7 +399,7 @@ class PlaygroundPage extends Component {
   };
 
   handleComponentClick = ({ component = null }) => {
-//.log('%s.handleComponentClick()', this.constructor.name, { component });
+    //.log('%s.handleComponentClick()', this.constructor.name, { component });
 
     // 		if (!component.selected) {
     component.selected = true;
@@ -429,12 +409,12 @@ class PlaygroundPage extends Component {
   };
 
   handleComponentMenuShow = ({ component = null }) => {
-//.log('%s.handleComponentMenuShow()', this.constructor.name, { component });
+    //.log('%s.handleComponentMenuShow()', this.constructor.name, { component });
     //     this.props.setComponent(component);
   };
 
   handleComponentMenuItem = ({ menuItem = null }) => {
-//.log('%s.handleComponentMenuItem()', this.constructor.name, { menuItem });
+    //.log('%s.handleComponentMenuItem()', this.constructor.name, { menuItem });
 
     //     this.props.setComponent(component);
 
@@ -455,7 +435,7 @@ class PlaygroundPage extends Component {
   };
 
   handleComponentPopoverClose = () => {
-//.log('%s.handleComponentPopoverClose()', this.constructor.name);
+    //.log('%s.handleComponentPopoverClose()', this.constructor.name);
 
     const pushURL = /\/comments\/.*$/.test(this.props.location.pathname)
       ? this.props.location.pathname.replace(/\/comments\/.*$/, "/comments")
@@ -473,7 +453,7 @@ class PlaygroundPage extends Component {
   };
 
   handleDeleteComment = comment => {
-//.log('%s.handleDeleteComment()', this.constructor.name, comment.id);
+    //.log('%s.handleDeleteComment()', this.constructor.name, comment.id);
     trackEvent("button", "delete-comment");
 
     axios
@@ -516,14 +496,14 @@ class PlaygroundPage extends Component {
   };
 
   handleNavTypeItemClick = (typeGroup, typeItem) => {
-//.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
+    //.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
 
     this.props.setComponent(typeItem);
     this.props.setComment(null);
   };
 
   handleSettingsItem = itemType => {
-//.log('%s.handleSettingsItem()', this.constructor.name, itemType);
+    //.log('%s.handleSettingsItem()', this.constructor.name, itemType);
 
     if (itemType === SettingsMenuItemTypes.DELETE_ACCT) {
       this.props.onModal(Modals.DISABLE);
@@ -533,7 +513,7 @@ class PlaygroundPage extends Component {
   };
 
   handleToggleAccessibility = () => {
-//.log('%s.handleToggleAccessibility()', this.constructor.name, this.state.accessibility);
+    //.log('%s.handleToggleAccessibility()', this.constructor.name, this.state.accessibility);
 
     const { comment } = this.props;
     setTimeout(() => {
@@ -546,14 +526,14 @@ class PlaygroundPage extends Component {
   };
 
   handleToggleCommentCursor = event => {
-//.log('%s.handleToggleCommentCursor()', this.constructor.name, event, this.state.cursor, !this.state.cursor);
+    //.log('%s.handleToggleCommentCursor()', this.constructor.name, event, this.state.cursor, !this.state.cursor);
 
     const { cursor } = this.state;
     this.setState({ cursor: !cursor });
   };
 
   handleTogglePlayground = () => {
-//.log('%s.handleTogglePlayground()', this.constructor.name, this.props.playground.deviceID);
+    //.log('%s.handleTogglePlayground()', this.constructor.name, this.props.playground.deviceID);
 
     trackEvent(
       "button",
@@ -574,7 +554,7 @@ class PlaygroundPage extends Component {
   };
 
   handleStripeModal = () => {
-//.log('%s.handleStripeModal()', this.constructor.name);
+    //.log('%s.handleStripeModal()', this.constructor.name);
 
     const { team, products } = this.props;
     const product = [...products].pop();
@@ -582,13 +562,13 @@ class PlaygroundPage extends Component {
   };
 
   onFetchTypeGroupComponents = typeGroup => {
-    const { playground } = this.props;
-    //  console.log('%s.onFetchTypeGroupComponents()', this.constructor.name, { typeGroup, components : componentsFromTypeGroup(playground.components, typeGroup) });
-    if (!typeGroupComponentsProcessed(typeGroup, playground.components)) {
-      this.setState({ processing: true }, () => {
-        this.props.fetchPlaygroundComponentGroup({ playground, typeGroup });
-      });
-    }
+    // const { playground } = this.props;
+    // //  console.log('%s.onFetchTypeGroupComponents()', this.constructor.name, { typeGroup, components : componentsFromTypeGroup(playground.components, typeGroup) });
+    // if (!typeGroupComponentsProcessed(typeGroup, playground.components)) {
+    //   this.setState({ processing: true }, () => {
+    //     this.props.fetchPlaygroundComponentGroup({ playground, typeGroup });
+    //   });
+    // }
   };
 
   onFetchBuildPlaygrounds = (buildID, playgroundID = null) => {
@@ -605,7 +585,7 @@ class PlaygroundPage extends Component {
   };
 
   render() {
-           		console.log('%s.render()', this.constructor.name, this.props, this.state);
+    // console.log('%s.render()', this.constructor.name, this.props, this.state);
     // 		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
 
     const {
@@ -622,13 +602,15 @@ class PlaygroundPage extends Component {
     return (
       <BasePage
         className={`playground-page${
-          component && component.processed && window.location.href.includes("/comments")
+          component &&
+          component.processed &&
+          window.location.href.includes("/comments")
             ? " playground-page-comments"
             : ""
         }`}
       >
         {profile && team && (
-          <>
+          <div>
             <PlaygroundNavPanel
               params={params}
               onTypeGroupClick={this.handleNavGroupItemClick}
@@ -643,9 +625,8 @@ class PlaygroundPage extends Component {
               onSettingsItem={this.handleSettingsItem}
               onLogout={this.props.onLogout}
             />
-          </>
+          </div>
         )}
-
         {profile && playground && typeGroup && (
           <div
             className="playground-page-content-wrapper"
@@ -684,15 +665,14 @@ class PlaygroundPage extends Component {
               />
             )}
           </div>
-        )} -
-
+        )}{" "}
+        -
         {profile && team && playground && component && component.processed && (
           <PlaygroundCommentsPanel
             comments={component ? component.comments : []}
             onDelete={this.handleDeleteComment}
           />
         )}
-
         {fetching && (
           <PlaygroundProcessingOverlay
             root={true}
@@ -737,7 +717,7 @@ const mapStateToProps = (state, ownProps) => {
     profile: state.userProfile,
     componentTypes: state.componentTypes,
     eventGroups: state.eventGroups,
-    team: state.teams[0],
+    team: state.team,
     products: state.products,
     pathname: state.pathname
   };

@@ -43,7 +43,7 @@ class ConfirmDialog extends Component {
 
 
 	render() {
-		console.log('%s.render()', this.constructor.name, this.props, this.state);
+		// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { tracking, buttons, closeable, filled, title, children } = this.props;
 		const { outro } = this.state;

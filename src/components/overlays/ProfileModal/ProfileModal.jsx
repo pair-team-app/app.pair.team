@@ -198,7 +198,7 @@ class ProfileModal extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     profile: state.userProfile,
-    team: state.teams[0]
+    team: state.team
   };
 };
 

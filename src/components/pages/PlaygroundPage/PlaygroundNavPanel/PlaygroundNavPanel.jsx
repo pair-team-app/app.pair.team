@@ -1,13 +1,11 @@
-import React, { Component } from "react";
-import "./PlaygroundNavPanel.css";
-
 import { grabFavicon } from "favicongrab";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { NavLink } from "react-router-dom";
-
-import NavPanelTypeGroup from "./NavPanelTypeGroup";
 import { TEAM_DEFAULT_AVATAR } from "../../../../consts/uris";
 import { trackEvent, trackOutbound } from "../../../../utils/tracking";
+import NavPanelTypeGroup from "./NavPanelTypeGroup";
+import "./PlaygroundNavPanel.css";
 
 class PlaygroundNavPanel extends Component {
   constructor(props) {
@@ -124,31 +122,31 @@ class PlaygroundNavPanel extends Component {
     const { typeGroups, teamLogo } = this.state;
 
     if (!teamLogo) {
-        if (playground) {
-          grabFavicon(
-            playground.team.domain === "pairurl.com"
-              ? "dev.pairurl.com"
-              : `http://${playground.team.domain}`
-          ).then(response => {
-            const icons = response.icons
-              ? response.icons
-                  .filter(({ sizes }) => sizes)
-                  .map(icon => ({
-                    ...icon,
-                    size: icon.sizes.split("x").pop() << 0
-                  }))
-                  .sort((i, ii) =>
-                    i.size < ii.size ? -1 : i.size > ii.size ? 1 : 0
-                  )
-              : [];
+      if (playground) {
+        grabFavicon(
+          playground.team.domain === "pairurl.com"
+            ? "dev.pairurl.com"
+            : `http://${playground.team.domain}`
+        ).then(response => {
+          const icons = response.icons
+            ? response.icons
+                .filter(({ sizes }) => sizes)
+                .map(icon => ({
+                  ...icon,
+                  size: icon.sizes.split("x").pop() << 0
+                }))
+                .sort((i, ii) =>
+                  i.size < ii.size ? -1 : i.size > ii.size ? 1 : 0
+                )
+            : [];
 
-            const teamLogo = icons.length > 0 ? icons.pop().src : null;
-            this.setState({ teamLogo });
-          });
-        } else {
-          const teamLogo = team.image || TEAM_DEFAULT_AVATAR;
+          const teamLogo = icons.length > 0 ? icons.pop().src : null;
           this.setState({ teamLogo });
-        }
+        });
+      } else {
+        const teamLogo = team.image || TEAM_DEFAULT_AVATAR;
+        this.setState({ teamLogo });
+      }
     }
 
     return (
@@ -191,6 +189,8 @@ const PlaygroundNavPanelHeader = props => {
   };
 
   const { team } = props;
+  console.log("PlaygroundNavPanelHeader()", props);
+
   return (
     <div className="playground-nav-panel-header">
       <img
@@ -213,7 +213,7 @@ const PlaygroundNavPanelHeader = props => {
 const mapStateToProps = (state, ownProps) => {
   return {
     componentTypes: state.componentTypes,
-    team: state.teams[0],
+    team: state.team,
     playground: state.playground,
     typeGroup: state.typeGroup,
     component: state.component
