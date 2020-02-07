@@ -1,17 +1,17 @@
 
-import React, { Component } from 'react';
-import './PlaygroundHeader.css';
-
 import { Strings } from 'lang-js-utils';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import { NavLink, withRouter } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
-
-import SharePopover from '../SharePopover';
-import UserSettings from './UserSettings';
-import { BreadcrumbTypes } from './';
 import { Pages } from '../../../../consts/uris';
 import { toggleTheme } from '../../../../redux/actions';
+import SharePopover from '../SharePopover';
+import { BreadcrumbTypes } from './';
+import './PlaygroundHeader.css';
+import UserSettings from './UserSettings';
+
+
 
 class PlaygroundHeader extends Component {
 	constructor(props) {
@@ -150,4 +150,5 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
+// export default connect(mapStateToProps, mapDispatchToProps)(PlaygroundHeader);
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PlaygroundHeader));

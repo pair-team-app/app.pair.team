@@ -7652,7 +7652,7 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-"lang-js-utils@file:../../npm_modules/lang-js-utils":
+lang-js-utils@/Users/Shared/labor/projects/npm_modules/lang-js-utils:
   version "0.6.1"
   dependencies:
     buffer-to-stream "^1.0.0"

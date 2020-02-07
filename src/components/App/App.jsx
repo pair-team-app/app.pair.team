@@ -3,9 +3,8 @@ import { Browsers, DateTimes } from "lang-js-utils";
 import React, { Component } from "react";
 import cookie from "react-cookies";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import { API_ENDPT_URL, GITHUB_APP_AUTH, Modals, Pages } from "../../consts/uris";
-import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamPlaygroundSummary, fetchUserProfile, setPlayground, updateMouseCoords, updatePathname, updateUserProfile } from "../../redux/actions";
+import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamPlaygroundsSummary, fetchUserProfile, setPlayground, updateMouseCoords, updatePathname, updateUserProfile } from "../../redux/actions";
 import { initTracker, trackEvent, trackPageview } from "../../utils/tracking";
 import Routes from "../helpers/Routes";
 import AlertDialog from "../overlays/AlertDialog";
@@ -16,9 +15,10 @@ import PopupNotification from "../overlays/PopupNotification";
 import ProfileModal from "../overlays/ProfileModal";
 import RegisterModal from "../overlays/RegisterModal";
 import StripeModal from "../overlays/StripeModal";
-import BottomNav from "../sections/BottomNav";
-import TopNav from "../sections/TopNav";
+import BottomNav from '../sections/BottomNav';
+import TopNav from '../sections/TopNav';
 import "./App.css";
+import { withRouter, matchPath } from 'react-router-dom';
 
 class App extends Component {
   constructor(props) {
@@ -50,8 +50,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
-    //-/> 		console.log('%s.componentDidMount()', this.constructor.name, this.props.location);
+    		console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
     trackEvent("site", "load");
     trackPageview();
@@ -80,7 +79,14 @@ class App extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, snapshot });
     // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
-    const { profile, team, playgrounds, playground, match } = this.props;
+    const matchPlaygrounds = matchPath(this.props.location.pathname, {
+      path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`,
+      exact : false,
+      strict: false
+    });
+
+
+    const { profile, team, playgrounds, playground } = this.props;
     const { pathname } = this.props.location;
     const { teamSlug,
       projectSlug,
@@ -88,10 +94,10 @@ class App extends Component {
       playgroundID,
       componentsSlug,
       componentID,
-      commentID } = match.params;
+      commentID } = matchPlaygrounds.params;
     const { modals } = this.state;
 
-    		console.log('|:|:|:|:|:|:|:|:|:|:|:|', { match });
+    		console.log('|:|:|:|:|:|:|:|:|:|:|:|', { matchPlaygrounds });
     //  console.log('|:|:|:|:|:|:|:|:|:|:|:|', { prevPathname : prevProps.location.pathname, currPathname : pathname, state : this.state });
     if (prevProps.location.pathname !== pathname) {
       trackPageview();
@@ -115,14 +121,16 @@ class App extends Component {
         this.onToggleModal(Modals.STRIPE, true, { team, product });
       }
 
-      this.props.fetchTeamPlaygroundSummary({ team });
+      this.props.fetchTeamPlaygroundsSummary({ team });
     }
 
-    if (playgrounds !== null && prevProps.playgrounds === null) {
-      console.log("|:|:|:|:|:|:|:|:|:|:|:|", "FETCH BUILD", { match });
-      // if (buildID) {
-          // this.props.fetchBuildPlaygrounds({ buildID : buildID << 0, playgroundID : playgroundID << 0 });
-      // }
+    if (matchPlaygrounds && playgrounds && !playground) {
+      
+    }
+
+    if (playgrounds !== null && prevProps.playgrounds === null && buildID) {
+      console.log("|:|:|:|:|:|:|:|:|:|:|:|", "FETCH BUILD", { matchPlaygrounds, buildID });
+      this.props.fetchBuildPlaygrounds({ buildID : buildID << 0, playgroundID : playgroundID << 0 });
     }
 
     // if (pathname.startsWith(Pages.PLAYGROUND)) {
@@ -395,140 +403,117 @@ class App extends Component {
   };
 
   render() {
-    //   	console.log('%s.render()', this.constructor.name, this.props, this.state);
+
+
+    const matchPlaygrounds = matchPath(this.props.location.pathname, {
+      path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`,
+      exact : false,
+      strict: false
+    });
+
+
+
+      	console.log('%s.render()', this.constructor.name, { props : this.props, matchPlaygrounds });
     //   	console.log('%s.render()', this.constructor.name, this.state.modals);
 
     const { darkThemed, profile, team, location } = this.props;
     const { popup, modals } = this.state;
 
-    return (
-      <div
-        className={`site-wrapper${darkThemed ? " site-wrapper-dark" : ""}`}
-        data-devin-matty={true}
-      >
-        {!location.pathname.startsWith(Pages.PLAYGROUND) && (
-          <TopNav
-            darkTheme={darkThemed}
-            onToggleTheme={this.handleThemeToggle}
-            onModal={(uri, payload) => this.onToggleModal(uri, true, payload)}
-          />
-        )}
-        <div
-          className={`page-wrapper${
-            location.pathname.startsWith(Pages.PLAYGROUND)
-              ? " playground-page-wrapper"
-              : ""
-          }`}
-        >
-          <Routes
-            onLogout={this.handleLogout}
-            onModal={this.onToggleModal}
-            onPopup={this.handlePopup}
-          />
-        </div>
-        {!location.pathname.startsWith(Pages.PLAYGROUND) && <BottomNav />}
 
-        <div className="modal-wrapper">
-          {modals.cookies && (
-            <CookiesOverlay
-              onConfirmed={this.handleCookies}
-              onComplete={() => this.onToggleModal(Modals.COOKIES, false)}
-            />
-          )}
 
-          {modals.profile && (
-            <ProfileModal
-              onModal={uri => this.onToggleModal(uri, true)}
-              onPopup={this.handlePopup}
-              onComplete={() => this.onToggleModal(Modals.PROFILE, false)}
-              onUpdated={this.handleUpdateUser}
-            />
-          )}
 
-          {modals.login && (
-            <LoginModal
-              inviteID={null}
-              onModal={uri => this.onToggleModal(uri, true)}
-              onPopup={this.handlePopup}
-              onComplete={() => this.onToggleModal(Modals.LOGIN, false)}
-              onLoggedIn={this.handleUpdateUser}
-            />
-          )}
+    return (<div className={`site-wrapper${(darkThemed) ? ' site-wrapper-dark' : ''}`} data-devin-matty={true}>
+      
+      {(!matchPlaygrounds) && (
+        <TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />
+      )}
 
-          {modals.register && (
-            <RegisterModal
-              inviteID={null}
-              onModal={uri => this.onToggleModal(uri, true)}
-              onPopup={this.handlePopup}
-              onComplete={() => this.onToggleModal(Modals.REGISTER, false)}
-              onRegistered={this.handleUpdateUser}
-            />
-          )}
+	    <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND)) ? ' playground-page-wrapper' : ''}`}>
+		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} />
+	    </div>
+		  
+      {(!matchPlaygrounds) && (
+        <BottomNav />
+      )}
 
-          {modals.stripe && (
-            <StripeModal
-              profile={profile}
-              payload={modals.payload}
-              onPopup={this.handlePopup}
-              onSubmitted={this.handlePurchaseSubmitted}
-              onComplete={() => this.onToggleModal(Modals.STRIPE, false)}
-            />
-          )}
 
-          {modals.network && (
-            <AlertDialog
-              title="No Internet Connection"
-              tracking={Modals.NETWORK}
-              onComplete={() => this.onToggleModal(Modals.NETWORK, false)}
-            >
-              Check your network connection to continue.
-            </AlertDialog>
-          )}
 
-          {modals.disable && (
-            <ConfirmDialog
-              title="Delete your account"
-              tracking={Modals.DISABLE}
-              filled={true}
-              closeable={true}
-              onConfirmed={this.handleDisableAccount}
-              onComplete={() => this.onToggleModal(Modals.DISABLE, false)}
-            >
-              Are you sure you wish to delete your account? You won't be able to
-              log back in, plus your playgrounds & comments will be removed.
-              Additionally, you will be dropped from your team.
-            </ConfirmDialog>
-          )}
 
-          {modals.noAccess && (
-            <ConfirmDialog
-              tracking={Modals.NO_ACCESS}
-              filled={true}
-              closeable={true}
-              buttons={["OK"]}
-              onConfirmed={null}
-              onComplete={ok => {
-                this.onToggleModal(Modals.NO_ACCESS, false);
-                ok
-                  ? this.handleLogout(null, Modals.LOGIN)
-                  : this.handleLogout(Pages.HOME);
-              }}
-            >
-              Project has been deleted or permissions have been denied.
-            </ConfirmDialog>
-          )}
 
-          {popup && (
-            <PopupNotification
-              payload={popup}
-              onComplete={() => this.setState({ popup: null })}
-            >
-              <span dangerouslySetInnerHTML={{ __html: popup.content }} />
-            </PopupNotification>
-          )}
-        </div>
-      </div>
-    );
+
+
+		  <div className="modal-wrapper">
+			  {(modals.cookies) && (<CookiesOverlay
+				  onConfirmed={this.handleCookies}
+				  onComplete={()=> this.onToggleModal(Modals.COOKIES, false)}
+			  />)}
+
+			  {(modals.profile) && (<ProfileModal
+				  onModal={(uri)=> this.onToggleModal(uri, true)}
+				  onPopup={this.handlePopup}
+				  onComplete={()=> this.onToggleModal(Modals.PROFILE, false)}
+				  onUpdated={this.handleUpdateUser}
+			  />)}
+
+			  {(modals.login) && (<LoginModal
+				  inviteID={null}
+				  onModal={(uri)=> this.onToggleModal(uri, true)}
+				  onPopup={this.handlePopup}
+				  onComplete={()=> this.onToggleModal(Modals.LOGIN, false)}
+				  onLoggedIn={this.handleUpdateUser}
+			  />)}
+
+			  {(modals.register) && (<RegisterModal
+				  inviteID={null}
+				  onModal={(uri)=> this.onToggleModal(uri, true)}
+				  onPopup={this.handlePopup}
+				  onComplete={()=> this.onToggleModal(Modals.REGISTER, false)}
+				  onRegistered={this.handleUpdateUser}
+			  />)}
+
+			  {(modals.stripe) && (<StripeModal
+				  profile={profile}
+				  payload={modals.payload}
+				  onPopup={this.handlePopup}
+				  onSubmitted={this.handlePurchaseSubmitted}
+				  onComplete={()=> this.onToggleModal(Modals.STRIPE, false)}
+			  />)}
+
+			  {(modals.network) && (<AlertDialog
+				  title="No Internet Connection"
+				  tracking={Modals.NETWORK}
+				  onComplete={()=> this.onToggleModal(Modals.NETWORK, false)}>
+				  Check your network connection to continue.
+			  </AlertDialog>)}
+
+			  {(modals.disable) && (<ConfirmDialog
+				  title="Delete your account"
+				  tracking={Modals.DISABLE}
+          filled={true}
+          closeable={true}
+				  onConfirmed={this.handleDisableAccount}
+				  onComplete={()=> this.onToggleModal(Modals.DISABLE, false)}>
+				  Are you sure you wish to delete your account? You won't be able to log back in, plus your playgrounds & comments will be removed. Additionally, you will be dropped from your team.
+			  </ConfirmDialog>)}
+
+			  {(modals.noAccess) && (<ConfirmDialog
+				  tracking={Modals.NO_ACCESS}
+					filled={true}
+					closeable={true}
+					buttons={['OK']}
+          onConfirmed={null}
+				  onComplete={(ok)=> { this.onToggleModal(Modals.NO_ACCESS, false); (ok) ? this.handleLogout(null, Modals.LOGIN) : this.handleLogout(Pages.HOME) }}>
+				  Project has been deleted or permissions have been denied.
+
+			  </ConfirmDialog>)}
+
+			  {(popup) && (<PopupNotification
+				  payload={popup}
+				  onComplete={()=> this.setState({ popup : null })}>
+				  <span dangerouslySetInnerHTML={{ __html : popup.content }} />
+			  </PopupNotification>)}
+		  </div>
+	  </div>);
   }
 }
 
@@ -547,7 +532,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchTeamLookup: payload => dispatch(fetchTeamLookup(payload)),
-    fetchTeamPlaygroundSummary: payload => dispatch(fetchTeamPlaygroundSummary(payload)),
+    fetchTeamPlaygroundsSummary: payload => dispatch(fetchTeamPlaygroundsSummary(payload)),
     fetchBuildPlaygrounds: payload => dispatch(fetchBuildPlaygrounds(payload)),
     fetchUserProfile: () => dispatch(fetchUserProfile()),
     setPlayground: payload => dispatch(setPlayground(payload)),
@@ -557,4 +542,5 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+// export default connect(mapStateToProps, mapDispatchToProps)(App);
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

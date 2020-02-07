@@ -4,7 +4,7 @@ import cookie from "react-cookies";
 import {
 BUILD_PLAYGROUNDS_LOADED, COMPONENT_TYPES_LOADED, EVENT_GROUPS_LOADED, SET_COMMENT, SET_COMPONENT,
   // 	CONVERTED_DEEPLINK,
-  SET_INVITE, SET_PLAYGROUND, SET_PLAYGROUNDS, SET_PRODUCTS, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_PLAYGROUND_SUMMARY_LOADED, TOGGLE_THEME, TYPE_GROUP_LOADED, UPDATE_DEEPLINK, UPDATE_MOUSE_COORDS, UPD_PATHNAME, USER_PROFILE_ERROR,
+  SET_INVITE, SET_PLAYGROUND, SET_PLAYGROUNDS, SET_PRODUCTS, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_PLAYGROUNDS_SUMMARY_LOADED, TOGGLE_THEME, TYPE_GROUP_LOADED, UPDATE_DEEPLINK, UPDATE_MOUSE_COORDS, UPD_PATHNAME, USER_PROFILE_ERROR,
   // 	USER_PROFILE_CACHED,
   USER_PROFILE_LOADED, USER_PROFILE_UPDATED
 } from "../../consts/action-types";
@@ -99,8 +99,8 @@ export function fetchEventGroups() {
   };
 }
 
-export function fetchTeamPlaygroundSummary(payload) {
-  logFormat("fetchTeamPlaygroundSummary()", payload);
+export function fetchTeamPlaygroundsSummary(payload) {
+  logFormat("fetchTeamPlaygroundsSummary()", payload);
 
   const { team } = payload;
   return dispatch => {
@@ -117,7 +117,7 @@ export function fetchTeamPlaygroundSummary(payload) {
         const { playgrounds } = response.data;
 
         dispatch({
-          type: TEAM_PLAYGROUND_SUMMARY_LOADED,
+          type: TEAM_PLAYGROUNDS_SUMMARY_LOADED,
           payload: { team, playgrounds }
         });
       })

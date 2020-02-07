@@ -2,6 +2,7 @@ import axios from "axios";
 import { Strings } from "lang-js-utils";
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { withRouter } from 'react-router-dom';
 import { API_ENDPT_URL, Modals } from "../../../consts/uris";
 import { fetchBuildPlaygrounds, fetchPlaygroundComponentGroup, setComment, setComponent, setPlayground, setTypeGroup } from "../../../redux/actions";
 import { trackEvent } from "../../../utils/tracking";
@@ -34,7 +35,7 @@ class PlaygroundPage extends Component {
   }
 
   componentDidMount() {
-    // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, match, playgrounds, playground } = this.props;
     const { fetching } = this.state;
@@ -51,7 +52,7 @@ class PlaygroundPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
 
     const {
@@ -605,7 +606,7 @@ class PlaygroundPage extends Component {
   };
 
   render() {
-    // console.log('%s.render()', this.constructor.name, this.props, this.state);
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
     // 		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
 
     const {
@@ -745,4 +746,5 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlaygroundPage);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PlaygroundPage));
+// export default connect(mapStateToProps, mapDispatchToProps)(PlaygroundPage);

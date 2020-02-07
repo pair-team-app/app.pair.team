@@ -1,6 +1,6 @@
 import cookie from "react-cookies";
 import { reformComponent } from "../../components/pages/PlaygroundPage/utils/reform";
-import { BUILD_PLAYGROUNDS_LOADED, SET_REFORMED_BUILD_PLAYGROUNDS, SET_REFORMED_TEAM_PLAYGROUND_SUMMARY, SET_REFORMED_TYPE_GROUP, TEAM_PLAYGROUND_SUMMARY_LOADED, TYPE_GROUP_LOADED, UPDATE_MOUSE_COORDS, USER_PROFILE_CACHED, USER_PROFILE_UPDATED } from "../../consts/action-types";
+import { BUILD_PLAYGROUNDS_LOADED, SET_REFORMED_BUILD_PLAYGROUNDS, SET_REFORMED_TEAM_PLAYGROUNDS_SUMMARY, SET_REFORMED_TYPE_GROUP, TEAM_PLAYGROUNDS_SUMMARY_LOADED, TYPE_GROUP_LOADED, UPDATE_MOUSE_COORDS, USER_PROFILE_CACHED, USER_PROFILE_UPDATED } from "../../consts/action-types";
 import { LOG_MIDDLEWARE_PREFIX } from "../../consts/log-ascii";
 import { fetchPlaygroundComponentGroup } from "../actions";
 
@@ -60,7 +60,7 @@ export function onMiddleware({ dispatch }) {
           sameSite: false
         });
 
-      } else if (type === TEAM_PLAYGROUND_SUMMARY_LOADED) {
+      } else if (type === TEAM_PLAYGROUNDS_SUMMARY_LOADED) {
         const { team } = payload;
         const playgrounds = await Promise.all(
           payload.playgrounds.map(async (playground, i) => {
@@ -95,7 +95,7 @@ export function onMiddleware({ dispatch }) {
         );
 
         dispatch({
-          type: SET_REFORMED_TEAM_PLAYGROUND_SUMMARY,
+          type: SET_REFORMED_TEAM_PLAYGROUNDS_SUMMARY,
           payload: { playgrounds }
         });
 
@@ -125,11 +125,14 @@ export function onMiddleware({ dispatch }) {
 
 
 
-        dispatch(fetchPlaygroundComponentGroup({ playground : { id : playgroundID }, typeGroup : { id : 187 } }))
+        dispatch(fetchPlaygroundComponentGroup({ 
+          playground : { id : playgroundID }, 
+          typeGroup : { id : 187 } 
+        }));
 
         dispatch({
           type: SET_REFORMED_BUILD_PLAYGROUNDS,
-          payload: { playgrounds, playgroundID }
+          payload: { playgrounds, playgroundID, dataState : 3 }
         });
       } else if (type === USER_PROFILE_CACHED) {
       }

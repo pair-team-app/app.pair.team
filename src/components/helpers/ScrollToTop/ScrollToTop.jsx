@@ -1,5 +1,5 @@
 
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
 
@@ -13,16 +13,18 @@ class ScrollToTop extends Component {
 
   componentDidMount() {
 // 	  console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
     this.onScroll();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot);
+console.log('%s.render()', this.constructor.name, { prevProps : prevProps, prevState : prevState, props : this.props, state : this.state });
 
     const { pathname } = this.props.location;
     if (pathname && pathname !== prevProps.location.pathname) {
-      this.onScroll();
+      this.componentDidUpdate();
     }
   }
 
@@ -39,12 +41,24 @@ class ScrollToTop extends Component {
 
 
   render() {
-//     console.log('%s.render()', this.constructor.name, this.props, this.state);
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { children } = this.props;
     return (children);
+
+    return (<div className="scroll-to-top">{children}</div>);
+  
   }
+
+
+
+
+  // render () {
+  //   return (<div className="scroll-to-top">{this.props.children}</div>);
+  // }
 }
+
+
 
 
 export default withRouter(ScrollToTop);

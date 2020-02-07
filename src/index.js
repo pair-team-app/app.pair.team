@@ -9,10 +9,6 @@ import ScrollToTop from './components/helpers/ScrollToTop';
 import './index.css';
 import store from './redux/store';
 
-
-
-
-
 window.store = store;
 
 if (typeof cookie.load('cookies') === 'undefined') {
@@ -23,10 +19,15 @@ if (typeof cookie.load('cookies') === 'undefined') {
 ReactDOM.render(
 	<Provider store={store}>
 		<BrowserRouter>
+		{/* <Route render={(props)=> <App />} /> */}
 			<ScrollToTop>
-				<Route children={()=> <App />} />
+				{/* <Route children={(props)=> <App { ...props } />} /> */}
+				<App />
 			</ScrollToTop>
 		</BrowserRouter>
 	</Provider>,
 	document.getElementById('root')
 );
+
+
+// word
