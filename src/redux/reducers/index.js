@@ -256,19 +256,21 @@ function rootReducer(state = initialState, action) {
       });
 
     case SET_REFORMED_BUILD_PLAYGROUNDS:
-      console.log('=;=;=;=;=;=;=;=;= LOADED EVENT IN REDUCER', { payload : action.payload })
-
       let { playgrounds, playgroundID, dataState } = action.payload;
 
-      if (dataState < 3) {
+    
         const playground = playgroundID
           ? playgrounds.find(({ id }) => id === playgroundID)
           : playgrounds.find(({ deviceID }) => deviceID !== 1) || playgrounds[0];
         const component = state.component
           ? playground.components.find(({ id }) => id === state.component.id)
           : null;
+
+        console.log('=;=;=;=;=;=;=;=;= LOADED EVENT IN REDUCER', { payload : action.payload, playgrounds, playground, component })
+
+
         return Object.assign({}, state, { playgrounds, playground, component });
-      }
+    
 
     case SET_PLAYGROUND:
       return Object.assign({}, state, {

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 #-- switch this screipt's dir
 if [ `pwd` != `dirname $0` ]; then cd `dirname $0`; fi
 

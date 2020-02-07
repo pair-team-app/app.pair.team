@@ -36,7 +36,7 @@ export function fetchBuildPlaygrounds(payload) {
         const playgrounds = response.data.playgrounds.map(playground => ({
           ...playground,
           size: jsonFormatKB(playground, true),
-          components: playground.components.map(component => ({
+          components: playground.components.map(component => ({ ...component,
             id: component.id,
             title: component.title,
             size: jsonFormatKB(component, true)

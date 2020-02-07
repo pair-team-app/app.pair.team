@@ -85,7 +85,7 @@ class PlaygroundNavPanel extends Component {
   };
 
   onPopulateTree = () => {
-    		// console.log('%s.onPopulateTree()', this.constructor.name);
+    		console.log('%s.onPopulateTree()', this.constructor.name, { props : this.props });
 
     const { componentTypes, playground, component } = this.props;
     const typeIDs = playground.components.map(({ typeID }) => typeID);
@@ -124,9 +124,9 @@ class PlaygroundNavPanel extends Component {
     if (!teamLogo) {
       if (playground) {
         grabFavicon(
-          playground.team.domain === "pairurl.com"
+          team.domain === "pairurl.com"
             ? "dev.pairurl.com"
-            : `http://${playground.team.domain}`
+            : `http://${team.domain}`
         ).then(response => {
           const icons = response.icons
             ? response.icons
