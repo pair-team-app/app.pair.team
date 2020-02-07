@@ -172,7 +172,7 @@ class PlaygroundPage extends Component {
         url = url.replace(new RegExp(`/${componentsSlug}.*$`, "g"), "/views");
       }
 
-      this.props.setTypeGroup(typeGroup);
+      // this.props.setTypeGroup(typeGroup);
       this.onFetchTypeGroupComponents(typeGroup);
 
       if (component) {
@@ -220,18 +220,18 @@ class PlaygroundPage extends Component {
           this.props.setPlayground(null);
         }
 
-        if (
-          this.state.typeGroups &&
-          playgroundID &&
-          componentsSlug &&
-          componentsSlug !== prevProps.params.componentsSlug
-        ) {
-          this.props.setTypeGroup(
-            typeGroupByKey(this.state.typeGroups, componentsSlug)
-          );
-        } else if (!componentsSlug) {
-          this.props.setTypeGroup(null);
-        }
+        // if (
+        //   this.state.typeGroups &&
+        //   playgroundID &&
+        //   componentsSlug &&
+        //   componentsSlug !== prevProps.params.componentsSlug
+        // ) {
+        //   this.props.setTypeGroup(
+        //     typeGroupByKey(this.state.typeGroups, componentsSlug)
+        //   );
+        // } else if (!componentsSlug) {
+        //   this.props.setTypeGroup(null);
+        // }
 
         if (
           playgrounds.length > 0 &&
@@ -373,7 +373,7 @@ class PlaygroundPage extends Component {
     //     console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
 
     if (type === BreadcrumbTypes.PLAYGROUND) {
-      this.props.setTypeGroup(typeGroupByID(this.state.typeGroups, 187));
+      // this.props.setTypeGroup(typeGroupByID(this.state.typeGroups, 187));
       this.props.setComponent(null);
       this.props.setComment(null);
     } else if (type === BreadcrumbTypes.TYPE_GROUP) {
@@ -511,7 +511,7 @@ class PlaygroundPage extends Component {
     typeGroup.selected = !typeGroup.selected;
 
     this.onFetchTypeGroupComponents(typeGroup);
-    this.props.setTypeGroup(typeGroup);
+    // this.props.setTypeGroup(typeGroup);
     this.props.setComponent(null);
     this.props.setComment(null);
   };

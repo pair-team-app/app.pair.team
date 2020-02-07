@@ -153,9 +153,9 @@ function rootReducer(state = initialState, action) {
             ? payload.playground
             : playground
         ),
-        //         playground  : { ...state.playground,
-        playground: {
-          ...storePlayground,
+                playground  : { ...state.playground,
+        // playground: {
+          // ...storePlayground,
           components: storePlayground.components
             .concat(payload.components)
             .reduce(
@@ -163,6 +163,7 @@ function rootReducer(state = initialState, action) {
               []
             )
         },
+        
         component:
           payload.components.find(
             ({ id }) => state.component && id === state.component.id

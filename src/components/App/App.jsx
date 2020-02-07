@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import cookie from "react-cookies";
 import { connect } from "react-redux";
 import { API_ENDPT_URL, GITHUB_APP_AUTH, Modals, Pages } from "../../consts/uris";
-import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamPlaygroundsSummary, fetchUserProfile, setPlayground, updateMouseCoords, updatePathname, updateUserProfile } from "../../redux/actions";
+import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamPlaygroundsSummary, fetchUserProfile, setPlayground, updateMouseCoords, updatePathname, updateUserProfile, setTypeGroup } from "../../redux/actions";
 import { initTracker, trackEvent, trackPageview } from "../../utils/tracking";
 import Routes from "../helpers/Routes";
 import AlertDialog from "../overlays/AlertDialog";
@@ -19,6 +19,7 @@ import BottomNav from '../sections/BottomNav';
 import TopNav from '../sections/TopNav';
 import "./App.css";
 import { withRouter, matchPath } from 'react-router-dom';
+import { typeGroupByID, typeGroupByKey } from "../pages/PlaygroundPage/utils/lookup";
 
 class App extends Component {
   constructor(props) {
@@ -86,7 +87,7 @@ class App extends Component {
     });
 
 
-    const { profile, team, playgrounds, playground } = this.props;
+    const { componentTypes, profile, team, playgrounds, playground, typeGroup } = this.props;
     const { pathname } = this.props.location;
     const { teamSlug,
       projectSlug,
@@ -97,7 +98,7 @@ class App extends Component {
       commentID } = matchPlaygrounds.params;
     const { modals } = this.state;
 
-    		console.log('|:|:|:|:|:|:|:|:|:|:|:|', { matchPlaygrounds });
+    		// console.log('|:|:|:|:|:|:|:|:|:|:|:|', { matchPlaygrounds });
     //  console.log('|:|:|:|:|:|:|:|:|:|:|:|', { prevPathname : prevProps.location.pathname, currPathname : pathname, state : this.state });
     if (prevProps.location.pathname !== pathname) {
       trackPageview();
@@ -124,13 +125,16 @@ class App extends Component {
       this.props.fetchTeamPlaygroundsSummary({ team });
     }
 
-    if (matchPlaygrounds && playgrounds && !playground) {
-      
+    if (playgrounds !== null && prevProps.playgrounds === null && buildID) {
+      this.props.fetchBuildPlaygrounds({ buildID : buildID << 0, playgroundID : playgroundID << 0 });
     }
 
-    if (playgrounds !== null && prevProps.playgrounds === null && buildID) {
-      console.log("|:|:|:|:|:|:|:|:|:|:|:|", "FETCH BUILD", { matchPlaygrounds, buildID });
-      this.props.fetchBuildPlaygrounds({ buildID : buildID << 0, playgroundID : playgroundID << 0 });
+    console.log('..|..|..|..|', { componentTypes, typeGroup, componentsSlug });
+
+    if (componentTypes && (!typeGroup && componentsSlug || typeGroup.key !== componentsSlug)) {
+      console.log("|:|:|:|:|:|:|:|:|:|:|:|", "SET TYPE GROUP", { matchPlaygrounds, buildID });
+      const typeGroup = typeGroupByKey(this.props.componentTypes, componentsSlug);
+      this.props.setTypeGroup(typeGroup);
     }
 
     // if (pathname.startsWith(Pages.PLAYGROUND)) {
@@ -146,14 +150,12 @@ class App extends Component {
     if (
       profile &&
       team &&
-      playground &&
+      playground && team.id << 0 !== playground.team.id << 0 &&
       !prevState.modals.noAccess &&
       !modals.noAccess
     ) {     
-      if (!playground.team.members.some(({ id }) => id === profile.id)) {
         this.onToggleModal(Modals.NO_ACCESS);
       }
-    }
 
     if (!prevState.modals.network && !modals.network && !Browsers.isOnline()) {
       this.onToggleModal(Modals.NETWORK);
@@ -520,12 +522,13 @@ class App extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     darkThemed: state.darkThemed,
+    componentTypes: state.componentTypes,
     profile: state.userProfile,
     products: state.products,
     team: state.team,
     playgrounds: state.playgrounds,
     playground: state.playground,
-    pathname: state.pathname
+    typeGroup: state.typeGroup
   };
 };
 
@@ -535,8 +538,8 @@ const mapDispatchToProps = dispatch => {
     fetchTeamPlaygroundsSummary: payload => dispatch(fetchTeamPlaygroundsSummary(payload)),
     fetchBuildPlaygrounds: payload => dispatch(fetchBuildPlaygrounds(payload)),
     fetchUserProfile: () => dispatch(fetchUserProfile()),
+    setTypeGroup: (payload)=> dispatch(setTypeGroup(payload)),
     setPlayground: payload => dispatch(setPlayground(payload)),
-    updatePathname: payload => dispatch(updatePathname(payload)),
     updateMouseCoords: payload => dispatch(updateMouseCoords(payload)),
     updateUserProfile: profile => dispatch(updateUserProfile(profile))
   };
