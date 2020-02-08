@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "./PlaygroundComment.css";
 
-import { Maths } from "lang-js-utils";
 import FontAwesome from "react-fontawesome";
 import { connect } from "react-redux";
 

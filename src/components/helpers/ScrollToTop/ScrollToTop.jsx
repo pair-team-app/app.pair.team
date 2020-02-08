@@ -1,7 +1,5 @@
 
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-
 
 class ScrollToTop extends Component {
   constructor(props) {
@@ -44,14 +42,11 @@ console.log('%s.render()', this.constructor.name, { prevProps : prevProps, prevS
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { children } = this.props;
-    return (children);
+    // return (children);
 
     return (<div className="scroll-to-top">{children}</div>);
   
   }
-
-
-
 
   // render () {
   //   return (<div className="scroll-to-top">{this.props.children}</div>);
@@ -59,6 +54,4 @@ console.log('%s.render()', this.constructor.name, { prevProps : prevProps, prevS
 }
 
 
-
-
-export default withRouter(ScrollToTop);
+export default ScrollToTop;

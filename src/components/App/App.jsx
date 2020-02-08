@@ -125,37 +125,29 @@ class App extends Component {
       this.props.fetchTeamPlaygroundsSummary({ team });
     }
 
-    if (playgrounds !== null && prevProps.playgrounds === null && buildID) {
-      this.props.fetchBuildPlaygrounds({ buildID : buildID << 0, playgroundID : playgroundID << 0 });
-    }
-
-    console.log('..|..|..|..|', { componentTypes, typeGroup, componentsSlug });
-
-    if (componentTypes && (!typeGroup && componentsSlug || typeGroup.key !== componentsSlug)) {
-      console.log("|:|:|:|:|:|:|:|:|:|:|:|", "SET TYPE GROUP", { matchPlaygrounds, buildID });
-      const typeGroup = typeGroupByKey(this.props.componentTypes, componentsSlug);
-      this.props.setTypeGroup(typeGroup);
-    }
-
-    // if (pathname.startsWith(Pages.PLAYGROUND)) {
-    //   if (!prevProps.location.pathname.startsWith(Pages.PLAYGROUND)) {
-    //     this.props.setPlayground(null);
-
-    //     if (!profile) {
-    //       this.onToggleModal(Modals.LOGIN);
-    //     }
-    //   }
-    // }
-
-    if (
-      profile &&
-      team &&
-      playground && team.id << 0 !== playground.team.id << 0 &&
-      !prevState.modals.noAccess &&
-      !modals.noAccess
-    ) {     
-        this.onToggleModal(Modals.NO_ACCESS);
+    if (matchPlaygrounds) {
+      if (playgrounds !== null && prevProps.playgrounds === null && buildID) {
+          this.props.fetchBuildPlaygrounds({ buildID : buildID << 0, playgroundID : playgroundID << 0 });
       }
+
+      console.log('..|..|..|..|', { componentTypes, typeGroup, componentsSlug });
+
+      if (componentTypes && (!typeGroup && componentsSlug || typeGroup.key !== componentsSlug)) {
+        console.log("|:|:|:|:|:|:|:|:|:|:|:|", "SET TYPE GROUP", { matchPlaygrounds, buildID });
+        const typeGroup = typeGroupByKey(this.props.componentTypes, componentsSlug);
+        this.props.setTypeGroup(typeGroup);
+      }
+
+      if (
+        profile &&
+        team &&
+        playground && team.id !== playground.team.id &&
+        !prevState.modals.noAccess &&
+        !modals.noAccess
+      ) {     
+          this.onToggleModal(Modals.NO_ACCESS);
+      }
+    }
 
     if (!prevState.modals.network && !modals.network && !Browsers.isOnline()) {
       this.onToggleModal(Modals.NETWORK);

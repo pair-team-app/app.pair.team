@@ -40,7 +40,6 @@ if (typeof cookie.load('user_id') === 'undefined') {
 }
 
 store.dispatch(fetchComponentTypes());
-// store.dispatch(fetchEventGroups());
 store.dispatch(fetchProducts());
 
 

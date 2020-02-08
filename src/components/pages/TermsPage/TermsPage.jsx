@@ -25,7 +25,7 @@ function TermsPage(props) {
 
 
 	return (
-		<BasePage className="terms-page">
+		<BasePage { ...this.props } className="terms-page">
 			<h1>Terms of Service</h1>
 			<div className="base-page-content-wrapper terms-page-content-wrapper">
 				<div>

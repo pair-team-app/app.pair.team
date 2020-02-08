@@ -43,7 +43,7 @@ class PricingPage extends Component {
 
 		const { title, intro, sections } = this.state;
 		return (
-			<BasePage className="pricing-page">
+			<BasePage { ...this.props } className="pricing-page">
 				<h1 dangerouslySetInnerHTML={{ __html : title }} />
 				<div className="base-page-intro-text">
 					<p dangerouslySetInnerHTML={{ __html : intro }} />

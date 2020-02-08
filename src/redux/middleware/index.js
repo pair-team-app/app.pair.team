@@ -28,18 +28,7 @@ export function onMiddleware({ dispatch }) {
 
         components = await Promise.all(
           Object.values(components).map(async component => {
-            const {
-              id,
-              type_id: typeID,
-              title,
-              html,
-              styles,
-              root_styles: rootStyles,
-              processed
-            } = component;
-            //           console.log('TYPE_GROUP_LOADED', 'PRE', component, { id, typeID, title, html, styles, rootStyles, processed });
             return await reformComponent(component);
-            //           return (await reformComponent({ ...component, root_styles : rootStyles }));
           })
         );
 
@@ -50,6 +39,8 @@ export function onMiddleware({ dispatch }) {
         //   comp => components.find(({ id }) => id === comp.id) || comp
         // );
         // //         console.log('TYPE_GROUP_LOADED', 'POST', playground.components.map(({ id, typeID, title, html, styles, rootStyles, image_data, processed })=> ({ id, typeID, title, html, styles, rootStyles, image_data, processed })));
+
+        
 
         dispatch({
           type: SET_REFORMED_TYPE_GROUP,

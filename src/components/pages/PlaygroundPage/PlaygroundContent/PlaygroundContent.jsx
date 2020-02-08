@@ -164,18 +164,6 @@ class PlaygroundContent extends Component {
         : componentsFromTypeGroup(playground.components, typeGroup)
       : [];
 
-    const scale =
-      bounds && bounds.init
-        ? {
-            width:
-              (bounds.init.container.size.width + 0) /
-              (bounds.curr.container.size.width + 0),
-            height:
-              (bounds.init.container.size.height + 0) /
-              (bounds.curr.container.size.height + 0)
-          }
-        : null;
-
     return (
       <div
         className="playground-content"
@@ -249,12 +237,10 @@ const PlaygroundComponent = props => {
   // console.log('PlaygroundComponent()', props);
 
   const {
-    scaling,
     profile,
     popover,
     scale,
     bounds,
-    maxBounds,
     typeGroup,
     component
   } = props;
@@ -304,8 +290,7 @@ const PlaygroundComponent = props => {
       height={height + 28}
       lockAspectRatio={true}
       minConstraints={[thumbSize.width, thumbSize.height]}
-      maxcontraints={[maxBounds.size.width - 60, maxBounds.size.height - 168]}
-      maxcontraints={[
+      maxContraints={[
         Math.min(width, fullSize.width),
         Math.min(height, fullSize.height) - 168
       ]}

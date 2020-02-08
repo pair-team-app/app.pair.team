@@ -17,7 +17,7 @@ import { SettingsMenuItemTypes } from "./PlaygroundHeader/UserSettings";
 import PlaygroundNavPanel from "./PlaygroundNavPanel";
 import "./PlaygroundPage.css";
 import PlaygroundProcessingOverlay from "./PlaygroundProcessingOverlay";
-import { commentByID, componentByID, componentFromComment, playgroundByID, typeGroupByID, typeGroupByKey } from "./utils/lookup";
+import { commentByID, componentByID, componentFromComment, playgroundByID } from "./utils/lookup";
 import { reformComment } from "./utils/reform";
 
 class PlaygroundPage extends Component {
@@ -37,18 +37,7 @@ class PlaygroundPage extends Component {
   componentDidMount() {
     console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { profile, match, playgrounds, playground } = this.props;
-    const { fetching } = this.state;
-    const { params = null } = match || {};
-    const { buildID = null, playgroundID = null } = params || {};
-
-    // if (profile) {
-    //   if (playgrounds && !playground && !fetching) {
-    //     if (buildID) {
-    //       this.onFetchBuildPlaygrounds(buildID << 0, playgroundID << 0);
-    //     }
-    //   }
-    // }
+    // const { buildID = null, playgroundID = null } = params || {};
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -61,10 +50,9 @@ class PlaygroundPage extends Component {
       playgrounds,
       playground,
       params,
-      location,
       pathname
     } = this.props;
-    const { fetching, processing, accessibility } = this.state;
+    const { fetching, accessibility } = this.state;
 
     // const { pathname } = location;
     const {
@@ -621,7 +609,7 @@ class PlaygroundPage extends Component {
     const { params = null } = this.props || { params : null };
 
     return (
-      <BasePage
+      <BasePage { ...this.props }
         className={`playground-page${
           component &&
           component.processed &&

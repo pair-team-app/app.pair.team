@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 // import { Route, Switch, withRouter } from 'react-router-dom';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { Pages } from '../../../consts/uris';
 import DocsPage from '../../pages/DocsPage/index';
 import FeaturesPage from '../../pages/FeaturesPage/index';
