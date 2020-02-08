@@ -57,7 +57,7 @@ class BasePopover extends Component {
 //-/> 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevPosition : prevProps.payload.position, currPosition : this.props.payload.position }, { statePosition : this.state.position });
 
 		// const { position } = this.props.payload;
-		const { intro, outro } = this.state;
+		// const { intro, outro } = this.state;
 
 // 		console.log('::POS::', { position : (position !== null), initStatePos :  (this.state.position.x !== 0 && this.state.position.y !== 0), prevPos : (position !== prevProps.payload.position), statePos : (position !== this.state.position) });
 //-/> 		console.log('::POS::', { props : position, state : this.state.position });

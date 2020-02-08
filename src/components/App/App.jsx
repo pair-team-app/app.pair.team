@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import cookie from "react-cookies";
 import { connect } from "react-redux";
 import { API_ENDPT_URL, GITHUB_APP_AUTH, Modals, Pages } from "../../consts/uris";
-import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamPlaygroundsSummary, fetchUserProfile, setPlayground, updateMouseCoords, updatePathname, updateUserProfile, setTypeGroup } from "../../redux/actions";
+import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamPlaygroundsSummary, fetchUserProfile, setPlayground, updateMouseCoords, updateUserProfile, setTypeGroup } from "../../redux/actions";
 import { initTracker, trackEvent, trackPageview } from "../../utils/tracking";
 import Routes from "../helpers/Routes";
 import AlertDialog from "../overlays/AlertDialog";
@@ -19,7 +19,7 @@ import BottomNav from '../sections/BottomNav';
 import TopNav from '../sections/TopNav';
 import "./App.css";
 import { withRouter, matchPath } from 'react-router-dom';
-import { typeGroupByID, typeGroupByKey } from "../pages/PlaygroundPage/utils/lookup";
+import { typeGroupByKey } from "../pages/PlaygroundPage/utils/lookup";
 
 class App extends Component {
   constructor(props) {
@@ -410,7 +410,7 @@ class App extends Component {
       	console.log('%s.render()', this.constructor.name, { props : this.props, matchPlaygrounds });
     //   	console.log('%s.render()', this.constructor.name, this.state.modals);
 
-    const { darkThemed, profile, team, location } = this.props;
+    const { darkThemed, profile, location } = this.props;
     const { popup, modals } = this.state;
 
 

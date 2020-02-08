@@ -21,8 +21,8 @@ ReactDOM.render(
 		<BrowserRouter>
 		{/* <Route render={(props)=> <App />} /> */}
 			<ScrollToTop>
-				{/* <Route children={(props)=> <App { ...props } />} /> */}
-				<App />
+				<Route render={(props)=> <App />} />
+				{/* <App /> */}
 			</ScrollToTop>
 		</BrowserRouter>
 	</Provider>,

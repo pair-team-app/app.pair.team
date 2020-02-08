@@ -605,7 +605,7 @@ class PlaygroundPage extends Component {
       typeGroup,
       component
     } = this.props;
-    const { cursor, accessibility, share, fetching, processing } = this.state;
+    const { cursor, accessibility, share, fetching } = this.state;
     const { params = null } = this.props || { params : null };
 
     return (

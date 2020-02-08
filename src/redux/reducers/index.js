@@ -60,10 +60,8 @@ function rootReducer(state = initialState, action) {
   logFormat(state, action);
 
   const { type, payload } = action;
-  let playgrounds = null,
-    playground = null;
-
-
+  let playgrounds = null;
+  let playground = null;
 
   switch (type) {
     default:
@@ -257,7 +255,7 @@ function rootReducer(state = initialState, action) {
       });
 
     case SET_REFORMED_BUILD_PLAYGROUNDS:
-      let { playgrounds, playgroundID, dataState } = action.payload;
+      let { playgrounds, playgroundID } = action.payload;
 
     
         const playground = playgroundID

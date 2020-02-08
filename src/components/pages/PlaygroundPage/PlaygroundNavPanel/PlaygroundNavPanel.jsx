@@ -1,8 +1,7 @@
-import { grabFavicon } from "favicongrab";
+
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { TEAM_DEFAULT_AVATAR } from "../../../../consts/uris";
 import { trackEvent, trackOutbound } from "../../../../utils/tracking";
 import NavPanelTypeGroup from "./NavPanelTypeGroup";
 import "./PlaygroundNavPanel.css";
@@ -119,35 +118,7 @@ class PlaygroundNavPanel extends Component {
     		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { team, playground } = this.props;
-    const { typeGroups, teamLogo } = this.state;
-
-    if (!teamLogo) {
-      if (playground) {
-        grabFavicon(
-          team.domain === "pairurl.com"
-            ? "dev.pairurl.com"
-            : `http://${team.domain}`
-        ).then(response => {
-          const icons = response.icons
-            ? response.icons
-                .filter(({ sizes }) => sizes)
-                .map(icon => ({
-                  ...icon,
-                  size: icon.sizes.split("x").pop() << 0
-                }))
-                .sort((i, ii) =>
-                  i.size < ii.size ? -1 : i.size > ii.size ? 1 : 0
-                )
-            : [];
-
-          const teamLogo = icons.length > 0 ? icons.pop().src : null;
-          this.setState({ teamLogo });
-        });
-      } else {
-        const teamLogo = team.image || TEAM_DEFAULT_AVATAR;
-        this.setState({ teamLogo });
-      }
-    }
+    const { typeGroups } = this.state;
 
     return (
       <div className="playground-nav-panel">

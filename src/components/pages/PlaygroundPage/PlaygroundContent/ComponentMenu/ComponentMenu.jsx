@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './ComponentMenu.css';
 
 import { ContextMenu, MenuItem } from 'react-contextmenu';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 // import { connect } from 'react-redux';
 
 import { COMPONENT_MENU_ITEM_COMMENTS, COMPONENT_MENU_ITEM_COPY } from './index';
@@ -171,7 +170,7 @@ const ComponentMenuItemAcc = (props)=> {
 //   });
 // };
 
-{/*<img src={(avatar || USER_DEFAULT_AVATAR)} alt={(email || username)} />*/}
+//<img src={(avatar || USER_DEFAULT_AVATAR)} alt={(email || username)} />//
 
 
 

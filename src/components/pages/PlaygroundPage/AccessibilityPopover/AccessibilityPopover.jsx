@@ -3,14 +3,10 @@ import "./AccessibilityPopover.css";
 
 import { Strings } from "lang-js-utils";
 import FontAwesome from 'react-fontawesome';
-import CopyToClipboard from "react-copy-to-clipboard";
 import { connect } from "react-redux";
 
 import BaseContentExpander from '../../../iterables/BaseContentExpander';
 import BasePopover from "../../../overlays/BasePopover";
-import { API_ENDPT_URL } from "../../../../consts/uris";
-import { trackEvent } from "../../../../utils/tracking";
-import { POPUP_TYPE_OK } from "../../../overlays/PopupNotification";
 
 class AccessibilityPopover extends Component {
   constructor(props) {
@@ -75,7 +71,7 @@ const AccessibilityTreeItem = (props)=> {
 	console.log('AccessibilityTreeItem()', props);
 
 	const { component, treeNode } = props;
-	const { expanded, title, childNodes } = treeNode;
+	const { expanded, childNodes } = treeNode;
 
 	const { failed, aborted } = (component && component.accessibility) ? component.accessibility : { failed : [], aborted : [] };
 	let ariaAttribs = [];

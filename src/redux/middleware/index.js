@@ -1,3 +1,5 @@
+
+import moment from "moment";
 import cookie from "react-cookies";
 import { reformComponent } from "../../components/pages/PlaygroundPage/utils/reform";
 import { BUILD_PLAYGROUNDS_LOADED, SET_REFORMED_BUILD_PLAYGROUNDS, SET_REFORMED_TEAM_PLAYGROUNDS_SUMMARY, SET_REFORMED_TYPE_GROUP, TEAM_PLAYGROUNDS_SUMMARY_LOADED, TYPE_GROUP_LOADED, UPDATE_MOUSE_COORDS, USER_PROFILE_CACHED, USER_PROFILE_UPDATED } from "../../consts/action-types";
@@ -40,7 +42,7 @@ export function onMiddleware({ dispatch }) {
         // );
         // //         console.log('TYPE_GROUP_LOADED', 'POST', playground.components.map(({ id, typeID, title, html, styles, rootStyles, image_data, processed })=> ({ id, typeID, title, html, styles, rootStyles, image_data, processed })));
 
-        
+
 
         dispatch({
           type: SET_REFORMED_TYPE_GROUP,
@@ -57,27 +59,30 @@ export function onMiddleware({ dispatch }) {
       } else if (type === TEAM_PLAYGROUNDS_SUMMARY_LOADED) {
         const { team } = payload;
         const playgrounds = await Promise.all(
+
+
+
+
           payload.playgrounds.map(async (playground, i) => {
-            const { device_id, components } = playground;
+            const { build_id, team_id, device_id, components, last_visited } = playground;
+            delete playground["build_id"];
+            delete playground["team_id"];
             delete playground["device_id"];
+            delete playground["last_visited"];
+
             const deviceID = device_id;
 
             return i === 0 && deviceID === 1
               ? {
                   ...playground,
                   team,
-                  deviceID: device_id,
+                  buildID : build_id << 0,
+                  teamID : team_id << 0,
+                  lastVisited : moment(last_visited),
+                  deviceID,
                   components: (await Promise.all(
-                    components//[:][:][:][:][:][:][:][:][:][:]
+                    components
                       .map(async component => {
-                        // console.log((component.type_id === 187) ? '[[>[>[>[>[>[>[>[>[>[>[>[>[>[>' : '[-][-][-][-][-][-][-][-][-][-]', {
-                          // ...component
-                        // });
-
-                        // if (component.type_id === 187) {
-                          // console.log('[[>[>[>[>[>[>[>[>[>[>[>[>[>[>', { ...component });
-                        // }
-
                         return component.type_id === 187
                           ? await reformComponent(component)
                           : component;
@@ -99,13 +104,19 @@ export function onMiddleware({ dispatch }) {
 
         const playgrounds = await Promise.all(
           payload.playgrounds.map(async playground => {
-            const { device_id, components } = playground;
+            const { build_id, team_id, device_id, components, last_visited } = playground;
+            delete playground["build_id"];
+            delete playground["team_id"];
             delete playground["device_id"];
+            delete playground["last_visited"];
 
             //					console.log('playground', { id : playground.id, device_id, components });
             return {
               ...playground,
-              deviceID: device_id,
+              buildID: build_id << 0,
+              teamID: team_id << 0,
+              deviceID: device_id << 0,
+              lastVisited: moment(last_visited),
               components: await Promise.all(
                 components.map(
                   async component => await reformComponent(component)

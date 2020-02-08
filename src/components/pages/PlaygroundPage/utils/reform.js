@@ -65,7 +65,6 @@ export const reformComponent = async (component, overwrite = {}) => {
     root_styles,
     meta,
     comments,
-    last_visited
   } = component;
   const { width, height } = meta.bounds;
   delete component["type_id"];
@@ -178,4 +177,16 @@ export const reformComponent = async (component, overwrite = {}) => {
 
 export const reformPlayground = async (playground, overwrite = {}) => {
   console.log("reformPlayground()", playground);
+
+  const { build_id, team_id } = playground;
+
+  delete playground["build_id"];
+  delete playground["team_id"];
+
+  const reformed = { ...playground,
+    buildID : build_id << 0,
+    teamID: team_id << 0
+  };
+
+  return ({ ...reformed });
 };
