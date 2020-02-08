@@ -1,5 +1,5 @@
 import { Objects } from "lang-js-utils";
-import { ADD_FILE_UPLOAD, APPEND_ARTBOARD_SLICES, APPEND_HOME_ARTBOARDS, COMPONENT_TYPES_LOADED, EVENT_GROUPS_LOADED, SET_ARTBOARD_COMPONENT, SET_ARTBOARD_GROUPS, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_PRODUCTS, SET_REDIRECT_URI, SET_REFORMED_BUILD_PLAYGROUNDS, SET_REFORMED_TEAM_PLAYGROUNDS_SUMMARY, SET_REFORMED_TYPE_GROUP, SET_TEAM, SET_TYPE_GROUP, TOGGLE_THEME, UPDATE_DEEPLINK, UPDATE_MOUSE_COORDS, UPD_PATHNAME, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from "../../consts/action-types";
+import { ADD_FILE_UPLOAD, APPEND_ARTBOARD_SLICES, APPEND_HOME_ARTBOARDS, COMPONENT_TYPES_LOADED, EVENT_GROUPS_LOADED, SET_ARTBOARD_COMPONENT, SET_ARTBOARD_GROUPS, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_PRODUCTS, SET_REDIRECT_URI, SET_REFORMED_BUILD_PLAYGROUNDS, SET_REFORMED_TEAM_PLAYGROUNDS_SUMMARY, SET_REFORMED_TYPE_GROUP, SET_TEAM, SET_TYPE_GROUP, TOGGLE_THEME, UPDATE_DEEPLINK, UPDATE_MOUSE_COORDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from "../../consts/action-types";
 import { LOG_REDUCER_PREFIX } from "../../consts/log-ascii";
 
 const initialState = {
@@ -12,10 +12,6 @@ const initialState = {
   comment: null,
   products: null,
   darkThemed: false,
-  pathname: {
-    prev: null,
-    curr: null
-  },
   deeplink: {
     teamID: 0,
     buildID: 0,
@@ -27,7 +23,6 @@ const initialState = {
   redirectURI: null,
   userProfile: null,
   invite: null,
-  teams: [],
   team: null,
   history: [],
   mouse: {
@@ -302,11 +297,6 @@ function rootReducer(state = initialState, action) {
           typeof action.payload === "boolean"
             ? action.payload
             : !state.darkThemed
-      });
-
-    case UPD_PATHNAME:
-      return Object.assign({}, state, {
-        pathname: action.payload
       });
   }
 }

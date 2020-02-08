@@ -4,7 +4,7 @@ import cookie from "react-cookies";
 import {
 BUILD_PLAYGROUNDS_LOADED, COMPONENT_TYPES_LOADED, EVENT_GROUPS_LOADED, SET_COMMENT, SET_COMPONENT,
   // 	CONVERTED_DEEPLINK,
-  SET_INVITE, SET_PLAYGROUND, SET_PLAYGROUNDS, SET_PRODUCTS, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_PLAYGROUNDS_SUMMARY_LOADED, TOGGLE_THEME, TYPE_GROUP_LOADED, UPDATE_DEEPLINK, UPDATE_MOUSE_COORDS, UPD_PATHNAME, USER_PROFILE_ERROR,
+  SET_INVITE, SET_PLAYGROUND, SET_PLAYGROUNDS, SET_PRODUCTS, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_PLAYGROUNDS_SUMMARY_LOADED, TOGGLE_THEME, TYPE_GROUP_LOADED, UPDATE_DEEPLINK, UPDATE_MOUSE_COORDS, USER_PROFILE_ERROR,
   // 	USER_PROFILE_CACHED,
   USER_PROFILE_LOADED, USER_PROFILE_UPDATED
 } from "../../consts/action-types";
@@ -297,11 +297,6 @@ export function setRedirectURI(payload) {
 export function toggleTheme(payload = null) {
   logFormat("toggleTheme()", payload);
   return { payload, type: TOGGLE_THEME };
-}
-
-export function updatePathname(payload = null) {
-  logFormat("updatePathname()", payload);
-  return { payload, type: UPD_PATHNAME };
 }
 
 export function updateDeeplink(payload) {
