@@ -13,11 +13,11 @@ function BasePage(props) {
 
 	const { className, children, style } = props;
 	const { navLinks, location } = props;
-	const matchPlaygrounds = matchPath(location.pathname, {
+	const matchPlaygrounds = (location) ? matchPath(location.pathname, {
 		path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`,
 		exact : false,
 		strict: false
-	});
+	}) : {};
 
 	return (<div className={`base-page ${className}`} style={style}>
 		{(children)}
@@ -27,7 +27,7 @@ function BasePage(props) {
 
 
 const BottomNav = (props)=> {
-	console.log('BasePage.BottomNav()', props);
+	// console.log('BasePage.BottomNav()', props);
 
 	const { navLinks } = props;
 	return (<div className="base-page-bottom-nav"><ul>

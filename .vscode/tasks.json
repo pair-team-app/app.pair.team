@@ -1,23 +1,45 @@
+// Available variables which can be used inside of strings.
+// ${workspaceRoot}: the root folder of the team
+// ${file}: the current opened file
+// ${fileBasename}: the current opened file's basename
+// ${fileDirname}: the current opened file's dirname
+// ${fileExtname}: the current opened file's extension
+// ${cwd}: the current working directory of the spawned process
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558 
-    // for the documentation about the tasks.json format
-    "version": "2.0.0",
-    "tasks": [{
-        "type": "shell",
-        "command": "yarn start --no-launch",
-        "label": "Run start",
-        "isBackground": true,
-        "problemMatcher": [{
-            "pattern": {
-                "regexp": ""
+	"version": "2.0.0",
+	"command": "npm",
+	"echoCommand": false,
+	"tasks": [
+        {
+            "label": "yarn start:debug",
+            "type": "process",
+            "command": "yarn",
+            "args": [
+                "start:debug"
+            ],
+            "problemMatcher": [
+                {
+                    "pattern": {
+                        "regexp": ""
+                    },
+                    "background": {
+                        "beginsPattern": ".*node .*",
+                        "endsPattern": "Web UI available at .*"
+                    }
+                }
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
             },
-            "background": {
-                "beginsPattern": ".*node .*",
-                "endsPattern": "Web UI available at .*"
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
             }
-        }],
-        "presentation": {
-            "reveal": "never"
         }
-    }]
+    ]
 }

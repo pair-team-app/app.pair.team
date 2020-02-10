@@ -4,7 +4,9 @@ import React, { Component } from "react";
 import cookie from "react-cookies";
 import { connect } from "react-redux";
 import { API_ENDPT_URL, GITHUB_APP_AUTH, Modals, Pages } from "../../consts/uris";
-import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamPlaygroundsSummary, fetchUserProfile, setPlayground, updateMouseCoords, updateUserProfile, setTypeGroup } from "../../redux/actions";
+import { componentByID } from '../../components/pages/PlaygroundPage/utils/lookup';
+import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamPlaygroundsSummary, fetchUserProfile, setPlayground, setComponent, setComment, updateMouseCoords, updateUserProfile, setTypeGroup } from "../../redux/actions";
+
 import { initTracker, trackEvent, trackPageview } from "../../utils/tracking";
 import Routes from "../helpers/Routes";
 import AlertDialog from "../overlays/AlertDialog";
@@ -80,77 +82,111 @@ class App extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, snapshot });
     // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
+
+    // check for playground url
     const matchPlaygrounds = matchPath(this.props.location.pathname, {
       path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`,
       exact : false,
       strict: false
-    });
+    }) || {};
 
 
+    console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds });
+
+
+
+    // extract url props
     const { componentTypes, profile, team, playgrounds, playground, typeGroup } = this.props;
-    const { pathname } = this.props.location;
+    const { pathname } = (matchPlaygrounds && Object.keys(matchPlaygrounds).length > 0) ? this.props.location : '';
     const { teamSlug,
       projectSlug,
       buildID,
       playgroundID,
       componentsSlug,
       componentID,
-      commentID } = matchPlaygrounds.params;
+      commentID } = (pathname && pathname.length > 0) ? matchPlaygrounds.params : {};
     const { modals } = this.state;
 
-    		// console.log('|:|:|:|:|:|:|:|:|:|:|:|', { matchPlaygrounds });
-    //  console.log('|:|:|:|:|:|:|:|:|:|:|:|', { prevPathname : prevProps.location.pathname, currPathname : pathname, state : this.state });
+    return;
+
+    // url changed
     if (prevProps.location.pathname !== pathname) {
       trackPageview();
     }
 
-    if (profile !== null && prevProps.profile === null) {
-      this.onToggleModal(Modals.LOGIN, false);
-      this.props.fetchTeamLookup({ userID: profile.id });
-    }
-
-    if (team !== null && prevProps.team === null) {
-      // console.log("|:|:|:|:|:|:|:|:|:|:|:|", "FETCH TEAM PLAYGROUND SUMMARY");
-
-      const modal =
-        (team.members.length > 10 && team.type === "free") ||
-        (team.members.length > 50 && team.type !== "enterprise");
-      if (modal && !prevState.modals.stripe && !modals.stripe) {
-        const product = this.props.products.find(
-          ({ threshold }) => team.members.length >= threshold
-        );
-        this.onToggleModal(Modals.STRIPE, true, { team, product });
-      }
-
-      this.props.fetchTeamPlaygroundsSummary({ team });
-    }
-
-    if (matchPlaygrounds) {
-      if (playgrounds !== null && prevProps.playgrounds === null && buildID) {
-          this.props.fetchBuildPlaygrounds({ buildID : buildID << 0, playgroundID : playgroundID << 0 });
-      }
-
-      console.log('..|..|..|..|', { componentTypes, typeGroup, componentsSlug });
-
-      if (componentTypes && (!typeGroup && componentsSlug || typeGroup.key !== componentsSlug)) {
-        console.log("|:|:|:|:|:|:|:|:|:|:|:|", "SET TYPE GROUP", { matchPlaygrounds, buildID });
-        const typeGroup = typeGroupByKey(this.props.componentTypes, componentsSlug);
-        this.props.setTypeGroup(typeGroup);
-      }
-
-      if (
-        profile &&
-        team &&
-        playground && team.id !== playground.team.id &&
-        !prevState.modals.noAccess &&
-        !modals.noAccess
-      ) {     
-          this.onToggleModal(Modals.NO_ACCESS);
-      }
-    }
-
+    // no internet
     if (!prevState.modals.network && !modals.network && !Browsers.isOnline()) {
       this.onToggleModal(Modals.NETWORK);
+    
+    } else {
+
+      // just received user profile, go get the team
+      if (profile !== null && prevProps.profile === null) {
+        this.onToggleModal(Modals.LOGIN, false);
+        this.props.fetchTeamLookup({ userID: profile.id });
+      }
+
+      // just received tean, go get summary of team's playgrounds
+      if (team !== null && prevProps.team === null) {
+        // console.log("|:|:|:|:|:|:|:|:|:|:|:|", "FETCH TEAM PLAYGROUND SUMMARY");
+
+        // pay alert check
+        const modal =
+          (team.members.length > 10 && team.type === "free") ||
+          (team.members.length > 50 && team.type !== "enterprise");
+        if (modal && !prevState.modals.stripe && !modals.stripe) {
+          const product = this.props.products.find(
+            ({ threshold }) => team.members.length >= threshold
+          );
+          this.onToggleModal(Modals.STRIPE, true, { team, product });
+        }
+
+        this.props.fetchTeamPlaygroundsSummary({ team });
+      }
+
+      // on a playground url
+      if (matchPlaygrounds) {
+        // not a team member, block access
+        if (
+          profile &&
+          team &&
+          playground && team.id !== playground.team.id &&
+          !prevState.modals.noAccess &&
+          !modals.noAccess
+        ) {     
+            this.onToggleModal(Modals.NO_ACCESS);
+        }
+
+
+        // get playgrounds associated w/ this buildID from url
+        if (playgrounds !== null && prevProps.playgrounds === null && buildID) {
+            this.props.fetchBuildPlaygrounds({ buildID : buildID << 0, playgroundID : playgroundID << 0 });
+        }
+
+        // loaded type group basics, map playground ones to it
+    
+        const typeGroup = (componentsSlug) ? typeGroupByKey(this.props.componentTypes, componentsSlug) : null;
+
+
+
+
+        if (typeGroup && (typeGroup !== this.props.typeGroup)) {
+          const typeGroup = typeGroupByKey(this.props.componentTypes, componentsSlug);
+
+          this.props.setTypeGroup(typeGroup);
+        }
+        
+        const component = (playground) && componentByID(playground.components, componentID << 0);
+
+        if (component && component !== prevProps.component) {
+          this.props.setComponent({ componentByID });
+        }
+
+
+        if (typeGroup && prevProps.componentID === null && componentID) {
+
+        }
+      }
     }
   }
 
@@ -515,12 +551,20 @@ const mapStateToProps = (state, ownProps) => {
   return {
     darkThemed: state.darkThemed,
     componentTypes: state.componentTypes,
-    profile: state.userProfile,
     products: state.products,
+    profile: state.userProfile,
     team: state.team,
     playgrounds: state.playgrounds,
     playground: state.playground,
-    typeGroup: state.typeGroup
+    typeGroup: state.typeGroup,
+    component: state.component,
+    comment: state.comment,
+    buildID: state.deeplink,
+    playgroundID: state.deeplink,
+    componentSlug: state.deeplink,
+    componentID: state.deeplink,
+    commentID: state.deeplink,
+    commentsPath: state.deeplink
   };
 };
 
@@ -532,6 +576,7 @@ const mapDispatchToProps = dispatch => {
     fetchUserProfile: () => dispatch(fetchUserProfile()),
     setTypeGroup: (payload)=> dispatch(setTypeGroup(payload)),
     setPlayground: payload => dispatch(setPlayground(payload)),
+    setComponent:payload=> dispatch(setComponent(payload)),
     updateMouseCoords: payload => dispatch(updateMouseCoords(payload)),
     updateUserProfile: profile => dispatch(updateUserProfile(profile))
   };

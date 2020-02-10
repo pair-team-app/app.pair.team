@@ -6,7 +6,7 @@ import { BUILD_PLAYGROUNDS_LOADED, SET_REFORMED_BUILD_PLAYGROUNDS, SET_REFORMED_
 import { LOG_MIDDLEWARE_PREFIX } from "../../consts/log-ascii";
 import { fetchPlaygroundComponentGroup } from "../actions";
 
-const logFormat = (action, meta = "") => {
+const logFormat = ({ store, action, meta = "" }) => {
   if (typeof action !== "function") {
     const { type, payload } = action;
     if (type !== UPDATE_MOUSE_COORDS) {
@@ -19,16 +19,22 @@ const logFormat = (action, meta = "") => {
   }
 };
 
-export function onMiddleware({ dispatch }) {
+export function onMiddleware(store) {
+  const { dispatch } = store;
+
   return next => {
     return async action => {
-      logFormat(action);
+      logFormat({ action });
+
+
+      // const storeState = store.getState();
+
 
       const { type, payload } = action;
       if (type === TYPE_GROUP_LOADED) {
         let { playground, components } = payload;
 
-        components = await Promise.all(
+        components = await Promise.allSettled(
           Object.values(components).map(async component => {
             return await reformComponent(component);
           })

@@ -67,7 +67,7 @@ class PlaygroundPage extends Component {
        		
     // init typeGroups
     if (!prevProps.componentTypes && componentTypes) {
-      this.setState({ typeGroups: componentTypes });
+      // this.setState({ typeGroups: componentTypes });
     }
 
     // logged in

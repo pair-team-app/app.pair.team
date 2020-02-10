@@ -12,13 +12,17 @@ const initialState = {
   comment: null,
   products: null,
   darkThemed: false,
-  deeplink: {
-    teamID: 0,
+  urlFragments: {
+    teamSlug: 0,
+    projSlug: 0,
     buildID: 0,
     playgroundID: 0,
-    typeGroupID: 0,
-    componentID: 0,
-    commentID: 0
+    typeGroupSlug: 0,
+    commentID: 0,
+    teamPath: null,
+    componentsPath: null,
+    commentsPath: null,
+    accessibility: null 
   },
   redirectURI: null,
   userProfile: null,

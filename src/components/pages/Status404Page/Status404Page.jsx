@@ -6,7 +6,7 @@ import BasePage from '../BasePage';
 
 
 function Status404Page(props) {
-	return (<BasePage { ...this.props } className="status-404-page">
+	return (<BasePage { ...props } className="status-404-page">
 		<h1>Nothing Here, 404</h1>
 	</BasePage>);
 }

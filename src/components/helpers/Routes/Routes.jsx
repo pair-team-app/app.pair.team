@@ -25,7 +25,7 @@ class Routes extends Component {
   }
 
   componentDidMount() {
-// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+		console.log('%s.componentDidMount()-', this.constructor.name, this.props, this.state);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -34,7 +34,7 @@ class Routes extends Component {
 
 
   render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props });
+    // console.log('%s.render()', this.constructor.name, { props : this.props });
 
     return (<Switch>
       <Route exact 
@@ -86,11 +86,11 @@ class Routes extends Component {
 
       <Route exact 
         path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`} 
-        // path={Pages.PLAYGROUND} 
-        component={()=> <PlaygroundPage
+        
+        component={()=> {return ( <PlaygroundPage 
           onLogout={this.props.onLogout} 
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
-          onPopup={this.props.onPopup} />
+          onPopup={this.props.onPopup} /> )}
          } />
 
       <Route exact 
