@@ -20,10 +20,11 @@ ReactDOM.render(
 	<Provider store={store}>
 		<BrowserRouter>
 		{/* <Route render={(props)=> <App />} /> */}
-			<ScrollToTop>
-				<Route render={(props)=> <App />} />
+			{/* <ScrollToTop> */}
+			{/* <Route path="/" render={} component={(props)=> <App />} /> */}
+				<Route path="/" render={(routeProps)=> <App { ...routeProps } />} />
 				{/* <App /> */}
-			</ScrollToTop>
+			{/* </ScrollToTop> */}
 		</BrowserRouter>
 	</Provider>,
 	document.getElementById('root')

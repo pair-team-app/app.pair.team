@@ -57,7 +57,7 @@ class App extends Component {
 
     trackEvent("site", "load");
     trackPageview();
-    //-/>
+    //
     // console.log('[:][:][:][:][:][:][:][:][:][:]');
 
     const { profile, location } = this.props;
@@ -73,7 +73,7 @@ class App extends Component {
     window.addEventListener("mousemove", this.handleMouseMove);
     window.onpopstate = event => {
       event.preventDefault();
-      //-/> 			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
+      // 			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
     };
   }
 
@@ -106,8 +106,6 @@ class App extends Component {
       componentID,
       commentID } = (pathname && pathname.length > 0) ? matchPlaygrounds.params : {};
     const { modals } = this.state;
-
-    return;
 
     // url changed
     if (prevProps.location.pathname !== pathname) {
@@ -163,35 +161,31 @@ class App extends Component {
             this.props.fetchBuildPlaygrounds({ buildID : buildID << 0, playgroundID : playgroundID << 0 });
         }
 
-        // loaded type group basics, map playground ones to it
-    
-        const typeGroup = (componentsSlug) ? typeGroupByKey(this.props.componentTypes, componentsSlug) : null;
-
-
-
-
+        // loaded type group basics, map playground ones to it    
+        const typeGroup = (componentsSlug && this.props.componentTypes) ? typeGroupByKey(this.props.componentTypes, componentsSlug) : null;
         if (typeGroup && (typeGroup !== this.props.typeGroup)) {
           const typeGroup = typeGroupByKey(this.props.componentTypes, componentsSlug);
 
           this.props.setTypeGroup(typeGroup);
         }
-        
-        const component = (playground) && componentByID(playground.components, componentID << 0);
 
-        if (component && component !== prevProps.component) {
-          this.props.setComponent({ componentByID });
+        // set global playground now
+        if (!prevProps.playgrounds && playgrounds && !playground) {
+          console.log('*************** PLAYGROUND -=> STORE', { playground });
+          this.props.setPlayground(playground);
         }
 
-
-        if (typeGroup && prevProps.componentID === null && componentID) {
-
+        // has componenID in path but no component set
+        const component = (playground) && componentByID(playground.components, componentID << 0);
+        if (component && component !== prevProps.component) {
+          this.props.setComponent({ componentByID });
         }
       }
     }
   }
 
   componentWillUnmount() {
-    //-/> 		console.log('%s.componentWillUnmount()', this.constructor.name);
+    // 		console.log('%s.componentWillUnmount()', this.constructor.name);
 
     if (this.authInterval) {
       clearInterval(this.authInterval);
@@ -225,7 +219,7 @@ class App extends Component {
         payload: { user_id: profile.id }
       })
       .then(response => {
-        //-/> 			console.log('DISABLE_ACCOUNT', response.data);
+        // 			console.log('DISABLE_ACCOUNT', response.data);
 
         trackEvent("user", "delete-account");
         this.props.updateUserProfile(null);
@@ -235,7 +229,7 @@ class App extends Component {
   };
 
   handleGithubAuth = () => {
-    //-/> 		console.log('%s.handleGithubAuth()', this.constructor.name);
+    // 		console.log('%s.handleGithubAuth()', this.constructor.name);
 
     const code = DateTimes.epoch(true);
     axios
@@ -244,7 +238,7 @@ class App extends Component {
         payload: { code }
       })
       .then(response => {
-        //-/> 			console.log('GITHUB_AUTH', response.data);
+        // 			console.log('GITHUB_AUTH', response.data);
         const authID = response.data.auth_id << 0;
         this.setState({ authID }, () => {
           if (
@@ -281,7 +275,7 @@ class App extends Component {
   };
 
   handleGitHubAuthSynced = (profile, register = true) => {
-    //-/> 		console.log('%s.handleGitHubAuthSynced()', this.constructor.name, profile, register);
+    // 		console.log('%s.handleGitHubAuthSynced()', this.constructor.name, profile, register);
 
     this.props.updateUserProfile(profile);
 
@@ -295,13 +289,13 @@ class App extends Component {
         }
       })
       .then(response => {
-        //-/> 			console.log('REGISTER', response.data);
+        // 			console.log('REGISTER', response.data);
       })
       .catch(error => {});
   };
 
   handleLogout = (page = null, modal = null) => {
-    //-/> 		console.log('%s.handleLogout()', this.constructor.name, this.constructor.name, page, modal);
+    // 		console.log('%s.handleLogout()', this.constructor.name, this.constructor.name, page, modal);
     trackEvent("user", "sign-out");
 
     this.props.updateUserProfile(null);
@@ -343,7 +337,7 @@ class App extends Component {
   };
 
   handleThemeToggle = event => {
-    //-/> 		console.log('%s.handleThemeToggle()', this.constructor.name, event);
+    // 		console.log('%s.handleThemeToggle()', this.constructor.name, event);
     this.setState({ darkTheme: !this.state.darkTheme });
   };
 
@@ -379,7 +373,7 @@ class App extends Component {
           payload: { authID }
         })
         .then(response => {
-          //-/> 				console.log('GITHUB_AUTH_CHECK', response.data);
+          // 				console.log('GITHUB_AUTH_CHECK', response.data);
           const { user } = response.data;
           if (user) {
             trackEvent("github", "success");
@@ -459,7 +453,7 @@ class App extends Component {
       )}
 
 	    <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND)) ? ' playground-page-wrapper' : ''}`}>
-		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} />
+		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
 	    </div>
 		  
       {(!matchPlaygrounds) && (

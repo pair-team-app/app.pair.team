@@ -2,6 +2,7 @@ import Jimp from "jimp";
 import jsonSize from "json-size";
 import { Images } from "lang-js-utils";
 import moment from "moment";
+import { jsonFormatKB } from '../../../../consts/formats';
 import { unzipData } from "../../../../utils/funcs";
 import { convertStyles } from "./css";
 
@@ -41,7 +42,7 @@ export const reformComment = (comment, overwrite = {}) => ({
 });
 
 export const reformComponent = async (component, overwrite = {}) => {
-  console.log("reformComponent()", component);
+  // console.log("reformComponent()", component);
   // 	console.log('reformComponent()', component, Object.keys(component));
 
   const PLACEHOLDER_FILL = {
@@ -74,15 +75,6 @@ export const reformComponent = async (component, overwrite = {}) => {
   delete component["root_styles"];
   delete component["image_data"];
   delete component["thumb_data"];
-
-  // 	const sizes = {
-  //     image         : jsonFormatKB(image_data, true),
-  //     html          : jsonFormatKB(html, true),
-  //     styles        : jsonFormatKB(styles, true),
-  //     accessibility : jsonFormatKB(accessibility, true),
-  //     rootStyles    : jsonFormatKB(root_styles, true)
-  //   };
-  // 	console.log('ZIPPED:', { styles : await unzipData(styles), accessibility : await unzipData(accessibility), rootStyles : await unzipData(root_styles) });
 
   const imageData =
     image_data && image_data.length > 1 ? await unzipData(image_data) : null; //Images.genColor(PLACEHOLDER_FILL, { width, height });
@@ -162,14 +154,15 @@ export const reformComponent = async (component, overwrite = {}) => {
       .map(comment => reformComment(comment))
       .sort((i, j) => (i.epoch > j.epoch ? -1 : i.epoch < j.epoch ? 1 : 0)),
     selected: false,
-    processed: (html && styles && rootStyles) !== null,
+    processed: true, //(html && styles && rootStyles) !== null,
     ...overwrite
   };
 
   if (imageData && html && styles && rootStyles) {
-    //     console.log('[%s] .::(REFORMED)::.', component.id, { data : { ...reformed, size : jsonFormatKB(reformed) } });
+    console.log('[%s] .::(REFORMED)::.', component.id, { data : { ...reformed, size : jsonFormatKB(reformed) } });
+
   } else {
-    //     console.log('[%s] .::(INITIAL)::.', component.id, { ...reformed, size : jsonFormatKB(reformed) });
+    console.log('[%s] .::(INITIAL)::.', component.id, { ...reformed, size : jsonFormatKB(reformed) });
   }
 
   return { ...reformed, size: jsonSize(reformed) };

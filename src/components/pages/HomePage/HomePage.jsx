@@ -30,7 +30,7 @@ class HomePage extends Component {
 	}
 
 	handleGitHub = ()=> {
-//-/> 		console.log('%s.handleGitHub()', this.constructor.name);
+// 		console.log('%s.handleGitHub()', this.constructor.name);
 		trackEvent('button', 'github');
 
 		this.props.onModal(Modals.GITHUB);
@@ -73,7 +73,7 @@ class HomePage extends Component {
 	};
 
 	handleSubmit = (event)=> {
-//-/> 		console.log('%s.handleSubmit()', this.constructor.name);
+// 		console.log('%s.handleSubmit()', this.constructor.name);
 		event.preventDefault();
 
 		trackEvent('button', 'join-wait-list');
@@ -87,7 +87,7 @@ class HomePage extends Component {
 					type     : 'wait_list'
 				}
 			}).then((response) => {
-//-/> 				console.log('REGISTER', response.data);
+// 				console.log('REGISTER', response.data);
 				const status = parseInt(response.data.status, 16);
 // 					console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));
 

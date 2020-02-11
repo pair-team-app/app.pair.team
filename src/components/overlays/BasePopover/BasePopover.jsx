@@ -54,13 +54,13 @@ class BasePopover extends Component {
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 // 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevPos : prevProps.payload.position,currPos : prevProps.outro }, { intro : this.props.intro, outro : this.props.outro }, { intro : prevState.intro, outro : prevState.outro }, { intro : this.state.intro, outro : this.state.outro });
-//-/> 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevPosition : prevProps.payload.position, currPosition : this.props.payload.position }, { statePosition : this.state.position });
+// 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevPosition : prevProps.payload.position, currPosition : this.props.payload.position }, { statePosition : this.state.position });
 
 		// const { position } = this.props.payload;
 		// const { intro, outro } = this.state;
 
 // 		console.log('::POS::', { position : (position !== null), initStatePos :  (this.state.position.x !== 0 && this.state.position.y !== 0), prevPos : (position !== prevProps.payload.position), statePos : (position !== this.state.position) });
-//-/> 		console.log('::POS::', { props : position, state : this.state.position });
+// 		console.log('::POS::', { props : position, state : this.state.position });
 
 // 		if (position && (this.state.position.x !== 0 && this.state.position.y !== 0) && position !== prevProps.payload.position && position !== this.state.position) {
 // 			this.setState({ position }, ()=> {
@@ -69,13 +69,13 @@ class BasePopover extends Component {
 // 		}
 
 		if (this.props.intro && this.props.intro !== prevProps.intro && !this.props.outro) {
-//-/> 			console.log('%s.componentDidUpdate() - intro > true', this.constructor.name, this.props.intro, intro);
+// 			console.log('%s.componentDidUpdate() - intro > true', this.constructor.name, this.props.intro, intro);
 				this.onIntro();
 // 			this.setState({ intro : true });
 		}
 
 		if (this.props.outro && this.props.outro !== prevProps.outro && !this.props.intro) {
-//-/> 			console.log('%s.componentDidUpdate() - outro true', this.constructor.name, this.props.outro, outro);
+// 			console.log('%s.componentDidUpdate() - outro true', this.constructor.name, this.props.outro, outro);
 			this.onOutro();
 // 			this.setState({ outro : true });
 		}
@@ -97,7 +97,7 @@ class BasePopover extends Component {
 	}
 
 	handleClickOutside(event) {
-//-/> 		console.log('%s.handleClickOutside()', this.constructor.name);
+// 		console.log('%s.handleClickOutside()', this.constructor.name);
 // 		this.setState({ outro : true });
 		this.onOutro();
 	}
@@ -157,7 +157,7 @@ class BasePopover extends Component {
 	};
 
 	render() {
-//-/> 		console.log('%s.render()', this.constructor.name, { props : this.props.payload, state : this.state.position });
+// 		console.log('%s.render()', this.constructor.name, { props : this.props.payload, state : this.state.position });
 		// console.log('%s.render()', this.constructor.name, this.props, this.state);
 // 		if (this.wrapper && this.timeline && this.timeline.time === 0) {
 // 			this.timeline.seek(0);
@@ -187,7 +187,7 @@ class BasePopover extends Component {
 		// 	width  : (size.width * size.height === 0) ? 'fit-content' : `${size.width}px`,
 		// 	height : (size.width * size.height === 0) ? 'fit-content' : `${size.height}px`,
 		// };
-//-/>
+//
 		// console.log('::::::::__', { position, offset, styles });
 
 		return (<div className={`base-popover${(fixed) ? ' base-popover-fixed' : ' base-popover-abs'}`} style={styles} ref={(element)=> { this.wrapper = element; }}>

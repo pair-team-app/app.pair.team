@@ -55,7 +55,7 @@ class PlaygroundComment extends Component {
 
   handleAddSubmit = event => {
     // 		console.log('%s.handleAddSubmit()', this.constructor.name, event, this.state.comment);
-    //-/> 		console.log('%s.handleAddSubmit()', this.constructor.name, event, this.state);
+    // 		console.log('%s.handleAddSubmit()', this.constructor.name, event, this.state);
     event.preventDefault();
     event.stopPropagation();
 

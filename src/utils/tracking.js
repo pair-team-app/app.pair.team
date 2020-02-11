@@ -43,7 +43,7 @@ export function trackOverlay(params) {
 
 export function trackPageview(uri=`${window.location.pathname}${window.location.search}`) {
 	const pageURI = (uri.replace(/^\//, '').length === 0) ? '/' : uri.replace(/^\//, '');
-//-/>
+//
 	console.log('::::]]', 'trackPageview()', pageURI);
 // 	ReactGA.pageview(pageURI);
 }

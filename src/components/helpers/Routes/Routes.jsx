@@ -14,8 +14,6 @@ import TermsPage from '../../pages/TermsPage/index';
 
 
 
-
-
 class Routes extends Component {
   constructor(props) {
     super(props);
@@ -25,11 +23,11 @@ class Routes extends Component {
   }
 
   componentDidMount() {
-		console.log('%s.componentDidMount()-', this.constructor.name, this.props, this.state);
+		// console.log('%s.componentDidMount()-', this.constructor.name, this.props, this.state);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot);
+		// console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot);
   }
 
 
@@ -39,7 +37,7 @@ class Routes extends Component {
     return (<Switch>
       <Route exact 
 	      path={Pages.HOME} 
-        render={()=> <HomePage 
+        children={()=> <HomePage 
             onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
             onPopup={this.props.onPopup} 
             onSignup={()=> null} />}
@@ -47,7 +45,7 @@ class Routes extends Component {
 
       <Route exact 
         path={Pages.HOME} 
-        render={()=> <HomePage
+        children={()=> <HomePage
             onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
             onPopup={this.props.onPopup} 
             onSignup={()=> null} />
@@ -55,58 +53,48 @@ class Routes extends Component {
       
       <Route exact 
         path={Pages.DOCS} 
-        render={()=> <DocsPage
+        children={()=> <DocsPage
             onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
             onPopup={this.props.onPopup} />
         } />
       
       <Route exact 
         path={Pages.FEATURES} 
-        render={()=> <FeaturesPage
+        children={()=> <FeaturesPage
             onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
             onPopup={this.props.onPopup} />
        } />
       
       <Route exact 
         path={Pages.FEATURES} 
-        render={()=> <FeaturesPage
+        children={()=> <FeaturesPage
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
           onPopup={this.props.onPopup} />
         }/>
 
-
-      {/* <Route
-        path={to}
-        children={({ match }) => (
-          <li className={match ? "active" : ""}>
-            <Link to={to} {...rest} />
-          </li>
-        )}
-      /> */}
-
-      <Route exact 
-        path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`} 
-        
-        component={()=> {return ( <PlaygroundPage 
+      <Route  
+      // path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`} 
+        path={Pages.PLAYGROUND} 
+        render={()=> <PlaygroundPage 
           onLogout={this.props.onLogout} 
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
-          onPopup={this.props.onPopup} /> )}
+          onPopup={this.props.onPopup} />
          } />
 
       <Route exact 
         path={Pages.PRICING} 
-        render={()=> <PricingPage
+        children={()=> <PricingPage
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
           onPopup={this.props.onPopup} />
         } />
 
       <Route exact 
         path={`/:page(${Pages.LEGAL.slice(1)}|${Pages.PRIVACY.slice(1)})`} 
-        render={PrivacyPage} />
+        component={PrivacyPage} />
 
       <Route exact 
         path={Pages.TERMS} 
-        render={TermsPage} 
+        component={TermsPage} 
       />
 
     

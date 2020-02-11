@@ -15,7 +15,7 @@ class AlertDialog extends Component {
 	}
 
 	handleClose = (event)=> {
-//-/> 		console.log('%s.handleClick()', this.constructor.name);
+// 		console.log('%s.handleClick()', this.constructor.name);
 		event.preventDefault();
 		this.setState({ outro : true });
 	};

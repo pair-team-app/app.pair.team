@@ -24,7 +24,7 @@ class SharePopover extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
-    //-/> 		console.log('%s.componentDidUpdate()', this.constructor.name, this.props);
+    // 		console.log('%s.componentDidUpdate()', this.constructor.name, this.props);
     // 		const { position } = this.props;
     // 		if (position !== this.state.position) {
     // 			this.setState({ position });
@@ -32,7 +32,7 @@ class SharePopover extends Component {
   }
 
   handleClipboardCopy = () => {
-    //-/> 		console.log('%s.handleClipboardCopy()', this.constructor.name, this.props);
+    // 		console.log('%s.handleClipboardCopy()', this.constructor.name, this.props);
 
     trackEvent("button", `copy-share-url`);
     // 		this.setState({ outro : true });
@@ -56,7 +56,7 @@ class SharePopover extends Component {
   };
 
   handleSubmit = event => {
-    //-/> 		console.log('%s.handleSubmit()', this.constructor.name);
+    // 		console.log('%s.handleSubmit()', this.constructor.name);
     event.preventDefault();
 
     const { email, emailValid } = this.state;
@@ -95,7 +95,7 @@ class SharePopover extends Component {
   };
 
   render() {
-    //-/> 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+    // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
     const { email, emailValid, outro } = this.state;
     const payload = {

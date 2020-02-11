@@ -1,39 +1,16 @@
 {
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-
     {
-      "type": "chrome",
-      "request": "attach",
-      "name": "Attach to Chrome",
-      "port": 9222,
-      "webRoot": "${workspaceFolder}/src"
-    },
-    {
-      "type": "chrome",
+      "type": "firefox",
       "request": "launch",
-      "name": "Launch Chrome on localhost",
-      "url": "http://localhost:3000/app/pairurl-com/pairurl-com/204/558/buttons",
-      "port": 9222,
-      "timeout": 20000,
-      "env": {
-        "VSCODE_EXTHOST_WILL_SEND_SOCKET": null
-      },
-      "breakOnLoad": false,
-      "runtimeArgs": [
-        "--remote-debugging-port=9222",
-        "--inspect=5875",
-        "--no-cached-data",
-      ],
-      "webRoot": "${workspaceFolder}",
-      "userDataDir": true,
-      "skipFiles": [
-         "<node_internals>/**/*.js",
-         "${workspaceFolder}/node_modules/**/*.js",
-         "${workspaceFolder}/vendor/**/*.js",
-         "${workspaceFolder}/build/**/*.js",
-      ]
-    },
-    
+      "reAttach": true,
+      "name": "Launch localhost",
+      "url": "ttp://localhost:3000/app/pairurl-com/pairurl-com/204/558/views",
+      "webRoot": "${workspaceFolder}"
+    }
   ]
 }

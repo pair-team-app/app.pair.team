@@ -70,9 +70,9 @@ class RegisterForm extends Component {
 					avatar   : makeAvatar(email)
 				}
 			}).then((response) => {
-//-/> 				console.log('REGISTER', response.data);
+// 				console.log('REGISTER', response.data);
 				const status = parseInt(response.data.status, 16);
-//-/> 				console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));
+// 				console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));
 
 				if (status === 0x11) {
 					this.props.onRegistered(response.data.user);

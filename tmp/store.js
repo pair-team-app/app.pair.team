@@ -1,9 +1,4 @@
 
-import store from './store';
-window.store = store;
-
-
-
 import cookie from 'react-cookies';
 import { applyMiddleware, createStore, compose } from 'redux';
 import thunk from 'redux-thunk';

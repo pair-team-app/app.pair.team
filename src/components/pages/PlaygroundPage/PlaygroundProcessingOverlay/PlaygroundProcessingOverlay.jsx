@@ -27,7 +27,7 @@ class PlaygroundProcessingOverlay extends Component {
   }
 
   componentDidMount() {
-    //-/> 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+    // 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
     const { root, playground, typeGroup } = this.props;
     if (!root) {
@@ -101,10 +101,10 @@ class PlaygroundProcessingOverlay extends Component {
           onOutro();
         } else {
           if (total !== components.length) {
-            //          console.log(':::::::::: NO PREV :::::::::::::::');
+              console.log(':::::::::: NO PREV :::::::::::::::');
             onReset();
           } else {
-            //          console.log("ACT LIST", { components : components.map(({ html, styles, rootStyles })=> ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles)), total : this.state.total });
+            console.log("ACT LIST", { components : components.map(({ html, styles, rootStyles })=> ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles)), total : this.state.total });
           }
 
           if (processed > this.state.processed) {
@@ -117,7 +117,7 @@ class PlaygroundProcessingOverlay extends Component {
   }
 
   handleComplete = () => {
-    //-/> 		console.log('%s.handleComplete()', this.constructor.name, this.state);
+    // 		console.log('%s.handleComplete()', this.constructor.name, this.state);
     this.setState(
       {
         outro: false,
@@ -130,7 +130,7 @@ class PlaygroundProcessingOverlay extends Component {
   };
 
   render() {
-    //-/> 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+    console.log('%s.render()', this.constructor.name, this.props, this.state);
 
     const { playground, root } = this.props;
     const { outro, completed } = this.state;

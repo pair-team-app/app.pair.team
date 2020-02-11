@@ -28,14 +28,14 @@ class RegisterModal extends Component {
 	}
 
 	componentDidMount() {
-//-/> 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
 		if (this.props.invite) {
 			axios.post(API_ENDPT_URL, {
 				action  : 'INVITE_LOOKUP',
 				payload : { invite_id : this.props.invite.id }
 			}).then((response) => {
-//-/> 				console.log('INVITE_LOOKUP', response.data);
+// 				console.log('INVITE_LOOKUP', response.data);
 				const { invite } = response.data;
 				if (invite.id === this.props.invite.id) {
 					const { email } = invite;
@@ -73,7 +73,7 @@ class RegisterModal extends Component {
 	};
 
 	handleError = (error)=> {
-//-/> 		console.log('%s.handleError()', this.constructor.name, error);
+// 		console.log('%s.handleError()', this.constructor.name, error);
 
 		this.props.onPopup({
 			type    : POPUP_TYPE_ERROR,
@@ -82,7 +82,7 @@ class RegisterModal extends Component {
 	};
 
 	handleModal = (uri)=> {
-//-/> 		console.log('%s.handleModal()', this.constructor.name, uri);
+// 		console.log('%s.handleModal()', this.constructor.name, uri);
 
 		this.setState({
 			outro    : true,

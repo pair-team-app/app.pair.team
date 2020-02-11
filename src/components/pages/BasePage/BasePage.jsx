@@ -6,10 +6,8 @@ import { Pages } from "../../../consts/uris";
 import './BasePage.css';
 
 
-
-
 function BasePage(props) {
-	console.log('BasePage()', props);
+	// console.log('BasePage()', props);
 
 	const { className, children, style } = props;
 	const { navLinks, location } = props;

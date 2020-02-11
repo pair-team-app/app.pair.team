@@ -30,12 +30,7 @@ class PlaygroundContent extends Component {
   }
 
   componentDidMount() {
-    console.log(
-      "%s.componentDidMount()",
-      this.constructor.name,
-      this.props,
-      this.state
-    );
+    console.log("%s.componentDidMount()", this.constructor.name, this.props, this.state);
     // this.calcBounds({ x : 0, y : 0, width : 0, height : 0 });
   }
 

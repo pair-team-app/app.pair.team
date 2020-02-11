@@ -24,6 +24,10 @@ class UserSettings extends Component {
 		this.wrapper = React.createRef();
 	}
 
+	componentDidMount() {
+    // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+  }
+
 	handleComplete = ()=> {
 //  console.log('%s.handleComplete()', this.constructor.name, );
 
