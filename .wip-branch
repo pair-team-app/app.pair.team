@@ -1,8 +1,0 @@
-
-#!/bin/bash
-
-export WIP_TAG="mh"
-
-#-- make enviro var branch's name formatted (...YYYYMMDD)
-export WIP_TIME=$(date + %Y%m%m)
-
