@@ -117,14 +117,20 @@ class PlaygroundNavPanel extends Component {
   render() {
     		// console.log('%s.render()', <this className="constructor n">                                                                                                                                                                                                                      </this>ame, { props : this.props, state : this.state });
 
-    const { team, playground } = this.props;
+    const { team, playgrounds } = this.props;
     const { typeGroups } = this.state;
 
     return (
       <div className="playground-nav-panel">
-        {playground && <PlaygroundNavPanelHeader team={team} />}
-        {playground && (
-          <div className="playground-nav-panel-component-type-wrapper">
+        {team && <PlaygroundNavPanelHeader team={team} />}
+        <div className="link-wrapper">
+          <NavLink to={'feed'} className="nav-panel-link" onClick={this.handleLink}>Feed</NavLink>
+          <NavLink to={'backlog'} className="nav-panel-link" onClick={this.handleLink}>Backlog</NavLink>
+          <NavLink to={'memebers'} className="nav-panel-link" onClick={this.handleLink}>Members</NavLink>
+        </div>
+        {playgrounds && (
+          <div className="projects-wrapper">
+            <div class="projects-wrapper-header">Projects</div>
             {typeGroups.map((typeGroup, i) => (
               <NavPanelTypeGroup
                 key={i}
@@ -165,7 +171,6 @@ const PlaygroundNavPanelHeader = props => {
   return (
     <div className="playground-nav-panel-header">
       <img
-        className="playground-nav-panel-header-logo"
         src={team.image}
         alt="Team Logo"
       />

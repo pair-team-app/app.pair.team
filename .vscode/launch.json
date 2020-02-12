@@ -10,7 +10,13 @@
       "reAttach": true,
       "name": "Launch Firefox @ localhost",
       "url": "http://localhost:3000/app/pairurl-com/pairurl-com/204/558/views",
-      "webRoot": "${workspaceFolder}"
+      "webRoot": "${workspaceFolder}",
+      "pathMappings": [
+        {
+          "url": "file:///labor/projects/sites/pairurl.com/src",
+          "path": "${workspaceFolder}/src"
+        }
+      ]
     }
   ]
 }

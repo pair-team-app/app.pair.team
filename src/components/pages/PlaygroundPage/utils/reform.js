@@ -42,7 +42,7 @@ export const reformComment = (comment, overwrite = {}) => ({
 });
 
 export const reformComponent = async (component, overwrite = {}) => {
-  // console.log("reformComponent()", component);
+  console.log("reformComponent()", component);
   // 	console.log('reformComponent()', component, Object.keys(component));
 
   const PLACEHOLDER_FILL = {

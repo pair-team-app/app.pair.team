@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { matchPath } from 'react-router-dom';
+import { matchPath, withRouter } from 'react-router-dom';
 import PageNavLink from '../../iterables/PageNavLink';
 import { Pages } from "../../../consts/uris";
 import './BasePage.css';
 
 
 function BasePage(props) {
-	// console.log('BasePage()', props);
+	console.log('BasePage()', props);
 
 	const { className, children, style } = props;
 	const { navLinks, location } = props;
@@ -36,5 +36,5 @@ const BottomNav = (props)=> {
 };
 
 
-// export default withRouter(BasePage);
-export default (BasePage);
+export default withRouter(BasePage);
+// export default (BasePage);

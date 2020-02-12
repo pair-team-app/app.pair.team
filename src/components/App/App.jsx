@@ -139,7 +139,7 @@ class App extends Component {
           this.onToggleModal(Modals.STRIPE, true, { team, product });
         }
 
-        this.props.fetchTeamPlaygroundsSummary({ team });
+        //this.props.fetchTeamPlaygroundsSummary({ team });
       }
 
       // on a playground url
@@ -155,7 +155,7 @@ class App extends Component {
             this.onToggleModal(Modals.NO_ACCESS);
         }
 
-
+/*
         // get playgrounds associated w/ this buildID from url
         if (playgrounds !== null && prevProps.playgrounds === null && buildID) {
             this.props.fetchBuildPlaygrounds({ buildID : buildID << 0, playgroundID : playgroundID << 0 });
@@ -170,7 +170,7 @@ class App extends Component {
         }
 
         // set global playground now
-        if (!prevProps.playgrounds && playgrounds && !playground) {
+        if (!prevProps.playgrounds && playgrounds && playground || (prevProps.playground !== !playground)) {
           console.log('*************** PLAYGROUND -=> STORE', { playground });
           this.props.setPlayground(playground);
         }
@@ -180,7 +180,10 @@ class App extends Component {
         if (component && component !== prevProps.component) {
           this.props.setComponent({ componentByID });
         }
+
+        */
       }
+    
     }
   }
 

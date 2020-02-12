@@ -19,7 +19,7 @@
 	margin-bottom: var(--orthodox-margin-base);
 }
 
-.playground-nav-panel-header-logo {
+.playground-nav-panel-header img {
 	width: var(--orthodox-acc-size);
 	height: var(--orthodox-acc-size);
 	margin-right: var(--orthodox-margin-half);
@@ -29,9 +29,18 @@
 	cursor: pointer;
 }
 
-.playground-nav-panel-component-type-wrapper {
+.playground-nav-panel .nav-panel-link {
+	display: block;
+	margin-bottom: var(--orthodox-margin-half);
+}
+
+.playground-nav-panel .projects-wrapper {
 	width: 100%;
 	max-height: calc(100% - calc(var(--orthodox-padding-base) * 2.0));
 	font-size: 15px;
 	overflow-y: auto;
+}
+
+.playground-nav-panel .projects-wrapper-header {
+	text-transform: uppercase;
 }

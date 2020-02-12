@@ -6,7 +6,7 @@ BUILD_PLAYGROUNDS_LOADED, COMPONENT_TYPES_LOADED, EVENT_GROUPS_LOADED, SET_COMME
   // 	CONVERTED_DEEPLINK,
   SET_INVITE, SET_PLAYGROUND, SET_PLAYGROUNDS, SET_PRODUCTS, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_PLAYGROUNDS_SUMMARY_LOADED, TOGGLE_THEME, TYPE_GROUP_LOADED, UPDATE_DEEPLINK, UPDATE_MOUSE_COORDS, USER_PROFILE_ERROR,
   // 	USER_PROFILE_CACHED,
-  USER_PROFILE_LOADED, USER_PROFILE_UPDATED, LOCATION_UPDATED
+  USER_PROFILE_LOADED, USER_PROFILE_UPDATED, LOCATION_UPDATED, TEAM_LOADED
 } from "../../consts/action-types";
 import { jsonFormatKB } from "../../consts/formats";
 import { LOG_ACTION_PREFIX } from "../../consts/log-ascii";
@@ -245,7 +245,7 @@ export function fetchTeamLookup(payload) {
 
         if (team) {
           dispatch({
-            type: SET_TEAM,
+            type: TEAM_LOADED,
             payload: {
               ...team,
               members: team.members.map(member => ({

@@ -585,6 +585,7 @@ class PlaygroundPage extends Component {
     const { cursor, accessibility, share, fetching } = this.state;
     const { params = null } = this.props || { params : null };
 
+
     return (
       <BasePage { ...this.props }
         className={`playground-page${
@@ -711,5 +712,5 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PlaygroundPage));
-export default connect(mapStateToProps, mapDispatchToProps)(PlaygroundPage);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PlaygroundPage));
+// export default connect(mapStateToProps, mapDispatchToProps)(PlaygroundPage);
