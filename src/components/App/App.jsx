@@ -91,7 +91,7 @@ class App extends Component {
     }) || {};
 
 
-    console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds });
+    // console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds });
 
 
 
@@ -119,12 +119,11 @@ class App extends Component {
     } else {
 
       // just received user profile, go get the team
-      if (profile !== null && prevProps.profile === null) {
+      if (profile !== null && modals.login) {
         this.onToggleModal(Modals.LOGIN, false);
-        this.props.fetchTeamLookup({ userID: profile.id });
       }
 
-      // just received tean, go get summary of team's playgrounds
+      // just received tean, check plan
       if (team !== null && prevProps.team === null) {
         // console.log("|:|:|:|:|:|:|:|:|:|:|:|", "FETCH TEAM PLAYGROUND SUMMARY");
 
@@ -138,8 +137,6 @@ class App extends Component {
           );
           this.onToggleModal(Modals.STRIPE, true, { team, product });
         }
-
-        //this.props.fetchTeamPlaygroundsSummary({ team });
       }
 
       // on a playground url

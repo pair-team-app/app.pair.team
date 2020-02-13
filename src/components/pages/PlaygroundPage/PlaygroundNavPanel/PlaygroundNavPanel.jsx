@@ -11,66 +11,67 @@ class PlaygroundNavPanel extends Component {
     super(props);
 
     this.state = {
-      typeGroups: [],
+      projects: [],
+      typegroups: [],
       teamLogo: null
     };
   }
 
   componentDidMount() {
-    		// console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+    console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
-    const { playground } = this.props;
-    if (playground) {
+    const { playgrounds } = this.props;
+    if (playgrounds) {
       this.onPopulateTree();
     }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    		// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-    const { playground } = this.props;
-    if (playground && playground !== prevProps.playground) {
+    const { playgrounds } = this.props;
+    if (playgrounds && playgrounds !== prevProps.playgrounds) {
       this.onPopulateTree();
     }
 
-    const { component } = this.props;
-    if (
-      (this.props.typeGroup && this.props.typeGroup !== prevProps.typeGroup) ||
-      (this.props.typeGroup === prevProps.typeGroup &&
-        component !== prevProps.component)
-    ) {
-      const typeGroups = this.state.typeGroups.map(typeGroup => {
-        const items = typeGroup.items.map(item => ({
-          ...item,
-          selected: component && item.id === component.id
-        }));
+    // const { component } = this.props;
+    // if (
+    //   (this.props.typeGroup && this.props.typeGroup !== prevProps.typeGroup) ||
+    //   (this.props.typeGroup === prevProps.typeGroup &&
+    //     component !== prevProps.component)
+    // ) {
+    //   const typeGroups = this.state.typeGroups.map(typeGroup => {
+    //     const items = typeGroup.items.map(item => ({
+    //       ...item,
+    //       selected: component && item.id === component.id
+    //     }));
 
-        return {
-          ...typeGroup,
-          items,
-          selected: typeGroup.id === this.props.typeGroup.id
-        };
-      });
+    //     return {
+    //       ...typeGroup,
+    //       items,
+    //       selected: typeGroup.id === this.props.typeGroup.id
+    //     };
+    //   });
 
-      this.setState({ typeGroups });
-    }
+    //   this.setState({ typeGroups });
+    // }
 
-    if (component && component !== prevProps.component) {
-      const typeGroups = this.state.typeGroups.map(typeGroup => {
-        const items = typeGroup.items.map(item => ({
-          ...item,
-          selected: component && item.id === component.id
-        }));
+    // if (component && component !== prevProps.component) {
+    //   const typeGroups = this.state.typeGroups.map(typeGroup => {
+    //     const items = typeGroup.items.map(item => ({
+    //       ...item,
+    //       selected: component && item.id === component.id
+    //     }));
 
-        return {
-          ...typeGroup,
-          items,
-          selected: typeGroup.id === this.props.typeGroup.id
-        };
-      });
+    //     return {
+    //       ...typeGroup,
+    //       items,
+    //       selected: typeGroup.id === this.props.typeGroup.id
+    //     };
+    //   });
 
-      this.setState({ typeGroups });
-    }
+    //   this.setState({ typeGroups });
+    // }
   }
 
   handleTypeGroupClick = typeGroup => {
@@ -86,39 +87,46 @@ class PlaygroundNavPanel extends Component {
   onPopulateTree = () => {
     		console.log('%s.onPopulateTree()', this.constructor.name, { props : this.props });
 
-    const { componentTypes, playground, component } = this.props;
-    const typeIDs = playground.components.map(({ typeID }) => typeID);
+    const { componentTypes, playgrounds, component } = this.props;
 
-    const typeGroups = componentTypes
-      .filter(({ id }) => typeIDs.includes(id))
-      .map(typeGroup => {
-        const items = playground.components
-          .filter(({ typeID }) => typeID === typeGroup.id)
-          .map(item => ({
-            ...item,
-            selected: component && item.id === component.id
-          }));
+    const projects = playgrounds.map((playground)=> {
+      const typeIDs = playground.components.map(({ typeID }) => typeID);
 
-        return {
-          ...typeGroup,
-          items,
-          selected:
-            this.props.typeGroup &&
-            (typeGroup.id === this.props.typeGroup.id ||
-              items.map(({ selected }) => selected).includes(true))
-        };
-      });
+      const typeGroups = componentTypes
+        .filter(({ id }) => typeIDs.includes(id))
+        .map(typeGroup => {
+          const items = playground.components
+            .filter(({ typeID }) => typeID === typeGroup.id)
+            .map(item => ({
+              ...item,
+              selected: component && item.id === component.id
+            }));
+
+          return {
+            ...typeGroup,
+            items,
+            selected:
+              this.props.typeGroup &&
+              (typeGroup.id === this.props.typeGroup.id ||
+                items.map(({ selected }) => selected).includes(true))
+          };
+        });
+
+      return ({
+        ...playground
+      }); 
+    });
 
     // 		const favicon = playground.team.
 
-    this.setState({ typeGroups });
+    this.setState({ projects });
   };
 
   render() {
     		// console.log('%s.render()', <this className="constructor n">                                                                                                                                                                                                                      </this>ame, { props : this.props, state : this.state });
 
     const { team, playgrounds } = this.props;
-    const { typeGroups } = this.state;
+    const { typeGroups, projects } = this.state;
 
     return (
       <div className="playground-nav-panel">
@@ -126,18 +134,13 @@ class PlaygroundNavPanel extends Component {
         <div className="link-wrapper">
           <NavLink to={'feed'} className="nav-panel-link" onClick={this.handleLink}>Feed</NavLink>
           <NavLink to={'backlog'} className="nav-panel-link" onClick={this.handleLink}>Backlog</NavLink>
-          <NavLink to={'memebers'} className="nav-panel-link" onClick={this.handleLink}>Members</NavLink>
+          <NavLink to={'members'} className="nav-panel-link" onClick={this.handleLink}>Members</NavLink>
         </div>
         {playgrounds && (
           <div className="projects-wrapper">
-            <div class="projects-wrapper-header">Projects</div>
-            {typeGroups.map((typeGroup, i) => (
-              <NavPanelTypeGroup
-                key={i}
-                typeGroup={typeGroup}
-                onTypeGroupClick={this.handleTypeGroupClick}
-                onTypeItemClick={this.handleTypeItemClick}
-              />
+            <div className="projects-wrapper-header">Projects</div>
+            {projects.map((project, i) => (
+              project.title
             ))}
           </div>
         )}
@@ -190,6 +193,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     componentTypes: state.componentTypes,
     team: state.team,
+    playgrounds: state.playgrounds,
     playground: state.playground,
     typeGroup: state.typeGroup,
     component: state.component

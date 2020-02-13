@@ -5,9 +5,10 @@ import { reformComponent } from "../../components/pages/PlaygroundPage/utils/ref
 import { BUILD_PLAYGROUNDS_LOADED, TEAM_LOADED, SET_REFORMED_BUILD_PLAYGROUNDS, 
   SET_REFORMED_TEAM_PLAYGROUNDS_SUMMARY, SET_REFORMED_TYPE_GROUP, TEAM_PLAYGROUNDS_SUMMARY_LOADED, 
   TYPE_GROUP_LOADED, UPDATE_MOUSE_COORDS, USER_PROFILE_CACHED, 
-  USER_PROFILE_UPDATED } from "../../consts/action-types";
+  USER_PROFILE_UPDATED, 
+  USER_PROFILE_LOADED} from "../../consts/action-types";
 import { LOG_MIDDLEWARE_PREFIX } from "../../consts/log-ascii";
-import { fetchTeamPlaygroundsSummary, fetchPlaygroundComponentGroup } from "../actions";
+import { fetchTeamPlaygroundsSummary, fetchPlaygroundComponentGroup, fetchTeamLookup } from "../actions";
 
 const logFormat = ({ store, action, next, meta = "" }) => {
   if (typeof action !== "function") {
@@ -30,13 +31,13 @@ export function onMiddleware(store) {
 
   return next => {
     return async action => {
-      // console.log('<><><><><> MW <><><><><>', { store : store.getState(), next, action }``);      
-      // console.log('<><><><><> MW <><><><><>', { next }``);
-      // console.log('<><><><><> MW <><><><><>', { action }``)
-      logFormat({ store : store.getState(), next, action });
+      logFormat({ store : store.getState(), action, next });
 
       const { type, payload } = action;
-      if (type === TEAM_LOADED) {
+      if (type === USER_PROFILE_LOADED) {
+        dispatch(fetchTeamLookup({ userID : payload.id }));
+
+      } else if (type === TEAM_LOADED) {
          dispatch(fetchTeamPlaygroundsSummary({ team : payload }));
 
       } else if (type === TYPE_GROUP_LOADED) {
@@ -79,7 +80,6 @@ export function onMiddleware(store) {
             delete playground["last_visited"];
 
             const deviceID = device_id;
-
             return deviceID === 1
               ? {
                   ...playground,
@@ -96,12 +96,6 @@ export function onMiddleware(store) {
 
         payload.playgrounds = playgrounds;
 
-        // dispatch({
-        //   type: SET_REFORMED_TEAM_PLAYGROUNDS_SUMMARY,
-        //   payload: { playgrounds }
-        // });
-
-
       } else if (type === BUILD_PLAYGROUNDS_LOADED) {
         const { playgroundID } = payload;
 
@@ -113,7 +107,7 @@ export function onMiddleware(store) {
             delete playground["device_id"];
             delete playground["last_visited"];
 
-            //					console.log('playground', { id : playground.id, device_id, components });
+            // console.log('playground', { id : playground.id, device_id, components });
             return {
               ...playground,
               buildID: build_id << 0,

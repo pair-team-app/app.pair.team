@@ -60,8 +60,6 @@ const logFormat = (state, action, meta = "") => {
 };
 
 function rootReducer(state = initialState, action) {
-  logFormat(state, action);
-
   const { type, payload } = action;
   let playgrounds = null;
   let playground = null;
@@ -183,8 +181,6 @@ function rootReducer(state = initialState, action) {
       });
 
     case TEAM_PLAYGROUNDS_SUMMARY_LOADED:
-    console.log('=-=-=-=--=-=-=', { playgrounds : payload.playgrounds });
-    
       playgrounds = payload.playgrounds.map(playground => {
           const storePlayground = (state.playgrounds) ? state.playgrounds.find(
             ({ id }) => id === playground.id
