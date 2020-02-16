@@ -124,9 +124,6 @@ export function onMiddleware(store) {
         );
 
 
-
-
-
         dispatch(fetchPlaygroundComponentGroup({ 
           playground : { id : playgroundID }, 
           typeGroup : { id : 187 } 

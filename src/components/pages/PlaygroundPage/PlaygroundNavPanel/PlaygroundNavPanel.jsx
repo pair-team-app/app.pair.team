@@ -140,7 +140,7 @@ class PlaygroundNavPanel extends Component {
           <div className="projects-wrapper">
             <div className="projects-wrapper-header">Projects</div>
             {projects.map((project, i) => (
-              project.title
+              <div>project.title</div>
             ))}
           </div>
         )}
