@@ -12,17 +12,17 @@ import { jsonFormatKB } from "../../consts/formats";
 import { LOG_ACTION_PREFIX } from "../../consts/log-ascii";
 import { API_ENDPT_URL } from "../../consts/uris";
 
-const logFormat = (action, payload = null, meta = "") => {
-  console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, payload || "", meta);
+const logFormat = (action, state, payload = null, meta = "") => {
+  console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, { payload : payload || {}, meta, state });
 };
 
 
 // these are all action CREATORS that rtrn a funct
-export function fetchBuildPlaygrounds(payload) {
-  logFormat("fetchBuildPlaygrounds()");
-
+export function fetchBuildPlaygrounds(payload=null) {
   const { buildID, playgroundID } = payload;
-  return dispatch => {
+  return (dispatch, getState) => {
+    logFormat("fetchBuildPlaygrounds()", getState(), payload);
+
     axios
       .post(API_ENDPT_URL, {
         action: "BUILD_PLAYGROUNDS",
@@ -53,10 +53,10 @@ export function fetchBuildPlaygrounds(payload) {
   };
 }
 
-export function fetchComponentTypes() {
-  logFormat("fetchComponentTypes()");
-
-  return dispatch => {
+export function fetchComponentTypes(payload=null) {
+  return (dispatch, getState) => {
+    logFormat("fetchComponentTypes()", getState(), payload);
+    
     axios
       .post(API_ENDPT_URL, {
         action: "COMPONENT_TYPES",
@@ -73,10 +73,10 @@ export function fetchComponentTypes() {
   };
 }
 
-export function fetchEventGroups() {
-  logFormat("fetchEventGroups()");
+export function fetchEventGroups(payload=null) {
+  return (dispatch, getState)=> {
+    logFormat("fetchEventGroups()", getState(), payload);
 
-  return dispatch => {
     axios
       .post(API_ENDPT_URL, {
         action: "EVENT_GROUPS",
@@ -99,11 +99,12 @@ export function fetchEventGroups() {
   };
 }
 
-export function fetchTeamPlaygroundsSummary(payload) {
-  logFormat("fetchTeamPlaygroundsSummary()", payload);
+export function fetchTeamPlaygroundsSummary(payload=null) {
+  return (dispatch, getState)=> {
+    const { team } = payload;
 
-  const { team } = payload;
-  return dispatch => {
+    logFormat("fetchTeamPlaygroundsSummary()", getState(), payload);
+
     axios
       .post(API_ENDPT_URL, {
         action: "TEAM_PLAYGROUNDS",
@@ -125,11 +126,10 @@ export function fetchTeamPlaygroundsSummary(payload) {
   };
 }
 
-export function fetchPlaygroundComponentGroup(payload) {
-  logFormat("fetchPlaygroundComponentGroup()", payload);
-
-  return dispatch => {
-    const { playground, typeGroup } = payload;
+export function fetchPlaygroundComponentGroup(payload=null) {
+  const { playground, typeGroup } = payload;
+  return (dispatch, getState)=> {
+    logFormat("fetchPlaygroundComponentGroup()", getState(), payload);
 
     axios
       .post(API_ENDPT_URL, {
@@ -162,10 +162,10 @@ export function fetchPlaygroundComponentGroup(payload) {
   };
 }
 
-export function fetchProducts() {
-  logFormat("fetchProducts()");
+export function fetchProducts(payload=null) {
+  return (dispatch, getState)=> {
+    logFormat("fetchProducts()", getState(), payload);
 
-  return dispatch => {
     axios
       .post(API_ENDPT_URL, {
         action: "PRODUCTS",
@@ -189,10 +189,10 @@ export function fetchProducts() {
   };
 }
 
-export function fetchUserProfile() {
-  logFormat("fetchUserProfile()");
+export function fetchUserProfile(payload=null) {
+  return (dispatch, getState) => {
+    logFormat("fetchUserProfile()", getState(), payload);
 
-  return dispatch => {
     axios
       .post(API_ENDPT_URL, {
         action: "USER_PROFILE",
@@ -226,11 +226,10 @@ export function fetchUserProfile() {
   };
 }
 
-export function fetchTeamLookup(payload) {
-  logFormat("fetchTeamLookup()", payload);
-
-  return dispatch => {
-    const { userID } = payload;
+export function fetchTeamLookup(payload=null) {
+  const { userID } = payload;
+  return (dispatch, getState)=> {
+    logFormat("fetchTeamLookup()", getState(), payload);
 
     axios
       .post(API_ENDPT_URL, {
@@ -261,32 +260,32 @@ export function fetchTeamLookup(payload) {
 }
 
 export function setInvite(payload) {
-  logFormat("setInvite()", payload);
+  logFormat("setInvite()", null, payload);
   return { payload, type: SET_INVITE };
 }
 
 export function setPlayground(payload) {
-  logFormat("setPlayground()", payload);
+  logFormat("setPlayground()", null, payload);
   return { payload, type: SET_PLAYGROUND };
 }
 
 export function setPlaygrounds(payload) {
-  logFormat("setPlaygrounds()", payload);
+  logFormat("setPlaygrounds()", null, payload);
   return { payload, type: SET_PLAYGROUNDS };
 }
 
 export function setTypeGroup(payload) {
-  logFormat("setTypeGroup()", payload);
+  logFormat("setTypeGroup()", null, payload);
   return { payload, type: SET_TYPE_GROUP };
 }
 
 export function setComponent(payload) {
-  logFormat("setComponent()", payload);
+  logFormat("setComponent()", null, payload);
   return { payload, type: SET_COMPONENT };
 }
 
 export function setComment(payload) {
-  logFormat("setComment()", payload);
+  logFormat("setComment()", null, payload);
   return { payload, type: SET_COMMENT };
 }
 
@@ -295,7 +294,7 @@ export function setRedirectURI(payload) {
 }
 
 export function toggleTheme(payload = null) {
-  logFormat("toggleTheme()", payload);
+  logFormat("toggleTheme()", null, payload);
   return { payload, type: TOGGLE_THEME };
 }
 

@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { trackEvent, trackOutbound } from "../../../../utils/tracking";
-import NavPanelTypeGroup from "./NavPanelTypeGroup";
+import NavPanelProject from "./NavPanelProject";
 import "./PlaygroundNavPanel.css";
 
 class PlaygroundNavPanel extends Component {
@@ -74,6 +74,11 @@ class PlaygroundNavPanel extends Component {
     // }
   }
 
+  handleProjectClick = project => {
+    		console.log('%s.handleProjectClick()', this.constructor.name, project);
+    this.props.onPlaygroundClick(project);
+  };
+
   handleTypeGroupClick = typeGroup => {
     // 		console.log('%s.handleTypeGroupClick()', this.constructor.name, typeGroup);
     this.props.onTypeGroupClick(typeGroup);
@@ -132,15 +137,15 @@ class PlaygroundNavPanel extends Component {
       <div className="playground-nav-panel">
         {team && <PlaygroundNavPanelHeader team={team} />}
         <div className="link-wrapper">
-          <NavLink to={'feed'} className="nav-panel-link" onClick={this.handleLink}>Feed</NavLink>
-          <NavLink to={'backlog'} className="nav-panel-link" onClick={this.handleLink}>Backlog</NavLink>
-          <NavLink to={'members'} className="nav-panel-link" onClick={this.handleLink}>Members</NavLink>
+          <NavLink to={'./feed'} className="nav-panel-link" onClick={this.handleLink}>Feed</NavLink>
+          <NavLink to={'./backlog'} className="nav-panel-link" onClick={this.handleLink}>Backlog</NavLink>
+          <NavLink to={'./members'} className="nav-panel-link" onClick={this.handleLink}>Members</NavLink>
         </div>
         {playgrounds && (
           <div className="projects-wrapper">
             <div className="projects-wrapper-header">Projects</div>
             {projects.map((project, i) => (
-              <div>project.title</div>
+              <NavPanelProject key={i} project={project} onProjectClick={this.handleProjectClick} />
             ))}
           </div>
         )}

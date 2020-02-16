@@ -31,7 +31,8 @@ export function onMiddleware(store) {
 
   return next => {
     return async action => {
-      logFormat({ store : store.getState(), action, next });
+      logFormat({ store : JSON.stringify(storeState, null, 2), action, next });
+      console.log('<>()<>', storeState);
 
       const { type, payload } = action;
       if (type === USER_PROFILE_LOADED) {
@@ -84,9 +85,10 @@ export function onMiddleware(store) {
               ? {
                   ...playground,
                   team,
-                  buildID : build_id << 0,
-                  teamID : team_id << 0,
-                  lastVisited : moment(last_visited),
+                  selected: false,
+                  buildID : build_id << 0,  
+                  teamID : team.id,
+                  lastVisited : moment(last_visited).utc(),
                   deviceID,
                   components
                 }
@@ -113,7 +115,7 @@ export function onMiddleware(store) {
               buildID: build_id << 0,
               teamID: team_id << 0,
               deviceID: device_id << 0,
-              lastVisited: moment(last_visited),
+              lastVisited: moment(last_visited).utc(),
               components: await Promise.all(
                 components.map(
                   async component => await reformComponent(component)

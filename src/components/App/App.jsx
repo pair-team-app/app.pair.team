@@ -110,6 +110,7 @@ class App extends Component {
     // url changed
     if (prevProps.location.pathname !== pathname) {
       trackPageview();
+      
     }
 
     // no internet
@@ -553,12 +554,13 @@ const mapStateToProps = (state, ownProps) => {
     typeGroup: state.typeGroup,
     component: state.component,
     comment: state.comment,
-    buildID: state.deeplink,
-    playgroundID: state.deeplink,
-    componentSlug: state.deeplink,
-    componentID: state.deeplink,
-    commentID: state.deeplink,
-    commentsPath: state.deeplink
+    teamSlug: state.deeplink.teamSlug,
+    projSlug: state.deeplink.projSlug,
+    buildID: state.deeplink.buildID,
+    playgroundID: state.deeplink.playgroundID,
+    componentSlug: state.deeplink.componentSlug,
+    componentID: state.deeplink.componentID,
+    commentID: state.deeplink.commentID,
   };
 };
 

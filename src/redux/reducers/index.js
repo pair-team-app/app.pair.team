@@ -16,9 +16,9 @@ const initialState = {
   comment: null,
   products: null,
   darkThemed: false,
-  urlFragments: {
-    teamSlug: 0,
-    projSlug: 0,
+  deeplink: {
+    teamSlug: null,
+    projSlug: null,
     buildID: 0,
     playgroundID: 0,
     typeGroupSlug: 0,
@@ -63,6 +63,8 @@ function rootReducer(state = initialState, action) {
   const { type, payload } = action;
   let playgrounds = null;
   let playground = null;
+
+  logFormat(state, action);
 
   switch (type) {
     default:

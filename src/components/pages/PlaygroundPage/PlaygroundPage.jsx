@@ -470,6 +470,26 @@ class PlaygroundPage extends Component {
       .catch(error => {});
   };
 
+  handlePlaygroundClick = playground => {
+    console.log('%s.handlePlaygroundClick()', this.constructor.name, playground);
+
+    const { team } = this.props;
+
+    playground.selected = !playground.selected;
+
+    if (playground.selected) {
+      this.props.history.push(`/app/${team.title}/${playground.title}/${playground.buildID}/${playground.id}`);
+      this.props.fetchPlaygroundComponentGroup({ playground, typeGroup : { id : 187 } })
+    
+    } else {
+      this.props.history.push(`/app/${team.title}`);
+    }
+    
+    this.props.setPlayground(playground);
+    this.props.setComponent(null);
+    this.props.setComment(null);
+  };
+
   handleNavGroupItemClick = typeGroup => {
     //console.log('%s.handleNavGroupItemClick()', this.constructor.name, typeGroup);
 
@@ -602,6 +622,7 @@ class PlaygroundPage extends Component {
           <div>
             <PlaygroundNavPanel
               params={params}
+              onPlaygroundClick={this.handlePlaygroundClick}
               onTypeGroupClick={this.handleNavGroupItemClick}
               onTypeItemClick={this.handleNavTypeItemClick}
             />
@@ -702,6 +723,7 @@ const mapStateToProps = (state, ownProps) => {
     playground: state.playground,
     typeGroup: state.typeGroup,
     component: state.component,
+    deeplink: state.deeplink,
     comment: state.comment,
     profile: state.userProfile,
     componentTypes: state.componentTypes,
