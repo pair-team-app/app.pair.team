@@ -17,7 +17,7 @@ export function getRoutePaths(pathname) {
 	const pricingPage = matchPath(pathname, { path : Pages.PRICING });
 	const privacyPage = matchPath(pathname, { path : Pages.PRIVACY });
 	const termsPage = matchPath(pathname, { path : Pages.TERMS });
-	const playgroundPage = matchPath(pathname, { path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:componentsSlug([a-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?` });
+	const playgroundPage = matchPath(pathname, { path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?` });
 
 // 	console.log(':::::::::::::', 'getRoutePaths', pathname, { homePage, featuresPage, pricingPage, privacyPage, termsPage, playgroundPage });
 

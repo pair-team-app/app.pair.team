@@ -6,7 +6,7 @@ import {
   TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TYPE_GROUP_LOADED, 
   SET_INVITE, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TYPE_GROUP, 
   USER_PROFILE_LOADED, USER_PROFILE_UPDATED, USER_PROFILE_ERROR,
-  UPDATE_MOUSE_COORDS, UPDATE_DEEPLINK, SET_REDIRECT_URI, TOGGLE_THEME
+  UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, SET_REDIRECT_URI, TOGGLE_THEME
 } from '../../consts/action-types';
 import { jsonFormatKB } from '../../consts/formats';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
@@ -272,13 +272,9 @@ export function toggleTheme(payload = null) {
   return { payload, type : TOGGLE_THEME };
 }
 
-export function updateDeeplink(payload) {
-  return { payload, type : UPDATE_DEEPLINK };
-
-  // 	const cnt = (payload) ? Object.keys(payload).filter((key)=> (payload && typeof payload[key] === 'number')).length : 0;
-  // 	return ({ payload,
-  // 		type : (!payload || Object.keys(payload).length !== cnt) ? UPDATE_DEEPLINK : CONVERTED_DEEPLINK
-  // 	});
+export function updateMatchPath(payload) {
+  logFormat('updateMatchPath()', payload);
+  return { payload, type : UPDATE_MATCH_PATH };
 }
 
 export function updateMouseCoords(payload) {

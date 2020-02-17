@@ -5,7 +5,7 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { API_ENDPT_URL, GITHUB_APP_AUTH, Modals, Pages } from '../../consts/uris';
 import { componentByID } from '../../components/pages/PlaygroundPage/utils/lookup';
-import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamBuilds, fetchUserProfile, setPlayground, setComponent, setComment, updateMouseCoords, updateUserProfile, setTypeGroup } from '../../redux/actions';
+import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamBuilds, fetchUserProfile, setPlayground, setComponent, setComment, updateMouseCoords, updateUserProfile, updateMatchPath, setTypeGroup } from '../../redux/actions';
 
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 import Routes from '../helpers/Routes';
@@ -85,7 +85,7 @@ class App extends Component {
 
     // check for playground url
     const matchPlaygrounds = matchPath(this.props.location.pathname, {
-      path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:componentsSlug([a-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`,
+      path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`,
       exact : false,
       strict: false
     }) || {};
@@ -98,19 +98,12 @@ class App extends Component {
     // extract url props
     const { componentTypes, profile, team, playgrounds, playground, typeGroup } = this.props;
     const { pathname } = (matchPlaygrounds && Object.keys(matchPlaygrounds).length > 0) ? this.props.location : '';
-    const { teamSlug,
-      projectSlug,
-      buildID,
-      deviceSlug,
-      componentsSlug,
-      componentID,
-      commentID } = (pathname && pathname.length > 0) ? matchPlaygrounds.params : {};
+    
     const { modals } = this.state;
 
     // url changed
     if (prevProps.location.pathname !== pathname) {
       trackPageview();
-      
     }
 
     // no internet
@@ -118,6 +111,10 @@ class App extends Component {
       this.onToggleModal(Modals.NETWORK);
     
     } else {
+      console.log('+=+=+=+=+=+=+=+', { local : matchPlaygrounds, props : this.props.matchPath, prev : prevProps.matchPath });
+      if (matchPlaygrounds !== null && (this.props.matchPath === null || (this.props.matchPath && matchPlaygrounds.url !== this.props.matchPath.url))) {
+        this.props.updateMatchPath({ matchPath : matchPlaygrounds });
+      }  
 
       // just received user profile, go get the team
       if (profile !== null && modals.login) {
@@ -126,16 +123,10 @@ class App extends Component {
 
       // just received tean, check plan
       if (team !== null && prevProps.team === null) {
-        // console.log('|:|:|:|:|:|:|:|:|:|:|:|', 'FETCH TEAM PLAYGROUND SUMMARY');
-
         // pay alert check
-        const modal =
-          (team.members.length > 10 && team.type === 'free') ||
-          (team.members.length > 50 && team.type !== 'enterprise');
+        const modal = (team.members.length > 10 && team.type === 'free') || (team.members.length > 50 && team.type !== 'enterprise');
         if (modal && !prevState.modals.stripe && !modals.stripe) {
-          const product = this.props.products.find(
-            ({ threshold }) => team.members.length >= threshold
-          );
+          const product = this.props.products.find(({ threshold }) => team.members.length >= threshold);
           this.onToggleModal(Modals.STRIPE, true, { team, product });
         }
       }
@@ -143,14 +134,11 @@ class App extends Component {
       // on a playground url
       if (matchPlaygrounds) {
         // not a team member, block access
-        if (
-          profile &&
-          team &&
-          playground && team.id !== playground.team.id &&
-          !prevState.modals.noAccess &&
-          !modals.noAccess
-        ) {     
-            this.onToggleModal(Modals.NO_ACCESS);
+        if (profile && team && playground && team.id !== playground.teamID && !prevState.modals.noAccess && !modals.noAccess) {     
+          this.onToggleModal(Modals.NO_ACCESS);
+        
+        } else {
+          
         }
 
 /*
@@ -160,9 +148,9 @@ class App extends Component {
         }
 
         // loaded type group basics, map playground ones to it    
-        const typeGroup = (componentsSlug && this.props.componentTypes) ? typeGroupByKey(this.props.componentTypes, componentsSlug) : null;
+        const typeGroup = (typeGroupSlug && this.props.componentTypes) ? typeGroupByKey(this.props.componentTypes, typeGroupSlug) : null;
         if (typeGroup && (typeGroup !== this.props.typeGroup)) {
-          const typeGroup = typeGroupByKey(this.props.componentTypes, componentsSlug);
+          const typeGroup = typeGroupByKey(this.props.componentTypes, typeGroupSlug);
 
           this.props.setTypeGroup(typeGroup);
         }
@@ -431,7 +419,7 @@ class App extends Component {
 
 
     const matchPlaygrounds = matchPath(this.props.location.pathname, {
-      path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:componentsSlug([a-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`,
+      path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`,
       exact : false,
       strict: false
     });
@@ -554,13 +542,7 @@ const mapStateToProps = (state, ownProps) => {
     typeGroup: state.typeGroup,
     component: state.component,
     comment: state.comment,
-    teamSlug: state.deeplink.teamSlug,
-    projSlug: state.deeplink.projSlug,
-    buildID: state.deeplink.buildID,
-    deviceSlug: state.deeplink.deviceSlug,
-    componentSlug: state.deeplink.componentSlug,
-    componentID: state.deeplink.componentID,
-    commentID: state.deeplink.commentID,
+    matchPath: state.matchPath
   };
 };
 
@@ -574,6 +556,7 @@ const mapDispatchToProps = dispatch => {
     setPlayground: payload => dispatch(setPlayground(payload)),
     setComponent:payload=> dispatch(setComponent(payload)),
     updateMouseCoords: payload => dispatch(updateMouseCoords(payload)),
+    updateMatchPath: payload=> dispatch(updateMatchPath(payload)),
     updateUserProfile: profile => dispatch(updateUserProfile(profile))
   };
 };

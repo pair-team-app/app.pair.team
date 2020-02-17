@@ -57,12 +57,12 @@ class PlaygroundHeader extends Component {
     console.log('%s.buildBreadcrumbs()', this.constructor.name, this.props, { match : this.props.match });
 
     const { match, playground, typeGroup, component, comment, accessibility, location } = this.props;
-    const { teamSlug, buildID, projectSlug, deviceSlug, componentsSlug, componentID, commentID } = match.params;
+    const { teamSlug, buildID, projectSlug, deviceSlug, typeGroupSlug, componentID, commentID } = match.params;
 
     let path = `${Pages.PLAYGROUND}/${teamSlug}/${projectSlug}/${buildID}/${deviceSlug}`;
     const segments = [
 			{ type : BreadcrumbTypes.PLAYGROUND, title : projectSlug, path : projectSlug, payload : playground },
-      (typeGroup && componentsSlug) ? { type : BreadcrumbTypes.TYPE_GROUP, title : Strings.capitalize(typeGroup.key), path : componentsSlug, payload : typeGroup } : null,
+      (typeGroup && typeGroupSlug) ? { type : BreadcrumbTypes.TYPE_GROUP, title : Strings.capitalize(typeGroup.key), path : typeGroupSlug, payload : typeGroup } : null,
       (component && componentID) ? { type : BreadcrumbTypes.COMPONENT, title : component.title, path : componentID, payload : component } : null,
       (accessibility) ? { type : BreadcrumbTypes.ACCESSIBILITY, title : 'accessibility' , path : 'accessibility', payload : null } : null,
       (location.pathname.includes('/comments')) ? { type : BreadcrumbTypes.COMMENTS, title : 'comments', path : 'comments', payload : null } : null,

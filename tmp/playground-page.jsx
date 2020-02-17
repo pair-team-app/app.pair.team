@@ -65,7 +65,7 @@ class PlaygroundPage extends Component {
       projectSlug,
       buildID,
       deviceSlug,
-      componentsSlug,
+      typeGroupSlug,
       componentID,
       commentID
     } = params || {};
@@ -94,14 +94,14 @@ class PlaygroundPage extends Component {
         url = url.replace(playgroundID, playground.id);
       }
 
-      if (componentsSlug && componentTypes) {
-        typeGroup = componentTypes.find(({ key }) => key === componentsSlug);
+      if (typeGroupSlug&& componentTypes) {
+        typeGroup = componentTypes.find(({ key }) => key === typeGroupSlug);
 
         if (typeGroup) {
           typeGroup.selected = true;
 
-          if (componentsSlug !== typeGroup.key) {
-            url = url.replace(componentsSlug, typeGroup.key);
+          if (typeGroupSlug !== typeGroup.key) {
+            url = url.replace(typeGroupSlug typeGroup.key);
           }
 
           if (componentID) {
@@ -134,7 +134,7 @@ class PlaygroundPage extends Component {
         }
       } else {
         typeGroup = componentTypes.find(({ key }) => key === "views");
-        url = url.replace(new RegExp(`/${componentsSlug}.*$`, "g"), "/views");
+        url = url.replace(new RegExp(`/${typeGroupSlug}.*$`, "g"), "/views");
       }
 
       // this.props.setTypeGroup(typeGroup);
@@ -188,20 +188,20 @@ class PlaygroundPage extends Component {
         // if (
         //   this.state.typeGroups &&
         //   playgroundID &&
-        //   componentsSlug &&
-        //   componentsSlug !== prevProps.params.componentsSlug
+        //   typeGroupSlug &&
+        //   typeGroupSlug !== prevProps.params.typeGroupSlug
         // ) {
         //   this.props.setTypeGroup(
-        //     typeGroupByKey(this.state.typeGroups, componentsSlug)
+        //     typeGroupByKey(this.state.typeGroups, typeGroupSlug)
         //   );
-        // } else if (!componentsSlug) {
+        // } else if (!typeGroupSlug {
         //   this.props.setTypeGroup(null);
         // }
 
         if (
           playgrounds.length > 0 &&
           playgroundID &&
-          componentsSlug &&
+          typeGroupSlug &&
           componentID !== prevProps.params.componentID
         ) {
           this.props.setComponent(
@@ -342,10 +342,10 @@ class PlaygroundPage extends Component {
       this.props.setComponent(null);
       this.props.setComment(null);
     } else if (type === BreadcrumbTypes.TYPE_GROUP) {
-      const { componentsSlug } = this.props.params;
+      const { typeGroupSlug } = this.props.params;
       this.props.history.push(
         this.props.pathname.replace(
-          new RegExp(`(/${componentsSlug}).*$`),
+          new RegExp(`(/${typeGroupSlug}).*$`),
           "$1"
         )
       );

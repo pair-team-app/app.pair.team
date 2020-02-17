@@ -2,7 +2,7 @@ import { Objects } from 'lang-js-utils';
 import { 
   COMPONENT_TYPES_LOADED, PRODUCTS_LOADED, EVENT_GROUPS_LOADED, TOGGLE_THEME, UPDATE_MOUSE_COORDS,
   SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_TYPE_GROUP, SET_REDIRECT_URI, 
-  TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TYPE_GROUP_LOADED, TEAM_LOADED, UPDATE_DEEPLINK,
+  TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TYPE_GROUP_LOADED, TEAM_LOADED, UPDATE_MATCH_PATH,
   USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, } from '../../consts/action-types';
 import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
@@ -16,16 +16,7 @@ const initialState = {
   comment: null,
   products: null,
   darkThemed: false,
-  deeplink: {
-    teamSlug: null,
-    projSlug: null,
-    buildID: 0,
-    deviceSlug: null,
-    typeGroupSlug: null,
-    accessibility: null,
-    comments: null,
-    commentID: 0
-  },
+  matchPath: null,
   devices: null,
   redirectURI: null,
   userProfile: null,
@@ -178,16 +169,17 @@ function rootReducer(state = initialState, action) {
             paid   : /admin|paid/i.test(type)
           }
         });
-        
+
       } else {
         return Object.assign({}, state, {
           userProfile: action.payload
         });
       }
 
-    case UPDATE_DEEPLINK:
+    case UPDATE_MATCH_PATH:
       return Object.assign({}, state, {
-        deeplink: Object.assign({}, state.deeplink, action.payload)
+        // matchPath: Object.assign({}, state.matchPath, action.payload.matchPath)
+        matchPath: action.payload.matchPath
       });
 
     case TEAM_LOADED:
