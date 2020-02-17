@@ -19,7 +19,7 @@ import RegisterModal from '../overlays/RegisterModal';
 import StripeModal from '../overlays/StripeModal';
 import BottomNav from '../sections/BottomNav';
 import TopNav from '../sections/TopNav';
-import "./App.css";
+import './App.css';
 import { withRouter, matchPath } from 'react-router-dom';
 import { typeGroupByKey } from '../pages/PlaygroundPage/utils/lookup';
 
@@ -32,7 +32,7 @@ class App extends Component {
       darkTheme: false,
       popup: null,
       modals: {
-        cookies: cookie.load("cookies") << 0 === 0,
+        cookies: cookie.load('cookies') << 0 === 0,
         // 				cookies  : false, // disable
         disable: false,
         github: false,
@@ -49,13 +49,13 @@ class App extends Component {
     this.githubWindow = null;
     this.authInterval = null;
 
-    initTracker(cookie.load("user_id"));
+    initTracker(cookie.load('user_id'));
   }
 
   componentDidMount() {
     		console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
-    trackEvent("site", "load");
+    trackEvent('site', 'load');
     trackPageview();
     //
     // console.log('[:][:][:][:][:][:][:][:][:][:]');
@@ -65,12 +65,12 @@ class App extends Component {
     if (
       !profile &&
       location.pathname.startsWith(Pages.PLAYGROUND) &&
-      cookie.load("user_id") === "0"
+      cookie.load('user_id') === '0'
     ) {
       this.onToggleModal(Modals.LOGIN);
     }
 
-    // window.addEventListener("mousemove", this.handleMouseMove);
+    // window.addEventListener('mousemove', this.handleMouseMove);
     window.onpopstate = event => {
       event.preventDefault();
       // 			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
@@ -126,12 +126,12 @@ class App extends Component {
 
       // just received tean, check plan
       if (team !== null && prevProps.team === null) {
-        // console.log("|:|:|:|:|:|:|:|:|:|:|:|", "FETCH TEAM PLAYGROUND SUMMARY");
+        // console.log('|:|:|:|:|:|:|:|:|:|:|:|', 'FETCH TEAM PLAYGROUND SUMMARY');
 
         // pay alert check
         const modal =
-          (team.members.length > 10 && team.type === "free") ||
-          (team.members.length > 50 && team.type !== "enterprise");
+          (team.members.length > 10 && team.type === 'free') ||
+          (team.members.length > 50 && team.type !== 'enterprise');
         if (modal && !prevState.modals.stripe && !modals.stripe) {
           const product = this.props.products.find(
             ({ threshold }) => team.members.length >= threshold
@@ -200,13 +200,13 @@ class App extends Component {
     this.githubWindow = null;
 
     window.onpopstate = null;
-    window.removeEventListener("mousemove", this.handleMouseMove);
+    window.removeEventListener('mousemove', this.handleMouseMove);
   }
 
   handleCookies = () => {
     // 		console.log('%s.handleCookies()', this.constructor.name);
     this.onToggleModal(Modals.COOKIES, false);
-    cookie.save("cookies", "1", { path: "/", sameSite: false });
+    cookie.save('cookies', '1', { path: '/', sameSite: false });
   };
 
   handleDisableAccount = () => {
@@ -216,13 +216,13 @@ class App extends Component {
 
     axios
       .post(API_ENDPT_URL, {
-        action: "DISABLE_ACCOUNT",
+        action: 'DISABLE_ACCOUNT',
         payload: { user_id: profile.id }
       })
       .then(response => {
         // 			console.log('DISABLE_ACCOUNT', response.data);
 
-        trackEvent("user", "delete-account");
+        trackEvent('user', 'delete-account');
         this.props.updateUserProfile(null);
         this.props.history.push(Pages.HOME);
       })
@@ -235,7 +235,7 @@ class App extends Component {
     const code = DateTimes.epoch(true);
     axios
       .post(API_ENDPT_URL, {
-        action: "GITHUB_AUTH",
+        action: 'GITHUB_AUTH',
         payload: { code }
       })
       .then(response => {
@@ -258,8 +258,8 @@ class App extends Component {
           };
 
           this.githubWindow = window.open(
-            GITHUB_APP_AUTH.replace("__{EPOCH}__", code),
-            "",
+            GITHUB_APP_AUTH.replace('__{EPOCH}__', code),
+            '',
             `titlebar=no, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${
               size.width
             }, height=${size.height}, top=${((window.screen.height -
@@ -282,11 +282,11 @@ class App extends Component {
 
     axios
       .post(API_ENDPT_URL, {
-        action: "REGISTER",
+        action: 'REGISTER',
         payload: {
           username: profile.email,
           email: profile.email,
-          type: "free_user"
+          type: 'free_user'
         }
       })
       .then(response => {
@@ -297,7 +297,7 @@ class App extends Component {
 
   handleLogout = (page = null, modal = null) => {
     // 		console.log('%s.handleLogout()', this.constructor.name, this.constructor.name, page, modal);
-    trackEvent("user", "sign-out");
+    trackEvent('user', 'sign-out');
 
     this.props.updateUserProfile(null);
 
@@ -370,14 +370,14 @@ class App extends Component {
 
       axios
         .post(API_ENDPT_URL, {
-          action: "GITHUB_AUTH_CHECK",
+          action: 'GITHUB_AUTH_CHECK',
           payload: { authID }
         })
         .then(response => {
           // 				console.log('GITHUB_AUTH_CHECK', response.data);
           const { user } = response.data;
           if (user) {
-            trackEvent("github", "success");
+            trackEvent('github', 'success');
             clearInterval(this.authInterval);
             this.authInterval = null;
             this.githubWindow.close();
@@ -467,7 +467,7 @@ class App extends Component {
 
 
 
-		  <div className="modal-wrapper">
+		  <div className='modal-wrapper'>
 			  {(modals.cookies) && (<CookiesOverlay
 				  onConfirmed={this.handleCookies}
 				  onComplete={()=> this.onToggleModal(Modals.COOKIES, false)}
@@ -505,7 +505,7 @@ class App extends Component {
 			  />)}
 
 			  {(modals.network) && (<AlertDialog
-				  title="No Internet Connection"
+				  title='No Internet Connection'
 				  tracking={Modals.NETWORK}
 				  onComplete={()=> this.onToggleModal(Modals.NETWORK, false)}>
 				  Check your network connection to continue.

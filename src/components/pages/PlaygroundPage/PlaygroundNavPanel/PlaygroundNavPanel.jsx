@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { trackEvent, trackOutbound } from '../../../../utils/tracking';
 import NavPanelProject from './NavPanelProject';
-import "./PlaygroundNavPanel.css";
+import './PlaygroundNavPanel.css';
 
 class PlaygroundNavPanel extends Component {
   constructor(props) {
@@ -164,7 +164,7 @@ const PlaygroundNavPanelHeader = props => {
     const { domain } = props.team;
     const url = `http://${domain}`;
 
-    trackEvent("team-name", domain);
+    trackEvent('team-name', domain);
     trackOutbound(url, () => {
       // 			window.open(url);
       // 			props.onClick(event);
@@ -174,7 +174,7 @@ const PlaygroundNavPanelHeader = props => {
   };
 
   const { team } = props;
-  // console.log("PlaygroundNavPanelHeader()", props);
+  // console.log('PlaygroundNavPanelHeader()', props);
 
   return (
     <div className="playground-nav-panel-header">

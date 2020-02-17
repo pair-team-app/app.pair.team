@@ -6,8 +6,8 @@ import {
   OVERLAY_TYPE_AUTO_SIZE,
   OVERLAY_TYPE_PERCENT_SIZE,
   OVERLAY_TYPE_POSITION_OFFSET
-} from "./";
-import "./BaseOverlay.css";
+} from './';
+import './BaseOverlay.css';
 
 const INTRO_DURATION = 1 / 8;
 const OUTRO_DURATION = 1 / 4;
@@ -141,10 +141,10 @@ class BaseOverlay extends Component {
     } = this.props;
     const wrapperClass = `base-overlay-content-wrapper base-overlay-content-wrapper${
       type === OVERLAY_TYPE_PERCENT_SIZE
-        ? "-percent"
+        ? '-percent'
         : OVERLAY_TYPE_AUTO_SIZE
-        ? "-auto-size"
-        : "-auto-scroll"
+        ? '-auto-size'
+        : '-auto-scroll'
     }`;
     const wrapperStyle = {
       transform:
@@ -155,8 +155,8 @@ class BaseOverlay extends Component {
 
     return (
       <div
-        className={`base-overlay${filled ? " base-overlay-filled" : ""}${
-          !closeable ? " base-overlay-noncloseable" : ""
+        className={`base-overlay${filled ? ' base-overlay-filled' : ''}${
+          !closeable ? ' base-overlay-noncloseable' : ''
         }`}
         onClick={closeable ? this.handleClose : null}
       >
@@ -176,7 +176,7 @@ class BaseOverlay extends Component {
           )}
           <div
             className="base-overlay-content"
-            style={{ height: hAdj > 88 ? `${hAdj}px` : "fit-content" }}
+            style={{ height: hAdj > 88 ? `${hAdj}px` : 'fit-content' }}
           >
             {children}
           </div>

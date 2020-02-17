@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import "./PlaygroundComment.css";
+import './PlaygroundComment.css';
 
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
@@ -24,11 +24,11 @@ class PlaygroundComment extends Component {
   }
 
   componentDidMount() {
-    // console.log("%s.componentDidMount()", this.constructor.name, this.props, this.state);
+    // console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
     const { position, comment } = this.props;
     if (comment.id === 0) {
-      document.addEventListener("keydown", this.handleKeyDown);
+      document.addEventListener('keydown', this.handleKeyDown);
     }
 
     //  console.log('%s.componentDidMount()', this.constructor.name, { position : comment });
@@ -49,7 +49,7 @@ class PlaygroundComment extends Component {
 
     const { comment } = this.props;
     if (comment.id === 0) {
-      document.removeEventListener("keydown", this.handleKeyDown);
+      document.removeEventListener('keydown', this.handleKeyDown);
     }
   }
 
@@ -124,7 +124,7 @@ class PlaygroundComment extends Component {
   };
 
   onOutro = (event = null) => {
-    // console.log("%s.onOutro()", this.constructor.name, {
+    // console.log('%s.onOutro()', this.constructor.name, {
     //   event,
     //   outro: this.state.outro
     // });
@@ -139,7 +139,7 @@ class PlaygroundComment extends Component {
   };
 
   render() {
-    // console.log("%s.render()", this.constructor.name, this.props, this.state);
+    // console.log('%s.render()', this.constructor.name, this.props, this.state);
     // 		console.log('%s.render()', this.constructor.name, this.props.component, this.props.comment);
 
     const { component, comment, ind, offset, scale, activeComment } = this.props;

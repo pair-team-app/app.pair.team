@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import "./SharePopover.css";
+import './SharePopover.css';
 
 import axios from 'axios';
 import { Strings } from 'lang-js-utils';
@@ -16,7 +16,7 @@ class SharePopover extends Component {
     super(props);
 
     this.state = {
-      email: "",
+      email: '',
       emailValid: false,
       outro: false
     };
@@ -34,7 +34,7 @@ class SharePopover extends Component {
   handleClipboardCopy = () => {
     // 		console.log('%s.handleClipboardCopy()', this.constructor.name, this.props);
 
-    trackEvent("button", `copy-share-url`);
+    trackEvent('button', `copy-share-url`);
     // 		this.setState({ outro : true });
 
     this.setState({ outro: true }, () => {
@@ -61,12 +61,12 @@ class SharePopover extends Component {
 
     const { email, emailValid } = this.state;
     if (email.length > 0 && emailValid) {
-      trackEvent("button", `send-invite`);
+      trackEvent('button', `send-invite`);
       const { profile, playground, component } = this.props;
 
       axios
         .post(API_ENDPT_URL, {
-          action: "SHARE_LINK",
+          action: 'SHARE_LINK',
           payload: {
             email,
             playground_id: playground.id,
@@ -75,7 +75,7 @@ class SharePopover extends Component {
           }
         })
         .then(response => {
-          console.log("SHARE_LINK", response.data);
+          console.log('SHARE_LINK', response.data);
           const success = parseInt(response.data.success, 16);
 
           this.setState({ outro: true });

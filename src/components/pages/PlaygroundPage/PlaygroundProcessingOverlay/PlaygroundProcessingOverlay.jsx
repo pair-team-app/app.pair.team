@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { Modals } from '../../../../consts/uris';
 import BaseOverlay, {
   OVERLAY_TYPE_POSITION_OFFSET
-} from "../../../overlays/BaseOverlay";
+} from '../../../overlays/BaseOverlay';
 import { componentsFromTypeGroup } from '../utils/lookup';
-import "./PlaygroundProcessingOverlay.css";
+import './PlaygroundProcessingOverlay.css';
 
 // const UPD_PROPS = [
 //   'playground',
@@ -80,7 +80,7 @@ class PlaygroundProcessingOverlay extends Component {
               completed: false
             },
             () => {
-              //          console.log("RESET LIST", { components : components.map(({ html, styles, rootStyles })=> ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles)), total : this.state.total });
+              //          console.log('RESET LIST', { components : components.map(({ html, styles, rootStyles })=> ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles)), total : this.state.total });
             }
           );
         };
@@ -97,18 +97,18 @@ class PlaygroundProcessingOverlay extends Component {
 
         if (this.state.processed === total && !this.state.outro) {
           //         if (((outro && !prevProps.outro) || (this.state.processed === total)) && !this.state.outro) {
-          //        console.log("DONE LIST", { components : components.map(({ html, styles, rootStyles })=> ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles)), total : this.state.total });
+          //        console.log('DONE LIST', { components : components.map(({ html, styles, rootStyles })=> ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles)), total : this.state.total });
           onOutro();
         } else {
           if (total !== components.length) {
               console.log(':::::::::: NO PREV :::::::::::::::');
             onReset();
           } else {
-            console.log("ACT LIST", { components : components.map(({ html, styles, rootStyles })=> ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles)), total : this.state.total });
+            console.log('ACT LIST', { components : components.map(({ html, styles, rootStyles })=> ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles)), total : this.state.total });
           }
 
           if (processed > this.state.processed) {
-            //          console.log("INC LIST", { components : components.map(({ html, styles, rootStyles })=> ({ html, styles, rootStyles })), processed, stateProc : this.state.processed, total : this.state.total });
+            //          console.log('INC LIST', { components : components.map(({ html, styles, rootStyles })=> ({ html, styles, rootStyles })), processed, stateProc : this.state.processed, total : this.state.total });
             this.setState({ processed });
           }
         }

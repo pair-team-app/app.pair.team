@@ -1,14 +1,14 @@
-import axios from "axios";
-import { Bits, Objects } from "lang-js-utils";
-import cookie from "react-cookies";
+import axios from 'axios';
+import { Bits, Objects } from 'lang-js-utils';
+import cookie from 'react-cookies';
 import {
 BUILD_PLAYGROUNDS_LOADED, COMPONENT_TYPES_LOADED, EVENT_GROUPS_LOADED, SET_COMMENT, SET_COMPONENT,
   SET_INVITE, SET_PLAYGROUND, SET_PLAYGROUNDS, SET_PRODUCTS, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TOGGLE_THEME, TYPE_GROUP_LOADED, UPDATE_DEEPLINK, UPDATE_MOUSE_COORDS, USER_PROFILE_ERROR,
   USER_PROFILE_LOADED, USER_PROFILE_UPDATED, LOCATION_UPDATED, TEAM_LOADED
-} from "../../consts/action-types";
-import { jsonFormatKB } from "../../consts/formats";
-import { LOG_ACTION_PREFIX } from "../../consts/log-ascii";
-import { API_ENDPT_URL } from "../../consts/uris";
+} from '../../consts/action-types';
+import { jsonFormatKB } from '../../consts/formats';
+import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
+import { API_ENDPT_URL } from '../../consts/uris';
 
 const logFormat = (action, state, payload = null, meta = "") => {
   console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, { payload : payload || {}, meta, state });
@@ -23,13 +23,13 @@ export function fetchBuildPlaygrounds(payload=null) {
 
     axios
       .post(API_ENDPT_URL, {
-        action: "BUILD_PLAYGROUNDS",
+        action: 'BUILD_PLAYGROUNDS',
         payload: {
           build_id: buildID
         }
       })
       .then(async response => {
-        console.log("BUILD_PLAYGROUNDS", response.data);
+        console.log('BUILD_PLAYGROUNDS', response.data);
 
         const playgrounds = response.data.playgrounds.map(playground => ({
           ...playground,
@@ -57,11 +57,11 @@ export function fetchComponentTypes(payload=null) {
     
     axios
       .post(API_ENDPT_URL, {
-        action: "COMPONENT_TYPES",
+        action: 'COMPONENT_TYPES',
         payload: null
       })
       .then(response => {
-        console.log("COMPONENT_TYPES", response.data);
+        console.log('COMPONENT_TYPES', response.data);
         dispatch({
           type: COMPONENT_TYPES_LOADED,
           payload: response.data.component_types
@@ -77,17 +77,17 @@ export function fetchEventGroups(payload=null) {
 
     axios
       .post(API_ENDPT_URL, {
-        action: "EVENT_GROUPS",
+        action: 'EVENT_GROUPS',
         payload: null
       })
       .then(response => {
-        console.log("EVENT_GROUPS", response.data);
+        console.log('EVENT_GROUPS', response.data);
 
         dispatch({
           type: EVENT_GROUPS_LOADED,
           payload: response.data.event_groups.map(eventGroup => {
             const events = eventGroup.event_types;
-            delete eventGroup["event_types"];
+            delete eventGroup['event_types'];
 
             return { ...eventGroup, events };
           })
@@ -105,14 +105,14 @@ export function fetchTeamBuilds(payload=null) {
 
     axios
       .post(API_ENDPT_URL, {
-        action: "TEAM_BUILDS",
+        action: 'TEAM_BUILDS',
         payload: {
           team_id: team.id,
           device_id: 1
         }
       })
       .then(response => {
-        console.log("TEAM_BUILDS", response.data);
+        console.log('TEAM_BUILDS', response.data);
         const { playgrounds } = response.data;
 
         dispatch({
@@ -131,7 +131,7 @@ export function fetchPlaygroundComponentGroup(payload=null) {
 
     axios
       .post(API_ENDPT_URL, {
-        action: "PLAYGROUND_TYPE_GROUP_COMPONENTS",
+        action: 'PLAYGROUND_TYPE_GROUP_COMPONENTS',
         payload: {
           playground_id: playground.id,
           type_group_id: typeGroup.id,
@@ -166,11 +166,11 @@ export function fetchProducts(payload=null) {
 
     axios
       .post(API_ENDPT_URL, {
-        action: "PRODUCTS",
+        action: 'PRODUCTS',
         payload: null
       })
       .then(response => {
-        console.log("PRODUCTS", response.data);
+        console.log('PRODUCTS', response.data);
 
         dispatch({
           type: SET_PRODUCTS,
@@ -193,18 +193,18 @@ export function fetchUserProfile(payload=null) {
 
     axios
       .post(API_ENDPT_URL, {
-        action: "USER_PROFILE",
-        payload: { user_id: cookie.load("user_id") << 0 }
+        action: 'USER_PROFILE',
+        payload: { user_id: cookie.load('user_id') << 0 }
       })
       .then(response => {
-        console.log("USER_PROFILE", response.data);
+        console.log('USER_PROFILE', response.data);
 
-        Objects.renameKey(response.data.user, "github_auth", "github");
+        Objects.renameKey(response.data.user, 'github_auth', 'github');
         if (response.data.user.github) {
           Objects.renameKey(
             response.data.user.github,
-            "access_token",
-            "accessToken"
+            'access_token',
+            'accessToken'
           );
         }
 
@@ -216,7 +216,7 @@ export function fetchUserProfile(payload=null) {
             id: id << 0,
             status: 0x00,
             github: github ? { ...github, id: github.id << 0 } : github,
-            paid: type.includes("paid")
+            paid: type.includes('paid')
           }
         });
       })
@@ -231,13 +231,13 @@ export function fetchTeamLookup(payload=null) {
 
     axios
       .post(API_ENDPT_URL, {
-        action: "TEAM_LOOKUP",
+        action: 'TEAM_LOOKUP',
         payload: {
           user_id: userID
         }
       })
       .then(response => {
-        console.log("TEAM_LOOKUP", response.data);
+        console.log('TEAM_LOOKUP', response.data);
         const { team } = response.data;
 
         if (team) {
@@ -318,10 +318,10 @@ export function updateUserProfile(payload, force = true) {
   logFormat("updateUserProfile()", payload, force);
 
   if (payload) {
-    Objects.renameKey(payload, "github_auth", "github");
+    Objects.renameKey(payload, 'github_auth', 'github');
 
     if (payload.github) {
-      Objects.renameKey(payload.github, "access_token", "accessToken");
+      Objects.renameKey(payload.github, 'access_token', 'accessToken');
     }
 
     const { id, github } = payload;
@@ -336,7 +336,7 @@ export function updateUserProfile(payload, force = true) {
         : github
     };
 
-    if (payload.hasOwnProperty("password") && payload.password === "") {
+    if (payload.hasOwnProperty('password') && payload.password === "") {
       delete payload.password;
     }
   }
@@ -352,7 +352,7 @@ export function updateUserProfile(payload, force = true) {
       const { id } = payload;
       axios
         .post(API_ENDPT_URL, {
-          action: "UPDATE_USER_PROFILE",
+          action: 'UPDATE_USER_PROFILE',
           payload: {
             ...payload,
             user_id: id
@@ -360,15 +360,15 @@ export function updateUserProfile(payload, force = true) {
           }
         })
         .then(response => {
-          console.log("UPDATE_USER_PROFILE", response.data);
+          console.log('UPDATE_USER_PROFILE', response.data);
 
           const status = parseInt(response.data.status, 16);
-          Objects.renameKey(response.data.user, "github_auth", "github");
+          Objects.renameKey(response.data.user, 'github_auth', 'github');
           if (response.data.user.github) {
             Objects.renameKey(
               response.data.user.github,
-              "access_token",
-              "accessToken"
+              'access_token',
+              'accessToken'
             );
           }
 
@@ -390,13 +390,13 @@ export function updateUserProfile(payload, force = true) {
                 ? "Email Already in Use"
                 : email,
               github: github ? { ...github, id: github.id << 0 } : github,
-              paid: type.includes("paid")
+              paid: type.includes('paid')
             }
           });
         })
         .catch(error => {});
     } else {
-      cookie.save("user_id", "0", { path: "/", sameSite: false });
+      cookie.save('user_id', '0', { path: '/', sameSite: false });
 
       dispatch({
         type: USER_PROFILE_UPDATED,

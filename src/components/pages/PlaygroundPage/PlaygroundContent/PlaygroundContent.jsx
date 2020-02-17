@@ -9,7 +9,7 @@ import PlaygroundComment from '../PlaygroundComment';
 import { componentsFromTypeGroup } from '../utils/lookup';
 import { reformComment } from '../utils/reform';
 import ComponentMenu from './ComponentMenu';
-import "./PlaygroundContent.css";
+import './PlaygroundContent.css';
 
 const CONSTRAIN = 0.875;
 
@@ -30,7 +30,7 @@ class PlaygroundContent extends Component {
   }
 
   componentDidMount() {
-    console.log("%s.componentDidMount()", this.constructor.name, this.props, this.state);
+    console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
     // this.calcBounds({ x : 0, y : 0, width : 0, height : 0 });
   }
 
@@ -116,7 +116,7 @@ class PlaygroundContent extends Component {
   
 
   handleComponentPopoverClose = () => {
-    console.log("%s.handleComponentPopoverClose()", this.constructor.name);
+    console.log('%s.handleComponentPopoverClose()', this.constructor.name);
 
     this.setState({ popover: false }, () => {
       this.props.onPopoverClose();
@@ -316,7 +316,7 @@ const PlaygroundComponent = props => {
               minHeight: `${thumbSize.height}`
             }}
           >
-            {processed && <img src={imageData || ""} alt={title} />}
+            {processed && <img src={imageData || ''} alt={title} />}
           </div>
           {processed && (
             <div
@@ -330,14 +330,14 @@ const PlaygroundComponent = props => {
                     reformComment({
                       position,
                       id: 0,
-                      type: "add",
-                      content: "",
+                      type: 'add',
+                      content: '',
                       author: profile
                     })
                   ]
                 : comments
               )
-                .filter(({ type }) => type !== "init")
+                .filter(({ type }) => type !== 'init')
                 .map((comm, i) => {
                   return (
                     <PlaygroundComment
@@ -361,7 +361,7 @@ const PlaygroundComponent = props => {
 
         {processed && (
           <div className="component-caption">
-            {component.meta.bounds.width << 0}px ×{" "}
+            {component.meta.bounds.width << 0}px ×{' '}
             {component.meta.bounds.height << 0}px
           </div>
         )}

@@ -1,16 +1,16 @@
 
-import moment from "moment";
-import cookie from "react-cookies";
-import { reformComponent, reformPlayground } from "../../components/pages/PlaygroundPage/utils/reform";
+import moment from 'moment';
+import cookie from 'react-cookies';
+import { reformComponent, reformPlayground } from '../../components/pages/PlaygroundPage/utils/reform';
 import { BUILD_PLAYGROUNDS_LOADED, TEAM_LOADED, TEAM_BUILDS_LOADED, 
   TYPE_GROUP_LOADED, UPDATE_MOUSE_COORDS, 
   USER_PROFILE_UPDATED, 
-  USER_PROFILE_LOADED } from "../../consts/action-types";
-import { LOG_MIDDLEWARE_PREFIX } from "../../consts/log-ascii";
-import { fetchTeamBuilds, fetchPlaygroundComponentGroup, fetchTeamLookup } from "../actions";
+  USER_PROFILE_LOADED } from '../../consts/action-types';
+import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
+import { fetchTeamBuilds, fetchPlaygroundComponentGroup, fetchTeamLookup } from '../actions';
 
 const logFormat = ({ store, action, next, meta = "" }) => {
-  if (typeof action !== "function") {
+  if (typeof action !== 'function') {
     const { type, payload } = action;
 
     if (type !== UPDATE_MOUSE_COORDS) {
@@ -67,8 +67,8 @@ export function onMiddleware(store) {
 
 
       } else if (type === USER_PROFILE_UPDATED) {
-        cookie.save("user_id", payload ? payload.id : "0", {
-          path: "/",
+        cookie.save('user_id', payload ? payload.id : '0', {
+          path: '/',
           sameSite: false
         });
 

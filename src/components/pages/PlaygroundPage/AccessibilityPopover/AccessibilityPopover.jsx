@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import "./AccessibilityPopover.css";
+import './AccessibilityPopover.css';
 
 import { Strings } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';

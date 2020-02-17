@@ -9,12 +9,12 @@ import {
   fetchTeamLookup,
   fetchUserProfile,
   updateUserProfile
-} from "../../../redux/actions";
+} from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import ProfileForm from '../../forms/ProfileForm/ProfileForm';
 import BaseOverlay from '../BaseOverlay';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
-import "./ProfileModal.css";
+import './ProfileModal.css';
 
 class ProfileModal extends Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class ProfileModal extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     console.log(
-      "%s.componentDidUpdate()",
+      '%s.componentDidUpdate()',
       this.constructor.name,
       prevProps,
       this.props.profile,
@@ -49,8 +49,8 @@ class ProfileModal extends Component {
   }
 
   handleCancel = () => {
-    console.log("%s.handleCancel()", this.constructor.name);
-    trackEvent("button", "profile-cancel");
+    console.log('%s.handleCancel()', this.constructor.name);
+    trackEvent('button', 'profile-cancel');
 
     this.setState({
       outro: true,
@@ -59,19 +59,19 @@ class ProfileModal extends Component {
   };
 
   handleComplete = () => {
-    console.log("%s.handleComplete()", this.constructor.name, this.state);
+    console.log('%s.handleComplete()', this.constructor.name, this.state);
 
     const { updated } = this.state;
     if (updated) {
       this.props.onPopup({
         type: POPUP_TYPE_OK,
-        content: "Profile updated.",
+        content: 'Profile updated.',
         delay: 333
       });
     } else {
       this.props.fetchUserProfile();
       this.props.onPopup({
-        content: "No profile changes made.",
+        content: 'No profile changes made.',
         delay: 333
       });
     }
@@ -79,7 +79,7 @@ class ProfileModal extends Component {
     this.setState({ outro: false }, () => {
       const { outroURI } = this.state;
 
-      if (outroURI && outroURI.startsWith("/modal")) {
+      if (outroURI && outroURI.startsWith('/modal')) {
         this.props.onModal(`/${URIs.lastComponent(outroURI)}`);
       }
 
@@ -88,13 +88,13 @@ class ProfileModal extends Component {
   };
 
   handleDowngradePlan = event => {
-    console.log("%s.handleDowngradePlan()", this.constructor.name, event);
+    console.log('%s.handleDowngradePlan()', this.constructor.name, event);
 
     this.setState({ submitting: true }, () => {
       const { profile, team } = this.props;
       axios
         .post(API_ENDPT_URL, {
-          action: "CANCEL_SUBSCRIPTION",
+          action: 'CANCEL_SUBSCRIPTION',
           payload: {
             user_id: profile.id,
             email: profile.email,
@@ -102,7 +102,7 @@ class ProfileModal extends Component {
           }
         })
         .then(response => {
-          console.log("CANCEL_SUBSCRIPTION", response.data);
+          console.log('CANCEL_SUBSCRIPTION', response.data);
           const { error } = response.data;
 
           this.setState({ submitting: false }, () => {
@@ -115,7 +115,7 @@ class ProfileModal extends Component {
             } else {
               this.props.onPopup({
                 type: POPUP_TYPE_OK,
-                content: "Successfully canceled your team plan.",
+                content: 'Successfully canceled your team plan.',
                 duration: 3333
               });
 
@@ -130,7 +130,7 @@ class ProfileModal extends Component {
   };
 
   handleResetPassword = () => {
-    console.log("%s.handleResetPassword()", this.constructor.name);
+    console.log('%s.handleResetPassword()', this.constructor.name);
     this.setState({
       outro: true,
       outroURI: `/modal${Modals.RECOVER}`
@@ -138,19 +138,19 @@ class ProfileModal extends Component {
   };
 
   handleSubmit = ({ id, username, email, password }) => {
-    console.log("%s.handleSubmit()", this.constructor.name, {
+    console.log('%s.handleSubmit()', this.constructor.name, {
       id,
       username,
       email,
       password
     });
 
-    trackEvent("button", "update-profile");
+    trackEvent('button', 'update-profile');
     this.props.updateUserProfile({ id, username, email, password });
   };
 
   render() {
-    console.log("%s.render()", this.constructor.name, this.props, this.state);
+    console.log('%s.render()', this.constructor.name, this.props, this.state);
 
     const { profile, team } = this.props;
     const { outro, submitting } = this.state;

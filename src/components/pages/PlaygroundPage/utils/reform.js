@@ -1,14 +1,14 @@
-import Jimp from "jimp";
-import jsonSize from "json-size";
-import { Images } from "lang-js-utils";
-import moment from "moment";
+import Jimp from 'jimp';
+import jsonSize from 'json-size';
+import { Images } from 'lang-js-utils';
+import moment from 'moment';
 import { jsonFormatKB } from '../../../../consts/formats';
-import { unzipData } from "../../../../utils/funcs";
-import { convertStyles } from "./css";
+import { unzipData } from '../../../../utils/funcs';
+import { convertStyles } from './css';
 
 export const reformChildElement = async (element, overwrite = {}) => {
   const { tag_name, html, styles } = element;
-  delete element["tag_name"];
+  delete element['tag_name'];
 
   return {
     ...element,
@@ -24,7 +24,7 @@ export const reformChildElement = async (element, overwrite = {}) => {
 
 export const reformComment = (comment, overwrite = {}) => ({
   ...comment,
-  position: (typeof comment.position === "string" &&
+  position: (typeof comment.position === 'string' &&
   comment.position.charAt(0) === "{"
     ? JSON.parse(comment.position)
     : comment.position) || { x: 0, y: 0 },
@@ -36,7 +36,7 @@ export const reformComment = (comment, overwrite = {}) => ({
   },
   epoch: comment.added ? (moment.utc(comment.added).valueOf() * 0.001) << 0 : 0,
   timestamp: comment.added
-    ? moment(comment.added).add(moment().utcOffset() << 0, "minute")
+    ? moment(comment.added).add(moment().utcOffset() << 0, 'minute')
     : moment.utc(),
   ...overwrite
 });
@@ -68,13 +68,13 @@ export const reformComponent = async (component, overwrite = {}) => {
     comments,
   } = component;
   const { width, height } = meta.bounds;
-  delete component["type_id"];
-  delete component["event_type_id"];
-  delete component["node_id"];
-  delete component["tag_name"];
-  delete component["root_styles"];
-  delete component["image_data"];
-  delete component["thumb_data"];
+  delete component['type_id'];
+  delete component['event_type_id'];
+  delete component['node_id'];
+  delete component['tag_name'];
+  delete component['root_styles'];
+  delete component['image_data'];
+  delete component['thumb_data'];
 
   const imageData =
     image_data && image_data.length > 1 ? await unzipData(image_data) : null; //Images.genColor(PLACEHOLDER_FILL, { width, height });
@@ -144,10 +144,10 @@ export const reformComponent = async (component, overwrite = {}) => {
     rootStyles: rootStyles
       ? {
           ...rootStyles,
-          maxWidth  : width > 0 ? `${width}px` : "fit-content",
-          minHeight : height > 0 ? `${height}px` : "fit-content",
-          minWidth  : width > 0 ? `${width}px` : "fit-content",
-          width     : width > 0 ? `${width}px` : "fit-content"
+          maxWidth  : width > 0 ? `${width}px` : 'fit-content',
+          minHeight : height > 0 ? `${height}px` : 'fit-content',
+          minWidth  : width > 0 ? `${width}px` : 'fit-content',
+          width     : width > 0 ? `${width}px` : 'fit-content'
         }
       : null,
     comments: comments
@@ -172,10 +172,10 @@ export const reformPlayground = async (playground, summary=false, team = null, o
   console.log("reformPlayground()", playground);
 
   const { build_id, team_id, device_id, components, added, last_visited } = playground;
-  delete playground["build_id"];
-  delete playground["team_id"];
-  delete playground["device_id"];
-  delete playground["last_visited"];
+  delete playground['build_id'];
+  delete playground['team_id'];
+  delete playground['device_id'];
+  delete playground['last_visited'];
 
   const deviceID = device_id;
   const reformed = { ...playground,
@@ -186,7 +186,7 @@ export const reformPlayground = async (playground, summary=false, team = null, o
     components  : (summary) ? components : components.map(async(component)=> (await reformComponent(component))),
     lastVisited : moment(last_visited).utc(),
     added       : (playground.added)
-      ? moment(added).add(moment().utcOffset() << 0, "minute")
+      ? moment(added).add(moment().utcOffset() << 0, 'minute')
       : moment.utc(),
     selected    : false,
     ...overwrite

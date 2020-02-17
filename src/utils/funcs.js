@@ -104,7 +104,7 @@ export function sendToSlack(channel, message, callback=null) {
 		action  : 'SLACK_MSG',
 		payload : { channel, message }
 	}).then((response) => {
-		console.log("SLACK_MSG", response.data);
+		console.log('SLACK_MSG', response.data);
 		if (callback) {
 			callback();
 		}
