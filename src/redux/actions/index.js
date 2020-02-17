@@ -10,7 +10,7 @@ import { jsonFormatKB } from '../../consts/formats';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
 
-const logFormat = (action, state, payload = null, meta = "") => {
+const logFormat = (action, state, payload = null, meta = '') => {
   console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, { payload : payload || {}, meta, state });
 };
 
@@ -19,7 +19,7 @@ const logFormat = (action, state, payload = null, meta = "") => {
 export function fetchBuildPlaygrounds(payload=null) {
   const { buildID, playgroundID } = payload;
   return (dispatch, getState) => {
-    logFormat("fetchBuildPlaygrounds()", getState(), payload);
+    logFormat('fetchBuildPlaygrounds()', getState(), payload);
 
     axios
       .post(API_ENDPT_URL, {
@@ -41,7 +41,7 @@ export function fetchBuildPlaygrounds(payload=null) {
           }))
         }));
 
-        console.log("BUILD_PLAYGROUNDS [SIZE]", { playgrounds });
+        console.log('BUILD_PLAYGROUNDS [SIZE]', { playgrounds });
         dispatch({
           type: BUILD_PLAYGROUNDS_LOADED,
           payload: { playgrounds, playgroundID }
@@ -53,7 +53,7 @@ export function fetchBuildPlaygrounds(payload=null) {
 
 export function fetchComponentTypes(payload=null) {
   return (dispatch, getState) => {
-    logFormat("fetchComponentTypes()", getState(), payload);
+    logFormat('fetchComponentTypes()', getState(), payload);
     
     axios
       .post(API_ENDPT_URL, {
@@ -73,7 +73,7 @@ export function fetchComponentTypes(payload=null) {
 
 export function fetchEventGroups(payload=null) {
   return (dispatch, getState)=> {
-    logFormat("fetchEventGroups()", getState(), payload);
+    logFormat('fetchEventGroups()', getState(), payload);
 
     axios
       .post(API_ENDPT_URL, {
@@ -101,7 +101,7 @@ export function fetchTeamBuilds(payload=null) {
   return (dispatch, getState)=> {
     const { team } = payload;
 
-    logFormat("fetchTeamBuilds()", getState(), payload);
+    logFormat('fetchTeamBuilds()', getState(), payload);
 
     axios
       .post(API_ENDPT_URL, {
@@ -127,7 +127,7 @@ export function fetchTeamBuilds(payload=null) {
 export function fetchPlaygroundComponentGroup(payload=null) {
   const { playground, typeGroup } = payload;
   return (dispatch, getState)=> {
-    logFormat("fetchPlaygroundComponentGroup()", getState(), payload);
+    logFormat('fetchPlaygroundComponentGroup()', getState(), payload);
 
     axios
       .post(API_ENDPT_URL, {
@@ -143,7 +143,7 @@ export function fetchPlaygroundComponentGroup(payload=null) {
 
         const { components } = response.data;
         console.log(
-          "PLAYGROUND_TYPE_GROUP_COMPONENTS [SIZE]",
+          'PLAYGROUND_TYPE_GROUP_COMPONENTS [SIZE]',
           Object.values(components).map(component => ({
             id: component.id,
             title: component.title,
@@ -162,7 +162,7 @@ export function fetchPlaygroundComponentGroup(payload=null) {
 
 export function fetchProducts(payload=null) {
   return (dispatch, getState)=> {
-    logFormat("fetchProducts()", getState(), payload);
+    logFormat('fetchProducts()', getState(), payload);
 
     axios
       .post(API_ENDPT_URL, {
@@ -189,7 +189,7 @@ export function fetchProducts(payload=null) {
 
 export function fetchUserProfile(payload=null) {
   return (dispatch, getState) => {
-    logFormat("fetchUserProfile()", getState(), payload);
+    logFormat('fetchUserProfile()', getState(), payload);
 
     axios
       .post(API_ENDPT_URL, {
@@ -227,7 +227,7 @@ export function fetchUserProfile(payload=null) {
 export function fetchTeamLookup(payload=null) {
   const { userID } = payload;
   return (dispatch, getState)=> {
-    logFormat("fetchTeamLookup()", getState(), payload);
+    logFormat('fetchTeamLookup()', getState(), payload);
 
     axios
       .post(API_ENDPT_URL, {
@@ -258,32 +258,32 @@ export function fetchTeamLookup(payload=null) {
 }
 
 export function setInvite(payload) {
-  logFormat("setInvite()", null, payload);
+  logFormat('setInvite()', null, payload);
   return { payload, type: SET_INVITE };
 }
 
 export function setPlayground(payload) {
-  logFormat("setPlayground()", null, payload);
+  logFormat('setPlayground()', null, payload);
   return { payload, type: SET_PLAYGROUND };
 }
 
 export function setPlaygrounds(payload) {
-  logFormat("setPlaygrounds()", null, payload);
+  logFormat('setPlaygrounds()', null, payload);
   return { payload, type: SET_PLAYGROUNDS };
 }
 
 export function setTypeGroup(payload) {
-  logFormat("setTypeGroup()", null, payload);
+  logFormat('setTypeGroup()', null, payload);
   return { payload, type: SET_TYPE_GROUP };
 }
 
 export function setComponent(payload) {
-  logFormat("setComponent()", null, payload);
+  logFormat('setComponent()', null, payload);
   return { payload, type: SET_COMPONENT };
 }
 
 export function setComment(payload) {
-  logFormat("setComment()", null, payload);
+  logFormat('setComment()', null, payload);
   return { payload, type: SET_COMMENT };
 }
 
@@ -292,7 +292,7 @@ export function setRedirectURI(payload) {
 }
 
 export function toggleTheme(payload = null) {
-  logFormat("toggleTheme()", null, payload);
+  logFormat('toggleTheme()', null, payload);
   return { payload, type: TOGGLE_THEME };
 }
 
@@ -315,7 +315,7 @@ export function updateMouseCoords(payload) {
 }
 
 export function updateUserProfile(payload, force = true) {
-  logFormat("updateUserProfile()", payload, force);
+  logFormat('updateUserProfile()', payload, force);
 
   if (payload) {
     Objects.renameKey(payload, 'github_auth', 'github');
@@ -336,7 +336,7 @@ export function updateUserProfile(payload, force = true) {
         : github
     };
 
-    if (payload.hasOwnProperty('password') && payload.password === "") {
+    if (payload.hasOwnProperty('password') && payload.password === '') {
       delete payload.password;
     }
   }
@@ -384,10 +384,10 @@ export function updateUserProfile(payload, force = true) {
               status: status,
               id: id << 0,
               username: Bits.contains(status, 0x01)
-                ? "Username Already in Use"
+                ? 'Username Already in Use'
                 : username,
               email: Bits.contains(status, 0x10)
-                ? "Email Already in Use"
+                ? 'Email Already in Use'
                 : email,
               github: github ? { ...github, id: github.id << 0 } : github,
               paid: type.includes('paid')

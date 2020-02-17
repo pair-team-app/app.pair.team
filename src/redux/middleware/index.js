@@ -9,7 +9,7 @@ import { BUILD_PLAYGROUNDS_LOADED, TEAM_LOADED, TEAM_BUILDS_LOADED,
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { fetchTeamBuilds, fetchPlaygroundComponentGroup, fetchTeamLookup } from '../actions';
 
-const logFormat = ({ store, action, next, meta = "" }) => {
+const logFormat = ({ store, action, next, meta = '' }) => {
   if (typeof action !== 'function') {
     const { type, payload } = action;
 

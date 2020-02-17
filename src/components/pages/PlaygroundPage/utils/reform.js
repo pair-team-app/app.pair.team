@@ -1,6 +1,6 @@
 import Jimp from 'jimp';
 import jsonSize from 'json-size';
-import { Images } from 'lang-js-utils';
+import { Images, Strings } from 'lang-js-utils';
 import moment from 'moment';
 import { jsonFormatKB } from '../../../../consts/formats';
 import { unzipData } from '../../../../utils/funcs';
@@ -16,7 +16,7 @@ export const reformChildElement = async (element, overwrite = {}) => {
     tagName: tag_name,
     html: await unzipData(html),
     styles: await unzipData(styles),
-    path: element.path.split(" ").filter(i => i.length > 0),
+    path: element.path.split(' ').filter(i => i.length > 0),
     // 		meta    : JSON.parse(element.meta.replace(/"/g, '\'')),
     ...overwrite
   };
@@ -25,7 +25,7 @@ export const reformChildElement = async (element, overwrite = {}) => {
 export const reformComment = (comment, overwrite = {}) => ({
   ...comment,
   position: (typeof comment.position === 'string' &&
-  comment.position.charAt(0) === "{"
+  comment.position.charAt(0) === '{'
     ? JSON.parse(comment.position)
     : comment.position) || { x: 0, y: 0 },
   author: {
@@ -42,7 +42,7 @@ export const reformComment = (comment, overwrite = {}) => ({
 });
 
 export const reformComponent = async (component, overwrite = {}) => {
-  console.log("reformComponent()", component);
+  console.log('reformComponent()', component);
   // 	console.log('reformComponent()', component, Object.keys(component));
 
   const PLACEHOLDER_FILL = {
@@ -168,27 +168,27 @@ export const reformComponent = async (component, overwrite = {}) => {
   return { ...reformed, size: jsonSize(reformed) };
 };
 
-export const reformPlayground = async (playground, summary=false, team = null, overwrite = {}) => {
-  console.log("reformPlayground()", playground);
+export const reformPlayground = async (playground, summary=false, team=null, overwrite={}) => {
+  console.log('reformPlayground()', playground);
 
-  const { build_id, team_id, device_id, components, added, last_visited } = playground;
+  const { build_id, team_id, device_id, title, components, added, last_visited, selected } = playground;
   delete playground['build_id'];
   delete playground['team_id'];
   delete playground['device_id'];
   delete playground['last_visited'];
 
-  const deviceID = device_id;
   const reformed = { ...playground,
-    team        : (!playground.team) ? team : playground.team,
     teamID      : team_id << 0,
     buildID     : build_id << 0,  
     deviceID    : device_id << 0,
+    projSlug    : Strings.slugifyURI(title),
+    team        : (!playground.team) ? team : playground.team,
     components  : (summary) ? components : components.map(async(component)=> (await reformComponent(component))),
     lastVisited : moment(last_visited).utc(),
     added       : (playground.added)
       ? moment(added).add(moment().utcOffset() << 0, 'minute')
       : moment.utc(),
-    selected    : false,
+    selected    : (typeof selected === 'undefined') ? false : selected,
     ...overwrite
   };
 

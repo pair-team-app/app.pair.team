@@ -43,7 +43,7 @@ const initialState = {
   }
 };
 
-const logFormat = (state, action, meta = "") => {
+const logFormat = (state, action, meta = '') => {
   const { type, payload } = action;
 
   if (type !== UPDATE_MOUSE_COORDS) {
