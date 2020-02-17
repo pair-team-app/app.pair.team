@@ -53,7 +53,7 @@ class PlaygroundComment extends Component {
     }
   }
 
-  handleAddSubmit = event => {
+  handleAddSubmit = (event)=> {
     // 		console.log('%s.handleAddSubmit()', this.constructor.name, event, this.state.comment);
     // 		console.log('%s.handleAddSubmit()', this.constructor.name, event, this.state);
     event.preventDefault();
@@ -69,7 +69,7 @@ class PlaygroundComment extends Component {
       { position,
         outro: true,
       },
-      () => {
+      ()=> {
         const { component } = this.props;
         const { position, comment } = this.state;
 
@@ -78,7 +78,7 @@ class PlaygroundComment extends Component {
     );
   };
 
-  handleClose = comment => {
+  handleClose = (comment)=> {
     console.log('%s.handleClose()', this.constructor.name, comment);
 
     if (comment.id === this.props.comment.id) {
@@ -86,18 +86,18 @@ class PlaygroundComment extends Component {
     }
   };
 
-  handleDelete = event => {
+  handleDelete = (event)=> {
     // 		console.log('%s.handleDelete()', this.constructor.name, event);
     event.preventDefault();
     event.stopPropagation();
 
-    this.setState({ outro: true }, () => {
+    this.setState({ outro: true }, ()=> {
       const { comment } = this.props;
       this.props.onDelete(comment);
     });
   };
 
-  handleKeyDown = event => {
+  handleKeyDown = (event)=> {
     //  console.log('%s.handleKeyDown()', this.constructor.name, event, event.keyCode);
 
     const { comment } = this.state;
@@ -106,7 +106,7 @@ class PlaygroundComment extends Component {
     }
   };
 
-  handleMarkerClick = (event, comment) => {
+  handleMarkerClick = (event, comment)=> {
     // 		console.log('%s.handleMarkerClick()', this.constructor.name, event, comment);
     event.preventDefault();
     event.stopPropagation();
@@ -114,7 +114,7 @@ class PlaygroundComment extends Component {
     this.props.onMarkerClick({ comment });
   };
 
-  handleTextChange = event => {
+  handleTextChange = (event)=> {
     // 		console.log('%s.handleTextChange()', this.constructor.name, event);
 
     const { comment } = this.state;
@@ -123,7 +123,7 @@ class PlaygroundComment extends Component {
     });
   };
 
-  onOutro = (event = null) => {
+  onOutro = (event = null)=> {
     // console.log('%s.onOutro()', this.constructor.name, {
     //   event,
     //   outro: this.state.outro
@@ -194,7 +194,7 @@ class PlaygroundComment extends Component {
   }
 }
 
-const PlaygroundCommentAddPopover = props => {
+const PlaygroundCommentAddPopover = (props)=> {
   // 	console.log('PlaygroundCommentAddPopover()', props);
 
   const { comment, outro } = props;
@@ -210,7 +210,7 @@ const PlaygroundCommentAddPopover = props => {
     <BasePopover
       outro={outro}
       payload={payload}
-      onOutroComplete={() => props.onClose(comment)}
+      onOutroComplete={()=> props.onClose(comment)}
     >
       <div className="playground-comment-add-popover">
         <div className="header-wrapper">
@@ -235,7 +235,7 @@ const PlaygroundCommentAddPopover = props => {
             <div>
               <button
                 className="quiet-button"
-                onClick={event => props.onOutro(event)}
+                onClick={(event)=> props.onOutro(event)}
               >
                 Cancel
               </button>
@@ -256,14 +256,14 @@ const PlaygroundCommentAddPopover = props => {
   );
 };
 
-const PlaygroundCommentMarker = props => {
+const PlaygroundCommentMarker = (props)=> {
   // 	console.log('PlaygroundCommentMarker()', props);
 
   const { ind, comment } = props;
   return (
     <div
       className="playground-comment-marker"
-      onClick={event => props.onClick(event, comment)}
+      onClick={(event)=> props.onClick(event, comment)}
       data-id={comment.id}
     >
       {comment.id === 0 ? (
@@ -279,7 +279,7 @@ const PlaygroundCommentMarker = props => {
   );
 };
 
-const PlaygroundCommentPopover = props => {
+const PlaygroundCommentPopover = (props)=> {
   // 	console.log('PlaygroundCommentPopover()', props);
 
   const { ind, comment, outro } = props;
@@ -295,7 +295,7 @@ const PlaygroundCommentPopover = props => {
     <BasePopover
       outro={outro}
       payload={payload}
-      onOutroComplete={() => props.onClose(comment)}
+      onOutroComplete={()=> props.onClose(comment)}
     >
       <div className="playground-comment-popover">
         <PlaygroundBaseComment
@@ -308,7 +308,7 @@ const PlaygroundCommentPopover = props => {
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, ownProps)=> {
   return {
     activeComment: state.comment
   };

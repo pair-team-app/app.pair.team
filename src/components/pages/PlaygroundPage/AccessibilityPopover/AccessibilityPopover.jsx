@@ -27,7 +27,7 @@ class AccessibilityPopover extends Component {
     // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
   }
 
-  handleEmailChange = event => {
+  handleEmailChange = (event)=> {
     // 		console.log('%s.handleEmailChange()', this.constructor.name);
 
     const email = event.target.value;
@@ -144,7 +144,7 @@ const AccessibilityTreeBranchRule = (props)=> {
 };
 
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, ownProps)=> {
   return {
     component: state.component
   };

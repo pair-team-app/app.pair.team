@@ -34,7 +34,7 @@ class RegisterModal extends Component {
 			axios.post(API_ENDPT_URL, {
 				action  : 'INVITE_LOOKUP',
 				payload : { invite_id : this.props.invite.id }
-			}).then((response) => {
+			}).then((response)=> {
 // 				console.log('INVITE_LOOKUP', response.data);
 				const { invite } = response.data;
 				if (invite.id === this.props.invite.id) {

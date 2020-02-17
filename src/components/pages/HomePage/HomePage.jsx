@@ -86,7 +86,7 @@ class HomePage extends Component {
 					username : email,
 					type     : 'wait_list'
 				}
-			}).then((response) => {
+			}).then((response)=> {
 // 				console.log('REGISTER', response.data);
 				const status = parseInt(response.data.status, 16);
 // 					console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));

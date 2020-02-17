@@ -103,7 +103,7 @@ export function sendToSlack(channel, message, callback=null) {
 	axios.post(API_ENDPT_URL, {
 		action  : 'SLACK_MSG',
 		payload : { channel, message }
-	}).then((response) => {
+	}).then((response)=> {
 		console.log('SLACK_MSG', response.data);
 		if (callback) {
 			callback();
@@ -165,7 +165,7 @@ export function makeAvatar(name, size=32) {
 
 
 export function unzipData(data) {
-//   return (new Promise(((resolve, reject) => {
+//   return (new Promise(((resolve, reject)=> {
 //     const zip = new JSZip();
 //     zip.loadAsync(data, { checkCRC32 : true }).then(({ files })=> {
 //       Object.keys(files).forEach((file)=> {
@@ -177,7 +177,7 @@ export function unzipData(data) {
 //   })));
 
 
-  return ((data) ? new Promise(((resolve, reject) => {
+  return ((data) ? new Promise(((resolve, reject)=> {
     const zip = new JSZip();
     zip.loadAsync(data, { checkCRC32 : true }).then(({ files })=> {
       Object.keys(files).forEach((file)=> {
@@ -186,5 +186,5 @@ export function unzipData(data) {
         });
       });
     }, (e)=> (reject(e)));
-  })) : new Promise((resolve => (resolve(null)))));
+  })) : new Promise(((resolve)=> (resolve(null)))));
 }

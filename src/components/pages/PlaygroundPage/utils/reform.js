@@ -6,7 +6,7 @@ import { unzipData } from '../../../../utils/funcs';
 import { convertStyles } from './css';
 
 
-export const reformComment = (comment, overwrite={}) => {
+export const reformComment = (comment, overwrite={})=> {
   console.log('reformComment()', { comment, overwrite });
 
   const reformed = { ...comment,
@@ -25,7 +25,7 @@ export const reformComment = (comment, overwrite={}) => {
   }
 };
 
-export const reformComponent = async (component, overwrite = {}) => {
+export const reformComponent = async (component, overwrite = {})=> {
   console.log('reformComponent()', { keys : Object.keys(component), component, overwrite });
 
   const PLACEHOLDER_FILL = {
@@ -74,12 +74,12 @@ export const reformComponent = async (component, overwrite = {}) => {
 
   const thumbData = thumb_data && thumb_data.length > 1 ? await unzipData(thumb_data) : Images.genColor(PLACEHOLDER_FILL, { width, height });
 
-  const fullSize = imageData ? await Jimp.read(imageData).then(async image => {
+  const fullSize = ((imageData) ? await Jimp.read(imageData).then( async(image)=> {
     const { data, ...size } = image.bitmap;
     return { ...size };
-  }) : { width, height };
+  }) : { width, height });
 
-  const thumbSize = thumbData ? await Jimp.read(thumbData).then(async image => {
+  const thumbSize = (thumbData) ? await Jimp.read(thumbData).then(async image=> {
     const { data, ...size } = image.bitmap;
     return { ...size };
   }) : null;
@@ -101,7 +101,7 @@ export const reformComponent = async (component, overwrite = {}) => {
     //       width     : width > 0 ? `${width}px` : 'fit-content'
     //     }
     //   : null,
-    comments: comments.map(comment => reformComment(comment)).sort((i, j) => (i.epoch > j.epoch ? -1 : i.epoch < j.epoch ? 1 : 0)),
+    comments: comments.map((comment)=> reformComment(comment)).sort((i, j)=> (i.epoch > j.epoch ? -1 : i.epoch < j.epoch ? 1 : 0)),
     selected: false,
     processed: (imageData && fullSize), //(html && styles && rootStyles) !== null,
     ...overwrite
@@ -117,7 +117,7 @@ export const reformComponent = async (component, overwrite = {}) => {
   return { ...reformed, size: jsonFormatKB(reformed) };
 };
 
-export const reformPlayground = async (playground, summary=false, team=null, overwrite={}) => {
+export const reformPlayground = async (playground, summary=false, team=null, overwrite={})=> {
   console.log('reformPlayground()', playground);
 
   const { build_id, team_id, device_id, title, components, added, last_visited, selected } = playground;

@@ -69,7 +69,7 @@ class RegisterForm extends Component {
 					type     : 'free_user',
 					avatar   : makeAvatar(email)
 				}
-			}).then((response) => {
+			}).then((response)=> {
 // 				console.log('REGISTER', response.data);
 				const status = parseInt(response.data.status, 16);
 // 				console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));

@@ -89,7 +89,7 @@ class ProfileForm extends Component {
 				emailValid    : emailValid,
 				passwordValid : passwordValid,
 				validated     : true
-			}, () => {
+			}, ()=> {
 				if (emailValid && passwordValid) {
 					const { id, username } = this.props.profile;
 					this.props.onSubmit({ id, username, email, password });

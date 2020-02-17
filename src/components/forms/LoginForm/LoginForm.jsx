@@ -66,7 +66,7 @@ class LoginForm extends Component {
 			axios.post(API_ENDPT_URL, {
 				action  : 'LOGIN',
 				payload : { email, password, inviteID }
-			}).then((response) => {
+			}).then((response)=> {
 				const { user } = response.data;
 				const status = parseInt(response.data.status, 16);
 // 				console.log('LOGIN', response.data, parseInt(response.data.status, 16), Bits.contains(status, 0x11), (status & 0x11));

@@ -39,7 +39,7 @@ class BaseOverlay extends Component {
 
     // 		const { completed } = this.state;
     if (prevProps.outro !== this.props.outro && this.props.outro) {
-      this.setState({ completed: false }, () => {
+      this.setState({ completed: false }, ()=> {
         this.onOutro();
       });
 
@@ -65,23 +65,23 @@ class BaseOverlay extends Component {
     }
   }
 
-  handleClose = () => {
+  handleClose = ()=> {
     // 		console.log('%s.handleClose()', this.constructor.name, this.props);
     this.onOutro();
   };
 
-  handleComplete = () => {
+  handleComplete = ()=> {
     //     console.log('%s.handleComplete()', this.constructor.name, this.props, this.state);
 
     const { onComplete } = this.props;
-    this.setState({ completed: true }, () => {
+    this.setState({ completed: true }, ()=> {
       if (onComplete) {
         onComplete();
       }
     });
   };
 
-  onIntro = () => {
+  onIntro = ()=> {
     //     console.log('%s.onIntro()', this.constructor.name, this.props, this.state, this.timeline);
 
     const { tracking, delay } = this.props;
@@ -93,13 +93,13 @@ class BaseOverlay extends Component {
       scale: 0.875,
       ease: Circ.easeOut,
       delay: (delay || 0) * 0.001,
-      onComplete: () => {
+      onComplete: ()=> {
         //         console.log('%s.onIntro().onIntroComplete', this.constructor.name, this.props, this.state, this.timeline);
       }
     });
   };
 
-  onOutro = () => {
+  onOutro = ()=> {
     //  console.log('%s.onOutro()', this.constructor.name, this.props, this.state, this.timeline);
 
     this.timeline = new TimelineMax();
@@ -107,7 +107,7 @@ class BaseOverlay extends Component {
       opacity: 0.9,
       scale: 0.333,
       ease: Back.easeIn,
-      onComplete: () => {
+      onComplete: ()=> {
         //      console.log('%s.onOutro().onOutroComplete', this.constructor.name, this.props, this.state, this.timeline);
         this.handleComplete();
       }
@@ -163,9 +163,9 @@ class BaseOverlay extends Component {
         <div
           className={wrapperClass}
           style={wrapperStyle}
-          onClick={event => event.stopPropagation()}
+          onClick={(event)=> event.stopPropagation()}
           data-bare={bare}
-          ref={element => {
+          ref={(element)=> {
             this.wrapper = element;
           }}
         >

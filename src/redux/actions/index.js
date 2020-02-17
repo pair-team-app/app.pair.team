@@ -12,7 +12,7 @@ import { jsonFormatKB } from '../../consts/formats';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
 
-const logFormat = (action, state, payload = null, meta = '') => {
+const logFormat = (action, state, payload = null, meta = '')=> {
   console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, { payload : payload || {}, meta, state });
 };
 
@@ -20,7 +20,7 @@ const logFormat = (action, state, payload = null, meta = '') => {
 // these are all action CREATORS that rtrn a funct
 export function fetchBuildPlaygrounds(payload=null) {
   const { buildID, playgroundID } = payload;
-  return (dispatch, getState) => {
+  return (dispatch, getState)=> {
     logFormat('fetchBuildPlaygrounds()', getState(), payload);
 
     axios.post(API_ENDPT_URL, {
@@ -28,12 +28,12 @@ export function fetchBuildPlaygrounds(payload=null) {
       payload : {
         build_id : buildID
       }
-    }).then(async response => {
+    }).then(async (response)=> {
       console.log('BUILD_PLAYGROUNDS', response.data);
 
-      const playgrounds = response.data.playgrounds.map(playground => ({ ...playground,
+      const playgrounds = response.data.playgrounds.map(playground=> ({ ...playground,
         size       : jsonFormatKB(playground, true),
-        components : playground.components.map(component => ({ ...component,
+        components : playground.components.map((component)=> ({ ...component,
           id    : component.id,
           title : component.title,
           size  : jsonFormatKB(component, true)
@@ -45,41 +45,41 @@ export function fetchBuildPlaygrounds(payload=null) {
         type    : BUILD_PLAYGROUNDS_LOADED,
         payload : { playgrounds, playgroundID }
       });
-    }).catch(error => {});
+    }).catch((error)=> {});
   };
 }
 
 export function fetchComponentTypes(payload=null) {
-  return (dispatch, getState) => {
+  return (dispatch, getState)=> {
     logFormat('fetchComponentTypes()', getState(), payload);
     
     axios.post(API_ENDPT_URL, {
       action: 'COMPONENT_TYPES',
       payload: null
-    }).then(response => {
+    }).then((response)=> {
       console.log('COMPONENT_TYPES', response.data);
       dispatch({
         type    : COMPONENT_TYPES_LOADED,
         payload : response.data.component_types
       });
-    }).catch(error => {});
+    }).catch((error)=> {});
   };
 }
 
 export function fetchDevices(payload=null) {
-  return (dispatch, getState) => {
+  return (dispatch, getState)=> {
     logFormat('fetchDevices()', getState(), payload);
     
     axios.post(API_ENDPT_URL, {
       action  : 'DEVICES',
       payload : null
-    }).then(response => {
+    }).then((response)=> {
       console.log('DEVICES', response.data);
       dispatch({
         type    : DEVICES_LOADED,
         payload : response.data.devices
       });
-    }).catch(error => {});
+    }).catch((error)=> {});
   };
 }
 
@@ -90,26 +90,25 @@ export function fetchEventGroups(payload=null) {
     axios.post(API_ENDPT_URL, {
       action  : 'EVENT_GROUPS',
       payload : null
-    }).then(response => {
+    }).then((response)=> {
       console.log('EVENT_GROUPS', response.data);
 
       dispatch({
         type    : EVENT_GROUPS_LOADED,
-        payload : response.data.event_groups.map(eventGroup => {
+        payload : response.data.event_groups.map((eventGroup)=> {
           const events = eventGroup.event_types;
           delete eventGroup['event_types'];
 
           return { ...eventGroup, events };
         })
       });
-    }).catch(error => {});
+    }).catch((error)=> {});
   };
 }
 
 export function fetchTeamBuilds(payload=null) {
   return (dispatch, getState)=> {
     const { team } = payload;
-    // const { team } = getState();
 
     logFormat('fetchTeamBuilds()', getState(), payload);
     axios.post(API_ENDPT_URL, {
@@ -118,15 +117,15 @@ export function fetchTeamBuilds(payload=null) {
         team_id   : team.id,
         device_id : 1
       }
-    }).then(response => {
+    }).then((response)=> {
       console.log('TEAM_BUILDS', response.data);
       const { playgrounds } = response.data;
 
       dispatch({
         type    : TEAM_BUILDS_LOADED,
-        payload : { team, playgrounds }
+        payload : { playgrounds }
       });
-    }).catch(error => {});
+    }).catch((error)=> {});
   };
 }
 
@@ -142,16 +141,15 @@ export function fetchPlaygroundComponentGroup(payload=null) {
         type_group_id : typeGroup.id,
         verbose       : true
       }
-    }).then(async response => {
+    }).then(async(response)=> {
     // console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', response.data);
 
       const { components } = response.data;
-      console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS [SIZE]', Object.values(components).map(component => ({
-          id    : component.id,
-          title : component.title,
-          size  : jsonFormatKB(component, true)
-        }))
-      );
+      console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS [SIZE]', Object.values(components).map((component)=> ({
+        id    : component.id,
+        title : component.title,
+        size  : jsonFormatKB(component, true)
+      })));
 
       dispatch({
         type    : TYPE_GROUP_LOADED,
@@ -159,7 +157,7 @@ export function fetchPlaygroundComponentGroup(payload=null) {
           components : Object.values(components) 
         }
       });
-    }).catch(error => {});
+    }).catch((error)=> {});
   };
 }
 
@@ -170,25 +168,25 @@ export function fetchProducts(payload=null) {
     axios.post(API_ENDPT_URL, {
       action  : 'PRODUCTS',
       payload : null
-    }).then(response => {
+    }).then((response)=> {
       console.log('PRODUCTS', response.data);
 
       dispatch({
         type    : PRODUCTS_LOADED,
-        payload : response.data.products.map(product => ({ ...product }).sort((i, j) => (i.price < j.price) ? -1 : (i.price > j.price) ? 1 : 0))
+        payload : response.data.products.map((product)=> ({ ...product }).sort((i, j)=> (i.price < j.price) ? -1 : (i.price > j.price) ? 1 : 0))
       });
-    }).catch(error => {});
+    }).catch((error)=> {});
   };
 }
 
 export function fetchUserProfile(payload=null) {
-  return (dispatch, getState) => {
+  return (dispatch, getState)=> {
     logFormat('fetchUserProfile()', getState(), payload);
 
     axios.post(API_ENDPT_URL, {
       action  : 'USER_PROFILE',
       payload : { user_id: cookie.load('user_id') << 0 }
-    }).then(response => {
+    }).then((response)=> {
       console.log('USER_PROFILE', response.data);
 
       Objects.renameKey(response.data.user, 'github_auth', 'github');
@@ -206,7 +204,7 @@ export function fetchUserProfile(payload=null) {
           paid   : type.includes('paid')
         }
       });
-    }).catch(error => {});
+    }).catch((error)=> {});
   };
 }
 
@@ -220,7 +218,7 @@ export function fetchTeamLookup(payload=null) {
       payload : {
         user_id : userID
       }
-    }).then(response => {
+    }).then((response)=> {
       console.log('TEAM_LOOKUP', response.data);
       const { team } = response.data;
 
@@ -228,13 +226,13 @@ export function fetchTeamLookup(payload=null) {
         dispatch({
           type    : TEAM_LOADED,
           payload : { ...team,
-            members : team.members.map(member => ({ ...member,
+            members : team.members.map((member)=> ({ ...member,
               id : member.id << 0
             }))
           }
         });
       }
-    }).catch(error => {});
+    }).catch((error)=> {});
   };
 }
 
@@ -308,12 +306,12 @@ export function updateUserProfile(payload, force = true) {
   }
 
   if (!force) {
-    return dispatch => {
+    return (dispatch)=> {
       dispatch({ payload, type : USER_PROFILE_UPDATED });
     };
   }
 
-  return dispatch => {
+  return (dispatch)=> {
     if (payload) {
       const { id } = payload;
       axios.post(API_ENDPT_URL, {
@@ -323,7 +321,7 @@ export function updateUserProfile(payload, force = true) {
             user_id : id
 // 					filename : avatar
           }
-        }).then(response => {
+        }).then((response)=> {
           console.log('UPDATE_USER_PROFILE', response.data);
 
           const status = parseInt(response.data.status, 16);
@@ -351,7 +349,7 @@ export function updateUserProfile(payload, force = true) {
               paid     : type.includes('paid')
             }
           });
-        }).catch(error => {});
+        }).catch((error)=> {});
 
     } else {
       cookie.save('user_id', '0', { path : '/', sameSite : false });

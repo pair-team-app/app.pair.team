@@ -20,7 +20,7 @@ export default function packComponents(components) {
 	};
 
 	if (rects.length > 1) {
-		rects.forEach((rect, i) => {
+		rects.forEach((rect, i)=> {
 			let fit = null;
 
 // 			if (node === findNode(rootNode, rect.width, rect.height)) {

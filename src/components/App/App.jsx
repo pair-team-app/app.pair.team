@@ -71,7 +71,7 @@ class App extends Component {
     }
 
     // window.addEventListener('mousemove', this.handleMouseMove);
-    window.onpopstate = event => {
+    window.onpopstate = (event)=> {
       event.preventDefault();
       // 			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
     };
@@ -126,7 +126,7 @@ class App extends Component {
         // pay alert check
         const modal = (team.members.length > 10 && team.type === 'free') || (team.members.length > 50 && team.type !== 'enterprise');
         if (modal && !prevState.modals.stripe && !modals.stripe) {
-          const product = this.props.products.find(({ threshold }) => team.members.length >= threshold);
+          const product = this.props.products.find(({ threshold })=> team.members.length >= threshold);
           this.onToggleModal(Modals.STRIPE, true, { team, product });
         }
       }
@@ -191,13 +191,13 @@ class App extends Component {
     window.removeEventListener('mousemove', this.handleMouseMove);
   }
 
-  handleCookies = () => {
+  handleCookies = ()=> {
     // 		console.log('%s.handleCookies()', this.constructor.name);
     this.onToggleModal(Modals.COOKIES, false);
     cookie.save('cookies', '1', { path: '/', sameSite: false });
   };
 
-  handleDisableAccount = () => {
+  handleDisableAccount = ()=> {
     // 		console.log('%s.handleDisableAccount()', this.constructor.name);
 
     const { profile } = this.props;
@@ -207,17 +207,17 @@ class App extends Component {
         action: 'DISABLE_ACCOUNT',
         payload: { user_id: profile.id }
       })
-      .then(response => {
+      .then((response)=> {
         // 			console.log('DISABLE_ACCOUNT', response.data);
 
         trackEvent('user', 'delete-account');
         this.props.updateUserProfile(null);
         this.props.history.push(Pages.HOME);
       })
-      .catch(error => {});
+      .catch((error)=> {});
   };
 
-  handleGithubAuth = () => {
+  handleGithubAuth = ()=> {
     // 		console.log('%s.handleGithubAuth()', this.constructor.name);
 
     const code = DateTimes.epoch(true);
@@ -226,10 +226,10 @@ class App extends Component {
         action: 'GITHUB_AUTH',
         payload: { code }
       })
-      .then(response => {
+      .then((response)=> {
         // 			console.log('GITHUB_AUTH', response.data);
         const authID = response.data.auth_id << 0;
-        this.setState({ authID }, () => {
+        this.setState({ authID }, ()=> {
           if (
             !this.githubWindow ||
             this.githubWindow.closed ||
@@ -255,15 +255,15 @@ class App extends Component {
               0.5) <<
               0}, left=${((window.screen.width - size.width) * 0.5) << 0}`
           );
-          this.authInterval = setInterval(() => {
+          this.authInterval = setInterval(()=> {
             this.onAuthInterval();
           }, 1000);
         });
       })
-      .catch(error => {});
+      .catch((error)=> {});
   };
 
-  handleGitHubAuthSynced = (profile, register = true) => {
+  handleGitHubAuthSynced = (profile, register = true)=> {
     // 		console.log('%s.handleGitHubAuthSynced()', this.constructor.name, profile, register);
 
     this.props.updateUserProfile(profile);
@@ -277,13 +277,13 @@ class App extends Component {
           type: 'free_user'
         }
       })
-      .then(response => {
+      .then((response)=> {
         // 			console.log('REGISTER', response.data);
       })
-      .catch(error => {});
+      .catch((error)=> {});
   };
 
-  handleLogout = (page = null, modal = null) => {
+  handleLogout = (page = null, modal = null)=> {
     // 		console.log('%s.handleLogout()', this.constructor.name, this.constructor.name, page, modal);
     trackEvent('user', 'sign-out');
 
@@ -298,7 +298,7 @@ class App extends Component {
     }
   };
 
-  handleMouseMove = event => {
+  handleMouseMove = (event)=> {
     // 		console.log('%s.handleMouseMove()', this.constructor.name, this.constructor.name, { x : event.pageX, y : event.pageY });
 
     const { location } = this.props;
@@ -310,12 +310,12 @@ class App extends Component {
     }
   };
 
-  handlePopup = payload => {
+  handlePopup = (payload)=> {
     // 		console.log('%s.handlePopup()', this.constructor.name, payload);
     this.setState({ popup: payload });
   };
 
-  handlePurchaseSubmitted = purchase => {
+  handlePurchaseSubmitted = (purchase)=> {
     // 		console.log('%s.handlePurchaseSubmitted()', this.constructor.name, purchase);
 
     this.onToggleModal(Modals.STRIPE, false);
@@ -325,17 +325,17 @@ class App extends Component {
     this.props.fetchTeamLookup({ userID: profile.id });
   };
 
-  handleThemeToggle = event => {
+  handleThemeToggle = (event)=> {
     // 		console.log('%s.handleThemeToggle()', this.constructor.name, event);
     this.setState({ darkTheme: !this.state.darkTheme });
   };
 
-  handleUpdateUser = profile => {
+  handleUpdateUser = (profile)=> {
     // 		console.log('%s.handleUpdateUser()', this.constructor.name, profile);
     this.props.updateUserProfile(profile);
   };
 
-  onAuthInterval = () => {
+  onAuthInterval = ()=> {
     // 		console.log('%s.onAuthInterval()', this.constructor.name);
 
     if (
@@ -361,7 +361,7 @@ class App extends Component {
           action: 'GITHUB_AUTH_CHECK',
           payload: { authID }
         })
-        .then(response => {
+        .then((response)=> {
           // 				console.log('GITHUB_AUTH_CHECK', response.data);
           const { user } = response.data;
           if (user) {
@@ -373,11 +373,11 @@ class App extends Component {
             this.handleGitHubAuthSynced(user);
           }
         })
-        .catch(error => {});
+        .catch((error)=> {});
     }
   };
 
-  onToggleModal = (uri, show = true, payload = null) => {
+  onToggleModal = (uri, show = true, payload = null)=> {
     // 		console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
     const { modals } = this.state;
 
@@ -530,7 +530,7 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, ownProps)=> {
   return {
     darkThemed: state.darkThemed,
     componentTypes: state.componentTypes,
@@ -546,18 +546,18 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch)=> {
   return {
-    fetchTeamLookup: payload => dispatch(fetchTeamLookup(payload)),
-    fetchTeamBuilds: payload => dispatch(fetchTeamBuilds(payload)),
-    fetchBuildPlaygrounds: payload => dispatch(fetchBuildPlaygrounds(payload)),
-    fetchUserProfile: () => dispatch(fetchUserProfile()),
-    setTypeGroup: (payload)=> dispatch(setTypeGroup(payload)),
-    setPlayground: payload => dispatch(setPlayground(payload)),
-    setComponent:payload=> dispatch(setComponent(payload)),
-    updateMouseCoords: payload => dispatch(updateMouseCoords(payload)),
-    updateMatchPath: payload=> dispatch(updateMatchPath(payload)),
-    updateUserProfile: profile => dispatch(updateUserProfile(profile))
+    fetchTeamLookup       : (payload)=> dispatch(fetchTeamLookup(payload)),
+    fetchTeamBuilds       : (payload)=> dispatch(fetchTeamBuilds(payload)),
+    fetchBuildPlaygrounds : (payload)=> dispatch(fetchBuildPlaygrounds(payload)),
+    fetchUserProfile      : ()=> dispatch(fetchUserProfile()),
+    setTypeGroup          : (payload)=> dispatch(setTypeGroup(payload)),
+    setPlayground         : (payload)=> dispatch(setPlayground(payload)),
+    setComponent          : payload=> dispatch(setComponent(payload)),
+    updateMouseCoords     : (payload)=> dispatch(updateMouseCoords(payload)),
+    updateMatchPath       : (payload)=> dispatch(updateMatchPath(payload)),
+    updateUserProfile     : (profile)=> dispatch(updateUserProfile(profile))
   };
 };
 

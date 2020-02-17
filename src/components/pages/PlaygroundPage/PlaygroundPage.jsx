@@ -95,7 +95,7 @@ class PlaygroundPage extends Component {
       }
 
       if (typeGroupSlug && componentTypes) {
-        typeGroup = componentTypes.find(({ key }) => key === typeGroupSlug);
+        typeGroup = componentTypes.find(({ key })=> key === typeGroupSlug);
 
         if (typeGroup) {
           typeGroup.selected = true;
@@ -133,7 +133,7 @@ class PlaygroundPage extends Component {
           }
         }
       } else {
-        typeGroup = componentTypes.find(({ key }) => key === 'views');
+        typeGroup = componentTypes.find(({ key })=> key === 'views');
         url = url.replace(new RegExp(`/${typeGroupSlug}.*$`, 'g'), '/views');
       }
 
@@ -296,7 +296,7 @@ class PlaygroundPage extends Component {
     component = null,
     position = { x: 0, y: 0 },
     content = null
-  }) => {
+  })=> {
     // 		console.log('%s.handleAddComment()', this.constructor.name, { component, position, content });
     trackEvent('button', 'add-comment');
 
@@ -311,16 +311,16 @@ class PlaygroundPage extends Component {
           component_id: component.id
         }
       })
-      .then(response => {
+      .then((response)=> {
         const comment = reformComment(response.data.comment);
         // 			console.log('ADD_COMMENT', response.data, comment);
 
-        component.comments = [...component.comments, comment].sort((i, ii) =>
+        component.comments = [...component.comments, comment].sort((i, ii)=>
           i.epoch > ii.epoch ? -1 : i.epoch < ii.epoch ? 1 : 0
         );
         const playground = {
           ...this.props.playground,
-          components: this.props.playground.components.map(item =>
+          components: this.props.playground.components.map((item)=>
             item.id === component.id ? component : item
           )
         };
@@ -331,10 +331,10 @@ class PlaygroundPage extends Component {
 
         this.setState({ cursor: false });
       })
-      .catch(error => {});
+      .catch((error)=> {});
   };
 
-  handleBreadCrumbClick = ({ type = null, payload = null }) => {
+  handleBreadCrumbClick = ({ type = null, payload = null })=> {
     //     console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
 
     if (type === BreadcrumbTypes.PLAYGROUND) {
@@ -369,7 +369,7 @@ class PlaygroundPage extends Component {
     }
   };
 
-  handleCommentMarkerClick = ({ comment = null }) => {
+  handleCommentMarkerClick = ({ comment = null })=> {
     const { playground } = this.props;
     const component = componentFromComment(playground.components, comment);
     //
@@ -384,7 +384,7 @@ class PlaygroundPage extends Component {
     this.props.setComment(comment);
   };
 
-  handleComponentClick = ({ component = null }) => {
+  handleComponentClick = ({ component = null })=> {
     //.log('%s.handleComponentClick()', this.constructor.name, { component });
 
     // 		if (!component.selected) {
@@ -394,12 +394,12 @@ class PlaygroundPage extends Component {
     //     }
   };
 
-  handleComponentMenuShow = ({ component = null }) => {
+  handleComponentMenuShow = ({ component = null })=> {
     //.log('%s.handleComponentMenuShow()', this.constructor.name, { component });
     //     this.props.setComponent(component);
   };
 
-  handleComponentMenuItem = ({ menuItem = null }) => {
+  handleComponentMenuItem = ({ menuItem = null })=> {
     //.log('%s.handleComponentMenuItem()', this.constructor.name, { menuItem });
 
     //     this.props.setComponent(component);
@@ -420,7 +420,7 @@ class PlaygroundPage extends Component {
     }
   };
 
-  handleComponentPopoverClose = () => {
+  handleComponentPopoverClose = ()=> {
     //.log('%s.handleComponentPopoverClose()', this.constructor.name);
 
     const pushURL = /\/comments\/.*$/.test(this.props.pathname)
@@ -438,7 +438,7 @@ class PlaygroundPage extends Component {
     }
   };
 
-  handleDeleteComment = comment => {
+  handleDeleteComment = (comment)=> {
     //.log('%s.handleDeleteComment()', this.constructor.name, comment.id);
     trackEvent('button', 'delete-comment');
 
@@ -450,14 +450,14 @@ class PlaygroundPage extends Component {
           state: 'deleted'
         }
       })
-      .then(response => {
+      .then((response)=> {
         // 			console.log('UPDATE_COMMENT', response.data);
 
         const component = {
           ...this.props.component,
           comments: this.props.component.comments
-            .filter(({ id }) => id !== comment.id)
-            .sort((i, ii) =>
+            .filter(({ id })=> id !== comment.id)
+            .sort((i, ii)=>
               i.epoch > ii.epoch ? -1 : i.epoch < ii.epoch ? 1 : 0
             )
         };
@@ -467,10 +467,10 @@ class PlaygroundPage extends Component {
           this.props.history.push(`${this.props.pathname}/comments`);
         }
       })
-      .catch(error => {});
+      .catch((error)=> {});
   };
 
-  handlePlaygroundClick = playground => {
+  handlePlaygroundClick = (playground)=> {
     console.log('%s.handlePlaygroundClick()', this.constructor.name, playground);
 
     const { team } = this.props;
@@ -490,7 +490,7 @@ class PlaygroundPage extends Component {
     this.props.setComment(null);
   };
 
-  handleNavGroupItemClick = typeGroup => {
+  handleNavGroupItemClick = (typeGroup)=> {
     //console.log('%s.handleNavGroupItemClick()', this.constructor.name, typeGroup);
 
     typeGroup.selected = !typeGroup.selected;
@@ -501,14 +501,14 @@ class PlaygroundPage extends Component {
     this.props.setComment(null);
   };
 
-  handleNavTypeItemClick = (typeGroup, typeItem) => {
+  handleNavTypeItemClick = (typeGroup, typeItem)=> {
     //.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
 
     this.props.setComponent(typeItem);
     this.props.setComment(null);
   };
 
-  handleSettingsItem = itemType => {
+  handleSettingsItem = (itemType)=> {
     //.log('%s.handleSettingsItem()', this.constructor.name, itemType);
 
     if (itemType === SettingsMenuItemTypes.DELETE_ACCT) {
@@ -518,11 +518,11 @@ class PlaygroundPage extends Component {
     }
   };
 
-  handleToggleAccessibility = () => {
+  handleToggleAccessibility = ()=> {
     //.log('%s.handleToggleAccessibility()', this.constructor.name, this.state.accessibility);
 
     const { comment } = this.props;
-    setTimeout(() => {
+    setTimeout(()=> {
       const { accessibility } = this.state;
       this.setState({
         accessibility: !accessibility,
@@ -531,14 +531,14 @@ class PlaygroundPage extends Component {
     }, ((comment !== null) << 0) * 150);
   };
 
-  handleToggleCommentCursor = event => {
+  handleToggleCommentCursor = (event)=> {
     //.log('%s.handleToggleCommentCursor()', this.constructor.name, event, this.state.cursor, !this.state.cursor);
 
     const { cursor } = this.state;
     this.setState({ cursor: !cursor });
   };
 
-  handleTogglePlayground = () => {
+  handleTogglePlayground = ()=> {
     //.log('%s.handleTogglePlayground()', this.constructor.name, this.props.playground.deviceID);
 
     trackEvent(
@@ -548,7 +548,7 @@ class PlaygroundPage extends Component {
 
     const { playgrounds } = this.props;
     const playground = playgrounds.find(
-      ({ deviceID }) => deviceID !== this.props.playground.deviceID
+      ({ deviceID })=> deviceID !== this.props.playground.deviceID
     );
     if (playground) {
       this.props.setPlayground(playground);
@@ -559,7 +559,7 @@ class PlaygroundPage extends Component {
     }
   };
 
-  handleStripeModal = () => {
+  handleStripeModal = ()=> {
     //.log('%s.handleStripeModal()', this.constructor.name);
 
     const { team, products } = this.props;
@@ -567,24 +567,24 @@ class PlaygroundPage extends Component {
     this.props.onModal(Modals.STRIPE, { team, product });
   };
 
-  onFetchTypeGroupComponents = typeGroup => {
+  onFetchTypeGroupComponents = (typeGroup)=> {
     // const { playground } = this.props;
     // //  console.log('%s.onFetchTypeGroupComponents()', this.constructor.name, { typeGroup, components : componentsFromTypeGroup(playground.components, typeGroup) });
     // if (!typeGroupComponentsProcessed(typeGroup, playground.components)) {
-    //   this.setState({ processing: true }, () => {
+    //   this.setState({ processing: true }, ()=> {
     //     this.props.fetchPlaygroundComponentGroup({ playground, typeGroup });
     //   });
     // }
   };
 
-  onFetchBuildPlaygrounds = (buildID, playgroundID = null) => {
+  onFetchBuildPlaygrounds = (buildID, playgroundID = null)=> {
     //  console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
 
     this.setState(
       {
         fetching: true
       },
-      () => {
+      ()=> {
         // this.props.fetchBuildPlaygrounds({ buildID, playgroundID });
       }
     );
@@ -631,7 +631,7 @@ class PlaygroundPage extends Component {
               popover={share}
               onBreadCrumbClick={this.handleBreadCrumbClick}
               onPopup={this.props.onPopup}
-              onSharePopoverClose={() => this.setState({ share: false })}
+              onSharePopoverClose={()=> this.setState({ share: false })}
               onSettingsItem={this.handleSettingsItem}
               onLogout={this.props.onLogout}
             />
@@ -671,7 +671,7 @@ class PlaygroundPage extends Component {
 
             {accessibility && (
               <AccessibilityPopover
-                onClose={() => this.setState({ accessibility: false })}
+                onClose={()=> this.setState({ accessibility: false })}
               />
             )}
           </div>
@@ -687,7 +687,7 @@ class PlaygroundPage extends Component {
           <PlaygroundProcessingOverlay
             root={true}
             outro={playground !== null}
-            onComplete={() => this.setState({ fetching: false })}
+            onComplete={()=> this.setState({ fetching: false })}
           />
         )}
         {/*{(fetching) && (<PlaygroundProcessingOverlay root={true} outro={false} onComplete={()=> null} />)}*/}
@@ -696,7 +696,7 @@ class PlaygroundPage extends Component {
           <PlaygroundProcessingOverlay
             root={false}
             outro={component.imageData}
-            onComplete={() => this.setState({ processing: false })}
+            onComplete={()=> this.setState({ processing: false })}
           />
         )}
         {/*<PlaygroundProcessingOverlay outro={!processing} />*/}
@@ -705,32 +705,31 @@ class PlaygroundPage extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch)=> {
   return {
-    fetchBuildPlaygrounds: payload => dispatch(fetchBuildPlaygrounds(payload)),
-    fetchPlaygroundComponentGroup: payload =>
-      dispatch(fetchPlaygroundComponentGroup(payload)),
-    setPlayground: payload => dispatch(setPlayground(payload)),
-    setTypeGroup: payload => dispatch(setTypeGroup(payload)),
-    setComponent: payload => dispatch(setComponent(payload)),
-    setComment: payload => dispatch(setComment(payload))
+    fetchBuildPlaygrounds         : (payload)=> dispatch(fetchBuildPlaygrounds(payload)),
+    fetchPlaygroundComponentGroup : (payload)=> dispatch(fetchPlaygroundComponentGroup(payload)),
+    setPlayground                 : (payload)=> dispatch(setPlayground(payload)),
+    setTypeGroup                  : (payload)=> dispatch(setTypeGroup(payload)),
+    setComponent                  : (payload)=> dispatch(setComponent(payload)),
+    setComment                    : (payload)=> dispatch(setComment(payload))
   };
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, ownProps)=> {
   return {
-    playgrounds: state.playgrounds,
-    playground: state.playground,
-    typeGroup: state.typeGroup,
-    component: state.component,
-    matchPath: state.matchPath,
-    comment: state.comment,
-    profile: state.userProfile,
-    componentTypes: state.componentTypes,
-    eventGroups: state.eventGroups,
-    team: state.team,
-    products: state.products,
-    pathname: state.pathname
+    playgrounds    : state.playgrounds,
+    playground     : state.playground,
+    typeGroup      : state.typeGroup,
+    component      : state.component,
+    matchPath      : state.matchPath,
+    comment        : state.comment,
+    profile        : state.userProfile,
+    componentTypes : state.componentTypes,
+    eventGroups    : state.eventGroups,
+    team           : state.team,
+    products       : state.products,
+    pathname       : state.pathname
   };
 };
 

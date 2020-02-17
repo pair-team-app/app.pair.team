@@ -40,8 +40,8 @@ class PlaygroundNavPanel extends Component {
     //   (this.props.typeGroup === prevProps.typeGroup &&
     //     component !== prevProps.component)
     // ) {
-    //   const typeGroups = this.state.typeGroups.map(typeGroup => {
-    //     const items = typeGroup.items.map(item => ({
+    //   const typeGroups = (this.state.typeGroups.map(typeGroup)=> {
+    //     const items = (typeGroup.items.map(item)=> ({
     //       ...item,
     //       selected: component && item.id === component.id
     //     }));
@@ -57,8 +57,8 @@ class PlaygroundNavPanel extends Component {
     // }
 
     // if (component && component !== prevProps.component) {
-    //   const typeGroups = this.state.typeGroups.map(typeGroup => {
-    //     const items = typeGroup.items.map(item => ({
+    //   const typeGroups = (this.state.typeGroups.map(typeGroup)=> {
+    //     const items = (typeGroup.items.map(item)=> ({
     //       ...item,
     //       selected: component && item.id === component.id
     //     }));
@@ -74,35 +74,35 @@ class PlaygroundNavPanel extends Component {
     // }
   }
 
-  handleProjectClick = project => {
+  handleProjectClick = (project)=> {
     		console.log('%s.handleProjectClick()', this.constructor.name, project);
     this.props.onPlaygroundClick(project);
   };
 
-  handleTypeGroupClick = typeGroup => {
+  handleTypeGroupClick = (typeGroup)=> {
     // 		console.log('%s.handleTypeGroupClick()', this.constructor.name, typeGroup);
     this.props.onTypeGroupClick(typeGroup);
   };
 
-  handleTypeItemClick = (typeGroup, typeItem) => {
+  handleTypeItemClick = (typeGroup, typeItem)=> {
     // 		console.log('%s.handleTypeItemClick()', this.constructor.name, typeGroup, typeItem);
     this.props.onTypeItemClick(typeGroup, typeItem);
   };
 
-  onPopulateTree = () => {
+  onPopulateTree = ()=> {
     		console.log('%s.onPopulateTree()', this.constructor.name, { props : this.props });
 
     const { componentTypes, playgrounds, component } = this.props;
 
     const projects = playgrounds.map((playground)=> {
-      const typeIDs = playground.components.map(({ typeID }) => typeID);
+      const typeIDs = playground.components.map(({ typeID })=> typeID);
 
       const typeGroups = componentTypes
-        .filter(({ id }) => typeIDs.includes(id))
-        .map(typeGroup => {
+        .filter(({ id })=> typeIDs.includes(id))
+        .map((typeGroup)=> {
           const items = playground.components
-            .filter(({ typeID }) => typeID === typeGroup.id)
-            .map(item => ({
+            .filter(({ typeID })=> typeID === typeGroup.id)
+            .map((item)=> ({
               ...item,
               selected: component && item.id === component.id
             }));
@@ -113,7 +113,7 @@ class PlaygroundNavPanel extends Component {
             selected:
               this.props.typeGroup &&
               (typeGroup.id === this.props.typeGroup.id ||
-                items.map(({ selected }) => selected).includes(true))
+                items.map(({ selected })=> selected).includes(true))
           };
         });
 
@@ -144,7 +144,7 @@ class PlaygroundNavPanel extends Component {
         {playgrounds && (
           <div className="projects-wrapper">
             <div className="projects-wrapper-header">Projects</div>
-            {projects.map((project, i) => (
+            {projects.map((project, i)=> (
               <NavPanelProject key={i} project={project} onProjectClick={this.handleProjectClick} />
             ))}
           </div>
@@ -154,10 +154,10 @@ class PlaygroundNavPanel extends Component {
   }
 }
 
-const PlaygroundNavPanelHeader = props => {
+const PlaygroundNavPanelHeader = (props)=> {
   // 	console.log('PlaygroundNavPanelHeader()', props);
 
-  const handleClick = event => {
+  const handleClick = (event)=> {
     //  console.log('%s.handleClick()', 'PlaygroundNavPanelHeader');
     event.preventDefault();
 
@@ -165,7 +165,7 @@ const PlaygroundNavPanelHeader = props => {
     const url = `http://${domain}`;
 
     trackEvent('team-name', domain);
-    trackOutbound(url, () => {
+    trackOutbound(url, ()=> {
       // 			window.open(url);
       // 			props.onClick(event);
     });
@@ -186,7 +186,7 @@ const PlaygroundNavPanelHeader = props => {
         to={`http://${team.domain}`}
         target="_blank"
         className="playground-nav-panel-header-title"
-        onClick={event => handleClick(event)}
+        onClick={(event)=> handleClick(event)}
       >
         {team.title}
       </NavLink>
@@ -194,7 +194,7 @@ const PlaygroundNavPanelHeader = props => {
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, ownProps)=> {
   return {
     componentTypes: state.componentTypes,
     team: state.team,

@@ -37,7 +37,7 @@ class PlaygroundProcessingOverlay extends Component {
           typeGroup
         );
         const processed = components.filter(
-          ({ html, styles, rootStyles }) => html && styles && rootStyles
+          ({ html, styles, rootStyles })=> html && styles && rootStyles
         ).length;
 
         if (components.length === processed) {
@@ -65,12 +65,12 @@ class PlaygroundProcessingOverlay extends Component {
           typeGroup
         );
         const processed = components.filter(
-          ({ html, styles, rootStyles }) => html && styles && rootStyles
+          ({ html, styles, rootStyles })=> html && styles && rootStyles
         ).length;
 
         //      console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, root, outro, typeGroup : typeGroup.id, total, processed : this.state.processed, components : componentsFromTypeGroup(playground.components, typeGroup)});
 
-        const onReset = () => {
+        const onReset = ()=> {
           //        console.log('%s.componentDidUpdate().onReset()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, root, outro, typeGroup : typeGroup.id, total, processed : this.state.processed, components : componentsFromTypeGroup(playground.components, typeGroup)});
           this.setState(
             {
@@ -79,13 +79,13 @@ class PlaygroundProcessingOverlay extends Component {
               total: components.length,
               completed: false
             },
-            () => {
+            ()=> {
               //          console.log('RESET LIST', { components : components.map(({ html, styles, rootStyles })=> ({ html, styles, rootStyles })), processed : components.filter(({ html, styles, rootStyles })=> (html && styles && rootStyles)), total : this.state.total });
             }
           );
         };
 
-        const onOutro = () => {
+        const onOutro = ()=> {
           //        console.log('%s.componentDidUpdate().onOutro()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, root, outro, typeGroup : typeGroup.id, total, processed : this.state.processed, components : componentsFromTypeGroup(playground.components, typeGroup)});
           //- outro fix here
           //           if (root) {
@@ -116,14 +116,14 @@ class PlaygroundProcessingOverlay extends Component {
     }
   }
 
-  handleComplete = () => {
+  handleComplete = ()=> {
     // 		console.log('%s.handleComplete()', this.constructor.name, this.state);
     this.setState(
       {
         outro: false,
         completed: true
       },
-      () => {
+      ()=> {
         this.props.onComplete();
       }
     );
@@ -156,7 +156,7 @@ class PlaygroundProcessingOverlay extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, ownProps)=> {
   return {
     playground: state.playground,
     typeGroup: state.typeGroup

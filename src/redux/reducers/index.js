@@ -35,7 +35,7 @@ const initialState = {
   }
 };
 
-const logFormat = (state, action, meta = '') => {
+const logFormat = (state, action, meta = '')=> {
   const { type, payload } = action;
 
   if (type !== UPDATE_MOUSE_COORDS) {
@@ -82,12 +82,12 @@ function rootReducer(state = initialState, action) {
 
     case TYPE_GROUP_LOADED:
       const storePlayground = state.playgrounds.find(
-        ({ id }) => id === payload.playground.id
+        ({ id })=> id === payload.playground.id
       );
 
       return Object.assign({}, state, {
         //       	playgrounds : state.playgrounds.map((playground)=> ((playground.id === payload.playground.id) ? payload.playground : playground)),
-        playgrounds: state.playgrounds.map(playground =>
+        playgrounds: state.playgrounds.map((playground)=>
           playground.id === payload.playground.id
             ? payload.playground
             : playground
@@ -98,14 +98,14 @@ function rootReducer(state = initialState, action) {
           components: storePlayground.components
             .concat(payload.components)
             .reduce(
-              (acc, inc) => [...acc.filter(({ id }) => id !== inc.id), inc],
+              (acc, inc)=> [...acc.filter(({ id })=> id !== inc.id), inc],
               []
             )
         },
         
         component:
           payload.components.find(
-            ({ id }) => state.component && id === state.component.id
+            ({ id })=> state.component && id === state.component.id
           ) || state.component
       });
 
@@ -122,7 +122,7 @@ function rootReducer(state = initialState, action) {
 
     case TEAM_BUILDS_LOADED:
       playgrounds = payload.playgrounds;
-      // playgrounds = payload.playgrounds.map(playground => {
+      // playgrounds = (payload.playgrounds.map(playground)=> {
       //     console.log('=;=;=;=;=;=;=;=;= LOADED EVENT IN REDUCER', { payload : action.payload, playgrounds })
 
       //     return storePlayground === null
@@ -132,8 +132,8 @@ function rootReducer(state = initialState, action) {
       //           components: storePlayground.components
       //             .concat(payload.components)
       //             .reduce(
-      //               (acc, inc) => [
-      //                 ...acc.filter(({ id }) => id !== inc.id),
+      //               (acc, inc)=> [
+      //                 ...acc.filter(({ id })=> id !== inc.id),
       //                 inc
       //               ],
       //               []
@@ -192,10 +192,10 @@ function rootReducer(state = initialState, action) {
       playgrounds = action.payload.playgrounds;
 
       const playground = playgroundID
-        ? playgrounds.find(({ id }) => id === playgroundID)
-        : playgrounds.find(({ deviceID }) => deviceID !== 1) || playgrounds[0];
+        ? playgrounds.find(({ id })=> id === playgroundID)
+        : playgrounds.find(({ deviceID })=> deviceID !== 1) || playgrounds[0];
       const component = state.component
-        ? playground.components.find(({ id }) => id === state.component.id)
+        ? playground.components.find(({ id })=> id === state.component.id)
         : null;
 
       return Object.assign({}, state, { playgrounds, playground, component });
@@ -243,10 +243,10 @@ function rootReducer(state = initialState, action) {
         uploadSlices: Object.assign(
           {},
           state.uploadSlices.findIndex(
-            artboard => artboard.artboardID === artboardID
+            (artboard)=> artboard.artboardID === artboardID
           ) > -1
             ? state.uploadSlices.filter(
-                artboard => artboard.artboardID === artboardID
+                (artboard)=> artboard.artboardID === artboardID
               )
             : state.uploadSlices,
           { artboardID, slices }
@@ -259,7 +259,7 @@ function rootReducer(state = initialState, action) {
           ? state.homeArtboards
               .concat(action.payload)
               .reduce(
-                (acc, inc) => [...acc.filter(({ id }) => id !== inc.id), inc],
+                (acc, inc)=> [...acc.filter(({ id })=> id !== inc.id), inc],
                 []
               )
           : []

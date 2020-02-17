@@ -31,13 +31,13 @@ class SharePopover extends Component {
     // 		}
   }
 
-  handleClipboardCopy = () => {
+  handleClipboardCopy = ()=> {
     // 		console.log('%s.handleClipboardCopy()', this.constructor.name, this.props);
 
     trackEvent('button', `copy-share-url`);
     // 		this.setState({ outro : true });
 
-    this.setState({ outro: true }, () => {
+    this.setState({ outro: true }, ()=> {
       this.props.onPopup({
         type: POPUP_TYPE_OK,
         content: `Pair URL has been copied to your clipboard!`,
@@ -47,7 +47,7 @@ class SharePopover extends Component {
     });
   };
 
-  handleEmailChange = event => {
+  handleEmailChange = (event)=> {
     // 		console.log('%s.handleEmailChange()', this.constructor.name);
 
     const email = event.target.value;
@@ -55,7 +55,7 @@ class SharePopover extends Component {
     this.setState({ email, emailValid });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event)=> {
     // 		console.log('%s.handleSubmit()', this.constructor.name);
     event.preventDefault();
 
@@ -74,7 +74,7 @@ class SharePopover extends Component {
             user_id: profile.id
           }
         })
-        .then(response => {
+        .then((response)=> {
           console.log('SHARE_LINK', response.data);
           const success = parseInt(response.data.success, 16);
 
@@ -88,7 +88,7 @@ class SharePopover extends Component {
             duration: 3333
           });
         })
-        .catch(error => {});
+        .catch((error)=> {});
     } else {
       this.setState({ emailValid: false });
     }
@@ -130,7 +130,7 @@ class SharePopover extends Component {
                 type="text"
                 value={email}
                 placeholder="Enter Email Address"
-                onChange={event => this.handleEmailChange(event)}
+                onChange={(event)=> this.handleEmailChange(event)}
               />
               <button
                 disabled={!emailValid}
@@ -145,7 +145,7 @@ class SharePopover extends Component {
               >
                 <button
                   disabled={false}
-                  onClick={event => event.preventDefault()}
+                  onClick={(event)=> event.preventDefault()}
                 >
                   Copy URL
                 </button>
@@ -158,7 +158,7 @@ class SharePopover extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, ownProps)=> {
   return {
     profile: state.userProfile,
     playground: state.playground,

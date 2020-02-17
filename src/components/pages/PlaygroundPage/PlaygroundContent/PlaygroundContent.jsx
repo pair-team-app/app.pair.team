@@ -38,7 +38,7 @@ class PlaygroundContent extends Component {
     // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
   }
 
-  calcBounds = rect => {
+  calcBounds = (rect)=> {
     // console.log('%s.calcBounds()', this.constructor.name, { rect });
 
     const { component } = this.props;
@@ -115,15 +115,15 @@ class PlaygroundContent extends Component {
 
   
 
-  handleComponentPopoverClose = () => {
+  handleComponentPopoverClose = ()=> {
     console.log('%s.handleComponentPopoverClose()', this.constructor.name);
 
-    this.setState({ popover: false }, () => {
+    this.setState({ popover: false }, ()=> {
       this.props.onPopoverClose();
     });
   };
 
-  handleContentClick = (event, component) => {
+  handleContentClick = (event, component)=> {
     // 		console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target }, { clientX : event.clientX, clientY : event.clientY }, component);
     //  console.log('%s.handleContentClick()', this.constructor.name, component);
 
@@ -212,7 +212,7 @@ class PlaygroundContent extends Component {
   }
 }
 
-const CommentPinCursor = props => {
+const CommentPinCursor = (props)=> {
   // 	console.log('CommentPinCursor()', props);
 
   const { position } = props;
@@ -228,7 +228,7 @@ const CommentPinCursor = props => {
   );
 };
 
-const PlaygroundComponent = props => {
+const PlaygroundComponent = (props)=> {
   // console.log('PlaygroundComponent()', props);
 
   const {
@@ -294,7 +294,7 @@ const PlaygroundComponent = props => {
       <div
         className="playground-component"
         data-processed={processed}
-        onClick={event => props.onItemClick(event, component)}
+        onClick={(event)=> props.onItemClick(event, component)}
         style={{ width: `${width}px`, height: `${height}px` }}
       >
         <h5 className="component-title">{title}</h5>
@@ -303,7 +303,7 @@ const PlaygroundComponent = props => {
           disable={!processed}
           id="component"
           component={component}
-          collect={props => ({ component: props.component })}
+          collect={(props)=> ({ component: props.component })}
           disableIfShiftIsPressed={true}
         >
 
@@ -337,8 +337,8 @@ const PlaygroundComponent = props => {
                   ]
                 : comments
               )
-                .filter(({ type }) => type !== 'init')
-                .map((comm, i) => {
+                .filter(({ type })=> type !== 'init')
+                .map((comm, i)=> {
                   return (
                     <PlaygroundComment
                       key={i}
@@ -370,13 +370,13 @@ const PlaygroundComponent = props => {
   );
 };
 
-const PlaygroundComponentsGrid = props => {
+const PlaygroundComponentsGrid = (props)=> {
   //   console.log('PlaygroundComponentsGrid()', props);
 
   const { typeGroup, components } = props;
   return (
     <div className="playground-components-grid">
-      {components.map((component, i) => {
+      {components.map((component, i)=> {
         const { id, thumbData, tagName, processed } = component;
         const title =
           component.title === tagName
@@ -387,7 +387,7 @@ const PlaygroundComponentsGrid = props => {
             key={i}
             className="playground-component-wrapper components-grid-item"
             data-id={id}
-            onClick={event => props.onItemClick(event, component)}
+            onClick={(event)=> props.onItemClick(event, component)}
           >
             <h5 className="component-title">{title}</h5>
             <div className="content-wrapper" data-loaded={processed}>
@@ -405,7 +405,7 @@ const PlaygroundComponentsGrid = props => {
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, ownProps)=> {
   return {
     mouse: state.mouse,
     profile: state.userProfile,
@@ -423,7 +423,7 @@ export default connect(mapStateToProps)(PlaygroundContent);
 const obj = {a: 1, b: 2, c: 3}
 const result = Object.fromEntries(
 Object.entries(obj).map(
-  ([key, value]) => [key, value * 2]
+  ([key, value])=> [key, value * 2]
 ))
 // {a: 2, b: 4, c: 6}
 */

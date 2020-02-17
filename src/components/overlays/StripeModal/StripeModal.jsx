@@ -94,7 +94,7 @@ class StripeModal extends Component {
 					token_id    : token.id,
 					product_ids : productIDs
 				}
-			}).then((response) => {
+			}).then((response)=> {
 // 				console.log('MAKE_PURCHASE', response.data);
 				const { purchase, error } = response.data;
 				trackEvent('purchase', (error) ? 'error' : 'success');

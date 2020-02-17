@@ -46,7 +46,7 @@ export default function onClickOutsideHOC(WrappedComponent, config) {
       stopPropagation: false,
     };
 
-    static getClass = () => (WrappedComponent.getClass ? WrappedComponent.getClass() : WrappedComponent);
+    static getClass = ()=> (WrappedComponent.getClass ? WrappedComponent.getClass() : WrappedComponent);
 
     constructor(props) {
       super(props);
@@ -64,7 +64,7 @@ export default function onClickOutsideHOC(WrappedComponent, config) {
       return ref.getInstance ? ref.getInstance() : ref;
     }
 
-    __outsideClickHandler = event => {
+    __outsideClickHandler = (event)=> {
       if (typeof this.__clickOutsideHandlerProp === 'function') {
         this.__clickOutsideHandlerProp(event);
         return;
@@ -87,7 +87,7 @@ export default function onClickOutsideHOC(WrappedComponent, config) {
       );
     };
 
-    __getComponentNode = () => {
+    __getComponentNode = ()=> {
       const instance = this.getInstance();
       if (config && typeof config.setClickOutsideRef === 'function') {
         return config.setClickOutsideRef()(instance);
@@ -144,7 +144,7 @@ export default function onClickOutsideHOC(WrappedComponent, config) {
      * Can be called to explicitly enable event listening
      * for clicks and touches outside of this element.
      */
-    enableOnClickOutside = () => {
+    enableOnClickOutside = ()=> {
       if (typeof document === 'undefined' || enabledInstances[this._uid]) {
         return;
       }
@@ -160,7 +160,7 @@ export default function onClickOutsideHOC(WrappedComponent, config) {
         events = [events];
       }
 
-      handlersMap[this._uid] = event => {
+      handlersMap[this._uid] = (event)=> {
         console.log('<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>');
         console.log('|:|+|:|·|:|+|:|·|:|+|:|>>', { props : this.props, event }, '<<|:|+|:|·|:|+|:|·|:|+|:|');
         console.log('<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>');
@@ -186,7 +186,7 @@ export default function onClickOutsideHOC(WrappedComponent, config) {
         this.__outsideClickHandler(event);
       };
 
-      events.forEach(eventName => {
+      events.forEach((eventName)=> {
         document.addEventListener(eventName, handlersMap[this._uid], getEventHandlerOptions(this, eventName));
       });
     };
@@ -195,7 +195,7 @@ export default function onClickOutsideHOC(WrappedComponent, config) {
      * Can be called to explicitly disable event listening
      * for clicks and touches outside of this element.
      */
-    disableOnClickOutside = () => {
+    disableOnClickOutside = ()=> {
       delete enabledInstances[this._uid];
       const fn = handlersMap[this._uid];
 
@@ -204,14 +204,14 @@ export default function onClickOutsideHOC(WrappedComponent, config) {
         if (!events.forEach) {
           events = [events];
         }
-        events.forEach(eventName =>
+        events.forEach((eventName)=>
           document.removeEventListener(eventName, fn, getEventHandlerOptions(this, eventName)),
         );
         delete handlersMap[this._uid];
       }
     };
 
-    getRef = ref => (this.instanceRef = ref);
+    getRef = (ref)=> (this.instanceRef = ref);
 
     /**
      * Pass-through render

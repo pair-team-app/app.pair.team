@@ -48,7 +48,7 @@ class ProfileModal extends Component {
     }
   }
 
-  handleCancel = () => {
+  handleCancel = ()=> {
     console.log('%s.handleCancel()', this.constructor.name);
     trackEvent('button', 'profile-cancel');
 
@@ -58,7 +58,7 @@ class ProfileModal extends Component {
     });
   };
 
-  handleComplete = () => {
+  handleComplete = ()=> {
     console.log('%s.handleComplete()', this.constructor.name, this.state);
 
     const { updated } = this.state;
@@ -76,7 +76,7 @@ class ProfileModal extends Component {
       });
     }
 
-    this.setState({ outro: false }, () => {
+    this.setState({ outro: false }, ()=> {
       const { outroURI } = this.state;
 
       if (outroURI && outroURI.startsWith('/modal')) {
@@ -87,10 +87,10 @@ class ProfileModal extends Component {
     });
   };
 
-  handleDowngradePlan = event => {
+  handleDowngradePlan = (event)=> {
     console.log('%s.handleDowngradePlan()', this.constructor.name, event);
 
-    this.setState({ submitting: true }, () => {
+    this.setState({ submitting: true }, ()=> {
       const { profile, team } = this.props;
       axios
         .post(API_ENDPT_URL, {
@@ -101,11 +101,11 @@ class ProfileModal extends Component {
             team_id: team.id
           }
         })
-        .then(response => {
+        .then((response)=> {
           console.log('CANCEL_SUBSCRIPTION', response.data);
           const { error } = response.data;
 
-          this.setState({ submitting: false }, () => {
+          this.setState({ submitting: false }, ()=> {
             if (error) {
               this.props.onPopup({
                 type: POPUP_TYPE_ERROR,
@@ -119,17 +119,17 @@ class ProfileModal extends Component {
                 duration: 3333
               });
 
-              this.setState({ updated: true }, () => {
+              this.setState({ updated: true }, ()=> {
                 this.props.fetchTeamLookup({ userID: profile.id });
               });
             }
           });
         })
-        .catch(error => {});
+        .catch((error)=> {});
     });
   };
 
-  handleResetPassword = () => {
+  handleResetPassword = ()=> {
     console.log('%s.handleResetPassword()', this.constructor.name);
     this.setState({
       outro: true,
@@ -137,7 +137,7 @@ class ProfileModal extends Component {
     });
   };
 
-  handleSubmit = ({ id, username, email, password }) => {
+  handleSubmit = ({ id, username, email, password })=> {
     console.log('%s.handleSubmit()', this.constructor.name, {
       id,
       username,
@@ -195,18 +195,18 @@ class ProfileModal extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, ownProps)=> {
   return {
-    profile: state.userProfile,
-    team: state.team
+    profile : state.userProfile,
+    team    : state.team
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch)=> {
   return {
-    fetchTeamLookup: payload => dispatch(fetchTeamLookup(payload)),
-    fetchUserProfile: () => dispatch(fetchUserProfile()),
-    updateUserProfile: profile => dispatch(updateUserProfile(profile))
+    fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
+    fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
+    updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
   };
 };
 
