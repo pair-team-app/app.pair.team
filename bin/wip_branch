@@ -44,21 +44,21 @@ printf "Branching to '%s'...\n" "${branch_name}"
 
 #-- make new wip branch
 if [[ -z "`git branch | grep ${branch_name}`" ]]; then
-	git checkout -b "${branch_name}"
+	git checkout -b "${branch_name}" &> /dev/null
 
 else #-- suffix index onto branch name if already one
 	ind=$(( `git branch | grep ${branch_name} | wc -l | awk '{print $NF}'`+1 ))
 	git checkout -b "${branch_name}.${ind}"
 
-	if [[ ! -z "`git status | grep clean`" ]]; then 
-		printf "Adding all files...\n"
-		git add . 
-	fi
+	#// if [[ ! -z "`git status | grep clean`" ]]; then 
+	#//	git status
+	#// fi
 fi
 
 
 #-- show remote + status
-echo ; git config --get remote.origin.url ; git status
+#// echo ; git config --get remote.origin.url
+git status
 
 
 #-- terminate w/o error
