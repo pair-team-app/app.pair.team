@@ -4,7 +4,7 @@ import './NavPanelProject.css';
 
 import { Strings } from 'lang-js-utils';
 import BaseContentExpander from '../../../../iterables/BaseContentExpander';
-
+import { BUILD_TIMESTAMP } from '../../../../../consts/formats';
 
 function NavPanelProject(props) {
 // 	console.log('NavPanelProject()', props);
@@ -13,7 +13,7 @@ function NavPanelProject(props) {
 	return (<BaseContentExpander
 		className="nav-panel-project"
 		open={project.selected}
-		title={<div className="nav-panel-project-title" onClick={()=> props.onProjectClick(project)} data-selected={project.selected}>{project.title}</div>}
+		title={<div className="nav-panel-project-title" onClick={()=> props.onProjectClick(project)} data-selected={project.selected}>{project.title} ({project.added.format(BUILD_TIMESTAMP)})</div>}
 		content={<div className="nav-panel-project-item-wrapper">
 			{/* {(typeGroup.items.map((item, i)=> (<NavPanelTypeItem key={i} typeName={typeGroup.title} item={item} onClick={()=> props.onTypeItemClick(typeGroup, item)} />)))} */}
 		</div>}

@@ -1,9 +1,9 @@
 import { Objects } from "lang-js-utils";
 import { ADD_FILE_UPLOAD, APPEND_ARTBOARD_SLICES, APPEND_HOME_ARTBOARDS, COMPONENT_TYPES_LOADED, 
   EVENT_GROUPS_LOADED, SET_ARTBOARD_COMPONENT, SET_ARTBOARD_GROUPS, SET_COMMENT, SET_COMPONENT, SET_INVITE, 
-  SET_PLAYGROUND, SET_PRODUCTS, SET_REDIRECT_URI, SET_REFORMED_BUILD_PLAYGROUNDS, 
-  TEAM_PLAYGROUNDS_SUMMARY_LOADED, SET_REFORMED_TYPE_GROUP, TEAM_LOADED, SET_TYPE_GROUP, TOGGLE_THEME, UPDATE_DEEPLINK, UPDATE_MOUSE_COORDS, 
-  USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from "../../consts/action-types";
+  SET_PLAYGROUND, SET_PRODUCTS, SET_REDIRECT_URI, 
+  TEAM_BUILDS_LOADED, TYPE_GROUP_LOADED, TEAM_LOADED, SET_TYPE_GROUP, TOGGLE_THEME, UPDATE_DEEPLINK, UPDATE_MOUSE_COORDS, 
+  USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, BUILD_PLAYGROUNDS_LOADED } from "../../consts/action-types";
 import { LOG_REDUCER_PREFIX } from "../../consts/log-ascii";
 
 const initialState = {
@@ -20,13 +20,11 @@ const initialState = {
     teamSlug: null,
     projSlug: null,
     buildID: 0,
-    playgroundID: 0,
-    typeGroupSlug: 0,
-    commentID: 0,
-    teamPath: null,
-    componentsPath: null,
-    commentsPath: null,
-    accessibility: null 
+    deviceSlug: null,
+    typeGroupSlug: null,
+    accessibility: null,
+    comments: null,
+    commentID: 0
   },
   redirectURI: null,
   userProfile: null,
@@ -142,7 +140,7 @@ function rootReducer(state = initialState, action) {
         invite: action.payload
       });
 
-    case SET_REFORMED_TYPE_GROUP:
+    case TYPE_GROUP_LOADED:
       const storePlayground = state.playgrounds.find(
         ({ id }) => id === payload.playground.id
       );
@@ -182,7 +180,7 @@ function rootReducer(state = initialState, action) {
         })
       });
 
-    case TEAM_PLAYGROUNDS_SUMMARY_LOADED:
+    case TEAM_BUILDS_LOADED:
       playgrounds = payload.playgrounds.map(playground => {
           const storePlayground = (state.playgrounds) ? state.playgrounds.find(
             ({ id }) => id === playground.id
@@ -255,22 +253,21 @@ function rootReducer(state = initialState, action) {
         team: action.payload
       });
 
-    case SET_REFORMED_BUILD_PLAYGROUNDS:
+    case BUILD_PLAYGROUNDS_LOADED:
       let { playgrounds, playgroundID } = action.payload;
 
-    
-        const playground = playgroundID
-          ? playgrounds.find(({ id }) => id === playgroundID)
-          : playgrounds.find(({ deviceID }) => deviceID !== 1) || playgrounds[0];
-        const component = state.component
-          ? playground.components.find(({ id }) => id === state.component.id)
-          : null;
+      const playground = playgroundID
+        ? playgrounds.find(({ id }) => id === playgroundID)
+        : playgrounds.find(({ deviceID }) => deviceID !== 1) || playgrounds[0];
+      const component = state.component
+        ? playground.components.find(({ id }) => id === state.component.id)
+        : null;
 
-        console.log('=;=;=;=;=;=;=;=;= LOADED EVENT IN REDUCER', { payload : action.payload, playgrounds, playground, component })
+      console.log('=;=;=;=;=;=;=;=;= LOADED EVENT IN REDUCER', { payload : action.payload, playgrounds, playground, component })
 
 
-        return Object.assign({}, state, { playgrounds, playground, component });
-    
+      return Object.assign({}, state, { playgrounds, playground, component });
+  
 
     case SET_PLAYGROUND:
       return Object.assign({}, state, {

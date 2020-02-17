@@ -1,13 +1,13 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import "./PlaygroundComment.css";
 
-import FontAwesome from "react-fontawesome";
-import { connect } from "react-redux";
+import FontAwesome from 'react-fontawesome';
+import { connect } from 'react-redux';
 
-import PlaygroundBaseComment from "../PlaygroundBaseComment";
-import BasePopover from "../../../overlays/BasePopover";
-import { ENTER_KEY } from "../../../../consts/key-codes";
-import { USER_DEFAULT_AVATAR } from "../../../../consts/uris";
+import PlaygroundBaseComment from '../PlaygroundBaseComment';
+import BasePopover from '../../../overlays/BasePopover';
+import { ENTER_KEY } from '../../../../consts/key-codes';
+import { USER_DEFAULT_AVATAR } from '../../../../consts/uris';
 
 class PlaygroundComment extends Component {
   constructor(props) {

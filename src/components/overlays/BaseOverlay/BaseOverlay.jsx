@@ -1,7 +1,7 @@
-import { Back, Circ, TimelineMax } from "gsap/TweenMax";
-import React, { Component } from "react";
-import onClickOutside from "react-onclickoutside";
-import { trackOverlay } from "../../../utils/tracking";
+import { Back, Circ, TimelineMax } from 'gsap/TweenMax';
+import React, { Component } from 'react';
+import onClickOutside from 'react-onclickoutside';
+import { trackOverlay } from '../../../utils/tracking';
 import {
   OVERLAY_TYPE_AUTO_SIZE,
   OVERLAY_TYPE_PERCENT_SIZE,

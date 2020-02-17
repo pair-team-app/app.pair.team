@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 // import FontAwesome from 'react-fontawesome';
-import { connect } from "react-redux";
-import { Modals } from "../../../../consts/uris";
+import { connect } from 'react-redux';
+import { Modals } from '../../../../consts/uris';
 import BaseOverlay, {
   OVERLAY_TYPE_POSITION_OFFSET
 } from "../../../overlays/BaseOverlay";
-import { componentsFromTypeGroup } from "../utils/lookup";
+import { componentsFromTypeGroup } from '../utils/lookup';
 import "./PlaygroundProcessingOverlay.css";
 
 // const UPD_PROPS = [

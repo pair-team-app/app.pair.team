@@ -4,7 +4,7 @@ import './PlaygroundBaseComment.css';
 
 import { connect } from 'react-redux';
 
-import { MOMENT_TIMESTAMP } from '../../../../consts/formats';
+import { COMMENT_TIMESTAMP } from '../../../../consts/formats';
 import { USER_DEFAULT_AVATAR } from '../../../../consts/uris';
 
 
@@ -26,7 +26,7 @@ function PlaygroundBaseComment(props) {
 			</div>
 		</div>
 
-		<div className="playground-base-comment-timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(MOMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
+		<div className="playground-base-comment-timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
 		<div className="playground-base-comment-content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">@${author.username}</span>`) }} />
 	</div>);
 }

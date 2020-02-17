@@ -144,10 +144,10 @@ export const reformComponent = async (component, overwrite = {}) => {
     rootStyles: rootStyles
       ? {
           ...rootStyles,
-          maxWidth: width > 0 ? `${width}px` : "fit-content",
-          minHeight: height > 0 ? `${height}px` : "fit-content",
-          minWidth: width > 0 ? `${width}px` : "fit-content",
-          width: width > 0 ? `${width}px` : "fit-content"
+          maxWidth  : width > 0 ? `${width}px` : "fit-content",
+          minHeight : height > 0 ? `${height}px` : "fit-content",
+          minWidth  : width > 0 ? `${width}px` : "fit-content",
+          width     : width > 0 ? `${width}px` : "fit-content"
         }
       : null,
     comments: comments
@@ -168,18 +168,29 @@ export const reformComponent = async (component, overwrite = {}) => {
   return { ...reformed, size: jsonSize(reformed) };
 };
 
-export const reformPlayground = async (playground, overwrite = {}) => {
+export const reformPlayground = async (playground, summary=false, team = null, overwrite = {}) => {
   console.log("reformPlayground()", playground);
 
-  const { build_id, team_id } = playground;
-
+  const { build_id, team_id, device_id, components, added, last_visited } = playground;
   delete playground["build_id"];
   delete playground["team_id"];
+  delete playground["device_id"];
+  delete playground["last_visited"];
 
+  const deviceID = device_id;
   const reformed = { ...playground,
-    buildID : build_id << 0,
-    teamID: team_id << 0
+    team        : (!playground.team) ? team : playground.team,
+    teamID      : team_id << 0,
+    buildID     : build_id << 0,  
+    deviceID    : device_id << 0,
+    components  : (summary) ? components : components.map(async(component)=> (await reformComponent(component))),
+    lastVisited : moment(last_visited).utc(),
+    added       : (playground.added)
+      ? moment(added).add(moment().utcOffset() << 0, "minute")
+      : moment.utc(),
+    selected    : false,
+    ...overwrite
   };
 
-  return ({ ...reformed });
+  return ({ ...reformed, size: jsonSize(reformed) });
 };

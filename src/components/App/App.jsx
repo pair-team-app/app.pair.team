@@ -1,27 +1,27 @@
-import axios from "axios";
-import { Browsers, DateTimes } from "lang-js-utils";
-import React, { Component } from "react";
-import cookie from "react-cookies";
-import { connect } from "react-redux";
-import { API_ENDPT_URL, GITHUB_APP_AUTH, Modals, Pages } from "../../consts/uris";
+import axios from 'axios';
+import { Browsers, DateTimes } from 'lang-js-utils';
+import React, { Component } from 'react';
+import cookie from 'react-cookies';
+import { connect } from 'react-redux';
+import { API_ENDPT_URL, GITHUB_APP_AUTH, Modals, Pages } from '../../consts/uris';
 import { componentByID } from '../../components/pages/PlaygroundPage/utils/lookup';
-import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamPlaygroundsSummary, fetchUserProfile, setPlayground, setComponent, setComment, updateMouseCoords, updateUserProfile, setTypeGroup } from "../../redux/actions";
+import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamBuilds, fetchUserProfile, setPlayground, setComponent, setComment, updateMouseCoords, updateUserProfile, setTypeGroup } from '../../redux/actions';
 
-import { initTracker, trackEvent, trackPageview } from "../../utils/tracking";
-import Routes from "../helpers/Routes";
-import AlertDialog from "../overlays/AlertDialog";
-import ConfirmDialog from "../overlays/ConfirmDialog";
-import CookiesOverlay from "../overlays/CookiesOverlay";
-import LoginModal from "../overlays/LoginModal";
-import PopupNotification from "../overlays/PopupNotification";
-import ProfileModal from "../overlays/ProfileModal";
-import RegisterModal from "../overlays/RegisterModal";
-import StripeModal from "../overlays/StripeModal";
+import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
+import Routes from '../helpers/Routes';
+import AlertDialog from '../overlays/AlertDialog';
+import ConfirmDialog from '../overlays/ConfirmDialog';
+import CookiesOverlay from '../overlays/CookiesOverlay';
+import LoginModal from '../overlays/LoginModal';
+import PopupNotification from '../overlays/PopupNotification';
+import ProfileModal from '../overlays/ProfileModal';
+import RegisterModal from '../overlays/RegisterModal';
+import StripeModal from '../overlays/StripeModal';
 import BottomNav from '../sections/BottomNav';
 import TopNav from '../sections/TopNav';
 import "./App.css";
 import { withRouter, matchPath } from 'react-router-dom';
-import { typeGroupByKey } from "../pages/PlaygroundPage/utils/lookup";
+import { typeGroupByKey } from '../pages/PlaygroundPage/utils/lookup';
 
 class App extends Component {
   constructor(props) {
@@ -70,7 +70,7 @@ class App extends Component {
       this.onToggleModal(Modals.LOGIN);
     }
 
-    window.addEventListener("mousemove", this.handleMouseMove);
+    // window.addEventListener("mousemove", this.handleMouseMove);
     window.onpopstate = event => {
       event.preventDefault();
       // 			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
@@ -85,7 +85,7 @@ class App extends Component {
 
     // check for playground url
     const matchPlaygrounds = matchPath(this.props.location.pathname, {
-      path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`,
+      path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:componentsSlug([a-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`,
       exact : false,
       strict: false
     }) || {};
@@ -101,7 +101,7 @@ class App extends Component {
     const { teamSlug,
       projectSlug,
       buildID,
-      playgroundID,
+      deviceSlug,
       componentsSlug,
       componentID,
       commentID } = (pathname && pathname.length > 0) ? matchPlaygrounds.params : {};
@@ -431,7 +431,7 @@ class App extends Component {
 
 
     const matchPlaygrounds = matchPath(this.props.location.pathname, {
-      path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`,
+      path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:componentsSlug([a-z-]+)?/:componentID([0-9]+)?/(accessibility)?/(comments)?/:commentID([0-9]+)?`,
       exact : false,
       strict: false
     });
@@ -557,7 +557,7 @@ const mapStateToProps = (state, ownProps) => {
     teamSlug: state.deeplink.teamSlug,
     projSlug: state.deeplink.projSlug,
     buildID: state.deeplink.buildID,
-    playgroundID: state.deeplink.playgroundID,
+    deviceSlug: state.deeplink.deviceSlug,
     componentSlug: state.deeplink.componentSlug,
     componentID: state.deeplink.componentID,
     commentID: state.deeplink.commentID,
@@ -567,7 +567,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchTeamLookup: payload => dispatch(fetchTeamLookup(payload)),
-    fetchTeamPlaygroundsSummary: payload => dispatch(fetchTeamPlaygroundsSummary(payload)),
+    fetchTeamBuilds: payload => dispatch(fetchTeamBuilds(payload)),
     fetchBuildPlaygrounds: payload => dispatch(fetchBuildPlaygrounds(payload)),
     fetchUserProfile: () => dispatch(fetchUserProfile()),
     setTypeGroup: (payload)=> dispatch(setTypeGroup(payload)),

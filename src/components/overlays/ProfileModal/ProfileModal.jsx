@@ -1,19 +1,19 @@
-import axios from "axios";
-import { URIs } from "lang-js-utils";
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import pairLogo from "../../../assets/images/logos/logo-pairurl-310.png";
-import { API_ENDPT_URL, Modals } from "../../../consts/uris";
+import axios from 'axios';
+import { URIs } from 'lang-js-utils';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
+import { API_ENDPT_URL, Modals } from '../../../consts/uris';
 import {
   fetchTeamLookup,
   fetchUserProfile,
   updateUserProfile
 } from "../../../redux/actions";
-import { trackEvent } from "../../../utils/tracking";
-import ProfileForm from "../../forms/ProfileForm/ProfileForm";
-import BaseOverlay from "../BaseOverlay";
-import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from "../PopupNotification";
+import { trackEvent } from '../../../utils/tracking';
+import ProfileForm from '../../forms/ProfileForm/ProfileForm';
+import BaseOverlay from '../BaseOverlay';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
 import "./ProfileModal.css";
 
 class ProfileModal extends Component {

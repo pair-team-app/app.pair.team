@@ -1,14 +1,14 @@
-import { Strings } from "lang-js-utils";
-import React, { Component } from "react";
-import { ContextMenuTrigger } from "react-contextmenu";
-import FontAwesome from "react-fontawesome";
-import { connect } from "react-redux";
-import { Resizable } from "react-resizable";
-import ResizeObserver from "react-resize-observer";
-import PlaygroundComment from "../PlaygroundComment";
-import { componentsFromTypeGroup } from "../utils/lookup";
-import { reformComment } from "../utils/reform";
-import ComponentMenu from "./ComponentMenu";
+import { Strings } from 'lang-js-utils';
+import React, { Component } from 'react';
+import { ContextMenuTrigger } from 'react-contextmenu';
+import FontAwesome from 'react-fontawesome';
+import { connect } from 'react-redux';
+import { Resizable } from 'react-resizable';
+import ResizeObserver from 'react-resize-observer';
+import PlaygroundComment from '../PlaygroundComment';
+import { componentsFromTypeGroup } from '../utils/lookup';
+import { reformComment } from '../utils/reform';
+import ComponentMenu from './ComponentMenu';
 import "./PlaygroundContent.css";
 
 const CONSTRAIN = 0.875;

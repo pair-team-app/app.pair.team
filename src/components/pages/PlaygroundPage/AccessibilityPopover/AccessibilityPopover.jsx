@@ -1,12 +1,12 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import "./AccessibilityPopover.css";
 
-import { Strings } from "lang-js-utils";
+import { Strings } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
 import BaseContentExpander from '../../../iterables/BaseContentExpander';
-import BasePopover from "../../../overlays/BasePopover";
+import BasePopover from '../../../overlays/BasePopover';
 
 class AccessibilityPopover extends Component {
   constructor(props) {

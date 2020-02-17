@@ -1,15 +1,15 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import "./SharePopover.css";
 
-import axios from "axios";
-import { Strings } from "lang-js-utils";
-import CopyToClipboard from "react-copy-to-clipboard";
-import { connect } from "react-redux";
+import axios from 'axios';
+import { Strings } from 'lang-js-utils';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { connect } from 'react-redux';
 
-import BasePopover from "../../../overlays/BasePopover";
-import { API_ENDPT_URL } from "../../../../consts/uris";
-import { trackEvent } from "../../../../utils/tracking";
-import { POPUP_TYPE_OK } from "../../../overlays/PopupNotification";
+import BasePopover from '../../../overlays/BasePopover';
+import { API_ENDPT_URL } from '../../../../consts/uris';
+import { trackEvent } from '../../../../utils/tracking';
+import { POPUP_TYPE_OK } from '../../../overlays/PopupNotification';
 
 class SharePopover extends Component {
   constructor(props) {

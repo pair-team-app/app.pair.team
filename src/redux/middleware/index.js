@@ -1,14 +1,13 @@
 
 import moment from "moment";
 import cookie from "react-cookies";
-import { reformComponent } from "../../components/pages/PlaygroundPage/utils/reform";
-import { BUILD_PLAYGROUNDS_LOADED, TEAM_LOADED, SET_REFORMED_BUILD_PLAYGROUNDS, 
-  SET_REFORMED_TEAM_PLAYGROUNDS_SUMMARY, SET_REFORMED_TYPE_GROUP, TEAM_PLAYGROUNDS_SUMMARY_LOADED, 
-  TYPE_GROUP_LOADED, UPDATE_MOUSE_COORDS, USER_PROFILE_CACHED, 
+import { reformComponent, reformPlayground } from "../../components/pages/PlaygroundPage/utils/reform";
+import { BUILD_PLAYGROUNDS_LOADED, TEAM_LOADED, TEAM_BUILDS_LOADED, 
+  TYPE_GROUP_LOADED, UPDATE_MOUSE_COORDS, 
   USER_PROFILE_UPDATED, 
-  USER_PROFILE_LOADED} from "../../consts/action-types";
+  USER_PROFILE_LOADED } from "../../consts/action-types";
 import { LOG_MIDDLEWARE_PREFIX } from "../../consts/log-ascii";
-import { fetchTeamPlaygroundsSummary, fetchPlaygroundComponentGroup, fetchTeamLookup } from "../actions";
+import { fetchTeamBuilds, fetchPlaygroundComponentGroup, fetchTeamLookup } from "../actions";
 
 const logFormat = ({ store, action, next, meta = "" }) => {
   if (typeof action !== "function") {
@@ -32,14 +31,17 @@ export function onMiddleware(store) {
   return next => {
     return async action => {
       logFormat({ store : JSON.stringify(storeState, null, 2), action, next });
-      console.log('<>()<>', storeState);
+      // console.log('<>()<>', storeState);
 
       const { type, payload } = action;
-      if (type === USER_PROFILE_LOADED) {
-        dispatch(fetchTeamLookup({ userID : payload.id }));
+      if (type === USER_PROFILE_LOADED || type === USER_PROFILE_UPDATED) {
+
+        if (payload) {
+          dispatch(fetchTeamLookup({ userID : payload.id }));
+        }
 
       } else if (type === TEAM_LOADED) {
-         dispatch(fetchTeamPlaygroundsSummary({ team : payload }));
+         dispatch(fetchTeamBuilds({ team : payload }));
 
       } else if (type === TYPE_GROUP_LOADED) {
         let { playground, components } = payload;
@@ -70,68 +72,21 @@ export function onMiddleware(store) {
           sameSite: false
         });
 
-      } else if (type === TEAM_PLAYGROUNDS_SUMMARY_LOADED) {
+      } else if (type === TEAM_BUILDS_LOADED) {
         const { team } = payload;
-        const playgrounds = await Promise.all(
-          payload.playgrounds.map(async (playground, i) => {
-            const { build_id, team_id, device_id, components, last_visited } = playground;
-            delete playground["build_id"];
-            delete playground["team_id"];
-            delete playground["device_id"];
-            delete playground["last_visited"];
-
-            const deviceID = device_id;
-            return deviceID === 1
-              ? {
-                  ...playground,
-                  team,
-                  selected: false,
-                  buildID : build_id << 0,  
-                  teamID : team.id,
-                  lastVisited : moment(last_visited).utc(),
-                  deviceID,
-                  components
-                }
-              : { ...playground, team }
-          }).filter(playground => playground != null)
-        );
-
+        const playgrounds = await Promise.all(payload.playgrounds.map(async (playground, i) => (await reformPlayground(playground, team))));
         payload.playgrounds = playgrounds;
 
       } else if (type === BUILD_PLAYGROUNDS_LOADED) {
         const { playgroundID } = payload;
 
-        const playgrounds = await Promise.all(
-          payload.playgrounds.map(async playground => {
-            const { build_id, team_id, device_id, components, last_visited } = playground;
-            delete playground["build_id"];
-            delete playground["team_id"];
-            delete playground["device_id"];
-            delete playground["last_visited"];
-
-            // console.log('playground', { id : playground.id, device_id, components });
-            return {
-              ...playground,
-              buildID: build_id << 0,
-              teamID: team_id << 0,
-              deviceID: device_id << 0,
-              lastVisited: moment(last_visited).utc(),
-              components: await Promise.all(
-                components.map(
-                  async component => await reformComponent(component)
-                )
-              )
-            };
-          })
-        );
-
+        const playgrounds = await Promise.all(payload.playgrounds.map(async playground => (await reformPlayground(playground, false))));
+        payload.playgrounds = playgrounds;
 
         dispatch(fetchPlaygroundComponentGroup({ 
           playground : { id : playgroundID }, 
           typeGroup : { id : 187 } 
         }));
-
-      } else if (type === USER_PROFILE_CACHED) {
       }
 
       return next(action);

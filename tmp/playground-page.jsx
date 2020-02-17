@@ -1,24 +1,24 @@
-import axios from "axios";
-import { Strings } from "lang-js-utils";
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import axios from 'axios';
+import { Strings } from 'lang-js-utils';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { API_ENDPT_URL, Modals } from "../../../consts/uris";
-import { fetchBuildPlaygrounds, fetchPlaygroundComponentGroup, setComment, setComponent, setPlayground, setTypeGroup } from "../../../redux/actions";
-import { trackEvent } from "../../../utils/tracking";
-import BasePage from "../BasePage";
-import AccessibilityPopover from "./AccessibilityPopover";
-import PlaygroundCommentsPanel from "./PlaygroundCommentsPanel";
-import PlaygroundContent from "./PlaygroundContent";
-import { COMPONENT_MENU_ITEM_COMMENTS, COMPONENT_MENU_ITEM_COPY } from "./PlaygroundContent/ComponentMenu";
-import PlaygroundFooter from "./PlaygroundFooter";
-import PlaygroundHeader, { BreadcrumbTypes } from "./PlaygroundHeader";
-import { SettingsMenuItemTypes } from "./PlaygroundHeader/UserSettings";
-import PlaygroundNavPanel from "./PlaygroundNavPanel";
+import { API_ENDPT_URL, Modals } from '../../../consts/uris';
+import { fetchBuildPlaygrounds, fetchPlaygroundComponentGroup, setComment, setComponent, setPlayground, setTypeGroup } from '../../../redux/actions';
+import { trackEvent } from '../../../utils/tracking';
+import BasePage from '../BasePage';
+import AccessibilityPopover from './AccessibilityPopover';
+import PlaygroundCommentsPanel from './PlaygroundCommentsPanel';
+import PlaygroundContent from './PlaygroundContent';
+import { COMPONENT_MENU_ITEM_COMMENTS, COMPONENT_MENU_ITEM_COPY } from './PlaygroundContent/ComponentMenu';
+import PlaygroundFooter from './PlaygroundFooter';
+import PlaygroundHeader, { BreadcrumbTypes } from './PlaygroundHeader';
+import { SettingsMenuItemTypes } from './PlaygroundHeader/UserSettings';
+import PlaygroundNavPanel from './PlaygroundNavPanel';
 import "./PlaygroundPage.css";
-import PlaygroundProcessingOverlay from "./PlaygroundProcessingOverlay";
-import { commentByID, componentByID, componentFromComment, playgroundByID } from "./utils/lookup";
-import { reformComment } from "./utils/reform";
+import PlaygroundProcessingOverlay from './PlaygroundProcessingOverlay';
+import { commentByID, componentByID, componentFromComment, playgroundByID } from './utils/lookup';
+import { reformComment } from './utils/reform';
 
 class PlaygroundPage extends Component {
   constructor(props) {
@@ -64,7 +64,7 @@ class PlaygroundPage extends Component {
       teamSlug,
       projectSlug,
       buildID,
-      playgroundID,
+      deviceSlug,
       componentsSlug,
       componentID,
       commentID

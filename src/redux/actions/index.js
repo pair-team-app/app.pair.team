@@ -3,9 +3,7 @@ import { Bits, Objects } from "lang-js-utils";
 import cookie from "react-cookies";
 import {
 BUILD_PLAYGROUNDS_LOADED, COMPONENT_TYPES_LOADED, EVENT_GROUPS_LOADED, SET_COMMENT, SET_COMPONENT,
-  // 	CONVERTED_DEEPLINK,
-  SET_INVITE, SET_PLAYGROUND, SET_PLAYGROUNDS, SET_PRODUCTS, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_PLAYGROUNDS_SUMMARY_LOADED, TOGGLE_THEME, TYPE_GROUP_LOADED, UPDATE_DEEPLINK, UPDATE_MOUSE_COORDS, USER_PROFILE_ERROR,
-  // 	USER_PROFILE_CACHED,
+  SET_INVITE, SET_PLAYGROUND, SET_PLAYGROUNDS, SET_PRODUCTS, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TOGGLE_THEME, TYPE_GROUP_LOADED, UPDATE_DEEPLINK, UPDATE_MOUSE_COORDS, USER_PROFILE_ERROR,
   USER_PROFILE_LOADED, USER_PROFILE_UPDATED, LOCATION_UPDATED, TEAM_LOADED
 } from "../../consts/action-types";
 import { jsonFormatKB } from "../../consts/formats";
@@ -99,26 +97,26 @@ export function fetchEventGroups(payload=null) {
   };
 }
 
-export function fetchTeamPlaygroundsSummary(payload=null) {
+export function fetchTeamBuilds(payload=null) {
   return (dispatch, getState)=> {
     const { team } = payload;
 
-    logFormat("fetchTeamPlaygroundsSummary()", getState(), payload);
+    logFormat("fetchTeamBuilds()", getState(), payload);
 
     axios
       .post(API_ENDPT_URL, {
-        action: "TEAM_PLAYGROUNDS",
+        action: "TEAM_BUILDS",
         payload: {
           team_id: team.id,
           device_id: 1
         }
       })
       .then(response => {
-        console.log("TEAM_PLAYGROUNDS", response.data);
+        console.log("TEAM_BUILDS", response.data);
         const { playgrounds } = response.data;
 
         dispatch({
-          type: TEAM_PLAYGROUNDS_SUMMARY_LOADED,
+          type: TEAM_BUILDS_LOADED,
           payload: { team, playgrounds }
         });
       })
