@@ -90,6 +90,7 @@ export function onMiddleware(store) {
       }
 
       return next(action);
+      console.log('<>()<>', storeState);
     };
   };
 }

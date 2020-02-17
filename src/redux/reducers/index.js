@@ -1,9 +1,9 @@
 import { Objects } from 'lang-js-utils';
-import { ADD_FILE_UPLOAD, APPEND_ARTBOARD_SLICES, APPEND_HOME_ARTBOARDS, COMPONENT_TYPES_LOADED, 
-  EVENT_GROUPS_LOADED, SET_ARTBOARD_COMPONENT, SET_ARTBOARD_GROUPS, SET_COMMENT, SET_COMPONENT, SET_INVITE, 
-  SET_PLAYGROUND, SET_PRODUCTS, SET_REDIRECT_URI, 
-  TEAM_BUILDS_LOADED, TYPE_GROUP_LOADED, TEAM_LOADED, SET_TYPE_GROUP, TOGGLE_THEME, UPDATE_DEEPLINK, UPDATE_MOUSE_COORDS, 
-  USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, BUILD_PLAYGROUNDS_LOADED } from '../../consts/action-types';
+import { 
+  COMPONENT_TYPES_LOADED, PRODUCTS_LOADED, EVENT_GROUPS_LOADED, TOGGLE_THEME, UPDATE_MOUSE_COORDS,
+  SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_TYPE_GROUP, SET_REDIRECT_URI, 
+  TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TYPE_GROUP_LOADED, TEAM_LOADED, UPDATE_DEEPLINK,
+  USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, } from '../../consts/action-types';
 import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 const initialState = {
@@ -26,6 +26,7 @@ const initialState = {
     comments: null,
     commentID: 0
   },
+  devices: null,
   redirectURI: null,
   userProfile: null,
   invite: null,
@@ -59,66 +60,14 @@ const logFormat = (state, action, meta = '') => {
 
 function rootReducer(state = initialState, action) {
   const { type, payload } = action;
-  let playgrounds = null;
-  let playground = null;
 
+  let playgrounds, playground = null;
+  
   logFormat(state, action);
 
   switch (type) {
     default:
-      return state;
-
-    case ADD_FILE_UPLOAD:
-      return Object.assign({}, state, {
-        file: action.payload
-      });
-
-    case APPEND_ARTBOARD_SLICES:
-      const { artboardID, slices } = payload;
-
-      return Object.assign({}, state, {
-        uploadSlices: Object.assign(
-          {},
-          state.uploadSlices.findIndex(
-            artboard => artboard.artboardID === artboardID
-          ) > -1
-            ? state.uploadSlices.filter(
-                artboard => artboard.artboardID === artboardID
-              )
-            : state.uploadSlices,
-          { artboardID, slices }
-        )
-      });
-
-    case APPEND_HOME_ARTBOARDS:
-      return Object.assign({}, state, {
-        homeArtboards: action.payload
-          ? state.homeArtboards
-              .concat(action.payload)
-              .reduce(
-                (acc, inc) => [...acc.filter(({ id }) => id !== inc.id), inc],
-                []
-              )
-          : []
-      });
-
-    case SET_ARTBOARD_COMPONENT:
-      const { uuid, syntax, timestamp } = action.payload;
-
-      return Object.assign({}, state, {
-        artboardComponents: {
-          ...state.artboardComponents,
-          [uuid]: {
-            syntax: syntax,
-            timestamp: timestamp
-          }
-        }
-      });
-
-    case SET_ARTBOARD_GROUPS:
-      return Object.assign({}, state, {
-        artboardGroups: action.payload
-      });
+      return (state);
 
     case COMPONENT_TYPES_LOADED:
       return Object.assign({}, state, {
@@ -181,31 +130,28 @@ function rootReducer(state = initialState, action) {
       });
 
     case TEAM_BUILDS_LOADED:
-      playgrounds = payload.playgrounds.map(playground => {
-          const storePlayground = (state.playgrounds) ? state.playgrounds.find(
-            ({ id }) => id === playground.id
-          ) : null;
+      playgrounds = payload.playgrounds;
+      // playgrounds = payload.playgrounds.map(playground => {
+      //     console.log('=;=;=;=;=;=;=;=;= LOADED EVENT IN REDUCER', { payload : action.payload, playgrounds })
 
-          return storePlayground === null
-            ? { ...playground }
-            : {
-                ...playground,
-                components: storePlayground.components
-                  .concat(payload.components)
-                  .reduce(
-                    (acc, inc) => [
-                      ...acc.filter(({ id }) => id !== inc.id),
-                      inc
-                    ],
-                    []
-                  )
-              };
-        });
+      //     return storePlayground === null
+      //       ? { ...playground }
+      //       : {
+      //           ...playground,
+      //           components: storePlayground.components
+      //             .concat(payload.components)
+      //             .reduce(
+      //               (acc, inc) => [
+      //                 ...acc.filter(({ id }) => id !== inc.id),
+      //                 inc
+      //               ],
+      //               []
+      //             )
+      //         };
+      //   });
 
-      return Object.assign({}, state, {
-        playgrounds: playgrounds,
-        // playground : (storePlayground != null) ? 
-      });
+      return Object.assign({}, state, { playgrounds });
+      break;
 
     case USER_PROFILE_ERROR:
       return Object.assign({}, state, {
@@ -221,22 +167,18 @@ function rootReducer(state = initialState, action) {
       if (action.payload) {
         Objects.renameKey(action.payload, 'github_auth', 'github');
         if (action.payload.github) {
-          Objects.renameKey(
-            action.payload.github,
-            'access_token',
-            'accessToken'
-          );
+          Objects.renameKey(action.payload.github, 'access_token', 'accessToken');
         }
 
         const { id, type, github } = action.payload;
         return Object.assign({}, state, {
-          userProfile: {
-            ...action.payload,
-            id: id << 0,
-            github: github ? { ...github, id: github.id << 0 } : github,
-            paid: /admin|paid/i.test(type)
+          userProfile: { ...action.payload,
+            id     : id << 0,
+            github : (github) ? { ...github, id : github.id << 0 } : github,
+            paid   : /admin|paid/i.test(type)
           }
         });
+        
       } else {
         return Object.assign({}, state, {
           userProfile: action.payload
@@ -254,7 +196,8 @@ function rootReducer(state = initialState, action) {
       });
 
     case BUILD_PLAYGROUNDS_LOADED:
-      let { playgrounds, playgroundID } = action.payload;
+      const { playgroundID } = action.payload;
+      playgrounds = action.payload.playgrounds;
 
       const playground = playgroundID
         ? playgrounds.find(({ id }) => id === playgroundID)
@@ -262,9 +205,6 @@ function rootReducer(state = initialState, action) {
       const component = state.component
         ? playground.components.find(({ id }) => id === state.component.id)
         : null;
-
-      console.log('=;=;=;=;=;=;=;=;= LOADED EVENT IN REDUCER', { payload : action.payload, playgrounds, playground, component })
-
 
       return Object.assign({}, state, { playgrounds, playground, component });
   
@@ -289,7 +229,7 @@ function rootReducer(state = initialState, action) {
         comment: action.payload
       });
 
-    case SET_PRODUCTS:
+    case PRODUCTS_LOADED:
       return Object.assign({}, state, {
         products: action.payload
       });
@@ -301,6 +241,38 @@ function rootReducer(state = initialState, action) {
             ? action.payload
             : !state.darkThemed
       });
+
+
+    /*
+    case APPEND_ARTBOARD_SLICES:
+      const { artboardID, slices } = payload;
+
+      return Object.assign({}, state, {
+        uploadSlices: Object.assign(
+          {},
+          state.uploadSlices.findIndex(
+            artboard => artboard.artboardID === artboardID
+          ) > -1
+            ? state.uploadSlices.filter(
+                artboard => artboard.artboardID === artboardID
+              )
+            : state.uploadSlices,
+          { artboardID, slices }
+        )
+      });
+
+    case APPEND_HOME_ARTBOARDS:
+      return Object.assign({}, state, {
+        homeArtboards: action.payload
+          ? state.homeArtboards
+              .concat(action.payload)
+              .reduce(
+                (acc, inc) => [...acc.filter(({ id }) => id !== inc.id), inc],
+                []
+              )
+          : []
+      });
+    */
   }
 }
 

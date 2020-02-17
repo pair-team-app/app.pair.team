@@ -3,7 +3,7 @@ import cookie from 'react-cookies';
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-import { fetchComponentTypes, fetchEventGroups, fetchUserProfile } from '../actions';
+import { fetchComponentTypes, fetchDevices, fetchUserProfile } from '../actions';
 import rootReducer from '../reducers/index';
 import { onMiddleware } from '../middleware'
 
@@ -17,7 +17,7 @@ if (typeof cookie.load('user_id') === 'undefined') {
 }
 
 store.dispatch(fetchComponentTypes());
-// store.dispatch(fetchEventGroups());
+store.dispatch(fetchDevices());
 
 
 export default store;
