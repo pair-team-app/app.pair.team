@@ -59,13 +59,14 @@ export function onMiddleware(store) {
 
     } else if (type === TEAM_BUILDS_LOADED) {
       const { team } = prevState;
-      const playgrounds = await Promise.all(payload.playgrounds.map(async (playground, i)=> (await reformPlayground(playground, true, team))));
+      const playgrounds = await Promise.all(payload.playgrounds.map(async (playground, i)=> (await reformPlayground(playground, false, team))));
       payload.playgrounds = playgrounds;
 
     } else if (type === BUILD_PLAYGROUNDS_LOADED) {
+      const { team } = prevState;
       const { playgroundID } = payload;
 
-      const playgrounds = await Promise.all(payload.playgrounds.map(async (playground)=> (await reformPlayground(playground, false))));
+      const playgrounds = await Promise.all(payload.playgrounds.map(async (playground)=> (await reformPlayground(playground, false, team))));
       payload.playgrounds = playgrounds;
 
       dispatch(fetchPlaygroundComponentGroup({ 

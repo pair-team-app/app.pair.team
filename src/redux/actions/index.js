@@ -315,41 +315,41 @@ export function updateUserProfile(payload, force = true) {
     if (payload) {
       const { id } = payload;
       axios.post(API_ENDPT_URL, {
-          action  : 'UPDATE_USER_PROFILE',
-          payload : {
-            ...payload,
-            user_id : id
+        action  : 'UPDATE_USER_PROFILE',
+        payload : {
+          ...payload,
+          user_id : id
 // 					filename : avatar
-          }
-        }).then((response)=> {
-          console.log('UPDATE_USER_PROFILE', response.data);
+        }
+      }).then((response)=> {
+        console.log('UPDATE_USER_PROFILE', response.data);
 
-          const status = parseInt(response.data.status, 16);
-          Objects.renameKey(response.data.user, 'github_auth', 'github');
-          if (response.data.user.github) {
-            Objects.renameKey(response.data.user.github, 'access_token', 'accessToken');
-          }
+        const status = parseInt(response.data.status, 16);
+        Objects.renameKey(response.data.user, 'github_auth', 'github');
+        if (response.data.user.github) {
+          Objects.renameKey(response.data.user.github, 'access_token', 'accessToken');
+        }
 
-          if (status === 0x00) {
-          }
+        if (status === 0x00) {
+        }
 
-          const { id, username, email, type, github } = response.data.user;
-          dispatch({
-            type    : (status === 0x00) ? USER_PROFILE_UPDATED : USER_PROFILE_ERROR,
-            payload : { ...response.data.user,
-              status   : status,
-              id       : id << 0,
-              username : (Bits.contains(status, 0x01))
-                ? 'Username Already in Use'
-                : username,
-              email    : (Bits.contains(status, 0x10))
-                ? 'Email Already in Use'
-                : email,
-              github   : github ? { ...github, id: github.id << 0 } : github,
-              paid     : type.includes('paid')
-            }
-          });
-        }).catch((error)=> {});
+        const { id, username, email, type, github } = response.data.user;
+        dispatch({
+          type    : (status === 0x00) ? USER_PROFILE_UPDATED : USER_PROFILE_ERROR,
+          payload : { ...response.data.user,
+            status   : status,
+            id       : id << 0,
+            username : (Bits.contains(status, 0x01))
+              ? 'Username Already in Use'
+              : username,
+            email    : (Bits.contains(status, 0x10))
+              ? 'Email Already in Use'
+              : email,
+            github   : github ? { ...github, id: github.id << 0 } : github,
+            paid     : type.includes('paid')
+          }
+        });
+      }).catch((error)=> {});
 
     } else {
       cookie.save('user_id', '0', { path : '/', sameSite : false });

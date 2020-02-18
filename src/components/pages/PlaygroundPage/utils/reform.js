@@ -132,8 +132,7 @@ export const reformPlayground = async (playground, summary=false, team=null, ove
     deviceID    : device_id << 0,
     projectSlug : Strings.slugifyURI(title),
     team        : (!playground.team) ? team : playground.team,
-    // components  : (summary) ? components : components.map(async(component)=> (await reformComponent(component))),
-    components  : components,
+    components  : (summary) ? components : components.map(async(component)=> (await reformComponent(component))),
     lastVisited : moment(last_visited).utc(),
     added       : (playground.added)
       ? moment(added).add(moment().utcOffset() << 0, 'minute')
