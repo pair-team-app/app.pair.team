@@ -23,6 +23,8 @@ export const reformComment = (comment, overwrite={})=> {
       : moment.utc(),
     ...overwrite
   }
+
+  return ({ ...reformed, size: jsonFormatKB(reformed) });
 };
 
 export const reformComponent = async (component, overwrite = {})=> {
@@ -117,7 +119,7 @@ export const reformComponent = async (component, overwrite = {})=> {
   return { ...reformed, size: jsonFormatKB(reformed) };
 };
 
-export const reformPlayground = async (playground, summary=false, team=null, overwrite={})=> {
+export const reformPlayground = async (playground, fullReform=true, team=null, overwrite={})=> {
   console.log('reformPlayground()', playground);
 
   const { build_id, team_id, device_id, title, components, added, last_visited, selected } = playground;
@@ -132,7 +134,18 @@ export const reformPlayground = async (playground, summary=false, team=null, ove
     deviceID    : device_id << 0,
     projectSlug : Strings.slugifyURI(title),
     team        : (!playground.team) ? team : playground.team,
-    components  : (summary) ? components : components.map(async(component)=> (await reformComponent(component))),
+    components  : (fullReform) 
+      ? components.map(async(component)=> (await reformComponent(component))) 
+      : components.map((component)=> {
+        const { type_id, event_type_id } = component;
+        delete (component['type_id']);
+        delete (component['event_type_id']);
+
+        return ({ ...component, 
+          typeID      : type_id << 0,
+          eventTypeID : event_type_id << 0
+        });
+      }),
     lastVisited : moment(last_visited).utc(),
     added       : (playground.added)
       ? moment(added).add(moment().utcOffset() << 0, 'minute')

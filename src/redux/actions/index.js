@@ -3,7 +3,7 @@ import { Bits, Objects } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { 
   COMPONENT_TYPES_LOADED, EVENT_GROUPS_LOADED, DEVICES_LOADED, PRODUCTS_LOADED,
-  TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TYPE_GROUP_LOADED, 
+  TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TYPE_GROUP_LOADED, PLAYGROUND_LOADED, 
   SET_INVITE, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TYPE_GROUP, 
   USER_PROFILE_LOADED, USER_PROFILE_UPDATED, USER_PROFILE_ERROR,
   UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, SET_REDIRECT_URI, TOGGLE_THEME
@@ -106,24 +106,21 @@ export function fetchEventGroups(payload=null) {
   };
 }
 
-export function fetchTeamBuilds(payload=null) {
+export function fetchPlayground(payload=null) {
   return (dispatch, getState)=> {
-    const { team } = payload;
-
-    logFormat('fetchTeamBuilds()', getState(), payload);
+    logFormat('fetchPlayground()', getState(), payload);
+    
     axios.post(API_ENDPT_URL, {
-      action  : 'TEAM_BUILDS',
+      action  : 'PLAYGROUND',
       payload : {
-        team_id   : team.id,
-        device_id : 1
+        playground_id : payload.playgroundID,
+        verbose       : true
       }
     }).then((response)=> {
-      console.log('TEAM_BUILDS', response.data);
-      const { playgrounds } = response.data;
-
+      console.log('PLAYGROUND', response.data);
       dispatch({
-        type    : TEAM_BUILDS_LOADED,
-        payload : { playgrounds }
+        type    : PLAYGROUND_LOADED,
+        payload : response.data.playground
       });
     }).catch((error)=> {});
   };
@@ -160,6 +157,30 @@ export function fetchPlaygroundComponentGroup(payload=null) {
     }).catch((error)=> {});
   };
 }
+
+export function fetchTeamBuilds(payload=null) {
+  return (dispatch, getState)=> {
+    const { team } = payload;
+
+    logFormat('fetchTeamBuilds()', getState(), payload);
+    axios.post(API_ENDPT_URL, {
+      action  : 'TEAM_BUILDS',
+      payload : {
+        team_id   : team.id,
+        device_id : 1
+      }
+    }).then((response)=> {
+      console.log('TEAM_BUILDS', response.data);
+      const { playgrounds } = response.data;
+
+      dispatch({
+        type    : TEAM_BUILDS_LOADED,
+        payload : { playgrounds }
+      });
+    }).catch((error)=> {});
+  };
+}
+
 
 export function fetchProducts(payload=null) {
   return (dispatch, getState)=> {

@@ -66,7 +66,7 @@ export function onMiddleware(store) {
       const { team } = prevState;
       const { playgroundID } = payload;
 
-      const playgrounds = await Promise.all(payload.playgrounds.map(async (playground)=> (await reformPlayground(playground, false, team))));
+      const playgrounds = await Promise.all(payload.playgrounds.map(async (playground)=> (await reformPlayground(playground, true, team))));
       payload.playgrounds = playgrounds;
 
       dispatch(fetchPlaygroundComponentGroup({ 

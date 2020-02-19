@@ -121,7 +121,7 @@ class App extends Component {
         this.onToggleModal(Modals.LOGIN, false);
       }
 
-      // just received tean, check plan
+      // just received team, check plan
       if (team !== null && prevProps.team === null) {
         // pay alert check
         const modal = (team.members.length > 10 && team.type === 'free') || (team.members.length > 50 && team.type !== 'enterprise');
@@ -140,8 +140,7 @@ class App extends Component {
         } else {
           
         }
-
-/*
+        /*
         // get playgrounds associated w/ this buildID from url
         if (playgrounds !== null && prevProps.playgrounds === null && buildID) {
             this.props.fetchBuildPlaygrounds({ buildID : buildID << 0, playgroundID : playgroundID << 0 });
@@ -169,7 +168,6 @@ class App extends Component {
 
         */
       }
-    
     }
   }
 
