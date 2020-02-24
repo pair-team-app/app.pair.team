@@ -637,7 +637,7 @@ class PlaygroundPage extends Component {
             />
           </div>
         )}
-        {profile && playground && typeGroup && (
+        {profile && playground && (
           <div
             className="playground-page-content-wrapper"
             data-component={component !== null}

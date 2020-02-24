@@ -81,14 +81,15 @@ function rootReducer(state = initialState, action) {
           : playground
       ),
               playground  : { ...state.playground,
+      playground: payload.playground,
       // playground: {
         // ...storePlayground,
-        components: storePlayground.components
-          .concat(payload.components)
-          .reduce(
-            (acc, inc)=> [...acc.filter(({ id })=> id !== inc.id), inc],
-            []
-          )
+        // components: storePlayground.components
+        //   .concat(payload.components)
+        //   .reduce(
+        //     (acc, inc)=> [...acc.filter(({ id })=> id !== inc.id), inc],
+        //     []
+        //   )
       },
       
       component:

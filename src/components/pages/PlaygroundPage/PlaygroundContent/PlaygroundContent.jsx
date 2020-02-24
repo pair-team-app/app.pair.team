@@ -143,6 +143,7 @@ class PlaygroundContent extends Component {
   render() {
     // console.log('%s.render()', this.constructor.name, { state : this.state, initBounds : this.state.bounds.init, currBounds : this.state.bounds.curr });
     // console.log('%s.render()', this.constructor.name, (this.state.bounds && this.state.bounds.init) ? { init : this.state.bounds.init.component, curr : this.state.bounds.curr.component, scale : { x : (this.state.bounds.init.component.size.width / this.state.bounds.curr.component.size.width), y : (this.state.bounds.init.component.size.height / this.state.bounds.curr.component.size.height) } } : null);
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const {
       profile,
@@ -153,11 +154,8 @@ class PlaygroundContent extends Component {
       mouse
     } = this.props;
     const { position, popover, bounds } = this.state;
-    const components = typeGroup
-      ? component
-        ? [component]
-        : componentsFromTypeGroup(playground.components, typeGroup)
-      : [];
+    // const components = (typeGroup) ? (component) ? [component] : componentsFromTypeGroup(playground.components, typeGroup) : [];
+    const { components } = playground;
 
     return (
       <div
@@ -170,7 +168,7 @@ class PlaygroundContent extends Component {
           onPosition={this.calcBounds}
           onReflow={this.calcBounds}
         />
-        {typeGroup && components.length > 0 && (
+        {components.length > 0 && (
           <div
             className="playground-content-components-wrapper"
             data-component={component !== null}

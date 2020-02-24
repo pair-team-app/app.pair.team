@@ -24,10 +24,10 @@ const logFormat = ({ store, action, next, meta = '' })=> {
 
 
 export function onMiddleware(store) {
-  const prevState = store.getState();
-  const { dispatch } = store;
-
   return ((next)=> async(action)=> {
+    const prevState = store.getState();
+    const { dispatch } = store;
+
     const { type, payload } = action;
     logFormat({ store : prevState, action, next, meta : '<==] PREV' });
 
@@ -40,7 +40,9 @@ export function onMiddleware(store) {
         dispatch(fetchTeamBuilds({ team : payload }));
 
     } else if (type === TYPE_GROUP_LOADED) {
-      let { playground, components } = payload;
+      let { playground } = prevState;
+      let { components } = payload;
+
 
       components = await Promise.all(
         Object.values((components).map(async (component)=> {
@@ -48,11 +50,14 @@ export function onMiddleware(store) {
         })
       ));
 
-      playground.components = { ...playground.components, components };
-      // playground.components = playground.components.map(
-      //   (comp)=> components.find(({ id })=> id === comp.id) || comp
-      // );
-      // //         console.log('TYPE_GROUP_LOADED', 'POST', playground.components.map(({ id, typeID, title, html, styles, rootStyles, image_data, processed })=> ({ id, typeID, title, html, styles, rootStyles, image_data, processed })));
+      console.log('PLAYGROUND', { playground });
+
+      playground.components = [ ...playground.components, ...components ];
+      // playground.components = [ ...components ];
+      playground.components = playground.components.map(
+        (comp)=> components.find(({ id })=> id === comp.id) || comp
+      );
+      console.log('TYPE_GROUP_LOADED', 'POST', playground.components.map(({ id, typeID, title, html, styles, rootStyles, image_data, processed })=> ({ id, typeID, title, html, styles, rootStyles, image_data, processed })));
 
     } else if (type === USER_PROFILE_UPDATED) {
       cookie.save('user_id', (payload) ? payload.id : '0', { path : '/', sameSite : false });

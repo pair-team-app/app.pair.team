@@ -139,7 +139,7 @@ export function fetchPlaygroundComponentGroup(payload=null) {
         verbose       : true
       }
     }).then(async(response)=> {
-    // console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', response.data);
+    console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', response.data);
 
       const { components } = response.data;
       console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS [SIZE]', Object.values(components).map((component)=> ({
