@@ -17,7 +17,7 @@ if (typeof cookie.load('user_id') === 'undefined') {
 }
 
 store.dispatch(fetchComponentTypes());
-store.dispatch(fetchDevices());
+// store.dispatch(fetchDevices());
 
 
 export default store;

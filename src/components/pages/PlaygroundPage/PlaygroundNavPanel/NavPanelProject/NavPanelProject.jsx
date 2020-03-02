@@ -13,7 +13,8 @@ function NavPanelProject(props) {
 	return (<BaseContentExpander
 		className="nav-panel-project"
 		open={project.selected}
-		title={<div className="nav-panel-project-title" onClick={()=> props.onProjectClick(project)} data-selected={project.selected}>{project.title} ({project.added.format(BUILD_TIMESTAMP)})</div>}
+		// title={<div className="nav-panel-project-title" onClick={()=> props.onProjectClick(project)} data-selected={project.selected}>{project.title} ({project.added.format(BUILD_TIMESTAMP)})</div>}
+		title={<div className="nav-panel-project-title" onClick={()=> props.onProjectClick(project)} data-selected={project.selected}>{project.title}</div>}
 		content={<div className="nav-panel-project-item-wrapper">
 			{/* {(typeGroup.items.map((item, i)=> (<NavPanelTypeItem key={i} typeName={typeGroup.title} item={item} onClick={()=> props.onTypeItemClick(typeGroup, item)} />)))} */}
 		</div>}

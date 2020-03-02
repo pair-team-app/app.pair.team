@@ -151,7 +151,8 @@ export function fetchPlaygroundComponentGroup(payload=null) {
       dispatch({
         type    : TYPE_GROUP_LOADED,
         payload : { playground, 
-          components : Object.values(components) 
+        components
+          // components : Object.values(components) 
         }
       });
     }).catch((error)=> {});

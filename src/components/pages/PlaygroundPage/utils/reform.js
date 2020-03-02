@@ -43,6 +43,7 @@ export const reformComponent = async (component, overwrite = {})=> {
     node_id,
     title,
     tag_name,
+    thumb,
     thumb_data,
     image_data,
     html,
@@ -74,17 +75,21 @@ export const reformComponent = async (component, overwrite = {})=> {
   //   console.log('::|::', { id : component.id, imageData }, '::|::');
   //   console.log('::|::', { id : component.id, title, imageData }, '::|::');
 
-  const thumbData = thumb_data && thumb_data.length > 1 ? await unzipData(thumb_data) : Images.genColor(PLACEHOLDER_FILL, { width, height });
+  // const thumbData = thumb && thumb.length > 1 ? await unzipData(thumb) : Images.genColor(PLACEHOLDER_FILL, { width, height });
+  const thumbData = Images.genColor(PLACEHOLDER_FILL, { width, height });
 
-  const fullSize = ((imageData) ? await Jimp.read(imageData).then( async(image)=> {
-    const { data, ...size } = image.bitmap;
-    return { ...size };
-  }) : { width, height });
+  const fullSize = null;
+  // const fullSize = ((imageData) ? await Jimp.read(imageData).then( async(image)=> {
+  //   const { data, ...size } = image.bitmap;
+  //   return { ...size };
+  // }) : { width, height });
 
-  const thumbSize = (thumbData) ? await Jimp.read(thumbData).then(async image=> {
-    const { data, ...size } = image.bitmap;
-    return { ...size };
-  }) : null;
+  console.log({ thumbData });
+  const thumbSize = null;
+  // const thumbSize = (thumbData) ? await Jimp.read(thumbData).then(async image=> {
+  //   const { data, ...size } = image.bitmap;
+  //   return { ...size };
+  // }) : null;
 
   const reformed = {...component, imageData, thumbData, thumbSize, fullSize, accessibility,
     // html,

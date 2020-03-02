@@ -44,6 +44,9 @@ class PlaygroundHeader extends Component {
     this.props.onBreadCrumbClick({ type, payload });
 	};
 
+	handleDeviceChange = (event)=> {
+		console.log('%s.handleDeviceChange()', this.constructor.name, { event : event });
+	};
 
 	handlePopoverClose = ()=> {
 //		console.log('%s.handlePopoverClose()', this.constructor.name);
@@ -88,7 +91,7 @@ class PlaygroundHeader extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { darkThemed, playground } = this.props;
+		const { darkThemed, devices, playground } = this.props;
 		const { popover } = this.state;
 
 		return (<div className="playground-header">
@@ -97,6 +100,12 @@ class PlaygroundHeader extends Component {
         <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
 			</div>
 			<div className="playground-header-col playground-header-col-right">
+				{(devices) && (<select onChange={this.handleDeviceChange}>
+				{/* {(true) && (<select onChange={this.handleDeviceChange}> */}
+					{(devices.map((device, i)=> {
+						return (<option key={i} value={device.id}>{device.title}</option>);
+					}))}
+				</select>)}
 				<PlaygroundShareLink popover={popover} playground={playground} onClick={()=> this.setState({ popover : !this.state.popover })} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
 				<UserSettings onMenuItem={this.props.onSettingsItem} onLogout={this.props.onLogout} />
 			</div>
@@ -142,6 +151,7 @@ const mapDispatchToProps = (dispatch)=> {
 const mapStateToProps = (state, ownProps)=> {
 	return ({
     darkThemed : state.darkThemed,
+		devices    : state.devices,
 		playground : state.playground,
 		typeGroup  : state.typeGroup,
 		component  : state.component,

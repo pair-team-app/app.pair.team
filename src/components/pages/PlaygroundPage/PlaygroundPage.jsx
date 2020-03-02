@@ -478,7 +478,7 @@ class PlaygroundPage extends Component {
     playground.selected = !playground.selected;
 
     if (playground.selected) {
-      this.props.history.push(`/app/${team.title}/${Strings.slugifyURI(playground.title)}/${playground.buildID}/desktop`);
+      this.props.history.push(`/app/${team.title}/${Strings.slugifyURI(playground.title)}/${playground.buildID}/desktop-macos`);
       this.props.fetchPlaygroundComponentGroup({ playground, typeGroup : { id : 187 } })
     
     } else {

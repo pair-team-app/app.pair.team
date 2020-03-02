@@ -2,11 +2,12 @@
 import moment from 'moment';
 import cookie from 'react-cookies';
 import { reformComponent, reformPlayground } from '../../components/pages/PlaygroundPage/utils/reform';
-import { BUILD_PLAYGROUNDS_LOADED, TEAM_LOADED, TEAM_BUILDS_LOADED, 
+import { DEVICES_LOADED,
+  BUILD_PLAYGROUNDS_LOADED, TEAM_LOADED, TEAM_BUILDS_LOADED, 
   TYPE_GROUP_LOADED, UPDATE_MOUSE_COORDS, 
   USER_PROFILE_UPDATED, 
   USER_PROFILE_LOADED, 
-  UPDATE_MATCH_PATH} from '../../consts/action-types';
+  UPDATE_MATCH_PATH } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { fetchTeamBuilds, fetchPlaygroundComponentGroup, fetchTeamLookup } from '../actions';
 
@@ -31,7 +32,9 @@ export function onMiddleware(store) {
     const { type, payload } = action;
     logFormat({ store : prevState, action, next, meta : '<==] PREV' });
 
-    if (type === USER_PROFILE_LOADED || type === USER_PROFILE_UPDATED) {
+    if (type === DEVICES_LOADED) {
+
+    } else if (type === USER_PROFILE_LOADED || type === USER_PROFILE_UPDATED) {
       if (payload) {
         dispatch(fetchTeamLookup({ userID : payload.id }));
       }

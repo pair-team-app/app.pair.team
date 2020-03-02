@@ -1,6 +1,6 @@
 import { Objects } from 'lang-js-utils';
 import { 
-  COMPONENT_TYPES_LOADED, PRODUCTS_LOADED, EVENT_GROUPS_LOADED, TOGGLE_THEME, UPDATE_MOUSE_COORDS,
+  COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, EVENT_GROUPS_LOADED, TOGGLE_THEME, UPDATE_MOUSE_COORDS,
   SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_TYPE_GROUP, SET_REDIRECT_URI, 
   TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TYPE_GROUP_LOADED, TEAM_LOADED, PLAYGROUND_LOADED, UPDATE_MATCH_PATH,
   USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, } from '../../consts/action-types';
@@ -58,6 +58,9 @@ function rootReducer(state = initialState, action) {
 
   if (type === COMPONENT_TYPES_LOADED) {
     return (Object.assign({}, state, { componentTypes : action.payload }));
+
+  } else if (type === DEVICES_LOADED) {
+    return (Object.assign({}, state, { devices : action.payload }));
 
   } else if (type === EVENT_GROUPS_LOADED) {
     return (Object.assign({}, state, { eventGroups: action.payload }));
