@@ -137,16 +137,17 @@ class PlaygroundNavPanel extends Component {
       <div className="playground-nav-panel">
         {team && <PlaygroundNavPanelHeader team={team} />}
         <div className="link-wrapper">
-          <NavLink to={'./feed'} className="nav-panel-link" onClick={this.handleLink}>Feed</NavLink>
-          <NavLink to={'./backlog'} className="nav-panel-link" onClick={this.handleLink}>Backlog</NavLink>
-          <NavLink to={'./members'} className="nav-panel-link" onClick={this.handleLink}>Members</NavLink>
+          <NavLink to={'/app/ask'} className="nav-panel-link" onClick={this.handleLink}>Ask</NavLink>
+          <NavLink to={'/app/install'} className="nav-panel-link" onClick={this.handleLink}>Install</NavLink>
         </div>
         {playgrounds && (
           <div className="projects-wrapper">
             <div className="projects-wrapper-header">Projects</div>
-            {projects.map((project, i)=> (
-              <NavPanelProject key={i} project={project} onProjectClick={this.handleProjectClick} />
-            ))}
+            <div className="projects-item-wrapper">
+              {projects.map((project, i)=> (
+                <NavPanelProject key={i} project={project} onProjectClick={this.handleProjectClick} />
+              ))}
+            </div>
           </div>
         )}
       </div>

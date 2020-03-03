@@ -1,0 +1,20 @@
+
+.nav-panel-project:not(:last-child) {
+  margin-bottom: var(--orthodox-margin-mini);
+}
+
+.project-tree-item-arrow {
+  margin-right: var(--orthodox-margin-half);
+}
+
+.nav-panel-project-title {
+  font-weight: bold;
+}
+
+.nav-panel-project-title:hover {
+  cursor: pointer;
+}
+
+.nav-panel-project-item-wrapper {
+  margin: var(--orthodox-margin-mini) 0 0 var(--orthodox-margin-base);
+}

@@ -42,6 +42,10 @@
 }
 
 .playground-nav-panel .projects-wrapper-header {
-	font-size: 14px;
+	font-size: 12px;
 	text-transform: uppercase;
+}
+
+.playground-nav-panel .projects-item-wrapper {
+	margin-top: var(--orthodox-margin-half);
 }
