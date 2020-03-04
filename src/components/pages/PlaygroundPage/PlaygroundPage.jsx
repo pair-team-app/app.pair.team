@@ -654,7 +654,7 @@ class PlaygroundPage extends Component {
               onPopoverClose={this.handleComponentPopoverClose}
             />
 
-            {typeGroup && component && (
+            {/* {typeGroup && component && ( */}
               <PlaygroundFooter
                 accessibility={accessibility}
                 cursor={cursor}
@@ -667,7 +667,7 @@ class PlaygroundPage extends Component {
                 onToggleDesktop={this.handleTogglePlayground}
                 onToggleMobile={this.handleTogglePlayground}
               />
-            )}
+            {/* )} */}
 
             {accessibility && (
               <AccessibilityPopover

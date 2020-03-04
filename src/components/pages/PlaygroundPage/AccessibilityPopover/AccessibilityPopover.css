@@ -1,9 +1,11 @@
 .accessibility-popover {
-	min-width: 250px;
-	min-height: 250px;
-	width: 350px;
-	height: 350px;
+	min-width: 258px;
+	min-height: 258px;
+	width: 358px;
+	height: 600px;
 	padding: var(--orthodox-padding-base);
+	background-color: #ffffff;
+	border-radius: var(--border-radius);
 }
 
 .accessibility-popover-tree-wrapper {

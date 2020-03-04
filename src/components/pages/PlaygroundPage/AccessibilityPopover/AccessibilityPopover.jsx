@@ -49,11 +49,7 @@ class AccessibilityPopover extends Component {
 	};
     
     return (
-      <BasePopover
-		outro={outro}
-		payload={payload}
-        onOutroComplete={this.props.onClose}
-      >
+      <BasePopover outro={outro} payload={payload} onOutroComplete={this.props.onClose}>
         <div className="accessibility-popover">
           {(component) && (<div className="accessibility-popover-tree-wrapper">
             {((treeNodes || []).map((treeNode, i)=> {
