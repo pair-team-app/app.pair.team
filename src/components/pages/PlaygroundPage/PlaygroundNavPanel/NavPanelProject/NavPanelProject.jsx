@@ -15,8 +15,14 @@ function NavPanelProject(props) {
 		className="nav-panel-project"
 		open={project.selected}
 		// title={<div className="nav-panel-project-title" onClick={()=> props.onProjectClick(project)} data-selected={project.selected}>{project.title} ({project.added.format(BUILD_TIMESTAMP)})</div>}
-		title={<div className="nav-panel-project-title" onClick={()=> props.onProjectClick(project)} data-selected={project.selected}><FontAwesome name="caret-right" className="project-tree-item-arrow" />{project.title}</div>}
+		title={<div className="nav-panel-project-title-wrapper" onClick={()=> props.onProjectClick(project)} data-selected={project.selected}>
+			<div className={`nav-panel-project-title-arrow-wrapper${(project.selected) ? ' nav-panel-project-title-arrow-wrapper-expanded' : ''}`}><FontAwesome name="caret-right" className="project-tree-item-arrow" /></div>
+			<div className="nav-panel-project-title">{project.title}</div>
+		</div>}
+
+
 		content={<div className="nav-panel-project-item-wrapper">
+			Buttons
 			{/* {(typeGroup.items.map((item, i)=> (<NavPanelTypeItem key={i} typeName={typeGroup.title} item={item} onClick={()=> props.onTypeItemClick(typeGroup, item)} />)))} */}
 		</div>}
 	/>);

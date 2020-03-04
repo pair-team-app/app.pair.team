@@ -100,16 +100,16 @@ const UserSettingsPopover = (props)=> {
 	const { position, outro } = props;
 	const payload = {
 		position : {
-			x : position.x + 10,
-			y : position.y + 25
+			x : position.x + 30,
+			y : position.y
 		}
 	};
 
 	return (<BasePopover outro={outro} payload={payload} onOutroComplete={props.onComplete}>
 		<div className="user-settings-popover">
 			<div className="user-settings-popover-item" onClick={()=> props.onItemClick(SettingsMenuItemTypes.PROFILE)}>Profile</div>
-			<div className="user-settings-popover-item" onClick={()=> props.onItemClick(SettingsMenuItemTypes.DELETE_ACCT)}>Delete Account</div>
-			<div className="user-settings-popover-item"><NavLink to={GITHUB_DOCS} target="_blank" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.DOCS, event)}>Docs</NavLink></div>
+			<div className="user-settings-popover-item" onClick={()=> props.onItemClick(SettingsMenuItemTypes.INSTALL)}>Install</div>
+			<div className="user-settings-popover-item"><NavLink to={GITHUB_DOCS} target="_blank" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.SUPPORT, event)}>Support</NavLink></div>
 			<div className="user-settings-popover-item" onClick={()=> props.onItemClick(SettingsMenuItemTypes.LOGOUT)}>Logout</div>
 		</div>
 	</BasePopover>);

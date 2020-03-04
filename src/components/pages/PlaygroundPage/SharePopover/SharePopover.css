@@ -1,7 +1,9 @@
 
 .share-popover {
-	width: 250px;
+	width: 348px;;
 	padding: var(--orthodox-padding-base);
+	background-color: #ffffff;
+	border-radius: var(--border-radius);
 }
 
 .share-popover-url {
