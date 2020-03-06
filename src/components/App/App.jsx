@@ -330,7 +330,7 @@ class App extends Component {
 
   handleUpdateUser = (profile)=> {
     // 		console.log('%s.handleUpdateUser()', this.constructor.name, profile);
-    this.props.updateUserProfile(profile);
+    // this.props.updateUserProfile(profile);
   };
 
   onAuthInterval = ()=> {
