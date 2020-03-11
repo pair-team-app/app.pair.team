@@ -30,6 +30,9 @@ const stackTraceMiddleware = createLogActionStackTraceMiddleware([SET_PLAYGROUND
 const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
 
 
+cookie.remove('user_id');
+
+
 // start filling store
 if (typeof cookie.load('user_id') === 'undefined') {
 	cookie.save('user_id', '0', { path : '/', sameSite : false });
