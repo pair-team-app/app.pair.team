@@ -5,10 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "firefox",
+      "type": "chrome",
+      "request": "attach",
+      "name": "Attach to Chrome",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}"
+    },
+
+    {
+      "type": "chrome",
       "request": "launch",
       "reAttach": true,
-      "name": "Launch Firefox @ localhost",
+      "name": "Launch Chrome @ localhost",
       "url": "http://localhost:3000/app/pairurl-com/pairurl-com/204/558/views",
       "webRoot": "${workspaceFolder}",
       "pathMappings": [
