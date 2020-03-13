@@ -5,11 +5,21 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "firefox",
+      "request": "launch",
+      "reAttach": true,
+      "name": "Launch Firefox",
+      "url": "http://localhost:3000/app/pairurl-com/pair-url/209/desktop-macos",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
       "type": "chrome",
       "request": "attach",
       "name": "Attach to Chrome",
       "port": 9222,
-      "webRoot": "${workspaceFolder}"
+      "url": "http://localhost:3000/app/pairurl-com/pair-url/209/desktop-macos",
+      "webRoot": "${workspaceFolder}",
+      "trace": true
     },
 
     {
@@ -17,7 +27,7 @@
       "request": "launch",
       "reAttach": true,
       "name": "Launch Chrome @ localhost",
-      "url": "http://localhost:3000/app/pairurl-com/pairurl-com/204/558/views",
+      "url": "http://localhost:3000/app/pairurl-com/pair-url/209/desktop-macos",
       "webRoot": "${workspaceFolder}",
       "pathMappings": [
         {

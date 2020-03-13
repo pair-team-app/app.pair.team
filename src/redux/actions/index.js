@@ -278,7 +278,7 @@ export function setComponent(payload) {
   return { payload, type : SET_COMPONENT };
 }
 
-export function setComment(payload) {
+export function  setComment(payload) {
   logFormat('setComment()', null, payload);
   return { payload, type : SET_COMMENT };
 }

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 // import { Route, Switch, withRouter } from 'react-router-dom';
 import { Route, Switch } from 'react-router-dom';
 import { Pages } from '../../../consts/uris';
+import AskPage from '../../pages/AskPage';
 import DocsPage from '../../pages/DocsPage/index';
 import FeaturesPage from '../../pages/FeaturesPage/index';
 import HomePage from '../../pages/HomePage/index';
@@ -73,6 +74,16 @@ class Routes extends Component {
         }/>
 
       <Route  
+        path={`${Pages.ASK}/:teamSlug([a-z-]+)/:commentID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`} 
+        // path={Pages.ASK} 
+        render={({ props })=> <AskPage 
+          onLogout={this.props.onLogout} 
+          onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
+          onPopup={this.props.onPopup} { ...props} />
+         } />
+
+
+      <Route  
         path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`} 
         // path={Pages.PLAYGROUND} 
         render={({ props })=> <PlaygroundPage 
@@ -80,6 +91,7 @@ class Routes extends Component {
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
           onPopup={this.props.onPopup} { ...props} />
          } />
+
 
       <Route exact 
         path={Pages.PRICING} 
