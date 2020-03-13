@@ -16,7 +16,7 @@ export const Modals = {
 };
 
 export const Pages = {
-	ASK        : '/ask',
+	ASK        : '/app',
 	DOCS       : '/docs',
 	HOME       : '/',
 	FEATURES   : '/features',

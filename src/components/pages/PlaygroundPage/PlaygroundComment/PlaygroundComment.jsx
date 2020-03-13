@@ -143,7 +143,7 @@ class PlaygroundComment extends Component {
     // 		console.log('%s.render()', this.constructor.name, this.props.component, this.props.comment);
 
     const { component, comment, ind, offset, scale, activeComment } = this.props;
-	const { outro } = this.state;
+	  const { outro } = this.state;
 	
 
 	// const style = {
@@ -231,24 +231,9 @@ const PlaygroundCommentAddPopover = (props)=> {
             placeholder="Enter Comment"
             onChange={props.onTextChange}
           ></textarea>
-          <div className="button-wrapper">
-            <div>
-              <button
-                className="quiet-button"
-                onClick={(event)=> props.onOutro(event)}
-              >
-                Cancel
-              </button>
-            </div>
-            <div>
-              <button
-                type="submit"
-                disabled={comment.content.length === 0}
-                onClick={props.onSubmit}
-              >
-                Submit
-              </button>
-            </div>
+          <div className="button-wrapper-row">
+            <button className="quiet-button" onClick={(event)=> props.onOutro(event)}>Cancel</button>
+            <button type="submit" disabled={comment.content.length === 0} onClick={props.onSubmit}>Submit</button>
           </div>
         </form>
       </div>

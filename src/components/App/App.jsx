@@ -439,7 +439,7 @@ class App extends Component {
         <TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />
       )}
 
-	    <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND)) ? ' playground-page-wrapper' : ''}`}>
+	    <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND) && !location.pathname.includes(Pages.ASK)) ? ' playground-page-wrapper' : ''}`}>
 		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
 	    </div>
 		  
