@@ -1,69 +1,83 @@
 
-.playground-header {
+.ask-page-header {
 	position: fixed;
 	top: 0;
 	left: 208px;
-	/*left: 0;*/
-	width: calc(100% - (var(--playground-nav-width) + var(--playground-comments-width)));
-	/*width: 100%;*/
+	width: calc(100% - 208px);
 	display: flex;
 	align-items: center;
 	padding: calc(var(--orthodox-padding-base) - 4px) var(--orthodox-padding-base) 0 var(--orthodox-padding-base);
-	/*background-color: rgba(var(--site-bg-color), 0.875);*/
 	transition: width 250ms cubic-bezier(0.4, 0, 0.2, 1);
 	z-index: 2;
 }
 
-.playground-header > * {
+.ask-page-header > * {
 	flex: 4 4 0;
 }
 
-.playground-header-col-right {
+.ask-page-header-col-left {
 	display: flex;
+	align-items: flex-start;
 	flex-wrap: nowrap;
-	justify-content: flex-end;
-	align-items: center;
 }
 
-.playground-header-col-right > *:not(:last-child) {
-	margin-right: var(--orthodox-margin-base);
-}
-
-.playground-header-col-middle {
+.ask-page-header-col-middle {
 	display: none;
 	visibility: hidden;
 	flex: 1 0 auto;
 	text-align: center;
 }
 
-.playground-header-breadcrumb-wrapper {
+.ask-page-header-col-right {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.ask-page-header-col-right > *:not(:last-child) {
+	margin-right: var(--orthodox-margin-base);
+}
+
+.ask-page-header-col-middle {
+	display: none;
+	visibility: hidden;
+	flex: 1 0 auto;
+	text-align: center;
+}
+
+.ask-page-header .sort-by-wrapper {
 	display: flex;
 	align-items: flex-start;
 	flex-wrap: nowrap;
 }
 
-
-.playground-header-breadcrumb-wrapper > * {
+.ask-page-header .sort-by-wrapper > * {
 	flex: 0 0 auto;
 }
 
-.playground-header-breadcrumb {
+.ask-page-header .sort-by-wrapper .sort-by-link {
 	color: rgba(var(--link-color), 1.0);
 	text-decoration: none;
 	transition: color 0.125s ease-out;
 }
 
-.playground-header-breadcrumb[data-last="false"]:hover {
+.ask-page-header .sort-by-wrapper .sort-by-link:hover {
 	cursor: pointer;
 	color: rgba(var(--link-hover-color), 1.0);
 }
 
-.playground-header-breadcrumb[data-last="true"] {
-	color: rgba(var(--link-selected-color), 1.0);
-	font-weight: 500;
-	text-decoration: underline;
+.ask-page-header .sort-by-wrapper .sort-by-link[data-selected="true"] {
+	font-weight: 700;
 }
 
+.ask-page-header .sort-by-wrapper .sort-by-link[data-selected="true"]:hover {
+	cursor: pointer;
+}
+
+.ask-page-header .sort-by-wrapper .sort-by-link:not(:last-child) {
+	margin-right: var(--orthodox-margin-half);
+}
 
 .playground-share-link {
 	position: relative;

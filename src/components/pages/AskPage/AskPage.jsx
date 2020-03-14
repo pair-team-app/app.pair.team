@@ -9,6 +9,7 @@ import { setComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import BasePage from '../BasePage';
 import './AskPage.css';
+import AskPageHeader from './AskPageHeader';
 import PlaygroundCommentsPanel from '../PlaygroundPage/PlaygroundCommentsPanel';
 import { SettingsMenuItemTypes } from '../PlaygroundPage/PlaygroundHeader/UserSettings';
 import PlaygroundNavPanel from '../PlaygroundPage/PlaygroundNavPanel';
@@ -21,7 +22,8 @@ class AskPage extends Component {
     this.state = {
       comments       : [], 
       commentContent : '',
-      fetching       : false
+      fetching       : false,
+      share          : false
     };
   }
 
@@ -46,46 +48,30 @@ class AskPage extends Component {
     const { teamSlug, commentID } = params || {};    
   }
 
-  handleAddComment = ({
-    component = null,
-    position = { x: 0, y: 0 },
-    content = null
-  })=> {
-    // 		console.log('%s.handleAddComment()', this.constructor.name, { component, position, content });
+  handleAddComment = (event)=> {
+    console.log('%s.handleAddComment()', this.constructor.name, { event });
     trackEvent('button', 'add-comment');
 
-    const { profile } = this.props;
-    axios
-      .post(API_ENDPT_URL, {
-        action: 'ADD_COMMENT',
-        payload: {
-          content,
-          position,
-          user_id: profile.id,
-          component_id: component.id
-        }
-      })
-      .then((response)=> {
-        const comment = reformComment(response.data.comment);
-        // 			console.log('ADD_COMMENT', response.data, comment);
+    event.preventDefault();``
+    event.stopPropagation();
 
-        component.comments = [...component.comments, comment].sort((i, ii)=>
-          i.epoch > ii.epoch ? -1 : i.epoch < ii.epoch ? 1 : 0
-        );
-        const playground = {
-          ...this.props.playground,
-          components: this.props.playground.components.map((item)=>
-            item.id === component.id ? component : item
-          )
-        };
+    const { profile, team } = this.props;
+    const { commentContent } = this.state; 
 
-        this.props.setPlayground(playground);
-        this.props.setComponent(component);
-        this.props.setComment(comment);
+    axios.post(API_ENDPT_URL, {
+      action  : 'ADD_COMMENT',
+      payload : { 
+        position : null,
+        user_id  : profile.id,
+        team_id  : team.id,
+        content  : commentContent 
+      }
+    }).then((response)=> {
+      const comment = reformComment(response.data.comment);
+      console.log('ADD_COMMENT', response.data, comment);
 
-        this.setState({ cursor: false });
-      })
-      .catch((error)=> {});
+      this.props.setComment(comment);
+    }).catch((error)=> {});
   };
 
 
@@ -121,8 +107,17 @@ class AskPage extends Component {
       .catch((error)=> {});
   };
 
+  handleKeyDown = (event)=> {
+    console.log('%s.handleKeyDown()', this.constructor.name, event);
+
+    const { commentContent } = this.state;
+    if (event.keyCode === ENTER_KEY && commentContent.length > 0) {
+      this.handleAddComment(event);
+    }
+  }
+
   handleSettingsItem = (itemType)=> {
-    //.log('%s.handleSettingsItem()', this.constructor.name, itemType);
+    //console.log('%s.handleSettingsItem()', this.constructor.name, itemType);
 
     if (itemType === SettingsMenuItemTypes.DELETE_ACCT) {
       this.props.onModal(Modals.DISABLE);
@@ -139,13 +134,20 @@ class AskPage extends Component {
     this.props.onModal(Modals.STRIPE, { team, product });
   };
 
+  handleTextChange = (event)=> {
+      console.log('%s.handleTextChange()', this.constructor.name, event);
+
+    const commentContent = event.target.value;
+    this.setState({ commentContent });
+  };
+
 
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
     // 		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
 
     const { profile, team, comment } = this.props;
-    const { comments, commentContent, fetching } = this.state;
+    const { comments, commentContent, fetching, share } = this.state;
     const { params = null } = this.props || { params : null };
 
 
@@ -158,18 +160,22 @@ class AskPage extends Component {
             onTypeGroupClick={this.handleNavGroupItemClick}
             onTypeItemClick={this.handleNavTypeItemClick}
           />
-          {/* <PlaygroundHeader
-            accessibility={accessibility}
-            popover={share}
-            onBreadCrumbClick={this.handleBreadCrumbClick}
-            onPopup={this.props.onPopup}
-            onSharePopoverClose={()=> this.setState({ share: false })}
-            onSettingsItem={this.handleSettingsItem}
-            onLogout={this.props.onLogout}
-          /> */}
+          <AskPageHeader 
+            sort="DATE" popover={share} 
+            onSortClick={this.handleSortClick} 
+            onPopup={this.props.onPopup} 
+            onSharePopoverClose={()=> this.setState({ share:  false })} 
+            onSettingsItem={this.handleSettingsItem} 
+            onLogout={this.props.onLogout} 
+          />
 
           <div className="ask-page-content-wrapper" data-loading={fetching}>
-            <AskPageContentHeader loading={fetching} commentContent={commentContent} onSubmit={this.handleAddComment} />
+            <AskPageContentHeader 
+              loading={fetching} 
+              commentContent={commentContent} 
+              onTextChange={this.handleTextChange} 
+              onSubmit={this.handleAddComment}
+            />
           </div>
         </>
       )}
@@ -181,16 +187,9 @@ const AskPageContentHeader = (props)=> {
   console.log('AskPageContentHeader()', props);
 
   const { loading, commentContent } = props;
-  
-  const handleKeyDown = (event)=> {
-    if (event.keyCode === ENTER_KEY && commentContent.length > 0) {
-      props.onSubmit(event);
-    }
-  };
-
   return (<div className="ask-page-content-header">
     <form>
-      <input type="text" placeholder="Enter Comment" onChange={props.onTextChange} />
+      <input type="text" placeholder="Ask your team anything…" onChange={props.onTextChange} />
       <button type="submit" disabled={commentContent.length === 0} onClick={props.onSubmit}>Submit</button>
     </form>
   </div>);
