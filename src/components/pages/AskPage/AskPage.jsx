@@ -52,7 +52,7 @@ class AskPage extends Component {
     console.log('%s.handleAddComment()', this.constructor.name, { event });
     trackEvent('button', 'add-comment');
 
-    event.preventDefault();``
+    event.preventDefault();
     event.stopPropagation();
 
     const { profile, team } = this.props;
@@ -79,32 +79,15 @@ class AskPage extends Component {
     //.log('%s.handleDeleteComment()', this.constructor.name, comment.id);
     trackEvent('button', 'delete-comment');
 
-    axios
-      .post(API_ENDPT_URL, {
-        action: 'UPDATE_COMMENT',
-        payload: {
-          comment_id: comment.id,
-          state: 'deleted'
-        }
-      })
-      .then((response)=> {
-        // 			console.log('UPDATE_COMMENT', response.data);
-
-        const component = {
-          ...this.props.component,
-          comments: this.props.component.comments
-            .filter(({ id })=> id !== comment.id)
-            .sort((i, ii)=>
-              i.epoch > ii.epoch ? -1 : i.epoch < ii.epoch ? 1 : 0
-            )
-        };
-
-        this.props.setComponent(component);
-        if (!this.props.pathname.includes('/comments')) {
-          this.props.history.push(`${this.props.pathname}/comments`);
-        }
-      })
-      .catch((error)=> {});
+    axios.post(API_ENDPT_URL, {
+      action: 'UPDATE_COMMENT',
+      payload: {
+        comment_id: comment.id,
+        state: 'deleted'
+      }
+    }).then((response)=> {
+      // 			console.log('UPDATE_COMMENT', response.data);
+    }).catch((error)=> {});
   };
 
   handleKeyDown = (event)=> {
