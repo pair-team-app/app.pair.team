@@ -10,7 +10,7 @@ import SharePopover from '../../PlaygroundPage/SharePopover';
 import { BreadcrumbTypes } from './';
 import './AskPageHeader.css';
 import UserSettings from '../../PlaygroundPage/PlaygroundHeader/UserSettings';
-
+import { SORT_BY_SCORE, SORT_BY_DATE } from './index';
 
 
 class AskPageHeader extends Component {
@@ -46,14 +46,14 @@ class AskPageHeader extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { darkThemed } = this.props;
+		const { darkThemed, sort } = this.props;
 		const { popover } = this.state;
 
 		return (<div className="ask-page-header">
 			<div className="ask-page-header-col ask-page-header-col-left">
 				<div className="sort-by-wrapper">
-					<div className="sort-by-link">Top</div>
-					<div className="sort-by-link">New</div>
+					<div className="sort-by-link" data-selected={sort === SORT_BY_SCORE} onClick={()=> this.props.onSortClick(SORT_BY_SCORE)}>Top</div>
+					<div className="sort-by-link" data-selected={sort === SORT_BY_DATE} onClick={()=> this.props.onSortClick(SORT_BY_DATE)}>New</div>
 				</div>
 			</div>
 			<div className="pask-page-header-col ask-page-header-col-middle">

@@ -35,6 +35,7 @@
   display: flex;
 	align-items: flex-start;
 	flex-wrap: nowrap;  
+	margin-bottom: var(--orthodox-margin-base);
 }
 
 .ask-page-content-header button {

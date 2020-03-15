@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Browsers, DateTimes } from 'lang-js-utils';
+import { Browsers, DateTimes, Images, Strings } from 'lang-js-utils';
 import React, { Component } from 'react';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
@@ -59,7 +59,6 @@ class App extends Component {
     trackPageview();
     //
     // console.log('[:][:][:][:][:][:][:][:][:][:]');
-
     const { profile, location } = this.props;
     // 		if (!profile && location.pathname.startsWith(Pages.PLAYGROUND)) {
     if (
@@ -82,7 +81,7 @@ class App extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, snapshot });
     // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
-
+  
     // check for playground url
     const matchPlaygrounds = matchPath(this.props.location.pathname, {
       path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`,
@@ -96,7 +95,7 @@ class App extends Component {
 
 
     // extract url props
-    const { componentTypes, profile, team, playgrounds, playground, typeGroup } = this.props;
+    const { products, componentTypes, profile, team, playgrounds, playground, typeGroup } = this.props;
     const { pathname } = (matchPlaygrounds && Object.keys(matchPlaygrounds).length > 0) ? this.props.location : '';
     
     const { modals } = this.state;
@@ -122,11 +121,11 @@ class App extends Component {
       }
 
       // just received team, check plan
-      if (team !== null && prevProps.team === null) {
+      if (products && team !== null && prevProps.team === null) {
         // pay alert check
         const modal = (team.members.length > 10 && team.type === 'free') || (team.members.length > 50 && team.type !== 'enterprise');
         if (modal && !prevState.modals.stripe && !modals.stripe) {
-          const product = this.props.products.find(({ threshold })=> team.members.length >= threshold);
+          const product = products.find(({ threshold })=> team.members.length >= threshold);
           this.onToggleModal(Modals.STRIPE, true, { team, product });
         }
       }

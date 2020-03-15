@@ -2,7 +2,7 @@ import { Objects } from 'lang-js-utils';
 import { 
   COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, EVENT_GROUPS_LOADED, TOGGLE_THEME, UPDATE_MOUSE_COORDS,
   SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_TYPE_GROUP, SET_REDIRECT_URI, 
-  TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TYPE_GROUP_LOADED, TEAM_LOADED, PLAYGROUND_LOADED, UPDATE_MATCH_PATH,
+  TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TYPE_GROUP_LOADED, TEAM_LOADED, PLAYGROUND_LOADED, UPDATE_MATCH_PATH, TEAM_COMMENTS_LOADED, 
   USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, } from '../../consts/action-types';
 import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
@@ -113,12 +113,15 @@ function rootReducer(state = initialState, action) {
     }));
   
   } else if (type === TEAM_BUILDS_LOADED) {
-      playgrounds = payload.playgrounds;
       // components: storePlayground.components.concat(payload.components).reduce((acc, inc)=> [
       //   ...acc.filter(({ id })=> id !== inc.id), inc
       // ], [])
            
-    return (Object.assign({}, state, { playgrounds }));
+    return (Object.assign({}, state, { playgrounds : payload.playgrounds }));
+
+  } else if (type === TEAM_COMMENTS_LOADED) {
+    const team = payload.team;     
+    return (Object.assign({}, state, { team : payload.team }));
   
   } else if (type === PLAYGROUND_LOADED) {
     const playgrounds = state.playgrounds.map((playground)=> ((playground.id === payload.playground.id) ? payload.playground : playground));
@@ -158,7 +161,7 @@ function rootReducer(state = initialState, action) {
     return Object.assign({}, state, { matchPath: action.payload.matchPath });
 
   } else if (type === TEAM_LOADED) {
-    return (Object.assign({}, state, { team : action.payload }));
+    return (Object.assign({}, state, { team : action.payload.team }));
 
   } else if (type === BUILD_PLAYGROUNDS_LOADED) {
     const { playgroundID } = action.payload;

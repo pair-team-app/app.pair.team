@@ -11,12 +11,17 @@ export const reformComment = (comment, overwrite={})=> {
 
   const reformed = { ...comment,
     position : ((typeof comment.position === 'string' && comment.position.charAt(0) === '{') ? JSON.parse(comment.position) : comment.position) || { x: 0, y: 0 },
+    content  : (comment.content || '¡!¡'),
     author   : {
       id       : comment.author.id,
       username : comment.author.username,
       email    : comment.author.email,
       avatar   : comment.author.avatar
     },
+    votes      : comment.votes.map((vote)=> ({ ...vote,
+      score : vote.score << 0
+    })),
+    score      : 1 + (comment.votes.reduce((acc, vote)=> (acc + (vote.score << 0)), 0)),
     epoch      : (comment.added) ? (moment.utc(comment.added).valueOf() * 0.001) << 0 : 0,
     timestamp  : (comment.added)
       ? moment(comment.added).add(moment().utcOffset() << 0, 'minute')

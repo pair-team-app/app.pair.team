@@ -3,7 +3,7 @@ import { Bits, Objects } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { 
   COMPONENT_TYPES_LOADED, EVENT_GROUPS_LOADED, DEVICES_LOADED, PRODUCTS_LOADED,
-  TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TYPE_GROUP_LOADED, PLAYGROUND_LOADED, 
+  TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TYPE_GROUP_LOADED, PLAYGROUND_LOADED, TEAM_COMMENTS_LOADED,
   SET_INVITE, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TYPE_GROUP, 
   USER_PROFILE_LOADED, USER_PROFILE_UPDATED, USER_PROFILE_ERROR,
   UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, SET_REDIRECT_URI, TOGGLE_THEME
@@ -182,6 +182,60 @@ export function fetchTeamBuilds(payload=null) {
   };
 }
 
+export function fetchTeamComments(payload=null) {
+  return (dispatch, getState)=> {
+    const { team } = payload;
+
+    logFormat('fetchTeamComments()', getState(), payload);
+    axios.post(API_ENDPT_URL, {
+      action  : 'TEAM_COMMENTS',
+      payload : {
+        team_id : team.id
+      }
+    }).then((response)=> {
+      console.log('TEAM_COMMENTS', response.data);
+      const { comments } = response.data;
+
+      dispatch({
+        type    : TEAM_COMMENTS_LOADED,
+        payload : { comments }
+      });
+    }).catch((error)=> {});
+  };
+}
+
+
+export function fetchTeamLookup(payload=null) {
+  const { userID } = payload;
+  return (dispatch, getState)=> {
+    logFormat('fetchTeamLookup()', getState(), payload);
+
+    axios.post(API_ENDPT_URL, {
+      action  : 'TEAM_LOOKUP',
+      payload : {
+        user_id : userID,
+        verbose : false
+      }
+    }).then((response)=> {
+      console.log('TEAM_LOOKUP', response.data);
+      const { team } = response.data;
+
+      if (team) {
+        dispatch({
+          type    : TEAM_LOADED,
+          payload : { 
+            team : { ...team,
+              members : team.members.map((member)=> ({ ...member,
+                id : member.id << 0
+              }))
+            }
+          }
+        });
+      }
+    }).catch((error)=> {});
+  };
+}
+
 
 export function fetchProducts(payload=null) {
   return (dispatch, getState)=> {
@@ -226,34 +280,6 @@ export function fetchUserProfile(payload=null) {
           paid   : type.includes('paid')
         }
       });
-    }).catch((error)=> {});
-  };
-}
-
-export function fetchTeamLookup(payload=null) {
-  const { userID } = payload;
-  return (dispatch, getState)=> {
-    logFormat('fetchTeamLookup()', getState(), payload);
-
-    axios.post(API_ENDPT_URL, {
-      action  : 'TEAM_LOOKUP',
-      payload : {
-        user_id : userID
-      }
-    }).then((response)=> {
-      console.log('TEAM_LOOKUP', response.data);
-      const { team } = response.data;
-
-      if (team) {
-        dispatch({
-          type    : TEAM_LOADED,
-          payload : { ...team,
-            members : team.members.map((member)=> ({ ...member,
-              id : member.id << 0
-            }))
-          }
-        });
-      }
     }).catch((error)=> {});
   };
 }

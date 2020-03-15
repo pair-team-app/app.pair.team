@@ -17,7 +17,7 @@ function PlaygroundBaseComment(props) {
 	return (<div className="playground-base-comment" data-id={id}>
 		<div className="playground-base-comment-header-wrapper">
 			<div className="playground-base-comment-header-icon-wrapper">
-				{(type !== 'init') && (<div className="playground-base-comment-header-icon avatar-wrapper">{ind}</div>)}
+				{(type !== 'init' && ind >= 0) && (<div className="playground-base-comment-header-icon avatar-wrapper">{ind}</div>)}
 				<div className="playground-base-comment-header-icon avatar-wrapper"><img src={(!author.avatar) ? USER_DEFAULT_AVATAR : author.avatar} alt={author.username} /></div>
 			</div>
 			<div className="playground-base-comment-header-spacer" />
@@ -27,7 +27,7 @@ function PlaygroundBaseComment(props) {
 		</div>
 
 		<div className="playground-base-comment-timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
-		<div className="playground-base-comment-content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">@${author.username}</span>`) }} />
+		{(content) && (<div className="playground-base-comment-content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">@${author.username}</span>`) }} />)}
 	</div>);
 }
 

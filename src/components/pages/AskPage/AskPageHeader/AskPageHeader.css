@@ -39,13 +39,6 @@
 	margin-right: var(--orthodox-margin-base);
 }
 
-.ask-page-header-col-middle {
-	display: none;
-	visibility: hidden;
-	flex: 1 0 auto;
-	text-align: center;
-}
-
 .ask-page-header .sort-by-wrapper {
 	display: flex;
 	align-items: flex-start;
@@ -69,6 +62,7 @@
 
 .ask-page-header .sort-by-wrapper .sort-by-link[data-selected="true"] {
 	font-weight: 700;
+	text-decoration: underline;
 }
 
 .ask-page-header .sort-by-wrapper .sort-by-link[data-selected="true"]:hover {

@@ -137,7 +137,8 @@ export function makeAvatar(name, size=32) {
     '#bdc3c7',
     '#7f8c8d'
   ]);
-
+	
+	const fgColor = (0xffffff ^ parseInt(bgColor.replace('#', ''), 16)).toString(16);
   const canvas = window.document.createElement('canvas');
   const context = canvas.getContext('2d');
 
@@ -154,7 +155,8 @@ export function makeAvatar(name, size=32) {
   context.font = `${(size * 0.5) << 0}px Monaco, monospace`;
   context.textAlign = 'center';
   context.textBaseline = 'middle';
-  context.fillStyle = `#${(0xffffff ^ parseInt(bgColor.replace('#', ''), 16)).toString(16)}`;
+  // context.fillStyle = `#${(0xffffff ^ parseInt(bgColor.replace('#', ''), 16)).toString(16)}`;
+  context.fillStyle = `#${'000000'.substr(0, 6 - fgColor.length)}${fgColor}`;
   context.fillText(letter, size * 0.5, size * 0.5);
 
   const dataURL = canvas.toDataURL();
