@@ -57,7 +57,8 @@ function rootReducer(state = initialState, action) {
   logFormat(state, action);
 
   if (type === COMPONENT_TYPES_LOADED) {
-    return (Object.assign({}, state, { componentTypes : action.payload }));
+    const { componentTypes } = action.payload;
+    return (Object.assign({}, state, { componentTypes : componentTypes }));
 
   } else if (type === DEVICES_LOADED) {
     return (Object.assign({}, state, { devices : action.payload }));
@@ -113,6 +114,10 @@ function rootReducer(state = initialState, action) {
     }));
   
   } else if (type === TEAM_BUILDS_LOADED) {
+    const { playgrounds, playground, typeGroup } = payload;
+    return (Object.assign({}, state, { playgrounds, playground, typeGroup }));
+
+
       // components: storePlayground.components.concat(payload.components).reduce((acc, inc)=> [
       //   ...acc.filter(({ id })=> id !== inc.id), inc
       // ], [])

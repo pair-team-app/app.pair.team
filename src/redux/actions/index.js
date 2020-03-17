@@ -60,7 +60,9 @@ export function fetchComponentTypes(payload=null) {
       console.log('COMPONENT_TYPES', response.data);
       dispatch({
         type    : COMPONENT_TYPES_LOADED,
-        payload : response.data.component_types
+        payload : {
+          componentTypes : response.data.component_types
+        }
       });
     }).catch((error)=> {});
   };
@@ -127,9 +129,11 @@ export function fetchPlayground(payload=null) {
 }
 
 export function fetchPlaygroundComponentGroup(payload=null) {
-  const { playground, typeGroup } = payload;
+  const { typeGroup } = payload;
   return (dispatch, getState)=> {
-    logFormat('fetchPlaygroundComponentGroup()', getState(), payload);
+    const { playground } = getState();
+
+    logFormat('fetchPlaygroundComponentGroup()', { payload, playground, typeGroup });
 
     axios.post(API_ENDPT_URL, {
       action  : 'PLAYGROUND_TYPE_GROUP_COMPONENTS',
@@ -168,7 +172,7 @@ export function fetchTeamBuilds(payload=null) {
       action  : 'TEAM_BUILDS',
       payload : {
         team_id   : team.id,
-        device_id : 1
+        device_id : 0
       }
     }).then((response)=> {
       console.log('TEAM_BUILDS', response.data);
@@ -281,6 +285,20 @@ export function fetchUserProfile(payload=null) {
         }
       });
     }).catch((error)=> {});
+  };
+}
+
+export function lookupTypeGroup(payload) {
+  return (dispatch, getState)=> {
+    logFormat('lookupTypeGroup()', payload, { componentTypes : getState().componentTypes });
+
+    const { typeGroupID, key } = payload;
+    const { componentTypes } = getState();
+
+    return (componentTypes.find(({ id })=> (id === (typeGroupID << 0))));
+
+    return { payload, type : SET_TYPE_GROUP };
+
   };
 }
 

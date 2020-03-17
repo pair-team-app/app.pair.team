@@ -40,6 +40,11 @@
                 "showReuseMessage": true,
                 "clear": false
             }
+        },
+        {
+            "type": "yarn",
+            "task": "start:debug",
+            "problemMatcher": []
         }
     ]
 }

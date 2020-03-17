@@ -4,6 +4,7 @@ import moment from 'moment';
 import { jsonFormatKB } from '../../../../consts/formats';
 import { unzipData } from '../../../../utils/funcs';
 import { convertStyles } from './css';
+import { typeGroupByID } from './lookup';
 
 
 export const reformComment = (comment, overwrite={})=> {
@@ -32,7 +33,7 @@ export const reformComment = (comment, overwrite={})=> {
   return ({ ...reformed, size: jsonFormatKB(reformed) });
 };
 
-export const reformComponent = async (component, overwrite = {})=> {
+export const reformComponent = async (component, componentTypes=null, overwrite = {})=> {
   console.log('reformComponent()', { keys : Object.keys(component), component, overwrite });
 
   const PLACEHOLDER_FILL = {
@@ -104,6 +105,7 @@ export const reformComponent = async (component, overwrite = {})=> {
     nodeID: node_id,
     title: title.length === 0 ? tag_name : title,
     tagName: tag_name,
+    typeGroup : componentTypes.find(({ id })=> (id === type_id)),
     // rootStyles: rootStyles
     //   ? {
     //       ...rootStyles,
@@ -129,13 +131,14 @@ export const reformComponent = async (component, overwrite = {})=> {
   return { ...reformed, size: jsonFormatKB(reformed) };
 };
 
-export const reformPlayground = async (playground, fullReform=true, team=null, overwrite={})=> {
-  console.log('reformPlayground()', playground);
+export const reformPlayground = async (playground, fullReform=true, team=null, componentTypes=null, overwrite={})=> {
+  console.log('reformPlayground()', { playground, componentTypes });
 
-  const { build_id, team_id, device_id, title, components, added, last_visited, selected } = playground;
+  const { build_id, team_id, device_id, title, type_groups, components, added, last_visited, selected } = playground;
   delete playground['build_id'];
   delete playground['team_id'];
   delete playground['device_id'];
+  delete playground['type_groups'];
   delete playground['last_visited'];
 
   const reformed = { ...playground,
@@ -145,7 +148,7 @@ export const reformPlayground = async (playground, fullReform=true, team=null, o
     projectSlug : Strings.slugifyURI(title),
     team        : (!playground.team) ? team : playground.team,
     components  : (fullReform) 
-      ? components.map(async(component)=> (await reformComponent(component))) 
+      ? components.map(async(component)=> (await reformComponent(component, componentTypes))) 
       : components.map((component)=> {
         const { type_id, event_type_id } = component;
         delete (component['type_id']);
@@ -156,6 +159,7 @@ export const reformPlayground = async (playground, fullReform=true, team=null, o
           eventTypeID : event_type_id << 0
         });
       }),
+    typeGroups  : type_groups.map((typeGroupID)=> (componentTypes.find(({ id })=> ((typeGroupID << 0) === id)))),
     lastVisited : moment(last_visited).utc(),
     added       : (playground.added)
       ? moment(added).add(moment().utcOffset() << 0, 'minute')

@@ -9,7 +9,7 @@ import { DEVICES_LOADED,
   USER_PROFILE_LOADED, 
   UPDATE_MATCH_PATH } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
-import { fetchTeamBuilds, fetchTeamComments, fetchPlaygroundComponentGroup, fetchTeamLookup } from '../actions';
+import { fetchTeamBuilds, fetchTeamComments, fetchPlaygroundComponentGroup, fetchTeamLookup, lookupTypeGroup } from '../actions';
 
 
 const logFormat = ({ store, action, next, meta = '' })=> {
@@ -47,13 +47,12 @@ export function onMiddleware(store) {
       payload.team.comments = comments;
 
     } else if (type === TYPE_GROUP_LOADED) {
-      let { playground } = prevState;
+      let { componentTypes, playground } = prevState;
       let { components } = payload;
-
 
       components = await Promise.all(
         Object.values((components).map(async (component)=> {
-          return await reformComponent(component);
+          return await reformComponent(component, componentTypes);
         })
       ));
 
@@ -70,11 +69,16 @@ export function onMiddleware(store) {
       cookie.save('user_id', (payload) ? payload.id : '0', { path : '/', sameSite : false });
 
     } else if (type === TEAM_BUILDS_LOADED) {
-      dispatch(fetchTeamComments({ team : prevState.team }));
+      const { componentTypes, team } = prevState;
+      const playgrounds = await Promise.all(payload.playgrounds.map(async (playground, i)=> (await reformPlayground(playground, false, team, componentTypes))));
+      const playground = playgrounds.find(({ deviceID })=> (deviceID === 2));
+      const typeGroup = playground.typeGroups.find(({ id })=> (id === 187 ));
 
-      const { team } = prevState;
-      const playgrounds = await Promise.all(payload.playgrounds.map(async (playground, i)=> (await reformPlayground(playground, false, team))));
       payload.playgrounds = playgrounds;
+      payload.playground = playground;
+      payload.typeGroup = typeGroup;
+
+      dispatch(fetchTeamComments({ team : prevState.team }));
 
     } else if (type === TEAM_COMMENTS_LOADED) {
       const { team } = prevState;
@@ -82,10 +86,10 @@ export function onMiddleware(store) {
       payload.team = (team) ? { ...team, comments } : null;
 
     } else if (type === BUILD_PLAYGROUNDS_LOADED) {
-      const { team } = prevState;
+      const { componentTypes, team } = prevState;
       const { playgroundID } = payload;
 
-      const playgrounds = await Promise.all(payload.playgrounds.map(async (playground)=> (await reformPlayground(playground, true, team))));
+      const playgrounds = await Promise.all(payload.playgrounds.map(async (playground)=> (await reformPlayground(playground, true, team, componentTypes))));
       payload.playgrounds = playgrounds;
 
       dispatch(fetchPlaygroundComponentGroup({ 
@@ -94,7 +98,8 @@ export function onMiddleware(store) {
       }));
     
     } else if (type === UPDATE_MATCH_PATH) {
-      const params = { ...payload.matchPath.params,
+      if (payload.matchPath.params) {
+const params = { ...payload.matchPath.params,
         teamSlug       : (payload.matchPath.params.teamSlug || null),
         projectSlug    : (payload.matchPath.params.projectSlug || null),
         buildID        : payload.matchPath.params.buildID << 0,
@@ -109,6 +114,7 @@ export function onMiddleware(store) {
       delete (params['0']);
       delete (params['1']);
       payload.matchPath = { ...payload.matchPath, params };
+      }
     }
 
     next(action);

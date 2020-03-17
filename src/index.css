@@ -39,6 +39,7 @@
 	--quiet-btn-hover-bg-color: 237, 237, 237; /* #ededed */
 	--quiet-btn-selected-bg-color: var(--site-fg-color); /* #232323 */
 	--quiet-btn-selected-fg-color: var(--full-white); /* ffffff */
+	--img-bg-color: 204, 204, 204; /* #cccccc */
 	--link-color: var(--site-fg-color); /* #232323 */
 	--link-hover-color: 153, 153, 153; /* 999999 */
 	--link-selected-color: var(--site-fg-color); /* #232323 */

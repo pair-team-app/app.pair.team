@@ -35,7 +35,7 @@ export const playgroundByID = (playgrounds, playgroundID)=> {
 export const typeGroupByComponent = (typeGroups, component)=> {
 	return (typeGroups.find(({ id })=> (id === component.typeID)));
 };
-
+ 
 export const typeGroupByID = (typeGroups, typeGroupID)=> {
 	return (typeGroups.find(({ id })=> (id === (typeGroupID << 0))));
 };

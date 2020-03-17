@@ -15,7 +15,7 @@ function NavPanelTypeGroup(props) {
 		open={typeGroup.selected}
 		title={<div className="nav-panel-type-group-title" onClick={()=> props.onTypeGroupClick(typeGroup)} data-selected={typeGroup.selected}>{Strings.capitalize(typeGroup.key)} ({typeGroup.items.length})</div>}
 		content={<div className="nav-panel-type-group-item-wrapper">
-			{(typeGroup.items.map((item, i)=> (<NavPanelTypeItem key={i} typeName={typeGroup.title} item={item} onClick={()=> props.onTypeItemClick(typeGroup, item)} />)))}
+			{(typeGroup.items.map((item, i)=> (<NavPanelTypeItem key={i} typeName={typeGroup.title} item={item} onClick={()=> props.onTypeItemClick(typeGroup)} />)))}
 		</div>}
 	/>);
 }

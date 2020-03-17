@@ -5,36 +5,74 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "program": "${workspaceFolder}/app.js",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",
+      "args": ["start", "--inspect-brk=5858", "--no-cache"],
+      "cwd": "${workspaceRoot}",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    
+    {
+      "name": "Launch localhost",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/src",
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*"
+      },
+      "skipFiles": [
+        "node_modules/**/*.js"
+      ]
+    },
+    {
+      "name": "Debug Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",
+      "args": ["start", "--inspect-brk=5858", "--runInBand", "--no-cache"],
+      "cwd": "${workspaceRoot}"
+    },
+    {
+      "name": "Debug CRA Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",
+      "args": ["start", "--runInBand", "--inspect-brk=5858"],
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "env": { "CI": "true" },
+      "disableOptimisticBPs": true
+    },
+    {
       "type": "firefox",
       "request": "launch",
       "reAttach": true,
       "name": "Launch Firefox",
-      "url": "http://localhost:3000/app/pairurl-com/pair-url/209/desktop-macos",
-      "webRoot": "${workspaceFolder}"
+      "url": "http://localhost:3000/app/pairurl-com/ask",
+      "webRoot": "${workspaceFolder}/src"
     },
     {
       "type": "chrome",
       "request": "attach",
       "name": "Attach to Chrome",
       "port": 9222,
-      "url": "http://localhost:3000/app/pairurl-com/pair-url/209/desktop-macos",
+      "url": "http://localhost:3000/app/pairurl-com/pair-url/209/desktop-macos/views",
       "webRoot": "${workspaceFolder}",
-      "trace": true
-    },
-
-    {
-      "type": "chrome",
-      "request": "launch",
-      "reAttach": true,
-      "name": "Launch Chrome @ localhost",
-      "url": "http://localhost:3000/app/pairurl-com/pair-url/209/desktop-macos",
-      "webRoot": "${workspaceFolder}",
-      "pathMappings": [
-        {
-          "url": "file:///labor/projects/sites/pairurl.com/src",
-          "path": "${workspaceFolder}/src"
-        }
-      ]
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*",
+        "/usr/src/app/*": "${workspaceRoot}/*"
+        
+      },
+      "trace": true,
+      "sourceMaps": true,
     }
   ]
 }

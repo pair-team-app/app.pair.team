@@ -40,35 +40,35 @@ class PlaygroundNavPanel extends Component {
     //   (this.props.typeGroup === prevProps.typeGroup &&
     //     component !== prevProps.component)
     // ) {
-    //   const typeGroups = (this.state.typeGroups.map(typeGroup)=> {
-    //     const items = (typeGroup.items.map(item)=> ({
+    //   const typeGroups = (this.state.typeGroups.map((typeGroup)=> {
+    //     const items = (typeGroup.items.map((item)=> ({
     //       ...item,
     //       selected: component && item.id === component.id
-    //     }));
+    //     })));
 
     //     return {
     //       ...typeGroup,
     //       items,
     //       selected: typeGroup.id === this.props.typeGroup.id
     //     };
-    //   });
+    //   }));
 
     //   this.setState({ typeGroups });
     // }
 
     // if (component && component !== prevProps.component) {
-    //   const typeGroups = (this.state.typeGroups.map(typeGroup)=> {
-    //     const items = (typeGroup.items.map(item)=> ({
+    //   const typeGroups = (this.state.typeGroups.map((typeGroup)=> {
+    //     const items = (typeGroup.items.map((item)=> ({
     //       ...item,
     //       selected: component && item.id === component.id
-    //     }));
+    //     })));
 
     //     return {
     //       ...typeGroup,
     //       items,
     //       selected: typeGroup.id === this.props.typeGroup.id
     //     };
-    //   });
+    //   }));
 
     //   this.setState({ typeGroups });
     // }
@@ -90,36 +90,20 @@ class PlaygroundNavPanel extends Component {
   };
 
   onPopulateTree = ()=> {
-    		console.log('%s.onPopulateTree()', this.constructor.name, { props : this.props });
+    console.log('%s.onPopulateTree()', this.constructor.name, { props : this.props });
 
-    const { componentTypes, playgrounds, component } = this.props;
+    const { componentTypes, playgrounds, playground, component } = this.props;
 
     const projects = playgrounds.map((playground)=> {
-      const typeIDs = playground.components.map(({ typeID })=> typeID);
+      const { typeGroups } = playground;
 
-      const typeGroups = componentTypes
-        .filter(({ id })=> typeIDs.includes(id))
-        .map((typeGroup)=> {
-          const items = playground.components
-            .filter(({ typeID })=> typeID === typeGroup.id)
-            .map((item)=> ({
-              ...item,
-              selected: component && item.id === component.id
-            }));
+      return ({ ...playground });
 
-          return {
-            ...typeGroup,
-            items,
-            selected:
-              this.props.typeGroup &&
-              (typeGroup.id === this.props.typeGroup.id ||
-                items.map(({ selected })=> selected).includes(true))
-          };
-        });
+      // return ({ ...playground,
+      //   typeGroups : playground.typeGroups.map((typeGroup)=> ({ ...typeGroup,
+      //     selected : false//(this.props.typeGroup && typeGroup.id === this.props.typeGroup.id)
+      // }))});
 
-      return ({
-        ...playground
-      }); 
     });
 
     // 		const favicon = playground.team.
@@ -130,7 +114,7 @@ class PlaygroundNavPanel extends Component {
   render() {
     		// console.log('%s.render()', <this className="constructor n">                                                                                                                                                                                                                      </this>ame, { props : this.props, state : this.state });
 
-    const { team, playgrounds } = this.props;
+    const { team, playgrounds, typeGroup } = this.props;
     const { typeGroups, projects } = this.state;
 
     return (
@@ -145,7 +129,11 @@ class PlaygroundNavPanel extends Component {
             <div className="projects-wrapper-header">Projects</div>
             <div className="projects-item-wrapper">
               {projects.map((project, i)=> (
-                <NavPanelProject key={i} project={project} onProjectClick={this.handleProjectClick} />
+                <NavPanelProject 
+                  key={i} 
+                  project={project} 
+                  typeGroup={typeGroup} 
+                  onProjectClick={this.handleProjectClick} onTypeGroupClick={this.props.onTypeGroupClick} />
               ))}
             </div>
           </div>

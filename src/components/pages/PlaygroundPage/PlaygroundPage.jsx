@@ -392,6 +392,7 @@ class PlaygroundPage extends Component {
     this.props.setComponent(component);
     this.setState({ cursor: false });
     //     }
+
   };
 
   handleComponentMenuShow = ({ component = null })=> {
@@ -478,8 +479,8 @@ class PlaygroundPage extends Component {
     playground.selected = !playground.selected;
 
     if (playground.selected) {
-      this.props.history.push(`/app/${team.title}/${Strings.slugifyURI(playground.title)}/${playground.buildID}/desktop-macos`);
-      this.props.fetchPlaygroundComponentGroup({ playground, typeGroup : { id : 187 } })
+      // this.props.history.push(`/app/${team.title}/${Strings.slugifyURI(playground.title)}/${playground.buildID}/desktop-macos`);
+      // this.props.fetchPlaygroundComponentGroup({ playground, typeGroup : { id : 187 } })
     
     } else {
       this.props.history.push(`/app/${team.title}`);
@@ -495,8 +496,9 @@ class PlaygroundPage extends Component {
 
     typeGroup.selected = !typeGroup.selected;
 
-    this.onFetchTypeGroupComponents(typeGroup);
-    // this.props.setTypeGroup(typeGroup);
+    // this.onFetchTypeGroupComponents(typeGroup);
+    this.props.fetchPlaygroundComponentGroup({ typeGroup });
+    this.props.setTypeGroup(typeGroup);
     this.props.setComponent(null);
     this.props.setComment(null);
   };

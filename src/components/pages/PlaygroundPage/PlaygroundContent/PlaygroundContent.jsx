@@ -10,6 +10,7 @@ import { componentsFromTypeGroup } from '../utils/lookup';
 import { reformComment } from '../utils/reform';
 import ComponentMenu from './ComponentMenu';
 import './PlaygroundContent.css';
+import { DateTimes } from 'lang-js-utils';
 
 const CONSTRAIN = 0.875;
 
@@ -372,14 +373,12 @@ const PlaygroundComponentsGrid = (props)=> {
   //   console.log('PlaygroundComponentsGrid()', props);
 
   const { typeGroup, components } = props;
+
   return (
-    <div className="playground-components-grid">
+    <div className="playground-components-grid" data-loaded={true}>
       {components.map((component, i)=> {
-        const { id, thumbData, tagName, processed } = component;
-        const title =
-          component.title === tagName
-            ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}`
-            : component.title;
+        const { id, title, thumbData, processed } = component;
+
         return (
           <div
             key={i}
@@ -388,7 +387,7 @@ const PlaygroundComponentsGrid = (props)=> {
             onClick={(event)=> props.onItemClick(event, component)}
           >
             <h5 className="component-title">{title}</h5>
-            <div className="content-wrapper" data-loaded={processed}>
+            <div className="content-wrapper" data-loaded={true}>
               <img
                 src={thumbData}
                 className="components-grid-item-image"
