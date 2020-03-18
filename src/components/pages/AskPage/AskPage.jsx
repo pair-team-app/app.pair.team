@@ -106,6 +106,15 @@ class AskPage extends Component {
     }
   }
 
+  handlePlaygroundClick = (playground)=> {
+    console.log('%s.handlePlaygroundClick()', this.constructor.name, playground);
+
+    const { team, comment } = this.props;
+    this.props.history.push(`/app/${team.title}/${Strings.slugifyURI(playground.title)}/${playground.buildID}/desktop-macos`);
+    this.props.setComment(null);
+
+  };
+
   handleSettingsItem = (itemType)=> {
     //console.log('%s.handleSettingsItem()', this.constructor.name, itemType);
 
@@ -135,11 +144,8 @@ class AskPage extends Component {
     const { profile, team } = this.props;
     const { comments } = team;
 
-    // const score = (!vote) ? (action === VOTE_ACTION_UP) ? 1 : -1 : (vote.score === 1 && action === VOTE_ACTION_UP) ? -1 : 1;
     const score = (!vote) ? (action === VOTE_ACTION_UP) ? 1 : -1 : vote.score * -1;
     comment.score += score;
-
-    console.log('%s.handleVote()', this.constructor.name, { comment, action, vote, score });
 
     this.setState({ comments : comments.map((item)=> ((item.id === comment.id) ? comment : item))});
     axios.post(API_ENDPT_URL, {

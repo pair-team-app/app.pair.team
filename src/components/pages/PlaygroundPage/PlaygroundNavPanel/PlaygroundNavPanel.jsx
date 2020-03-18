@@ -121,8 +121,8 @@ class PlaygroundNavPanel extends Component {
       <div className="playground-nav-panel">
         {team && <PlaygroundNavPanelHeader team={team} />}
         <div className="link-wrapper">
-          <NavLink to={'/app/ask'} className="nav-panel-link" onClick={this.handleLink}>Ask</NavLink>
-          <NavLink to={'/app/install'} className="nav-panel-link" onClick={this.handleLink}>Install</NavLink>
+          <NavLink to={`/app/${team.title}/ask`} className="nav-panel-link" onClick={this.handleLink}>Ask</NavLink>
+          <NavLink to={'/install'} className="nav-panel-link" onClick={this.handleLink}>Install</NavLink>
         </div>
         {playgrounds && (
           <div className="projects-wrapper">

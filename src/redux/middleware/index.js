@@ -7,19 +7,17 @@ import { DEVICES_LOADED,
   TYPE_GROUP_LOADED, UPDATE_MOUSE_COORDS, 
   USER_PROFILE_UPDATED, 
   USER_PROFILE_LOADED, 
-  UPDATE_MATCH_PATH } from '../../consts/action-types';
+  UPDATE_MATCH_PATH,
+  SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
-import { fetchTeamBuilds, fetchTeamComments, fetchPlaygroundComponentGroup, fetchTeamLookup, lookupTypeGroup, fetchBuildPlaygrounds } from '../actions';
+import { fetchTeamBuilds, fetchTeamComments, fetchPlaygroundComponentGroup, fetchTeamLookup, fetchBuildPlaygrounds } from '../actions';
 
 
-const logFormat = ({ store, action, next, meta = '' })=> {
-  if (typeof action !== 'function') {
+const logFormat = ({ prevState, action, next, meta = '' })=> {
+  // if (action && typeof action !== 'function') {
+  if (action) {
     const { type, payload } = action;
-
-    if (type !== UPDATE_MOUSE_COORDS) {
-      // 
-      
-    }
+    console.log(LOG_MIDDLEWARE_PREFIX, `“${type}”`, { payload, meta });
   }
 };
 
@@ -30,13 +28,15 @@ export function onMiddleware(store) {
     const { dispatch } = store;
 
     const { type, payload } = action;
-    logFormat({ store : prevState, action, next, meta : '<==] PREV' });
+    // console.log('onMiddleware()', { prevState, type, payload });
+    logFormat(prevState, action, next);
 
     if (type === DEVICES_LOADED) {
 
     } else if (type === USER_PROFILE_LOADED || type === USER_PROFILE_UPDATED) {
-      if (payload) {
-        dispatch(fetchTeamLookup({ userID : payload.id }));
+      const { userProfile } = payload;
+      if (userProfile) {
+        dispatch(fetchTeamLookup({ userProfile }));
       }
 
     } else if (type === TEAM_LOADED) {
@@ -103,21 +103,49 @@ export function onMiddleware(store) {
     
     } else if (type === UPDATE_MATCH_PATH) {
       if (payload.matchPath.params) {
-const params = { ...payload.matchPath.params,
-        teamSlug       : (payload.matchPath.params.teamSlug || null),
-        projectSlug    : (payload.matchPath.params.projectSlug || null),
-        buildID        : payload.matchPath.params.buildID << 0,
-        deviceSlug     : (payload.matchPath.params.deviceSlug || null),
-        typeGroupSlug  : (payload.matchPath.params.typeGroupSlug || null),
-        componentID    : (payload.matchPath.params.componentID) ? payload.matchPath.params.componentID << 0 : null,
-        ax             : (typeof payload.matchPath.params.ax !== 'undefined'),
-        comments       : (typeof payload.matchPath.params.comments !== 'undefined'),
-        commentID      : (payload.matchPath.params.commentID) ? payload.matchPath.params.commentID << 0 : null,
-      };
+        const params = { ...payload.matchPath.params,
+          teamSlug      : (payload.matchPath.params.teamSlug || null),
+          projectSlug   : (payload.matchPath.params.projectSlug || null),
+          buildID       : payload.matchPath.params.buildID << 0,
+          deviceSlug    : (payload.matchPath.params.deviceSlug || null),
+          typeGroupSlug : (payload.matchPath.params.typeGroupSlug || null),
+          componentID   : (payload.matchPath.params.componentID) ? payload.matchPath.params.componentID << 0 : null,
+          ax            : (typeof payload.matchPath.params.ax !== 'undefined'),
+          comments      : (typeof payload.matchPath.params.comments !== 'undefined'),
+          commentID     : (payload.matchPath.params.commentID) ? payload.matchPath.params.commentID << 0 : null,
+        };
 
-      delete (params['0']);
-      delete (params['1']);
-      payload.matchPath = { ...payload.matchPath, params };
+        delete (params['0']);
+        delete (params['1']);
+        payload.matchPath = { ...payload.matchPath, params };
+      }
+    
+    } else if (type === SET_PLAYGROUND) {
+      const { playground } = payload;
+
+      if (prevState.playground === playground) {
+        return;
+      }
+
+    } else if (type === SET_TYPE_GROUP) {
+      const { typeGroup } = payload;
+
+      if (prevState.typeGroup === typeGroup) {
+        return;
+      }
+
+    } else if (type === SET_COMPONENT) {
+      const { component } = payload;
+
+      if (prevState.component === component) {
+        return;
+      }
+
+    } else if (type === SET_COMMENT) {
+      const { comment } = payload;
+
+      if (prevState.comment === comment) {
+        return;
       }
     }
 

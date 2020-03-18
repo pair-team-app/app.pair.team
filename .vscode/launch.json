@@ -64,7 +64,7 @@
       "request": "attach",
       "name": "Attach to Chrome",
       "port": 9222,
-      "url": "http://localhost:3000/app/pairurl-com/pair-url/209/desktop-macos/views",
+      "url": "http://localhost:3000/app/pairurl-com/pair-url/389/desktop-macos/views",
       "webRoot": "${workspaceFolder}",
       "sourceMapPathOverrides": {
         "webpack:///src/*": "${webRoot}/*",

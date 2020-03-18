@@ -25,7 +25,7 @@ const FooterAXButton = (props)=> {
 //
 	const { selected } = props;
   return (<button className="quiet-button glyph-button" onClick={props.onClick} data-selected={selected}>
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="32" viewBox="0 0 30 32">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 30 32">
       <g id="Group_308" data-name="Group 308" transform="translate(-961.008 -5499.554)">
         <path id="Path_113" data-name="Path 113" d="M972.94,5502.53a3.058,3.058,0,1,1,3.057,2.976A3.017,3.017,0,0,1,972.94,5502.53Zm7.132,6.942,10.493-4.407c.93-.39.261-2.186-.757-1.842l-12.793,4.265h-2.038l-12.792-4.264c-.869-.318-1.706,1.316-.757,1.841l10.493,4.406v7.935q-2.089,6.579-4.179,13.159c-.264.734,1.662,1.284,1.905.7l5.913-12.87h.873q2.957,6.435,5.913,12.871c.319.706,2.17-.042,1.905-.7l-4.179-13.159Z" transform="translate(0 0.001)" fillRule="evenodd"/>
       </g>
@@ -38,7 +38,7 @@ const FooterCommentButton = (props)=> {
 
   const { selected } = props;
   return (<button className="quiet-button glyph-button" onClick={props.onClick} data-selected={selected}>
-    <svg xmlns="http://www.w3.org/2000/svg" width="29" height="28.352" viewBox="0 0 29 28.352">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 29 28.352">
       <path id="Union_1" data-name="Union 1" d="M1618.834,562.178a10.59,10.59,0,0,1-4.334-8.331c0-6.267,6.044-11.347,13.5-11.347s13.5,5.08,13.5,11.347-6.044,11.347-13.5,11.347a15.939,15.939,0,0,1-3.526-.391l-5.64,4.049Z" transform="translate(-1613.5 -541.5)"/>
     </svg>
 	</button>);

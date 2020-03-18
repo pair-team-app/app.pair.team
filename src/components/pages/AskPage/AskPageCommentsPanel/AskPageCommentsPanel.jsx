@@ -40,7 +40,7 @@ function AskPageCommentsPanel(props) {
 }
 
 const AskPageComment = (props)=> {
-  console.log('AskPageComment()', props);
+  // console.log('AskPageComment()', props);
 
   const { loading, disabled, vote, comment } = props;
 

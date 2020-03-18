@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Strings } from 'lang-js-utils';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -16,8 +15,7 @@ import PlaygroundHeader, { BreadcrumbTypes } from './PlaygroundHeader';
 import { SettingsMenuItemTypes } from './PlaygroundHeader/UserSettings';
 import PlaygroundNavPanel from './PlaygroundNavPanel';
 import './PlaygroundPage.css';
-import PlaygroundProcessingOverlay from './PlaygroundProcessingOverlay';
-import { commentByID, componentByID, componentFromComment, playgroundByID } from './utils/lookup';
+import { componentFromComment } from './utils/lookup';
 import { reformComment } from './utils/reform';
 
 class PlaygroundPage extends Component {

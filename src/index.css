@@ -211,11 +211,19 @@ button.quiet-button[data-selected="true"], button.quiet-button[data-selected="tr
 	color: rgba(var(--quiet-btn-selected-fg-color), 1.0);
 }
 
+	/* min-width: unset;
+	min-height: unset;
+	max-width: unset;
+	max-height: unset; */
+	/* width: min-content; */
+	/* height: min-content; */
+
 button.quiet-button[data-selected="true"]:hover {
 	color: rgba(var(--quiet-btn-hover-bg-color), 1.0);
 }
 
 button.glyph-button {
+
 	border-radius: 50%;
 	border: 1px solid rgba(var(--site-fg-color), 1.0);
 }

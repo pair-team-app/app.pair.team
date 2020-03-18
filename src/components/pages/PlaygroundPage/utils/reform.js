@@ -4,7 +4,7 @@ import moment from 'moment';
 import { jsonFormatKB } from '../../../../consts/formats';
 
 export const reformComment = (comment, overwrite={})=> {
-  console.log('reformComment()', { comment, overwrite });
+  // console.log('reformComment()', { comment, overwrite });
 
   const reformed = { ...comment,
     position : ((typeof comment.position === 'string' && comment.position.charAt(0) === '{') ? JSON.parse(comment.position) : comment.position) || { x: 0, y: 0 },
@@ -30,7 +30,7 @@ export const reformComment = (comment, overwrite={})=> {
 };
 
 export const reformComponent = (component, componentTypes=null, overwrite = {})=> {
-  console.log('reformComponent()', { keys : Object.keys(component), component, overwrite });
+  // console.log('reformComponent()', { keys : Object.keys(component), component, overwrite });
 
   const PLACEHOLDER_FILL = {
     r: 128,
@@ -120,7 +120,7 @@ export const reformComponent = (component, componentTypes=null, overwrite = {})=
 };
 
 export const reformPlayground = (playground, fullReform=true, team=null, componentTypes=null, overwrite={})=> {
-  console.log('reformPlayground()', { playground, componentTypes });
+  // console.log('reformPlayground()', { playground, componentTypes });
 
   const { build_id, team_id, device_id, title, type_groups, components, added, last_visited, selected } = playground;
   delete playground['build_id'];

@@ -25,17 +25,18 @@
 }
 
 
-.playground-footer-button-wrapper button {
+.playground-footer-button-wrapper button.quiet-button {
+	/* padding: 15px; */
 	padding: 5px;
-	min-width: 28px;
-	max-width: 28px;
 	width: 28px;
-	min-height: 28px;
-	max-height: 28px;
 	height: 28px;
+	min-width: 28px;
+	min-height: 28px; 
+	max-width: 28px;
+	max-height: 28px;
 }
 
-.playground-footer-button-wrapper button[data-selected="true"] {
+.playground-footer-button-wrapper button.quiet-button[data-selected="true"] {
 	cursor: default;
 }
 

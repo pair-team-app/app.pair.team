@@ -60,9 +60,7 @@ export function fetchComponentTypes(payload=null) {
       console.log('COMPONENT_TYPES', response.data);
       dispatch({
         type    : COMPONENT_TYPES_LOADED,
-        payload : {
-          componentTypes : response.data.component_types
-        }
+        payload : { componentTypes : response.data.component_types }
       });
     }).catch((error)=> {});
   };
@@ -77,9 +75,11 @@ export function fetchDevices(payload=null) {
       payload : null
     }).then((response)=> {
       console.log('DEVICES', response.data);
+      const {devices } = response.data;
+
       dispatch({
         type    : DEVICES_LOADED,
-        payload : response.data.devices
+        payload : { devices }
       });
     }).catch((error)=> {});
   };
@@ -97,13 +97,14 @@ export function fetchEventGroups(payload=null) {
 
       dispatch({
         type    : EVENT_GROUPS_LOADED,
-        payload : response.data.event_groups.map((eventGroup)=> {
-          const events = eventGroup.event_types;
-          delete eventGroup['event_types'];
+        payload : { 
+          eventGroups : response.data.event_groups.map((eventGroup)=> {
+            const events = eventGroup.event_types;
+            delete eventGroup['event_types'];
 
-          return { ...eventGroup, events };
-        })
-      });
+            return ({ ...eventGroup, events });
+          })
+        }});
     }).catch((error)=> {});
   };
 }
@@ -120,9 +121,10 @@ export function fetchPlayground(payload=null) {
       }
     }).then((response)=> {
       console.log('PLAYGROUND', response.data);
+      const { playground } = response.data;
       dispatch({
         type    : PLAYGROUND_LOADED,
-        payload : response.data.playground
+        payload : { playground }
       });
     }).catch((error)=> {});
   };
@@ -154,10 +156,7 @@ export function fetchPlaygroundComponentGroup(payload=null) {
 
       dispatch({
         type    : TYPE_GROUP_LOADED,
-        payload : { playground, 
-        components
-          // components : Object.values(components) 
-        }
+        payload : { playground, components }
       });
     }).catch((error)=> {});
   };
@@ -210,14 +209,14 @@ export function fetchTeamComments(payload=null) {
 
 
 export function fetchTeamLookup(payload=null) {
-  const { userID } = payload;
+  const { userProfile } = payload;
   return (dispatch, getState)=> {
     logFormat('fetchTeamLookup()', getState(), payload);
 
     axios.post(API_ENDPT_URL, {
       action  : 'TEAM_LOOKUP',
       payload : {
-        user_id : userID,
+        user_id : userProfile.id,
         verbose : false
       }
     }).then((response)=> {
@@ -253,7 +252,7 @@ export function fetchProducts(payload=null) {
 
       dispatch({
         type    : PRODUCTS_LOADED,
-        payload : response.data.products.map((product)=> ({ ...product }).sort((i, j)=> (i.price < j.price) ? -1 : (i.price > j.price) ? 1 : 0))
+        payload : { products : response.data.products.map((product)=> ({ ...product }).sort((i, j)=> (i.price < j.price) ? -1 : (i.price > j.price) ? 1 : 0)) }
       });
     }).catch((error)=> {});
   };
@@ -277,63 +276,61 @@ export function fetchUserProfile(payload=null) {
       const { id, type, github } = response.data.user;
       dispatch({
         type    : USER_PROFILE_LOADED,
-        payload : { ...response.data.user,
-          id     : id << 0,
-          status : 0x00,
-          github : (github) ? { ...github, id: github.id << 0 } : github,
-          paid   : type.includes('paid')
+        payload : {
+          userProfile : { ...response.data.user,
+            id     : id << 0,
+            status : 0x00,
+            github : (github) ? { ...github, id: github.id << 0 } : github,
+            paid   : type.includes('paid')
+          }
         }
       });
     }).catch((error)=> {});
   };
 }
 
-export function lookupTypeGroup(payload) {
-  return (dispatch, getState)=> {
-    logFormat('lookupTypeGroup()', payload, { componentTypes : getState().componentTypes });
-
-    const { typeGroupID, key } = payload;
-    const { componentTypes } = getState();
-
-    return (componentTypes.find(({ id })=> (id === (typeGroupID << 0))));
-
-    return { payload, type : SET_TYPE_GROUP };
-
-  };
-}
-
 export function setInvite(payload) {
   logFormat('setInvite()', null, payload);
-  return { payload, type : SET_INVITE };
+  const invite = payload;
+  return { payload : { invite }, type : SET_INVITE };
 }
 
 export function setPlayground(payload) {
   logFormat('setPlayground()', null, payload);
-  return { payload, type : SET_PLAYGROUND };
+  const playground = payload;
+  return { payload : { playground }, type : SET_PLAYGROUND };
 }
 
 export function setTypeGroup(payload) {
   logFormat('setTypeGroup()', null, payload);
-  return { payload, type : SET_TYPE_GROUP };
+  const typeGroup = payload;
+  return { payloaad : { typeGroup }, type : SET_TYPE_GROUP };
 }
 
 export function setComponent(payload) {
   logFormat('setComponent()', null, payload);
-  return { payload, type : SET_COMPONENT };
+  const component = payload;
+  return { payload : { component }, type : SET_COMPONENT };
 }
 
-export function  setComment(payload) {
+export function setComment(payload) {
   logFormat('setComment()', null, payload);
-  return { payload, type : SET_COMMENT };
+  const comment = payload;
+  return ({ 
+    payload : { comment }, 
+    type    : SET_COMMENT 
+  });
 }
 
 export function setRedirectURI(payload) {
-  return { payload, type : SET_REDIRECT_URI };
+  const redrectURL = payload;
+  return { redrectURL, type : SET_REDIRECT_URI };
 }
 
 export function toggleTheme(payload = null) {
   logFormat('toggleTheme()', null, payload);
-  return { payload, type : TOGGLE_THEME };
+  const theme = payload;
+  return { theme, type : TOGGLE_THEME };
 }
 
 export function updateMatchPath(payload) {
@@ -343,11 +340,14 @@ export function updateMatchPath(payload) {
 
 export function updateMouseCoords(payload) {
   // 	logFormat('updateMouseCoords()', payload);
-  return { payload, type : UPDATE_MOUSE_COORDS };
+  const { mouseCoords } = payload;
+  return { mouseCoords, type : UPDATE_MOUSE_COORDS };
 }
 
 export function updateUserProfile(payload, force = true) {
   logFormat('updateUserProfile()', payload, force);
+
+  const { userProfile } = payload;
 
   if (payload) {
     Objects.renameKey(payload, 'github_auth', 'github');

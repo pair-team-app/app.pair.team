@@ -73,41 +73,9 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { invite: action.payload }));
 
   } else if (type === TYPE_GROUP_LOADED) {
-    
     const { playgrounds, playground } = payload;
     return (Object.assign({}, state, { playgrounds, playground }));
 
-
-
-
-    const storePlayground = state.playgrounds.find(
-      ({ id })=> id === payload.playground.id
-    );
-
-    return (Object.assign({}, state, {
-      //       	playgrounds : state.playgrounds.map((playground)=> ((playground.id === payload.playground.id) ? payload.playground : playground)),
-      playgrounds: state.playgrounds.map((playground)=>
-        playground.id === payload.playground.id
-          ? payload.playground
-          : playground
-      ),
-              playground  : { ...state.playground,
-      playground: payload.playground,
-      // playground: {
-        // ...storePlayground,
-        // components: storePlayground.components
-        //   .concat(payload.components)
-        //   .reduce(
-        //     (acc, inc)=> [...acc.filter(({ id })=> id !== inc.id), inc],
-        //     []
-        //   )
-      },
-      
-      component:
-        payload.components.find(
-          ({ id })=> state.component && id === state.component.id
-        ) || state.component
-    }));
 
   } else if (type === UPDATE_MOUSE_COORDS) {
     return (Object.assign({}, state, {
@@ -125,8 +93,8 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { playgrounds, playground, typeGroup }));
 
   } else if (type === TEAM_COMMENTS_LOADED) {
-    const team = payload.team;     
-    return (Object.assign({}, state, { team : payload.team }));
+    const { team } = payload;
+    return (Object.assign({}, state, { team }));
   
   } else if (type === PLAYGROUND_LOADED) {
     const playgrounds = state.playgrounds.map((playground)=> ((playground.id === payload.playground.id) ? payload.playground : playground));
@@ -134,11 +102,12 @@ function rootReducer(state = initialState, action) {
 
     return (Object.assign({}, state, { playgrounds, playground }));
 
-  } else if (type === USER_PROFILE_ERROR) {
-    return (Object.assign({}, state, { userProfile: action.payload }));
+  } else if (type === USER_PROFILE_ERROR || type === USER_PROFILE_LOADED) {
+    const { userProfile } = payload;
 
-  } else if (type === USER_PROFILE_LOADED) {
-    return (Object.assign({}, state, { userProfile: action.payload }));
+    console.log('!!!!!!!!!!!!!!', userProfile)
+
+    return (Object.assign({}, state, { userProfile }));
 
   } else if (type === USER_PROFILE_UPDATED) {
     if (action.payload) {
@@ -163,41 +132,32 @@ function rootReducer(state = initialState, action) {
     }
 
   } else if (type === UPDATE_MATCH_PATH) {
-    return Object.assign({}, state, { matchPath: action.payload.matchPath });
+    const { matchPath } = payload;
+
+    return Object.assign({}, state, { matchPath });
 
   } else if (type === TEAM_LOADED) {
-    return (Object.assign({}, state, { team : action.payload.team }));
+    const { team } = payload;
+    return (Object.assign({}, state, { team }));
 
   } else if (type === BUILD_PLAYGROUNDS_LOADED) {
     const { playgrounds, playground } = payload;
-
     return (Object.assign({}, state, { playgrounds, playground }));
 
-
-
-
-    // const { playgroundID } = action.payload;
-    // playgrounds = action.payload.playgrounds;
-
-    // const playground = playgroundID
-    //   ? playgrounds.find(({ id })=> id === playgroundID)
-    //   : playgrounds.find(({ deviceID })=> deviceID !== 1) || playgrounds[0];
-    // const component = state.component
-    //   ? playground.components.find(({ id })=> id === state.component.id)
-    //   : null;
-
-    // return (Object.assign({}, state, { playgrounds, playground, component }));
-
   } else if (type === SET_PLAYGROUND) {
-    return (Object.assign({}, state, { playground : action.payload }));
+    const { playground } = payload;
+    return (Object.assign({}, state, { playground }));
 
   } else if (type === SET_TYPE_GROUP) {
-    return (Object.assign({}, state, { typeGroup : action.payload }));
+    const { typeGroup } = payload;
+    return (Object.assign({}, state, { typeGroup }));
 
   } else if (type === SET_COMPONENT) {
-    return (Object.assign({}, state, { component : action.payload }));
+    const { component } = payload;
+    return (Object.assign({}, state, { component }));
 
   } else if (type === SET_COMMENT) {
+    const { comment } = payload;
     return (Object.assign({}, state, { comment : action.payload }));
 
   } else if (type === PRODUCTS_LOADED) {

@@ -258,7 +258,7 @@ const PlaygroundComponent = (props)=> {
       height={height + 28}
       lockAspectRatio={true}
       minConstraints={[sizes.t.width, sizes.t.height]}
-      maxContraints={[Math.min(width, sizes.c.width), Math.min(height, sizes.c.height) - CONTAINER_PADDING.height]}
+      maxConstraints={[Math.min(width, sizes.c.width), Math.min(height, sizes.c.height) - CONTAINER_PADDING.height]}
       onResize={props.onResize}
     >
       <div className="playground-component" data-loaded={true} onClick={(event)=> props.onItemClick(event, component)} style={{ width: `${width}px`, height: `${height}px` }}>
