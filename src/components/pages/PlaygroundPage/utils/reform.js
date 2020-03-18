@@ -1,11 +1,7 @@
-import Jimp from 'jimp';
+
 import { Images, Strings } from 'lang-js-utils';
 import moment from 'moment';
 import { jsonFormatKB } from '../../../../consts/formats';
-import { unzipData } from '../../../../utils/funcs';
-import { convertStyles } from './css';
-import { typeGroupByID } from './lookup';
-
 
 export const reformComment = (comment, overwrite={})=> {
   console.log('reformComment()', { comment, overwrite });

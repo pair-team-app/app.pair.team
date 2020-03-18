@@ -10,7 +10,6 @@ import { componentsFromTypeGroup } from '../utils/lookup';
 import { reformComment } from '../utils/reform';
 import ComponentMenu from './ComponentMenu';
 import './PlaygroundContent.css';
-import { DateTimes } from 'lang-js-utils';
 
 const SCALE_CONSTRAIN = 1.0;//0.875;
 const CONTAINER_PADDING = {
@@ -160,8 +159,8 @@ class PlaygroundContent extends Component {
       mouse
     } = this.props;
     const { position, popover, bounds } = this.state;
-    // const components = (typeGroup) ? (component) ? [component] : componentsFromTypeGroup(playground.components, typeGroup) : [];
-    const { components } = playground;
+    const components = (typeGroup) ? (component) ? [component] : componentsFromTypeGroup(playground.components, typeGroup) : [];
+    // const { components } = playground;
 
     return (
       <div
