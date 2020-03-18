@@ -73,6 +73,13 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { invite: action.payload }));
 
   } else if (type === TYPE_GROUP_LOADED) {
+    
+    const { playgrounds, playground } = payload;
+    return (Object.assign({}, state, { playgrounds, playground }));
+
+
+
+
     const storePlayground = state.playgrounds.find(
       ({ id })=> id === payload.playground.id
     );
@@ -116,13 +123,6 @@ function rootReducer(state = initialState, action) {
   } else if (type === TEAM_BUILDS_LOADED) {
     const { playgrounds, playground, typeGroup } = payload;
     return (Object.assign({}, state, { playgrounds, playground, typeGroup }));
-
-
-      // components: storePlayground.components.concat(payload.components).reduce((acc, inc)=> [
-      //   ...acc.filter(({ id })=> id !== inc.id), inc
-      // ], [])
-           
-    return (Object.assign({}, state, { playgrounds : payload.playgrounds }));
 
   } else if (type === TEAM_COMMENTS_LOADED) {
     const team = payload.team;     
@@ -169,17 +169,24 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { team : action.payload.team }));
 
   } else if (type === BUILD_PLAYGROUNDS_LOADED) {
-    const { playgroundID } = action.payload;
-    playgrounds = action.payload.playgrounds;
+    const { playgrounds, playground } = payload;
 
-    const playground = playgroundID
-      ? playgrounds.find(({ id })=> id === playgroundID)
-      : playgrounds.find(({ deviceID })=> deviceID !== 1) || playgrounds[0];
-    const component = state.component
-      ? playground.components.find(({ id })=> id === state.component.id)
-      : null;
+    return (Object.assign({}, state, { playgrounds, playground }));
 
-    return (Object.assign({}, state, { playgrounds, playground, component }));
+
+
+
+    // const { playgroundID } = action.payload;
+    // playgrounds = action.payload.playgrounds;
+
+    // const playground = playgroundID
+    //   ? playgrounds.find(({ id })=> id === playgroundID)
+    //   : playgrounds.find(({ deviceID })=> deviceID !== 1) || playgrounds[0];
+    // const component = state.component
+    //   ? playground.components.find(({ id })=> id === state.component.id)
+    //   : null;
+
+    // return (Object.assign({}, state, { playgrounds, playground, component }));
 
   } else if (type === SET_PLAYGROUND) {
     return (Object.assign({}, state, { playground : action.payload }));

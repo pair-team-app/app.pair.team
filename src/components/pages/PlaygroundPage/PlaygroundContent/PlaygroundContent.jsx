@@ -12,7 +12,12 @@ import ComponentMenu from './ComponentMenu';
 import './PlaygroundContent.css';
 import { DateTimes } from 'lang-js-utils';
 
-const CONSTRAIN = 0.875;
+const SCALE_CONSTRAIN = 1.0;//0.875;
+const CONTAINER_PADDING = {
+  width  : 48,
+  // height : 168
+  height : 50
+};
 
 class PlaygroundContent extends Component {
   constructor(props) {
@@ -32,7 +37,7 @@ class PlaygroundContent extends Component {
 
   componentDidMount() {
     console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
-    // this.calcBounds({ x : 0, y : 0, width : 0, height : 0 });
+    this.calcBounds({ x : 0, y : 0, width : 0, height : 0 });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -40,7 +45,7 @@ class PlaygroundContent extends Component {
   }
 
   calcBounds = (rect)=> {
-    // console.log('%s.calcBounds()', this.constructor.name, { rect });
+    console.log('%s.calcBounds()', this.constructor.name, { rect });
 
     const { component } = this.props;
     if (!component) {
@@ -53,10 +58,10 @@ class PlaygroundContent extends Component {
 
     const scale = {
       width: component
-        ? component.meta.bounds.width / ((width - 48) * CONSTRAIN)
+        ? component.meta.bounds.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)
         : 1,
       height: component
-        ? component.meta.bounds.height / ((height - 168) * CONSTRAIN)
+        ? component.meta.bounds.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN)
         : 1
     };
 
@@ -90,8 +95,8 @@ class PlaygroundContent extends Component {
               y: 0
             },
             size: {
-              width: (width - 40) * CONSTRAIN,
-              height: (height - 168) * CONSTRAIN
+              width: (width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN,
+              height: (height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN
             }
           }
         : null
@@ -99,7 +104,7 @@ class PlaygroundContent extends Component {
 
     // const scale = (init.component)
 
-    // console.log('%s.calcBounds() --SET STATE', this.constructor.name, { bounds, init : { ...bounds.init, init}, prev : { ...bounds.prev, prev}, curr : { ...bounds.curr, curr}, next : { ...bounds.next, next} });
+    console.log('%s.calcBounds() --SET STATE', this.constructor.name, { bounds, init : { ...bounds.init, init}, prev : { ...bounds.prev, prev}, curr : { ...bounds.curr, curr}, next : { ...bounds.next, next} });
 
     bounds = {
       ...bounds,
@@ -169,11 +174,7 @@ class PlaygroundContent extends Component {
           onPosition={this.calcBounds}
           onReflow={this.calcBounds}
         />
-        {components.length > 0 && (
-          <div
-            className="playground-content-components-wrapper"
-            data-component={component !== null}
-          >
+        {(components.length > 0) && (<div className="playground-content-components-wrapper" data-component={component !== null}>
             {!component || bounds.curr === null ? (
               <PlaygroundComponentsGrid
                 typeGroup={typeGroup}
@@ -230,41 +231,15 @@ const CommentPinCursor = (props)=> {
 const PlaygroundComponent = (props)=> {
   // console.log('PlaygroundComponent()', props);
 
-  const {
-    profile,
-    popover,
-    scale,
-    bounds,
-    typeGroup,
-    component
-  } = props;
-  const {
-    id,
-    tagName,
-    imageData,
-    thumbSize,
-    fullSize,
-    processed,
-    comments
-  } = component;
+  const { profile, popover, scale, bounds, typeGroup, component } = props;
+  const { id, title, sizes, images, comments } = component;
   const { position, size } = bounds || component.meta.bounds;
   const { width, height } = size;
 
-  const title =
-    component.title === tagName
-      ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}`
-      : component.title;
+  // const title = component.title === tagName ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}`   : component.title;
 
   const lgFactor = Math.max(scale.width, scale.height);
-  const updBounds = {
-    position: {
-      x: (width - component.meta.bounds.width / lgFactor) * 0.5,
-      y: (height - component.meta.bounds.height / lgFactor) * 0.5
-    },
-    size: {
-      width: component.meta.bounds.width / lgFactor,
-      height: component.meta.bounds.height / lgFactor
-    }
+  const updBounds = { position: {   x: (width - component.meta.bounds.width / lgFactor) * 0.5,   y: (height - component.meta.bounds.height / lgFactor) * 0.5 }, size: {   width: component.meta.bounds.width / lgFactor,   height: component.meta.bounds.height / lgFactor }
   };
 
   // console.log('PlaygroundComponent()', offset);
@@ -283,101 +258,73 @@ const PlaygroundComponent = (props)=> {
       width={width}
       height={height + 28}
       lockAspectRatio={true}
-      minConstraints={[thumbSize.width, thumbSize.height]}
-      maxContraints={[
-        Math.min(width, fullSize.width),
-        Math.min(height, fullSize.height) - 168
-      ]}
+      minConstraints={[sizes.t.width, sizes.t.height]}
+      maxContraints={[Math.min(width, sizes.c.width), Math.min(height, sizes.c.height) - CONTAINER_PADDING.height]}
       onResize={props.onResize}
     >
-      <div
-        className="playground-component"
-        data-processed={processed}
-        onClick={(event)=> props.onItemClick(event, component)}
-        style={{ width: `${width}px`, height: `${height}px` }}
-      >
+      <div className="playground-component" data-loaded={true} onClick={(event)=> props.onItemClick(event, component)} style={{ width: `${width}px`, height: `${height}px` }}>
         <h5 className="component-title">{title}</h5>
 
-        <ContextMenuTrigger
-          disable={!processed}
-          id="component"
-          component={component}
-          collect={(props)=> ({ component: props.component })}
-          disableIfShiftIsPressed={true}
-        >
-
-          <div
-            className="playground-content-component"
-            data-id={id}
-            style={{
-              height: `${height}px`,
-              minWidth: `${thumbSize.width}px`,
-              minHeight: `${thumbSize.height}`
-            }}
-          >
-            {processed && <img src={imageData || ''} alt={title} />}
+        <ContextMenuTrigger disable={false} id="component" component={component} collect={(props)=> ({ component: props.component })} disableIfShiftIsPressed={true}>
+          <div className="bg-wrapper" style={commentsStyle}></div>
+          <div className="playground-content-component" data-id={id} style={{
+            height    : `${height}px`,
+            minWidth  : `${sizes.t.width}px`,
+            minHeight : `${sizes.t.height}px`}}>
+            <img src={images[1] || ''} alt={title} />
           </div>
-          {processed && (
-            <div
-              className="playground-component-comments-wrapper"
-              style={commentsStyle}
-              data-id={id}
-            >
-              {(popover
-                ? [
-                    ...comments,
-                    reformComment({
-                      position,
-                      id: 0,
-                      type: 'add',
-                      content: '',
-                      author: profile
-                    })
-                  ]
-                : comments
-              )
-                .filter(({ type })=> type !== 'init')
-                .map((comm, i)=> {
-                  return (
-                    <PlaygroundComment
-                      key={i}
-                      ind={comments.length - 1 - i}
-                      component={component}
-                      comment={comm}
-                      scale={scale}
-                      position={position}
-                      offset={updBounds.position}
-                      onMarkerClick={props.onMarkerClick}
-                      onAdd={props.onAddComment}
-                      onDelete={props.onDeleteComment}
-                      onClose={props.onCloseComment}
-                    />
-                  );
-                })}
-            </div>
-          )}
+          
+          <div className="playground-component-comments-wrapper" style={commentsStyle} data-id={id}>
+            {(popover
+              ? [
+                  ...comments,
+                  reformComment({
+                    position,
+                    id: 0,
+                    type: 'add',
+                    content: '',
+                    author: profile
+                  })
+                ]
+              : comments
+            ).filter(({ type })=> type !== 'init').map((comm, i)=> {
+                return (
+                  <PlaygroundComment
+                    key={i}
+                    ind={comments.length - 1 - i}
+                    component={component}
+                    comment={comm}
+                    scale={scale}
+                    position={position}
+                    offset={updBounds.position}
+                    onMarkerClick={props.onMarkerClick}
+                    onAdd={props.onAddComment}
+                    onDelete={props.onDeleteComment}
+                    onClose={props.onCloseComment}
+                  />
+                );
+              })}
+          </div>
         </ContextMenuTrigger>
 
-        {processed && (
-          <div className="component-caption">
-            {component.meta.bounds.width << 0}px ×{' '}
-            {component.meta.bounds.height << 0}px
-          </div>
-        )}
+        <div className="component-caption">
+          {component.meta.bounds.width << 0}px ×{' '}
+          {component.meta.bounds.height << 0}px
+        </div>
       </div>
     </Resizable>
   );
 };
 
 const PlaygroundComponentsGrid = (props)=> {
-  //   console.log('PlaygroundComponentsGrid()', props);
+    console.log('PlaygroundComponentsGrid()', props);
 
   const { typeGroup, components } = props;
 
   return (
     <div className="playground-components-grid" data-loaded={true}>
       {components.map((component, i)=> {
-        const { id, title, thumbData, processed } = component;
+        const { id, title, images } = component;
 
         return (
           <div
@@ -389,11 +336,11 @@ const PlaygroundComponentsGrid = (props)=> {
             <h5 className="component-title">{title}</h5>
             <div className="content-wrapper" data-loaded={true}>
               <img
-                src={thumbData}
+                src={images[0]}
                 className="components-grid-item-image"
                 alt={title}
               />
-              {processed && <div className="image-overlay" />}
+              <div className="image-overlay" />
             </div>
           </div>
         );

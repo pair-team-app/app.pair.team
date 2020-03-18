@@ -19,7 +19,7 @@ const logFormat = (action, state, payload = null, meta = '')=> {
 
 // these are all action CREATORS that rtrn a funct
 export function fetchBuildPlaygrounds(payload=null) {
-  const { buildID, playgroundID } = payload;
+  const { buildID } = payload;
   return (dispatch, getState)=> {
     logFormat('fetchBuildPlaygrounds()', getState(), payload);
 
@@ -34,8 +34,8 @@ export function fetchBuildPlaygrounds(payload=null) {
       const playgrounds = response.data.playgrounds.map(playground=> ({ ...playground,
         size       : jsonFormatKB(playground, true),
         components : playground.components.map((component)=> ({ ...component,
-          id    : component.id,
-          title : component.title,
+          // id    : component.id,
+          // title : component.title,
           size  : jsonFormatKB(component, true)
         }))
       }));
@@ -43,7 +43,7 @@ export function fetchBuildPlaygrounds(payload=null) {
       console.log('BUILD_PLAYGROUNDS [SIZE]', { playgrounds });
       dispatch({
         type    : BUILD_PLAYGROUNDS_LOADED,
-        payload : { playgrounds, playgroundID }
+        payload : { playgrounds }
       });
     }).catch((error)=> {});
   };

@@ -9,7 +9,7 @@ import { DEVICES_LOADED,
   USER_PROFILE_LOADED, 
   UPDATE_MATCH_PATH } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
-import { fetchTeamBuilds, fetchTeamComments, fetchPlaygroundComponentGroup, fetchTeamLookup, lookupTypeGroup } from '../actions';
+import { fetchTeamBuilds, fetchTeamComments, fetchPlaygroundComponentGroup, fetchTeamLookup, lookupTypeGroup, fetchBuildPlaygrounds } from '../actions';
 
 
 const logFormat = ({ store, action, next, meta = '' })=> {
@@ -25,7 +25,7 @@ const logFormat = ({ store, action, next, meta = '' })=> {
 
 
 export function onMiddleware(store) {
-  return ((next)=> async(action)=> {
+  return ((next)=> (action)=> {
     const prevState = store.getState();
     const { dispatch } = store;
 
@@ -43,34 +43,26 @@ export function onMiddleware(store) {
       dispatch(fetchTeamBuilds({ team : payload.team }));
 
       const { team } = prevState;
-      const comments = (payload.team.comments) ? await Promise.all(payload.team.comments.map(async (comment, i)=> (await reformComment(comment, false, team)))) : [];
+      const comments = (payload.team.comments) ? payload.team.comments.map((comment, i)=> (reformComment(comment, false, team))) : [];
       payload.team.comments = comments;
 
     } else if (type === TYPE_GROUP_LOADED) {
       let { componentTypes, playground } = prevState;
-      let { components } = payload;
+      // let { components } = payload;
 
-      components = await Promise.all(
-        Object.values((components).map(async (component)=> {
-          return await reformComponent(component, componentTypes);
-        })
-      ));
+      // const components = [ ...new Set([ ...playground.components, ...Object.values((components).map((component)=> (reformComponent(component, componentTypes)))) ])];
+      const components = [ ...new Set([ ...playground.components, ...payload.components.map((component)=> (reformComponent(component, componentTypes))) ])];
 
+      playground.components = [ ...components ];
+      payload.playgrounds = prevState.playgrounds.map((item)=> ((item.id === playground.id) ? playground : item));
+      payload.playground = playground;
       
-
-      playground.components = [ ...playground.components, ...components ];
-      // playground.components = [ ...components ];
-      playground.components = playground.components.map(
-        (comp)=> components.find(({ id })=> id === comp.id) || comp
-      );
-      
-
     } else if (type === USER_PROFILE_UPDATED) {
       cookie.save('user_id', (payload) ? payload.id : '0', { path : '/', sameSite : false });
 
     } else if (type === TEAM_BUILDS_LOADED) {
       const { componentTypes, team } = prevState;
-      const playgrounds = await Promise.all(payload.playgrounds.map(async (playground, i)=> (await reformPlayground(playground, false, team, componentTypes))));
+      const playgrounds = payload.playgrounds.map((playground, i)=> (reformPlayground(playground, false, team, componentTypes)));
       const playground = playgrounds.find(({ deviceID })=> (deviceID === 2));
       const typeGroup = playground.typeGroups.find(({ id })=> (id === 187 ));
 
@@ -78,22 +70,34 @@ export function onMiddleware(store) {
       payload.playground = playground;
       payload.typeGroup = typeGroup;
 
+      dispatch(fetchBuildPlaygrounds({ buildID : playground.buildID }));
       dispatch(fetchTeamComments({ team : prevState.team }));
 
     } else if (type === TEAM_COMMENTS_LOADED) {
-      const { team } = prevState;
-      const comments = await Promise.all(payload.comments.map(async (comment, i)=> (await reformComment(comment, false, team))));
+      const { team, playground } = prevState;
+      const comments = payload.comments.map((comment, i)=> (reformComment(comment, false, team)));
       payload.team = (team) ? { ...team, comments } : null;
 
     } else if (type === BUILD_PLAYGROUNDS_LOADED) {
       const { componentTypes, team } = prevState;
-      const { playgroundID } = payload;
 
-      const playgrounds = await Promise.all(payload.playgrounds.map(async (playground)=> (await reformPlayground(playground, true, team, componentTypes))));
+      const playgrounds = prevState.playgrounds.map((playground)=> {
+        let pg = payload.playgrounds.map((playground)=> (reformPlayground(playground, true, team, componentTypes))).find(({ id })=> ((id === playground.id)));
+        // return ((pg) ? Object.assign({}, playground, pg) : playground);
+        let merge = (pg) ? Object.assign({}, playground, pg) : playground;
+        
+        return ({ ...merge,
+          components : [ ...new Set(merge.components)]
+        });
+      });
+
+      const playground = (prevState.playground && playgrounds.find(({ id })=> (id === prevState.playrgound.id))) ? playgrounds.find(({ id })=> (id === prevState.playground.id)) : prevState.playground;
+
       payload.playgrounds = playgrounds;
+      payload.playground = playground;
 
       dispatch(fetchPlaygroundComponentGroup({ 
-        playground : { id : playgroundID }, 
+        playground : { id : prevState.playground.id }, 
         typeGroup : { id : 187 } 
       }));
     
