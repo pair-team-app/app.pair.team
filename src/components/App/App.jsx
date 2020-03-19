@@ -101,7 +101,7 @@ class App extends Component {
 
 
 
-      if (prevProps.matchPath.params !== this.props.matchPath.params) {
+      if (prevProps.matchPath.params !== this.props.matchPath.params && this.props.matchPath.params.buildID > 0) {
         const path = generatePath(`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`, { ...this.props.matchPath.params, 
           ax       : (this.props.matchPath.params.ax) ? 'accessibility' : undefined,
           comments : (this.props.matchPath.params.comments) ? 'comments' : undefined

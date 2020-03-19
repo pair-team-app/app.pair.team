@@ -117,12 +117,27 @@ class PlaygroundNavPanel extends Component {
     const { team, playgrounds, typeGroup } = this.props;
     const { typeGroups, projects } = this.state;
 
+
+    const handleURL = (event, url)=> {
+// 		console.log('%s.handleURL()', this.constructor.name, event, url);
+
+		if (event) {
+			event.preventDefault();
+		}
+
+		trackOutbound(url, ()=> {
+			window.open(url);
+		});
+
+		window.open(url);
+	};
+
     return (
       <div className="playground-nav-panel">
         {team && <PlaygroundNavPanelHeader team={team} />}
         <div className="link-wrapper">
-          <NavLink to={`/app/${team.title}/ask`} className="nav-panel-link" onClick={this.handleLink}>Ask</NavLink>
-          <NavLink to={'/install'} className="nav-panel-link" onClick={this.handleLink}>Install</NavLink>
+          <NavLink to={`/app/${team.title}/ask`} className="nav-panel-link">Ask</NavLink>
+          <NavLink to="https://www.npmjs.com/package/design-engine-playground" className="nav-panel-link" target="_blank" onClick={(event)=> handleURL(event, 'https://www.npmjs.com/package/design-engine-playground')}>Install</NavLink>
         </div>
         {playgrounds && (
           <div className="projects-wrapper">
@@ -167,16 +182,8 @@ const PlaygroundNavPanelHeader = (props)=> {
 
   return (
     <div className="playground-nav-panel-header">
-      <img
-        src={team.image}
-        alt="Team Logo"
-      />
-      <NavLink
-        to={`http://${team.domain}`}
-        target="_blank"
-        className="playground-nav-panel-header-title"
-        onClick={(event)=> handleClick(event)}
-      >
+      <NavLink to={`/app/${team.title}/ask`} className="playground-nav-panel-header-title">
+        <img src={team.image} alt="Team Logo" />
         {team.title}
       </NavLink>
     </div>
