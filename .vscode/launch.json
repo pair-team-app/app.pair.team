@@ -21,6 +21,8 @@
       "name": "Launch localhost",
       "type": "chrome",
       "request": "launch",
+      "sourceMaps": true,
+      "userDataDir": true,
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}/src",
       "sourceMapPathOverrides": {
@@ -64,11 +66,11 @@
       "request": "attach",
       "name": "Attach to Chrome",
       "port": 9222,
-      "url": "http://localhost:3000/app/pairurl-com/pair-url/389/desktop-macos/views",
+      "urlfilter": "http://localhost:3000/app/*",
       "webRoot": "${workspaceFolder}",
       "sourceMapPathOverrides": {
         "webpack:///src/*": "${webRoot}/*",
-        "/usr/src/app/*": "${workspaceRoot}/*"
+        "/labor/projects/sites/pairurl.com/*": "${workspaceRoot}/*"
         
       },
       "trace": true,

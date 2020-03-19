@@ -52,7 +52,7 @@ const logFormat = (state, action, meta = '')=> {
 function rootReducer(state = initialState, action) {
   const { type, payload } = action;
 
-  let playgrounds, playground = null;
+  //let playgrounds, playground = null;
   
   logFormat(state, action);
 
@@ -89,8 +89,8 @@ function rootReducer(state = initialState, action) {
     }));
   
   } else if (type === TEAM_BUILDS_LOADED) {
-    const { playgrounds, playground, typeGroup } = payload;
-    return (Object.assign({}, state, { playgrounds, playground, typeGroup }));
+    const { playgrounds, playground, typeGroup, component } = payload;
+    return (Object.assign({}, state, { playgrounds, playground, typeGroup, component }));
 
   } else if (type === TEAM_COMMENTS_LOADED) {
     const { team } = payload;
@@ -140,9 +140,9 @@ function rootReducer(state = initialState, action) {
     const { team } = payload;
     return (Object.assign({}, state, { team }));
 
-  } else if (type === BUILD_PLAYGROUNDS_LOADED) {
-    const { playgrounds, playground } = payload;
-    return (Object.assign({}, state, { playgrounds, playground }));
+  // } else if (type === BUILD_PLAYGROUNDS_LOADED) {
+    // const { playgrounds, playground, component } = payload;
+    // return (Object.assign({}, state, { playgrounds, playground, component }));
 
   } else if (type === SET_PLAYGROUND) {
     const { playground } = payload;

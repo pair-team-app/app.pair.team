@@ -51,7 +51,7 @@
 	background-color: rgba(var(--img-bg-color), 1.0);
 	transition: background-color 0.125s ease-out;
 }
-.playground-component[data-loaded="true"] .bg-wrapper {
+.playground-component[data-loading="false"] .bg-wrapper {
 	background-color: rgba(var(--img-bg-color), 0.0);
 }
 
@@ -150,12 +150,12 @@
 	position: relative;
 	width: 100%;
 	height: 144px;
-	background-color: rgba(var(--img-bg-color), 1.0);
+	background-color: rgba(var(--img-bg-color), 0.0);
 	overflow: hidden;
 	transition: background-color 0.125s ease-out;
 }
 
-.components-grid-item .content-wrapper[data-loaded="true"] {
+.components-grid-item .content-wrapper[data-loading="false"] {
 	background-color: rgba(var(--img-bg-color), 0.0);
 }
 

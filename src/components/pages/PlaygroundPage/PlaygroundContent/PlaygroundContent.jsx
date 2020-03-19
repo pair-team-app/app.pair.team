@@ -35,82 +35,94 @@ class PlaygroundContent extends Component {
   }
 
   componentDidMount() {
-    // console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
-    this.calcBounds({ x : 0, y : 0, width : 0, height : 0 });
+    console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+    // this.calcBounds({ x : 0, y : 0, width : 0, height : 0 });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+    console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+
+    const { component } = this.props;
+    const { bounds } = this.state;
+
+    if (component && !bounds.init.component) {
+      const { x, y } = bounds.init.container.position;
+      const { width, height } = bounds.init.container.size;
+
+      this.calcBounds(new DOMRect(x, y, width, height));
+    }
   }
 
   calcBounds = (rect)=> {
     // console.log('%s.calcBounds()', this.constructor.name, { rect });
 
     const { component } = this.props;
-    if (!component) {
-      return;
-    }
-
+    
     const { x, y, width, height } = rect;
     let { bounds } = this.state;
     let { init, prev, curr, next } = this.state.bounds;
 
     const scale = {
-      width: component
-        ? component.meta.bounds.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)
-        : 1,
-      height: component
-        ? component.meta.bounds.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN)
-        : 1
+      width : (component) ? component.meta.bounds.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN) : 1,
+      height: (component) ? component.meta.bounds.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN) : 1
     };
 
     // nothing stored yet
-    init = init || {
-      container: { scale, position: { x, y }, size: { width, height } },
-      component: component
-        ? {
-            scale,
-            position: {
-              x: 0,
-              y: 0
-            },
-            size: component
-              ? {
-                  width: width,
-                  height: height
-                }
-              : null
-          }
-        : null
-    };
+    init = (init || {
+      container : { scale, 
+        position : { x, y }, 
+        size     : { width, height } 
+      },
+      component : (component) ? { scale,
+        position : {
+          x : 0,
+          y : 0
+        },
+        // size     : (component) ? { width, height } : null
+        size     : (component) ? {
+          width  : scale.width * component.meta.bounds.width,
+          height : scale.height * component.meta.bounds.height
+        } : null
+      } : null
+    });
 
     curr = {
-      container: { scale, position: { x, y }, size: { width, height } },
-      component: component
-        ? {
-            scale,
-            position: {
-              x: 0,
-              y: 0
-            },
-            size: {
-              width: (width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN,
-              height: (height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN
-            }
-          }
-        : null
+      container : { scale, 
+        position : { x, y }, 
+        size     : { width, height }
+      },
+      component : (component) ? { scale,
+        position : {
+          x : 0,
+          y : 0
+        },
+        size    : {
+          width  : (width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN,
+          height : (height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN
+        }
+      }: null
     };
 
     // const scale = (init.component)
 
-    // console.log('%s.calcBounds() --SET STATE', this.constructor.name, { bounds, init : { ...bounds.init, init}, prev : { ...bounds.prev, prev}, curr : { ...bounds.curr, curr}, next : { ...bounds.next, next} });
+    console.log('%s.calcBounds() --SET STATE', this.constructor.name, { component, rect, bounds, init : { ...init }, prev : { ...bounds.prev, ...bounds.curr }, curr : { ...curr }, next : { ...bounds.next, ...next } });
 
-    bounds = {
-      ...bounds,
-      init,
-      curr,
-      prev: { ...bounds.prev, ...prev },
-      next: { ...bounds.next, ...next }
+    bounds = { ...bounds, curr,
+      init : { ...init, 
+        component : (init && component && !init.component) ? { ...init.component, 
+          scale    : init.container.scale,
+          position : { 
+            x : 0,
+            y : 0
+          },
+          size     : {
+            width  : init.container.scale.width * component.meta.bounds.width,
+            height : init.container.scale.height * component.meta.bounds.height
+          }
+        } : null
+      }, 
+      prev : { ...bounds.prev, ...bounds.curr },
+      next : { ...bounds.next, ...next }
     };
 
     this.setState({ bounds });
@@ -146,7 +158,7 @@ class PlaygroundContent extends Component {
   };
 
   render() {
-    // console.log('%s.render()', this.constructor.name, { state : this.state, initBounds : this.state.bounds.init, currBounds : this.state.bounds.curr });
+    console.log('%s.render()', this.constructor.name, { props: this.props, state : this.state, initBounds : this.state.bounds.init, currBounds : this.state.bounds.curr });
     // console.log('%s.render()', this.constructor.name, (this.state.bounds && this.state.bounds.init) ? { init : this.state.bounds.init.component, curr : this.state.bounds.curr.component, scale : { x : (this.state.bounds.init.component.size.width / this.state.bounds.curr.component.size.width), y : (this.state.bounds.init.component.size.height / this.state.bounds.curr.component.size.height) } } : null);
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
@@ -261,7 +273,7 @@ const PlaygroundComponent = (props)=> {
       maxConstraints={[Math.min(width, sizes.c.width), Math.min(height, sizes.c.height) - CONTAINER_PADDING.height]}
       onResize={props.onResize}
     >
-      <div className="playground-component" data-loaded={true} onClick={(event)=> props.onItemClick(event, component)} style={{ width: `${width}px`, height: `${height}px` }}>
+      <div className="playground-component" data-loading={false} onClick={(event)=> props.onItemClick(event, component)} style={{ width: `${width}px`, height: `${height}px` }}>
         <h5 className="component-title">{title}</h5>
 
         <ContextMenuTrigger disable={false} id="component" component={component} collect={(props)=> ({ component: props.component })} disableIfShiftIsPressed={true}>
@@ -321,7 +333,7 @@ const PlaygroundComponentsGrid = (props)=> {
   const { typeGroup, components } = props;
 
   return (
-    <div className="playground-components-grid" data-loaded={true}>
+    <div className="playground-components-grid" data-loading={false}>
       {components.map((component, i)=> {
         const { id, title, images } = component;
 
@@ -333,7 +345,7 @@ const PlaygroundComponentsGrid = (props)=> {
             onClick={(event)=> props.onItemClick(event, component)}
           >
             <h5 className="component-title">{title}</h5>
-            <div className="content-wrapper" data-loaded={true}>
+            <div className="content-wrapper" data-loading={false}>
               <img
                 src={images[0]}
                 className="components-grid-item-image"

@@ -13,11 +13,10 @@ import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { fetchTeamBuilds, fetchTeamComments, fetchPlaygroundComponentGroup, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setComment, setComponent, setTypeGroup, setPlayground } from '../actions';
 
 
-const logFormat = ({ prevState, action, next, meta = '' })=> {
-  // if (action && typeof action !== 'function') {
-  if (action) {
+const logFormat = ({ prevState, action, next, meta=null })=> {
+  if (action && typeof action !== 'function') {
     const { type, payload } = action;
-    console.log(LOG_MIDDLEWARE_PREFIX, `“${type}”`, { payload, meta });
+    console.log(LOG_MIDDLEWARE_PREFIX, `“${type}”`, { payload, action, meta }, { prevState, next });
   }
 };
 
@@ -29,7 +28,7 @@ export function onMiddleware(store) {
 
     const { type, payload } = action;
     // console.log('onMiddleware()', { prevState, type, payload });
-    logFormat(prevState, action, next);
+    logFormat({ prevState, action, next });
 
     if (type === DEVICES_LOADED) {
 
@@ -61,16 +60,20 @@ export function onMiddleware(store) {
       cookie.save('user_id', (payload) ? payload.id : '0', { path : '/', sameSite : false });
 
     } else if (type === TEAM_BUILDS_LOADED) {
-      const { componentTypes, team } = prevState;
-      const playgrounds = payload.playgrounds.map((playground, i)=> (reformPlayground(playground, false, team, componentTypes)));
-      const playground = playgrounds.find(({ deviceID })=> (deviceID === 2));
-      const typeGroup = playground.typeGroups.find(({ id })=> (id === 187 ));
+      const { componentTypes, team, matchPath } = prevState;
+      const { params } = matchPath || {};
 
+      const playgrounds = payload.playgrounds.map((playground, i)=> (reformPlayground(playground, false, team, componentTypes)));
+      const playground = playgrounds.find(({ deviceID })=> (deviceID === 2)) || [ ...playgrounds ].shift();
+      const typeGroup = playground.typeGroups.find(({ id })=> (id === 187 ));
+      const component = playground.components.find(({ id })=> (id === (params.componentID || 0) )) || null;
+      
       payload.playgrounds = playgrounds;
       payload.playground = playground;
       payload.typeGroup = typeGroup;
+      payload.component = component;
 
-      dispatch(fetchBuildPlaygrounds({ buildID : playground.buildID }));
+      // dispatch(fetchBuildPlaygrounds({ buildID : playground.buildID }));
       dispatch(fetchTeamComments({ team : prevState.team }));
 
     } else if (type === TEAM_COMMENTS_LOADED) {
@@ -79,11 +82,29 @@ export function onMiddleware(store) {
       payload.team = (team) ? { ...team, comments } : null;
 
     } else if (type === BUILD_PLAYGROUNDS_LOADED) {
-      const { componentTypes, team } = prevState;
+      // const { componentTypes, team } = prevState;
+
+      // const playgrounds = prevState.playgrounds.map((playground)=> {
+      //   let pg = payload.playgrounds.map((playground)=> (reformPlayground(playground, true, team, componentTypes))).find(({ id })=> ((id === playground.id)));
+      //   // return ((pg) ? Object.assign({}, playground, pg) : playground);
+      //   let merge = (pg) ? Object.assign({}, playground, pg) : playground;
+        
+      //   return ({ ...merge,
+      //     components : [ ...new Set(merge.components)]
+      //   });
+      // });
+
+      // const playground = (prevState.playground && playgrounds.find(({ id })=> (id === prevState.playrgound.id))) ? playgrounds.find(({ id })=> (id === prevState.playground.id)) : prevState.playground;
+
+      // payload.playgrounds = playgrounds;
+      // payload.playground = playground;
+
+      /*
+      const { componentTypes, team, matchPath } = prevState;
+      // const { params } = (matchPath || {});
 
       const playgrounds = prevState.playgrounds.map((playground)=> {
         let pg = payload.playgrounds.map((playground)=> (reformPlayground(playground, true, team, componentTypes))).find(({ id })=> ((id === playground.id)));
-        // return ((pg) ? Object.assign({}, playground, pg) : playground);
         let merge = (pg) ? Object.assign({}, playground, pg) : playground;
         
         return ({ ...merge,
@@ -91,15 +112,22 @@ export function onMiddleware(store) {
         });
       });
 
-      const playground = (prevState.playground && playgrounds.find(({ id })=> (id === prevState.playrgound.id))) ? playgrounds.find(({ id })=> (id === prevState.playground.id)) : prevState.playground;
+      const playground = (playgrounds.find(({ id })=> (id === prevState.playrgound.id))) ? playgrounds.find(({ id })=> (id === prevState.playground.id)) : prevState.playground;
+      // const component = (playground) ? playground.components.find(({ id, typeID })=> (params.componentID && id == params.componentID)) : prevState.component;
+      // const component = prevState.component;
+
+      // console.log ('!!!!!!!!!!!!!', { params, playgrounds, playground, component });
+      console.log ('!!!!!!!!!!!!!', { matchPath, playgrounds, playground });
 
       payload.playgrounds = playgrounds;
       payload.playground = playground;
+      // payload.component = component;
 
-      dispatch(fetchPlaygroundComponentGroup({ 
-        playground : { id : prevState.playground.id }, 
-        typeGroup : { id : 187 } 
-      }));
+      // dispatch(fetchPlaygroundComponentGroup({ 
+      //   playground : { id : prevState.playground.id }, 
+      //   typeGroup : { id : 187 } 
+      // }));
+      */
     
     } else if (type === UPDATE_MATCH_PATH) {
       if (payload.matchPath.params) {
@@ -118,6 +146,15 @@ export function onMiddleware(store) {
         delete (params['0']);
         delete (params['1']);
         payload.matchPath = { ...payload.matchPath, params };
+
+
+        // console.log('!!!!!!!!!!!!!!!', { prevState, params });
+
+        // if (prevState.matchPath.params !== params) {
+          // if (!prevState.component && prevState.matchPath && prevState.matchPath.params.componentID !== params.componentID) {
+          //   dispatch(setComponent(prevState.playground.components.find(({ id })=> (id === params.componentID))));
+          // }
+        // }
       }
     
     } else if (type === SET_PLAYGROUND) {

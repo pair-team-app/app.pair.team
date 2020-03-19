@@ -31,14 +31,16 @@ export function fetchBuildPlaygrounds(payload=null) {
     }).then(async (response)=> {
       console.log('BUILD_PLAYGROUNDS', response.data);
 
-      const playgrounds = response.data.playgrounds.map(playground=> ({ ...playground,
-        size       : jsonFormatKB(playground, true),
-        components : playground.components.map((component)=> ({ ...component,
-          // id    : component.id,
-          // title : component.title,
-          size  : jsonFormatKB(component, true)
-        }))
-      }));
+      // const playgrounds = response.data.playgrounds.map(playground=> ({ ...playground,
+      //   size       : jsonFormatKB(playground, true),
+      //   components : playground.components.map((component)=> ({ ...component,
+      //     // id    : component.id,
+      //     // title : component.title,
+      //     size  : jsonFormatKB(component, true)
+      //   }))
+      // }));
+
+      const { playgrounds } = response.data;
 
       // console.log('BUILD_PLAYGROUNDS [SIZE]', { playgrounds });
       dispatch({

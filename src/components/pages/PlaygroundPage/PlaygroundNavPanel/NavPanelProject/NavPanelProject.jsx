@@ -8,7 +8,7 @@ import BaseContentExpander from '../../../../iterables/BaseContentExpander';
 import { BUILD_TIMESTAMP } from '../../../../../consts/formats';
 
 function NavPanelProject(props) {
-	// console.log('NavPanelProject()', props);
+	console.log('NavPanelProject()', props);
 
 	const { project } = props;
 	return (<BaseContentExpander
