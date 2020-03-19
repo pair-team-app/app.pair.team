@@ -1,5 +1,6 @@
 
 export const BreadcrumbTypes = {
+  DEVICE        : 'DEVICE',
   PLAYGROUND    : 'PLAYGROUND',
   TYPE_GROUP    : 'TYPE_GROUP',
   COMPONENT     : 'COMPONENT',

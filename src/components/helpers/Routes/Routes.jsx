@@ -33,7 +33,7 @@ class Routes extends Component {
 
 
   render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props });
+    // console.log('%s.render()', this.constructor.name, { props : this.props });
 
     return (<Switch>
       <Route exact 

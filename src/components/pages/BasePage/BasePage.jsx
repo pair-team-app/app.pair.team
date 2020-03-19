@@ -9,7 +9,7 @@ import navLinks from '../../../assets/json/nav-links.json';
 
 
 function BasePage(props) {
-	console.log('BasePage()', props);
+	// console.log('BasePage()', props);
 
 	const { className, children, style } = props;
 	const { location } = props;

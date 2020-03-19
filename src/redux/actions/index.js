@@ -40,7 +40,7 @@ export function fetchBuildPlaygrounds(payload=null) {
         }))
       }));
 
-      console.log('BUILD_PLAYGROUNDS [SIZE]', { playgrounds });
+      // console.log('BUILD_PLAYGROUNDS [SIZE]', { playgrounds });
       dispatch({
         type    : BUILD_PLAYGROUNDS_LOADED,
         payload : { playgrounds }
@@ -304,7 +304,7 @@ export function setPlayground(payload) {
 export function setTypeGroup(payload) {
   logFormat('setTypeGroup()', null, payload);
   const typeGroup = payload;
-  return { payloaad : { typeGroup }, type : SET_TYPE_GROUP };
+  return { payload : { typeGroup }, type : SET_TYPE_GROUP };
 }
 
 export function setComponent(payload) {

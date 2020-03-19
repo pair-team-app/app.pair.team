@@ -337,18 +337,21 @@ class PlaygroundPage extends Component {
 
     if (type === BreadcrumbTypes.PLAYGROUND) {
       // this.props.setTypeGroup(typeGroupByID(this.state.typeGroups, 187));
-      this.props.setComponent(null);
-      this.props.setComment(null);
+      // this.props.setComponent(null);
+      // this.props.setComment(null);
+
     } else if (type === BreadcrumbTypes.TYPE_GROUP) {
-      const { typeGroupSlug } = this.props.params;
-      this.props.history.push(
-        this.props.pathname.replace(
-          new RegExp(`(/${typeGroupSlug}).*$`),
-          '$1'
-        )
-      );
-      this.props.setComponent(null);
-      this.props.setComment(null);
+      const typeGroup = payload;
+      // const { typeGroupSlug } = this.props.params;
+      // this.props.history.push(
+      //   this.props.pathname.replace(
+      //     new RegExp(`(/${typeGroupSlug}).*$`),
+      //     '$1'
+      //   )
+      // );
+      // this.props.setComponent(null);
+      this.props.setTypeGroup(typeGroup);
+      
     } else if (type === BreadcrumbTypes.COMPONENT) {
       this.props.setComment(null);
       this.props.history.push(
@@ -476,13 +479,13 @@ class PlaygroundPage extends Component {
 
     playground.selected = !playground.selected;
 
-    if (playground.selected) {
+    // if (playground.selected) {
       // this.props.history.push(`/app/${team.title}/${Strings.slugifyURI(playground.title)}/${playground.buildID}/desktop-macos`);
       // this.props.fetchPlaygroundComponentGroup({ playground, typeGroup : { id : 187 } })
     
-    } else {
-      this.props.history.push(`/app/${team.title}`);
-    }
+    // } else {
+      // this.props.history.push(`/app/${team.title}`);
+    // }
     
     this.props.setPlayground(playground);
     this.props.setComponent(null);
@@ -490,15 +493,15 @@ class PlaygroundPage extends Component {
   };
 
   handleNavGroupItemClick = (typeGroup)=> {
-    //console.log('%s.handleNavGroupItemClick()', this.constructor.name, typeGroup);
+    console.log('%s.handleNavGroupItemClick()', this.constructor.name, { typeGroup });
 
     typeGroup.selected = !typeGroup.selected;
 
     // this.onFetchTypeGroupComponents(typeGroup);
-    this.props.fetchPlaygroundComponentGroup({ typeGroup });
+    // this.props.fetchPlaygroundComponentGroup(typeGroup);
     this.props.setTypeGroup(typeGroup);
-    this.props.setComponent(null);
-    this.props.setComment(null);
+    // this.props.setComponent(null);
+    // this.props.setComment(null);
   };
 
   handleNavTypeItemClick = (typeGroup, typeItem)=> {
@@ -591,7 +594,7 @@ class PlaygroundPage extends Component {
   };
 
   render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
     // 		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
 
     const {
@@ -705,7 +708,7 @@ const mapStateToProps = (state, ownProps)=> {
     playground     : state.playground,
     typeGroup      : state.typeGroup,
     component      : state.component,
-    matchPath      : state.matchPath,
+    // matchPath      : state.matchPath,
     comment        : state.comment,
     profile        : state.userProfile,
     componentTypes : state.componentTypes,

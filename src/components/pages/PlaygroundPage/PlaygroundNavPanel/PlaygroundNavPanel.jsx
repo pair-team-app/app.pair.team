@@ -18,7 +18,7 @@ class PlaygroundNavPanel extends Component {
   }
 
   componentDidMount() {
-    console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+    // console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
     const { playgrounds } = this.props;
     if (playgrounds) {
@@ -27,7 +27,7 @@ class PlaygroundNavPanel extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { playgrounds } = this.props;
     if (playgrounds && playgrounds !== prevProps.playgrounds) {
@@ -90,7 +90,7 @@ class PlaygroundNavPanel extends Component {
   };
 
   onPopulateTree = ()=> {
-    console.log('%s.onPopulateTree()', this.constructor.name, { props : this.props });
+    // console.log('%s.onPopulateTree()', this.constructor.name, { props : this.props });
 
     const { componentTypes, playgrounds, playground, component } = this.props;
 

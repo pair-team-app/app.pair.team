@@ -35,7 +35,7 @@ class PlaygroundContent extends Component {
   }
 
   componentDidMount() {
-    console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+    // console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
     this.calcBounds({ x : 0, y : 0, width : 0, height : 0 });
   }
 
@@ -44,7 +44,7 @@ class PlaygroundContent extends Component {
   }
 
   calcBounds = (rect)=> {
-    console.log('%s.calcBounds()', this.constructor.name, { rect });
+    // console.log('%s.calcBounds()', this.constructor.name, { rect });
 
     const { component } = this.props;
     if (!component) {
@@ -103,7 +103,7 @@ class PlaygroundContent extends Component {
 
     // const scale = (init.component)
 
-    console.log('%s.calcBounds() --SET STATE', this.constructor.name, { bounds, init : { ...bounds.init, init}, prev : { ...bounds.prev, prev}, curr : { ...bounds.curr, curr}, next : { ...bounds.next, next} });
+    // console.log('%s.calcBounds() --SET STATE', this.constructor.name, { bounds, init : { ...bounds.init, init}, prev : { ...bounds.prev, prev}, curr : { ...bounds.curr, curr}, next : { ...bounds.next, next} });
 
     bounds = {
       ...bounds,
@@ -148,7 +148,7 @@ class PlaygroundContent extends Component {
   render() {
     // console.log('%s.render()', this.constructor.name, { state : this.state, initBounds : this.state.bounds.init, currBounds : this.state.bounds.curr });
     // console.log('%s.render()', this.constructor.name, (this.state.bounds && this.state.bounds.init) ? { init : this.state.bounds.init.component, curr : this.state.bounds.curr.component, scale : { x : (this.state.bounds.init.component.size.width / this.state.bounds.curr.component.size.width), y : (this.state.bounds.init.component.size.height / this.state.bounds.curr.component.size.height) } } : null);
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const {
       profile,
@@ -316,7 +316,7 @@ const PlaygroundComponent = (props)=> {
 };
 
 const PlaygroundComponentsGrid = (props)=> {
-    console.log('PlaygroundComponentsGrid()', props);
+    // console.log('PlaygroundComponentsGrid()', props);
 
   const { typeGroup, components } = props;
 

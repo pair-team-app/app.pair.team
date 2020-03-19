@@ -10,7 +10,7 @@ import { DEVICES_LOADED,
   UPDATE_MATCH_PATH,
   SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
-import { fetchTeamBuilds, fetchTeamComments, fetchPlaygroundComponentGroup, fetchTeamLookup, fetchBuildPlaygrounds } from '../actions';
+import { fetchTeamBuilds, fetchTeamComments, fetchPlaygroundComponentGroup, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setComment, setComponent, setTypeGroup, setPlayground } from '../actions';
 
 
 const logFormat = ({ prevState, action, next, meta = '' })=> {
@@ -74,7 +74,7 @@ export function onMiddleware(store) {
       dispatch(fetchTeamComments({ team : prevState.team }));
 
     } else if (type === TEAM_COMMENTS_LOADED) {
-      const { team, playground } = prevState;
+      const { team } = prevState;
       const comments = payload.comments.map((comment, i)=> (reformComment(comment, false, team)));
       payload.team = (team) ? { ...team, comments } : null;
 
@@ -110,8 +110,8 @@ export function onMiddleware(store) {
           deviceSlug    : (payload.matchPath.params.deviceSlug || null),
           typeGroupSlug : (payload.matchPath.params.typeGroupSlug || null),
           componentID   : (payload.matchPath.params.componentID) ? payload.matchPath.params.componentID << 0 : null,
-          ax            : (typeof payload.matchPath.params.ax !== 'undefined'),
-          comments      : (typeof payload.matchPath.params.comments !== 'undefined'),
+          ax            : (typeof payload.matchPath.params.ax !== 'undefined' && payload.matchPath.params.ax !== null && payload.matchPath.params.ax === 'accessibility'),
+          comments      : (typeof payload.matchPath.params.comments !== 'undefined' && payload.matchPath.params.comments !== null && payload.matchPath.params.comments === 'comments'),
           commentID     : (payload.matchPath.params.commentID) ? payload.matchPath.params.commentID << 0 : null,
         };
 
@@ -130,23 +130,65 @@ export function onMiddleware(store) {
     } else if (type === SET_TYPE_GROUP) {
       const { typeGroup } = payload;
 
-      if (prevState.typeGroup === typeGroup) {
-        return;
+      // if (prevState.typeGroup === typeGroup) {
+      //   return;
+      // }
+
+
+      const { matchPath } = prevState;
+      const { params } = matchPath;
+
+      if (typeGroup) {
+        dispatch(updateMatchPath({ 
+          matchPath : { ...matchPath,
+            params : { ...params,
+              typeGroupSlug : typeGroup.key,
+              ax : false,
+              comments : false
+            }
+          }
+        }));
+
+        dispatch(setComponent(null));
       }
 
     } else if (type === SET_COMPONENT) {
       const { component } = payload;
 
-      if (prevState.component === component) {
-        return;
-      }
+      // if (prevState.component === component) {
+      //   return;
+      // }
+
+      const { matchPath } = prevState;
+      const { params } = matchPath;
+
+      dispatch(updateMatchPath({ 
+        matchPath : { ...matchPath,
+          params : { ...params,
+            componentID : (component) ? component.id : null
+          }
+        }
+      }));
+
+      dispatch(setComment(null));
 
     } else if (type === SET_COMMENT) {
       const { comment } = payload;
 
-      if (prevState.comment === comment) {
-        return;
-      }
+      const { matchPath } = prevState;
+      const { params } = matchPath;
+
+      // if (prevState.comment === comment) {
+      //   return;
+      // }
+
+      dispatch(updateMatchPath({ 
+        matchPath : { ...matchPath,
+          params : { ...params,
+            commentID : (comment) ? comment.id : null
+          }
+        }
+      }));
     }
 
     next(action);

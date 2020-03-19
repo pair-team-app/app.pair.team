@@ -20,7 +20,7 @@ import StripeModal from '../overlays/StripeModal';
 import BottomNav from '../sections/BottomNav';
 import TopNav from '../sections/TopNav';
 import './App.css';
-import { withRouter, matchPath } from 'react-router-dom';
+import { withRouter, matchPath, generatePath } from 'react-router-dom';
 import { typeGroupByKey } from '../pages/PlaygroundPage/utils/lookup';
 
 class App extends Component {
@@ -89,6 +89,29 @@ class App extends Component {
       strict: false
     }) || {};
 
+    const historyMatch = matchPath(this.props.location.pathname, {
+      path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`,
+      exact : false,
+      strict: false
+    });
+
+
+    if (prevProps.matchPath && this.props.matchPath) {
+      console.log('??+=+=+=+=+=+=+=+', { historyMatch, prevMatchPath : prevProps.matchPath, currMatchPath : this.props.matchPath });
+
+
+
+      if (prevProps.matchPath.params !== this.props.matchPath.params) {
+        const path = generatePath(`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`, { ...this.props.matchPath.params, 
+          ax       : (this.props.matchPath.params.ax) ? 'accessibility' : undefined,
+          comments : (this.props.matchPath.params.comments) ? 'comments' : undefined
+        });
+        console.log('??*=*=*=*=*=*=*=*', { path });
+
+        this.props.history.push(path);
+
+      }
+    }
 
     // console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds });
 
@@ -110,9 +133,13 @@ class App extends Component {
       this.onToggleModal(Modals.NETWORK);
     
     } else {
-      console.log('+=+=+=+=+=+=+=+', { local : matchPlaygrounds, props : this.props.matchPath, prev : prevProps.matchPath });
+      // console.log('+=+=+=+=+=+=+=+', { local : matchPlaygrounds, props : this.props.matchPath, prev : prevProps.matchPath });
       if (matchPlaygrounds !== null && (this.props.matchPath === null || (this.props.matchPath && matchPlaygrounds.url !== this.props.matchPath.url))) {
-        this.props.updateMatchPath({ matchPath : matchPlaygrounds });
+        this.props.updateMatchPath({ 
+          matchPath : { ...matchPlaygrounds,
+            location : this.props.location
+          } 
+        });
       }  
 
       // just received user profile, go get the team
@@ -319,7 +346,7 @@ class App extends Component {
 
     const { profile } = this.props;
     this.props.fetchUserProfile();
-    this.props.fetchTeamLookup({ userID: profile.id });
+    // this.props.fetchTeamLookup({ userID: profile.id });
   };
 
   handleThemeToggle = (event)=> {

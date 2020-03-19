@@ -38,7 +38,7 @@ class PlaygroundHeader extends Component {
 
 
 	handleBreadcrumbClick = ({ event, type, payload })=> {
-//  console.log('%s.handleBreadcrumbClick()', this.constructor.name, { event, type, payload });
+ console.log('%s.handleBreadcrumbClick()', this.constructor.name, { event, type, payload });
 
     event.preventDefault();
     this.props.onBreadCrumbClick({ type, payload });
@@ -57,20 +57,22 @@ class PlaygroundHeader extends Component {
 
 
 	buildBreadcrumbs = ()=> {
-    console.log('%s.buildBreadcrumbs()', this.constructor.name, this.props, { match : this.props.match });
+    console.log('%s.buildBreadcrumbs()', this.constructor.name, this.props, { matchPath : this.props.matchPath, match : this.props.match });
 
     const { match, playground, typeGroup, component, comment, accessibility, location } = this.props;
     const { teamSlug, buildID, projectSlug, deviceSlug, typeGroupSlug, componentID, commentID } = match.params;
 
-    let path = `${Pages.PLAYGROUND}/${teamSlug}/${projectSlug}/${buildID}/${deviceSlug}`;
-    const segments = [
-			{ type : BreadcrumbTypes.PLAYGROUND, title : projectSlug, path : projectSlug, payload : playground },
+		let path = `${Pages.PLAYGROUND}/${teamSlug}/${projectSlug}/${buildID}`;
+
+		const segments = [
+			{ type : BreadcrumbTypes.DEVICE, title : deviceSlug, path : deviceSlug, payload : deviceSlug },
       (typeGroup && typeGroupSlug) ? { type : BreadcrumbTypes.TYPE_GROUP, title : Strings.capitalize(typeGroup.key), path : typeGroupSlug, payload : typeGroup } : null,
       (component && componentID) ? { type : BreadcrumbTypes.COMPONENT, title : component.title, path : componentID, payload : component } : null,
       (accessibility) ? { type : BreadcrumbTypes.ACCESSIBILITY, title : 'accessibility' , path : 'accessibility', payload : null } : null,
       (location.pathname.includes('/comments')) ? { type : BreadcrumbTypes.COMMENTS, title : 'comments', path : 'comments', payload : null } : null,
       (comment && commentID) ? { type : BreadcrumbTypes.COMMENT, title : commentID, path : commentID, payload : comment } : null
     ].filter((segment)=> (segment !== null));
+
 
     const breadcrumbs = [];
     Object.keys(segments).forEach((key, i)=> {
@@ -155,7 +157,8 @@ const mapStateToProps = (state, ownProps)=> {
 		playground : state.playground,
 		typeGroup  : state.typeGroup,
 		component  : state.component,
-		comment    : state.comment
+		comment    : state.comment,
+		matchPath  : state.matchPath
 	});
 };
 
