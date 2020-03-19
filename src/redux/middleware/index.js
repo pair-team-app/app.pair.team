@@ -8,7 +8,9 @@ import { DEVICES_LOADED,
   USER_PROFILE_UPDATED, 
   USER_PROFILE_LOADED, 
   UPDATE_MATCH_PATH,
-  SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT } from '../../consts/action-types';
+  SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT,
+  TOGGLE_AX, TOGGLE_COMMENTS, TOGGLE_THEME
+} from '../../consts/action-types';
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { fetchTeamBuilds, fetchTeamComments, fetchPlaygroundComponentGroup, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setComment, setComponent, setTypeGroup, setPlayground } from '../actions';
 
@@ -65,8 +67,8 @@ export function onMiddleware(store) {
 
       const playgrounds = payload.playgrounds.map((playground, i)=> (reformPlayground(playground, false, team, componentTypes)));
       const playground = playgrounds.find(({ deviceID })=> (deviceID === 2)) || [ ...playgrounds ].shift();
-      const typeGroup = playground.typeGroups.find(({ id })=> (id === 187 ));
-      const component = playground.components.find(({ id })=> (id === (params.componentID || 0) )) || null;
+      const typeGroup = playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views')));
+      const component = playground.components.find(({ id })=> (id === params.componentID)) || null;
       
       payload.playgrounds = playgrounds;
       payload.playground = playground;
@@ -202,7 +204,8 @@ export function onMiddleware(store) {
       dispatch(updateMatchPath({ 
         matchPath : { ...matchPath,
           params : { ...params,
-            componentID : (component) ? component.id : null
+            componentID : (component) ? component.id : null,
+            ax : false
           }
         }
       }));
@@ -226,6 +229,7 @@ export function onMiddleware(store) {
           }
         }
       }));
+    
     }
 
     next(action);

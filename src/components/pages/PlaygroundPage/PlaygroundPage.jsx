@@ -324,8 +324,8 @@ class PlaygroundPage extends Component {
         };
 
         this.props.setPlayground(playground);
-        this.props.setComponent(component);
-        this.props.setComment(comment);
+        // this.props.setComponent(component);
+        // this.props.setComment(comment);
 
         this.setState({ cursor: false });
       })
@@ -342,29 +342,21 @@ class PlaygroundPage extends Component {
 
     } else if (type === BreadcrumbTypes.TYPE_GROUP) {
       const typeGroup = payload;
-      // const { typeGroupSlug } = this.props.params;
-      // this.props.history.push(
-      //   this.props.pathname.replace(
-      //     new RegExp(`(/${typeGroupSlug}).*$`),
-      //     '$1'
-      //   )
-      // );
-      // this.props.setComponent(null);
       this.props.setTypeGroup(typeGroup);
       
     } else if (type === BreadcrumbTypes.COMPONENT) {
-      this.props.setComment(null);
-      this.props.history.push(
-        this.props.pathname.replace(/\/comments.*$/, '')
-      );
+      const component = payload;
+      this.props.setComponent(component);
+
     } else if (type === BreadcrumbTypes.ACCESSIBILITY) {
     } else if (type === BreadcrumbTypes.COMMENTS) {
-      if (/\/comments\/.*$/.test(this.props.pathname)) {
-        this.props.history.push(
-          this.props.pathname.replace(/(\/comments)\/?(.*)$/, '$1')
-        );
+      const { pathname } = this.props.location;
+
+      if (/\/comments\/.*$/.test(pathname)) {
+        this.props.history.push(pathname.replace(/(\/comments)\/?(.*)$/, '$1'));
         this.props.setComment(null);
       }
+
     } else if (type === BreadcrumbTypes.COMMENT) {
       this.props.setComment(payload);
     }
@@ -374,11 +366,11 @@ class PlaygroundPage extends Component {
     const { playground } = this.props;
     const component = componentFromComment(playground.components, comment);
     //
-    console.log('%s.handleCommentMarkerClick()', this.constructor.name, {
-      comment,
-      components: playground.components,
-      component
-    });
+    // console.log('%s.handleCommentMarkerClick()', this.constructor.name, {
+      // comment,
+      // components: playground.components,
+      // component
+    // });
     if (component && component !== this.props.component) {
       this.props.setComponent(component);
     }
@@ -386,14 +378,13 @@ class PlaygroundPage extends Component {
   };
 
   handleComponentClick = ({ component = null })=> {
-    //.log('%s.handleComponentClick()', this.constructor.name, { component });
+    // console.log('%s.handleComponentClick()', this.constructor.name, { component });
 
-    // 		if (!component.selected) {
-    component.selected = true;
-    this.props.setComponent(component);
-    this.setState({ cursor: false });
-    //     }
-
+    if (!component.selected) {
+      component.selected = true;
+      this.props.setComponent(component);
+      this.setState({ cursor: false });
+    }
   };
 
   handleComponentMenuShow = ({ component = null })=> {
@@ -407,13 +398,13 @@ class PlaygroundPage extends Component {
     //     this.props.setComponent(component);
 
     if (menuItem === COMPONENT_MENU_ITEM_COMMENTS) {
-      if (/\/comments.*$/.test(this.props.pathname)) {
+      const { pathname } = this.props.location;
+      if (/\/comments.*$/.test(pathname)) {
         this.props.setComment(null);
-        this.props.history.push(
-          this.props.pathname.replace(/\/comments.*$/, '')
-        );
+        this.props.history.push(pathname.replace(/\/comments.*$/, ''));
+
       } else {
-        this.props.history.push(`${this.props.pathname}/comments`);
+        this.props.history.push(`${pathname}/comments`);
       }
     } else if (menuItem === COMPONENT_MENU_ITEM_COPY) {
       if (!this.state.share) {
@@ -423,7 +414,7 @@ class PlaygroundPage extends Component {
   };
 
   handleComponentPopoverClose = ()=> {
-    //.log('%s.handleComponentPopoverClose()', this.constructor.name);
+    console.log('%s.handleComponentPopoverClose()', this.constructor.name);
 
     const pushURL = /\/comments\/.*$/.test(this.props.pathname)
       ? this.props.pathname.replace(/\/comments\/.*$/, '/comments')
@@ -488,8 +479,8 @@ class PlaygroundPage extends Component {
     // }
     
     this.props.setPlayground(playground);
-    this.props.setComponent(null);
-    this.props.setComment(null);
+    // this.props.setComponent(null);
+    // this.props.setComment(null);
   };
 
   handleNavGroupItemClick = (typeGroup)=> {
@@ -508,7 +499,7 @@ class PlaygroundPage extends Component {
     //.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
 
     this.props.setComponent(typeItem);
-    this.props.setComment(null);
+    // this.props.setComment(null);
   };
 
   handleSettingsItem = (itemType)=> {
@@ -516,6 +507,7 @@ class PlaygroundPage extends Component {
 
     if (itemType === SettingsMenuItemTypes.DELETE_ACCT) {
       this.props.onModal(Modals.DISABLE);
+      
     } else if (itemType === SettingsMenuItemTypes.PROFILE) {
       this.props.onModal(Modals.PROFILE);
     }
@@ -524,14 +516,12 @@ class PlaygroundPage extends Component {
   handleToggleAccessibility = ()=> {
     //.log('%s.handleToggleAccessibility()', this.constructor.name, this.state.accessibility);
 
-    const { comment } = this.props;
-    setTimeout(()=> {
-      const { accessibility } = this.state;
-      this.setState({
-        accessibility: !accessibility,
-        cursor: false
-      });
-    }, ((comment !== null) << 0) * 150);
+    const { accessibility } = this.state;
+
+    this.setState({
+      accessibility : !accessibility,
+      cursor        : false
+    });
   };
 
   handleToggleCommentCursor = (event)=> {
@@ -555,8 +545,8 @@ class PlaygroundPage extends Component {
     );
     if (playground) {
       this.props.setPlayground(playground);
-      this.props.setComponent(null);
-      this.props.setComment(null);
+      // this.props.setComponent(null);
+      // this.props.setComment(null);
 
       this.setState({ cursor: false });
     }
@@ -610,17 +600,7 @@ class PlaygroundPage extends Component {
 
 
     return (
-      <BasePage { ...this.props }
-        className={`playground-page${
-          component &&
-          component.processed &&
-          window.location.href.includes('/comments')
-            ? ' playground-page-comments'
-            : ''
-        }`}
-      >
-
-
+      <BasePage { ...this.props } className="playground-page" data-comments={component && window.location.href.includes('/comments')}>
         {profile && team && (
           <div>
             <PlaygroundNavPanel
@@ -672,17 +652,13 @@ class PlaygroundPage extends Component {
               />
             {/* )} */}
 
-            {accessibility && (
-              <AccessibilityPopover
-                onClose={()=> this.setState({ accessibility: false })}
-              />
-            )}
+            {(accessibility) && (<AccessibilityPopover onClose={this.handleToggleAccessibility} />)}
           </div>
-        )}{' '}
+        )}
         
-        {profile && team && playground && component && component.processed && (
+        {profile && team && playground && component && (
           <PlaygroundCommentsPanel
-            comments={component ? component.comments : []}
+            comments={component.comments}
             onDelete={this.handleDeleteComment}
           />
         )}
@@ -708,7 +684,6 @@ const mapStateToProps = (state, ownProps)=> {
     playground     : state.playground,
     typeGroup      : state.typeGroup,
     component      : state.component,
-    // matchPath      : state.matchPath,
     comment        : state.comment,
     profile        : state.userProfile,
     componentTypes : state.componentTypes,

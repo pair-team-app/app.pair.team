@@ -35,12 +35,12 @@ class PlaygroundContent extends Component {
   }
 
   componentDidMount() {
-    console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+    // console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
     // this.calcBounds({ x : 0, y : 0, width : 0, height : 0 });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+    // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
     const { component } = this.props;
     const { bounds } = this.state;
@@ -60,11 +60,11 @@ class PlaygroundContent extends Component {
     
     const { x, y, width, height } = rect;
     let { bounds } = this.state;
-    let { init, prev, curr, next } = this.state.bounds;
+    let { init, prev, curr } = this.state.bounds;
 
     const scale = {
-      width : (component) ? component.meta.bounds.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN) : 1,
-      height: (component) ? component.meta.bounds.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN) : 1
+      width  : (component) ? component.meta.bounds.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN) : 1,
+      height : (component) ? component.meta.bounds.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN) : 1
     };
 
     // nothing stored yet
@@ -80,8 +80,8 @@ class PlaygroundContent extends Component {
         },
         // size     : (component) ? { width, height } : null
         size     : (component) ? {
-          width  : scale.width * component.meta.bounds.width,
-          height : scale.height * component.meta.bounds.height
+          width  : width, //scale.width * component.meta.bounds.width,
+          height : height //scale.height * component.meta.bounds.height
         } : null
       } : null
     });
@@ -105,25 +105,35 @@ class PlaygroundContent extends Component {
 
     // const scale = (init.component)
 
-    console.log('%s.calcBounds() --SET STATE', this.constructor.name, { component, rect, bounds, init : { ...init }, prev : { ...bounds.prev, ...bounds.curr }, curr : { ...curr }, next : { ...bounds.next, ...next } });
+    // console.log('%s.calcBounds() --SET STATE', this.constructor.name, { component, rect, bounds, init : { ...init }, prev : { ...bounds.prev, ...bounds.curr }, curr : { ...curr }, next : { ...bounds.next, ...next } });
 
-    bounds = { ...bounds, curr,
+    bounds = { ...bounds, init, curr,
       init : { ...init, 
-        component : (init && component && !init.component) ? { ...init.component, 
-          scale    : init.container.scale,
-          position : { 
-            x : 0,
-            y : 0
-          },
-          size     : {
-            width  : init.container.scale.width * component.meta.bounds.width,
-            height : init.container.scale.height * component.meta.bounds.height
-          }
-        } : null
-      }, 
-      prev : { ...bounds.prev, ...bounds.curr },
-      next : { ...bounds.next, ...next }
+        component : (init && component && !init.component) ? { ...init.component, ...curr.component } : init.component
+      },
+      prev : { ...prev, ...bounds.curr },
+      next : { ...bounds.curr, ...curr }
     };
+
+
+
+    // bounds = { ...bounds, curr,
+    //   init : { ...init, 
+    //     component : (init && component && !init.component) ? { ...init.component, 
+    //       scale    : init.container.scale,
+    //       position : { 
+    //         x : 0,
+    //         y : 0
+    //       },
+    //       size     : {
+    //         width  : init.container.scale.width * component.meta.bounds.width,
+    //         height : init.container.scale.height * component.meta.bounds.height
+    //       }
+    //     } : null
+    //   }, 
+    //   prev : { ...bounds.prev, ...bounds.curr },
+    //   next : { ...bounds.next, ...next }
+    // };
 
     this.setState({ bounds });
   };
@@ -186,7 +196,7 @@ class PlaygroundContent extends Component {
           onReflow={this.calcBounds}
         />
         {(components.length > 0) && (<div className="playground-content-components-wrapper" data-component={component !== null}>
-            {!component || bounds.curr === null ? (
+            {!component || bounds.curr === null || bounds.curr.component === null ? (
               <PlaygroundComponentsGrid
                 typeGroup={typeGroup}
                 components={components}
@@ -214,6 +224,7 @@ class PlaygroundContent extends Component {
         {cursor && <CommentPinCursor position={mouse.position} />}
         <ComponentMenu
           menuID="component"
+          profile={profile}
           onShow={this.props.onMenuShow}
           onClick={this.props.onMenuItem}
           onAddComment={this.props.onAddComment}

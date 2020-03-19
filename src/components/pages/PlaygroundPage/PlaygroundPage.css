@@ -13,10 +13,8 @@
 	overflow: hidden;
 }
 
-/* .playground-page > * {} */
-
-.playground-page-comments {
-	--playground-comments-width: 228px;
+.playground-page[data-comments="true"] {
+	--playground-comments-width: 228px;	
 }
 
 .playground-page-content-wrapper {

@@ -106,9 +106,9 @@ class ComponentMenu extends Component {
 
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { menuID } = this.props;
+		const { menuID, profile } = this.props;
 		const { intro, outro, component, comment } = this.state;
 // 		const { avatar, username, email } = this.props.profile;
 
@@ -125,7 +125,7 @@ class ComponentMenu extends Component {
           <div className="playground-comment-add-popover">
             <div className="header-wrapper">
               <div className="avatar-wrapper">
-                <img className="avatar-wrapper-ico" src={USER_DEFAULT_AVATAR} alt={''} />
+                <img className="avatar-wrapper-ico" src={profile.avatar} alt={profile.email} />
               </div>
             </div>
 						<textarea placeholder="Enter Comment" onChange={(event)=> this.setState({ comment : event.target.value })} ref={(element)=> this.textAreaRef = element}>

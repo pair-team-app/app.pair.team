@@ -4,52 +4,74 @@
 	width: 358px;
 	height: 600px;
 	padding: var(--orthodox-padding-base);
-	background-color: #ffffff;
 	border-radius: var(--border-radius);
 }
 
-.accessibility-popover-tree-wrapper {
+.accessibility-popover-report-wrapper {
 	position: relative;
-}
-
-.accessibility-tree-item  {
-	margin: 0;
-	padding: 0 12px;
-	position: relative;
-}
-
-.accessibility-tree-item::after {
-	content: '';
-	position: absolute;
-	left: 0;
-}
-
-.accessibility-tree-item::before {
-	top: 10px;
-	width: 10px;
-	height: 0;
-	border-top: 1px solid rgb(var(--border-color), 1.0);
-}
-
-.accessibility-popover-tree-wrapper > .accessibility-tree-item:first-child::before {
-	border: none;
-}
-
-.accessibility-tree-item::after {
-	top: -10px;
+	width: 100%;
 	height: 100%;
-	width: 0;
-	border-left: 1px solid rgb(var(--border-color), 1.0);
+	overflow-y: auto;
 }
 
-.accessibility-popover-tree-wrapper > .accessibility-tree-item::after {
-	top: 10px;
+
+
+.accessibility-report-item {
+  width: 100%;
+  height: fit-content;
+	padding: var(--orthodox-padding-more) var(--orthodox-padding-base) var(--orthodox-padding-base) var(--orthodox-padding-base);
+	border-bottom: 1px solid rgba(var(--border-color), 1.0);
+	opacity: 1;
+	transition: opacity 125ms 175ms ease-in;
 }
 
-.accessibility-popover-tree-wrapper > .accessibility-tree-item:last-child::after {
-	display: none;
+.accessibility-report-item-header-wrapper {
+  display: flex;
+	flex-wrap: nowrap;
+	justify-content: center; /* h-align */
+	align-items: flex-start; /* v-align */
+	width: 100%;
+	margin-bottom: var(--orthodox-margin-base);
 }
 
-.accessibility-popover-tree-wrapper .accessibility-tree-item-child-wrapper:last-child .accessibility-tree-item:last-child::after {
-	height: 20px;
+.accessibility-report-item-header-icon-wrapper {
+  flex: 1 1 auto;
+	display: flex;
+}
+
+.accessibility-report-item-header-icon {
+  text-align: center;
+}
+
+.accessibility-report-item-header-spacer {
+  flex: 10 0 0;
+	margin: auto;
+}
+
+.accessibility-report-item-header-link-wrapper {
+  flex: 1 1 auto;
+	text-align: right;
+}
+
+.accessibility-report-item-header-link {
+  font-size: 10px;
+  color: rgba(var(--link-hover-color), 1.0);
+	transition: color 0.125s ease-out;
+}
+
+.accessibility-report-item-header-link:hover {
+  color: rgba(var(--link-color), 1.0);
+	cursor: pointer;
+}
+
+.accessibility-report-item-title {
+  margin-bottom: var(--orthodox-margin-mini);
+	font-size: 12px;
+	color: rgba(var(--timestamp-color), 1.0);
+}
+
+.accessibility-report-item-content {
+  font-size: 14px;
+	line-height: 20px;
+	text-align: justify;
 }

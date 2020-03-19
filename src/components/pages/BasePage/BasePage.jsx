@@ -19,7 +19,12 @@ function BasePage(props) {
 		strict: false
 	}) : {};
 
-	return (<div className={`base-page ${className}`} style={style}>
+	let attribs = {};
+	Object.keys(props).filter((key)=> (/^data\-/.test(key))).forEach((key)=> {
+		attribs[key] = props[key];
+	});
+
+	return (<div className={`base-page ${className}`} { ...attribs } style={style}>
 		{(children)}
 		{(!matchPlaygrounds) && (<BottomNav navLinks={navLinks.bottom} />)}
 	</div>);

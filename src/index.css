@@ -20,7 +20,7 @@
 
 :root {
 	--full-white: 255, 255, 255; /* ffffff */
-/* /*	--site-bg-color: 252, 252, 252; fcfcfc */
+	--site-bg-color: 252, 252, 252; /* fcfcfc */
 	/* --site-bg-color: 80, 80, 80; fcfcfc */
 	--site-fg-color: 35, 35, 35; /* #232323 */
 	--site-hilite-color: 0, 90, 217; /* #0067ff */

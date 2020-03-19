@@ -6,7 +6,7 @@
 	width: 100%;
 	padding: var(--orthodox-padding-base);
 	opacity: 1;
-	background-color: rgba(var(--site-bg-color), 1.0);
+	/* background-color: rgba(var(--site-bg-color), 1.0); */
 	border: 1px solid rgba(var(--border-color), 1.0);
 	z-index: 3000;
 }
