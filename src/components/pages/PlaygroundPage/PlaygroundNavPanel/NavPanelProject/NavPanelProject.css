@@ -44,10 +44,11 @@
 .nav-panel-project-title {
   color: rgba(var(--site-fg-color), 1.0);
   font-weight: 500;
-  margin-left: var(--orthodox-margin-half);
+  /* margin-left: var(--orthodox-margin-half); */
+  margin-left: calc(var(--orthodox-margin-half) + 3px);
 }
 
 .nav-panel-project-title-wrapper[data-selected="true"] .nav-panel-project-title {
-  margin-left: calc(var(--orthodox-margin-half) + 3px);
+  /* margin-left: calc(var(--orthodox-margin-half) + 3px); */
   text-decoration: underline;
 }
