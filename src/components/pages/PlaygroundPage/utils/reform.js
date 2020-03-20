@@ -103,7 +103,7 @@ export const reformComponent = (component, componentTypes=null, overwrite = {})=
     tagName: tag_name,
     typeGroup : componentTypes.find(({ id })=> (id === type_id)),
     images : Object.keys(sizes).map((key)=> (`${image_url}_${key}.png`)),
-    comments: comments.map((comment)=> reformComment(comment)).sort((i, j)=> (i.epoch > j.epoch ? -1 : i.epoch < j.epoch ? 1 : 0)),
+    comments: comments.map((comment)=> reformComment(comment)).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
     selected: false,
     processed: ((html && accessibility) !== null),
     ...overwrite
