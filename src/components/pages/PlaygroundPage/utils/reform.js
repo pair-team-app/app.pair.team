@@ -18,7 +18,7 @@ export const reformComment = (comment, overwrite={})=> {
     votes      : comment.votes.map((vote)=> ({ ...vote,
       score : vote.score << 0
     })),
-    score      : 1 + (comment.votes.reduce((acc, vote)=> (acc + (vote.score << 0)), 0)),
+    score      : comment.votes.reduce((acc, vote)=> (acc + (vote.score << 0)), 0),
     epoch      : (comment.added) ? (moment.utc(comment.added).valueOf() * 0.001) << 0 : 0,
     timestamp  : (comment.added)
       ? moment(comment.added).add(moment().utcOffset() << 0, 'minute')

@@ -46,7 +46,7 @@ const AskPageComment = (props)=> {
 
 	const handleDelete = (event)=> {
 		event.preventDefault();
-		props.onDelete(comment.id);
+		props.onDelete(comment);
 	};
 
 	return (<div className="ask-page-comment" data-id={comment.id} data-loading={loading}>

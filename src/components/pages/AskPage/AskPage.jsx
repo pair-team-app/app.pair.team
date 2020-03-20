@@ -75,6 +75,7 @@ class AskPage extends Component {
       }).then((response)=> {
         const comment = reformComment(response.data.comment);
         console.log('ADD_COMMENT', response.data, comment);
+        this.setState({ commentContent : '' });
         this.props.fetchTeamComments({ team });
         
       }).catch((error)=> {});
@@ -93,7 +94,11 @@ class AskPage extends Component {
         state: 'deleted'
       }
     }).then((response)=> {
-      // 			console.log('UPDATE_COMMENT', response.data);
+      console.log('UPDATE_COMMENT', response.data);
+
+      const { team } = this.props;
+      this.props.fetchTeamComments({ team });
+
     }).catch((error)=> {});
   };
 
@@ -219,7 +224,7 @@ const AskPageContentHeader = (props)=> {
   const { loading, commentContent } = props;
   return (<div className="ask-page-content-header">
     <form>
-      <input type="text" placeholder="Ask your team anything…" onChange={props.onTextChange} />
+      <input type="text" placeholder="Ask your team anything…" value={commentContent} onChange={props.onTextChange} autoComplete="new-password" />
       <button type="submit" disabled={commentContent.length === 0} onClick={props.onSubmit}>Submit</button>
     </form>
   </div>);
