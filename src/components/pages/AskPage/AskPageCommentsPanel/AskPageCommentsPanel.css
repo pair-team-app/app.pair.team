@@ -68,9 +68,9 @@
 }
 
 .ask-page-comment .vote-wrapper .vote-score {
-	cursor: default;;
+	cursor: default;
 }
 
-.ask-page-comment .vote-wrapper[data-vote="true"] .vote-score:hover {
+.ask-page-comment .vote-wrapper[data-voted="true"] .vote-score:hover {
 	cursor: pointer;
 }

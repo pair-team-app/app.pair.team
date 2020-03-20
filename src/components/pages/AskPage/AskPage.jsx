@@ -31,30 +31,33 @@ class AskPage extends Component {
 
   componentWillMount() {
     console.log('%s.componentWillMount()', this.constructor.name, { props : this.props, state : this.state });
-
-    this.setState({ fetching : true });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-    const { profile, team, params, pathname } = this.props;
+    const { team, params } = this.props;
     const { fetching, topSort } = this.state;
     
-    const { teamSlug, commentID } = params || {};
+    // const { teamSlug, commentID } = params || {};
 
     if (team) {
-      if (topSort.length === 0) {
+      if (!fetching && (team.comments.filter(({ content })=> (content === null)).length > 0)) {
+        this.setState({ 
+          fetching : true,
+          topSort  : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).map(({ id })=> (id))
+        });
+      }
+
+      if (fetching) {
+        if ((team.comments.filter(({ content })=> (content === null)).length === 0)) {
+          this.setState({ fetching : false });
+        }
+      }
+
+      if (!fetching && topSort.length === 0) {
         this.setState({ topSort : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).map(({ id })=> (id)) });
       }
-
-      if (fetching && team.comments.filter(({ content })=> (content !== '¡!¡')).length === team.comments.length) {
-        this.setState({ fetching : false });
-      }
-
-      if (fetching && prevProps.team && prevProps.team.comments !== team.comments) {
-      this.setState({ fetching : false });
-    }
     }
   }
 
@@ -152,8 +155,6 @@ class AskPage extends Component {
     trackEvent('button', (action === VOTE_ACTION_UP) ? 'upvote-comment' : (action === VOTE_ACTION_DOWN) ? 'downvote-comment' : 'retract-vote');
     
     const { profile, team } = this.props;
-    const { comments } = team;
-
     const score = (action === VOTE_ACTION_UP) ? 1 : (action === VOTE_ACTION_DOWN) ? -1 : 0;
 
     axios.post(API_ENDPT_URL, {
@@ -169,15 +170,15 @@ class AskPage extends Component {
     }).catch((error)=> {});
   };
 
-  onReloadComments = (refesh=false)=> {
-    console.log('%s.onReloadComments()', this.constructor.name);
+  onReloadComments = (refresh=false)=> {
+    console.log('%s.onReloadComments()', this.constructor.name, { refresh });
 
     const { team } = this.props;
     const { topSort } = this.state;
 
     this.setState({ 
       fetching : true,
-      topSort  : (refesh) ? [] : topSort
+      topSort  : (refresh) ? [] : topSort
     }, ()=> {
       this.props.fetchTeamComments({ team });
     });
@@ -237,7 +238,7 @@ class AskPage extends Component {
 }
 
 const AskPageContentHeader = (props)=> {
-  console.log('AskPageContentHeader()', props);
+  // console.log('AskPageContentHeader()', props);
 
   const { loading, commentContent } = props;
   return (<div className="ask-page-content-header">

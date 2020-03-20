@@ -12,15 +12,8 @@ import { VOTE_ACTION_UP, VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT } from './index';
 function AskPageCommentsPanel(props) {
 // 	console.log('AskPageCommentsPanel()', props);
 
-	const { loading, profile, sort, comments } = props;
-  const handleVote = ({ comment, action })=> {
-    const vote = (comment.votes.find(({ author, score })=> (author.id === profile.id && score !== 0 )) || null);
-    // console.log('AskPageCommentsPanel.handleVote()', { comment, action, vote });
-
-    props.onVote({ comment, action, vote });
-  };
-
-	return (<div className="ask-page-comments-panel" data-loading={loading}>
+	const { loading, profile, comments } = props;
+  return (<div className="ask-page-comments-panel" data-loading={loading}>
 		<div className="comments-panel-item-wrapper">
 			{(comments.map((comment, i)=> {
         const vote = (comment.votes.find(({ author, score })=> (author.id === profile.id && score !== 0 )) || null);
@@ -31,7 +24,7 @@ function AskPageCommentsPanel(props) {
           disabled={(comment.author.id === profile.id || loading)} 
           vote={vote}
           comment={comment} 
-          onVote={handleVote}
+          onVote={props.onVote}
           onDelete={props.onDelete} 
         />);
 			}))}
@@ -50,12 +43,12 @@ const AskPageComment = (props)=> {
 	};
 
 	return (<div className="ask-page-comment" data-id={comment.id} data-loading={loading}>
-    <div className="vote-wrapper" data-disabled={disabled} data-vote={vote !== null}>
-      <FontAwesome name="sort-up" className="vote-arrow vote-arrow-up" data-selected={vote && vote.score === 1} onClick={()=> props.onVote({ comment, action : VOTE_ACTION_UP })} />
-      <div className="vote-score" onClick={()=> props.onVote({ comment, action : VOTE_ACTION_RETRACT })}>{comment.score}</div>
-      <FontAwesome name="sort-down" className="vote-arrow vote-arrow-dn" data-selected={vote && vote.score === -1} onClick={()=> props.onVote({ comment, action : VOTE_ACTION_DOWN })} />
+    <div className="vote-wrapper" data-disabled={disabled} data-voted={vote !== null}>
+      <FontAwesome name="sort-up" className="vote-arrow vote-arrow-up" data-selected={vote && vote.score === 1} onClick={()=> (vote && vote.score === 1) ? null : props.onVote({ comment, action : VOTE_ACTION_UP })} />
+      <div className="vote-score" onClick={()=> (vote) ? props.onVote({ comment, action : VOTE_ACTION_RETRACT }) : null}>{comment.score}</div>
+      <FontAwesome name="sort-down" className="vote-arrow vote-arrow-dn" data-selected={vote && vote.score === -1} onClick={()=> (vote && vote.score === -1) ? null : props.onVote({ comment, action : VOTE_ACTION_DOWN })} />
     </div>
-		<PlaygroundBaseComment ind={-1} comment={comment} onDelete={handleDelete} />
+		<PlaygroundBaseComment ind={-1} comment={{ ...comment, content : (comment.content || ' ') }} onDelete={handleDelete} />
  	</div>);
 };
 

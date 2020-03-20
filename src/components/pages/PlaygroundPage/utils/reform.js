@@ -8,7 +8,7 @@ export const reformComment = (comment, overwrite={})=> {
 
   const reformed = { ...comment,
     position : ((typeof comment.position === 'string' && comment.position.charAt(0) === '{') ? JSON.parse(comment.position) : comment.position) || { x: 0, y: 0 },
-    content  : (comment.content || '¡!¡'),
+    content  : (comment.content || null),
     author   : {
       id       : comment.author.id,
       username : comment.author.username,
