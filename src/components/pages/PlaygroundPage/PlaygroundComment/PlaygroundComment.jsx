@@ -156,9 +156,14 @@ class PlaygroundComment extends Component {
 	// 	left: `${offset.x + ((comment.position.x) / scale.width)}px`
   // };
 
+  // const style = {
+	// 	top: `${((comment.position.y) / scale.height)}px`,
+	// 	left: `${((comment.position.x) / scale.width)}px`
+  // };
+
   const style = {
-		top: `${((comment.position.y) / scale.height)}px`,
-		left: `${((comment.position.x) / scale.width)}px`
+		top  : `${(comment.position.y / Math.max(scale.width, scale.height)) - offset.y}px`,
+		left : `${(comment.position.x / Math.max(scale.width, scale.height)) - offset.x}px`
   };
 
     return (

@@ -229,7 +229,6 @@ export function onMiddleware(store) {
           }
         }
       }));
-    
     }
 
     next(action);

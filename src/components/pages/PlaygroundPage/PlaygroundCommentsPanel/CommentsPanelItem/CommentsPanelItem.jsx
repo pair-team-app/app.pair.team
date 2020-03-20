@@ -11,7 +11,7 @@ function CommentsPanelItem(props) {
 	const { ind, comment } = props;
 	const handleDelete = (event)=> {
 		event.preventDefault();
-		props.onDelete(comment.id);
+		props.onDelete(comment);
 	};
 
 	return (<div className="comments-panel-item" data-id={comment.id}>

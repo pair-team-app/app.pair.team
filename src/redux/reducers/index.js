@@ -162,7 +162,7 @@ function rootReducer(state = initialState, action) {
 
   } else if (type === SET_COMMENT) {
     const { comment } = payload;
-    return (Object.assign({}, state, { comment : action.payload }));
+    return (Object.assign({}, state, { comment }));
 
   } else if (type === PRODUCTS_LOADED) {
     return (Object.assign({}, state, { products : action.payload }));

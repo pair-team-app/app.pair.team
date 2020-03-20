@@ -15,7 +15,7 @@ const SCALE_CONSTRAIN = 1.0;//0.875;
 const CONTAINER_PADDING = {
   width  : 48,
   // height : 168
-  height : 50
+  height : 68
 };
 
 class PlaygroundContent extends Component {
@@ -62,9 +62,14 @@ class PlaygroundContent extends Component {
     let { bounds } = this.state;
     let { init, prev, curr } = this.state.bounds;
 
+    // const scale = {
+    //   width  : (component) ? component.meta.bounds.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN) : 1,
+    //   height : (component) ? component.meta.bounds.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN) : 1
+    // };
+
     const scale = {
-      width  : (component) ? component.meta.bounds.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN) : 1,
-      height : (component) ? component.meta.bounds.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN) : 1
+      width  : (component) ? component.sizes.c.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN) : 1,
+      height : (component) ? component.sizes.c.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN) : 1
     };
 
     // nothing stored yet
@@ -100,7 +105,7 @@ class PlaygroundContent extends Component {
           width  : (width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN,
           height : (height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN
         }
-      }: null
+      }: init.component
     };
 
     // const scale = (init.component)
@@ -261,7 +266,15 @@ const PlaygroundComponent = (props)=> {
   // const title = component.title === tagName ? `${tagName.toUpperCase()} ${Strings.capitalize(typeGroup.title)}`   : component.title;
 
   const lgFactor = Math.max(scale.width, scale.height);
-  const updBounds = { position: {   x: (width - component.meta.bounds.width / lgFactor) * 0.5,   y: (height - component.meta.bounds.height / lgFactor) * 0.5 }, size: {   width: component.meta.bounds.width / lgFactor,   height: component.meta.bounds.height / lgFactor }
+  const updBounds = { 
+    position : { 
+      x : (width - component.meta.bounds.width / lgFactor) * 0.5, 
+      y : (height - component.meta.bounds.height / lgFactor) * 0.5
+    }, 
+    size     : { 
+      width  : component.meta.bounds.width / lgFactor, 
+      height : component.meta.bounds.height / lgFactor 
+    }
   };
 
   // console.log('PlaygroundComponent()', offset);
@@ -348,24 +361,13 @@ const PlaygroundComponentsGrid = (props)=> {
       {components.map((component, i)=> {
         const { id, title, images } = component;
 
-        return (
-          <div
-            key={i}
-            className="playground-component-wrapper components-grid-item"
-            data-id={id}
-            onClick={(event)=> props.onItemClick(event, component)}
-          >
-            <h5 className="component-title">{title}</h5>
-            <div className="content-wrapper" data-loading={false}>
-              <img
-                src={images[0]}
-                className="components-grid-item-image"
-                alt={title}
-              />
-              <div className="image-overlay" />
-            </div>
+        return (<div key={i} className="playground-component-wrapper components-grid-item" data-id={id} onClick={(event)=> props.onItemClick(event, component)}>
+          <h5 className="component-title">{title}</h5>
+          <div className="content-wrapper" data-loading={false}>
+            <img src={images[0]} className="components-grid-item-image" alt={title} />
+            <div className="image-overlay" />
           </div>
-        );
+        </div>);
       })}
     </div>
   );

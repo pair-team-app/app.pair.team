@@ -432,7 +432,7 @@ class PlaygroundPage extends Component {
   };
 
   handleDeleteComment = (comment)=> {
-    //.log('%s.handleDeleteComment()', this.constructor.name, comment.id);
+    console.log('%s.handleDeleteComment()', this.constructor.name, comment.id);
     trackEvent('button', 'delete-comment');
 
     axios

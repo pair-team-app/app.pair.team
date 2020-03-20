@@ -54,7 +54,7 @@ class ComponentMenu extends Component {
 	};
 
   handleHideMenu = (event)=> {
-    console.log('%s.handleHideMenu()', this.constructor.name, event);
+    // console.log('%s.handleHideMenu()', this.constructor.name, event);
     event.preventDefault();
     event.stopPropagation()
 
@@ -106,7 +106,7 @@ class ComponentMenu extends Component {
 
 
 	render() {
-		console.log('%s.render()', this.constructor.name, this.props, this.state);
+		// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { menuID, profile } = this.props;
 		const { intro, outro, component, comment } = this.state;
