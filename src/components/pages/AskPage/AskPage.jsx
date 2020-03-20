@@ -9,8 +9,8 @@ import { fetchTeamComments, setComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import BasePage from '../BasePage';
 import './AskPage.css';
-import AskPageHeader, { SORT_BY_DATE, SORT_BY_SCORE } from './AskPageHeader';
-import AskPageCommentsPanel, { VOTE_ACTION_UP, VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT } from './AskPageCommentsPanel';
+import AskPageHeader, { SORT_BY_SCORE, SORT_BY_DATE } from './AskPageHeader';
+import AskPageCommentsPanel, { VOTE_ACTION_UP, VOTE_ACTION_DOWN } from './AskPageCommentsPanel';
 import { SettingsMenuItemTypes } from '../PlaygroundPage/PlaygroundHeader/UserSettings';
 import PlaygroundNavPanel from '../PlaygroundPage/PlaygroundNavPanel';
 import { reformComment } from '../PlaygroundPage/utils/reform';
@@ -23,7 +23,8 @@ class AskPage extends Component {
       commentContent : '',
       fetching       : false,
       share          : false,
-      sort           : SORT_BY_SCORE
+      sort           : SORT_BY_SCORE,
+      topSort        : []
     };
   }
 
@@ -38,11 +39,15 @@ class AskPage extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { profile, team, params, pathname } = this.props;
-    const { fetching } = this.state;
+    const { fetching, topSort } = this.state;
     
     const { teamSlug, commentID } = params || {};
 
     if (team) {
+      if (topSort.length === 0) {
+        this.setState({ topSort : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).map(({ id })=> (id)) });
+      }
+
       if (fetching && team.comments.filter(({ content })=> (content !== '¡!¡')).length === team.comments.length) {
         this.setState({ fetching : false });
       }
@@ -128,7 +133,12 @@ class AskPage extends Component {
 
   handleSortClick = (sort)=> {
     console.log('%s.handleSortClick()', this.constructor.name, sort);
-    this.setState({ sort });
+
+    this.setState({ sort }, ()=> {
+      if (sort === SORT_BY_SCORE) {
+        this.onReloadComments(true);
+      }
+    });
   }
 
   handleTextChange = (event)=> {
@@ -146,10 +156,6 @@ class AskPage extends Component {
 
     const score = (action === VOTE_ACTION_UP) ? 1 : (action === VOTE_ACTION_DOWN) ? -1 : 0;
 
-    // const score = (!vote) ? (action === VOTE_ACTION_UP) ? 1 : -1 : vote.score * -1;
-    // comment.score += score;
-
-    // this.setState({ comments : comments.map((item)=> ((item.id === comment.id) ? comment : item))});
     axios.post(API_ENDPT_URL, {
       action: 'VOTE_COMMENT',
       payload: { score,
@@ -163,12 +169,15 @@ class AskPage extends Component {
     }).catch((error)=> {});
   };
 
-  onReloadComments = ()=> {
+  onReloadComments = (refesh=false)=> {
     console.log('%s.onReloadComments()', this.constructor.name);
 
     const { team } = this.props;
+    const { topSort } = this.state;
+
     this.setState({ 
       fetching : true,
+      topSort  : (refesh) ? [] : topSort
     }, ()=> {
       this.props.fetchTeamComments({ team });
     });
@@ -179,8 +188,10 @@ class AskPage extends Component {
     // 		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
 
     const { profile, team, comment } = this.props;
-    const { commentContent, fetching, share, sort } = this.state;
+    const { commentContent, fetching, share, sort, topSort } = this.state;
     const { params = null } = this.props || { params : null };
+
+    const comments = (sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : topSort.map((commentID)=> (team.comments.find(({ id })=> (id === commentID))));
 
 
     return (<BasePage { ...this.props } className="ask-page">
@@ -212,7 +223,7 @@ class AskPage extends Component {
 
             <AskPageCommentsPanel 
               profile={profile} 
-              comments={team.comments} 
+              comments={comments} 
               loading={fetching}
               sort={sort}
               onVote={this.handleVote} 

@@ -22,7 +22,7 @@ function AskPageCommentsPanel(props) {
 
 	return (<div className="ask-page-comments-panel" data-loading={loading}>
 		<div className="comments-panel-item-wrapper">
-			{(comments.sort((i, ii)=> ((sort === SORT_BY_SCORE) ? (i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0 : (i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)).map((comment, i)=> {
+			{(comments.map((comment, i)=> {
         const vote = (comment.votes.find(({ author, score })=> (author.id === profile.id && score !== 0 )) || null);
 
 				return (<AskPageComment 
