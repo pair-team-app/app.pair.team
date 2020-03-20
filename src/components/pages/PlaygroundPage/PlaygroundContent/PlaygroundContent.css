@@ -123,7 +123,7 @@
 }
 
 .components-grid-item {
-	margin: 0 var(--orthodox-margin-half) var(--orthodox-margin-base) var(--orthodox-margin-half);
+	margin: 0 var(--orthodox-margin-half) var(--orthodox-margin-base) 0;
 }
 
 .playground-content[data-cursor="false"] .components-grid-item:hover {
