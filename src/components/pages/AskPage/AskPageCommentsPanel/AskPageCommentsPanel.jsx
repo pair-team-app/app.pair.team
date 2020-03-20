@@ -28,7 +28,7 @@ function AskPageCommentsPanel(props) {
 				return (<AskPageComment 
           key={i} 
           loading={loading} 
-          disabled={(comment.author.id === profile.id)} 
+          disabled={(comment.author.id === profile.id || loading)} 
           vote={vote}
           comment={comment} 
           onVote={handleVote}
@@ -50,9 +50,9 @@ const AskPageComment = (props)=> {
 	};
 
 	return (<div className="ask-page-comment" data-id={comment.id} data-loading={loading}>
-    <div className="vote-wrapper" data-disabled={disabled}>
+    <div className="vote-wrapper" data-disabled={disabled} data-vote={vote !== null}>
       <FontAwesome name="sort-up" className="vote-arrow vote-arrow-up" data-selected={vote && vote.score === 1} onClick={()=> props.onVote({ comment, action : VOTE_ACTION_UP })} />
-      <div className="vote-score">{comment.score}</div>
+      <div className="vote-score" onClick={()=> props.onVote({ comment, action : VOTE_ACTION_RETRACT })}>{comment.score}</div>
       <FontAwesome name="sort-down" className="vote-arrow vote-arrow-dn" data-selected={vote && vote.score === -1} onClick={()=> props.onVote({ comment, action : VOTE_ACTION_DOWN })} />
     </div>
 		<PlaygroundBaseComment ind={-1} comment={comment} onDelete={handleDelete} />

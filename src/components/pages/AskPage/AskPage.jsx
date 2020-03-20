@@ -34,10 +34,6 @@ class AskPage extends Component {
     this.setState({ fetching : true });
   }
 
-  // componentDidMount() {
-  //   console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
-  // }
-
   componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
@@ -50,6 +46,10 @@ class AskPage extends Component {
       if (fetching && team.comments.filter(({ content })=> (content !== '¡!¡')).length === team.comments.length) {
         this.setState({ fetching : false });
       }
+
+      if (fetching && prevProps.team && prevProps.team.comments !== team.comments) {
+      this.setState({ fetching : false });
+    }
     }
   }
 
@@ -75,8 +75,7 @@ class AskPage extends Component {
       }).then((response)=> {
         const comment = reformComment(response.data.comment);
         console.log('ADD_COMMENT', response.data, comment);
-        this.setState({ commentContent : '' });
-        this.props.fetchTeamComments({ team });
+        this.onReloadComments();
         
       }).catch((error)=> {});
     });
@@ -95,9 +94,7 @@ class AskPage extends Component {
       }
     }).then((response)=> {
       console.log('UPDATE_COMMENT', response.data);
-
-      const { team } = this.props;
-      this.props.fetchTeamComments({ team });
+      this.onReloadComments();
 
     }).catch((error)=> {});
   };
@@ -116,8 +113,6 @@ class AskPage extends Component {
 
     const { team, comment } = this.props;
     this.props.history.push(`/app/${team.title}/${Strings.slugifyURI(playground.title)}/${playground.buildID}/desktop-macos`);
-    this.props.setComment(null);
-
   };
 
   handleSettingsItem = (itemType)=> {
@@ -125,6 +120,7 @@ class AskPage extends Component {
 
     if (itemType === SettingsMenuItemTypes.DELETE_ACCT) {
       this.props.onModal(Modals.DISABLE);
+
     } else if (itemType === SettingsMenuItemTypes.PROFILE) {
       this.props.onModal(Modals.PROFILE);
     }
@@ -132,7 +128,6 @@ class AskPage extends Component {
 
   handleSortClick = (sort)=> {
     console.log('%s.handleSortClick()', this.constructor.name, sort);
-
     this.setState({ sort });
   }
 
@@ -143,16 +138,18 @@ class AskPage extends Component {
     this.setState({ commentContent });
   };
 
-  handleVote = ({ comment, action, vote })=> {
-    trackEvent('button', (!vote) ? (action === VOTE_ACTION_UP) ? 'upvote-comment' : 'downvote-comment' : 'retract-vote');
+  handleVote = ({ comment, action })=> {
+    trackEvent('button', (action === VOTE_ACTION_UP) ? 'upvote-comment' : (action === VOTE_ACTION_DOWN) ? 'downvote-comment' : 'retract-vote');
     
     const { profile, team } = this.props;
     const { comments } = team;
 
-    const score = (!vote) ? (action === VOTE_ACTION_UP) ? 1 : -1 : vote.score * -1;
-    comment.score += score;
+    const score = (action === VOTE_ACTION_UP) ? 1 : (action === VOTE_ACTION_DOWN) ? -1 : 0;
 
-    this.setState({ comments : comments.map((item)=> ((item.id === comment.id) ? comment : item))});
+    // const score = (!vote) ? (action === VOTE_ACTION_UP) ? 1 : -1 : vote.score * -1;
+    // comment.score += score;
+
+    // this.setState({ comments : comments.map((item)=> ((item.id === comment.id) ? comment : item))});
     axios.post(API_ENDPT_URL, {
       action: 'VOTE_COMMENT',
       payload: { score,
@@ -161,11 +158,21 @@ class AskPage extends Component {
       }
     }).then((response)=> {
 			console.log('VOTE_COMMENT', response.data);
-      this.props.fetchTeamComments({ team });
+      this.onReloadComments();
 
     }).catch((error)=> {});
   };
 
+  onReloadComments = ()=> {
+    console.log('%s.onReloadComments()', this.constructor.name);
+
+    const { team } = this.props;
+    this.setState({ 
+      fetching : true,
+    }, ()=> {
+      this.props.fetchTeamComments({ team });
+    });
+  };
 
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
