@@ -1,5 +1,5 @@
 
-import { Images, Strings } from 'lang-js-utils';
+import { Strings } from 'lang-js-utils';
 import moment from 'moment';
 import { jsonFormatKB } from '../../../../consts/formats';
 
@@ -109,12 +109,12 @@ export const reformComponent = (component, componentTypes=null, overwrite = {})=
     ...overwrite
   };
 
-  if ((html && accessibility) !== null) {
-    console.log('[%s] .::(REFORMED)::.', component.id, { data : { ...reformed, size : jsonFormatKB(reformed) } });
+  // if ((html && accessibility) !== null) {
+  //   console.log('[%s] .::(REFORMED)::.', component.id, { data : { ...reformed, size : jsonFormatKB(reformed) } });
 
-  } else {
-    console.log('[%s] .::(INITIAL)::.', component.id, { ...reformed, size : jsonFormatKB(reformed) });
-  }
+  // } else {
+  //   console.log('[%s] .::(INITIAL)::.', component.id, { ...reformed, size : jsonFormatKB(reformed) });
+  // }
 
   return { ...reformed, size: jsonFormatKB(reformed) };
 };

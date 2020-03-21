@@ -4,10 +4,11 @@ import cookie from 'react-cookies';
 import { reformComponent, reformPlayground , reformComment} from '../../components/pages/PlaygroundPage/utils/reform';
 import { DEVICES_LOADED,
   BUILD_PLAYGROUNDS_LOADED, TEAM_LOADED, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, 
-  TYPE_GROUP_LOADED, UPDATE_MOUSE_COORDS, 
+  TYPE_GROUP_LOADED, 
   USER_PROFILE_UPDATED, 
   USER_PROFILE_LOADED, 
   UPDATE_MATCH_PATH,
+  UPDATE_MOUSE_COORDS,
   SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT,
   TOGGLE_AX, TOGGLE_COMMENTS, TOGGLE_THEME
 } from '../../consts/action-types';
@@ -16,7 +17,7 @@ import { fetchTeamBuilds, fetchTeamComments, fetchPlaygroundComponentGroup, fetc
 
 
 const logFormat = ({ prevState, action, next, meta=null })=> {
-  if (action && typeof action !== 'function') {
+  if (action && typeof action !== 'function' && action.type !== UPDATE_MOUSE_COORDS) {
     const { type, payload } = action;
     console.log(LOG_MIDDLEWARE_PREFIX, `“${type}”`, { payload, action, meta }, { prevState, next });
   }
@@ -140,7 +141,7 @@ export function onMiddleware(store) {
           deviceSlug    : (payload.matchPath.params.deviceSlug || null),
           typeGroupSlug : (payload.matchPath.params.typeGroupSlug || null),
           componentID   : (payload.matchPath.params.componentID) ? payload.matchPath.params.componentID << 0 : null,
-          ax            : (typeof payload.matchPath.params.ax !== 'undefined' && payload.matchPath.params.ax !== null && payload.matchPath.params.ax === 'accessibility'),
+          // ax            : (typeof payload.matchPath.params.ax !== 'undefined' && payload.matchPath.params.ax !== null && payload.matchPath.params.ax === 'accessibility'),
           comments      : (typeof payload.matchPath.params.comments !== 'undefined' && payload.matchPath.params.comments !== null && payload.matchPath.params.comments === 'comments'),
           commentID     : (payload.matchPath.params.commentID) ? payload.matchPath.params.commentID << 0 : null,
         };
@@ -158,6 +159,16 @@ export function onMiddleware(store) {
           // }
         // }
       }
+
+    } else if (type === UPDATE_MOUSE_COORDS) {
+      const { speed } = prevState.mouse;
+      payload.mouse = {
+        position : { ...payload },
+        speed    : {
+          x : speed.x - payload.x,
+          y : speed.y - payload.y
+        }
+      };
     
     } else if (type === SET_PLAYGROUND) {
       const { playground } = payload;
@@ -169,11 +180,6 @@ export function onMiddleware(store) {
     } else if (type === SET_TYPE_GROUP) {
       const { typeGroup } = payload;
 
-      // if (prevState.typeGroup === typeGroup) {
-      //   return;
-      // }
-
-
       const { matchPath } = prevState;
       const { params } = matchPath;
 
@@ -181,9 +187,7 @@ export function onMiddleware(store) {
         dispatch(updateMatchPath({ 
           matchPath : { ...matchPath,
             params : { ...params,
-              typeGroupSlug : typeGroup.key,
-              ax : false,
-              comments : false
+              typeGroupSlug : typeGroup.key
             }
           }
         }));
@@ -194,10 +198,6 @@ export function onMiddleware(store) {
     } else if (type === SET_COMPONENT) {
       const { component } = payload;
 
-      // if (prevState.component === component) {
-      //   return;
-      // }
-
       const { matchPath } = prevState;
       const { params } = matchPath;
 
@@ -205,7 +205,7 @@ export function onMiddleware(store) {
         matchPath : { ...matchPath,
           params : { ...params,
             componentID : (component) ? component.id : null,
-            ax : false
+            comments    : false
           }
         }
       }));
@@ -215,16 +215,13 @@ export function onMiddleware(store) {
     } else if (type === SET_COMMENT) {
       const { comment } = payload;
 
-      const { matchPath } = prevState;
+      const { component, matchPath } = prevState;
       const { params } = matchPath;
-
-      // if (prevState.comment === comment) {
-      //   return;
-      // }
 
       dispatch(updateMatchPath({ 
         matchPath : { ...matchPath,
           params : { ...params,
+            comments  : (params.componentID && (params.comments || comment)) ? 'comments' : params.comments,
             commentID : (comment) ? comment.id : null
           }
         }

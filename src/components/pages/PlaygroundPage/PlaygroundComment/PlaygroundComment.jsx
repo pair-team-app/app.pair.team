@@ -61,21 +61,18 @@ class PlaygroundComment extends Component {
 
     const { offset } = this.props;
     const position = {
-      x: (this.state.position.x - 2) + offset.x,
-      y: (this.state.position.y - 28) + offset.y
+      x : this.state.position.x,
+      y : this.state.position.y + 10
     };
 
-    this.setState(
-      { position,
-        outro: true,
-      },
-      ()=> {
-        const { component } = this.props;
-        const { position, comment } = this.state;
+    this.setState({ position,
+      outro : true,
+    }, ()=> {
+      const { component } = this.props;
+      const { position, comment } = this.state;
 
-        this.props.onAdd({ position, component, content: comment.content });
-      }
-    );
+      this.props.onAdd({ position, component, content : comment.content });
+    });
   };
 
   handleClose = (comment)=> {
@@ -139,7 +136,7 @@ class PlaygroundComment extends Component {
   };
 
   render() {
-    // console.log('%s.render()', this.constructor.name, this.props, this.state);
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
     // 		console.log('%s.render()', this.constructor.name, this.props.component, this.props.comment);
 
     const { component, comment, ind, offset, scale, activeComment } = this.props;
@@ -147,55 +144,47 @@ class PlaygroundComment extends Component {
 	
 
 	// const style = {
-    //   top: `${offset.top + ((comment.position.y) / scale.height)}px`,
-    //   left: `${offset.left + ((comment.position.x) / scale.width)}px`
-	// };
-	
-	// const style = {
 	// 	top: `${offset.y + ((comment.position.y) / scale.height)}px`,
 	// 	left: `${offset.x + ((comment.position.x) / scale.width)}px`
   // };
 
+  //
   // const style = {
-	// 	top: `${((comment.position.y) / scale.height)}px`,
-	// 	left: `${((comment.position.x) / scale.width)}px`
+	// 	top: `${((comment.position.y - offset.y) / Math.max(scale.height, scale.width))}px`,
+	// 	left: `${((comment.position.x - offset.x) / Math.max(scale.width, scale.height))}px`
+  // };
+
+  // (0, 0) = top-left actual image
+  // const style = {
+	// 	top  : `${((comment.position.y) / Math.max(scale.height, scale.width))}px`,
+	// 	left : `${((comment.position.x) / Math.max(scale.width, scale.height))}px`
   // };
 
   const style = {
-		top  : `${(comment.position.y / Math.max(scale.width, scale.height)) - offset.y}px`,
-		left : `${(comment.position.x / Math.max(scale.width, scale.height)) - offset.x}px`
+		top  : `${(comment.position.y / ((comment.id === 0) ? 1 : Math.max(scale.width, scale.height)))}px`,
+		left : `${(comment.position.x / ((comment.id === 0) ? 1 : Math.max(scale.width, scale.height)))}px`
   };
 
-    return (
-      <div className="playground-comment" style={style} data-id={component.id} data-pos={JSON.stringify(comment.position)} data-offset={JSON.stringify(offset)} data-scale={JSON.stringify(scale)}>
-        <PlaygroundCommentMarker
-          ind={ind}
-          comment={comment}
-          onClick={this.handleMarkerClick}
-        />
-        {comment.id === 0 ? (
-          <PlaygroundCommentAddPopover
+    return (<div className="playground-comment" style={style} data-id={component.id} data-pos={JSON.stringify(comment.position)} data-offset={JSON.stringify(offset)} data-scale={JSON.stringify(scale)}>
+      <PlaygroundCommentMarker ind={ind} comment={comment} onClick={this.handleMarkerClick} />
+      {(comment.id === 0) 
+        ? (<PlaygroundCommentAddPopover
             comment={this.state.comment}
             outro={outro}
             onTextChange={this.handleTextChange}
             onOutro={this.onOutro}
             onSubmit={this.handleAddSubmit}
             onClose={this.handleClose}
-          />
-        ) : (
-          activeComment &&
-          activeComment.id === comment.id && (
-            <PlaygroundCommentPopover
-              ind={ind}
-              comment={comment}
-              outro={outro}
-              onDelete={this.handleDelete}
-              onClose={this.handleClose}
-            />
-          )
-        )}
-      </div>
-    );
+          />) 
+        : ((activeComment && activeComment.id === comment.id) && (<PlaygroundCommentPopover
+            ind={ind}
+            comment={comment}
+            outro={outro}
+            onDelete={this.handleDelete}
+            onClose={this.handleClose}
+          />)
+      )}
+    </div>);
   }
 }
 
@@ -204,68 +193,40 @@ const PlaygroundCommentAddPopover = (props)=> {
 
   const { comment, outro } = props;
   const payload = {
-    fixed: false,
-    position: {
-      x: 0,
-      y: 20
+    fixed    : false,
+    position : {
+      x : 0,
+      y : 20
     }
   };
 
-  return (
-    <BasePopover
-      outro={outro}
-      payload={payload}
-      onOutroComplete={()=> props.onClose(comment)}
-    >
-      <div className="playground-comment-add-popover">
-        <div className="header-wrapper">
-          <div className="avatar-wrapper">
-            <img
-              className="avatar-wrapper-ico"
-              src={
-                !comment.author.avatar
-                  ? USER_DEFAULT_AVATAR
-                  : comment.author.avatar
-              }
-              alt={comment.author.username}
-            />
-          </div>
+  return (<BasePopover outro={outro} payload={payload} onOutroComplete={()=> props.onClose(comment)}>
+    <div className="playground-comment-add-popover">
+      <div className="header-wrapper">
+        <div className="avatar-wrapper">
+          <img className="avatar-wrapper-ico"src={!comment.author.avatar ? USER_DEFAULT_AVATAR : comment.author.avatar} alt={comment.author.username} />
         </div>
-        <form>
-          <textarea
-            placeholder="Enter Comment"
-            onChange={props.onTextChange}
-          ></textarea>
-          <div className="button-wrapper-row">
-            <button className="quiet-button" onClick={(event)=> props.onOutro(event)}>Cancel</button>
-            <button type="submit" disabled={comment.content.length === 0} onClick={props.onSubmit}>Submit</button>
-          </div>
-        </form>
       </div>
-    </BasePopover>
-  );
+      <form>
+        <textarea placeholder="Enter Comment" onChange={props.onTextChange}></textarea>
+        <div className="button-wrapper-row">
+          <button className="quiet-button" onClick={(event)=> props.onOutro(event)}>Cancel</button>
+          <button type="submit" disabled={!comment.content || comment.content.length === 0} onClick={props.onSubmit}>Submit</button>
+        </div>
+      </form>
+    </div>
+  </BasePopover>);
 };
 
 const PlaygroundCommentMarker = (props)=> {
-  // 	console.log('PlaygroundCommentMarker()', props);
+  	// console.log('PlaygroundCommentMarker()', props);
 
   const { ind, comment } = props;
-  return (
-    <div
-      className="playground-comment-marker"
-      onClick={(event)=> props.onClick(event, comment)}
-      data-id={comment.id}
-    >
-      {comment.id === 0 ? (
-        <div className="playground-comment-marker-pin">
-          <FontAwesome name="map-marker-alt" />
-        </div>
-      ) : (
-        <div className="playground-comment-marker-content-wrapper">
-          <div className="playground-comment-marker-content">{ind}</div>
-        </div>
-      )}
-    </div>
+  return (<div className="playground-comment-marker" onClick={(event)=> props.onClick(event, comment)} data-id={comment.id}>
+    {(comment.id === 0) 
+      ? (<div className="playground-comment-marker-pin"><FontAwesome name="map-marker-alt" /></div>) 
+      : (<div className="playground-comment-marker-content-wrapper"><div className="playground-comment-marker-content">{ind}</div></div>)}
+  </div>
   );
 };
 
@@ -277,7 +238,7 @@ const PlaygroundCommentPopover = (props)=> {
     fixed: false,
     position: {
       x: 0,
-      y: 20
+      y: 15
     }
   };
 

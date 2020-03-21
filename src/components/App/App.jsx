@@ -61,15 +61,11 @@ class App extends Component {
     // console.log('[:][:][:][:][:][:][:][:][:][:]');
     const { profile, location } = this.props;
     // 		if (!profile && location.pathname.startsWith(Pages.PLAYGROUND)) {
-    if (
-      !profile &&
-      location.pathname.startsWith(Pages.PLAYGROUND) &&
-      cookie.load('user_id') === '0'
-    ) {
+    if (!profile && location.pathname.startsWith(Pages.PLAYGROUND) && cookie.load('user_id') === '0') {
       this.onToggleModal(Modals.LOGIN);
     }
 
-    // window.addEventListener('mousemove', this.handleMouseMove);
+    window.addEventListener('mousemove', this.handleMouseMove);
     window.onpopstate = (event)=> {
       event.preventDefault();
       // 			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
@@ -133,7 +129,7 @@ class App extends Component {
       this.onToggleModal(Modals.NETWORK);
     
     } else {
-      // console.log('+=+=+=+=+=+=+=+', { local : matchPlaygrounds, props : this.props.matchPath, prev : prevProps.matchPath });
+      console.log('+=+=+=+=+=+=+=+', { local : matchPlaygrounds, props : this.props.matchPath, prev : prevProps.matchPath });
       if (matchPlaygrounds !== null && (this.props.matchPath === null || (this.props.matchPath && matchPlaygrounds.url !== this.props.matchPath.url))) {
         this.props.updateMatchPath({ 
           matchPath : { ...matchPlaygrounds,
@@ -328,8 +324,8 @@ class App extends Component {
     const { location } = this.props;
     if (this.props.profile && location.pathname.startsWith(Pages.PLAYGROUND)) {
       this.props.updateMouseCoords({
-        x: event.pageX,
-        y: event.pageY
+        x : event.pageX,
+        y : event.pageY
       });
     }
   };

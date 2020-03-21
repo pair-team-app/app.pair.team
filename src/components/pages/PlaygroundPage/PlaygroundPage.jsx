@@ -345,15 +345,21 @@ class PlaygroundPage extends Component {
       this.props.setTypeGroup(typeGroup);
       
     } else if (type === BreadcrumbTypes.COMPONENT) {
-      const component = payload;
-      this.props.setComponent(component);
+      const { pathname } = this.props.location;
+      setTimeout(()=> {
+        this.props.history.push(pathname.replace(/\/comments.*$/, ''));
+      }, ((/\/comments\/\d+$/.test(pathname))) * 200);
+
+      // const component = payload;
+      // this.props.setComponent(component);
 
     } else if (type === BreadcrumbTypes.ACCESSIBILITY) {
     } else if (type === BreadcrumbTypes.COMMENTS) {
       const { pathname } = this.props.location;
 
       if (/\/comments\/.*$/.test(pathname)) {
-        this.props.history.push(pathname.replace(/(\/comments)\/?(.*)$/, '$1'));
+        this.props.history.push(pathname.replace(/\/comments.*$/, ''));
+        // this.props.history.push(pathname.replace(/(\/comments)\/?(.*)$/, '$1'));
         this.props.setComment(null);
       }
 
@@ -372,7 +378,7 @@ class PlaygroundPage extends Component {
       // component
     // });
     if (component && component !== this.props.component) {
-      this.props.setComponent(component);
+      // this.props.setComponent(component);
     }
     this.props.setComment(comment);
   };
@@ -380,11 +386,11 @@ class PlaygroundPage extends Component {
   handleComponentClick = ({ component = null })=> {
     // console.log('%s.handleComponentClick()', this.constructor.name, { component });
 
-    if (!component.selected) {
-      component.selected = true;
+    // if (!component.selected) {
+      // component.selected = true;
       this.props.setComponent(component);
       this.setState({ cursor: false });
-    }
+    // }
   };
 
   handleComponentMenuShow = ({ component = null })=> {
@@ -395,13 +401,16 @@ class PlaygroundPage extends Component {
   handleComponentMenuItem = ({ menuItem = null })=> {
     //.log('%s.handleComponentMenuItem()', this.constructor.name, { menuItem });
 
-    //     this.props.setComponent(component);
+    // const { component } = this.props;
+    // this.props.setComponent(component);
 
     if (menuItem === COMPONENT_MENU_ITEM_COMMENTS) {
       const { pathname } = this.props.location;
       if (/\/comments.*$/.test(pathname)) {
-        this.props.setComment(null);
-        this.props.history.push(pathname.replace(/\/comments.*$/, ''));
+
+        setTimeout(()=> {
+          this.props.history.push(pathname.replace(/\/comments.*$/, ''));
+        }, ((/\/comments\/\d+$/.test(pathname))) * 200);
 
       } else {
         this.props.history.push(`${pathname}/comments`);
@@ -416,19 +425,16 @@ class PlaygroundPage extends Component {
   handleComponentPopoverClose = ()=> {
     console.log('%s.handleComponentPopoverClose()', this.constructor.name);
 
-    const pushURL = /\/comments\/.*$/.test(this.props.pathname)
-      ? this.props.pathname.replace(/\/comments\/.*$/, '/comments')
-      : null;
+    this.props.setComment(null);
 
-    console.log('%s.handleComponentPopoverClose()', this.constructor.name, {
-      pathname: this.props.pathname,
-      hasComments: /\/comments.*$/.test(this.props.pathname),
-      pushURL
-    });
+    // const { pathname } = this.props.location.pathname;
+    // const pushURL = (/\/comments\/.+$/.test(pathname)) ? pathname.replace(/\/comments\/.+$/, '/comments') : null;
 
-    if (pushURL) {
-      this.props.history.push(pushURL);
-    }
+    // console.log('%s.handleComponentPopoverClose()', this.constructor.name, { pathname, hasComments : /\/comments\/.+$/.test(pathname), pushURL });
+
+    // if (pushURL) {
+    //   this.props.history.push(pushURL);
+    // }
   };
 
   handleDeleteComment = (comment)=> {
@@ -600,7 +606,7 @@ class PlaygroundPage extends Component {
 
 
     return (
-      <BasePage { ...this.props } className="playground-page" data-comments={component && window.location.href.includes('/comments')}>
+      <BasePage { ...this.props } className="playground-page" data-component={(component !== null)} data-comments={component && window.location.href.includes('/comments')}>
         {profile && team && (
           <div>
             <PlaygroundNavPanel
@@ -610,7 +616,6 @@ class PlaygroundPage extends Component {
               onTypeItemClick={this.handleNavTypeItemClick}
             />
             <PlaygroundHeader
-              accessibility={accessibility}
               popover={share}
               onBreadCrumbClick={this.handleBreadCrumbClick}
               onPopup={this.props.onPopup}

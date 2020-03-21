@@ -43,13 +43,7 @@ const logFormat = (state, action, meta = '')=> {
   const { type, payload } = action;
 
   if (type !== UPDATE_MOUSE_COORDS) {
-    console.log(
-      LOG_REDUCER_PREFIX,
-      `REDUCER >> “${type}”`,
-      state,
-      payload,
-      meta
-    );
+    console.log(LOG_REDUCER_PREFIX, `REDUCER >> “${type}”`, { state, payload, meta });
   }
 };
 
@@ -82,15 +76,17 @@ function rootReducer(state = initialState, action) {
 
 
   } else if (type === UPDATE_MOUSE_COORDS) {
-    return (Object.assign({}, state, {
-      mouse : Object.assign({}, state.mouse, {
-        position : Object.assign({}, state.mouse.position, action.payload),
-        speed: {
-          x : state.mouse.position.x - action.payload.x,
-          y : state.mouse.position.y - action.payload.y
-        }
-      })
-    }));
+    const { mouse } = payload;
+
+    return (Object.assign({}, state, { mouse }));
+      // mouse : Object.assign({}, state.mouse, {
+      //   position : Object.assign({}, state.mouse.position, action.payload),
+      //   speed: {
+      //     x : state.mouse.position.x - action.payload.x,
+      //     y : state.mouse.position.y - action.payload.y
+      //   }
+      // })
+    // }));
   
   } else if (type === TEAM_BUILDS_LOADED) {
     const { playgrounds, playground, typeGroup, component } = payload;

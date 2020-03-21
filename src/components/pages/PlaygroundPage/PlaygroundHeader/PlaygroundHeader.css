@@ -9,9 +9,13 @@
 	display: flex;
 	align-items: center;
 	padding: calc(var(--orthodox-padding-base) - 4px) var(--orthodox-padding-base) 0 var(--orthodox-padding-base);
-	/*background-color: rgba(var(--site-bg-color), 0.875);*/
+	/* background-color: rgba(var(--site-bg-color), 1.0); */
 	transition: width 250ms cubic-bezier(0.4, 0, 0.2, 1);
-	z-index: 2;
+	z-index: 4;
+}
+
+.playground-page[data-component="false"] .playground-header {
+	/* background-color: rgba(var(--playground-content-bg-color), 1.0); */
 }
 
 .playground-header > * {

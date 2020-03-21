@@ -7,7 +7,7 @@ import { ContextMenu, MenuItem } from 'react-contextmenu';
 
 import { COMPONENT_MENU_ITEM_COMMENTS, COMPONENT_MENU_ITEM_COPY } from './index';
 import { ENTER_KEY } from '../../../../../consts/key-codes';
-import { USER_DEFAULT_AVATAR } from '../../../../../consts/uris';
+// import { USER_DEFAULT_AVATAR } from '../../../../../consts/uris';
 
 
 class ComponentMenu extends Component {
@@ -47,8 +47,9 @@ class ComponentMenu extends Component {
 		const { position, component, comment : content } = this.state;
 		const { x , y } = position;
 		this.props.onAddComment({ component, content,
-			position : { x,
-        y : y + 30,
+			position : { 
+				x : x - 6,
+        y : y - 9,
       }
     });
 	};
@@ -81,25 +82,29 @@ class ComponentMenu extends Component {
   };
 
 	handleShowMenu = (event)=> {
- 		console.log('%s.handleShowMenu()', this.constructor.name, this.props, event.detail, event.detail.target.getBoundingClientRect())
+ 		// console.log('%s.handleShowMenu()', this.constructor.name, this.props, event, { position : { x : ((event.detail.position.x - event.detail.data.target.getBoundingClientRect().x) - 10) << 0, y : ((event.detail.position.y - event.detail.data.target.getBoundingClientRect().y) - 8) << 0 }, target : event.detail.data.target.getBoundingClientRect() });
 
 		event.preventDefault();
 		event.stopPropagation();
 
 		const { component } = event.detail.data;
-		this.setState({ component,
+		const { scale } = this.props;
+		const position = {
+			x : ((event.detail.position.x - event.detail.data.target.getBoundingClientRect().x) * scale) << 0,
+			y : ((event.detail.position.y - event.detail.data.target.getBoundingClientRect().y) * scale) << 0
+		};
+
+
+		this.setState({ component, position,
 			intro    : true,
 			outro    : false,
-			position : {
-				x : ((event.detail.position.x - event.detail.target.getBoundingClientRect().x) - 10) << 0,
-				y : ((event.detail.position.y - event.detail.target.getBoundingClientRect().y) - 8) << 0,
-			},
 			comment  : ''
 		}, ()=> {
 			if (this.textAreaRef) {
 				this.textAreaRef.value = this.state.comment;
 			}
 
+			console.log('%s.handleShowMenu()', this.constructor.name, this.props, event, { position });
 			this.props.onShow({ component });
 		});
 	};
@@ -110,7 +115,7 @@ class ComponentMenu extends Component {
 
 		const { menuID, profile } = this.props;
 		const { intro, outro, component, comment } = this.state;
-// 		const { avatar, username, email } = this.props.profile;
+		const { avatar, email } = profile;
 
 		return (<ContextMenu id={menuID} className="component-menu-wrapper" onShow={this.handleShowMenu} onHide={this.handleHideMenu} preventHideOnContextMenu={true} preventHideOnResize={true} preventHideOnScroll={true}>
 			{/*<BasePopover intro={intro} outro={outro} payload={payload} onOutroComplete={this.props.onClose}>*/}
@@ -125,7 +130,7 @@ class ComponentMenu extends Component {
           <div className="playground-comment-add-popover">
             <div className="header-wrapper">
               <div className="avatar-wrapper">
-                <img className="avatar-wrapper-ico" src={profile.avatar} alt={profile.email} />
+                <img className="avatar-wrapper-ico" src={avatar} alt={email} />
               </div>
             </div>
 						<textarea placeholder="Enter Comment" onChange={(event)=> this.setState({ comment : event.target.value })} ref={(element)=> this.textAreaRef = element}>
@@ -163,19 +168,9 @@ const ComponentMenuItemAcc = (props)=> {
 	return (<div className="component-menu-item-acc">{amt}</div>);
 };
 
-
-// const mapStateToProps = (state, ownProps)=> {
-//   return ({
-//     profile : state.userProfile
-//   });
-// };
-
-//<img src={(avatar || USER_DEFAULT_AVATAR)} alt={(email || username)} />//
-
-
-
 // export default connect(mapStateToProps)(ComponentMenu);
 export default (ComponentMenu);
 
 
 // ComponentMenuItem.height = 46px
+//<img src={(avatar || USER_DEFAULT_AVATAR)} alt={(email || username)} />//

@@ -342,8 +342,8 @@ export function updateMatchPath(payload) {
 
 export function updateMouseCoords(payload) {
   // 	logFormat('updateMouseCoords()', payload);
-  const { mouseCoords } = payload;
-  return { mouseCoords, type : UPDATE_MOUSE_COORDS };
+  const position = payload;
+  return { payload : position, type : UPDATE_MOUSE_COORDS };
 }
 
 export function updateUserProfile(payload, force = true) {
