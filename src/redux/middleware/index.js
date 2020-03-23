@@ -14,6 +14,7 @@ import { DEVICES_LOADED,
 } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { fetchTeamBuilds, fetchTeamComments, fetchPlaygroundComponentGroup, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setComment, setComponent, setTypeGroup, setPlayground } from '../actions';
+import {typeGroupByID} from '../../components/pages/PlaygroundPage/utils/lookup';
 
 
 const logFormat = ({ prevState, action, next, meta=null })=> {
@@ -66,7 +67,7 @@ export function onMiddleware(store) {
       const { componentTypes, team, matchPath } = prevState;
       const { params } = matchPath || {};
 
-      const playgrounds = payload.playgrounds.map((playground, i)=> (reformPlayground(playground, false, team, componentTypes)));
+      const playgrounds = payload.playgrounds.map((playground, i)=> (reformPlayground(playground, false, team, componentTypes))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
       const playground = playgrounds.find(({ buildID })=> (buildID === params.buildID)) || null;
       const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) : null;
       const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
@@ -173,9 +174,19 @@ export function onMiddleware(store) {
     } else if (type === SET_PLAYGROUND) {
       const { playground } = payload;
 
-      if (prevState.playground === playground) {
-        return;
-      }
+      const { typeGroup, matchPath } = prevState;
+      const { params } = matchPath;
+
+      
+      dispatch(updateMatchPath({ 
+        matchPath : { ...matchPath,
+          params : { ...params,
+            buildID       : playground.buildID,
+            deviceSlug    : 'desktop-macos',
+            typeGroupSlug : 'views'
+          }
+        }
+      }));
 
     } else if (type === SET_TYPE_GROUP) {
       const { typeGroup } = payload;
@@ -183,15 +194,15 @@ export function onMiddleware(store) {
       const { component, matchPath } = prevState;
       const { params } = matchPath;
 
-      if (typeGroup) {
-        dispatch(updateMatchPath({ 
-          matchPath : { ...matchPath,
-            params : { ...params,
-              typeGroupSlug : typeGroup.key
-            }
+      
+      dispatch(updateMatchPath({ 
+        matchPath : { ...matchPath,
+          params : { ...params,
+            typeGroupSlug : (typeGroup) ? typeGroup.key : null
           }
-        }));
-      }
+        }
+      }));
+      
       
       if (component || params.componentID) {
         dispatch(setComponent(null));

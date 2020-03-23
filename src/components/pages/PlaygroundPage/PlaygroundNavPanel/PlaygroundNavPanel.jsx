@@ -20,17 +20,20 @@ class PlaygroundNavPanel extends Component {
   componentDidMount() {
     // console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
-    const { playgrounds } = this.props;
-    if (playgrounds) {
-      this.onPopulateTree();
-    }
+    // const { playgrounds } = this.props;
+    // const { projects } = this.state;
+
+    // if (playgrounds && projects.length === 0) {
+    //   this.onPopulateTree();
+    // }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { playgrounds } = this.props;
-    if (playgrounds && playgrounds !== prevProps.playgrounds) {
+    const { projects } = this.state;
+    if (playgrounds && projects.length === 0) {
       this.onPopulateTree();
     }
 
@@ -75,13 +78,31 @@ class PlaygroundNavPanel extends Component {
   }
 
   handleProjectClick = (project)=> {
-    		console.log('%s.handleProjectClick()', this.constructor.name, project);
-    this.props.onPlaygroundClick(project);
+    console.log('%s.handleProjectClick()', this.constructor.name, project);
+
+    project.expanded = !project.expanded;
+
+    const { projects } = this.state;
+    this.setState({ projects : projects.map((item)=> ((item.id === project.id) ? project : item))});
   };
 
-  handleTypeGroupClick = (typeGroup)=> {
-    // 		console.log('%s.handleTypeGroupClick()', this.constructor.name, typeGroup);
-    this.props.onTypeGroupClick(typeGroup);
+  handleTypeGroupClick = (project, typeGroup)=> {
+    console.log('%s.handleTypeGroupClick()', this.constructor.name, { project, typeGroup });
+
+    project.selected = true;
+
+    const { playground } = this.props;
+    const { projects } = this.state;
+    this.setState({ projects : projects.map((item)=> ((item.id !== project.id) ? { ...item, 
+      expanded : false,
+      selected : false 
+    } : project))}, ()=> {
+      if (project.id !== playground.id) {
+        this.props.onPlaygroundClick(project);
+      }
+      
+      this.props.onTypeGroupClick(typeGroup);
+    });
   };
 
   handleTypeItemClick = (typeGroup, typeItem)=> {
@@ -97,7 +118,9 @@ class PlaygroundNavPanel extends Component {
     const projects = playgrounds.map((playground)=> {
       const { typeGroups } = playground;
 
-      return ({ ...playground });
+      return ({ ...playground,
+        expanded : playground.selected
+       });
 
       // return ({ ...playground,
       //   typeGroups : playground.typeGroups.map((typeGroup)=> ({ ...typeGroup,
@@ -112,9 +135,9 @@ class PlaygroundNavPanel extends Component {
   };
 
   render() {
-    		// console.log('%s.render()', <this className="constructor n">                                                                                                                                                                                                                      </this>ame, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { team, playgrounds, typeGroup } = this.props;
+    const { team, playgrounds, playground, typeGroup } = this.props;
     const { typeGroups, projects } = this.state;
 
 
@@ -147,8 +170,10 @@ class PlaygroundNavPanel extends Component {
                 <NavPanelProject 
                   key={i} 
                   project={project} 
+                  buildID={playground.buildID}
                   typeGroup={typeGroup} 
-                  onProjectClick={this.handleProjectClick} onTypeGroupClick={this.props.onTypeGroupClick} />
+                  onProjectClick={this.handleProjectClick} 
+                  onTypeGroupClick={(typeGroup)=> this.handleTypeGroupClick(project, typeGroup)} />
               ))}
             </div>
           </div>

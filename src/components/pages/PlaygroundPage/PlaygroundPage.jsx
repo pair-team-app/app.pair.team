@@ -466,7 +466,7 @@ class PlaygroundPage extends Component {
 
     const { team } = this.props;
 
-    playground.selected = !playground.selected;
+    // playground.selected = !playground.selected;
 
     // if (playground.selected) {
       // this.props.history.push(`/app/${team.title}/${Strings.slugifyURI(playground.title)}/${playground.buildID}/desktop-macos`);
@@ -476,7 +476,9 @@ class PlaygroundPage extends Component {
       // this.props.history.push(`/app/${team.title}`);
     // }
     
-    this.props.setPlayground(playground);
+    // if (playground.selected) {
+      this.props.setPlayground(playground);
+    // }
     // this.props.setComponent(null);
     // this.props.setComment(null);
   };
