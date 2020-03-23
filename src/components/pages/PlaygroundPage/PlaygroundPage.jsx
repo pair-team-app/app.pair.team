@@ -332,25 +332,26 @@ class PlaygroundPage extends Component {
       
     } else if (type === BreadcrumbTypes.COMPONENT) {
       const { pathname } = this.props.location;
-      setTimeout(()=> {
-        this.props.history.push(pathname.replace(/\/comments.*$/, ''));
-      }, ((/\/comments\/\d+$/.test(pathname))) * 200);
+      // setTimeout(()=> {
+      //   this.props.history.push(pathname.replace(/\/comments.*$/, ''));
+      // }, ((/\/comments\/\d+$/.test(pathname))) * 200);
 
-      // const component = payload;
-      // this.props.setComponent(component);
+      const component = payload;
+      this.props.setComponent(component);
 
     } else if (type === BreadcrumbTypes.ACCESSIBILITY) {
     } else if (type === BreadcrumbTypes.COMMENTS) {
       const { pathname } = this.props.location;
 
-      if (/\/comments\/.*$/.test(pathname)) {
-        this.props.history.push(pathname.replace(/\/comments.*$/, ''));
-        // this.props.history.push(pathname.replace(/(\/comments)\/?(.*)$/, '$1'));
-        this.props.setComment(null);
-      }
+      this.props.setComment(null);
+      // if (/\/comments\/.*$/.test(pathname)) {
+      //   this.props.history.push(pathname.replace(/\/comments.*$/, ''));
+      //   // this.props.history.push(pathname.replace(/(\/comments)\/?(.*)$/, '$1'));
+      //   this.props.setComment(null);
+      // }
 
     } else if (type === BreadcrumbTypes.COMMENT) {
-      this.props.setComment(payload);
+      // this.props.setComment(payload);
     }
   };
 

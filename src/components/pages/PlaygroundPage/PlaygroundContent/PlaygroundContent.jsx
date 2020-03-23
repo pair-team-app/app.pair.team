@@ -268,12 +268,12 @@ const PlaygroundComponent = (props)=> {
   // console.log('PlaygroundComponent()', { updBounds });
 
   const contentStyle = {
-    top    : 20 + updBounds.position.y,
-    left   : updBounds.position.x,
+    top    : 20 + updBounds.position.y << 0,
+    left   : updBounds.position.x << 0,
     // width  : Math.min(updBounds.size.width, sizes.c.width),
     // height : Math.min(updBounds.size.height, sizes.c.height)
-    width  : updBounds.size.width,
-    height : updBounds.size.height
+    width  : Math.ceil(updBounds.size.width),
+    height : Math.ceil(updBounds.size.height)
   };
 
   return (<Resizable
@@ -291,7 +291,7 @@ const PlaygroundComponent = (props)=> {
 
         <ContextMenuTrigger disable={false} id="component" component={component} collect={(props)=> ({ component : props.component })} disableIfShiftIsPressed={true}>
           <div className="bg-wrapper" style={contentStyle}></div>
-          <div className="playground-content-component" data-id={id} style={{ height : `${height}px` }}>
+          <div className="playground-content-component" data-id={id} style={{ height : `${Math.ceil(height)}px` }}>
             <img src={images[1] || ''} alt={title} />
           </div>
           

@@ -183,10 +183,6 @@ export function onMiddleware(store) {
       const { component, matchPath } = prevState;
       const { params } = matchPath;
 
-      if (component) {
-        dispatch(setComponent(null));
-      }
-
       if (typeGroup) {
         dispatch(updateMatchPath({ 
           matchPath : { ...matchPath,
@@ -195,6 +191,10 @@ export function onMiddleware(store) {
             }
           }
         }));
+      }
+      
+      if (component || params.componentID) {
+        dispatch(setComponent(null));
       }
 
     } else if (type === SET_COMPONENT) {

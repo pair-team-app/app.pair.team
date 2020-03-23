@@ -236,10 +236,10 @@ const PlaygroundCommentPopover = (props)=> {
 
   const { ind, comment, outro } = props;
   const payload = {
-    fixed: false,
-    position: {
-      x: 0,
-      y: 15
+    fixed    : false,
+    position : {
+      x : 0,
+      y : 0
     }
   };
 
