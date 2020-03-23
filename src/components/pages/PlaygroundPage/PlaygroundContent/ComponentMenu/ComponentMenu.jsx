@@ -48,8 +48,8 @@ class ComponentMenu extends Component {
 		const { x , y } = position;
 		this.props.onAddComment({ component, content,
 			position : { 
-				x : x - 6,
-        y : y - 9,
+				x : x,
+        y : y,
       }
     });
 	};
@@ -90,8 +90,8 @@ class ComponentMenu extends Component {
 		const { component } = event.detail.data;
 		const { scale } = this.props;
 		const position = {
-			x : ((event.detail.position.x - event.detail.data.target.getBoundingClientRect().x) * scale) << 0,
-			y : ((event.detail.position.y - event.detail.data.target.getBoundingClientRect().y) * scale) << 0
+			x : (event.detail.position.x - event.detail.data.target.getBoundingClientRect().x) * scale,
+			y : (event.detail.position.y - event.detail.data.target.getBoundingClientRect().y) * scale
 		};
 
 

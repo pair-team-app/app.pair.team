@@ -59,10 +59,10 @@ class PlaygroundComment extends Component {
     event.preventDefault();
     event.stopPropagation();
 
-    const { offset } = this.props;
+    const { offset, scale } = this.props;
     const position = {
-      x : this.state.position.x,
-      y : this.state.position.y + 10
+      x : (this.state.position.x + 9) * Math.max(scale.width, scale.height),
+      y : (this.state.position.y + 20) * Math.max(scale.width, scale.height)
     };
 
     this.setState({ position,
@@ -108,6 +108,7 @@ class PlaygroundComment extends Component {
     event.preventDefault();
     event.stopPropagation();
 
+    this.setState({comment });
     this.props.onMarkerClick({ comment });
   };
 

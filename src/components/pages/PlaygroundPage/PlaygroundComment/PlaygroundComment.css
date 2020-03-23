@@ -5,6 +5,14 @@
 
 
 .playground-comment-marker {
+	position: relative;
+	top: -10px;
+	left: -10px;
+}
+
+.playground-comment-marker[data-id="0"] {
+	top: 0;
+	left: 0;
 }
 
 .playground-comment-marker:hover {

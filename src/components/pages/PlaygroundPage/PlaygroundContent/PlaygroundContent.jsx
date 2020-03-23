@@ -13,7 +13,7 @@ import './PlaygroundContent.css';
 
 const SCALE_CONSTRAIN = 1.0;
 const CONTAINER_PADDING = {
-  width  : 48 * 0,
+  width  : 48 * 1,
   height : 68 * 1
 };
 
@@ -155,7 +155,7 @@ class PlaygroundContent extends Component {
   };
 
   handleContentClick = (event, component)=> {
-    		// console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target }, { clientX : event.clientX, clientY : event.clientY }, component);
+    	console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target }, { clientX : event.clientX, clientY : event.clientY }, component);
     //  console.log('%s.handleContentClick()', this.constructor.name, component);
 
     const { cursor } = this.props;
@@ -180,14 +180,7 @@ class PlaygroundContent extends Component {
     // console.log('%s.render()', this.constructor.name, (this.state.bounds && this.state.bounds.init) ? { init : this.state.bounds.init.component, curr : this.state.bounds.curr.component, scale : { x : (this.state.bounds.init.component.size.width / this.state.bounds.curr.component.size.width), y : (this.state.bounds.init.component.size.height / this.state.bounds.curr.component.size.height) } } : null);
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const {
-      profile,
-      typeGroup,
-      playground,
-      component,
-      cursor,
-      mouse
-    } = this.props;
+    const { profile, typeGroup, playground, component, cursor, mouse } = this.props;
     const { position, popover, bounds } = this.state;
     const components = (typeGroup) ? (component) ? [component] : componentsFromTypeGroup(playground.components, typeGroup) : [];
     // const { components } = playground;
@@ -217,7 +210,7 @@ class PlaygroundContent extends Component {
           </div>
         )}
         {(cursor) && (<CommentPinCursor position={mouse.position} />)}
-        {(bounds.curr) && (<ComponentMenu menuID="component" profile={profile} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)}
+        {(component && bounds.curr && bounds.curr.component) && (<ComponentMenu menuID="component" profile={profile} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)}
       </div>
     );
   }
@@ -283,7 +276,7 @@ const PlaygroundComponent = (props)=> {
     className="playground-component-wrapper"
     axis="both"
     width={width}
-    height={height + 28}
+    height={height + 38}
     lockAspectRatio={true}
     // minConstraints={[sizes.t.width, sizes.t.height]}
     // maxConstraints={[Math.min(width, sizes.c.width), Math.min(height, sizes.c.height) - CONTAINER_PADDING.height]}

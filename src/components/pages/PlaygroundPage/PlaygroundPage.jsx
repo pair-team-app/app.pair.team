@@ -290,46 +290,32 @@ class PlaygroundPage extends Component {
     }*/
   }
 
-  handleAddComment = ({
-    component = null,
-    position = { x: 0, y: 0 },
-    content = null
-  })=> {
-    // 		console.log('%s.handleAddComment()', this.constructor.name, { component, position, content });
+  handleAddComment = ({ component=null, position={ x : 0, y : 0 }, content=null})=> {
+    console.log('%s.handleAddComment()', this.constructor.name, { component, position, content });
     trackEvent('button', 'add-comment');
 
     const { profile } = this.props;
-    axios
-      .post(API_ENDPT_URL, {
-        action: 'ADD_COMMENT',
-        payload: {
-          content,
-          position,
-          user_id: profile.id,
-          component_id: component.id
-        }
-      })
-      .then((response)=> {
-        const comment = reformComment(response.data.comment);
-        // 			console.log('ADD_COMMENT', response.data, comment);
+    axios.post(API_ENDPT_URL, {
+      action  : 'ADD_COMMENT',
+      payload : { content, position,
+        user_id      : profile.id,
+        component_id : component.id
+      }
+    }).then((response)=> {
+      const comment = reformComment(response.data.comment);
+      // 			console.log('ADD_COMMENT', response.data, comment);
 
-        component.comments = [...component.comments, comment].sort((i, ii)=>
-          i.epoch > ii.epoch ? -1 : i.epoch < ii.epoch ? 1 : 0
-        );
-        const playground = {
-          ...this.props.playground,
-          components: this.props.playground.components.map((item)=>
-            item.id === component.id ? component : item
-          )
-        };
+      component.comments = [...component.comments, comment].sort((i, ii)=> (i.epoch > ii.epoch ? -1 : i.epoch < ii.epoch ? 1 : 0));
+      const playground = { ...this.props.playground,
+        components : this.props.playground.components.map((item)=> (item.id === component.id ? component : item))
+      };
 
-        this.props.setPlayground(playground);
-        // this.props.setComponent(component);
-        // this.props.setComment(comment);
+      this.props.setPlayground(playground);
+      // this.props.setComponent(component);
+      // this.props.setComment(comment);
 
-        this.setState({ cursor: false });
-      })
-      .catch((error)=> {});
+      this.setState({ cursor : false });
+    }).catch((error)=> {});
   };
 
   handleBreadCrumbClick = ({ type = null, payload = null })=> {

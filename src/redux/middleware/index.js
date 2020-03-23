@@ -67,9 +67,9 @@ export function onMiddleware(store) {
       const { params } = matchPath || {};
 
       const playgrounds = payload.playgrounds.map((playground, i)=> (reformPlayground(playground, false, team, componentTypes)));
-      const playground = playgrounds.find(({ deviceID })=> (deviceID === 2)) || [ ...playgrounds ].shift();
-      const typeGroup = playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views')));
-      const component = playground.components.find(({ id })=> (id === params.componentID)) || null;
+      const playground = playgrounds.find(({ buildID })=> (buildID === params.buildID)) || null;
+      const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) : null;
+      const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
       
       payload.playgrounds = playgrounds;
       payload.playground = playground;

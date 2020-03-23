@@ -16,7 +16,7 @@
 }
 
 .playground-page[data-component="true"] {
-	background-color: rgba(var(--site-bg-color), 1.0);
+	background-color: rgba(var(--playground-content-bg-color), 0.0);
 }
 
 .playground-page[data-comments="true"] {

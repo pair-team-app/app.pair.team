@@ -10,24 +10,16 @@
 	z-index: 1;
 }
 
-.playground-content-components-wrapper[data-component="true"] .playground-content {
-	align-items: center;
-}
-
 .playground-content[data-cursor="true"] {
 	cursor: none;
 }
 
-.playground-content[data-component="true"] .playground-content {
+.playground-content[data-component="true"] {
 	align-items: center;
 }
 
 .playground-content[data-component="true"] .playground-content-components-wrapper {
-	margin: auto;
-}
-
-.playground-content-component-wrapper-cursor:hover {
-	cursor: pointer;
+	/* margin: auto; */
 }
 
 .comment-pin-cursor {

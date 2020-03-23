@@ -321,8 +321,8 @@ class App extends Component {
   handleMouseMove = (event)=> {
     // 		console.log('%s.handleMouseMove()', this.constructor.name, this.constructor.name, { x : event.pageX, y : event.pageY });
 
-    const { location } = this.props;
-    if (this.props.profile && location.pathname.startsWith(Pages.PLAYGROUND)) {
+    const { profile, component } = this.props;
+    if (profile && component) {
       this.props.updateMouseCoords({
         x : event.pageX,
         y : event.pageY
