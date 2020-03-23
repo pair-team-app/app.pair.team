@@ -369,14 +369,19 @@ class PlaygroundPage extends Component {
     this.props.setComment(comment);
   };
 
-  handleComponentClick = ({ component = null })=> {
+  handleComponentClick = ({ component=null })=> {
     // console.log('%s.handleComponentClick()', this.constructor.name, { component });
 
-    // if (!component.selected) {
-      // component.selected = true;
+    if (!this.props.component) {
       this.props.setComponent(component);
-      this.setState({ cursor: false });
+    }
+
+    // if (!component.selected) {
+    //   component.selected = true;  
+    //   this.props.setComponent(component);
     // }
+
+    this.setState({ cursor: false });
   };
 
   handleComponentMenuShow = ({ component = null })=> {

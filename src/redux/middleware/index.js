@@ -180,8 +180,12 @@ export function onMiddleware(store) {
     } else if (type === SET_TYPE_GROUP) {
       const { typeGroup } = payload;
 
-      const { matchPath } = prevState;
+      const { component, matchPath } = prevState;
       const { params } = matchPath;
+
+      if (component) {
+        dispatch(setComponent(null));
+      }
 
       if (typeGroup) {
         dispatch(updateMatchPath({ 
@@ -191,15 +195,17 @@ export function onMiddleware(store) {
             }
           }
         }));
-
-        dispatch(setComponent(null));
       }
 
     } else if (type === SET_COMPONENT) {
       const { component } = payload;
 
-      const { matchPath } = prevState;
+      const { comment, matchPath } = prevState;
       const { params } = matchPath;
+
+      if (comment) {
+        dispatch(setComment(null));
+      }
 
       dispatch(updateMatchPath({ 
         matchPath : { ...matchPath,
@@ -209,8 +215,6 @@ export function onMiddleware(store) {
           }
         }
       }));
-
-      dispatch(setComment(null));
 
     } else if (type === SET_COMMENT) {
       const { comment } = payload;

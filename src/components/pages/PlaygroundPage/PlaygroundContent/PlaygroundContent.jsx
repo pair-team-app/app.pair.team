@@ -170,9 +170,13 @@ class PlaygroundContent extends Component {
       this.setState({ position, 
         popover : true 
       });
+
+      this.props.onComponentClick({ component });
     }
 
-    this.props.onComponentClick({ component });
+    if (!this.props.component) {
+      this.props.onComponentClick({ component });
+    }
   };
 
   render() {
