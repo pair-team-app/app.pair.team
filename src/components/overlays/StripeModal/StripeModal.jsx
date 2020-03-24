@@ -183,4 +183,4 @@ const mapDispatchToProps = (dispatch)=> {
 };
 
 
-export default withRouter(connect(null, mapDispatchToProps)(StripeModal));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(StripeModal));

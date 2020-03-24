@@ -349,7 +349,7 @@ export function updateMouseCoords(payload) {
 export function updateUserProfile(payload, force = true) {
   logFormat('updateUserProfile()', payload, force);
 
-  const { userProfile } = payload;
+  // const { userProfile } = payload;
 
   if (payload) {
     Objects.renameKey(payload, 'github_auth', 'github');
@@ -361,11 +361,9 @@ export function updateUserProfile(payload, force = true) {
     const { id, github } = payload;
     payload = { ...payload,
       id     : id << 0,
-      github : (github)
-        ? { ...github,
-            id : github.id << 0
-          }
-        : github
+      github : (github) ? { ...github,
+        id : github.id << 0
+      } : github
     };
 
     if (payload.hasOwnProperty('password') && payload.password === '') {
@@ -384,8 +382,7 @@ export function updateUserProfile(payload, force = true) {
       const { id } = payload;
       axios.post(API_ENDPT_URL, {
         action  : 'UPDATE_USER_PROFILE',
-        payload : {
-          ...payload,
+        payload : { ...payload,
           user_id : id
 // 					filename : avatar
         }
@@ -407,13 +404,9 @@ export function updateUserProfile(payload, force = true) {
           payload : { ...response.data.user,
             status   : status,
             id       : id << 0,
-            username : (Bits.contains(status, 0x01))
-              ? 'Username Already in Use'
-              : username,
-            email    : (Bits.contains(status, 0x10))
-              ? 'Email Already in Use'
-              : email,
-            github   : github ? { ...github, id: github.id << 0 } : github,
+            username : (Bits.contains(status, 0x01)) ? 'Username Already in Use' : username,
+            email    : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email,
+            github   : (github) ? { ...github, id: github.id << 0 } : github,
             paid     : type.includes('paid')
           }
         });

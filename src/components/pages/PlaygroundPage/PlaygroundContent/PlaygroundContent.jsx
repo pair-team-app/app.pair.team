@@ -1,4 +1,4 @@
-import { Strings } from 'lang-js-utils';
+
 import React, { Component } from 'react';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import FontAwesome from 'react-fontawesome';
@@ -14,7 +14,7 @@ import './PlaygroundContent.css';
 const SCALE_CONSTRAIN = 1.0;
 const CONTAINER_PADDING = {
   width  : 48 * 1,
-  height : 48 * 1
+  height : 68 * 1
 };
 
 class PlaygroundContent extends Component {
@@ -111,7 +111,7 @@ class PlaygroundContent extends Component {
 
     // console.log('%s.calcBounds() --SET STATE', this.constructor.name, { component, rect, bounds, init : { ...init }, prev : { ...bounds.prev, ...bounds.curr }, curr : { ...curr }, next : { ...bounds.next, ...next } });
 
-    bounds = { ...bounds, init, curr,
+    bounds = { ...bounds, curr,
       init : { ...init, 
         component : (init && component && !init.component) ? { ...init.component, ...curr.component } : init.component
       },

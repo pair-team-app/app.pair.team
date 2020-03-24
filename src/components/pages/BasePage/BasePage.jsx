@@ -20,7 +20,7 @@ function BasePage(props) {
 	}) : {};
 
 	let attribs = {};
-	Object.keys(props).filter((key)=> (/^data\-/.test(key))).forEach((key)=> {
+	Object.keys(props).filter((key)=> (/^data-/.test(key))).forEach((key)=> {
 		attribs[key] = props[key];
 	});
 

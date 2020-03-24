@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import './DevicesPopover.css';
 
-import { Strings } from 'lang-js-utils';
-import { connect } from 'react-redux';
-
 import BasePopover from '../../../overlays/BasePopover';
+import { connect } from 'react-redux';
 
 class DevicesPopover extends Component {
   constructor(props) {

@@ -1,10 +1,9 @@
 import axios from 'axios';
-import { Browsers, DateTimes, Images, Strings } from 'lang-js-utils';
+import { Browsers, DateTimes } from 'lang-js-utils';
 import React, { Component } from 'react';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { API_ENDPT_URL, GITHUB_APP_AUTH, Modals, Pages } from '../../consts/uris';
-import { componentByID } from '../../components/pages/PlaygroundPage/utils/lookup';
 import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamBuilds, fetchUserProfile, setPlayground, setComponent, setComment, updateMouseCoords, updateUserProfile, updateMatchPath, setTypeGroup } from '../../redux/actions';
 
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
@@ -21,7 +20,6 @@ import BottomNav from '../sections/BottomNav';
 import TopNav from '../sections/TopNav';
 import './App.css';
 import { withRouter, matchPath, generatePath } from 'react-router-dom';
-import { typeGroupByKey } from '../pages/PlaygroundPage/utils/lookup';
 
 class App extends Component {
   constructor(props) {
@@ -351,7 +349,7 @@ class App extends Component {
   };
 
   handleUpdateUser = (profile)=> {
-    // 		console.log('%s.handleUpdateUser()', this.constructor.name, profile);
+    console.log('%s.handleUpdateUser()', this.constructor.name, profile);
     this.props.updateUserProfile(profile);
   };
 

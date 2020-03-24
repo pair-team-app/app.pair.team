@@ -1,4 +1,4 @@
-import { Objects } from 'lang-js-utils';
+
 import { 
   COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, EVENT_GROUPS_LOADED, TOGGLE_THEME, UPDATE_MOUSE_COORDS,
   SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_TYPE_GROUP, SET_REDIRECT_URI, 
@@ -112,26 +112,29 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { userProfile }));
 
   } else if (type === USER_PROFILE_UPDATED) {
-    if (action.payload) {
-      Objects.renameKey(action.payload, 'github_auth', 'github');
-      if (action.payload.github) {
-        Objects.renameKey(action.payload.github, 'access_token', 'accessToken');
-      }
+    const userProfile = payload;
+    return (Object.assign({}, state, { userProfile }));
 
-      const { id, type, github } = action.payload;
-      return (Object.assign({}, state, {
-        userProfile: { ...action.payload,
-          id     : id << 0,
-          github : (github) ? { ...github, id : github.id << 0 } : github,
-          paid   : /admin|paid/i.test(type)
-        }
-      }));
+    // if (action.payload) {
+    //   Objects.renameKey(action.payload, 'github_auth', 'github');
+    //   if (action.payload.github) {
+    //     Objects.renameKey(action.payload.github, 'access_token', 'accessToken');
+    //   }
 
-    } else {
-      return (Object.assign({}, state, {
-        userProfile: action.payload
-      }));
-    }
+    //   const { id, type, github } = action.payload;
+    //   return (Object.assign({}, state, {
+    //     userProfile: { ...action.payload,
+    //       id     : id << 0,
+    //       github : (github) ? { ...github, id : github.id << 0 } : github,
+    //       paid   : /admin|paid/i.test(type)
+    //     }
+    //   }));
+
+    // } else {
+    //   return (Object.assign({}, state, {
+    //     userProfile: action.payload
+    //   }));
+    // }
 
   } else if (type === UPDATE_MATCH_PATH) {
     const { matchPath } = payload;

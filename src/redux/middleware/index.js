@@ -36,9 +36,20 @@ export function onMiddleware(store) {
 
     if (type === DEVICES_LOADED) {
 
-    } else if (type === USER_PROFILE_LOADED || type === USER_PROFILE_UPDATED) {
+    } else if (type === USER_PROFILE_LOADED) {
       const { userProfile } = payload;
+      // const userProfile = payload;
       if (userProfile) {
+        cookie.save('user_id', (userProfile) ? userProfile.id : '0', { path : '/', sameSite : false });
+        dispatch(fetchTeamLookup({ userProfile }));
+      }
+
+      // payload = { userProfile };
+
+    } else if (type === USER_PROFILE_UPDATED) {
+      const userProfile = payload;
+      if (userProfile) {
+        cookie.save('user_id', (userProfile) ? userProfile.id : '0', { path : '/', sameSite : false });
         dispatch(fetchTeamLookup({ userProfile }));
       }
 
@@ -60,9 +71,7 @@ export function onMiddleware(store) {
       payload.playgrounds = prevState.playgrounds.map((item)=> ((item.id === playground.id) ? playground : item));
       payload.playground = playground;
       
-    } else if (type === USER_PROFILE_UPDATED) {
-      cookie.save('user_id', (payload) ? payload.id : '0', { path : '/', sameSite : false });
-
+  
     } else if (type === TEAM_BUILDS_LOADED) {
       const { devices, componentTypes, team, matchPath } = prevState;
       const { params } = matchPath || {};

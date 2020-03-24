@@ -43,6 +43,8 @@ class PlaygroundNavPanel extends Component {
   handleTypeGroupClick = (build, typeGroup)=> {
     console.log('%s.handleTypeGroupClick()', this.constructor.name, { build, typeGroup });
 
+    trackEvent('nav', 'type-group', typeGroup.title);
+
     build.selected = true;
     const playgrounds = build.playgrounds.filter(({ typeGroups })=> (typeGroups.includes(typeGroup)));
     const playground = playgrounds.find(({ deviceID })=> (deviceID === this.props.playground.deviceID)) || playgrounds.pop();

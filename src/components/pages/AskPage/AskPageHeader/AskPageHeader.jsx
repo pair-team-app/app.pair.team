@@ -1,13 +1,9 @@
 
-import { Strings } from 'lang-js-utils';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { NavLink, withRouter } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
-import { Pages } from '../../../../consts/uris';
 import { toggleTheme } from '../../../../redux/actions';
 import SharePopover from '../../PlaygroundPage/SharePopover';
-import { BreadcrumbTypes } from './';
 import './AskPageHeader.css';
 import UserSettings from '../../PlaygroundPage/PlaygroundHeader/UserSettings';
 import { SORT_BY_SCORE, SORT_BY_DATE } from './index';
