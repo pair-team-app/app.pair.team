@@ -35,20 +35,20 @@
 	font-size: 14px;
 }
 
-.playground-nav-panel .projects-wrapper {
+.playground-nav-panel .builds-wrapper {
 	width: 100%;
 	max-height: calc(100% - calc(var(--orthodox-padding-base) * 2.0));
 	font-size: 14px;
 	overflow-y: auto;
 }
 
-.playground-nav-panel .projects-wrapper-header {
+.playground-nav-panel .builds-wrapper-header {
 	color: rgba(var(--txtfield-fg-color), 1.0);
 	font-size: 10px;
 	font-weight: bold;
 	text-transform: uppercase;
 }
 
-.playground-nav-panel .projects-item-wrapper {
+.playground-nav-panel .builds-item-wrapper {
 	margin-top: var(--orthodox-margin-half);
 }

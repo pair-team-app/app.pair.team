@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { trackEvent, trackOutbound } from '../../../../utils/tracking';
-import NavPanelProject from './NavPanelProject';
+import NavPanelBuild from './NavPanelBuild';
 import './PlaygroundNavPanel.css';
 
 class PlaygroundNavPanel extends Component {
@@ -11,94 +11,45 @@ class PlaygroundNavPanel extends Component {
     super(props);
 
     this.state = {
-      projects: [],
-      typegroups: [],
-      teamLogo: null
+      builds : [],
     };
   }
 
-  componentDidMount() {
-    // console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
-
-    // const { playgrounds } = this.props;
-    // const { projects } = this.state;
-
-    // if (playgrounds && projects.length === 0) {
-    //   this.onPopulateTree();
-    // }
+  componentWillMount() {
+    // console.log('%s.componentWillMount()', this.constructor.name, this.props, this.state);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-    const { playgrounds } = this.props;
-    const { projects } = this.state;
-    if (playgrounds && projects.length === 0) {
+    const { playgrounds, playground } = this.props;
+    if ((playgrounds && !prevProps.playgrounds) || (prevProps.playground !== playground)) {
       this.onPopulateTree();
     }
-
-    // const { component } = this.props;
-    // if (
-    //   (this.props.typeGroup && this.props.typeGroup !== prevProps.typeGroup) ||
-    //   (this.props.typeGroup === prevProps.typeGroup &&
-    //     component !== prevProps.component)
-    // ) {
-    //   const typeGroups = (this.state.typeGroups.map((typeGroup)=> {
-    //     const items = (typeGroup.items.map((item)=> ({
-    //       ...item,
-    //       selected: component && item.id === component.id
-    //     })));
-
-    //     return {
-    //       ...typeGroup,
-    //       items,
-    //       selected: typeGroup.id === this.props.typeGroup.id
-    //     };
-    //   }));
-
-    //   this.setState({ typeGroups });
-    // }
-
-    // if (component && component !== prevProps.component) {
-    //   const typeGroups = (this.state.typeGroups.map((typeGroup)=> {
-    //     const items = (typeGroup.items.map((item)=> ({
-    //       ...item,
-    //       selected: component && item.id === component.id
-    //     })));
-
-    //     return {
-    //       ...typeGroup,
-    //       items,
-    //       selected: typeGroup.id === this.props.typeGroup.id
-    //     };
-    //   }));
-
-    //   this.setState({ typeGroups });
-    // }
   }
 
-  handleProjectClick = (project)=> {
-    console.log('%s.handleProjectClick()', this.constructor.name, project);
+  handleBuildClick = (build)=> {
+    console.log('%s.handleBuildClick()', this.constructor.name, { build });
 
-    project.expanded = !project.expanded;
+    build.expanded = !build.expanded;
 
-    const { projects } = this.state;
-    this.setState({ projects : projects.map((item)=> ((item.id === project.id) ? project : item))});
+    const { builds } = this.state;
+    this.setState({ builds : builds.map((item)=> ((item.id === build.id) ? build : item))});
   };
 
-  handleTypeGroupClick = (project, typeGroup)=> {
-    console.log('%s.handleTypeGroupClick()', this.constructor.name, { project, typeGroup });
+  handleTypeGroupClick = (build, typeGroup)=> {
+    console.log('%s.handleTypeGroupClick()', this.constructor.name, { build, typeGroup });
 
-    project.selected = true;
+    build.selected = true;
+    const playground = build.playgrounds.find(({ typeGroups })=> (typeGroups.includes(typeGroup)))
 
-    const { playground } = this.props;
-    const { projects } = this.state;
-    this.setState({ projects : projects.map((item)=> ((item.id !== project.id) ? { ...item, 
+    const { builds } = this.state;
+    this.setState({ builds : builds.map((item)=> ((item.id !== build.id) ? { ...item, 
       expanded : false,
       selected : false 
-    } : project))}, ()=> {
-      if (project.id !== playground.id) {
-        this.props.onPlaygroundClick(project);
+    } : build))}, ()=> {
+      if (playground.id !== this.props.playground.id) {
+        this.props.onPlaygroundClick(playground);
       }
       
       this.props.onTypeGroupClick(typeGroup);
@@ -113,116 +64,83 @@ class PlaygroundNavPanel extends Component {
   onPopulateTree = ()=> {
     // console.log('%s.onPopulateTree()', this.constructor.name, { props : this.props });
 
-    const { componentTypes, playgrounds, playground, component } = this.props;
+    const { playgrounds, playground } = this.props;
+    const buildIDs = [ ...new Set([ ...playgrounds.map(({ buildID })=> (buildID))])];
+    const builds = buildIDs.map((id)=> ({ id,
+      title       : [ ...playgrounds].pop().title,
+      expanded    : (playground !== null && playground.buildID === id),
+      selected    : (playground !== null && playground.buildID === id),
+      playgrounds : playgrounds.filter(({ buildID })=> (buildID === id)),
+      added       : [ ...playgrounds].pop().added
+    }));
 
-    const projects = playgrounds.map((playground)=> {
-      const { typeGroups } = playground;
-
-      return ({ ...playground,
-        expanded : playground.selected
-       });
-
-      // return ({ ...playground,
-      //   typeGroups : playground.typeGroups.map((typeGroup)=> ({ ...typeGroup,
-      //     selected : false//(this.props.typeGroup && typeGroup.id === this.props.typeGroup.id)
-      // }))});
-
-    });
-
-    // 		const favicon = playground.team.
-
-    this.setState({ projects });
+    this.setState({ builds });
   };
 
   render() {
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { team, playgrounds, playground, typeGroup } = this.props;
-    const { typeGroups, projects } = this.state;
-
+    const { team, playgrounds, typeGroup } = this.props;
+    const { builds } = this.state;
 
     const handleURL = (event, url)=> {
 // 		console.log('%s.handleURL()', this.constructor.name, event, url);
 
-		if (event) {
-			event.preventDefault();
-		}
+      if (event) {
+        event.preventDefault();
+      }
 
-		trackOutbound(url, ()=> {
-			window.open(url);
-		});
+      trackOutbound(url, ()=> {
+        window.open(url);
+      });
 
-		window.open(url);
-	};
+      window.open(url);
+	  };
 
-    return (
-      <div className="playground-nav-panel">
-        {team && <PlaygroundNavPanelHeader team={team} />}
-        <div className="link-wrapper">
-          <NavLink to={`/app/${team.title}/ask`} className="nav-panel-link">Ask</NavLink>
-          <NavLink to="https://www.npmjs.com/package/design-engine-playground" className="nav-panel-link" target="_blank" onClick={(event)=> handleURL(event, 'https://www.npmjs.com/package/design-engine-playground')}>Install</NavLink>
-        </div>
-        {playgrounds && (
-          <div className="projects-wrapper">
-            <div className="projects-wrapper-header">Projects</div>
-            <div className="projects-item-wrapper">
-              {projects.map((project, i)=> (
-                <NavPanelProject 
-                  key={i} 
-                  project={project} 
-                  buildID={(playground) ? playground.buildID : 0}
-                  typeGroup={typeGroup} 
-                  onProjectClick={this.handleProjectClick} 
-                  onTypeGroupClick={(typeGroup)=> this.handleTypeGroupClick(project, typeGroup)} />
-              ))}
-            </div>
-          </div>
-        )}
+    return (<div className="playground-nav-panel">
+      {(team) && (<PlaygroundNavPanelHeader team={team} />)}
+      <div className="link-wrapper">
+        <NavLink to={`/app/${team.title}/ask`} className="nav-panel-link">Ask</NavLink>
+        <NavLink to="https://www.npmjs.com/package/design-engine-playground" className="nav-panel-link" target="_blank" onClick={(event)=> handleURL(event, 'https://www.npmjs.com/package/design-engine-playground')}>Install</NavLink>
       </div>
-    );
+      
+      {(playgrounds) && (<div className="builds-wrapper">
+        <div className="builds-wrapper-header">Projects</div>
+        <div className="builds-item-wrapper">
+          {builds.map((build, i)=> (
+            <NavPanelBuild 
+              key={i} 
+              build={build}
+              typeGroup={typeGroup} 
+              onBuildClick={this.handleBuildClick} 
+              onTypeGroupClick={(typeGroup)=> this.handleTypeGroupClick(build, typeGroup)} />
+          ))}
+        </div>
+      </div>)}
+    </div>);
   }
 }
 
 const PlaygroundNavPanelHeader = (props)=> {
   // 	console.log('PlaygroundNavPanelHeader()', props);
 
-  const handleClick = (event)=> {
-    //  console.log('%s.handleClick()', 'PlaygroundNavPanelHeader');
-    event.preventDefault();
-
-    const { domain } = props.team;
-    const url = `http://${domain}`;
-
-    trackEvent('team-name', domain);
-    trackOutbound(url, ()=> {
-      // 			window.open(url);
-      // 			props.onClick(event);
-    });
-
-    window.open(url);
-  };
-
   const { team } = props;
-  // console.log('PlaygroundNavPanelHeader()', props);
-
-  return (
-    <div className="playground-nav-panel-header">
-      <NavLink to={`/app/${team.title}/ask`} className="playground-nav-panel-header-title">
-        <img src={team.image} alt="Team Logo" />
-        {team.title}
-      </NavLink>
-    </div>
-  );
+  const { image, title } = team;
+  return (<div className="playground-nav-panel-header">
+    <NavLink to={`/app/${team.title}/ask`} className="playground-nav-panel-header-title">
+      <img src={image} alt="Team Logo" />
+      {title}
+    </NavLink>
+  </div>);
 };
 
 const mapStateToProps = (state, ownProps)=> {
   return {
-    componentTypes: state.componentTypes,
-    team: state.team,
-    playgrounds: state.playgrounds,
-    playground: state.playground,
-    typeGroup: state.typeGroup,
-    component: state.component
+    team        : state.team,
+    playgrounds : state.playgrounds,
+    playground  : state.playground,
+    typeGroup   : state.typeGroup,
+    component   : state.component,
   };
 };
 
