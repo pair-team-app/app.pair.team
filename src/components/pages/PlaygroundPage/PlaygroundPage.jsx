@@ -16,7 +16,6 @@ import PlaygroundHeader, { BreadcrumbTypes } from './PlaygroundHeader';
 import { SettingsMenuItemTypes } from './PlaygroundHeader/UserSettings';
 import PlaygroundNavPanel from './PlaygroundNavPanel';
 import './PlaygroundPage.css';
-import { componentFromComment } from './utils/lookup';
 import { reformComment } from './utils/reform';
 
 class PlaygroundPage extends Component {
@@ -24,13 +23,12 @@ class PlaygroundPage extends Component {
     super(props);
 
     this.state = {
-      typeGroups: null,
-      cursor: false,
-      accessibility: false,
-      share: false,
-      fetching: false,
-      processing: false,
-      devices: false
+      typeGroups    : null,
+      devices       : false,
+      cursor        : false,
+      accessibility : false,
+      share         : false,
+      fetching      : false
     };
   }
 
@@ -39,257 +37,8 @@ class PlaygroundPage extends Component {
     console.log('%s.componentWillMount()', this.constructor.name, { props : this.props, state : this.state });
   }
 
-  componentDidMount() {
-    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
-
-    // const { buildID = null, playgroundID = null } = params || {};
-  }
-
-
   componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
-
-
-    const {
-      profile,
-      componentTypes,
-      playgrounds,
-      playground,
-      params,
-      pathname
-    } = this.props;
-    const { fetching, accessibility } = this.state;
-    
-    const {
-      teamSlug,
-      projectSlug,
-      buildID,
-      deviceSlug,
-      typeGroupSlug,
-      componentID,
-      commentID
-    } = params || {};
-
-    let url = pathname;
-       		
-/*
-  
-    // playground first load
-    if (!prevProps.playground && playground) {
-      let url = pathname;
-
-      let typeGroup = null;
-      let component = null;
-      let comment = null;
-
-      if (teamSlug && teamSlug !== playground.team.title) {
-        url = pathname.replace(teamSlug, playground.team.title);
-      }
-
-      if (projectSlug !== Strings.slugifyURI(playground.title)) {
-        url = url.replace(projectSlug, Strings.slugifyURI(playground.title));
-      }
-
-      if (playgroundID << 0 !== playground.id) {
-        url = url.replace(playgroundID, playground.id);
-      }
-
-      if (typeGroupSlug && componentTypes) {
-        typeGroup = componentTypes.find(({ key })=> key === typeGroupSlug);
-
-        if (typeGroup) {
-          typeGroup.selected = true;
-
-          if (typeGroupSlug !== typeGroup.key) {
-            url = url.replace(typeGroupSlug, typeGroup.key);
-          }
-
-          if (componentID) {
-            component = componentByID(playground.components, componentID);
-
-            if (component) {
-              component.selected = true;
-              if (componentID << 0 !== component.id) {
-                url = url.replace(componentID, component.id);
-              }
-
-              //              console.log('=-=-=-=-=-=--=', { commentID, comment : commentByID(component.comments, commentID) });
-              if (commentID) {
-                comment = commentByID(component.comments, commentID);
-
-                if (comment) {
-                  comment.selected = true;
-                  if (commentID << 0 !== comment.id) {
-                    url = url.replace(commentID, comment.id);
-                  }
-                } else {
-                  url = url.replace(new RegExp(`/comments.*$`), '/comments');
-                }
-              }
-            } else {
-              //              console.log('=-=-=-=-=-=--2=', { commentID, comment : commentByID(component.comments, commentID) });
-              url = url.replace(new RegExp(`/${componentID}.*$`), '');
-            }
-          }
-        }
-      } else {
-        typeGroup = componentTypes.find(({ key })=> key === 'views');
-        url = url.replace(new RegExp(`/${typeGroupSlug}.*$`, 'g'), '/views');
-      }
-
-      // this.props.setTypeGroup(typeGroup);
-      this.onFetchTypeGroupComponents(typeGroup);
-
-      if (component) {
-        this.props.setComponent(component);
-      }
-
-      if (comment) {
-        this.props.setComment(comment);
-      }
-
-      if (pathname !== url) {
-        this.props.history.push(url);
-      }
-
-      if (pathname.includes('/accessibility')) {
-        this.setState({ accessibility: true });
-      }
-
-      // swapped out url
-    } else if (playground && prevProps.playground) {
-      const { typeGroup, component, comment } = this.props;
-      let url = pathname;
-
-      //      //    console.log('%s.componentDidUpdate()', this.constructor.name, { playgroundID : this.props.playground.id, prev : prevProps.playground.id, fetching, processing });
-      if (playground.id !== prevProps.playground.id && !fetching) {
-        this.onFetchTypeGroupComponents(typeGroup);
-      }
-
-      //       console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, state : this.state, typeGroup, component, prevTypeGroup : prevProps.typeGroup, prevComponent : prevProps.component, curr : pathname, prev : prevProps.pathname });
-      //       console.log('%s.componentDidUpdate()', this.constructor.name, { curr : pathname, prev : prevProps.pathname, storePathname : this.props.pathname });
-
-      const prev = prevProps.pathname;
-      const curr = this.props.pathname;
-
-      if (curr !== prev) {
-        if (
-          playgrounds.length > 0 &&
-          playgroundID &&
-          playgroundID !== prevProps.params.playgroundID
-        ) {
-          this.props.setPlayground(
-            playgroundByID(playgrounds, playgroundID << 0)
-          );
-        } else if (!playgroundID) {
-          this.props.setPlayground(null);
-        }
-
-        // if (
-        //   this.state.typeGroups &&
-        //   playgroundID &&
-        //   typeGroupSlug &&
-        //   typeGroupSlug !== prevProps.params.typeGroupSlug
-        // ) {
-        //   this.props.setTypeGroup(
-        //     typeGroupByKey(this.state.typeGroups, typeGroupSlug)
-        //   );
-        // } else if (!typeGroupSlug) {
-        //   this.props.setTypeGroup(null);
-        // }
-
-        if (
-          playgrounds.length > 0 &&
-          playgroundID &&
-          typeGroupSlug &&
-          componentID !== prevProps.params.componentID
-        ) {
-          this.props.setComponent(
-            componentByID(
-              playgroundByID(playgrounds, playgroundID << 0).components,
-              componentID << 0
-            )
-          );
-        } else if (!componentID) {
-          this.props.setComponent(null);
-        }
-
-        // console.log('_-_--------', { commentID, comment });
-        // if (!commentID && comment) {
-        //   this.props.setComment(null);
-        // }
-
-        this.setState({ accessibility: curr.includes('/accessibility') });
-      } else {
-        if (playgroundID << 0 !== playground.id) {
-          url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${typeGroup.key}`;
-        }
-
-        if (typeGroup && typeGroup !== prevProps.typeGroup && !comment) {
-          if (!/\/accessibility\/.*$/.test(url)) {
-            this.props.pathname.replace(/(\/comments)$/, '');
-          }
-
-          url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${
-            typeGroup.key
-          }${url.includes('/accessibility') ? '/accessibility' : ''}`;
-        }
-
-        if (component && component !== prevProps.component && !comment) {
-          url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${
-            typeGroup.key
-          }/${component.id}${
-            url.includes('/accessibility') ? '/accessibility' : ''
-          }`;
-
-          url = url.replace(/\/comments.*$/, '');
-        }
-
-        if (comment && comment !== prevProps.comment) {
-          url = prevProps.comment
-            ? url.replace(prevProps.comment.id, comment.id)
-            : `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${
-                typeGroup.key
-              }/${component.id}${
-                url.includes('/accessibility') ? '/accessibility' : ''
-              }/comments/${comment.id}`;
-        }
-
-        if (
-          component &&
-          !comment &&
-          prevProps.comment &&
-          !commentID &&
-          prevProps.commentID
-        ) {
-          url = prevProps.history.pathname.includes('/comments/')
-            ? url.replace(/\/comments\/?.*$/, '')
-            : url.replace(/(\/comments)\/?(.*)$/, '$1');
-        }
-
-        if (
-          accessibility &&
-          !prevState.accessibility &&
-          !this.props.pathname.includes('/accessibility')
-        ) {
-          url = `/app/${teamSlug}/${projectSlug}/${buildID}/${playground.id}/${
-            typeGroup.key
-          }${component ? `/${component.id}` : ''}/accessibility`;
-        }
-
-        if (
-          !accessibility &&
-          prevState.accessibility &&
-          this.props.pathname.includes('/accessibility')
-        ) {
-          url = url.replace(/\/accessibility.*$/, '');
-        }
-
-        if (this.props.pathname !== url) {
-          this.props.history.push(url);
-        }
-      }
-    }*/
   }
 
   handleAddComment = ({ component=null, position={ x : 0, y : 0 }, content=null})=> {
@@ -313,62 +62,30 @@ class PlaygroundPage extends Component {
       };
 
       this.props.setPlayground(playground);
-      // this.props.setComponent(component);
-      // this.props.setComment(comment);
-
-      this.setState({ cursor : false });
     }).catch((error)=> {});
   };
 
-  handleBreadCrumbClick = ({ type = null, payload = null })=> {
-    //     console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
+  handleBreadCrumbClick = ({ type=null, payload=null })=> {
+    // console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
 
     if (type === BreadcrumbTypes.PLAYGROUND) {
-      // this.props.setTypeGroup(typeGroupByID(this.state.typeGroups, 187));
-      // this.props.setComponent(null);
-      // this.props.setComment(null);
-
     } else if (type === BreadcrumbTypes.TYPE_GROUP) {
       const typeGroup = payload;
       this.props.setTypeGroup(typeGroup);
       
     } else if (type === BreadcrumbTypes.COMPONENT) {
-      const { pathname } = this.props.location;
-      // setTimeout(()=> {
-      //   this.props.history.push(pathname.replace(/\/comments.*$/, ''));
-      // }, ((/\/comments\/\d+$/.test(pathname))) * 200);
-
       const component = payload;
       this.props.setComponent(component);
 
     } else if (type === BreadcrumbTypes.ACCESSIBILITY) {
     } else if (type === BreadcrumbTypes.COMMENTS) {
-      const { pathname } = this.props.location;
-
       this.props.setComment(null);
-      // if (/\/comments\/.*$/.test(pathname)) {
-      //   this.props.history.push(pathname.replace(/\/comments.*$/, ''));
-      //   // this.props.history.push(pathname.replace(/(\/comments)\/?(.*)$/, '$1'));
-      //   this.props.setComment(null);
-      // }
-
+      
     } else if (type === BreadcrumbTypes.COMMENT) {
-      // this.props.setComment(payload);
     }
   };
 
-  handleCommentMarkerClick = ({ comment = null })=> {
-    const { playground } = this.props;
-    const component = componentFromComment(playground.components, comment);
-    //
-    // console.log('%s.handleCommentMarkerClick()', this.constructor.name, {
-      // comment,
-      // components: playground.components,
-      // component
-    // });
-    if (component && component !== this.props.component) {
-      // this.props.setComponent(component);
-    }
+  handleCommentMarkerClick = ({ comment=null })=> {
     this.props.setComment(comment);
   };
 
@@ -379,24 +96,16 @@ class PlaygroundPage extends Component {
       this.props.setComponent(component);
     }
 
-    // if (!component.selected) {
-    //   component.selected = true;  
-    //   this.props.setComponent(component);
-    // }
-
-    this.setState({ cursor: false });
+    this.setState({ cursor : false });
   };
 
-  handleComponentMenuShow = ({ component = null })=> {
+  handleComponentMenuShow = ({ component=null })=> {
     //.log('%s.handleComponentMenuShow()', this.constructor.name, { component });
     //     this.props.setComponent(component);
   };
 
-  handleComponentMenuItem = ({ menuItem = null })=> {
+  handleComponentMenuItem = ({ menuItem=null })=> {
     //.log('%s.handleComponentMenuItem()', this.constructor.name, { menuItem });
-
-    // const { component } = this.props;
-    // this.props.setComponent(component);
 
     if (menuItem === COMPONENT_MENU_ITEM_COMMENTS) {
       const { pathname } = this.props.location;
@@ -409,6 +118,7 @@ class PlaygroundPage extends Component {
       } else {
         this.props.history.push(`${pathname}/comments`);
       }
+
     } else if (menuItem === COMPONENT_MENU_ITEM_COPY) {
       if (!this.state.share) {
         this.setState({ share: true });
@@ -418,49 +128,33 @@ class PlaygroundPage extends Component {
 
   handleComponentPopoverClose = ()=> {
     console.log('%s.handleComponentPopoverClose()', this.constructor.name);
-
     this.props.setComment(null);
-
-    // const { pathname } = this.props.location.pathname;
-    // const pushURL = (/\/comments\/.+$/.test(pathname)) ? pathname.replace(/\/comments\/.+$/, '/comments') : null;
-
-    // console.log('%s.handleComponentPopoverClose()', this.constructor.name, { pathname, hasComments : /\/comments\/.+$/.test(pathname), pushURL });
-
-    // if (pushURL) {
-    //   this.props.history.push(pushURL);
-    // }
   };
 
   handleDeleteComment = (comment)=> {
     console.log('%s.handleDeleteComment()', this.constructor.name, comment.id);
     trackEvent('button', 'delete-comment');
 
-    axios
-      .post(API_ENDPT_URL, {
-        action: 'UPDATE_COMMENT',
-        payload: {
-          comment_id: comment.id,
-          state: 'deleted'
-        }
-      })
-      .then((response)=> {
-        // 			console.log('UPDATE_COMMENT', response.data);
+    axios.post(API_ENDPT_URL, {
+      action  : 'UPDATE_COMMENT',
+      payload : {
+        comment_id : comment.id,
+        state      : 'deleted'
+      } 
+    }).then((response)=> {
+			// console.log('UPDATE_COMMENT', response.data);
 
-        const component = {
-          ...this.props.component,
-          comments: this.props.component.comments
-            .filter(({ id })=> id !== comment.id)
-            .sort((i, ii)=>
-              i.epoch > ii.epoch ? -1 : i.epoch < ii.epoch ? 1 : 0
-            )
-        };
+      const component = { ...this.props.component,
+        comments : this.props.component.comments.filter(({ id })=> (id !== comment.id)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0))
+      };
 
-        this.props.setComponent(component);
-        if (!this.props.pathname.includes('/comments')) {
-          this.props.history.push(`${this.props.pathname}/comments`);
-        }
-      })
-      .catch((error)=> {});
+      this.props.setComponent(component);
+
+      const { pathname } = this.props.location;
+      if (!pathname.includes('/comments')) {
+        this.props.history.push(`${pathname}/comments`);
+      }
+    }).catch((error)=> {});
   };
 
   handleDeviceClick = (device)=> {
@@ -485,7 +179,6 @@ class PlaygroundPage extends Component {
 
     // typeGroup.selected = !typeGroup.selected;
     this.props.setTypeGroup(typeGroup);
-    
   };
 
   handleNavTypeItemClick = (typeGroup, typeItem)=> {
@@ -520,7 +213,7 @@ class PlaygroundPage extends Component {
     //.log('%s.handleToggleCommentCursor()', this.constructor.name, event, this.state.cursor, !this.state.cursor);
 
     const { cursor } = this.state;
-    this.setState({ cursor: !cursor });
+    this.setState({ cursor : !cursor });
   };
 
   handleToggleDevices = ()=> {
@@ -535,141 +228,80 @@ class PlaygroundPage extends Component {
 
   handleStripeModal = ()=> {
     //.log('%s.handleStripeModal()', this.constructor.name);
-
-    const { team, products } = this.props;
-    const product = [...products].pop();
-    this.props.onModal(Modals.STRIPE, { team, product });
-  };
-
-  onFetchTypeGroupComponents = (typeGroup)=> {
-    // const { playground } = this.props;
-    // //  console.log('%s.onFetchTypeGroupComponents()', this.constructor.name, { typeGroup, components : componentsFromTypeGroup(playground.components, typeGroup) });
-    // if (!typeGroupComponentsProcessed(typeGroup, playground.components)) {
-    //   this.setState({ processing: true }, ()=> {
-    //     this.props.fetchPlaygroundComponentGroup({ playground, typeGroup });
-    //   });
-    // }
-  };
-
-  onFetchBuildPlaygrounds = (buildID, playgroundID = null)=> {
-    //  console.log('%s.onFetchBuildPlaygrounds()', this.constructor.name, buildID, playgroundID);
-
-    this.setState(
-      {
-        fetching: true
-      },
-      ()=> {
-        // this.props.fetchBuildPlaygrounds({ buildID, playgroundID });
-      }
-    );
+    this.props.onModal(Modals.STRIPE);
   };
 
   render() {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
-    // 		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
 
-    const {
-      profile,
-      team,
-      playgrounds,
-      playground,
-      typeGroup,
-      component
-    } = this.props;
+    const { profile, team, playgrounds, playground, component } = this.props;
     const { cursor, accessibility, share, fetching, devices } = this.state;
     const { params = null } = this.props || { params : null };
 
+    return (<BasePage { ...this.props } className="playground-page" data-component={(component !== null)} data-comments={component && window.location.href.includes('/comments')}>
+      {(profile && team) && (<div>
+        <PlaygroundNavPanel
+          params={params}
+          onPlaygroundClick={this.handlePlaygroundClick}
+          onTypeGroupClick={this.handleNavGroupItemClick}
+          onTypeItemClick={this.handleNavTypeItemClick} />
+        <PlaygroundHeader
+          popover={share}
+          onBreadCrumbClick={this.handleBreadCrumbClick}
+          onPopup={this.props.onPopup}
+          onSharePopoverClose={()=> this.setState({ share: false })}
+          onSettingsItem={this.handleSettingsItem}
+          onLogout={this.props.onLogout} />
+      </div>)}
+      {(profile && playground) && (<div className="playground-page-content-wrapper" data-component={component !== null}>
+        <PlaygroundContent
+          cursor={cursor}
+          onComponentClick={this.handleComponentClick}
+          onMarkerClick={this.handleCommentMarkerClick}
+          onMenuShow={this.handleComponentMenuShow}
+          onMenuItem={this.handleComponentMenuItem}
+          onAddComment={this.handleAddComment}
+          onDeleteComment={this.handleDeleteComment}
+          onPopoverClose={this.handleComponentPopoverClose} />
 
-    return (
-      <BasePage { ...this.props } className="playground-page" data-component={(component !== null)} data-comments={component && window.location.href.includes('/comments')}>
-        {profile && team && (
-          <div>
-            <PlaygroundNavPanel
-              params={params}
-              onPlaygroundClick={this.handlePlaygroundClick}
-              onTypeGroupClick={this.handleNavGroupItemClick}
-              onTypeItemClick={this.handleNavTypeItemClick}
-            />
-            <PlaygroundHeader
-              popover={share}
-              onBreadCrumbClick={this.handleBreadCrumbClick}
-              onPopup={this.props.onPopup}
-              onSharePopoverClose={()=> this.setState({ share: false })}
-              onSettingsItem={this.handleSettingsItem}
-              onLogout={this.props.onLogout}
-            />
-          </div>
-        )}
-        {profile && playground && (
-          <div
-            className="playground-page-content-wrapper"
-            data-component={component !== null}
-            data-processed={component && component.processed}
-          >
-            <PlaygroundContent
-              cursor={cursor}
-              onComponentClick={this.handleComponentClick}
-              onMarkerClick={this.handleCommentMarkerClick}
-              onMenuShow={this.handleComponentMenuShow}
-              onMenuItem={this.handleComponentMenuItem}
-              onAddComment={this.handleAddComment}
-              onDeleteComment={this.handleDeleteComment}
-              onPopoverClose={this.handleComponentPopoverClose}
-            />
-
+        <PlaygroundFooter
+          accessibility={accessibility}
+          cursor={cursor}
+          playground={playground}
+          component={component}
+          devices={devices}
+          onToggleAccessibility={this.handleToggleAccessibility}
+          onToggleCursor={this.handleToggleCommentCursor}
+          onToggleDevices={this.handleToggleDevices} />
             
-              <PlaygroundFooter
-                accessibility={accessibility}
-                cursor={cursor}
-                playground={playground}
-                component={component}
-                devices={devices}
-                onToggleAccessibility={this.handleToggleAccessibility}
-                onToggleCursor={this.handleToggleCommentCursor}
-                onToggleDevices={this.handleToggleDevices}
-              />
-            
-
-            {(accessibility) && (<AccessibilityPopover onClose={this.handleToggleAccessibility} />)}
-            {(devices) && (<DevicesPopover deviceIDs={((playgrounds && playground) ? playgrounds.filter(({ buildID })=> (buildID === playground.buildID)).map(({ deviceID })=> (deviceID)) : [])} onDeviceClick={this.handleDeviceClick} onClose={this.handleToggleDevices} />)}
-          </div>
-        )}
+        {(accessibility) && (<AccessibilityPopover onClose={this.handleToggleAccessibility} />)}
+        {(devices) && (<DevicesPopover deviceIDs={((playgrounds && playground) ? playgrounds.filter(({ buildID })=> (buildID === playground.buildID)).map(({ deviceID })=> (deviceID)) : [])} onDeviceClick={this.handleDeviceClick} onClose={this.handleToggleDevices} />)}
+      </div>)}
         
-        {profile && team && playground && component && (
-          <PlaygroundCommentsPanel
-            comments={component.comments}
-            onDelete={this.handleDeleteComment}
-          />
-        )}
-      </BasePage>
-    );
+      {(profile && team && playground && component) && (<PlaygroundCommentsPanel comments={component.comments} onDelete={this.handleDeleteComment} />)}
+    </BasePage>);
   }
 }
 
 const mapDispatchToProps = (dispatch)=> {
   return {
-    fetchBuildPlaygrounds         : (payload)=> dispatch(fetchBuildPlaygrounds(payload)),
-    fetchPlaygroundComponentGroup : (payload)=> dispatch(fetchPlaygroundComponentGroup(payload)),
-    setPlayground                 : (payload)=> dispatch(setPlayground(payload)),
-    setTypeGroup                  : (payload)=> dispatch(setTypeGroup(payload)),
-    setComponent                  : (payload)=> dispatch(setComponent(payload)),
-    setComment                    : (payload)=> dispatch(setComment(payload))
+    fetchBuildPlaygrounds : (payload)=> dispatch(fetchBuildPlaygrounds(payload)),
+    setPlayground         : (payload)=> dispatch(setPlayground(payload)),
+    setTypeGroup          : (payload)=> dispatch(setTypeGroup(payload)),
+    setComponent          : (payload)=> dispatch(setComponent(payload)),
+    setComment            : (payload)=> dispatch(setComment(payload))
   };
 };
 
 const mapStateToProps = (state, ownProps)=> {
   return {
-    playgrounds    : state.playgrounds,
-    playground     : state.playground,
-    typeGroup      : state.typeGroup,
-    component      : state.component,
-    comment        : state.comment,
-    profile        : state.userProfile,
-    componentTypes : state.componentTypes,
-    eventGroups    : state.eventGroups,
-    team           : state.team,
-    products       : state.products,
-    pathname       : state.pathname
+    playgrounds : state.playgrounds,
+    playground  : state.playground,
+    typeGroup   : state.typeGroup,
+    component   : state.component,
+    comment     : state.comment,
+    profile     : state.userProfile,
+    team        : state.team
   };
 };
 

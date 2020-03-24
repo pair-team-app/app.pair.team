@@ -34,7 +34,8 @@ class StripeModal extends Component {
 			outro      : false,
 			outroURI   : null,
 			purchase   : null,
-			productIDs : Strings.repeat(this.props.payload.product.id, this.props.payload.team.members.length, ',')
+			product    : this.props.products.pop(), 
+			productIDs : Strings.repeat(this.props.products.pop().id, this.props.team.members.length, ',')
 		};
 	}
 
@@ -84,7 +85,7 @@ class StripeModal extends Component {
 
 		this.setState({ submitting : true }, ()=> {
 			const { profile, payload } = this.props;
-			const { productIDs } = this.state;
+			const { product, productIDs } = this.state;
 
 			axios.post(API_ENDPT_URL, {
 				action  : 'MAKE_PURCHASE',
@@ -108,7 +109,7 @@ class StripeModal extends Component {
 				} else {
 					this.props.onPopup({
 						type     : POPUP_TYPE_OK,
-						content  : `Successfully purchased monthly subscription "${payload.product.title}" for $${payload.product.price * payload.team.members.length}. (${payload.team.members.length} users x $${payload.product.price})`,
+						content  : `Successfully purchased monthly subscription "${product.title}" for $${product.price * payload.team.members.length}. (${payload.team.members.length} users x $${product.price})`,
 						duration : 3333
 					});
 				}
@@ -126,8 +127,8 @@ class StripeModal extends Component {
 	render() {
 // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { product, team } = this.props.payload;
-		const { outro, submitting } = this.state;
+		const { team } = this.props;
+		const { outro, submitting, product } = this.state;
 		return (<BaseOverlay
 			tracking={Modals.STRIPE}
 			outro={outro}
@@ -167,6 +168,13 @@ class StripeModal extends Component {
 	}
 }
 
+
+const mapStateToProps = (state, ownProps)=> {
+  return {
+    team     : state.team,
+    products : state.products
+  };
+};
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
