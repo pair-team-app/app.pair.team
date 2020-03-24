@@ -36,7 +36,7 @@ class AskPage extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-    const { team, params } = this.props;
+    const { team } = this.props;
     const { fetching, topSort } = this.state;
     
     // const { teamSlug, commentID } = params || {};
@@ -119,7 +119,7 @@ class AskPage extends Component {
   handlePlaygroundClick = (playground)=> {
     console.log('%s.handlePlaygroundClick()', this.constructor.name, playground);
 
-    const { team, comment } = this.props;
+    const { team } = this.props;
     this.props.history.push(`/app/${team.title}/${Strings.slugifyURI(playground.title)}/${playground.buildID}/desktop-macos`);
   };
 
@@ -154,7 +154,7 @@ class AskPage extends Component {
   handleVote = ({ comment, action })=> {
     trackEvent('button', (action === VOTE_ACTION_UP) ? 'upvote-comment' : (action === VOTE_ACTION_DOWN) ? 'downvote-comment' : 'retract-vote');
     
-    const { profile, team } = this.props;
+    const { profile } = this.props;
     const score = (action === VOTE_ACTION_UP) ? 1 : (action === VOTE_ACTION_DOWN) ? -1 : 0;
 
     axios.post(API_ENDPT_URL, {
@@ -188,7 +188,7 @@ class AskPage extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
     // 		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
 
-    const { profile, team, comment } = this.props;
+    const { profile, team } = this.props;
     const { commentContent, fetching, share, sort, topSort } = this.state;
     const { params = null } = this.props || { params : null };
 
@@ -241,7 +241,7 @@ const AskPageContentHeader = (props)=> {
   // console.log('AskPageContentHeader()', props);
 
   const { loading, commentContent } = props;
-  return (<div className="ask-page-content-header">
+  return (<div className="ask-page-content-header" data-loading={loading}>
     <form>
       <input type="text" placeholder="Ask your team anything…" value={commentContent} onChange={props.onTextChange} autoComplete="new-password" />
       <button type="submit" disabled={commentContent.length === 0} onClick={props.onSubmit}>Submit</button>

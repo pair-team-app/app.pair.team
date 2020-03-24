@@ -59,7 +59,7 @@ class PlaygroundComment extends Component {
     event.preventDefault();
     event.stopPropagation();
 
-    const { offset, scale } = this.props;
+    const { scale } = this.props;
     const position = {
       x : (this.state.position.x + 9) * Math.max(scale.width, scale.height),
       y : (this.state.position.y + 20) * Math.max(scale.width, scale.height)

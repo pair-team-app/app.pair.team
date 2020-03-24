@@ -5,13 +5,13 @@ import './NavPanelBuild.css';
 import { Strings } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 import BaseContentExpander from '../../../../iterables/BaseContentExpander';
-import { BUILD_TIMESTAMP } from '../../../../../consts/formats';
+// import { BUILD_TIMESTAMP } from '../../../../../consts/formats';
 
 function NavPanelBuild(props) {
 	// console.log('NavPanelBuild()', props);
 
 	const { build } = props;
-	const { id, title, expanded, selected, playgrounds, added } = build;
+	const { id, title, expanded, selected, playgrounds } = build;
 	const typeGroups = [ ...new Set([ ...playgrounds.map(({ typeGroups })=> (typeGroups)).flat()])];
 
 	// console.log('NavPanelBuild()', { props, typeGroups });

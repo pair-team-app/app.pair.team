@@ -43,7 +43,7 @@ export const reformComponent = (component, componentTypes=null, overwrite = {})=
   delete component['image_data'];
   delete component['thumb_data'];
 
-  const reformed = {...component, accessibility, html, styles, sizes,
+  const reformed = {...component, html,
     id            : id << 0,
     typeID        : type_id << 0,
     eventTypeID   : event_type_id << 0,

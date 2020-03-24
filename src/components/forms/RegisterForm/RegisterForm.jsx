@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './RegisterForm.css'
 
 import axios from 'axios';
-import { Bits, Images, Strings } from 'lang-js-utils';
+import { Bits, Strings } from 'lang-js-utils';
 
 import DummyForm from '../../forms/DummyForm';
 import { API_ENDPT_URL } from '../../../consts/uris';

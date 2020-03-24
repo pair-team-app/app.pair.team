@@ -292,7 +292,6 @@ const PlaygroundComponent = (props)=> {
                   comment={comment}
                   scale={scale}
                   position={position}
-                  offset={updBounds.position}
                   onMarkerClick={props.onMarkerClick}
                   onAdd={props.onAddComment}
                   onDelete={props.onDeleteComment}

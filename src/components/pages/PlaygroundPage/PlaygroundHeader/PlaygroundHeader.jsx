@@ -59,7 +59,7 @@ class PlaygroundHeader extends Component {
 	buildBreadcrumbs = ()=> {
     // console.log('%s.buildBreadcrumbs()', this.constructor.name, this.props, { matchPath : this.props.matchPath, match : this.props.match });
 
-    const { matchPath, playground, typeGroup, component, comment, accessibility, location } = this.props;
+    const { matchPath, typeGroup, component, comment, location } = this.props;
     const { teamSlug, buildID, projectSlug, deviceSlug, typeGroupSlug, componentID, commentID } = matchPath.params;
 
 		let path = `${Pages.PLAYGROUND}/${teamSlug}/${projectSlug}/${buildID}`;

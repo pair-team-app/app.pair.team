@@ -5,7 +5,6 @@ import './AskPageCommentsPanel.css';
 import FontAwesome from 'react-fontawesome';
 import PlaygroundBaseComment from '../../PlaygroundPage/PlaygroundBaseComment';
 
-import { SORT_BY_SCORE, SORT_BY_DATE } from '../AskPageHeader';
 import { VOTE_ACTION_UP, VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT } from './index';
 
 

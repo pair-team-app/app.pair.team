@@ -1,5 +1,5 @@
 
-import moment from 'moment';
+// import moment from 'moment';
 import cookie from 'react-cookies';
 import { reformComponent, reformPlayground , reformComment} from '../../components/pages/PlaygroundPage/utils/reform';
 import { DEVICES_LOADED,
@@ -9,12 +9,10 @@ import { DEVICES_LOADED,
   USER_PROFILE_LOADED, 
   UPDATE_MATCH_PATH,
   UPDATE_MOUSE_COORDS,
-  SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT,
-  TOGGLE_AX, TOGGLE_COMMENTS, TOGGLE_THEME
+  SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT
 } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
-import { fetchTeamBuilds, fetchTeamComments, fetchPlaygroundComponentGroup, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setComment, setComponent, setTypeGroup, setPlayground } from '../actions';
-import {typeGroupByID} from '../../components/pages/PlaygroundPage/utils/lookup';
+import { fetchTeamBuilds, fetchTeamComments, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setComment, setComponent } from '../actions';
 
 
 const logFormat = ({ prevState, action, next, meta=null })=> {
@@ -250,7 +248,7 @@ export function onMiddleware(store) {
     } else if (type === SET_COMMENT) {
       const { comment } = payload;
 
-      const { component, matchPath } = prevState;
+      const { matchPath } = prevState;
       const { params } = matchPath;
 
       dispatch(updateMatchPath({ 

@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { API_ENDPT_URL, GITHUB_APP_AUTH, Modals, Pages } from '../../consts/uris';
-import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamBuilds, fetchUserProfile, setPlayground, setComponent, setComment, updateMouseCoords, updateUserProfile, updateMatchPath, setTypeGroup } from '../../redux/actions';
+import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamBuilds, fetchUserProfile, setPlayground, setComponent, updateMouseCoords, updateUserProfile, updateMatchPath, setTypeGroup } from '../../redux/actions';
 
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 import Routes from '../helpers/Routes';
@@ -112,7 +112,7 @@ class App extends Component {
 
 
     // extract url props
-    const { products, componentTypes, profile, team, playgrounds, playground, typeGroup } = this.props;
+    const { profile, team, playground } = this.props;
     const { pathname } = (matchPlaygrounds && Object.keys(matchPlaygrounds).length > 0) ? this.props.location : '';
     
     const { modals } = this.state;
@@ -136,57 +136,27 @@ class App extends Component {
         });
       }  
 
-      // just received user profile, go get the team
+      // dismiss login modal after profile
       if (profile !== null && modals.login) {
         this.onToggleModal(Modals.LOGIN, false);
       }
 
-      // just received team, check plan
-      if (products && team !== null && prevProps.team === null) {
-        // pay alert check
-        const modal = (team.members.length > 10 && team.type === 'free') || (team.members.length > 50 && team.type !== 'enterprise');
-        if (modal && !prevState.modals.stripe && !modals.stripe) {
-          const product = products.find(({ threshold })=> team.members.length >= threshold);
-          this.onToggleModal(Modals.STRIPE, true, { team, product });
-        }
-      }
+      
+      // if (products && team !== null && prevProps.team === null) {
+      //   const modal = (team.members.length > 10 && team.type === 'free') || (team.members.length > 50 && team.type !== 'enterprise');
+      //   if (modal && !prevState.modals.stripe && !modals.stripe) {
+      //     const product = products.find(({ threshold })=> team.members.length >= threshold);
+      //     this.onToggleModal(Modals.STRIPE, true, { team, product });
+      //   }
+      // }
 
       // on a playground url
       if (matchPlaygrounds) {
+
         // not a team member, block access
         if (profile && team && playground && team.id !== playground.teamID && !prevState.modals.noAccess && !modals.noAccess) {     
           this.onToggleModal(Modals.NO_ACCESS);
-        
-        } else {
-          
         }
-        /*
-        // get playgrounds associated w/ this buildID from url
-        if (playgrounds !== null && prevProps.playgrounds === null && buildID) {
-            this.props.fetchBuildPlaygrounds({ buildID : buildID << 0, playgroundID : playgroundID << 0 });
-        }
-
-        // loaded type group basics, map playground ones to it    
-        const typeGroup = (typeGroupSlug && this.props.componentTypes) ? typeGroupByKey(this.props.componentTypes, typeGroupSlug) : null;
-        if (typeGroup && (typeGroup !== this.props.typeGroup)) {
-          const typeGroup = typeGroupByKey(this.props.componentTypes, typeGroupSlug);
-
-          this.props.setTypeGroup(typeGroup);
-        }
-
-        // set global playground now
-        if (!prevProps.playgrounds && playgrounds && playground || (prevProps.playground !== !playground)) {
-          console.log('*************** PLAYGROUND -=> STORE', { playground });
-          this.props.setPlayground(playground);
-        }
-
-        // has componenID in path but no component set
-        const component = (playground) && componentByID(playground.components, componentID << 0);
-        if (component && component !== prevProps.component) {
-          this.props.setComponent({ componentByID });
-        }
-
-        */
       }
     }
   }
@@ -338,8 +308,8 @@ class App extends Component {
 
     this.onToggleModal(Modals.STRIPE, false);
 
-    const { profile } = this.props;
     this.props.fetchUserProfile();
+    // const { profile } = this.props;
     // this.props.fetchTeamLookup({ userID: profile.id });
   };
 
