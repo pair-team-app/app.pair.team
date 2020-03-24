@@ -93,10 +93,8 @@ class PlaygroundHeader extends Component {
 	render() {
 		// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { darkThemed, devices, playgrounds, playground } = this.props;
+		const { darkThemed, playground } = this.props;
 		const { popover } = this.state;
-
-		const deviceIDs = (playgrounds && playground) ? playgrounds.filter(({ buildID })=> (buildID === playground.buildID)).map(({ deviceID })=> (deviceID)) : [];
 
 		// console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, deviceIDs });
 
@@ -106,11 +104,6 @@ class PlaygroundHeader extends Component {
         <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
 			</div>
 			<div className="playground-header-col playground-header-col-right">
-				{(playground===1) && (<select value={playground.deviceID} onChange={this.handleDeviceChange}>
-					{(devices.filter(({ id })=> (deviceIDs.includes(id))).map((device, i)=> {
-						return (<option key={i} value={device.id}>{device.title}</option>);
-					}))}
-				</select>)}
 				<PlaygroundShareLink popover={popover} playground={playground} onClick={()=> this.setState({ popover : !this.state.popover })} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
 				<UserSettings onMenuItem={this.props.onSettingsItem} onLogout={this.props.onLogout} />
 			</div>

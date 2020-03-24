@@ -7,6 +7,7 @@ import { fetchBuildPlaygrounds, fetchPlaygroundComponentGroup, setComment, setCo
 import { trackEvent } from '../../../utils/tracking';
 import BasePage from '../BasePage';
 import AccessibilityPopover from './AccessibilityPopover';
+import DevicesPopover from './DevicesPopover';
 import PlaygroundCommentsPanel from './PlaygroundCommentsPanel';
 import PlaygroundContent from './PlaygroundContent';
 import { COMPONENT_MENU_ITEM_COMMENTS, COMPONENT_MENU_ITEM_COPY } from './PlaygroundContent/ComponentMenu';
@@ -462,45 +463,35 @@ class PlaygroundPage extends Component {
       .catch((error)=> {});
   };
 
+  handleDeviceClick = (device)=> {
+    console.log('%s.handleDeviceClick()', this.constructor.name, { device });
+
+    const { playgrounds, playground } = this.props;
+    this.setState({ devices : false }, ()=> {
+      this.props.setPlayground(playgrounds.find(({ buildID, deviceID })=> (buildID === playground.buildID && deviceID === device.id)) || null);
+    });
+  };
+
   handlePlaygroundClick = (playground)=> {
     console.log('%s.handlePlaygroundClick()', this.constructor.name, playground);
+    this.props.setPlayground(playground);
 
-    const { team } = this.props;
-
-    // playground.selected = !playground.selected;
-
-    // if (playground.selected) {
-      // this.props.history.push(`/app/${team.title}/${Strings.slugifyURI(playground.title)}/${playground.buildID}/desktop-macos`);
-      // this.props.fetchPlaygroundComponentGroup({ playground, typeGroup : { id : 187 } })
-    
-    // } else {
-      // this.props.history.push(`/app/${team.title}`);
-    // }
-    
-    // if (playground.selected) {
-      this.props.setPlayground(playground);
-    // }
-    // this.props.setComponent(null);
-    // this.props.setComment(null);
+    const { buildID } = playground;
+    this.props.fetchBuildPlaygrounds({ buildID });
   };
 
   handleNavGroupItemClick = (typeGroup)=> {
     console.log('%s.handleNavGroupItemClick()', this.constructor.name, { typeGroup });
 
-    typeGroup.selected = !typeGroup.selected;
-
-    // this.onFetchTypeGroupComponents(typeGroup);
-    // this.props.fetchPlaygroundComponentGroup(typeGroup);
+    // typeGroup.selected = !typeGroup.selected;
     this.props.setTypeGroup(typeGroup);
-    // this.props.setComponent(null);
-    // this.props.setComment(null);
+    
   };
 
   handleNavTypeItemClick = (typeGroup, typeItem)=> {
     //.log('%s.handleNavTypeItemClick()', this.constructor.name, typeGroup, typeItem);
 
     this.props.setComponent(typeItem);
-    // this.props.setComment(null);
   };
 
   handleSettingsItem = (itemType)=> {
@@ -536,15 +527,10 @@ class PlaygroundPage extends Component {
     console.log('%s.handleToggleDevices()', this.constructor.name);
 
     const { devices } = this.state;
-    this.setState({ devices : !devices });
-
-    // const { playgrounds } = this.props;
-    // const playground = playgrounds.find(({ buildID, deviceID })=> (buildID === this.props.playground.buildID && deviceID !== device.id)) || null;
-
-    // if (playground) {
-    //   this.props.setPlayground(playground);
-    //   this.setState({ cursor: false });
-    // }
+    this.setState({ 
+      devices : !devices, 
+      cursor  : false
+    });
   };
 
   handleStripeModal = ()=> {
@@ -645,6 +631,7 @@ class PlaygroundPage extends Component {
             
 
             {(accessibility) && (<AccessibilityPopover onClose={this.handleToggleAccessibility} />)}
+            {(devices) && (<DevicesPopover deviceIDs={((playgrounds && playground) ? playgrounds.filter(({ buildID })=> (buildID === playground.buildID)).map(({ deviceID })=> (deviceID)) : [])} onDeviceClick={this.handleDeviceClick} onClose={this.handleToggleDevices} />)}
           </div>
         )}
         
