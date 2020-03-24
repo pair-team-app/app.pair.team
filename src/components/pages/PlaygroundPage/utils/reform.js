@@ -92,13 +92,10 @@ export const reformComponent = (component, componentTypes=null, overwrite = {})=
   //   return { ...size };
   // }) : null;
 
-  const reformed = {...component, accessibility,
-    html,
-    styles,
-    sizes,
-    typeID: type_id,
-    eventTypeID: event_type_id,
-    nodeID: node_id,
+  const reformed = {...component, accessibility, html, styles, sizes,
+    typeID: type_id << 0,
+    eventTypeID: event_type_id << 0,
+    nodeID: node_id << 0,
     title: title.length === 0 ? tag_name : title,
     tagName: tag_name,
     typeGroup : componentTypes.find(({ id })=> (id === type_id)),
@@ -119,7 +116,7 @@ export const reformComponent = (component, componentTypes=null, overwrite = {})=
   return { ...reformed, size: jsonFormatKB(reformed) };
 };
 
-export const reformPlayground = (playground, fullReform=true, team=null, componentTypes=null, overwrite={})=> {
+export const reformPlayground = (playground, devices=null, componentTypes=null, team=null, overwrite={})=> {
   // console.log('reformPlayground()', { playground, componentTypes });
 
   const { build_id, team_id, device_id, title, type_groups, components, added, last_visited, selected } = playground;
@@ -137,6 +134,7 @@ export const reformPlayground = (playground, fullReform=true, team=null, compone
     team        : (!playground.team) ? team : playground.team,
     components  : components.map((component)=> (reformComponent(component, componentTypes))),
     typeGroups  : type_groups.map((typeGroupID)=> (componentTypes.find(({ id })=> ((typeGroupID << 0) === id)))),
+    device      : (devices.find(({ id })=> (id === (device_id << 0))) || null),
     lastVisited : moment(last_visited).utc(),
     added       : (playground.added)
       ? moment(added).add(moment().utcOffset() << 0, 'minute')

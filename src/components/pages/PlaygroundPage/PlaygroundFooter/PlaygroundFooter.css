@@ -17,16 +17,11 @@
 
 .playground-footer > * {
 	margin: auto;
-	/*border: 1px dotted #00ff00;*/
-}
-
-.playground-footer-comments-wrapper, .playground-footer-content-toggle-wrapper {
 	flex: 1 1 auto;
+	/* border: 1px dotted #00ff00; */
 }
 
-
-.playground-footer-button-wrapper button.quiet-button {
-	/* padding: 15px; */
+.playground-footer button.quiet-button {
 	padding: 5px;
 	width: 28px;
 	height: 28px;
@@ -36,25 +31,14 @@
 	max-height: 28px;
 }
 
-.playground-footer-button-wrapper button.quiet-button[data-selected="true"] {
+.playground-footer button.quiet-button[data-selected="true"] {
 	cursor: default;
 }
 
-
-.playground-footer-button-wrapper {
-	flex: 3 3 auto;
-	text-align: center;
-}
-
-.playground-footer-comments-wrapper {
+.playground-footer-col-left {
 	text-align: left;
 }
 
-.playground-footer-content-toggle-wrapper {
+.playground-footer-col-right {
 	text-align: right;
-}
-
-.playground-footer-content-toggle-wrapper > button > svg {
-	width: 14px;
-	height: 14px;
 }

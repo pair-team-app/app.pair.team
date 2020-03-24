@@ -8,7 +8,7 @@ import BaseContentExpander from '../../../../iterables/BaseContentExpander';
 import { BUILD_TIMESTAMP } from '../../../../../consts/formats';
 
 function NavPanelProject(props) {
-	console.log('NavPanelProject()', props);
+	// console.log('NavPanelProject()', props);
 
 	const { project, buildID } = props;
 	return (<BaseContentExpander
@@ -34,7 +34,7 @@ function NavPanelProject(props) {
 
 
 const NavPanelTypeTypeGroup = (props)=> {
-	console.log('NavPanelTypeTypeGroup()', { typeGroup : props.typeGroup, title : props.typeGroup.title });
+	// console.log('NavPanelTypeTypeGroup()', { typeGroup : props.typeGroup, title : props.typeGroup.title });
 
 	const { typeGroup, selected } = props;
 	const { title } = typeGroup;

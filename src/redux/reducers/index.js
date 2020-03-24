@@ -9,32 +9,33 @@ import {
 import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 const initialState = {
-  componentTypes: null,
-  eventGroups: [],
-  playgrounds: null,
-  playground: null,
-  typeGroup: null,
-  component: null,
-  comment: null,
-  comments: false,
-  ax       : false,
-  products: null,
-  darkThemed: false,
-  matchPath: null,
-  devices: null,
-  redirectURI: null,
-  userProfile: null,
-  invite: null,
-  team: null,
-  history: [],
-  mouse: {
-    position: {
-      x: 0,
-      y: 0
+  componentTypes : null,
+  devices        : null,
+  eventGroups    : [],
+  playgrounds    : null,
+  playground     : null,
+  typeGroup      : null,
+  component      : null,
+  comment        : null,
+  comments       : false,
+  ax             : false,
+  products       : null,
+  darkThemed     : false,
+  matchPath      : null,
+  devices        : null,
+  redirectURI    : null,
+  userProfile    : null,
+  invite         : null,
+  team           : null,
+  history        : [],
+  mouse          : {
+    position : {
+      x : 0,
+      y : 0
     },
-    speed: {
-      x: 0,
-      y: 0
+    speed    : {
+      x : 0,
+      y : 0
     }
   }
 };
@@ -59,7 +60,8 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { componentTypes : componentTypes }));
 
   } else if (type === DEVICES_LOADED) {
-    return (Object.assign({}, state, { devices : action.payload }));
+    const { devices } = action.payload;
+    return (Object.assign({}, state, { devices }));
 
   } else if (type === EVENT_GROUPS_LOADED) {
     return (Object.assign({}, state, { eventGroups: action.payload }));
@@ -140,9 +142,9 @@ function rootReducer(state = initialState, action) {
     const { team } = payload;
     return (Object.assign({}, state, { team }));
 
-  // } else if (type === BUILD_PLAYGROUNDS_LOADED) {
-    // const { playgrounds, playground, component } = payload;
-    // return (Object.assign({}, state, { playgrounds, playground, component }));
+  } else if (type === BUILD_PLAYGROUNDS_LOADED) {
+    const { playgrounds, playground, typeGroup } = payload;
+    return (Object.assign({}, state, { playgrounds, playground, typeGroup }));
 
   } else if (type === SET_PLAYGROUND) {
     const { playground } = payload;

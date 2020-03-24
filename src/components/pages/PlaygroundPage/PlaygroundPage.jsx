@@ -28,7 +28,8 @@ class PlaygroundPage extends Component {
       accessibility: false,
       share: false,
       fetching: false,
-      processing: false
+      processing: false,
+      devices: false
     };
   }
 
@@ -531,25 +532,19 @@ class PlaygroundPage extends Component {
     this.setState({ cursor: !cursor });
   };
 
-  handleTogglePlayground = ()=> {
-    //.log('%s.handleTogglePlayground()', this.constructor.name, this.props.playground.deviceID);
+  handleToggleDevices = ()=> {
+    console.log('%s.handleToggleDevices()', this.constructor.name);
 
-    trackEvent(
-      'button',
-      this.props.playground.deviceID === 1 ? 'mobile-toggle' : 'desktop-toggle'
-    );
+    const { devices } = this.state;
+    this.setState({ devices : !devices });
 
-    const { playgrounds } = this.props;
-    const playground = playgrounds.find(
-      ({ deviceID })=> deviceID !== this.props.playground.deviceID
-    );
-    if (playground) {
-      this.props.setPlayground(playground);
-      // this.props.setComponent(null);
-      // this.props.setComment(null);
+    // const { playgrounds } = this.props;
+    // const playground = playgrounds.find(({ buildID, deviceID })=> (buildID === this.props.playground.buildID && deviceID !== device.id)) || null;
 
-      this.setState({ cursor: false });
-    }
+    // if (playground) {
+    //   this.props.setPlayground(playground);
+    //   this.setState({ cursor: false });
+    // }
   };
 
   handleStripeModal = ()=> {
@@ -595,7 +590,7 @@ class PlaygroundPage extends Component {
       typeGroup,
       component
     } = this.props;
-    const { cursor, accessibility, share, fetching } = this.state;
+    const { cursor, accessibility, share, fetching, devices } = this.state;
     const { params = null } = this.props || { params : null };
 
 
@@ -636,20 +631,18 @@ class PlaygroundPage extends Component {
               onPopoverClose={this.handleComponentPopoverClose}
             />
 
-            {/* {typeGroup && component && ( */}
+            
               <PlaygroundFooter
                 accessibility={accessibility}
                 cursor={cursor}
                 playground={playground}
                 component={component}
-                builds={playgrounds.length}
-                // 					onToggleAccessibility={this.handleStripeModal}
+                devices={devices}
                 onToggleAccessibility={this.handleToggleAccessibility}
                 onToggleCursor={this.handleToggleCommentCursor}
-                onToggleDesktop={this.handleTogglePlayground}
-                onToggleMobile={this.handleTogglePlayground}
+                onToggleDevices={this.handleToggleDevices}
               />
-            {/* )} */}
+            
 
             {(accessibility) && (<AccessibilityPopover onClose={this.handleToggleAccessibility} />)}
           </div>

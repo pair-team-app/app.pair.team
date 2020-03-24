@@ -45,7 +45,7 @@ class PlaygroundHeader extends Component {
 	};
 
 	handleDeviceChange = (event)=> {
-		console.log('%s.handleDeviceChange()', this.constructor.name, { event : event });
+		console.log('%s.handleDeviceChange()', this.constructor.name, { event : event.target });
 	};
 
 	handlePopoverClose = ()=> {
@@ -91,10 +91,14 @@ class PlaygroundHeader extends Component {
 
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+		// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { darkThemed, devices, playground } = this.props;
+		const { darkThemed, devices, playgrounds, playground } = this.props;
 		const { popover } = this.state;
+
+		const deviceIDs = (playgrounds && playground) ? playgrounds.filter(({ buildID })=> (buildID === playground.buildID)).map(({ deviceID })=> (deviceID)) : [];
+
+		// console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, deviceIDs });
 
 		return (<div className="playground-header">
 			<div className="playground-header-col playground-header-breadcrumb-wrapper">{this.buildBreadcrumbs().map((breadcrumb)=> (breadcrumb))}</div>
@@ -102,9 +106,8 @@ class PlaygroundHeader extends Component {
         <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
 			</div>
 			<div className="playground-header-col playground-header-col-right">
-				{(devices) && (<select onChange={this.handleDeviceChange}>
-				{/* {(true) && (<select onChange={this.handleDeviceChange}> */}
-					{(devices.map((device, i)=> {
+				{(playground===1) && (<select value={playground.deviceID} onChange={this.handleDeviceChange}>
+					{(devices.filter(({ id })=> (deviceIDs.includes(id))).map((device, i)=> {
 						return (<option key={i} value={device.id}>{device.title}</option>);
 					}))}
 				</select>)}
@@ -152,13 +155,14 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-    darkThemed : state.darkThemed,
-		devices    : state.devices,
-		playground : state.playground,
-		typeGroup  : state.typeGroup,
-		component  : state.component,
-		comment    : state.comment,
-		matchPath  : state.matchPath
+    darkThemed  : state.darkThemed,
+		devices     : state.devices,
+		playgrounds : state.playgrounds,
+		playground  : state.playground,
+		typeGroup   : state.typeGroup,
+		component   : state.component,
+		comment     : state.comment,
+		matchPath   : state.matchPath
 	});
 };
 

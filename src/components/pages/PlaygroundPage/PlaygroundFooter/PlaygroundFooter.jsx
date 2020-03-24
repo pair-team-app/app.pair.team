@@ -4,19 +4,23 @@ import './PlaygroundFooter.css';
 
 function PlaygroundFooter(props) {
 // 	console.log('PlaygroundFooter()', props);
-	// console.log('PlaygroundFooter()', { component : props.component, props });
+	console.log('PlaygroundFooter()', { component : props.component, props });
 
-	const { accessibility, cursor } = props;
-	return (<div className="playground-footer">
-		<div className="playground-footer-button-wrapper playground-footer-comments-wrapper">
+	const { accessibility, cursor, devices, component } = props;
+	return ((component) ? (<div className="playground-footer">
+		<div className="pplayground-footer-col-left">
 			<FooterCommentButton selected={cursor} onClick={props.onToggleCursor} />
 		</div>
-		<div className="button-wrapper-col playground-footer-button-wrapper playground-footer-content-toggle-wrapper">
-			{/*<FooterMobileButton hidden={(builds === 0)} selected={(playground.deviceID !== 1 && !accessibility)} onClick={props.onToggleMobile} />*/}
+		<div className="playground-footer-col-right button-wrapper-col">
+			{/* <FooterMobileButton selected={devices} onClick={props.onToggleMobile} /> */}
 			{/*<FooterDesktopButton hidden={(builds === 0)} selected={(playground.deviceID === 1 && !accessibility)} onClick={props.onToggleDesktop} />*/}
 			<FooterAXButton selected={accessibility} onClick={props.onToggleAccessibility} />
 		</div>
-	</div>);
+	</div>) : (<div className="playground-footer">
+		<div className="playground-footer-col-right">
+			<FooterDevicesButton selected={devices} onClick={props.onToggleDevices} />
+		</div>
+	</div>));
 }
 
 
@@ -44,6 +48,18 @@ const FooterCommentButton = (props)=> {
 	</button>);
 };
 
+
+const FooterDevicesButton = (props)=> {
+//   console.log('PlaygroundFooter().FooterDevicesButton()', props);
+
+  const { selected } = props;
+	return (<button className="quiet-button glyph-button" onClick={props.onClick} data-selected={selected}>
+		<svg xmlns="http://www.w3.org/2000/svg" width="17.838" height="30" viewBox="0 0 17.838 30">
+			<rect id="Rectangle_102" data-name="Rectangle 102" width="30" height="17.838" rx="2" transform="translate(17.838) rotate(90)"/>
+		</svg>
+	</button>);
+};
+
 // const FooterDesktopButton = (props)=> {
 // //   console.log('PlaygroundFooter().FooterDesktopButton()', props);
 //
@@ -57,10 +73,10 @@ const FooterCommentButton = (props)=> {
 // 		</svg>
 // 	</button>);
 // };
-//
+
 // const FooterMobileButton = (props)=> {
 // //   console.log('PlaygroundFooter().FooterMobileButton()', props);
-//
+
 //   const { selected } = props;
 // 	return (<button className="quiet-button glyph-button" onClick={props.onClick} data-selected={selected}>
 // 		<svg xmlns="http://www.w3.org/2000/svg" width="17.838" height="30" viewBox="0 0 17.838 30">

@@ -135,7 +135,7 @@ class PlaygroundNavPanel extends Component {
   };
 
   render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { team, playgrounds, playground, typeGroup } = this.props;
     const { typeGroups, projects } = this.state;
@@ -170,7 +170,7 @@ class PlaygroundNavPanel extends Component {
                 <NavPanelProject 
                   key={i} 
                   project={project} 
-                  buildID={playground.buildID}
+                  buildID={(playground) ? playground.buildID : 0}
                   typeGroup={typeGroup} 
                   onProjectClick={this.handleProjectClick} 
                   onTypeGroupClick={(typeGroup)=> this.handleTypeGroupClick(project, typeGroup)} />

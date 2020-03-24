@@ -50,7 +50,7 @@ export function onMiddleware(store) {
       payload.team.comments = comments;
 
     } else if (type === TYPE_GROUP_LOADED) {
-      let { componentTypes, playground } = prevState;
+      const { componentTypes, playground } = prevState;
       // let { components } = payload;
 
       // const components = [ ...new Set([ ...playground.components, ...Object.values((components).map((component)=> (reformComponent(component, componentTypes)))) ])];
@@ -64,11 +64,12 @@ export function onMiddleware(store) {
       cookie.save('user_id', (payload) ? payload.id : '0', { path : '/', sameSite : false });
 
     } else if (type === TEAM_BUILDS_LOADED) {
-      const { componentTypes, team, matchPath } = prevState;
+      const { devices, componentTypes, team, matchPath } = prevState;
       const { params } = matchPath || {};
 
-      const playgrounds = payload.playgrounds.map((playground, i)=> (reformPlayground(playground, false, team, componentTypes))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
-      const playground = playgrounds.find(({ buildID })=> (buildID === params.buildID)) || null;
+      const playgrounds = payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
+      const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null;
+      // const playground = playgrounds.find(({ buildID })=> (buildID === params.buildID)) || null;
       const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) : null;
       const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
       
@@ -77,7 +78,7 @@ export function onMiddleware(store) {
       payload.typeGroup = typeGroup;
       payload.component = component;
 
-      // dispatch(fetchBuildPlaygrounds({ buildID : playground.buildID }));
+      dispatch(fetchBuildPlaygrounds({ buildID : params.buildID }));
       dispatch(fetchTeamComments({ team : prevState.team }));
 
     } else if (type === TEAM_COMMENTS_LOADED) {
@@ -86,16 +87,20 @@ export function onMiddleware(store) {
       payload.team = (team) ? { ...team, comments } : null;
 
     } else if (type === BUILD_PLAYGROUNDS_LOADED) {
-      // const { componentTypes, team } = prevState;
+      const { devices, componentTypes, team, matchPath } = prevState;
+      const { params } = matchPath || {};
 
-      // const playgrounds = prevState.playgrounds.map((playground)=> {
-      //   let pg = payload.playgrounds.map((playground)=> (reformPlayground(playground, true, team, componentTypes))).find(({ id })=> ((id === playground.id)));
-      //   // return ((pg) ? Object.assign({}, playground, pg) : playground);
-      //   let merge = (pg) ? Object.assign({}, playground, pg) : playground;
-        
-      //   return ({ ...merge,
-      //     components : [ ...new Set(merge.components)]
-      //   });
+      const playgrounds = [ ...new Set([ ...prevState.playgrounds, ...payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)})).filter(({ id })=> (!prevState.playgrounds.map(({ id })=> (id)).includes(id)))])];
+      const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || prevState.playground;
+      const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) : null;
+
+      payload.playgrounds = playgrounds;
+      payload.playground = playground;
+      payload.typeGroup = typeGroup;
+
+      // payload.playgrounds = prevState.playgrounds.map((playground)=> {
+      //   const pg = payload.playgrounds.map((playground)=> (reformPlayground(playground, true, team, componentTypes))).find(({ id })=> ((id === playground.id)));
+      //   return ((pg) ? Object.assign({}, playground, pg) : playground);
       // });
 
       // const playground = (prevState.playground && playgrounds.find(({ id })=> (id === prevState.playrgound.id))) ? playgrounds.find(({ id })=> (id === prevState.playground.id)) : prevState.playground;
@@ -174,15 +179,16 @@ export function onMiddleware(store) {
     } else if (type === SET_PLAYGROUND) {
       const { playground } = payload;
 
-      const { typeGroup, matchPath } = prevState;
+      const { devices, typeGroup, matchPath } = prevState;
       const { params } = matchPath;
 
+      const device = devices.find(({ id })=> (id === playground.deviceID)) || null;
       
       dispatch(updateMatchPath({ 
         matchPath : { ...matchPath,
           params : { ...params,
             buildID       : playground.buildID,
-            deviceSlug    : 'desktop-macos',
+            deviceSlug    : (device) ? device.slug : null,//'desktop-macos',
             typeGroupSlug : 'views'
           }
         }
