@@ -32,28 +32,7 @@ export const reformComment = (comment, overwrite={})=> {
 export const reformComponent = (component, componentTypes=null, overwrite = {})=> {
   // console.log('reformComponent()', { keys : Object.keys(component), component, overwrite });
 
-  const PLACEHOLDER_FILL = {
-    r: 128,
-    g: 128,
-    b: 128,
-    a: 0.0
-  };
-
-  let {
-    type_id,
-    event_type_id,
-    node_id,
-    title,
-    tag_name,
-    sizes,
-    image_url,
-    html,
-    styles,
-    accessibility,
-    // root_styles,
-    meta,
-    comments,
-  } = component;
+  const { id, type_id, event_type_id, node_id, title, tag_name, sizes, image_url, html, styles, accessibility, meta, comments } = component;
   const { width, height } = meta.bounds;
   delete component['type_id'];
   delete component['event_type_id'];
@@ -64,45 +43,21 @@ export const reformComponent = (component, componentTypes=null, overwrite = {})=
   delete component['image_data'];
   delete component['thumb_data'];
 
-
-  styles = styles ? JSON.parse(styles) : null;
-  accessibility = accessibility ? JSON.parse(accessibility) : null;
-  // const rootStyles = root_styles ? convertStyles(JSON.parse(await unzipData(root_styles))) : null;
-
-  // 	console.log('META: [%s]', JSON.stringify(meta, null, 2));
-  //	console.log('ROOT STYLES:', root_styles);
-  // 	console.log('META.BOUNDS:', meta.bounds.height, meta.bounds.width);
-
-  //   console.log('::|::', { id : component.id, imageData }, '::|::');
-  //   console.log('::|::', { id : component.id, title, imageData }, '::|::');
-
-  // const thumbData = thumb && thumb.length > 1 ? await unzipData(thumb) : Images.genColor(PLACEHOLDER_FILL, { width, height });
-  // const thumbData = Images.genColor(PLACEHOLDER_FILL, { width, height });
-
-  // const fullSize = null;
-  // const fullSize = ((imageData) ? await Jimp.read(imageData).then( async(image)=> {
-  //   const { data, ...size } = image.bitmap;
-  //   return { ...size };
-  // }) : { width, height });
-
-  // console.log({ thumbData });
-  // const thumbSize = null;
-  // const thumbSize = (thumbData) ? await Jimp.read(thumbData).then(async image=> {
-  //   const { data, ...size } = image.bitmap;
-  //   return { ...size };
-  // }) : null;
-
   const reformed = {...component, accessibility, html, styles, sizes,
-    typeID: type_id << 0,
-    eventTypeID: event_type_id << 0,
-    nodeID: node_id << 0,
-    title: title.length === 0 ? tag_name : title,
-    tagName: tag_name,
-    typeGroup : componentTypes.find(({ id })=> (id === type_id)),
-    images : Object.keys(sizes).map((key)=> (`${image_url}_${key}.png`)),
-    comments: comments.map((comment)=> reformComment(comment)).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
-    selected: false,
-    processed: ((html && accessibility) !== null),
+    id            : id << 0,
+    typeID        : type_id << 0,
+    eventTypeID   : event_type_id << 0,
+    nodeID        : node_id << 0,
+    title         : title.length === 0 ? tag_name : title,
+    tagName       : tag_name,
+    styles        : (styles) ? JSON.parse(styles) : null,
+    accessibility : (accessibility) ? JSON.parse(accessibility) : null,
+    typeGroup     : componentTypes.find(({ id })=> (id === type_id)),
+    sizes         : { ...sizes, o : { width, height } },
+    images        : Object.keys(sizes).map((key)=> (`${image_url}_${key}.png`)),
+    comments      : comments.map((comment)=> reformComment(comment)).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
+    selected      : false,
+    processed     : ((html && accessibility) !== null),
     ...overwrite
   };
 
