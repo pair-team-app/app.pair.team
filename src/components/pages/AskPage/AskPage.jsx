@@ -29,8 +29,8 @@ class AskPage extends Component {
   }
 
 
-  componentWillMount() {
-    console.log('%s.componentWillMount()', this.constructor.name, { props : this.props, state : this.state });
+  componentDidMount() {
+    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {

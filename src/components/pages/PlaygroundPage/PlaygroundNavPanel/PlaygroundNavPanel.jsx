@@ -15,15 +15,18 @@ class PlaygroundNavPanel extends Component {
     };
   }
 
-  componentWillMount() {
-    // console.log('%s.componentWillMount()', this.constructor.name, this.props, this.state);
+  componentDidMount() {
+    // console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { playgrounds, playground } = this.props;
-    if ((playgrounds && !prevProps.playgrounds) || (prevProps.playground !== playground)) {
+    const { builds } = this.state;
+
+    if (playgrounds && (playgrounds.length !== builds.map(({ playgrounds })=> (playgrounds)).flat().length || prevProps.playground !== playground)) {
+    //if ((playgrounds && !prevProps.playgrounds) || (prevProps.playground !== playground)) {
       this.onPopulateTree();
     }
   }
@@ -41,7 +44,8 @@ class PlaygroundNavPanel extends Component {
     console.log('%s.handleTypeGroupClick()', this.constructor.name, { build, typeGroup });
 
     build.selected = true;
-    const playground = build.playgrounds.find(({ typeGroups })=> (typeGroups.includes(typeGroup)))
+    const playgrounds = build.playgrounds.filter(({ typeGroups })=> (typeGroups.includes(typeGroup)));
+    const playground = playgrounds.find(({ deviceID })=> (deviceID === this.props.playground.deviceID)) || playgrounds.pop();
 
     const { builds } = this.state;
     this.setState({ builds : builds.map((item)=> ((item.id !== build.id) ? { ...item, 
@@ -78,7 +82,7 @@ class PlaygroundNavPanel extends Component {
   };
 
   render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { team, playgrounds, typeGroup } = this.props;
     const { builds } = this.state;

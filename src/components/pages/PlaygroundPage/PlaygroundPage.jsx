@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
-import { fetchBuildPlaygrounds, fetchPlaygroundComponentGroup, setComment, setComponent, setPlayground, setTypeGroup } from '../../../redux/actions';
+import { fetchBuildPlaygrounds, setComment, setComponent, setPlayground, setTypeGroup } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import BasePage from '../BasePage';
 import AccessibilityPopover from './AccessibilityPopover';
@@ -23,18 +23,16 @@ class PlaygroundPage extends Component {
     super(props);
 
     this.state = {
-      typeGroups    : null,
       devices       : false,
       cursor        : false,
       accessibility : false,
-      share         : false,
-      fetching      : false
+      share         : false
     };
   }
 
 
-  componentWillMount() {
-    console.log('%s.componentWillMount()', this.constructor.name, { props : this.props, state : this.state });
+  componentDidMount() {
+    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -235,7 +233,7 @@ class PlaygroundPage extends Component {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, playgrounds, playground, component } = this.props;
-    const { cursor, accessibility, share, fetching, devices } = this.state;
+    const { cursor, accessibility, share, devices } = this.state;
     const { params = null } = this.props || { params : null };
 
     return (<BasePage { ...this.props } className="playground-page" data-component={(component !== null)} data-comments={component && window.location.href.includes('/comments')}>
@@ -245,6 +243,7 @@ class PlaygroundPage extends Component {
           onPlaygroundClick={this.handlePlaygroundClick}
           onTypeGroupClick={this.handleNavGroupItemClick}
           onTypeItemClick={this.handleNavTypeItemClick} />
+
         <PlaygroundHeader
           popover={share}
           onBreadCrumbClick={this.handleBreadCrumbClick}
@@ -253,6 +252,7 @@ class PlaygroundPage extends Component {
           onSettingsItem={this.handleSettingsItem}
           onLogout={this.props.onLogout} />
       </div>)}
+
       {(profile && playground) && (<div className="playground-page-content-wrapper" data-component={component !== null}>
         <PlaygroundContent
           cursor={cursor}

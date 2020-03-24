@@ -15,7 +15,7 @@
 }
 
 .playground-content[data-component="true"] {
-	/* align-items: center; */
+	align-items: center;
 }
 
 .playground-content[data-component="false"] .playground-content-components-wrapper {

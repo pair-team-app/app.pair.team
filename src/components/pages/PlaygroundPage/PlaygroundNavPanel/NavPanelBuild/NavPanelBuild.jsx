@@ -14,7 +14,7 @@ function NavPanelBuild(props) {
 	const { id, title, expanded, selected, playgrounds, added } = build;
 	const typeGroups = [ ...new Set([ ...playgrounds.map(({ typeGroups })=> (typeGroups)).flat()])];
 
-	console.log('NavPanelBuild()', { props, typeGroups });
+	// console.log('NavPanelBuild()', { props, typeGroups });
 
 	return (<BaseContentExpander className="nav-panel-build" open={build.expanded}
 		title={<div className="nav-panel-build-title-wrapper" onClick={()=> props.onBuildClick(build)} data-id={id} data-expanded={expanded} data-selected={selected}>

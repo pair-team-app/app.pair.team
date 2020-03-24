@@ -14,7 +14,7 @@ import './PlaygroundContent.css';
 const SCALE_CONSTRAIN = 1.0;
 const CONTAINER_PADDING = {
   width  : 48 * 1,
-  height : 68 * 1
+  height : 48 * 1
 };
 
 class PlaygroundContent extends Component {
@@ -22,13 +22,13 @@ class PlaygroundContent extends Component {
     super(props);
 
     this.state = {
-      position: null,
-      popover: false,
-      bounds: {
-        init: null,
-        prev: null,
-        curr: null,
-        next: null
+      position : null,
+      popover  : false,
+      bounds   : {
+        init : null,
+        prev : null,
+        curr : null,
+        next : null
       }
     };
   }
@@ -119,26 +119,6 @@ class PlaygroundContent extends Component {
       next : { ...bounds.curr, ...curr }
     };
 
-
-
-    // bounds = { ...bounds, curr,
-    //   init : { ...init, 
-    //     component : (init && component && !init.component) ? { ...init.component, 
-    //       scale    : init.container.scale,
-    //       position : { 
-    //         x : 0,
-    //         y : 0
-    //       },
-    //       size     : {
-    //         width  : init.container.scale.width * component.meta.bounds.width,
-    //         height : init.container.scale.height * component.meta.bounds.height
-    //       }
-    //     } : null
-    //   }, 
-    //   prev : { ...bounds.prev, ...bounds.curr },
-    //   next : { ...bounds.next, ...next }
-    // };
-
     this.setState({ bounds });
   };
 
@@ -149,7 +129,7 @@ class PlaygroundContent extends Component {
   handleComponentPopoverClose = ()=> {
     console.log('%s.handleComponentPopoverClose()', this.constructor.name);
 
-    this.setState({ popover: false }, ()=> {
+    this.setState({ popover : false }, ()=> {
       this.props.onPopoverClose();
     });
   };
@@ -187,14 +167,13 @@ class PlaygroundContent extends Component {
     const { profile, typeGroup, playground, component, cursor, mouse } = this.props;
     const { position, popover, bounds } = this.state;
     const components = (typeGroup) ? (component) ? [component] : componentsFromTypeGroup(playground.components, typeGroup) : [];
-    // const { components } = playground;
 
     return (
       <div className="playground-content" data-component={!(!component << 0)} data-cursor={cursor}>
         <ResizeObserver onResize={this.calcBounds} onPosition={this.calcBounds} onReflow={this.calcBounds} />
         {(components.length > 0) && (<div className="playground-content-components-wrapper" data-component={component !== null}>
             {(!component || bounds.curr === null || bounds.curr.component === null) 
-              ? (<PlaygroundComponentsGrid typeGroup={typeGroup} components={components} onItemClick={this.handleContentClick}/>) 
+              ? (<PlaygroundComponentsGrid components={components} onItemClick={this.handleContentClick}/>) 
               : (<PlaygroundComponent
                   profile={profile}
                   popover={popover}
@@ -292,7 +271,7 @@ const PlaygroundComponent = (props)=> {
         <ContextMenuTrigger disable={false} id="component" component={component} collect={(props)=> ({ component : props.component })} disableIfShiftIsPressed={true}>
           <div className="bg-wrapper" style={contentStyle}></div>
           <div className="playground-content-component" data-id={id} style={{ height : `${Math.ceil(height)}px` }}>
-            <img src={images[1] || ''} alt={title} />
+            <img src={(images[1] || null)} alt={title} />
           </div>
           
           <div className="playground-component-comments-wrapper" style={contentStyle} data-id={id}>
@@ -305,12 +284,12 @@ const PlaygroundComponent = (props)=> {
                   votes    : []
                 })
               ] : comments
-            ).filter(({ type })=> type !== 'init').map((comm, i)=> {
+            ).filter(({ type })=> type !== 'init').map((comment, i)=> {
                 return (<PlaygroundComment
                   key={i}
                   ind={comments.length - 1 - i}
                   component={component}
-                  comment={comm}
+                  comment={comment}
                   scale={scale}
                   position={position}
                   offset={updBounds.position}
@@ -335,7 +314,7 @@ const PlaygroundComponent = (props)=> {
 const PlaygroundComponentsGrid = (props)=> {
     // console.log('PlaygroundComponentsGrid()', props);
 
-  const { typeGroup, components } = props;
+  const { components } = props;
 
   return (
     <div className="playground-components-grid" data-loading={false}>
@@ -360,8 +339,7 @@ const mapStateToProps = (state, ownProps)=> {
     profile    : state.userProfile,
     playground : state.playground,
     typeGroup  : state.typeGroup,
-    component  : state.component,
-    comment    : state.comment
+    component  : state.component
   };
 };
 

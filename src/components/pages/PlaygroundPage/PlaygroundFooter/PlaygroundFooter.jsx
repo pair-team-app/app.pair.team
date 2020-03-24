@@ -3,17 +3,15 @@ import './PlaygroundFooter.css';
 
 
 function PlaygroundFooter(props) {
-// 	console.log('PlaygroundFooter()', props);
-	console.log('PlaygroundFooter()', { component : props.component, props });
+	// console.log('PlaygroundFooter()', { component : props.component, props });
 
 	const { accessibility, cursor, devices, component } = props;
+	
 	return ((component) ? (<div className="playground-footer">
 		<div className="pplayground-footer-col-left">
 			<FooterCommentButton selected={cursor} onClick={props.onToggleCursor} />
 		</div>
-		<div className="playground-footer-col-right button-wrapper-col">
-			{/* <FooterMobileButton selected={devices} onClick={props.onToggleMobile} /> */}
-			{/*<FooterDesktopButton hidden={(builds === 0)} selected={(playground.deviceID === 1 && !accessibility)} onClick={props.onToggleDesktop} />*/}
+		<div className="playground-footer-col-right">
 			<FooterAXButton selected={accessibility} onClick={props.onToggleAccessibility} />
 		</div>
 	</div>) : (<div className="playground-footer">

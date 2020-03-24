@@ -69,14 +69,15 @@ export function onMiddleware(store) {
 
       const playgrounds = payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
       const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null;
-      // const playground = playgrounds.find(({ buildID })=> (buildID === params.buildID)) || null;
       const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) : null;
       const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
-      
+      const comment = (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
+
       payload.playgrounds = playgrounds;
       payload.playground = playground;
       payload.typeGroup = typeGroup;
       payload.component = component;
+      payload.comment = comment;
 
       dispatch(fetchBuildPlaygrounds({ buildID : params.buildID }));
       dispatch(fetchTeamComments({ team : prevState.team }));
@@ -93,10 +94,14 @@ export function onMiddleware(store) {
       const playgrounds = [ ...new Set([ ...prevState.playgrounds, ...payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)})).filter(({ id })=> (!prevState.playgrounds.map(({ id })=> (id)).includes(id)))])];
       const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || prevState.playground;
       const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) : null;
+      const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
+      const comment = (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
 
       payload.playgrounds = playgrounds;
       payload.playground = playground;
       payload.typeGroup = typeGroup;
+      payload.component = component;
+      payload.comment = comment;
 
       // payload.playgrounds = prevState.playgrounds.map((playground)=> {
       //   const pg = payload.playgrounds.map((playground)=> (reformPlayground(playground, true, team, componentTypes))).find(({ id })=> ((id === playground.id)));
@@ -148,7 +153,7 @@ export function onMiddleware(store) {
           typeGroupSlug : (payload.matchPath.params.typeGroupSlug || null),
           componentID   : (payload.matchPath.params.componentID) ? payload.matchPath.params.componentID << 0 : null,
           // ax            : (typeof payload.matchPath.params.ax !== 'undefined' && payload.matchPath.params.ax !== null && payload.matchPath.params.ax === 'accessibility'),
-          comments      : (typeof payload.matchPath.params.comments !== 'undefined' && payload.matchPath.params.comments !== null && payload.matchPath.params.comments === 'comments'),
+          comments      : (payload.matchPath.params.comments === true || (typeof payload.matchPath.params.comments !== 'undefined' && payload.matchPath.params.comments !== null && payload.matchPath.params.comments === 'comments')),
           commentID     : (payload.matchPath.params.commentID) ? payload.matchPath.params.commentID << 0 : null,
         };
 
@@ -179,7 +184,7 @@ export function onMiddleware(store) {
     } else if (type === SET_PLAYGROUND) {
       const { playground } = payload;
 
-      const { devices, typeGroup, matchPath } = prevState;
+      const { devices, matchPath } = prevState;
       const { params } = matchPath;
 
       const device = devices.find(({ id })=> (id === playground.deviceID)) || null;
@@ -188,7 +193,7 @@ export function onMiddleware(store) {
         matchPath : { ...matchPath,
           params : { ...params,
             buildID       : playground.buildID,
-            deviceSlug    : (device) ? device.slug : null,//'desktop-macos',
+            deviceSlug    : (device) ? device.slug : null,
             typeGroupSlug : 'views'
           }
         }
@@ -220,7 +225,7 @@ export function onMiddleware(store) {
       const { comment, matchPath } = prevState;
       const { params } = matchPath;
 
-      if (comment) {
+      if ((!component && comment) || (component && params.componentID !== component.id)) {
         dispatch(setComment(null));
       }
 
@@ -228,7 +233,7 @@ export function onMiddleware(store) {
         matchPath : { ...matchPath,
           params : { ...params,
             componentID : (component) ? component.id : null,
-            comments    : false
+            comments    : false//(component !== null || (component && params.componentID === component.id))
           }
         }
       }));

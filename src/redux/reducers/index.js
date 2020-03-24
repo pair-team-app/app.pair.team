@@ -22,7 +22,7 @@ const initialState = {
   products       : null,
   darkThemed     : false,
   matchPath      : null,
-  devices        : null,
+  device         : null,
   redirectURI    : null,
   userProfile    : null,
   invite         : null,
@@ -91,8 +91,8 @@ function rootReducer(state = initialState, action) {
     // }));
   
   } else if (type === TEAM_BUILDS_LOADED) {
-    const { playgrounds, playground, typeGroup, component } = payload;
-    return (Object.assign({}, state, { playgrounds, playground, typeGroup, component }));
+    const { playgrounds, playground, typeGroup, component, comment } = payload;
+    return (Object.assign({}, state, { playgrounds, playground, typeGroup, component, comment }));
 
   } else if (type === TEAM_COMMENTS_LOADED) {
     const { team } = payload;
@@ -107,7 +107,7 @@ function rootReducer(state = initialState, action) {
   } else if (type === USER_PROFILE_ERROR || type === USER_PROFILE_LOADED) {
     const { userProfile } = payload;
 
-    console.log('!!!!!!!!!!!!!!', userProfile)
+    // console.log('!!!!!!!!!!!!!!', userProfile);
 
     return (Object.assign({}, state, { userProfile }));
 
@@ -143,8 +143,8 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { team }));
 
   } else if (type === BUILD_PLAYGROUNDS_LOADED) {
-    const { playgrounds, playground, typeGroup } = payload;
-    return (Object.assign({}, state, { playgrounds, playground, typeGroup }));
+    const { playgrounds, playground, typeGroup, component, comment } = payload;
+    return (Object.assign({}, state, { playgrounds, playground, typeGroup, component, comment }));
 
   } else if (type === SET_PLAYGROUND) {
     const { playground } = payload;
