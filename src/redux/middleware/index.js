@@ -108,7 +108,8 @@ export function onMiddleware(store) {
       const { params } = matchPath || {};
 
       const playgrounds = [ ...new Set([ ...prevState.playgrounds, ...payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)})).filter(({ id })=> (!prevState.playgrounds.map(({ id })=> (id)).includes(id)))])];
-      const playground = (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || (prevState.playground || [ ...playgrounds].shift()) : null;
+      // const playground = (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || (prevState.playground || [ ...playgrounds].shift()) : null;
+      const playground = (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null : null;
       const typeGroup = (playground) ? (playground.typeGroups.find(({ key })=> (key === params.typeGroupSlug)) || playground.typeGroups.find(({ key })=> (key === 'views'))) : null;
       const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
       const comment = (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;

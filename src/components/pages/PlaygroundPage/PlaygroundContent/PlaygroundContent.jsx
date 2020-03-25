@@ -181,6 +181,7 @@ class PlaygroundContent extends Component {
                   bounds={bounds.curr.component}
                   maxBounds={bounds.curr.container}
                   scale={bounds.curr.component.scale}
+                  cursor={cursor}
                   typeGroup={typeGroup}
                   component={component}
                   onResize={this.handleComponentResize}
@@ -193,7 +194,7 @@ class PlaygroundContent extends Component {
           </div>
         )}
         {(cursor) && (<CommentPinCursor position={mouse.position} />)}
-        {(component && bounds.curr && bounds.curr.component) && (<ComponentMenu menuID="component" profile={profile} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)}
+        {(component && bounds.curr && bounds.curr.component) && (<ComponentMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)}
       </div>
     );
   }
@@ -216,7 +217,7 @@ const CommentPinCursor = (props)=> {
 const PlaygroundComponent = (props)=> {
   // console.log('PlaygroundComponent()', props);
 
-  const { profile, popover, scale, bounds, component, position } = props;
+  const { profile, popover, cursor, scale, bounds, component, position } = props;
   const { id, title, sizes, images, comments } = component;
   const { size } = bounds;// || component.meta.bounds;
   const { width, height } = size;
@@ -265,10 +266,10 @@ const PlaygroundComponent = (props)=> {
     // maxConstraints={[Math.min(width, sizes.c.width), Math.min(height, sizes.c.height) - CONTAINER_PADDING.height]}
     maxConstraints={[sizes.c.width, sizes.c.height - CONTAINER_PADDING.height]}
     onResize={props.onResize}>
-      <div className="playground-component" data-loading={false} onClick={(event)=> props.onItemClick(event, component)} style={{ width: `${width}px`, height: `${height}px` }}>
+      <div className="playground-component" data-loading={false} onClick={(event)=> (cursor) ? props.onItemClick(event, component) : null} style={{ width: `${width}px`, height: `${height}px` }}>
         <h5 className="component-title">{title}</h5>
 
-        <ContextMenuTrigger disable={false} id="component" component={component} collect={(props)=> ({ component : props.component })} disableIfShiftIsPressed={true}>
+        <ContextMenuTrigger id="component" component={component} disableIfShiftIsPressed={true}>
           <div className="bg-wrapper" style={contentStyle}></div>
           <div className="playground-content-component" data-id={id} style={{ height : `${Math.ceil(height)}px` }}>
             <img src={(images[1] || null)} alt={title} />

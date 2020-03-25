@@ -21,8 +21,7 @@ class ComponentMenu extends Component {
 				x : 0,
 				y : 0
 			},
-			component : null,
-			comment   : ''
+			comment  : ''
 		};
 
 		this.textAreaRef = React.createRef();
@@ -45,12 +44,14 @@ class ComponentMenu extends Component {
 // 		console.log('%s.handleAddComment()', this.constructor.name, event, { bounds : (data || event).target.getBoundingClientRect() }, this.state.position, this.state.comment);
 		event.preventDefault();
 
-		const { position, component, comment : content } = this.state;
+    const { component } = this.props;
+		const { position,  comment : content } = this.state;
+
 		const { x , y } = position;
 		this.props.onAddComment({ component, content,
 			position : { 
 				x : x,
-        y : y,
+        y : y
       }
     });
 	};
@@ -83,28 +84,26 @@ class ComponentMenu extends Component {
   };
 
 	handleShowMenu = (event)=> {
- 		// console.log('%s.handleShowMenu()', this.constructor.name, this.props, event, { position : { x : ((event.detail.position.x - event.detail.data.target.getBoundingClientRect().x) - 10) << 0, y : ((event.detail.position.y - event.detail.data.target.getBoundingClientRect().y) - 8) << 0 }, target : event.detail.data.target.getBoundingClientRect() });
+ 		console.log('%s.handleShowMenu()', this.constructor.name, this.props, event, { position : { x : ((event.detail.position.x - event.detail.data.target.getBoundingClientRect().x) - 10) << 0, y : ((event.detail.position.y - event.detail.data.target.getBoundingClientRect().y) - 8) << 0 }, target : event.detail.data.target.getBoundingClientRect() });
 
 		event.preventDefault();
 		event.stopPropagation();
 
-		const { component } = event.detail.data;
-		const { scale } = this.props;
+		const { component, scale } = this.props;
 		const position = {
 			x : (event.detail.position.x - event.detail.data.target.getBoundingClientRect().x) * scale,
 			y : (event.detail.position.y - event.detail.data.target.getBoundingClientRect().y) * scale
 		};
 
-		this.setState({ component, position,
-			intro    : true,
-			// outro    : false,
-			comment  : ''
+		this.setState({ position,
+			intro   : true,
+			comment : ''
 		}, ()=> {
 			if (this.textAreaRef) {
 				this.textAreaRef.value = this.state.comment;
 			}
 
-			console.log('%s.handleShowMenu()', this.constructor.name, this.props, event, { position });
+			// console.log('%s.handleShowMenu()', this.constructor.name, this.props, event, { position });
 			this.props.onShow({ component });
 		});
 	};
@@ -113,8 +112,8 @@ class ComponentMenu extends Component {
 	render() {
 		// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { menuID, profile } = this.props;
-		const { intro, outro, component, comment } = this.state;
+		const { menuID, profile, component } = this.props;
+		const { intro, outro, comment } = this.state;
 		const { avatar, email } = profile;
 
 		return (<ContextMenu id={menuID} className="component-menu-wrapper" onShow={this.handleShowMenu} onHide={this.handleHideMenu} preventHideOnContextMenu={true} preventHideOnResize={true} preventHideOnScroll={true}>

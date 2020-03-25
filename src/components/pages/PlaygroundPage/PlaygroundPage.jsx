@@ -61,6 +61,7 @@ class PlaygroundPage extends Component {
 
       // // this.props.setPlayground(playground);
       this.props.setComponent(component);
+      this.props.setComment(comment);
     }).catch((error)=> {});
   };
 
