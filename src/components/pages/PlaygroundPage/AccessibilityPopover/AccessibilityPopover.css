@@ -25,7 +25,7 @@
 	transition: opacity 125ms 175ms ease-in;
 }
 
-.accessibility-report-item-header-wrapper {
+.accessibility-report-item .header-wrapper {
   display: flex;
 	flex-wrap: nowrap;
 	justify-content: center; /* h-align */
@@ -34,44 +34,49 @@
 	margin-bottom: var(--orthodox-margin-base);
 }
 
-.accessibility-report-item-header-icon-wrapper {
+.accessibility-report-item .header-icon-wrapper {
   flex: 1 1 auto;
 	display: flex;
 }
 
-.accessibility-report-item-header-icon {
+.accessibility-report-item .header-icon {
   text-align: center;
 }
 
-.accessibility-report-item-header-spacer {
+.accessibility-report-item .header-spacer {
   flex: 10 0 0;
 	margin: auto;
 }
 
-.accessibility-report-item-header-link-wrapper {
+.accessibility-report-item .header-status-wrapper {
   flex: 1 1 auto;
 	text-align: right;
 }
 
-.accessibility-report-item-header-link {
+.accessibility-report-item .header-status {
   font-size: 10px;
-  color: rgba(var(--link-hover-color), 1.0);
-	transition: color 0.125s ease-out;
+  color: rgba(var(--timestamp-color), 1.0);
 }
 
-.accessibility-report-item-header-link:hover {
-  color: rgba(var(--link-color), 1.0);
-	cursor: pointer;
-}
-
-.accessibility-report-item-title {
+.accessibility-report-item .title {
   margin-bottom: var(--orthodox-margin-mini);
 	font-size: 12px;
+}
+
+.accessibility-report-item .title a {
 	color: rgba(var(--timestamp-color), 1.0);
 }
 
-.accessibility-report-item-content {
+.accessibility-report-item .title a:hover {
+	color: rgba(var(--link-color), 0.75);
+}
+
+.accessibility-report-item .content {
   font-size: 14px;
 	line-height: 20px;
 	text-align: justify;
+}
+
+.accessibility-report-item .content .txt-code {
+	text-align-last: left;
 }

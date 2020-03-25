@@ -245,19 +245,6 @@ button.cancel-button {
 	padding: var(--orthodox-padding-half) var(--orthodox-padding-form);
 }
 
-code {
-	display: block;
-	padding: 8px;
-	background-color: rgba(var(--playground-panel-bg-color), 1.0);
-	border: 1px solid rgba(var(--border-color), 1.0);
-	font-family: Monaco, Consolas, monospace;
-	font-size: 12px;
-}
-
-code:not(:last-child) {
-	margin-bottom: var(--orthodox-margin-base);
-}
-
 fieldset {
   margin: 0;
   padding: 0;

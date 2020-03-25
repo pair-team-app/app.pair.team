@@ -3,8 +3,10 @@ import './AccessibilityPopover.css';
 
 import { Strings } from 'lang-js-utils';
 import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 
 import BasePopover from '../../../overlays/BasePopover';
+import { trackOutbound } from '../../../../utils/tracking';
 
 class AccessibilityPopover extends Component {
   constructor(props) {
@@ -30,15 +32,15 @@ class AccessibilityPopover extends Component {
   render() {
 	// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-	const { component } = this.props;
-	const { outro } = this.state;
-	const payload = {
-		fixed  : false,
-		offset : {
-			right  : 30,
-			bottom : 30
-		}
-	};
+		const { component } = this.props;
+		const { outro } = this.state;
+		const payload = {
+			fixed  : false,
+			offset : {
+				right  : 30,
+				bottom : 30
+			}
+		};
     
     return (<BasePopover outro={outro} payload={payload} onOutroComplete={this.props.onClose}>
 			<div className="accessibility-popover">
@@ -54,26 +56,38 @@ class AccessibilityPopover extends Component {
 
 
 const AccessibilityReportItem = (props)=> {
-	// console.log('AccessibilityReportItem()', props);
+	console.log('AccessibilityReportItem()', props);
 
 	const { ind, report } = props;
-	const { help, description } = report
+	const { help, description, impact, helpUrl } = report;
 
-	return (<div className="accessibility-report-item">
-		<div className="accessibility-report-item-header-wrapper">
-			<div className="accessibility-report-item-header-icon-wrapper">
-				<div className="accessibility-report-item-header-icon avatar-wrapper">{ind}</div>
+	const handleURL = (event, url)=> {
+		// console.log('%s.handleURL()', this.constructor.name, { event, url });
+		event.preventDefault();
+		trackOutbound(url);
+	};
+
+	const FormattedContent = (props)=> {
+		// console.log('FormattedContent()', { props });
+
+		const { content } = props;
+		return (<span dangerouslySetInnerHTML={{ __html : content.replace(/(\<.+?\>)/g, (markup)=> (`<span class="txt-code">${markup.replace('<', '&lt;').replace('>', '&gt;')}</span>`))}}></span>)
+	};
+
+	return (<div className="accessibility-report-item" data-impact={impact}>
+		<div className="header-wrapper">
+			<div className="header-icon-wrapper">
+				<div className="header-icon avatar-wrapper">{ind}</div>
 			</div>
-			<div className="accessibility-report-item-header-spacer" />
-			<div className="accessibility-report-item-header-link-wrapper">
-				<div className="accessibility-report-item-header-link" onClick={props.onDelete}>Comment</div>
+			<div className="header-spacer" />
+			<div className="header-status-wrapper">
+				<div className="header-status">Auto Comment</div>
 			</div>
 		</div>
 
-		<div className="accessibility-report-item-title">{help}</div>
-		<div className="accessibility-report-item-content">
-			{description}
-		</div>
+		<div className="title"><NavLink to={helpUrl} target="_blank" onClick={(event)=> handleURL(event, helpUrl)}>{help}</NavLink></div>
+		{/* <div className="content">{description.replace(/(\<.+?\>)/g, (match)=> (`<span className="txt-code">${match}</span>`))}</div> */}
+		<div className="content"><FormattedContent content={description} /></div>
  	</div>);
 };
 
