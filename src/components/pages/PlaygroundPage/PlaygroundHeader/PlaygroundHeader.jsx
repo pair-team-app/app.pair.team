@@ -65,7 +65,6 @@ class PlaygroundHeader extends Component {
 		let path = `${Pages.PLAYGROUND}/${teamSlug}/${projectSlug}/${buildID}`;
 
 		const segments = [
-			{ type : BreadcrumbTypes.PLAYGROUND, title : projectSlug, path : projectSlug, payload : projectSlug },
 			{ type : BreadcrumbTypes.DEVICE, title : deviceSlug, path : deviceSlug, payload : playground },
       (typeGroup && typeGroupSlug) ? { type : BreadcrumbTypes.TYPE_GROUP, title : Strings.capitalize(typeGroup.key), path : typeGroupSlug, payload : typeGroup } : null,
       (typeGroup && component && componentID) ? { type : BreadcrumbTypes.COMPONENT, title : component.title, path : componentID, payload : component } : null,
@@ -120,8 +119,8 @@ const PlayGroundHeaderBreadcrumb = (props)=> {
   const { type, title, payload } = segment;
   
   return ((ind < tot) 
-		? (<><div className="playground-header-breadcrumb" data-last="false" onClick={(event)=> props.onClick({ event, type, payload })}>{title}</div>&nbsp;&gt;&nbsp;</>)
-		: (<div className="playground-header-breadcrumb" data-last="true">{title}</div>)
+		? (<><div className="playground-header-breadcrumb" onClick={(event)=> (ind > 0 && ind < tot) ? props.onClick({ event, type, payload }) : null}>{title}</div>&nbsp;&gt;&nbsp;</>)
+		: (<div className="playground-header-breadcrumb">{title}</div>)
 	);
 };
 
