@@ -209,7 +209,7 @@ const PlaygroundCommentAddPopover = (props)=> {
         </div>
       </div>
       <form>
-        <textarea placeholder="Enter Comment" onChange={props.onTextChange}></textarea>
+        <textarea placeholder="Enter Comment" onChange={props.onTextChange} autoFocus></textarea>
         <div className="button-wrapper-row">
           <button className="quiet-button" onClick={(event)=> props.onOutro(event)}>Cancel</button>
           <button type="submit" disabled={!comment.content || comment.content.length === 0} onClick={props.onSubmit}>Submit</button>

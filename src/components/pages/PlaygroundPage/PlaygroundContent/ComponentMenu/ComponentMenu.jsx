@@ -31,6 +31,7 @@ class ComponentMenu extends Component {
 
   componentDidMount() {
 //     console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+
     document.addEventListener('keydown', this.handleKeyDown);
   }
 
@@ -94,10 +95,9 @@ class ComponentMenu extends Component {
 			y : (event.detail.position.y - event.detail.data.target.getBoundingClientRect().y) * scale
 		};
 
-
 		this.setState({ component, position,
 			intro    : true,
-			outro    : false,
+			// outro    : false,
 			comment  : ''
 		}, ()=> {
 			if (this.textAreaRef) {
@@ -133,8 +133,7 @@ class ComponentMenu extends Component {
                 <img className="avatar-wrapper-ico" src={avatar} alt={email} />
               </div>
             </div>
-						<textarea placeholder="Enter Comment" onChange={(event)=> this.setState({ comment : event.target.value })} ref={(element)=> this.textAreaRef = element}>
-						</textarea>
+						<textarea placeholder="Enter Comment" onChange={(event)=> this.setState({ comment : event.target.value })} ref={(element)=> { this.textAreaRef = element ; element && element.focus() }} autoFocus></textarea>
 						<div className="button-wrapper">
 							<div><button className="quiet-button" onClick={this.handleHideMenu}>Cancel</button></div>
               <MenuItem data={{ type : 'submit' }} onClick={this.handleAddComment}>

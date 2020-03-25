@@ -19,14 +19,13 @@ class AskPage extends Component {
     super(props);
 
     this.state = {
+      topSort        : [],
       commentContent : '',
+      sort           : SORT_BY_SCORE,
       fetching       : false,
       share          : false,
-      sort           : SORT_BY_SCORE,
-      topSort        : []
     };
   }
-
 
   componentDidMount() {
     // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
@@ -45,27 +44,25 @@ class AskPage extends Component {
     const { fetching, topSort } = this.state;
     
     if (team) {
-      if (!fetching && (team.comments.filter(({ content })=> (content === null)).length > 0)) {
-        this.setState({ 
-          fetching : true,
-          topSort  : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).map(({ id })=> (id))
-        });
-      }
-
       if (fetching) {
         if ((team.comments.filter(({ content })=> (content === null)).length === 0)) {
           this.setState({ fetching : false });
         }
+      
+      } else {
+        if (team.comments.filter(({ content })=> (content === null)).length > 0) {
+          this.setState({ fetching : true });
+        }
       }
 
-      if (!fetching && topSort.length === 0) {
+      if (topSort.length !== team.comments.length) {
         this.setState({ topSort : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).map(({ id })=> (id)) });
       }
     }
   }
 
   handleAddComment = (event)=> {
-    console.log('%s.handleAddComment()', this.constructor.name, { event });
+    // console.log('%s.handleAddComment()', this.constructor.name, { event });
     trackEvent('button', 'add-comment');
 
     event.preventDefault();
@@ -86,7 +83,10 @@ class AskPage extends Component {
       }).then((response)=> {
         const comment = reformComment(response.data.comment);
         console.log('ADD_COMMENT', response.data, comment);
-        this.onReloadComments();
+
+        this.setState({ commentContent : '' }, ()=> {
+          this.onReloadComments();
+        });
         
       }).catch((error)=> {});
     });
@@ -94,7 +94,7 @@ class AskPage extends Component {
 
 
   handleDeleteComment = (comment)=> {
-    //.log('%s.handleDeleteComment()', this.constructor.name, comment.id);
+    //console.log('%s.handleDeleteComment()', this.constructor.name, { comment });
     trackEvent('button', 'delete-comment');
 
     axios.post(API_ENDPT_URL, {
@@ -111,7 +111,7 @@ class AskPage extends Component {
   };
 
   handleKeyDown = (event)=> {
-    console.log('%s.handleKeyDown()', this.constructor.name, event);
+    // console.log('%s.handleKeyDown()', this.constructor.name, event);
 
     const { commentContent } = this.state;
     if (event.keyCode === ENTER_KEY && commentContent.length > 0) {
@@ -120,11 +120,11 @@ class AskPage extends Component {
   }
 
   handleNavGroupItemClick = (typeGroup)=> {
-    console.log('%s.handleNavGroupItemClick()', this.constructor.name, { typeGroup });
+    // console.log('%s.handleNavGroupItemClick()', this.constructor.name, { typeGroup });
   };
 
   handlePlaygroundClick = (playground, typeGroup)=> {
-    console.log('%s.handlePlaygroundClick()', this.constructor.name, { playground, typeGroup });
+    // console.log('%s.handlePlaygroundClick()', this.constructor.name, { playground, typeGroup });
 
     this.props.setPlayground(playground);
     this.props.setTypeGroup(typeGroup);
@@ -142,11 +142,11 @@ class AskPage extends Component {
   };
 
   handleSortClick = (sort)=> {
-    console.log('%s.handleSortClick()', this.constructor.name, sort);
+    // console.log('%s.handleSortClick()', this.constructor.name, sort);
 
     this.setState({ sort }, ()=> {
       if (sort === SORT_BY_SCORE) {
-        this.onReloadComments(true);
+        this.onReloadComments();
       }
     });
   }
@@ -172,12 +172,12 @@ class AskPage extends Component {
       }
     }).then((response)=> {
 			console.log('VOTE_COMMENT', response.data);
-      this.onReloadComments();
+      this.onReloadComments(false);
 
     }).catch((error)=> {});
   };
 
-  onReloadComments = (refresh=false)=> {
+  onReloadComments = (refresh=true)=> {
     console.log('%s.onReloadComments()', this.constructor.name, { refresh });
 
     const { team } = this.props;
@@ -193,52 +193,46 @@ class AskPage extends Component {
 
   render() {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
-    // 		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
 
     const { profile, team } = this.props;
     const { commentContent, fetching, share, sort, topSort } = this.state;
-    const { params = null } = this.props || { params : null };
-
-    const comments = (sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : topSort.map((commentID)=> (team.comments.find(({ id })=> (id === commentID))));
+    const comments = (sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : topSort.map((commentID)=> (team.comments.find(({ id })=> (id === commentID)) || null)).filter((comment)=> (comment !== null));
 
     return (<BasePage { ...this.props } className="ask-page">
-      {profile && team && (
-        <>
-          <PlaygroundNavPanel
-            params={params}
-            onPlaygroundClick={this.handlePlaygroundClick}
-            onTypeGroupClick={this.handleNavGroupItemClick}
-            onTypeItemClick={this.handleNavTypeItemClick}
-          />
-          <AskPageHeader 
-            sort={sort} 
-            popover={share} 
-            onSortClick={this.handleSortClick} 
-            onPopup={this.props.onPopup} 
-            onSharePopoverClose={()=> this.setState({ share:  false })} 
-            onSettingsItem={this.handleSettingsItem} 
-            onLogout={this.props.onLogout} 
+      {profile && team && (<>
+        <PlaygroundNavPanel
+          onPlaygroundClick={this.handlePlaygroundClick}
+          onTypeGroupClick={this.handleNavGroupItemClick}
+          onTypeItemClick={this.handleNavTypeItemClick}
+        />
+        <AskPageHeader 
+          sort={sort} 
+          popover={share} 
+          onSortClick={this.handleSortClick} 
+          onPopup={this.props.onPopup} 
+          onSharePopoverClose={()=> this.setState({ share : false })} 
+          onSettingsItem={this.handleSettingsItem} 
+          onLogout={this.props.onLogout} 
+        />
+
+        <div className="ask-page-content-wrapper" data-loading={fetching}>
+          <AskPageContentHeader 
+            loading={fetching} 
+            commentContent={commentContent} 
+            onTextChange={this.handleTextChange} 
+            onSubmit={this.handleAddComment}
           />
 
-          <div className="ask-page-content-wrapper" data-loading={fetching}>
-            <AskPageContentHeader 
-              loading={fetching} 
-              commentContent={commentContent} 
-              onTextChange={this.handleTextChange} 
-              onSubmit={this.handleAddComment}
-            />
-
-            <AskPageCommentsPanel 
-              profile={profile} 
-              comments={comments} 
-              loading={fetching}
-              sort={sort}
-              onVote={this.handleVote} 
-              onDelete={this.handleDeleteComment} 
-            />
-          </div>
-        </>
-      )}
+          <AskPageCommentsPanel 
+            profile={profile} 
+            comments={comments} 
+            loading={fetching}
+            sort={sort}
+            onVote={this.handleVote} 
+            onDelete={this.handleDeleteComment} 
+          />
+        </div>
+      </>)}
     </BasePage>);
   }
 }
@@ -249,7 +243,7 @@ const AskPageContentHeader = (props)=> {
   const { loading, commentContent } = props;
   return (<div className="ask-page-content-header" data-loading={loading}>
     <form>
-      <input type="text" placeholder="Ask your team anything…" value={commentContent} onChange={props.onTextChange} autoComplete="new-password" />
+      <input type="text" placeholder="Ask your team anything…" value={commentContent} onChange={props.onTextChange} autoComplete="new-password" autoFocus />
       <button type="submit" disabled={commentContent.length === 0} onClick={props.onSubmit}>Submit</button>
     </form>
   </div>);

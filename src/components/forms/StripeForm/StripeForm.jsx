@@ -84,7 +84,7 @@ class StripeForm extends Component {
 		return (<div className="stripe-form">
 			<form onSubmit={this.handleSubmit} method="post">
 				<div className="stripe-form-element-wrapper">
-					<input type="text" name="cardHolder" placeholder="Card Holder" value={cardHolder} onFocus={this.handleFocus} onChange={(event)=> this.handleChange(event.target)} style={{ textAlign : 'left' }} autoComplete="off" />
+					<input type="text" name="cardHolder" placeholder="Card Holder" value={cardHolder} onFocus={this.handleFocus} onChange={(event)=> this.handleChange(event.target)} style={{ textAlign : 'left' }} autoComplete="off" autoFocus />
 					<CardNumberElement className="input-txt" {...createElementOptions()} />
 					<CardExpiryElement className="input-txt" {...createElementOptions()} />
 					<CardCVCElement className="input-txt"  {...createElementOptions()} />

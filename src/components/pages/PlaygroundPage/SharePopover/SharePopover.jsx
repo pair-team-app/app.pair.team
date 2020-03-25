@@ -126,7 +126,7 @@ class SharePopover extends Component {
           </CopyToClipboard>
           <div className="share-popover-form-wrapper">
             <form onSubmit={this.handleSubmit}>
-              <input type="text" value={email} placeholder="Enter Email Address" onChange={(event)=> this.handleEmailChange(event)} />
+              <input type="text" value={email} placeholder="Enter Email Address" onChange={(event)=> this.handleEmailChange(event)} autoFocus />
               <button disabled={!emailValid} type="submit" onClick={this.handleSubmit}>Submit</button>
               <CopyToClipboard text={window.location.href} onCopy={this.handleClipboardCopy}>
                 <button disabled={false} onClick={(event)=> event.preventDefault()}>Copy URL</button>

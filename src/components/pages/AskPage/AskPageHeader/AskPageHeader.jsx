@@ -53,7 +53,7 @@ class AskPageHeader extends Component {
 				</div>
 			</div>
 			<div className="pask-page-header-col ask-page-header-col-middle">
-        <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
+        <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} autoFocus />
 			</div>
 			<div className="ask-page-header-col ask-page-header-col-right">
 				<PlaygroundShareLink popover={popover} playground={null} onClick={()=> this.setState({ popover : !this.state.popover })} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
