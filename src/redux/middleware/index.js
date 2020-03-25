@@ -12,7 +12,7 @@ import { DEVICES_LOADED,
   SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT
 } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
-import { fetchTeamBuilds, fetchTeamComments, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setComment, setComponent } from '../actions';
+import { fetchTeamBuilds, fetchTeamComments, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setTypeGroup, setComment, setComponent } from '../actions';
 
 
 const logFormat = ({ prevState, action, next, meta=null })=> {
@@ -29,7 +29,6 @@ export function onMiddleware(store) {
     const { dispatch } = store;
 
     const { type, payload } = action;
-    // console.log('onMiddleware()', { prevState, type, payload });
     logFormat({ prevState, action, next });
 
     if (type === DEVICES_LOADED) {
@@ -60,9 +59,6 @@ export function onMiddleware(store) {
 
     } else if (type === TYPE_GROUP_LOADED) {
       const { componentTypes, playground } = prevState;
-      // let { components } = payload;
-
-      // const components = [ ...new Set([ ...playground.components, ...Object.values((components).map((component)=> (reformComponent(component, componentTypes)))) ])];
       const components = [ ...new Set([ ...playground.components, ...payload.components.map((component)=> (reformComponent(component, componentTypes))) ])];
 
       playground.components = [ ...components ];
@@ -76,7 +72,7 @@ export function onMiddleware(store) {
 
       const playgrounds = payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
       const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null;
-      const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) : null;
+      const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === params.typeGroupSlug)) || null : null;
       const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
       const comment = (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
 
@@ -86,7 +82,15 @@ export function onMiddleware(store) {
       payload.component = component;
       payload.comment = comment;
 
-      dispatch(fetchBuildPlaygrounds({ buildID : params.buildID }));
+      if (playground) {
+        dispatch(fetchBuildPlaygrounds({ buildID : (playground) ? playground.buildID : params.buildID }));
+      
+      } else {
+        playgrounds.forEach(({ buildID })=> {
+          dispatch(fetchBuildPlaygrounds({ buildID }));
+        });
+      }
+
       dispatch(fetchTeamComments({ team : prevState.team }));
 
     } else if (type === TEAM_COMMENTS_LOADED) {
@@ -99,66 +103,43 @@ export function onMiddleware(store) {
       const { params } = matchPath || {};
 
       const playgrounds = [ ...new Set([ ...prevState.playgrounds, ...payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)})).filter(({ id })=> (!prevState.playgrounds.map(({ id })=> (id)).includes(id)))])];
-      const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || prevState.playground;
-      const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) : null;
+      const playground = (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || (prevState.playground || [ ...playgrounds].shift()) : null;
+      const typeGroup = (playground) ? (playground.typeGroups.find(({ key })=> (key === params.typeGroupSlug)) || playground.typeGroups.find(({ key })=> (key === 'views'))) : null;
       const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
       const comment = (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
+
+
+      dispatch(updateMatchPath({ 
+        matchPath : { ...matchPath,
+          params : { ...params,
+            teamSlug      : (params.teamSlug !== team.title) ? team.title : params.teamSlug,
+            projectSlug   : (playground && params.projectSlug !== playground.projectSlug) ? playground.projectSlug : params.projectSlug,
+            buildID       : (playground && params.buildID !== playground.buildID) ? playground.buildID : params.buildID,
+            deviceSlug    : (playground && params.deviceSlug !== playground.device.slug) ? playground.device.slug : params.deviceSlug,
+            typeGroupSlug : (typeGroup && params.typeGroupSlug !== typeGroup.key) ? typeGroup.key : params.typeGroupSlug,
+            componentID   : (params.componentID && !component) ? null : params.componentID,
+            comments      : (params.componentID && component && params.comments),
+            commentID     : (params.commentID && !comment) ? null : params.commentID
+          }
+        }
+      }));
 
       payload.playgrounds = playgrounds;
       payload.playground = playground;
       payload.typeGroup = typeGroup;
       payload.component = component;
       payload.comment = comment;
-
-      // payload.playgrounds = prevState.playgrounds.map((playground)=> {
-      //   const pg = payload.playgrounds.map((playground)=> (reformPlayground(playground, true, team, componentTypes))).find(({ id })=> ((id === playground.id)));
-      //   return ((pg) ? Object.assign({}, playground, pg) : playground);
-      // });
-
-      // const playground = (prevState.playground && playgrounds.find(({ id })=> (id === prevState.playrgound.id))) ? playgrounds.find(({ id })=> (id === prevState.playground.id)) : prevState.playground;
-
-      // payload.playgrounds = playgrounds;
-      // payload.playground = playground;
-
-      /*
-      const { componentTypes, team, matchPath } = prevState;
-      // const { params } = (matchPath || {});
-
-      const playgrounds = prevState.playgrounds.map((playground)=> {
-        let pg = payload.playgrounds.map((playground)=> (reformPlayground(playground, true, team, componentTypes))).find(({ id })=> ((id === playground.id)));
-        let merge = (pg) ? Object.assign({}, playground, pg) : playground;
-        
-        return ({ ...merge,
-          components : [ ...new Set(merge.components)]
-        });
-      });
-
-      const playground = (playgrounds.find(({ id })=> (id === prevState.playrgound.id))) ? playgrounds.find(({ id })=> (id === prevState.playground.id)) : prevState.playground;
-      // const component = (playground) ? playground.components.find(({ id, typeID })=> (params.componentID && id == params.componentID)) : prevState.component;
-      // const component = prevState.component;
-
-      // console.log ('!!!!!!!!!!!!!', { params, playgrounds, playground, component });
-      console.log ('!!!!!!!!!!!!!', { matchPath, playgrounds, playground });
-
-      payload.playgrounds = playgrounds;
-      payload.playground = playground;
-      // payload.component = component;
-
-      // dispatch(fetchPlaygroundComponentGroup({ 
-      //   playground : { id : prevState.playground.id }, 
-      //   typeGroup : { id : 187 } 
-      // }));
-      */
     
     } else if (type === UPDATE_MATCH_PATH) {
       if (payload.matchPath.params) {
         const params = { ...payload.matchPath.params,
           teamSlug      : (payload.matchPath.params.teamSlug || null),
           projectSlug   : (payload.matchPath.params.projectSlug || null),
-          buildID       : payload.matchPath.params.buildID << 0,
+          buildID       : (payload.matchPath.params.buildID) ? payload.matchPath.params.buildID << 0 : null,
           deviceSlug    : (payload.matchPath.params.deviceSlug || null),
           typeGroupSlug : (payload.matchPath.params.typeGroupSlug || null),
           componentID   : (payload.matchPath.params.componentID) ? payload.matchPath.params.componentID << 0 : null,
+          ax            : false,
           // ax            : (typeof payload.matchPath.params.ax !== 'undefined' && payload.matchPath.params.ax !== null && payload.matchPath.params.ax === 'accessibility'),
           comments      : (payload.matchPath.params.comments === true || (typeof payload.matchPath.params.comments !== 'undefined' && payload.matchPath.params.comments !== null && payload.matchPath.params.comments === 'comments')),
           commentID     : (payload.matchPath.params.commentID) ? payload.matchPath.params.commentID << 0 : null,
@@ -168,14 +149,7 @@ export function onMiddleware(store) {
         delete (params['1']);
         payload.matchPath = { ...payload.matchPath, params };
 
-
         // console.log('!!!!!!!!!!!!!!!', { prevState, params });
-
-        // if (prevState.matchPath.params !== params) {
-          // if (!prevState.component && prevState.matchPath && prevState.matchPath.params.componentID !== params.componentID) {
-          //   dispatch(setComponent(prevState.playground.components.find(({ id })=> (id === params.componentID))));
-          // }
-        // }
       }
 
     } else if (type === UPDATE_MOUSE_COORDS) {
@@ -190,75 +164,94 @@ export function onMiddleware(store) {
     
     } else if (type === SET_PLAYGROUND) {
       const { playground } = payload;
-
       const { devices, matchPath } = prevState;
-      const { params } = matchPath;
 
-      const device = devices.find(({ id })=> (id === playground.deviceID)) || null;
-      
-      dispatch(updateMatchPath({ 
-        matchPath : { ...matchPath,
-          params : { ...params,
-            buildID       : playground.buildID,
-            deviceSlug    : (device) ? device.slug : null,
-            typeGroupSlug : 'views'
+      if (matchPath) {
+        const { params } = matchPath;
+
+        const device = (playground) ? devices.find(({ id })=> (id === playground.deviceID)) || null : null;
+        const typeGroup = (playground) ? playground.typeGroups.find(({ id })=> (id === 187)) || null : null;
+        
+        dispatch(updateMatchPath({ 
+          matchPath : { ...matchPath,
+            params : { ...params,
+              projectSlug   : (playground) ? playground.projectSlug : params.projectSlug,
+              buildID       : (playground) ? playground.buildID : params.buildID,
+              deviceSlug    : (device) ? device.slug : params.deviceSlug,
+              typeGroupSlug : (typeGroup) ? typeGroup.key : params.typeGroupSlug
+            }
           }
-        }
-      }));
+        }));
+
+        dispatch(setTypeGroup(typeGroup));
+      
+      } else {
+        dispatch(setTypeGroup(null));
+      }
 
     } else if (type === SET_TYPE_GROUP) {
       const { typeGroup } = payload;
-
       const { component, matchPath } = prevState;
-      const { params } = matchPath;
 
-      
-      dispatch(updateMatchPath({ 
-        matchPath : { ...matchPath,
-          params : { ...params,
-            typeGroupSlug : (typeGroup) ? typeGroup.key : null
+      if (matchPath) {
+        const { params } = matchPath;
+
+        dispatch(updateMatchPath({ 
+          matchPath : { ...matchPath,
+            params : { ...params,
+              typeGroupSlug : (typeGroup) ? typeGroup.key : null
+            }
           }
+        }));
+        
+        if (component || params.componentID) {
+          dispatch(setComponent(null));
         }
-      }));
-      
-      
-      if (component || params.componentID) {
+
+      } else {
         dispatch(setComponent(null));
       }
 
     } else if (type === SET_COMPONENT) {
       const { component } = payload;
-
       const { comment, matchPath } = prevState;
-      const { params } = matchPath;
+      
+      if (matchPath) {  
+        const { params } = matchPath;
 
-      if ((!component && comment) || (component && params.componentID !== component.id)) {
+        dispatch(updateMatchPath({ 
+          matchPath : { ...matchPath,
+            params : { ...params,
+              componentID : (component) ? component.id : null,
+              comments    : false//(component !== null || (component && params.componentID === component.id))
+            }
+          }
+        }));
+
+        if ((!component && comment) || (component && params.componentID !== component.id)) {
+          dispatch(setComment(null));
+        }
+
+      } else {
         dispatch(setComment(null));
       }
 
-      dispatch(updateMatchPath({ 
-        matchPath : { ...matchPath,
-          params : { ...params,
-            componentID : (component) ? component.id : null,
-            comments    : false//(component !== null || (component && params.componentID === component.id))
-          }
-        }
-      }));
-
     } else if (type === SET_COMMENT) {
       const { comment } = payload;
-
       const { matchPath } = prevState;
-      const { params } = matchPath;
 
-      dispatch(updateMatchPath({ 
-        matchPath : { ...matchPath,
-          params : { ...params,
-            comments  : (params.componentID && (params.comments || comment)) ? 'comments' : params.comments,
-            commentID : (comment) ? comment.id : null
+      if (matchPath) {  
+        const { params } = matchPath;
+
+        dispatch(updateMatchPath({ 
+          matchPath : { ...matchPath,
+            params : { ...params,
+              comments  : (params.componentID && (params.comments || comment)) ? 'comments' : params.comments,
+              commentID : (comment) ? comment.id : null
+            }
           }
-        }
-      }));
+        }));
+      }
     }
 
     next(action);

@@ -1,4 +1,8 @@
 
+.nav-panel-build {
+  transition: height 0.125s ease-out;
+}
+
 .nav-panel-build:not(:last-child) {
   margin-bottom: var(--orthodox-margin-mini);
 }

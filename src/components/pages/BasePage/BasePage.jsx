@@ -11,8 +11,7 @@ import navLinks from '../../../assets/json/nav-links.json';
 function BasePage(props) {
 	// console.log('BasePage()', props);
 
-	const { className, children, style } = props;
-	const { location } = props;
+	const { location, className, children, style } = props;
 	const matchPlaygrounds = (location) ? matchPath(location.pathname, {
 		path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`,
 		exact : false,

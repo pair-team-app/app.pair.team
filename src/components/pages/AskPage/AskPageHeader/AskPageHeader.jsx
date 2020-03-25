@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 import { toggleTheme } from '../../../../redux/actions';
 import SharePopover from '../../PlaygroundPage/SharePopover';
 import './AskPageHeader.css';
@@ -97,5 +97,5 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
-// export default connect(mapStateToProps, mapDispatchToProps)(PlaygroundHeader);
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AskPageHeader));
+export default connect(mapStateToProps, mapDispatchToProps)(AskPageHeader);
+// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AskPageHeader));

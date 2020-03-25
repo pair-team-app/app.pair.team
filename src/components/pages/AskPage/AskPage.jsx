@@ -1,11 +1,10 @@
 import axios from 'axios';
-import { Strings } from 'lang-js-utils';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { ENTER_KEY } from '../../../consts/key-codes';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
-import { fetchTeamComments, setComment } from '../../../redux/actions';
+import { fetchTeamComments, setPlayground, setTypeGroup, setComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import BasePage from '../BasePage';
 import './AskPage.css';
@@ -30,17 +29,21 @@ class AskPage extends Component {
 
 
   componentDidMount() {
-    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+
+    const { playground } = this.props;
+
+    if (playground) {
+      this.props.setPlayground(null);
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { team } = this.props;
     const { fetching, topSort } = this.state;
     
-    // const { teamSlug, commentID } = params || {};
-
     if (team) {
       if (!fetching && (team.comments.filter(({ content })=> (content === null)).length > 0)) {
         this.setState({ 
@@ -116,11 +119,15 @@ class AskPage extends Component {
     }
   }
 
-  handlePlaygroundClick = (playground)=> {
-    console.log('%s.handlePlaygroundClick()', this.constructor.name, playground);
+  handleNavGroupItemClick = (typeGroup)=> {
+    console.log('%s.handleNavGroupItemClick()', this.constructor.name, { typeGroup });
+  };
 
-    const { team } = this.props;
-    this.props.history.push(`/app/${team.title}/${Strings.slugifyURI(playground.title)}/${playground.buildID}/desktop-macos`);
+  handlePlaygroundClick = (playground, typeGroup)=> {
+    console.log('%s.handlePlaygroundClick()', this.constructor.name, { playground, typeGroup });
+
+    this.props.setPlayground(playground);
+    this.props.setTypeGroup(typeGroup);
   };
 
   handleSettingsItem = (itemType)=> {
@@ -185,7 +192,7 @@ class AskPage extends Component {
   };
 
   render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
     // 		console.log('%s.render()', this.constructor.name, { fetching : this.state.fetching, processing : this.state.processing });
 
     const { profile, team } = this.props;
@@ -193,7 +200,6 @@ class AskPage extends Component {
     const { params = null } = this.props || { params : null };
 
     const comments = (sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : topSort.map((commentID)=> (team.comments.find(({ id })=> (id === commentID))));
-
 
     return (<BasePage { ...this.props } className="ask-page">
       {profile && team && (
@@ -253,17 +259,18 @@ const AskPageContentHeader = (props)=> {
 const mapDispatchToProps = (dispatch)=> {
   return {
     fetchTeamComments : (payload)=> dispatch(fetchTeamComments(payload)),
+    setPlayground     : (payload)=> dispatch(setPlayground(payload)),
+    setTypeGroup      : (payload)=> dispatch(setTypeGroup(payload)),
     setComment        : (payload)=> dispatch(setComment(payload))
   };
 };
 
 const mapStateToProps = (state, ownProps)=> {
   return {
-    comment  : state.comment,
-    profile  : state.userProfile,
-    team     : state.team,
-    products : state.products,
-    pathname : state.pathname
+    comment    : state.comment,
+    profile    : state.userProfile,
+    team       : state.team,
+    playground : state.playground
   };
 };
 

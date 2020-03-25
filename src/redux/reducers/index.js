@@ -50,9 +50,6 @@ const logFormat = (state, action, meta = '')=> {
 
 function rootReducer(state = initialState, action) {
   const { type, payload } = action;
-
-  //let playgrounds, playground = null;
-  
   logFormat(state, action);
 
   if (type === COMPONENT_TYPES_LOADED) {
@@ -76,20 +73,10 @@ function rootReducer(state = initialState, action) {
     const { playgrounds, playground } = payload;
     return (Object.assign({}, state, { playgrounds, playground }));
 
-
   } else if (type === UPDATE_MOUSE_COORDS) {
     const { mouse } = payload;
-
     return (Object.assign({}, state, { mouse }));
-      // mouse : Object.assign({}, state.mouse, {
-      //   position : Object.assign({}, state.mouse.position, action.payload),
-      //   speed: {
-      //     x : state.mouse.position.x - action.payload.x,
-      //     y : state.mouse.position.y - action.payload.y
-      //   }
-      // })
-    // }));
-  
+      
   } else if (type === TEAM_BUILDS_LOADED) {
     const { playgrounds, playground, typeGroup, component, comment } = payload;
     return (Object.assign({}, state, { playgrounds, playground, typeGroup, component, comment }));
@@ -106,35 +93,12 @@ function rootReducer(state = initialState, action) {
 
   } else if (type === USER_PROFILE_ERROR || type === USER_PROFILE_LOADED) {
     const { userProfile } = payload;
-
     // console.log('!!!!!!!!!!!!!!', userProfile);
-
     return (Object.assign({}, state, { userProfile }));
 
   } else if (type === USER_PROFILE_UPDATED) {
     const userProfile = payload;
     return (Object.assign({}, state, { userProfile }));
-
-    // if (action.payload) {
-    //   Objects.renameKey(action.payload, 'github_auth', 'github');
-    //   if (action.payload.github) {
-    //     Objects.renameKey(action.payload.github, 'access_token', 'accessToken');
-    //   }
-
-    //   const { id, type, github } = action.payload;
-    //   return (Object.assign({}, state, {
-    //     userProfile: { ...action.payload,
-    //       id     : id << 0,
-    //       github : (github) ? { ...github, id : github.id << 0 } : github,
-    //       paid   : /admin|paid/i.test(type)
-    //     }
-    //   }));
-
-    // } else {
-    //   return (Object.assign({}, state, {
-    //     userProfile: action.payload
-    //   }));
-    // }
 
   } else if (type === UPDATE_MATCH_PATH) {
     const { matchPath } = payload;

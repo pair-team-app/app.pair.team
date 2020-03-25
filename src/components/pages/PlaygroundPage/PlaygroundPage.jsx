@@ -64,9 +64,12 @@ class PlaygroundPage extends Component {
   };
 
   handleBreadCrumbClick = ({ type=null, payload=null })=> {
-    // console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
+    console.log('%s.handleBreadCrumbClick()', this.constructor.name, { type, payload });
 
-    if (type === BreadcrumbTypes.PLAYGROUND) {
+    if (type === BreadcrumbTypes.DEVICE) {
+      const playground = payload;
+      this.props.setPlayground(playground);
+
     } else if (type === BreadcrumbTypes.TYPE_GROUP) {
       const typeGroup = payload;
       this.props.setTypeGroup(typeGroup);

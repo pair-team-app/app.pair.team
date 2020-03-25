@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { API_ENDPT_URL, GITHUB_APP_AUTH, Modals, Pages } from '../../consts/uris';
-import { fetchBuildPlaygrounds, fetchTeamLookup, fetchTeamBuilds, fetchUserProfile, setPlayground, setComponent, updateMouseCoords, updateUserProfile, updateMatchPath, setTypeGroup } from '../../redux/actions';
+import { fetchTeamLookup, fetchUserProfile, updateMouseCoords, updateUserProfile, updateMatchPath } from '../../redux/actions';
 
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 import Routes from '../helpers/Routes';
@@ -89,15 +89,12 @@ class App extends Component {
       strict: false
     });
 
-
     if (prevProps.matchPath && this.props.matchPath) {
       console.log('??+=+=+=+=+=+=+=+', { historyMatch, prevMatchPath : prevProps.matchPath, currMatchPath : this.props.matchPath });
 
-
-
       if (prevProps.matchPath.params !== this.props.matchPath.params && this.props.matchPath.params.buildID > 0) {
         const path = generatePath(`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`, { ...this.props.matchPath.params, 
-          ax       : (this.props.matchPath.params.ax) ? 'accessibility' : undefined,
+          ax       : undefined,
           comments : (this.props.matchPath.params.comments) ? 'comments' : undefined
         });
         console.log('??*=*=*=*=*=*=*=*', { path });
@@ -109,10 +106,8 @@ class App extends Component {
 
     // console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds });
 
-
-
     // extract url props
-    const { profile, team, playground } = this.props;
+    const { profile, team, playgrounds, playground } = this.props;
     const { pathname } = (matchPlaygrounds && Object.keys(matchPlaygrounds).length > 0) ? this.props.location : '';
     
     const { modals } = this.state;
@@ -136,6 +131,7 @@ class App extends Component {
         });
       }  
 
+
       // dismiss login modal after profile
       if (profile !== null && modals.login) {
         this.onToggleModal(Modals.LOGIN, false);
@@ -156,6 +152,35 @@ class App extends Component {
         // not a team member, block access
         if (profile && team && playground && team.id !== playground.teamID && !prevState.modals.noAccess && !modals.noAccess) {     
           this.onToggleModal(Modals.NO_ACCESS);
+        }
+
+        if (this.props.matchPath) {
+          // const { teamSlug, projectSlug, buildID, deviceSlug, typeGroupSlug, componentID, comments, commentID } = this.props.matchPath.params || {};
+          const { teamSlug, projectSlug, buildID, deviceSlug, typeGroupSlug } = this.props.matchPath.params || {};
+          
+          if (!prevProps.team && team) {
+            if (teamSlug !== team.title || !projectSlug) {
+              this.props.history.push(`${Pages.ASK}/${team.title}/ask`);
+            }
+          }
+
+          if (!profile && !prevState.modals.login && !modals.login) {
+            this.onToggleModal(Modals.LOGIN);
+          }
+
+          if (!this.props.location.pathname.includes('/ask') && playgrounds && (!buildID || !deviceSlug || !typeGroupSlug)) {
+            const pg = [ ...playgrounds].shift();
+            this.props.updateMatchPath({ 
+              matchPath : { ...this.props.matchPath,
+                params : { ...this.props.matchPath.params,
+                  projectSlug   : (projectSlug !== pg.projectSlug) ? pg.projectSlug : projectSlug,
+                  buildID       : (!buildID) ? pg.buildID : buildID,
+                  deviceSlug    : (!deviceSlug) ? pg.device.slug : deviceSlug,
+                  typeGroupSlug : (!typeGroupSlug) ? [ ...pg.typeGroups].pop().key : typeGroupSlug
+                }
+              } 
+            });
+          }
         }
       }
     }
@@ -366,38 +391,35 @@ class App extends Component {
   };
 
   onToggleModal = (uri, show = true, payload = null)=> {
-    // 		console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
+    console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
     const { modals } = this.state;
 
     if (show) {
       this.setState({
-        modals: {
-          ...modals,
-          payload,
-          github: false,
-          disable: uri === Modals.DISABLE,
-          login: uri === Modals.LOGIN,
-          network: uri === Modals.NETWORK,
-          noAccess: uri === Modals.NO_ACCESS,
-          profile: uri === Modals.PROFILE,
-          register: uri === Modals.REGISTER,
-          stripe: uri === Modals.STRIPE
+        modals : { ...modals, payload,
+          github   : false,
+          disable  : uri === Modals.DISABLE,
+          login    : uri === Modals.LOGIN,
+          network  : uri === Modals.NETWORK,
+          noAccess : uri === Modals.NO_ACCESS,
+          profile  : uri === Modals.PROFILE,
+          register : uri === Modals.REGISTER,
+          stripe   : uri === Modals.STRIPE
         }
       });
     } else {
       this.setState({
-        modals: {
-          ...modals,
-          cookies: uri === Modals.COOKIES ? false : modals.cookies,
-          disable: uri === Modals.DISABLE ? false : modals.disable,
-          github: uri === Modals.GITHUB ? false : modals.github,
-          login: uri === Modals.LOGIN ? false : modals.login,
-          network: uri === Modals.NETWORK ? false : modals.network,
-          noAccess: uri === Modals.NO_ACCESS ? false : modals.noAccess,
-          profile: uri === Modals.PROFILE ? false : modals.profile,
-          register: uri === Modals.REGISTER ? false : modals.register,
-          stripe: uri === Modals.STRIPE ? false : modals.stripe,
-          payload: null
+        modals : { ...modals,
+          cookies  : uri === Modals.COOKIES ? false : modals.cookies,
+          disable  : uri === Modals.DISABLE ? false : modals.disable,
+          github   : uri === Modals.GITHUB ? false : modals.github,
+          login    : uri === Modals.LOGIN ? false : modals.login,
+          network  : uri === Modals.NETWORK ? false : modals.network,
+          noAccess : uri === Modals.NO_ACCESS ? false : modals.noAccess,
+          profile  : uri === Modals.PROFILE ? false : modals.profile,
+          register : uri === Modals.REGISTER ? false : modals.register,
+          stripe   : uri === Modals.STRIPE ? false : modals.stripe,
+          payload  : null
         }
       });
     }
@@ -425,23 +447,13 @@ class App extends Component {
 
     return (<div className={`site-wrapper${(darkThemed) ? ' site-wrapper-dark' : ''}`} data-devin-matty={true}>
       
-      {(!matchPlaygrounds) && (
-        <TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />
-      )}
+      {(!matchPlaygrounds) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
 
 	    <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND) && !location.pathname.includes(Pages.ASK)) ? ' playground-page-wrapper' : ''}`}>
 		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
 	    </div>
 		  
-      {(!matchPlaygrounds) && (
-        <BottomNav />
-      )}
-
-
-
-
-
-
+      {(!matchPlaygrounds) && (<BottomNav />)}
 
 		  <div className='modal-wrapper'>
 			  {(modals.cookies) && (<CookiesOverlay
@@ -505,7 +517,6 @@ class App extends Component {
           onConfirmed={null}
 				  onComplete={(ok)=> { this.onToggleModal(Modals.NO_ACCESS, false); (ok) ? this.handleLogout(null, Modals.LOGIN) : this.handleLogout(Pages.HOME) }}>
 				  Project has been deleted or permissions have been denied.
-
 			  </ConfirmDialog>)}
 
 			  {(popup) && (<PopupNotification
@@ -536,16 +547,11 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return {
-    fetchTeamLookup       : (payload)=> dispatch(fetchTeamLookup(payload)),
-    fetchTeamBuilds       : (payload)=> dispatch(fetchTeamBuilds(payload)),
-    fetchBuildPlaygrounds : (payload)=> dispatch(fetchBuildPlaygrounds(payload)),
-    fetchUserProfile      : ()=> dispatch(fetchUserProfile()),
-    setTypeGroup          : (payload)=> dispatch(setTypeGroup(payload)),
-    setPlayground         : (payload)=> dispatch(setPlayground(payload)),
-    setComponent          : payload=> dispatch(setComponent(payload)),
-    updateMouseCoords     : (payload)=> dispatch(updateMouseCoords(payload)),
-    updateMatchPath       : (payload)=> dispatch(updateMatchPath(payload)),
-    updateUserProfile     : (profile)=> dispatch(updateUserProfile(profile))
+    fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
+    fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
+    updateMouseCoords : (payload)=> dispatch(updateMouseCoords(payload)),
+    updateMatchPath   : (payload)=> dispatch(updateMatchPath(payload)),
+    updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
   };
 };
 

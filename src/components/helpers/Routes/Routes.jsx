@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 // import { Route, Switch, withRouter } from 'react-router-dom';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import { Pages } from '../../../consts/uris';
 import AskPage from '../../pages/AskPage';
 import DocsPage from '../../pages/DocsPage/index';
@@ -10,7 +10,7 @@ import HomePage from '../../pages/HomePage/index';
 import PlaygroundPage from '../../pages/PlaygroundPage/index';
 import PricingPage from '../../pages/PricingPage/index';
 import PrivacyPage from '../../pages/PrivacyPage/index';
-import Status404Page from '../../pages/Status404Page/index';
+// import Status404Page from '../../pages/Status404Page/index';
 import TermsPage from '../../pages/TermsPage/index';
 
 
@@ -36,28 +36,23 @@ class Routes extends Component {
     // console.log('%s.render()', this.constructor.name, { props : this.props });
 
     return (<Switch>
-      <Route exact 
-	      path={Pages.HOME} 
-        children={()=> <HomePage 
-            onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
-            onPopup={this.props.onPopup} 
-            onSignup={()=> null} />}
-        />
-
+      <Route exact path={Pages.HOME}><Redirect to={`${Pages.ASK}/team/ask`} /></Route>
+      <Route exact path={`${Pages.ASK}`}><Redirect to={`${Pages.ASK}/team/ask`} /></Route>
+      
       <Route exact 
         path={Pages.HOME} 
         children={()=> <HomePage
             onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
             onPopup={this.props.onPopup} 
             onSignup={()=> null} />
-        } />
+      } />
       
       <Route exact 
         path={Pages.DOCS} 
         children={()=> <DocsPage
             onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
             onPopup={this.props.onPopup} />
-        } />
+      } />
       
       <Route exact 
         path={Pages.FEATURES} 
@@ -66,22 +61,13 @@ class Routes extends Component {
             onPopup={this.props.onPopup} />
        } />
       
-      <Route exact 
-        path={Pages.FEATURES} 
-        children={()=> <FeaturesPage
-          onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
-          onPopup={this.props.onPopup} />
-        }/>
-
-      <Route  
-        path={`${Pages.ASK}/:teamSlug([a-z-]+)/ask/:commentID([0-9]+)?`} 
-        // path={Pages.ASK} 
+      <Route 
+        path={`${Pages.ASK}/:teamSlug([a-z-]+)?/ask/:commentID([0-9]+)?`} 
         render={({ props })=> <AskPage 
           onLogout={this.props.onLogout} 
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
           onPopup={this.props.onPopup} { ...props} />
-         } />
-
+      } />
 
       <Route  
         path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`} 
@@ -90,15 +76,14 @@ class Routes extends Component {
           onLogout={this.props.onLogout} 
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
           onPopup={this.props.onPopup} { ...props} />
-         } />
-
+      } />
 
       <Route exact 
         path={Pages.PRICING} 
         children={()=> <PricingPage
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
           onPopup={this.props.onPopup} />
-        } />
+      } />
 
       <Route exact 
         path={`/:page(${Pages.LEGAL.slice(1)}|${Pages.PRIVACY.slice(1)})`} 
@@ -106,11 +91,10 @@ class Routes extends Component {
 
       <Route exact 
         path={Pages.TERMS} 
-        component={TermsPage} 
-      />
+        component={TermsPage} />
 
-    
-      <Route path={Pages.WILDCARD}><Status404Page /></Route>
+      {/* <Route path={Pages.WILDCARD}><Status404Page /></Route> */}
+      <Route path={Pages.WILDCARD}><Redirect to={`${Pages.ASK}/team/ask`} /></Route>
     </Switch>);
   }
 }
