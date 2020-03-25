@@ -59,7 +59,8 @@ class PlaygroundPage extends Component {
         components : this.props.playground.components.map((item)=> (item.id === component.id ? component : item))
       };
 
-      this.props.setPlayground(playground);
+      // this.props.setPlayground(playground);
+      this.props.setComponent(component);
     }).catch((error)=> {});
   };
 

@@ -76,7 +76,7 @@ class PlaygroundComment extends Component {
   };
 
   handleClose = (comment)=> {
-    console.log('%s.handleClose()', this.constructor.name, comment);
+    console.log('%s.handleClose()', this.constructor.name, { comment, props : this.props.comment });
 
     if (comment.id === this.props.comment.id) {
       this.props.onClose();

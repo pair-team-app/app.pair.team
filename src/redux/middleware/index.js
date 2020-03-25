@@ -246,7 +246,8 @@ export function onMiddleware(store) {
         dispatch(updateMatchPath({ 
           matchPath : { ...matchPath,
             params : { ...params,
-              comments  : (params.componentID && (params.comments || comment)) ? 'comments' : params.comments,
+              // comments  : (params.componentID && params.comments) ? 'comments' : params.comments,
+              comments  : (params.componentID && comment) ? 'comments' : params.comments,
               commentID : (comment) ? comment.id : null
             }
           }
