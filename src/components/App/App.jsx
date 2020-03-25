@@ -92,7 +92,7 @@ class App extends Component {
     if (prevProps.matchPath && this.props.matchPath) {
       console.log('??+=+=+=+=+=+=+=+', { historyMatch, prevMatchPath : prevProps.matchPath, currMatchPath : this.props.matchPath });
 
-      if (prevProps.matchPath.params !== this.props.matchPath.params && this.props.matchPath.params.buildID > 0) {
+      if (this.props.matchPath.params && prevProps.matchPath.params !== this.props.matchPath.params && this.props.matchPath.params.buildID > 0) {
         const path = generatePath(`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`, { ...this.props.matchPath.params, 
           ax       : undefined,
           comments : (this.props.matchPath.params.comments) ? 'comments' : undefined
@@ -159,8 +159,8 @@ class App extends Component {
           const { teamSlug, projectSlug, buildID, deviceSlug, typeGroupSlug } = this.props.matchPath.params || {};
           
           if (!prevProps.team && team) {
-            if (teamSlug !== team.title || !projectSlug) {
-              this.props.history.push(`${Pages.ASK}/${team.title}/ask`);
+            if (teamSlug !== team.slug || !projectSlug) {
+              this.props.history.push(`${Pages.ASK}/${team.slug}/ask`);
             }
           }
 

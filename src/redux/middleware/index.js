@@ -51,11 +51,16 @@ export function onMiddleware(store) {
       }
 
     } else if (type === TEAM_LOADED) {
-      dispatch(fetchTeamBuilds({ team : payload.team }));
+      const { team } = payload;
+      payload.team = { ...team,
+        id       : team.id << 0,
+        members  : team.members.map((member)=> ({ ...member,
+          id : member.id << 0
+        })),
+        comments : (team.comments) ? team.comments.map((comment)=> (reformComment(comment, false, team))) : []
+      };
 
-      const { team } = prevState;
-      const comments = (payload.team.comments) ? payload.team.comments.map((comment, i)=> (reformComment(comment, false, team))) : [];
-      payload.team.comments = comments;
+      dispatch(fetchTeamBuilds({ team }));
 
     } else if (type === TYPE_GROUP_LOADED) {
       const { componentTypes, playground } = prevState;
@@ -112,7 +117,7 @@ export function onMiddleware(store) {
       dispatch(updateMatchPath({ 
         matchPath : { ...matchPath,
           params : { ...params,
-            teamSlug      : (params.teamSlug !== team.title) ? team.title : params.teamSlug,
+            teamSlug      : (params.teamSlug !== team.slug) ? team.slug : params.teamSlug,
             projectSlug   : (playground && params.projectSlug !== playground.projectSlug) ? playground.projectSlug : params.projectSlug,
             buildID       : (playground && params.buildID !== playground.buildID) ? playground.buildID : params.buildID,
             deviceSlug    : (playground && params.deviceSlug !== playground.device.slug) ? playground.device.slug : params.deviceSlug,

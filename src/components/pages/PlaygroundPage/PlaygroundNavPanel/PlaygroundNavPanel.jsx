@@ -112,7 +112,7 @@ class PlaygroundNavPanel extends Component {
     return (<div className="playground-nav-panel">
       {(team) && (<PlaygroundNavPanelHeader team={team} />)}
       <div className="link-wrapper">
-        <NavLink to={`/app/${team.title}/ask`} className="nav-panel-link">Ask</NavLink>
+        <NavLink to={`/app/${team.slug}/ask`} className="nav-panel-link">Ask</NavLink>
         <NavLink to="https://www.npmjs.com/package/design-engine-playground" className="nav-panel-link" target="_blank" onClick={(event)=> handleURL(event, 'https://www.npmjs.com/package/design-engine-playground')}>Install</NavLink>
       </div>
       
@@ -139,7 +139,7 @@ const PlaygroundNavPanelHeader = (props)=> {
   const { team } = props;
   const { image, title } = team;
   return (<div className="playground-nav-panel-header">
-    <NavLink to={`/app/${team.title}/ask`} className="playground-nav-panel-header-title">
+    <NavLink to={`/app/${team.slug}/ask`} className="playground-nav-panel-header-title">
       <img src={image} alt="Team Logo" />
       {title}
     </NavLink>
