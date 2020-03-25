@@ -44,20 +44,13 @@ class UserSettings extends Component {
 
 	handleItemClick = (itemType, event=null)=> {
 // 		console.log('%s.handleItemClick()', this.constructor.name, itemType, event);
-
-		if (event) {
-			event.preventDefault();
-		}
-
+		
+		event.preventDefault();
 		this.setState({ itemType,
 			outro : true
 		}, ()=> {
 			if (itemType === SettingsMenuItemTypes.DOCS) {
-				trackOutbound(GITHUB_DOCS, ()=> {
-					window.open(GITHUB_DOCS);
-				});
-
-				window.open(GITHUB_DOCS);
+				trackOutbound(GITHUB_DOCS);
 			}
 		});
 	};

@@ -12,21 +12,14 @@ import { trackOutbound } from '../../../utils/tracking';
 function PrivacyPage(props) {
 	const handleURL = (event, url)=> {
 // 		console.log('%s.handleURL()', this.constructor.name, event, url);
-
-		if (event) {
-			event.preventDefault();
-		}
-
-		trackOutbound(url, ()=> {
-			window.open(url);
-		});
-
-		window.open(url);
+		
+		event.preventDefault();
+		trackOutbound(url);
 	};
 
 
 	return (
-		<BasePage { ...this.props } className="privacy-page">
+		<BasePage { ...props } className="privacy-page">
 			<h1>Privacy Policy</h1>
 			<div className="base-page-content-wrapper privacy-page-content-wrapper">
 				<div>

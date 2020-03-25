@@ -12,15 +12,8 @@ function TermsPage(props) {
 	const handleURL = (event, url)=> {
 // 		console.log('%s.handleURL()', this.constructor.name, event, url);
 
-		if (event) {
-			event.preventDefault();
-		}
-
-		trackOutbound(url, ()=> {
-			window.open(url);
-		});
-
-		window.open(url);
+		event.preventDefault();
+		trackOutbound(url);
 	};
 
 

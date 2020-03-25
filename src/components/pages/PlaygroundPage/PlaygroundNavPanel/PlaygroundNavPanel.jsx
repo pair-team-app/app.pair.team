@@ -98,15 +98,8 @@ class PlaygroundNavPanel extends Component {
     const handleURL = (event, url)=> {
 // 		console.log('%s.handleURL()', this.constructor.name, event, url);
 
-      if (event) {
-        event.preventDefault();
-      }
-
-      trackOutbound(url, ()=> {
-        window.open(url);
-      });
-
-      window.open(url);
+      event.preventDefault();
+      trackOutbound(url);
 	  };
 
     return (<div className="playground-nav-panel">

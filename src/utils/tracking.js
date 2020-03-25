@@ -6,6 +6,9 @@ import ReactGA from 'react-ga';
 // const UA_TRACKING_ID = 'UA-149949677-1';
 // const DEBUG = false;
 
+const openURL = (url)=> {
+	window.open(url);
+};
 
 export function initTracker(userID) {
 	console.log('::::]]', 'initTracker', userID);
@@ -48,7 +51,9 @@ export function trackPageview(uri=`${window.location.pathname}${window.location.
 // 	ReactGA.pageview(pageURI);
 }
 
-export function trackOutbound(url, callback=null) {
+export function trackOutbound(url, callback=openURL) {
 	console.log('::::]]', 'trackOutbound()', url, callback);
-// 	ReactGA.outboundLink({ label : url }, callback);
+
+	// ReactGA.outboundLink({ label : url }, callback(url) );
+	callback(url);
 }

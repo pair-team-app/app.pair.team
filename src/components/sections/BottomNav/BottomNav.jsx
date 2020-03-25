@@ -11,11 +11,7 @@ function BottomNav(props) {
 		event.preventDefault();
 
 		trackEvent('button', event.target.name);
-		trackOutbound(url, ()=> {
-			window.open(url);
-		});
-
-		window.open(url);
+		trackOutbound(url);
 	};
 
 	return (

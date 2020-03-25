@@ -55,11 +55,11 @@ class PlaygroundPage extends Component {
       // 			console.log('ADD_COMMENT', response.data, comment);
 
       component.comments = [...component.comments, comment].sort((i, ii)=> (i.epoch > ii.epoch ? -1 : i.epoch < ii.epoch ? 1 : 0));
-      const playground = { ...this.props.playground,
-        components : this.props.playground.components.map((item)=> (item.id === component.id ? component : item))
-      };
+      // const playground = { ...this.props.playground,
+      //   components : this.props.playground.components.map((item)=> (item.id === component.id ? component : item))
+      // };
 
-      // this.props.setPlayground(playground);
+      // // this.props.setPlayground(playground);
       this.props.setComponent(component);
     }).catch((error)=> {});
   };
