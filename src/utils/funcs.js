@@ -1,7 +1,7 @@
 
-import Octokit from '@octokit/rest';
+// import Octokit from '@octokit/rest';
 import axios from 'axios';
-import JSZip from 'jszip';
+// import JSZip from 'jszip';
 import { Arrays, Strings } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
@@ -65,13 +65,13 @@ export function createGist(token, filename, contents, description, visible, call
 		}
 	};
 
-	new Octokit({ auth : token }).gists.create(payload).then((result)=> {
-		console.log('CREATE_GIST ->', result);
+	// new Octokit({ auth : token }).gists.create(payload).then((result)=> {
+	// 	console.log('CREATE_GIST ->', result);
 
-		if (callback) {
-			callback(result.data);
-		}
-	});
+	// 	if (callback) {
+	// 		callback(result.data);
+	// 	}
+	// });
 }
 
 export function editGist(token, gistID, filename, contents, description, visible, callback=null) {
@@ -85,13 +85,13 @@ export function editGist(token, gistID, filename, contents, description, visible
 		}
 	};
 
-	new Octokit({ auth : token }).gists.update(payload).then((result)=> {
-		console.log('EDIT_GIST ->', result);
+	// new Octokit({ auth : token }).gists.update(payload).then((result)=> {
+	// 	console.log('EDIT_GIST ->', result);
 
-		if (callback) {
-			callback(result.data);
-		}
-	});
+	// 	if (callback) {
+	// 		callback(result.data);
+	// 	}
+	// });
 }
 
 export function isUserLoggedIn(confirmed=true) {
@@ -165,26 +165,14 @@ export function makeAvatar(name, size=32) {
 
 
 export function unzipData(data) {
-//   return (new Promise(((resolve, reject)=> {
-//     const zip = new JSZip();
-//     zip.loadAsync(data, { checkCRC32 : true }).then(({ files })=> {
-//       Object.keys(files).forEach((file)=> {
-//         zip.file(file).async('binarystring').then((data)=> {
-//           resolve (data);
-//         });
-//       });
-//     }, (e)=> (reject(e)));
-//   })));
-
-
-  return ((data) ? new Promise(((resolve, reject)=> {
-    const zip = new JSZip();
-    zip.loadAsync(data, { checkCRC32 : true }).then(({ files })=> {
-      Object.keys(files).forEach((file)=> {
-        zip.file(file).async('binarystring').then((data)=> {
-          resolve (data);
-        });
-      });
-    }, (e)=> (reject(e)));
-  })) : new Promise(((resolve)=> (resolve(null)))));
+	// const zip = new JSZip();
+  // return ((data) ? new Promise(((resolve, reject)=> {
+  //   zip.loadAsync(data, { checkCRC32 : true }).then(({ files })=> {
+  //     Object.keys(files).forEach((file)=> {
+  //       zip.file(file).async('binarystring').then((data)=> {
+  //         resolve (data);
+  //       });
+  //     });
+  //   }, (e)=> (reject(e)));
+  // })) : new Promise(((resolve)=> (resolve(null)))));
 }

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './PlaygroundAccessibility.css';
 
-import JSSoup from 'jssoup';
+// import JSSoup from 'jssoup';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 
@@ -114,8 +114,8 @@ const AccessibilityTreeBranch = (props)=> {
 	const { failed, aborted } = (component && component.accessibility) ? component.accessibility.report : {};
 
 	let ariaAttribs = [];
-	const tag = new JSSoup(component.html).nextElement;
-	ariaAttribs = Object.keys(tag.attrs).filter((key)=> (/^(aria-|role)/i.test(key))).sort().reverse().map((key)=> (`${key}="${(key !== tag.attrs[key]) ? tag.attrs[key] : ''}"`));
+	// const tag = new JSSoup(component.html).nextElement;
+	// ariaAttribs = Object.keys(tag.attrs).filter((key)=> (/^(aria-|role)/i.test(key))).sort().reverse().map((key)=> (`${key}="${(key !== tag.attrs[key]) ? tag.attrs[key] : ''}"`));
 
 	const expandable = ((((component) ? failed.length + aborted.length + ariaAttribs.length : 0) + childNodes.length) * 1 !== 0);
 	return (<BaseContentExpander
