@@ -7,13 +7,12 @@
 }
 
 .user-settings-avatar-ico {
-	opacity: 0.875;
 	transition: opacity 0.125s ease-out;
 }
 
 .user-settings-avatar-ico:hover {
+	opacity: 0.875;
 	cursor: pointer;
-	opacity: 1;
 }
 
 

@@ -54,7 +54,7 @@ class PlaygroundPage extends Component {
       const comment = reformComment(response.data.comment);
       // 			console.log('ADD_COMMENT', response.data, comment);
 
-      component.comments = [...component.comments, comment].sort((i, ii)=> (i.epoch > ii.epoch ? -1 : i.epoch < ii.epoch ? 1 : 0));
+      component.comments = [...component.comments, comment].sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)));
       const playground = { ...this.props.playground,
         components : this.props.playground.components.map((item)=> (item.id === component.id ? component : item))
       };

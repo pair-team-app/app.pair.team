@@ -55,7 +55,7 @@ export const reformComponent = (component, componentTypes=null, overwrite = {})=
     typeGroup     : componentTypes.find(({ id })=> (id === type_id)),
     sizes         : { ...sizes, o : { width, height } },
     images        : Object.keys(sizes).map((key)=> (`${image_url}_${key}.png`)),
-    comments      : comments.map((comment)=> reformComment(comment)).sort((i, j)=> ((i.epoch > j.epoch) ? -1 : (i.epoch < j.epoch) ? 1 : 0)),
+    comments      : comments.map((comment)=> reformComment(comment)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0))),
     selected      : false,
     processed     : ((html && accessibility) !== null),
     ...overwrite
