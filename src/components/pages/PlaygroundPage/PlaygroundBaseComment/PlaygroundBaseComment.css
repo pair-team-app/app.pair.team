@@ -43,12 +43,14 @@
 }
 
 .playground-base-comment-header-icon > * {
-	opacity: 0.875;
-	transition: opacity 0.125s;
+	/* opacity: 0.875; */
+	transition: filter 0.125s ease-out;
+	filter: brightness(100%);
 }
 
 .playground-base-comment-header-icon > *:hover {
-	opacity: 1.0;
+	/* opacity: 1.0; */
+	/* filter: brightness(110%); */
 }
 
 .playground-base-comment-header-link {

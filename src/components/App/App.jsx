@@ -118,7 +118,7 @@ class App extends Component {
     }
 
     // no internet
-    if (!prevState.modals.network && !modals.network && !Browsers.isOnline()) {
+    if (!modals.network && !Browsers.isOnline()) {
       this.onToggleModal(Modals.NETWORK);
     
     } else {

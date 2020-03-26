@@ -30,14 +30,13 @@ class PlaygroundContent extends Component {
         prev : null,
         curr : null,
         next : null
-      }
+      },
+      rect     : null
     };
   }
 
   componentDidMount() {
-    // console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
-    // this.calcBounds({ x : 0, y : 0, width : 0, height : 0 });
-
+    // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
     window.addEventListener('mousemove', this.handleMouseMove);
   }
 
@@ -50,30 +49,40 @@ class PlaygroundContent extends Component {
     // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
     const { component } = this.props;
-    const { bounds } = this.state;
+    const { bounds, rect } = this.state;
 
     // if (component && !bounds.init.component) {
-    if (component && bounds.init && (!bounds.curr || !bounds.curr.component)) {
+    // if (component && bounds.init && (!bounds.curr || !bounds.curr.component)) { ///<<--
     // if (component && (!prevProps.component || !bounds.init.component)) {
-      const { x, y } = bounds.init.container.position;
-      const { width, height } = bounds.init.container.size;
 
-      this.calcBounds(new DOMRect(x, y, width, height));
+    if (prevProps.component && !component) {
+      this.setState({ 
+        bounds : {
+          init : null,
+          curr : null,
+          prev : null,
+          next : null
+        }
+      });
+    }
+
+    if (!bounds.init && rect) {
+      this.calcBounds(rect);
     }
   }
 
   calcBounds = (rect)=> {
-    // console.log('%s.calcBounds()', this.constructor.name, { rect });
+    console.log('%s.calcBounds()', this.constructor.name, { rect, component : this.props.component });
 
     const { component } = this.props;
-
     if (!component) {
       return;
     }
+
     
-    const { x, y, width, height } = rect;
     let { bounds } = this.state;
-    let { init, prev, curr } = this.state.bounds;
+    let { init, curr } = bounds;
+    const { x, y, width, height } = rect;
 
     // const scale = {
     //   width  : (component) ? component.meta.bounds.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN) : 1,
@@ -81,10 +90,53 @@ class PlaygroundContent extends Component {
     // };
 
     const scale = {
-      width  : (component) ? Math.max(1, component.sizes.c.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)) : 1,
-      height : (component) ? Math.max(1, component.sizes.c.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN)) : 1
+      // width  : (component) ? Math.max(1, component.sizes.c.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)) : 1,
+      // height : (component) ? Math.max(1, component.sizes.c.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN)) : 1
+
+      width  : Math.max(1, component.sizes.c.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)),
+      height : Math.max(1, component.sizes.c.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN))
     };
 
+    const size = { 
+      width  : (width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN,
+      height : (height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN
+    };
+
+    if (!init) {
+      init = {
+        container : { scale, 
+          position : { x, y }, 
+          size     : { width, height } 
+        },
+        component : { scale, size,
+          position : {
+            x : 0,
+            y : 0
+          }
+        }
+      };
+
+      curr = { ...init };
+    
+    } else {
+      curr = {
+        container : { scale, 
+          position : { x, y }, 
+          size     : { width, height }
+        },
+        component : { scale, size,
+          position : { ...curr.component.position }
+        }
+      };
+    }
+
+    bounds = { ...bounds, init, curr,
+      prev : { ...bounds.prev, ...bounds.curr },
+      next : { ...bounds.curr, ...curr }
+    };
+
+
+/*
     // nothing stored yet
     init = (init || {
       container : { scale, 
@@ -124,7 +176,9 @@ class PlaygroundContent extends Component {
     // const scale = (init.component)
 
     // console.log('%s.calcBounds() --SET STATE', this.constructor.name, { component, rect, bounds, init : { ...init }, prev : { ...bounds.prev, ...bounds.curr }, curr : { ...curr }, next : { ...bounds.next, ...next } });
+*/
 
+/*
     bounds = { ...bounds, curr, init,
       // init : { ...init, 
       //   component : (init && component && !init.component) ? { ...init.component, ...curr.component } : (curr.component || init.component)
@@ -132,13 +186,13 @@ class PlaygroundContent extends Component {
       prev : { ...prev, ...bounds.curr },
       next : { ...bounds.curr, ...curr }
     };
-
+*/
     this.setState({ bounds });
   };
 
 
   handleComponentPopoverClose = ()=> {
-    console.log('%s.handleComponentPopoverClose()', this.constructor.name);
+    // console.log('%s.handleComponentPopoverClose()', this.constructor.name);
 
     this.setState({ popover : false }, ()=> {
       this.props.onPopoverClose();
@@ -146,7 +200,7 @@ class PlaygroundContent extends Component {
   };
 
   handleContentClick = (event, component)=> {
-    	console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target }, { clientX : event.clientX, clientY : event.clientY }, component);
+    	// console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target }, { clientX : event.clientX, clientY : event.clientY }, component);
     //  console.log('%s.handleContentClick()', this.constructor.name, component);
 
     const { cursor } = this.props;
@@ -156,7 +210,7 @@ class PlaygroundContent extends Component {
         y : (event.clientY - event.target.getBoundingClientRect().y)
       };
 
-      console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target }, { clientX : event.clientX, clientY : event.clientY, position });
+      // console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target }, { clientX : event.clientX, clientY : event.clientY, position });
 
       this.setState({ position, 
         popover : true 
@@ -194,29 +248,29 @@ class PlaygroundContent extends Component {
 
     return (
       <div className="playground-content" data-component={!(!component << 0)} data-cursor={cursor}>
-        <ResizeObserver onResize={this.calcBounds} onPosition={this.calcBounds} onReflow={this.calcBounds} />
-        {(components.length > 0) && (<div className="playground-content-components-wrapper" data-component={component !== null}>
-            {(!component || bounds.curr === null || bounds.curr.component === null) 
-              ? (<PlaygroundComponentsGrid components={components} onItemClick={this.handleContentClick}/>) 
-              : (<PlaygroundComponent
-                  profile={profile}
-                  popover={popover}
-                  position={position}
-                  bounds={bounds.curr.component}
-                  maxBounds={bounds.curr.container}
-                  scale={bounds.curr.component.scale}
-                  cursor={cursor}
-                  typeGroup={typeGroup}
-                  component={component}
-                  onResize={this.handleComponentResize}
-                  onAddComment={this.props.onAddComment}
-                  onCloseComment={this.handleComponentPopoverClose}
-                  onDeleteComment={this.props.onDeleteComment}
-                  onItemClick={this.handleContentClick}
-                  onMarkerClick={this.props.onMarkerClick}
-                />)}
-          </div>
-        )}
+        <ResizeObserver onResize={this.calcBounds} onPosition={this.calcBounds} onReflow={this.calcBounds} ref={(el)=> { (el && !this.state.rect) && this.setState({ rect : el._lastRect })}} />
+          {(!component || bounds.curr === null || bounds.curr.component === null) 
+            ? (<PlaygroundComponentsGrid 
+                components={components} 
+                onItemClick={this.handleContentClick} 
+              />) 
+            : (<PlaygroundComponent
+                profile={profile}
+                popover={popover}
+                position={position}
+                bounds={bounds.curr.component}
+                maxBounds={bounds.curr.container}
+                scale={bounds.curr.component.scale}
+                cursor={cursor}
+                typeGroup={typeGroup}
+                component={component}
+                onResize={this.handleComponentResize}
+                onAddComment={this.props.onAddComment}
+                onCloseComment={this.handleComponentPopoverClose}
+                onDeleteComment={this.props.onDeleteComment}
+                onItemClick={this.handleContentClick}
+                onMarkerClick={this.props.onMarkerClick}
+              />)}
         {(cursor) && (<CommentPinCursor position={mouse.position} />)}
         {(component && bounds.curr && bounds.curr.component) && (<ComponentMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)}
       </div>

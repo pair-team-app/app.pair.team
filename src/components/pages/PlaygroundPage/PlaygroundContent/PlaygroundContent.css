@@ -18,9 +18,9 @@
 	align-items: center;
 }
 
-.playground-content[data-component="false"] .playground-content-components-wrapper {
-	width: 100%;
-}
+/* .playground-content[data-component="false"] .playground-content-components-wrapper {
+	width: 100%; */
+/* } */
 
 /* .playground-content[data-component="true"] .playground-content-components-wrapper {
 	margin: auto;

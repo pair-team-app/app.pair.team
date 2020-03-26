@@ -120,12 +120,11 @@ export function makeAvatar(name, size=32) {
     '#1abc9c',
     '#2ecc71',
     '#3498db',
-    '#9b59b6',
     '#34495e',
     '#16a085',
     '#27ae60',
     '#2980b9',
-    '#8e44ad',
+    '#7e44ad',
     '#2c3e50',
     '#f1c40f',
     '#e67e22',
@@ -152,10 +151,9 @@ export function makeAvatar(name, size=32) {
   context.fillStyle = bgColor;
   context.fillRect(0, 0, size, size);
 
-  context.font = `${(size * 0.5) << 0}px Monaco, monospace`;
+  context.font = `${Math.max(10, Math.ceil(size * 0.5))}px Monaco, Consolas, monospace`;
   context.textAlign = 'center';
   context.textBaseline = 'middle';
-  // context.fillStyle = `#${(0xffffff ^ parseInt(bgColor.replace('#', ''), 16)).toString(16)}`;
   context.fillStyle = `#${'000000'.substr(0, 6 - fgColor.length)}${fgColor}`;
   context.fillText(letter, size * 0.5, size * 0.5);
 

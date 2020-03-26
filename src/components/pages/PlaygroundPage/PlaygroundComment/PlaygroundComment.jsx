@@ -33,7 +33,9 @@ class PlaygroundComment extends Component {
 
     //  console.log('%s.componentDidMount()', this.constructor.name, { position : comment });
     if (position) {
-      this.setState({ position });
+      this.setState({ position : { ...this.state.position, ...position }}, ()=> {
+        console.log('%s.componentDidMount()', this.constructor.name, { position : this.state.position });
+      });
       // this.setState({ 
 		// position: Maths.geom.pointsAdd(position || { x : 0, y : 0 }, this.state.position),
       // });
@@ -235,6 +237,7 @@ const PlaygroundCommentMarker = (props)=> {
   );
 };
 
+
 const PlaygroundCommentPopover = (props)=> {
   // 	console.log('PlaygroundCommentPopover()', props);
 
@@ -247,27 +250,19 @@ const PlaygroundCommentPopover = (props)=> {
     }
   };
 
-  return (
-    <BasePopover
-      outro={outro}
-      payload={payload}
-      onOutroComplete={()=> props.onClose(comment)}
-    >
-      <div className="playground-comment-popover">
-        <PlaygroundBaseComment
-          ind={ind}
-          comment={comment}
-          onDelete={props.onDelete}
-        />
-      </div>
-    </BasePopover>
-  );
+  return (<BasePopover outro={outro} payload={payload} onOutroComplete={()=> props.onClose(comment)}>
+    <div className="playground-comment-popover">
+      <PlaygroundBaseComment ind={ind} comment={comment} onDelete={props.onDelete} />
+    </div>
+  </BasePopover>);
 };
+
 
 const mapStateToProps = (state, ownProps)=> {
   return {
-    activeComment: state.comment
+    activeComment : state.comment
   };
 };
+
 
 export default connect(mapStateToProps)(PlaygroundComment);
