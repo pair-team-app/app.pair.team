@@ -6,8 +6,8 @@
 
 .playground-comment-marker {
 	position: relative;
-	top: -10px;
-	left: -10px;
+	top: -9px;
+	left: -9px;
 }
 
 .playground-comment-marker[data-id="0"] {
@@ -30,6 +30,7 @@
 	font-weight: var(--orthodox-font-weight);
 	text-align: center;
 	background-color: rgba(var(--comment-marker-bg-color), 0.33);
+	transition: width 125ms cubic-bezier(0.4, 0, 0.2, 1), height 125ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .playground-comment-marker-content {
@@ -37,12 +38,13 @@
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	width: 90%;
-	height: 90%;
 	clip-path: circle(8px at center);
 }
 
 .playground-comment-marker-pin {
+	position: relative;
+	top: -25px;
+	left: -9px;
 	color: rgba(var(--site-hilite-color), 1.0);
 	font-size: 20px;
 }
@@ -75,7 +77,7 @@
 }
 
 .playground-comment-add-popover .button-wrapper > *:first-child {
-	/*margin-right: var(--orthodox-margin-half);*/
+	/* margin-right: var(--orthodox-margin-half); */
 }
 
 .playground-comment-add-popover .button-wrapper > *:last-child {

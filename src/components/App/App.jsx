@@ -63,7 +63,7 @@ class App extends Component {
       this.onToggleModal(Modals.LOGIN);
     }
 
-    window.addEventListener('mousemove', this.handleMouseMove);
+    // window.addEventListener('mousemove', this.handleMouseMove);
     window.onpopstate = (event)=> {
       event.preventDefault();
       // 			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
@@ -201,7 +201,7 @@ class App extends Component {
     this.githubWindow = null;
 
     window.onpopstate = null;
-    window.removeEventListener('mousemove', this.handleMouseMove);
+    // window.removeEventListener('mousemove', this.handleMouseMove);
   }
 
   handleCookies = ()=> {

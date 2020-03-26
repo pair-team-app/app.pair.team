@@ -84,7 +84,7 @@ class ComponentMenu extends Component {
   };
 
 	handleShowMenu = (event)=> {
- 		console.log('%s.handleShowMenu()', this.constructor.name, this.props, event, { position : { x : ((event.detail.position.x - event.detail.data.target.getBoundingClientRect().x) - 10) << 0, y : ((event.detail.position.y - event.detail.data.target.getBoundingClientRect().y) - 8) << 0 }, target : event.detail.data.target.getBoundingClientRect() });
+ 		// console.log('%s.handleShowMenu()', this.constructor.name, this.props, event, { position : { x : ((event.detail.position.x - event.detail.data.target.getBoundingClientRect().x) - 10) << 0, y : ((event.detail.position.y - event.detail.data.target.getBoundingClientRect().y) - 8) << 0 }, target : event.detail.data.target.getBoundingClientRect() });
 
 		event.preventDefault();
 		event.stopPropagation();
@@ -92,7 +92,7 @@ class ComponentMenu extends Component {
 		const { component, scale } = this.props;
 		const position = {
 			x : (event.detail.position.x - event.detail.data.target.getBoundingClientRect().x) * scale,
-			y : (event.detail.position.y - event.detail.data.target.getBoundingClientRect().y) * scale
+			y : (event.detail.position.y - event.detail.data.target.getBoundingClientRect().y - 1) * scale
 		};
 
 		this.setState({ position,

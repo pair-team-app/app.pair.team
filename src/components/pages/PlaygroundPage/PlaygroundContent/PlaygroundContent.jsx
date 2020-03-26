@@ -10,6 +10,7 @@ import { componentsFromTypeGroup } from '../utils/lookup';
 import { reformComment } from '../utils/reform';
 import ComponentMenu from './ComponentMenu';
 import './PlaygroundContent.css';
+import { updateMouseCoords } from '../../../../redux/actions';
 
 const SCALE_CONSTRAIN = 1.0;
 const CONTAINER_PADDING = {
@@ -36,6 +37,13 @@ class PlaygroundContent extends Component {
   componentDidMount() {
     // console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
     // this.calcBounds({ x : 0, y : 0, width : 0, height : 0 });
+
+    window.addEventListener('mousemove', this.handleMouseMove);
+  }
+
+  componentWillUnmount() {
+    // 		console.log('%s.componentWillUnmount()', this.constructor.name);
+    window.removeEventListener('mousemove', this.handleMouseMove);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -44,7 +52,9 @@ class PlaygroundContent extends Component {
     const { component } = this.props;
     const { bounds } = this.state;
 
-    if (component && !bounds.init.component) {
+    // if (component && !bounds.init.component) {
+    if (component && (!bounds.curr || !bounds.curr.component)) {
+    // if (component && (!prevProps.component || !bounds.init.component)) {
       const { x, y } = bounds.init.container.position;
       const { width, height } = bounds.init.container.size;
 
@@ -56,6 +66,10 @@ class PlaygroundContent extends Component {
     // console.log('%s.calcBounds()', this.constructor.name, { rect });
 
     const { component } = this.props;
+
+    if (!component) {
+      return;
+    }
     
     const { x, y, width, height } = rect;
     let { bounds } = this.state;
@@ -104,17 +118,17 @@ class PlaygroundContent extends Component {
           width  : (width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN,
           height : (height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN
         }
-      }: init.component
+      } : (prev.component || init.component)
     };
 
     // const scale = (init.component)
 
     // console.log('%s.calcBounds() --SET STATE', this.constructor.name, { component, rect, bounds, init : { ...init }, prev : { ...bounds.prev, ...bounds.curr }, curr : { ...curr }, next : { ...bounds.next, ...next } });
 
-    bounds = { ...bounds, curr,
-      init : { ...init, 
-        component : (init && component && !init.component) ? { ...init.component, ...curr.component } : init.component
-      },
+    bounds = { ...bounds, curr, init,
+      // init : { ...init, 
+      //   component : (init && component && !init.component) ? { ...init.component, ...curr.component } : (curr.component || init.component)
+      // },
       prev : { ...prev, ...bounds.curr },
       next : { ...bounds.curr, ...curr }
     };
@@ -122,9 +136,6 @@ class PlaygroundContent extends Component {
     this.setState({ bounds });
   };
 
-
-
-  
 
   handleComponentPopoverClose = ()=> {
     console.log('%s.handleComponentPopoverClose()', this.constructor.name);
@@ -141,8 +152,8 @@ class PlaygroundContent extends Component {
     const { cursor } = this.props;
     if (cursor) {
       const position = {
-        x : (event.clientX - event.target.getBoundingClientRect().x) - 9,
-        y : (event.clientY - event.target.getBoundingClientRect().y) - 25
+        x : (event.clientX - event.target.getBoundingClientRect().x),
+        y : (event.clientY - event.target.getBoundingClientRect().y)
       };
 
       console.log('%s.handleContentClick()', this.constructor.name, { boundingRect : event.target }, { clientX : event.clientX, clientY : event.clientY, position });
@@ -156,6 +167,19 @@ class PlaygroundContent extends Component {
 
     if (!this.props.component) {
       this.props.onComponentClick({ component });
+    }
+  };
+
+
+  handleMouseMove = (event)=> {
+    // 		console.log('%s.handleMouseMove()', this.constructor.name, this.constructor.name, { x : event.pageX, y : event.pageY });
+
+    const { component, cursor } = this.props;
+    if (component && cursor) {
+      this.props.updateMouseCoords({
+        x : event.pageX,
+        y : event.pageY
+      });
     }
   };
 
@@ -343,7 +367,14 @@ const mapStateToProps = (state, ownProps)=> {
   };
 };
 
-export default connect(mapStateToProps)(PlaygroundContent);
+
+const mapDispatchToProps = (dispatch)=> {
+  return {
+    updateMouseCoords : (payload)=> dispatch(updateMouseCoords(payload))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PlaygroundContent);
 
 /*
 // Object.fromEntries()

@@ -155,14 +155,15 @@ export function fetchPlaygroundComponentGroup(payload=null) {
 
 export function fetchTeamBuilds(payload=null) {
   return (dispatch, getState)=> {
-    const { team } = payload;
+    const { team, buildID, deviceSlug } = payload;
 
     logFormat('fetchTeamBuilds()', getState(), payload);
     axios.post(API_ENDPT_URL, {
       action  : 'TEAM_BUILDS',
       payload : {
-        team_id   : team.id,
-        device_id : 0
+        team_id  : team.id,
+        build_id : buildID,
+        device   : deviceSlug
       }
     }).then((response)=> {
       console.log('TEAM_BUILDS', response.data);

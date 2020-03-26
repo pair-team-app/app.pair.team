@@ -61,8 +61,8 @@ class PlaygroundComment extends Component {
 
     const { scale } = this.props;
     const position = {
-      x : (this.state.position.x + 9) * Math.max(scale.width, scale.height),
-      y : (this.state.position.y + 20) * Math.max(scale.width, scale.height)
+      x : (this.state.position.x * Math.max(scale.width, scale.height)) - 2,
+      y : (this.state.position.y * Math.max(scale.width, scale.height)) - 5
     };
 
     this.setState({ position,
@@ -117,7 +117,9 @@ class PlaygroundComment extends Component {
 
     const { comment } = this.state;
     this.setState({
-      comment: { ...comment, content: event.target.value }
+      comment : { ...comment, 
+        content : event.target.value 
+      }
     });
   };
 
@@ -190,14 +192,14 @@ class PlaygroundComment extends Component {
 }
 
 const PlaygroundCommentAddPopover = (props)=> {
-  // 	console.log('PlaygroundCommentAddPopover()', props);
+  	console.log('PlaygroundCommentAddPopover()', props);
 
   const { comment, outro } = props;
   const payload = {
     fixed    : false,
     position : {
-      x : 0,
-      y : 20
+      x : -3,
+      y : -3
     }
   };
 
@@ -209,8 +211,8 @@ const PlaygroundCommentAddPopover = (props)=> {
         </div>
       </div>
       <form>
-        <textarea placeholder="Enter Comment" onChange={props.onTextChange} autoFocus></textarea>
-        <div className="button-wrapper-row">
+        <textarea placeholder="Enter Comment" onChange={props.onTextChange} autoFocus>{comment.content}</textarea>
+        <div className="button-wrapper">
           <button className="quiet-button" onClick={(event)=> props.onOutro(event)}>Cancel</button>
           <button type="submit" disabled={!comment.content || comment.content.length === 0} onClick={props.onSubmit}>Submit</button>
         </div>
@@ -226,7 +228,9 @@ const PlaygroundCommentMarker = (props)=> {
   return (<div className="playground-comment-marker" onClick={(event)=> props.onClick(event, comment)} data-id={comment.id}>
     {(comment.id === 0) 
       ? (<div className="playground-comment-marker-pin"><FontAwesome name="map-marker-alt" /></div>) 
-      : (<div className="playground-comment-marker-content-wrapper"><div className="playground-comment-marker-content">{ind}</div></div>)}
+      : (<div className="playground-comment-marker-content-wrapper">
+          <div className="playground-comment-marker-content">{ind}</div>
+        </div>)}
   </div>
   );
 };
@@ -238,8 +242,8 @@ const PlaygroundCommentPopover = (props)=> {
   const payload = {
     fixed    : false,
     position : {
-      x : 0,
-      y : 0
+      x : 1,
+      y : 1
     }
   };
 

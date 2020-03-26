@@ -120,7 +120,7 @@
 	position: relative;
 	width: var(--orthodox-ico-size);
 	height: var(--orthodox-ico-size);
-	padding: 3px;
+	padding-top: 3px;
 	border: 1px solid rgba(var(--site-fg-color), 1.0);
 	border-radius: 50%;
 	font-size: 12px;
@@ -132,10 +132,13 @@
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	width: 100%;
-	height: 100%;
 	clip-path: circle(8px at center);
 	transition: opacity 0.125s ease-out;
+}
+
+.avatar-wrapper > img {
+	width: 100%;
+	height: 100%;
 }
 
 

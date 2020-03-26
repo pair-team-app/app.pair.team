@@ -41,7 +41,13 @@ class BasePopover extends Component {
  		// console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state, { ...this.state, ...this.props});
 
 		const { intro, outro } = { ...this.state, ...this.props };
-		const { fixed = this.state.fixed, duration = this.state.duration, position = this.state.position, offset = this.state.offset, size = this.state.size } = (this.props.payload) ? Object.assign({}, this.state, this.props.payload) : this.state;
+		const { 
+			fixed = this.state.fixed, 
+			duration = this.state.duration, 
+			position = this.state.position, 
+			offset = this.state.offset, 
+			size = this.state.size 
+		} = (this.props.payload) ? Object.assign({}, this.state, this.props.payload) : this.state;
 
 		this.timeline = new TimelineMax();
 		this.setState({ fixed, duration, position, offset, size, intro, outro }, ()=> {
@@ -157,7 +163,7 @@ class BasePopover extends Component {
 	};
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, { props : this.props.payload, state : this.state.position });
+		// console.log('%s.render()', this.constructor.name, { props : this.props, payload : this.props.payload, state : this.state.position });
 		// console.log('%s.render()', this.constructor.name, this.props, this.state);
 // 		if (this.wrapper && this.timeline && this.timeline.time === 0) {
 // 			this.timeline.seek(0);
