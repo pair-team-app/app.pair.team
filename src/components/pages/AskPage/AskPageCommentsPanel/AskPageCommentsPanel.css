@@ -1,8 +1,7 @@
 
 .ask-page-comments-panel {
 	width: 100%;
-	overflow-y: auto;
-	flex: 1 1 0;
+	/* flex: 1 1 0; */
 }
 
 .ask-page-comments-panel[data-loading="true"] .comments-panel-item {
