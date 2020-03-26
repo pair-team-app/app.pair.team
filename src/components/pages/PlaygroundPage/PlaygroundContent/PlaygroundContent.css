@@ -14,17 +14,9 @@
 	cursor: none;
 }
 
-.playground-content[data-component="true"] {
+.playground-page[data-component="true"] .playground-content {
 	align-items: center;
 }
-
-/* .playground-content[data-component="false"] .playground-content-components-wrapper {
-	width: 100%; */
-/* } */
-
-/* .playground-content[data-component="true"] .playground-content-components-wrapper {
-	margin: auto;
-} */
 
 .comment-pin-cursor {
 	position: fixed;
@@ -62,7 +54,7 @@
 	/* object-fit: none; */
 }
 
-.playground-content[data-component="true"] .playground-component h5 {
+.playground-page[data-component="true"] .playground-component h5 {
 	margin-bottom: 0;
 	padding-bottom: var(--orthodox-margin-base);
 	text-align: left;

@@ -258,7 +258,7 @@ class PlaygroundPage extends Component {
           onLogout={this.props.onLogout} />
       </div>)}
 
-      {(profile && playground) && (<div className="playground-page-content-wrapper" data-component={component !== null}>
+      {(profile && playground) && (<div className="playground-page-content-wrapper">
         <PlaygroundContent
           cursor={cursor}
           onComponentClick={this.handleComponentClick}

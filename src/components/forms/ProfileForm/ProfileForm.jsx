@@ -116,26 +116,16 @@ class ProfileForm extends Component {
 					{(validated)
 						? (<div className="form-acc-wrapper">
 								<input type="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" required />
-              	<div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div>
+              	{/* <div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div> */}
 						</div>)
 						: (<div className="form-acc-wrapper">
 								<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" />
-              	<div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div>
+              	{/* <div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div> */}
 						</div>)
-					}
-					{(team.type === 'free')
-						? (<div className="form-acc-wrapper">
-								<input disabled={true} type="text" className="profile-form-team-txt" value={Strings.capitalize(team.type)} readOnly={true} />
-              	<div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div>
-						</div>)
-						: (<div className="form-acc-wrapper">
-								<input type="text" className="profile-form-team-txt" value={Strings.capitalize(team.type)} readOnly={true} />
-								<div className="form-accessory" onClick={this.props.onDowngradePlan}>Downgrade</div>
-							</div>)
 					}
           <div className="form-acc-wrapper">
 						<input type="password" placeholder="Enter Password" value={password} onChange={this.handlePasswordChange} onClick={this.handlePasswordClick} autoComplete="new-password" />
-            <div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div>
+            {/* <div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div> */}
 					</div>
 
 					<div className="button-wrapper-col stripe-form-button-wrapper">

@@ -120,7 +120,7 @@ class ProfileModal extends Component {
               });
 
               this.setState({ updated: true }, ()=> {
-                this.props.fetchTeamLookup({ userID: profile.id });
+                this.props.fetchTeamLookup({ userProfile : profile });
               });
             }
           });
@@ -132,18 +132,13 @@ class ProfileModal extends Component {
   handleResetPassword = ()=> {
     console.log('%s.handleResetPassword()', this.constructor.name);
     this.setState({
-      outro: true,
-      outroURI: `/modal${Modals.RECOVER}`
+      outro    : true,
+      outroURI : `/modal${Modals.RECOVER}`
     });
   };
 
   handleSubmit = ({ id, username, email, password })=> {
-    console.log('%s.handleSubmit()', this.constructor.name, {
-      id,
-      username,
-      email,
-      password
-    });
+    console.log('%s.handleSubmit()', this.constructor.name, { id, username, email, password });
 
     trackEvent('button', 'update-profile');
     this.props.updateUserProfile({ id, username, email, password });

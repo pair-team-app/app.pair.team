@@ -247,7 +247,7 @@ class PlaygroundContent extends Component {
     const components = (typeGroup) ? (component) ? [component] : componentsFromTypeGroup(playground.components, typeGroup) : [];
 
     return (
-      <div className="playground-content" data-component={!(!component << 0)} data-cursor={cursor}>
+      <div className="playground-content" data-cursor={cursor}>
         <ResizeObserver onResize={this.calcBounds} onPosition={this.calcBounds} onReflow={this.calcBounds} ref={(el)=> { (el && !this.state.rect) && this.setState({ rect : el._lastRect })}} />
           {(!component || bounds.curr === null || bounds.curr.component === null) 
             ? (<PlaygroundComponentsGrid 

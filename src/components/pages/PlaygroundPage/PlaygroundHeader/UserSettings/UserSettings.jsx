@@ -7,7 +7,7 @@ import { NavLink } from 'react-router-dom';
 
 import { SettingsMenuItemTypes } from '.';
 import BasePopover from '../../../../overlays/BasePopover';
-import { USER_DEFAULT_AVATAR, GITHUB_DOCS, Modals } from '../../../../../consts/uris';
+import { USER_DEFAULT_AVATAR, GITHUB_DOCS, NPM_DE_PLAYGROUND, Modals } from '../../../../../consts/uris';
 import { trackOutbound } from '../../../../../utils/tracking';
 
 
@@ -36,7 +36,7 @@ class UserSettings extends Component {
       if (itemType === SettingsMenuItemTypes.LOGOUT) {
         this.props.onLogout(null, Modals.LOGIN);
 
-      } else if (itemType !== SettingsMenuItemTypes) {
+      } else if (itemType !== SettingsMenuItemTypes.DOCS && itemType !== SettingsMenuItemTypes.INSTALL) {
         this.props.onMenuItem(itemType);
       }
 		});
@@ -51,6 +51,9 @@ class UserSettings extends Component {
 		}, ()=> {
 			if (itemType === SettingsMenuItemTypes.DOCS) {
 				trackOutbound(GITHUB_DOCS);
+			
+			} else if (itemType === SettingsMenuItemTypes.INSTALL) {
+				trackOutbound(NPM_DE_PLAYGROUND);
 			}
 		});
 	};
@@ -100,10 +103,10 @@ const UserSettingsPopover = (props)=> {
 
 	return (<BasePopover outro={outro} payload={payload} onOutroComplete={props.onComplete}>
 		<div className="user-settings-popover">
-			<div className="user-settings-popover-item" onClick={()=> props.onItemClick(SettingsMenuItemTypes.PROFILE)}>Profile</div>
-			<div className="user-settings-popover-item" onClick={()=> props.onItemClick(SettingsMenuItemTypes.INSTALL)}>Install</div>
-			<div className="user-settings-popover-item"><NavLink to={GITHUB_DOCS} target="_blank" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.SUPPORT, event)}>Support</NavLink></div>
-			<div className="user-settings-popover-item" onClick={()=> props.onItemClick(SettingsMenuItemTypes.LOGOUT)}>Logout</div>
+			<div className="user-settings-popover-item" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.PROFILE, event)}>Profile</div>
+			<div className="user-settings-popover-item"><NavLink to={NPM_DE_PLAYGROUND} target="_blank" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.INSTALL, event)}>Install</NavLink></div>
+			<div className="user-settings-popover-item"><NavLink to={GITHUB_DOCS} target="_blank" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.DOCS, event)}>Support</NavLink></div>
+			<div className="user-settings-popover-item" onClick={(event)=> props.onItemClick(SettingsMenuItemTypes.LOGOUT, event)}>Logout</div>
 		</div>
 	</BasePopover>);
 };
