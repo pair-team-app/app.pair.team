@@ -53,7 +53,7 @@ class PlaygroundContent extends Component {
     const { bounds } = this.state;
 
     // if (component && !bounds.init.component) {
-    if (component && (!bounds.curr || !bounds.curr.component)) {
+    if (component && bounds.init && (!bounds.curr || !bounds.curr.component)) {
     // if (component && (!prevProps.component || !bounds.init.component)) {
       const { x, y } = bounds.init.container.position;
       const { width, height } = bounds.init.container.size;
