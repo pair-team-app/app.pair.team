@@ -5,7 +5,7 @@ import './ProfileForm.css';
 
 import { Bits, Strings } from 'lang-js-utils';
 import { trackEvent } from '../../../utils/tracking';
-
+import { makeAvatar } from '../../../utils/funcs';
 
 class ProfileForm extends Component {
 	constructor(props) {
@@ -75,6 +75,7 @@ class ProfileForm extends Component {
 // 		console.log('%s.handleSubmit()', this.constructor.name, event, this.state);
 		event.preventDefault();
 
+		const { profile } = this.props;
 		const { email, password, changed } = this.state;
 		if (changed) {
 			trackEvent('button', 'profile-update');
@@ -91,8 +92,10 @@ class ProfileForm extends Component {
 				validated     : true
 			}, ()=> {
 				if (emailValid && passwordValid) {
-					const { id, username } = this.props.profile;
-					this.props.onSubmit({ id, username, email, password });
+					const { id } = profile;
+					const avatar = (!Strings.compare(Strings.firstChar(email), Strings.firstChar(profile.email), false)) ? makeAvatar(email) : profile.avatar;
+					
+					this.props.onSubmit({ id, email, password, avatar, username : email });
 				}
 			});
 		}
@@ -115,16 +118,16 @@ class ProfileForm extends Component {
 
 					{(validated)
 						? (<div className="form-acc-wrapper">
-								<input type="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" required />
+								<input type="email" placeholder="Change Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" required />
               	{/* <div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div> */}
 						</div>)
 						: (<div className="form-acc-wrapper">
-								<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" />
+								<input type="text" placeholder="Change Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={this.handleEmailChange} autoComplete="new-password" />
               	{/* <div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div> */}
 						</div>)
 					}
           <div className="form-acc-wrapper">
-						<input type="password" placeholder="Enter Password" value={password} onChange={this.handlePasswordChange} onClick={this.handlePasswordClick} autoComplete="new-password" />
+						<input type="password" placeholder="Change Password" value={password} onChange={this.handlePasswordChange} onClick={this.handlePasswordClick} autoComplete="new-password" />
             {/* <div className="form-accessory" onClick={this.props.onDowngradePlan}>Change</div> */}
 					</div>
 

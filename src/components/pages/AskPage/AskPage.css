@@ -1,8 +1,6 @@
 
 .ask-page {
 	margin: 0;
-	/* padding: 0; */
-	/* width: 100vw; */
 	height: 100vh;
 	/*border-style: dashed;*/
 	/*border-width: 1px;*/
@@ -17,18 +15,10 @@
 	width: calc(60vw - 208px);
 	height: calc(100vh - 58px);
 	overflow-y: auto;
-	/* display: flex; */
-	/* flex-flow: column wrap; */
 	padding: 0 var(--orthodox-padding-base);
 	background-color: rgba(var(--site-bg-color), 1.0);
 	transition: background-color 250ms cubic-bezier(0.5, 0.9, 0.1, 1.0);
 }
-
-/* .ask-page-content-wrapper > * { */
-	/* border-style: dashed;
-	border-color: var(--matty-mana);
-	border-width: 1px; */
-/* } */
 
 .ask-page-content-wrapper[data-loading="true"] {
 	background-color: rgba(var(--site-bg-color), 1.0);

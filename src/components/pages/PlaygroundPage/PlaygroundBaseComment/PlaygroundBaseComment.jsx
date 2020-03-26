@@ -18,7 +18,7 @@ function PlaygroundBaseComment(props) {
 		<div className="playground-base-comment-header-wrapper">
 			<div className="playground-base-comment-header-icon-wrapper">
 				{(type !== 'init' && ind >= 0) && (<div className="playground-base-comment-header-icon avatar-wrapper"><div>{ind}</div></div>)}
-				<div className="playground-base-comment-header-icon avatar-wrapper"><img src={(!author.avatar) ? USER_DEFAULT_AVATAR : author.avatar} alt={author.username} /></div>
+				<div className="playground-base-comment-header-icon avatar-wrapper"><img src={(!author.avatar) ? USER_DEFAULT_AVATAR : author.avatar} alt={author.username} data-id={author.id} /></div>
 			</div>
 			<div className="playground-base-comment-header-spacer" />
 			<div className="playground-base-comment-header-link-wrapper">

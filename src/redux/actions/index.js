@@ -12,7 +12,7 @@ import { jsonFormatKB } from '../../consts/formats';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
 
-const logFormat = (action, state, payload = null, meta = '')=> {
+const logFormat = (action, state, payload=null, meta='')=> {
   console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, { payload : payload || {}, meta, state });
 };
 
@@ -324,7 +324,7 @@ export function setRedirectURI(payload) {
   return { redrectURL, type : SET_REDIRECT_URI };
 }
 
-export function toggleTheme(payload = null) {
+export function toggleTheme(payload=null) {
   logFormat('toggleTheme()', null, payload);
   const theme = payload;
   return { theme, type : TOGGLE_THEME };
@@ -341,8 +341,8 @@ export function updateMouseCoords(payload) {
   return { payload : position, type : UPDATE_MOUSE_COORDS };
 }
 
-export function updateUserProfile(payload, force = true) {
-  logFormat('updateUserProfile()', payload, force);
+export function updateUserProfile(payload, force=true) {
+  logFormat('updateUserProfile()', null, payload, force);
 
   // const { userProfile } = payload;
 
@@ -374,12 +374,12 @@ export function updateUserProfile(payload, force = true) {
 
   return (dispatch)=> {
     if (payload) {
-      const { id } = payload;
+      const { id, avatar } = payload;
       axios.post(API_ENDPT_URL, {
         action  : 'UPDATE_USER_PROFILE',
         payload : { ...payload,
-          user_id : id
-// 					filename : avatar
+          user_id  : id,
+					filename : avatar
         }
       }).then((response)=> {
         console.log('UPDATE_USER_PROFILE', response.data);

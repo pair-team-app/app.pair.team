@@ -137,11 +137,11 @@ class ProfileModal extends Component {
     });
   };
 
-  handleSubmit = ({ id, username, email, password })=> {
-    console.log('%s.handleSubmit()', this.constructor.name, { id, username, email, password });
+  handleSubmit = ({ id, username, email, password, avatar })=> {
+    console.log('%s.handleSubmit()', this.constructor.name, { id, username, email, password, avatar });
 
     trackEvent('button', 'update-profile');
-    this.props.updateUserProfile({ id, username, email, password });
+    this.props.updateUserProfile({ id, username : email, email, password, avatar });
   };
 
   render() {
