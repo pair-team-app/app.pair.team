@@ -279,7 +279,7 @@ class PlaygroundPage extends Component {
           onToggleCursor={this.handleToggleCommentCursor}
           onToggleDevices={this.handleToggleDevices} />
             
-        {(accessibility) && (<AccessibilityPopover onClose={this.handleToggleAccessibility} />)}
+        {(component && accessibility) && (<AccessibilityPopover onClose={this.handleToggleAccessibility} />)}
         {(devices) && (<DevicesPopover deviceIDs={((playgrounds && playground) ? playgrounds.filter(({ buildID })=> (buildID === playground.buildID)).map(({ deviceID })=> (deviceID)) : [])} onDeviceClick={this.handleDeviceClick} onClose={this.handleToggleDevices} />)}
       </div>)}
         

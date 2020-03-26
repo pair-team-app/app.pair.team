@@ -43,12 +43,16 @@ class AccessibilityPopover extends Component {
 		};
     
     return (<BasePopover outro={outro} payload={payload} onOutroComplete={this.props.onClose}>
-			<div className="accessibility-popover">
-				<div className="accessibility-popover-report-wrapper">
+			<div className="accessibility-popover" data-report={component.accessibility.report.failed.length > 0}>
+				{(component.accessibility.report.failed.length > 0) && (<div className="report-wrapper">
 					{(component.accessibility.report.failed.map((report, i)=> (
 						<AccessibilityReportItem key={i} ind={(i + 1)} report={report} onComment={this.handleComment} />)
 					))}
-				</div>
+				</div>)}
+
+				{(component.accessibility.report.failed.length === 0) && (<div className="empty-report-wrapper">
+					No accessibilty concerns detected.
+				</div>)}
 			</div>
 		</BasePopover>);
   }
@@ -56,7 +60,7 @@ class AccessibilityPopover extends Component {
 
 
 const AccessibilityReportItem = (props)=> {
-	console.log('AccessibilityReportItem()', props);
+	// console.log('AccessibilityReportItem()', props);
 
 	const { ind, report } = props;
 	const { help, description, impact, helpUrl } = report;

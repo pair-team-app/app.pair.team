@@ -7,14 +7,22 @@
 	border-radius: var(--border-radius);
 }
 
-.accessibility-popover-report-wrapper {
+.accessibility-popover[data-report="false"] {
+	width: fit-content;
+	min-height: 0;
+	height: auto;
+}
+
+.accessibility-popover .report-wrapper {
 	position: relative;
 	width: 100%;
 	height: 100%;
 	overflow-y: auto;
 }
 
+.accessibility-popover .empty-report-wrapper {
 
+}
 
 .accessibility-report-item {
   width: 100%;
