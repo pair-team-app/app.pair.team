@@ -79,7 +79,7 @@ class PlaygroundNavPanel extends Component {
     const { playgrounds, playground } = this.props;
     const buildIDs = [ ...new Set([ ...playgrounds.map(({ buildID })=> (buildID))])];
     const builds = buildIDs.map((id)=> ({ id,
-      title       : [ ...playgrounds].pop().title,
+      title       : [ ...playgrounds.filter(({ buildID })=> (buildID === id))].pop().title,
       expanded    : (playground !== null && playground.buildID === id),
       selected    : (playground !== null && playground.buildID === id),
       playgrounds : playgrounds.filter(({ buildID })=> (buildID === id)),

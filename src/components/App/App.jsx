@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { API_ENDPT_URL, GITHUB_APP_AUTH, Modals, Pages } from '../../consts/uris';
-import { fetchTeamLookup, fetchUserProfile, updateMouseCoords, updateUserProfile, updateMatchPath } from '../../redux/actions';
+import { fetchTeamLookup, fetchUserProfile, updateUserProfile, updateMatchPath } from '../../redux/actions';
 
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 import Routes from '../helpers/Routes';
@@ -63,7 +63,6 @@ class App extends Component {
       this.onToggleModal(Modals.LOGIN);
     }
 
-    // window.addEventListener('mousemove', this.handleMouseMove);
     window.onpopstate = (event)=> {
       event.preventDefault();
       // 			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
@@ -201,7 +200,6 @@ class App extends Component {
     this.githubWindow = null;
 
     window.onpopstate = null;
-    // window.removeEventListener('mousemove', this.handleMouseMove);
   }
 
   handleCookies = ()=> {
@@ -308,18 +306,6 @@ class App extends Component {
 
     if (page) {
       this.props.history.push(page);
-    }
-  };
-
-  handleMouseMove = (event)=> {
-    // 		console.log('%s.handleMouseMove()', this.constructor.name, this.constructor.name, { x : event.pageX, y : event.pageY });
-
-    const { profile, component } = this.props;
-    if (profile && component) {
-      this.props.updateMouseCoords({
-        x : event.pageX,
-        y : event.pageY
-      });
     }
   };
 
@@ -549,7 +535,6 @@ const mapDispatchToProps = (dispatch)=> {
   return {
     fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
     fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
-    updateMouseCoords : (payload)=> dispatch(updateMouseCoords(payload)),
     updateMatchPath   : (payload)=> dispatch(updateMatchPath(payload)),
     updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
   };

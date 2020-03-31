@@ -33,7 +33,7 @@ class DevicesPopover extends Component {
     return (<BasePopover outro={outro} payload={payload} onOutroComplete={this.props.onClose}>
 			<div className="devices-popover">
 				<div className="device-item-wrapper">
-          {(deviceIDs.map((deviceID)=> (devices.find(({ id })=> (id === deviceID)))).map((device, i)=> (
+          {(deviceIDs.map((deviceID)=> (devices.find(({ id })=> (id === deviceID)))).sort((i, ii)=> ((i.title.toUpperCase() < ii.title.toUpperCase()) ? -1 : (i.title.toUpperCase() > ii.title.toUpperCase()) ? 1 : 0)).map((device, i)=> (
             <DeviceItem key={i} device={device} selected={device.slug === matchPath.params.deviceSlug} onClick={this.props.onDeviceClick} />
           )))}
 				</div>

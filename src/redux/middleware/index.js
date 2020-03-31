@@ -32,6 +32,8 @@ export function onMiddleware(store) {
     logFormat({ prevState, action, next });
 
     if (type === DEVICES_LOADED) {
+      const { devices } = payload;
+      payload.devices = devices.sort((i, ii)=> ((i.title < ii.title) ? -1 : (i.title > ii.title) ? 1 : 0));
 
     } else if (type === USER_PROFILE_LOADED) {
       const { userProfile } = payload;
@@ -70,7 +72,7 @@ export function onMiddleware(store) {
       const components = [ ...new Set([ ...playground.components, ...payload.components.map((component)=> (reformComponent(component, componentTypes))) ])];
 
       playground.components = [ ...components ];
-      payload.playgrounds = prevState.playgrounds.map((item)=> ((item.id === playground.id) ? playground : item));
+      payload.playgrounds = prevState.playgrounds.map((item)=> ((item.id === playground.id) ? playground : item)).sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
       payload.playground = playground;
       
   
@@ -80,11 +82,11 @@ export function onMiddleware(store) {
 
       const playgrounds = payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
       const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null;
-      const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === params.typeGroupSlug)) || null : null;
+      const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) || null : null;
       const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
       const comment = (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
 
-      payload.playgrounds = playgrounds;
+      payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
       payload.playground = playground;
       payload.typeGroup = typeGroup;
       payload.component = component;
@@ -137,7 +139,7 @@ export function onMiddleware(store) {
         }
       }));
 
-      payload.playgrounds = playgrounds;
+      payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
       payload.playground = playground;
       payload.typeGroup = typeGroup;
       payload.component = component;
@@ -183,7 +185,7 @@ export function onMiddleware(store) {
         const { params } = matchPath;
 
         const device = (playground) ? devices.find(({ id })=> (id === playground.deviceID)) || null : null;
-        const typeGroup = (playground) ? playground.typeGroups.find(({ id })=> (id === 187)) || null : null;
+        const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) || null : null;
         
         dispatch(updateMatchPath({ 
           matchPath : { ...matchPath,

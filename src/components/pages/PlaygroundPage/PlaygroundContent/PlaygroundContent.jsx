@@ -72,7 +72,7 @@ class PlaygroundContent extends Component {
   }
 
   calcBounds = (rect)=> {
-    console.log('%s.calcBounds()', this.constructor.name, { rect, component : this.props.component });
+    // console.log('%s.calcBounds()', this.constructor.name, { rect, component : this.props.component });
 
     const { component } = this.props;
     if (!component) {
