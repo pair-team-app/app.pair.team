@@ -12,7 +12,7 @@
 .ask-page-scroll-wrapper {
 	position: fixed;
 	left: 208px;
-	width: calc(100vw - 208ox);
+	width: calc(100vw - 208px);
 	height: calc(100vh - 58px);
 	overflow-y: auto;
 	padding-right: calc(50vw - 208px);
