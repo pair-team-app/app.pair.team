@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { ENTER_KEY } from '../../../consts/key-codes';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
-import { fetchTeamComments, setPlayground, setTypeGroup, setComment } from '../../../redux/actions';
+import { fetchTeamComments, setTeam, setPlayground, setTypeGroup, setComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import BasePage from '../BasePage';
 import './AskPage.css';
@@ -20,6 +20,7 @@ class AskPage extends Component {
 
     this.state = {
       topSort        : [],
+      comments       : [], 
       commentContent : '',
       sort           : SORT_BY_SCORE,
       fetching       : false,
@@ -161,7 +162,7 @@ class AskPage extends Component {
   handleVote = ({ comment, action })=> {
     trackEvent('button', (action === VOTE_ACTION_UP) ? 'upvote-comment' : (action === VOTE_ACTION_DOWN) ? 'downvote-comment' : 'retract-vote');
     
-    const { profile } = this.props;
+    const { profile, team } = this.props;
     const score = (action === VOTE_ACTION_UP) ? 1 : (action === VOTE_ACTION_DOWN) ? -1 : 0;
 
     axios.post(API_ENDPT_URL, {
@@ -172,6 +173,12 @@ class AskPage extends Component {
       }
     }).then((response)=> {
 			console.log('VOTE_COMMENT', response.data);
+
+      const comment = reformComment(response.data.comment);
+      const comments = team.comments.map((i)=> ((i.id === comment.id) ? comment : i));
+      team.comments = comments;
+
+      this.props.setTeam(team);
       this.onReloadComments(false);
 
     }).catch((error)=> {});
@@ -256,6 +263,7 @@ const mapDispatchToProps = (dispatch)=> {
   return {
     fetchTeamComments : (payload)=> dispatch(fetchTeamComments(payload)),
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),
+    setTeam           : (payload)=> dispatch(setTeam(payload)),
     setTypeGroup      : (payload)=> dispatch(setTypeGroup(payload)),
     setComment        : (payload)=> dispatch(setComment(payload))
   };

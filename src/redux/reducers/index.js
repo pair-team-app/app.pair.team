@@ -1,7 +1,7 @@
 
 import { 
   COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, EVENT_GROUPS_LOADED, TOGGLE_THEME, UPDATE_MOUSE_COORDS,
-  SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_TYPE_GROUP, SET_REDIRECT_URI, 
+  SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_TYPE_GROUP, SET_REDIRECT_URI, SET_TEAM,
   TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TYPE_GROUP_LOADED, TEAM_LOADED, PLAYGROUND_LOADED, UPDATE_MATCH_PATH, TEAM_COMMENTS_LOADED, 
   USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED,
   TOGGLE_AX, TOGGLE_COMMENTS
@@ -116,6 +116,10 @@ function rootReducer(state = initialState, action) {
     const { playgrounds, playground, typeGroup, component, comment } = payload;
     return (Object.assign({}, state, { playgrounds, playground, typeGroup, component, comment }));
 
+  } else if (type === SET_TEAM) {
+    const { team } = payload;
+    return (Object.assign({}, state, { team }));
+  
   } else if (type === SET_PLAYGROUND) {
     const { playground } = payload;
     return (Object.assign({}, state, { playground }));

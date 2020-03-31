@@ -4,7 +4,7 @@ import cookie from 'react-cookies';
 import { 
   COMPONENT_TYPES_LOADED, EVENT_GROUPS_LOADED, DEVICES_LOADED, PRODUCTS_LOADED,
   TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TYPE_GROUP_LOADED, PLAYGROUND_LOADED, TEAM_COMMENTS_LOADED,
-  SET_INVITE, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TYPE_GROUP, 
+  SET_INVITE, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TYPE_GROUP, SET_TEAM,
   USER_PROFILE_LOADED, USER_PROFILE_UPDATED, USER_PROFILE_ERROR,
   UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, SET_REDIRECT_URI, TOGGLE_THEME
 } from '../../consts/action-types';
@@ -296,6 +296,12 @@ export function setPlayground(payload) {
   logFormat('setPlayground()', null, payload);
   const playground = payload;
   return { payload : { playground }, type : SET_PLAYGROUND };
+}
+
+export function setTeam(payload) {
+  logFormat('setTeam()', null, payload);
+  const team = payload;
+  return { payload : { team }, type : SET_TEAM };
 }
 
 export function setTypeGroup(payload) {
