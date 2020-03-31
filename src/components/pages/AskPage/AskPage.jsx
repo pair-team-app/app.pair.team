@@ -215,22 +215,24 @@ class AskPage extends Component {
           onLogout={this.props.onLogout} 
         />
 
-        <div className="ask-page-content-wrapper" data-loading={fetching}>
-          <AskPageContentHeader 
-            loading={fetching} 
-            commentContent={commentContent} 
-            onTextChange={this.handleTextChange} 
-            onSubmit={this.handleAddComment}
-          />
+        <div className="ask-page-scroll-wrapper">
+          <div className="ask-page-content-wrapper" data-loading={fetching}>
+            <AskPageContentHeader 
+              loading={fetching} 
+              commentContent={commentContent} 
+              onTextChange={this.handleTextChange} 
+              onSubmit={this.handleAddComment}
+            />
 
-          <AskPageCommentsPanel 
-            profile={profile} 
-            comments={comments} 
-            loading={fetching}
-            sort={sort}
-            onVote={this.handleVote} 
-            onDelete={this.handleDeleteComment} 
-          />
+            <AskPageCommentsPanel 
+              profile={profile} 
+              comments={comments} 
+              loading={fetching}
+              sort={sort}
+              onVote={this.handleVote} 
+              onDelete={this.handleDeleteComment} 
+            />
+          </div>
         </div>
       </>)}
     </BasePage>);

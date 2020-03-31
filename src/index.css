@@ -19,58 +19,62 @@
 }
 
 :root {
-	--full-white: 255, 255, 255; /* ffffff */
-	--site-bg-color: 252, 252, 252; /* fcfcfc */
-	/* --site-bg-color: 80, 80, 80; fcfcfc */
+	--full-white: 255, 255, 255; /* #ffffff */
+	--site-bg-color: 252, 252, 252; /* #fcfcfc */
+	/* --site-bg-color: 80, 80, 80; #fcfcfc */
 	--site-fg-color: 35, 35, 35; /* #232323 */
 	--site-hilite-color: 0, 90, 217; /* #0067ff */
 	--disabled-fg-color: 204, 204, 204; /* #cccccc */
-	--invalid-bg-color: 255, 240, 240; /* fff0f0 */
+	--invalid-bg-color: 255, 240, 240; /* #fff0f0 */
 	--invalid-fg-color: 255, 101, 101; /* #ff6565 */
 	--invalid-border-color: var(--invalid-fg-color); /* #ff4646 */
 	--btn-bg-color: 0, 103, 255; /* #0067ff */
-	--btn-fg-color: var(--full-white); /* ffffff */
+	--btn-fg-color: var(--full-white); /* #ffffff */
 	--btn-hover-bg-color: 0, 92, 229; /* #005ce5 */
-	--btn-disabled-bg-color: var(--disabled-fg-color); /* cccccc */
+	--btn-disabled-bg-color: var(--disabled-fg-color); /* #cccccc */
 	--btn-disabled-fg-color: 247, 247, 247; /* #f7f7f7 */
 	--quiet-btn-bg-color: 247, 247, 247; /* #f7f7f7 */
-	--modal-bg-color: var(--full-white); /* ffffff */
+	--modal-bg-color: var(--full-white); /* #ffffff */
 	--quiet-btn-fg-color: var(--site-fg-color); /* #232323 */
 	--quiet-btn-hover-bg-color: 237, 237, 237; /* #ededed */
 	--quiet-btn-selected-bg-color: var(--site-fg-color); /* #232323 */
-	--quiet-btn-selected-fg-color: var(--full-white); /* ffffff */
+	--quiet-btn-selected-fg-color: var(--full-white); /* #ffffff */
 	--img-bg-color: 240, 240, 240; /* #f0f0f0 */
-	--overlay-hover-color: 153, 153, 153; /* 999999 */
+	--overlay-hover-color: 153, 153, 153; /* #999999 */
 	--link-color: var(--site-fg-color); /* #232323 */
-	--link-hover-color: 153, 153, 153; /* 999999 */
+	--link-hover-color: 153, 153, 153; /* #999999 */
 	--link-selected-color: var(--site-fg-color); /* #232323 */
-	--txtfield-bg-color: var(--full-white); /* ffffff */
-	--txtfield-fg-color: 153, 153, 153; /* 999999 */
+	--txtfield-bg-color: var(--full-white); /* #ffffff */
+	--txtfield-fg-color: 153, 153, 153; /* #999999 */
 	--txtfield-focused-bg-color: 247, 247, 247; /* #f7f7f7 */
 	--txtfield-focused-fg-color: var(--site-fg-color); /* #232323 */
 	--txtfield-hover-bg-color: 247, 247, 247; /* #f7f7f7 */
-	--txtfield-hover-fg-color: 153, 153, 153; /* 999999 */
+	--txtfield-hover-fg-color: 153, 153, 153; /* #999999 */
 	--txtfield-invalid-bg-color: 247, 247, 247; /* #f7f7f7 */
 	--txtfield-invalid-fg-color: var(--invalid-fg-color); /* #ff6565 */
-	--txtfield-disabled-bg-color: var(--disabled-fg-color); /* cccccc */
-	--txtfield-disabled-fg-color: 153, 153, 153; /* 999999 */
+	--txtfield-disabled-bg-color: var(--disabled-fg-color); /* #cccccc */
+	--txtfield-disabled-fg-color: 153, 153, 153; /* #999999 */
 	--border-color: var(--site-fg-color);
-	--border-alt-color: 206, 206, 206; /* cecece */
+	--border-alt-color: 206, 206, 206; /* #cecece */
 	--overlay-shadow: 2px 2px 6px rgba(var(--border-color), 0.125);
 	--playground-component-shadow: 2px 2px 3px rgba(var(--border-color), 0.75);
 	--playground-panel-bg-color: 244, 244, 244; /* #f4f4f4 */
 	--playground-content-bg-color: 247, 247, 247; /* #f7f7f7 */
 	/*--playground-content-bg-color: 80, 80, 80; /*#f4f4f4*/
 	--playground-component-bg-color: 252, 252, 252; /* #fbfbfb */
-	--playground-panel-link-color: 153, 153, 153; /* 999999 */
+	--playground-panel-link-color: 153, 153, 153; /* #999999 */
 	--playground-panel-link-hover-color: var(--site-fg-color); /* #232323 */
 	--comment-marker-bg-color: 207, 247, 207;
 
-	--timestamp-color: 153, 153, 153; /* 999999 */
-	--dialog-title-color: 153, 153, 153; /* 999999 */
+	--timestamp-color: 153, 153, 153; /* #999999 */
+	--dialog-title-color: 153, 153, 153; /* #999999 */
 
 	--popup-ok-bg-color: var(--site-bg-color);
-	--popup-ok-fg-color: 255, 101, 101;  /*64, 128, 35; /* 80ff46 */
+	--popup-ok-fg-color: 255, 101, 101;  /*64, 128, 35; /* #80ff46 */
+
+	--scroll-track-color: 247, 247, 247; /* #f7f7f7 */
+	--scroll-thumb-color: var(--site-fg-color); /* #232323 */
+	--scroll-thumb-hover-color: 153, 153, 153; /* #999999 */
 
 	--playground-nav-width: 208px;
 	--playground-comments-width: 228px;
@@ -487,15 +491,16 @@ ul > li:not(:last-child) {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(var(--quiet-btn-bg-color), 1.0);
+  background: rgba(var(--scroll-track-color), 1.0);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(var(--border-color), 1.0);
+  background: rgba(var(--scroll-thumb-color), 1.0);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--site-fg-color);
+  background: rgba(var(--scroll-thumb-hover-color), 1.0);
+	cursor: pointer;
 }
 
 
