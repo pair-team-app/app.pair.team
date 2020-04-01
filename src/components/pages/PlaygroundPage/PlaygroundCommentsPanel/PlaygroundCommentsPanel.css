@@ -19,7 +19,7 @@
 
 .playground-comments-panel[data-collapsed="true"] {
 	opacity: 0;
-	transition: width 250ms cubic-bezier(0.4, 0, 0.2, 1), opacity 250ms ease-out;
+	transition: width 125ms 250ms cubic-bezier(0.4, 0, 0.2, 1), opacity 250ms ease-out;
 }
 
 .comments-panel-item-wrapper {

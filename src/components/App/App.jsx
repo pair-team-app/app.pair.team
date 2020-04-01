@@ -57,7 +57,7 @@ class App extends Component {
     trackEvent('site', 'load');
     trackPageview();
     //
-    console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('B'));
+    // console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('npm'));
     const { profile, location } = this.props;
     // 		if (!profile && location.pathname.startsWith(Pages.PLAYGROUND)) {
     if (!profile && location.pathname.startsWith(Pages.PLAYGROUND) && cookie.load('user_id') === '0') {
