@@ -237,7 +237,7 @@ class PlaygroundPage extends Component {
   render() {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { profile, team, playgrounds, playground, component } = this.props;
+    const { profile, team, playgrounds, playground, component, comment } = this.props;
     const { cursor, accessibility, share, devices } = this.state;
     const { params = null } = this.props || { params : null };
 
@@ -283,7 +283,7 @@ class PlaygroundPage extends Component {
         {(devices) && (<DevicesPopover deviceIDs={((playgrounds && playground) ? playgrounds.filter(({ buildID })=> (buildID === playground.buildID)).map(({ deviceID })=> (deviceID)) : [])} onDeviceClick={this.handleDeviceClick} onClose={this.handleToggleDevices} />)}
       </div>)}
         
-      {(profile && team && playground && component) && (<PlaygroundCommentsPanel comments={component.comments} onDelete={this.handleDeleteComment} />)}
+      {(profile && team && playground && component) && (<PlaygroundCommentsPanel comments={component.comments} commentID={(comment) ? comment.id : 0} onDelete={this.handleDeleteComment} />)}
     </BasePage>);
   }
 }

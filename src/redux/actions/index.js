@@ -121,38 +121,6 @@ export function fetchPlayground(payload=null) {
   };
 }
 
-export function fetchPlaygroundComponentGroup(payload=null) {
-  const { typeGroup } = payload;
-  return (dispatch, getState)=> {
-    const { playground } = getState();
-
-    logFormat('fetchPlaygroundComponentGroup()', { payload, playground, typeGroup });
-
-    axios.post(API_ENDPT_URL, {
-      action  : 'PLAYGROUND_TYPE_GROUP_COMPONENTS',
-      payload : {
-        playground_id : playground.id,
-        type_group_id : typeGroup.id,
-        verbose       : true
-      }
-    }).then(async(response)=> {
-    console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS', response.data);
-
-      const { components } = response.data;
-      console.log('PLAYGROUND_TYPE_GROUP_COMPONENTS [SIZE]', Object.values(components).map((component)=> ({
-        id    : component.id,
-        title : component.title,
-        size  : jsonFormatKB(component, true)
-      })));
-
-      dispatch({
-        type    : TYPE_GROUP_LOADED,
-        payload : { playground, components }
-      });
-    }).catch((error)=> {});
-  };
-}
-
 export function fetchTeamBuilds(payload=null) {
   return (dispatch, getState)=> {
     const { team, buildID, deviceSlug } = payload;
