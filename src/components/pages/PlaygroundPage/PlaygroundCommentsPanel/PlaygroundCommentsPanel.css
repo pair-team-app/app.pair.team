@@ -5,10 +5,11 @@
 	right: 0;
 	width: var(--playground-comments-width);
 	height: 100%;
+	opacity: 1;
 	overflow-y: auto;
 	background-color: rgba(var(--playground-panel-bg-color), 1.0);
 	border-left: 1px solid rgba(var(--border-alt-color), 1.0);
-	transition: width 250ms 125ms cubic-bezier(0.4, 0, 0.2, 1);
+	transition: width 250ms 125ms cubic-bezier(0.4, 0, 0.2, 1), opacity 333ms 250ms ease-out;
 	z-index: 2;
 }
 
@@ -17,11 +18,8 @@
 }
 
 .playground-comments-panel[data-collapsed="true"] {
-	transition: width 250ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.playground-comments-panel[data-collapsed="true"] > * {
-	visibility: hidden;
+	opacity: 0;
+	transition: width 250ms cubic-bezier(0.4, 0, 0.2, 1), opacity 250ms ease-out;
 }
 
 .comments-panel-item-wrapper {

@@ -117,24 +117,24 @@ export function makeAvatar(name, size=32) {
 	const letter = (name.length > 0) ? name.charAt(0).toUpperCase() : '?';
 
   const bgColor = Arrays.randomElement([
-    '#1a0c9c',
-    '#2e5c21',
-    '#3498db',
-    // '#34495e',
-    '#0610f5',
-    '#07ae0f',
-    '#2980b9',
-    '#7e44ad',
+    // '#1a0c9c',
+    // '#2e5c21',
+    // '#3498db',
+    '#34495e',
+    // '#0610f5',
+    // '#07ae0f',
+    // '#2980b9',
+    // '#7e44ad',
     '#2c3e50',
-    '#c1044f',
-    '#e67e22',
-    '#e74c3c',
+    // '#c1044f',
+    // '#e67e22',
+    // '#e74c3c',
     // '#95a5a6',
-    '#f39c12',
-    '#d35400',
-    '#c0392b',
-    // '#bdc3c7',
-    // '#7f8c8d'
+    // '#f39c12',
+    // '#d35400',
+    // '#c0392b',
+    '#bdc3c7',
+    '#7f8c8d'
   ]);
 	
 	const fgColor = (0xffffff ^ parseInt(bgColor.replace('#', ''), 16)).toString(16);
@@ -154,7 +154,8 @@ export function makeAvatar(name, size=32) {
   context.font = `normal normal bold ${Math.max(10, Math.ceil(size * 0.5))}px Monaco, Consolas, monospace`;
   context.textAlign = 'center';
   context.textBaseline = 'middle';
-  context.fillStyle = '#fcfcfc';//`#${'000000'.substr(0, 6 - fgColor.length)}${fgColor}`;
+  context.fillStyle = '#fcfcfc';
+  context.fillStyle = `#${'000000'.substr(0, 6 - fgColor.length)}${fgColor}`;
   context.fillText(letter, size * 0.5, Math.ceil(size * 0.5) + 1);
 
   const dataURL = canvas.toDataURL();

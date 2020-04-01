@@ -20,6 +20,7 @@ import BottomNav from '../sections/BottomNav';
 import TopNav from '../sections/TopNav';
 import './App.css';
 import { withRouter, matchPath, generatePath } from 'react-router-dom';
+import {makeAvatar} from '../../utils/funcs';
 
 class App extends Component {
   constructor(props) {
@@ -47,7 +48,7 @@ class App extends Component {
     this.githubWindow = null;
     this.authInterval = null;
 
-    initTracker(cookie.load('user_id'));
+    initTracker(cookie.load('user_id'), window.location.hostname);
   }
 
   componentDidMount() {
@@ -56,7 +57,7 @@ class App extends Component {
     trackEvent('site', 'load');
     trackPageview();
     //
-    // console.log('[:][:][:][:][:][:][:][:][:][:]');
+    console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('B'));
     const { profile, location } = this.props;
     // 		if (!profile && location.pathname.startsWith(Pages.PLAYGROUND)) {
     if (!profile && location.pathname.startsWith(Pages.PLAYGROUND) && cookie.load('user_id') === '0') {
