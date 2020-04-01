@@ -6,7 +6,8 @@ import ReactGA from 'react-ga';
 const UA_TRACKING_ID_LOCAL = 'UA-149949677-1';
 const UA_TRACKING_ID_DEV = 'UA-149949677-2';
 const UA_TRACKING_ID_LIVE = 'UA-149949677-3';
-const DEBUG = true;
+// const DEBUG = true;
+const DEBUG = false;
 
 const openURL = (url)=> {
 	window.open(url);
