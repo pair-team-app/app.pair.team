@@ -17,7 +17,7 @@ const initialState = {
   typeGroup      : null,
   component      : null,
   comment        : null,
-  comments       : false,
+  comments       : [],
   ax             : false,
   products       : null,
   darkThemed     : false,
@@ -78,15 +78,12 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { mouse }));
       
   } else if (type === TEAM_BUILDS_LOADED) {
-    const { playgrounds, playground, typeGroup, component, comment } = payload;
-    return (Object.assign({}, state, { playgrounds, playground, typeGroup, component, comment }));
-
-    // const { playgrounds } = payload;
-    // return (Object.assign({}, state, { playgrounds }));
+    const { playgrounds, comments, playground, typeGroup, component, comment } = payload;
+    return (Object.assign({}, state, { playgrounds, comments, playground, typeGroup, component, comment }));
 
   } else if (type === TEAM_COMMENTS_LOADED) {
-    const { team } = payload;
-    return (Object.assign({}, state, { team }));
+    const { team, comments } = payload;
+    return (Object.assign({}, state, { team, comments }));
   
   } else if (type === PLAYGROUND_LOADED) {
     const playgrounds = state.playgrounds.map((playground)=> ((playground.id === payload.playground.id) ? payload.playground : playground));
@@ -113,8 +110,8 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { team }));
 
   } else if (type === BUILD_PLAYGROUNDS_LOADED) {
-    const { playgrounds, playground, typeGroup, component, comment } = payload;
-    return (Object.assign({}, state, { playgrounds, playground, typeGroup, component, comment }));
+    const { playgrounds, comments, playground, typeGroup, component, comment } = payload;
+    return (Object.assign({}, state, { playgrounds, comments, playground, typeGroup, component, comment }));
 
   } else if (type === SET_TEAM) {
     const { team } = payload;
@@ -145,10 +142,6 @@ function rootReducer(state = initialState, action) {
   } else if (type === TOGGLE_AX) {
     const { ax } = payload;
     return (Object.assign({}, state, { ax }));
-
-  } else if (type === TOGGLE_COMMENTS) {
-    const { comments } = payload;
-    return (Object.assign({}, state, { comments }));
 
   } else {
     return (state);

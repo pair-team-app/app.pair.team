@@ -382,7 +382,7 @@ const PlaygroundComponent = (props)=> {
 
         <div className="component-caption">
           {`${component.meta.bounds.width << 0}px × ${component.meta.bounds.height << 0}px`}
-          <br />>
+          <br />
           {`${updBounds.size.width.toFixed(2)}px × ${updBounds.size.height.toFixed(2)}px`}
         </div>
       </div>

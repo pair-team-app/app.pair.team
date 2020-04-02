@@ -3,14 +3,14 @@ import { Bits, Objects } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { 
   COMPONENT_TYPES_LOADED, EVENT_GROUPS_LOADED, DEVICES_LOADED, PRODUCTS_LOADED,
-  TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TYPE_GROUP_LOADED, PLAYGROUND_LOADED, TEAM_COMMENTS_LOADED,
+  TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, COMMENT_VOTED, PLAYGROUND_LOADED, TEAM_COMMENTS_LOADED,
   SET_INVITE, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TYPE_GROUP, SET_TEAM,
   USER_PROFILE_LOADED, USER_PROFILE_UPDATED, USER_PROFILE_ERROR,
   UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, SET_REDIRECT_URI, TOGGLE_THEME
 } from '../../consts/action-types';
-import { jsonFormatKB } from '../../consts/formats';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
+import { VOTE_ACTION_UP, VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT } from '../../components/pages/PlaygroundPage/VoteComment';
 
 const logFormat = (action, state, payload=null, meta='')=> {
   console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, { payload : payload || {}, meta, state });
@@ -252,6 +252,31 @@ export function fetchUserProfile(payload=null) {
       });
     }).catch((error)=> {});
   };
+}
+
+export function makeVote(payload) {
+  return ((dispatch, getState)=> {
+    logFormat('makeVote()', null, payload);
+    const { comment, action } = payload;
+    const { profile } = getState();
+
+    const score = (action === VOTE_ACTION_UP) ? 1 : (action === VOTE_ACTION_DOWN) ? -1 : 0;
+
+    axios.post(API_ENDPT_URL, {
+      action: 'VOTE_COMMENT',
+      payload: { score,
+        user_id    : profile.id,
+        comment_id : comment.id
+      }
+    }).then((response)=> {
+      console.log('VOTE_COMMENT', response.data);
+
+      dispatch({
+        type    : COMMENT_VOTED,
+        payload : { comment : response.data.comment }
+      });
+    }).catch((error)=> {});
+  });
 }
 
 export function setInvite(payload) {

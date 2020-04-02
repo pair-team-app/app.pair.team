@@ -55,16 +55,21 @@
 	cursor: pointer;
 }
 
-.ask-page-comment .vote-wrapper .vote-arrow[data-selected="true"] {
-	color: rgba(var(--btn-bg-color), 1.0);
-}
-
-.ask-page-comment .vote-wrapper .vote-arrow[data-selected="true"]:hover {
+.ask-page-comment[data-author="true"] .vote-wrapper .vote-arrow:hover {
 	cursor: default;
 }
 
 .ask-page-comment .vote-wrapper[data-disabled="true"] .vote-arrow, .ask-page-comment .vote-wrapper[data-disabled="true"] .vote-arrow:hover {
 	color: rgba(var(--disabled-fg-color), 1.0);
+	cursor: default;
+}
+
+.ask-page-comment .vote-wrapper .vote-arrow[data-selected="true"] {
+	color: rgba(var(--btn-bg-color), 1.0);
+}
+
+.ask-page-comment .vote-wrapper .vote-arrow[data-selected="true"]:hover {
+	color: rgba(var(--btn-bg-color), 1.0);
 	cursor: default;
 }
 
@@ -74,4 +79,8 @@
 
 .ask-page-comment .vote-wrapper[data-voted="true"] .vote-score:hover {
 	cursor: pointer;
+}
+
+.ask-page-comment[data-author="true"] .vote-wrapper .vote-score:hover {
+	cursor: default;
 }

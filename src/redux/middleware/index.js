@@ -3,13 +3,17 @@
 import cookie from 'react-cookies';
 import { reformComponent, reformPlayground , reformComment} from '../../components/pages/PlaygroundPage/utils/reform';
 import { DEVICES_LOADED,
-  BUILD_PLAYGROUNDS_LOADED, TEAM_LOADED, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, 
+  BUILD_PLAYGROUNDS_LOADED, 
+  TEAM_LOADED, 
+  TEAM_BUILDS_LOADED, 
+  TEAM_COMMENTS_LOADED, 
   TYPE_GROUP_LOADED, 
   USER_PROFILE_UPDATED, 
   USER_PROFILE_LOADED, 
   UPDATE_MATCH_PATH,
   UPDATE_MOUSE_COORDS,
-  SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT
+  SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT,
+  COMMENT_VOTED
 } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { fetchTeamBuilds, fetchTeamComments, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setTypeGroup, setComment, setComponent } from '../actions';
@@ -62,7 +66,7 @@ export function onMiddleware(store) {
         members  : team.members.map((member)=> ({ ...member,
           id : member.id << 0
         })),
-        comments : (team.comments) ? team.comments.map((comment)=> (reformComment(comment, false, team))) : []
+        comments : (team.comments) ? team.comments.map((comment)=> (reformComment(comment, team))) : []
       };
 
       dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
@@ -81,12 +85,14 @@ export function onMiddleware(store) {
       const { params } = matchPath || {};
 
       const playgrounds = payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
+      const comments = [ ...new Set([ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()])];
       const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null;
       const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) || null : null;
       const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
       const comment = (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
 
       payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
+      payload.comments = comments;
       payload.playground = playground;
       payload.typeGroup = typeGroup;
       payload.component = component;
@@ -108,15 +114,18 @@ export function onMiddleware(store) {
       dispatch(fetchTeamComments({ team : prevState.team }));
 
     } else if (type === TEAM_COMMENTS_LOADED) {
-      const { team } = prevState;
-      const comments = payload.comments.map((comment, i)=> (reformComment(comment, false, team)));
+      const { team } = prevState;      
+      const comments = payload.comments.map((comment, i)=> (reformComment(comment, team)));
+
       payload.team = (team) ? { ...team, comments } : null;
+      payload.comments = [ ...new Set([ ...prevState.comments, ...comments])];
 
     } else if (type === BUILD_PLAYGROUNDS_LOADED) {
       const { devices, componentTypes, team, matchPath } = prevState;
       const { params } = matchPath || {};
 
       const playgrounds = [ ...new Set([ ...prevState.playgrounds, ...payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)})).filter(({ id })=> (!prevState.playgrounds.map(({ id })=> (id)).includes(id)))])];
+      const comments = [ ...new Set([ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()])];
       const playground = (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || (prevState.playground || [ ...playgrounds].shift()) : null;
       // const playground = (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null : null;
       const typeGroup = (playground) ? (playground.typeGroups.find(({ key })=> (key === params.typeGroupSlug)) || playground.typeGroups.find(({ key })=> (key === 'views'))) : null;
@@ -140,6 +149,7 @@ export function onMiddleware(store) {
       }));
 
       payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
+      payload.comments = comments;
       payload.playground = playground;
       payload.typeGroup = typeGroup;
       payload.component = component;
@@ -176,6 +186,16 @@ export function onMiddleware(store) {
           y : speed.y - payload.y
         }
       };
+
+    } else if (type === COMMENT_VOTED) {
+      const { team } = prevState;
+
+      if (payload.comment.type === 1) {
+
+      }
+      
+      const comments = team.comments.map((comment)=> ((comment.id === payload.comment.id) ? reformComment(payload.comment, team) : comment));
+      payload.team = { ...team, comments };
     
     } else if (type === SET_PLAYGROUND) {
       const { playground } = payload;

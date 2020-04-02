@@ -20,7 +20,6 @@ class AskPage extends Component {
 
     this.state = {
       topSort        : [],
-      comments       : [], 
       commentContent : '',
       sort           : SORT_BY_SCORE,
       fetching       : false,
@@ -39,31 +38,30 @@ class AskPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-    const { team } = this.props;
+    const { comments } = this.props;
     const { fetching, topSort } = this.state;
+  
+  
+    if (fetching) {
+      if ((comments.filter(({ content })=> (content === null)).length === 0)) {
+        this.setState({ fetching : false });
+      }
     
-    if (team) {
-      if (fetching) {
-        if ((team.comments.filter(({ content })=> (content === null)).length === 0)) {
-          this.setState({ fetching : false });
-        }
-      
-      } else {
-        if (team.comments.filter(({ content })=> (content === null)).length > 0) {
-          this.setState({ fetching : true });
-        }
+    } else {
+      if (comments.filter(({ content })=> (content === null)).length > 0) {
+        this.setState({ fetching : true });
       }
+    }
 
-      if (topSort.length !== team.comments.length) {
-        this.setState({ topSort : team.comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).map(({ id })=> (id)) });
-      }
+    if (topSort.length !== comments.length) {
+      this.setState({ topSort : comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).map(({ id })=> (id)) });
     }
   }
 
   handleAddComment = (event)=> {
-    // console.log('%s.handleAddComment()', this.constructor.name, { event });
+    console.log('%s.handleAddComment()', this.constructor.name, { event, props : this.props, state : this.state });
     trackEvent('button', 'add-comment');
 
     event.preventDefault();
@@ -72,7 +70,7 @@ class AskPage extends Component {
     const { profile, team } = this.props;
     const { commentContent } = this.state;
 
-    this.setState({ fetching : true }, ()=> {
+    // this.setState({ fetching : true }, ()=> {
       axios.post(API_ENDPT_URL, {
         action  : 'ADD_COMMENT',
         payload : { 
@@ -90,7 +88,7 @@ class AskPage extends Component {
         });
         
       }).catch((error)=> {});
-    });
+    // });
   };
 
 
@@ -162,7 +160,7 @@ class AskPage extends Component {
   handleVote = ({ comment, action })=> {
     trackEvent('button', (action === VOTE_ACTION_UP) ? 'upvote-comment' : (action === VOTE_ACTION_DOWN) ? 'downvote-comment' : 'retract-vote');
     
-    const { profile, team } = this.props;
+    const { profile, team, comments } = this.props;
     const score = (action === VOTE_ACTION_UP) ? 1 : (action === VOTE_ACTION_DOWN) ? -1 : 0;
 
     axios.post(API_ENDPT_URL, {
@@ -175,8 +173,11 @@ class AskPage extends Component {
 			console.log('VOTE_COMMENT', response.data);
 
       const comment = reformComment(response.data.comment);
-      const comments = team.comments.map((i)=> ((i.id === comment.id) ? comment : i));
-      team.comments = comments;
+      const { comments } = this.props;
+
+      
+
+      team.comments = team.comments.map((i)=> ((i.id === comment.id) ? comment : i));
 
       this.props.setTeam(team);
       this.onReloadComments(false);
@@ -201,9 +202,8 @@ class AskPage extends Component {
   render() {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { profile, team } = this.props;
+    const { profile, team, comments } = this.props;
     const { commentContent, fetching, share, sort, topSort } = this.state;
-    const comments = (sort === SORT_BY_DATE) ? team.comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : topSort.map((commentID)=> (team.comments.find(({ id })=> (id === commentID)) || null)).filter((comment)=> (comment !== null));
 
     return (<BasePage { ...this.props } className="ask-page">
       {profile && team && (<>
@@ -233,7 +233,7 @@ class AskPage extends Component {
 
             <AskPageCommentsPanel 
               profile={profile} 
-              comments={comments} 
+              comments={(sort === SORT_BY_DATE) ? comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : topSort.map((commentID)=> (comments.find(({ id })=> (id === commentID)) || null)).filter((comment)=> (comment !== null))} 
               loading={fetching}
               sort={sort}
               onVote={this.handleVote} 
@@ -274,6 +274,7 @@ const mapStateToProps = (state, ownProps)=> {
     comment    : state.comment,
     profile    : state.userProfile,
     team       : state.team,
+    comments   : state.comments,
     playground : state.playground
   };
 };

@@ -3,35 +3,32 @@ import { Strings } from 'lang-js-utils';
 import moment from 'moment';
 import { jsonFormatKB } from '../../../../consts/formats';
 
-export const reformComment = (comment, overwrite={})=> {
-  // console.log('reformComment()', { comment, overwrite });
+export const reformComment = (comment, uri, overwrite={})=> {
+  // console.log('reformComment()', { comment, uri, overwrite });
+
+  const { id, position, content, author, votes, added } = comment;
 
   const reformed = { ...comment,
-    position : ((typeof comment.position === 'string' && comment.position.charAt(0) === '{') ? JSON.parse(comment.position) : comment.position) || { x: 0, y: 0 },
-    content  : (comment.content || null),
-    author   : {
-      id       : comment.author.id,
-      username : comment.author.username,
-      email    : comment.author.email,
-      avatar   : comment.author.avatar
-    },
-    votes      : comment.votes.map((vote)=> ({ ...vote,
+    id       : id << 0,
+    position : ((typeof position === 'string' && position.charAt(0) === '{') ? JSON.parse(position) : position) || { x: 0, y: 0 },
+    content  : (content || null),
+    author   : { ...author },
+    votes    : votes.map((vote)=> ({ ...vote,
       score : vote.score << 0
     })),
-    score      : comment.votes.reduce((acc, vote)=> (acc + (vote.score << 0)), 0),
-    selected   : false,
-    epoch      : (comment.added) ? (moment.utc(comment.added).valueOf() * 0.001) << 0 : 0,
-    timestamp  : (comment.added)
-      ? moment(comment.added).add(moment().utcOffset() << 0, 'minute')
-      : moment.utc(),
+    score     : votes.reduce((acc, vote)=> (acc + (vote.score << 0)), 0),
+    uri       : `${uri}/comments/${id}`,
+    selected  : false,
+    epoch     : (added) ? (moment.utc(added).valueOf() * 0.001) << 0 : 0,
+    timestamp : (added) ? moment(added).add(moment().utcOffset() << 0, 'minute') : moment.utc(),
     ...overwrite
   }
 
   return ({ ...reformed, size: jsonFormatKB(reformed) });
 };
 
-export const reformComponent = (component, componentTypes=null, overwrite = {})=> {
-  // console.log('reformComponent()', { keys : Object.keys(component), component, overwrite });
+export const reformComponent = (component, uri, componentTypes=null, overwrite={})=> {
+  // console.log('reformComponent()', { keys : Object.keys(component), component, uri, componentTypes, overwrite });
 
   const { id, type_id, event_type_id, node_id, title, tag_name, sizes, image_url, html, styles, accessibility, meta, comments } = component;
   const { width, height } = meta.bounds;
@@ -56,7 +53,8 @@ export const reformComponent = (component, componentTypes=null, overwrite = {})=
     typeGroup     : componentTypes.find(({ id })=> (id === type_id)),
     sizes         : { ...sizes, o : { width, height } },
     images        : Object.keys(sizes).map((key)=> (`${image_url}_${key}.png`)),
-    comments      : comments.map((comment)=> reformComment(comment)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0))),
+    comments      : comments.map((comment)=> reformComment(comment, `${uri}/${id}`)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0))),
+    uri           : `${uri}/${id}`,
     selected      : false,
     processed     : ((html && accessibility) !== null),
     ...overwrite
@@ -82,15 +80,18 @@ export const reformPlayground = (playground, devices=null, componentTypes=null, 
   delete playground['type_groups'];
   delete playground['last_visited'];
 
-  const reformed = { ...playground,
+  const projectSlug = Strings.slugifyURI(title);
+  const device = (devices.find(({ id })=> (id === (device_id << 0))) || null);
+  const uri = `/app/${team.slug}/${projectSlug}/${build_id}/${device.slug}/views`;
+
+  const reformed = { ...playground, projectSlug, uri,
     teamID      : team_id << 0,
     buildID     : build_id << 0,  
     deviceID    : device_id << 0,
-    projectSlug : Strings.slugifyURI(title),
     team        : (!playground.team) ? team : playground.team,
-    components  : components.map((component)=> (reformComponent(component, componentTypes))),
+    components  : components.map((component)=> (reformComponent(component, uri, componentTypes))),
     typeGroups  : type_groups.map((typeGroupID)=> (componentTypes.find(({ id })=> ((typeGroupID << 0) === id)))),
-    device      : (devices.find(({ id })=> (id === (device_id << 0))) || null),
+    device      : (device || device_id),
     lastVisited : moment(last_visited).utc(),
     added       : (playground.added)
       ? moment(added).add(moment().utcOffset() << 0, 'minute')
