@@ -28,10 +28,7 @@
                     }
                 }
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "presentation": {
                 "echo": true,
                 "reveal": "always",
@@ -44,6 +41,25 @@
         {
             "type": "yarn",
             "task": "start:debug",
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "type": "yarn",
+            "task": "start",
+            "group": "build"
+        },
+        {
+            "type": "yarn",
+            "task": "build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "yarn",
+            "task": "wip-branch",
             "problemMatcher": []
         }
     ]

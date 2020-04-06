@@ -74,7 +74,8 @@ class PlaygroundContent extends Component {
   calcBounds = (rect)=> {
     console.log('%s.calcBounds()', this.constructor.name, { rect, component : this.props.component });
 
-    const { component } = this.props;
+    const { playground, component } = this.props;
+    const { device } = playground;
     if (!component) {
       return;
     }
@@ -89,21 +90,23 @@ class PlaygroundContent extends Component {
     //   height : (component) ? component.meta.bounds.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN) : 1
     // };
 
+    const isScaled = component.sizes.f.width !== component.sizes.o.width || component.sizes.f.height !== component.sizes.o.height;
+
     const scale = {
       // width  : (component) ? Math.max(1, component.sizes.c.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)) : 1,
       // height : (component) ? Math.max(1, component.sizes.c.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN)) : 1
 
-      width  : Math.max(1, component.sizes.c.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)),
-      height : Math.max(1, component.sizes.c.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN))
+      width  : Math.max(1, component.sizes.f.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)),
+      height : Math.max(1, component.sizes.f.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN))
     };
 
     const size = { 
-      width  : (width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN,
-      height : (height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN
+      width  : device.scale * ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN),
+      height : device.scale * ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN)
     };
 
     if (!init) {
-      init = {
+      init = { 
         container : { scale, 
           position : { x, y }, 
           size     : { width, height } 
@@ -248,13 +251,16 @@ class PlaygroundContent extends Component {
 
     return (
       <div className="playground-content" data-cursor={cursor}>
-        <ResizeObserver onResize={this.calcBounds} onPosition={this.calcBounds} onReflow={this.calcBounds} ref={(el)=> { (el && !this.state.rect) && this.setState({ rect : el._lastRect })}} />
-          {(!component || bounds.curr === null || bounds.curr.component === null) 
-            ? (<PlaygroundComponentsGrid 
-                components={components} 
-                onItemClick={this.handleContentClick} 
-              />) 
-            : (<PlaygroundComponent
+        {(!component) 
+          ? (<PlaygroundComponentsGrid 
+              components={components} 
+              onItemClick={this.handleContentClick} 
+            />) 
+          : (<div className="resize-wrapper">
+              <ResizeObserver onResize={this.calcBounds} onPosition={this.calcBounds} onReflow={this.calcBounds} ref={(el)=> { (el && !this.state.rect) && this.setState({ rect : el._lastRect })}} />
+
+              {(bounds.curr !== null && bounds.curr.component !== null) && (
+                <PlaygroundComponent
                 profile={profile}
                 popover={popover}
                 position={position}
@@ -270,9 +276,11 @@ class PlaygroundContent extends Component {
                 onDeleteComment={this.props.onDeleteComment}
                 onItemClick={this.handleContentClick}
                 onMarkerClick={this.props.onMarkerClick}
-              />)}
-        {(cursor) && (<CommentPinCursor position={mouse.position} />)}
-        {(component && bounds.curr && bounds.curr.component) && (<ComponentMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)}
+              />
+              )}
+              {(cursor) && (<CommentPinCursor position={mouse.position} />)}
+              {(component && bounds.curr && bounds.curr.component) && (<ComponentMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)}
+            </div>)}
       </div>
     );
   }
@@ -314,12 +322,12 @@ const PlaygroundComponent = (props)=> {
 
   const updBounds = { 
     position : { 
-      x : (width - component.sizes.c.width / lgFactor) * 0.5, 
-      y : (height - component.sizes.c.height / lgFactor) * 0.5
+      x : (width - component.sizes.f.width / lgFactor) * 0.5, 
+      y : (height - component.sizes.f.height / lgFactor) * 0.5
     }, 
     size     : { 
-      width  : component.sizes.c.width / lgFactor, 
-      height : component.sizes.c.height / lgFactor 
+      width  : component.sizes.f.width / lgFactor, 
+      height : component.sizes.f.height / lgFactor 
     }
   };
 
@@ -342,7 +350,7 @@ const PlaygroundComponent = (props)=> {
     lockAspectRatio={true}
     // minConstraints={[sizes.t.width, sizes.t.height]}
     // maxConstraints={[Math.min(width, sizes.c.width), Math.min(height, sizes.c.height) - CONTAINER_PADDING.height]}
-    maxConstraints={[sizes.c.width, sizes.c.height - CONTAINER_PADDING.height]}
+    maxConstraints={[sizes.f.width, sizes.f.height - CONTAINER_PADDING.height]}
     onResize={props.onResize}>
       <div className="playground-component" data-loading={false} onClick={(event)=> (cursor) ? props.onItemClick(event, component) : null} style={{ width: `${width}px`, height: `${height}px` }}>
         <h5 className="component-title">{title}</h5>
@@ -350,7 +358,7 @@ const PlaygroundComponent = (props)=> {
         <ContextMenuTrigger id="component" component={component} disableIfShiftIsPressed={true}>
           <div className="bg-wrapper" style={contentStyle}></div>
           <div className="playground-content-component" data-id={id} style={{ height : `${Math.ceil(height)}px` }}>
-            <img src={(images[1] || null)} alt={title} />
+            <img src={(images[2] || null)} alt={title} />
           </div>
           
           <div className="playground-component-comments-wrapper" style={contentStyle} data-id={id}>

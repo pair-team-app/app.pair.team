@@ -2,14 +2,14 @@
 import { Strings } from 'lang-js-utils';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { NavLink, withRouter } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import { Pages } from '../../../../consts/uris';
 import { toggleTheme } from '../../../../redux/actions';
 import SharePopover from '../SharePopover';
 import { BreadcrumbTypes } from './';
 import './PlaygroundHeader.css';
 import UserSettings from './UserSettings';
+import { trackEvent, trackOutbound } from '../../../../utils/tracking';
 
 
 
@@ -96,6 +96,14 @@ class PlaygroundHeader extends Component {
 		const { darkThemed, playground } = this.props;
 		const { popover } = this.state;
 
+
+		const handleURL = (event, url)=> {
+// 		console.log('%s.handleURL()', this.constructor.name, event, url);
+
+      event.preventDefault();
+      trackOutbound(url);
+	  };
+
 		// console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, deviceIDs });
 
 		return (<div className="playground-header">
@@ -104,6 +112,8 @@ class PlaygroundHeader extends Component {
         <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
 			</div>
 			<div className="playground-header-col playground-header-col-right">
+				<NavLink to="https://www.notion.so/pairurl/Blog-f8fd5939357442bca1ff97c3117d1ecb" className="playground-header-link" target="_blank" onClick={(event)=> handleURL(event, 'https://www.notion.so/pairurl/Blog-f8fd5939357442bca1ff97c3117d1ecb')}>Blog</NavLink>
+        <NavLink to="https://spectrum.chat/pair" className="playground-header-link" target="_blank" onClick={(event)=> handleURL(event, 'https://spectrum.chat/pair')}>Support</NavLink>
 				<PlaygroundShareLink popover={popover} playground={playground} onClick={()=> this.setState({ popover : !this.state.popover })} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
 				<UserSettings onMenuItem={this.props.onSettingsItem} onLogout={this.props.onLogout} />
 			</div>

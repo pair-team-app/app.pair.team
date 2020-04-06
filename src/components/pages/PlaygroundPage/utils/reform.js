@@ -4,7 +4,7 @@ import moment from 'moment';
 import { jsonFormatKB } from '../../../../consts/formats';
 
 export const reformComment = (comment, uri, overwrite={})=> {
-  // console.log('reformComment()', { comment, uri, overwrite });
+  console.log('reformComment()', { comment, uri, overwrite });
 
   const { id, position, content, author, votes, added } = comment;
 
@@ -28,10 +28,12 @@ export const reformComment = (comment, uri, overwrite={})=> {
 };
 
 export const reformComponent = (component, uri, componentTypes=null, overwrite={})=> {
-  // console.log('reformComponent()', { keys : Object.keys(component), component, uri, componentTypes, overwrite });
+  console.log('reformComponent()', { keys : Object.keys(component), component, uri, componentTypes, overwrite });
 
   const { id, type_id, event_type_id, node_id, title, tag_name, sizes, image_url, html, styles, accessibility, meta, comments } = component;
   const { width, height } = meta.bounds;
+  const scale = 2;//Math.max(1, sizes['f'].width / meta.bounds.width, sizes['f'].height / meta.bounds.height);
+
   delete component['type_id'];
   delete component['event_type_id'];
   delete component['node_id'];
@@ -51,9 +53,9 @@ export const reformComponent = (component, uri, componentTypes=null, overwrite={
     styles        : (styles) ? JSON.parse(styles) : null,
     accessibility : (accessibility) ? JSON.parse(accessibility) : null,
     typeGroup     : componentTypes.find(({ id })=> (id === type_id)),
-    sizes         : { ...sizes, o : { width, height } },
+    sizes         : { ...sizes, o : { width : width * scale, height : height * scale } },
     images        : Object.keys(sizes).map((key)=> (`${image_url}_${key}.png`)),
-    comments      : comments.map((comment)=> reformComment(comment, `${uri}/${id}`)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0))),
+    comments      : (comments) ? comments.map((comment)=> reformComment(comment, `${uri}/${id}`)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0))) : [],
     uri           : `${uri}/${id}`,
     selected      : false,
     processed     : ((html && accessibility) !== null),
@@ -71,7 +73,7 @@ export const reformComponent = (component, uri, componentTypes=null, overwrite={
 };
 
 export const reformPlayground = (playground, devices=null, componentTypes=null, team=null, overwrite={})=> {
-  // console.log('reformPlayground()', { playground, componentTypes });
+  console.log('reformPlayground()', { playground, devices, componentTypes, team });
 
   const { build_id, team_id, device_id, title, type_groups, components, added, last_visited, selected } = playground;
   delete playground['build_id'];
@@ -88,8 +90,8 @@ export const reformPlayground = (playground, devices=null, componentTypes=null, 
     teamID      : team_id << 0,
     buildID     : build_id << 0,  
     deviceID    : device_id << 0,
-    team        : (!playground.team) ? team : playground.team,
-    components  : components.map((component)=> (reformComponent(component, uri, componentTypes))),
+    team        : (!playground.team || playground.team.length === 0) ? team : playground.team,
+    components  : (components) ? components.map((component)=> (reformComponent(component, uri, componentTypes))) : [],
     typeGroups  : type_groups.map((typeGroupID)=> (componentTypes.find(({ id })=> ((typeGroupID << 0) === id)))),
     device      : (device || device_id),
     lastVisited : moment(last_visited).utc(),

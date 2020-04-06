@@ -29,8 +29,8 @@ function PlaygroundBaseComment(props) {
 
 		<div className="playground-base-comment-timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
 		{(content) && (<div className="playground-base-comment-content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">${author.username}</span>`) }} />)}
-		{(type === 'component') && (<NavLink className="playground-base-comment-uri" to={uri}>{window.location.href.replace(/\/app\/.*$/, comment.uri)}</NavLink>)}
-		{/* {(type === 'component') && (<div className="playground-base-comment-uri" onClick={props.onClick}>{window.location.href.replace(/\/app\/.*$/, comment.uri)}</div>)} */}
+		{/* {(type === 'component') && (<NavLink className="playground-base-comment-uri" to={uri}>{window.location.href.replace(/\/app\/.*$/, comment.uri)}</NavLink>)} */}
+		{(type === 'component') && (<div className="playground-base-comment-uri" onClick={props.onClick}>{window.location.href.replace(/\/app\/.*$/, comment.uri)}</div>)}
 	</div>);
 }
 

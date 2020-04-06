@@ -37,7 +37,7 @@ export function onMiddleware(store) {
 
     if (type === DEVICES_LOADED) {
       const { devices } = payload;
-      payload.devices = devices.sort((i, ii)=> ((i.title < ii.title) ? -1 : (i.title > ii.title) ? 1 : 0));
+      payload.devices = devices.map((device)=> ({ ...device, scale : parseFloat(device.scale) })).sort((i, ii)=> ((i.title < ii.title) ? -1 : (i.title > ii.title) ? 1 : 0));
 
     } else if (type === USER_PROFILE_LOADED) {
       const { userProfile } = payload;
@@ -59,7 +59,7 @@ export function onMiddleware(store) {
     } else if (type === TEAM_LOADED) {
       const { params } = prevState.matchPath;
       const { buildID, deviceSlug } = params;
-             
+      
       const { team } = payload;
       payload.team = { ...team,
         id       : team.id << 0,
@@ -81,14 +81,17 @@ export function onMiddleware(store) {
       
   
     } else if (type === TEAM_BUILDS_LOADED) {
+
       const { devices, componentTypes, team, matchPath } = prevState;
       const { params } = matchPath || {};
 
-      const playgrounds = payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
-      const comments = [ ...new Set([ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()])];
-      const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null;
+      dispatch(fetchTeamComments({ team }));
+
+      const playgrounds = [ ...payload.playgrounds].map((playground, i)=> (reformPlayground((playground.components) ? playground : { ...playground, compontents : []}, devices, componentTypes, team)));//.map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
+      const comments = [ ...new Set([ ...prevState.comments, ...playgrounds.map(({ components })=> ((components || [])).flat().map(({ comments })=> (comments)).flat())])];
+      const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || playgrounds.pop();
       const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) || null : null;
-      const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
+      const component = { ... prevState.component };//(playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
       const comment = (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
 
       payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
@@ -98,20 +101,18 @@ export function onMiddleware(store) {
       payload.component = component;
       payload.comment = comment;
 
-      playgrounds.forEach(({ buildID })=> {
+      // playgrounds.forEach(({ buildID })=> {
+      //   dispatch(fetchBuildPlaygrounds({ buildID }));
+      // });
+
+      if (playground) {
+        dispatch(fetchBuildPlaygrounds({ buildID : (playground) ? playground.buildID : params.buildID }));
+      
+      } else {
+        playgrounds.filter(({ buildID })=> (buildID !== params.buildID)).forEach(({ buildID })=> {
           dispatch(fetchBuildPlaygrounds({ buildID }));
         });
-
-      // if (playground) {
-      //   dispatch(fetchBuildPlaygrounds({ buildID : (playground) ? playground.buildID : params.buildID }));
-      
-      // } else {
-      //   playgrounds.forEach(({ buildID })=> {
-      //     dispatch(fetchBuildPlaygrounds({ buildID }));
-      //   });
-      // }
-
-      dispatch(fetchTeamComments({ team : prevState.team }));
+      }
 
     } else if (type === TEAM_COMMENTS_LOADED) {
       const { team } = prevState;      

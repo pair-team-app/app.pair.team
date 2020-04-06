@@ -9,17 +9,17 @@ import {
 import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 const initialState = {
-  componentTypes : null,
-  devices        : null,
+  componentTypes : [],
+  devices        : [],
   eventGroups    : [],
-  playgrounds    : null,
+  playgrounds    : [],
   playground     : null,
   typeGroup      : null,
   component      : null,
   comment        : null,
   comments       : [],
   ax             : false,
-  products       : null,
+  products       : [],
   darkThemed     : false,
   matchPath      : null,
   device         : null,
