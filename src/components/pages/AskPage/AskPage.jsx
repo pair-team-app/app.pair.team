@@ -175,8 +175,6 @@ class AskPage extends Component {
       const comment = reformComment(response.data.comment);
       const { comments } = this.props;
 
-      
-
       team.comments = team.comments.map((i)=> ((i.id === comment.id) ? comment : i));
 
       this.props.setTeam(team);

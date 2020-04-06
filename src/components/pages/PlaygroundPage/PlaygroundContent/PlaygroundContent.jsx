@@ -355,7 +355,7 @@ const PlaygroundComponent = (props)=> {
       <div className="playground-component" data-loading={false} onClick={(event)=> (cursor) ? props.onItemClick(event, component) : null} style={{ width: `${width}px`, height: `${height}px` }}>
         <h5 className="component-title">{title}</h5>
 
-        <ContextMenuTrigger id="component" component={component} disableIfShiftIsPressed={true}>
+        <ContextMenuTrigger id="component" component={component} disableIfShiftIsPressed={true} holdToDisplay={-1} >
           <div className="bg-wrapper" style={contentStyle}></div>
           <div className="playground-content-component" data-id={id} style={{ height : `${Math.ceil(height)}px` }}>
             <img src={(images[2] || null)} alt={title} />
