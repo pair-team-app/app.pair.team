@@ -46,11 +46,6 @@
         },
         {
             "type": "yarn",
-            "task": "start",
-            "group": "build"
-        },
-        {
-            "type": "yarn",
             "task": "build",
             "group": {
                 "kind": "build",
@@ -58,8 +53,13 @@
             }
         },
         {
-            "type": "yarn",
-            "task": "wip-branch",
+            "label": "yarn branch:wip",
+            "type": "process",
+            "command": "yarn",
+            "args": [
+                "branch",
+                "wip"
+            ],
             "problemMatcher": []
         }
     ]
