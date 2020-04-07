@@ -133,7 +133,10 @@ const PlaygroundNavPanelHeader = (props)=> {
   const { logo, title } = team;
   return (<div className="playground-nav-panel-header">
     <NavLink to={`/app/${team.slug}/ask`} className="playground-nav-panel-header-title">
-      <img src={logo} alt="Team Logo" />
+      {(logo.startsWith('data:')) 
+        ? (<img src={logo} alt="Team Logo" />)
+        : (<span dangerouslySetInnerHTML={{ __html : logo }} />)
+      }
       {title}
     </NavLink>
   </div>);

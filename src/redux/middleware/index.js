@@ -68,7 +68,7 @@ export function onMiddleware(store) {
         members  : team.members.map((member)=> ({ ...member,
           id : member.id << 0
         })),
-        logo     : team.image
+        logo     : team.image.replace(/\\n/g, '', team.image)
         // comments : (team.comments) ? team.comments.map((comment)=> (reformComment(comment, team))) : []
       };
 
@@ -86,7 +86,7 @@ export function onMiddleware(store) {
       const { logo } = payload;
       const { team } = prevState;
 
-      payload.team = { ...team, logo };
+      payload.team = { ...team, logo : logo.replace(/\\n/g, '', logo) };
 
     } else if (type === TYPE_GROUP_LOADED) {
       const { componentTypes, playground } = prevState;
