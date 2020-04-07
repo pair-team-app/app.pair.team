@@ -6,7 +6,7 @@ import {
   TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, COMMENT_VOTED, PLAYGROUND_LOADED, TEAM_COMMENTS_LOADED,
   SET_INVITE, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TYPE_GROUP, SET_TEAM,
   USER_PROFILE_LOADED, USER_PROFILE_UPDATED, USER_PROFILE_ERROR,
-  UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, SET_REDIRECT_URI, TOGGLE_THEME
+  UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, SET_REDIRECT_URI, TOGGLE_THEME, TEAM_LOGO_LOADED
 } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
@@ -164,6 +164,28 @@ export function fetchTeamComments(payload=null) {
       dispatch({
         type    : TEAM_COMMENTS_LOADED,
         payload : { comments }
+      });
+    }).catch((error)=> {});
+  };
+}
+
+export function fetchTeamLogo(payload=null) {
+  return (dispatch, getState)=> {
+    const { team } = payload;
+
+    logFormat('fetchTeamLogo()', getState(), payload);
+    axios.post(API_ENDPT_URL, {
+      action  : 'TEAM_LOGO',
+      payload : {
+        team_id : team.id
+      }
+    }).then((response)=> {
+      console.log('fetchTeamLogo', response.data);
+      const { logo } = response.data;
+
+      dispatch({
+        type    : TEAM_LOGO_LOADED,
+        payload : { logo }
       });
     }).catch((error)=> {});
   };

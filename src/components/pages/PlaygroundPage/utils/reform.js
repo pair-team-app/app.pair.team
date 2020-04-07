@@ -4,13 +4,13 @@ import moment from 'moment';
 import { jsonFormatKB } from '../../../../consts/formats';
 
 export const reformComment = (comment, uri, overwrite={})=> {
-  console.log('reformComment()', { comment, uri, overwrite });
+  // console.log('reformComment()', { comment, uri, overwrite }, { position : typeof comment.position });
 
   const { id, position, content, author, votes, added } = comment;
 
   const reformed = { ...comment,
     id       : id << 0,
-    position : ((typeof position === 'string' && position.charAt(0) === '{') ? JSON.parse(position) : position) || { x: 0, y: 0 },
+    position : (typeof position === 'string' && position.charAt(0) === '{') ? JSON.parse(position) : (position || { x : 0, y : 0 }),
     content  : (content || null),
     author   : { ...author },
     votes    : votes.map((vote)=> ({ ...vote,
@@ -24,11 +24,12 @@ export const reformComment = (comment, uri, overwrite={})=> {
     ...overwrite
   }
 
+  // console.log('reformComment()', { comment, uri, reformed  });
   return ({ ...reformed, size: jsonFormatKB(reformed) });
 };
 
 export const reformComponent = (component, uri, componentTypes=null, overwrite={})=> {
-  console.log('reformComponent()', { keys : Object.keys(component), component, uri, componentTypes, overwrite });
+  // console.log('reformComponent()', { keys : Object.keys(component), component, uri, componentTypes, overwrite });
 
   const { id, type_id, event_type_id, node_id, title, tag_name, sizes, image_url, html, styles, accessibility, meta, comments } = component;
   const { width, height } = meta.bounds;
@@ -69,11 +70,12 @@ export const reformComponent = (component, uri, componentTypes=null, overwrite={
   //   console.log('[%s] .::(INITIAL)::.', component.id, { ...reformed, size : jsonFormatKB(reformed) });
   // }
 
+  // console.log('reformComponent()', { component, uri, componentTypes, overwrite, reformed });
   return { ...reformed, size: jsonFormatKB(reformed) };
 };
 
 export const reformPlayground = (playground, devices=null, componentTypes=null, team=null, overwrite={})=> {
-  console.log('reformPlayground()', { playground, devices, componentTypes, team });
+  // console.log('reformPlayground()', { playground, devices, componentTypes, team });
 
   const { build_id, team_id, device_id, title, type_groups, components, added, last_visited, selected } = playground;
   delete playground['build_id'];
@@ -91,7 +93,7 @@ export const reformPlayground = (playground, devices=null, componentTypes=null, 
     buildID     : build_id << 0,  
     deviceID    : device_id << 0,
     team        : (!playground.team || playground.team.length === 0) ? team : playground.team,
-    components  : (components) ? components.map((component)=> (reformComponent(component, uri, componentTypes))) : [],
+    components  : (components && components.length > 0) ? components.map((component)=> (reformComponent(component, uri, componentTypes))) : [],
     typeGroups  : type_groups.map((typeGroupID)=> (componentTypes.find(({ id })=> ((typeGroupID << 0) === id)))),
     device      : (device || device_id),
     lastVisited : moment(last_visited).utc(),
@@ -102,5 +104,6 @@ export const reformPlayground = (playground, devices=null, componentTypes=null, 
     ...overwrite
   };
 
-  return ({ ...reformed, size: jsonFormatKB(reformed) });
+  // console.log('reformPlayground()', { playground, devices, componentTypes, team, reformed });
+  return ({ ...reformed, size : jsonFormatKB(reformed) });
 };

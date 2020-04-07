@@ -10,13 +10,16 @@
       "name": "Launch Program",
       "program": "${workspaceFolder}/app.js",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",
-      "args": ["start", "--inspect-brk=5858", "--no-cache"],
+      "args": [
+        "start",
+        "--inspect-brk=5858",
+        "--no-cache"
+      ],
       "cwd": "${workspaceRoot}",
       "skipFiles": [
         "<node_internals>/**"
       ]
     },
-    
     {
       "name": "Launch localhost",
       "type": "chrome",
@@ -37,7 +40,12 @@
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",
-      "args": ["start", "--inspect-brk=5858", "--runInBand", "--no-cache"],
+      "args": [
+        "start",
+        "--inspect-brk=5858",
+        "--runInBand",
+        "--no-cache"
+      ],
       "cwd": "${workspaceRoot}"
     },
     {
@@ -45,12 +53,18 @@
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",
-      "args": ["start", "--runInBand", "--inspect-brk=5858"],
+      "args": [
+        "start",
+        "--runInBand",
+        "--inspect-brk=5858"
+      ],
       "cwd": "${workspaceRoot}",
       "protocol": "inspector",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "env": { "CI": "true" },
+      "env": {
+        "CI": "true"
+      },
       "disableOptimisticBPs": true
     },
     {
@@ -59,7 +73,12 @@
       "reAttach": true,
       "name": "Launch Firefox",
       "url": "http://localhost:3000/app/pairurl-com/ask",
-      "webRoot": "${workspaceFolder}/src"
+      "webRoot": "${workspaceFolder}/src",
+      "pathMappings": [
+        {
+          "url": "file:///labor/projects/npm_modules/lang-js-utils/index.js"
+        }
+      ]
     },
     {
       "type": "chrome",
@@ -71,10 +90,9 @@
       "sourceMapPathOverrides": {
         "webpack:///src/*": "${webRoot}/*",
         "/labor/projects/sites/pairurl.com/*": "${workspaceRoot}/*"
-        
       },
       "trace": true,
-      "sourceMaps": true,
+      "sourceMaps": true
     }
   ]
 }

@@ -28,7 +28,7 @@ class AskPage extends Component {
   }
 
   componentDidMount() {
-    // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
     const { playground } = this.props;
 
@@ -198,7 +198,7 @@ class AskPage extends Component {
   };
 
   render() {
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, comments } = this.props;
     const { commentContent, fetching, share, sort, topSort } = this.state;

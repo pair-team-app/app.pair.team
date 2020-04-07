@@ -72,7 +72,7 @@ class PlaygroundContent extends Component {
   }
 
   calcBounds = (rect)=> {
-    console.log('%s.calcBounds()', this.constructor.name, { rect, component : this.props.component });
+    // console.log('%s.calcBounds()', this.constructor.name, { rect, component : this.props.component });
 
     const { playground, component } = this.props;
     const { device } = playground;
@@ -90,7 +90,7 @@ class PlaygroundContent extends Component {
     //   height : (component) ? component.meta.bounds.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN) : 1
     // };
 
-    const isScaled = component.sizes.f.width !== component.sizes.o.width || component.sizes.f.height !== component.sizes.o.height;
+    // const isScaled = component.sizes.f.width !== component.sizes.o.width || component.sizes.f.height !== component.sizes.o.height;
 
     const scale = {
       // width  : (component) ? Math.max(1, component.sizes.c.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)) : 1,
@@ -101,8 +101,8 @@ class PlaygroundContent extends Component {
     };
 
     const size = { 
-      width  : device.scale * ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN),
-      height : device.scale * ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN)
+      width  : (1 / device.scale) * ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN),
+      height : (1 / device.scale) * ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN)
     };
 
     if (!init) {
@@ -243,7 +243,7 @@ class PlaygroundContent extends Component {
   render() {
     // console.log('%s.render()', this.constructor.name, { props: this.props, state : this.state, initBounds : this.state.bounds.init, currBounds : this.state.bounds.curr });
     // console.log('%s.render()', this.constructor.name, (this.state.bounds && this.state.bounds.init) ? { init : this.state.bounds.init.component, curr : this.state.bounds.curr.component, scale : { x : (this.state.bounds.init.component.size.width / this.state.bounds.curr.component.size.width), y : (this.state.bounds.init.component.size.height / this.state.bounds.curr.component.size.height) } } : null);
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, typeGroup, playground, component, cursor, mouse } = this.props;
     const { position, popover, bounds } = this.state;
@@ -355,7 +355,7 @@ const PlaygroundComponent = (props)=> {
       <div className="playground-component" data-loading={false} onClick={(event)=> (cursor) ? props.onItemClick(event, component) : null} style={{ width: `${width}px`, height: `${height}px` }}>
         <h5 className="component-title">{title}</h5>
 
-        <ContextMenuTrigger id="component" component={component} disableIfShiftIsPressed={true} holdToDisplay={-1} >
+        <ContextMenuTrigger id="component" component={component} disableIfShiftIsPressed={true} holdToDisplay={-1}>
           <div className="bg-wrapper" style={contentStyle}></div>
           <div className="playground-content-component" data-id={id} style={{ height : `${Math.ceil(height)}px` }}>
             <img src={(images[2] || null)} alt={title} />

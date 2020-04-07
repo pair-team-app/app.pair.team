@@ -53,12 +53,12 @@
             }
         },
         {
-            "label": "yarn branch:wip",
+            "label": "yarn branch:daily",
             "type": "process",
             "command": "yarn",
             "args": [
                 "branch",
-                "wip"
+                "daily"
             ],
             "problemMatcher": []
         }

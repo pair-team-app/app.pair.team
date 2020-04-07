@@ -5,6 +5,7 @@ import { reformComponent, reformPlayground , reformComment} from '../../componen
 import { DEVICES_LOADED,
   BUILD_PLAYGROUNDS_LOADED, 
   TEAM_LOADED, 
+  TEAM_LOGO_LOADED, 
   TEAM_BUILDS_LOADED, 
   TEAM_COMMENTS_LOADED, 
   TYPE_GROUP_LOADED, 
@@ -16,7 +17,8 @@ import { DEVICES_LOADED,
   COMMENT_VOTED
 } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
-import { fetchTeamBuilds, fetchTeamComments, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setTypeGroup, setComment, setComponent } from '../actions';
+import { fetchTeamBuilds, fetchTeamComments, fetchTeamLogo, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setTypeGroup, setComment, setComponent } from '../actions';
+import { TEAM_DEFAULT_AVATAR } from '../../consts/uris';
 
 
 const logFormat = ({ prevState, action, next, meta=null })=> {
@@ -66,10 +68,25 @@ export function onMiddleware(store) {
         members  : team.members.map((member)=> ({ ...member,
           id : member.id << 0
         })),
-        comments : (team.comments) ? team.comments.map((comment)=> (reformComment(comment, team))) : []
+        logo     : team.image
+        // comments : (team.comments) ? team.comments.map((comment)=> (reformComment(comment, team))) : []
       };
 
+      if (!team.image === TEAM_DEFAULT_AVATAR) {
+        dispatch(fetchTeamLogo({ team }));
+      }
+
+      if (team.comments << 0 !== 0) {
+        dispatch(fetchTeamComments({ team }));
+      }
+
       dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
+
+    } else if (type === TEAM_LOGO_LOADED) {
+      const { logo } = payload;
+      const { team } = prevState;
+
+      payload.team = { ...team, logo };
 
     } else if (type === TYPE_GROUP_LOADED) {
       const { componentTypes, playground } = prevState;
@@ -85,14 +102,19 @@ export function onMiddleware(store) {
       const { devices, componentTypes, team, matchPath } = prevState;
       const { params } = matchPath || {};
 
-      dispatch(fetchTeamComments({ team }));
-
-      const playgrounds = [ ...payload.playgrounds].map((playground, i)=> (reformPlayground((playground.components) ? playground : { ...playground, compontents : []}, devices, componentTypes, team)));//.map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
-      const comments = [ ...new Set([ ...prevState.comments, ...playgrounds.map(({ components })=> ((components || [])).flat().map(({ comments })=> (comments)).flat())])];
+      const playgrounds = [ ...payload.playgrounds].map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team)));//.map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
+      console.log('!!!!!!!!!!!!!!!', { playgrounds });
+      const comments = [];//[ ...new Set([ ...prevState.comments, ...playgrounds.map(({ components })=> ((components || [])).flat().map(({ comments })=> (comments)).flat())])];
+      console.log('!!!!!!!!!!!!!!!', { comments });
       const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || playgrounds.pop();
+      console.log('!!!!!!!!!!!!!!!', { playground });
       const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) || null : null;
-      const component = { ... prevState.component };//(playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
+      console.log('!!!!!!!!!!!!!!!', { typeGroup });
+      const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
+      console.log('!!!!!!!!!!!!!!!', { component });
       const comment = (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
+      console.log('!!!!!!!!!!!!!!!', { comment });
+
 
       payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
       payload.comments = comments;
@@ -101,18 +123,18 @@ export function onMiddleware(store) {
       payload.component = component;
       payload.comment = comment;
 
-      // playgrounds.forEach(({ buildID })=> {
-      //   dispatch(fetchBuildPlaygrounds({ buildID }));
-      // });
+      playgrounds.forEach(({ buildID })=> {
+        dispatch(fetchBuildPlaygrounds({ buildID }));
+      });
 
-      if (playground) {
-        dispatch(fetchBuildPlaygrounds({ buildID : (playground) ? playground.buildID : params.buildID }));
+      // if (playground) {
+      //   dispatch(fetchBuildPlaygrounds({ buildID : (playground) ? playground.buildID : params.buildID }));
       
-      } else {
-        playgrounds.filter(({ buildID })=> (buildID !== params.buildID)).forEach(({ buildID })=> {
-          dispatch(fetchBuildPlaygrounds({ buildID }));
-        });
-      }
+      // } else {
+      //   playgrounds.filter(({ buildID })=> (buildID !== params.buildID)).forEach(({ buildID })=> {
+      //     dispatch(fetchBuildPlaygrounds({ buildID }));
+      //   });
+      // }
 
     } else if (type === TEAM_COMMENTS_LOADED) {
       const { team } = prevState;      

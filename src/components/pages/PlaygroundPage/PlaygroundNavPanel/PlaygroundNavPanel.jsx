@@ -127,13 +127,13 @@ class PlaygroundNavPanel extends Component {
 }
 
 const PlaygroundNavPanelHeader = (props)=> {
-  // 	console.log('PlaygroundNavPanelHeader()', props);
+  	console.log('PlaygroundNavPanelHeader()', props);
 
   const { team } = props;
-  const { image, title } = team;
+  const { logo, title } = team;
   return (<div className="playground-nav-panel-header">
     <NavLink to={`/app/${team.slug}/ask`} className="playground-nav-panel-header-title">
-      <img src={image} alt="Team Logo" />
+      <img src={logo} alt="Team Logo" />
       {title}
     </NavLink>
   </div>);
