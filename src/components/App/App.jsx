@@ -12,7 +12,7 @@ import AlertDialog from '../overlays/AlertDialog';
 import ConfirmDialog from '../overlays/ConfirmDialog';
 import CookiesOverlay from '../overlays/CookiesOverlay';
 import LoginModal from '../overlays/LoginModal';
-import PopupNotification from '../overlays/PopupNotification';
+import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification';
 import ProfileModal from '../overlays/ProfileModal';
 import RegisterModal from '../overlays/RegisterModal';
 import StripeModal from '../overlays/StripeModal';
@@ -64,6 +64,16 @@ class App extends Component {
       this.onToggleModal(Modals.LOGIN);
     }
 
+
+    if (!Browsers.isOnline()) {
+      this.handlePopup({
+        type     : POPUP_TYPE_OK,
+        content  : 'Check your network connection to continue.',
+        delay    : 125,
+        duration : 2350
+      });
+    }
+
     window.onpopstate = (event)=> {
       event.preventDefault();
       // 			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
@@ -104,6 +114,7 @@ class App extends Component {
       }
     }
 
+    console.log('!!!!!!!!!!!', { online : Browsers.isOnline() });
     // console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds });
 
     // extract url props
@@ -118,8 +129,15 @@ class App extends Component {
     }
 
     // no internet
-    if (!modals.network && !Browsers.isOnline()) {
-      this.onToggleModal(Modals.NETWORK);
+    // if (!modals.network && !Browsers.isOnline()) {
+    if (!Browsers.isOnline()) {
+      // this.onToggleModal(Modals.NETWORK);
+      // this.handlePopup({
+      //   type     : POPUP_TYPE_OK,
+      //   content  : 'Project URL has been copied to your clipboard',
+      //   delay    : 125,
+      //   duration : 3333
+      // });
     
     } else {
       console.log('+=+=+=+=+=+=+=+', { local : matchPlaygrounds, props : this.props.matchPath, prev : prevProps.matchPath });
@@ -312,7 +330,7 @@ class App extends Component {
 
   handlePopup = (payload)=> {
     // 		console.log('%s.handlePopup()', this.constructor.name, payload);
-    this.setState({ popup: payload });
+    this.setState({ popup : payload });
   };
 
   handlePurchaseSubmitted = (purchase)=> {
@@ -479,12 +497,12 @@ class App extends Component {
 				  onComplete={()=> this.onToggleModal(Modals.STRIPE, false)}
 			  />)}
 
-			  {(modals.network) && (<AlertDialog
+			  {/* {(modals.network) && (<AlertDialog
 				  title='No Internet Connection'
 				  tracking={Modals.NETWORK}
 				  onComplete={()=> this.onToggleModal(Modals.NETWORK, false)}>
 				  Check your network connection to continue.
-			  </AlertDialog>)}
+			  </AlertDialog>)} */}
 
 			  {(modals.disable) && (<ConfirmDialog
 				  title="Delete your account"

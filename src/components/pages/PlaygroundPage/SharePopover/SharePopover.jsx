@@ -16,9 +16,9 @@ class SharePopover extends Component {
     super(props);
 
     this.state = {
-      email: '',
-      emailValid: false,
-      outro: false
+      email      : '',
+      emailValid : false,
+      outro      : false
     };
   }
 
@@ -31,18 +31,18 @@ class SharePopover extends Component {
     // 		}
   }
 
-  handleClipboardCopy = ()=> {
-    // 		console.log('%s.handleClipboardCopy()', this.constructor.name, this.props);
+  handleClipboardCopy = (text)=> {
+    console.log('%s.handleClipboardCopy()', this.constructor.name, { props : this.props, text });
 
     trackEvent('button', `copy-share-url`);
-    // 		this.setState({ outro : true });
+    		this.setState({ outro : true });
 
-    this.setState({ outro: true }, ()=> {
+    this.setState({ outro : true }, ()=> {
       this.props.onPopup({
-        type: POPUP_TYPE_OK,
-        content: `Pair URL has been copied to your clipboard!`,
-        delay: 125,
-        duration: 3333
+        type     : POPUP_TYPE_OK,
+        content  : 'Project URL has been copied to your clipboard',
+        delay    : 125,
+        duration : 3333
       });
     });
   };
@@ -62,88 +62,83 @@ class SharePopover extends Component {
     const { email, emailValid } = this.state;
     if (email.length > 0 && emailValid) {
       trackEvent('button', `send-invite`);
-      const { profile, playground, component } = this.props;
+      const { profile, team, playground, component } = this.props;
 
       axios
         .post(API_ENDPT_URL, {
-          action: 'SHARE_LINK',
-          payload: {
-            email,
-            playground_id: playground.id,
-            component_id: component.id,
-            user_id: profile.id
+          action  : 'SHARE_LINK',
+          payload : { email,
+            playground_id : playground.id,
+            component_id  : component.id,
+            user_id       : profile.id,
+            team_id       : team.id,
+            uri           : window.location.href
           }
         })
         .then((response)=> {
           console.log('SHARE_LINK', response.data);
           const success = parseInt(response.data.success, 16);
 
-          this.setState({ outro: true });
+          this.setState({ outro : true });
           this.props.onPopup({
-            type: POPUP_TYPE_OK,
-            content: success
-              ? `Sent <span class="txt-bold">${window.location.href}</span> to <span class="txt-bold">${email}</span>.`
-              : `Failed to send share link, try again.`,
-            delay: 125,
-            duration: 3333
+            type    : POPUP_TYPE_OK,
+            content : (success) ? `Sent <span class="txt-bold">${window.location.href}</span> to <span class="txt-bold">${email}</span>.` : 'Failed to send share link, try again.',
+            delay    : 125,
+            duration : 3333
           });
         })
         .catch((error)=> {});
     } else {
-      this.setState({ emailValid: false });
+      this.setState({ emailValid : false });
     }
   };
 
   render() {
     // 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
+    const { playground, typeGroup, component, comment } = this.props;
     const { email, emailValid, outro } = this.state;
     const payload = {
-      fixed: false,
-      position: {
-        x: -310,
-        y: 18
+      fixed    : false,
+      position : {
+        x : -310,
+        y : 18
       },
-      offset : null
-      // offset: {
-      //   right: -50,
-      //   top: 22
-      // }
+      offset   : null
     };
 
-    return (
-      <BasePopover
-        outro={outro}
-        payload={payload}
-        onOutroComplete={this.props.onClose}
-      >
-        <div className="share-popover">
-          <CopyToClipboard
-            text={window.location.href}
-            onCopy={this.handleClipboardCopy}
-          >
-            <div className="share-popover-url">{window.location.href}</div>
-          </CopyToClipboard>
-          <div className="share-popover-form-wrapper">
-            <form onSubmit={this.handleSubmit}>
-              <input type="text" value={email} placeholder="Enter Email Address" onChange={(event)=> this.handleEmailChange(event)} autoFocus />
-              <button disabled={!emailValid} type="submit" onClick={this.handleSubmit}>Submit</button>
-              <CopyToClipboard text={window.location.href} onCopy={this.handleClipboardCopy}>
-                <button disabled={false} onClick={(event)=> event.preventDefault()}>Copy URL</button>
-              </CopyToClipboard>
-            </form>
-          </div>
+    const shareURL = (comment) ? comment.uri : (component) ? component.uri : (typeGroup) ? typeGroup.url : (playground ) ? playground.uri : '/404';
+
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, shareURL });
+
+    return (<BasePopover outro={outro} payload={payload} onOutroComplete={this.props.onClose}>
+      <div className="share-popover">
+        <CopyToClipboard text={window.location.href} onCopy={()=> this.handleClipboardCopy(window.location.href)}>
+          <div className="share-popover-url">{window.location.href}</div>
+        </CopyToClipboard>
+
+        <div className="share-popover-form-wrapper">
+          <form onSubmit={this.handleSubmit}>
+            <input type="text" value={email} placeholder="Enter Email Address" onChange={(event)=> this.handleEmailChange(event)} autoFocus />
+            <button disabled={!emailValid} type="submit" onClick={this.handleSubmit}>Submit</button>
+            <CopyToClipboard text={window.location.href} onCopy={()=> this.handleClipboardCopy(window.location.href)}>
+              <button>Copy URL</button>
+            </CopyToClipboard>
+          </form>
         </div>
-      </BasePopover>
-    );
+      </div>
+    </BasePopover>);
   }
 }
 
 const mapStateToProps = (state, ownProps)=> {
   return {
-    profile: state.userProfile,
-    playground: state.playground,
-    component: state.component
+    profile    : state.userProfile,
+    team       : state.team,
+    playground : state.playground,
+    typeGroup  : state.typeGroup,
+    component  : state.component,
+    comment    : state.comment
   };
 };
 

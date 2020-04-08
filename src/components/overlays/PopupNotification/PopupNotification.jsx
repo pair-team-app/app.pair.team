@@ -63,8 +63,8 @@ class PopupNotification extends Component {
 	}
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state, this.timeline, this.wrapper);
-// 		console.log('%s.render()', this.constructor.name, this.timeline);
+		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, timeline : this.timeline, wrapper : this.wrapper });
+		// console.log('%s.render()', this.constructor.name, this.timeline);
 
 // 		if (this.wrapper && this.timeline) {
 // 			this.timeline.seek(0);
@@ -82,21 +82,17 @@ class PopupNotification extends Component {
 			right : 0
 		}, payload.offset);
 
-		const wrapperClass = `popup-notification-wrapper${(position === POPUP_POSITION_EMBEDDED) ? ' popup-notification-wrapper-embedded' : ''}`;
-		const className = `popup-notification-content${(type === POPUP_TYPE_OK) ? ' popup-notification-content-ok' : (type === POPUP_TYPE_ERROR) ? ' popup-notification-content-error' : ' popup-notification-content-status'}`;
 		const wrapperStyle = {
 			width     : (offset.right !== 0) ? `calc(100% - ${offset.right}px)` : '100%',
 // 			transform : `translate(${offset.left}px, ${offset.top}px)`
 // 			transform : `translate(${offset.left}px, 38px)`
 		};
 
-		return (
-			<div className={wrapperClass} style={wrapperStyle} ref={(element)=> { this.wrapper = element; }}>
-				<div className={className}>
-					{children}
-				</div>
+		return (<div className="popup-notification" data-embedded={(position === POPUP_POSITION_EMBEDDED)} style={wrapperStyle} ref={(element)=> { this.wrapper = element; }}>
+			<div className="content" data-type={(type === POPUP_TYPE_OK) ? 'ok' : (type === POPUP_TYPE_ERROR) ? 'error' : 'status'}>
+				{children}
 			</div>
-		);
+		</div>);
 	}
 
 

@@ -204,6 +204,7 @@ class BasePopover extends Component {
 
 
 export default (onClickOutside(BasePopover));
+// export default (BasePopover);
 
 
 

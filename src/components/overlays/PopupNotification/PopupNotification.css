@@ -1,31 +1,35 @@
 
-.popup-notification-wrapper {
+.popup-notification {
 	position: fixed;
-	bottom: 0;
+	bottom: var(--orthodox-padding-base);
 	left: 0;
 	width: 100%;
-	height: 38px;
+	/* height: 38px; */
+	display: flex;
+	justify-content: center;
+	font-size: var(--orthodox-font-size);
 	z-index: 5000;
 	overflow: hidden;
 }
 
-.popup-notification-wrapper-embedded {
+.popup-notification[data-embedded="true"] {
 	z-index: 5000;
 }
 
-.popup-notification-content-wrapper {
+.popup-notification .content-wrapper {
 	width: 100%;
 	height: 100%;
 }
 
-.popup-notification-content {
+.popup-notification .content {
 	display: flex;
 	flex-flow: row nowrap;
 	justify-content: center;
 	align-items: center;
-	width: 100%;
 	height: 100%;
-	border: 1px solid rgba(var(--border-color), 0.0);
+	padding: calc(var(--orthodox-padding-base) - 1px) var(--orthodox-padding-base);
+	border: 1px solid rgba(var(--border-color), 1.0);
+	border-radius: 30px;
 	text-align: center;
 	vertical-align: middle;
 	/*box-shadow:*/
@@ -35,17 +39,17 @@
 		/*1px  1px 0 rgba(26, 27, 29, 0.5);*/
 }
 
-.popup-notification-content-error {
+.popup-notification .content[data-type="error"] {
 	background-color: rgba(var(--invalid-bg-color), 0.0);
 	color: rgba(var(--popup-ok-fg-color), 1.0);
 }
 
-.popup-notification-content-ok {
-	background-color: rgba(var(--popup-ok-bg-color), 0.0);
+.popup-notification .content[data-type="ok"] {
+	background-color: rgba(var(--popup-ok-bg-color), 1.0);
 	color: rgba(var(--popup-ok-fg-color), 1.0);
 }
 
-.popup-notification-content-status {
+.popup-notification .content[data-type="status"] {
 	background-color: rgba(var(--site-bg-color), 0.0);
 	color: rgba(var(--popup-ok-fg-color), 1.0);
 }

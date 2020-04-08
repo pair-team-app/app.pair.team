@@ -127,7 +127,7 @@ class PlaygroundNavPanel extends Component {
 }
 
 const PlaygroundNavPanelHeader = (props)=> {
-  	console.log('PlaygroundNavPanelHeader()', props);
+  	// console.log('PlaygroundNavPanelHeader()', props);
 
   const { team } = props;
   const { logo, title } = team;

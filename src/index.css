@@ -69,8 +69,8 @@
 	--timestamp-color: 153, 153, 153; /* #999999 */
 	--dialog-title-color: 153, 153, 153; /* #999999 */
 
-	--popup-ok-bg-color: var(--site-bg-color);
-	--popup-ok-fg-color: 255, 101, 101;  /*64, 128, 35; /* #80ff46 */
+	--popup-ok-bg-color: 247, 247, 247; /* #ededed */
+	--popup-ok-fg-color: var(--site-fg-color); /* #232323 */
 
 	--scroll-track-color: 247, 247, 247; /* #f7f7f7 */
 	--scroll-thumb-color: var(--site-fg-color); /* #232323 */
