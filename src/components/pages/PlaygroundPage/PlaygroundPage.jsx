@@ -253,7 +253,8 @@ class PlaygroundPage extends Component {
           popover={share}
           onBreadCrumbClick={this.handleBreadCrumbClick}
           onPopup={this.props.onPopup}
-          onSharePopoverClose={()=> this.setState({ share: false })}
+          onSharePopoverClose={()=> this.setState({ share : false })}
+          onModal={this.props.onModal}
           onSettingsItem={this.handleSettingsItem}
           onLogout={this.props.onLogout} />
       </div>)}
@@ -269,7 +270,7 @@ class PlaygroundPage extends Component {
           onDeleteComment={this.handleDeleteComment}
           onPopoverClose={this.handleComponentPopoverClose} />
 
-        <PlaygroundFooter
+        {/* <PlaygroundFooter
           accessibility={accessibility}
           cursor={cursor}
           playground={playground}
@@ -277,7 +278,7 @@ class PlaygroundPage extends Component {
           devices={devices}
           onToggleAccessibility={this.handleToggleAccessibility}
           onToggleCursor={this.handleToggleCommentCursor}
-          onToggleDevices={this.handleToggleDevices} />
+          onToggleDevices={this.handleToggleDevices} /> */}
             
         {(component && accessibility) && (<AccessibilityPopover onClose={this.handleToggleAccessibility} />)}
         {(devices) && (<DevicesPopover deviceIDs={((playgrounds && playground) ? playgrounds.filter(({ buildID })=> (buildID === playground.buildID)).map(({ deviceID })=> (deviceID)) : [])} onDeviceClick={this.handleDeviceClick} onClose={this.handleToggleDevices} />)}

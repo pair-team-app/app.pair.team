@@ -3,7 +3,7 @@ import { Strings } from 'lang-js-utils';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
-import { Pages } from '../../../../consts/uris';
+import { Pages, Modals } from '../../../../consts/uris';
 import { toggleTheme } from '../../../../redux/actions';
 import SharePopover from '../SharePopover';
 import { BreadcrumbTypes } from './';
@@ -116,6 +116,7 @@ class PlaygroundHeader extends Component {
         <NavLink to="https://spectrum.chat/pair" className="playground-header-link" target="_blank" onClick={(event)=> handleURL(event, 'https://spectrum.chat/pair')}>Support</NavLink>
 				<PlaygroundShareLink popover={popover} playground={playground} onClick={()=> this.setState({ popover : !this.state.popover })} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
 				<UserSettings onMenuItem={this.props.onSettingsItem} onLogout={this.props.onLogout} />
+				<div className="" onClick={()=> this.props.onModal(Modals.INVITE)}>invite</div>
 			</div>
 		</div>);
 	}

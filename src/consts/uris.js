@@ -4,6 +4,7 @@ export const Modals = {
 	COOKIES   : '/cookies',
 	DISABLE   : '/disable',
 	GITHUB    : '/github',
+	INVITE    : '/invite',
 	LOGIN     : '/login',
 	PROCESSING : '/processing',
 	NETWORK   : '/network',

@@ -12,6 +12,7 @@ import AlertDialog from '../overlays/AlertDialog';
 import ConfirmDialog from '../overlays/ConfirmDialog';
 import CookiesOverlay from '../overlays/CookiesOverlay';
 import LoginModal from '../overlays/LoginModal';
+import InviteModal from '../overlays/InviteModal';
 import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification';
 import ProfileModal from '../overlays/ProfileModal';
 import RegisterModal from '../overlays/RegisterModal';
@@ -27,21 +28,21 @@ class App extends Component {
     super(props);
 
     this.state = {
-      authID: 0,
-      darkTheme: false,
-      popup: null,
-      modals: {
-        cookies: cookie.load('cookies') << 0 === 0,
-        // 				cookies  : false, // disable
-        disable: false,
-        github: false,
-        login: false,
-        network: !Browsers.isOnline(),
-        noAccess: false,
-        profile: false,
-        register: false,
-        stripe: false,
-        payload: null
+      authID    : 0,
+      darkTheme : false,
+      popup     : null,
+      modals    : {
+        cookies  : cookie.load('cookies') << 0 === 0,
+        disable  : false,
+        github   : false,
+        invite   : false,
+        login    : false,
+        network  : !Browsers.isOnline(),
+        noAccess : false,
+        profile  : false,
+        register : false,
+        stripe   : false,
+        payload  : null
       }
     };
 
@@ -345,7 +346,7 @@ class App extends Component {
 
   handleThemeToggle = (event)=> {
     // 		console.log('%s.handleThemeToggle()', this.constructor.name, event);
-    this.setState({ darkTheme: !this.state.darkTheme });
+    this.setState({ darkTheme : !this.state.darkTheme });
   };
 
   handleUpdateUser = (profile)=> {
@@ -405,6 +406,7 @@ class App extends Component {
           github   : false,
           disable  : uri === Modals.DISABLE,
           login    : uri === Modals.LOGIN,
+          invite   : uri === Modals.INVITE,
           network  : uri === Modals.NETWORK,
           noAccess : uri === Modals.NO_ACCESS,
           profile  : uri === Modals.PROFILE,
@@ -418,6 +420,7 @@ class App extends Component {
           cookies  : uri === Modals.COOKIES ? false : modals.cookies,
           disable  : uri === Modals.DISABLE ? false : modals.disable,
           github   : uri === Modals.GITHUB ? false : modals.github,
+          invite   : uri === Modals.INVITE ? false : modals.invite,
           login    : uri === Modals.LOGIN ? false : modals.login,
           network  : uri === Modals.NETWORK ? false : modals.network,
           noAccess : uri === Modals.NO_ACCESS ? false : modals.noAccess,
@@ -495,6 +498,13 @@ class App extends Component {
 				  onPopup={this.handlePopup}
 				  onSubmitted={this.handlePurchaseSubmitted}
 				  onComplete={()=> this.onToggleModal(Modals.STRIPE, false)}
+			  />)}
+
+        {(modals.invite) && (<InviteModal
+				  payload={modals.payload}
+				  onPopup={this.handlePopup}
+				  onSubmitted={this.handlePurchaseSubmitted}
+				  onComplete={()=> this.onToggleModal(Modals.INVITE, false)}
 			  />)}
 
 			  {/* {(modals.network) && (<AlertDialog

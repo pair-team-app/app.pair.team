@@ -1,0 +1,7 @@
+
+.invite-form {
+}
+
+.invite-form form > *:not(:last-child) {
+	margin-bottom: var(--orthodox-margin-base);
+}

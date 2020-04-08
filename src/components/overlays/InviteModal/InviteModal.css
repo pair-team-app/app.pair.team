@@ -1,0 +1,9 @@
+
+.invite-modal {
+	max-width: var(--modal-content-width);
+}
+
+.invite-modal .content-wrapper {
+	width: 100%;
+	min-width: 100%;
+}
