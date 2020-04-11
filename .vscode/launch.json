@@ -5,10 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "firefox",
+      "request": "launch",
+      "reAttach": true,
+      "name": "Launch Firefox on localhost:3000",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "disableOptimisticBPs": false
+    },
+    {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
-      "program": "${workspaceFolder}/app.js",
+      "name": "Start Debug Inspector on 5858",
+      "program": "${workspaceRoot}/src/index.js",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",
       "args": [
         "start",
@@ -16,18 +25,9 @@
         "--no-cache"
       ],
       "cwd": "${workspaceRoot}",
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
-    },
-    {
-      "name": "Launch localhost",
-      "type": "chrome",
-      "request": "launch",
       "sourceMaps": true,
       "userDataDir": true,
-      "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}/src",
+      "disableOptimisticBPs": false,
       "sourceMapPathOverrides": {
         "webpack:///src/*": "${webRoot}/*"
       },
@@ -46,6 +46,7 @@
         "--runInBand",
         "--no-cache"
       ],
+      "disableOptimisticBPs": false,
       "cwd": "${workspaceRoot}"
     },
     {
@@ -66,33 +67,6 @@
         "CI": "true"
       },
       "disableOptimisticBPs": true
-    },
-    {
-      "type": "firefox",
-      "request": "launch",
-      "reAttach": true,
-      "name": "Launch Firefox",
-      "url": "http://localhost:3000/app/pairurl-com/ask",
-      "webRoot": "${workspaceFolder}/src",
-      "pathMappings": [
-        {
-          "url": "file:///labor/projects/npm_modules/lang-js-utils/index.js"
-        }
-      ]
-    },
-    {
-      "type": "chrome",
-      "request": "attach",
-      "name": "Attach to Chrome",
-      "port": 9222,
-      "urlfilter": "http://localhost:3000/app/*",
-      "webRoot": "${workspaceFolder}",
-      "sourceMapPathOverrides": {
-        "webpack:///src/*": "${webRoot}/*",
-        "/labor/projects/sites/pairurl.com/*": "${workspaceRoot}/*"
-      },
-      "trace": true,
-      "sourceMaps": true
     }
   ]
 }

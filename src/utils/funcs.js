@@ -114,8 +114,8 @@ export function sendToSlack(channel, message, callback=null) {
 
 
 export function makeAvatar(name, size=32) {
-	// const letter = (name.length > 0) ? name.charAt(0).toUpperCase() : '?';
-	const letter = name;
+	const letter = (name.length > 0) ? name.charAt(0).toUpperCase() : '?';
+	// const letter = name;
 
   const bgColor = Arrays.randomElement([
     '#1a0c9c',

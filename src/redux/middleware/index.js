@@ -104,7 +104,9 @@ export function onMiddleware(store) {
 
       // const playgrounds = [ ...payload.playgrounds].map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team)));//.map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
       const playgrounds = [ ...payload.playgrounds].map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
-      const comments = [ ...new Set([ ...prevState.comments, ...playgrounds.map(({ components })=> ((components || [])).flat().map(({ comments })=> (comments)).flat())])];
+      // const comments = [ ...new Set([ ...prevState.comments, ...playgrounds.map(({ components })=> ((components || [])).flat().map(({ comments })=> (comments)).flat())])];
+      // const comments = [ ...prevState.comments, ...playgrounds.map(({ components })=> ((components || [])).flat().map(({ comments })=> (comments)).flat())];
+      const comments = [ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()];//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
       const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || playgrounds.pop();
       const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) || null : null;
       const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;

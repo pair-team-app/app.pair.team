@@ -9,7 +9,7 @@ import { VOTE_ACTION_UP, VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT } from './index';
 
 
 function AskPageCommentsPanel(props) {
-	// console.log('AskPageCommentsPanel()', { ...props });
+	console.log('AskPageCommentsPanel()', { ...props });
 
 	const { loading, profile, comments } = props;
 

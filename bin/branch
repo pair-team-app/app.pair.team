@@ -5,7 +5,7 @@
 git_user=$(git config --list | grep -E "^user\.name" | cut -d\= -f2)
 
 #-- branch prefix
-prefix="dev"
+prefix="daily"
 if [ ! -z $1 ]; then prefix="$1" ; fi
 
 #-- build branch name from prefix + username + date
