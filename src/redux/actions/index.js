@@ -6,7 +6,7 @@ import {
   TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, COMMENT_VOTED, PLAYGROUND_LOADED, TEAM_COMMENTS_LOADED,
   SET_INVITE, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TYPE_GROUP, SET_TEAM,
   USER_PROFILE_LOADED, USER_PROFILE_UPDATED, USER_PROFILE_ERROR,
-  UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, SET_REDIRECT_URI, TOGGLE_THEME, TEAM_LOGO_LOADED
+  UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, UPDATE_RESIZE_BOUNDS, SET_REDIRECT_URI, TOGGLE_THEME, TEAM_LOGO_LOADED
 } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
@@ -362,6 +362,11 @@ export function updateMouseCoords(payload) {
   // 	logFormat('updateMouseCoords()', payload);
   const position = payload;
   return { payload : position, type : UPDATE_MOUSE_COORDS };
+}
+export function updateResizeBounds(payload) {
+  // 	logFormat('updateMouseCoords()', payload);
+  const resizeBounds = payload;
+  return { payload : resizeBounds, type : UPDATE_RESIZE_BOUNDS };
 }
 
 export function updateUserProfile(payload, force=true) {

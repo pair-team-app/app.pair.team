@@ -14,7 +14,7 @@ import { DEVICES_LOADED,
   UPDATE_MATCH_PATH,
   UPDATE_MOUSE_COORDS,
   SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT,
-  COMMENT_VOTED
+  COMMENT_VOTED, UPDATE_RESIZE_BOUNDS
 } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { fetchTeamBuilds, fetchTeamComments, fetchTeamLogo, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setTypeGroup, setComment, setComponent } from '../actions';
@@ -201,6 +201,10 @@ export function onMiddleware(store) {
           y : speed.y - payload.y
         }
       };
+
+    } else if (type === UPDATE_RESIZE_BOUNDS) {
+      payload.resizeBounds = payload.bounds;
+      delete (payload.bounds);
 
     } else if (type === COMMENT_VOTED) {
       const { team } = prevState;

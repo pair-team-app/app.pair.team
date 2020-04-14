@@ -116,7 +116,7 @@ class ComponentMenu extends Component {
 		const { intro, outro, comment } = this.state;
 		const { avatar, email } = profile;
 
-		return (<ContextMenu id={menuID} className="component-menu-wrapper" onShow={this.handleShowMenu} onHide={this.handleHideMenu} preventHideOnContextMenu={true} preventHideOnResize={true} preventHideOnScroll={true}>
+		return (<ContextMenu id={menuID} className="component-menu" onShow={this.handleShowMenu} onHide={this.handleHideMenu} preventHideOnContextMenu={true} preventHideOnResize={true} preventHideOnScroll={true}>
 			{/*<BasePopover intro={intro} outro={outro} payload={payload} onOutroComplete={this.props.onClose}>*/}
 			<div className={`component-popover${(intro) ? ' component-menu-intro' : (outro) ? ' component-menu-outro' : ''}`}>
 				<div className="component-menu-content-wrapper">

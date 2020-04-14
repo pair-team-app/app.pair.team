@@ -4,7 +4,7 @@ import {
   SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_TYPE_GROUP, SET_REDIRECT_URI, SET_TEAM,
   TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TYPE_GROUP_LOADED, TEAM_LOADED, TEAM_LOGO_LOADED, PLAYGROUND_LOADED, UPDATE_MATCH_PATH, TEAM_COMMENTS_LOADED, 
   USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED,
-  TOGGLE_AX, TOGGLE_COMMENTS
+  TOGGLE_AX, TOGGLE_COMMENTS, UPDATE_RESIZE_BOUNDS
 } from '../../consts/action-types';
 import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
@@ -15,6 +15,7 @@ const initialState = {
   playgrounds    : [],
   playground     : null,
   typeGroup      : null,
+  resizeBounds   : null,
   component      : null,
   comment        : null,
   comments       : [],
@@ -102,8 +103,11 @@ function rootReducer(state = initialState, action) {
 
   } else if (type === UPDATE_MATCH_PATH) {
     const { matchPath } = payload;
-
     return Object.assign({}, state, { matchPath });
+
+  } else if (type === UPDATE_RESIZE_BOUNDS) {
+    const { resizeBounds } = payload;
+    return Object.assign({}, state, { resizeBounds });
 
   } else if (type === TEAM_LOADED) {
     const { team } = payload;

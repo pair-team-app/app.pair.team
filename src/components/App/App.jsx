@@ -23,6 +23,9 @@ import './App.css';
 import { withRouter, matchPath, generatePath } from 'react-router-dom';
 import {makeAvatar} from '../../utils/funcs';
 
+
+import ComponentMenu from '../pages/PlaygroundPage/PlaygroundContent/ComponentMenu';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -58,7 +61,7 @@ class App extends Component {
     trackEvent('site', 'load');
     trackPageview();
     //
-    // console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('npm'));
+    console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('M'));
     const { profile, location } = this.props;
     // 		if (!profile && location.pathname.startsWith(Pages.PLAYGROUND)) {
     if (!profile && location.pathname.startsWith(Pages.PLAYGROUND) && cookie.load('user_id') === '0') {
@@ -447,7 +450,7 @@ class App extends Component {
       	console.log('%s.render()', this.constructor.name, { props : this.props, matchPlaygrounds });
     //   	console.log('%s.render()', this.constructor.name, this.state.modals);
 
-    const { darkThemed, profile, location } = this.props;
+    const { darkThemed, profile, location, component, resizeBounds } = this.props;
     const { popup, modals } = this.state;
 
 
@@ -539,6 +542,8 @@ class App extends Component {
 				  onComplete={()=> this.setState({ popup : null })}>
 				  <span dangerouslySetInnerHTML={{ __html : popup.content }} />
 			  </PopupNotification>)}
+
+        {(component && resizeBounds) && (<ComponentMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(resizeBounds.curr.component.scale))} onShow={()=> null} onClick={(menuItem=null)=> console.log('%s.onComponentMenuItem()', this.constructor.name, { menuItem })} onAddComment={({ component=null, position={ x : 0, y : 0 }, content=null})=> console.log('%s.handleAddComment()', this.constructor.name, { component, position, content })} />)}
 		  </div>
 	  </div>);
   }
@@ -546,17 +551,18 @@ class App extends Component {
 
 const mapStateToProps = (state, ownProps)=> {
   return {
-    darkThemed: state.darkThemed,
-    componentTypes: state.componentTypes,
-    products: state.products,
-    profile: state.userProfile,
-    team: state.team,
-    playgrounds: state.playgrounds,
-    playground: state.playground,
-    typeGroup: state.typeGroup,
-    component: state.component,
-    comment: state.comment,
-    matchPath: state.matchPath
+    darkThemed     : state.darkThemed,
+    componentTypes : state.componentTypes,
+    products       : state.products,
+    profile        : state.userProfile,
+    team           : state.team,
+    playgrounds    : state.playgrounds,
+    playground     : state.playground,
+    typeGroup      : state.typeGroup,
+    component      : state.component,
+    comment        : state.comment,
+    matchPath      : state.matchPath,
+    resizeBounds   : state.resizeBounds
   };
 };
 

@@ -10,7 +10,7 @@ import { componentsFromTypeGroup } from '../utils/lookup';
 import { reformComment } from '../utils/reform';
 import ComponentMenu from './ComponentMenu';
 import './PlaygroundContent.css';
-import { updateMouseCoords } from '../../../../redux/actions';
+import { updateMouseCoords, updateResizeBounds } from '../../../../redux/actions';
 
 const SCALE_CONSTRAIN = 1.0;
 const CONTAINER_PADDING = {
@@ -193,7 +193,9 @@ class PlaygroundContent extends Component {
       next : { ...bounds.curr, ...curr }
     };
 */
-    this.setState({ bounds });
+    this.setState({ bounds }, ()=> {
+      this.props.updateResizeBounds({bounds});
+    });
   };
 
 
@@ -283,7 +285,8 @@ class PlaygroundContent extends Component {
               />
               )}
               {(cursor) && (<CommentPinCursor position={mouse.position} />)}
-              {(component && bounds.curr && bounds.curr.component) && (<ComponentMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)}
+              {/* {(component && bounds.curr && bounds.curr.component) && (<ComponentMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)} */}
+              {/* {(component) && (<Compon  entMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)} */}
             </div>)}
       </div>
     );
@@ -436,7 +439,8 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return {
-    updateMouseCoords : (payload)=> dispatch(updateMouseCoords(payload))
+    updateMouseCoords  : (payload)=> dispatch(updateMouseCoords(payload)),
+    updateResizeBounds : (payload)=> dispatch(updateResizeBounds(payload))
   };
 };
 
