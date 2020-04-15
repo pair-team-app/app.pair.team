@@ -100,26 +100,26 @@ export function fetchEventGroups(payload=null) {
   };
 }
 
-export function fetchPlayground(payload=null) {
-  return (dispatch, getState)=> {
-    logFormat('fetchPlayground()', getState(), payload);
+// export function fetchPlayground(payload=null) {
+//   return (dispatch, getState)=> {
+//     logFormat('fetchPlayground()', getState(), payload);
     
-    axios.post(API_ENDPT_URL, {
-      action  : 'PLAYGROUND',
-      payload : {
-        playground_id : payload.playgroundID,
-        verbose       : true
-      }
-    }).then((response)=> {
-      console.log('PLAYGROUND', response.data);
-      const { playground } = response.data;
-      dispatch({
-        type    : PLAYGROUND_LOADED,
-        payload : { playground }
-      });
-    }).catch((error)=> {});
-  };
-}
+//     axios.post(API_ENDPT_URL, {
+//       action  : 'PLAYGROUND',
+//       payload : {
+//         playground_id : payload.playgroundID,
+//         verbose       : true
+//       }
+//     }).then((response)=> {
+//       console.log('PLAYGROUND', response.data);
+//       const { playground } = response.data;
+//       dispatch({
+//         type    : PLAYGROUND_LOADED,
+//         payload : { playground }
+//       });
+//     }).catch((error)=> {});
+//   };
+// }
 
 export function fetchTeamBuilds(payload=null) {
   return (dispatch, getState)=> {
@@ -280,16 +280,16 @@ export function fetchUserProfile(payload=null) {
 
 export function makeVote(payload) {
   return ((dispatch, getState)=> {
-    logFormat('makeVote()', null, payload);
+    logFormat('makeVote()', getState(), payload);
     const { comment, action } = payload;
-    const { profile } = getState();
+    const { userProfile } = getState();
 
     const score = (action === VOTE_ACTION_UP) ? 1 : (action === VOTE_ACTION_DOWN) ? -1 : 0;
 
     axios.post(API_ENDPT_URL, {
       action: 'VOTE_COMMENT',
       payload: { score,
-        user_id    : profile.id,
+        user_id    : userProfile.id,
         comment_id : comment.id
       }
     }).then((response)=> {

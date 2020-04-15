@@ -1,6 +1,8 @@
 
 // import moment from 'moment';
 import cookie from 'react-cookies';
+import { matchPath } from 'react-router-dom';
+
 import { reformComponent, reformPlayground , reformComment} from '../../components/pages/PlaygroundPage/utils/reform';
 import { DEVICES_LOADED,
   BUILD_PLAYGROUNDS_LOADED, 
@@ -18,7 +20,7 @@ import { DEVICES_LOADED,
 } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { fetchTeamBuilds, fetchTeamComments, fetchTeamLogo, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setTypeGroup, setComment, setComponent } from '../actions';
-import { TEAM_DEFAULT_AVATAR } from '../../consts/uris';
+import { TEAM_DEFAULT_AVATAR, Pages } from '../../consts/uris';
 
 
 const logFormat = ({ prevState, action, next, meta=null })=> {
@@ -104,8 +106,11 @@ export function onMiddleware(store) {
 
       // const playgrounds = [ ...payload.playgrounds].map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team)));//.map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
       const playgrounds = [ ...payload.playgrounds].map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
-      // const comments = [ ...new Set([ ...prevState.comments, ...playgrounds.map(({ components })=> ((components || [])).flat().map(({ comments })=> (comments)).flat())])];
-      // const comments = [ ...prevState.comments, ...playgrounds.map(({ components })=> ((components || [])).flat().map(({ comments })=> (comments)).flat())];
+      const components = [ ...prevState.components, ...playgrounds.map(({ components })=> (components)).flat()].map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? component : null)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i > ii) ? 1 : 0));
+      
+      console.log('!!!!!!!!!!!!!!!', { components });
+      
+
       const comments = [ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()];//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
       const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || playgrounds.pop();
       const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) || null : null;
@@ -114,6 +119,7 @@ export function onMiddleware(store) {
 
 
       payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
+      payload.components = components;
       payload.comments = comments;
       payload.playground = playground;
       payload.typeGroup = typeGroup;
@@ -130,7 +136,7 @@ export function onMiddleware(store) {
 
     } else if (type === TEAM_COMMENTS_LOADED) {
       const { team } = prevState;      
-      const comments = payload.comments.map((comment, i)=> (reformComment(comment, team)));
+      const comments = payload.comments.map((comment, i)=> (reformComment(comment, `${Pages.ASK}/${team.slug}/ask`)));
 
       payload.team = (team) ? { ...team, comments } : null;
       payload.comments = [ ...new Set([ ...prevState.comments, ...comments])];
@@ -207,14 +213,88 @@ export function onMiddleware(store) {
       delete (payload.bounds);
 
     } else if (type === COMMENT_VOTED) {
-      const { team } = prevState;
+      const { team, playgrounds, playground, typeGroup, component } = prevState;
 
-      if (payload.comment.type === 1) {
+      let { comment } = payload
+      if (comment.type === 'team') {
+        comment = reformComment(comment, `${Pages.ASK}/${team.slug}/ask/comments`);
 
+      } else if (comment.type === 'component') {
+        let projectSlug = null;
+        let buildID = null;
+        let deviceSlug = null;
+        let typeGroupSlug = null;
+        let componentID = null;
+
+
+        if (!component) {
+          const components = playgrounds.map(({ components })=> (components)).flat();
+          const comm = components.map(({ id, comments })=> ({ comments,
+            componentID : id
+          })).flat();//.find(({ id })=> (id === comment.id));
+
+          // console.log('!!!!!!!!!!!!!!!', { components, comm });
+
+        
+        } else {
+          componentID = component.id;
+        }
+
+
+        // const comments = [ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()];//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
+
+        if (playground) {
+          projectSlug = playground.projectSlug;
+          buildID = playground.buildID;
+          deviceSlug = playground.device.slug;
+        
+        } else {
+          //componentID = playgrounds.
+        }
+
+        if (typeGroup) {
+          typeGroupSlug = typeGroup.slug;
+        }
+
+        
+
+
+        // console.log('!!!!!!!!!!!!!!!', { playground, params });
+
+        comment = reformComment(comment, `${Pages.PLAYGROUND}/${team.slug}/${playground.projectSlug}/${playground.buildID}/${playground.device.slug}}/${typeGroup.slug}/${component.id}/comments`);
       }
+
       
-      const comments = team.comments.map((comment)=> ((comment.id === payload.comment.id) ? reformComment(payload.comment, team) : comment));
-      payload.team = { ...team, comments };
+
+      // const matchURI = (payload.comment.type === 'component') ? matchPath(comment.uri, {
+      //   path   : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`,
+      //   exact  : false,
+      //   strict : false
+      // }) : matchPath(comment.uri, {
+      //   path   : `${Pages.ASK}/:teamSlug([a-z-]+)?/ask/(comments)?/:commentID([0-9]+)?`,
+      //   exact  : false,
+      //   strict : false
+      // });
+
+      payload.comment = comment;
+      
+
+      // if (payload.comment.type === "team") {
+      //   const { team } = prevState;
+
+      //   // const comments = team.comments.map((comment)=> ((comment.id === payload.comment.id) ? reformComment(payload.comment, team) : comment));
+      //   // payload.team = { ...team, comments };
+
+      //   payload.team = { ...team, 
+      //     comments : team.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment))
+      //   }
+
+      //   delete (payload['comment']);
+      
+      // } else if (payload.comment.type === 'component') {
+      //     const { playgrounds } = prevState;
+      //     payload.playgrounds = playgrounds.map((playground)=> ((playground)))
+      // }
     
     } else if (type === SET_PLAYGROUND) {
       const { playground } = payload;

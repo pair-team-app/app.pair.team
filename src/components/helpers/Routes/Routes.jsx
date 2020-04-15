@@ -62,7 +62,7 @@ class Routes extends Component {
        } />
       
       <Route 
-        path={`${Pages.ASK}/:teamSlug([a-z-]+)?/ask/:commentID([0-9]+)?`} 
+        path={`${Pages.ASK}/:teamSlug([a-z-]+)?/ask/(comments)?/:commentID([0-9]+)?`} 
         render={({ props })=> <AskPage 
           onLogout={this.props.onLogout} 
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
