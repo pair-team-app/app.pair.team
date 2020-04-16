@@ -6,7 +6,7 @@ import { jsonFormatKB } from '../../../../consts/formats';
 export const reformComment = (comment, uri, overwrite={})=> {
   // console.log('reformComment()', { comment, uri, overwrite }, { position : typeof comment.position });
 
-  const { id, position, content, author, votes, added } = comment;
+  const { id, position, content, author, votes, replies, added } = comment;
 
   const reformed = { ...comment,
     id       : id << 0,
@@ -16,6 +16,7 @@ export const reformComment = (comment, uri, overwrite={})=> {
     votes    : votes.map((vote)=> ({ ...vote,
       score : vote.score << 0
     })),
+    replies   : replies.map((reply)=> (reformComment(reply, uri))).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0))),
     score     : votes.reduce((acc, vote)=> (acc + (vote.score << 0)), 0),
     uri       : `${uri}/comments/${id}`,
     selected  : false,

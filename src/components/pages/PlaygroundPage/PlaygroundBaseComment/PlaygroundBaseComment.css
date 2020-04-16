@@ -89,3 +89,12 @@
 	text-decoration: none;
 	cursor: pointer;
 }
+
+.base-comment-replies-wrapper {
+	margin-left: var(--orthodox-margin-base);
+}
+
+.base-comment-reply {
+	width: 100%;
+	margin-top: var(--orthodox-margin-half);
+}
