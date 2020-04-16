@@ -137,7 +137,10 @@ export function fetchTeamBuilds(payload=null) {
       console.log('TEAM_BUILDS', response.data);
       const { playgrounds } = response.data;
 
-      console.log('⟨⎝⎛:⎞⎠⟩', 'TEAM_BUILDS', { builds : [ ...playgrounds].map(({ build_id : buildID, id :  playgroundID, device_id : deviceID, team_id : teamID })=> ({ buildID, playgroundID, deviceID, teamID }))});
+      const builds =  [ ...playgrounds].map(({ build_id : buildID, id :  playgroundID, device_id : deviceID, team_id : teamID, components })=> ({ buildID, playgroundID, deviceID, teamID, totComponents : components.length, totComments : components.map(({ comments })=> (comments.length)).reduce((acc, val)=> (acc += val)) }));
+      const components = builds.map(({ totComponents })=> (totComponents)).reduce((acc, val)=> (acc += val), 0);
+
+      console.log('⟨⎝⎛:⎞⎠⟩', 'TEAM_BUILDS', { builds : builds, components, comments : builds.map(({ totComments })=> (totComments)).reduce((acc, val)=> (acc += val)) });
 
       dispatch({
         type    : TEAM_BUILDS_LOADED,

@@ -118,7 +118,7 @@ class App extends Component {
       }
     }
 
-    console.log('!!!!!!!!!!!', { online : Browsers.isOnline() });
+    // console.log('!!!!!!!!!!!', { online : Browsers.isOnline() });
     // console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds });
 
     // extract url props

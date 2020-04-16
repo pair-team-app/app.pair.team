@@ -55,7 +55,7 @@ export function onMiddleware(store) {
 
     } else if (type === USER_PROFILE_UPDATED) {
       const userProfile = payload;
-      if (userProfile) {
+      if (userProfile && userProfile !== store.getState().userProfile) {
         cookie.save('user_id', (userProfile) ? userProfile.id : '0', { path : '/', sameSite : false });
         dispatch(fetchTeamLookup({ userProfile }));
       }
@@ -107,10 +107,6 @@ export function onMiddleware(store) {
       // const playgrounds = [ ...payload.playgrounds].map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team)));//.map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
       const playgrounds = [ ...payload.playgrounds].map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
       const components = [ ...prevState.components, ...playgrounds.map(({ components })=> (components)).flat()].map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? component : null)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i > ii) ? 1 : 0));
-      
-      console.log('!!!!!!!!!!!!!!!', { components });
-      
-
       const comments = [ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()];//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
       const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || playgrounds.pop();
       const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) || null : null;
@@ -125,10 +121,6 @@ export function onMiddleware(store) {
       payload.typeGroup = typeGroup;
       payload.component = component;
       payload.comment = comment;
-
-      // playgrounds.forEach(({ buildID })=> {
-      //   dispatch(fetchBuildPlaygrounds({ buildID }));
-      // });
 
       playgrounds.filter(({ buildID })=> (buildID !== params.buildID)).forEach(({ buildID })=> {
         dispatch(fetchBuildPlaygrounds({ buildID }));
@@ -146,6 +138,7 @@ export function onMiddleware(store) {
       const { params } = matchPath || {};
 
       const playgrounds = [ ...new Set([ ...prevState.playgrounds, ...payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)})).filter(({ id })=> (!prevState.playgrounds.map(({ id })=> (id)).includes(id)))])];
+      const components = [ ...prevState.components, ...playgrounds.map(({ components })=> (components)).flat()].map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? component : null)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i > ii) ? 1 : 0));
       const comments = [ ...new Set([ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()])];
       // const playground = (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || (prevState.playground || [ ...playgrounds].shift()) : null;
       const playground = (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null : null;
@@ -170,6 +163,7 @@ export function onMiddleware(store) {
       }));
 
       payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
+      payload.components = components;
       payload.comments = comments;
       payload.playground = playground;
       payload.typeGroup = typeGroup;
