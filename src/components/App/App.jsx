@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { API_ENDPT_URL, GITHUB_APP_AUTH, Modals, Pages } from '../../consts/uris';
-import { fetchTeamLookup, fetchUserProfile, updateUserProfile, updateMatchPath } from '../../redux/actions';
+import { fetchTeam, fetchUserProfile, updateUserProfile, updateMatchPath } from '../../redux/actions';
 
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 import Routes from '../helpers/Routes';
@@ -344,7 +344,7 @@ class App extends Component {
 
     this.props.fetchUserProfile();
     // const { profile } = this.props;
-    // this.props.fetchTeamLookup({ userID: profile.id });
+    // this.props.fetchTeam({ userID: profile.id });
   };
 
   handleThemeToggle = (event)=> {
@@ -572,7 +572,7 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return {
-    fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
+    fetchTeam   : (payload)=> dispatch(fetchTeam(payload)),
     fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
     updateMatchPath   : (payload)=> dispatch(updateMatchPath(payload)),
     updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))

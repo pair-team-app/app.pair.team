@@ -15,7 +15,7 @@ import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
 import { API_ENDPT_URL, Modals, Pages } from '../../../consts/uris';
 import { trackEvent } from '../../../utils/tracking';
 import stripeCreds from '../../../assets/json/stripe-creds';
-import { fetchTeamLookup } from '../../../redux/actions';
+import { fetchTeam } from '../../../redux/actions';
 
 
 const STRIPE_TEST_TOKEN = stripeCreds.test.publish;
@@ -178,7 +178,7 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		fetchTeamLookup : (payload)=> dispatch(fetchTeamLookup(payload))
+		fetchTeam : (payload)=> dispatch(fetchTeam(payload))
 	});
 };
 

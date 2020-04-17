@@ -50,13 +50,13 @@ const logFormat = (state, action, meta = '')=> {
   }
 };
 
-function rootReducer(state = initialState, action) {
+function rootReducer(state=initialState, action) {
   const { type, payload } = action;
   logFormat(state, action);
 
   if (type === COMPONENT_TYPES_LOADED) {
     const { componentTypes } = action.payload;
-    return (Object.assign({}, state, { componentTypes : componentTypes }));
+    return (Object.assign({}, state, { componentTypes }));
 
   } else if (type === DEVICES_LOADED) {
     const { devices } = action.payload;

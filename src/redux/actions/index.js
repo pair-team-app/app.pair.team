@@ -195,10 +195,10 @@ export function fetchTeamLogo(payload=null) {
 }
 
 
-export function fetchTeamLookup(payload=null) {
+export function fetchTeam(payload=null) {
   const { userProfile } = payload;
   return (dispatch, getState)=> {
-    logFormat('fetchTeamLookup()', getState(), payload);
+    logFormat('fetchTeam()', getState(), payload);
 
     axios.post(API_ENDPT_URL, {
       action  : 'TEAM_LOOKUP',
@@ -209,19 +209,6 @@ export function fetchTeamLookup(payload=null) {
     }).then((response)=> {
       console.log('TEAM_LOOKUP', response.data);
       const { team } = response.data;
-
-      // if (team) {
-      //   dispatch({
-      //     type    : TEAM_LOADED,
-      //     payload : { 
-      //       team : { ...team,
-      //         members : team.members.map((member)=> ({ ...member,
-      //           id : member.id << 0
-      //         }))
-      //       }
-      //     }
-      //   });
-      // }
 
       dispatch({
         type    : TEAM_LOADED,

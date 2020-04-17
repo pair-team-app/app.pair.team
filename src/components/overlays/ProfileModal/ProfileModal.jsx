@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
 import {
-  fetchTeamLookup,
+  fetchTeam,
   fetchUserProfile,
   updateUserProfile
 } from '../../../redux/actions';
@@ -120,7 +120,7 @@ class ProfileModal extends Component {
               });
 
               this.setState({ updated: true }, ()=> {
-                this.props.fetchTeamLookup({ userProfile : profile });
+                this.props.fetchTeam({ userProfile : profile });
               });
             }
           });
@@ -199,7 +199,7 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return {
-    fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
+    fetchTeam   : (payload)=> dispatch(fetchTeam(payload)),
     fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
     updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
   };

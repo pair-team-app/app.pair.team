@@ -19,16 +19,16 @@ import { DEVICES_LOADED,
   UPDATE_RESIZE_BOUNDS,
   COMMENT_ADDED, COMMENT_UPDATED
 } from '../../consts/action-types';
-import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
-import { fetchTeamBuilds, fetchTeamComments, fetchTeamLogo, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setTypeGroup, setComment, setComponent } from '../actions';
+import { LOG_MIDDLEWARE_PRE_PREFIX, LOG_MIDDLEWARE_POST_PREFIX } from '../../consts/log-ascii';
+import { fetchTeamBuilds, fetchTeamComments, fetchTeamLogo, fetchTeam, fetchBuildPlaygrounds, updateMatchPath, setTypeGroup, setComment, setComponent } from '../actions';
 import { TEAM_DEFAULT_AVATAR, Pages } from '../../consts/uris';
 
 
-const logFormat = ({ prevState, action, next, meta=null })=> {
-  if (action && typeof action !== 'function' && action.type !== UPDATE_MOUSE_COORDS) {
+const logFormat = ({ store, action, next, event })=> {
+  // if (action && typeof action !== 'function' && action.type !== UPDATE_MOUSE_COORDS) {
     const { type, payload } = action;
-    console.log(LOG_MIDDLEWARE_PREFIX, `“${type}”`, { payload, action, meta }, { prevState, next });
-  }
+    console.log((event === 'PRE') ? LOG_MIDDLEWARE_PRE_PREFIX : LOG_MIDDLEWARE_POST_PREFIX, `“${type}”`, { payload, type : typeof action }, { store : store.getState(), next, action });
+  // }
 };
 
 
@@ -38,7 +38,7 @@ export function onMiddleware(store) {
     const { dispatch } = store;
 
     const { type, payload } = action;
-    logFormat({ prevState, action, next });
+    logFormat({ store, action, next, event : 'PRE' });
 
     if (type === DEVICES_LOADED) {
       const { devices } = payload;
@@ -47,9 +47,15 @@ export function onMiddleware(store) {
     } else if (type === USER_PROFILE_LOADED) {
       const { userProfile } = payload;
       // const userProfile = payload;
+
       if (userProfile) {
         cookie.save('user_id', (userProfile) ? userProfile.id : '0', { path : '/', sameSite : false });
-        dispatch(fetchTeamLookup({ userProfile }));
+        // next({ 
+        //   type : TEAM_LOADED,
+        //   payload : { userProfile }
+        // });
+
+        dispatch(fetchTeam({ userProfile }));
       }
 
       // payload = { userProfile };
@@ -58,7 +64,7 @@ export function onMiddleware(store) {
       const userProfile = payload;
       if (userProfile && userProfile !== store.getState().userProfile) {
         cookie.save('user_id', (userProfile) ? userProfile.id : '0', { path : '/', sameSite : false });
-        dispatch(fetchTeamLookup({ userProfile }));
+        // dispatch(fetchTeam({ userProfile }));
       }
 
     } else if (type === TEAM_LOADED) {
@@ -79,11 +85,13 @@ export function onMiddleware(store) {
         dispatch(fetchTeamLogo({ team }));
       }
 
+
       if (team.comments << 0 !== 0) {
-        dispatch(fetchTeamComments({ team }));
+        // dispatch(fetchTeamComments({ team }));
       }
 
       dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
+      // return (action(dispatch, { ...prevState, team }));
 
     } else if (type === TEAM_LOGO_LOADED) {
       const { logo } = payload;
@@ -102,6 +110,8 @@ export function onMiddleware(store) {
   
     } else if (type === TEAM_BUILDS_LOADED) {
 
+      return (next(action));
+
       const { devices, componentTypes, team, matchPath } = prevState;
       const { params } = matchPath || {};
 
@@ -114,7 +124,7 @@ export function onMiddleware(store) {
       const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
       const comment = (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
 
-    playgrounds.filter(({ buildID })=> (buildID !== params.buildID)).forEach(({ buildID })=> {
+      playgrounds.filter(({ buildID })=> (buildID !== params.buildID)).forEach(({ buildID })=> {
         dispatch(fetchBuildPlaygrounds({ buildID }));
       });
 
@@ -133,6 +143,8 @@ export function onMiddleware(store) {
       // payload.team = (team) ? { ...team, comments } : null;
       // payload.comments = [ ...new Set([ ...prevState.comments, ...comments])];
       payload.comments = [ ...prevState.comments, ...comments].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (id === comment.id && i === ii))) ? comment : null ));
+
+      // return (action(dispatch, { ...prevState, team }));
 
     } else if (type === BUILD_PLAYGROUNDS_LOADED) {
       const { devices, componentTypes, team, matchPath } = prevState;
@@ -402,11 +414,15 @@ export function onMiddleware(store) {
           }
         }));
       }
+    
+    } else { 
     }
 
-    next(action);
+    const nextAction = next(action);
+    logFormat({ store, action, next, event : 'POST' });
 
-    const postState = store.getState();
-    logFormat({ store : postState, action, next, meta : 'POST [==>' });
+    return (nextAction);
   });
+    
+
 }
