@@ -1,61 +1,192 @@
 
-import React from 'react';
+import React, { Component } from 'react';
 import './PlaygroundBaseComment.css';
+import { VOTE_ACTION_UP, VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT } from './index';
 
-import { connect } from 'react-redux';
-
-import { COMMENT_TIMESTAMP } from '../../../../consts/formats';
-import { USER_DEFAULT_AVATAR } from '../../../../consts/uris';
-import { NavLink } from 'react-router-dom';
 import { Strings } from 'lang-js-utils';
+import FontAwesome from 'react-fontawesome';
+import { connect } from 'react-redux';
+// import { NavLink } from 'react-router-dom';
+
+import { makeComment, modifyComment } from '../../../../redux/actions';
+import { COMMENT_TIMESTAMP } from '../../../../consts/formats';
+import { ENTER_KEY } from '../../../../consts/key-codes';
+import { USER_DEFAULT_AVATAR } from '../../../../consts/uris';
+import { trackEvent } from '../../../../utils/tracking';
+
+class PlaygroundBaseComment extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+			replyContent : ''
+		};
+	}
+
+	componentDidMount() {
+    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+
+		document.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+  }
+
+	componentWillUnmount() {
+		console.log('%s.componentWillUnmount()', this.constructor.name, { props : this.props, state : this.state });
+
+		document.removeEventListener('keydown', this.handleKeyDown);
+	}
 
 
-function PlaygroundBaseComment(props) {
-// 	console.log('PlaygroundBaseComment()', props);
+	handleDeleteComment = (comment)=> {
+		console.log('%s.handleDeleteComment()', this.constructor.name, { comment });
+		this.props.modifyComment({ comment, action : 'deleted' });
+	};
 
-	const { profile, ind, comment } = props;
-	const { id, src, type, author, content, uri, timestamp } = comment;
+	handleKeyDown = (event)=> {
+    // console.log('%s.handleKeyDown()', this.constructor.name, event);
+
+    const { replyContent } = this.state;
+    if (event.keyCode === ENTER_KEY && replyContent.length > 0) {
+      this.handleReplySubmit(event);
+    }
+  }
+
+	handleTextChange = (event)=> {
+		// console.log('%s.handleTextChange()', this.constructor.name, event);
+
+    const replyContent = event.target.value;
+    this.setState({ replyContent });
+	};
 
 
-	return (<div className="playground-base-comment" data-id={id} data-type={type} data-selected={comment.selected}>
-		<div className="playground-base-comment-header-wrapper">
-			<div className="playground-base-comment-header-icon-wrapper">
-				{(src !== 'npm' && ind >= 0) && (<div className="playground-base-comment-header-icon avatar-wrapper"><div>{ind}</div></div>)}
-				<div className="playground-base-comment-header-icon avatar-wrapper"><img src={(!author.avatar) ? USER_DEFAULT_AVATAR : author.avatar} alt={author.username} data-id={author.id} /></div>
+	handleReplySubmit = (event)=> {
+    console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { event });
+
+		const { comment } = this.props;
+		const { replyContent } = this.state;
+
+		trackEvent('button', 'reply-comment');
+
+    event.preventDefault();
+    event.stopPropagation();
+
+
+		this.props.makeComment({ comment, 
+			content : replyContent
+		});
+  };
+
+
+	render() {
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+
+		const { comment } = this.props;
+		const { replyContent } = this.state;
+
+		const contentProps = { ...this.props, replyContent};
+
+		return (<div className="playground-base-comment" data-id={comment.id} data-type={comment.type} data-votable={comment.votable} data-selected={comment.selected}>
+			<BaseCommentHeader { ...this.props} onDelete={this.handleDeleteComment} />
+			<div className="comment-body">
+				{(comment.votable) && (<BaseCommentVote { ...this.props } />)}
+				<BaseCommentContent { ...contentProps } onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} />
 			</div>
-			<div className="playground-base-comment-header-spacer" />
-			<div className="playground-base-comment-header-link-wrapper">
-				{(profile && profile.id === author.id && src === 'user') && (<div className="playground-base-comment-header-link" onClick={props.onDelete}>Delete</div>)}
-			</div>
-		</div>
-
-		<div className="playground-base-comment-timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
-		{(content) && (<div className="playground-base-comment-content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">${author.username}</span>`) }} />)}
-
-		
-		{/* {(type === 'component') && (<NavLink className="playground-base-comment-uri" to={uri}>{window.location.href.replace(/\/app\/.*$/, comment.uri)}</NavLink>)} */}
-		{(type === 'component') && (<div className="playground-base-comment-uri" onClick={props.onClick}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, comment.uri), 60)}</div>)}
-		{(comment.replies.length > 0) && (<div className="base-comment-replies-wrapper">
-			{(comment.replies.map((reply, i)=> {
-				return (<BaseCommentReply key={i} comment={reply} onDelete={props.onDelete} />);
-			}))}
-		</div>)}
-	</div>);
+			{(comment.state !== 'closed') && (<form className="reply-form">
+			{/* <input type="text" placeholder="Reply" value={replyContent} onChange={props.onTextChange} autoComplete="new-password" autoFocus /> */}
+				<input type="text" placeholder="Reply" value={replyContent} onChange={this.handleTextChange} autoComplete="new-password" autoFocus />
+			</form>)}
+		</div>);
+	}
 }
 
 
-const BaseCommentReply = (props)=> {
-	console.log('PlaygroundBaseComment.BaseCommentReply()', props);
+const BaseCommentVote = (props=> {
+	// console.log('PlaygroundBaseComment.BaseCommentVote()', { props });
 
-	const { profile, comment } = props;
-	const { id, src, type, author, content, uri, timestamp } = comment;
+	const { profile, comment, loading, vote } = props;
+  return (<div className="base-comment-vote" data-id={comment.id} data-author={(comment.author.id === profile.id)} data-loading={loading} data-disabled={(comment.author.id === profile.id || loading)} data-voted={vote !== null}>
+		<FontAwesome name="sort-up" className="vote-arrow vote-arrow-up" data-selected={vote && vote.score === 1} onClick={()=> (vote && vote.score === 1) ? null : props.onVote({ comment, action : VOTE_ACTION_UP })} />
+		<div className="score" onClick={()=> (vote) ? props.onVote({ comment, action : VOTE_ACTION_RETRACT }) : null}>{comment.score}</div>
+		<FontAwesome name="sort-down" className="vote-arrow vote-arrow-dn" data-selected={vote && vote.score === -1} onClick={()=> (vote && vote.score === -1) ? null : props.onVote({ comment, action : VOTE_ACTION_DOWN })} />
+ 	</div>);
+});
 
-	return (<div className="base-comment-reply">
-		<div className="playground-base-comment-timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
-		{(content) && (<div className="playground-base-comment-content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">${author.username}</span>`) }} />)}
+
+const BaseCommentHeader = (props)=> {
+	// console.log('PlaygroundBaseComment.BaseCommentHeader()', { props });
+
+	const { profile, ind, comment } = props;
+	const { src, author } = comment;
+
+	const handleDelete = (event)=> {
+		event.preventDefault();
+		props.onDelete(comment);
+	};
+
+	return (<div className="base-comment-header">
+		<div className="icon-wrapper">
+			{(src !== 'npm' && ind >= 0) && (<div className="icon avatar-wrapper"><div>{ind}</div></div>)}
+			<div className="icon avatar-wrapper"><img src={(!author.avatar) ? USER_DEFAULT_AVATAR : author.avatar} alt={author.username} data-id={author.id} /></div>
+		</div>
+		<div className="spacer" />
+		<div className="link-wrapper">
+			{(profile.id === author.id) && (<div className="link" onClick={handleDelete}>Delete</div>)}
+		</div>
 	</div>);
 };
 
+
+const BaseCommentContent = (props)=> {
+	// console.log('PlaygroundBaseComment.BaseCommentContent()', { props });
+
+	const { comment } = props;
+	const { author, type, content, uri, timestamp } = comment;
+
+	return (<div className="base-comment-content">
+		<div className="timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
+		{(content) && (<div className="content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">${author.username}</span>`) }} />)}
+		{(type === 'component') && (<div className="uri" onClick={props.onClick}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</div>)}
+		<BaseCommentReplies { ...props } onDelete={props.onDeleteReply} />
+	</div>
+	);
+}
+
+
+const BaseCommentReplies = (props)=> {
+	console.log('PlaygroundBaseComment.BaseCommentReplies()', { props });
+
+	const { profile, comment } = props;
+
+	const handleDelete = (event, reply)=> {
+		event.preventDefault();
+		props.onDelete(reply);
+	};
+
+	return((comment.replies.length > 0) ? (<div className="base-comment-replies-wrapper">
+		{(comment.replies.map((reply, i)=> {
+			return (<div className="base-comment-reply" key={i}>
+				<div className="header">
+					<div className="timestamp" dangerouslySetInnerHTML={{ __html : reply.timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
+					<div className="link-wrapper">
+						{(profile.id === reply.author.id) && (<div className="link" onClick={(event)=> handleDelete(event, reply)}>Delete</div>)}
+					</div>
+				</div>
+				{(reply.content) && (<div className="content" dangerouslySetInnerHTML={{ __html : reply.content.replace(reply.author.username, `<span class="txt-bold">${reply.author.username}</span>`) }} />)}
+			</div>);
+		}))}
+	</div>) : <></>);
+};
+
+
+const mapDispatchToProps = (dispatch)=> {
+  return ({
+		makeComment   : (payload)=> dispatch(makeComment(payload)),
+    modifyComment : (payload)=> dispatch(modifyComment(payload))
+	});
+};
 
 
 const mapStateToProps = (state, ownProps)=> {
@@ -65,4 +196,4 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
-export default connect(mapStateToProps)(PlaygroundBaseComment);
+export default connect(mapStateToProps, mapDispatchToProps)(PlaygroundBaseComment);

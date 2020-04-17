@@ -9,7 +9,7 @@
       "request": "launch",
       "reAttach": true,
       "name": "Launch Firefox on localhost:3000",
-      "url": "http://localhost:3000",
+      "url": "http://localhost:3000/app/pairurl-com/pairurl-com/390/desktop-macos/views/16089/comments/16911",
       "webRoot": "${workspaceFolder}",
       "disableOptimisticBPs": false
     },

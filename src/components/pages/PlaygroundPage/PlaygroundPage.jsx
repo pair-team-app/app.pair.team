@@ -235,7 +235,7 @@ class PlaygroundPage extends Component {
   };
 
   render() {
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, playgrounds, playground, component, comment } = this.props;
     const { cursor, accessibility, share, devices } = this.state;
@@ -302,10 +302,13 @@ const mapDispatchToProps = (dispatch)=> {
 const mapStateToProps = (state, ownProps)=> {
   return {
     playgrounds : state.playgrounds,
-    playground  : state.playground,
+    // playground  : state.playground,
+    playground  : state.playgrounds.find(({ id })=> (id === this.state.playground.id)),
     typeGroup   : state.typeGroup,
-    component   : state.component,
-    comment     : state.comment,
+    // component   : state.component,
+    component   : state.components.find(({ id })=> (id === this.state.component.id)),
+    // comment     : state.comment,
+    comment     : state.comments.find(({ id })=> (id === this.state.component.id)),
     profile     : state.userProfile,
     team        : state.team
   };

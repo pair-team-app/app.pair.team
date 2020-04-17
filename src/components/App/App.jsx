@@ -456,11 +456,10 @@ class App extends Component {
 
 
 
-    return (<div className={`site-wrapper${(darkThemed) ? ' site-wrapper-dark' : ''}`} data-devin-matty={true}>
-      
+    return (<div className="site-wrapper" data-theme={(darkThemed) ? 'dark' : 'light'} data-devin-matty={true}>
       {(!matchPlaygrounds) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
 
-	    <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND) && !location.pathname.includes(Pages.ASK)) ? ' playground-page-wrapper' : ''}`}>
+	    <div className="page-wrapper" data-playground={(location.pathname.startsWith(Pages.PLAYGROUND) && !location.pathname.includes(Pages.ASK))}>
 		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
 	    </div>
 		  
@@ -557,10 +556,15 @@ const mapStateToProps = (state, ownProps)=> {
     profile        : state.userProfile,
     team           : state.team,
     playgrounds    : state.playgrounds,
+    // playground     : state.playground,
+    playground  : state.playgrounds.find(({ id })=> (id === this.state.playground.id)),
     playground     : state.playground,
     typeGroup      : state.typeGroup,
+    // component      : state.component,
+    component   : state.components.find(({ id })=> (id === this.state.component.id)),
     component      : state.component,
-    comment        : state.comment,
+    // comment        : state.comment,
+    comment     : state.comments.find(({ id })=> (id === this.state.component.id)),
     matchPath      : state.matchPath,
     resizeBounds   : state.resizeBounds
   };

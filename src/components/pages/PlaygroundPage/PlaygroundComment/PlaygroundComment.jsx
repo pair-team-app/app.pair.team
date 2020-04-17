@@ -49,10 +49,10 @@ class PlaygroundComment extends Component {
   componentWillUnmount() {
     //     console.log('%s.componentWillUnmount()', this.constructor.name);
 
-    const { comment } = this.props;
-    if (comment.id === 0) {
+    // const { comment } = this.props;
+    // if (comment.id === 0) {
       document.removeEventListener('keydown', this.handleKeyDown);
-    }
+    // }
   }
 
   handleAddSubmit = (event)=> {

@@ -82,21 +82,21 @@
 	--orthodox-margin-base: 20px;
 	--orthodox-padding-base: 20px;
 
+--orthodox-margin-mini: calc(var(--orthodox-margin-base) * 0.25);
 	--orthodox-margin-half: calc(var(--orthodox-margin-base) * 0.5);
 	--orthodox-margin-less: calc(var(--orthodox-margin-base) * 0.75);
-	--orthodox-margin-mini: calc(var(--orthodox-margin-base) * 0.25);
 	--orthodox-margin-more: calc(var(--orthodox-margin-base) * 1.25);
-	--orthodox-margin-huge: calc(var(--orthodox-margin-base) * 3.0);
 	--orthodox-margin-dbbl: calc(var(--orthodox-margin-base) * 2.0);
+	--orthodox-margin-huge: calc(var(--orthodox-margin-base) * 3.0);
 
+	--orthodox-padding-mini: calc(var(--orthodox-padding-base) * 0.25);
 	--orthodox-padding-half: calc(var(--orthodox-padding-base) * 0.5);
 	--orthodox-padding-less: calc(var(--orthodox-padding-base) * 0.75);
-	--orthodox-padding-mini: calc(var(--orthodox-padding-base) * 0.25);
 	--orthodox-padding-more: calc(var(--orthodox-padding-base) * 1.25);
+	--orthodox-padding-form: calc(var(--orthodox-padding-base) * 1.5);
 	--orthodox-padding-dbbl: calc(var(--orthodox-padding-base) * 2.0);
 	--orthodox-padding-huge: calc(var(--orthodox-padding-base) * 3.0);
 	--orthodox-padding-page: calc(var(--orthodox-padding-base) * 3.0);
-	--orthodox-padding-form: calc(var(--orthodox-padding-base) * 1.5);
 
 	--orthodox-padding-page-mobile: calc(var(--orthodox-padding-base) * 1.5);
 
