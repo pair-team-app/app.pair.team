@@ -2,9 +2,6 @@
 import React from 'react';
 import './CommentsPanelItem.css';
 
-import 'emoji-mart/css/emoji-mart.css'
-import { Picker } from 'emoji-mart';
-
 import PlaygroundBaseComment from '../../PlaygroundBaseComment';
 
 
@@ -15,10 +12,6 @@ function CommentsPanelItem(props) {
 	const handleDelete = (event)=> {
 		event.preventDefault();
 		props.onDelete(comment);
-	};
-
-	const handleEmoji = (emoji, event=null)=> {
-		console.log('PlaygroundBaseComment.handleEmoji()', { emoji, event });
 	};
 
 	return (<div className="comments-panel-item" data-id={comment.id} data-selected={selected}>

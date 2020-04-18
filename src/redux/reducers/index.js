@@ -6,7 +6,7 @@ import {
   USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, COMMENT_ADDED, COMMENT_UPDATED,
   TOGGLE_AX, TOGGLE_COMMENTS, UPDATE_RESIZE_BOUNDS
 } from '../../consts/action-types';
-import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
+import { LOG_REDUCER_PREFIX, LOG_REDUCER_POSTFIX } from '../../consts/log-ascii';
 
 const initialState = {
   componentTypes : [],
@@ -39,6 +39,9 @@ const initialState = {
       x : 0,
       y : 0
     }
+  },
+  cnt            : {
+    buildsPG : 0
   }
 };
 

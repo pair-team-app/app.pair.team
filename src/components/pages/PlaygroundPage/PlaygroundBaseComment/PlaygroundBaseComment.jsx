@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import './PlaygroundBaseComment.css';
 import { VOTE_ACTION_UP, VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT } from './index';
 
+import { Picker } from 'emoji-mart';
+import 'emoji-mart/css/emoji-mart.css'
 import { Strings } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
@@ -61,6 +63,10 @@ class PlaygroundBaseComment extends Component {
     this.setState({ replyContent });
 	};
 
+	handleEmoji = (emoji, event)=> {
+		console.log('PlaygroundBaseComment.handleEmoji()', { emoji, event });
+	};
+
 
 	handleReplySubmit = (event)=> {
     console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { event });
@@ -97,7 +103,9 @@ class PlaygroundBaseComment extends Component {
 			{(comment.state !== 'closed') && (<form className="reply-form">
 			{/* <input type="text" placeholder="Reply" value={replyContent} onChange={props.onTextChange} autoComplete="new-password" autoFocus /> */}
 				<input type="text" placeholder="Reply" value={replyContent} onChange={this.handleTextChange} autoComplete="new-password" autoFocus />
+				<Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize="24" native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} />
 			</form>)}
+			2010
 		</div>);
 	}
 }

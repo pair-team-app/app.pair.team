@@ -146,11 +146,11 @@ class App extends Component {
     } else {
       console.log('+=+=+=+=+=+=+=+', { local : matchPlaygrounds, props : this.props.matchPath, prev : prevProps.matchPath });
       if (matchPlaygrounds !== null && (this.props.matchPath === null || (this.props.matchPath && matchPlaygrounds.url !== this.props.matchPath.url))) {
-        this.props.updateMatchPath({ 
-          matchPath : { ...matchPlaygrounds,
-            location : this.props.location
-          } 
-        });
+        // this.props.updateMatchPath({ 
+        //   matchPath : { ...matchPlaygrounds,
+        //     location : this.props.location
+        //   } 
+        // });
       }  
 
 

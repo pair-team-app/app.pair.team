@@ -52,12 +52,7 @@ const AskPageComment = (props)=> {
 	};
 
 	return (<div className="ask-page-comment" data-id={comment.id} data-author={author} data-loading={loading}>
-    <div className="vote-wrapper" data-disabled={(author || loading)} data-voted={vote !== null}>
-      <FontAwesome name="sort-up" className="vote-arrow vote-arrow-up" data-selected={vote && vote.score === 1} onClick={()=> (vote && vote.score === 1) ? null : props.onVote({ comment, action : VOTE_ACTION_UP })} />
-      <div className="vote-score" onClick={()=> (vote) ? props.onVote({ comment, action : VOTE_ACTION_RETRACT }) : null}>{comment.score}</div>
-      <FontAwesome name="sort-down" className="vote-arrow vote-arrow-dn" data-selected={vote && vote.score === -1} onClick={()=> (vote && vote.score === -1) ? null : props.onVote({ comment, action : VOTE_ACTION_DOWN })} />
-    </div>
-		<PlaygroundBaseComment ind={-1} comment={{ ...comment, content : (comment.content || '--') }} onClick={(event)=> props.onClick(event, comment)} onDelete={handleDelete} />
+    <PlaygroundBaseComment ind={-1} comment={{ ...comment, content : (comment.content || '--') }} onClick={(event)=> props.onClick(event, comment)} onDelete={handleDelete} />
  	</div>);
 };
 

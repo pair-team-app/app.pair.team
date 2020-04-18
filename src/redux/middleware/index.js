@@ -19,15 +19,15 @@ import { DEVICES_LOADED,
   UPDATE_RESIZE_BOUNDS,
   COMMENT_ADDED, COMMENT_UPDATED
 } from '../../consts/action-types';
-import { LOG_MIDDLEWARE_PRE_PREFIX, LOG_MIDDLEWARE_POST_PREFIX } from '../../consts/log-ascii';
+import { LOG_MIDDLEWARE_PREFIX, LOG_MIDDLEWARE_POSTFIX } from '../../consts/log-ascii';
 import { fetchTeamBuilds, fetchTeamComments, fetchTeamLogo, fetchTeam, fetchBuildPlaygrounds, updateMatchPath, setTypeGroup, setComment, setComponent } from '../actions';
-import { TEAM_DEFAULT_AVATAR, Pages } from '../../consts/uris';
+import { Pages } from '../../consts/uris';
 
 
 const logFormat = ({ store, action, next, event })=> {
   // if (action && typeof action !== 'function' && action.type !== UPDATE_MOUSE_COORDS) {
     const { type, payload } = action;
-    console.log((event === 'PRE') ? LOG_MIDDLEWARE_PRE_PREFIX : LOG_MIDDLEWARE_POST_PREFIX, `“${type}”`, { payload, type : typeof action }, { store : store.getState(), next, action });
+    console.log((event === 'PRE') ? LOG_MIDDLEWARE_PREFIX : '', `“${type}”`, { action : (typeof action === 'function') ? action : { type, payload }, ofType : typeof action }, { store : store.getState(), next, action }, (event === 'POST' ? LOG_MIDDLEWARE_POSTFIX : ''));
   // }
 };
 
@@ -36,6 +36,10 @@ export function onMiddleware(store) {
   return ((next)=> (action)=> {
     const prevState = store.getState();
     const { dispatch } = store;
+
+    if (typeof action === 'function') {
+      return (action(dispatch, { ...prevState }));
+    }
 
     const { type, payload } = action;
     logFormat({ store, action, next, event : 'PRE' });
@@ -54,8 +58,6 @@ export function onMiddleware(store) {
         //   type : TEAM_LOADED,
         //   payload : { userProfile }
         // });
-
-        dispatch(fetchTeam({ userProfile }));
       }
 
       // payload = { userProfile };
@@ -81,16 +83,6 @@ export function onMiddleware(store) {
         // comments : (team.comments) ? team.comments.map((comment)=> (reformComment(comment, team))) : []
       };
 
-      if (!team.image === TEAM_DEFAULT_AVATAR) {
-        dispatch(fetchTeamLogo({ team }));
-      }
-
-
-      if (team.comments << 0 !== 0) {
-        // dispatch(fetchTeamComments({ team }));
-      }
-
-      dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
       // return (action(dispatch, { ...prevState, team }));
 
     } else if (type === TEAM_LOGO_LOADED) {
@@ -110,24 +102,29 @@ export function onMiddleware(store) {
   
     } else if (type === TEAM_BUILDS_LOADED) {
 
-      return (next(action));
-
       const { devices, componentTypes, team, matchPath } = prevState;
       const { params } = matchPath || {};
 
       // const playgrounds = [ ...payload.playgrounds].map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team)));//.map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
       const playgrounds = [ ...payload.playgrounds].map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
-      const components = [ ...prevState.components, ...playgrounds.map(({ components })=> (components)).flat()].map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? component : null));
-      const comments = [ ...prevState.comments, ...components.map(({ comments })=> (comments)).flat()].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
-      const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || playgrounds.pop();
-      const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) || null : null;
-      const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
-      const comment = (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
 
-      playgrounds.filter(({ buildID })=> (buildID !== params.buildID)).forEach(({ buildID })=> {
-        dispatch(fetchBuildPlaygrounds({ buildID }));
+      const components = [ ...prevState.components ];//, ...playgrounds.map(({ components })=> (components)).flat()].map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? component : null));
+      const comments = [ ...prevState.comments ];//, ...components.map(({ comments })=> (comments)).flat()].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
+      const playground = null;//playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || playgrounds.pop();
+      const typeGroup = null;//(playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) || null : null;
+      const component = null;//(playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
+      const comment = null;//(component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
+
+      const buildIDs = playgrounds.filter(({ buildID })=> (buildID !== params.buildID)).map(({ buildID })=> (buildID));
+      
+
+      playgrounds.filter(({ buildID })=> (buildID !== params.buildID)).forEach(({ buildID }, i)=> {
+        if (i === 0) {
+          dispatch(fetchBuildPlaygrounds({ buildID }));
+        }
       });
 
+      payload.buildIDs = buildIDs
       payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
       payload.components = components;
       payload.comments = comments;
@@ -420,6 +417,32 @@ export function onMiddleware(store) {
 
     const nextAction = next(action);
     logFormat({ store, action, next, event : 'POST' });
+
+
+    //⟪ ⟫ // ⦃ ⦄ // ⦇ ⦈ // ⦉ ⦊
+    // console.log('<<=\\MW\\:=', `POST ⦅⟨—MW—⟩⦆ "${type}"`, );
+
+    if (type === TEAM_LOADED) {
+      const { team } = store.getState();
+      
+      const deviceSlug = 'desaktop-macos';
+      const buildID = 390;
+
+
+      console.log('!¡!¡!¡!¡!¡!¡!¡!', 'POST MW // "TEAM_LOADED"', { action, store : store.getState() } , '!¡!¡!¡!¡!¡!¡!¡!');
+
+      // return (action(dispatch, { ...prevState, team })); // <<-- right way
+      // return (action(dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }), { team })));
+      // return (action(dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }))));
+      // return (action(dispatch, { team }));
+
+
+
+      // dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
+      // return (action(dispatch, { ...prevState, team }));
+
+      
+    }
 
     return (nextAction);
   });
