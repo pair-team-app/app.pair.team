@@ -188,6 +188,7 @@
 
 .base-comment-replies-wrapper {
 	margin-left: var(--orthodox-margin-half);
+	width: 100%;
 }
 
 .base-comment-reply {

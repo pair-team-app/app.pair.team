@@ -7,7 +7,7 @@ import {
   SET_INVITE, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TYPE_GROUP, SET_TEAM,
   USER_PROFILE_LOADED, USER_PROFILE_UPDATED, USER_PROFILE_ERROR,
   UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, UPDATE_RESIZE_BOUNDS, SET_REDIRECT_URI, TOGGLE_THEME, TEAM_LOGO_LOADED, 
-  COMMENT_ADDED, COMMENT_VOTED, COMMENT_UPDATED
+  COMMENT_ADDED, COMMENT_UPDATED
 } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
@@ -324,7 +324,7 @@ export function makeVote(payload) {
       console.log('VOTE_COMMENT', response.data);
 
       dispatch({
-        type    : COMMENT_VOTED,
+        type    : COMMENT_UPDATED,
         payload : { comment : response.data.comment }
       });
     }).catch((error)=> {});

@@ -103,7 +103,7 @@ class PlaygroundBaseComment extends Component {
 			{(comment.state !== 'closed') && (<form className="reply-form">
 			{/* <input type="text" placeholder="Reply" value={replyContent} onChange={props.onTextChange} autoComplete="new-password" autoFocus /> */}
 				<input type="text" placeholder="Reply" value={replyContent} onChange={this.handleTextChange} autoComplete="new-password" autoFocus />
-				<Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} />
+				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 			</form>)}
 		</div>);
 	}

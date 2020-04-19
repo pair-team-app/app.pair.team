@@ -16,7 +16,7 @@ import { DEVICES_LOADED,
   UPDATE_MATCH_PATH,
   UPDATE_MOUSE_COORDS,
   SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT,
-  COMMENT_VOTED, UPDATE_RESIZE_BOUNDS
+  COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, UPDATE_RESIZE_BOUNDS
 } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { fetchTeamBuilds, fetchTeamComments, fetchTeamLogo, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setTypeGroup, setComment, setComponent } from '../actions';
@@ -38,6 +38,9 @@ export function onMiddleware(store) {
 
     const { type, payload } = action;
     logFormat({ prevState, action, next });
+
+
+    // next(action);
 
     if (type === DEVICES_LOADED) {
       const { devices } = payload;
@@ -78,9 +81,9 @@ export function onMiddleware(store) {
         dispatch(fetchTeamLogo({ team }));
       }
 
-      if (team.comments << 0 !== 0) {
+      // if (team.comments << 0 !== 0) {
         dispatch(fetchTeamComments({ team }));
-      }
+      // }
 
       dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
 
@@ -106,11 +109,11 @@ export function onMiddleware(store) {
 
       const playgrounds = [ ...payload.playgrounds].map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
       const components = [ ...prevState.components, ...playgrounds.map(({ components })=> (components)).flat()].map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? component : null)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i > ii) ? 1 : 0));
-      
+      const comments = [ ...prevState.comments , ...components.map(({ comments })=> (comments)).flat()].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
       console.log('!!!!!!!!!!!!!!!', { components });
       
 
-      const comments = [ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()];//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
+      // const comments = [ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()];//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
       const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || playgrounds.pop();
       const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) || null : null;
       const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
@@ -125,16 +128,12 @@ export function onMiddleware(store) {
       payload.component = component;
       payload.comment = comment;
 
-      // playgrounds.forEach(({ buildID })=> {
-      //   dispatch(fetchBuildPlaygrounds({ buildID }));
-      // });
-
       playgrounds.filter(({ buildID })=> (buildID !== params.buildID)).forEach(({ buildID })=> {
         dispatch(fetchBuildPlaygrounds({ buildID }));
       });
 
     } else if (type === TEAM_COMMENTS_LOADED) {
-      const { team } = prevState;      
+      const { team } = prevState;
       const comments = payload.comments.map((comment, i)=> (reformComment(comment, `${Pages.ASK}/${team.slug}/ask`)));
 
       payload.team = (team) ? { ...team, comments } : null;
@@ -145,7 +144,10 @@ export function onMiddleware(store) {
       const { params } = matchPath || {};
 
       const playgrounds = [ ...new Set([ ...prevState.playgrounds, ...payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)})).filter(({ id })=> (!prevState.playgrounds.map(({ id })=> (id)).includes(id)))])];
-      const comments = [ ...new Set([ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()])];
+      // const comments = [ ...new Set([ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()])];
+      const components = [ ...prevState.components, ...playgrounds.map(({ components })=> (components)).flat()].map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? component : null)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i > ii) ? 1 : 0));
+      const comments = [ ...prevState.comments , ...components.map(({ comments })=> (comments)).flat()].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
+      
       // const playground = (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || (prevState.playground || [ ...playgrounds].shift()) : null;
       const playground = (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null : null;
       const typeGroup = (playground) ? (playground.typeGroups.find(({ key })=> (key === params.typeGroupSlug)) || playground.typeGroups.find(({ key })=> (key === 'views'))) : null;
@@ -210,6 +212,25 @@ export function onMiddleware(store) {
     } else if (type === UPDATE_RESIZE_BOUNDS) {
       payload.resizeBounds = payload.bounds;
       delete (payload.bounds);
+
+    } else if (type === COMMENT_ADDED) {  
+      const { comment } = payload;
+      const { comments, team } = prevState
+      payload.comments = [ ...comments, reformComment(comment, `${Pages.ASK}/${team.slug}/ask/comments`)];
+
+    } else if (type === COMMENT_UPDATED) {
+      const { comments, team } = prevState;
+      const prevComment = comments.find(({ id })=> (id === payload.comment.id));
+      
+      if (payload.comment.state === 'deleted') {
+        const { comment } = payload;
+        payload.comments = comments.filter(({ id })=> (id !== comment.id));
+      
+      } else {
+        payload.comment = reformComment(payload.comment, prevComment.uri);
+        payload.comments = comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment));
+      }
+
 
     } else if (type === COMMENT_VOTED) {
       const { team, playgrounds, playground, typeGroup, component } = prevState;
