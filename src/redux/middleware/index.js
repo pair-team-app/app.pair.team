@@ -104,7 +104,6 @@ export function onMiddleware(store) {
       const { devices, componentTypes, team, matchPath } = prevState;
       const { params } = matchPath || {};
 
-      // const playgrounds = [ ...payload.playgrounds].map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team)));//.map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
       const playgrounds = [ ...payload.playgrounds].map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
       const components = [ ...prevState.components, ...playgrounds.map(({ components })=> (components)).flat()].map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? component : null)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i > ii) ? 1 : 0));
       

@@ -6,7 +6,7 @@ import { jsonFormatKB } from '../../../../consts/formats';
 export const reformComment = (comment, uri, overwrite={})=> {
   // console.log('reformComment()', { comment, uri, overwrite }, { position : typeof comment.position });
 
-  const { id, position, content, author, votes, added } = comment;
+  const { id, position, content, author, votes, replies, added } = comment;
 
   const reformed = { ...comment,
     id       : id << 0,
@@ -21,6 +21,7 @@ export const reformComment = (comment, uri, overwrite={})=> {
     selected  : false,
     epoch     : (added) ? (moment.utc(added).valueOf() * 0.001) << 0 : 0,
     timestamp : (added) ? moment(added).add(moment().utcOffset() << 0, 'minute') : moment.utc(),
+    replies   : replies.map((reply)=> (reformComment(reply, uri))),
     ...overwrite
   }
 

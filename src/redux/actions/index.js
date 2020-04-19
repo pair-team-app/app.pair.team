@@ -3,10 +3,11 @@ import { Bits, Objects } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { 
   COMPONENT_TYPES_LOADED, EVENT_GROUPS_LOADED, DEVICES_LOADED, PRODUCTS_LOADED,
-  TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, COMMENT_VOTED, PLAYGROUND_LOADED, TEAM_COMMENTS_LOADED,
+  TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, PLAYGROUND_LOADED, TEAM_COMMENTS_LOADED,
   SET_INVITE, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TYPE_GROUP, SET_TEAM,
   USER_PROFILE_LOADED, USER_PROFILE_UPDATED, USER_PROFILE_ERROR,
-  UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, UPDATE_RESIZE_BOUNDS, SET_REDIRECT_URI, TOGGLE_THEME, TEAM_LOGO_LOADED
+  UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, UPDATE_RESIZE_BOUNDS, SET_REDIRECT_URI, TOGGLE_THEME, TEAM_LOGO_LOADED, 
+  COMMENT_ADDED, COMMENT_VOTED, COMMENT_UPDATED
 } from '../../consts/action-types';
 import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
@@ -278,6 +279,33 @@ export function fetchUserProfile(payload=null) {
   };
 }
 
+export function makeComment(payload) {
+  return ((dispatch, getState)=> {
+    logFormat('makeComment()', getState(), payload);
+
+    const { userProfile : profile, team, component } = getState();
+    const { comment, content, position } = payload;
+    
+    axios.post(API_ENDPT_URL, {
+      action  : 'ADD_COMMENT',
+      payload : { content, 
+        position     : (position || null),
+        user_id      : profile.id,
+        team_id      : team.id,
+        component_id : (component) ? component.id : 0,
+        comment_id   : (comment) ? comment.id : 0
+      }
+    }).then((response)=> {
+      console.log('ADD_COMMENT', response.data, response.data.comment);
+
+      dispatch({
+        type    : (!comment) ? COMMENT_ADDED : COMMENT_UPDATED,
+        payload : { comment : response.data.comment }
+      });
+    }).catch((error)=> {});
+  });
+}
+
 export function makeVote(payload) {
   return ((dispatch, getState)=> {
     logFormat('makeVote()', getState(), payload);
@@ -302,6 +330,30 @@ export function makeVote(payload) {
     }).catch((error)=> {});
   });
 }
+
+export function modifyComment(payload) {
+  return ((dispatch, getState)=> {
+    logFormat('modifyComment()', getState(), payload);
+    const { comment, action } = payload;
+
+    axios.post(API_ENDPT_URL, {
+      action  : 'UPDATE_COMMENT',
+      payload : {
+        comment_id : comment.id,
+        state      : action
+      }
+    }).then((response)=> {
+      console.log('UPDATE_COMMENT', response.data);
+
+      dispatch({
+        type    : COMMENT_UPDATED,
+        payload : { comment : response.data.comment }
+      });
+
+    }).catch((error)=> {});
+  });
+}
+
 
 export function setInvite(payload) {
   logFormat('setInvite()', null, payload);
