@@ -157,36 +157,7 @@ class AskPage extends Component {
     this.setState({ commentContent });
   };
 
-  handleVote = ({ comment, action })=> {
-    trackEvent('button', (action === VOTE_ACTION_UP) ? 'upvote-comment' : (action === VOTE_ACTION_DOWN) ? 'downvote-comment' : 'retract-vote');
     
-    const { profile, team, comments } = this.props;
-
-
-    this.props.makeVote({ comment, action });
-
-
-    // const score = (action === VOTE_ACTION_UP) ? 1 : (action === VOTE_ACTION_DOWN) ? -1 : 0;
-
-    // axios.post(API_ENDPT_URL, {
-    //   action: 'VOTE_COMMENT',
-    //   payload: { score,
-    //     user_id    : profile.id,
-    //     comment_id : comment.id
-    //   }
-    // }).then((response)=> {
-		// 	console.log('VOTE_COMMENT', response.data);
-
-    //   const comment = reformComment(response.data.comment);
-    //   const { comments } = this.props;
-
-    //   team.comments = team.comments.map((i)=> ((i.id === comment.id) ? comment : i));
-
-    //   this.props.setTeam(team);
-    //   this.onReloadComments(false);
-
-    // }).catch((error)=> {});
-  };
 
   onReloadComments = (refresh=true)=> {
     console.log('%s.onReloadComments()', this.constructor.name, { refresh });
