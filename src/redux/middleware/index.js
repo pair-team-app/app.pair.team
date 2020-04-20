@@ -41,7 +41,8 @@ export function onMiddleware(store) {
 
     if (typeof action === 'function') {
       // next(action);
-      return (action(dispatch, store.getState ));
+      // return (action(dispatch, { ...prevState }));
+      return (action(dispatch, store.getState));
     }
 
     // next(action);
@@ -90,7 +91,7 @@ export function onMiddleware(store) {
       }
 
       // console.log('!!!!!!!!!!!!!!!', { prevState, params, team, buildID, deviceSlug });
-      // dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
+      dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
 
     } else if (type === TEAM_LOGO_LOADED) {
       const { logo } = payload;
@@ -216,10 +217,15 @@ export function onMiddleware(store) {
       const { comments, team } = prevState;
       const prevComment = comments.find(({ id })=> (id === payload.comment.id));
       
-      payload.comment = reformComment(payload.comment, prevComment.uri);
-      payload.comments = comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment));
+      if (payload.comment.state === 'deleted') {
+        const { comment } = payload;
+        payload.comments = comments.filter(({ id })=> (id !== comment.id));
       
-      payload.comments = comments.filter(({ state })=> (state !== 'deleted'));
+      } else {
+        payload.comment = reformComment(payload.comment, prevComment.uri);
+        payload.comments = comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment));
+      }
+
 
     } else if (type === COMMENT_VOTED) {
       const { team, playgrounds, playground, typeGroup, component } = prevState;
