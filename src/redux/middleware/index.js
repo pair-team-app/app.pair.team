@@ -90,7 +90,7 @@ export function onMiddleware(store) {
       }
 
       // console.log('!!!!!!!!!!!!!!!', { prevState, params, team, buildID, deviceSlug });
-      dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
+      // dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
 
     } else if (type === TEAM_LOGO_LOADED) {
       const { logo } = payload;
@@ -216,15 +216,10 @@ export function onMiddleware(store) {
       const { comments, team } = prevState;
       const prevComment = comments.find(({ id })=> (id === payload.comment.id));
       
-      if (payload.comment.state === 'deleted') {
-        const { comment } = payload;
-        payload.comments = comments.filter(({ id })=> (id !== comment.id));
+      payload.comment = reformComment(payload.comment, prevComment.uri);
+      payload.comments = comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment));
       
-      } else {
-        payload.comment = reformComment(payload.comment, prevComment.uri);
-        payload.comments = comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment));
-      }
-
+      payload.comments = comments.filter(({ state })=> (state !== 'deleted'));
 
     } else if (type === COMMENT_VOTED) {
       const { team, playgrounds, playground, typeGroup, component } = prevState;
