@@ -9,7 +9,7 @@ import { trackEvent } from '../../../utils/tracking';
 import BasePage from '../BasePage';
 import './AskPage.css';
 import AskPageHeader, { SORT_BY_SCORE, SORT_BY_DATE } from './AskPageHeader';
-import AskPageCommentsPanel, { VOTE_ACTION_UP, VOTE_ACTION_DOWN } from './AskPageCommentsPanel';
+import AskPageCommentsPanel from './AskPageCommentsPanel';
 import { SettingsMenuItemTypes } from '../PlaygroundPage/PlaygroundHeader/UserSettings';
 import PlaygroundNavPanel from '../PlaygroundPage/PlaygroundNavPanel';
 import { reformComment } from '../PlaygroundPage/utils/reform';
@@ -92,22 +92,22 @@ class AskPage extends Component {
   };
 
 
-  handleDeleteComment = (comment)=> {
-    //console.log('%s.handleDeleteComment()', this.constructor.name, { comment });
-    trackEvent('button', 'delete-comment');
+  // handleDeleteComment = (comment)=> {
+  //   //console.log('%s.handleDeleteComment()', this.constructor.name, { comment });
+  //   trackEvent('button', 'delete-comment');
 
-    axios.post(API_ENDPT_URL, {
-      action: 'UPDATE_COMMENT',
-      payload: {
-        comment_id: comment.id,
-        state: 'deleted'
-      }
-    }).then((response)=> {
-      console.log('UPDATE_COMMENT', response.data);
-      this.onReloadComments();
+  //   axios.post(API_ENDPT_URL, {
+  //     action: 'UPDATE_COMMENT',
+  //     payload: {
+  //       comment_id: comment.id,
+  //       state: 'deleted'
+  //     }
+  //   }).then((response)=> {
+  //     console.log('UPDATE_COMMENT', response.data);
+  //     this.onReloadComments();
 
-    }).catch((error)=> {});
-  };
+  //   }).catch((error)=> {});
+  // };
 
   handleKeyDown = (event)=> {
     // console.log('%s.handleKeyDown()', this.constructor.name, event);
@@ -169,7 +169,7 @@ class AskPage extends Component {
       fetching : true,
       topSort  : (refresh) ? [] : topSort
     }, ()=> {
-      this.props.fetchTeamComments({ team });
+      // this.props.fetchTeamComments({ team });
     });
   };
 
@@ -210,7 +210,6 @@ class AskPage extends Component {
               comments={(sort === SORT_BY_DATE) ? comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : topSort.map((commentID)=> (comments.find(({ id })=> (id === commentID)) || null)).filter((comment)=> (comment !== null))} 
               loading={fetching}
               sort={sort}
-              onVote={this.handleVote} 
               onDelete={this.handleDeleteComment} 
             />
           </div>

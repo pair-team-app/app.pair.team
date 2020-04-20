@@ -118,7 +118,7 @@ class App extends Component {
       }
     }
 
-    console.log('!!!!!!!!!!!', { online : Browsers.isOnline() });
+    // console.log('!!!!!!!!!!!', { online : Browsers.isOnline() });
     // console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds });
 
     // extract url props
@@ -144,7 +144,7 @@ class App extends Component {
       // });
     
     } else {
-      console.log('+=+=+=+=+=+=+=+', { local : matchPlaygrounds, props : this.props.matchPath, prev : prevProps.matchPath });
+      // console.log('+=+=+=+=+=+=+=+', { local : matchPlaygrounds, props : this.props.matchPath, prev : prevProps.matchPath });
       if (matchPlaygrounds !== null && (this.props.matchPath === null || (this.props.matchPath && matchPlaygrounds.url !== this.props.matchPath.url))) {
         this.props.updateMatchPath({ 
           matchPath : { ...matchPlaygrounds,

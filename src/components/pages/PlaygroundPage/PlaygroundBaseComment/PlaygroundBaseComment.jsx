@@ -10,7 +10,7 @@ import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 // import { NavLink } from 'react-router-dom';
 
-import { makeComment, modifyComment } from '../../../../redux/actions';
+import { makeComment, modifyComment, makeVote } from '../../../../redux/actions';
 import { COMMENT_TIMESTAMP } from '../../../../consts/formats';
 import { ENTER_KEY } from '../../../../consts/key-codes';
 import { USER_DEFAULT_AVATAR } from '../../../../consts/uris';
@@ -85,6 +85,13 @@ class PlaygroundBaseComment extends Component {
 		});
   };
 
+	handleVote = ({ comment, action })=> {
+		console.log('BaseCommentContent.handleReplySubmit()', this.constructor.name, { comment, action });
+
+		trackEvent('button', (action === VOTE_ACTION_UP) ? 'upvote-comment' : (action === VOTE_ACTION_DOWN) ? 'downvote-comment' : 'retract-vote');
+    this.props.makeVote({ comment, action });
+	}
+
 
 	render() {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
@@ -97,7 +104,7 @@ class PlaygroundBaseComment extends Component {
 		return (<div className="playground-base-comment" data-id={comment.id} data-type={comment.type} data-votable={comment.votable} data-selected={comment.selected}>
 			<BaseCommentHeader { ...this.props} onDelete={this.handleDeleteComment} />
 			<div className="comment-body">
-				{(comment.votable) && (<BaseCommentVote { ...this.props } />)}
+				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
 				<BaseCommentContent { ...contentProps } onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} />
 			</div>
 			{(comment.state !== 'closed') && (<form className="reply-form">
@@ -115,9 +122,9 @@ const BaseCommentVote = (props=> {
 
 	const { profile, comment, loading, vote } = props;
   return (<div className="base-comment-vote" data-id={comment.id} data-author={(comment.author.id === profile.id)} data-loading={loading} data-disabled={(comment.author.id === profile.id || loading)} data-voted={vote !== null}>
-		<FontAwesome name="sort-up" className="vote-arrow vote-arrow-up" data-selected={vote && vote.score === 1} onClick={()=> (vote && vote.score === 1) ? null : props.onVote({ comment, action : VOTE_ACTION_UP })} />
-		<div className="score" onClick={()=> (vote) ? props.onVote({ comment, action : VOTE_ACTION_RETRACT }) : null}>{comment.score}</div>
-		<FontAwesome name="sort-down" className="vote-arrow vote-arrow-dn" data-selected={vote && vote.score === -1} onClick={()=> (vote && vote.score === -1) ? null : props.onVote({ comment, action : VOTE_ACTION_DOWN })} />
+		<FontAwesome name="sort-up" className="vote-arrow vote-arrow-up" data-selected={vote && vote.score === 1} onClick={()=> ((comment.author.id === profile.id) || (vote && vote.score === 1)) ? null : props.onVote({ comment, action : VOTE_ACTION_UP })} />
+		<div className="score" onClick={()=> (comment.author.id !== profile.id && vote) ? props.onVote({ comment, action : VOTE_ACTION_RETRACT }) : null}>{comment.score}</div>
+		<FontAwesome name="sort-down" className="vote-arrow vote-arrow-dn" data-selected={vote && vote.score === -1} onClick={()=> ((comment.author.id === profile.id) || (vote && vote.score === -1)) ? null : props.onVote({ comment, action : VOTE_ACTION_DOWN })} />
  	</div>);
 });
 
@@ -150,12 +157,12 @@ const BaseCommentContent = (props)=> {
 	// console.log('PlaygroundBaseComment.BaseCommentContent()', { props });
 
 	const { comment } = props;
-	const { author, type, content, uri, timestamp } = comment;
+	const { author, types, content, uri, timestamp } = comment;
 
 	return (<div className="base-comment-content">
 		<div className="timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
 		{(content) && (<div className="content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">${author.username}</span>`) }} />)}
-		{(type === 'component') && (<div className="uri" onClick={props.onClick}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</div>)}
+		{(types.find('component')) && (<div className="uri" onClick={props.onClick}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</div>)}
 		<BaseCommentReplies { ...props } onDelete={props.onDeleteReply} />
 	</div>
 	);
@@ -191,7 +198,8 @@ const BaseCommentReplies = (props)=> {
 const mapDispatchToProps = (dispatch)=> {
   return ({
 		makeComment   : (payload)=> dispatch(makeComment(payload)),
-    modifyComment : (payload)=> dispatch(modifyComment(payload))
+    modifyComment : (payload)=> dispatch(modifyComment(payload)),
+		makeVote      : (payload)=> dispatch(makeVote(payload))
 	});
 };
 

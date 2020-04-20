@@ -26,7 +26,9 @@ function AskPageCommentsPanel(props) {
 			{(comments.map((comment, i)=> {
         const vote = (comment.votes.find(({ author, score })=> (author.id === profile.id && score !== 0 )) || null);
 
-				return (<AskPageComment 
+        return (<PlaygroundBaseComment key={i} loading={loading} vote={vote} comment={comment} />);
+
+				{/* return (<AskPageComment 
           key={i} 
           loading={loading} 
           author={(comment.author.id === profile.id)}
@@ -35,7 +37,7 @@ function AskPageCommentsPanel(props) {
           onClick={handleCommentClick}
           onVote={props.onVote}
           onDelete={props.onDelete} 
-        />);
+        />); */}
 			}))}
 		</div>
 	</div>);

@@ -10,7 +10,6 @@ import { DEVICES_LOADED,
   TEAM_LOGO_LOADED, 
   TEAM_BUILDS_LOADED, 
   TEAM_COMMENTS_LOADED, 
-  TYPE_GROUP_LOADED, 
   USER_PROFILE_UPDATED, 
   USER_PROFILE_LOADED, 
   UPDATE_MATCH_PATH,
@@ -26,7 +25,7 @@ import { TEAM_DEFAULT_AVATAR, Pages } from '../../consts/uris';
 const logFormat = ({ prevState, action, next, meta=null })=> {
   if (action && typeof action !== 'function' && action.type !== UPDATE_MOUSE_COORDS) {
     const { type, payload } = action;
-    console.log(LOG_MIDDLEWARE_PREFIX, `“${type}”`, { payload, action, meta }, { prevState, next });
+    
   }
 };
 
@@ -39,6 +38,11 @@ export function onMiddleware(store) {
     const { type, payload } = action;
     logFormat({ prevState, action, next });
 
+
+    if (typeof action === 'function') {
+      // next(action);
+      return (action(dispatch, { ...prevState }));
+    }
 
     // next(action);
 
@@ -81,9 +85,9 @@ export function onMiddleware(store) {
         dispatch(fetchTeamLogo({ team }));
       }
 
-      // if (team.comments << 0 !== 0) {
+      if (team.comments << 0 !== 0) {
         dispatch(fetchTeamComments({ team }));
-      // }
+      }
 
       dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
 
@@ -92,15 +96,6 @@ export function onMiddleware(store) {
       const { team } = prevState;
 
       payload.team = { ...team, logo : logo.replace(/\\n/g, '', logo) };
-
-    } else if (type === TYPE_GROUP_LOADED) {
-      const { componentTypes, playground } = prevState;
-      const components = [ ...new Set([ ...playground.components, ...payload.components.map((component)=> (reformComponent(component, componentTypes))) ])];
-
-      playground.components = [ ...components ];
-      payload.playgrounds = prevState.playgrounds.map((item)=> ((item.id === playground.id) ? playground : item)).sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
-      payload.playground = playground;
-      
   
     } else if (type === TEAM_BUILDS_LOADED) {
 
@@ -108,9 +103,9 @@ export function onMiddleware(store) {
       const { params } = matchPath || {};
 
       const playgrounds = [ ...payload.playgrounds].map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)}));
-      const components = [ ...prevState.components, ...playgrounds.map(({ components })=> (components)).flat()].map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? component : null)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i > ii) ? 1 : 0));
-      const comments = [ ...prevState.comments , ...components.map(({ comments })=> (comments)).flat()].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
-      console.log('!!!!!!!!!!!!!!!', { components });
+      const components = [ ...prevState.components, ...playgrounds.map(({ components })=> (components)).flat()];//.map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? reformComponent(component) : null)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i > ii) ? 1 : 0));
+      const comments = [ ...prevState.comments, ...components.map(({ comments })=> (comments)).flat()];//.map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
+      
       
 
       // const comments = [ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()];//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
@@ -196,7 +191,7 @@ export function onMiddleware(store) {
         delete (params['1']);
         payload.matchPath = { ...payload.matchPath, params };
 
-        // console.log('!!!!!!!!!!!!!!!', { prevState, params });
+        // 
       }
 
     } else if (type === UPDATE_MOUSE_COORDS) {
@@ -253,7 +248,7 @@ export function onMiddleware(store) {
             componentID : id
           })).flat();//.find(({ id })=> (id === comment.id));
 
-          // console.log('!!!!!!!!!!!!!!!', { components, comm });
+          // 
 
         
         } else {
@@ -279,7 +274,7 @@ export function onMiddleware(store) {
         
 
 
-        // console.log('!!!!!!!!!!!!!!!', { playground, params });
+        // 
 
         comment = reformComment(comment, `${Pages.PLAYGROUND}/${team.slug}/${playground.projectSlug}/${playground.buildID}/${playground.device.slug}}/${typeGroup.slug}/${component.id}/comments`);
       }

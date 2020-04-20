@@ -22,7 +22,7 @@ const logFormat = (action, state, payload=null, meta='')=> {
 export function fetchBuildPlaygrounds(payload=null) {
   const { buildID } = payload;
   return (dispatch, getState)=> {
-    logFormat('fetchBuildPlaygrounds()', getState(), payload);
+    logFormat('fetchBuildPlaygrounds()', (typeof getState === 'function') ? getState() : getState, payload);
 
     axios.post(API_ENDPT_URL, {
       action  : 'BUILD_PLAYGROUNDS',
@@ -43,7 +43,7 @@ export function fetchBuildPlaygrounds(payload=null) {
 
 export function fetchComponentTypes(payload=null) {
   return (dispatch, getState)=> {
-    logFormat('fetchComponentTypes()', getState(), payload);
+    logFormat('fetchComponentTypes()', (typeof getState === 'function') ? getState() : getState, payload);
     
     axios.post(API_ENDPT_URL, {
       action: 'COMPONENT_TYPES',
@@ -60,7 +60,7 @@ export function fetchComponentTypes(payload=null) {
 
 export function fetchDevices(payload=null) {
   return (dispatch, getState)=> {
-    logFormat('fetchDevices()', getState(), payload);
+    logFormat('fetchDevices()', (typeof getState === 'function') ? getState() : getState, payload);
     
     axios.post(API_ENDPT_URL, {
       action  : 'DEVICES',
@@ -79,7 +79,7 @@ export function fetchDevices(payload=null) {
 
 export function fetchEventGroups(payload=null) {
   return (dispatch, getState)=> {
-    logFormat('fetchEventGroups()', getState(), payload);
+    logFormat('fetchEventGroups()', (typeof getState === 'function') ? getState() : getState, payload);
 
     axios.post(API_ENDPT_URL, {
       action  : 'EVENT_GROUPS',
@@ -103,7 +103,7 @@ export function fetchEventGroups(payload=null) {
 
 // export function fetchPlayground(payload=null) {
 //   return (dispatch, getState)=> {
-//     logFormat('fetchPlayground()', getState(), payload);
+//     logFormat('fetchPlayground()', (typeof getState === 'function') ? getState() : getState, payload);
     
 //     axios.post(API_ENDPT_URL, {
 //       action  : 'PLAYGROUND',
@@ -124,9 +124,10 @@ export function fetchEventGroups(payload=null) {
 
 export function fetchTeamBuilds(payload=null) {
   return (dispatch, getState)=> {
-    const { team, buildID, deviceSlug } = payload;
+    const { buildID, deviceSlug } = payload;
+    const { team } = getState();
 
-    logFormat('fetchTeamBuilds()', getState(), { payload });
+    logFormat('fetchTeamBuilds()', (typeof getState === 'function') ? getState() : getState, { payload });
     axios.post(API_ENDPT_URL, {
       action  : 'TEAM_BUILDS',
       payload : {
@@ -150,9 +151,10 @@ export function fetchTeamBuilds(payload=null) {
 
 export function fetchTeamComments(payload=null) {
   return (dispatch, getState)=> {
+    // const { team } = getState();
     const { team } = payload;
 
-    logFormat('fetchTeamComments()', getState(), payload);
+    logFormat('fetchTeamComments()', (typeof getState === 'function') ? getState() : getState, payload);
     axios.post(API_ENDPT_URL, {
       action  : 'TEAM_COMMENTS',
       payload : {
@@ -172,9 +174,9 @@ export function fetchTeamComments(payload=null) {
 
 export function fetchTeamLogo(payload=null) {
   return (dispatch, getState)=> {
-    const { team } = payload;
+    const { team } = getState();
 
-    logFormat('fetchTeamLogo()', getState(), payload);
+    logFormat('fetchTeamLogo()', (typeof getState === 'function') ? getState() : getState, payload);
     axios.post(API_ENDPT_URL, {
       action  : 'TEAM_LOGO',
       payload : {
@@ -196,7 +198,7 @@ export function fetchTeamLogo(payload=null) {
 export function fetchTeamLookup(payload=null) {
   const { userProfile } = payload;
   return (dispatch, getState)=> {
-    logFormat('fetchTeamLookup()', getState(), payload);
+    logFormat('fetchTeamLookup()', (typeof getState === 'function') ? getState() : getState, payload);
 
     axios.post(API_ENDPT_URL, {
       action  : 'TEAM_LOOKUP',
@@ -232,7 +234,7 @@ export function fetchTeamLookup(payload=null) {
 
 export function fetchProducts(payload=null) {
   return (dispatch, getState)=> {
-    logFormat('fetchProducts()', getState(), payload);
+    logFormat('fetchProducts()', (typeof getState === 'function') ? getState() : getState, payload);
 
     axios.post(API_ENDPT_URL, {
       action  : 'PRODUCTS',
@@ -250,7 +252,7 @@ export function fetchProducts(payload=null) {
 
 export function fetchUserProfile(payload=null) {
   return (dispatch, getState)=> {
-    logFormat('fetchUserProfile()', getState(), payload);
+    logFormat('fetchUserProfile()', (typeof getState === 'function') ? getState() : getState, payload);
 
     axios.post(API_ENDPT_URL, {
       action  : 'USER_PROFILE',
@@ -281,7 +283,7 @@ export function fetchUserProfile(payload=null) {
 
 export function makeComment(payload) {
   return ((dispatch, getState)=> {
-    logFormat('makeComment()', getState(), payload);
+    logFormat('makeComment()', (typeof getState === 'function') ? getState() : getState, payload);
 
     const { userProfile : profile, team, component } = getState();
     const { comment, content, position } = payload;
@@ -308,7 +310,7 @@ export function makeComment(payload) {
 
 export function makeVote(payload) {
   return ((dispatch, getState)=> {
-    logFormat('makeVote()', getState(), payload);
+    logFormat('makeVote()', (typeof getState === 'function') ? getState() : getState, payload);
     const { comment, action } = payload;
     const { userProfile } = getState();
 
@@ -333,7 +335,7 @@ export function makeVote(payload) {
 
 export function modifyComment(payload) {
   return ((dispatch, getState)=> {
-    logFormat('modifyComment()', getState(), payload);
+    logFormat('modifyComment()', (typeof getState === 'function') ? getState() : getState, payload);
     const { comment, action } = payload;
 
     axios.post(API_ENDPT_URL, {
