@@ -9,12 +9,12 @@ import {
   UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, UPDATE_RESIZE_BOUNDS, SET_REDIRECT_URI, TOGGLE_THEME, TEAM_LOGO_LOADED, 
   COMMENT_ADDED, COMMENT_UPDATED
 } from '../../consts/action-types';
-import { LOG_ACTION_PREFIX } from '../../consts/log-ascii';
+import { LOG_ACTION_PREFIX, LOG_ACTION_POSTFIX, API_RESPONSE_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
 import { VOTE_ACTION_UP, VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT } from '../../components/pages/PlaygroundPage/VoteComment';
 
 const logFormat = (action, state, payload=null, meta='')=> {
-  console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, { payload : payload || {}, meta, state });
+  console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, { payload : payload || {}, meta, state }, LOG_ACTION_POSTFIX);
 };
 
 
@@ -30,7 +30,7 @@ export function fetchBuildPlaygrounds(payload=null) {
         build_id : buildID
       }
     }).then(async (response)=> {
-      console.log('BUILD_PLAYGROUNDS', response.data);
+      console.log(API_RESPONSE_PREFIX, 'BUILD_PLAYGROUNDS', response.data);
       const { playgrounds } = response.data;
 
       dispatch({
@@ -49,7 +49,7 @@ export function fetchComponentTypes(payload=null) {
       action: 'COMPONENT_TYPES',
       payload: null
     }).then((response)=> {
-      console.log('COMPONENT_TYPES', response.data);
+      console.log(API_RESPONSE_PREFIX, 'COMPONENT_TYPES', response.data);
       dispatch({
         type    : COMPONENT_TYPES_LOADED,
         payload : { componentTypes : response.data.component_types }
@@ -66,7 +66,7 @@ export function fetchDevices(payload=null) {
       action  : 'DEVICES',
       payload : null
     }).then((response)=> {
-      console.log('DEVICES', response.data);
+      console.log(API_RESPONSE_PREFIX, 'DEVICES', response.data);
       const {devices } = response.data;
 
       dispatch({
@@ -85,7 +85,7 @@ export function fetchEventGroups(payload=null) {
       action  : 'EVENT_GROUPS',
       payload : null
     }).then((response)=> {
-      console.log('EVENT_GROUPS', response.data);
+      console.log(API_RESPONSE_PREFIX, 'EVENT_GROUPS', response.data);
 
       dispatch({
         type    : EVENT_GROUPS_LOADED,
@@ -124,8 +124,7 @@ export function fetchEventGroups(payload=null) {
 
 export function fetchTeamBuilds(payload=null) {
   return (dispatch, getState)=> {
-    const { buildID, deviceSlug } = payload;
-    const { team } = getState();
+    const { team, buildID, deviceSlug } = payload;
 
     logFormat('fetchTeamBuilds()', (typeof getState === 'function') ? getState() : getState, { payload });
     axios.post(API_ENDPT_URL, {
@@ -136,10 +135,10 @@ export function fetchTeamBuilds(payload=null) {
         device   : deviceSlug
       }
     }).then((response)=> {
-      console.log('TEAM_BUILDS', response.data);
+      console.log(API_RESPONSE_PREFIX, 'TEAM_BUILDS', response.data);
       const { playgrounds } = response.data;
 
-      console.log('⟨⎝⎛:⎞⎠⟩', 'TEAM_BUILDS', { builds : [ ...playgrounds].map(({ build_id : buildID, id :  playgroundID, device_id : deviceID, team_id : teamID })=> ({ buildID, playgroundID, deviceID, teamID }))});
+      // console.log('⟨⎝⎛:⎞⎠⟩', 'TEAM_BUILDS', { builds : [ ...playgrounds].map(({ build_id : buildID, id :  playgroundID, device_id : deviceID, team_id : teamID })=> ({ buildID, playgroundID, deviceID, teamID }))});
 
       dispatch({
         type    : TEAM_BUILDS_LOADED,
@@ -161,7 +160,7 @@ export function fetchTeamComments(payload=null) {
         team_id : team.id
       }
     }).then((response)=> {
-      console.log('TEAM_COMMENTS', response.data);
+      console.log(API_RESPONSE_PREFIX, 'TEAM_COMMENTS', response.data);
       const { comments } = response.data;
 
       dispatch({
@@ -183,7 +182,7 @@ export function fetchTeamLogo(payload=null) {
         team_id : team.id
       }
     }).then((response)=> {
-      console.log('fetchTeamLogo', response.data);
+      console.log(API_RESPONSE_PREFIX, 'TEAM_LOGO', response.data);
       const { logo } = response.data;
 
       dispatch({
@@ -207,7 +206,7 @@ export function fetchTeamLookup(payload=null) {
         verbose : false
       }
     }).then((response)=> {
-      console.log('TEAM_LOOKUP', response.data);
+      console.log(API_RESPONSE_PREFIX, 'TEAM_LOOKUP', response.data);
       const { team } = response.data;
 
       // if (team) {
@@ -240,7 +239,7 @@ export function fetchProducts(payload=null) {
       action  : 'PRODUCTS',
       payload : null
     }).then((response)=> {
-      console.log('PRODUCTS', response.data);
+      console.log(API_RESPONSE_PREFIX, 'PRODUCTS', response.data);
 
       dispatch({
         type    : PRODUCTS_LOADED,
@@ -258,7 +257,7 @@ export function fetchUserProfile(payload=null) {
       action  : 'USER_PROFILE',
       payload : { user_id: cookie.load('user_id') << 0 }
     }).then((response)=> {
-      console.log('USER_PROFILE', response.data);
+      console.log(API_RESPONSE_PREFIX, 'USER_PROFILE', response.data);
 
       Objects.renameKey(response.data.user, 'github_auth', 'github');
       if (response.data.user.github) {
@@ -298,7 +297,7 @@ export function makeComment(payload) {
         comment_id   : (comment) ? comment.id : 0
       }
     }).then((response)=> {
-      console.log('ADD_COMMENT', response.data, response.data.comment);
+      console.log(API_RESPONSE_PREFIX, 'ADD_COMMENT', response.data, response.data.comment);
 
       dispatch({
         type    : (!comment) ? COMMENT_ADDED : COMMENT_UPDATED,
@@ -323,7 +322,7 @@ export function makeVote(payload) {
         comment_id : comment.id
       }
     }).then((response)=> {
-      console.log('VOTE_COMMENT', response.data);
+      console.log(API_RESPONSE_PREFIX, 'VOTE_COMMENT', response.data);
 
       dispatch({
         type    : COMMENT_UPDATED,
@@ -345,7 +344,7 @@ export function modifyComment(payload) {
         state      : action
       }
     }).then((response)=> {
-      console.log('UPDATE_COMMENT', response.data);
+      console.log(API_RESPONSE_PREFIX, 'UPDATE_COMMENT', response.data);
 
       dispatch({
         type    : COMMENT_UPDATED,
@@ -464,7 +463,7 @@ export function updateUserProfile(payload, force=true) {
 					filename : avatar
         }
       }).then((response)=> {
-        console.log('UPDATE_USER_PROFILE', response.data);
+        console.log(API_RESPONSE_PREFIX, 'UPDATE_USER_PROFILE', response.data);
 
         const status = parseInt(response.data.status, 16);
         Objects.renameKey(response.data.user, 'github_auth', 'github');

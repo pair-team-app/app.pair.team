@@ -19,8 +19,8 @@
 }
 
 .ask-page-scroll-wrapper::-webkit-scrollbar {
-	/* display: initial; */
-	display: none;
+	display: initial;
+	/* display: none; */
 }
 
 .ask-page-content-wrapper {

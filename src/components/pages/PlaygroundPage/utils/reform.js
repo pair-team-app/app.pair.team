@@ -6,7 +6,7 @@ import { jsonFormatKB } from '../../../../consts/formats';
 export const reformComment = (comment, uri, overwrite={})=> {
   // console.log('reformComment()', { comment, uri, overwrite }, { position : typeof comment.position });
 
-  const { id, position, content, author, state, votes, types, replies, added } = comment;
+  const { id, position, content, author, state, votes, type, replies, added } = comment;
 
   const reformed = { ...comment,
     id       : id << 0,
@@ -16,7 +16,7 @@ export const reformComment = (comment, uri, overwrite={})=> {
     votes    : votes.map((vote)=> ({ ...vote,
       score : vote.score << 0
     })),
-    types     : types.split(','),
+    types     : type.split(','),
     score     : votes.reduce((acc, vote)=> (acc + (vote.score << 0)), 0),
     uri       : `${uri}/comments/${id}`,
     selected  : false,
@@ -38,14 +38,14 @@ export const reformComponent = (component, uri, componentTypes=null, overwrite={
   const { width, height } = meta.bounds;
   const scale = 2;//Math.max(1, sizes['f'].width / meta.bounds.width, sizes['f'].height / meta.bounds.height);
 
-  delete component['type_id'];
-  delete component['event_type_id'];
-  delete component['node_id'];
-  delete component['tag_name'];
-  delete component['image_url'];
-  delete component['root_styles'];
-  delete component['image_data'];
-  delete component['thumb_data'];
+  // delete component['type_id'];
+  // delete component['event_type_id'];
+  // delete component['node_id'];
+  // delete component['tag_name'];
+  // delete component['image_url'];
+  // delete component['root_styles'];
+  // delete component['image_data'];
+  // delete component['thumb_data'];
 
   const reformed = {...component, html,
     id            : id << 0,
@@ -79,14 +79,15 @@ export const reformComponent = (component, uri, componentTypes=null, overwrite={
 };
 
 export const reformPlayground = (playground, devices=null, componentTypes=null, team=null, overwrite={})=> {
-  // console.log('reformPlayground()', { playground, devices, componentTypes, team });
+  console.log('reformPlayground()', { playground, devices, componentTypes, team });
 
   const { build_id, team_id, device_id, title, type_groups, components, added, last_visited, selected } = playground;
-  delete playground['build_id'];
-  delete playground['team_id'];
-  delete playground['device_id'];
-  delete playground['type_groups'];
-  delete playground['last_visited'];
+
+  // delete playground['build_id'];
+  // delete playground['team_id'];
+  // delete playground['device_id'];
+  // delete playground['type_groups'];
+  // delete playground['last_visited'];
 
   const projectSlug = Strings.slugifyURI(title);
   const device = (devices.find(({ id })=> (id === (device_id << 0))) || null);

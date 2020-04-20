@@ -84,12 +84,6 @@ function rootReducer(state = initialState, action) {
     const { team, comments } = payload;
     return (Object.assign({}, state, { team, comments }));
   
-  // } else if (type === PLAYGROUND_LOADED) {
-  //   const playgrounds = state.playgrounds.map((playground)=> ((playground.id === payload.playground.id) ? payload.playground : playground));
-  //   const { playground } = payload;
-
-  //   return (Object.assign({}, state, { playgrounds, playground }));
-
   } else if (type === USER_PROFILE_ERROR || type === USER_PROFILE_LOADED) {
     const { userProfile } = payload;
     // console.log('!!!!!!!!!!!!!!', userProfile);

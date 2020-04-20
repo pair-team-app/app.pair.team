@@ -162,7 +162,7 @@ const BaseCommentContent = (props)=> {
 	return (<div className="base-comment-content">
 		<div className="timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
 		{(content) && (<div className="content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">${author.username}</span>`) }} />)}
-		{(types.find('component')) && (<div className="uri" onClick={props.onClick}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</div>)}
+		{(types.indexOf('component') > -1) && (<div className="uri" onClick={props.onClick}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</div>)}
 		<BaseCommentReplies { ...props } onDelete={props.onDeleteReply} />
 	</div>
 	);
