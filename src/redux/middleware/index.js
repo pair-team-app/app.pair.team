@@ -41,7 +41,7 @@ export function onMiddleware(store) {
 
     if (typeof action === 'function') {
       // next(action);
-      return (action(dispatch, { ...prevState }));
+      return (action(dispatch, store.getState ));
     }
 
     // next(action);
