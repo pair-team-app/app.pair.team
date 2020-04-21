@@ -209,19 +209,6 @@ export function fetchTeamLookup(payload=null) {
       console.log(API_RESPONSE_PREFIX, 'TEAM_LOOKUP', response.data);
       const { team } = response.data;
 
-      // if (team) {
-      //   dispatch({
-      //     type    : TEAM_LOADED,
-      //     payload : { 
-      //       team : { ...team,
-      //         members : team.members.map((member)=> ({ ...member,
-      //           id : member.id << 0
-      //         }))
-      //       }
-      //     }
-      //   });
-      // }
-
       dispatch({
         type    : TEAM_LOADED,
         payload : { team }

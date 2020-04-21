@@ -10,7 +10,7 @@ import { componentsFromTypeGroup } from '../utils/lookup';
 import { reformComment } from '../utils/reform';
 import ComponentMenu from './ComponentMenu';
 import './PlaygroundContent.css';
-import { updateMouseCoords, updateResizeBounds } from '../../../../redux/actions';
+import { updateMouseCoords } from '../../../../redux/actions';
 
 const SCALE_CONSTRAIN = 1.0;
 const CONTAINER_PADDING = {
@@ -194,7 +194,6 @@ class PlaygroundContent extends Component {
     };
 */
     this.setState({ bounds }, ()=> {
-      this.props.updateResizeBounds({bounds});
     });
   };
 
@@ -286,6 +285,7 @@ class PlaygroundContent extends Component {
               )}
               {(cursor) && (<CommentPinCursor position={mouse.position} />)}
               {/* {(component && bounds.curr && bounds.curr.component) && (<ComponentMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)} */}
+              {(component && bounds.curr) && (<ComponentMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)}
               {/* {(component) && (<Compon  entMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)} */}
             </div>)}
       </div>
@@ -388,7 +388,7 @@ const PlaygroundComponent = (props)=> {
                   key={i}
                   ind={comments.length - 1 - i}
                   component={component}
-                  comment={comment}
+                  comment={{ ...comment, votable : false }}
                   scale={scale}
                   position={position}
                   onMarkerClick={props.onMarkerClick}
@@ -439,8 +439,7 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return {
-    updateMouseCoords  : (payload)=> dispatch(updateMouseCoords(payload)),
-    updateResizeBounds : (payload)=> dispatch(updateResizeBounds(payload))
+    updateMouseCoords : (payload)=> dispatch(updateMouseCoords(payload))
   };
 };
 

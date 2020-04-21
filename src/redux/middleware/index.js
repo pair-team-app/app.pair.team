@@ -101,7 +101,7 @@ export function onMiddleware(store) {
       }
 
       // console.log('!!!!!!!!!!!!!!!', { prevState, params, team, buildID, deviceSlug });
-      // dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
+      dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
 
     } else if (type === TEAM_LOGO_LOADED) {
       const { logo } = payload;
@@ -222,7 +222,7 @@ export function onMiddleware(store) {
       const { team } = prevState
 
       const prevComment = prevState.comments.find(({ id })=> (id === (payload.comment.id << 0)));
-      payload.comments = (prevComment) ? prevState.comments.map((comment)=> ((comment.id === (payload.comment.id << 0)) ? reformComment(payload.comment, prevComment.uri) : comment)) : [ ...prevState.comments, reformComment(payload.comment, `${Pages.ASK}/${team.slug}/ask/comments`)];
+      payload.comments = (prevComment) ? prevState.comments.map((comment)=> ((comment.id === (payload.comment.id << 0)) ? reformComment(payload.comment, prevComment.uri) : comment)) : [ ...prevState.comments, reformComment(payload.comment, `${Pages.ASK}/${team.slug}/ask`)];
 
 
     } else if (type === COMMENT_UPDATED) {

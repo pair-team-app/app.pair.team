@@ -4,7 +4,7 @@ import moment from 'moment';
 import { jsonFormatKB } from '../../../../consts/formats';
 
 export const reformComment = (comment, uri, overwrite={})=> {
-  console.log('reformComment()', { comment, uri, overwrite }, { position : typeof comment.position });
+  // console.log('reformComment()', { comment, uri, overwrite }, { position : typeof comment.position });
 
   const { id, position, content, author, state, votes, types, replies, added } = comment;
 

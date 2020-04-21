@@ -176,8 +176,8 @@
 	color: rgba(var(--link-color), 1.0);
 	text-decoration: underline;
 	transition: color 0.125s ease-out;
-	/* word-break: break-all; */
-	line-break: loose;
+	word-break: break-all;
+	/* line-break: loose; */
 }
 
 .playground-base-comment .uri:hover {

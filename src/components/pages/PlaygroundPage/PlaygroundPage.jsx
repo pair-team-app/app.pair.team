@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
-import { fetchBuildPlaygrounds, setComment, setComponent, setPlayground, setTypeGroup } from '../../../redux/actions';
+import { fetchBuildPlaygrounds, makeComment, setComment, setComponent, setPlayground, setTypeGroup } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import BasePage from '../BasePage';
 import AccessibilityPopover from './AccessibilityPopover';
@@ -44,25 +44,33 @@ class PlaygroundPage extends Component {
     trackEvent('button', 'add-comment');
 
     const { profile } = this.props;
-    axios.post(API_ENDPT_URL, {
-      action  : 'ADD_COMMENT',
-      payload : { content, position,
-        user_id      : profile.id,
-        component_id : component.id
-      }
-    }).then((response)=> {
-      const comment = reformComment(response.data.comment);
-      console.log('ADD_COMMENT', response.data, comment);
 
-      component.comments = [...component.comments, comment].sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)));
-      const playground = { ...this.props.playground,
-        components : this.props.playground.components.map((item)=> (item.id === component.id ? component : item))
-      };
+    this.props.makeComment({ position, content,
+          user_id      : profile.id,
+          team_id      : 0,
+          component_id : component.id
+        })
 
-      this.props.setPlayground(playground);
-      this.props.setComponent(component);
-      this.props.setComment(comment);
-    }).catch((error)=> {});
+
+    // axios.post(API_ENDPT_URL, {
+    //   action  : 'ADD_COMMENT',
+    //   payload : { content, position,
+    //     user_id      : profile.id,
+    //     component_id : component.id
+    //   }
+    // }).then((response)=> {
+    //   const comment = reformComment(response.data.comment);
+    //   console.log('ADD_COMMENT', response.data, comment);
+
+    //   component.comments = [...component.comments, comment].sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)));
+    //   const playground = { ...this.props.playground,
+    //     components : this.props.playground.components.map((item)=> (item.id === component.id ? component : item))
+    //   };
+
+    //   this.props.setPlayground(playground);
+    //   this.props.setComponent(component);
+    //   this.props.setComment(comment);
+    // }).catch((error)=> {});
   };
 
   handleBreadCrumbClick = ({ type=null, payload=null })=> {
@@ -292,6 +300,7 @@ class PlaygroundPage extends Component {
 const mapDispatchToProps = (dispatch)=> {
   return {
     fetchBuildPlaygrounds : (payload)=> dispatch(fetchBuildPlaygrounds(payload)),
+    makeComment           : (payload)=> dispatch(makeComment(payload)),
     setPlayground         : (payload)=> dispatch(setPlayground(payload)),
     setTypeGroup          : (payload)=> dispatch(setTypeGroup(payload)),
     setComponent          : (payload)=> dispatch(setComponent(payload)),

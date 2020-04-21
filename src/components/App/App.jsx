@@ -542,8 +542,6 @@ class App extends Component {
 				  onComplete={()=> this.setState({ popup : null })}>
 				  <span dangerouslySetInnerHTML={{ __html : popup.content }} />
 			  </PopupNotification>)}
-
-        {(component && resizeBounds) && (<ComponentMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(resizeBounds.curr.component.scale))} onShow={()=> null} onClick={(menuItem=null)=> console.log('%s.onComponentMenuItem()', this.constructor.name, { menuItem })} onAddComment={({ component=null, position={ x : 0, y : 0 }, content=null})=> console.log('%s.handleAddComment()', this.constructor.name, { component, position, content })} />)}
 		  </div>
 	  </div>);
   }
@@ -561,8 +559,7 @@ const mapStateToProps = (state, ownProps)=> {
     typeGroup      : state.typeGroup,
     component      : state.component,
     comment        : state.comment,
-    matchPath      : state.matchPath,
-    resizeBounds   : state.resizeBounds
+    matchPath      : state.matchPath
   };
 };
 
