@@ -191,6 +191,7 @@ class PlaygroundPage extends Component {
   handleToggleAccessibility = ()=> {
     //.log('%s.handleToggleAccessibility()', this.constructor.name, this.state.accessibility);
 
+    const { component } = this.props;
     const { accessibility } = this.state;
 
     this.setState({
@@ -279,7 +280,7 @@ class PlaygroundPage extends Component {
           onToggleCursor={this.handleToggleCommentCursor}
           onToggleDevices={this.handleToggleDevices} />
             
-        {(component && accessibility) && (<AccessibilityPopover onClose={this.handleToggleAccessibility} />)}
+        {(accessibility) && (<AccessibilityPopover onClose={this.handleToggleAccessibility} />)}
         {(devices) && (<DevicesPopover deviceIDs={((playgrounds && playground) ? playgrounds.filter(({ buildID })=> (buildID === playground.buildID)).map(({ deviceID })=> (deviceID)) : [])} onDeviceClick={this.handleDeviceClick} onClose={this.handleToggleDevices} />)}
       </div>)}
         

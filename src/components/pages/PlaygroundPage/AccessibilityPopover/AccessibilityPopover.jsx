@@ -32,7 +32,7 @@ class AccessibilityPopover extends Component {
   render() {
 	// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { component } = this.props;
+		const { playground, component } = this.props;
 		const { outro } = this.state;
 		const payload = {
 			fixed  : true,
@@ -41,16 +41,19 @@ class AccessibilityPopover extends Component {
 				bottom : 30
 			}
 		};
+
+		const report = (component) ? component.accessibility.report.failed : playground.components.map(({ accessibility })=> (accessibility.report.failed)).flat();
+		console.log('xXxXxXxXxXxXxXx', { report });
     
     return (<BasePopover outro={outro} payload={payload} onOutroComplete={this.props.onClose}>
-			<div className="accessibility-popover" data-report={component.accessibility.report.failed.length > 0}>
-				{(component.accessibility.report.failed.length > 0) && (<div className="report-wrapper">
-					{(component.accessibility.report.failed.map((report, i)=> (
+			<div className="accessibility-popover" data-report={report.length > 0}>
+				{(report.length > 0) && (<div className="report-wrapper">
+					{(report.map((report, i)=> (
 						<AccessibilityReportItem key={i} ind={(i + 1)} report={report} onComment={this.handleComment} />)
 					))}
 				</div>)}
 
-				{(component.accessibility.report.failed.length === 0) && (<div className="empty-report-wrapper">
+				{(report.length === 0) && (<div className="empty-report-wrapper">
 					No accessibilty concerns detected.
 				</div>)}
 			</div>
@@ -96,9 +99,10 @@ const AccessibilityReportItem = (props)=> {
 };
 
 const mapStateToProps = (state, ownProps)=> {
-  return {
-    component: state.component
-  };
+  return ({
+		playground : state.playground,
+    component  : state.component
+  });
 };
 
 export default connect(mapStateToProps)(AccessibilityPopover);
