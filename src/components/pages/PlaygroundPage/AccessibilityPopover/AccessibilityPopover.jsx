@@ -35,7 +35,7 @@ class AccessibilityPopover extends Component {
 		const { component } = this.props;
 		const { outro } = this.state;
 		const payload = {
-			fixed  : false,
+			fixed  : true,
 			offset : {
 				right  : 30,
 				bottom : 30

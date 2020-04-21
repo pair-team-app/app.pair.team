@@ -21,7 +21,7 @@
 	/* border: 1px dotted #00ff00; */
 }
 
-.playground-footer button.quiet-button {
+.playground-footer button.glyph-button {
 	padding: 5px;
 	width: 28px;
 	height: 28px;
@@ -31,12 +31,16 @@
 	max-height: 28px;
 }
 
-.playground-footer button.quiet-button[data-selected="true"] {
+.playground-footer button.glyph-button[data-selected="true"] {
 	cursor: default;
 }
 
 .playground-footer-col-left {
 	text-align: left;
+}
+
+.playground-footer-col-mid {
+	text-align: center;
 }
 
 .playground-footer-col-right {

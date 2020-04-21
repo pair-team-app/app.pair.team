@@ -218,23 +218,35 @@ export function onMiddleware(store) {
       payload.resizeBounds = payload.bounds;
       delete (payload.bounds);
 
-    } else if (type === COMMENT_ADDED) {  
-      const { team } = prevState
+    } else if (type === COMMENT_ADDED) {
+      const { team, component } = prevState;
 
       const prevComment = prevState.comments.find(({ id })=> (id === (payload.comment.id << 0)));
-      payload.comments = (prevComment) ? prevState.comments.map((comment)=> ((comment.id === (payload.comment.id << 0)) ? reformComment(payload.comment, prevComment.uri) : comment)) : [ ...prevState.comments, reformComment(payload.comment, `${Pages.ASK}/${team.slug}/ask`)];
+      payload.comment = (prevComment) ? reformComment(payload.comment, prevComment.uri) : reformComment(payload.comment, `${Pages.ASK}/${team.slug}/ask`);
+      payload.comments = (prevComment) ? prevState.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment)) : [ ...prevState.comments, payload.comment];
+      payload.component = (component) ? { ...component, 
+        comments : [ ...component.comments, payload.comment].sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)))
+      } : null;
 
 
     } else if (type === COMMENT_UPDATED) {
-      if (payload.comment.state === 'deleted') {
-        const { comment } = payload;
-        payload.comments = prevState.comments.filter(({ id })=> (id !== comment.id));
+      const { component, comment } = prevState;
+
+      const prevComment = prevState.comments.find(({ id })=> (id === (payload.comment.id << 0)));
+      payload.comment = reformComment(payload.comment, prevComment.uri);
+
+      if (payload.comment.state === 'deleted') { 
+        payload.comments = prevState.comments.filter(({ id })=> (id !== payload.comment.id));
       
       } else {
-        const prevComment = prevState.comments.find(({ id })=> (id === (payload.comment.id << 0)));
-        payload.comments = prevState.comments.map((comment)=> ((comment.id === payload.comment.id) ? reformComment(payload.comment, prevComment.uri) : comment));
+        payload.comments = prevState.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment));
       }
 
+      payload.component = (component) ? { ...component,
+        comments : (payload.comment.state === 'deleted') ? component.comments.filter(({ id })=> (id !== payload.comment.id)) : component.comments.map((comment)=> ((comment.id === prevState.comment.id) ? payload.comment : comment)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)))
+      } : null;
+
+      payload.comment = (comment) ? payload.comment : null;
 
     } else if (type === COMMENT_VOTED) {
       const { team, playgrounds, playground, typeGroup, component } = prevState;

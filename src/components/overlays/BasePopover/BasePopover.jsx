@@ -163,7 +163,7 @@ class BasePopover extends Component {
 	};
 
 	render() {
-		// console.log('%s.render()', this.constructor.name, { props : this.props, payload : this.props.payload, state : this.state.position });
+		console.log('%s.render()', this.constructor.name, { props : this.props, payload : this.props.payload, state : this.state.position });
 		// console.log('%s.render()', this.constructor.name, this.props, this.state);
 // 		if (this.wrapper && this.timeline && this.timeline.time === 0) {
 // 			this.timeline.seek(0);
@@ -177,8 +177,8 @@ class BasePopover extends Component {
 			left   : `${position.x}px`,
 			top    : `${position.y}px`
 		} : {
-			right  : `${(offset.right || 0)}px`,
-			bottom : `${(offset.bottom || 0)}px`,
+			right  : (isNaN(offset.right)) ? offset.right : `${(offset.right || 0)}px`,
+			bottom : (isNaN(offset.bottom)) ? offset.bottom : `${(offset.bottom || 0)}px`,
 		}),  
 			width  : (size.width * size.height === 0) ? 'fit-content' : `${size.width}px`,
 			height : (size.width * size.height === 0) ? 'fit-content' : `${size.height}px`,

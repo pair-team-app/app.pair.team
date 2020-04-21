@@ -25,7 +25,7 @@ class DevicesPopover extends Component {
 	  const payload = {
 		  fixed  : false,
 		  offset : {
-			  right  : 30,
+			  right  : '50%',
 			  bottom : 30
 		  }
 	  };

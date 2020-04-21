@@ -81,7 +81,8 @@ class PlaygroundBaseComment extends Component {
 
 
 		this.props.makeComment({ comment, 
-			content : replyContent
+			content  : replyContent,
+			position : comment.position
 		});
 
 		this.setState({ replyContent : '' });

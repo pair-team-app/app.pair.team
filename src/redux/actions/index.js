@@ -279,7 +279,7 @@ export function makeComment(payload) {
       payload : { content, 
         position     : (position || ((comment) ? comment.position : { x : 0, y : 0 })),
         user_id      : profile.id,
-        team_id      : team.id,
+        team_id      : (component) ? 0 : team.id,
         component_id : (component) ? component.id : 0,
         comment_id   : (comment) ? comment.id : 0
       }

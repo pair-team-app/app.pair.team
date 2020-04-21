@@ -3,20 +3,29 @@ import './PlaygroundFooter.css';
 
 
 function PlaygroundFooter(props) {
-	// console.log('PlaygroundFooter()', { component : props.component, props });
+	console.log('PlaygroundFooter()', { component : props.component, props });
 
-	const { accessibility, cursor, devices, component } = props;
+	const { accessibility, cursor, devices, component, device } = props;
 	
 	return ((component) ? (<div className="playground-footer">
-		<div className="pplayground-footer-col-left">
+		<div className="playground-footer-col-left">
 			<FooterCommentButton selected={cursor} onClick={props.onToggleCursor} />
+		</div>
+		<div className="playground-footer-col-mid">
+			<FooterDevicesButton selected={false} device={null} component={component} onClick={props.onToggleDevices} />
 		</div>
 		<div className="playground-footer-col-right">
 			<FooterAXButton selected={accessibility} onClick={props.onToggleAccessibility} />
 		</div>
 	</div>) : (<div className="playground-footer">
+		<div className="playground-footer-col-left">
+			<FooterCommentButton selected={cursor} onClick={props.onToggleCursor} />
+		</div>
+		<div className="playground-footer-col-mid">
+			<FooterDevicesButton selected={devices} device={device} component={null} onClick={props.onToggleDevices} />
+		</div>
 		<div className="playground-footer-col-right">
-			<FooterDevicesButton selected={devices} onClick={props.onToggleDevices} />
+			<FooterAXButton selected={accessibility} onClick={props.onToggleAccessibility} />
 		</div>
 	</div>));
 }
@@ -50,13 +59,21 @@ const FooterCommentButton = (props)=> {
 const FooterDevicesButton = (props)=> {
 //   console.log('PlaygroundFooter().FooterDevicesButton()', props);
 
-  const { selected } = props;
-	return (<button className="quiet-button glyph-button" onClick={props.onClick} data-selected={selected}>
+  const { selected, component, device } = props;
+	return ((component) 
+		? (<button className="quiet-button" onClick={props.onClick} data-selected={false}>Return</button>) 
+		: (<button className="quiet-button" onClick={props.onClick} data-selected={selected}>{device.title}</button>)
+	);
+};
+
+
+/*
+<button className="quiet-button glyph-button" onClick={props.onClick} data-selected={selected}>
 		<svg xmlns="http://www.w3.org/2000/svg" width="17.838" height="30" viewBox="0 0 17.838 30">
 			<rect id="Rectangle_102" data-name="Rectangle 102" width="30" height="17.838" rx="2" transform="translate(17.838) rotate(90)"/>
 		</svg>
-	</button>);
-};
+	</button>
+	*/
 
 // const FooterDesktopButton = (props)=> {
 // //   console.log('PlaygroundFooter().FooterDesktopButton()', props);

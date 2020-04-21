@@ -43,34 +43,13 @@ class PlaygroundPage extends Component {
     console.log('%s.handleAddComment()', this.constructor.name, { component, position, content });
     trackEvent('button', 'add-comment');
 
-    const { profile } = this.props;
+    const { profile, comment } = this.props;
 
-    this.props.makeComment({ position, content,
-          user_id      : profile.id,
-          team_id      : 0,
-          component_id : component.id
-        })
-
-
-    // axios.post(API_ENDPT_URL, {
-    //   action  : 'ADD_COMMENT',
-    //   payload : { content, position,
-    //     user_id      : profile.id,
-    //     component_id : component.id
-    //   }
-    // }).then((response)=> {
-    //   const comment = reformComment(response.data.comment);
-    //   console.log('ADD_COMMENT', response.data, comment);
-
-    //   component.comments = [...component.comments, comment].sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)));
-    //   const playground = { ...this.props.playground,
-    //     components : this.props.playground.components.map((item)=> (item.id === component.id ? component : item))
-    //   };
-
-    //   this.props.setPlayground(playground);
-    //   this.props.setComponent(component);
-    //   this.props.setComment(comment);
-    // }).catch((error)=> {});
+    this.props.makeComment({ comment, position, content,
+      user_id      : profile.id,
+      team_id      : 0,
+      component_id : component.id
+    });
   };
 
   handleBreadCrumbClick = ({ type=null, payload=null })=> {
@@ -223,18 +202,29 @@ class PlaygroundPage extends Component {
   handleToggleCommentCursor = (event)=> {
     //.log('%s.handleToggleCommentCursor()', this.constructor.name, event, this.state.cursor, !this.state.cursor);
 
+    const { team, component } = this.props;
     const { cursor } = this.state;
-    this.setState({ cursor : !cursor });
+    this.setState({ cursor : !cursor }, ()=> {
+      if (!component) {
+        this.props.history.push(`/app/${team.slug}/ask`);
+      }
+    });
   };
 
   handleToggleDevices = ()=> {
     console.log('%s.handleToggleDevices()', this.constructor.name);
 
-    const { devices } = this.state;
-    this.setState({ 
-      devices : !devices, 
-      cursor  : false
-    });
+    const { typeGroup, component } = this.props;
+    if (!component) {
+      const { devices } = this.state;
+      this.setState({ 
+        devices : !devices, 
+        cursor  : false
+      });
+
+    } else {
+      this.props.setTypeGroup(typeGroup);
+    }
   };
 
   handleStripeModal = ()=> {
@@ -284,6 +274,7 @@ class PlaygroundPage extends Component {
           playground={playground}
           component={component}
           devices={devices}
+          device={this.props.devices.find(({ id })=> (id === playground.deviceID))}
           onToggleAccessibility={this.handleToggleAccessibility}
           onToggleCursor={this.handleToggleCommentCursor}
           onToggleDevices={this.handleToggleDevices} />
@@ -310,6 +301,7 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
   return {
+    devices     : state.devices,
     playgrounds : state.playgrounds,
     playground  : state.playground,
     typeGroup   : state.typeGroup,
