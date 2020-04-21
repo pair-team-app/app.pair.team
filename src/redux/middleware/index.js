@@ -17,15 +17,25 @@ import { DEVICES_LOADED,
   SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT,
   COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, UPDATE_RESIZE_BOUNDS
 } from '../../consts/action-types';
-import { LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
+import { LOG_MIDDLEWARE_PREFIX, LOG_MIDDLEWARE_POSTFIX } from '../../consts/log-ascii';
 import { fetchTeamBuilds, fetchTeamComments, fetchTeamLogo, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setTypeGroup, setComment, setComponent } from '../actions';
 import { TEAM_DEFAULT_AVATAR, Pages } from '../../consts/uris';
 
 
-const logFormat = ({ prevState, action, next, meta=null })=> {
+const logFormat = ({ store, action, next, event })=> {
   if (action && typeof action !== 'function' && action.type !== UPDATE_MOUSE_COORDS) {
     const { type, payload } = action;
-    console.log(LOG_MIDDLEWARE_PREFIX, `“${type}”`, { payload, action, meta }, { prevState, next });
+
+    if (event === 'PRE') {
+      console.log(LOG_MIDDLEWARE_PREFIX, `“${type}”`, { action : (typeof action === 'function') ? { type, payload } : action, ofType : typeof action }, { store : store.getState(), next, action });
+    
+    } else {
+      console.log(LOG_MIDDLEWARE_POSTFIX, `“${type}”`, { action : (typeof action === 'function') ? { type, payload } : action, ofType : typeof action }, { store : store.getState(), next, action });
+    }
+
+
+
+    // console.log((event === 'PRE') ? LOG_MIDDLEWARE_PREFIX : '', `“${type}”`, { action : (typeof action === 'function') ? action : { type, payload }, ofType : typeof action }, { store : (event === 'POST') ? store.getState() : store.getState, next, action }, (event === 'POST' ? LOG_MIDDLEWARE_POSTFIX : ''));
   }
 };
 
@@ -36,7 +46,7 @@ export function onMiddleware(store) {
     const { dispatch } = store;
 
     const { type, payload } = action;
-    logFormat({ prevState, action, next });
+    logFormat({ store, action, next, event : 'PRE' });
 
 
     if (typeof action === 'function') {
@@ -91,7 +101,7 @@ export function onMiddleware(store) {
       }
 
       // console.log('!!!!!!!!!!!!!!!', { prevState, params, team, buildID, deviceSlug });
-      dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
+      // dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
 
     } else if (type === TEAM_LOGO_LOADED) {
       const { logo } = payload;
@@ -132,7 +142,7 @@ export function onMiddleware(store) {
       const comments = payload.comments.map((comment, i)=> (reformComment(comment, `${Pages.ASK}/${team.slug}/ask`)));
 
       payload.team = (team) ? { ...team, comments } : null;
-      payload.comments = [ ...new Set([ ...prevState.comments, ...comments])];
+      payload.comments = [ ...prevState.comments, ...comments];
 
     } else if (type === BUILD_PLAYGROUNDS_LOADED) {
       const { devices, componentTypes, team, matchPath } = prevState;
@@ -209,21 +219,20 @@ export function onMiddleware(store) {
       delete (payload.bounds);
 
     } else if (type === COMMENT_ADDED) {  
-      const { comment } = payload;
-      const { comments, team } = prevState
-      payload.comments = [ ...comments, reformComment(comment, `${Pages.ASK}/${team.slug}/ask/comments`)];
+      const { team } = prevState
+
+      const prevComment = prevState.comments.find(({ id })=> (id === (payload.comment.id << 0)));
+      payload.comments = (prevComment) ? prevState.comments.map((comment)=> ((comment.id === (payload.comment.id << 0)) ? reformComment(payload.comment, prevComment.uri) : comment)) : [ ...prevState.comments, reformComment(payload.comment, `${Pages.ASK}/${team.slug}/ask/comments`)];
+
 
     } else if (type === COMMENT_UPDATED) {
-      const { comments, team } = prevState;
-      const prevComment = comments.find(({ id })=> (id === payload.comment.id));
-      
       if (payload.comment.state === 'deleted') {
         const { comment } = payload;
-        payload.comments = comments.filter(({ id })=> (id !== comment.id));
+        payload.comments = prevState.comments.filter(({ id })=> (id !== comment.id));
       
       } else {
-        payload.comment = reformComment(payload.comment, prevComment.uri);
-        payload.comments = comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment));
+        const prevComment = prevState.comments.find(({ id })=> (id === (payload.comment.id << 0)));
+        payload.comments = prevState.comments.map((comment)=> ((comment.id === payload.comment.id) ? reformComment(payload.comment, prevComment.uri) : comment));
       }
 
 
@@ -407,6 +416,6 @@ export function onMiddleware(store) {
     next(action);
 
     const postState = store.getState();
-    logFormat({ store : postState, action, next, meta : 'POST [==>' });
+    logFormat({ store, action, next, meta : 'POST [==>' });
   });
 }

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { ENTER_KEY } from '../../../consts/key-codes';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
-import { fetchTeamComments, makeVote, setTeam, setPlayground, setTypeGroup, setComment } from '../../../redux/actions';
+import { fetchTeamComments, makeComment, setPlayground, setTypeGroup, setComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import BasePage from '../BasePage';
 import './AskPage.css';
@@ -67,47 +67,16 @@ class AskPage extends Component {
     event.preventDefault();
     event.stopPropagation();
 
-    const { profile, team } = this.props;
     const { commentContent } = this.state;
+    this.props.makeComment({ 
+      comment  : null, 
+			content  : commentContent,
+      position : null
+		});
 
-    // this.setState({ fetching : true }, ()=> {
-      axios.post(API_ENDPT_URL, {
-        action  : 'ADD_COMMENT',
-        payload : { 
-          position : null,
-          user_id  : profile.id,
-          team_id  : team.id,
-          content  : commentContent 
-        }
-      }).then((response)=> {
-        const comment = reformComment(response.data.comment);
-        console.log('ADD_COMMENT', response.data, comment);
-
-        this.setState({ commentContent : '' }, ()=> {
-          this.onReloadComments();
-        });
-        
-      }).catch((error)=> {});
-    // });
+    this.setState({ commentContent : '' });
   };
 
-
-  // handleDeleteComment = (comment)=> {
-  //   //console.log('%s.handleDeleteComment()', this.constructor.name, { comment });
-  //   trackEvent('button', 'delete-comment');
-
-  //   axios.post(API_ENDPT_URL, {
-  //     action: 'UPDATE_COMMENT',
-  //     payload: {
-  //       comment_id: comment.id,
-  //       state: 'deleted'
-  //     }
-  //   }).then((response)=> {
-  //     console.log('UPDATE_COMMENT', response.data);
-  //     this.onReloadComments();
-
-  //   }).catch((error)=> {});
-  // };
 
   handleKeyDown = (event)=> {
     // console.log('%s.handleKeyDown()', this.constructor.name, event);
@@ -210,7 +179,6 @@ class AskPage extends Component {
               comments={(sort === SORT_BY_DATE) ? comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : topSort.map((commentID)=> (comments.find(({ id })=> (id === commentID)) || null)).filter((comment)=> (comment !== null))} 
               loading={fetching}
               sort={sort}
-              onDelete={this.handleDeleteComment} 
             />
           </div>
         </div>
@@ -235,9 +203,8 @@ const AskPageContentHeader = (props)=> {
 const mapDispatchToProps = (dispatch)=> {
   return {
     fetchTeamComments : (payload)=> dispatch(fetchTeamComments(payload)),
+    makeComment       : (payload)=> dispatch(makeComment(payload)),
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),
-    makeVote          : (payload)=> dispatch(makeVote(payload)),
-    setTeam           : (payload)=> dispatch(setTeam(payload)),
     setTypeGroup      : (payload)=> dispatch(setTypeGroup(payload)),
     setComment        : (payload)=> dispatch(setComment(payload))
   };

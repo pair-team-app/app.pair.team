@@ -83,6 +83,8 @@ class PlaygroundBaseComment extends Component {
 		this.props.makeComment({ comment, 
 			content : replyContent
 		});
+
+		this.setState({ replyContent : '' });
   };
 
 	handleVote = ({ comment, action })=> {

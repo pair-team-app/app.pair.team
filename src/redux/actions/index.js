@@ -290,7 +290,7 @@ export function makeComment(payload) {
     axios.post(API_ENDPT_URL, {
       action  : 'ADD_COMMENT',
       payload : { content, 
-        position     : (position || null),
+        position     : (position || ((comment) ? comment.position : { x : 0, y : 0 })),
         user_id      : profile.id,
         team_id      : team.id,
         component_id : (component) ? component.id : 0,
