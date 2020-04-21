@@ -11,6 +11,7 @@
     "buffer-to-stream": "^1.0.0",
     "connected-react-router": "^6.8.0",
     "copy-to-clipboard": "^3.2.0",
+    "emoji-mart": "^3.0.0",
     "favicongrab": "^1.0.0",
     "gsap": "^2.1.2",
     "json-size": "^1.0.0",
