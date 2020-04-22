@@ -79,7 +79,7 @@ export const reformComponent = (component, uri, componentTypes=null, overwrite={
 };
 
 export const reformPlayground = (playground, devices=null, componentTypes=null, team=null, overwrite={})=> {
-  console.log('reformPlayground()', { playground, devices, componentTypes, team });
+  // console.log('reformPlayground()', { playground, devices, componentTypes, team });
 
   const { build_id, team_id, device_id, title, type_groups, components, added, last_visited, selected } = playground;
 

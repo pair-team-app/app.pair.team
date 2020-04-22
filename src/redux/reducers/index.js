@@ -7,7 +7,7 @@ import {
   COMMENT_ADDED, COMMENT_UPDATED,
   TOGGLE_AX, TOGGLE_COMMENTS, UPDATE_RESIZE_BOUNDS
 } from '../../consts/action-types';
-import { LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
+import { LOG_REDUCER_PREFIX, LOG_REDUCER_POSTFIX } from '../../consts/log-ascii';
 
 const initialState = {
   componentTypes : [],
@@ -47,7 +47,7 @@ const logFormat = (state, action, meta = '')=> {
   const { type, payload } = action;
 
   if (type !== UPDATE_MOUSE_COORDS) {
-    console.log(LOG_REDUCER_PREFIX, `REDUCER >> “${type}”`, { state, payload, meta });
+    console.log(LOG_REDUCER_PREFIX, `REDUCER >> “${type}”`, { state, payload, meta }, LOG_REDUCER_POSTFIX);
   }
 };
 

@@ -43,7 +43,6 @@ class AccessibilityPopover extends Component {
 		};
 
 		const report = (component) ? component.accessibility.report.failed : playground.components.map(({ accessibility })=> (accessibility.report.failed)).flat();
-		console.log('xXxXxXxXxXxXxXx', { report });
     
     return (<BasePopover outro={outro} payload={payload} onOutroComplete={this.props.onClose}>
 			<div className="accessibility-popover" data-report={report.length > 0}>

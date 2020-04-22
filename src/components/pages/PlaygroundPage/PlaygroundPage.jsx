@@ -191,7 +191,6 @@ class PlaygroundPage extends Component {
   handleToggleAccessibility = ()=> {
     //.log('%s.handleToggleAccessibility()', this.constructor.name, this.state.accessibility);
 
-    const { component } = this.props;
     const { accessibility } = this.state;
 
     this.setState({

@@ -163,7 +163,7 @@ class BasePopover extends Component {
 	};
 
 	render() {
-		console.log('%s.render()', this.constructor.name, { props : this.props, payload : this.props.payload, state : this.state.position });
+		// console.log('%s.render()', this.constructor.name, { props : this.props, payload : this.props.payload, state : this.state.position });
 		// console.log('%s.render()', this.constructor.name, this.props, this.state);
 // 		if (this.wrapper && this.timeline && this.timeline.time === 0) {
 // 			this.timeline.seek(0);

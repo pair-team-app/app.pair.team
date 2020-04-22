@@ -3,7 +3,7 @@ import './PlaygroundFooter.css';
 
 
 function PlaygroundFooter(props) {
-	console.log('PlaygroundFooter()', { component : props.component, props });
+	// console.log('PlaygroundFooter()', { component : props.component, props });
 
 	const { accessibility, cursor, devices, component, device } = props;
 	
