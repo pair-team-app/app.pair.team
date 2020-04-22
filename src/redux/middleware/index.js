@@ -119,7 +119,8 @@ export function onMiddleware(store) {
       const comments = [ ...prevState.comments, ...components.map(({ comments })=> (comments)).flat()].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
 
       // const comments = [ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()];//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
-      const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || playgrounds.pop();
+      // const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || ((params.projectSlug !== 'ask') ? playgrounds.pop() : null);
+      const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null;
       const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) || null : null;
       const component = (playground) ? playground.components.find(({ id })=> (id === params.componentID)) || null : null;
       const comment = (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
@@ -132,6 +133,23 @@ export function onMiddleware(store) {
       payload.typeGroup = typeGroup;
       payload.component = component;
       payload.comment = comment;
+
+
+      
+      dispatch(updateMatchPath({ 
+        matchPath : { ...matchPath,
+          params : { ...params,
+            teamSlug      : (params.teamSlug !== team.slug) ? team.slug : params.teamSlug,
+            projectSlug   : (playground && params.projectSlug !== playground.projectSlug) ? playground.projectSlug : params.projectSlug,
+            buildID       : (playground && params.buildID !== playground.buildID) ? playground.buildID : params.buildID,
+            deviceSlug    : (playground && params.deviceSlug !== playground.device.slug) ? playground.device.slug : params.deviceSlug,
+            typeGroupSlug : (typeGroup && params.typeGroupSlug !== typeGroup.key) ? typeGroup.key : params.typeGroupSlug,
+            componentID   : (params.componentID && !component) ? null : params.componentID,
+            comments      : (params.componentID && component && params.comments),
+            commentID     : (params.commentID && !comment) ? null : params.commentID
+          }
+        }
+      }));
 
       playgrounds.filter(({ buildID })=> (buildID !== params.buildID)).forEach(({ buildID })=> {
         //dispatch(fetchBuildPlaygrounds({ buildID }));
@@ -160,21 +178,6 @@ export function onMiddleware(store) {
       const comment = (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
 
 
-      dispatch(updateMatchPath({ 
-        matchPath : { ...matchPath,
-          params : { ...params,
-            teamSlug      : (params.teamSlug !== team.slug) ? team.slug : params.teamSlug,
-            projectSlug   : (playground && params.projectSlug !== playground.projectSlug) ? playground.projectSlug : params.projectSlug,
-            buildID       : (playground && params.buildID !== playground.buildID) ? playground.buildID : params.buildID,
-            deviceSlug    : (playground && params.deviceSlug !== playground.device.slug) ? playground.device.slug : params.deviceSlug,
-            typeGroupSlug : (typeGroup && params.typeGroupSlug !== typeGroup.key) ? typeGroup.key : params.typeGroupSlug,
-            componentID   : (params.componentID && !component) ? null : params.componentID,
-            comments      : (params.componentID && component && params.comments),
-            commentID     : (params.commentID && !comment) ? null : params.commentID
-          }
-        }
-      }));
-
       payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
       payload.comments = comments;
       payload.playground = playground;
@@ -183,6 +186,9 @@ export function onMiddleware(store) {
       payload.comment = comment;
     
     } else if (type === UPDATE_MATCH_PATH) {
+      const { playgrounds, componentTypes, components, comments } = prevState;
+      const prevParams = (prevState.matchPath) ? prevState.matchPath.params : null;
+
       if (payload.matchPath.params) {
         const params = { ...payload.matchPath.params,
           teamSlug      : (payload.matchPath.params.teamSlug || null),
@@ -200,8 +206,19 @@ export function onMiddleware(store) {
         delete (params['0']);
         delete (params['1']);
         payload.matchPath = { ...payload.matchPath, params };
+        console.log('!!!!!!!!!!!!!!!', { prevParams, params });
 
-        // 
+        if (prevParams !== params) {
+          const playground = (params.buildID && params.deviceSlug) ? playgrounds.filter(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)).pop() : (prevParams) ? prevParams.playground : null;
+          const typeGroup = (params.typeGroupSlug) ? componentTypes.filter(({ key })=> (key === params.typeGroupSlug)).pop() : (prevParams) ? prevParams.typeGroup : null;
+          const component = (params.componentID) ? components.filter(({ id })=> (id === params.componentID)).pop() : (prevParams) ? prevParams.component : null;
+          const comment = (params.commentID) ? comments.filter(({ id })=> (id === params.commentID)).pop() : (prevParams) ? prevParams.comment : null;
+
+          payload.playground = (typeof playground === 'undefined') ? null : playground;//(params.buildID && params.deviceSlug) ? (playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null) : (prevParams) ? prevParams.playground : null;
+          payload.typeGroup = (typeof typeGroup === 'undefined') ? null : typeGroup;//(params.typeGroupSlug) ? (componentTypes.find(({ key })=> (key === params.typeGroupSlug)) || null) : (prevParams) ? prevParams.typeGroup : null;
+          payload.component = (typeof component === 'undefined') ? null : component;//(params.componentID) ? (components.find(({ id })=> (id === params.componentID)) || null) : (prevParams) ? prevParams.typeGroup : null;
+          payload.comment = (typeof comment === 'undefined') ? null : comment;//(params.commentID) ? (comments.find(({ id })=> (id === params.commentID)) || null) : (prevParams) ? prevParams.comment : null;
+        }
       }
 
     } else if (type === UPDATE_MOUSE_COORDS) {
@@ -332,6 +349,9 @@ export function onMiddleware(store) {
       //     payload.playgrounds = playgrounds.map((playground)=> ((playground)))
       // }
     
+
+
+    
     } else if (type === SET_PLAYGROUND) {
       const { playground } = payload;
       const { devices, matchPath } = prevState;
@@ -428,6 +448,12 @@ export function onMiddleware(store) {
     next(action);
 
     const postState = store.getState();
+
+    if (type === TEAM_BUILDS_LOADED) {
+      const { devices, componentTypes, team, matchPath } = postState;
+      const { params } = matchPath || {};
+    }
+    
     logFormat({ store, action, next, meta : 'POST [==>' });
   });
 }

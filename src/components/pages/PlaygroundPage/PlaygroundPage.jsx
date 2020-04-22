@@ -160,8 +160,8 @@ class PlaygroundPage extends Component {
     console.log('%s.handlePlaygroundClick()', this.constructor.name, playground);
     this.props.setPlayground(playground);
 
-    const { buildID } = playground;
-    this.props.fetchBuildPlaygrounds({ buildID });
+    // const { buildID } = playground;
+    // this.props.fetchBuildPlaygrounds({ buildID });
   };
 
   handleNavGroupItemClick = (typeGroup)=> {

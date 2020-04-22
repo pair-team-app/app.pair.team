@@ -393,8 +393,8 @@ export function toggleTheme(payload=null) {
   return { theme, type : TOGGLE_THEME };
 }
 
-export function updateMatchPath(payload) {
-  logFormat('updateMatchPath()', payload);
+export function updateMatchPath(payload=null) {
+  logFormat('updateMatchPath()', null, payload, { type : typeof payload, len : Object.keys(payload).length, empty : (payload === null)});
   return { payload, type : UPDATE_MATCH_PATH };
 }
 

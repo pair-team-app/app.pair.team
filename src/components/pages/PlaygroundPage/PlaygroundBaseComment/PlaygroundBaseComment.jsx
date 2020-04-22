@@ -8,7 +8,7 @@ import 'emoji-mart/css/emoji-mart.css'
 import { Strings } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
-// import { NavLink } from 'react-router-dom';
+import { withRouter, NavLink } from 'react-router-dom';
 
 import { makeComment, modifyComment, makeVote } from '../../../../redux/actions';
 import { COMMENT_TIMESTAMP } from '../../../../consts/formats';
@@ -162,10 +162,16 @@ const BaseCommentContent = (props)=> {
 	const { comment } = props;
 	const { author, types, content, uri, timestamp } = comment;
 
+	// const onURIClick = ()=> {
+	// 	console.log('PlaygroundBaseComment.BaseCommentContent.onURIClick()', { props });
+	// 	window.location.href = window.location.href.replace(/\/app\/.*$/, uri)
+	// };
+
 	return (<div className="base-comment-content">
 		<div className="timestamp" dangerouslySetInnerHTML={{ __html : timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
 		{(content) && (<div className="content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">${author.username}</span>`) }} />)}
-		{(types.indexOf('component') > -1) && (<div className="uri" onClick={props.onClick}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</div>)}
+		{/* {(types.indexOf('component') > -1) && (<div className="uri" onClick={onURIClick}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</div>)} */}
+		{(types.indexOf('component') > -1) && (<NavLink className="uri" to={uri}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</NavLink>)}
 		<BaseCommentReplies { ...props } onDelete={props.onDeleteReply} />
 	</div>
 	);

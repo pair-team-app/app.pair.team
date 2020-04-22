@@ -104,17 +104,17 @@ class App extends Component {
     });
 
     if (prevProps.matchPath && this.props.matchPath) {
-      console.log('??+=+=+=+=+=+=+=+', { historyMatch, prevMatchPath : prevProps.matchPath, currMatchPath : this.props.matchPath });
+      console.log('??+=+=+=+=+=+=+=+', { matchPlaygrounds, historyMatch, prevMatchPath : prevProps.matchPath, currMatchPath : this.props.matchPath });
 
-      if (this.props.matchPath.params && prevProps.matchPath.params !== this.props.matchPath.params && this.props.matchPath.params.buildID > 0) {
+      // if (this.props.matchPath.params && prevProps.matchPath.params !== this.props.matchPath.params && this.props.matchPath.params.buildID > 0) {
+      if (this.props.matchPath.params && matchPlaygrounds.url !== historyMatch.url && this.props.matchPath.params.buildID > 0) {
         const path = generatePath(`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`, { ...this.props.matchPath.params, 
           ax       : undefined,
           comments : (this.props.matchPath.params.comments) ? 'comments' : undefined
         });
-        console.log('??*=*=*=*=*=*=*=*', { path });
+        console.log('??*=*=*=*=*=*=*=*]] PUSH HISTORY -->>', { path });
 
         this.props.history.push(path);
-
       }
     }
 
@@ -144,8 +144,19 @@ class App extends Component {
       // });
     
     } else {
-      // console.log('+=+=+=+=+=+=+=+', { local : matchPlaygrounds, props : this.props.matchPath, prev : prevProps.matchPath });
+      
+
+      // const pass = (prevProps.matchPath && this.props.matchPath) ? (Object.keys(this.props.matchPath.params).map((key)=> ((this.props.matchPath.params[key] === prevProps.matchPath.params[key]))).reduce((acc, val)=> (acc * val), 1) === 0) : false;
+
+      // console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds, props : this.props.matchPath, prev : prevProps.matchPath, historyMatch });
+      // console.log('+=+=+=+=+=+=+=+', { props : (this.props.matchPath) ? { ...this.props.matchPath.params } : null, prev : (prevProps.matchPath) ? { ...prevProps.matchPath.params } : null, pass });
+      console.log('+=+=+=+=+=+=+=+', { props : (this.props.matchPath) ? { ...this.props.matchPath.params } : null, prev : (prevProps.matchPath) ? { ...prevProps.matchPath.params } : null });
       if (matchPlaygrounds !== null && (this.props.matchPath === null || (this.props.matchPath && matchPlaygrounds.url !== this.props.matchPath.url))) {
+      // if (this.props.matchPath === null && matchPlaygrounds !== null && matchPlaygrounds.url !== historyMatch.url) {
+      // if ((this.props.matchPath === null && matchPlaygrounds !== null) || (matchPlaygrounds.url !== this.props.matchPath.url)) {
+      // if ((this.props.matchPath === null && matchPlaygrounds !== null) || (this.props.matchPath && prevProps.matchPath && prevProps.matchPath.params !== this.props.matchPath.params)) {
+      //// if ((this.props.matchPath === null) || (this.props.matchPath && prevProps.matchPath && pass)) {
+        console.log('+=+=+=+=+=+=+=+]] UPDATE PATH -->', { matchPlaygrounds, props : this.props.matchPath });
         this.props.updateMatchPath({ 
           matchPath : { ...matchPlaygrounds,
             location : this.props.location
@@ -192,16 +203,16 @@ class App extends Component {
 
           if (!this.props.location.pathname.includes('/ask') && playgrounds && (!buildID || !deviceSlug || !typeGroupSlug)) {
             const pg = [ ...playgrounds].shift();
-            this.props.updateMatchPath({ 
-              matchPath : { ...this.props.matchPath,
-                params : { ...this.props.matchPath.params,
-                  projectSlug   : (projectSlug !== pg.projectSlug) ? pg.projectSlug : projectSlug,
-                  buildID       : (!buildID) ? pg.buildID : buildID,
-                  deviceSlug    : (!deviceSlug) ? pg.device.slug : deviceSlug,
-                  typeGroupSlug : (!typeGroupSlug) ? [ ...pg.typeGroups].pop().key : typeGroupSlug
-                }
-              } 
-            });
+            // this.props.updateMatchPath({ 
+            //   matchPath : { ...this.props.matchPath,
+            //     params : { ...this.props.matchPath.params,
+            //       projectSlug   : (projectSlug !== pg.projectSlug) ? pg.projectSlug : projectSlug,
+            //       buildID       : (!buildID) ? pg.buildID : buildID,
+            //       deviceSlug    : (!deviceSlug) ? pg.device.slug : deviceSlug,
+            //       typeGroupSlug : (!typeGroupSlug) ? [ ...pg.typeGroups].pop().key : typeGroupSlug
+            //     }
+            //   } 
+            // });
           }
         }
       }

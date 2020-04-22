@@ -94,8 +94,8 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { userProfile }));
 
   } else if (type === UPDATE_MATCH_PATH) {
-    const { matchPath } = payload;
-    return Object.assign({}, state, { matchPath });
+    const { matchPath, playground, component, comment } = payload;
+    return Object.assign({}, state, { matchPath, playground, component, comment });
 
   } else if (type === UPDATE_RESIZE_BOUNDS) {
     const { resizeBounds } = payload;
