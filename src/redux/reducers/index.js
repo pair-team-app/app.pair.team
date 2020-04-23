@@ -1,7 +1,7 @@
 
 import { 
-  COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, EVENT_GROUPS_LOADED, TOGGLE_THEME, UPDATE_MOUSE_COORDS,
-  SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_TYPE_GROUP, SET_REDIRECT_URI, SET_TEAM,
+  COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, TOGGLE_THEME, UPDATE_MOUSE_COORDS,
+  SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_TYPE_GROUP, SET_REDIRECT_URI,
   TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TEAM_LOADED, TEAM_LOGO_LOADED, PLAYGROUND_LOADED, UPDATE_MATCH_PATH, TEAM_COMMENTS_LOADED, 
   USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, 
   COMMENT_ADDED, COMMENT_UPDATED,
@@ -12,7 +12,6 @@ import { LOG_REDUCER_PREFIX, LOG_REDUCER_POSTFIX } from '../../consts/log-ascii'
 const initialState = {
   componentTypes : [],
   devices        : [],
-  eventGroups    : [],
   playgrounds    : [],
   playground     : null,
   typeGroup      : null,
@@ -63,14 +62,11 @@ function rootReducer(state = initialState, action) {
     const { devices } = action.payload;
     return (Object.assign({}, state, { devices }));
 
-  } else if (type === EVENT_GROUPS_LOADED) {
-    return (Object.assign({}, state, { eventGroups: action.payload }));
-
   } else if (type === SET_REDIRECT_URI) {
-    return (Object.assign({}, state, { redirectURI: action.payload }));
+    return (Object.assign({}, state, { redirectURI : action.payload }));
 
   } else if (type === SET_INVITE) {
-    return (Object.assign({}, state, { invite: action.payload }));
+    return (Object.assign({}, state, { invite : action.payload }));
 
   } else if (type === UPDATE_MOUSE_COORDS) {
     const { mouse } = payload;
@@ -94,8 +90,8 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { userProfile }));
 
   } else if (type === UPDATE_MATCH_PATH) {
-    const { matchPath, playground, component, comment } = payload;
-    return Object.assign({}, state, { matchPath, playground, component, comment });
+    const { matchPath, playground, typeGroup, component, comment } = payload;
+    return Object.assign({}, state, { matchPath, playground, typeGroup, component, comment });
 
   } else if (type === UPDATE_RESIZE_BOUNDS) {
     const { resizeBounds } = payload;
@@ -117,10 +113,6 @@ function rootReducer(state = initialState, action) {
     const { comments, component, comment } = payload;
     return (Object.assign({}, state, { comments, component, comment }));
 
-  } else if (type === SET_TEAM) {
-    const { team } = payload;
-    return (Object.assign({}, state, { team }));
-  
   } else if (type === SET_PLAYGROUND) {
     const { playground } = payload;
     return (Object.assign({}, state, { playground }));

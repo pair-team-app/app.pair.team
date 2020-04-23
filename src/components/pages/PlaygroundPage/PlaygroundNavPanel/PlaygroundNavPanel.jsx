@@ -68,11 +68,6 @@ class PlaygroundNavPanel extends Component {
     });
   };
 
-  handleTypeItemClick = (typeGroup, typeItem)=> {
-    // 		console.log('%s.handleTypeItemClick()', this.constructor.name, typeGroup, typeItem);
-    this.props.onTypeItemClick(typeGroup, typeItem);
-  };
-
   onPopulateTree = ()=> {
     console.log('%s.onPopulateTree()', this.constructor.name, { props : this.props });
 

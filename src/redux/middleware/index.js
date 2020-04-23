@@ -100,7 +100,6 @@ export function onMiddleware(store) {
         dispatch(fetchTeamComments({ team }));
       }
 
-      // console.log('!!!!!!!!!!!!!!!', { prevState, params, team, buildID, deviceSlug });
       dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
 
     } else if (type === TEAM_LOGO_LOADED) {
@@ -111,7 +110,7 @@ export function onMiddleware(store) {
   
     } else if (type === TEAM_BUILDS_LOADED) {
       const { devices, componentTypes, team, matchPath } = prevState;
-      const { params } = matchPath || {};
+      const { params, location } = matchPath || {};
 
 
       const playgrounds = [ ...payload.playgrounds].map((playground)=> (reformPlayground({ ...playground, selected : (params.buildID !== null && (playground.build_id << 0) === params.buildID)}, devices, componentTypes, team)));
@@ -147,6 +146,9 @@ export function onMiddleware(store) {
             componentID   : (params.componentID && !component) ? null : params.componentID,
             comments      : (params.componentID && component && params.comments),
             commentID     : (params.commentID && !comment) ? null : params.commentID
+          },
+          location : { ...location,
+            state : { referer : 'TEAM_BUILDS_LOADED' }
           }
         }
       }));
@@ -179,6 +181,7 @@ export function onMiddleware(store) {
 
 
       payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
+      payload.components = components;
       payload.comments = comments;
       payload.playground = playground;
       payload.typeGroup = typeGroup;
@@ -206,7 +209,7 @@ export function onMiddleware(store) {
         delete (params['0']);
         delete (params['1']);
         payload.matchPath = { ...payload.matchPath, params };
-        console.log('!!!!!!!!!!!!!!!', { prevParams, params });
+        console.log('!¡!¡!¡!¡!¡!¡!¡!¡!¡!¡!¡!', { prevParams, params });
 
         if (prevParams !== params) {
           const playground = (params.buildID && params.deviceSlug) ? playgrounds.filter(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)).pop() : (prevParams) ? prevParams.playground : null;
@@ -357,7 +360,7 @@ export function onMiddleware(store) {
       const { devices, matchPath } = prevState;
 
       if (matchPath) {
-        const { params } = matchPath;
+        const { params, location } = matchPath;
 
         const device = (playground) ? devices.find(({ id })=> (id === playground.deviceID)) || null : null;
         const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) || null : null;
@@ -368,62 +371,83 @@ export function onMiddleware(store) {
               projectSlug   : (playground) ? playground.projectSlug : params.projectSlug,
               buildID       : (playground) ? playground.buildID : params.buildID,
               deviceSlug    : (device) ? device.slug : params.deviceSlug,
-              typeGroupSlug : (typeGroup) ? typeGroup.key : params.typeGroupSlug
+              typeGroupSlug : (typeGroup) ? typeGroup.key : params.typeGroupSlug,
+              componentID   : null,
+              comments      : false,
+              commentID     : null
+            },
+            location : { ...location,
+              state : { referer : 'SET_PLAYGROUND' }
             }
           }
         }));
+
+        payload.device = device;
+        payload.typeGroup = typeGroup
 
         dispatch(setTypeGroup(typeGroup));
       
       } else {
-        dispatch(setTypeGroup(null));
+        // dispatch(setTypeGroup(null));
       }
 
     } else if (type === SET_TYPE_GROUP) {
       const { typeGroup } = payload;
-      const { component, matchPath } = prevState;
+      const { matchPath } = prevState;
 
       if (matchPath) {
-        const { params } = matchPath;
+        const { params, location } = matchPath;
 
         dispatch(updateMatchPath({ 
           matchPath : { ...matchPath,
             params : { ...params,
-              typeGroupSlug : (typeGroup) ? typeGroup.key : null
+              typeGroupSlug : (typeGroup) ? typeGroup.key : null,
+              componentID   : null,
+              comments      : params.comments,
+              commentID     : null
+            },
+            location : { ...location,
+              state : { referer : 'SET_TYPE_GROUP' }
             }
           }
         }));
         
-        if (component || params.componentID) {
-          dispatch(setComponent(null));
-        }
+        // if (prevState.component || params.componentID) {
+          // dispatch(setComponent(null));
+        // }
 
       } else {
-        dispatch(setComponent(null));
+        // dispatch(setComponent(null));
       }
+
+      // dispatch(setComponent(null));
 
     } else if (type === SET_COMPONENT) {
       const { component } = payload;
-      const { comment, matchPath } = prevState;
+      const { matchPath } = prevState;
       
       if (matchPath) {  
-        const { params } = matchPath;
-
+        const { params, location } = matchPath;
+        
         dispatch(updateMatchPath({ 
           matchPath : { ...matchPath,
             params : { ...params,
               componentID : (component) ? component.id : null,
-              comments    : false//(component !== null || (component && params.componentID === component.id))
+              comments    : false,//(component !== null || (component && params.componentID === component.id)),
+              commentID   : null
+            },
+            location : { ...location,
+              state : { referer : 'SET_COMPONENT' }
             }
           }
         }));
 
-        if ((!component && comment) || (component && params.componentID !== component.id)) {
-          dispatch(setComment(null));
-        }
+        // if ((!component && comment.comment) || (component && params.componentID !== component.id)) {
+        //   dispatch(setComment(null));
+        // }
 
       } else {
-        dispatch(setComment(null));
+        // dispatch(setComment(null));
       }
 
     } else if (type === SET_COMMENT) {
@@ -431,7 +455,7 @@ export function onMiddleware(store) {
       const { matchPath } = prevState;
 
       if (matchPath) {  
-        const { params } = matchPath;
+        const { params, location } = matchPath;
 
         dispatch(updateMatchPath({ 
           matchPath : { ...matchPath,
@@ -439,6 +463,9 @@ export function onMiddleware(store) {
               // comments  : (params.componentID && params.comments) ? 'comments' : params.comments,
               comments  : (params.componentID && comment) ? 'comments' : params.comments,
               commentID : (comment) ? comment.id : null
+            },
+            location : { ...location,
+              state : { referer : 'SET_COMMENT' }
             }
           }
         }));

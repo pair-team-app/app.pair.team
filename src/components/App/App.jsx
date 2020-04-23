@@ -104,15 +104,22 @@ class App extends Component {
     });
 
     if (prevProps.matchPath && this.props.matchPath) {
-      console.log('??+=+=+=+=+=+=+=+', { matchPlaygrounds, historyMatch, prevMatchPath : prevProps.matchPath, currMatchPath : this.props.matchPath });
+      // console.log('??+=+=+=+=+=+=+=+', { matchPlaygrounds, historyMatch, prevMatchPath : prevProps.matchPath, currMatchPath : this.props.matchPath });
+      console.log(`~≈["${this.props.history.action}" HISTORY(${prevProps.history.action})]≈~`);
 
-      if (this.props.matchPath.params && historyMatch.params === matchPlaygrounds.params && this.props.matchPath.params.buildID > 0) {
-      //// if (this.props.matchPath.params && matchPlaygrounds.url !== historyMatch.url) {
+      if (this.props.history.action === 'POP') {
+        this.props.history.goBack();
+      }
+
+      //x if (this.props.matchPath.params && historyMatch.params === matchPlaygrounds.params && this.props.matchPath.params.buildID > 0) {
+      // if (this.props.matchPath.params && matchPlaygrounds.url !== historyMatch.url) {
+      if (this.props.matchPath.params && ((this.props.matchPath.params !== prevProps.matchPath.params) || (this.props.matchPath.location.pathname !== prevProps.matchPath.location.pathname))) {
+        // const path = generatePath(`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`, { ...this.props.matchPath.params, 
         const path = generatePath(`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`, { ...this.props.matchPath.params, 
           ax       : undefined,
           comments : (this.props.matchPath.params.comments) ? 'comments' : undefined
         });
-        console.log('??*=*=*=*=*=*=*=*]] PUSH HISTORY -->>', { path });
+        console.log('??*=*=*=*=*=*=*=*]] PUSH HISTORY -->>', { path, prevAction : prevProps.history.action, currAction : this.props.history.action });
 
         this.props.history.push(path);
       }
@@ -151,15 +158,17 @@ class App extends Component {
       // console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds, props : this.props.matchPath, prev : prevProps.matchPath, historyMatch });
       // console.log('+=+=+=+=+=+=+=+', { props : (this.props.matchPath) ? { ...this.props.matchPath.params } : null, prev : (prevProps.matchPath) ? { ...prevProps.matchPath.params } : null, pass });
       console.log('+=+=+=+=+=+=+=+', { props : (this.props.matchPath) ? { ...this.props.matchPath.params } : null, prev : (prevProps.matchPath) ? { ...prevProps.matchPath.params } : null });
-      //// if (matchPlaygrounds !== null && (this.props.matchPath === null || (this.props.matchPath && matchPlaygrounds.url !== this.props.matchPath.url))) {
+      if (matchPlaygrounds !== null && (this.props.matchPath === null || (this.props.matchPath && matchPlaygrounds.url !== this.props.matchPath.url))) {
       // if (this.props.matchPath === null && matchPlaygrounds !== null && matchPlaygrounds.url !== historyMatch.url) {
       // if ((this.props.matchPath === null && matchPlaygrounds !== null) || (matchPlaygrounds.url !== this.props.matchPath.url)) {
       // if ((this.props.matchPath === null && matchPlaygrounds !== null) || (this.props.matchPath && prevProps.matchPath && prevProps.matchPath.params !== this.props.matchPath.params)) {
-      if ((this.props.matchPath === null) || (this.props.matchPath && prevProps.matchPath && pass)) {
+      //x if ((this.props.matchPath === null) || (this.props.matchPath && prevProps.matchPath && pass)) {
         console.log('+=+=+=+=+=+=+=+]] UPDATE PATH -->', { matchPlaygrounds, props : this.props.matchPath });
         this.props.updateMatchPath({ 
           matchPath : { ...matchPlaygrounds,
-            location : this.props.location
+            location : { ...this.props.location,
+              state : { referer : 'APP' }
+            }
           } 
         });
       }  
@@ -201,19 +210,21 @@ class App extends Component {
             this.onToggleModal(Modals.LOGIN);
           }
 
+          /*
           if (!this.props.location.pathname.includes('/ask') && playgrounds && (!buildID || !deviceSlug || !typeGroupSlug)) {
             const pg = [ ...playgrounds].shift();
-            // this.props.updateMatchPath({ 
-            //   matchPath : { ...this.props.matchPath,
-            //     params : { ...this.props.matchPath.params,
-            //       projectSlug   : (projectSlug !== pg.projectSlug) ? pg.projectSlug : projectSlug,
-            //       buildID       : (!buildID) ? pg.buildID : buildID,
-            //       deviceSlug    : (!deviceSlug) ? pg.device.slug : deviceSlug,
-            //       typeGroupSlug : (!typeGroupSlug) ? [ ...pg.typeGroups].pop().key : typeGroupSlug
-            //     }
-            //   } 
-            // });
+            this.props.updateMatchPath({ 
+              matchPath : { ...this.props.matchPath,
+                params : { ...this.props.matchPath.params,
+                  projectSlug   : (projectSlug !== pg.projectSlug) ? pg.projectSlug : projectSlug,
+                  buildID       : (!buildID) ? pg.buildID : buildID,
+                  deviceSlug    : (!deviceSlug) ? pg.device.slug : deviceSlug,
+                  typeGroupSlug : (!typeGroupSlug) ? [ ...pg.typeGroups].pop().key : typeGroupSlug
+                }
+              } 
+            });
           }
+          */
         }
       }
     }

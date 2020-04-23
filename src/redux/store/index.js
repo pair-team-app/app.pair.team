@@ -13,7 +13,7 @@ const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
   const logActionStackTraceMiddleware = (storeAPI)=> (next)=> (action)=> {
     if(action.type && actionTypes.includes(action.type)) {
     	console.log('[|:|] Store', storeAPI.getState());
-      // console.trace('[:|:] '%s'', action.type, action);
+      console.trace('[:|:] "%s" %s', action.type, action);
     }
 
     return (next(action));
@@ -29,11 +29,10 @@ const stackTraceMiddleware = createLogActionStackTraceMiddleware([SET_PLAYGROUND
 
 
 
-const store = createStore(rootReducer, applyMiddleware(onMiddleware, thunk));
-// const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
+// const store = createStore(rootReducer, applyMiddleware(onMiddleware, thunk));
+const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
 
 
-console.log('!!!!!!!!!!!!!!!', { rootReducer, onMiddleware });
 if (typeof cookie.load('user_id') === 'undefined') {
 	cookie.save('user_id', '0', { path : '/', sameSite : false });
 

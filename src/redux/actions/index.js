@@ -2,9 +2,9 @@ import axios from 'axios';
 import { Bits, Objects } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { 
-  COMPONENT_TYPES_LOADED, EVENT_GROUPS_LOADED, DEVICES_LOADED, PRODUCTS_LOADED,
+  COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED,
   TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, PLAYGROUND_LOADED, TEAM_COMMENTS_LOADED,
-  SET_INVITE, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TYPE_GROUP, SET_TEAM,
+  SET_INVITE, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TYPE_GROUP,
   USER_PROFILE_LOADED, USER_PROFILE_UPDATED, USER_PROFILE_ERROR,
   UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, UPDATE_RESIZE_BOUNDS, SET_REDIRECT_URI, TOGGLE_THEME, TEAM_LOGO_LOADED, 
   COMMENT_ADDED, COMMENT_UPDATED
@@ -22,7 +22,7 @@ const logFormat = (action, state, payload=null, meta='')=> {
 export function fetchBuildPlaygrounds(payload=null) {
   const { buildID } = payload;
   return (dispatch, getState)=> {
-    logFormat('fetchBuildPlaygrounds()', (typeof getState === 'function') ? getState() : getState, payload);
+    logFormat('fetchBuildPlaygrounds()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
     axios.post(API_ENDPT_URL, {
       action  : 'BUILD_PLAYGROUNDS',
@@ -43,7 +43,7 @@ export function fetchBuildPlaygrounds(payload=null) {
 
 export function fetchComponentTypes(payload=null) {
   return (dispatch, getState)=> {
-    logFormat('fetchComponentTypes()', (typeof getState === 'function') ? getState() : getState, payload);
+    logFormat('fetchComponentTypes()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
     
     axios.post(API_ENDPT_URL, {
       action: 'COMPONENT_TYPES',
@@ -60,7 +60,7 @@ export function fetchComponentTypes(payload=null) {
 
 export function fetchDevices(payload=null) {
   return (dispatch, getState)=> {
-    logFormat('fetchDevices()', (typeof getState === 'function') ? getState() : getState, payload);
+    logFormat('fetchDevices()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
     
     axios.post(API_ENDPT_URL, {
       action  : 'DEVICES',
@@ -77,33 +77,9 @@ export function fetchDevices(payload=null) {
   };
 }
 
-export function fetchEventGroups(payload=null) {
-  return (dispatch, getState)=> {
-    logFormat('fetchEventGroups()', (typeof getState === 'function') ? getState() : getState, payload);
-
-    axios.post(API_ENDPT_URL, {
-      action  : 'EVENT_GROUPS',
-      payload : null
-    }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'EVENT_GROUPS', response.data);
-
-      dispatch({
-        type    : EVENT_GROUPS_LOADED,
-        payload : { 
-          eventGroups : response.data.event_groups.map((eventGroup)=> {
-            const events = eventGroup.event_types;
-            delete eventGroup['event_types'];
-
-            return ({ ...eventGroup, events });
-          })
-        }});
-    }).catch((error)=> {});
-  };
-}
-
 // export function fetchPlayground(payload=null) {
 //   return (dispatch, getState)=> {
-//     logFormat('fetchPlayground()', (typeof getState === 'function') ? getState() : getState, payload);
+//     logFormat('fetchPlayground()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
     
 //     axios.post(API_ENDPT_URL, {
 //       action  : 'PLAYGROUND',
@@ -126,7 +102,7 @@ export function fetchTeamBuilds(payload=null) {
   return (dispatch, getState)=> {
     const { team, buildID, deviceSlug } = payload;
 
-    logFormat('fetchTeamBuilds()', (typeof getState === 'function') ? getState() : getState, { payload });
+    logFormat('fetchTeamBuilds()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, { payload });
     axios.post(API_ENDPT_URL, {
       action  : 'TEAM_BUILDS',
       payload : {
@@ -153,7 +129,7 @@ export function fetchTeamComments(payload=null) {
     // const { team } = getState();
     const { team } = payload;
 
-    logFormat('fetchTeamComments()', (typeof getState === 'function') ? getState() : getState, payload);
+    logFormat('fetchTeamComments()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
     axios.post(API_ENDPT_URL, {
       action  : 'TEAM_COMMENTS',
       payload : {
@@ -175,7 +151,7 @@ export function fetchTeamLogo(payload=null) {
   return (dispatch, getState)=> {
     const { team } = getState();
 
-    logFormat('fetchTeamLogo()', (typeof getState === 'function') ? getState() : getState, payload);
+    logFormat('fetchTeamLogo()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
     axios.post(API_ENDPT_URL, {
       action  : 'TEAM_LOGO',
       payload : {
@@ -197,7 +173,7 @@ export function fetchTeamLogo(payload=null) {
 export function fetchTeamLookup(payload=null) {
   const { userProfile } = payload;
   return (dispatch, getState)=> {
-    logFormat('fetchTeamLookup()', (typeof getState === 'function') ? getState() : getState, payload);
+    logFormat('fetchTeamLookup()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
     axios.post(API_ENDPT_URL, {
       action  : 'TEAM_LOOKUP',
@@ -220,7 +196,7 @@ export function fetchTeamLookup(payload=null) {
 
 export function fetchProducts(payload=null) {
   return (dispatch, getState)=> {
-    logFormat('fetchProducts()', (typeof getState === 'function') ? getState() : getState, payload);
+    logFormat('fetchProducts()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
     axios.post(API_ENDPT_URL, {
       action  : 'PRODUCTS',
@@ -238,7 +214,7 @@ export function fetchProducts(payload=null) {
 
 export function fetchUserProfile(payload=null) {
   return (dispatch, getState)=> {
-    logFormat('fetchUserProfile()', (typeof getState === 'function') ? getState() : getState, payload);
+    logFormat('fetchUserProfile()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
     axios.post(API_ENDPT_URL, {
       action  : 'USER_PROFILE',
@@ -269,7 +245,7 @@ export function fetchUserProfile(payload=null) {
 
 export function makeComment(payload) {
   return ((dispatch, getState)=> {
-    logFormat('makeComment()', (typeof getState === 'function') ? getState() : getState, payload);
+    logFormat('makeComment()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
     const { userProfile : profile, team, component } = getState();
     const { comment, content, position } = payload;
@@ -296,7 +272,7 @@ export function makeComment(payload) {
 
 export function makeVote(payload) {
   return ((dispatch, getState)=> {
-    logFormat('makeVote()', (typeof getState === 'function') ? getState() : getState, payload);
+    logFormat('makeVote()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
     const { comment, action } = payload;
     const { userProfile } = getState();
 
@@ -321,7 +297,7 @@ export function makeVote(payload) {
 
 export function modifyComment(payload) {
   return ((dispatch, getState)=> {
-    logFormat('modifyComment()', (typeof getState === 'function') ? getState() : getState, payload);
+    logFormat('modifyComment()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
     const { comment, action } = payload;
 
     axios.post(API_ENDPT_URL, {
@@ -350,15 +326,15 @@ export function setInvite(payload) {
 }
 
 export function setPlayground(payload) {
-  logFormat('setPlayground()', null, payload);
-  const playground = payload;
-  return { payload : { playground }, type : SET_PLAYGROUND };
-}
+  return ((dispatch, getState)=> {
+    logFormat('setPlayground()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
-export function setTeam(payload) {
-  logFormat('setTeam()', null, payload);
-  const team = payload;
-  return { payload : { team }, type : SET_TEAM };
+    const playground = payload;
+    dispatch({
+        type    : SET_PLAYGROUND,
+        payload : { playground }
+      });
+  });
 }
 
 export function setTypeGroup(payload) {
@@ -394,8 +370,27 @@ export function toggleTheme(payload=null) {
 }
 
 export function updateMatchPath(payload=null) {
-  logFormat('updateMatchPath()', null, payload, { type : typeof payload, len : Object.keys(payload).length, empty : (payload === null)});
-  return { payload, type : UPDATE_MATCH_PATH };
+  // logFormat('updateMatchPath()', null, payload, { type : typeof payload, len : Object.keys(payload).length, empty : (payload === null)});
+
+  return ((dispatch, getState)=> {
+    logFormat('updateMatchPath()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
+    
+    const { matchPath } = payload;
+    const comps = (getState().matchPath) ? Object.keys(matchPath.params).map((key)=> (`${key} : ${matchPath.params[key]} ${getState().matchPath.params[key]} (${matchPath.params[key] === getState().matchPath.params[key]})`)) : null;
+    const paramChange = (getState().matchPath) ? (Object.keys(matchPath.params).map((key)=> (matchPath.params[key] === getState().matchPath.params[key])).reduce((acc, val)=> (acc * val), 1) === 0) : true;
+
+    console.log('\t', LOG_ACTION_POSTFIX, { store : (getState().matchPath) ? { params : getState().matchPath.params, referer : getState().matchPath.location.state.referer } : null, payload : { params : payload.matchPath.params, referer : payload.matchPath.location.state.referer }}, { change : paramChange, comps }, LOG_ACTION_PREFIX);
+
+    if (paramChange) {
+      dispatch({
+        type    : UPDATE_MATCH_PATH,
+        payload : { matchPath }
+      });
+    
+    } else {
+      return;
+    }
+  });
 }
 
 export function updateMouseCoords(payload) {
@@ -404,7 +399,7 @@ export function updateMouseCoords(payload) {
   return { payload : position, type : UPDATE_MOUSE_COORDS };
 }
 export function updateResizeBounds(payload) {
-  // 	logFormat('updateMouseCoords()', payload);
+  // 	logFormat('updateResizeBounds()', payload);
   const resizeBounds = payload;
   return { payload : resizeBounds, type : UPDATE_RESIZE_BOUNDS };
 }
@@ -412,7 +407,7 @@ export function updateResizeBounds(payload) {
 export function updateUserProfile(payload, force=true) {
   logFormat('updateUserProfile()', null, payload, force);
 
-  // const { userProfile } = payload;
+  const userProfile = payload;
 
   if (payload) {
     Objects.renameKey(payload, 'github_auth', 'github');
