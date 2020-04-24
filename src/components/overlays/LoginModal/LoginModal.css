@@ -3,7 +3,7 @@
 	max-width: var(--modal-content-width);
 }
 
-.login-modal-content-wrapper {
-	width: 100%;
+.login-modal .form-wrapper {
+	width: 270px;
 	min-width: 100%;
 }

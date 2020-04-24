@@ -139,7 +139,7 @@ class BaseOverlay extends Component {
       bare,
       children
     } = this.props;
-    const wrapperClass = `base-overlay-content-wrapper base-overlay-content-wrapper${
+    const wrapperClass = `content-wrapper content-wrapper${
       type === OVERLAY_TYPE_PERCENT_SIZE
         ? '-percent'
         : OVERLAY_TYPE_AUTO_SIZE
@@ -153,36 +153,16 @@ class BaseOverlay extends Component {
           : null
     };
 
-    return (
-      <div
-        className={`base-overlay${filled ? ' base-overlay-filled' : ''}${
-          !closeable ? ' base-overlay-noncloseable' : ''
-        }`}
-        onClick={closeable ? this.handleClose : null}
-      >
-        <div
-          className={wrapperClass}
-          style={wrapperStyle}
-          onClick={(event)=> event.stopPropagation()}
-          data-bare={bare}
-          ref={(element)=> {
-            this.wrapper = element;
-          }}
-        >
-          {title && (
-            <div className="base-overlay-header-wrapper">
-              <div className="base-overlay-title">{title}</div>
-            </div>
-          )}
-          <div
-            className="base-overlay-content"
-            style={{ height: hAdj > 88 ? `${hAdj}px` : 'fit-content' }}
-          >
-            {children}
-          </div>
+    return (<div className="base-overlay" data-filled={filled} data-closeable={closeable} onClick={closeable ? this.handleClose : null}>
+      <div className="content-wrapper" data-percent={type === OVERLAY_TYPE_PERCENT_SIZE} data-auto-size={type === OVERLAY_TYPE_AUTO_SIZE} data-auto-scroll={(type !== OVERLAY_TYPE_PERCENT_SIZE && type !== OVERLAY_TYPE_AUTO_SIZE)} style={wrapperStyle} onClick={(event)=> event.stopPropagation()} data-bare={bare} ref={(element)=> {this.wrapper = element;}}>
+        {title && (<div className="header-wrapper">
+          <div className="header-title">{title}</div>
+        </div>)}
+        <div className="content" style={{ height: hAdj > 88 ? `${hAdj}px` : 'fit-content' }}>
+          {children}
         </div>
       </div>
-    );
+    </div>);
   }
 }
 

@@ -71,9 +71,9 @@
 
 
 .form-disclaimer {
-	margin: var(--orthodox-margin-base) 0 var(--orthodox-margin-mini) 0;
+	/* margin: var(--orthodox-margin-base) 0 var(--orthodox-margin-mini) 0; *//**/
 	font-size: 14px;
-	line-height: 28px;
+	line-height: 18px;
 }
 
 .form-disclaimer > div, .form-disclaimer a:not(:hover) {

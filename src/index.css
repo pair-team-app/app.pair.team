@@ -106,7 +106,7 @@
 
 	--orthodox-font-size: 16px;
 	--orthodox-font-weight: 400;
-	--modal-content-width: 306px;
+
 
 	--border-radius: 20px;
 
@@ -167,8 +167,7 @@ a:active {
 }
 
 button {
-  width: var(--modal-content-width);
-  /*height: 46px;*/
+  width: 100%;
 	padding: calc(var(--orthodox-padding-base) - 1px) var(--orthodox-padding-form);
   background-color: rgba(var(--btn-bg-color), 1.0);
   border: 1px solid rgba(var(--btn-bg-color), 1.0);

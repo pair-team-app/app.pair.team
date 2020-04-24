@@ -93,11 +93,11 @@ class LoginModal extends Component {
 				onComplete={this.handleComplete}>
 
 				<div className="login-modal">
-					<div className="base-overlay-header-wrapper">
-						<img className="base-overlay-header-logo" src={pairLogo} alt="Logo" />
+					<div className="header-wrapper">
+						<img className="header-logo" src={pairLogo} alt="Logo" />
 					</div>
 
-					<div className="login-modal-content-wrapper">
+					<div className="form-wrapper">
 						<LoginForm
 							inviteID={null}
 							email={null}
@@ -105,7 +105,7 @@ class LoginModal extends Component {
 							onLoggedIn={this.handleLoggedIn} />
 					</div>
 
-					<div className="base-overlay-footer-wrapper form-disclaimer">
+					<div className="footer-wrapper form-disclaimer">
 						{/*<div onClick={()=> this.handleModal(Modals.RECOVER)}>Forgot Password</div>*/}
 						<div onClick={()=> this.handleModal(Modals.REGISTER)}>Don't have an account? Sign Up</div>
 					</div>

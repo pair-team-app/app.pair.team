@@ -8,7 +8,7 @@
 	}
 }
 
-.base-overlay {
+.base-overlay[data-closeable="true"] {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -19,14 +19,14 @@
 	background-color: rgba(var(--site-bg-color), 0.0);
 }
 
-.base-overlay-noncloseable,
-.base-overlay-filled {
+
+.base-overlay[data-closeable="false"], .base-overlay[data-filled="true"] {
 	width: 100%;
 	height: 100%;
 }
 
-.base-overlay-filled {
-	background-color: rgba(var(--site-bg-color), 1.0);
+.base-overlay[data-filled="true"] {
+background-color: rgba(var(--site-bg-color), 1.0);
 	/*transition: all 0.333s cubic-bezier(0.2, 0.9, 0.3, 1.0);*/
 
 	transition: all 0.333s cubic-bezier(0.5, 0.9, 0.1, 1.0);
@@ -35,7 +35,7 @@
 	/*transition: all 0.333s cubic-bezier(0.4, 0.0, 0.2, 1.0);*/
 }
 
-.base-overlay-content-wrapper {
+.base-overlay .content-wrapper {
 	position: fixed;
 	min-width: 88px;
 	min-height: 88px;
@@ -44,7 +44,7 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	-webkit-transform: translate(-50%, -50%);
-	padding: var(--orthodox-padding-base);
+	padding: var(--orthodox-padding-dbbl);
 	overflow: hidden;
 	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: var(--border-radius);
@@ -56,43 +56,41 @@
 	/*box-shadow: var(--overlay-shadow);*/
 }
 
-.base-overlay-content-wrapper[data-bare="true"] {
+.base-overlay .content-wrapper[data-bare="true"] {
 	border-color: rgba(var(--border-color), 0.0);
 	background-color: rgba(var(--site-bg-color), 0.0);
 }
 
-.base-overlay-content-wrapper-auto-size {
+.base-overlay .content-wrapper[data-auto-size="true"] {
 	width: fit-content;
-	/*border-radius: 0px;*/
 	transform-style: flat;
 	box-shadow: none;
 }
 
-.base-overlay-content-wrapper-auto-scroll {
+.base-overlay .content-wrapper[data-auto-scroll="true"] {
 	overflow-y: auto;
 }
 
-.base-overlay-content-wrapper-fixed {
+.base-overlay .content-wrapper[data-fixed="true"] {
 	overflow-y: hidden;
 }
 
-.base-overlay-content-wrapper-percent {
+.base-overlay .content-wrapper[data-percent="true"] {
 	width: 50%;
 }
 
-.base-overlay-header-wrapper {
+.base-overlay .header-wrapper {
 	display: flex;
 	justify-content: center;
-	margin-top: var(--orthodox-margin-base);
-	margin-bottom: calc(var(--orthodox-margin-half) + 4px);
-	padding-bottom: var(--orthodox-padding-base);
+	/* margin-top: var(--orthodox-margin-base); *//**/
+	/* padding-bottom: var(--orthodox-padding-base); *//**/
 }
 
-.base-overlay-header-logo {
+.base-overlay .header-logo {
 	width: 88px;
 }
 
-.base-overlay-title {
+.base-overlay .header-title {
 	flex: 1 1 auto;
 	margin: auto;
 	text-align: left;
@@ -100,19 +98,19 @@
 	font-weight: 500;
 }
 
-.base-overlay-content {
+.base-overlay .content {
 	overflow: hidden;
 	width: fit-content;
 }
 
-.base-overlay-loader-wrapper {
+.base-overlay .loader-wrapper {
 	margin: calc(var(--orthodox-margin-base) * 1);
 	min-width: 100%;
 	min-height: 100%;
 }
 
 
-.base-overlay-loader {
+.base-overlay .loader {
 	height: 48px;
 	width: 48px;
 	color: #5a5a5a;
@@ -124,15 +122,14 @@
 	animation: loader-rotate 1s linear infinite;
 }
 
-.base-overlay-footer-wrapper {
+.base-overlay .footer-wrapper {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
 	flex-wrap: nowrap;
-	margin-bottom: var(--orthodox-margin-mini);
 }
 
-.base-overlay-footer-wrapper>* {
+.base-overlay .footer-wrapper > * {
 	margin: auto;
 	flex: 1 0 0;
 	/*border: 1px dotted #ff00ff;*/
