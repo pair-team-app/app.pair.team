@@ -378,6 +378,7 @@ const PlaygroundComponent = (props)=> {
               ? [ ...comments, reformComment({ position,
                   id       : 0,
                   type     : 'add',
+                  types    : '',
                   content  : '',
                   author   : profile,
                   votes    : []

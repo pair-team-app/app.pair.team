@@ -12,7 +12,7 @@ import { SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT } from '../.
 const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
   const logActionStackTraceMiddleware = (storeAPI)=> (next)=> (action)=> {
     if(action.type && actionTypes.includes(action.type)) {
-    	console.log('[|:|] Store', storeAPI.getState());
+    	// console.log('[|:|] Store', storeAPI.getState());
       console.trace('[:|:] "%s" %s', action.type, action);
     }
 

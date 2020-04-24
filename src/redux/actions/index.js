@@ -376,10 +376,10 @@ export function updateMatchPath(payload=null) {
     logFormat('updateMatchPath()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
     
     const { matchPath } = payload;
-    const comps = (getState().matchPath) ? Object.keys(matchPath.params).map((key)=> (`${key} : ${matchPath.params[key]} ${getState().matchPath.params[key]} (${matchPath.params[key] === getState().matchPath.params[key]})`)) : null;
+    // const comps = (getState().matchPath) ? Object.keys(matchPath.params).map((key)=> (`${key} : ${matchPath.params[key]} ${getState().matchPath.params[key]} (${matchPath.params[key] === getState().matchPath.params[key]})`)) : null;
     const paramChange = (getState().matchPath) ? (Object.keys(matchPath.params).map((key)=> (matchPath.params[key] === getState().matchPath.params[key])).reduce((acc, val)=> (acc * val), 1) === 0) : true;
 
-    console.log('\t', LOG_ACTION_POSTFIX, { store : (getState().matchPath) ? { params : getState().matchPath.params, referer : getState().matchPath.location.state.referer } : null, payload : { params : payload.matchPath.params, referer : payload.matchPath.location.state.referer }}, { change : paramChange, comps }, LOG_ACTION_PREFIX);
+    // console.log('\t', LOG_ACTION_POSTFIX, { store : (getState().matchPath) ? { params : getState().matchPath.params, referer : getState().matchPath.location.state.referer } : null, payload : { params : payload.matchPath.params, referer : payload.matchPath.location.state.referer }}, { change : paramChange, comps }, LOG_ACTION_PREFIX);
 
     if (paramChange) {
       dispatch({

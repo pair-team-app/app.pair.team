@@ -202,14 +202,15 @@ export function onMiddleware(store) {
           componentID   : (payload.matchPath.params.componentID) ? payload.matchPath.params.componentID << 0 : null,
           ax            : false,
           // ax            : (typeof payload.matchPath.params.ax !== 'undefined' && payload.matchPath.params.ax !== null && payload.matchPath.params.ax === 'accessibility'),
-          comments      : (payload.matchPath.params.comments === true || (typeof payload.matchPath.params.comments !== 'undefined' && payload.matchPath.params.comments !== null && payload.matchPath.params.comments === 'comments')),
+          // comments      : ((payload.matchPath.params.comments === true && payload.matchPath.params.comments !== false) || (typeof payload.matchPath.params.comments !== 'undefined' && payload.matchPath.params.comments !== null && payload.matchPath.params.comments === 'comments')),
+          comments      : ((payload.matchPath.params.comments === true) || (typeof payload.matchPath.params.comments !== 'undefined' && payload.matchPath.params.comments !== null && payload.matchPath.params.comments === 'comments')),
           commentID     : (payload.matchPath.params.commentID) ? payload.matchPath.params.commentID << 0 : null,
         };
 
         delete (params['0']);
         delete (params['1']);
         payload.matchPath = { ...payload.matchPath, params };
-        console.log('!¡!¡!¡!¡!¡!¡!¡!¡!¡!¡!¡!', { prevParams, params });
+        // console.log('!¡!¡!¡!¡!¡!¡!¡!¡!¡!¡!¡!', { prevParams, params });
 
         if (prevParams !== params) {
           const playground = (params.buildID && params.deviceSlug) ? playgrounds.filter(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)).pop() : (prevParams) ? prevParams.playground : null;
@@ -385,7 +386,7 @@ export function onMiddleware(store) {
         payload.device = device;
         payload.typeGroup = typeGroup
 
-        dispatch(setTypeGroup(typeGroup));
+        // dispatch(setTypeGroup(typeGroup));
       
       } else {
         // dispatch(setTypeGroup(null));

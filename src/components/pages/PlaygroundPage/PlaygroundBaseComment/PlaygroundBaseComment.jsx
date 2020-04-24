@@ -36,7 +36,7 @@ class PlaygroundBaseComment extends Component {
   }
 
 	componentWillUnmount() {
-		console.log('%s.componentWillUnmount()', this.constructor.name, { props : this.props, state : this.state });
+		// console.log('%s.componentWillUnmount()', this.constructor.name, { props : this.props, state : this.state });
 
 		document.removeEventListener('keydown', this.handleKeyDown);
 	}

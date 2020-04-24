@@ -166,7 +166,8 @@ class AskPage extends Component {
         />
 
         <div className="ask-page-scroll-wrapper">
-          <div className="ask-page-content-wrapper" data-loading={fetching}>
+        {/* <div className="ask-page-scroll-wrapper"> */}
+          <div className="ask-page-content-wrapper" data-loading={fetching} ref={(element)=> (element) && this.props.onScrollRef(element)}>
             <AskPageContentHeader 
               loading={fetching} 
               commentContent={commentContent} 

@@ -36,7 +36,7 @@ class PlaygroundPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
   }
 
   handleAddComment = ({ component=null, position={ x : 0, y : 0 }, content=null})=> {

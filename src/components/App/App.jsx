@@ -105,7 +105,7 @@ class App extends Component {
 
     if (prevProps.matchPath && this.props.matchPath) {
       // console.log('??+=+=+=+=+=+=+=+', { matchPlaygrounds, historyMatch, prevMatchPath : prevProps.matchPath, currMatchPath : this.props.matchPath });
-      console.log(`~≈["${this.props.history.action}" HISTORY(${prevProps.history.action})]≈~`);
+      // console.log(`~≈["${this.props.history.action}" HISTORY(${prevProps.history.action})]≈~`);
 
       if (this.props.history.action === 'POP') {
         this.props.history.goBack();
@@ -157,13 +157,13 @@ class App extends Component {
 
       // console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds, props : this.props.matchPath, prev : prevProps.matchPath, historyMatch });
       // console.log('+=+=+=+=+=+=+=+', { props : (this.props.matchPath) ? { ...this.props.matchPath.params } : null, prev : (prevProps.matchPath) ? { ...prevProps.matchPath.params } : null, pass });
-      console.log('+=+=+=+=+=+=+=+', { props : (this.props.matchPath) ? { ...this.props.matchPath.params } : null, prev : (prevProps.matchPath) ? { ...prevProps.matchPath.params } : null });
+      // console.log('+=+=+=+=+=+=+=+', { props : (this.props.matchPath) ? { ...this.props.matchPath.params } : null, prev : (prevProps.matchPath) ? { ...prevProps.matchPath.params } : null });
       if (matchPlaygrounds !== null && (this.props.matchPath === null || (this.props.matchPath && matchPlaygrounds.url !== this.props.matchPath.url))) {
       // if (this.props.matchPath === null && matchPlaygrounds !== null && matchPlaygrounds.url !== historyMatch.url) {
       // if ((this.props.matchPath === null && matchPlaygrounds !== null) || (matchPlaygrounds.url !== this.props.matchPath.url)) {
       // if ((this.props.matchPath === null && matchPlaygrounds !== null) || (this.props.matchPath && prevProps.matchPath && prevProps.matchPath.params !== this.props.matchPath.params)) {
       //x if ((this.props.matchPath === null) || (this.props.matchPath && prevProps.matchPath && pass)) {
-        console.log('+=+=+=+=+=+=+=+]] UPDATE PATH -->', { matchPlaygrounds, props : this.props.matchPath });
+        console.log('+=+=+=+=+=+=+=+]] UPDATE PATH PARAMS -->', { matchPlaygrounds, props : this.props.matchPath });
         this.props.updateMatchPath({ 
           matchPath : { ...matchPlaygrounds,
             location : { ...this.props.location,
@@ -459,8 +459,6 @@ class App extends Component {
   };
 
   render() {
-
-
     const matchPlaygrounds = matchPath(this.props.location.pathname, {
       path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`,
       exact : false,
@@ -472,7 +470,7 @@ class App extends Component {
       	console.log('%s.render()', this.constructor.name, { props : this.props, matchPlaygrounds });
     //   	console.log('%s.render()', this.constructor.name, this.state.modals);
 
-    const { darkThemed, profile, location, component, resizeBounds } = this.props;
+    const { darkThemed, profile, location } = this.props;
     const { popup, modals } = this.state;
 
 
@@ -483,7 +481,7 @@ class App extends Component {
       {(!matchPlaygrounds) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
 
 	    <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND) && !location.pathname.includes(Pages.ASK)) ? ' playground-page-wrapper' : ''}`}>
-		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
+		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } onScrollRef={this.props.onScrollRef} />
 	    </div>
 		  
       {(!matchPlaygrounds) && (<BottomNav />)}
@@ -579,7 +577,6 @@ const mapStateToProps = (state, ownProps)=> {
     playgrounds    : state.playgrounds,
     playground     : state.playground,
     typeGroup      : state.typeGroup,
-    component      : state.component,
     comment        : state.comment,
     matchPath      : state.matchPath
   };

@@ -63,10 +63,13 @@ class Routes extends Component {
       
       <Route 
         path={`${Pages.ASK}/:teamSlug([a-z-]+)?/ask/(comments)?/:commentID([0-9]+)?`} 
+        onScrollRef={this.props.onScrollRef}
         render={({ props })=> <AskPage 
           onLogout={this.props.onLogout} 
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
-          onPopup={this.props.onPopup} { ...props} />
+          onPopup={this.props.onPopup} { ...props} 
+          onScrollRef={this.props.onScrollRef}
+          />
       } />
 
       <Route  
