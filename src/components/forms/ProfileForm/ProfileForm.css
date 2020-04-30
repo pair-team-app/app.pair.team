@@ -7,7 +7,7 @@
 }
 
 .profile-form form > *:not(:last-child) {
-	margin-bottom: var(--orthodox-margin-base);
+	margin-bottom: var(--spacing-20);
 }
 
 

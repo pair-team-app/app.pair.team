@@ -12,6 +12,7 @@
 .ask-page-scroll-wrapper {
 	position: fixed;
 	left: 208px;
+	top: 58px;
 	width: calc(100vw - 208px);
 	height: calc(100vh - 58px);
 	overflow-y: auto;
@@ -24,7 +25,7 @@
 }
 
 .ask-page-content-wrapper {
-	padding: 0 var(--orthodox-padding-base);
+	padding: 0 var(--spacing-10);
 	background-color: rgba(var(--site-bg-color), 1.0);
 	transition: background-color 250ms cubic-bezier(0.5, 0.9, 0.1, 1.0);
 }
@@ -37,10 +38,10 @@
   display: flex;
 	align-items: flex-start;
 	flex-wrap: nowrap;  
-	margin-bottom: var(--orthodox-margin-base);
+	margin-bottom: var(--spacing-20);
 }
 
 .ask-page-content-header button {
-  margin-left: var(--orthodox-margin-half);
+  margin-left: var(--spacing-10);
   width: fit-content;
 }

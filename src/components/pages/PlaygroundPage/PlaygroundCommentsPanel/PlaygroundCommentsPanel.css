@@ -1,7 +1,7 @@
 
 .playground-comments-panel {
 	position: fixed;
-	top: calc(var(--orthodox-margin-mini) * -1);
+	top: calc(var(--spacing-05) * -1);
 	right: 0;
 	width: var(--playground-comments-width);
 	height: 100%;

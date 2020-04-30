@@ -21,7 +21,7 @@
 	display: flex;
 	align-items: center;
 	width: 100%;
-	padding: var(--orthodox-padding-base);
+	padding: var(--spacing-20);
 	/*background-color: rgba(var(--site-bg-color), 0.975);*/
 	z-index: 2;
 }
@@ -65,7 +65,7 @@
 
 .top-nav-title {
 	display: inline;
-	margin-left: var(--orthodox-margin-half);
+	margin-left: var(--spacing-10);
 }
 
 .top-nav-theme-toggle-wrapper {

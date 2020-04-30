@@ -7,7 +7,7 @@
 }
 
 .alert-dialog-button-wrapper {
-	margin-top: var(--orthodox-margin-base);
+	margin-top: var(--spacing-20);
 }
 
 .alert-dialog-button-wrapper > button {

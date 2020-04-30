@@ -20,7 +20,7 @@
 }
 
 .home-page-form-wrapper input {
-	margin-bottom: var(--orthodox-margin-base);
+	margin-bottom: var(--spacing-20);
 }
 
 .home-page-form-wrapper input:disabled {
@@ -28,14 +28,14 @@
 }
 
 .home-page-form-wrapper > *:last-child {
-	margin-top: var(--orthodox-margin-base);
+	margin-top: var(--spacing-20);
 }
 
 .home-page-content-wrapper {
 }
 
 .home-page-element-wrapper:not(:last-child) {
-	margin-bottom: var(--orthodox-margin-more);
+	margin-bottom: var(--spacing-30);
 }
 
 .home-page-element {

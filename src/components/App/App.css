@@ -62,16 +62,15 @@
 
 
 .button-wrapper-col > *:not(:last-child) {
-	margin-right: var(--orthodox-margin-base);
+	margin-right: var(--spacing-20);
 }
 
 .button-wrapper-row > *:not(:last-child) {
-	margin-bottom: var(--orthodox-margin-base);
+	margin-bottom: var(--spacing-20);
 }
 
 
 .form-disclaimer {
-	/* margin: var(--orthodox-margin-base) 0 var(--orthodox-margin-mini) 0; *//**/
 	font-size: 14px;
 	line-height: 18px;
 }
@@ -100,7 +99,7 @@
 .form-acc-wrapper .form-accessory {
 	position: absolute;
 	top: 50%;
-	right: var(--orthodox-margin-base);
+	right: var(--spacing-20);
 	transform: translateY(-50%);
 	color: rgba(var(--site-hilite-color), 1.0);
 	line-height: 0;

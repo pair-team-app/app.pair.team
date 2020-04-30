@@ -1,14 +1,14 @@
 
 .share-popover {
 	width: 348px;;
-	padding: var(--orthodox-padding-base);
+	padding: var(--spacing-20);
 	background-color: #ffffff;
 	border-radius: var(--border-radius);
 }
 
 .share-popover-url {
-	margin: var(--orthodox-margin-half) var(--orthodox-margin-base) var(--orthodox-margin-base) var(--orthodox-margin-base);
-	padding-bottom: var(--orthodox-padding-half);
+	margin: var(--spacing-10) var(--spacing-20) var(--spacing-20) var(--spacing-20);
+	padding-bottom: var(--spacing-10);
 	font-size: 12px;
 	text-align: center;
 	text-decoration: underline;
@@ -22,12 +22,12 @@
 }
 
 .share-popover-form-wrapper {
-	margin-bottom: var(--orthodox-margin-half);
+	margin-bottom: var(--spacing-10);
 }
 
 .share-popover-form-wrapper form > * {
 	width: 100%;
-	margin-bottom: var(--orthodox-margin-base);
+	margin-bottom: var(--spacing-20);
 }
 
 .share-popover-form-wrapper form > *:last-child {

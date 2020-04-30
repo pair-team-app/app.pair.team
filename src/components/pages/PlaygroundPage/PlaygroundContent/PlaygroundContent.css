@@ -2,7 +2,7 @@
 .playground-content {
 	position: relative;
 	top: 0;
-	padding: 0 var(--orthodox-padding-base) calc(var(--orthodox-padding-base) + 28px) var(--orthodox-padding-base);
+	padding: 0 var(--spacing-20) var(--spacing-40) var(--spacing-20);
 	display: flex;
 	flex-flow: nowrap;
 	width:100%;
@@ -62,7 +62,7 @@
 
 .playground-page[data-component="true"] .playground-component h5 {
 	margin-bottom: 0;
-	padding-bottom: var(--orthodox-margin-base);
+	padding-bottom: var(--spacing-20);
 	text-align: left;
 	font-size: var(--orthodox-font-size);
 	font-weight: var(--orthodox-font-weight);
@@ -70,7 +70,7 @@
 }
 
 .playground-component .component-caption {
-	margin-top: var(--orthodox-margin-base);
+	margin-top: var(--spacing-20);
 	text-align: center;
 	color: rgba(var(--playground-panel-link-color), 1.0);
 	font-size: 13px;
@@ -87,8 +87,8 @@
 }
 
 .playground-components-grid {
-	/* margin: 0 var(--orthodox-margin-base); */
-	/*justify-content: center; */
+	margin: 0 var(--spacing-10);
+	justify-content: center;
 
 
 	display: flex;
@@ -110,7 +110,7 @@
 }
 
 .components-grid-item {
-	margin: 0 var(--orthodox-margin-base) var(--orthodox-margin-base) 0;
+	margin: 0 var(--spacing-20) var(--spacing-20) 0;
 }
 
 .components-grid-item:hover {
@@ -120,7 +120,7 @@
 .components-grid-item h5.component-title, .playground-component-wrapper h5.component-title {
 	color: rgba(var(--playground-panel-link-color), 1.0);
 	transition: color 0.125s ease-out;
-	margin-bottom: var(--orthodox-margin-base);
+	margin-bottom: var(--spacing-20);
 }
 
 .components-grid-item:hover h5.component-title {

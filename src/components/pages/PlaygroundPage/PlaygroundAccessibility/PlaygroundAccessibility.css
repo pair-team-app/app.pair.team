@@ -1,6 +1,6 @@
 
 .playground-accessibility {
-	padding: 58px var(--orthodox-padding-base) 68px var(--orthodox-padding-base);
+	padding: 58px var(--spacing-20) 68px var(--spacing-20);
 	max-width: calc(100vw - var(--playground-nav-width));
 	overflow: hidden;
 }
@@ -103,7 +103,7 @@
 }
 
 .accessibility-tree-item-thumb-wrapper {
-	margin-right: var(--orthodox-margin-half);
+	margin-right: var(--spacing-10);
 	max-width: 100px;
 	max-height: 100px;
 	background-color: rgba(var(--playground-content-bg-color), 1.0);
@@ -180,7 +180,7 @@
 	flex-direction: row;
 	flex-wrap: nowrap;
 	align-items: flex-start;
-	margin-bottom: var(--orthodox-margin-mini);
+	margin-bottom: var(--spacing-05);
 	font-size: 12px;
 }
 
@@ -214,13 +214,13 @@
 }
 
 .accessibility-tree-item-child-wrapper {
-	padding: var(--orthodox-margin-half) 0 0 var(--orthodox-margin-half);
+	padding: var(--spacing-10) 0 0 var(--spacing-10);
 }
 
 .accessibility-tree-item:not(:last-child) {
-	padding-bottom: var(--orthodox-margin-half);
+	padding-bottom: var(--spacing-10);
 }
 
 .accessibility-tree-item:last-child:not(:only-child) {
-	padding-bottom: var(--orthodox-margin-half);
+	padding-bottom: var(--spacing-10);
 }

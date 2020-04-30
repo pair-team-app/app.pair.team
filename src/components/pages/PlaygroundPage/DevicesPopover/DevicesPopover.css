@@ -1,6 +1,6 @@
 .devices-popover {
 	min-width: 258px;
-	padding: var(--orthodox-padding-base);
+	padding: var(--spacing-20);
 	border-radius: var(--border-radius);
 }
 
@@ -14,7 +14,7 @@
 
 .devices-popover .device-item:not(:last-child) {
   width: 100%;
-	margin-bottom: var(--orthodox-padding-half);
+	margin-bottom: var(--spacing-10);
 	/* border-bottom: 1px solid rgba(var(--border-color), 1.0); */
 	opacity: 1;
 	transition: opacity 125ms 175ms ease-in;

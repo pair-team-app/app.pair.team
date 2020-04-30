@@ -1,6 +1,6 @@
 
 .nav-panel-type-group:not(:last-child) {
-	margin-bottom: var(--orthodox-margin-half);
+	margin-bottom: var(--spacing-10);
 }
 
 .nav-panel-type-group-title, .nav-panel-type-item {
@@ -54,7 +54,7 @@
 
 .nav-panel-type-group-item-wrapper {
 	position: relative;
-	margin: var(--orthodox-margin-half) 0 0 var(--orthodox-margin-base);
+	margin: var(--spacing-10) 0 0 var(--spacing-20);
 }
 
 
@@ -62,5 +62,5 @@
 }
 
 .nav-panel-type-item:not(:last-child) {
-	margin-bottom: var(--orthodox-margin-half);
+	margin-bottom: var(--spacing-10);
 }

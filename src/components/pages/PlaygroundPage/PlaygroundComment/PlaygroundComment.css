@@ -56,12 +56,11 @@
 
 .playground-comment-add-popover {
 	width: 260px;
-	/*padding: var(--orthodox-padding-base);*/
-	padding: var(--orthodox-padding-less);
+	padding: var(--spacing-15);
 }
 
 .playground-comment-add-popover .header-wrapper {
-	margin-bottom: var(--orthodox-margin-half);
+	margin-bottom: var(----spacing-10);
 }
 
 .playground-comment-add-popover .button-wrapper {
@@ -81,7 +80,7 @@
 }
 
 .playground-comment-add-popover .button-wrapper > *:last-child {
-	margin-left: var(--orthodox-margin-base);
+	margin-left: var(--spacing-20);
 }
 
 .playground-comment-add-popover form {
@@ -91,13 +90,13 @@
 .playground-comment-add-popover button {
 	width: 100%;
 	max-width: 100%;
-	padding: calc(var(--orthodox-padding-half) + 4px) var(--orthodox-padding-base);
+	padding: var(--spacing-10) var(--spacing-20);
 }
 
 .playground-comment-add-popover textarea {
 	width: 100%;
 	height: 84px;
-	margin-bottom: var(--orthodox-margin-half);
+	margin-bottom: var(--spacing-10);
 	background-color: rgba(var(--site-bg-color), 1.0);
 	text-align: left;
 }

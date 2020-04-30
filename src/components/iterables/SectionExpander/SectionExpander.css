@@ -1,6 +1,6 @@
 
 .section-expander {
-	margin-bottom: var(--orthodox-margin-huge);
+	margin-bottom: var(--spacing-40);
 }
 
 .section-expander:last-child {
@@ -8,14 +8,14 @@
 }
 
 .section-expander-content-wrapper {
-	margin-top: var(--orthodox-margin-half);
+	margin-top: var(--spacing-10);
 }
 
 .section-expander-content {
 	position: relative;
-	margin: var(--orthodox-margin-base) 0 0 3px;
+	margin: var(--spacing-20) 0 0 3px;
 }
 
 .section-expander-content div {
-	margin: var(--orthodox-margin-mini) 0 0 var(--orthodox-margin-base);
+	margin: var(--spacing-05) 0 0 var(--spacing-20);
 }

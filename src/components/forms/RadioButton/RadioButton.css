@@ -9,7 +9,7 @@
 	background: #fafbfc none;
 	border: 1px solid #eaecef;
 	border-radius: 50%;
-	margin-bottom: var(--orthodox-margin-half);
+	margin-bottom: var(spacing-10);
 	padding: 4px;
 }
 

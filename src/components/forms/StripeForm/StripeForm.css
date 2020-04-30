@@ -8,7 +8,7 @@
 }
 
 .stripe-form input:not(:last-child) {
-	margin-bottom: var(--orthodox-margin-base);
+	margin-bottom: var(--spacing-20);
 }
 
 .stripe-form-button-wrapper {
@@ -20,8 +20,8 @@
 
 
 .StripeElement {
-	margin-bottom: var(--orthodox-margin-base);
-	padding: var(--orthodox-padding-less) var(--orthodox-padding-base);
+	margin-bottom: var(--spacing-20);
+	padding: var(--spacing-20);
 	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: 23px;
 	background-color: rgba(var(--txtfield-bg-color), 1.0);

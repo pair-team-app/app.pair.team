@@ -24,7 +24,7 @@
 
 .user-settings-popover > * {
 	width: 100%;
-	padding: var(--orthodox-padding-less) var(--orthodox-padding-base);
+	padding: var(--spacing-15) var(--spacing-20);
 	border-bottom: 1px solid rgba(var(--border-color), 1.0);
 	color: rgba(var(--link-color), 1.0);
 	transition: color 125ms ease-in;
