@@ -191,7 +191,6 @@
 	margin-left: var(--spacing-10);
 	padding-right: var(--spacing-20);
 	width: 100%;
-	border: 1px dashed #00ff00;
 }
 
 .base-comment-reply {
