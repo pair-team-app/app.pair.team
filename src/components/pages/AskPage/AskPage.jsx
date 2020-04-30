@@ -9,6 +9,7 @@ import { trackEvent } from '../../../utils/tracking';
 import BasePage from '../BasePage';
 import './AskPage.css';
 import AskPageHeader, { SORT_BY_SCORE, SORT_BY_DATE } from './AskPageHeader';
+import ScrollToTop from '../../helpers/ScrollToTop';
 import AskPageCommentsPanel from './AskPageCommentsPanel';
 import { SettingsMenuItemTypes } from '../PlaygroundPage/PlaygroundHeader/UserSettings';
 import PlaygroundNavPanel from '../PlaygroundPage/PlaygroundNavPanel';
@@ -166,7 +167,7 @@ class AskPage extends Component {
         />
 
         <div className="ask-page-scroll-wrapper">
-        {/* <div className="ask-page-scroll-wrapper"> */}
+        <ScrollToTop>
           <div className="ask-page-content-wrapper" data-loading={fetching} ref={(element)=> (element) && this.props.onScrollRef(element)}>
             <AskPageContentHeader 
               loading={fetching} 
@@ -182,6 +183,7 @@ class AskPage extends Component {
               sort={sort}
             />
           </div>
+          </ScrollToTop>
         </div>
       </>)}
     </BasePage>);

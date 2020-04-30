@@ -62,6 +62,7 @@
 .link-wrapper .link {
 	font-size: 10px;
 	color: rgba(var(--link-color), 1.0);
+	text-align: right;
 	transition: color 0.125s ease-out;
 }
 
@@ -108,7 +109,8 @@
 	flex-direction: column;
 	flex-wrap: nowrap;
 	align-items: center;
-	padding: var(--orthodox-padding-half) var(--orthodox-padding-half) var(--orthodox-padding-half) 0;
+	padding: 0 var(--orthodox-padding-base) 0 0;
+	border: 1px dotted #ff00ff;
 }
 
 .base-comment-vote .vote-arrow {
@@ -188,11 +190,13 @@
 
 .base-comment-replies-wrapper {
 	margin-left: var(--orthodox-margin-half);
+	padding-right: var(--orthodox-margin-base);
 	width: 100%;
+	border: 1px dashed #00ff00;
 }
 
 .base-comment-reply {
-	width: 100%;
+	/* width: 100%; */
 	margin-top: var(--orthodox-margin-less);
 }
 

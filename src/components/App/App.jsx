@@ -108,7 +108,7 @@ class App extends Component {
       // console.log(`~≈["${this.props.history.action}" HISTORY(${prevProps.history.action})]≈~`);
 
       if (this.props.history.action === 'POP') {
-        // this.props.history.goBack();
+        this.props.history.goBack();
       }
 
       //x if (this.props.matchPath.params && historyMatch.params === matchPlaygrounds.params && this.props.matchPath.params.buildID > 0) {

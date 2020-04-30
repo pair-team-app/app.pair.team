@@ -4,7 +4,6 @@
 	padding: var(--orthodox-padding-half) 0 5px 0;
 }
 
-.register-modal-content-wrapper {
-	width: 100%;
-	min-width: 100%;
+.register-modal .form-wrapper {
+	width: 348px;
 }

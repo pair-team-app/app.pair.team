@@ -18,7 +18,8 @@
 }
 
 .base-page-section-wrapper {
-	line-height: var(--orthodox-padding-more);
+	/* line-height: var(--orthodox-padding-more); */
+	line-height: unset;
 	text-align: justify;
 }
 

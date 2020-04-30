@@ -147,10 +147,8 @@ class BaseOverlay extends Component {
         : '-auto-scroll'
     }`;
     const wrapperStyle = {
-      transform:
-        type === OVERLAY_TYPE_POSITION_OFFSET
-          ? `translate(${offset.x || 0}px, ${offset.y || 0}px)`
-          : null
+      height    : 'auto',
+      transform : (type === OVERLAY_TYPE_POSITION_OFFSET) ? `translate(${offset.x || 0}px, ${offset.y || 0}px)` : null
     };
 
     return (<div className="base-overlay" data-filled={filled} data-closeable={closeable} onClick={closeable ? this.handleClose : null}>

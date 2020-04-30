@@ -3,7 +3,7 @@
 	width: 306px;
 }
 
-.profile-modal-content-wrapper {
+.profile-modal .form-wrapper {
 	display: flex;
 	flex-flow: column;
 }

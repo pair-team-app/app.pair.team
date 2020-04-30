@@ -110,11 +110,6 @@ class PlaygroundBaseComment extends Component {
 				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
 				<BaseCommentContent { ...contentProps } onTextChange={this.handleTextChange} onDeleteReply={this.handleDeleteComment} />
 			</div>
-			{(comment.state !== 'closed') && (<form className="reply-form">
-			{/* <input type="text" placeholder="Reply" value={replyContent} onChange={props.onTextChange} autoComplete="new-password" autoFocus /> */}
-				<input type="text" placeholder="Reply" value={replyContent} onChange={this.handleTextChange} autoComplete="new-password" autoFocus />
-				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={16} showPreview={false} showSkinTones={false} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
-			</form>)}
 		</div>);
 	}
 }
@@ -159,7 +154,7 @@ const BaseCommentHeader = (props)=> {
 const BaseCommentContent = (props)=> {
 	// console.log('PlaygroundBaseComment.BaseCommentContent()', { props });
 
-	const { comment } = props;
+	const { comment, replyContent } = props;
 	const { author, types, content, uri, timestamp } = comment;
 
 	// const onURIClick = ()=> {
@@ -173,6 +168,10 @@ const BaseCommentContent = (props)=> {
 		{/* {(types.indexOf('component') > -1) && (<div className="uri" onClick={onURIClick}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</div>)} */}
 		{(types.indexOf('component') > -1) && (<NavLink className="uri" to={uri}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</NavLink>)}
 		<BaseCommentReplies { ...props } onDelete={props.onDeleteReply} />
+		{(comment.state !== 'closed') && (<form className="reply-form">
+				<input type="text" placeholder="Reply to this…" value={replyContent} onChange={props.onTextChange} autoComplete="new-password" autoFocus />
+				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={20} showPreview={true} showSkinTones={true} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
+			</form>)}
 	</div>
 	);
 }

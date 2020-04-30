@@ -108,6 +108,7 @@ class LoginModal extends Component {
 					<div className="footer-wrapper form-disclaimer">
 						{/*<div onClick={()=> this.handleModal(Modals.RECOVER)}>Forgot Password</div>*/}
 						<div onClick={()=> this.handleModal(Modals.REGISTER)}>Don't have an account? Sign Up</div>
+						<div onClick={()=> this.handleModal(Modals.LOGIN)}>Forgot Password</div>
 					</div>
 				</div>
 			</BaseOverlay>);

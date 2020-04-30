@@ -25,7 +25,9 @@ function AskPageCommentsPanel(props) {
 		<div className="comments-panel-item-wrapper">
 			{(comments.map((comment, i)=> {
         const vote = (comment.votes.find(({ author, score })=> (author.id === profile.id && score !== 0 )) || null);
-        return (<PlaygroundBaseComment key={i} loading={loading} vote={vote} comment={comment} />);
+        return (<div className="ask-page-comment" data-id={comment.id} data-author={comment.author} data-loading={loading}>
+          <PlaygroundBaseComment key={i} loading={loading} vote={vote} comment={comment} />
+        </div>);
 			}))}
 		</div>
 	</div>);

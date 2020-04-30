@@ -149,44 +149,23 @@ class ProfileModal extends Component {
 
     const { profile, team } = this.props;
     const { outro, submitting } = this.state;
-    return (
-      <BaseOverlay
-        tracking={Modals.PROFILE}
-        outro={outro}
-        filled={true}
-        closeable={true}
-        title={null}
-        onComplete={this.handleComplete}
-      >
-        <div className="profile-modal">
-          <div className="base-overlay-header-wrapper">
-            <img
-              className="base-overlay-header-logo"
-              src={pairLogo}
-              alt="Logo"
-            />
-          </div>
-          <div className="profile-modal-content-wrapper">
-            <ProfileForm
-              profile={profile}
-              team={team}
-              onCancel={this.handleCancel}
-              onDowngradePlan={this.handleDowngradePlan}
-              onSubmit={this.handleSubmit}
-            />
-            <div className="form-disclaimer">
-              <div onClick={this.handleResetPassword}>Delete Account?</div>
-            </div>
-          </div>
-          {submitting && (
-            <div className="base-overlay-loader-wrapper">
-              {/*{(true) && (<div className="base-overlay-loader-wrapper">*/}
-              <div className="base-overlay-loader" />
-            </div>
-          )}
+    return (<BaseOverlay tracking={Modals.PROFILE} outro={outro} filled={true} closeable={true} title={null} onComplete={this.handleComplete}>
+      <div className="profile-modal">
+        <div className="header-wrapper">
+          <img className="header-logo" src={pairLogo} alt="Logo" />
         </div>
-      </BaseOverlay>
-    );
+        <div className="form-wrapper">
+          <ProfileForm profile={profile} team={team} onCancel={this.handleCancel} onDowngradePlan={this.handleDowngradePlan} onSubmit={this.handleSubmit} />
+          <div className="form-disclaimer">
+            <div onClick={this.handleResetPassword}>Delete Account?</div>
+          </div>
+        </div>
+        {submitting && (<div className="base-overlay-loader-wrapper">
+          {/*{(true) && (<div className="base-overlay-loader-wrapper">*/}
+          <div className="base-overlay-loader" />
+        </div>)}
+      </div>
+    </BaseOverlay>);
   }
 }
 
