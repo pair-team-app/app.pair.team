@@ -96,8 +96,8 @@ class PlaygroundContent extends Component {
       // width  : (component) ? Math.max(1, component.sizes.c.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)) : 1,
       // height : (component) ? Math.max(1, component.sizes.c.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN)) : 1
 
-      width  : Math.max(1, component.sizes.f.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)),
-      height : Math.max(1, component.sizes.f.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN))
+      width  : 1,//Math.max(1, component.sizes.f.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)),
+      height : 1//Math.max(1, component.sizes.f.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN))
     };
 
     // const devScale = 1 + (((playground.deviceID < 9) << 0) * 1);
