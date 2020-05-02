@@ -32,7 +32,7 @@ export const Pages = {
 const API_VER = 'v4';
 
 export const CDN_HOSTNAME = 'http://cdn.pairurl.com';
-export const API_HOSTNAME = 'http://api.pairurl.com';
+export const API_HOSTNAME = 'https://api.pairurl.com';
 // export const API_HOSTNAME = 'http://157.230.173.158';
 // export const API_ENDPT_URL = `${API_HOSTNAME}/api-test/${API_VER}/pairurl.php`;
 export const API_ENDPT_URL = `${API_HOSTNAME}/${API_VER}/pairurl.php`;

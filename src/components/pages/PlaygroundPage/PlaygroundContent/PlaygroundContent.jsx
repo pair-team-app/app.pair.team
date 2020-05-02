@@ -11,6 +11,7 @@ import { reformComment } from '../utils/reform';
 import ComponentMenu from './ComponentMenu';
 import './PlaygroundContent.css';
 import { updateMouseCoords } from '../../../../redux/actions';
+import placeholderImg from '../../../../assets/images/placeholders/699-187-16087_c.png';
 
 const SCALE_CONSTRAIN = 1.0;
 const CONTAINER_PADDING = {
@@ -80,6 +81,13 @@ class PlaygroundContent extends Component {
       return;
     }
 
+    component.sizes = { ...component.sizes,
+      f : {
+        width : 1122,
+        height : 2328
+      }
+    };
+
     
     let { bounds } = this.state;
     let { init, curr } = bounds;
@@ -96,14 +104,17 @@ class PlaygroundContent extends Component {
       // width  : (component) ? Math.max(1, component.sizes.c.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)) : 1,
       // height : (component) ? Math.max(1, component.sizes.c.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN)) : 1
 
-      width  : 1,//Math.max(1, component.sizes.f.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)),
-      height : 1//Math.max(1, component.sizes.f.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN))
+      // width  : 1,//Math.max(1, component.sizes.f.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)),
+      width  : Math.max(1, component.sizes.f.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)),
+      // height : 1//Math.max(1, component.sizes.f.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN))
+      height : Math.max(1, component.sizes.f.width / ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN)),//Math.max(1, component.sizes.f.height / ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN))
     };
 
     // const devScale = 1 + (((playground.deviceID < 9) << 0) * 1);
     const size = { 
       width  : (width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN,
       // width  : (1 / device.scale) * ((width - CONTAINER_PADDING.width) * SCALE_CONSTRAIN),
+      // height : (height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN
       height : (height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN
       // height : (1 / device.scale) * ((height - CONTAINER_PADDING.height) * SCALE_CONSTRAIN)
     };
@@ -140,6 +151,8 @@ class PlaygroundContent extends Component {
       prev : { ...bounds.prev, ...bounds.curr },
       next : { ...bounds.curr, ...curr }
     };
+
+    console.log('%s.calcBounds() --SET STATE', this.constructor.name, { component, init : { ...init }, curr : { ...curr } });
 
 
 /*
@@ -181,7 +194,6 @@ class PlaygroundContent extends Component {
 
     // const scale = (init.component)
 
-    // console.log('%s.calcBounds() --SET STATE', this.constructor.name, { component, rect, bounds, init : { ...init }, prev : { ...bounds.prev, ...bounds.curr }, curr : { ...curr }, next : { ...bounds.next, ...next } });
 */
 
 /*
@@ -312,10 +324,18 @@ const PlaygroundComponent = (props)=> {
 
   const { profile, popover, cursor, scale, sizeMult, bounds, component, position } = props;
   const { id, title, sizes, images, comments } = component;
-  const { size } = bounds;// || component.meta.bounds;
+  const { size } =  bounds;// || component.meta.bounds;
   const { width, height } = size;
 
-  const lgFactor = Math.max(scale.width, scale.height);
+  component.sizes = { ...component.sizes,
+      f : {
+        width : 1122,
+        height : 2328
+      }
+    };
+
+
+  const lgFactor = scale.width;//Math.max(scale.width, scale.height);
   // const updBounds = { 
   //   position : { 
   //     x : (width - component.meta.bounds.width / lgFactor) * 0.5, 
@@ -327,10 +347,13 @@ const PlaygroundComponent = (props)=> {
   //   }
   // };
 
+  
   const updBounds = { 
     position : { 
+      // x : (width - ((sizeMult * component.sizes.f.width) / lgFactor)) * 0.5, 
       x : (width - ((sizeMult * component.sizes.f.width) / lgFactor)) * 0.5, 
-      y : (height - ((sizeMult * component.sizes.f.height) / lgFactor)) * 0.5
+      // y : (height - ((sizeMult * component.sizes.f.height) / lgFactor)) * 0.5
+      y : (width - ((sizeMult * component.sizes.f.width) / lgFactor)) * 0.5
     }, 
     size     : { 
       width  : (sizeMult * component.sizes.f.width) / lgFactor, 
@@ -338,10 +361,10 @@ const PlaygroundComponent = (props)=> {
     }
   };
 
-  // console.log('PlaygroundComponent()', { updBounds });
+  console.log('PlaygroundComponent()', { updBounds });
 
   const contentStyle = {
-    top    : 20 + (updBounds.position.y) << 0,
+    top    : 0 + (updBounds.position.y) << 0,
     left   : updBounds.position.x << 0,
     // width  : Math.min(updBounds.size.width, sizes.c.width),
     // height : Math.min(updBounds.size.height, sizes.c.height)
@@ -349,16 +372,7 @@ const PlaygroundComponent = (props)=> {
     height : Math.ceil(updBounds.size.height)
   };
 
-  return (<Resizable
-    className="playground-component-wrapper"
-    axis="both"
-    width={width}
-    height={height + 38}
-    lockAspectRatio={true}
-    // minConstraints={[sizes.t.width, sizes.t.height]}
-    maxConstraints={[Math.min(width, sizes.c.width), Math.min(height, sizes.c.height) - CONTAINER_PADDING.height]}
-    // maxConstraints={[sizes.f.width - CONTAINER_PADDING.width, sizes.f.height - CONTAINER_PADDING.height]}
-    onResize={props.onResize}>
+  return (
       <div className="playground-component" data-loading={false} onClick={(event)=> (cursor) ? props.onItemClick(event, component) : null} style={{ width: `${width}px`, height: `${height}px` }}>
         <h5 className="component-title">{title}</h5>
 
@@ -369,8 +383,8 @@ const PlaygroundComponent = (props)=> {
         </div>
         <ContextMenuTrigger id="component" component={component} disableIfShiftIsPressed={true} holdToDisplay={-1}>
           <div className="bg-wrapper" style={contentStyle}></div>
-          <div className="playground-content-component" data-id={id} style={{ height : `${Math.ceil(height)}px` }}>
-            <img src={(images[1] || null)} alt={title} />
+          <div className="playground-content-component" data-id={id}>
+            <img src={(placeholderImg || null)} alt={title} />
           </div>
           
           <div className="playground-component-comments-wrapper" style={contentStyle} data-id={id}>
@@ -401,7 +415,7 @@ const PlaygroundComponent = (props)=> {
           </div>
         </ContextMenuTrigger>
       </div>
-    </Resizable>
+    
   );
 };
 
