@@ -171,7 +171,7 @@ export function fetchTeamLogo(payload=null) {
 
 
 export function fetchTeamLookup(payload=null) {
-  const { userProfile } = payload;
+  const { userProfile } = payload || null;
   return (dispatch, getState)=> {
     logFormat('fetchTeamLookup()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
@@ -218,13 +218,18 @@ export function fetchUserProfile(payload=null) {
 
     axios.post(API_ENDPT_URL, {
       action  : 'USER_PROFILE',
-      payload : { user_id: cookie.load('user_id') << 0 }
+      payload : { user_id : cookie.load('user_id') << 0 || 0 }
     }).then((response)=> {
       console.log(API_RESPONSE_PREFIX, 'USER_PROFILE', response.data);
 
-      Objects.renameKey(response.data.user, 'github_auth', 'github');
-      if (response.data.user.github) {
-        Objects.renameKey(response.data.user.github, 'access_token', 'accessToken');
+      const { user } = response.data;
+
+
+      if (user) {
+        Objects.renameKey(user, 'github_auth', 'github');
+        if (user.github) {
+          Objects.renameKey(response.data.user.github, 'access_token', 'accessToken');
+        }
       }
 
       const { id, type, github } = response.data.user;

@@ -8,7 +8,7 @@ import { Bits, Strings } from 'lang-js-utils';
 import DummyForm from '../../forms/DummyForm';
 import { API_ENDPT_URL } from '../../../consts/uris';
 import { makeAvatar } from '../../../utils/funcs';
-
+import blacklistTeamDomains from '../../../assets/json/blacklist-team-domains.json';
 
 class RegisterForm extends Component {
 	constructor(props) {
@@ -47,21 +47,25 @@ class RegisterForm extends Component {
 
 	handleSubmit = (event)=> {
 // 		console.log('%s.handleSubmit()', this.constructor.name, event.target);
+// 		console.log('%s.handleSubmit()', this.constructor.name, event.target);
 		event.preventDefault();
 
 		const { inviteID, email, password, password2 } = this.state;
+
 		const emailValid = Strings.isEmail(email);
+		const emailBlackListed = (blacklistTeamDomains.matches.filter((patt)=> ((new RegExp(`${patt}`, 'i')).test(email))).length > 0);
 		const passwordValid = (password.length > 0 && password === password2);
 
-		this.setState({
-			email         : (emailValid) ? email : 'Email Address Invalid',
-			passMsg       : (passwordValid) ? '' : 'Passwords don\'t match',
-			emailValid    : emailValid,
-			passwordValid : passwordValid
+		this.setState({ emailValid, passwordValid,
+			email         : (emailValid) ? (emailBlackListed) ? `@${email.split('@').pop()} not supported` : email : 'Email Address Invalid',
+			passMsg       : (passwordValid) ? '' : 'Passwords don\'t match'
 		});
 
 
-		if (emailValid && passwordValid) {
+		console.log('%s.handleSubmit()', this.constructor.name, { email, emailValid, passwordValid, emailBlackListed });
+
+
+		if (emailValid && passwordValid && !emailBlackListed) {
 			axios.post(API_ENDPT_URL, {
 				action  : 'REGISTER',
 				payload : { email, password, inviteID,

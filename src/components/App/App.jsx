@@ -22,7 +22,7 @@ import TopNav from '../sections/TopNav';
 import './App.css';
 import { withRouter, matchPath, generatePath } from 'react-router-dom';
 import {makeAvatar} from '../../utils/funcs';
-
+import blacklist from '../../assets/json/blacklist-team-domains.json';
 
 import ComponentMenu from '../pages/PlaygroundPage/PlaygroundContent/ComponentMenu';
 
@@ -61,7 +61,8 @@ class App extends Component {
     trackEvent('site', 'load');
     trackPageview();
     //
-    console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('M'));
+    // console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('M'));
+
     const { profile, location } = this.props;
     // 		if (!profile && location.pathname.startsWith(Pages.PLAYGROUND)) {
     if (!profile && location.pathname.startsWith(Pages.PLAYGROUND) && cookie.load('user_id') === '0') {
