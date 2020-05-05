@@ -11,12 +11,21 @@ RewriteEngine on
     RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
 
 
-#-- react routing --#
+#-- service paths --#
 RewriteEngine on
-    Options -MultiViews
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ / [QSA,L]
+    #RewriteRule ^verify-email/(.*)/?$ https://api.pairurl.com/v4/pairurl.php?/$1 [R=301,L,NE]
+    #RewriteRule ^verify-email/(\d+)/([0-9a-f]+)/?$ /php/verify-email.php?action=VERIFY_EMAIL&user_id=$1&token=$2 [P]
+    #RewriteRule ^verify-email/(\d+)/([0-9a-f]+)/?$ /php/rewrite-worker.php?action=VERIFY_EMAIL&user_id=$1&token=$2 [P]
+    #RewriteRule ^verify-email/(\d+)/?$ /php/rewrite-worker.php?action=VERIFY_EMAIL&user_id=$1 [P]
+    RewriteRule ^verify-email/(\d+)/(.+)/?$ /php/rewrite-worker.php?action=VERIFY_EMAIL&user_id=$1&email=$2 [P]
+
+#-- react routing --#
+# RewriteEngine on
+#     Options -MultiViews
+#     RewriteCond %{REQUEST_FILENAME} !-d
+#     RewriteCond %{REQUEST_FILENAME} !-f
+#     RewriteRule ^ / [QSA,L]
 
 
 #-- don't cache these --#
