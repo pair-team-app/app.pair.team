@@ -25,9 +25,15 @@ function AskPageCommentsPanel(props) {
 		<div className="comments-panel-item-wrapper">
 			{(comments.map((comment, i)=> {
         const vote = (comment.votes.find(({ author, score })=> (author.id === profile.id && score !== 0 )) || null);
-        return (<div className="ask-page-comment" data-id={comment.id} data-author={comment.author} data-loading={loading}>
+
+        return (<AskPageComment key={i} comment={comment}  loading={loading} vote={vote}>
           <PlaygroundBaseComment key={i} loading={loading} vote={vote} comment={comment} />
-        </div>);
+        </AskPageComment>);
+
+
+        {/* return (<div className="ask-page-comment" data-id={comment.id} data-author={comment.author} data-loading={loading}>
+          <PlaygroundBaseComment key={i} loading={loading} vote={vote} comment={comment} />
+        </div>); */}
 			}))}
 		</div>
 	</div>);
@@ -36,21 +42,27 @@ function AskPageCommentsPanel(props) {
 const AskPageComment = (props)=> {
   // console.log('AskPageComment()', props);
 
-  const { loading, vote, comment, author } = props;
+  const { loading, vote, comment, author, children } = props;
 
 	const handleDelete = (event)=> {
 		event.preventDefault();
 		props.onDelete(comment);
 	};
 
-	return (<div className="ask-page-comment" data-id={comment.id} data-author={author} data-loading={loading}>
-    <div className="vote-wrapper" data-disabled={(author || loading)} data-voted={vote !== null}>
-      <FontAwesome name="sort-up" className="vote-arrow vote-arrow-up" data-selected={vote && vote.score === 1} onClick={()=> (vote && vote.score === 1) ? null : props.onVote({ comment, action : VOTE_ACTION_UP })} />
-      <div className="vote-score" onClick={()=> (vote) ? props.onVote({ comment, action : VOTE_ACTION_RETRACT }) : null}>{comment.score}</div>
-      <FontAwesome name="sort-down" className="vote-arrow vote-arrow-dn" data-selected={vote && vote.score === -1} onClick={()=> (vote && vote.score === -1) ? null : props.onVote({ comment, action : VOTE_ACTION_DOWN })} />
-    </div>
-		<PlaygroundBaseComment ind={-1} comment={{ ...comment, content : (comment.content || '--') }} onClick={(event)=> props.onClick(event, comment)} onDelete={handleDelete} />
- 	</div>);
+
+  return (<div className="ask-page-comment" data-id={comment.id} data-author={comment.author.id} data-loading={loading}>
+    {children}
+    {/* <PlaygroundBaseComment key={i} loading={loading} vote={vote} comment={comment} /> */}
+  </div>);
+
+	// return (<div className="ask-page-comment" data-id={comment.id} data-author={author} data-loading={loading}>
+  //   <div className="vote-wrapper" data-disabled={(author || loading)} data-voted={vote !== null}>
+  //     <FontAwesome name="sort-up" className="vote-arrow vote-arrow-up" data-selected={vote && vote.score === 1} onClick={()=> (vote && vote.score === 1) ? null : props.onVote({ comment, action : VOTE_ACTION_UP })} />
+  //     <div className="vote-score" onClick={()=> (vote) ? props.onVote({ comment, action : VOTE_ACTION_RETRACT }) : null}>{comment.score}</div>
+  //     <FontAwesome name="sort-down" className="vote-arrow vote-arrow-dn" data-selected={vote && vote.score === -1} onClick={()=> (vote && vote.score === -1) ? null : props.onVote({ comment, action : VOTE_ACTION_DOWN })} />
+  //   </div>
+	// 	<PlaygroundBaseComment ind={-1} comment={{ ...comment, content : (comment.content || '--') }} onClick={(event)=> props.onClick(event, comment)} onDelete={handleDelete} />
+ 	// </div>);
 };
 
 

@@ -1,31 +1,43 @@
 
 #-- auth --#
 #AuthType Basic
-#AuthName "Password Protected Area"
-#AuthUserFile /var/www/designengine.ai/.htpasswd
-#Require valid-user
+#    AuthName "Password Protected Area"
+#    AuthUserFile /var/www/designengine.ai/.htpasswd
+#    Require valid-user
 
 #-- drop www prefix --#
-RewriteEngine on
-    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-    RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+#RewriteEngine on
+#    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+#    RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
 
 
 #-- service paths --#
 RewriteEngine on
     RewriteCond %{REQUEST_FILENAME} !-d
-    #RewriteRule ^verify-email/(.*)/?$ https://api.pairurl.com/v4/pairurl.php?/$1 [R=301,L,NE]
-    #RewriteRule ^verify-email/(\d+)/([0-9a-f]+)/?$ /php/verify-email.php?action=VERIFY_EMAIL&user_id=$1&token=$2 [P]
-    #RewriteRule ^verify-email/(\d+)/([0-9a-f]+)/?$ /php/rewrite-worker.php?action=VERIFY_EMAIL&user_id=$1&token=$2 [P]
-    #RewriteRule ^verify-email/(\d+)/?$ /php/rewrite-worker.php?action=VERIFY_EMAIL&user_id=$1 [P]
-    RewriteRule ^verify-email/(\d+)/(.+)/?$ /php/rewrite-worker.php?action=VERIFY_EMAIL&user_id=$1&email=$2 [P]
+    RewriteRule ^verify-email/(\d+)/(.+)/?$ /php/rewrite-worker.php?action=VERIFY_EMAIL&user_id=$1&email=$2 [QSA,L]
+#   RewriteRule ^/verify-email/(\d+)/(.+)/?$  /php/rewrite-worker.php?action=VERIFY_EMAIL&user_id=$1&email=$2 [R=301,L]
+
 
 #-- react routing --#
-# RewriteEngine on
-#     Options -MultiViews
-#     RewriteCond %{REQUEST_FILENAME} !-d
-#     RewriteCond %{REQUEST_FILENAME} !-f
-#     RewriteRule ^ / [QSA,L]
+RewriteEngine on
+    Options -MultiViews
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ / [QSA,L]
+
+#-- react routing alt --#
+#    RewriteCond %{REQUEST_FILENAME} -f [OR]
+#    RewriteCond %{REQUEST_FILENAME} -d
+#    RewriteRule ^ - [L]
+#    RewriteRule ^ index.html [L]
+
+#-- react routing alt --#
+#    RewriteBase /
+#    RewriteRule ^index\.html$ - [L]
+#    RewriteCond %{REQUEST_FILENAME} !-f
+#    RewriteCond %{REQUEST_FILENAME} !-d
+#    RewriteCond %{REQUEST_FILENAME} !-l
+#    RewriteRule . /index.html [L]
 
 
 #-- don't cache these --#
