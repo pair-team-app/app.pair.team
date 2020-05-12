@@ -93,8 +93,7 @@
 .playground-components-grid {
 	margin: 0 var(--spacing-10);
 	justify-content: center;
-
-
+	
 	display: flex;
 	flex-flow: row wrap;
 	align-items: flex-start;

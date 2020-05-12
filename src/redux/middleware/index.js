@@ -7,9 +7,11 @@ import { reformComponent, reformPlayground , reformComment} from '../../componen
 import { DEVICES_LOADED,
   BUILD_PLAYGROUNDS_LOADED, 
   TEAM_LOADED, 
+  TEAM_UPDATED, 
   TEAM_LOGO_LOADED, 
   TEAM_BUILDS_LOADED, 
   TEAM_COMMENTS_LOADED, 
+  TEAM_RULES_UPDATED,
   USER_PROFILE_UPDATED, 
   USER_PROFILE_LOADED, 
   UPDATE_MATCH_PATH,
@@ -89,7 +91,6 @@ export function onMiddleware(store) {
           id : member.id << 0
         })),
         logo     : team.image.replace(/\\n/g, '', team.image)
-        // comments : (team.comments) ? team.comments.map((comment)=> (reformComment(comment, team))) : []
       };
 
       if (!team.image === TEAM_DEFAULT_AVATAR) {
@@ -268,6 +269,25 @@ export function onMiddleware(store) {
       } : null;
 
       payload.comment = (comment) ? payload.comment : null;
+
+
+    } else if (type === TEAM_RULES_UPDATED) {
+      const { team } = prevState;
+      const { rules } = payload;
+
+      payload.team = { ...team, rules };
+
+
+    } else if (type === TEAM_UPDATED) {
+      const { team } = payload;
+
+      payload.team = { ...team,
+        id       : team.id << 0,
+        members  : team.members.map((member)=> ({ ...member,
+          id : member.id << 0
+        })),
+        logo     : team.image.replace(/\\n/g, '', team.image)
+      };
 
     } else if (type === COMMENT_VOTED) {
       const { team, playgrounds, playground, typeGroup, component } = prevState;

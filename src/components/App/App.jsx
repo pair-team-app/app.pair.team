@@ -21,10 +21,6 @@ import BottomNav from '../sections/BottomNav';
 import TopNav from '../sections/TopNav';
 import './App.css';
 import { withRouter, matchPath, generatePath } from 'react-router-dom';
-import {makeAvatar} from '../../utils/funcs';
-import blacklist from '../../assets/json/blacklist-team-domains.json';
-
-import ComponentMenu from '../pages/PlaygroundPage/PlaygroundContent/ComponentMenu';
 
 class App extends Component {
   constructor(props) {

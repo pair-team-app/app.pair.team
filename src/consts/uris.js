@@ -29,7 +29,7 @@ export const Pages = {
 	WILDCARD   : '*'
 };
 
-const API_VER = 'v4';
+const API_VER = 'v5';
 
 export const CDN_HOSTNAME = 'http://cdn.pairurl.com';
 export const API_HOSTNAME = 'https://api.pairurl.com';

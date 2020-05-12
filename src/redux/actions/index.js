@@ -3,7 +3,7 @@ import { Bits, Objects } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { 
   COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED,
-  TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, PLAYGROUND_LOADED, TEAM_COMMENTS_LOADED,
+  TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, PLAYGROUND_LOADED, TEAM_COMMENTS_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED,
   SET_INVITE, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TYPE_GROUP,
   USER_PROFILE_LOADED, USER_PROFILE_UPDATED, USER_PROFILE_ERROR,
   UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, UPDATE_RESIZE_BOUNDS, SET_REDIRECT_URI, TOGGLE_THEME, TEAM_LOGO_LOADED, 
@@ -275,6 +275,32 @@ export function makeComment(payload) {
   });
 }
 
+
+export function makeTeamRule(payload) {
+  return ((dispatch, getState)=> {
+    logFormat('makeTeamRule()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
+
+    const { userProfile : profile, team } = getState();
+    const { title } = payload;
+    
+    axios.post(API_ENDPT_URL, {
+      action  : 'ADD_RULE',
+      payload : { title,
+        user_id : profile.id,
+        team_id : team.id
+      }
+    }).then((response)=> {
+      console.log(API_RESPONSE_PREFIX, 'ADD_RULE', response.data, response.data.comment);
+
+      dispatch({
+        type    : TEAM_RULES_UPDATED,
+        payload : { rules : response.data.rules }
+      });
+    }).catch((error)=> {});
+  });
+}
+
+
 export function makeVote(payload) {
   return ((dispatch, getState)=> {
     logFormat('makeVote()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
@@ -317,6 +343,33 @@ export function modifyComment(payload) {
       dispatch({
         type    : COMMENT_UPDATED,
         payload : { comment : response.data.comment }
+      });
+
+    }).catch((error)=> {});
+  });
+}
+
+
+export function modifyTeam(payload) {
+  return ((dispatch, getState)=> {
+    logFormat('modifyTeam()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
+    
+    const { userProfile, team } = getState();
+    const { description, image } = payload;
+
+    axios.post(API_ENDPT_URL, {
+      action  : 'UPDATE_TEAM',
+      payload : { description, 
+        team_id     : team.id,
+        user_id     : userProfile.id,
+        image       : (image === null) ? false : (image === true)
+      }
+    }).then((response)=> {
+      console.log(API_RESPONSE_PREFIX, 'UPDATE_TEAM', response.data);
+
+      dispatch({
+        type    : TEAM_UPDATED,
+        payload : { team : response.data.team }
       });
 
     }).catch((error)=> {});
@@ -403,6 +456,8 @@ export function updateMouseCoords(payload) {
   const position = payload;
   return { payload : position, type : UPDATE_MOUSE_COORDS };
 }
+
+
 export function updateResizeBounds(payload) {
   // 	logFormat('updateResizeBounds()', payload);
   const resizeBounds = payload;

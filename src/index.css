@@ -66,6 +66,7 @@
 	--playground-panel-link-color: 153, 153, 153; /* #999999 */
 	--playground-panel-link-hover-color: var(--site-fg-color); /* #232323 */
 	--comment-marker-bg-color: 207, 247, 207;
+	--alt-list-bg-color: 247, 247, 247; /* #f7f7f7 */
 
 	--timestamp-color: 153, 153, 153; /* #999999 */
 	--dialog-title-color: 153, 153, 153; /* #999999 */
