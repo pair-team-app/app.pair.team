@@ -20,6 +20,7 @@
     "npm": "^6.10.2",
     "prop-types": "^15.6.0",
     "react": "^16.8.6",
+    "react-contexify": "^4.1.1",
     "react-contextmenu": "^2.13.0",
     "react-cookies": "^0.1.1",
     "react-copy-to-clipboard": "^5.0.1",
