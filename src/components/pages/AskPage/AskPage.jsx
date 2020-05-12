@@ -15,6 +15,7 @@ import { ENTER_KEY } from '../../../consts/key-codes';
 import { Modals } from '../../../consts/uris';
 import { fetchTeamComments, makeComment, makeTeamRule, modifyTeam, setPlayground, setTypeGroup, setComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
+import { TEAM_TIMESTAMP } from '../../../consts/formats';
 
 class AskPage extends Component {
   constructor(props) {
@@ -25,6 +26,7 @@ class AskPage extends Component {
       commentContent  : '',
       teamDescription : '',
       ruleContent     : '',
+      ruleInput       : false,
       sort            : SORT_BY_SCORE,
       fetching        : false,
       share           : false
@@ -77,7 +79,7 @@ class AskPage extends Component {
 
 
   handleAddComment = (event)=> {
-    console.log('%s.handleAddComment()', this.constructor.name, { event, props : this.props, state : this.state });
+    // console.log('%s.handleAddComment()', this.constructor.name, { event, props : this.props, state : this.state });
     trackEvent('button', 'add-comment');
 
     event.preventDefault();
@@ -94,7 +96,7 @@ class AskPage extends Component {
   };
 
   handleAddRule = (event)=> {
-    console.log('%s.handleAddRule()', this.constructor.name, event);
+    // console.log('%s.handleAddRule()', this.constructor.name, event);
     trackEvent('button', 'add-rule');
 
     event.preventDefault();
@@ -102,13 +104,16 @@ class AskPage extends Component {
 
     const { ruleContent } = this.state;
     this.props.makeTeamRule({ title : ruleContent });
-    this.setState({ ruleContent : '' });
+    this.setState({ 
+      ruleInput   : false,
+      ruleContent : ''
+    });
   }
 
   handleKeyDown = (event)=> {
     // console.log('%s.handleKeyDown()', this.constructor.name, event);
 
-    const { commentContent, teamDescription, ruleContent } = this.state;
+    const { ruleInput, commentContent, teamDescription, ruleContent } = this.state;
     if (event.keyCode === ENTER_KEY) {
       if (commentContent.length > 0) {
         this.handleAddComment(event);
@@ -118,6 +123,7 @@ class AskPage extends Component {
         this.handleUpdateTeamDescription(event);
       }
 
+      // if (ruleContent.length > 0 && ruleInput) {
       if (ruleContent.length > 0) {
         this.handleAddRule(event);
       }
@@ -135,6 +141,16 @@ class AskPage extends Component {
     this.props.setPlayground(playground);
     this.props.setTypeGroup(typeGroup);
   };
+
+  handleRuleInput = (event)=> {
+    // console.log('%s.handleRuleInput()', this.constructor.name, event);
+    trackEvent('button', 'add-rule');
+
+    this.setState({ 
+      ruleContent : '',
+      ruleInput   : true 
+    });
+  }
 
   handleSettingsItem = (itemType)=> {
     //console.log('%s.handleSettingsItem()', this.constructor.name, itemType);
@@ -158,14 +174,14 @@ class AskPage extends Component {
   }
 
   handleTextChange = (event)=> {
-    console.log('%s.handleTextChange()', this.constructor.name, event);
+    // console.log('%s.handleTextChange()', this.constructor.name, event);
 
     const commentContent = event.target.value;
     this.setState({ commentContent });
   };
 
   handleUpdateTeamDescription = (event)=> {
-    console.log('%s.handleUpdateTeamDescription()', this.constructor.name, event);
+    // console.log('%s.handleUpdateTeamDescription()', this.constructor.name, event);
     trackEvent('button', 'update-team');
 
     event.preventDefault();
@@ -176,7 +192,7 @@ class AskPage extends Component {
   }
 
   onReloadComments = (refresh=true)=> {
-    console.log('%s.onReloadComments()', this.constructor.name, { refresh });
+    // console.log('%s.onReloadComments()', this.constructor.name, { refresh });
 
     const { team } = this.props;
     const { topSort } = this.state;
@@ -193,7 +209,7 @@ class AskPage extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, comments } = this.props;
-    const { commentContent, teamDescription, ruleContent, fetching, share, sort, topSort } = this.state;
+    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, share, sort, topSort } = this.state;
 
     return (<BasePage { ...this.props } className="ask-page">
       {profile && team && (<>
@@ -236,7 +252,7 @@ class AskPage extends Component {
               <div className="content"><textarea placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })}></textarea></div>
               <div className="footer">
                 <div>{team.members.length} {Strings.pluralize('member', team.members.length)}</div>
-                <div className="timestamp">CREATED {team.added.split(' ')[0].split('-').reverse().join('/')}</div>
+                <div className="timestamp">CREATED {team.added.format(TEAM_TIMESTAMP)}</div>
               </div>
             </div>
             <div className="rules-wrapper">
@@ -250,9 +266,10 @@ class AskPage extends Component {
                   />);
                 }))}
               </div>)}
-              <div className="footer">
+              {/* <div className="footer" data-input={ruleInput}> */}
+              <div className="footer" data-input={true}>
+                {/* <button className="quiet-button" onClick={this.handleRuleInput}>+</button> */}
                 <input type="text" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} />
-                {/* <button className="quiet-button" onClick={this.handleAddRule}>+</button> */}
               </div>
             </div>
           </div>

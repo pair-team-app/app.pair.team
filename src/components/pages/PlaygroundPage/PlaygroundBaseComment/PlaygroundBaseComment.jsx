@@ -170,6 +170,7 @@ const BaseCommentContent = (props)=> {
 		{(types.indexOf('component') > -1) && (<NavLink className="uri" to={uri}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</NavLink>)}
 		<BaseCommentReplies { ...props } onDelete={props.onDeleteReply} />
 		{(comment.state !== 'closed') && (<form className="reply-form">
+				{/* <input type="text" placeholder="Reply to this…" value={replyContent} onChange={props.onTextChange} autoComplete="new-password" /> */}
 				<input type="text" placeholder="Reply to this…" value={replyContent} onChange={props.onTextChange} autoComplete="new-password" autoFocus />
 				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={20} showPreview={true} showSkinTones={true} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 			</form>)}

@@ -1,7 +1,9 @@
 
 import { Strings } from 'lang-js-utils';
 import moment from 'moment';
+
 import { jsonFormatKB } from '../../../../consts/formats';
+import { TEAM_DEFAULT_AVATAR, Pages } from '../../../../consts/uris';
 
 export const reformComment = (comment, uri, overwrite={})=> {
   // console.log('reformComment()', { comment, uri, overwrite }, { position : typeof comment.position });
@@ -10,20 +12,20 @@ export const reformComment = (comment, uri, overwrite={})=> {
 
   const reformed = { ...comment,
     id       : id << 0,
-    position : (typeof position === 'string' && position.charAt(0) === '{') ? JSON.parse(position) : (position || { x : 0, y : 0 }),
+    position : (position) ? (typeof position === 'string' && position.charAt(0) === '{') ? JSON.parse(position) : (position || { x : 0, y : 0 }) : { x : 0, y : 0 },
     content  : (content || null),
-    author   : { ...author },
-    votes    : votes.map((vote)=> ({ ...vote,
+    author   : (author || null),
+    votes    : (votes) ? votes.map((vote)=> ({ ...vote,
       score : vote.score << 0
-    })),
-    types     : types.split(','),
-    score     : votes.reduce((acc, vote)=> (acc + (vote.score << 0)), 0),
+    })) : [],
+    types     : (types) ? types.split(',') : [],
+    score     : (votes) ? votes.reduce((acc, vote)=> (acc + (vote.score << 0)), 0) : 0,
     uri       : `${uri}/comments/${id}`,
     selected  : false,
     epoch     : (added) ? (moment.utc(added).valueOf() * 0.001) << 0 : 0,
     timestamp : (added) ? moment(added).add(moment().utcOffset() << 0, 'minute') : moment.utc(),
     replies   : (replies) ? replies.map((reply)=> (reformComment(reply, uri))) : [],
-    votable   : (state !== 'closed'),
+    votable   : (state && state !== 'closed'),
     ...overwrite
   }
 
@@ -111,4 +113,46 @@ export const reformPlayground = (playground, devices=null, componentTypes=null, 
 
   // console.log('reformPlayground()', { playground, devices, componentTypes, team, reformed });
   return ({ ...reformed, size : jsonFormatKB(reformed) });
+};
+
+
+export const reformRule = (rule, members, overwrite={})=> {
+  console.log('reformRule()', { rule, members, overwrite });
+
+  const { id, author, content, updated, added } = rule;
+  const reformed = { ...rule, 
+    id      : id << 0,
+    author  : members.find((member)=> ((member.id === (author << 0)))),
+    content : (content || ''),
+    updated : moment(updated).utc(),
+    added   : moment(added).utc()
+  };
+
+  return ({ ...reformed, size : jsonFormatKB(reformed) });
+};
+
+
+export const reformTeam = (team, overwrite={})=> {
+  console.log('reformTeam()', { team, overwrite });
+
+  const { description, slug, image, updated, added } = team;
+  const members = team.members.map((member)=> ({ ...member,
+    id : member.id << 0
+  }));
+
+  const rules = team.rules.map((rule)=> (reformRule(rule, members)));
+  const comments = team.comments.map((comment)=> (reformComment(comment, `${Pages.ASK}/${slug}/ask/comments`)));
+
+
+  const reformed = { ...team, rules, members, comments,
+    id          : team.id << 0,
+    description : (description || ''),
+    logo        : (image) ? image.replace(/\\n/g, '', image) : TEAM_DEFAULT_AVATAR,
+    updated     : moment(updated).utc(),
+    added       : moment(added).utc(),
+  };
+
+  console.log('reformTeam()', { team, reformed });
+  return ({ ...reformed, size : jsonFormatKB(reformed) });
+
 };

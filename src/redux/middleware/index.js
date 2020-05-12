@@ -3,7 +3,7 @@
 import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
 
-import { reformComponent, reformPlayground , reformComment} from '../../components/pages/PlaygroundPage/utils/reform';
+import { reformComponent, reformPlayground , reformComment, reformRule, reformTeam } from '../../components/pages/PlaygroundPage/utils/reform';
 import { DEVICES_LOADED,
   BUILD_PLAYGROUNDS_LOADED, 
   TEAM_LOADED, 
@@ -85,15 +85,17 @@ export function onMiddleware(store) {
       const { buildID, deviceSlug } = params;
       
       const { team } = payload;
-      payload.team = { ...team,
-        id       : team.id << 0,
-        members  : team.members.map((member)=> ({ ...member,
-          id : member.id << 0
-        })),
-        logo     : team.image.replace(/\\n/g, '', team.image)
-      };
+      // payload.team = { ...team,
+      //   id       : team.id << 0,
+      //   members  : team.members.map((member)=> ({ ...member,
+      //     id : member.id << 0
+      //   })),
+      //   logo     : team.image.replace(/\\n/g, '', team.image)
+      // };
 
-      if (!team.image === TEAM_DEFAULT_AVATAR) {
+      payload.team = reformTeam(team);
+
+      if (team.image === TEAM_DEFAULT_AVATAR) {
         dispatch(fetchTeamLogo({ team }));
       }
 
@@ -275,19 +277,15 @@ export function onMiddleware(store) {
       const { team } = prevState;
       const { rules } = payload;
 
-      payload.team = { ...team, rules };
+      // payload.team = { ...team, 
+      //   rules : rules.map((rule)=> (reformRule(rule, team.members)))
+      // };
 
+      payload.team = { ...team, rules };
 
     } else if (type === TEAM_UPDATED) {
       const { team } = payload;
-
-      payload.team = { ...team,
-        id       : team.id << 0,
-        members  : team.members.map((member)=> ({ ...member,
-          id : member.id << 0
-        })),
-        logo     : team.image.replace(/\\n/g, '', team.image)
-      };
+      payload.team = reformTeam(team);
 
     } else if (type === COMMENT_VOTED) {
       const { team, playgrounds, playground, typeGroup, component } = prevState;

@@ -13,4 +13,4 @@ export const COMPONENT_THUMB_SCALE = 0.25;
 export const COMPONENT_THUMB_QUALITY = 6;
 
 // TODO: Move to lang-js module
-export const jsonFormatKB = (json, binary=false)=> (`${Math.round(jsonSize(json) * ((binary) ? 0.0009765625 : 0.001).toFixed(3) * 1000) * 0.001}KB`);
+export const jsonFormatKB = (json, binary=false)=> (`${(Math.round(jsonSize(json) * ((binary) ? 0.0009765625 : 0.001).toFixed(3) * 1000) * 0.001).toFixed(3)}KB`);
