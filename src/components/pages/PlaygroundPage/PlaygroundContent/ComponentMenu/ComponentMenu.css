@@ -25,13 +25,15 @@
 	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: var(--border-radius);
 	box-shadow: var(--overlay-shadow);
+
+	margin: 0 0 0 0px;
 }
 
-.component-menu-intro {
+.component-menu[data-segue="intro"] {
 	animation: 0.125s cubic-bezier(0.0, 0.2, 0.4, 1.0) 0s 1 forwards component-menu-intro;
 }
 
-.component-menu-outro {
+.component-menu[data-segue="outro"] {
 	animation: 0.125s cubic-bezier(0.0, 0.3, 0.5, 1.0) 0s 1 forwards component-menu-outro;
 }
 

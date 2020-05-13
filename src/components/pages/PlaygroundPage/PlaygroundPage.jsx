@@ -26,7 +26,8 @@ class PlaygroundPage extends Component {
       devices       : false,
       cursor        : false,
       accessibility : false,
-      share         : false
+      share         : false,
+      menu          : false
     };
   }
 
@@ -90,8 +91,10 @@ class PlaygroundPage extends Component {
   };
 
   handleComponentMenuShow = ({ component=null })=> {
-    //.log('%s.handleComponentMenuShow()', this.constructor.name, { component });
+    console.log('%s.handleComponentMenuShow()', this.constructor.name, { component });
     //     this.props.setComponent(component);
+
+    this.setState({ menu : true });
   };
 
   handleComponentMenuItem = ({ menuItem=null })=> {
@@ -236,12 +239,13 @@ class PlaygroundPage extends Component {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, playgrounds, playground, component, comment } = this.props;
-    const { cursor, accessibility, share, devices } = this.state;
+    const { menu, cursor, accessibility, share, devices } = this.state;
     const { params = null } = this.props || { params : null };
 
-    return (<BasePage { ...this.props } className="playground-page" data-component={(component !== null)} data-comments={component && window.location.href.includes('/comments')}>
+    return (<BasePage { ...this.props } className="playground-page" data-menu={menu} data-component={(component !== null)} data-comments={component && window.location.href.includes('/comments')}>
       {(profile && team) && (<div>
         <PlaygroundNavPanel
+          menu={menu}
           params={params}
           onPlaygroundClick={this.handlePlaygroundClick}
           onTypeGroupClick={this.handleNavGroupItemClick}

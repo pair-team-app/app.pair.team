@@ -87,7 +87,7 @@ class PlaygroundNavPanel extends Component {
   render() {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { team, playgrounds, typeGroup } = this.props;
+    const { menu, team, playgrounds, typeGroup } = this.props;
     const { builds } = this.state;
 
     const handleURL = (event, url)=> {
@@ -97,7 +97,7 @@ class PlaygroundNavPanel extends Component {
       trackOutbound(url);
 	  };
 
-    return (<div className="playground-nav-panel">
+    return (<div className="playground-nav-panel" data-menu={menu}>
       {(team) && (<PlaygroundNavPanelHeader team={team} />)}
       <div className="link-wrapper">
         <NavLink to={`/app/${team.slug}/ask`} className="nav-panel-link">Ask</NavLink>

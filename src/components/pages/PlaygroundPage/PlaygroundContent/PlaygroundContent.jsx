@@ -1,22 +1,25 @@
 
 import React, { Component } from 'react';
+import './PlaygroundContent.css';
+
 import { ContextMenuTrigger } from 'react-contextmenu';
+import { Menu, Item, Separator, Submenu, MenuProvider } from 'react-contexify';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { Resizable } from 'react-resizable';
 import ResizeObserver from 'react-resize-observer';
+
+import ComponentMenu from './ComponentMenu';
 import PlaygroundComment from '../PlaygroundComment';
 import { componentsFromTypeGroup } from '../utils/lookup';
 import { reformComment } from '../utils/reform';
-import ComponentMenu from './ComponentMenu';
-import './PlaygroundContent.css';
 import { updateMouseCoords } from '../../../../redux/actions';
 import placeholderImg from '../../../../assets/images/placeholders/699-187-16087_c.png';
 
 const SCALE_CONSTRAIN = 1.0;
 const CONTAINER_PADDING = {
-  width  : 48 * 1,
-  height : 68 * 1
+  width  : 48 * 0,
+  height : 68 * 0
 };
 
 class PlaygroundContent extends Component {
@@ -73,7 +76,7 @@ class PlaygroundContent extends Component {
   }
 
   calcBounds = (rect)=> {
-    // console.log('%s.calcBounds()', this.constructor.name, { rect, component : this.props.component });
+    console.log('%s.calcBounds()', this.constructor.name, { rect, component : this.props.component });
 
     const { playground, component } = this.props;
     const { device } = playground;
@@ -83,7 +86,7 @@ class PlaygroundContent extends Component {
 
     component.sizes = { ...component.sizes,
       f : {
-        width : 1122,
+        width  : 1122,
         height : 2328
       }
     };
@@ -265,43 +268,34 @@ class PlaygroundContent extends Component {
     const { position, popover, bounds } = this.state;
     const components = (typeGroup) ? (component) ? [component] : componentsFromTypeGroup(playground.components, typeGroup) : [];
 
-    return (
-      <div className="playground-content" data-cursor={cursor}>
-        {(!component) 
-          ? (<PlaygroundComponentsGrid 
-              components={components} 
-              onItemClick={this.handleContentClick} 
-            />) 
-          : (<div className="resize-wrapper">
-              <ResizeObserver onResize={this.calcBounds} onPosition={this.calcBounds} onReflow={this.calcBounds} ref={(el)=> { (el && !this.state.rect) && this.setState({ rect : el._lastRect })}} />
+    return (<div className="playground-content" data-cursor={cursor}>
+      {(!component) ? (<PlaygroundComponentsGrid components={components} onItemClick={this.handleContentClick} />) : (<div className="resize-wrapper">
+        <ResizeObserver onResize={this.calcBounds} onPosition={this.calcBounds} onReflow={this.calcBounds} ref={(el)=> { (el && !this.state.rect) && this.setState({ rect : el._lastRect })}} />
 
-              {(bounds.curr !== null && bounds.curr.component !== null) && (
-                <PlaygroundComponent
-                profile={profile}
-                popover={popover}
-                position={position}
-                bounds={bounds.curr.component}
-                maxBounds={bounds.curr.container}
-                scale={bounds.curr.component.scale}
-                sizeMult={playground.device.scale}
-                cursor={cursor}
-                typeGroup={typeGroup}
-                component={component}
-                onResize={this.handleComponentResize}
-                onAddComment={this.props.onAddComment}
-                onCloseComment={this.handleComponentPopoverClose}
-                onDeleteComment={this.props.onDeleteComment}
-                onItemClick={this.handleContentClick}
-                onMarkerClick={this.props.onMarkerClick}
-              />
-              )}
-              {(cursor) && (<CommentPinCursor position={mouse.position} />)}
-              {/* {(component && bounds.curr && bounds.curr.component) && (<ComponentMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)} */}
-              {(component && bounds.curr) && (<ComponentMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)}
-              {/* {(component) && (<Compon  entMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)} */}
-            </div>)}
-      </div>
-    );
+        {(bounds.curr !== null && bounds.curr.component !== null) && (<PlaygroundComponent
+          profile={profile}
+          popover={popover}
+          position={position}
+          bounds={bounds.curr.component}
+          maxBounds={bounds.curr.container}
+          scale={bounds.curr.component.scale}
+          sizeMult={playground.device.scale}
+          cursor={cursor}
+          typeGroup={typeGroup}
+          component={component}
+          onResize={this.handleComponentResize}
+          onAddComment={this.props.onAddComment}
+          onCloseComment={this.handleComponentPopoverClose}
+          onDeleteComment={this.props.onDeleteComment}
+          onItemClick={this.handleContentClick}
+          onMarkerClick={this.props.onMarkerClick}
+        />)}
+        {(cursor) && (<CommentPinCursor position={mouse.position} />)}
+            
+        {/* {(component && bounds.curr) && (<ComponentMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)} */}
+        {(component && bounds.curr) && (<ComponentMenu menuID="component" profile={profile} component={component} scale={Math.max(...Object.values(bounds.curr.component.scale))} onShow={this.props.onMenuShow} onClick={this.props.onMenuItem} onAddComment={this.props.onAddComment} />)}
+      </div>)}
+    </div>);
   }
 }
 
@@ -328,11 +322,11 @@ const PlaygroundComponent = (props)=> {
   const { width, height } = size;
 
   component.sizes = { ...component.sizes,
-      f : {
-        width : 1122,
-        height : 2328
-      }
-    };
+    f : {
+      width : 1122,
+      height : 2328
+    }
+  };
 
 
   const lgFactor = scale.width;//Math.max(scale.width, scale.height);
@@ -350,7 +344,6 @@ const PlaygroundComponent = (props)=> {
   
   const updBounds = { 
     position : { 
-      // x : (width - ((sizeMult * component.sizes.f.width) / lgFactor)) * 0.5, 
       x : (width - ((sizeMult * component.sizes.f.width) / lgFactor)) * 0.5, 
       // y : (height - ((sizeMult * component.sizes.f.height) / lgFactor)) * 0.5
       y : (width - ((sizeMult * component.sizes.f.width) / lgFactor)) * 0.5
@@ -363,14 +356,24 @@ const PlaygroundComponent = (props)=> {
 
   console.log('PlaygroundComponent()', { updBounds });
 
-  const contentStyle = {
+  /*const contentStyle = {
     top    : 0 + (updBounds.position.y) << 0,
     left   : updBounds.position.x << 0,
     // width  : Math.min(updBounds.size.width, sizes.c.width),
     // height : Math.min(updBounds.size.height, sizes.c.height)
     width  : Math.ceil(updBounds.size.width),
     height : Math.ceil(updBounds.size.height)
+  };*/
+
+
+  const contentStyle = {
+    top    : 0,
+    left   : 0,
+    width  : width,
+    height : Math.ceil(updBounds.size.height)
   };
+
+
 
   return (
       <div className="playground-component" data-loading={false} onClick={(event)=> (cursor) ? props.onItemClick(event, component) : null} style={{ width: `${width}px`, height: `${height}px` }}>
@@ -381,9 +384,10 @@ const PlaygroundComponent = (props)=> {
           <br />
           {`${updBounds.size.width.toFixed(2)}px × ${updBounds.size.height.toFixed(2)}px`}
         </div>
-        <ContextMenuTrigger id="component" component={component} disableIfShiftIsPressed={true} holdToDisplay={-1}>
+        <MenuProvider id="component">
+        {/* <ContextMenuTrigger id="component" component={component} disableIfShiftIsPressed={true} holdToDisplay={-1}> */}
           <div className="bg-wrapper" style={contentStyle}></div>
-          <div className="playground-content-component" data-id={id}>
+          <div className="playground-content-component" style={contentStyle} data-id={id}>
             <img src={(placeholderImg || null)} alt={title} />
           </div>
           
@@ -413,7 +417,8 @@ const PlaygroundComponent = (props)=> {
                 />);
               })}
           </div>
-        </ContextMenuTrigger>
+        {/* </ContextMenuTrigger> */}
+        </MenuProvider>
       </div>
     
   );

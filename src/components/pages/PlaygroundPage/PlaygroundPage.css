@@ -15,6 +15,14 @@
 	transition: background-color 333ms ease-out;
 }
 
+.playground-page[data-menu="true"] {
+	--playground-nav-width: 88px;
+}
+
+.playground-page[data-menu="true"] .playground-nav-panel {
+	opacity: 0.5;
+}
+
 .playground-page[data-component="true"] {
 	background-color: rgba(var(--playground-content-bg-color), 0.0);
 }
@@ -29,7 +37,7 @@
 	left: var(--playground-nav-width);
 	width: calc(100vw - (var(--playground-nav-width) + var(--playground-comments-width)));
 	height: calc(100vh - 64px);
-	padding-bottom: 64px;
+	/* padding-bottom: 64px; */
 	transition: width 333ms 125ms cubic-bezier(0.4, 0, 0.2, 1), height 333ms 125ms cubic-bezier(0.4, 0, 0.2, 1);
 
 	/*border-style: dashed;*/
