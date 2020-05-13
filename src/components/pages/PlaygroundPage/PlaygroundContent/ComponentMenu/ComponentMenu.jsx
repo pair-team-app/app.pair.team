@@ -62,10 +62,10 @@ class ComponentMenu extends Component {
 
 		const { scale } = this.props;
 
-		const position = {
-			x : (event.detail.position.x - event.detail.data.target.getBoundingClientRect().x) * scale,
-			y : (event.detail.position.y - event.detail.data.target.getBoundingClientRect().y - 1) * scale
-		};
+		// const position = {
+		// 	x : (event.detail.position.x - event.detail.data.target.getBoundingClientRect().x) * scale,
+		// 	y : (event.detail.position.y - event.detail.data.target.getBoundingClientRect().y - 1) * scale
+		// };
 
     this.setState({
       intro : false,

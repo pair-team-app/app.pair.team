@@ -2,11 +2,12 @@
 import React, { Component } from 'react';
 import './PlaygroundContent.css';
 
-import { ContextMenuTrigger } from 'react-contextmenu';
-import { Menu, Item, Separator, Submenu, MenuProvider } from 'react-contexify';
+// import { ContextMenuTrigger } from 'react-contextmenu';
+import { MenuProvider } from 'react-contexify';
+import { contextMenu } from 'react-contexify';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
-import { Resizable } from 'react-resizable';
+// import { Resizable } from 'react-resizable';
 import ResizeObserver from 'react-resize-observer';
 
 import ComponentMenu from './ComponentMenu';
@@ -374,54 +375,51 @@ const PlaygroundComponent = (props)=> {
   };
 
 
+  const handleContextMenu = (event)=> {
 
-  return (
-      <div className="playground-component" data-loading={false} onClick={(event)=> (cursor) ? props.onItemClick(event, component) : null} style={{ width: `${width}px`, height: `${height}px` }}>
-        <h5 className="component-title">{title}</h5>
+  };
 
-        <div className="component-caption">
-          {`${component.meta.bounds.width << 0}px × ${component.meta.bounds.height << 0}px`}
-          <br />
-          {`${updBounds.size.width.toFixed(2)}px × ${updBounds.size.height.toFixed(2)}px`}
-        </div>
-        <MenuProvider id="component">
-        {/* <ContextMenuTrigger id="component" component={component} disableIfShiftIsPressed={true} holdToDisplay={-1}> */}
-          <div className="bg-wrapper" style={contentStyle}></div>
-          <div className="playground-content-component" style={contentStyle} data-id={id}>
-            <img src={(placeholderImg || null)} alt={title} />
-          </div>
-          
-          <div className="playground-component-comments-wrapper" style={contentStyle} data-id={id}>
-            {((popover)
-              ? [ ...comments, reformComment({ position,
-                  id       : 0,
-                  type     : 'add',
-                  types    : '',
-                  content  : '',
-                  author   : profile,
-                  votes    : []
-                })
-              ] : comments
-            ).filter(({ type })=> type !== 'init').map((comment, i)=> {
-                return (<PlaygroundComment
-                  key={i}
-                  ind={comments.length - 1 - i}
-                  component={component}
-                  comment={{ ...comment, votable : false }}
-                  scale={scale}
-                  position={position}
-                  onMarkerClick={props.onMarkerClick}
-                  onAdd={props.onAddComment}
-                  onDelete={props.onDeleteComment}
-                  onClose={props.onCloseComment}
-                />);
-              })}
-          </div>
-        {/* </ContextMenuTrigger> */}
-        </MenuProvider>
-      </div>
+
+  return (<div className="playground-component" data-loading={false} onClick={(event)=> (cursor) ? props.onItemClick(event, component) : null} style={{ width: `${width}px`, height: `${height}px` }}>
+    <h5 className="component-title">{title}</h5>
+
+    <div className="component-caption">{`${component.meta.bounds.width << 0}px × ${component.meta.bounds.height << 0}px`}<br />{`${updBounds.size.width.toFixed(2)}px × ${updBounds.size.height.toFixed(2)}px`}</div>
     
-  );
+    <div className="context-menu-wrapper" onContextMenu={handleContextMenu}>
+    {/* <ContextMenuTrigger id="component" component={component} disableIfShiftIsPressed={true} holdToDisplay={-1}> */}
+      <div className="bg-wrapper" style={contentStyle}></div>
+      <div className="playground-content-component" style={contentStyle} data-id={id}>
+        <img src={(placeholderImg || null)} alt={title} />
+      </div>
+      
+      <div className="playground-component-comments-wrapper" style={contentStyle} data-id={id}>
+        {((popover)
+          ? [ ...comments, reformComment({ position,
+              id       : 0,
+              type     : 'add',
+              types    : '',
+              content  : '',
+              author   : profile,
+              votes    : []
+            })
+          ] : comments
+        ).filter(({ type })=> type !== 'init').map((comment, i)=> {
+            return (<PlaygroundComment
+              key={i}
+              ind={comments.length - 1 - i}
+              component={component}
+              comment={{ ...comment, votable : false }}
+              scale={scale}
+              position={position}
+              onMarkerClick={props.onMarkerClick}
+              onAdd={props.onAddComment}
+              onDelete={props.onDeleteComment}
+              onClose={props.onCloseComment}
+            />);
+          })}
+      </div>
+    </div>
+  </div>);
 };
 
 const PlaygroundComponentsGrid = (props)=> {
