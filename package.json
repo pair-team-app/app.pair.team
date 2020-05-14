@@ -21,6 +21,7 @@
     "prop-types": "^15.6.0",
     "react": "^16.8.6",
     "react-contexify": "^4.1.1",
+    "react-context-menu-wrapper": "^2.0.2",
     "react-contextmenu": "^2.13.0",
     "react-cookies": "^0.1.1",
     "react-copy-to-clipboard": "^5.0.1",

@@ -67,10 +67,10 @@ class ComponentMenu extends Component {
 		// 	y : (event.detail.position.y - event.detail.data.target.getBoundingClientRect().y - 1) * scale
 		// };
 
-    this.setState({
-      intro : false,
-      outro : true
-    });
+    // this.setState({
+    //   intro : false,
+    //   outro : true
+    // });
   };
 
   handleMenuItemClick = (event, data, target)=> {
@@ -102,6 +102,9 @@ class ComponentMenu extends Component {
 		// 	y : (event.detail.position.y - event.detail.data.target.getBoundingClientRect().y - 1) * scale
 		// };
 
+
+		
+
 		// this.setState({ position,
 		// 	intro   : true,
 		// 	comment : ''
@@ -126,8 +129,7 @@ class ComponentMenu extends Component {
 			<div className="component-popover" data-segue={(intro) ? 'intro' : (outro) ? 'outro' : 'idle'}>
 				<div className="component-menu-content-wrapper">
 					<div className="component-menu-item-wrapper">
-            {/* <ComponentMenuItem type={COMPONENT_MENU_ITEM_COMMENTS} title={`${window.location.href.includes('/comments') ? 'Hide' : 'View'} Comments`} acc={<ComponentMenuItemAcc amt={(component) ? Math.max(0, component.comments.length - 1) : 0} />} onClick={this.handleMenuItemClick} /> */}
-            <ComponentMenuItem type={COMPONENT_MENU_ITEM_COMMENTS} title={`${window.location.href.includes('/comments') ? 'Hide' : 'View'} Comments`} acc={<ComponentMenuItemAcc amt="0" />} onClick={this.handleMenuItemClick} />
+            <ComponentMenuItem type={COMPONENT_MENU_ITEM_COMMENTS} title={`${window.location.href.includes('/comments') ? 'Hide' : 'View'} Comments`} acc={<ComponentMenuItemAcc amt={(component) ? Math.max(0, component.comments.length - 1) : 0} />} onClick={this.handleMenuItemClick} />
             {/*<CopyToClipboard text={window.location.href} onCopy={this.handleClipboardCopy}>*/}
 							<ComponentMenuItem type={COMPONENT_MENU_ITEM_COPY} title="Copy URL" acc={null} onClick={this.handleMenuItemClick} />
 						{/*</CopyToClipboard>*/}
@@ -135,8 +137,7 @@ class ComponentMenu extends Component {
           <div className="playground-comment-add-popover">
             <div className="header-wrapper">
               <div className="avatar-wrapper">
-                {/* <img className="avatar-wrapper-ico" src={avatar} alt={email} /> */}
-                <img className="avatar-wrapper-ico" src={Math.random()} alt={email} />
+                <img className="avatar-wrapper-ico" src={avatar} alt={email} />
               </div>
             </div>
 						<textarea placeholder="Enter Comment" onChange={(event)=> this.setState({ comment : event.target.value })} ref={(element)=> { this.textAreaRef = element ; element && element.focus() }} autoFocus></textarea>

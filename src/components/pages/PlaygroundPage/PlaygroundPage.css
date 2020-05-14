@@ -16,7 +16,7 @@
 }
 
 .playground-page[data-menu="true"] {
-	--playground-nav-width: 88px;
+	/* --playground-nav-width: 88px; */
 }
 
 .playground-page[data-menu="true"] .playground-nav-panel {
