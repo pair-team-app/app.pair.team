@@ -110,7 +110,7 @@
 	flex-wrap: nowrap;
 	align-items: center;
 	padding: 0 var(--spacing-20) 0 0;
-	border: 1px dotted #ff00ff;
+	/* border: 1px dotted #ff00ff; */
 }
 
 .base-comment-vote .vote-arrow {

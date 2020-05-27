@@ -474,11 +474,10 @@ class App extends Component {
 
 
     return (<div className={`site-wrapper${(darkThemed) ? ' site-wrapper-dark' : ''}`} data-devin-matty={true}>
-      
       {(!matchPlaygrounds) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
 
 	    <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND) && !location.pathname.includes(Pages.ASK)) ? ' playground-page-wrapper' : ''}`}>
-		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } onScrollRef={this.props.onScrollRef} />
+		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
 	    </div>
 		  
       {(!matchPlaygrounds) && (<BottomNav />)}

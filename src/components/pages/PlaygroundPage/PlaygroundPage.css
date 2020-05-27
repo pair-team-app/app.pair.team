@@ -19,10 +19,6 @@
 	/* --playground-nav-width: 88px; */
 }
 
-.playground-page[data-menu="true"] .playground-nav-panel {
-	opacity: 0.5;
-}
-
 .playground-page[data-component="true"] {
 	background-color: rgba(var(--playground-content-bg-color), 0.0);
 }

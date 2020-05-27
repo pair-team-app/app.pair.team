@@ -105,8 +105,8 @@ class AskPage extends Component {
     const { ruleContent } = this.state;
     this.props.makeTeamRule({ title : ruleContent });
     this.setState({ 
-      ruleInput   : false,
-      ruleContent : ''
+      ruleInput   : false
+      // ruleContent : ''
     });
   }
 
@@ -123,8 +123,7 @@ class AskPage extends Component {
         this.handleUpdateTeamDescription(event);
       }
 
-      // if (ruleContent.length > 0 && ruleInput) {
-      if (ruleContent.length > 0) {
+      if (ruleContent.length > 0 && ruleInput) {
         this.handleAddRule(event);
       }
 
@@ -230,7 +229,7 @@ class AskPage extends Component {
 
         <div className="content-wrapper">
           <div className="comments-wrapper" data-loading={fetching}>
-            <div ref={(element)=> (element) && this.props.onScrollRef(element)}>
+            <div>
               <AskPageAddComment 
                 loading={fetching} 
                 commentContent={commentContent} 
@@ -266,9 +265,8 @@ class AskPage extends Component {
                   />);
                 }))}
               </div>)}
-              {/* <div className="footer" data-input={ruleInput}> */}
-              <div className="footer" data-input={true}>
-                {/* <button className="quiet-button" onClick={this.handleRuleInput}>+</button> */}
+              <div className="footer" data-input={ruleInput}>
+                <button className="quiet-button" onClick={this.handleRuleInput}>+</button>
                 <input type="text" placeholder="" value={ruleContent} onChange={(event)=> this.setState({ ruleContent : event.target.value })} />
               </div>
             </div>

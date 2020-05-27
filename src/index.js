@@ -17,19 +17,12 @@ if (typeof cookie.load('cookies') === 'undefined') {
 }
 
 
-const handleScrollRef = (ref)=> {
-	console.log('///////////',ref,'\\\\\\\\\\\\\\');
-	scrollableElement = ref;
-};
-
-
 ReactDOM.render(
 	<Provider store={store}>
 		<BrowserRouter>
 		{/* <Route render={(props)=> <App />} /> */}
 			<ScrollToTop props={{ scrollableElement }}>
-			{/* <Route path="/" render={} component={(props)=> <App />} /> */}
-				<Route path="/" render={(routeProps)=> <App { ...routeProps } onScrollRef={(ref)=> handleScrollRef(ref)} />} />
+				<Route path="/" render={(routeProps)=> <App { ...routeProps } />} />
 				{/* <App /> */}
 			</ScrollToTop>
 		</BrowserRouter>
