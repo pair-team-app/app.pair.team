@@ -63,9 +63,11 @@ class LoginForm extends Component {
 		});
 
 		if (emailValid && passwordValid) {
+			const username = email;
+
 			axios.post(API_ENDPT_URL, {
 				action  : 'LOGIN',
-				payload : { email, password, inviteID }
+				payload : { email, password, inviteID, username }
 			}).then((response)=> {
 				const { user } = response.data;
 				const status = parseInt(response.data.status, 16);
