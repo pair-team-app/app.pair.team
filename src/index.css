@@ -42,7 +42,7 @@
 	--quiet-btn-border-color: 206, 206, 206; /* cecece */
 	--img-bg-color: 240, 240, 240; /* #f0f0f0 */
 	--overlay-hover-color: 153, 153, 153; /* #999999 */
-	--link-color: var(--site-fg-color); /* #232323 */
+	--link-color: 58, 79, 255; /* #3a4fff */
 	--link-hover-color: 153, 153, 153; /* #999999 */
 	--link-selected-color: var(--site-fg-color); /* #232323 */
 	--txtfield-bg-color: 247, 247, 247; /* #f7f7f7 */

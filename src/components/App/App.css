@@ -3,7 +3,7 @@
 	width: 100%;
 }
 
-.site-wrapper-dark {
+.site-wrapper[data-theme="dark"] {
 	--site-bg-color: 3, 3, 3; /* 030303 */
 	--site-fg-color: 220, 220, 220; /* #dcdcdc */
 	--site-hilite-color: 255, 152, 0; /* #ff9800 */

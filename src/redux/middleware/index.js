@@ -1,27 +1,12 @@
 
 // import moment from 'moment';
 import cookie from 'react-cookies';
-import { matchPath } from 'react-router-dom';
+import { reformComment, reformPlayground, reformTeam } from '../../components/pages/PlaygroundPage/utils/reform';
+import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAM_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { LOG_MIDDLEWARE_POSTFIX, LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
+import { Pages, TEAM_DEFAULT_AVATAR } from '../../consts/uris';
+import { fetchTeamBuilds, fetchTeamComments, fetchTeamLogo, fetchTeamLookup, updateMatchPath } from '../actions';
 
-import { reformComponent, reformPlayground , reformComment, reformRule, reformTeam } from '../../components/pages/PlaygroundPage/utils/reform';
-import { DEVICES_LOADED,
-  BUILD_PLAYGROUNDS_LOADED, 
-  TEAM_LOADED, 
-  TEAM_UPDATED, 
-  TEAM_LOGO_LOADED, 
-  TEAM_BUILDS_LOADED, 
-  TEAM_COMMENTS_LOADED, 
-  TEAM_RULES_UPDATED,
-  USER_PROFILE_UPDATED, 
-  USER_PROFILE_LOADED, 
-  UPDATE_MATCH_PATH,
-  UPDATE_MOUSE_COORDS,
-  SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT,
-  COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, UPDATE_RESIZE_BOUNDS
-} from '../../consts/action-types';
-import { LOG_MIDDLEWARE_PREFIX, LOG_MIDDLEWARE_POSTFIX } from '../../consts/log-ascii';
-import { fetchTeamBuilds, fetchTeamComments, fetchTeamLogo, fetchTeamLookup, fetchBuildPlaygrounds, updateMatchPath, setTypeGroup, setComment, setComponent } from '../actions';
-import { TEAM_DEFAULT_AVATAR, Pages } from '../../consts/uris';
 
 
 const logFormat = ({ store, action, next, event })=> {
@@ -371,6 +356,9 @@ export function onMiddleware(store) {
       //     payload.playgrounds = playgrounds.map((playground)=> ((playground)))
       // }
     
+
+    } else if (type === SET_TEAM) {
+      const { team } = payload;
 
 
     

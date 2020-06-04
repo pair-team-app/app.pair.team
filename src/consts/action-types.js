@@ -27,6 +27,7 @@ export const SET_TYPE_GROUP = 'SET_TYPE_GROUP';
 export const SET_DEVICE = 'SET_DEVICE';
 export const SET_COMPONENT = 'SET_COMPONENT';
 export const SET_COMMENT = 'SET_COMMENT';
+export const SET_TEAM = 'SET_TEAM';
 export const SET_INVITE = 'SET_INVITE';
 
 export const SET_REDIRECT_URI = 'SET_REDIRECT_URI';

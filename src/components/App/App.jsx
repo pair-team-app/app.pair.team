@@ -3,16 +3,15 @@ import { Browsers, DateTimes } from 'lang-js-utils';
 import React, { Component } from 'react';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
+import { generatePath, matchPath, withRouter } from 'react-router-dom';
 import { API_ENDPT_URL, GITHUB_APP_AUTH, Modals, Pages } from '../../consts/uris';
-import { fetchTeamLookup, fetchUserProfile, updateUserProfile, updateMatchPath } from '../../redux/actions';
-
+import { fetchTeamLookup, fetchUserProfile, updateMatchPath, updateUserProfile } from '../../redux/actions';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 import Routes from '../helpers/Routes';
-import AlertDialog from '../overlays/AlertDialog';
 import ConfirmDialog from '../overlays/ConfirmDialog';
 import CookiesOverlay from '../overlays/CookiesOverlay';
-import LoginModal from '../overlays/LoginModal';
 import InviteModal from '../overlays/InviteModal';
+import LoginModal from '../overlays/LoginModal';
 import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification';
 import ProfileModal from '../overlays/ProfileModal';
 import RegisterModal from '../overlays/RegisterModal';
@@ -20,7 +19,7 @@ import StripeModal from '../overlays/StripeModal';
 import BottomNav from '../sections/BottomNav';
 import TopNav from '../sections/TopNav';
 import './App.css';
-import { withRouter, matchPath, generatePath } from 'react-router-dom';
+
 
 class App extends Component {
   constructor(props) {
@@ -473,7 +472,7 @@ class App extends Component {
 
 
 
-    return (<div className={`site-wrapper${(darkThemed) ? ' site-wrapper-dark' : ''}`} data-devin-matty={true}>
+    return (<div className="site-wrapper" data-theme={(darkThemed) ? 'dark' : 'light'} data-devin-matty={true}>
       {(!matchPlaygrounds) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
 
 	    <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND) && !location.pathname.includes(Pages.ASK)) ? ' playground-page-wrapper' : ''}`}>

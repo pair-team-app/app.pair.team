@@ -2,9 +2,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { setTeam } from '../../../../redux/actions';
 import { trackEvent, trackOutbound } from '../../../../utils/tracking';
 import NavPanelBuild from './NavPanelBuild';
 import './PlaygroundNavPanel.css';
+
 
 class PlaygroundNavPanel extends Component {
   constructor(props) {
@@ -45,6 +47,19 @@ class PlaygroundNavPanel extends Component {
     const { builds } = this.state;
     this.setState({ builds : builds.map((item)=> ((item.id === build.id) ? build : item))});
   };
+
+  handleCreateTeam = ()=> {
+    console.log('%s.handleCreateTeam()', this.constructor.name);
+    window.alert('Create Team Modal');
+  }
+
+  handleTeamClick = (team)=> {
+    console.log('%s.handleTeamClick()', this.constructor.name, { team });
+
+    this.props.setTeam({ ...this.props.team, 
+      selected : true
+    });
+  }
 
   handleTypeGroupClick = (build, typeGroup)=> {
     console.log('%s.handleTypeGroupClick()', this.constructor.name, { build, typeGroup });
@@ -90,6 +105,8 @@ class PlaygroundNavPanel extends Component {
     const { menu, team, playgrounds, typeGroup } = this.props;
     const { builds } = this.state;
 
+    const teams = Array(4).fill(team);
+
     const handleURL = (event, url)=> {
 // 		console.log('%s.handleURL()', this.constructor.name, event, url);
 
@@ -100,9 +117,21 @@ class PlaygroundNavPanel extends Component {
     return (<div className="playground-nav-panel" data-menu={menu}>
       {(team) && (<PlaygroundNavPanelHeader team={team} />)}
       <div className="link-wrapper">
-        <NavLink to={`/app/${team.slug}/ask`} className="nav-panel-link">Ask</NavLink>
-        <NavLink to="https://www.npmjs.com/package/design-engine-playground" className="nav-panel-link" target="_blank" onClick={(event)=> handleURL(event, 'https://www.npmjs.com/package/design-engine-playground')}>Install</NavLink>
+        {/* <NavLink to={`/app/${team.slug}/ask`} className="nav-panel-link">Ask</NavLink> */}
+        {/* <NavLink to="https://www.npmjs.com/package/design-engine-playground" className="nav-panel-link" target="_blank" onClick={(event)=> handleURL(event, 'https://www.npmjs.com/package/design-engine-playground')}>Install</NavLink> */}
       </div>
+
+      {(teams) && (<div className="teams-wrapper">
+        <div className="items-wrapper">
+          {teams.map((team, i)=> (
+              <NavPanelTeam
+                key={i} 
+                team={team}
+                onClick={this.handleTeamClick} />
+            ))}
+        </div>
+        <div className="create-team" onClick={this.handleCreateTeam}>Create Team</div>
+      </div>)}
       
       {(playgrounds) && (<div className="builds-wrapper">
         <div className="builds-wrapper-header">Projects</div>
@@ -137,6 +166,15 @@ const PlaygroundNavPanelHeader = (props)=> {
   </div>);
 };
 
+
+const NavPanelTeam = (props)=> {
+	// console.log('NavPanelTeam()', props);
+
+	const { team } = props;
+	const { id, title, selected } = team;
+	return (<div className="nav-panel-team" onClick={()=> props.onClick(team)} data-id={id} data-selected={selected}>{title}</div>);
+}
+
 const mapStateToProps = (state, ownProps)=> {
   return {
     team        : state.team,
@@ -147,4 +185,10 @@ const mapStateToProps = (state, ownProps)=> {
   };
 };
 
-export default connect(mapStateToProps)(PlaygroundNavPanel);
+const mapDispatchToProps = (dispatch)=> {
+  return {
+    setTeam : (payload)=> dispatch(setTeam(payload))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PlaygroundNavPanel);

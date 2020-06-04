@@ -1,17 +1,10 @@
 import axios from 'axios';
 import { Bits, Objects } from 'lang-js-utils';
 import cookie from 'react-cookies';
-import { 
-  COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED,
-  TEAM_LOADED, TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, PLAYGROUND_LOADED, TEAM_COMMENTS_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED,
-  SET_INVITE, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TYPE_GROUP,
-  USER_PROFILE_LOADED, USER_PROFILE_UPDATED, USER_PROFILE_ERROR,
-  UPDATE_MOUSE_COORDS, UPDATE_MATCH_PATH, UPDATE_RESIZE_BOUNDS, SET_REDIRECT_URI, TOGGLE_THEME, TEAM_LOGO_LOADED, 
-  COMMENT_ADDED, COMMENT_UPDATED
-} from '../../consts/action-types';
-import { LOG_ACTION_PREFIX, LOG_ACTION_POSTFIX, API_RESPONSE_PREFIX } from '../../consts/log-ascii';
+import { VOTE_ACTION_DOWN, VOTE_ACTION_UP } from '../../components/pages/PlaygroundPage/VoteComment';
+import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAM_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_THEME, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { API_RESPONSE_PREFIX, LOG_ACTION_POSTFIX, LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
-import { VOTE_ACTION_UP, VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT } from '../../components/pages/PlaygroundPage/VoteComment';
 
 const logFormat = (action, state, payload=null, meta='')=> {
   console.log(LOG_ACTION_PREFIX, `ACTION >> ${action}`, { payload : payload || {}, meta, state }, LOG_ACTION_POSTFIX);
@@ -413,6 +406,16 @@ export function setComment(payload) {
   return ({ 
     payload : { comment }, 
     type    : SET_COMMENT 
+  });
+}
+
+
+export function setTeam(payload) {
+  logFormat('setTeam()', null, payload);
+  const team = payload;
+  return ({ 
+    payload : { team }, 
+    type    : SET_TEAM
   });
 }
 

@@ -1,9 +1,9 @@
 
 import { Strings } from 'lang-js-utils';
 import moment from 'moment';
-
 import { jsonFormatKB } from '../../../../consts/formats';
-import { TEAM_DEFAULT_AVATAR, Pages } from '../../../../consts/uris';
+import { Pages, TEAM_DEFAULT_AVATAR } from '../../../../consts/uris';
+
 
 export const reformComment = (comment, uri, overwrite={})=> {
   // console.log('reformComment()', { comment, uri, overwrite }, { position : typeof comment.position });
@@ -148,6 +148,7 @@ export const reformTeam = (team, overwrite={})=> {
     id          : team.id << 0,
     description : (description || ''),
     logo        : (image) ? image.replace(/\\n/g, '', image) : TEAM_DEFAULT_AVATAR,
+    selected    : false,
     updated     : moment(updated).utc(),
     added       : moment(added).utc(),
   };

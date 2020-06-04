@@ -1,13 +1,6 @@
 
-import { 
-  COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, TOGGLE_THEME, UPDATE_MOUSE_COORDS,
-  SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_TYPE_GROUP, SET_REDIRECT_URI,
-  TEAM_BUILDS_LOADED, BUILD_PLAYGROUNDS_LOADED, TEAM_LOADED, TEAM_UPDATED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, PLAYGROUND_LOADED, UPDATE_MATCH_PATH, TEAM_COMMENTS_LOADED, 
-  USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, 
-  COMMENT_ADDED, COMMENT_UPDATED,
-  TOGGLE_AX, TOGGLE_COMMENTS, UPDATE_RESIZE_BOUNDS
-} from '../../consts/action-types';
-import { LOG_REDUCER_PREFIX, LOG_REDUCER_POSTFIX } from '../../consts/log-ascii';
+import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAM_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_AX, TOGGLE_THEME, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 const initialState = {
   componentTypes : [],
@@ -28,6 +21,7 @@ const initialState = {
   redirectURI    : null,
   userProfile    : null,
   invite         : null,
+  teams          : null,
   team           : null,
   history        : [],
   mouse          : {
@@ -120,6 +114,10 @@ function rootReducer(state = initialState, action) {
   } else if (type === COMMENT_ADDED || type === COMMENT_UPDATED) {
     const { comments, component, comment } = payload;
     return (Object.assign({}, state, { comments, component, comment }));
+
+  } else if (type === SET_TEAM) {
+    const { team } = payload;
+    return (Object.assign({}, state, { team }));
 
   } else if (type === SET_PLAYGROUND) {
     const { playground } = payload;
