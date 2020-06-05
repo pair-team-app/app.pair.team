@@ -1,7 +1,0 @@
-#!/bin/bash
-
-#--prefix
-export WIP_PREFIX="mh"
-
-#-- time formatted (YYYYMMDD)
-export WIP_TIME=$(date + %Y%m%m)
