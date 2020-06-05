@@ -4,15 +4,20 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-    
     {
       "type": "firefox",
       "request": "launch",
       "reAttach": true,
       "name": "Launch Firefox on localhost:3000",
-      "url": "http://localhost:3000/app/pairurl-com/pairurl-com/390/desktop-macos/views/16089/comments/16911",
+      "url": "http://localhost:3000/team/pairurl-com",
       "webRoot": "${workspaceFolder}",
-      "disableOptimisticBPs": false
+      "disableOptimisticBPs": false,
+      "pathMappings": [
+        {
+          "url": "moz-extension://0fe61bde-c36b-8944-956f-5dacb1f1f855/inject",
+          "path": "${workspaceFolder}/src/redux/middleware"
+        }
+      ]
     },
     {
       "type": "node",

@@ -2,13 +2,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { setTeam } from '../../../../redux/actions';
-import { trackEvent, trackOutbound } from '../../../../utils/tracking';
-import NavPanelBuild from './NavPanelBuild';
-import './PlaygroundNavPanel.css';
+import { setTeam } from '../../../redux/actions';
+import { trackEvent, trackOutbound } from '../../../utils/tracking';
+import './LeftNav.css';
+import LeftNavBuild from './LeftNavBuild';
 
 
-class PlaygroundNavPanel extends Component {
+class LeftNav extends Component {
   constructor(props) {
     super(props);
 
@@ -102,10 +102,8 @@ class PlaygroundNavPanel extends Component {
   render() {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { menu, team, playgrounds, typeGroup } = this.props;
+    const { menu, teams, playgrounds, typeGroup } = this.props;
     const { builds } = this.state;
-
-    const teams = Array(4).fill(team);
 
     const handleURL = (event, url)=> {
 // 		console.log('%s.handleURL()', this.constructor.name, event, url);
@@ -114,17 +112,15 @@ class PlaygroundNavPanel extends Component {
       trackOutbound(url);
 	  };
 
-    return (<div className="playground-nav-panel" data-menu={menu}>
-      {(team) && (<PlaygroundNavPanelHeader team={team} />)}
-      <div className="link-wrapper">
-        {/* <NavLink to={`/app/${team.slug}/ask`} className="nav-panel-link">Ask</NavLink> */}
-        {/* <NavLink to="https://www.npmjs.com/package/design-engine-playground" className="nav-panel-link" target="_blank" onClick={(event)=> handleURL(event, 'https://www.npmjs.com/package/design-engine-playground')}>Install</NavLink> */}
-      </div>
+    return (<div className="left-nav" data-menu={menu}>
+      <LeftNavHeader />
+      
+      {(!teams) && (<div className="loading">Loading…</div>)}
 
       {(teams) && (<div className="teams-wrapper">
         <div className="items-wrapper">
           {teams.map((team, i)=> (
-              <NavPanelTeam
+              <LeftNavTeam
                 key={i} 
                 team={team}
                 onClick={this.handleTeamClick} />
@@ -133,11 +129,11 @@ class PlaygroundNavPanel extends Component {
         <div className="create-team" onClick={this.handleCreateTeam}>Create Team</div>
       </div>)}
       
-      {(playgrounds) && (<div className="builds-wrapper">
-        <div className="builds-wrapper-header">Projects</div>
-        <div className="builds-item-wrapper">
+      {(teams) && (<div className="builds-wrapper">
+        <div className="header">Projects</div>
+        <div className="items-wrapper">
           {builds.map((build, i)=> (
-            <NavPanelBuild 
+            <LeftNavBuild 
               key={i} 
               build={build}
               typeGroup={typeGroup} 
@@ -150,34 +146,32 @@ class PlaygroundNavPanel extends Component {
   }
 }
 
-const PlaygroundNavPanelHeader = (props)=> {
-  	// console.log('PlaygroundNavPanelHeader()', props);
+const LeftNavHeader = (props)=> {
+  	// console.log('LeftNavHeader()', props);
 
-  const { team } = props;
-  const { logo, title } = team;
-  return (<div className="playground-nav-panel-header">
-    <NavLink to={`/app/${team.slug}/ask`} className="playground-nav-panel-header-title">
-      {(logo && logo.startsWith('data:')) 
-        ? (<img src={logo} alt="Team Logo" />)
-        : (<span dangerouslySetInnerHTML={{ __html : logo }} />)
-      }
-      {title}
+  //const { team } = props;
+  //const { logo, title } = team;
+  return (<div className="left-nav-header">
+    <NavLink to={`/app/\${team.slug}/ask`} className="title">
+      <img src={null} alt="Logo" />
+      {'{title}'}
     </NavLink>
   </div>);
 };
 
 
-const NavPanelTeam = (props)=> {
-	// console.log('NavPanelTeam()', props);
+const LeftNavTeam = (props)=> {
+	// console.log('LeftNavTeam()', props);
 
 	const { team } = props;
 	const { id, title, selected } = team;
-	return (<div className="nav-panel-team" onClick={()=> props.onClick(team)} data-id={id} data-selected={selected}>{title}</div>);
+	return (<div className="left-nav-team" onClick={()=> props.onClick(team)} data-id={id} data-selected={selected}>{title}</div>);
 }
 
 const mapStateToProps = (state, ownProps)=> {
   return {
     team        : state.team,
+    teams       : state.teams,
     playgrounds : state.playgrounds,
     playground  : state.playground,
     typeGroup   : state.typeGroup,
@@ -191,4 +185,4 @@ const mapDispatchToProps = (dispatch)=> {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlaygroundNavPanel);
+export default connect(mapStateToProps, mapDispatchToProps)(LeftNav);

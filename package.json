@@ -1,6 +1,7 @@
 {
   "name": "pairurl.com",
   "version": "4.15.0",
+  "repository": "git@github.com:de-ai/playground.designengine.ai.git",
   "private": true,
   "dependencies": {
     "@kunukn/react-collapse": "^2.2.7",

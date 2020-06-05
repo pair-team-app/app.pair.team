@@ -1,23 +1,22 @@
 
-import React, { Component } from 'react';
-import './AskPage.css';
-
 import { Strings } from 'lang-js-utils';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-
-import BasePage from '../BasePage';
-import AskPageHeader, { SORT_BY_SCORE, SORT_BY_DATE } from './AskPageHeader';
-import AskPageCommentsPanel from './AskPageCommentsPanel';
-import { SettingsMenuItemTypes } from '../PlaygroundPage/PlaygroundHeader/UserSettings';
-import PlaygroundNavPanel from '../PlaygroundPage/PlaygroundNavPanel';
+import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
 import { Modals } from '../../../consts/uris';
-import { fetchTeamComments, makeComment, makeTeamRule, modifyTeam, setPlayground, setTypeGroup, setComment } from '../../../redux/actions';
+import { fetchTeamComments, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
-import { TEAM_TIMESTAMP } from '../../../consts/formats';
+import BasePage from '../BasePage';
+import { SettingsMenuItemTypes } from '../PlaygroundPage/PlaygroundHeader/UserSettings';
+import './TeamPage.css';
+import TeamPageCommentsPanel from './TeamPageCommentsPanel';
+import TeamPageHeader, { SORT_BY_DATE, SORT_BY_SCORE } from './TeamPageHeader';
 
-class AskPage extends Component {
+
+
+class TeamPage extends Component {
   constructor(props) {
     super(props);
 
@@ -210,14 +209,9 @@ class AskPage extends Component {
     const { profile, team, comments } = this.props;
     const { commentContent, teamDescription, ruleContent, ruleInput, fetching, share, sort, topSort } = this.state;
 
-    return (<BasePage { ...this.props } className="ask-page">
+    return (<BasePage { ...this.props } className="team-page">
       {profile && team && (<>
-        <PlaygroundNavPanel
-          onPlaygroundClick={this.handlePlaygroundClick}
-          onTypeGroupClick={this.handleNavGroupItemClick}
-          onTypeItemClick={this.handleNavTypeItemClick}
-        />
-        <AskPageHeader 
+        <TeamPageHeader 
           sort={sort} 
           popover={share} 
           onSortClick={this.handleSortClick} 
@@ -230,14 +224,14 @@ class AskPage extends Component {
         <div className="content-wrapper">
           <div className="comments-wrapper" data-loading={fetching}>
             <div>
-              <AskPageAddComment 
+              <TeamPageAddComment 
                 loading={fetching} 
                 commentContent={commentContent} 
                 onTextChange={this.handleTextChange} 
                 onSubmit={this.handleAddComment}
               />
 
-              <AskPageCommentsPanel 
+              <TeamPageCommentsPanel 
                 profile={profile} 
                 comments={(sort === SORT_BY_DATE) ? comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : topSort.map((commentID)=> (comments.find(({ id })=> (id === commentID)) || null)).filter((comment)=> (comment !== null))} 
                 loading={fetching}
@@ -258,7 +252,7 @@ class AskPage extends Component {
               <div className="header"><span>Rules</span></div>
               {(team) && (<div className="content">
                 {(team.rules.map((rule, i)=> {
-                  return (<AskPageTeamRule 
+                  return (<TeamPageTeamRule 
                     key={i} 
                     ind={i+1} 
                     rule={rule} 
@@ -277,11 +271,11 @@ class AskPage extends Component {
   }
 }
 
-const AskPageAddComment = (props)=> {
-  // console.log('AskPageAddComment()', props);
+const TeamPageAddComment = (props)=> {
+  // console.log('TeamPageAddComment()', props);
 
   const { loading, commentContent } = props;
-  return (<div className="ask-page-add-comment" data-loading={loading}>
+  return (<div className="team-page-add-comment" data-loading={loading}>
     <form>
       <input type="text" placeholder="Ask your team anything…" value={commentContent} onChange={props.onTextChange} autoComplete="new-password" />
       <button type="submit" disabled={commentContent.length === 0} onClick={props.onSubmit}>Submit</button>
@@ -291,11 +285,11 @@ const AskPageAddComment = (props)=> {
 
 
 
-const AskPageTeamRule = (props)=> {
-  // console.log('AskPageTeamRule()', props);
+const TeamPageTeamRule = (props)=> {
+  // console.log('TeamPageTeamRule()', props);
 
   const { ind, rule } = props;
-  return (<div className="ask-page-team-rule">
+  return (<div className="team-page-team-rule">
     {ind}. {rule.title} {rule.content}
   </div>);
 };
@@ -323,4 +317,4 @@ const mapStateToProps = (state, ownProps)=> {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AskPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(TeamPage));

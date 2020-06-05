@@ -3,14 +3,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { toggleTheme } from '../../../../redux/actions';
-import SharePopover from '../../PlaygroundPage/SharePopover';
-import './AskPageHeader.css';
+import { trackOutbound } from '../../../../utils/tracking';
 import UserSettings from '../../PlaygroundPage/PlaygroundHeader/UserSettings';
-import { SORT_BY_SCORE, SORT_BY_DATE } from './index';
-import { trackEvent, trackOutbound } from '../../../../utils/tracking';
+import SharePopover from '../../PlaygroundPage/SharePopover';
+import { SORT_BY_DATE, SORT_BY_SCORE } from './index';
+import './TeamPageHeader.css';
 
 
-class AskPageHeader extends Component {
+class TeamPageHeader extends Component {
 	constructor(props) {
 		super(props);
 
@@ -107,5 +107,5 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(AskPageHeader);
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AskPageHeader));
+export default connect(mapStateToProps, mapDispatchToProps)(TeamPageHeader);
+// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(TeamPageHeader));

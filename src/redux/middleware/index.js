@@ -4,8 +4,8 @@ import cookie from 'react-cookies';
 import { reformComment, reformPlayground, reformTeam } from '../../components/pages/PlaygroundPage/utils/reform';
 import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAM_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_POSTFIX, LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
-import { Pages, TEAM_DEFAULT_AVATAR } from '../../consts/uris';
-import { fetchTeamBuilds, fetchTeamComments, fetchTeamLogo, fetchTeamLookup, updateMatchPath } from '../actions';
+import { Pages } from '../../consts/uris';
+import { fetchTeamBuilds, fetchTeamComments, fetchTeamLookup, updateMatchPath } from '../actions';
 
 
 
@@ -66,8 +66,10 @@ export function onMiddleware(store) {
       }
 
     } else if (type === TEAM_LOADED) {
-      const { params } = prevState.matchPath;
-      const { buildID, deviceSlug } = params;
+      // const { params } = prevState.matchPath;
+      // const { buildID, deviceSlug } = params;
+      const buildID = 0;
+      const deviceSlug = "";
       
       const { team } = payload;
       // payload.team = { ...team,
@@ -79,15 +81,13 @@ export function onMiddleware(store) {
       // };
 
       payload.team = reformTeam(team);
-
-      if (team.image === TEAM_DEFAULT_AVATAR) {
-        dispatch(fetchTeamLogo({ team }));
-      }
+      payload.teams = Array(4).fill(payload.team);
 
       if (team.comments << 0 !== 0) {
         dispatch(fetchTeamComments({ team }));
       }
 
+  
       dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
 
     } else if (type === TEAM_LOGO_LOADED) {
@@ -357,9 +357,9 @@ export function onMiddleware(store) {
       // }
     
 
-    } else if (type === SET_TEAM) {
-      const { team } = payload;
-
+    } else if (type === SET_TEAM) {      
+      const { teams } = prevState;
+      payload.teams = teams.map((team)=> ((team.id === payload.team.id) ? payload.team : team));
 
     
     } else if (type === SET_PLAYGROUND) {

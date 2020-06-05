@@ -1,11 +1,10 @@
 
 import React from 'react';
 import { matchPath, withRouter } from 'react-router-dom';
-import PageNavLink from '../../iterables/PageNavLink';
 import { Pages } from '../../../consts/uris';
+import PageNavLink from '../../iterables/PageNavLink';
 import './BasePage.css';
 
-import navLinks from '../../../assets/json/nav-links.json';
 
 
 function BasePage(props) {
@@ -23,9 +22,9 @@ function BasePage(props) {
 		attribs[key] = props[key];
 	});
 
-	return (<div className={`base-page ${className}`} { ...attribs } style={style}>
+ 	return (<div className={`base-page ${className}`} { ...attribs } style={style}>
 		{(children)}
-		{(!matchPlaygrounds) && (<BottomNav navLinks={navLinks.bottom} />)}
+		{/* {(!matchPlaygrounds) && (<BottomNav navLinks={navLinks.bottom} />)} */}
 	</div>);
 }
 

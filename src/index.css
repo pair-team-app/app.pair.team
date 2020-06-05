@@ -68,6 +68,7 @@
 	--comment-marker-bg-color: 207, 247, 207;
 	--alt-list-bg-color: 247, 247, 247; /* #f7f7f7 */
 
+	--status-text-color: 153, 153, 153; /* #999999 */
 	--timestamp-color: 153, 153, 153; /* #999999 */
 	--dialog-title-color: 153, 153, 153; /* #999999 */
 
@@ -95,7 +96,8 @@
 	--orthodox-acc-size: 18px;
 	--orthodox-ico-size: 24px;
 
-	--orthodox-font-size: 16px;
+	/* --orthodox-font-size: 16px; */
+	--orthodox-font-size: 14px;
 	--orthodox-font-weight: 400;
 
 

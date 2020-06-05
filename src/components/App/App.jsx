@@ -17,6 +17,7 @@ import ProfileModal from '../overlays/ProfileModal';
 import RegisterModal from '../overlays/RegisterModal';
 import StripeModal from '../overlays/StripeModal';
 import BottomNav from '../sections/BottomNav';
+import LeftNav from '../sections/LeftNav';
 import TopNav from '../sections/TopNav';
 import './App.css';
 
@@ -149,7 +150,7 @@ class App extends Component {
     } else {
       
 
-      const pass = (prevProps.matchPath && this.props.matchPath) ? (Object.keys(this.props.matchPath.params).map((key)=> ((this.props.matchPath.params[key] === prevProps.matchPath.params[key]))).reduce((acc, val)=> (acc * val), 1) === 0) : false;
+      // const pass = (prevProps.matchPath && this.props.matchPath) ? (Object.keys(this.props.matchPath.params).map((key)=> ((this.props.matchPath.params[key] === prevProps.matchPath.params[key]))).reduce((acc, val)=> (acc * val), 1) === 0) : false;
 
       // console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds, props : this.props.matchPath, prev : prevProps.matchPath, historyMatch });
       // console.log('+=+=+=+=+=+=+=+', { props : (this.props.matchPath) ? { ...this.props.matchPath.params } : null, prev : (prevProps.matchPath) ? { ...prevProps.matchPath.params } : null, pass });
@@ -198,7 +199,7 @@ class App extends Component {
           
           if (!prevProps.team && team) {
             if (teamSlug !== team.slug || !projectSlug) {
-              this.props.history.push(`${Pages.ASK}/${team.slug}/ask`);
+              this.props.history.push(`${Pages.TEAM}/${team.slug}`);
             }
           }
 
@@ -463,8 +464,9 @@ class App extends Component {
 
 
 
-      	console.log('%s.render()', this.constructor.name, { props : this.props, matchPlaygrounds });
-    //   	console.log('%s.render()', this.constructor.name, this.state.modals);
+      	// console.log('%s.render()', this.constructor.name, { props : this.props, matchPlaygrounds });
+      	console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+      	// console.log('%s.render()', this.constructor.name, this.state.modals);
 
     const { darkThemed, profile, location } = this.props;
     const { popup, modals } = this.state;
@@ -473,12 +475,15 @@ class App extends Component {
 
 
     return (<div className="site-wrapper" data-theme={(darkThemed) ? 'dark' : 'light'} data-devin-matty={true}>
-      {(!matchPlaygrounds) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
+      {/* {(!matchPlaygrounds) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)} */}
+      <LeftNav onTeamClick={this.handleTeamClick} onProjectClick={this.handleProject} />
+      
 
-	    <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND) && !location.pathname.includes(Pages.ASK)) ? ' playground-page-wrapper' : ''}`}>
+	    {/* <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND) && !location.pathname.includes(Pages.TEAM)) ? ' playground-page-wrapper' : ''}`}> */}
+	    {/* <div className="page-wrapper"> */}
+	    <div className="page-wrapper">
 		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
 	    </div>
-		  
       {(!matchPlaygrounds) && (<BottomNav />)}
 
 		  <div className='modal-wrapper'>

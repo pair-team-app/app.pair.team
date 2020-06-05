@@ -1,15 +1,15 @@
 
 import React, { Component } from 'react';
 // import { Route, Switch, withRouter } from 'react-router-dom';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { Pages } from '../../../consts/uris';
-import AskPage from '../../pages/AskPage';
 import DocsPage from '../../pages/DocsPage/index';
 import FeaturesPage from '../../pages/FeaturesPage/index';
 import HomePage from '../../pages/HomePage/index';
 import PlaygroundPage from '../../pages/PlaygroundPage/index';
 import PricingPage from '../../pages/PricingPage/index';
 import PrivacyPage from '../../pages/PrivacyPage/index';
+import TeamPage from '../../pages/TeamPage';
 // import Status404Page from '../../pages/Status404Page/index';
 import TermsPage from '../../pages/TermsPage/index';
 
@@ -62,8 +62,8 @@ class Routes extends Component {
        } />
       
       <Route 
-        path={`${Pages.ASK}/:teamSlug([a-z-]+)?/ask/(comments)?/:commentID([0-9]+)?`} 
-        render={({ props })=> <AskPage 
+        path={`${Pages.TEAM}/:teamSlug([a-z-]+)?/(comments)?/:commentID([0-9]+)?`} 
+        render={({ props })=> <TeamPage 
           onLogout={this.props.onLogout} 
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
           onPopup={this.props.onPopup} { ...props} 

@@ -1,6 +1,9 @@
 
 .site-wrapper {
-	width: 100%;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	overflow: hidden;
 }
 
 .site-wrapper[data-theme="dark"] {
@@ -41,10 +44,12 @@
 
 
 .page-wrapper {
-	position: relative;
+	/* position: relative; */
 	/* top: 58px; */
 	width: 100%;
-	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	/* overflow: hidden; */
 }
 
 .playground-page-wrapper {

@@ -14,9 +14,7 @@ import { COMPONENT_MENU_ITEM_COMMENTS, COMPONENT_MENU_ITEM_COPY } from './Playgr
 import PlaygroundFooter from './PlaygroundFooter';
 import PlaygroundHeader, { BreadcrumbTypes } from './PlaygroundHeader';
 import { SettingsMenuItemTypes } from './PlaygroundHeader/UserSettings';
-import PlaygroundNavPanel from './PlaygroundNavPanel';
 import './PlaygroundPage.css';
-import { reformComment } from './utils/reform';
 
 class PlaygroundPage extends Component {
   constructor(props) {
@@ -244,12 +242,12 @@ class PlaygroundPage extends Component {
 
     return (<BasePage { ...this.props } className="playground-page" data-menu={menu} data-component={(component !== null)} data-comments={component && window.location.href.includes('/comments')}>
       {(profile && team) && (<div>
-        <PlaygroundNavPanel
+        {/* <PlaygroundNavPanel
           menu={menu}
           params={params}
           onPlaygroundClick={this.handlePlaygroundClick}
           onTypeGroupClick={this.handleNavGroupItemClick}
-          onTypeItemClick={this.handleNavTypeItemClick} />
+          onTypeItemClick={this.handleNavTypeItemClick} /> */}
 
         <PlaygroundHeader
           popover={share}

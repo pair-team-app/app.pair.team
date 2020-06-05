@@ -5,7 +5,7 @@ import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii'
 const initialState = {
   componentTypes : [],
   devices        : [],
-  playgrounds    : [],
+  playgrounds    : null,
   playground     : null,
   typeGroup      : null,
   resizeBounds   : null,
@@ -96,8 +96,10 @@ function rootReducer(state = initialState, action) {
     return Object.assign({}, state, { resizeBounds });
 
   } else if (type === TEAM_LOADED) {
-    const { team } = payload;
-    return (Object.assign({}, state, { team }));
+    const { team, teams } = payload;
+    // const { team } = payload;
+    return (Object.assign({}, state, { team, teams }));
+    // return (Object.assign({}, state, { team }));
 
   } else if (type === TEAM_UPDATED) {
     const { team } = payload;
@@ -116,8 +118,8 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { comments, component, comment }));
 
   } else if (type === SET_TEAM) {
-    const { team } = payload;
-    return (Object.assign({}, state, { team }));
+    const { teams, team } = payload;
+    return (Object.assign({}, state, { teams, team }));
 
   } else if (type === SET_PLAYGROUND) {
     const { playground } = payload;

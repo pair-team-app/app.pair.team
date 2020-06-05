@@ -2,7 +2,7 @@
 
 
 #-- pull username from git cfg
-git_user=$(git config --list | grep -E "^user\.name" | cut -d\= -f2)
+git_user=$(git config --list | grep -E "^user\.name" | cut -d\= -f2 | tr -d ' ')
 
 #-- branch prefix
 prefix="daily"

@@ -1,20 +1,20 @@
 
-import React from 'react';
-import './NavPanelBuild.css';
-
 import { Strings } from 'lang-js-utils';
+import React from 'react';
 import FontAwesome from 'react-fontawesome';
-import BaseContentExpander from '../../../../iterables/BaseContentExpander';
+import BaseContentExpander from '../../../iterables/BaseContentExpander';
+import './LeftNavBuild.css';
+
 // import { BUILD_TIMESTAMP } from '../../../../../consts/formats';
 
-function NavPanelBuild(props) {
-	// console.log('NavPanelBuild()', props);
+function LeftNavBuild(props) {
+	// console.log('LeftNavBuild()', props);
 
 	const { build } = props;
 	const { id, title, expanded, selected, playgrounds } = build;
 	const typeGroups = [ ...new Set([ ...playgrounds.map(({ typeGroups })=> (typeGroups)).flat()])];
 
-	// console.log('NavPanelBuild()', { props, typeGroups });
+	// console.log('LeftNavBuild()', { props, typeGroups });
 
 	return (<BaseContentExpander className="nav-panel-build" open={build.expanded}
 		title={<div className="nav-panel-build-title-wrapper" onClick={()=> props.onBuildClick(build)} data-id={id} data-expanded={expanded} data-selected={selected}>
@@ -44,4 +44,4 @@ const NavPanelTypeTypeGroup = (props)=> {
 };
 
 
-export default (NavPanelBuild);
+export default (LeftNavBuild);
