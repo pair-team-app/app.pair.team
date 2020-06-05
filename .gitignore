@@ -1,6 +1,5 @@
 
 #-- os misc --#
-.*DS_Store
 .env.local
 .env.development.local
 .env.test.local
@@ -31,21 +30,16 @@ yarn-error.log
 #-- temp --#
 /.cache
 /.node-persist
-/tmp
+/tmp/**/*
 
 #-- php files --#
-/public/index.php
 /public/php
 
 
 #-- creds --#
-/src/assets/json/crypto-creds.json
-/src/assets/json/github-creds.json
-/src/assets/json/stripe-creds.json
+/src/assets/json/*creds.json
 
 
 #-- vendor paths --#
 **/vendor/**/node_modules
-**/vendor/**/*.md
 **/vendor/**/dist
-**/vendor/**/LICENSE
