@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { toggleTheme } from '../../../../redux/actions';
 import { trackOutbound } from '../../../../utils/tracking';
-import UserSettings from '../../PlaygroundPage/PlaygroundHeader/UserSettings';
-import SharePopover from '../../PlaygroundPage/SharePopover';
+import SharePopover from '../../../overlays/SharePopover';
+import UserSettings from '../../../sections/TopNav/UserSettings';
 import { SORT_BY_DATE, SORT_BY_SCORE } from './index';
 import './TeamPageHeader.css';
 

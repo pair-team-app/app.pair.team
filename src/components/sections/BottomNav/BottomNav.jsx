@@ -1,9 +1,9 @@
 
 import React from 'react';
-import './BottomNav.css';
-
 import { GITHUB_FIGMA_PLUGIN, GITHUB_XD_PLUGIN, NPM_DE_PLAYGROUND } from '../../../consts/uris';
 import { trackEvent, trackOutbound } from '../../../utils/tracking';
+import './BottomNav.css';
+
 
 
 function BottomNav(props) {
@@ -16,7 +16,7 @@ function BottomNav(props) {
 
 	return (
 		<div className="bottom-nav">
-			<div className="button-wrapper-col bottom-nav-button-wrapper">
+			<div className="button-wrapper-col button-wrapper">
 				<button className="quiet-button" onClick={(event)=> handleClick(event, NPM_DE_PLAYGROUND)}>NPM Module</button>
 				<button className="quiet-button" onClick={(event)=> handleClick(event, GITHUB_FIGMA_PLUGIN)}>Figma Plugin</button>
 				<button className="quiet-button" onClick={(event)=> handleClick(event, GITHUB_XD_PLUGIN)}>Adobe XD Plugin</button>

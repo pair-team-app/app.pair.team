@@ -8,11 +8,11 @@ import { ENTER_KEY } from '../../../consts/key-codes';
 import { Modals } from '../../../consts/uris';
 import { fetchTeamComments, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
+import { SettingsMenuItemTypes } from '../../sections/TopNav/UserSettings';
 import BasePage from '../BasePage';
-import { SettingsMenuItemTypes } from '../PlaygroundPage/PlaygroundHeader/UserSettings';
 import './TeamPage.css';
 import TeamPageCommentsPanel from './TeamPageCommentsPanel';
-import TeamPageHeader, { SORT_BY_DATE, SORT_BY_SCORE } from './TeamPageHeader';
+import { SORT_BY_DATE, SORT_BY_SCORE } from './TeamPageHeader';
 
 
 
@@ -211,7 +211,7 @@ class TeamPage extends Component {
 
     return (<BasePage { ...this.props } className="team-page">
       {profile && team && (<>
-        <TeamPageHeader 
+        {/* <TeamPageHeader 
           sort={sort} 
           popover={share} 
           onSortClick={this.handleSortClick} 
@@ -219,7 +219,7 @@ class TeamPage extends Component {
           onSharePopoverClose={()=> this.setState({ share : false })} 
           onSettingsItem={this.handleSettingsItem} 
           onLogout={this.props.onLogout} 
-        />
+        /> */}
 
         <div className="content-wrapper">
           <div className="comments-wrapper" data-loading={fetching}>

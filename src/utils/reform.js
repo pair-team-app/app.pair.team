@@ -1,8 +1,8 @@
 
 import { Strings } from 'lang-js-utils';
 import moment from 'moment';
-import { jsonFormatKB } from '../../../../consts/formats';
-import { Pages, TEAM_DEFAULT_AVATAR } from '../../../../consts/uris';
+import { jsonFormatKB } from '../consts/formats';
+import { Pages, TEAM_DEFAULT_AVATAR } from '../consts/uris';
 
 
 export const reformComment = (comment, uri, overwrite={})=> {

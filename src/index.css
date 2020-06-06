@@ -128,8 +128,6 @@
 
 }
 
-
-
 html, body {
   margin: 0;
   padding: 0;
@@ -140,7 +138,11 @@ html, body {
   font-family: 'Helvetica Neue', Ubuntu, Arial, sans-serif;
   font-weight: var(--orthodox-font-weight);
   font-size: var(--orthodox-font-size);
-  color: rgba(var(--site-fg-color), 1.0);
+	color: rgba(var(--site-fg-color), 1.0);
+	
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+	scrollbar-color: transparent transparent;
 }
 
 
@@ -386,11 +388,13 @@ input[type="email"]:disabled, input[type="password"]:disabled, input[type="text"
 }
 
 input:-webkit-autofill {
+	box-shadow: 0 0 1px 50px rgba(var(--txtfield-bg-color), 1.0) inset;
 	-webkit-box-shadow: 0 0 1px 50px rgba(var(--txtfield-bg-color), 1.0) inset;
 	-webkit-text-fill-color: rgba(var(--txtfield-fg-color), 1.0);
 }
 
 input:-webkit-autofill:focus, input:-webkit-autofill:hover:focus, input:-webkit-autofill:active:focus {
+	box-shadow: 0 0 1px 50px rgba(var(--txtfield-focused-bg-color), 1.0) inset;
   -webkit-box-shadow: 0 0 1px 50px rgba(var(--txtfield-focused-bg-color), 1.0) inset;
   -webkit-text-fill-color: rgba(var(--txtfield-fg-color), 1.0);
 }
@@ -518,6 +522,6 @@ ul > li:not(:last-child) {
 
 
 .site-wrapper[data-devin-matty="true"] body {
-	/*background-color: rgba(255, 0, 255, 0.33);*/
+	background-color: rgba(255, 0, 255, 0.33);
 	/*filter: none;*/
 }

@@ -1,13 +1,15 @@
 
 .bottom-nav {
-	position: fixed;
-	bottom: 0;
+	display: inline-flex;
+	flex-shrink: 0;
+	align-items: center;
 	width: 100%;
 	padding: var(--spacing-10) var(--spacing-20);
 	z-index: 2;
 }
 
-.bottom-nav-button-wrapper {
+.bottom-nav .button-wrapper {
+	width: 100%;
 	text-align: center;
 }
 
@@ -18,7 +20,7 @@
 		padding-right: var(--spacing-20);
 	}
 
-	.bottom-nav-button-wrapper {
+	.bottom-nav .button-wrapper {
 		display: none;
 	}
 }

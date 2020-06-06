@@ -482,9 +482,10 @@ class App extends Component {
 	    {/* <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND) && !location.pathname.includes(Pages.TEAM)) ? ' playground-page-wrapper' : ''}`}> */}
 	    {/* <div className="page-wrapper"> */}
 	    <div className="page-wrapper">
+        <TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />
 		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
+        {(1===2) && (<BottomNav />)}
 	    </div>
-      {(!matchPlaygrounds) && (<BottomNav />)}
 
 		  <div className='modal-wrapper'>
 			  {(modals.cookies) && (<CookiesOverlay

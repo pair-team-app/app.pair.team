@@ -1,22 +1,21 @@
 
-import React, { Component } from 'react';
-import './PlaygroundBaseComment.css';
-import { VOTE_ACTION_UP, VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT } from './index';
-
-import { Picker } from 'emoji-mart';
-import 'emoji-mart/css/emoji-mart.css'
+import 'emoji-mart/css/emoji-mart.css';
 import { Strings } from 'lang-js-utils';
+import React, { Component } from 'react';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
-import { withRouter, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { COMMENT_TIMESTAMP } from '../../../consts/formats';
+import { ENTER_KEY } from '../../../consts/key-codes';
+import { USER_DEFAULT_AVATAR } from '../../../consts/uris';
+import { makeComment, makeVote, modifyComment } from '../../../redux/actions';
+import { trackEvent } from '../../../utils/tracking';
+import './BaseComment.css';
+import { VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT, VOTE_ACTION_UP } from './index';
 
-import { makeComment, modifyComment, makeVote } from '../../../../redux/actions';
-import { COMMENT_TIMESTAMP } from '../../../../consts/formats';
-import { ENTER_KEY } from '../../../../consts/key-codes';
-import { USER_DEFAULT_AVATAR } from '../../../../consts/uris';
-import { trackEvent } from '../../../../utils/tracking';
 
-class PlaygroundBaseComment extends Component {
+
+class BaseComment extends Component {
   constructor(props) {
     super(props);
 
@@ -64,7 +63,7 @@ class PlaygroundBaseComment extends Component {
 	};
 
 	handleEmoji = (emoji, event)=> {
-		console.log('PlaygroundBaseComment.handleEmoji()', { emoji, event });
+		console.log('BaseComment.handleEmoji()', { emoji, event });
 	};
 
 
@@ -104,7 +103,7 @@ class PlaygroundBaseComment extends Component {
 
 		const contentProps = { ...this.props, replyContent};
 
-		return (<div className="playground-base-comment" data-id={comment.id} data-type={comment.type} data-votable={comment.votable} data-selected={comment.selected}>
+		return (<div className="base-comment" data-id={comment.id} data-type={comment.type} data-votable={comment.votable} data-selected={comment.selected}>
 			<BaseCommentHeader { ...this.props} onDelete={this.handleDeleteComment} />
 			<div className="comment-body">
 				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
@@ -117,7 +116,7 @@ class PlaygroundBaseComment extends Component {
 
 
 const BaseCommentVote = (props=> {
-	// console.log('PlaygroundBaseComment.BaseCommentVote()', { props });
+	// console.log('BaseComment.BaseCommentVote()', { props });
 
 	const { profile, comment, loading, vote } = props;
   return (<div className="base-comment-vote" data-id={comment.id} data-author={(comment.author.id === profile.id)} data-loading={loading} data-disabled={(comment.author.id === profile.id || loading)} data-voted={vote !== null}>
@@ -129,7 +128,7 @@ const BaseCommentVote = (props=> {
 
 
 const BaseCommentHeader = (props)=> {
-	// console.log('PlaygroundBaseComment.BaseCommentHeader()', { props });
+	// console.log('BaseComment.BaseCommentHeader()', { props });
 
 	const { profile, ind, comment } = props;
 	const { src, author } = comment;
@@ -153,13 +152,13 @@ const BaseCommentHeader = (props)=> {
 
 
 const BaseCommentContent = (props)=> {
-	// console.log('PlaygroundBaseComment.BaseCommentContent()', { props });
+	// console.log('BaseComment.BaseCommentContent()', { props });
 
 	const { comment, replyContent } = props;
 	const { author, types, content, uri, timestamp } = comment;
 
 	// const onURIClick = ()=> {
-	// 	console.log('PlaygroundBaseComment.BaseCommentContent.onURIClick()', { props });
+	// 	console.log('BaseComment.BaseCommentContent.onURIClick()', { props });
 	// 	window.location.href = window.location.href.replace(/\/app\/.*$/, uri)
 	// };
 
@@ -180,7 +179,7 @@ const BaseCommentContent = (props)=> {
 
 
 const BaseCommentReplies = (props)=> {
-	// console.log('PlaygroundBaseComment.BaseCommentReplies()', { props });
+	// console.log('BaseComment.BaseCommentReplies()', { props });
 
 	const { profile, comment } = props;
 
@@ -189,7 +188,7 @@ const BaseCommentReplies = (props)=> {
 		props.onDelete(reply);
 	};
 
-	return((comment.replies.length > 0) ? (<div className="base-comment-replies-wrapper">
+	return((comment.replies.length > 0) ? (<div className="base-comment-replies">
 		{(comment.replies.map((reply, i)=> {
 			return (<div className="base-comment-reply" key={i}>
 				<div className="header">
@@ -221,4 +220,4 @@ const mapStateToProps = (state, ownProps)=> {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlaygroundBaseComment);
+export default connect(mapStateToProps, mapDispatchToProps)(BaseComment);

@@ -8,10 +8,10 @@
       "type": "firefox",
       "request": "launch",
       "reAttach": true,
+      "profileDir": "/Users/mattholcombe/Library/Application Support/Firefox/Profiles/1spydc8c.default-debug",
       "name": "Launch Firefox on localhost:3000",
       "url": "http://localhost:3000/team/pairurl-com",
       "webRoot": "${workspaceFolder}",
-      "disableOptimisticBPs": false,
       "pathMappings": [
         {
           "url": "moz-extension://0fe61bde-c36b-8944-956f-5dacb1f1f855/inject",
@@ -20,20 +20,11 @@
       ]
     },
     {
-      "type": "node",
+      "name": "Launch Chrome",
+      "type": "chrome",
       "request": "launch",
-      "name": "Start Debug Inspector on 5858",
-      "program": "${workspaceRoot}/src/index.js",
-      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",
-      "args": [
-        "start",
-        "--inspect-brk=5858",
-        "--no-cache"
-      ],
-      "cwd": "${workspaceRoot}",
-      "sourceMaps": true,
-      "userDataDir": true,
-      "disableOptimisticBPs": false,
+      "url": "http://localhost:3000/team/pairurl-com",
+      "webRoot": "${workspaceFolder}/src",
       "sourceMapPathOverrides": {
         "webpack:///src/*": "${webRoot}/*"
       },
@@ -42,37 +33,18 @@
       ]
     },
     {
-      "name": "Debug Tests",
-      "type": "node",
-      "request": "launch",
-      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",
-      "args": [
-        "start",
-        "--inspect-brk=5858",
-        "--runInBand",
-        "--no-cache"
-      ],
-      "disableOptimisticBPs": false,
-      "cwd": "${workspaceRoot}"
-    },
-    {
-      "name": "Debug CRA Tests",
-      "type": "node",
-      "request": "launch",
-      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-scripts",
-      "args": [
-        "start",
-        "--runInBand",
-        "--inspect-brk=5858"
-      ],
-      "cwd": "${workspaceRoot}",
-      "protocol": "inspector",
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "env": {
-        "CI": "true"
+      "type": "chrome",
+      "request": "attach",
+      "name": "Attach to Chrome",
+      "port": 9222,
+      "urlFilter": "http://localhost:3000/team/*",
+      "webRoot": "${workspaceFolder}",
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*",
+        "/Volumes/Labor/projects/sites/pairurl.com/*": "${workspaceRoot}/*"
       },
-      "disableOptimisticBPs": true
+      "trace": true,
+      "sourceMaps": true
     }
   ]
 }

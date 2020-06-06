@@ -1,6 +1,6 @@
 
 import React from 'react';
-import PlaygroundBaseComment from '../../PlaygroundPage/PlaygroundBaseComment';
+import PlaygroundBaseComment from '../../../iterables/BaseComment';
 import './TeamPageCommentsPanel.css';
 
 

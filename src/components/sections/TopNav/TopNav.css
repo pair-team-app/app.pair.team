@@ -17,63 +17,92 @@
 }
 
 .top-nav {
-	position: fixed;
-	display: flex;
-	align-items: center;
-	width: 100%;
+	display: inline-flex;
+  flex-shrink: 0;
+	/* width: 100%;
+	height: 100%; */
 	padding: var(--spacing-20);
 	/*background-color: rgba(var(--site-bg-color), 0.975);*/
+	/* z-index: 2; */
+
+	align-items: center;
+	padding: var(--spacing-20) var(--spacing-20) 0 var(--spacing-20);
+	transition: width 250ms 125ms cubic-bezier(0.4, 0, 0.2, 1);
 	z-index: 2;
 }
 
+/* .playground-page[data-comments="true"] .top-nav {
+	transition: width 125ms 333ms cubic-bezier(0.4, 0, 0.2, 1); */
+/* } */
+
 .top-nav > * {
-	margin: auto;
-	/*border: 1px dotted #ff00ff;*/
+	flex: 4 4 0;
 }
 
-.top-nav-branding-wrapper, .top-nav-mobile-menu-wrapper {
-	flex: 2 2 0;
-}
-
-.top-nav-branding-wrapper a > div {
+.top-nav .col-right {
 	display: flex;
 	flex-wrap: nowrap;
+	justify-content: flex-end;
 	align-items: center;
-	width: fit-content;
 }
 
-.top-nav-logo {
-	width: var(--orthodox-acc-size);
-	height: var(--orthodox-acc-size);
+.top-nav .col-right > *:not(:last-child) {
+	margin-right: var(--spacing-20);
 }
 
-.top-nav-branding-wrapper a:not(:hover):not(:active) rect#logo-fg {
-	/*transform: scale(1.00);*/
-	transform-origin: center;
-	animation: 0.125s ease-in 0s 1 forwards top-nav-logo-out;
-}
-
-/*a.top-nav-branding-wrapper:hover rect#logo-bg {*/
-	/*transform-origin: center;*/
-	/*animation: 0.25s ease-out 0.0s 1 forwards top-nav-logo-bg-hover;*/
-/*}*/
-
-.top-nav-branding-wrapper a:hover rect#logo-fg {
-	transform-origin: center;
-	animation: 0.33s ease-out 0s infinite alternate top-nav-logo-fg-hover;
-}
-
-.top-nav-title {
-	display: inline;
-	margin-left: var(--spacing-10);
-}
-
-.top-nav-theme-toggle-wrapper {
-	flex: 1 1 0;
+.top-nav .col-middle {
+	display: none;
+	visibility: hidden;
+	flex: 1 0 auto;
 	text-align: center;
 }
 
-.top-nav-link-wrapper {
-	flex: 2 2 0;
-	text-align: right;
+.top-nav .breadcrumb-wrapper {
+	display: flex;
+	align-items: flex-start;
+	flex-wrap: nowrap;
 }
+
+
+.top-nav .breadcrumb-wrapper > * {
+	flex: 0 0 auto;
+}
+
+.top-nav .top-nav-breadcrumb {
+	color: rgba(var(--link-color), 1.0);
+	text-decoration: none;
+	transition: color 0.125s ease-out;
+}
+
+.top-nav .top-nav-breadcrumb:not(:first-child):hover, .top-nav .top-nav-breadcrumb:not(:last-child):hover {
+	cursor: pointer;
+	color: rgba(var(--link-hover-color), 1.0);
+}
+
+.top-nav .top-nav-breadcrumb:first-child:hover {
+	color: rgba(var(--link-selected-color), 1.0);
+	cursor: default;
+}
+
+.top-nav .top-nav-breadcrumb:last-child, .top-nav .top-nav-breadcrumb:last-child:hover {
+	color: rgba(var(--link-selected-color), 1.0);
+	font-weight: 500;
+	text-decoration: underline;
+	cursor: default;
+}
+
+
+.top-nav .top-nav-share-link {
+	position: relative;
+}
+
+.top-nav .top-nav-share-link .nav-link {
+	color: rgba(var(--link-color), 1.0);
+	transition: color 0.125s ease-out;
+}
+
+.top-nav .top-nav-share-link .nav-link:hover {
+	color: rgba(var(--link-hover-color), 1.0);
+	cursor: pointer;
+}
+

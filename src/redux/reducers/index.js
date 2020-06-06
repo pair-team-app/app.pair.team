@@ -67,8 +67,11 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { mouse }));
       
   } else if (type === TEAM_BUILDS_LOADED) {
-    const { playgrounds, comments, playground, typeGroup, components, component, comment } = payload;
-    return (Object.assign({}, state, { playgrounds, comments, playground, typeGroup, components, component, comment }));
+    // const { playgrounds, comments, playground, typeGroup, components, component, comment } = payload;
+    // return (Object.assign({}, state, { playgrounds, comments, playground, typeGroup, components, component, comment }));
+    
+    const { playgrounds } = payload;
+    return (Object.assign({}, state, { playgrounds }));
 
   } else if (type === TEAM_COMMENTS_LOADED) {
     const { team, comments } = payload;

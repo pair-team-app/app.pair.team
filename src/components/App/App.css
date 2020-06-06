@@ -46,9 +46,11 @@
 .page-wrapper {
 	/* position: relative; */
 	/* top: 58px; */
+
 	width: 100%;
-	display: flex;
+  display: flex;
 	flex-direction: column;
+	height: 100%;
 	/* overflow: hidden; */
 }
 

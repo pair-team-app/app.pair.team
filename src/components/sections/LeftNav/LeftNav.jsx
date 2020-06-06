@@ -1,11 +1,13 @@
 
+import { Strings } from 'lang-js-utils';
 import React, { Component } from 'react';
+import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { setTeam } from '../../../redux/actions';
 import { trackEvent, trackOutbound } from '../../../utils/tracking';
+import BaseContentExpander from '../../iterables/BaseContentExpander';
 import './LeftNav.css';
-import LeftNavBuild from './LeftNavBuild';
 
 
 class LeftNav extends Component {
@@ -18,7 +20,7 @@ class LeftNav extends Component {
   }
 
   componentDidMount() {
-    // console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
     const { playgrounds } = this.props;
     const { builds } = this.state;
@@ -29,7 +31,7 @@ class LeftNav extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { playgrounds, playground } = this.props;
     const { builds } = this.state;
@@ -54,7 +56,7 @@ class LeftNav extends Component {
   }
 
   handleTeamClick = (team)=> {
-    console.log('%s.handleTeamClick()', this.constructor.name, { team });
+    console.log('%s.handleTeamClick()', this.constructor.name, {team });
 
     this.props.setTeam({ ...this.props.team, 
       selected : true
@@ -84,10 +86,13 @@ class LeftNav extends Component {
   };
 
   onPopulateTree = ()=> {
-    console.log('%s.onPopulateTree()', this.constructor.name, { props : this.props });
+    // console.log('%s.onPopulateTree()', this.constructor.name);
 
     const { playgrounds, playground } = this.props;
     const buildIDs = [ ...new Set([ ...playgrounds.map(({ buildID })=> (buildID))])];
+
+    console.log('%s.onPopulateTree()', this.constructor.name, { playgrounds, buildIDs });
+
     const builds = buildIDs.map((id)=> ({ id,
       title       : [ ...playgrounds.filter(({ buildID })=> (buildID === id))].pop().title,
       expanded    : (playground !== null && playground.buildID === id),
@@ -106,7 +111,7 @@ class LeftNav extends Component {
     const { builds } = this.state;
 
     const handleURL = (event, url)=> {
-// 		console.log('%s.handleURL()', this.constructor.name, event, url);
+// 		
 
       event.preventDefault();
       trackOutbound(url);
@@ -114,40 +119,41 @@ class LeftNav extends Component {
 
     return (<div className="left-nav" data-menu={menu}>
       <LeftNavHeader />
-      
-      {(!teams) && (<div className="loading">Loading…</div>)}
-
-      {(teams) && (<div className="teams-wrapper">
-        <div className="items-wrapper">
-          {teams.map((team, i)=> (
-              <LeftNavTeam
-                key={i} 
-                team={team}
-                onClick={this.handleTeamClick} />
-            ))}
-        </div>
-        <div className="create-team" onClick={this.handleCreateTeam}>Create Team</div>
-      </div>)}
-      
-      {(teams) && (<div className="builds-wrapper">
-        <div className="header">Projects</div>
-        <div className="items-wrapper">
-          {builds.map((build, i)=> (
-            <LeftNavBuild 
-              key={i} 
-              build={build}
-              typeGroup={typeGroup} 
-              onBuildClick={this.handleBuildClick} 
-              onTypeGroupClick={(typeGroup)=> this.handleTypeGroupClick(build, typeGroup)} />
-          ))}
-        </div>
+      {(!teams) ? (<div className="loading">Loading…</div>)
+      : (<div className="tree-wrapper">
+          <div className="teams-wrapper">
+            <div className="items-wrapper">
+              {teams.map((team, i)=> (
+                <LeftNavTeam
+                  key={i} 
+                  team={team}
+                  onClick={this.handleTeamClick}  
+                />
+              ))}
+            </div>
+            <div className="create-team" onClick={this.handleCreateTeam}>Create Team</div>
+          </div>
+          {(playgrounds) && (<div className="builds-wrapper">
+            <div className="header">Projects</div>
+            <div className="items-wrapper">
+              {[ ...builds, ...builds].map((build, i)=> (
+                <LeftNavBuild 
+                  key={i} 
+                  build={build}
+                  typeGroup={typeGroup} 
+                  onBuildClick={this.handleBuildClick} 
+                  onTypeGroupClick={(typeGroup)=> this.handleTypeGroupClick(build, typeGroup)} 
+                />
+              ))}
+            </div>
+          </div>)}
       </div>)}
     </div>);
   }
 }
 
 const LeftNavHeader = (props)=> {
-  	// console.log('LeftNavHeader()', props);
+  // console.log('LeftNavHeader()', { props });
 
   //const { team } = props;
   //const { logo, title } = team;
@@ -161,12 +167,46 @@ const LeftNavHeader = (props)=> {
 
 
 const LeftNavTeam = (props)=> {
-	// console.log('LeftNavTeam()', props);
+	// console.log('LeftNavBuildTypeGroup()', { props });
 
 	const { team } = props;
 	const { id, title, selected } = team;
 	return (<div className="left-nav-team" onClick={()=> props.onClick(team)} data-id={id} data-selected={selected}>{title}</div>);
 }
+
+const LeftNavBuild = (props)=> {
+  // console.log('LeftNavBuildTypeGroup()', { props });
+
+  const { build } = props;
+	const { id, title, expanded, selected, playgrounds } = build;
+	const typeGroups = [ ...new Set([ ...playgrounds.map(({ typeGroups })=> (typeGroups)).flat()])];
+
+	// 
+
+	return (<BaseContentExpander className="left-nav-build" open={build.expanded}
+		title={<div className="title-wrapper" onClick={()=> props.onBuildClick(build)} data-id={id} data-expanded={expanded} data-selected={selected}>
+			<div className="arrow-wrapper" data-expanded={expanded}><FontAwesome name="caret-right" /></div>
+			{/* <div className="left-nav-build-title">{title} ({added.format(BUILD_TIMESTAMP)})</div> */}
+			<div className="title">{title}</div>
+		</div>}
+
+		content={<div className="item-wrapper">
+			{(typeGroups.map((typeGroup, i)=> (<LeftNavBuildTypeGroup 
+				key={i} 
+				typeGroup={typeGroup} 
+				selected={(selected && props.typeGroup && props.typeGroup.id === typeGroup.id)} 
+				onClick={()=> props.onTypeGroupClick(typeGroup)} />)))}
+		</div>}
+	/>);
+}
+
+const LeftNavBuildTypeGroup = (props)=> {
+	// console.log('LeftNavBuildTypeGroup()', { props });
+
+	const { typeGroup, selected } = props;
+	const { title } = typeGroup;
+	return (<div className="left-nav-build-type-group" onClick={props.onClick} data-id={typeGroup.id} data-selected={selected}>{Strings.truncate(title, 19)}</div>);
+};
 
 const mapStateToProps = (state, ownProps)=> {
   return {

@@ -1,8 +1,0 @@
-
-.playground-processing-overlay {
-	/*width: 128px;*/
-	padding: var(--spacing-20);
-}
-
-.playground-processing-overlay[data-root="false"] {
-}
