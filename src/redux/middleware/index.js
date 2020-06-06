@@ -1,4 +1,5 @@
 
+
 // import moment from 'moment';
 import cookie from 'react-cookies';
 import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAM_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
@@ -15,7 +16,7 @@ const logFormat = ({ store, action, next, event })=> {
 
     if (event === 'PRE') {
       console.log(LOG_MIDDLEWARE_PREFIX, `“${type}”`, { action : (typeof action === 'function') ? { type, payload } : action, ofType : typeof action }, { store : store.getState(), next, action });
-    
+
     } else {
       console.log(LOG_MIDDLEWARE_POSTFIX, `“${type}”`, { action : (typeof action === 'function') ? { type, payload } : action, ofType : typeof action }, { store : store.getState(), next, action });
     }
@@ -70,24 +71,17 @@ export function onMiddleware(store) {
       // const { buildID, deviceSlug } = params;
       const buildID = 0;
       const deviceSlug = "";
-      
+
       const { team } = payload;
-      // payload.team = { ...team,
-      //   id       : team.id << 0,
-      //   members  : team.members.map((member)=> ({ ...member,
-      //     id : member.id << 0
-      //   })),
-      //   logo     : team.image.replace(/\\n/g, '', team.image)
-      // };
 
       payload.team = reformTeam(team);
       payload.teams = Array(4).fill(payload.team);
 
-      if (team.comments << 0 !== 0) {
-        dispatch(fetchTeamComments({ team }));
-      }
+      // if (team.comments << 0 !== 0) {
+        // dispatch(fetchTeamComments({ team }));
+      // }
 
-  
+
       dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
 
     } else if (type === TEAM_LOGO_LOADED) {
@@ -95,7 +89,7 @@ export function onMiddleware(store) {
       const { team } = prevState;
 
       payload.team = { ...team, logo : logo.replace(/\\n/g, '', logo) };
-  
+
     } else if (type === TEAM_BUILDS_LOADED) {
       const { devices, componentTypes, team, matchPath } = prevState;
       const { params, location } = matchPath || {};
@@ -113,7 +107,14 @@ export function onMiddleware(store) {
       // const comment = (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
 
 
-      payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
+
+
+
+      // payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
+      payload.playgrounds = playgrounds.sort((i, ii)=> (((Math.random() * 3) - 1)) << 0).slice(0, 3 + ((Math.random() * 5) << 0));
+
+
+      payload.playgrounds = [ ...payload.playgrounds ];
       // payload.components = components;
       // payload.comments = comments;
       // payload.playground = playground;
@@ -122,8 +123,8 @@ export function onMiddleware(store) {
       // payload.comment = comment;
 
 
-      
-      // dispatch(updateMatchPath({ 
+
+      // dispatch(updateMatchPath({
       //   matchPath : { ...matchPath,
       //     params : { ...params,
       //       teamSlug      : (params.teamSlug !== team.slug) ? team.slug : params.teamSlug,
@@ -160,7 +161,7 @@ export function onMiddleware(store) {
       // const comments = [ ...new Set([ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()])];
       const components = [ ...prevState.components, ...playgrounds.map(({ components })=> (components)).flat()].map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? component : null)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i > ii) ? 1 : 0));
       const comments = [ ...prevState.comments , ...components.map(({ comments })=> (comments)).flat()].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
-      
+
       // const playground = (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || (prevState.playground || [ ...playgrounds].shift()) : null;
       const playground = (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null : null;
       const typeGroup = (playground) ? (playground.typeGroups.find(({ key })=> (key === params.typeGroupSlug)) || playground.typeGroups.find(({ key })=> (key === 'views'))) : null;
@@ -175,7 +176,7 @@ export function onMiddleware(store) {
       payload.typeGroup = typeGroup;
       payload.component = component;
       payload.comment = comment;
-    
+
     } else if (type === UPDATE_MATCH_PATH) {
       const { playgrounds, componentTypes, components, comments } = prevState;
       const prevParams = (prevState.matchPath) ? prevState.matchPath.params : null;
@@ -211,9 +212,9 @@ export function onMiddleware(store) {
           payload.component = (typeof component === 'undefined') ? null : component;//(params.componentID) ? (components.find(({ id })=> (id === params.componentID)) || null) : (prevParams) ? prevParams.typeGroup : null;
           payload.comment = (typeof comment === 'undefined') ? null : comment;//(params.commentID) ? (comments.find(({ id })=> (id === params.commentID)) || null) : (prevParams) ? prevParams.comment : null;
         }
-      
+
       } else {
-        payload.matchPath = { ...payload.matchPath, 
+        payload.matchPath = { ...payload.matchPath,
           params : {
             teamSlug      : null,
             projectSlug   : null,
@@ -255,7 +256,7 @@ export function onMiddleware(store) {
       const prevComment = prevState.comments.find(({ id })=> (id === (payload.comment.id << 0)));
       payload.comment = (prevComment) ? reformComment(payload.comment, prevComment.uri) : reformComment(payload.comment, `${Pages.ASK}/${team.slug}/ask`);
       payload.comments = (prevComment) ? prevState.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment)) : [ ...prevState.comments, payload.comment];
-      payload.component = (component) ? { ...component, 
+      payload.component = (component) ? { ...component,
         comments : [ ...component.comments, payload.comment].sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)))
       } : null;
 
@@ -266,9 +267,9 @@ export function onMiddleware(store) {
       const prevComment = prevState.comments.find(({ id })=> (id === (payload.comment.id << 0)));
       payload.comment = reformComment(payload.comment, prevComment.uri);
 
-      if (payload.comment.state === 'deleted') { 
+      if (payload.comment.state === 'deleted') {
         payload.comments = prevState.comments.filter(({ id })=> (id !== payload.comment.id));
-      
+
       } else {
         payload.comments = prevState.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment));
       }
@@ -284,7 +285,7 @@ export function onMiddleware(store) {
       const { team } = prevState;
       const { rules } = payload;
 
-      // payload.team = { ...team, 
+      // payload.team = { ...team,
       //   rules : rules.map((rule)=> (reformRule(rule, team.members)))
       // };
 
@@ -315,9 +316,9 @@ export function onMiddleware(store) {
             componentID : id
           })).flat();//.find(({ id })=> (id === comment.id));
 
-          // 
+          //
 
-        
+
         } else {
           componentID = component.id;
         }
@@ -329,7 +330,7 @@ export function onMiddleware(store) {
           projectSlug = playground.projectSlug;
           buildID = playground.buildID;
           deviceSlug = playground.device.slug;
-        
+
         } else {
           //componentID = playgrounds.
         }
@@ -338,15 +339,15 @@ export function onMiddleware(store) {
           typeGroupSlug = typeGroup.slug;
         }
 
-        
 
 
-        // 
+
+        //
 
         comment = reformComment(comment, `${Pages.PLAYGROUND}/${team.slug}/${playground.projectSlug}/${playground.buildID}/${playground.device.slug}}/${typeGroup.slug}/${component.id}/comments`);
       }
 
-      
+
 
       // const matchURI = (payload.comment.type === 'component') ? matchPath(comment.uri, {
       //   path   : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`,
@@ -359,7 +360,7 @@ export function onMiddleware(store) {
       // });
 
       payload.comment = comment;
-      
+
 
       // if (payload.comment.type === "team") {
       //   const { team } = prevState;
@@ -367,7 +368,7 @@ export function onMiddleware(store) {
       //   // const comments = team.comments.map((comment)=> ((comment.id === payload.comment.id) ? reformComment(payload.comment, team) : comment));
       //   // payload.team = { ...team, comments };
 
-      //   payload.team = { ...team, 
+      //   payload.team = { ...team,
       //     comments : team.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment))
       //   }
 
@@ -393,8 +394,8 @@ export function onMiddleware(store) {
 
         const device = (playground) ? devices.find(({ id })=> (id === playground.deviceID)) || null : null;
         const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) || null : null;
-        
-        dispatch(updateMatchPath({ 
+
+        dispatch(updateMatchPath({
           matchPath : { ...matchPath,
             params : { ...params,
               projectSlug   : (playground) ? playground.projectSlug : params.projectSlug,
@@ -415,7 +416,7 @@ export function onMiddleware(store) {
         payload.typeGroup = typeGroup
 
         // dispatch(setTypeGroup(typeGroup));
-      
+
       } else {
         // dispatch(setTypeGroup(null));
       }
@@ -427,7 +428,7 @@ export function onMiddleware(store) {
       if (matchPath) {
         const { params, location } = matchPath;
 
-        dispatch(updateMatchPath({ 
+        dispatch(updateMatchPath({
           matchPath : { ...matchPath,
             params : { ...params,
               typeGroupSlug : (typeGroup) ? typeGroup.key : null,
@@ -440,7 +441,7 @@ export function onMiddleware(store) {
             }
           }
         }));
-        
+
         // if (prevState.component || params.componentID) {
           // dispatch(setComponent(null));
         // }
@@ -454,11 +455,11 @@ export function onMiddleware(store) {
     } else if (type === SET_COMPONENT) {
       const { component } = payload;
       const { matchPath } = prevState;
-      
-      if (matchPath) {  
+
+      if (matchPath) {
         const { params, location } = matchPath;
-        
-        dispatch(updateMatchPath({ 
+
+        dispatch(updateMatchPath({
           matchPath : { ...matchPath,
             params : { ...params,
               componentID : (component) ? component.id : null,
@@ -483,10 +484,10 @@ export function onMiddleware(store) {
       const { comment } = payload;
       const { matchPath } = prevState;
 
-      if (matchPath) {  
+      if (matchPath) {
         const { params, location } = matchPath;
 
-        dispatch(updateMatchPath({ 
+        dispatch(updateMatchPath({
           matchPath : { ...matchPath,
             params : { ...params,
               // comments  : (params.componentID && params.comments) ? 'comments' : params.comments,
@@ -509,7 +510,7 @@ export function onMiddleware(store) {
       const { devices, componentTypes, team, matchPath } = postState;
       const { params } = matchPath || {};
     }
-    
+
     logFormat({ store, action, next, meta : 'POST [==>' });
   });
 }
