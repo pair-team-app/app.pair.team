@@ -66,9 +66,10 @@ class LeftNav extends Component {
   handleTeamClick = (team)=> {
     console.log('%s.handleTeamClick()', this.constructor.name, { team });
 
-    // this.props.setTeam({ ...this.props.team });
-    this.props.setTeam(team);
-    this.props.setPlayground(null);
+    this.setState({ builds : null }, ()=> {
+      this.props.setTeam(team);
+      this.props.setPlayground(null);
+    });
   }
 
 
@@ -112,7 +113,8 @@ class LeftNav extends Component {
             </div>
             <div className="create-team" onClick={this.handleCreateTeam}>Create Team</div>
           </div>
-          {(builds) && (<div className="builds-wrapper">
+          {(!builds) ? (<div className="loading">Loading…</div>)
+          : (<div className="builds-wrapper">
             <div className="header">Projects</div>
             <div className="items-wrapper">
               {builds.map((build, i)=> (

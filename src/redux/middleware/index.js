@@ -113,10 +113,10 @@ export function onMiddleware(store) {
 
 
 
-      payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
+      payload.playgrounds = playgrounds;//.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
 
 
-      payload.playgrounds = [ ...payload.playgrounds ];
+      // payload.playgrounds = [ ...payload.playgrounds ];
       // payload.components = components;
       // payload.comments = comments;
       // payload.playground = playground;
