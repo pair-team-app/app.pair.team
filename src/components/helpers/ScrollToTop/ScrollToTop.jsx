@@ -11,12 +11,12 @@ class ScrollToTop extends Component {
   }
 
   componentDidMount() {
-    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
     this.onScroll();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : prevProps, prevState : prevState, props : this.props, state : this.state });
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : prevProps, prevState : prevState, props : this.props, state : this.state });
 
     const { pathname } = this.props.location;
     //if (pathname && pathname !== prevProps.location.pathname) {
@@ -25,7 +25,7 @@ class ScrollToTop extends Component {
   }
 
   onScroll = ()=> {
-    console.log('%s.onScroll()', this.constructor.name, { offset : window.scrollY });
+    // console.log('%s.onScroll()', this.constructor.name, { offset : window.scrollY });
 
     setTimeout(()=> {
       if (window.scrollY > 0) {
@@ -37,7 +37,7 @@ class ScrollToTop extends Component {
 
 
   render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { children } = this.props;
     // return (children);

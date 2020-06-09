@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Bits, Objects } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { VOTE_ACTION_DOWN, VOTE_ACTION_UP } from '../../components/iterables/BaseComment';
-import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAM_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_THEME, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_THEME, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { API_RESPONSE_PREFIX, LOG_ACTION_POSTFIX, LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
 
@@ -37,7 +37,7 @@ export function fetchBuildPlaygrounds(payload=null) {
 export function fetchComponentTypes(payload=null) {
   return (dispatch, getState)=> {
     logFormat('fetchComponentTypes()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
-    
+
     axios.post(API_ENDPT_URL, {
       action: 'COMPONENT_TYPES',
       payload: null
@@ -54,7 +54,7 @@ export function fetchComponentTypes(payload=null) {
 export function fetchDevices(payload=null) {
   return (dispatch, getState)=> {
     logFormat('fetchDevices()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
-    
+
     axios.post(API_ENDPT_URL, {
       action  : 'DEVICES',
       payload : null
@@ -73,7 +73,7 @@ export function fetchDevices(payload=null) {
 // export function fetchPlayground(payload=null) {
 //   return (dispatch, getState)=> {
 //     logFormat('fetchPlayground()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
-    
+
 //     axios.post(API_ENDPT_URL, {
 //       action  : 'PLAYGROUND',
 //       payload : {
@@ -169,18 +169,18 @@ export function fetchTeamLookup(payload=null) {
     logFormat('fetchTeamLookup()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
     axios.post(API_ENDPT_URL, {
-      action  : 'TEAM_LOOKUP',
+      action  : 'USER_TEAMS',
       payload : {
         user_id : userProfile.id,
         verbose : false
       }
     }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'TEAM_LOOKUP', response.data);
-      const { team } = response.data;
+      console.log(API_RESPONSE_PREFIX, 'USER_TEAMS', response.data);
+      const { teams } = response.data;
 
       dispatch({
-        type    : TEAM_LOADED,
-        payload : { team }
+        type    : TEAMS_LOADED,
+        payload : { teams }
       });
     }).catch((error)=> {});
   };
@@ -247,10 +247,10 @@ export function makeComment(payload) {
 
     const { userProfile : profile, team, component } = getState();
     const { comment, content, position } = payload;
-    
+
     axios.post(API_ENDPT_URL, {
       action  : 'ADD_COMMENT',
-      payload : { content, 
+      payload : { content,
         position     : (position || ((comment) ? comment.position : { x : 0, y : 0 })),
         user_id      : profile.id,
         team_id      : (component) ? 0 : team.id,
@@ -275,7 +275,7 @@ export function makeTeamRule(payload) {
 
     const { userProfile : profile, team } = getState();
     const { title } = payload;
-    
+
     axios.post(API_ENDPT_URL, {
       action  : 'ADD_RULE',
       payload : { title,
@@ -346,13 +346,13 @@ export function modifyComment(payload) {
 export function modifyTeam(payload) {
   return ((dispatch, getState)=> {
     logFormat('modifyTeam()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
-    
+
     const { userProfile, team } = getState();
     const { description, image } = payload;
 
     axios.post(API_ENDPT_URL, {
       action  : 'UPDATE_TEAM',
-      payload : { description, 
+      payload : { description,
         team_id     : team.id,
         user_id     : userProfile.id,
         image       : (image === null) ? false : (image === true)
@@ -403,9 +403,9 @@ export function setComponent(payload) {
 export function setComment(payload) {
   logFormat('setComment()', null, payload);
   const comment = payload;
-  return ({ 
-    payload : { comment }, 
-    type    : SET_COMMENT 
+  return ({
+    payload : { comment },
+    type    : SET_COMMENT
   });
 }
 
@@ -413,8 +413,8 @@ export function setComment(payload) {
 export function setTeam(payload) {
   logFormat('setTeam()', null, payload);
   const team = payload;
-  return ({ 
-    payload : { team }, 
+  return ({
+    payload : { team },
     type    : SET_TEAM
   });
 }
@@ -435,7 +435,7 @@ export function updateMatchPath(payload=null) {
 
   return ((dispatch, getState)=> {
     logFormat('updateMatchPath()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
-    
+
     const { matchPath } = payload;
     // const comps = (getState().matchPath) ? Object.keys(matchPath.params).map((key)=> (`${key} : ${matchPath.params[key]} ${getState().matchPath.params[key]} (${matchPath.params[key] === getState().matchPath.params[key]})`)) : null;
     const paramChange = (getState().matchPath) ? (Object.keys(matchPath.params).map((key)=> (matchPath.params[key] === getState().matchPath.params[key])).reduce((acc, val)=> (acc * val), 1) === 0) : true;
@@ -447,7 +447,7 @@ export function updateMatchPath(payload=null) {
         type    : UPDATE_MATCH_PATH,
         payload : { matchPath }
       });
-    
+
     } else {
       return;
     }

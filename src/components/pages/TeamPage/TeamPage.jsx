@@ -33,7 +33,7 @@ class TeamPage extends Component {
   }
 
   componentDidMount() {
-    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
     const { playground } = this.props;
     if (playground) {
@@ -44,17 +44,17 @@ class TeamPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { team, comments } = this.props;
     const { teamDescription, fetching, topSort } = this.state;
-  
-  
+
+
     if (fetching) {
       if ((comments.filter(({ content })=> (content === null)).length === 0)) {
         this.setState({ fetching : false });
       }
-    
+
     } else {
       if (comments.filter(({ content })=> (content === null)).length > 0) {
         this.setState({ fetching : true });
@@ -65,7 +65,7 @@ class TeamPage extends Component {
       this.setState({ topSort : comments.sort((i, ii)=> ((i.score > ii.score) ? -1 : (i.score < ii.score) ? 1 : 0)).map(({ id })=> (id)) });
     }
 
-    if (prevProps.team !== team && team && teamDescription !== team.description) { 
+    if (prevProps.team !== team && team && teamDescription !== team.description) {
       this.setState({ teamDescription : team.description });
     }
   }
@@ -85,8 +85,8 @@ class TeamPage extends Component {
     event.stopPropagation();
 
     const { commentContent } = this.state;
-    this.props.makeComment({ 
-      comment  : null, 
+    this.props.makeComment({
+      comment  : null,
 			content  : commentContent,
       position : null
 		});
@@ -103,7 +103,7 @@ class TeamPage extends Component {
 
     const { ruleContent } = this.state;
     this.props.makeTeamRule({ title : ruleContent });
-    this.setState({ 
+    this.setState({
       ruleInput   : false
       // ruleContent : ''
     });
@@ -144,9 +144,9 @@ class TeamPage extends Component {
     // console.log('%s.handleRuleInput()', this.constructor.name, event);
     trackEvent('button', 'add-rule');
 
-    this.setState({ 
+    this.setState({
       ruleContent : '',
-      ruleInput   : true 
+      ruleInput   : true
     });
   }
 
@@ -195,7 +195,7 @@ class TeamPage extends Component {
     const { team } = this.props;
     const { topSort } = this.state;
 
-    this.setState({ 
+    this.setState({
       fetching : true,
       topSort  : (refresh) ? [] : topSort
     }, ()=> {
@@ -204,36 +204,36 @@ class TeamPage extends Component {
   };
 
   render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, comments } = this.props;
     const { commentContent, teamDescription, ruleContent, ruleInput, fetching, share, sort, topSort } = this.state;
 
     return (<BasePage { ...this.props } className="team-page">
       {profile && team && (<>
-        {/* <TeamPageHeader 
-          sort={sort} 
-          popover={share} 
-          onSortClick={this.handleSortClick} 
-          onPopup={this.props.onPopup} 
-          onSharePopoverClose={()=> this.setState({ share : false })} 
-          onSettingsItem={this.handleSettingsItem} 
-          onLogout={this.props.onLogout} 
+        {/* <TeamPageHeader
+          sort={sort}
+          popover={share}
+          onSortClick={this.handleSortClick}
+          onPopup={this.props.onPopup}
+          onSharePopoverClose={()=> this.setState({ share : false })}
+          onSettingsItem={this.handleSettingsItem}
+          onLogout={this.props.onLogout}
         /> */}
 
         <div className="content-wrapper">
           <div className="comments-wrapper" data-loading={fetching}>
             <div>
-              <TeamPageAddComment 
-                loading={fetching} 
-                commentContent={commentContent} 
-                onTextChange={this.handleTextChange} 
+              <TeamPageAddComment
+                loading={fetching}
+                commentContent={commentContent}
+                onTextChange={this.handleTextChange}
                 onSubmit={this.handleAddComment}
               />
 
-              <TeamPageCommentsPanel 
-                profile={profile} 
-                comments={(sort === SORT_BY_DATE) ? comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : topSort.map((commentID)=> (comments.find(({ id })=> (id === commentID)) || null)).filter((comment)=> (comment !== null))} 
+              <TeamPageCommentsPanel
+                profile={profile}
+                comments={(sort === SORT_BY_DATE) ? comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : topSort.map((commentID)=> (comments.find(({ id })=> (id === commentID)) || null)).filter((comment)=> (comment !== null))}
                 loading={fetching}
                 sort={sort}
               />
@@ -252,10 +252,10 @@ class TeamPage extends Component {
               <div className="header"><span>Rules</span></div>
               {(team) && (<div className="content">
                 {(team.rules.map((rule, i)=> {
-                  return (<TeamPageTeamRule 
-                    key={i} 
-                    ind={i+1} 
-                    rule={rule} 
+                  return (<TeamPageTeamRule
+                    key={i}
+                    ind={i+1}
+                    rule={rule}
                   />);
                 }))}
               </div>)}

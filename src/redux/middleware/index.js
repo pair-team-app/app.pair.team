@@ -2,11 +2,11 @@
 
 // import moment from 'moment';
 import cookie from 'react-cookies';
-import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAM_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_POSTFIX, LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { Pages } from '../../consts/uris';
 import { reformComment, reformPlayground, reformTeam } from '../../utils/reform';
-import { fetchTeamBuilds, fetchTeamComments, fetchTeamLookup, updateMatchPath } from '../actions';
+import { fetchBuildPlaygrounds, fetchTeamBuilds, fetchTeamComments, fetchTeamLookup, updateMatchPath } from '../actions';
 
 
 
@@ -66,23 +66,26 @@ export function onMiddleware(store) {
         dispatch(fetchTeamLookup({ userProfile }));
       }
 
-    } else if (type === TEAM_LOADED) {
+    } else if (type === TEAMS_LOADED) {
       // const { params } = prevState.matchPath;
       // const { buildID, deviceSlug } = params;
       const buildID = 0;
       const deviceSlug = "";
 
-      const { team } = payload;
-
-      payload.team = reformTeam(team);
-      payload.teams = Array(4).fill(payload.team);
+      const { teams } = payload;
+      payload.teams = teams.map((team)=> (reformTeam(team))).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)).map((team, i)=> ({ ...team, selected : (i === 0)}));
+      payload.team = (payload.teams.length > 0) ? [ ...payload.teams ].shift() : null;
 
       // if (team.comments << 0 !== 0) {
-        // dispatch(fetchTeamComments({ team }));
+        // dispatch(fetchTeamComments({ team : payload.team }));
       // }
 
+      if (payload.team) {
+        dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
+      }
 
-      dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
+
+      // dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
 
     } else if (type === TEAM_LOGO_LOADED) {
       const { logo } = payload;
@@ -110,8 +113,7 @@ export function onMiddleware(store) {
 
 
 
-      // payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
-      payload.playgrounds = playgrounds.sort((i, ii)=> (((Math.random() * 3) - 1)) << 0).slice(0, 3 + ((Math.random() * 5) << 0));
+      payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
 
 
       payload.playgrounds = [ ...payload.playgrounds ];
@@ -143,7 +145,12 @@ export function onMiddleware(store) {
       // }));
 
       // playgrounds.filter(({ buildID })=> (buildID !== params.buildID)).forEach(({ buildID })=> {
-        //dispatch(fetchBuildPlaygrounds({ buildID }));
+      //   dispatch(fetchBuildPlaygrounds({ buildID }));
+      // });
+
+
+      // playgrounds.forEach(({ buildID })=> {
+      //   dispatch(fetchBuildPlaygrounds({ buildID }));
       // });
 
     } else if (type === TEAM_COMMENTS_LOADED) {
@@ -382,8 +389,14 @@ export function onMiddleware(store) {
 
     } else if (type === SET_TEAM) {
       const { teams } = prevState;
-      payload.teams = teams.map((team)=> ((team.id === payload.team.id) ? payload.team : team));
+      payload.teams = teams.map((team)=> ({ ...team,
+        selected : (team.id === payload.team.id)
+      }));
+      payload.team = payload.teams.find(({ id })=> (id === payload.team.id));
 
+      const buildID = 0;
+      const deviceSlug = "";
+      dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
 
     } else if (type === SET_PLAYGROUND) {
       const { playground } = payload;
