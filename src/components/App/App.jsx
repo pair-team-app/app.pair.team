@@ -59,7 +59,7 @@ class App extends Component {
     // console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('M'));
 
     const { profile, location } = this.props;
-    // 		if (!profile && location.pathname.startsWith(Pages.PLAYGROUND)) {
+    // if (!profile && location.pathname.startsWith(Pages.PLAYGROUND)) {
     if (!profile && location.pathname.startsWith(Pages.PLAYGROUND) && cookie.load('user_id') === '0') {
       this.onToggleModal(Modals.LOGIN);
     }
@@ -207,7 +207,7 @@ class App extends Component {
           }
 
           /*
-          if (!this.props.location.pathname.includes('/ask') && playgrounds && (!buildID || !deviceSlug || !typeGroupSlug)) {
+          if (!this.props.location.pathname.includes('/team') && playgrounds && (!buildID || !deviceSlug || !typeGroupSlug)) {
             const pg = [ ...playgrounds].shift();
             this.props.updateMatchPath({
               matchPath : { ...this.props.matchPath,

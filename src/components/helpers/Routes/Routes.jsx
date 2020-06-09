@@ -2,9 +2,9 @@
 import React, { Component } from 'react';
 // import { Route, Switch, withRouter } from 'react-router-dom';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { Pages } from '../../../consts/uris';
-import HomePage from '../../pages/HomePage/index';
+
 import TeamPage from '../../pages/TeamPage';
+import { Pages } from '../../../consts/uris';
 
 
 
@@ -29,37 +29,28 @@ class Routes extends Component {
     // console.log('%s.render()', this.constructor.name, { props : this.props });
 
     return (<Switch>
-      <Route exact path={Pages.HOME}><Redirect to={`${Pages.ASK}/team/ask`} /></Route>
-      <Route exact path={`${Pages.ASK}`}><Redirect to={`${Pages.ASK}/team/ask`} /></Route>
-      
-      <Route exact 
-        path={Pages.HOME} 
-        children={()=> <HomePage
-            onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
-            onPopup={this.props.onPopup} 
-            onSignup={()=> null} />
-      } />
-      
-      <Route 
-        path={`${Pages.TEAM}/:teamSlug([a-z-]+)?/(comments)?/:commentID([0-9]+)?`} 
-        render={({ props })=> <TeamPage 
-          onLogout={this.props.onLogout} 
-          onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
-          onPopup={this.props.onPopup} { ...props} 
+      <Route exact path={Pages.HOME}><Redirect to={Pages.TEAM} /></Route>
+
+      <Route
+        path={`${Pages.TEAM}/:teamSlug([a-z-]+)?/(comments)?/:commentID([0-9]+)?`}
+        render={({ props })=> <TeamPage
+          onLogout={this.props.onLogout}
+          onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
+          onPopup={this.props.onPopup} { ...props}
           />
       } />
 
-      {/* <Route  
-        path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`} 
-        // path={Pages.PLAYGROUND} 
-        render={({ props })=> <PlaygroundPage 
-          onLogout={this.props.onLogout} 
-          onModal={(uri, payload)=> this.props.onModal(uri, true, payload)} 
+      {/* <Route
+        path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`}
+        // path={Pages.PLAYGROUND}
+        render={({ props })=> <PlaygroundPage
+          onLogout={this.props.onLogout}
+          onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
           onPopup={this.props.onPopup} { ...props} />
       } /> */}
 
       {/* <Route path={Pages.WILDCARD}><Status404Page /></Route> */}
-      <Route path={Pages.WILDCARD}><Redirect to={`${Pages.ASK}/team/ask`} /></Route>
+      <Route path={Pages.WILDCARD}><Redirect to={Pages.team} /></Route>
     </Switch>);
   }
 }

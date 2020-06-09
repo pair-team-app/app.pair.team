@@ -54,7 +54,7 @@ class InviteForm extends Component {
 				console.log('TEAM_INVITE', { invites });
 
 				// if (user) {
-				// 	this.props.onLoggedIn(user);
+					// this.props.onLoggedIn(user);
 
 				// } else {
 				// 	this.setState({
@@ -80,10 +80,10 @@ class InviteForm extends Component {
 
 
 		const { emails, emailsValid, validations } = this.state;
-		this.setState({ 
-			emails      : emails.map((email, ii)=> ((ii === i || emailsValid[ii]) ? email : '')), 
+		this.setState({
+			emails      : emails.map((email, ii)=> ((ii === i || emailsValid[ii]) ? email : '')),
 			emailsValid : emailsValid.map((valid, ii)=> ((ii === i) ? true : valid)),
-			validations : validations.map((valid, ii)=> ((ii === i) ? true : valid )) 
+			validations : validations.map((valid, ii)=> ((ii === i) ? true : valid ))
 		});
 	};
 
@@ -105,8 +105,8 @@ class InviteForm extends Component {
 			<form onSubmit={this.handleSubmit}>
 				<DummyForm />
 				{(emails.map((email, i)=> {
-					return ((validations[i]) 
-					? (<input key={i} type="email" placeholder="Enter Email Address" value={email} onFocus={(event)=> this.handleTextFocus(event, i)} onChange={(event)=> this.handleTextChange(event, i)} autoComplete="new-password" autoFocus />) 
+					return ((validations[i])
+					? (<input key={i} type="email" placeholder="Enter Email Address" value={email} onFocus={(event)=> this.handleTextFocus(event, i)} onChange={(event)=> this.handleTextChange(event, i)} autoComplete="new-password" autoFocus />)
 					: (<input key={i} type="text" placeholder="Enter Email Address" value={email} onFocus={(event)=> this.handleTextFocus(event, i)} onChange={(event)=> this.handleTextChange(event, i)} autoComplete="new-password" />));
 				}))}
 
