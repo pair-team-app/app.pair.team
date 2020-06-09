@@ -400,39 +400,45 @@ export function onMiddleware(store) {
 
     } else if (type === SET_PLAYGROUND) {
       const { playground } = payload;
-      const { devices, matchPath } = prevState;
+      const { devices, playgrounds, matchPath } = prevState;
 
-      if (matchPath) {
-        const { params, location } = matchPath;
+      const device = (playground) ? (devices.find(({ id })=> (id === playground.deviceID)) || null) : null;
+      payload.playground = (playground) ? { ...playground,
+        selected : true
+      } : null;
+      payload.playgrounds = playgrounds.map((item)=> ((playground && item.id === playground.id) ? payload.playground : { ...item,
+        selected : false
+      }));
+      payload.device = device;
 
-        const device = (playground) ? devices.find(({ id })=> (id === playground.deviceID)) || null : null;
-        const typeGroup = (playground) ? playground.typeGroups.find(({ key })=> (key === (params.typeGroupSlug || 'views'))) || null : null;
+      // if (matchPath) {
+      //   const { params, location } = matchPath;
 
-        dispatch(updateMatchPath({
-          matchPath : { ...matchPath,
-            params : { ...params,
-              projectSlug   : (playground) ? playground.projectSlug : params.projectSlug,
-              buildID       : (playground) ? playground.buildID : params.buildID,
-              deviceSlug    : (device) ? device.slug : params.deviceSlug,
-              typeGroupSlug : (typeGroup) ? typeGroup.key : params.typeGroupSlug,
-              componentID   : null,
-              comments      : false,
-              commentID     : null
-            },
-            location : { ...location,
-              state : { referer : 'SET_PLAYGROUND' }
-            }
-          }
-        }));
+      //   dispatch(updateMatchPath({
+      //     matchPath : { ...matchPath,
+      //       params : { ...params,
+      //         projectSlug   : (playground) ? playground.projectSlug : params.projectSlug,
+      //         buildID       : (playground) ? playground.buildID : params.buildID,
+      //         deviceSlug    : (device) ? device.slug : params.deviceSlug,
+      //         typeGroupSlug : (typeGroup) ? typeGroup.key : params.typeGroupSlug,
+      //         componentID   : null,
+      //         comments      : false,
+      //         commentID     : null
+      //       },
+      //       location : { ...location,
+      //         state : { referer : 'SET_PLAYGROUND' }
+      //       }
+      //     }
+      //   }));
 
-        payload.device = device;
-        payload.typeGroup = typeGroup
+      //   payload.device = device;
+      //   payload.typeGroup = typeGroup
 
-        // dispatch(setTypeGroup(typeGroup));
+      //   // dispatch(setTypeGroup(typeGroup));
 
-      } else {
-        // dispatch(setTypeGroup(null));
-      }
+      // } else {
+      //   // dispatch(setTypeGroup(null));
+      // }
 
     } else if (type === SET_TYPE_GROUP) {
       const { typeGroup } = payload;

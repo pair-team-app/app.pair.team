@@ -5,7 +5,7 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { generatePath, matchPath, withRouter } from 'react-router-dom';
 import { API_ENDPT_URL, GITHUB_APP_AUTH, Modals, Pages } from '../../consts/uris';
-import { fetchTeamLookup, fetchUserProfile, updateMatchPath, updateUserProfile } from '../../redux/actions';
+import { fetchTeamLookup, fetchUserProfile, setPlayground, updateMatchPath, updateUserProfile } from '../../redux/actions';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 import Routes from '../helpers/Routes';
 import ConfirmDialog from '../overlays/ConfirmDialog';
@@ -86,7 +86,7 @@ class App extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, snapshot });
     // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
-  
+
     // check for playground url
     const matchPlaygrounds = matchPath(this.props.location.pathname, {
       path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`,
@@ -111,8 +111,8 @@ class App extends Component {
       //x if (this.props.matchPath.params && historyMatch.params === matchPlaygrounds.params && this.props.matchPath.params.buildID > 0) {
       // if (this.props.matchPath.params && matchPlaygrounds.url !== historyMatch.url) {
       if (this.props.matchPath.params && ((this.props.matchPath.params !== prevProps.matchPath.params) || (this.props.matchPath.location.pathname !== prevProps.matchPath.location.pathname))) {
-        // const path = generatePath(`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`, { ...this.props.matchPath.params, 
-        const path = generatePath(`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`, { ...this.props.matchPath.params, 
+        // const path = generatePath(`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`, { ...this.props.matchPath.params,
+        const path = generatePath(`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`, { ...this.props.matchPath.params,
           ax       : undefined,
           comments : (this.props.matchPath.params.comments) ? 'comments' : undefined
         });
@@ -128,7 +128,7 @@ class App extends Component {
     // extract url props
     const { profile, team, playgrounds, playground } = this.props;
     const { pathname } = (matchPlaygrounds && Object.keys(matchPlaygrounds).length > 0) ? this.props.location : '';
-    
+
     const { modals } = this.state;
 
     // url changed
@@ -146,9 +146,9 @@ class App extends Component {
       //   delay    : 125,
       //   duration : 3333
       // });
-    
+
     } else {
-      
+
 
       // const pass = (prevProps.matchPath && this.props.matchPath) ? (Object.keys(this.props.matchPath.params).map((key)=> ((this.props.matchPath.params[key] === prevProps.matchPath.params[key]))).reduce((acc, val)=> (acc * val), 1) === 0) : false;
 
@@ -161,14 +161,14 @@ class App extends Component {
       // if ((this.props.matchPath === null && matchPlaygrounds !== null) || (this.props.matchPath && prevProps.matchPath && prevProps.matchPath.params !== this.props.matchPath.params)) {
       //x if ((this.props.matchPath === null) || (this.props.matchPath && prevProps.matchPath && pass)) {
         console.log('+=+=+=+=+=+=+=+]] UPDATE PATH PARAMS -->', { matchPlaygrounds, props : this.props.matchPath });
-        this.props.updateMatchPath({ 
+        this.props.updateMatchPath({
           matchPath : { ...matchPlaygrounds,
             location : { ...this.props.location,
               state : { referer : 'APP' }
             }
-          } 
+          }
         });
-      }  
+      }
 
 
       // dismiss login modal after profile
@@ -176,7 +176,7 @@ class App extends Component {
         this.onToggleModal(Modals.LOGIN, false);
       }
 
-      
+
       // if (products && team !== null && prevProps.team === null) {
       //   const modal = (team.members.length > 10 && team.type === 'free') || (team.members.length > 50 && team.type !== 'enterprise');
       //   if (modal && !prevState.modals.stripe && !modals.stripe) {
@@ -189,14 +189,14 @@ class App extends Component {
       if (matchPlaygrounds) {
 
         // not a team member, block access
-        if (profile && team && playground && team.id !== playground.teamID && !prevState.modals.noAccess && !modals.noAccess) {     
+        if (profile && team && playground && team.id !== playground.teamID && !prevState.modals.noAccess && !modals.noAccess) {
           this.onToggleModal(Modals.NO_ACCESS);
         }
 
         if (this.props.matchPath) {
           // const { teamSlug, projectSlug, buildID, deviceSlug, typeGroupSlug, componentID, comments, commentID } = this.props.matchPath.params || {};
           const { teamSlug, projectSlug, buildID, deviceSlug, typeGroupSlug } = this.props.matchPath.params || {};
-          
+
           if (!prevProps.team && team) {
             if (teamSlug !== team.slug || !projectSlug) {
               this.props.history.push(`${Pages.TEAM}/${team.slug}`);
@@ -210,7 +210,7 @@ class App extends Component {
           /*
           if (!this.props.location.pathname.includes('/ask') && playgrounds && (!buildID || !deviceSlug || !typeGroupSlug)) {
             const pg = [ ...playgrounds].shift();
-            this.props.updateMatchPath({ 
+            this.props.updateMatchPath({
               matchPath : { ...this.props.matchPath,
                 params : { ...this.props.matchPath.params,
                   projectSlug   : (projectSlug !== pg.projectSlug) ? pg.projectSlug : projectSlug,
@@ -218,7 +218,7 @@ class App extends Component {
                   deviceSlug    : (!deviceSlug) ? pg.device.slug : deviceSlug,
                   typeGroupSlug : (!typeGroupSlug) ? [ ...pg.typeGroups].pop().key : typeGroupSlug
                 }
-              } 
+              }
             });
           }
           */
@@ -251,7 +251,7 @@ class App extends Component {
   };
 
   handleDisableAccount = ()=> {
-    // 		console.log('%s.handleDisableAccount()', this.constructor.name);
+	  // console.log('%s.handleDisableAccount()', this.constructor.name);
 
     const { profile } = this.props;
 
@@ -476,8 +476,8 @@ class App extends Component {
 
     return (<div className="site-wrapper" data-theme={(darkThemed) ? 'dark' : 'light'} data-devin-matty={true}>
       {/* {(!matchPlaygrounds) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)} */}
-      <LeftNav onTeamClick={this.handleTeamClick} onProjectClick={this.handleProject} />
-      
+      <LeftNav />
+
 
 	    {/* <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND) && !location.pathname.includes(Pages.TEAM)) ? ' playground-page-wrapper' : ''}`}> */}
 	    {/* <div className="page-wrapper"> */}
@@ -587,8 +587,9 @@ const mapDispatchToProps = (dispatch)=> {
   return {
     fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
     fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
+    setPlayground     : (payload)=> dispatch(setPlayground(payload)),
     updateMatchPath   : (payload)=> dispatch(updateMatchPath(payload)),
-    updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
+    updateUserProfile : (payload)=> dispatch(updateUserProfile(payload))
   };
 };
 

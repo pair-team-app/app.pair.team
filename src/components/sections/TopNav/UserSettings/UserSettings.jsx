@@ -9,8 +9,6 @@ import { SettingsMenuItemTypes } from './';
 import './UserSettings.css';
 
 
-
-
 class UserSettings extends Component {
 	constructor(props) {
 		super(props);
@@ -44,14 +42,14 @@ class UserSettings extends Component {
 
 	handleItemClick = (itemType, event=null)=> {
 // 		console.log('%s.handleItemClick()', this.constructor.name, itemType, event);
-		
+
 		event.preventDefault();
 		this.setState({ itemType,
 			outro : true
 		}, ()=> {
 			if (itemType === SettingsMenuItemTypes.DOCS) {
 				trackOutbound(GITHUB_DOCS);
-			
+
 			} else if (itemType === SettingsMenuItemTypes.INSTALL) {
 				trackOutbound(NPM_DE_PLAYGROUND);
 			}

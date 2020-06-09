@@ -65,6 +65,11 @@
 	--playground-component-bg-color: 252, 252, 252; /* #fbfbfb */
 	--playground-panel-link-color: 153, 153, 153; /* #999999 */
 	--playground-panel-link-hover-color: var(--site-fg-color); /* #232323 */
+
+	--left-nav-tree-item-color: 153, 153, 153; /* #999999 */
+	--left-nav-tree-item-hover-color: 35, 35, 35; /* #232323 */
+	--left-nav-tree-item-selected-color: 35, 35, 35; /* #232323 */
+
 	--comment-marker-bg-color: 207, 247, 207;
 	--alt-list-bg-color: 247, 247, 247; /* #f7f7f7 */
 
@@ -92,7 +97,7 @@
 	--spacing-40: 40px;
 	--spacing-50: 50px;
 
-	
+
 	--orthodox-acc-size: 18px;
 	--orthodox-ico-size: 24px;
 
@@ -139,7 +144,7 @@ html, body {
   font-weight: var(--orthodox-font-weight);
   font-size: var(--orthodox-font-size);
 	color: rgba(var(--site-fg-color), 1.0);
-	
+
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 	scrollbar-color: transparent transparent;

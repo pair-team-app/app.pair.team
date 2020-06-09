@@ -126,8 +126,8 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { teams, team }));
 
   } else if (type === SET_PLAYGROUND) {
-    const { playground } = payload;
-    return (Object.assign({}, state, { playground }));
+    const { playgrounds, playground } = payload;
+    return (Object.assign({}, state, { playgrounds, playground }));
 
   } else if (type === SET_TYPE_GROUP) {
     const { typeGroup } = payload;
