@@ -10,7 +10,7 @@ import { trackOutbound } from '../../../utils/tracking';
 
 function TermsPage(props) {
 	const handleURL = (event, url)=> {
-// 		console.log('%s.handleURL()', this.constructor.name, event, url);
+// console.log('%s.handleURL()', this.constructor.name, event, url);
 
 		event.preventDefault();
 		trackOutbound(url);

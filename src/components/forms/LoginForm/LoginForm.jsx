@@ -25,7 +25,7 @@ class LoginForm extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+// console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		if (prevProps.email !== this.props.email) {
 			const { email } = this.props;
@@ -34,7 +34,7 @@ class LoginForm extends Component {
 	}
 
 	handlePassword = (event)=> {
-// 		console.log('%s.handlePassword()', this.constructor.name);
+// console.log('%s.handlePassword()', this.constructor.name);
 		event.preventDefault();
 
 		this.setState({
@@ -46,7 +46,7 @@ class LoginForm extends Component {
 	};
 
 	handleSubmit = (event)=> {
-// 		console.log('%s.handleSubmit()', this.constructor.name, event.target, this.state);
+// console.log('%s.handleSubmit()', this.constructor.name, event.target, this.state);
 		event.preventDefault();
 
 		trackEvent('button', 'login');
@@ -71,7 +71,7 @@ class LoginForm extends Component {
 			}).then((response)=> {
 				const { user } = response.data;
 				const status = parseInt(response.data.status, 16);
-// 				console.log('LOGIN', response.data, parseInt(response.data.status, 16), Bits.contains(status, 0x11), (status & 0x11));
+// console.log('LOGIN', response.data, parseInt(response.data.status, 16), Bits.contains(status, 0x11), (status & 0x11));
 
 				if (user) {
 					this.props.onLoggedIn(user);
@@ -97,7 +97,7 @@ class LoginForm extends Component {
 
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { email, password, passMsg } = this.state;
 		const { emailValid, passwordValid, validated } = this.state;

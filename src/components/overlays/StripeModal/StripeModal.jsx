@@ -25,7 +25,7 @@ const STRIPE_TEST_TOKEN = stripeCreds.test.publish;
 
 class StripeModal extends Component {
 	constructor(props) {
-// 		console.log('%s.CONSTRUCTOR()', 'StripeModal', props);
+// console.log('%s.CONSTRUCTOR()', 'StripeModal', props);
 
 		super(props);
 
@@ -40,7 +40,7 @@ class StripeModal extends Component {
 	}
 
 	handleComplete = ()=> {
-// 		console.log('%s.handleComplete()', this.constructor.name);
+// console.log('%s.handleComplete()', this.constructor.name);
 
 		this.setState({ outro : false }, ()=> {
 			const { purchase, outroURI } = this.state;
@@ -58,7 +58,7 @@ class StripeModal extends Component {
 	};
 
 	handleError = (error)=> {
-// 		console.log('%s.handleError()', this.constructor.name, error);
+// console.log('%s.handleError()', this.constructor.name, error);
 
 		this.props.onPopup({
 			type    : POPUP_TYPE_ERROR,
@@ -67,7 +67,7 @@ class StripeModal extends Component {
 	};
 
 	handlePage = (url)=> {
-// 		console.log('%s.handlePage()', this.constructor.name, url);
+// console.log('%s.handlePage()', this.constructor.name, url);
 
 		if (url.startsWith('/modal')) {
 			this.props.onModal(`/${URIs.lastComponent(url)}`);
@@ -81,7 +81,7 @@ class StripeModal extends Component {
 	};
 
 	handleSubmit = ({ cardHolder, token })=> {
-// 		console.log('%s.handleSubmit()', this.constructor.name, cardHolder, token, this.state);
+// console.log('%s.handleSubmit()', this.constructor.name, cardHolder, token, this.state);
 
 		this.setState({ submitting : true }, ()=> {
 			const { profile, payload } = this.props;
@@ -96,7 +96,7 @@ class StripeModal extends Component {
 					product_ids : productIDs
 				}
 			}).then((response)=> {
-// 				console.log('MAKE_PURCHASE', response.data);
+// console.log('MAKE_PURCHASE', response.data);
 				const { purchase, error } = response.data;
 				trackEvent('purchase', (error) ? 'error' : 'success');
 
@@ -125,7 +125,7 @@ class StripeModal extends Component {
 	};
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { team } = this.props;
 		const { outro, submitting, product } = this.state;

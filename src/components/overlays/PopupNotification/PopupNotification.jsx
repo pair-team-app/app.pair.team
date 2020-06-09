@@ -18,7 +18,7 @@ const OUTRO_DURATION = 1000 * (2/3);
 
 class PopupNotification extends Component {
 	constructor(props) {
-// 		console.log('%s.constructor()', this.constructor.name, props);
+// console.log('%s.constructor()', this.constructor.name, props);
 
 		super(props);
 		this.state = {
@@ -28,7 +28,7 @@ class PopupNotification extends Component {
 	}
 
 	componentDidMount() {
-// 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state, this.timeline, this.wrapper);
+// console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state, this.timeline, this.wrapper);
 
 		const { payload, onComplete } = this.props;
 		const { position } = Object.assign({}, { position : POPUP_POSITION_TOPMOST }, payload);
@@ -38,7 +38,7 @@ class PopupNotification extends Component {
 			duration : ORTHODOX_DURATION
 		}, payload);
 
-// 		console.log('%s.componentDidMount()', this.constructor.name, { position, top, delay, duration });
+// console.log('%s.componentDidMount()', this.constructor.name, { position, top, delay, duration });
 
 		this.timeline = new TimelineMax();
 		this.timeline.addLabel(START_LBL, '0').from(this.wrapper, (INTRO_DURATION * 0.001), {
@@ -58,7 +58,7 @@ class PopupNotification extends Component {
 	}
 
 	componentWillUnmount() {
-// 		console.log('%s.componentWillUnmount()', this.constructor.name, this.props, this.state, this.timeline, this.wrapper);
+// console.log('%s.componentWillUnmount()', this.constructor.name, this.props, this.state, this.timeline, this.wrapper);
 		this.timeline = null;
 	}
 
@@ -97,23 +97,23 @@ class PopupNotification extends Component {
 
 
 // 	componentDidCatch(error, errorInfo) {
-// 		console.log('%s.componentDidCatch()', this.constructor.name, error, errorInfo, this.props, this.state, this.timeline, this.wrapper);
+// console.log('%s.componentDidCatch()', this.constructor.name, error, errorInfo, this.props, this.state, this.timeline, this.wrapper);
 // 	}
 // 	componentWillMount() {
-// 		console.log('%s.componentWillMount()', this.constructor.name, this.props, this.state, this.timeline, this.wrapper);
+// console.log('%s.componentWillMount()', this.constructor.name, this.props, this.state, this.timeline, this.wrapper);
 // 	}
 // 	componentWillUpdate(nextProps, nextState, nextContext) {
-// 		console.log('%s.componentWillUpdate()', this.constructor.name, this.props, nextProps, this.state, nextState, nextContext, this.timeline, this.wrapper);
+// console.log('%s.componentWillUpdate()', this.constructor.name, this.props, nextProps, this.state, nextState, nextContext, this.timeline, this.wrapper);
 // 	}
 // 	componentWillReceiveProps(nextProps, nextContext) {
-// 		console.log('%s.componentWillReceiveProps()', this.constructor.name, this.props, nextProps, this.state, nextContext, this.timeline, this.wrapper);
+// console.log('%s.componentWillReceiveProps()', this.constructor.name, this.props, nextProps, this.state, nextContext, this.timeline, this.wrapper);
 // 	}
 // 	shouldComponentUpdate(nextProps, nextState, nextContext) {
-// 		console.log('%s.shouldComponentUpdate()', this.constructor.name, this.props, nextProps, this.state, nextState, nextContext, this.timeline, this.wrapper);
+// console.log('%s.shouldComponentUpdate()', this.constructor.name, this.props, nextProps, this.state, nextState, nextContext, this.timeline, this.wrapper);
 // 		return (true);
 // 	}
 // 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot, this.timeline, this.wrapper);
+// console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot, this.timeline, this.wrapper);
 // 	}
 
 }

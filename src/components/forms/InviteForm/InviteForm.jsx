@@ -22,7 +22,7 @@ class InviteForm extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+// console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 	}
 
 	handleSubmit = (event)=> {
@@ -96,7 +96,7 @@ class InviteForm extends Component {
 
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { profile, team } = this.props;
 		const { emails, emailsValid, validations } = this.state;

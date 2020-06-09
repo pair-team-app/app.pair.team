@@ -4,7 +4,7 @@ import './DummyForm.css';
 
 
 function DummyForm(props) {
-// 	console.log('DummyForm()', props);
+// console.log('DummyForm()', props);
 
 	return (<div className='dummy-form'>
 		<input name='email' style={{ display : 'none' }} />

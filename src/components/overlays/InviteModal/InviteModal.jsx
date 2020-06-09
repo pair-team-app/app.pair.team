@@ -28,7 +28,7 @@ class InviteModal extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+// console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { profile } = this.props;
 		if (!prevProps.profile && profile) {
@@ -36,7 +36,7 @@ class InviteModal extends Component {
 	}
 
 	handleComplete = ()=> {
-// 		console.log('%s.handleComplete()', this.constructor.name);
+// console.log('%s.handleComplete()', this.constructor.name);
 
 		const { outroURI } = this.state;
 		this.setState({ outro : false }, ()=> {
@@ -51,7 +51,7 @@ class InviteModal extends Component {
 	};
 
 	handleError = (error)=> {
-// 		console.log('%s.handleError()', this.constructor.name, error);
+// console.log('%s.handleError()', this.constructor.name, error);
 
 		this.props.onPopup({
 			type    : POPUP_TYPE_ERROR,
@@ -60,7 +60,7 @@ class InviteModal extends Component {
 	};
 
 	handleLoggedIn = (profile)=> {
-// 		console.log('%s.handleLoggedIn()', this.constructor.name, profile, this.props);
+// console.log('%s.handleLoggedIn()', this.constructor.name, profile, this.props);
 
 		trackEvent('user', 'login');
     this.setState({ outro : true }, ()=> {
@@ -71,7 +71,7 @@ class InviteModal extends Component {
 	};
 
 	handleModal = (uri)=> {
-// 		console.log('%s.handleModal()', this.constructor.name, uri);
+// console.log('%s.handleModal()', this.constructor.name, uri);
 		this.setState({
 			outro    : true,
 			outroURI : `/modal${uri}`
@@ -80,7 +80,7 @@ class InviteModal extends Component {
 
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
     const { profile, team } = this.props;
 		const { outro } = this.state;

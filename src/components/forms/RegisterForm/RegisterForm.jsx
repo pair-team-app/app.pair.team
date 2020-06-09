@@ -26,7 +26,7 @@ class RegisterForm extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+// console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		if (prevProps.email !== this.props.email) {
 			const { email } = this.props;
@@ -35,7 +35,7 @@ class RegisterForm extends Component {
 	}
 
 	handlePassword = ()=> {
-// 		console.log('%s.handlePassword()', this.constructor.name);
+// console.log('%s.handlePassword()', this.constructor.name);
 
 		this.setState({
 			password      : '',
@@ -46,8 +46,8 @@ class RegisterForm extends Component {
 	};
 
 	handleSubmit = (event)=> {
-// 		console.log('%s.handleSubmit()', this.constructor.name, event.target);
-// 		console.log('%s.handleSubmit()', this.constructor.name, event.target);
+// console.log('%s.handleSubmit()', this.constructor.name, event.target);
+// console.log('%s.handleSubmit()', this.constructor.name, event.target);
 		event.preventDefault();
 
 		const { inviteID, email, password, password2 } = this.state;
@@ -74,9 +74,9 @@ class RegisterForm extends Component {
 					avatar   : makeAvatar(email)
 				}
 			}).then((response)=> {
-// 				console.log('REGISTER', response.data);
+// console.log('REGISTER', response.data);
 				const status = parseInt(response.data.status, 16);
-// 				console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));
+// console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));
 
 				if (status === 0x11) {
 					this.props.onRegistered(response.data.user);
@@ -100,7 +100,7 @@ class RegisterForm extends Component {
 
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { email, password, password2, passMsg } = this.state;
 		const { emailValid, passwordValid, validated } = this.state;

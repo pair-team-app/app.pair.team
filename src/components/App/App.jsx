@@ -1,12 +1,13 @@
+
+import React, { Component } from 'react';
+import './App.css';
+
 import axios from 'axios';
 import { Browsers, DateTimes } from 'lang-js-utils';
-import React, { Component } from 'react';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { generatePath, matchPath, withRouter } from 'react-router-dom';
-import { API_ENDPT_URL, GITHUB_APP_AUTH, Modals, Pages } from '../../consts/uris';
-import { fetchTeamLookup, fetchUserProfile, setPlayground, updateMatchPath, updateUserProfile } from '../../redux/actions';
-import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
+
 import Routes from '../helpers/Routes';
 import ConfirmDialog from '../overlays/ConfirmDialog';
 import CookiesOverlay from '../overlays/CookiesOverlay';
@@ -19,7 +20,10 @@ import StripeModal from '../overlays/StripeModal';
 import BottomNav from '../sections/BottomNav';
 import LeftNav from '../sections/LeftNav';
 import TopNav from '../sections/TopNav';
-import './App.css';
+
+import { API_ENDPT_URL, Modals, Pages } from '../../consts/uris';
+import { fetchTeamLookup, fetchUserProfile, setPlayground, updateMatchPath, updateUserProfile } from '../../redux/actions';
+import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 
 class App extends Component {
@@ -27,13 +31,11 @@ class App extends Component {
     super(props);
 
     this.state = {
-      authID    : 0,
       darkTheme : false,
       popup     : null,
       modals    : {
         cookies  : cookie.load('cookies') << 0 === 0,
         disable  : false,
-        github   : false,
         invite   : false,
         login    : false,
         network  : !Browsers.isOnline(),
@@ -44,9 +46,6 @@ class App extends Component {
         payload  : null
       }
     };
-
-    this.githubWindow = null;
-    this.authInterval = null;
 
     initTracker(cookie.load('user_id'), window.location.hostname);
   }
@@ -77,14 +76,14 @@ class App extends Component {
 
     window.onpopstate = (event)=> {
       event.preventDefault();
-      // 			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
+      // console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot);
+    // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot);
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, snapshot });
-    // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
+    // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
 
     // check for playground url
@@ -228,24 +227,13 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    // 		console.log('%s.componentWillUnmount()', this.constructor.name);
-
-    if (this.authInterval) {
-      clearInterval(this.authInterval);
-    }
-
-    if (this.githubWindow) {
-      this.githubWindow.close();
-    }
-
-    this.authInterval = null;
-    this.githubWindow = null;
+    // console.log('%s.componentWillUnmount()', this.constructor.name);
 
     window.onpopstate = null;
   }
 
   handleCookies = ()=> {
-    // 		console.log('%s.handleCookies()', this.constructor.name);
+    // console.log('%s.handleCookies()', this.constructor.name);
     this.onToggleModal(Modals.COOKIES, false);
     cookie.save('cookies', '1', { path: '/', sameSite: false });
   };
@@ -261,7 +249,7 @@ class App extends Component {
         payload: { user_id: profile.id }
       })
       .then((response)=> {
-        // 			console.log('DISABLE_ACCOUNT', response.data);
+        // console.log('DISABLE_ACCOUNT', response.data);
 
         trackEvent('user', 'delete-account');
         this.props.updateUserProfile(null);
@@ -270,74 +258,8 @@ class App extends Component {
       .catch((error)=> {});
   };
 
-  handleGithubAuth = ()=> {
-    // 		console.log('%s.handleGithubAuth()', this.constructor.name);
-
-    const code = DateTimes.epoch(true);
-    axios
-      .post(API_ENDPT_URL, {
-        action: 'GITHUB_AUTH',
-        payload: { code }
-      })
-      .then((response)=> {
-        // 			console.log('GITHUB_AUTH', response.data);
-        const authID = response.data.auth_id << 0;
-        this.setState({ authID }, ()=> {
-          if (
-            !this.githubWindow ||
-            this.githubWindow.closed ||
-            this.githubWindow.closed === undefined
-          ) {
-            clearInterval(this.authInterval);
-            this.authInterval = null;
-            this.githubWindow = null;
-          }
-
-          const size = {
-            width: Math.min(460, window.screen.width - 20),
-            height: Math.min(820, window.screen.height - 25)
-          };
-
-          this.githubWindow = window.open(
-            GITHUB_APP_AUTH.replace('__{EPOCH}__', code),
-            '',
-            `titlebar=no, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${
-              size.width
-            }, height=${size.height}, top=${((window.screen.height -
-              size.height) *
-              0.5) <<
-              0}, left=${((window.screen.width - size.width) * 0.5) << 0}`
-          );
-          this.authInterval = setInterval(()=> {
-            this.onAuthInterval();
-          }, 1000);
-        });
-      })
-      .catch((error)=> {});
-  };
-
-  handleGitHubAuthSynced = (profile, register = true)=> {
-    // 		console.log('%s.handleGitHubAuthSynced()', this.constructor.name, profile, register);
-
-    this.props.updateUserProfile(profile);
-
-    axios
-      .post(API_ENDPT_URL, {
-        action: 'REGISTER',
-        payload: {
-          username: profile.email,
-          email: profile.email,
-          type: 'free_user'
-        }
-      })
-      .then((response)=> {
-        // 			console.log('REGISTER', response.data);
-      })
-      .catch((error)=> {});
-  };
-
   handleLogout = (page = null, modal = null)=> {
-    // 		console.log('%s.handleLogout()', this.constructor.name, this.constructor.name, page, modal);
+    // console.log('%s.handleLogout()', this.constructor.name, this.constructor.name, page, modal);
     trackEvent('user', 'sign-out');
 
     this.props.updateUserProfile(null);
@@ -352,12 +274,12 @@ class App extends Component {
   };
 
   handlePopup = (payload)=> {
-    // 		console.log('%s.handlePopup()', this.constructor.name, payload);
+    // console.log('%s.handlePopup()', this.constructor.name, payload);
     this.setState({ popup : payload });
   };
 
   handlePurchaseSubmitted = (purchase)=> {
-    // 		console.log('%s.handlePurchaseSubmitted()', this.constructor.name, purchase);
+    // console.log('%s.handlePurchaseSubmitted()', this.constructor.name, purchase);
 
     this.onToggleModal(Modals.STRIPE, false);
 
@@ -367,55 +289,13 @@ class App extends Component {
   };
 
   handleThemeToggle = (event)=> {
-    // 		console.log('%s.handleThemeToggle()', this.constructor.name, event);
+    // console.log('%s.handleThemeToggle()', this.constructor.name, event);
     this.setState({ darkTheme : !this.state.darkTheme });
   };
 
   handleUpdateUser = (profile)=> {
     console.log('%s.handleUpdateUser()', this.constructor.name, profile);
     this.props.updateUserProfile(profile);
-  };
-
-  onAuthInterval = ()=> {
-    // 		console.log('%s.onAuthInterval()', this.constructor.name);
-
-    if (
-      !this.githubWindow ||
-      this.githubWindow.closed ||
-      this.githubWindow.closed === undefined
-    ) {
-      if (this.authInterval) {
-        clearInterval(this.authInterval);
-      }
-
-      if (this.githubWindow) {
-        this.githubWindow.close();
-      }
-
-      this.authInterval = null;
-      this.githubWindow = null;
-    } else {
-      const { authID } = this.state;
-
-      axios
-        .post(API_ENDPT_URL, {
-          action: 'GITHUB_AUTH_CHECK',
-          payload: { authID }
-        })
-        .then((response)=> {
-          // 				console.log('GITHUB_AUTH_CHECK', response.data);
-          const { user } = response.data;
-          if (user) {
-            trackEvent('github', 'success');
-            clearInterval(this.authInterval);
-            this.authInterval = null;
-            this.githubWindow.close();
-            this.githubWindow = null;
-            this.handleGitHubAuthSynced(user);
-          }
-        })
-        .catch((error)=> {});
-    }
   };
 
   onToggleModal = (uri, show = true, payload = null)=> {
@@ -425,7 +305,6 @@ class App extends Component {
     if (show) {
       this.setState({
         modals : { ...modals, payload,
-          github   : false,
           disable  : uri === Modals.DISABLE,
           login    : uri === Modals.LOGIN,
           invite   : uri === Modals.INVITE,
@@ -441,7 +320,6 @@ class App extends Component {
         modals : { ...modals,
           cookies  : uri === Modals.COOKIES ? false : modals.cookies,
           disable  : uri === Modals.DISABLE ? false : modals.disable,
-          github   : uri === Modals.GITHUB ? false : modals.github,
           invite   : uri === Modals.INVITE ? false : modals.invite,
           login    : uri === Modals.LOGIN ? false : modals.login,
           network  : uri === Modals.NETWORK ? false : modals.network,

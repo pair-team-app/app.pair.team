@@ -24,8 +24,8 @@ class TopNav extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
+// console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+// console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
 
  		const { popover } = this.props;
  		if (popover && !prevProps.popover && !this.state.popover) {
@@ -34,7 +34,7 @@ class TopNav extends Component {
 	}
 
 	componentWillUnmount() {
-// 		console.log('%s.componentWillUnmount()', this.constructor.name);
+// console.log('%s.componentWillUnmount()', this.constructor.name);
 	}
 
 
@@ -50,7 +50,7 @@ class TopNav extends Component {
 	};
 
 	handlePopoverClose = ()=> {
-//		console.log('%s.handlePopoverClose()', this.constructor.name);
+// console.log('%s.handlePopoverClose()', this.constructor.name);
 
 		this.props.onSharePopoverClose();
 		this.setState({ popover : false });
@@ -99,7 +99,7 @@ class TopNav extends Component {
 
 
 		const handleURL = (event, url)=> {
-// 		console.log('%s.handleURL()', this.constructor.name, event, url);
+// console.log('%s.handleURL()', this.constructor.name, event, url);
 
       event.preventDefault();
       trackOutbound(url);

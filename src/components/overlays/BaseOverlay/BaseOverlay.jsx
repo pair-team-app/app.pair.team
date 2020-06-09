@@ -26,7 +26,7 @@ class BaseOverlay extends Component {
   }
 
   componentDidMount() {
-    // 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+    // console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
     const { tracking } = this.props;
     trackOverlay(`open${tracking}`);
@@ -34,8 +34,8 @@ class BaseOverlay extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state);
-    // 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : prevProps.outro, props : this.props.outro });
+    // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state);
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : prevProps.outro, props : this.props.outro });
 
     // 		const { completed } = this.state;
     if (prevProps.outro !== this.props.outro && this.props.outro) {
@@ -51,7 +51,7 @@ class BaseOverlay extends Component {
   }
 
   componentWillUnmount() {
-    // 		console.log('%s.componentWillUnmount()', this.constructor.name);
+    // console.log('%s.componentWillUnmount()', this.constructor.name);
     const { tracking } = this.props;
     trackOverlay(`close${tracking}`);
 
@@ -66,7 +66,7 @@ class BaseOverlay extends Component {
   }
 
   handleClose = ()=> {
-    // 		console.log('%s.handleClose()', this.constructor.name, this.props);
+    // console.log('%s.handleClose()', this.constructor.name, this.props);
     this.onOutro();
   };
 
@@ -115,7 +115,7 @@ class BaseOverlay extends Component {
   };
 
   render() {
-    // 		console.log('%s.render()', this.constructor.name, this.props, this.state, this.timeline, (this.wrapper) ? this.wrapper.currentTarget : null);
+    // console.log('%s.render()', this.constructor.name, this.props, this.state, this.timeline, (this.wrapper) ? this.wrapper.currentTarget : null);
 
     if (this.wrapper && this.timeline && this.timeline.time === 0) {
       this.timeline.seek(0);

@@ -10,7 +10,7 @@ import { API_ENDPT_URL, Pages } from '../consts/uris';
 
 
 export function getRoutePaths(pathname) {
-// 	console.log('_-_-_-_-_', 'getRoutePaths()', pathname);
+// console.log('_-_-_-_-_', 'getRoutePaths()', pathname);
 
 	const homePage = matchPath(pathname, { path : Pages.HOME });
 	const featuresPage = matchPath(pathname, { path : Pages.FEATURES });
@@ -19,7 +19,7 @@ export function getRoutePaths(pathname) {
 	const termsPage = matchPath(pathname, { path : Pages.TERMS });
 	const playgroundPage = matchPath(pathname, { path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?` });
 
-// 	console.log(':::::::::::::', 'getRoutePaths', pathname, { homePage, featuresPage, pricingPage, privacyPage, termsPage, playgroundPage });
+// console.log(':::::::::::::', 'getRoutePaths', pathname, { homePage, featuresPage, pricingPage, privacyPage, termsPage, playgroundPage });
 
 	if (homePage && homePage.isExact) {
 		return (homePage);
@@ -66,7 +66,7 @@ export function createGist(token, filename, contents, description, visible, call
 	};
 
 	// new Octokit({ auth : token }).gists.create(payload).then((result)=> {
-	// 	console.log('CREATE_GIST ->', result);
+	// console.log('CREATE_GIST ->', result);
 
 	// 	if (callback) {
 	// 		callback(result.data);
@@ -86,7 +86,7 @@ export function editGist(token, gistID, filename, contents, description, visible
 	};
 
 	// new Octokit({ auth : token }).gists.update(payload).then((result)=> {
-	// 	console.log('EDIT_GIST ->', result);
+	// console.log('EDIT_GIST ->', result);
 
 	// 	if (callback) {
 	// 		callback(result.data);

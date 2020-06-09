@@ -32,7 +32,7 @@ class StripeForm extends Component {
 	}
 
 	handleCancel = (event)=> {
-// 		console.log('%s.handleCancel()', this.constructor.name, event);
+// console.log('%s.handleCancel()', this.constructor.name, event);
 
 		event.preventDefault();
 		trackEvent('button', 'purchase-cancel');
@@ -41,12 +41,12 @@ class StripeForm extends Component {
 	};
 
 	handleChange = (target)=> {
-// 		console.log('%s.handleChange()', this.constructor.name, target);
+// console.log('%s.handleChange()', this.constructor.name, target);
 		this.setState({ [target.name] : target.value });
 	};
 
 	handleFocus = (event)=> {
-// 		console.log('%s.handleFocus()', this.constructor.name, event);
+// console.log('%s.handleFocus()', this.constructor.name, event);
 		this.setState({
 			cardHolder      : '',
 			cardHolderValid : true
@@ -54,7 +54,7 @@ class StripeForm extends Component {
 	};
 
 	handleSubmit = (event)=> {
-// 		console.log('%s.handleSubmit()', this.constructor.name, event);
+// console.log('%s.handleSubmit()', this.constructor.name, event);
 
 		event.preventDefault();
 		trackEvent('button', 'purchase-submit');
@@ -77,7 +77,7 @@ class StripeForm extends Component {
 
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { submitting } = this.props;
 		const { cardHolder } = this.state;

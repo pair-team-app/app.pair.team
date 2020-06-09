@@ -19,7 +19,7 @@ class CookiesOverlay extends Component {
 	}
 
 	handleClick = (ok)=> {
-// 		console.log('%s.handleClick()', this.constructor.name, ok);
+// console.log('%s.handleClick()', this.constructor.name, ok);
 
 		if (ok) {
 			this.props.onConfirmed();

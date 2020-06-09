@@ -41,7 +41,7 @@ class UserSettings extends Component {
 	};
 
 	handleItemClick = (itemType, event=null)=> {
-// 		console.log('%s.handleItemClick()', this.constructor.name, itemType, event);
+// console.log('%s.handleItemClick()', this.constructor.name, itemType, event);
 
 		event.preventDefault();
 		this.setState({ itemType,
@@ -57,7 +57,7 @@ class UserSettings extends Component {
 	};
 
 	handleShowPopover = ()=> {
-// 		console.log('%s.handleShowPopover()', this.constructor.name);
+// console.log('%s.handleShowPopover()', this.constructor.name);
 		this.setState({
 			popover : true,
 			outro   : false
@@ -65,7 +65,7 @@ class UserSettings extends Component {
 	};
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { profile } = this.props;
 		const { avatar } = (profile || { avatar : USER_DEFAULT_AVATAR });
@@ -89,7 +89,7 @@ class UserSettings extends Component {
 
 
 const UserSettingsPopover = (props)=> {
-// 	console.log('UserSettingsPopover()', props);
+// console.log('UserSettingsPopover()', props);
 
 	const { position, outro } = props;
 	const payload = {

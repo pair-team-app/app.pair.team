@@ -158,7 +158,7 @@ const BaseCommentContent = (props)=> {
 	const { author, types, content, uri, timestamp } = comment;
 
 	// const onURIClick = ()=> {
-	// 	console.log('BaseComment.BaseCommentContent.onURIClick()', { props });
+	// console.log('BaseComment.BaseCommentContent.onURIClick()', { props });
 	// 	window.location.href = window.location.href.replace(/\/app\/.*$/, uri)
 	// };
 

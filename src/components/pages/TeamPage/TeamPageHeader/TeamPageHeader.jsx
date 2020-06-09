@@ -20,8 +20,8 @@ class TeamPageHeader extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
+// console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+// console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
 
  		const { popover } = this.props;
  		if (popover && !prevProps.popover && !this.state.popover) {
@@ -30,24 +30,24 @@ class TeamPageHeader extends Component {
 	}
 
 	componentWillUnmount() {
-// 		console.log('%s.componentWillUnmount()', this.constructor.name);
+// console.log('%s.componentWillUnmount()', this.constructor.name);
 	}
 
 	handlePopoverClose = ()=> {
-//		console.log('%s.handlePopoverClose()', this.constructor.name);
+// console.log('%s.handlePopoverClose()', this.constructor.name);
 
 		this.props.onSharePopoverClose();
 		this.setState({ popover : false });
 	};
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { darkThemed, sort } = this.props;
 		const { popover } = this.state;
 
 		const handleURL = (event, url)=> {
-// 		console.log('%s.handleURL()', this.constructor.name, event, url);
+// console.log('%s.handleURL()', this.constructor.name, event, url);
 
       event.preventDefault();
       trackOutbound(url);

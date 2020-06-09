@@ -16,11 +16,11 @@ class ConfirmDialog extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
  console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state);
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : prevProps.outro, props : this.props.outro });
+// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : prevProps.outro, props : this.props.outro });
   }
 
 	handleClick = (ok)=> {
-// 		console.log('%s.handleClick()', this.constructor.name, ok);
+// console.log('%s.handleClick()', this.constructor.name, ok);
 
 		this.setState({ ok,
 			outro : true
@@ -28,7 +28,7 @@ class ConfirmDialog extends Component {
 	};
 
 	handleComplete = ()=> {
-// 		console.log('%s.handleComplete()', this.constructor.name);
+// console.log('%s.handleComplete()', this.constructor.name);
 
 		const { onConfirmed, onComplete } = this.props;
 		const { ok } = this.state;
