@@ -8,7 +8,7 @@ import cookie from 'react-cookies';
 import { connect } from 'react-redux';
 import { generatePath, matchPath, withRouter } from 'react-router-dom';
 
-import Routes from '../helpers/Routes';
+import Routes, { RoutePaths } from '../helpers/Routes';
 import ConfirmDialog from '../overlays/ConfirmDialog';
 import CookiesOverlay from '../overlays/CookiesOverlay';
 import InviteModal from '../overlays/InviteModal';
@@ -59,8 +59,8 @@ class App extends Component {
     // console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('M'));
 
     const { profile, location } = this.props;
-    // if (!profile && location.pathname.startsWith(Pages.PLAYGROUND)) {
-    if (!profile && location.pathname.startsWith(Pages.PLAYGROUND) && cookie.load('user_id') === '0') {
+    // if (!profile && location.pathname.startsWith(Pages.PROJECT)) {
+    if (!profile && location.pathname.startsWith(Pages.PROJECT) && cookie.load('user_id') === '0') {
       this.onToggleModal(Modals.LOGIN);
     }
 
@@ -88,13 +88,13 @@ class App extends Component {
 
     // check for playground url
     const matchPlaygrounds = matchPath(this.props.location.pathname, {
-      path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`,
+      path : RoutePaths.PROJECT,
       exact : false,
       strict: false
     }) || {};
 
     const historyMatch = matchPath(this.props.location.pathname, {
-      path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`,
+      path : RoutePaths.PROJECT,
       exact : false,
       strict: false
     });
@@ -110,8 +110,8 @@ class App extends Component {
       //x if (this.props.matchPath.params && historyMatch.params === matchPlaygrounds.params && this.props.matchPath.params.buildID > 0) {
       // if (this.props.matchPath.params && matchPlaygrounds.url !== historyMatch.url) {
       if (this.props.matchPath.params && ((this.props.matchPath.params !== prevProps.matchPath.params) || (this.props.matchPath.location.pathname !== prevProps.matchPath.location.pathname))) {
-        // const path = generatePath(`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`, { ...this.props.matchPath.params,
-        const path = generatePath(`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`, { ...this.props.matchPath.params,
+        // const path = generatePath(RoutePaths.PROJECT, { ...this.props.matchPath.params,
+        const path = generatePath(RoutePaths.PROJECT, { ...this.props.matchPath.params,
           ax       : undefined,
           comments : (this.props.matchPath.params.comments) ? 'comments' : undefined
         });
@@ -125,9 +125,9 @@ class App extends Component {
     // console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds });
 
     // extract url props
-    const { profile, team, playgrounds, playground } = this.props;
-    const { pathname } = (matchPlaygrounds && Object.keys(matchPlaygrounds).length > 0) ? this.props.location : '';
-
+    const { location, profile, team, playgrounds, playground } = this.props;
+    // const { pathname } = (matchPlaygrounds && Object.keys(matchPlaygrounds).length > 0) ? this.props.location : '';
+    const { pathname } = location;
     const { modals } = this.state;
 
     // url changed
@@ -335,7 +335,7 @@ class App extends Component {
 
   render() {
     const matchPlaygrounds = matchPath(this.props.location.pathname, {
-      path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`,
+      path : RoutePaths.PROJECT,
       exact : false,
       strict: false
     });
@@ -357,7 +357,7 @@ class App extends Component {
       <LeftNav />
 
 
-	    {/* <div className={`page-wrapper${(location.pathname.startsWith(Pages.PLAYGROUND) && !location.pathname.includes(Pages.TEAM)) ? ' playground-page-wrapper' : ''}`}> */}
+	    {/* <div className={`page-wrapper${(location.pathname.startsWith(Pages.PROJECT) && !location.pathname.includes(Pages.TEAM)) ? ' playground-page-wrapper' : ''}`}> */}
 	    {/* <div className="page-wrapper"> */}
 	    <div className="page-wrapper">
         <TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />

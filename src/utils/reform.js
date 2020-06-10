@@ -10,7 +10,7 @@ export const reformComment = (comment, uri, overwrite={})=> {
 
   const { id, position, content, author, state, votes, types, replies, added } = comment;
 
-  const reformed = { ...comment,
+  const reformed = { ...comment, uri,
     id       : id << 0,
     position : (position) ? (typeof position === 'string' && position.charAt(0) === '{') ? JSON.parse(position) : (position || { x : 0, y : 0 }) : { x : 0, y : 0 },
     content  : (content || null),
@@ -20,7 +20,7 @@ export const reformComment = (comment, uri, overwrite={})=> {
     })) : [],
     types     : (types) ? types.split(',') : [],
     score     : (votes) ? votes.reduce((acc, vote)=> (acc + (vote.score << 0)), 0) : 0,
-    uri       : `${uri}/comments/${id}`,
+    // uri       : `${uri}/${id}`,
     selected  : false,
     epoch     : (added) ? (moment.utc(added).valueOf() * 0.001) << 0 : 0,
     timestamp : (added) ? moment(added).add(moment().utcOffset() << 0, 'minute') : moment.utc(),
@@ -62,7 +62,7 @@ export const reformComponent = (component, uri, componentTypes=null, overwrite={
     // sizes         : { ...sizes, f : { width : width * (1 / scale), height : height * (1 / scale) }, o : { width : width * scale, height : height * scale } },
     sizes         : { ...sizes },
     images        : Object.keys(sizes).map((key)=> (`${image_url}_${key}.png`)),
-    comments      : (comments) ? comments.map((comment)=> reformComment(comment, `${uri}/${id}`)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0))) : [],
+    comments      : (comments) ? comments.map((comment)=> reformComment(comment, `${uri}/${id}/comments`)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0))) : [],
     uri           : `${uri}/${id}`,
     selected      : false,
     processed     : ((html && accessibility) !== null),
@@ -93,7 +93,7 @@ export const reformPlayground = (playground, devices=null, componentTypes=null, 
 
   const projectSlug = Strings.slugifyURI(title);
   const device = (devices.find(({ id })=> (id === (device_id << 0))) || null);
-  const uri = `/app/${team.slug}/${projectSlug}/${build_id}/${device.slug}/views`;
+  const uri = `/${Pages.PROJECT}/${projectSlug}/${build_id}/${device.slug}/views`;
 
   const reformed = { ...playground, projectSlug, uri,
     teamID      : team_id << 0,
@@ -144,7 +144,7 @@ export const reformTeam = (team, overwrite={})=> {
   }));
 
   const rules = team.rules.map((rule)=> (reformRule(rule, members)));
-  const comments = team.comments.map((comment)=> (reformComment(comment, `${Pages.ASK}/${slug}/ask/comments`)));
+  const comments = team.comments.map((comment)=> (reformComment(comment, `${Pages.TEAM}/${slug}/comments`)));
 
 
   const reformed = { ...team, rules, members, comments,

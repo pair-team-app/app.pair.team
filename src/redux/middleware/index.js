@@ -2,11 +2,13 @@
 
 // import moment from 'moment';
 import cookie from 'react-cookies';
+
+import { RoutePaths } from '../../components/helpers/Routes';
+import { fetchBuildPlaygrounds, fetchTeamBuilds, fetchTeamComments, fetchTeamLookup, updateMatchPath } from '../actions';
 import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_POSTFIX, LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { Pages } from '../../consts/uris';
 import { reformComment, reformPlayground, reformTeam } from '../../utils/reform';
-import { fetchBuildPlaygrounds, fetchTeamBuilds, fetchTeamComments, fetchTeamLookup, updateMatchPath } from '../actions';
 
 
 
@@ -80,12 +82,9 @@ export function onMiddleware(store) {
         // dispatch(fetchTeamComments({ team : payload.team }));
       // }
 
-      if (payload.team) {
-        dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
-      }
 
-
-      // dispatch(fetchTeamBuilds({ team, buildID, deviceSlug }));
+      dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
+      dispatch(fetchTeamComments({ team : payload.team }));
 
     } else if (type === TEAM_LOGO_LOADED) {
       const { logo } = payload;
@@ -155,7 +154,7 @@ export function onMiddleware(store) {
 
     } else if (type === TEAM_COMMENTS_LOADED) {
       const { team } = prevState;
-      const comments = payload.comments.map((comment, i)=> (reformComment(comment, `${Pages.ASK}/${team.slug}/ask`)));
+      const comments = payload.comments.map((comment, i)=> (reformComment(comment, `${Pages.TEAM}/${team.slug}/comments`)));
 
       payload.team = (team) ? { ...team, comments } : null;
       payload.comments = [ ...prevState.comments, ...comments];
@@ -261,7 +260,7 @@ export function onMiddleware(store) {
       const { team, component } = prevState;
 
       const prevComment = prevState.comments.find(({ id })=> (id === (payload.comment.id << 0)));
-      payload.comment = (prevComment) ? reformComment(payload.comment, prevComment.uri) : reformComment(payload.comment, `${Pages.ASK}/${team.slug}/ask`);
+      payload.comment = (prevComment) ? reformComment(payload.comment, prevComment.uri) : reformComment(payload.comment, `${Pages.TEAM}/${team.slug}/comments`);
       payload.comments = (prevComment) ? prevState.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment)) : [ ...prevState.comments, payload.comment];
       payload.component = (component) ? { ...component,
         comments : [ ...component.comments, payload.comment].sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)))
@@ -307,7 +306,7 @@ export function onMiddleware(store) {
 
       let { comment } = payload
       if (comment.type === 'team') {
-        comment = reformComment(comment, `${Pages.ASK}/${team.slug}/ask/comments`);
+        comment = reformComment(comment, `${Pages.TEAM}/${team.slug}/comments`);
 
       } else if (comment.type === 'component') {
         let projectSlug = null;
@@ -351,17 +350,17 @@ export function onMiddleware(store) {
 
         //
 
-        comment = reformComment(comment, `${Pages.PLAYGROUND}/${team.slug}/${playground.projectSlug}/${playground.buildID}/${playground.device.slug}}/${typeGroup.slug}/${component.id}/comments`);
+        comment = reformComment(comment, `${Pages.PROJECT}/${playground.projectSlug}/${playground.buildID}/${playground.device.slug}/${typeGroup.slug}/${component.id}/comments`);
       }
 
 
 
       // const matchURI = (payload.comment.type === 'component') ? matchPath(comment.uri, {
-      //   path   : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`,
+      //   path   : RoutePaths.PROJECT,
       //   exact  : false,
       //   strict : false
       // }) : matchPath(comment.uri, {
-      //   path   : `${Pages.ASK}/:teamSlug([a-z-]+)?/ask/(comments)?/:commentID([0-9]+)?`,
+      //   path   : RoutePaths.TEAM,
       //   exact  : false,
       //   strict : false
       // });

@@ -63,7 +63,7 @@ class TopNav extends Component {
     const { matchPath, playground, typeGroup, component, comment, location } = this.props;
     const { teamSlug, buildID, projectSlug, deviceSlug, typeGroupSlug, componentID, commentID } = matchPath.params;
 
-		let path = `${Pages.PLAYGROUND}/${teamSlug}/${projectSlug}/${buildID}`;
+		let path = `${Pages.PROJECT}/${teamSlug}/${projectSlug}/${buildID}`;
 
 		const segments = [
 			{ type : BreadcrumbTypes.DEVICE, title : deviceSlug, path : deviceSlug, payload : playground },
@@ -126,11 +126,11 @@ class TopNav extends Component {
 
 const TopNavBreadcrumb = (props)=> {
 //   console.log('TopNavBreadcrumb()', props);
-  
+
   const { ind, tot, segment } = props;
   const { type, title, payload } = segment;
-  
-  return ((ind < tot) 
+
+  return ((ind < tot)
 		? (<><div className="top-nav-breadcrumb" onClick={(event)=> (ind > 0 && ind < tot) ? props.onClick({ event, type, payload }) : null}>{title}</div>&nbsp;&gt;&nbsp;</>)
 		: (<div className="top-nav-breadcrumb">{title}</div>)
 	);

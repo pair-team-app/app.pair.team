@@ -1,10 +1,10 @@
 
-// import Octokit from '@octokit/rest';
 import axios from 'axios';
-// import JSZip from 'jszip';
 import { Arrays, Strings } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
+
+import { RoutePaths } from '../components/helpers/Routes';
 import { API_ENDPT_URL, Pages } from '../consts/uris';
 
 
@@ -17,7 +17,7 @@ export function getRoutePaths(pathname) {
 	const pricingPage = matchPath(pathname, { path : Pages.PRICING });
 	const privacyPage = matchPath(pathname, { path : Pages.PRIVACY });
 	const termsPage = matchPath(pathname, { path : Pages.TERMS });
-	const playgroundPage = matchPath(pathname, { path : `${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?` });
+	const playgroundPage = matchPath(pathname, { path : RoutePaths.PROJECT });
 
 // console.log(':::::::::::::', 'getRoutePaths', pathname, { homePage, featuresPage, pricingPage, privacyPage, termsPage, playgroundPage });
 
@@ -137,7 +137,7 @@ export function makeAvatar(name, size=32) {
     // '#bdc3c7',
     // '#7f8c8d'
   ]);
-	
+
 	const fgColor = (0xffffff ^ parseInt(bgColor.replace('#', ''), 16)).toString(16);
   const canvas = window.document.createElement('canvas');
   const context = canvas.getContext('2d');

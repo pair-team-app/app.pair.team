@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 // import { Route, Switch, withRouter } from 'react-router-dom';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
+import { RoutePaths } from './';
 import TeamPage from '../../pages/TeamPage';
 import { Pages } from '../../../consts/uris';
 
@@ -32,7 +33,7 @@ class Routes extends Component {
       <Route exact path={Pages.HOME}><Redirect to={Pages.TEAM} /></Route>
 
       <Route
-        path={`${Pages.TEAM}/:teamSlug([a-z-]+)?/(comments)?/:commentID([0-9]+)?`}
+        path={RoutePaths.TEAM}
         render={({ props })=> <TeamPage
           onLogout={this.props.onLogout}
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
@@ -41,16 +42,14 @@ class Routes extends Component {
       } />
 
       {/* <Route
-        path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:deviceSlug([a-z0-9-]+)?/:typeGroupSlug([a-z-]+)?/:componentID([0-9]+)?/:ax(accessibility)?/:comments(comments)?/:commentID([0-9]+)?`}
-        // path={Pages.PLAYGROUND}
+        path={RoutePaths.PROJECT}
         render={({ props })=> <PlaygroundPage
           onLogout={this.props.onLogout}
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
           onPopup={this.props.onPopup} { ...props} />
       } /> */}
 
-      {/* <Route path={Pages.WILDCARD}><Status404Page /></Route> */}
-      <Route path={Pages.WILDCARD}><Redirect to={Pages.team} /></Route>
+      <Route path={Pages.WILDCARD}><Redirect to={Pages.TEAM} /></Route>
     </Switch>);
   }
 }

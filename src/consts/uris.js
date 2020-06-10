@@ -17,14 +17,11 @@ export const Modals = {
 };
 
 export const Pages = {
-	ASK        : '/app',
-	DOCS       : '/docs',
 	HOME       : '/',
-	FEATURES   : '/features',
 	LEGAL      : '/legal',
 	PLAYGROUND : '/app',
-	PRICING    : '/pricing',
 	PRIVACY    : '/privacy',
+	PROJECT    : '/project',
 	TEAM       : '/team',
 	TERMS      : '/terms',
 	WILDCARD   : '*'
