@@ -7,7 +7,7 @@ import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
-import BaseContentExpander from '../../iterables/BaseContentExpander';
+import ContentExpander from '../../iterables/ContentExpander';
 import { setPlayground, setTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -139,7 +139,7 @@ const LeftNavBuild = (props)=> {
   const { build } = props;
 	const { id, title, expanded, selected, renders } = build;
 
-	return (<BaseContentExpander
+	return (<ContentExpander
     className="left-nav-build"
     expanded={expanded}
 		title={<div className="title-wrapper" onClick={()=> props.onBuildClick(build)} data-id={id} data-expanded={expanded} data-selected={selected}>

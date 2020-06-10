@@ -13,36 +13,21 @@ export function getRoutePaths(pathname) {
 // console.log('_-_-_-_-_', 'getRoutePaths()', pathname);
 
 	const homePage = matchPath(pathname, { path : Pages.HOME });
-	const featuresPage = matchPath(pathname, { path : Pages.FEATURES });
-	const pricingPage = matchPath(pathname, { path : Pages.PRICING });
-	const privacyPage = matchPath(pathname, { path : Pages.PRIVACY });
-	const termsPage = matchPath(pathname, { path : Pages.TERMS });
-	const playgroundPage = matchPath(pathname, { path : RoutePaths.PROJECT });
+	const teamPage = matchPath(pathname, { path : RoutePaths.TEAM });
+	const projectPage = matchPath(pathname, { path : RoutePaths.PROJECT });
 
-// console.log(':::::::::::::', 'getRoutePaths', pathname, { homePage, featuresPage, pricingPage, privacyPage, termsPage, playgroundPage });
+// console.log(':::::::::::::', 'getRoutePaths', pathname, { homePage, teamPage, projectPage });
 
 	if (homePage && homePage.isExact) {
 		return (homePage);
 	}
 
-	if (featuresPage && featuresPage.isExact) {
-		return (featuresPage);
+	if (teamPage && teamPage.isExact) {
+		return (teamPage);
 	}
 
-	if (pricingPage && pricingPage.isExact) {
-		return (pricingPage);
-	}
-
-	if (privacyPage && privacyPage.isExact) {
-		return (privacyPage);
-	}
-
-	if (termsPage && termsPage.isExact) {
-		return (termsPage);
-	}
-
-	if (playgroundPage && playgroundPage.isExact) {
-		return (playgroundPage);
+	if (projectPage && projectPage.isExact) {
+		return (projectPage);
 	}
 }
 
