@@ -215,25 +215,13 @@ export function fetchUserProfile(payload=null) {
     }).then((response)=> {
       console.log(API_RESPONSE_PREFIX, 'USER_PROFILE', response.data);
 
-      const { user } = response.data;
-
-
-      if (user) {
-        Objects.renameKey(user, 'github_auth', 'github');
-        if (user.github) {
-          Objects.renameKey(response.data.user.github, 'access_token', 'accessToken');
-        }
-      }
-
-      const { id, type, github } = response.data.user;
+      const { id, type } = response.data.user;
       dispatch({
         type    : USER_PROFILE_LOADED,
         payload : {
           userProfile : { ...response.data.user,
             id     : id << 0,
-            status : 0x00,
-            github : (github) ? { ...github, id: github.id << 0 } : github,
-            paid   : type.includes('paid')
+            status : 0x00
           }
         }
       });

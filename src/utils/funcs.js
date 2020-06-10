@@ -55,45 +55,6 @@ export function buildInspectorURL(upload, prefix='/specs', suffix='') {
 	return (`${window.location.origin}${buildInspectorPath(upload, prefix, suffix)}`);
 }
 
-export function createGist(token, filename, contents, description, visible, callback=null) {
-	// const payload = { description,
-	// 	public : visible,
-	// 	files  : {
-	// 		[filename] : {
-	// 			content : contents
-	// 		}
-	// 	}
-	// };
-
-	// new Octokit({ auth : token }).gists.create(payload).then((result)=> {
-	// console.log('CREATE_GIST ->', result);
-
-	// 	if (callback) {
-	// 		callback(result.data);
-	// 	}
-	// });
-}
-
-export function editGist(token, gistID, filename, contents, description, visible, callback=null) {
-	// const payload = { gistID, description,
-	// 	gist_id : gistID,
-	// 	public  : visible,
-	// 	files   : {
-	// 		[filename] : {
-	// 			content : contents
-	// 		}
-	// 	}
-	// };
-
-	// new Octokit({ auth : token }).gists.update(payload).then((result)=> {
-	// console.log('EDIT_GIST ->', result);
-
-	// 	if (callback) {
-	// 		callback(result.data);
-	// 	}
-	// });
-}
-
 export function isUserLoggedIn(confirmed=true) {
 // 	return ((confirmed) ? cookie.load('user_id') !== '0' : typeof cookie.load('user_id') !== 'undefined');
 	return ((confirmed) ? ((cookie.load('user_id') << 0) !== 0) : (typeof cookie.load('user_id') !== 'undefined') << 0 !== 0);

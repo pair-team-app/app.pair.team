@@ -29,13 +29,6 @@ class HomePage extends Component {
 		};
 	}
 
-	handleGitHub = ()=> {
-// console.log('%s.handleGitHub()', this.constructor.name);
-		trackEvent('button', 'github');
-
-		this.props.onModal(Modals.GITHUB);
-	};
-
 	handleTextfieldChange = (event)=> {
 // console.log('%s.handleTextfieldChange()', this.constructor.name, event.target.value, this.state.email, this.state.emailValid, this.state.emailReset);
 		const email = event.target.value;
