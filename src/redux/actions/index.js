@@ -470,21 +470,10 @@ export function updateResizeBounds(payload) {
 export function updateUserProfile(payload, force=true) {
   logFormat('updateUserProfile()', null, payload, force);
 
-  const userProfile = payload;
-
   if (payload) {
-    Objects.renameKey(payload, 'github_auth', 'github');
-
-    if (payload.github) {
-      Objects.renameKey(payload.github, 'access_token', 'accessToken');
-    }
-
-    const { id, github } = payload;
+    const { id } = payload;
     payload = { ...payload,
-      id     : id << 0,
-      github : (github) ? { ...github,
-        id : github.id << 0
-      } : github
+      id : id << 0
     };
 
     if (payload.hasOwnProperty('password') && payload.password === '') {
@@ -511,24 +500,17 @@ export function updateUserProfile(payload, force=true) {
         console.log(API_RESPONSE_PREFIX, 'UPDATE_USER_PROFILE', response.data);
 
         const status = parseInt(response.data.status, 16);
-        Objects.renameKey(response.data.user, 'github_auth', 'github');
-        if (response.data.user.github) {
-          Objects.renameKey(response.data.user.github, 'access_token', 'accessToken');
-        }
-
         if (status === 0x00) {
         }
 
-        const { id, username, email, type, github } = response.data.user;
+        const { id, username, email } = response.data.user;
         dispatch({
           type    : (status === 0x00) ? USER_PROFILE_UPDATED : USER_PROFILE_ERROR,
           payload : { ...response.data.user,
             status   : status,
             id       : id << 0,
             username : (Bits.contains(status, 0x01)) ? 'Username Already in Use' : username,
-            email    : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email,
-            github   : (github) ? { ...github, id: github.id << 0 } : github,
-            paid     : type.includes('paid')
+            email    : (Bits.contains(status, 0x10)) ? 'Email Already in Use' : email
           }
         });
       }).catch((error)=> {});

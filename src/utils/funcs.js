@@ -56,14 +56,14 @@ export function buildInspectorURL(upload, prefix='/specs', suffix='') {
 }
 
 export function createGist(token, filename, contents, description, visible, callback=null) {
-	const payload = { description,
-		public : visible,
-		files  : {
-			[filename] : {
-				content : contents
-			}
-		}
-	};
+	// const payload = { description,
+	// 	public : visible,
+	// 	files  : {
+	// 		[filename] : {
+	// 			content : contents
+	// 		}
+	// 	}
+	// };
 
 	// new Octokit({ auth : token }).gists.create(payload).then((result)=> {
 	// console.log('CREATE_GIST ->', result);
@@ -75,15 +75,15 @@ export function createGist(token, filename, contents, description, visible, call
 }
 
 export function editGist(token, gistID, filename, contents, description, visible, callback=null) {
-	const payload = { gistID, description,
-		gist_id : gistID,
-		public  : visible,
-		files   : {
-			[filename] : {
-				content : contents
-			}
-		}
-	};
+	// const payload = { gistID, description,
+	// 	gist_id : gistID,
+	// 	public  : visible,
+	// 	files   : {
+	// 		[filename] : {
+	// 			content : contents
+	// 		}
+	// 	}
+	// };
 
 	// new Octokit({ auth : token }).gists.update(payload).then((result)=> {
 	// console.log('EDIT_GIST ->', result);

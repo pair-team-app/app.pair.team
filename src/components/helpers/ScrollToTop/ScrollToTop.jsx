@@ -19,9 +19,9 @@ class ScrollToTop extends Component {
     // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps : prevProps, prevState : prevState, props : this.props, state : this.state });
 
     const { pathname } = this.props.location;
-    //if (pathname && pathname !== prevProps.location.pathname) {
+    if (pathname && pathname !== prevProps.location.pathname) {
       this.onScroll();
-    //}
+    }
   }
 
   onScroll = ()=> {
