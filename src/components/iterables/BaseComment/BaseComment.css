@@ -87,8 +87,8 @@
 }
 
 .base-comment-header .icon > *:hover {
-	/* opacity: 1.0; */
-	/* filter: brightness(110%); */
+	opacity: 1.0;
+	filter: brightness(100%);
 }
 
 .base-comment .comment-body {
@@ -187,7 +187,7 @@
 	cursor: pointer;
 }
 
-.base-comment-replies-wrapper {
+.base-comment-replies {
 	margin-left: var(--spacing-10);
 	padding-right: var(--spacing-20);
 	width: 100%;
@@ -203,12 +203,13 @@
 	display: flex;
 	flex-wrap: nowrap;
 	width: 100%;
+	text-align: left;
 }
 
 .base-comment-reply .header > * {
 	margin: auto;
 	flex: 1 0 0;
-	/* border: 1px dashed var(--matty-royall); */
+	border: 1px dashed var(--matty-royall);
 }
 
 

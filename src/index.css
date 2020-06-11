@@ -23,6 +23,7 @@
 	--site-bg-color: 255, 255, 255; /* #ffffff */
 	/* --site-bg-color: 80, 80, 80; #fcfcfc */
 	--site-fg-color: 35, 35, 35; /* #232323 */
+	--site-fg-lite-color: 153, 153, 153; /* #232323 */
 	--site-hilite-color: 0, 90, 217; /* #0067ff */
 	--disabled-fg-color: 204, 204, 204; /* #cccccc */
 	--invalid-bg-color: 255, 240, 240; /* #fff0f0 */
@@ -526,7 +527,26 @@ ul > li:not(:last-child) {
 }
 
 
-.site-wrapper[data-devin-matty="true"] body {
-	background-color: rgba(255, 0, 255, 0.33);
+.site-wrapper[data-dev-matty="true"] {
+	background-color: rgba(0, 0, 0, 0.125);
 	/*filter: none;*/
+}
+
+
+.site-wrapper[data-dev-matty="true"] .debug-window {
+	width: 320px;
+	padding: 4px;
+	background-color: rgba(88, 88, 128, 0.125);
+	border: 1px dotted #666666;
+	font-family: Consolas, Monaco, monospace;
+	font-size: 12px;
+	text-align: left;
+	z-index: 9999;
+}
+
+
+.site-wrapper[data-dev-matty="true"] .debug-window[data-pos="fixed"] {
+	position: fixed;
+	top: 450px;
+	right: 20px;
 }

@@ -1,19 +1,19 @@
 
+import React, { Component } from 'react';
+import './BaseComment.css';
+import { VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT, VOTE_ACTION_UP } from './index';
+
 import 'emoji-mart/css/emoji-mart.css';
 import { Strings } from 'lang-js-utils';
-import React, { Component } from 'react';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+
 import { COMMENT_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
 import { USER_DEFAULT_AVATAR } from '../../../consts/uris';
 import { makeComment, makeVote, modifyComment } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
-import './BaseComment.css';
-import { VOTE_ACTION_DOWN, VOTE_ACTION_RETRACT, VOTE_ACTION_UP } from './index';
-
-
 
 class BaseComment extends Component {
   constructor(props) {
@@ -73,13 +73,13 @@ class BaseComment extends Component {
 		const { comment } = this.props;
 		const { replyContent } = this.state;
 
-		trackEvent('button', 'reply-comment');
+		trackEvent('button', 'reply-comment', comment.id);
 
     event.preventDefault();
     event.stopPropagation();
 
 
-		this.props.makeComment({ comment, 
+		this.props.makeComment({ comment,
 			content  : replyContent,
 			position : comment.position
 		});
@@ -98,12 +98,12 @@ class BaseComment extends Component {
 	render() {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-		const { comment } = this.props;
+		const { profile, comment } = this.props;
 		const { replyContent } = this.state;
 
 		const contentProps = { ...this.props, replyContent};
 
-		return (<div className="base-comment" data-id={comment.id} data-type={comment.type} data-votable={comment.votable} data-selected={comment.selected}>
+		return (<div className="base-comment" data-id={comment.id} data-type={comment.type} data-author={comment.author.id === profile.id} data-votable={comment.votable} data-selected={comment.selected}>
 			<BaseCommentHeader { ...this.props} onDelete={this.handleDeleteComment} />
 			<div className="comment-body">
 				{(comment.votable) && (<BaseCommentVote { ...this.props } onVote={this.handleVote} />)}
@@ -119,7 +119,7 @@ const BaseCommentVote = (props=> {
 	// console.log('BaseComment.BaseCommentVote()', { props });
 
 	const { profile, comment, loading, vote } = props;
-  return (<div className="base-comment-vote" data-id={comment.id} data-author={(comment.author.id === profile.id)} data-loading={loading} data-disabled={(comment.author.id === profile.id || loading)} data-voted={vote !== null}>
+  return (<div className="base-comment-vote" data-id={comment.id} data-loading={loading} data-disabled={(comment.author.id === profile.id || loading)} data-voted={vote !== null}>
 		<FontAwesome name="sort-up" className="vote-arrow vote-arrow-up" data-selected={vote && vote.score === 1} onClick={()=> ((comment.author.id === profile.id) || (vote && vote.score === 1)) ? null : props.onVote({ comment, action : VOTE_ACTION_UP })} />
 		<div className="score" onClick={()=> (comment.author.id !== profile.id && vote) ? props.onVote({ comment, action : VOTE_ACTION_RETRACT }) : null}>{comment.score}</div>
 		<FontAwesome name="sort-down" className="vote-arrow vote-arrow-dn" data-selected={vote && vote.score === -1} onClick={()=> ((comment.author.id === profile.id) || (vote && vote.score === -1)) ? null : props.onVote({ comment, action : VOTE_ACTION_DOWN })} />
@@ -167,9 +167,8 @@ const BaseCommentContent = (props)=> {
 		{(content) && (<div className="content" dangerouslySetInnerHTML={{ __html : content.replace(author.username, `<span class="txt-bold">${author.username}</span>`) }} />)}
 		{/* {(types.indexOf('component') > -1) && (<div className="uri" onClick={onURIClick}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</div>)} */}
 		{(types.indexOf('component') > -1) && (<NavLink className="uri" to={uri}>{Strings.truncate(window.location.href.replace(/\/app\/.*$/, uri), 45)}</NavLink>)}
-		<BaseCommentReplies { ...props } onDelete={props.onDeleteReply} />
+		{(comment.replies.length > 0) && (<BaseCommentReplies { ...props } onDelete={props.onDeleteReply} />)}
 		{(comment.state !== 'closed') && (<form className="reply-form">
-				{/* <input type="text" placeholder="Reply to this…" value={replyContent} onChange={props.onTextChange} autoComplete="new-password" /> */}
 				<input type="text" placeholder="Reply to this…" value={replyContent} onChange={props.onTextChange} autoComplete="new-password" />
 				{/* <Picker set="apple" onSelect={this.handleEmoji} onClick={this.handleEmoji} perline={9} emojiSize={24} native={true} sheetSize={20} showPreview={true} showSkinTones={true} title="Pick your emoji…" emoji="point_up" style={{ position : 'relative', bottom : '20px', right : '20px' }} /> */}
 			</form>)}
@@ -188,19 +187,17 @@ const BaseCommentReplies = (props)=> {
 		props.onDelete(reply);
 	};
 
-	return((comment.replies.length > 0) ? (<div className="base-comment-replies">
-		{(comment.replies.map((reply, i)=> {
-			return (<div className="base-comment-reply" key={i}>
-				<div className="header">
-					<div className="timestamp" dangerouslySetInnerHTML={{ __html : reply.timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
-					<div className="link-wrapper">
-						{(profile.id === reply.author.id) && (<div className="link" onClick={(event)=> handleDelete(event, reply)}>Delete</div>)}
-					</div>
+	return(<div className="base-comment-replies">
+		{(comment.replies.map((reply, i)=> (<div key={i} className="base-comment-reply" data-id={reply.id}>
+			<div className="header">
+				<div className="timestamp" dangerouslySetInnerHTML={{ __html : reply.timestamp.format(COMMENT_TIMESTAMP).replace(/(\d{1,2})(\w{2}) @/, (match, p1, p2)=> (`${p1}<sup>${p2}</sup> @`)) }} />
+				<div className="link-wrapper">
+					{(profile.id === reply.author.id) && (<div className="link" onClick={(event)=> handleDelete(event, reply)}>Delete</div>)}
 				</div>
-				{(reply.content) && (<div className="content" dangerouslySetInnerHTML={{ __html : reply.content.replace(reply.author.username, `<span class="txt-bold">${reply.author.username}</span>`) }} />)}
-			</div>);
-		}))}
-	</div>) : <></>);
+			</div>
+			{(reply.content) && (<div className="content" dangerouslySetInnerHTML={{ __html : reply.content.replace(reply.author.username, `<span class="txt-bold">${reply.author.username}</span>`) }} />)}
+		</div>)))}
+	</div>);
 };
 
 

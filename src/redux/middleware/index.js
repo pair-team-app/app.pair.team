@@ -154,11 +154,18 @@ export function onMiddleware(store) {
 
     } else if (type === TEAM_COMMENTS_LOADED) {
       const { team } = prevState;
-      const comments = payload.comments.map((comment, i)=> (reformComment(comment, `${Pages.TEAM}/${team.slug}/comments`)));
+      const verbose = payload.comments.reduce((acc, val)=> (acc + (val << 0)), 0);
 
-      payload.team = (team) ? { ...team, comments } : null;
-      payload.comments = [ ...prevState.comments, ...comments];
+      if (payload.comments.reduce((acc, val)=> (acc + (val << 0)), 0) !== 0) {
+        // dispatch(fetchTeamComments({ team, verbose : true }));
+        return (action(dispatch(fetchTeamComments({ team, verbose : true })), store.getState));
 
+      } else {
+        const comments = payload.comments.map((comment, i)=> (reformComment(comment, `${Pages.TEAM}/${team.slug}/comments`)));
+
+        payload.team = (team) ? { ...team, comments } : null;
+        payload.comments = [ ...prevState.comments, ...comments].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));
+      }
     } else if (type === BUILD_PLAYGROUNDS_LOADED) {
       const { devices, componentTypes, team, matchPath } = prevState;
       const { params } = matchPath || {};
@@ -396,6 +403,7 @@ export function onMiddleware(store) {
       const buildID = 0;
       const deviceSlug = "";
       dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
+      dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
 
     } else if (type === SET_PLAYGROUND) {
       const { playground } = payload;

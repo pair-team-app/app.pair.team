@@ -3,6 +3,10 @@ import { Strings } from 'lang-js-utils';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import Gluejar from '@charliewilco/gluejar';
+import Clipboard from 'react-clipboard';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
 import { Modals } from '../../../consts/uris';
@@ -33,7 +37,7 @@ class TeamPage extends Component {
   }
 
   componentDidMount() {
-    // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
     const { playground } = this.props;
     if (playground) {
@@ -44,7 +48,7 @@ class TeamPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { team, comments } = this.props;
     const { teamDescription, fetching, topSort } = this.state;
@@ -204,7 +208,7 @@ class TeamPage extends Component {
   };
 
   render() {
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, comments } = this.props;
     const { commentContent, teamDescription, ruleContent, ruleInput, fetching, share, sort, topSort } = this.state;

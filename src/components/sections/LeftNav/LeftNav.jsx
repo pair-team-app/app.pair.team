@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 import ContentExpander from '../../iterables/ContentExpander';
+import { Pages } from '../../../consts/uris';
 import { setPlayground, setTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -94,11 +95,11 @@ class LeftNav extends Component {
   render() {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { teams } = this.props;
+    const { teams, team } = this.props;
     const { builds } = this.state;
 
     return (<div className="left-nav">
-      <LeftNavHeader />
+      <LeftNavHeader { ...this.props } />
       {(!teams) ? (<div className="loading">Loading…</div>)
       : (<div className="tree-wrapper">
           <div className="teams-wrapper">
@@ -159,15 +160,15 @@ const LeftNavBuild = (props)=> {
 
 
 const LeftNavHeader = (props)=> {
-  // console.log('LeftNavHeader()', { props });
+  console.log('LeftNavHeader()', { props });
 
-  //const { team } = props;
-  //const { logo, title } = team;
+  const { team } = props;
+  const { logo, title } = team || { logo : null, title : '' };
   return (<div className="left-nav-header">
-    <NavLink to={`/app/\${team.slug}/ask`} className="title">
+    {(team) && (<NavLink to={`${Pages.TEAM}/${team.slug}`} className="title">
       <img src={null} alt="Logo" />
-      {'{title}'}
-    </NavLink>
+      {title}
+    </NavLink>)}
   </div>);
 };
 
@@ -183,6 +184,7 @@ const LeftNavTeam = (props)=> {
 
 const mapStateToProps = (state, ownProps)=> {
   return {
+    team        : state.team,
     teams       : state.teams,
     playgrounds : state.playgrounds,
     playground  : state.playground

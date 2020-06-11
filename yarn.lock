@@ -1036,6 +1036,11 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@charliewilco/gluejar@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@charliewilco/gluejar/-/gluejar-1.0.0.tgz#f228e8130d4e23401c119f32e27e5353c544c58e"
+  integrity sha512-tVvd/7VPK/3bzqYRxyrbZpG25Nf5jnJs5fUTEp00FKDa4Tk3nucju4pbmdX+h4TsZ9bJZc00iPCdoOiv6pOPOg==
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.3.tgz#099139eaec7ebf07a27c1786a3ff64f39464d2ef"
@@ -2104,6 +2109,11 @@ atob@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
+
+attr-accept@^2.0.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/attr-accept/-/attr-accept-2.1.0.tgz#a231a854385d36ff7a99647bb77b33c8a5175aee"
+  integrity sha512-sLzVM3zCCmmDtDNhI0i96k6PUztkotSOXqE4kDGQt/6iDi5M+H0srjeF+QC6jN581l4X/Zq3Zu/tgcErEssavg==
 
 autoprefixer@^9.6.1:
   version "9.7.4"
@@ -4848,6 +4858,13 @@ file-loader@4.3.0:
   dependencies:
     loader-utils "^1.2.3"
     schema-utils "^2.5.0"
+
+file-selector@^0.1.12:
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-0.1.12.tgz#fe726547be219a787a9dcc640575a04a032b1fd0"
+  integrity sha512-Kx7RTzxyQipHuiqyZGf+Nz4vY9R1XGxuQl/hLoJwq+J4avk/9wxxgZyHKtbyIPJmbD4A66DWGYfyykWNpcYutQ==
+  dependencies:
+    tslib "^1.9.0"
 
 file-uri-to-path@1.0.0:
   version "1.0.0"
@@ -9805,7 +9822,7 @@ promzard@^0.3.0:
   dependencies:
     read "1"
 
-prop-types@15.7.2, prop-types@15.x, prop-types@^15.5.6, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@15.7.2, prop-types@15.x, prop-types@^15.5.0, prop-types@^15.5.6, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -10017,6 +10034,13 @@ react-app-polyfill@^1.0.5:
     regenerator-runtime "^0.13.3"
     whatwg-fetch "^3.0.0"
 
+react-clipboard@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/react-clipboard/-/react-clipboard-1.3.2.tgz#7cbdfbe94dbf493c0e2506e3f348ee1cd14deb25"
+  integrity sha1-fL376U2/STwOJQbj80juHNFN6yU=
+  dependencies:
+    prop-types "^15.5.0"
+
 react-contexify@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/react-contexify/-/react-contexify-4.1.1.tgz#f5eba1ad82a923c033c91d0abcea1da0a71ebaa1"
@@ -10047,6 +10071,13 @@ react-cookies@^0.1.1:
   dependencies:
     cookie "^0.3.1"
     object-assign "^4.1.1"
+
+react-copy-text@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-copy-text/-/react-copy-text-1.0.1.tgz#735d286dd908979e1b71c3806d9d63b507deb507"
+  integrity sha512-89IL1u1AVNeEh/XrRQh5N+Vza6SVQuOs0TrtDI89s6s/ExvmM30k7/Ir9qnHA4OutBKCEhGMuRKY7lpYDrOP8Q==
+  dependencies:
+    prop-types "^15.6.0"
 
 react-copy-to-clipboard@^5.0.1:
   version "5.0.2"
@@ -10125,6 +10156,15 @@ react-draggable@^4.0.3:
     classnames "^2.2.5"
     prop-types "^15.6.0"
 
+react-dropzone@^11.0.1:
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-11.0.1.tgz#c8b6a6ed02576e5365af2e2a3f3b31df31feb213"
+  integrity sha512-x/6wqRHaR8jsrNiu/boVMIPYuoxb83Vyfv77hO7/3ZRn8Pr+KH5onsCsB8MLBa3zdJl410C5FXPUINbu16XIzw==
+  dependencies:
+    attr-accept "^2.0.0"
+    file-selector "^0.1.12"
+    prop-types "^15.7.2"
+
 react-error-overlay@^6.0.4:
   version "6.0.4"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.4.tgz#0d165d6d27488e660bc08e57bdabaad741366f7a"
@@ -10141,6 +10181,13 @@ react-ga@^2.5.7:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-2.7.0.tgz#24328f157f31e8cffbf4de74a3396536679d8d7c"
   integrity sha512-AjC7UOZMvygrWTc2hKxTDvlMXEtbmA0IgJjmkhgmQQ3RkXrWR11xEagLGFGaNyaPnmg24oaIiaNPnEoftUhfXA==
+
+react-gluejar@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-gluejar/-/react-gluejar-1.0.0.tgz#ff47d483811c5e2c58849becfb50f064d8fb12b3"
+  integrity sha1-/0fUg4EcXixYhJvs+1DwZNj7ErM=
+  dependencies:
+    react "^16.3.2"
 
 react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.2, react-is@^16.8.4:
   version "16.12.0"
@@ -10275,6 +10322,15 @@ react-stripe-elements@^6.0.1:
   integrity sha512-WVKTunSgsrkm8Tv1+BEehfYrA2CHdlk01ocmbcECliPb1EDybaoUCx2MR212ptRHyitMrHF+ahUTewjaX98kcQ==
   dependencies:
     prop-types "15.7.2"
+
+react@^16.3.2:
+  version "16.13.1"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
+  integrity sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
 
 react@^16.8.6:
   version "16.12.0"

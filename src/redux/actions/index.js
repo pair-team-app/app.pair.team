@@ -120,13 +120,14 @@ export function fetchTeamBuilds(payload=null) {
 export function fetchTeamComments(payload=null) {
   return (dispatch, getState)=> {
     // const { team } = getState();
-    const { team } = payload;
+    const { team, verbose } = payload;
 
     logFormat('fetchTeamComments()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
     axios.post(API_ENDPT_URL, {
       action  : 'TEAM_COMMENTS',
       payload : {
-        team_id : team.id
+        team_id : team.id,
+        verbose : (verbose || false)
       }
     }).then((response)=> {
       console.log(API_RESPONSE_PREFIX, 'TEAM_COMMENTS', response.data);

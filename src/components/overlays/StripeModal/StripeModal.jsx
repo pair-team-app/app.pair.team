@@ -14,7 +14,7 @@ import StripeForm from '../../forms/StripeForm/StripeForm';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
 import { API_ENDPT_URL, Modals, Pages } from '../../../consts/uris';
 import { trackEvent } from '../../../utils/tracking';
-import stripeCreds from '../../../assets/json/stripe-creds';
+import stripeCreds from '../../../assets/json/configs/stripe-creds';
 import { fetchTeamLookup } from '../../../redux/actions';
 
 
@@ -34,7 +34,7 @@ class StripeModal extends Component {
 			outro      : false,
 			outroURI   : null,
 			purchase   : null,
-			product    : this.props.products.pop(), 
+			product    : this.props.products.pop(),
 			productIDs : Strings.repeat(this.props.products.pop().id, this.props.team.members.length, ',')
 		};
 	}
