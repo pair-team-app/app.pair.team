@@ -24,7 +24,7 @@ import { SettingsMenuItemTypes } from '../../sections/TopNav/UserSettings';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
 import { Modals, API_ENDPT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
-import { fetchTeamComments, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
+import { fetchTeamComments, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup, toggleCreateTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import btnClear from '../../../assets/images/ui/btn-clear.svg';
 import btnCode from '../../../assets/images/ui/btn-code.svg';
@@ -52,8 +52,7 @@ class TeamPage extends Component {
       files:          [  ],
       richComment     : false,
       url             : null,
-      imageComment    : null,
-      createForm      : false
+      imageComment    : null
     };
   }
 
@@ -336,8 +335,8 @@ class TeamPage extends Component {
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { profile, team, comments } = this.props;
-    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, share, sort, topSort, files, richComment, imageComment, codeComment, createTeam } = this.state;
+    const { profile, team, comments, createTeam } = this.props;
+    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, share, sort, topSort, files, richComment, imageComment, codeComment } = this.state;
 
 
     const cdnHeaders = {
@@ -471,7 +470,7 @@ class TeamPage extends Component {
             </div>
           </div>
         </div>) : (<div>
-          <CreateTeamForm />
+          <CreateTeamForm onCancel={()=> this.props.toggleCreateTeam(false)} />
         </div>)}
       </>)}
     </BasePage>);
@@ -520,13 +519,15 @@ const mapDispatchToProps = (dispatch)=> {
     modifyTeam        : (payload)=> dispatch(modifyTeam(payload)),
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),
     setTypeGroup      : (payload)=> dispatch(setTypeGroup(payload)),
-    setComment        : (payload)=> dispatch(setComment(payload))
+    setComment        : (payload)=> dispatch(setComment(payload)),
+    toggleCreateTeam  : (payload)=> dispatch(toggleCreateTeam(payload))
   };
 };
 
 const mapStateToProps = (state, ownProps)=> {
   return {
     comment    : state.comment,
+    createTeam : state.createTeam,
     profile    : state.userProfile,
     team       : state.team,
     comments   : state.comments,

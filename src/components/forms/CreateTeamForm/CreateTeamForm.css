@@ -2,3 +2,15 @@
 .create-team-form {
   display: flex;
 }
+
+.create-team-form form > *:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.create-team-form textarea.rules-txt, .create-team-form textarea.invites-txt {
+  padding: 20px 20px 20px 20px;
+	color: rgba(var(--txtfield-fg-color), 1.0);
+  font-family: 'Helvetica Neue', Ubuntu, Arial, sans-serif;
+  border-radius: 30px;;
+	border: 1px solid rgba(var(--border-color), 1.0);
+}

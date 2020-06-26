@@ -9,7 +9,7 @@ import { NavLink } from 'react-router-dom';
 
 import ContentExpander from '../../iterables/ContentExpander';
 import { Pages } from '../../../consts/uris';
-import { setPlayground, setTeam } from '../../../redux/actions';
+import { setPlayground, setTeam, toggleCreateTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 
@@ -54,7 +54,7 @@ class LeftNav extends Component {
 
   handleCreateTeam = ()=> {
     console.log('%s.handleCreateTeam()', this.constructor.name);
-    window.alert('Create Team Modal');
+    this.props.toggleCreateTeam(true);
   }
 
   handleDeviceRenderClick = (deviceRender)=> {
@@ -193,8 +193,9 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return {
-    setPlayground : (payload)=> dispatch(setPlayground(payload)),
-    setTeam       : (payload)=> dispatch(setTeam(payload))
+    setPlayground    : (payload)=> dispatch(setPlayground(payload)),
+    setTeam          : (payload)=> dispatch(setTeam(payload)),
+    toggleCreateTeam : (payload)=> dispatch(toggleCreateTeam(payload))
   };
 };
 
