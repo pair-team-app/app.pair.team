@@ -41,7 +41,7 @@ yarn-error.log
 
 
 #-- creds --#
-/src/assets/json/*creds.json
+/src/assets/json/configs/stripe-creds.json
 
 
 #-- user --#
