@@ -8,8 +8,7 @@
 // ${cwd}: the current working directory of the spawned process
 {
 	"version": "2.0.0",
-    "command": "npm",
-    "promptOnClose": false,
+	"command": "npm",
 	"echoCommand": false,
 	"tasks": [
         {
@@ -44,17 +43,7 @@
             "type": "yarn",
             "task": "start:debug",
             "problemMatcher": [],
-            "group": "build",
-            "promptOnClose": true,
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": true,
-                "panel": "dedicated",
-                "showReuseMessage": true,
-                "clear": true
-            },
-            "label": "yarn: start:debug"
+            "group": "build"
         },
         {
             "type": "yarn",
@@ -62,18 +51,7 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
-            },
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false
-            },
-            "promptOnClose": false,
-            "problemMatcher": [],
-            "label": "yarn: build"
+            }
         },
         {
             "label": "yarn branch:daily",
@@ -83,15 +61,7 @@
                 "branch",
                 "daily"
             ],
-            "problemMatcher": [],
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "dedicated",
-                "showReuseMessage": false,
-                "clear": true
-            }
+            "problemMatcher": []
         }
     ]
 }

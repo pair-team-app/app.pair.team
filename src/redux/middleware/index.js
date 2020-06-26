@@ -164,7 +164,8 @@ export function onMiddleware(store) {
         const comments = payload.comments.map((comment, i)=> (reformComment(comment, `${Pages.TEAM}/${team.slug}/comments`)));
 
         payload.team = (team) ? { ...team, comments } : null;
-        payload.comments = [ ...prevState.comments, ...comments].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));
+        payload.comments = comments;
+        // payload.comments = [ ...prevState.comments, ...comments].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));
       }
     } else if (type === BUILD_PLAYGROUNDS_LOADED) {
       const { devices, componentTypes, team, matchPath } = prevState;

@@ -6,15 +6,6 @@
   "configurations": [
     {
       "type": "firefox",
-      "request": "attach",
-      "name": "Attach to Firefox",
-      "reloadOnAttach": true,
-      "webRoot": "${workspaceFolder}",
-      "url": "http://localhost:3000/team/pairurl-com",
-      "suggestPathMappingWizard": true
-    },
-    {
-      "type": "firefox",
       "request": "launch",
       "reAttach": true,
       "profileDir": "/Users/mattholcombe/Library/Application Support/Firefox/Profiles/1spydc8c.default-debug",
@@ -28,23 +19,18 @@
         }
       ]
     },
-
     {
       "name": "Launch Chrome",
       "type": "chrome",
       "request": "launch",
-      "preLaunchTask": "yarn start:debug",
       "url": "http://localhost:3000/team/pairurl-com",
       "webRoot": "${workspaceFolder}/src",
       "sourceMapPathOverrides": {
         "webpack:///src/*": "${webRoot}/*"
       },
       "skipFiles": [
-        "node_modules/**/*.js"
-      ],
-      "sourceMaps": true,
-      "urlFilter": "http://localhost:3000/*",
-      "userDataDir": true,
+        "node_modules/*\*/*.js"
+      ]
     },
     {
       "type": "chrome",

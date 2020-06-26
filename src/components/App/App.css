@@ -165,12 +165,6 @@
 	width: 100%;
 }
 
-.txt-code {
-	font-family: Monaco, Consolas, monospace;
-	font-size: 12px;
-	font-style: italic;
-}
-
 .txt-bold {
 	font-weight: bold;
 	font-weight: 700;

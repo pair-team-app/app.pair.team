@@ -527,13 +527,13 @@ ul > li:not(:last-child) {
 }
 
 
-.site-wrapper[data-dev-matty="true"] {
+.site-wrapper[data-devin-matty="true"] {
 	background-color: rgba(0, 0, 0, 0.125);
 	/*filter: none;*/
 }
 
 
-.site-wrapper[data-dev-matty="true"] .debug-window {
+.site-wrapper[data-devin-matty="true"] .debug-window {
 	width: 320px;
 	padding: 4px;
 	background-color: rgba(88, 88, 128, 0.125);
@@ -545,7 +545,7 @@ ul > li:not(:last-child) {
 }
 
 
-.site-wrapper[data-dev-matty="true"] .debug-window[data-pos="fixed"] {
+.site-wrapper[data-devin-matty="true"] .debug-window[data-pos="fixed"] {
 	position: fixed;
 	top: 450px;
 	right: 20px;

@@ -12,6 +12,9 @@
 *.ipr
 
 
+/.history
+/.tours
+
 #-- npm --#
 /node_modules
 npm-debug.log*
@@ -30,6 +33,7 @@ yarn-error.log
 #-- temp --#
 /.cache
 /.node-persist
+/tmp
 /tmp/**/*
 
 #-- php files --#
@@ -38,6 +42,13 @@ yarn-error.log
 
 #-- creds --#
 /src/assets/json/*creds.json
+
+
+#-- user --#
+/opt/debug_profiles
+
+/.history
+.tours
 
 
 #-- vendor paths --#

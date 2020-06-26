@@ -1,23 +1,37 @@
 
-import { Strings } from 'lang-js-utils';
 import React, { Component } from 'react';
+import './TeamPage.css';
+
+import axios from 'axios';
+import FilepondPluginFilePoster from 'filepond-plugin-file-poster';
+import FilepondPluginFileMetadata from 'filepond-plugin-file-metadata';
+import FilepondPluginImageCrop from 'filepond-plugin-image-crop';
+import FilepondPluginImageEdit from 'filepond-plugin-image-edit';
+import FilepondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+import FilepondPluginImagePreview from 'filepond-plugin-image-preview';
+import FilepondPluginImageTransform from 'filepond-plugin-image-transform';
+import { Strings } from 'lang-js-utils';
+import TextareaAutosize from 'react-autosize-textarea';
+import { FilePond, registerPlugin } from 'react-filepond';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import Gluejar from '@charliewilco/gluejar';
-import Clipboard from 'react-clipboard';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
 
-import { TEAM_TIMESTAMP } from '../../../consts/formats';
-import { ENTER_KEY } from '../../../consts/key-codes';
-import { Modals } from '../../../consts/uris';
-import { fetchTeamComments, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
-import { trackEvent } from '../../../utils/tracking';
-import { SettingsMenuItemTypes } from '../../sections/TopNav/UserSettings';
 import BasePage from '../BasePage';
-import './TeamPage.css';
+import CreateTeamForm from '../../forms/CreateTeamForm';
 import TeamPageCommentsPanel from './TeamPageCommentsPanel';
 import { SORT_BY_DATE, SORT_BY_SCORE } from './TeamPageHeader';
+import { SettingsMenuItemTypes } from '../../sections/TopNav/UserSettings';
+import { TEAM_TIMESTAMP } from '../../../consts/formats';
+import { ENTER_KEY } from '../../../consts/key-codes';
+import { Modals, API_ENDPT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
+import { fetchTeamComments, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup } from '../../../redux/actions';
+import { trackEvent } from '../../../utils/tracking';
+import btnClear from '../../../assets/images/ui/btn-clear.svg';
+import btnCode from '../../../assets/images/ui/btn-code.svg';
 
+// import 'filepond/dist/filepond.min.css';
+// import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+import 'filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css'
 
 
 class TeamPage extends Component {
@@ -25,14 +39,21 @@ class TeamPage extends Component {
     super(props);
 
     this.state = {
-      topSort         : [],
+      topSort         : [ ],
       commentContent  : '',
+      codeComment     : false,
       teamDescription : '',
       ruleContent     : '',
       ruleInput       : false,
       sort            : SORT_BY_SCORE,
       fetching        : false,
-      share           : false
+      loading         : false,
+      share           : false,
+      files:          [  ],
+      richComment     : false,
+      url             : null,
+      imageComment    : null,
+      createForm      : false
     };
   }
 
@@ -44,6 +65,8 @@ class TeamPage extends Component {
       this.props.setPlayground(null);
     }
 
+    // Register the plugins
+    registerPlugin(FilepondPluginFileMetadata, FilepondPluginFilePoster, FilepondPluginImageCrop, FilepondPluginImageEdit, FilepondPluginImageExifOrientation, FilepondPluginImagePreview, FilepondPluginImageTransform);
     document.addEventListener('keydown', this.handleKeyDown);
   }
 
@@ -80,6 +103,9 @@ class TeamPage extends Component {
 		document.removeEventListener('keydown', this.handleKeyDown);
 	}
 
+  handleInit() {
+    console.log('FilePond instance has initialised', this.pond);
+  }
 
   handleAddComment = (event)=> {
     // console.log('%s.handleAddComment()', this.constructor.name, { event, props : this.props, state : this.state });
@@ -113,6 +139,22 @@ class TeamPage extends Component {
     });
   }
 
+  handleClearComment = (event)=> {
+    console.log('%s.handleClearComment()', this.constructor.name, { event });
+    this.setState({
+      commentContent : '',
+      loading        : false,
+      richComment    : false,
+      imageComment   : null
+    });
+  }
+
+  handleCode = (event)=> {
+    console.log('%s.handleCode()', this.constructor.name, { event });
+    this.setState({ codeComment : !this.state.codeComment });
+
+  }
+
   handleKeyDown = (event)=> {
     // console.log('%s.handleKeyDown()', this.constructor.name, event);
 
@@ -129,7 +171,6 @@ class TeamPage extends Component {
       if (ruleContent.length > 0 && ruleInput) {
         this.handleAddRule(event);
       }
-
     }
   }
 
@@ -179,7 +220,31 @@ class TeamPage extends Component {
     // console.log('%s.handleTextChange()', this.constructor.name, event);
 
     const commentContent = event.target.value;
-    this.setState({ commentContent });
+    const richComment = (/https?:\/\//i.test(commentContent));
+
+    this.setState({ commentContent, richComment,
+      parsing      : richComment,
+      imageComment : null
+    }, ()=> {
+      if (richComment) {
+        const url = commentContent.match(/https?:\/\/.+ ?/i).shift().split(' ').shift();
+        // if (url !== this.state.url) {
+          this.setState({ url }, ()=> {
+            axios.post(API_ENDPT_URL, {
+              action  : 'SCREENSHOT_URL',
+              payload : { url }
+            }).then((response)=> {
+              const { image } = response.data;
+              console.log('SCREENSHOT_URL', { data : response.data });
+              this.setState({
+                parsing      : false,
+                imageComment : image.cdn
+               });
+            });
+          });
+        // }
+      }
+    });
   };
 
   handleUpdateTeamDescription = (event)=> {
@@ -207,11 +272,78 @@ class TeamPage extends Component {
     });
   };
 
+  handleFileInit = (file)=> {
+    console.log('%s.handleFileInit(file)', this.constructor.name, { file });
+  };
+
+
+  // processes the first file
+  handleFileAdd = (file)=> {
+    console.log('%s.handleFileAdd(file)', this.constructor.name, { file });
+    // File has been processed
+  };
+
+  handleFileProgress = (file, progress)=> {
+    console.log('%s.handleFileProgress(file, progress)', this.constructor.name, { file, progress });
+  };
+
+  handleFileProcessStart = (file)=> {
+    console.log('%s.handleFileProcessStart(file)', this.constructor.name, { file });
+  };
+
+  handleFileProcessProgress = (file, progress)=> {
+    console.log('%s.handleFileProcessProgress(file, progress)', this.constructor.name, { file, progress });
+  };
+
+  handleProcessedFile = (error, file)=> {
+    console.log('%s.handleProcessedFile(error, output)', this.constructor.name, { error, file });
+  };
+
+  handleProcessedFiles = ()=> {
+    console.log('%shandleProcessedFiles()', this.constructor.name, {  });
+  };
+
+  handleFileRemoved = (error, output)=> {
+    console.log('%s.handleFileRemoved(error, output)', this.constructor.name, { error, output });
+  };
+
+
+
+  // // processes the first file
+  handleFileWarning = (error, file, status)=> {
+    console.log('%s.handleFileWarning(error, file, status)', this.constructor.name, { error, file, status });
+    // File has been processed
+  };
+
+
+  // processes the first file
+  handleFileError = (error, file, status) => {
+    console.log('%s.handleFileError(error, file, status)', this.constructor.name, { error, file, status });
+    // File has been processed
+  };
+
+  handleFilesUpdated = (fileItems)=> {
+    console.log('%s.handleFilesUpdated(fileItems)', this.constructor.name, { fileItems });
+    this.setState({ files : fileItems.map(({ file })=> (file)) });
+  }
+
+  /* handleFilePond = ()=> {
+    console.log('%s.()', this.constructor.name, { ,  });
+  }; */
+
+
+
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, comments } = this.props;
-    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, share, sort, topSort } = this.state;
+    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, share, sort, topSort, files, richComment, imageComment, codeComment, createTeam } = this.state;
+
+
+    const cdnHeaders = {
+      'Content-Type' : 'multipart/form-data',
+      'Accept'       : 'application/json'
+    };
 
     return (<BasePage { ...this.props } className="team-page">
       {profile && team && (<>
@@ -225,25 +357,94 @@ class TeamPage extends Component {
           onLogout={this.props.onLogout}
         /> */}
 
-        <div className="content-wrapper">
-          <div className="comments-wrapper" data-loading={fetching}>
+        {(!createTeam) ? (<div>
+          <div className="comments-wrapper" data-fetching={fetching} data-empty={comments.length === 0}>
             <div>
-              <TeamPageAddComment
-                loading={fetching}
+              {(files.length === 0) && (<TeamPageAddComment
+                loading={loading}
+                codeComment={codeComment}
                 commentContent={commentContent}
+                imageComment={imageComment}
+                onClear={this.handleClearComment}
+                onCode={this.handleCode}
                 onTextChange={this.handleTextChange}
                 onSubmit={this.handleAddComment}
-              />
+              />)}
+
+              {(!richComment) && (<FilePond
+                server={{
+                  url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}`,
+                  process: (fieldName, file, metadata, load) => {
+                    console.log('%s.server.process(fieldName, file, metadata, load)', this.constructor.name, { fieldName, file, metadata, load, url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}` });
+
+                    // simulates uploading a file
+                    setTimeout(() => {
+                        load(Date.now())
+                    }, 1500);
+
+                    /*
+                    url : './process',
+                    method: 'POST',
+
+                    headers: { 'Content-Type' : 'application/json', },
+                    */
+                },
+                load: (source, load) => {
+                  console.log('%s.server.load(source, load)', this.constructor.name, { source, load });
+
+                    // simulates loading a file from the server
+                    fetch(source).then(res => res.blob()).then(load);
+                }
+                }}
+                // ref={ref => (this.pond = ref)}
+                files={this.state.files}
+                className="file-pond-wrapper"
+                allowMultiple={true}
+                maxFiles={3}
+                // allowImagePreview={true}
+                // allowBrowse={true}
+                // allowDrop={true}
+                allowPaste={true}
+                // allowReorder={false}
+                // allowReplace={true}
+                // allowRevert={true}
+                // appendTo={filePondAttach}
+                // itemInsertLocation="after"
+                instantUpload={true}
+                labelIdle=""
+                iconRemove={btnClear}
+                labelFileProcessingComplete="Add comment to this…"
+                labelTapToUndo=""
+                oninit={this.handleFileInit}
+                onwarning={this.handleFileWarning}
+                onerror={this.handleFileError}
+                oninitfile={this.handleFileInit}
+                onaddfile={this.handleFileAdd}
+                onaddfileprogress={this.handleFileProgress}
+                onprocessfilestart={this.handleFileProcessStart}
+                onprocessfileprogress={this.handleFileProcessProgress}
+                onprocessfile={this.handleProcessedFile}
+                onprocessfiles={this.handleProcessedFiles}
+                onremovefile={this.handleFileRemoved}
+                onupdatefiles={this.handleFilesUpdated}
+
+                // onupdatefiles={(fileItems)=> {
+                //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
+                //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
+                // }}
+              />)}
+
+              <div className="empty-comments">No Activity</div>
 
               <TeamPageCommentsPanel
                 profile={profile}
                 comments={(sort === SORT_BY_DATE) ? comments.sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : 0)) : topSort.map((commentID)=> (comments.find(({ id })=> (id === commentID)) || null)).filter((comment)=> (comment !== null))}
-                loading={fetching}
+                fetching={fetching}
                 sort={sort}
               />
             </div>
           </div>
-          <div className="team-wrapper" data-loading={fetching}>
+          <div className="team-wrapper" data-fetching={fetching}>
             <div className="about-wrapper">
               <div className="header">About</div>
               <div className="content"><textarea placeholder="Enter Text to Describe you team" value={teamDescription} onChange={(event)=> this.setState({ teamDescription : event.target.value })}></textarea></div>
@@ -269,24 +470,36 @@ class TeamPage extends Component {
               </div>
             </div>
           </div>
-        </div>
+        </div>) : (<div>
+          <CreateTeamForm />
+        </div>)}
       </>)}
     </BasePage>);
   }
 }
 
 const TeamPageAddComment = (props)=> {
-  // console.log('TeamPageAddComment()', props);
+  console.log('TeamPageAddComment()', { props });
 
-  const { loading, commentContent } = props;
-  return (<div className="team-page-add-comment" data-loading={loading}>
-    <form>
-      <input type="text" placeholder="Ask your team anything…" value={commentContent} onChange={props.onTextChange} autoComplete="new-password" />
-      <button type="submit" disabled={commentContent.length === 0} onClick={props.onSubmit}>Submit</button>
-    </form>
-  </div>);
+  const { loading, codeComment, commentContent, imageComment } = props;
+  const isURL = (/https?:\/\//i.test(props.commentContent));
+
+  return (<div className="team-page-add-comment" data-loading={loading}><form>
+    <div className="content-wrapper">
+      {(commentContent.length > 0) && (<div>
+        <img src={btnClear} className="clear-btn" onClick={props.onClear} alt="Clear" />
+        <img src={btnCode} className="code-btn" onClick={props.onCode} alt="Code" />
+      </div>)}
+      {(isURL)
+      ? (<div className="rich-content">
+          <div className="image-wrapper"><img src={imageComment} alt="" /></div>
+          <TextareaAutosize className="comment-txt" placeholder="Add a comment to this image…" value={commentContent} onChange={props.onTextChange} data-code={codeComment} />
+        </div>)
+      : (<TextareaAutosize className="comment-txt" placeholder="Text, Paste or Drag to ask you team anything…" value={commentContent} onChange={props.onTextChange} data-code={codeComment} />)
+    }</div>
+    <button type="submit" disabled={commentContent.length === 0} onClick={props.onSubmit}>Submit</button>
+  </form></div>);
 };
-
 
 
 const TeamPageTeamRule = (props)=> {
