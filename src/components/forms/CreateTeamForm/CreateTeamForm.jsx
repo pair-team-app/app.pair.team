@@ -11,7 +11,7 @@ class CreateTeamForm extends Component {
 
     this.state = {
       title       : '',
-      description : null,
+      description : '',
       rules       : [],
       invites     : [],
       changed     : false,
@@ -34,6 +34,26 @@ class CreateTeamForm extends Component {
   handleCancel = (event)=> {
     console.log('%s.handleCancel()', this.constructor.name, { event });
     this.props.onCancel();
+  };
+
+  handleTitleChange = (event)=> {
+    console.log('%s.handleTitleChange()', this.constructor.name, { event });
+    this.setState({ title : event.target.value });
+  };
+
+  handleDescriptionChange = (event)=> {
+    console.log('%s.handleDescriptionChange()', this.constructor.name, { event });
+    this.setState({ description : event.target.value });
+  };
+
+  handleInvitesChange = (event)=> {
+    console.log('%s.handleInvitesChange()', this.constructor.name, { event });
+    this.setState({ invites : event.target.value.split(' ') });
+  };
+
+  handleRulesChange = (event)=> {
+    console.log('%s.handleRulesChange()', this.constructor.name, { event });
+    this.setState({ rules : event.target.value.split('\n') });
   };
 
 
