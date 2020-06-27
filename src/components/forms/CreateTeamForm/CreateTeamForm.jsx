@@ -68,10 +68,10 @@ class CreateTeamForm extends Component {
         <input type="text" placeholder="Team title" value={title} onChange={this.handleTitleChange} autoComplete="new-password" />
         <input type="text" placeholder="Team description" value={description} onChange={this.handleDescriptionChange} autoComplete="new-password" />
         <TextareaAutosize className="rules-txt" placeholder="Team rules (one per line)" value={rules.join('\n')} onChange={this.handleRulesChange} />
-        <TextareaAutosize className="invites-txt" placeholder="Invites (space separated emails)" value={invites.join(' ')} onChange={this.handleInvitesChange} />
+        <TextareaAutosize className="invites-txt" placeholder="Invite (space separated emails)" value={invites.join(' ')} onChange={this.handleInvitesChange} />
 				{/* <button disabled={(emails.filter((email)=> (email.length === 0)).length === emails.length || emailsValid.filter((valid)=> (!valid)).length === emailsValid.length)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Invite Team</button> */}
 				<button type="button" className="quiet-button" onClick={this.handleCancel}>Cancel</button>
-				<button type="submit" onClick={this.handleSubmit}>Create Team</button>
+				<button type="submit" disabled={(title.length === 0)} onClick={this.handleSubmit}>Create Team</button>
 			</form>
     </div>);
   }
