@@ -117,7 +117,7 @@ export const reformPlayground = (playground, devices=null, componentTypes=null, 
 
 
 export const reformRule = (rule, members, overwrite={})=> {
-  console.log('reformRule()', { rule, members, overwrite });
+  // console.log('reformRule()', { rule, members, overwrite });
 
   const { id, author, content, updated, added } = rule;
   const reformed = { ...rule,
@@ -134,7 +134,7 @@ export const reformRule = (rule, members, overwrite={})=> {
 
 
 export const reformTeam = (team, overwrite={})=> {
-  console.log('reformTeam()', { team, overwrite });
+  // console.log('reformTeam()', { team, overwrite });
 
   const { description, slug, image, updated, added } = team;
   const members = team.members.map((member)=> ({ ...member,
@@ -156,7 +156,7 @@ export const reformTeam = (team, overwrite={})=> {
     ...overwrite
   };
 
-  console.log('reformTeam()', { team, reformed });
+  // console.log('reformTeam()', { team, reformed });
   return ({ ...reformed, size : jsonFormatKB(reformed) });
 
 };

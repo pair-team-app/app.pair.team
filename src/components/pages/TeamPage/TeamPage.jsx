@@ -24,7 +24,7 @@ import { SettingsMenuItemTypes } from '../../sections/TopNav/UserSettings';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
 import { Modals, API_ENDPT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
-import { fetchTeamComments, makeComment, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup, toggleCreateTeam } from '../../../redux/actions';
+import { fetchTeamComments, makeComment, makeTeam, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup, toggleCreateTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import btnClear from '../../../assets/images/ui/btn-clear.svg';
 import btnCode from '../../../assets/images/ui/btn-code.svg';
@@ -57,7 +57,7 @@ class TeamPage extends Component {
   }
 
   componentDidMount() {
-    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
     const { playground } = this.props;
     if (playground) {
@@ -70,7 +70,7 @@ class TeamPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { team, comments } = this.props;
     const { teamDescription, fetching, topSort } = this.state;
@@ -257,6 +257,15 @@ class TeamPage extends Component {
     this.props.modifyTeam({ description : teamDescription });
   }
 
+  handleCreateTeamSubmit = ({ title, description, rules, invites })=> {
+    console.log('%s.handleCreateTeamSubmit()', this.constructor.name, { title, description, rules, invites });
+    this.props.makeTeam({ title, description, rules, invites });
+
+    setTimeout(()=> {
+      this.props.toggleCreateTeam(false);
+    }, 1250);
+  };
+
   onReloadComments = (refresh=true)=> {
     // console.log('%s.onReloadComments()', this.constructor.name, { refresh });
 
@@ -333,7 +342,7 @@ class TeamPage extends Component {
 
 
   render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, comments, createTeam } = this.props;
     const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, share, sort, topSort, files, richComment, imageComment, codeComment } = this.state;
@@ -414,7 +423,7 @@ class TeamPage extends Component {
                 iconRemove={btnClear}
                 labelFileProcessingComplete="Add comment to this…"
                 labelTapToUndo=""
-                oninit={this.handleFileInit}
+                //oninit={this.handleInit}
                 onwarning={this.handleFileWarning}
                 onerror={this.handleFileError}
                 oninitfile={this.handleFileInit}
@@ -470,7 +479,7 @@ class TeamPage extends Component {
             </div>
           </div>
         </div>) : (<div>
-          <CreateTeamForm onCancel={()=> this.props.toggleCreateTeam(false)} />
+          <CreateTeamForm onCancel={()=> this.props.toggleCreateTeam(false)} onSubmit={this.handleCreateTeamSubmit} />
         </div>)}
       </>)}
     </BasePage>);
@@ -478,7 +487,7 @@ class TeamPage extends Component {
 }
 
 const TeamPageAddComment = (props)=> {
-  console.log('TeamPageAddComment()', { props });
+  // console.log('TeamPageAddComment()', { props });
 
   const { loading, codeComment, commentContent, imageComment } = props;
   const isURL = (/https?:\/\//i.test(props.commentContent));
@@ -515,6 +524,7 @@ const mapDispatchToProps = (dispatch)=> {
   return {
     fetchTeamComments : (payload)=> dispatch(fetchTeamComments(payload)),
     makeComment       : (payload)=> dispatch(makeComment(payload)),
+    makeTeam          : (payload)=> dispatch(makeTeam(payload)),
     makeTeamRule      : (payload)=> dispatch(makeTeamRule(payload)),
     modifyTeam        : (payload)=> dispatch(modifyTeam(payload)),
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),

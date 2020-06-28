@@ -53,7 +53,7 @@ class LeftNav extends Component {
   };
 
   handleCreateTeam = ()=> {
-    console.log('%s.handleCreateTeam()', this.constructor.name);
+    // console.log('%s.handleCreateTeam()', this.constructor.name);
     this.props.toggleCreateTeam(true);
   }
 
@@ -160,7 +160,7 @@ const LeftNavBuild = (props)=> {
 
 
 const LeftNavHeader = (props)=> {
-  console.log('LeftNavHeader()', { props });
+  // console.log('LeftNavHeader()', { props });
 
   const { team } = props;
   const { logo, title } = team || { logo : null, title : '' };

@@ -20,11 +20,11 @@ class CreateTeamForm extends Component {
   }
 
   componentDidMount() {
-    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
   }
 
   /* handleFilePond = ()=> {
@@ -37,28 +37,36 @@ class CreateTeamForm extends Component {
   };
 
   handleTitleChange = (event)=> {
-    console.log('%s.handleTitleChange()', this.constructor.name, { event });
+    // console.log('%s.handleTitleChange()', this.constructor.name, { event });
     this.setState({ title : event.target.value });
   };
 
   handleDescriptionChange = (event)=> {
-    console.log('%s.handleDescriptionChange()', this.constructor.name, { event });
+    // console.log('%s.handleDescriptionChange()', this.constructor.name, { event });
     this.setState({ description : event.target.value });
   };
 
   handleInvitesChange = (event)=> {
-    console.log('%s.handleInvitesChange()', this.constructor.name, { event });
+    // console.log('%s.handleInvitesChange()', this.constructor.name, { event });
     this.setState({ invites : event.target.value.split(' ') });
   };
 
   handleRulesChange = (event)=> {
-    console.log('%s.handleRulesChange()', this.constructor.name, { event });
+    // console.log('%s.handleRulesChange()', this.constructor.name, { event });
     this.setState({ rules : event.target.value.split('\n') });
+  };
+
+  handleSubmit = (event)=> {
+    console.log('%s.handleSubmit()', this.constructor.name, { event });
+    event.preventDefault();
+
+    const { title, description, rules, invites } = this.state;
+    this.props.onSubmit({ title, description, rules, invites });
   };
 
 
   render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team } = this.props;
     const { title, description, rules, invites, changed, validated } = this.state;
@@ -71,7 +79,7 @@ class CreateTeamForm extends Component {
         <TextareaAutosize className="invites-txt" placeholder="Invite (space separated emails)" value={invites.join(' ')} onChange={this.handleInvitesChange} />
 				{/* <button disabled={(emails.filter((email)=> (email.length === 0)).length === emails.length || emailsValid.filter((valid)=> (!valid)).length === emailsValid.length)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Invite Team</button> */}
 				<button type="button" className="quiet-button" onClick={this.handleCancel}>Cancel</button>
-				<button type="submit" disabled={(title.length === 0)} onClick={this.handleSubmit}>Create Team</button>
+				<button type="submit" disabled={(title.length === 0)} onClick={(event)=> this.handleSubmit(event)}>Create Team</button>
 			</form>
     </div>);
   }
