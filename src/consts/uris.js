@@ -17,6 +17,7 @@ export const Modals = {
 
 export const Pages = {
 	HOME       : '/',
+	INVITE     : '/invite',
 	LEGAL      : '/legal',
 	PLAYGROUND : '/app',
 	PRIVACY    : '/privacy',

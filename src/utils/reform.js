@@ -152,7 +152,7 @@ export const reformTeam = (team, overwrite={})=> {
     selected    : false,
     updated     : moment(updated).utc(),
     added       : moment(added).utc(),
-    epoch       : (updated) ? (moment.utc(updated).valueOf() * 0.001) << 0 : 0,
+    epoch       : (added) ? (moment.utc(added).valueOf() * 0.001) << 0 : 0,
     ...overwrite
   };
 
