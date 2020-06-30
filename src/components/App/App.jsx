@@ -34,6 +34,7 @@ class App extends Component {
     this.state = {
       darkTheme : false,
       popup     : null,
+      inviteID  : null,
       modals    : {
         cookies  : cookie.load('cookies') << 0 === 0,
         disable  : false,
@@ -61,8 +62,19 @@ class App extends Component {
 
     const { profile, location } = this.props;
     // if (!profile && location.pathname.startsWith(Pages.PROJECT)) {
-    if (!profile && location.pathname.startsWith(Pages.PROJECT) && cookie.load('user_id') === '0') {
+    if (!profile && (location.pathname.startsWith(Pages.PROJECT) || location.pathname.startsWith(Pages.TEAM)) && cookie.load('user_id') === '0') {
       this.onToggleModal(Modals.LOGIN);
+    }
+
+    if (!profile && cookie.load('user_id') === '0') {
+      if (location.pathname.startsWith(Pages.PROJECT) || location.pathname.startsWith(Pages.TEAM)) {
+        this.onToggleModal(Modals.LOGIN);
+
+      } else if (location.pathname.startsWith(Pages.INVITE)) {
+        this.setState({ inviteID : location.pathname.split('/')[3] << 0 }, ()=> {
+          this.onToggleModal(Modals.REGISTER);
+        });
+      }
     }
 
 
@@ -204,7 +216,7 @@ class App extends Component {
           }
 
           if (!profile && !prevState.modals.login && !modals.login) {
-            this.onToggleModal(Modals.LOGIN);
+            // this.onToggleModal(Modals.LOGIN);
           }
 
           /*
@@ -348,10 +360,9 @@ class App extends Component {
       	// console.log('%s.render()', this.constructor.name, this.state.modals);
 
     const { darkThemed, profile, location } = this.props;
-    const { popup, modals } = this.state;
+    const { popup, inviteID, modals } = this.state;
 
-
-
+    const { pathname } = location;
 
     return (<div className="site-wrapper" data-theme={(darkThemed) ? 'dark' : 'light'} data-devin-matty={MATTY_DEVIN_THEME}>
       {/* {(!matchPlaygrounds) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)} */}
@@ -388,7 +399,7 @@ class App extends Component {
 			  />)}
 
 			  {(modals.register) && (<RegisterModal
-				  inviteID={null}
+				  inviteID={inviteID}
 				  onModal={(uri)=> this.onToggleModal(uri, true)}
 				  onPopup={this.handlePopup}
 				  onComplete={()=> this.onToggleModal(Modals.REGISTER, false)}

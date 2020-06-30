@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Bits } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { VOTE_ACTION_DOWN, VOTE_ACTION_UP } from '../../components/iterables/BaseComment';
-import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_THEME, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, TEAM_CREATED, TOGGLE_CREATE_TEAM } from '../../consts/action-types';
+import { BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_THEME, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, TEAM_CREATED, TOGGLE_CREATE_TEAM } from '../../consts/action-types';
 import { API_RESPONSE_PREFIX, LOG_ACTION_POSTFIX, LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
 
@@ -65,6 +65,29 @@ export function fetchDevices(payload=null) {
       dispatch({
         type    : DEVICES_LOADED,
         payload : { devices }
+      });
+    }).catch((error)=> {});
+  };
+}
+
+export function fetchInvite(payload=null) {
+  const { inviteID } = payload;
+
+  return (dispatch, getState)=> {
+    logFormat('fetchInvite()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
+
+    axios.post(API_ENDPT_URL, {
+      action  : 'INVITE_LOOKUP',
+      payload : {
+        invite_id : inviteID
+      }
+    }).then((response)=> {
+      console.log('INVITE_LOOKUP', response.data);
+      const { invite, team } = response.data;
+
+      dispatch({
+        type    : INVITE_LOADED,
+        payload : { invite, team }
       });
     }).catch((error)=> {});
   };
@@ -274,7 +297,7 @@ export function makeTeam(payload) {
     }).then((response)=> {
       console.log(API_RESPONSE_PREFIX, 'CREATE_TEAM', response.data, response.data.team);
       const { team } = response.data;
-      
+
       dispatch({
         type    : TEAM_CREATED,
         payload : { userProfile : profile, team }

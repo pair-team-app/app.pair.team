@@ -5,10 +5,10 @@ import cookie from 'react-cookies';
 
 import { RoutePaths } from '../../components/helpers/Routes';
 import { fetchBuildPlaygrounds, fetchTeamBuilds, fetchTeamComments, fetchTeamLookup, updateMatchPath } from '../actions';
-import { BUILD_PLAYGROUNDS_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
+import { BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_POSTFIX, LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { Pages } from '../../consts/uris';
-import { reformComment, reformPlayground, reformTeam } from '../../utils/reform';
+import { reformComment, reformPlayground, reformTeam, reformInvite } from '../../utils/reform';
 
 
 
@@ -152,6 +152,13 @@ export function onMiddleware(store) {
       // playgrounds.forEach(({ buildID })=> {
       //   dispatch(fetchBuildPlaygrounds({ buildID }));
       // });
+
+    } else if (type === INVITE_LOADED) {
+      const invite = reformInvite(payload.invite);
+      const team = reformTeam(payload.team);
+
+      payload.invite = invite;
+      payload.team = team;
 
     } else if (type === TEAM_COMMENTS_LOADED) {
       const { team } = prevState;

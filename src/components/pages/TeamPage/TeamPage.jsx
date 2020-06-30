@@ -70,7 +70,7 @@ class TeamPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
     const { team, comments } = this.props;
     const { teamDescription, fetching, topSort } = this.state;
@@ -342,7 +342,7 @@ class TeamPage extends Component {
 
 
   render() {
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, comments, createTeam } = this.props;
     const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, share, sort, topSort, files, richComment, imageComment, codeComment } = this.state;
@@ -354,7 +354,7 @@ class TeamPage extends Component {
     };
 
     return (<BasePage { ...this.props } className="team-page">
-      {profile && team && (<>
+      {(profile && team) && (<>
         {/* <TeamPageHeader
           sort={sort}
           popover={share}

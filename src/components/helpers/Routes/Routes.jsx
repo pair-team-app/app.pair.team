@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { RoutePaths } from './';
+import BasePage from '../../pages/BasePage';
 import TeamPage from '../../pages/TeamPage';
 import { Pages } from '../../../consts/uris';
 
@@ -31,6 +32,15 @@ class Routes extends Component {
 
     return (<Switch>
       <Route exact path={Pages.HOME}><Redirect to={Pages.TEAM} /></Route>
+
+      <Route
+        path={RoutePaths.INVITE}
+        render={({ props })=> <BasePage
+          onLogout={this.props.onLogout}
+          onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
+          onPopup={this.props.onPopup} { ...props}
+          />
+      } />
 
       <Route
         path={RoutePaths.TEAM}

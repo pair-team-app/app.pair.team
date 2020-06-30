@@ -10,8 +10,8 @@ import { withRouter } from 'react-router-dom';
 import BaseOverlay from '../BaseOverlay';
 import RegisterForm from '../../forms/RegisterForm';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
-import { API_ENDPT_URL, Modals } from '../../../consts/uris';
-import { updateUserProfile } from '../../../redux/actions';
+import { Modals } from '../../../consts/uris';
+import { fetchInvite, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
@@ -28,32 +28,39 @@ class RegisterModal extends Component {
 	}
 
 	componentDidMount() {
-// console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
-		if (this.props.invite) {
-			axios.post(API_ENDPT_URL, {
-				action  : 'INVITE_LOOKUP',
-				payload : { invite_id : this.props.invite.id }
-			}).then((response)=> {
-// console.log('INVITE_LOOKUP', response.data);
-				const { invite } = response.data;
-				if (invite.id === this.props.invite.id) {
-					const { email } = invite;
-					trackEvent('user', 'invite');
-					this.setState({ email });
-				}
+		const { inviteID } = this.props;
+		if (inviteID) {
+			this.props.fetchInvite({ inviteID });
 
-			}).catch((error)=> {
-			});
+			// axios.post(API_ENDPT_URL, {
+			// 	action  : 'INVITE_LOOKUP',
+			// 	payload : { invite_id : this.props.invite.id }
+			// }).then((response)=> {
+			// 	// console.log('INVITE_LOOKUP', response.data);
+			// 	const { invite } = response.data;
+			// 	if (invite.id === this.props.invite.id) {
+			// 		const { email } = invite;
+			// 		trackEvent('user', 'invite');
+			// 		this.setState({ email });
+			// 	}
+
+			// }).catch((error)=> {
+			// });
 		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		const { profile } = this.props;
 		if (!prevProps.profile && profile) {
 			this.setState({ outro : true });
+		}
+
+		if (!prevProps.invite && this.props.invite) {
+
 		}
 	}
 
@@ -100,7 +107,9 @@ class RegisterModal extends Component {
 	render() {
 // console.log('%s.render()', this.constructor.name, this.props, this.state);
 
+		const { invite, team } = this.props;
 		const { outro } = this.state;
+
 		return (<BaseOverlay
 			tracking={Modals.REGISTER}
 			outro={outro}
@@ -112,11 +121,11 @@ class RegisterModal extends Component {
 					<img className="header-logo" src={pairLogo} alt="Logo" />
 				</div>
 
+				{(invite) && (<div className="title-wrapper">{invite.team_title}</div>)}
 				<div className="form-wrapper">
 					<RegisterForm
-						title={null}
-						inviteID={null}
-						email={null}
+						inviteID={(invite) ? invite.id : null}
+						email={(invite) ? invite.email : null}
 						onCancel={(event)=> { event.preventDefault(); this.handleComplete(); }}
 						onRegistered={this.handleRegistered} />
 				</div>
@@ -132,6 +141,7 @@ class RegisterModal extends Component {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
+		fetchInvite       : (payload)=> dispatch(fetchInvite(payload)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 
@@ -141,6 +151,7 @@ const mapStateToProps = (state, ownProps)=> {
 	return ({
 		invite  : state.invite,
 		profile : state.userProfile,
+		team    : state.team
 	});
 };
 

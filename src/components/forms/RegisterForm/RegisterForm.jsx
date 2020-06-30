@@ -14,7 +14,6 @@ class RegisterForm extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			inviteID      : props.inviteID,
 			email         : (props.email || ''),
 			password      : '',
 			password2     : '',
@@ -26,7 +25,7 @@ class RegisterForm extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+		// console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
 		if (prevProps.email !== this.props.email) {
 			const { email } = this.props;
@@ -35,7 +34,7 @@ class RegisterForm extends Component {
 	}
 
 	handlePassword = ()=> {
-// console.log('%s.handlePassword()', this.constructor.name);
+		// console.log('%s.handlePassword()', this.constructor.name);
 
 		this.setState({
 			password      : '',
@@ -46,14 +45,14 @@ class RegisterForm extends Component {
 	};
 
 	handleSubmit = (event)=> {
-// console.log('%s.handleSubmit()', this.constructor.name, event.target);
-// console.log('%s.handleSubmit()', this.constructor.name, event.target);
+		// console.log('%s.handleSubmit()', this.constructor.name, event.target);
 		event.preventDefault();
 
-		const { inviteID, email, password, password2 } = this.state;
+		const { inviteID } = this.props;
+		const { email, password, password2 } = this.state;
 
 		const emailValid = Strings.isEmail(email);
-		const emailBlackListed = (blacklistTeamDomains.matches.filter((patt)=> ((new RegExp(`${patt}`, 'i')).test(email))).length > 0);
+		const emailBlackListed = false; //(blacklistTeamDomains.matches.filter((patt)=> ((new RegExp(`${patt}`, 'i')).test(email))).length > 0);
 		const passwordValid = (password.length > 0 && password === password2);
 
 		this.setState({ emailValid, passwordValid,
@@ -62,21 +61,22 @@ class RegisterForm extends Component {
 		});
 
 
-		console.log('%s.handleSubmit()', this.constructor.name, { email, emailValid, passwordValid, emailBlackListed });
+		console.log('%s.handleSubmit()', this.constructor.name, { props : this.props, state : this.state, email, emailValid, passwordValid, emailBlackListed });
 
 
 		if (emailValid && passwordValid && !emailBlackListed) {
 			axios.post(API_ENDPT_URL, {
 				action  : 'REGISTER',
-				payload : { email, password, inviteID,
-					username : email,
-					type     : 'free_user',
-					avatar   : makeAvatar(email)
+				payload : { email, password,
+					username  : email,
+					types     : ['user', 'invite'],
+					avatar    : makeAvatar(email),
+					invite_id : inviteID
 				}
 			}).then((response)=> {
-// console.log('REGISTER', response.data);
+				console.log('REGISTER', response.data);
 				const status = parseInt(response.data.status, 16);
-// console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));
+				// console.log('status', status, Bits.contains(status, 0x01), Bits.contains(status, 0x10));
 
 				if (status === 0x11) {
 					this.props.onRegistered(response.data.user);
@@ -91,6 +91,7 @@ class RegisterForm extends Component {
 					});
 				}
 			}).catch((error)=> {
+				console.log('REGISTER -- ERROR', { error : error.config.data });
 			});
 
 		} else {
@@ -100,8 +101,9 @@ class RegisterForm extends Component {
 
 
 	render() {
-// console.log('%s.render()', this.constructor.name, this.props, this.state);
+		// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
+		const { inviteID } = this.props;
 		const { email, password, password2, passMsg } = this.state;
 		const { emailValid, passwordValid, validated } = this.state;
 
@@ -111,8 +113,8 @@ class RegisterForm extends Component {
 					<DummyForm />
 
 					{(validated)
-						? (<input type="email" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" required autoFocus />)
-						: (<input type="text" placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />)
+						? (<input type="email" disabled={(inviteID !== null)} placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" required autoFocus />)
+						: (<input type="text" disabled={(inviteID !== null)} placeholder="Enter Email Address" value={email} onFocus={()=> this.setState({ email : (emailValid) ? email : '', emailValid : true, validated : false })} onChange={(event)=> this.setState({ email : event.target.value })} autoComplete="new-password" />)
 					}
 
 					{(passMsg)
