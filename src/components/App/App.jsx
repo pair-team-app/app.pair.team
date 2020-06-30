@@ -199,7 +199,7 @@ class App extends Component {
 
           if (!prevProps.team && team) {
             if (teamSlug !== team.slug || !projectSlug) {
-              this.props.history.push(`${Pages.TEAM}/${team.slug}`);
+              this.props.history.push(`${Pages.TEAM}/${team.slug}-${team.id}`);
             }
           }
 

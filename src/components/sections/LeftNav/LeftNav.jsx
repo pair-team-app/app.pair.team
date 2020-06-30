@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 import ContentExpander from '../../iterables/ContentExpander';
-import { Pages } from '../../../consts/uris';
+import { Pages, TEAM_DEFAULT_AVATAR} from '../../../consts/uris';
 import { setPlayground, setTeam, toggleCreateTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
@@ -166,7 +166,7 @@ const LeftNavHeader = (props)=> {
   const { logo, title } = team || { logo : null, title : '' };
   return (<div className="left-nav-header">
     {(team) && (<NavLink to={`${Pages.TEAM}/${team.slug}`} className="title">
-      <img src={null} alt="Logo" />
+      <img src={TEAM_DEFAULT_AVATAR} alt="Logo" />
       {title}
     </NavLink>)}
   </div>);
