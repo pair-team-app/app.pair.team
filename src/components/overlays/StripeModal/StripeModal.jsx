@@ -4,7 +4,7 @@ import './StripeModal.css';
 
 import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
-import { Strings, URIs } from 'lang-js-utils';
+import { URIs } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
@@ -32,6 +32,7 @@ class StripeModal extends Component {
 		super(props);
 
 		this.state = {
+			payment    : null,
 			submitting : false,
 			outro      : false,
 			outroURI   : null
@@ -79,16 +80,17 @@ class StripeModal extends Component {
 		}
 	};
 
-	handleSubmit = async(event)=> {
-		console.log('%s.handleSubmit()', this.constructor.name, { event });
+	handleSubmit = async(event, payment)=> {
+		console.log('%s.handleSubmit()', this.constructor.name, { event, payment });
 
 		event.preventDefault();
 
+		const { team } = this.props;
 		this.setState({ submitting : true }, ()=> {
 			axios.post(API_ENDPT_URL, {
 				action  : 'STRIPE_SESSION',
-				payload : {
-					quantity : 10
+				payload : { payment,
+					quantity : team.members.length
 				}
 			}).then(async(response)=> {
 				console.log('STRIPE_SESSION', response.data);
@@ -102,7 +104,7 @@ class StripeModal extends Component {
 
 				} else {
 					const stripe = await stripePromise;
-					//const { error } = await stripe.redirectToCheckout({ sessionId : session.id });
+					const { error } = await stripe.redirectToCheckout({ sessionId : session.id });
 
 
 					this.props.onPopup({
@@ -137,11 +139,14 @@ class StripeModal extends Component {
 			<div className="stripe-modal">
 				<div className="stripe-modal-header-wrapper"><h4>
 					Your domain has reached {team.members.length} users.<br />
-					To continue using Pair, please sign up<br />
-					for <span className="stripe-form-price">$10</span> per month per user.
+					To continue using Pair, please subscribe:<br />
+					Monthly - <span className="stripe-form-price">$10</span> per month per user (<span className="stripe-form-price">${team.members.length * 10}</span>)< br />
+					Yearly - <span className="stripe-form-price">$8</span> per month per user (<span className="stripe-form-price">${(team.members.length * 8) * 12}</span>)< br />
+
 				</h4></div>
 				<div className="stripe-modal-content-wrapper">
-					<button type="submit" onClick={this.handleSubmit}>Submit</button>
+					<button onClick={(event)=> this.handleSubmit(event, 'monthly')}>Monthly</button>
+					<button onClick={(event)=> this.handleSubmit(event, 'yearly')}>Yearly</button>
 
 					<div className="form-disclaimer">
 						<NavLink to={Pages.TERMS} onClick={this.handlePage}>Need More details about our Plans?</NavLink>
