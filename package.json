@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@kunukn/react-collapse": "^2.2.7",
+    "@stripe/stripe-js": "^1.7.0",
     "acorn": "^6.1.1",
     "ajv": "^6.10.0",
     "axios": "^0.19.2",
