@@ -7,14 +7,11 @@
 	/* background-color: rgba(var(--site-bg-color), 1.0); */
 }
 
-.stripe-modal-header-wrapper {
+.stripe-modal .header-wrapper {
 	padding: 0 0 var(--spacing-10) 0;
 	letter-spacing: 0.2px;
 }
 
-.stripe-form-price {
+.stripe-modal .price {
 	font-weight: 600;
-}
-
-.stripe-modal-content-wrapper {
 }

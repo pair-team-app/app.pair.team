@@ -160,7 +160,7 @@ class App extends Component {
 
     } else {
 
-      if (profile && !prevProps.team && team && team.type == 'free' && !modals.stripe) {
+      if (profile && team && team.type == 'free' && !modals.stripe) {
         if (team.members.length >= 2) {
           this.onToggleModal(Modals.STRIPE);
         }
