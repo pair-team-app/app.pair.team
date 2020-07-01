@@ -2,15 +2,14 @@
 import React, { Component } from 'react';
 import './StripeModal.css';
 
+import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
 import { Strings, URIs } from 'lang-js-utils';
 import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
-import { Elements, StripeProvider } from 'react-stripe-elements';
 
 import BaseOverlay from '../BaseOverlay';
-import StripeForm from '../../forms/StripeForm/StripeForm';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
 import { API_ENDPT_URL, Modals, Pages } from '../../../consts/uris';
 import { trackEvent } from '../../../utils/tracking';
@@ -18,8 +17,11 @@ import stripeCreds from '../../../assets/json/configs/stripe-creds';
 import { fetchTeamLookup } from '../../../redux/actions';
 
 
-const STRIPE_TEST_TOKEN = stripeCreds.test.publish;
-// const STRIPE_LIVE_TOKEN = stripeCreds.live.publish;
+const STRIPE_PUBLIC_TOKEN = stripeCreds.test.publish;
+// const STRIPE_PUBLIC_TOKEN = stripeCreds.live.publish;
+
+
+const stripePromise = loadStripe(STRIPE_PUBLIC_TOKEN);
 
 
 
@@ -32,10 +34,7 @@ class StripeModal extends Component {
 		this.state = {
 			submitting : false,
 			outro      : false,
-			outroURI   : null,
-			purchase   : null,
-			product    : this.props.products.pop(),
-			productIDs : Strings.repeat(this.props.products.pop().id, this.props.team.members.length, ',')
+			outroURI   : null
 		};
 	}
 
@@ -80,45 +79,44 @@ class StripeModal extends Component {
 		}
 	};
 
-	handleSubmit = ({ cardHolder, token })=> {
-// console.log('%s.handleSubmit()', this.constructor.name, cardHolder, token, this.state);
+	handleSubmit = async(event)=> {
+		console.log('%s.handleSubmit()', this.constructor.name, { event });
+
+		event.preventDefault();
 
 		this.setState({ submitting : true }, ()=> {
-			const { profile, payload } = this.props;
-			const { product, productIDs } = this.state;
-
 			axios.post(API_ENDPT_URL, {
-				action  : 'MAKE_PURCHASE',
+				action  : 'STRIPE_SESSION',
 				payload : {
-					user_id     : profile.id,
-					team_id     : payload.team.id,
-					token_id    : token.id,
-					product_ids : productIDs
+					quantity : 10
 				}
-			}).then((response)=> {
-// console.log('MAKE_PURCHASE', response.data);
-				const { purchase, error } = response.data;
-				trackEvent('purchase', (error) ? 'error' : 'success');
+			}).then(async(response)=> {
+				console.log('STRIPE_SESSION', response.data);
+				const { session, error } = response.data;
 
-				if ((purchase.id << 0) === 0) {
+				if (error) {
 					this.props.onPopup({
 						type    : POPUP_TYPE_ERROR,
 						content : error.code
 					});
 
 				} else {
+					const stripe = await stripePromise;
+					//const { error } = await stripe.redirectToCheckout({ sessionId : session.id });
+
+
 					this.props.onPopup({
 						type     : POPUP_TYPE_OK,
-						content  : `Successfully purchased monthly subscription "${product.title}" for $${product.price * payload.team.members.length}. (${payload.team.members.length} users x $${product.price})`,
+						content  : `Session ID ${session.id}`,
 						duration : 3333
 					});
 				}
 
-				this.setState({
-					outro      : true,
-					submitting : false,
-					purchase   : purchase
-				});
+				// this.setState({
+				// 	outro      : true,
+				// 	submitting : false,
+				// 	purchase   : purchase
+				// });
 			}).catch((error)=> {
 			});
 		});
@@ -128,7 +126,7 @@ class StripeModal extends Component {
 // console.log('%s.render()', this.constructor.name, this.props, this.state);
 
 		const { team } = this.props;
-		const { outro, submitting, product } = this.state;
+		const { outro, submitting } = this.state;
 		return (<BaseOverlay
 			tracking={Modals.STRIPE}
 			outro={outro}
@@ -140,29 +138,20 @@ class StripeModal extends Component {
 				<div className="stripe-modal-header-wrapper"><h4>
 					Your domain has reached {team.members.length} users.<br />
 					To continue using Pair, please sign up<br />
-					for <span className="stripe-form-price">${product.price}</span> per month per user.
+					for <span className="stripe-form-price">$10</span> per month per user.
 				</h4></div>
 				<div className="stripe-modal-content-wrapper">
-					<StripeProvider apiKey={STRIPE_TEST_TOKEN}>
-						<Elements>
-							<StripeForm
-								submitting={submitting}
-								onCancel={()=> this.setState({ outro : true })}
-								onError={this.handleError}
-								onSubmit={this.handleSubmit}
-							/>
-						</Elements>
-					</StripeProvider>
+					<button type="submit" onClick={this.handleSubmit}>Submit</button>
 
 					<div className="form-disclaimer">
 						<NavLink to={Pages.TERMS} onClick={this.handlePage}>Need More details about our Plans?</NavLink>
 					</div>
 				</div>
-				{(submitting) && (<div className="base-overlay-loader-wrapper">
+				{/* {(submitting) && (<div className="base-overlay-loader-wrapper">
 					<div className="base-overlay-loader">
 						<FontAwesome name="circle-notch" className="base-overlay-loader-spinner" size="3x" spin />
 					</div>
-				</div>)}
+				</div>)} */}
 			</div>
 		</BaseOverlay>);
 	}
@@ -170,10 +159,9 @@ class StripeModal extends Component {
 
 
 const mapStateToProps = (state, ownProps)=> {
-  return {
-    team     : state.team,
-    products : state.products
-  };
+  return ({
+    team : state.team
+  });
 };
 
 const mapDispatchToProps = (dispatch)=> {

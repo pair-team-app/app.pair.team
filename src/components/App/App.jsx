@@ -77,7 +77,6 @@ class App extends Component {
       }
     }
 
-
     if (!Browsers.isOnline()) {
       this.handlePopup({
         type     : POPUP_TYPE_OK,
@@ -160,6 +159,12 @@ class App extends Component {
       // });
 
     } else {
+
+      if (profile && !prevProps.team && team && !modals.stripe) {
+        if (team.members.length >= 2) {
+          this.onToggleModal(Modals.STRIPE);
+        }
+      }
 
 
       // const pass = (prevProps.matchPath && this.props.matchPath) ? (Object.keys(this.props.matchPath.params).map((key)=> ((this.props.matchPath.params[key] === prevProps.matchPath.params[key]))).reduce((acc, val)=> (acc * val), 1) === 0) : false;
