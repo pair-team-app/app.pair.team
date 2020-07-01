@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Bits } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { VOTE_ACTION_DOWN, VOTE_ACTION_UP } from '../../components/iterables/BaseComment';
-import { BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_THEME, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, TEAM_CREATED, TOGGLE_CREATE_TEAM } from '../../consts/action-types';
+import { BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_THEME, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, TEAM_CREATED, TOGGLE_CREATE_TEAM, STRIPE_SESSION_CREATED } from '../../consts/action-types';
 import { API_RESPONSE_PREFIX, LOG_ACTION_POSTFIX, LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
 
@@ -275,6 +275,28 @@ export function makeComment(payload) {
       dispatch({
         type    : (!comment) ? COMMENT_ADDED : COMMENT_UPDATED,
         payload : { comment : response.data.comment }
+      });
+    }).catch((error)=> {});
+  });
+}
+
+
+export function makeStripeSession(payload) {
+  return ((dispatch, getState)=> {
+    logFormat('makeStripeSession()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
+
+    const { payment, quantity } = payload;
+
+    axios.post(API_ENDPT_URL, {
+      action  : 'STRIPE_SESSION',
+      payload : { payment, quantity }
+    }).then((response)=> {
+      console.log(API_RESPONSE_PREFIX, 'STRIPE_SESSION', response.data);
+      const { session } = response.data;
+
+      dispatch({
+        type    : STRIPE_SESSION_CREATED,
+        payload : { session }
       });
     }).catch((error)=> {});
   });

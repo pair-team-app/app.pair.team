@@ -1,14 +1,16 @@
-import { Strings } from 'lang-js-utils';
 import React, { Component } from 'react';
+import './TopNav.css';
+
 import { connect } from 'react-redux';
+import { Strings } from 'lang-js-utils';
 import { NavLink, withRouter } from 'react-router-dom';
+
+import { BreadcrumbTypes } from './';
+import UserSettings from './UserSettings';
+import SharePopover from '../../overlays/SharePopover';
 import { Modals, Pages } from '../../../consts/uris';
 import { toggleTheme } from '../../../redux/actions';
 import { trackOutbound } from '../../../utils/tracking';
-import SharePopover from '../../overlays/SharePopover';
-import { BreadcrumbTypes } from './';
-import './TopNav.css';
-import UserSettings from './UserSettings';
 
 
 

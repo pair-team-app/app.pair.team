@@ -10,6 +10,7 @@ import { NavLink, withRouter } from 'react-router-dom';
 import BaseOverlay from '../BaseOverlay';
 import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
+import { makeStripeSession } from '../../../redux/actions';
 import { trackEvent, trackOutbound } from '../../../utils/tracking';
 import stripeCreds from '../../../assets/json/configs/stripe-creds';
 
@@ -34,6 +35,16 @@ class StripeModal extends Component {
 		};
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+
+		const { stripeSession } = this.props;
+		if (!prevProps.stripeSession && stripeSession) {
+			this.onStripeSession();
+		}
+	}
+
+
 	handleComplete = ()=> {
 		// console.log('%s.handleComplete()', this.constructor.name);
 
@@ -51,7 +62,7 @@ class StripeModal extends Component {
 	};
 
 
-	handleSubmit = async(event, payment)=> {
+	handleSubmit = (event, payment)=> {
 		console.log('%s.handleSubmit()', this.constructor.name, { event, payment });
 
 		event.preventDefault();
@@ -89,6 +100,22 @@ class StripeModal extends Component {
 		});
 	};
 
+	onStripeSession = async()=> {
+		console.log('%s.onStripeSession()', this.constructor.name);
+
+		const { stripeSession } = this.props;
+
+		const stripe = await stripePromise;
+		const { error } = await stripe.redirectToCheckout({ sessionId : stripeSession.id });
+
+		if (error) {
+			this.props.onPopup({
+				type    : POPUP_TYPE_ERROR,
+				content : error.code
+			});
+		}
+	};
+
 
 	render() {
 		console.log('%s.render()', this.constructor.name, this.props, this.state);
@@ -123,11 +150,19 @@ class StripeModal extends Component {
 }
 
 
-const mapStateToProps = (state, ownProps)=> {
+const mapDispatchToProps = (dispatch)=> {
   return ({
-    team : state.team
+    makeStripeSession : (payload)=> dispatch(makeStripeSession(payload))
   });
 };
 
 
-export default withRouter(connect(mapStateToProps)(StripeModal));
+const mapStateToProps = (state, ownProps)=> {
+  return ({
+		stripeSession : state.stripeSession,
+    team          : state.team
+  });
+};
+
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(StripeModal));

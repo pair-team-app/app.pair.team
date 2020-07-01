@@ -1,5 +1,5 @@
 
-import { BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_AX, TOGGLE_THEME, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, TOGGLE_CREATE_TEAM } from '../../consts/action-types';
+import { BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_AX, TOGGLE_THEME, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, TOGGLE_CREATE_TEAM, STRIPE_SESSION_CREATED } from '../../consts/action-types';
 import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 const initialState = {
@@ -25,6 +25,7 @@ const initialState = {
   teams          : null,
   team           : null,
   createTeam     : false,
+  stripeSession  : null,
   history        : [],
   mouse          : {
     position : {
@@ -82,6 +83,10 @@ function rootReducer(state = initialState, action) {
   } else if (type === TEAM_COMMENTS_LOADED) {
     const { team, comments } = payload;
     return (Object.assign({}, state, { team, comments }));
+
+  } else if (type === STRIPE_SESSION_CREATED) {
+    const { stripeSession } = payload;
+    return (Object.assign({}, state, { stripeSession }));
 
   } else if (type === TEAM_RULES_UPDATED) {
     const { team } = payload;
