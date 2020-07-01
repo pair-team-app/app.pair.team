@@ -66,7 +66,7 @@ class TeamPage extends Component {
 
     // Register the plugins
     registerPlugin(FilepondPluginFileMetadata, FilepondPluginFilePoster, FilepondPluginImageCrop, FilepondPluginImageEdit, FilepondPluginImageExifOrientation, FilepondPluginImagePreview, FilepondPluginImageTransform);
-    document.addEventListener('keydown', this.handleKeyDown);
+    // document.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
