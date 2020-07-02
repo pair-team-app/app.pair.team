@@ -42,6 +42,16 @@ class Routes extends Component {
           />
       } />
 
+
+<Route
+        path={RoutePaths.INVITE}
+        render={({ props })=> <BasePage
+          onLogout={this.props.onLogout}
+          onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
+          onPopup={this.props.onPopup} { ...props}
+          />
+      } />
+
       <Route
         path={RoutePaths.TEAM}
         render={({ props })=> <TeamPage

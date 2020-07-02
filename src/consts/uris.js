@@ -20,6 +20,7 @@ export const Pages = {
 	INVITE     : '/invite',
 	LEGAL      : '/legal',
 	PLAYGROUND : '/app',
+	PAYMENT    : '/payment',
 	PRIVACY    : '/privacy',
 	PROJECT    : '/project',
 	TEAM       : '/team',
