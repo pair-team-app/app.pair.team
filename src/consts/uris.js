@@ -29,21 +29,22 @@ export const Pages = {
 };
 
 
-// const API_PROTOCOL = 'https'
-const API_PROTOCOL = 'http';
-// export const API_HOSTNAME = 'api.pairurl.com';
-export const API_HOSTNAME = 'localhost:1215';
+const API_PROTOCOL = 'https'
+// const API_PROTOCOL = 'http';
+export const API_HOSTNAME = 'api.pairurl.com';
+// export const API_HOSTNAME = 'localhost:1215';
 const API_VER = 'v6';
 export const API_GATEWAY = 'gateway.php'
 export const API_ENDPT_URL = `${API_PROTOCOL}://${API_HOSTNAME}/${API_VER}/${API_GATEWAY}`;
 
 
-const CDN_PROTOCOL = 'http';
-export const CDN_HOSTNAME = 'localhost:1453';
+// const CDN_PROTOCOL = 'http';
+const CDN_PROTOCOL = 'https';
+// export const CDN_HOSTNAME = 'localhost:1453';
+export const CDN_HOSTNAME = 'cdn.pairurl.com';
 const CDN_VER = 'v1';
 export const CDN_UPLOAD = 'upload'
 export const CDN_UPLOAD_URL = `${CDN_PROTOCOL}://${CDN_HOSTNAME}/${CDN_VER}/${CDN_UPLOAD}`;
-// export const CDN_HOSTNAME = 'http://cdn.pairurl.com';
 
 
 // export const TEAM_DEFAULT_AVATAR = `${CDN_HOSTNAME}/site-assets/avatars/team-default.png`;
