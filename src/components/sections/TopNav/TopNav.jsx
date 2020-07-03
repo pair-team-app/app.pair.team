@@ -96,7 +96,7 @@ class TopNav extends Component {
 	render() {
 		// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { darkThemed, playground } = this.props;
+		const { darkThemed, playground, profile, invite, team } = this.props;
 		const { popover } = this.state;
 
 
@@ -118,8 +118,8 @@ class TopNav extends Component {
 				<NavLink to="https://www.notion.so/pairurl/Blog-f8fd5939357442bca1ff97c3117d1ecb" className="top-nav-link" target="_blank" onClick={(event)=> handleURL(event, 'https://www.notion.so/pairurl/Blog-f8fd5939357442bca1ff97c3117d1ecb')}>Blog</NavLink>
         <NavLink to="https://spectrum.chat/pair" className="top-nav-link" target="_blank" onClick={(event)=> handleURL(event, 'https://spectrum.chat/pair')}>Support</NavLink>
 				<TopNavShareLink popover={popover} playground={playground} onClick={()=> this.setState({ popover : !this.state.popover })} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
-				<UserSettings onMenuItem={this.props.onSettingsItem} onLogout={this.props.onLogout} />
-				<div className="" onClick={()=> this.props.onModal(Modals.INVITE)}>invite</div>
+				{(profile && !invite) && (<UserSettings onMenuItem={this.props.onSettingsItem} onLogout={this.props.onLogout} />)}
+				{(profile && !invite) && (<div className="" onClick={()=> this.props.onModal(Modals.INVITE)}>invite</div>)}
 			</div>
 		</div>);
 	}
@@ -164,8 +164,10 @@ const mapStateToProps = (state, ownProps)=> {
 	return ({
     darkThemed  : state.darkThemed,
 		devices     : state.devices,
+		invite      : state.invite,
 		playgrounds : state.playgrounds,
 		playground  : state.playground,
+		profile     : state.userProfile,
 		typeGroup   : state.typeGroup,
 		component   : state.component,
 		comment     : state.comment,

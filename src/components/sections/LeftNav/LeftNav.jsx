@@ -95,39 +95,39 @@ class LeftNav extends Component {
   render() {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { teams, team } = this.props;
+    const { teams, team, invite } = this.props;
     const { builds } = this.state;
 
     return (<div className="left-nav">
       <LeftNavHeader { ...this.props } />
-      {(!teams) ? (<div className="loading">Loading…</div>)
-      : (<div className="tree-wrapper">
-          <div className="teams-wrapper">
-            <div className="items-wrapper">
-              {teams.map((team, i)=> (
-                <LeftNavTeam
-                  key={i}
-                  team={team}
-                  onClick={this.handleTeamClick}
-                />
-              ))}
-            </div>
-            <div className="create-team" onClick={this.handleCreateTeam}>Create Team</div>
+      {(!teams && !invite) && (<div className="loading">Loading…</div>)}
+      {(teams) && (<div className="tree-wrapper">
+        <div className="teams-wrapper">
+          <div className="items-wrapper">
+            {teams.map((team, i)=> (
+              <LeftNavTeam
+                key={i}
+                team={team}
+                onClick={this.handleTeamClick}
+              />
+            ))}
           </div>
-          {(!builds) ? (<div className="loading">Loading…</div>)
-          : (<div className="builds-wrapper">
-            <div className="header">Projects</div>
-            <div className="items-wrapper">
-              {builds.map((build, i)=> (
-                <LeftNavBuild
-                  key={i}
-                  build={build}
-                  onBuildClick={this.handleBuildClick}
-                  onDeviceRenderClick={this.handleDeviceRenderClick}
-                />
-              ))}
-            </div>
-          </div>)}
+          <div className="create-team" onClick={this.handleCreateTeam}>Create Team</div>
+        </div>
+        {(!builds) ? (<div className="loading">Loading…</div>)
+        : (<div className="builds-wrapper">
+          <div className="header">Projects</div>
+          <div className="items-wrapper">
+            {builds.map((build, i)=> (
+              <LeftNavBuild
+                key={i}
+                build={build}
+                onBuildClick={this.handleBuildClick}
+                onDeviceRenderClick={this.handleDeviceRenderClick}
+              />
+            ))}
+          </div>
+        </div>)}
       </div>)}
     </div>);
   }
@@ -184,6 +184,7 @@ const LeftNavTeam = (props)=> {
 
 const mapStateToProps = (state, ownProps)=> {
   return {
+    invite      : state.invite,
     team        : state.team,
     teams       : state.teams,
     playgrounds : state.playgrounds,
