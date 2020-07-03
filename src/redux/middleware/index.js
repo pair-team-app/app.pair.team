@@ -155,7 +155,7 @@ export function onMiddleware(store) {
 
     } else if (type === INVITE_LOADED) {
       const invite = reformInvite(payload.invite);
-      const team = reformTeam(payload.team);
+      const team = null;//eformTeam(payload.team);
 
       payload.invite = invite;
       payload.team = team;

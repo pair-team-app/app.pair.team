@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { generatePath, matchPath, withRouter } from 'react-router-dom';
 
 import Routes, { RoutePaths } from '../helpers/Routes';
+import AlertDialog from '../overlays/AlertDialog';
 import ConfirmDialog from '../overlays/ConfirmDialog';
 import CookiesOverlay from '../overlays/CookiesOverlay';
 import InviteModal from '../overlays/InviteModal';
@@ -22,7 +23,7 @@ import LeftNav from '../sections/LeftNav';
 import TopNav from '../sections/TopNav';
 
 import { API_ENDPT_URL, Modals, Pages } from '../../consts/uris';
-import { fetchTeamLookup, fetchUserProfile, setPlayground, modifyInvite, updateMatchPath, updateUserProfile } from '../../redux/actions';
+import { fetchTeamLookup, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, updateMatchPath, updateUserProfile } from '../../redux/actions';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 const MATTY_DEVIN_THEME = false;
@@ -38,9 +39,9 @@ class App extends Component {
       modals    : {
         cookies  : cookie.load('cookies') << 0 === 0,
         disable  : false,
+        expired  : false,
         invite   : false,
         login    : false,
-        network  : !Browsers.isOnline(),
         noAccess : false,
         profile  : false,
         register : false,
@@ -70,10 +71,10 @@ class App extends Component {
       if (location.pathname.startsWith(Pages.PROJECT) || location.pathname.startsWith(Pages.TEAM)) {
         this.onToggleModal(Modals.LOGIN);
 
-      } else if (location.pathname.startsWith(Pages.INVITE)) {
-        this.setState({ inviteID : location.pathname.split('/')[3] << 0 }, ()=> {
-          this.onToggleModal(Modals.REGISTER);
-        });
+      // } else if (location.pathname.startsWith(Pages.INVITE)) {
+      //   this.setState({ inviteID : location.pathname.split('/')[3] << 0 }, ()=> {
+      //     this.onToggleModal(Modals.REGISTER);
+      //   });
       }
     }
 
@@ -137,7 +138,7 @@ class App extends Component {
     // console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds });
 
     // extract url props
-    const { location, profile, team, invite, playgrounds, playground } = this.props;
+    const { location, profile, team, playgrounds, playground } = this.props;
     // const { pathname } = (matchPlaygrounds && Object.keys(matchPlaygrounds).length > 0) ? this.props.location : '';
     const { pathname } = location;
     const { modals } = this.state;
@@ -147,58 +148,40 @@ class App extends Component {
       trackPageview();
     }
 
-    // no internet
-    // if (!modals.network && !Browsers.isOnline()) {
-    if (!Browsers.isOnline()) {
-      // this.onToggleModal(Modals.NETWORK);
-      // this.handlePopup({
-      //   type     : POPUP_TYPE_OK,
-      //   content  : 'Project URL has been copied to your clipboard',
-      //   delay    : 125,
-      //   duration : 3333
-      // });
+    // has internet
+    if (Browsers.isOnline()) {
+      if (location.pathname.startsWith(Pages.INVITE) && !this.state.inviteID && !modals.register) {
+        const inviteID = location.pathname.split('/')[3] << 0;
+        this.setState({ inviteID }, ()=> {
+          //
+        });
+      }
 
-    } else {
+      if (!prevState.inviteID && this.state.inviteID) {
+        const { inviteID } = this.state;
+        this.props.fetchInvite({ inviteID });
+      }
 
-      if (profile && team && team.type == 'free' && !modals.stripe) {
-        if (team.members.length >= 2) {
-          this.onToggleModal(Modals.STRIPE);
+      if (!prevProps.invite && this.props.invite) {
+        const { invite } = this.props;
+
+        console.log('-------YO----------', { invite });
+        if (invite.state === 1) {
+          this.onToggleModal(Modals.REGISTER);
+          this.props.modifyInvite({ invite, state : 2 });
+
+        } else if (invite.state === 2) {//} && !modals.register) {
+          this.onToggleModal(Modals.REGISTER);
+
+        } else if (invite.state === 3) {//} && !modals.expired) {
+          this.onToggleModal(Modals.EXPIRED);
         }
       }
 
 
-      // const pass = (prevProps.matchPath && this.props.matchPath) ? (Object.keys(this.props.matchPath.params).map((key)=> ((this.props.matchPath.params[key] === prevProps.matchPath.params[key]))).reduce((acc, val)=> (acc * val), 1) === 0) : false;
-
-      // console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds, props : this.props.matchPath, prev : prevProps.matchPath, historyMatch });
-      // console.log('+=+=+=+=+=+=+=+', { props : (this.props.matchPath) ? { ...this.props.matchPath.params } : null, prev : (prevProps.matchPath) ? { ...prevProps.matchPath.params } : null, pass });
-      // console.log('+=+=+=+=+=+=+=+', { props : (this.props.matchPath) ? { ...this.props.matchPath.params } : null, prev : (prevProps.matchPath) ? { ...prevProps.matchPath.params } : null });
-      if (matchPlaygrounds !== null && (this.props.matchPath === null || (this.props.matchPath && matchPlaygrounds.url !== this.props.matchPath.url))) {
-      // if (this.props.matchPath === null && matchPlaygrounds !== null && matchPlaygrounds.url !== historyMatch.url) {
-      // if ((this.props.matchPath === null && matchPlaygrounds !== null) || (matchPlaygrounds.url !== this.props.matchPath.url)) {
-      // if ((this.props.matchPath === null && matchPlaygrounds !== null) || (this.props.matchPath && prevProps.matchPath && prevProps.matchPath.params !== this.props.matchPath.params)) {
-      //x if ((this.props.matchPath === null) || (this.props.matchPath && prevProps.matchPath && pass)) {
-        console.log('+=+=+=+=+=+=+=+]] UPDATE PATH PARAMS -->', { matchPlaygrounds, props : this.props.matchPath });
-        this.props.updateMatchPath({
-          matchPath : { ...matchPlaygrounds,
-            location : { ...this.props.location,
-              state : { referer : 'APP' }
-            }
-          }
-        });
-      }
-
-
-      // dismiss login modal after profile
-      if (profile !== null && modals.login) {
-        this.onToggleModal(Modals.LOGIN, false);
-      }
-
-      if (invite !== null && !prevProps.invite) {
-        if (invite.state === 1) {
-          this.props.modifyInvite({ invite, state : 2 });
-
-        } else if (invite === 2) {
-
+      if (profile && team && team.type == 'free' && !modals.stripe) {
+        if (team.members.length >= 2) {
+          this.onToggleModal(Modals.STRIPE);
         }
       }
 
@@ -211,45 +194,18 @@ class App extends Component {
       //   }
       // }
 
-      // on a playground url
-      if (matchPlaygrounds) {
 
-        // not a team member, block access
-        if (profile && team && playground && team.id !== playground.teamID && !prevState.modals.noAccess && !modals.noAccess) {
-          this.onToggleModal(Modals.NO_ACCESS);
-        }
-
-        if (this.props.matchPath) {
-          // const { teamSlug, projectSlug, buildID, deviceSlug, typeGroupSlug, componentID, comments, commentID } = this.props.matchPath.params || {};
-          const { teamSlug, projectSlug, buildID, deviceSlug, typeGroupSlug } = this.props.matchPath.params || {};
-
-          if (!prevProps.team && team) {
-            if (teamSlug !== team.slug || !projectSlug) {
-              this.props.history.push(`${Pages.TEAM}/${team.slug}-${team.id}`);
-            }
-          }
-
-          if (!profile && !prevState.modals.login && !modals.login) {
-            // this.onToggleModal(Modals.LOGIN);
-          }
-
-          /*
-          if (!this.props.location.pathname.includes('/team') && playgrounds && (!buildID || !deviceSlug || !typeGroupSlug)) {
-            const pg = [ ...playgrounds].shift();
-            this.props.updateMatchPath({
-              matchPath : { ...this.props.matchPath,
-                params : { ...this.props.matchPath.params,
-                  projectSlug   : (projectSlug !== pg.projectSlug) ? pg.projectSlug : projectSlug,
-                  buildID       : (!buildID) ? pg.buildID : buildID,
-                  deviceSlug    : (!deviceSlug) ? pg.device.slug : deviceSlug,
-                  typeGroupSlug : (!typeGroupSlug) ? [ ...pg.typeGroups].pop().key : typeGroupSlug
-                }
-              }
-            });
-          }
-          */
-        }
+      // dismiss login modal after profile
+      if (profile !== null && modals.login) {
+        this.onToggleModal(Modals.LOGIN, false);
       }
+
+
+      // dismiss register modal after profile
+      if (profile !== null && modals.register) {
+        this.onToggleModal(Modals.REGISTER, false);
+      }
+
     }
   }
 
@@ -335,7 +291,7 @@ class App extends Component {
           disable  : uri === Modals.DISABLE,
           login    : uri === Modals.LOGIN,
           invite   : uri === Modals.INVITE,
-          network  : uri === Modals.NETWORK,
+          expired  : uri === Modals.EXPIRED,
           noAccess : uri === Modals.NO_ACCESS,
           profile  : uri === Modals.PROFILE,
           register : uri === Modals.REGISTER,
@@ -349,7 +305,6 @@ class App extends Component {
           disable  : uri === Modals.DISABLE ? false : modals.disable,
           invite   : uri === Modals.INVITE ? false : modals.invite,
           login    : uri === Modals.LOGIN ? false : modals.login,
-          network  : uri === Modals.NETWORK ? false : modals.network,
           noAccess : uri === Modals.NO_ACCESS ? false : modals.noAccess,
           profile  : uri === Modals.PROFILE ? false : modals.profile,
           register : uri === Modals.REGISTER ? false : modals.register,
@@ -435,12 +390,12 @@ class App extends Component {
 				  onComplete={()=> this.onToggleModal(Modals.INVITE, false)}
 			  />)}
 
-			  {/* {(modals.network) && (<AlertDialog
-				  title='No Internet Connection'
-				  tracking={Modals.NETWORK}
-				  onComplete={()=> this.onToggleModal(Modals.NETWORK, false)}>
-				  Check your network connection to continue.
-			  </AlertDialog>)} */}
+			  {(modals.expired) && (<AlertDialog
+				  title='Invite Expired'
+				  tracking={Modals.EXPIRED}
+				  onComplete={()=> this.onToggleModal(Modals.EXPIRED, false)}>
+				  This invite has expired.
+			  </AlertDialog>)}
 
 			  {(modals.disable) && (<ConfirmDialog
 				  title="Delete your account"
@@ -490,6 +445,7 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return {
+    fetchInvite       : (payload)=> dispatch(fetchInvite(payload)),
     fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
     fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),

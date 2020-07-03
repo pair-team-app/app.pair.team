@@ -3,6 +3,7 @@
 export const Modals = {
 	COOKIES   : '/cookies',
 	DISABLE   : '/disable',
+	EXPIRED   : '/expired',
 	INVITE    : '/invite',
 	LOGIN     : '/login',
 	PROCESSING : '/processing',
