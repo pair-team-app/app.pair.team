@@ -10,10 +10,10 @@ class CreateTeamForm extends Component {
     super(props);
 
     this.state = {
-      title       : '',
+      title       : 'invite team',
       description : '',
       rules       : [],
-      invites     : [],
+      invites     : ['matt.holcombe@gmail.com', 'mth.363615033@gmail.com'],
       changed     : false,
       validated   : false
     };
