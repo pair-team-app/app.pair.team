@@ -9,6 +9,7 @@ export const Modals = {
 	PROCESSING : '/processing',
 	NETWORK   : '/network',
 	NO_ACCESS : '/no-access',
+	PAYMENT   : '/payment',
 	PROFILE   : '/profile',
 	RECOVER   : '/recover',
 	REGISTER  : '/register',

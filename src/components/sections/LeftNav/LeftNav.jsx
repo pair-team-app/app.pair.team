@@ -178,7 +178,7 @@ const LeftNavTeam = (props)=> {
 
 	const { team } = props;
 	const { id, title, selected } = team;
-	return (<div className="left-nav-team" onClick={()=> props.onClick(team)} data-id={id} data-selected={selected}>{title}</div>);
+	return (<div className="left-nav-team" onClick={()=> props.onClick(team)} data-id={id} data-selected={selected}>{title} [{id}]</div>);
 }
 
 

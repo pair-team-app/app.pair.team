@@ -42,9 +42,8 @@ class Routes extends Component {
           />
       } />
 
-
-<Route
-        path={RoutePaths.INVITE}
+      <Route
+        path={RoutePaths.PAYMENT}
         render={({ props })=> <BasePage
           onLogout={this.props.onLogout}
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}

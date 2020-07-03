@@ -23,7 +23,7 @@ import LeftNav from '../sections/LeftNav';
 import TopNav from '../sections/TopNav';
 
 import { API_ENDPT_URL, Modals, Pages } from '../../consts/uris';
-import { fetchTeamLookup, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, updateMatchPath, updateUserProfile } from '../../redux/actions';
+import { fetchTeamLookup, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, paidStripeSession, updateMatchPath, updateUserProfile } from '../../redux/actions';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 const MATTY_DEVIN_THEME = false;
@@ -43,6 +43,7 @@ class App extends Component {
         invite   : false,
         login    : false,
         noAccess : false,
+        payment  : false,
         profile  : false,
         register : false,
         stripe   : false,
@@ -66,11 +67,6 @@ class App extends Component {
       if (profile) {
         this.onLogout();
       }
-
-    } else if (location.pathname.startsWith(Pages.PAYMENT)) {
-      if (profile) {
-
-      }
     }
 
     if (!Browsers.isOnline()) {
@@ -93,7 +89,7 @@ class App extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, snapshot });
     // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
-    const { location, profile, team, playgrounds, playground } = this.props;
+    const { location, profile, team, playgrounds, playground, purchase } = this.props;
     const { pathname } = location;
     const { modals } = this.state;
 
@@ -148,10 +144,24 @@ class App extends Component {
       //   }
       // }
 
+      if (location.pathname.startsWith(Pages.PAYMENT)) {
+        if (profile) {
+          const sessionID = pathname.split('/').pop();
 
-      if (!profile && pathname.startsWith(Pages.TEAM)) {
-        if (!modals.login && !modals.register)
-        this.onToggleModal(Modals.LOGIN);
+          if (!purchase) {
+            this.props.paidStripeSession({ sessionID });
+
+          } else {
+            if (!prevProps.purchase && purchase && !modals.payment) {
+              this.onToggleModal(Modals.PAYMENT);
+            }
+          }
+        }
+
+      } else if (pathname.startsWith(Pages.TEAM)) {
+        if (!profile && !modals.login && !modals.register && !modals.payment) {
+          this.onToggleModal(Modals.LOGIN);
+        }
       }
 
       // dismiss login modal after profile
@@ -252,6 +262,7 @@ class App extends Component {
           invite   : uri === Modals.INVITE,
           expired  : uri === Modals.EXPIRED,
           noAccess : uri === Modals.NO_ACCESS,
+          payment  : uri === Modals.PAYMENT,
           profile  : uri === Modals.PROFILE,
           register : uri === Modals.REGISTER,
           stripe   : uri === Modals.STRIPE
@@ -260,14 +271,15 @@ class App extends Component {
     } else {
       this.setState({
         modals : { ...modals,
-          cookies  : uri === Modals.COOKIES ? false : modals.cookies,
-          disable  : uri === Modals.DISABLE ? false : modals.disable,
-          invite   : uri === Modals.INVITE ? false : modals.invite,
-          login    : uri === Modals.LOGIN ? false : modals.login,
-          noAccess : uri === Modals.NO_ACCESS ? false : modals.noAccess,
-          profile  : uri === Modals.PROFILE ? false : modals.profile,
-          register : uri === Modals.REGISTER ? false : modals.register,
-          stripe   : uri === Modals.STRIPE ? false : modals.stripe,
+          cookies  : (uri === Modals.COOKIES) ? false : modals.cookies,
+          disable  : (uri === Modals.DISABLE) ? false : modals.disable,
+          invite   : (uri === Modals.INVITE) ? false : modals.invite,
+          login    : (uri === Modals.LOGIN) ? false : modals.login,
+          noAccess : (uri === Modals.NO_ACCESS) ? false : modals.noAccess,
+          payment  : (uri === Modals.PAYMENT) ? false : modals.payment,
+          profile  : (uri === Modals.PROFILE) ? false : modals.profile,
+          register : (uri === Modals.REGISTER) ? false : modals.register,
+          stripe   : (uri === Modals.STRIPE) ? false : modals.stripe,
           payload  : null
         }
       });
@@ -287,7 +299,7 @@ class App extends Component {
       	console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
       	// console.log('%s.render()', this.constructor.name, this.state.modals);
 
-    const { darkThemed, profile, location } = this.props;
+    const { darkThemed, profile, location, team, purchase } = this.props;
     const { popup, inviteID, modals } = this.state;
 
     const { pathname } = location;
@@ -376,6 +388,14 @@ class App extends Component {
 				  Project has been deleted or permissions have been denied.
 			  </ConfirmDialog>)}
 
+        {(modals.payment) && (<AlertDialog
+				  title='Payment Processed'
+				  tracking={Modals.PAYMENT}
+				  // onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); window.location.pathname = `${Pages.TEAM}/${team.slug}-${team.id}` }}>
+				  onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); this.props.history.replace(`${Pages.TEAM}/${team.slug}-${team.id}`) }}>
+				  Your team <strong>{team.title} - [{team.id}]</strong> is now a paid {purchase.type} plan.
+			  </AlertDialog>)}
+
 			  {(popup) && (<PopupNotification
 				  payload={popup}
 				  onComplete={()=> this.setState({ popup : null })}>
@@ -391,6 +411,7 @@ const mapStateToProps = (state, ownProps)=> {
     darkThemed     : state.darkThemed,
     componentTypes : state.componentTypes,
     invite         : state.invite,
+    purchase       : state.purchase,
     products       : state.products,
     profile        : state.userProfile,
     team           : state.team,
@@ -409,6 +430,7 @@ const mapDispatchToProps = (dispatch)=> {
     fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),
     modifyInvite      : (payload)=> dispatch(modifyInvite(payload)),
+    paidStripeSession : (payload)=> dispatch(paidStripeSession(payload)),
     updateMatchPath   : (payload)=> dispatch(updateMatchPath(payload)),
     updateUserProfile : (payload)=> dispatch(updateUserProfile(payload))
   };

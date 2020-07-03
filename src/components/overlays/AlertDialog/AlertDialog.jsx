@@ -28,7 +28,7 @@ class AlertDialog extends Component {
 			tracking={tracking}
 			outro={outro}
 			closeable={true}
-			filled={true}
+			filled={false}
 			title={title}
 			onComplete={this.props.onComplete}>
 			<div className="alert-dialog">
