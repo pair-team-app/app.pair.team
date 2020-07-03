@@ -95,12 +95,12 @@ class LeftNav extends Component {
   render() {
     // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-    const { teams, team, invite } = this.props;
+    const { teams, team, invite, profile } = this.props;
     const { builds } = this.state;
 
     return (<div className="left-nav">
       <LeftNavHeader { ...this.props } />
-      {(!teams && !invite) && (<div className="loading">Loading…</div>)}
+      {(profile && !teams && !invite) && (<div className="loading">Loading…</div>)}
       {(teams) && (<div className="tree-wrapper">
         <div className="teams-wrapper">
           <div className="items-wrapper">
@@ -188,7 +188,8 @@ const mapStateToProps = (state, ownProps)=> {
     team        : state.team,
     teams       : state.teams,
     playgrounds : state.playgrounds,
-    playground  : state.playground
+    playground  : state.playground,
+    profile     : state.profile
   };
 };
 

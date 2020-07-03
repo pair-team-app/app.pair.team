@@ -54,7 +54,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    		console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
     trackEvent('site', 'load');
     trackPageview();
@@ -62,19 +62,14 @@ class App extends Component {
     // console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('M'));
 
     const { profile, location } = this.props;
-    // if (!profile && location.pathname.startsWith(Pages.PROJECT)) {
-    if (!profile && (location.pathname.startsWith(Pages.PROJECT) || location.pathname.startsWith(Pages.TEAM)) && cookie.load('user_id') === '0') {
-      this.onToggleModal(Modals.LOGIN);
-    }
+    if (location.pathname.startsWith(Pages.INVITE)) {
+      if (profile) {
+        this.onLogout();
+      }
 
-    if (!profile && cookie.load('user_id') === '0') {
-      if (location.pathname.startsWith(Pages.PROJECT) || location.pathname.startsWith(Pages.TEAM)) {
-        this.onToggleModal(Modals.LOGIN);
+    } else if (location.pathname.startsWith(Pages.PAYMENT)) {
+      if (profile) {
 
-      // } else if (location.pathname.startsWith(Pages.INVITE)) {
-      //   this.setState({ inviteID : location.pathname.split('/')[3] << 0 }, ()=> {
-      //     this.onToggleModal(Modals.REGISTER);
-      //   });
       }
     }
 
@@ -98,48 +93,7 @@ class App extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, snapshot });
     // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
-
-    // check for playground url
-    const matchPlaygrounds = matchPath(this.props.location.pathname, {
-      path : RoutePaths.PROJECT,
-      exact : false,
-      strict: false
-    }) || {};
-
-    const historyMatch = matchPath(this.props.location.pathname, {
-      path : RoutePaths.PROJECT,
-      exact : false,
-      strict: false
-    });
-
-    if (prevProps.matchPath && this.props.matchPath) {
-      // console.log('??+=+=+=+=+=+=+=+', { matchPlaygrounds, historyMatch, prevMatchPath : prevProps.matchPath, currMatchPath : this.props.matchPath });
-      // console.log(`~≈["${this.props.history.action}" HISTORY(${prevProps.history.action})]≈~`);
-
-      if (this.props.history.action === 'POP') {
-        // this.props.history.goBack();
-      }
-
-      //x if (this.props.matchPath.params && historyMatch.params === matchPlaygrounds.params && this.props.matchPath.params.buildID > 0) {
-      // if (this.props.matchPath.params && matchPlaygrounds.url !== historyMatch.url) {
-      if (this.props.matchPath.params && ((this.props.matchPath.params !== prevProps.matchPath.params) || (this.props.matchPath.location.pathname !== prevProps.matchPath.location.pathname))) {
-        // const path = generatePath(RoutePaths.PROJECT, { ...this.props.matchPath.params,
-        const path = generatePath(RoutePaths.PROJECT, { ...this.props.matchPath.params,
-          ax       : undefined,
-          comments : (this.props.matchPath.params.comments) ? 'comments' : undefined
-        });
-        console.log('??*=*=*=*=*=*=*=*]] PUSH HISTORY -->>', { path, prevAction : prevProps.history.action, currAction : this.props.history.action });
-
-        this.props.history.push(path);
-      }
-    }
-
-    // console.log('!!!!!!!!!!!', { online : Browsers.isOnline() });
-    // console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds });
-
-    // extract url props
     const { location, profile, team, playgrounds, playground } = this.props;
-    // const { pathname } = (matchPlaygrounds && Object.keys(matchPlaygrounds).length > 0) ? this.props.location : '';
     const { pathname } = location;
     const { modals } = this.state;
 
@@ -194,6 +148,11 @@ class App extends Component {
       //   }
       // }
 
+
+      if (!profile && pathname.startsWith(Pages.TEAM)) {
+        if (!modals.login && !modals.register)
+        this.onToggleModal(Modals.LOGIN);
+      }
 
       // dismiss login modal after profile
       if (profile !== null && modals.login) {
