@@ -406,6 +406,28 @@ export function modifyComment(payload) {
   });
 }
 
+export function modifyInvite(payload) {
+  return ((dispatch, getState)=> {
+    logFormat('modifyInvite()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
+    const { invite, state } = payload;
+
+    axios.post(API_ENDPT_URL, {
+      action  : 'UPDATE_INVITE_STATE',
+      payload : { state,
+        invite_id : invite.id
+      }
+    }).then((response)=> {
+      console.log(API_RESPONSE_PREFIX, 'UPDATE_INVITE_STATE', response.data);
+
+      dispatch({
+        type    : STRIPE_SESSION_CLOSED,
+        payload : null
+      });
+
+    }).catch((error)=> {});
+  });
+}
+
 
 export function modifyStripeSession(payload) {
   return ((dispatch, getState)=> {

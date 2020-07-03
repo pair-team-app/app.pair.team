@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import './RegisterModal.css';
 
-import axios from 'axios';
 import { URIs } from 'lang-js-utils';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -11,7 +10,7 @@ import BaseOverlay from '../BaseOverlay';
 import RegisterForm from '../../forms/RegisterForm';
 import { POPUP_TYPE_ERROR } from '../PopupNotification';
 import { Modals } from '../../../consts/uris';
-import { fetchInvite, updateUserProfile } from '../../../redux/actions';
+import { fetchInvite, modifyInvite, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
@@ -33,34 +32,19 @@ class RegisterModal extends Component {
 		const { inviteID } = this.props;
 		if (inviteID) {
 			this.props.fetchInvite({ inviteID });
-
-			// axios.post(API_ENDPT_URL, {
-			// 	action  : 'INVITE_LOOKUP',
-			// 	payload : { invite_id : this.props.invite.id }
-			// }).then((response)=> {
-			// 	// console.log('INVITE_LOOKUP', response.data);
-			// 	const { invite } = response.data;
-			// 	if (invite.id === this.props.invite.id) {
-			// 		const { email } = invite;
-			// 		trackEvent('user', 'invite');
-			// 		this.setState({ email });
-			// 	}
-
-			// }).catch((error)=> {
-			// });
 		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
 
-		const { profile } = this.props;
+		const { profile, invite } = this.props;
+
 		if (!prevProps.profile && profile) {
 			this.setState({ outro : true });
 		}
 
-		if (!prevProps.invite && this.props.invite) {
-
+		if (!prevProps.invite && invite) {
 		}
 	}
 
@@ -142,6 +126,7 @@ class RegisterModal extends Component {
 const mapDispatchToProps = (dispatch)=> {
 	return ({
 		fetchInvite       : (payload)=> dispatch(fetchInvite(payload)),
+		modifyInvite      : (payload)=> dispatch(modifyInvite(payload)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 

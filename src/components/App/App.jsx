@@ -22,7 +22,7 @@ import LeftNav from '../sections/LeftNav';
 import TopNav from '../sections/TopNav';
 
 import { API_ENDPT_URL, Modals, Pages } from '../../consts/uris';
-import { fetchTeamLookup, fetchUserProfile, setPlayground, updateMatchPath, updateUserProfile } from '../../redux/actions';
+import { fetchTeamLookup, fetchUserProfile, setPlayground, modifyInvite, updateMatchPath, updateUserProfile } from '../../redux/actions';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 const MATTY_DEVIN_THEME = false;
@@ -137,7 +137,7 @@ class App extends Component {
     // console.log('+=+=+=+=+=+=+=+', { matchPlaygrounds });
 
     // extract url props
-    const { location, profile, team, playgrounds, playground } = this.props;
+    const { location, profile, team, invite, playgrounds, playground } = this.props;
     // const { pathname } = (matchPlaygrounds && Object.keys(matchPlaygrounds).length > 0) ? this.props.location : '';
     const { pathname } = location;
     const { modals } = this.state;
@@ -191,6 +191,15 @@ class App extends Component {
       // dismiss login modal after profile
       if (profile !== null && modals.login) {
         this.onToggleModal(Modals.LOGIN, false);
+      }
+
+      if (invite !== null && !prevProps.invite) {
+        if (invite.state === 1) {
+          this.props.modifyInvite({ invite, state : 2 });
+
+        } else if (invite === 2) {
+
+        }
       }
 
 
@@ -467,6 +476,7 @@ const mapStateToProps = (state, ownProps)=> {
   return {
     darkThemed     : state.darkThemed,
     componentTypes : state.componentTypes,
+    invite         : state.invite,
     products       : state.products,
     profile        : state.userProfile,
     team           : state.team,
@@ -483,6 +493,7 @@ const mapDispatchToProps = (dispatch)=> {
     fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
     fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),
+    modifyInvite      : (payload)=> dispatch(modifyInvite(payload)),
     updateMatchPath   : (payload)=> dispatch(updateMatchPath(payload)),
     updateUserProfile : (payload)=> dispatch(updateUserProfile(payload))
   };
