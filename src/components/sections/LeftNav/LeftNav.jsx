@@ -112,7 +112,7 @@ class LeftNav extends Component {
               />
             ))}
           </div>
-          <div className="create-team" onClick={this.handleCreateTeam}>Create Team</div>
+          {(profile && profile.state >= 2) && (<div className="create-team" onClick={this.handleCreateTeam}>Create Team</div>)}
         </div>
         {(!builds) ? (<div className="loading">Loading…</div>)
         : (<div className="builds-wrapper">
@@ -189,7 +189,7 @@ const mapStateToProps = (state, ownProps)=> {
     teams       : state.teams,
     playgrounds : state.playgrounds,
     playground  : state.playground,
-    profile     : state.profile
+    profile     : state.userProfile
   };
 };
 

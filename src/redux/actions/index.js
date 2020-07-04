@@ -286,13 +286,14 @@ export function makeStripeSession(payload) {
     logFormat('makeStripeSession()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
     const { userProfile : profile, team } = getState();
-    const { payment, quantity } = payload;
+    const { payment } = payload;
 
     axios.post(API_ENDPT_URL, {
       action  : 'STRIPE_SESSION',
-      payload : { payment, quantity,
-        team_id : team.id,
-        user_id : profile.id
+      payload : { payment,
+        team_id  : team.id,
+        user_id  : profile.id,
+        quantity : team.members.length
       }
     }).then((response)=> {
       console.log(API_RESPONSE_PREFIX, 'STRIPE_SESSION', response.data);

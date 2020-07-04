@@ -86,7 +86,7 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { team, comments }));
 
   } else if (type === STRIPE_SESSION_CREATED) {
-    const { stripeSession } = payload;
+    const { session : stripeSession } = payload;
     return (Object.assign({}, state, { stripeSession }));
 
   } else if (type === STRIPE_SESSION_PAID) {

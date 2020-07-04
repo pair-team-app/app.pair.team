@@ -70,34 +70,39 @@ class StripeModal extends Component {
 		trackEvent('button', `${payment}-subscription`);
 
 		const { team } = this.props;
-		axios.post(API_ENDPT_URL, {
-			action  : 'STRIPE_SESSION',
-			payload : { payment,
-				quantity : team.members.length
-			}
-		}).then(async(response)=> {
-			console.log('STRIPE_SESSION', response.data);
-			const { session, error } = response.data;
 
-			if (error) {
-				this.props.onPopup({
-					type    : POPUP_TYPE_ERROR,
-					content : error.code
-				});
+		this.props.makeStripeSession({ payment, })
 
-			} else {
-				const stripe = await stripePromise;
-				const { error } = await stripe.redirectToCheckout({ sessionId : session.id });
 
-				if (error) {
-					this.props.onPopup({
-						type    : POPUP_TYPE_ERROR,
-						content : error.code
-					});
-				}
-			}
-		}).catch((error)=> {
-		});
+
+		// axios.post(API_ENDPT_URL, {
+		// 	action  : 'STRIPE_SESSION',
+		// 	payload : { payment,
+		// 		quantity : team.members.length
+		// 	}
+		// }).then(async(response)=> {
+		// 	console.log('STRIPE_SESSION', response.data);
+		// 	const { session, error } = response.data;
+
+		// 	if (error) {
+		// 		this.props.onPopup({
+		// 			type    : POPUP_TYPE_ERROR,
+		// 			content : error.code
+		// 		});
+
+		// 	} else {
+		// 		const stripe = await stripePromise;
+		// 		const { error } = await stripe.redirectToCheckout({ sessionId : session.id });
+
+		// 		if (error) {
+		// 			this.props.onPopup({
+		// 				type    : POPUP_TYPE_ERROR,
+		// 				content : error.code
+		// 			});
+		// 		}
+		// 	}
+		// }).catch((error)=> {
+		// });
 	};
 
 	onStripeSession = async()=> {
