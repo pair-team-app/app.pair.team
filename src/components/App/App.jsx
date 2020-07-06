@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { generatePath, matchPath, withRouter } from 'react-router-dom';
 
 import Routes, { RoutePaths } from '../helpers/Routes';
+import ModalRoutes from '../helpers/ModalRoutes';
 import AlertDialog from '../overlays/AlertDialog';
 import ConfirmDialog from '../overlays/ConfirmDialog';
 import CookiesOverlay from '../overlays/CookiesOverlay';
@@ -225,6 +226,11 @@ class App extends Component {
     }
   };
 
+  handleModalComplete = (uri)=> {
+    console.log('%s.handleModalComplete()', this.constructor.name, { uri });
+    this.onToggleModal(uri, false);
+  };
+
   handlePopup = (payload)=> {
     // console.log('%s.handlePopup()', this.constructor.name, payload);
     this.setState({ popup : payload });
@@ -250,7 +256,7 @@ class App extends Component {
     this.props.updateUserProfile(profile);
   };
 
-  onToggleModal = (uri, show = true, payload = null)=> {
+  onToggleModal = (uri, show=true, payload=null)=> {
     console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
     const { modals } = this.state;
 
@@ -312,12 +318,15 @@ class App extends Component {
 	    {/* <div className={`page-wrapper${(location.pathname.startsWith(Pages.PROJECT) && !location.pathname.includes(Pages.TEAM)) ? ' playground-page-wrapper' : ''}`}> */}
 	    {/* <div className="page-wrapper"> */}
 	    <div className="page-wrapper">
-        <TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />
+        <TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={this.onToggleModal} />
 		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
         {(1===2) && (<BottomNav />)}
 	    </div>
 
 		  <div className='modal-wrapper'>
+        <ModalRoutes modals={modals} onComplete={this.handeModalComplete} />
+
+
 			  {(modals.cookies) && (<CookiesOverlay
 				  onConfirmed={this.handleCookies}
 				  onComplete={()=> this.onToggleModal(Modals.COOKIES, false)}
