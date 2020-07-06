@@ -157,7 +157,8 @@ function rootReducer(state = initialState, action) {
     return (Object.assign({}, state, { comment }));
 
   } else if (type === PRODUCTS_LOADED) {
-    return (Object.assign({}, state, { products : action.payload }));
+    const { products } = payload;
+    return (Object.assign({}, state, { products }));
 
   } else if (type === TOGGLE_CREATE_TEAM) {
     return (Object.assign({}, state, { createTeam : (typeof action.payload === 'boolean') ? action.payload : !state.createTeam }));

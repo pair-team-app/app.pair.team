@@ -62,16 +62,16 @@ class StripeModal extends Component {
 	};
 
 
-	handleSubmit = (event, payment)=> {
-		console.log('%s.handleSubmit()', this.constructor.name, { event, payment });
+	handleSubmit = (event, product)=> {
+		console.log('%s.handleSubmit()', this.constructor.name, { event, product });
 
 		event.preventDefault();
 
-		trackEvent('button', `${payment}-subscription`);
+		trackEvent('button', `${product.billing}-subscription`);
 
 		const { team } = this.props;
 
-		this.props.makeStripeSession({ payment, })
+		this.props.makeStripeSession({ product })
 
 
 
@@ -125,7 +125,7 @@ class StripeModal extends Component {
 	render() {
 		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-		const { team } = this.props;
+		const { products, team } = this.props;
 		const { outro } = this.state;
 
 		return (<BaseOverlay
@@ -142,8 +142,8 @@ class StripeModal extends Component {
 					Yearly - <span className="price">$8</span> per month per user (<span className="price">${(team.members.length * 8) * 12}</span> total)< br />
 				</h4></div>
 				<div>
-					<button onClick={(event)=> this.handleSubmit(event, 'monthly'.toLowerCase())}>Monthly</button>
-					<button onClick={(event)=> this.handleSubmit(event, 'yearly'.toLowerCase())}>Yearly</button>
+					<button onClick={(event)=> this.handleSubmit(event, products[0])}>Monthly</button>
+					<button onClick={(event)=> this.handleSubmit(event, products[1])}>Yearly</button>
 
 					<div className="form-disclaimer">
 						<NavLink to="https://spectrum.chat/pair" target="_blank" onClick={(event)=> this.handleURL(event, 'https://spectrum.chat/pair')}>Need More details about our Plans?</NavLink>
@@ -164,6 +164,7 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
   return ({
+		products      : state.products,
 		stripeSession : state.stripeSession,
     team          : state.team
   });

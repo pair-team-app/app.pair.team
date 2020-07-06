@@ -114,6 +114,27 @@ export function fetchInvite(payload=null) {
 //   };
 // }
 
+
+export function fetchProducts(payload=null) {
+  return (dispatch, getState)=> {
+    logFormat('fetchProducts()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
+
+    axios.post(API_ENDPT_URL, {
+      action  : 'PRODUCTS',
+      payload : null
+    }).then((response)=> {
+      console.log(API_RESPONSE_PREFIX, 'PRODUCTS', response.data);
+      const { products } = response.data;
+
+      dispatch({
+        type    : PRODUCTS_LOADED,
+        payload : { products }
+      });
+    }).catch((error)=> {});
+  };
+}
+
+
 export function fetchTeamBuilds(payload=null) {
   return (dispatch, getState)=> {
     const { team, buildID, deviceSlug } = payload;
@@ -211,24 +232,6 @@ export function fetchTeamLookup(payload=null) {
 }
 
 
-export function fetchProducts(payload=null) {
-  return (dispatch, getState)=> {
-    logFormat('fetchProducts()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
-
-    axios.post(API_ENDPT_URL, {
-      action  : 'PRODUCTS',
-      payload : null
-    }).then((response)=> {
-      console.log(API_RESPONSE_PREFIX, 'PRODUCTS', response.data);
-
-      dispatch({
-        type    : PRODUCTS_LOADED,
-        payload : { products : response.data.products.map((product)=> ({ ...product }).sort((i, j)=> (i.price < j.price) ? -1 : (i.price > j.price) ? 1 : 0)) }
-      });
-    }).catch((error)=> {});
-  };
-}
-
 export function fetchUserProfile(payload=null) {
   return (dispatch, getState)=> {
     logFormat('fetchUserProfile()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
@@ -286,14 +289,15 @@ export function makeStripeSession(payload) {
     logFormat('makeStripeSession()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
     const { userProfile : profile, team } = getState();
-    const { payment } = payload;
+    const { product } = payload;
 
     axios.post(API_ENDPT_URL, {
       action  : 'STRIPE_SESSION',
-      payload : { payment,
-        team_id  : team.id,
-        user_id  : profile.id,
-        quantity : team.members.length
+      payload : {
+        team_id    : team.id,
+        user_id    : profile.id,
+        product_id : product.id,
+        quantity   : team.members.length
       }
     }).then((response)=> {
       console.log(API_RESPONSE_PREFIX, 'STRIPE_SESSION', response.data);
