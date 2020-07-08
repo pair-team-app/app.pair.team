@@ -108,16 +108,18 @@ function rootReducer(state = initialState, action) {
 
   } else if (type === UPDATE_MATCH_PATH) {
     const { matchPath, playground, typeGroup, component, comment } = payload;
-    return Object.assign({}, state, { matchPath, playground, typeGroup, component, comment });
+    return (Object.assign({}, state, { matchPath, playground, typeGroup, component, comment }));
+    // return (state);
 
   } else if (type === UPDATE_RESIZE_BOUNDS) {
     const { resizeBounds } = payload;
-    return Object.assign({}, state, { resizeBounds });
+    return (Object.assign({}, state, { resizeBounds }));
 
   } else if (type === TEAMS_LOADED) {
     const { team, teams } = payload;
     // const { team } = payload;
     return (Object.assign({}, state, { team, teams }));
+    // return ( { ...state, teams, team });
     // return (Object.assign({}, state, { team }));
 
   } else if (type === TEAM_UPDATED) {
@@ -139,6 +141,10 @@ function rootReducer(state = initialState, action) {
   } else if (type === SET_TEAM) {
     const { teams, team } = payload;
     return (Object.assign({}, state, { teams, team }));
+    // return ({ ...state, teams, team });
+    // state.teams = teams;
+    // return (state);
+
 
   } else if (type === SET_PLAYGROUND) {
     const { playgrounds, playground } = payload;
