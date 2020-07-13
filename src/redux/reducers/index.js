@@ -48,7 +48,7 @@ const logFormat = (state, action, meta = '')=> {
   }
 };
 
-function rootReducer(state = initialState, action) {
+function rootReducer(state=initialState, action) {
   const { type, payload } = action;
   logFormat(state, action);
 

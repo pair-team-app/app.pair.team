@@ -1,4 +1,5 @@
 
+import { createBrowserHistory } from 'history';
 import cookie from 'react-cookies';
 import { applyMiddleware, createStore, compose } from 'redux';
 import thunk from 'redux-thunk';
@@ -8,6 +9,9 @@ import rootReducer from '../reducers/index';
 import { onMiddleware } from '../middleware'
 
 import { SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT } from '../../consts/action-types';
+
+export const history = createBrowserHistory();
+
 
 const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
   const logActionStackTraceMiddleware = (storeAPI)=> (next)=> (action)=> {

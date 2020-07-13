@@ -4,10 +4,12 @@ import cookie from 'react-cookies';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router'
+
 import App from './components/App';
 import ScrollToTop from './components/helpers/ScrollToTop';
 import './index.css';
-import store from './redux/store';
+import store, { history } from './redux/store';
 
 window.store = store;
 let scrollableElement = null;
@@ -19,7 +21,7 @@ if (typeof cookie.load('cookies') === 'undefined') {
 
 ReactDOM.render(
 	<Provider store={store}>
-		<BrowserRouter>
+		<BrowserRouter history={history}>
 		{/* <Route render={(props)=> <App />} /> */}
 			<ScrollToTop props={{ scrollableElement }}>
 				<Route path="/" render={(routeProps)=> <App { ...routeProps } />} />
