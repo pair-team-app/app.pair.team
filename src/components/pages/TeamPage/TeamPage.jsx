@@ -342,7 +342,7 @@ class TeamPage extends Component {
 
 
   render() {
-    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, comments, createTeam } = this.props;
     const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, share, sort, topSort, files, richComment, imageComment, codeComment } = this.state;

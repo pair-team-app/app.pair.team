@@ -124,7 +124,7 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		profile : state.userProfile,
+		profile : state.user.profile,
     team    : state.team
 	});
 };

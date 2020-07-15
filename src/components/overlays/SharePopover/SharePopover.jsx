@@ -133,7 +133,7 @@ class SharePopover extends Component {
 
 const mapStateToProps = (state, ownProps)=> {
   return {
-    profile    : state.userProfile,
+    profile    : state.user.profile,
     team       : state.team,
     playground : state.playground,
     typeGroup  : state.typeGroup,

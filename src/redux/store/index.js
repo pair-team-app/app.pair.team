@@ -1,4 +1,5 @@
 
+import { routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 import cookie from 'react-cookies';
 import { applyMiddleware, createStore, compose } from 'redux';
@@ -30,12 +31,8 @@ const createLogActionStackTraceMiddleware = (actionTypes=[])=> {
 const stackTraceMiddleware = createLogActionStackTraceMiddleware([SET_PLAYGROUND, SET_TYPE_GROUP, SET_COMPONENT, SET_COMMENT]);
 
 
-
-
-
-// const store = createStore(rootReducer, applyMiddleware(onMiddleware, thunk));
 // const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
-const store = createStore(rootReducer(history), compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
+const store = createStore(rootReducer(history), compose(applyMiddleware(routerMiddleware(history), onMiddleware, thunk, stackTraceMiddleware)));
 
 
 if (typeof cookie.load('user_id') === 'undefined') {

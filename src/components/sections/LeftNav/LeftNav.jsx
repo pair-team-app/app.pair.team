@@ -69,7 +69,9 @@ class LeftNav extends Component {
 
     this.setState({ builds : null }, ()=> {
       this.props.setTeam(team);
-      this.props.setPlayground(null);
+      if (this.props.playground) {
+        this.props.setPlayground(null);
+      }
     });
   }
 

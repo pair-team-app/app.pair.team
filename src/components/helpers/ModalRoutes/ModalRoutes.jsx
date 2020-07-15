@@ -164,7 +164,7 @@ class ModalRoutes extends Component {
         title='Payment Processed'
         tracking={Modals.PAYMENT}
         onComplete={()=> { this.props.onComplete(Modals.PAYMENT);
-        this.props.history.replace(`${Pages.TEAM}/${team.slug}-${team.id}`)
+        this.props.history.replace(`${Pages.TEAM}/${team.slug}--${team.id}`)
       }}>
         Your team <strong>{team.title} - [{team.id}]</strong> is now a paid {purchase.type} plan.
       </AlertDialog>)}

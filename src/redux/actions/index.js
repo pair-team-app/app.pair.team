@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Bits } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { VOTE_ACTION_DOWN, VOTE_ACTION_UP } from '../../components/iterables/BaseComment';
-import { BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, INVITE_MODIFIED, COMMENT_ADDED, COMMENT_UPDATED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_THEME, UPDATE_MATCH_PATH, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, TEAM_CREATED, TOGGLE_CREATE_TEAM, STRIPE_SESSION_CREATED, STRIPE_SESSION_PAID } from '../../consts/action-types';
+import { BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, INVITE_MODIFIED, COMMENT_ADDED, COMMENT_UPDATED, COMPONENT_TYPES_LOADED, DEVICES_LOADED, PRODUCTS_LOADED, SET_COMMENT, SET_COMPONENT, SET_INVITE, SET_PLAYGROUND, SET_REDIRECT_URI, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_THEME, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_ERROR, USER_PROFILE_LOADED, USER_PROFILE_UPDATED, TEAM_CREATED, TOGGLE_CREATE_TEAM, STRIPE_SESSION_CREATED, STRIPE_SESSION_PAID } from '../../consts/action-types';
 import { API_RESPONSE_PREFIX, LOG_ACTION_POSTFIX, LOG_ACTION_PREFIX } from '../../consts/log-ascii';
 import { API_ENDPT_URL } from '../../consts/uris';
 
@@ -549,30 +549,6 @@ export function toggleTheme(payload=null) {
   logFormat('toggleTheme()', null, payload);
   const theme = payload;
   return { theme, type : TOGGLE_THEME };
-}
-
-export function updateMatchPath(payload=null) {
-  // logFormat('updateMatchPath()', null, payload, { type : typeof payload, len : Object.keys(payload).length, empty : (payload === null)});
-
-  return ((dispatch, getState)=> {
-    logFormat('updateMatchPath()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
-
-    const { matchPath } = payload;
-    // const comps = (getState().matchPath) ? Object.keys(matchPath.params).map((key)=> (`${key} : ${matchPath.params[key]} ${getState().matchPath.params[key]} (${matchPath.params[key] === getState().matchPath.params[key]})`)) : null;
-    const paramChange = (getState().matchPath) ? (Object.keys(matchPath.params).map((key)=> (matchPath.params[key] === getState().matchPath.params[key])).reduce((acc, val)=> (acc * val), 1) === 0) : true;
-
-    // console.log('\t', LOG_ACTION_POSTFIX, { store : (getState().matchPath) ? { params : getState().matchPath.params, referer : getState().matchPath.location.state.referer } : null, payload : { params : payload.matchPath.params, referer : payload.matchPath.location.state.referer }}, { change : paramChange, comps }, LOG_ACTION_PREFIX);
-
-    if (paramChange) {
-      dispatch({
-        type    : UPDATE_MATCH_PATH,
-        payload : { matchPath }
-      });
-
-    } else {
-      return;
-    }
-  });
 }
 
 export function updateMouseCoords(payload) {

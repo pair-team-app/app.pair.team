@@ -74,7 +74,7 @@ function VoteComment(props) {
 const mapStateToProps = (state, ownProps)=> {
   return {
     activeComment : state.comment,
-    profile       : state.userProfile
+    profile       : state.user.profile
   };
 };
 

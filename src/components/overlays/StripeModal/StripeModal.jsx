@@ -166,7 +166,7 @@ const mapStateToProps = (state, ownProps)=> {
   return ({
 		products      : state.products,
 		stripeSession : state.stripeSession,
-    team          : state.team
+    team          : state.teams.team
   });
 };
 

@@ -126,7 +126,7 @@ const mapDispatchToProps = (dispatch)=> {
 const mapStateToProps = (state, ownProps)=> {
 	return ({
 		invite  : state.invite,
-		profile : state.userProfile,
+		profile : state.user.profile,
 	});
 };
 

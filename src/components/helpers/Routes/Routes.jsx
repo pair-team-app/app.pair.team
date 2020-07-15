@@ -5,6 +5,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { RoutePaths } from './';
 import BasePage from '../../pages/BasePage';
+import ProjectPage from '../../pages/ProjectPage';
 import TeamPage from '../../pages/TeamPage';
 import { Pages } from '../../../consts/uris';
 
@@ -45,6 +46,15 @@ class Routes extends Component {
       <Route
         path={RoutePaths.PAYMENT}
         render={({ props })=> <BasePage
+          onLogout={this.props.onLogout}
+          onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
+          onPopup={this.props.onPopup} { ...props}
+          />
+      } />
+
+<Route
+        path={RoutePaths.PROJECT}
+        render={({ props })=> <ProjectPage
           onLogout={this.props.onLogout}
           onModal={(uri, payload)=> this.props.onModal(uri, true, payload)}
           onPopup={this.props.onPopup} { ...props}

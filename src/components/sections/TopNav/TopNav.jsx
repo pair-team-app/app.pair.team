@@ -167,7 +167,7 @@ const mapStateToProps = (state, ownProps)=> {
 		invite      : state.invite,
 		playgrounds : state.playgrounds,
 		playground  : state.playground,
-		profile     : state.userProfile,
+		profile     : state.user.profile,
 		typeGroup   : state.typeGroup,
 		component   : state.component,
 		comment     : state.comment,

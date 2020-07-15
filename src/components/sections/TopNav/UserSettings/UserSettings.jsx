@@ -111,7 +111,7 @@ const UserSettingsPopover = (props)=> {
 
 
 const mapStateToProps = (state, ownProps)=> {
-	return ({ profile : state.userProfile });
+	return ({ profile : state.user.profile });
 };
 
 

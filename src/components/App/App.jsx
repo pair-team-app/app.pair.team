@@ -3,10 +3,10 @@ import React, { Component } from 'react';
 import './App.css';
 
 import axios from 'axios';
-import { Browsers, DateTimes } from 'lang-js-utils';
+import { Browsers } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
-import { generatePath, matchPath, withRouter } from 'react-router-dom';
+import { matchPath, withRouter } from 'react-router-dom';
 
 import Routes, { RoutePaths } from '../helpers/Routes';
 import ModalRoutes from '../helpers/ModalRoutes';
@@ -24,7 +24,7 @@ import LeftNav from '../sections/LeftNav';
 import TopNav from '../sections/TopNav';
 
 import { API_ENDPT_URL, Modals, Pages } from '../../consts/uris';
-import { fetchTeamLookup, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, paidStripeSession, updateMatchPath, updateUserProfile } from '../../redux/actions';
+import { fetchTeamLookup, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, paidStripeSession, updateUserProfile } from '../../redux/actions';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 const MATTY_DEVIN_THEME = false;
@@ -400,8 +400,8 @@ class App extends Component {
         {(modals.payment) && (<AlertDialog
 				  title='Payment Processed'
 				  tracking={Modals.PAYMENT}
-				  // onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); window.location.pathname = `${Pages.TEAM}/${team.slug}-${team.id}` }}>
-				  onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); this.props.history.replace(`${Pages.TEAM}/${team.slug}-${team.id}`) }}>
+				  // onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); window.location.pathname = `${Pages.TEAM}/${team.slug}--${team.id}` }}>
+				  onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); this.props.history.replace(`${Pages.TEAM}/${team.slug}--${team.id}`) }}>
 				  Your team <strong>{team.title} - [{team.id}]</strong> is now a paid {purchase.type} plan.
 			  </AlertDialog>)}
 
@@ -418,16 +418,16 @@ class App extends Component {
 const mapStateToProps = (state, ownProps)=> {
   return {
     darkThemed     : state.darkThemed,
-    componentTypes : state.componentTypes,
-    invite         : state.invite,
+    componentTypes : state.builds.componentTypes,
+    invite         : state.teams.invite,
     purchase       : state.purchase,
     products       : state.products,
-    profile        : state.userProfile,
-    team           : state.team,
-    playgrounds    : state.playgrounds,
-    playground     : state.playground,
-    typeGroup      : state.typeGroup,
-    comment        : state.comment,
+    profile        : state.user.profile,
+    team           : state.teams.team,
+    playgrounds    : state.builds.playgrounds,
+    playground     : state.builds.playground,
+    typeGroup      : state.builds.typeGroup,
+    comment        : state.comments.comment,
     matchPath      : state.matchPath
   };
 };
@@ -440,7 +440,6 @@ const mapDispatchToProps = (dispatch)=> {
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),
     modifyInvite      : (payload)=> dispatch(modifyInvite(payload)),
     paidStripeSession : (payload)=> dispatch(paidStripeSession(payload)),
-    updateMatchPath   : (payload)=> dispatch(updateMatchPath(payload)),
     updateUserProfile : (payload)=> dispatch(updateUserProfile(payload))
   };
 };
