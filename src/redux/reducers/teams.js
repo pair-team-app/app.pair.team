@@ -52,6 +52,16 @@ export default function comments(state=initialState, action) {
   } else if (type === TOGGLE_CREATE_TEAM) {
     return (Object.assign({}, state, { createTeam : (typeof action.payload === 'boolean') ? action.payload : !state.createTeam }));
 
+  } else if (type === '@@router/LOCATION_CHANGE') {
+    const { teams, team } = payload;
+
+    if (teams && team) {
+      return (Object.assign({}, state, { teams, team }));
+
+    } else {
+      return (state);
+    }
+
   } else {
     return (state);
   }

@@ -16,7 +16,7 @@ const openURL = (url)=> {
 export function initTracker(userID, hostname) {
 	console.log('::::]]', 'initTracker', userID, hostname);
 
-	ReactGA.initialize((hostname.includes('localhost')) ? UA_TRACKING_ID_LOCAL : (hostname.includes('dev.pairurl.com') ? UA_TRACKING_ID_DEV : UA_TRACKING_ID_LIVE), {
+	ReactGA.initialize((hostname.includes('localhost') || hostname.includes('192')) ? UA_TRACKING_ID_LOCAL : (hostname.includes('dev.pairurl.com') ? UA_TRACKING_ID_DEV : UA_TRACKING_ID_LIVE), {
 		debug     : DEBUG,
 		titleCase : false,
 		gaOptions : { userId : userID }

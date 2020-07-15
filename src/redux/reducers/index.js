@@ -8,12 +8,12 @@ import products from './products';
 import stripe from './stripe';
 import teams from './teams';
 import user from './user';
-import views from './views';
+import path from './path';
 
 
 const rootReducer = (history)=> combineReducers({
   router : connectRouter(history),
-  builds, comments, products, stripe, teams, user, views
+  builds, comments, products, stripe, teams, user, path
 });
 
 export default rootReducer;

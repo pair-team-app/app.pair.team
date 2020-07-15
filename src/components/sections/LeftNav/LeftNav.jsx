@@ -69,15 +69,15 @@ class LeftNav extends Component {
 
     this.setState({ builds : null }, ()=> {
       this.props.setTeam(team);
-      if (this.props.playground) {
+      // if (this.props.playground) {
         this.props.setPlayground(null);
-      }
+      // }
     });
   }
 
 
   onPopulateBuildTree = ()=> {
-    // console.log('%s.onPopulateBuildTree()', this.constructor.name);
+    console.log('%s.onPopulateBuildTree()', this.constructor.name, { playgrounds : this.props.playgrounds, playground : this.props.playground });
 
     const { playgrounds, playground } = this.props;
     const buildIDs = [ ...new Set([ ...playgrounds.map(({ buildID })=> (buildID))])];
@@ -147,7 +147,7 @@ const LeftNavBuild = (props)=> {
     expanded={expanded}
 		title={<div className="title-wrapper" onClick={()=> props.onBuildClick(build)} data-id={id} data-expanded={expanded} data-selected={selected}>
 			<div className="arrow-wrapper"><FontAwesome name="caret-right" /></div>
-			<div className="title">{title}</div>
+			<div className="title">{title} [{id}]</div>
 		</div>}
 
 		content={<div className="item-wrapper">

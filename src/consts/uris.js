@@ -39,10 +39,7 @@ const API_VER = 'v6';
 export const API_GATEWAY = 'gateway.php'
 export const API_ENDPT_URL = `${API_PROTOCOL}://${API_HOSTNAME}/${API_VER}/${API_GATEWAY}`;
 
-
-// const CDN_PROTOCOL = 'http';
 const CDN_PROTOCOL = 'https';
-// export const CDN_HOSTNAME = 'localhost:1453';
 export const CDN_HOSTNAME = 'cdn.pairurl.com';
 const CDN_VER = 'v1';
 export const CDN_UPLOAD = 'upload'

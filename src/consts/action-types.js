@@ -37,7 +37,8 @@ export const SET_COMMENT = 'SET_COMMENT';
 export const SET_TEAM = 'SET_TEAM';
 export const SET_INVITE = 'SET_INVITE';
 
-export const SET_REDIRECT_URI = 'SET_REDIRECT_URI';
+export const SET_ENTRY_ROUTE_PATH = 'SET_ENTRY_ROUTE_PATH';
+export const SET_ROUTE_PATH = 'SET_ROUTE_PATH';
 
 export const TOGGLE_AX = 'TOGGLE_AX';
 export const TOGGLE_COMMENTS = 'TOGGLE_COMMENTS';
