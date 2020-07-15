@@ -38,7 +38,7 @@ class ProjectPage extends Component {
 
     return (<BasePage { ...this.props } className="project-page">
       {(!playground) && (<div>Project page loading...</div>)}
-      {(playground) && (<div>
+      {(playground && Object.keys(playground).length > 1) && (<div>
         <div>Title: {playground.title}</div>
         <div>Device: {playground.device.title}</div>
         <div style={{
