@@ -313,6 +313,7 @@ export function onMiddleware(store) {
 
     } else if (type === '@@router/LOCATION_CHANGE') {
       const { teams } = prevState.teams;
+      const { playgrounds } = prevState.builds;
       const { action, isFirstRendering, location } = payload;
 
       if (action === 'POP') {
@@ -392,6 +393,29 @@ export function onMiddleware(store) {
               exact : false,
               strict: false
             }) || {};
+
+            if (Object.keys(projectMatch).length > 0) {
+              const playground = playgrounds.find(({ buildID, device })=> (buildID === (projectMatch.params.buildID << 0) && device.slug === projectMatch.params.deviceSlug));
+              console.log('______________________', { playground });
+              payload.playground = playground;
+              payload.playgrounds = playgrounds.map((item)=> ((item.id === playground.id) ? playground : { ...item,
+                selected : false
+              }));
+
+
+              dispatch(setRoutePath({ ...projectMatch,
+                params : { ...projectMatch.params,
+                  teamID       : (projectMatch.params.teamID << 0 || null),
+                  teamSlug     : (projectMatch.params.teamSlug || null),
+                  buildID      : (projectMatch.params.buildID << 0 || null),
+                  projectSlug  : (projectMatch.params.projectSlug || null),
+                  deviceSlug   : (projectMatch.params.deviceSlug || null),
+                  componentID  : (projectMatch.params.componentID << 0 || null),
+                  comments     : (projectMatch.params.comments) ? (projectMatch.params.comments === true) : false,
+                  commentID    : (projectMatch.params.commentID << 0 || null)
+                }
+              }));
+            }
           }
         }
       }
