@@ -110,11 +110,11 @@ export const reformPlayground = (playground, devices=null, componentTypes=null, 
   // delete playground['type_groups'];
   // delete playground['last_visited'];
 
-  const projectSlug = Strings.slugifyURI(title);
+  const slug = Strings.slugifyURI(title);
   const device = (devices.find(({ id })=> (id === (device_id << 0))) || null);
-  const uri = `/${Pages.PROJECT}/${projectSlug}/${build_id}/${device.slug}/views`;
+  const uri = `${Pages.TEAM}/${slug}/${build_id}/${device.slug}/views`;
 
-  const reformed = { ...playground, projectSlug, uri,
+  const reformed = { ...playground, slug, uri,
     teamID      : team_id << 0,
     buildID     : build_id << 0,
     deviceID    : device_id << 0,

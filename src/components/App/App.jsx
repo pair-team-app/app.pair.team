@@ -116,7 +116,7 @@ class App extends Component {
       if (!prevProps.invite && this.props.invite) {
         const { invite } = this.props;
 
-        console.log('-------YO----------', { invite });
+
         if (invite.state === 1) {
           this.onToggleModal(Modals.REGISTER);
           this.props.modifyInvite({ invite, state : 2 });
@@ -400,8 +400,8 @@ class App extends Component {
         {(modals.payment) && (<AlertDialog
 				  title='Payment Processed'
 				  tracking={Modals.PAYMENT}
-				  // onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); window.location.pathname = `${Pages.TEAM}/${team.slug}--${team.id}` }}>
-				  onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); this.props.history.replace(`${Pages.TEAM}/${team.slug}--${team.id}`) }}>
+				  // onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); window.location.pathname = `${Pages.TEAM}/${team.id}--${team.slug}` }}>
+				  onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); this.props.history.replace(`${Pages.TEAM}/${team.id}--${team.slug}`) }}>
 				  Your team <strong>{team.title} - [{team.id}]</strong> is now a paid {purchase.type} plan.
 			  </AlertDialog>)}
 

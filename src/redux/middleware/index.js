@@ -238,7 +238,7 @@ export function onMiddleware(store) {
         }
 
         if (playground) {
-          projectSlug = playground.projectSlug;
+          projectSlug = playground.slug;
           buildID = playground.buildID;
           deviceSlug = playground.device.slug;
 
@@ -250,7 +250,7 @@ export function onMiddleware(store) {
           typeGroupSlug = typeGroup.slug;
         }
 
-        comment = reformComment(comment, `${Pages.PROJECT}/${playground.projectSlug}/${playground.buildID}/${playground.device.slug}/${typeGroup.slug}/${component.id}/comments`);
+        comment = reformComment(comment, `${Pages.PROJECT}/${playground.slug}/${playground.buildID}/${playground.device.slug}/${typeGroup.slug}/${component.id}/comments`);
       }
 
 
@@ -267,20 +267,23 @@ export function onMiddleware(store) {
       const deviceSlug = "";
       dispatch(fetchTeamBuilds({ team : payload.team, buildID, deviceSlug }));
       dispatch(fetchTeamComments({ team : payload.team, verbose : true }));
-      dispatch(push(`/team/${payload.team.slug}--${payload.team.id}`));
+      dispatch(push(`/team/${payload.team.id}--${payload.team.slug}`));
 
     } else if (type === SET_PLAYGROUND) {
       const { playground } = payload;
-      const { devices, playgrounds } = prevState.builds;
+      const { team } = prevState.teams;
+      const { playgrounds } = prevState.builds;
 
-      const device = (playground) ? (devices.find(({ id })=> (id === playground.deviceID)) || null) : null;
       payload.playground = (playground) ? { ...playground,
         selected : true
       } : null;
       payload.playgrounds = playgrounds.map((item)=> ((playground && item.id === playground.id) ? payload.playground : { ...item,
         selected : false
       }));
-      payload.device = device;
+
+      if (payload.playground) {
+        dispatch(push(`/team/${team.id}--${team.slug}/project/${payload.playground.buildID}--${payload.playground.slug}/${payload.playground.device.slug}`));
+      }
 
     } else if (type === SET_TYPE_GROUP) {
       const { typeGroup } = payload;

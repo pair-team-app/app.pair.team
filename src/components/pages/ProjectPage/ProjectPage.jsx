@@ -29,8 +29,26 @@ class ProjectPage extends Component {
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
+    const { playground, match } = this.props;
+
+    if (playground) {
+      const { buildID, title, projectSlug, device } = playground;
+    }
+
+
     return (<BasePage { ...this.props } className="project-page">
-      PROJECT PAGE
+      {(!playground) && (<div>Project page loading...</div>)}
+      {(playground) && (<div>
+        <div>Title: {playground.title}</div>
+        <div>Device: {playground.device.title}</div>
+        <div style={{
+          width : '100%',
+          marginTop : '50px',
+          padding : '20px',
+          border : '1px dotted #ff00ff',
+          fontWeight : 'bold'
+        }}>GRID GOES HERE</div>
+      </div>)}
     </BasePage>);
   }
 }
@@ -45,7 +63,7 @@ const mapStateToProps = (state, ownProps)=> {
   return {
     comment    : state.comments.comment,
     profile    : state.user.profile,
-    playground : state.playground
+    playground : state.builds.playground
   };
 };
 
