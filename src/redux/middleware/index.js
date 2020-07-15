@@ -107,9 +107,13 @@ export function onMiddleware(store) {
 
       if (params) {
         if (params.buildID) {
-          const playground = playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug));
+          const playground = { ...playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)), selected : true };
           console.log('______________________', { playground });
           payload.playground = playground;
+
+          payload.playgrounds = playgrounds.map((item)=> ((playground && item.id === playground.id) ? payload.playground : { ...item,
+            selected : false
+          }));
         }
       }
 
@@ -327,16 +331,15 @@ export function onMiddleware(store) {
           }) || {};
 
           if (Object.keys(teamMatch).length > 0) {
-            console.log('=-=-=-=-=-=-=-=-=-=-=-=', { teamMatch });
-
             const projectMatch = matchPath(payload.location.pathname, {
               path : RoutePaths.PROJECT,
               exact : false,
               strict: false
             }) || {};
 
+            console.log('=-=-=-=-=-=-=-=-=-=-=-=', { teamMatch, projectMatch });
+
             if (Object.keys(projectMatch).length > 0) {
-              console.log('=-=-=-=-=-=-=-=-=-=-=-=', { projectMatch });
               dispatch(setRoutePath({ ...projectMatch,
                 params : { ...projectMatch.params,
                   teamID       : (projectMatch.params.teamID << 0 || null),
@@ -394,8 +397,10 @@ export function onMiddleware(store) {
               strict: false
             }) || {};
 
+            console.log('=-=-=-=-=-=-=-=-=-=-=-=', { projectMatch });
+
             if (Object.keys(projectMatch).length > 0) {
-              const playground = playgrounds.find(({ buildID, device })=> (buildID === (projectMatch.params.buildID << 0) && device.slug === projectMatch.params.deviceSlug));
+              const playground = ({ ...playgrounds.find(({ buildID, device })=> (buildID === (projectMatch.params.buildID << 0) && device.slug === projectMatch.params.deviceSlug)), selected : true } || null);
               console.log('______________________', { playground });
               payload.playground = playground;
               payload.playgrounds = playgrounds.map((item)=> ((item.id === playground.id) ? playground : { ...item,
