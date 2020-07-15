@@ -415,6 +415,20 @@ export function onMiddleware(store) {
                   commentID    : (projectMatch.params.commentID << 0 || null)
                 }
               }));
+
+            } else {
+              dispatch(setRoutePath({ ...teamMatch,
+                params : { ...teamMatch.params,
+                  teamID       : (teamMatch.params.teamID << 0 || null),
+                  teamSlug     : (teamMatch.params.teamSlug || null),
+                  buildID      : null,
+                  projectSlug  : null,
+                  deviceSlug   : null,
+                  componentID  : null,
+                  comments     : (teamMatch.params.comments) ? (teamMatch.params.comments === true) : false,
+                  commentID    : (teamMatch.params.commentID << 0 || null)
+                }
+              }));
             }
           }
         }
