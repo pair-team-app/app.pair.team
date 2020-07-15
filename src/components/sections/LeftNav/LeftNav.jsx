@@ -184,12 +184,12 @@ const LeftNavTeam = (props)=> {
 
 const mapStateToProps = (state, ownProps)=> {
   return {
-    invite      : state.invite,
-    team        : state.team,
-    teams       : state.teams,
-    playgrounds : state.playgrounds,
-    playground  : state.playground,
-    profile     : state.userProfile
+    invite      : state.teams.invite,
+    team        : state.teams.team,
+    teams       : state.teams.teams,
+    playgrounds : state.builds.playgrounds,
+    playground  : state.builds.playground,
+    profile     : state.user.profile
   };
 };
 

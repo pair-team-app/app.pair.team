@@ -52,25 +52,25 @@ export function onMiddleware(store) {
       payload.devices = devices.map((device)=> ({ ...device, scale : parseFloat(device.scale) })).sort((i, ii)=> ((i.title < ii.title) ? -1 : (i.title > ii.title) ? 1 : 0));
 
     } else if (type === USER_PROFILE_LOADED) {
-      const { userProfile } = payload;
+      const { profile } = payload;
       // const userProfile = payload;
-      if (userProfile) {
-        cookie.save('user_id', (userProfile) ? userProfile.id : '0', { path : '/', sameSite : false });
-        dispatch(fetchTeamLookup({ userProfile }));
+      if (profile) {
+        cookie.save('user_id', (profile) ? profile.id : '0', { path : '/', sameSite : false });
+        dispatch(fetchTeamLookup({ profile }));
       }
 
       // payload = { userProfile };
 
     } else if (type === USER_PROFILE_UPDATED) {
-      const userProfile = payload;
-      if (userProfile) {
-        cookie.save('user_id', (userProfile) ? userProfile.id : '0', { path : '/', sameSite : false });
-        dispatch(fetchTeamLookup({ userProfile }));
+      const profile = payload;
+      if (profile) {
+        cookie.save('user_id', (profile) ? profile.id : '0', { path : '/', sameSite : false });
+        dispatch(fetchTeamLookup({ profile }));
       }
 
     } else if (type === TEAMS_LOADED) {
       // const { params } = prevState.matchPath;
-      const { team } = prevState;
+      const { team } = prevState.teams;
       // const { buildID, deviceSlug } = params;
       const buildID = 0;
       const deviceSlug = "";
@@ -90,12 +90,13 @@ export function onMiddleware(store) {
 
     } else if (type === TEAM_LOGO_LOADED) {
       const { logo } = payload;
-      const { team } = prevState;
+      const { team } = prevState.teams;
 
       payload.team = { ...team, logo : logo.replace(/\\n/g, '', logo) };
 
     } else if (type === TEAM_BUILDS_LOADED) {
-      const { devices, componentTypes, team, matchPath } = prevState;
+      const { team } = prevState.teams;
+      const { devices, componentTypes, matchPath } = prevState.builds;
       const { params, location } = matchPath || {};
 
 
@@ -162,7 +163,7 @@ export function onMiddleware(store) {
       payload.team = team;
 
     } else if (type === TEAM_COMMENTS_LOADED) {
-      const { team } = prevState;
+      const { team } = prevState.teams;
       const verbose = payload.comments.reduce((acc, val)=> (acc + (val << 0)), 0);
 
       if (payload.comments.reduce((acc, val)=> (acc + (val << 0)), 0) !== 0) {
@@ -177,13 +178,14 @@ export function onMiddleware(store) {
         // payload.comments = [ ...prevState.comments, ...comments].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));
       }
     } else if (type === BUILD_PLAYGROUNDS_LOADED) {
-      const { devices, componentTypes, team, matchPath } = prevState;
+      const { devices, componentTypes, matchPath } = prevState.builds;
+      const { team } = prevState.teams;
       const { params } = matchPath || {};
 
-      const playgrounds = [ ...new Set([ ...prevState.playgrounds, ...payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)})).filter(({ id })=> (!prevState.playgrounds.map(({ id })=> (id)).includes(id)))])];
+      const playgrounds = [ ...new Set([ ...prevState.builds.playgrounds, ...payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : (playground.buildID === params.buildID)})).filter(({ id })=> (!prevState.playgrounds.map(({ id })=> (id)).includes(id)))])];
       // const comments = [ ...new Set([ ...prevState.comments, ...playgrounds.map(({ components })=> (components)).flat().map(({ comments })=> (comments)).flat()])];
-      const components = [ ...prevState.components, ...playgrounds.map(({ components })=> (components)).flat()].map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? component : null)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i > ii) ? 1 : 0));
-      const comments = [ ...prevState.comments , ...components.map(({ comments })=> (comments)).flat()].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
+      const components = [ ...prevState.builds.components, ...playgrounds.map(({ components })=> (components)).flat()].map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? component : null)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i > ii) ? 1 : 0));
+      const comments = [ ...prevState.comments.comments , ...components.map(({ comments })=> (comments)).flat()].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
 
       // const playground = (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || (prevState.playground || [ ...playgrounds].shift()) : null;
       const playground = (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null : null;
@@ -205,7 +207,8 @@ export function onMiddleware(store) {
       dispatch(fetchTeamLookup({ userProfile }));
 
     } else if (type === UPDATE_MATCH_PATH) {
-      const { playgrounds, componentTypes, components, comments } = prevState;
+      const { comments } = prevState.comments;
+      const { playgrounds, componentTypes, components } = prevState.builds;
       const prevParams = (prevState.matchPath) ? prevState.matchPath.params : null;
 
       if (payload.matchPath.params) {
@@ -278,31 +281,33 @@ export function onMiddleware(store) {
       delete (payload.bounds);
 
     } else if (type === COMMENT_ADDED) {
-      const { team, component } = prevState;
+      const { team } = prevState.teams;
+      const { component } = prevState.builds;
 
-      const prevComment = prevState.comments.find(({ id })=> (id === (payload.comment.id << 0)));
+      const prevComment = prevState.comments.comments.comments.find(({ id })=> (id === (payload.comment.id << 0)));
       payload.comment = (prevComment) ? reformComment(payload.comment, prevComment.uri) : reformComment(payload.comment, `${Pages.TEAM}/${team.slug}/comments`);
-      payload.comments = (prevComment) ? prevState.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment)) : [ ...prevState.comments, payload.comment];
+      payload.comments = (prevComment) ? prevState.comments.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment)) : [ ...prevState.comments, payload.comment];
       payload.component = (component) ? { ...component,
         comments : [ ...component.comments, payload.comment].sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)))
       } : null;
 
 
     } else if (type === COMMENT_UPDATED) {
-      const { component, comment } = prevState;
+      const { component } = prevState.builds;
+      const { comment } = prevState.comments;
 
-      const prevComment = prevState.comments.find(({ id })=> (id === (payload.comment.id << 0)));
+      const prevComment = prevState.comments.comments.find(({ id })=> (id === (payload.comment.id << 0)));
       payload.comment = reformComment(payload.comment, prevComment.uri);
 
       if (payload.comment.state === 'deleted') {
-        payload.comments = prevState.comments.filter(({ id })=> (id !== payload.comment.id));
+        payload.comments = prevState.comments.comments.filter(({ id })=> (id !== payload.comment.id));
 
       } else {
-        payload.comments = prevState.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment));
+        payload.comments = prevState.comments.comments.map((comment)=> ((comment.id === payload.comment.id) ? payload.comment : comment));
       }
 
       payload.component = (component) ? { ...component,
-        comments : (payload.comment.state === 'deleted') ? component.comments.filter(({ id })=> (id !== payload.comment.id)) : component.comments.map((comment)=> ((comment.id === prevState.comment.id) ? payload.comment : comment)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)))
+        comments : (payload.comment.state === 'deleted') ? component.comments.filter(({ id })=> (id !== payload.comment.id)) : component.comments.map((comment)=> ((comment.id === prevState.comments.comment.id) ? payload.comment : comment)).sort((i, ii)=> ((i.epoch > ii.epoch) ? -1 : (i.epoch < ii.epoch) ? 1 : ((i.type === 'bot') ? -1 : (ii.type === 'bot') ? 1 : 0)))
       } : null;
 
       payload.comment = (comment) ? payload.comment : null;
@@ -311,7 +316,7 @@ export function onMiddleware(store) {
       payload.team = reformTeam(payload.team);
 
     } else if (type === TEAM_RULES_UPDATED) {
-      const { team } = prevState;
+      const { team } = prevState.teams;
       const { rules } = payload;
 
       // payload.team = { ...team,
@@ -325,7 +330,8 @@ export function onMiddleware(store) {
       payload.team = reformTeam(team);
 
     } else if (type === COMMENT_VOTED) {
-      const { team, playgrounds, playground, typeGroup, component } = prevState;
+      const { team } = prevState.teams;
+      const { playgrounds, playground, typeGroup, component } = prevState.builds;
 
       let { comment } = payload
       if (comment.type === 'team') {
@@ -410,7 +416,7 @@ export function onMiddleware(store) {
 
 
     } else if (type === SET_TEAM) {
-      const { teams } = prevState;
+      const { teams } = prevState.teams;
       payload.teams = teams.map((team)=> ({ ...team,
         selected : (team.id === payload.team.id)
       }));
@@ -423,7 +429,7 @@ export function onMiddleware(store) {
 
     } else if (type === SET_PLAYGROUND) {
       const { playground } = payload;
-      const { devices, playgrounds, matchPath } = prevState;
+      const { devices, playgrounds, matchPath } = prevState.builds;
 
       const device = (playground) ? (devices.find(({ id })=> (id === playground.deviceID)) || null) : null;
       payload.playground = (playground) ? { ...playground,

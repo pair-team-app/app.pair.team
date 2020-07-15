@@ -5,7 +5,7 @@ import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii'
 
 
 const initialState = {
-  comments      : null,
+  comments      : [],
   comment       : null,
   createComment : null
 };

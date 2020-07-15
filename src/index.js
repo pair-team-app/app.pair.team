@@ -3,7 +3,7 @@ import React from 'react';
 import cookie from 'react-cookies';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router';
 import { ConnectedRouter } from 'connected-react-router'
 
 import App from './components/App';
@@ -21,13 +21,12 @@ if (typeof cookie.load('cookies') === 'undefined') {
 
 ReactDOM.render(
 	<Provider store={store}>
-		<BrowserRouter history={history}>
-		{/* <Route render={(props)=> <App />} /> */}
+		<ConnectedRouter history={history}>
 			<ScrollToTop props={{ scrollableElement }}>
 				<Route path="/" render={(routeProps)=> <App { ...routeProps } />} />
 				{/* <App /> */}
 			</ScrollToTop>
-		</BrowserRouter>
+		</ConnectedRouter>
 	</Provider>,
 	document.getElementById('root')
 );

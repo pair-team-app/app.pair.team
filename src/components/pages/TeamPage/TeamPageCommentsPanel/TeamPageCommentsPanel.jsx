@@ -18,7 +18,7 @@ function TeamPageCommentsPanel(props) {
 
 
 const TeamPageComment = (props)=> {
-  // console.log('TeamPageComment()', props);
+  console.log('TeamPageComment()', props);
 
   const { loading, vote, comment } = props;
 	return (<div className="team-page-comment" data-id={comment.id} data-author={comment.author.id} data-loading={loading}>

@@ -342,7 +342,7 @@ class TeamPage extends Component {
 
 
   render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    // console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, comments, createTeam } = this.props;
     const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, share, sort, topSort, files, richComment, imageComment, codeComment } = this.state;
@@ -536,11 +536,11 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
   return {
-    comment    : state.comment,
-    createTeam : state.createTeam,
-    profile    : state.userProfile,
-    team       : state.team,
-    comments   : state.comments,
+    comment    : state.comments.comment,
+    createTeam : state.teams.createTeam,
+    profile    : state.user.profile,
+    team       : state.teams.team,
+    comments   : state.comments.comments,
     playground : state.playground
   };
 };

@@ -34,7 +34,8 @@ const stackTraceMiddleware = createLogActionStackTraceMiddleware([SET_PLAYGROUND
 
 
 // const store = createStore(rootReducer, applyMiddleware(onMiddleware, thunk));
-const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
+// const store = createStore(rootReducer, compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
+const store = createStore(rootReducer(history), compose(applyMiddleware(onMiddleware, thunk, stackTraceMiddleware)));
 
 
 if (typeof cookie.load('user_id') === 'undefined') {

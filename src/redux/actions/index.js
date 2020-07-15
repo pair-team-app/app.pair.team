@@ -209,14 +209,14 @@ export function fetchTeamLogo(payload=null) {
 
 
 export function fetchTeamLookup(payload=null) {
-  const { userProfile } = payload || null;
+  const { profile } = payload || null;
   return (dispatch, getState)=> {
     logFormat('fetchTeamLookup()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
     axios.post(API_ENDPT_URL, {
       action  : 'USER_TEAMS',
       payload : {
-        user_id : userProfile.id,
+        user_id : profile.id,
         verbose : false
       }
     }).then((response)=> {
@@ -246,7 +246,7 @@ export function fetchUserProfile(payload=null) {
       dispatch({
         type    : USER_PROFILE_LOADED,
         payload : {
-          userProfile : { ...response.data.user,
+          profile : { ...response.data.user,
             id     : id << 0,
             status : 0x00
           }
