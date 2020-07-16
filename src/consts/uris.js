@@ -1,20 +1,18 @@
 
 
 export const Modals = {
-	COOKIES   : '/cookies',
-	DISABLE   : '/disable',
-	EXPIRED   : '/expired',
-	INVITE    : '/invite',
-	LOGIN     : '/login',
-	PROCESSING : '/processing',
-	NETWORK   : '/network',
-	NO_ACCESS : '/no-access',
-	PAYMENT   : '/payment',
-	PROFILE   : '/profile',
-	RECOVER   : '/recover',
-	REGISTER  : '/register',
-	STRIPE    : '/stripe',
-	SITE      : '/SITE'
+	COOKIES   : '#cookies',
+	DISABLE   : '#disable',
+	EXPIRED   : '#expired',
+	INVITE    : '#invite',
+	LOGIN     : '#login',
+	NETWORK   : '#network',
+	NO_ACCESS : '#no-access',
+	PAYMENT   : '#payment',
+	PROFILE   : '#profile',
+	RECOVER   : '#recover',
+	REGISTER  : '#register',
+	STRIPE    : '#stripe'
 };
 
 export const Pages = {

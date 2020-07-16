@@ -11,7 +11,6 @@ const logFormat = (action, state, payload=null, meta='')=> {
 };
 
 
-// these are all action CREATORS that rtrn a funct
 export function fetchBuildPlaygrounds(payload=null) {
   const { buildID } = payload;
   return (dispatch, getState)=> {
@@ -20,7 +19,8 @@ export function fetchBuildPlaygrounds(payload=null) {
     axios.post(API_ENDPT_URL, {
       action  : 'BUILD_PLAYGROUNDS',
       payload : {
-        build_id : buildID
+        build_id : buildID,
+        verbose  : true
       }
     }).then(async (response)=> {
       console.log(API_RESPONSE_PREFIX, 'BUILD_PLAYGROUNDS', response.data);

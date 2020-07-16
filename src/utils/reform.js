@@ -112,21 +112,21 @@ export const reformPlayground = (playground, devices=null, componentTypes=null, 
 
   const slug = Strings.slugifyURI(title);
   const device = (devices.find(({ id })=> (id === (device_id << 0))) || null);
-  const uri = `${Pages.TEAM}/${slug}/${build_id}/${device.slug}/views`;
+  const uri = `${Pages.TEAM}/${team.id}--${team.slug}/project/${build_id}--${slug}/${device.slug}`;
 
-  const reformed = { ...playground, slug, uri,
+  const reformed = { ...playground, slug, uri, selected,
     teamID      : team_id << 0,
     buildID     : build_id << 0,
     deviceID    : device_id << 0,
     team        : (!playground.team || playground.team.length === 0) ? team : playground.team,
-    components  : (components && components.length > 0) ? components.map((component)=> (reformComponent(component, uri, componentTypes))) : [],
+    components  : (components || []),
+    //components  : (components && components.length > 0) ? components.map((component)=> (reformComponent(component, uri, componentTypes))) : [],
     typeGroups  : type_groups.map((typeGroupID)=> (componentTypes.find(({ id })=> ((typeGroupID << 0) === id)))),
     device      : (device || device_id),
     lastVisited : moment(last_visited).utc(),
     added       : (playground.added)
       ? moment(added).add(moment().utcOffset() << 0, 'minute')
       : moment.utc(),
-    selected    : (typeof selected === 'undefined') ? false : selected,
     ...overwrite
   };
 

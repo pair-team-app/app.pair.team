@@ -147,9 +147,9 @@ export function onMiddleware(store) {
       // const components = [ ...prevState.builds.components, ...playgrounds.map(({ components })=> (components)).flat()].map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? component : null)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i > ii) ? 1 : 0));
       // const comments = [ ...prevState.comments.comments , ...components.map(({ comments })=> (comments)).flat()].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
 
-      const playgrounds = [ ...new Set([ ...prevState.builds.playgrounds, ...payload.playgrounds.map((playground, i)=> (reformPlayground(playground, devices, componentTypes, team))).map((playground)=> ({ ...playground, selected : false})).filter(({ id })=> (!prevState.playgrounds.map(({ id })=> (id)).includes(id)))])];
-      const components = [ ...prevState.builds.components, ...playgrounds.map(({ components })=> (components)).flat()].map((component, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? component : null)).sort((i, ii)=> ((i.id < ii.id) ? -1 : (i > ii) ? 1 : 0));
-      const comments = [ ...prevState.comments.comments , ...components.map(({ comments })=> (comments)).flat()].map((comment, i, arr)=> ((arr.find(({ id }, ii)=> (i === ii))) ? comment : null));//loop thru parent and merge merge the dups (InviteForm) -->  .map((comment, i, flatComments)=> ((component.id === )))
+      const playgrounds = [ ...payload.playgrounds.map((playground, i)=> (reformPlayground({ ...playground, selected : false }, devices, componentTypes, team)))];
+      const components = [ ...playgrounds.map(({ components })=> (components)).flat()];
+      const comments = null;//[ ...components.map(({ comments })=> (comments)).flat()];
 
       const playground = null;// (params.projectSlug !== 'ask') ? playgrounds.find(({ buildID, device })=> (buildID === params.buildID && device.slug === params.deviceSlug)) || null : null;
       const typeGroup = null;// (playground) ? (playground.typeGroups.find(({ key })=> (key === params.typeGroupSlug)) || playground.typeGroups.find(({ key })=> (key === 'views'))) : null;
@@ -157,13 +157,14 @@ export function onMiddleware(store) {
       const comment = null;// (component) ? component.comments.find(({ id })=> (id === params.commentID)) || null : null;
 
 
-      payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
+      // payload.playgrounds = playgrounds.sort((i, ii)=> ((i.id < ii.id) ? 1 : (i.id > ii.id) ? -1 : 0));
+      payload.playgrounds = playgrounds;
       payload.components = components;
       payload.comments = comments;
-      payload.playground = playground;
-      payload.typeGroup = typeGroup;
-      payload.component = component;
-      payload.comment = comment;
+      // payload.playground = playground;
+      // payload.typeGroup = typeGroup;
+      // payload.component = component;
+      // payload.comment = comment;
 
     } else if (type === TEAM_CREATED) {
       const { userProfile, team } = payload;

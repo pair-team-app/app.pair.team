@@ -25,8 +25,11 @@ export default function comments(state=initialState, action) {
     return (Object.assign({}, state, { comments }));
 
   } else if (type === BUILD_PLAYGROUNDS_LOADED) {
-    const { comments, comment } = payload;
-    return (Object.assign({}, state, { comments, comment }));
+    // const { comments, comment } = payload;
+    // return (Object.assign({}, state, { comments, comment }));
+
+    const { comments } = payload;
+    return (Object.assign({}, state, { comments }));
 
   } else if (type === COMMENT_ADDED || type === COMMENT_UPDATED) {
     const { comments, comment } = payload;

@@ -9,7 +9,7 @@ import { NavLink } from 'react-router-dom';
 
 import ContentExpander from '../../iterables/ContentExpander';
 import { Pages, TEAM_DEFAULT_AVATAR} from '../../../consts/uris';
-import { setPlayground, setTeam, toggleCreateTeam } from '../../../redux/actions';
+import { fetchBuildPlaygrounds, setPlayground, setTeam, toggleCreateTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 
 
@@ -60,8 +60,10 @@ class LeftNav extends Component {
   handleDeviceRenderClick = (deviceRender)=> {
     console.log('%s.handleDeviceRenderClick()', this.constructor.name, { deviceRender });
 
-    trackEvent('nav', 'device', deviceRender.title);
+    const { buildID, title } = deviceRender;
+    trackEvent('nav', 'device', title);
     this.props.setPlayground(deviceRender);
+    // this.props.fetchBuildPlaygrounds({ buildID });
   };
 
   handleTeamClick = (team)=> {
@@ -197,9 +199,10 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return {
-    setPlayground    : (payload)=> dispatch(setPlayground(payload)),
-    setTeam          : (payload)=> dispatch(setTeam(payload)),
-    toggleCreateTeam : (payload)=> dispatch(toggleCreateTeam(payload))
+    fetchBuildPlaygrounds : (payload)=> dispatch(fetchBuildPlaygrounds(payload)),
+    setPlayground         : (payload)=> dispatch(setPlayground(payload)),
+    setTeam               : (payload)=> dispatch(setTeam(payload)),
+    toggleCreateTeam      : (payload)=> dispatch(toggleCreateTeam(payload))
   };
 };
 

@@ -39,8 +39,11 @@ export default function builds(state=initialState, action) {
     return (Object.assign({}, state, { playgrounds, playground }));
 
   } else if (type === BUILD_PLAYGROUNDS_LOADED) {
-    const { playgrounds, comments, playground, typeGroup, components, component, comment } = payload;
-    return (Object.assign({}, state, { playgrounds, comments, playground, typeGroup, components, component, comment }));
+    // const { playgrounds, comments, playground, typeGroup, components, component, comment } = payload;
+    // return (Object.assign({}, state, { playgrounds, comments, playground, typeGroup, components, component, comment }));
+
+    const { playgrounds, components } = payload;
+    return (Object.assign({}, state, { playgrounds, components }));
 
   } else if (type === SET_PLAYGROUND) {
     const { playgrounds, playground } = payload;

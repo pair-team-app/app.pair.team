@@ -91,7 +91,7 @@ class App extends Component {
     // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
     const { location, profile, team, playgrounds, playground, purchase } = this.props;
-    const { pathname } = location;
+    const { pathname, hash } = location;
     const { modals } = this.state;
 
     // url changed

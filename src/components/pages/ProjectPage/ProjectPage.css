@@ -1,0 +1,28 @@
+
+.project-page {
+
+}
+
+.project-page .content-wrapper {
+  margin-top: 30px;
+
+}
+
+.project-views-grid {
+  display: flex;
+	flex-flow: row wrap;
+	align-items: flex-start;
+	justify-content: space-between;
+	align-content: flex-start;
+	align-items: center;
+	width: 100%;
+}
+
+.project-views-grid > * {
+	display: flex;
+	flex-flow: column nowrap;
+	width: 226px;
+  height: 180px;
+  margin-bottom: 20px;
+  background-color: #cccccc;
+}
