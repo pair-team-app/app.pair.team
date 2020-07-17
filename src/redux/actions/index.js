@@ -20,7 +20,7 @@ export function fetchBuildPlaygrounds(payload=null) {
       action  : 'BUILD_PLAYGROUNDS',
       payload : {
         build_id : buildID,
-        verbose  : true
+        verbose :
       }
     }).then(async (response)=> {
       console.log(API_RESPONSE_PREFIX, 'BUILD_PLAYGROUNDS', response.data);
