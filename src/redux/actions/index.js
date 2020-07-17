@@ -20,7 +20,7 @@ export function fetchBuildPlaygrounds(payload=null) {
       action  : 'BUILD_PLAYGROUNDS',
       payload : {
         build_id : buildID,
-        verbose :
+        verbose  : true
       }
     }).then(async (response)=> {
       console.log(API_RESPONSE_PREFIX, 'BUILD_PLAYGROUNDS', response.data);
@@ -260,7 +260,9 @@ export function makeComment(payload) {
   return ((dispatch, getState)=> {
     logFormat('makeComment()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
-    const { userProfile : profile, team, component } = getState();
+    const { profile } = getState().user;
+    const { team } = getState().teams;
+    const { component } = getState().builds;
     const { comment, content, position } = payload;
 
     axios.post(API_ENDPT_URL, {
@@ -288,7 +290,8 @@ export function makeStripeSession(payload) {
   return ((dispatch, getState)=> {
     logFormat('makeStripeSession()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
-    const { userProfile : profile, team } = getState();
+    const { profile } = getState().user;
+    const { team } = getState().teams;
     const { product } = payload;
 
     axios.post(API_ENDPT_URL, {
@@ -316,7 +319,7 @@ export function makeTeam(payload) {
   return ((dispatch, getState)=> {
     logFormat('makeTeam()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
-    const { userProfile : profile } = getState();
+    const { profile } = getState().user;
     const { title, description, rules, invites } = payload;
 
     axios.post(API_ENDPT_URL, {
@@ -331,7 +334,7 @@ export function makeTeam(payload) {
 
       dispatch({
         type    : TEAM_CREATED,
-        payload : { userProfile : profile, team }
+        payload : { profile, team }
       });
     }).catch((error)=> {});
   });
@@ -342,7 +345,8 @@ export function makeTeamRule(payload) {
   return ((dispatch, getState)=> {
     logFormat('makeTeamRule()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
-    const { userProfile : profile, team } = getState();
+    const { profile } = getState().user;
+    const { team } = getState().teams;
     const { title } = payload;
 
     axios.post(API_ENDPT_URL, {
@@ -367,14 +371,14 @@ export function makeVote(payload) {
   return ((dispatch, getState)=> {
     logFormat('makeVote()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
     const { comment, action } = payload;
-    const { userProfile } = getState();
+    const { profile } = getState().user;
 
     const score = (action === VOTE_ACTION_UP) ? 1 : (action === VOTE_ACTION_DOWN) ? -1 : 0;
 
     axios.post(API_ENDPT_URL, {
       action: 'VOTE_COMMENT',
       payload: { score,
-        user_id    : userProfile.id,
+        user_id    : profile.id,
         comment_id : comment.id
       }
     }).then((response)=> {
@@ -462,14 +466,15 @@ export function modifyTeam(payload) {
   return ((dispatch, getState)=> {
     logFormat('modifyTeam()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
-    const { userProfile, team } = getState();
+    const { profile } = getState().user;
+    const { team } = getState().teams;
     const { description, image } = payload;
 
     axios.post(API_ENDPT_URL, {
       action  : 'UPDATE_TEAM',
       payload : { description,
         team_id     : team.id,
-        user_id     : userProfile.id,
+        user_id     : profile.id,
         image       : (image === null) ? false : (image === true)
       }
     }).then((response)=> {

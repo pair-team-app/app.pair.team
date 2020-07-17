@@ -55,13 +55,10 @@ export function onMiddleware(store) {
 
     } else if (type === USER_PROFILE_LOADED) {
       const { profile } = payload;
-      // const userProfile = payload;
       if (profile) {
         cookie.save('user_id', (profile) ? profile.id : '0', { path : '/', sameSite : false });
         dispatch(fetchTeamLookup({ profile }));
       }
-
-      // payload = { userProfile };
 
     } else if (type === USER_PROFILE_UPDATED) {
       const profile = payload;
@@ -167,8 +164,8 @@ export function onMiddleware(store) {
       // payload.comment = comment;
 
     } else if (type === TEAM_CREATED) {
-      const { userProfile, team } = payload;
-      dispatch(fetchTeamLookup({ userProfile }));
+      const { profile, team } = payload;
+      dispatch(fetchTeamLookup({ profile }));
 
     } else if (type === UPDATE_MOUSE_COORDS) {
       const { speed } = prevState.mouse;

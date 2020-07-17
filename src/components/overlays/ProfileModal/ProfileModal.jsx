@@ -120,7 +120,7 @@ class ProfileModal extends Component {
               });
 
               this.setState({ updated: true }, ()=> {
-                this.props.fetchTeamLookup({ userProfile : profile });
+                this.props.fetchTeamLookup({ profile });
               });
             }
           });
