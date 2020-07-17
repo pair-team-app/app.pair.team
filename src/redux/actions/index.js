@@ -208,10 +208,10 @@ export function fetchTeamLogo(payload=null) {
 }
 
 
-export function fetchTeamLookup(payload=null) {
+export function fetchUserTeams(payload=null) {
   const { profile } = payload || null;
   return (dispatch, getState)=> {
-    logFormat('fetchTeamLookup()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
+    logFormat('fetchUserTeams()', { store : (typeof getState === 'function') ? getState() : getState, typeof : typeof getState }, payload);
 
     axios.post(API_ENDPT_URL, {
       action  : 'USER_TEAMS',

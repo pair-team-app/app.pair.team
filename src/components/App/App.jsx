@@ -24,7 +24,7 @@ import LeftNav from '../sections/LeftNav';
 import TopNav from '../sections/TopNav';
 
 import { API_ENDPT_URL, Modals, Pages } from '../../consts/uris';
-import { fetchTeamLookup, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, paidStripeSession, updateUserProfile } from '../../redux/actions';
+import { fetchUserTeams, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, paidStripeSession, updateUserProfile } from '../../redux/actions';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
 const MATTY_DEVIN_THEME = false;
@@ -38,7 +38,7 @@ class App extends Component {
       popup     : null,
       inviteID  : null,
       modals    : {
-        cookies  : cookie.load('cookies') << 0 === 0,
+        cookies  : (cookie.load('cookies') << 0) === 0,
         disable  : false,
         expired  : false,
         invite   : false,
@@ -117,12 +117,27 @@ class App extends Component {
         const { invite } = this.props;
 
 
-        if (invite.state === 1) {
-          this.onToggleModal(Modals.REGISTER);
-          this.props.modifyInvite({ invite, state : 2 });
+        if (invite.state === 1 || invite.state === 2) {
+          axios.post(API_ENDPT_URL, {
+            action  : 'USER_LOOKUP',
+            payload : {
+              email : invite.email
+            }
+          }).then((response)=> {
+            // console.log('USER_LOOKUP', response.data);
 
-        } else if (invite.state === 2) {//} && !modals.register) {
-          this.onToggleModal(Modals.REGISTER);
+            const { user } = response.data;
+            if (user) {
+              this.onToggleModal(Modals.REGISTER);
+
+            } else {
+              this.onToggleModal(Modals.LOGIN);
+            }
+
+            if (invite.state === 1) {
+              this.props.modifyInvite({ invite, state : 2 });
+            }
+          }).catch((error)=> {});
 
         } else if (invite.state === 3) {//} && !modals.expired) {
           this.onToggleModal(Modals.EXPIRED);
@@ -196,19 +211,16 @@ class App extends Component {
 
     const { profile } = this.props;
 
-    axios
-      .post(API_ENDPT_URL, {
-        action: 'DISABLE_ACCOUNT',
-        payload: { user_id: profile.id }
-      })
-      .then((response)=> {
-        // console.log('DISABLE_ACCOUNT', response.data);
+    axios.post(API_ENDPT_URL, {
+      action  : 'DISABLE_ACCOUNT',
+      payload : { user_id: profile.id }
+    }).then((response)=> {
+      // console.log('DISABLE_ACCOUNT', response.data);
 
-        trackEvent('user', 'delete-account');
-        this.props.updateUserProfile(null);
-        this.props.history.push(Pages.HOME);
-      })
-      .catch((error)=> {});
+      trackEvent('user', 'delete-account');
+      this.props.updateUserProfile(null);
+      this.props.history.push(Pages.HOME);
+    }).catch((error)=> {});
   };
 
   handleLogout = (page = null, modal = null)=> {
@@ -242,8 +254,8 @@ class App extends Component {
     this.onToggleModal(Modals.STRIPE, false);
 
     this.props.fetchUserProfile();
-    // const { profile } = this.props;
-    // this.props.fetchTeamLookup({ userID: profile.id });
+    const { profile } = this.props;
+    this.props.fetchUserTeams({ profile });
   };
 
   handleThemeToggle = (event)=> {
@@ -435,7 +447,7 @@ const mapStateToProps = (state, ownProps)=> {
 const mapDispatchToProps = (dispatch)=> {
   return {
     fetchInvite       : (payload)=> dispatch(fetchInvite(payload)),
-    fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
+    fetchUserTeams    : (payload)=> dispatch(fetchUserTeams(payload)),
     fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),
     modifyInvite      : (payload)=> dispatch(modifyInvite(payload)),

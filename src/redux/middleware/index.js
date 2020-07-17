@@ -6,7 +6,7 @@ import cookie from 'react-cookies';
 import { matchPath } from 'react-router-dom';
 
 import { RoutePaths } from '../../components/helpers/Routes';
-import { fetchBuildPlaygrounds, fetchTeamBuilds, fetchTeamComments, fetchTeamLookup, setRoutePath, setTeam } from '../actions';
+import { fetchBuildPlaygrounds, fetchTeamBuilds, fetchTeamComments, fetchUserTeams, setRoutePath, setTeam } from '../actions';
 import { STRIPE_SESSION_PAID, BUILD_PLAYGROUNDS_LOADED, INVITE_LOADED, COMMENT_ADDED, COMMENT_UPDATED, COMMENT_VOTED, DEVICES_LOADED, SET_COMMENT, SET_COMPONENT, SET_PLAYGROUND, SET_TEAM, SET_TYPE_GROUP, TEAM_BUILDS_LOADED, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_CREATED, TEAM_UPDATED, UPDATE_MOUSE_COORDS, UPDATE_RESIZE_BOUNDS, USER_PROFILE_LOADED, USER_PROFILE_UPDATED } from '../../consts/action-types';
 import { LOG_MIDDLEWARE_POSTFIX, LOG_MIDDLEWARE_PREFIX } from '../../consts/log-ascii';
 import { Pages } from '../../consts/uris';
@@ -57,14 +57,14 @@ export function onMiddleware(store) {
       const { profile } = payload;
       if (profile) {
         cookie.save('user_id', (profile) ? profile.id : '0', { path : '/', sameSite : false });
-        dispatch(fetchTeamLookup({ profile }));
+        dispatch(fetchUserTeams({ profile }));
       }
 
     } else if (type === USER_PROFILE_UPDATED) {
       const profile = payload;
       if (profile) {
         cookie.save('user_id', (profile) ? profile.id : '0', { path : '/', sameSite : false });
-        dispatch(fetchTeamLookup({ profile }));
+        dispatch(fetchUserTeams({ profile }));
       }
 
     } else if (type === TEAMS_LOADED) {
@@ -165,7 +165,7 @@ export function onMiddleware(store) {
 
     } else if (type === TEAM_CREATED) {
       const { profile, team } = payload;
-      dispatch(fetchTeamLookup({ profile }));
+      dispatch(fetchUserTeams({ profile }));
 
     } else if (type === UPDATE_MOUSE_COORDS) {
       const { speed } = prevState.mouse;

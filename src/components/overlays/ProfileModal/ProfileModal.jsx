@@ -5,11 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 import { API_ENDPT_URL, Modals } from '../../../consts/uris';
-import {
-  fetchTeamLookup,
-  fetchUserProfile,
-  updateUserProfile
-} from '../../../redux/actions';
+import { fetchUserTeams, fetchUserProfile, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import ProfileForm from '../../forms/ProfileForm/ProfileForm';
 import BaseOverlay from '../BaseOverlay';
@@ -120,7 +116,7 @@ class ProfileModal extends Component {
               });
 
               this.setState({ updated: true }, ()=> {
-                this.props.fetchTeamLookup({ profile });
+                this.props.fetchUserTeams({ profile });
               });
             }
           });
@@ -178,7 +174,7 @@ const mapStateToProps = (state, ownProps)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return {
-    fetchTeamLookup   : (payload)=> dispatch(fetchTeamLookup(payload)),
+    fetchUserTeams    : (payload)=> dispatch(fetchUserTeams(payload)),
     fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
     updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
   };
