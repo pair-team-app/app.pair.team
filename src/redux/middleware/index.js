@@ -111,6 +111,11 @@ export function onMiddleware(store) {
           payload.playgrounds = playgrounds.map((item)=> ((playground && item.id === playground.id) ? payload.playground : { ...item,
             selected : false
           }));
+
+          if (playground && params.componentID) {
+            const component = { ...playground.components.find(({ id })=> (id === params.componentID)), selected : true };
+            payload.component = component;
+          }
         }
       }
 
@@ -309,6 +314,12 @@ export function onMiddleware(store) {
 
     } else if (type === SET_COMPONENT) {
       const { component } = payload;
+      const { team } = prevState.teams;
+      const { playground } = prevState.builds;
+
+      if (payload.component) {
+        dispatch(push(`/team/${team.id}--${team.slug}/project/${playground.buildID}--${playground.slug}/${playground.device.slug}/${component.id}`));
+      }
 
     } else if (type === SET_COMMENT) {
       const { comment } = payload;
@@ -340,14 +351,15 @@ export function onMiddleware(store) {
             if (Object.keys(projectMatch).length > 0) {
               dispatch(setRoutePath({ ...projectMatch,
                 params : { ...projectMatch.params,
-                  teamID       : (projectMatch.params.teamID << 0 || null),
-                  teamSlug     : (projectMatch.params.teamSlug || null),
-                  buildID      : (projectMatch.params.buildID << 0 || null),
-                  projectSlug  : (projectMatch.params.projectSlug || null),
-                  deviceSlug   : (projectMatch.params.deviceSlug || null),
-                  componentID  : (projectMatch.params.componentID << 0 || null),
-                  comments     : (projectMatch.params.comments) ? (projectMatch.params.comments === true) : false,
-                  commentID    : (projectMatch.params.commentID << 0 || null)
+                  teamID        : (projectMatch.params.teamID << 0 || null),
+                  teamSlug      : (projectMatch.params.teamSlug || null),
+                  buildID       : (projectMatch.params.buildID << 0 || null),
+                  projectSlug   : (projectMatch.params.projectSlug || null),
+                  deviceSlug    : (projectMatch.params.deviceSlug || null),
+                  componentID   : (projectMatch.params.componentID << 0 || null),
+                  componentSlug : (projectMatch.params.componentSlug || null),
+                  comments      : (projectMatch.params.comments) ? (projectMatch.params.comments === 'comments' || projectMatch.params.comments === true) : false,
+                  commentID     : (projectMatch.params.commentID << 0 || null)
                 }
               }));
 
@@ -414,7 +426,7 @@ export function onMiddleware(store) {
                   projectSlug  : (projectMatch.params.projectSlug || null),
                   deviceSlug   : (projectMatch.params.deviceSlug || null),
                   componentID  : (projectMatch.params.componentID << 0 || null),
-                  comments     : (projectMatch.params.comments) ? (projectMatch.params.comments === true) : false,
+                  comments     : (projectMatch.params.comments) ? (projectMatch.params.comments === 'comments' || projectMatch.params.comments === true) : false,
                   commentID    : (projectMatch.params.commentID << 0 || null)
                 }
               }));

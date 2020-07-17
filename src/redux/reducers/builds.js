@@ -35,8 +35,8 @@ export default function builds(state=initialState, action) {
     // const { playgrounds, comments, playground, typeGroup, components, component, comment } = payload;
     // return (Object.assign({}, state, { playgrounds, comments, playground, typeGroup, components, component, comment }));
 
-    const { playgrounds, playground } = payload;
-    return (Object.assign({}, state, { playgrounds, playground }));
+    const { playgrounds, playground, component } = payload;
+    return (Object.assign({}, state, { playgrounds, playground, component }));
 
   } else if (type === BUILD_PLAYGROUNDS_LOADED) {
     // const { playgrounds, comments, playground, typeGroup, components, component, comment } = payload;
@@ -58,10 +58,10 @@ export default function builds(state=initialState, action) {
     return (Object.assign({}, state, { component }));
 
   } else if (type === '@@router/LOCATION_CHANGE') {
-    const { playgrounds, playground } = payload;
+    const { playgrounds, playground, component } = payload;
 
     if (playgrounds && playground) {
-      return (Object.assign({}, state, { playgrounds, playground }));
+      return (Object.assign({}, state, { playgrounds, playground, component }));
 
     } else {
       return (state);
