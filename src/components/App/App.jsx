@@ -124,14 +124,14 @@ class App extends Component {
               email : invite.email
             }
           }).then((response)=> {
-            // console.log('USER_LOOKUP', response.data);
+            console.log('USER_LOOKUP', response.data);
 
             const { user } = response.data;
             if (user) {
-              this.onToggleModal(Modals.REGISTER);
+              this.onToggleModal(Modals.LOGIN);
 
             } else {
-              this.onToggleModal(Modals.LOGIN);
+              this.onToggleModal(Modals.REGISTER);
             }
 
             if (invite.state === 1) {

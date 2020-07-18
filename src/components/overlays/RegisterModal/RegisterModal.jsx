@@ -36,7 +36,7 @@ class RegisterModal extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
 		const { profile, invite } = this.props;
 
@@ -134,9 +134,9 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		invite  : state.invite,
+		invite  : state.teams.invite,
 		profile : state.user.profile,
-		team    : state.team
+		team    : state.teams.team
 	});
 };
 
