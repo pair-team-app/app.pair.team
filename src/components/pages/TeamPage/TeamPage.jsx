@@ -260,10 +260,7 @@ class TeamPage extends Component {
   handleCreateTeamSubmit = ({ title, description, rules, invites })=> {
     console.log('%s.handleCreateTeamSubmit()', this.constructor.name, { title, description, rules, invites });
     this.props.makeTeam({ title, description, rules, invites });
-
-    setTimeout(()=> {
-      this.props.toggleCreateTeam(false);
-    }, 1250);
+    this.props.toggleCreateTeam(false);
   };
 
   onReloadComments = (refresh=true)=> {

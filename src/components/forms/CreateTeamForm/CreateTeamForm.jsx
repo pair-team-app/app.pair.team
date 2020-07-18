@@ -61,7 +61,7 @@ class CreateTeamForm extends Component {
     event.preventDefault();
 
     const { title, description, rules, invites } = this.state;
-    this.props.onSubmit({ title, description, rules, invites });
+    this.props.onSubmit({ title, description, rules, invites : (invites.join(' ').length === 0) ? [] : invites });
   };
 
 

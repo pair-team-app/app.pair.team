@@ -336,7 +336,13 @@ export function makeTeam(payload) {
         type    : TEAM_CREATED,
         payload : { profile, team }
       });
-    }).catch((error)=> {});
+    }).catch((error)=> {
+      console.log(API_RESPONSE_PREFIX, 'CREATE_TEAM >> ERROR', { error, payload : {
+        title, description, rules, invites,
+        user_id : profile.id,
+        image   : null
+      } });
+    });
   });
 }
 
