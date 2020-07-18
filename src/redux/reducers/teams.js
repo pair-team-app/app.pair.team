@@ -19,8 +19,8 @@ export default function comments(state=initialState, action) {
   logFormat(state, action);
 
   if (type === INVITE_LOADED) {
-    const { team } = action.payload;
-    return (Object.assign({}, state, { team }));
+    const { team, invite } = action.payload;
+    return (Object.assign({}, state, { team, invite }));
 
   } else if (type === TEAM_COMMENTS_LOADED) {
     const { team } = payload;
