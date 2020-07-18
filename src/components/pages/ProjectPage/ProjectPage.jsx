@@ -27,11 +27,23 @@ class ProjectPage extends Component {
     console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
   }
 
+  handleCommentMarkerClick = (comment)=> {
+    console.log('handleCommentMarkerClick()', { comment });
+    this.props.setComment(comment);
+  };
+
   handleGridItemClick = (component)=> {
     console.log('handleGridItemClick()', { component });
-
     this.props.setComponent(component);
-  }
+  };
+
+  handleViewClick = (event)=> {
+    console.log('handleViewClick()', { event });
+
+    const { component } = this.props;
+    this.props.setComment(null);
+    this.props.setComponent(component);
+  };
 
   render() {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
@@ -47,9 +59,9 @@ class ProjectPage extends Component {
       {(playground && Object.keys(playground).length > 1) && (<div className="view-wrapper" data-grid={(component === null)}>
         {(!component) && (<ProjectViewsGrid components={playground.components} onGridItemClick={this.handleGridItemClick} />)}
         {(component) && (<div className="view-item-wrapper">
-          <ProjectViewItem components={component} />
+          <ProjectViewItem components={component} onClick={this.handleViewClick} />
           <div className="view-item-comments-wrapper">
-            {(component.comments.map((comment, i)=> (<ProjectViewCommentMarker key={i} ind={(i+1)} comment={comment} />)))}
+            {(component.comments.map((comment, i)=> (<ProjectViewCommentMarker key={i} ind={(i+1)} comment={comment} onClick={this.handleCommentMarkerClick} />)))}
           </div>
         </div>)}
       </div>)}
@@ -107,7 +119,7 @@ const ProjectViewItem = (props)=> {
   console.log('ProjectViewItem()', props);
 
   const { components } = props;
-  return (<div className="project-view-item">
+  return (<div className="project-view-item" onClick={props.onClick}>
     <img src={null} alt="" />
   </div>);
 }
@@ -116,7 +128,7 @@ const ProjectViewCommentMarker = (props)=> {
   console.log('ProjectViewCommentMarker()', props);
 
   const { comment, ind } = props;
-  return (<div className="project-view-comment-marker" style={{
+  return (<div className="project-view-comment-marker" onClick={()=> props.onClick(comment)} style={{
     top  : '100px',
     left : '100px'
   }}>

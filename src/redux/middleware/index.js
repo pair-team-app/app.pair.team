@@ -324,6 +324,13 @@ export function onMiddleware(store) {
     } else if (type === SET_COMMENT) {
       const { comment } = payload;
 
+      const { team } = prevState.teams;
+      const { playground, component } = prevState.builds;
+
+      if (payload.comment) {
+        dispatch(push(`/team/${team.id}--${team.slug}/project/${playground.buildID}--${playground.slug}/${playground.device.slug}/${component.id}/comments/${comment.id}`));
+      }
+
     } else if (type === '@@router/LOCATION_CHANGE') {
       const { teams } = prevState.teams;
       const { playgrounds } = prevState.builds;
