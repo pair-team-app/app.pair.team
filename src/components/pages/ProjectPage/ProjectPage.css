@@ -48,7 +48,7 @@
 	position: fixed;
 	bottom: 0;
 	left: 208px;
-	width: calc(100vw - (208px + var(--playground-comments-width)));
+	width: calc(100vw - (208px + var(--project-comments-width)));
 	display: flex;
 	align-items: flex-start; /* v-align */
 	padding: 0 var(--spacing-20) var(--spacing-20) var(--spacing-20);
