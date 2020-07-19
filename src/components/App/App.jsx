@@ -484,9 +484,10 @@ const mapDispatchToProps = (dispatch)=> {
     setPlayground     : (payload)=> dispatch(setPlayground(payload)),
     modifyInvite      : (payload)=> dispatch(modifyInvite(payload)),
     paidStripeSession : (payload)=> dispatch(paidStripeSession(payload)),
-    updateUserProfile : (payload)=> dispatch(updateUserProfile(payload))
+    updateUserProfile : (payload)=> dispatch(updateUserProfile(payload)),
+    push              : (payload)=> dispatch(push(payload))
   };
 };
 
 // export default connect(mapStateToProps, mapDispatchToProps)(App);
-export default withRouter(connect(mapStateToProps, { ...mapDispatchToProps, push })(App));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
