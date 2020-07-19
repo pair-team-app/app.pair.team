@@ -2,7 +2,7 @@
 .user-settings-popover {
 	position: relative;
 	display: flex;
-	flex-flow: row nowrap;
+	flex-flow: column nowrap;
 	align-items: center;
 }
 

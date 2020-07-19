@@ -1,12 +1,15 @@
 
 import React, { Component } from 'react';
+import './UserSettings.css';
+
+import { push } from 'connected-react-router'
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { GITHUB_DOCS, Modals, NPM_DE_PLAYGROUND, USER_DEFAULT_AVATAR } from '../../../../consts/uris';
 import { trackOutbound } from '../../../../utils/tracking';
 import BasePopover from '../../../overlays/BasePopover';
 import { SettingsMenuItemTypes } from './';
-import './UserSettings.css';
+
 
 
 class UserSettings extends Component {
@@ -23,12 +26,33 @@ class UserSettings extends Component {
 	}
 
 	componentDidMount() {
-    // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
-  }
+		console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+
+		const { hash } = this.props;
+		if (hash === '#settings' && !this.state.popover) {
+			this.setState({ popover : true });
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+		// console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
+
+		const { hash } = this.props;
+		if ((hash === '#settings') && !this.state.popover) {
+			this.setState({ popover : true });
+		}
+
+		if (hash !== '#settings' && this.state.popover) {
+			this.setState({ popover : false });
+		}
+	}
 
 	handleComplete = ()=> {
- 		console.log('%s.handleComplete()', this.constructor.name, { state : this.state });
+		console.log('%s.handleComplete()', this.constructor.name, { state : this.state });
 
+		// window.location.href = window.location.href.replace('#settings', '');
+		this.props.push(window.location.pathname.replace('#settings', ''));
     this.setState({ popover : false }, ()=> {
 			const { itemType } = this.state;
 			if (itemType) {
@@ -60,14 +84,17 @@ class UserSettings extends Component {
 
 	handleShowPopover = ()=> {
 // console.log('%s.handleShowPopover()', this.constructor.name);
+
+		// this.props.push(`${window.location.href}#settings`);
+		window.location.href = `${window.location.href}#settings`;
 		this.setState({
-			popover : true,
+			// popover : true,
 			outro   : false
 		});
 	};
 
 	render() {
-// console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { profile } = this.props;
 		const { avatar } = (profile || { avatar : USER_DEFAULT_AVATAR });
@@ -91,13 +118,13 @@ class UserSettings extends Component {
 
 
 const UserSettingsPopover = (props)=> {
-// console.log('UserSettingsPopover()', props);
+console.log('UserSettingsPopover()', props);
 
 	const { position, outro } = props;
 	const payload = {
 		position : {
-			x : position.x + 30,
-			y : position.y
+			x : position.x - 100,
+			y : position.y + 20
 		}
 	};
 
@@ -113,8 +140,11 @@ const UserSettingsPopover = (props)=> {
 
 
 const mapStateToProps = (state, ownProps)=> {
-	return ({ profile : state.user.profile });
+	return ({
+		profile : state.user.profile,
+		hash    : state.router.location.hash
+	});
 };
 
 
-export default connect(mapStateToProps)(UserSettings);
+export default connect(mapStateToProps, { push })(UserSettings);

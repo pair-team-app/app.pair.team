@@ -11,9 +11,7 @@ import SharePopover from '../../overlays/SharePopover';
 import { Modals, Pages } from '../../../consts/uris';
 import { toggleTheme } from '../../../redux/actions';
 import { trackOutbound } from '../../../utils/tracking';
-
-
-
+import {buildSearch} from 'emoji-mart/dist-es/utils/data';
 
 
 class TopNav extends Component {
@@ -26,11 +24,11 @@ class TopNav extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 // console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
 
  		const { popover } = this.props;
- 		if (popover && !prevProps.popover && !this.state.popover) {
+ 		if ((popover || popover) && !prevProps.popover && !this.state.popover) {
  			this.setState({ popover });
 	  }
 	}
@@ -105,7 +103,7 @@ class TopNav extends Component {
 
 
 	render() {
-		// console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
 		const { darkThemed, playground, profile, invite, team } = this.props;
 		const { popover } = this.state;
