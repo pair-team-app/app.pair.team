@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './UserSettings.css';
 
-import { push } from 'connected-react-router'
+import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { GITHUB_DOCS, Modals, NPM_DE_PLAYGROUND, USER_DEFAULT_AVATAR } from '../../../../consts/uris';
@@ -85,12 +85,9 @@ class UserSettings extends Component {
 	handleShowPopover = ()=> {
 // console.log('%s.handleShowPopover()', this.constructor.name);
 
-		// this.props.push(`${window.location.href}#settings`);
-		window.location.href = `${window.location.href}#settings`;
-		this.setState({
-			// popover : true,
-			outro   : false
-		});
+		this.props.push(`${window.location.pathname}#settings`);
+		// window.location.href = `${window.location.href}#settings`;
+		this.setState({ outro : false });
 	};
 
 	render() {

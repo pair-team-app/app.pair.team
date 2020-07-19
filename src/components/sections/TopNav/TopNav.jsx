@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './TopNav.css';
 
+import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 import { Strings } from 'lang-js-utils';
 import { NavLink, withRouter } from 'react-router-dom';
@@ -23,14 +24,27 @@ class TopNav extends Component {
 		};
 	}
 
+	componentDidMount() {
+		console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
+
+		const { hash } = this.props;
+		if (hash === '#share' && !this.state.popover) {
+			this.setState({ popover : true });
+		}
+	}
+
 	componentDidUpdate(prevProps, prevState, snapshot) {
 		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 // console.log('%s.componentDidUpdate()', this.constructor.name, { left : shareLink.offsetLeft, top : shareLink.offsetTop });
 
- 		const { popover } = this.props;
- 		if ((popover || popover) && !prevProps.popover && !this.state.popover) {
- 			this.setState({ popover });
-	  }
+		 const { hash } = this.props;
+		if ((hash === '#share') && !this.state.popover) {
+			this.setState({ popover : true });
+		}
+
+		if (hash !== '#share' && this.state.popover) {
+			this.setState({ popover : false });
+		}
 	}
 
 	componentWillUnmount() {
@@ -58,12 +72,17 @@ class TopNav extends Component {
     } else if (itemType === SettingsMenuItemTypes.PROFILE) {
       this.props.onModal(Modals.PROFILE);
     }
-  };
+	};
+
+	handlePopoverToggle = ()=> {
+		console.log('%s.handlePopoverToggle()', this.constructor.name);
+		this.props.push(`${window.location.pathname}#share`);
+	};
 
 	handlePopoverClose = ()=> {
-// console.log('%s.handlePopoverClose()', this.constructor.name);
+		console.log('%s.handlePopoverClose()', this.constructor.name);
 
-		this.props.onSharePopoverClose();
+		this.props.push(window.location.pathname.replace('#share', ''));
 		this.setState({ popover : false });
 	};
 
@@ -126,7 +145,7 @@ class TopNav extends Component {
 			<div className="col col-right">
 				<NavLink to="https://www.notion.so/pairurl/Blog-f8fd5939357442bca1ff97c3117d1ecb" className="top-nav-link" target="_blank" onClick={(event)=> handleURL(event, 'https://www.notion.so/pairurl/Blog-f8fd5939357442bca1ff97c3117d1ecb')}>Blog</NavLink>
         <NavLink to="https://spectrum.chat/pair" className="top-nav-link" target="_blank" onClick={(event)=> handleURL(event, 'https://spectrum.chat/pair')}>Support</NavLink>
-				<TopNavShareLink popover={popover} playground={playground} onClick={()=> this.setState({ popover : !this.state.popover })} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
+				<TopNavShareLink popover={popover} playground={playground} onClick={this.handlePopoverToggle} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
 				{(profile && !invite) && (<UserSettings onMenuItem={this.handleSettingsItem} onLogout={this.props.onLogout} />)}
 				{(profile && !invite) && (<div className="" onClick={()=> this.props.onModal(Modals.INVITE)}>invite</div>)}
 			</div>
@@ -155,35 +174,33 @@ const TopNavShareLink = (props)=> {
 	return (<div className="top-nav-share-link">
     <div className="nav-link" onClick={props.onClick}>Share</div>
 
-    {(popover) && (<SharePopover
-      playground={playground}
-      onPopup={props.onPopup}
-      onClose={props.onPopoverClose} />)}
+    {(popover) && (<SharePopover playground={playground} onPopup={props.onPopup} onClose={props.onPopoverClose} />)}
 	</div>);
 };
 
 
-const mapDispatchToProps = (dispatch)=> {
-  return ({
-    toggleTheme : ()=> dispatch(toggleTheme())
-  });
-};
+// const mapDispatchToProps = (dispatch)=> {
+//   return ({
+//     toggleTheme : ()=> dispatch(toggleTheme())
+//   });
+// };
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
     darkThemed  : state.darkThemed,
-		devices     : state.devices,
-		invite      : state.invite,
-		playgrounds : state.playgrounds,
-		playground  : state.playground,
+		devices     : state.builds.devices,
+		invite      : state.teams.invite,
+		playgrounds : state.builds.playgrounds,
+		playground  : state.builds.playground,
 		profile     : state.user.profile,
 		typeGroup   : state.typeGroup,
-		component   : state.component,
-		comment     : state.comment,
-		matchPath   : state.matchPath
+		component   : state.builds.component,
+		comment     : state.comments.comment,
+		matchPath   : state.matchPath,
+		hash        : state.router.location.hash
 	});
 };
 
 
 // export default connect(mapStateToProps, mapDispatchToProps)(TopNav);
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(TopNav));
+export default withRouter(connect(mapStateToProps, { push })(TopNav));
