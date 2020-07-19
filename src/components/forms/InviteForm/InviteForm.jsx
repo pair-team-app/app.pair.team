@@ -15,9 +15,9 @@ class InviteForm extends Component {
 		super(props);
 		this.state = {
 			inviteID    : props.inviteID,
-			emails      : new Array(5).fill(''),
-			emailsValid : new Array(5).fill(true),
-			validations : new Array(5).fill(false)
+			emails      : new Array(3).fill(''),
+			emailsValid : new Array(3).fill(true),
+			validations : new Array(3).fill(false)
 		};
 	}
 
@@ -109,7 +109,7 @@ class InviteForm extends Component {
 					? (<input key={i} type="email" placeholder="Enter Email Address" value={email} onFocus={(event)=> this.handleTextFocus(event, i)} onChange={(event)=> this.handleTextChange(event, i)} autoComplete="new-password" autoFocus />)
 					: (<input key={i} type="text" placeholder="Enter Email Address" value={email} onFocus={(event)=> this.handleTextFocus(event, i)} onChange={(event)=> this.handleTextChange(event, i)} autoComplete="new-password" />));
 				}))}
-
+				<button className="quiet-button" onClick={this.props.onCancel}>Cancel</button>
 				<button disabled={(emails.filter((email)=> (email.length === 0)).length === emails.length || emailsValid.filter((valid)=> (!valid)).length === emailsValid.length)} type="submit" onClick={(event)=> this.handleSubmit(event)}>Invite Team</button>
 			</form>
 		</div>);
