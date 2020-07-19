@@ -27,16 +27,18 @@ class UserSettings extends Component {
   }
 
 	handleComplete = ()=> {
-//  console.log('%s.handleComplete()', this.constructor.name, );
+ 		console.log('%s.handleComplete()', this.constructor.name, { state : this.state });
 
     this.setState({ popover : false }, ()=> {
-      const { itemType } = this.state;
-      if (itemType === SettingsMenuItemTypes.LOGOUT) {
-        this.props.onLogout(null, Modals.LOGIN);
+			const { itemType } = this.state;
+			if (itemType) {
+				if (itemType === SettingsMenuItemTypes.LOGOUT) {
+					this.props.onLogout(null, Modals.LOGIN);
 
-      } else if (itemType !== SettingsMenuItemTypes.DOCS && itemType !== SettingsMenuItemTypes.INSTALL) {
-        this.props.onMenuItem(itemType);
-      }
+				} else if (itemType !== SettingsMenuItemTypes.DOCS && itemType !== SettingsMenuItemTypes.INSTALL) {
+					this.props.onMenuItem(itemType);
+				}
+			}
 		});
 	};
 

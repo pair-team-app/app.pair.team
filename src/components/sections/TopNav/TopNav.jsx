@@ -6,7 +6,7 @@ import { Strings } from 'lang-js-utils';
 import { NavLink, withRouter } from 'react-router-dom';
 
 import { BreadcrumbTypes } from './';
-import UserSettings from './UserSettings';
+import UserSettings, { SettingsMenuItemTypes} from './UserSettings';
 import SharePopover from '../../overlays/SharePopover';
 import { Modals, Pages } from '../../../consts/uris';
 import { toggleTheme } from '../../../redux/actions';
@@ -50,6 +50,17 @@ class TopNav extends Component {
 	handleDeviceChange = (event)=> {
 		console.log('%s.handleDeviceChange()', this.constructor.name, { event : event.target });
 	};
+
+	handleSettingsItem = (itemType)=> {
+    console.log('%s.handleSettingsItem()', this.constructor.name, { itemType });
+
+    if (itemType === SettingsMenuItemTypes.DELETE_ACCT) {
+      this.props.onModal(Modals.DISABLE);
+
+    } else if (itemType === SettingsMenuItemTypes.PROFILE) {
+      this.props.onModal(Modals.PROFILE);
+    }
+  };
 
 	handlePopoverClose = ()=> {
 // console.log('%s.handlePopoverClose()', this.constructor.name);
@@ -118,7 +129,7 @@ class TopNav extends Component {
 				<NavLink to="https://www.notion.so/pairurl/Blog-f8fd5939357442bca1ff97c3117d1ecb" className="top-nav-link" target="_blank" onClick={(event)=> handleURL(event, 'https://www.notion.so/pairurl/Blog-f8fd5939357442bca1ff97c3117d1ecb')}>Blog</NavLink>
         <NavLink to="https://spectrum.chat/pair" className="top-nav-link" target="_blank" onClick={(event)=> handleURL(event, 'https://spectrum.chat/pair')}>Support</NavLink>
 				<TopNavShareLink popover={popover} playground={playground} onClick={()=> this.setState({ popover : !this.state.popover })} onPopup={this.props.onPopup} onPopoverClose={this.handlePopoverClose} />
-				{(profile && !invite) && (<UserSettings onMenuItem={this.props.onSettingsItem} onLogout={this.props.onLogout} />)}
+				{(profile && !invite) && (<UserSettings onMenuItem={this.handleSettingsItem} onLogout={this.props.onLogout} />)}
 				{(profile && !invite) && (<div className="" onClick={()=> this.props.onModal(Modals.INVITE)}>invite</div>)}
 			</div>
 		</div>);
