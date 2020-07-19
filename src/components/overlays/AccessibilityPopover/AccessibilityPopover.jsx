@@ -18,7 +18,7 @@ class AccessibilityPopover extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+    // console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
   }
 
   handleComment = (event)=> {
