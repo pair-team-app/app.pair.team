@@ -179,11 +179,11 @@ const TopNavShareLink = (props)=> {
 };
 
 
-// const mapDispatchToProps = (dispatch)=> {
-//   return ({
-//     toggleTheme : ()=> dispatch(toggleTheme())
-//   });
-// };
+const mapDispatchToProps = (dispatch)=> {
+  return ({
+    toggleTheme : ()=> dispatch(toggleTheme())
+  });
+};
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
@@ -203,4 +203,4 @@ const mapStateToProps = (state, ownProps)=> {
 
 
 // export default connect(mapStateToProps, mapDispatchToProps)(TopNav);
-export default withRouter(connect(mapStateToProps, { push })(TopNav));
+export default withRouter(connect(mapStateToProps, { ...mapDispatchToProps, push })(TopNav));

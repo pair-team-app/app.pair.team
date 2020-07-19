@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import axios from 'axios';
+import { push } from 'connected-react-router';
 import { Browsers } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
@@ -191,6 +192,26 @@ class App extends Component {
         this.onToggleModal(Modals.REGISTER, false);
       }
 
+
+      const { hash } = this.props;
+      if (hash === '#invite' && !modals.invite) {
+        this.onToggleModal(Modals.INVITE);
+      }
+
+      if (hash === '#profile' && !modals.profile) {
+        this.onToggleModal(Modals.PROFILE);
+      }
+
+      if (hash === '') {
+        if (prevProps.hash === '#invite') {
+          this.onToggleModal(Modals.INVITE, false);
+        }
+
+        if (prevProps.hash === '#profile') {
+          this.onToggleModal(Modals.PROFILE, false);
+        }
+      }
+
     }
   }
 
@@ -270,9 +291,15 @@ class App extends Component {
 
   onToggleModal = (uri, show=true, payload=null)=> {
     console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
+
+    const { hash } = this.props;
     const { modals } = this.state;
 
     if (show) {
+      if ((uri === Modals.INVITE || uri === Modals.PROFILE) && !hash.includes('#')) {
+        this.props.push(`${window.location.pathname}${uri}`);
+      }
+
       this.setState({
         modals : { ...modals, payload,
           disable  : uri === Modals.DISABLE,
@@ -287,6 +314,10 @@ class App extends Component {
         }
       });
     } else {
+      if (hash === uri) {
+        this.props.push(window.location.pathname.replace(uri, ''));
+      }
+
       this.setState({
         modals : { ...modals,
           cookies  : (uri === Modals.COOKIES) ? false : modals.cookies,
@@ -440,7 +471,8 @@ const mapStateToProps = (state, ownProps)=> {
     playground     : state.builds.playground,
     typeGroup      : state.builds.typeGroup,
     comment        : state.comments.comment,
-    matchPath      : state.matchPath
+    matchPath      : state.matchPath,
+    hash           : state.router.location.hash
   };
 };
 
@@ -457,4 +489,4 @@ const mapDispatchToProps = (dispatch)=> {
 };
 
 // export default connect(mapStateToProps, mapDispatchToProps)(App);
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps, { ...mapDispatchToProps, push })(App));
