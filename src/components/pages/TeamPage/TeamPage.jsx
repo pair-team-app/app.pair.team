@@ -3,16 +3,8 @@ import React, { Component } from 'react';
 import './TeamPage.css';
 
 import axios from 'axios';
-import FilepondPluginFilePoster from 'filepond-plugin-file-poster';
-import FilepondPluginFileMetadata from 'filepond-plugin-file-metadata';
-import FilepondPluginImageCrop from 'filepond-plugin-image-crop';
-import FilepondPluginImageEdit from 'filepond-plugin-image-edit';
-import FilepondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
-import FilepondPluginImagePreview from 'filepond-plugin-image-preview';
-import FilepondPluginImageTransform from 'filepond-plugin-image-transform';
 import { Strings } from 'lang-js-utils';
 import TextareaAutosize from 'react-autosize-textarea';
-import { FilePond, registerPlugin } from 'react-filepond';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
@@ -23,16 +15,11 @@ import CreateTeamForm from '../../forms/CreateTeamForm';
 import { SORT_BY_DATE, SORT_BY_SCORE } from './index';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
-import { API_ENDPT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
+import { API_ENDPT_URL } from '../../../consts/uris';
 import { fetchTeamComments, makeComment, makeTeam, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup, toggleCreateTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import btnClear from '../../../assets/images/ui/btn-clear.svg';
 import btnCode from '../../../assets/images/ui/btn-code.svg';
-
-// import 'filepond/dist/filepond.min.css';
-// import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
-import 'filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css'
-
 
 class TeamPage extends Component {
   constructor(props) {
@@ -49,7 +36,6 @@ class TeamPage extends Component {
       fetching        : false,
       loading         : false,
       share           : false,
-      files:          [  ],
       richComment     : false,
       url             : null,
       imageComment    : null
@@ -63,10 +49,6 @@ class TeamPage extends Component {
     if (playground) {
       this.props.setPlayground(null);
     }
-
-    // Register the plugins
-    registerPlugin(FilepondPluginFileMetadata, FilepondPluginFilePoster, FilepondPluginImageCrop, FilepondPluginImageEdit, FilepondPluginImageExifOrientation, FilepondPluginImagePreview, FilepondPluginImageTransform);
-    // document.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -102,10 +84,6 @@ class TeamPage extends Component {
 		document.removeEventListener('keydown', this.handleKeyDown);
 	}
 
-  handleInit() {
-    console.log('FilePond instance has initialised', this.pond);
-  }
-
   handleAddComment = (event)=> {
     // console.log('%s.handleAddComment()', this.constructor.name, { event, props : this.props, state : this.state });
     trackEvent('button', 'add-comment');
@@ -138,22 +116,6 @@ class TeamPage extends Component {
     });
   }
 
-  handleClearComment = (event)=> {
-    console.log('%s.handleClearComment()', this.constructor.name, { event });
-    this.setState({
-      commentContent : '',
-      loading        : false,
-      richComment    : false,
-      imageComment   : null
-    });
-  }
-
-  handleCode = (event)=> {
-    console.log('%s.handleCode()', this.constructor.name, { event });
-    this.setState({ codeComment : !this.state.codeComment });
-
-  }
-
   handleKeyDown = (event)=> {
     // console.log('%s.handleKeyDown()', this.constructor.name, event);
 
@@ -172,17 +134,6 @@ class TeamPage extends Component {
       }
     }
   }
-
-  handleNavGroupItemClick = (typeGroup)=> {
-    // console.log('%s.handleNavGroupItemClick()', this.constructor.name, { typeGroup });
-  };
-
-  handlePlaygroundClick = (playground, typeGroup)=> {
-    // console.log('%s.handlePlaygroundClick()', this.constructor.name, { playground, typeGroup });
-
-    this.props.setPlayground(playground);
-    this.props.setTypeGroup(typeGroup);
-  };
 
   handleRuleInput = (event)=> {
     // console.log('%s.handleRuleInput()', this.constructor.name, event);
@@ -266,65 +217,6 @@ class TeamPage extends Component {
     });
   };
 
-  handleFileInit = (file)=> {
-    console.log('%s.handleFileInit(file)', this.constructor.name, { file });
-  };
-
-
-  // processes the first file
-  handleFileAdd = (file)=> {
-    console.log('%s.handleFileAdd(file)', this.constructor.name, { file });
-    // File has been processed
-  };
-
-  handleFileProgress = (file, progress)=> {
-    console.log('%s.handleFileProgress(file, progress)', this.constructor.name, { file, progress });
-  };
-
-  handleFileProcessStart = (file)=> {
-    console.log('%s.handleFileProcessStart(file)', this.constructor.name, { file });
-  };
-
-  handleFileProcessProgress = (file, progress)=> {
-    console.log('%s.handleFileProcessProgress(file, progress)', this.constructor.name, { file, progress });
-  };
-
-  handleProcessedFile = (error, file)=> {
-    console.log('%s.handleProcessedFile(error, output)', this.constructor.name, { error, file });
-  };
-
-  handleProcessedFiles = ()=> {
-    console.log('%shandleProcessedFiles()', this.constructor.name, {  });
-  };
-
-  handleFileRemoved = (error, output)=> {
-    console.log('%s.handleFileRemoved(error, output)', this.constructor.name, { error, output });
-  };
-
-
-
-  // // processes the first file
-  handleFileWarning = (error, file, status)=> {
-    console.log('%s.handleFileWarning(error, file, status)', this.constructor.name, { error, file, status });
-    // File has been processed
-  };
-
-
-  // processes the first file
-  handleFileError = (error, file, status) => {
-    console.log('%s.handleFileError(error, file, status)', this.constructor.name, { error, file, status });
-    // File has been processed
-  };
-
-  handleFilesUpdated = (fileItems)=> {
-    console.log('%s.handleFilesUpdated(fileItems)', this.constructor.name, { fileItems });
-    this.setState({ files : fileItems.map(({ file })=> (file)) });
-  }
-
-  /* handleFilePond = ()=> {
-    console.log('%s.()', this.constructor.name, { ,  });
-  }; */
-
 
 
   render() {
@@ -346,7 +238,7 @@ class TeamPage extends Component {
         {(!createTeam) ? (<div>
           <div className="comments-wrapper" data-fetching={fetching} data-empty={comments.length === 0}>
             <div>
-              {(files.length === 0) && (<TeamPageAddComment
+              <TeamPageAddComment
                 loading={loading}
                 codeComment={codeComment}
                 commentContent={commentContent}
@@ -355,70 +247,7 @@ class TeamPage extends Component {
                 onCode={this.handleCode}
                 onTextChange={this.handleTextChange}
                 onSubmit={this.handleAddComment}
-              />)}
-
-              {(!richComment) && (<FilePond
-                server={{
-                  url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}`,
-                  process: (fieldName, file, metadata, load) => {
-                    console.log('%s.server.process(fieldName, file, metadata, load)', this.constructor.name, { fieldName, file, metadata, load, url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}` });
-
-                    // simulates uploading a file
-                    setTimeout(() => {
-                        load(Date.now())
-                    }, 1500);
-
-                    /*
-                    url : './process',
-                    method: 'POST',
-
-                    headers: { 'Content-Type' : 'application/json', },
-                    */
-                },
-                load: (source, load) => {
-                  console.log('%s.server.load(source, load)', this.constructor.name, { source, load });
-
-                    // simulates loading a file from the server
-                    fetch(source).then(res => res.blob()).then(load);
-                }
-                }}
-                // ref={ref => (this.pond = ref)}
-                files={this.state.files}
-                className="file-pond-wrapper"
-                allowMultiple={true}
-                maxFiles={3}
-                // allowImagePreview={true}
-                // allowBrowse={true}
-                // allowDrop={true}
-                allowPaste={true}
-                // allowReorder={false}
-                // allowReplace={true}
-                // allowRevert={true}
-                // appendTo={filePondAttach}
-                // itemInsertLocation="after"
-                instantUpload={true}
-                labelIdle=""
-                iconRemove={btnClear}
-                labelFileProcessingComplete="Add comment to this…"
-                labelTapToUndo=""
-                //oninit={this.handleInit}
-                onwarning={this.handleFileWarning}
-                onerror={this.handleFileError}
-                oninitfile={this.handleFileInit}
-                onaddfile={this.handleFileAdd}
-                onaddfileprogress={this.handleFileProgress}
-                onprocessfilestart={this.handleFileProcessStart}
-                onprocessfileprogress={this.handleFileProcessProgress}
-                onprocessfile={this.handleProcessedFile}
-                onprocessfiles={this.handleProcessedFiles}
-                onremovefile={this.handleFileRemoved}
-                onupdatefiles={this.handleFilesUpdated}
-
-                // onupdatefiles={(fileItems)=> {
-                //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
-                //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
-                // }}
-              />)}
+              />
 
               <div className="empty-comments">No Activity</div>
 
