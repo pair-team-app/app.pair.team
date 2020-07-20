@@ -38,7 +38,8 @@ class TeamPage extends Component {
       share           : false,
       richComment     : false,
       url             : null,
-      imageComment    : null
+      imageComment    : null,
+      dragOver        : false,
     };
   }
 
@@ -49,6 +50,16 @@ class TeamPage extends Component {
     if (playground) {
       this.props.setPlayground(null);
     }
+
+    window.ondragenter = this.handleDragEnter;
+    window.ondragleave = this.handleDragLeave;
+
+    // window.ondragenter = (event)=> { console.log('%s.ondragenter()', 'window', { event }); };
+    // window.ondragleave = (event)=> { console.log('%s.ondragleave()', 'window', { event }); };
+    //window.ondragexit = (event)=> { console.log('%s.ondragexit()', 'window', { event }); };
+    //window.ondragover = (event)=> { console.log('%s.ondragover()', 'window', { event }); };
+    //window.ondragend = (event)=> { console.log('%s.ondragend()', 'window', { event }); };
+    //window.ondragstart = (event)=> { console.log('%s.ondragstart()', 'window', { event }); };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -81,6 +92,8 @@ class TeamPage extends Component {
   componentWillUnmount() {
 		// console.log('%s.componentWillUnmount()', this.constructor.name, { props : this.props, state : this.state });
 
+    window.ondragenter = null;
+    window.ondragleave = null;
 		document.removeEventListener('keydown', this.handleKeyDown);
 	}
 
@@ -114,6 +127,26 @@ class TeamPage extends Component {
       ruleInput   : false
       // ruleContent : ''
     });
+  }
+
+  handleDragEnter = (event)=> {
+    console.log('%s.handleDragEnter()', this.constructor.name, { event });
+    event.preventDefault();
+
+    const { dragOver } = this.state;
+    if (!dragOver) {
+      this.setState({ dragOver : true });
+    }
+  };
+
+  handleDragLeave = (event)=> {
+    console.log('%s.handleDragLeave()', this.constructor.name, { event });
+    event.preventDefault();
+
+    const { dragOver } = this.state;
+    if (dragOver) {
+      this.setState({ dragOver : false });
+    }
   }
 
   handleKeyDown = (event)=> {
