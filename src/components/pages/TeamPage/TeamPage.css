@@ -22,7 +22,7 @@
 	overflow: hidden;
 }
 
-.team-page > div {
+.team-page > .content-wrapper {
 	position: fixed;
 	left: 208px;
 	top: 58px;
@@ -35,7 +35,7 @@
 	padding: 0 var(--spacing-20);
 }
 
-.team-page > div > * {
+.team-page > .content-wrapper > * {
 	/* height: calc(100vh - 58px); */
 }
 

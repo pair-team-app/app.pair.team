@@ -53,13 +53,6 @@ class TeamPage extends Component {
 
     window.ondragenter = this.handleDragEnter;
     window.ondragleave = this.handleDragLeave;
-
-    // window.ondragenter = (event)=> { console.log('%s.ondragenter()', 'window', { event }); };
-    // window.ondragleave = (event)=> { console.log('%s.ondragleave()', 'window', { event }); };
-    //window.ondragexit = (event)=> { console.log('%s.ondragexit()', 'window', { event }); };
-    //window.ondragover = (event)=> { console.log('%s.ondragover()', 'window', { event }); };
-    //window.ondragend = (event)=> { console.log('%s.ondragend()', 'window', { event }); };
-    //window.ondragstart = (event)=> { console.log('%s.ondragstart()', 'window', { event }); };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -140,11 +133,13 @@ class TeamPage extends Component {
   };
 
   handleDragLeave = (event)=> {
-    console.log('%s.handleDragLeave()', this.constructor.name, { event });
+    console.log('%s.handleDragLeave()', this.constructor.name, { event, client : { x : event.clientX, y : event.clientY }});
     event.preventDefault();
 
     const { dragOver } = this.state;
-    if (dragOver) {
+    const { clientX, clientY } = event;
+
+    if (dragOver && (clientX + clientY === 0)) {
       this.setState({ dragOver : false });
     }
   }
@@ -256,7 +251,7 @@ class TeamPage extends Component {
     console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
     const { profile, team, comments, createTeam } = this.props;
-    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, share, sort, topSort, files, richComment, imageComment, codeComment } = this.state;
+    const { commentContent, teamDescription, ruleContent, ruleInput, fetching, loading, share, sort, topSort, files, richComment, imageComment, codeComment, dragOver } = this.state;
 
 
     const cdnHeaders = {
@@ -266,7 +261,7 @@ class TeamPage extends Component {
 
     return (<BasePage { ...this.props } className="team-page">
       {(profile && team) && (<>
-        {(!createTeam) ? (<div>
+        {(!createTeam) ? (<div className="content-wrapper">
           <div className="comments-wrapper" data-fetching={fetching} data-empty={comments.length === 0}>
             <div>
               <TeamPageAddComment
@@ -319,6 +314,7 @@ class TeamPage extends Component {
         </div>) : (<div>
           <CreateTeamForm onCancel={()=> this.props.toggleCreateTeam(false)} onSubmit={this.handleCreateTeamSubmit} />
         </div>)}
+        {(dragOver) && (<TeamPageFileDrop />)}
       </>)}
     </BasePage>);
   }
