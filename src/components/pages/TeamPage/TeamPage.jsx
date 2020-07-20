@@ -17,13 +17,12 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import BasePage from '../BasePage';
+import BaseComment from '../../iterables/BaseComment';
 import CreateTeamForm from '../../forms/CreateTeamForm';
-import TeamPageCommentsPanel from './TeamPageCommentsPanel';
-import { SORT_BY_DATE, SORT_BY_SCORE } from './TeamPageHeader';
-import { SettingsMenuItemTypes } from '../../sections/TopNav/UserSettings';
+import { SORT_BY_DATE, SORT_BY_SCORE } from './index';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
-import { Modals, API_ENDPT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
+import { API_ENDPT_URL, CDN_UPLOAD_URL } from '../../../consts/uris';
 import { fetchTeamComments, makeComment, makeTeam, makeTeamRule, modifyTeam, setComment, setPlayground, setTypeGroup, toggleCreateTeam } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
 import btnClear from '../../../assets/images/ui/btn-clear.svg';
@@ -194,17 +193,6 @@ class TeamPage extends Component {
     });
   }
 
-  handleSettingsItem = (itemType)=> {
-    //console.log('%s.handleSettingsItem()', this.constructor.name, itemType);
-
-    if (itemType === SettingsMenuItemTypes.DELETE_ACCT) {
-      this.props.onModal(Modals.DISABLE);
-
-    } else if (itemType === SettingsMenuItemTypes.PROFILE) {
-      this.props.onModal(Modals.PROFILE);
-    }
-  };
-
   handleSortClick = (sort)=> {
     // console.log('%s.handleSortClick()', this.constructor.name, sort);
 
@@ -352,15 +340,7 @@ class TeamPage extends Component {
 
     return (<BasePage { ...this.props } className="team-page">
       {(profile && team) && (<>
-        {/* <TeamPageHeader
-          sort={sort}
-          popover={share}
-          onSortClick={this.handleSortClick}
-          onPopup={this.props.onPopup}
-          onSharePopoverClose={()=> this.setState({ share : false })}
-          onSettingsItem={this.handleSettingsItem}
-          onLogout={this.props.onLogout}
-        /> */}
+        <TeamPageHeader onSortClick={this.handleSortClick} />
 
         {(!createTeam) ? (<div>
           <div className="comments-wrapper" data-fetching={fetching} data-empty={comments.length === 0}>
@@ -505,6 +485,44 @@ const TeamPageAddComment = (props)=> {
     <button type="submit" disabled={commentContent.length === 0} onClick={props.onSubmit}>Submit</button>
   </form></div>);
 };
+
+
+
+const TeamPageCommentsPanel = (props)=> {
+	// console.log('TeamPageCommentsPanel()', { ...props });
+
+	const { loading, profile, comments } = props;
+  return (<div className="team-page-comments-panel" data-loading={loading}>
+		{(comments.map((comment, i)=> {
+			const vote = (comment.votes.find(({ author, score })=> (author.id === profile.id && score !== 0 )) || null);
+			return (<TeamPageComment key={i} comment={comment}  loading={loading} vote={vote} />);
+		}))}
+	</div>);
+}
+
+
+const TeamPageComment = (props)=> {
+  // console.log('TeamPageComment()', props);
+
+  const { loading, vote, comment } = props;
+	return (<div className="team-page-comment" data-id={comment.id} data-author={comment.author.id} data-loading={loading}>
+    <BaseComment loading={loading} vote={vote} comment={comment} />
+  </div>);
+};
+
+
+const TeamPageHeader = (props)=> {
+  console.log('TeamPageHeader()', props);
+
+  const { sort } = props;
+  return (<div className="team-page-header">
+    <div className="sort-by-wrapper">
+      <div className="sort-by-link" data-selected={sort === SORT_BY_SCORE} onClick={()=> this.props.onSortClick(SORT_BY_SCORE)}>Top</div>
+      <div className="sort-by-link" data-selected={sort === SORT_BY_DATE} onClick={()=> this.props.onSortClick(SORT_BY_DATE)}>New</div>
+    </div>
+  </div>);
+};
+
 
 
 const TeamPageTeamRule = (props)=> {
