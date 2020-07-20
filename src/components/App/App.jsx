@@ -20,7 +20,6 @@ import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification'
 import ProfileModal from '../overlays/ProfileModal';
 import RegisterModal from '../overlays/RegisterModal';
 import StripeModal from '../overlays/StripeModal';
-import BottomNav from '../sections/BottomNav';
 import LeftNav from '../sections/LeftNav';
 import TopNav from '../sections/TopNav';
 
@@ -363,7 +362,6 @@ class App extends Component {
 	    <div className="page-wrapper">
         <TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={this.onToggleModal} />
 		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
-        {(1===2) && (<BottomNav />)}
 	    </div>
 
 		  <div className='modal-wrapper'>
