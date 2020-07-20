@@ -16,6 +16,7 @@ import { FilePond, registerPlugin } from 'react-filepond';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import TeamPageFileDrop from './TeamPageFileDrop';
 import BasePage from '../BasePage';
 import BaseComment from '../../iterables/BaseComment';
 import CreateTeamForm from '../../forms/CreateTeamForm';
