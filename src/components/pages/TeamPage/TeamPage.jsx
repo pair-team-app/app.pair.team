@@ -442,7 +442,7 @@ class TeamPage extends Component {
               <div className="header"><span>Rules</span></div>
               {(team) && (<div className="content">
                 {(team.rules.map((rule, i)=> {
-                  return (<TeamPageTeamRule
+                  return (<TeamPageRule
                     key={i}
                     ind={i+1}
                     rule={rule}
@@ -525,11 +525,11 @@ const TeamPageHeader = (props)=> {
 
 
 
-const TeamPageTeamRule = (props)=> {
-  // console.log('TeamPageTeamRule()', props);
+const TeamPageRule = (props)=> {
+  // console.log('TeamPageRule()', props);
 
   const { ind, rule } = props;
-  return (<div className="team-page-team-rule">
+  return (<div className="team-page-rule">
     {ind}. {rule.title} {rule.content}
   </div>);
 };
