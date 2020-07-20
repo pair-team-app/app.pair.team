@@ -135,68 +135,70 @@ class TeamPageFileDrop extends Component {
 
     const { team, profile } = this.props;
 		return (<div className="team-page-file-drop">
-      <FilePond
-        server={{
-          url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}`,
-          process: (fieldName, file, metadata, load) => {
-            console.log('%s.server.process(fieldName, file, metadata, load)', this.constructor.name, { fieldName, file, metadata, load, url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}` });
+      <div>
+        <FilePond
+          server={{
+            url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}`,
+            process: (fieldName, file, metadata, load) => {
+              console.log('%s.server.process(fieldName, file, metadata, load)', this.constructor.name, { fieldName, file, metadata, load, url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}` });
 
-            // simulates uploading a file
-            setTimeout(() => {
-                load(Date.now())
-            }, 1500);
+              // simulates uploading a file
+              setTimeout(() => {
+                  load(Date.now())
+              }, 1500);
 
-            /*
-            url : './process',
-            method: 'POST',
+              /*
+              url : './process',
+              method: 'POST',
 
-            headers: { 'Content-Type' : 'application/json', },
-            */
-        },
-        load: (source, load) => {
-          console.log('%s.server.load(source, load)', this.constructor.name, { source, load });
+              headers: { 'Content-Type' : 'application/json', },
+              */
+          },
+          load: (source, load) => {
+            console.log('%s.server.load(source, load)', this.constructor.name, { source, load });
 
-            // simulates loading a file from the server
-            fetch(source).then(res => res.blob()).then(load);
-        }
-        }}
-        // ref={ref => (this.pond = ref)}
-        files={this.state.files}
-        className="file-pond-wrapper"
-        allowMultiple={true}
-        maxFiles={3}
-        // allowImagePreview={true}
-        // allowBrowse={true}
-        // allowDrop={true}
-        allowPaste={true}
-        // allowReorder={false}
-        // allowReplace={true}
-        // allowRevert={true}
-        // appendTo={filePondAttach}
-        // itemInsertLocation="after"
-        instantUpload={true}
-        labelIdle=""
-        iconRemove={btnClear}
-        labelFileProcessingComplete="Add comment to this…"
-        labelTapToUndo=""
-        //oninit={this.handleInit}
-        onwarning={this.handleFileWarning}
-        onerror={this.handleFileError}
-        oninitfile={this.handleFileInit}
-        onaddfile={this.handleFileAdd}
-        onaddfileprogress={this.handleFileProgress}
-        onprocessfilestart={this.handleFileProcessStart}
-        onprocessfileprogress={this.handleFileProcessProgress}
-        onprocessfile={this.handleProcessedFile}
-        onprocessfiles={this.handleProcessedFiles}
-        onremovefile={this.handleFileRemoved}
-        onupdatefiles={this.handleFilesUpdated}
+              // simulates loading a file from the server
+              fetch(source).then(res => res.blob()).then(load);
+          }
+          }}
+          // ref={ref => (this.pond = ref)}
+          files={this.state.files}
+          className="file-pond-wrapper"
+          allowMultiple={true}
+          maxFiles={3}
+          // allowImagePreview={true}
+          // allowBrowse={true}
+          // allowDrop={true}
+          allowPaste={true}
+          // allowReorder={false}
+          // allowReplace={true}
+          // allowRevert={true}
+          // appendTo={filePondAttach}
+          // itemInsertLocation="after"
+          instantUpload={true}
+          labelIdle=""
+          iconRemove={btnClear}
+          labelFileProcessingComplete="Add comment to this…"
+          labelTapToUndo=""
+          //oninit={this.handleInit}
+          onwarning={this.handleFileWarning}
+          onerror={this.handleFileError}
+          oninitfile={this.handleFileInit}
+          onaddfile={this.handleFileAdd}
+          onaddfileprogress={this.handleFileProgress}
+          onprocessfilestart={this.handleFileProcessStart}
+          onprocessfileprogress={this.handleFileProcessProgress}
+          onprocessfile={this.handleProcessedFile}
+          onprocessfiles={this.handleProcessedFiles}
+          onremovefile={this.handleFileRemoved}
+          onupdatefiles={this.handleFilesUpdated}
 
-        // onupdatefiles={(fileItems)=> {
-        //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
-        //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
-        // }}
-      />
+          // onupdatefiles={(fileItems)=> {
+          //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
+          //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
+          // }}
+        />
+        </div>
 		</div>);
 	}
 }
