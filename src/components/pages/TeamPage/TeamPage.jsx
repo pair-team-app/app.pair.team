@@ -12,7 +12,7 @@ import TeamPageFileDrop from './TeamPageFileDrop';
 import BasePage from '../BasePage';
 import BaseComment from '../../iterables/BaseComment';
 import CreateTeamForm from '../../forms/CreateTeamForm';
-import { SORT_BY_DATE, SORT_BY_SCORE } from './index';
+import { SORT_BY_DATE, SORT_BY_SCORE } from '../../sections/TopNav/TeamPageHeader';
 import { TEAM_TIMESTAMP } from '../../../consts/formats';
 import { ENTER_KEY } from '../../../consts/key-codes';
 import { API_ENDPT_URL } from '../../../consts/uris';
@@ -233,8 +233,6 @@ class TeamPage extends Component {
 
     return (<BasePage { ...this.props } className="team-page">
       {(profile && team) && (<>
-        <TeamPageHeader onSortClick={this.handleSortClick} />
-
         {(!createTeam) ? (<div>
           <div className="comments-wrapper" data-fetching={fetching} data-empty={comments.length === 0}>
             <div>
@@ -339,21 +337,6 @@ const TeamPageComment = (props)=> {
     <BaseComment loading={loading} vote={vote} comment={comment} />
   </div>);
 };
-
-
-const TeamPageHeader = (props)=> {
-  console.log('TeamPageHeader()', props);
-
-  const { sort } = props;
-  return (<div className="team-page-header">
-    <div className="sort-by-wrapper">
-      <div className="sort-by-link" data-selected={sort === SORT_BY_SCORE} onClick={()=> this.props.onSortClick(SORT_BY_SCORE)}>Top</div>
-      <div className="sort-by-link" data-selected={sort === SORT_BY_DATE} onClick={()=> this.props.onSortClick(SORT_BY_DATE)}>New</div>
-    </div>
-  </div>);
-};
-
-
 
 const TeamPageRule = (props)=> {
   // console.log('TeamPageRule()', props);

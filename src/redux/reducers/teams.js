@@ -1,9 +1,10 @@
 
-import { INVITE_LOADED, SET_TEAM, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_CREATE_TEAM } from '../../consts/action-types';
+import { INVITE_LOADED, SET_TEAM, SET_TEAM_COMMENTS_SORT, TEAM_COMMENTS_LOADED, TEAMS_LOADED, TEAM_LOGO_LOADED, TEAM_RULES_UPDATED, TEAM_UPDATED, TOGGLE_CREATE_TEAM } from '../../consts/action-types';
 import { LOG_REDUCER_POSTFIX, LOG_REDUCER_PREFIX } from '../../consts/log-ascii';
 
 const initialState = {
   teams      : [],
+  sort       : 'SORT_BY_SCORE',
   team       : null,
   createTeam : false
 };
@@ -48,6 +49,10 @@ export default function comments(state=initialState, action) {
     // return ({ ...state, teams, team });
     // state.teams = teams;
     // return (state);
+
+  } else if (type === SET_TEAM_COMMENTS_SORT) {
+    const { sort } = payload;
+    return (Object.assign({}, state, { sort }));
 
   } else if (type === TOGGLE_CREATE_TEAM) {
     return (Object.assign({}, state, { createTeam : (typeof action.payload === 'boolean') ? action.payload : !state.createTeam }));

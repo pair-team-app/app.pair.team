@@ -1,0 +1,48 @@
+
+.team-page-header {
+  display: flex;
+	align-items: center;
+	transition: width 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.team-page-header > * {
+	flex: 4 4 0;
+}
+
+.team-page-header-col-right > *:not(:last-child) {
+	margin-right: var(--spacing-20);
+}
+
+.team-page-header .sort-by-wrapper {
+	display: flex;
+	align-items: flex-start;
+	flex-wrap: nowrap;
+}
+
+.team-page-header .sort-by-wrapper > * {
+	flex: 0 0 auto;
+}
+
+.team-page-header .sort-by-wrapper .sort-by-link {
+	color: rgba(var(--link-color), 1.0);
+	text-decoration: none;
+	transition: color 0.125s ease-out;
+}
+
+.team-page-header .sort-by-wrapper .sort-by-link:hover {
+	cursor: pointer;
+	color: rgba(var(--link-hover-color), 1.0);
+}
+
+.team-page-header .sort-by-wrapper .sort-by-link[data-selected="true"] {
+	/* font-weight: 500; */
+	text-decoration: underline;
+}
+
+.team-page-header .sort-by-wrapper .sort-by-link[data-selected="true"]:hover {
+	cursor: pointer;
+}
+
+.team-page-header .sort-by-wrapper .sort-by-link:not(:last-child) {
+	margin-right: var(--spacing-10);
+}

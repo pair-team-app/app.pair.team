@@ -10,9 +10,9 @@ import { BreadcrumbTypes } from './';
 import UserSettings, { SettingsMenuItemTypes} from './UserSettings';
 import SharePopover from '../../overlays/SharePopover';
 import { Modals, Pages } from '../../../consts/uris';
-import { toggleTheme } from '../../../redux/actions';
+import { setTeamCommentsSort, toggleTheme } from '../../../redux/actions';
 import { trackOutbound } from '../../../utils/tracking';
-import {buildSearch} from 'emoji-mart/dist-es/utils/data';
+import TeamPageHeader from './TeamPageHeader';
 
 
 class TopNav extends Component {
@@ -86,6 +86,10 @@ class TopNav extends Component {
 		this.setState({ popover : false });
 	};
 
+	handleTeamCommentsSort = (sort)=> {
+		console.log('%s.handleTeamCommentsSort()', this.constructor.name, { sort });
+		this.props.setTeamCommentsSort({ sort });
+	};
 
 	buildBreadcrumbs = ()=> {
     // console.log('%s.buildBreadcrumbs()', this.constructor.name, this.props, { matchPath : this.props.matchPath, match : this.props.match });
@@ -124,7 +128,7 @@ class TopNav extends Component {
 	render() {
 		console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
 
-		const { darkThemed, playground, profile, invite, team } = this.props;
+		const { darkThemed, playground, profile, invite, team, teamSort } = this.props;
 		const { popover } = this.state;
 
 
@@ -139,6 +143,9 @@ class TopNav extends Component {
 
 		return (<div className="top-nav">
 			{/* <div className="col breadcrumb-wrapper">{this.buildBreadcrumbs().map((breadcrumb)=> (breadcrumb))}</div> */}
+			{(team && !playground) && (<div className="col col-left">
+				<TeamPageHeader sort={teamSort} onSortClick={this.handleTeamCommentsSort} />
+			</div>)}
 			<div className="col col-middle">
         <input type="checkbox" checked={darkThemed} value={darkThemed} onChange={this.props.toggleTheme} />
 			</div>
@@ -181,8 +188,9 @@ const TopNavShareLink = (props)=> {
 
 const mapDispatchToProps = (dispatch)=> {
   return ({
-		toggleTheme : ()=> dispatch(toggleTheme()),
-		push        : (payload)=> dispatch(push(payload))
+		setTeamCommentsSort : (payload)=> dispatch(setTeamCommentsSort(payload)),
+		toggleTheme         : ()=> dispatch(toggleTheme()),
+		push                : (payload)=> dispatch(push(payload))
   });
 };
 
@@ -194,6 +202,8 @@ const mapStateToProps = (state, ownProps)=> {
 		playgrounds : state.builds.playgrounds,
 		playground  : state.builds.playground,
 		profile     : state.user.profile,
+		team        : state.teams.team,
+		teamSort    : state.teams.sort,
 		typeGroup   : state.typeGroup,
 		component   : state.builds.component,
 		comment     : state.comments.comment,
