@@ -2,26 +2,16 @@
 import React, { Component } from 'react';
 import './TeamPageFileDrop.css';
 
-import FilepondPluginFilePoster from 'filepond-plugin-file-poster';
-import FilepondPluginFileMetadata from 'filepond-plugin-file-metadata';
-import FilepondPluginImageCrop from 'filepond-plugin-image-crop';
-import FilepondPluginImageEdit from 'filepond-plugin-image-edit';
-import FilepondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
-import FilepondPluginImagePreview from 'filepond-plugin-image-preview';
-import FilepondPluginImageTransform from 'filepond-plugin-image-transform';
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
 import { FilePond, registerPlugin } from 'react-filepond';
 import { connect } from 'react-redux';
 
-import { CDN_UPLOAD_URL } from '../../../../consts/uris';
-import { trackEvent } from '../../../../utils/tracking';
-import btnClear from '../../../../assets/images/ui/btn-clear.svg';
-import btnCode from '../../../../assets/images/ui/btn-code.svg';
+import 'filepond/dist/filepond.min.css';
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+import './post-styles.css';
 
-
-// import 'filepond/dist/filepond.min.css';
-// import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
-import 'filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css'
-
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 class TeamPageFileDrop extends Component {
 	constructor(props) {
@@ -41,8 +31,6 @@ class TeamPageFileDrop extends Component {
 
   componentDidMount() {
     // console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
-
-    registerPlugin(FilepondPluginFileMetadata, FilepondPluginFilePoster, FilepondPluginImageCrop, FilepondPluginImageEdit, FilepondPluginImageExifOrientation, FilepondPluginImagePreview, FilepondPluginImageTransform);
   }
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -51,7 +39,7 @@ class TeamPageFileDrop extends Component {
 
 
   handleInit() {
-    console.log('FilePond instance has initialised', this.pond);
+    console.log('FilePond instance has initialised');
   };
 
   handleClearComment = (event)=> {
@@ -134,72 +122,17 @@ class TeamPageFileDrop extends Component {
 
 
     const { team, profile } = this.props;
-		return (<div className="team-page-file-drop">
-      <div>
-        <FilePond
-          server={{
-            url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}`,
-            process: (fieldName, file, metadata, load) => {
-              console.log('%s.server.process(fieldName, file, metadata, load)', this.constructor.name, { fieldName, file, metadata, load, url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}` });
+    const { files } = this.state;
 
-              // simulates uploading a file
-              setTimeout(() => {
-                  load(Date.now())
-              }, 1500);
-
-              /*
-              url : './process',
-              method: 'POST',
-
-              headers: { 'Content-Type' : 'application/json', },
-              */
-          },
-          load: (source, load) => {
-            console.log('%s.server.load(source, load)', this.constructor.name, { source, load });
-
-              // simulates loading a file from the server
-              fetch(source).then(res => res.blob()).then(load);
-          }
-          }}
-          // ref={ref => (this.pond = ref)}
-          files={this.state.files}
-          className="file-pond-wrapper"
-          allowMultiple={true}
-          maxFiles={3}
-          // allowImagePreview={true}
-          // allowBrowse={true}
-          // allowDrop={true}
-          allowPaste={true}
-          // allowReorder={false}
-          // allowReplace={true}
-          // allowRevert={true}
-          // appendTo={filePondAttach}
-          // itemInsertLocation="after"
-          instantUpload={true}
-          labelIdle=""
-          iconRemove={btnClear}
-          labelFileProcessingComplete="Add comment to this…"
-          labelTapToUndo=""
-          //oninit={this.handleInit}
-          onwarning={this.handleFileWarning}
-          onerror={this.handleFileError}
-          oninitfile={this.handleFileInit}
-          onaddfile={this.handleFileAdd}
-          onaddfileprogress={this.handleFileProgress}
-          onprocessfilestart={this.handleFileProcessStart}
-          onprocessfileprogress={this.handleFileProcessProgress}
-          onprocessfile={this.handleProcessedFile}
-          onprocessfiles={this.handleProcessedFiles}
-          onremovefile={this.handleFileRemoved}
-          onupdatefiles={this.handleFilesUpdated}
-
-          // onupdatefiles={(fileItems)=> {
-          //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
-          //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
-          // }}
-        />
-        </div>
-		</div>);
+		return (<div className="team-page-file-drop"><div>
+      <FilePond
+        files={files}
+        allowMultiple={true}
+        allowImagePreview={true}
+        onupdatefiles={this.handleFilesUpdated}
+        labelIdle={(files.length === 0) ? 'Drag &amp; Drop your files or <span class="filepond--label-action">Browse</span>' : null}
+      />
+    </div></div>);
 	}
 }
 
