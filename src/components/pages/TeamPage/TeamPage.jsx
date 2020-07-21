@@ -314,7 +314,8 @@ class TeamPage extends Component {
         </div>) : (<div>
           <CreateTeamForm onCancel={()=> this.props.toggleCreateTeam(false)} onSubmit={this.handleCreateTeamSubmit} />
         </div>)}
-        {(dragOver) && (<TeamPageFileDrop />)}
+        {/* {(dragOver) && (<TeamPageFileDrop />)} */}
+        <TeamPageFileDrop hidden={(!dragOver)} onClose={()=> this.setState({ dragOver : false })} />
       </>)}
     </BasePage>);
   }

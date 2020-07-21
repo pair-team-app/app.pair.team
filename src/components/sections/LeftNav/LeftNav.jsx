@@ -117,11 +117,11 @@ class LeftNav extends Component {
               />
             ))}
           </div>
-          {(profile && profile.state >= 2) && (<div className="create-team" onClick={this.handleCreateTeam}>Create Team</div>)}
+          {(profile && profile.state >= 2) && (<div className="create-team" onClick={this.handleCreateTeam}>Create Pair</div>)}
         </div>
         {(!builds) ? (<div className="loading">Loading…</div>)
         : (<div className="builds-wrapper">
-          <div className="header">Projects</div>
+          <div className="header">{(builds.length === 0) ? 'No ' : ''}Projects</div>
           <div className="items-wrapper">
             {builds.map((build, i)=> (
               <LeftNavBuild

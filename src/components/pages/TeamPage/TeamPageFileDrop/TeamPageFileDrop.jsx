@@ -58,6 +58,10 @@ class TeamPageFileDrop extends Component {
 
   };
 
+  handleFilesCleared = (event)=> {
+    console.log('%s.handleFilesCleared(event)', this.constructor.name, { event });
+    this.setState({ files : [] });
+  }
 
   handleFileInit = (file)=> {
     console.log('%s.handleFileInit(file)', this.constructor.name, { file });
@@ -108,7 +112,9 @@ class TeamPageFileDrop extends Component {
 
   handleFilesUpdated = (fileItems)=> {
     console.log('%s.handleFilesUpdated(fileItems)', this.constructor.name, { fileItems });
-    this.setState({ files : fileItems.map(({ file })=> (file)) });
+    this.setState({ files : fileItems.map(({ file })=> (file)) }, ()=> {
+      this.props.onClose();
+    });
   }
 
   /* handleFilePond = ()=> {
@@ -117,20 +123,22 @@ class TeamPageFileDrop extends Component {
 
 
 
+
+
 	render() {
-    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+    console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state, files : this.state.files.length });
 
 
-    const { team, profile } = this.props;
+    const { team, profile, hidden } = this.props;
     const { files } = this.state;
 
-		return (<div className="team-page-file-drop"><div>
+		return (<div className="team-page-file-drop" data-hidden={(hidden && files.length === 0)}><div onClick={this.handleFilesCleared}>
       <FilePond
         files={files}
         allowMultiple={true}
         allowImagePreview={true}
         onupdatefiles={this.handleFilesUpdated}
-        labelIdle={(files.length === 0) ? 'Drag &amp; Drop your files or <span class="filepond--label-action">Browse</span>' : null}
+        labelIdle={(files.length === 0) ? 'Drag &amp; Drop your files or <span class="filepond--label-action">Browse</span>' : ''}
       />
     </div></div>);
 	}
