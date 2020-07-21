@@ -11,6 +11,8 @@ import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import './post-styles.css';
 
+import { CDN_UPLOAD_URL } from '../../../../consts/uris';
+
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 class TeamPageFileDrop extends Component {
@@ -134,12 +136,76 @@ class TeamPageFileDrop extends Component {
 
 		return (<div className="team-page-file-drop" data-hidden={(hidden && files.length === 0)}><div onClick={this.handleFilesCleared}>
       <FilePond
+        server={{
+          url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}`,
+          process: (fieldName, file, metadata, load) => {
+            console.log('%s.server.process(fieldName, file, metadata, load)', this.constructor.name, { fieldName, file, metadata, load, url : `${CDN_UPLOAD_URL}/${profile.id}/${team.id}` });
+
+            // simulates uploading a file
+            setTimeout(() => {
+                load(Date.now())
+            }, 1500);
+
+            /*
+            url : './process',
+            method: 'POST',
+
+            headers: { 'Content-Type' : 'application/json', },
+            */
+        },
+        load: (source, load) => {
+          console.log('%s.server.load(source, load)', this.constructor.name, { source, load });
+
+            // simulates loading a file from the server
+            fetch(source).then(res => res.blob()).then(load);
+        }
+        }}
+        // ref={ref => (this.pond = ref)}
+        files={files}
+        className="file-pond-wrapper"
+        allowMultiple={true}
+        maxFiles={3}
+        // allowImagePreview={true}
+        // allowBrowse={true}
+        // allowDrop={true}
+        // allowPaste={true}
+        // allowReorder={false}
+        // allowReplace={true}
+        // allowRevert={true}
+        // appendTo={filePondAttach}
+        // itemInsertLocation="after"
+        instantUpload={true}
+        labelIdle={(files.length === 0) ? 'Drag &amp; Drop your files or <span class="filepond--label-action">Browse</span>' : ''}
+        // iconRemove={btnClear}
+        labelFileProcessingComplete="Add comment to this…"
+        labelTapToUndo=""
+        oninit={this.handleInit}
+        onwarning={this.handleFileWarning}
+        onerror={this.handleFileError}
+        oninitfile={this.handleFileInit}
+        onaddfile={this.handleFileAdd}
+        onaddfileprogress={this.handleFileProgress}
+        onprocessfilestart={this.handleFileProcessStart}
+        onprocessfileprogress={this.handleFileProcessProgress}
+        onprocessfile={this.handleProcessedFile}
+        onprocessfiles={this.handleProcessedFiles}
+        onremovefile={this.handleFileRemoved}
+        onupdatefiles={this.handleFilesUpdated}
+
+        // onupdatefiles={(fileItems)=> {
+        //   console.log('%s.onupdatefiles()', this.constructor.name, { fileItems });
+        //   this.setState({ files: fileItems.map(fileItem => fileItem.file) });
+        // }}
+      />
+
+
+      {/* <FilePond
         files={files}
         allowMultiple={true}
         allowImagePreview={true}
         onupdatefiles={this.handleFilesUpdated}
         labelIdle={(files.length === 0) ? 'Drag &amp; Drop your files or <span class="filepond--label-action">Browse</span>' : ''}
-      />
+      /> */}
     </div></div>);
 	}
 }
