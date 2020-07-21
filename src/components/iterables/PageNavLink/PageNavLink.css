@@ -1,12 +1,11 @@
 
 .page-nav-link {
 	width: fit-content;
-	margin-right: 40px;
 	letter-spacing: 0.2px;
 }
 
-.page-nav-link:last-child {
-	margin-right: 0;
+.page-nav-link:not(:last-child) {
+	margin-right: var(--spacing-40);
 }
 
 .page-nav-link-selected, a.page-nav-link-selected {

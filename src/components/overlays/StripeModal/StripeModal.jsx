@@ -2,162 +2,173 @@
 import React, { Component } from 'react';
 import './StripeModal.css';
 
+import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
-import { URIs } from 'lang-js-utils';
-import { withRouter } from 'react-router-dom';
-import { Elements, StripeProvider } from 'react-stripe-elements';
+import { connect } from 'react-redux';
+import { NavLink, withRouter } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
-import StripeForm from '../../forms/StripeForm/StripeForm';
-import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
-import { API_ENDPT_URL } from '../../../consts/uris';
-import { sendToSlack } from '../../../utils/funcs';
-import { trackEvent } from '../../../utils/tracking';
-import stripeCreds from '../../../assets/json/stripe-creds';
-// import stripeLogo from '../../../assets/images/logos/logo-stripe-dark.png';
+import { POPUP_TYPE_ERROR, POPUP_TYPE_OK } from '../PopupNotification';
+import { API_ENDPT_URL, Modals } from '../../../consts/uris';
+import { makeStripeSession } from '../../../redux/actions';
+import { trackEvent, trackOutbound } from '../../../utils/tracking';
+import stripeCreds from '../../../assets/json/configs/stripe-creds';
 
 
-const STRIPE_TEST_TOKEN = stripeCreds.test.publish;
-// const STRIPE_LIVE_TOKEN = stripeCreds.live.publish;
+const STRIPE_PUBLIC_TOKEN = stripeCreds.test.publish;
+// const STRIPE_PUBLIC_TOKEN = stripeCreds.live.publish;
 
 
-const PRODUCT_IDS = [1];
+const stripePromise = loadStripe(STRIPE_PUBLIC_TOKEN);
+
 
 
 class StripeModal extends Component {
 	constructor(props) {
+		// console.log('%s.CONSTRUCTOR()', 'StripeModal', props);
+
 		super(props);
 
 		this.state = {
-			submitting : false,
-			approved   : false,
-			outro      : false,
-			purchase   : null,
-			outroURI   : null
+			payment : null,
+			outro   : false,
 		};
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
+
+		const { stripeSession } = this.props;
+		if (!prevProps.stripeSession && stripeSession) {
+			this.onStripeSession();
+		}
+	}
+
+
 	handleComplete = ()=> {
-// 		console.log('%s.handleComplete()', this.constructor.name);
+		// console.log('%s.handleComplete()', this.constructor.name);
 
 		this.setState({ outro : false }, ()=> {
-			const { approved, purchase, outroURI } = this.state;
-			if (approved) {
-				this.props.onSubmitted(purchase);
-
-			} else {
-				this.props.onComplete();
-			}
-
-			if (outroURI) {
-				this.props.history.push(outroURI);
-			}
+			this.props.onComplete();
 		});
 	};
 
-	handleError = (error)=> {
-		console.log('%s.handleError()', this.constructor.name, error);
 
-		this.props.onPopup({
-			position : POPUP_POSITION_TOPMOST,
-			type     : POPUP_TYPE_ERROR,
-			content  : error.code
-		});
+	handleURL = (event, url)=> {
+		console.log('%s.handleURL()', this.constructor.name, { event, url });
+
+		event.preventDefault();
+		trackOutbound(url);
 	};
 
-	handlePage = (url)=> {
-// 		console.log('%s.handlePage()', this.constructor.name, url);
 
-		if (url.startsWith('/modal')) {
-			this.props.onModal(`/${URIs.lastComponent(url)}`);
+	handleSubmit = (event, product)=> {
+		console.log('%s.handleSubmit()', this.constructor.name, { event, product });
 
-		} else {
-			this.setState({
-				outro    : true,
-				outroURI : url
+		event.preventDefault();
+
+		trackEvent('button', `${product.billing}-subscription`);
+
+		const { team } = this.props;
+
+		this.props.makeStripeSession({ product })
+
+
+
+		// axios.post(API_ENDPT_URL, {
+		// 	action  : 'STRIPE_SESSION',
+		// 	payload : { payment,
+		// 		quantity : team.members.length
+		// 	}
+		// }).then(async(response)=> {
+		// 	console.log('STRIPE_SESSION', response.data);
+		// 	const { session, error } = response.data;
+
+		// 	if (error) {
+		// 		this.props.onPopup({
+		// 			type    : POPUP_TYPE_ERROR,
+		// 			content : error.code
+		// 		});
+
+		// 	} else {
+		// 		const stripe = await stripePromise;
+		// 		const { error } = await stripe.redirectToCheckout({ sessionId : session.id });
+
+		// 		if (error) {
+		// 			this.props.onPopup({
+		// 				type    : POPUP_TYPE_ERROR,
+		// 				content : error.code
+		// 			});
+		// 		}
+		// 	}
+		// }).catch((error)=> {
+		// });
+	};
+
+	onStripeSession = async()=> {
+		console.log('%s.onStripeSession()', this.constructor.name);
+
+		const { stripeSession } = this.props;
+
+		const stripe = await stripePromise;
+		const { error } = await stripe.redirectToCheckout({ sessionId : stripeSession.id });
+
+		if (error) {
+			this.props.onPopup({
+				type    : POPUP_TYPE_ERROR,
+				content : error.code
 			});
 		}
 	};
 
-	handleSubmit = (cardHolder, token)=> {
-// 		console.log('%s.handleSubmit()', this.constructor.name, cardHolder, token, this.state);
-
-		const { profile } = this.props;
-		this.setState({ submitting : true });
-
-		axios.post(API_ENDPT_URL, {
-			action  : 'MAKE_PURCHASE',
-			payload : {
-				user_id     : profile.id,
-				token_id    : token.id,
-				product_ids : PRODUCT_IDS.join(',')
-			}
-		}).then((response) => {
-			console.log('MAKE_PURCHASE', response.data);
-			const { purchase, error } = response.data;
-			trackEvent('purchase', (error) ? 'error' : 'success');
-
-			if ((purchase.id << 0) > 0) {
-				sendToSlack(`*[\`${profile.id}\`]* *${profile.email}* purchased "_${'Unlimited Site Access'}_" for \`$${4.99}\``);
-
-				this.props.onPopup({
-					type    : POPUP_TYPE_OK,
-					content : 'Payment Processed!!'
-				});
-
-			} else {
-				this.props.onPopup({
-					position : POPUP_POSITION_TOPMOST,
-					type     : POPUP_TYPE_ERROR,
-					content  : error.code
-				});
-			}
-
-			this.setState({
-				submitting : false,
-				approved   : ((purchase.id << 0) > 0),
-				outro      : ((purchase.id << 0) > 0),
-				purchase   : purchase
-			});
-
-		}).catch((error)=> {
-		});
-	};
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+		console.log('%s.render()', this.constructor.name, this.props, this.state);
 
+		const { products, team } = this.props;
 		const { outro } = this.state;
-		return (
-			<BaseOverlay
-				tracking={`stripe/${URIs.firstComponent()}`}
-				outro={outro}
-				closeable={true}
-				defaultButton={null}
-				title={null}
-				onComplete={this.handleComplete}>
 
-				<div className="stripe-modal-wrapper">
-					<div className="stripe-modal-header">
-						<h3>Team - $0</h3>
-					</div>
+		return (<BaseOverlay
+			tracking={Modals.STRIPE}
+			outro={outro}
+			closeable={true}
+			title={null}
+			onComplete={this.handleComplete}>
+			<div className="stripe-modal">
+				<div className="header-wrapper"><h4>
+					Your domain has reached {team.members.length} users.<br />
+					To continue using Pair, please subscribe:<br />
+					Monthly - <span className="price">$10</span> per month per user (<span className="price">${team.members.length * 10}</span> total)< br />
+					Yearly - <span className="price">$8</span> per month per user (<span className="price">${(team.members.length * 8) * 12}</span> total)< br />
+				</h4></div>
+				<div>
+					<button onClick={(event)=> this.handleSubmit(event, products[0])}>Monthly</button>
+					<button onClick={(event)=> this.handleSubmit(event, products[1])}>Yearly</button>
 
-					<div className="stripe-modal-content-wrapper">
-						<StripeProvider apiKey={STRIPE_TEST_TOKEN}>
-							<Elements>
-								<StripeForm
-									onCancel={()=> this.setState({ outro : true })}
-									onError={this.handleError}
-									onSubmit={this.handleSubmit}
-									onPage={this.handlePage}
-								/>
-							</Elements>
-						</StripeProvider>
+					<div className="form-disclaimer">
+						<NavLink to="https://spectrum.chat/pair" target="_blank" onClick={(event)=> this.handleURL(event, 'https://spectrum.chat/pair')}>Need More details about our Plans?</NavLink>
 					</div>
 				</div>
-			</BaseOverlay>);
+			</div>
+		</BaseOverlay>);
 	}
 }
 
 
-export default withRouter(StripeModal);
+const mapDispatchToProps = (dispatch)=> {
+  return ({
+    makeStripeSession : (payload)=> dispatch(makeStripeSession(payload))
+  });
+};
+
+
+const mapStateToProps = (state, ownProps)=> {
+  return ({
+		products      : state.products,
+		stripeSession : state.stripeSession,
+    team          : state.teams.team
+  });
+};
+
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(StripeModal));

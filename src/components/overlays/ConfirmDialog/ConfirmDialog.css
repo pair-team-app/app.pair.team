@@ -1,10 +1,28 @@
 
-.confirm-dialog-content {
+.confirm-dialog {
 	min-width: 320px;
-	padding: 0 15px;
 }
 
-.confirm-dialog-button-wrapper {
-	width: 100%;
-	text-align: right;
+.confirm-dialog-content {
+	min-width: 320px;
+	max-width: 520px;
+	width: min-content;
+	text-align: left;
+	line-height: 30px;
 }
+
+.confirm-dialog-footer-wrapper {
+	display: flex;
+	flex-flow: column;
+	margin-top: var(--spacing-20);
+	text-align: center;
+}
+
+.confirm-dialog-footer-wrapper > button {
+}
+
+.confirm-dialog-footer-wrapper > *:first-child {
+}
+
+
+

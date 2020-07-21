@@ -3,5 +3,5 @@
 }
 
 .login-form form > *:not(:last-child) {
-	margin-bottom: 20px;
+	margin-bottom: var(--spacing-20);
 }

@@ -1,0 +1,4 @@
+
+.blocking-dialog {
+	max-width: var(--modal-content-width);
+}

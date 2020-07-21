@@ -1,0 +1,35 @@
+
+.share-popover {
+	width: 348px;;
+	padding: var(--spacing-20);
+	background-color: #ffffff;
+	border-radius: var(--border-radius);
+}
+
+.share-popover-url {
+	margin: var(--spacing-10) var(--spacing-20) var(--spacing-20) var(--spacing-20);
+	padding-bottom: var(--spacing-10);
+	font-size: 12px;
+	text-align: center;
+	text-decoration: underline;
+	word-break: break-all;
+	transition: color 0.125s ease-out;
+}
+
+.share-popover-url:hover {
+	cursor: pointer;
+	color: rgba(var(--link-hover-color), 1.0);
+}
+
+.share-popover-form-wrapper {
+	margin-bottom: var(--spacing-10);
+}
+
+.share-popover-form-wrapper form > * {
+	width: 100%;
+	margin-bottom: var(--spacing-20);
+}
+
+.share-popover-form-wrapper form > *:last-child {
+	margin-bottom: 0;
+}

@@ -1,0 +1,26 @@
+{
+  "top": [{
+    "title": "Blog",
+    "url": "/url/https://medium.com/pairurl"
+  }, {
+    "title": "Docs",
+    "url": "/page/docs"
+  }],
+  "bottom": [{
+    "title": "Blog",
+    "url": "/url/https://medium.com/pairurl"
+  }, {
+    "title": "Docs",
+    "url": "/page/docs"
+  }, {
+    "title": "GitHub",
+    "url": "/url/https://github.com/de-ai"
+  }],
+  "menu": [{
+    "title": "Download NPM",
+    "url": "/url/https://www.npmjs.com/package/design-engine-playground"
+  }, {
+    "title": "Adobe XD Plugin",
+    "url": "/url/https://github.com/de-ai/designengine-xd"
+  }]
+}

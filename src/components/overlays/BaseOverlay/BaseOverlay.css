@@ -1,89 +1,137 @@
+@keyframes loader-rotate {
+	0% {
+		transform: rotate(0);
+	}
 
-.base-overlay {
-	z-index: 2000;
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.base-overlay[data-closeable="true"] {
 	position: fixed;
 	top: 0;
 	left: 0;
 	text-align: left;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.05);
+	width: 0;
+	height: 0;
+	z-index: 2000;
+	background-color: rgba(var(--site-bg-color), 0.0);
 }
 
-.base-overlay-content-wrapper {
+
+.base-overlay[data-closeable="false"], .base-overlay[data-filled="true"] {
+	width: 100%;
+	height: 100%;
+}
+
+.base-overlay[data-filled="true"] {
+background-color: rgba(var(--site-bg-color), 1.0);
+	/*transition: all 0.333s cubic-bezier(0.2, 0.9, 0.3, 1.0);*/
+
+	transition: all 0.333s cubic-bezier(0.5, 0.9, 0.1, 1.0);
+	/*transition: all 0.333s cubic-bezier(0.4, 1, 0.2, 1);*/
+	/*transition: all 0.333s cubic-bezier(0.2, 0.9, 0.3, 1.0);*/
+	/*transition: all 0.333s cubic-bezier(0.4, 0.0, 0.2, 1.0);*/
+}
+
+.base-overlay .content-wrapper {
 	position: fixed;
-	width: fit-content;
+	min-width: 88px;
+	min-height: 88px;
 	height: auto;
-	max-width: 85%;
-	max-height: 85%;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	-webkit-transform: translate(-50%, -50%);
-	padding: 20px;
-	z-index: 2002;
+	padding: var(--spacing-20);
 	overflow: hidden;
 	border: 1px solid rgba(var(--border-color), 1.0);
-	border-radius: 10px;
-	background-color: rgba(var(--site-bg-color), 1.0);
+	border-radius: var(--border-radius);
+	background-color: rgba(var(--modal-bg-color), 1.0);
 	text-align: center;
+	/*transform-style: preserve-3d;*/
+	transform-style: flat;
 	/*backface-visibility: hidden;*/
-	/*transform-style: flat;*/
-	box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.125);
+	/*box-shadow: var(--overlay-shadow);*/
 }
 
-.base-overlay-content-wrapper-unblurred {
-	background-color: rgba(0, 0, 0, 0.0);
-	/*box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.33);*/
+.base-overlay .content-wrapper[data-bare="true"] {
+	border-color: rgba(var(--border-color), 0.0);
+	background-color: rgba(var(--site-bg-color), 0.0);
 }
 
-.base-overlay-content-wrapper-auto-scroll {
+.base-overlay .content-wrapper[data-auto-size="true"] {
+	width: fit-content;
+	transform-style: flat;
+	box-shadow: none;
+}
+
+.base-overlay .content-wrapper[data-auto-scroll="true"] {
 	overflow-y: auto;
 }
 
-.base-overlay-content-wrapper-fixed {
+.base-overlay .content-wrapper[data-fixed="true"] {
 	overflow-y: hidden;
 }
 
-.base-overlay-content-wrapper-percent {
+.base-overlay .content-wrapper[data-percent="true"] {
 	width: 50%;
 }
 
-.base-overlay-header-wrapper {
-	display: table;
-	width: 100%;
-	padding-bottom: 20px;
-	/*border-bottom: 1px solid rgba(var(--border-color), 1.0);*/
+.base-overlay .header-wrapper {
+	display: flex;
+	justify-content: center;
+	padding-bottom: var(--spacing-20);
 }
 
-.base-overlay-title {
-	display: table-cell;
+.base-overlay .header-logo {
+	width: 88px;
+	height: 88px;
+}
+
+.base-overlay .header-title {
+	flex: 1 1 auto;
+	margin: auto;
 	text-align: left;
 	color: var(--dialog-title-color);
+	font-weight: 500;
 }
 
-.base-overlay-close-button {
+.base-overlay .content {
+	overflow: hidden;
 	width: fit-content;
-	height: fit-content;
-	padding: 2px 4px;
-	font-size: 10px;
 }
 
-.base-overlay-close-button:hover {
-	background-color: rgba(var(--quiet-btn-hover-bg-color), 1.0);
+.base-overlay .loader-wrapper {
+	margin: var(--spacing-20);
+	min-width: 100%;
+	min-height: 100%;
 }
 
-.base-overlay-content {
-	padding-bottom: 20px;
+
+.base-overlay .loader {
+	height: 48px;
+	width: 48px;
+	color: #5a5a5a;
+	position: relative;
+	display: inline-block;
+	border: 5px solid;
+	border-radius: 50%;
+	border-top-color: transparent;
+	animation: loader-rotate 1s linear infinite;
 }
 
-.base-overlay-button-wrapper {
-	margin: 20px 0;
+.base-overlay .footer-wrapper {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	margin-top: var(--spacing-30);
 }
 
-.base-overlay-button-wrapper button {
-	width: 50%
-}
-
-.base-overlay-button-wrapper button:hover {
+.base-overlay .footer-wrapper > * {
+	margin: auto;
+	flex: 1 0 0;
+	/*border: 1px dotted #ff00ff;*/
 }

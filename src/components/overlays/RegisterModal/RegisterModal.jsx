@@ -2,25 +2,24 @@
 import React, { Component } from 'react';
 import './RegisterModal.css';
 
-import axios from 'axios';
 import { URIs } from 'lang-js-utils';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 import RegisterForm from '../../forms/RegisterForm';
-import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
-import { API_ENDPT_URL, Modals } from '../../../consts/uris';
-import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
-import { buildInspectorPath } from '../../../utils/funcs';
+import { POPUP_TYPE_ERROR } from '../PopupNotification';
+import { Modals } from '../../../consts/uris';
+import { fetchInvite, modifyInvite, updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
-import pairLogo from '../../../assets/images/logos/logo-obit-310.png';
+import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
 class RegisterModal extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
+			outro    : false,
 			email    : null,
 			upload   : null,
 			outroURI : null
@@ -30,127 +29,104 @@ class RegisterModal extends Component {
 	componentDidMount() {
 		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
 
-		if (this.props.invite) {
-			axios.post(API_ENDPT_URL, {
-				action  : 'INVITE_LOOKUP',
-				payload : { invite_id : this.props.invite.id }
-			}).then((response) => {
-				console.log('INVITE_LOOKUP', response.data);
-				const { invite, upload } = response.data;
-				if (invite.id === this.props.invite.id) {
-					const { email } = invite;
-					trackEvent('user', 'invite');
-					this.setState({ email, upload });
-					this.props.setRedirectURI(buildInspectorPath(upload));
-				}
-
-			}).catch((error)=> {
-			});
+		const { inviteID } = this.props;
+		if (inviteID) {
+			this.props.fetchInvite({ inviteID });
 		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+		console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
-		const { profile } = this.props;
+		const { profile, invite } = this.props;
+
 		if (!prevProps.profile && profile) {
 			this.setState({ outro : true });
+		}
+
+		if (!prevProps.invite && invite) {
 		}
 	}
 
 	handleComplete = ()=> {
-// 		console.log('%s.handleComplete()', this.constructor.name);
+// console.log('%s.handleComplete()', this.constructor.name);
 
 		const { outroURI } = this.state;
 		this.setState({ outro : false }, ()=> {
 			this.props.onComplete();
 
-			const { redirectURI } = this.props;
-			if (redirectURI) {
-				this.props.history.push(redirectURI);
-
-			} else {
-				if (outroURI) {
-					if (outroURI.startsWith('/modal')) {
-						this.props.setRedirectURI(null);
-						this.props.onModal(`/${URIs.lastComponent(outroURI)}`);
-					}
+			if (outroURI) {
+				if (outroURI.startsWith('/modal')) {
+					this.props.onModal(`/${URIs.lastComponent(outroURI)}`);
 				}
 			}
 		});
 	};
 
 	handleError = (error)=> {
-		console.log('%s.handleError()', this.constructor.name, error);
+// console.log('%s.handleError()', this.constructor.name, error);
 
 		this.props.onPopup({
-			position : POPUP_POSITION_TOPMOST,
-			type     : POPUP_TYPE_ERROR,
-			content  : error.code
+			type    : POPUP_TYPE_ERROR,
+			content : error.code
 		});
 	};
 
-	handleLogin = ()=> {
-		console.log('%s.handleLogin()', this.constructor.name);
+	handleModal = (uri)=> {
+// console.log('%s.handleModal()', this.constructor.name, uri);
 
 		this.setState({
 			outro    : true,
-			outroURI : `/modal${Modals.LOGIN}`
+			outroURI : `/modal${uri}`
 		});
 	};
 
 	handleRegistered = (profile)=> {
-// 		console.log('%s.handleRegistered()', this.constructor.name, profile);
-
-		const { redirectURI } = this.props;
-		const { upload } = this.state;
-		if (redirectURI && upload) {
-			this.props.updateDeeplink({ uploadID : upload.id });
-		}
+// console.log('%s.handleRegistered()', this.constructor.name, profile);
 
 		trackEvent('user', 'sign-up');
 		this.props.onRegistered(profile);
 	};
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-// 		const { team } = this.props;
+		const { invite, team } = this.props;
 		const { outro } = this.state;
-		return (
-			<BaseOverlay
-				tracking={`register/${URIs.firstComponent()}`}
-				outro={outro}
-				closeable={false}
-				onComplete={this.handleComplete}>
 
-				<div className="register-modal">
-					<div className="register-modal-header-wrapper">
-						<img className="register-modal-header-logo" src={pairLogo} alt="Logo" />
-					</div>
+		return (<BaseOverlay
+			tracking={Modals.REGISTER}
+			outro={outro}
+			closeable={false}
+			onComplete={this.handleComplete}>
 
-					<div className="register-modal-content-wrapper">
-						<RegisterForm
-							title={null}
-							inviteID={null}
-							email={null}
-							onCancel={(event)=> { event.preventDefault(); this.handleComplete(); }}
-							onRegistered={this.handleRegistered} />
-					</div>
-
-					<div className="register-modal-footer-wrapper">
-						{/*<div className="register-modal-footer-link">Not a member of this Pair yet?</div>*/}
-						<div className="register-modal-footer-link" onClick={this.handleLogin}>Login</div>
-					</div>
+			<div className="register-modal">
+				<div className="header-wrapper">
+					<img className="header-logo" src={pairLogo} alt="Logo" />
 				</div>
-			</BaseOverlay>);
+
+				{(invite) && (<div className="title-wrapper">{invite.team_title}</div>)}
+				<div className="form-wrapper">
+					<RegisterForm
+						inviteID={(invite) ? invite.id : null}
+						email={(invite) ? invite.email : null}
+						onCancel={(event)=> { event.preventDefault(); this.handleComplete(); }}
+						onRegistered={this.handleRegistered} />
+				</div>
+
+				<div className="footer-wrapper form-disclaimer">
+					<div onClick={()=> this.handleModal(Modals.LOGIN)}>Have an account? Login</div>
+				</div>
+			</div>
+		</BaseOverlay>);
 	}
 }
 
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		setRedirectURI    : (url)=> dispatch(setRedirectURI(url)),
+		fetchInvite       : (payload)=> dispatch(fetchInvite(payload)),
+		modifyInvite      : (payload)=> dispatch(modifyInvite(payload)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 
@@ -158,10 +134,9 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		invite      : state.invite,
-		profile     : state.userProfile,
-		redirectURI : state.redirectURI,
-		team        : state.team
+		invite  : state.teams.invite,
+		profile : state.user.profile,
+		team    : state.teams.team
 	});
 };
 

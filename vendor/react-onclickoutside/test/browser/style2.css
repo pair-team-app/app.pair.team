@@ -1,0 +1,10 @@
+.popup {
+  padding: var(--orthodox-padding-less);
+  border: 1px solid black;
+}
+
+.workspace {
+  padding: var(--orthodox-padding-less);
+  height: 200px;
+  border: 1px dashed black;
+}

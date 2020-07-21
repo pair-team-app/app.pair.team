@@ -1,24 +1,44 @@
 
-import React from 'react';
+import React, { Component } from 'react';
 import './AlertDialog.css'
 
-import { URIs } from 'lang-js-utils';
 import BaseOverlay from '../BaseOverlay';
 
 
-function AlertDialog(props) {
-	console.log('AlertDialog()', props);
-	const { tracking, title, children } = props;
+class AlertDialog extends Component {
+	constructor(props) {
+		super(props);
 
-	return (<BaseOverlay
-		tracking={`${tracking}/${URIs.firstComponent()}`}
-		outro={false}
-		closeable={true}
-		defaultButton="OK"
-		title={title}
-		onComplete={props.onComplete}>
-		<div className="alert-dialog-content">{children}</div>
-	</BaseOverlay>);
+		this.state = {
+			outro : false
+		}
+	}
+
+	handleClose = (event)=> {
+// console.log('%s.handleClick()', this.constructor.name);
+		event.preventDefault();
+		this.setState({ outro : true });
+	};
+
+	render() {
+		const { tracking, title, children } = this.props;
+		const { outro } = this.state;
+
+		return (<BaseOverlay
+			tracking={tracking}
+			outro={outro}
+			closeable={true}
+			filled={false}
+			title={title}
+			onComplete={this.props.onComplete}>
+			<div className="alert-dialog">
+				<div className="alert-dialog-content">{children}</div>
+				<div className="alert-dialog-button-wrapper">
+					<button onClick={this.handleClose}>OK</button>
+				</div>
+			</div>
+		</BaseOverlay>);
+	}
 }
 
 

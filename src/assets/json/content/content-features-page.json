@@ -1,0 +1,50 @@
+{
+  "desktop": {
+    "title": "Features",
+    "intro": "Pair provides a &ldquo;playground&rdquo; for designers and developers to critique their implementation efforts. Our approach is unique, because it becomes the connective tissue between your team & how they execute.",
+    "sections": [{
+      "open" : true,
+      "header": "Components",
+      "content": "Using Pair your product team can co-review & critique every Component, including buttons, colors, fonts, padding & more. Pair captures every one of your projects components and organizes them for feedback from your team.",
+      "price": null,
+      "event": "components"
+    }, {
+      "open" : true,
+      "header": "Design Systems",
+      "content": "Pair helps your product team maintain consumable design systems for both small and large scale applications. Pair's ad hoc URL approach gives teams tremendous power over traditional solutions making it easy to distribute design system assets at ease.",
+      "price": null,
+      "event": "design-systems"
+    }, {
+      "open" : true,
+      "header": "Accessibility",
+      "content": "Pair was designed to help you reach every audience effectively by helping your team visualize your products Accessibility Tree. Pair provides the ability to view & make comments directly against every aspect of your mission critical application.",
+      "price": null,
+      "event": "accessibility"
+    }],
+    "assets": null
+  },
+  "mobile": {
+    "title": "Features",
+    "intro": "Pair provides a &ldquo;playground&rdquo; for designers and developers to critique their implementation efforts. Our approach is unique, because it becomes the connective tissue between your team & how they execute.",
+    "sections": [{
+      "open" : false,
+      "header": "Components",
+      "content": "Using Pair your product team can co-review & critique every Component, including buttons, colors, fonts, padding & more. Pair captures every one of your projects components and organizes them for feedback from your team.",
+      "price": null,
+      "event": "components"
+    }, {
+      "open" : false,
+      "header": "Design Systems",
+      "content": "Pair helps your product team maintain consumable design systems for both small and large scale applications. Pair's ad hoc URL approach gives teams tremendous power over traditional solutions making it easy to distribute design system assets at ease.",
+      "price": null,
+      "event": "design-systems"
+    }, {
+      "open" : false,
+      "header": "Accessibility",
+      "content": "Pair was designed to help you reach every audience effectively by helping your team visualize your products Accessibility Tree. Pair provides the ability to view & make comments directly against every aspect of your mission critical application.",
+      "price": null,
+      "event": "accessibility"
+    }],
+    "assets": null
+  }
+}

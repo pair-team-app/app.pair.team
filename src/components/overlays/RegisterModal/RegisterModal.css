@@ -1,47 +1,9 @@
 
 .register-modal {
-	max-width: 360px;
-	margin-top: 20px;
-	padding: 0 20px;
+	max-width: var(--modal-content-width);
+	padding: var(--spacing-10) 0 var(--spacing-05) 0;
 }
 
-.register-modal-header-wrapper {
-	width: 100%;
-	margin: 40px 0;
-}
-
-.register-modal-header-logo {
-	width: 100px;
-}
-
-.register-modal-content-wrapper {
-	width: 100%;
-	min-width: 100%;
-}
-
-.register-modal-footer-wrapper {
-	width: 100%;
-	margin-top: 20px;
-	display: flex;
-	flex-direction: column;
-	flex-wrap: nowrap;
-}
-
-.register-modal-footer-wrapper > * {
-	margin: auto;
-	flex: 1 0 0;
-}
-
-.register-modal-footer-link {
-	width: fit-content;
-	font-size: 12px;
-	color: rgba(var(--link-color), 1.0);
-	text-decoration: underline;
-	transition: color 0.125s ease-out;
-}
-
-.register-modal-footer-link:hover {
-	text-decoration: none;
-	color: rgba(var(--link-hover-color), 1.0);
-	cursor: pointer;
+.register-modal .form-wrapper {
+	width: 348px;
 }

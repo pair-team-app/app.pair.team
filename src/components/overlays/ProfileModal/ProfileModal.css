@@ -1,0 +1,13 @@
+
+.profile-modal {
+	width: 306px;
+}
+
+.profile-modal .form-wrapper {
+	display: flex;
+	flex-flow: column;
+}
+
+.profile-modal-content-wrapper > * {
+
+}

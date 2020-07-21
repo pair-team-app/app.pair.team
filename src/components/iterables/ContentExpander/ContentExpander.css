@@ -1,0 +1,36 @@
+
+/* .content-expander {
+	border: 1px dotted #ff00ff;
+} */
+
+/* .content-expander-header-wrapper {} */
+
+.content-expander-content-wrapper {
+	display: block;
+	position: relative;
+	overflow: hidden;
+	transition: var(--expander-content-close-transition);
+}
+
+.content-expander-content-wrapper::after {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 1;
+	content: "";
+	background: linear-gradient(0deg, transparent 25%, rgba(var(--site-bg-color), 1.0));
+	pointer-events: none;
+	will-change: opacity;
+	transition: opacity 250ms;
+}
+
+.content-expander-content-wrapper[data-open="true"] {
+	transition: var(--expander-content-open-transition);
+}
+
+.content-expander-content-wrapper[data-open="true"]::after {
+	opacity: 0;
+}

@@ -1,54 +1,55 @@
 
-.popup-notification-wrapper {
+.popup-notification {
 	position: fixed;
-	top: 64px;
+	bottom: var(--spacing-20);
 	left: 0;
 	width: 100%;
-	height: 38px;
-	z-index: 1001;
+	/* height: 38px; */
+	display: flex;
+	justify-content: center;
+	font-size: var(--orthodox-font-size);
+	z-index: 5000;
 	overflow: hidden;
 }
 
-.popup-notification-wrapper-topmost {
-	z-index: 3000;
+.popup-notification[data-embedded="true"] {
+	z-index: 5000;
 }
 
-.popup-notification-content-wrapper {
+.popup-notification .content-wrapper {
 	width: 100%;
 	height: 100%;
 }
 
-.popup-notification-content {
-	width: 100%;
+.popup-notification .content {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+	align-items: center;
 	height: 100%;
-	font-family: "San Francisco Text Medium", sans-serif;
-	font-size: 15px;
-	letter-spacing: -0.5px;
+	padding: var(--spacing-20);
+	border: 1px solid rgba(var(--border-color), 1.0);
+	border-radius: 30px;
 	text-align: center;
 	vertical-align: middle;
-	color: rgba(var(--site-fg-color), 1.0);
+	/*box-shadow:*/
+		/*-1px -1px 0 rgba(26, 27, 29, 0.5),*/
+		/*1px -1px 0 rgba(26, 27, 29, 0.5),*/
+		/*-1px  1px 0 rgba(26, 27, 29, 0.5),*/
+		/*1px  1px 0 rgba(26, 27, 29, 0.5);*/
 }
 
-.popup-notification-content-error {
-	/*background-color : rgba(255, 70, 70, 0.5);*/
-	/*color : #ff4646;*/
-
-	background-color: rgba(var(--invalid-bg-color), 0.95);
-	color: rgba(var(--invalid-fg-color), 1.0);
+.popup-notification .content[data-type="error"] {
+	background-color: rgba(var(--invalid-bg-color), 0.0);
+	color: rgba(var(--popup-ok-fg-color), 1.0);
 }
 
-.popup-notification-content-ok {
-	background-color: rgba(var(--site-bg-color), 1.0);
-	color: rgba(var(--site-fg-color), 1.0);
+.popup-notification .content[data-type="ok"] {
+	background-color: rgba(var(--popup-ok-bg-color), 1.0);
+	color: rgba(var(--popup-ok-fg-color), 1.0);
 }
 
-.popup-notification-content-status {
-	background-color: rgba(var(--site-bg-color), 1.0);
-	font-weight: bold;
-	color: rgba(var(--site-fg-color), 1.0);
-	text-shadow:
-			-1px -1px 0 rgba(26, 27, 29, 0.5),
-			 1px -1px 0 rgba(26, 27, 29, 0.5),
-			-1px  1px 0 rgba(26, 27, 29, 0.5),
-			 1px  1px 0 rgba(26, 27, 29, 0.5);
+.popup-notification .content[data-type="status"] {
+	background-color: rgba(var(--site-bg-color), 0.0);
+	color: rgba(var(--popup-ok-fg-color), 1.0);
 }

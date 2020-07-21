@@ -1,0 +1,45 @@
+
+.user-settings-popover {
+	position: relative;
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+}
+
+.user-settings-avatar-ico {
+	transition: opacity 0.125s ease-out;
+}
+
+.user-settings-avatar-ico:hover {
+	opacity: 0.875;
+	cursor: pointer;
+}
+
+
+.user-settings-popover {
+	width: 188px;
+	background-color: #ffffff;
+	border-radius: var(--border-radius);
+}
+
+.user-settings-popover > * {
+	width: 100%;
+	padding: var(--spacing-15) var(--spacing-20);
+	border-bottom: 1px solid rgba(var(--border-color), 1.0);
+	color: rgba(var(--link-color), 1.0);
+	transition: color 125ms ease-in;
+}
+
+.user-settings-popover > *:hover {
+	cursor: pointer;
+	color: rgba(var(--link-hover-color), 1.0);
+}
+
+.user-settings-popover > *:last-child {
+	border-bottom: none;
+}
+
+.user-settings-popover-item > a {
+	/*width: 100%;*/
+	display: flex;
+}

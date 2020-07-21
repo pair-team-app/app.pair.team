@@ -1,27 +1,14 @@
 
-.stripe-form-wrapper {
+.stripe-form {
 	width: 100%;
 }
 
-.stripe-form-link-wrapper {
-	display: flex;
-	flex-wrap: nowrap;
-	justify-content: flex-start; /* h-align */
-	align-items: center; /* v-align */
-	margin-bottom: 10px;
-	padding: 0 5px;
+.stripe-form > form {
+	width: 100%;
 }
 
-.stripe-form-link-wrapper > * {
-	flex: 1 1 auto;
-}
-
-.stripe-form-link-wrapper > div:first-child {
-	text-align: left;
-}
-
-.stripe-form-link-wrapper > div:last-child {
-	text-align: right;
+.stripe-form input:not(:last-child) {
+	margin-bottom: var(--spacing-20);
 }
 
 .stripe-form-button-wrapper {
@@ -31,31 +18,13 @@
 	align-items: center; /* v-align */
 }
 
-.stripe-form-logo {
-	width: 149px;
-	height: 41px;
-	filter: brightness(100%);
-	transition: filter 0.125s ease-out;
-}
-
-.stripe-form-logo:hover {
-	cursor: pointer;
-	filter: brightness(85%);
-	transition: filter 0.125s ease-in;
-}
-
 
 .StripeElement {
-	margin-bottom: 20px;
-	padding: 15px 20px;
+	margin-bottom: var(--spacing-20);
+	padding: var(--spacing-20);
 	border: 1px solid rgba(var(--border-color), 1.0);
 	border-radius: 23px;
 	background-color: rgba(var(--txtfield-bg-color), 1.0);
 	font-family: inherit;
 	font-size: inherit;
 }
-
-.StripeElement:last-child {
-	margin-bottom: 10px;
-}
-

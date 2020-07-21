@@ -1,5 +1,5 @@
 
-.home-page-wrapper {
+.home-page {
 }
 
 .home-page-form-wrapper {
@@ -16,16 +16,26 @@
 }
 
 .home-page-form-wrapper form {
-	width: 316px;
+	/* width: var(--modal-content-width); */
 }
 
 .home-page-form-wrapper input {
-	margin-bottom: 20px;
+	margin-bottom: var(--spacing-20);
 }
 
-.home-page-element-wrapper {
-	width: 100%;
-	margin-bottom: 30px;
+.home-page-form-wrapper input:disabled {
+	color: rgba(var(--txtfield-fg-color), 1.0);
+}
+
+.home-page-form-wrapper > *:last-child {
+	margin-top: var(--spacing-20);
+}
+
+.home-page-content-wrapper {
+}
+
+.home-page-element-wrapper:not(:last-child) {
+	margin-bottom: var(--spacing-30);
 }
 
 .home-page-element {

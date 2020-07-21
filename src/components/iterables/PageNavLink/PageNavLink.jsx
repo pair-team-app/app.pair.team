@@ -19,12 +19,9 @@ function PageNavLink(props) {
 		trackEvent('link', url);
 
 		trackOutbound(url, ()=> {
-// 			window.open(url);
-// 			props.onClick(event);
+			window.open(url);
+			props.onClick(event);
 		});
-
-		window.open(url);
-		props.onClick(event);
 	};
 
 	return (<NavLink

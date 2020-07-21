@@ -1,6 +1,5 @@
 
 #-- os misc --#
-.*DS_Store
 .env.local
 .env.development.local
 .env.test.local
@@ -12,6 +11,8 @@
 *.iml
 *.ipr
 
+/.history
+/.tours
 
 #-- npm --#
 /node_modules
@@ -33,23 +34,25 @@ yarn-error.log
 
 #-- temp --#
 /.cache
+/.node-persist
 /tmp
-
+/tmp/**/*
 
 #-- php files --#
-/public/index.php
-/public/php/*.php
+/public/php
 
 
 #-- creds --#
-/src/assets/json/crypto-creds.json
-/src/assets/json/github-creds.json
-/src/assets/json/stripe-creds.json
+/src/assets/json/configs/stripe-creds.json
+
+
+#-- user --#
+/opt/debug_profiles
+
+/.history
+.tours
 
 
 #-- vendor paths --#
 **/vendor/**/node_modules
-**/vendor/**/.*
-**/vendor/**/*.md
-**/vendor/**/examples
-**/vendor/**/LICENSE
+**/vendor/**/dist

@@ -1,0 +1,53 @@
+#!/bin/bash
+
+
+#-- pull username from git cfg
+git_user=$(git config --list | grep -E "^user\.name" | cut -d\= -f2 | tr -d ' ')
+
+#-- branch prefix
+prefix="daily"
+if [ ! -z $1 ]; then prefix="$1" ; fi
+
+#-- build branch name from prefix + username + date
+new_branch="${prefix}/${git_user}-`date +%Y%m%d`"
+
+#-- new checkout based from
+src_branch=$(git branch | grep \* | awk '{print $NF}')
+if [[ ! -z "$2" ]]; then src_branch="$2" ; fi
+
+
+#-- check src branch exists
+if [[ ! -z "`git branch | grep $src_branch`" ]]; then
+
+	#-- not on branch to base from + uncommited changes
+	if [[ -z "`git branch | grep "* $src_branch"`" ]] && [[ ! -z "`git status | grep clean`" ]]; then
+		printf "Uncommitted changes, commit first, then try again.\n"
+		exit 0;
+	fi
+
+	#-- change to based branch
+	[[ -z "`git branch | grep "* $src_branch"`" ]] && git checkout "${src_branch}"
+
+
+#-- no branch to base from
+else
+	printf "No '%s' branch for this repo.\n" "${src_branch}"
+	exit 0;
+fi
+
+
+#-- append '.01' / inc total on branch name
+new_branch="${new_branch}.`git branch | grep ${new_branch} | wc -l | awk '{printf "%02d", $NF+1}'`"
+
+
+#-- make the new branch
+printf "Branching from '%s' -->> '%s'...\n\n" "${src_branch}" "${new_branch}"
+git checkout -b "${new_branch}" &> /dev/null
+
+
+#-- show status
+git status
+
+
+#-- terminate w/o error
+exit 0;

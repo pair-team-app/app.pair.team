@@ -1,7 +1,15 @@
 
-.alert-dialog-wrapper {
+.alert-dialog-content {
+	min-width: 320px;
+	max-width: 520px;
+	text-align: left;
+	line-height: 20px;
 }
 
-.alert-dialog-content {
-	text-align: justify;
+.alert-dialog-button-wrapper {
+	margin-top: var(--spacing-20);
+}
+
+.alert-dialog-button-wrapper > button {
+	width: 50%;
 }

@@ -3,378 +3,396 @@ import React, { Component } from 'react';
 import './App.css';
 
 import axios from 'axios';
-import { Browsers, DateTimes, URIs } from 'lang-js-utils';
+import { push } from 'connected-react-router';
+import { Browsers } from 'lang-js-utils';
 import cookie from 'react-cookies';
 import { connect } from 'react-redux';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { matchPath, withRouter } from 'react-router-dom';
 
+import Routes, { RoutePaths } from '../helpers/Routes';
+import ModalRoutes from '../helpers/ModalRoutes';
 import AlertDialog from '../overlays/AlertDialog';
+import ConfirmDialog from '../overlays/ConfirmDialog';
+import CookiesOverlay from '../overlays/CookiesOverlay';
+import InviteModal from '../overlays/InviteModal';
 import LoginModal from '../overlays/LoginModal';
-import PopupNotification from '../overlays/PopupNotification';
+import PopupNotification, { POPUP_TYPE_OK } from '../overlays/PopupNotification';
+import ProfileModal from '../overlays/ProfileModal';
 import RegisterModal from '../overlays/RegisterModal';
 import StripeModal from '../overlays/StripeModal';
+import LeftNav from '../sections/LeftNav';
 import TopNav from '../sections/TopNav';
-import BottomNav from '../sections/BottomNav';
-import HomePage from '../pages/HomePage';
-import FeaturesPage from '../pages/FeaturesPage';
-import PlaygroundPage from '../pages/PlaygroundPage';
-import PricingPage from '../pages/PricingPage';
-import PrivacyPage from '../pages/PrivacyPage';
-import Status404Page from '../pages/Status404Page';
-import TermsPage from '../pages/TermsPage';
 
-import {
-	Modals,
-	Pages,
-	API_ENDPT_URL,
-	GITHUB_APP_AUTH } from '../../consts/uris';
-import {
-	appendHomeArtboards,
-	fetchTeamLookup,
-	fetchUserHistory,
-	fetchUserProfile,
-	updateDeeplink,
-	updateMouseCoords,
-	updateUserProfile
-} from '../../redux/actions';
-// import { idsFromPath } from '../../utils/funcs';
+import { API_ENDPT_URL, Modals, Pages } from '../../consts/uris';
+import { fetchUserTeams, fetchUserProfile, fetchInvite, setPlayground, modifyInvite, paidStripeSession, updateUserProfile } from '../../redux/actions';
 import { initTracker, trackEvent, trackPageview } from '../../utils/tracking';
 
+const MATTY_DEVIN_THEME = false;
 
 class App extends Component {
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
 
-		this.state = {
-			authID      : 0,
-			darkTheme   : false,
-			contentSize : {
-				width  : 0,
-				height : 0
-			},
-			popup       : null,
-			modals      : {
-				network  : (!Browsers.isOnline()),
-				login    : false,
-				register : false,
-				github   : false,
-				stripe   : false,
-				payload  : null,
+    this.state = {
+      darkTheme : false,
+      popup     : null,
+      inviteID  : null,
+      modals    : {
+        cookies  : (cookie.load('cookies') << 0) === 0,
+        disable  : false,
+        expired  : false,
+        invite   : false,
+        login    : false,
+        noAccess : false,
+        payment  : false,
+        profile  : false,
+        register : false,
+        stripe   : false,
+        payload  : null
+      }
+    };
 
-			}
-		};
+    initTracker(cookie.load('user_id'), window.location.hostname);
+  }
 
-		this.githubWindow = null;
-		this.authInterval = null;
+  componentDidMount() {
+    console.log('%s.componentDidMount()', this.constructor.name, { props : this.props, state : this.state });
 
-		initTracker(cookie.load('user_id'));
-	}
+    trackEvent('site', 'load');
+    trackPageview();
+    //
+    // console.log('[:][:][:][:][:][:][:][:][:][:]', makeAvatar('M'));
 
-	componentDidMount() {
-		console.log('%s.componentDidMount()', this.constructor.name, this.props, this.state);
+    const { profile, location } = this.props;
+    if (location.pathname.startsWith(Pages.INVITE)) {
+      if (profile) {
+        this.onLogout();
+      }
+    }
 
-		trackEvent('site', 'load');
-		trackPageview();
+    if (!Browsers.isOnline()) {
+      this.handlePopup({
+        type     : POPUP_TYPE_OK,
+        content  : 'Check your network connection to continue.',
+        delay    : 125,
+        duration : 2350
+      });
+    }
 
-// 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (new Array(20)).fill(null).map((i)=> (Strings.randHex())), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
-// 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (new Array(20)).fill(null).map((i)=> (parseInt(Maths.randomHex(), 16))), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
-// 		console.log('\n//=-=//-=-//=-=//-=-//=-=//-=-//=-=//', (URIs.queryString()), '//=-=//-=-//=-=//-=-//=-=//-=-//=-=//\n');
+    window.onpopstate = (event)=> {
+      event.preventDefault();
+      // console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', this.props.location.pathname, event);
+    };
+  }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state, snapshot);
+    console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state, snapshot });
+    // console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, this.state.modals);
 
-		window.addEventListener('mousemove', this.handleMouseMove);
-		window.addEventListener('resize', this.handleResize);
-		window.addEventListener('scroll', this.handleScroll);
-		window.onpopstate = (event)=> {
-			console.log('%s.onpopstate()', this.constructor.name, '-/\\/\\/\\/\\/\\/\\-', event);
-			//this.props.updateDeeplink(idsFromPath());
-		};
-	}
+    const { location, profile, team, playgrounds, playground, purchase } = this.props;
+    const { pathname, hash } = location;
+    const { modals } = this.state;
 
-	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, this.constructor.name, prevProps, this.props, prevState, this.state, Browsers.isOnline());
+    // url changed
+    if (prevProps.location.pathname !== pathname) {
+      trackPageview();
+    }
 
-		const { profile } = this.props;
-		const { pathname } = this.props.location;
+    // has internet
+    if (Browsers.isOnline()) {
+      if (location.pathname.startsWith(Pages.INVITE) && !this.state.inviteID && !modals.register) {
+        const inviteID = location.pathname.split('/')[3] << 0;
+        this.setState({ inviteID }, ()=> {
+          //
+        });
+      }
 
-// 		console.log('|:|:|:|:|:|:|:|:|:|:|:|', prevProps.location.pathname, pathname);
-		if (prevProps.location.pathname !== pathname) {
-// 			console.log('|:|:|:|:|:|:|:|:|:|:|:|', pathname);
-			trackPageview();
-		}
+      if (!prevState.inviteID && this.state.inviteID) {
+        const { inviteID } = this.state;
+        this.props.fetchInvite({ inviteID });
+      }
 
-		const { modals } = this.state;
-		if (!prevState.modals.network && !modals.network && !Browsers.isOnline()) {
-			this.onToggleModal(Modals.NETWORK, true);
-		}
-
-		if (profile) {
-			if (!prevProps.profile) {
-				this.onToggleModal(Modals.LOGIN, false);
-// 				this.props.fetchUserHistory({ profile });
-			}
-
-// 			console.log('[:::::::::::|:|:::::::::::] PAY CHECK [:::::::::::|:|:::::::::::]');
-// 			console.log('[::] (!payDialog && !stripeModal)', (!payDialog && !stripeModal));
-// 			console.log('[::] (!profile.paid && artboards.length > 3)', (!profile.paid && artboards.length > 3));
-// 			console.log('[::] (isHomePage(false)', isHomePage(false));
-// 			console.log('[::] (isInspectorPage())', isInspectorPage());
-// 			console.log('[::] (prevProps.deeplink.uploadID)', prevProps.deeplink.uploadID);
-// 			console.log('[::] (this.props.deeplink.uploadID)', deeplink.uploadID);
-// 			console.log('[:::::::::::|:|:::::::::::] =-=-=-=-= [:::::::::::|:|:::::::::::]');
-
-			//console.log('||||||||||||||||', payDialog, stripeModal, profile.paid, artboards.length, isHomePage(false), prevProps.deeplink.uploadID, deeplink.uploadID, isInspectorPage());
-		}
-	}
-
-	componentWillUnmount() {
-		console.log('%s.componentWillUnmount()', this.constructor.name);
-
-		if (this.authInterval) {
-			clearInterval(this.authInterval);
-		}
-
-		if (this.githubWindow) {
-			this.githubWindow.close();
-		}
-
-		this.authInterval = null;
-		this.githubWindow = null;
+      if (!prevProps.invite && this.props.invite) {
+        const { invite } = this.props;
 
 
-		window.onpopstate = null;
-		window.removeEventListener('resize', this.handleResize);
-	}
+        if (invite.state === 1 || invite.state === 2) {
+          axios.post(API_ENDPT_URL, {
+            action  : 'USER_LOOKUP',
+            payload : {
+              email : invite.email
+            }
+          }).then((response)=> {
+            console.log('USER_LOOKUP', response.data);
+
+            const { user } = response.data;
+            if (user) {
+              this.onToggleModal(Modals.LOGIN);
+
+            } else {
+              this.onToggleModal(Modals.REGISTER);
+            }
+
+            if (invite.state === 1) {
+              this.props.modifyInvite({ invite, state : 2 });
+            }
+          }).catch((error)=> {});
+
+        } else if (invite.state === 3) {//} && !modals.expired) {
+          this.onToggleModal(Modals.EXPIRED);
+        }
+      }
 
 
-	handleGithubAuth = ()=> {
-		console.log('%s.handleGithubAuth()', this.constructor.name);
-
-		const code = DateTimes.epoch(true);
-		axios.post(API_ENDPT_URL, {
-			action  : 'GITHUB_AUTH',
-			payload : { code }
-		}).then((response) => {
-			console.log('GITHUB_AUTH', response.data);
-			const authID = response.data.auth_id << 0;
-			this.setState({ authID }, ()=> {
-				if (!this.githubWindow || this.githubWindow.closed || this.githubWindow.closed === undefined) {
-					clearInterval(this.authInterval);
-					this.authInterval = null;
-					this.githubWindow = null;
-				}
-
-				const size = {
-					width  : Math.min(460, window.screen.width - 20),
-					height : Math.min(820, window.screen.height - 25)
-				};
-
-				this.githubWindow = window.open(GITHUB_APP_AUTH.replace('__{EPOCH}__', code), '', `titlebar=no, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${size.width}, height=${size.height}, top=${((((window.screen.height) - size.height) * 0.5) << 0)}, left=${((((window.screen.width) - size.width) * 0.5) << 0)}`);
-				this.authInterval = setInterval(()=> {
-					this.onAuthInterval();
-				}, 1000);
-			});
-
-		}).catch((error)=> {
-		});
-	};
-
-	handleGitHubAuthSynced = (profile, register=true)=> {
-		console.log('%s.handleGitHubAuthSynced()', this.constructor.name, profile, register);
-
-		this.props.updateUserProfile(profile);
-
-		axios.post(API_ENDPT_URL, {
-			action  : 'REGISTER',
-			payload : {
-				username : profile.email,
-				email    : profile.email,
-				type     : 'wait_list'
-			}
-		}).then((response) => {
-			console.log('REGISTER', response.data);
-
-		}).catch((error)=> {
-		});
-	};
-
-	handleLoggedIn = (profile)=> {
-// 		console.log('%s.handleLoggedIn()', this.constructor.name, profile);
-		this.props.updateUserProfile(profile);
-// 		this.props.fetchUserHistory({profile});
-	};
-
-	handleLogout = ()=> {
-		console.log('%s.handleLogout()', this.constructor.name, this.constructor.name);
-
-		cookie.save('user_id', '0', { path : '/' });
-		trackEvent('user', 'sign-out');
-
-		this.props.updateUserProfile(null);
-		this.props.purgeHomeArtboards();
-		this.props.history.push(Pages.HOME);
-	};
-
-	handleMouseMove = (event)=> {
-// 		console.log('%s.handleMouseMove()', this.constructor.name, this.constructor.name, { x : event.pageX, y : event.pageY });
-		this.props.updateMouseCoords({
-			x : event.pageX,
-			y : event.pageY
-		});
-	};
-
-	handlePopup = (payload)=> {
-// 		console.log('%s.handlePopup()', this.constructor.name, payload);
-		this.setState({ popup : payload });
-	};
-
-	handlePurchaseSubmitted = (purchase)=> {
-// 		console.log('%s.handlePurchaseSubmitted()', this.constructor.name, purchase);
-
-		this.onToggleModal(Modals.STRIPE, false);
-		this.props.fetchUserProfile();
-	};
-
-	handleResize = (event)=> {
-// 		console.log('%s.handleResize()', this.constructor.name, { width : document.documentElement.clientWidth, height : document.documentElement.clientHeight });
-
-		this.setState({
-			contentSize : {
-				width  : document.documentElement.clientWidth,
-				height : document.documentElement.clientHeight
-			}
-		})
-	};
-
-	handleScroll = (event)=> {
-// 		console.log('%s.handleScroll()', this.constructor.name, event);
-// 		this.setState({ scrolling : true }, ()=> {
-// 			setTimeout(()=> {
-// 				this.setState({ scrolling : false });
-// 			}, 1000);
-// 		});
-	};
-
-	onAuthInterval = ()=> {
-// 		console.log('%s.onAuthInterval()', this.constructor.name);
-
-		if (!this.githubWindow || this.githubWindow.closed || this.githubWindow.closed === undefined) {
-
-			if (this.authInterval) {
-				clearInterval(this.authInterval);
-			}
-			if (this.githubWindow) {
-				this.githubWindow.close();
-			}
-
-			this.authInterval = null;
-			this.githubWindow = null;
-
-		} else {
-			const { authID } = this.state;
-
-			axios.post(API_ENDPT_URL, {
-				action  : 'GITHUB_AUTH_CHECK',
-				payload : { authID }
-			}).then((response) => {
-				console.log('GITHUB_AUTH_CHECK', response.data);
-				const { user } = response.data;
-				if (user) {
-					trackEvent('github', 'success');
-					clearInterval(this.authInterval);
-					this.authInterval = null;
-					this.githubWindow.close();
-					this.githubWindow = null;
-					this.handleGitHubAuthSynced(user);
-				}
-
-			}).catch((error)=> {
-			});
-		}
-	};
-
-	onToggleModal = (uri, show=true, payload=null)=> {
-// 		console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
-		const { modals } = this.state;
-
-		if (show) {
-			this.setState({ modals : { ...modals,
-				github   : false,
-				login    : (uri === Modals.LOGIN),
-				network  : (uri === Modals.NETWORK),
-				register : (uri === Modals.REGISTER),
-				stripe   : (uri === Modals.STRIPE) }
-			});
-
-		} else {
-			this.setState({ modals : { ...modals,
-				github   : (uri === Modals.GITHUB) ? false : modals.github,
-				login    : (uri === Modals.LOGIN) ? false : modals.login,
-				network  : (uri === Modals.NETWORK) ? false : modals.network,
-				register : (uri === Modals.REGISTER) ? false : modals.register,
-				stripe   : (uri === Modals.STRIPE) ? false : modals.stripe }
-			});
-		}
-	};
-
-	handleToggleTheme = (event)=> {
-		console.log('%s.handleToggleTheme()', this.constructor.name, event);
-		this.setState({ darkTheme : !this.state.darkTheme });
-	};
+      if (profile && team && team.type == 'free' && !modals.stripe) {
+        if (team.members.length >= 2) {
+          this.onToggleModal(Modals.STRIPE);
+        }
+      }
 
 
-	render() {
-//   	console.log('%s.render()', this.constructor.name, this.props, this.state);
+      // if (products && team !== null && prevProps.team === null) {
+      //   const modal = (team.members.length > 10 && team.type === 'free') || (team.members.length > 50 && team.type !== 'enterprise');
+      //   if (modal && !prevState.modals.stripe && !modals.stripe) {
+      //     const product = products.find(({ threshold })=> team.members.length >= threshold);
+      //     this.onToggleModal(Modals.STRIPE, true, { team, product });
+      //   }
+      // }
 
-		const { profile } = this.props;
-  	const { darkTheme, popup, modals } = this.state;
+      if (location.pathname.startsWith(Pages.PAYMENT)) {
+        if (profile) {
+          const sessionID = pathname.split('/').pop();
 
-  	const wrapperClass = (URIs.firstComponent() !== 'app') ? 'content-wrapper' : 'playground-wrapper';
+          if (!purchase) {
+            this.props.paidStripeSession({ sessionID });
 
-  	return (<div className={`site-wrapper${(darkTheme) ? ' site-wrapper-dark' : ''}`}>
-		  {(URIs.firstComponent() !== 'app') && (<TopNav darkTheme={darkTheme} onToggleTheme={this.handleToggleTheme} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)}
-	    <div className={wrapperClass}>
-		    <Switch>
-			    <Route exact path={Pages.HOME} render={()=> <HomePage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} onSignup={()=> null} />} />
-			    <Route exact path={Pages.FEATURES} render={()=> <FeaturesPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
-			    <Route exact path={`${Pages.PLAYGROUND}/:teamSlug([a-z-]+)/:projectSlug([a-z-]+)?/:buildID([0-9]+)?/:playgroundID([0-9]+)?/:componentsSlug([A-Za-z-]+)?/:componentID([0-9]+)?/(comments)?/:commentID([0-9]+)?`} render={(props)=> <PlaygroundPage { ...props } onLogout={this.handleLogout} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
-			    <Route exact path={Pages.PRICING} render={()=> <PricingPage onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} onPopup={this.handlePopup} />} />
-			    <Route exact path={`/:page(${Pages.LEGAL.slice(1)}|${Pages.PRIVACY.slice(1)})`} render={()=> <PrivacyPage />} />
-			    <Route exact path={Pages.TERMS} render={()=> <TermsPage />} />
+          } else {
+            if (!prevProps.purchase && purchase && !modals.payment) {
+              this.onToggleModal(Modals.PAYMENT);
+            }
+          }
+        }
 
-			    <Route path={Pages.WILDCARD}><Status404Page /></Route>
-		    </Switch>
+      } else if (pathname.startsWith(Pages.TEAM)) {
+        if (!profile && !modals.login && !modals.register && !modals.payment) {
+          this.onToggleModal(Modals.LOGIN);
+        }
+      }
+
+      // dismiss login modal after profile
+      if (profile !== null && modals.login) {
+        this.onToggleModal(Modals.LOGIN, false);
+      }
+
+
+      // dismiss register modal after profile
+      if (profile !== null && modals.register) {
+        this.onToggleModal(Modals.REGISTER, false);
+      }
+
+
+      const { hash } = this.props;
+      if (hash === '#invite' && !modals.invite) {
+        this.onToggleModal(Modals.INVITE);
+      }
+
+      if (hash === '#profile' && !modals.profile) {
+        this.onToggleModal(Modals.PROFILE);
+      }
+
+      if (hash === '') {
+        if (prevProps.hash === '#invite') {
+          this.onToggleModal(Modals.INVITE, false);
+        }
+
+        if (prevProps.hash === '#profile') {
+          this.onToggleModal(Modals.PROFILE, false);
+        }
+      }
+
+    }
+  }
+
+  componentWillUnmount() {
+    // console.log('%s.componentWillUnmount()', this.constructor.name);
+    window.onpopstate = null;
+  }
+
+  handleCookies = ()=> {
+    // console.log('%s.handleCookies()', this.constructor.name);
+    this.onToggleModal(Modals.COOKIES, false);
+    cookie.save('cookies', '1', { path: '/', sameSite: false });
+  };
+
+  handleDisableAccount = ()=> {
+	  // console.log('%s.handleDisableAccount()', this.constructor.name);
+
+    const { profile } = this.props;
+
+    axios.post(API_ENDPT_URL, {
+      action  : 'DISABLE_ACCOUNT',
+      payload : { user_id: profile.id }
+    }).then((response)=> {
+      // console.log('DISABLE_ACCOUNT', response.data);
+
+      trackEvent('user', 'delete-account');
+      this.props.updateUserProfile(null);
+      this.props.history.push(Pages.HOME);
+    }).catch((error)=> {});
+  };
+
+  handleLogout = (page = null, modal = null)=> {
+    // console.log('%s.handleLogout()', this.constructor.name, this.constructor.name, page, modal);
+    trackEvent('user', 'sign-out');
+
+    this.props.updateUserProfile(null);
+
+    if (modal) {
+      this.onToggleModal(modal);
+    }
+
+    if (page) {
+      this.props.history.push(page);
+    }
+  };
+
+  handleModalComplete = (uri)=> {
+    console.log('%s.handleModalComplete()', this.constructor.name, { uri });
+    this.onToggleModal(uri, false);
+  };
+
+  handlePopup = (payload)=> {
+    // console.log('%s.handlePopup()', this.constructor.name, payload);
+    this.setState({ popup : payload });
+  };
+
+  handlePurchaseSubmitted = (purchase)=> {
+    // console.log('%s.handlePurchaseSubmitted()', this.constructor.name, purchase);
+
+    this.onToggleModal(Modals.STRIPE, false);
+
+    this.props.fetchUserProfile();
+    const { profile } = this.props;
+    this.props.fetchUserTeams({ profile });
+  };
+
+  handleThemeToggle = (event)=> {
+    // console.log('%s.handleThemeToggle()', this.constructor.name, event);
+    this.setState({ darkTheme : !this.state.darkTheme });
+  };
+
+  handleUpdateUser = (profile)=> {
+    console.log('%s.handleUpdateUser()', this.constructor.name, profile);
+    this.props.updateUserProfile(profile);
+  };
+
+  onToggleModal = (uri, show=true, payload=null)=> {
+    console.log('%s.onToggleModal()', this.constructor.name, uri, show, payload, this.state.modals);
+
+    const { hash } = this.props;
+    const { modals } = this.state;
+
+    if (show) {
+      if ((uri === Modals.INVITE || uri === Modals.PROFILE) && !hash.includes('#')) {
+        this.props.push(`${window.location.pathname}${uri}`);
+      }
+
+      this.setState({
+        modals : { ...modals, payload,
+          disable  : uri === Modals.DISABLE,
+          login    : uri === Modals.LOGIN,
+          invite   : uri === Modals.INVITE,
+          expired  : uri === Modals.EXPIRED,
+          noAccess : uri === Modals.NO_ACCESS,
+          payment  : uri === Modals.PAYMENT,
+          profile  : uri === Modals.PROFILE,
+          register : uri === Modals.REGISTER,
+          stripe   : uri === Modals.STRIPE
+        }
+      });
+    } else {
+      if (hash === uri) {
+        this.props.push(window.location.pathname.replace(uri, ''));
+      }
+
+      this.setState({
+        modals : { ...modals,
+          cookies  : (uri === Modals.COOKIES) ? false : modals.cookies,
+          disable  : (uri === Modals.DISABLE) ? false : modals.disable,
+          invite   : (uri === Modals.INVITE) ? false : modals.invite,
+          login    : (uri === Modals.LOGIN) ? false : modals.login,
+          noAccess : (uri === Modals.NO_ACCESS) ? false : modals.noAccess,
+          payment  : (uri === Modals.PAYMENT) ? false : modals.payment,
+          profile  : (uri === Modals.PROFILE) ? false : modals.profile,
+          register : (uri === Modals.REGISTER) ? false : modals.register,
+          stripe   : (uri === Modals.STRIPE) ? false : modals.stripe,
+          payload  : null
+        }
+      });
+    }
+  };
+
+  render() {
+    const matchPlaygrounds = matchPath(this.props.location.pathname, {
+      path : RoutePaths.PROJECT,
+      exact : false,
+      strict: false
+    });
+
+
+
+      	// console.log('%s.render()', this.constructor.name, { props : this.props, matchPlaygrounds });
+      	console.log('%s.render()', this.constructor.name, { props : this.props, state : this.state });
+      	// console.log('%s.render()', this.constructor.name, this.state.modals);
+
+    const { darkThemed, profile, location, team, purchase } = this.props;
+    const { popup, inviteID, modals } = this.state;
+
+    const { pathname } = location;
+
+    return (<div className="site-wrapper" data-theme={(darkThemed) ? 'dark' : 'light'} data-devin-matty={MATTY_DEVIN_THEME}>
+      {/* {(!matchPlaygrounds) && (<TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={(uri, payload)=> this.onToggleModal(uri, true, payload)} />)} */}
+      <LeftNav />
+
+
+	    {/* <div className={`page-wrapper${(location.pathname.startsWith(Pages.PROJECT) && !location.pathname.includes(Pages.TEAM)) ? ' playground-page-wrapper' : ''}`}> */}
+	    {/* <div className="page-wrapper"> */}
+	    <div className="page-wrapper">
+        <TopNav darkTheme={darkThemed} onToggleTheme={this.handleThemeToggle} onModal={this.onToggleModal} />
+		    <Routes onLogout={this.handleLogout} onModal={this.onToggleModal} onPopup={this.handlePopup} { ...this.props } />
 	    </div>
-		  {(URIs.firstComponent() !== 'app') && (<BottomNav onModal={(uri)=> this.onToggleModal(uri, true)} />)}
 
-		  <div className="modal-wrapper">
-			  {(popup) && (<PopupNotification
-				  payload={popup}
-				  onComplete={()=> this.setState({ popup : null })}>
-				    {popup.content}
-			  </PopupNotification>)}
+		  <div className='modal-wrapper'>
+        <ModalRoutes modals={modals} onComplete={this.handeModalComplete} />
+
+
+			  {(modals.cookies) && (<CookiesOverlay
+				  onConfirmed={this.handleCookies}
+				  onComplete={()=> this.onToggleModal(Modals.COOKIES, false)}
+			  />)}
+
+			  {(modals.profile) && (<ProfileModal
+				  onModal={(uri)=> this.onToggleModal(uri, true)}
+				  onPopup={this.handlePopup}
+				  onComplete={()=> this.onToggleModal(Modals.PROFILE, false)}
+				  onUpdated={this.handleUpdateUser}
+			  />)}
 
 			  {(modals.login) && (<LoginModal
 				  inviteID={null}
-				  outro={(profile !== null)}
 				  onModal={(uri)=> this.onToggleModal(uri, true)}
 				  onPopup={this.handlePopup}
 				  onComplete={()=> this.onToggleModal(Modals.LOGIN, false)}
-				  onLoggedIn={this.handleLoggedIn}
+				  onLoggedIn={this.handleUpdateUser}
 			  />)}
 
-			  {(modals.network) && (<AlertDialog
-				  title="No Internet Connection"
-				  onComplete={()=> this.onToggleModal(Modals.NETWORK, false)}>
-				  Check your network connection to continue.
-			  </AlertDialog>)}
-
 			  {(modals.register) && (<RegisterModal
-				  inviteID={null}
-				  outro={(profile !== null)}
+				  inviteID={inviteID}
 				  onModal={(uri)=> this.onToggleModal(uri, true)}
 				  onPopup={this.handlePopup}
 				  onComplete={()=> this.onToggleModal(Modals.REGISTER, false)}
-				  onRegistered={this.handleLoggedIn}
+				  onRegistered={this.handleUpdateUser}
 			  />)}
 
 			  {(modals.stripe) && (<StripeModal
@@ -384,32 +402,89 @@ class App extends Component {
 				  onSubmitted={this.handlePurchaseSubmitted}
 				  onComplete={()=> this.onToggleModal(Modals.STRIPE, false)}
 			  />)}
+
+        {(modals.invite) && (<InviteModal
+				  payload={modals.payload}
+				  onPopup={this.handlePopup}
+				  onSubmitted={this.handlePurchaseSubmitted}
+				  onComplete={()=> this.onToggleModal(Modals.INVITE, false)}
+			  />)}
+
+			  {(modals.expired) && (<AlertDialog
+				  title='Invite Expired'
+				  tracking={Modals.EXPIRED}
+				  onComplete={()=> this.onToggleModal(Modals.EXPIRED, false)}>
+				  This invite has expired.
+			  </AlertDialog>)}
+
+			  {(modals.disable) && (<ConfirmDialog
+				  title="Delete your account"
+				  tracking={Modals.DISABLE}
+          filled={true}
+          closeable={true}
+				  onConfirmed={this.handleDisableAccount}
+				  onComplete={()=> this.onToggleModal(Modals.DISABLE, false)}>
+				  Are you sure you wish to delete your account? You won't be able to log back in, plus your playgrounds & comments will be removed. Additionally, you will be dropped from your team.
+			  </ConfirmDialog>)}
+
+			  {(modals.noAccess) && (<ConfirmDialog
+				  tracking={Modals.NO_ACCESS}
+					filled={true}
+					closeable={true}
+					buttons={['OK']}
+          onConfirmed={null}
+				  onComplete={(ok)=> { this.onToggleModal(Modals.NO_ACCESS, false); (ok) ? this.handleLogout(null, Modals.LOGIN) : this.handleLogout(Pages.HOME) }}>
+				  Project has been deleted or permissions have been denied.
+			  </ConfirmDialog>)}
+
+        {(modals.payment) && (<AlertDialog
+				  title='Payment Processed'
+				  tracking={Modals.PAYMENT}
+				  // onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); window.location.pathname = `${Pages.TEAM}/${team.id}--${team.slug}` }}>
+				  onComplete={()=> { this.onToggleModal(Modals.PAYMENT, false); this.props.history.replace(`${Pages.TEAM}/${team.id}--${team.slug}`) }}>
+				  Your team <strong>{team.title} - [{team.id}]</strong> is now a paid {purchase.type} plan.
+			  </AlertDialog>)}
+
+			  {(popup) && (<PopupNotification
+				  payload={popup}
+				  onComplete={()=> this.setState({ popup : null })}>
+				  <span dangerouslySetInnerHTML={{ __html : popup.content }} />
+			  </PopupNotification>)}
 		  </div>
 	  </div>);
   }
 }
 
-
 const mapStateToProps = (state, ownProps)=> {
-	return ({
-		deeplink  : state.deeplink,
-		profile   : state.userProfile,
-		artboards : state.homeArtboards,
-		team      : state.team
-	});
+  return {
+    darkThemed     : state.darkThemed,
+    componentTypes : state.builds.componentTypes,
+    invite         : state.teams.invite,
+    purchase       : state.purchase,
+    products       : state.products,
+    profile        : state.user.profile,
+    team           : state.teams.team,
+    playgrounds    : state.builds.playgrounds,
+    playground     : state.builds.playground,
+    typeGroup      : state.builds.typeGroup,
+    comment        : state.comments.comment,
+    matchPath      : state.matchPath,
+    hash           : state.router.location.hash
+  };
 };
 
 const mapDispatchToProps = (dispatch)=> {
-	return ({
-		purgeHomeArtboards : ()=> dispatch(appendHomeArtboards(null)),
-		fetchTeamLookup    : (payload)=> dispatch(fetchTeamLookup(payload)),
-		fetchUserHistory   : (payload)=> dispatch(fetchUserHistory(payload)),
-		fetchUserProfile   : ()=> dispatch(fetchUserProfile()),
-		updateMouseCoords  : (payload)=> dispatch(updateMouseCoords(payload)),
-		updateDeeplink     : (navIDs)=> dispatch(updateDeeplink(navIDs)),
-		updateUserProfile  : (profile)=> dispatch(updateUserProfile(profile))
-	});
+  return {
+    fetchInvite       : (payload)=> dispatch(fetchInvite(payload)),
+    fetchUserTeams    : (payload)=> dispatch(fetchUserTeams(payload)),
+    fetchUserProfile  : ()=> dispatch(fetchUserProfile()),
+    setPlayground     : (payload)=> dispatch(setPlayground(payload)),
+    modifyInvite      : (payload)=> dispatch(modifyInvite(payload)),
+    paidStripeSession : (payload)=> dispatch(paidStripeSession(payload)),
+    updateUserProfile : (payload)=> dispatch(updateUserProfile(payload)),
+    push              : (payload)=> dispatch(push(payload))
+  };
 };
 
-
+// export default connect(mapStateToProps, mapDispatchToProps)(App);
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

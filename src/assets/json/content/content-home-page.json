@@ -1,0 +1,24 @@
+{
+  "desktop": {
+    "title": "Pair helps product teams with the single most important of design, execution.",
+    "intro": null,
+    "sections": null,
+    "assets": {
+      "videos": [{
+        "title": "Desktop Video",
+        "url": "_{CDN_HOSTNAME}_/site-assets/videos/home-page_landscape.mp4"
+      }]
+    }
+  },
+  "mobile": {
+    "title": "Pair helps teams with the most important of design, execution.",
+    "intro": null,
+    "sections": null,
+    "assets": {
+      "videos": [{
+        "title": "Mobile Video",
+        "url": "_{CDN_HOSTNAME}_/site-assets/videos/home-page_portrait.mp4"
+      }]
+    }
+  }
+}

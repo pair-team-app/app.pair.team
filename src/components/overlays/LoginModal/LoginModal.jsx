@@ -8,10 +8,11 @@ import { withRouter } from 'react-router-dom';
 
 import BaseOverlay from '../BaseOverlay';
 import LoginForm from '../../forms/LoginForm';
-import { POPUP_POSITION_TOPMOST, POPUP_TYPE_ERROR } from '../PopupNotification';
+import { POPUP_TYPE_ERROR } from '../PopupNotification';
 import { Modals } from '../../../consts/uris';
-import { setRedirectURI, updateUserProfile } from '../../../redux/actions';
+import { updateUserProfile } from '../../../redux/actions';
 import { trackEvent } from '../../../utils/tracking';
+import pairLogo from '../../../assets/images/logos/logo-pairurl-310.png';
 
 
 class LoginModal extends Component {
@@ -19,6 +20,7 @@ class LoginModal extends Component {
 		super(props);
 
 		this.state = {
+			outro    : false,
 			email    : null,
 			upload   : null,
 			outroURI : null
@@ -26,98 +28,87 @@ class LoginModal extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-// 		console.log('%s.componentDidUpdate()', this.constructor.name, prevProps, this.props, prevState, this.state);
+// console.log('%s.componentDidUpdate()', this.constructor.name, { prevProps, props : this.props, prevState, state : this.state });
 
 		const { profile } = this.props;
 		if (!prevProps.profile && profile) {
-			this.setState({ outro : true });
 		}
 	}
 
 	handleComplete = ()=> {
-// 		console.log('%s.handleComplete()', this.constructor.name);
+// console.log('%s.handleComplete()', this.constructor.name);
 
 		const { outroURI } = this.state;
 		this.setState({ outro : false }, ()=> {
 			this.props.onComplete();
 
-			const { redirectURI } = this.props;
-			if (redirectURI) {
-				this.props.history.push(redirectURI);
-
-			} else {
-				if (outroURI) {
-					if (outroURI.startsWith('/modal')) {
-						this.props.setRedirectURI(null);
-						this.props.onModal(`/${URIs.lastComponent(outroURI)}`);
-					}
+			if (outroURI) {
+				if (outroURI.startsWith('/modal')) {
+					this.props.onModal(`/${URIs.lastComponent(outroURI)}`);
 				}
 			}
 		});
 	};
 
 	handleError = (error)=> {
-// 		console.log('%s.handleError()', this.constructor.name, error);
+// console.log('%s.handleError()', this.constructor.name, error);
 
 		this.props.onPopup({
-			position : POPUP_POSITION_TOPMOST,
-			type     : POPUP_TYPE_ERROR,
-			content  : error.code
+			type    : POPUP_TYPE_ERROR,
+			content : error.code
 		});
 	};
 
 	handleLoggedIn = (profile)=> {
-// 		console.log('%s.handleLoggedIn()', this.constructor.name, profile, this.props);
+// console.log('%s.handleLoggedIn()', this.constructor.name, profile, this.props);
 
 		trackEvent('user', 'login');
-		const { redirectURI } = this.props;
-		const { upload } = this.state;
-		if (redirectURI && upload) {
-			this.props.updateDeeplink({ uploadID : upload.id });
-		}
-
-		this.props.onLoggedIn(profile);
+    this.setState({ outro : true }, ()=> {
+      setTimeout(()=> {
+        this.props.onLoggedIn(profile);
+      }, 333);
+    });
 	};
 
-	handleRegister = ()=> {
-// 		console.log('%s.handleRegister()', this.constructor.name);
+	handleModal = (uri)=> {
+// console.log('%s.handleModal()', this.constructor.name, uri);
 		this.setState({
 			outro    : true,
-			outroURI : `/modal${Modals.REGISTER}`
+			outroURI : `/modal${uri}`
 		});
 	};
 
 
 	render() {
-// 		console.log('%s.render()', this.constructor.name, this.props, this.state);
+// console.log('%s.render()', this.constructor.name, this.props, this.state);
 
-// 		const { team } = this.props;
 		const { outro } = this.state;
-
 		return (
 			<BaseOverlay
-				tracking={`login/${URIs.firstComponent()}`}
+				tracking={Modals.LOGIN}
 				outro={outro}
+				filled={true}
 				closeable={false}
+				delay={125}
 				onComplete={this.handleComplete}>
 
 				<div className="login-modal">
-					<div className="login-modal-header-wrapper">
-						<h4>You must be signed in to view this Pair.</h4>
+					<div className="header-wrapper">
+						<img className="header-logo" src={pairLogo} alt="Logo" />
 					</div>
 
-					<div className="login-modal-content-wrapper">
+					<div className="form-wrapper">
 						<LoginForm
-							title={null}
 							inviteID={null}
 							email={null}
 							onCancel={(event)=> { event.preventDefault(); this.handleComplete(); }}
 							onLoggedIn={this.handleLoggedIn} />
 					</div>
 
-					<div className="login-modal-footer-wrapper">
-						<div className="login-modal-footer-link">Not a member of this Pair yet?</div>
-						<div className="login-modal-footer-link" onClick={this.handleRegister}>Sign Up</div>
+					<div className="footer-wrapper form-disclaimer">
+						{/*<div onClick={()=> this.handleModal(Modals.RECOVER)}>Forgot Password</div>*/}
+						<div onClick={()=> this.handleModal(Modals.REGISTER)}>Don't have an account? Sign Up</div>
+						<div onClick={()=> this.handleModal(Modals.LOGIN)}>Forgot Password</div>
 					</div>
 				</div>
 			</BaseOverlay>);
@@ -127,7 +118,6 @@ class LoginModal extends Component {
 
 const mapDispatchToProps = (dispatch)=> {
 	return ({
-		setRedirectURI    : (url)=> dispatch(setRedirectURI(url)),
 		updateUserProfile : (profile)=> dispatch(updateUserProfile(profile))
 	});
 
@@ -135,10 +125,8 @@ const mapDispatchToProps = (dispatch)=> {
 
 const mapStateToProps = (state, ownProps)=> {
 	return ({
-		team        : state.team,
-		invite      : state.invite,
-		profile     : state.userProfile,
-		redirectURI : state.redirectURI
+		invite  : state.invite,
+		profile : state.user.profile,
 	});
 };
 

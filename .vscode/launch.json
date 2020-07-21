@@ -1,0 +1,50 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "firefox",
+      "request": "launch",
+      "reAttach": true,
+      "profileDir": "/Users/mattholcombe/Library/Application Support/Firefox/Profiles/1spydc8c.default-debug",
+      "name": "Launch Firefox on localhost:3000",
+      "url": "http://localhost:3000/team/pairurl-com",
+      "webRoot": "${workspaceFolder}",
+      "pathMappings": [
+        {
+          "url": "moz-extension://0fe61bde-c36b-8944-956f-5dacb1f1f855/inject",
+          "path": "${workspaceFolder}/src/redux/middleware"
+        }
+      ]
+    },
+    {
+      "name": "Launch Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000/team/pairurl-com",
+      "webRoot": "${workspaceFolder}/src",
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*"
+      },
+      "skipFiles": [
+        "node_modules/*\*/*.js"
+      ]
+    },
+    {
+      "type": "chrome",
+      "request": "attach",
+      "name": "Attach to Chrome",
+      "port": 9222,
+      "urlFilter": "http://localhost:3000/team/*",
+      "webRoot": "${workspaceFolder}",
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*",
+        "/Volumes/Labor/projects/sites/pairurl.com/*": "${workspaceRoot}/*"
+      },
+      "trace": true,
+      "sourceMaps": true
+    }
+  ]
+}

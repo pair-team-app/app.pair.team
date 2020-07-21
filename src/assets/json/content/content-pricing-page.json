@@ -1,0 +1,50 @@
+{
+  "desktop": {
+    "title": "Pricing",
+    "intro": "Pair offers simple pricing for Free, Team, and Enterprise customers. For custom solutions of ≈100,000 Pair URLs or more per month, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
+    "sections": [{
+      "open" : true,
+      "header": "Free",
+      "content": "<strong>10 Pair Public URLs</strong> per month.<div>&bull; Public Pair URLs<br />&bull; 100 Builds Per Month<br />&bull; Email Support</div>",
+      "price": 0.00,
+      "event": "free-plan"
+    }, {
+      "open" : true,
+      "header": "Team",
+      "content": "<strong>1,000 Pair URLs</strong> per month.<div>&bull; Private Pair URLs<br />&bull; 1,000 Builds Per Month<br />&bull; Slack Support</div>",
+      "price": 14.99,
+      "event": "team-plan"
+    }, {
+      "open" : true,
+      "header": "Enterprise",
+      "content": "<strong>10,000 Pair URLs</strong> per month.<div>&bull; Private Pair URLs<br />&bull; 1,0000 Builds Per Month<br />&bull; PM Support</div>",
+      "price": 27.99,
+      "event": "enterprise-plan"
+    }],
+    "assets": null
+  },
+  "mobile": {
+    "title": "Pricing",
+    "intro": "Pair offers simple pricing for Free, Team, and Enterprise customers. For custom solutions of ≈100,000 Pair URLs or more per month, please contact <a href=\"mailto:customer@pairurl.com\">customer@pairurl.com</a>.",
+    "sections": [{
+      "open" : false,
+      "header": "Free",
+      "content": "<strong>10 Pair Public URLs</strong> per month.<div>&bull; Public Pair URLs<br />&bull; 100 Builds Per Month<br />&bull; Email Support</div>",
+      "price": 0.00,
+      "event": "free-plan"
+    }, {
+      "open" : false,
+      "header": "Team",
+      "content": "<strong>1,000 Pair URLs</strong> per month.<div>&bull; Private Pair URLs<br />&bull; 1,000 Builds Per Month<br />&bull; Slack Support</div>",
+      "price": 14.99,
+      "event": "team-plan"
+    }, {
+      "open" : false,
+      "header": "Enterprise",
+      "content": "<strong>10,000 Pair URLs</strong> per month.<div>&bull; Private Pair URLs<br />&bull; 1,0000 Builds Per Month<br />&bull; PM Support</div>",
+      "price": 27.99,
+      "event": "enterprise-plan"
+    }],
+    "assets": null
+  }
+}
